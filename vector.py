@@ -10,9 +10,15 @@
 #
 # (c) 2004 Benedict Verhegghe
 #
-"""A python class for 3D vector operations"""
+"""A python class for 3D vector operations.
 
-from math import *
+A 3D vector is a list of three floats.
+All operations are implemented in standard Python.
+If you need high performance numerical operations on lots of vectors,
+you should use Numarray instead.
+"""
+
+import math
 
 def reverse (v):
     """Return the reverse vector [-x, -y, -z] of v[x,y,z]"""
@@ -32,7 +38,7 @@ def norm (v):
  
 def length (v):
     """Return the length of the vector v"""
-    return sqrt(norm(v))
+    return math.sqrt(norm(v))
 
 def unitvector (v):
     """Return the normalized (unit length) vector in direction v"""
@@ -61,13 +67,13 @@ def dotpr (v,w):
     """Return the dot product of vectors v and w"""
     return sum( [ x*y for x,y in zip(v,w) ] )
 
-def cosangle (v,w):
+def cosAngle (v,w):
     """Return the cosine of the angle between two vectors"""
     return dotpr(v,w)/length(v)/length(w)
 
 def projection(v,w):
     """Return the length of the projection of vector v on vector w."""
-    return dot(v,w)/length(w)
+    return dotpr(v,w)/length(w)
 
 def parallel(v,w):
     """Returns the part of vector v that is parallel to vector w"""
@@ -78,7 +84,7 @@ def orthogonal(v,w):
     return v-projection(v,w)*unitvector(w)
 
 def cross (v,w):
-    """Return the cross product between two vectors"""
+    """Return the cross product of two vectors."""
     return [ v[1]*w[2]-v[2]*w[1],  v[2]*w[0]-v[0]*w[2], v[0]*w[1]-v[1]*w[0] ]
 
 def cartesianToSpherical (v) :
@@ -87,15 +93,15 @@ def cartesianToSpherical (v) :
     Angles are given in degrees: lat: -90..90, long:0..360
     """
     distance = length(v)
-    longitude = degrees( atan2(v[0],v[2]) )
-    latitude = degrees( asin(v[1]/distance) )
+    longitude = degrees( math.atan2(v[0],v[2]) )
+    latitude = degrees( math.asin(v[1]/distance) )
     return [ longitude, latitude, distance]
 
 def sphericalToCartesian (v) :
     """Convert spherical coordinates [lat,long,dist] to cartesian [x,y,z]"""
-    long = radians(v[0])
-    lat = radians(v[1])
-    return scale ([ cos(lat)*sin(long), sin(lat), cos(lat)*cos(long) ], v[2])
+    long = math.radians(v[0])
+    lat = math.radians(v[1])
+    return scale ([ math.cos(lat)*math.sin(long), math.sin(lat), math.cos(lat)*math.cos(long) ], v[2])
 
 def roll(vector,n):
     """Roll the elements of the vector over n positions forward"""
@@ -107,9 +113,9 @@ def rotationMatrix (axis,angle):
     This is a matrix for postmultiplying a row vector."""
     m = [ [ 0. for i in range(3) ]  for j in range(3) ]
     i,j,k = roll(range(3),axis%3)
-    a = radians(angle)
-    c = cos(a)
-    s = sin(a)
+    a = math.radians(angle)
+    c = math.cos(a)
+    s = math.sin(a)
     m[i][i] = 1.
     m[j][j] = c
     m[j][k] = s

@@ -10,7 +10,7 @@
 #
 """Hyparcap"""
 clear()
-global out
+from math import *
 a = 3 # verdeelparameter
 x = -((1-sqrt(5))/2) # gulden getal
 s = 30. # overspanning
@@ -30,11 +30,10 @@ bot = B.genid(a-1,a-1,2,3,1,-1).lam(2,-1).unique()
 web = W1.genid(a-1,a-1,2,3,1,-1) + W2.genid(a,a,2,-3,1,-1) + W3
 blad = (top+bot+web).scale([1.,1./3,1.]).tranid(0,a)
 vlakblad = blad.scale([s*sin(radians(b/2))/a,s*cos(radians(b/2)),1.])
-out = blad
-draw(out)
 
-nod = out.nodes().unique()
+nod = blad.nodes().unique()
 nod.setProp(4)
 print nod
+draw(blad)
 drawProp(nod)
 

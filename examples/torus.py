@@ -10,10 +10,7 @@
 #
 """Torus"""
 clear()
-F1 = Formex([[[0,0],[1,0]]],1)
-F2 = Formex([[[0,0],[0,1]]],3)
-F3 = Formex([[[0,1],[1,0]]],2)
-F = (F1+F2+F3).replicate(36,0,1).replicate(12,1,1)
+F = Formex(pattern("164"),[1,2,3]).replicate(36,0,1).replicate(12,1,1)
 drawProp(F)
 sleep()
 G = F.translate1(2,1).cylindrical([2,1,0],[1.,30.,1.])

@@ -54,3 +54,10 @@ die nodig zijn om enkele mooie voorbeelden uit je afstudeerwerk te kunnen
 reproduceren. O.a. glisit, sbd, bapel, nnov,...
 Als dat er allemaal is, kunnen we, denk ik, het projekt naar buiten brengen.
 ############################################################################
+2004-10-25 BV: Ik probeer zoveel mogelijk de from ...import * te vermijden,
+voornamelijk omdat dan bij de generatie van documentatie met pydoc ook alle
+imports weergegeven worden, wat zeer lang duurt en tot veel te omvangrijke 
+docs leidt.
+Ik ben ook aan het experimenteren met de smooth rendering voor vlakken.
+Ik probeer de wireframe display niet te beschadigen.
+############################################################################

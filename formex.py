@@ -19,20 +19,20 @@ import math
 
 def sind(arg):
     """Return the sin of an angle in degrees."""
-    return sin(radians(arg))
+    return math.sin(radians(arg))
 
 def cosd(arg):
     """Return the sin of an angle in degrees."""
-    return cos(radians(arg))
+    return math.cos(radians(arg))
 
 def tand(arg):
     """Return the sin of an angle in degrees."""
-    return tan(radians(arg))
+    return math.tan(radians(arg))
 
 def length(arg):
     """Return the quadratic norm of a vector with all elements of arg."""
     a = arg.getflat()
-    return sqrt(sum(multiply(a,a)))
+    return math.sqrt(sum(multiply(a,a)))
 
 def inside(p,mi,ma):
     """Return true if point p is inside bbox defined by points mi and ma"""
@@ -59,6 +59,63 @@ def equal(p1,p2,tol=1.e-6):
     return inside([ p1[i]-p2[i] for i in range(3) ],
                   [ -tol for i in range(3) ], [ +tol for i in range(3) ] )
 
+def pattern(s):
+    """Return a line segment pattern created from a string.
+
+    This function creates a list of line segments where all nodes lie on the
+    gridpoints of a regular grid with unit step.
+    The first point of the list is [0,0]. Each character from the given
+    string is interpreted as a code specifying how to move to the next node.
+    Currently defined are the following codes:
+    0 = goto origin [0,0]
+    1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE
+    / = go to the next point without connecting.
+    The resulting list is directly suited to initialize a Formex in the
+    (x,y)-plane.
+    """
+    x = y = 0
+    l = []
+    connect=True
+    for c in s:
+        pos = [x,y]
+        if c=="0":
+            x = y = 0
+        elif c=="1":
+            x += 1
+        elif c == "2":
+            y += 1
+        elif c == "3":
+            x -= 1
+        elif c == "4":
+            y -= 1
+        elif c == "5":
+            x += 1
+            y += 1
+        elif c == "6":
+            x -= 1
+            y += 1
+        elif c == "7":
+            x -= 1
+            y -= 1
+        elif c == "8":
+            x += 1
+            y -= 1
+        elif c == "/":
+            connect = False
+        else:
+            print "Unknown pattern character %c ignored" % c
+            continue
+        if connect:
+            l.append([pos,[x,y]])
+        connect=True
+    return l
+
+###########################################################################
+##
+##   class Formex
+##
+#########################
+#
 # Update 02 Jul 2004
 # For simplicity's sake, we work now only with 3-D coordinates.
 # The user can create formices in a 2-D space,
@@ -522,12 +579,34 @@ class Formex:
         return f
 ##
 
+##############################################################################
+#
+#   Transformations that preserve the topology (but change coordinates)
+#
+#
+#   A. Affine transformations
+#
+#      Scaling
+#      Translation
+#      Central Dilatation = Scaling + Translation
+#      Rotation
+#      Shear
+#      Reflection
+#      Affine
+#
+    def scale(self,scale):
+        """Returns a copy scaled with scale[i] in direction i.
+
+        The scale should be a list of 3 numbers, or a single number.
+        In the latter case, the scaling is homothetic."""
+        return Formex(self.f*scale,self.p)
+
     def translate(self,vector,distance=None):
         """Returns a copy translated over distance in direction of vector.
 
         If no distance is given, translation is over the specified vector.
         If a distance is given, translation is over the specified distance
-        in the direction of the vector"""
+        in the direction of the vector."""
         if distance:
             return Formex(self.f + scale(unitvector(vector),distance),self.p)
         else:
@@ -563,64 +642,15 @@ class Formex:
         m = self.rotationMatrix(angle,axis)
         return Formex(matrixmultiply(self.f,m),self.p)
 
-    def scale(self,scale):
-        """Returns a copy scaled with scale[i] in direction i"""
-        return Formex(self.f*scale,self.p)
-
     def reflect(self,dir,pos):
         """Returns a formex mirrored in direction dir against plane at pos"""
         f = self.f.copy()
         f[:,:,dir] = 2*pos - f[:,:,dir]
         return Formex(f,self.p)
-
-    def reflectAdd(self,dir,pos):
-        """Return the sum of original plus reflection"""
-        return self + self.reflect(dir,pos)
-
-    # generate might be good alternative name for replicate
-    def replicate(self,n,dir,step):
-        """Returns a formex with n replications in direction dir with step.
-
-        The original formex is the first of the n replicas.
-        """
-        f = array( [ self.f for i in range(n) ] )
-        for i in range(1,n):
-            f[i,:,:,dir] += i*step
-        f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
-        ## the replication of the properties is automatic!
-        return Formex(f,self.p)
- 
-    def rosette(self,n,axis,point,angle):
-        """Returns a formex with n rotational replications around axis
-        through point with angular step angle.
-
-        axis is the number of the axis (0,1,2).
-        point must have same grade as formex.
-        The original formex is the first of the n replicas.
-        """
-        f = self.f - point
-        f = array( [ f for i in range(n) ] )
-        for i in range(1,n):
-            m = self.rotationMatrix(i*angle,axis)
-            f[i] = matrixmultiply(f[i],m)
-        f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
-        return Formex(f + point,self.p)
-    
-    def generate2(self,n1,n2,d1,d2,t1,t2,bias=0,taper=0):
-        """Generate copies in two directions.
-
-        n1,n2 number of replications in direction d1,d2
-        t1,t2 step in these directions
-        bias, taper : extra step and extra number of generations in direction
-        d1 for each generation in direction d2
-        """
-        P = [ self.translatem((d1,i*bias),(d2,i*t2)).rindle(n1+i*taper,d1,t1)
-              for i in range(n2) ]
-        ##
-        ## We should replace the Formex concatenation here by
-        ## seperate data and prop concatenations, because we are
-        ## guaranteed that either none or all formices in P have props.
-        return Formex.concatenate(P)
+#
+#
+#   B. Non-Affine transformations
+#
 
     def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.]):
         """Converts from cylindrical to cartesian after scaling.
@@ -827,6 +857,60 @@ class Formex:
     def circulize(self,i,j):
         """Transforms 1/8 of the i-j plane to 1/6 of a circle."""
         return Formex(f,self.p)
+
+##############################################################################
+#
+#   Transformations that change the topology
+#        
+
+    def reflectAdd(self,dir,pos):
+        """Return the sum of original plus reflection"""
+        return self + self.reflect(dir,pos)
+
+    # generate might be good alternative name for replicate
+    def replicate(self,n,dir,step):
+        """Returns a formex with n replications in direction dir with step.
+
+        The original formex is the first of the n replicas.
+        """
+        f = array( [ self.f for i in range(n) ] )
+        for i in range(1,n):
+            f[i,:,:,dir] += i*step
+        f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
+        ## the replication of the properties is automatic!
+        return Formex(f,self.p)
+ 
+    def rosette(self,n,axis,point,angle):
+        """Returns a formex with n rotational replications around axis
+        through point with angular step angle.
+
+        axis is the number of the axis (0,1,2).
+        point must have same grade as formex.
+        The original formex is the first of the n replicas.
+        """
+        f = self.f - point
+        f = array( [ f for i in range(n) ] )
+        for i in range(1,n):
+            m = self.rotationMatrix(i*angle,axis)
+            f[i] = matrixmultiply(f[i],m)
+        f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
+        return Formex(f + point,self.p)
+    
+    def generate2(self,n1,n2,d1,d2,t1,t2,bias=0,taper=0):
+        """Generate copies in two directions.
+
+        n1,n2 number of replications in direction d1,d2
+        t1,t2 step in these directions
+        bias, taper : extra step and extra number of generations in direction
+        d1 for each generation in direction d2
+        """
+        P = [ self.translatem((d1,i*bias),(d2,i*t2)).rindle(n1+i*taper,d1,t1)
+              for i in range(n2) ]
+        ##
+        ## We should replace the Formex concatenation here by
+        ## seperate data and prop concatenations, because we are
+        ## guaranteed that either none or all formices in P have props.
+        return Formex.concatenate(P)
         
         
 
@@ -947,6 +1031,7 @@ class Formex:
         return int(round(f))
 
 
+            
 ##############################################################################
 #
 #  Testing
@@ -997,13 +1082,7 @@ if __name__ == "__main__":
         print "nodes:",G.nodes()
         print "unique nodes:",G.nodes().unique()
         print "size:",G.size()
-##        H = F.rin(1,4,2)
-##        print "H =",H
-##        R = F.lam(1,1)
-##        print "R =",R
-##        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
-##        print "G =",G
-
+        
     (f,t) = _test()
     if f == 0:
         test()

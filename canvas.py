@@ -52,18 +52,53 @@ def stuur(x,xval,yval,exp=2.5):
     else:
         return ymax
 
+def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
+    """Draws a centered cube with side 2*s and colored faces.
+
+    Colors are specified in the order [FRONT,BACK,RIGHT,LEFT,TOP,BOTTOM].
+    """
+    vertices = [[s,s,s],[-s,s,s],[-s,-s,s],[s,-s,s],[s,s,-s],[-s,s,-s],[-s,-s,-s],[s,-s,-s]]
+    planes = [[0,1,2,3],[4,5,6,7],[0,3,7,4],[1,2,6,5],[0,1,5,4],[3,2,6,7]]
+    glBegin(GL_QUADS)
+    for i in range(6):
+        #glNormal3d(0,1,0);
+        glColor(*color[i])
+        for j in planes[i]:
+            glVertex3f(*vertices[j])
+    glEnd()
+
+def drawSphere(s,color=cyan,ndiv=8):
+    """Draws a centered sphere with radius s in given color."""
+    quad = gluNewQuadric()
+    gluQuadricNormals(quad, GLU_SMOOTH)
+    glColor(*color)
+    gluSphere(quad,s,ndiv,ndiv)
+
+
+class CubeActor:
+    """An OpenGL actor with cubic shape and 6 colored sides."""
+
+    def __init__(self,size,color=[red,cyan,green,magenta,blue,yellow]):
+        self.size = size
+        self.color = color
+
+    def display(self):
+        """Draw the cube."""
+        gluCube(self.size,self.color)
+
 
 class FormexActor(Formex):
-    """An OpenGL actor which is a Formex"""
+    """An OpenGL actor which is a Formex."""
 
     def __init__(self,F,color=black):
         Formex.__init__(self,F.data())
+        self.list = None
         self.color = color
+        if self.plexitude() == 1:
+            self.setMark(self.size()/200,"cube")
         
-    def display(self,wireframe=True):
-        """Draw a formex.
-
-        """
+    def draw(self,wireframe=True):
+        """Draw the formex."""
         glColor3f(*self.color)
         nnod = self.plexitude()
         if nnod == 2:
@@ -72,16 +107,12 @@ class FormexActor(Formex):
                 for nod in el:
                     glVertex3f(*nod)
             glEnd()
+            
         elif nnod == 1:
-            radius = self.size() / 100
-            slices = 16
-            stacks = 16
-            quad = gluNewQuadric()
-            gluQuadricNormals(quad, GLU_SMOOTH) # Create Smooth Normals
             for el in self.data():
                 glPushMatrix()
                 glTranslatef (*el[0])
-                gluSphere(quad,radius,slices,stacks)
+                glCallList(self.mark)
                 glPopMatrix()
                 
         elif wireframe:
@@ -91,13 +122,13 @@ class FormexActor(Formex):
                     glVertex3f(*nod)
                 glEnd()
         elif nnod == 3:
-            print "Triangles"
             glBegin(GL_TRIANGLES)
             for el in self.data():
                 for nod in el:
                     glVertex3f(*nod)
             glEnd()
         elif nnod == 4:
+            print wireframe
             glBegin(GL_QUADS)
             for el in self.data():
                 for nod in el:
@@ -109,9 +140,21 @@ class FormexActor(Formex):
                 for nod in el:
                     glVertex3f(*nod)
                 glEnd()
-                                
 
+    def setMark(self,size,type):
+        """Create a symbol for drawing vertices."""
+        self.mark = glGenLists(1)
+        glNewList(self.mark,GL_COMPILE)
+        if type == "sphere":
+            drawSphere(size)
+        else:
+            drawCube(size)
+        glEndList()
 
+##################################################################
+#
+#  The Canvas
+#
 class Canvas(QGLWidget):
     """A canvas for OpenGL rendering."""
     
@@ -122,16 +165,14 @@ class Canvas(QGLWidget):
         QGLWidget.__init__(self,*args)
         self.setFocusPolicy(QWidget.StrongFocus)
         self.resize(w,h)
-        self.wireframe = True  # default mode is wireframe 
-        self.glinit()
+        self.glinit("wireframe") # default mode is wireframe 
 
+    # These three are defined by the qtgl API
     def initializeGL(self):
         """Set up the OpenGL rendering state, and define display list"""
         self.glinit()
-        
     def repaintGL(self):
         self.display()
-        
     def	resizeGL(self,w,h):
         """Set up the OpenGL view port, matrix mode, etc.
 
@@ -139,6 +180,7 @@ class Canvas(QGLWidget):
         """
         self.resize(w,h)
 
+    # The rest are our functions
     def setGLColor(self,s):
         """Set the OpenGL color to the named color"""
         self.qglColor(QColor(s))
@@ -148,6 +190,7 @@ class Canvas(QGLWidget):
         self.qglClearColor(QColor(s))
 
     def glinit(self,mode="wireframe"):
+        print "glinit"
 	glClearColor(*RGBA(mediumgrey))# Clear The Background Color
 	glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	glDepthFunc(GL_LESS)	       # The Type Of Depth Test To Do
@@ -155,30 +198,27 @@ class Canvas(QGLWidget):
         if mode == "wireframe":
             self.wireframe = True
             glShadeModel(GL_FLAT)      # Enables Flat Color Shading
+            glDisable(GL_LIGHTING)
         elif mode == "render":
             self.wireframe = False
             glShadeModel(GL_SMOOTH)    # Enables Smooth Color Shading
-
-##        #print "set up lights"
-##	glLightfv(GL_LIGHT0, GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
-##	glLightfv(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-##	glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-##	glLightfv(GL_LIGHT0, GL_POSITION, (200.0, 200.0, 0.0))
-##	glEnable(GL_LIGHT0)
-##	glLightfv(GL_LIGHT1, GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
-##	glLightfv(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-##	glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-##	glLightfv(GL_LIGHT1, GL_POSITION, (-500.0, 100.0, 0.0))
-##	glEnable(GL_LIGHT1)
-##        glEnable(GL_LIGHTING)
-        
-##        #print "set up materials"
-##        glEnable ( GL_COLOR_MATERIAL )
-##        glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE )
-##        glMaterial(GL_FRONT, GL_SPECULAR, (0,0,0,1));
-##        glMaterial(GL_FRONT, GL_EMISSION, (0,0,0,1));
+            #print "set up lights"
+            glLightModel(GL_LIGHT_MODEL_AMBIENT,(0.5,0.5,0.5,1))
+            glLightfv(GL_LIGHT0, GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
+            glLightfv(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
+            glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+            glLightfv(GL_LIGHT0, GL_POSITION, (-1.0, -1.0, 5.0))
+            glEnable(GL_LIGHT0)
+            glLightfv(GL_LIGHT1, GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
+            glLightfv(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
+            glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+            glLightfv(GL_LIGHT1, GL_POSITION, (1.0, 1.0, 1.0))
+            glEnable(GL_LIGHT1)
+            glEnable(GL_LIGHTING)
+            #print "set up materials"
+            glEnable(GL_COLOR_MATERIAL)
+            glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE )
         glFinish()
-
         #print "set up camera"
 	self.camera.loadProjection()
 
@@ -190,36 +230,50 @@ class Canvas(QGLWidget):
 ##        #self.camera.lookAt(array(corners))
 ##        #print self.camera.center,self.camera.eye
 ##        #self.camera.setProjection()
+
          
     def addActor(self,actor):
-        """Add an actor to the scene
-
-        All an actor needs is a display function
-        """
+        """Add an actor to the scene."""
         self.makeCurrent()
-        list = glGenLists(1)
-        glNewList(list,GL_COMPILE)
-        actor.display(self.wireframe)
-        glEndList ()
-        self.actors.append(list)
-        actor.list = list
+        actor.list = glGenLists(1)
+        glNewList(actor.list,GL_COMPILE)
+        actor.draw(self.wireframe)
+        glEndList()
+        self.actors.append(actor)
 
     def removeActor(self,actor):
         """Remove an actor from the scene"""
         self.makeCurrent()
-        self.actors.remove(actor.list)
+        self.actors.remove(actor)
         glDeleteLists(actor.list,1)
 
     def removeAllActors(self):
         """Remove all actors from the scene"""
-        for list in self.actors:
-            glDeleteLists(list,1)
+        for a in self.actors:
+            glDeleteLists(a.list,1)
         self.actors = []
 
     def recreateActor(self,actor):
         """Recreate an actor in the scene"""
         self.removeActor(actor)
         self.addActor(actor) 
+
+    def redrawAll(self):
+        """Redraw all actors in the scene.
+
+        This is different from display() in that it recreates
+        each actors display list.
+        This should e.g. be used after changing drawing modes.
+        """
+        self.makeCurrent()
+        for actor in self.actors:
+            if actor.list:
+                glDeleteLists(actor.list,1)
+            actor.list = glGenLists(1)
+            glNewList(actor.list,GL_COMPILE)
+            actor.draw(self.wireframe)
+            glEndList() 
+        self.display()
 
     def clear(self):
         self.makeCurrent()
@@ -228,14 +282,19 @@ class Canvas(QGLWidget):
         self.updateGL()
 
     def display(self):
+        """(Re)display all the actors in the scene.
+
+        This should e.g. be used when actors are added to the scene,
+        or after changing  camera position or lens.
+        """
         self.makeCurrent()
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        glColor3f(*black)
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+	glClearColor(*RGBA(lightgrey))   # Clear The Background Color
         self.camera.loadProjection()
         glLoadIdentity()
         self.camera.loadMatrix()
         for i in self.actors:
-            glCallList(i)
+            glCallList(i.list)
         self.updateGL()
         
     def resize (self,w,h):

@@ -20,8 +20,8 @@ in the -z direction. Near and far clipping planes are by default set to
 
 import sys,math
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
+import OpenGL.GL as GL
+import OpenGL.GLU as GLU
 
 from vector import *
 
@@ -267,10 +267,10 @@ class Camera:
         #print "Angles = ",self.getAngles()
         rot = self.getAngles()
         eye = self.getEye()
-        glRotatef(-rot[2], 0.0, 0.0, 1.0)
-        glRotatef(-rot[0], 1.0, 0.0, 0.0)
-        glRotatef(-rot[1], 0.0, 1.0, 0.0)
-        glTranslatef(-eye[0],-eye[1],-eye[2])
+        GL.glRotatef(-rot[2], 0.0, 0.0, 1.0)
+        GL.glRotatef(-rot[0], 1.0, 0.0, 0.0)
+        GL.glRotatef(-rot[1], 0.0, 1.0, 0.0)
+        GL.glTranslatef(-eye[0],-eye[1],-eye[2])
 
     def loadProjection(self,force=False):
         """Load the projection/perspective matrix.
@@ -285,13 +285,13 @@ class Camera:
         detected. You can optionally force loading the matrix.
         """
         if self.lensChanged or force:
-            glMatrixMode(GL_PROJECTION)
-            glLoadIdentity()
+            GL.glMatrixMode(GL.GL_PROJECTION)
+            GL.glLoadIdentity()
             if self.perspective:
-                gluPerspective(self.fovy,self.aspect,self.near,self.far)
+                GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
             else:
-                glOrtho(self.left,self.right,self.top,self.bottom,self.near,self.far)
-            glMatrixMode(GL_MODELVIEW)     
+                GL.glOrtho(self.left,self.right,self.top,self.bottom,self.near,self.far)
+            GL.glMatrixMode(GL.GL_MODELVIEW)     
 
 
 if __name__ == "__main__":
@@ -299,24 +299,24 @@ if __name__ == "__main__":
     from OpenGL.GLUT import *
    
     def init():
-        glClearColor (0.0, 0.0, 0.0, 0.0)
-        glShadeModel (GL_FLAT)
+        GL.glClearColor (0.0, 0.0, 0.0, 0.0)
+        GL.glShadeModel (GL.GL_FLAT)
 
     def display():
         global cam
-        glClear (GL_COLOR_BUFFER_BIT)
-        glColor3f (1.0, 1.0, 1.0)
-        glLoadIdentity ()             # clear the matrix
+        GL.glClear (GL.GL_COLOR_BUFFER_BIT)
+        GL.glColor3f (1.0, 1.0, 1.0)
+        GL.glLoadIdentity ()             # clear the matrix
         cam.loadMatrix()
         glutWireCube (1.0)
-        glFlush ()
+        GL.glFlush ()
 
     def reshape (w, h):
-        glViewport (0, 0, w, h)
-        glMatrixMode (GL_PROJECTION)
-        glLoadIdentity ()
-        glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0)
-        glMatrixMode (GL_MODELVIEW)
+        GL.glViewport (0, 0, w, h)
+        GL.glMatrixMode (GL.GL_PROJECTION)
+        GL.glLoadIdentity ()
+        GL.glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0)
+        GL.glMatrixMode (GL.GL_MODELVIEW)
 
     def keyboard(key, x, y):
         global cam

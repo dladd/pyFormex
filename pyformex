@@ -230,14 +230,6 @@ def saveImage():
             warning("Sorry, can not save in %s format!\n"
                     "Suggest you use PNG format ;)"%fmt)
 
-def wireframe():
-    global canvas
-    canvas.glinit("wireframe")
-    draw(out)
-def smooth():
-    global canvas
-    canvas.glinit("render")
-    draw(out)
 
 def play():
     fs = FileSelectionDialog(".","pyformex scripts (*.frm *.py)")
@@ -252,9 +244,6 @@ def printbbox():
     print "bbox ",out.bbox()
 def printglobals():
     print globals()
-def redraw():
-    global canvas
-    canvas.display()
 
 def zoomIn():
     global canvas
@@ -331,6 +320,17 @@ def clear():
     global canvas
     canvas.removeAllActors()
     canvas.clear()
+def wireframe():
+    global canvas
+    canvas.glinit("wireframe")
+    canvas.redrawAll()
+def smooth():
+    global canvas
+    canvas.glinit("render")
+    canvas.redrawAll()
+def redraw():
+    global canvas
+    canvas.redrawAll()
     
 def draw(F,side='front'):
     """Draw a Formex on the canvas.
