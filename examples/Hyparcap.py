@@ -21,8 +21,8 @@ d = 2. # laagdikte
 c = (x*s+k1*s*s/2*sin(radians(2*hoek)))/(k1*s*cos(radians(hoek))+k1*s*sin(radians(hoek))) # pentacapvoorwaarde
 
 # compret van 1 blad
-T = Formex([[[-a,0,d],[-a+2,0,d]],[[-a,0,d],[1-a,3,d]],[[1-a,3,d],[2-a,0,d]]])
-B = Formex([[[1-a,-1,0],[3-a,-1,0]],[[1-a,-1,0],[2-a,2,0]],[[2-a,2,0],[3-a,-1,0]]])
+T = Formex([[[-a,0,d],[-a+2,0,d]],[[-a,0,d],[1-a,3,d]],[[1-a,3,d],[2-a,0,d]]],1)
+B = Formex([[[1-a,-1,0],[3-a,-1,0]],[[1-a,-1,0],[2-a,2,0]],[[2-a,2,0],[3-a,-1,0]]],2)
 W1 = Formex([[[2-a,2,0],[1-a,3,d]],[[2-a,2,0],[3-a,3,d]],[[2-a,2,0],[2-a,0,d]]])
 W2 = Formex([[[1-a,-1,0],[-a,0,d]],[[1-a,-1,0],[2-a,0,d]],[[1-a,-1,0],[1-a,-3,d]]])
 W3 = Formex([[[0,3*a,d],[0,3*(a-1)-1,0]]])
@@ -37,6 +37,6 @@ vlakblad2=vlakblad.translate([-c,-c,0])
 j=vlakblad2.map(lambda x,y,z:[x,y,k1*x*y])
 #overige bladen genereren
 hyparcap=j.translate([c,c,0]).rosette(m,360/m,2,[0.,0.,0.])
-draw(hyparcap)
+drawProp(hyparcap)
 
 

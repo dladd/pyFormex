@@ -1,0 +1,17 @@
+This is a summary of our plans before the next releases:
+
+Release 0.2 : No further functionality is planned: release is imminent
+
+
+
+Release 0.3 : 
+  - Refine the mouse rotation action.
+  - Include an interface for executing external scripts.
+  - Include an online help system
+  - Provide a formian to pyformex translator
+
+Release 0.4 :
+  - Better rendering of triangles and polygones.
+  - Decent install/uninstall procedures
+  - Full manual
+

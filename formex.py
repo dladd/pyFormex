@@ -239,7 +239,13 @@ class Formex:
 #
 #   Return information about a Formex
 #
-
+    def nelems(self):
+        return self.f.shape[0]
+    def nnodes(self):
+        return self.f.shape[0]*self.f.shape[1]
+    def nnodel(self):
+        return self.f.shape[1]
+    
     def shape(self):
         """Return the shape of the Formex.
 
@@ -328,6 +334,42 @@ class Formex:
     def propSet(self):
         """Return a list with unique property values on this formex."""
         return unique(self.p)
+
+    def nodesAndElements(self):
+        """Return a tuple of nodal coordinates and element connectivity.
+
+        A tuple of two arrays is returned. The first is float array with
+        the coordinates of the unique nodes of the Formex. The second is
+        an integer array with the node numbers connected by each element.
+        """
+        ## THIS IS EXTREMELY SLOW IF PERFORMED ON A LARGE FORMEX
+        ## SHOULD BE IMPLEMENTED IN C
+        nnod = self.nnodes()
+        f = reshape(self.f,(nnod,3))
+        e = arange(nnod)
+        # first sort
+        sel = argsort(f[:,0])
+        old = argsort(sel)
+        f = f[sel]
+        e = old[e]
+        # now compact
+        flag = ones((nnod,))
+        sel = arange(nnod)
+        for i in range(nnod):
+            j = i-1
+            while j>=0 and allclose(f[i][0],f[j][0]):
+                if allclose(f[i],f[j]):
+                    # node i is same as node j
+                    flag[i] = 0
+                    sel[i] = sel[j]
+                    sel[i+1:nnod] -= 1
+                    break
+                j = j-1
+##        print flag
+##        print sel
+        f = f[flag>0]
+        e = reshape(sel,self.f.shape[:2])
+        return (f,e)
         
 
 ##############################################################################
@@ -421,6 +463,11 @@ class Formex:
         self.p = resize(p,self.f.shape[:1])
         return self
 
+    def removeProp(self):
+        """Remove the properties from a Formex."""
+        self.p = None
+        return self
+
     def append(self,F):
         """Append the members of formex F to this one.
 
@@ -444,6 +491,22 @@ class Formex:
             self.p = concatenate((self.p,p))
         return self
 
+    def sort(self):
+        """Sorts the elements of a formex.
+
+        Sorting is done according to the bbox of the elements.
+        !! NOT FULLY IMPLEMENTED: CURRENTLY ONLY SORTS ACCORDING TO
+        !! THE 0-direction OF NODE 0
+        """
+        sel = argsort(self.x()[:,0])
+        self.f = self.f[sel]
+        if self.p:
+            self.p = self.p[sel]
+        return self
+
+## MAYBE WE SHOULD LET MORE FUNCTIONS OPERATE ON THE FORMEX ITSELF
+## INSTEAD OF RETURNING A NEW ONE??
+
 ## 
 ## All others functions should operate on and return copies. This in intended
 ## so that the user can write statements like
@@ -464,10 +527,6 @@ class Formex:
         ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
         ## In all examples it works, I think because the operations on
         ## the numarray data cause a copy to be made. Need to explore this.
-
-    def removeProp(self):
-        """Returns a copy of the formex without the properties."""
-        return Formex(self.f)
 
     def __add__(self,other):
         """Return the sum of two formices"""
@@ -519,13 +578,7 @@ class Formex:
             [ self.f[j,:,i].max() for i in range(self.f.shape[2])] ]
                         for j in range(self.f.shape[0]) ] )
 
-    def sort(self):
-        """Return a formex where the elements are sorted.
 
-        Sorting is done according to the bbox of the elements.
-        """
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
         
     def unique(self,rtol=1.e-4,atol=1.e-6):
         """Return a formex which holds only the unique elements.
@@ -1181,6 +1234,7 @@ if __name__ == "__main__":
         G = Formex.connect([F,F],bias=[0,1],loop=True)
         print G
         print G[1]
+        print G.nodesAndElements()
         
     (f,t) = _test()
     if f == 0:

@@ -72,3 +72,59 @@ transformatiefunkties te genereren die dan met map() kunnen gebruikt
 worden om een topologie op de gewenste geometrie over te brengen " Interessant:
 dit past perfect in een typische strategie om ruimtelijke staafconstructies te genereren. Zo is trouwens ook de hyparcap tot stand gekomen.
 ############################################################################
+2004-12-09 BV: Hyparcap voorbeeld is prachtig. Heb wat kleur toegevoegd. 
+Men zou zowaar pyformex alleen al voor de schoonheid van de creaties gaan 
+gebruiken. Heb je het stars voorbeeld al gezien (louter Spielerei natuurlijk).
+***
+Wat back-ends betreft: ik vind dat die best onafhankelijke programma's blijven
+die gaan werken met de data die pyformex creeert. Best overdracht via een tekst
+bestand. Maar wij zouden in pyformex een mogelijkheid kunnen voorzien om die er
+aan te haken en aldus vanuit pyformex de uitvoering te starten, en eventuele
+resultaten (bv. een vervormde constructie) terug te krijgen. Een beetje zoals
+ook GiD doet met de berekeningsmodules. Dat hoeft niet veel meer te zijn dan
+een standaard directory waar scripts kunnen geplaatst worden die met een 
+standaard stel parameters (naam van datafile,...) opgeroepen kunnen worden.
+En eventueel een standaard opmaak van data in zo'n file. De scripts zouden 
+eenvoudig door ze op de juiste plaats te zetten in het menu van pyformex 
+verschijnen (zoals de voorbeelden).
+Ik zou geen grotere koppeling maken dan het displayen van de gevonden scripts
+en de mogelijkheid om zij op te roepen.
+Ik weet wel dat de gebruiker dit door de opvatting van pyformex en python ook
+allemaal zelf kan doen vanuit het script dat hij maakt om zijn formex te
+bouwen, maar ik vrees dat dat precies te veel zal zijn voor de gewone
+gebruiker en dat een gedefinieerde interface met ingebouwde aanroep veel
+aantrekkelijker is. Ik vergelijk weer een beetje met GiD. 
+***
+Wat het naar buiten opengooien van het project betreft: Ik vind dat wij dat 
+stilaan kunnen gaan doen. Ik zou het niet openen voor andere ontwikkelaars
+(in elk geval nu nog niet), maar wel de 'releases' laten downloaden.
+Om te vermijden dat onze servers overloaded raken, en om meer veiligheid en 
+zichtbaarheid te hebben, wil ik dat liefst op een open source hosting site 
+doen. In tegenstelling met mijn vroegere plannen denk ik nu eerder aan 
+berlios.de i.p.v. sourceforge. Voornamelijk omdat berlios ook subversion 
+toegang biedt en sourceforge enkel CVS. En ook een beetje omdat berlios
+europees is. 
+Nog een puntje in dit verband: de copyright notice en copyright license.
+De license kan wat mij betreft alleen de GNU GPL zijn (anders zouden wij
+wellicht de precieze implicaties moeten nagaan van alles wat wij gebruiken).
+De GPL steunt sterk op copyright bescherming die in vele landen automatisch is.
+Maar ook dan is het nog best om alvast elk tekstbestand van een copyright
+notice te voorzien. Er zijn twee mogelijkheden: ofwel plaatsen wij elk ons
+copyright merk bij de gedeelten die wij schrijven, ofwel plaatsen wij in elk
+bestand eenzelfde notice met ons beider namen. Tot nu toe deed ik dat merken
+automatisch (via het Stamp programmaatje). Dit is natuurlijk alleen bruikbaar 
+met een gemeenschappelijke notice. Ik pleit dus daarvoor.
+***
+Ik heb eeb file TODO gemaakt, waarin wij kunnen bijhouden wat wij willen doen
+en een soort roadmap bijhouden naar komende releases. Niets om ons strikt aan
+te houden, maar vooral om plannen die wij eens gemaakt hebben niet weer te 
+vergeten. Ook niet voor gedetailleerde uiteenzettingen, die houden wij hier.
+***
+Rotatie met de muis gaat m.i. handig in GiD (ik vind het alvast veel beter
+dan in ABAQUS/CAE). Ik zou de werking van GiD hierbij willen benaderen. 
+Maar voorlopig denk ik de rotatie om de camera-as te koppelen aan de afstand
+tot het centrum van de figuur, zodat wij alvast ook om die as kunnen roteren.
+***
+Ik heb bij de Qt voorbeelden een eenvoudig helpsysteem gevonden dat wij bijna
+direct kunnen inpluggen en aldus een on-line manual beschikbaar stellen.  
+############################################################################
