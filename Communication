@@ -61,3 +61,14 @@ docs leidt.
 Ik ben ook aan het experimenteren met de smooth rendering voor vlakken.
 Ik probeer de wireframe display niet te beschadigen.
 ############################################################################
+2004-12-7 B(art)D(esloovere) :Het hyparcap voorbeeld zou nu ook moeten lopen.
+Ok, benedict, ik zal met plezier de formex functies vervolledigen. Ik zal zelf
+ wel nog voor enkele op zoek moeten gaan naar de juiste definities. 
+(Heb wat 'gecopypaste' voor mijn afstudeerwerk :-P, tja, tijdsgebrek...) 
+Het lijkt me ook interessant de pattern() functie uit de formex module uit te 
+breiden met generaties naar boven en beneden. Quote van BD: "Waar 
+ik ook aan denk is het toevoegen van enkele procedures om 
+transformatiefunkties te genereren die dan met map() kunnen gebruikt 
+worden om een topologie op de gewenste geometrie over te brengen " Interessant:
+dit past perfect in een typische strategie om ruimtelijke staafconstructies te genereren. Zo is trouwens ook de hyparcap tot stand gekomen.
+############################################################################
