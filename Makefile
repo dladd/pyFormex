@@ -29,6 +29,7 @@ INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
 PROGRAM= pyformex
 SOURCE= formex.py canvas.py camera.py colors.py vector.py
+HTMLDOCS= $(SOURCE:.py=.html)
 DOCFILES= README COPYING History
 EXAMPLES= examples/*.py
 STAMPABLE= README History Makefile
@@ -61,7 +62,12 @@ remove:
 
 dist:	dist.stamped
 
-dist.stamped:
+distdoc:
+	mkdir -p doc/html
+	for f in $(PROGRAM) $(SOURCE); do pydoc -w "./$f"; done
+	mv *.html doc/html
+
+dist.stamped: distdoc
 	make distclean
 	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples
 	$(STAMP) -tStamp.template -oStamp.stamp

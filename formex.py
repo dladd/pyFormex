@@ -95,6 +95,12 @@ class Formex:
             f[:,:,:2] = self.f
             self.f = f
 
+    def globals(self):
+        """Return the list of globals defined in this module."""
+        return globals()
+
+    globals = classmethod(globals)
+
     def order(self):
         """Return the order of the Formex
 
@@ -162,7 +168,15 @@ class Formex:
         return s+"]"
     
     def asFormex(self):
-        """String representation of a formex as in Formian"""
+        """Return string representation of a formex as in Formian.
+
+        Coordinates are separated by commas, points are separated
+        by semicolons and grouped between brackets, elements are
+        separated by commas and grouped between braces.
+        >>> F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+        >>> print F
+        {[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}
+        """
         s = "{"
         if len(self.f) > 0:
             s += self.cantle2str(self.f[0])
@@ -172,6 +186,7 @@ class Formex:
         return s+"}"
                 
     def asArray(self):
+        """Return string representation as a numarray."""
         return self.f.__str__()
 
     #default print function
@@ -198,7 +213,12 @@ class Formex:
         """Append the members of formex F to this one
 
         This function changes the original one! Use __add__ if you want to
-        get a copy with the sum"""
+        get a copy with the sum.
+        >>> F = Formex([[[1.0,1.0,1.0]]])
+        >>> G = F.append(F)
+        >>> print F
+        {[1.0,1.0,1.0], [1.0,1.0,1.0]}
+        """
         self.f = concatenate((self.f,F.f))
         return self
 
@@ -210,10 +230,13 @@ class Formex:
         """Concatenate all formices in list.
 
         This is a class method, not an instance method!
+        >>> F = Formex([[[1,2,3]]])
+        >>> print Formex.concatenate([F,F,F])
+        {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}
         """
         return Formex( concatenate([a.f for a in list]) )
-
-
+    concatenate = classmethod(concatenate)
+    
     def bbox(self):
         """Return the boundary box of the Formex"""
         min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
@@ -313,10 +336,12 @@ class Formex:
         """Return the sum of original plus reflection"""
         return self + self.reflect(dir,pos)
 
+    # we really should call this replicate or generate
     def rindle(self,n,dir,step):
         """Returns a formex with n replications in direction dir with step.
 
-        The original formex is the first of the n replicas."""
+        The original formex is the first of the n replicas.
+        """
         f = array( [ self.f for i in range(n) ] )
         for i in range(1,n):
             f[i,:,:,dir] += i*step
@@ -324,11 +349,13 @@ class Formex:
         return Formex(f)
  
     def rosette(self,n,axis,point,angle):
-        """Returns a formex with n rotational replications around axis through point with angular step angle.
+        """Returns a formex with n rotational replications around axis
+        through point with angular step angle.
 
         axis is the number of the axis (0,1,2).
         point must have same grade as formex.
-        The original formex is the first of the n replicas."""
+        The original formex is the first of the n replicas.
+        """
         f = self.f - point
         f = array( [ f for i in range(n) ] )
         for i in range(1,n):
@@ -480,7 +507,7 @@ class Formex:
         return Formex(f)
 
     def map(self,func):
-        """Return a Formex where point is mapped by a 3-D function.
+        """Return a Formex mapped by a 3-D function.
 
         This is one of the versatile mapping functions.
         func is a numerical function which takes three arguments and produces
@@ -497,6 +524,56 @@ class Formex:
         f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
         return Formex(f)
 
+    def map1(self,dir,func):
+        """Return a Formex where coordinate i is mapped by a 1-D function.
+
+        <func> is a numerical function which takes one argument and produces
+        one result. The coordinate dir will be replaced by func(coord[dir]).
+        The function must be applicable on numarrays, so it should only
+        include numerical operations and functions understood by the
+        numarray module.
+        This method is one of several mapping methods. See also map and mapd.
+        """
+        f = copy.deepcopy(self.f)
+        f[:,:,dir] = func[i](self.f[:,:,dir])
+        return Formex(f)
+
+    def mapd(self,dir,func,point,dist=None):
+        """Maps one coordinate by a function of the distance to a point.
+
+        <func> is a numerical function which takes one argument and produces
+        one result. The coordinate dir will be replaced by func(d), where <d>
+        i calculated as the distance to <point>.
+        The function must be applicable on numarrays, so it should only
+        include numerical operations and functions understood by the
+        numarray module.
+        By default, the distance d is calculated in 3-D, but one can specify
+        a limited set of axes to calculate a 2-D or 1-D distance.
+        This method is one of several mapping methods. See also map3 and map1.
+        Example: E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
+        maps E on a sphere with radius 10
+        """
+        f = copy.deepcopy(self.f)
+        if dist == None:
+            dist = [0,1,2]
+        try:
+            l = len(dist)
+        except TypeError:
+            l = 1
+            dist = [dist]
+        d = f[:,:,dist[0]] - point[dist[0]]
+        if l==1:
+            d = abs(d)
+        else:
+            d = d*d
+            for i in dist[1:]:
+                d1 = f[:,:,i] - point[i]
+                d += d1*d1
+            d = sqrt(d)
+        f[:,:,dir] = func(d)
+        return Formex(f)
+
+    # This could be done by a map, but it is slightly cheaper to do it this way
     def replace(self,i,j):
         """Replace the coordinates along the axes i by those along j.
 
@@ -508,22 +585,9 @@ class Formex:
         for k in range(len(i)):
             f[:,:,i[k]] = self.f[:,:,j[k]]
 
-    def map1(self,func):
-        """Return a Formex where each coordinate is mapped by a 1-D function.
-
-        This is one of the versatile mapping functions.
-        func is a list of three numerical functions [f,g,h], each of which
-        takes one argument and produces one value. The coordinates [x,y,z]
-        will be replaced by [ f(x), g(y), h(z) ].
-        The functions f,g,h must be applicable on numarrays, so they should
-        only include numerical operations and functions understood by the
-        numarray module.
-        This method is one of several mapping methods. See also map and mapd.
-        """
-        f = zeros(self.f.shape,type=Float32)
-        for i in range(3):
-            f[:,:,i] = func[i](self.f[:,:,i])
-        return Formex(f)
+    def swapaxes(self,i,j):
+        """Swap coordinate axes i and j"""
+        return self.replace([i,j],[j,i])
         
 
     # Compatibility functions # deprecated !
@@ -626,41 +690,42 @@ class Formex:
         return self.spherical(scale=[b1,b2,b3])
 
     pex = unique
-    tic = int
+    def tic(f):
+        return int(f)
     def ric(f):
         return int(round(f))
 
-    def globals(self):
-        return globals()
-
-    globals = classmethod(globals)
-
 
 #### Test
+
+def _test():
+    import doctest, formex
+    return doctest.testmod(formex)
+
 if __name__ == "__main__":
+    _test()
     
-    def test():
-        print "This is a test of formex algebra"
-##        F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-##        print "F =",F
-##        F1 = F.tran(1,6)
-##        print "F1 =",F1
-##        F2 = F.ref(1,2)
-##        print "F2 =",F2
-##        F3 = F.ref(1,1.5).tran(2,2)
-##        print "F3 =",F3
-##        H = F.rin(1,4,2)
-##        print "H =",H
-##        R = F.lam(1,1)
-##        print "R =",R
-##        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
-##        print "G =",G
-        F = Formex([[[1,0,0],[0,1,1]]])
-        print F
-        G = F.translatem((1,4),(2,10))
-        print G
-        H = F.tranic(2,3,4,10)
-        print H
-    test()
+##    def test():
+####        F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+####        print "F =",F
+####        F1 = F.tran(1,6)
+####        print "F1 =",F1
+####        F2 = F.ref(1,2)
+####        print "F2 =",F2
+####        F3 = F.ref(1,1.5).tran(2,2)
+####        print "F3 =",F3
+####        H = F.rin(1,4,2)
+####        print "H =",H
+####        R = F.lam(1,1)
+####        print "R =",R
+####        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
+####        print "G =",G
+##        F = Formex([[[1,0,0],[0,1,1]]])
+##        print F
+##        G = F.translatem((1,4),(2,10))
+##        print G
+##        H = F.tranic(2,3,4,10)
+##        print H
+##    test()
 
 #### End

@@ -7,6 +7,8 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
+"""Parabolic Tower"""
+clear()
 global out,a,b,c,d  # constants in lambda need to be made global
 h = 25.   # height of tower
 h1 = 18.  # height at neck of tower

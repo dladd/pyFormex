@@ -8,6 +8,7 @@
 ##
 #
 """Double layer diamatic dome"""
+clear()
 global out
 rt = 36.   # radius of top circumsphere
 rb = 34.5  # radius of bottom circumsphere
@@ -23,5 +24,13 @@ top = T.genit(1,m,3,3,0,1)
 web = W1.genit(1,m,3,3,0,1) + W2.genit(1,m-1,3,3,0,1)
 bot = B1.genit(1,m-1,3,3,0,1) + B2.rin(3,m,3)
 F = (top+web+bot)#.spherical(1.,360./n,a/(3*m))
-out = top
-draw(out)
+
+def toSector(f):
+    x,y,z = f.x(), f.y(), f.z()
+    d = sqrt(y*y+z*z)
+    return f.map(lambda x,y,z:[x,where(d>0,y*z/d,0),where(d>0,z*z/d,0)])
+
+#out = toSector(top)#.rosette(4,0,[0,0,0],45.)
+out = top + toSector(top)
+draw(top)
+draw(bot)

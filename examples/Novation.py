@@ -7,6 +7,8 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
+"""Novation"""
+clear()
 n = 40
 # These two look the same in wireframe
 # These are quadrilaterals

@@ -91,7 +91,8 @@ MenuData = [
     ("Popup","&Display",[
         ("Action","&Test","test"), 
         ("Action","&Print","printit"), 
-        ("Action","&Bbox","bbox"), 
+        ("Action","&Bbox","printbbox"), 
+        ("Action","&Globals","printglobals"), 
         ("Action","&Wireframe","wireframe"), 
         ("Action","&Smooth","smooth"),
         ("Action","&Clear","clear"),
@@ -240,12 +241,11 @@ def test():
 def printit():
     global out
     print out
-def bbox():
+def printbbox():
     global out
     print "bbox ",out.bbox()
-def clear():
-    global canvas
-    canvas.clear()
+def printglobals():
+    print globals()
 def redraw():
     global canvas
     canvas.display()
@@ -319,14 +319,25 @@ def replay(fn,ask=False):
         status(fn)
         execfile(fn,g)
 
-    
-def draw(F,camera=True,side="front"):
-    """Draw a Formex on the canvas"""
-    global canvas,bbox
+def clear():
+    """Remove all actors from the canvas"""
+    global canvas
     canvas.removeAllActors()
+    canvas.clear()
+    
+def draw(F,side='front'):
+    """Draw a Formex on the canvas.
+
+    This adds an actor to the canvas, and directs the camera to it from
+    the specified side. Default is looking in the -z direction.
+    Specify side=None if you want to leave the camera settings unchanged.
+    If other actors are on the scene, they may be visible as well.
+    Clear the canvas before drawing if you only want one actor!
+    """
+    global canvas,bbox
     canvas.addActor(FormexActor(F))
-    bbox = F.bbox()
-    if camera:
+    if side:
+        bbox = F.bbox()
         canvas.setView(bbox,side)
     canvas.display()
 
