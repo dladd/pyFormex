@@ -39,3 +39,19 @@ sleep()
 
 structure = frame.generate2(2,6,0,2,12,3)
 drawProp(structure)
+
+sleep()
+canvas.camera.rotate(90,1)
+canvas.display()
+
+sleep()
+canvas.camera.rotate(-90,0)
+canvas.display()
+
+sleep()
+canvas.camera.rotate(-90,1)
+canvas.display()
+
+sleep()
+canvas.camera.rotate(-90,2)
+canvas.display()

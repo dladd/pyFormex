@@ -3,7 +3,14 @@
 	
 Changes from release 0.2:
 
-- class Formex: added function select(), affine()
+- pyformex: added rotate buttons to toolbar
 	
+- class Formex: added function select(), affine()
+  BoundingBox now returns a list instead of an array
+
+- camera.py completely reworked and canvas.py changed accrdingly
+- vector.py: added midPoint and centerDiff	
+
 - Added lima.py and Turtle.py
+
 - Added examples: Lima 

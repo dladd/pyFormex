@@ -141,10 +141,10 @@ def viewNr(i):
     
 def view(v):
     """Show a named view, either a builtin or a user defined."""
-    global canvas,bbox,BuiltinViews
+    global canvas,BuiltinViews
     if v in BuiltinViews:
-        canvas.setView(bbox,v)
-        canvas.display()
+        canvas.setView(None,v)
+        canvas.update()
     else:
         warning("This view has not been created yet")
 
@@ -174,21 +174,37 @@ def runExamples(n):
     for i in range(n):
         runExample(i)
 
-# Action buttons (should be put in a toolbar)
+
+# add rotate buttons to toolbar
+def addRotateButtons():
+    global app,tool,action,startdir
+    action = {}
+    dir = os.path.join(startdir,"icons")
+    buttons = [ [ "Rotate left", "rotleft.xbm", rotLeft ],
+                [ "Rotate right", "rotright.xbm", rotRight ],
+                [ "Rotate up", "rotup.xbm", rotUp ],
+                [ "Rotate down", "rotdown.xbm", rotDown ],
+                [ "Twist left", "twistleft.xbm", twistLeft ],
+                [ "Twist right", "twistright.xbm", twistRight ] ]
+    for b in buttons:
+        w = qt.QToolButton(qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[0],"",b[2],tool)
+        w.setAutoRepeat(True)
+
+# Action buttons (inserted in a toolbar)
 def insertActions():
     global tool,action,startdir
     action = {}
     dir = os.path.join(startdir,"icons")
-    print dir
-    print os.listdir(dir)
-    buttons = [ [ "Step", "next.xpm", wakeup ],
-                [ "Continue", "ff.xpm", kill ] ]
+    buttons = [ [ "Step", "next.xbm", wakeup, False ],
+                [ "Continue", "ff.xbm", kill, False ],
+              ]
     for b in buttons:
         a = qt.QAction(b[0],qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[1],0,tool)
         qt.QObject.connect(a,qt.SIGNAL("activated()"),b[2])
         a.addTo(tool)
-        a.setEnabled(False)
+        a.setEnabled(b[3])
         action[b[0]] = a
+    addRotateButtons()
 
 out=None
 
@@ -268,64 +284,75 @@ def printit():
     print out
 def printbbox():
     global out
-    print "bbox ",out.bbox()
+    if out:
+        print "bbox of displayed Formex",out.bbox()
 def printglobals():
     print globals()
 
 def zoomIn():
     global canvas
     canvas.zoom(0.8)
-    canvas.display()
+    canvas.update()
 def zoomOut():
     global canvas
     canvas.zoom(1.25)
-    canvas.display()
+    canvas.update()
 def panRight():
     global canvas
     canvas.camera.pan(+5)
-    canvas.display()   
+    canvas.update()   
 def panLeft():
     global canvas
     canvas.camera.pan(-5)
-    canvas.display()   
+    canvas.update()   
 def panUp():
     global canvas
-    canvas.camera.pan(+5,1)
-    canvas.display()   
+    canvas.camera.pan(+5,0)
+    canvas.update()   
 def panDown():
     global canvas
-    canvas.camera.pan(-5,1)
-    canvas.display()   
+    canvas.camera.pan(-5,0)
+    canvas.update()   
 def rotRight():
     global canvas
-    canvas.camera.rotate(+5)
-    canvas.display()   
+    canvas.camera.rotate(+5,0,1,0)
+    canvas.update()   
 def rotLeft():
     global canvas
-    canvas.camera.rotate(-5)
-    canvas.display()   
+    canvas.camera.rotate(-5,0,1,0)
+    canvas.update()   
 def rotUp():
     global canvas
-    canvas.camera.rotate(+5,1)
-    canvas.display()   
+    canvas.camera.rotate(-5,1,0,0)
+    canvas.update()   
 def rotDown():
     global canvas
-    canvas.camera.rotate(-5,1)
-    canvas.display()   
+    canvas.camera.rotate(+5,1,0,0)
+    canvas.update()   
+def twistLeft():
+    global canvas
+    canvas.camera.rotate(+5,0,0,1)
+    canvas.update()   
+def twistRight():
+    global canvas
+    canvas.camera.rotate(-5,0,0,1)
+    canvas.update()   
 def dollyIn():
     global canvas
     canvas.camera.dolly(0.8)
-    canvas.display()   
+    canvas.update()   
 def dollyOut():
     global canvas
     canvas.camera.dolly(1.25)
-    canvas.display()   
+    canvas.update()   
 
 def clear():
     """Remove all actors from the canvas"""
-    global canvas
+    global canvas,out
+    print "Clear everything from the canvas"
     canvas.removeAllActors()
     canvas.clear()
+    out = None
 def wireframe():
     global canvas
     canvas.glinit("wireframe")
@@ -347,15 +374,14 @@ def draw(F,side='front'):
     If other actors are on the scene, they may be visible as well.
     Clear the canvas before drawing if you only want one actor!
     """
-    global canvas,bbox,out
+    global canvas,out
     out = F
     canvas.addActor(FormexActor(F))
     if side:
-        bbox = F.bbox()
-        canvas.setView(bbox,side)
+        canvas.setView(F.bbox(),side)
     # Als side == None zou toch de bbox moeten berekend worden
     # en de camera in/uitgezoomd of gedollied worden.
-    canvas.display()
+    canvas.update()
     
 def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,white]):
     """Draw a Formex in colors matching the elements property value.
@@ -366,7 +392,7 @@ def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,whit
     If no color list is specified, a default one is used. The color index
     used is the property value modulus the number of colors in the list.
     """
-    global canvas,bbox,out
+    global canvas,out
     out = F
     if F.p == None:
         draw(F,side)
@@ -377,9 +403,8 @@ def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,whit
         i = v % len(color)
         canvas.addActor(FormexActor(f,color[i]))
     if side:
-        bbox = F.bbox()
-        canvas.setView(bbox,side)
-    canvas.display()
+        canvas.setView(F.bbox(),side)
+    canvas.update()
 
     
 def execFile(fn):
@@ -416,7 +441,7 @@ def playScript(scr,name="unnamed"):
     if not scriptLock.acquire(False):
         return
     message("Running script (%s)" % name)
-    canvas.updateGL()
+    canvas.update()
     # We need to pass formex globals to the script
     # This would be done automatically if we put this function
     # in the formex.py file. But hen we need to pass other globals
@@ -533,9 +558,11 @@ def GUI():
     f.resize(640,480)
     fmt = qtgl.QGLFormat.defaultFormat()
     fmt.setDirectRendering(options.dri)
+##    print "Overlay?",fmt.hasOverlay()
+##    print "DoubleBuffer?",fmt.doubleBuffer()
     canvas = Canvas(640,480,fmt,f)
-    canvas.clear()
-    canvas.camera.setEye(0,0,5)
+##    canvas.makeCurrent()
+##    print "AutoBufferSwap?",canvas.autoBufferSwap()
     # Put the GL widget inside the frame
     w.setCentralWidget(f)
     return w
@@ -548,9 +575,13 @@ def runApp(args):
     gui = GUI()
     app.setMainWidget(gui)
     gui.show()
-    canvas.show()
-    canvas.clear()
     options.gui = True
+##    #canvas.show()
+##    canvas.clear()
+##    app.flushX()
+##    #canvas.redraw()
+##    qt.QObject.connect(app,qt.PYSIGNAL("clear"),clear)
+##    app.emit(qt.PYSIGNAL("clear"),())
     app.exec_loop()
    
 def main(argv=None):

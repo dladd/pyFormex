@@ -34,7 +34,7 @@ import vector
 def stuur(x,xval,yval,exp=2.5):
     """Returns a nonlinear response on the input x.
 
-    xval and yval should be lists of 3 values: [xmin,x0,xmax], [ymin,y0,yma].
+    xval and yval should be lists of 3 values: [xmin,x0,xmax], [ymin,y0,ymax].
     Together with the exponent exp, they define the response curve as function
     of x. With an exponent > 0, the variation will be slow in the neighbourhood
     of (x0,y0). For values x < xmin or x > xmax, the limit value ymin or ymax
@@ -76,6 +76,13 @@ def drawSphere(s,color=cyan,ndiv=8):
     GLU.gluSphere(quad,s,ndiv,ndiv)
 
 
+### Actors ###############################################
+#
+# Actors are anything that can be drawn on an openGL canvas.
+# An actor minimally needs two functions:
+#   bbox() : to calculate the bounding box of the actor.
+#   draw() : to actually draw the actor.
+
 class CubeActor:
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
@@ -83,9 +90,12 @@ class CubeActor:
         self.size = size
         self.color = color
 
-    def display(self):
+    def bbox(self):
+        return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
+
+    def draw(self,wireframe=False):
         """Draw the cube."""
-        GLU.gluCube(self.size,self.color)
+        drawCube(self.size,self.color)
 
 
 class FormexActor(Formex):
@@ -159,37 +169,39 @@ class Canvas(qtgl.QGLWidget):
     """A canvas for OpenGL rendering."""
     
     def __init__(self,w=640,h=480,*args):
-        self.actors = []
-        self.camera = Camera() # default Camera settings are adequate
-        self.dynamic = None    # what action on mouse move
-        self.trl = [0.0,0.0,0.0]  # model
-        self.rot = [0.0,0.0,0.0,1.0]
         qtgl.QGLWidget.__init__(self,*args)
         self.setFocusPolicy(qt.QWidget.StrongFocus)
-        self.resize(w,h)
-        self.glinit("wireframe") # default mode is wireframe
-
+        self.actors = []       # an empty scene
+        self.setBbox()
+        self.wireframe = True
+        self.dynamic = None    # what action on mouse move
+        self.rot = [ 0.,1.,0.,0.]
+        self.makeCurrent()     # set GL context before creating the camera
+        self.camera = Camera()
+        
     # These three are defined by the qtgl API
     def initializeGL(self):
-        """Set up the OpenGL rendering state, and define display list"""
         self.glinit()
-    def repaintGL(self):
-        self.display()
-    def	resizeGL(self,w,h):
-        """Set up the OpenGL view port, matrix mode, etc.
 
-        This will get called automatically on creating the QGLWidget!
-        """
+    def	resizeGL(self,w,h):
         self.resize(w,h)
 
+    def	paintGL(self):
+        self.display()
+
     # The rest are our functions
-    def setGLColor(self,s):
+
+    # our own name for the canvas update function
+    def update(self):
+        self.updateGL()
+
+    def setColor(self,s):
         """Set the OpenGL color to the named color"""
-        self.qglColor(qtgl.QColor(s))
+        self.qglColor(qt.QColor(s))
 
     def clearGLColor(self,s):
         """Clear the OpenGL widget with the named background color"""
-        self.qglClearColor(qtgl.QColor(s))
+        self.qglClearColor(qt.QColor(s))
 
     def glinit(self,mode="wireframe"):
 	GL.glClearColor(*RGBA(mediumgrey))# Clear The Background Color
@@ -219,27 +231,30 @@ class Canvas(qtgl.QGLWidget):
             #print "set up materials"
             GL.glEnable(GL.GL_COLOR_MATERIAL)
             GL.glColorMaterial ( GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE )
-        GL.glFinish()
-        #print "set up camera"
-	self.camera.loadProjection()
-        self.loadModelMatrix()
 
-    def loadModelMatrix(self):
-        """Load the model transformation matrix"""
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        GL.glTranslatef(*self.trl)
+    def applyModelMatrix(self):
+        """Apply the model transformation matrix on top of existing matrix"""
+        print "Camera data'",self.camera.data
+        print "Extra rotation is ",self.rot
+        tr=self.camera.getCenter()
+        GL.glTranslatef(tr[0],tr[1],tr[2])
         GL.glRotatef(*self.rot)
+##        GL.glRotatef(self.rot[2], 0.0, 0.0, 1.0)
+##        GL.glRotatef(self.rot[0], 1.0, 0.0, 0.0)
+##        GL.glRotatef(self.rot[1], 0.0, 1.0, 0.0)
+        GL.glTranslatef(-tr[0],-tr[1],-tr[2])
 
-##    def setViewingVolume(self,bbox):
-##        print "bbox=",bbox
-##        x0,y0,z0 = bbox[0]
-##        x1,y1,z1 = bbox[1]
-##        corners = [[x,y,z] for x in [x0,x1] for y in [y0,y1] for z in [z0,z1]]
-##        #self.camera.lookAt(array(corners))
-##        #print self.camera.center,self.camera.eye
-##        #self.camera.setProjection()
-
+    def setBbox(self,bbox=None):
+        """Set the bounding box of the scene you want to be visible."""
+        # TEST: use last actor
+        if bbox:
+            self.bbox = bbox
+        else:
+            if len(self.actors) > 0:
+                self.bbox = self.actors[-1].bbox()
+            else:
+                self.bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
+        print "canvas.bbox=",self.bbox
          
     def addActor(self,actor):
         """Add an actor to the scene."""
@@ -261,6 +276,7 @@ class Canvas(qtgl.QGLWidget):
         for a in self.actors:
             GL.glDeleteLists(a.list,1)
         self.actors = []
+        self.setBbox()
 
     def recreateActor(self,actor):
         """Recreate an actor in the scene"""
@@ -288,7 +304,6 @@ class Canvas(qtgl.QGLWidget):
         self.makeCurrent()
 	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
-        self.updateGL()
 
     def display(self):
         """(Re)display all the actors in the scene.
@@ -300,11 +315,10 @@ class Canvas(qtgl.QGLWidget):
 	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
         self.camera.loadProjection()
-        GL.glLoadIdentity()
         self.camera.loadMatrix()
+##        self.applyModelMatrix()
         for i in self.actors:
             GL.glCallList(i.list)
-        self.updateGL()
         
     def resize (self,w,h):
         self.makeCurrent()
@@ -315,82 +329,109 @@ class Canvas(qtgl.QGLWidget):
         self.camera.setLens(aspect=self.aspect)
         self.display()
 
-    def setView(self,bbox,side='front'):
-        """Sets the camera looking at one of the sides of the bbox"""
+    def setView(self,bbox=None,side='front'):
+        """Sets the camera looking at one of the sides of the bbox.
+
+        If a bbox is specified, 
+        If no bbox is specified, the current scene bbox will be used.
+        If no current bbox has been set, it will be calculated as the
+        bbox of the whole scene.
+        The view side can be one of the predefined sides. If none is
+        given, 'front' is used.
+        """
         self.makeCurrent()
-        center = (bbox[0]+bbox[1])/2
+        if bbox == None:
+            bbox = self.bbox
+        else:
+            self.bbox = bbox
+        center,size = centerDiff(*bbox)
+        print "Setting view for bbox",bbox
+        print "center=",center
+        print "size=",size
         self.camera.setCenter(*center)
-        size = bbox[1]-bbox[0]
-        # print "size=",size
         if side == 'front':
             hsize,vsize,depth = size[0],size[1],size[2]
-            long,lat = 0.,0.
+            lat,long = 0.,0.
         elif side == 'back':
             hsize,vsize,depth = size[0],size[1],size[2]
-            long,lat = 180.,0.
+            lat,long = 180.,0.
         elif side == 'right':
             hsize,vsize,depth = size[2],size[1],size[0]
-            long,lat = 90.,0.
+            lat,long = 90.,0.
         elif side == 'left':
             hsize,vsize,depth = size[2],size[1],size[0]
-            long,lat = 270.,0.
+            lat,long = 270.,0.
         elif side == 'top':
             hsize,vsize,depth = size[0],size[2],size[1]
-            long,lat = 0.,90.
+            lat,long = 0.,90.
         elif side == 'bottom':
             hsize,vsize,depth = size[0],size[2],size[1]
-            long,lat = 0.,-90.
+            lat,long = 0.,-90.
         elif side == 'iso':
             hsize = vsize = depth = vector.distance(bbox[1],bbox[0])
-            long,lat = 45.,45.
+            lat,long = 45.,45.
         # go to a distance to have a good view with a 45 degree angle lens
         dist = max(0.6*depth, 1.5*max(hsize/self.aspect,vsize))
-        self.camera.setEye(long,lat,dist)
+        print "dist = ",dist
+        self.camera.setEye(lat,long,dist)
+        self.camera.setTwist(0.)
         self.camera.setLens(45.,self.aspect)
-        self.camera.setClip(0.1*dist,10*dist)
-        self.camera.loadProjection()
+        self.camera.setClip(0.01*dist,100*dist)
 
+
+    def zoom(self,f):
+        self.camera.setDistance(f*self.camera.getDist())
 
     def dyna(self,x,y):
         """Perform dynamic zoom/pan/rotation functions"""
         w,h = self.width(),self.height()
-        if self.dynamic == "zoom":
+        if self.dynamic == "rotate":
+            # hor movement sets azimuth
+            a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
+            # vert movement sets elevation
+            e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
+            self.camera.setDirection(self.state[0] - a,self.state[1] + e)
+        elif self.dynamic == "trirotate":
+            # set all three rotations from mouse movement
+            x0 = [self.statex-w/2, self.statey-h/2,0] # initial vector
+            dx = [x-self.statex, y-self.statey,0]     # movement
+            x1 = [x-w/2, y-h/2,0]           # new vector
+            a0 = math.atan2(x0[0],x0[1])
+            a1 = math.atan2(x1[0],x1[1])
+            an = (a1-a0) / math.pi * 180
+            # tangential movement set twist
+            # but not if to close to center
+##            d = vector.length(x1)
+##            if d < h/8:
+##                ds = 0
+##            else:
+##                ds = stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
+##            print "ds = ",ds
+##            self.camera.setTwist(self.state[2] - an*ds)
+            # radial movement rotates around vector in lens plane
+            b = -vector.projection(dx,x0)
+            self.rot[0] = stuur(b,[-2*h,0,2*h],[-360,0,+360],1.5)
+            self.rot[1:4] = self.state[0:3]
+        elif self.dynamic == "pan":
+            dist = self.camera.getDistance() * 0.5
+            # hor movement sets x value of center
+            # vert movement sets y value of center
+            panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
+            pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
+            self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
+        elif self.dynamic == "zoom":
             # hor movement is lens zooming
-            f = stuur(x,[0,self.statex,w],[180,self.statef,0],1.5)
+            f = stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
             self.camera.setLens(f)
-            self.display()
         elif self.dynamic == "combizoom":
             # hor movement is lens zooming
-            f = stuur(x,[0,self.statex,w],[180,self.state[1],0],1.5)
+            f = stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             self.camera.setLens(f)
             # vert movement is dolly zooming
-            d = stuur(y,[0,self.statey,h],[0.1,1,10],1.5)
+            d = stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
             self.camera.setDistance(d*self.state[0])
-            self.display()
-        elif self.dynamic == "rotate":
-            # hor movement sets azimuth
-            a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
-            # vert movement sets elevation
-            e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
-            self.camera.setDirection(self.state[0] - a,self.state[1] + e)
-            self.display()
-        elif self.dynamic == "trirotate":
-            cx,cy = w/2,h/2
-            # hor movement sets azimuth
-            a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
-            # vert movement sets elevation
-            e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
-            self.camera.setDirection(self.state[0] - a,self.state[1] + e)
-            self.display()
-        elif self.dynamic == "pan":
-            dist = self.camera.getDistance()
-            # hor movement sets x value of center
-            panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
-            # vert movement sets y value of center
-            pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
-            self.camera.ctr[0] = self.state[0] - panx
-            self.camera.ctr[1] = self.state[1] + pany
-            self.display()
+        self.update()
+
 
     ## Een ENTER keypress in het teken canvas stuurt een wakeup event.
     ## Dit kan bijvoorbeeld gebruikt worden om een wait af te breken.
@@ -401,11 +442,25 @@ class Canvas(qtgl.QGLWidget):
         e.ignore()
         
     def mousePressEvent(self,e):
+        # Remember the place of the click
         self.statex = e.x()
         self.statey = e.y()
+        self.camera.loadMatrix()
+        self.rot = [ 0.,1.,0.,0.]
+        # Other initialisations for the mouse move actions are done here 
         if e.button() == qt.Qt.LeftButton:
             self.dynamic = "trirotate"
-            self.state = self.camera.getEye()
+            # the vector from the screen center to the clicked point
+            print "x,y=",self.statex,self.statey
+            v = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
+            print "v=",v
+            # rotate vector 90 degrees around z-axis
+            v = [ v[1], -v[0], v[2] ]
+            print "vrot=",v
+            dist = vector.length(v)
+            nv = self.camera.toWorld(v)
+            self.state = nv + [ dist ]
+            print "State:",nv,dist,self.state
         elif e.button() == qt.Qt.MidButton:
             self.dynamic = "pan"
             self.state = self.camera.getCenter()
@@ -414,6 +469,9 @@ class Canvas(qtgl.QGLWidget):
             self.state = [self.camera.getDistance(),self.camera.fovy]
         
     def mouseReleaseEvent(self,e):
+        if self.dynamic == "trirotate":
+            self.camera.saveMatrix()          
+            self.rot = [ 0.,1.,0.,0.]
         self.dynamic = None
         
     def mouseMoveEvent(self,e):

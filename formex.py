@@ -12,6 +12,7 @@
 
 from numarray import *
 import math
+import vector
 
 ###########################################################################
 ##
@@ -318,19 +319,19 @@ class Formex:
         """Return the boundary box of the Formex"""
         min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
         max = [ self.f[:,:,i].max() for i in range(self.f.shape[2]) ]
-        return array([min, max]) 
+        return [min, max]
 
     def center(self):
         """Return the center of the Formex"""
         min,max = self.bbox()
-        return [ (min[i]+max[i])/2 for i in range(self.grade()) ]
+        return vector.midPoint(min,max)
 
     def size(self):
         """Return the size of the Formex.
 
         The size is the length of the diagonal of the bbox"""
         min,max = self.bbox()
-        return length(max-min)
+        return vector.distance(min,max)
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""

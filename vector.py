@@ -59,8 +59,21 @@ def pointOf (v,w,pos=0.5):
     """Return the point on the line v-w defined by the relative coordinate pos.
 
     v has pos 0, w has pos 1. For values 0..1 the point lies between v and w.
+    If the pos argument is omitted, the midpoint between v and w is returned.
     """
     return add(v, scale(diff(w,v),pos))
+
+def midPoint (v,w):
+    """Return the center point of the line v-w.
+
+    This is the same as pointOf(v,w,0.5), but cheaper.
+    """
+    return scale(add(v,w),0.5)
+
+def centerDiff (v,w):
+    """Return the center point and the difference of the line v-w."""
+    d = diff(w,v)
+    return [ add(v, scale(d,0.5)), d ]
 
 def dotpr (v,w):
     """Return the dot product of vectors v and w"""
@@ -71,16 +84,16 @@ def cosAngle (v,w):
     return dotpr(v,w)/length(v)/length(w)
 
 def projection(v,w):
-    """Return the length of the projection of vector v on vector w."""
+    """Return the (signed) length of the projection of vector v on vector w."""
     return dotpr(v,w)/length(w)
 
 def parallel(v,w):
     """Returns the part of vector v that is parallel to vector w"""
-    return projection(v,w)*unitvector(w)
+    return scale(unitvector(w),projection(v,w))
 
 def orthogonal(v,w):
     """Returns the part of vector v that is orthogonal to vector w"""
-    return v-projection(v,w)*unitvector(w)
+    return v-parallel(v,w)
 
 def cross (v,w):
     """Return the cross product of two vectors."""
@@ -114,7 +127,7 @@ def cartesianToSpherical (v) :
     return [ longitude, latitude, distance]
 
 def sphericalToCartesian (v) :
-    """Convert spherical coordinates [lat,long,dist] to cartesian [x,y,z]"""
+    """Convert spherical coordinates [long,lat,dist] to cartesian [x,y,z]"""
     long = math.radians(v[0])
     lat = math.radians(v[1])
     return scale ([ math.cos(lat)*math.sin(long), math.sin(lat), math.cos(lat)*math.cos(long) ], v[2])
