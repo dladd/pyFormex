@@ -17,3 +17,5 @@
 2004-07-08 BV : Created a first release (0.1.1)
 2004-07-09 BV : Added file replay, moved examples to separate files, 
 		autoload example menu, added saving of images
+2004-07-14 BV : Made the cylindrical and spherical transforms more general,
+		Reorganized the subversion repository

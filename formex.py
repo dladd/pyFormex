@@ -56,6 +56,12 @@ def equal(p1,p2,tol=1.e-6):
 # and preceded by a 'F:'. Similar concepts in Finite Element terminology
 # are marked with 'FE:'.
 
+# PITFALLS:
+# Python by default uses integer math on integer arguments!
+# Therefore: always create the numarray data with type Float32!
+# (this will be mostly in functions array() and zeros()
+#
+
 class Formex:
     """A Formex is a numarray of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
@@ -347,36 +353,48 @@ class Formex:
         """Converts from cylindrical to cartesian after scaling.
 
         dir specifies which coordinates are interpreted as resp.
-        distance(r), longitude(theta) and height(z).
-        scale will scale the coordinate values prior to the transformation
+        distance(r), angle(theta) and height(z).
+        scale will scale the coordinate values prior to the transformation.
+        angle is then interpreted as degrees.
         """
-        f = zeros(self.f.shape)
+        f = zeros(self.f.shape,type=Float32)
         r = scale[0] * self.f[:,:,dir[0]]
         theta = math.radians(scale[1]) * self.f[:,:,dir[1]]
         f[:,:,0] = r*cos(theta)
         f[:,:,1] = r*sin(theta)
-        f[:,:,2] = b3
+        f[:,:,2] = scale[2] *  self.f[:,:,dir[2]]
         return Formex(f)
     
-    def spherical(self,b1,b2,b3):
+    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
         """Converts from spherical to cartesian after scaling.
 
-        The first coordinate is the distance,
-        the second is the colatitude (elevation measured from 0 in the zenit,
-        the third is the longitude
+        <dir> specifies which coordinates are interpreted as resp.
+        distance(r), longitude(theta) and colatitude(phi).
+        <scale> will scale the coordinate values prior to the transformation.
+        Angles are then interpreted in degrees.
+        Colatitude is 90 degrees - latitude, i.e. the elevation angle measured
+        from north pole(0) to south pole(180). This choice facilitates the
+        creation of spherical domes.
         """
-        f = copy.deepcopy(self.f)
-        r = b1*f[:,:,0]
-        s = math.radians(b2)*f[:,:,1]
-        t = math.radians(b3)*f[:,:,2]
-        rc = r*sin(t)
-        f[:,:,0] = rc*cos(s)
-        f[:,:,1] = rc*sin(s)
-        f[:,:,2] = r*cos(t)
+        f = zeros(self.f.shape,type=Float32)
+        r = scale[0] * self.f[:,:,dir[0]]
+        theta = math.radians(scale[1]) * self.f[:,:,dir[1]]
+        phi = math.radians(scale[2]) * self.f[:,:,dir[2]]
+        rc = r*sin(phi)
+        f[:,:,0] = rc*cos(theta)
+        f[:,:,1] = rc*sin(theta)
+        f[:,:,2] = r*cos(phi)
         return Formex(f)
       
     def unique(self):
-        """Return a formex which holds only the unique cantles."""
+        """Return a formex which holds only the unique elements."""
+        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+        return Formex(self.f)
+      
+    def nonzero(self):
+        """Return a formex which holds only the nonzero elements.
+
+        A zero element is an element where all nodes are equal."""
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
         return Formex(self.f)
 
@@ -475,7 +493,7 @@ class Formex:
         Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
         is equivalent with E.scale([2,3,4])
         """
-        f = zeros(self.f.shape)
+        f = zeros(self.f.shape,type=Float32)
         f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
         return Formex(f)
 
@@ -488,7 +506,7 @@ class Formex:
         """
         f = copy.deepcopy(self.f.shape)
         for k in range(len(i)):
-            f[:,:,i[i]],f[:,:,1],f[:,:,2] = self.f[:,:,0],self.f[:,:,1],self.f[:,        
+            f[:,:,i[k]] = self.f[:,:,j[k]]
 
     def map1(self,func):
         """Return a Formex where each coordinate is mapped by a 1-D function.
@@ -502,7 +520,7 @@ class Formex:
         numarray module.
         This method is one of several mapping methods. See also map and mapd.
         """
-        f = zeros(self.f.shape)
+        f = zeros(self.f.shape,type=Float32)
         for i in range(3):
             f[:,:,i] = func[i](self.f[:,:,i])
         return Formex(f)
@@ -599,13 +617,13 @@ class Formex:
         return self.scale([b1,b2,1.])
 
     def bc(self,b1,b2,b3):
-        return self.cylindrical(b1,b2,b3)
+        return self.cylindrical(scale=[b1,b2,b3])
 
     def bp(self,b1,b2):
-        return self.cylindrical(b1,b2,1.)
+        return self.cylindrical(scale=[b1,b2,1.])
 
     def bs(self,b1,b2,b3):
-        return self.spherical(b1,b2,b3)
+        return self.spherical(scale=[b1,b2,b3])
 
     pex = unique
     tic = int
