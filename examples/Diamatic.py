@@ -33,4 +33,3 @@ def toSector(f):
 #out = toSector(top)#.rosette(4,0,[0,0,0],45.)
 out = top + toSector(top)
 draw(top)
-draw(bot)

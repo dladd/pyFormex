@@ -111,7 +111,7 @@ MenuData = [
         ("Action","Rotate &Up","rotUp"),
         ("Action","Rotate &Down","rotDown"),  ]),
     ("Popup","&Help",[
-        ("Action","&Help","Help"),
+        ("Action","&Help","help"),
         ("Action","&About","about"), 
         ("Action","&Warning","testwarning"), ])]
 
@@ -160,16 +160,21 @@ def runExample(i):
     replay(os.path.join(dirname,"examples",examples[i]))
 
 
+out=None
+
 # Actions
 
 def NotImplemented():
     warning("This option has not been implemented yet!")
-
-Help = NotImplemented
+    
 save = NotImplemented
 saveAs = NotImplemented
 record = NotImplemented
-out=None
+
+def help():
+    """Start up the help browser"""
+    help = QTextBrowser()
+    help.setSource('doc/html/formex.py')
 
 def about():
     about = QMessageBox()
@@ -412,7 +417,7 @@ def GUI():
     
 def runApp(args):
     global app,canvas
-    app = QApplication(sys.argv)
+    app = QApplication(args)
     QObject.connect(app,SIGNAL("lastWindowClosed()"),app,SLOT("quit()"))
     # create GUI
     gui = GUI()
