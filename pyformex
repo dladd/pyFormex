@@ -19,10 +19,13 @@ import sys,time,os.path,string
 import threading
 import qt
 
+
 global config
 config={}
-config['sleeptime']=1 # default time (sec.) to sleep (None is indefinitely)
-config['localaxes']=True # by default, buttons rotate/translate in local axes
+
+global out
+out=None
+
  
 class FileSelectionDialog(qt.QFileDialog):
     """A file selection dialog widget.
@@ -160,8 +163,8 @@ def view(v):
 # Examples Menu
 def insertExampleMenu():
     """Insert the examples menu in the menudata."""
-    global startdir,example
-    dir = os.path.join(startdir,"examples")
+    global config,example
+    dir = os.path.join(config['pyformexdir'],"examples")
     if os.path.isdir(dir):
         example = filter(lambda s:s[-3:]==".py" and s[0]!='.',os.listdir(dir))
     example.sort()
@@ -174,8 +177,8 @@ def insertExampleMenu():
 
 def runExample(i):
     """Run example i from the list of found examples."""
-    global startdir,example
-    playFile(os.path.join(startdir,"examples",example[i]))
+    global config,example
+    playFile(os.path.join(config['pyformexdir'],"examples",example[i]))
 
 
 def runExamples(n):
@@ -184,10 +187,25 @@ def runExamples(n):
         runExample(i)
 
 
-# add rotate buttons to toolbar
-def addRotateButtons():
-    global app,tool,startdir
-    dir = os.path.join(startdir,"icons")
+# add action buttons to toolbar
+def addActionButtons():
+    global config,tool,action
+    action = {}
+    dir = os.path.join(config['pyformexdir'],"icons")
+    buttons = [ [ "Step", "next.xbm", wakeup, False ],
+                [ "Continue", "ff.xbm", kill, False ],
+              ]
+    for b in buttons:
+        a = qt.QAction(b[0],qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[1],0,tool)
+        qt.QObject.connect(a,qt.SIGNAL("activated()"),b[2])
+        a.addTo(tool)
+        a.setEnabled(b[3])
+        action[b[0]] = a
+
+# add camera buttons to toolbar (repeating)
+def addCameraButtons():
+    global config,tool
+    dir = os.path.join(config['pyformexdir'],"icons")
     buttons = [ [ "Rotate left", "rotleft.xbm", rotLeft ],
                 [ "Rotate right", "rotright.xbm", rotRight ],
                 [ "Rotate up", "rotup.xbm", rotUp ],
@@ -199,8 +217,16 @@ def addRotateButtons():
                 [ "Translate down", "down.xbm", transDown ],
                 [ "Translate up", "up.xbm", transUp ],
                 [ "Zoom In", "zoomin.xbm", zoomIn ],
-                [ "Zoom Out", "zoomout.xbm", zoomOut ],
-                [ "Front View", "frontview.xbm", frontView ],
+                [ "Zoom Out", "zoomout.xbm", zoomOut ],  ]
+    for b in buttons:
+        w = qt.QToolButton(qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[0],"",b[2],tool)
+        w.setAutoRepeat(True)
+
+# add view buttons to toolbar (non-repeating)
+def addViewButtons():
+    global config,tool
+    dir = os.path.join(config['pyformexdir'],"icons")
+    buttons = [ [ "Front View", "frontview.xbm", frontView ],
                 [ "Back View", "backview.xbm", backView ],
                 [ "Left View", "leftview.xbm", leftView ],
                 [ "Right View", "rightview.xbm", rightView ],
@@ -209,26 +235,10 @@ def addRotateButtons():
                 [ "Iso View", "isoview.xbm", isoView ]  ]
     for b in buttons:
         w = qt.QToolButton(qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[0],"",b[2],tool)
-        w.setAutoRepeat(True)
 
-# Action buttons (inserted in a toolbar)
-def insertActions():
-    global tool,action,startdir
-    action = {}
-    dir = os.path.join(startdir,"icons")
-    buttons = [ [ "Step", "next.xbm", wakeup, False ],
-                [ "Continue", "ff.xbm", kill, False ],
-              ]
-    for b in buttons:
-        a = qt.QAction(b[0],qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[1],0,tool)
-        qt.QObject.connect(a,qt.SIGNAL("activated()"),b[2])
-        a.addTo(tool)
-        a.setEnabled(b[3])
-        action[b[0]] = a
 
-out=None
-
-# Actions
+# Actions (these are just python functions)
+# ??? Can we use python functions with arguments ???
 
 def NotImplemented():
     warning("This option has not been implemented yet!")
@@ -263,16 +273,6 @@ def warning(s):
         print s
 
 
-##def save():
-##    global renwin,savefile
-##    SaveRendering(renwin,savefile)
-##def saveAs():
-##    global renwin,savefile
-##    fs = FileSelectionDialog(savefile.getPattern())
-##    fn = fs.getFilename()
-##    if fn:
-##        savefile.setPattern(fn)
-##        SaveRendering(renwin,savefile)
 def saveImage():
     """Save the current rendering in image format."""
     global canvas
@@ -311,11 +311,11 @@ def printglobals():
 
 def zoomIn():
     global canvas,config
-    canvas.zoom(0.8)
+    canvas.zoom(1./config['zoomfactor'])
     canvas.update()
 def zoomOut():
     global canvas,config
-    canvas.zoom(1.25)
+    canvas.zoom(config['zoomfactor'])
     canvas.update()
 ##def panRight():
 ##    global canvas,config
@@ -335,51 +335,51 @@ def zoomOut():
 ##    canvas.update()   
 def rotRight():
     global canvas,config
-    canvas.camera.rotate(+5,0,1,0)
+    canvas.camera.rotate(+config['rotfactor'],0,1,0)
     canvas.update()   
 def rotLeft():
     global canvas,config
-    canvas.camera.rotate(-5,0,1,0)
+    canvas.camera.rotate(-config['rotfactor'],0,1,0)
     canvas.update()   
 def rotUp():
     global canvas,config
-    canvas.camera.rotate(-5,1,0,0)
+    canvas.camera.rotate(-config['rotfactor'],1,0,0)
     canvas.update()   
 def rotDown():
     global canvas,config
-    canvas.camera.rotate(+5,1,0,0)
+    canvas.camera.rotate(+config['rotfactor'],1,0,0)
     canvas.update()   
 def twistLeft():
     global canvas,config
-    canvas.camera.rotate(+5,0,0,1)
+    canvas.camera.rotate(+config['rotfactor'],0,0,1)
     canvas.update()   
 def twistRight():
     global canvas,config
-    canvas.camera.rotate(-5,0,0,1)
+    canvas.camera.rotate(-config['rotfactor'],0,0,1)
     canvas.update()   
 def transLeft():
     global canvas,config
-    canvas.camera.translate(-5,0,0,config['localaxes'])
+    canvas.camera.translate(-config['panfactor'],0,0,config['localaxes'])
     canvas.update()   
 def transRight():
     global canvas,config
-    canvas.camera.translate(5,0,0,config['localaxes'])
+    canvas.camera.translate(config['panfactor'],0,0,config['localaxes'])
     canvas.update()   
 def transDown():
     global canvas,config
-    canvas.camera.translate(0,-5,0,config['localaxes'])
+    canvas.camera.translate(0,-config['panfactor'],0,config['localaxes'])
     canvas.update()   
 def transUp():
     global canvas,config
-    canvas.camera.translate(0,5,0,config['localaxes'])
+    canvas.camera.translate(0,config['panfactor'],0,config['localaxes'])
     canvas.update()   
 def dollyIn():
     global canvas,config
-    canvas.camera.dolly(0.8)
+    canvas.camera.dolly(1./config['zoomfactor'])
     canvas.update()   
 def dollyOut():
     global canvas,config
-    canvas.camera.dolly(1.25)
+    canvas.camera.dolly(config['zoomfactor'])
     canvas.update()   
 
 def frontView():
@@ -604,10 +604,11 @@ def message(s):
     theMessage.setText(qt.QString(s))
 
 def GUI():
-    global canvas,statusbar,theMessage,menu,tool, options
+    global canvas,statusbar,theMessage,menu,tool, options,config
+    wd,ht = (config['width'],config['height'])
     w = qt.QMainWindow()
     w.setCaption(Version)
-    w.resize(640,480)
+    w.resize(wd,ht)
     # add widgets to the main window
     statusbar = w.statusBar()
     theMessage = qt.QLabel(statusbar)
@@ -618,19 +619,22 @@ def GUI():
     insertExampleMenu()
     AddMenuItems(menu,MenuData)
     tool = qt.QToolBar(w)
-    insertActions()
-    addRotateButtons()
+    addActionButtons()
+    if config['camerabuttons']:
+        addCameraButtons()
+    if config['viewbuttons']:
+        addViewButtons()
     # Create a nice frame to put around the OpenGL widget
     # Create our display widget
     f = qt.QHBox(w, "frame")
     f.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
     f.setLineWidth(2)
-    f.resize(640,480)
+    f.resize(wd,ht)
     fmt = qtgl.QGLFormat.defaultFormat()
     fmt.setDirectRendering(options.dri)
 ##    print "Overlay?",fmt.hasOverlay()
 ##    print "DoubleBuffer?",fmt.doubleBuffer()
-    canvas = Canvas(640,480,fmt,f)
+    canvas = Canvas(wd,ht,fmt,f)
 ##    canvas.makeCurrent()
 ##    print "AutoBufferSwap?",canvas.autoBufferSwap()
     # Put the GL widget inside the frame
@@ -656,11 +660,11 @@ def runApp(args):
    
 def main(argv=None):
     """This is a fairly generic main() function"""
-    global options,startdir
+    global options,config
     # this allows us to call main from the interpreter
     if argv is None:
         argv = sys.argv
-    startdir = os.path.dirname(os.path.realpath(argv[0]))
+    config['pyformexdir'] = os.path.dirname(os.path.realpath(argv[0]))
     #process options
     from optparse import OptionParser,make_option
     parser = OptionParser(
@@ -673,6 +677,14 @@ def main(argv=None):
                     action="store_true", dest="debug", default=False)
         ])
     (options, args) = parser.parse_args()
+    # Read the config file
+    for f in [".pyformexrc", \
+              os.path.join(os.environ['HOME'],".pyformexrc"), \
+              os.path.join(config['pyformexdir'],"pyformexrc"), \
+              "/usr/local/lib/pyformexrc"]:
+        if os.path.exists(f):
+            execfile(f)
+            break
     # Run the application
     return runApp(args)
 

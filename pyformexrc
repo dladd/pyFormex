@@ -1,0 +1,16 @@
+# This is the default pyFormex config file
+# Copy it to ~/.pyformexrc if you want to make changes
+#
+# The config is a Python dictionary and this file be legal Python
+# All config settings should be of the form config[key]=value
+#
+config['width']=1000     # default window width
+config['height']=750     # default window height
+config['sleeptime']=1    # default time (sec.) to sleep (None is indefinitely)
+config['localaxes']=True     # by default, buttons rotate/pan in local axes
+config['camerabuttons']=True # add camera buttons to toolbar
+config['viewbuttons']=True   # add view buttons to toolbar
+config['examplesmenu']=True  # add examples menu
+config['zoomfactor']=1.25    # zooming factor for zoom buttons
+config['rotfactor']=5.       # rotation angle for rotation buttons
+config['panfactor']=5.       # translation factor for pan buttons
