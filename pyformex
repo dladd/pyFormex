@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
 """pyformex is a python implementation of Formex algebra"""
@@ -16,6 +17,7 @@ from canvas import *
 
 import sys,time,os.path,string
 import threading
+import qt
 
  
 class FileSelectionDialog(qt.QFileDialog):
@@ -149,31 +151,44 @@ def view(v):
 # Examples Menu
 def insertExampleMenu():
     """Insert the examples menu in the menudata."""
-    global dirname,example
-    dir = os.path.join(dirname,"examples")
+    global startdir,example
+    dir = os.path.join(startdir,"examples")
     if os.path.isdir(dir):
         example = filter(lambda s:s[-3:]==".py" and s[0]!='.',os.listdir(dir))
     example.sort()
     vm = ("Popup","&Examples",[
         ("VAction","&%s"%os.path.splitext(t)[0],("runExample",i)) for i,t in enumerate(example)
         ])
+    nEx = len(vm[2])
+    vm[2].append(("VAction","Run All Examples",("runExamples",nEx)))
     MenuData.insert(4,vm)
 
 def runExample(i):
     """Run example i from the list of found examples."""
-    global dirname,example
-    playFile(os.path.join(dirname,"examples",example[i]),example[i])
+    global startdir,example
+    playFile(os.path.join(startdir,"examples",example[i]))
+
+
+def runExamples(n):
+    """Run the first n examples."""
+    for i in range(n):
+        runExample(i)
 
 # Action buttons (should be put in a toolbar)
 def insertActions():
-    global tool,action
+    global tool,action,startdir
     action = {}
-    #print 
-    a = qt.QAction("Continue",qt.QIconSet(qt.QPixmap("next.xpm")),"Continue",0,tool)
-    qt.QObject.connect(a,qt.SIGNAL("activated()"),wakeup)
-    a.addTo(tool)
-    a.setEnabled(False)
-    action['Continue'] = a
+    dir = os.path.join(startdir,"icons")
+    print dir
+    print os.listdir(dir)
+    buttons = [ [ "Step", "next.xpm", wakeup ],
+                [ "Continue", "ff.xpm", kill ] ]
+    for b in buttons:
+        a = qt.QAction(b[0],qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[1],0,tool)
+        qt.QObject.connect(a,qt.SIGNAL("activated()"),b[2])
+        a.addTo(tool)
+        a.setEnabled(False)
+        action[b[0]] = a
 
 out=None
 
@@ -196,9 +211,9 @@ def about():
     about.about(about,"About pyFormex",
         Version+"\n\n"
         "pyFormex is a python implementation of Formex algebra\n\n"
+        "http://pyformex.berlios.de\n\n"
         "Copyright 2004 Benedict Verhegghe\n"
         "Distributed under the GNU General Public License.\n\n"
-        "Downloads available from ftp://mecatrix.ugent.be/pub/pyformex\n\n"
         "For help or information, mailto benedict.verhegghe@ugent.be\n" )
 
 def testwarning():
@@ -366,6 +381,19 @@ def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,whit
         canvas.setView(bbox,side)
     canvas.display()
 
+    
+def execFile(fn):
+    """Play a pyformex script from file fn."""
+    execScript(file(fn))
+    
+def execScript(scr):
+    """Play a pyformex script scr. scr should be a valid Python text.
+
+    This function executes the script with 
+    """
+    g = globals()
+    g.update(Formex.globals())
+    exec scr in g
 
 def playFile(fn,name=None):
     """Play a formex script from file fn."""
@@ -387,7 +415,7 @@ def playScript(scr,name="unnamed"):
     # (We only allow one script executing at a time!)
     if not scriptLock.acquire(False):
         return
-    status("Running script (%s)" % name)
+    message("Running script (%s)" % name)
     canvas.updateGL()
     # We need to pass formex globals to the script
     # This would be done automatically if we put this function
@@ -398,10 +426,10 @@ def playScript(scr,name="unnamed"):
     g = globals()
     g.update(Formex.globals())
     try:
-        exec(scr,g)
+        exec scr in g
     finally:
         scriptLock.release() # release the lock in case of an error
-    status("Finished script")
+    message("Finished script")
     if wakeupMode > 2:
         exit()
     if wakeupMode < 2:
@@ -430,12 +458,14 @@ def sleep(timeout=None):
         timer = None
     # go into sleep mode
     sleeping = True
+    action['Step'].setEnabled(True)
     action['Continue'].setEnabled(True)
     ## while sleeping, we have to process events
     ## (we could start another thread for this)
     while sleeping:
         app.processEvents()
         time.sleep(0.1)
+    action['Step'].setEnabled(False)
     action['Continue'].setEnabled(False)
     # ignore further wakeup events
     qt.QObject.disconnect(canvas,qt.PYSIGNAL("wakeup"),wakeup)
@@ -474,19 +504,21 @@ def exit():
     else: # the gui didn't even start
         sys.exit(0)
 
-def status(s):
-    """Display a message in the status line"""
-    global statusbar
-    statusbar.message(s)
+def message(s):
+    """Display a permanent message in the status line."""
+    global theMessage
+    theMessage.setText(qt.QString(s))
 
 def GUI():
-    global canvas,statusbar,menu,tool, options
+    global canvas,statusbar,theMessage,menu,tool, options
     w = qt.QMainWindow()
     w.setCaption(Version)
     w.resize(640,480)
     # add widgets to the main window
     statusbar = w.statusBar()
-    statusbar.message(Version+" (c) B. Verhegghe")
+    theMessage = qt.QLabel(statusbar)
+    statusbar.addWidget(theMessage)
+    message(Version+" (c) B. Verhegghe")
     menu = w.menuBar()
     insertViewMenu()
     insertExampleMenu()
@@ -503,7 +535,7 @@ def GUI():
     fmt.setDirectRendering(options.dri)
     canvas = Canvas(640,480,fmt,f)
     canvas.clear()
-    canvas.camera.setPos(0,0,5)
+    canvas.camera.setEye(0,0,5)
     # Put the GL widget inside the frame
     w.setCentralWidget(f)
     return w
@@ -523,11 +555,11 @@ def runApp(args):
    
 def main(argv=None):
     """This is a fairly generic main() function"""
-    global options,dirname
+    global options,startdir
     # this allows us to call main from the interpreter
     if argv is None:
         argv = sys.argv
-    dirname = os.path.dirname(os.path.realpath(argv[0]))
+    startdir = os.path.dirname(os.path.realpath(argv[0]))
     #process options
     from optparse import OptionParser,make_option
     parser = OptionParser(

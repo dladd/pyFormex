@@ -1,10 +1,11 @@
 # canvas.py
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
@@ -320,6 +321,7 @@ class Canvas(qtgl.QGLWidget):
         center = (bbox[0]+bbox[1])/2
         self.camera.setCenter(*center)
         size = bbox[1]-bbox[0]
+        # print "size=",size
         if side == 'front':
             hsize,vsize,depth = size[0],size[1],size[2]
             long,lat = 0.,0.
@@ -343,7 +345,7 @@ class Canvas(qtgl.QGLWidget):
             long,lat = 45.,45.
         # go to a distance to have a good view with a 45 degree angle lens
         dist = max(0.6*depth, 1.5*max(hsize/self.aspect,vsize))
-        self.camera.setPos(long,lat,dist)
+        self.camera.setEye(long,lat,dist)
         self.camera.setLens(45.,self.aspect)
         self.camera.setClip(0.1*dist,10*dist)
         self.camera.loadProjection()
@@ -370,8 +372,7 @@ class Canvas(qtgl.QGLWidget):
             a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
             # vert movement sets elevation
             e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
-            self.camera.pos[0] = self.state[0] - a
-            self.camera.pos[1] = self.state[1] + e
+            self.camera.setDirection(self.state[0] - a,self.state[1] + e)
             self.display()
         elif self.dynamic == "trirotate":
             cx,cy = w/2,h/2
@@ -379,11 +380,10 @@ class Canvas(qtgl.QGLWidget):
             a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
             # vert movement sets elevation
             e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
-            self.camera.pos[0] = self.state[0] - a
-            self.camera.pos[1] = self.state[1] + e
+            self.camera.setDirection(self.state[0] - a,self.state[1] + e)
             self.display()
         elif self.dynamic == "pan":
-            dist=self.camera.pos[2]
+            dist = self.camera.getDistance()
             # hor movement sets x value of center
             panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
             # vert movement sets y value of center
@@ -405,13 +405,13 @@ class Canvas(qtgl.QGLWidget):
         self.statey = e.y()
         if e.button() == qt.Qt.LeftButton:
             self.dynamic = "trirotate"
-            self.state = self.camera.pos[0:2]
+            self.state = self.camera.getEye()
         elif e.button() == qt.Qt.MidButton:
             self.dynamic = "pan"
-            self.state = self.camera.ctr[0:2]
+            self.state = self.camera.getCenter()
         elif e.button() == qt.Qt.RightButton:
             self.dynamic = "combizoom"
-            self.state = [self.camera.distance(),self.camera.fovy]
+            self.state = [self.camera.getDistance(),self.camera.fovy]
         
     def mouseReleaseEvent(self,e):
         self.dynamic = None

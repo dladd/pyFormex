@@ -9,14 +9,7 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>camera</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/camera.py">/home/bene/prj/pyformex/camera.py</a></font></td></tr></table>
-    <p><tt>camera&nbsp;0.1&nbsp;(C)&nbsp;Benedict&nbsp;Verhegghe<br>
-&nbsp;<br>
-This&nbsp;class&nbsp;defines&nbsp;a&nbsp;camera&nbsp;for&nbsp;OpenGL&nbsp;rendering.&nbsp;It&nbsp;lets&nbsp;you&nbsp;manipulate<br>
-the&nbsp;camera&nbsp;position&nbsp;and&nbsp;viewing&nbsp;direction&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;lens&nbsp;parameters.<br>
-&nbsp;<br>
-The&nbsp;default&nbsp;camera&nbsp;is&nbsp;at&nbsp;[0,0,1]&nbsp;and&nbsp;aims&nbsp;at&nbsp;point&nbsp;[0,0,0],&nbsp;i.e.&nbsp;looking<br>
-in&nbsp;the&nbsp;-z&nbsp;direction.&nbsp;Near&nbsp;and&nbsp;far&nbsp;clipping&nbsp;planes&nbsp;are&nbsp;by&nbsp;default&nbsp;set&nbsp;to<br>
-0.1,&nbsp;resp&nbsp;10&nbsp;times&nbsp;the&nbsp;camera&nbsp;distance.</tt></p>
+    <p><tt>camera&nbsp;0.1&nbsp;(C)&nbsp;Benedict&nbsp;Verhegghe</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -45,24 +38,37 @@ in&nbsp;the&nbsp;-z&nbsp;direction.&nbsp;Near&nbsp;and&nbsp;far&nbsp;clipping&nb
 <font color="#000000" face="helvetica, arial"><a name="Camera">class <strong>Camera</strong></a></font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>This&nbsp;class&nbsp;defines&nbsp;a&nbsp;camera.<br>
+<td colspan=2><tt>This&nbsp;class&nbsp;defines&nbsp;a&nbsp;camera&nbsp;for&nbsp;OpenGL&nbsp;rendering.<br>
 &nbsp;<br>
-Position&nbsp;(eye)&nbsp;:&nbsp;position&nbsp;of&nbsp;the&nbsp;camera<br>
-Scene&nbsp;center&nbsp;(center)&nbsp;:&nbsp;the&nbsp;point&nbsp;the&nbsp;camera&nbsp;is&nbsp;looking&nbsp;at.<br>
-Up&nbsp;Vector<br>
-Viewing&nbsp;direction&nbsp;(rotx,roty,rotz)<br>
+It&nbsp;provides&nbsp;functions&nbsp;for&nbsp;manipulating&nbsp;the&nbsp;camera&nbsp;position&nbsp;and&nbsp;viewing<br>
+direction&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;lens&nbsp;parameters.<br>
 &nbsp;<br>
-For&nbsp;enabling&nbsp;continuous&nbsp;rotations,&nbsp;it&nbsp;is&nbsp;essential&nbsp;that&nbsp;the&nbsp;camera&nbsp;angles<br>
-are&nbsp;stored&nbsp;as&nbsp;such,&nbsp;and&nbsp;not&nbsp;be&nbsp;calculated&nbsp;form&nbsp;the&nbsp;camera&nbsp;position&nbsp;and<br>
-center&nbsp;point,&nbsp;because&nbsp;the&nbsp;transformation&nbsp;from&nbsp;cartesian&nbsp;to&nbsp;spherical<br>
-coordinates&nbsp;is&nbsp;not&nbsp;unique.<br>
+The&nbsp;camera&nbsp;viewing&nbsp;line&nbsp;can&nbsp;be&nbsp;defined&nbsp;by&nbsp;two&nbsp;points&nbsp;:&nbsp;the&nbsp;position&nbsp;of<br>
+the&nbsp;camera&nbsp;and&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;scene&nbsp;the&nbsp;camera&nbsp;is&nbsp;looking&nbsp;at.<br>
+To&nbsp;enable&nbsp;continuous&nbsp;camera&nbsp;rotations&nbsp;however,&nbsp;it&nbsp;is&nbsp;essential&nbsp;that&nbsp;the<br>
+camera&nbsp;angles&nbsp;are&nbsp;stored&nbsp;as&nbsp;such,&nbsp;and&nbsp;not&nbsp;be&nbsp;calculated&nbsp;from&nbsp;the&nbsp;camera<br>
+position&nbsp;and&nbsp;the&nbsp;center&nbsp;point,&nbsp;because&nbsp;the&nbsp;transformation&nbsp;from&nbsp;cartesian<br>
+to&nbsp;spherical&nbsp;coordinates&nbsp;is&nbsp;not&nbsp;unique.<br>
 Therefore&nbsp;we&nbsp;store&nbsp;the&nbsp;camera&nbsp;as&nbsp;follows:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ctr&nbsp;:&nbsp;[&nbsp;x,y,z&nbsp;]&nbsp;:&nbsp;the&nbsp;reference&nbsp;point&nbsp;of&nbsp;the&nbsp;camera&nbsp;:&nbsp;this&nbsp;is&nbsp;always<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;point&nbsp;on&nbsp;the&nbsp;viewing&nbsp;axis.&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;pos&nbsp;:&nbsp;[&nbsp;long,lat,dist&nbsp;]&nbsp;:&nbsp;relative&nbsp;position&nbsp;in&nbsp;spherical&nbsp;coordinates<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;the&nbsp;camera&nbsp;with&nbsp;respect&nbsp;to&nbsp;the&nbsp;center&nbsp;point.&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;twist&nbsp;:&nbsp;rotation&nbsp;angles&nbsp;around&nbsp;the&nbsp;camera's&nbsp;viewing&nbsp;axis<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;point&nbsp;on&nbsp;the&nbsp;viewing&nbsp;axis.&nbsp;Usualy,&nbsp;it&nbsp;is&nbsp;the&nbsp;center&nbsp;point&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;scene&nbsp;we&nbsp;are&nbsp;looking&nbsp;at.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;eye&nbsp;:&nbsp;[&nbsp;long,lat,dist&nbsp;]&nbsp;:&nbsp;relative&nbsp;position&nbsp;of&nbsp;the&nbsp;camera&nbsp;with&nbsp;respect<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;the&nbsp;center&nbsp;point.&nbsp;This&nbsp;is&nbsp;measured&nbsp;in&nbsp;spherical&nbsp;coordinates:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long&nbsp;is&nbsp;the&nbsp;rotation&nbsp;around&nbsp;the&nbsp;y-axis,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;is&nbsp;the&nbsp;rotation&nbsp;around&nbsp;the&nbsp;rotated&nbsp;x-axis,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dist&nbsp;is&nbsp;the&nbsp;distance&nbsp;from&nbsp;the&nbsp;center.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;twist&nbsp;:&nbsp;rotation&nbsp;angle&nbsp;around&nbsp;the&nbsp;camera's&nbsp;viewing&nbsp;axis<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+The&nbsp;default&nbsp;camera&nbsp;is&nbsp;at&nbsp;[0,0,1]&nbsp;and&nbsp;aims&nbsp;at&nbsp;point&nbsp;[0,0,0],<br>
+i.e.&nbsp;looking&nbsp;in&nbsp;the&nbsp;-z&nbsp;direction.&nbsp;Near&nbsp;and&nbsp;far&nbsp;clipping&nbsp;planes&nbsp;are&nbsp;by<br>
+default&nbsp;set&nbsp;to&nbsp;0.1,&nbsp;resp&nbsp;10&nbsp;times&nbsp;the&nbsp;camera&nbsp;distance.<br>
 &nbsp;<br>
+Position&nbsp;(eye)&nbsp;:&nbsp;position&nbsp;of&nbsp;the&nbsp;camera<br>
+Scene&nbsp;center&nbsp;(ctr)&nbsp;:&nbsp;the&nbsp;point&nbsp;the&nbsp;camera&nbsp;is&nbsp;looking&nbsp;at.<br>
+Up&nbsp;Vector&nbsp;:&nbsp;a&nbsp;vector&nbsp;pointing&nbsp;up&nbsp;from&nbsp;the&nbsp;camera.<br>
+Viewing&nbsp;direction&nbsp;(rotx,roty,rotz)<br>
 Lens&nbsp;angle&nbsp;(fovy)<br>
 Aspect&nbsp;ratio&nbsp;(aspect)<br>
 Clip&nbsp;(front/back)<br>
@@ -70,8 +76,6 @@ Perspective/Orthogonal<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="Camera-__init__"><strong>__init__</strong></a>(self, center<font color="#909090">=[0.0, 0.0, 0.0]</font>, position<font color="#909090">=[0.0, 0.0, 1.0]</font>, twist<font color="#909090">=0.0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;camera&nbsp;at&nbsp;position&nbsp;(0,0,1)&nbsp;looking&nbsp;along&nbsp;the&nbsp;-z&nbsp;axis</tt></dd></dl>
-
-<dl><dt><a name="Camera-distance"><strong>distance</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;camera&nbsp;distance&nbsp;from&nbsp;the&nbsp;center.</tt></dd></dl>
 
 <dl><dt><a name="Camera-dolly"><strong>dolly</strong></a>(self, val)</dt><dd><tt>Move&nbsp;the&nbsp;camera&nbsp;eye&nbsp;towards/away&nbsp;from&nbsp;the&nbsp;scene&nbsp;center.<br>
 &nbsp;<br>
@@ -84,7 +88,13 @@ a&nbsp;dolly&nbsp;operation.</tt></dd></dl>
 
 <dl><dt><a name="Camera-getAngles"><strong>getAngles</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;three&nbsp;rotation&nbsp;angles&nbsp;of&nbsp;the&nbsp;camera.</tt></dd></dl>
 
-<dl><dt><a name="Camera-getEye"><strong>getEye</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;cartesian&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;camera&nbsp;(eye).</tt></dd></dl>
+<dl><dt><a name="Camera-getCenter"><strong>getCenter</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;camera&nbsp;reference&nbsp;point&nbsp;(the&nbsp;scene&nbsp;center).</tt></dd></dl>
+
+<dl><dt><a name="Camera-getDistance"><strong>getDistance</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;camera&nbsp;distance&nbsp;from&nbsp;the&nbsp;center.</tt></dd></dl>
+
+<dl><dt><a name="Camera-getEye"><strong>getEye</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;camera&nbsp;eye.</tt></dd></dl>
+
+<dl><dt><a name="Camera-getPosition"><strong>getPosition</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;cartesian&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;camera&nbsp;(eye).</tt></dd></dl>
 
 <dl><dt><a name="Camera-loadMatrix"><strong>loadMatrix</strong></a>(self)</dt><dd><tt>Load&nbsp;the&nbsp;camera&nbsp;transformation&nbsp;matrix.<br>
 &nbsp;<br>
@@ -126,22 +136,21 @@ This&nbsp;has&nbsp;the&nbsp;effect&nbsp;of&nbsp;rotating&nbsp;the&nbsp;scene&nbs
 A&nbsp;positive&nbsp;value&nbsp;rotates&nbsp;the&nbsp;camera&nbsp;around&nbsp;the&nbsp;pos&nbsp;y-axis.<br>
 The&nbsp;value&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
-<dl><dt><a name="Camera-setCenter"><strong>setCenter</strong></a>(self, x, y, z)</dt><dd><tt>Set&nbsp;thecenter&nbsp;of&nbsp;the&nbsp;camera&nbsp;in&nbsp;cartesian&nbsp;coordinates.</tt></dd></dl>
+<dl><dt><a name="Camera-setCenter"><strong>setCenter</strong></a>(self, x, y, z)</dt><dd><tt>Set&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;camera&nbsp;in&nbsp;global&nbsp;cartesian&nbsp;coordinates.</tt></dd></dl>
 
 <dl><dt><a name="Camera-setClip"><strong>setClip</strong></a>(self, near, far)</dt><dd><tt>Set&nbsp;the&nbsp;near&nbsp;and&nbsp;far&nbsp;clipping&nbsp;planes</tt></dd></dl>
 
 <dl><dt><a name="Camera-setClipRel"><strong>setClipRel</strong></a>(self, near, far)</dt><dd><tt>Set&nbsp;the&nbsp;near&nbsp;and&nbsp;far&nbsp;clipping&nbsp;planes</tt></dd></dl>
 
-<dl><dt><a name="Camera-setDistance"><strong>setDistance</strong></a>(self, d)</dt></dl>
+<dl><dt><a name="Camera-setDirection"><strong>setDirection</strong></a>(self, long, lat)</dt></dl>
 
-<dl><dt><a name="Camera-setEye"><strong>setEye</strong></a>(self, lat, long, dist)</dt><dd><tt>Set&nbsp;the&nbsp;position&nbsp;of&nbsp;the&nbsp;camera&nbsp;in&nbsp;relative&nbsp;spherical&nbsp;coordinates.<br>
+<dl><dt><a name="Camera-setDistance"><strong>setDistance</strong></a>(self, dist)</dt></dl>
+
+<dl><dt><a name="Camera-setEye"><strong>setEye</strong></a>(self, long, lat, dist)</dt><dd><tt>Set&nbsp;the&nbsp;position&nbsp;of&nbsp;the&nbsp;camera&nbsp;in&nbsp;relative&nbsp;spherical&nbsp;coordinates.<br>
 &nbsp;<br>
 We&nbsp;store&nbsp;the&nbsp;position&nbsp;of&nbsp;the&nbsp;camera&nbsp;in&nbsp;spherical&nbsp;coordinates,<br>
 relative&nbsp;to&nbsp;the&nbsp;center.&nbsp;This&nbsp;allows&nbsp;for&nbsp;easy&nbsp;camera&nbsp;movements.<br>
-Latitude&nbsp;(azimuth)&nbsp;and&nbsp;longitude&nbsp;(elevation)&nbsp;are&nbsp;in&nbsp;degrees.<br>
-lat&nbsp;is&nbsp;the&nbsp;rotation&nbsp;around&nbsp;the&nbsp;y-axis,&nbsp;(0&nbsp;is&nbsp;z-axis)<br>
-long&nbsp;is&nbsp;the&nbsp;rotation&nbsp;around&nbsp;the&nbsp;(rotated)&nbsp;x-axis,&nbsp;(0&nbsp;is&nbsp;x-z&nbsp;plane)<br>
-dist&nbsp;is&nbsp;the&nbsp;distance&nbsp;from&nbsp;the&nbsp;center.</tt></dd></dl>
+Longitude&nbsp;(azimuth)&nbsp;and&nbsp;latitude&nbsp;(elevation)&nbsp;are&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
 <dl><dt><a name="Camera-setLens"><strong>setLens</strong></a>(self, fovy<font color="#909090">=None</font>, aspect<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;field&nbsp;of&nbsp;view&nbsp;of&nbsp;the&nbsp;camera.<br>
 &nbsp;<br>
@@ -150,8 +159,6 @@ and&nbsp;the&nbsp;aspect&nbsp;ratio&nbsp;(width/height)&nbsp;of&nbsp;the&nbsp;vi
 A&nbsp;parameter&nbsp;that&nbsp;is&nbsp;not&nbsp;specified&nbsp;is&nbsp;left&nbsp;unchanged.</tt></dd></dl>
 
 <dl><dt><a name="Camera-setPerspective"><strong>setPerspective</strong></a>(self, on<font color="#909090">=True</font>)</dt><dd><tt>Set&nbsp;perspective&nbsp;on&nbsp;or&nbsp;off</tt></dd></dl>
-
-<dl><dt><a name="Camera-setPos"><strong>setPos</strong></a>(self, x, y, z)</dt></dl>
 
 <dl><dt><a name="Camera-setTwist"><strong>setTwist</strong></a>(self, t)</dt></dl>
 
@@ -164,7 +171,7 @@ The&nbsp;value&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
 <dl><dt><a name="Camera-truck"><strong>truck</strong></a>(self, translation)</dt><dd><tt>Move&nbsp;the&nbsp;camera&nbsp;translation&nbsp;vector&nbsp;in&nbsp;local&nbsp;coordinates.<br>
 &nbsp;<br>
-This&nbsp;has&nbsp;the&nbsp;effect&nbsp;moving&nbsp;the&nbsp;scene&nbsp;in&nbsp;opposite&nbsp;direction.<br>
+This&nbsp;has&nbsp;the&nbsp;effect&nbsp;of&nbsp;moving&nbsp;the&nbsp;scene&nbsp;in&nbsp;opposite&nbsp;direction.<br>
 Positive&nbsp;coordinates&nbsp;mean:<br>
 &nbsp;&nbsp;first&nbsp;&nbsp;coordinate&nbsp;:&nbsp;truck&nbsp;right,<br>
 &nbsp;&nbsp;second&nbsp;coordinate&nbsp;:&nbsp;pedestal&nbsp;up,<br>

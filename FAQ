@@ -1,0 +1,27 @@
+pyFormex Frequently Asked Questions (and answers)
+=================================================
+
+Questions
+=========
+
+1.1 How was the pyFormex logo created?
+
+
+Answers
+=======
+
+1.1 How was the pyFormex logo created?
+
+With the Gimp: Xtra -> Script-Fu -> Logos -> Alien-neon
+Font Size: 120
+Font: Blippo
+Glow Color: 0xFF3366
+Background Color: 0x000000
+Width of Bands: 2
+Width of Gaps: 2
+Number of Bands: 4
+Fade Away: Yes
+
+Then switch off background layer and save as .png format.
+Export the image with Save Background Color switched off!
+

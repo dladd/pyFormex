@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
 """Formex algebra in python"""
@@ -731,24 +732,26 @@ class Formex:
         f[:,:,dir] += distance
         return Formex(f,self.p)
 
-    def translatem(self,*args):
-        """Multiple subsequent translations in axis directions.
-
-        The argument list is a sequence of tuples (axis number, step). 
-        Thus translatem((0,x),(2,z),(1,y)) is equivalent to
-        translate([x,y,z]). This function is especially conveniant
-        to translate in calculated directions.
-        """
-        tr = [0.,0.,0.]
-        for d,t in args:
-            tr[d] += t
-        return self.translate(tr)
-        
-
     def rotate(self,angle,axis=2):
-        """Returns a copy rotated over distance dist of matching grade."""
+        """Returns a copy rotated over angle around coordinate axis."""
         m = rotationMatrix(angle,axis)
         return Formex(matrixmultiply(self.f,m),self.p)
+
+    # This could be made the same function as rotate, but differentiated
+    # by means of the value of the second argument
+    def rotateAround(self,vector,angle):
+        """Returns a copy rotated over angle around vector."""
+        print "rotate has not been implemented yet!"
+        return self
+
+    def shear(self,dir,dir1,skew):
+        """Returns a copy skewed in the direction dir of plane (dir,dir1).
+
+        The coordinate dir is replaced with (dir + skew * dir1).
+        """
+        f = self.f.copy()
+        f[:,:,dir] += skew * f[:,:,dir1]
+        return Formex(f,self.p)
 
     def reflect(self,dir,pos=0):
         """Returns a formex mirrored in direction dir against plane at pos.
@@ -1010,10 +1013,16 @@ class Formex:
         """Swap coordinate axes i and j"""
         return self.replace([i,j],[j,i])
 
-    def circulize(self,i,j):
-        """Transforms 1/8 of the i-j plane to 1/6 of a circle."""
-        ## NOT IMPLEMENTED YET : see example ScallopDome...
-        return Formex(f,self.p)
+    def circulize(self):
+        """Transforms the first octant of the 0-1 plane into 1/6 of a circle.
+
+        Points on the 0-axis keep their position. Lines parallel to the 1-axis
+        are transformed into circular arcs. The bisector of the first quadrant
+        is transformed in a straight line at an angle Pi/6.
+        This function is especially suited to create circular domains where
+        all bars have nearly same length. See the Scallopdome example.
+        """
+        return self.map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
 
 ##############################################################################
 #
@@ -1064,9 +1073,9 @@ class Formex:
         ## guaranteed that either none or all formices in P have props.
         return Formex.concatenate(P)
 
-    #alternate name
+    #alternate names
     replicate2 = generate2
-        
+    generate = replicate    
         
 
 ##############################################################################
@@ -1075,6 +1084,19 @@ class Formex:
 #
 # New users should avoid these functions!
 #
+
+    def translatem(self,*args):
+        """Multiple subsequent translations in axis directions.
+
+        The argument list is a sequence of tuples (axis number, step). 
+        Thus translatem((0,x),(2,z),(1,y)) is equivalent to
+        translate([x,y,z]). This function is especially conveniant
+        to translate in calculated directions.
+        """
+        tr = [0.,0.,0.]
+        for d,t in args:
+            tr[d] += t
+        return self.translate(tr)
 
     cantle = element
     signet = point

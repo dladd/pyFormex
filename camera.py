@@ -1,22 +1,14 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
-"""camera 0.1 (C) Benedict Verhegghe
-
-This class defines a camera for OpenGL rendering. It lets you manipulate
-the camera position and viewing direction as well as the lens parameters.
-
-The default camera is at [0,0,1] and aims at point [0,0,0], i.e. looking
-in the -z direction. Near and far clipping planes are by default set to
-0.1, resp 10 times the camera distance.
-
-"""
+"""camera 0.1 (C) Benedict Verhegghe"""
 
 import sys,math
 
@@ -26,24 +18,37 @@ import OpenGL.GLU as GLU
 from vector import *
 
 class Camera:
-    """This class defines a camera.
+    """This class defines a camera for OpenGL rendering.
 
-    Position (eye) : position of the camera
-    Scene center (center) : the point the camera is looking at.
-    Up Vector : a vector pointing up from the camera.
-    Viewing direction (rotx,roty,rotz)
-    
-    For enabling continuous rotations, it is essential that the camera angles
-    are stored as such, and not be calculated form the camera position and
-    center point, because the transformation from cartesian to spherical
-    coordinates is not unique.
+    It provides functions for manipulating the camera position and viewing
+    direction as well as the lens parameters.
+
+    The camera viewing line can be defined by two points : the position of
+    the camera and the center of the scene the camera is looking at.
+    To enable continuous camera rotations however, it is essential that the
+    camera angles are stored as such, and not be calculated from the camera
+    position and the center point, because the transformation from cartesian
+    to spherical coordinates is not unique.
     Therefore we store the camera as follows:
         ctr : [ x,y,z ] : the reference point of the camera : this is always
-                a point on the viewing axis. 
-        pos : [ long,lat,dist ] : relative position in spherical coordinates
-                of the camera with respect to the center point. 
+              a point on the viewing axis. Usualy, it is the center point of
+              the scene we are looking at.
+        eye : [ long,lat,dist ] : relative position of the camera with respect
+              to the center point. This is measured in spherical coordinates:
+              long is the rotation around the y-axis,
+              lat is the rotation around the rotated x-axis,
+              dist is the distance from the center.
+              
         twist : rotation angle around the camera's viewing axis
-   
+        
+    The default camera is at [0,0,1] and aims at point [0,0,0],
+    i.e. looking in the -z direction. Near and far clipping planes are by
+    default set to 0.1, resp 10 times the camera distance.
+    
+    Position (eye) : position of the camera
+    Scene center (ctr) : the point the camera is looking at.
+    Up Vector : a vector pointing up from the camera.
+    Viewing direction (rotx,roty,rotz)
     Lens angle (fovy)
     Aspect ratio (aspect)
     Clip (front/back)
@@ -53,53 +58,58 @@ class Camera:
     def __init__(self,center=[0.,0.,0.],position=[0.,0.,1.],twist=0.):
         """Create a new camera at position (0,0,1) looking along the -z axis"""
         self.setCenter(*center)
-        self.setPos(*position)
+        self.setEye(*position)
         self.setTwist(twist)
         self.setLens(45.,4./3.)
         self.setClip(0.1,10.)
         self.setPerspective(True)
-
 
     # Camera position and viewing direction
     # !! These functions do not automatically reload the transformation matrix
     # !! Clients should explicitely call loadMatrix() before displaying
 
     def setCenter(self,x,y,z):
-        """Set the center of the camera in cartesian coordinates."""
+        """Set the center of the camera in global cartesian coordinates."""
         self.ctr = [x,y,z]
 
-    def setPos(self,x,y,z):
-        self.pos = [x % 360,y % 360,z]
-
-    def setDistance(self,d):
-        self.pos[2] = d
-
-    def setTwist(self,t):
-        self.twist = t % 360
-        
-    def getEye(self):
-        """Return the cartesian coordinates of the camera (eye)."""
-        return add(self.ctr,sphericalToCartesian(self.pos))
-        
-    def distance(self):
-        """Return the camera distance from the center."""
-        return self.pos[2]
-        
-    def getAngles(self):
-        """Return the three rotation angles of the camera."""
-        return [ -self.pos[1], self.pos[0], self.twist ]
-
-    def setEye(self,lat,long,dist):
+    def setEye(self,long,lat,dist):
         """Set the position of the camera in relative spherical coordinates.
 
         We store the position of the camera in spherical coordinates,
         relative to the center. This allows for easy camera movements.
-        Latitude (azimuth) and longitude (elevation) are in degrees.
-        lat is the rotation around the y-axis, (0 is z-axis)
-        long is the rotation around the (rotated) x-axis, (0 is x-z plane)
-        dist is the distance from the center.
+        Longitude (azimuth) and latitude (elevation) are in degrees.
         """
-        self.eye = [lat,long,dist]
+        self.eye = [long % 360,lat % 360,dist]
+
+    def setDirection(self,long,lat):
+        self.eye[0] = long % 360
+        self.eye[1] = lat % 360
+
+    def setDistance(self,dist):
+        self.eye[2] = dist
+
+    def setTwist(self,t):
+        self.twist = t % 360
+        
+    def getCenter(self):
+        """Return the camera reference point (the scene center)."""
+        return self.ctr[0:2]
+        
+    def getEye(self):
+        """Return the camera eye."""
+        return self.eye[0:2]
+        
+    def getDistance(self):
+        """Return the camera distance from the center."""
+        return self.eye[2]
+        
+    def getAngles(self):
+        """Return the three rotation angles of the camera."""
+        return [ -self.eye[1], self.eye[0], self.twist ]
+        
+    def getPosition(self):
+        """Return the cartesian coordinates of the camera (eye)."""
+        return add(self.ctr,sphericalToCartesian(self.eye))
 
     def dolly(self,val):
         """Move the camera eye towards/away from the scene center.
@@ -111,7 +121,7 @@ class Camera:
         The front and back clipping planes may need adjustment after
         a dolly operation.
         """
-        self.pos[2] *= val
+        self.eye[2] *= val
 
     def rotate(self,val,axis=0):
         """Rotate the camera around axis through the center.
@@ -124,7 +134,7 @@ class Camera:
         The value is specified in degrees.
         """
         if axis==0 or axis ==1:
-            self.pos[axis] = (self.pos[axis] + val) % 360
+            self.eye[axis] = (self.eye[axis] + val) % 360
         elif axis==2:
             self.twist = (self.twist + val) % 360
 
@@ -139,9 +149,9 @@ class Camera:
         For axis = 2 the operation is equivalent to the rotate operation.
         """
         if axis==0 or axis ==1:
-            eye = self.getEye()
-            self.pos[axis] = (self.pos[axis] + val) % 360
-            center = diff(eye,sphericalToCartesian(self.pos))
+            pos = self.getPosition()
+            self.eye[axis] = (self.eye[axis] + val) % 360
+            center = diff(pos,sphericalToCartesian(self.eye))
             self.setCenter(*center)
         elif axis==2:
             self.twist = (self.twist + val) % 360
@@ -174,7 +184,7 @@ class Camera:
           second coordinate : pedestal up,
           third  coordinate : dolly out.
         """
-        eye = self.getEye()
+        #pos = self.getPosition()
         ang = self.getAngles()
         tr = [translation]
         for i in [1,0,2]:
@@ -261,12 +271,12 @@ class Camera:
         He also should make sure that matrix mode is GL_MODELVIEW. Since
         this is usually the default, we do not set it here.
         """
-        #print "Center = ",self.ctr
-        #print "Position = ",self.pos
+        #print "Center = ",self.getCenter()
         #print "Eye = ",self.getEye()
+        #print "Position = ",self.getPosition()
         #print "Angles = ",self.getAngles()
         rot = self.getAngles()
-        eye = self.getEye()
+        eye = self.getPosition()
         GL.glRotatef(-rot[2], 0.0, 0.0, 1.0)
         GL.glRotatef(-rot[0], 1.0, 0.0, 0.0)
         GL.glRotatef(-rot[1], 0.0, 1.0, 0.0)
@@ -372,7 +382,7 @@ if __name__ == "__main__":
             cam.truck([0.,0.,-0.5])
         elif key == '=':
             cam.setCenter(0.,0.,0.)
-            cam.setPos(0.,0.,5.)
+            cam.setEye(0.,0.,5.)
             cam.setTwist(0.)
         elif key == 'o':
             cam.setPerspective(not cam.perspective)

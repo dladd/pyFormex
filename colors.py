@@ -1,10 +1,11 @@
 # Definition of some RGB colors
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
 

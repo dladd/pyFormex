@@ -1,9 +1,10 @@
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
@@ -12,14 +13,12 @@
 
 # root of the installation tree: this is a reasonable default
 ROOTDIR= /usr/local
-# where to install pyformex: some prefer to use $(ROOTDIR) 
-LIBDIR= $(ROOTDIR)/lib
+# where to install pyformex: some prefer to use $(ROOTDIR)/lib
+LIBDIR= $(ROOTDIR)
 # where to create symbolic links to the executable files
 BINDIR= $(ROOTDIR)/bin
 # where to install the documentation
 DOCDIR= $(ROOTDIR)/share/doc
-# where to install problem types for GiD: check that this is correct!
-# comment this line if you do not want to install problem types
 
 ############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
 
@@ -29,14 +28,16 @@ INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
 PROGRAM= pyformex
 SOURCE= formex.py canvas.py camera.py colors.py vector.py
+ICONS= icons
 HTMLDOCS= $(SOURCE:.py=.html)
 HTMLDIR= doc/html
 DOCFILES= README COPYING History
-EXAMPLES= examples/*.py
+EXAMPLES= BarrelVault Baumkuchen Dome DoubleLayer Geodesic Hyparcap Novation ParabolicTower ScallopDome Spiral Stars Torus
+EXAMPLEFILES= $(addprefix examples/,$(addsuffix .py,$(EXAMPLES)))
+IMAGEFILES =  $(addprefix screenshots/,$(addsuffix .png,$(EXAMPLES)))
 STAMPABLE= README History Makefile TODO
 NONSTAMPABLE= COPYING 
 STAMP= ./Stamp 
-REPLACE= /usr/local/bin/replace
 
 .PHONY: install dist distclean
 
@@ -47,15 +48,16 @@ all:
 ############ User installation ######################
 
 install:
-	install -d $(INSTDIR) $(BINDIR) $(DOCINSTDIR) $(DOCINSTDIR)/examples
+	install -d $(INSTDIR) $(BINDIR) $(INSTDIR)/icons $(INSTDIR)/examples $(DOCINSTDIR)
 	install -m 0664 $(SOURCE) $(INSTDIR)
 	install -m 0775 $(PROGRAM) $(INSTDIR)
+	install -m 0664 icons/* $(INSTDIR)/icons
+	install -m 0664 examples/* $(INSTDIR)/examples
 	install -m 0664 ${DOCFILES} $(DOCINSTDIR)
-	install -m 0664 examples/* $(DOCINSTDIR)/examples
 	ln -sfn $(INSTDIR)/$(PROGRAM) $(BINDIR)/$(PROGRAM)
 
-remove:
-	echo "There is no automatic installation procedure."""
+uninstall:
+	echo "There is no automatic uninstall procedure."""
 	echo "Remove the entire pyformex directory from where you installed it."
 	echo "Remove the symbolic link to the pyformex program."""
 	echo "Remove the pyformex doc files."""
@@ -72,6 +74,7 @@ dist:	dist.stamped
 %.html: %.py
 	pydoc -w ./$< && mv $@ $(HTMLDIR)
 
+
 htmldoc: $(HTMLDOCS)
 
 distdoc: htmldoc
@@ -80,12 +83,13 @@ stamp:
 	$(STAMP) -tStamp.template version=$(VERSION) -oStamp.stamp
 
 dist.stamped: distdoc distclean stamp
-	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples
+	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples $(PYFORMEXDIR)/images
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(PROGRAM) $(SOURCE)
-	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR)/examples $(EXAMPLES)
+	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR)/examples $(EXAMPLEFILES)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(STAMPABLE)
 	cp $(NONSTAMPABLE) $(PYFORMEXDIR)
-	cp -R screenshots  $(PYFORMEXDIR)
+	cp -R $(ICONS)  $(PYFORMEXDIR)
+	cp $(IMAGEFILES)  $(PYFORMEXDIR)/images
 	tar czf $(PYFORMEXDIR).tar.gz $(PYFORMEXDIR)
 
 

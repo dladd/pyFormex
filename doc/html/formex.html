@@ -171,7 +171,13 @@ func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&n
 
 <dl><dt><a name="Formex-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a></tt></dd></dl>
 
-<dl><dt><a name="Formex-circulize"><strong>circulize</strong></a>(self, i, j)</dt><dd><tt>Transforms&nbsp;1/8&nbsp;of&nbsp;the&nbsp;i-j&nbsp;plane&nbsp;to&nbsp;1/6&nbsp;of&nbsp;a&nbsp;circle.</tt></dd></dl>
+<dl><dt><a name="Formex-circulize"><strong>circulize</strong></a>(self)</dt><dd><tt>Transforms&nbsp;the&nbsp;first&nbsp;octant&nbsp;of&nbsp;the&nbsp;0-1&nbsp;plane&nbsp;into&nbsp;1/6&nbsp;of&nbsp;a&nbsp;circle.<br>
+&nbsp;<br>
+Points&nbsp;on&nbsp;the&nbsp;0-axis&nbsp;keep&nbsp;their&nbsp;position.&nbsp;Lines&nbsp;parallel&nbsp;to&nbsp;the&nbsp;1-axis<br>
+are&nbsp;transformed&nbsp;into&nbsp;circular&nbsp;arcs.&nbsp;The&nbsp;bisector&nbsp;of&nbsp;the&nbsp;first&nbsp;quadrant<br>
+is&nbsp;transformed&nbsp;in&nbsp;a&nbsp;straight&nbsp;line&nbsp;at&nbsp;an&nbsp;angle&nbsp;Pi/6.<br>
+This&nbsp;function&nbsp;is&nbsp;especially&nbsp;suited&nbsp;to&nbsp;create&nbsp;circular&nbsp;domains&nbsp;where<br>
+all&nbsp;bars&nbsp;have&nbsp;nearly&nbsp;same&nbsp;length.&nbsp;See&nbsp;the&nbsp;Scallopdome&nbsp;example.</tt></dd></dl>
 
 <dl><dt><a name="Formex-coord"><strong>coord</strong></a>(self, i, j, k)</dt><dd><tt>Return&nbsp;coord&nbsp;k&nbsp;of&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
 
@@ -194,6 +200,8 @@ The&nbsp;returned&nbsp;formex&nbsp;has&nbsp;two&nbsp;points&nbsp;for&nbsp;each&n
 of&nbsp;the&nbsp;bbox.</tt></dd></dl>
 
 <dl><dt><a name="Formex-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;formex</tt></dd></dl>
+
+<dl><dt><a name="Formex-generate"><strong>generate</strong></a> = <a href="#Formex-replicate">replicate</a>(self, n, dir, step)</dt></dl>
 
 <dl><dt><a name="Formex-generate2"><strong>generate2</strong></a>(self, n1, n2, d1, d2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt><dd><tt>Generate&nbsp;copies&nbsp;in&nbsp;two&nbsp;directions.<br>
 &nbsp;<br>
@@ -267,6 +275,12 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 Example:&nbsp;E.<a href="#Formex-mapd">mapd</a>(2,lambda&nbsp;d:sqrt(10**2-d**2),f.<a href="#Formex-center">center</a>(),[0,1])<br>
 maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></dl>
 
+<dl><dt><a name="Formex-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Formex-nnodel"><strong>nnodel</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Formex-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="Formex-nodes"><strong>nodes</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;containing&nbsp;only&nbsp;the&nbsp;nodes.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;obviously&nbsp;a&nbsp;formex&nbsp;with&nbsp;plexitude&nbsp;1.&nbsp;It&nbsp;holds&nbsp;the&nbsp;same&nbsp;data<br>
@@ -275,6 +289,12 @@ per&nbsp;element&nbsp;is&nbsp;1,&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;elem
 number&nbsp;of&nbsp;nodes.<br>
 The&nbsp;properties&nbsp;are&nbsp;not&nbsp;copied&nbsp;over,&nbsp;since&nbsp;they&nbsp;will&nbsp;usually&nbsp;not&nbsp;make<br>
 any&nbsp;sense.</tt></dd></dl>
+
+<dl><dt><a name="Formex-nodesAndElements"><strong>nodesAndElements</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
+&nbsp;<br>
+A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;first&nbsp;is&nbsp;float&nbsp;array&nbsp;with<br>
+the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
+an&nbsp;integer&nbsp;array&nbsp;with&nbsp;the&nbsp;node&nbsp;numbers&nbsp;connected&nbsp;by&nbsp;each&nbsp;element.</tt></dd></dl>
 
 <dl><dt><a name="Formex-nonzero"><strong>nonzero</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;nonzero&nbsp;elements.<br>
 &nbsp;<br>
@@ -299,7 +319,9 @@ The&nbsp;plexitude&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;number&nbsp;of&nbsp
 
 <dl><dt><a name="Formex-ref"><strong>ref</strong></a>(self, dir, dist)</dt></dl>
 
-<dl><dt><a name="Formex-reflect"><strong>reflect</strong></a>(self, dir, pos)</dt><dd><tt>Returns&nbsp;a&nbsp;formex&nbsp;mirrored&nbsp;in&nbsp;direction&nbsp;dir&nbsp;against&nbsp;plane&nbsp;at&nbsp;pos</tt></dd></dl>
+<dl><dt><a name="Formex-reflect"><strong>reflect</strong></a>(self, dir, pos<font color="#909090">=0</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;formex&nbsp;mirrored&nbsp;in&nbsp;direction&nbsp;dir&nbsp;against&nbsp;plane&nbsp;at&nbsp;pos.<br>
+&nbsp;<br>
+Default&nbsp;position&nbsp;of&nbsp;the&nbsp;plane&nbsp;is&nbsp;through&nbsp;the&nbsp;origin.</tt></dd></dl>
 
 <dl><dt><a name="Formex-remove"><strong>remove</strong></a>(self, F)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;where&nbsp;the&nbsp;elements&nbsp;in&nbsp;F&nbsp;have&nbsp;been&nbsp;removed.<br>
 &nbsp;<br>
@@ -307,13 +329,15 @@ This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&n
 Elements&nbsp;are&nbsp;only&nbsp;removed&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;nodes&nbsp;in&nbsp;the&nbsp;same<br>
 order.</tt></dd></dl>
 
-<dl><dt><a name="Formex-removeProp"><strong>removeProp</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;formex&nbsp;without&nbsp;the&nbsp;properties.</tt></dd></dl>
+<dl><dt><a name="Formex-removeProp"><strong>removeProp</strong></a>(self)</dt><dd><tt>Remove&nbsp;the&nbsp;properties&nbsp;from&nbsp;a&nbsp;<a href="#Formex">Formex</a>.</tt></dd></dl>
 
-<dl><dt><a name="Formex-replace"><strong>replace</strong></a>(self, i, j)</dt><dd><tt>Replace&nbsp;the&nbsp;coordinates&nbsp;along&nbsp;the&nbsp;axes&nbsp;i&nbsp;by&nbsp;those&nbsp;along&nbsp;j.<br>
+<dl><dt><a name="Formex-replace"><strong>replace</strong></a>(self, i, j, other<font color="#909090">=None</font>)</dt><dd><tt>Replace&nbsp;the&nbsp;coordinates&nbsp;along&nbsp;the&nbsp;axes&nbsp;i&nbsp;by&nbsp;those&nbsp;along&nbsp;j.<br>
 &nbsp;<br>
 i&nbsp;and&nbsp;j&nbsp;are&nbsp;lists&nbsp;of&nbsp;axis&nbsp;numbers.<br>
 replace&nbsp;([0,1,2],[1,2,0])&nbsp;will&nbsp;roll&nbsp;the&nbsp;axes&nbsp;by&nbsp;1.<br>
-replace&nbsp;([0,1],[1,0])&nbsp;will&nbsp;swap&nbsp;axes&nbsp;0&nbsp;and&nbsp;1.</tt></dd></dl>
+replace&nbsp;([0,1],[1,0])&nbsp;will&nbsp;swap&nbsp;axes&nbsp;0&nbsp;and&nbsp;1.<br>
+An&nbsp;optionally&nbsp;third&nbsp;argument&nbsp;may&nbsp;specify&nbsp;another&nbsp;formex&nbsp;to&nbsp;take<br>
+the&nbsp;coordinates&nbsp;from.&nbsp;It&nbsp;should&nbsp;have&nbsp;the&nbsp;same&nbsp;dimensions.</tt></dd></dl>
 
 <dl><dt><a name="Formex-replicate"><strong>replicate</strong></a>(self, n, dir, step)</dt><dd><tt>Returns&nbsp;a&nbsp;formex&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
 &nbsp;<br>
@@ -349,7 +373,9 @@ going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nb
 point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
 The&nbsp;original&nbsp;formex&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
-<dl><dt><a name="Formex-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;distance&nbsp;dist&nbsp;of&nbsp;matching&nbsp;grade.</tt></dd></dl>
+<dl><dt><a name="Formex-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;coordinate&nbsp;axis.</tt></dd></dl>
+
+<dl><dt><a name="Formex-rotateAround"><strong>rotateAround</strong></a>(self, vector, angle)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;vector.</tt></dd></dl>
 
 <dl><dt><a name="Formex-scale"><strong>scale</strong></a>(self, scale)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;scaled&nbsp;with&nbsp;scale[i]&nbsp;in&nbsp;direction&nbsp;i.<br>
 &nbsp;<br>
@@ -368,6 +394,10 @@ The&nbsp;default&nbsp;argument&nbsp;will&nbsp;give&nbsp;all&nbsp;elements&nbsp;a
 The&nbsp;shape&nbsp;of&nbsp;a&nbsp;formex&nbsp;is&nbsp;the&nbsp;shape&nbsp;of&nbsp;its&nbsp;data&nbsp;array,<br>
 i.e.&nbsp;a&nbsp;tuple&nbsp;(order,&nbsp;plexitude,&nbsp;grade)</tt></dd></dl>
 
+<dl><dt><a name="Formex-shear"><strong>shear</strong></a>(self, dir, dir1, skew)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;skewed&nbsp;in&nbsp;the&nbsp;direction&nbsp;dir&nbsp;of&nbsp;plane&nbsp;(dir,dir1).<br>
+&nbsp;<br>
+The&nbsp;coordinate&nbsp;dir&nbsp;is&nbsp;replaced&nbsp;with&nbsp;(dir&nbsp;+&nbsp;skew&nbsp;*&nbsp;dir1).</tt></dd></dl>
+
 <dl><dt><a name="Formex-signet"><strong>signet</strong></a> = <a href="#Formex-point">point</a>(self, i, j)</dt></dl>
 
 <dl><dt><a name="Formex-signet2str"><strong>signet2str</strong></a>(self, sig)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;signet</tt></dd></dl>
@@ -376,9 +406,11 @@ i.e.&nbsp;a&nbsp;tuple&nbsp;(order,&nbsp;plexitude,&nbsp;grade)</tt></dd></dl>
 &nbsp;<br>
 The&nbsp;size&nbsp;is&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;diagonal&nbsp;of&nbsp;the&nbsp;bbox</tt></dd></dl>
 
-<dl><dt><a name="Formex-sort"><strong>sort</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;where&nbsp;the&nbsp;elements&nbsp;are&nbsp;sorted.<br>
+<dl><dt><a name="Formex-sort"><strong>sort</strong></a>(self)</dt><dd><tt>Sorts&nbsp;the&nbsp;elements&nbsp;of&nbsp;a&nbsp;formex.<br>
 &nbsp;<br>
-Sorting&nbsp;is&nbsp;done&nbsp;according&nbsp;to&nbsp;the&nbsp;bbox&nbsp;of&nbsp;the&nbsp;elements.</tt></dd></dl>
+Sorting&nbsp;is&nbsp;done&nbsp;according&nbsp;to&nbsp;the&nbsp;bbox&nbsp;of&nbsp;the&nbsp;elements.<br>
+!!&nbsp;NOT&nbsp;FULLY&nbsp;IMPLEMENTED:&nbsp;CURRENTLY&nbsp;ONLY&nbsp;SORTS&nbsp;ACCORDING&nbsp;TO<br>
+!!&nbsp;THE&nbsp;0-direction&nbsp;OF&nbsp;NODE&nbsp;0</tt></dd></dl>
 
 <dl><dt><a name="Formex-spherical"><strong>spherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>

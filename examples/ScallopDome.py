@@ -1,44 +1,69 @@
 #!/usr/bin/env pyformex
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
 """Scallop Dome"""
-clear()
-pc=2; # pijl in het centrum van de koepel
-pr=4; # pijl aan de rand
-a=0; g=60; m=1; p=0;
-f1 = Formex([[[0,0,0],[0,1,0]],[[0,1,0],[1,1,0]]]).genid(1,8,1,1,0,1) + Formex([[[0,1,0],[1,2,0]]]).genid(1,7,1,1,0,1)
-f1 = f1.remove(Formex([[[0,1,0],[1,1,0]]]).genid(1,4,0,2,1,0))
-glisid=lambda x,y,z:[where(y>0,x*sqrt(4*y*y-x*x)/(y+y),x),where(y>0,y-x*x/(y+y),0),0]
-f2 = f1.map(glisid)
-f1.setProp(1)
-f2.setProp(3)
-drawProp(f1+f2)
-sleep()
-func1 = lambda x,y,z: [x,y,pc*(1.-x*x/64.)+pr*x*x/64.*4*(1.-y)*y]
-func2 = lambda x,y,z: [x,y,pc*(1.-x*x/64.)+pr*x*x/64.*4*pow((1.-y)*y,2)]
-func3 = lambda x,y,z: [x,y,pc*(1.-x*x/64.)+pr*x*x/64.*4*pow((1.-y)*y,2)]
-def show(n,f,c,r):
-    global pc,pr
-    pc = c
-    pr = r
-    a=360./n
-    f3 = f2.toCylindrical([1,0,2]).scale([1.,1./60.,1.])
-    f4 = f3.map(f).cylindrical([0,1,2],[1.,a,1.]).rosette(n,a)
+# This example is fully annotated with comments in the statusbar
+# First we define a function to display a Formex and then wait for the user
+# to click the Step button
+def show(F,side='front'):
     clear()
-    drawProp(f4,0)
+    drawProp(F,side)
     sleep()
-for r in [-2,0,2,4,6]:
-    show(6,func1,2,r)
-for c in [0,2,4]:
-    show(6,func1,c,2)
-for r in [-4,0,4,8]:
-    show(6,func2,4,r)
-for r in [-2,0,2]:
-    show(12,func1,2,r)
+# Here we go
+message("Create a triangular pattern in the first octant")
+f1 = Formex([[[0,0],[1,0]],[[1,0],[1,1]]]).generate2(8,8,0,1,1,1,1,-1) + Formex([[[1,0],[2,1]]]).generate2(7,7,0,1,1,1,1,-1)
+show(f1)
+#
+message("Remove some of the bars")
+f1 = f1.remove(Formex([[[1,0],[1,1]]]).replicate(4,0,2))
+show(f1)
+#
+message("Transform the octant into a circular sector")
+f2 = f1.circulize()
+f1.setProp(1)
+f2.setProp(0)
+show(f1+f2)
+#
+message("Make circular copies to obtain a full circle")
+show(f1+f2.rosette(6,60.))
+# Create and display a scallop dome using the following parameters:
+# n = number of repetitions of the base module in circumference (this does not
+#     have to be equal to 6: the base module will be compressed/expanded to
+#     generate a full circle
+# f = if 0, the dome will have sharp edges where repeated mdules meet;
+#     if 1, the dome surface will be smooth over neighbouring modules.
+# c = height of the dome at the center of the dome.
+# r = height of the arcs at the circumference of the dome. 
+def scallop(n,f,c,r):
+    func = lambda x,y,z: [x,y,c*(1.-x*x/64.)+r*x*x/64.*4*power((1.-y)*y,f)]
+    a=360./n
+    f3 = f2.toCylindrical([0,1,2]).scale([1.,1./60.,1.])
+    f4 = f3.map(func).cylindrical([0,1,2],[1.,a,1.]).rosette(n,a)
+    message("Scallop Dome with n=%d, f=%d, c=%f, r=%f" % (n,f,c,r))
+    show(f4,0)
+# Present some nice examples
+canvas.camera.setDirection(0,-45)
+for n,f,c,r in [
+    [6,1,2,0],
+    [6,1,2,2],
+    [6,1,2,5],
+    [6,1,2,-2],
+    [6,1,-4,4],
+    [6,1,0,4],
+    [6,1,4,4],
+    [6,2,2,-4],
+    [6,2,2,4],
+    [6,2,2,8],
+    [12,1,2,-2],
+    [12,1,2,2] ]:
+    scallop(n,f,c,r)
+
+# That's all
