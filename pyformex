@@ -14,6 +14,7 @@ Version="pyFormex 0.2-20050313"
 
 from formex import *
 from canvas import *
+from widgets import *
 
 import sys,time,os.path,string
 import threading
@@ -26,38 +27,27 @@ config={}
 global out   # holds the last drawn Formex
 out=None
 
- 
-class MyQAction(qt.QAction):
-    """A MyQAction is a QAction that sends a string as parameter when clicked."""
-    def __init__(self,text,*args):
-        qt.QAction.__init__(self,*args)
-        self.signal = text
-        self.connect(self,qt.SIGNAL("activated()"),self.activated)
-    def activated(self):
-        self.emit(qt.PYSIGNAL("Clicked"), (self.signal,))
 
+def askPreferences(list):
+    global config
+    items = [ [ it,config.setdefault(it,"") ] for it in list ]
+    #items = [ [ it,val,type(val) ] for it,val in items ]
+    print "Asking Prefs ",items
+    res = ConfigDialog(items).process()
+    for r in res:
+        config[r[0]] = r[1]
+    print config
 
-class FileSelectionDialog(qt.QFileDialog):
-    """A file selection dialog widget.
+def prefSleeptime():
+    askPreferences(['sleeptime'])
 
-    You can specify a default path/filename that will be suggested
-    initially.
-    If a pattern is specified, only matching files will be shown.
-    A pattern can be something like 'Images (*.png *.jpg)'.
-    Default mode is to accept only existing files. You can specify
-    any QFileDialog mode (e.g. QFileDialog.AnyFile to accept new files)
-    
-    """
-    def __init__(self,default=None,pattern=None,mode=qt.QFileDialog.ExistingFile):
-        qt.QFileDialog.__init__(self,default,pattern)
-        self.setMode(mode)
-        self.show()
-    def getFilename(self):
-        self.exec_loop()
-        if self.result() == qt.QDialog.Accepted:
-            return str(self.selectedFile())
-        else:
-            return None
+def preferences():
+    test = [["item1","value1"],
+            ["item2",""],
+            ["an item with a long name","and a very long value for this item, just to test the scrolling"]]
+    d = ConfigDialog(test)
+    res = d.process()
+    print res
 
 def AddMenuItems(menu, items=[]):
     """Add a list of items to a menu.
@@ -108,7 +98,6 @@ def AddMenuItems(menu, items=[]):
             val.addTo(menu)
         else:
             raise RuntimeError, "Invalid key %s in menu item"%key
-        
 
 MenuData = [
     ("Popup","&File",[
@@ -121,9 +110,8 @@ MenuData = [
         ("Sep",None,None),
         ("Action","E&xit","exit"), ]),
     ("Popup","&Settings",[
-        ("Action","&SleepShort","sleepShort"), 
-        ("Action","&SleepLong","sleepLong"), 
-        ("Action","&SleepForever","sleepForever"),
+        ("Action","&Preferences","preferences"), 
+        ("Action","&Sleep Time","prefSleeptime"), 
         ("Action","&LocalAxes","localAxes"),
         ("Action","&GlobalAxes","globalAxes"),
         ("Action","&Wireframe","wireframe"),
@@ -174,7 +162,6 @@ def runExample(i):
     """Run example i from the list of found examples."""
     global config,example
     playFile(os.path.join(config['pyformexdir'],"examples",example[i]))
-
 
 def runExamples(n):
     """Run the first n examples."""
@@ -251,7 +238,6 @@ def createViewAction(name,icon,tooltip,menutext):
     The toolbar button has icon and tooltip. The menu item has menutext. 
     """
     global config,views,viewsMenu,viewsBar,gui
-    print "Creating View Action ",name,icon,tooltip,menutext
     dir = config['icondir']
     a = MyQAction(name,tooltip,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,gui)
     qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),view)
@@ -280,7 +266,8 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
 
 # Actions (these are just python functions)
 # ??? Can we use python functions with arguments as actions in menus ???
-# Didn't succeed yet
+# In menus : we can have items send an integer id
+# Other actions : make a subclass that emits a signal with 
 
 
 def NotImplemented():
@@ -291,9 +278,20 @@ saveAs = NotImplemented
 record = NotImplemented
 
 def help():
+    global help
     """Start up the help browser"""
-    help = qt.QTextBrowser()
-    help.setSource('doc/html/formex.py')
+    from helpViewer import HelpViewer
+    dir = os.path.join(config['pyformexdir'],"doc","html")
+    home = os.path.join(dir,"formex.html")
+    print "Help file = ",home
+    help = HelpViewer(home, dir, None, "help viewer")
+    help.setCaption("pyFormex - Helpviewer")
+    help.setAbout("This is the pyFormex HelpViewer", \
+                  "<p>It was modeled after the HelpViewer example " \
+                  "from the Qt documentation.</p>")
+    help.resize(800,600)
+    help.show()
+    help.dummy()
 
 def about():
     about = qt.QMessageBox()
@@ -572,7 +570,7 @@ def sleep(timeout=None):
     qt.QObject.connect(canvas,qt.PYSIGNAL("wakeup"),wakeup)
     # create a Timer to wakeup after timeout
     if timeout == None:
-        timeout = config['sleeptime']
+        timeout = int(config['sleeptime'])
     if timeout:
         timer = threading.Timer(timeout,wakeup)
         timer.start()
@@ -615,13 +613,14 @@ def kill():
 def killall():
     """Kill the current and all subsequent scripts"""
     wakeup(2)
+    
+##def sleepShort():
+##    setSleepTime(1)
+##def sleepLong():
+##    setSleepTime(5)
+##def sleepForever():
+##    setSleepTime(None)
 
-def sleepShort():
-    setSleepTime(1)
-def sleepLong():
-    setSleepTime(5)
-def sleepForever():
-    setSleepTime(None)
 def setSleepTime(t):
     global config
     config['sleeptime'] = t
@@ -693,7 +692,6 @@ def GUI():
     initViewActions(config.setdefault('builtinviews',['front','back','left','right','top','bottom','iso']))
     return w
 
-
 def runApp(args):
     """Create and run the qt application."""
     global app,gui
@@ -747,7 +745,7 @@ def main(argv=None):
 #### deprecated functions (retained for compatibility)
 
 def drawProp(F,side="front",color="prop"):
-    print "DEPRECATED: use draw() instead."
+    print "drawProp() DEPRECATED: use draw() instead."
     draw(F,side,color)
 
 #### Go

@@ -4,7 +4,7 @@
 """TrussFrame"""
 def show(F):
     clear()
-    drawProp(F)
+    draw(F)
     sleep()
 
 yf = [ 0.0, 0.2, 1.2, 2.2, 3.2, 4.2, 4.5 ] # y of nodes in frame columns
@@ -34,24 +34,20 @@ dakligger = (ond+bov+tss)
 dakligger += dakligger.reflect(0)
 frame += dakligger.translate([0,yf[-1],0])
 clear()
-drawProp(frame)
+draw(frame)
 sleep()
 
 structure = frame.generate2(2,6,0,2,12,3)
-drawProp(structure)
+draw(structure)
 
 sleep()
-canvas.camera.rotate(90,1)
+view('top')
 canvas.display()
 
 sleep()
-canvas.camera.rotate(-90,0)
+view('right')
 canvas.display()
 
 sleep()
-canvas.camera.rotate(-90,1)
-canvas.display()
-
-sleep()
-canvas.camera.rotate(-90,2)
+view('iso')
 canvas.display()
