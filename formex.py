@@ -750,8 +750,11 @@ class Formex:
         m = rotationMatrix(angle,axis)
         return Formex(matrixmultiply(self.f,m),self.p)
 
-    def reflect(self,dir,pos):
-        """Returns a formex mirrored in direction dir against plane at pos"""
+    def reflect(self,dir,pos=0):
+        """Returns a formex mirrored in direction dir against plane at pos.
+
+        Default position of the plane is through the origin.
+        """
         f = self.f.copy()
         f[:,:,dir] = 2*pos - f[:,:,dir]
         return Formex(f,self.p)
@@ -984,17 +987,23 @@ class Formex:
         return Formex(f,self.p)
 
     # This could be done by a map, but it is slightly cheaper to do it this way
-    def replace(self,i,j):
+    def replace(self,i,j,other=None):
         """Replace the coordinates along the axes i by those along j.
 
         i and j are lists of axis numbers.
         replace ([0,1,2],[1,2,0]) will roll the axes by 1.
         replace ([0,1],[1,0]) will swap axes 0 and 1.
+        An optionally third argument may specify another formex to take
+        the coordinates from. It should have the same dimensions.
         """
         ## IS there a numarray way to do this in 1 operation ?
+        # if self.shape != other.shape:
+        # ERROR
+        if other == None:
+            other=self
         f = self.f.copy()
         for k in range(len(i)):
-            f[:,:,i[k]] = self.f[:,:,j[k]]
+            f[:,:,i[k]] = other.f[:,:,j[k]]
         return Formex(f,self.p)
 
     def swapaxes(self,i,j):

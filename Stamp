@@ -5,7 +5,7 @@ import sys,time,string,os
 def Stamp():
     """Stamp files with copyright notice and date 
 
-    Stamp [options] [<files>]
+    Stamp [options] [replacements] [<files>]
         Will stamp the source files with our copyright and date
         If no -d option is given, the output file will be named
         <sourcefile>.stamped
@@ -14,13 +14,26 @@ def Stamp():
              part of the input file is stripped); make sure that the
              specified path exists and is not equal to the input path
         -t<stamp> : use file <stamp> for stamping. A stamp file is a text
-             file where each line starts with '##'. If the file contains a
-             text fragment '%s', this will be replaced with the date/time.
-             If you omit this option, a dull standard text will be generated.
+             file where each line starts with '##'. It can also contain one or
+             more of the following text strings, which will be replaced by the
+             appropriate string:
+               '%datetime%' will be replaced with the date/time
+             Any other string of the form '%text%' will be replaced with
+             'replacement' if an argument 'text=replacement' was specified
+             on the command line. (see Replacements).
+             If you omit the -t option, a dull standard text will be generated.
         -o<stamp> : save the (modified) stamp to file <stamp>. This is useful
              for having the same time stamp over different invocations.
         -v : be verbose
         -h : show this help
+    Beware that options with arguments are glued together!
+    Replacements:
+      Any arguments of the type 'key=value' will be added to the replacement
+      dictionary. As a result a string '%key%' in the stamp file will be
+      replaced with 'value' in the actual stamp.
+    Any other argument that is a file name, will be subjected to stamping.
+    Replacements and filenames may be interspersed, but any replacement will
+    only be active for the files following it.
 """
     global stamp,stamptime,outdir,verbose
     verbose = 0
@@ -28,6 +41,7 @@ def Stamp():
     savefile = None
     stampfile = None
     stamptime = time.asctime()
+    repl = { '%datetime%' : stamptime }
     stamp = """##
 ## This file is part of Unspecified Someversion Release %s
 ## Unspecified is an unspecified software package
@@ -47,11 +61,12 @@ def Stamp():
         elif opt == "-t":
             if verbose:
                 print "Using stamp from file %s" % a[2:]
-            stamp = string.replace(file(a[2:],'r').read(),"%s",stamptime,1)
+            stamp = file(a[2:],'r').read()
             continue
         elif opt == "-o":
             if verbose:
                 print "Saving stamp to file %s" % a[2:]
+            stamp = Replace(stamp,repl)
             file(a[2:],'w').write(stamp)
             continue
         elif opt == "-d":
@@ -59,12 +74,31 @@ def Stamp():
             if verbose:
                 print "Output files go to "+outdir
             continue
-        if count==0:
-            if verbose:
+        # it is not a recognized option
+        l = string.find(a,'=')
+        if l > -1:
+            # it is a replacement
+            repl['%'+a[:l]+'%'] = a[l+1:]
+        elif os.path.isfile(a) :
+            # it is a file
+            stamp = Replace(stamp,repl)
+            if count==0 and verbose:
                 print "Stamping files with stamp\n"+stamp
-        if os.path.isfile(a) :
             count += StampFile(a)
+        else:
+            if verbose:
+                print "Skipped unrecognized argument '%s'\n" % a
     print "%d file(s) stamped" % count
+
+def Replace(text,repl):
+    """Perform a set of replacements in text.
+
+    text is any string. repl is a dictionary. Each occurrence of a key
+    of repl will be replaced with the corresponding value.
+    """
+    for k,v in repl.iteritems():
+        text = string.replace(text,k,v)
+    return text
 
 def StampFile(name):
     """Stamp the file with given name"""

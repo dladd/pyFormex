@@ -30,7 +30,7 @@ class Camera:
 
     Position (eye) : position of the camera
     Scene center (center) : the point the camera is looking at.
-    Up Vector
+    Up Vector : a vector pointing up from the camera.
     Viewing direction (rotx,roty,rotz)
     
     For enabling continuous rotations, it is essential that the camera angles
@@ -42,7 +42,7 @@ class Camera:
                 a point on the viewing axis. 
         pos : [ long,lat,dist ] : relative position in spherical coordinates
                 of the camera with respect to the center point. 
-        twist : rotation angles around the camera's viewing axis
+        twist : rotation angle around the camera's viewing axis
    
     Lens angle (fovy)
     Aspect ratio (aspect)
@@ -65,7 +65,7 @@ class Camera:
     # !! Clients should explicitely call loadMatrix() before displaying
 
     def setCenter(self,x,y,z):
-        """Set thecenter of the camera in cartesian coordinates."""
+        """Set the center of the camera in cartesian coordinates."""
         self.ctr = [x,y,z]
 
     def setPos(self,x,y,z):
@@ -168,7 +168,7 @@ class Camera:
     def truck(self,translation):
         """Move the camera translation vector in local coordinates.
 
-        This has the effect moving the scene in opposite direction.
+        This has the effect of moving the scene in opposite direction.
         Positive coordinates mean:
           first  coordinate : truck right,
           second coordinate : pedestal up,

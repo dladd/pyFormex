@@ -17,13 +17,13 @@
 
 """This implements an OpenGL drawing widget"""
 
-from qt import *
-from qtgl import *
-
 import sys,math
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
+import OpenGL.GL as GL
+import OpenGL.GLU as GLU
+
+import qt
+import qtgl
 
 from colors import *
 from formex import *
@@ -59,20 +59,20 @@ def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """
     vertices = [[s,s,s],[-s,s,s],[-s,-s,s],[s,-s,s],[s,s,-s],[-s,s,-s],[-s,-s,-s],[s,-s,-s]]
     planes = [[0,1,2,3],[4,5,6,7],[0,3,7,4],[1,2,6,5],[0,1,5,4],[3,2,6,7]]
-    glBegin(GL_QUADS)
+    GL.glBegin(GL.GL_QUADS)
     for i in range(6):
         #glNormal3d(0,1,0);
-        glColor(*color[i])
+        GL.glColor(*color[i])
         for j in planes[i]:
-            glVertex3f(*vertices[j])
-    glEnd()
+            GL.glVertex3f(*vertices[j])
+    GL.glEnd()
 
 def drawSphere(s,color=cyan,ndiv=8):
     """Draws a centered sphere with radius s in given color."""
-    quad = gluNewQuadric()
-    gluQuadricNormals(quad, GLU_SMOOTH)
-    glColor(*color)
-    gluSphere(quad,s,ndiv,ndiv)
+    quad = GLU.gluNewQuadric()
+    GLU.gluQuadricNormals(quad, GLU.GLU_SMOOTH)
+    GL.glColor(*color)
+    GLU.gluSphere(quad,s,ndiv,ndiv)
 
 
 class CubeActor:
@@ -84,7 +84,7 @@ class CubeActor:
 
     def display(self):
         """Draw the cube."""
-        gluCube(self.size,self.color)
+        GLU.gluCube(self.size,self.color)
 
 
 class FormexActor(Formex):
@@ -99,72 +99,74 @@ class FormexActor(Formex):
         
     def draw(self,wireframe=True):
         """Draw the formex."""
-        glColor3f(*self.color)
+        GL.glColor3f(*self.color)
         nnod = self.plexitude()
         if nnod == 2:
-            glBegin(GL_LINES)
+            GL.glBegin(GL.GL_LINES)
             for el in self.data():
                 for nod in el:
-                    glVertex3f(*nod)
-            glEnd()
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
             
         elif nnod == 1:
             for el in self.data():
-                glPushMatrix()
-                glTranslatef (*el[0])
-                glCallList(self.mark)
-                glPopMatrix()
+                GL.glPushMatrix()
+                GL.glTranslatef (*el[0])
+                GL.glCallList(self.mark)
+                GL.glPopMatrix()
                 
         elif wireframe:
             for el in self.data():
-                glBegin(GL_LINE_LOOP)
+                GL.glBegin(GL.GL_LINE_LOOP)
                 for nod in el:
-                    glVertex3f(*nod)
-                glEnd()
+                    GL.glVertex3f(*nod)
+                GL.glEnd()
         elif nnod == 3:
-            glBegin(GL_TRIANGLES)
+            GL.glBegin(GL.GL_TRIANGLES)
             for el in self.data():
                 for nod in el:
-                    glVertex3f(*nod)
-            glEnd()
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
         elif nnod == 4:
-            glBegin(GL_QUADS)
+            GL.glBegin(GL.GL_QUADS)
             for el in self.data():
                 for nod in el:
-                    glVertex3f(*nod)
-            glEnd()
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
         else:
             for el in self.data():
-                glBegin(GL_POLYGON)
+                GL.glBegin(GL.GL_POLYGON)
                 for nod in el:
-                    glVertex3f(*nod)
-                glEnd()
+                    GL.glVertex3f(*nod)
+                GL.glEnd()
 
     def setMark(self,size,type):
         """Create a symbol for drawing vertices."""
-        self.mark = glGenLists(1)
-        glNewList(self.mark,GL_COMPILE)
+        self.mark = GL.glGenLists(1)
+        GL.glNewList(self.mark,GL.GL_COMPILE)
         if type == "sphere":
             drawSphere(size)
         else:
             drawCube(size)
-        glEndList()
+        GL.glEndList()
 
 ##################################################################
 #
 #  The Canvas
 #
-class Canvas(QGLWidget):
+class Canvas(qtgl.QGLWidget):
     """A canvas for OpenGL rendering."""
     
     def __init__(self,w=640,h=480,*args):
         self.actors = []
         self.camera = Camera() # default Camera settings are adequate
         self.dynamic = None    # what action on mouse move
-        QGLWidget.__init__(self,*args)
-        self.setFocusPolicy(QWidget.StrongFocus)
+        self.trl = [0.0,0.0,0.0]  # model
+        self.rot = [0.0,0.0,0.0,1.0]
+        qtgl.QGLWidget.__init__(self,*args)
+        self.setFocusPolicy(qt.QWidget.StrongFocus)
         self.resize(w,h)
-        self.glinit("wireframe") # default mode is wireframe 
+        self.glinit("wireframe") # default mode is wireframe
 
     # These three are defined by the qtgl API
     def initializeGL(self):
@@ -182,43 +184,51 @@ class Canvas(QGLWidget):
     # The rest are our functions
     def setGLColor(self,s):
         """Set the OpenGL color to the named color"""
-        self.qglColor(QColor(s))
+        self.qglColor(qtgl.QColor(s))
 
     def clearGLColor(self,s):
         """Clear the OpenGL widget with the named background color"""
-        self.qglClearColor(QColor(s))
+        self.qglClearColor(qtgl.QColor(s))
 
     def glinit(self,mode="wireframe"):
-	glClearColor(*RGBA(mediumgrey))# Clear The Background Color
-	glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
-	glDepthFunc(GL_LESS)	       # The Type Of Depth Test To Do
-	glEnable(GL_DEPTH_TEST)	       # Enables Depth Testing
+	GL.glClearColor(*RGBA(mediumgrey))# Clear The Background Color
+	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
+	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
+	GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         if mode == "wireframe":
             self.wireframe = True
-            glShadeModel(GL_FLAT)      # Enables Flat Color Shading
-            glDisable(GL_LIGHTING)
+            GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
+            GL.glDisable(GL.GL_LIGHTING)
         elif mode == "render":
             self.wireframe = False
-            glShadeModel(GL_SMOOTH)    # Enables Smooth Color Shading
+            GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             #print "set up lights"
-            glLightModel(GL_LIGHT_MODEL_AMBIENT,(0.5,0.5,0.5,1))
-            glLightfv(GL_LIGHT0, GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
-            glLightfv(GL_LIGHT0, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-            glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-            glLightfv(GL_LIGHT0, GL_POSITION, (-1.0, -1.0, 5.0))
-            glEnable(GL_LIGHT0)
-            glLightfv(GL_LIGHT1, GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
-            glLightfv(GL_LIGHT1, GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-            glLightfv(GL_LIGHT1, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-            glLightfv(GL_LIGHT1, GL_POSITION, (1.0, 1.0, 1.0))
-            glEnable(GL_LIGHT1)
-            glEnable(GL_LIGHTING)
+            GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,(0.5,0.5,0.5,1))
+            GL.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
+            GL.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
+            GL.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+            GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, (-1.0, -1.0, 5.0))
+            GL.glEnable(GL.GL_LIGHT0)
+            GL.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
+            GL.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
+            GL.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+            GL.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, (1.0, 1.0, 1.0))
+            GL.glEnable(GL.GL_LIGHT1)
+            GL.glEnable(GL.GL_LIGHTING)
             #print "set up materials"
-            glEnable(GL_COLOR_MATERIAL)
-            glColorMaterial ( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE )
-        glFinish()
+            GL.glEnable(GL.GL_COLOR_MATERIAL)
+            GL.glColorMaterial ( GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE )
+        GL.glFinish()
         #print "set up camera"
 	self.camera.loadProjection()
+        self.loadModelMatrix()
+
+    def loadModelMatrix(self):
+        """Load the model transformation matrix"""
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glLoadIdentity()
+        GL.glTranslatef(*self.trl)
+        GL.glRotatef(*self.rot)
 
 ##    def setViewingVolume(self,bbox):
 ##        print "bbox=",bbox
@@ -233,22 +243,22 @@ class Canvas(QGLWidget):
     def addActor(self,actor):
         """Add an actor to the scene."""
         self.makeCurrent()
-        actor.list = glGenLists(1)
-        glNewList(actor.list,GL_COMPILE)
+        actor.list = GL.glGenLists(1)
+        GL.glNewList(actor.list,GL.GL_COMPILE)
         actor.draw(self.wireframe)
-        glEndList()
+        GL.glEndList()
         self.actors.append(actor)
 
     def removeActor(self,actor):
         """Remove an actor from the scene"""
         self.makeCurrent()
         self.actors.remove(actor)
-        glDeleteLists(actor.list,1)
+        GL.glDeleteLists(actor.list,1)
 
     def removeAllActors(self):
         """Remove all actors from the scene"""
         for a in self.actors:
-            glDeleteLists(a.list,1)
+            GL.glDeleteLists(a.list,1)
         self.actors = []
 
     def recreateActor(self,actor):
@@ -266,17 +276,17 @@ class Canvas(QGLWidget):
         self.makeCurrent()
         for actor in self.actors:
             if actor.list:
-                glDeleteLists(actor.list,1)
-            actor.list = glGenLists(1)
-            glNewList(actor.list,GL_COMPILE)
+                GL.glDeleteLists(actor.list,1)
+            actor.list = GL.glGenLists(1)
+            GL.glNewList(actor.list,GL.GL_COMPILE)
             actor.draw(self.wireframe)
-            glEndList() 
+            GL.glEndList() 
         self.display()
 
     def clear(self):
         self.makeCurrent()
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-	glClearColor(*RGBA(lightgrey))   # Clear The Background Color
+	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
         self.updateGL()
 
     def display(self):
@@ -286,20 +296,20 @@ class Canvas(QGLWidget):
         or after changing  camera position or lens.
         """
         self.makeCurrent()
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-	glClearColor(*RGBA(lightgrey))   # Clear The Background Color
+	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
         self.camera.loadProjection()
-        glLoadIdentity()
+        GL.glLoadIdentity()
         self.camera.loadMatrix()
         for i in self.actors:
-            glCallList(i.list)
+            GL.glCallList(i.list)
         self.updateGL()
         
     def resize (self,w,h):
         self.makeCurrent()
 	if h == 0:	# Prevent A Divide By Zero If The Window Is Too Small 
             h = 1
-	glViewport(0, 0, w, h)
+	GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h
         self.camera.setLens(aspect=self.aspect)
         self.display()
@@ -363,6 +373,15 @@ class Canvas(QGLWidget):
             self.camera.pos[0] = self.state[0] - a
             self.camera.pos[1] = self.state[1] + e
             self.display()
+        elif self.dynamic == "trirotate":
+            cx,cy = w/2,h/2
+            # hor movement sets azimuth
+            a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
+            # vert movement sets elevation
+            e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
+            self.camera.pos[0] = self.state[0] - a
+            self.camera.pos[1] = self.state[1] + e
+            self.display()
         elif self.dynamic == "pan":
             dist=self.camera.pos[2]
             # hor movement sets x value of center
@@ -378,19 +397,19 @@ class Canvas(QGLWidget):
     ## Wij zouden dit ook in de top-event handler kunnen doen voorzover
     ## wij de events hier niet afhandelen.
     def keyPressEvent (self,e):
-        self.emit(PYSIGNAL("wakeup"),())
+        self.emit(qt.PYSIGNAL("wakeup"),())
         e.ignore()
         
     def mousePressEvent(self,e):
         self.statex = e.x()
         self.statey = e.y()
-        if e.button() == Qt.LeftButton:
-            self.dynamic = "rotate"
+        if e.button() == qt.Qt.LeftButton:
+            self.dynamic = "trirotate"
             self.state = self.camera.pos[0:2]
-        elif e.button() == Qt.MidButton:
+        elif e.button() == qt.Qt.MidButton:
             self.dynamic = "pan"
             self.state = self.camera.ctr[0:2]
-        elif e.button() == Qt.RightButton:
+        elif e.button() == qt.Qt.RightButton:
             self.dynamic = "combizoom"
             self.state = [self.camera.distance(),self.camera.fovy]
         
@@ -404,6 +423,6 @@ class Canvas(QGLWidget):
     def save(self,fn,fmt='PNG'):
         """Save the current rendering as an image file."""
         self.makeCurrent()
-        glFinish()
+        GL.glFinish()
         qim = self.grabFrameBuffer()
         qim.save(fn,fmt)

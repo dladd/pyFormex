@@ -10,7 +10,6 @@
 #
 """Baumkuchen Vault"""
 clear()
-global out
 m = 12 # number of cells in direction 0
 n = 36 # number of cells in direction 1
 a1 = Formex([[[0,0,0],[0,1,0]]]).rinid(m+1,n,1,1) + Formex([[[0,0,0],[1,0,0]]]).rinid(m,n+1,1,1)

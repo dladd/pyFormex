@@ -23,7 +23,7 @@ DOCDIR= $(ROOTDIR)/share/doc
 
 ############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
 
-VERSION= 0.1.3
+VERSION= 0.2
 PYFORMEXDIR= pyformex-$(VERSION)
 INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
@@ -33,9 +33,10 @@ HTMLDOCS= $(SOURCE:.py=.html)
 HTMLDIR= doc/html
 DOCFILES= README COPYING History
 EXAMPLES= examples/*.py
-STAMPABLE= README History Makefile
+STAMPABLE= README History Makefile TODO
 NONSTAMPABLE= COPYING 
 STAMP= ./Stamp 
+REPLACE= /usr/local/bin/replace
 
 .PHONY: install dist distclean
 
@@ -76,7 +77,7 @@ htmldoc: $(HTMLDOCS)
 distdoc: htmldoc
 
 stamp:
-	$(STAMP) -tStamp.template -oStamp.stamp
+	$(STAMP) -tStamp.template version=$(VERSION) -oStamp.stamp
 
 dist.stamped: distdoc distclean stamp
 	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples
@@ -92,5 +93,5 @@ distclean:
 	rm -rf $(PYFORMEXDIR)
 	alldirs . "rm -f *~"
 
-public: $(PYFORMEXDIR).tar.gz
-	scp README $(PYFORMEXDIR).tar.gz mecatrix.ugent.be:/home/ftp/pub/pyformex
+#public: $(PYFORMEXDIR).tar.gz
+#	scp README $(PYFORMEXDIR).tar.gz mecatrix.ugent.be:/home/ftp/pub/pyformex

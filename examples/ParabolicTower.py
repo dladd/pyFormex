@@ -10,7 +10,7 @@
 #
 """Parabolic Tower"""
 clear()
-global out,a,b,c,d  # constants in lambda need to be made global
+global a,b,c,d  # constants in lambda need to be made global
 h = 25.   # height of tower
 h1 = 18.  # height at neck of tower
 r = 10.   # radius at base of tower
@@ -22,7 +22,6 @@ g = lambda i: a*(d*i)**2 + b*d*i + c
 f = concatenate([  [[[g(i),i,i], [g(i+1),i-1,i+1]],
              [[g(i),i,i], [g(i+1),i+1,i+1]],
              [[g(i+1),i-1,i+1], [g(i+1),i+1,i+1]]] for i in range(n) ])
-F = Formex(f).rin(2,m,2)
+F = Formex(f,[3,0,1]).rin(2,m,2)
 T = F.bc(1,360./(2*m),d)
-out = T
-draw(out,side="bottom")
+drawProp(T,side="bottom")

@@ -18,7 +18,7 @@ import sys,time,os.path,string
 import threading
 
  
-class FileSelectionDialog(QFileDialog):
+class FileSelectionDialog(qt.QFileDialog):
     """A file selection dialog widget.
 
     You can specify a default path/filename that will be suggested
@@ -29,13 +29,13 @@ class FileSelectionDialog(QFileDialog):
     any QFileDialog mode (e.g. QFileDialog.AnyFile to accept new files)
     
     """
-    def __init__(self,default=None,pattern=None,mode=QFileDialog.ExistingFile):
-        QFileDialog.__init__(self,default,pattern)
+    def __init__(self,default=None,pattern=None,mode=qt.QFileDialog.ExistingFile):
+        qt.QFileDialog.__init__(self,default,pattern)
         self.setMode(mode)
         self.show()
     def getFilename(self):
         self.exec_loop()
-        if self.result() == QDialog.Accepted:
+        if self.result() == qt.QDialog.Accepted:
             return str(self.selectedFile())
         else:
             return None
@@ -63,7 +63,7 @@ def AddMenuItems(menu, items=[]):
         if key == "Sep":
             menu.insertSeparator()
         elif key == "Popup":
-            pop = QPopupMenu(menu,txt)
+            pop = qt.QPopupMenu(menu,txt)
             AddMenuItems(pop,val)
             menu.insertItem(txt,pop)
         elif key == "Action":
@@ -75,7 +75,7 @@ def AddMenuItems(menu, items=[]):
             menu.insertItem(txt,val)
         elif key == "QAction":
             if txt:
-                val.setProperty("menuText",QVariant(txt))
+                val.setProperty("menuText",qt.QVariant(txt))
             val.addTo(menu)
         else:
             raise RuntimeError, "Invalid key %s in menu item"%key
@@ -168,8 +168,9 @@ def runExample(i):
 def insertActions():
     global tool,action
     action = {}
-    a = QAction("Continue",QIconSet(QPixmap("next.xpm")),"Continue",0,tool)
-    QObject.connect(a,SIGNAL("activated()"),wakeup)
+    #print 
+    a = qt.QAction("Continue",qt.QIconSet(qt.QPixmap("next.xpm")),"Continue",0,tool)
+    qt.QObject.connect(a,qt.SIGNAL("activated()"),wakeup)
     a.addTo(tool)
     a.setEnabled(False)
     action['Continue'] = a
@@ -187,11 +188,11 @@ record = NotImplemented
 
 def help():
     """Start up the help browser"""
-    help = QTextBrowser()
+    help = qt.QTextBrowser()
     help.setSource('doc/html/formex.py')
 
 def about():
-    about = QMessageBox()
+    about = qt.QMessageBox()
     about.about(about,"About pyFormex",
         Version+"\n\n"
         "pyFormex is a python implementation of Formex algebra\n\n"
@@ -205,7 +206,7 @@ def testwarning():
 def warning(s):
     global options
     if options.gui:
-        w = QMessageBox()
+        w = qt.QMessageBox()
         w.warning(w,Version,s)
     else:
         print s
@@ -224,7 +225,7 @@ def warning(s):
 def saveImage():
     """Save the current rendering in image format."""
     global canvas
-    fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=QFileDialog.AnyFile)
+    fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
     fn = fs.getFilename()
     if fn:
         fmt = string.upper(os.path.splitext(fn)[1])
@@ -235,7 +236,7 @@ def saveImage():
         else:
             fmt = 'PNG'
             fn += '.png'
-        if fmt in QImage.outputFormats():
+        if fmt in qt.QImage.outputFormats():
             canvas.save(fn,fmt)
         else:
             warning("Sorry, can not save in %s format!\n"
@@ -420,7 +421,7 @@ def sleep(timeout=None):
     if wakeupMode > 0: # don't bother
         return
     # prepare for getting wakeup event 
-    QObject.connect(canvas,PYSIGNAL("wakeup"),wakeup)
+    qt.QObject.connect(canvas,qt.PYSIGNAL("wakeup"),wakeup)
     # create a Timer to wakeup after timeout
     if timeout:
         timer = threading.Timer(timeout,wakeup)
@@ -437,7 +438,7 @@ def sleep(timeout=None):
         time.sleep(0.1)
     action['Continue'].setEnabled(False)
     # ignore further wakeup events
-    QObject.disconnect(canvas,PYSIGNAL("wakeup"),wakeup)
+    qt.QObject.disconnect(canvas,qt.PYSIGNAL("wakeup"),wakeup)
         
 def wakeup(mode=0):
     """Wake up from the sleep function.
@@ -480,7 +481,7 @@ def status(s):
 
 def GUI():
     global canvas,statusbar,menu,tool, options
-    w = QMainWindow()
+    w = qt.QMainWindow()
     w.setCaption(Version)
     w.resize(640,480)
     # add widgets to the main window
@@ -490,16 +491,15 @@ def GUI():
     insertViewMenu()
     insertExampleMenu()
     AddMenuItems(menu,MenuData)
-    tool = QToolBar(w)
+    tool = qt.QToolBar(w)
     insertActions()
     # Create a nice frame to put around the OpenGL widget
     # Create our display widget
-    f = QHBox(w, "frame")
-    f.setFrameStyle(QFrame.Sunken | QFrame.Panel)
+    f = qt.QHBox(w, "frame")
+    f.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
     f.setLineWidth(2)
     f.resize(640,480)
-    from qtgl import QGLFormat
-    fmt = QGLFormat.defaultFormat()
+    fmt = qtgl.QGLFormat.defaultFormat()
     fmt.setDirectRendering(options.dri)
     canvas = Canvas(640,480,fmt,f)
     canvas.clear()
@@ -510,8 +510,8 @@ def GUI():
 
 def runApp(args):
     global app,canvas,gui
-    app = QApplication(args)
-    QObject.connect(app,SIGNAL("lastWindowClosed()"),app,SLOT("quit()"))
+    app = qt.QApplication(args)
+    qt.QObject.connect(app,qt.SIGNAL("lastWindowClosed()"),app,qt.SLOT("quit()"))
     # create GUI
     gui = GUI()
     app.setMainWidget(gui)

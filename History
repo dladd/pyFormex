@@ -26,3 +26,4 @@
 2004-10-09 BV : Fully implemented props; added color plotting.
 2004-10-15 BV : Added unique,nodes,remove; plotting of uniplex formex;
 		renamed withProp to hasProp;
+2004-12-15 BV : Added model transformation in the Canvas class
