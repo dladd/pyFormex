@@ -368,7 +368,7 @@ def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,whit
 
 def playFile(fn,name=None):
     """Play a formex script from file fn."""
-    playScript(file(fn,'r'))
+    playScript(file(fn,'r'),fn)
 
 wakeupMode=0  # 0 = sleeping allowed, 1 = stay awake for this script
               # 2 = always stay awake, 3 = stay awake and exit
@@ -396,9 +396,11 @@ def playScript(scr,name="unnamed"):
     # scripts.
     g = globals()
     g.update(Formex.globals())
-    exec(scr,g)
+    try:
+        exec(scr,g)
+    finally:
+        scriptLock.release() # release the lock in case of an error
     status("Finished script")
-    scriptLock.release()
     if wakeupMode > 2:
         exit()
     if wakeupMode < 2:
@@ -437,7 +439,6 @@ def sleep(timeout=None):
     # ignore further wakeup events
     QObject.disconnect(canvas,PYSIGNAL("wakeup"),wakeup)
         
-    
 def wakeup(mode=0):
     """Wake up from the sleep function.
 
@@ -453,6 +454,9 @@ def wakeup(mode=0):
 
 def kill():
     """Kill the current script"""
+    ## For now, this just wakes up the cript to let it finish
+    ## We really should implement a kill, e.g. bny raising a user
+    ## exception, which is caught by the playScript function
     wakeup(1)
 
 def killall():

@@ -12,6 +12,12 @@
 from numarray import *
 import math
 
+###########################################################################
+##
+##   some math functions
+##
+#########################
+
 # multiplier to transform degrees to radians
 rad = math.pi/180.
 
@@ -112,6 +118,36 @@ def pattern(s):
         connect=True
     return l
 
+def translationVector(dir,dist):
+    """Returns a translation vector in direction dir over distance dist"""
+    f = [0.,0.,0.]
+    f[dir] = dist
+    return f
+
+def rotationMatrix(angle,axis=None):
+    """Returns a rotation matrix over angle, optionally around axis.
+
+    If axis==None (default), a 2x2 rotation matrix is returned.
+    Else, axis should be one of [ 0,1,2] and specifies the rotation axis
+    in a 3D world. A 3x3 rotation matrix is returned.
+    """
+    a = angle*rad
+    c = math.cos(a)
+    s = math.sin(a)
+    if axis==None:
+        f = [[c,s],[-s,c]]
+    else:
+        f = [[0 for i in range(3)] for j in range(3)]
+        axes = range(3)
+        i,j,k = axes[axis:]+axes[:axis]
+        f[i][i] = 1.0
+        f[j][j] = c
+        f[j][k] = s
+        f[k][j] = -s
+        f[k][k] = c
+    return f
+
+
 ###########################################################################
 ##
 ##   class Formex
@@ -204,6 +240,14 @@ class Formex:
 #   Return information about a Formex
 #
 
+    def shape(self):
+        """Return the shape of the Formex.
+
+        The shape of a formex is the shape of its data array,
+        i.e. a tuple (order, plexitude, grade)
+        """
+        return self.f.shape
+
     def order(self):
         """Return the order of the Formex
 
@@ -255,6 +299,13 @@ class Formex:
     def coord(self,i,j,k):
         """Return coord k of point j of element i"""
         return self.f[i][j][k]
+
+    def __getitem__(self,i):
+        """Return element i of the formex.
+
+        This allows addressing element i of formex F as F[i].
+        """
+        return self.f[i]
     
     def bbox(self):
         """Return the boundary box of the Formex"""
@@ -358,12 +409,8 @@ class Formex:
 #  Functions that change the formex itself
 #
 
-##
-## Maybe we should make these functions inaccessible for the user?
-##
-
     def setProp(self,p=0):
-        """Create a property set on the Formex.
+        """Create a property array for the Formex.
 
         You can specify a single value or a list/array of values.
         If the number of passed values is less than the number of
@@ -372,7 +419,7 @@ class Formex:
         """
         p = asarray(p,type=Int32)
         self.p = resize(p,self.f.shape[:1])
-        
+        return self
 
     def append(self,F):
         """Append the members of formex F to this one.
@@ -408,7 +455,7 @@ class Formex:
 
 ##############################################################################
 #
-# Create copies and concatenations
+# Create copies, concatenations, subtractions, connections, ...
 #
         
     def copy(self):
@@ -529,7 +576,12 @@ class Formex:
 
 
     def remove(self,F):
-        """Remove the elements in F from the formex."""
+        """Return a formex where the elements in F have been removed.
+
+        This is also the subtraction of the current formex with F.
+        Elements are only removed if they have the same nodes in the same
+        order.
+        """
         flag = ones((self.f.shape[0],))
         for i in range(self.f.shape[0]):
             for j in range(F.f.shape[0]):
@@ -543,47 +595,44 @@ class Formex:
             p = self.p[flag>0]
         return Formex(self.f[flag>0],p)
         
+    def connect(self,Flist,nodid=None,bias=None,loop=False):
+        """Return a formex which connects the formices in list.
 
-##############################################################################
-#
-#   Common tranformations
-#        
-
-## Two utility functions that might be moved out of the formex class
-## Remember that formices have always grade 3 in the current implementation
-##
-## BV: ik zal deze twee funkties wellicht binnenkort overbrengen
-##     naar de convenience functions bovendaan deze module
-
-    def translationVector(self,dir,dist):
-        """Returns a translation vector in direction dir over distance dist"""
-        f = zeros((self.grade()),type=Float32)
-        f[dir] = dist
-        return f
-
-    def rotationMatrix(self,angle,axis=2):
-        """Returns a rotation matrix over angle around axis.
-
-        If grade=2, a 2x2 matrix is returned and axis is always 2.
-        If grade is 3, a 3x3 matrix is returned, and default axis is 2.
+        This is a class method, not an instance method!
+        Flist is a list of formices, nodid is an optional list of nod ids and
+        bias is an optional list of element bias values. All lists should have
+        the same length.
+        The returned formex has a plexitude equal to the number of
+        formices in list. Each element of the formex consist of a node from
+        the corresponding element of each of the formices in list. By default
+        this will be the first node of that element, but a nodid list may be
+        given to specify the node id to be used for each of the formices.
+        Finally, a list of bias values may be given to specify an offset in
+        element number for the subsequent formices.
+        If loop==False, the order of the formex will be the minimum order of
+        the formices in Flist, each minus its respective bias. By setting
+        loop=True however, each formex will loop around if its end is
+        encountered, and the order of the result is the maximum order in Flist.
         """
-        n = self.grade()
-        a = angle*rad
-        c = math.cos(a)
-        s = math.sin(a)
-        if n == 2:
-            f = array([[c,s],[-s,c]],type=Float32)
-        elif n == 3:
-            axes = range(3)
-            i,j,k = axes[axis:]+axes[:axis]
-            f = zeros((n,n),type=Float32)
-            f[i,i] = 1.0
-            f[j,j] = c
-            f[j,k] = s
-            f[k,j] = -s
-            f[k,k] = c
-        return f
-##
+        ## !! Loop does not work correctly. And I'm not sure if we will
+        ## ever fix it: It might be better to let the user extend the
+        ## formices where needed
+        ## Maybe give a warning?
+        m = len(Flist)
+        if not nodid:
+            nodid = [ 0 for i in range(m) ]
+        if not bias:
+            bias = [ 0 for i in range(m) ]
+        if loop:
+            n = max([ Flist[i].order() for i in range(m) ])
+        else:
+            n = min([ Flist[i].order() - bias[i] for i in range(m) ])
+        f = zeros((n,m,3),type=Float32)
+        for i,j,k in zip(range(m),nodid,bias):
+            f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
+        return Formex(f)
+    connect = classmethod(connect)
+    
 
 ##############################################################################
 #
@@ -645,7 +694,7 @@ class Formex:
 
     def rotate(self,angle,axis=2):
         """Returns a copy rotated over distance dist of matching grade."""
-        m = self.rotationMatrix(angle,axis)
+        m = rotationMatrix(angle,axis)
         return Formex(matrixmultiply(self.f,m),self.p)
 
     def reflect(self,dir,pos):
@@ -922,18 +971,17 @@ class Formex:
         ## the replication of the properties is automatic!
         return Formex(f,self.p)
  
-    def rosette(self,n,axis,point,angle):
-        """Returns a formex with n rotational replications around axis
-        through point with angular step angle.
-
-        axis is the number of the axis (0,1,2).
-        point must have same grade as formex.
+    def rosette(self,n,angle,axis=2,point=[0.,0.,0.]):
+        """Returns a formex with n rotational replications with angular
+        step angle around an axis parallel with one of the coordinate axes
+        going through the given point. axis is the number of the axis (0,1,2).
+        point must be given as a list (or array) of three coordinates.
         The original formex is the first of the n replicas.
         """
         f = self.f - point
         f = array( [ f for i in range(n) ] )
         for i in range(1,n):
-            m = self.rotationMatrix(i*angle,axis)
+            m = rotationMatrix(i*angle,axis)
             f[i] = matrixmultiply(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.p)
@@ -989,11 +1037,11 @@ class Formex:
 
     def ros(self,i,j,x,y,n,angle):
         if (i,j) == (1,2):
-            return self.rosette(n,2,[x,y,0],angle)
+            return self.rosette(n,angle,2,[x,y,0])
         elif (i,j) == (2,3):
-            return self.rosette(n,0,[0,x,y],angle)
+            return self.rosette(n,angle,0,[0,x,y])
         elif (i,j) == (1,3):
-            return self.rosette(n,1,[x,0,y],-angle)
+            return self.rosette(n,-angle,1,[x,0,y])
 
     def tranic(self,*args):
         n = len(args)/2
@@ -1044,11 +1092,11 @@ class Formex:
         return self.lam(2,t1).lam(2,t2)
     
     def rosad(self,a,b,n=4,angle=90):
-        return self.rosette(n,2,[a,b,0],angle)
+        return self.rosette(n,angle,2,[a,b,0])
     def rosas(self,a,b,n=4,angle=90):
-        return self.rosette(n,1,[a,0,b],angle)
+        return self.rosette(n,angle,1,[a,0,b])
     def rosat(self,a,b,n=4,angle=90):
-        return self.rosette(n,0,[0,a,b],angle)
+        return self.rosette(n,angle,0,[0,a,b])
 
     def genid(self,n1,n2,t1,t2,bias=0,taper=0):
         return self.generate2(n1,n2,0,1,t1,t2,bias,taper)
@@ -1127,6 +1175,12 @@ if __name__ == "__main__":
         print "nodes:",G.nodes()
         print "unique nodes:",G.nodes().unique()
         print "size:",G.size()
+        F = Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]])
+        G = Formex.connect([F,F],bias=[0,1])
+        print G
+        G = Formex.connect([F,F],bias=[0,1],loop=True)
+        print G
+        print G[1]
         
     (f,t) = _test()
     if f == 0:

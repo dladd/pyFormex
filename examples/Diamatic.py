@@ -31,6 +31,6 @@ def toSector(f):
     d = sqrt(y*y+z*z)
     return f.map(lambda x,y,z:[x,where(d>0,y*z/d,0),where(d>0,z*z/d,0)])
 
-#out = toSector(top)#.rosette(4,0,[0,0,0],45.)
+#out = toSector(top)#.rosette(4,45.,0)
 out = top + toSector(top)
 draw(out)

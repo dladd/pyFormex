@@ -30,7 +30,7 @@ def show(n,f,c,r):
     pr = r
     a=360./n
     f3 = f2.toCylindrical([1,0,2]).scale([1.,1./60.,1.])
-    f4 = f3.map(f).cylindrical([0,1,2],[1.,a,1.]).rosette(n,2,[0,0,0],a)
+    f4 = f3.map(f).cylindrical([0,1,2],[1.,a,1.]).rosette(n,a)
     clear()
     drawProp(f4,0)
     sleep()
