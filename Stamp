@@ -74,8 +74,8 @@ def StampFile(name):
     fil = file(name,'r')
     line = fil.readline()
     # first character should start comments
-    # we detect python, bash and fortran
-    if line[0] not in  "#*":
+    # we detect python, bash, fortran, tex and friends
+    if line[0] not in  "#*%":
         if verbose:
             print "This is not a stampable file "
         return 0
@@ -94,14 +94,18 @@ def StampFile(name):
     mark2 = mark+mark
     if mark2 != '##':
         stamp = string.replace(stamp,'##',mark2);
-    # check if file has a stamp
-    # print stamp
+    # check if file has an "$Id" line and echo it
     line = fil.readline()
-    if line[0:2]==mark2 and len(line):
+    if line[0]==mark and string.find(line,"$Id") >= 0:
+        fout.write(line)
+        line = fil.readline()
+    # check if file has a stamp, and eat it
+    if line[0:2]==mark2:
         line = fil.readline()
     if line[0:2]==mark2 and string.find(line,"This file is part of") >= 0:
         while line[0:2]==mark2:
             line = fil.readline()
+    # print stamp
     fout.write(stamp)
     fout.write(line)
     fout.writelines(fil.readlines())
