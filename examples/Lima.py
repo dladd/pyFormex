@@ -5,7 +5,7 @@
 def show(F):
     clear()
     drawProp(F)
-    sleep(1)
+    sleep()
 
 # We use the lima module
 from lima import *

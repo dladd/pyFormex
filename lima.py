@@ -3,9 +3,6 @@
 #
 "Lindenmayer Systems"
 
-# Convenience functions: trigonometric functions with argument in degrees
-# Should we keep this in here???
-
 class Lima:
     """A class for operations on Lindenmayer Systems."""
 

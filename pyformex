@@ -19,6 +19,9 @@ import sys,time,os.path,string
 import threading
 import qt
 
+global config
+config={}
+config['sleeptime']=1 # default time (sec.) to sleep (None is indefinitely)
  
 class FileSelectionDialog(qt.QFileDialog):
     """A file selection dialog widget.
@@ -93,6 +96,10 @@ MenuData = [
         ("Action","&Record","record"),
         ("Sep",None,None),
         ("Action","E&xit","exit"), ]),
+    ("Popup","&Settings",[
+        ("Action","&SleepShort","sleepShort"), 
+        ("Action","&SleepLong","sleepLong"), 
+        ("Action","&SleepForever","sleepForever"), ]),
     ("Popup","&Display",[
         ("Action","&Print","printit"), 
         ("Action","&Bbox","printbbox"), 
@@ -177,8 +184,7 @@ def runExamples(n):
 
 # add rotate buttons to toolbar
 def addRotateButtons():
-    global app,tool,action,startdir
-    action = {}
+    global app,tool,startdir
     dir = os.path.join(startdir,"icons")
     buttons = [ [ "Rotate left", "rotleft.xbm", rotLeft ],
                 [ "Rotate right", "rotright.xbm", rotRight ],
@@ -204,7 +210,6 @@ def insertActions():
         a.addTo(tool)
         a.setEnabled(b[3])
         action[b[0]] = a
-    addRotateButtons()
 
 out=None
 
@@ -476,12 +481,15 @@ def sleep(timeout=None):
     # prepare for getting wakeup event 
     qt.QObject.connect(canvas,qt.PYSIGNAL("wakeup"),wakeup)
     # create a Timer to wakeup after timeout
+    if timeout == None:
+        timeout = config['sleeptime']
     if timeout:
         timer = threading.Timer(timeout,wakeup)
         timer.start()
     else:
         timer = None
     # go into sleep mode
+    print action
     sleeping = True
     action['Step'].setEnabled(True)
     action['Continue'].setEnabled(True)
@@ -519,6 +527,16 @@ def killall():
     """Kill the current and all subsequent scripts"""
     wakeup(2)
 
+def sleepShort():
+    setSleepTime(1)
+def sleepLong():
+    setSleepTime(5)
+def sleepForever():
+    setSleepTime(None)
+def setSleepTime(t):
+    global config
+    config['sleeptime'] = t
+
 def exit():
     global app,scriptLock
     if app:
@@ -550,6 +568,7 @@ def GUI():
     AddMenuItems(menu,MenuData)
     tool = qt.QToolBar(w)
     insertActions()
+    addRotateButtons()
     # Create a nice frame to put around the OpenGL widget
     # Create our display widget
     f = qt.QHBox(w, "frame")
