@@ -120,6 +120,7 @@ class Canvas(QGLWidget):
         self.camera = Camera() # default Camera settings are adequate
         self.dynamic = None    # what action on mouse move
         QGLWidget.__init__(self,*args)
+        self.setFocusPolicy(QWidget.StrongFocus)
         self.resize(w,h)
         self.wireframe = True  # default mode is wireframe 
         self.glinit()
@@ -306,18 +307,22 @@ class Canvas(QGLWidget):
             self.camera.pos[1] = self.state[1] + e
             self.display()
         elif self.dynamic == "pan":
-            # hor movement sets azimuth
-            a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
-            # vert movement sets elevation
-            e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
-            self.camera.pos[0] = self.state[0] - a
-            self.camera.pos[1] = self.state[1] + e
+            dist=self.camera.pos[2]
+            # hor movement sets x value of center
+            panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
+            # vert movement sets y value of center
+            pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
+            self.camera.ctr[0] = self.state[0] - panx
+            self.camera.ctr[1] = self.state[1] + pany
             self.display()
-        
 
-    def mouseMoveEvent(self,e):
-        if self.dynamic:
-            self.dyna(e.x(),e.y())
+    ## Een ENTER keypress in het teken canvas stuurt een wakeup event.
+    ## Dit kan bijvoorbeeld gebruikt worden om een wait af te breken.
+    ## Wij zouden dit ook in de top-event handler kunnen doen voorzover
+    ## wij de events hier niet afhandelen.
+    def keyPressEvent (self,e):
+        self.emit(PYSIGNAL("wakeup"),())
+        e.ignore()
         
     def mousePressEvent(self,e):
         self.statex = e.x()
@@ -327,12 +332,17 @@ class Canvas(QGLWidget):
             self.state = self.camera.pos[0:2]
         elif e.button() == Qt.MidButton:
             self.dynamic = "pan"
+            self.state = self.camera.ctr[0:2]
         elif e.button() == Qt.RightButton:
             self.dynamic = "combizoom"
             self.state = [self.camera.distance(),self.camera.fovy]
         
     def mouseReleaseEvent(self,e):
         self.dynamic = None
+        
+    def mouseMoveEvent(self,e):
+        if self.dynamic:
+            self.dyna(e.x(),e.y())
 
     def save(self,fn,fmt='PNG'):
         """Save the current rendering as an image file."""

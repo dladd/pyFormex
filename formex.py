@@ -300,7 +300,7 @@ class Formex:
 #
 
 ##
-## Maybe we should make these functions inaccesible for the user?
+## Maybe we should make these functions inaccessible for the user?
 ##
 
     def setProp(self,p=0):
@@ -389,7 +389,7 @@ class Formex:
         return F
     concatenate = classmethod(concatenate)
 
-    def withProp(self,val):
+    def hasProp(self,val):
         """Return a formex which holds only the elements with property val.
 
         If the formex has no properties, a copy is returned.
@@ -464,6 +464,22 @@ class Formex:
         """
         return Formex(reshape(self.f,(-1,1,self.f.shape[2])))
 
+
+    def remove(self,F):
+        """Remove the elements in F from the formex."""
+        flag = ones((self.f.shape[0],))
+        for i in range(self.f.shape[0]):
+            for j in range(F.f.shape[0]):
+                if allclose(self.f[i],F.f[j]):
+                    # element i is same as element j of F
+                    flag[i] = 0
+                    break
+        if self.p == None:
+            p = None
+        else:
+            p = self.p[flag>0]
+        return Formex(self.f[flag>0],p)
+        
 
 ##############################################################################
 #
@@ -561,7 +577,7 @@ class Formex:
         """Return the sum of original plus reflection"""
         return self + self.reflect(dir,pos)
 
-## generate might be good alternative name
+    # generate might be good alternative name for replicate
     def replicate(self,n,dir,step):
         """Returns a formex with n replications in direction dir with step.
 
@@ -807,6 +823,11 @@ class Formex:
     def swapaxes(self,i,j):
         """Swap coordinate axes i and j"""
         return self.replace([i,j],[j,i])
+
+    def circulize(self,i,j):
+        """Transforms 1/8 of the i-j plane to 1/6 of a circle."""
+        return Formex(f,self.p)
+        
         
 
 ##############################################################################
@@ -819,6 +840,7 @@ class Formex:
     cantle = element
     signet = point
     uniple = coord
+    cop = remove
     
     def give():
         print self.toFormian()
@@ -970,7 +992,7 @@ if __name__ == "__main__":
         G = F1+F3+F2+F3
         print "F1+F3+F2+F3 =",G
         print "elbbox:",G.elbbox()
-        print "met prop 1:",G.withProp(1)
+        print "met prop 1:",G.hasProp(1)
         print "unique:",G.unique()
         print "nodes:",G.nodes()
         print "unique nodes:",G.nodes().unique()

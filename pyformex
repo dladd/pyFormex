@@ -15,6 +15,8 @@ from formex import *
 from canvas import *
 
 import sys,time,os.path,string
+from threading import Timer
+
  
 class FileSelectionDialog(QFileDialog):
     """A file selection dialog widget.
@@ -90,7 +92,6 @@ MenuData = [
         ("Sep",None,None),
         ("Action","E&xit","exit"), ]),
     ("Popup","&Display",[
-        ("Action","&Test","test"), 
         ("Action","&Print","printit"), 
         ("Action","&Bbox","printbbox"), 
         ("Action","&Globals","printglobals"), 
@@ -114,7 +115,8 @@ MenuData = [
     ("Popup","&Help",[
         ("Action","&Help","help"),
         ("Action","&About","about"), 
-        ("Action","&Warning","testwarning"), ])]
+        ("Action","&Warning","testwarning"), ]),
+    ("Action","&Continue","wakeup"), ]
 
 # Views Menu
 
@@ -242,8 +244,6 @@ def play():
     fn = fs.getFilename()
     if fn:
         replay(fn)
-def test():
-    draw(maketest(0))
 def printit():
     global out
     print out
@@ -278,7 +278,7 @@ def panUp():
     canvas.display()   
 def panDown():
     global canvas
-    canvas.camera.pan(-5,0)
+    canvas.camera.pan(-5,1)
     canvas.display()   
 def rotRight():
     global canvas
@@ -307,6 +307,7 @@ def dollyOut():
 
 def replay(fn,ask=False):
     """Play a formex script from file fn"""
+    global canvas
     canvas.updateGL()
     if ask:
         for line in file(fn,"r"):
@@ -340,14 +341,17 @@ def draw(F,side='front'):
     If other actors are on the scene, they may be visible as well.
     Clear the canvas before drawing if you only want one actor!
     """
-    global canvas,bbox
+    global canvas,bbox,out
+    out = F
     canvas.addActor(FormexActor(F))
     if side:
         bbox = F.bbox()
         canvas.setView(bbox,side)
+    # Als side == None zou toch de bbox moeten berekend worden
+    # en de camera in/uitgezoomd of gedollied worden.
     canvas.display()
     
-def drawProp(F,color=[black,red,green,blue,cyan,magenta,yellow,white],side='front'):
+def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,white]):
     """Draw a Formex in colors matching the elements property value.
 
     This is comparable to <draw>, but the elements of the formex are displayed
@@ -356,13 +360,14 @@ def drawProp(F,color=[black,red,green,blue,cyan,magenta,yellow,white],side='fron
     If no color list is specified, a default one is used. The color index
     used is the property value modulus the number of colors in the list.
     """
-    global canvas,bbox
+    global canvas,bbox,out
+    out = F
     if F.p == None:
         draw(F,side)
         return
     # create actors for each value
     for v in F.propSet():
-        f = F.withProp(v)
+        f = F.hasProp(v)
         i = v % len(color)
         canvas.addActor(FormexActor(f,color[i]))
     if side:
@@ -370,6 +375,30 @@ def drawProp(F,color=[black,red,green,blue,cyan,magenta,yellow,white],side='fron
         canvas.setView(bbox,side)
     canvas.display()
 
+def sleep(timeout=None):
+    """Sleep until key/mouse press in the canvas or until timeout"""
+    global sleeping,timer,app
+    # prepare for getting wakeup event 
+    QObject.connect(canvas,PYSIGNAL("wakeup"),wakeup)
+    # create a Timer to wakeup after timeout
+    if timeout:
+        timer = Timer(timeout,wakeup)
+        timer.start()
+    else:
+        timer = None
+    ## while sleeping, we have to process events
+    sleeping = True
+    while sleeping:
+        app.processEvents()
+        time.sleep(0.1)
+    # ignore further wakeup events
+    QObject.disconnect(canvas,PYSIGNAL("wakeup"),wakeup)
+
+def wakeup():
+    global sleeping,timer
+    if timer:
+        timer.cancel()
+    sleeping = False
 
 def exit():
     global app
@@ -377,34 +406,6 @@ def exit():
         app.quit()
     else:
         sys.exit(0)
-                     
-testnr=0
-    
-def maketest(nr=0):
-    global testnr,F,G,out
-    if nr == 0:
-        nr = testnr
-    testnr = (testnr + 1) % 5
-    print "Test nr. %d"%nr 
-    if nr == 0:
-        F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-        out = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
-    elif nr == 1:
-        E = Formex([[[1,1.5],[1,1]],[[1,1],[2,1]]])
-        out = E.ros(1,2,3,1,5,-45)
-    elif nr == 2:
-        N = Formex([[[0,0],[2,0]],[[0,0],[1,1]],[[2,0],[1,1]]])
-        out = N.genid(4,3,2,1,1,-1)
-    elif nr == 3:
-        G = F.lamid(1,1).rinid(10,6,2,2)
-        out = G.bb(1.5,0.8)
-    elif nr == 3:
-        out = G.bp(0.75,15)
-    elif nr == 4:
-        E = Formex([[[5,1,1],[5,2,1]]]).rinit(6,5,1,1) + Formex([[[5,1,1],[5,1,2]]]).rinit(7,4,1,1)
-        G = E.bs(1,30,5)
-        out=G
-    return out
 
 def status(s):
     """Display a message in the status line"""
@@ -438,9 +439,9 @@ def GUI():
     # Put the GL widget inside the frame
     w.setCentralWidget(f)
     return w
-    
+
 def runApp(args):
-    global app,canvas
+    global app,canvas,gui
     app = QApplication(args)
     QObject.connect(app,SIGNAL("lastWindowClosed()"),app,SLOT("quit()"))
     # create GUI

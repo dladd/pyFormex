@@ -38,7 +38,7 @@ class Camera:
     center point, because the transformation from cartesian to spherical
     coordinates is not unique.
     Therefore we store the camera as follows:
-        center : [ x,y,z ] : the reference point of the camera : this is always
+        ctr : [ x,y,z ] : the reference point of the camera : this is always
                 a point on the viewing axis. 
         pos : [ long,lat,dist ] : relative position in spherical coordinates
                 of the camera with respect to the center point. 
