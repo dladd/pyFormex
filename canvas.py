@@ -11,8 +11,8 @@
 #
 # This implements an OpenGL drawing widget for painting 3D scenes.
 #
-# TODO : we want to remove the Qt dependencies as much as possible out of
-#        this class
+# TODO : we want to move the Qt dependencies as much as possible out of
+#        this module
 # TODO : we want to move the actual GL actors out of this module
 
 """This implements an OpenGL drawing widget"""
@@ -56,13 +56,15 @@ def stuur(x,xval,yval,exp=2.5):
 class FormexActor(Formex):
     """An OpenGL actor which is a Formex"""
 
-    def __init__(self,F):
+    def __init__(self,F,color=black):
         Formex.__init__(self,F.data())
+        self.color = color
         
     def display(self,wireframe=True):
         """Draw a formex of line elements.
 
         """
+        glColor3f(*self.color)
         nnod = self.plexitude()
         if nnod == 2:
             glBegin(GL_LINES)

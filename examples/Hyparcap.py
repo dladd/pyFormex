@@ -8,7 +8,7 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
-"Hyparcap"""
+"""Hyparcap"""
 clear()
 global out
 a = 3 # verdeelparameter

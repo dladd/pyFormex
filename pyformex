@@ -346,6 +346,29 @@ def draw(F,side='front'):
         bbox = F.bbox()
         canvas.setView(bbox,side)
     canvas.display()
+    
+def drawProp(F,color=[black,red,green,blue,cyan,magenta,yellow,white],side='front'):
+    """Draw a Formex in colors matching the elements property value.
+
+    This is comparable to <draw>, but the elements of the formex are displayed
+    in different colors according to the property set. If the formex has no
+    properties, it is equivalent to <draw>.
+    If no color list is specified, a default one is used. The color index
+    used is the property value modulus the number of colors in the list.
+    """
+    global canvas,bbox
+    if F.p == None:
+        draw(F,side)
+        return
+    # create actors for each value
+    for v in F.propSet():
+        f = F.withProp(v)
+        i = v % len(color)
+        canvas.addActor(FormexActor(f,color[i]))
+    if side:
+        bbox = F.bbox()
+        canvas.setView(bbox,side)
+    canvas.display()
 
 
 def exit():

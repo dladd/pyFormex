@@ -8,6 +8,8 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
+"""Scallop Dome"""
+clear()
 global out
 a=0; g=60; m=1; p=0;
 f1 = Formex([[[10,0,0],[10,0,1]],[[10,0,1],[10,1,1]]]).genit(1,8,1,1,0,1) + Formex([[[10,0,1],[10,1,2]]]).genit(1,7,1,1,0,1)

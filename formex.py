@@ -34,6 +34,18 @@ def inside(p,mi,ma):
     return p[0] >= mi[0] and p[1] >= mi[1] and p[2] >= mi[2] and \
            p[0] <= ma[0] and p[1] <= ma[1] and p[2] <= ma[2]
 
+def unique(a):
+    """Return the unique elements in an integer array."""
+    ## OK, this looks complex. And there might be a simpler way
+    ## to do this in numarray, I just couldn't find any.
+    ## Our algorithm:
+    ## First we sort the values (1-D). Then we create an array that flags
+    ## the elements which are larger than their predecessor with a "1".
+    ## The first element always gets flagged with a "1".
+    ## Finally we take the flagged elements from the sorted array.
+    b = sort(a.getflat())
+    return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
+
 ##
 ## If p1 and p2 are arrays, this can better be replaced by
 ## allclose(p1,p2,rtol,atol)
@@ -111,7 +123,7 @@ class Formex:
 #   Create a new Formex
 #
 
-    def __init__(self,data=[[[]]],props=None):
+    def __init__(self,data=[[[]]],prop=None):
         self.f = array(data,type=Float32)
         self.p = None
         if len(self.f.shape) != 3:
@@ -120,8 +132,8 @@ class Formex:
             f = zeros((self.f.shape[:2]+(3,)),type=Float32)
             f[:,:,:2] = self.f
             self.f = f
-        if props != None:
-            self.setProps(props)
+        if prop != None:
+            self.setProp(prop)
 
 ###########################################################################
 #
@@ -164,20 +176,20 @@ class Formex:
     def z(self):
         """Return the z-plane (can be modified)"""
         return self.f[:,:,2]
-    def props(self):
+    def prop(self):
         """Return the properties as a numarray"""
         return self.p
 
-    def cantle(self,i):
-        """Return cantle i of the formex"""
+    def element(self,i):
+        """Return element i of the formex"""
         return self.f[i]
 
-    def signet(self,i,j):
-        """Return signet j of cantle i"""
+    def point(self,i,j):
+        """Return point j of element i"""
         return self.f[i][j]
 
-    def uniple(self,i,j,k):
-        """Return uniple k of signet j of cantle i"""
+    def coord(self,i,j,k):
+        """Return coord k of point j of element i"""
         return self.f[i][j][k]
     
     def bbox(self):
@@ -190,6 +202,11 @@ class Formex:
         """Return the center of the Formex"""
         min,max = self.bbox()
         return [ (min[i]+max[i])/2 for i in range(self.grade()) ]
+
+    def propSet(self):
+        """Return a list with unique property values on this formex."""
+        return unique(self.p)
+        
 
 ##############################################################################
 # Create string representations of a formex
@@ -237,17 +254,17 @@ class Formex:
         """Return string representation as a numarray."""
         return self.f.__str__()
 
-    def asFormexWithProps(self):
+    def asFormexWithProp(self):
         """Return string representation as Formex with properties.
 
         The string representation as done by asFormex() is followed by
-        the words "with props" and a list of the properties.
+        the words "with prop" and a list of the properties.
         """
         s = self.asFormex()
         if self.p != None:
-            s += " with props "+self.p.__str__()
+            s += " with prop "+self.p.__str__()
         else:
-            s += " no props "
+            s += " no prop "
         return s
 
     #default print function
@@ -274,7 +291,7 @@ class Formex:
 ## Maybe we should make these functions inaccesible for the user?
 ##
 
-    def setProps(self,p=0):
+    def setProp(self,p=0):
         """Create a property set on the Formex.
 
         You can specify a single value or a list/array of values.
@@ -330,7 +347,7 @@ class Formex:
         ## In all examples it works, I think because the operations on
         ## the numarray data cause a copy to be made. Need to explore this.
 
-    def removeProps(self):
+    def removeProp(self):
         """Returns a copy of the formex without the properties."""
         return Formex(self.f)
 
@@ -342,6 +359,8 @@ class Formex:
     ## DO we really need this? Could be written as F+F+F
     ## Find out if there would be performance penalty?
     ## Then maybe move to deprecated compatibility functions
+    ## It may come in handy though.
+
     def concatenate(self,list):
         """Concatenate all formices in list.
 
@@ -350,11 +369,33 @@ class Formex:
         >>> print Formex.concatenate([F,F,F])
         {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}
         """
-        return Formex( concatenate([a.f for a in list]) )
+        ## return Formex( concatenate([a.f for a in list]) )
+        ## This is not so simple anymore because of the handling of properties
+        F = list[0]
+        for G in list[1:]:
+            F += G
+        return F
     concatenate = classmethod(concatenate)
+
+    def withProp(self,val):
+        """Return a formex which holds only the elements with property val.
+
+        If the formex has no properties, a copy is returned.
+        The returned formex is always without properties.
+        """
+        if self.p == None:
+            return Formex(self.f)
+        else:
+            return Formex(self.f[self.p==val])
       
-    def unique(self):
-        """Return a formex which holds only the unique elements."""
+    def unique(self,rtol=1.e-4,atol=1.e-6):
+        """Return a formex which holds only the unique elements.
+
+        Two elements are considered equal when all its nodal coordinates
+        are close. Two values are close if they are both small compared to atol
+        or their difference divided by the second value is small compared to
+        rtol.
+        """
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
         return Formex(self.f)
       
@@ -379,6 +420,12 @@ class Formex:
 #
 #   Common tranformations
 #        
+
+## Two utility functions that might be moved out of the formex class
+## Remember that formices have always grade 3 in the current implementation
+##
+## BV: ik zal deze twee funkties wellicht binnenkort overbrengen
+##     naar de convenience functions bovendaan deze module
 
     def translationVector(self,dir,dist):
         """Returns a translation vector in direction dir over distance dist"""
@@ -408,17 +455,18 @@ class Formex:
             f[k,j] = -s
             f[k,k] = c
         return f
+##
 
     def translate(self,vector,distance=None):
-        """Returns a copy translated over translation vector.
+        """Returns a copy translated over distance in direction of vector.
 
         If no distance is given, translation is over the specified vector.
         If a distance is given, translation is over the specified distance
         in the direction of the vector"""
         if distance:
-            return Formex(self.f + scale(unitvector(vector),distance))
+            return Formex(self.f + scale(unitvector(vector),distance),self.p)
         else:
-            return Formex(self.f + vector)
+            return Formex(self.f + vector,self.p)
 
     # This could be replaced by a call to translate(), but it is cheaper
     # because we operate on one third of the coordinates only
@@ -429,7 +477,7 @@ class Formex:
         """
         f = self.f.copy()
         f[:,:,dir] += distance
-        return Formex(f)
+        return Formex(f,self.p)
 
     def translatem(self,*args):
         """Multiple subsequent translations in axis directions.
@@ -448,24 +496,24 @@ class Formex:
     def rotate(self,angle,axis=2):
         """Returns a copy rotated over distance dist of matching grade."""
         m = self.rotationMatrix(angle,axis)
-        return Formex(matrixmultiply(self.f,m))
+        return Formex(matrixmultiply(self.f,m),self.p)
 
     def scale(self,scale):
         """Returns a copy scaled with scale[i] in direction i"""
-        return Formex(self.f*scale)
+        return Formex(self.f*scale,self.p)
 
     def reflect(self,dir,pos):
         """Returns a formex mirrored in direction dir against plane at pos"""
         f = self.f.copy()
         f[:,:,dir] = 2*pos - f[:,:,dir]
-        return Formex(f)
+        return Formex(f,self.p)
 
     def reflectAdd(self,dir,pos):
         """Return the sum of original plus reflection"""
         return self + self.reflect(dir,pos)
 
-    # we really should call this replicate or generate
-    def rindle(self,n,dir,step):
+## generate might be good alternative name
+    def replicate(self,n,dir,step):
         """Returns a formex with n replications in direction dir with step.
 
         The original formex is the first of the n replicas.
@@ -474,7 +522,8 @@ class Formex:
         for i in range(1,n):
             f[i,:,:,dir] += i*step
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
-        return Formex(f)
+        ## the replication of the properties is automatic!
+        return Formex(f,self.p)
  
     def rosette(self,n,axis,point,angle):
         """Returns a formex with n rotational replications around axis
@@ -490,7 +539,7 @@ class Formex:
             m = self.rotationMatrix(i*angle,axis)
             f[i] = matrixmultiply(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
-        return Formex(f + point)
+        return Formex(f + point,self.p)
     
     def generate2(self,n1,n2,d1,d2,t1,t2,bias=0,taper=0):
         """Generate copies in two directions.
@@ -502,15 +551,19 @@ class Formex:
         """
         P = [ self.translatem((d1,i*bias),(d2,i*t2)).rindle(n1+i*taper,d1,t1)
               for i in range(n2) ]
-        return self.concatenate(P)
+        ##
+        ## We should replace the Formex concatenation here by
+        ## seperate data and prop concatenations, because we are
+        ## guaranteed that either none or all formices in P have props.
+        return Formex.concatenate(P)
 
     def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.]):
         """Converts from cylindrical to cartesian after scaling.
 
         dir specifies which coordinates are interpreted as resp.
-        distance(r), angle(theta) and height(z).
+        distance(r), angle(theta) and height(z). Default order is [r,theta,z].
         scale will scale the coordinate values prior to the transformation.
-        angle is then interpreted as degrees.
+        The resulting angle is interpreted in degrees.
         """
         f = zeros(self.f.shape,type=Float32)
         r = scale[0] * self.f[:,:,dir[0]]
@@ -518,7 +571,7 @@ class Formex:
         f[:,:,0] = r*cos(theta)
         f[:,:,1] = r*sin(theta)
         f[:,:,2] = scale[2] *  self.f[:,:,dir[2]]
-        return Formex(f)
+        return Formex(f,self.p)
     
     def spherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
         """Converts from spherical to cartesian after scaling.
@@ -539,8 +592,7 @@ class Formex:
         f[:,:,0] = rc*cos(theta)
         f[:,:,1] = rc*sin(theta)
         f[:,:,2] = r*cos(phi)
-        return Formex(f)
-
+        return Formex(f,self.p)
 
     def bump1(self,dir,a,func,dist):
         """Return a formex with a one-dimensional bump.
@@ -554,7 +606,7 @@ class Formex:
         f = self.f.copy()
         d = f[:,:,dist] - a[dist]
         f[:,:,dir] += func(d)*a[dir]/func(0)
-        return Formex(f)
+        return Formex(f,self.p)
     
     def bump2(self,dir,a,func):
         """Return a formex with a two-dimensional bump.
@@ -571,7 +623,7 @@ class Formex:
         d2 = f[:,:,dist[1]] - a[dist[1]]
         d = sqrt(d1*d1+d2*d2)
         f[:,:,dir] += func(d)*a[dir]/func(0)
-        return Formex(f)
+        return Formex(f,self.p)
 
     
     # This is a generalization of both the bump1 and bump2 methods.
@@ -620,7 +672,7 @@ class Formex:
         #print d
         #print a[dir]/func(0)
         f[:,:,dir] += func(d)*a[dir]/func(0)
-        return Formex(f)
+        return Formex(f,self.p)
 
     def map(self,func):
         """Return a Formex mapped by a 3-D function.
@@ -638,7 +690,7 @@ class Formex:
         """
         f = zeros(self.f.shape,type=Float32)
         f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
-        return Formex(f)
+        return Formex(f,self.p)
 
     def map1(self,dir,func):
         """Return a Formex where coordinate i is mapped by a 1-D function.
@@ -652,7 +704,7 @@ class Formex:
         """
         f = self.f.copy()
         f[:,:,dir] = func[i](self.f[:,:,dir])
-        return Formex(f)
+        return Formex(f,self.p)
 
     def mapd(self,dir,func,point,dist=None):
         """Maps one coordinate by a function of the distance to a point.
@@ -687,7 +739,7 @@ class Formex:
                 d += d1*d1
             d = sqrt(d)
         f[:,:,dir] = func(d)
-        return Formex(f)
+        return Formex(f,self.p)
 
     # This could be done by a map, but it is slightly cheaper to do it this way
     def replace(self,i,j):
@@ -701,7 +753,7 @@ class Formex:
         f = self.f.copy()
         for k in range(len(i)):
             f[:,:,i[k]] = self.f[:,:,j[k]]
-        return Formex(f)
+        return Formex(f,self.p)
 
     def swapaxes(self,i,j):
         """Swap coordinate axes i and j"""
@@ -714,7 +766,11 @@ class Formex:
 #
 # New users should avoid these functions!
 #
-        
+
+    cantle = element
+    signet = point
+    uniple = coord
+    
     def give():
         print self.toFormian()
 
@@ -724,6 +780,7 @@ class Formex:
     def ref(self,dir,dist):
         return self.reflect(dir-1,dist)
 
+    rindle = replicate
     def rin(self,dir,n,dist):
         return self.rindle(n,dir-1,dist)
 
@@ -849,36 +906,37 @@ if __name__ == "__main__":
         This is intended for tests during development. This can be changed
         at will.
         """
-        Formex.setPrintFunction(Formex.asFormexWithProps)
+        Formex.setPrintFunction(Formex.asFormexWithProp)
         A = Formex()
         print "An empty formex",A
         F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
         print "F =",F
         F1 = F.tran(1,6)
-        F1.setProps(0)
+        F1.setProp(0)
         print "F1 =",F1
         F2 = F.ref(1,2)
         print "F2 =",F2
         F3 = F.ref(1,1.5).tran(2,2)
-        F3.setProps([1,2])
+        F3.setProp([1,2])
         print "F3+F3 =",F3+F3
+        print "prop 1:",(F3+F3).withProp(1)
 ##        H = F.rin(1,4,2)
 ##        print "H =",H
 ##        R = F.lam(1,1)
 ##        print "R =",R
 ##        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
 ##        print "G =",G
-        F = Formex([[[1,0,0],[0,1,1]]],props=[0])
-        print F
-        G = F.translatem((1,4),(2,10))
-        print G
-        H = F.tranic(2,3,4,10)
-        print H
-        F = Formex([[[1.0,1.0,1.0]]])
-        G = F.copy()
-        F.append(F)
-        print "F =",F
-        print "G =",G
+##        F = Formex([[[1,0,0],[0,1,1]]],prop=[0])
+##        print F
+##        G = F.translatem((1,4),(2,10))
+##        print G
+##        H = F.tranic(2,3,4,10)
+##        print H
+##        F = Formex([[[1.0,1.0,1.0]]])
+##        G = F.copy()
+##        F.append(F)
+##        print "F =",F
+##        print "G =",G
 
     (f,t) = _test()
     if f == 0:

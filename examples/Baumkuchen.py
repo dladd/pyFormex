@@ -8,7 +8,7 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
-"""Baumkuchen vault"""
+"""Baumkuchen Vault"""
 clear()
 global out
 m = 12 # number of cells in direction 0

@@ -8,7 +8,7 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
-"Geodesic Dome"""
+"""Geodesic Dome"""
 clear()
 global out
 m=5; n=5; v=0.5*sqrt(3.)
