@@ -31,11 +31,11 @@ def sind(arg):
     return sin(arg*rad)
 
 def cosd(arg):
-    """Return the sin of an angle in degrees."""
+    """Return the cos of an angle in degrees."""
     return cos(arg*rad)
 
 def tand(arg):
-    """Return the sin of an angle in degrees."""
+    """Return the tan of an angle in degrees."""
     return tan(arg*rad)
 
 def length(arg):
@@ -316,22 +316,39 @@ class Formex:
         return self.f[i]
     
     def bbox(self):
-        """Return the boundary box of the Formex"""
+        """Return the bounding box of the Formex.
+
+        The bounding box is the smallest rectangular volume in global
+        coordinates, such at no points of the Formex are outside the
+        box. It is returned as a list of two points: one with the
+        minimal coordinates and one with the maximal."""
         min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
         max = [ self.f[:,:,i].max() for i in range(self.f.shape[2]) ]
         return [min, max]
 
     def center(self):
-        """Return the center of the Formex"""
+        """Return the center of the Formex.
+
+        The center of the formex is the center of its bbox().
+        """
         min,max = self.bbox()
         return vector.midPoint(min,max)
 
     def size(self):
         """Return the size of the Formex.
 
-        The size is the length of the diagonal of the bbox"""
+        The size is the length of the diagonal of the bbox()."""
         min,max = self.bbox()
         return vector.distance(min,max)
+    
+    def bsphere(self):
+        """Return the diameter of the bounding sphere of the Formex.
+
+        The bounding sphere is the smallest sphere with center in the
+        center() of the Formex, and such that no points of the Formex
+        are lying outside the sphere.
+        """
+        return self.f - self.center()
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""
@@ -1288,7 +1305,9 @@ if __name__ == "__main__":
         print G
         print G[1]
         print G.nodesAndElements()
-        print isinstance(G,Formex)
+        print F
+        print F.center()
+        print F.bsphere()
 
 
     (f,t) = _test()

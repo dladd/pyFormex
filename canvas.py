@@ -172,6 +172,14 @@ class Canvas(qtgl.QGLWidget):
         qtgl.QGLWidget.__init__(self,*args)
         self.setFocusPolicy(qt.QWidget.StrongFocus)
         self.actors = []       # an empty scene
+        self.views = { 'front': (0.,0.,0.),
+                       'back': (180.,0.,0.),
+                       'right': (90.,0.,0.),
+                       'left': (270.,0.,0.),
+                       'top': (0.,90.,0.),
+                       'bottom': (0.,-90.,0.),
+                       'iso': (45.,45.,0.),
+                       }   # default views
         self.setBbox()
         self.wireframe = True
         self.dynamic = None    # what action on mouse move
@@ -315,6 +323,15 @@ class Canvas(qtgl.QGLWidget):
         self.camera.setLens(aspect=self.aspect)
         self.display()
 
+    def createView(self,name,angles):
+        """Create a named view for camera orientation long,lat.
+
+        By default, the following views are created:
+        'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
+        The user can add/delete/overwrite any number of predefined views.
+        """
+        self.views['name'] = angles
+        
     def setView(self,bbox=None,side='front'):
         """Sets the camera looking at one of the sides of the bbox.
 
@@ -326,44 +343,25 @@ class Canvas(qtgl.QGLWidget):
         given, 'front' is used.
         """
         self.makeCurrent()
+        # select view angles: if undefined use (0,0,0)
+        angles = self.views.get(side,(0,0,0))
+        # go to a distance to have a good view with a 45 degree angle lens
         if bbox == None:
             bbox = self.bbox
         else:
             self.bbox = bbox
         center,size = centerDiff(*bbox)
-        print "Setting view for bbox",bbox
-        print "center=",center
-        print "size=",size
+        #print "Setting view for bbox",bbox
+        #print "center=",center
+        #print "size=",size
+        # calculating the bounding circle: this is rather conservative
+        dist = length(size)
+        #print "dist = ",dist
         self.camera.setCenter(*center)
-        if side == 'front':
-            hsize,vsize,depth = size[0],size[1],size[2]
-            long,lat = 0.,0.
-        elif side == 'back':
-            hsize,vsize,depth = size[0],size[1],size[2]
-            long,lat = 180.,0.
-        elif side == 'right':
-            hsize,vsize,depth = size[2],size[1],size[0]
-            long,lat = 90.,0.
-        elif side == 'left':
-            hsize,vsize,depth = size[2],size[1],size[0]
-            long,lat = 270.,0.
-        elif side == 'top':
-            hsize,vsize,depth = size[0],size[2],size[1]
-            long,lat = 0.,90.
-        elif side == 'bottom':
-            hsize,vsize,depth = size[0],size[2],size[1]
-            long,lat = 0.,-90.
-        elif side == 'iso':
-            hsize = vsize = depth = vector.distance(bbox[1],bbox[0])
-            long,lat = 45.,45.
-        # go to a distance to have a good view with a 45 degree angle lens
-        dist = max(0.6*depth, 1.5*max(hsize/self.aspect,vsize))
-        print "dist = ",dist
-        self.camera.setRotation(long,lat,0.)
+        self.camera.setRotation(*angles)
         self.camera.setDist(dist)
         self.camera.setLens(45.,self.aspect)
         self.camera.setClip(0.01*dist,100*dist)
-
 
     def zoom(self,f):
         self.camera.setDist(f*self.camera.getDist())
@@ -395,7 +393,7 @@ class Canvas(qtgl.QGLWidget):
             if abs(b) > 5:
                 val = stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
                 rot =  [ abs(val),-dx[1],dx[0],0 ]
-                print "val,rot=",val,rot
+                #print "val,rot=",val,rot
                 self.camera.rotate(*rot)
                 self.statex,self.statey = (x,y)
 
@@ -409,7 +407,7 @@ class Canvas(qtgl.QGLWidget):
             dx,dy = (x-self.statex,y-self.statey)
             panx = stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
             pany = stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
-            print dx,dy,panx,pany
+            #print dx,dy,panx,pany
             self.camera.translate(panx,-pany,0)
             self.statex,self.statey = (x,y)
 

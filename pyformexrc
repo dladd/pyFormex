@@ -1,18 +1,27 @@
-# This is the default pyFormex config file
-# Copy it to ~/.pyformexrc if you want to make changes
+# This is the default pyFormex config file. DO NOT CHANGE IT!
 #
-# The config is a Python dictionary and this file be legal Python
+# Changes should go to /etc/pyformexrc (for site-wide changes)
+# or to ~/.pyformexrc (for personal settings).
+# If your are missing these files, you can safely copy this file as a start.
+# Config settings are read in order from this file, then /etc/pyformexrc,
+# finally ~/.pyformexrc. The last settings will override previous ones.
+#
+# The config is a Python dictionary and this file should be legal Python
 # All config settings should be of the form config[key]=value
 #
-config['width']=1000     # default window width
-config['height']=750     # default window height
-config['sleeptime']=1    # default time (sec.) to sleep (None is indefinitely)
-config['localaxes']=True     # by default, buttons rotate/pan in local axes
-config['camerabuttons']=True # add camera buttons to toolbar
-config['viewbuttons']=True   # add view buttons to toolbar
-config['examplesmenu']=True  # add examples menu
-config['zoomfactor']=1.25    # zooming factor for zoom buttons
-config['rotfactor']=5.       # rotation angle for rotation buttons
-config['panfactor']=5.       # translation factor for pan buttons
-config['propcolors']=[black,red,green,blue,cyan,magenta,yellow,white] 
+config['width'] = 640    # default window width
+config['height'] = 480	 # default window height
+config['sleeptime'] = 1  # default time (sec.) to sleep (None is indefinitely)
+config['localaxes'] = True     # by default, buttons rotate/pan in local axes
+config['camerabuttons'] = True # add camera buttons to toolbar
+config['examplesmenu'] = True  # add examples menu
+config['zoomfactor'] = 1.25    # zooming factor for zoom buttons
+config['rotfactor'] = 5.       # rotation angle for rotation buttons
+config['panfactor'] = 5.       # translation factor for pan buttons
+config['propcolors'] = [black,red,green,blue,cyan,magenta,yellow,white] 
    # a default color set for properties
+config['icondir'] = os.path.join(config['pyformexdir'],"icons")
+config['exampledir'] = os.path.join(config['pyformexdir'],"examples")
+config['viewsmenu'] = True # Add a Views menu
+config['viewsbar'] = True  # Add a Views toolbar
+config['builtinviews'] = ['front','back','right','left','top','bottom','iso']

@@ -17,10 +17,12 @@ def torus(m,n):
     return H
 
 for m in [3,4,6,12,36]:
+    side='front'
     for n in [3,4,6,8,12]:
         clear()
-        drawProp(torus(m,n),0)
+        draw(torus(m,n),side)
+        side=None
         sleep()
 
 clear()
-drawProp(torus(72,36),0)
+draw(torus(72,36),None)

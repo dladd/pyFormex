@@ -1,6 +1,6 @@
 This is a summary of our plans before the next releases:
 
-Release 0.2 : No further functionality is planned: release is imminent
+Release 0.2 : Released 2005-Jan-03
 
 
 
@@ -8,10 +8,10 @@ Release 0.3 :
  - Rethink, reorganize, complete the formex transformations
  - Provide short documentation 
  - Change the mouse rotation action  (DONE) 
- - Include an interface for executing external scripts.
- - Include an online help system
+ - Interface for executing external scripts.
+ - Online help system
  - Provide a formian to pyformex translator
- - Add config file and config settings dialog
+ - Add config file and config settings dialog (INITIAL)
 
 
 Release 0.4 :
@@ -19,3 +19,8 @@ Release 0.4 :
   - Decent install/uninstall procedures
   - Full manual
 
+Release 0.5 :
+  - Multiple views
+  - Rendering of externally provided values on the domain.
+
+  
