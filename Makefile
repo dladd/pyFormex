@@ -64,7 +64,7 @@ dist:	dist.stamped
 
 distdoc:
 	mkdir -p doc/html
-	for f in $(PROGRAM) $(SOURCE); do pydoc -w "./$f" ; done
+	for f in $(PROGRAM) $(SOURCE); do pydoc -w "./$$f" ; done
 	mv *.html doc/html
 
 dist.stamped: distdoc

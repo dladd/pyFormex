@@ -87,14 +87,31 @@ def cross (v,w):
     """Return the cross product of two vectors."""
     return [ v[1]*w[2]-v[2]*w[1],  v[2]*w[0]-v[0]*w[2], v[0]*w[1]-v[1]*w[0] ]
 
+def cartesianToCylindrical (v) :
+    """Convert cartesian coordinates [x,y,z] to cylindrical [r,theta,z]
+    
+    The angle is given in degrees: theta: -180..180
+    """
+    r = math.sqrt(v[0]*v[0]+v[1]*v[1])
+    theta = math.degrees( math.atan2(v[1],v[0]) )
+    return [ r, theta, v[2] ]
+
+def cylindricalToCartesian (v) :
+    """Convert cylindrical coordinates [r,theta,z] to cartesian [x,y,z]
+    
+    The angle theta must be given in degrees.
+    """
+    theta = math.radians(v[1])
+    return [ v[0]*math.cos(theta),  v[0]*math.sin(theta), v[2] ]
+
 def cartesianToSpherical (v) :
     """Convert cartesian coordinates [x,y,z] to spherical [long,lat,dist]
     
-    Angles are given in degrees: lat: -90..90, long:0..360
+    Angles are given in degrees: lat: -90..90, long:-180..180
     """
     distance = length(v)
-    longitude = degrees( math.atan2(v[0],v[2]) )
-    latitude = degrees( math.asin(v[1]/distance) )
+    longitude = math.degrees( math.atan2(v[0],v[2]) )
+    latitude = math.degrees( math.asin(v[1]/distance) )
     return [ longitude, latitude, distance]
 
 def sphericalToCartesian (v) :

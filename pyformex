@@ -15,7 +15,7 @@ from formex import *
 from canvas import *
 
 import sys,time,os.path,string
-from threading import Timer
+import threading
 
  
 class FileSelectionDialog(QFileDialog):
@@ -112,14 +112,16 @@ MenuData = [
         ("Action","Rotate &Left","rotLeft"),
         ("Action","Rotate &Up","rotUp"),
         ("Action","Rotate &Down","rotDown"),  ]),
+    ("Popup","&Actions",[
+        ("Action","&Wakeup","wakeup"),
+        ("Action","&Kill","kill"), 
+        ("Action","&Killall","killall"),  ]),
     ("Popup","&Help",[
         ("Action","&Help","help"),
         ("Action","&About","about"), 
-        ("Action","&Warning","testwarning"), ]),
-    ("Action","&Continue","wakeup"), ]
+        ("Action","&Warning","testwarning"), ]) ]
 
 # Views Menu
-
 def insertViewMenu():
     """Insert the default views menu in the menudata."""
     global MenuData,BuiltinViews
@@ -145,23 +147,32 @@ def view(v):
         warning("This view has not been created yet")
 
 # Examples Menu
-
-def insertExamplesMenu():
+def insertExampleMenu():
     """Insert the examples menu in the menudata."""
-    global dirname,examples
+    global dirname,example
     dir = os.path.join(dirname,"examples")
     if os.path.isdir(dir):
-        examples = filter(lambda s:s[-3:]==".py" and s[0]!='.',os.listdir(dir))
+        example = filter(lambda s:s[-3:]==".py" and s[0]!='.',os.listdir(dir))
+    example.sort()
     vm = ("Popup","&Examples",[
-        ("VAction","&%s"%os.path.splitext(t)[0],("runExample",i)) for i,t in enumerate(examples)
+        ("VAction","&%s"%os.path.splitext(t)[0],("runExample",i)) for i,t in enumerate(example)
         ])
     MenuData.insert(4,vm)
 
 def runExample(i):
     """Run example i from the list of found examples."""
-    global dirname,examples
-    replay(os.path.join(dirname,"examples",examples[i]))
+    global dirname,example
+    playFile(os.path.join(dirname,"examples",example[i]),example[i])
 
+# Action buttons (should be put in a toolbar)
+def insertActions():
+    global tool,action
+    action = {}
+    a = QAction("Continue",QIconSet(QPixmap("next.xpm")),"Continue",0,tool)
+    QObject.connect(a,SIGNAL("activated()"),wakeup)
+    a.addTo(tool)
+    a.setEnabled(False)
+    action['Continue'] = a
 
 out=None
 
@@ -235,7 +246,7 @@ def play():
     fs = FileSelectionDialog(".","pyformex scripts (*.frm *.py)")
     fn = fs.getFilename()
     if fn:
-        replay(fn)
+        playFile(fn)
 def printit():
     global out
     print out
@@ -293,27 +304,6 @@ def dollyOut():
     global canvas
     canvas.camera.dolly(1.25)
     canvas.display()   
-
-def replay(fn,ask=False):
-    """Play a formex script from file fn"""
-    global canvas
-    canvas.updateGL()
-    if ask:
-        for line in file(fn,"r"):
-            print line
-        ans = raw_input(line.rstrip('\n')+" -- Execute this script (y/n)? ")
-        ask = ans != 'y'
-    if not ask:
-        # We need to pass formex globals to the script
-        # This would be done automatically if we put this function
-        # in the formex.py file. But hen we need to pass other globals
-        # from this file (like draw,...)
-        # We might create a module with all operations accepted in
-        # scripts.
-        g = globals()
-        g.update(Formex.globals())
-        status(fn)
-        execfile(fn,g)
 
 def clear():
     """Remove all actors from the canvas"""
@@ -375,36 +365,108 @@ def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,whit
         canvas.setView(bbox,side)
     canvas.display()
 
+
+def playFile(fn,name=None):
+    """Play a formex script from file fn."""
+    playScript(file(fn,'r'))
+
+wakeupMode=0  # 0 = sleeping allowed, 1 = stay awake for this script
+              # 2 = always stay awake, 3 = stay awake and exit
+scriptLock = threading.Lock()
+    
+def playScript(scr,name="unnamed"):
+    """Play a pyformex script scr. scr should be a valid Python text.
+
+    If a second parameter is given, it will be displayed on the status line.
+    This is different from execScript in that it starts a new thread,
+    enabling the script to be killed.
+    """
+    global canvas,scriptLock,wakeupMode
+    # Try to acquire the scriptLock, if not: return immediately
+    # (We only allow one script executing at a time!)
+    if not scriptLock.acquire(False):
+        return
+    status("Running script (%s)" % name)
+    canvas.updateGL()
+    # We need to pass formex globals to the script
+    # This would be done automatically if we put this function
+    # in the formex.py file. But hen we need to pass other globals
+    # from this file (like draw,...)
+    # We might create a module with all operations accepted in
+    # scripts.
+    g = globals()
+    g.update(Formex.globals())
+    exec(scr,g)
+    status("Finished script")
+    scriptLock.release()
+    if wakeupMode > 2:
+        exit()
+    if wakeupMode < 2:
+        wakeupMode = 0
+
+# The sleep functionality has some problems which needs to be solved:
+# If a script is played and enters in sleep mode, and the user does not wake
+# it up before the next script is played, both get intermixed.
+# Also, if a script is unfinished, and you try to close the program,
+# It hangs.
+# Therefore, it would be good to have some kill() function to cancel
+# hanging scripts.
+
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
-    global sleeping,timer,app
+    global sleeping,wakeupMode,timer,app,action
+    if wakeupMode > 0: # don't bother
+        return
     # prepare for getting wakeup event 
     QObject.connect(canvas,PYSIGNAL("wakeup"),wakeup)
     # create a Timer to wakeup after timeout
     if timeout:
-        timer = Timer(timeout,wakeup)
+        timer = threading.Timer(timeout,wakeup)
         timer.start()
     else:
         timer = None
-    ## while sleeping, we have to process events
+    # go into sleep mode
     sleeping = True
+    action['Continue'].setEnabled(True)
+    ## while sleeping, we have to process events
+    ## (we could start another thread for this)
     while sleeping:
         app.processEvents()
         time.sleep(0.1)
+    action['Continue'].setEnabled(False)
     # ignore further wakeup events
     QObject.disconnect(canvas,PYSIGNAL("wakeup"),wakeup)
+        
+    
+def wakeup(mode=0):
+    """Wake up from the sleep function.
 
-def wakeup():
-    global sleeping,timer
+    This is the only way to exit the sleep() function.
+    Default is to wake up from the current sleep. A mode > 0
+    forces wakeup for longer period.
+    """
+    global timer,sleeping,wakeupMode
     if timer:
         timer.cancel()
     sleeping = False
+    wakeupMode = mode
+
+def kill():
+    """Kill the current script"""
+    wakeup(1)
+
+def killall():
+    """Kill the current and all subsequent scripts"""
+    wakeup(2)
 
 def exit():
-    global app
+    global app,scriptLock
     if app:
-        app.quit()
-    else:
+        if scriptLock.acquire(False): # try to acquire script lock
+            app.quit()  # exit on success (no script running)
+        else:
+            wakeup(3) # return to let the script finish, then exit
+    else: # the gui didn't even start
         sys.exit(0)
 
 def status(s):
@@ -413,17 +475,19 @@ def status(s):
     statusbar.message(s)
 
 def GUI():
-    global canvas,statusbar, options
+    global canvas,statusbar,menu,tool, options
     w = QMainWindow()
     w.setCaption(Version)
     w.resize(640,480)
     # add widgets to the main window
     statusbar = w.statusBar()
     statusbar.message(Version+" (c) B. Verhegghe")
-    m = w.menuBar()
+    menu = w.menuBar()
     insertViewMenu()
-    insertExamplesMenu()
-    AddMenuItems(m,MenuData)
+    insertExampleMenu()
+    AddMenuItems(menu,MenuData)
+    tool = QToolBar(w)
+    insertActions()
     # Create a nice frame to put around the OpenGL widget
     # Create our display widget
     f = QHBox(w, "frame")

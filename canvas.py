@@ -128,7 +128,6 @@ class FormexActor(Formex):
                     glVertex3f(*nod)
             glEnd()
         elif nnod == 4:
-            print wireframe
             glBegin(GL_QUADS)
             for el in self.data():
                 for nod in el:
@@ -190,7 +189,6 @@ class Canvas(QGLWidget):
         self.qglClearColor(QColor(s))
 
     def glinit(self,mode="wireframe"):
-        print "glinit"
 	glClearColor(*RGBA(mediumgrey))# Clear The Background Color
 	glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	glDepthFunc(GL_LESS)	       # The Type Of Depth Test To Do

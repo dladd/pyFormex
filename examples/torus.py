@@ -10,13 +10,17 @@
 #
 """Torus"""
 clear()
-F = Formex(pattern("164"),[1,2,3]).replicate(36,0,1).replicate(12,1,1)
-drawProp(F)
-sleep()
-G = F.translate1(2,1).cylindrical([2,1,0],[1.,30.,1.])
-clear()
-drawProp(G)
-sleep()
-H = G.translate1(0,5).cylindrical([0,2,1],[1.,10.,1.])
-clear()
-drawProp(H)
+m = 36 # number of cells along torus big circle
+n = 10 # number of cells along torus small circle
+# First create a long rectangle
+F = Formex(pattern("164"),[1,2,3]).replicate(m,0,1).replicate(n,1,1)
+drawProp(F);sleep()
+# Fold it into a tube
+G = F.translate1(2,1).cylindrical([2,1,0],[1.,360./n,1.])
+clear();drawProp(G,side='right');sleep()
+# Bend the tube into a torus with (mean) radius 5
+H = G.translate1(0,5).cylindrical([0,2,1],[1.,360./m,1.])
+clear();drawProp(H,side='iso');sleep()
+# Something extra: extend the tube, tilt it a bit and then bend it
+K = G.replicate(5,2,m).rotate(-10,0).translate1(0,5).cylindrical([0,2,1],[1.,360./m,1.])
+clear();drawProp(K,side='iso')# Amazed?

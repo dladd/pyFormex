@@ -12,22 +12,23 @@
 from numarray import *
 import math
 
+# multiplier to transform degrees to radians
+rad = math.pi/180.
+
 # Convenience functions: trigonometric functions with argument in degrees
 # Should we keep this in ???
-# or shall we redefine them as in
-#   def sin(arg): return math.sin(math.radians(arg))
 
 def sind(arg):
     """Return the sin of an angle in degrees."""
-    return math.sin(radians(arg))
+    return sin(arg*rad)
 
 def cosd(arg):
     """Return the sin of an angle in degrees."""
-    return math.cos(radians(arg))
+    return cos(arg*rad)
 
 def tand(arg):
     """Return the sin of an angle in degrees."""
-    return math.tan(radians(arg))
+    return tan(arg*rad)
 
 def length(arg):
     """Return the quadratic norm of a vector with all elements of arg."""
@@ -102,6 +103,7 @@ def pattern(s):
             y -= 1
         elif c == "/":
             connect = False
+            continue
         else:
             print "Unknown pattern character %c ignored" % c
             continue
@@ -488,6 +490,10 @@ class Formex:
         Two elements are not considered equal if one's elements are a
         permutation of the other's.
         """
+        ##
+        ##  THIS IS SLOW!! IT NEEDS TO BE REIMPLEMENTED AFTER THE sort
+        ##  FUNCTION HAS BEEN DONE
+        ##
         ## Maybe we need a variant that tests for equal permutations?
         flag = ones((self.f.shape[0],))
         for i in range(self.f.shape[0]):
@@ -562,7 +568,7 @@ class Formex:
         If grade is 3, a 3x3 matrix is returned, and default axis is 2.
         """
         n = self.grade()
-        a = math.radians(angle)
+        a = angle*rad
         c = math.cos(a)
         s = math.sin(a)
         if n == 2:
@@ -660,12 +666,34 @@ class Formex:
         scale will scale the coordinate values prior to the transformation.
         The resulting angle is interpreted in degrees.
         """
+        # We put in a optional scaling, because doing this together with the
+        # transforming is cheaper than first scaling and then transforming.
         f = zeros(self.f.shape,type=Float32)
         r = scale[0] * self.f[:,:,dir[0]]
-        theta = math.radians(scale[1]) * self.f[:,:,dir[1]]
+        theta = (scale[1]*rad) * self.f[:,:,dir[1]]
         f[:,:,0] = r*cos(theta)
         f[:,:,1] = r*sin(theta)
         f[:,:,2] = scale[2] *  self.f[:,:,dir[2]]
+        return Formex(f,self.p)
+
+    def toCylindrical(self,dir=[0,1,2]):
+        """Converts from cartesian to cylindrical coordinates.
+
+        dir specifies which coordinates axes are parallel to respectively the
+        cylindrical axes distance(r), angle(theta) and height(z). Default
+        order is [x,y,z].
+        The angle value is given in degrees.
+        """
+        # We can not just leave the z's in place, because there might be
+        # permutation of axes.
+        f = zeros(self.f.shape,type=Float32)
+        x,y,z = [ self.f[:,:,i] for i in dir ]
+        #print x
+        #print y
+        #print z
+        f[:,:,0] = sqrt(x*x+y*y)
+        f[:,:,1] = arctan2(y,x) / rad
+        f[:,:,2] = z
         return Formex(f,self.p)
     
     def spherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
@@ -681,13 +709,30 @@ class Formex:
         """
         f = zeros(self.f.shape,type=Float32)
         r = scale[0] * self.f[:,:,dir[0]]
-        theta = math.radians(scale[1]) * self.f[:,:,dir[1]]
-        phi = math.radians(scale[2]) * self.f[:,:,dir[2]]
+        theta = (scale[1]*rad) * self.f[:,:,dir[1]]
+        phi = (scale[2]*rad) * self.f[:,:,dir[2]]
         rc = r*sin(phi)
         f[:,:,0] = rc*cos(theta)
         f[:,:,1] = rc*sin(theta)
         f[:,:,2] = r*cos(phi)
         return Formex(f,self.p)
+
+    def toSpherical(self,dir=[0,1,2]):
+        """Converts from cartesian to spherical coordinates.
+
+        dir specifies which coordinates axes are parallel to respectively
+        the spherical axes distance(r), longitude(theta) and colatitude(phi).
+        Colatitude is 90 degrees - latitude, i.e. the elevation angle measured
+        from north pole(0) to south pole(180).
+        Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
+        The returned angle values are given in degrees.
+        """
+        f = zeros(self.f.shape,type=Float32)
+        x,y,z = [f[:,:,i] for i in dir]
+        distance = length(v)
+        longitude = arctan2(v[0],v[2]) / rad
+        latitude = arcsin(v[1]/distance) / rad
+        return [ longitude, latitude, distance ]
 
     def bump1(self,dir,a,func,dist):
         """Return a formex with a one-dimensional bump.
@@ -856,16 +901,13 @@ class Formex:
 
     def circulize(self,i,j):
         """Transforms 1/8 of the i-j plane to 1/6 of a circle."""
+        ## NOT IMPLEMENTED YET : see example ScallopDome...
         return Formex(f,self.p)
 
 ##############################################################################
 #
 #   Transformations that change the topology
 #        
-
-    def reflectAdd(self,dir,pos):
-        """Return the sum of original plus reflection"""
-        return self + self.reflect(dir,pos)
 
     # generate might be good alternative name for replicate
     def replicate(self,n,dir,step):
@@ -904,13 +946,16 @@ class Formex:
         bias, taper : extra step and extra number of generations in direction
         d1 for each generation in direction d2
         """
-        P = [ self.translatem((d1,i*bias),(d2,i*t2)).rindle(n1+i*taper,d1,t1)
+        P = [ self.translatem((d1,i*bias),(d2,i*t2)).replicate(n1+i*taper,d1,t1)
               for i in range(n2) ]
         ##
         ## We should replace the Formex concatenation here by
         ## seperate data and prop concatenations, because we are
         ## guaranteed that either none or all formices in P have props.
         return Formex.concatenate(P)
+
+    #alternate name
+    replicate2 = generate2
         
         
 
@@ -940,7 +985,7 @@ class Formex:
         return self.rindle(n,dir-1,dist)
 
     def lam(self,dir,dist):
-        return self.reflectAdd(dir-1,dist)
+        return self+self.reflect(dir-1,dist)
 
     def ros(self,i,j,x,y,n,angle):
         if (i,j) == (1,2):
