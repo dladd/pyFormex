@@ -100,9 +100,19 @@ class Formex:
     copied in an operation are those that exist at the time of performing
     the operation.   
     """
+            
+    def globals(self):
+        """Return the list of globals defined in this module."""
+        return globals()
+    globals = classmethod(globals)
 
-    def __init__(self,l=[[[]]],props=None):
-        self.f = array(l,type=Float32)
+###########################################################################
+#
+#   Create a new Formex
+#
+
+    def __init__(self,data=[[[]]],props=None):
+        self.f = array(data,type=Float32)
         self.p = None
         if len(self.f.shape) != 3:
             raise RuntimeError,"Invalid data in creating Formex"
@@ -113,15 +123,10 @@ class Formex:
         if props != None:
             self.setProps(props)
 
-    def setProps(self,p):
-        p = asarray(p,type=Int32)
-        self.p = resize(p,self.f.shape[:1])
-            
-
-    def globals(self):
-        """Return the list of globals defined in this module."""
-        return globals()
-    globals = classmethod(globals)
+###########################################################################
+#
+#   Return information about a Formex
+#
 
     def order(self):
         """Return the order of the Formex
@@ -159,7 +164,7 @@ class Formex:
     def z(self):
         """Return the z-plane (can be modified)"""
         return self.f[:,:,2]
-    def prop(self):
+    def props(self):
         """Return the properties as a numarray"""
         return self.p
 
@@ -174,6 +179,17 @@ class Formex:
     def uniple(self,i,j,k):
         """Return uniple k of signet j of cantle i"""
         return self.f[i][j][k]
+    
+    def bbox(self):
+        """Return the boundary box of the Formex"""
+        min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
+        max = [ self.f[:,:,i].max() for i in range(self.f.shape[2]) ]
+        return array([min, max]) 
+
+    def center(self):
+        """Return the center of the Formex"""
+        min,max = self.bbox()
+        return [ (min[i]+max[i])/2 for i in range(self.grade()) ]
 
 ##############################################################################
 # Create string representations of a formex
@@ -248,29 +264,84 @@ class Formex:
         """
         clas.__str__ = func
     setPrintFunction = classmethod(setPrintFunction)
+
+##############################################################################
+#
+#  Functions that change the formex itself
+#
+
+##
+## Maybe we should make these functions inaccesible for the user?
+##
+
+    def setProps(self,p=0):
+        """Create a property set on the Formex.
+
+        You can specify a single value or a list/array of values.
+        If the number of passed values is less than the number of
+        elements, they are repeated.
+        The default argument will give all elements a property value 0.
+        """
+        p = asarray(p,type=Int32)
+        self.p = resize(p,self.f.shape[:1])
         
-    def copy(self):
-        """Returns a deep copy of itself"""
-        ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
-        return Formex(self.f)
 
     def append(self,F):
         """Append the members of formex F to this one.
 
         This function changes the original one! Use __add__ if you want to
-        get a copy with the sum.
+        get a copy with the sum. 
         >>> F = Formex([[[1.0,1.0,1.0]]])
         >>> G = F.append(F)
         >>> print F
         {[1.0,1.0,1.0], [1.0,1.0,1.0]}
         """
         self.f = concatenate((self.f,F.f))
+        ## What to do if one of the formices has properties, the other one not?
+        ## I suggest to use zero property values for the formex without props
+        if self.p != None or F.p != None:
+            if self.p == None:
+                self.p = zeros(shape=self.f.shape[:1],type=Int32)
+            if F.p == None:
+                p = zeros(shape=F.f.shape[:1],type=Int32)
+            else:
+                p = F.p
+            self.p = concatenate((self.p,p))
         return self
+
+## 
+## All others functions should operate on and return copies. This in intended
+## so that the user can write statements like
+##   G = F.op1().op2().op3()
+## without changing F.
+## While this may seem to create a lot of intermediate data, I think that
+## Python is clever enough to free this storage upon garbage collection
+##
+
+##############################################################################
+#
+# Create copies and concatenations
+#
+        
+    def copy(self):
+        """Returns a deep copy of itself."""
+        return Formex(self.f,self.p)
+        ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
+        ## In all examples it works, I think because the operations on
+        ## the numarray data cause a copy to be made. Need to explore this.
+
+    def removeProps(self):
+        """Returns a copy of the formex without the properties."""
+        return Formex(self.f)
 
     def __add__(self,other):
         """Return the sum of two formices"""
         return self.copy().append(other)
 
+
+    ## DO we really need this? Could be written as F+F+F
+    ## Find out if there would be performance penalty?
+    ## Then maybe move to deprecated compatibility functions
     def concatenate(self,list):
         """Concatenate all formices in list.
 
@@ -281,17 +352,33 @@ class Formex:
         """
         return Formex( concatenate([a.f for a in list]) )
     concatenate = classmethod(concatenate)
-    
-    def bbox(self):
-        """Return the boundary box of the Formex"""
-        min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
-        max = [ self.f[:,:,i].max() for i in range(self.f.shape[2]) ]
-        return array([min, max]) 
+      
+    def unique(self):
+        """Return a formex which holds only the unique elements."""
+        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+        return Formex(self.f)
+      
+    def nonzero(self):
+        """Return a formex which holds only the nonzero elements.
 
-    def center(self):
-        """Return the center of the Formex"""
-        min,max = self.bbox()
-        return [ (min[i]+max[i])/2 for i in range(self.grade()) ]
+        A zero element is an element where all nodes are equal."""
+        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+        return Formex(self.f)
+
+    def nodes(self):
+        """Return a formex containing only the nodes.
+
+        This is obviously a formex with plexitude 1. It has the same data
+        as with the original formex, but holds
+        """
+        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+        return Formex(self.f)
+
+
+##############################################################################
+#
+#   Common tranformations
+#        
 
     def translationVector(self,dir,dist):
         """Returns a translation vector in direction dir over distance dist"""
@@ -321,13 +408,6 @@ class Formex:
             f[k,j] = -s
             f[k,k] = c
         return f
-
-
-
-##############################################################################
-#
-#   Common tranformations
-#        
 
     def translate(self,vector,distance=None):
         """Returns a copy translated over translation vector.
@@ -460,27 +540,6 @@ class Formex:
         f[:,:,1] = rc*sin(theta)
         f[:,:,2] = r*cos(phi)
         return Formex(f)
-      
-    def unique(self):
-        """Return a formex which holds only the unique elements."""
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
-      
-    def nonzero(self):
-        """Return a formex which holds only the nonzero elements.
-
-        A zero element is an element where all nodes are equal."""
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
-
-    def nodes(self):
-        """Return a formex with the unique nodes.
-
-        This is obviously a formex with plexitude 1.
-        """
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
-        
 
 
     def bump1(self,dir,a,func,dist):
@@ -802,7 +861,7 @@ if __name__ == "__main__":
         print "F2 =",F2
         F3 = F.ref(1,1.5).tran(2,2)
         F3.setProps([1,2])
-        print "F3 =",F3
+        print "F3+F3 =",F3+F3
 ##        H = F.rin(1,4,2)
 ##        print "H =",H
 ##        R = F.lam(1,1)
@@ -815,6 +874,11 @@ if __name__ == "__main__":
         print G
         H = F.tranic(2,3,4,10)
         print H
+        F = Formex([[[1.0,1.0,1.0]]])
+        G = F.copy()
+        F.append(F)
+        print "F =",F
+        print "G =",G
 
     (f,t) = _test()
     if f == 0:
