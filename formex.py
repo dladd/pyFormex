@@ -168,7 +168,7 @@ def rotationMatrix(angle,axis=None):
 # it works rather distracting and ennoying for people that are already
 # familiar with the basic ideas of 3D geometry, and are used to using the
 # standardized terms.
-# In our pyformex we will try to use as much as possible the normal
+# In our pyFormex we will try to use as much as possible the normal
 # terminology, while referring to the formian newspeak in parentheses
 # and preceded by a 'F:'. Similar concepts in Finite Element terminology
 # are marked with 'FE:'.
@@ -187,7 +187,7 @@ class Formex:
     (node, vertex, F: signet).
     For simplicity's sake, the current implementation only deals with points
     in a 3-dimensional space. This means that the length of axis 2 is always 3.
-    The user can create formices (plural of formex) in a 2-D space, but
+    The user can create formices (plural of Formex) in a 2-D space, but
     internally these will be stored with 3 coordinates, by adding a third
     value 0. All operations work with 3-D coordinate sets. However, a method
     exists to extract only a limited set of coordinates from the results,
@@ -202,12 +202,12 @@ class Formex:
 
     Additionally, a Formex may have a property set, which is an 1-D array of
     integers. The length of the array is equal to the length of axis 0 of the
-    formex data (i.e. the number of elements in the Formex). Thus, a single
+    Formex data (i.e. the number of elements in the Formex). Thus, a single
     integer value may be attributed to each element. It is up to the user to
     define the use of this integer (e.g. it could be an index in a table of
     element property records).
-    If a property set is defined, it will be copied together with the formex
-    data whenever copies of the formex (or parts thereof) are made.
+    If a property set is defined, it will be copied together with the Formex
+    data whenever copies of the Formex (or parts thereof) are made.
     Properties can be specified at creation time, and they can be set,
     modified or deleted at any time. Of course, the properties that are
     copied in an operation are those that exist at the time of performing
@@ -250,7 +250,7 @@ class Formex:
     def shape(self):
         """Return the shape of the Formex.
 
-        The shape of a formex is the shape of its data array,
+        The shape of a Formex is the shape of its data array,
         i.e. a tuple (order, plexitude, grade)
         """
         return self.f.shape
@@ -280,7 +280,7 @@ class Formex:
         return self.f.shape[2]
 
     def data(self):
-        """Return the formex as a numarray"""
+        """Return the Formex as a numarray"""
         return self.f
     def x(self):
         """Return the x-plane (can be modified)"""
@@ -296,7 +296,7 @@ class Formex:
         return self.p
 
     def element(self,i):
-        """Return element i of the formex"""
+        """Return element i of the Formex"""
         return self.f[i]
 
     def point(self,i,j):
@@ -308,9 +308,9 @@ class Formex:
         return self.f[i][j][k]
 
     def __getitem__(self,i):
-        """Return element i of the formex.
+        """Return element i of the Formex.
 
-        This allows addressing element i of formex F as F[i].
+        This allows addressing element i of Formex F as F[i].
         """
         return self.f[i]
     
@@ -333,7 +333,7 @@ class Formex:
         return length(max-min)
 
     def propSet(self):
-        """Return a list with unique property values on this formex."""
+        """Return a list with unique property values on this Formex."""
         return unique(self.p)
 
     def nodesAndElements(self):
@@ -374,7 +374,7 @@ class Formex:
         
 
 ##############################################################################
-# Create string representations of a formex
+# Create string representations of a Formex
 #
 
     def signet2str(self,sig):
@@ -398,7 +398,7 @@ class Formex:
         return s+"]"
     
     def asFormex(self):
-        """Return string representation of a formex as in Formian.
+        """Return string representation of a Formex as in Formian.
 
         Coordinates are separated by commas, points are separated
         by semicolons and grouped between brackets, elements are
@@ -449,7 +449,7 @@ class Formex:
 
 ##############################################################################
 #
-#  Functions that change the formex itself
+#  Functions that change the Formex itself
 #
 
     def setProp(self,p=0):
@@ -470,7 +470,7 @@ class Formex:
         return self
 
     def append(self,F):
-        """Append the members of formex F to this one.
+        """Append the members of Formex F to this one.
 
         This function changes the original one! Use __add__ if you want to
         get a copy with the sum. 
@@ -481,7 +481,7 @@ class Formex:
         """
         self.f = concatenate((self.f,F.f))
         ## What to do if one of the formices has properties, the other one not?
-        ## I suggest to use zero property values for the formex without props
+        ## I suggest to use zero property values for the Formex without props
         if self.p != None or F.p != None:
             if self.p == None:
                 self.p = zeros(shape=self.f.shape[:1],type=Int32)
@@ -493,7 +493,7 @@ class Formex:
         return self
 
     def sort(self):
-        """Sorts the elements of a formex.
+        """Sorts the elements of a Formex.
 
         Sorting is done according to the bbox of the elements.
         !! NOT FULLY IMPLEMENTED: CURRENTLY ONLY SORTS ACCORDING TO
@@ -556,10 +556,10 @@ class Formex:
     concatenate = classmethod(concatenate)
 
     def hasProp(self,val):
-        """Return a formex which holds only the elements with property val.
+        """Return a Formex which holds only the elements with property val.
 
-        If the formex has no properties, a copy is returned.
-        The returned formex is always without properties.
+        If the Formex has no properties, a copy is returned.
+        The returned Formex is always without properties.
         """
         if self.p == None:
             return Formex(self.f)
@@ -567,9 +567,9 @@ class Formex:
             return Formex(self.f[self.p==val])
 
     def elbbox(self):
-        """Return a formex where each element is replaced by its bbox.
+        """Return a Formex where each element is replaced by its bbox.
 
-        The returned formex has two points for each element: two corners
+        The returned Formex has two points for each element: two corners
         of the bbox.
         """
         ## Obviously, in the case of plexitude 1 and 2,
@@ -582,7 +582,7 @@ class Formex:
 
         
     def unique(self,rtol=1.e-4,atol=1.e-6):
-        """Return a formex which holds only the unique elements.
+        """Return a Formex which holds only the unique elements.
 
         Two elements are considered equal when all its nodal coordinates
         are close. Two values are close if they are both small compared to atol
@@ -610,17 +610,27 @@ class Formex:
         return Formex(self.f[flag>0],p)
       
     def nonzero(self):
-        """Return a formex which holds only the nonzero elements.
+        """Return a Formex which holds only the nonzero elements.
 
         A zero element is an element where all nodes are equal."""
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
         return Formex(self.f)
+      
+    def select(self,idx):
+        """Return a Formex which holds only elements with numbers in ids.
+
+        idx can be a single element number or a list of numbers"""
+        if self.p == None:
+            p = None
+        else:
+            p = self.p[idx]
+        return Formex(self.f[idx],p)
 
     def nodes(self):
-        """Return a formex containing only the nodes.
+        """Return a Formex containing only the nodes.
 
-        This is obviously a formex with plexitude 1. It holds the same data
-        as the original formex, but in another shape: the number of nodes
+        This is obviously a Formex with plexitude 1. It holds the same data
+        as the original Formex, but in another shape: the number of nodes
         per element is 1, and the number of elements is equal to the total
         number of nodes.
         The properties are not copied over, since they will usually not make
@@ -630,9 +640,9 @@ class Formex:
 
 
     def remove(self,F):
-        """Return a formex where the elements in F have been removed.
+        """Return a Formex where the elements in F have been removed.
 
-        This is also the subtraction of the current formex with F.
+        This is also the subtraction of the current Formex with F.
         Elements are only removed if they have the same nodes in the same
         order.
         """
@@ -650,22 +660,22 @@ class Formex:
         return Formex(self.f[flag>0],p)
         
     def connect(self,Flist,nodid=None,bias=None,loop=False):
-        """Return a formex which connects the formices in list.
+        """Return a Formex which connects the formices in list.
 
         This is a class method, not an instance method!
         Flist is a list of formices, nodid is an optional list of nod ids and
         bias is an optional list of element bias values. All lists should have
         the same length.
-        The returned formex has a plexitude equal to the number of
-        formices in list. Each element of the formex consist of a node from
+        The returned Formex has a plexitude equal to the number of
+        formices in list. Each element of the Formex consist of a node from
         the corresponding element of each of the formices in list. By default
         this will be the first node of that element, but a nodid list may be
         given to specify the node id to be used for each of the formices.
         Finally, a list of bias values may be given to specify an offset in
         element number for the subsequent formices.
-        If loop==False, the order of the formex will be the minimum order of
+        If loop==False, the order of the Formex will be the minimum order of
         the formices in Flist, each minus its respective bias. By setting
-        loop=True however, each formex will loop around if its end is
+        loop=True however, each Formex will loop around if its end is
         encountered, and the order of the result is the maximum order in Flist.
         """
         ## !! Loop does not work correctly. And I'm not sure if we will
@@ -741,7 +751,7 @@ class Formex:
     # by means of the value of the second argument
     def rotateAround(self,vector,angle):
         """Returns a copy rotated over angle around vector."""
-        print "rotate has not been implemented yet!"
+        print "rotateAround has not been implemented yet!"
         return self
 
     def shear(self,dir,dir1,skew):
@@ -754,12 +764,23 @@ class Formex:
         return Formex(f,self.p)
 
     def reflect(self,dir,pos=0):
-        """Returns a formex mirrored in direction dir against plane at pos.
+        """Returns a Formex mirrored in direction dir against plane at pos.
 
         Default position of the plane is through the origin.
         """
         f = self.f.copy()
         f[:,:,dir] = 2*pos - f[:,:,dir]
+        return Formex(f,self.p)
+
+    def affine(self,mat,vec=None):
+        """Returns a general affine transform of the Formex.
+
+        The returned Formex has coordinates given by mat * xorig + vec,
+        where mat is a 3x3 matrix and vec a length 3 list.
+        """
+        f = matrixmultiply(self.f,m)
+        if not vec==None:
+            f += vec
         return Formex(f,self.p)
 #
 #
@@ -843,7 +864,7 @@ class Formex:
         return [ longitude, latitude, distance ]
 
     def bump1(self,dir,a,func,dist):
-        """Return a formex with a one-dimensional bump.
+        """Return a Formex with a one-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
         a is the point that forces the bumping;
@@ -857,7 +878,7 @@ class Formex:
         return Formex(f,self.p)
     
     def bump2(self,dir,a,func):
-        """Return a formex with a two-dimensional bump.
+        """Return a Formex with a two-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
         a is the point that forces the bumping;
@@ -881,7 +902,7 @@ class Formex:
     # the distance and a point for defining the intensity (3-D) of the
     # modification
     def bump(self,dir,a,func,dist=None):
-        """Return a formex with a bump.
+        """Return a Formex with a bump.
 
         A bump is a modification of a set of coordinates by a non-matching
         point. It can produce various effects, but one of the most common
@@ -996,7 +1017,7 @@ class Formex:
         i and j are lists of axis numbers.
         replace ([0,1,2],[1,2,0]) will roll the axes by 1.
         replace ([0,1],[1,0]) will swap axes 0 and 1.
-        An optionally third argument may specify another formex to take
+        An optionally third argument may specify another Formex to take
         the coordinates from. It should have the same dimensions.
         """
         ## IS there a numarray way to do this in 1 operation ?
@@ -1031,9 +1052,9 @@ class Formex:
 
     # generate might be good alternative name for replicate
     def replicate(self,n,dir,step):
-        """Returns a formex with n replications in direction dir with step.
+        """Returns a Formex with n replications in direction dir with step.
 
-        The original formex is the first of the n replicas.
+        The original Formex is the first of the n replicas.
         """
         f = array( [ self.f for i in range(n) ] )
         for i in range(1,n):
@@ -1043,11 +1064,11 @@ class Formex:
         return Formex(f,self.p)
  
     def rosette(self,n,angle,axis=2,point=[0.,0.,0.]):
-        """Returns a formex with n rotational replications with angular
+        """Returns a Formex with n rotational replications with angular
         step angle around an axis parallel with one of the coordinate axes
         going through the given point. axis is the number of the axis (0,1,2).
         point must be given as a list (or array) of three coordinates.
-        The original formex is the first of the n replicas.
+        The original Formex is the first of the n replicas.
         """
         f = self.f - point
         f = array( [ f for i in range(n) ] )
@@ -1213,8 +1234,8 @@ class Formex:
 #
 #  Testing
 #
-#  Some of the docstrings above hold test examples. They should be carefully
-#  crafted to test the functionality of the pyformex class.
+#  Some of the docstrings above hold test examples. They should be carefully 
+#  crafted to test the functionality of the Formex class.
 #
 #  Ad hoc test examples during development can be added to the test() function
 #  below.
@@ -1266,7 +1287,8 @@ if __name__ == "__main__":
         print G
         print G[1]
         print G.nodesAndElements()
-        
+
+
     (f,t) = _test()
     if f == 0:
         test()

@@ -1,0 +1,9 @@
+# This collects most important changes between releases
+#
+	
+Changes from release 0.2:
+
+- class Formex: added function select(), affine()
+	
+- Added lima.py and Turtle.py
+- Added examples: Lima 

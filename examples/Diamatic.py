@@ -10,27 +10,21 @@
 #
 """Double layer diamatic dome"""
 clear()
-global out
+u = 3      # modular length
 rt = 36.   # radius of top circumsphere
 rb = 34.5  # radius of bottom circumsphere
 m = 6      # frequency of top layer
 n = 6      # number of sectors
 a = 36.    # sweep angle of top layer
-T = Formex([[[rt,0,0],[rt,0,3]],[[rt,0,0],[rt,3,3]],[[rt,0,3],[rt,3,3]]])
-W1 = Formex([[[rb,1,2],[rt,0,0]],[[rb,1,2],[rt,0,3]],[[rb,1,2],[rt,3,3]]])
-W2 = Formex([[[rb,2,4],[rt,3,6]],[[rb,2,4],[rt,0,3]],[[rb,2,4],[rt,3,3]]])
-B1 = Formex([[[rb,2,4],[rb,1,2]],[[rb,2,4],[rb,1,5]],[[rb,2,4],[rb,4,5]]])
-B2 = Formex([[[rb,1,2],[rb,-1,2]]])
-top = T.genit(1,m,3,3,0,1)
-web = W1.genit(1,m,3,3,0,1) + W2.genit(1,m-1,3,3,0,1)
-bot = B1.genit(1,m-1,3,3,0,1) + B2.rin(3,m,3)
-F = (top+web+bot)#.spherical(1.,360./n,a/(3*m))
+T = Formex([[[0,0],[u,0]],[[u,0],[u,u]],[[u,u],[0,0]]])
+#W1 = Formex([[[rb,1,2],[rt,0,0]],[[rb,1,2],[rt,0,3]],[[rb,1,2],[rt,3,3]]])
+#W2 = Formex([[[rb,2,4],[rt,3,6]],[[rb,2,4],[rt,0,3]],[[rb,2,4],[rt,3,3]]])
+#B1 = Formex([[[rb,2,4],[rb,1,2]],[[rb,2,4],[rb,1,5]],[[rb,2,4],[rb,4,5]]])
+#B2 = Formex([[[rb,1,2],[rb,-1,2]]])
+top = T.generate2(m,m,0,1,u,u,u,-1).circulize().translate([0,0,rt])
+#web = W1.genit(1,m,3,3,0,1) + W2.genit(1,m-1,3,3,0,1)
+#bot = B1.genit(1,m-1,3,3,0,1) + B2.rin(3,m,3)
+F = (top)#.spherical(1.,360./n,a/(3*m))
 
-def toSector(f):
-    x,y,z = f.x(), f.y(), f.z()
-    d = sqrt(y*y+z*z)
-    return f.map(lambda x,y,z:[x,where(d>0,y*z/d,0),where(d>0,z*z/d,0)])
-
-#out = toSector(top)#.rosette(4,45.,0)
-out = top + toSector(top)
+out = F.rosette(6,60).shear(0,1,.7)
 draw(out)

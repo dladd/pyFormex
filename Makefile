@@ -28,7 +28,7 @@ INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
 PROGRAM= pyformex
 SOURCE= formex.py canvas.py camera.py colors.py vector.py
-ICONS= icons
+ICONS= icons/*.xpm
 HTMLDOCS= $(SOURCE:.py=.html)
 HTMLDIR= doc/html
 DOCFILES= README COPYING History
@@ -83,15 +83,14 @@ stamp:
 	$(STAMP) -tStamp.template version=$(VERSION) -oStamp.stamp
 
 dist.stamped: distdoc distclean stamp
-	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples $(PYFORMEXDIR)/images
+	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/icons $(PYFORMEXDIR)/examples $(PYFORMEXDIR)/images
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(PROGRAM) $(SOURCE)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR)/examples $(EXAMPLEFILES)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(STAMPABLE)
 	cp $(NONSTAMPABLE) $(PYFORMEXDIR)
-	cp -R $(ICONS)  $(PYFORMEXDIR)
+	cp -R $(ICONS)  $(PYFORMEXDIR)/icons
 	cp $(IMAGEFILES)  $(PYFORMEXDIR)/images
 	tar czf $(PYFORMEXDIR).tar.gz $(PYFORMEXDIR)
-
 
 distclean:
 	rm -rf $(PYFORMEXDIR)
