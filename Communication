@@ -33,6 +33,24 @@ gekopieerd.
    - kopieren van properties toevoegen.
    - property gebruiken voor het tekenen in verschillende kleuren
 ###########################################################################
-
-
-
+2004-10-09 BV: Dit is allemaal vlotter verlopen dan ik gedacht had.
+Properties worden nu overal meegekopieerd.
+En ze kunnen zichtbaar gemaakt worden via de drawProp funktie.
+(Zie het voorbeeld ColorDoubleLayer
+###########################################################################
+2004-10-13 BV: De functies unique en nodes geimplementeerd. nodes geeft
+gewoon de volledige formex terug, maar als losse knopen. NOrmaal zal men
+F.nodes().unique() gebruiken om unieke knopenset te bekomen. Een formex met
+enkel knopen kan nu ook getekend worden (zie voorbeeld hyparcap).
+###########################################################################
+2004-10-15 BV: Tot nu toe gebruikte ik mijn standaard editor (XEmacs) om
+voorbeelden te maken en uit te proberen. Maar misschien moet wij een editor
+inbouwen in pyformex.
+Ik wil ook werk maken van de sorteer funktie, het verwijderen van elementen,
+en het omzetten van een formex naar een knooppnummerlijst.
+Tenslotte zijn er nog een aantal belangrijke formian funkties niet 
+geimplementeerd. Hier zou jij me kunnen helpen, Bart. Vooral de funkties
+die nodig zijn om enkele mooie voorbeelden uit je afstudeerwerk te kunnen
+reproduceren. O.a. glisit, sbd, bapel, nnov,...
+Als dat er allemaal is, kunnen we, denk ik, het projekt naar buiten brengen.
+############################################################################

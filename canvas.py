@@ -61,7 +61,7 @@ class FormexActor(Formex):
         self.color = color
         
     def display(self,wireframe=True):
-        """Draw a formex of line elements.
+        """Draw a formex.
 
         """
         glColor3f(*self.color)
@@ -72,6 +72,18 @@ class FormexActor(Formex):
                 for nod in el:
                     glVertex3f(*nod)
             glEnd()
+        elif nnod == 1:
+            radius = self.size() / 100
+            slices = 16
+            stacks = 16
+            quad = gluNewQuadric()
+            gluQuadricNormals(quad, GLU_SMOOTH) # Create Smooth Normals
+            for el in self.data():
+                glPushMatrix()
+                glTranslatef (*el[0])
+                gluSphere(quad,radius,slices,stacks)
+                glPopMatrix()
+                
         elif wireframe:
             for el in self.data():
                 glBegin(GL_LINE_LOOP)
@@ -109,7 +121,7 @@ class Canvas(QGLWidget):
         self.dynamic = None    # what action on mouse move
         QGLWidget.__init__(self,*args)
         self.resize(w,h)
-        self.wireframe = True
+        self.wireframe = True  # default mode is wireframe 
         self.glinit()
 
     def initializeGL(self):

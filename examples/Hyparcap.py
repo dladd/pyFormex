@@ -33,3 +33,8 @@ vlakblad = blad.scale([s*sin(radians(b/2))/a,s*cos(radians(b/2)),1.])
 out = blad
 draw(out)
 
+nod = out.nodes().unique()
+nod.setProp(4)
+print nod
+drawProp(nod)
+

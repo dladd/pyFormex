@@ -29,6 +29,11 @@ def tand(arg):
     """Return the sin of an angle in degrees."""
     return tan(radians(arg))
 
+def length(arg):
+    """Return the quadratic norm of a vector with all elements of arg."""
+    a = arg.getflat()
+    return sqrt(sum(multiply(a,a)))
+
 def inside(p,mi,ma):
     """Return true if point p is inside bbox defined by points mi and ma"""
     return p[0] >= mi[0] and p[1] >= mi[1] and p[2] >= mi[2] and \
@@ -202,6 +207,13 @@ class Formex:
         """Return the center of the Formex"""
         min,max = self.bbox()
         return [ (min[i]+max[i])/2 for i in range(self.grade()) ]
+
+    def size(self):
+        """Return the size of the Formex.
+
+        The size is the length of the diagonal of the bbox"""
+        min,max = self.bbox()
+        return length(max-min)
 
     def propSet(self):
         """Return a list with unique property values on this formex."""
@@ -387,7 +399,28 @@ class Formex:
             return Formex(self.f)
         else:
             return Formex(self.f[self.p==val])
-      
+
+    def elbbox(self):
+        """Return a formex where each element is replaced by its bbox.
+
+        The returned formex has two points for each element: two corners
+        of the bbox.
+        """
+        ## Obviously, in the case of plexitude 1 and 2,
+        ## there are shorter ways to perform this
+        return Formex( [ [
+            [ self.f[j,:,i].min() for i in range(self.f.shape[2])],
+            [ self.f[j,:,i].max() for i in range(self.f.shape[2])] ]
+                        for j in range(self.f.shape[0]) ] )
+
+    def sort(self):
+        """Return a formex where the elements are sorted.
+
+        Sorting is done according to the bbox of the elements.
+        """
+        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+        return Formex(self.f)
+        
     def unique(self,rtol=1.e-4,atol=1.e-6):
         """Return a formex which holds only the unique elements.
 
@@ -395,9 +428,22 @@ class Formex:
         are close. Two values are close if they are both small compared to atol
         or their difference divided by the second value is small compared to
         rtol.
+        Two elements are not considered equal if one's elements are a
+        permutation of the other's.
         """
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
+        ## Maybe we need a variant that tests for equal permutations?
+        flag = ones((self.f.shape[0],))
+        for i in range(self.f.shape[0]):
+            for j in range(i):
+                if allclose(self.f[i],self.f[j]):
+                    # i is a duplicate node
+                    flag[i] = 0
+                    break
+        if self.p == None:
+            p = None
+        else:
+            p = self.p[flag>0]
+        return Formex(self.f[flag>0],p)
       
     def nonzero(self):
         """Return a formex which holds only the nonzero elements.
@@ -409,11 +455,14 @@ class Formex:
     def nodes(self):
         """Return a formex containing only the nodes.
 
-        This is obviously a formex with plexitude 1. It has the same data
-        as with the original formex, but holds
+        This is obviously a formex with plexitude 1. It holds the same data
+        as the original formex, but in another shape: the number of nodes
+        per element is 1, and the number of elements is equal to the total
+        number of nodes.
+        The properties are not copied over, since they will usually not make
+        any sense.
         """
-        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
+        return Formex(reshape(self.f,(-1,1,self.f.shape[2])))
 
 
 ##############################################################################
@@ -912,30 +961,25 @@ if __name__ == "__main__":
         F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
         print "F =",F
         F1 = F.tran(1,6)
-        F1.setProp(0)
+        F1.setProp(5)
         print "F1 =",F1
         F2 = F.ref(1,2)
         print "F2 =",F2
         F3 = F.ref(1,1.5).tran(2,2)
         F3.setProp([1,2])
-        print "F3+F3 =",F3+F3
-        print "prop 1:",(F3+F3).withProp(1)
+        G = F1+F3+F2+F3
+        print "F1+F3+F2+F3 =",G
+        print "elbbox:",G.elbbox()
+        print "met prop 1:",G.withProp(1)
+        print "unique:",G.unique()
+        print "nodes:",G.nodes()
+        print "unique nodes:",G.nodes().unique()
+        print "size:",G.size()
 ##        H = F.rin(1,4,2)
 ##        print "H =",H
 ##        R = F.lam(1,1)
 ##        print "R =",R
 ##        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
-##        print "G =",G
-##        F = Formex([[[1,0,0],[0,1,1]]],prop=[0])
-##        print F
-##        G = F.translatem((1,4),(2,10))
-##        print G
-##        H = F.tranic(2,3,4,10)
-##        print H
-##        F = Formex([[[1.0,1.0,1.0]]])
-##        G = F.copy()
-##        F.append(F)
-##        print "F =",F
 ##        print "G =",G
 
     (f,t) = _test()
