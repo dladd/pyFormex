@@ -7,10 +7,11 @@ Release 0.2 : No further functionality is planned: release is imminent
 Release 0.3 :
  - Rethink, reorganize, complete the formex transformations
  - Provide short documentation 
- - Change the mouse rotation action.
+ - Change the mouse rotation action  (DONE) 
  - Include an interface for executing external scripts.
  - Include an online help system
  - Provide a formian to pyformex translator
+ - Add config file and config settings dialog
 
 
 Release 0.4 :

@@ -20,6 +20,10 @@ from numarray import *
 import numarray.linear_algebra as la
 
 
+## ! For developers: this information is not fully correct
+## ! We now store the rotation of the camera as a combined rotation matrix,
+##   not by the individual rotation angles.
+
 class Camera:
     """This class defines a camera for OpenGL rendering.
 
@@ -62,88 +66,47 @@ class Camera:
     to MODELVIEW.
     """
 
-    def __init__(self,center=[0.,0.,0.],eye=[0.,0.,1],twist=0.):
-        """Create a new camera at position (0,0,1) looking along the -z axis"""
-        print "initializing camera"
-        self.data = center+eye+[twist]
-        self.setMatrix()
-        self.saveMatrix()
+    def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=0.):
+        """Create a new camera at position (0,0,0) looking along the -z axis"""
+        self.setCenter(*center)
+        self.setRotation(long,lat,twist)
+        self.setDist(dist)
         self.setLens(45.,4./3.)
         self.setClip(0.1,10.)
         self.setPerspective(True)
         self.viewChanged = True
 
     # Using only these access functions make it easier to change implementation
-    def getX(self):
-        return self.data[0]
-    def getY(self):
-        return self.data[1]
-    def getZ(self):
-        return self.data[2]
-    def getLong(self):
-        return self.data[3]
-    def getLat(self):
-        return self.data[4]
-    def getDist(self):
-        return self.data[5]
-    def getTwist(self):
-        return self.data[6]
-    getDistance=getDist
-    def getCenter(self):
-        """Return the camera reference point (the scene center)."""
-        return self.data[0:3]
-        
-##    def getEyeCoords(self):
-##        """Return the camera orientation : [ long, lat, dist ]"""
-##        return [ 
-        
-    def getAngles(self):
-        """Return the three rotation angles of the camera."""
-        return [ self.getLong(), -self.getLat(), self.getTwist() ]
-        
-    def getPosition(self):
-        """Return the cartesian coordinates of the camera (eye)."""
-        # Beware: the sphericalToCartesian function takes arguments
-        # in the order long,lat,dist
-        relpos = sphericalToCartesian([self.getLong(),self.getLat(),self.getDist()])
-        print "Cartesian relative camera position",relpos
-        return add(self.getCenter(),relpos)
-        
-
-    # Camera position and viewing direction
-    # !! These functions do not automatically reload the transformation matrix
-    # !! Clients should explicitely call loadMatrix() before displaying
 
     def setCenter(self,x,y,z):
         """Set the center of the camera in global cartesian coordinates."""
-        self.data[0:3] = [x,y,z]
+        self.ctr = [x,y,z]
         self.viewChanged = True
 
-    def setDistance(self,dist):
-        self.data[5] = dist
+    def setRotation(self,long,lat,twist=0):
+        """Set the rotation matrix of the camera from three angles."""
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glLoadIdentity()
+        GL.glRotatef(-twist % 360, 0.0, 0.0, 1.0)
+        GL.glRotatef(lat % 360, 1.0, 0.0, 0.0)
+        GL.glRotatef(-long % 360, 0.0, 1.0, 0.0)
+        self.rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
         self.viewChanged = True
 
-    def setDirection(self,long,lat):
-        self.data[3:5] = [ long % 360, lat % 360 ]
+    def setDist(self,dist):
+        """Set the distance."""
+        self.dist = dist
         self.viewChanged = True
-
-    def setTwist(self,t):
-        self.data[6] = t % 360
-        self.viewChanged = True
-
-    def setEye(self,long,lat,dist):
-        """Set the position of the camera in relative spherical coordinates.
-
-        We store the position of the camera in spherical coordinates,
-        relative to the center. This allows for easy camera movements.
-        Longitude (azimuth) and latitude (elevation) are in degrees.
-        """
-        self.setDistance(dist)
-        self.setDirection(long,lat)
-        self.viewChanged = True
-
-##    def setAngles(self,angles):
-##        self.data[4:7] = [ a % 360 for a in angles ]
+        
+    def getCenter(self):
+        """Return the camera reference point (the scene center)."""
+        return self.ctr
+    def getRot(self):
+        """Return the camera rotation matrix."""
+        return self.rot
+    def getDist(self):
+        """Return the camera distance."""
+        return self.dist
         
     def dolly(self,val):
         """Move the camera eye towards/away from the scene center.
@@ -155,26 +118,8 @@ class Camera:
         The front and back clipping planes may need adjustment after
         a dolly operation.
         """
-        self.setDistance(self.getDist() * val)
+        self.setDist(self.getDist() * val)
         self.viewChanged = True
-
-    def rotateGlobal(self,val,axis=1):
-        """Rotate the camera around global axis through the center.
-
-        The camera is rotated around an axis through the center point
-        and parallel with the y-axis. The viewing axis of the camera
-        remains directed at the center.
-        This has the effect of rotating the scene around the axis.
-        A positive value rotates the camera around the pos y-axis.
-        The value is specified in degrees.
-        If axis = 0 is specified, rotation is around the (rotated)
-        x-axis. Axis=2 will rotate around rotated z-axis.
-        """
-        i = [ 4,3,5 ][axis]
-        self.data[i] = (self.data[i] + val) % 360
-        self.viewChanged = True
-        
- 
         
     def pan(self,val,axis=0):
         """Rotate the camera around axis through its eye. 
@@ -212,7 +157,7 @@ class Camera:
         The center of the camera is moved over the specified translation
         vector. This has the effect of moving the scene in opposite direction.
         """
-        center = add(self.ctr,translation)
+        center = add(self.getCenter(),translation)
         self.setCenter(*center)
         self.viewChanged = True
 
@@ -234,41 +179,44 @@ class Camera:
 ##        self.move(tr[0])
 ##        self.viewChanged = True
 
-    def setRotationMatrix(self):
-        """Set the ModelView rotation matrix from camera parameters.
-
-        These are the transformations applied on the model space.
-        Rotations need be taken negatively.
-        """
-        print "Camera data",self.data
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        rot = self.getAngles()
-        GL.glRotatef(-rot[2], 0.0, 0.0, 1.0)
-        GL.glRotatef(-rot[1], 1.0, 0.0, 0.0)
-        GL.glRotatef(-rot[0], 0.0, 1.0, 0.0)
-
     def setMatrix(self):
         """Set the ModelView matrix from camera parameters.
 
         These are the transformations applied on the model space.
         Rotations and translations need be taken negatively.
         """
-        print "Camera data",self.data
+        # The operations on the model space
+        # arguments should be taken negative and applied in backwards order
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glLoadIdentity()
-        rot = self.getAngles()
-        GL.glRotatef(-rot[2], 0.0, 0.0, 1.0)
-        GL.glRotatef(-rot[1], 1.0, 0.0, 0.0)
-        GL.glRotatef(-rot[0], 0.0, 1.0, 0.0)
-        self.completeMatrix()
-##        pos = self.getPosition()
-##        GL.glTranslatef(-pos[0],-pos[1],-pos[2])
+        # translate over camera distance
+        GL.glTranslate(0,0,-self.dist)
+        # rotate
+        GL.glMultMatrixf(self.rot)
+        # translate to center
+        dx,dy,dz = self.getCenter()
+        GL.glTranslatef(-dx,-dy,-dz)
+
+    def rotate(self,val,vx,vy,vz):
+        """Rotate the model around current camera axes."""
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        self.saveMatrix()
+        GL.glLoadIdentity()
+        GL.glTranslatef(0,0,-self.dist)
+        GL.glRotatef(val,vx,vy,vz)
+        GL.glMultMatrixf(self.rot)
+        dx,dy,dz = self.getCenter()
+        GL.glTranslatef(-dx,-dy,-dz)
+        self.saveMatrix()
 
     def saveMatrix (self):
         """Save the ModelView matrix."""
         self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-        print "Current matrix",self.m
+        self.rot = copy.deepcopy(self.m)
+        self.trl = copy.deepcopy(self.rot[3][0:3])
+        self.rot[3][0:3] = [0.,0.,0.]
+        #print self.trl
+        #print self.rot
 
     def loadMatrix (self):
         """Load the saved ModelView matrix."""
@@ -279,52 +227,12 @@ class Camera:
             self.viewChanged = False
         else:
             GL.glLoadMatrixf(self.m)
-
-    def multMatrix (self):
-        """Multiply the saved ModelView matrix."""
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glMultMatrixf(self.m)
-
-    def completeMatrix(self):
-        """Complete the ModelView matrix after rotation was set.
-
-        These are the transformations applied on the model space.
-        Rotations and translations need be taken negatively.
-        """
-        self.saveMatrix()
-        #cx,cy,cz = self.transform([0,0,self.getDist()])
-        cx,cy,cz = [0,0,self.getDist()]
-        print "New relative camera position=",cx,cy,cz
-        dx,dy,dz = self.getCenter()
-        print "Center of scene",dx,dy,dz
-        GL.glLoadIdentity()
-        GL.glTranslatef(-cx,-cy,-cz)
-        GL.glMultMatrixf(self.m)
-        GL.glTranslatef(-dx,-dy,-dz)
-        self.saveMatrix()
-
-    def rotate(self,val,vx,vy,vz):
-        """Rotate the camera around axis through the center.
-
-        The camera is rotated around an axis through the center point
-        and parallel with the given vector. 
-        """
-        self.loadMatrix()
-        # world coordinates of the camera
-        x,y,z = [ -a for a in self.m[3][0:3] ]
-        print "Camera position=",x,y,z
-        # remove the translation
-        self.m[3][0:3] = [0.,0.,0.]
-        # world orientation of the rotation vector
-        vx,vy,vz = self.toWorld([vx,vy,vz,1])
-        print "Rotation axis=",vx,vy,vz
-        #
-        GL.glLoadMatrixf(self.m)
-        # new rotation
-        GL.glRotatef(val,vx,vy,vz)
-        #GL.glMultMatrixf(self.m)
-        self.completeMatrix()
-       
+ 
+    def translate(self,vx,vy,vz,local=True):
+        if local:
+            vx,vy,vz = self.toWorld([vx,vy,vz,1])
+        self.move([-vx,-vy,-vz])
+      
     def transform(self,v):
         """Transform a vertex using the currently saved  Modelview matrix."""
         if len(v) == 3:
@@ -336,15 +244,15 @@ class Camera:
         """Transform a vertex from camera to world coordinates.
 
         The specified vector can have 3 or 4 (homogoneous) components.
-        This uses the currently loaded modelview matrix.
+        This uses the currently saved rotation matrix.
         """
-        a = la.inverse(array(self.m))
+        a = la.inverse(array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
         v = matrixmultiply(array(v),a)
-        return [ a/v[3] for a in v[0:3] ]
+        return v[0:3] / v[3]
 
-
+    
     # Camera Lens Setting.
     #
     # These include :
@@ -504,10 +412,6 @@ if __name__ == "__main__":
             cam.truck([0.,0.,0.5])
         elif key == 'Z':
             cam.truck([0.,0.,-0.5])
-        elif key == '=':
-            cam.setCenter(0.,0.,0.)
-            cam.setEye(0.,0.,5.)
-            cam.setTwist(0.)
         elif key == 'o':
             cam.setPerspective(not cam.perspective)
             cam.loadProjection

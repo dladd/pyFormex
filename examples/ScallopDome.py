@@ -50,7 +50,7 @@ def scallop(n,f,c,r):
     message("Scallop Dome with n=%d, f=%d, c=%f, r=%f" % (n,f,c,r))
     show(f4,0)
 # Present some nice examples
-canvas.camera.setDirection(0,-45)
+canvas.camera.setRotation(0,-45)
 for n,f,c,r in [
     [6,1,2,0],
     [6,1,2,2],

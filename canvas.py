@@ -175,7 +175,6 @@ class Canvas(qtgl.QGLWidget):
         self.setBbox()
         self.wireframe = True
         self.dynamic = None    # what action on mouse move
-        self.rot = [ 0.,1.,0.,0.]
         self.makeCurrent()     # set GL context before creating the camera
         self.camera = Camera()
         
@@ -232,18 +231,6 @@ class Canvas(qtgl.QGLWidget):
             GL.glEnable(GL.GL_COLOR_MATERIAL)
             GL.glColorMaterial ( GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE )
 
-    def applyModelMatrix(self):
-        """Apply the model transformation matrix on top of existing matrix"""
-        print "Camera data'",self.camera.data
-        print "Extra rotation is ",self.rot
-        tr=self.camera.getCenter()
-        GL.glTranslatef(tr[0],tr[1],tr[2])
-        GL.glRotatef(*self.rot)
-##        GL.glRotatef(self.rot[2], 0.0, 0.0, 1.0)
-##        GL.glRotatef(self.rot[0], 1.0, 0.0, 0.0)
-##        GL.glRotatef(self.rot[1], 0.0, 1.0, 0.0)
-        GL.glTranslatef(-tr[0],-tr[1],-tr[2])
-
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
@@ -254,7 +241,7 @@ class Canvas(qtgl.QGLWidget):
                 self.bbox = self.actors[-1].bbox()
             else:
                 self.bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
-        print "canvas.bbox=",self.bbox
+        #print "canvas.bbox=",self.bbox
          
     def addActor(self,actor):
         """Add an actor to the scene."""
@@ -316,7 +303,6 @@ class Canvas(qtgl.QGLWidget):
 	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
         self.camera.loadProjection()
         self.camera.loadMatrix()
-##        self.applyModelMatrix()
         for i in self.actors:
             GL.glCallList(i.list)
         
@@ -351,85 +337,94 @@ class Canvas(qtgl.QGLWidget):
         self.camera.setCenter(*center)
         if side == 'front':
             hsize,vsize,depth = size[0],size[1],size[2]
-            lat,long = 0.,0.
+            long,lat = 0.,0.
         elif side == 'back':
             hsize,vsize,depth = size[0],size[1],size[2]
-            lat,long = 180.,0.
+            long,lat = 180.,0.
         elif side == 'right':
             hsize,vsize,depth = size[2],size[1],size[0]
-            lat,long = 90.,0.
+            long,lat = 90.,0.
         elif side == 'left':
             hsize,vsize,depth = size[2],size[1],size[0]
-            lat,long = 270.,0.
+            long,lat = 270.,0.
         elif side == 'top':
             hsize,vsize,depth = size[0],size[2],size[1]
-            lat,long = 0.,90.
+            long,lat = 0.,90.
         elif side == 'bottom':
             hsize,vsize,depth = size[0],size[2],size[1]
-            lat,long = 0.,-90.
+            long,lat = 0.,-90.
         elif side == 'iso':
             hsize = vsize = depth = vector.distance(bbox[1],bbox[0])
-            lat,long = 45.,45.
+            long,lat = 45.,45.
         # go to a distance to have a good view with a 45 degree angle lens
         dist = max(0.6*depth, 1.5*max(hsize/self.aspect,vsize))
         print "dist = ",dist
-        self.camera.setEye(lat,long,dist)
-        self.camera.setTwist(0.)
+        self.camera.setRotation(long,lat,0.)
+        self.camera.setDist(dist)
         self.camera.setLens(45.,self.aspect)
         self.camera.setClip(0.01*dist,100*dist)
 
 
     def zoom(self,f):
-        self.camera.setDistance(f*self.camera.getDist())
+        self.camera.setDist(f*self.camera.getDist())
 
     def dyna(self,x,y):
         """Perform dynamic zoom/pan/rotation functions"""
         w,h = self.width(),self.height()
-        if self.dynamic == "rotate":
-            # hor movement sets azimuth
-            a = stuur(x,[0,self.statex,w],[-360,0,+360],1.5)
-            # vert movement sets elevation
-            e = stuur(y,[0,self.statey,h],[-180,0,+180],1.5)
-            self.camera.setDirection(self.state[0] - a,self.state[1] + e)
-        elif self.dynamic == "trirotate":
+        if self.dynamic == "trirotate":
             # set all three rotations from mouse movement
-            x0 = [self.statex-w/2, self.statey-h/2,0] # initial vector
-            dx = [x-self.statex, y-self.statey,0]     # movement
-            x1 = [x-w/2, y-h/2,0]           # new vector
-            a0 = math.atan2(x0[0],x0[1])
-            a1 = math.atan2(x1[0],x1[1])
-            an = (a1-a0) / math.pi * 180
-            # tangential movement set twist
-            # but not if to close to center
-##            d = vector.length(x1)
-##            if d < h/8:
-##                ds = 0
-##            else:
-##                ds = stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
-##            print "ds = ",ds
-##            self.camera.setTwist(self.state[2] - an*ds)
+            # tangential movement sets twist,
+            # but only if initial vector is big enough
+            x0 = self.state        # initial vector
+            d = vector.length(x0)
+            if d > h/8:
+                x1 = [x-w/2, h/2-y, 0]     # new vector
+                a0 = math.atan2(x0[0],x0[1])
+                a1 = math.atan2(x1[0],x1[1])
+                an = (a1-a0) / math.pi * 180
+                ds = stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
+                twist = - an*ds
+                #print "an,d,ds = ",an,d,ds,twist
+                self.camera.rotate(twist,0.,0.,1.)
+                self.state = x1
             # radial movement rotates around vector in lens plane
-            b = -vector.projection(dx,x0)
-            self.rot[0] = stuur(b,[-2*h,0,2*h],[-360,0,+360],1.5)
-            self.rot[1:4] = self.state[0:3]
+            x0 = [self.statex-w/2, h/2-self.statey, 0]    # initial vector
+            dx = [x-self.statex, self.statey-y,0]         # movement
+            b = vector.projection(dx,x0)
+            #print "x0,dx,b=",x0,dx,b
+            if abs(b) > 5:
+                val = stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
+                rot =  [ abs(val),-dx[1],dx[0],0 ]
+                print "val,rot=",val,rot
+                self.camera.rotate(*rot)
+                self.statex,self.statey = (x,y)
+
         elif self.dynamic == "pan":
-            dist = self.camera.getDistance() * 0.5
+            dist = self.camera.getDist() * 0.5
             # hor movement sets x value of center
             # vert movement sets y value of center
-            panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
-            pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
-            self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
+            #panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
+            #pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
+            #self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
+            dx,dy = (x-self.statex,y-self.statey)
+            panx = stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
+            pany = stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
+            print dx,dy,panx,pany
+            self.camera.translate(panx,-pany,0)
+            self.statex,self.statey = (x,y)
+
         elif self.dynamic == "zoom":
             # hor movement is lens zooming
             f = stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
             self.camera.setLens(f)
+
         elif self.dynamic == "combizoom":
             # hor movement is lens zooming
             f = stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             self.camera.setLens(f)
             # vert movement is dolly zooming
             d = stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
-            self.camera.setDistance(d*self.state[0])
+            self.camera.setDist(d*self.state[0])
         self.update()
 
 
@@ -446,33 +441,22 @@ class Canvas(qtgl.QGLWidget):
         self.statex = e.x()
         self.statey = e.y()
         self.camera.loadMatrix()
-        self.rot = [ 0.,1.,0.,0.]
         # Other initialisations for the mouse move actions are done here 
         if e.button() == qt.Qt.LeftButton:
             self.dynamic = "trirotate"
             # the vector from the screen center to the clicked point
-            print "x,y=",self.statex,self.statey
-            v = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-            print "v=",v
-            # rotate vector 90 degrees around z-axis
-            v = [ v[1], -v[0], v[2] ]
-            print "vrot=",v
-            dist = vector.length(v)
-            nv = self.camera.toWorld(v)
-            self.state = nv + [ dist ]
-            print "State:",nv,dist,self.state
+            # this is used for the twist angle
+            self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
         elif e.button() == qt.Qt.MidButton:
             self.dynamic = "pan"
             self.state = self.camera.getCenter()
         elif e.button() == qt.Qt.RightButton:
             self.dynamic = "combizoom"
-            self.state = [self.camera.getDistance(),self.camera.fovy]
+            self.state = [self.camera.getDist(),self.camera.fovy]
         
     def mouseReleaseEvent(self,e):
-        if self.dynamic == "trirotate":
-            self.camera.saveMatrix()          
-            self.rot = [ 0.,1.,0.,0.]
         self.dynamic = None
+        self.camera.saveMatrix()          
         
     def mouseMoveEvent(self,e):
         if self.dynamic:

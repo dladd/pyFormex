@@ -10,7 +10,7 @@
 ##
 """pyformex is a python implementation of Formex algebra"""
 
-Version="pyFormex 0.1"
+Version="pyFormex 0.2-20050313"
 
 from formex import *
 from canvas import *
@@ -22,6 +22,7 @@ import qt
 global config
 config={}
 config['sleeptime']=1 # default time (sec.) to sleep (None is indefinitely)
+config['localaxes']=True # by default, buttons rotate/translate in local axes
  
 class FileSelectionDialog(qt.QFileDialog):
     """A file selection dialog widget.
@@ -44,7 +45,7 @@ class FileSelectionDialog(qt.QFileDialog):
             return str(self.selectedFile())
         else:
             return None
-      
+
 def AddMenuItems(menu, items=[]):
     """Add a list of items to a menu.
 
@@ -99,24 +100,20 @@ MenuData = [
     ("Popup","&Settings",[
         ("Action","&SleepShort","sleepShort"), 
         ("Action","&SleepLong","sleepLong"), 
-        ("Action","&SleepForever","sleepForever"), ]),
-    ("Popup","&Display",[
-        ("Action","&Print","printit"), 
-        ("Action","&Bbox","printbbox"), 
-        ("Action","&Globals","printglobals"), 
-        ("Action","&Wireframe","wireframe"), 
-        ("Action","&Smooth","smooth"),
-        ("Action","&Clear","clear"),
-        ("Action","&Redraw","redraw"), ]),
+        ("Action","&SleepForever","sleepForever"),
+        ("Action","&LocalAxes","localAxes"),
+        ("Action","&GlobalAxes","globalAxes"),
+        ("Action","&Wireframe","wireframe"),
+        ("Action","&Smooth","smooth"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","zoomIn"), 
         ("Action","&Zoom Out","zoomOut"), 
         ("Action","&Dolly In","dollyIn"), 
         ("Action","&Dolly Out","dollyOut"), 
-        ("Action","Pan &Right","panRight"), 
-        ("Action","Pan &Left","panLeft"), 
-        ("Action","Pan &Up","panUp"),
-        ("Action","Pan &Down","panDown"),
+        ("Action","Pan &Right","transRight"), 
+        ("Action","Pan &Left","transLeft"), 
+        ("Action","Pan &Up","transUp"),
+        ("Action","Pan &Down","transDown"),
         ("Action","Rotate &Right","rotRight"),
         ("Action","Rotate &Left","rotLeft"),
         ("Action","Rotate &Up","rotUp"),
@@ -124,7 +121,12 @@ MenuData = [
     ("Popup","&Actions",[
         ("Action","&Wakeup","wakeup"),
         ("Action","&Kill","kill"), 
-        ("Action","&Killall","killall"),  ]),
+        ("Action","&Killall","killall"),
+        ("Action","&Clear","clear"),
+        ("Action","&Redraw","redraw"),
+        ("Action","&Print","printit"),
+        ("Action","&Bbox","printbbox"),
+        ("Action","&Globals","printglobals"),  ]),
     ("Popup","&Help",[
         ("Action","&Help","help"),
         ("Action","&About","about"), 
@@ -191,7 +193,20 @@ def addRotateButtons():
                 [ "Rotate up", "rotup.xbm", rotUp ],
                 [ "Rotate down", "rotdown.xbm", rotDown ],
                 [ "Twist left", "twistleft.xbm", twistLeft ],
-                [ "Twist right", "twistright.xbm", twistRight ] ]
+                [ "Twist right", "twistright.xbm", twistRight ],
+                [ "Translate left", "left.xbm", transLeft ],
+                [ "Translate right", "right.xbm", transRight ],
+                [ "Translate down", "down.xbm", transDown ],
+                [ "Translate up", "up.xbm", transUp ],
+                [ "Zoom In", "zoomin.xbm", zoomIn ],
+                [ "Zoom Out", "zoomout.xbm", zoomOut ],
+                [ "Front View", "frontview.xbm", frontView ],
+                [ "Back View", "backview.xbm", backView ],
+                [ "Left View", "leftview.xbm", leftView ],
+                [ "Right View", "rightview.xbm", rightView ],
+                [ "Top View", "topview.xbm", topView ],
+                [ "Bottom View", "bottomview.xbm", bottomView ],
+                [ "Iso View", "isoview.xbm", isoView ]  ]
     for b in buttons:
         w = qt.QToolButton(qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[0],"",b[2],tool)
         w.setAutoRepeat(True)
@@ -295,66 +310,96 @@ def printglobals():
     print globals()
 
 def zoomIn():
-    global canvas
+    global canvas,config
     canvas.zoom(0.8)
     canvas.update()
 def zoomOut():
-    global canvas
+    global canvas,config
     canvas.zoom(1.25)
     canvas.update()
-def panRight():
-    global canvas
-    canvas.camera.pan(+5)
-    canvas.update()   
-def panLeft():
-    global canvas
-    canvas.camera.pan(-5)
-    canvas.update()   
-def panUp():
-    global canvas
-    canvas.camera.pan(+5,0)
-    canvas.update()   
-def panDown():
-    global canvas
-    canvas.camera.pan(-5,0)
-    canvas.update()   
+##def panRight():
+##    global canvas,config
+##    canvas.camera.pan(+5)
+##    canvas.update()   
+##def panLeft():
+##    global canvas,config
+##    canvas.camera.pan(-5)
+##    canvas.update()   
+##def panUp():
+##    global canvas,config
+##    canvas.camera.pan(+5,0)
+##    canvas.update()   
+##def panDown():
+##    global canvas,config
+##    canvas.camera.pan(-5,0)
+##    canvas.update()   
 def rotRight():
-    global canvas
+    global canvas,config
     canvas.camera.rotate(+5,0,1,0)
     canvas.update()   
 def rotLeft():
-    global canvas
+    global canvas,config
     canvas.camera.rotate(-5,0,1,0)
     canvas.update()   
 def rotUp():
-    global canvas
+    global canvas,config
     canvas.camera.rotate(-5,1,0,0)
     canvas.update()   
 def rotDown():
-    global canvas
+    global canvas,config
     canvas.camera.rotate(+5,1,0,0)
     canvas.update()   
 def twistLeft():
-    global canvas
+    global canvas,config
     canvas.camera.rotate(+5,0,0,1)
     canvas.update()   
 def twistRight():
-    global canvas
+    global canvas,config
     canvas.camera.rotate(-5,0,0,1)
     canvas.update()   
+def transLeft():
+    global canvas,config
+    canvas.camera.translate(-5,0,0,config['localaxes'])
+    canvas.update()   
+def transRight():
+    global canvas,config
+    canvas.camera.translate(5,0,0,config['localaxes'])
+    canvas.update()   
+def transDown():
+    global canvas,config
+    canvas.camera.translate(0,-5,0,config['localaxes'])
+    canvas.update()   
+def transUp():
+    global canvas,config
+    canvas.camera.translate(0,5,0,config['localaxes'])
+    canvas.update()   
 def dollyIn():
-    global canvas
+    global canvas,config
     canvas.camera.dolly(0.8)
     canvas.update()   
 def dollyOut():
-    global canvas
+    global canvas,config
     canvas.camera.dolly(1.25)
     canvas.update()   
+
+def frontView():
+    view("front");
+def backView():
+    view("back");
+def leftView():
+    view("left");
+def rightView():
+    view("right");
+def topView():
+    view("top");
+def bottomView():
+    view("bottom");
+def isoView():
+    view("iso");
 
 def clear():
     """Remove all actors from the canvas"""
     global canvas,out
-    print "Clear everything from the canvas"
     canvas.removeAllActors()
     canvas.clear()
     out = None
@@ -489,7 +534,6 @@ def sleep(timeout=None):
     else:
         timer = None
     # go into sleep mode
-    print action
     sleeping = True
     action['Step'].setEnabled(True)
     action['Continue'].setEnabled(True)
@@ -536,6 +580,13 @@ def sleepForever():
 def setSleepTime(t):
     global config
     config['sleeptime'] = t
+
+def localAxes():
+    global config
+    config['localaxes'] = True 
+def globalAxes():
+    global config
+    config['localaxes'] = False 
 
 def exit():
     global app,scriptLock

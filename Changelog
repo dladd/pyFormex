@@ -3,14 +3,19 @@
 	
 Changes from release 0.2:
 
-- pyformex: added rotate buttons to toolbar
+- pyformex: added rotate, pan, zoom and views buttons to toolbar
+	    reorganized menus
 	
 - class Formex: added function select(), affine()
   BoundingBox now returns a list instead of an array
 
-- camera.py completely reworked and canvas.py changed accrdingly
+- camera.py: completely reworked
+- canvas.py: changed for new camera handing
 - vector.py: added midPoint and centerDiff	
 
 - Added lima.py and Turtle.py
 
 - Added examples: Lima 
+
+- Added lots of icons
+	
