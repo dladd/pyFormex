@@ -23,13 +23,14 @@ DOCDIR= $(ROOTDIR)/share/doc
 
 ############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
 
-VERSION= 0.1.2
+VERSION= 0.1.3
 PYFORMEXDIR= pyformex-$(VERSION)
 INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
 PROGRAM= pyformex
 SOURCE= formex.py canvas.py camera.py colors.py vector.py
 HTMLDOCS= $(SOURCE:.py=.html)
+HTMLDIR= doc/html
 DOCFILES= README COPYING History
 EXAMPLES= examples/*.py
 STAMPABLE= README History Makefile
@@ -39,7 +40,7 @@ STAMP= ./Stamp
 .PHONY: install dist distclean
 
 all:
-	echo  "Do `make install' to install this program"
+	@echo "Do 'make install' to install pyformex"
 
 
 ############ User installation ######################
@@ -60,17 +61,25 @@ remove:
 
 ############ Creating Distribution ##################
 
+vpath %.html $(HTMLDIR)
+
+disttest:
+	@cp -f Stamp.template Stamp.template.old && sed 's/pyformex .* Release/pyformex $(VERSION) Release/' Stamp.template.old > Stamp.template
+
 dist:	dist.stamped
 
-distdoc:
-	mkdir -p doc/html
-	for f in $(PROGRAM) $(SOURCE); do pydoc -w "./$$f" ; done
-	mv *.html doc/html
+%.html: %.py
+	pydoc -w ./$< && mv $@ $(HTMLDIR)
 
-dist.stamped: distdoc
-	make distclean
-	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples
+htmldoc: $(HTMLDOCS)
+
+distdoc: htmldoc
+
+stamp:
 	$(STAMP) -tStamp.template -oStamp.stamp
+
+dist.stamped: distdoc distclean stamp
+	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/examples
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(PROGRAM) $(SOURCE)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR)/examples $(EXAMPLES)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(STAMPABLE)
