@@ -1,0 +1,38 @@
+# $Id$
+# This file is for internal communication between developers.
+# It will not be included in releases (as opposed to README/History)
+###########################################################################
+2004-10-08 BV: Bart, Ik heb deze file gemaakt als een extra communicatiemiddel
+(naast bv. E-mail), omdat op deze manier onze bedenkingen en besprekingen over
+het projekt gemakkelijk kunnen samen gehouden worden. 
+###########################################################################
+2004-10-08 BV: Het volgende heb ik naar hier overgebracht uit de README file
+
+But this is a list of things we want to do before we go public:
+
+- introduce all (or most) of the formian functions
+- provide basic documentation
+- make a clean GUI
+- provide output facilities (text and graphics)
+- make a formian to pyformex translator
+
+And these ideas might be useful:
+- on installation, create a remove script
+- create a batch run mode
+###########################################################################
+2004-10-08 BV: Properties kunnen gezet worden. Ofwel bij creatie:
+  F = Formex({...},props=...)
+ofwel achteraf : F.setProps(...)
+props kan een enkel getal zijn (dan krijgen alle elementen die prop),
+of een lijst/array/.. : als je bv [1,1,3] toekent aan een formex met 7 
+elementen, krijgen die de properties  1,1,3,1,1,3,1 
+Properties kunnen al afgedrukt worden (zie test), maar worden nog niet
+gekopieerd.
+###########################################################################
+2004-10-08 BV: Mijn plannen:
+   - kopieren van properties toevoegen.
+   - property gebruiken voor het tekenen in verschillende kleuren
+###########################################################################
+
+
+

@@ -19,3 +19,7 @@
 		autoload example menu, added saving of images
 2004-07-14 BV : Made the cylindrical and spherical transforms more general,
 		Reorganized the subversion repository
+2004-10-07 BV : Added svn:keyword $Id$ to source files, and changed Stamp to 
+		recognize it.
+2004-10-08 BV : In Formex.py: fixed replace() function, replaced copy.deepcopy
+		by numarray's copy(), added props to Formex. 

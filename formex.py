@@ -34,6 +34,9 @@ def inside(p,mi,ma):
     return p[0] >= mi[0] and p[1] >= mi[1] and p[2] >= mi[2] and \
            p[0] <= ma[0] and p[1] <= ma[1] and p[2] <= ma[2]
 
+##
+## If p1 and p2 are arrays, this can better be replaced by
+## allclose(p1,p2,rtol,atol)
 def equal(p1,p2,tol=1.e-6):
     """Return true if two points are considered equal within tolerance."""
     return inside([ p1[i]-p2[i] for i in range(3) ],
@@ -75,31 +78,49 @@ class Formex:
     internally these will be stored with 3 coordinates, by adding a third
     value 0. All operations work with 3-D coordinate sets. However, a method
     exists to extract only a limited set of coordinates from the results,
-    premitting to return to a 2-D environment
+    permitting to return to a 2-D environment
 
     A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
     thought of as a geometrical shape (2 points form a line segment, 3 points
-    make a triangle, ...) or as an element in FE terms. But it reaaly is up to
+    make a triangle, ...) or as an element in FE terms. But it really is up to
     the user as to how this set of points is to be interpreted.
-    The number of nodes of an element is its
 
-    Finally, the whole Formex represents a set of such elements
+    Finally, the whole Formex represents a set of such elements.
 
+    Additionally, a Formex may have a property set, which is an 1-D array of
+    integers. The length of the array is equal to the length of axis 0 of the
+    formex data (i.e. the number of elements in the Formex). Thus, a single
+    integer value may be attributed to each element. It is up to the user to
+    define the use of this integer (e.g. it could be an index in a table of
+    element property records).
+    If a property set is defined, it will be copied together with the formex
+    data whenever copies of the formex (or parts thereof) are made.
+    Properties can be specified at creation time, and they can be set,
+    modified or deleted at any time. Of course, the properties that are
+    copied in an operation are those that exist at the time of performing
+    the operation.   
     """
 
-    def __init__(self,l=[[[]]]):
+    def __init__(self,l=[[[]]],props=None):
         self.f = array(l,type=Float32)
+        self.p = None
         if len(self.f.shape) != 3:
             raise RuntimeError,"Invalid data in creating Formex"
         if self.f.shape[2] == 2:
             f = zeros((self.f.shape[:2]+(3,)),type=Float32)
             f[:,:,:2] = self.f
             self.f = f
+        if props != None:
+            self.setProps(props)
+
+    def setProps(self,p):
+        p = asarray(p,type=Int32)
+        self.p = resize(p,self.f.shape[:1])
+            
 
     def globals(self):
         """Return the list of globals defined in this module."""
         return globals()
-
     globals = classmethod(globals)
 
     def order(self):
@@ -112,8 +133,8 @@ class Formex:
     def plexitude(self):
         """Return the plexitude of the Formex
 
-        The plexitude is the number of number of nodes in the cantle.
-        2 = bar, 3 = triangle, 4= quadrilateral, etc.
+        The plexitude is the number of number of nodes in each cantle.
+        1 = node, 2 = bar, 3 = triangle, 4= quadrilateral, etc.
         """
         return self.f.shape[1]
 
@@ -122,6 +143,7 @@ class Formex:
 
         The grade is the number of dimensions of the signet.
         2 = 2D, 3 = 3D.
+        This will always return 3 in the current implementation.
         """
         return self.f.shape[2]
 
@@ -132,11 +154,14 @@ class Formex:
         """Return the x-plane (can be modified)"""
         return self.f[:,:,0]
     def y(self):
-        """Return the x-plane (can be modified)"""
+        """Return the y-plane (can be modified)"""
         return self.f[:,:,1]
     def z(self):
-        """Return the x-plane (can be modified)"""
+        """Return the z-plane (can be modified)"""
         return self.f[:,:,2]
+    def prop(self):
+        """Return the properties as a numarray"""
+        return self.p
 
     def cantle(self,i):
         """Return cantle i of the formex"""
@@ -147,10 +172,15 @@ class Formex:
         return self.f[i][j]
 
     def uniple(self,i,j,k):
-        """Return uniple k of signet j of canlte i"""
+        """Return uniple k of signet j of cantle i"""
         return self.f[i][j][k]
 
+##############################################################################
+# Create string representations of a formex
+#
+
     def signet2str(self,sig):
+        """Returns a string representation of a signet"""
         s = ""
         if len(sig)>0:
             s += str(sig[0])
@@ -160,6 +190,7 @@ class Formex:
         return s
 
     def cantle2str(self,can):
+        """Returns a string representation of a cantle"""
         s = "["
         if len(can) > 0:
             s += self.signet2str(can[0])
@@ -190,6 +221,19 @@ class Formex:
         """Return string representation as a numarray."""
         return self.f.__str__()
 
+    def asFormexWithProps(self):
+        """Return string representation as Formex with properties.
+
+        The string representation as done by asFormex() is followed by
+        the words "with props" and a list of the properties.
+        """
+        s = self.asFormex()
+        if self.p != None:
+            s += " with props "+self.p.__str__()
+        else:
+            s += " no props "
+        return s
+
     #default print function
     __str__ = asFormex
 
@@ -203,15 +247,15 @@ class Formex:
         Formex.setPrintFunction(Formex.asArray).
         """
         clas.__str__ = func
-        
     setPrintFunction = classmethod(setPrintFunction)
         
     def copy(self):
         """Returns a deep copy of itself"""
+        ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
         return Formex(self.f)
 
     def append(self,F):
-        """Append the members of formex F to this one
+        """Append the members of formex F to this one.
 
         This function changes the original one! Use __add__ if you want to
         get a copy with the sum.
@@ -279,8 +323,11 @@ class Formex:
         return f
 
 
-    # Common tranformations
-        
+
+##############################################################################
+#
+#   Common tranformations
+#        
 
     def translate(self,vector,distance=None):
         """Returns a copy translated over translation vector.
@@ -426,6 +473,15 @@ class Formex:
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
         return Formex(self.f)
 
+    def nodes(self):
+        """Return a formex with the unique nodes.
+
+        This is obviously a formex with plexitude 1.
+        """
+        # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
+        return Formex(self.f)
+        
+
 
     def bump1(self,dir,a,func,dist):
         """Return a formex with a one-dimensional bump.
@@ -436,7 +492,7 @@ class Formex:
         func is a function that calculates the bump intensity from distance
         !! func(0) should be different from 0.
         """
-        f = copy.deepcopy(self.f)
+        f = self.f.copy()
         d = f[:,:,dist] - a[dist]
         f[:,:,dir] += func(d)*a[dir]/func(0)
         return Formex(f)
@@ -449,7 +505,7 @@ class Formex:
         func is a function that calculates the bump intensity from distance
         !! func(0) should be different from 0.
         """
-        f = copy.deepcopy(self.f)
+        f = self.f.copy()
         dist = [0,1,2]
         dist.remove(dir)
         d1 = f[:,:,dist[0]] - a[dist[0]]
@@ -484,7 +540,7 @@ class Formex:
         Default value is the set of 3 axes minus the direction of modification.
         This function is then equivalent to bump2.
         """
-        f = copy.deepcopy(self.f)
+        f = self.f.copy()
         if dist == None:
             dist = [0,1,2]
             dist.remove(dir)
@@ -535,7 +591,7 @@ class Formex:
         numarray module.
         This method is one of several mapping methods. See also map and mapd.
         """
-        f = copy.deepcopy(self.f)
+        f = self.f.copy()
         f[:,:,dir] = func[i](self.f[:,:,dir])
         return Formex(f)
 
@@ -554,7 +610,7 @@ class Formex:
         Example: E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
         maps E on a sphere with radius 10
         """
-        f = copy.deepcopy(self.f)
+        f = self.f.copy()
         if dist == None:
             dist = [0,1,2]
         try:
@@ -582,16 +638,23 @@ class Formex:
         replace ([0,1,2],[1,2,0]) will roll the axes by 1.
         replace ([0,1],[1,0]) will swap axes 0 and 1.
         """
-        f = copy.deepcopy(self.f.shape)
+        ## IS there a numarray way to do this in 1 operation ?
+        f = self.f.copy()
         for k in range(len(i)):
             f[:,:,i[k]] = self.f[:,:,j[k]]
+        return Formex(f)
 
     def swapaxes(self,i,j):
         """Swap coordinate axes i and j"""
         return self.replace([i,j],[j,i])
         
 
-    # Compatibility functions # deprecated !
+##############################################################################
+#
+# Compatibility functions # deprecated !
+#
+# New users should avoid these functions!
+#
         
     def give():
         print self.toFormian()
@@ -697,36 +760,65 @@ class Formex:
         return int(round(f))
 
 
-#### Test
+##############################################################################
+#
+#  Testing
+#
+#  Some of the docstrings above hold test examples. They should be carefully
+#  crafted to test the functionality of the pyformex class.
+#
+#  Ad hoc test examples during development can be added to the test() function
+#  below.
+#
+#  python formex.py
+#    will execute the docstring examples silently. 
+#  python formex.py -v
+#    will execute the docstring examples verbosely.
+#  In both cases, the ad hoc tests are only run if the docstring tests
+#  are passed.
+#
 
 def _test():
+    """Run the examples in the docstrings."""
     import doctest, formex
     return doctest.testmod(formex)
 
 if __name__ == "__main__":
-    _test()
+    def test():
+        """Run some additional examples.
+
+        This is intended for tests during development. This can be changed
+        at will.
+        """
+        Formex.setPrintFunction(Formex.asFormexWithProps)
+        A = Formex()
+        print "An empty formex",A
+        F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+        print "F =",F
+        F1 = F.tran(1,6)
+        F1.setProps(0)
+        print "F1 =",F1
+        F2 = F.ref(1,2)
+        print "F2 =",F2
+        F3 = F.ref(1,1.5).tran(2,2)
+        F3.setProps([1,2])
+        print "F3 =",F3
+##        H = F.rin(1,4,2)
+##        print "H =",H
+##        R = F.lam(1,1)
+##        print "R =",R
+##        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
+##        print "G =",G
+        F = Formex([[[1,0,0],[0,1,1]]],props=[0])
+        print F
+        G = F.translatem((1,4),(2,10))
+        print G
+        H = F.tranic(2,3,4,10)
+        print H
+
+    (f,t) = _test()
+    if f == 0:
+        test()
     
-##    def test():
-####        F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-####        print "F =",F
-####        F1 = F.tran(1,6)
-####        print "F1 =",F1
-####        F2 = F.ref(1,2)
-####        print "F2 =",F2
-####        F3 = F.ref(1,1.5).tran(2,2)
-####        print "F3 =",F3
-####        H = F.rin(1,4,2)
-####        print "H =",H
-####        R = F.lam(1,1)
-####        print "R =",R
-####        G = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
-####        print "G =",G
-##        F = Formex([[[1,0,0],[0,1,1]]])
-##        print F
-##        G = F.translatem((1,4),(2,10))
-##        print G
-##        H = F.tranic(2,3,4,10)
-##        print H
-##    test()
 
 #### End

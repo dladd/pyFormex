@@ -63,21 +63,6 @@ ToDo:
 ----
 A LOT!
 
-But this is a list of things we want to do before we go public:
-
-- introduce all (or most) of the formian functions
-- provide basic documentation
-- make a clean GUI
-- provide output facilities (text and graphics)
-- make a formian to pyformex translator
-
-And these ideas might be useful:
-- on installation, create a remove script
-- create a batch run mode
-
-
-
-
 
 Documentation:
 -------------
