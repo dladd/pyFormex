@@ -1,0 +1,441 @@
+#!/usr/bin/env python
+##
+## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
+## pyformex is a python implementation of Formex algebra
+## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
+## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## Distributed under the General Public License, see file COPYING for details
+##
+"""pyformex is a python implementation of Formex algebra"""
+
+Version="pyFormex 0.1"
+
+from formex import *
+from canvas import *
+
+import sys,time,os.path,string
+ 
+class FileSelectionDialog(QFileDialog):
+    """A file selection dialog widget.
+
+    You can specify a default path/filename that will be suggested
+    initially.
+    If a pattern is specified, only matching files will be shown.
+    A pattern can be something like 'Images (*.png *.jpg)'.
+    Default mode is to accept only existing files. You can specify
+    any QFileDialog mode (e.g. QFileDialog.AnyFile to accept new files)
+    
+    """
+    def __init__(self,default=None,pattern=None,mode=QFileDialog.ExistingFile):
+        QFileDialog.__init__(self,default,pattern)
+        self.setMode(mode)
+        self.show()
+    def getFilename(self):
+        self.exec_loop()
+        if self.result() == QDialog.Accepted:
+            return str(self.selectedFile())
+        else:
+            return None
+      
+def AddMenuItems(menu, items=[]):
+    """Add a list of items to a menu.
+
+    Each item is a tuple of three strings : Type, Text, Value.
+    Type is one of 'Sep', 'Popup', 'Action'.
+    'Sep' is a separator item. Its Text and Value fields are not used.
+    For the other types, Text is the text that will be displayed in the
+    menu. It can include a '&' character to flag the hotkey.
+    
+    'Popup' is a popup submenu item. Its value should be an item list.
+    'Action' is an active item. Its value is an instruction that is to be
+    executed when the item is activated. It will be executed by calling
+    python's eval(Value) instruction.
+    !!! For now, Actions are limited to global function names (no arguments)
+    
+    'VAction' is a tuple of an action and an integer argument.
+    'QAction' signals that value is a qt QAction. Text may be None if it
+    was already set in constructuting the QAction.
+    """
+    for key,txt,val in items:
+        if key == "Sep":
+            menu.insertSeparator()
+        elif key == "Popup":
+            pop = QPopupMenu(menu,txt)
+            AddMenuItems(pop,val)
+            menu.insertItem(txt,pop)
+        elif key == "Action":
+            menu.insertItem(txt,eval(val))
+        elif key == "VAction":
+            id = menu.insertItem(txt,eval(val[0]))
+            menu.setItemParameter(id,val[1])
+        elif key == "Statement":
+            menu.insertItem(txt,val)
+        elif key == "QAction":
+            if txt:
+                val.setProperty("menuText",QVariant(txt))
+            val.addTo(menu)
+        else:
+            raise RuntimeError, "Invalid key %s in menu item"%key
+        
+
+MenuData = [
+    ("Popup","&File",[
+        ("Action","&Save","save"),
+        ("Action","Save &As","saveAs"),
+        ("Action","Save &Image","saveImage"),
+        ("Sep",None,None),
+        ("Action","&Play","play"),
+        ("Action","&Record","record"),
+        ("Sep",None,None),
+        ("Action","E&xit","exit"), ]),
+    ("Popup","&Display",[
+        ("Action","&Test","test"), 
+        ("Action","&Print","printit"), 
+        ("Action","&Bbox","bbox"), 
+        ("Action","&Wireframe","wireframe"), 
+        ("Action","&Smooth","smooth"),
+        ("Action","&Clear","clear"),
+        ("Action","&Redraw","redraw"), ]),
+    ("Popup","&Camera",[
+        ("Action","&Zoom In","zoomIn"), 
+        ("Action","&Zoom Out","zoomOut"), 
+        ("Action","&Dolly In","dollyIn"), 
+        ("Action","&Dolly Out","dollyOut"), 
+        ("Action","Pan &Right","panRight"), 
+        ("Action","Pan &Left","panLeft"), 
+        ("Action","Pan &Up","panUp"),
+        ("Action","Pan &Down","panDown"),
+        ("Action","Rotate &Right","rotRight"),
+        ("Action","Rotate &Left","rotLeft"),
+        ("Action","Rotate &Up","rotUp"),
+        ("Action","Rotate &Down","rotDown"),  ]),
+    ("Popup","&Help",[
+        ("Action","&Help","Help"),
+        ("Action","&About","about"), 
+        ("Action","&Warning","testwarning"), ])]
+
+# Views Menu
+
+def insertViewMenu():
+    """Insert the default views menu in the menudata."""
+    global MenuData,BuiltinViews
+    BuiltinViews = ['front','back','right','left','top','bottom','iso']
+    vm = ("Popup","&View",[
+        ("VAction","&%s View"%t,("viewNr",i)) for i,t in enumerate(BuiltinViews)
+        ])
+    MenuData.insert(2,vm)
+
+# This function is here because the menus slot/signal only support integer args
+def viewNr(i):
+    global BuiltinViews
+    """Show one of the builtin views by its number"""
+    view(BuiltinViews[i])
+    
+def view(v):
+    """Show a named view, either a builtin or a user defined."""
+    global canvas,bbox,BuiltinViews
+    if v in BuiltinViews:
+        canvas.setView(bbox,v)
+        canvas.display()
+    else:
+        warning("This view has not been created yet")
+
+# Examples Menu
+
+def insertExamplesMenu():
+    """Insert the examples menu in the menudata."""
+    global dirname,examples
+    dir = os.path.join(dirname,"examples")
+    if os.path.isdir(dir):
+        examples = filter(lambda s:s[-3:]==".py" and s[0]!='.',os.listdir(dir))
+    vm = ("Popup","&Examples",[
+        ("VAction","&%s"%os.path.splitext(t)[0],("runExample",i)) for i,t in enumerate(examples)
+        ])
+    MenuData.insert(4,vm)
+
+def runExample(i):
+    """Run example i from the list of found examples."""
+    global dirname,examples
+    replay(os.path.join(dirname,"examples",examples[i]))
+
+
+# Actions
+
+def NotImplemented():
+    warning("This option has not been implemented yet!")
+
+Help = NotImplemented
+save = NotImplemented
+saveAs = NotImplemented
+record = NotImplemented
+out=None
+
+def about():
+    about = QMessageBox()
+    about.about(about,"About pyFormex",
+        Version+"\n\n"
+        "pyFormex is a python implementation of Formex algebra\n\n"
+        "Copyright 2004 Benedict Verhegghe\n"
+        "Distributed under the GNU General Public License.\n\n"
+        "Downloads available from ftp://mecatrix.ugent.be/pub/pyformex\n\n"
+        "For help or information, mailto benedict.verhegghe@ugent.be\n" )
+
+def testwarning():
+    warning("Smoking may be hazardous to your health!")
+def warning(s):
+    global options
+    if options.gui:
+        w = QMessageBox()
+        w.warning(w,Version,s)
+    else:
+        print s
+
+
+##def save():
+##    global renwin,savefile
+##    SaveRendering(renwin,savefile)
+##def saveAs():
+##    global renwin,savefile
+##    fs = FileSelectionDialog(savefile.getPattern())
+##    fn = fs.getFilename()
+##    if fn:
+##        savefile.setPattern(fn)
+##        SaveRendering(renwin,savefile)
+def saveImage():
+    """Save the current rendering in image format."""
+    global canvas
+    fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=QFileDialog.AnyFile)
+    fn = fs.getFilename()
+    if fn:
+        fmt = string.upper(os.path.splitext(fn)[1])
+        if len(fmt) > 0 and fmt[0] == '.':
+            fmt = fmt[1:]
+            if fmt == 'JPG':
+                fmt = 'JPEG'
+        else:
+            fmt = 'PNG'
+            fn += '.png'
+        if fmt in QImage.outputFormats():
+            canvas.save(fn,fmt)
+        else:
+            warning("Sorry, can not save in %s format!\n"
+                    "Suggest you use PNG format ;)"%fmt)
+
+def wireframe():
+    global canvas
+    canvas.glinit("wireframe")
+    draw(out)
+def smooth():
+    global canvas
+    canvas.glinit("render")
+    draw(out)
+
+def play():
+    fs = FileSelectionDialog(".","pyformex scripts (*.frm *.py)")
+    fn = fs.getFilename()
+    if fn:
+        replay(fn)
+def test():
+    draw(maketest(0))
+def printit():
+    global out
+    print out
+def bbox():
+    global out
+    print "bbox ",out.bbox()
+def clear():
+    global canvas
+    canvas.clear()
+def redraw():
+    global canvas
+    canvas.display()
+
+def zoomIn():
+    global canvas
+    canvas.zoom(0.8)
+    canvas.display()
+def zoomOut():
+    global canvas
+    canvas.zoom(1.25)
+    canvas.display()
+def panRight():
+    global canvas
+    canvas.camera.pan(+5)
+    canvas.display()   
+def panLeft():
+    global canvas
+    canvas.camera.pan(-5)
+    canvas.display()   
+def panUp():
+    global canvas
+    canvas.camera.pan(+5,1)
+    canvas.display()   
+def panDown():
+    global canvas
+    canvas.camera.pan(-5,0)
+    canvas.display()   
+def rotRight():
+    global canvas
+    canvas.camera.rotate(+5)
+    canvas.display()   
+def rotLeft():
+    global canvas
+    canvas.camera.rotate(-5)
+    canvas.display()   
+def rotUp():
+    global canvas
+    canvas.camera.rotate(+5,1)
+    canvas.display()   
+def rotDown():
+    global canvas
+    canvas.camera.rotate(-5,1)
+    canvas.display()   
+def dollyIn():
+    global canvas
+    canvas.camera.dolly(0.8)
+    canvas.display()   
+def dollyOut():
+    global canvas
+    canvas.camera.dolly(1.25)
+    canvas.display()   
+
+def replay(fn,ask=False):
+    """Play a formex script from file fn"""
+    canvas.updateGL()
+    if ask:
+        for line in file(fn,"r"):
+            print line
+        ans = raw_input(line.rstrip('\n')+" -- Execute this script (y/n)? ")
+        ask = ans != 'y'
+    if not ask:
+        # We need to pass formex globals to the script
+        # This would be done automatically if we put this function
+        # in the formex.py file. But hen we need to pass other globals
+        # from this file (like draw,...)
+        # We might create a module with all operations accepted in
+        # scripts.
+        g = globals()
+        g.update(Formex.globals())
+        status(fn)
+        execfile(fn,g)
+
+    
+def draw(F,camera=True,side="front"):
+    """Draw a Formex on the canvas"""
+    global canvas,bbox
+    canvas.removeAllActors()
+    canvas.addActor(FormexActor(F))
+    bbox = F.bbox()
+    if camera:
+        canvas.setView(bbox,side)
+    canvas.display()
+
+
+def exit():
+    global app
+    if app:
+        app.quit()
+    else:
+        sys.exit(0)
+                     
+testnr=0
+    
+def maketest(nr=0):
+    global testnr,F,G,out
+    if nr == 0:
+        nr = testnr
+    testnr = (testnr + 1) % 5
+    print "Test nr. %d"%nr 
+    if nr == 0:
+        F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+        out = F.lam(1,1).lam(2,1).rin(1,10,2).rin(2,6,2)
+    elif nr == 1:
+        E = Formex([[[1,1.5],[1,1]],[[1,1],[2,1]]])
+        out = E.ros(1,2,3,1,5,-45)
+    elif nr == 2:
+        N = Formex([[[0,0],[2,0]],[[0,0],[1,1]],[[2,0],[1,1]]])
+        out = N.genid(4,3,2,1,1,-1)
+    elif nr == 3:
+        G = F.lamid(1,1).rinid(10,6,2,2)
+        out = G.bb(1.5,0.8)
+    elif nr == 3:
+        out = G.bp(0.75,15)
+    elif nr == 4:
+        E = Formex([[[5,1,1],[5,2,1]]]).rinit(6,5,1,1) + Formex([[[5,1,1],[5,1,2]]]).rinit(7,4,1,1)
+        G = E.bs(1,30,5)
+        out=G
+    return out
+
+def status(s):
+    """Display a message in the status line"""
+    global statusbar
+    statusbar.message(s)
+
+def GUI():
+    global canvas,statusbar, options
+    w = QMainWindow()
+    w.setCaption(Version)
+    w.resize(640,480)
+    # add widgets to the main window
+    statusbar = w.statusBar()
+    statusbar.message(Version+" (c) B. Verhegghe")
+    m = w.menuBar()
+    insertViewMenu()
+    insertExamplesMenu()
+    AddMenuItems(m,MenuData)
+    # Create a nice frame to put around the OpenGL widget
+    # Create our display widget
+    f = QHBox(w, "frame")
+    f.setFrameStyle(QFrame.Sunken | QFrame.Panel)
+    f.setLineWidth(2)
+    f.resize(640,480)
+    from qtgl import QGLFormat
+    fmt = QGLFormat.defaultFormat()
+    fmt.setDirectRendering(options.dri)
+    canvas = Canvas(640,480,fmt,f)
+    canvas.clear()
+    canvas.camera.setPos(0,0,5)
+    # Put the GL widget inside the frame
+    w.setCentralWidget(f)
+    return w
+    
+def runApp(args):
+    global app,canvas
+    app = QApplication(sys.argv)
+    QObject.connect(app,SIGNAL("lastWindowClosed()"),app,SLOT("quit()"))
+    # create GUI
+    gui = GUI()
+    app.setMainWidget(gui)
+    gui.show()
+    canvas.show()
+    canvas.clear()
+    options.gui = True
+    app.exec_loop()
+   
+def main(argv=None):
+    """This is a fairly generic main() function"""
+    global options,dirname
+    # this allows us to call main from the interpreter
+    if argv is None:
+        argv = sys.argv
+    dirname = os.path.dirname(os.path.realpath(argv[0]))
+    #process options
+    from optparse import OptionParser,make_option
+    parser = OptionParser(
+        usage = "usage: %prog [<options>] [ --  <Qapp-options> ]",
+        version = Version,
+        option_list=[
+        make_option("--nodri", help="do not use Direct Rendering",
+                    action="store_false", dest="dri", default=True),
+        make_option("--debug", help="display logging info to sys.stdout",
+                    action="store_true", dest="debug", default=False)
+        ])
+    (options, args) = parser.parse_args()
+    # Run the application
+    return runApp(args)
+
+#### Go
+if __name__ == "__main__":
+    sys.exit(main())
+
+#### End

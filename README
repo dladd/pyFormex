@@ -1,0 +1,105 @@
+# README
+##
+## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
+## pyformex is a python implementation of Formex algebra
+## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
+## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
+## Distributed under the General Public License, see file COPYING for details
+##
+#
+# pyformex is a program that lets you easily generate large sets of coordinates
+# following simple generation patterns such as translation, rotation,
+# reflection, mathematical functions, replication.
+# It may be useful to generate node and elements sets in finite element mesh
+# generation and in the design of spatial frame structures.
+#
+# But if you find it useful for something else, please go ahead.
+# If you have questions or remarks, feel free to contact the author.
+#
+# BEWARE: this is very early beta beta software, undergoing frequent changes!
+#
+
+Howto install:
+-------------
+Unpack the tarball and go to the pyformex directory
+  tar -xvzf pyformex-VERSION.tar.gz
+  cd pyformex-VERSION
+Edit the top lines of the Makefile to suit your installation
+Then run
+  make install
+
+Howto remove:
+------------
+<TODO>
+
+
+What you need:
+-------------- 
+python: http://www.python.org  
+	(version 2.2 or higher)
+numarray: http://www.stsci.edu/resources/software_hardware/numarray
+	(version 0.8 or higher)
+PyOpenGL: http://pyopengl.sourceforge.net/
+	(version 2.0 or higher)
+PyQt: http://www.riverbankcomputing.co.uk/pyqt/
+	(version 0.9 or higher)
+
+
+
+Why:
+---
+<TODO>
+
+
+Why Python:
+----------
+Because
+ - it is very easy to learn (See www.python.org)
+ - it is extremely powerful (More on www.python.org)
+ - I just like to use it
+
+
+ToDo:
+----
+A LOT!
+
+But this is a list of things we want to do before we go public:
+
+- introduce all (or most) of the formian functions
+- provide basic documentation
+- make a clean GUI
+- provide output facilities (text and graphics)
+- make a formian to pyformex translator
+
+And these ideas might be useful:
+- on installation, create a remove script
+- create a batch run mode
+
+
+
+
+
+Documentation:
+-------------
+Because it is not obvious from the GUI:
+
+The canvas showing the Formex has dynamic zoom/pan/rotate functionality.
+Moving the mouse with one of the buttons depressed will activate this:
+  LEFT mouse button : rotate
+  MIDDLE mouse button : pan
+  RIGHT mouse button : zoom : horizontal movement zooms by camera lens angle,
+        vertical movement zooms by changing camera distance. The first mode 
+	keeps the perspecive, the second one changes it.
+	Moving right and up zooms in, left and down zooms out. Moving 
+	diagonally from upper left to lower right more or less keeps the
+	image size, while changing the perspective.
+
+
+
+Help:
+----
+
+Address all your questions, observations and ideas to
+benedict.verhegghe@ugent.be
+
+
