@@ -1288,6 +1288,7 @@ if __name__ == "__main__":
         print G
         print G[1]
         print G.nodesAndElements()
+        print isinstance(G,Formex)
 
 
     (f,t) = _test()

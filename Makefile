@@ -27,8 +27,8 @@ PYFORMEXDIR= pyformex-$(VERSION)
 INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
 PROGRAM= pyformex
-SOURCE= formex.py canvas.py camera.py colors.py vector.py
-ICONS= icons/*.xpm
+SOURCE= formex.py canvas.py camera.py colors.py vector.py lima.py Turtle.py pyformexrc
+ICONS= icons/*.xbm
 HTMLDOCS= $(SOURCE:.py=.html)
 HTMLDIR= doc/html
 DOCFILES= README COPYING History

@@ -23,7 +23,7 @@ import qt
 global config
 config={}
 
-global out
+global out   # holds the last drawn Formex
 out=None
 
  
@@ -232,13 +232,16 @@ def addViewButtons():
                 [ "Right View", "rightview.xbm", rightView ],
                 [ "Top View", "topview.xbm", topView ],
                 [ "Bottom View", "bottomview.xbm", bottomView ],
-                [ "Iso View", "isoview.xbm", isoView ]  ]
+                [ "Iso View", "isoview.xbm", isoView ],
+                [ "User View", "userview.xbm", isoView ]  ]
     for b in buttons:
         w = qt.QToolButton(qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[0],"",b[2],tool)
 
 
 # Actions (these are just python functions)
-# ??? Can we use python functions with arguments ???
+# ??? Can we use python functions with arguments as actions in menus ???
+# Didn't succeed yet
+
 
 def NotImplemented():
     warning("This option has not been implemented yet!")
@@ -414,46 +417,42 @@ def smooth():
 def redraw():
     global canvas
     canvas.redrawAll()
+
+### draw now draws in color by default.
+### use draw(...,color=None) to draw in black, like the old function did    
     
-def draw(F,side='front'):
+def draw(F,side='front',color="prop"):
     """Draw a Formex on the canvas.
 
-    This adds an actor to the canvas, and directs the camera to it from
+    This draws an actor on the canvas, and directs the camera to it from
     the specified side. Default is looking in the -z direction.
-    Specify side=None if you want to leave the camera settings unchanged.
+    Specifying side=None leaves the camera settings unchanged.
     If other actors are on the scene, they may be visible as well.
     Clear the canvas before drawing if you only want one actor!
-    """
-    global canvas,out
-    out = F
-    canvas.addActor(FormexActor(F))
-    if side:
-        canvas.setView(F.bbox(),side)
-    # Als side == None zou toch de bbox moeten berekend worden
-    # en de camera in/uitgezoomd of gedollied worden.
-    canvas.update()
-    
-def drawProp(F,side='front',color=[black,red,green,blue,cyan,magenta,yellow,white]):
-    """Draw a Formex in colors matching the elements property value.
 
-    This is comparable to <draw>, but the elements of the formex are displayed
-    in different colors according to the property set. If the formex has no
-    properties, it is equivalent to <draw>.
-    If no color list is specified, a default one is used. The color index
-    used is the property value modulus the number of colors in the list.
+    If the Formex has properties and a color list is specified, then the
+    the properties will be used as an index in the color list and each member
+    will be drawn with the resulting color.
+    If color is one color value, the whole Formex will be drawn with
+    that color.
+    Finally, is color=None is specified, the whole Formex is
+    drawn in black.
     """
-    global canvas,out
+    global canvas,out,config
     out = F
-    if F.p == None:
-        draw(F,side)
-        return
-    # create actors for each value
-    for v in F.propSet():
-        f = F.hasProp(v)
-        i = v % len(color)
-        canvas.addActor(FormexActor(f,color[i]))
+    if F.p == None or color==None:
+        # use the Formex directly as actor
+        canvas.addActor(FormexActor(F))
+    else:
+        # create actors for each color value
+        color=config['propcolors']
+        for v in F.propSet():
+            f = F.hasProp(v)
+            i = v % len(color)
+            canvas.addActor(FormexActor(f,color[i]))
     if side:
         canvas.setView(F.bbox(),side)
+    # If side == None we still should calculate the bbox and zoom accordingly
     canvas.update()
 
     
@@ -475,7 +474,7 @@ def playFile(fn,name=None):
     playScript(file(fn,'r'),fn)
 
 wakeupMode=0  # 0 = sleeping allowed, 1 = stay awake for this script
-              # 2 = always stay awake, 3 = stay awake and exit
+              # 2 = always stay awake, 3 = stay awake and exit at end of script
 scriptLock = threading.Lock()
     
 def playScript(scr,name="unnamed"):
@@ -688,7 +687,14 @@ def main(argv=None):
     # Run the application
     return runApp(args)
 
+#### deprecated functions (retained for compatibility)
+
+def drawProp(F,side="front",color="prop"):
+    print "DEPRECATED: use draw() instead."
+    draw(F,side,color)
+
 #### Go
+
 if __name__ == "__main__":
     sys.exit(main())
 

@@ -3,12 +3,20 @@
 	
 Changes from release 0.2:
 
-- pyformex: added rotate, pan, zoom and views buttons to toolbar
-	    reorganized menus
-	
-- class Formex: added function select(), affine()
-  BoundingBox now returns a list instead of an array
+pyformex:
+========	
+- added rotate, pan, zoom and views buttons to toolbar
+- reorganized menus
+- the draw() function now by default draws in color. Use draw(...,color=None)
+	or draw(...,color=black) to obtain the old black drawing functionality
 
+	
+class Formex:
+============
+- added function select(), affine()
+- BoundingBox now returns a list instead of an array
+
+	
 - camera.py: completely reworked
 - canvas.py: changed for new camera handing
 - vector.py: added midPoint and centerDiff	

@@ -14,3 +14,5 @@ config['examplesmenu']=True  # add examples menu
 config['zoomfactor']=1.25    # zooming factor for zoom buttons
 config['rotfactor']=5.       # rotation angle for rotation buttons
 config['panfactor']=5.       # translation factor for pan buttons
+config['propcolors']=[black,red,green,blue,cyan,magenta,yellow,white] 
+   # a default color set for properties
