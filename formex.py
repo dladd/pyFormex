@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
-## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
-## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
-## Distributed under the General Public License, see file COPYING for details
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
 ##
 """Formex algebra in python"""
 
@@ -662,7 +661,8 @@ class Formex:
 
         This is also the subtraction of the current Formex with F.
         Elements are only removed if they have the same nodes in the same
-        order.
+        order. This is a slow operation: for large structures, you should
+        avoid it where possible.
         """
         flag = ones((self.f.shape[0],))
         for i in range(self.f.shape[0]):
@@ -736,6 +736,8 @@ class Formex:
 
         The scale should be a list of 3 numbers, or a single number.
         In the latter case, the scaling is homothetic."""
+        #self.f = self.f*scale
+        #return self
         return Formex(self.f*scale,self.p)
 
     def translate(self,vector,distance=None):
@@ -977,6 +979,8 @@ class Formex:
         """
         f = zeros(self.f.shape,type=Float32)
         f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
+        #self.f = f
+        #return self
         return Formex(f,self.p)
 
     def map1(self,dir,func):
@@ -998,7 +1002,7 @@ class Formex:
 
         <func> is a numerical function which takes one argument and produces
         one result. The coordinate dir will be replaced by func(d), where <d>
-        i calculated as the distance to <point>.
+        is calculated as the distance to <point>.
         The function must be applicable on numarrays, so it should only
         include numerical operations and functions understood by the
         numarray module.
@@ -1061,16 +1065,16 @@ class Formex:
         This function is especially suited to create circular domains where
         all bars have nearly same length. See the Scallopdome example.
         """
-        return self.map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
-
+        return map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
+        #return self
+        
 ##############################################################################
 #
 #   Transformations that change the topology
 #        
 
-    # generate might be good alternative name for replicate
-    def replicate(self,n,dir,step):
-        """Returns a Formex with n replications in direction dir with step.
+    def replic(self,n,step,dir):
+        """Return a Formex with n replications in direction dir with step.
 
         The original Formex is the first of the n replicas.
         """
@@ -1080,9 +1084,23 @@ class Formex:
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         ## the replication of the properties is automatic!
         return Formex(f,self.p)
+    
+    def replic2(self,n1,n2,t1,t2,d1=0,d2=1,bias=0,taper=0):
+        """Replicate in two directions.
+
+        n1,n2 number of replications with steps t1,t2 in directions d1,d2
+        bias, taper : extra step and extra number of generations in direction
+        d1 for each generation in direction d2
+        """
+        P = [ self.translatem((d1,i*bias),(d2,i*t2)).replic(n1+i*taper,t1,d1)
+              for i in range(n2) ]
+        ## We should replace the Formex concatenation here by
+        ## separate data and prop concatenations, because we are
+        ## guaranteed that either none or all formices in P have props.
+        return Formex.concatenate(P)
  
     def rosette(self,n,angle,axis=2,point=[0.,0.,0.]):
-        """Returns a Formex with n rotational replications with angular
+        """Return a Formex with n rotational replications with angular
         step angle around an axis parallel with one of the coordinate axes
         going through the given point. axis is the number of the axis (0,1,2).
         point must be given as a list (or array) of three coordinates.
@@ -1095,26 +1113,6 @@ class Formex:
             f[i] = matrixmultiply(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.p)
-    
-    def generate2(self,n1,n2,d1,d2,t1,t2,bias=0,taper=0):
-        """Generate copies in two directions.
-
-        n1,n2 number of replications in direction d1,d2
-        t1,t2 step in these directions
-        bias, taper : extra step and extra number of generations in direction
-        d1 for each generation in direction d2
-        """
-        P = [ self.translatem((d1,i*bias),(d2,i*t2)).replicate(n1+i*taper,d1,t1)
-              for i in range(n2) ]
-        ##
-        ## We should replace the Formex concatenation here by
-        ## seperate data and prop concatenations, because we are
-        ## guaranteed that either none or all formices in P have props.
-        return Formex.concatenate(P)
-
-    #alternate names
-    replicate2 = generate2
-    generate = replicate    
         
 
 ##############################################################################
@@ -1122,12 +1120,13 @@ class Formex:
 # Compatibility functions # deprecated !
 #
 # New users should avoid these functions!
+# They will be moved to a separate file in future!
 #
 
     def translatem(self,*args):
         """Multiple subsequent translations in axis directions.
 
-        The argument list is a sequence of tuples (axis number, step). 
+        The argument list is a sequence of tuples (axis, step). 
         Thus translatem((0,x),(2,z),(1,y)) is equivalent to
         translate([x,y,z]). This function is especially conveniant
         to translate in calculated directions.
@@ -1151,7 +1150,8 @@ class Formex:
     def ref(self,dir,dist):
         return self.reflect(dir-1,dist)
 
-    rindle = replicate
+    def rindle(self,n,dir,step):
+        return self.replic(n,step,dir)
     def rin(self,dir,n,dist):
         return self.rindle(n,dir-1,dist)
 
@@ -1222,11 +1222,11 @@ class Formex:
         return self.rosette(n,angle,0,[0,a,b])
 
     def genid(self,n1,n2,t1,t2,bias=0,taper=0):
-        return self.generate2(n1,n2,0,1,t1,t2,bias,taper)
+        return self.replic2(n1,n2,t1,t2,0,1,bias,taper)
     def genis(self,n1,n2,t1,t2,bias=0,taper=0):
-        return self.generate2(n1,n2,0,2,t1,t2,bias,taper)
+        return self.replic2(n1,n2,t1,t2,0,2,bias,taper)
     def genit(self,n1,n2,t1,t2,bias=0,taper=0):
-        return self.generate2(n1,n2,1,2,t1,t2,bias,taper)
+        return self.replic2(n1,n2,t1,t2,1,2,bias,taper)
 
     def bb(self,b1,b2):
         return self.scale([b1,b2,1.])

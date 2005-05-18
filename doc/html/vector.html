@@ -19,7 +19,7 @@ you&nbsp;should&nbsp;use&nbsp;Numarray&nbsp;instead.</tt></p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
@@ -37,6 +37,7 @@ The&nbsp;angle&nbsp;is&nbsp;given&nbsp;in&nbsp;degrees:&nbsp;theta:&nbsp;-180..1
  <dl><dt><a name="-cartesianToSpherical"><strong>cartesianToSpherical</strong></a>(v)</dt><dd><tt>Convert&nbsp;cartesian&nbsp;coordinates&nbsp;[x,y,z]&nbsp;to&nbsp;spherical&nbsp;[long,lat,dist]<br>
 &nbsp;<br>
 Angles&nbsp;are&nbsp;given&nbsp;in&nbsp;degrees:&nbsp;lat:&nbsp;-90..90,&nbsp;long:-180..180</tt></dd></dl>
+ <dl><dt><a name="-centerDiff"><strong>centerDiff</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;point&nbsp;and&nbsp;the&nbsp;difference&nbsp;of&nbsp;the&nbsp;line&nbsp;v-w.</tt></dd></dl>
  <dl><dt><a name="-cosAngle"><strong>cosAngle</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;cosine&nbsp;of&nbsp;the&nbsp;angle&nbsp;between&nbsp;two&nbsp;vectors</tt></dd></dl>
  <dl><dt><a name="-cross"><strong>cross</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;cross&nbsp;product&nbsp;of&nbsp;two&nbsp;vectors.</tt></dd></dl>
  <dl><dt><a name="-cylindricalToCartesian"><strong>cylindricalToCartesian</strong></a>(v)</dt><dd><tt>Convert&nbsp;cylindrical&nbsp;coordinates&nbsp;[r,theta,z]&nbsp;to&nbsp;cartesian&nbsp;[x,y,z]<br>
@@ -47,20 +48,24 @@ The&nbsp;angle&nbsp;theta&nbsp;must&nbsp;be&nbsp;given&nbsp;in&nbsp;degrees.</tt
  <dl><dt><a name="-dotpr"><strong>dotpr</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;vectors&nbsp;v&nbsp;and&nbsp;w</tt></dd></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;vector&nbsp;v</tt></dd></dl>
  <dl><dt><a name="-matrixMultiply"><strong>matrixMultiply</strong></a>(a, b)</dt><dd><tt>Multipy&nbsp;matrices&nbsp;a&nbsp;and&nbsp;b.</tt></dd></dl>
+ <dl><dt><a name="-midPoint"><strong>midPoint</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;point&nbsp;of&nbsp;the&nbsp;line&nbsp;v-w.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;<a href="#-pointOf">pointOf</a>(v,w,0.5),&nbsp;but&nbsp;cheaper.</tt></dd></dl>
  <dl><dt><a name="-norm"><strong>norm</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;square&nbsp;length&nbsp;[x^2&nbsp;+&nbsp;y^2&nbsp;+&nbsp;z^2&nbsp;of&nbsp;a&nbsp;vector&nbsp;v</tt></dd></dl>
  <dl><dt><a name="-orthogonal"><strong>orthogonal</strong></a>(v, w)</dt><dd><tt>Returns&nbsp;the&nbsp;part&nbsp;of&nbsp;vector&nbsp;v&nbsp;that&nbsp;is&nbsp;orthogonal&nbsp;to&nbsp;vector&nbsp;w</tt></dd></dl>
  <dl><dt><a name="-parallel"><strong>parallel</strong></a>(v, w)</dt><dd><tt>Returns&nbsp;the&nbsp;part&nbsp;of&nbsp;vector&nbsp;v&nbsp;that&nbsp;is&nbsp;parallel&nbsp;to&nbsp;vector&nbsp;w</tt></dd></dl>
  <dl><dt><a name="-pointOf"><strong>pointOf</strong></a>(v, w, pos<font color="#909090">=0.5</font>)</dt><dd><tt>Return&nbsp;the&nbsp;point&nbsp;on&nbsp;the&nbsp;line&nbsp;v-w&nbsp;defined&nbsp;by&nbsp;the&nbsp;relative&nbsp;coordinate&nbsp;pos.<br>
 &nbsp;<br>
-v&nbsp;has&nbsp;pos&nbsp;0,&nbsp;w&nbsp;has&nbsp;pos&nbsp;1.&nbsp;For&nbsp;values&nbsp;0..1&nbsp;the&nbsp;point&nbsp;lies&nbsp;between&nbsp;v&nbsp;and&nbsp;w.</tt></dd></dl>
- <dl><dt><a name="-projection"><strong>projection</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;projection&nbsp;of&nbsp;vector&nbsp;v&nbsp;on&nbsp;vector&nbsp;w.</tt></dd></dl>
+v&nbsp;has&nbsp;pos&nbsp;0,&nbsp;w&nbsp;has&nbsp;pos&nbsp;1.&nbsp;For&nbsp;values&nbsp;0..1&nbsp;the&nbsp;point&nbsp;lies&nbsp;between&nbsp;v&nbsp;and&nbsp;w.<br>
+If&nbsp;the&nbsp;pos&nbsp;argument&nbsp;is&nbsp;omitted,&nbsp;the&nbsp;midpoint&nbsp;between&nbsp;v&nbsp;and&nbsp;w&nbsp;is&nbsp;returned.</tt></dd></dl>
+ <dl><dt><a name="-projection"><strong>projection</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;(signed)&nbsp;length&nbsp;of&nbsp;the&nbsp;projection&nbsp;of&nbsp;vector&nbsp;v&nbsp;on&nbsp;vector&nbsp;w.</tt></dd></dl>
  <dl><dt><a name="-reverse"><strong>reverse</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;reverse&nbsp;vector&nbsp;[-x,&nbsp;-y,&nbsp;-z]&nbsp;of&nbsp;v[x,y,z]</tt></dd></dl>
  <dl><dt><a name="-roll"><strong>roll</strong></a>(vector, n)</dt><dd><tt>Roll&nbsp;the&nbsp;elements&nbsp;of&nbsp;the&nbsp;vector&nbsp;over&nbsp;n&nbsp;positions&nbsp;forward</tt></dd></dl>
  <dl><dt><a name="-rotationMatrix"><strong>rotationMatrix</strong></a>(axis, angle)</dt><dd><tt>Return&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;over&nbsp;angle(degrees)&nbsp;around&nbsp;axis.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;a&nbsp;matrix&nbsp;for&nbsp;postmultiplying&nbsp;a&nbsp;row&nbsp;vector.</tt></dd></dl>
  <dl><dt><a name="-scale"><strong>scale</strong></a>(v, a)</dt><dd><tt>Return&nbsp;the&nbsp;a&nbsp;*&nbsp;[x,&nbsp;y,&nbsp;z],&nbsp;where&nbsp;a&nbsp;is&nbsp;a&nbsp;scalar</tt></dd></dl>
- <dl><dt><a name="-sphericalToCartesian"><strong>sphericalToCartesian</strong></a>(v)</dt><dd><tt>Convert&nbsp;spherical&nbsp;coordinates&nbsp;[lat,long,dist]&nbsp;to&nbsp;cartesian&nbsp;[x,y,z]</tt></dd></dl>
+ <dl><dt><a name="-sphericalToCartesian"><strong>sphericalToCartesian</strong></a>(v)</dt><dd><tt>Convert&nbsp;spherical&nbsp;coordinates&nbsp;[long,lat,dist]&nbsp;to&nbsp;cartesian&nbsp;[x,y,z]</tt></dd></dl>
  <dl><dt><a name="-square"><strong>square</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;squared&nbsp;components&nbsp;[x^2,&nbsp;y^2,&nbsp;z^2]&nbsp;of&nbsp;v[x,y,z]</tt></dd></dl>
  <dl><dt><a name="-unitvector"><strong>unitvector</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;normalized&nbsp;(unit&nbsp;length)&nbsp;vector&nbsp;in&nbsp;direction&nbsp;v</tt></dd></dl>
 </td></tr></table>

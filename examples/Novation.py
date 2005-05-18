@@ -27,7 +27,7 @@ a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
-drawProp (e)
+draw (e)
 	
 		
 	

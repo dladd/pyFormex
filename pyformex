@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
-## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
-## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
-## Distributed under the General Public License, see file COPYING for details
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
 ##
 """pyformex is a python implementation of Formex algebra"""
 
@@ -139,7 +138,7 @@ MenuData = [
         ("Action","&Bbox","printbbox"),
         ("Action","&Globals","printglobals"),  ]),
     ("Popup","&Help",[
-        ("Action","&Help","help"),
+        ("Action","&Help","showHelp"),
         ("Action","&About","about"), 
         ("Action","&Warning","testwarning"), ]) ]
 
@@ -264,10 +263,15 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
     createViewAction(name,icon,tooltip,menutext)
 
 
-# Actions (these are just python functions)
-# ??? Can we use python functions with arguments as actions in menus ???
-# In menus : we can have items send an integer id
-# Other actions : make a subclass that emits a signal with 
+###################### Actions #############################################
+# Actions are just python functions, preferably without arguments
+# Actions are often used as slots, which are triggered by signals,
+#   e.g. by clicking a menu item or a tool button.
+# Since signals have no arguments:
+# Can we use python functions with arguments as actions ???
+# - In menus we can have the menuitems send an integer id.
+# - For other cases (like toolbuttons), we can subclass QAction and let it send
+#   a signal with appropriate arguments 
 
 
 def NotImplemented():
@@ -277,21 +281,31 @@ save = NotImplemented
 saveAs = NotImplemented
 record = NotImplemented
 
-def help():
-    global help
+global help
+help = None
+def showHelp():
     """Start up the help browser"""
-    from helpViewer import HelpViewer
-    dir = os.path.join(config['pyformexdir'],"doc","html")
-    home = os.path.join(dir,"formex.html")
-    print "Help file = ",home
-    help = HelpViewer(home, dir, None, "help viewer")
-    help.setCaption("pyFormex - Helpviewer")
-    help.setAbout("This is the pyFormex HelpViewer", \
-                  "<p>It was modeled after the HelpViewer example " \
+    global help
+    from helpviewer import HelpViewer
+    print "help = ",help
+    if help == None:
+        dir = os.path.join(config['docdir'],"html")
+        home = os.path.join(dir,"formex.html")
+        print "Help file = ",home
+        help = HelpViewer(home, dir,bookfile=config['helpbookmarks'])
+        help.setCaption("pyFormex - Helpviewer")
+        help.setAbout("pyFormex Help", \
+                  "This is the pyFormex HelpViewer.<p>It was modeled after the HelpViewer example " \
                   "from the Qt documentation.</p>")
-    help.resize(800,600)
+        #help.resize(800,600)
+        help.connect(help,qt.SIGNAL("destroyed()"),closeHelp)
     help.show()
-    help.dummy()
+
+def closeHelp():
+    """Close the help browser"""
+    global help
+    help = None
+        
 
 def about():
     about = qt.QMessageBox()

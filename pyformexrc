@@ -1,4 +1,11 @@
 # This is the default pyFormex config file. DO NOT CHANGE IT!
+##
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
+##
 #
 # Changes should go to /etc/pyformexrc (for site-wide changes)
 # or to ~/.pyformexrc (for personal settings).
@@ -25,3 +32,6 @@ config['exampledir'] = os.path.join(config['pyformexdir'],"examples")
 config['viewsmenu'] = True # Add a Views menu
 config['viewsbar'] = True  # Add a Views toolbar
 config['builtinviews'] = ['front','back','right','left','top','bottom','iso']
+config['helpbookmarks'] = os.path.join(os.environ['HOME'],".pyformex.bookmarks")
+config['helphistory'] = os.path.join(os.environ['HOME'],".pyformex.history")
+config['docdir'] = os.path.join(config['pyformexdir'],"doc")

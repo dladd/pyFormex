@@ -1,11 +1,10 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
-## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
-## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
-## Distributed under the General Public License, see file COPYING for details
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
 ##
 #
 
@@ -22,18 +21,20 @@ DOCDIR= $(ROOTDIR)/share/doc
 
 ############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
 
-VERSION= 0.2
+VERSION= 0.2.1
 PYFORMEXDIR= pyformex-$(VERSION)
 INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
 DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
 PROGRAM= pyformex
-SOURCE= formex.py canvas.py camera.py colors.py vector.py lima.py Turtle.py pyformexrc
+PYSOURCE= formex.py canvas.py camera.py colors.py vector.py lima.py Turtle.py widgets.py helpviewer.py
+SOURCE= $(PYSOURCE) pyformexrc
 ICONS= icons/*.xbm
-HTMLDOCS= $(SOURCE:.py=.html)
 HTMLDIR= doc/html
+HTMLDOCS= $(addprefix $(HTMLDIR)/,$(PYSOURCE:.py=.html))
 DOCFILES= README COPYING History
-EXAMPLES= BarrelVault Baumkuchen Dome DoubleLayer Geodesic Hyparcap Novation ParabolicTower ScallopDome Spiral Stars Torus
-EXAMPLEFILES= $(addprefix examples/,$(addsuffix .py,$(EXAMPLES)))
+EXAMPLES= BarrelVault Baumkuchen Dome DoubleLayer Geodesic Hyparcap KochLine Lima Novation ParabolicTower ScallopDome Spiral Stars Torus
+EXAMPLES2= TrussFrame tori
+EXAMPLEFILES= $(addprefix examples/,$(addsuffix .py, $(EXAMPLES) $(EXAMPLES2) ))
 IMAGEFILES =  $(addprefix screenshots/,$(addsuffix .png,$(EXAMPLES)))
 STAMPABLE= README History Makefile TODO
 NONSTAMPABLE= COPYING 
@@ -48,12 +49,14 @@ all:
 ############ User installation ######################
 
 install:
-	install -d $(INSTDIR) $(BINDIR) $(INSTDIR)/icons $(INSTDIR)/examples $(DOCINSTDIR)
+	echo "config['docdir'] = '$(DOCINSTDIR)'" >> pyformexrc
+	install -d $(INSTDIR) $(BINDIR) $(INSTDIR)/icons $(INSTDIR)/examples $(DOCINSTDIR) $(DOCINSTDIR)/html
 	install -m 0664 $(SOURCE) $(INSTDIR)
 	install -m 0775 $(PROGRAM) $(INSTDIR)
 	install -m 0664 icons/* $(INSTDIR)/icons
 	install -m 0664 examples/* $(INSTDIR)/examples
 	install -m 0664 ${DOCFILES} $(DOCINSTDIR)
+	install -m 0664 html/* $(DOCINSTDIR)/html
 	ln -sfn $(INSTDIR)/$(PROGRAM) $(BINDIR)/$(PROGRAM)
 
 uninstall:
@@ -83,13 +86,14 @@ stamp:
 	$(STAMP) -tStamp.template version=$(VERSION) -oStamp.stamp
 
 dist.stamped: distdoc distclean stamp
-	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/icons $(PYFORMEXDIR)/examples $(PYFORMEXDIR)/images
+	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/icons $(PYFORMEXDIR)/examples $(PYFORMEXDIR)/images $(PYFORMEXDIR)/html
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(PROGRAM) $(SOURCE)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR)/examples $(EXAMPLEFILES)
 	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(STAMPABLE)
 	cp $(NONSTAMPABLE) $(PYFORMEXDIR)
 	cp -R $(ICONS)  $(PYFORMEXDIR)/icons
 	cp $(IMAGEFILES)  $(PYFORMEXDIR)/images
+	cp $(HTMLDOCS) $(PYFORMEXDIR)/html
 	tar czf $(PYFORMEXDIR).tar.gz $(PYFORMEXDIR)
 
 distclean:

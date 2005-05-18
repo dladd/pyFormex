@@ -1,5 +1,12 @@
 #!/usr/bin/env pyformex
 # $Id$
+##
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
+##
 #
 """TrussFrame"""
 def show(F):
@@ -17,7 +24,7 @@ d.setProp(2)
 e = Formex.connect([b,c],bias=[1,2]).select([0,2]) + Formex.connect([b,c],bias=[2,1]).select([1,3])
 e.setProp(1)
 col = b+c+d+e
-frame = col.translate([-4.0,0.0,0.0]) +  col.translate([+4.0,0.0,0.0])
+frame = col.translate([-4.0,0.0,0.0]) + col.translate([+4.0,0.0,0.0])
 
 # Dakligger
 h0 = 1.2 # hoogte in het midden
@@ -37,7 +44,7 @@ clear()
 draw(frame)
 sleep()
 
-structure = frame.generate2(2,6,0,2,12,3)
+structure = frame.replic2(2,6,0,2,12,3)
 draw(structure)
 
 sleep()

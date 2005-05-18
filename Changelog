@@ -1,29 +1,50 @@
-# This collects most important changes between releases
+# This collects most important changes between releases since 0.2
 #
-	
-Changes from release 0.2:
 
-pyformex:
-========	
+formex.py:
+----------
+- replicate: renamed to replic
+- generate2: renamed to replic2, changed order of arguments has, introduced
+	default values 0,1 for directions.
+- removed generate(2) aliases
+
+Examples:
+---------	
+- Dome.py renamed to Lamella.py
+- added Schwedler.py
+	
+Release 0.2.1:
+==============
+
+pyformex GUI:
+-------------
 - added rotate, pan, zoom and views buttons to toolbar
 - reorganized menus
-- the draw() function now by default draws in color. Use draw(...,color=None)
-	or draw(...,color=black) to obtain the old black drawing functionality
+- added help viewer
+- added lots of icons
+- added configuration file (well, at least started working on it)
+- camera.py: completely reworked
+- canvas.py: changed for new camera handing, interacive mouse actions in 
+	screen axes
 
+pyformex FUNCTIONS:
+-------------------	
+- the draw() function now by default draws in color. Use draw(...,color=None)
+  or draw(...,color=black) to obtain the old black drawing functionality
 	
-class Formex:
-============
+Formex class:
+-------------
 - added function select(), affine()
 - BoundingBox now returns a list instead of an array
 
-	
-- camera.py: completely reworked
-- canvas.py: changed for new camera handing
+Other changes:
+--------------
+- moved some widgets to separate file widgets.py
 - vector.py: added midPoint and centerDiff	
+- added lima.py : a class for generating structures through recursive 
+	growth rules
+- turtle.py : a class for creating simple Turtle type graphics  
+- added more examples: Kochline, Lima 
 
-- Added lima.py and Turtle.py
-
-- Added examples: Lima 
-
-- Added lots of icons
+============================================================================
 	

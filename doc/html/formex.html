@@ -14,7 +14,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numarray.arrayprint.html">numarray.arrayprint</a><br>
@@ -22,20 +22,22 @@
 <a href="copy_reg.html">copy_reg</a><br>
 <a href="numarray.generic.html">numarray.generic</a><br>
 <a href="numarray.libnumarray.html">numarray.libnumarray</a><br>
+<a href="numarray.libnumeric.html">numarray.libnumeric</a><br>
 </td><td width="25%" valign=top><a href="math.html">math</a><br>
 <a href="numarray.memory.html">numarray.memory</a><br>
 <a href="numarray.numarrayall.html">numarray.numarrayall</a><br>
 <a href="numarray.numarraycore.html">numarray.numarraycore</a><br>
 <a href="numarray.numerictypes.html">numarray.numerictypes</a><br>
-</td><td width="25%" valign=top><a href="numarray.numinclude.html">numarray.numinclude</a><br>
-<a href="numarray.numtest.html">numarray.numtest</a><br>
+<a href="numarray.numinclude.html">numarray.numinclude</a><br>
+</td><td width="25%" valign=top><a href="numarray.numtest.html">numarray.numtest</a><br>
 <a href="operator.html">operator</a><br>
 <a href="os.html">os</a><br>
 <a href="numarray.safethread.html">numarray.safethread</a><br>
-</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+<a href="sys.html">sys</a><br>
 <a href="numarray.typeconv.html">numarray.typeconv</a><br>
-<a href="types.html">types</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
 <a href="numarray.ufunc.html">numarray.ufunc</a><br>
+<a href="vector.html">vector</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -60,7 +62,7 @@ A&nbsp;row&nbsp;along&nbsp;the&nbsp;axis&nbsp;2&nbsp;is&nbsp;a&nbsp;set&nbsp;of&
 (node,&nbsp;vertex,&nbsp;F:&nbsp;signet).<br>
 For&nbsp;simplicity's&nbsp;sake,&nbsp;the&nbsp;current&nbsp;implementation&nbsp;only&nbsp;deals&nbsp;with&nbsp;points<br>
 in&nbsp;a&nbsp;3-dimensional&nbsp;space.&nbsp;This&nbsp;means&nbsp;that&nbsp;the&nbsp;length&nbsp;of&nbsp;axis&nbsp;2&nbsp;is&nbsp;always&nbsp;3.<br>
-The&nbsp;user&nbsp;can&nbsp;create&nbsp;formices&nbsp;(plural&nbsp;of&nbsp;formex)&nbsp;in&nbsp;a&nbsp;2-D&nbsp;space,&nbsp;but<br>
+The&nbsp;user&nbsp;can&nbsp;create&nbsp;formices&nbsp;(plural&nbsp;of&nbsp;<a href="#Formex">Formex</a>)&nbsp;in&nbsp;a&nbsp;2-D&nbsp;space,&nbsp;but<br>
 internally&nbsp;these&nbsp;will&nbsp;be&nbsp;stored&nbsp;with&nbsp;3&nbsp;coordinates,&nbsp;by&nbsp;adding&nbsp;a&nbsp;third<br>
 value&nbsp;0.&nbsp;All&nbsp;operations&nbsp;work&nbsp;with&nbsp;3-D&nbsp;coordinate&nbsp;sets.&nbsp;However,&nbsp;a&nbsp;method<br>
 exists&nbsp;to&nbsp;extract&nbsp;only&nbsp;a&nbsp;limited&nbsp;set&nbsp;of&nbsp;coordinates&nbsp;from&nbsp;the&nbsp;results,<br>
@@ -75,12 +77,12 @@ Finally,&nbsp;the&nbsp;whole&nbsp;<a href="#Formex">Formex</a>&nbsp;represents&n
 &nbsp;<br>
 Additionally,&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;may&nbsp;have&nbsp;a&nbsp;property&nbsp;set,&nbsp;which&nbsp;is&nbsp;an&nbsp;1-D&nbsp;array&nbsp;of<br>
 integers.&nbsp;The&nbsp;length&nbsp;of&nbsp;the&nbsp;array&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;length&nbsp;of&nbsp;axis&nbsp;0&nbsp;of&nbsp;the<br>
-formex&nbsp;data&nbsp;(i.e.&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;<a href="#Formex">Formex</a>).&nbsp;Thus,&nbsp;a&nbsp;single<br>
+<a href="#Formex">Formex</a>&nbsp;data&nbsp;(i.e.&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;<a href="#Formex">Formex</a>).&nbsp;Thus,&nbsp;a&nbsp;single<br>
 integer&nbsp;value&nbsp;may&nbsp;be&nbsp;attributed&nbsp;to&nbsp;each&nbsp;element.&nbsp;It&nbsp;is&nbsp;up&nbsp;to&nbsp;the&nbsp;user&nbsp;to<br>
 define&nbsp;the&nbsp;use&nbsp;of&nbsp;this&nbsp;integer&nbsp;(e.g.&nbsp;it&nbsp;could&nbsp;be&nbsp;an&nbsp;index&nbsp;in&nbsp;a&nbsp;table&nbsp;of<br>
 element&nbsp;property&nbsp;records).<br>
-If&nbsp;a&nbsp;property&nbsp;set&nbsp;is&nbsp;defined,&nbsp;it&nbsp;will&nbsp;be&nbsp;copied&nbsp;together&nbsp;with&nbsp;the&nbsp;formex<br>
-data&nbsp;whenever&nbsp;copies&nbsp;of&nbsp;the&nbsp;formex&nbsp;(or&nbsp;parts&nbsp;thereof)&nbsp;are&nbsp;made.<br>
+If&nbsp;a&nbsp;property&nbsp;set&nbsp;is&nbsp;defined,&nbsp;it&nbsp;will&nbsp;be&nbsp;copied&nbsp;together&nbsp;with&nbsp;the&nbsp;<a href="#Formex">Formex</a><br>
+data&nbsp;whenever&nbsp;copies&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;(or&nbsp;parts&nbsp;thereof)&nbsp;are&nbsp;made.<br>
 Properties&nbsp;can&nbsp;be&nbsp;specified&nbsp;at&nbsp;creation&nbsp;time,&nbsp;and&nbsp;they&nbsp;can&nbsp;be&nbsp;set,<br>
 modified&nbsp;or&nbsp;deleted&nbsp;at&nbsp;any&nbsp;time.&nbsp;Of&nbsp;course,&nbsp;the&nbsp;properties&nbsp;that&nbsp;are<br>
 copied&nbsp;in&nbsp;an&nbsp;operation&nbsp;are&nbsp;those&nbsp;that&nbsp;exist&nbsp;at&nbsp;the&nbsp;time&nbsp;of&nbsp;performing<br>
@@ -89,15 +91,20 @@ the&nbsp;operation.<br>&nbsp;</tt></td></tr>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="Formex-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;sum&nbsp;of&nbsp;two&nbsp;formices</tt></dd></dl>
 
-<dl><dt><a name="Formex-__getitem__"><strong>__getitem__</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;formex.<br>
+<dl><dt><a name="Formex-__getitem__"><strong>__getitem__</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
-This&nbsp;allows&nbsp;addressing&nbsp;element&nbsp;i&nbsp;of&nbsp;formex&nbsp;F&nbsp;as&nbsp;F[i].</tt></dd></dl>
+This&nbsp;allows&nbsp;addressing&nbsp;element&nbsp;i&nbsp;of&nbsp;<a href="#Formex">Formex</a>&nbsp;F&nbsp;as&nbsp;F[i].</tt></dd></dl>
 
 <dl><dt><a name="Formex-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">=[[[]]]</font>, prop<font color="#909090">=None</font>)</dt></dl>
 
 <dl><dt><a name="Formex-__str__"><strong>__str__</strong></a> = <a href="#Formex-asFormex">asFormex</a>(self)</dt></dl>
 
-<dl><dt><a name="Formex-append"><strong>append</strong></a>(self, F)</dt><dd><tt>Append&nbsp;the&nbsp;members&nbsp;of&nbsp;formex&nbsp;F&nbsp;to&nbsp;this&nbsp;one.<br>
+<dl><dt><a name="Formex-affine"><strong>affine</strong></a>(self, mat, vec<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;general&nbsp;affine&nbsp;transform&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;has&nbsp;coordinates&nbsp;given&nbsp;by&nbsp;mat&nbsp;*&nbsp;xorig&nbsp;+&nbsp;vec,<br>
+where&nbsp;mat&nbsp;is&nbsp;a&nbsp;3x3&nbsp;matrix&nbsp;and&nbsp;vec&nbsp;a&nbsp;length&nbsp;3&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Formex-append"><strong>append</strong></a>(self, F)</dt><dd><tt>Append&nbsp;the&nbsp;members&nbsp;of&nbsp;<a href="#Formex">Formex</a>&nbsp;F&nbsp;to&nbsp;this&nbsp;one.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;changes&nbsp;the&nbsp;original&nbsp;one!&nbsp;Use&nbsp;__add__&nbsp;if&nbsp;you&nbsp;want&nbsp;to<br>
 get&nbsp;a&nbsp;copy&nbsp;with&nbsp;the&nbsp;sum.&nbsp;<br>
@@ -108,7 +115,7 @@ get&nbsp;a&nbsp;copy&nbsp;with&nbsp;the&nbsp;sum.&nbsp;<br>
 
 <dl><dt><a name="Formex-asArray"><strong>asArray</strong></a>(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;as&nbsp;a&nbsp;numarray.</tt></dd></dl>
 
-<dl><dt><a name="Formex-asFormex"><strong>asFormex</strong></a>(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;formex&nbsp;as&nbsp;in&nbsp;Formian.<br>
+<dl><dt><a name="Formex-asFormex"><strong>asFormex</strong></a>(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;as&nbsp;in&nbsp;Formian.<br>
 &nbsp;<br>
 Coordinates&nbsp;are&nbsp;separated&nbsp;by&nbsp;commas,&nbsp;points&nbsp;are&nbsp;separated<br>
 by&nbsp;semicolons&nbsp;and&nbsp;grouped&nbsp;between&nbsp;brackets,&nbsp;elements&nbsp;are<br>
@@ -124,7 +131,12 @@ the&nbsp;words&nbsp;"with&nbsp;prop"&nbsp;and&nbsp;a&nbsp;list&nbsp;of&nbsp;the&
 
 <dl><dt><a name="Formex-bb"><strong>bb</strong></a>(self, b1, b2)</dt></dl>
 
-<dl><dt><a name="Formex-bbox"><strong>bbox</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;boundary&nbsp;box&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a></tt></dd></dl>
+<dl><dt><a name="Formex-bbox"><strong>bbox</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;bounding&nbsp;box&nbsp;is&nbsp;the&nbsp;smallest&nbsp;rectangular&nbsp;volume&nbsp;in&nbsp;global<br>
+coordinates,&nbsp;such&nbsp;at&nbsp;no&nbsp;points&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;are&nbsp;outside&nbsp;the<br>
+box.&nbsp;It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;two&nbsp;points:&nbsp;one&nbsp;with&nbsp;the<br>
+minimal&nbsp;coordinates&nbsp;and&nbsp;one&nbsp;with&nbsp;the&nbsp;maximal.</tt></dd></dl>
 
 <dl><dt><a name="Formex-bc"><strong>bc</strong></a>(self, b1, b2, b3)</dt></dl>
 
@@ -132,7 +144,13 @@ the&nbsp;words&nbsp;"with&nbsp;prop"&nbsp;and&nbsp;a&nbsp;list&nbsp;of&nbsp;the&
 
 <dl><dt><a name="Formex-bs"><strong>bs</strong></a>(self, b1, b2, b3)</dt></dl>
 
-<dl><dt><a name="Formex-bump"><strong>bump</strong></a>(self, dir, a, func, dist<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;with&nbsp;a&nbsp;bump.<br>
+<dl><dt><a name="Formex-bsphere"><strong>bsphere</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;diameter&nbsp;of&nbsp;the&nbsp;bounding&nbsp;sphere&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;bounding&nbsp;sphere&nbsp;is&nbsp;the&nbsp;smallest&nbsp;sphere&nbsp;with&nbsp;center&nbsp;in&nbsp;the<br>
+<a href="#Formex-center">center</a>()&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>,&nbsp;and&nbsp;such&nbsp;that&nbsp;no&nbsp;points&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a><br>
+are&nbsp;lying&nbsp;outside&nbsp;the&nbsp;sphere.</tt></dd></dl>
+
+<dl><dt><a name="Formex-bump"><strong>bump</strong></a>(self, dir, a, func, dist<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;a&nbsp;bump.<br>
 &nbsp;<br>
 A&nbsp;bump&nbsp;is&nbsp;a&nbsp;modification&nbsp;of&nbsp;a&nbsp;set&nbsp;of&nbsp;coordinates&nbsp;by&nbsp;a&nbsp;non-matching<br>
 point.&nbsp;It&nbsp;can&nbsp;produce&nbsp;various&nbsp;effects,&nbsp;but&nbsp;one&nbsp;of&nbsp;the&nbsp;most&nbsp;common<br>
@@ -150,7 +168,7 @@ This&nbsp;function&nbsp;can&nbsp;take&nbsp;3&nbsp;axes&nbsp;however.<br>
 Default&nbsp;value&nbsp;is&nbsp;the&nbsp;set&nbsp;of&nbsp;3&nbsp;axes&nbsp;minus&nbsp;the&nbsp;direction&nbsp;of&nbsp;modification.<br>
 This&nbsp;function&nbsp;is&nbsp;then&nbsp;equivalent&nbsp;to&nbsp;bump2.</tt></dd></dl>
 
-<dl><dt><a name="Formex-bump1"><strong>bump1</strong></a>(self, dir, a, func, dist)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;with&nbsp;a&nbsp;one-dimensional&nbsp;bump.<br>
+<dl><dt><a name="Formex-bump1"><strong>bump1</strong></a>(self, dir, a, func, dist)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;a&nbsp;one-dimensional&nbsp;bump.<br>
 &nbsp;<br>
 dir&nbsp;specifies&nbsp;the&nbsp;axis&nbsp;of&nbsp;the&nbsp;modified&nbsp;coordinates;<br>
 a&nbsp;is&nbsp;the&nbsp;point&nbsp;that&nbsp;forces&nbsp;the&nbsp;bumping;<br>
@@ -158,7 +176,7 @@ dist&nbsp;specifies&nbsp;the&nbsp;direction&nbsp;in&nbsp;which&nbsp;the&nbsp;dis
 func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&nbsp;intensity&nbsp;from&nbsp;distance<br>
 !!&nbsp;func(0)&nbsp;should&nbsp;be&nbsp;different&nbsp;from&nbsp;0.</tt></dd></dl>
 
-<dl><dt><a name="Formex-bump2"><strong>bump2</strong></a>(self, dir, a, func)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;with&nbsp;a&nbsp;two-dimensional&nbsp;bump.<br>
+<dl><dt><a name="Formex-bump2"><strong>bump2</strong></a>(self, dir, a, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;a&nbsp;two-dimensional&nbsp;bump.<br>
 &nbsp;<br>
 dir&nbsp;specifies&nbsp;the&nbsp;axis&nbsp;of&nbsp;the&nbsp;modified&nbsp;coordinates;<br>
 a&nbsp;is&nbsp;the&nbsp;point&nbsp;that&nbsp;forces&nbsp;the&nbsp;bumping;<br>
@@ -169,7 +187,9 @@ func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&n
 
 <dl><dt><a name="Formex-cantle2str"><strong>cantle2str</strong></a>(self, can)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;cantle</tt></dd></dl>
 
-<dl><dt><a name="Formex-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a></tt></dd></dl>
+<dl><dt><a name="Formex-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;center&nbsp;of&nbsp;the&nbsp;formex&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#Formex-bbox">bbox</a>().</tt></dd></dl>
 
 <dl><dt><a name="Formex-circulize"><strong>circulize</strong></a>(self)</dt><dd><tt>Transforms&nbsp;the&nbsp;first&nbsp;octant&nbsp;of&nbsp;the&nbsp;0-1&nbsp;plane&nbsp;into&nbsp;1/6&nbsp;of&nbsp;a&nbsp;circle.<br>
 &nbsp;<br>
@@ -192,14 +212,14 @@ distance(r),&nbsp;angle(theta)&nbsp;and&nbsp;height(z).&nbsp;Default&nbsp;order&
 scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
-<dl><dt><a name="Formex-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;formex&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
+<dl><dt><a name="Formex-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
 
-<dl><dt><a name="Formex-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
+<dl><dt><a name="Formex-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
 &nbsp;<br>
-The&nbsp;returned&nbsp;formex&nbsp;has&nbsp;two&nbsp;points&nbsp;for&nbsp;each&nbsp;element:&nbsp;two&nbsp;corners<br>
+The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;has&nbsp;two&nbsp;points&nbsp;for&nbsp;each&nbsp;element:&nbsp;two&nbsp;corners<br>
 of&nbsp;the&nbsp;bbox.</tt></dd></dl>
 
-<dl><dt><a name="Formex-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;formex</tt></dd></dl>
+<dl><dt><a name="Formex-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a></tt></dd></dl>
 
 <dl><dt><a name="Formex-generate"><strong>generate</strong></a> = <a href="#Formex-replicate">replicate</a>(self, n, dir, step)</dt></dl>
 
@@ -224,10 +244,10 @@ The&nbsp;grade&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions&nbsp;of&nbsp
 2&nbsp;=&nbsp;2D,&nbsp;3&nbsp;=&nbsp;3D.<br>
 This&nbsp;will&nbsp;always&nbsp;return&nbsp;3&nbsp;in&nbsp;the&nbsp;current&nbsp;implementation.</tt></dd></dl>
 
-<dl><dt><a name="Formex-hasProp"><strong>hasProp</strong></a>(self, val)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;elements&nbsp;with&nbsp;property&nbsp;val.<br>
+<dl><dt><a name="Formex-hasProp"><strong>hasProp</strong></a>(self, val)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;elements&nbsp;with&nbsp;property&nbsp;val.<br>
 &nbsp;<br>
-If&nbsp;the&nbsp;formex&nbsp;has&nbsp;no&nbsp;properties,&nbsp;a&nbsp;copy&nbsp;is&nbsp;returned.<br>
-The&nbsp;returned&nbsp;formex&nbsp;is&nbsp;always&nbsp;without&nbsp;properties.</tt></dd></dl>
+If&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;has&nbsp;no&nbsp;properties,&nbsp;a&nbsp;copy&nbsp;is&nbsp;returned.<br>
+The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;always&nbsp;without&nbsp;properties.</tt></dd></dl>
 
 <dl><dt><a name="Formex-lam"><strong>lam</strong></a>(self, dir, dist)</dt></dl>
 
@@ -281,10 +301,10 @@ maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></
 
 <dl><dt><a name="Formex-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="Formex-nodes"><strong>nodes</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;containing&nbsp;only&nbsp;the&nbsp;nodes.<br>
+<dl><dt><a name="Formex-nodes"><strong>nodes</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;containing&nbsp;only&nbsp;the&nbsp;nodes.<br>
 &nbsp;<br>
-This&nbsp;is&nbsp;obviously&nbsp;a&nbsp;formex&nbsp;with&nbsp;plexitude&nbsp;1.&nbsp;It&nbsp;holds&nbsp;the&nbsp;same&nbsp;data<br>
-as&nbsp;the&nbsp;original&nbsp;formex,&nbsp;but&nbsp;in&nbsp;another&nbsp;shape:&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes<br>
+This&nbsp;is&nbsp;obviously&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;plexitude&nbsp;1.&nbsp;It&nbsp;holds&nbsp;the&nbsp;same&nbsp;data<br>
+as&nbsp;the&nbsp;original&nbsp;<a href="#Formex">Formex</a>,&nbsp;but&nbsp;in&nbsp;another&nbsp;shape:&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes<br>
 per&nbsp;element&nbsp;is&nbsp;1,&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;total<br>
 number&nbsp;of&nbsp;nodes.<br>
 The&nbsp;properties&nbsp;are&nbsp;not&nbsp;copied&nbsp;over,&nbsp;since&nbsp;they&nbsp;will&nbsp;usually&nbsp;not&nbsp;make<br>
@@ -296,7 +316,7 @@ A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;f
 the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
 an&nbsp;integer&nbsp;array&nbsp;with&nbsp;the&nbsp;node&nbsp;numbers&nbsp;connected&nbsp;by&nbsp;each&nbsp;element.</tt></dd></dl>
 
-<dl><dt><a name="Formex-nonzero"><strong>nonzero</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;nonzero&nbsp;elements.<br>
+<dl><dt><a name="Formex-nonzero"><strong>nonzero</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;nonzero&nbsp;elements.<br>
 &nbsp;<br>
 A&nbsp;zero&nbsp;element&nbsp;is&nbsp;an&nbsp;element&nbsp;where&nbsp;all&nbsp;nodes&nbsp;are&nbsp;equal.</tt></dd></dl>
 
@@ -315,17 +335,17 @@ The&nbsp;plexitude&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;number&nbsp;of&nbsp
 
 <dl><dt><a name="Formex-prop"><strong>prop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;properties&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
 
-<dl><dt><a name="Formex-propSet"><strong>propSet</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;with&nbsp;unique&nbsp;property&nbsp;values&nbsp;on&nbsp;this&nbsp;formex.</tt></dd></dl>
+<dl><dt><a name="Formex-propSet"><strong>propSet</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;with&nbsp;unique&nbsp;property&nbsp;values&nbsp;on&nbsp;this&nbsp;<a href="#Formex">Formex</a>.</tt></dd></dl>
 
 <dl><dt><a name="Formex-ref"><strong>ref</strong></a>(self, dir, dist)</dt></dl>
 
-<dl><dt><a name="Formex-reflect"><strong>reflect</strong></a>(self, dir, pos<font color="#909090">=0</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;formex&nbsp;mirrored&nbsp;in&nbsp;direction&nbsp;dir&nbsp;against&nbsp;plane&nbsp;at&nbsp;pos.<br>
+<dl><dt><a name="Formex-reflect"><strong>reflect</strong></a>(self, dir, pos<font color="#909090">=0</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;mirrored&nbsp;in&nbsp;direction&nbsp;dir&nbsp;against&nbsp;plane&nbsp;at&nbsp;pos.<br>
 &nbsp;<br>
 Default&nbsp;position&nbsp;of&nbsp;the&nbsp;plane&nbsp;is&nbsp;through&nbsp;the&nbsp;origin.</tt></dd></dl>
 
-<dl><dt><a name="Formex-remove"><strong>remove</strong></a>(self, F)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;where&nbsp;the&nbsp;elements&nbsp;in&nbsp;F&nbsp;have&nbsp;been&nbsp;removed.<br>
+<dl><dt><a name="Formex-remove"><strong>remove</strong></a>(self, F)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;where&nbsp;the&nbsp;elements&nbsp;in&nbsp;F&nbsp;have&nbsp;been&nbsp;removed.<br>
 &nbsp;<br>
-This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&nbsp;formex&nbsp;with&nbsp;F.<br>
+This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;F.<br>
 Elements&nbsp;are&nbsp;only&nbsp;removed&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;nodes&nbsp;in&nbsp;the&nbsp;same<br>
 order.</tt></dd></dl>
 
@@ -336,12 +356,12 @@ order.</tt></dd></dl>
 i&nbsp;and&nbsp;j&nbsp;are&nbsp;lists&nbsp;of&nbsp;axis&nbsp;numbers.<br>
 replace&nbsp;([0,1,2],[1,2,0])&nbsp;will&nbsp;roll&nbsp;the&nbsp;axes&nbsp;by&nbsp;1.<br>
 replace&nbsp;([0,1],[1,0])&nbsp;will&nbsp;swap&nbsp;axes&nbsp;0&nbsp;and&nbsp;1.<br>
-An&nbsp;optionally&nbsp;third&nbsp;argument&nbsp;may&nbsp;specify&nbsp;another&nbsp;formex&nbsp;to&nbsp;take<br>
+An&nbsp;optionally&nbsp;third&nbsp;argument&nbsp;may&nbsp;specify&nbsp;another&nbsp;<a href="#Formex">Formex</a>&nbsp;to&nbsp;take<br>
 the&nbsp;coordinates&nbsp;from.&nbsp;It&nbsp;should&nbsp;have&nbsp;the&nbsp;same&nbsp;dimensions.</tt></dd></dl>
 
-<dl><dt><a name="Formex-replicate"><strong>replicate</strong></a>(self, n, dir, step)</dt><dd><tt>Returns&nbsp;a&nbsp;formex&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
+<dl><dt><a name="Formex-replicate"><strong>replicate</strong></a>(self, n, dir, step)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
 &nbsp;<br>
-The&nbsp;original&nbsp;formex&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+The&nbsp;original&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
 <dl><dt><a name="Formex-replicate2"><strong>replicate2</strong></a> = <a href="#Formex-generate2">generate2</a>(self, n1, n2, d1, d2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt></dl>
 
@@ -367,11 +387,11 @@ The&nbsp;original&nbsp;formex&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;
 
 <dl><dt><a name="Formex-rosat"><strong>rosat</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
 
-<dl><dt><a name="Formex-rosette"><strong>rosette</strong></a>(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;formex&nbsp;with&nbsp;n&nbsp;rotational&nbsp;replications&nbsp;with&nbsp;angular<br>
+<dl><dt><a name="Formex-rosette"><strong>rosette</strong></a>(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;rotational&nbsp;replications&nbsp;with&nbsp;angular<br>
 step&nbsp;angle&nbsp;around&nbsp;an&nbsp;axis&nbsp;parallel&nbsp;with&nbsp;one&nbsp;of&nbsp;the&nbsp;coordinate&nbsp;axes<br>
 going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;axis&nbsp;(0,1,2).<br>
 point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
-The&nbsp;original&nbsp;formex&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+The&nbsp;original&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
 <dl><dt><a name="Formex-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;coordinate&nbsp;axis.</tt></dd></dl>
 
@@ -382,6 +402,10 @@ The&nbsp;original&nbsp;formex&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;
 The&nbsp;scale&nbsp;should&nbsp;be&nbsp;a&nbsp;list&nbsp;of&nbsp;3&nbsp;numbers,&nbsp;or&nbsp;a&nbsp;single&nbsp;number.<br>
 In&nbsp;the&nbsp;latter&nbsp;case,&nbsp;the&nbsp;scaling&nbsp;is&nbsp;homothetic.</tt></dd></dl>
 
+<dl><dt><a name="Formex-select"><strong>select</strong></a>(self, idx)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;elements&nbsp;with&nbsp;numbers&nbsp;in&nbsp;ids.<br>
+&nbsp;<br>
+idx&nbsp;can&nbsp;be&nbsp;a&nbsp;single&nbsp;element&nbsp;number&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;numbers</tt></dd></dl>
+
 <dl><dt><a name="Formex-setProp"><strong>setProp</strong></a>(self, p<font color="#909090">=0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;property&nbsp;array&nbsp;for&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
 You&nbsp;can&nbsp;specify&nbsp;a&nbsp;single&nbsp;value&nbsp;or&nbsp;a&nbsp;list/array&nbsp;of&nbsp;values.<br>
@@ -391,7 +415,7 @@ The&nbsp;default&nbsp;argument&nbsp;will&nbsp;give&nbsp;all&nbsp;elements&nbsp;a
 
 <dl><dt><a name="Formex-shape"><strong>shape</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;shape&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;shape&nbsp;of&nbsp;a&nbsp;formex&nbsp;is&nbsp;the&nbsp;shape&nbsp;of&nbsp;its&nbsp;data&nbsp;array,<br>
+The&nbsp;shape&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;shape&nbsp;of&nbsp;its&nbsp;data&nbsp;array,<br>
 i.e.&nbsp;a&nbsp;tuple&nbsp;(order,&nbsp;plexitude,&nbsp;grade)</tt></dd></dl>
 
 <dl><dt><a name="Formex-shear"><strong>shear</strong></a>(self, dir, dir1, skew)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;skewed&nbsp;in&nbsp;the&nbsp;direction&nbsp;dir&nbsp;of&nbsp;plane&nbsp;(dir,dir1).<br>
@@ -404,9 +428,9 @@ The&nbsp;coordinate&nbsp;dir&nbsp;is&nbsp;replaced&nbsp;with&nbsp;(dir&nbsp;+&nb
 
 <dl><dt><a name="Formex-size"><strong>size</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;size&nbsp;is&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;diagonal&nbsp;of&nbsp;the&nbsp;bbox</tt></dd></dl>
+The&nbsp;size&nbsp;is&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;diagonal&nbsp;of&nbsp;the&nbsp;<a href="#Formex-bbox">bbox</a>().</tt></dd></dl>
 
-<dl><dt><a name="Formex-sort"><strong>sort</strong></a>(self)</dt><dd><tt>Sorts&nbsp;the&nbsp;elements&nbsp;of&nbsp;a&nbsp;formex.<br>
+<dl><dt><a name="Formex-sort"><strong>sort</strong></a>(self)</dt><dd><tt>Sorts&nbsp;the&nbsp;elements&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
 Sorting&nbsp;is&nbsp;done&nbsp;according&nbsp;to&nbsp;the&nbsp;bbox&nbsp;of&nbsp;the&nbsp;elements.<br>
 !!&nbsp;NOT&nbsp;FULLY&nbsp;IMPLEMENTED:&nbsp;CURRENTLY&nbsp;ONLY&nbsp;SORTS&nbsp;ACCORDING&nbsp;TO<br>
@@ -481,7 +505,7 @@ to&nbsp;translate&nbsp;in&nbsp;calculated&nbsp;directions.</tt></dd></dl>
 
 <dl><dt><a name="Formex-uniple"><strong>uniple</strong></a> = <a href="#Formex-coord">coord</a>(self, i, j, k)</dt></dl>
 
-<dl><dt><a name="Formex-unique"><strong>unique</strong></a>(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;unique&nbsp;elements.<br>
+<dl><dt><a name="Formex-unique"><strong>unique</strong></a>(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;unique&nbsp;elements.<br>
 &nbsp;<br>
 Two&nbsp;elements&nbsp;are&nbsp;considered&nbsp;equal&nbsp;when&nbsp;all&nbsp;its&nbsp;nodal&nbsp;coordinates<br>
 are&nbsp;close.&nbsp;Two&nbsp;values&nbsp;are&nbsp;close&nbsp;if&nbsp;they&nbsp;are&nbsp;both&nbsp;small&nbsp;compared&nbsp;to&nbsp;atol<br>
@@ -505,22 +529,22 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;
 &gt;&gt;&gt;&nbsp;print&nbsp;<a href="#Formex">Formex</a>.<a href="#Formex-concatenate">concatenate</a>([F,F,F])<br>
 {[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0]}</tt></dd></dl>
 
-<dl><dt><a name="Formex-connect"><strong>connect</strong></a>(self, Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;a&nbsp;formex&nbsp;which&nbsp;connects&nbsp;the&nbsp;formices&nbsp;in&nbsp;list.<br>
+<dl><dt><a name="Formex-connect"><strong>connect</strong></a>(self, Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;connects&nbsp;the&nbsp;formices&nbsp;in&nbsp;list.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;method!<br>
 Flist&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;formices,&nbsp;nodid&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;nod&nbsp;ids&nbsp;and<br>
 bias&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;element&nbsp;bias&nbsp;values.&nbsp;All&nbsp;lists&nbsp;should&nbsp;have<br>
 the&nbsp;same&nbsp;length.<br>
-The&nbsp;returned&nbsp;formex&nbsp;has&nbsp;a&nbsp;plexitude&nbsp;equal&nbsp;to&nbsp;the&nbsp;number&nbsp;of<br>
-formices&nbsp;in&nbsp;list.&nbsp;Each&nbsp;element&nbsp;of&nbsp;the&nbsp;formex&nbsp;consist&nbsp;of&nbsp;a&nbsp;node&nbsp;from<br>
+The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;has&nbsp;a&nbsp;plexitude&nbsp;equal&nbsp;to&nbsp;the&nbsp;number&nbsp;of<br>
+formices&nbsp;in&nbsp;list.&nbsp;Each&nbsp;element&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;consist&nbsp;of&nbsp;a&nbsp;node&nbsp;from<br>
 the&nbsp;corresponding&nbsp;element&nbsp;of&nbsp;each&nbsp;of&nbsp;the&nbsp;formices&nbsp;in&nbsp;list.&nbsp;By&nbsp;default<br>
 this&nbsp;will&nbsp;be&nbsp;the&nbsp;first&nbsp;node&nbsp;of&nbsp;that&nbsp;element,&nbsp;but&nbsp;a&nbsp;nodid&nbsp;list&nbsp;may&nbsp;be<br>
 given&nbsp;to&nbsp;specify&nbsp;the&nbsp;node&nbsp;id&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;each&nbsp;of&nbsp;the&nbsp;formices.<br>
 Finally,&nbsp;a&nbsp;list&nbsp;of&nbsp;bias&nbsp;values&nbsp;may&nbsp;be&nbsp;given&nbsp;to&nbsp;specify&nbsp;an&nbsp;offset&nbsp;in<br>
 element&nbsp;number&nbsp;for&nbsp;the&nbsp;subsequent&nbsp;formices.<br>
-If&nbsp;loop==False,&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;formex&nbsp;will&nbsp;be&nbsp;the&nbsp;minimum&nbsp;order&nbsp;of<br>
+If&nbsp;loop==False,&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;will&nbsp;be&nbsp;the&nbsp;minimum&nbsp;order&nbsp;of<br>
 the&nbsp;formices&nbsp;in&nbsp;Flist,&nbsp;each&nbsp;minus&nbsp;its&nbsp;respective&nbsp;bias.&nbsp;By&nbsp;setting<br>
-loop=True&nbsp;however,&nbsp;each&nbsp;formex&nbsp;will&nbsp;loop&nbsp;around&nbsp;if&nbsp;its&nbsp;end&nbsp;is<br>
+loop=True&nbsp;however,&nbsp;each&nbsp;<a href="#Formex">Formex</a>&nbsp;will&nbsp;loop&nbsp;around&nbsp;if&nbsp;its&nbsp;end&nbsp;is<br>
 encountered,&nbsp;and&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;result&nbsp;is&nbsp;the&nbsp;maximum&nbsp;order&nbsp;in&nbsp;Flist.</tt></dd></dl>
 
 <dl><dt><a name="Formex-globals"><strong>globals</strong></a>(self)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;the&nbsp;list&nbsp;of&nbsp;globals&nbsp;defined&nbsp;in&nbsp;this&nbsp;module.</tt></dd></dl>
@@ -541,12 +565,15 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;function.&nbsp;It&nbsp;should&nbsp;be&nbsp;u
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-and_"><strong>and_</strong></a>(...)</dt><dd><tt><a href="#-and_">and_</a>(a,&nbsp;b)&nbsp;--&nbsp;Same&nbsp;as&nbsp;a&nbsp;&amp;&nbsp;b.</tt></dd></dl>
- <dl><dt><a name="-cosd"><strong>cosd</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;sin&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
+ <dl><dt><a name="-cosd"><strong>cosd</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;cos&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-cumproduct"><strong>cumproduct</strong></a> = accumulate(...)</dt><dd><tt>accumulate&nbsp;&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;dimension,&nbsp;accumulating&nbsp;subtotals</tt></dd></dl>
  <dl><dt><a name="-cumsum"><strong>cumsum</strong></a> = accumulate(...)</dt><dd><tt>accumulate&nbsp;&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;dimension,&nbsp;accumulating&nbsp;subtotals</tt></dd></dl>
+ <dl><dt><a name="-dot"><strong>dot</strong></a>(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)&nbsp;computes&nbsp;the&nbsp;matrix&nbsp;multiplication&nbsp;of&nbsp;two&nbsp;arrays</tt></dd></dl>
  <dl><dt><a name="-equal"><strong>equal</strong></a>(p1, p2, tol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;two&nbsp;points&nbsp;are&nbsp;considered&nbsp;equal&nbsp;within&nbsp;tolerance.</tt></dd></dl>
+ <dl><dt><a name="-innerproduct"><strong>innerproduct</strong></a>(...)</dt><dd><tt><a href="#-innerproduct">innerproduct</a>(a,b)&nbsp;computes&nbsp;the&nbsp;inner&nbsp;product&nbsp;of&nbsp;two&nbsp;arrays</tt></dd></dl>
  <dl><dt><a name="-inside"><strong>inside</strong></a>(p, mi, ma)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;point&nbsp;p&nbsp;is&nbsp;inside&nbsp;bbox&nbsp;defined&nbsp;by&nbsp;points&nbsp;mi&nbsp;and&nbsp;ma</tt></dd></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;quadratic&nbsp;norm&nbsp;of&nbsp;a&nbsp;vector&nbsp;with&nbsp;all&nbsp;elements&nbsp;of&nbsp;arg.</tt></dd></dl>
+ <dl><dt><a name="-matrixmultiply"><strong>matrixmultiply</strong></a> = dot(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)&nbsp;computes&nbsp;the&nbsp;matrix&nbsp;multiplication&nbsp;of&nbsp;two&nbsp;arrays</tt></dd></dl>
  <dl><dt><a name="-pattern"><strong>pattern</strong></a>(s)</dt><dd><tt>Return&nbsp;a&nbsp;line&nbsp;segment&nbsp;pattern&nbsp;created&nbsp;from&nbsp;a&nbsp;string.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;creates&nbsp;a&nbsp;list&nbsp;of&nbsp;line&nbsp;segments&nbsp;where&nbsp;all&nbsp;nodes&nbsp;lie&nbsp;on&nbsp;the<br>
@@ -567,7 +594,7 @@ Else,&nbsp;axis&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;[&nbsp;0,1,2]&nbsp;and
 in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;A&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&nbsp;returned.</tt></dd></dl>
  <dl><dt><a name="-sind"><strong>sind</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;sin&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-sum"><strong>sum</strong></a> = reduce(...)</dt><dd><tt>reduce&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;specified&nbsp;dimension,&nbsp;eliminating&nbsp;it.&nbsp;Returns&nbsp;scalars&nbsp;rather&nbsp;than&nbsp;rank-0&nbsp;numarray.</tt></dd></dl>
- <dl><dt><a name="-tand"><strong>tand</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;sin&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
+ <dl><dt><a name="-tand"><strong>tand</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;tan&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-translationVector"><strong>translationVector</strong></a>(dir, dist)</dt><dd><tt>Returns&nbsp;a&nbsp;translation&nbsp;vector&nbsp;in&nbsp;direction&nbsp;dir&nbsp;over&nbsp;distance&nbsp;dist</tt></dd></dl>
  <dl><dt><a name="-unique"><strong>unique</strong></a>(a)</dt><dd><tt>Return&nbsp;the&nbsp;unique&nbsp;elements&nbsp;in&nbsp;an&nbsp;integer&nbsp;array.</tt></dd></dl>
 </td></tr></table><p>
@@ -678,6 +705,6 @@ in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;A&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&
 <strong>tanh</strong> = &lt;UFunc: 'tanh'&gt;<br>
 <strong>true_divide</strong> = &lt;UFunc: 'true_divide'&gt;<br>
 <strong>typeDict</strong> = {'1': Int8, 'Any': Any, 'Bool': Bool, 'Byte': Int8, 'Complex': Complex64, 'Complex32': Complex32, 'Complex64': Complex64, 'D': Complex64, 'F': Complex32, 'Float': Float64, ...}<br>
-<strong>typecode</strong> = {Bool: '1', Int8: '1', UInt8: 'b', Int16: 's', UInt16: 'w', Int32: 'u', Int64: 'l', Float32: 'f', Float64: 'd', Complex32: 'F', ...}<br>
-<strong>typecodes</strong> = {'Character': 'c', 'Complex': 'FD', 'Float': 'fd', 'Integer': '1silN', 'UnsignedInteger': 'bwu'}</td></tr></table>
+<strong>typecode</strong> = {Bool: '1', Int8: '1', UInt8: 'b', Int16: 's', UInt16: 'w', Int32: 'i', UInt32: 'u', Int64: 'l', UInt64: 'U', Float32: 'f', ...}<br>
+<strong>typecodes</strong> = {'Character': 'c', 'Complex': 'FD', 'Float': 'fd', 'Integer': '1silN', 'UnsignedInteger': 'bwuU'}</td></tr></table>
 </body></html>

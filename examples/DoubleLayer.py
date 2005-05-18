@@ -1,12 +1,11 @@
 #!/usr/bin/env pyformex
 # $Id: DoubleLayer.py 17 2004-10-08 14:37:45Z bene $
 ##
-## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
-## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
-## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
-## Distributed under the General Public License, see file COPYING for details
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
 ##
 #
 """DoubleLayer"""
@@ -24,4 +23,4 @@ e6 = e2.genid(n,n,2,1,1,-1).bb(1./(2*n),1./(2*n)/tan(radians(30)))
 e5.setProp(2)
 out = (e4+e5+e6).tran(3,-d)
 print out.nnodes(),out.nelems()
-drawProp(out)
+draw(out)

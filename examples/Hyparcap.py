@@ -1,13 +1,14 @@
 #!/usr/bin/env pyformex
 # $Id$
 ##
-## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
-## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
-## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
-## Distributed under the General Public License, see file COPYING for details
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
 ##
+#
+# This example created (C) by Bart Desloovere (bart.desloovere@telenet.be)
 #
 """Hyparcap"""
 clear()
@@ -38,6 +39,6 @@ vlakblad2=vlakblad.translate([-c,-c,0])
 j=vlakblad2.map(lambda x,y,z:[x,y,k1*x*y])
 #overige bladen genereren
 hyparcap=j.translate([c,c,0]).rosette(m,360/m,2,[0.,0.,0.])
-drawProp(hyparcap)
+draw(hyparcap)
 
 

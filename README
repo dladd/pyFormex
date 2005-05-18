@@ -1,11 +1,10 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.2 Release Mon Jan  3 14:54:38 2005
+## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
-## Copyright (C) 2004 Benedict Verhegghe (benedict.verhegghe@ugent.be)
-## Copyright (C) 2004 Bart Desloovere (bart.desloovere@telenet.be)
-## Distributed under the General Public License, see file COPYING for details
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where otherwise stated 
 ##
 #
 # pyformex is a program that lets you easily generate large sets of coordinates
@@ -70,7 +69,13 @@ Because it is not obvious from the GUI:
 
 The canvas showing the Formex has dynamic zoom/pan/rotate functionality.
 Moving the mouse with one of the buttons depressed will activate this:
-  LEFT mouse button : rotate
+  LEFT mouse button : rotate :
+	* moving radially w.r.t the center of the screen rotates around an
+	axis in the screen, perpendicular to the direction of the movement
+	* moving tangentially rotates around the axis perpendicular to the 
+	screen (the screen z-axis), but only it the click was not to close
+	to the center of the screen. Just try it out and you will see what
+	I mean 
   MIDDLE mouse button : pan
   RIGHT mouse button : zoom : horizontal movement zooms by camera lens angle,
         vertical movement zooms by changing camera distance. The first mode 
@@ -81,9 +86,10 @@ Moving the mouse with one of the buttons depressed will activate this:
 
 To use pyFormex, you create a script that builds a structure layout and 
 geometry. Look at the examples to get the feeling of how it is working. 
-The python source is relatively well documented and pydoc may be used to
-display it.
 Use the File->Play menu selection to display the structure. 
+
+The examples and the python source are relatively well documented. You can
+use pydoc to display it or the Help viewer.
 
 
 
