@@ -241,43 +241,45 @@ class Formex:
 #   Return information about a Formex
 #
     def nelems(self):
+        """Return the number of elements in the formex."""
         return self.f.shape[0]
-    def nnodes(self):
-        return self.f.shape[0]*self.f.shape[1]
+    
     def nnodel(self):
+        """Return the number of nodes per element.
+
+        Examples:
+        1: unconnected nodes,
+        2: straight line elements,
+        3: triangles or quadratic line elements,
+        4: tetraeders or quadrilaterals or cubic line elements.
+        """
         return self.f.shape[1]
+    
+    def ndim(self):
+        """Return the number of dimensions.
+
+        This is the number of coordinates for each node. In the
+        current implementation this is always 3, though you can
+        define 2D Formices by given only two coordinates: the third
+        will automatically be set to zero.
+        """
+        return self.f.shape[2]
+    
+    def nnodes(self):
+        """Return the number of nodes in the formex.
+
+        This is the product of the number of elements in the formex
+        with the number of nodes per element.
+        """
+        return self.f.shape[0]*self.f.shape[1]
     
     def shape(self):
         """Return the shape of the Formex.
 
         The shape of a Formex is the shape of its data array,
-        i.e. a tuple (order, plexitude, grade)
+        i.e. a tuple (nelems, nnodel, ndim).
         """
         return self.f.shape
-
-    def order(self):
-        """Return the order of the Formex
-
-        The order is the number of elements in the Formex.
-        """
-        return self.f.shape[0]
-
-    def plexitude(self):
-        """Return the plexitude of the Formex
-
-        The plexitude is the number of number of nodes in each cantle.
-        1 = node, 2 = bar, 3 = triangle, 4= quadrilateral, etc.
-        """
-        return self.f.shape[1]
-
-    def grade(self):
-        """Return the grade of the Formex.
-
-        The grade is the number of dimensions of the signet.
-        2 = 2D, 3 = 3D.
-        This will always return 3 in the current implementation.
-        """
-        return self.f.shape[2]
 
     def data(self):
         """Return the Formex as a numarray"""
@@ -714,7 +716,6 @@ class Formex:
             f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
         return Formex(f)
     connect = classmethod(connect)
-    
 
 ##############################################################################
 #
@@ -736,8 +737,6 @@ class Formex:
 
         The scale should be a list of 3 numbers, or a single number.
         In the latter case, the scaling is homothetic."""
-        #self.f = self.f*scale
-        #return self
         return Formex(self.f*scale,self.p)
 
     def translate(self,vector,distance=None):
@@ -970,7 +969,7 @@ class Formex:
         func is a numerical function which takes three arguments and produces
         a list of three output values. The coordinates [x,y,z] will be
         replaced by func(x,y,z).
-        The function must be applicable on numarrays, so it should
+        The function must be applicable to numarrays, so it should
         only include numerical operations and functions understood by the
         numarray module.
         This method is one of several mapping methods. See also map1 and mapd.
@@ -979,8 +978,6 @@ class Formex:
         """
         f = zeros(self.f.shape,type=Float32)
         f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
-        #self.f = f
-        #return self
         return Formex(f,self.p)
 
     def map1(self,dir,func):
@@ -1056,18 +1053,30 @@ class Formex:
         """Swap coordinate axes i and j"""
         return self.replace([i,j],[j,i])
 
-    def circulize(self):
+    def circulize(self,angle):
+        """Transform a linear sector into a circular one.
+
+        A sector of the (0,1) plane with given angle, starting from the 0 axis,
+        is transformed as follows: points on the sector borders remain in
+        place. Points inside the sector are projected from the center on the
+        circle through the intersection points of the sector border axes and
+        the line through the point and perpendicular to the bisector of the
+        angle. See Diamatic example."""
+        e = tand(0.5*angle)
+        return self.map(lambda x,y,z:[where(y==0,x,(x*x+x*y*e)/sqrt(x*x+y*y)),where(x==0,y,(x*y+y*y*e)/sqrt(x*x+y*y)),0])
+
+
+    def circulize1(self):
         """Transforms the first octant of the 0-1 plane into 1/6 of a circle.
 
         Points on the 0-axis keep their position. Lines parallel to the 1-axis
         are transformed into circular arcs. The bisector of the first quadrant
         is transformed in a straight line at an angle Pi/6.
         This function is especially suited to create circular domains where
-        all bars have nearly same length. See the Scallopdome example.
+        all bars have nearly same length. See the Diamatic example.
         """
-        return map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
-        #return self
-        
+        return self.map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
+
 ##############################################################################
 #
 #   Transformations that change the topology
@@ -1135,6 +1144,11 @@ class Formex:
         for d,t in args:
             tr[d] += t
         return self.translate(tr)
+
+
+    order = nelems
+    plexitude = nnodel
+    grade = ndim
 
     cantle = element
     signet = point

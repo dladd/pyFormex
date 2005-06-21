@@ -52,7 +52,7 @@ class Lima:
             self.gen += 1
         return self.product
     
-def lima(axiom,rules,level,turtle):
+def lima(axiom,rules,level,turtle,glob=None):
     """Create a list of connected points using a Lindenmayer system."""
     import Turtle
     A = Lima(axiom,rules)
@@ -60,7 +60,7 @@ def lima(axiom,rules,level,turtle):
     #A.status()
     scr = "reset();"+A.translate(turtle,keep=False)
     #print(scr)
-    list = Turtle.play(scr)
+    list = Turtle.play(scr,glob)
     #print len(list)," lines"
     return list
 

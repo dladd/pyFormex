@@ -8,31 +8,70 @@
 ## Distributed under the General Public License, see file COPYING for details
 ##
 #
-"""Double layer diamatic dome"""
-clear()
+"""Diamatic dome"""
 u = 3.     # modular length
-rt = 36.   # radius of top circumsphere
-rb = 34.5  # radius of bottom circumsphere
-m = 6      # frequency of top layer
-n = 6      # number of sectors
-a = 36.    # sweep angle of top layer
-# We start with a modular length = 3, for convenience
-T = Formex([[[0,0],[3,0]],[[3,0],[3,3]],[[3,3],[0,0]]],3)
-#W1 = Formex([[[rb,1,2],[rt,0,0]],[[rb,1,2],[rt,0,3]],[[rb,1,2],[rt,3,3]]])
-#W2 = Formex([[[rb,2,4],[rt,3,6]],[[rb,2,4],[rt,0,3]],[[rb,2,4],[rt,3,3]]])
-B1 = Formex([[[4,2],[2,1]],[[4,2],[5,1]],[[4,2],[5,4]]],0)
-B2 = Formex([[[2,1],[2,-1]]],0)
-top = T.replic2(m,m,3,3,0,1,u,-1)
-#web = W1.genit(1,m,3,3,0,1) + W2.genit(1,m-1,3,3,0,1)
-bot = B1.replic2(m-1,m-1,u,u,0,1,u,-1) + B2.replic(m,3,0)
-draw(top+bot)
-# Scale the parts and circulize them
-for F in [ top,bot]:
-    F.scale(u/3.).circulize()
+n = 6      # number of modules in one sector
+r = 36.    # radius of the dome
+
+# Topology for 1 sector
+T = Formex(pattern("164"),3).replic2(n,n,1,1,0,1,0,-1)
+
+
+# 4 sectors
+m = 4
+angle = 360./m
+# circulize sector
+D = T.scale(u).circulize(angle)
+D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
+dome1=D.rosette(m,angle)
+clear()
+draw(dome1)
+
+# 6 sectors
+m = 6
+angle = 360./m
+a = sqrt(3.)/2
+D = T.shear(0,1,0.5).scale([1,a,1])
+#D = T.replic2(n,n,1,a,0,1,0.5,-1)
+D = D.scale(u).circulize(angle)
+D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
+dome2=D.rosette(m,angle)
 sleep()
 clear()
-draw(top+bot)
-#top = top.mapd(2,lambda d:sqrt(rt**2-d**2),[0,0,0],[0,1])
+draw(dome2)
+
+# 8 sectors
+m = 8
+angle = 360./m
+a = sqrt(2.)/2
+T = Formex([[[0,0],[1,0]],[[1,0],[a,a]],[[a,a],[0,0]]],3)
+D = T.replic2(n,n,1,a,0,1,a,-1)
+# circulize sector
+D = D.scale(u).circulize(angle)
+D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
+dome3=D.rosette(m,angle)
+sleep()
+clear()
+draw(dome3)
+
+# circulize1
+m = 6
+angle = 360./m
+T = Formex(pattern("127"),3)
+D = T.replic2(n,n,1,1,0,1,1,-1)
+D = D.scale(u).circulize1()
+D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
+dome4=D.rosette(m,angle)
+sleep()
+clear()
+draw(dome4)
+
+sleep();clear()
+dome4.setProp(1)
+draw(dome2+dome4)
 
 
-#dome=top.rosette(6,60)
+sleep()
+clear()
+d=1.1*r
+draw(dome1+dome2.translate([d,0,0])+dome3.translate([0,d,0])+dome4.translate([d,d,0]))

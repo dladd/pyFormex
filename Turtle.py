@@ -72,11 +72,15 @@ def an(a):
     global pos,step,angle,list
     angle = a
 
-def play(scr):
+def play(scr,glob=None):
     import string
     for line in string.split(scr,";"):
         if line:
-            eval(line)
+            if glob:
+                glob.update(globals())
+                eval(line,glob)
+            else:
+                eval(line)
     return list
     
 
