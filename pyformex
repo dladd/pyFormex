@@ -134,6 +134,7 @@ MenuData = [
         ("Action","&Killall","killall"),
         ("Action","&Clear","clear"),
         ("Action","&Redraw","redraw"),
+        ("Action","&ListAll","listall"),
         ("Action","&Print","printit"),
         ("Action","&Bbox","printbbox"),
         ("Action","&Globals","printglobals"),  ]),
@@ -638,6 +639,15 @@ def killall():
 def setSleepTime(t):
     global config
     config['sleeptime'] = t
+
+
+def listall():
+    """List all Formices in globals()"""
+    print "Formices currently in globals():"
+    for n,t in globals().items():
+        if isinstance(t,Formex):
+            print "%s, " % n
+     
 
 def localAxes():
     global config
