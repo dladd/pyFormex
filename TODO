@@ -9,9 +9,10 @@ Release 0.3 :
  - Provide short documentation 
  - Change the mouse rotation action  (DONE) 
  - Interface for executing external scripts.
- - Online help system
+ - Online help system (INITIATED)
  - Provide a formian to pyformex translator
- - Add config file and config settings dialog (INITIAL)
+ - Add config file and config settings dialog (INITIATED)
+ - Display camera settings
 
 
 Release 0.4 :

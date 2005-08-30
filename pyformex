@@ -27,6 +27,11 @@ global out   # holds the last drawn Formex
 out=None
 
 
+def debug(s):
+    global options
+    if options.debug:
+        print s
+
 def askPreferences(list):
     global config
     items = [ [ it,config.setdefault(it,"") ] for it in list ]
@@ -535,6 +540,7 @@ def playFile(fn,name=None):
 wakeupMode=0  # 0 = sleeping allowed, 1 = stay awake for this script
               # 2 = always stay awake, 3 = stay awake and exit at end of script
 scriptLock = threading.Lock()
+timer = None
     
 def playScript(scr,name="unnamed"):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -585,7 +591,7 @@ def sleep(timeout=None):
     qt.QObject.connect(canvas,qt.PYSIGNAL("wakeup"),wakeup)
     # create a Timer to wakeup after timeout
     if timeout == None:
-        timeout = int(config['sleeptime'])
+        timeout = max(0,int(config['sleeptime']))
     if timeout:
         timer = threading.Timer(timeout,wakeup)
         timer.start()
@@ -629,14 +635,13 @@ def killall():
     """Kill the current and all subsequent scripts"""
     wakeup(2)
     
-##def sleepShort():
-##    setSleepTime(1)
-##def sleepLong():
-##    setSleepTime(5)
-##def sleepForever():
-##    setSleepTime(None)
 
 def setSleepTime(t):
+    """Set the time to wait during a sleep() operation.
+
+    The sleep time is specified in seconds. A zero value means
+    sleep indefinitely.
+    """
     global config
     config['sleeptime'] = t
 
@@ -656,14 +661,20 @@ def globalAxes():
     global config
     config['localaxes'] = False 
 
+
+
 def exit():
-    global app,scriptLock
-    if app:
+    global app,scriptLock,app_started
+    #debug("exit()")
+    if app and app_started:
         if scriptLock.acquire(False): # try to acquire script lock
+            #debug("app.quit()")
             app.quit()  # exit on success (no script running)
         else:
+            #debug("wakeup(3)")
             wakeup(3) # return to let the script finish, then exit
     else: # the gui didn't even start
+        #debug("sys.exit()")
         sys.exit(0)
 
 def message(s):
@@ -718,7 +729,7 @@ def GUI():
 
 def runApp(args):
     """Create and run the qt application."""
-    global app,gui
+    global app,gui,app_started
     app = qt.QApplication(args)
     qt.QObject.connect(app,qt.SIGNAL("lastWindowClosed()"),app,qt.SLOT("quit()"))
     # create GUI, show it, run it
@@ -726,6 +737,12 @@ def runApp(args):
     app.setMainWidget(gui)
     gui.show()
     options.gui = True
+    # remaining args are interpreted as scripts
+    app_started = False
+    for arg in args:
+        if os.path.exists(arg):
+            playFile(arg)
+    app_started = True
     app.exec_loop()
 
 ###########################  main  ################################

@@ -26,7 +26,7 @@ f1 = f1.remove(Formex([[[1,0],[1,1]]]).replic(4,2,0))
 show(f1)
 #
 message("Transform the octant into a circular sector")
-f2 = f1.circulize()
+f2 = f1.circulize1()
 f1.setProp(1)
 f2.setProp(0)
 show(f1+f2)

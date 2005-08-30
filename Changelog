@@ -1,5 +1,15 @@
 # This collects most important changes between releases since 0.2
 #
+	
+pyformex command line parameters:
+--------------------------------
+- parameters not recognized by pyformex and/or Qt are considered to be
+  filenames of scripts, and will be executed (if existing and accessible)
+
+pyformex FUNCTIONS:
+-------------------	
+- the exit() function can be used in scripts. It will close the GUI and exit
+  the program. It is mainly intended for batch processing.
 
 formex.py:
 ----------
@@ -7,11 +17,24 @@ formex.py:
 - generate2: renamed to replic2, changed order of arguments has, introduced
 	default values 0,1 for directions.
 - removed generate(2) aliases
+	
+Formex class:
+-------------
+- allow Formex("string") as a shorthand for Formex(pattern("string")) in 
+  initializing a Formex
+- added function select(), affine()
+- BoundingBox now returns a list instead of an array
+- individual Formex elements can be changed by a syntax such as
+	 F[i] = [[1,2,3],[1,2,4]]
+  USE CAREFULLY THOUGH!!
+
+Added files FlatDB.key and FlatKeyDB.py, aimed at backend processing
 
 Examples:
 ---------	
-- Dome.py renamed to Lamella.py
-- added Schwedler.py
+- Dome renamed to Lamella
+- added Schwedler, TrussBridge, SpaceTrussRoof
+
 	
 Release 0.2.1:
 ==============
@@ -24,7 +47,7 @@ pyformex GUI:
 - added lots of icons
 - added configuration file (well, at least started working on it)
 - camera.py: completely reworked
-- canvas.py: changed for new camera handing, interacive mouse actions in 
+- canvas.py: changed for new camera handing, interactive mouse actions in 
 	screen axes
 
 pyformex FUNCTIONS:
@@ -44,7 +67,7 @@ Other changes:
 - added lima.py : a class for generating structures through recursive 
 	growth rules
 - turtle.py : a class for creating simple Turtle type graphics  
-- added more examples: Kochline, Lima 
+- added more examples: Kochline, Lima
 
 ============================================================================
 	

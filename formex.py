@@ -225,6 +225,14 @@ class Formex:
 #
 
     def __init__(self,data=[[[]]],prop=None):
+        """Create a new Formex.
+
+        The Formex can be initialized by a 3D coordinate list,
+        or by a string to be used in the pattern function to create
+        a coordinate list.
+        """
+        if type(data) == str:
+            data = pattern(data)
         self.f = array(data,type=Float32)
         self.p = None
         if len(self.f.shape) != 3:
@@ -315,6 +323,13 @@ class Formex:
         This allows addressing element i of Formex F as F[i].
         """
         return self.f[i]
+
+    def __setitem__(self,i,val):
+        """Change element i of the Formex.
+
+        This allows writing expressions as F[i] = [[1,2,3]].
+        """
+        self.f[i] = val
     
     def bbox(self):
         """Return the bounding box of the Formex.
@@ -717,6 +732,7 @@ class Formex:
         return Formex(f)
     connect = classmethod(connect)
 
+
 ##############################################################################
 #
 #   Transformations that preserve the topology (but change coordinates)
@@ -797,13 +813,15 @@ class Formex:
         The returned Formex has coordinates given by mat * xorig + vec,
         where mat is a 3x3 matrix and vec a length 3 list.
         """
-        f = matrixmultiply(self.f,m)
+        f = matrixmultiply(self.f,mat)
         if not vec==None:
             f += vec
         return Formex(f,self.p)
 #
 #
 #   B. Non-Affine transformations
+#
+#        Cylindrical, Spherical, Isoparametric
 #
 
     def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.]):
@@ -962,6 +980,30 @@ class Formex:
         f[:,:,dir] += func(d)*a[dir]/func(0)
         return Formex(f,self.p)
 
+    # NEW implementation flattens coordinate sets to ease use of
+    # complicated functions
+    def newmap(self,func):
+        """Return a Formex mapped by a 3-D function.
+
+        This is one of the versatile mapping functions.
+        func is a numerical function which takes three arguments and produces
+        a list of three output values. The coordinates [x,y,z] will be
+        replaced by func(x,y,z).
+        The function must be applicable to numarrays, so it should
+        only include numerical operations and functions understood by the
+        numarray module.
+        This method is one of several mapping methods. See also map1 and mapd.
+        Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
+        is equivalent with E.scale([2,3,4])
+        """
+        x,y,z = func(self.f[:,:,0].flat,self.f[:,:,1].flat,self.f[:,:,2].flat)
+        shape = list(self.f.shape)
+        shape[2] = 1
+        print shape,reshape(x,shape)
+        f = concatenate([reshape(x,shape),reshape(y,shape),reshape(z,shape)],2)
+        print f.shape
+        return Formex(f,self.p)
+
     def map(self,func):
         """Return a Formex mapped by a 3-D function.
 
@@ -1082,7 +1124,7 @@ class Formex:
 #   Transformations that change the topology
 #        
 
-    def replic(self,n,step,dir):
+    def replic(self,n,step,dir=0):
         """Return a Formex with n replications in direction dir with step.
 
         The original Formex is the first of the n replicas.
