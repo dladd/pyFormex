@@ -49,17 +49,19 @@ def splitKeyValue(s,key_sep):
 
 # The Flat text file database class
 class FlatDB(dict):
-    """A database stored as a list of dictionaries.
+    """A database stored as a dictionary of dictionaries.
 
     Each record is a dictionary where keys and values are just strings.
-    The database is a Python list of such records. Records are thus addressed
-    by their index in the list.
+    The field names (keys) can be different for each record, but there is at
+    least one field that exists for all records and will be used as the
+    primary key. This field should have unique values for all records.
     
-    While the field names (keys) can be different for each record, there
-    often will be at least one key that exists for each record, so that it
-    can be used as primary key for searching through the records.
-    On constructing the database a list of keys can be specified that will be
-    required for each record.
+    The database itself is also a dictionary, with the value of the primary
+    key as key and the full rcord as value.
+    
+    On constructing the database a list of keys must be specified that will be
+    required for each record. The first key in this list will be used as the
+    primary key. Obviously, the list must at least have one required key.
 
     The database is stored in a flat text file. Each field (key,value pair)
     is put on a line by itself. Records are delimited by a (beginrec,
@@ -73,7 +75,8 @@ class FlatDB(dict):
     as record delimiter if endrec is empty)
 
     Thus, with the initialization:
-      FlatDB(comment = 'com', key_sep = 'sep', begin_rec = 'rec', end_rec = '')
+      FlatDB(req_keys=['key1'], comment = 'com', key_sep = 'sep',
+      begin_rec = 'rec', end_rec = '')
     the following is a legal database:
       com This is a comment
       com
@@ -85,7 +88,7 @@ class FlatDB(dict):
         key3=val4
 
     Keys and values can be any strings, except that a key can not begin nor
-    end with a blank, and can not be equal to either of the comment, beginrec
+    end with a blank, and can not be equal to any of the comment, beginrec
     or endrec markers.
     Whitespace around the key is always stripped. By default, this is also
     done for the value (though this can be switched off.)
@@ -162,23 +165,39 @@ class FlatDB(dict):
         raise RuntimeError, "FlatDB: invalid record : %s" % record
 
         
-    def __setitem__(self, i, record):
-        """Sets item i of the list to record (if it is valid)."""
+    def __setitem__(self, key, record):
+        """Sets the record with specified primary key (if record is valid).
+
+        This will change the primary key value of the record to the
+        value of key.
+        """
         if self.checkRecord(record):
-            record[self.key] = i
-            dict.__setitem__(self, i, record)
+            record[self.key] = key
+            dict.__setitem__(self, key, record)
+
+
+    def insert(self, record):
+        """Insert a record to the database, overwriting existing records.
+
+        This is equivalent to __setitem__ but using the value stored in the
+        the primary key field of the record as key for storing the record.
+        This is also similar to append(), but overwriting an old record with
+        the same primary key.
+        """
+        self.__setitem__(record[self.key], record)
 
 
     def append(self, record):
         """Add a record to the database.
 
-        Since the database is just a list of records, storing a record
-        is just appending the record to the list. There are no provisions
-        to force unique keys or even make sure that the database has
-        searchable keys. This can be overriden in subclasses.
+        Since the database is a dictionary, keys are unique and appending a
+        record with an existing is not allowed.
+        If you want to overwrite the old record, use insert() instead.
         """
-        if self.checkRecord(record):
-            dict.__setitem__(self, record[self.key], record)
+        if self.has_key(record[self.key]):
+            raise RuntimeError, "FlatDB: record with key '%s' already in database" % record[self.key]
+        else:
+            self.insert(record)
 
 
     def splitKeyValue(self,line):

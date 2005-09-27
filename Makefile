@@ -38,7 +38,7 @@ EXAMPLEFILES= $(addprefix examples/,$(addsuffix .py, $(EXAMPLES) $(EXAMPLES2) ))
 IMAGEFILES =  $(addprefix screenshots/,$(addsuffix .png,$(EXAMPLES)))
 STAMPABLE= README History Makefile TODO
 NONSTAMPABLE= COPYING 
-STAMP= ./Stamp 
+STAMP= Stamp 
 
 .PHONY: install dist distclean
 
