@@ -354,12 +354,16 @@ def saveImage():
             warning("Sorry, can not save in %s format!\n"
                     "Suggest you use PNG format ;)"%fmt)
 
-
+#
 def play():
-    fs = FileSelectionDialog(".","pyformex scripts (*.frm *.py)")
+    global config
+    dir = config.get('workdir',".")
+    fs = FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
     fn = fs.getFilename()
     if fn:
+        config['workdir'] = os.path.dirname(fn)
         playFile(fn)
+        
 def printit():
     global out
     print out
