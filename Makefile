@@ -82,7 +82,7 @@ htmldoc: $(HTMLDOCS)
 
 distdoc: htmldoc
 
-stamp:
+stamp: Stamp.template
 	$(STAMP) -tStamp.template version=$(VERSION) -oStamp.stamp
 
 dist.stamped: distdoc distclean stamp

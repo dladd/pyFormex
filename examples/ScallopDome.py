@@ -48,6 +48,8 @@ def scallop(n,f,c,r):
     f4 = f3.map(func).cylindrical([0,1,2],[1.,a,1.]).rosette(n,a)
     message("Scallop Dome with n=%d, f=%d, c=%f, r=%f" % (n,f,c,r))
     show(f4,0)
+#    return f4
+
 # Present some nice examples
 canvas.camera.setRotation(0,-45)
 for n,f,c,r in [
@@ -66,3 +68,7 @@ for n,f,c,r in [
     scallop(n,f,c,r)
 
 # That's all
+#F=scallop(6,1,4,4)
+#F.setProp(3)
+#clear()
+#draw(F)

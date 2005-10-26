@@ -87,6 +87,10 @@ class FlatDB(dict):
         key1=val3
         key3=val4
 
+    The readFile() function can even be instructed to ignore anything not
+    between a (beginrec,endrec) pair. This allows for multiple databases
+    being stored on the same file, even with records intermixed.
+
     Keys and values can be any strings, except that a key can not begin nor
     end with a blank, and can not be equal to any of the comment, beginrec
     or endrec markers.
@@ -120,6 +124,7 @@ class FlatDB(dict):
         self.endrec = str(endrec)
         self.strip_quotes = strip_quotes
         self.check_func = check_func
+        self.error_msg = ''
         if self.check_func and not callable(check_func):
             raise TypeError, "FlatDB: check_func should be callable"
 
@@ -231,6 +236,7 @@ class FlatDB(dict):
         All lines between the BEGINREC and ENDREC should be field definition
         lines of the type 'KEY [ = VALUE ]'.
         This function returns 0 if the line was parsed correctly.
+        Else, the variable self.error_msg is set.
         """
         if len(self.comment) > 0 and line.startswith(self.comment):
             return 0
@@ -242,10 +248,9 @@ class FlatDB(dict):
                 # ignore empty lines in these cases
                 return 0
         w = firstWord(line)
-        #print "Firstword '%s'" % w
         if w == self.endrec:
             if self.record == None:
-                print "Found beginrec without previous endrec"
+                self.error_msg = "Found endrec without previous beginrec"
                 return 1
             else:
                 self.append(self.record)
@@ -262,14 +267,14 @@ class FlatDB(dict):
                 else:
                     return 0
             else:
-                print "Found beginrec without previous endrec"
+                self.error_msg = "Found beginrec without previous endrec"
                 return 1
         else:
             if self.record == None:
                 if self.beginrec == '':
                     self.record = self.newRecord()
                 else:
-                    print "Line ignored"
+                    self.error_msg = "Unrecognized line '%s'" % line
                     return 1
             key,value = self.splitKeyValue(line)
             self.record[key] = value
@@ -277,12 +282,15 @@ class FlatDB(dict):
         return 0
                 
 
-    def readFile(self, filename):
+    def readFile(self, filename, ignore=False):
         """Read a database from file.
         
         Lines starting with a comment string are ignored.
-        Every record is delimited by a 'recmark, 'endrecmark' pair.
+        Every record is delimited by a (beginrec,endrec) pair.
+        If ignore is True, all lines that are not between a (beginrec,endrec)
+        pair are simply ignored. Default is to raise a RuntimeError.
         """
+        infile=None
         try:
             infile = file(filename,'r')
             lines = infile.readlines()
@@ -294,10 +302,8 @@ class FlatDB(dict):
         linenr = 0
         for line in lines:
             linenr += 1
-            if self.parseLine(line) != 0:
-                print "Error while reading line %d of database file %s" % (
-                    linenr,filename)
-                print line
+            if self.parseLine(line) != 0 and not ignore:
+                raise RuntimeError, "FlatDB: error while reading line %d of database file %s\n%s" % (linenr,filename,self.error_msg)
                 break
 
 
