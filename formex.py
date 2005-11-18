@@ -12,6 +12,7 @@
 from numarray import *
 import math
 import vector
+import pickle
 
 ###########################################################################
 ##
@@ -405,7 +406,6 @@ class Formex:
         f = f[flag>0]
         e = reshape(sel,self.f.shape[:2])
         return (f,e)
-        
 
 ##############################################################################
 # Create string representations of a Formex
@@ -480,6 +480,13 @@ class Formex:
         """
         clas.__str__ = func
     setPrintFunction = classmethod(setPrintFunction)
+
+    def fprint(self,fmt="%10.3e %10.3e %10.3e"):
+        for el in self.data():
+            for nod in el:
+                print fmt % tuple(nod)
+                
+            
 
 ##############################################################################
 #
@@ -1302,8 +1309,6 @@ class Formex:
     def ric(f):
         return int(round(f))
 
-
-            
 ##############################################################################
 #
 #  Testing
@@ -1364,6 +1369,8 @@ if __name__ == "__main__":
         print F
         print F.center()
         print F.bsphere()
+
+        F.fprint()
 
 
     (f,t) = _test()
