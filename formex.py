@@ -139,7 +139,7 @@ def rotationMatrix(angle,axis=None):
     if axis==None:
         f = [[c,s],[-s,c]]
     else:
-        f = [[0 for i in range(3)] for j in range(3)]
+        f = [[0.0 for i in range(3)] for j in range(3)]
         axes = range(3)
         i,j,k = axes[axis:]+axes[:axis]
         f[i][i] = 1.0
@@ -149,6 +149,25 @@ def rotationMatrix(angle,axis=None):
         f[k][k] = c
     return f
 
+def rotationAboutMatrix(angle,axis):
+    """Returns a rotation matrix over angle around an axis thru the origin.
+
+    Axis is a list of three components specifying the axis.
+    The result is a 3x3 rotation matrix in list format.
+    Note that:
+      rotationAboutMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
+      rotationAboutMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
+      rotationAboutMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
+    but the latter functions are more efficient.
+    """
+    a = angle*rad
+    c = math.cos(a)
+    s = math.sin(a)
+    t = 1-c
+    X,Y,Z = axis
+    return [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
+             [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
+             [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
 
 ###########################################################################
 ##
@@ -1376,6 +1395,5 @@ if __name__ == "__main__":
     (f,t) = _test()
     if f == 0:
         test()
-    
 
-#### End
+### End

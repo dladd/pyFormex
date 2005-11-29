@@ -1,0 +1,32 @@
+# STYLE
+#
+# This file holds some recommendations about the style to be used for
+# pyFormex development and the use of the subversion repository.
+#
+
+- Make sure the following is in your subversion configuration 
+  (~/.subversion/config):
+
+global-ignores = *~ *.pyc
+use-commit-times = yes
+enable-auto-props = yes
+[auto-props]
+*.py = svn:eol-style=native;svn:keywords=Id
+
+- Name of .py files should be only lowercase.
+- Start .py files with the following two lines:
+
+#!/usr/bin/env python
+# $Id: $
+
+- .py files should end with a section
+
+if __name__ == "__main__":
+
+  followed by whatever is needed to test the functionality of the module
+
+- exported names should preferably follow the convention:
+  - all lowercase for (global) variable names
+  - lowerUpperUpper for function names
+  - UpperUpperUpper for class names
+
