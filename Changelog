@@ -1,5 +1,7 @@
 # This collects most important changes between releases since 0.2
 #
+
+Release ???:
 	
 pyformex command line parameters:
 --------------------------------
@@ -10,13 +12,19 @@ pyformex FUNCTIONS:
 -------------------	
 - the exit() function can be used in scripts. It will close the GUI and exit
   the program. It is mainly intended for batch processing.
+- the file menu has an multiSave option: When activating this option, you can
+	save subsequent images by just hitting the 's' key. Each image will be
+	saved on a file with an increasing numerical part just before the
+	extension. You are asked once for a file name on activating the option.
+	If the supplied filename already contains a numerical part, it will
+	be used. Otherwise, a numerical part will be added. Thus on specifying
+	'image.png', subsequently saved images will be named 'image-000.png,
+	'image-001.png', ... If you specify a name 'image09.png, next saves
+	will go to 'image09.png', 'image10.png'.
 
+	
 formex.py:
 ----------
-- replicate: renamed to replic
-- generate2: renamed to replic2, changed order of arguments has, introduced
-	default values 0,1 for directions.
-- removed generate(2) aliases
 	
 Formex class:
 -------------
@@ -27,6 +35,11 @@ Formex class:
 - individual Formex elements can be changed by a syntax such as
 	 F[i] = [[1,2,3],[1,2,4]]
   USE CAREFULLY THOUGH!!
+- replicate: renamed to replic
+- generate2: renamed to replic2, changed order of arguments has, introduced
+	default values 0,1 for directions.
+- removed generate(2) aliases
+- connect has been made a global function instead of a Formex class method
 
 Added files FlatDB.key and FlatKeyDB.py, aimed at backend processing
 
@@ -34,10 +47,11 @@ Examples:
 ---------	
 - Dome renamed to Lamella
 - added Schwedler, TrussBridge, SpaceTrussRoof
+- example X_truss.py shows how to define classes of Formex structures.  
 
 	
-Release 0.2.1:
-==============
+New in release 0.2.1:
+====================
 
 pyformex GUI:
 -------------

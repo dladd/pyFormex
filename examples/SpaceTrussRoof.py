@@ -19,11 +19,10 @@ top = (Formex("1").replic2(nx+1,ny+2,1,1) + Formex("2").replic2(nx+2,ny+1,1,1)).
 top.setProp(0)
 T0 = Formex(4*[[[0,0,0]]]) # 4 times the corner of the bottom deck
 T4 = top.select([0,1,nx+1,nx+2]) # 4 nodes of corner module of top deck
-dia = Formex.connect([F1,T4]).replic2(nx+1,ny+1,dx,dx)
+dia = connect([T0,T4]).replic2(nx+1,ny+1,dx,dx)
 dia.setProp(1)
-#B4 = Formex([[B0],[B0],
 col = (Formex([[[0,0,-colht],[0,0,0]]]).replic2(ncx,2,m,ny) + Formex([[[0,m,-colht],[0,m,0]]]).replic2(2,ncy-2,nx,m)).scale([dx,dx,1])
-col.setProp(5)
+col.setProp(2)
 clear()
 draw(top+bot+dia+col)
 

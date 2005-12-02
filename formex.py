@@ -396,21 +396,25 @@ class Formex:
         A tuple of two arrays is returned. The first is float array with
         the coordinates of the unique nodes of the Formex. The second is
         an integer array with the node numbers connected by each element.
+        The elements come in the same order as they are in the Formex, but
+        the order of the nodes is unspecified.
         """
-        ## THIS IS EXTREMELY SLOW IF PERFORMED ON A LARGE FORMEX
-        ## SHOULD BE IMPLEMENTED IN C
+        ## THIS IS RATHER SLOW IF PERFORMED ON A LARGE FORMEX
+        ## IT SHOULD BE IMPLEMENTED IN C (BUT THAT WILL BE FAR LESS ELEGANT)
         nnod = self.nnodes()
         f = reshape(self.f,(nnod,3))
-        e = arange(nnod)
         # first sort
-        sel = argsort(f[:,0])
-        old = argsort(sel)
-        f = f[sel]
-        e = old[e]
+        sel = argsort(f[:,0])  # node numbers sorted
+        old = argsort(sel)     # old node numbers of sorted nodes
+        f = f[sel]             # sorted nodes 
+##        print 'sel',sel
+##        print 'old',old
         # now compact
-        flag = ones((nnod,))
-        sel = arange(nnod)
+        flag = ones((nnod,))   # 1 = new, 0 = existing node
+        sel = arange(nnod)     # replacement unique node nr
         for i in range(nnod):
+##            print 'flag',flag
+##            print 'sel',sel
             j = i-1
             while j>=0 and allclose(f[i][0],f[j][0]):
                 if allclose(f[i],f[j]):
@@ -420,18 +424,18 @@ class Formex:
                     sel[i+1:nnod] -= 1
                     break
                 j = j-1
-##        print flag
-##        print sel
-        f = f[flag>0]
-        e = reshape(sel,self.f.shape[:2])
+##        print 'flag',flag
+##        print 'sel',sel
+        f = f[flag>0]                           # extract unique nodes
+        e = reshape(sel[old],self.f.shape[:2])  # create elements
         return (f,e)
 
 ##############################################################################
 # Create string representations of a Formex
 #
 
-    def signet2str(self,sig):
-        """Returns a string representation of a signet"""
+    def point2str(self,sig):
+        """Returns a string representation of a point"""
         s = ""
         if len(sig)>0:
             s += str(sig[0])
@@ -440,14 +444,14 @@ class Formex:
                     s += "," + str(i)
         return s
 
-    def cantle2str(self,can):
-        """Returns a string representation of a cantle"""
+    def element2str(self,can):
+        """Returns a string representation of an element"""
         s = "["
         if len(can) > 0:
             s += self.signet2str(can[0])
             if len(can) > 1:
                 for i in can[1:]:
-                    s += "; " + self.signet2str(i) 
+                    s += "; " + self.point2str(i) 
         return s+"]"
     
     def asFormex(self):
@@ -462,10 +466,10 @@ class Formex:
         """
         s = "{"
         if len(self.f) > 0:
-            s += self.cantle2str(self.f[0])
+            s += self.element2str(self.f[0])
             if len(self.f) > 1:
                 for i in self.f[1:]:
-                    s += ", " + self.cantle2str(i)
+                    s += ", " + self.element2str(i)
         return s+"}"
                 
     def asArray(self):
@@ -719,44 +723,6 @@ class Formex:
         else:
             p = self.p[flag>0]
         return Formex(self.f[flag>0],p)
-        
-    def connect(self,Flist,nodid=None,bias=None,loop=False):
-        """Return a Formex which connects the formices in list.
-
-        This is a class method, not an instance method!
-        Flist is a list of formices, nodid is an optional list of nod ids and
-        bias is an optional list of element bias values. All lists should have
-        the same length.
-        The returned Formex has a plexitude equal to the number of
-        formices in list. Each element of the Formex consist of a node from
-        the corresponding element of each of the formices in list. By default
-        this will be the first node of that element, but a nodid list may be
-        given to specify the node id to be used for each of the formices.
-        Finally, a list of bias values may be given to specify an offset in
-        element number for the subsequent formices.
-        If loop==False, the order of the Formex will be the minimum order of
-        the formices in Flist, each minus its respective bias. By setting
-        loop=True however, each Formex will loop around if its end is
-        encountered, and the order of the result is the maximum order in Flist.
-        """
-        ## !! Loop does not work correctly. And I'm not sure if we will
-        ## ever fix it: It might be better to let the user extend the
-        ## formices where needed
-        ## Maybe give a warning?
-        m = len(Flist)
-        if not nodid:
-            nodid = [ 0 for i in range(m) ]
-        if not bias:
-            bias = [ 0 for i in range(m) ]
-        if loop:
-            n = max([ Flist[i].order() for i in range(m) ])
-        else:
-            n = min([ Flist[i].order() - bias[i] for i in range(m) ])
-        f = zeros((n,m,3),type=Float32)
-        for i,j,k in zip(range(m),nodid,bias):
-            f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
-        return Formex(f)
-    connect = classmethod(connect)
 
 
 ##############################################################################
@@ -787,6 +753,8 @@ class Formex:
         If no distance is given, translation is over the specified vector.
         If a distance is given, translation is over the specified distance
         in the direction of the vector."""
+        if len(vector) == 2:
+            vector.append(0.0)
         if distance:
             return Formex(self.f + scale(unitvector(vector),distance),self.p)
         else:
@@ -1198,7 +1166,13 @@ class Formex:
 #
 # New users should avoid these functions!
 # They will be moved to a separate file in future!
+# Or may even be removed.
 #
+
+    # We changed connect into a global function, not a class method
+    def connect(self,Flist,nodid=None,bias=None,loop=False):
+        return connect(Flist,nodid,bias,loop)
+    connect = classmethod(connect)
 
     def translatem(self,*args):
         """Multiple subsequent translations in axis directions.
@@ -1213,7 +1187,6 @@ class Formex:
             tr[d] += t
         return self.translate(tr)
 
-
     order = nelems
     plexitude = nnodel
     grade = ndim
@@ -1222,6 +1195,9 @@ class Formex:
     signet = point
     uniple = coord
     cop = remove
+    
+    cantle2str = element2str
+    signet2str = point2str
     
     def give():
         print self.toFormian()
@@ -1327,6 +1303,53 @@ class Formex:
         return int(f)
     def ric(f):
         return int(round(f))
+
+##############################################################################
+#
+#    Functions which are not Formex class methods
+#
+        
+def connect(Flist,nodid=None,bias=None,loop=False):
+    """Return a Formex which connects the formices in list.
+
+    This is a class method, not an instance method!
+    Flist is a list of formices, nodid is an optional list of nod ids and
+    bias is an optional list of element bias values. All lists should have
+    the same length.
+    The returned Formex has a plexitude equal to the number of
+    formices in list. Each element of the Formex consist of a node from
+    the corresponding element of each of the formices in list. By default
+    this will be the first node of that element, but a nodid list may be
+    given to specify the node id to be used for each of the formices.
+    Finally, a list of bias values may be given to specify an offset in
+    element number for the subsequent formices.
+    If loop==False, the order of the Formex will be the minimum order of
+    the formices in Flist, each minus its respective bias. By setting
+    loop=True however, each Formex will loop around if its end is
+    encountered, and the order of the result is the maximum order in Flist.
+    """
+    ## !! Loop does not work correctly. And I'm not sure if we will
+    ## ever fix it: It might be better to let the user extend the
+    ## formices where needed
+    ## Maybe give a warning?
+    m = len(Flist)
+    for F in Flist:
+        if not isinstance(F,Formex):
+            raise RuntimeError,'connect(): first argument should be a list of formices'
+    if not nodid:
+        nodid = [ 0 for i in range(m) ]
+    if not bias:
+        bias = [ 0 for i in range(m) ]
+    if loop:
+        n = max([ Flist[i].nelems() for i in range(m) ])
+    else:
+        n = min([ Flist[i].nelems() - bias[i] for i in range(m) ])
+    f = zeros((n,m,3),type=Float32)
+    for i,j,k in zip(range(m),nodid,bias):
+        f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
+    return Formex(f)
+
+
 
 ##############################################################################
 #

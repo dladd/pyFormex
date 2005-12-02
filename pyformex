@@ -14,6 +14,7 @@ Version="pyFormex 0.2-20050313"
 from formex import *
 from canvas import *
 from widgets import *
+from utils import *
 
 import sys,time,os.path,string
 import threading
@@ -108,6 +109,7 @@ MenuData = [
         ("Action","&Save","save"),
         ("Action","Save &As","saveAs"),
         ("Action","Save &Image","saveImage"),
+        ("Action","Toggle &MultiSave","multiSave"),
         ("Sep",None,None),
         ("Action","&Play","play"),
         ("Action","&Record","record"),
@@ -324,7 +326,7 @@ def about():
         "For help or information, mailto benedict.verhegghe@ugent.be\n" )
 
 def testwarning():
-    warning("Smoking may be hazardous to your health!")
+    warning("Smoking may be hazardous to your health!\nWindows is a virus!")
 def warning(s):
     global options
     if options.gui:
@@ -332,24 +334,68 @@ def warning(s):
         w.warning(w,Version,s)
     else:
         print s
-
-
+    
 def saveImage():
     """Save the current rendering in image format."""
     global canvas
     fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
     fn = fs.getFilename()
     if fn:
-        fmt = string.upper(os.path.splitext(fn)[1])
-        if len(fmt) > 0 and fmt[0] == '.':
-            fmt = fmt[1:]
-            if fmt == 'JPG':
-                fmt = 'JPEG'
-        else:
-            fmt = 'PNG'
-            fn += '.png'
+        ext = os.path.splitext(fn)[1]
+        fmt = imageFormatFromExt(ext)
         if fmt in qt.QImage.outputFormats():
+            if len(ext) == 0:
+                fn += '.%s' % fmt.lower()
             canvas.save(fn,fmt)
+        else:
+            warning("Sorry, can not save in %s format!\n"
+                    "Suggest you use PNG format ;)"%fmt)
+
+multisave = None
+
+def saveNext():
+    global multisave
+    name,nr,fmt = multisave
+    nr += 1
+    multisave = [ name,nr,fmt ]
+    canvas.save(name % nr,fmt)
+
+
+def multiSave():
+    """Save a sequence of images.
+
+    If the filename supplied has a trailing numeric part, subsequent images
+    will be numbered continuing from this number. Otherwise a numeric part
+    -000, -001, will be added to the filename.
+    """
+    global canvas,multisave
+    if multisave:
+        print "Stop auto mode"
+        qt.QObject.disconnect(canvas,qt.PYSIGNAL("save"),saveNext)
+        multisave = None
+        return
+    
+    fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+    fn = fs.getFilename()
+    if fn:
+        print "Start auto mode"
+        name,ext = os.path.splitext(fn)
+        fmt = imageFormatFromExt(ext)
+        print name,ext,fmt
+        if fmt in qt.QImage.outputFormats():
+            name,number = splitEndDigits(name)
+            if len(number) > 0:
+                nr = int(number)
+                name += "%%0%dd" % len(number)
+            else:
+                nr = 0
+                name += "-%03d"
+            if len(ext) == 0:
+                ext = '.%s' % fmt.lower()
+            name += ext
+            warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
+            qt.QObject.connect(canvas,qt.PYSIGNAL("save"),saveNext)
+            multisave = [ name,nr,fmt ]
         else:
             warning("Sorry, can not save in %s format!\n"
                     "Suggest you use PNG format ;)"%fmt)

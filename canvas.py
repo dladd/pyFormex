@@ -425,12 +425,15 @@ class Canvas(qtgl.QGLWidget):
         self.update()
 
 
-    ## Een ENTER keypress in het teken canvas stuurt een wakeup event.
-    ## Dit kan bijvoorbeeld gebruikt worden om een wait af te breken.
-    ## Wij zouden dit ook in de top-event handler kunnen doen voorzover
-    ## wij de events hier niet afhandelen.
+    # Any keypress with focus in the canvas generates a 'wakeup' signal.
+    # This is used to break out of a wait status.
+    # An 's' keypress will generate a 'save' signal.
+    # Events not handled here could also be handled by the toplevel
+    # event handler.
     def keyPressEvent (self,e):
         self.emit(qt.PYSIGNAL("wakeup"),())
+        if e.text() == 's':
+            self.emit(qt.PYSIGNAL("save"),())
         e.ignore()
         
     def mousePressEvent(self,e):
