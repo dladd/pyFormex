@@ -36,7 +36,7 @@ D = T.shear(0,1,0.5).scale([1,a,1])
 D = D.scale(u).circulize(angle)
 D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
 dome2=D.rosette(m,angle)
-sleep()
+
 clear()
 draw(dome2)
 
@@ -50,7 +50,7 @@ D = T.replic2(n,n,1,a,0,1,a,-1)
 D = D.scale(u).circulize(angle)
 D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
 dome3=D.rosette(m,angle)
-sleep()
+
 clear()
 draw(dome3)
 
@@ -62,16 +62,16 @@ D = T.replic2(n,n,1,1,0,1,1,-1)
 D = D.scale(u).circulize1()
 D = D.mapd(2,lambda d:sqrt(r**2-d**2),[0,0,0],[0,1])
 dome4=D.rosette(m,angle)
-sleep()
+
 clear()
 draw(dome4)
 
-sleep();clear()
+clear()
 dome4.setProp(1)
 draw(dome2+dome4)
 
 
-sleep()
+
 clear()
 d=1.1*r
 draw(dome1+dome2.translate([d,0,0])+dome3.translate([0,d,0])+dome4.translate([d,d,0]))

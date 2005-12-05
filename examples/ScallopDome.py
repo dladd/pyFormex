@@ -15,7 +15,7 @@
 def show(F,side='front'):
     clear()
     draw(F,side)
-    sleep()
+    
 # Here we go
 message("Create a triangular pattern in the first octant")
 f1 = Formex([[[0,0],[1,0]],[[1,0],[1,1]]]).replic2(8,8,1,1,0,1,1,-1) + Formex([[[1,0],[2,1]]]).replic2(7,7,1,1,0,1,1,-1)

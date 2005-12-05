@@ -9,10 +9,6 @@
 ##
 
 """Lima examples"""
-def show(F):
-    clear()
-    draw(F)
-    sleep()
 
 # We use the lima module
 from lima import *
@@ -60,4 +56,5 @@ for a,r,g,t in limas:
     # and display them in series
     for s in S:
         if len(s): # avoid error when list is empty
-            show(Formex(s))
+            clear()
+            draw(Formex(s))

@@ -54,6 +54,8 @@ draw(Formex(reshape(coords,(coords.shape[0],1,coords.shape[1]))))
 draw(model)
 
 # import analysis module
+# You need calpy >= 0.2.1-pre1
+# Download from ftp://bumps.ugent.be/calpy
 import sys
 sys.path.append('/usr/local/lib/calpy-0.2.1')
 from fe_util import *

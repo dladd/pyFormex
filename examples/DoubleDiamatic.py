@@ -32,15 +32,15 @@ draw(T+B1+B2)
 # Scale the parts and circulize them
 #for F in [ top,bot]:
 #    F.scale(u/3.).circulize()
-#sleep()
+#
 #clear()
 #draw(top+bot)
 #top.mapd(2,lambda d:sqrt(rt**2-d**2),[0,0,0],[0,1])
 #bot.mapd(2,lambda d:sqrt(rb**2-d**2),[0,0,0],[0,1])
-#sleep()
+#
 #clear()
 #draw(top+bot)
 #dome=(top+bot).rosette(6,60)
-#sleep()
+#
 #clear()
 #draw(dome)

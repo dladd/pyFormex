@@ -160,6 +160,80 @@ class FormexActor(Formex):
             drawCube(size)
         GL.glEndList()
 
+class CFormexActor(Formex):
+    """An OpenGL actor which is a multicolored Formex.
+
+    This is a variant of the FormexActor allowing for multiple colors. 
+    """
+
+    def __init__(self,F,colorset):
+        """Create a multicolored Formex actor.
+
+        The colors argument specifies a list of OpenGL colors for each
+        of the property values in the Formex. If the list has less
+        values that the PropSet, it is wrapped around.
+        """
+        Formex.__init__(self,F.data(),F.prop())
+        self.list = None
+        mprop = max(F.propSet()) + 1
+        self.colorset = [ colorset[v % len(colorset)] for v in range(mprop) ]
+        if self.plexitude() == 1:
+            self.setMark(self.size()/200,"cube")
+
+    # We need to further implement draw(). only nnod=2 done 
+    def draw(self,wireframe=True):
+        """Draw the formex."""
+        nnod = self.plexitude()
+        if nnod == 2:
+            GL.glBegin(GL.GL_LINES)
+            for i in range(self.nelems()):
+                GL.glColor3f(*(self.colorset[self.prop()[i]]))
+                for nod in self[i]:
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
+            
+        elif nnod == 1:
+            for el in self.data():
+                GL.glPushMatrix()
+                GL.glTranslatef (*el[0])
+                GL.glCallList(self.mark)
+                GL.glPopMatrix()
+                
+        elif wireframe:
+            for el in self.data():
+                GL.glBegin(GL.GL_LINE_LOOP)
+                for nod in el:
+                    GL.glVertex3f(*nod)
+                GL.glEnd()
+        elif nnod == 3:
+            GL.glBegin(GL.GL_TRIANGLES)
+            for el in self.data():
+                for nod in el:
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
+        elif nnod == 4:
+            GL.glBegin(GL.GL_QUADS)
+            for el in self.data():
+                for nod in el:
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
+        else:
+            for el in self.data():
+                GL.glBegin(GL.GL_POLYGON)
+                for nod in el:
+                    GL.glVertex3f(*nod)
+                GL.glEnd()
+
+    def setMark(self,size,type):
+        """Create a symbol for drawing vertices."""
+        self.mark = GL.glGenLists(1)
+        GL.glNewList(self.mark,GL.GL_COMPILE)
+        if type == "sphere":
+            drawSphere(size)
+        else:
+            drawCube(size)
+        GL.glEndList()
+
 ##################################################################
 #
 #  The Canvas

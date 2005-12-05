@@ -824,6 +824,7 @@ class Formex:
         dir specifies which coordinates are interpreted as resp.
         distance(r), angle(theta) and height(z). Default order is [r,theta,z].
         scale will scale the coordinate values prior to the transformation.
+        (scale is given in order r,theta,z).
         The resulting angle is interpreted in degrees.
         """
         # We put in a optional scaling, because doing this together with the

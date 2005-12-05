@@ -56,6 +56,6 @@ draw(half_bridge+central)
 
 # And a full full bridge
 bridge = half_bridge + half_bridge.reflect(0) + central
-sleep()
+
 clear()
 draw(bridge,'iso')

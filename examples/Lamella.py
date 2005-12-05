@@ -25,8 +25,8 @@ else:
     f2 = e2.replic2(nx,2,2,2*ny)
 g = (f1+f2).translate([0,a,1]).spherical([2,0,1],[rd,180/nx,t/(2*ny+a)])
 draw(e1+e2)
-sleep()
+
 draw(f1+f2)
-sleep()
+
 clear()
 draw(g)

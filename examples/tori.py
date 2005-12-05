@@ -22,7 +22,7 @@ for m in [3,4,6,12,36]:
         clear()
         draw(torus(m,n),side)
         side=None
-        sleep()
+        
 
 clear()
 draw(torus(72,36),None)

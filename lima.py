@@ -54,7 +54,7 @@ class Lima:
     
 def lima(axiom,rules,level,turtle,glob=None):
     """Create a list of connected points using a Lindenmayer system."""
-    import Turtle
+    import turtle
     A = Lima(axiom,rules)
     A.grow(level)
     #A.status()

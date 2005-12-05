@@ -12,7 +12,7 @@
 def show(F):
     clear()
     draw(F)
-    sleep()
+    
 
 yf = [ 0.0, 0.2, 1.2, 2.2, 3.2, 4.2, 4.5 ] # y of nodes in frame columns
 a = Formex([[[0.0,y]] for y in yf ])
@@ -42,19 +42,19 @@ dakligger += dakligger.reflect(0)
 frame += dakligger.translate([0,yf[-1],0])
 clear()
 draw(frame)
-sleep()
+
 
 structure = frame.replic2(2,6,0,2,12,3)
 draw(structure)
 
-sleep()
+
 view('top')
 canvas.display()
 
-sleep()
+
 view('right')
 canvas.display()
 
-sleep()
+
 view('iso')
 canvas.display()
