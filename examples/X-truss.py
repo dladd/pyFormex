@@ -22,5 +22,4 @@ def example(diag=True,vert=True):
 for diag in [True,False]:
     for vert in [True,False]:
         example(diag,vert)
-        sleep(0)
 

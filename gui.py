@@ -5,6 +5,7 @@
 import globaldata as GD
 import canvas
 from widgets import MyQAction
+import draw
 
 import pyfotemp as PT
 
@@ -19,15 +20,6 @@ import qtgl
 # A number of views are predefined in the canvas class
 # Any number of new views can be created, deleted, changed.
 # Each view is identified by a string
-    
-def view(v):
-    """Show a named view, either a builtin or a user defined."""
-    global canvas
-    if canvas.views.has_key(v):
-        canvas.setView(None,v)
-        canvas.update()
-    else:
-        warning("A view named '%s' has not been created yet" % v)
   
 def initViewActions(parent,viewlist):
     """Create the initial set of view actions."""
@@ -50,7 +42,7 @@ def createViewAction(parent,name,icon,tooltip,menutext):
     global views,viewsMenu,viewsBar
     dir = GD.config['icondir']
     a = MyQAction(name,tooltip,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,parent)
-    qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),view)
+    qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),draw.view)
     views.append(name)
     if viewsMenu:
         a.addTo(viewsMenu)
@@ -64,14 +56,15 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
     It also creates a MyQAction which sends the name when activated, and
     adds the MyQAction to the viewsMenu and/or the viewsBar if they exist.
     """
-    global views,viewsMenu,viewsBar,canvas,gui
+    global views,viewsMenu,viewsBar
     if tooltip == None:
         tooltip = name
     if menutext == None:
         menutext == name
     dir = GD.config['icondir']
-    canvas.createView(name,angles)
-    createViewAction(name,icon,tooltip,menutext)
+    if not GD.canvas.views.has_key(name):
+        createViewAction(GD.gui.main,name,icon,tooltip,menutext)
+    GD.canvas.createView(name,angles)
 
 
 class GUI:
@@ -85,6 +78,7 @@ class GUI:
         """
         global viewsMenu,viewsBar
         wd,ht = (GD.config['width'],GD.config['height'])
+        print wd,ht
         self.main = qt.QMainWindow()
         self.main.setCaption(GD.Version)
         self.main.resize(wd,ht)
@@ -127,12 +121,12 @@ class GUI:
         """Display a permanent message in the status line."""
         self.message.setText(qt.QString(s))
 
-    def addView(self,a):
-        """Add a new view action to the Views Menu and Views Toolbar."""
-        if self.has('viewsMenu'):
-            a.addTo(self.viewsMenu)
-        if self.has('viewsBar'):
-            a.addTo(self.viewsBar)
+##    def addView(self,a):
+##        """Add a new view action to the Views Menu and Views Toolbar."""
+##        if self.has('viewsMenu'):
+##            a.addTo(self.viewsMenu)
+##        if self.has('viewsBar'):
+##            a.addTo(self.viewsBar)
 
 
 ###########################  app  ################################

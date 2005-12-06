@@ -242,6 +242,8 @@ class Canvas(qtgl.QGLWidget):
     """A canvas for OpenGL rendering."""
     
     def __init__(self,w=640,h=480,*args):
+        """Initialize an empty canvas with default settings.
+        """
         qtgl.QGLWidget.__init__(self,*args)
         self.setFocusPolicy(qt.QWidget.StrongFocus)
         self.actors = []       # an empty scene
@@ -253,7 +255,9 @@ class Canvas(qtgl.QGLWidget):
                        'bottom': (0.,-90.,0.),
                        'iso': (45.,45.,0.),
                        }   # default views
+        # angles are: longitude, latitude, twist
         self.setBbox()
+        self.bgcolor = mediumgrey
         self.wireframe = True
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # set GL context before creating the camera
@@ -275,16 +279,17 @@ class Canvas(qtgl.QGLWidget):
     def update(self):
         self.updateGL()
 
-    def setColor(self,s):
-        """Set the OpenGL color to the named color"""
-        self.qglColor(qt.QColor(s))
+# Do we use these??
+##    def setColor(self,s):
+##        """Set the OpenGL color to the named color"""
+##        self.qglColor(qt.QColor(s))
 
-    def clearGLColor(self,s):
-        """Clear the OpenGL widget with the named background color"""
-        self.qglClearColor(qt.QColor(s))
+##    def clearGLColor(self,s):
+##        """Clear the OpenGL widget with the named background color"""
+##        self.qglClearColor(qt.QColor(s))
 
     def glinit(self,mode="wireframe"):
-	GL.glClearColor(*RGBA(mediumgrey))# Clear The Background Color
+	GL.glClearColor(*RGBA(self.bgcolor))# Clear The Background Color
 	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
 	GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
@@ -371,7 +376,7 @@ class Canvas(qtgl.QGLWidget):
     def clear(self):
         self.makeCurrent()
 	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
+	GL.glClearColor(*RGBA(self.bgcolor))   # Clear The Background Color
 
     def display(self):
         """(Re)display all the actors in the scene.
@@ -381,7 +386,7 @@ class Canvas(qtgl.QGLWidget):
         """
         self.makeCurrent()
 	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*RGBA(lightgrey))   # Clear The Background Color
+	GL.glClearColor(*RGBA(self.bgcolor))   # Clear The Background Color
         self.camera.loadProjection()
         self.camera.loadMatrix()
         for i in self.actors:
@@ -403,17 +408,20 @@ class Canvas(qtgl.QGLWidget):
         'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
         The user can add/delete/overwrite any number of predefined views.
         """
-        self.views['name'] = angles
+        self.views[name] = angles
         
-    def setView(self,bbox=None,side='front'):
-        """Sets the camera looking at one of the sides of the bbox.
+    def useView(self,bbox=None,side='front'):
+        """Sets the camera looking from one of the named views.
 
-        If a bbox is specified, 
+        On startup, the predefined views are 'front', 'back', 'left',
+        'right', 'top', 'bottom' and 'iso'.
+        This function does not only set the camera angles, but also
+        adjust the zooming.
+        If a bbox is specified, the camera will be zoomed to view the
+        whole bbox.
         If no bbox is specified, the current scene bbox will be used.
         If no current bbox has been set, it will be calculated as the
         bbox of the whole scene.
-        The view side can be one of the predefined sides. If none is
-        given, 'front' is used.
         """
         self.makeCurrent()
         # select view angles: if undefined use (0,0,0)

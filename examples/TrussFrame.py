@@ -1,19 +1,8 @@
 #!/usr/bin/env pyformex
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
-#
-"""TrussFrame"""
-def show(F):
-    clear()
-    draw(F)
-    
 
+"""TrussFrame"""
+clear()
 yf = [ 0.0, 0.2, 1.2, 2.2, 3.2, 4.2, 4.5 ] # y of nodes in frame columns
 a = Formex([[[0.0,y]] for y in yf ])
 b = Formex.connect([a,a],bias=[0,1]).translate([0.5,0.0,0.0])
@@ -40,21 +29,11 @@ tss.setProp(5)
 dakligger = (ond+bov+tss)
 dakligger += dakligger.reflect(0)
 frame += dakligger.translate([0,yf[-1],0])
-clear()
 draw(frame)
 
-
-structure = frame.replic2(2,6,0,2,12,3)
+structure = frame.replic2(2,6,12.,3.,0,2)
+clear()
 draw(structure)
-
-
 view('top')
-canvas.display()
-
-
 view('right')
-canvas.display()
-
-
 view('iso')
-canvas.display()

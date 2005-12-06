@@ -23,7 +23,24 @@ dia = connect([T0,T4]).replic2(nx+1,ny+1,dx,dx)
 dia.setProp(1)
 col = (Formex([[[0,0,-colht],[0,0,0]]]).replic2(ncx,2,m,ny) + Formex([[[0,m,-colht],[0,m,0]]]).replic2(2,ncy-2,nx,m)).scale([dx,dx,1])
 col.setProp(2)
-clear()
-draw(top+bot+dia+col)
 
+F = top+bot+dia+col
+clear()
+
+draw(F)
+
+F = F.rotate(-90,0) # put the structure upright
+clear()
+draw(F)
+
+addview('myview1',(30.,0.,0.))
+view('myview1',True)
+
+
+addview('myview2',(0.,20.,0.))
+view('myview2',True)
+
+
+addview('myview3',(30.,20.,0.))
+view('myview3')
 

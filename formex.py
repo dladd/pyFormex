@@ -398,6 +398,10 @@ class Formex:
         an integer array with the node numbers connected by each element.
         The elements come in the same order as they are in the Formex, but
         the order of the nodes is unspecified.
+        By the way, the reverse operation of
+           coords,elems = nodesAndElements(F)
+        is accomplished by
+           F = Formex(coords[elems])
         """
         ## THIS IS RATHER SLOW IF PERFORMED ON A LARGE FORMEX
         ## IT SHOULD BE IMPLEMENTED IN C (BUT THAT WILL BE FAR LESS ELEGANT)

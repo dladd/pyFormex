@@ -100,3 +100,6 @@ class X_truss:
     def allBars(self):
         """Return a Formex with all nodes."""
         return self.bot+self.top+self.vert+self.mid1+self.mid2
+
+print __name__
+print __file__

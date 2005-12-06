@@ -4,7 +4,9 @@
 import globaldata as GD
 from gui import *
 #from formex import *
-from draw import *
+import draw
+#from draw import *
+
 from widgets import *
 #from utils import *
 
@@ -21,8 +23,12 @@ def askPreferences(list):
         GD.config[r[0]] = r[1]
     print GD.config
 
-def prefSleeptime():
-    askPreferences(['sleeptime'])
+def prefDrawtimeout():
+    askPreferences(['drawtimeout'])
+
+def prefBGcolor():
+    askPreferences(['bgcolor'])
+    bgcolor(GD.config['bgcolor'])
 
 def preferences():
     test = [["item1","value1"],
@@ -57,7 +63,7 @@ def AddMenuItems(menu, items=[]):
     menu items to the same function.
 
     'QAction' signals that the value is a qt QAction. It is advisable to
-    construct a QAction if you have to use the sameaction at more than one
+    construct a QAction if you have to use the sameaction in more than one
     place of your program. With this type Text may be None, if it was already
     set in the QAction itself.
     """
@@ -73,7 +79,7 @@ def AddMenuItems(menu, items=[]):
         elif key == "VAction":
             id = menu.insertItem(txt,eval(val[0]))
             menu.setItemParameter(id,val[1])
-        elif key == "Statement":
+        elif key == "SAction":
             menu.insertItem(txt,val)
         elif key == "QAction":
             if txt:
@@ -81,7 +87,11 @@ def AddMenuItems(menu, items=[]):
             val.addTo(menu)
         else:
             raise RuntimeError, "Invalid key %s in menu item"%key
-
+#
+# Using ("SAction","text",foo) is almost equivalent to
+# using ("Action","text","foo"), but the latter allows for function
+# that have not been defined yet in this scope!
+#
 MenuData = [
     ("Popup","&File",[
         ("Action","&Save","save"),
@@ -92,14 +102,15 @@ MenuData = [
         ("Action","&Play","play"),
         ("Action","&Record","record"),
         ("Sep",None,None),
-        ("Action","E&xit","exit"), ]),
+        ("Action","E&xit","draw.exit"), ]),
     ("Popup","&Settings",[
         ("Action","&Preferences","preferences"), 
-        ("Action","&Sleep Time","prefSleeptime"), 
+        ("Action","&Drawwait Timeout","prefDrawtimeout"), 
+        ("Action","&Background Color","prefBGcolor"), 
         ("Action","&LocalAxes","localAxes"),
         ("Action","&GlobalAxes","globalAxes"),
-        ("Action","&Wireframe","wireframe"),
-        ("Action","&Smooth","smooth"), ]),
+        ("Action","&Wireframe","draw.wireframe"),
+        ("Action","&Smooth","draw.smooth"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","zoomIn"), 
         ("Action","&Zoom Out","zoomOut"), 
@@ -114,14 +125,14 @@ MenuData = [
         ("Action","Rotate &Up","rotUp"),
         ("Action","Rotate &Down","rotDown"),  ]),
     ("Popup","&Actions",[
-        ("Action","&Step","step"),
-        ("Action","&Continue","fforward"), 
-        ("Action","&Clear","clear"),
-        ("Action","&Redraw","redraw"),
-        ("Action","&ListAll","listall"),
-        ("Action","&Print","printit"),
-        ("Action","&Bbox","printbbox"),
-        ("Action","&Globals","printglobals"),  ]),
+        ("Action","&Step","draw.step"),
+        ("Action","&Continue","draw.fforward"), 
+        ("Action","&Clear","draw.clear"),
+        ("Action","&Redraw","draw.redraw"),
+        ("Action","&ListAll","draw.listall"),
+#        ("Action","&Print","printit"),
+#        ("Action","&Bbox","printbbox"),
+        ("Action","&Globals","draw.printglobals"),  ]),
     ("Popup","&Help",[
         ("Action","&Help","showHelp"),
         ("Action","&About","about"), 
@@ -150,7 +161,7 @@ def addDefaultMenu(menu):
 def runExample(i):
     """Run example i from the list of found examples."""
     global example
-    playFile(os.path.join(GD.config['pyformexdir'],"examples",example[i]))
+    draw.playFile(os.path.join(GD.config['pyformexdir'],"examples",example[i]))
 
 def runExamples(n):
     """Run the first n examples."""
@@ -162,8 +173,8 @@ def addActionButtons(toolbar):
     global action
     action = {}
     dir = GD.config['icondir']
-    buttons = [ [ "Step", "next.xbm", step, False ],
-                [ "Continue", "ff.xbm", fforward, False ],
+    buttons = [ [ "Step", "next.xbm", draw.step, False ],
+                [ "Continue", "ff.xbm", draw.fforward, False ],
               ]
     for b in buttons:
         a = qt.QAction(b[0],qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[1],0,toolbar)
@@ -192,75 +203,6 @@ def addCameraButtons(toolbar):
         w = qt.QToolButton(qt.QIconSet(qt.QPixmap(os.path.join(dir,b[1]))),b[0],"",b[2],toolbar)
         w.setAutoRepeat(True)
 
-######################## Views #############################################
-### Views are different camera postitions from where to view the structure.
-### They can be activated from menus, or from the  view toolbox
-### A number of views are predefined in the canvas class
-### Any number of new views can be created, deleted, changed.
-### Each view is identified by a string
-    
-##def view(v):
-##    """Show a named view, either a builtin or a user defined."""
-##    if GD.canvas.views.has_key(v):
-##        GD.canvas.setView(None,v)
-##        GD.canvas.update()
-##    else:
-##        warning("A view named '%s' has not been created yet" % v)
-  
-##def initViewActions(viewsMenu,viewsBar,viewlist):
-##    """Create the initial set of view actions.
-
-##    The actions are added to the GUI's views Menu and Views Toolbar
-##    if these exist.
-##    """
-##    global views
-##    views = []
-##    for name in viewlist:
-##        icon = name+"view.xbm"
-##        Name = string.capitalize(name)
-##        tooltip = Name+" View"
-##        menutext = "&"+Name
-##        a = createViewAction(name,icon,tooltip,menutext)
-##        print viewsMenu,viewsBar
-##        print a
-##        if viewsMenu:
-##            print "adding to viewsMenu"
-##            a.addTo(viewsMenu)
-##        if viewsBar:
-##            print "adding to viewsBar"
-##            a.addTo(viewsBar)
-##    print views
-
-##def createViewAction(name,icon,tooltip,menutext):
-##    """Creates a view action and adds it to the menu and/or toolbar.
-
-##    The view action is a MyQAction which sends the name when activated.
-##    It is added to the viewsMenu and/or the viewsBar if they exist.
-##    The toolbar button has icon and tooltip. The menu item has menutext. 
-##    """
-##    global views,viewsMenu,viewsBar
-##    dir = GD.config['icondir']
-##    a = MyQAction(name,tooltip,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,GD.gui)
-##    qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),view)
-##    views.append(name)
-##    return a
- 
-##def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
-##    """Add a new view to the list of predefined views.
-
-##    This creates a new named view with specified angles for the canvas.
-##    It also creates a MyQAction which sends the name when activated, and
-##    adds the MyQAction to the viewsMenu and/or the viewsBar if they exist.
-##    """
-##    global views
-##    if tooltip == None:
-##        tooltip = name
-##    if menutext == None:
-##        menutext == name
-##    dir = GD.config['icondir']
-##    GD.canvas.createView(name,angles)
-##    a = createViewAction(name,icon,tooltip,menutext)
-##    GD.gui.addView(a)
 
 
 ###################### Actions #############################################
@@ -401,15 +343,6 @@ def play():
         GD.config['workdir'] = os.path.dirname(fn)
         playFile(fn)
         
-def printit():
-    global out
-    print out
-def printbbox():
-    global out
-    if out:
-        print "bbox of displayed Formex",out.bbox()
-def printglobals():
-    print globals()
 
 def zoomIn():
     global canvas
@@ -505,13 +438,6 @@ def userView(i=1):
     else:
         isoView()
 
-
-def listall():
-    """List all Formices in globals()"""
-    print "Formices currently in globals():"
-    for n,t in globals().items():
-        if isinstance(t,Formex):
-            print "%s, " % n
      
 
 def localAxes():

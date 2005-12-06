@@ -51,7 +51,7 @@ def scallop(n,f,c,r):
 #    return f4
 
 # Present some nice examples
-canvas.camera.setRotation(0,-45)
+GD.canvas.camera.setRotation(0,-45)
 for n,f,c,r in [
     [6,1,2,0],
     [6,1,2,2],

@@ -6,7 +6,7 @@ import globaldata as GD
 from gui import runApp
 
 from colors import *    # needed for reading config file
-  # e should move this to a module
+  # We should move this to a module
 import sys
 import os.path
 from optparse import OptionParser,make_option

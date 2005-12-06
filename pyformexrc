@@ -9,9 +9,9 @@
 # The config is a Python dictionary and this file should be legal Python
 # All config settings should be of the form config[key]=value
 #
-config['width'] = 640    # default window width
-config['height'] = 480	 # default window height
-config['sleeptime'] = 1  # default time (sec.) to sleep (None is indefinitely)
+config['width'] =  960   # default window width
+config['height'] = 720	 # default window height
+config['drawtimeout'] = 2  # default time (sec.) to wait between draw operationssleep (None is indefinitely)
 config['localaxes'] = True     # by default, buttons rotate/pan in local axes
 config['camerabuttons'] = True # add camera buttons to toolbar
 config['examplesmenu'] = True  # add examples menu

@@ -10,6 +10,8 @@
 #
 "Lindenmayer Systems"
 
+import turtle
+
 class Lima:
     """A class for operations on Lindenmayer Systems."""
 
@@ -51,17 +53,21 @@ class Lima:
             self.product = self.translate(self.rule,keep=True)
             self.gen += 1
         return self.product
+
     
-def lima(axiom,rules,level,turtle,glob=None):
-    """Create a list of connected points using a Lindenmayer system."""
-    import turtle
+def lima(axiom,rules,level,turtlecmds,glob=None):
+    """Create a list of connected points using a Lindenmayer system.
+
+    axiom is the initial string,
+    rules are translation rules for the characters in the string,
+    level is the number of generations to produce,
+    turtlecmds are the translation rules of the final string to turtle cmds,
+    glob is an optionallist of globals to pass to the turtle script player.
+    """
     A = Lima(axiom,rules)
     A.grow(level)
-    #A.status()
-    scr = "reset();"+A.translate(turtle,keep=False)
-    #print(scr)
-    list = Turtle.play(scr,glob)
-    #print len(list)," lines"
+    scr = "reset();"+A.translate(turtlecmds,keep=False)
+    list = turtle.play(scr,glob)
     return list
 
 if __name__ == "__main__":

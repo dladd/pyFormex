@@ -4,6 +4,7 @@
 """X-shaped truss analysis"""
 
 from examples.X_truss import X_truss
+bgcolor(lightgrey)
 
 # create a truss (Vandepitte, Chapter 1, p.16)
 n = 5
@@ -81,4 +82,38 @@ ndof=bcon.max()
 nlc=1
 loads=zeros((ndof,nlc),Float)
 loads[:,0]=AssembleVector(loads[:,0],[ 0.0, -50.0, 0.0 ],bcon[nr_loaded,:])
-static(coords,bcon,mats,matnod,loads,Echo=True)
+#warning("performing analysis: this may take some time")
+displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
+
+pf = abs(frc.astype(Int))
+results = Formex(coords[elems],pf)
+
+clear()
+draw(results)
+
+clear()
+draw(results,color=green)
+
+# Even though there is only one resultant force per element, and only
+# one load case, the frc array returned by static will still have shape
+# (nelems,1,1). We select the results in a onedimensional vector val. 
+val = frc[:,0,0]
+vmin = val.min()
+vmax = val.max()
+rng = vmax-vmin
+# scale it
+sval = (val-vmin) / (vmax-vmin)
+# create colors
+colorval = zeros((nelems,3),Float)
+# plot with a red scale
+colorval[:,0] = sval
+aprint(colorval,header=['Red','Green','Blue'])
+clear()
+draw(results,color=colorval)
+# plot with a yellow scale
+colorval[:,1] = sval
+clear()
+draw(results,color=colorval)
+# change background to black 
+sleep(2)   # we need a sleep here
+bgcolor(darkgrey)

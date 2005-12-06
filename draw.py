@@ -5,26 +5,26 @@
 import globaldata as GD
 from formex import *
 from canvas import *
-import pyfotemp
+import gui
+#import pyfotemp as PT
 import threading
 
-def clear():
-    """Remove all actors from the canvas"""
-    global out
-    GD.canvas.removeAllActors()
-    GD.canvas.clear()
-    out = None
 def wireframe():
+    global allowwait
     GD.canvas.glinit("wireframe")
     GD.canvas.redrawAll()
+
 def smooth():
+    global allowwait
+    if allowwait:
+        drawwait()
     GD.canvas.glinit("render")
-    GD.canvas.redrawAll()
-def redraw():
     GD.canvas.redrawAll()
 
 def message(s):
-    """Show a message in the status bar"""
+    """Show a message to the user.
+
+    Currently, messages are shown in the status bar."""
     if GD.gui:
         GD.gui.showMessage(s)
     else:
@@ -33,39 +33,45 @@ def message(s):
 # A timed lock to slow down drawing processes
 
 allowwait = True
-drawwait = False
+drawlocked = False
 drawtimeout = GD.config.get('drawwait',2)
+drawtimer = None
 
-def setdrawwait(n):
-    """Set the waiting time for the draw function."""
-    global drawtimeout
-    drawtimeout = n
+def drawwait():
+    """Wait for the drawing lock to be released.
+
+    While we are waiting, events are processed.
+    """
+    global drawlocked, drawtimeout, drawtimer
+    while drawlocked:
+        GD.app.processEvents()
 
 def drawlock():
     """Lock the drawing function.
 
     This locks the drawing function for the next drawtimeout seconds.
     """
-    global drawwait, drawtimeout, drawtimer
-    while drawwait:
-        GD.app.processEvents()
-        continue
-    drawwait = True
-    drawtimer = threading.Timer(drawtimeout,drawrelease)
-    drawtimer.start()
+    global drawlocked, drawtimeout, drawtimer
+    if not drawlocked and drawtimeout > 0:
+        drawlocked = True
+        drawtimer = threading.Timer(drawtimeout,drawrelease)
+        drawtimer.start()
 
 def drawrelease():
-    """Release the drawing function."""
-    global drawwait, drawtimer
-    drawwait = False
+    """Release the drawing function.
+
+    If a timer is running, cancel it.
+    """
+    global drawlocked, drawtimer
+    drawlocked = False
     if drawtimer:
         drawtimer.cancel()
 
 
-def draw(F,side='front',color="prop"):
+def draw(F,side='front',color='prop',wait=True):
     """Draw a Formex on the canvas.
 
-    This draws an actor on the canvas, and directs the camera to it from
+    Draws an actor on the canvas, and directs the camera to it from
     the specified side. Default is looking in the -z direction.
     Specifying side=None leaves the camera settings unchanged.
     If other actors are on the scene, they may be visible as well.
@@ -77,24 +83,76 @@ def draw(F,side='front',color="prop"):
     If color is one color value, the whole Formex will be drawn with
     that color.
     Finally, if color=None is specified, the whole Formex is drawn in black.
-    Each draw action activates a 
+    
+    Each draw action activates a locking mechanism for the next draw action,
+    which will only be allowed after drawtimeout seconds have elapsed. This
+    makes it easier to see subsequent images and is far more elegant that an
+    explicit sleep() operation, because all script processing will continue
+    up to the next drawing instruction.
+    The user can disable the wait cycle for the next draw operation by
+    specifying wait=False. Setting drawtimeout=0 will disable the waiting
+    mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait
     if allowwait:
-        print "waits allowed"
-        drawlock()
+        drawwait()
     lastdrawn = F
+    # Maybe we should move some of this color handling to the FormexActor
     if F.p == None or color==None:
-        # use the Formex directly as actor
-        GD.canvas.addActor(FormexActor(F))
-    else:
+        color = black
+    if type(color) == str and color == 'prop':
         # use the prop as entry in a color table
-        colorset=GD.config['propcolors']
-        GD.canvas.addActor(CFormexActor(F,colorset))
+        color=GD.config['propcolors']
+    if len(color) == 3 and type(color[0]) == float and \
+           type(color[1]) == float and type(color[2]) == float:
+        # it is a single color
+        GD.canvas.addActor(FormexActor(F,color))
+    else:
+        # assume color is a colorset
+        GD.canvas.addActor(CFormexActor(F,color))
     if side:
-        GD.canvas.setView(F.bbox(),side)
+        GD.canvas.useView(F.bbox(),side)
     # If side == None we still should calculate the bbox and zoom accordingly
     GD.canvas.update()
+    if allowwait and wait:
+        drawlock()
+
+def bgcolor(color):
+    """Change the background color (and redraw)."""
+    if type(color) == str:
+        color = eval(color)
+    GD.canvas.bgcolor = color
+    GD.canvas.display()
+    GD.canvas.update()
+
+def clear():
+    """Remove all actors from the canvas"""
+    global allowwait
+    if allowwait:
+        drawwait()
+    GD.canvas.removeAllActors()
+    GD.canvas.clear()
+
+def redraw():
+    GD.canvas.redrawAll()
+
+def view(v,wait=False):
+    """Show a named view, either a builtin or a user defined."""
+    global allowwait
+    if allowwait:
+        drawwait()
+    if GD.canvas.views.has_key(v):
+        GD.canvas.useView(None,v)
+        GD.canvas.update()
+        if allowwait and wait:
+            drawlock()
+    else:
+        warning("A view named '%s' has not been created yet" % v)
+
+def addview(name,angles):
+    dir(gui)
+    gui.addView(name,angles)
+    
 
 scriptDisabled = False
 scriptRunning = False
@@ -156,6 +214,57 @@ def exit():
     else: # the gui didn't even start
         sys.exit(0)
 
+wakeupMode=0
+def sleep(timeout=None):
+    """Sleep until key/mouse press in the canvas or until timeout"""
+    global sleeping,wakeupMode,timer
+    if wakeupMode > 0:  # don't bother : sleeps inactivated
+        return
+    # prepare for getting wakeup event 
+    qt.QObject.connect(GD.canvas,qt.PYSIGNAL("wakeup"),wakeup)
+    # create a Timer to wakeup after timeout
+    if timeout and timeout > 0:
+        timer = threading.Timer(timeout,wakeup)
+        timer.start()
+    else:
+        timer = None
+    # go into sleep mode
+    sleeping = True
+    ## while sleeping, we have to process events
+    ## (we could start another thread for this)
+    while sleeping:
+        GD.app.processEvents()
+        #time.sleep(0.1)
+    # ignore further wakeup events
+    qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("wakeup"),wakeup)
+        
+def wakeup(mode=0):
+    """Wake up from the sleep function.
 
-def sleep(n=None):
-    print "The sleep() function is deprecated and ignored!"
+    This is the only way to exit the sleep() function.
+    Default is to wake up from the current sleep. A mode > 0
+    forces wakeup for longer period.
+    """
+    global timer,sleeping,wakeupMode
+    if timer:
+        timer.cancel()
+    sleeping = False
+    wakeupMode = mode
+
+
+def listall():
+    """List all Formices in globals()"""
+    print "Formices currently in globals():"
+    for n,t in globals().items():
+        if isinstance(t,Formex):
+            print "%s, " % n
+
+##def printit():
+##    global out
+##    print out
+##def printbbox():
+##    global out
+##    if out:
+##        print "bbox of displayed Formex",out.bbox()
+def printglobals():
+    print globals()
