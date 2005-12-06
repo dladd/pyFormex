@@ -1,18 +1,8 @@
-# $Id$
+#  -*- Makefile -*-  for creating pyFormex releases
+# $Id: Makefile 53 2005-12-05 18:23:28Z bverheg $
 #
 
-############# SET THESE TO SUIT YOUR INSTALLATION ####################
-
-# root of the installation tree: this is a reasonable default
-ROOTDIR= /usr/local
-# where to install pyformex: some prefer to use $(ROOTDIR)/lib
-LIBDIR= $(ROOTDIR)
-# where to create symbolic links to the executable files
-BINDIR= $(ROOTDIR)/bin
-# where to install the documentation
-DOCDIR= $(ROOTDIR)/share/doc
-
-############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
+include RELEASE
 
 VERSION= 0.2.1
 PYFORMEXDIR= pyformex-$(VERSION)

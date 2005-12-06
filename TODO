@@ -5,10 +5,10 @@ Release 0.2 : Released 2005-Jan-03
 
 
 Release 0.3 :
- - Rethink, reorganize, complete the formex transformations
- - Provide short documentation 
+ - Rethink, reorganize, complete the formex transformations (LARGELY DONE)
+ - Provide short documentation  
  - Change the mouse rotation action  (DONE) 
- - Interface for executing external scripts.
+ - Interface for executing external scripts.  (CANCELLED, Python provides it)
  - Online help system (INITIATED)
  - Provide a formian to pyformex translator
  - Add config file and config settings dialog (INITIATED)
