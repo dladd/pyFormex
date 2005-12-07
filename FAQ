@@ -1,16 +1,18 @@
+# pyFormex FAQ
+#
 pyFormex Frequently Asked Questions (and answers)
 =================================================
 
 Questions
 =========
 
-1.1 How was the pyFormex logo created?
-
+1. How was the pyFormex logo created?
+2. Why is pyFormex written in Python? Isn't it slow? 
 
 Answers
 =======
 
-1.1 How was the pyFormex logo created?
+1. How was the pyFormex logo created?
 
 With the Gimp: Xtra -> Script-Fu -> Logos -> Alien-neon
 Font Size: 120
@@ -25,3 +27,12 @@ Fade Away: Yes
 Then switch off background layer and save as .png format.
 Export the image with Save Background Color switched off!
 
+
+2. Why is pyFormex written in Python? Isn't it slow?
+----------
+Because
+ - it is very easy to learn (See www.python.org)
+ - it is extremely powerful (More on www.python.org)
+As a scripting language, it allows for quick program development.
+And because it provides so many plugins to libraries implemented in 
+C or Fortran, it can be surprisingly fast.

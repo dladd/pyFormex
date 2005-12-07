@@ -1,0 +1,141 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module pyfotemp</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>pyfotemp</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/pyfotemp.py">/home/bene/prj/pyformex/pyfotemp.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;$Id&nbsp;$</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
+<a href="pyfotemp.html">pyfotemp</a><br>
+<a href="canvas.html">canvas</a><br>
+</td><td width="25%" valign=top><a href="draw.html">draw</a><br>
+<a href="os.html">os</a><br>
+<a href="qt.html">qt</a><br>
+</td><td width="25%" valign=top><a href="qtgl.html">qtgl</a><br>
+<a href="string.html">string</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+<a href="types.html">types</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-AddMenuItems"><strong>AddMenuItems</strong></a>(menu, items<font color="#909090">=[]</font>)</dt><dd><tt>Add&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;to&nbsp;a&nbsp;menu.<br>
+&nbsp;<br>
+Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;three&nbsp;strings&nbsp;:&nbsp;Type,&nbsp;Text,&nbsp;Value.<br>
+Type&nbsp;specifies&nbsp;the&nbsp;menu&nbsp;item&nbsp;type&nbsp;and&nbsp;must&nbsp;be&nbsp;one&nbsp;of<br>
+'Sep',&nbsp;'Popup',&nbsp;'Action',&nbsp;'VAction',&nbsp;'QAction'.<br>
+&nbsp;<br>
+'Sep'&nbsp;is&nbsp;a&nbsp;separator&nbsp;item.&nbsp;Its&nbsp;Text&nbsp;and&nbsp;Value&nbsp;fields&nbsp;are&nbsp;not&nbsp;used.<br>
+&nbsp;<br>
+For&nbsp;the&nbsp;other&nbsp;types,&nbsp;Text&nbsp;is&nbsp;the&nbsp;string&nbsp;that&nbsp;will&nbsp;be&nbsp;displayed&nbsp;in&nbsp;the<br>
+menu.&nbsp;It&nbsp;can&nbsp;include&nbsp;a&nbsp;'&amp;'&nbsp;character&nbsp;to&nbsp;flag&nbsp;the&nbsp;hotkey.<br>
+&nbsp;<br>
+'Popup'&nbsp;is&nbsp;a&nbsp;popup&nbsp;submenu&nbsp;item.&nbsp;Its&nbsp;value&nbsp;should&nbsp;be&nbsp;an&nbsp;item&nbsp;list,<br>
+defining&nbsp;the&nbsp;menu&nbsp;to&nbsp;pop&nbsp;up&nbsp;when&nbsp;activated.<br>
+&nbsp;<br>
+'Action'&nbsp;is&nbsp;an&nbsp;active&nbsp;item.&nbsp;Its&nbsp;value&nbsp;is&nbsp;a&nbsp;python&nbsp;function&nbsp;that&nbsp;will&nbsp;be<br>
+executed&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;activated.&nbsp;It&nbsp;should&nbsp;be&nbsp;a&nbsp;global&nbsp;function<br>
+without&nbsp;arguments.<br>
+&nbsp;<br>
+'VAction'&nbsp;is&nbsp;an&nbsp;active&nbsp;item&nbsp;where&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;an&nbsp;function<br>
+and&nbsp;an&nbsp;integer&nbsp;argument.&nbsp;When&nbsp;activated,&nbsp;the&nbsp;function&nbsp;will&nbsp;be&nbsp;executed<br>
+with&nbsp;the&nbsp;specified&nbsp;argument.&nbsp;With&nbsp;'Vaction',&nbsp;you&nbsp;can&nbsp;bind&nbsp;multiple<br>
+menu&nbsp;items&nbsp;to&nbsp;the&nbsp;same&nbsp;function.<br>
+&nbsp;<br>
+'QAction'&nbsp;signals&nbsp;that&nbsp;the&nbsp;value&nbsp;is&nbsp;a&nbsp;qt&nbsp;QAction.&nbsp;It&nbsp;is&nbsp;advisable&nbsp;to<br>
+construct&nbsp;a&nbsp;QAction&nbsp;if&nbsp;you&nbsp;have&nbsp;to&nbsp;use&nbsp;the&nbsp;sameaction&nbsp;in&nbsp;more&nbsp;than&nbsp;one<br>
+place&nbsp;of&nbsp;your&nbsp;program.&nbsp;With&nbsp;this&nbsp;type&nbsp;Text&nbsp;may&nbsp;be&nbsp;None,&nbsp;if&nbsp;it&nbsp;was&nbsp;already<br>
+set&nbsp;in&nbsp;the&nbsp;QAction&nbsp;itself.</tt></dd></dl>
+ <dl><dt><a name="-NotImplemented"><strong>NotImplemented</strong></a>()</dt></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>()</dt></dl>
+ <dl><dt><a name="-addActionButtons"><strong>addActionButtons</strong></a>(toolbar)</dt><dd><tt>#&nbsp;add&nbsp;action&nbsp;buttons&nbsp;to&nbsp;toolbar</tt></dd></dl>
+ <dl><dt><a name="-addCameraButtons"><strong>addCameraButtons</strong></a>(toolbar)</dt><dd><tt>#&nbsp;add&nbsp;camera&nbsp;buttons&nbsp;to&nbsp;toolbar&nbsp;(repeating)</tt></dd></dl>
+ <dl><dt><a name="-addDefaultMenu"><strong>addDefaultMenu</strong></a>(menu)</dt><dd><tt>Add&nbsp;the&nbsp;default&nbsp;menu&nbsp;structure&nbsp;to&nbsp;the&nbsp;GUI.</tt></dd></dl>
+ <dl><dt><a name="-askPreferences"><strong>askPreferences</strong></a>(list)</dt></dl>
+ <dl><dt><a name="-backView"><strong>backView</strong></a>()</dt></dl>
+ <dl><dt><a name="-bottomView"><strong>bottomView</strong></a>()</dt></dl>
+ <dl><dt><a name="-closeHelp"><strong>closeHelp</strong></a>()</dt><dd><tt>Close&nbsp;the&nbsp;help&nbsp;browser</tt></dd></dl>
+ <dl><dt><a name="-dollyIn"><strong>dollyIn</strong></a>()</dt></dl>
+ <dl><dt><a name="-dollyOut"><strong>dollyOut</strong></a>()</dt></dl>
+ <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
+ <dl><dt><a name="-globalAxes"><strong>globalAxes</strong></a>()</dt></dl>
+ <dl><dt><a name="-insertExampleMenu"><strong>insertExampleMenu</strong></a>()</dt><dd><tt>Insert&nbsp;the&nbsp;examples&nbsp;menu&nbsp;in&nbsp;the&nbsp;menudata.</tt></dd></dl>
+ <dl><dt><a name="-isoView"><strong>isoView</strong></a>()</dt></dl>
+ <dl><dt><a name="-leftView"><strong>leftView</strong></a>()</dt></dl>
+ <dl><dt><a name="-localAxes"><strong>localAxes</strong></a>()</dt></dl>
+ <dl><dt><a name="-multiSave"><strong>multiSave</strong></a>()</dt><dd><tt>Save&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;filename&nbsp;supplied&nbsp;has&nbsp;a&nbsp;trailing&nbsp;numeric&nbsp;part,&nbsp;subsequent&nbsp;images<br>
+will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp;Otherwise&nbsp;a&nbsp;numeric&nbsp;part<br>
+-000,&nbsp;-001,&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;filename.</tt></dd></dl>
+ <dl><dt><a name="-play"><strong>play</strong></a>()</dt></dl>
+ <dl><dt><a name="-prefBGcolor"><strong>prefBGcolor</strong></a>()</dt></dl>
+ <dl><dt><a name="-prefDrawtimeout"><strong>prefDrawtimeout</strong></a>()</dt></dl>
+ <dl><dt><a name="-preferences"><strong>preferences</strong></a>()</dt></dl>
+ <dl><dt><a name="-record"><strong>record</strong></a> = NotImplemented()</dt></dl>
+ <dl><dt><a name="-rightView"><strong>rightView</strong></a>()</dt></dl>
+ <dl><dt><a name="-rotDown"><strong>rotDown</strong></a>()</dt></dl>
+ <dl><dt><a name="-rotLeft"><strong>rotLeft</strong></a>()</dt></dl>
+ <dl><dt><a name="-rotRight"><strong>rotRight</strong></a>()</dt><dd><tt>##def&nbsp;panRight():<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;canvas,config<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.camera.pan(+5)<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.update()&nbsp;&nbsp;&nbsp;<br>
+##def&nbsp;panLeft():<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;canvas,config<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.camera.pan(-5)<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.update()&nbsp;&nbsp;&nbsp;<br>
+##def&nbsp;panUp():<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;canvas,config<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.camera.pan(+5,0)<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.update()&nbsp;&nbsp;&nbsp;<br>
+##def&nbsp;panDown():<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;canvas,config<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.camera.pan(-5,0)<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;canvas.update()</tt></dd></dl>
+ <dl><dt><a name="-rotUp"><strong>rotUp</strong></a>()</dt></dl>
+ <dl><dt><a name="-runExample"><strong>runExample</strong></a>(i)</dt><dd><tt>Run&nbsp;example&nbsp;i&nbsp;from&nbsp;the&nbsp;list&nbsp;of&nbsp;found&nbsp;examples.</tt></dd></dl>
+ <dl><dt><a name="-runExamples"><strong>runExamples</strong></a>(n)</dt><dd><tt>Run&nbsp;the&nbsp;first&nbsp;n&nbsp;examples.</tt></dd></dl>
+ <dl><dt><a name="-save"><strong>save</strong></a> = NotImplemented()</dt></dl>
+ <dl><dt><a name="-saveAs"><strong>saveAs</strong></a> = NotImplemented()</dt></dl>
+ <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;in&nbsp;image&nbsp;format.</tt></dd></dl>
+ <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt></dl>
+ <dl><dt><a name="-showHelp"><strong>showHelp</strong></a>()</dt><dd><tt>Start&nbsp;up&nbsp;the&nbsp;help&nbsp;browser</tt></dd></dl>
+ <dl><dt><a name="-testwarning"><strong>testwarning</strong></a>()</dt></dl>
+ <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
+ <dl><dt><a name="-transDown"><strong>transDown</strong></a>()</dt></dl>
+ <dl><dt><a name="-transLeft"><strong>transLeft</strong></a>()</dt></dl>
+ <dl><dt><a name="-transRight"><strong>transRight</strong></a>()</dt></dl>
+ <dl><dt><a name="-transUp"><strong>transUp</strong></a>()</dt></dl>
+ <dl><dt><a name="-twistLeft"><strong>twistLeft</strong></a>()</dt></dl>
+ <dl><dt><a name="-twistRight"><strong>twistRight</strong></a>()</dt></dl>
+ <dl><dt><a name="-userView"><strong>userView</strong></a>(i<font color="#909090">=1</font>)</dt><dd><tt>#&nbsp;JUST&nbsp;TESTING:</tt></dd></dl>
+ <dl><dt><a name="-warning"><strong>warning</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-zoomIn"><strong>zoomIn</strong></a>()</dt></dl>
+ <dl><dt><a name="-zoomOut"><strong>zoomOut</strong></a>()</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>MenuData</strong> = [('Popup', '&amp;File', [('Action', '&amp;Save', 'save'), ('Action', 'Save &amp;As', 'saveAs'), ('Action', 'Save &amp;Image', 'saveImage'), ('Action', 'Toggle &amp;MultiSave', 'multiSave'), ('Sep', None, None), ('Action', '&amp;Play', 'play'), ('Action', '&amp;Record', 'record'), ('Sep', None, None), ('Action', 'E&amp;xit', 'draw.exit')]), ('Popup', '&amp;Settings', [('Action', '&amp;Preferences', 'preferences'), ('Action', '&amp;Drawwait Timeout', 'prefDrawtimeout'), ('Action', '&amp;Background Color', 'prefBGcolor'), ('Action', '&amp;LocalAxes', 'localAxes'), ('Action', '&amp;GlobalAxes', 'globalAxes'), ('Action', '&amp;Wireframe', 'draw.wireframe'), ('Action', '&amp;Smooth', 'draw.smooth')]), ('Popup', '&amp;Camera', [('Action', '&amp;Zoom In', 'zoomIn'), ('Action', '&amp;Zoom Out', 'zoomOut'), ('Action', '&amp;Dolly In', 'dollyIn'), ('Action', '&amp;Dolly Out', 'dollyOut'), ('Action', 'Pan &amp;Right', 'transRight'), ('Action', 'Pan &amp;Left', 'transLeft'), ('Action', 'Pan &amp;Up', 'transUp'), ('Action', 'Pan &amp;Down', 'transDown'), ('Action', 'Rotate &amp;Right', 'rotRight'), ('Action', 'Rotate &amp;Left', 'rotLeft'), ('Action', 'Rotate &amp;Up', 'rotUp'), ('Action', 'Rotate &amp;Down', 'rotDown')]), ('Popup', '&amp;Actions', [('Action', '&amp;Step', 'draw.step'), ('Action', '&amp;Continue', 'draw.fforward'), ('Action', '&amp;Clear', 'draw.clear'), ('Action', '&amp;Redraw', 'draw.redraw'), ('Action', '&amp;ListAll', 'draw.listall'), ('Action', '&amp;Globals', 'draw.printglobals')]), ('Popup', '&amp;Help', [('Action', '&amp;Help', 'showHelp'), ('Action', '&amp;About', 'about'), ('Action', '&amp;Warning', 'testwarning')])]<br>
+<strong>help</strong> = None<br>
+<strong>multisave</strong> = None</td></tr></table>
+</body></html>

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# $Id$
 """Flat Text File Database.
 A simple database stored as easily readable text files.
 

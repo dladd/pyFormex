@@ -1,58 +1,58 @@
+#  -*- Makefile -*-  for installing pyFormex
 # $Id$
 #
-
 ############# SET THESE TO SUIT YOUR INSTALLATION ####################
 
 # root of the installation tree: this is a reasonable default
-ROOTDIR= /usr/local
-# where to install pyformex: some prefer to use $(ROOTDIR)/lib
-LIBDIR= $(ROOTDIR)
-# where to create symbolic links to the executable files
-BINDIR= $(ROOTDIR)/bin
+prefix = ${DESTDIR}/usr/local
+# where to install the executable files
+bindir= ${prefix}/bin
+# where to install pyformex modules: some may prefer to use ${PREFIX} 
+libdir= ${prefix}/lib
 # where to install the documentation
-DOCDIR= $(ROOTDIR)/share/doc
+docdir= ${prefix}/share/doc
 
 ############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
+include RELEASE
 
-VERSION= 0.2.1
-PYFORMEXDIR= pyformex-$(VERSION)
-INSTDIR= $(LIBDIR)/$(PYFORMEXDIR)
-DOCINSTDIR= $(DOCDIR)/$(PYFORMEXDIR)
+PYFORMEXDIR= pyformex-${VERSION}
+PYFORMEXREL= pyformex-${RELEASE}
+INSTDIR= ${libdir}/${PYFORMEXDIR}
+DOCINSTDIR= ${docdir}/${PYFORMEXDIR}
 PROGRAM= pyformex
-PYSOURCE= camera.py canvas.py colors.py draw.py flatdb.py flatkeydb.py \
-  formex.py globaldata.py gui.py helpviewer.py lima.py pyfotemp.py turtle.py \
-  units.py utils.py vector.py widgets.py
-SOURCE= $(PYSOURCE) pyformexrc
+PYSOURCE= ${addsuffix .py, ${PYMODULES}}
+SOURCE= ${PYSOURCE} pyformexrc
 ICONS= icons/*.xbm
-HTMLDIR= doc/html
-HTMLDOCS= $(addprefix $(HTMLDIR)/,$(PYSOURCE:.py=.html))
-DOCFILES= README COPYING FAQ History
-EXAMPLES= BarrelVault Baumkuchen Dome DoubleLayer Geodesic Hyparcap KochLine Lima Novation ParabolicTower ScallopDome Spiral Stars Torus
-EXAMPLES2= TrussFrame tori
-EXAMPLEFILES= $(addprefix examples/,$(addsuffix .py, $(EXAMPLES) $(EXAMPLES2) ))
-IMAGEFILES =  $(addprefix screenshots/,$(addsuffix .png,$(EXAMPLES)))
-STAMPABLE= README History Makefile TODO
-NONSTAMPABLE= COPYING 
-STAMP= Stamp 
+HTMLDIR= html
+HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}}
+EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} __init__}}
+IMAGEFILES =  ${addprefix images/,${addsuffix .png,${IMAGES}}}
+DOCFILES= README COPYING History Makefile FAQ
+
+INSTALL= install -c
+INSTALL_PROGRAM= ${INSTALL} -m 0755
+INSTALL_DATA= ${INSTALL} -m 0644
 
 .PHONY: install dist distclean
 
 all:
 	@echo "Do 'make install' to install pyformex"
 
-
 ############ User installation ######################
 
-install:
-	echo "config['docdir'] = '$(DOCINSTDIR)'" >> pyformexrc
-	install -d $(INSTDIR) $(BINDIR) $(INSTDIR)/icons $(INSTDIR)/examples $(DOCINSTDIR) $(DOCINSTDIR)/html
-	install -m 0664 $(SOURCE) $(INSTDIR)
-	install -m 0775 $(PROGRAM) $(INSTDIR)
-	install -m 0664 icons/* $(INSTDIR)/icons
-	install -m 0664 examples/* $(INSTDIR)/examples
-	install -m 0664 ${DOCFILES} $(DOCINSTDIR)
-	install -m 0664 html/* $(DOCINSTDIR)/html
-	ln -sfn $(INSTDIR)/$(PROGRAM) $(BINDIR)/$(PROGRAM)
+install: installdirs ${PROGRAM} ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES} ${HTMLDOCS}
+	echo "config['docdir'] = '${DOCINSTDIR}'" >> pyformexrc
+	${INSTALL_PROGRAM} ${PROGRAM} ${INSTDIR}
+	${INSTALL_DATA} ${SOURCE} ${INSTDIR}
+	${INSTALL_DATA} ${ICONS} ${INSTDIR}/icons
+	${INSTALL_DATA} ${EXAMPLEFILES} ${INSTDIR}/examples
+	${INSTALL_DATA} ${DOCFILES} ${DOCINSTDIR}
+	${INSTALL_DATA} ${IMAGEFILES} ${DOCINSTDIR}/images
+	${INSTALL_DATA} ${HTMLDOCS} ${DOCINSTDIR}/html
+	ln -sfn ${INSTDIR}/${PROGRAM} ${bindir}/${PROGRAM}
+
+installdirs:
+	install -d ${bindir} ${INSTDIR} ${INSTDIR}/icons ${INSTDIR}/examples ${DOCINSTDIR} ${DOCINSTDIR}/images ${DOCINSTDIR}/html
 
 uninstall:
 	echo "There is no automatic uninstall procedure."""
@@ -62,38 +62,11 @@ uninstall:
 
 ############ Creating Distribution ##################
 
-vpath %.html $(HTMLDIR)
 
-disttest:
-	@cp -f Stamp.template Stamp.template.old && sed 's/pyformex .* Release/pyformex $(VERSION) Release/' Stamp.template.old > Stamp.template
+${HTMLDIR}/%.html: %.py
+	pydoc -w ./$< && mv $*.html ${HTMLDIR}
 
-dist:	dist.stamped
+pydoc: ${HTMLDOCS}
 
-%.html: %.py
-	pydoc -w ./$< && mv $@ $(HTMLDIR)
-
-
-htmldoc: $(HTMLDOCS)
-
-distdoc: htmldoc
-
-stamp: Stamp.template
-	$(STAMP) -tStamp.template version=$(VERSION) -oStamp.stamp
-
-dist.stamped: distdoc distclean stamp
-	mkdir $(PYFORMEXDIR) $(PYFORMEXDIR)/icons $(PYFORMEXDIR)/examples $(PYFORMEXDIR)/images $(PYFORMEXDIR)/html
-	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(PROGRAM) $(SOURCE)
-	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR)/examples $(EXAMPLEFILES)
-	$(STAMP) -tStamp.stamp -d$(PYFORMEXDIR) $(STAMPABLE)
-	cp $(NONSTAMPABLE) $(PYFORMEXDIR)
-	cp -R $(ICONS)  $(PYFORMEXDIR)/icons
-	cp $(IMAGEFILES)  $(PYFORMEXDIR)/images
-	cp $(HTMLDOCS) $(PYFORMEXDIR)/html
-	tar czf $(PYFORMEXDIR).tar.gz $(PYFORMEXDIR)
-
-distclean:
-	rm -rf $(PYFORMEXDIR)
-	alldirs . "rm -f *~"
-
-#public: $(PYFORMEXDIR).tar.gz
-#	scp README $(PYFORMEXDIR).tar.gz mecatrix.ugent.be:/home/ftp/pub/pyformex
+dist: Makefile.dist pydoc
+	${MAKE} -f Makefile.dist

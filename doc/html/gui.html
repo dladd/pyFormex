@@ -1,0 +1,77 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gui</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>gui</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/gui.py">/home/bene/prj/pyformex/gui.py</a></font></td></tr></table>
+    <p><tt>Graphical&nbsp;User&nbsp;Interface&nbsp;for&nbsp;pyformex.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
+<a href="pyfotemp.html">pyfotemp</a><br>
+<a href="canvas.html">canvas</a><br>
+</td><td width="25%" valign=top><a href="draw.html">draw</a><br>
+<a href="os.html">os</a><br>
+<a href="qt.html">qt</a><br>
+</td><td width="25%" valign=top><a href="qtgl.html">qtgl</a><br>
+<a href="string.html">string</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="gui.html#GUI">GUI</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="GUI">class <strong>GUI</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Implements&nbsp;a&nbsp;<a href="#GUI">GUI</a>&nbsp;for&nbsp;pyformex.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="GUI-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Constructs&nbsp;the&nbsp;<a href="#GUI">GUI</a>.<br>
+&nbsp;<br>
+The&nbsp;<a href="#GUI">GUI</a>&nbsp;has&nbsp;a&nbsp;central&nbsp;canvas&nbsp;for&nbsp;drawing,&nbsp;a&nbsp;menubar&nbsp;and&nbsp;a&nbsp;toolbar<br>
+on&nbsp;top,&nbsp;and&nbsp;a&nbsp;statusbar&nbsp;at&nbsp;the&nbsp;bottom.</tt></dd></dl>
+
+<dl><dt><a name="GUI-showMessage"><strong>showMessage</strong></a>(self, s)</dt><dd><tt>Display&nbsp;a&nbsp;permanent&nbsp;message&nbsp;in&nbsp;the&nbsp;status&nbsp;line.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-addView"><strong>addView</strong></a>(name, angles, icon<font color="#909090">='userview.xbm'</font>, tooltip<font color="#909090">=None</font>, menutext<font color="#909090">=None</font>)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;view&nbsp;to&nbsp;the&nbsp;list&nbsp;of&nbsp;predefined&nbsp;views.<br>
+&nbsp;<br>
+This&nbsp;creates&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;with&nbsp;specified&nbsp;angles&nbsp;for&nbsp;the&nbsp;canvas.<br>
+It&nbsp;also&nbsp;creates&nbsp;a&nbsp;MyQAction&nbsp;which&nbsp;sends&nbsp;the&nbsp;name&nbsp;when&nbsp;activated,&nbsp;and<br>
+adds&nbsp;the&nbsp;MyQAction&nbsp;to&nbsp;the&nbsp;viewsMenu&nbsp;and/or&nbsp;the&nbsp;viewsBar&nbsp;if&nbsp;they&nbsp;exist.</tt></dd></dl>
+ <dl><dt><a name="-createViewAction"><strong>createViewAction</strong></a>(parent, name, icon, tooltip, menutext)</dt><dd><tt>Creates&nbsp;a&nbsp;view&nbsp;action&nbsp;and&nbsp;adds&nbsp;it&nbsp;to&nbsp;the&nbsp;menu&nbsp;and/or&nbsp;toolbar.<br>
+&nbsp;<br>
+The&nbsp;view&nbsp;action&nbsp;is&nbsp;a&nbsp;MyQAction&nbsp;which&nbsp;sends&nbsp;the&nbsp;name&nbsp;when&nbsp;activated.<br>
+It&nbsp;is&nbsp;added&nbsp;to&nbsp;the&nbsp;viewsMenu&nbsp;and/or&nbsp;the&nbsp;viewsBar&nbsp;if&nbsp;they&nbsp;exist.<br>
+The&nbsp;toolbar&nbsp;button&nbsp;has&nbsp;icon&nbsp;and&nbsp;tooltip.&nbsp;The&nbsp;menu&nbsp;item&nbsp;has&nbsp;menutext.</tt></dd></dl>
+ <dl><dt><a name="-initViewActions"><strong>initViewActions</strong></a>(parent, viewlist)</dt><dd><tt>Create&nbsp;the&nbsp;initial&nbsp;set&nbsp;of&nbsp;view&nbsp;actions.</tt></dd></dl>
+ <dl><dt><a name="-runApp"><strong>runApp</strong></a>(args)</dt><dd><tt>Create&nbsp;and&nbsp;run&nbsp;the&nbsp;qt&nbsp;application.</tt></dd></dl>
+</td></tr></table>
+</body></html>

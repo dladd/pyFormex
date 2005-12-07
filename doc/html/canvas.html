@@ -14,7 +14,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="OpenGL.GL.html">OpenGL.GL</a><br>
@@ -35,10 +35,11 @@
 <a href="numarray.numtest.html">numarray.numtest</a><br>
 <a href="operator.html">operator</a><br>
 <a href="os.html">os</a><br>
+<a href="pickle.html">pickle</a><br>
 <a href="qt.html">qt</a><br>
 <a href="qtgl.html">qtgl</a><br>
-<a href="numarray.safethread.html">numarray.safethread</a><br>
-</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="numarray.safethread.html">numarray.safethread</a><br>
+<a href="sys.html">sys</a><br>
 <a href="numarray.typeconv.html">numarray.typeconv</a><br>
 <a href="types.html">types</a><br>
 <a href="numarray.ufunc.html">numarray.ufunc</a><br>
@@ -55,7 +56,8 @@
 </font></dt><dt><font face="helvetica, arial"><a href="formex.html#Formex">formex.Formex</a>
 </font></dt><dd>
 <dl>
-<dt><font face="helvetica, arial"><a href="canvas.html#FormexActor">FormexActor</a>
+<dt><font face="helvetica, arial"><a href="canvas.html#CFormexActor">CFormexActor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="canvas.html#FormexActor">FormexActor</a>
 </font></dt></dl>
 </dd>
 <dt><font face="helvetica, arial"><a href="qtgl.html#QGLWidget">qtgl.QGLWidget</a>(<a href="qt.html#QWidget">qt.QWidget</a>, <a href="qtgl.html#QGL">qtgl.QGL</a>)
@@ -66,6 +68,552 @@
 </dd>
 </dl>
  <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CFormexActor">class <strong>CFormexActor</strong></a>(<a href="formex.html#Formex">formex.Formex</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;OpenGL&nbsp;actor&nbsp;which&nbsp;is&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;variant&nbsp;of&nbsp;the&nbsp;<a href="#FormexActor">FormexActor</a>&nbsp;allowing&nbsp;for&nbsp;multiple&nbsp;colors.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CFormexActor-__init__"><strong>__init__</strong></a>(self, F, colorset)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
+&nbsp;<br>
+The&nbsp;colors&nbsp;argument&nbsp;specifies&nbsp;a&nbsp;list&nbsp;of&nbsp;OpenGL&nbsp;colors&nbsp;for&nbsp;each<br>
+of&nbsp;the&nbsp;property&nbsp;values&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;If&nbsp;the&nbsp;list&nbsp;has&nbsp;less<br>
+values&nbsp;that&nbsp;the&nbsp;PropSet,&nbsp;it&nbsp;is&nbsp;wrapped&nbsp;around.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-draw"><strong>draw</strong></a>(self, wireframe<font color="#909090">=True</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-setMark"><strong>setMark</strong></a>(self, size, type)</dt><dd><tt>Create&nbsp;a&nbsp;symbol&nbsp;for&nbsp;drawing&nbsp;vertices.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
+<dl><dt><a name="CFormexActor-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;sum&nbsp;of&nbsp;two&nbsp;formices</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-__getitem__"><strong>__getitem__</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+This&nbsp;allows&nbsp;addressing&nbsp;element&nbsp;i&nbsp;of&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;F&nbsp;as&nbsp;F[i].</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-__setitem__"><strong>__setitem__</strong></a>(self, i, val)</dt><dd><tt>Change&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+This&nbsp;allows&nbsp;writing&nbsp;expressions&nbsp;as&nbsp;F[i]&nbsp;=&nbsp;[[1,2,3]].</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-__str__"><strong>__str__</strong></a> = asFormex(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;in&nbsp;Formian.<br>
+&nbsp;<br>
+Coordinates&nbsp;are&nbsp;separated&nbsp;by&nbsp;commas,&nbsp;points&nbsp;are&nbsp;separated<br>
+by&nbsp;semicolons&nbsp;and&nbsp;grouped&nbsp;between&nbsp;brackets,&nbsp;elements&nbsp;are<br>
+separated&nbsp;by&nbsp;commas&nbsp;and&nbsp;grouped&nbsp;between&nbsp;braces.<br>
+&gt;&gt;&gt;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>([[[1,0],[0,1]],[[0,1],[1,2]]])<br>
+&gt;&gt;&gt;&nbsp;print&nbsp;F<br>
+{[1.0,0.0,0.0;&nbsp;0.0,1.0,0.0],&nbsp;[0.0,1.0,0.0;&nbsp;1.0,2.0,0.0]}</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-affine"><strong>affine</strong></a>(self, mat, vec<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;general&nbsp;affine&nbsp;transform&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;coordinates&nbsp;given&nbsp;by&nbsp;mat&nbsp;*&nbsp;xorig&nbsp;+&nbsp;vec,<br>
+where&nbsp;mat&nbsp;is&nbsp;a&nbsp;3x3&nbsp;matrix&nbsp;and&nbsp;vec&nbsp;a&nbsp;length&nbsp;3&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-append"><strong>append</strong></a>(self, F)</dt><dd><tt>Append&nbsp;the&nbsp;members&nbsp;of&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;F&nbsp;to&nbsp;this&nbsp;one.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;changes&nbsp;the&nbsp;original&nbsp;one!&nbsp;Use&nbsp;__add__&nbsp;if&nbsp;you&nbsp;want&nbsp;to<br>
+get&nbsp;a&nbsp;copy&nbsp;with&nbsp;the&nbsp;sum.&nbsp;<br>
+&gt;&gt;&gt;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>([[[1.0,1.0,1.0]]])<br>
+&gt;&gt;&gt;&nbsp;G&nbsp;=&nbsp;F.<a href="#CFormexActor-append">append</a>(F)<br>
+&gt;&gt;&gt;&nbsp;print&nbsp;F<br>
+{[1.0,1.0,1.0],&nbsp;[1.0,1.0,1.0]}</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-asArray"><strong>asArray</strong></a>(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;as&nbsp;a&nbsp;numarray.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-asFormex"><strong>asFormex</strong></a>(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;in&nbsp;Formian.<br>
+&nbsp;<br>
+Coordinates&nbsp;are&nbsp;separated&nbsp;by&nbsp;commas,&nbsp;points&nbsp;are&nbsp;separated<br>
+by&nbsp;semicolons&nbsp;and&nbsp;grouped&nbsp;between&nbsp;brackets,&nbsp;elements&nbsp;are<br>
+separated&nbsp;by&nbsp;commas&nbsp;and&nbsp;grouped&nbsp;between&nbsp;braces.<br>
+&gt;&gt;&gt;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>([[[1,0],[0,1]],[[0,1],[1,2]]])<br>
+&gt;&gt;&gt;&nbsp;print&nbsp;F<br>
+{[1.0,0.0,0.0;&nbsp;0.0,1.0,0.0],&nbsp;[0.0,1.0,0.0;&nbsp;1.0,2.0,0.0]}</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-asFormexWithProp"><strong>asFormexWithProp</strong></a>(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;as&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;properties.<br>
+&nbsp;<br>
+The&nbsp;string&nbsp;representation&nbsp;as&nbsp;done&nbsp;by&nbsp;<a href="#CFormexActor-asFormex">asFormex</a>()&nbsp;is&nbsp;followed&nbsp;by<br>
+the&nbsp;words&nbsp;"with&nbsp;prop"&nbsp;and&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;properties.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-bb"><strong>bb</strong></a>(self, b1, b2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-bbox"><strong>bbox</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;bounding&nbsp;box&nbsp;is&nbsp;the&nbsp;smallest&nbsp;rectangular&nbsp;volume&nbsp;in&nbsp;global<br>
+coordinates,&nbsp;such&nbsp;at&nbsp;no&nbsp;points&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;are&nbsp;outside&nbsp;the<br>
+box.&nbsp;It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;list&nbsp;of&nbsp;two&nbsp;points:&nbsp;one&nbsp;with&nbsp;the<br>
+minimal&nbsp;coordinates&nbsp;and&nbsp;one&nbsp;with&nbsp;the&nbsp;maximal.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-bc"><strong>bc</strong></a>(self, b1, b2, b3)</dt></dl>
+
+<dl><dt><a name="CFormexActor-bp"><strong>bp</strong></a>(self, b1, b2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-bs"><strong>bs</strong></a>(self, b1, b2, b3)</dt></dl>
+
+<dl><dt><a name="CFormexActor-bsphere"><strong>bsphere</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;diameter&nbsp;of&nbsp;the&nbsp;bounding&nbsp;sphere&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;bounding&nbsp;sphere&nbsp;is&nbsp;the&nbsp;smallest&nbsp;sphere&nbsp;with&nbsp;center&nbsp;in&nbsp;the<br>
+<a href="#CFormexActor-center">center</a>()&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>,&nbsp;and&nbsp;such&nbsp;that&nbsp;no&nbsp;points&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a><br>
+are&nbsp;lying&nbsp;outside&nbsp;the&nbsp;sphere.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-bump"><strong>bump</strong></a>(self, dir, a, func, dist<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;a&nbsp;bump.<br>
+&nbsp;<br>
+A&nbsp;bump&nbsp;is&nbsp;a&nbsp;modification&nbsp;of&nbsp;a&nbsp;set&nbsp;of&nbsp;coordinates&nbsp;by&nbsp;a&nbsp;non-matching<br>
+point.&nbsp;It&nbsp;can&nbsp;produce&nbsp;various&nbsp;effects,&nbsp;but&nbsp;one&nbsp;of&nbsp;the&nbsp;most&nbsp;common<br>
+uses&nbsp;is&nbsp;to&nbsp;force&nbsp;a&nbsp;surface&nbsp;to&nbsp;be&nbsp;indented&nbsp;by&nbsp;some&nbsp;point.<br>
+&nbsp;<br>
+dir&nbsp;specifies&nbsp;the&nbsp;axis&nbsp;of&nbsp;the&nbsp;modified&nbsp;coordinates;<br>
+a&nbsp;is&nbsp;the&nbsp;point&nbsp;that&nbsp;forces&nbsp;the&nbsp;bumping;<br>
+func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&nbsp;intensity&nbsp;from&nbsp;distance<br>
+(!!&nbsp;func(0)&nbsp;should&nbsp;be&nbsp;different&nbsp;from&nbsp;0)<br>
+distdir&nbsp;is&nbsp;the&nbsp;direction&nbsp;in&nbsp;which&nbsp;the&nbsp;distance&nbsp;is&nbsp;measured&nbsp;:&nbsp;this&nbsp;can<br>
+be&nbsp;one&nbsp;of&nbsp;the&nbsp;axes,&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;one&nbsp;or&nbsp;more&nbsp;axes.<br>
+If&nbsp;only&nbsp;1&nbsp;axis&nbsp;is&nbsp;specified,&nbsp;the&nbsp;effect&nbsp;is&nbsp;like&nbsp;function&nbsp;bump1<br>
+If&nbsp;2&nbsp;axes&nbsp;are&nbsp;specified,&nbsp;the&nbsp;effect&nbsp;is&nbsp;like&nbsp;bump2<br>
+This&nbsp;function&nbsp;can&nbsp;take&nbsp;3&nbsp;axes&nbsp;however.<br>
+Default&nbsp;value&nbsp;is&nbsp;the&nbsp;set&nbsp;of&nbsp;3&nbsp;axes&nbsp;minus&nbsp;the&nbsp;direction&nbsp;of&nbsp;modification.<br>
+This&nbsp;function&nbsp;is&nbsp;then&nbsp;equivalent&nbsp;to&nbsp;bump2.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-bump1"><strong>bump1</strong></a>(self, dir, a, func, dist)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;a&nbsp;one-dimensional&nbsp;bump.<br>
+&nbsp;<br>
+dir&nbsp;specifies&nbsp;the&nbsp;axis&nbsp;of&nbsp;the&nbsp;modified&nbsp;coordinates;<br>
+a&nbsp;is&nbsp;the&nbsp;point&nbsp;that&nbsp;forces&nbsp;the&nbsp;bumping;<br>
+dist&nbsp;specifies&nbsp;the&nbsp;direction&nbsp;in&nbsp;which&nbsp;the&nbsp;distance&nbsp;is&nbsp;measured;<br>
+func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&nbsp;intensity&nbsp;from&nbsp;distance<br>
+!!&nbsp;func(0)&nbsp;should&nbsp;be&nbsp;different&nbsp;from&nbsp;0.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-bump2"><strong>bump2</strong></a>(self, dir, a, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;a&nbsp;two-dimensional&nbsp;bump.<br>
+&nbsp;<br>
+dir&nbsp;specifies&nbsp;the&nbsp;axis&nbsp;of&nbsp;the&nbsp;modified&nbsp;coordinates;<br>
+a&nbsp;is&nbsp;the&nbsp;point&nbsp;that&nbsp;forces&nbsp;the&nbsp;bumping;<br>
+func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&nbsp;intensity&nbsp;from&nbsp;distance<br>
+!!&nbsp;func(0)&nbsp;should&nbsp;be&nbsp;different&nbsp;from&nbsp;0.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-cantle"><strong>cantle</strong></a> = element(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a></tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-cantle2str"><strong>cantle2str</strong></a> = element2str(self, can)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;center&nbsp;of&nbsp;the&nbsp;formex&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#CFormexActor-bbox">bbox</a>().</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-circulize"><strong>circulize</strong></a>(self, angle)</dt><dd><tt>Transform&nbsp;a&nbsp;linear&nbsp;sector&nbsp;into&nbsp;a&nbsp;circular&nbsp;one.<br>
+&nbsp;<br>
+A&nbsp;sector&nbsp;of&nbsp;the&nbsp;(0,1)&nbsp;plane&nbsp;with&nbsp;given&nbsp;angle,&nbsp;starting&nbsp;from&nbsp;the&nbsp;0&nbsp;axis,<br>
+is&nbsp;transformed&nbsp;as&nbsp;follows:&nbsp;points&nbsp;on&nbsp;the&nbsp;sector&nbsp;borders&nbsp;remain&nbsp;in<br>
+place.&nbsp;Points&nbsp;inside&nbsp;the&nbsp;sector&nbsp;are&nbsp;projected&nbsp;from&nbsp;the&nbsp;center&nbsp;on&nbsp;the<br>
+circle&nbsp;through&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;the&nbsp;sector&nbsp;border&nbsp;axes&nbsp;and<br>
+the&nbsp;line&nbsp;through&nbsp;the&nbsp;point&nbsp;and&nbsp;perpendicular&nbsp;to&nbsp;the&nbsp;bisector&nbsp;of&nbsp;the<br>
+angle.&nbsp;See&nbsp;Diamatic&nbsp;example.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-circulize1"><strong>circulize1</strong></a>(self)</dt><dd><tt>Transforms&nbsp;the&nbsp;first&nbsp;octant&nbsp;of&nbsp;the&nbsp;0-1&nbsp;plane&nbsp;into&nbsp;1/6&nbsp;of&nbsp;a&nbsp;circle.<br>
+&nbsp;<br>
+Points&nbsp;on&nbsp;the&nbsp;0-axis&nbsp;keep&nbsp;their&nbsp;position.&nbsp;Lines&nbsp;parallel&nbsp;to&nbsp;the&nbsp;1-axis<br>
+are&nbsp;transformed&nbsp;into&nbsp;circular&nbsp;arcs.&nbsp;The&nbsp;bisector&nbsp;of&nbsp;the&nbsp;first&nbsp;quadrant<br>
+is&nbsp;transformed&nbsp;in&nbsp;a&nbsp;straight&nbsp;line&nbsp;at&nbsp;an&nbsp;angle&nbsp;Pi/6.<br>
+This&nbsp;function&nbsp;is&nbsp;especially&nbsp;suited&nbsp;to&nbsp;create&nbsp;circular&nbsp;domains&nbsp;where<br>
+all&nbsp;bars&nbsp;have&nbsp;nearly&nbsp;same&nbsp;length.&nbsp;See&nbsp;the&nbsp;Diamatic&nbsp;example.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-coord"><strong>coord</strong></a>(self, i, j, k)</dt><dd><tt>Return&nbsp;coord&nbsp;k&nbsp;of&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-cop"><strong>cop</strong></a> = remove(self, F)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;the&nbsp;elements&nbsp;in&nbsp;F&nbsp;have&nbsp;been&nbsp;removed.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;F.<br>
+Elements&nbsp;are&nbsp;only&nbsp;removed&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;nodes&nbsp;in&nbsp;the&nbsp;same<br>
+order.&nbsp;This&nbsp;is&nbsp;a&nbsp;slow&nbsp;operation:&nbsp;for&nbsp;large&nbsp;structures,&nbsp;you&nbsp;should<br>
+avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;itself.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-cylindrical"><strong>cylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cylindrical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
+&nbsp;<br>
+dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
+distance(r),&nbsp;angle(theta)&nbsp;and&nbsp;height(z).&nbsp;Default&nbsp;order&nbsp;is&nbsp;[r,theta,z].<br>
+scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
+(scale&nbsp;is&nbsp;given&nbsp;in&nbsp;order&nbsp;r,theta,z).<br>
+The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
+&nbsp;<br>
+The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;two&nbsp;points&nbsp;for&nbsp;each&nbsp;element:&nbsp;two&nbsp;corners<br>
+of&nbsp;the&nbsp;bbox.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a></tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-element2str"><strong>element2str</strong></a>(self, can)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-fprint"><strong>fprint</strong></a>(self, fmt<font color="#909090">='%10.3e %10.3e %10.3e'</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-genid"><strong>genid</strong></a>(self, n1, n2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-genis"><strong>genis</strong></a>(self, n1, n2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-genit"><strong>genit</strong></a>(self, n1, n2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-give"><strong>give</strong></a>()</dt></dl>
+
+<dl><dt><a name="CFormexActor-grade"><strong>grade</strong></a> = ndim(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;node.&nbsp;In&nbsp;the<br>
+current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nbsp;you&nbsp;can<br>
+define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
+will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-hasProp"><strong>hasProp</strong></a>(self, val)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;elements&nbsp;with&nbsp;property&nbsp;val.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;no&nbsp;properties,&nbsp;a&nbsp;copy&nbsp;is&nbsp;returned.<br>
+The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;always&nbsp;without&nbsp;properties.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-lam"><strong>lam</strong></a>(self, dir, dist)</dt></dl>
+
+<dl><dt><a name="CFormexActor-lamic"><strong>lamic</strong></a>(self, *args)</dt></dl>
+
+<dl><dt><a name="CFormexActor-lamid"><strong>lamid</strong></a>(self, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-lamis"><strong>lamis</strong></a>(self, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-lamit"><strong>lamit</strong></a>(self, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-map"><strong>map</strong></a>(self, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;mapped&nbsp;by&nbsp;a&nbsp;3-D&nbsp;function.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;versatile&nbsp;mapping&nbsp;functions.<br>
+func&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;three&nbsp;arguments&nbsp;and&nbsp;produces<br>
+a&nbsp;list&nbsp;of&nbsp;three&nbsp;output&nbsp;values.&nbsp;The&nbsp;coordinates&nbsp;[x,y,z]&nbsp;will&nbsp;be<br>
+replaced&nbsp;by&nbsp;func(x,y,z).<br>
+The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;to&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should<br>
+only&nbsp;include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
+numarray&nbsp;module.<br>
+This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map1&nbsp;and&nbsp;mapd.<br>
+Example:&nbsp;E.<a href="#CFormexActor-map">map</a>(lambda&nbsp;x,y,z:&nbsp;[2*x,3*y,4*z])<br>
+is&nbsp;equivalent&nbsp;with&nbsp;E.<a href="#CFormexActor-scale">scale</a>([2,3,4])</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-map1"><strong>map1</strong></a>(self, dir, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;coordinate&nbsp;i&nbsp;is&nbsp;mapped&nbsp;by&nbsp;a&nbsp;1-D&nbsp;function.<br>
+&nbsp;<br>
+&lt;func&gt;&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;one&nbsp;argument&nbsp;and&nbsp;produces<br>
+one&nbsp;result.&nbsp;The&nbsp;coordinate&nbsp;dir&nbsp;will&nbsp;be&nbsp;replaced&nbsp;by&nbsp;func(coord[dir]).<br>
+The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;on&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should&nbsp;only<br>
+include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
+numarray&nbsp;module.<br>
+This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map&nbsp;and&nbsp;mapd.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-mapd"><strong>mapd</strong></a>(self, dir, func, point, dist<font color="#909090">=None</font>)</dt><dd><tt>Maps&nbsp;one&nbsp;coordinate&nbsp;by&nbsp;a&nbsp;function&nbsp;of&nbsp;the&nbsp;distance&nbsp;to&nbsp;a&nbsp;point.<br>
+&nbsp;<br>
+&lt;func&gt;&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;one&nbsp;argument&nbsp;and&nbsp;produces<br>
+one&nbsp;result.&nbsp;The&nbsp;coordinate&nbsp;dir&nbsp;will&nbsp;be&nbsp;replaced&nbsp;by&nbsp;func(d),&nbsp;where&nbsp;&lt;d&gt;<br>
+is&nbsp;calculated&nbsp;as&nbsp;the&nbsp;distance&nbsp;to&nbsp;&lt;point&gt;.<br>
+The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;on&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should&nbsp;only<br>
+include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
+numarray&nbsp;module.<br>
+By&nbsp;default,&nbsp;the&nbsp;distance&nbsp;d&nbsp;is&nbsp;calculated&nbsp;in&nbsp;3-D,&nbsp;but&nbsp;one&nbsp;can&nbsp;specify<br>
+a&nbsp;limited&nbsp;set&nbsp;of&nbsp;axes&nbsp;to&nbsp;calculate&nbsp;a&nbsp;2-D&nbsp;or&nbsp;1-D&nbsp;distance.<br>
+This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map3&nbsp;and&nbsp;map1.<br>
+Example:&nbsp;E.<a href="#CFormexActor-mapd">mapd</a>(2,lambda&nbsp;d:sqrt(10**2-d**2),f.<a href="#CFormexActor-center">center</a>(),[0,1])<br>
+maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-ndim"><strong>ndim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;node.&nbsp;In&nbsp;the<br>
+current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nbsp;you&nbsp;can<br>
+define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
+will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-nelems"><strong>nelems</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-newmap"><strong>newmap</strong></a>(self, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;mapped&nbsp;by&nbsp;a&nbsp;3-D&nbsp;function.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;versatile&nbsp;mapping&nbsp;functions.<br>
+func&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;three&nbsp;arguments&nbsp;and&nbsp;produces<br>
+a&nbsp;list&nbsp;of&nbsp;three&nbsp;output&nbsp;values.&nbsp;The&nbsp;coordinates&nbsp;[x,y,z]&nbsp;will&nbsp;be<br>
+replaced&nbsp;by&nbsp;func(x,y,z).<br>
+The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;to&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should<br>
+only&nbsp;include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
+numarray&nbsp;module.<br>
+This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map1&nbsp;and&nbsp;mapd.<br>
+Example:&nbsp;E.<a href="#CFormexActor-map">map</a>(lambda&nbsp;x,y,z:&nbsp;[2*x,3*y,4*z])<br>
+is&nbsp;equivalent&nbsp;with&nbsp;E.<a href="#CFormexActor-scale">scale</a>([2,3,4])</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-nnodel"><strong>nnodel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
+&nbsp;<br>
+Examples:<br>
+1:&nbsp;unconnected&nbsp;nodes,<br>
+2:&nbsp;straight&nbsp;line&nbsp;elements,<br>
+3:&nbsp;triangles&nbsp;or&nbsp;quadratic&nbsp;line&nbsp;elements,<br>
+4:&nbsp;tetraeders&nbsp;or&nbsp;quadrilaterals&nbsp;or&nbsp;cubic&nbsp;line&nbsp;elements.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-nnodes"><strong>nnodes</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;in&nbsp;the&nbsp;formex.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;product&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex<br>
+with&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-nodes"><strong>nodes</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;containing&nbsp;only&nbsp;the&nbsp;nodes.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;obviously&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plexitude&nbsp;1.&nbsp;It&nbsp;holds&nbsp;the&nbsp;same&nbsp;data<br>
+as&nbsp;the&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>,&nbsp;but&nbsp;in&nbsp;another&nbsp;shape:&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes<br>
+per&nbsp;element&nbsp;is&nbsp;1,&nbsp;and&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;total<br>
+number&nbsp;of&nbsp;nodes.<br>
+The&nbsp;properties&nbsp;are&nbsp;not&nbsp;copied&nbsp;over,&nbsp;since&nbsp;they&nbsp;will&nbsp;usually&nbsp;not&nbsp;make<br>
+any&nbsp;sense.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-nodesAndElements"><strong>nodesAndElements</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
+&nbsp;<br>
+A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;first&nbsp;is&nbsp;float&nbsp;array&nbsp;with<br>
+the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
+an&nbsp;integer&nbsp;array&nbsp;with&nbsp;the&nbsp;node&nbsp;numbers&nbsp;connected&nbsp;by&nbsp;each&nbsp;element.<br>
+The&nbsp;elements&nbsp;come&nbsp;in&nbsp;the&nbsp;same&nbsp;order&nbsp;as&nbsp;they&nbsp;are&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>,&nbsp;but<br>
+the&nbsp;order&nbsp;of&nbsp;the&nbsp;nodes&nbsp;is&nbsp;unspecified.<br>
+By&nbsp;the&nbsp;way,&nbsp;the&nbsp;reverse&nbsp;operation&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;coords,elems&nbsp;=&nbsp;<a href="#CFormexActor-nodesAndElements">nodesAndElements</a>(F)<br>
+is&nbsp;accomplished&nbsp;by<br>
+&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>(coords[elems])</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-nonzero"><strong>nonzero</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;nonzero&nbsp;elements.<br>
+&nbsp;<br>
+A&nbsp;zero&nbsp;element&nbsp;is&nbsp;an&nbsp;element&nbsp;where&nbsp;all&nbsp;nodes&nbsp;are&nbsp;equal.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-order"><strong>order</strong></a> = nelems(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-pex"><strong>pex</strong></a> = unique(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;unique&nbsp;elements.<br>
+&nbsp;<br>
+Two&nbsp;elements&nbsp;are&nbsp;considered&nbsp;equal&nbsp;when&nbsp;all&nbsp;its&nbsp;nodal&nbsp;coordinates<br>
+are&nbsp;close.&nbsp;Two&nbsp;values&nbsp;are&nbsp;close&nbsp;if&nbsp;they&nbsp;are&nbsp;both&nbsp;small&nbsp;compared&nbsp;to&nbsp;atol<br>
+or&nbsp;their&nbsp;difference&nbsp;divided&nbsp;by&nbsp;the&nbsp;second&nbsp;value&nbsp;is&nbsp;small&nbsp;compared&nbsp;to<br>
+rtol.<br>
+Two&nbsp;elements&nbsp;are&nbsp;not&nbsp;considered&nbsp;equal&nbsp;if&nbsp;one's&nbsp;elements&nbsp;are&nbsp;a<br>
+permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-plexitude"><strong>plexitude</strong></a> = nnodel(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
+&nbsp;<br>
+Examples:<br>
+1:&nbsp;unconnected&nbsp;nodes,<br>
+2:&nbsp;straight&nbsp;line&nbsp;elements,<br>
+3:&nbsp;triangles&nbsp;or&nbsp;quadratic&nbsp;line&nbsp;elements,<br>
+4:&nbsp;tetraeders&nbsp;or&nbsp;quadrilaterals&nbsp;or&nbsp;cubic&nbsp;line&nbsp;elements.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-point"><strong>point</strong></a>(self, i, j)</dt><dd><tt>Return&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-point2str"><strong>point2str</strong></a>(self, sig)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-prop"><strong>prop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;properties&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-propSet"><strong>propSet</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;with&nbsp;unique&nbsp;property&nbsp;values&nbsp;on&nbsp;this&nbsp;<a href="formex.html#Formex">Formex</a>.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-ref"><strong>ref</strong></a>(self, dir, dist)</dt></dl>
+
+<dl><dt><a name="CFormexActor-reflect"><strong>reflect</strong></a>(self, dir, pos<font color="#909090">=0</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;mirrored&nbsp;in&nbsp;direction&nbsp;dir&nbsp;against&nbsp;plane&nbsp;at&nbsp;pos.<br>
+&nbsp;<br>
+Default&nbsp;position&nbsp;of&nbsp;the&nbsp;plane&nbsp;is&nbsp;through&nbsp;the&nbsp;origin.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-remove"><strong>remove</strong></a>(self, F)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;the&nbsp;elements&nbsp;in&nbsp;F&nbsp;have&nbsp;been&nbsp;removed.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;F.<br>
+Elements&nbsp;are&nbsp;only&nbsp;removed&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;nodes&nbsp;in&nbsp;the&nbsp;same<br>
+order.&nbsp;This&nbsp;is&nbsp;a&nbsp;slow&nbsp;operation:&nbsp;for&nbsp;large&nbsp;structures,&nbsp;you&nbsp;should<br>
+avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-removeProp"><strong>removeProp</strong></a>(self)</dt><dd><tt>Remove&nbsp;the&nbsp;properties&nbsp;from&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-replace"><strong>replace</strong></a>(self, i, j, other<font color="#909090">=None</font>)</dt><dd><tt>Replace&nbsp;the&nbsp;coordinates&nbsp;along&nbsp;the&nbsp;axes&nbsp;i&nbsp;by&nbsp;those&nbsp;along&nbsp;j.<br>
+&nbsp;<br>
+i&nbsp;and&nbsp;j&nbsp;are&nbsp;lists&nbsp;of&nbsp;axis&nbsp;numbers.<br>
+replace&nbsp;([0,1,2],[1,2,0])&nbsp;will&nbsp;roll&nbsp;the&nbsp;axes&nbsp;by&nbsp;1.<br>
+replace&nbsp;([0,1],[1,0])&nbsp;will&nbsp;swap&nbsp;axes&nbsp;0&nbsp;and&nbsp;1.<br>
+An&nbsp;optionally&nbsp;third&nbsp;argument&nbsp;may&nbsp;specify&nbsp;another&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;to&nbsp;take<br>
+the&nbsp;coordinates&nbsp;from.&nbsp;It&nbsp;should&nbsp;have&nbsp;the&nbsp;same&nbsp;dimensions.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-replic"><strong>replic</strong></a>(self, n, step, dir<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
+&nbsp;<br>
+The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-replic2"><strong>replic2</strong></a>(self, n1, n2, t1, t2, d1<font color="#909090">=0</font>, d2<font color="#909090">=1</font>, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt><dd><tt>Replicate&nbsp;in&nbsp;two&nbsp;directions.<br>
+&nbsp;<br>
+n1,n2&nbsp;number&nbsp;of&nbsp;replications&nbsp;with&nbsp;steps&nbsp;t1,t2&nbsp;in&nbsp;directions&nbsp;d1,d2<br>
+bias,&nbsp;taper&nbsp;:&nbsp;extra&nbsp;step&nbsp;and&nbsp;extra&nbsp;number&nbsp;of&nbsp;generations&nbsp;in&nbsp;direction<br>
+d1&nbsp;for&nbsp;each&nbsp;generation&nbsp;in&nbsp;direction&nbsp;d2</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-ric"><strong>ric</strong></a>(f)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rin"><strong>rin</strong></a>(self, dir, n, dist)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rindle"><strong>rindle</strong></a>(self, n, dir, step)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rinic"><strong>rinic</strong></a>(self, *args)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rinid"><strong>rinid</strong></a>(self, n1, n2, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rinis"><strong>rinis</strong></a>(self, n1, n2, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rinit"><strong>rinit</strong></a>(self, n1, n2, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-ros"><strong>ros</strong></a>(self, i, j, x, y, n, angle)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rosad"><strong>rosad</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rosas"><strong>rosas</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rosat"><strong>rosat</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-rosette"><strong>rosette</strong></a>(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;rotational&nbsp;replications&nbsp;with&nbsp;angular<br>
+step&nbsp;angle&nbsp;around&nbsp;an&nbsp;axis&nbsp;parallel&nbsp;with&nbsp;one&nbsp;of&nbsp;the&nbsp;coordinate&nbsp;axes<br>
+going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;axis&nbsp;(0,1,2).<br>
+point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
+The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;coordinate&nbsp;axis.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-rotateAround"><strong>rotateAround</strong></a>(self, vector, angle)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;vector.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-scale"><strong>scale</strong></a>(self, scale)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;scaled&nbsp;with&nbsp;scale[i]&nbsp;in&nbsp;direction&nbsp;i.<br>
+&nbsp;<br>
+The&nbsp;scale&nbsp;should&nbsp;be&nbsp;a&nbsp;list&nbsp;of&nbsp;3&nbsp;numbers,&nbsp;or&nbsp;a&nbsp;single&nbsp;number.<br>
+In&nbsp;the&nbsp;latter&nbsp;case,&nbsp;the&nbsp;scaling&nbsp;is&nbsp;homothetic.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-select"><strong>select</strong></a>(self, idx)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;elements&nbsp;with&nbsp;numbers&nbsp;in&nbsp;ids.<br>
+&nbsp;<br>
+idx&nbsp;can&nbsp;be&nbsp;a&nbsp;single&nbsp;element&nbsp;number&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;numbers</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-setProp"><strong>setProp</strong></a>(self, p<font color="#909090">=0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;property&nbsp;array&nbsp;for&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+You&nbsp;can&nbsp;specify&nbsp;a&nbsp;single&nbsp;value&nbsp;or&nbsp;a&nbsp;list/array&nbsp;of&nbsp;values.<br>
+If&nbsp;the&nbsp;number&nbsp;of&nbsp;passed&nbsp;values&nbsp;is&nbsp;less&nbsp;than&nbsp;the&nbsp;number&nbsp;of<br>
+elements,&nbsp;they&nbsp;are&nbsp;repeated.<br>
+The&nbsp;default&nbsp;argument&nbsp;will&nbsp;give&nbsp;all&nbsp;elements&nbsp;a&nbsp;property&nbsp;value&nbsp;0.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-shape"><strong>shape</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;shape&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;shape&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;shape&nbsp;of&nbsp;its&nbsp;data&nbsp;array,<br>
+i.e.&nbsp;a&nbsp;tuple&nbsp;(nelems,&nbsp;nnodel,&nbsp;ndim).</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-shear"><strong>shear</strong></a>(self, dir, dir1, skew)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;skewed&nbsp;in&nbsp;the&nbsp;direction&nbsp;dir&nbsp;of&nbsp;plane&nbsp;(dir,dir1).<br>
+&nbsp;<br>
+The&nbsp;coordinate&nbsp;dir&nbsp;is&nbsp;replaced&nbsp;with&nbsp;(dir&nbsp;+&nbsp;skew&nbsp;*&nbsp;dir1).</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-signet"><strong>signet</strong></a> = point(self, i, j)</dt><dd><tt>Return&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-signet2str"><strong>signet2str</strong></a> = point2str(self, sig)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-size"><strong>size</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;size&nbsp;is&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;diagonal&nbsp;of&nbsp;the&nbsp;<a href="#CFormexActor-bbox">bbox</a>().</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-sort"><strong>sort</strong></a>(self)</dt><dd><tt>Sorts&nbsp;the&nbsp;elements&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+Sorting&nbsp;is&nbsp;done&nbsp;according&nbsp;to&nbsp;the&nbsp;bbox&nbsp;of&nbsp;the&nbsp;elements.<br>
+!!&nbsp;NOT&nbsp;FULLY&nbsp;IMPLEMENTED:&nbsp;CURRENTLY&nbsp;ONLY&nbsp;SORTS&nbsp;ACCORDING&nbsp;TO<br>
+!!&nbsp;THE&nbsp;0-direction&nbsp;OF&nbsp;NODE&nbsp;0</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-spherical"><strong>spherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
+&nbsp;<br>
+&lt;dir&gt;&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
+distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;colatitude(phi).<br>
+&lt;scale&gt;&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
+Angles&nbsp;are&nbsp;then&nbsp;interpreted&nbsp;in&nbsp;degrees.<br>
+Colatitude&nbsp;is&nbsp;90&nbsp;degrees&nbsp;-&nbsp;latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured<br>
+from&nbsp;north&nbsp;pole(0)&nbsp;to&nbsp;south&nbsp;pole(180).&nbsp;This&nbsp;choice&nbsp;facilitates&nbsp;the<br>
+creation&nbsp;of&nbsp;spherical&nbsp;domes.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-swapaxes"><strong>swapaxes</strong></a>(self, i, j)</dt><dd><tt>Swap&nbsp;coordinate&nbsp;axes&nbsp;i&nbsp;and&nbsp;j</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-tic"><strong>tic</strong></a>(f)</dt></dl>
+
+<dl><dt><a name="CFormexActor-toCylindrical"><strong>toCylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cartesian&nbsp;to&nbsp;cylindrical&nbsp;coordinates.<br>
+&nbsp;<br>
+dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;axes&nbsp;are&nbsp;parallel&nbsp;to&nbsp;respectively&nbsp;the<br>
+cylindrical&nbsp;axes&nbsp;distance(r),&nbsp;angle(theta)&nbsp;and&nbsp;height(z).&nbsp;Default<br>
+order&nbsp;is&nbsp;[x,y,z].<br>
+The&nbsp;angle&nbsp;value&nbsp;is&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-toSpherical"><strong>toSpherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cartesian&nbsp;to&nbsp;spherical&nbsp;coordinates.<br>
+&nbsp;<br>
+dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;axes&nbsp;are&nbsp;parallel&nbsp;to&nbsp;respectively<br>
+the&nbsp;spherical&nbsp;axes&nbsp;distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;colatitude(phi).<br>
+Colatitude&nbsp;is&nbsp;90&nbsp;degrees&nbsp;-&nbsp;latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured<br>
+from&nbsp;north&nbsp;pole(0)&nbsp;to&nbsp;south&nbsp;pole(180).<br>
+Default&nbsp;order&nbsp;is&nbsp;[0,1,2],&nbsp;thus&nbsp;the&nbsp;equator&nbsp;plane&nbsp;is&nbsp;the&nbsp;(x,y)-plane.<br>
+The&nbsp;returned&nbsp;angle&nbsp;values&nbsp;are&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-tran"><strong>tran</strong></a>(self, dir, dist)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranad"><strong>tranad</strong></a>(self, a1, a2, b1, b2, t<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranas"><strong>tranas</strong></a>(self, a1, a2, b1, b2, t<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranat"><strong>tranat</strong></a>(self, a1, a2, b1, b2, t<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranax"><strong>tranax</strong></a>(self, a1, a2, a3, b1, b2, b3, t<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranic"><strong>tranic</strong></a>(self, *args)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranid"><strong>tranid</strong></a>(self, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranis"><strong>tranis</strong></a>(self, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranit"><strong>tranit</strong></a>(self, t1, t2)</dt></dl>
+
+<dl><dt><a name="CFormexActor-tranix"><strong>tranix</strong></a>(self, t1, t2, t3)</dt></dl>
+
+<dl><dt><a name="CFormexActor-translate"><strong>translate</strong></a>(self, vector, distance<font color="#909090">=None</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;translated&nbsp;over&nbsp;distance&nbsp;in&nbsp;direction&nbsp;of&nbsp;vector.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;distance&nbsp;is&nbsp;given,&nbsp;translation&nbsp;is&nbsp;over&nbsp;the&nbsp;specified&nbsp;vector.<br>
+If&nbsp;a&nbsp;distance&nbsp;is&nbsp;given,&nbsp;translation&nbsp;is&nbsp;over&nbsp;the&nbsp;specified&nbsp;distance<br>
+in&nbsp;the&nbsp;direction&nbsp;of&nbsp;the&nbsp;vector.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-translate1"><strong>translate1</strong></a>(self, dir, distance)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;translated&nbsp;in&nbsp;direction&nbsp;dir&nbsp;over&nbsp;distance&nbsp;dist.<br>
+&nbsp;<br>
+The&nbsp;direction&nbsp;is&nbsp;specified&nbsp;by&nbsp;the&nbsp;axis&nbsp;number&nbsp;(0,1,2).</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-translatem"><strong>translatem</strong></a>(self, *args)</dt><dd><tt>Multiple&nbsp;subsequent&nbsp;translations&nbsp;in&nbsp;axis&nbsp;directions.<br>
+&nbsp;<br>
+The&nbsp;argument&nbsp;list&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;tuples&nbsp;(axis,&nbsp;step).&nbsp;<br>
+Thus&nbsp;<a href="#CFormexActor-translatem">translatem</a>((0,x),(2,z),(1,y))&nbsp;is&nbsp;equivalent&nbsp;to<br>
+<a href="#CFormexActor-translate">translate</a>([x,y,z]).&nbsp;This&nbsp;function&nbsp;is&nbsp;especially&nbsp;conveniant<br>
+to&nbsp;translate&nbsp;in&nbsp;calculated&nbsp;directions.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-uniple"><strong>uniple</strong></a> = coord(self, i, j, k)</dt><dd><tt>Return&nbsp;coord&nbsp;k&nbsp;of&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-unique"><strong>unique</strong></a>(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;unique&nbsp;elements.<br>
+&nbsp;<br>
+Two&nbsp;elements&nbsp;are&nbsp;considered&nbsp;equal&nbsp;when&nbsp;all&nbsp;its&nbsp;nodal&nbsp;coordinates<br>
+are&nbsp;close.&nbsp;Two&nbsp;values&nbsp;are&nbsp;close&nbsp;if&nbsp;they&nbsp;are&nbsp;both&nbsp;small&nbsp;compared&nbsp;to&nbsp;atol<br>
+or&nbsp;their&nbsp;difference&nbsp;divided&nbsp;by&nbsp;the&nbsp;second&nbsp;value&nbsp;is&nbsp;small&nbsp;compared&nbsp;to<br>
+rtol.<br>
+Two&nbsp;elements&nbsp;are&nbsp;not&nbsp;considered&nbsp;equal&nbsp;if&nbsp;one's&nbsp;elements&nbsp;are&nbsp;a<br>
+permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-x"><strong>x</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x-plane&nbsp;(can&nbsp;be&nbsp;modified)</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-y"><strong>y</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y-plane&nbsp;(can&nbsp;be&nbsp;modified)</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-z"><strong>z</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;z-plane&nbsp;(can&nbsp;be&nbsp;modified)</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
+<dl><dt><a name="CFormexActor-concatenate"><strong>concatenate</strong></a>(self, list)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Concatenate&nbsp;all&nbsp;formices&nbsp;in&nbsp;list.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;method!<br>
+&gt;&gt;&gt;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>([[[1,2,3]]])<br>
+&gt;&gt;&gt;&nbsp;print&nbsp;<a href="formex.html#Formex">Formex</a>.<a href="#CFormexActor-concatenate">concatenate</a>([F,F,F])<br>
+{[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0]}</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-connect"><strong>connect</strong></a>(self, Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>#&nbsp;We&nbsp;changed&nbsp;connect&nbsp;into&nbsp;a&nbsp;global&nbsp;function,&nbsp;not&nbsp;a&nbsp;class&nbsp;method</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-globals"><strong>globals</strong></a>(self)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;the&nbsp;list&nbsp;of&nbsp;globals&nbsp;defined&nbsp;in&nbsp;this&nbsp;module.</tt></dd></dl>
+
+<dl><dt><a name="CFormexActor-setPrintFunction"><strong>setPrintFunction</strong></a>(clas, func)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Choose&nbsp;the&nbsp;default&nbsp;formatting&nbsp;for&nbsp;printing&nbsp;formices.<br>
+&nbsp;<br>
+This&nbsp;sets&nbsp;how&nbsp;formices&nbsp;will&nbsp;be&nbsp;formatted&nbsp;by&nbsp;a&nbsp;print&nbsp;statement.<br>
+Currently&nbsp;there&nbsp;are&nbsp;two&nbsp;available&nbsp;functions:&nbsp;asFormex,&nbsp;asArray.<br>
+The&nbsp;user&nbsp;may&nbsp;create&nbsp;its&nbsp;own&nbsp;formatting&nbsp;method.<br>
+This&nbsp;is&nbsp;a&nbsp;class&nbsp;function.&nbsp;It&nbsp;should&nbsp;be&nbsp;used&nbsp;asfollows:<br>
+<a href="formex.html#Formex">Formex</a>.<a href="#CFormexActor-setPrintFunction">setPrintFunction</a>(<a href="formex.html#Formex">Formex</a>.asArray).</tt></dd></dl>
+
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -87,13 +635,11 @@
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="Canvas-__init__"><strong>__init__</strong></a>(self, w<font color="#909090">=640</font>, h<font color="#909090">=480</font>, *args)</dt></dl>
+<dl><dt><a name="Canvas-__init__"><strong>__init__</strong></a>(self, w<font color="#909090">=640</font>, h<font color="#909090">=480</font>, *args)</dt><dd><tt>Initialize&nbsp;an&nbsp;empty&nbsp;canvas&nbsp;with&nbsp;default&nbsp;settings.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-addActor"><strong>addActor</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;the&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-clear"><strong>clear</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="Canvas-clearGLColor"><strong>clearGLColor</strong></a>(self, s)</dt><dd><tt>Clear&nbsp;the&nbsp;OpenGL&nbsp;widget&nbsp;with&nbsp;the&nbsp;named&nbsp;background&nbsp;color</tt></dd></dl>
 
 <dl><dt><a name="Canvas-createView"><strong>createView</strong></a>(self, name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
 &nbsp;<br>
@@ -112,10 +658,11 @@ or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position&nbsp;or&nbsp;lens.</
 
 <dl><dt><a name="Canvas-initializeGL"><strong>initializeGL</strong></a>(self)</dt><dd><tt>#&nbsp;These&nbsp;three&nbsp;are&nbsp;defined&nbsp;by&nbsp;the&nbsp;qtgl&nbsp;API</tt></dd></dl>
 
-<dl><dt><a name="Canvas-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>##&nbsp;Een&nbsp;ENTER&nbsp;keypress&nbsp;in&nbsp;het&nbsp;teken&nbsp;canvas&nbsp;stuurt&nbsp;een&nbsp;wakeup&nbsp;event.<br>
-##&nbsp;Dit&nbsp;kan&nbsp;bijvoorbeeld&nbsp;gebruikt&nbsp;worden&nbsp;om&nbsp;een&nbsp;wait&nbsp;af&nbsp;te&nbsp;breken.<br>
-##&nbsp;Wij&nbsp;zouden&nbsp;dit&nbsp;ook&nbsp;in&nbsp;de&nbsp;top-event&nbsp;handler&nbsp;kunnen&nbsp;doen&nbsp;voorzover<br>
-##&nbsp;wij&nbsp;de&nbsp;events&nbsp;hier&nbsp;niet&nbsp;afhandelen.</tt></dd></dl>
+<dl><dt><a name="Canvas-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>#&nbsp;Any&nbsp;keypress&nbsp;with&nbsp;focus&nbsp;in&nbsp;the&nbsp;canvas&nbsp;generates&nbsp;a&nbsp;'wakeup'&nbsp;signal.<br>
+#&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;break&nbsp;out&nbsp;of&nbsp;a&nbsp;wait&nbsp;status.<br>
+#&nbsp;An&nbsp;'s'&nbsp;keypress&nbsp;will&nbsp;generate&nbsp;a&nbsp;'save'&nbsp;signal.<br>
+#&nbsp;Events&nbsp;not&nbsp;handled&nbsp;here&nbsp;could&nbsp;also&nbsp;be&nbsp;handled&nbsp;by&nbsp;the&nbsp;toplevel<br>
+#&nbsp;event&nbsp;handler.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-mouseMoveEvent"><strong>mouseMoveEvent</strong></a>(self, e)</dt></dl>
 
@@ -145,18 +692,19 @@ This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;after&nbsp;changing&nbsp;drawi
 
 <dl><dt><a name="Canvas-setBbox"><strong>setBbox</strong></a>(self, bbox<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;scene&nbsp;you&nbsp;want&nbsp;to&nbsp;be&nbsp;visible.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-setColor"><strong>setColor</strong></a>(self, s)</dt><dd><tt>Set&nbsp;the&nbsp;OpenGL&nbsp;color&nbsp;to&nbsp;the&nbsp;named&nbsp;color</tt></dd></dl>
+<dl><dt><a name="Canvas-update"><strong>update</strong></a>(self)</dt><dd><tt>#&nbsp;our&nbsp;own&nbsp;name&nbsp;for&nbsp;the&nbsp;canvas&nbsp;update&nbsp;function</tt></dd></dl>
 
-<dl><dt><a name="Canvas-setView"><strong>setView</strong></a>(self, bbox<font color="#909090">=None</font>, side<font color="#909090">='front'</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;at&nbsp;one&nbsp;of&nbsp;the&nbsp;sides&nbsp;of&nbsp;the&nbsp;bbox.<br>
+<dl><dt><a name="Canvas-useView"><strong>useView</strong></a>(self, bbox<font color="#909090">=None</font>, side<font color="#909090">='front'</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;from&nbsp;one&nbsp;of&nbsp;the&nbsp;named&nbsp;views.<br>
 &nbsp;<br>
-If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;<br>
+On&nbsp;startup,&nbsp;the&nbsp;predefined&nbsp;views&nbsp;are&nbsp;'front',&nbsp;'back',&nbsp;'left',<br>
+'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.<br>
+This&nbsp;function&nbsp;does&nbsp;not&nbsp;only&nbsp;set&nbsp;the&nbsp;camera&nbsp;angles,&nbsp;but&nbsp;also<br>
+adjust&nbsp;the&nbsp;zooming.<br>
+If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;to&nbsp;view&nbsp;the<br>
+whole&nbsp;bbox.<br>
 If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nbsp;bbox&nbsp;will&nbsp;be&nbsp;used.<br>
 If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
-bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.<br>
-The&nbsp;view&nbsp;side&nbsp;can&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;predefined&nbsp;sides.&nbsp;If&nbsp;none&nbsp;is<br>
-given,&nbsp;'front'&nbsp;is&nbsp;used.</tt></dd></dl>
-
-<dl><dt><a name="Canvas-update"><strong>update</strong></a>(self)</dt><dd><tt>#&nbsp;our&nbsp;own&nbsp;name&nbsp;for&nbsp;the&nbsp;canvas&nbsp;update&nbsp;function</tt></dd></dl>
+bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
 
@@ -2182,6 +2730,10 @@ Methods inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
 &nbsp;<br>
 This&nbsp;allows&nbsp;addressing&nbsp;element&nbsp;i&nbsp;of&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;F&nbsp;as&nbsp;F[i].</tt></dd></dl>
 
+<dl><dt><a name="FormexActor-__setitem__"><strong>__setitem__</strong></a>(self, i, val)</dt><dd><tt>Change&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+This&nbsp;allows&nbsp;writing&nbsp;expressions&nbsp;as&nbsp;F[i]&nbsp;=&nbsp;[[1,2,3]].</tt></dd></dl>
+
 <dl><dt><a name="FormexActor-__str__"><strong>__str__</strong></a> = asFormex(self)</dt><dd><tt>Return&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;in&nbsp;Formian.<br>
 &nbsp;<br>
 Coordinates&nbsp;are&nbsp;separated&nbsp;by&nbsp;commas,&nbsp;points&nbsp;are&nbsp;separated<br>
@@ -2277,19 +2829,28 @@ func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&n
 
 <dl><dt><a name="FormexActor-cantle"><strong>cantle</strong></a> = element(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a></tt></dd></dl>
 
-<dl><dt><a name="FormexActor-cantle2str"><strong>cantle2str</strong></a>(self, can)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;cantle</tt></dd></dl>
+<dl><dt><a name="FormexActor-cantle2str"><strong>cantle2str</strong></a> = element2str(self, can)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
 The&nbsp;center&nbsp;of&nbsp;the&nbsp;formex&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#FormexActor-bbox">bbox</a>().</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-circulize"><strong>circulize</strong></a>(self)</dt><dd><tt>Transforms&nbsp;the&nbsp;first&nbsp;octant&nbsp;of&nbsp;the&nbsp;0-1&nbsp;plane&nbsp;into&nbsp;1/6&nbsp;of&nbsp;a&nbsp;circle.<br>
+<dl><dt><a name="FormexActor-circulize"><strong>circulize</strong></a>(self, angle)</dt><dd><tt>Transform&nbsp;a&nbsp;linear&nbsp;sector&nbsp;into&nbsp;a&nbsp;circular&nbsp;one.<br>
+&nbsp;<br>
+A&nbsp;sector&nbsp;of&nbsp;the&nbsp;(0,1)&nbsp;plane&nbsp;with&nbsp;given&nbsp;angle,&nbsp;starting&nbsp;from&nbsp;the&nbsp;0&nbsp;axis,<br>
+is&nbsp;transformed&nbsp;as&nbsp;follows:&nbsp;points&nbsp;on&nbsp;the&nbsp;sector&nbsp;borders&nbsp;remain&nbsp;in<br>
+place.&nbsp;Points&nbsp;inside&nbsp;the&nbsp;sector&nbsp;are&nbsp;projected&nbsp;from&nbsp;the&nbsp;center&nbsp;on&nbsp;the<br>
+circle&nbsp;through&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;the&nbsp;sector&nbsp;border&nbsp;axes&nbsp;and<br>
+the&nbsp;line&nbsp;through&nbsp;the&nbsp;point&nbsp;and&nbsp;perpendicular&nbsp;to&nbsp;the&nbsp;bisector&nbsp;of&nbsp;the<br>
+angle.&nbsp;See&nbsp;Diamatic&nbsp;example.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-circulize1"><strong>circulize1</strong></a>(self)</dt><dd><tt>Transforms&nbsp;the&nbsp;first&nbsp;octant&nbsp;of&nbsp;the&nbsp;0-1&nbsp;plane&nbsp;into&nbsp;1/6&nbsp;of&nbsp;a&nbsp;circle.<br>
 &nbsp;<br>
 Points&nbsp;on&nbsp;the&nbsp;0-axis&nbsp;keep&nbsp;their&nbsp;position.&nbsp;Lines&nbsp;parallel&nbsp;to&nbsp;the&nbsp;1-axis<br>
 are&nbsp;transformed&nbsp;into&nbsp;circular&nbsp;arcs.&nbsp;The&nbsp;bisector&nbsp;of&nbsp;the&nbsp;first&nbsp;quadrant<br>
 is&nbsp;transformed&nbsp;in&nbsp;a&nbsp;straight&nbsp;line&nbsp;at&nbsp;an&nbsp;angle&nbsp;Pi/6.<br>
 This&nbsp;function&nbsp;is&nbsp;especially&nbsp;suited&nbsp;to&nbsp;create&nbsp;circular&nbsp;domains&nbsp;where<br>
-all&nbsp;bars&nbsp;have&nbsp;nearly&nbsp;same&nbsp;length.&nbsp;See&nbsp;the&nbsp;Scallopdome&nbsp;example.</tt></dd></dl>
+all&nbsp;bars&nbsp;have&nbsp;nearly&nbsp;same&nbsp;length.&nbsp;See&nbsp;the&nbsp;Diamatic&nbsp;example.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-coord"><strong>coord</strong></a>(self, i, j, k)</dt><dd><tt>Return&nbsp;coord&nbsp;k&nbsp;of&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
 
@@ -2297,7 +2858,8 @@ all&nbsp;bars&nbsp;have&nbsp;nearly&nbsp;same&nbsp;length.&nbsp;See&nbsp;the&nbs
 &nbsp;<br>
 This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;F.<br>
 Elements&nbsp;are&nbsp;only&nbsp;removed&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;nodes&nbsp;in&nbsp;the&nbsp;same<br>
-order.</tt></dd></dl>
+order.&nbsp;This&nbsp;is&nbsp;a&nbsp;slow&nbsp;operation:&nbsp;for&nbsp;large&nbsp;structures,&nbsp;you&nbsp;should<br>
+avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;itself.</tt></dd></dl>
 
@@ -2306,6 +2868,7 @@ order.</tt></dd></dl>
 dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
 distance(r),&nbsp;angle(theta)&nbsp;and&nbsp;height(z).&nbsp;Default&nbsp;order&nbsp;is&nbsp;[r,theta,z].<br>
 scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
+(scale&nbsp;is&nbsp;given&nbsp;in&nbsp;order&nbsp;r,theta,z).<br>
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
@@ -2317,16 +2880,9 @@ of&nbsp;the&nbsp;bbox.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a></tt></dd></dl>
 
-<dl><dt><a name="FormexActor-generate"><strong>generate</strong></a> = replicate(self, n, dir, step)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
-&nbsp;<br>
-The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+<dl><dt><a name="FormexActor-element2str"><strong>element2str</strong></a>(self, can)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-generate2"><strong>generate2</strong></a>(self, n1, n2, d1, d2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt><dd><tt>Generate&nbsp;copies&nbsp;in&nbsp;two&nbsp;directions.<br>
-&nbsp;<br>
-n1,n2&nbsp;number&nbsp;of&nbsp;replications&nbsp;in&nbsp;direction&nbsp;d1,d2<br>
-t1,t2&nbsp;step&nbsp;in&nbsp;these&nbsp;directions<br>
-bias,&nbsp;taper&nbsp;:&nbsp;extra&nbsp;step&nbsp;and&nbsp;extra&nbsp;number&nbsp;of&nbsp;generations&nbsp;in&nbsp;direction<br>
-d1&nbsp;for&nbsp;each&nbsp;generation&nbsp;in&nbsp;direction&nbsp;d2</tt></dd></dl>
+<dl><dt><a name="FormexActor-fprint"><strong>fprint</strong></a>(self, fmt<font color="#909090">='%10.3e %10.3e %10.3e'</font>)</dt></dl>
 
 <dl><dt><a name="FormexActor-genid"><strong>genid</strong></a>(self, n1, n2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt></dl>
 
@@ -2336,11 +2892,12 @@ d1&nbsp;for&nbsp;each&nbsp;generation&nbsp;in&nbsp;direction&nbsp;d2</tt></dd></
 
 <dl><dt><a name="FormexActor-give"><strong>give</strong></a>()</dt></dl>
 
-<dl><dt><a name="FormexActor-grade"><strong>grade</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;grade&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+<dl><dt><a name="FormexActor-grade"><strong>grade</strong></a> = ndim(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
 &nbsp;<br>
-The&nbsp;grade&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions&nbsp;of&nbsp;the&nbsp;signet.<br>
-2&nbsp;=&nbsp;2D,&nbsp;3&nbsp;=&nbsp;3D.<br>
-This&nbsp;will&nbsp;always&nbsp;return&nbsp;3&nbsp;in&nbsp;the&nbsp;current&nbsp;implementation.</tt></dd></dl>
+This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;node.&nbsp;In&nbsp;the<br>
+current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nbsp;you&nbsp;can<br>
+define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
+will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-hasProp"><strong>hasProp</strong></a>(self, val)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;elements&nbsp;with&nbsp;property&nbsp;val.<br>
 &nbsp;<br>
@@ -2363,7 +2920,7 @@ This&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;versatile&nbsp;mapping&nbsp;function
 func&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;three&nbsp;arguments&nbsp;and&nbsp;produces<br>
 a&nbsp;list&nbsp;of&nbsp;three&nbsp;output&nbsp;values.&nbsp;The&nbsp;coordinates&nbsp;[x,y,z]&nbsp;will&nbsp;be<br>
 replaced&nbsp;by&nbsp;func(x,y,z).<br>
-The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;on&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should<br>
+The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;to&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should<br>
 only&nbsp;include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
 numarray&nbsp;module.<br>
 This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map1&nbsp;and&nbsp;mapd.<br>
@@ -2383,7 +2940,7 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 &nbsp;<br>
 &lt;func&gt;&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;one&nbsp;argument&nbsp;and&nbsp;produces<br>
 one&nbsp;result.&nbsp;The&nbsp;coordinate&nbsp;dir&nbsp;will&nbsp;be&nbsp;replaced&nbsp;by&nbsp;func(d),&nbsp;where&nbsp;&lt;d&gt;<br>
-i&nbsp;calculated&nbsp;as&nbsp;the&nbsp;distance&nbsp;to&nbsp;&lt;point&gt;.<br>
+is&nbsp;calculated&nbsp;as&nbsp;the&nbsp;distance&nbsp;to&nbsp;&lt;point&gt;.<br>
 The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;on&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should&nbsp;only<br>
 include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
 numarray&nbsp;module.<br>
@@ -2393,11 +2950,40 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 Example:&nbsp;E.<a href="#FormexActor-mapd">mapd</a>(2,lambda&nbsp;d:sqrt(10**2-d**2),f.<a href="#FormexActor-center">center</a>(),[0,1])<br>
 maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+<dl><dt><a name="FormexActor-ndim"><strong>ndim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;node.&nbsp;In&nbsp;the<br>
+current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nbsp;you&nbsp;can<br>
+define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
+will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-nnodel"><strong>nnodel</strong></a>(self)</dt></dl>
+<dl><dt><a name="FormexActor-nelems"><strong>nelems</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+<dl><dt><a name="FormexActor-newmap"><strong>newmap</strong></a>(self, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;mapped&nbsp;by&nbsp;a&nbsp;3-D&nbsp;function.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;versatile&nbsp;mapping&nbsp;functions.<br>
+func&nbsp;is&nbsp;a&nbsp;numerical&nbsp;function&nbsp;which&nbsp;takes&nbsp;three&nbsp;arguments&nbsp;and&nbsp;produces<br>
+a&nbsp;list&nbsp;of&nbsp;three&nbsp;output&nbsp;values.&nbsp;The&nbsp;coordinates&nbsp;[x,y,z]&nbsp;will&nbsp;be<br>
+replaced&nbsp;by&nbsp;func(x,y,z).<br>
+The&nbsp;function&nbsp;must&nbsp;be&nbsp;applicable&nbsp;to&nbsp;numarrays,&nbsp;so&nbsp;it&nbsp;should<br>
+only&nbsp;include&nbsp;numerical&nbsp;operations&nbsp;and&nbsp;functions&nbsp;understood&nbsp;by&nbsp;the<br>
+numarray&nbsp;module.<br>
+This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map1&nbsp;and&nbsp;mapd.<br>
+Example:&nbsp;E.<a href="#FormexActor-map">map</a>(lambda&nbsp;x,y,z:&nbsp;[2*x,3*y,4*z])<br>
+is&nbsp;equivalent&nbsp;with&nbsp;E.<a href="#FormexActor-scale">scale</a>([2,3,4])</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-nnodel"><strong>nnodel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
+&nbsp;<br>
+Examples:<br>
+1:&nbsp;unconnected&nbsp;nodes,<br>
+2:&nbsp;straight&nbsp;line&nbsp;elements,<br>
+3:&nbsp;triangles&nbsp;or&nbsp;quadratic&nbsp;line&nbsp;elements,<br>
+4:&nbsp;tetraeders&nbsp;or&nbsp;quadrilaterals&nbsp;or&nbsp;cubic&nbsp;line&nbsp;elements.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-nnodes"><strong>nnodes</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;in&nbsp;the&nbsp;formex.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;product&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex<br>
+with&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-nodes"><strong>nodes</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;containing&nbsp;only&nbsp;the&nbsp;nodes.<br>
 &nbsp;<br>
@@ -2412,15 +2998,19 @@ any&nbsp;sense.</tt></dd></dl>
 &nbsp;<br>
 A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;first&nbsp;is&nbsp;float&nbsp;array&nbsp;with<br>
 the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
-an&nbsp;integer&nbsp;array&nbsp;with&nbsp;the&nbsp;node&nbsp;numbers&nbsp;connected&nbsp;by&nbsp;each&nbsp;element.</tt></dd></dl>
+an&nbsp;integer&nbsp;array&nbsp;with&nbsp;the&nbsp;node&nbsp;numbers&nbsp;connected&nbsp;by&nbsp;each&nbsp;element.<br>
+The&nbsp;elements&nbsp;come&nbsp;in&nbsp;the&nbsp;same&nbsp;order&nbsp;as&nbsp;they&nbsp;are&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>,&nbsp;but<br>
+the&nbsp;order&nbsp;of&nbsp;the&nbsp;nodes&nbsp;is&nbsp;unspecified.<br>
+By&nbsp;the&nbsp;way,&nbsp;the&nbsp;reverse&nbsp;operation&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;coords,elems&nbsp;=&nbsp;<a href="#FormexActor-nodesAndElements">nodesAndElements</a>(F)<br>
+is&nbsp;accomplished&nbsp;by<br>
+&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>(coords[elems])</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-nonzero"><strong>nonzero</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;nonzero&nbsp;elements.<br>
 &nbsp;<br>
 A&nbsp;zero&nbsp;element&nbsp;is&nbsp;an&nbsp;element&nbsp;where&nbsp;all&nbsp;nodes&nbsp;are&nbsp;equal.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-order"><strong>order</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a><br>
-&nbsp;<br>
-The&nbsp;order&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.</tt></dd></dl>
+<dl><dt><a name="FormexActor-order"><strong>order</strong></a> = nelems(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-pex"><strong>pex</strong></a> = unique(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;unique&nbsp;elements.<br>
 &nbsp;<br>
@@ -2431,12 +3021,17 @@ rtol.<br>
 Two&nbsp;elements&nbsp;are&nbsp;not&nbsp;considered&nbsp;equal&nbsp;if&nbsp;one's&nbsp;elements&nbsp;are&nbsp;a<br>
 permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-plexitude"><strong>plexitude</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;plexitude&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a><br>
+<dl><dt><a name="FormexActor-plexitude"><strong>plexitude</strong></a> = nnodel(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
 &nbsp;<br>
-The&nbsp;plexitude&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;number&nbsp;of&nbsp;nodes&nbsp;in&nbsp;each&nbsp;cantle.<br>
-1&nbsp;=&nbsp;node,&nbsp;2&nbsp;=&nbsp;bar,&nbsp;3&nbsp;=&nbsp;triangle,&nbsp;4=&nbsp;quadrilateral,&nbsp;etc.</tt></dd></dl>
+Examples:<br>
+1:&nbsp;unconnected&nbsp;nodes,<br>
+2:&nbsp;straight&nbsp;line&nbsp;elements,<br>
+3:&nbsp;triangles&nbsp;or&nbsp;quadratic&nbsp;line&nbsp;elements,<br>
+4:&nbsp;tetraeders&nbsp;or&nbsp;quadrilaterals&nbsp;or&nbsp;cubic&nbsp;line&nbsp;elements.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-point"><strong>point</strong></a>(self, i, j)</dt><dd><tt>Return&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-point2str"><strong>point2str</strong></a>(self, sig)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-prop"><strong>prop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;properties&nbsp;as&nbsp;a&nbsp;numarray</tt></dd></dl>
 
@@ -2452,7 +3047,8 @@ Default&nbsp;position&nbsp;of&nbsp;the&nbsp;plane&nbsp;is&nbsp;through&nbsp;the&
 &nbsp;<br>
 This&nbsp;is&nbsp;also&nbsp;the&nbsp;subtraction&nbsp;of&nbsp;the&nbsp;current&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;F.<br>
 Elements&nbsp;are&nbsp;only&nbsp;removed&nbsp;if&nbsp;they&nbsp;have&nbsp;the&nbsp;same&nbsp;nodes&nbsp;in&nbsp;the&nbsp;same<br>
-order.</tt></dd></dl>
+order.&nbsp;This&nbsp;is&nbsp;a&nbsp;slow&nbsp;operation:&nbsp;for&nbsp;large&nbsp;structures,&nbsp;you&nbsp;should<br>
+avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-removeProp"><strong>removeProp</strong></a>(self)</dt><dd><tt>Remove&nbsp;the&nbsp;properties&nbsp;from&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>.</tt></dd></dl>
 
@@ -2464,14 +3060,13 @@ replace&nbsp;([0,1],[1,0])&nbsp;will&nbsp;swap&nbsp;axes&nbsp;0&nbsp;and&nbsp;1.
 An&nbsp;optionally&nbsp;third&nbsp;argument&nbsp;may&nbsp;specify&nbsp;another&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;to&nbsp;take<br>
 the&nbsp;coordinates&nbsp;from.&nbsp;It&nbsp;should&nbsp;have&nbsp;the&nbsp;same&nbsp;dimensions.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-replicate"><strong>replicate</strong></a>(self, n, dir, step)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
+<dl><dt><a name="FormexActor-replic"><strong>replic</strong></a>(self, n, step, dir<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
 &nbsp;<br>
 The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-replicate2"><strong>replicate2</strong></a> = generate2(self, n1, n2, d1, d2, t1, t2, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt><dd><tt>Generate&nbsp;copies&nbsp;in&nbsp;two&nbsp;directions.<br>
+<dl><dt><a name="FormexActor-replic2"><strong>replic2</strong></a>(self, n1, n2, t1, t2, d1<font color="#909090">=0</font>, d2<font color="#909090">=1</font>, bias<font color="#909090">=0</font>, taper<font color="#909090">=0</font>)</dt><dd><tt>Replicate&nbsp;in&nbsp;two&nbsp;directions.<br>
 &nbsp;<br>
-n1,n2&nbsp;number&nbsp;of&nbsp;replications&nbsp;in&nbsp;direction&nbsp;d1,d2<br>
-t1,t2&nbsp;step&nbsp;in&nbsp;these&nbsp;directions<br>
+n1,n2&nbsp;number&nbsp;of&nbsp;replications&nbsp;with&nbsp;steps&nbsp;t1,t2&nbsp;in&nbsp;directions&nbsp;d1,d2<br>
 bias,&nbsp;taper&nbsp;:&nbsp;extra&nbsp;step&nbsp;and&nbsp;extra&nbsp;number&nbsp;of&nbsp;generations&nbsp;in&nbsp;direction<br>
 d1&nbsp;for&nbsp;each&nbsp;generation&nbsp;in&nbsp;direction&nbsp;d2</tt></dd></dl>
 
@@ -2479,9 +3074,7 @@ d1&nbsp;for&nbsp;each&nbsp;generation&nbsp;in&nbsp;direction&nbsp;d2</tt></dd></
 
 <dl><dt><a name="FormexActor-rin"><strong>rin</strong></a>(self, dir, n, dist)</dt></dl>
 
-<dl><dt><a name="FormexActor-rindle"><strong>rindle</strong></a> = replicate(self, n, dir, step)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
-&nbsp;<br>
-The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+<dl><dt><a name="FormexActor-rindle"><strong>rindle</strong></a>(self, n, dir, step)</dt></dl>
 
 <dl><dt><a name="FormexActor-rinic"><strong>rinic</strong></a>(self, *args)</dt></dl>
 
@@ -2499,7 +3092,7 @@ The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&
 
 <dl><dt><a name="FormexActor-rosat"><strong>rosat</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
 
-<dl><dt><a name="FormexActor-rosette"><strong>rosette</strong></a>(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;rotational&nbsp;replications&nbsp;with&nbsp;angular<br>
+<dl><dt><a name="FormexActor-rosette"><strong>rosette</strong></a>(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;rotational&nbsp;replications&nbsp;with&nbsp;angular<br>
 step&nbsp;angle&nbsp;around&nbsp;an&nbsp;axis&nbsp;parallel&nbsp;with&nbsp;one&nbsp;of&nbsp;the&nbsp;coordinate&nbsp;axes<br>
 going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;axis&nbsp;(0,1,2).<br>
 point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
@@ -2528,7 +3121,7 @@ The&nbsp;default&nbsp;argument&nbsp;will&nbsp;give&nbsp;all&nbsp;elements&nbsp;a
 <dl><dt><a name="FormexActor-shape"><strong>shape</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;shape&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
 The&nbsp;shape&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;shape&nbsp;of&nbsp;its&nbsp;data&nbsp;array,<br>
-i.e.&nbsp;a&nbsp;tuple&nbsp;(order,&nbsp;plexitude,&nbsp;grade)</tt></dd></dl>
+i.e.&nbsp;a&nbsp;tuple&nbsp;(nelems,&nbsp;nnodel,&nbsp;ndim).</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-shear"><strong>shear</strong></a>(self, dir, dir1, skew)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;skewed&nbsp;in&nbsp;the&nbsp;direction&nbsp;dir&nbsp;of&nbsp;plane&nbsp;(dir,dir1).<br>
 &nbsp;<br>
@@ -2536,7 +3129,7 @@ The&nbsp;coordinate&nbsp;dir&nbsp;is&nbsp;replaced&nbsp;with&nbsp;(dir&nbsp;+&nb
 
 <dl><dt><a name="FormexActor-signet"><strong>signet</strong></a> = point(self, i, j)</dt><dd><tt>Return&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-signet2str"><strong>signet2str</strong></a>(self, sig)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;signet</tt></dd></dl>
+<dl><dt><a name="FormexActor-signet2str"><strong>signet2str</strong></a> = point2str(self, sig)</dt><dd><tt>Returns&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-size"><strong>size</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
@@ -2610,7 +3203,7 @@ The&nbsp;direction&nbsp;is&nbsp;specified&nbsp;by&nbsp;the&nbsp;axis&nbsp;number
 
 <dl><dt><a name="FormexActor-translatem"><strong>translatem</strong></a>(self, *args)</dt><dd><tt>Multiple&nbsp;subsequent&nbsp;translations&nbsp;in&nbsp;axis&nbsp;directions.<br>
 &nbsp;<br>
-The&nbsp;argument&nbsp;list&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;tuples&nbsp;(axis&nbsp;number,&nbsp;step).&nbsp;<br>
+The&nbsp;argument&nbsp;list&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;tuples&nbsp;(axis,&nbsp;step).&nbsp;<br>
 Thus&nbsp;<a href="#FormexActor-translatem">translatem</a>((0,x),(2,z),(1,y))&nbsp;is&nbsp;equivalent&nbsp;to<br>
 <a href="#FormexActor-translate">translate</a>([x,y,z]).&nbsp;This&nbsp;function&nbsp;is&nbsp;especially&nbsp;conveniant<br>
 to&nbsp;translate&nbsp;in&nbsp;calculated&nbsp;directions.</tt></dd></dl>
@@ -2641,23 +3234,7 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;
 &gt;&gt;&gt;&nbsp;print&nbsp;<a href="formex.html#Formex">Formex</a>.<a href="#FormexActor-concatenate">concatenate</a>([F,F,F])<br>
 {[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0]}</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-connect"><strong>connect</strong></a>(self, Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;connects&nbsp;the&nbsp;formices&nbsp;in&nbsp;list.<br>
-&nbsp;<br>
-This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;method!<br>
-Flist&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;formices,&nbsp;nodid&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;nod&nbsp;ids&nbsp;and<br>
-bias&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;element&nbsp;bias&nbsp;values.&nbsp;All&nbsp;lists&nbsp;should&nbsp;have<br>
-the&nbsp;same&nbsp;length.<br>
-The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;a&nbsp;plexitude&nbsp;equal&nbsp;to&nbsp;the&nbsp;number&nbsp;of<br>
-formices&nbsp;in&nbsp;list.&nbsp;Each&nbsp;element&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;consist&nbsp;of&nbsp;a&nbsp;node&nbsp;from<br>
-the&nbsp;corresponding&nbsp;element&nbsp;of&nbsp;each&nbsp;of&nbsp;the&nbsp;formices&nbsp;in&nbsp;list.&nbsp;By&nbsp;default<br>
-this&nbsp;will&nbsp;be&nbsp;the&nbsp;first&nbsp;node&nbsp;of&nbsp;that&nbsp;element,&nbsp;but&nbsp;a&nbsp;nodid&nbsp;list&nbsp;may&nbsp;be<br>
-given&nbsp;to&nbsp;specify&nbsp;the&nbsp;node&nbsp;id&nbsp;to&nbsp;be&nbsp;used&nbsp;for&nbsp;each&nbsp;of&nbsp;the&nbsp;formices.<br>
-Finally,&nbsp;a&nbsp;list&nbsp;of&nbsp;bias&nbsp;values&nbsp;may&nbsp;be&nbsp;given&nbsp;to&nbsp;specify&nbsp;an&nbsp;offset&nbsp;in<br>
-element&nbsp;number&nbsp;for&nbsp;the&nbsp;subsequent&nbsp;formices.<br>
-If&nbsp;loop==False,&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;will&nbsp;be&nbsp;the&nbsp;minimum&nbsp;order&nbsp;of<br>
-the&nbsp;formices&nbsp;in&nbsp;Flist,&nbsp;each&nbsp;minus&nbsp;its&nbsp;respective&nbsp;bias.&nbsp;By&nbsp;setting<br>
-loop=True&nbsp;however,&nbsp;each&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;will&nbsp;loop&nbsp;around&nbsp;if&nbsp;its&nbsp;end&nbsp;is<br>
-encountered,&nbsp;and&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;result&nbsp;is&nbsp;the&nbsp;maximum&nbsp;order&nbsp;in&nbsp;Flist.</tt></dd></dl>
+<dl><dt><a name="FormexActor-connect"><strong>connect</strong></a>(self, Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>#&nbsp;We&nbsp;changed&nbsp;connect&nbsp;into&nbsp;a&nbsp;global&nbsp;function,&nbsp;not&nbsp;a&nbsp;class&nbsp;method</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-globals"><strong>globals</strong></a>(self)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;the&nbsp;list&nbsp;of&nbsp;globals&nbsp;defined&nbsp;in&nbsp;this&nbsp;module.</tt></dd></dl>
 

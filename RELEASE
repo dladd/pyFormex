@@ -1,3 +1,13 @@
 # pyFormex version
 VERSION=0.2.2
 RELEASE=${VERSION}-pre1
+PYMODULES= camera canvas colors draw flatdb flatkeydb \
+  formex globaldata gui helpviewer lima pyfotemp turtle \
+  units utils vector widgets
+EXAMPLES= BarrelVault Baumkuchen Diamatic DoubleDiamatic DoubleLayer \
+  Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
+  ScallopDome Schwedler SpaceTrussRoof Spiral Stars Torus TrussBridge \
+  TrussFrame WireStent X_truss X_truss_analysis X_truss_draw
+IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
+  Lima Novation ParabolicTower ScallopDome SpaceTrussRoof Spiral Stars \
+  Torus WireStent

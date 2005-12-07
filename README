@@ -48,16 +48,6 @@ Remove the symbolic link to the pyformex program.
 Remove the pyformex doc files.
 
 
-Why Python:
-----------
-Because
- - it is very easy to learn (See www.python.org)
- - it is extremely powerful (More on www.python.org)
- - I just like to use it
-If needed though, in future releases some speed critical parts may
-be implemented in C++.
-
-
 ToDo:
 ----
 A LOT!

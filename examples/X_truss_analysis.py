@@ -114,6 +114,9 @@ draw(results,color=colorval)
 colorval[:,1] = sval
 clear()
 draw(results,color=colorval)
-# change background to black 
+# change background color
 sleep(2)   # we need a sleep here
 bgcolor(darkgrey)
+# change back
+sleep(2)   # we need a sleep here
+bgcolor(lightgrey)
