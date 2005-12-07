@@ -1,12 +1,6 @@
+#!/usr/bin/env python
 # Definition of some RGB colors
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
 
 black   = (0.0, 0.0, 0.0)
 red     = (1.0, 0.0, 0.0)

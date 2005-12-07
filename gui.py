@@ -78,7 +78,6 @@ class GUI:
         """
         global viewsMenu,viewsBar
         wd,ht = (GD.config['width'],GD.config['height'])
-        print wd,ht
         self.main = qt.QMainWindow()
         self.main.setCaption(GD.Version)
         self.main.resize(wd,ht)

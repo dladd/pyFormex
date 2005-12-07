@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # $Id$
+"""A collection of misc. utility functions."""
 
 def imageFormatFromExt(ext):
     """Determine the image format from an extension.
@@ -32,6 +33,28 @@ def splitEndDigits(s):
     if not s[i].isdigit():
         i += 1
     return ( s[:i], s[i:] )
+
+def stuur(x,xval,yval,exp=2.5):
+    """Returns a (non)linear response on the input x.
+
+    xval and yval should be lists of 3 values: [xmin,x0,xmax], [ymin,y0,ymax].
+    Together with the exponent exp, they define the response curve as function
+    of x. With an exponent > 0, the variation will be slow in the neighbourhood
+    of (x0,y0). For values x < xmin or x > xmax, the limit value ymin or ymax
+    is returned.
+    """
+    xmin,x0,xmax = xval
+    ymin,y0,ymax = yval 
+    if x < xmin:
+        return ymin
+    elif x < x0:
+        xr = float(x-x0) / (xmin-x0)
+        return y0 + (ymin-y0) * xr**exp
+    elif x < xmax:
+        xr = float(x-x0) / (xmax-x0)
+        return y0 + (ymax-y0) * xr**exp
+    else:
+        return ymax
 
 def interrogate(item):
     """Print useful information about item."""

@@ -14,7 +14,7 @@ truss = X_truss(n,l,h)
 
 # draw it
 clear()
-draw(truss.allNodes())
+draw(truss.allNodes(),wait=False)
 draw(truss.allBars())
 
 # assign property numbers
@@ -51,7 +51,7 @@ props = model.prop()
 propset = model.propSet()
 
 clear()
-draw(Formex(reshape(coords,(coords.shape[0],1,coords.shape[1]))))
+draw(Formex(reshape(coords,(coords.shape[0],1,coords.shape[1]))),wait=False)
 draw(model)
 
 # import analysis module
@@ -85,38 +85,43 @@ loads[:,0]=AssembleVector(loads[:,0],[ 0.0, -50.0, 0.0 ],bcon[nr_loaded,:])
 #warning("performing analysis: this may take some time")
 displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
 
-pf = abs(frc.astype(Int))
-results = Formex(coords[elems],pf)
+# Creating a formex for displaying results is fairly easy
+results = Formex(coords[elems],range(nelems))
 
 clear()
 draw(results)
 
-clear()
-draw(results,color=green)
-
+# Now try to give the formex some meaingful colors
 # Even though there is only one resultant force per element, and only
 # one load case, the frc array returned by static will still have shape
 # (nelems,1,1). We select the results in a onedimensional vector val. 
 val = frc[:,0,0]
+
+# First : do it ourself
 vmin = val.min()
 vmax = val.max()
 rng = vmax-vmin
 # scale it
 sval = (val-vmin) / (vmax-vmin)
-# create colors
+# create colors with a black to red scale
 colorval = zeros((nelems,3),Float)
-# plot with a red scale
 colorval[:,0] = sval
 aprint(colorval,header=['Red','Green','Blue'])
 clear()
 draw(results,color=colorval)
-# plot with a yellow scale
-colorval[:,1] = sval
+
+# Second way : use the colorscale module
+from colorscale import *
+CS = ColorScale('BGR',vmin,vmax,0.)
+cval = array(map(CS.color,val))
+aprint(cval,header=['Red','Green','Blue'])
 clear()
-draw(results,color=colorval)
-# change background color
-sleep(2)   # we need a sleep here
-bgcolor(darkgrey)
-# change back
-sleep(2)   # we need a sleep here
-bgcolor(lightgrey)
+draw(results,color=cval)
+
+# show some other color cales:
+
+for palet in [ 'RGB', 'BWR', 'GWB', 'BW' ]:
+    CS = ColorScale(palet,vmin,vmax,0.)
+    cval = array(map(CS.color,val))
+    clear()
+    draw(results,color=cval)

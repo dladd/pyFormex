@@ -28,29 +28,8 @@ import qtgl
 from colors import *
 from formex import *
 from camera import *
+from utils import stuur
 import vector
-
-def stuur(x,xval,yval,exp=2.5):
-    """Returns a nonlinear response on the input x.
-
-    xval and yval should be lists of 3 values: [xmin,x0,xmax], [ymin,y0,ymax].
-    Together with the exponent exp, they define the response curve as function
-    of x. With an exponent > 0, the variation will be slow in the neighbourhood
-    of (x0,y0). For values x < xmin or x > xmax, the limit value ymin or ymax
-    is returned.
-    """
-    xmin,x0,xmax = xval
-    ymin,y0,ymax = yval 
-    if x < xmin:
-        return ymin
-    elif x < x0:
-        xr = float(x-x0) / (xmin-x0)
-        return y0 + (ymin-y0) * xr**exp
-    elif x < xmax:
-        xr = float(x-x0) / (xmax-x0)
-        return y0 + (ymax-y0) * xr**exp
-    else:
-        return ymax
 
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
