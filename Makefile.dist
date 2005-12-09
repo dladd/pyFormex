@@ -17,7 +17,7 @@ EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES =  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 STAMP= Stamp 
 VERSIONSTRING= "pyFormex .*"
-NEWVERSIONSTRING= "pyFormex ${PYFORMEX_RELEASE}"
+NEWVERSIONSTRING= "pyFormex ${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= releases
 
@@ -25,10 +25,8 @@ PKGDIR= releases
 
 ############ Creating Distribution ##################
 
-vpath %.html ${HTMLDIR}
-
-%.html: %.py
-	pydoc -w ./$< && mv $@ ${HTMLDIR}
+${HTMLDIR}/%.html: %.py
+	pydoc -w ./$< && mv $*.html ${HTMLDIR}
 
 dist:	${PYFORMEXDIR}
 	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}

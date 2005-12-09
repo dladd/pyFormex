@@ -1,4 +1,4 @@
-#!/usr/bin/env pyfromex
+#!/usr/bin/env pyformex
 # $Id$
 #
 """Wire Stent"""
@@ -60,8 +60,11 @@ class WireStent:
 clear()
 F = WireStent(10.,200.,12,12,4,1.).all()
 draw(F)
-##G = WireStent(8.,200.,12,12,4,1.).all()
-##
-##draw(G)
-##draw(F.translate([0.,30.,0.]))
-     
+setview('myview1',(30.,0.,0.))
+view('myview1',True)
+
+# double
+G = WireStent(8.,200.,12,12,4,1.).all()
+draw(G)
+draw(F.translate([0.,30.,0.]))
+

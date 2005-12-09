@@ -9,7 +9,7 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>utils</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/utils.py">/home/bene/prj/pyformex/utils.py</a></font></td></tr></table>
-    <p><tt>#&nbsp;$Id:&nbsp;utils.py&nbsp;54&nbsp;2005-12-06&nbsp;14:48:37Z&nbsp;bverheg&nbsp;$</tt></p>
+    <p><tt>A&nbsp;collection&nbsp;of&nbsp;misc.&nbsp;utility&nbsp;functions.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
@@ -28,5 +28,12 @@ If&nbsp;the&nbsp;supplied&nbsp;extension&nbsp;is&nbsp;empty,&nbsp;the&nbsp;defau
 &nbsp;<br>
 A&nbsp;string&nbsp;like&nbsp;'abc-0123'&nbsp;will&nbsp;be&nbsp;split&nbsp;in&nbsp;'abc-'&nbsp;and&nbsp;'0123'.<br>
 Any&nbsp;of&nbsp;both&nbsp;can&nbsp;be&nbsp;empty.</tt></dd></dl>
+ <dl><dt><a name="-stuur"><strong>stuur</strong></a>(x, xval, yval, exp<font color="#909090">=2.5</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;(non)linear&nbsp;response&nbsp;on&nbsp;the&nbsp;input&nbsp;x.<br>
+&nbsp;<br>
+xval&nbsp;and&nbsp;yval&nbsp;should&nbsp;be&nbsp;lists&nbsp;of&nbsp;3&nbsp;values:&nbsp;[xmin,x0,xmax],&nbsp;[ymin,y0,ymax].<br>
+Together&nbsp;with&nbsp;the&nbsp;exponent&nbsp;exp,&nbsp;they&nbsp;define&nbsp;the&nbsp;response&nbsp;curve&nbsp;as&nbsp;function<br>
+of&nbsp;x.&nbsp;With&nbsp;an&nbsp;exponent&nbsp;&gt;&nbsp;0,&nbsp;the&nbsp;variation&nbsp;will&nbsp;be&nbsp;slow&nbsp;in&nbsp;the&nbsp;neighbourhood<br>
+of&nbsp;(x0,y0).&nbsp;For&nbsp;values&nbsp;x&nbsp;&lt;&nbsp;xmin&nbsp;or&nbsp;x&nbsp;&gt;&nbsp;xmax,&nbsp;the&nbsp;limit&nbsp;value&nbsp;ymin&nbsp;or&nbsp;ymax<br>
+is&nbsp;returned.</tt></dd></dl>
 </td></tr></table>
 </body></html>

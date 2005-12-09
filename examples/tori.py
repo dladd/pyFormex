@@ -17,11 +17,11 @@ def torus(m,n):
     return H
 
 for m in [3,4,6,12,36]:
-    side='front'
+    view='front'
     for n in [3,4,6,8,12]:
         clear()
-        draw(torus(m,n),side)
-        side=None
+        draw(torus(m,n),view)
+        view=None
         
 
 clear()

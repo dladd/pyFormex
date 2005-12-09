@@ -13,9 +13,9 @@
 m = 36 # number of cells along torus big circle
 n = 10 # number of cells along torus small circle
 # First create a long rectangle
-def drawit(F,side='front'):
+def drawit(F,view='front'):
     clear()
-    draw(F,side)
+    draw(F,view)
     
 F = Formex(pattern("164"),[1,2,3]); drawit(F)
 F = F.replic(m,1,0); drawit(F)

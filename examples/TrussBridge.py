@@ -19,7 +19,7 @@ clear()
 
 # We start with the bottom girder, and copy it to the top
 nodes = Formex([[[0,0,b]]]).replic(n+1,Lm)
-draw(nodes)
+draw(nodes,'iso')
 bot_gird = Formex.connect([nodes,nodes],bias=[0,1])
 top_gird = bot_gird.translate([0,H,0])
 
@@ -42,8 +42,7 @@ braces.setProp(2)
 # Wind bracing
 nodes1 = nodes.select([2*i for i in range(n/2+1)]).translate([0,0,-Bi])
 nodes2 = nodes.select([2*i+1 for i in range(n/2)]).translate([0,0,-Bi]).reflect(2)
-draw(nodes1)
-draw(nodes2)
+draw(nodes1+nodes2)
 wind_bracing = Formex.connect([nodes1,nodes2]) + Formex.connect([nodes2,nodes1],bias=[0,1])
 wind_bracing.setProp(5)
 
@@ -58,4 +57,4 @@ draw(half_bridge+central)
 bridge = half_bridge + half_bridge.reflect(0) + central
 
 clear()
-draw(bridge,'iso')
+draw(bridge)

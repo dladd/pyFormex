@@ -5,10 +5,14 @@
 import globaldata as GD
 from formex import *
 from canvas import *
+from colors import *
 import gui
-#import pyfotemp as PT
 import threading
 
+class Exit(Exception):
+    """Exception raised to exit from a running script."""
+    pass    
+    
 def wireframe():
     global allowwait
     GD.canvas.glinit("wireframe")
@@ -27,6 +31,12 @@ def message(s):
     Currently, messages are shown in the status bar."""
     if GD.gui:
         GD.gui.showMessage(s)
+    else:
+        print s
+
+def warning(s):
+    if GD.gui:
+        GD.gui.showWarning(s)
     else:
         print s
     
@@ -67,15 +77,24 @@ def drawrelease():
     if drawtimer:
         drawtimer.cancel()
 
+currentView = 'front'
 
-def draw(F,side='front',color='prop',wait=True):
+def draw(F,view='__last__',color='prop',wait=True):
     """Draw a Formex on the canvas.
 
     Draws an actor on the canvas, and directs the camera to it from
-    the specified side. Default is looking in the -z direction.
-    Specifying side=None leaves the camera settings unchanged.
-    If other actors are on the scene, they may be visible as well.
-    Clear the canvas before drawing if you only want one actor!
+    the specified view. Named views are either predefined or can be added by
+    the user.
+    If view=None is specified, the camera settings remain unchanged.
+    This may make the drawn object out of view!
+    A special name '__last__' may be used to keep the same camera angles
+    as in the last draw operation. The camera will be zoomed on the newly
+    drawn object.
+    The initial default view is 'front' (looking in the -z direction).
+
+    If other actors are on the scene, they may or may not be visible with the
+    new camera settings. Clear the canvas before drawing if you only want
+    a single actor!
 
     If the Formex has properties and a color list is specified, then the
     the properties will be used as an index in the color list and each member
@@ -93,7 +112,7 @@ def draw(F,side='front',color='prop',wait=True):
     specifying wait=False. Setting drawtimeout=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-    global allowwait
+    global allowwait, currentView
     if allowwait:
         drawwait()
     lastdrawn = F
@@ -110,12 +129,29 @@ def draw(F,side='front',color='prop',wait=True):
     else:
         # assume color is a colorset
         GD.canvas.addActor(CFormexActor(F,color))
-    if side:
-        GD.canvas.useView(F.bbox(),side)
-    # If side == None we still should calculate the bbox and zoom accordingly
-    GD.canvas.update()
+    if view:
+        if view == '__last__':
+            view = currentView
+        GD.canvas.useView(F.bbox(),view)
+        currentView = view
+        # calculate the bbox and zoom accordingly
+        GD.canvas.update()
     if allowwait and wait:
         drawlock()
+
+def view(v,wait=False):
+    """Show a named view, either a builtin or a user defined."""
+    global allowwait,currentView
+    if allowwait:
+        drawwait()
+    if GD.canvas.views.has_key(v):
+        GD.canvas.useView(None,v)
+        currentView = v
+        GD.canvas.update()
+        if allowwait and wait:
+            drawlock()
+    else:
+        warning("A view named '%s' has not been created yet" % v)
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
@@ -136,26 +172,18 @@ def clear():
 def redraw():
     GD.canvas.redrawAll()
 
-def view(v,wait=False):
-    """Show a named view, either a builtin or a user defined."""
-    global allowwait
-    if allowwait:
-        drawwait()
-    if GD.canvas.views.has_key(v):
-        GD.canvas.useView(None,v)
-        GD.canvas.update()
-        if allowwait and wait:
-            drawlock()
-    else:
-        warning("A view named '%s' has not been created yet" % v)
+def setview(name,angles):
+    """Declare a new named view (or redefine an old).
 
-def addview(name,angles):
-    dir(gui)
+    The angles are (longitude, latitude, twist).
+    If the view name is new, and there is a views toolbar,
+    a view button will be added to it."""
     gui.addView(name,angles)
     
 
 scriptDisabled = False
 scriptRunning = False
+scriptName = None
  
 def playScript(scr,name="unnamed"):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -164,11 +192,13 @@ def playScript(scr,name="unnamed"):
     There is a lock to prevent multiple scripts from being executed at the
     same time.
     """
-    global scriptRunning, scriptDisabled, allowwait
+    global scriptRunning, scriptDisabled, scriptName, allowwait
     # (We only allow one script executing at a time!)
+    # and scripts are non-reentrant
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
+    scriptName = name
     message("Running script (%s)" % name)
     GD.canvas.update()
     allowwait = True
@@ -183,17 +213,24 @@ def playScript(scr,name="unnamed"):
     g = globals()
     g.update(Formex.globals())
     try:
-        exec scr in g
+        try:
+            exec scr in g
+        except Exit:
+            pass
     finally:
         scriptRunning = False # release the lock in case of an error
-    message("Finished script")
-    GD.gui.actions['Step'].setEnabled(False)
-    GD.gui.actions['Continue'].setEnabled(False)
+        message("Finished script")
+        GD.gui.actions['Step'].setEnabled(False)
+        GD.gui.actions['Continue'].setEnabled(False)
 
 
 def playFile(fn,name=None):
     """Play a formex script from file fn."""
+    global currentView,drawtimeout 
+    drawtimeout = GD.config.get('drawwait',2)
+    currentView = 'front'
     playScript(file(fn,'r'),fn)
+
 
 def step():
     drawrelease()
@@ -206,14 +243,11 @@ def fforward():
     
 
 def exit():
-    if GD.app and GD.app_started:
-        if scriptRunning:
-            scriptDisabled = True
-            fforward()
-        GD.app.quit()  # exit on success (no script running)
-    else: # the gui didn't even start
-        sys.exit(0)
-
+    if scriptRunning:
+        raise Exit # exit from script
+    else:
+        gui.exit() # exit from pyformex
+        
 wakeupMode=0
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""

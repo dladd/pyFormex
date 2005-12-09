@@ -3,12 +3,10 @@
 
 import globaldata as GD
 from gui import *
-#from formex import *
+from utils import *
 import draw
-#from draw import *
 
 from widgets import *
-#from utils import *
 
 import sys,time,os.path,string
 import qt
@@ -28,7 +26,7 @@ def prefDrawtimeout():
 
 def prefBGcolor():
     askPreferences(['bgcolor'])
-    bgcolor(GD.config['bgcolor'])
+    draw.bgcolor(GD.config['bgcolor'])
 
 def preferences():
     test = [["item1","value1"],
@@ -104,7 +102,7 @@ MenuData = [
         ("Sep",None,None),
         ("Action","E&xit","draw.exit"), ]),
     ("Popup","&Settings",[
-        ("Action","&Preferences","preferences"), 
+#        ("Action","&Preferences","preferences"), 
         ("Action","&Drawwait Timeout","prefDrawtimeout"), 
         ("Action","&Background Color","prefBGcolor"), 
         ("Action","&LocalAxes","localAxes"),
@@ -146,6 +144,7 @@ def insertExampleMenu():
     if not os.path.isdir(dir):
         return
     example = filter(lambda s:s[-3:]==".py" and s[0]!='.' and s[0]!='_',os.listdir(dir))
+    example = filter(lambda s:file(os.path.join(GD.config['pyformexdir'],"examples",s)).readlines()[0].strip().endswith('pyformex'),example)
     example.sort()
     vm = ("Popup","&Examples",[
         ("VAction","&%s"%os.path.splitext(t)[0],("runExample",i)) for i,t in enumerate(example)
@@ -217,7 +216,7 @@ def addCameraButtons(toolbar):
 
 
 def NotImplemented():
-    warning("This option has not been implemented yet!")
+    draw.warning("This option has not been implemented yet!")
     
 save = NotImplemented
 saveAs = NotImplemented
@@ -260,13 +259,7 @@ def about():
         "For help or information, mailto benedict.verhegghe@ugent.be\n" )
 
 def testwarning():
-    warning("Smoking may be hazardous to your health!\nWindows is a virus!")
-def warning(s):
-    if GD.options.gui:
-        w = qt.QMessageBox()
-        w.warning(w,GD.Version,s)
-    else:
-        print s
+    draw.warning("Smoking may be hazardous to your health!\nWindows is a virus!")
 
     
 def saveImage():
@@ -282,7 +275,7 @@ def saveImage():
                 fn += '.%s' % fmt.lower()
             GD.canvas.save(fn,fmt)
         else:
-            warning("Sorry, can not save in %s format!\n"
+            draw.warning("Sorry, can not save in %s format!\n"
                     "Suggest you use PNG format ;)"%fmt)
 
 multisave = None
@@ -327,11 +320,11 @@ def multiSave():
             if len(ext) == 0:
                 ext = '.%s' % fmt.lower()
             name += ext
-            warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
+            draw.warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
             qt.QObject.connect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
             multisave = [ name,nr,fmt ]
         else:
-            warning("Sorry, can not save in %s format!\n"
+            draw.warning("Sorry, can not save in %s format!\n"
                     "Suggest you use PNG format ;)"%fmt)
 
 #

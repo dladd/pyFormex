@@ -19,7 +19,7 @@ F = F.replic2(m,n,1,1)
 clear();draw(F);
 message("Fold the rectangle into a tube")
 G = F.translate1(2,1).cylindrical([2,1,0],[1.,360./n,1.])
-clear();draw(G,side='right');
+clear();draw(G,view='right');
 message("Bend the tube into a torus with mean radius 5")
 H = G.translate1(0,5).cylindrical([0,2,1],[1.,360./m,1.])
-clear();draw(H,side='iso');
+clear();draw(H,view='iso');

@@ -49,19 +49,128 @@
 <a href="vector.html">vector</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="draw.html#Exit">Exit</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Exit">class <strong>Exit</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="exceptions.html#Exception">Exception</a>&nbsp;raised&nbsp;to&nbsp;exit&nbsp;from&nbsp;a&nbsp;running&nbsp;script.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="Exit-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="Exit-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="Exit-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-and_"><strong>and_</strong></a>(...)</dt><dd><tt><a href="#-and_">and_</a>(a,&nbsp;b)&nbsp;--&nbsp;Same&nbsp;as&nbsp;a&nbsp;&amp;&nbsp;b.</tt></dd></dl>
+ <dl><dt><a name="-bgcolor"><strong>bgcolor</strong></a>(color)</dt><dd><tt>Change&nbsp;the&nbsp;background&nbsp;color&nbsp;(and&nbsp;redraw).</tt></dd></dl>
+ <dl><dt><a name="-clear"><strong>clear</strong></a>()</dt><dd><tt>Remove&nbsp;all&nbsp;actors&nbsp;from&nbsp;the&nbsp;canvas</tt></dd></dl>
  <dl><dt><a name="-cumproduct"><strong>cumproduct</strong></a> = accumulate(...)</dt><dd><tt>accumulate&nbsp;&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;dimension,&nbsp;accumulating&nbsp;subtotals</tt></dd></dl>
  <dl><dt><a name="-cumsum"><strong>cumsum</strong></a> = accumulate(...)</dt><dd><tt>accumulate&nbsp;&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;dimension,&nbsp;accumulating&nbsp;subtotals</tt></dd></dl>
  <dl><dt><a name="-dot"><strong>dot</strong></a>(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)&nbsp;computes&nbsp;the&nbsp;matrix&nbsp;multiplication&nbsp;of&nbsp;two&nbsp;arrays</tt></dd></dl>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">='__last__'</font>, color<font color="#909090">='prop'</font>, wait<font color="#909090">=True</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;on&nbsp;the&nbsp;canvas.<br>
+&nbsp;<br>
+Draws&nbsp;an&nbsp;actor&nbsp;on&nbsp;the&nbsp;canvas,&nbsp;and&nbsp;directs&nbsp;the&nbsp;camera&nbsp;to&nbsp;it&nbsp;from<br>
+the&nbsp;specified&nbsp;view.&nbsp;Named&nbsp;views&nbsp;are&nbsp;either&nbsp;predefined&nbsp;or&nbsp;can&nbsp;be&nbsp;added&nbsp;by<br>
+the&nbsp;user.<br>
+If&nbsp;view=None&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;settings&nbsp;remain&nbsp;unchanged.<br>
+This&nbsp;may&nbsp;make&nbsp;the&nbsp;drawn&nbsp;object&nbsp;out&nbsp;of&nbsp;view!<br>
+A&nbsp;special&nbsp;name&nbsp;'__last__'&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;keep&nbsp;the&nbsp;same&nbsp;camera&nbsp;angles<br>
+as&nbsp;in&nbsp;the&nbsp;last&nbsp;draw&nbsp;operation.&nbsp;The&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;on&nbsp;the&nbsp;newly<br>
+drawn&nbsp;object.<br>
+The&nbsp;initial&nbsp;default&nbsp;view&nbsp;is&nbsp;'front'&nbsp;(looking&nbsp;in&nbsp;the&nbsp;-z&nbsp;direction).<br>
+&nbsp;<br>
+If&nbsp;other&nbsp;actors&nbsp;are&nbsp;on&nbsp;the&nbsp;scene,&nbsp;they&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;be&nbsp;visible&nbsp;with&nbsp;the<br>
+new&nbsp;camera&nbsp;settings.&nbsp;Clear&nbsp;the&nbsp;canvas&nbsp;before&nbsp;drawing&nbsp;if&nbsp;you&nbsp;only&nbsp;want<br>
+a&nbsp;single&nbsp;actor!<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;Formex&nbsp;has&nbsp;properties&nbsp;and&nbsp;a&nbsp;color&nbsp;list&nbsp;is&nbsp;specified,&nbsp;then&nbsp;the<br>
+the&nbsp;properties&nbsp;will&nbsp;be&nbsp;used&nbsp;as&nbsp;an&nbsp;index&nbsp;in&nbsp;the&nbsp;color&nbsp;list&nbsp;and&nbsp;each&nbsp;member<br>
+will&nbsp;be&nbsp;drawn&nbsp;with&nbsp;the&nbsp;resulting&nbsp;color.<br>
+If&nbsp;color&nbsp;is&nbsp;one&nbsp;color&nbsp;value,&nbsp;the&nbsp;whole&nbsp;Formex&nbsp;will&nbsp;be&nbsp;drawn&nbsp;with<br>
+that&nbsp;color.<br>
+Finally,&nbsp;if&nbsp;color=None&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp;Formex&nbsp;is&nbsp;drawn&nbsp;in&nbsp;black.<br>
+&nbsp;<br>
+Each&nbsp;draw&nbsp;action&nbsp;activates&nbsp;a&nbsp;locking&nbsp;mechanism&nbsp;for&nbsp;the&nbsp;next&nbsp;draw&nbsp;action,<br>
+which&nbsp;will&nbsp;only&nbsp;be&nbsp;allowed&nbsp;after&nbsp;drawtimeout&nbsp;seconds&nbsp;have&nbsp;elapsed.&nbsp;This<br>
+makes&nbsp;it&nbsp;easier&nbsp;to&nbsp;see&nbsp;subsequent&nbsp;images&nbsp;and&nbsp;is&nbsp;far&nbsp;more&nbsp;elegant&nbsp;that&nbsp;an<br>
+explicit&nbsp;<a href="#-sleep">sleep</a>()&nbsp;operation,&nbsp;because&nbsp;all&nbsp;script&nbsp;processing&nbsp;will&nbsp;continue<br>
+up&nbsp;to&nbsp;the&nbsp;next&nbsp;drawing&nbsp;instruction.<br>
+The&nbsp;user&nbsp;can&nbsp;disable&nbsp;the&nbsp;wait&nbsp;cycle&nbsp;for&nbsp;the&nbsp;next&nbsp;draw&nbsp;operation&nbsp;by<br>
+specifying&nbsp;wait=False.&nbsp;Setting&nbsp;drawtimeout=0&nbsp;will&nbsp;disable&nbsp;the&nbsp;waiting<br>
+mechanism&nbsp;for&nbsp;all&nbsp;subsequent&nbsp;draw&nbsp;statements&nbsp;(until&nbsp;set&nbsp;&gt;0&nbsp;again).</tt></dd></dl>
+ <dl><dt><a name="-drawlock"><strong>drawlock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function.<br>
+&nbsp;<br>
+This&nbsp;locks&nbsp;the&nbsp;drawing&nbsp;function&nbsp;for&nbsp;the&nbsp;next&nbsp;drawtimeout&nbsp;seconds.</tt></dd></dl>
+ <dl><dt><a name="-drawrelease"><strong>drawrelease</strong></a>()</dt><dd><tt>Release&nbsp;the&nbsp;drawing&nbsp;function.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;timer&nbsp;is&nbsp;running,&nbsp;cancel&nbsp;it.</tt></dd></dl>
+ <dl><dt><a name="-drawwait"><strong>drawwait</strong></a>()</dt><dd><tt>Wait&nbsp;for&nbsp;the&nbsp;drawing&nbsp;lock&nbsp;to&nbsp;be&nbsp;released.<br>
+&nbsp;<br>
+While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></dd></dl>
+ <dl><dt><a name="-exit"><strong>exit</strong></a>()</dt></dl>
+ <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-innerproduct"><strong>innerproduct</strong></a>(...)</dt><dd><tt><a href="#-innerproduct">innerproduct</a>(a,b)&nbsp;computes&nbsp;the&nbsp;inner&nbsp;product&nbsp;of&nbsp;two&nbsp;arrays</tt></dd></dl>
+ <dl><dt><a name="-listall"><strong>listall</strong></a>()</dt><dd><tt>List&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
  <dl><dt><a name="-matrixmultiply"><strong>matrixmultiply</strong></a> = dot(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)&nbsp;computes&nbsp;the&nbsp;matrix&nbsp;multiplication&nbsp;of&nbsp;two&nbsp;arrays</tt></dd></dl>
+ <dl><dt><a name="-message"><strong>message</strong></a>(s)</dt><dd><tt>Show&nbsp;a&nbsp;message&nbsp;to&nbsp;the&nbsp;user.<br>
+&nbsp;<br>
+Currently,&nbsp;messages&nbsp;are&nbsp;shown&nbsp;in&nbsp;the&nbsp;status&nbsp;bar.</tt></dd></dl>
+ <dl><dt><a name="-playFile"><strong>playFile</strong></a>(fn, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.</tt></dd></dl>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">='unnamed'</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;second&nbsp;parameter&nbsp;is&nbsp;given,&nbsp;it&nbsp;will&nbsp;be&nbsp;displayed&nbsp;on&nbsp;the&nbsp;status&nbsp;line.<br>
+There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
+same&nbsp;time.</tt></dd></dl>
+ <dl><dt><a name="-printglobals"><strong>printglobals</strong></a>()</dt><dd><tt>##def&nbsp;printit():<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;out<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;out<br>
+##def&nbsp;printbbox():<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;global&nbsp;out<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;out:<br>
+##&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;"bbox&nbsp;of&nbsp;displayed&nbsp;Formex",out.bbox()</tt></dd></dl>
  <dl><dt><a name="-product"><strong>product</strong></a> = reduce(...)</dt><dd><tt>reduce&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;specified&nbsp;dimension,&nbsp;eliminating&nbsp;it.&nbsp;Returns&nbsp;scalars&nbsp;rather&nbsp;than&nbsp;rank-0&nbsp;numarray.</tt></dd></dl>
+ <dl><dt><a name="-redraw"><strong>redraw</strong></a>()</dt></dl>
+ <dl><dt><a name="-setview"><strong>setview</strong></a>(name, angles)</dt><dd><tt>Declare&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
+&nbsp;<br>
+The&nbsp;angles&nbsp;are&nbsp;(longitude,&nbsp;latitude,&nbsp;twist).<br>
+If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nbsp;a&nbsp;views&nbsp;toolbar,<br>
+a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
+ <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
+ <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
+ <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>
  <dl><dt><a name="-sum"><strong>sum</strong></a> = reduce(...)</dt><dd><tt>reduce&nbsp;&nbsp;performs&nbsp;the&nbsp;operation&nbsp;along&nbsp;the&nbsp;specified&nbsp;dimension,&nbsp;eliminating&nbsp;it.&nbsp;Returns&nbsp;scalars&nbsp;rather&nbsp;than&nbsp;rank-0&nbsp;numarray.</tt></dd></dl>
+ <dl><dt><a name="-view"><strong>view</strong></a>(v, wait<font color="#909090">=False</font>)</dt><dd><tt>Show&nbsp;a&nbsp;named&nbsp;view,&nbsp;either&nbsp;a&nbsp;builtin&nbsp;or&nbsp;a&nbsp;user&nbsp;defined.</tt></dd></dl>
+ <dl><dt><a name="-wakeup"><strong>wakeup</strong></a>(mode<font color="#909090">=0</font>)</dt><dd><tt>Wake&nbsp;up&nbsp;from&nbsp;the&nbsp;sleep&nbsp;function.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;only&nbsp;way&nbsp;to&nbsp;exit&nbsp;the&nbsp;<a href="#-sleep">sleep</a>()&nbsp;function.<br>
+Default&nbsp;is&nbsp;to&nbsp;wake&nbsp;up&nbsp;from&nbsp;the&nbsp;current&nbsp;sleep.&nbsp;A&nbsp;mode&nbsp;&gt;&nbsp;0<br>
+forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
+ <dl><dt><a name="-warning"><strong>warning</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-wireframe"><strong>wireframe</strong></a>()</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -126,6 +235,7 @@
 <strong>ceil</strong> = &lt;UFunc: 'ceil'&gt;<br>
 <strong>cos</strong> = &lt;UFunc: 'cos'&gt;<br>
 <strong>cosh</strong> = &lt;UFunc: 'cosh'&gt;<br>
+<strong>currentView</strong> = 'front'<br>
 <strong>cyan</strong> = (0.0, 1.0, 1.0)<br>
 <strong>darkgrey</strong> = (0.5, 0.5, 0.5)<br>
 <strong>divide</strong> = &lt;UFunc: 'divide'&gt;<br>
@@ -177,6 +287,7 @@
 <strong>rshift</strong> = &lt;UFunc: 'rshift'&gt;<br>
 <strong>scalarTypeMap</strong> = {&lt;type 'complex'&gt;: 'Complex64', &lt;type 'float'&gt;: 'Float64', &lt;type 'int'&gt;: 'Int64', &lt;type 'long'&gt;: 'Int64'}<br>
 <strong>scriptDisabled</strong> = False<br>
+<strong>scriptName</strong> = None<br>
 <strong>scriptRunning</strong> = False<br>
 <strong>sin</strong> = &lt;UFunc: 'sin'&gt;<br>
 <strong>sinh</strong> = &lt;UFunc: 'sinh'&gt;<br>

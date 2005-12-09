@@ -1,6 +1,6 @@
 # $Id$
 
-
+2005-12-09 BV : First anniversary release 0.2.2
 2005-12-06 BV : Lots of changes have been made since the 0.2.1 release.
                 The pyformex program has been split over multiple files and
                 a large code cleanup is underway.

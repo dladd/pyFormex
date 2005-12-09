@@ -12,9 +12,9 @@
 # This example is fully annotated with comments in the statusbar
 # First we define a function to display a Formex and then wait for the user
 # to click the Step button
-def show(F,side='front'):
+def show(F,view='front'):
     clear()
-    draw(F,side)
+    draw(F,view)
     
 # Here we go
 message("Create a triangular pattern in the first octant")

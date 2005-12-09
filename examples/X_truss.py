@@ -1,4 +1,4 @@
-#!/usr/bin/env pyfromex
+#
 # $Id$
 #
 """X-shaped truss"""
@@ -68,11 +68,11 @@ class X_truss:
             vert2 = vert1.translate([total_length,0.,0.])
             vert = vert1+vert2
         if diagonals_connected:
-            mid1 = connect([bot_nodes,mid_nodes]) + connect([mid_nodes,top_nodes],bias=[0,1])
-            mid2 = connect([top_nodes,mid_nodes]) + connect([mid_nodes,bot_nodes],bias=[0,1])
+            dia1 = connect([bot_nodes,mid_nodes]) + connect([mid_nodes,top_nodes],bias=[0,1])
+            dia2 = connect([top_nodes,mid_nodes]) + connect([mid_nodes,bot_nodes],bias=[0,1])
         else:
-            mid1 = connect([bot_nodes,top_nodes],bias=[0,1])
-            mid2 = connect([top_nodes,bot_nodes],bias=[0,1])
+            dia1 = connect([bot_nodes,top_nodes],bias=[0,1])
+            dia2 = connect([top_nodes,bot_nodes],bias=[0,1])
         # save attributes
         self.n_mod = n_mod
         self.mod_length = mod_length
@@ -86,8 +86,8 @@ class X_truss:
         self.bot = bot
         self.top = top
         self.vert = vert
-        self.mid1 = mid1
-        self.mid2 = mid2
+        self.dia1 = dia1
+        self.dia2 = dia2
 
 
     def allNodes(self):
@@ -99,7 +99,6 @@ class X_truss:
 
     def allBars(self):
         """Return a Formex with all nodes."""
-        return self.bot+self.top+self.vert+self.mid1+self.mid2
+        return self.bot+self.top+self.vert+self.dia1+self.dia2
 
-print __name__
-print __file__
+# End

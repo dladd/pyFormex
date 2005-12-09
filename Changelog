@@ -1,7 +1,8 @@
 # This collects most important changes between releases since 0.2
 #
 
-Release ???:
+Release 0.2.2:
+==============
 	
 pyformex command line parameters:
 --------------------------------
@@ -10,9 +11,9 @@ pyformex command line parameters:
 
 pyformex FUNCTIONS:
 -------------------	
-- the exit() function can be used in scripts. It will close the GUI and exit
-  the program. It is mainly intended for batch processing.
-- the file menu has an multiSave option: When activating this option, you can
+- the exit() function can be used in scripts. It will exit from the script.
+  Using exit() in interactive mode will close the GUI and exit the program.
+- the file menu has a multiSave option: When activating this option, you can
 	save subsequent images by just hitting the 's' key. Each image will be
 	saved on a file with an increasing numerical part just before the
 	extension. You are asked once for a file name on activating the option.
@@ -21,6 +22,7 @@ pyformex FUNCTIONS:
 	'image.png', subsequently saved images will be named 'image-000.png,
 	'image-001.png', ... If you specify a name 'image09.png, next saves
 	will go to 'image09.png', 'image10.png'.
+- default view in draw operations is the last view
 
 	
 formex.py:
@@ -47,7 +49,9 @@ Examples:
 ---------	
 - Dome renamed to Lamella
 - added Schwedler, TrussBridge, SpaceTrussRoof
-- example X_truss.py shows how to define classes of Formex structures.  
+- X_truss.py shows how to define classes of Formex structures.  
+- X_truss_analysis shows how to send data to analysis code and get results
+  displayed in pyFormex
 
 	
 New in release 0.2.1:

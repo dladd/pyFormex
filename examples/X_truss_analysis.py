@@ -3,6 +3,14 @@
 #
 """X-shaped truss analysis"""
 
+#######################################################################
+# Setting this path correctly is required to import the analysis module
+# You need calpy >= 0.2.1-pre1
+# It can be downloaded from ftp://bumps.ugent.be/calpy/
+import sys
+sys.path.append('/usr/local/lib/calpy-0.2.1')
+#######################################################################
+
 from examples.X_truss import X_truss
 bgcolor(lightgrey)
 
@@ -21,8 +29,8 @@ draw(truss.allBars())
 truss.bot.setProp(0)
 truss.top.setProp(0)
 truss.vert.setProp(2)
-truss.mid1.setProp(1)
-truss.mid2.setProp(1)
+truss.dia1.setProp(1)
+truss.dia2.setProp(1)
 for p in [ truss.bot.p, truss.top.p ]:
     p[0] = p[n-1] = 3 
 
@@ -54,13 +62,15 @@ clear()
 draw(Formex(reshape(coords,(coords.shape[0],1,coords.shape[1]))),wait=False)
 draw(model)
 
-# import analysis module
-# You need calpy >= 0.2.1-pre1
-# Download from ftp://bumps.ugent.be/calpy
-import sys
-sys.path.append('/usr/local/lib/calpy-0.2.1')
-from fe_util import *
-from truss3d import *
+##### NOW load the analysis code #####
+try:
+    from fe_util import *
+    from truss3d import *
+except ImportError:
+    from draw import scriptName
+    warning("You need calpy-0.2.1 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct path in this example's source file\n(%s)."%scriptName)
+    exit()
+    
 nnod = coords.shape[0]
 nelems = elems.shape[0]
 # boundary conditions
@@ -120,8 +130,11 @@ draw(results,color=cval)
 
 # show some other color cales:
 
+drawtimeout=1
 for palet in [ 'RGB', 'BWR', 'GWB', 'BW' ]:
     CS = ColorScale(palet,vmin,vmax,0.)
     cval = array(map(CS.color,val))
     clear()
     draw(results,color=cval)
+
+# End

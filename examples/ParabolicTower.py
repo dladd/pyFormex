@@ -1,12 +1,5 @@
 #!/usr/bin/env pyformex
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
 #
 """Parabolic Tower"""
 clear()
@@ -24,4 +17,4 @@ f = concatenate([  [[[g(i),i,i], [g(i+1),i-1,i+1]],
              [[g(i+1),i-1,i+1], [g(i+1),i+1,i+1]]] for i in range(n) ])
 F = Formex(f,[3,0,1]).rin(2,m,2)
 T = F.bc(1,360./(2*m),d)
-draw(T,side="bottom")
+draw(T,view='bottom')

@@ -60,13 +60,10 @@ uninstall:
 	echo "Remove the symbolic link to the pyformex program."""
 	echo "Remove the pyformex doc files."""
 
-############ Creating Distribution ##################
-
-
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
 
-pydoc: ${HTMLDOCS}
+############ Creating Distribution ##################
 
-dist: Makefile.dist pydoc
+dist: Makefile.dist
 	${MAKE} -f Makefile.dist

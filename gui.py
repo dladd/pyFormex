@@ -120,6 +120,11 @@ class GUI:
         """Display a permanent message in the status line."""
         self.message.setText(qt.QString(s))
 
+    def showWarning(self,s):
+        """Show a warning, to be acknowledged by the user."""
+        w = qt.QMessageBox()
+        w.warning(w,GD.Version,s)
+
 ##    def addView(self,a):
 ##        """Add a new view action to the Views Menu and Views Toolbar."""
 ##        if self.has('viewsMenu'):
@@ -148,5 +153,12 @@ def runApp(args):
             playFile(arg)
     GD.app_started = True
     GD.app.exec_loop()
+
+## exit from program pyformex
+def exit():
+    if GD.app and GD.app_started: # exit from GUI
+        GD.app.quit() 
+    else: # the gui didn't even start
+        sys.exit(0)
 
 #### End

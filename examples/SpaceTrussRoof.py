@@ -33,14 +33,10 @@ F = F.rotate(-90,0) # put the structure upright
 clear()
 draw(F)
 
-addview('myview1',(30.,0.,0.))
+setview('myview1',(30.,0.,0.))
 view('myview1',True)
 
-
-addview('myview2',(0.,20.,0.))
-view('myview2',True)
-
-
-addview('myview3',(30.,20.,0.))
-view('myview3')
-
+drawtimeout = 1
+for i in range(19):
+    setview('myview2',(i*10.,20.,0.))
+    view('myview2',True)
