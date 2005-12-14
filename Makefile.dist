@@ -11,8 +11,8 @@ SOURCE= ${PYSOURCE} pyformexrc
 ICONFILES= icons/*.xbm
 HTMLDIR= doc/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}}
-STAMPFILES= README History Makefile FAQ
-NONSTAMPFILES= COPYING RELEASE
+STAMPFILES= README History Makefile FAQ Changelog
+NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION}
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES =  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 STAMP= Stamp 
@@ -28,7 +28,7 @@ PKGDIR= releases
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
 
-dist:	${PYFORMEXDIR}
+dist: version ${PYFORMEXDIR}
 	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
 
 ${PYFORMEXDIR}: dist.stamped
@@ -53,5 +53,7 @@ dist.stamped:  distclean stamp globaldata.py ${PROGRAM} ${SOURCE} ${EXAMPLEFILES
 	cp ${IMAGEFILES} ${PYFORMEXDIR}/images
 	cp ${HTMLDOCS}   ${PYFORMEXDIR}/html
 
+version: globaldata.py
+
 globaldata.py: RELEASE
-	replace -f '${VERSIONSTRING}' '${NEWVERSIONSTRING}' globaldata.py
+	replace -f '${VERSIONSTRING}' '${NEWVERSIONSTRING}' $@

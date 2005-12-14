@@ -1,6 +1,6 @@
 # pyFormex version
-VERSION=0.2.2
-RELEASE=${VERSION}
+VERSION=0.3
+RELEASE=${VERSION}-alpha
 PYMODULES= camera canvas colors colorscale draw flatdb flatkeydb \
   formex globaldata gui helpviewer lima pyfotemp turtle \
   units utils vector widgets

@@ -1,0 +1,13 @@
+2005-12-12    <benedict.verhegghe@ugent.be>
+
+	* canvas.py (TriadeActor): new: shows the global axes 
+	(Canvas.redrawActors): new: redraws specified actors
+	(Canvas.setLinewidth): new: sets linewidth for openGL drawing
+
+	* draw.py (linewidth): new: sets linewidth for openGL drawing
+
+2005-12-10    <benedict.verhegghe@ugent.be>
+
+	* formex.py: moved from numarray to scipy
+	(Formex.sort): now returns copy, leaves original Formex unchanged
+

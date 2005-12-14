@@ -27,7 +27,7 @@ HTMLDIR= html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}}
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} __init__}}
 IMAGEFILES =  ${addprefix images/,${addsuffix .png,${IMAGES}}}
-DOCFILES= README COPYING History Makefile FAQ
+DOCFILES= README COPYING History Makefile FAQ Changelog
 
 INSTALL= install -c
 INSTALL_PROGRAM= ${INSTALL} -m 0755
@@ -67,3 +67,6 @@ ${HTMLDIR}/%.html: %.py
 
 dist: Makefile.dist
 	${MAKE} -f Makefile.dist
+
+version: Makefile.dist
+	${MAKE} -f Makefile.dist version

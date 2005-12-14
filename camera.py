@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
 """camera 0.1 (C) Benedict Verhegghe"""
 
 import sys,math
@@ -15,8 +8,8 @@ import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 
 from vector import *
-from numarray import *
-import numarray.linear_algebra as la
+from scipy import array,matrixmultiply,linalg
+import copy
 
 
 ## ! For developers: this information is not fully correct
@@ -245,7 +238,7 @@ class Camera:
         The specified vector can have 3 or 4 (homogoneous) components.
         This uses the currently saved rotation matrix.
         """
-        a = la.inverse(array(self.rot))
+        a = linalg.inverse(array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
         v = matrixmultiply(array(v),a)

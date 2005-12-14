@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
 """A collection of custom widgets used in the pyFormex GUI"""
 
 import qt,types
@@ -25,8 +18,7 @@ class MyQAction(qt.QAction):
 class FileSelectionDialog(qt.QFileDialog):
     """A file selection dialog widget.
 
-    You can specify a default path/filename that will be suggested
-    initially.
+    You can specify a default path/filename that will be suggested initially.
     If a pattern is specified, only matching files will be shown.
     A pattern can be something like 'Images (*.png *.jpg)'.
     Default mode is to accept only existing files. You can specify
@@ -46,7 +38,23 @@ class FileSelectionDialog(qt.QFileDialog):
 
 
 class ConfigDialog(qt.QDialog):
+    """A dialog widget to set the value of one or more items."""
+    
     def __init__(self,cfgitems):
+        """Creates a dialog which asks the user for the value cfgitems.
+
+        cfgitems is the list of items that can be configured.
+        Each item is a tuple holding at least the name of the item,
+        and possible some more elements that limit the type of data
+        that can be entered.
+        name,value,type,range,default
+        It should fit one of the following schemes:
+        ('name') or ('name',str) : type string, any string input allowed
+        ('name',int) : type int, any integer value allowed
+        ('name',int,'min','max') : type int, only min <= value <= max allowed
+        For each item a label with the name and a LineEdit widget are created,
+        with a validator function where appropriate.
+        """
         qt.QDialog.__init__(self,None,None,True)
         self.resize(400,200)
         self.setCaption("Config")
@@ -57,12 +65,18 @@ class ConfigDialog(qt.QDialog):
             line = qt.QHBoxLayout(None,0,6)
             label = qt.QLabel(item[0],self)
             line.addWidget(label)
-            if len(item) <= 2 or item[2] == str:
+            input = qt.QLineEdit(str(item[1]),self)
+            if len(item) == 2 or item[2] == 'str':
                 print "%s is a string"%item[0]
-                input = qt.QLineEdit(str(item[1]),self)
-            elif item[2] == int:
+            elif item[2] == 'int':
                 print "%s is an integer"%item[0]
-                input = qt.QLineEdit(item[1],self)
+                if len(item) ==3 :
+                    input.setValidator(qt.QIntValidator(input))
+                else:
+                    input.setValidator(qt.QIntValidator(item[3][0],item[3][1],input))
+            elif item[2] == 'float':
+                print "%s is a float"%item[0]
+            input.selectAll()
             line.addWidget(input)
             self.fields.append([label,input])
             tab.addLayout(line)
@@ -73,8 +87,8 @@ class ConfigDialog(qt.QDialog):
         ok = qt.QPushButton("OK",self)
         ok.setDefault(True)
         cancel = qt.QPushButton("CANCEL",self)
-        #cancel.setAccel(qt.Key_Escape)
-        cancel.setDefault(True)
+        cancel.setAccel(qt.QKeyEvent.Key_Escape)
+        #cancel.setDefault(True)
         but.addWidget(cancel)
         but.addWidget(ok)
         tab.addLayout(but)

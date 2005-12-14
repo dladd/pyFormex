@@ -117,7 +117,7 @@ def draw(F,view='__last__',color='prop',wait=True):
         drawwait()
     lastdrawn = F
     # Maybe we should move some of this color handling to the FormexActor
-    if F.p == None or color==None:
+    if type(F.p) == type(None) or type(color) == type(None):
         color = black
     if type(color) == str and color == 'prop':
         # use the prop as entry in a color table
@@ -139,6 +139,12 @@ def draw(F,view='__last__',color='prop',wait=True):
     if allowwait and wait:
         drawlock()
 
+def drawTriade():
+    """Show the global axes."""
+    GD.canvas.addActor(TriadeActor(1.0))
+    GD.canvas.update()
+    
+
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
     global allowwait,currentView
@@ -155,11 +161,14 @@ def view(v,wait=False):
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
-    if type(color) == str:
-        color = eval(color)
+    color = GLColor(color)
     GD.canvas.bgcolor = color
     GD.canvas.display()
     GD.canvas.update()
+
+def linewidth(wid):
+    """Set the linewidth to be used in line drawings."""
+    GD.canvas.setLinewidth(float(wid))
 
 def clear():
     """Remove all actors from the canvas"""
@@ -237,7 +246,6 @@ def step():
 
 def fforward():
     global allowwait
-    print "Blocking further waits"
     allowwait = False
     drawrelease()
     

@@ -5,10 +5,10 @@
 
 #######################################################################
 # Setting this path correctly is required to import the analysis module
-# You need calpy >= 0.2.1-pre1
+# You need calpy >= 0.2.2
 # It can be downloaded from ftp://bumps.ugent.be/calpy/
 import sys
-sys.path.append('/usr/local/lib/calpy-0.2.1')
+sys.path.append('/usr/local/lib/calpy-0.2.2')
 #######################################################################
 
 from examples.X_truss import X_truss

@@ -4,10 +4,8 @@
 
 import globaldata as GD
 import canvas
-from widgets import MyQAction
 import draw
-
-import pyfotemp as PT
+from widgets import MyQAction
 
 import sys,time,os.path,string
 import qt
@@ -66,6 +64,10 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
         createViewAction(GD.gui.main,name,icon,tooltip,menutext)
     GD.canvas.createView(name,angles)
 
+def addboard():
+    GD.board = GD.gui.addBoard()
+
+import pyfotemp as PT
 
 class GUI:
     """Implements a GUI for pyformex."""
@@ -85,18 +87,34 @@ class GUI:
         self.statusbar = self.main.statusBar()
         self.message = qt.QLabel(self.statusbar)
         self.statusbar.addWidget(self.message)
-        self.showMessage(GD.Version+" (c) B. Verhegghe")
         self.menu = self.main.menuBar()
         self.toolbar = qt.QToolBar(self.main)
+        # Create a box for the central widgets
+        self.box = qt.QVBox(self.main)
+        #self.box.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
+        #self.box.setLineWidth(2)
+        self.main.setCentralWidget(self.box)
+        # Create a splitter
+        s = qt.QSplitter(self.box)
+        s.setOrientation(qt.QSplitter.Vertical)
+        s.setLineWidth(0)
         # Create an OpenGL canvas with a nice frame around it
-        f = qt.QHBox(self.main)
-        f.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
-        f.setLineWidth(2)
-        f.resize(wd,ht)
         fmt = qtgl.QGLFormat.defaultFormat()
         fmt.setDirectRendering(GD.options.dri)
-        self.canvas = canvas.Canvas(wd,ht,fmt,f)
-        self.main.setCentralWidget(f)
+        c = canvas.Canvas(wd,ht,fmt,s)
+        c.setMinimumHeight(100)
+        c.resize(wd,ht)
+        self.canvas = c
+        # Create the message board
+        b = qt.QTextEdit(s)
+        b.setReadOnly(True) 
+        b.setTextFormat(qt.Qt.PlainText)
+        b.setText(GD.Version+' started')
+        b.setMinimumHeight(32)
+        b.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
+        b.setLineWidth(0)
+        self.board = b
+        s.setSizes([wd,64])
         # Populate the menu ...
         PT.insertExampleMenu()
         PT.addDefaultMenu(self.menu)
@@ -115,15 +133,28 @@ class GUI:
             viewsBar = qt.QToolBar("Views",self.main)
         # Create View Actions for the default views provided by the canvas
         initViewActions(self.main,GD.config.setdefault('builtinviews',['front','back','left','right','top','bottom','iso']))
+        #self.showMessage(GD.Version+"   (C) B. Verhegghe")
 
     def showMessage(self,s):
-        """Display a permanent message in the status line."""
-        self.message.setText(qt.QString(s))
+        """Append a message to the message board."""
+        self.board.append(qt.QString(s))
+        self.board.moveCursor(qt.QTextEdit.MoveEnd,True)
+
+    def clearMessages(self,s):
+        """Clear the message board."""
+        self.board.setText("")
 
     def showWarning(self,s):
         """Show a warning, to be acknowledged by the user."""
         w = qt.QMessageBox()
         w.warning(w,GD.Version,s)
+
+    def resize(self,wd,ht):
+        """Resize the canvas."""
+        self.canvas.resize(wd,ht)
+        self.box.resize(wd,ht+self.board.height())
+        self.main.adjustSize()
+
 
 ##    def addView(self,a):
 ##        """Add a new view action to the Views Menu and Views Toolbar."""
@@ -131,9 +162,10 @@ class GUI:
 ##            a.addTo(self.viewsMenu)
 ##        if self.has('viewsBar'):
 ##            a.addTo(self.viewsBar)
-
+    
 
 ###########################  app  ################################
+
 
 def runApp(args):
     """Create and run the qt application."""

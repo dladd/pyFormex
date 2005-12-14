@@ -1,19 +1,12 @@
 # A python class for 3D vector operations
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
 #
 """A python class for 3D vector operations.
 
 A 3D vector is a list of three floats.
 All operations are implemented in standard Python.
 If you need high performance numerical operations on lots of vectors,
-you should use Numarray instead.
+you should use scipy instead.
 """
 
 import math

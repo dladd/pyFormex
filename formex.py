@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
 """Formex algebra in python"""
 
-from numarray import *
+from scipy import *
+#
+#  We now use scipy instead of numarray
+#  Watch out for the following:
+#     - replace Float by float, etc
+#     - replace tests like  a == None  by type(a) == type(None)
+#     - int array elements can not be used directly as Python integers in
+#       indexing: use  int(p[i])  instead.
+
 import math
 import vector
 import pickle
+
+# default float and int types
+Float = float32
+Int = int32
 
 ###########################################################################
 ##
@@ -40,7 +45,7 @@ def tand(arg):
 
 def length(arg):
     """Return the quadratic norm of a vector with all elements of arg."""
-    a = arg.getflat()
+    a = arg.flat
     return math.sqrt(sum(multiply(a,a)))
 
 def inside(p,mi,ma):
@@ -51,20 +56,23 @@ def inside(p,mi,ma):
 def unique(a):
     """Return the unique elements in an integer array."""
     ## OK, this looks complex. And there might be a simpler way
-    ## to do this in numarray, I just couldn't find any.
+    ## to do this in scipy, I just couldn't find any.
     ## Our algorithm:
     ## First we sort the values (1-D). Then we create an array that flags
-    ## the elements which are larger than their predecessor with a "1".
+    ## with a "1" all the elements which are larger than their predecessor.
     ## The first element always gets flagged with a "1".
     ## Finally we take the flagged elements from the sorted array.
-    b = sort(a.getflat())
+    b = sort(a.flat)
     return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
 
 ##
 ## If p1 and p2 are arrays, this can better be replaced by
 ## allclose(p1,p2,rtol,atol)
 def equal(p1,p2,tol=1.e-6):
-    """Return true if two points are considered equal within tolerance."""
+    """Return true if two points are considered equal within tolerance.
+
+    Each point is a list of three coordinates, or something compatible.
+    """
     return inside([ p1[i]-p2[i] for i in range(3) ],
                   [ -tol for i in range(3) ], [ +tol for i in range(3) ] )
 
@@ -129,6 +137,7 @@ def translationVector(dir,dist):
 def rotationMatrix(angle,axis=None):
     """Returns a rotation matrix over angle, optionally around axis.
 
+    The angle is specified in degrees.
     If axis==None (default), a 2x2 rotation matrix is returned.
     Else, axis should be one of [ 0,1,2] and specifies the rotation axis
     in a 3D world. A 3x3 rotation matrix is returned.
@@ -152,6 +161,7 @@ def rotationMatrix(angle,axis=None):
 def rotationAboutMatrix(angle,axis):
     """Returns a rotation matrix over angle around an axis thru the origin.
 
+    The angle is specified in degrees.
     Axis is a list of three components specifying the axis.
     The result is a 3x3 rotation matrix in list format.
     Note that:
@@ -168,6 +178,7 @@ def rotationAboutMatrix(angle,axis):
     return [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
              [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
              [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
+
 
 ###########################################################################
 ##
@@ -195,12 +206,12 @@ def rotationAboutMatrix(angle,axis):
 
 # PITFALLS:
 # Python by default uses integer math on integer arguments!
-# Therefore: always create the numarray data with type Float32!
+# Therefore: always create the array data with a float type!
 # (this will be mostly in functions array() and zeros()
 #
 
 class Formex:
-    """A Formex is a numarray of order 3 (axes 0,1,2) and type Float.
+    """A Formex is a scipy array of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
 
     A row along the axis 2 is a set of coordinates and represents a point
@@ -253,15 +264,19 @@ class Formex:
         """
         if type(data) == str:
             data = pattern(data)
-        self.f = array(data,type=Float32)
+        self.f = array(data).astype(Float)
         self.p = None
         if len(self.f.shape) != 3:
-            raise RuntimeError,"Invalid data in creating Formex"
-        if self.f.shape[2] == 2:
-            f = zeros((self.f.shape[:2]+(3,)),type=Float32)
+            raise RuntimeError,"Formex: Initialization needs rank-3 data array"
+        if self.f.shape[2] == 3:
+            pass
+        elif self.f.shape[2] == 2:
+            f = zeros((self.f.shape[:2]+(3,)),dtype=Float)
             f[:,:,:2] = self.f
             self.f = f
-        if prop != None:
+        elif self.f.shape[2] != 0:
+            raise RuntimeError,"Formex: last data dimension should be 2 or 3"   
+        if type(prop) != type(None):
             self.setProp(prop)
 
 ###########################################################################
@@ -310,7 +325,7 @@ class Formex:
         return self.f.shape
 
     def data(self):
-        """Return the Formex as a numarray"""
+        """Return the Formex as a scipy array"""
         return self.f
     def x(self):
         """Return the x-plane (can be modified)"""
@@ -322,7 +337,7 @@ class Formex:
         """Return the z-plane (can be modified)"""
         return self.f[:,:,2]
     def prop(self):
-        """Return the properties as a numarray"""
+        """Return the properties as a scipy array"""
         return self.p
 
     def element(self,i):
@@ -477,7 +492,7 @@ class Formex:
         return s+"}"
                 
     def asArray(self):
-        """Return string representation as a numarray."""
+        """Return string representation as a scipy array."""
         return self.f.__str__()
 
     def asFormexWithProp(self):
@@ -487,8 +502,8 @@ class Formex:
         the words "with prop" and a list of the properties.
         """
         s = self.asFormex()
-        if self.p != None:
-            s += " with prop "+self.p.__str__()
+        if isinstance(self.p,ndarray):
+            s += " with prop " + self.p.__str__()
         else:
             s += " no prop "
         return s
@@ -517,18 +532,21 @@ class Formex:
 
 ##############################################################################
 #
-#  Functions that change the Formex itself
+#  These are the only functions that change a Formex !
 #
+##############################################################################
 
     def setProp(self,p=0):
         """Create a property array for the Formex.
 
-        You can specify a single value or a list/array of values.
-        If the number of passed values is less than the number of
-        elements, they are repeated.
+        A property array is a rank-1 integer array with dimension equal
+        ro the number of elements in the Formex (first dimension of data).
+        You can specify a single value or a list/array of integer values.
+        If the number of passed values is less than the number of elements,
+        they wil be repeated. If you give more, they will be ignored.
         The default argument will give all elements a property value 0.
         """
-        p = asarray(p,type=Int32)
+        p = asarray(p,dtype=Int)
         self.p = resize(p,self.f.shape[:1])
         return self
 
@@ -550,16 +568,33 @@ class Formex:
         self.f = concatenate((self.f,F.f))
         ## What to do if one of the formices has properties, the other one not?
         ## I suggest to use zero property values for the Formex without props
-        if self.p != None or F.p != None:
-            if self.p == None:
-                self.p = zeros(shape=self.f.shape[:1],type=Int32)
-            if F.p == None:
-                p = zeros(shape=F.f.shape[:1],type=Int32)
+        if type(self.p) != type(None) or type(F.p) != type(None):
+            if type(self.p) == type(None):
+                self.p = zeros(shape=self.f.shape[:1],dtype=Int32)
+            if type(F.p) == type(None):
+                p = zeros(shape=F.f.shape[:1],dtype=Int32)
             else:
                 p = F.p
             self.p = concatenate((self.p,p))
         return self
 
+##############################################################################
+## 
+## All the following functions leave the original Formex unchanged and return
+## a new Formex instead.
+## This is a design decision intended so that the user can write statements as 
+##   G = F.op1().op2().op3()
+## without having an impact on F. If the user wishes, he can always change an
+## existing Formex by a statement such as
+##   F = F.op()
+## While this may seem to create a lot of intermediate array data, Python and
+## scipy are clever enough to release the memory that is no longer used.
+##
+##############################################################################
+#
+# Create copies, concatenations, subtractions, connections, ...
+#
+ 
     def sort(self):
         """Sorts the elements of a Formex.
 
@@ -568,34 +603,17 @@ class Formex:
         !! THE 0-direction OF NODE 0
         """
         sel = argsort(self.x()[:,0])
-        self.f = self.f[sel]
+        f = self.f[sel]
         if self.p:
-            self.p = self.p[sel]
-        return self
-
-## MAYBE WE SHOULD LET MORE FUNCTIONS OPERATE ON THE FORMEX ITSELF
-## INSTEAD OF RETURNING A NEW ONE??
-
-## 
-## All others functions should operate on and return copies. This in intended
-## so that the user can write statements like
-##   G = F.op1().op2().op3()
-## without changing F.
-## While this may seem to create a lot of intermediate data, I think that
-## Python is clever enough to free this storage upon garbage collection
-##
-
-##############################################################################
-#
-# Create copies, concatenations, subtractions, connections, ...
-#
-        
+            p = self.p[sel]
+        return Formex(f,p)
+       
     def copy(self):
         """Returns a deep copy of itself."""
         return Formex(self.f,self.p)
         ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
         ## In all examples it works, I think because the operations on
-        ## the numarray data cause a copy to be made. Need to explore this.
+        ## the array data cause a copy to be made. Need to explore this.
 
     def __add__(self,other):
         """Return the sum of two formices"""
@@ -605,7 +623,8 @@ class Formex:
     ## DO we really need this? Could be written as F+F+F
     ## Find out if there would be performance penalty?
     ## Then maybe move to deprecated compatibility functions
-    ## It may come in handy though.
+    ## It may come in handy though to use a function.
+    ## Should we move this out of the Formex class??
 
     def concatenate(self,list):
         """Concatenate all formices in list.
@@ -629,7 +648,7 @@ class Formex:
         If the Formex has no properties, a copy is returned.
         The returned Formex is always without properties.
         """
-        if self.p == None:
+        if type(self.p) == type(None):
             return Formex(self.f)
         else:
             return Formex(self.f[self.p==val])
@@ -671,7 +690,7 @@ class Formex:
                     # i is a duplicate node
                     flag[i] = 0
                     break
-        if self.p == None:
+        if type(self.p) == type(None):
             p = None
         else:
             p = self.p[flag>0]
@@ -688,7 +707,7 @@ class Formex:
         """Return a Formex which holds only elements with numbers in ids.
 
         idx can be a single element number or a list of numbers"""
-        if self.p == None:
+        if type(self.p) == type(None):
             p = None
         else:
             p = self.p[idx]
@@ -722,7 +741,7 @@ class Formex:
                     # element i is same as element j of F
                     flag[i] = 0
                     break
-        if self.p == None:
+        if type(self.p) == type(None):
             p = None
         else:
             p = self.p[flag>0]
@@ -776,15 +795,23 @@ class Formex:
         return Formex(f,self.p)
 
     def rotate(self,angle,axis=2):
-        """Returns a copy rotated over angle around coordinate axis."""
+        """Returns a copy rotated over angle around coordinate axis.
+
+        The angle is specified in degrees. Default rotation is around z-axis.
+        """
         m = rotationMatrix(angle,axis)
         return Formex(matrixmultiply(self.f,m),self.p)
 
     # This could be made the same function as rotate, but differentiated
     # by means of the value of the second argument
     def rotateAround(self,vector,angle):
-        """Returns a copy rotated over angle around vector."""
-        print "rotateAround has not been implemented yet!"
+        """Returns a copy rotated over angle around vector.
+
+        The angle is specified in degrees. The rotation axis is specified
+        by a vector of three values. It is an axis through the center.
+        """
+        m = rotationAboutMatrix(angle,vector)
+        return Formex(matrixmultiply(self.f,m),self.p)
         return self
 
     def shear(self,dir,dir1,skew):
@@ -833,7 +860,7 @@ class Formex:
         """
         # We put in a optional scaling, because doing this together with the
         # transforming is cheaper than first scaling and then transforming.
-        f = zeros(self.f.shape,type=Float32)
+        f = zeros(self.f.shape,dtype=Float)
         r = scale[0] * self.f[:,:,dir[0]]
         theta = (scale[1]*rad) * self.f[:,:,dir[1]]
         f[:,:,0] = r*cos(theta)
@@ -851,7 +878,7 @@ class Formex:
         """
         # We can not just leave the z's in place, because there might be
         # permutation of axes.
-        f = zeros(self.f.shape,type=Float32)
+        f = zeros(self.f.shape,dtype=Float)
         x,y,z = [ self.f[:,:,i] for i in dir ]
         #print x
         #print y
@@ -872,7 +899,7 @@ class Formex:
         from north pole(0) to south pole(180). This choice facilitates the
         creation of spherical domes.
         """
-        f = zeros(self.f.shape,type=Float32)
+        f = zeros(self.f.shape,dtype=Float)
         r = scale[0] * self.f[:,:,dir[0]]
         theta = (scale[1]*rad) * self.f[:,:,dir[1]]
         phi = (scale[2]*rad) * self.f[:,:,dir[2]]
@@ -892,7 +919,7 @@ class Formex:
         Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
         The returned angle values are given in degrees.
         """
-        f = zeros(self.f.shape,type=Float32)
+        f = zeros(self.f.shape,dtype=Float)
         x,y,z = [f[:,:,i] for i in dir]
         distance = length(v)
         longitude = arctan2(v[0],v[2]) / rad
@@ -948,7 +975,7 @@ class Formex:
         a is the point that forces the bumping;
         func is a function that calculates the bump intensity from distance
         (!! func(0) should be different from 0)
-        distdir is the direction in which the distance is measured : this can
+        dist is the direction in which the distance is measured : this can
         be one of the axes, or a list of one or more axes.
         If only 1 axis is specified, the effect is like function bump1
         If 2 axes are specified, the effect is like bump2
@@ -988,9 +1015,9 @@ class Formex:
         func is a numerical function which takes three arguments and produces
         a list of three output values. The coordinates [x,y,z] will be
         replaced by func(x,y,z).
-        The function must be applicable to numarrays, so it should
+        The function must be applicable to arrays, so it should
         only include numerical operations and functions understood by the
-        numarray module.
+        scipy module.
         This method is one of several mapping methods. See also map1 and mapd.
         Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
         is equivalent with E.scale([2,3,4])
@@ -1010,14 +1037,14 @@ class Formex:
         func is a numerical function which takes three arguments and produces
         a list of three output values. The coordinates [x,y,z] will be
         replaced by func(x,y,z).
-        The function must be applicable to numarrays, so it should
+        The function must be applicable to arrays, so it should
         only include numerical operations and functions understood by the
-        numarray module.
+        scipy module.
         This method is one of several mapping methods. See also map1 and mapd.
         Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
         is equivalent with E.scale([2,3,4])
         """
-        f = zeros(self.f.shape,type=Float32)
+        f = zeros(self.f.shape,dtype=Float)
         f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
         return Formex(f,self.p)
 
@@ -1026,9 +1053,9 @@ class Formex:
 
         <func> is a numerical function which takes one argument and produces
         one result. The coordinate dir will be replaced by func(coord[dir]).
-        The function must be applicable on numarrays, so it should only
+        The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
-        numarray module.
+        scipy module.
         This method is one of several mapping methods. See also map and mapd.
         """
         f = self.f.copy()
@@ -1041,9 +1068,9 @@ class Formex:
         <func> is a numerical function which takes one argument and produces
         one result. The coordinate dir will be replaced by func(d), where <d>
         is calculated as the distance to <point>.
-        The function must be applicable on numarrays, so it should only
+        The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
-        numarray module.
+        scipy module.
         By default, the distance d is calculated in 3-D, but one can specify
         a limited set of axes to calculate a 2-D or 1-D distance.
         This method is one of several mapping methods. See also map3 and map1.
@@ -1080,11 +1107,11 @@ class Formex:
         An optionally third argument may specify another Formex to take
         the coordinates from. It should have the same dimensions.
         """
-        ## IS there a numarray way to do this in 1 operation ?
+        ## Is there a way to do this in 1 operation ?
         # if self.shape != other.shape:
         # ERROR
-        if other == None:
-            other=self
+        if type(other) == type(None):
+            other = self
         f = self.f.copy()
         for k in range(len(i)):
             f[:,:,i[k]] = other.f[:,:,j[k]]
@@ -1349,7 +1376,7 @@ def connect(Flist,nodid=None,bias=None,loop=False):
         n = max([ Flist[i].nelems() for i in range(m) ])
     else:
         n = min([ Flist[i].nelems() - bias[i] for i in range(m) ])
-    f = zeros((n,m,3),type=Float32)
+    f = zeros((n,m,3),dtype=Float)
     for i,j,k in zip(range(m),nodid,bias):
         f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
     return Formex(f)

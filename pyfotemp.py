@@ -2,8 +2,8 @@
 # $Id $
 
 import globaldata as GD
-from gui import *
-from utils import *
+import gui
+import utils
 import draw
 
 from widgets import *
@@ -12,9 +12,14 @@ import sys,time,os.path,string
 import qt
 import qtgl
 
-def askPreferences(list):
-    items = [ [ it,GD.config.setdefault(it,"") ] for it in list ]
-    #items = [ [ it,val,type(val) ] for it,val in items ]
+def askConfigPreferences(items):
+    """Ask preferences stored in config variables.
+
+    Items in list should not have the value.
+    """
+    # insert current values
+    for it in items:
+        it.insert(1,GD.config.setdefault(it[0],''))
     print "Asking Prefs ",items
     res = ConfigDialog(items).process()
     for r in res:
@@ -22,11 +27,22 @@ def askPreferences(list):
     print GD.config
 
 def prefDrawtimeout():
-    askPreferences(['drawtimeout'])
+    askConfigPreferences([['drawtimeout','int']])
 
 def prefBGcolor():
-    askPreferences(['bgcolor'])
-    draw.bgcolor(GD.config['bgcolor'])
+    #askConfigPreferences([['bgcolor']])
+    #draw.bgcolor(GD.config['bgcolor'])
+    col = qt.QColorDialog.getColor(qt.QColor(GD.config.setdefault('bgcolor','')))
+    if col.isValid():
+        GD.config['bgcolor'] = col.name()
+        draw.bgcolor(col)
+        
+def prefLinewidth():
+    askConfigPreferences([['linewidth']])
+    draw.linewidth(GD.config['linewidth'])
+
+def prefSize():
+    GD.gui.resize(800,600)
 
 def preferences():
     test = [["item1","value1"],
@@ -103,8 +119,11 @@ MenuData = [
         ("Action","E&xit","draw.exit"), ]),
     ("Popup","&Settings",[
 #        ("Action","&Preferences","preferences"), 
+        ("Action","Show &Triade","draw.drawTriade"), 
         ("Action","&Drawwait Timeout","prefDrawtimeout"), 
         ("Action","&Background Color","prefBGcolor"), 
+        ("Action","Line&Width","prefLinewidth"), 
+        ("Action","&Canvas Size","prefSize"), 
         ("Action","&LocalAxes","localAxes"),
         ("Action","&GlobalAxes","globalAxes"),
         ("Action","&Wireframe","draw.wireframe"),

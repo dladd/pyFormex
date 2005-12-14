@@ -1,21 +1,11 @@
 # canvas.py
 # $Id$
-##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
-##
-#
-#
-# This implements an OpenGL drawing widget for painting 3D scenes.
+"""This implements an OpenGL drawing widget for painting 3D scenes."""
 #
 # TODO : we want to move the Qt dependencies as much as possible out of
 #        this module
 # TODO : we want to move the actual GL actors out of this module
 
-"""This implements an OpenGL drawing widget"""
 
 import sys,math
 
@@ -74,6 +64,57 @@ class CubeActor:
     def draw(self,wireframe=False):
         """Draw the cube."""
         drawCube(self.size,self.color)
+
+class TriadeActor:
+    """An OpenGL actor representing a triade of global axes."""
+
+    def __init__(self,size,color=[red,green,blue,cyan,magenta,yellow]):
+        self.size = size
+        self.color = color
+
+    def bbox(self):
+        return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
+
+    def draw(self,wireframe=False):
+        """Draw the cube."""
+        GL.glShadeModel(GL.GL_FLAT)
+        GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
+        GL.glPolygonMode(GL.GL_BACK, GL.GL_LINE)
+        GL.glBegin(GL.GL_TRIANGLES)
+        GL.glColor(*self.color[0])
+        GL.glVertex3f(0.0,0.0,0.0)
+        GL.glVertex3f(1.0,0.0,0.0)
+        GL.glVertex3f(0.0,1.0,0.0)
+        GL.glColor(*self.color[1])
+        GL.glVertex3f(0.0,0.0,0.0)
+        GL.glVertex3f(0.0,1.0,0.0)
+        GL.glVertex3f(0.0,0.0,1.0)
+        GL.glColor(*self.color[2])
+        GL.glVertex3f(0.0,0.0,0.0)
+        GL.glVertex3f(0.0,0.0,1.0)
+        GL.glVertex3f(1.0,0.0,0.0)
+##        GL.glColor(*self.color[3])
+##        GL.glVertex3f(0.0,0.0,0.0)
+##        GL.glVertex3f(0.0,1.0,0.0)
+##        GL.glVertex3f(1.0,0.0,0.0)
+##        GL.glColor(*self.color[4])
+##        GL.glVertex3f(0.0,0.0,0.0)
+##        GL.glVertex3f(0.0,0.0,1.0)
+##        GL.glVertex3f(0.0,1.0,0.0)
+##        GL.glColor(*self.color[5])
+##        GL.glVertex3f(0.0,0.0,0.0)
+##        GL.glVertex3f(1.0,0.0,0.0)
+##        GL.glVertex3f(0.0,0.0,1.0)
+        GL.glEnd()
+        GL.glBegin(GL.GL_LINES)
+        GL.glColor3f(*black)
+        GL.glVertex3f(0.0,0.0,0.0)
+        GL.glVertex3f(2.0,0.0,0.0)
+        GL.glVertex3f(0.0,0.0,0.0)
+        GL.glVertex3f(0.0,2.0,0.0)
+        GL.glVertex3f(0.0,0.0,0.0)
+        GL.glVertex3f(0.0,0.0,2.0)
+        GL.glEnd()
 
 
 class FormexActor(Formex):
@@ -166,7 +207,8 @@ class CFormexActor(Formex):
         if nnod == 2:
             GL.glBegin(GL.GL_LINES)
             for i in range(self.nelems()):
-                GL.glColor3f(*(self.colorset[self.prop()[i]]))
+                col = self.colorset[int(self.p[i])]
+                GL.glColor3f(*(col))
                 for nod in self[i]:
                     GL.glVertex3f(*nod)
             GL.glEnd()
@@ -296,6 +338,10 @@ class Canvas(qtgl.QGLWidget):
             GL.glEnable(GL.GL_COLOR_MATERIAL)
             GL.glColorMaterial ( GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE )
 
+    def setLinewidth(self,lw):
+        """Set the linewidth for line rendering."""
+        GL.glLineWidth (lw)
+
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
@@ -335,15 +381,18 @@ class Canvas(qtgl.QGLWidget):
         self.removeActor(actor)
         self.addActor(actor) 
 
-    def redrawAll(self):
-        """Redraw all actors in the scene.
+    def redrawActors(self,actorlist=None):
+        """Redraw (some) actors in the scene.
 
-        This is different from display() in that it recreates
-        each actors display list.
-        This should e.g. be used after changing drawing modes.
+        This redraws the specified actors (recreating their display list).
+        This should e.g. be used after changing an actor's properties.
+        Only actors that are in the current actor list will be redrawn.
+        If no actor list is specified, the whole current actorlist is redrawn.
         """
         self.makeCurrent()
-        for actor in self.actors:
+        if actorlist == None:
+            actorlist = self.actors
+        for actor in actorlist:
             if actor.list:
                 GL.glDeleteLists(actor.list,1)
             actor.list = GL.glGenLists(1)
@@ -351,6 +400,10 @@ class Canvas(qtgl.QGLWidget):
             actor.draw(self.wireframe)
             GL.glEndList() 
         self.display()
+
+    def redrawAll(self):
+        """Redraw all actors in the scene."""
+        self.redrawActors(self.actors)
 
     def clear(self):
         self.makeCurrent()
