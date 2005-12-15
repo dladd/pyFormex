@@ -20,6 +20,30 @@ from formex import *
 from camera import *
 from utils import stuur
 import vector
+   
+def drawGrid(x1, y1, x2, y2, nx, ny):
+    """Draw a rectangular grid of lines
+        
+    The rectangle has (x1,y1) and and (x2,y2) as opposite corners.
+    There are (nx,ny) subdivisions along the (x,y)-axis. So the grid
+    has (nx+1) * (ny+1) lines. nx=ny=1 draws a rectangle. nx=0 draws 1
+    vertical line (at x1). nx=-1 gives only horizontal lines.
+    
+    """
+    GL.glBegin(GL.GL_LINES)
+    ix = range(nx+1)
+    jx = [ nx-i for i in ix ]
+    for i,j in zip(ix,jx):
+        x = (i*x1+j*x2)/nx
+        GL.glVertex2f(x, y1)
+        GL.glVertex2f(x, y2)
+        iy = range(ny+1)
+        jy = [ ny-i for i in iy ]
+        for i,j in zip(iy,jy):
+            y = (i*y1+j*y2)/ny
+            GL.glVertex2f(x1, y)
+            GL.glVertex2f(x2, y)
+    GL.glEnd()
 
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
@@ -255,6 +279,24 @@ class CFormexActor(Formex):
             drawCube(size)
         GL.glEndList()
 
+
+class titleActor:
+    """A viewport decoration showing a colorscale legend."""
+    def __init__(self,title):
+        """Create a title"""
+        self.title = str(title)
+
+    def draw(self):
+        """draw the title."""
+        
+    
+
+class colorLegendActor:
+    """A viewport decoration showing a colorscale legend."""
+    def __init__(self,colorscale):
+        self.scale = colorscale
+
+
 ##################################################################
 #
 #  The Canvas
@@ -423,6 +465,11 @@ class Canvas(qtgl.QGLWidget):
         self.camera.loadMatrix()
         for i in self.actors:
             GL.glCallList(i.list)
+        #GL.glMatrixMode (GL.GL_PROJECTION)
+        #GL.glLoadIdentity()
+        #GLU.gluOrtho2D (0, self.width(), 0, self.height())
+        #drawGrid(10,10,100,100,9,9)
+
         
     def resize (self,w,h):
         self.makeCurrent()

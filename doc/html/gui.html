@@ -52,7 +52,11 @@
 The&nbsp;<a href="#GUI">GUI</a>&nbsp;has&nbsp;a&nbsp;central&nbsp;canvas&nbsp;for&nbsp;drawing,&nbsp;a&nbsp;menubar&nbsp;and&nbsp;a&nbsp;toolbar<br>
 on&nbsp;top,&nbsp;and&nbsp;a&nbsp;statusbar&nbsp;at&nbsp;the&nbsp;bottom.</tt></dd></dl>
 
-<dl><dt><a name="GUI-showMessage"><strong>showMessage</strong></a>(self, s)</dt><dd><tt>Display&nbsp;a&nbsp;permanent&nbsp;message&nbsp;in&nbsp;the&nbsp;status&nbsp;line.</tt></dd></dl>
+<dl><dt><a name="GUI-clearMessages"><strong>clearMessages</strong></a>(self, s)</dt><dd><tt>Clear&nbsp;the&nbsp;message&nbsp;board.</tt></dd></dl>
+
+<dl><dt><a name="GUI-resize"><strong>resize</strong></a>(self, wd, ht)</dt><dd><tt>Resize&nbsp;the&nbsp;canvas.</tt></dd></dl>
+
+<dl><dt><a name="GUI-showMessage"><strong>showMessage</strong></a>(self, s)</dt><dd><tt>Append&nbsp;a&nbsp;message&nbsp;to&nbsp;the&nbsp;message&nbsp;board.</tt></dd></dl>
 
 <dl><dt><a name="GUI-showWarning"><strong>showWarning</strong></a>(self, s)</dt><dd><tt>Show&nbsp;a&nbsp;warning,&nbsp;to&nbsp;be&nbsp;acknowledged&nbsp;by&nbsp;the&nbsp;user.</tt></dd></dl>
 
@@ -68,6 +72,7 @@ on&nbsp;top,&nbsp;and&nbsp;a&nbsp;statusbar&nbsp;at&nbsp;the&nbsp;bottom.</tt></
 This&nbsp;creates&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;with&nbsp;specified&nbsp;angles&nbsp;for&nbsp;the&nbsp;canvas.<br>
 It&nbsp;also&nbsp;creates&nbsp;a&nbsp;MyQAction&nbsp;which&nbsp;sends&nbsp;the&nbsp;name&nbsp;when&nbsp;activated,&nbsp;and<br>
 adds&nbsp;the&nbsp;MyQAction&nbsp;to&nbsp;the&nbsp;viewsMenu&nbsp;and/or&nbsp;the&nbsp;viewsBar&nbsp;if&nbsp;they&nbsp;exist.</tt></dd></dl>
+ <dl><dt><a name="-addboard"><strong>addboard</strong></a>()</dt></dl>
  <dl><dt><a name="-createViewAction"><strong>createViewAction</strong></a>(parent, name, icon, tooltip, menutext)</dt><dd><tt>Creates&nbsp;a&nbsp;view&nbsp;action&nbsp;and&nbsp;adds&nbsp;it&nbsp;to&nbsp;the&nbsp;menu&nbsp;and/or&nbsp;toolbar.<br>
 &nbsp;<br>
 The&nbsp;view&nbsp;action&nbsp;is&nbsp;a&nbsp;MyQAction&nbsp;which&nbsp;sends&nbsp;the&nbsp;name&nbsp;when&nbsp;activated.<br>

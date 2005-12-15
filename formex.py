@@ -546,7 +546,7 @@ class Formex:
         they wil be repeated. If you give more, they will be ignored.
         The default argument will give all elements a property value 0.
         """
-        p = asarray(p,dtype=Int)
+        p = array(p).astype(Int)
         self.p = resize(p,self.f.shape[:1])
         return self
 

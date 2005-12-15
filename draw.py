@@ -45,6 +45,8 @@ def warning(s):
 allowwait = True
 drawlocked = False
 drawtimeout = GD.config.get('drawwait',2)
+# set = 0 to disable wait
+# what if we want an indefinite wait (until step pressed)
 drawtimer = None
 
 def drawwait():
@@ -57,15 +59,20 @@ def drawwait():
         GD.app.processEvents()
 
 def drawlock():
-    """Lock the drawing function.
-
-    This locks the drawing function for the next drawtimeout seconds.
-    """
+    """Lock the drawing function for the next drawtimeout seconds."""
     global drawlocked, drawtimeout, drawtimer
     if not drawlocked and drawtimeout > 0:
         drawlocked = True
         drawtimer = threading.Timer(drawtimeout,drawrelease)
         drawtimer.start()
+
+def drawblock():
+    """Lock the drawing function indefinitely."""
+    global drawlocked, drawtimer
+    if drawtimer:
+        drawtimer.cancel()
+    if not drawlocked:
+        drawlocked = True
 
 def drawrelease():
     """Release the drawing function.
@@ -240,6 +247,9 @@ def playFile(fn,name=None):
     currentView = 'front'
     playScript(file(fn,'r'),fn)
 
+
+def pause():
+    drawblock()
 
 def step():
     drawrelease()

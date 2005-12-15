@@ -52,7 +52,9 @@
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="ConfigDialog">class <strong>ConfigDialog</strong></a>(<a href="qt.html#QDialog">qt.QDialog</a>)</font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;dialog&nbsp;widget&nbsp;to&nbsp;set&nbsp;the&nbsp;value&nbsp;of&nbsp;one&nbsp;or&nbsp;more&nbsp;items.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="widgets.html#ConfigDialog">ConfigDialog</a></dd>
 <dd><a href="qt.html#QDialog">qt.QDialog</a></dd>
@@ -65,7 +67,19 @@
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="ConfigDialog-__init__"><strong>__init__</strong></a>(self, cfgitems)</dt></dl>
+<dl><dt><a name="ConfigDialog-__init__"><strong>__init__</strong></a>(self, cfgitems)</dt><dd><tt>Creates&nbsp;a&nbsp;dialog&nbsp;which&nbsp;asks&nbsp;the&nbsp;user&nbsp;for&nbsp;the&nbsp;value&nbsp;cfgitems.<br>
+&nbsp;<br>
+cfgitems&nbsp;is&nbsp;the&nbsp;list&nbsp;of&nbsp;items&nbsp;that&nbsp;can&nbsp;be&nbsp;configured.<br>
+Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;holding&nbsp;at&nbsp;least&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;item,<br>
+and&nbsp;possible&nbsp;some&nbsp;more&nbsp;elements&nbsp;that&nbsp;limit&nbsp;the&nbsp;type&nbsp;of&nbsp;data<br>
+that&nbsp;can&nbsp;be&nbsp;entered.<br>
+name,value,type,range,default<br>
+It&nbsp;should&nbsp;fit&nbsp;one&nbsp;of&nbsp;the&nbsp;following&nbsp;schemes:<br>
+('name')&nbsp;or&nbsp;('name',str)&nbsp;:&nbsp;type&nbsp;string,&nbsp;any&nbsp;string&nbsp;input&nbsp;allowed<br>
+('name',int)&nbsp;:&nbsp;type&nbsp;int,&nbsp;any&nbsp;integer&nbsp;value&nbsp;allowed<br>
+('name',int,'min','max')&nbsp;:&nbsp;type&nbsp;int,&nbsp;only&nbsp;min&nbsp;&lt;=&nbsp;value&nbsp;&lt;=&nbsp;max&nbsp;allowed<br>
+For&nbsp;each&nbsp;item&nbsp;a&nbsp;label&nbsp;with&nbsp;the&nbsp;name&nbsp;and&nbsp;a&nbsp;LineEdit&nbsp;widget&nbsp;are&nbsp;created,<br>
+with&nbsp;a&nbsp;validator&nbsp;function&nbsp;where&nbsp;appropriate.</tt></dd></dl>
 
 <dl><dt><a name="ConfigDialog-acceptdata"><strong>acceptdata</strong></a>(self)</dt></dl>
 
@@ -2018,8 +2032,7 @@ Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper<
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>A&nbsp;file&nbsp;selection&nbsp;dialog&nbsp;widget.<br>
 &nbsp;<br>
-You&nbsp;can&nbsp;specify&nbsp;a&nbsp;default&nbsp;path/filename&nbsp;that&nbsp;will&nbsp;be&nbsp;suggested<br>
-initially.<br>
+You&nbsp;can&nbsp;specify&nbsp;a&nbsp;default&nbsp;path/filename&nbsp;that&nbsp;will&nbsp;be&nbsp;suggested&nbsp;initially.<br>
 If&nbsp;a&nbsp;pattern&nbsp;is&nbsp;specified,&nbsp;only&nbsp;matching&nbsp;files&nbsp;will&nbsp;be&nbsp;shown.<br>
 A&nbsp;pattern&nbsp;can&nbsp;be&nbsp;something&nbsp;like&nbsp;'Images&nbsp;(*.png&nbsp;*.jpg)'.<br>
 Default&nbsp;mode&nbsp;is&nbsp;to&nbsp;accept&nbsp;only&nbsp;existing&nbsp;files.&nbsp;You&nbsp;can&nbsp;specify<br>
