@@ -37,10 +37,12 @@ def splitEndDigits(s):
 def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.
 
-    xval and yval should be lists of 3 values: [xmin,x0,xmax], [ymin,y0,ymax].
-    Together with the exponent exp, they define the response curve as function
-    of x. With an exponent > 0, the variation will be slow in the neighbourhood
-    of (x0,y0). For values x < xmin or x > xmax, the limit value ymin or ymax
+    xval and yval should be lists of 3 values:
+      [xmin,x0,xmax], [ymin,y0,ymax].
+    Together with the exponent exp, they define the response curve
+    as function of x. With an exponent > 0, the variation will be
+    slow in the neighbourhood of (x0,y0).
+    For values x < xmin or x > xmax, the limit value ymin or ymax
     is returned.
     """
     xmin,x0,xmax = xval

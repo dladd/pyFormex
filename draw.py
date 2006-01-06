@@ -120,22 +120,18 @@ def draw(F,view='__last__',color='prop',wait=True):
     mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait, currentView
+    if not isinstance(F,Formex):
+        raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
         drawwait()
     lastdrawn = F
-    # Maybe we should move some of this color handling to the FormexActor
-    if type(F.p) == type(None) or type(color) == type(None):
-        color = black
-    if type(color) == str and color == 'prop':
-        # use the prop as entry in a color table
-        color=GD.config['propcolors']
-    if len(color) == 3 and type(color[0]) == float and \
-           type(color[1]) == float and type(color[2]) == float:
-        # it is a single color
-        GD.canvas.addActor(FormexActor(F,color))
-    else:
-        # assume color is a colorset
-        GD.canvas.addActor(CFormexActor(F,color))
+    if type(color) == str:
+        if color == 'prop':
+            # use the prop as entry in a color table
+            color = GD.config.get('propcolors','[black]')
+        else:
+            color = GLColor(color)
+    GD.canvas.addActor(FormexActor(F,color,GD.config.get('linewidth',1)))
     if view:
         if view == '__last__':
             view = currentView
@@ -150,7 +146,17 @@ def drawTriade():
     """Show the global axes."""
     GD.canvas.addActor(TriadeActor(1.0))
     GD.canvas.update()
-    
+
+
+def drawtext(text,x,y,font='9x15'):
+    """Show a text at position x,y using font."""
+    decorate(TextActor(text,x,y,font))
+
+def decorate(actor):
+    """Draw a decoration."""
+    GD.canvas.addDecoration(actor)
+    GD.canvas.update()
+
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
@@ -175,14 +181,15 @@ def bgcolor(color):
 
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
-    GD.canvas.setLinewidth(float(wid))
+    #GD.canvas.setLinewidth(float(wid))
+    GD.config['linewidth'] = wid
 
 def clear():
-    """Remove all actors from the canvas"""
+    """Clear the canvas"""
     global allowwait
     if allowwait:
         drawwait()
-    GD.canvas.removeAllActors()
+    GD.canvas.removeAll()
     GD.canvas.clear()
 
 def redraw():

@@ -19,10 +19,10 @@ docdir= ${prefix}/share/doc
 ############# NOTHING CONFIGURABLE BELOW THIS LINE ###################
 include RELEASE
 
-PYFORMEXDIR= pyformex-${VERSION}
+PYFORMEXVER= pyformex-${VERSION}
 PYFORMEXREL= pyformex-${RELEASE}
-INSTDIR= ${libdir}/${PYFORMEXDIR}
-DOCINSTDIR= ${libdir}/${PYFORMEXDIR}/doc
+INSTDIR= ${libdir}/${PYFORMEXVER}
+DOCINSTDIR= ${libdir}/${PYFORMEXVER}/doc
 PROGRAM= pyformex
 PYSOURCE= ${addsuffix .py, ${PYMODULES}}
 SOURCE= ${PYSOURCE} pyformexrc
@@ -52,13 +52,13 @@ install: installdirs ${PROGRAM} ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} $
 	${INSTALL_DATA} ${DOCFILES} ${DESTDIR}${DOCINSTDIR}
 	${INSTALL_DATA} ${IMAGEFILES} ${DESTDIR}${DOCINSTDIR}/images
 	${INSTALL_DATA} ${HTMLDOCS} ${DESTDIR}${DOCINSTDIR}/html
-	${call makesymlink,${PROGRAM},${PYFORMEXDIR}/${PROGRAM}}
-	ln -sfn ${DOCINSTDIR} ${docdir}
+	${call makesymlink,${PROGRAM},${PYFORMEXVER}/${PROGRAM}}
+	ln -sfn ${DOCINSTDIR} ${DESTDIR}${docdir}/${PYFORMEXVER}
 
 # create a symlink $(1) in $(bindir) pointing to $(2) in $(libdir)
 # this will detect the special cases where $(bindir)==$(libdir)/bin or
 # $(bindir)==$(libdir)/../bin, and make a short relative symlink.
-makesymlink= if [ $(bindir) = $(subst lib,bin,$(libdir)) ]; then ln -sfn ../lib/$(2) $(bindir)/$(1); elif [ "$(bindir)" = "$(libdir)/bin" ]; then ln -sfn ../$(2) $(bindir)/$(1); else ln -sfn $(libdir)/$(2) $(bindir)/$(1); fi
+makesymlink= if [ $(bindir) = $(subst lib,bin,$(libdir)) ]; then ln -sfn ../lib/$(2) ${DESTDIR}$(bindir)/$(1); elif [ "$(bindir)" = "$(libdir)/bin" ]; then ln -sfn ../$(2) ${DESTDIR}$(bindir)/$(1); else ln -sfn $(libdir)/$(2) ${DESTDIR}$(bindir)/$(1); fi
 
 installdirs:
 	install -d ${DESTDIR}${bindir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html
@@ -72,7 +72,7 @@ uninstall:
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
 
-############ Creating Distribution ##################
+################# SHORTHANDS FOR DEVELOPERS ONLY ##################
 
 dist: Makefile.dist
 	${MAKE} -f Makefile.dist

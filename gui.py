@@ -39,7 +39,7 @@ def createViewAction(parent,name,icon,tooltip,menutext):
     """
     global views,viewsMenu,viewsBar
     dir = GD.config['icondir']
-    a = MyQAction(name,tooltip,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,parent)
+    a = MyQAction(name,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,parent)
     qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),draw.view)
     views.append(name)
     if viewsMenu:
@@ -58,7 +58,7 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
     if tooltip == None:
         tooltip = name
     if menutext == None:
-        menutext == name
+        menutext = name
     dir = GD.config['icondir']
     if not GD.canvas.views.has_key(name):
         createViewAction(GD.gui.main,name,icon,tooltip,menutext)

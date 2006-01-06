@@ -11,6 +11,7 @@ class MyQAction(qt.QAction):
         qt.QAction.__init__(self,*args)
         self.signal = text
         self.connect(self,qt.SIGNAL("activated()"),self.activated)
+        
     def activated(self):
         self.emit(qt.PYSIGNAL("Clicked"), (self.signal,))
 
@@ -29,6 +30,7 @@ class FileSelectionDialog(qt.QFileDialog):
         qt.QFileDialog.__init__(self,default,pattern)
         self.setMode(mode)
         self.show()
+        
     def getFilename(self):
         self.exec_loop()
         if self.result() == qt.QDialog.Accepted:

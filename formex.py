@@ -58,11 +58,12 @@ def unique(a):
     ## OK, this looks complex. And there might be a simpler way
     ## to do this in scipy, I just couldn't find any.
     ## Our algorithm:
-    ## First we sort the values (1-D). Then we create an array that flags
-    ## with a "1" all the elements which are larger than their predecessor.
+    ## First we sort the values (1-D). Then we create an array
+    ## that flags with a "1" all the elements which are larger
+    ## than their predecessor.
     ## The first element always gets flagged with a "1".
     ## Finally we take the flagged elements from the sorted array.
-    b = sort(a.flat)
+    b = sort(a.ravel())
     return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
 
 ##
@@ -339,6 +340,9 @@ class Formex:
     def prop(self):
         """Return the properties as a scipy array"""
         return self.p
+#    def items(self):
+#        """Return a list of (element,property) tuples"""
+        
 
     def element(self,i):
         """Return element i of the Formex"""
@@ -403,7 +407,11 @@ class Formex:
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""
-        return unique(self.p)
+        if type(self.p) == type(None):
+            print " No Properties!!"
+            return None
+        else:
+            return unique(self.p)
 
     def nodesAndElements(self):
         """Return a tuple of nodal coordinates and element connectivity.

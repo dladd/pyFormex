@@ -5,12 +5,13 @@
 
 #######################################################################
 # Setting this path correctly is required to import the analysis module
-# You need calpy >= 0.2.2
+# You need calpy >= 0.3
 # It can be downloaded from ftp://bumps.ugent.be/calpy/
 import sys
-sys.path.append('/usr/local/lib/calpy-0.2.2')
+sys.path.append('/usr/local/lib/calpy-0.3.1')
 #######################################################################
-
+linewidth(1.0)
+clear()
 from examples.X_truss import X_truss
 bgcolor(lightgrey)
 
@@ -92,49 +93,48 @@ ndof=bcon.max()
 nlc=1
 loads=zeros((ndof,nlc),Float)
 loads[:,0]=AssembleVector(loads[:,0],[ 0.0, -50.0, 0.0 ],bcon[nr_loaded,:])
-#warning("performing analysis: this may take some time")
+message("Performing analysis: this may take some time")
 displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
 
 # Creating a formex for displaying results is fairly easy
 results = Formex(coords[elems],range(nelems))
-
-clear()
-draw(results)
-
-# Now try to give the formex some meaingful colors
-# Even though there is only one resultant force per element, and only
-# one load case, the frc array returned by static will still have shape
-# (nelems,1,1). We select the results in a onedimensional vector val. 
+# Now try to give the formex some meaningful colors.
+# The frc array reutrns element forces and has shape
+#  (nelems,nforcevalues,nloadcases)
+# In this case there is only one resultant force per element (the
+# normal force), and only load case; we still need to select the
+# scalar element result values from the array into a onedimensional
+# vector val. 
 val = frc[:,0,0]
-
-# First : do it ourself
-vmin = val.min()
-vmax = val.max()
-rng = vmax-vmin
-# scale it
-sval = (val-vmin) / (vmax-vmin)
-# create colors with a black to red scale
-colorval = zeros((nelems,3),Float)
-colorval[:,0] = sval
-aprint(colorval,header=['Red','Green','Blue'])
-clear()
-draw(results,color=colorval)
-
-# Second way : use the colorscale module
-from colorscale import *
-CS = ColorScale('BGR',vmin,vmax,0.)
+# create a colorscale
+CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
 cval = array(map(CS.color,val))
-aprint(cval,header=['Red','Green','Blue'])
+#aprint(cval,header=['Red','Green','Blue'])
 clear()
 draw(results,color=cval)
 
-# show some other color cales:
+bgcolor('lightgreen')
+linewidth(3)
+drawtext('Normal force in the truss members',400,100,'tr24')
+CL = ColorLegend(CS,100)
+CLA = ColorLegendActor(CL,10,10,30,200) 
+GD.canvas.addDecoration(CLA)
+GD.canvas.update()
 
-drawtimeout=1
-for palet in [ 'RGB', 'BWR', 'GWB', 'BW' ]:
-    CS = ColorScale(palet,vmin,vmax,0.)
-    cval = array(map(CS.color,val))
-    clear()
-    draw(results,color=cval)
+# and a deformed plot
+print coords.shape
+print displ.shape
+dscale = 10000.
+dcoords = coords + dscale * displ[:,:,0] # first load case
+deformed = Formex(dcoords[elems],range(nelems))
+clear()
+GD.canvas.addDecoration(CLA)
+linewidth(1)
+draw(results,color='darkgreen')
+linewidth(3)
+draw(deformed,color=cval)
+drawtext('Normal force in the truss members',400,100,'tr24')
+drawtext('Deformed geometry (scale %.2f)' % dscale,400,130,'tr24')
+
 
 # End

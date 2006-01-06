@@ -4,10 +4,8 @@
 #
 # TODO : we want to move the Qt dependencies as much as possible out of
 #        this module
-# TODO : we want to move the actual GL actors out of this module
 
-
-import sys,math
+import math
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
@@ -16,285 +14,11 @@ import qt
 import qtgl
 
 from colors import *
-from formex import *
+from actors import *
+from decorations import *
 from camera import *
 from utils import stuur
 import vector
-   
-def drawGrid(x1, y1, x2, y2, nx, ny):
-    """Draw a rectangular grid of lines
-        
-    The rectangle has (x1,y1) and and (x2,y2) as opposite corners.
-    There are (nx,ny) subdivisions along the (x,y)-axis. So the grid
-    has (nx+1) * (ny+1) lines. nx=ny=1 draws a rectangle. nx=0 draws 1
-    vertical line (at x1). nx=-1 gives only horizontal lines.
-    
-    """
-    GL.glBegin(GL.GL_LINES)
-    ix = range(nx+1)
-    jx = [ nx-i for i in ix ]
-    for i,j in zip(ix,jx):
-        x = (i*x1+j*x2)/nx
-        GL.glVertex2f(x, y1)
-        GL.glVertex2f(x, y2)
-        iy = range(ny+1)
-        jy = [ ny-i for i in iy ]
-        for i,j in zip(iy,jy):
-            y = (i*y1+j*y2)/ny
-            GL.glVertex2f(x1, y)
-            GL.glVertex2f(x2, y)
-    GL.glEnd()
-
-def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
-    """Draws a centered cube with side 2*s and colored faces.
-
-    Colors are specified in the order [FRONT,BACK,RIGHT,LEFT,TOP,BOTTOM].
-    """
-    vertices = [[s,s,s],[-s,s,s],[-s,-s,s],[s,-s,s],[s,s,-s],[-s,s,-s],[-s,-s,-s],[s,-s,-s]]
-    planes = [[0,1,2,3],[4,5,6,7],[0,3,7,4],[1,2,6,5],[0,1,5,4],[3,2,6,7]]
-    GL.glBegin(GL.GL_QUADS)
-    for i in range(6):
-        #glNormal3d(0,1,0);
-        GL.glColor(*color[i])
-        for j in planes[i]:
-            GL.glVertex3f(*vertices[j])
-    GL.glEnd()
-
-def drawSphere(s,color=cyan,ndiv=8):
-    """Draws a centered sphere with radius s in given color."""
-    quad = GLU.gluNewQuadric()
-    GLU.gluQuadricNormals(quad, GLU.GLU_SMOOTH)
-    GL.glColor(*color)
-    GLU.gluSphere(quad,s,ndiv,ndiv)
-
-
-### Actors ###############################################
-#
-# Actors are anything that can be drawn on an openGL canvas.
-# An actor minimally needs two functions:
-#   bbox() : to calculate the bounding box of the actor.
-#   draw() : to actually draw the actor.
-
-class CubeActor:
-    """An OpenGL actor with cubic shape and 6 colored sides."""
-
-    def __init__(self,size,color=[red,cyan,green,magenta,blue,yellow]):
-        self.size = size
-        self.color = color
-
-    def bbox(self):
-        return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
-
-    def draw(self,wireframe=False):
-        """Draw the cube."""
-        drawCube(self.size,self.color)
-
-class TriadeActor:
-    """An OpenGL actor representing a triade of global axes."""
-
-    def __init__(self,size,color=[red,green,blue,cyan,magenta,yellow]):
-        self.size = size
-        self.color = color
-
-    def bbox(self):
-        return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
-
-    def draw(self,wireframe=False):
-        """Draw the cube."""
-        GL.glShadeModel(GL.GL_FLAT)
-        GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
-        GL.glPolygonMode(GL.GL_BACK, GL.GL_LINE)
-        GL.glBegin(GL.GL_TRIANGLES)
-        GL.glColor(*self.color[0])
-        GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(1.0,0.0,0.0)
-        GL.glVertex3f(0.0,1.0,0.0)
-        GL.glColor(*self.color[1])
-        GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,1.0,0.0)
-        GL.glVertex3f(0.0,0.0,1.0)
-        GL.glColor(*self.color[2])
-        GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,0.0,1.0)
-        GL.glVertex3f(1.0,0.0,0.0)
-##        GL.glColor(*self.color[3])
-##        GL.glVertex3f(0.0,0.0,0.0)
-##        GL.glVertex3f(0.0,1.0,0.0)
-##        GL.glVertex3f(1.0,0.0,0.0)
-##        GL.glColor(*self.color[4])
-##        GL.glVertex3f(0.0,0.0,0.0)
-##        GL.glVertex3f(0.0,0.0,1.0)
-##        GL.glVertex3f(0.0,1.0,0.0)
-##        GL.glColor(*self.color[5])
-##        GL.glVertex3f(0.0,0.0,0.0)
-##        GL.glVertex3f(1.0,0.0,0.0)
-##        GL.glVertex3f(0.0,0.0,1.0)
-        GL.glEnd()
-        GL.glBegin(GL.GL_LINES)
-        GL.glColor3f(*black)
-        GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(2.0,0.0,0.0)
-        GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,2.0,0.0)
-        GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,0.0,2.0)
-        GL.glEnd()
-
-
-class FormexActor(Formex):
-    """An OpenGL actor which is a Formex."""
-
-    def __init__(self,F,color=black):
-        Formex.__init__(self,F.data())
-        self.list = None
-        self.color = color
-        if self.plexitude() == 1:
-            self.setMark(self.size()/200,"cube")
-        
-    def draw(self,wireframe=True):
-        """Draw the formex."""
-        GL.glColor3f(*self.color)
-        nnod = self.plexitude()
-        if nnod == 2:
-            GL.glBegin(GL.GL_LINES)
-            for el in self.data():
-                for nod in el:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-            
-        elif nnod == 1:
-            for el in self.data():
-                GL.glPushMatrix()
-                GL.glTranslatef (*el[0])
-                GL.glCallList(self.mark)
-                GL.glPopMatrix()
-                
-        elif wireframe:
-            for el in self.data():
-                GL.glBegin(GL.GL_LINE_LOOP)
-                for nod in el:
-                    GL.glVertex3f(*nod)
-                GL.glEnd()
-        elif nnod == 3:
-            GL.glBegin(GL.GL_TRIANGLES)
-            for el in self.data():
-                for nod in el:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-        elif nnod == 4:
-            GL.glBegin(GL.GL_QUADS)
-            for el in self.data():
-                for nod in el:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-        else:
-            for el in self.data():
-                GL.glBegin(GL.GL_POLYGON)
-                for nod in el:
-                    GL.glVertex3f(*nod)
-                GL.glEnd()
-
-    def setMark(self,size,type):
-        """Create a symbol for drawing vertices."""
-        self.mark = GL.glGenLists(1)
-        GL.glNewList(self.mark,GL.GL_COMPILE)
-        if type == "sphere":
-            drawSphere(size)
-        else:
-            drawCube(size)
-        GL.glEndList()
-
-class CFormexActor(Formex):
-    """An OpenGL actor which is a multicolored Formex.
-
-    This is a variant of the FormexActor allowing for multiple colors. 
-    """
-
-    def __init__(self,F,colorset):
-        """Create a multicolored Formex actor.
-
-        The colors argument specifies a list of OpenGL colors for each
-        of the property values in the Formex. If the list has less
-        values that the PropSet, it is wrapped around.
-        """
-        Formex.__init__(self,F.data(),F.prop())
-        self.list = None
-        mprop = max(F.propSet()) + 1
-        self.colorset = [ colorset[v % len(colorset)] for v in range(mprop) ]
-        if self.plexitude() == 1:
-            self.setMark(self.size()/200,"cube")
-
-    # We need to further implement draw(). only nnod=2 done 
-    def draw(self,wireframe=True):
-        """Draw the formex."""
-        nnod = self.plexitude()
-        if nnod == 2:
-            GL.glBegin(GL.GL_LINES)
-            for i in range(self.nelems()):
-                col = self.colorset[int(self.p[i])]
-                GL.glColor3f(*(col))
-                for nod in self[i]:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-            
-        elif nnod == 1:
-            for el in self.data():
-                GL.glPushMatrix()
-                GL.glTranslatef (*el[0])
-                GL.glCallList(self.mark)
-                GL.glPopMatrix()
-                
-        elif wireframe:
-            for el in self.data():
-                GL.glBegin(GL.GL_LINE_LOOP)
-                for nod in el:
-                    GL.glVertex3f(*nod)
-                GL.glEnd()
-        elif nnod == 3:
-            GL.glBegin(GL.GL_TRIANGLES)
-            for el in self.data():
-                for nod in el:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-        elif nnod == 4:
-            GL.glBegin(GL.GL_QUADS)
-            for el in self.data():
-                for nod in el:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-        else:
-            for el in self.data():
-                GL.glBegin(GL.GL_POLYGON)
-                for nod in el:
-                    GL.glVertex3f(*nod)
-                GL.glEnd()
-
-    def setMark(self,size,type):
-        """Create a symbol for drawing vertices."""
-        self.mark = GL.glGenLists(1)
-        GL.glNewList(self.mark,GL.GL_COMPILE)
-        if type == "sphere":
-            drawSphere(size)
-        else:
-            drawCube(size)
-        GL.glEndList()
-
-
-class titleActor:
-    """A viewport decoration showing a colorscale legend."""
-    def __init__(self,title):
-        """Create a title"""
-        self.title = str(title)
-
-    def draw(self):
-        """draw the title."""
-        
-    
-
-class colorLegendActor:
-    """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorscale):
-        self.scale = colorscale
 
 
 ##################################################################
@@ -310,6 +34,7 @@ class Canvas(qtgl.QGLWidget):
         qtgl.QGLWidget.__init__(self,*args)
         self.setFocusPolicy(qt.QWidget.StrongFocus)
         self.actors = []       # an empty scene
+        self.decorations = []  # and no decorations
         self.views = { 'front': (0.,0.,0.),
                        'back': (180.,0.,0.),
                        'right': (90.,0.,0.),
@@ -325,6 +50,8 @@ class Canvas(qtgl.QGLWidget):
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # set GL context before creating the camera
         self.camera = Camera()
+        text1=TextActor('pyFormex, by B. Verhegghe',w/2,h/2,font='tr24',adjust='center',color=red)
+        self.addDecoration(text1)
         
     # These three are defined by the qtgl API
     def initializeGL(self):
@@ -342,7 +69,7 @@ class Canvas(qtgl.QGLWidget):
     def update(self):
         self.updateGL()
 
-# Do we use these??
+# Do we use/need these??
 ##    def setColor(self,s):
 ##        """Set the OpenGL color to the named color"""
 ##        self.qglColor(qt.QColor(s))
@@ -396,32 +123,61 @@ class Canvas(qtgl.QGLWidget):
                 self.bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
         #print "canvas.bbox=",self.bbox
          
-    def addActor(self,actor):
-        """Add an actor to the scene."""
+    def add_actor(self,actor,list):
+        """Add an actor to an actorlist."""
         self.makeCurrent()
         actor.list = GL.glGenLists(1)
         GL.glNewList(actor.list,GL.GL_COMPILE)
         actor.draw(self.wireframe)
         GL.glEndList()
-        self.actors.append(actor)
+        list.append(actor)
 
-    def removeActor(self,actor):
-        """Remove an actor from the scene"""
+    def remove_actor(self,actor,list):
+        """Remove an actor from an actorlist."""
         self.makeCurrent()
-        self.actors.remove(actor)
+        list.remove(actor)
         GL.glDeleteLists(actor.list,1)
 
-    def removeAllActors(self):
-        """Remove all actors from the scene"""
-        for a in self.actors:
-            GL.glDeleteLists(a.list,1)
-        self.actors = []
+    def recreate_actor(self,actor,list):
+        """Recreate an actor in a list."""
+        self.remove_actor(actor,list)
+        self.add_actor(actor,list) 
+         
+    def addActor(self,actor):
+        """Add a 3D actor to the 3D scene."""
+        self.add_actor(actor,self.actors)
+
+    def removeActor(self,actor):
+        """Remove a 3D actor from the 3D scene."""
+        self.remove_actor(actor,self.actors)
+         
+    def addDecoration(self,actor):
+        """Add a 2D decoration to the canvas."""
+        self.add_actor(actor,self.decorations)
+
+    def removeDecoration(self,actor):
+        """Remove a 2D decoration from the canvas."""
+        self.remove_actor(actor,self.decorations)
+
+    def removeActors(self,actorlist=None):
+        """Remove all actors in actorlist (default = all) from the scene."""
+        if actorlist == None:
+            actorlist = self.actors[:]
+        for actor in actorlist:
+            self.removeActor(actor)
         self.setBbox()
 
-    def recreateActor(self,actor):
-        """Recreate an actor in the scene"""
-        self.removeActor(actor)
-        self.addActor(actor) 
+    def removeDecorations(self,actorlist=None):
+        """Remove all decorations in actorlist (default = all) from the scene."""
+        if actorlist == None:
+            actorlist = self.decorations[:]
+        for actor in actorlist:
+            self.removeDecoration(actor)
+
+    def removeAll(self):
+        """Remove all actors and decorations"""
+        self.removeActors()
+        self.removeDecorations()
 
     def redrawActors(self,actorlist=None):
         """Redraw (some) actors in the scene.
@@ -448,9 +204,10 @@ class Canvas(qtgl.QGLWidget):
         self.redrawActors(self.actors)
 
     def clear(self):
+        """Clear the canvas to the background color."""
         self.makeCurrent()
 	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*RGBA(self.bgcolor))   # Clear The Background Color
+	GL.glClearColor(*RGBA(self.bgcolor))
 
     def display(self):
         """(Re)display all the actors in the scene.
@@ -458,22 +215,27 @@ class Canvas(qtgl.QGLWidget):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position or lens.
         """
-        self.makeCurrent()
-	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*RGBA(self.bgcolor))   # Clear The Background Color
+        self.clear()
         self.camera.loadProjection()
         self.camera.loadMatrix()
         for i in self.actors:
             GL.glCallList(i.list)
-        #GL.glMatrixMode (GL.GL_PROJECTION)
-        #GL.glLoadIdentity()
-        #GLU.gluOrtho2D (0, self.width(), 0, self.height())
-        #drawGrid(10,10,100,100,9,9)
-
-        
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        # Plot viewport decorations
+        GL.glLoadIdentity()
+        GL.glMatrixMode (GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        GLU.gluOrtho2D (0, self.width(), 0, self.height())
+        for i in self.decorations:
+            GL.glCallList(i.list)
+        # end plot viewport decorations
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
+    
     def resize (self,w,h):
         self.makeCurrent()
-	if h == 0:	# Prevent A Divide By Zero If The Window Is Too Small 
+	if h == 0:	# Prevent A Divide By Zero 
             h = 1
 	GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h

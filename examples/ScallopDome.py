@@ -15,6 +15,7 @@
 def show(F,view='front'):
     clear()
     draw(F,view)
+    GD.canvas.update()
     
 # Here we go
 message("Create a triangular pattern in the first octant")

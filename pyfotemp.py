@@ -3,7 +3,7 @@
 
 import globaldata as GD
 import gui
-import utils
+from utils import *
 import draw
 
 from widgets import *
@@ -284,9 +284,11 @@ def testwarning():
 def saveImage():
     """Save the current rendering in image format."""
     global canvas
-    fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+    dir = GD.config.get('workdir',".")
+    fs = FileSelectionDialog(dir,pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
     fn = fs.getFilename()
     if fn:
+        GD.config['workdir'] = os.path.dirname(fn)
         ext = os.path.splitext(fn)[1]
         fmt = imageFormatFromExt(ext)
         if fmt in qt.QImage.outputFormats():
