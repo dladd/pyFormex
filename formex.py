@@ -181,6 +181,107 @@ def rotationAboutMatrix(angle,axis):
              [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
 
 
+def newsort(f,bb,nodesperbox=1):
+    """Sorts an array of coordinate points."""
+    nnod = f.shape[0]
+    bb = array(bb)
+    sz = bb[1]-bb[0]
+    esz = sz[sz > 0.0]  # only keep the nonzero dimensions
+    vol = esz.prod()
+    nboxes = nnod / nodesperbox
+    #print "nboxes = %d" % nboxes
+    boxsz = (vol/nboxes) ** (1./esz.shape[0])
+    #print "Ideal box size = ",boxsz
+    nx = (sz/boxsz).astype(int)
+    #print "# of boxes: ",nx
+    dx = where(nx>0,sz/nx,boxsz)
+    #print "box size:",dx
+    nx = array(nx) + 1
+    #print "Final # of boxes: ",nx
+    ox = bb[0] - dx/2
+    #print "Origin: ",ox
+    # Create box number coordinates for all nodes
+    ind = floor((f-ox)/dx).astype(int)
+    #print "Box coordinates",ind
+    # sort in smallest direction first
+    o = argsort(nx)
+    #print "Axes order",o
+    jnd = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
+    #print "Sortvalue",jnd
+    crit =  nx[o[2]] *  nx[o[1]] * 2
+    #print "Critical diff in jnd " % crit
+    # (if diff>crit, the nodes are not in adjacent boxes)
+    srt = argsort(jnd)
+    return (srt,jnd,crit)
+
+
+def equivalence(x,nodesperbox=1,shift=0.5):
+    """Finds (almost) identical nodes and returns a compressed list.
+
+    The input x is an (nnod,3) array of nodal coordinates. This functions finds
+    the nodes that are very close and replaces them with a single node.
+    The return value is a tuple of two arrays: the remaining (nunique,3) nodal
+    coordinates, and an integer (nnod) array holding an index in the unique
+    coordinates array for each of the original nodes.
+
+    The procedure works by first dividing the 3D space in a number of
+    equally sized boxes, with a mean population of nodesperbox.
+    The boxes are numbered in the 3 directions and a unique integer scalar
+    is computed, that is then used to sort the nodes.
+    Then only nodes inside the same box are compared on almost equal
+    coordinates, using the scipy allclose() function. Close nodes are replaced
+    by a single one.
+
+    Currently the procedure does not guarantee to find all close nodes:
+    two close nodes might be in adjacent boxes. The performance hit for
+    testing adjacent boxes is rather high, and the probability of separating
+    two close nodes with the computed box limits is very small. Nevertheless
+    we intend to access this problem by repeating the procedure with the
+    boxes shifted in space.
+    """
+    if len(x.shape) != 2 or x.shape[1] != 3:
+        raise RuntimeError, "equivalence: expects an (nnod,3) coordinate array"
+    nnod = x.shape[0]
+    # Calculate box size
+    lo = array([ x[:,i].min() for i in range(3) ])
+    hi = array([ x[:,i].max() for i in range(3) ])
+    sz = hi-lo
+    esz = sz[sz > 0.0]  # only keep the nonzero dimensions
+    vol = esz.prod()
+    nboxes = nnod / nodesperbox # ideal total number of boxes
+    boxsz = (vol/nboxes) ** (1./esz.shape[0])
+    nx = (sz/boxsz).astype(int)
+    dx = where(nx>0,sz/nx,boxsz)
+    nx = array(nx) + 1
+    ox = lo - dx*shift # origin :  0 < shift < 1
+    # Create box coordinates for all nodes
+    ind = floor((x-ox)/dx).astype(int)
+    # Create unique box numbers in smallest direction first
+    o = argsort(nx)
+    val = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
+    # sort according to box number
+    srt = argsort(val)
+    # rearrange the data according to the sort order
+    val = val[srt]
+    x = x[srt]
+    # now compact
+    flag = ones((nnod,))   # 1 = new, 0 = existing node
+    sel = arange(nnod)     # replacement unique node nr
+    for i in range(nnod):
+        j = i-1
+        while j>=0 and val[i]==val[j]:
+            if allclose(x[i],x[j]):
+                # node i is same as node j
+                flag[i] = 0
+                sel[i] = sel[j]
+                sel[i+1:nnod] -= 1
+                break
+            j = j-1
+    x = x[flag>0]          # extract unique nodes
+    s = sel[argsort(srt)]  # and indices for old nodes
+    return (x,s)
+
+
 ###########################################################################
 ##
 ##   class Formex
@@ -413,7 +514,7 @@ class Formex:
         else:
             return unique(self.p)
 
-    def nodesAndElements(self):
+    def nodesAndElems(self,nodesperbox=1):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -425,37 +526,92 @@ class Formex:
            coords,elems = nodesAndElements(F)
         is accomplished by
            F = Formex(coords[elems])
+        There are currently 3 methods:
+          0 : secure but relatively slow
+          2 : secure but very slow
+          3 : blazing fast, but may skip a few equivalent nodes if
+              positioned just accross box boundaries.
+              In a future version we could shift the boxes over a half dx
+              and repeat the procedure. This will be done after we moved
+              equivalencing of nodes out of this Formex function.
         """
-        ## THIS IS RATHER SLOW IF PERFORMED ON A LARGE FORMEX
-        ## IT SHOULD BE IMPLEMENTED IN C (BUT THAT WILL BE FAR LESS ELEGANT)
+        f = reshape(self.f,(self.nnodes(),3))
+        f,s = equivalence(f,1,0.5)
+        e = reshape(s,self.f.shape[:2])
+        return (f,e)
+
+
+    def nodesAndElements(self,sortmethod=3,nodesperbox=1):
+        """Return a tuple of nodal coordinates and element connectivity.
+
+        A tuple of two arrays is returned. The first is float array with
+        the coordinates of the unique nodes of the Formex. The second is
+        an integer array with the node numbers connected by each element.
+        The elements come in the same order as they are in the Formex, but
+        the order of the nodes is unspecified.
+        By the way, the reverse operation of
+           coords,elems = nodesAndElements(F)
+        is accomplished by
+           F = Formex(coords[elems])
+        There are currently 3 methods:
+          0 : secure but relatively slow
+          2 : secure but very slow
+          3 : blazing fast, but may skip a few equivalent nodes if
+              positioned just accross box boundaries.
+              In a future version we could shift the boxes over a half dx
+              and repeat the procedure. This will be done after we moved
+              equivalencing of nodes out of this Formex function.
+        """
         nnod = self.nnodes()
         f = reshape(self.f,(nnod,3))
-        # first sort
-        sel = argsort(f[:,0])  # node numbers sorted
-        old = argsort(sel)     # old node numbers of sorted nodes
-        f = f[sel]             # sorted nodes 
-##        print 'sel',sel
-##        print 'old',old
+        # first sort (
+        if sortmethod==0: # sort on x only: COMPRESSING WILL BE SLOW
+            srt = argsort(f[:,0])
+        else: # Full 3D sorting: NEW!! COMPRESSING IS NOW FAST ENOUGH 
+            srt,val,crit = newsort(f,self.bbox(),nodesperbox)
+            val = val[srt]
+        f = f[srt]             # sorted nodes
+        old = argsort(srt)     # old node numbers of sorted nodes
         # now compact
         flag = ones((nnod,))   # 1 = new, 0 = existing node
         sel = arange(nnod)     # replacement unique node nr
-        for i in range(nnod):
-##            print 'flag',flag
-##            print 'sel',sel
-            j = i-1
-            while j>=0 and allclose(f[i][0],f[j][0]):
-                if allclose(f[i],f[j]):
-                    # node i is same as node j
-                    flag[i] = 0
-                    sel[i] = sel[j]
-                    sel[i+1:nnod] -= 1
-                    break
-                j = j-1
-##        print 'flag',flag
-##        print 'sel',sel
+        if sortmethod == 0:
+            for i in range(nnod):
+                j = i-1
+                while j>=0 and allclose(f[i][0],f[j][0]):
+                    if allclose(f[i],f[j]):
+                        # node i is same as node j
+                        flag[i] = 0
+                        sel[i] = sel[j]
+                        sel[i+1:nnod] -= 1
+                        break
+                    j = j-1
+        elif sortmethod == 2:
+            for i in range(nnod):
+                j = i-1
+                while j>=0 and abs(val[i]-val[j]) <= crit:
+                    if allclose(f[i],f[j]):
+                        # node i is same as node j
+                        flag[i] = 0
+                        sel[i] = sel[j]
+                        sel[i+1:nnod] -= 1
+                        break
+                    j = j-1
+        elif sortmethod == 3:
+            for i in range(nnod):
+                j = i-1
+                while j>=0 and val[i]==val[j]:
+                    if allclose(f[i],f[j]):
+                        # node i is same as node j
+                        flag[i] = 0
+                        sel[i] = sel[j]
+                        sel[i+1:nnod] -= 1
+                        break
+                    j = j-1
         f = f[flag>0]                           # extract unique nodes
         e = reshape(sel[old],self.f.shape[:2])  # create elements
         return (f,e)
+
 
 ##############################################################################
 # Create string representations of a Formex

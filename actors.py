@@ -123,7 +123,7 @@ class FormexActor(Formex):
         self.list = None
         if type(self.p) == type(None):
             self.setProp(arange(self.nelems()))
-            print "Properties:",self.p
+            #print "Properties:",self.p
         if len(color) == 3 and type(color[0]) == float and \
            type(color[1]) == float and type(color[2]) == float:
             color = [ color ] # turn single color into a list

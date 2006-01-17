@@ -12,6 +12,10 @@ import threading
 class Exit(Exception):
     """Exception raised to exit from a running script."""
     pass    
+
+class ExitAll(Exception):
+    """Exception raised to exit pyFormex from a script."""
+    pass    
     
 def wireframe():
     global allowwait
@@ -127,8 +131,10 @@ def draw(F,view='__last__',color='prop',wait=True):
     lastdrawn = F
     if type(color) == str:
         if color == 'prop':
-            # use the prop as entry in a color table
-            color = GD.config.get('propcolors','[black]')
+            if type(F.p) == type(None):
+                color = GD.config.get('defaultcolor',[black]) 
+            else: # use the prop as entry in a color table
+                color = GD.config.get('propcolors',[black])
         else:
             color = GLColor(color)
     GD.canvas.addActor(FormexActor(F,color,GD.config.get('linewidth',1)))
@@ -235,17 +241,21 @@ def playScript(scr,name="unnamed"):
     # scripts.
     g = globals()
     g.update(Formex.globals())
+    exitall = False
     try:
         try:
             exec scr in g
         except Exit:
             pass
+        except ExitAll:
+            exitall = True
     finally:
         scriptRunning = False # release the lock in case of an error
         message("Finished script")
         GD.gui.actions['Step'].setEnabled(False)
         GD.gui.actions['Continue'].setEnabled(False)
-
+    if exitall:
+        exit()
 
 def playFile(fn,name=None):
     """Play a formex script from file fn."""
@@ -267,9 +277,12 @@ def fforward():
     drawrelease()
     
 
-def exit():
+def exit(all=False):
     if scriptRunning:
-        raise Exit # exit from script
+        if all:
+            raise ExitAll # exit from pyformex
+        else:
+            raise Exit # exit from script only
     else:
         gui.exit() # exit from pyformex
         

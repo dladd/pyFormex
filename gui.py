@@ -139,10 +139,12 @@ class GUI:
         """Append a message to the message board."""
         self.board.append(qt.QString(s))
         self.board.moveCursor(qt.QTextEdit.MoveEnd,True)
+        self.board.update()
 
     def clearMessages(self,s):
         """Clear the message board."""
         self.board.setText("")
+        self.board.update()
 
     def showWarning(self,s):
         """Show a warning, to be acknowledged by the user."""
@@ -182,7 +184,7 @@ def runApp(args):
     GD.app_started = False
     for arg in args:
         if os.path.exists(arg):
-            playFile(arg)
+            draw.playFile(arg)
     GD.app_started = True
     GD.app.exec_loop()
 

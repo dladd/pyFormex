@@ -219,7 +219,7 @@ class ColorLegendActor(Decoration):
         for i,v in enumerate(self.cl.limits):
             y2 = y0 + i*dy
             if y2 >= y1 or i == 0:
-                drawText(str(v),x1,y2)   
+                drawText(("%%.%df" % self.dec) % v,x1,y2)   
                 y1 = y2 + dh
             
 
