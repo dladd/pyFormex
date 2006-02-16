@@ -5,17 +5,6 @@
 import qt,types
 
 
-class MyQAction(qt.QAction):
-    """A MyQAction is a QAction that sends a string as parameter when clicked."""
-    def __init__(self,text,*args):
-        qt.QAction.__init__(self,*args)
-        self.signal = text
-        self.connect(self,qt.SIGNAL("activated()"),self.activated)
-        
-    def activated(self):
-        self.emit(qt.PYSIGNAL("Clicked"), (self.signal,))
-
-
 class FileSelectionDialog(qt.QFileDialog):
     """A file selection dialog widget.
 
@@ -27,11 +16,17 @@ class FileSelectionDialog(qt.QFileDialog):
     
     """
     def __init__(self,default=None,pattern=None,mode=qt.QFileDialog.ExistingFile):
+        """The constructor shows the widget."""
         qt.QFileDialog.__init__(self,default,pattern)
         self.setMode(mode)
         self.show()
         
     def getFilename(self):
+        """Ask for a filename by user interaction.
+
+        Return the filename selected by the user.
+        If the user hits CANCEL or ESC, None is returned.
+        """
         self.exec_loop()
         if self.result() == qt.QDialog.Accepted:
             return str(self.selectedFile())
@@ -40,7 +35,10 @@ class FileSelectionDialog(qt.QFileDialog):
 
 
 class ConfigDialog(qt.QDialog):
-    """A dialog widget to set the value of one or more items."""
+    """A dialog widget to set the value of one or more items.
+
+    This feature is still experimental (though already used in a few places.
+    """
     
     def __init__(self,cfgitems):
         """Creates a dialog which asks the user for the value cfgitems.

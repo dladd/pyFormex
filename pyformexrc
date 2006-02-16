@@ -6,25 +6,30 @@
 # Config settings are read in order from this file, then /etc/pyformexrc,
 # finally ~/.pyformexrc. The last settings will override previous ones.
 #
-# The config is a Python dictionary and this file should be legal Python
-# All config settings should be of the form config[key]=value
+# The config is now read by the myconfig.Config class
 #
-config['width'] =  960   # default window width
-config['height'] = 720	 # default window height
-config['drawtimeout'] = 2  # default time (sec.) to wait between draw operationssleep (None is indefinitely)
-config['localaxes'] = True     # by default, buttons rotate/pan in local axes
-config['camerabuttons'] = True # add camera buttons to toolbar
-config['examplesmenu'] = True  # add examples menu
-config['zoomfactor'] = 1.25    # zooming factor for zoom buttons
-config['rotfactor'] = 5.       # rotation angle for rotation buttons
-config['panfactor'] = 5.       # translation factor for pan buttons
-config['propcolors'] = [black,red,green,blue,cyan,magenta,yellow,white] 
-   # a default color set for properties
-config['icondir'] = os.path.join(config['pyformexdir'],"icons")
-config['exampledir'] = os.path.join(config['pyformexdir'],"examples")
-config['viewsmenu'] = True # Add a Views menu
-config['viewsbar'] = True  # Add a Views toolbar
-config['builtinviews'] = ['front','back','right','left','top','bottom','iso']
-config['helpbookmarks'] = os.path.join(os.environ['HOME'],".pyformex.bookmarks")
-config['helphistory'] = os.path.join(os.environ['HOME'],".pyformex.history")
-config['docdir'] = os.path.join(config['pyformexdir'],"doc")
+import os
+from colors import *
+icondir = os.path.join(pyformexdir,"icons")
+exampledir = os.path.join(pyformexdir,"examples")
+docdir = os.path.join(pyformexdir,"doc")
+edit = 'gnuclient'   # editor command
+[help]
+bookmarks = os.path.join(os.environ['HOME'],".pyformex.bookmarks")
+history = os.path.join(os.environ['HOME'],".pyformex.history")
+[gui]
+width =  960         # default window width
+height = 720	     # default window height
+localaxes = True     # by default, buttons rotate/pan in local axes
+camerabuttons = True # add camera buttons to toolbar
+examplesmenu = True  # add examples menu
+viewsmenu = True     # add a Views menu
+viewsbar = True      # add a Views toolbar
+builtinviews = ['front','back','right','left','top','bottom','iso']
+zoomfactor = 1.25    # zooming factor for zoom buttons
+rotfactor = 5.       # rotation angle for rotation buttons
+panfactor = 5.       # translation factor for pan buttons
+propcolors = [black,red,green,blue,cyan,magenta,yellow,white] 
+                 # a default color set for properties
+drawwait = 2     # default time (sec.) to wait between draw operations
+                 # (None is indefinitely)

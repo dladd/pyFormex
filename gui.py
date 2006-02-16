@@ -5,11 +5,23 @@
 import globaldata as GD
 import canvas
 import draw
-from widgets import MyQAction
+import widgets
 
 import sys,time,os.path,string
 import qt
 import qtgl
+import editor
+
+
+class MyQAction(qt.QAction):
+    """A MyQAction is a QAction that sends a string as parameter when clicked."""
+    def __init__(self,text,*args):
+        qt.QAction.__init__(self,*args)
+        self.signal = text
+        self.connect(self,qt.SIGNAL("activated()"),self.activated)
+        
+    def activated(self):
+        self.emit(qt.PYSIGNAL("Clicked"), (self.signal,))
 
 
 ###################### Views #############################################
@@ -38,7 +50,7 @@ def createViewAction(parent,name,icon,tooltip,menutext):
     The toolbar button has icon and tooltip. The menu item has menutext. 
     """
     global views,viewsMenu,viewsBar
-    dir = GD.config['icondir']
+    dir = GD.cfg['icondir']
     a = MyQAction(name,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,parent)
     qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),draw.view)
     views.append(name)
@@ -59,7 +71,7 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
         tooltip = name
     if menutext == None:
         menutext = name
-    dir = GD.config['icondir']
+    dir = GD.cfg['icondir']
     if not GD.canvas.views.has_key(name):
         createViewAction(GD.gui.main,name,icon,tooltip,menutext)
     GD.canvas.createView(name,angles)
@@ -79,7 +91,7 @@ class GUI:
         on top, and a statusbar at the bottom.
         """
         global viewsMenu,viewsBar
-        wd,ht = (GD.config['width'],GD.config['height'])
+        wd,ht = (GD.cfg.gui['width'],GD.cfg.gui['height'])
         self.main = qt.QMainWindow()
         self.main.setCaption(GD.Version)
         self.main.resize(wd,ht)
@@ -89,6 +101,7 @@ class GUI:
         self.statusbar.addWidget(self.message)
         self.menu = self.main.menuBar()
         self.toolbar = qt.QToolBar(self.main)
+        self.editor = None
         # Create a box for the central widgets
         self.box = qt.QVBox(self.main)
         #self.box.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
@@ -120,19 +133,19 @@ class GUI:
         PT.addDefaultMenu(self.menu)
         # ... and the toolbar
         self.actions = PT.addActionButtons(self.toolbar)
-        if GD.config.setdefault('camerabuttons',True):
+        if GD.cfg.gui.setdefault('camerabuttons',True):
             PT.addCameraButtons(self.toolbar)
         # ... and the views menu
         viewsMenu = None
-        if GD.config.setdefault('viewsmenu',True):
+        if GD.cfg.gui.setdefault('viewsmenu',True):
             viewsMenu = qt.QPopupMenu(self.menu)
             self.menu.insertItem('View',viewsMenu,-1,2)
         # ... and the views toolbar
         viewsBar = None
-        if GD.config.setdefault('viewsbar',True):
+        if GD.cfg.gui.setdefault('viewsbar',True):
             viewsBar = qt.QToolBar("Views",self.main)
         # Create View Actions for the default views provided by the canvas
-        initViewActions(self.main,GD.config.setdefault('builtinviews',['front','back','left','right','top','bottom','iso']))
+        initViewActions(self.main,GD.cfg.gui.setdefault('builtinviews',['front','back','left','right','top','bottom','iso']))
         #self.showMessage(GD.Version+"   (C) B. Verhegghe")
 
     def showMessage(self,s):
@@ -165,6 +178,18 @@ class GUI:
 ##        if self.has('viewsBar'):
 ##            a.addTo(self.viewsBar)
     
+    def showEditor(self):
+        """Start the editor."""
+        if not hasattr(self,'editor'):
+            self.editor = Editor(self,'Editor')
+            self.editor.show()
+            self.editor.setText("Hallo\n")
+
+    def closetEditor(self):
+        """Start the editor."""
+        if hasattr(self,'editor'):
+            self.editor.close()
+            self.editor = None
 
 ###########################  app  ################################
 

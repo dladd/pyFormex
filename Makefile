@@ -61,7 +61,7 @@ install: installdirs ${PROGRAM} ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} $
 makesymlink= if [ $(bindir) = $(subst lib,bin,$(libdir)) ]; then ln -sfn ../lib/$(2) ${DESTDIR}$(bindir)/$(1); elif [ "$(bindir)" = "$(libdir)/bin" ]; then ln -sfn ../$(2) ${DESTDIR}$(bindir)/$(1); else ln -sfn $(libdir)/$(2) ${DESTDIR}$(bindir)/$(1); fi
 
 installdirs:
-	install -d ${DESTDIR}${bindir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html
+	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html
 
 uninstall:
 	echo "There is no automatic uninstall procedure."""
@@ -71,6 +71,10 @@ uninstall:
 
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
+
+clean:
+	rm -f *.pyc
+	rm -f examples/*.pyc
 
 ################# SHORTHANDS FOR DEVELOPERS ONLY ##################
 

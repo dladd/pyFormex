@@ -5,41 +5,41 @@ import globaldata as GD
 import gui
 from utils import *
 import draw
+import widgets
+import canvas
 
-from widgets import *
-
-import sys,time,os.path,string
+import sys,time,os,string,commands
 import qt
 import qtgl
 
-def askConfigPreferences(items):
+def askConfigPreferences(items,section=None):
     """Ask preferences stored in config variables.
 
     Items in list should not have the value.
     """
     # insert current values
     for it in items:
-        it.insert(1,GD.config.setdefault(it[0],''))
+        it.insert(1,GD.cfg.setdefault(it[0],''))
     print "Asking Prefs ",items
-    res = ConfigDialog(items).process()
+    res = widgets.ConfigDialog(items).process()
     for r in res:
-        GD.config[r[0]] = r[1]
-    print GD.config
+        GD.cfg[r[0]] = r[1]
+    print GD.cfg
 
 def prefDrawtimeout():
     askConfigPreferences([['drawtimeout','int']])
 
 def prefBGcolor():
     #askConfigPreferences([['bgcolor']])
-    #draw.bgcolor(GD.config['bgcolor'])
-    col = qt.QColorDialog.getColor(qt.QColor(GD.config.setdefault('bgcolor','')))
+    #draw.bgcolor(GD.cfg['bgcolor'])
+    col = qt.QColorDialog.getColor(qt.QColor(GD.cfg.gui.setdefault('bgcolor','')))
     if col.isValid():
-        GD.config['bgcolor'] = col.name()
+        GD.cfg.gui['bgcolor'] = col.name()
         draw.bgcolor(col)
         
 def prefLinewidth():
     askConfigPreferences([['linewidth']])
-    draw.linewidth(GD.config['linewidth'])
+    draw.linewidth(GD.cfg.gui['linewidth'])
 
 def prefSize():
     GD.gui.resize(800,600)
@@ -48,8 +48,7 @@ def preferences():
     test = [["item1","value1"],
             ["item2",""],
             ["an item with a long name","and a very long value for this item, just to test the scrolling"]]
-    d = ConfigDialog(test)
-    res = d.process()
+    res = widgets.ConfigDialog(test).process()
     print res
 
 def AddMenuItems(menu, items=[]):
@@ -108,13 +107,14 @@ def AddMenuItems(menu, items=[]):
 #
 MenuData = [
     ("Popup","&File",[
-        ("Action","&Save","save"),
-        ("Action","Save &As","saveAs"),
+        ("Action","&Open","openFile"),
+        ("Action","&Play","play"),
+        ("Action","&Edit","editor"),
+#        ("Action","&Save","save"),
+#        ("Action","Save &As","saveAs"),
+        ("Sep",None,None),
         ("Action","Save &Image","saveImage"),
         ("Action","Toggle &MultiSave","multiSave"),
-        ("Sep",None,None),
-        ("Action","&Play","play"),
-        ("Action","&Record","record"),
         ("Sep",None,None),
         ("Action","E&xit","draw.exit"), ]),
     ("Popup","&Settings",[
@@ -127,6 +127,7 @@ MenuData = [
         ("Action","&LocalAxes","localAxes"),
         ("Action","&GlobalAxes","globalAxes"),
         ("Action","&Wireframe","draw.wireframe"),
+        ("Action","&Flat","draw.flat"),
         ("Action","&Smooth","draw.smooth"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","zoomIn"), 
@@ -157,13 +158,18 @@ MenuData = [
 
 # Examples Menu
 def insertExampleMenu():
-    """Insert the examples menu in the menudata."""
+    """Insert the examples menu in the menudata.
+
+    Examples are all the .py files in the subdirectory examples,
+    provided there name does not start with a '.' or '_' and
+    their first line ends with 'pyformex'
+    """
     global example
-    dir = os.path.join(GD.config['pyformexdir'],"examples")
+    dir = GD.cfg.exampledir
     if not os.path.isdir(dir):
         return
     example = filter(lambda s:s[-3:]==".py" and s[0]!='.' and s[0]!='_',os.listdir(dir))
-    example = filter(lambda s:file(os.path.join(GD.config['pyformexdir'],"examples",s)).readlines()[0].strip().endswith('pyformex'),example)
+    example = filter(lambda s:file(os.path.join(GD.cfg.exampledir,s)).readlines()[0].strip().endswith('pyformex'),example)
     example.sort()
     vm = ("Popup","&Examples",[
         ("VAction","&%s"%os.path.splitext(t)[0],("runExample",i)) for i,t in enumerate(example)
@@ -179,7 +185,7 @@ def addDefaultMenu(menu):
 def runExample(i):
     """Run example i from the list of found examples."""
     global example
-    draw.playFile(os.path.join(GD.config['pyformexdir'],"examples",example[i]))
+    draw.playFile(os.path.join(GD.cfg.exampledir,example[i]))
 
 def runExamples(n):
     """Run the first n examples."""
@@ -190,7 +196,7 @@ def runExamples(n):
 def addActionButtons(toolbar):
     global action
     action = {}
-    dir = GD.config['icondir']
+    dir = GD.cfg.icondir
     buttons = [ [ "Step", "next.xbm", draw.step, False ],
                 [ "Continue", "ff.xbm", draw.fforward, False ],
               ]
@@ -204,7 +210,7 @@ def addActionButtons(toolbar):
 
 # add camera buttons to toolbar (repeating)
 def addCameraButtons(toolbar):
-    dir = GD.config['icondir']
+    dir = GD.cfg['icondir']
     buttons = [ [ "Rotate left", "rotleft.xbm", rotLeft ],
                 [ "Rotate right", "rotright.xbm", rotRight ],
                 [ "Rotate up", "rotup.xbm", rotUp ],
@@ -236,10 +242,93 @@ def addCameraButtons(toolbar):
 
 def NotImplemented():
     draw.warning("This option has not been implemented yet!")
-    
+
+#####################################################################
+# Opening, Playing and Saving pyformex scripts
+
 save = NotImplemented
 saveAs = NotImplemented
-record = NotImplemented
+
+def editor():
+    if GD.gui.editor:
+        GD.gui.closeEditor()
+    else:
+        GD.gui.showEditor()
+
+# open a pyformex script
+def openFile():
+    dir = GD.cfg.get('workdir',".")
+    fs = widgets.FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
+    fn = fs.getFilename()
+    if fn:
+        GD.cfg['workdir'] = os.path.dirname(fn)
+        GD.cfg['curfile'] = fn
+        if GD.cfg['edit']:
+            cmd = GD.cfg['edit']
+            print cmd
+            print fn
+            pid = os.spawnlp(os.P_NOWAIT, cmd, cmd, fn)
+            print "Spawned %d" % pid
+
+# play the current file
+def play():
+    if not GD.cfg['curfile']:
+        playFile(GD.cfg['curfile'])
+
+    
+
+multisave = None
+
+def saveNext():
+    global multisave
+    name,nr,fmt = multisave
+    nr += 1
+    multisave = [ name,nr,fmt ]
+    GD.canvas.save(name % nr,fmt)
+
+
+def multiSave():
+    """Save a sequence of images.
+
+    If the filename supplied has a trailing numeric part, subsequent images
+    will be numbered continuing from this number. Otherwise a numeric part
+    -000, -001, will be added to the filename.
+    """
+    global canvas,multisave
+    if multisave:
+        print "Stop auto mode"
+        qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
+        multisave = None
+        return
+    
+    fs = widgets.FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+    fn = fs.getFilename()
+    if fn:
+        print "Start auto mode"
+        name,ext = os.path.splitext(fn)
+        fmt = imageFormatFromExt(ext)
+        print name,ext,fmt
+        if fmt in qt.QImage.outputFormats():
+            name,number = splitEndDigits(name)
+            if len(number) > 0:
+                nr = int(number)
+                name += "%%0%dd" % len(number)
+            else:
+                nr = 0
+                name += "-%03d"
+            if len(ext) == 0:
+                ext = '.%s' % fmt.lower()
+            name += ext
+            draw.warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
+            qt.QObject.connect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
+            multisave = [ name,nr,fmt ]
+        else:
+            draw.warning("Sorry, can not save in %s format!\n"
+                    "Suggest you use PNG format ;)"%fmt)
+
+
+############################################################################
+# online help system
 
 global help
 help = None
@@ -249,10 +338,10 @@ def showHelp():
     from helpviewer import HelpViewer
     print "help = ",help
     if help == None:
-        dir = os.path.join(GD.config['docdir'],"html")
+        dir = os.path.join(GD.cfg['docdir'],"html")
         home = os.path.join(dir,"formex.html")
         print "Help file = ",home
-        help = HelpViewer(home, dir,bookfile=GD.config['helpbookmarks'])
+        help = HelpViewer(home, dir,bookfile=GD.cfg['helpbookmarks'])
         help.setCaption("pyFormex - Helpviewer")
         help.setAbout("pyFormex Help", \
                   "This is the pyFormex HelpViewer.<p>It was modeled after the HelpViewer example " \
@@ -282,89 +371,38 @@ def testwarning():
 
     
 def saveImage():
-    """Save the current rendering in image format."""
+    """Save the current rendering in image format.
+
+    This function will open a file selection dialog, and if a valid
+    file is returned, the current OpenGL rendering will be saved to it.
+    """
     global canvas
-    dir = GD.config.get('workdir',".")
-    fs = FileSelectionDialog(dir,pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+    dir = GD.cfg.get('workdir',".")
+    fs = widgets.FileSelectionDialog(dir,pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
     fn = fs.getFilename()
     if fn:
-        GD.config['workdir'] = os.path.dirname(fn)
+        GD.cfg['workdir'] = os.path.dirname(fn)
         ext = os.path.splitext(fn)[1]
         fmt = imageFormatFromExt(ext)
-        if fmt in qt.QImage.outputFormats():
+        if fmt in GD.image_formats_qt + GD.image_formats_gl2ps:
             if len(ext) == 0:
-                fn += '.%s' % fmt.lower()
+                ext = '.%s' % fmt.lower()
+                fn += ext
+            if fmt == 'TEX':
+                draw.warning("This will only write a LaTeX fragment to include the image\n%s\nYou still have to create the .EPS format image separately.\n"
+                             % fn.replace(ext,'.eps'))
             GD.canvas.save(fn,fmt)
         else:
             draw.warning("Sorry, can not save in %s format!\n"
                     "Suggest you use PNG format ;)"%fmt)
 
-multisave = None
-
-def saveNext():
-    global multisave
-    name,nr,fmt = multisave
-    nr += 1
-    multisave = [ name,nr,fmt ]
-    GD.canvas.save(name % nr,fmt)
-
-
-def multiSave():
-    """Save a sequence of images.
-
-    If the filename supplied has a trailing numeric part, subsequent images
-    will be numbered continuing from this number. Otherwise a numeric part
-    -000, -001, will be added to the filename.
-    """
-    global canvas,multisave
-    if multisave:
-        print "Stop auto mode"
-        qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
-        multisave = None
-        return
-    
-    fs = FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
-    fn = fs.getFilename()
-    if fn:
-        print "Start auto mode"
-        name,ext = os.path.splitext(fn)
-        fmt = imageFormatFromExt(ext)
-        print name,ext,fmt
-        if fmt in qt.QImage.outputFormats():
-            name,number = splitEndDigits(name)
-            if len(number) > 0:
-                nr = int(number)
-                name += "%%0%dd" % len(number)
-            else:
-                nr = 0
-                name += "-%03d"
-            if len(ext) == 0:
-                ext = '.%s' % fmt.lower()
-            name += ext
-            draw.warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-            qt.QObject.connect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
-            multisave = [ name,nr,fmt ]
-        else:
-            draw.warning("Sorry, can not save in %s format!\n"
-                    "Suggest you use PNG format ;)"%fmt)
-
-#
-def play():
-    dir = GD.config.get('workdir',".")
-    fs = FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
-    fn = fs.getFilename()
-    if fn:
-        GD.config['workdir'] = os.path.dirname(fn)
-        playFile(fn)
-        
-
 def zoomIn():
     global canvas
-    GD.canvas.zoom(1./GD.config['zoomfactor'])
+    GD.canvas.zoom(1./GD.cfg['zoomfactor'])
     GD.canvas.update()
 def zoomOut():
     global canvas
-    GD.canvas.zoom(GD.config['zoomfactor'])
+    GD.canvas.zoom(GD.cfg['zoomfactor'])
     GD.canvas.update()
 ##def panRight():
 ##    global canvas,config
@@ -384,51 +422,51 @@ def zoomOut():
 ##    canvas.update()   
 def rotRight():
     global canvas
-    GD.canvas.camera.rotate(+GD.config['rotfactor'],0,1,0)
+    GD.canvas.camera.rotate(+GD.cfg['rotfactor'],0,1,0)
     GD.canvas.update()   
 def rotLeft():
     global canvas
-    GD.canvas.camera.rotate(-GD.config['rotfactor'],0,1,0)
+    GD.canvas.camera.rotate(-GD.cfg['rotfactor'],0,1,0)
     GD.canvas.update()   
 def rotUp():
     global canvas
-    GD.canvas.camera.rotate(-GD.config['rotfactor'],1,0,0)
+    GD.canvas.camera.rotate(-GD.cfg['rotfactor'],1,0,0)
     GD.canvas.update()   
 def rotDown():
     global canvas
-    GD.canvas.camera.rotate(+GD.config['rotfactor'],1,0,0)
+    GD.canvas.camera.rotate(+GD.cfg['rotfactor'],1,0,0)
     GD.canvas.update()   
 def twistLeft():
     global canvas
-    GD.canvas.camera.rotate(+GD.config['rotfactor'],0,0,1)
+    GD.canvas.camera.rotate(+GD.cfg['rotfactor'],0,0,1)
     GD.canvas.update()   
 def twistRight():
     global canvas
-    GD.canvas.camera.rotate(-GD.config['rotfactor'],0,0,1)
+    GD.canvas.camera.rotate(-GD.cfg['rotfactor'],0,0,1)
     GD.canvas.update()   
 def transLeft():
     global canvas
-    GD.canvas.camera.translate(-GD.config['panfactor'],0,0,GD.config['localaxes'])
+    GD.canvas.camera.translate(-GD.cfg['panfactor'],0,0,GD.cfg['localaxes'])
     GD.canvas.update()   
 def transRight():
     global canvas
-    GD.canvas.camera.translate(GD.config['panfactor'],0,0,GD.config['localaxes'])
+    GD.canvas.camera.translate(GD.cfg['panfactor'],0,0,GD.cfg['localaxes'])
     GD.canvas.update()   
 def transDown():
     global canvas
-    GD.canvas.camera.translate(0,-GD.config['panfactor'],0,GD.config['localaxes'])
+    GD.canvas.camera.translate(0,-GD.cfg['panfactor'],0,GD.cfg['localaxes'])
     GD.canvas.update()   
 def transUp():
     global canvas
-    GD.canvas.camera.translate(0,GD.config['panfactor'],0,GD.config['localaxes'])
+    GD.canvas.camera.translate(0,GD.cfg['panfactor'],0,GD.cfg['localaxes'])
     GD.canvas.update()   
 def dollyIn():
     global canvas
-    GD.canvas.camera.dolly(1./GD.config['zoomfactor'])
+    GD.canvas.camera.dolly(1./GD.cfg['zoomfactor'])
     GD.canvas.update()   
 def dollyOut():
     global canvas
-    GD.canvas.camera.dolly(GD.config['zoomfactor'])
+    GD.canvas.camera.dolly(GD.cfg['zoomfactor'])
     GD.canvas.update()   
 
 def frontView():
@@ -455,10 +493,18 @@ def userView(i=1):
      
 
 def localAxes():
-    GD.config['localaxes'] = True 
+    GD.cfg['localaxes'] = True 
 def globalAxes():
-    GD.config['localaxes'] = False 
+    GD.cfg['localaxes'] = False 
 
+
+def system(cmdline,result='output'):
+    if result == 'status':
+        return os.system(cmdline)
+    elif result == 'output':
+        return commands.getoutput(cmdline)
+    elif result == 'both':
+        return commands.getstatusoutput(cmdline)
 
 
 #### End

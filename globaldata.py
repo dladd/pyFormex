@@ -16,10 +16,14 @@ Version = "pyFormex 0.3-alpha"
 ##        if __main__.__dict__.has_key(name):
 ##            del  __main__.__dict__[name]
 
-config = {}
+import myconfig
+
+cfg = myconfig.Config()
 gui = None
 canvas = None
 PyFormex = {}  # globals that will be offered to scripts
+scriptName = None
+image_formats = []
 
 def debug(s):
     if options.debug:

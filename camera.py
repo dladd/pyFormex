@@ -8,7 +8,7 @@ import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 
 from vector import *
-from scipy import array,matrixmultiply,linalg
+import numpy
 import copy
 
 
@@ -229,7 +229,7 @@ class Camera:
         """Transform a vertex using the currently saved  Modelview matrix."""
         if len(v) == 3:
             v = v + [ 1. ]
-        v = matrixMultiply([v],self.m)[0]
+        v = numpy.matrixMultiply([v],self.m)[0]
         return [ a/v[3] for a in v[0:3] ]
 
     def toWorld(self,v,trl=False):
@@ -238,10 +238,10 @@ class Camera:
         The specified vector can have 3 or 4 (homogoneous) components.
         This uses the currently saved rotation matrix.
         """
-        a = linalg.inverse(array(self.rot))
+        a = numpy.linalg.inverse(numpy.array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
-        v = matrixmultiply(array(v),a)
+        v = numpy.matrixmultiply(numpy.array(v),a)
         return v[0:3] / v[3]
 
     

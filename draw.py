@@ -6,6 +6,8 @@ import globaldata as GD
 from formex import *
 from canvas import *
 from colors import *
+
+import pyfotemp
 import gui
 import threading
 
@@ -16,18 +18,22 @@ class Exit(Exception):
 class ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
     pass    
-    
-def wireframe():
-    global allowwait
-    GD.canvas.glinit("wireframe")
-    GD.canvas.redrawAll()
 
-def smooth():
+def renderMode(mode):
     global allowwait
     if allowwait:
         drawwait()
-    GD.canvas.glinit("render")
+    GD.canvas.glinit(mode)
     GD.canvas.redrawAll()
+    
+def wireframe():
+    renderMode("wireframe")
+    
+def flat():
+    renderMode("flat")
+    
+def smooth():
+    renderMode("smooth")
 
 def message(s):
     """Show a message to the user.
@@ -48,7 +54,7 @@ def warning(s):
 
 allowwait = True
 drawlocked = False
-drawtimeout = GD.config.get('drawwait',2)
+drawtimeout = GD.cfg.gui.get('drawwait',2)
 # set = 0 to disable wait
 # what if we want an indefinite wait (until step pressed)
 drawtimer = None
@@ -90,7 +96,7 @@ def drawrelease():
 
 currentView = 'front'
 
-def draw(F,view='__last__',color='prop',wait=True):
+def draw(F,view='__last__',color='prop',wait=True,eltype=None):
     """Draw a Formex on the canvas.
 
     Draws an actor on the canvas, and directs the camera to it from
@@ -132,12 +138,14 @@ def draw(F,view='__last__',color='prop',wait=True):
     if type(color) == str:
         if color == 'prop':
             if type(F.p) == type(None):
-                color = GD.config.get('defaultcolor',[black]) 
+                color = GD.cfg.gui.get('defaultcolor',[black]) 
             else: # use the prop as entry in a color table
-                color = GD.config.get('propcolors',[black])
+                color = GD.cfg.gui.get('propcolors',[black])
+        elif color == 'random':
+            color = random.random((F.nelems(),3))
         else:
             color = GLColor(color)
-    GD.canvas.addActor(FormexActor(F,color,GD.config.get('linewidth',1)))
+    GD.canvas.addActor(FormexActor(F,color,GD.cfg.gui.get('linewidth',1),eltype=eltype))
     if view:
         if view == '__last__':
             view = currentView
@@ -188,7 +196,7 @@ def bgcolor(color):
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
     #GD.canvas.setLinewidth(float(wid))
-    GD.config['linewidth'] = wid
+    GD.cfg.gui['linewidth'] = wid
 
 def clear():
     """Clear the canvas"""
@@ -212,7 +220,6 @@ def setview(name,angles):
 
 scriptDisabled = False
 scriptRunning = False
-scriptName = None
  
 def playScript(scr,name="unnamed"):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -221,13 +228,13 @@ def playScript(scr,name="unnamed"):
     There is a lock to prevent multiple scripts from being executed at the
     same time.
     """
-    global scriptRunning, scriptDisabled, scriptName, allowwait
+    global scriptRunning, scriptDisabled, allowwait
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
-    scriptName = name
+    GD.scriptName = name
     message("Running script (%s)" % name)
     GD.canvas.update()
     allowwait = True
@@ -240,7 +247,9 @@ def playScript(scr,name="unnamed"):
     # We might create a module with all operations accepted in
     # scripts.
     g = globals()
+    #print "Voor",g.get('__name__','Geen')
     g.update(Formex.globals())
+    #print "Na",g.get('__name__','Geen')
     exitall = False
     try:
         try:
@@ -260,7 +269,7 @@ def playScript(scr,name="unnamed"):
 def playFile(fn,name=None):
     """Play a formex script from file fn."""
     global currentView,drawtimeout 
-    drawtimeout = GD.config.get('drawwait',2)
+    drawtimeout = GD.cfg.gui.get('drawwait',2)
     currentView = 'front'
     playScript(file(fn,'r'),fn)
 
@@ -340,3 +349,10 @@ def listall():
 ##        print "bbox of displayed Formex",out.bbox()
 def printglobals():
     print globals()
+
+
+def save(filename,fmt):
+    GD.canvas.save(filename,fmt)
+
+def system(*args):
+    pyfotemp.system(*args)

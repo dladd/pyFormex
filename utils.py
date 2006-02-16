@@ -11,7 +11,9 @@ def imageFormatFromExt(ext):
     If the supplied extension is empty, the default format 'PNG' is returned.
     """
     if len(ext) > 0:
-        fmt = ext[1:].upper()  # remove the initial '.'
+        if ext[0] == '.':
+            ext = ext[1:]
+        fmt = ext.upper()  # remove the initial '.'
         if fmt == 'JPG':
             fmt = 'JPEG'
     else:  # no extension given: save as .png
@@ -77,3 +79,6 @@ def interrogate(item):
         doc = doc.strip()   # Remove leading/trailing whitespace.
         firstline = doc.split('\n')[0]
         print "DOC:     ", firstline
+
+def deprecated(old,new):
+    print "Function %s is deprecated: use %s instead" % (old,new)

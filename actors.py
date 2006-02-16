@@ -109,7 +109,7 @@ class TriadeActor:
 class FormexActor(Formex):
     """An OpenGL actor which is a Formex."""
 
-    def __init__(self,F,color=[black],linewidth=1.0):
+    def __init__(self,F,color=[black],linewidth=1.0,eltype=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -133,59 +133,78 @@ class FormexActor(Formex):
         self.linewidth = float(linewidth)
         if self.nnodel() == 1:
             self.setMark(self.size()/200,"cube")
+        self.eltype = eltype
 
     def draw(self,wireframe=True):
         """Draw the formex."""
         nnod = self.nnodel()
         nelem = self.nelems()
-        if nnod == 2:
-            GL.glLineWidth(self.linewidth)
-            GL.glBegin(GL.GL_LINES)
-            for i in range(nelem):
-                col = self.color[int(self.p[i])]
-                GL.glColor3f(*(col))
-                for nod in self[i]:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
-            
-        # We need to further color setting only nnod=2 done 
-        elif nnod == 1:
-            for el in self.data():
+        
+        if nnod == 1:
+            for elem in self.f:
                 GL.glPushMatrix()
-                GL.glTranslatef (*el[0])
+                GL.glTranslatef (*elem[0])
                 GL.glCallList(self.mark)
                 GL.glPopMatrix()
                 
-        elif wireframe:
+        elif nnod == 2:
             GL.glLineWidth(self.linewidth)
-            for i in range(nelem):
-                col = self.color[self.p[i]]
+            GL.glBegin(GL.GL_LINES)
+            for prop,elem in zip(self.p,self.f):
+                col = self.color[int(prop)]
+                GL.glColor3f(*(col))
+                for nod in elem:
+                    GL.glVertex3f(*nod)
+            GL.glEnd()
+            
+        elif wireframe and not self.eltype:
+            GL.glLineWidth(self.linewidth)
+            for prop,elem in zip(self.p,self.f):
+                col = self.color[int(prop)]
                 GL.glColor3f(*(col))
                 GL.glBegin(GL.GL_LINE_LOOP)
-                for nod in self[i]:
+                for nod in elem:
                     GL.glVertex3f(*nod)
                 GL.glEnd()
                 
         elif nnod == 3:
             GL.glBegin(GL.GL_TRIANGLES)
-            for el in self.data():
-                for nod in el:
+            for prop,elem in zip(self.p,self.f):
+                col = self.color[int(prop)]
+                GL.glColor3f(*(col))
+                for nod in elem:
                     GL.glVertex3f(*nod)
             GL.glEnd()
             
         elif nnod == 4:
-            GL.glBegin(GL.GL_QUADS)
-            for el in self.data():
-                for nod in el:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
+            if self.eltype=='tet':
+                print "draw surfaces"
+                GL.glBegin(GL.GL_TRIANGLES)
+                for prop,elem in zip(self.p,self.f):
+                    col = self.color[int(prop)]
+                    GL.glColor3f(*(col))
+                    for side in [ [0,1,2], [0,2,3], [0,3,1], [3,2,1] ]:
+                        for nod in elem[side]:
+                            GL.glVertex3f(*nod)
+                GL.glEnd()
+            else:
+                GL.glBegin(GL.GL_QUADS)
+                for i in range(nelem):
+                    col = self.color[int(self.p[i])]
+                    GL.glColor3f(*(col))
+                    for nod in self[i]:
+                        GL.glVertex3f(*nod)
+                GL.glEnd()
             
         else:
-            for el in self.data():
+            for prop,elem in zip(self.p,self.f):
+                col = self.color[int(prop)]
+                GL.glColor3f(*(col))
                 GL.glBegin(GL.GL_POLYGON)
-                for nod in el:
+                for nod in elem:
                     GL.glVertex3f(*nod)
                 GL.glEnd()
+
 
     def setMark(self,size,type):
         """Create a symbol for drawing vertices."""

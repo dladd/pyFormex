@@ -3,10 +3,7 @@
 """pyformex is a python implementation of Formex algebra"""
 
 import globaldata as GD
-from gui import runApp
 
-from colors import *    # needed for reading config file
-  # We should move this to a module
 import sys
 import os.path
 from optparse import OptionParser,make_option
@@ -19,17 +16,36 @@ def main(argv=None):
 
     It is responsible for reading the configuration file(s),
     processing the command line options and starting the application.
+
+    The basic configuration file is 'pyformexrc' located in the pyformex
+    directory. It should always be present and be left unchanged.
+    You can copy this file to another location if you want to make changes.
+    By default, pyformex will try to read the following extra configuration
+    files (in this order:
+       system-wide settings: /etc/pyformexrc
+       user settings:        $HOME/.pyformexrc
+       local settings        $PWD/.pyformexrc
+    Also, an extra config file can be specified in the command line.
+    Config file settings always override existing ones.
     """
     # this allows us to call main from the interpreter
     if argv is None:
         argv = sys.argv
-    # set the path to the pyformex files
-    config = GD.config
-    config['pyformexdir'] = os.path.dirname(os.path.realpath(argv[0]))
+    # get the path to the pyformex files, and store it in the config
+    pyformexdir = os.path.dirname(os.path.realpath(argv[0]))
+    # use a read, not an update, to set the pyformexdir as a variable
+    GD.cfg.read("pyformexdir = '%s'\n" % pyformexdir)
+
     # Read the default config file
-    f = os.path.join(config['pyformexdir'],"pyformexrc")
-    execfile(f)
-    #process options
+    GD.cfg.read(os.path.join(GD.cfg['pyformexdir'],"pyformexrc"))
+    # Read additional config files
+    for f in ["/etc/pyformexrc", \
+              os.path.join(os.environ['HOME'],".pyformexrc"), \
+              ".pyformexrc", ]:
+        if os.path.exists(f):
+            GD.cfg.read(f)
+
+    # Process options
     parser = OptionParser(
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ]",
         version = GD.Version,
@@ -40,14 +56,10 @@ def main(argv=None):
                     action="store_true", dest="debug", default=False)
         ])
     GD.options, args = parser.parse_args()
-    # Read the available config files
-    for f in ["/etc/pyformexrc", \
-              os.path.join(os.environ['HOME'],".pyformexrc"), \
-              ".pyformexrc", ]:
-        if os.path.exists(f):
-            execfile(f)
-            break
-    # Run the application
+
+    # Run the application with the remaining arguments
+    # We waited for importing the gui until the config was set
+    from gui import runApp
     return runApp(args)
 
 #### Go

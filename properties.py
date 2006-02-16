@@ -7,6 +7,29 @@ The classes in this module should not be relied upon. They may
 dissappear in future.
 """
 
+
+class Property(object):
+    """Properties related to a single node."""
+
+    def __init__(self,cload=None,bound=None):
+        """Create a new node property. Empty by default
+
+        A node property can hold the following sub-properties:
+        - cload : a concentrated load
+        - bound : a boundary condition
+        """
+        self.cload = cload
+        self.bound = bound
+
+    def __repr__(self):
+        """Format a node property into a string."""
+        return "{ cload: %s; bound: %s }" % (str(self.cload),str(self.bound))
+
+    def __getitem__(self,name):
+        """Return a named attribute."""
+        return getattr(self,name)
+
+
 class NodeProperty:
     """Properties related to a single node."""
 

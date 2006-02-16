@@ -2,7 +2,7 @@
 # $Id$
 # Creates random points, bars, triangles, quads, ...
 """Random"""
-from scipy import random
+from numpy import random
 npoints = 100
 P = Formex(random.random((npoints,1,3)))
 clear();draw(P);

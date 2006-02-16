@@ -2,11 +2,10 @@
 # $Id$
 """Formex algebra in python"""
 
-from scipy import *
+from numpy import *
 #
-#  We now use scipy instead of numarray
+#  We now use numpy instead of numarray
 #  Watch out for the following:
-#     - replace Float by float, etc
 #     - replace tests like  a == None  by type(a) == type(None)
 #     - int array elements can not be used directly as Python integers in
 #       indexing: use  int(p[i])  instead.
@@ -15,7 +14,7 @@ import math
 import vector
 import pickle
 
-# default float and int types
+# default float and int types used in the Formex data
 Float = float32
 Int = int32
 
@@ -56,7 +55,7 @@ def inside(p,mi,ma):
 def unique(a):
     """Return the unique elements in an integer array."""
     ## OK, this looks complex. And there might be a simpler way
-    ## to do this in scipy, I just couldn't find any.
+    ## to do this in numpy, I just couldn't find any.
     ## Our algorithm:
     ## First we sort the values (1-D). Then we create an array
     ## that flags with a "1" all the elements which are larger
@@ -181,40 +180,6 @@ def rotationAboutMatrix(angle,axis):
              [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
 
 
-def newsort(f,bb,nodesperbox=1):
-    """Sorts an array of coordinate points."""
-    nnod = f.shape[0]
-    bb = array(bb)
-    sz = bb[1]-bb[0]
-    esz = sz[sz > 0.0]  # only keep the nonzero dimensions
-    vol = esz.prod()
-    nboxes = nnod / nodesperbox
-    #print "nboxes = %d" % nboxes
-    boxsz = (vol/nboxes) ** (1./esz.shape[0])
-    #print "Ideal box size = ",boxsz
-    nx = (sz/boxsz).astype(int)
-    #print "# of boxes: ",nx
-    dx = where(nx>0,sz/nx,boxsz)
-    #print "box size:",dx
-    nx = array(nx) + 1
-    #print "Final # of boxes: ",nx
-    ox = bb[0] - dx/2
-    #print "Origin: ",ox
-    # Create box number coordinates for all nodes
-    ind = floor((f-ox)/dx).astype(int)
-    #print "Box coordinates",ind
-    # sort in smallest direction first
-    o = argsort(nx)
-    #print "Axes order",o
-    jnd = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
-    #print "Sortvalue",jnd
-    crit =  nx[o[2]] *  nx[o[1]] * 2
-    #print "Critical diff in jnd " % crit
-    # (if diff>crit, the nodes are not in adjacent boxes)
-    srt = argsort(jnd)
-    return (srt,jnd,crit)
-
-
 def equivalence(x,nodesperbox=1,shift=0.5):
     """Finds (almost) identical nodes and returns a compressed list.
 
@@ -229,7 +194,7 @@ def equivalence(x,nodesperbox=1,shift=0.5):
     The boxes are numbered in the 3 directions and a unique integer scalar
     is computed, that is then used to sort the nodes.
     Then only nodes inside the same box are compared on almost equal
-    coordinates, using the scipy allclose() function. Close nodes are replaced
+    coordinates, using the numpy allclose() function. Close nodes are replaced
     by a single one.
 
     Currently the procedure does not guarantee to find all close nodes:
@@ -313,7 +278,7 @@ def equivalence(x,nodesperbox=1,shift=0.5):
 #
 
 class Formex:
-    """A Formex is a scipy array of order 3 (axes 0,1,2) and type Float.
+    """A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
 
     A row along the axis 2 is a set of coordinates and represents a point
@@ -349,7 +314,11 @@ class Formex:
             
     def globals(self):
         """Return the list of globals defined in this module."""
-        return globals()
+        g = globals()
+        if g.has_key('__name__'):
+            del g['__name__']
+        return g
+        
     globals = classmethod(globals)
 
 ###########################################################################
@@ -427,7 +396,7 @@ class Formex:
         return self.f.shape
 
     def data(self):
-        """Return the Formex as a scipy array"""
+        """Return the Formex as a numpy array"""
         return self.f
     def x(self):
         """Return the x-plane (can be modified)"""
@@ -439,7 +408,7 @@ class Formex:
         """Return the z-plane (can be modified)"""
         return self.f[:,:,2]
     def prop(self):
-        """Return the properties as a scipy array"""
+        """Return the properties as a numpy array"""
         return self.p
 #    def items(self):
 #        """Return a list of (element,property) tuples"""
@@ -514,7 +483,9 @@ class Formex:
         else:
             return unique(self.p)
 
-    def nodesAndElems(self,nodesperbox=1):
+
+## NEW IMPLEMENTATION : MUCH FASTER ON LARGE FORMICES !!
+    def nodesAndElements(self,nodesperbox=1):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -526,90 +497,15 @@ class Formex:
            coords,elems = nodesAndElements(F)
         is accomplished by
            F = Formex(coords[elems])
-        There are currently 3 methods:
-          0 : secure but relatively slow
-          2 : secure but very slow
-          3 : blazing fast, but may skip a few equivalent nodes if
-              positioned just accross box boundaries.
-              In a future version we could shift the boxes over a half dx
-              and repeat the procedure. This will be done after we moved
-              equivalencing of nodes out of this Formex function.
         """
         f = reshape(self.f,(self.nnodes(),3))
-        f,s = equivalence(f,1,0.5)
+        f,s = equivalence(f,nodesperbox,0.5)
+        #
+        # We really should repeat this operation with another shift (0.75)
+        # and we might have to use higher values of nodesperbox for
+        # extremely large formices --> research needed
+        #
         e = reshape(s,self.f.shape[:2])
-        return (f,e)
-
-
-    def nodesAndElements(self,sortmethod=3,nodesperbox=1):
-        """Return a tuple of nodal coordinates and element connectivity.
-
-        A tuple of two arrays is returned. The first is float array with
-        the coordinates of the unique nodes of the Formex. The second is
-        an integer array with the node numbers connected by each element.
-        The elements come in the same order as they are in the Formex, but
-        the order of the nodes is unspecified.
-        By the way, the reverse operation of
-           coords,elems = nodesAndElements(F)
-        is accomplished by
-           F = Formex(coords[elems])
-        There are currently 3 methods:
-          0 : secure but relatively slow
-          2 : secure but very slow
-          3 : blazing fast, but may skip a few equivalent nodes if
-              positioned just accross box boundaries.
-              In a future version we could shift the boxes over a half dx
-              and repeat the procedure. This will be done after we moved
-              equivalencing of nodes out of this Formex function.
-        """
-        nnod = self.nnodes()
-        f = reshape(self.f,(nnod,3))
-        # first sort (
-        if sortmethod==0: # sort on x only: COMPRESSING WILL BE SLOW
-            srt = argsort(f[:,0])
-        else: # Full 3D sorting: NEW!! COMPRESSING IS NOW FAST ENOUGH 
-            srt,val,crit = newsort(f,self.bbox(),nodesperbox)
-            val = val[srt]
-        f = f[srt]             # sorted nodes
-        old = argsort(srt)     # old node numbers of sorted nodes
-        # now compact
-        flag = ones((nnod,))   # 1 = new, 0 = existing node
-        sel = arange(nnod)     # replacement unique node nr
-        if sortmethod == 0:
-            for i in range(nnod):
-                j = i-1
-                while j>=0 and allclose(f[i][0],f[j][0]):
-                    if allclose(f[i],f[j]):
-                        # node i is same as node j
-                        flag[i] = 0
-                        sel[i] = sel[j]
-                        sel[i+1:nnod] -= 1
-                        break
-                    j = j-1
-        elif sortmethod == 2:
-            for i in range(nnod):
-                j = i-1
-                while j>=0 and abs(val[i]-val[j]) <= crit:
-                    if allclose(f[i],f[j]):
-                        # node i is same as node j
-                        flag[i] = 0
-                        sel[i] = sel[j]
-                        sel[i+1:nnod] -= 1
-                        break
-                    j = j-1
-        elif sortmethod == 3:
-            for i in range(nnod):
-                j = i-1
-                while j>=0 and val[i]==val[j]:
-                    if allclose(f[i],f[j]):
-                        # node i is same as node j
-                        flag[i] = 0
-                        sel[i] = sel[j]
-                        sel[i+1:nnod] -= 1
-                        break
-                    j = j-1
-        f = f[flag>0]                           # extract unique nodes
-        e = reshape(sel[old],self.f.shape[:2])  # create elements
         return (f,e)
 
 
@@ -656,7 +552,7 @@ class Formex:
         return s+"}"
                 
     def asArray(self):
-        """Return string representation as a scipy array."""
+        """Return string representation as a numpy array."""
         return self.f.__str__()
 
     def asFormexWithProp(self):
@@ -752,7 +648,7 @@ class Formex:
 ## existing Formex by a statement such as
 ##   F = F.op()
 ## While this may seem to create a lot of intermediate array data, Python and
-## scipy are clever enough to release the memory that is no longer used.
+## numpy are clever enough to release the memory that is no longer used.
 ##
 ##############################################################################
 #
@@ -806,7 +702,7 @@ class Formex:
         return F
     concatenate = classmethod(concatenate)
 
-    def hasProp(self,val):
+    def withProp(self,val):
         """Return a Formex which holds only the elements with property val.
 
         If the Formex has no properties, a copy is returned.
@@ -816,6 +712,7 @@ class Formex:
             return Formex(self.f)
         else:
             return Formex(self.f[self.p==val])
+
 
     def elbbox(self):
         """Return a Formex where each element is replaced by its bbox.
@@ -1181,7 +1078,7 @@ class Formex:
         replaced by func(x,y,z).
         The function must be applicable to arrays, so it should
         only include numerical operations and functions understood by the
-        scipy module.
+        numpy module.
         This method is one of several mapping methods. See also map1 and mapd.
         Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
         is equivalent with E.scale([2,3,4])
@@ -1203,7 +1100,7 @@ class Formex:
         replaced by func(x,y,z).
         The function must be applicable to arrays, so it should
         only include numerical operations and functions understood by the
-        scipy module.
+        numpy module.
         This method is one of several mapping methods. See also map1 and mapd.
         Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
         is equivalent with E.scale([2,3,4])
@@ -1219,7 +1116,7 @@ class Formex:
         one result. The coordinate dir will be replaced by func(coord[dir]).
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
-        scipy module.
+        numpy module.
         This method is one of several mapping methods. See also map and mapd.
         """
         f = self.f.copy()
@@ -1234,7 +1131,7 @@ class Formex:
         is calculated as the distance to <point>.
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
-        scipy module.
+        numpy module.
         By default, the distance d is calculated in 3-D, but one can specify
         a limited set of axes to calculate a 2-D or 1-D distance.
         This method is one of several mapping methods. See also map3 and map1.
@@ -1354,22 +1251,9 @@ class Formex:
             f[i] = matrixmultiply(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.p)
+
+    ## A formian compatibility function that we may keep
         
-
-##############################################################################
-#
-# Compatibility functions # deprecated !
-#
-# New users should avoid these functions!
-# They will be moved to a separate file in future!
-# Or may even be removed.
-#
-
-    # We changed connect into a global function, not a class method
-    def connect(self,Flist,nodid=None,bias=None,loop=False):
-        return connect(Flist,nodid,bias,loop)
-    connect = classmethod(connect)
-
     def translatem(self,*args):
         """Multiple subsequent translations in axis directions.
 
@@ -1383,6 +1267,30 @@ class Formex:
             tr[d] += t
         return self.translate(tr)
 
+    #########################################################################
+    #
+    # Obsolete and deprecated functions
+    #
+    # These functions are retained mainly for compatibility reasons.
+    # New users should avoid these functions!
+    # The may be removed in future.
+    #
+
+    def hasProp(self,*args):
+        import utils
+        utils.deprecated("Formex.hasProp","Formex.withProp")
+        return self.withProp(*args)
+    
+
+    # We changed connect into a global function, not a class method
+    def connect(self,Flist,nodid=None,bias=None,loop=False):
+        return connect(Flist,nodid,bias,loop)
+    connect = classmethod(connect)
+
+
+    # Formian compatibility functions
+    # These will be moved to a separate file in future.
+    #
     order = nelems
     plexitude = nnodel
     grade = ndim

@@ -5,6 +5,8 @@
 # TODO : we want to move the Qt dependencies as much as possible out of
 #        this module
 
+import globaldata as GD
+
 import math
 
 import OpenGL.GL as GL
@@ -13,13 +15,23 @@ import OpenGL.GLU as GLU
 import qt
 import qtgl
 
+import camera
 from colors import *
 from actors import *
 from decorations import *
-from camera import *
 from utils import stuur
 import vector
 
+GD.image_formats_qt = qt.QImage.outputFormats()
+
+### load draw_ps if gl2ps available
+try:
+    import gl2ps
+    _has_gl2ps = True
+except ImportError:
+    _has_gl2ps = False
+
+_start_message = GD.Version + ', by B. Verhegghe'
 
 ##################################################################
 #
@@ -49,8 +61,8 @@ class Canvas(qtgl.QGLWidget):
         self.wireframe = True
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # set GL context before creating the camera
-        self.camera = Camera()
-        text1=TextActor('pyFormex, by B. Verhegghe',w/2,h/2,font='tr24',adjust='center',color=red)
+        self.camera = camera.Camera()
+        text1=TextActor(_start_message,w/2,h/2,font='tr24',adjust='center',color=red)
         self.addDecoration(text1)
         
     # These three are defined by the qtgl API
@@ -78,7 +90,7 @@ class Canvas(qtgl.QGLWidget):
 ##        """Clear the OpenGL widget with the named background color"""
 ##        self.qglClearColor(qt.QColor(s))
 
-    def glinit(self,mode="wireframe"):
+    def glinit(self,mode="flat"):
 	GL.glClearColor(*RGBA(self.bgcolor))# Clear The Background Color
 	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
@@ -87,25 +99,31 @@ class Canvas(qtgl.QGLWidget):
             self.wireframe = True
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-        elif mode == "render":
+        elif mode == "flat":
+            self.wireframe = False
+            GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
+            GL.glDisable(GL.GL_LIGHTING)
+        elif mode == "smooth":
             self.wireframe = False
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
-            #print "set up lights"
-            GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,(0.5,0.5,0.5,1))
+            print "set up materials"
+            GL.glEnable(GL.GL_COLOR_MATERIAL)
+            GL.glColorMaterial ( GL.GL_FRONT, GL.GL_DIFFUSE )
+            print "set up lights"
+            GL.glEnable(GL.GL_LIGHTING)
+            GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,(0.5,0.5,0.5,1.0))
             GL.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
             GL.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
             GL.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, (-1.0, -1.0, 5.0))
+            GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, (-1., -1., 1.))
             GL.glEnable(GL.GL_LIGHT0)
             GL.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
             GL.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
             GL.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
             GL.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, (1.0, 1.0, 1.0))
             GL.glEnable(GL.GL_LIGHT1)
-            GL.glEnable(GL.GL_LIGHTING)
-            #print "set up materials"
-            GL.glEnable(GL.GL_COLOR_MATERIAL)
-            GL.glColorMaterial ( GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE )
+        else:
+            raise RuntimeError,"Unknown rendering mode"
 
     def setLinewidth(self,lw):
         """Set the linewidth for line rendering."""
@@ -272,12 +290,12 @@ class Canvas(qtgl.QGLWidget):
             bbox = self.bbox
         else:
             self.bbox = bbox
-        center,size = centerDiff(*bbox)
+        center,size = vector.centerDiff(*bbox)
         #print "Setting view for bbox",bbox
         #print "center=",center
         #print "size=",size
         # calculating the bounding circle: this is rather conservative
-        dist = length(size)
+        dist = vector.length(size)
         #print "dist = ",dist
         self.camera.setCenter(*center)
         self.camera.setRotation(*angles)
@@ -385,9 +403,74 @@ class Canvas(qtgl.QGLWidget):
         if self.dynamic:
             self.dyna(e.x(),e.y())
 
-    def save(self,fn,fmt='PNG'):
+    def save(self,fn,fmt='PNG',options=None):
         """Save the current rendering as an image file."""
         self.makeCurrent()
-        GL.glFinish()
-        qim = self.grabFrameBuffer()
-        qim.save(fn,fmt)
+        if fmt in GD.image_formats_qt:
+            GL.glFinish()
+            qim = self.grabFrameBuffer()
+            qim.save(fn,fmt)
+        elif fmt in GD.image_formats_gl2ps:
+            self.savePS(fn,fmt)
+
+    if _has_gl2ps:
+
+        def savePS(self,filename,filetype=None,title='',producer='',
+                   viewport=None):
+            """ Export OpenGL rendering to PostScript/PDF/TeX format.
+
+            Exporting OpenGL renderings to PostScript is based on the PS2GL
+            library by Christophe Geuzaine (http://geuz.org/gl2ps/), linked
+            to Python by Toby Whites's wrapper
+            (http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz)
+
+            This function is only defined if the gl2ps module is found.
+
+            The filetype should be one of 'PS', 'EPS', 'PDF' or 'TEX'.
+            If not specified, the type is derived from the file extension.
+            In case of the 'TEX' filetype, two files are written: one with
+            the .tex extension, and one with .eps extension.
+            """
+            print self.actors
+            fp = file(filename, "wb")
+            if filetype:
+                filetype = self._gl2ps_types[filetype]
+            else:
+                s = filename.upper()
+                for ext in _gl2ps_types.keys():
+                    if s.endswith('.'+ext):
+                        filetype = self._gl2ps_types[ext]
+                        break
+                if not filetype:
+                    filetype = gl2ps.GL2PS_EPS
+            if not title:
+                title = filename
+            if not viewport:
+                viewport = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            bufsize = 0
+            state = gl2ps.GL2PS_OVERFLOW
+            options = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET
+            ##| gl2ps.GL2PS_NO_BLENDING | gl2ps.GL2PS_OCCLUSION_CULL | gl2ps.GL2PS_BEST_ROOT
+            ##color = GL[[0.,0.,0.,0.]]
+            while state == gl2ps.GL2PS_OVERFLOW:
+                bufsize += 1024*1024
+                print filename,filetype
+                gl2ps.gl2psBeginPage(title, self._producer, viewport, filetype,
+                                     gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA, 0,
+                                     None, 0, 0, 0, bufsize, fp, filename)
+                self.display()
+                GL.glFinish()
+                state = gl2ps.gl2psEndPage()
+            fp.close()
+            print "File %s written" % filename
+
+        #Canvas.savePS = _savePS
+
+        _start_message += '\nCongratulations! You have gl2ps, so I activated drawPS!'
+
+        _producer = GD.Version + ' (http://pyformex.berlios.de)'
+        _gl2ps_types = { 'PS':gl2ps.GL2PS_PS, 'EPS':gl2ps.GL2PS_EPS,
+                         'PDF':gl2ps.GL2PS_PDF, 'TEX':gl2ps.GL2PS_TEX }
+        GD.image_formats_gl2ps = _gl2ps_types.keys()
+
+        print _start_message

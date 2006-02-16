@@ -6,7 +6,7 @@
 A 3D vector is a list of three floats.
 All operations are implemented in standard Python.
 If you need high performance numerical operations on lots of vectors,
-you should use scipy instead.
+you should use numpy instead.
 """
 
 import math

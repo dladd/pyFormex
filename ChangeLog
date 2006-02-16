@@ -8,6 +8,6 @@
 
 2005-12-10    <benedict.verhegghe@ugent.be>
 
-	* formex.py: moved from numarray to scipy
+	* formex.py: moved from numarray to numpy
 	(Formex.sort): now returns copy, leaves original Formex unchanged
 
