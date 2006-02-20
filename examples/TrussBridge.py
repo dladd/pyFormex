@@ -1,5 +1,12 @@
 #!/usr/bin/env pyformex
 # $Id$
+##
+## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
 #
 L = 12000 # Nominal length of the bridge
 N = 12    # Number of modules (should be even)

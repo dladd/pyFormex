@@ -1,11 +1,11 @@
 #!/usr/bin/env pyformex
 # $Id: DoubleLayer.py 17 2004-10-08 14:37:45Z bene $
 ##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
+## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
 ## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
 #
 """DoubleLayer"""

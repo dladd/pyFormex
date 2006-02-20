@@ -23,6 +23,7 @@ def askConfigPreferences(items,section=None):
     print "Asking Prefs ",items
     res = widgets.ConfigDialog(items).process()
     for r in res:
+        print r
         GD.cfg[r[0]] = r[1]
     print GD.cfg
 
@@ -32,14 +33,14 @@ def prefDrawtimeout():
 def prefBGcolor():
     #askConfigPreferences([['bgcolor']])
     #draw.bgcolor(GD.cfg['bgcolor'])
-    col = qt.QColorDialog.getColor(qt.QColor(GD.cfg.gui.setdefault('bgcolor','')))
+    col = qt.QColorDialog.getColor(qt.QColor(GD.cfg.setdefault('bgcolor','')))
     if col.isValid():
-        GD.cfg.gui['bgcolor'] = col.name()
+        GD.cfg['bgcolor'] = col.name()
         draw.bgcolor(col)
         
 def prefLinewidth():
     askConfigPreferences([['linewidth']])
-    draw.linewidth(GD.cfg.gui['linewidth'])
+    draw.linewidth(GD.cfg['linewidth'])
 
 def prefSize():
     GD.gui.resize(800,600)

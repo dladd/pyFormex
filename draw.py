@@ -138,14 +138,14 @@ def draw(F,view='__last__',color='prop',wait=True,eltype=None):
     if type(color) == str:
         if color == 'prop':
             if type(F.p) == type(None):
-                color = GD.cfg.gui.get('defaultcolor',[black]) 
+                color = GD.cfg.get('defaultcolor',[black]) 
             else: # use the prop as entry in a color table
-                color = GD.cfg.gui.get('propcolors',[black])
+                color = GD.cfg.get('propcolors',[black])
         elif color == 'random':
             color = random.random((F.nelems(),3))
         else:
             color = GLColor(color)
-    GD.canvas.addActor(FormexActor(F,color,GD.cfg.gui.get('linewidth',1),eltype=eltype))
+    GD.canvas.addActor(FormexActor(F,color,GD.cfg.get('linewidth',1),eltype=eltype))
     if view:
         if view == '__last__':
             view = currentView
@@ -196,7 +196,7 @@ def bgcolor(color):
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
     #GD.canvas.setLinewidth(float(wid))
-    GD.cfg.gui['linewidth'] = wid
+    GD.cfg.linewidth = wid
 
 def clear():
     """Clear the canvas"""

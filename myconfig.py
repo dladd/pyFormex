@@ -26,8 +26,9 @@ other Python dicts inside the top Config dictionary. The current version
 is limited to one level of sectioning.
 """
 
+from mydict import Dict
 
-class Config:
+class Config(Dict):
     """A configuration class allowing Python expressions in the input.
 
     The configuration settings are stored in the __dict__ of a Python object.
@@ -96,7 +97,8 @@ class Config:
         The latter includes the name of a config file, or a multiline string
         holding the contents of a configuration file.
         """
-        if type(data) == dict:
+        Dict.__init__(self)
+        if isinstance(data,dict):
             self.update(data)
         elif data:
             self.read(data)
@@ -116,7 +118,7 @@ class Config:
         empty dictionary (section) with that name.
 
         If removeLocals is set, keys starting with '_' are removed from the
-        data before updating the dictionaryand not
+        data before updating the dictionary and not
         included in the config. This behaviour can be changed by setting
         removeLocals to false.
         """
@@ -125,32 +127,11 @@ class Config:
                 if k[0] == '_':
                     del data[k]
         if name:
-            if not self[name] or not isinstance(self[name],dict):
-                self[name] = {}
+            if not self[name] or not isinstance(self[name],Dict):
+                self[name] = Dict()
             self[name].update(data)
         else:
-            self.__dict__.update(data)
-
-
-    def __getitem__(self,key):
-        """Allows items to be addressed as self[key].
-
-        It is not an error if the key does not exist: None is returned."""
-        return self.__dict__.get(key)
-
-
-    def get(self,key,default=None):
-        """Returns named item or default value if non-existent."""
-        return self.__dict__.get(key,default)
-
-
-    def __setitem__(self,key,value=None):
-        """Allows items to be set as self[key]=value"""
-        self.__dict__[key] = value
-    
-
-    def __str__(self):
-        return str(self.__dict__)
+            Dict.update(self,data)
 
     
     def _read_error(self,filename,lineno,line):
@@ -237,13 +218,12 @@ rng = range(_n)
     print C['aa']
     print C.get('dd',1)  # 1
     print C['dd']        # None
-    #print C.dd           # Error
-    D = Config()
-    print D
+    print C.dd           # None
     # beware for this though!
     print C.get
     print C['get']
-    C['get'] = 'ahllo'
+    C['get'] = 'hallo'
     print C
     print C.get('aa',1)
+    print C.get('ab',1)
         

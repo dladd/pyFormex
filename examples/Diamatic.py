@@ -1,11 +1,11 @@
 #!/usr/bin/env pyformex
 # $Id$
 ##
-## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
-## pyformex is a python implementation of Formex algebra
-## (c) 2004 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Releases can be found at ftp://mecatrix.ugent.be/pub/pyformex/
-## Distributed under the General Public License, see file COPYING for details
+## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
 #
 """Diamatic dome"""
