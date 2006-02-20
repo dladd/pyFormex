@@ -6,11 +6,14 @@ import globaldata as GD
 import canvas
 import draw
 import widgets
+import editor
 
 import sys,time,os.path,string
+
 import qt
 import qtgl
-import editor
+
+import pyfotemp as PT
 
 
 class MyQAction(qt.QAction):
@@ -78,8 +81,6 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
 
 def addboard():
     GD.board = GD.gui.addBoard()
-
-import pyfotemp as PT
 
 class GUI:
     """Implements a GUI for pyformex."""

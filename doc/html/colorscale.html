@@ -18,23 +18,83 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="colorscale.html#ColorScale">ColorScale</a>
+<dt><font face="helvetica, arial"><a href="colorscale.html#ColorLegend">ColorLegend</a>
+</font></dt><dt><font face="helvetica, arial"><a href="colorscale.html#ColorScale">ColorScale</a>
 </font></dt></dl>
  <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ColorLegend">class <strong>ColorLegend</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;colorlegend&nbsp;is&nbsp;a&nbsp;colorscale&nbsp;divided&nbsp;in&nbsp;a&nbsp;number&nbsp;of&nbsp;subranges.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ColorLegend-__init__"><strong>__init__</strong></a>(self, colorscale, n)</dt><dd><tt>Create&nbsp;a&nbsp;color&nbsp;legend&nbsp;dividing&nbsp;a&nbsp;colorscale&nbsp;in&nbsp;n&nbsp;subranges.<br>
+&nbsp;<br>
+The&nbsp;full&nbsp;value&nbsp;range&nbsp;of&nbsp;the&nbsp;colorscale&nbsp;is&nbsp;divided&nbsp;in&nbsp;n&nbsp;subranges,<br>
+each&nbsp;half&nbsp;range&nbsp;being&nbsp;divided&nbsp;in&nbsp;n/2&nbsp;subranges.<br>
+This&nbsp;sets&nbsp;n+1&nbsp;limits&nbsp;of&nbsp;the&nbsp;subranges.<br>
+The&nbsp;n&nbsp;colors&nbsp;of&nbsp;the&nbsp;subranges&nbsp;corrsepond&nbsp;to&nbsp;the&nbsp;subrange&nbsp;middle&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="ColorLegend-color"><strong>color</strong></a>(self, val)</dt><dd><tt>Return&nbsp;the&nbsp;color&nbsp;representing&nbsp;a&nbsp;value&nbsp;val.<br>
+&nbsp;<br>
+The&nbsp;color&nbsp;is&nbsp;that&nbsp;of&nbsp;the&nbsp;subrange&nbsp;holding&nbsp;the&nbsp;value.&nbsp;If&nbsp;the&nbsp;value<br>
+matches&nbsp;a&nbsp;subrange&nbsp;limit,&nbsp;the&nbsp;lower&nbsp;range&nbsp;color&nbsp;is&nbsp;returned.<br>
+If&nbsp;the&nbsp;value&nbsp;falls&nbsp;outside&nbsp;the&nbsp;colorscale&nbsp;range,&nbsp;a&nbsp;runtime&nbsp;error<br>
+is&nbsp;raised,&nbsp;unless&nbsp;the&nbsp;corresponding&nbsp;underflowcolor&nbsp;or&nbsp;overflowcolor<br>
+attribute&nbsp;has&nbsp;been&nbsp;set,&nbsp;in&nbsp;which&nbsp;case&nbsp;this&nbsp;attirbute&nbsp;is&nbsp;returned.<br>
+Though&nbsp;these&nbsp;attributes&nbsp;can&nbsp;be&nbsp;set&nbsp;to&nbsp;any&nbsp;not&nbsp;None&nbsp;value,&nbsp;it&nbsp;will<br>
+usually&nbsp;be&nbsp;set&nbsp;to&nbsp;some&nbsp;color&nbsp;value,&nbsp;that&nbsp;will&nbsp;be&nbsp;used&nbsp;to&nbsp;show<br>
+overflow&nbsp;values.<br>
+The&nbsp;returned&nbsp;color&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;three&nbsp;RGB&nbsp;values&nbsp;in&nbsp;the&nbsp;range&nbsp;0-1.</tt></dd></dl>
+
+<dl><dt><a name="ColorLegend-overflow"><strong>overflow</strong></a>(self, oflow<font color="#909090">=None</font>)</dt><dd><tt>Raise&nbsp;a&nbsp;runtime&nbsp;error&nbsp;if&nbsp;oflow&nbsp;==&nbsp;None,&nbsp;else&nbsp;return&nbsp;oflow.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="ColorScale">class <strong>ColorScale</strong></a></font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;colorscale&nbsp;maps&nbsp;a&nbsp;range&nbsp;of&nbsp;values&nbsp;into&nbsp;colors.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="ColorScale-__init__"><strong>__init__</strong></a>(self, palet, minval<font color="#909090">=0.0</font>, maxval<font color="#909090">=1.0</font>, midval<font color="#909090">=None</font>)</dt></dl>
+<dl><dt><a name="ColorScale-__init__"><strong>__init__</strong></a>(self, palet, minval<font color="#909090">=0.0</font>, maxval<font color="#909090">=1.0</font>, midval<font color="#909090">=None</font>, exp<font color="#909090">=1.0</font>, exp2<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;colorscale&nbsp;to&nbsp;map&nbsp;a&nbsp;range&nbsp;of&nbsp;values&nbsp;into&nbsp;colors.<br>
+&nbsp;<br>
+The&nbsp;values&nbsp;range&nbsp;from&nbsp;minval&nbsp;to&nbsp;maxval&nbsp;(default&nbsp;0.0..1.0).<br>
+&nbsp;<br>
+A&nbsp;midval&nbsp;may&nbsp;be&nbsp;specified&nbsp;to&nbsp;set&nbsp;the&nbsp;value&nbsp;corresponding&nbsp;to<br>
+the&nbsp;midle&nbsp;of&nbsp;the&nbsp;color&nbsp;scale.&nbsp;It&nbsp;defaults&nbsp;to&nbsp;the&nbsp;middle&nbsp;value<br>
+of&nbsp;the&nbsp;range.&nbsp;It&nbsp;is&nbsp;especially&nbsp;useful&nbsp;if&nbsp;the&nbsp;range&nbsp;extends&nbsp;over<br>
+negative&nbsp;and&nbsp;positive&nbsp;values&nbsp;to&nbsp;set&nbsp;0.0&nbsp;as&nbsp;the&nbsp;middle&nbsp;value.&nbsp;<br>
+&nbsp;<br>
+The&nbsp;palet&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;3&nbsp;colors,&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;minval,<br>
+midval&nbsp;and&nbsp;maxval&nbsp;respectively.&nbsp;The&nbsp;middle&nbsp;color&nbsp;may&nbsp;be&nbsp;given<br>
+as&nbsp;None,&nbsp;in&nbsp;which&nbsp;case&nbsp;it&nbsp;will&nbsp;be&nbsp;set&nbsp;to&nbsp;the&nbsp;middle&nbsp;color<br>
+between&nbsp;the&nbsp;first&nbsp;and&nbsp;last.<br>
+&nbsp;<br>
+Some&nbsp;useful&nbsp;palets&nbsp;are&nbsp;predefined&nbsp;in&nbsp;Palette.<br>
+&nbsp;<br>
+Mapping&nbsp;values&nbsp;to&nbsp;colors&nbsp;is&nbsp;linear&nbsp;by&nbsp;default.&nbsp;Nonlinear<br>
+mappings&nbsp;can&nbsp;be&nbsp;obtained&nbsp;by&nbsp;specifying&nbsp;an&nbsp;exponent.&nbsp;Mapping<br>
+is&nbsp;done&nbsp;with&nbsp;the&nbsp;stuur&nbsp;function&nbsp;from&nbsp;utils.py.<br>
+If&nbsp;2&nbsp;exponents&nbsp;are&nbsp;given,&nbsp;mapping&nbsp;is&nbsp;done&nbsp;independently&nbsp;in&nbsp;the<br>
+minval..midval&nbsp;range&nbsp;with&nbsp;exp&nbsp;and&nbsp;in&nbsp;the&nbsp;midval..maxval&nbsp;range<br>
+with&nbsp;exp2.</tt></dd></dl>
 
 <dl><dt><a name="ColorScale-color"><strong>color</strong></a>(self, val)</dt><dd><tt>Return&nbsp;the&nbsp;color&nbsp;representing&nbsp;a&nbsp;value&nbsp;val.<br>
 &nbsp;<br>
 The&nbsp;returned&nbsp;color&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;three&nbsp;RGB&nbsp;values&nbsp;in&nbsp;the&nbsp;range&nbsp;0-1.</tt></dd></dl>
 
 <dl><dt><a name="ColorScale-scale"><strong>scale</strong></a>(self, val)</dt><dd><tt>Scale&nbsp;a&nbsp;value&nbsp;to&nbsp;the&nbsp;range&nbsp;-1...1.</tt></dd></dl>
+
+<dl><dt><a name="ColorScale-scale2"><strong>scale2</strong></a>(self, val)</dt><dd><tt>Scale&nbsp;a&nbsp;value&nbsp;to&nbsp;the&nbsp;range&nbsp;-1...1.<br>
+&nbsp;<br>
+This&nbsp;scales&nbsp;indepently&nbsp;in&nbsp;one&nbsp;of&nbsp;the&nbsp;intervals<br>
+xmin..x0&nbsp;or&nbsp;x0..xmax.</tt></dd></dl>
 
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">

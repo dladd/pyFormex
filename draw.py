@@ -6,8 +6,8 @@ import globaldata as GD
 from formex import *
 from canvas import *
 from colors import *
-
 import pyfotemp
+
 import gui
 import threading
 
