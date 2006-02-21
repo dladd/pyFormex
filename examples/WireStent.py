@@ -95,9 +95,10 @@ if __name__ == "draw":
     clear()
     draw(H,view='iso')
     # and save it in a lot of graphics formats
-    for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
-        if ext == 'jpg':
-            fmt = 'JPEG'
-        else:
-            fmt = ext.upper()
-        save('examples/WireStent.'+ext,fmt)
+    if ack("Do you want to save this image (in lots of formats) ?"):
+        for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
+            if ext == 'jpg':
+                fmt = 'JPEG'
+            else:
+                fmt = ext.upper()
+            save('WireStent.'+ext,fmt)

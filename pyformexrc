@@ -17,6 +17,7 @@ edit = 'gnuclient'   # editor command
 #[draw]
 linewidth = 1
 propcolors = [black,red,green,blue,cyan,magenta,yellow,white] 
+                 # a default color set for properties
 [help]
 bookmarks = os.path.join(os.environ['HOME'],".pyformex.bookmarks")
 history = os.path.join(os.environ['HOME'],".pyformex.history")
@@ -32,6 +33,5 @@ builtinviews = ['front','back','right','left','top','bottom','iso']
 zoomfactor = 1.25    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 5.       # translation factor for pan buttons
-                 # a default color set for properties
-drawwait = 2     # default time (sec.) to wait between draw operations
-                 # (None is indefinitely)
+drawwait = 2         # default time (sec.) to wait between draw operations
+                     # (None is indefinitely)

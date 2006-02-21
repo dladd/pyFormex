@@ -6,7 +6,11 @@ import globaldata as GD
 import canvas
 import draw
 import widgets
-import editor
+
+#try:
+#    import editor         ## non-essential module under testing
+#except ImportError:
+#    pass
 
 import sys,time,os.path,string
 
@@ -164,7 +168,17 @@ class GUI:
         """Show a warning, to be acknowledged by the user."""
         w = qt.QMessageBox()
         w.warning(w,GD.Version,s)
-
+        
+    def yesNo(self,s):
+        """Show a question and get an answer."""
+        w = qt.QMessageBox()
+        return w.warning(w,GD.Version,s,'Yes','No') == 0
+        
+    def askQuestion(self,args):
+        """Show a question and get an answer."""
+        w = qt.QMessageBox()
+        return w.warning(w,GD.Version,*args)
+    
     def resize(self,wd,ht):
         """Resize the canvas."""
         self.canvas.resize(wd,ht)

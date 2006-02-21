@@ -49,7 +49,10 @@ def warning(s):
         GD.gui.showWarning(s)
     else:
         print s
-    
+
+def ack(s):
+    return GD.gui.yesNo(s)
+
 # A timed lock to slow down drawing processes
 
 allowwait = True

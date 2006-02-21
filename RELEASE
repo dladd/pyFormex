@@ -1,9 +1,9 @@
 # pyFormex version
 VERSION=0.3
 RELEASE=${VERSION}-alpha
-PYMODULES= camera canvas colors colorscale draw flatdb flatkeydb \
-  formex globaldata gui helpviewer lima pyfotemp turtle \
-  units utils vector widgets
+PYMODULES= camera canvas colors colorscale draw flatkeydb \
+  formex globaldata gui helpviewer lima myconfig mydict pyfotemp \
+  turtle units utils vector widgets
 EXAMPLES= BarrelVault Baumkuchen Diamatic DoubleLayer \
   Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
   ScallopDome Schwedler SpaceTrussRoof Spiral Stars Torus TrussBridge \

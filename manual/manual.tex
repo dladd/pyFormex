@@ -1,12 +1,17 @@
 % pyFormex manual
 %
 \documentclass[a4paper]{manual}
-\usepackage[latex2html,pdftex]{hyperref}
+\let\pyurl\url
+\let\url\relax
+\usepackage{hyperref}
+%\usepackage[latex2html]{hyperref}
+%\usepackage[latex2html,pdftex]{hyperref}
 \usepackage{html}
 \usepackage{xspace}
-\usepackage[pdftex]{graphicx}
+\usepackage{graphicx}
+%\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
-\author{Benedict Verhegghe}
+\author{Tim Neels, Benedict Verhegghe}
 \release{0.3-alpha}
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
@@ -20,10 +25,10 @@
 
 \section{What is \pyformex{}?}
 \label{sec:what-pyformex}
-You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is an easy task to do, ecause the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
+You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
 The short answer is that \pyformex{} is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
-If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \pyformex{} website\footnote{\websitelink}. Then you will probably have a better idea of what \pyformex{} is. 
+If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \pyformex{} website\footnote{\websitelink}. You will then probably have a better idea of what \pyformex{} is. 
 
 The initial intention of \pyformex{} (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its subparts and assemblage thereof.
 
@@ -35,11 +40,11 @@ The example of the stent\footnote{A stent is a tube-shaped structure that is e.g
   \centering
   %\htmlimage{scale=0.5}
   \begin{latexonly}
-  \includegraphics[width=12cm]{../../examples/WireStent.png}
+  \includegraphics[width=12cm]{../../examples/WireStent}
   \end{latexonly}
   \begin{htmlonly}
     %\hyperimage{../../examples/WireStent.png}
-    \htmladdimg{../../examples/WireStent.png}
+    \htmladdimg{../../../examples/WireStent.png}
   \end{htmlonly}  \caption{WireStent example.}
 \end{figure}
 
