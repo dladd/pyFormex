@@ -51,7 +51,14 @@ def warning(s):
         print s
 
 def ack(s):
-    return GD.gui.yesNo(s)
+    if GD.gui:
+        return GD.gui.yesNo(s)
+    else:
+        while 1:
+            res = raw_input(s+' [Yn] ')[0].upper()
+            if res in 'yn':
+                return res == 'y'
+
 
 # A timed lock to slow down drawing processes
 
