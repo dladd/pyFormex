@@ -1,8 +1,11 @@
-% pyFormex manual
+% pyFormex manual (we use the python manual class)
 %
 \documentclass[a4paper]{manual}
+%
+%% Dirty hack to make Python classes work together with hyperref
 \let\pyurl\url
 \let\url\relax
+%%
 \usepackage{hyperref}
 %\usepackage[latex2html]{hyperref}
 %\usepackage[latex2html,pdftex]{hyperref}
@@ -11,12 +14,12 @@
 \usepackage{graphicx}
 %\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
-\author{Tim Neels, Benedict Verhegghe}
+\author{Tim Neels and Benedict Verhegghe}
 \release{0.3-alpha}
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
-\newcommand{\website}{http://pyformex.berlios.de}
-\newcommand{\websitelink}{\pyurl{\website}}
+\newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
+
 
 \begin{document}
 \maketitle
@@ -28,7 +31,7 @@
 You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
 The short answer is that \pyformex{} is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
-If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \pyformex{} website\footnote{\websitelink}. You will then probably have a better idea of what \pyformex{} is. 
+If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. You will then probably have a better idea of what \pyformex{} is. 
 
 The initial intention of \pyformex{} (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its subparts and assemblage thereof.
 
@@ -40,16 +43,16 @@ The example of the stent\footnote{A stent is a tube-shaped structure that is e.g
   \centering
   %\htmlimage{scale=0.5}
   \begin{latexonly}
-  \includegraphics[width=12cm]{../../examples/WireStent}
+  \includegraphics[width=12cm]{images/wirestent}
   \end{latexonly}
   \begin{htmlonly}
-    %\hyperimage{../../examples/WireStent.png}
-    \htmladdimg{../../../examples/WireStent.png}
+    %\hyperimage{../../examples/wirestent.png}
+    \htmladdimg{../images/wirestent.png}
   \end{htmlonly}  \caption{WireStent example.}
 \end{figure}
 
 
-The structure has 
+The structure has ...
 
 
 \section{History}
@@ -74,12 +77,20 @@ When starting up, \pyformex reads through the Examples directory (this is normal
 \menuselection{Examples \sub WireStent}
 
 
-\section{Quick scipy tutorial}
-\label{sec:scipy-tutorial}
+\section{Quick NumPy tutorial}
+\label{sec:numpy-tutorial}
+This could be part of the tutorial in chapter 2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{formex --- the base module}
-{\label{cha:formex}
+\chapter{pyFormex --- a tutorial}
+{\label{cha:tutorial}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{pyFormex --- reference manual}
+{\label{cha:reference}
+
+\section{formex --- the base module}
+{\label{sec:formex}
 
 This module contains all the basic functionality for creating, structuring and transforming sets of coordinates.
 
