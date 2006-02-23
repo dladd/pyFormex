@@ -174,7 +174,7 @@ class GUI:
         w = qt.QMessageBox()
         return w.warning(w,GD.Version,s,'Yes','No') == 0
         
-    def askQuestion(self,args):
+    def askQuestion(self,*args):
         """Show a question and get an answer."""
         w = qt.QMessageBox()
         return w.warning(w,GD.Version,*args)

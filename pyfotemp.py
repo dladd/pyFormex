@@ -252,8 +252,10 @@ saveAs = NotImplemented
 
 def editor():
     if GD.gui.editor:
+        print "Close editor"
         GD.gui.closeEditor()
     else:
+        print "Open editor"
         GD.gui.showEditor()
 
 # open a pyformex script
@@ -273,8 +275,8 @@ def openFile():
 
 # play the current file
 def play():
-    if not GD.cfg['curfile']:
-        playFile(GD.cfg['curfile'])
+    if GD.cfg['curfile']:
+        draw.playFile(GD.cfg['curfile'])
 
     
 

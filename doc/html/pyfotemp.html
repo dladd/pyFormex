@@ -18,15 +18,17 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
-<a href="draw.html">draw</a><br>
+<a href="canvas.html">canvas</a><br>
+<a href="commands.html">commands</a><br>
+</td><td width="25%" valign=top><a href="draw.html">draw</a><br>
 <a href="gui.html">gui</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
-<a href="qt.html">qt</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="qt.html">qt</a><br>
 <a href="qtgl.html">qtgl</a><br>
-</td><td width="25%" valign=top><a href="string.html">string</a><br>
-<a href="sys.html">sys</a><br>
+<a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
 <a href="time.html">time</a><br>
-</td><td width="25%" valign=top><a href="types.html">types</a><br>
+<a href="widgets.html">widgets</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
@@ -66,7 +68,7 @@ set&nbsp;in&nbsp;the&nbsp;QAction&nbsp;itself.</tt></dd></dl>
  <dl><dt><a name="-addActionButtons"><strong>addActionButtons</strong></a>(toolbar)</dt><dd><tt>#&nbsp;add&nbsp;action&nbsp;buttons&nbsp;to&nbsp;toolbar</tt></dd></dl>
  <dl><dt><a name="-addCameraButtons"><strong>addCameraButtons</strong></a>(toolbar)</dt><dd><tt>#&nbsp;add&nbsp;camera&nbsp;buttons&nbsp;to&nbsp;toolbar&nbsp;(repeating)</tt></dd></dl>
  <dl><dt><a name="-addDefaultMenu"><strong>addDefaultMenu</strong></a>(menu)</dt><dd><tt>Add&nbsp;the&nbsp;default&nbsp;menu&nbsp;structure&nbsp;to&nbsp;the&nbsp;GUI.</tt></dd></dl>
- <dl><dt><a name="-askConfigPreferences"><strong>askConfigPreferences</strong></a>(items)</dt><dd><tt>Ask&nbsp;preferences&nbsp;stored&nbsp;in&nbsp;config&nbsp;variables.<br>
+ <dl><dt><a name="-askConfigPreferences"><strong>askConfigPreferences</strong></a>(items, section<font color="#909090">=None</font>)</dt><dd><tt>Ask&nbsp;preferences&nbsp;stored&nbsp;in&nbsp;config&nbsp;variables.<br>
 &nbsp;<br>
 Items&nbsp;in&nbsp;list&nbsp;should&nbsp;not&nbsp;have&nbsp;the&nbsp;value.</tt></dd></dl>
  <dl><dt><a name="-backView"><strong>backView</strong></a>()</dt></dl>
@@ -74,9 +76,14 @@ Items&nbsp;in&nbsp;list&nbsp;should&nbsp;not&nbsp;have&nbsp;the&nbsp;value.</tt>
  <dl><dt><a name="-closeHelp"><strong>closeHelp</strong></a>()</dt><dd><tt>Close&nbsp;the&nbsp;help&nbsp;browser</tt></dd></dl>
  <dl><dt><a name="-dollyIn"><strong>dollyIn</strong></a>()</dt></dl>
  <dl><dt><a name="-dollyOut"><strong>dollyOut</strong></a>()</dt></dl>
+ <dl><dt><a name="-editor"><strong>editor</strong></a>()</dt></dl>
  <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
  <dl><dt><a name="-globalAxes"><strong>globalAxes</strong></a>()</dt></dl>
- <dl><dt><a name="-insertExampleMenu"><strong>insertExampleMenu</strong></a>()</dt><dd><tt>Insert&nbsp;the&nbsp;examples&nbsp;menu&nbsp;in&nbsp;the&nbsp;menudata.</tt></dd></dl>
+ <dl><dt><a name="-insertExampleMenu"><strong>insertExampleMenu</strong></a>()</dt><dd><tt>Insert&nbsp;the&nbsp;examples&nbsp;menu&nbsp;in&nbsp;the&nbsp;menudata.<br>
+&nbsp;<br>
+Examples&nbsp;are&nbsp;all&nbsp;the&nbsp;.py&nbsp;files&nbsp;in&nbsp;the&nbsp;subdirectory&nbsp;examples,<br>
+provided&nbsp;there&nbsp;name&nbsp;does&nbsp;not&nbsp;start&nbsp;with&nbsp;a&nbsp;'.'&nbsp;or&nbsp;'_'&nbsp;and<br>
+their&nbsp;first&nbsp;line&nbsp;ends&nbsp;with&nbsp;'pyformex'</tt></dd></dl>
  <dl><dt><a name="-isoView"><strong>isoView</strong></a>()</dt></dl>
  <dl><dt><a name="-leftView"><strong>leftView</strong></a>()</dt></dl>
  <dl><dt><a name="-localAxes"><strong>localAxes</strong></a>()</dt></dl>
@@ -85,13 +92,13 @@ Items&nbsp;in&nbsp;list&nbsp;should&nbsp;not&nbsp;have&nbsp;the&nbsp;value.</tt>
 If&nbsp;the&nbsp;filename&nbsp;supplied&nbsp;has&nbsp;a&nbsp;trailing&nbsp;numeric&nbsp;part,&nbsp;subsequent&nbsp;images<br>
 will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp;Otherwise&nbsp;a&nbsp;numeric&nbsp;part<br>
 -000,&nbsp;-001,&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;filename.</tt></dd></dl>
- <dl><dt><a name="-play"><strong>play</strong></a>()</dt></dl>
+ <dl><dt><a name="-openFile"><strong>openFile</strong></a>()</dt><dd><tt>#&nbsp;open&nbsp;a&nbsp;pyformex&nbsp;script</tt></dd></dl>
+ <dl><dt><a name="-play"><strong>play</strong></a>()</dt><dd><tt>#&nbsp;play&nbsp;the&nbsp;current&nbsp;file</tt></dd></dl>
  <dl><dt><a name="-prefBGcolor"><strong>prefBGcolor</strong></a>()</dt></dl>
  <dl><dt><a name="-prefDrawtimeout"><strong>prefDrawtimeout</strong></a>()</dt></dl>
  <dl><dt><a name="-prefLinewidth"><strong>prefLinewidth</strong></a>()</dt></dl>
  <dl><dt><a name="-prefSize"><strong>prefSize</strong></a>()</dt></dl>
  <dl><dt><a name="-preferences"><strong>preferences</strong></a>()</dt></dl>
- <dl><dt><a name="-record"><strong>record</strong></a> = NotImplemented()</dt></dl>
  <dl><dt><a name="-rightView"><strong>rightView</strong></a>()</dt></dl>
  <dl><dt><a name="-rotDown"><strong>rotDown</strong></a>()</dt></dl>
  <dl><dt><a name="-rotLeft"><strong>rotLeft</strong></a>()</dt></dl>
@@ -116,9 +123,13 @@ will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp
  <dl><dt><a name="-runExamples"><strong>runExamples</strong></a>(n)</dt><dd><tt>Run&nbsp;the&nbsp;first&nbsp;n&nbsp;examples.</tt></dd></dl>
  <dl><dt><a name="-save"><strong>save</strong></a> = NotImplemented()</dt></dl>
  <dl><dt><a name="-saveAs"><strong>saveAs</strong></a> = NotImplemented()</dt></dl>
- <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;in&nbsp;image&nbsp;format.</tt></dd></dl>
+ <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;in&nbsp;image&nbsp;format.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;will&nbsp;open&nbsp;a&nbsp;file&nbsp;selection&nbsp;dialog,&nbsp;and&nbsp;if&nbsp;a&nbsp;valid<br>
+file&nbsp;is&nbsp;returned,&nbsp;the&nbsp;current&nbsp;OpenGL&nbsp;rendering&nbsp;will&nbsp;be&nbsp;saved&nbsp;to&nbsp;it.</tt></dd></dl>
  <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt></dl>
  <dl><dt><a name="-showHelp"><strong>showHelp</strong></a>()</dt><dd><tt>Start&nbsp;up&nbsp;the&nbsp;help&nbsp;browser</tt></dd></dl>
+ <dl><dt><a name="-system"><strong>system</strong></a>(cmdline, result<font color="#909090">='output'</font>)</dt></dl>
  <dl><dt><a name="-testwarning"><strong>testwarning</strong></a>()</dt></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
  <dl><dt><a name="-transDown"><strong>transDown</strong></a>()</dt></dl>
@@ -137,7 +148,7 @@ will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>MenuData</strong> = [('Popup', '&amp;File', [('Action', '&amp;Save', 'save'), ('Action', 'Save &amp;As', 'saveAs'), ('Action', 'Save &amp;Image', 'saveImage'), ('Action', 'Toggle &amp;MultiSave', 'multiSave'), ('Sep', None, None), ('Action', '&amp;Play', 'play'), ('Action', '&amp;Record', 'record'), ('Sep', None, None), ('Action', 'E&amp;xit', 'draw.exit')]), ('Popup', '&amp;Settings', [('Action', 'Show &amp;Triade', 'draw.drawTriade'), ('Action', '&amp;Drawwait Timeout', 'prefDrawtimeout'), ('Action', '&amp;Background Color', 'prefBGcolor'), ('Action', 'Line&amp;Width', 'prefLinewidth'), ('Action', '&amp;Canvas Size', 'prefSize'), ('Action', '&amp;LocalAxes', 'localAxes'), ('Action', '&amp;GlobalAxes', 'globalAxes'), ('Action', '&amp;Wireframe', 'draw.wireframe'), ('Action', '&amp;Smooth', 'draw.smooth')]), ('Popup', '&amp;Camera', [('Action', '&amp;Zoom In', 'zoomIn'), ('Action', '&amp;Zoom Out', 'zoomOut'), ('Action', '&amp;Dolly In', 'dollyIn'), ('Action', '&amp;Dolly Out', 'dollyOut'), ('Action', 'Pan &amp;Right', 'transRight'), ('Action', 'Pan &amp;Left', 'transLeft'), ('Action', 'Pan &amp;Up', 'transUp'), ('Action', 'Pan &amp;Down', 'transDown'), ('Action', 'Rotate &amp;Right', 'rotRight'), ('Action', 'Rotate &amp;Left', 'rotLeft'), ('Action', 'Rotate &amp;Up', 'rotUp'), ('Action', 'Rotate &amp;Down', 'rotDown')]), ('Popup', '&amp;Actions', [('Action', '&amp;Step', 'draw.step'), ('Action', '&amp;Continue', 'draw.fforward'), ('Action', '&amp;Clear', 'draw.clear'), ('Action', '&amp;Redraw', 'draw.redraw'), ('Action', '&amp;ListAll', 'draw.listall'), ('Action', '&amp;Globals', 'draw.printglobals')]), ('Popup', '&amp;Help', [('Action', '&amp;Help', 'showHelp'), ('Action', '&amp;About', 'about'), ('Action', '&amp;Warning', 'testwarning')])]<br>
+<td width="100%"><strong>MenuData</strong> = [('Popup', '&amp;File', [('Action', '&amp;Open', 'openFile'), ('Action', '&amp;Play', 'play'), ('Action', '&amp;Edit', 'editor'), ('Sep', None, None), ('Action', 'Save &amp;Image', 'saveImage'), ('Action', 'Toggle &amp;MultiSave', 'multiSave'), ('Sep', None, None), ('Action', 'E&amp;xit', 'draw.exit')]), ('Popup', '&amp;Settings', [('Action', 'Show &amp;Triade', 'draw.drawTriade'), ('Action', '&amp;Drawwait Timeout', 'prefDrawtimeout'), ('Action', '&amp;Background Color', 'prefBGcolor'), ('Action', 'Line&amp;Width', 'prefLinewidth'), ('Action', '&amp;Canvas Size', 'prefSize'), ('Action', '&amp;LocalAxes', 'localAxes'), ('Action', '&amp;GlobalAxes', 'globalAxes'), ('Action', '&amp;Wireframe', 'draw.wireframe'), ('Action', '&amp;Flat', 'draw.flat'), ('Action', '&amp;Smooth', 'draw.smooth')]), ('Popup', '&amp;Camera', [('Action', '&amp;Zoom In', 'zoomIn'), ('Action', '&amp;Zoom Out', 'zoomOut'), ('Action', '&amp;Dolly In', 'dollyIn'), ('Action', '&amp;Dolly Out', 'dollyOut'), ('Action', 'Pan &amp;Right', 'transRight'), ('Action', 'Pan &amp;Left', 'transLeft'), ('Action', 'Pan &amp;Up', 'transUp'), ('Action', 'Pan &amp;Down', 'transDown'), ('Action', 'Rotate &amp;Right', 'rotRight'), ('Action', 'Rotate &amp;Left', 'rotLeft'), ('Action', 'Rotate &amp;Up', 'rotUp'), ('Action', 'Rotate &amp;Down', 'rotDown')]), ('Popup', '&amp;Actions', [('Action', '&amp;Step', 'draw.step'), ('Action', '&amp;Continue', 'draw.fforward'), ('Action', '&amp;Clear', 'draw.clear'), ('Action', '&amp;Redraw', 'draw.redraw'), ('Action', '&amp;ListAll', 'draw.listall'), ('Action', '&amp;Globals', 'draw.printglobals')]), ('Popup', '&amp;Help', [('Action', '&amp;Help', 'showHelp'), ('Action', '&amp;About', 'about'), ('Action', '&amp;Warning', 'testwarning')])]<br>
 <strong>help</strong> = None<br>
 <strong>multisave</strong> = None</td></tr></table>
 </body></html>

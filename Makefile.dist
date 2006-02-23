@@ -42,7 +42,7 @@ pydoc: ${HTMLDOCS}
 stamp: Stamp.template RELEASE
 	${STAMP} -tStamp.template version=${VERSION} -oStamp.stamp
 
-dist.stamped:  distclean stamp globaldata.py ${PROGRAM} ${SOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES} examples/__init__.py ${ICONFILES} ${IMAGEFILES} # ${HTMLDOCS}
+dist.stamped:  distclean stamp globaldata.py ${PROGRAM} ${SOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES} examples/__init__.py ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
 	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${SOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/examples ${EXAMPLEFILES}

@@ -6,7 +6,8 @@ MKHOWTO=${PYTHONDIR}/doc/tools/mkhowto
 TEXINPUTS=${PYTHONDIR}/doc/texinputs
 TGT=manual
 HTMLDIR=html
-FAVICON=../../website/favicon.ico
+FAVICON=../favicon.ico
+OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" --image-type png --favicon ${FAVICON}
 
 # Default target
 .PHONY all: pdf ps html
@@ -24,4 +25,4 @@ ${TGT}.ps: ${TGT}.tex
 	${MKHOWTO} --a4 --ps $<
 
 html/${TGT}.html: ${TGT}.tex
-	${MKHOWTO} --html --dir ${HTMLDIR} --image-type png  --favicon ${FAVICON} $<
+	${MKHOWTO} --html --dir ${HTMLDIR} $(OPTIONS)  $<

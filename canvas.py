@@ -24,7 +24,7 @@ import vector
 
 GD.image_formats_qt = qt.QImage.outputFormats()
 
-### load draw_ps if gl2ps available
+### load gl2ps if available
 try:
     import gl2ps
     _has_gl2ps = True

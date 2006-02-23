@@ -15,7 +15,7 @@
 # You need calpy >= 0.3
 # It can be downloaded from ftp://bumps.ugent.be/calpy/
 import sys
-sys.path.append('/usr/local/lib/calpy-0.3.1')
+sys.path.append('/usr/local/lib/calpy-0.3.2')
 #######################################################################
 linewidth(1.0)
 clear()
@@ -75,8 +75,8 @@ try:
     from fe_util import *
     from truss3d import *
 except ImportError:
-    from draw import scriptName
-    warning("You need calpy-0.2.1 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct path in this example's source file\n(%s)."%scriptName)
+    import globaldata as GD
+    warning("You need calpy-0.3.2 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct path in this example's source file\n(%s)." % GD.scriptName)
     exit()
     
 nnod = coords.shape[0]
@@ -129,10 +129,9 @@ GD.canvas.addDecoration(CLA)
 GD.canvas.update()
 
 # and a deformed plot
-print coords.shape
-print displ.shape
 dscale = 10000.
-dcoords = coords + dscale * displ[:,:,0] # first load case
+dcoords = coords + dscale * displ[:,:,0]
+# first load case
 deformed = Formex(dcoords[elems],range(nelems))
 clear()
 GD.canvas.addDecoration(CLA)

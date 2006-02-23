@@ -6,8 +6,8 @@ import globaldata as GD
 from formex import *
 from canvas import *
 from colors import *
-import pyfotemp
 
+import pyfotemp
 import gui
 import threading
 
@@ -60,11 +60,15 @@ def ack(s):
                 return res == 'y'
 
 
+def ask(*args):
+    return GD.gui.askQuestion(*args)
+
+    
 # A timed lock to slow down drawing processes
 
 allowwait = True
 drawlocked = False
-drawtimeout = GD.cfg.gui.get('drawwait',2)
+drawtimeout = 2
 # set = 0 to disable wait
 # what if we want an indefinite wait (until step pressed)
 drawtimer = None
@@ -350,13 +354,13 @@ def listall():
         if isinstance(t,Formex):
             print "%s, " % n
 
-##def printit():
-##    global out
-##    print out
-##def printbbox():
-##    global out
-##    if out:
-##        print "bbox of displayed Formex",out.bbox()
+def printit():
+    global out
+    print out
+def printbbox():
+    global out
+    if out:
+        print "bbox of displayed Formex",out.bbox()
 def printglobals():
     print globals()
 

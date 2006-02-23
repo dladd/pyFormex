@@ -17,7 +17,8 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-imageFormatFromExt"><strong>imageFormatFromExt</strong></a>(ext)</dt><dd><tt>Determine&nbsp;the&nbsp;image&nbsp;format&nbsp;from&nbsp;an&nbsp;extension.<br>
+<td width="100%"><dl><dt><a name="-deprecated"><strong>deprecated</strong></a>(old, new)</dt></dl>
+ <dl><dt><a name="-imageFormatFromExt"><strong>imageFormatFromExt</strong></a>(ext)</dt><dd><tt>Determine&nbsp;the&nbsp;image&nbsp;format&nbsp;from&nbsp;an&nbsp;extension.<br>
 &nbsp;<br>
 The&nbsp;extension&nbsp;can&nbsp;start&nbsp;with&nbsp;a&nbsp;'.'&nbsp;or&nbsp;not&nbsp;and&nbsp;be&nbsp;in&nbsp;upper&nbsp;or<br>
 lower&nbsp;case.&nbsp;The&nbsp;format&nbsp;is&nbsp;usually&nbsp;equal&nbsp;to&nbsp;the&nbsp;extension&nbsp;characters<br>
@@ -30,10 +31,12 @@ A&nbsp;string&nbsp;like&nbsp;'abc-0123'&nbsp;will&nbsp;be&nbsp;split&nbsp;in&nbs
 Any&nbsp;of&nbsp;both&nbsp;can&nbsp;be&nbsp;empty.</tt></dd></dl>
  <dl><dt><a name="-stuur"><strong>stuur</strong></a>(x, xval, yval, exp<font color="#909090">=2.5</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;(non)linear&nbsp;response&nbsp;on&nbsp;the&nbsp;input&nbsp;x.<br>
 &nbsp;<br>
-xval&nbsp;and&nbsp;yval&nbsp;should&nbsp;be&nbsp;lists&nbsp;of&nbsp;3&nbsp;values:&nbsp;[xmin,x0,xmax],&nbsp;[ymin,y0,ymax].<br>
-Together&nbsp;with&nbsp;the&nbsp;exponent&nbsp;exp,&nbsp;they&nbsp;define&nbsp;the&nbsp;response&nbsp;curve&nbsp;as&nbsp;function<br>
-of&nbsp;x.&nbsp;With&nbsp;an&nbsp;exponent&nbsp;&gt;&nbsp;0,&nbsp;the&nbsp;variation&nbsp;will&nbsp;be&nbsp;slow&nbsp;in&nbsp;the&nbsp;neighbourhood<br>
-of&nbsp;(x0,y0).&nbsp;For&nbsp;values&nbsp;x&nbsp;&lt;&nbsp;xmin&nbsp;or&nbsp;x&nbsp;&gt;&nbsp;xmax,&nbsp;the&nbsp;limit&nbsp;value&nbsp;ymin&nbsp;or&nbsp;ymax<br>
+xval&nbsp;and&nbsp;yval&nbsp;should&nbsp;be&nbsp;lists&nbsp;of&nbsp;3&nbsp;values:<br>
+&nbsp;&nbsp;[xmin,x0,xmax],&nbsp;[ymin,y0,ymax].<br>
+Together&nbsp;with&nbsp;the&nbsp;exponent&nbsp;exp,&nbsp;they&nbsp;define&nbsp;the&nbsp;response&nbsp;curve<br>
+as&nbsp;function&nbsp;of&nbsp;x.&nbsp;With&nbsp;an&nbsp;exponent&nbsp;&gt;&nbsp;0,&nbsp;the&nbsp;variation&nbsp;will&nbsp;be<br>
+slow&nbsp;in&nbsp;the&nbsp;neighbourhood&nbsp;of&nbsp;(x0,y0).<br>
+For&nbsp;values&nbsp;x&nbsp;&lt;&nbsp;xmin&nbsp;or&nbsp;x&nbsp;&gt;&nbsp;xmax,&nbsp;the&nbsp;limit&nbsp;value&nbsp;ymin&nbsp;or&nbsp;ymax<br>
 is&nbsp;returned.</tt></dd></dl>
 </td></tr></table>
 </body></html>

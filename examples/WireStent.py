@@ -40,10 +40,8 @@ class DoubleHelixStent:
     The returned formex has one set of wires with property 1, the
     other with property 3. The connectors have property 2. The wire
     set with property 1 is winding positively around the z-axis.
-    If diamond = True, the stent ends at knots between crossing wires.
-    The default is to end halfway between the knots.   
     """
-    def __init__(self,De,L,d,nx,be,ds=0.0,nb=4,connectors=True,diamond=False):
+    def __init__(self,De,L,d,nx,be,ds=0.0,nb=4,connectors=True):
         """Create the Wire Stent."""
         D = De - 2*d - ds
         r = 0.5*D
