@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 """
-A dictionary with default values and attribute syntax.
+Extensions to Pythons built-in dictionary class:
+Dict is a dictionary with default values and alternate attribute syntax.
+CascadingDict is a Dict with lookup cascading into the next level Dict's
+if the key is not found in the CascadingDict itself.
 
 (C) 2005 Benedict Verhegghe
 Distributed under the GNU GPL
 """
+
+__all__ = [ 'Dict', 'CascadingDict' ]
 
 
 class Dict(dict):
@@ -66,11 +71,6 @@ class Dict(dict):
             return self.default
 
 
-##    def __setitem__(self,key,value=None):
-##        """Allows items to be set as self[key]=value"""
-##        dict.__setitem__(self,key,value)
-
-
     def __delitem__(self,key):
         """Allow items to be deleted using del self[key].
 
@@ -82,20 +82,12 @@ class Dict(dict):
             pass
 
 
-##    def __getattr__(self, key):
-##        """Allows items to be addressed as self.key."""
-##        try:
-##            return self.__getattribute__(key)
-##        except AttributeError:
-##            return None
-
-
     def __getattr__(self, key):
         """Allows items to be addressed as self.key.
 
-        This make self.key become equivalent to self['key'], except if key
-        is an attribute of the builtin type dict: then we return that
-        attribute, so that the dict methods keep their binding.
+        This makes self.key equivalent to self['key'], except if key
+        is an attribute of the builtin type 'dict': then we return that
+        attribute instead, so that the 'dict' methods keep their binding.
         """
         try:
             return dict.__getattribute__(self,key)
@@ -131,55 +123,77 @@ class Dict(dict):
         dict.update(self,data)
 
 
-##    def __str__(self):
-##        return str(self.__dict__)
 
+class CascadingKeyError(KeyError):
+    """A KeyError exception for use in CascadingDict."""
+    pass
+
+
+class CascadingDict(Dict):
+    """A cascading Dict: properties not in Dict are searched in all Dicts.
+
+    This is equivalent to the Dict class, except that if a key is not found
+    and the CascadingDict has items with values that are themselves instances
+    of Dict or CascadingDict, the key will be looked up in those Dicts as well.
+
+    As you expect, this will make the lookup cascade into all lower levels
+    of CascadingDict's. The cascade will stop if you use a Dict.
+    There is no way to guarantee in which order the (Cascading)Dict's are
+    visited, so if multiple Dicts on the same level hold """
+
+
+    def __init__(self,data={},default=None):
+        Dict.__init__(self,data,default)
+
+
+    def __getitem__(self, key):
+        """Allows items to be addressed as self[key].
+
+        This is equivalent to the Dict lookup, except that we
+        cascade through lower level Dict's (not dict's though!).
+        """
+        #print "Lookin for ",key
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
+            try:
+                for v in self.itervalues():
+                    if isinstance(v,Dict):
+                        #print "trying",v
+                        try:
+                            return v[key]
+                        except CascadingKeyError:
+                            #print "Pass"
+                            pass
+                raise CascadingKeyError
+            except CascadingKeyError:
+                pass
+        return self.default
+        
+# this should be fixed in section instead
+##    def getprop(self,key):
+##    #nodig om 'getprop' op alle niveau's te doen werken (anders werkt bv section.getprop('A') niet)
+##	return self. __getattr__(key)
 
 
 if __name__ == '__main__':
 
-    C = Dict({'a':1,'b':2})
+    C = Dict({'a':1,'x':Dict({'b':'2','x':Dict({'c':3,'x':Dict({'d':4,'a':0})})})})
     print C
-    print C.a
-    print C.b
-    try:
-        print C.c
-    except:
-        print "Can not print C.c"
-    print C['a']
-    print C['b']
-    print C['c']
-    C.a = 3
-    C['b'] = 4
-    C['d'] = 7
-    C.d = 8
-    C.update({'b':5,'c':6})
-    print C
-    print C.__dict__
-    print C.get('hallo')
-    print C.get('hallo',24)
-    C.get = 123
-    print C
-    print C.__dict__
-    print C.get('hallo')
-    print C.get('get')
-    print C.keys()
-    print C.items()
-    print dict(C.items())
-    print C.get
-    
-    D=Dict(C)
-    D.a = None
-    del D['b']
-    # del D.b # does not work
-    print D
-    print C
-    print C.__dict__
-    print len(C)
-    del D['aaa']
-    del D.b
-    del D.get
-    print D.get('d')
-    print D
-    D.update(C)
-    print D
+    print C.a,C.b,C.c,C.d,C.e,C.x.a # This only finds C.a : no cascading
+
+    C = CascadingDict(C)
+    print C.a,C.b,C.c,C.d,C.e,C.x.a # This finds C.a and C.b: 1 level cascading
+
+    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':CascadingDict({'c':3,'x':CascadingDict({'d':4,'a':0})})})})
+    print C.a,C.b,C.c,C.d,C.e,C.x.a # This finds everything except C.e
+
+    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':CascadingDict({'c':3,'x':Dict({'d':4,'a':0})})})})
+    print C.a,C.b,C.c,C.d,C.e,C.x.a # Same here, forelast level is still cascading
+
+    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':CascadingDict({'c':3,'x':dict({'d':4,'a':0})})})})
+    print C.a,C.b,C.c,C.d,C.e,C.x.a # Does not find d, x.a because last level is a dict, not Dict
+
+    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':Dict({'c':3,'x':Dict({'d':4,'a':0})})})})
+    print C.a,C.b,C.c,C.d,C.e,C.x.a # Does not find d, x.a because forelast level is not cascading
+
