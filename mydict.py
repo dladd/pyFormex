@@ -12,12 +12,6 @@ Distributed under the GNU GPL
 __all__ = [ 'Dict', 'CascadingDict', 'cascade' ]
 
 
-
-class CascadeError(KeyError):
-    """A KeyError exception for use in Cascade."""
-    pass
-
-        
 def cascade(dic, key):
     """Cascading lookup in a dictionary.
 
@@ -28,18 +22,13 @@ def cascade(dic, key):
     try:
         return dict.__getitem__(dic,key)
     except KeyError:
-        try:
-            for v in dic.itervalues():
-                if isinstance(v,dict):
-                    try:
-                        return cascade(v,key)
-                    except CascadeError:
-                        pass
-                    except KeyError:
-                        pass
-            raise CascadeError
-        except CascadeError:
-            raise KeyError
+        for v in dic.itervalues():
+            if isinstance(v,dict):
+                try:
+                    return cascade(v,key)
+                except KeyError:
+                    pass
+        raise KeyError
 
 
 class Dict(dict):
