@@ -9,7 +9,37 @@ if the key is not found in the CascadingDict itself.
 Distributed under the GNU GPL
 """
 
-__all__ = [ 'Dict', 'CascadingDict' ]
+__all__ = [ 'Dict', 'CascadingDict', 'cascade' ]
+
+
+
+class CascadeError(KeyError):
+    """A KeyError exception for use in Cascade."""
+    pass
+
+        
+def cascade(dic, key):
+    """Cascading lookup in a dictionary.
+
+    This is equivalent to the dict lookup, except that when the key is
+    not found, a cascading lookup through lower level dict's is started
+    and the first matching key found is returned.
+    """
+    try:
+        return dict.__getitem__(dic,key)
+    except KeyError:
+        try:
+            for v in dic.itervalues():
+                if isinstance(v,dict):
+                    try:
+                        return cascade(v,key)
+                    except CascadeError:
+                        pass
+                    except KeyError:
+                        pass
+            raise CascadeError
+        except CascadeError:
+            raise KeyError
 
 
 class Dict(dict):
@@ -123,12 +153,6 @@ class Dict(dict):
         dict.update(self,data)
 
 
-
-class CascadingKeyError(KeyError):
-    """A KeyError exception for use in CascadingDict."""
-    pass
-
-
 class CascadingDict(Dict):
     """A cascading Dict: properties not in Dict are searched in all Dicts.
 
@@ -149,51 +173,27 @@ class CascadingDict(Dict):
     def __getitem__(self, key):
         """Allows items to be addressed as self[key].
 
-        This is equivalent to the Dict lookup, except that we
-        cascade through lower level Dict's (not dict's though!).
+        This is equivalent to the dict lookup, except that we
+        cascade through lower level dict's.
         """
-        #print "Lookin for ",key
         try:
-            return dict.__getitem__(self, key)
+            return cascade(self, key)
         except KeyError:
-            try:
-                for v in self.itervalues():
-                    if isinstance(v,Dict):
-                        #print "trying",v
-                        try:
-                            return v[key]
-                        except CascadingKeyError:
-                            #print "Pass"
-                            pass
-                raise CascadingKeyError
-            except CascadingKeyError:
-                pass
-        return self.default
-        
-# this should be fixed in section instead
-##    def getprop(self,key):
-##    #nodig om 'getprop' op alle niveau's te doen werken (anders werkt bv section.getprop('A') niet)
-##	return self. __getattr__(key)
+            return self.default
 
 
 if __name__ == '__main__':
 
-    C = Dict({'a':1,'x':Dict({'b':'2','x':Dict({'c':3,'x':Dict({'d':4,'a':0})})})})
-    print C
-    print C.a,C.b,C.c,C.d,C.e,C.x.a # This only finds C.a : no cascading
+    def printval(s):
+        """Prints the name and value of a (sequence of) variables."""
+        try:
+            print "%s = %s" % (s,eval(s))
+        except:
+            print "Error in %s" % s
 
-    C = CascadingDict(C)
-    print C.a,C.b,C.c,C.d,C.e,C.x.a # This finds C.a and C.b: 1 level cascading
-
-    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':CascadingDict({'c':3,'x':CascadingDict({'d':4,'a':0})})})})
-    print C.a,C.b,C.c,C.d,C.e,C.x.a # This finds everything except C.e
-
-    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':CascadingDict({'c':3,'x':Dict({'d':4,'a':0})})})})
-    print C.a,C.b,C.c,C.d,C.e,C.x.a # Same here, forelast level is still cascading
-
-    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':CascadingDict({'c':3,'x':dict({'d':4,'a':0})})})})
-    print C.a,C.b,C.c,C.d,C.e,C.x.a # Does not find d, x.a because last level is a dict, not Dict
-
-    C = CascadingDict({'a':1,'x':CascadingDict({'b':'2','x':Dict({'c':3,'x':Dict({'d':4,'a':0})})})})
-    print C.a,C.b,C.c,C.d,C.e,C.x.a # Does not find d, x.a because forelast level is not cascading
-
+    C = CascadingDict({'x':CascadingDict({'a':1,'y':CascadingDict({'b':5,'c':6})}),'y':CascadingDict({'c':3,'d':4}),'d':0})
+    printval("C")
+    printval("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
+    printval("C['e']")
+    printval("C.a,C.b,C.c,C.d,C.x.c")
+    printval("C.e")
