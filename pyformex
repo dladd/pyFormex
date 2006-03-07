@@ -58,7 +58,7 @@ def main(argv=None):
     GD.options, args = parser.parse_args()
 
     # Run the application with the remaining arguments
-    # We waited for importing the gui until the config was set
+    # Importing the gui should be done after the config is set !!
     from gui import runApp
     return runApp(args)
 

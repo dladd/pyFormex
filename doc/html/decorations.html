@@ -1,0 +1,159 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module decorations</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>decorations</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/decorations.py">/home/bene/prj/pyformex/decorations.py</a></font></td></tr></table>
+    <p><tt>OpenGL&nbsp;actors&nbsp;for&nbsp;decorating&nbsp;the&nbsp;canvas(2D).</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="OpenGL.GL.html">OpenGL.GL</a><br>
+</td><td width="25%" valign=top><a href="OpenGL.GLU.html">OpenGL.GLU</a><br>
+</td><td width="25%" valign=top><a href="OpenGL.GLUT.html">OpenGL.GLUT</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="decorations.html#Decoration">Decoration</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="decorations.html#ColorLegendActor">ColorLegendActor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="decorations.html#Grid2Actor">Grid2Actor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="decorations.html#TextActor">TextActor</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ColorLegendActor">class <strong>ColorLegendActor</strong></a>(<a href="decorations.html#Decoration">Decoration</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;viewport&nbsp;decoration&nbsp;showing&nbsp;a&nbsp;colorscale&nbsp;legend.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ColorLegendActor-__init__"><strong>__init__</strong></a>(self, colorlegend, x, y, w, h, font<font color="#909090">='9x15'</font>, dec<font color="#909090">=2</font>)</dt></dl>
+
+<dl><dt><a name="ColorLegendActor-draw"><strong>draw</strong></a>(self, wireframe<font color="#909090">=False</font>)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Decoration">class <strong>Decoration</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;decoration&nbsp;is&nbsp;a&nbsp;2-D&nbsp;drawing&nbsp;at&nbsp;canvas&nbsp;position&nbsp;x,y.<br>
+&nbsp;<br>
+All&nbsp;decoration&nbsp;have&nbsp;at&nbsp;least&nbsp;the&nbsp;following&nbsp;attributes:<br>
+&nbsp;&nbsp;x,y&nbsp;:&nbsp;(int)&nbsp;window&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;insertion&nbsp;point<br>
+&nbsp;&nbsp;<a href="#Decoration-draw">draw</a>()&nbsp;:&nbsp;function&nbsp;that&nbsp;draws&nbsp;the&nbsp;decoration&nbsp;at&nbsp;(x,y).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;should&nbsp;only&nbsp;use&nbsp;openGL&nbsp;function&nbsp;that&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allowed&nbsp;in&nbsp;a&nbsp;display&nbsp;list.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Decoration-__init__"><strong>__init__</strong></a>(self, x, y)</dt><dd><tt>Create&nbsp;a&nbsp;decoration&nbsp;at&nbsp;acnvas&nbsp;coordinates&nbsp;x,y</tt></dd></dl>
+
+<dl><dt><a name="Decoration-draw"><strong>draw</strong></a>(self)</dt><dd><tt>Draw&nbsp;the&nbsp;decoration.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Grid2Actor">class <strong>Grid2Actor</strong></a>(<a href="decorations.html#Decoration">Decoration</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;2D-grid&nbsp;on&nbsp;the&nbsp;canvas.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Grid2Actor-__init__"><strong>__init__</strong></a>(self, x1, y1, x2, y2, nx, ny)</dt></dl>
+
+<dl><dt><a name="Grid2Actor-draw"><strong>draw</strong></a>(self, wireframe<font color="#909090">=False</font>)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TextActor">class <strong>TextActor</strong></a>(<a href="decorations.html#Decoration">Decoration</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;viewport&nbsp;decoration&nbsp;showing&nbsp;a&nbsp;text.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TextActor-__init__"><strong>__init__</strong></a>(self, text, x, y, font<font color="#909090">='9x15'</font>, adjust<font color="#909090">='left'</font>, color<font color="#909090">=(0.0, 0.0, 0.0)</font>)</dt><dd><tt>Create&nbsp;a&nbsp;text&nbsp;actor</tt></dd></dl>
+
+<dl><dt><a name="TextActor-draw"><strong>draw</strong></a>(self, wireframe<font color="#909090">=False</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;text.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-drawGrid"><strong>drawGrid</strong></a>(x1, y1, x2, y2, nx, ny)</dt><dd><tt>Draw&nbsp;a&nbsp;rectangular&nbsp;grid&nbsp;of&nbsp;lines<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+The&nbsp;rectangle&nbsp;has&nbsp;(x1,y1)&nbsp;and&nbsp;and&nbsp;(x2,y2)&nbsp;as&nbsp;opposite&nbsp;corners.<br>
+There&nbsp;are&nbsp;(nx,ny)&nbsp;subdivisions&nbsp;along&nbsp;the&nbsp;(x,y)-axis.&nbsp;So&nbsp;the&nbsp;grid<br>
+has&nbsp;(nx+1)&nbsp;*&nbsp;(ny+1)&nbsp;lines.&nbsp;nx=ny=1&nbsp;draws&nbsp;a&nbsp;rectangle.&nbsp;nx=0&nbsp;draws&nbsp;1<br>
+vertical&nbsp;line&nbsp;(at&nbsp;x1).&nbsp;nx=-1&nbsp;gives&nbsp;only&nbsp;horizontal&nbsp;lines.</tt></dd></dl>
+ <dl><dt><a name="-drawMarker"><strong>drawMarker</strong></a>(x, y)</dt><dd><tt>Draw&nbsp;a&nbsp;marker&nbsp;at&nbsp;position&nbsp;x,y&nbsp;of&nbsp;the&nbsp;current&nbsp;window.</tt></dd></dl>
+ <dl><dt><a name="-drawText"><strong>drawText</strong></a>(text, x, y, font<font color="#909090">='9x15'</font>, adjust<font color="#909090">='left'</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;given&nbsp;text&nbsp;at&nbsp;given&nbsp;2D&nbsp;position&nbsp;in&nbsp;window.<br>
+&nbsp;<br>
+If&nbsp;adjust&nbsp;==&nbsp;'center',&nbsp;the&nbsp;text&nbsp;will&nbsp;be&nbsp;horizontally&nbsp;centered&nbsp;on<br>
+the&nbsp;insertion&nbsp;point.<br>
+If&nbsp;adjust&nbsp;==&nbsp;'right',&nbsp;the&nbsp;text&nbsp;will&nbsp;be&nbsp;right&nbsp;aligned&nbsp;on&nbsp;the&nbsp;point.<br>
+Any&nbsp;other&nbsp;setting&nbsp;will&nbsp;align&nbsp;the&nbsp;text&nbsp;left.<br>
+Default&nbsp;is&nbsp;to&nbsp;center.</tt></dd></dl>
+ <dl><dt><a name="-glutFont"><strong>glutFont</strong></a>(font)</dt><dd><tt>Return&nbsp;GLUT&nbsp;font&nbsp;designer&nbsp;for&nbsp;the&nbsp;named&nbsp;font.<br>
+&nbsp;<br>
+The&nbsp;recognized&nbsp;font&nbsp;names&nbsp;are:<br>
+&nbsp;&nbsp;fixed:&nbsp;'9x15',&nbsp;'8x13',<br>
+&nbsp;&nbsp;times-roman:&nbsp;'tr10',&nbsp;'tr24'<br>
+&nbsp;&nbsp;helvetica:&nbsp;&nbsp;&nbsp;'hv10',&nbsp;'hv12',&nbsp;&nbsp;'hv18'<br>
+If&nbsp;an&nbsp;unrecognized&nbsp;string&nbsp;is&nbsp;&nbsp;given,&nbsp;the&nbsp;default&nbsp;is&nbsp;9x15.</tt></dd></dl>
+ <dl><dt><a name="-glutFontHeight"><strong>glutFontHeight</strong></a>(font)</dt><dd><tt>Return&nbsp;the&nbsp;height&nbsp;of&nbsp;the&nbsp;named&nbsp;glut&nbsp;font.<br>
+&nbsp;<br>
+This&nbsp;supposes&nbsp;that&nbsp;the&nbsp;last&nbsp;two&nbsp;characters&nbsp;of&nbsp;the&nbsp;name<br>
+hold&nbsp;the&nbsp;font&nbsp;height.</tt></dd></dl>
+ <dl><dt><a name="-myBitmapLength"><strong>myBitmapLength</strong></a>(font, text)</dt><dd><tt>Compute&nbsp;the&nbsp;length&nbsp;in&nbsp;pixels&nbsp;of&nbsp;a&nbsp;text&nbsp;string&nbsp;in&nbsp;given&nbsp;font.<br>
+&nbsp;<br>
+We&nbsp;use&nbsp;our&nbsp;own&nbsp;fucntion&nbsp;to&nbsp;calculate&nbsp;the&nbsp;length&nbsp;because&nbsp;the&nbsp;builtin<br>
+has&nbsp;a&nbsp;bug.</tt></dd></dl>
+ <dl><dt><a name="-unProject"><strong>unProject</strong></a>(x, y, win)</dt><dd><tt>Map&nbsp;the&nbsp;window&nbsp;coordinates&nbsp;(x,y)&nbsp;to&nbsp;object&nbsp;coordinates.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>GLUTFONTS</strong> = {'8x13': 3, '9x15': 2, 'hv10': 6, 'hv12': 7, 'hv18': 8, 'tr10': 4, 'tr24': 5}<br>
+<strong>Palette</strong> = {'BGR': [(0.0, 0.0, 1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 0.0)], 'BW': [(0.0, 0.0, 0.0), None, (1.0, 1.0, 1.0)], 'BWG': [(0.0, 0.0, 1.0), (1.0, 1.0, 1.0), (0.0, 1.0, 0.0)], 'BWR': [(0.0, 0.0, 1.0), (1.0, 1.0, 1.0), (1.0, 0.0, 0.0)], 'GWB': [(0.0, 1.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0)], 'GWR': [(0.0, 1.0, 0.0), (1.0, 1.0, 1.0), (1.0, 0.0, 0.0)], 'RGB': [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)], 'RWB': [(1.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0)], 'RWG': [(1.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 1.0, 0.0)], 'WB': [(1.0, 1.0, 1.0), (0.5, 0.5, 0.5), (0.0, 0.0, 0.0)]}<br>
+<strong>black</strong> = (0.0, 0.0, 0.0)<br>
+<strong>blue</strong> = (0.0, 0.0, 1.0)<br>
+<strong>cyan</strong> = (0.0, 1.0, 1.0)<br>
+<strong>darkgrey</strong> = (0.5, 0.5, 0.5)<br>
+<strong>green</strong> = (0.0, 1.0, 0.0)<br>
+<strong>lightgrey</strong> = (0.80000000000000004, 0.80000000000000004, 0.80000000000000004)<br>
+<strong>magenta</strong> = (1.0, 0.0, 1.0)<br>
+<strong>mediumgrey</strong> = (0.69999999999999996, 0.69999999999999996, 0.69999999999999996)<br>
+<strong>red</strong> = (1.0, 0.0, 0.0)<br>
+<strong>white</strong> = (1.0, 1.0, 1.0)<br>
+<strong>yellow</strong> = (1.0, 1.0, 0.0)</td></tr></table>
+</body></html>

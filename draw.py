@@ -11,6 +11,20 @@ import pyfotemp
 import gui
 import threading
 
+
+def ack(s):
+    if GD.gui:
+        return gui.yesNo(s)
+    else:
+        while 1:
+            res = raw_input(s+' [Yn] ')[0].upper()
+            if res in 'yn':
+                return res == 'y'
+
+def ask(s,*args):
+    return gui.info(s,*args)
+
+
 class Exit(Exception):
     """Exception raised to exit from a running script."""
     pass    
@@ -44,24 +58,6 @@ def message(s):
     else:
         print s
 
-def warning(s):
-    if GD.gui:
-        GD.gui.showWarning(s)
-    else:
-        print s
-
-def ack(s):
-    if GD.gui:
-        return GD.gui.yesNo(s)
-    else:
-        while 1:
-            res = raw_input(s+' [Yn] ')[0].upper()
-            if res in 'yn':
-                return res == 'y'
-
-
-def ask(*args):
-    return GD.gui.askQuestion(*args)
 
     
 # A timed lock to slow down drawing processes

@@ -1,0 +1,184 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module mydict</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>mydict</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/mydict.py">/home/bene/prj/pyformex/mydict.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;dictionary&nbsp;with&nbsp;default&nbsp;values&nbsp;and&nbsp;attribute&nbsp;syntax.<br>
+&nbsp;<br>
+(C)&nbsp;2005&nbsp;Benedict&nbsp;Verhegghe<br>
+Distributed&nbsp;under&nbsp;the&nbsp;GNU&nbsp;GPL</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#dict">__builtin__.dict</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="mydict.html#Dict">Dict</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Dict">class <strong>Dict</strong></a>(<a href="__builtin__.html#dict">__builtin__.dict</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;Python&nbsp;dictionary&nbsp;with&nbsp;default&nbsp;values&nbsp;and&nbsp;attribute&nbsp;syntax.<br>
+&nbsp;<br>
+<a href="#Dict">Dict</a>&nbsp;is&nbsp;functionally&nbsp;nearly&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;builtin&nbsp;Python&nbsp;<a href="__builtin__.html#dict">dict</a>,<br>
+but&nbsp;provides&nbsp;the&nbsp;following&nbsp;extras:<br>
+-&nbsp;Items&nbsp;can&nbsp;be&nbsp;accessed&nbsp;with&nbsp;attribute&nbsp;syntax&nbsp;as&nbsp;well&nbsp;as&nbsp;dictionary<br>
+&nbsp;&nbsp;syntax.&nbsp;Thus,&nbsp;if&nbsp;C&nbsp;is&nbsp;a&nbsp;<a href="#Dict">Dict</a>,&nbsp;the&nbsp;following&nbsp;are&nbsp;equivalent:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C['foo']&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;C.foo<br>
+&nbsp;&nbsp;This&nbsp;works&nbsp;as&nbsp;well&nbsp;for&nbsp;accessing&nbsp;values&nbsp;as&nbsp;for&nbsp;setting&nbsp;values.<br>
+&nbsp;&nbsp;In&nbsp;the&nbsp;following,&nbsp;the&nbsp;words&nbsp;key&nbsp;or&nbsp;attribute&nbsp;therefore&nbsp;have&nbsp;the<br>
+&nbsp;&nbsp;same&nbsp;meaning.<br>
+-&nbsp;Lookup&nbsp;of&nbsp;a&nbsp;nonexisting&nbsp;key/attribute&nbsp;does&nbsp;not&nbsp;raise&nbsp;an&nbsp;error,&nbsp;but<br>
+&nbsp;&nbsp;returns&nbsp;a&nbsp;default&nbsp;value&nbsp;which&nbsp;can&nbsp;be&nbsp;set&nbsp;by&nbsp;the&nbsp;user&nbsp;(None&nbsp;by&nbsp;default).<br>
+&nbsp;<br>
+There&nbsp;are&nbsp;a&nbsp;few&nbsp;caveats&nbsp;though:<br>
+-&nbsp;Keys&nbsp;that&nbsp;are&nbsp;also&nbsp;attributes&nbsp;of&nbsp;the&nbsp;builtin&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;type,&nbsp;can&nbsp;not&nbsp;be&nbsp;used<br>
+&nbsp;&nbsp;with&nbsp;the&nbsp;attribute&nbsp;syntax&nbsp;to&nbsp;get&nbsp;values&nbsp;from&nbsp;the&nbsp;<a href="#Dict">Dict</a>.&nbsp;You&nbsp;should&nbsp;use<br>
+&nbsp;&nbsp;the&nbsp;dictionary&nbsp;syntax&nbsp;to&nbsp;access&nbsp;these&nbsp;items.&nbsp;It&nbsp;is&nbsp;possible&nbsp;to&nbsp;set<br>
+&nbsp;&nbsp;such&nbsp;keys&nbsp;as&nbsp;attributes.&nbsp;Thus&nbsp;the&nbsp;following&nbsp;will&nbsp;work:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C['get']&nbsp;=&nbsp;'foo'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C.get&nbsp;=&nbsp;'foo'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;C['get']<br>
+&nbsp;&nbsp;but&nbsp;not<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;C.get<br>
+&nbsp;<br>
+&nbsp;&nbsp;This&nbsp;is&nbsp;done&nbsp;so&nbsp;because&nbsp;we&nbsp;want&nbsp;all&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;attributes&nbsp;to&nbsp;be&nbsp;available<br>
+&nbsp;&nbsp;with&nbsp;their&nbsp;normal&nbsp;binding.&nbsp;Thus,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;C.<a href="#Dict-get">get</a>('get')<br>
+&nbsp;&nbsp;will&nbsp;print<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;foo<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="mydict.html#Dict">Dict</a></dd>
+<dd><a href="__builtin__.html#dict">__builtin__.dict</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Dict-__delattr__"><strong>__delattr__</strong></a>(self, key)</dt><dd><tt>Allow&nbsp;items&nbsp;to&nbsp;be&nbsp;deleted&nbsp;using&nbsp;del&nbsp;self.<strong>key</strong>.<br>
+&nbsp;<br>
+This&nbsp;works&nbsp;even&nbsp;if&nbsp;the&nbsp;key&nbsp;is&nbsp;an&nbsp;existing&nbsp;attribute&nbsp;of&nbsp;the<br>
+builtin&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;class:&nbsp;the&nbsp;item&nbsp;is&nbsp;deleted&nbsp;from&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>,<br>
+leaving&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>'s&nbsp;attributes&nbsp;unchanged.</tt></dd></dl>
+
+<dl><dt><a name="Dict-__delitem__"><strong>__delitem__</strong></a>(self, key)</dt><dd><tt>Allow&nbsp;items&nbsp;to&nbsp;be&nbsp;deleted&nbsp;using&nbsp;del&nbsp;self[key].<br>
+&nbsp;<br>
+Silently&nbsp;ignore&nbsp;if&nbsp;key&nbsp;is&nbsp;nonexistant.</tt></dd></dl>
+
+<dl><dt><a name="Dict-__getattr__"><strong>__getattr__</strong></a>(self, key)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;be&nbsp;addressed&nbsp;as&nbsp;self.<strong>key</strong>.<br>
+&nbsp;<br>
+This&nbsp;make&nbsp;self.<strong>key</strong>&nbsp;become&nbsp;equivalent&nbsp;to&nbsp;self['key'],&nbsp;except&nbsp;if&nbsp;key<br>
+is&nbsp;an&nbsp;attribute&nbsp;of&nbsp;the&nbsp;builtin&nbsp;type&nbsp;<a href="__builtin__.html#dict">dict</a>:&nbsp;then&nbsp;we&nbsp;return&nbsp;that<br>
+attribute,&nbsp;so&nbsp;that&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;methods&nbsp;keep&nbsp;their&nbsp;binding.</tt></dd></dl>
+
+<dl><dt><a name="Dict-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;be&nbsp;addressed&nbsp;as&nbsp;self[key].<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;lookup,&nbsp;except&nbsp;that&nbsp;we<br>
+provide&nbsp;a&nbsp;default&nbsp;value&nbsp;if&nbsp;the&nbsp;key&nbsp;does&nbsp;not&nbsp;exist.</tt></dd></dl>
+
+<dl><dt><a name="Dict-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">={}</font>, default<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#Dict">Dict</a>&nbsp;instance.<br>
+&nbsp;<br>
+The&nbsp;<a href="#Dict">Dict</a>&nbsp;can&nbsp;be&nbsp;initialized&nbsp;with&nbsp;a&nbsp;Python&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;or&nbsp;a&nbsp;<a href="#Dict">Dict</a>.<br>
+The&nbsp;default&nbsp;value&nbsp;is&nbsp;the&nbsp;value&nbsp;that&nbsp;will&nbsp;be&nbsp;returned&nbsp;on&nbsp;lookups<br>
+for&nbsp;non-existing&nbsp;keys.</tt></dd></dl>
+
+<dl><dt><a name="Dict-__setattr__"><strong>__setattr__</strong></a>(self, key, value<font color="#909090">=None</font>)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;beset&nbsp;as&nbsp;self.<strong>key</strong>=value.<br>
+&nbsp;<br>
+This&nbsp;works&nbsp;even&nbsp;if&nbsp;the&nbsp;key&nbsp;is&nbsp;an&nbsp;existing&nbsp;attribute&nbsp;of&nbsp;the<br>
+builtin&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;class:&nbsp;the&nbsp;key,value&nbsp;pair&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>,<br>
+leaving&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>'s&nbsp;attributes&nbsp;unchanged.</tt></dd></dl>
+
+<dl><dt><a name="Dict-update"><strong>update</strong></a>(self, data<font color="#909090">={}</font>)</dt><dd><tt>Add&nbsp;a&nbsp;dictionary&nbsp;to&nbsp;the&nbsp;<a href="#Dict">Dict</a>&nbsp;object.<br>
+&nbsp;<br>
+The&nbsp;data&nbsp;can&nbsp;be&nbsp;a&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;or&nbsp;<a href="#Dict">Dict</a>&nbsp;type&nbsp;object.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Dict' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><a name="Dict-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
+
+<dl><dt><a name="Dict-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Dict-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="Dict-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Dict-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Dict-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Dict-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="Dict-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Dict-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Dict-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Dict-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Dict-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Dict-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Dict-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Dict-clear"><strong>clear</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<dl><dt><a name="Dict-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Dict-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="Dict-has_key"><strong>has_key</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-has_key">has_key</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="Dict-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
+
+<dl><dt><a name="Dict-iteritems"><strong>iteritems</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-iteritems">iteritems</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;(key,&nbsp;value)&nbsp;items&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Dict-iterkeys"><strong>iterkeys</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-iterkeys">iterkeys</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;keys&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Dict-itervalues"><strong>itervalues</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-itervalues">itervalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;values&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Dict-keys"><strong>keys</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-keys">keys</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="Dict-pop"><strong>pop</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised</tt></dd></dl>
+
+<dl><dt><a name="Dict-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
+2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty</tt></dd></dl>
+
+<dl><dt><a name="Dict-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#Dict-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Dict-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#Dict-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object&gt;<dd><tt><a href="__builtin__.html#dict">dict</a>.<a href="#Dict-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

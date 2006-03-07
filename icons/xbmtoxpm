@@ -1,0 +1,12 @@
+#!/bin/sh
+# Transform xbm to xpm
+#
+[ -n "$1" ] || {
+  echo "Usage: $(basename $0) <xbm-files>"
+  echo "  Transforms the .xbm icons to .xpm format (using netpbm)"
+  exit
+}
+for f in "$@"; do
+  name=${f%.xbm}
+  [ -f ${name}.xbm ] && xbmtopbm ${name}.xbm | ppmtoxpm -name ${name} > ${name}.xpm
+done

@@ -1,113 +1,53 @@
 #!/usr/bin/env python
 # $Id$
-"""Definition of some typical property sets used in structural analysis.
+"""General framework for attributing properties to Formex elements.
 
-This is currently mainly for testing different implementations.
-The classes in this module should not be relied upon. They may
-dissappear in future.
+Properties can really be just about any Python object.
+Properties are identified and connected to a Formex element by the
+prop values that are stored in the Formex.
 """
 
-
-class Property(object):
-    """Properties related to a single node."""
-
-    def __init__(self,cload=None,bound=None):
-        """Create a new node property. Empty by default
-
-        A node property can hold the following sub-properties:
-        - cload : a concentrated load
-        - bound : a boundary condition
-        """
-        self.cload = cload
-        self.bound = bound
-
-    def __repr__(self):
-        """Format a node property into a string."""
-        return "{ cload: %s; bound: %s }" % (str(self.cload),str(self.bound))
-
-    def __getitem__(self,name):
-        """Return a named attribute."""
-        return getattr(self,name)
+from mydict import CascadingDict
 
 
-class NodeProperty:
-    """Properties related to a single node."""
+class Property(CascadingDict):
+    """A general properties class.
 
-    def __init__(self,cload=None,bound=None):
-        """Create a new node property. Empty by default
+    This class should only provide general methods, such as
+    add, change and delete properties, lookup, print, and
+    of course, connect properties to Formex elements.
+    """
 
-        A node property can hold the following sub-properties:
-        - cload : a concentrated load
-        - bound : a boundary condition
-        """
-        self.cload = cload
-        self.bound = bound
+    def __init__(self,data={},default=None):
+        """Create a new property. Empty by default."""
+        CascadingDict.__init__(self,data,default)
+
+
+ls TeX
 
     def __repr__(self):
-        """Format a node property into a string."""
-        return "{ cload: %s; bound: %s }" % (str(self.cload),str(self.bound))
+        """Format a property into a string."""
+        s = "PropertyClass{ default=%s" % self.default
+        for i in self.items():
+            s += "\n  %s = %s" % i
+        return s + "}\n"
 
-    def __getitem__(self,name):
-        """Return a named attribute."""
-        return getattr(self,name)
-
-
-from UserDict import UserDict
-class AltNodeProperty(UserDict):
-    """An alternate node property class."""
-
-    def __init__(self,init={}):
-        """Create a new node property. Empty by default
-
-        A node property can hold anything in dictionary format
-        """
-        self.data = init
-
-    def __getitem__(self,name):
-        if self.has_key(name):
-            return self.data[name]
-        else:
-            return None
-
-    def __getattr__(self,name):
-        if self.has_key(name):
-            return self[name]
-        else:
-            raise AttributeError
 
 # Test
 
 if __name__ == "__main__":
 
-    P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
-    P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
-    B1 = [ 0.0 ] * 6
+    cload1 = {'x':1.0, 'z':1.0, 'ry':0.0 }
+    cload2 = {'x':2.0, 'y':3.0 } 
+    bdisp = {'x':0.0, 'rx':0.0, 'rz':0.0}
+
+    np1 = Property({'cload':cload1,'bound':bdisp})
+    np2 = Property({'cload':cload2,'bound':bdisp,'color':'red','id':'123'})
 
     np = {}
-    np['1'] = NodeProperty(P1)
-    np['2'] = NodeProperty(cload=P2)
-    np['3'] = np['2']
-    np['3'].bound = B1
-    np['1'].cload[1] = 33.0
+    np['0'] = np1
+    np['1'] = np2
+    np['2'] = np1
 
-    np['4'] = AltNodeProperty({'cload':P1})
-    np['5'] = AltNodeProperty({'cload':P2})
-    np['6'] = np['5']
-    np['6']['bound'] = B1
-    np['4']['cload'][1] = 33.0
-
-    np7 = NodeProperty(bound=B1)
-    np8 = AltNodeProperty({'bound':B1})
-    np['7'] = np7
-    np['8'] = np8
-
-    for key,item in np.iteritems():
-        print key,item
-
-    print "'cload' attributes"
-    for key,item in np.iteritems():
-        print key,item['cload']
-
-    print "cload attributes"
-    for key,item in np.iteritems():
-        print key,item.cload
+    for i in range(3):
+        print np[str(i)]

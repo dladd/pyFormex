@@ -7,6 +7,7 @@ from utils import *
 import draw
 import widgets
 import canvas
+import help
 
 import sys,time,os,string,commands
 import qt
@@ -153,9 +154,9 @@ MenuData = [
 #        ("Action","&Bbox","printbbox"),
         ("Action","&Globals","draw.printglobals"),  ]),
     ("Popup","&Help",[
-        ("Action","&Help","showHelp"),
-        ("Action","&About","about"), 
-        ("Action","&Warning","testwarning"), ]) ]
+        ("Action","&Help","help.help"),
+        ("Action","&About","help.about"), 
+        ("Action","&Warning","help.testwarning"), ]) ]
 
 # Examples Menu
 def insertExampleMenu():
@@ -332,45 +333,6 @@ def multiSave():
 
 ############################################################################
 # online help system
-
-global help
-help = None
-def showHelp():
-    """Start up the help browser"""
-    global help
-    from helpviewer import HelpViewer
-    print "help = ",help
-    if help == None:
-        dir = os.path.join(GD.cfg['docdir'],"html")
-        home = os.path.join(dir,"formex.html")
-        print "Help file = ",home
-        help = HelpViewer(home, dir,bookfile=GD.cfg['helpbookmarks'])
-        help.setCaption("pyFormex - Helpviewer")
-        help.setAbout("pyFormex Help", \
-                  "This is the pyFormex HelpViewer.<p>It was modeled after the HelpViewer example " \
-                  "from the Qt documentation.</p>")
-        #help.resize(800,600)
-        help.connect(help,qt.SIGNAL("destroyed()"),closeHelp)
-    help.show()
-
-def closeHelp():
-    """Close the help browser"""
-    global help
-    help = None
-        
-
-def about():
-    about = qt.QMessageBox()
-    about.about(about,"About pyFormex",
-        GD.Version+"\n\n"
-        "pyFormex is a python implementation of Formex algebra\n\n"
-        "http://pyformex.berlios.de\n\n"
-        "Copyright 2004 Benedict Verhegghe\n"
-        "Distributed under the GNU General Public License.\n\n"
-        "For help or information, mailto benedict.verhegghe@ugent.be\n" )
-
-def testwarning():
-    draw.warning("Smoking may be hazardous to your health!\nWindows is a virus!")
 
     
 def saveImage():

@@ -3,11 +3,12 @@
 """Global data for pyFormex."""
 Version = "pyFormex 0.3-alpha"
 
-import myconfig
+import config
 
-cfg = myconfig.Config()
+cfg = config.Config()
 gui = None
 canvas = None
+help = None
 PyFormex = {}  # globals that will be offered to scripts
 scriptName = None
 image_formats = []

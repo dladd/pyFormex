@@ -163,21 +163,6 @@ class GUI:
         """Clear the message board."""
         self.board.setText("")
         self.board.update()
-
-    def showWarning(self,s):
-        """Show a warning, to be acknowledged by the user."""
-        w = qt.QMessageBox()
-        w.warning(w,GD.Version,s)
-        
-    def yesNo(self,s):
-        """Show a question and get an answer."""
-        w = qt.QMessageBox()
-        return w.warning(w,GD.Version,s,'Yes','No') == 0
-        
-    def askQuestion(self,*args):
-        """Show a question and get an answer."""
-        w = qt.QMessageBox()
-        return w.warning(w,GD.Version,*args)
     
     def resize(self,wd,ht):
         """Resize the canvas."""
@@ -200,11 +185,50 @@ class GUI:
             self.editor.show()
             self.editor.setText("Hallo\n")
 
-    def closetEditor(self):
-        """Start the editor."""
+    def closeEditor(self):
+        """Close the editor."""
         if hasattr(self,'editor'):
             self.editor.close()
             self.editor = None
+
+
+def messageBox(message,level='info',actions=['OK']):
+    """Display a message box and wait for user response.
+
+    The message box displays a text, an icon depending on the level
+    (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
+    with the specified action text. The 'about' level has no buttons.
+
+    The function returns the number of the button that was clicked.
+    """
+    w = qt.QMessageBox()
+    if level == 'error':
+        return w.critical(w,GD.Version,message,*actions)
+    elif level == 'warning':
+        return w.warning(w,GD.Version,message,*actions)
+    elif level == 'info':
+        return w.information(w,GD.Version,message,*actions)
+    elif level == 'about':
+        return w.about(w,GD.Version,message)
+
+    
+def error(message,actions=['OK']):
+    return messageBox(message,'error',actions)
+    
+def warning(message,actions=['OK']):
+    return messageBox(message,'warning',actions)
+
+def info(message,actions=['OK']):
+    return messageBox(message,'info',actions)
+
+def yesNo(s):
+    """Show a question and get an answer."""
+    return warning(s,['Yes','No']) == 0
+    
+def about(message=GD.Version):
+    """Show a message, to be acknowledged by the user."""
+    return messageBox(message,'about')
+
 
 ###########################  app  ################################
 
