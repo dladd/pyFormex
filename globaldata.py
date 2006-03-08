@@ -12,6 +12,7 @@ help = None
 PyFormex = {}  # globals that will be offered to scripts
 scriptName = None
 image_formats = []
+prefsChanged = False
 
 def debug(s):
     if options.debug:

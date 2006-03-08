@@ -9,7 +9,7 @@ from colors import *
 
 import pyfotemp
 import gui
-import threading
+import threading,commands
 
 
 def ack(s):
@@ -364,5 +364,11 @@ def printglobals():
 def save(filename,fmt):
     GD.canvas.save(filename,fmt)
 
-def system(*args):
-    pyfotemp.system(*args)
+
+def system(cmdline,result='output'):
+    if result == 'status':
+        return os.system(cmdline)
+    elif result == 'output':
+        return commands.getoutput(cmdline)
+    elif result == 'both':
+        return commands.getstatusoutput(cmdline)

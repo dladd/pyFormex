@@ -82,3 +82,18 @@ def interrogate(item):
 
 def deprecated(old,new):
     print "Function %s is deprecated: use %s instead" % (old,new)
+
+def formatDict(dic):
+    """Format a dict in Python source representation.
+
+    Each (key,value) pair is formatted on a line : key = value.
+    """
+    s = ""
+    if isinstance(dic,dict):
+        for k,v in dic.iteritems():
+            if type(v) == str:
+                s += '%s = "%s"\n' % (k,v)
+            else:
+                s += '%s = %s\n' % (k,v)
+    return s
+

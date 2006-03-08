@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # $Id $
 
+# This file is intended to disappear, after its contents has been
+# moved to a more appropriate place.
+
 import globaldata as GD
 import gui
 from utils import *
@@ -9,35 +12,49 @@ import widgets
 import canvas
 import help
 
-import sys,time,os,string,commands
+import sys,time,os,string
 import qt
 import qtgl
 
 def askConfigPreferences(items,section=None):
     """Ask preferences stored in config variables.
 
-    Items in list should not have the value.
+    Items in list should only be keys. The current values are retrieved
+    from the config.
+    A config section name should be specified if the items are not in the
+    top config level.
     """
+    if section:
+        store = GD.cfg[section]
+    else:
+        store = GD.cfg
     # insert current values
     for it in items:
-        it.insert(1,GD.cfg.setdefault(it[0],''))
+        it.insert(1,store.setdefault(it[0],''))
     print "Asking Prefs ",items
-    res = widgets.ConfigDialog(items).process()
-    for r in res:
-        print r
-        GD.cfg[r[0]] = r[1]
+    res,accept = widgets.ConfigDialog(items).process()
+    if accept:
+        GD.prefsChanged = True
+        print "ACCEPTED following values:"
+        for r in res:
+            print r
+            store[r[0]] = r[1]
     print GD.cfg
+
+
+def prefHelp():
+    askConfigPreferences([['viewer'],['homepage'],['history'],['bookmarks']],'help')
 
 def prefDrawtimeout():
     askConfigPreferences([['drawtimeout','int']])
 
+
 def prefBGcolor():
-    #askConfigPreferences([['bgcolor']])
-    #draw.bgcolor(GD.cfg['bgcolor'])
     col = qt.QColorDialog.getColor(qt.QColor(GD.cfg.setdefault('bgcolor','')))
     if col.isValid():
         GD.cfg['bgcolor'] = col.name()
         draw.bgcolor(col)
+
         
 def prefLinewidth():
     askConfigPreferences([['linewidth']])
@@ -46,12 +63,14 @@ def prefLinewidth():
 def prefSize():
     GD.gui.resize(800,600)
 
+
 def preferences():
     test = [["item1","value1"],
             ["item2",""],
             ["an item with a long name","and a very long value for this item, just to test the scrolling"]]
     res = widgets.ConfigDialog(test).process()
     print res
+
 
 def AddMenuItems(menu, items=[]):
     """Add a list of items to a menu.
@@ -130,7 +149,8 @@ MenuData = [
         ("Action","&GlobalAxes","globalAxes"),
         ("Action","&Wireframe","draw.wireframe"),
         ("Action","&Flat","draw.flat"),
-        ("Action","&Smooth","draw.smooth"), ]),
+        ("Action","&Smooth","draw.smooth"),
+        ("Action","&Help","prefHelp"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","zoomIn"), 
         ("Action","&Zoom Out","zoomOut"), 
@@ -154,7 +174,7 @@ MenuData = [
 #        ("Action","&Bbox","printbbox"),
         ("Action","&Globals","draw.printglobals"),  ]),
     ("Popup","&Help",[
-        ("Action","&Help","help.help"),
+        ("Action","&Help","dohelp"),
         ("Action","&About","help.about"), 
         ("Action","&Warning","help.testwarning"), ]) ]
 
@@ -332,7 +352,6 @@ def multiSave():
 
 
 ############################################################################
-# online help system
 
     
 def saveImage():
@@ -363,11 +382,11 @@ def saveImage():
 
 def zoomIn():
     global canvas
-    GD.canvas.zoom(1./GD.cfg['zoomfactor'])
+    GD.canvas.zoom(1./GD.cfg.gui['zoomfactor'])
     GD.canvas.update()
 def zoomOut():
     global canvas
-    GD.canvas.zoom(GD.cfg['zoomfactor'])
+    GD.canvas.zoom(GD.cfg.gui['zoomfactor'])
     GD.canvas.update()
 ##def panRight():
 ##    global canvas,config
@@ -387,51 +406,51 @@ def zoomOut():
 ##    canvas.update()   
 def rotRight():
     global canvas
-    GD.canvas.camera.rotate(+GD.cfg['rotfactor'],0,1,0)
+    GD.canvas.camera.rotate(+GD.cfg.gui['rotfactor'],0,1,0)
     GD.canvas.update()   
 def rotLeft():
     global canvas
-    GD.canvas.camera.rotate(-GD.cfg['rotfactor'],0,1,0)
+    GD.canvas.camera.rotate(-GD.cfg.gui['rotfactor'],0,1,0)
     GD.canvas.update()   
 def rotUp():
     global canvas
-    GD.canvas.camera.rotate(-GD.cfg['rotfactor'],1,0,0)
+    GD.canvas.camera.rotate(-GD.cfg.gui['rotfactor'],1,0,0)
     GD.canvas.update()   
 def rotDown():
     global canvas
-    GD.canvas.camera.rotate(+GD.cfg['rotfactor'],1,0,0)
+    GD.canvas.camera.rotate(+GD.cfg.gui['rotfactor'],1,0,0)
     GD.canvas.update()   
 def twistLeft():
     global canvas
-    GD.canvas.camera.rotate(+GD.cfg['rotfactor'],0,0,1)
+    GD.canvas.camera.rotate(+GD.cfg.gui['rotfactor'],0,0,1)
     GD.canvas.update()   
 def twistRight():
     global canvas
-    GD.canvas.camera.rotate(-GD.cfg['rotfactor'],0,0,1)
+    GD.canvas.camera.rotate(-GD.cfg.gui['rotfactor'],0,0,1)
     GD.canvas.update()   
 def transLeft():
     global canvas
-    GD.canvas.camera.translate(-GD.cfg['panfactor'],0,0,GD.cfg['localaxes'])
+    GD.canvas.camera.translate(-GD.cfg.gui['panfactor'],0,0,GD.cfg.gui['localaxes'])
     GD.canvas.update()   
 def transRight():
     global canvas
-    GD.canvas.camera.translate(GD.cfg['panfactor'],0,0,GD.cfg['localaxes'])
+    GD.canvas.camera.translate(GD.cfg.gui['panfactor'],0,0,GD.cfg.gui['localaxes'])
     GD.canvas.update()   
 def transDown():
     global canvas
-    GD.canvas.camera.translate(0,-GD.cfg['panfactor'],0,GD.cfg['localaxes'])
+    GD.canvas.camera.translate(0,-GD.cfg.gui['panfactor'],0,GD.cfg.gui['localaxes'])
     GD.canvas.update()   
 def transUp():
     global canvas
-    GD.canvas.camera.translate(0,GD.cfg['panfactor'],0,GD.cfg['localaxes'])
+    GD.canvas.camera.translate(0,GD.cfg.gui['panfactor'],0,GD.cfg.gui['localaxes'])
     GD.canvas.update()   
 def dollyIn():
     global canvas
-    GD.canvas.camera.dolly(1./GD.cfg['zoomfactor'])
+    GD.canvas.camera.dolly(1./GD.cfg.gui['zoomfactor'])
     GD.canvas.update()   
 def dollyOut():
     global canvas
-    GD.canvas.camera.dolly(GD.cfg['zoomfactor'])
+    GD.canvas.camera.dolly(GD.cfg.gui['zoomfactor'])
     GD.canvas.update()   
 
 def frontView():
@@ -458,18 +477,16 @@ def userView(i=1):
      
 
 def localAxes():
-    GD.cfg['localaxes'] = True 
+    GD.cfg.gui['localaxes'] = True 
 def globalAxes():
-    GD.cfg['localaxes'] = False 
+    GD.cfg.gui['localaxes'] = False 
 
 
-def system(cmdline,result='output'):
-    if result == 'status':
-        return os.system(cmdline)
-    elif result == 'output':
-        return commands.getoutput(cmdline)
-    elif result == 'both':
-        return commands.getstatusoutput(cmdline)
+## We need this because the menufunctions take an argument and the
+## help.help function has a default argument
+##
+def dohelp():
+    help.help()
 
 
 #### End

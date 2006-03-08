@@ -78,6 +78,15 @@ class Dict(dict):
         self.__dict__['default'] = default
 
 
+    def __str__(self):
+        """Format the Dict as a string.
+
+        We use the format Dict({}), so that the string can be
+        read back as a Dict.
+        """
+        return "Dict(%s)" % dict.__str__(self)
+    
+
     def __getitem__(self, key):
         """Allows items to be addressed as self[key].
 

@@ -39,9 +39,8 @@ def main(argv=None):
     # Read the default config file
     GD.cfg.read(os.path.join(GD.cfg['pyformexdir'],"pyformexrc"))
     # Read additional config files
-    for f in ["/etc/pyformexrc", \
-              os.path.join(os.environ['HOME'],".pyformexrc"), \
-              ".pyformexrc", ]:
+    userConfig = os.path.join(os.environ['HOME'],".pyformexrc")
+    for f in ["/etc/pyformexrc", userConfig, ".pyformexrc" ]:
         if os.path.exists(f):
             GD.cfg.read(f)
 
@@ -57,10 +56,33 @@ def main(argv=None):
         ])
     GD.options, args = parser.parse_args()
 
+    if GD.options.debug:
+        print GD.cfg
+        print GD.options
+
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     from gui import runApp
-    return runApp(args)
+    
+    res = runApp(args)
+
+    #Save the preferences if they changed
+    if GD.prefsChanged:
+        f = ".pyformexrc"
+        if not os.path.exists(f):
+            f = userConfig
+        try:
+            fil = file(f,'w')
+            fil.write("%s" % GD.cfg)
+            fil.close()
+            print "Saved preferences to file %s" % f
+            
+        except:
+            print "Could not save preferences!"
+
+    # Exit
+    return res
+
 
 #### Go
 

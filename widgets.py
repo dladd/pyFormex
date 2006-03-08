@@ -101,10 +101,5 @@ class ConfigDialog(qt.QDialog):
         self.accept()
         
     def process(self):
-        print "Now accepting events"
-        if self.exec_loop() == qt.QDialog.Accepted:
-            print "ACCEPT the following values"
-            print self.result
-        else:
-            print "CHANGES REFUSED ",self.result
-        return self.result
+        accept = self.exec_loop() == qt.QDialog.Accepted
+        return (self.result, accept)

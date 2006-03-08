@@ -28,6 +28,21 @@ is limited to one level of sectioning.
 
 from mydict import Dict
 
+def dicttostr(dic):
+    """Format a dict in Python source representation.
+
+    Each (key,value) pair is formatted on a line : key = value.
+    """
+    s = ""
+    if isinstance(dic,dict):
+        for k,v in dic.iteritems():
+            if type(v) == str:
+                s += '%s = "%s"\n' % (k,v)
+            else:
+                s += '%s = %s\n' % (k,v)
+    return s
+
+
 class Config(Dict):
     """A configuration class allowing Python expressions in the input.
 
@@ -202,6 +217,19 @@ class Config(Dict):
             self.update(name=section,data=contents,removeLocals=True)
         return self
 
+
+    def __str__(self):
+        """Format the Config in a way that can be red back."""
+        s = "# Config written by pyFormex\n\n"
+        for k,v in self.iteritems():
+            if not isinstance(v,Dict):
+                s += dicttostr({k:v})
+        for k,v in self.iteritems():
+            if isinstance(v,Dict):
+                s += "\n[%s]\n" % k
+                s += dicttostr(v)
+        return s
+    
 
 if __name__ == '__main__':
 

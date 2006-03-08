@@ -5,23 +5,37 @@
 import globaldata as GD
 import helpviewer
 import gui
+import draw
 import qt
+import os
 
     
-def help():
-    """Display the help browser"""
-    print "help = ",GD.cfg.help
-    if GD.help == None or GD.help.destroyed:
-        GD.help = helpviewer.HelpViewer(home = GD.cfg.help.homepage,
-                                        path = GD.cfg.help.helpdir,
-                                        histfile = GD.cfg.help.history,
-                                        bookfile = GD.cfg.help.bookmarks)
-        GD.help.setCaption("pyFormex - Helpviewer")
-        GD.help.setAbout("pyFormex Help",
-                      "This is the pyFormex HelpViewer.<p>It was modeled after the HelpViewer example from the Qt documentation.</p>")
-        #help.resize(800,600)
-        GD.help.connect(GD.help,qt.SIGNAL("destroyed()"),closeHelp)
-    GD.help.show()
+def help(page=None):
+    """Display a html help page.
+
+    If GD.help.viewer == None, the help page is displayed using the
+    built-in help browser. GD.help.viewer can be set to a string to
+    display the page in an external browser.
+    """
+    if not page:
+        page = GD.cfg.help.homepage
+    if GD.cfg.help.viewer:
+        print 
+        pid = os.spawnlp(os.P_NOWAIT,GD.cfg.help.viewer,
+                         os.path.basename(GD.cfg.help.viewer),page)
+    else:
+        if GD.help == None or GD.help.destroyed:
+            GD.help = helpviewer.HelpViewer(home = page,
+                                            path = os.path.dirname(page),
+                                            histfile = GD.cfg.help.history,
+                                            bookfile = GD.cfg.help.bookmarks)
+            GD.help.setCaption("pyFormex - Helpviewer")
+            GD.help.setAbout("pyFormex Help",
+                          "This is the pyFormex HelpViewer.<p>It was modeled after the HelpViewer example from the Qt documentation.</p>")
+            #help.resize(800,600)
+            # THis signal does not seem to work !!!
+            GD.help.connect(GD.help,qt.SIGNAL("destroyed()"),closeHelp)
+        GD.help.show()
 
 
 def closeHelp():

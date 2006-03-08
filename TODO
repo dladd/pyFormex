@@ -3,25 +3,26 @@ This is a summary of our plans before the next releases:
 Release 0.2 : Released 2005-Jan-03
 
 
-
 Release 0.3 :
  - Rethink, reorganize, complete the formex transformations (LARGELY DONE)
- - Provide short documentation  
+ - Provide short documentation (INITIATED)
  - Change the mouse rotation action  (DONE) 
- - Interface for executing external scripts.  (CANCELLED, Python provides it)
+ - Interface for executing external scripts. (CANCELLED, Python provides it)
  - Online help system (INITIATED)
- - Provide a formian to pyformex translator
+ - Provide a formian to pyformex translator (POSTPONED)
  - Add config file and config settings dialog (INITIATED)
- - Display camera settings
+ - Display camera settings 
 
 
 Release 0.4 :
   - Better rendering of triangles and polygones.
-  - Decent install/uninstall procedures
-  - Full manual
+  - Decent install/uninstall procedures (INITIATED)
+  - Full manual (INITIATED)
+  - Dedicated editor
+  - Interactive selection/transformation
+
 
 Release 0.5 :
   - Multiple views
-  - Rendering of externally provided values on the domain.
+  - Rendering of externally provided values on the domain. (INITIATED)
 
-  

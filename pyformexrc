@@ -20,7 +20,7 @@ propcolors = [black,red,green,blue,cyan,magenta,yellow,white]
                  # a default color set for properties
 
 [help]
-viewer = None        # None selects the built-in help viewer
+viewer = ""          # Empty selects the built-in help viewer
 # if set to a string, the command "%s %s" % (viewer,page) will be used
 helpdir = os.path.join(pyformexdir,"manual","html")
 homepage = os.path.join(helpdir,"index.html") 
