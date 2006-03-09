@@ -64,12 +64,6 @@ def prefSize():
     GD.gui.resize(800,600)
 
 
-def preferences():
-    test = [["item1","value1"],
-            ["item2",""],
-            ["an item with a long name","and a very long value for this item, just to test the scrolling"]]
-    res = widgets.ConfigDialog(test).process()
-    print res
 
 
 def AddMenuItems(menu, items=[]):
@@ -130,7 +124,7 @@ MenuData = [
     ("Popup","&File",[
         ("Action","&Open","openFile"),
         ("Action","&Play","play"),
-        ("Action","&Edit","editor"),
+        ("Action","&Edit","edit"),
 #        ("Action","&Save","save"),
 #        ("Action","Save &As","saveAs"),
         ("Sep",None,None),
@@ -207,7 +201,8 @@ def addDefaultMenu(menu):
 def runExample(i):
     """Run example i from the list of found examples."""
     global example
-    draw.playFile(os.path.join(GD.cfg.exampledir,example[i]))
+    gui.setcurfile(os.path.join(GD.cfg.exampledir,example[i]))
+    play()
 
 def runExamples(n):
     """Run the first n examples."""
@@ -219,7 +214,8 @@ def addActionButtons(toolbar):
     global action
     action = {}
     dir = GD.cfg.icondir
-    buttons = [ [ "Step", "next.xbm", draw.step, False ],
+    buttons = [ [ "Play", "next.xbm", play, False ],
+                [ "Step", "nextstop.xbm", draw.step, False ],
                 [ "Continue", "ff.xbm", draw.fforward, False ],
               ]
     for b in buttons:
@@ -279,30 +275,39 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
-# open a pyformex script
+
 def openFile():
+    """Open a file and set it as the current file"""
     dir = GD.cfg.get('workdir',".")
     fs = widgets.FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
-        GD.cfg['curfile'] = fn
-        if GD.cfg['edit']:
-            cmd = GD.cfg['edit']
-            print cmd
-            print fn
-            pid = os.spawnlp(os.P_NOWAIT, cmd, cmd, fn)
-            print "Spawned %d" % pid
+        gui.setcurfile(fn)
 
-# play the current file
+
+def edit():
+    """Load the current file in the editor.
+
+    This only works if the editor was set in the configuration.
+    The author uses 'gnuclient' to load the files in a running copy
+    of xemacs.
+    """
+    if GD.cfg['edit']:
+        cmd = GD.cfg['edit']
+        pid = os.spawnlp(os.P_NOWAIT, cmd, cmd, GD.cfg['curfile'])
+        print "Spawned %d" % pid
+
+
 def play():
-    if GD.cfg['curfile']:
+    """Play the current file.
+
+    This only does something if the current file is a pyFormex script.
+    """
+    if GD.canPlay:
         draw.playFile(GD.cfg['curfile'])
 
     
-
-multisave = None
-
 def saveNext():
     global multisave
     name,nr,fmt = multisave
@@ -318,7 +323,6 @@ def multiSave():
     will be numbered continuing from this number. Otherwise a numeric part
     -000, -001, will be added to the filename.
     """
-    global canvas,multisave
     if multisave:
         print "Stop auto mode"
         qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("save"),saveNext)

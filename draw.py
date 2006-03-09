@@ -231,10 +231,9 @@ def setview(name,angles):
 scriptDisabled = False
 scriptRunning = False
  
-def playScript(scr,name="unnamed"):
+def playScript(scr):
     """Play a pyformex script scr. scr should be a valid Python text.
 
-    If a second parameter is given, it will be displayed on the status line.
     There is a lock to prevent multiple scripts from being executed at the
     same time.
     """
@@ -244,8 +243,6 @@ def playScript(scr,name="unnamed"):
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
-    GD.scriptName = name
-    message("Running script (%s)" % name)
     GD.canvas.update()
     allowwait = True
     GD.gui.actions['Step'].setEnabled(True)
@@ -270,7 +267,6 @@ def playScript(scr,name="unnamed"):
             exitall = True
     finally:
         scriptRunning = False # release the lock in case of an error
-        message("Finished script")
         GD.gui.actions['Step'].setEnabled(False)
         GD.gui.actions['Continue'].setEnabled(False)
     if exitall:
@@ -281,7 +277,9 @@ def playFile(fn,name=None):
     global currentView,drawtimeout 
     drawtimeout = GD.cfg.gui.get('drawwait',2)
     currentView = 'front'
-    playScript(file(fn,'r'),fn)
+    message("Running script (%s)" % fn)
+    playScript(file(fn,'r'))
+    message("Script finished")
 
 
 def pause():

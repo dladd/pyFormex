@@ -1,8 +1,30 @@
 pyFormex 0.3 - release notes
 
-numarray has been replaced by NumPy as the underlying numeric array
+- Base -
+numarray has been replaced by NumPy as the underlying numerical array class.
 Get numpy from http://numeric.scipy.org/
-Version 0.8.4 (called scipy_core) or higher
-0.9.4 or higher recommended
+Version 0.9.4 or higher 
 
-See file Changelog for more details about changes in this release.
+- Configuration -
+Configuration files have a new structure. 
+Changed preferences are saved in the user configuration file on exit.
+
+- GUI -
+File->Open: selects the current file (name displayed in status bar)
+File->Play: plays the current file (if it is a pyFormex script)
+File->Edit: loads the current file in the editor (if an editor was set)
+Selecting an example sets the current file name and plays the script
+The Toolbar has a Play Button, the Step button has a new icon
+
+- Help system -
+The GUI has an integrated help system, using either an external or a built-in
+browser.
+
+- Documentation -
+Work on a manual/tutorial has started. Accessible from the help system.
+
+- Changelog -
+See file Changelog for some more detailed changes in this release.
+It is by far not a complete overview of the changes though: there simply 
+are too many.
+

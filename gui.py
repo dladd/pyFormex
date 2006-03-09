@@ -102,8 +102,10 @@ class GUI:
         self.main.resize(wd,ht)
         # add widgets to the main window
         self.statusbar = self.main.statusBar()
-        self.message = qt.QLabel(self.statusbar)
-        self.statusbar.addWidget(self.message)
+        self.curfile = qt.QLabel(self.statusbar)
+        self.statusbar.addWidget(self.curfile)
+        self.smiley = qt.QLabel(self.statusbar)
+        self.statusbar.addWidget(self.smiley)
         self.menu = self.main.menuBar()
         self.toolbar = qt.QToolBar(self.main)
         self.editor = None
@@ -153,6 +155,7 @@ class GUI:
         initViewActions(self.main,GD.cfg.gui.setdefault('builtinviews',['front','back','left','right','top','bottom','iso']))
         #self.showMessage(GD.Version+"   (C) B. Verhegghe")
 
+
     def showMessage(self,s):
         """Append a message to the message board."""
         self.board.append(qt.QString(s))
@@ -169,7 +172,6 @@ class GUI:
         self.canvas.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
         self.main.adjustSize()
-
 
 ##    def addView(self,a):
 ##        """Add a new view action to the Views Menu and Views Toolbar."""
@@ -190,6 +192,40 @@ class GUI:
         if hasattr(self,'editor'):
             self.editor.close()
             self.editor = None
+
+
+def setcurfile(filename):
+    """Set the current file and check whether it is a pyFormex script.
+
+    A file that is not a pyFormex script can be loaded in the editor,
+    but it can not be played as a pyFormex script.
+    A file is considered to be a pyformex script if its name ends in '.py'
+    and the first line of the file ends with 'pyformex'. Typically, a
+    pyFormex script starts with a line: #!/usr/bin/env pyformex
+    """
+    GD.cfg.curfile = filename
+    GD.gui.curfile.setText(os.path.basename(filename))
+    GD.canPlay = isPyFormex(filename)
+    GD.gui.actions['Play'].setEnabled(GD.canPlay)
+    if GD.canPlay:
+        icon = 'happy.xbm'
+    else:
+        icon = 'unhappy.xbm'
+    GD.gui.smiley.setPixmap(qt.QPixmap(os.path.join(GD.cfg.icondir,icon)))
+
+
+def isPyFormex(filename):
+    """Checks whether a file is a pyFormex script."""
+    ok = filename.endswith(".py")
+    if ok:
+        try:
+            f = file(filename,'r')
+            ok = f.readline().strip().endswith('pyformex')
+            f.close()
+        except IOError:
+            ok = False
+            warning("I could not open the file %s" % filename)
+    return ok
 
 
 def messageBox(message,level='info',actions=['OK']):
@@ -248,7 +284,7 @@ def runApp(args):
     GD.app_started = False
     for arg in args:
         if os.path.exists(arg):
-            draw.playFile(arg)
+            GD.gui.play(arg)
     GD.app_started = True
     GD.app.exec_loop()
 

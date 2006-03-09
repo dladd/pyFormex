@@ -33,16 +33,8 @@ def help(page=None):
             GD.help.setAbout("pyFormex Help",
                           "This is the pyFormex HelpViewer.<p>It was modeled after the HelpViewer example from the Qt documentation.</p>")
             #help.resize(800,600)
-            # THis signal does not seem to work !!!
-            GD.help.connect(GD.help,qt.SIGNAL("destroyed()"),closeHelp)
         GD.help.show()
 
-
-def closeHelp():
-    """Close the help browser"""
-    print "Closing the help window!"
-    GD.help = None
-        
 
 def about():
     gui.about(GD.Version+"""
@@ -56,5 +48,6 @@ Distributed under the GNU General Public License.
 For help or information, mailto benedict.verhegghe@ugent.be
 """)
 
+
 def testwarning():
-    gui.info("Smoking may be hazardous to your health!\nWindows is a virus!",["OK","Cancel"])
+    gui.info("Smoking may be hazardous to your health!\nWindows is a virus!",["OK"])
