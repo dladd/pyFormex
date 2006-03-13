@@ -51,6 +51,8 @@ def main(argv=None):
         option_list=[
         make_option("--nodri", help="do not use Direct Rendering",
                     action="store_false", dest="dri", default=True),
+        make_option("--nogui", help="do not load the GUI",
+                    action="store_false", dest="gui", default=True),
         make_option("--debug", help="display logging info to sys.stdout",
                     action="store_true", dest="debug", default=False)
         ])
@@ -61,8 +63,12 @@ def main(argv=None):
         print GD.options
 
     # Run the application with the remaining arguments
+    
     # Importing the gui should be done after the config is set !!
-    from gui import runApp
+    if GD.options.gui:
+        from draw import runApp
+    else:
+        from script import runApp
     
     res = runApp(args)
 

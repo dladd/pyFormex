@@ -9,7 +9,7 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>draw</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/draw.py">/home/bene/prj/pyformex/draw.py</a></font></td></tr></table>
-    <p><tt>Functions&nbsp;for&nbsp;drawing&nbsp;and&nbsp;for&nbsp;executing&nbsp;scripts.</tt></p>
+    <p><tt>Functions&nbsp;for&nbsp;drawing&nbsp;and&nbsp;for&nbsp;executing&nbsp;pyFormex&nbsp;scripts.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -23,25 +23,28 @@
 <a href="OpenGL.GLUT.html">OpenGL.GLUT</a><br>
 <a href="camera.html">camera</a><br>
 <a href="numpy.core.defchararray.html">numpy.core.defchararray</a><br>
-<a href="numpy.core.html">numpy.core</a><br>
-</td><td width="25%" valign=top><a href="numpy.dft.html">numpy.dft</a><br>
+<a href="commands.html">commands</a><br>
+</td><td width="25%" valign=top><a href="numpy.core.html">numpy.core</a><br>
+<a href="numpy.dft.html">numpy.dft</a><br>
 <a href="numpy.distutils.html">numpy.distutils</a><br>
 <a href="numpy.f2py.html">numpy.f2py</a><br>
 <a href="gl2ps.html">gl2ps</a><br>
 <a href="gui.html">gui</a><br>
 <a href="numpy.lib.html">numpy.lib</a><br>
-<a href="numpy.linalg.html">numpy.linalg</a><br>
-</td><td width="25%" valign=top><a href="numpy.core.ma.html">numpy.core.ma</a><br>
+</td><td width="25%" valign=top><a href="numpy.linalg.html">numpy.linalg</a><br>
+<a href="numpy.core.ma.html">numpy.core.ma</a><br>
 <a href="math.html">math</a><br>
+<a href="os.html">os</a><br>
 <a href="pickle.html">pickle</a><br>
 <a href="pyfotemp.html">pyfotemp</a><br>
 <a href="qt.html">qt</a><br>
-<a href="qtgl.html">qtgl</a><br>
+</td><td width="25%" valign=top><a href="qtgl.html">qtgl</a><br>
 <a href="numpy.random.html">numpy.random</a><br>
-</td><td width="25%" valign=top><a href="numpy.core.records.html">numpy.core.records</a><br>
+<a href="numpy.core.records.html">numpy.core.records</a><br>
 <a href="numpy.testing.html">numpy.testing</a><br>
 <a href="threading.html">threading</a><br>
 <a href="vector.html">vector</a><br>
+<a href="widgets.html">widgets</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -97,7 +100,8 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-ack"><strong>ack</strong></a>(s)</dt></dl>
+<td width="100%"><dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.3-alpha'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;message,&nbsp;to&nbsp;be&nbsp;acknowledged&nbsp;by&nbsp;the&nbsp;user.</tt></dd></dl>
+ <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-add_docstring"><strong>add_docstring</strong></a>(...)</dt></dl>
  <dl><dt><a name="-arange"><strong>arange</strong></a>(...)</dt><dd><tt><a href="#-arange">arange</a>(start,&nbsp;stop=None,&nbsp;step=1,&nbsp;dtype=int)<br>
 &nbsp;<br>
@@ -118,6 +122,7 @@ array&nbsp;may&nbsp;be&nbsp;returned.&nbsp;Otherwise,&nbsp;a&nbsp;base-class&nbs
 &nbsp;<br>
 &nbsp;Just&nbsp;like&nbsp;range()&nbsp;except&nbsp;it&nbsp;returns&nbsp;an&nbsp;array&nbsp;whose&nbsp;type&nbsp;can&nbsp;be<br>
 specified&nbsp;by&nbsp;the&nbsp;keyword&nbsp;argument&nbsp;typecode.</tt></dd></dl>
+ <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.</tt></dd></dl>
  <dl><dt><a name="-bgcolor"><strong>bgcolor</strong></a>(color)</dt><dd><tt>Change&nbsp;the&nbsp;background&nbsp;color&nbsp;(and&nbsp;redraw).</tt></dd></dl>
  <dl><dt><a name="-bincount"><strong>bincount</strong></a>(...)</dt></dl>
  <dl><dt><a name="-can_cast"><strong>can_cast</strong></a>(...)</dt><dd><tt>can_cast_safely(from=d1,&nbsp;to=d2)&nbsp;returns&nbsp;True&nbsp;if&nbsp;data&nbsp;type&nbsp;d1&nbsp;can&nbsp;be&nbsp;cast&nbsp;to&nbsp;data&nbsp;type&nbsp;d2&nbsp;without&nbsp;losing&nbsp;precision.</tt></dd></dl>
@@ -177,7 +182,8 @@ See&nbsp;the&nbsp;Pickler&nbsp;docstring&nbsp;for&nbsp;the&nbsp;meaning&nbsp;of&
 See&nbsp;the&nbsp;Pickler&nbsp;docstring&nbsp;for&nbsp;the&nbsp;meaning&nbsp;of&nbsp;optional&nbsp;argument&nbsp;proto.</tt></dd></dl>
  <dl><dt><a name="-empty"><strong>empty</strong></a>(...)</dt><dd><tt><a href="#-empty">empty</a>((d1,...,dn),dtype=int,fortran=0)&nbsp;will&nbsp;return&nbsp;a&nbsp;new&nbsp;array<br>
 of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;given&nbsp;type&nbsp;with&nbsp;all&nbsp;its&nbsp;entries&nbsp;uninitialized.&nbsp;This&nbsp;can&nbsp;be&nbsp;faster&nbsp;than&nbsp;zeros.</tt></dd></dl>
- <dl><dt><a name="-exit"><strong>exit</strong></a>(all<font color="#909090">=False</font>)</dt></dl>
+ <dl><dt><a name="-error"><strong>error</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt></dl>
+ <dl><dt><a name="-exit"><strong>exit</strong></a>()</dt><dd><tt>##&nbsp;exit&nbsp;from&nbsp;program&nbsp;pyformex</tt></dd></dl>
  <dl><dt><a name="-fastCopyAndTranspose"><strong>fastCopyAndTranspose</strong></a> = _fastCopyAndTranspose(...)</dt><dd><tt>_fastCopyAndTranspose(a)</tt></dd></dl>
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
@@ -210,12 +216,14 @@ useful&nbsp;to&nbsp;read&nbsp;in&nbsp;simply-formatted&nbsp;or&nbsp;binary&nbsp;
  <dl><dt><a name="-getbuffer"><strong>getbuffer</strong></a>(...)</dt><dd><tt><a href="#-getbuffer">getbuffer</a>(obj&nbsp;[,offset[,&nbsp;size]])&nbsp;create&nbsp;a&nbsp;buffer&nbsp;object&nbsp;from&nbsp;the&nbsp;given&nbsp;object<br>
 &nbsp;referencing&nbsp;a&nbsp;slice&nbsp;of&nbsp;length&nbsp;size&nbsp;starting&nbsp;at&nbsp;offset.&nbsp;&nbsp;Default<br>
 is&nbsp;the&nbsp;entire&nbsp;buffer.&nbsp;A&nbsp;read-write&nbsp;buffer&nbsp;is&nbsp;attempted&nbsp;followed&nbsp;by&nbsp;a&nbsp;read-only&nbsp;buffer.</tt></dd></dl>
+ <dl><dt><a name="-info"><strong>info</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt></dl>
  <dl><dt><a name="-inner"><strong>inner</strong></a>(...)</dt><dd><tt><a href="#-inner">inner</a>(a,b)&nbsp;returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;two&nbsp;arrays,&nbsp;which&nbsp;has<br>
 shape&nbsp;a.shape[:-1]&nbsp;+&nbsp;b.shape[:-1]&nbsp;with&nbsp;elements&nbsp;computed&nbsp;by<br>
 the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbsp;dimensions&nbsp;of&nbsp;a&nbsp;and&nbsp;b.</tt></dd></dl>
  <dl><dt><a name="-innerproduct"><strong>innerproduct</strong></a> = inner(...)</dt><dd><tt><a href="#-inner">inner</a>(a,b)&nbsp;returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;two&nbsp;arrays,&nbsp;which&nbsp;has<br>
 shape&nbsp;a.shape[:-1]&nbsp;+&nbsp;b.shape[:-1]&nbsp;with&nbsp;elements&nbsp;computed&nbsp;by<br>
 the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbsp;dimensions&nbsp;of&nbsp;a&nbsp;and&nbsp;b.</tt></dd></dl>
+ <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.</tt></dd></dl>
  <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;indexes&nbsp;similar&nbsp;to&nbsp;argsort&nbsp;except&nbsp;the&nbsp;sorting&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;provided&nbsp;sorting&nbsp;keys.&nbsp;&nbsp;First&nbsp;the&nbsp;sort&nbsp;is&nbsp;done&nbsp;using&nbsp;key[0],&nbsp;then&nbsp;the&nbsp;resulting&nbsp;list&nbsp;of&nbsp;indexes&nbsp;is&nbsp;further&nbsp;manipulated&nbsp;by&nbsp;sorting&nbsp;on&nbsp;key[0].&nbsp;&nbsp;And&nbsp;so&nbsp;forth&nbsp;The&nbsp;result&nbsp;is&nbsp;a&nbsp;sort&nbsp;on&nbsp;multiple&nbsp;keys.&nbsp;&nbsp;If&nbsp;the&nbsp;keys&nbsp;represented&nbsp;columns&nbsp;of&nbsp;a&nbsp;spread-sheet,&nbsp;for&nbsp;example,&nbsp;this&nbsp;would&nbsp;sort&nbsp;using&nbsp;multiple&nbsp;columns.&nbsp;The&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;tuple&nbsp;of&nbsp;things&nbsp;that&nbsp;can&nbsp;be&nbsp;converted&nbsp;to&nbsp;&nbsp;arrays&nbsp;of&nbsp;the&nbsp;same&nbsp;shape.</tt></dd></dl>
  <dl><dt><a name="-linewidth"><strong>linewidth</strong></a>(wid)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;line&nbsp;drawings.</tt></dd></dl>
  <dl><dt><a name="-listall"><strong>listall</strong></a>()</dt><dd><tt>List&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
@@ -223,15 +231,12 @@ the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbs
  <dl><dt><a name="-matrixmultiply"><strong>matrixmultiply</strong></a> = dot(...)</dt><dd><tt><a href="#-dot">dot</a>(a,v)&nbsp;returns&nbsp;matrix-multiplication&nbsp;between&nbsp;a&nbsp;and&nbsp;b.&nbsp;&nbsp;<br>
 The&nbsp;product-sum&nbsp;is&nbsp;over&nbsp;the&nbsp;last&nbsp;dimension&nbsp;of&nbsp;a&nbsp;and&nbsp;the&nbsp;<br>
 second-to-last&nbsp;dimension&nbsp;of&nbsp;b.</tt></dd></dl>
- <dl><dt><a name="-message"><strong>message</strong></a>(s)</dt><dd><tt>Show&nbsp;a&nbsp;message&nbsp;to&nbsp;the&nbsp;user.<br>
-&nbsp;<br>
-Currently,&nbsp;messages&nbsp;are&nbsp;shown&nbsp;in&nbsp;the&nbsp;status&nbsp;bar.</tt></dd></dl>
+ <dl><dt><a name="-message"><strong>message</strong></a>(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;to&nbsp;the&nbsp;user.</tt></dd></dl>
  <dl><dt><a name="-newbuffer"><strong>newbuffer</strong></a>(...)</dt><dd><tt><a href="#-newbuffer">newbuffer</a>(size)&nbsp;return&nbsp;a&nbsp;new&nbsp;uninitialized&nbsp;buffer&nbsp;object&nbsp;of&nbsp;size&nbsp;bytes</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
- <dl><dt><a name="-playFile"><strong>playFile</strong></a>(fn, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.</tt></dd></dl>
- <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">='unnamed'</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+ <dl><dt><a name="-play"><strong>play</strong></a>(fn, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.</tt></dd></dl>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
 &nbsp;<br>
-If&nbsp;a&nbsp;second&nbsp;parameter&nbsp;is&nbsp;given,&nbsp;it&nbsp;will&nbsp;be&nbsp;displayed&nbsp;on&nbsp;the&nbsp;status&nbsp;line.<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
 same&nbsp;time.</tt></dd></dl>
  <dl><dt><a name="-printbbox"><strong>printbbox</strong></a>()</dt></dl>
@@ -248,6 +253,7 @@ array&nbsp;of&nbsp;shape&nbsp;(d0,&nbsp;d1,&nbsp;...,&nbsp;dn).<br>
  <dl><dt><a name="-redraw"><strong>redraw</strong></a>()</dt></dl>
  <dl><dt><a name="-register_dtype"><strong>register_dtype</strong></a>(...)</dt><dd><tt><a href="#-register_dtype">register_dtype</a>(a)&nbsp;registers&nbsp;a&nbsp;new&nbsp;type&nbsp;object&nbsp;--&nbsp;gives&nbsp;it&nbsp;a&nbsp;typenum</tt></dd></dl>
  <dl><dt><a name="-renderMode"><strong>renderMode</strong></a>(mode)</dt></dl>
+ <dl><dt><a name="-runApp"><strong>runApp</strong></a>(args)</dt><dd><tt>Create&nbsp;and&nbsp;run&nbsp;the&nbsp;qt&nbsp;application.</tt></dd></dl>
  <dl><dt><a name="-save"><strong>save</strong></a>(filename, fmt)</dt></dl>
  <dl><dt><a name="-set_numeric_ops"><strong>set_numeric_ops</strong></a>(...)</dt><dd><tt><a href="#-set_numeric_ops">set_numeric_ops</a>(op=func,&nbsp;...)&nbsp;sets&nbsp;some&nbsp;or&nbsp;all&nbsp;of&nbsp;the&nbsp;number&nbsp;methods&nbsp;for&nbsp;all&nbsp;array&nbsp;objects.&nbsp;&nbsp;Don't&nbsp;forget&nbsp;**dict&nbsp;can&nbsp;be&nbsp;used&nbsp;as&nbsp;the&nbsp;argument&nbsp;list.&nbsp;&nbsp;Returns&nbsp;the&nbsp;functions&nbsp;that&nbsp;were&nbsp;replaced&nbsp;--&nbsp;can&nbsp;be&nbsp;stored&nbsp;and&nbsp;set&nbsp;later.</tt></dd></dl>
  <dl><dt><a name="-set_string_function"><strong>set_string_function</strong></a>(...)</dt><dd><tt><a href="#-set_string_function">set_string_function</a>(f,&nbsp;repr=1)&nbsp;sets&nbsp;the&nbsp;python&nbsp;function&nbsp;f&nbsp;to&nbsp;be&nbsp;the&nbsp;function&nbsp;used&nbsp;to&nbsp;obtain&nbsp;a&nbsp;pretty&nbsp;printable&nbsp;string&nbsp;version&nbsp;of&nbsp;a&nbsp;array&nbsp;whenever&nbsp;a&nbsp;array&nbsp;is&nbsp;printed.&nbsp;&nbsp;f(M)&nbsp;should&nbsp;expect&nbsp;a&nbsp;array&nbsp;argument&nbsp;M,&nbsp;and&nbsp;should&nbsp;return&nbsp;a&nbsp;string&nbsp;consisting&nbsp;of&nbsp;the&nbsp;desired&nbsp;representation&nbsp;of&nbsp;M&nbsp;for&nbsp;printing.</tt></dd></dl>
@@ -259,7 +265,7 @@ a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd><
  <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
  <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
  <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>
- <dl><dt><a name="-system"><strong>system</strong></a>(*args)</dt></dl>
+ <dl><dt><a name="-system"><strong>system</strong></a>(cmdline, result<font color="#909090">='output'</font>)</dt></dl>
  <dl><dt><a name="-update_use_defaults"><strong>update_use_defaults</strong></a>(...)</dt></dl>
  <dl><dt><a name="-view"><strong>view</strong></a>(v, wait<font color="#909090">=False</font>)</dt><dd><tt>Show&nbsp;a&nbsp;named&nbsp;view,&nbsp;either&nbsp;a&nbsp;builtin&nbsp;or&nbsp;a&nbsp;user&nbsp;defined.</tt></dd></dl>
  <dl><dt><a name="-wakeup"><strong>wakeup</strong></a>(mode<font color="#909090">=0</font>)</dt><dd><tt>Wake&nbsp;up&nbsp;from&nbsp;the&nbsp;sleep&nbsp;function.<br>
@@ -267,7 +273,7 @@ a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd><
 This&nbsp;is&nbsp;the&nbsp;only&nbsp;way&nbsp;to&nbsp;exit&nbsp;the&nbsp;<a href="#-sleep">sleep</a>()&nbsp;function.<br>
 Default&nbsp;is&nbsp;to&nbsp;wake&nbsp;up&nbsp;from&nbsp;the&nbsp;current&nbsp;sleep.&nbsp;A&nbsp;mode&nbsp;&gt;&nbsp;0<br>
 forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
- <dl><dt><a name="-warning"><strong>warning</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-warning"><strong>warning</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt></dl>
  <dl><dt><a name="-where"><strong>where</strong></a>(...)</dt><dd><tt><a href="#-where">where</a>(condition,&nbsp;|&nbsp;x,&nbsp;y)&nbsp;is&nbsp;shaped&nbsp;like&nbsp;condition&nbsp;and&nbsp;has&nbsp;elements&nbsp;of&nbsp;x&nbsp;and&nbsp;y&nbsp;where&nbsp;condition&nbsp;is&nbsp;respectively&nbsp;true&nbsp;or&nbsp;false.&nbsp;&nbsp;If&nbsp;x&nbsp;or&nbsp;y&nbsp;are&nbsp;not&nbsp;given,&nbsp;then&nbsp;it&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;nonzero(condition).</tt></dd></dl>
  <dl><dt><a name="-wireframe"><strong>wireframe</strong></a>()</dt></dl>
  <dl><dt><a name="-zeros"><strong>zeros</strong></a>(...)</dt><dd><tt><a href="#-zeros">zeros</a>((d1,...,dn),dtype=int,fortran=0)&nbsp;will&nbsp;return&nbsp;a&nbsp;new&nbsp;array&nbsp;of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;type&nbsp;typecode&nbsp;with&nbsp;all&nbsp;it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
@@ -351,7 +357,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.concatenator object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab97eb18&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab998ed8&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>

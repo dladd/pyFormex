@@ -33,21 +33,21 @@ class FileSelectionDialog(qt.QFileDialog):
         else:
             return None
 
-
-class ConfigDialog(qt.QDialog):
+## !! THIS IS NOT FULLY FUNCTIONAL YET
+## It can already be used for string items  
+class inputDialog(qt.QDialog):
     """A dialog widget to set the value of one or more items.
 
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,cfgitems):
-        """Creates a dialog which asks the user for the value cfgitems.
+    def __init__(self,items,caption='Input Dialog'):
+        """Creates a dialog which asks the user for the value of items.
 
-        cfgitems is the list of items that can be configured.
-        Each item is a tuple holding at least the name of the item,
-        and possible some more elements that limit the type of data
-        that can be entered.
-        name,value,type,range,default
+        Each item in the 'items' list is a tuple holding at least the name
+        of the item, and optionally some more elements that limit the type
+        of data that can be entered. The general format of an item is:
+          name,value,type,range,default
         It should fit one of the following schemes:
         ('name') or ('name',str) : type string, any string input allowed
         ('name',int) : type int, any integer value allowed
@@ -57,11 +57,11 @@ class ConfigDialog(qt.QDialog):
         """
         qt.QDialog.__init__(self,None,None,True)
         self.resize(400,200)
-        self.setCaption("Config")
+        self.setCaption(caption)
         self.fields = []
         self.result = []
         tab = qt.QVBoxLayout(self,11,6)
-        for item in cfgitems:
+        for item in items:
             line = qt.QHBoxLayout(None,0,6)
             label = qt.QLabel(item[0],self)
             line.addWidget(label)

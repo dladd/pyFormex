@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # $Id$
-"""Functions for drawing and for executing scripts."""
+"""Functions for drawing and for executing pyFormex scripts."""
 
 import globaldata as GD
 from formex import *
@@ -9,21 +9,10 @@ from colors import *
 
 import pyfotemp
 import gui
-import threading,commands
+import widgets
+import threading,os,commands
 
-
-def ack(s):
-    if GD.gui:
-        return gui.yesNo(s)
-    else:
-        while 1:
-            res = raw_input(s+' [Yn] ')[0].upper()
-            if res in 'yn':
-                return res == 'y'
-
-def ask(s,*args):
-    return gui.info(s,*args)
-
+#################### scripting functions ######################################
 
 class Exit(Exception):
     """Exception raised to exit from a running script."""
@@ -32,6 +21,109 @@ class Exit(Exception):
 class ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
     pass    
+
+def ask(question,choices=None,default=''):
+    """Ask a question and present possible answers."""
+    if choices:
+        # this currently only supports 3 answers
+        return info(question,choices)
+    else:
+        items = [ [question, default] ]
+        res,accept = widgets.inputDialog(items,'Config Dialog').process()
+        #GD.gui.update()
+        print res
+        if accept:
+            return res[0][1]
+        else:
+            return default
+
+def ack(question):
+    """Show a Yes/No question and return True/False depending on answer."""
+    return ask(question,['Yes','No']) == 0
+    
+def error(message,actions=['OK']):
+    return gui.messageBox(message,'error',actions)
+    
+def warning(message,actions=['OK']):
+    return gui.messageBox(message,'warning',actions)
+
+def info(message,actions=['OK']):
+    return gui.messageBox(message,'info',actions)
+    
+def about(message=GD.Version):
+    """Show a message, to be acknowledged by the user."""
+    return gui.messageBox(message,'about')
+
+def message(s):
+    """Display a message to the user."""
+    GD.gui.showMessage(s)
+    
+
+scriptDisabled = False
+scriptRunning = False
+ 
+def playScript(scr):
+    """Play a pyformex script scr. scr should be a valid Python text.
+
+    There is a lock to prevent multiple scripts from being executed at the
+    same time.
+    """
+    global scriptRunning, scriptDisabled, allowwait
+    # (We only allow one script executing at a time!)
+    # and scripts are non-reentrant
+    if scriptRunning or scriptDisabled :
+        return
+    scriptRunning = True
+    allowwait = True
+    if GD.canvas:
+        GD.canvas.update()
+    if GD.gui:
+        print "Activating buttons"
+        GD.gui.actions['Step'].setEnabled(True)
+        GD.gui.actions['Continue'].setEnabled(True)
+    else:
+        print "Not activating buttons"
+        
+    # We need to pass formex globals to the script
+    # This would be done automatically if we put this function
+    # in the formex.py file. But hen we need to pass other globals
+    # from this file (like draw,...)
+    # We might create a module with all operations accepted in
+    # scripts.
+    g = globals()
+    #print "Voor",g.get('__name__','Geen')
+    g.update(Formex.globals())
+    #print "Na",g.get('__name__','Geen')
+    exitall = False
+    try:
+        try:
+            exec scr in g
+        except Exit:
+            pass
+        except ExitAll:
+            exitall = True
+    finally:
+        scriptRunning = False # release the lock in case of an error
+        if GD.gui:
+            GD.gui.actions['Step'].setEnabled(False)
+            GD.gui.actions['Continue'].setEnabled(False)
+    if exitall:
+        exit()
+
+def play(fn,name=None):
+    """Play a formex script from file fn."""
+    global currentView,drawtimeout 
+    drawtimeout = GD.cfg.gui.get('drawwait',2)
+    print "drawtimeout = %d" % drawtimeout
+    currentView = 'front'
+    if name:
+        GD.scriptName = name
+    message("Running script (%s)" % fn)
+    playScript(file(fn,'r'))
+    message("Script finished")
+
+
+############################## drawing functions ########################
 
 def renderMode(mode):
     global allowwait
@@ -48,15 +140,6 @@ def flat():
     
 def smooth():
     renderMode("smooth")
-
-def message(s):
-    """Show a message to the user.
-
-    Currently, messages are shown in the status bar."""
-    if GD.gui:
-        GD.gui.showMessage(s)
-    else:
-        print s
 
 
     
@@ -226,60 +309,6 @@ def setview(name,angles):
     If the view name is new, and there is a views toolbar,
     a view button will be added to it."""
     gui.addView(name,angles)
-    
-
-scriptDisabled = False
-scriptRunning = False
- 
-def playScript(scr):
-    """Play a pyformex script scr. scr should be a valid Python text.
-
-    There is a lock to prevent multiple scripts from being executed at the
-    same time.
-    """
-    global scriptRunning, scriptDisabled, allowwait
-    # (We only allow one script executing at a time!)
-    # and scripts are non-reentrant
-    if scriptRunning or scriptDisabled :
-        return
-    scriptRunning = True
-    GD.canvas.update()
-    allowwait = True
-    GD.gui.actions['Step'].setEnabled(True)
-    GD.gui.actions['Continue'].setEnabled(True)
-    # We need to pass formex globals to the script
-    # This would be done automatically if we put this function
-    # in the formex.py file. But hen we need to pass other globals
-    # from this file (like draw,...)
-    # We might create a module with all operations accepted in
-    # scripts.
-    g = globals()
-    #print "Voor",g.get('__name__','Geen')
-    g.update(Formex.globals())
-    #print "Na",g.get('__name__','Geen')
-    exitall = False
-    try:
-        try:
-            exec scr in g
-        except Exit:
-            pass
-        except ExitAll:
-            exitall = True
-    finally:
-        scriptRunning = False # release the lock in case of an error
-        GD.gui.actions['Step'].setEnabled(False)
-        GD.gui.actions['Continue'].setEnabled(False)
-    if exitall:
-        exit()
-
-def playFile(fn,name=None):
-    """Play a formex script from file fn."""
-    global currentView,drawtimeout 
-    drawtimeout = GD.cfg.gui.get('drawwait',2)
-    currentView = 'front'
-    message("Running script (%s)" % fn)
-    playScript(file(fn,'r'))
-    message("Script finished")
 
 
 def pause():
@@ -293,6 +322,19 @@ def fforward():
     allowwait = False
     drawrelease()
     
+      
+def isPyFormex(filename):
+    """Checks whether a file is a pyFormex script."""
+    ok = filename.endswith(".py")
+    if ok:
+        try:
+            f = file(filename,'r')
+            ok = f.readline().strip().endswith('pyformex')
+            f.close()
+        except IOError:
+            ok = False
+            warning("I could not open the file %s" % filename)
+    return ok
 
 def exit(all=False):
     if scriptRunning:
@@ -370,3 +412,32 @@ def system(cmdline,result='output'):
         return commands.getoutput(cmdline)
     elif result == 'both':
         return commands.getstatusoutput(cmdline)
+
+## exit from program pyformex
+def exit():
+    if GD.app and GD.app_started: # exit from GUI
+        GD.app.quit() 
+    else: # the gui didn't even start
+        sys.exit(0)
+
+###########################  app  ################################
+
+def runApp(args):
+    """Create and run the qt application."""
+    global app_started
+    GD.app = qt.QApplication(args)
+    qt.QObject.connect(GD.app,qt.SIGNAL("lastWindowClosed()"),GD.app,qt.SLOT("quit()"))
+    # create GUI, show it, run it
+    GD.gui = gui.GUI()
+    GD.canvas = GD.gui.canvas
+    GD.app.setMainWidget(GD.gui.main)
+    GD.gui.main.show()
+    # remaining args are interpreted as scripts
+    GD.app_started = False
+    for arg in args:
+        if os.path.exists(arg):
+            play(arg)
+    GD.app_started = True
+    GD.app.exec_loop()
+
+#### End

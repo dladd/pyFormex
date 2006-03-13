@@ -14,6 +14,7 @@ image_formats = []
 prefsChanged = False
 multisave = False
 canPlay = False
+scriptName = None
 
 def debug(s):
     if options.debug:

@@ -4,6 +4,7 @@
 
 import globaldata as GD
 import canvas
+import script
 import draw
 import widgets
 
@@ -205,7 +206,7 @@ def setcurfile(filename):
     """
     GD.cfg.curfile = filename
     GD.gui.curfile.setText(os.path.basename(filename))
-    GD.canPlay = isPyFormex(filename)
+    GD.canPlay = script.isPyFormex(filename)
     GD.gui.actions['Play'].setEnabled(GD.canPlay)
     if GD.canPlay:
         icon = 'happy.xbm'
@@ -213,19 +214,6 @@ def setcurfile(filename):
         icon = 'unhappy.xbm'
     GD.gui.smiley.setPixmap(qt.QPixmap(os.path.join(GD.cfg.icondir,icon)))
 
-
-def isPyFormex(filename):
-    """Checks whether a file is a pyFormex script."""
-    ok = filename.endswith(".py")
-    if ok:
-        try:
-            f = file(filename,'r')
-            ok = f.readline().strip().endswith('pyformex')
-            f.close()
-        except IOError:
-            ok = False
-            warning("I could not open the file %s" % filename)
-    return ok
 
 
 def messageBox(message,level='info',actions=['OK']):
@@ -247,52 +235,6 @@ def messageBox(message,level='info',actions=['OK']):
     elif level == 'about':
         return w.about(w,GD.Version,message)
 
-    
-def error(message,actions=['OK']):
-    return messageBox(message,'error',actions)
-    
-def warning(message,actions=['OK']):
-    return messageBox(message,'warning',actions)
 
-def info(message,actions=['OK']):
-    return messageBox(message,'info',actions)
-
-def yesNo(s):
-    """Show a question and get an answer."""
-    return warning(s,['Yes','No']) == 0
-    
-def about(message=GD.Version):
-    """Show a message, to be acknowledged by the user."""
-    return messageBox(message,'about')
-
-
-###########################  app  ################################
-
-
-def runApp(args):
-    """Create and run the qt application."""
-    global app_started
-    GD.app = qt.QApplication(args)
-    qt.QObject.connect(GD.app,qt.SIGNAL("lastWindowClosed()"),GD.app,qt.SLOT("quit()"))
-    # create GUI, show it, run it
-    GD.gui = GUI()
-    GD.canvas = GD.gui.canvas
-    GD.app.setMainWidget(GD.gui.main)
-    GD.gui.main.show()
-    GD.options.gui = True
-    # remaining args are interpreted as scripts
-    GD.app_started = False
-    for arg in args:
-        if os.path.exists(arg):
-            GD.gui.play(arg)
-    GD.app_started = True
-    GD.app.exec_loop()
-
-## exit from program pyformex
-def exit():
-    if GD.app and GD.app_started: # exit from GUI
-        GD.app.quit() 
-    else: # the gui didn't even start
-        sys.exit(0)
 
 #### End

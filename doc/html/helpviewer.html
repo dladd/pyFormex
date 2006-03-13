@@ -18,7 +18,7 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="qt.html">qt</a><br>
 </td><td width="25%" valign=top><a href="sys.html">sys</a><br>
 </td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -86,6 +86,8 @@ built-in&nbsp;ones.&nbsp;They&nbsp;will&nbsp;be&nbsp;used&nbsp;for&nbsp;back,&nb
 
 <dl><dt><a name="HelpViewer-bookmChosen"><strong>bookmChosen</strong></a>(self, i)</dt></dl>
 
+<dl><dt><a name="HelpViewer-closeEvent"><strong>closeEvent</strong></a>(self, ce)</dt></dl>
+
 <dl><dt><a name="HelpViewer-exit"><strong>exit</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="HelpViewer-fillMenu"><strong>fillMenu</strong></a>(self, menu, filename)</dt><dd><tt>Fills&nbsp;a&nbsp;menu&nbsp;with&nbsp;items&nbsp;read&nbsp;from&nbsp;the&nbsp;specified&nbsp;file.<br>
@@ -134,8 +136,6 @@ Data and other attributes defined here:<br>
 <dl><dt><strong>clearWFlags</strong> = &lt;built-in function clearWFlags&gt;</dl>
 
 <dl><dt><strong>clearWState</strong> = &lt;built-in function clearWState&gt;</dl>
-
-<dl><dt><strong>closeEvent</strong> = &lt;built-in function closeEvent&gt;</dl>
 
 <dl><dt><strong>contextMenuEvent</strong> = &lt;built-in function contextMenuEvent&gt;</dl>
 
@@ -2105,93 +2105,5 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 <dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#HelpViewer-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
-</td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#eeaa77">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-PYSIGNAL"><strong>PYSIGNAL</strong></a>(...)</dt></dl>
- <dl><dt><a name="-QT_TRANSLATE_NOOP"><strong>QT_TRANSLATE_NOOP</strong></a>(...)</dt></dl>
- <dl><dt><a name="-QT_TR_NOOP"><strong>QT_TR_NOOP</strong></a>(...)</dt></dl>
- <dl><dt><a name="-SIGNAL"><strong>SIGNAL</strong></a>(...)</dt></dl>
- <dl><dt><a name="-SLOT"><strong>SLOT</strong></a>(...)</dt></dl>
- <dl><dt><a name="-bitBlt"><strong>bitBlt</strong></a>(...)</dt></dl>
- <dl><dt><a name="-copyBlt"><strong>copyBlt</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qAlpha"><strong>qAlpha</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qAppClass"><strong>qAppClass</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qAppName"><strong>qAppName</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qBlue"><strong>qBlue</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qCompress"><strong>qCompress</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qDrawPlainRect"><strong>qDrawPlainRect</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qDrawShadeLine"><strong>qDrawShadeLine</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qDrawShadePanel"><strong>qDrawShadePanel</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qDrawShadeRect"><strong>qDrawShadeRect</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qDrawWinButton"><strong>qDrawWinButton</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qDrawWinPanel"><strong>qDrawWinPanel</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qGray"><strong>qGray</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qGreen"><strong>qGreen</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallMsgHandler"><strong>qInstallMsgHandler</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPath"><strong>qInstallPath</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathBins"><strong>qInstallPathBins</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathData"><strong>qInstallPathData</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathDocs"><strong>qInstallPathDocs</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathHeaders"><strong>qInstallPathHeaders</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathLibs"><strong>qInstallPathLibs</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathPlugins"><strong>qInstallPathPlugins</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathSysconf"><strong>qInstallPathSysconf</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qInstallPathTranslations"><strong>qInstallPathTranslations</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qRed"><strong>qRed</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qRgb"><strong>qRgb</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qRgba"><strong>qRgba</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qUncompress"><strong>qUncompress</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qVersion"><strong>qVersion</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qt_xdisplay"><strong>qt_xdisplay</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qt_xrootwin"><strong>qt_xrootwin</strong></a>(...)</dt></dl>
- <dl><dt><a name="-qt_xscreen"><strong>qt_xscreen</strong></a>(...)</dt></dl>
- <dl><dt><a name="-tr"><strong>tr</strong></a>(s)</dt></dl>
-</td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#55aa55">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>IO_AbortError</strong> = 6<br>
-<strong>IO_Append</strong> = 4<br>
-<strong>IO_Async</strong> = 128<br>
-<strong>IO_Combined</strong> = 768<br>
-<strong>IO_ConnectError</strong> = 5<br>
-<strong>IO_Direct</strong> = 256<br>
-<strong>IO_FatalError</strong> = 3<br>
-<strong>IO_ModeMask</strong> = 255<br>
-<strong>IO_Ok</strong> = 0<br>
-<strong>IO_Open</strong> = 4096<br>
-<strong>IO_OpenError</strong> = 5<br>
-<strong>IO_Raw</strong> = 64<br>
-<strong>IO_ReadError</strong> = 1<br>
-<strong>IO_ReadOnly</strong> = 1<br>
-<strong>IO_ReadWrite</strong> = 3<br>
-<strong>IO_ResourceError</strong> = 4<br>
-<strong>IO_Sequential</strong> = 512<br>
-<strong>IO_StateMask</strong> = 61440<br>
-<strong>IO_TimeOutError</strong> = 7<br>
-<strong>IO_Translate</strong> = 16<br>
-<strong>IO_Truncate</strong> = 8<br>
-<strong>IO_TypeMask</strong> = 3840<br>
-<strong>IO_UnspecifiedError</strong> = 8<br>
-<strong>IO_WriteError</strong> = 2<br>
-<strong>IO_WriteOnly</strong> = 2<br>
-<strong>PYQT_BUILD</strong> = '310'<br>
-<strong>PYQT_VERSION</strong> = 200193<br>
-<strong>PYQT_VERSION_STR</strong> = '3.14.1'<br>
-<strong>QCOORD_MAX</strong> = 2147483647<br>
-<strong>QCOORD_MIN</strong> = -2147483648<br>
-<strong>QT_VERSION</strong> = 197380<br>
-<strong>QT_VERSION_STR</strong> = '3.3.4'<br>
-<strong>QtDebugMsg</strong> = 0<br>
-<strong>QtFatalMsg</strong> = 2<br>
-<strong>QtWarningMsg</strong> = 1<br>
-<strong>qApp</strong> = &lt;qt.QApplication object&gt;</td></tr></table>
+</td></tr></table></td></tr></table>
 </body></html>

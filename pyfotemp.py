@@ -31,8 +31,7 @@ def askConfigPreferences(items,section=None):
     # insert current values
     for it in items:
         it.insert(1,store.setdefault(it[0],''))
-    print "Asking Prefs ",items
-    res,accept = widgets.ConfigDialog(items).process()
+    res,accept = widgets.inputDialog(items,'Config Dialog').process()
     if accept:
         GD.prefsChanged = True
         print "ACCEPTED following values:"
@@ -305,7 +304,7 @@ def play():
     This only does something if the current file is a pyFormex script.
     """
     if GD.canPlay:
-        draw.playFile(GD.cfg['curfile'])
+        draw.play(GD.cfg['curfile'])
 
     
 def saveNext():

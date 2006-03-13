@@ -24,8 +24,8 @@ viewer = ""          # Empty selects the built-in help viewer
 # if set to a string, the command "%s %s" % (viewer,page) will be used
 helpdir = os.path.join(pyformexdir,"manual","html")
 homepage = os.path.join(helpdir,"index.html") 
-bookmarks = os.path.join(os.environ['HOME'],".pyformex.bookmarks")
-history = os.path.join(os.environ['HOME'],".pyformex.history")
+#bookmarks = os.path.join(os.environ['HOME'],".pyformex.bookmarks")
+#history = os.path.join(os.environ['HOME'],".pyformex.history")
 
 [gui]
 width =  960         # default window width
