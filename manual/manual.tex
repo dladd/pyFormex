@@ -20,7 +20,7 @@
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
-\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
+%\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
  
 
 \begin{document}
@@ -178,28 +178,28 @@ Simply put: a Formex is a set of elements, and every element can have a property
 
 The first and most useful way to create a Formex is by specifying it's nodes and elements in a 3D-list.  
 
-\begin{mycode}
+\begin{verbatim}
 	F=Formex([[[0,0],[1,0],[1,1],[0,1]]])
-\end{mycode}
+\end{verbatim}
 %fig?
 
 This would create a Formex F, which has the nodes (0,0), (0,1), (1,1) and (0,1). These nodes are all part of a single element, thus creating a square plane. This element is also the entire Formex.
 On the other hand, if you would change the position of the [] %how do you call this?? square brackets?
 like in the following example, then you'd create a Formex F which is different from the previous. The nodes are the same, but the connection is different. The nodes (0,0) and (1,0) are linked together by an element, and so are the nodes (1,1) and (0,1). The formex is now a set of 2 parallel bars, instead of a square plane. 
-\begin{mycode}
+\begin{verbatim}
 	F=Formex([[[0,0],[1,0]],[[1,1],[0,1]]])
-\end{mycode}
+\end{verbatim}
 %fig?
 
 If we want to define a Formex, simular to the square plane, but consisting of the 4 edges instead of the actual plane, we have to define four elements and combine them in a Formex.
-\begin{mycode}
+\begin{verbatim}
 F=Formex([[[0,0],[0,1]], [[0,1],[1,1]], [[1,1],[1,0]], [[1,0],[0,0]]])
-\end{mycode}
+\end{verbatim}
 
 The previous examples were limited to a 2-D environment for simplicity. Of course, we could add a third dimension. For instance, it's no problem defining a pyramid consisting of 8 elements ('bars').
-\begin{mycode}
+\begin{verbatim}
 	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
-\end{mycode}
+\end{verbatim}
 %fig
 However, as you can see, even in this very simple example the number of nodes, elements and coordinates you have to declare becomes rather large. Defining large Formices using this method would not be practicle. This problem is easily overcome by copying, translating, rotating,... a smaller Formex - as will be explained in the rest of this chapter - or by using patterns.
  
@@ -219,17 +219,17 @@ The second way of creating a new Formex, is by defining patterns. In this case, 
     (x,y)-plane.
 
 This method has important restrictions, since it can only created lines, in a 2-D environment, on a regular grid. However, it can be a much easier and shorter way to define a simple Formex. This is illustrated by the difference in lenght between code 3 and code ref 4, however they define the same Formex.
-\begin{mycode}
+\begin{verbatim}
 	F=Formex(pattern('1234'))
-\end{mycode}
+\end{verbatim}
 
 \subsubsection{drawing a Formex}
 
 Of course, you'd want to see what you have created. This is accomplished by the 'draw'-function. In code ... the pyramid we created in code ... is drawn.
-\begin{mycode}
+\begin{verbatim}
 	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
 draw(F)
-\end{mycode}
+\end{verbatim}
  
 It might be important to realize that even if you don't draw a particular Formex, that doesn't mean you didn't create it!
 

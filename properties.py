@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # $Id$
 
-"""Definition of some typical property sets used in structural analysis."""
+"""General framework for attributing properties to Formex elements.
+
+Properties can really be just about any Python object.
+Properties are identified and connected to a Formex element by the
+prop values that are stored in the Formex.
+"""
 
 from flatkeydb import *
 from mydict import *
@@ -27,11 +32,25 @@ def readSections(database):
     print materials
 
 class Property(CascadingDict):
+    """A general properties class.
+
+    This class should only provide general methods, such as
+    add, change and delete properties, lookup, print, and
+    of course, connect properties to Formex elements.
+    """
 
     def __init__(self, nr, data={}):
-        CascadingDict.__init__(self, data)
+        """Create a new property. Empty by default."""
+	CascadingDict.__init__(self, data)
         properties[nr] = self 
-
+    
+    def __repr__(self):
+        """Format a property into a string."""
+        s = ""			#"PropertyClass{ default=%s" % self.default
+        for i in self.items():
+            s += "\n  %s = %s" % i
+        return s + "\n"
+	#it would be great if every level of Properties would indent...!
 
 class NodeProperty(Property):
     """Properties related to a single node."""
