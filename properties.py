@@ -19,16 +19,24 @@ nodeproperties = Dict({})
 elemproperties = Dict({})
 
 def readMaterials(database):
+    """Import all materials from a database
+    
+    For now, it can only read databases using flatkeydb.
+    """
     mat = FlatDB(['name'], beginrec = 'material', endrec = 'endmaterial')
     mat.readFile(database)
     for key, item in mat.iteritems():#not materials=Dict(mat), because this would erase any material that was already added
-	materials[key] = item
+        materials[key] = item
 
 def readSections(database):
+    """Import all sections from a database
+    
+    For now, it can only read databases using flatkeydb.
+    """
     sect = FlatDB(['name'], beginrec = 'section', endrec = 'endsection')
     sect.readFile('sections.db')
     for key, item in sect.iteritems():
-	sections[key] = item
+        sections[key] = item
     print materials
 
 class Property(CascadingDict):
@@ -40,8 +48,13 @@ class Property(CascadingDict):
     """
 
     def __init__(self, nr, data={}):
-        """Create a new property. Empty by default."""
-	CascadingDict.__init__(self, data)
+        """Create a new property. Empty by default.
+        
+        A property is created and the data is stored in a Dict called 'properties'. 
+        The key to access the property is the number.
+        This number should be the same as the property number of the Formex element.
+        """
+        CascadingDict.__init__(self, data)
         properties[nr] = self 
     
     def __repr__(self):
@@ -50,21 +63,23 @@ class Property(CascadingDict):
         for i in self.items():
             s += "\n  %s = %s" % i
         return s + "\n"
-	#it would be great if every level of Properties would indent...!
+        #it would be great if every level of Properties would indent...!
 
 class NodeProperty(Property):
     """Properties related to a single node."""
 
     def __init__(self, nr, cload = None, bound = None, coords = 'cartesian'):
         """Create a new node property. Empty by default
-
+        
+        A node property is created and the data is stored in a Dict called 'nodeproperties'. 
+        The key to access the node property is the number.
+        This number should be the same as the node property number of the Formex element.
         A node property can hold the following sub-properties:
         - cload : a concentrated load
         - bound : a boundary condition
         - coords: the coordinate system which is used for the definition of cload and bound. There are three options:
         cartesian, spherical and cylindrical
         """
-        #controleren of cload, bound is lijst van 6 elementen, vervolgens gecreeerd
         if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or bound==None): 
             CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'coords' : coords})
             nodeproperties[nr] = self
@@ -73,25 +88,42 @@ class NodeProperty(Property):
 
 
 class ElemProperty(Property):
-    """Properties related to a single beam"""
-
+    """Properties related to a single element."""
+    
     def __init__(self, nr, elemsection = None, elemload = None, elemtype = None): 
+        """Create a new element property. Empty by default
+        
+        An element property is created and the data is stored in a Dict called 'elemproperties'. 
+        The key to access the element property is the number.
+        This number should be the same as the element property number of the Formex element.
+        An element property can hold the following sub-properties:
+        - elemsection : the section properties of the element. This is an ElemSection instance.
+        - elemload : the loading of the element. This is an ElemLoad instance.
+        - elemtype: the type of element that is to be used in the analysis. 
+        """    
         CascadingDict.__init__(self, {'elemsection' : elemsection, 'elemload' : elemload, 'elemtype' : elemtype})
         elemproperties[nr] = self
 
 class ElemSection(Property):
     """Properties related to the section of a beam."""
 
-    def __init__(self, section = None, material = None, sectiontype = 'general'): #shoudn't be empty! 
-   #dict-> make a Dict in 'materials{}'
-  #string-> zoeken in 'materials{}'
-            # daarna zoeken in database-file 
+    def __init__(self, section = None, material = None, sectiontype = 'general'):  
+        """Create a new element section property. Empty by default
+        
+        An element section property can hold the following sub-properties:
+        - section : the section properties of the element. The required data in this dict depends on the sectiontype.
+        - material : the element material. 
+        - sectiontype: the sectiontype of the element. 
+        """    
         CascadingDict.__init__(self,{})
         self.sectiontype = sectiontype
         self.addMaterial(material)
         self.addSection(section)
     
     def addSection(self, section):
+        """Create or replace the section properties of the element. If the argument is a dict, it will be added to 'sections'.
+        If the argument is a string, this string will be used as a key to search in 'sections'
+        """
         if isinstance(section, str):
             if sections.has_key(section):
                 self.section = sections[section]
@@ -100,24 +132,31 @@ class ElemSection(Property):
         elif isinstance(section,dict):
             sections[section['name']] = CascadingDict(section)
             self.section = sections[section['name']]
+        elif section==None:
+            self.section = section
         else: 
             print "argument needs to be string or dict"
     
     def addMaterial(self, material):
+        """Create or replace the material properties of the element. If the argument is a dict, it will be added to 'materials'.
+        If the argument is a string, this string will be used as a key to search in 'materials'
+        """
         if isinstance(material, str) :
             if materials.has_key(material):
-                self.material = materials[material] #like this if you want to call it like 'beamsection.section.A'
+                self.material = materials[material] 
             else:
                 print "This material is not available in the database"
         elif isinstance(material, dict):
             materials[material['name']] = CascadingDict(material)
             self.material = materials[material['name']]
+        elif material==None:
+            self.material=material
         else:
             print "argument needs to be a string or dict"
 
 class ElemLoad(Property):
     """Properties related to the load of a beam."""
-    # cload kan enkel in knoop -> hier weg??
+    # cload can only be applied in a node -> useless here??
 
     def __init__(self, dload = None, cload = None, coords = 'cartesian'):
         """there are three options: cartesian (global), cylindrical and local""" 
@@ -155,7 +194,7 @@ if __name__ == "__main__":
     np['7'] = NodeProperty(7, bound=B1)
 
     for key, item in materials.iteritems():
-	print key, item
+        print key, item
 
     print 'properties'
     for key, item in properties.iteritems():
