@@ -47,7 +47,7 @@ class DoubleHelixStent:
         r = 0.5*D
         dz = 0.5*(ds+d)
         p = math.pi*D*tand(be)
-        ny = int(nx*L/p)  # The actual length can be a bit shorter than L
+        ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         #print "pitch",p
         #print "ny",ny
         # a single bumped strut, oriented along the x-axis
@@ -77,11 +77,11 @@ class DoubleHelixStent:
         F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
         # fold it into a cylinder
         self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
+        self.ny = ny
 
     def all(self):
         """Return the Formex with all bar elements."""
         return self.F
-
 
 
 if __name__ == "draw":

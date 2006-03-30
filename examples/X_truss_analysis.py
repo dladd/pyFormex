@@ -106,7 +106,7 @@ displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
 # Creating a formex for displaying results is fairly easy
 results = Formex(coords[elems],range(nelems))
 # Now try to give the formex some meaningful colors.
-# The frc array reutrns element forces and has shape
+# The frc array returns element forces and has shape
 #  (nelems,nforcevalues,nloadcases)
 # In this case there is only one resultant force per element (the
 # normal force), and only load case; we still need to select the

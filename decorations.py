@@ -24,7 +24,7 @@ GLUTFONTS = {
 }
 
 def glutFont(font):
-    """Return GLUT font designer for the named font.
+    """Return GLUT font designation for the named font.
 
     The recognized font names are:
       fixed: '9x15', '8x13',

@@ -773,6 +773,17 @@ class Formex:
         else:
             p = self.p[idx]
         return Formex(self.f[idx],p)
+      
+    def selectNodes(self,idx):
+        """Return a Formex which holds only some nodes of the parent.
+
+        idx is a list of node numbers to select.
+        Thus, if F is a grade 3 Formex representing triangles, the sides of
+        the triangles are given by
+        F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
+        The returned Formex inherits the property of its parent.
+        """
+        return Formex(self.f[:,idx,:],self.p)
 
     def nodes(self):
         """Return a Formex containing only the nodes.
@@ -807,6 +818,14 @@ class Formex:
         else:
             p = self.p[flag>0]
         return Formex(self.f[flag>0],p)
+
+
+    def reverseElements(self):
+        """Return a Formex where all elements have been reversed.
+
+        Reversing an element means reversing the order of its points.
+        """
+        return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p)
 
 
 ##############################################################################
@@ -1517,6 +1536,10 @@ if __name__ == "__main__":
         print F.bsphere()
 
         F.fprint()
+
+        F = Formex([[[0,0],[1,0],[0,1]],[[1,0],[1,1],[0,1]]])
+        print F
+        print F.reverseElements()
 
 
     (f,t) = _test()

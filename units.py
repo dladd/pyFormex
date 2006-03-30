@@ -19,13 +19,13 @@
 import commands,string
 
     
-def ConvertUnits(From,To):
+def convertUnits(From,To):
     """Converts between conformable units.
 
     This function converts the units 'From' to units 'To'. The units should
     be conformable. The 'From' argument can (and usually does) include a value.
     The return value is the converted value without units. Thus:
-    ConvertUnits('3.45 kg','g') will return '3450'.
+    convertUnits('3.45 kg','g') will return '3450'.
     This function is merely a wrapper around the GNU 'units' command, which
     should be installed for this function to work.
     """ 
@@ -139,3 +139,6 @@ class UnitsSystem:
             else:
                 return ent
             
+
+if __name__ == '__main__":
+

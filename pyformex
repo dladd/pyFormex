@@ -36,10 +36,16 @@ def main(argv=None):
     # use a read, not an update, to set the pyformexdir as a variable
     GD.cfg.read("pyformexdir = '%s'\n" % pyformexdir)
 
+    if os.name == 'posix':
+        homedir = os.environ['HOME']
+    elif os.name == 'nt':
+        homedir = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']
+    GD.cfg.read("homedir = '%s'\n" % homedir)
+    
     # Read the default config file
-    GD.cfg.read(os.path.join(GD.cfg['pyformexdir'],"pyformexrc"))
+    GD.cfg.read(os.path.join(pyformexdir,"pyformexrc"))
     # Read additional config files
-    userConfig = os.path.join(os.environ['HOME'],".pyformexrc")
+    userConfig = os.path.join(homedir,".pyformexrc")
     for f in ["/etc/pyformexrc", userConfig, ".pyformexrc" ]:
         if os.path.exists(f):
             GD.cfg.read(f)

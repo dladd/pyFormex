@@ -23,7 +23,18 @@ r = n/m
 s = n/r
 a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
+b = e.reverseElements()
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
 draw (e,color=red)
+draw (b,color=blue)
+
+
+if ack('Export to .stl?'):
+    import stl
+    f = file('novation.stl','w')
+    F = b+e
+    G = F.selectNodes([0,1,2]) + F.selectNodes([2,3,0])
+    stl.stl_export(G,f)
+    f.close()

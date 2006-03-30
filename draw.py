@@ -10,7 +10,7 @@ from colors import *
 import pyfotemp
 import gui
 import widgets
-import threading,os,commands
+import threading,os,sys,commands
 
 #################### scripting functions ######################################
 
@@ -414,7 +414,12 @@ def system(cmdline,result='output'):
         return commands.getstatusoutput(cmdline)
 
 ## exit from program pyformex
-def exit():
+def exit(all=False):
+    if scriptRunning:
+        if all:
+            raise ExitAll # exit from pyformex
+        else:
+            raise Exit # exit from script only
     if GD.app and GD.app_started: # exit from GUI
         GD.app.quit() 
     else: # the gui didn't even start

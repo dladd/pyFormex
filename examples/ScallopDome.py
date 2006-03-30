@@ -12,8 +12,9 @@
 # This example is fully annotated with comments in the statusbar
 # First we define a function to display a Formex and then wait for the user
 # to click the Step button
-def show(F,view='front'):
-    clear()
+def show(F,view='front',clearscr=True):
+    if clearscr:
+        clear()
     draw(F,view)
     GD.canvas.update()
     
@@ -48,28 +49,33 @@ def scallop(n,f,c,r):
     f3 = f2.toCylindrical([0,1,2]).scale([1.,1./60.,1.])
     f4 = f3.map(func).cylindrical([0,1,2],[1.,a,1.]).rosette(n,a)
     message("Scallop Dome with n=%d, f=%d, c=%f, r=%f" % (n,f,c,r))
-    show(f4,0)
-#    return f4
+    return f4
 
-# Present some nice examples
+message("Create a dome from the circular layout")
+f2.setProp(3)
 GD.canvas.camera.setRotation(0,-45)
-for n,f,c,r in [
-    [6,1,2,0],
-    [6,1,2,2],
-    [6,1,2,5],
-    [6,1,2,-2],
-    [6,1,-4,4],
-    [6,1,0,4],
-    [6,1,4,4],
-    [6,2,2,-4],
-    [6,2,2,4],
-    [6,2,2,8],
-    [12,1,2,-2],
-    [12,1,2,2] ]:
-    scallop(n,f,c,r)
+show(scallop(6,1,2,0),0,False)
 
-# That's all
-#F=scallop(6,1,4,4)
-#F.setProp(3)
-#clear()
-#draw(F)
+
+howmany = ask("How many more domes do you want?",["None","One","Sequence"])
+
+if howmany == 1:
+   # The example from the pyformex homepage
+   show(scallop(6,1,4,4),0)
+        
+elif howmany == 2:
+   # Present some nice examples
+    for n,f,c,r in [
+        [6,1,2,0],
+        [6,1,2,2],
+        [6,1,2,5],
+        [6,1,2,-2],
+        [6,1,-4,4],
+        [6,1,0,4],
+        [6,1,4,4],
+        [6,2,2,-4],
+        [6,2,2,4],
+        [6,2,2,8],
+        [12,1,2,-2],
+        [12,1,2,2] ]:
+        show(scallop(n,f,c,r),0)
