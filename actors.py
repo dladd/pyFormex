@@ -38,7 +38,7 @@ def drawSphere(s,color=cyan,ndiv=8):
 # Actors are anything that can be drawn in an openGL 3D scene.
 # An actor minimally needs two functions:
 #   bbox() : to calculate the bounding box of the actor.
-#   draw(wireframe=False) : to actually draw the actor.
+#   draw(mode='wireframe') : to actually draw the actor.
 
 class CubeActor:
     """An OpenGL actor with cubic shape and 6 colored sides."""
@@ -50,7 +50,7 @@ class CubeActor:
     def bbox(self):
         return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
 
-    def draw(self,wireframe=False):
+    def draw(self,mode='wireframe'):
         """Draw the cube."""
         drawCube(self.size,self.color)
 
@@ -64,7 +64,7 @@ class TriadeActor:
     def bbox(self):
         return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
 
-    def draw(self,wireframe=False):
+    def draw(self,mode='wireframe'):
         """Draw the triade."""
         GL.glShadeModel(GL.GL_FLAT)
         GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
@@ -135,8 +135,9 @@ class FormexActor(Formex):
             self.setMark(self.size()/200,"cube")
         self.eltype = eltype
 
-    def draw(self,wireframe=True):
+    def draw(self,mode='wireframe'):
         """Draw the formex."""
+        print "Drawing with mode %s" % mode
         nnod = self.nnodel()
         nelem = self.nelems()
         
@@ -157,7 +158,7 @@ class FormexActor(Formex):
                     GL.glVertex3f(*nod)
             GL.glEnd()
             
-        elif wireframe and not self.eltype:
+        elif mode=='wireframe' and not self.eltype:
             GL.glLineWidth(self.linewidth)
             for prop,elem in zip(self.p,self.f):
                 col = self.color[int(prop)]
@@ -169,11 +170,27 @@ class FormexActor(Formex):
                 
         elif nnod == 3:
             GL.glBegin(GL.GL_TRIANGLES)
-            for prop,elem in zip(self.p,self.f):
-                col = self.color[int(prop)]
-                GL.glColor3f(*(col))
-                for nod in elem:
-                    GL.glVertex3f(*nod)
+            if mode == 'flat':
+                for prop,elem in zip(self.p,self.f):
+                    col = self.color[int(prop)]
+                    GL.glColor3f(*(col))
+                    for nod in elem:
+                        GL.glVertex3f(*nod)
+            elif mode == 'smooth':
+                # Calc normals
+                print "Calculating Normals"
+                print self.f
+                normal = cross(self.f[:,1,:] - self.f[:,0,:],
+                                self.f[:,2,:] - self.f[:,1,:])
+                print normal
+                print normal.shape
+                for prop,elem,norm in zip(self.p,self.f,normal):
+                    print norm
+                    col = self.color[int(prop)]
+                    GL.glNormal3f(*(norm))
+                    GL.glColor3f(*(col))
+                    for nod in elem:
+                        GL.glVertex3f(*nod)
             GL.glEnd()
             
         elif nnod == 4:
@@ -215,3 +232,10 @@ class FormexActor(Formex):
         else:
             drawCube(size)
         GL.glEndList()
+
+
+##class BboxActor(FormexActor):
+##    """Draws a bbox."""
+
+##    def __init__(self,bbox,color=[black],linewidth=1.0):
+##        F = CubeFormex(

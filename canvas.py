@@ -58,7 +58,7 @@ class Canvas(qtgl.QGLWidget):
         # angles are: longitude, latitude, twist
         self.setBbox()
         self.bgcolor = mediumgrey
-        self.wireframe = True
+        self.rendermode = GD.cfg.gui.rendermode
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # set GL context before creating the camera
         self.camera = camera.Camera()
@@ -67,6 +67,7 @@ class Canvas(qtgl.QGLWidget):
         
     # These three are defined by the qtgl API
     def initializeGL(self):
+        print "initializeGL:",self.rendermode
         self.glinit()
 
     def	resizeGL(self,w,h):
@@ -90,38 +91,40 @@ class Canvas(qtgl.QGLWidget):
 ##        """Clear the OpenGL widget with the named background color"""
 ##        self.qglClearColor(qt.QColor(s))
 
-    def glinit(self,mode="flat"):
+    def glinit(self,mode=None):
+        if mode:
+            self.rendermode = mode
 	GL.glClearColor(*RGBA(self.bgcolor))# Clear The Background Color
 	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
 	GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
-        if mode == "wireframe":
-            self.wireframe = True
+        if self.rendermode == 'wireframe':
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-        elif mode == "flat":
-            self.wireframe = False
+        elif self.rendermode == 'flat':
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-        elif mode == "smooth":
-            self.wireframe = False
+        elif self.rendermode == 'smooth':
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             print "set up materials"
-            GL.glEnable(GL.GL_COLOR_MATERIAL)
-            GL.glColorMaterial ( GL.GL_FRONT, GL.GL_DIFFUSE )
+            #GL.glMaterialfv(GL.GL_FRONT,GL.GL_AMBIENT_AND_DIFFUSE,(0.5,0.5,0.5,1.))
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,(0.8,0.8,0.8,1.))
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,25.)
             print "set up lights"
+            GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
+            GL.glLightfv(GL.GL_LIGHT0,GL.GL_AMBIENT,(1.0,1.0,1.0,1.0))
+            GL.glLightfv(GL.GL_LIGHT0,GL.GL_DIFFUSE,(1.0,1.0,1.0,1.0))
+            GL.glLightfv(GL.GL_LIGHT0,GL.GL_SPECULAR,(0.8, 0.8, 0.8, 1.0))
+            GL.glLightfv(GL.GL_LIGHT0,GL.GL_POSITION,(0.,0.,1.,0.))
+            GL.glLightfv(GL.GL_LIGHT1,GL.GL_AMBIENT,(1.0,1.0,1.0,1.0))
+            GL.glLightfv(GL.GL_LIGHT1,GL.GL_DIFFUSE,(1.0,1.0,1.0,1.0))
+            GL.glLightfv(GL.GL_LIGHT1,GL.GL_SPECULAR,(0.8, 0.8, 0.8, 1.0))
+            GL.glLightfv(GL.GL_LIGHT1,GL.GL_POSITION,(-1.,-1.,1.,0.))
             GL.glEnable(GL.GL_LIGHTING)
-            GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,(0.5,0.5,0.5,1.0))
-            GL.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, (1.0, 1.0, 1.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, (-1., -1., 1.))
             GL.glEnable(GL.GL_LIGHT0)
-            GL.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, (0.0, 0.0, 0.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, (1.0, 1.0, 1.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-            GL.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, (1.0, 1.0, 1.0))
             GL.glEnable(GL.GL_LIGHT1)
+            GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
+            GL.glEnable(GL.GL_COLOR_MATERIAL)
         else:
             raise RuntimeError,"Unknown rendering mode"
 
@@ -146,7 +149,7 @@ class Canvas(qtgl.QGLWidget):
         self.makeCurrent()
         actor.list = GL.glGenLists(1)
         GL.glNewList(actor.list,GL.GL_COMPILE)
-        actor.draw(self.wireframe)
+        actor.draw(self.rendermode)
         GL.glEndList()
         list.append(actor)
 
@@ -213,7 +216,7 @@ class Canvas(qtgl.QGLWidget):
                 GL.glDeleteLists(actor.list,1)
             actor.list = GL.glGenLists(1)
             GL.glNewList(actor.list,GL.GL_COMPILE)
-            actor.draw(self.wireframe)
+            actor.draw(self.rendermode)
             GL.glEndList() 
         self.display()
 

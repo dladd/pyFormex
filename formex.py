@@ -81,50 +81,83 @@ def pattern(s):
 
     This function creates a list of line segments where all nodes lie on the
     gridpoints of a regular grid with unit step.
-    The first point of the list is [0,0]. Each character from the given
+    The first point of the list is [0,0,0]. Each character from the given
     string is interpreted as a code specifying how to move to the next node.
     Currently defined are the following codes:
-    0 = goto origin [0,0]
-    1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE
-    / = go to the next point without connecting.
-    The resulting list is directly suited to initialize a Formex in the
-    (x,y)-plane.
+    0 = goto origin [0,0,0]
+    1..8 move in the x,y plane
+    9 remains at the same place
+    When looking at the plane with the x-axis to the right,
+    1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.
+    Adding 16 to the ordinal of the character causes an extra move of +1 in
+    the z-direction. Adding 48 causes an extra move of -1. This means that
+    'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
+    z +/-= 1. THe gives the following schema:
+
+                 z+=1             z unchanged            z -= 1
+            
+             F    B    E          6    2    5         f    b    e 
+                  |                    |                   |     
+                  |                    |                   |     
+             C----I----A          3----9----1         c----i----a  
+                  |                    |                   |     
+                  |                    |                   |     
+             G    D    H          7    4    8         g    d    h
+             
+    The special character '\' can be put before any character to make the
+    move without making a connection.
+    The effect of any other character is undefined.
+    
+    The resulting list is directly suited to initialize a Formex.
     """
-    x = y = 0
+    x = y = z =0
     l = []
     connect=True
     for c in s:
-        pos = [x,y]
-        if c=="0":
-            x = y = 0
-        elif c=="1":
-            x += 1
-        elif c == "2":
-            y += 1
-        elif c == "3":
-            x -= 1
-        elif c == "4":
-            y -= 1
-        elif c == "5":
-            x += 1
-            y += 1
-        elif c == "6":
-            x -= 1
-            y += 1
-        elif c == "7":
-            x -= 1
-            y -= 1
-        elif c == "8":
-            x += 1
-            y -= 1
-        elif c == "/":
+        if c == "/":
             connect = False
             continue
+        pos = [x,y,z]
+        if c == "0":
+            x = y = z = 0
         else:
-            print "Unknown pattern character %c ignored" % c
-            continue
+            i = ord(c)
+            d = i/16
+            if d == 3:
+                pass
+            elif d == 4:
+                z += 1
+            elif d == 6:
+                z -= 1
+            else:
+                raise RuntimeError,"Unknown pattern character %c ignored" % c
+            i %= 16
+            if i == 1:
+                x += 1
+            elif i == 2:
+                y += 1
+            elif i == 3:
+                x -= 1
+            elif i == 4:
+                y -= 1
+            elif i == 5:
+                x += 1
+                y += 1
+            elif i == 6:
+                x -= 1
+                y += 1
+            elif i == 7:
+                x -= 1
+                y -= 1
+            elif i == 8:
+                x += 1
+                y -= 1
+            elif i == 9:
+                pass
+            else:
+                raise RuntimeError,"Unknown pattern character %c ignored" % c
         if connect:
-            l.append([pos,[x,y]])
+            l.append([pos,[x,y,z]])
         connect=True
     return l
 
@@ -960,9 +993,6 @@ class Formex:
         # permutation of axes.
         f = zeros(self.f.shape,dtype=Float)
         x,y,z = [ self.f[:,:,i] for i in dir ]
-        #print x
-        #print y
-        #print z
         f[:,:,0] = sqrt(x*x+y*y)
         f[:,:,1] = arctan2(y,x) / rad
         f[:,:,2] = z

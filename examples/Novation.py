@@ -11,9 +11,11 @@
 """Novation"""
 clear()
 n = 40
+# These are triangles
+e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
 # These two look the same in wireframe
 # These are quadrilaterals
-e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
+#e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
 # These are lines
 #e = Formex([[[0,0,0],[1,0,0]]]).rosad(.5,.5).rinid(n,n,1,1)
 # Novation (Spots)

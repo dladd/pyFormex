@@ -401,6 +401,10 @@ n1,n2&nbsp;number&nbsp;of&nbsp;replications&nbsp;with&nbsp;steps&nbsp;t1,t2&nbsp
 bias,&nbsp;taper&nbsp;:&nbsp;extra&nbsp;step&nbsp;and&nbsp;extra&nbsp;number&nbsp;of&nbsp;generations&nbsp;in&nbsp;direction<br>
 d1&nbsp;for&nbsp;each&nbsp;generation&nbsp;in&nbsp;direction&nbsp;d2</tt></dd></dl>
 
+<dl><dt><a name="Formex-reverseElements"><strong>reverseElements</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;where&nbsp;all&nbsp;elements&nbsp;have&nbsp;been&nbsp;reversed.<br>
+&nbsp;<br>
+Reversing&nbsp;an&nbsp;element&nbsp;means&nbsp;reversing&nbsp;the&nbsp;order&nbsp;of&nbsp;its&nbsp;points.</tt></dd></dl>
+
 <dl><dt><a name="Formex-ric"><strong>ric</strong></a>(f)</dt></dl>
 
 <dl><dt><a name="Formex-rin"><strong>rin</strong></a>(self, dir, n, dist)</dt></dl>
@@ -446,6 +450,14 @@ In&nbsp;the&nbsp;latter&nbsp;case,&nbsp;the&nbsp;scaling&nbsp;is&nbsp;homothetic
 <dl><dt><a name="Formex-select"><strong>select</strong></a>(self, idx)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;elements&nbsp;with&nbsp;numbers&nbsp;in&nbsp;ids.<br>
 &nbsp;<br>
 idx&nbsp;can&nbsp;be&nbsp;a&nbsp;single&nbsp;element&nbsp;number&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;numbers</tt></dd></dl>
+
+<dl><dt><a name="Formex-selectNodes"><strong>selectNodes</strong></a>(self, idx)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;some&nbsp;nodes&nbsp;of&nbsp;the&nbsp;parent.<br>
+&nbsp;<br>
+idx&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;node&nbsp;numbers&nbsp;to&nbsp;select.<br>
+Thus,&nbsp;if&nbsp;F&nbsp;is&nbsp;a&nbsp;grade&nbsp;3&nbsp;<a href="#Formex">Formex</a>&nbsp;representing&nbsp;triangles,&nbsp;the&nbsp;sides&nbsp;of<br>
+the&nbsp;triangles&nbsp;are&nbsp;given&nbsp;by<br>
+F.<a href="#Formex-selectNodes">selectNodes</a>([0,1])&nbsp;+&nbsp;F.<a href="#Formex-selectNodes">selectNodes</a>([1,2])&nbsp;+&nbsp;F.<a href="#Formex-selectNodes">selectNodes</a>([2,0])<br>
+The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;inherits&nbsp;the&nbsp;property&nbsp;of&nbsp;its&nbsp;parent.</tt></dd></dl>
 
 <dl><dt><a name="Formex-setProp"><strong>setProp</strong></a>(self, p<font color="#909090">=0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;property&nbsp;array&nbsp;for&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
@@ -722,14 +734,34 @@ second-to-last&nbsp;dimension&nbsp;of&nbsp;b.</tt></dd></dl>
 &nbsp;<br>
 This&nbsp;function&nbsp;creates&nbsp;a&nbsp;list&nbsp;of&nbsp;line&nbsp;segments&nbsp;where&nbsp;all&nbsp;nodes&nbsp;lie&nbsp;on&nbsp;the<br>
 gridpoints&nbsp;of&nbsp;a&nbsp;regular&nbsp;grid&nbsp;with&nbsp;unit&nbsp;step.<br>
-The&nbsp;first&nbsp;point&nbsp;of&nbsp;the&nbsp;list&nbsp;is&nbsp;[0,0].&nbsp;Each&nbsp;character&nbsp;from&nbsp;the&nbsp;given<br>
+The&nbsp;first&nbsp;point&nbsp;of&nbsp;the&nbsp;list&nbsp;is&nbsp;[0,0,0].&nbsp;Each&nbsp;character&nbsp;from&nbsp;the&nbsp;given<br>
 string&nbsp;is&nbsp;interpreted&nbsp;as&nbsp;a&nbsp;code&nbsp;specifying&nbsp;how&nbsp;to&nbsp;move&nbsp;to&nbsp;the&nbsp;next&nbsp;node.<br>
 Currently&nbsp;defined&nbsp;are&nbsp;the&nbsp;following&nbsp;codes:<br>
-0&nbsp;=&nbsp;goto&nbsp;origin&nbsp;[0,0]<br>
-1&nbsp;=&nbsp;East,&nbsp;2&nbsp;=&nbsp;North,&nbsp;3&nbsp;=&nbsp;West,&nbsp;4&nbsp;=&nbsp;South,&nbsp;5&nbsp;=&nbsp;NE,&nbsp;6&nbsp;=&nbsp;NW,&nbsp;7&nbsp;=&nbsp;SW,&nbsp;8&nbsp;=&nbsp;SE<br>
-/&nbsp;=&nbsp;go&nbsp;to&nbsp;the&nbsp;next&nbsp;point&nbsp;without&nbsp;connecting.<br>
-The&nbsp;resulting&nbsp;list&nbsp;is&nbsp;directly&nbsp;suited&nbsp;to&nbsp;initialize&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;in&nbsp;the<br>
-(x,y)-plane.</tt></dd></dl>
+0&nbsp;=&nbsp;goto&nbsp;origin&nbsp;[0,0,0]<br>
+1..8&nbsp;move&nbsp;in&nbsp;the&nbsp;x,y&nbsp;plane<br>
+9&nbsp;remains&nbsp;at&nbsp;the&nbsp;same&nbsp;place<br>
+When&nbsp;looking&nbsp;at&nbsp;the&nbsp;plane&nbsp;with&nbsp;the&nbsp;x-axis&nbsp;to&nbsp;the&nbsp;right,<br>
+1&nbsp;=&nbsp;East,&nbsp;2&nbsp;=&nbsp;North,&nbsp;3&nbsp;=&nbsp;West,&nbsp;4&nbsp;=&nbsp;South,&nbsp;5&nbsp;=&nbsp;NE,&nbsp;6&nbsp;=&nbsp;NW,&nbsp;7&nbsp;=&nbsp;SW,&nbsp;8&nbsp;=&nbsp;SE.<br>
+Adding&nbsp;16&nbsp;to&nbsp;the&nbsp;ordinal&nbsp;of&nbsp;the&nbsp;character&nbsp;causes&nbsp;an&nbsp;extra&nbsp;move&nbsp;of&nbsp;+1&nbsp;in<br>
+the&nbsp;z-direction.&nbsp;Adding&nbsp;48&nbsp;causes&nbsp;an&nbsp;extra&nbsp;move&nbsp;of&nbsp;-1.&nbsp;This&nbsp;means&nbsp;that<br>
+'ABCDEFGHI',&nbsp;resp.&nbsp;'abcdefghi',&nbsp;correspond&nbsp;with&nbsp;'123456789'&nbsp;with&nbsp;an&nbsp;extra<br>
+z&nbsp;+/-=&nbsp;1.&nbsp;THe&nbsp;gives&nbsp;the&nbsp;following&nbsp;schema:<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z+=1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;unchanged&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;-=&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;F&nbsp;&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f&nbsp;&nbsp;&nbsp;&nbsp;b&nbsp;&nbsp;&nbsp;&nbsp;e&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C----I----A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3----9----1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c----i----a&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;G&nbsp;&nbsp;&nbsp;&nbsp;D&nbsp;&nbsp;&nbsp;&nbsp;H&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g&nbsp;&nbsp;&nbsp;&nbsp;d&nbsp;&nbsp;&nbsp;&nbsp;h<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+The&nbsp;special&nbsp;character&nbsp;''&nbsp;can&nbsp;be&nbsp;put&nbsp;before&nbsp;any&nbsp;character&nbsp;to&nbsp;make&nbsp;the<br>
+move&nbsp;without&nbsp;making&nbsp;a&nbsp;connection.<br>
+The&nbsp;effect&nbsp;of&nbsp;any&nbsp;other&nbsp;character&nbsp;is&nbsp;undefined.<br>
+&nbsp;<br>
+The&nbsp;resulting&nbsp;list&nbsp;is&nbsp;directly&nbsp;suited&nbsp;to&nbsp;initialize&nbsp;a&nbsp;<a href="#Formex">Formex</a>.</tt></dd></dl>
  <dl><dt><a name="-rand"><strong>rand</strong></a>(...)</dt><dd><tt>Return&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;given&nbsp;dimensions&nbsp;which&nbsp;is&nbsp;initialized&nbsp;to&nbsp;<br>
 random&nbsp;numbers&nbsp;from&nbsp;a&nbsp;uniform&nbsp;distribution&nbsp;in&nbsp;the&nbsp;range&nbsp;[0,1).<br>
 &nbsp;<br>
@@ -839,7 +871,7 @@ in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;A&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.concatenator object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaabaa7320&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaabaa8320&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>

@@ -10,7 +10,7 @@
 #
 """Geodesic Dome"""
 clear()
-m=5; n=5; v=0.5*sqrt(3.)
+m=2; n=2; v=0.5*sqrt(3.)
 a = Formex([[[0,0],[1,0],[0.5,v]]],1)
 aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)
 draw(a+aa)

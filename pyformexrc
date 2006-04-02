@@ -42,3 +42,4 @@ rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 5.       # translation factor for pan buttons
 drawwait = 2         # default time (sec.) to wait between draw operations
                      # (None is indefinitely)
+rendermode = 'wireframe' # Alternatives are 'flat' or 'smooth'
