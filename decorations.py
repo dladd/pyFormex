@@ -162,7 +162,7 @@ class Decoration:
         self.x = int(x)
         self.y = int(y)
 
-    def draw(self):
+    def draw(self,mode='wireframe'):
         """Draw the decoration."""
         pass
 
@@ -178,7 +178,7 @@ class TextActor(Decoration):
         self.adjust = adjust
         self.color = color
 
-    def draw(self,wireframe=False):
+    def draw(self,mode='wireframe'):
         """Draw the text."""
         GL.glColor3f(*(self.color))
         drawText(self.text,self.x,self.y,self.font,self.adjust)
@@ -196,7 +196,7 @@ class ColorLegendActor(Decoration):
         self.font = font
         self.dec = 2   # number of decimals
 
-    def draw(self,wireframe=False):
+    def draw(self,mode='wireframe'):
         n = len(self.cl.colors)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
@@ -234,6 +234,6 @@ class Grid2Actor(Decoration):
         self.nx = nx
         self.ny = ny
 
-    def draw(self,wireframe=False):
+    def draw(self,mode='wireframe'):
         drawGrid(self.x1,self.y1,self.x2,self.y2,self.nx,self.ny)
 
