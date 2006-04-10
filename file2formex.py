@@ -23,15 +23,14 @@ def splitCoords(s, sep=','):
             return ([c1,c2,c3])
     else:
         print ('Seperator %s was not found'%sep)
-        #return ( s, '' )
 
 def fileFormex(fil, sep=',', closed='No'):
-    """Reads coordinates from a file and creates a Formex.
+    """Read coordinates from a file and create a Formex.
    
-    The coordinates in the file are seperated by sep.
-    """
-    
-    
+    The coordinates of a single point are seperated by sep.
+    Each line represents a new point. Each point is connected with the following, forming an element (bar).
+    If closed = 'yes', the last and the first point will be connected.
+    """    
     inp=open(fil,'r')
     allcoords=inp.readlines()
     F=Formex([[splitCoords(allcoords[1],sep),splitCoords(allcoords[2], sep)]])

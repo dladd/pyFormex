@@ -37,7 +37,6 @@ def readSections(database):
     sect.readFile('sections.db')
     for key, item in sect.iteritems():
         sections[key] = item
-    print materials
 
 class Property(CascadingDict):
     """A general properties class.
