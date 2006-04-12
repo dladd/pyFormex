@@ -28,7 +28,7 @@ def fileFormex(fil, sep=',', closed='No'):
     """Read coordinates from a file and create a Formex.
    
     The coordinates of a single point are seperated by sep.
-    Each line represents a new point. Each point is connected with the following, forming an element (bar).
+    Each line represents a new point. Each point is connected to the following, forming an element (bar).
     If closed = 'yes', the last and the first point will be connected.
     """    
     inp=open(fil,'r')
