@@ -67,15 +67,17 @@ class inputDialog(qt.QDialog):
             line.addWidget(label)
             input = qt.QLineEdit(str(item[1]),self)
             if len(item) == 2 or item[2] == 'str':
-                print "%s is a string"%item[0]
+                pass
+                #print "%s is a string"%item[0]
             elif item[2] == 'int':
-                print "%s is an integer"%item[0]
+                #print "%s is an integer"%item[0]
                 if len(item) ==3 :
                     input.setValidator(qt.QIntValidator(input))
                 else:
                     input.setValidator(qt.QIntValidator(item[3][0],item[3][1],input))
             elif item[2] == 'float':
-                print "%s is a float"%item[0]
+                pass
+                #print "%s is a float"%item[0]
             input.selectAll()
             line.addWidget(input)
             self.fields.append([label,input])

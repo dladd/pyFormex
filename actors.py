@@ -137,7 +137,6 @@ class FormexActor(Formex):
 
     def draw(self,mode='wireframe'):
         """Draw the formex."""
-        print "Drawing with mode %s" % mode
         nnod = self.nnodel()
         nelem = self.nelems()
         
@@ -178,14 +177,14 @@ class FormexActor(Formex):
                         GL.glVertex3f(*nod)
             elif mode == 'smooth':
                 # Calc normals
-                print "Calculating Normals"
-                print self.f
+                #print "Calculating Normals"
+                #print self.f
                 normal = cross(self.f[:,1,:] - self.f[:,0,:],
                                 self.f[:,2,:] - self.f[:,1,:])
-                print normal
-                print normal.shape
+                #print normal
+                #print normal.shape
                 for prop,elem,norm in zip(self.p,self.f,normal):
-                    print norm
+                    #print norm
                     col = self.color[int(prop)]
                     GL.glNormal3f(*(norm))
                     GL.glColor3f(*(col))
@@ -195,7 +194,7 @@ class FormexActor(Formex):
             
         elif nnod == 4:
             if self.eltype=='tet':
-                print "draw surfaces"
+                #print "draw surfaces"
                 GL.glBegin(GL.GL_TRIANGLES)
                 for prop,elem in zip(self.p,self.f):
                     col = self.color[int(prop)]

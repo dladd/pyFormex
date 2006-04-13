@@ -195,6 +195,10 @@ class GUI:
             self.editor = None
 
 
+    def update(self):
+        self.main.update()
+
+
 def setcurfile(filename):
     """Set the current file and check whether it is a pyFormex script.
 
@@ -227,14 +231,15 @@ def messageBox(message,level='info',actions=['OK']):
     """
     w = qt.QMessageBox()
     if level == 'error':
-        return w.critical(w,GD.Version,message,*actions)
+        ans = w.critical(w,GD.Version,message,*actions)
     elif level == 'warning':
-        return w.warning(w,GD.Version,message,*actions)
+        ans = w.warning(w,GD.Version,message,*actions)
     elif level == 'info':
-        return w.information(w,GD.Version,message,*actions)
+        ans = w.information(w,GD.Version,message,*actions)
     elif level == 'about':
-        return w.about(w,GD.Version,message)
-
+        ans = w.about(w,GD.Version,message)
+    GD.gui.update()
+    return ans
 
 
 #### End

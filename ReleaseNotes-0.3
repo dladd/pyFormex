@@ -92,6 +92,12 @@ has been split in two:
 - draw.py: holds the global functions (directly accessible from scripts) to
   allow OpenGL drawing, as well as some basic user interaction widgets. 
 
+- saveImage(filename,fmt) : uses default format based on extension or sets
+  extension based on format
+- multiSave(filename,fmt) : prepares for saving multiple images or stops
+  multisave mode (if filename = None)
+- saveNext() : saves the next image
+
 
 canvas.py:
 ----------

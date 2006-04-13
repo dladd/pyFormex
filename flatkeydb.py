@@ -368,10 +368,12 @@ if __name__ == '__main__':
         print "Could not append record without 'name' field"
     print mat
 
+    # Variant without endmarker
     mat = FlatDB(req_keys=['name'],beginrec='material',endrec='')
     mat.readFile('materials.sng')
     print mat
 
+    # Variant without begin/endrec markers: records separated by blanks
     mat = FlatDB(req_keys=['name'],beginrec='',endrec='')
     mat.readFile('materials.alt')
     print mat

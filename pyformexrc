@@ -43,3 +43,9 @@ panfactor = 5.       # translation factor for pan buttons
 drawwait = 2         # default time (sec.) to wait between draw operations
                      # (None is indefinitely)
 rendermode = 'wireframe' # Alternatives are 'flat' or 'smooth'
+
+[render]
+specular = (0.8,0.8,0.8,1.)
+shininess = 0.7
+light0 = { 'ambient':(1.0,1.0,1.0,1.0), 'diffuse': (1.0,1.0,1.0,1.0), 'specular':(0.7,0.7,0.7,1.0), 'position':(1.,0.,1.,0.)}
+#light1 = { 'ambient':(1.0,1.0,1.0,1.0), 'diffuse': (1.0,1.0,1.0,1.0), 'specular':(1.0,1.0,1.0,1.0), 'position':(-10.,0.,10.,0.)}

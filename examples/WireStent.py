@@ -45,6 +45,7 @@ class DoubleHelixStent:
         """Create the Wire Stent."""
         D = De - 2*d - ds
         r = 0.5*D
+        print "Mean radius at creation = %s"% r
         dz = 0.5*(ds+d)
         p = math.pi*D*tand(be)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
@@ -89,7 +90,7 @@ if __name__ == "draw":
 
     # show an example
     L = 80.
-    H = DoubleHelixStent(10.,L,0.2,12,30.).all()
+    H = DoubleHelixStent(10.,L,0.2,12,30.,ds=-0.2).all()
     clear()
     draw(H,view='iso')
     # and save it in a lot of graphics formats

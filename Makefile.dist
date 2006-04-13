@@ -11,7 +11,7 @@ SOURCE= ${PYSOURCE} pyformexrc
 ICONFILES= icons/*.xbm
 HTMLDIR= doc/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}}
-STAMPFILES= README History Makefile FAQ Changelog
+STAMPFILES= README History Makefile FAQ
 NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION}
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES =  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}

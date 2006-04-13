@@ -1,0 +1,281 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module config</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>config</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/config.py">/home/bene/prj/pyformex/config.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;general&nbsp;yet&nbsp;simple&nbsp;configuration&nbsp;class.<br>
+&nbsp;<br>
+(C)&nbsp;2005&nbsp;Benedict&nbsp;Verhegghe<br>
+Distributed&nbsp;under&nbsp;the&nbsp;GNU&nbsp;GPL<br>
+&nbsp;<br>
+Why:<br>
+I&nbsp;wrote&nbsp;this&nbsp;simple&nbsp;class&nbsp;because&nbsp;I&nbsp;wanted&nbsp;to&nbsp;use&nbsp;Python&nbsp;expressions&nbsp;in&nbsp;my<br>
+configuration&nbsp;files.&nbsp;This&nbsp;is&nbsp;so&nbsp;much&nbsp;more&nbsp;fun&nbsp;than&nbsp;using&nbsp;.INI&nbsp;style&nbsp;config<br>
+files.<br>
+While&nbsp;there&nbsp;are&nbsp;some&nbsp;other&nbsp;Python&nbsp;config&nbsp;modules&nbsp;available&nbsp;on&nbsp;the&nbsp;web,<br>
+I&nbsp;couldn't&nbsp;find&nbsp;one&nbsp;that&nbsp;suited&nbsp;my&nbsp;needs&nbsp;and&nbsp;my&nbsp;taste:&nbsp;either&nbsp;they&nbsp;are&nbsp;intended<br>
+for&nbsp;more&nbsp;complex&nbsp;configuration&nbsp;needs&nbsp;than&nbsp;mine,&nbsp;or&nbsp;they&nbsp;do&nbsp;not&nbsp;work&nbsp;with&nbsp;the<br>
+simple&nbsp;Python&nbsp;syntax&nbsp;I&nbsp;expected.<br>
+&nbsp;<br>
+What:<br>
+Our&nbsp;<a href="#Config">Config</a>&nbsp;class&nbsp;is&nbsp;just&nbsp;a&nbsp;normal&nbsp;Python&nbsp;dictionary&nbsp;which&nbsp;can&nbsp;hold&nbsp;anything.<br>
+Fields&nbsp;can&nbsp;be&nbsp;accessed&nbsp;either&nbsp;as&nbsp;dictionary&nbsp;lookup&nbsp;(config['foo'])&nbsp;or&nbsp;as<br>
+object&nbsp;attributes&nbsp;(config.foo).<br>
+The&nbsp;class&nbsp;provides&nbsp;a&nbsp;function&nbsp;for&nbsp;reading&nbsp;the&nbsp;dictionary&nbsp;from&nbsp;a&nbsp;flat&nbsp;text<br>
+(multiline&nbsp;string&nbsp;or&nbsp;file).&nbsp;I&nbsp;will&nbsp;always&nbsp;use&nbsp;the&nbsp;word&nbsp;'file'&nbsp;hereafter,<br>
+because&nbsp;that&nbsp;is&nbsp;what&nbsp;you&nbsp;usually&nbsp;will&nbsp;read&nbsp;the&nbsp;configuration&nbsp;from.<br>
+Your&nbsp;configuration&nbsp;file&nbsp;can&nbsp;have&nbsp;named&nbsp;sections.&nbsp;Sections&nbsp;are&nbsp;stored&nbsp;as<br>
+other&nbsp;Python&nbsp;dicts&nbsp;inside&nbsp;the&nbsp;top&nbsp;<a href="#Config">Config</a>&nbsp;dictionary.&nbsp;The&nbsp;current&nbsp;version<br>
+is&nbsp;limited&nbsp;to&nbsp;one&nbsp;level&nbsp;of&nbsp;sectioning.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="mydict.html#Dict">mydict.Dict</a>(<a href="__builtin__.html#dict">__builtin__.dict</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="config.html#Config">Config</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Config">class <strong>Config</strong></a>(<a href="mydict.html#Dict">mydict.Dict</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;configuration&nbsp;class&nbsp;allowing&nbsp;Python&nbsp;expressions&nbsp;in&nbsp;the&nbsp;input.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;configuration&nbsp;settings&nbsp;are&nbsp;stored&nbsp;in&nbsp;the&nbsp;__dict__&nbsp;of&nbsp;a&nbsp;Python&nbsp;object.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;An&nbsp;item&nbsp;'foo'&nbsp;in&nbsp;the&nbsp;configuration&nbsp;'config'&nbsp;can&nbsp;be&nbsp;accessed&nbsp;either&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dictionary&nbsp;lookup&nbsp;(config['foo'])&nbsp;or&nbsp;as&nbsp;object&nbsp;attribute&nbsp;(config.foo).<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;configuration&nbsp;object&nbsp;can&nbsp;be&nbsp;initialized&nbsp;from&nbsp;a&nbsp;multiline&nbsp;string&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;text&nbsp;file&nbsp;(or&nbsp;any&nbsp;other&nbsp;object&nbsp;that&nbsp;allows&nbsp;iterating&nbsp;over&nbsp;strings).&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;format&nbsp;of&nbsp;the&nbsp;config&nbsp;file/text&nbsp;is&nbsp;as&nbsp;follows.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;config&nbsp;lines&nbsp;should&nbsp;have&nbsp;the&nbsp;format:&nbsp;key&nbsp;=&nbsp;value,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;key&nbsp;is&nbsp;a&nbsp;string&nbsp;and&nbsp;value&nbsp;is&nbsp;a&nbsp;Python&nbsp;expression<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;first&nbsp;'='&nbsp;character&nbsp;on&nbsp;the&nbsp;line&nbsp;is&nbsp;the&nbsp;delimiter&nbsp;between&nbsp;key&nbsp;and&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Blanks&nbsp;around&nbsp;both&nbsp;the&nbsp;key&nbsp;and&nbsp;the&nbsp;value&nbsp;are&nbsp;stripped.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;value&nbsp;is&nbsp;then&nbsp;evaluated&nbsp;as&nbsp;a&nbsp;Python&nbsp;expression&nbsp;and&nbsp;stored&nbsp;in&nbsp;a&nbsp;variable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;name&nbsp;specified&nbsp;by&nbsp;the&nbsp;key.&nbsp;This&nbsp;variable&nbsp;is&nbsp;available&nbsp;for&nbsp;use&nbsp;in<br>
+&nbsp;&nbsp;&nbsp;&nbsp;subsequent&nbsp;configuration&nbsp;lines.&nbsp;It&nbsp;is&nbsp;an&nbsp;error&nbsp;to&nbsp;use&nbsp;a&nbsp;variable&nbsp;before<br>
+&nbsp;&nbsp;&nbsp;&nbsp;it&nbsp;is&nbsp;defined.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;key,value&nbsp;pair&nbsp;is&nbsp;also&nbsp;stored&nbsp;in&nbsp;the&nbsp;config&nbsp;dictionary,&nbsp;unless&nbsp;the&nbsp;key<br>
+&nbsp;&nbsp;&nbsp;&nbsp;starts&nbsp;with&nbsp;an&nbsp;underscore&nbsp;('_'):&nbsp;this&nbsp;provides&nbsp;for&nbsp;local&nbsp;variables.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Lines&nbsp;starting&nbsp;with&nbsp;'#'&nbsp;are&nbsp;comments&nbsp;and&nbsp;are&nbsp;ignored,&nbsp;as&nbsp;are&nbsp;empty&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;blank&nbsp;lines.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;line&nbsp;starting&nbsp;with&nbsp;'['&nbsp;starts&nbsp;a&nbsp;new&nbsp;section.&nbsp;A&nbsp;section&nbsp;is&nbsp;nothing&nbsp;more<br>
+&nbsp;&nbsp;&nbsp;&nbsp;than&nbsp;a&nbsp;Python&nbsp;dictionary&nbsp;inside&nbsp;the&nbsp;config&nbsp;dictionary.&nbsp;The&nbsp;section&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;delimited&nbsp;by&nbsp;'['and&nbsp;']'.&nbsp;All&nbsp;subsequent&nbsp;lines&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;section&nbsp;dictionary&nbsp;instead&nbsp;of&nbsp;the&nbsp;toplevel&nbsp;dictionary.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;other&nbsp;lines&nbsp;are&nbsp;executed&nbsp;as&nbsp;python&nbsp;statements.&nbsp;This&nbsp;allows&nbsp;e.g.&nbsp;for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;importing&nbsp;modules.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Whole&nbsp;dictionaries&nbsp;can&nbsp;be&nbsp;inserted&nbsp;at&nbsp;once&nbsp;in&nbsp;the&nbsp;config&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Config-update">update</a>()&nbsp;function.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;defined&nbsp;variables&nbsp;while&nbsp;reading&nbsp;config&nbsp;files&nbsp;remain&nbsp;available&nbsp;for&nbsp;use<br>
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;the&nbsp;config&nbsp;file&nbsp;statements,&nbsp;even&nbsp;over&nbsp;multiple&nbsp;calls&nbsp;to&nbsp;the&nbsp;<a href="#Config-read">read</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;function.&nbsp;Variables&nbsp;inserted&nbsp;with&nbsp;addSection()&nbsp;will&nbsp;not&nbsp;be&nbsp;available<br>
+&nbsp;&nbsp;&nbsp;&nbsp;as&nbsp;individual&nbsp;variables&nbsp;though,&nbsp;but&nbsp;can&nbsp;be&nbsp;access&nbsp;as&nbsp;self['name'].<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;As&nbsp;an&nbsp;example,&nbsp;if&nbsp;your&nbsp;config&nbsp;file&nbsp;looks&nbsp;like<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aa&nbsp;=&nbsp;'bb'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bb&nbsp;=&nbsp;aa<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cc]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;aa&nbsp;=&nbsp;'aa'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_n&nbsp;=&nbsp;3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rng&nbsp;=&nbsp;range(_n)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;read&nbsp;configuration&nbsp;dictionary&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{'aa':&nbsp;'bb',&nbsp;'bb':&nbsp;'bb',&nbsp;'cc':&nbsp;{'aa':&nbsp;'aa',&nbsp;'rng':&nbsp;[0,&nbsp;1,&nbsp;2]}}<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;As&nbsp;far&nbsp;as&nbsp;the&nbsp;resulting&nbsp;<a href="#Config">Config</a>&nbsp;contents&nbsp;is&nbsp;concerned,&nbsp;the&nbsp;following&nbsp;are<br>
+&nbsp;&nbsp;&nbsp;&nbsp;equivalent:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C.<a href="#Config-update">update</a>({'key':'value'})<br>
+&nbsp;&nbsp;&nbsp;&nbsp;C.<a href="#Config-read">read</a>("key='value'<br>
+")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;There&nbsp;is&nbsp;an&nbsp;important&nbsp;difference&nbsp;though:&nbsp;the&nbsp;second&nbsp;line&nbsp;will&nbsp;make&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;variable&nbsp;key&nbsp;(with&nbsp;value&nbsp;'value')&nbsp;available&nbsp;in&nbsp;subsequent&nbsp;<a href="#Config">Config</a>&nbsp;<a href="#Config-read">read</a>()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;calls.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="config.html#Config">Config</a></dd>
+<dd><a href="mydict.html#Dict">mydict.Dict</a></dd>
+<dd><a href="__builtin__.html#dict">__builtin__.dict</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Config-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">={}</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;<a href="#Config">Config</a>&nbsp;instance.<br>
+&nbsp;<br>
+The&nbsp;configuration&nbsp;can&nbsp;be&nbsp;initialized&nbsp;with&nbsp;a&nbsp;dictionary,&nbsp;or<br>
+with&nbsp;a&nbsp;variable&nbsp;that&nbsp;can&nbsp;be&nbsp;passed&nbsp;to&nbsp;the&nbsp;<a href="#Config-read">read</a>()&nbsp;function.<br>
+The&nbsp;latter&nbsp;includes&nbsp;the&nbsp;name&nbsp;of&nbsp;a&nbsp;config&nbsp;file,&nbsp;or&nbsp;a&nbsp;multiline&nbsp;string<br>
+holding&nbsp;the&nbsp;contents&nbsp;of&nbsp;a&nbsp;configuration&nbsp;file.</tt></dd></dl>
+
+<dl><dt><a name="Config-__str__"><strong>__str__</strong></a>(self)</dt><dd><tt>Format&nbsp;the&nbsp;<a href="#Config">Config</a>&nbsp;in&nbsp;a&nbsp;way&nbsp;that&nbsp;can&nbsp;be&nbsp;red&nbsp;back.</tt></dd></dl>
+
+<dl><dt><a name="Config-read"><strong>read</strong></a>(self, fil, debug<font color="#909090">=False</font>)</dt><dd><tt>Read&nbsp;a&nbsp;configuration&nbsp;from&nbsp;a&nbsp;file&nbsp;or&nbsp;text<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fil&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;strings.&nbsp;Any&nbsp;type&nbsp;that&nbsp;allows&nbsp;a&nbsp;loop&nbsp;like&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;line&nbsp;in&nbsp;fil:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;iterate&nbsp;over&nbsp;its&nbsp;text&nbsp;lines&nbsp;will&nbsp;do.&nbsp;This&nbsp;could&nbsp;be&nbsp;a&nbsp;file&nbsp;type,&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;multiline&nbsp;text&nbsp;after&nbsp;splitting&nbsp;on&nbsp;'<br>
+'.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;function&nbsp;will&nbsp;try&nbsp;to&nbsp;react&nbsp;intelligently&nbsp;if&nbsp;a&nbsp;string&nbsp;is&nbsp;passed&nbsp;as<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argument.&nbsp;If&nbsp;the&nbsp;string&nbsp;contains&nbsp;at&nbsp;least&nbsp;one&nbsp;'<br>
+',&nbsp;it&nbsp;will&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interpreted&nbsp;as&nbsp;a&nbsp;multiline&nbsp;string&nbsp;and&nbsp;be&nbsp;splitted&nbsp;on&nbsp;'<br>
+'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Else,&nbsp;the&nbsp;string&nbsp;will&nbsp;be&nbsp;considered&nbsp;and&nbsp;a&nbsp;file&nbsp;with&nbsp;that&nbsp;name&nbsp;will<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;opened.&nbsp;It&nbsp;is&nbsp;an&nbsp;error&nbsp;if&nbsp;the&nbsp;file&nbsp;does&nbsp;not&nbsp;exist&nbsp;or&nbsp;can&nbsp;not&nbsp;be<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opened.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;function&nbsp;returns&nbsp;self,&nbsp;so&nbsp;that&nbsp;you&nbsp;can&nbsp;write:&nbsp;cfg&nbsp;=&nbsp;<a href="#Config">Config</a>().</tt></dd></dl>
+
+<dl><dt><a name="Config-update"><strong>update</strong></a>(self, data<font color="#909090">={}</font>, name<font color="#909090">=None</font>, removeLocals<font color="#909090">=False</font>)</dt><dd><tt>Add&nbsp;a&nbsp;dictionary&nbsp;to&nbsp;the&nbsp;<a href="#Config">Config</a>&nbsp;object.<br>
+&nbsp;<br>
+The&nbsp;data,&nbsp;if&nbsp;specified,&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;dict.<br>
+If&nbsp;no&nbsp;name&nbsp;is&nbsp;specified,&nbsp;the&nbsp;data&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;top&nbsp;dictionary<br>
+and&nbsp;will&nbsp;become&nbsp;attributes.<br>
+If&nbsp;a&nbsp;name&nbsp;is&nbsp;specified,&nbsp;the&nbsp;data&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;named&nbsp;attribute,<br>
+which&nbsp;should&nbsp;be&nbsp;a&nbsp;dictionary.&nbsp;If&nbsp;the&nbsp;name&nbsp;does&nbsp;not&nbsp;specify&nbsp;a<br>
+dictionary,&nbsp;an&nbsp;empty&nbsp;one&nbsp;is&nbsp;created,&nbsp;deleting&nbsp;the&nbsp;existing&nbsp;attribute.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;name&nbsp;is&nbsp;specified,&nbsp;but&nbsp;no&nbsp;data,&nbsp;the&nbsp;effect&nbsp;is&nbsp;to&nbsp;add&nbsp;a&nbsp;new<br>
+empty&nbsp;dictionary&nbsp;(section)&nbsp;with&nbsp;that&nbsp;name.<br>
+&nbsp;<br>
+If&nbsp;removeLocals&nbsp;is&nbsp;set,&nbsp;keys&nbsp;starting&nbsp;with&nbsp;'_'&nbsp;are&nbsp;removed&nbsp;from&nbsp;the<br>
+data&nbsp;before&nbsp;updating&nbsp;the&nbsp;dictionary&nbsp;and&nbsp;not<br>
+included&nbsp;in&nbsp;the&nbsp;config.&nbsp;This&nbsp;behaviour&nbsp;can&nbsp;be&nbsp;changed&nbsp;by&nbsp;setting<br>
+removeLocals&nbsp;to&nbsp;false.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="mydict.html#Dict">mydict.Dict</a>:<br>
+<dl><dt><a name="Config-__delattr__"><strong>__delattr__</strong></a>(self, key)</dt><dd><tt>Allow&nbsp;items&nbsp;to&nbsp;be&nbsp;deleted&nbsp;using&nbsp;del&nbsp;self.<strong>key</strong>.<br>
+&nbsp;<br>
+This&nbsp;works&nbsp;even&nbsp;if&nbsp;the&nbsp;key&nbsp;is&nbsp;an&nbsp;existing&nbsp;attribute&nbsp;of&nbsp;the<br>
+builtin&nbsp;dict&nbsp;class:&nbsp;the&nbsp;item&nbsp;is&nbsp;deleted&nbsp;from&nbsp;the&nbsp;dict,<br>
+leaving&nbsp;the&nbsp;dict's&nbsp;attributes&nbsp;unchanged.</tt></dd></dl>
+
+<dl><dt><a name="Config-__delitem__"><strong>__delitem__</strong></a>(self, key)</dt><dd><tt>Allow&nbsp;items&nbsp;to&nbsp;be&nbsp;deleted&nbsp;using&nbsp;del&nbsp;self[key].<br>
+&nbsp;<br>
+Silently&nbsp;ignore&nbsp;if&nbsp;key&nbsp;is&nbsp;nonexistant.</tt></dd></dl>
+
+<dl><dt><a name="Config-__getattr__"><strong>__getattr__</strong></a>(self, key)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;be&nbsp;addressed&nbsp;as&nbsp;self.<strong>key</strong>.<br>
+&nbsp;<br>
+This&nbsp;makes&nbsp;self.<strong>key</strong>&nbsp;equivalent&nbsp;to&nbsp;self['key'],&nbsp;except&nbsp;if&nbsp;key<br>
+is&nbsp;an&nbsp;attribute&nbsp;of&nbsp;the&nbsp;builtin&nbsp;type&nbsp;'dict':&nbsp;then&nbsp;we&nbsp;return&nbsp;that<br>
+attribute&nbsp;instead,&nbsp;so&nbsp;that&nbsp;the&nbsp;'dict'&nbsp;methods&nbsp;keep&nbsp;their&nbsp;binding.</tt></dd></dl>
+
+<dl><dt><a name="Config-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;be&nbsp;addressed&nbsp;as&nbsp;self[key].<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;the&nbsp;dict&nbsp;lookup,&nbsp;except&nbsp;that&nbsp;we<br>
+provide&nbsp;a&nbsp;default&nbsp;value&nbsp;if&nbsp;the&nbsp;key&nbsp;does&nbsp;not&nbsp;exist.</tt></dd></dl>
+
+<dl><dt><a name="Config-__setattr__"><strong>__setattr__</strong></a>(self, key, value<font color="#909090">=None</font>)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;beset&nbsp;as&nbsp;self.<strong>key</strong>=value.<br>
+&nbsp;<br>
+This&nbsp;works&nbsp;even&nbsp;if&nbsp;the&nbsp;key&nbsp;is&nbsp;an&nbsp;existing&nbsp;attribute&nbsp;of&nbsp;the<br>
+builtin&nbsp;dict&nbsp;class:&nbsp;the&nbsp;key,value&nbsp;pair&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;dict,<br>
+leaving&nbsp;the&nbsp;dict's&nbsp;attributes&nbsp;unchanged.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="mydict.html#Dict">mydict.Dict</a>:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Dict' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><a name="Config-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
+
+<dl><dt><a name="Config-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Config-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="Config-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Config-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Config-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Config-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="Config-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Config-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Config-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Config-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Config-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Config-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Config-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Config-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Config-clear"><strong>clear</strong></a>(...)</dt><dd><tt>D.<a href="#Config-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<dl><dt><a name="Config-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#Config-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Config-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#Config-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="Config-has_key"><strong>has_key</strong></a>(...)</dt><dd><tt>D.<a href="#Config-has_key">has_key</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="Config-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#Config-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
+
+<dl><dt><a name="Config-iteritems"><strong>iteritems</strong></a>(...)</dt><dd><tt>D.<a href="#Config-iteritems">iteritems</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;(key,&nbsp;value)&nbsp;items&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Config-iterkeys"><strong>iterkeys</strong></a>(...)</dt><dd><tt>D.<a href="#Config-iterkeys">iterkeys</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;keys&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Config-itervalues"><strong>itervalues</strong></a>(...)</dt><dd><tt>D.<a href="#Config-itervalues">itervalues</a>()&nbsp;-&gt;&nbsp;an&nbsp;iterator&nbsp;over&nbsp;the&nbsp;values&nbsp;of&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Config-keys"><strong>keys</strong></a>(...)</dt><dd><tt>D.<a href="#Config-keys">keys</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="Config-pop"><strong>pop</strong></a>(...)</dt><dd><tt>D.<a href="#Config-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised</tt></dd></dl>
+
+<dl><dt><a name="Config-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#Config-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
+2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty</tt></dd></dl>
+
+<dl><dt><a name="Config-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#Config-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#Config-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="Config-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#Config-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#Config-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<dl><dt><strong>fromkeys</strong> = &lt;built-in method fromkeys of type object&gt;<dd><tt>dict.<a href="#Config-fromkeys">fromkeys</a>(S[,v])&nbsp;-&gt;&nbsp;New&nbsp;dict&nbsp;with&nbsp;keys&nbsp;from&nbsp;S&nbsp;and&nbsp;values&nbsp;equal&nbsp;to&nbsp;v.<br>
+v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-dicttostr"><strong>dicttostr</strong></a>(dic)</dt><dd><tt>Format&nbsp;a&nbsp;dict&nbsp;in&nbsp;Python&nbsp;source&nbsp;representation.<br>
+&nbsp;<br>
+Each&nbsp;(key,value)&nbsp;pair&nbsp;is&nbsp;formatted&nbsp;on&nbsp;a&nbsp;line&nbsp;:&nbsp;key&nbsp;=&nbsp;value.</tt></dd></dl>
+</td></tr></table>
+</body></html>

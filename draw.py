@@ -7,12 +7,13 @@ from formex import *
 from canvas import *
 from colors import *
 
+import utils
 import pyfotemp
 import gui
 import widgets
 import threading,os,sys,commands
 
-#################### scripting functions ######################################
+######################### Exceptions #########################################
 
 class Exit(Exception):
     """Exception raised to exit from a running script."""
@@ -21,6 +22,8 @@ class Exit(Exception):
 class ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
     pass    
+
+#################### Interacting with the user ###############################
 
 def ask(question,choices=None,default=''):
     """Ask a question and present possible answers."""
@@ -42,22 +45,50 @@ def ack(question):
     return ask(question,['Yes','No']) == 0
     
 def error(message,actions=['OK']):
+    """Show an error message and wait for user acknowledgement."""
     return gui.messageBox(message,'error',actions)
     
 def warning(message,actions=['OK']):
+    """Show a warning message and wait for user acknowledgement."""
     return gui.messageBox(message,'warning',actions)
 
 def info(message,actions=['OK']):
+    """Show a neutral message and wait for user acknowledgement."""
     return gui.messageBox(message,'info',actions)
-    
+   
 def about(message=GD.Version):
-    """Show a message, to be acknowledged by the user."""
-    return gui.messageBox(message,'about')
+    """Show a informative message and wait for user acknowledgement."""
+    gui.messageBox(message,'about')
 
-def message(s):
-    """Display a message to the user."""
+def askItems(items):
+    """Ask the value of some items to the user. !! VERY EXPERIMENTAL!!
+
+    Input is a dictionary of items or a list of [key,value] pairs.
+    The latter is recommended, because a dictionary does not guarantee
+    the order of the items.
+    Returns a dictionary (maybe we should just return the list??)
+    """
+    if type(items) == dict:
+        items = items.items()
+    #print items.items()
+    res,status = widgets.inputDialog(items).process()
+    #print res
+    items = {}
+    for r in res:
+        items[r[0]] = r[1]
+    return items
+
+def log(s):
+    """Display a message in the cmdlog window."""
     GD.gui.showMessage(s)
-    
+
+# message is the preferred function to send text info to the user.
+# The default message handler is set here.
+# Best candidates are log/info
+message = log
+
+
+########################### PLAYING SCRIPTS ##############################
 
 scriptDisabled = False
 scriptRunning = False
@@ -189,7 +220,7 @@ def drawrelease():
 
 currentView = 'front'
 
-def draw(F,view='__last__',color='prop',wait=True,eltype=None):
+def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     """Draw a Formex on the canvas.
 
     Draws an actor on the canvas, and directs the camera to it from
@@ -201,6 +232,10 @@ def draw(F,view='__last__',color='prop',wait=True,eltype=None):
     as in the last draw operation. The camera will be zoomed on the newly
     drawn object.
     The initial default view is 'front' (looking in the -z direction).
+
+    If bbox == 'auto', the camera will zoom automatically on the shown
+    object. A bbox may be specified to have other zoom settings, e.g. to
+    keep the previous settings.
 
     If other actors are on the scene, they may or may not be visible with the
     new camera settings. Clear the canvas before drawing if you only want
@@ -231,9 +266,9 @@ def draw(F,view='__last__',color='prop',wait=True,eltype=None):
     if type(color) == str:
         if color == 'prop':
             if type(F.p) == type(None):
-                color = GD.cfg.get('defaultcolor',[black]) 
+                color = GLColor(GD.cfg.get('defaultcolor',black)) 
             else: # use the prop as entry in a color table
-                color = GD.cfg.get('propcolors',[black])
+                color = map(GLColor,GD.cfg.get('propcolors',[black]))
         elif color == 'random':
             color = random.random((F.nelems(),3))
         else:
@@ -242,7 +277,9 @@ def draw(F,view='__last__',color='prop',wait=True,eltype=None):
     if view:
         if view == '__last__':
             view = currentView
-        GD.canvas.useView(F.bbox(),view)
+        if bbox == 'auto':
+            bbox = F.bbox()
+        GD.canvas.setView(bbox,view)
         currentView = view
         # calculate the bbox and zoom accordingly
         GD.canvas.update()
@@ -271,7 +308,7 @@ def view(v,wait=False):
     if allowwait:
         drawwait()
     if GD.canvas.views.has_key(v):
-        GD.canvas.useView(None,v)
+        GD.canvas.setView(None,v)
         currentView = v
         GD.canvas.update()
         if allowwait and wait:
@@ -401,10 +438,6 @@ def printglobals():
     print globals()
 
 
-def save(filename,fmt):
-    GD.canvas.save(filename,fmt)
-
-
 def system(cmdline,result='output'):
     if result == 'status':
         return os.system(cmdline)
@@ -424,6 +457,103 @@ def exit(all=False):
         GD.app.quit() 
     else: # the gui didn't even start
         sys.exit(0)
+
+
+################################ saving images ########################
+
+def imageFormats():
+    """Return a list of the valid image formats."""
+    return GD.image_formats_qt + GD.image_formats_gl2ps
+
+
+def checkImageFormat(fmt,verbose=False):
+    """Checks image format; if verbose, warn if it is not.
+
+    Returns the image format, or None if it is not OK.
+    """ 
+    if fmt in imageFormats():
+        if fmt == 'TEX' and verbose:
+            warning("This will only write a LaTeX fragment to include the EPS image\nYou may still have to create the .EPS format image separately.\n")
+        return fmt
+    else:
+        if verbose:
+            error("Sorry, can not save in %s format!\n"
+                  "I suggest you use PNG format ;)"%fmt)
+        return None
+    
+
+def saveImage(fn,fmt=None,verbose=False):
+    """Save the current rendering on file fn in format fmt.
+
+    If no format is specified, it is derived from the extension.
+    fmt should be one of the valid formats as returned by imageFormats()
+    If the file has no extension, one is added based on the format.
+    If verbose=True, error/warnings are activated. 
+    """
+    ext = os.path.splitext(fn)[1]
+    if not fmt:
+        fmt = utils.imageFormatFromExt(ext)
+    fmt = checkImageFormat(fmt,verbose)
+    if fmt:
+        if len(ext) == 0:
+            ext = '.%s' % fmt.lower()
+            fn += ext
+        GD.canvas.save(fn,fmt)
+
+    
+def saveNext():
+    global multisave
+    print "Saving to ",multisave
+    if multisave:
+        name,nr,fmt = multisave
+        GD.canvas.save(name % nr,fmt)
+        nr += 1
+        multisave = [ name,nr,fmt ]
+
+multisave = None
+
+
+def saveMulti(fn=None,fmt=None,verbose=False):
+    """Save a sequence of images.
+
+    If the filename supplied has a trailing numeric part, subsequent images
+    will be numbered continuing from this number. Otherwise a numeric part
+    -000, -001, will be added to the filename.
+
+    Without filename, switches off multisave mode.
+    """
+    global multisave
+    # Leave multisave mode
+    if not fn:
+        if multisave:
+            log("Leaving multi save mode")
+            qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
+        multisave = None
+        return
+
+    # Enter multisave mode
+    log("Entering multiple save mode to files:")
+    name,ext = os.path.splitext(fn)
+    fmt = utils.imageFormatFromExt(ext)
+    log("%s-???.%s (%s)" % (name,ext,fmt))
+    fmt = checkImageFormat(fmt,verbose)
+    if fmt:
+        name,number = utils.splitEndDigits(name)
+        if len(number) > 0:
+            nr = int(number)
+            name += "%%0%dd" % len(number)
+        else:
+            nr = 0
+            name += "-%03d"
+        if len(ext) == 0:
+            ext = '.%s' % fmt.lower()
+        name += ext
+        if verbose:
+            warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
+        qt.QObject.connect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
+        multisave = [ name,nr,fmt ]
+
+
 
 ###########################  app  ################################
 

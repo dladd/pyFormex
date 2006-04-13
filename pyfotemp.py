@@ -6,7 +6,6 @@
 
 import globaldata as GD
 import gui
-from utils import *
 import draw
 import widgets
 import canvas
@@ -34,11 +33,30 @@ def askConfigPreferences(items,section=None):
     res,accept = widgets.inputDialog(items,'Config Dialog').process()
     if accept:
         GD.prefsChanged = True
-        print "ACCEPTED following values:"
+        #print "ACCEPTED following values:"
         for r in res:
-            print r
-            store[r[0]] = r[1]
-    print GD.cfg
+            #print r
+            store[r[0]] = eval(r[1])
+    #print GD.cfg
+
+
+def newaskConfigPreferences(items,store):
+    """Ask preferences stored in config variables.
+
+    Items in list should only be keys. The current values are retrieved
+    from the config.
+    A config section name should be specified if the items are not in the
+    top config level.
+    """
+    if not store:
+        store = GD.cfg
+    itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
+    res,accept = widgets.inputDialog(itemlist,'Config Dialog').process()
+    if accept:
+        #print "ACCEPTED following values:"
+        for r in res:
+            #print r
+            store[r[0]] = eval(r[1])
 
 
 def prefHelp():
@@ -54,16 +72,43 @@ def prefBGcolor():
         GD.cfg['bgcolor'] = col.name()
         draw.bgcolor(col)
 
-        
+
 def prefLinewidth():
     askConfigPreferences([['linewidth']])
     draw.linewidth(GD.cfg['linewidth'])
 
 def prefSize():
     GD.gui.resize(800,600)
+    
+def prefCanvasSize():
+    res = draw.askItems([['w',GD.canvas.width()],['h',GD.canvas.height()]])
+    GD.canvas.resize(int(res['w']),int(res['h']))
+        
+    
+def prefRender():
+    askConfigPreferences([['specular'], ['shininess']],'render')
 
+##def prefLight0():
+##    askConfigPreferences([['light0']],'render')
+##    draw.smooth()
 
+##def prefLight1():
+##    askConfigPreferences([['light1']],'render')
+##    draw.smooth()
 
+def prefLight(light=0):
+    store = GD.cfg.render["light%d" % light]
+    keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
+    newaskConfigPreferences(keys,store)
+
+def prefLight0():
+    prefLight(0)
+    draw.smooth()
+
+def prefLight1():
+    prefLight(1)
+    draw.smooth()
+    
 
 def AddMenuItems(menu, items=[]):
     """Add a list of items to a menu.
@@ -137,12 +182,15 @@ MenuData = [
         ("Action","&Drawwait Timeout","prefDrawtimeout"), 
         ("Action","&Background Color","prefBGcolor"), 
         ("Action","Line&Width","prefLinewidth"), 
-        ("Action","&Canvas Size","prefSize"), 
+        ("Action","&Canvas Size","prefCanvasSize"), 
         ("Action","&LocalAxes","localAxes"),
         ("Action","&GlobalAxes","globalAxes"),
         ("Action","&Wireframe","draw.wireframe"),
         ("Action","&Flat","draw.flat"),
         ("Action","&Smooth","draw.smooth"),
+        ("Action","&Render","prefRender"),
+        ("Action","&Light0","prefLight0"),
+        ("Action","&Light1","prefLight1"),
         ("Action","&Help","prefHelp"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","zoomIn"), 
@@ -275,16 +323,26 @@ def editor():
         GD.gui.showEditor()
 
 
+##def openFile():
+##    """Open a file and set it as the current file"""
+##    dir = GD.cfg.get('workdir',".")
+##    fs = widgets.FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
+##    fn = fs.getFilename()
+##    if fn:
+##        GD.cfg['workdir'] = os.path.dirname(fn)
+##        gui.setcurfile(fn)
+
 def openFile():
     """Open a file and set it as the current file"""
-    dir = GD.cfg.get('workdir',".")
-    fs = widgets.FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
-    fn = fs.getFilename()
+    cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
+    fn = qt.QFileDialog.getSaveFileName(
+        cur,"pyformex scripts (*.frm *.py)",None,"save file dialog",
+        "Choose a file to open (New or Exisiting)" )
     if fn:
+        fn = str(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         gui.setcurfile(fn)
-
-
+        
 def edit():
     """Load the current file in the editor.
 
@@ -295,7 +353,7 @@ def edit():
     if GD.cfg['edit']:
         cmd = GD.cfg['edit']
         pid = os.spawnlp(os.P_NOWAIT, cmd, cmd, GD.cfg['curfile'])
-        print "Spawned %d" % pid
+        log("Spawned %d" % pid)
 
 
 def play():
@@ -305,56 +363,6 @@ def play():
     """
     if GD.canPlay:
         draw.play(GD.cfg['curfile'])
-
-    
-def saveNext():
-    global multisave
-    name,nr,fmt = multisave
-    nr += 1
-    multisave = [ name,nr,fmt ]
-    GD.canvas.save(name % nr,fmt)
-
-
-def multiSave():
-    """Save a sequence of images.
-
-    If the filename supplied has a trailing numeric part, subsequent images
-    will be numbered continuing from this number. Otherwise a numeric part
-    -000, -001, will be added to the filename.
-    """
-    if multisave:
-        print "Stop auto mode"
-        qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
-        multisave = None
-        return
-    
-    fs = widgets.FileSelectionDialog(pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
-    fn = fs.getFilename()
-    if fn:
-        print "Start auto mode"
-        name,ext = os.path.splitext(fn)
-        fmt = imageFormatFromExt(ext)
-        print name,ext,fmt
-        if fmt in qt.QImage.outputFormats():
-            name,number = splitEndDigits(name)
-            if len(number) > 0:
-                nr = int(number)
-                name += "%%0%dd" % len(number)
-            else:
-                nr = 0
-                name += "-%03d"
-            if len(ext) == 0:
-                ext = '.%s' % fmt.lower()
-            name += ext
-            draw.warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-            qt.QObject.connect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
-            multisave = [ name,nr,fmt ]
-        else:
-            draw.warning("Sorry, can not save in %s format!\n"
-                    "Suggest you use PNG format ;)"%fmt)
-
-
-############################################################################
 
     
 def saveImage():
@@ -369,19 +377,26 @@ def saveImage():
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
-        ext = os.path.splitext(fn)[1]
-        fmt = imageFormatFromExt(ext)
-        if fmt in GD.image_formats_qt + GD.image_formats_gl2ps:
-            if len(ext) == 0:
-                ext = '.%s' % fmt.lower()
-                fn += ext
-            if fmt == 'TEX':
-                draw.warning("This will only write a LaTeX fragment to include the image\n%s\nYou still have to create the .EPS format image separately.\n"
-                             % fn.replace(ext,'.eps'))
-            GD.canvas.save(fn,fmt)
-        else:
-            draw.warning("Sorry, can not save in %s format!\n"
-                    "Suggest you use PNG format ;)"%fmt)
+        draw.saveImage(fn,verbose=True)
+
+def multiSave():
+    """Save a sequence of images.
+
+    If the filename supplied has a trailing numeric part, subsequent images
+    will be numbered continuing from this number. Otherwise a numeric part
+    -000, -001, will be added to the filename.
+    """
+    if draw.multisave:
+        fn = None
+    else:
+        dir = GD.cfg.get('workdir',".")
+        fs = widgets.FileSelectionDialog(dir,pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+        fn = fs.getFilename()
+    draw.saveMulti(fn,verbose=True)
+
+
+############################################################################
+            
 
 def zoomIn():
     global canvas

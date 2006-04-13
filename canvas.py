@@ -67,11 +67,11 @@ class Canvas(qtgl.QGLWidget):
         
     # These three are defined by the qtgl API
     def initializeGL(self):
-        print "initializeGL:",self.rendermode
+        #print "initializeGL:",self.rendermode
         self.glinit()
 
     def	resizeGL(self,w,h):
-        self.resize(w,h)
+        self.setSize(w,h)
 
     def	paintGL(self):
         self.display()
@@ -106,25 +106,27 @@ class Canvas(qtgl.QGLWidget):
             GL.glDisable(GL.GL_LIGHTING)
         elif self.rendermode == 'smooth':
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
-            print "set up materials"
+            #print "set up materials"
             #GL.glMaterialfv(GL.GL_FRONT,GL.GL_AMBIENT_AND_DIFFUSE,(0.5,0.5,0.5,1.))
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,(0.8,0.8,0.8,1.))
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,25.)
-            print "set up lights"
-            GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
-            GL.glLightfv(GL.GL_LIGHT0,GL.GL_AMBIENT,(1.0,1.0,1.0,1.0))
-            GL.glLightfv(GL.GL_LIGHT0,GL.GL_DIFFUSE,(1.0,1.0,1.0,1.0))
-            GL.glLightfv(GL.GL_LIGHT0,GL.GL_SPECULAR,(0.8, 0.8, 0.8, 1.0))
-            GL.glLightfv(GL.GL_LIGHT0,GL.GL_POSITION,(0.,0.,1.,0.))
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_AMBIENT,(1.0,1.0,1.0,1.0))
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_DIFFUSE,(1.0,1.0,1.0,1.0))
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_SPECULAR,(0.8, 0.8, 0.8, 1.0))
-            GL.glLightfv(GL.GL_LIGHT1,GL.GL_POSITION,(-1.,-1.,1.,0.))
-            GL.glEnable(GL.GL_LIGHTING)
-            GL.glEnable(GL.GL_LIGHT0)
-            GL.glEnable(GL.GL_LIGHT1)
+            #print GD.cfg.render.specular
+            #print GD.cfg.render.shininess
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,GD.cfg.render.specular)
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg.render.shininess)
             GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
             GL.glEnable(GL.GL_COLOR_MATERIAL)
+            #print "set up lights"
+            #print GD.cfg.render.keys()
+            GL.glEnable(GL.GL_LIGHTING)
+            for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
+                #print "  set up light ",l,i
+                if GD.cfg.render.has_key(l):
+                    #print GD.cfg.render[l]
+                    GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
+                    GL.glLightfv(i,GL.GL_AMBIENT,GD.cfg.render[l]['ambient'])
+                    GL.glLightfv(i,GL.GL_DIFFUSE,GD.cfg.render[l]['diffuse'])
+                    GL.glLightfv(i,GL.GL_SPECULAR,GD.cfg.render[l]['specular'])
+                    GL.glLightfv(i,GL.GL_POSITION,GD.cfg.render[l]['position'])
+                    GL.glEnable(i)
         else:
             raise RuntimeError,"Unknown rendering mode"
 
@@ -135,14 +137,14 @@ class Canvas(qtgl.QGLWidget):
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
-        if bbox:
-            self.bbox = bbox
-        else:
+        if type(bbox) == type(None):
             if len(self.actors) > 0:
                 self.bbox = self.actors[-1].bbox()
             else:
                 self.bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
-        #print "canvas.bbox=",self.bbox
+        else:
+            self.bbox = bbox
+
          
     def add_actor(self,actor,list):
         """Add an actor to an actorlist."""
@@ -254,7 +256,7 @@ class Canvas(qtgl.QGLWidget):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
     
-    def resize (self,w,h):
+    def setSize (self,w,h):
         self.makeCurrent()
 	if h == 0:	# Prevent A Divide By Zero 
             h = 1
@@ -271,8 +273,9 @@ class Canvas(qtgl.QGLWidget):
         The user can add/delete/overwrite any number of predefined views.
         """
         self.views[name] = angles
+
         
-    def useView(self,bbox=None,side='front'):
+    def setView(self,bbox=None,side='front'):
         """Sets the camera looking from one of the named views.
 
         On startup, the predefined views are 'front', 'back', 'left',
@@ -289,11 +292,11 @@ class Canvas(qtgl.QGLWidget):
         # select view angles: if undefined use (0,0,0)
         angles = self.views.get(side,(0,0,0))
         # go to a distance to have a good view with a 45 degree angle lens
-        if bbox == None:
+        if type(bbox) == type(None):
             bbox = self.bbox
         else:
             self.bbox = bbox
-        center,size = vector.centerDiff(*bbox)
+        center,size = vector.centerDiff(bbox[0],bbox[1])
         #print "Setting view for bbox",bbox
         #print "center=",center
         #print "size=",size
@@ -304,7 +307,11 @@ class Canvas(qtgl.QGLWidget):
         self.camera.setRotation(*angles)
         self.camera.setDist(dist)
         self.camera.setLens(45.,self.aspect)
-        self.camera.setClip(0.01*dist,100*dist)
+        if dist > 0.0:
+            self.camera.setClip(0.01*dist,100*dist)
+        else:
+            self.camera.setClip(0.0,1.0)
+
 
     def zoom(self,f):
         self.camera.setDist(f*self.camera.getDist())
@@ -416,6 +423,12 @@ class Canvas(qtgl.QGLWidget):
         elif fmt in GD.image_formats_gl2ps:
             self.savePS(fn,fmt)
 
+
+    # Deprecated
+    useView = setView
+
+######################### ONLY LOADED IF GL2PS FOUND ########################
+
     if _has_gl2ps:
 
         def savePS(self,filename,filetype=None,title='',producer='',
@@ -434,7 +447,7 @@ class Canvas(qtgl.QGLWidget):
             In case of the 'TEX' filetype, two files are written: one with
             the .tex extension, and one with .eps extension.
             """
-            print self.actors
+            #print self.actors
             fp = file(filename, "wb")
             if filetype:
                 filetype = self._gl2ps_types[filetype]
@@ -457,7 +470,7 @@ class Canvas(qtgl.QGLWidget):
             ##color = GL[[0.,0.,0.,0.]]
             while state == gl2ps.GL2PS_OVERFLOW:
                 bufsize += 1024*1024
-                print filename,filetype
+                #print filename,filetype
                 gl2ps.gl2psBeginPage(title, self._producer, viewport, filetype,
                                      gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA, 0,
                                      None, 0, 0, 0, bufsize, fp, filename)
@@ -465,7 +478,7 @@ class Canvas(qtgl.QGLWidget):
                 GL.glFinish()
                 state = gl2ps.gl2psEndPage()
             fp.close()
-            print "File %s written" % filename
+            log("File %s written" % filename)
 
         #Canvas.savePS = _savePS
 

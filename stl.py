@@ -10,9 +10,12 @@ from numpy import *
 def write_ascii(a,f):
     """Export an [n,3,3] float array as an ascii .stl file"""
 
+    own = type(f) == str
+    if own:
+        f = file(f,'w')
     f.write("solid  Created by %s\n" % GD.Version)
-    for e in F:
-        normal = numpy.cross(e[1]-e[0],e[2]-e[1])
+    for e in a:
+        normal = cross(e[1]-e[0],e[2]-e[1])
         f.write("  facet normal %f %f %f\n" % tuple(normal))
         f.write("    outer loop\n")
         for p in e:
@@ -20,6 +23,8 @@ def write_ascii(a,f):
         f.write("    endloop\n")
         f.write("  endfacet\n")
     f.write("endsolid\n")
+    if own:
+        f.close()
 
 
 def read_error(cnt,line):
@@ -29,12 +34,17 @@ def read_error(cnt,line):
 
 def read_ascii(f):
     """Read an ascii .stl file into an [n,3,3] float array"""
+
+    own = type(f) == str
+    if own:
+        f = file(f,'r')
     n = 100
     a = zeros(shape=[n,3,3],dtype=float32)
     x = zeros(shape=[3,3],dtype=float32)
     i = 0
     j = 0
     cnt = 0
+    finished = False
     for line in f:
         cnt += 1
         s = line.strip().split()
@@ -56,7 +66,15 @@ def read_ascii(f):
         elif s[0] == 'solid':
             pass
         elif s[0] == 'endsolid':
-            return a[:i]
+            finished = True
+            break
+        
+    if own:
+        f.close()
+    if finished:
+        return a[:i]
+    raise RuntimeError,"Incorrect stl file: read %d lines, %d facets" % (cnt,i)
+        
 
 if __name__ == '__main__':
     f = file('unit_triangle.stl','r')

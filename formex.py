@@ -478,11 +478,13 @@ class Formex:
 
         The bounding box is the smallest rectangular volume in global
         coordinates, such at no points of the Formex are outside the
-        box. It is returned as a list of two points: one with the
-        minimal coordinates and one with the maximal."""
+        box.
+        It is returned as a [2,3] array: the first row holds the
+        minimal coordinates and the second one the maximal.
+        """
         min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
         max = [ self.f[:,:,i].max() for i in range(self.f.shape[2]) ]
-        return [min, max]
+        return array([min, max])
 
     def center(self):
         """Return the center of the Formex.
@@ -490,7 +492,7 @@ class Formex:
         The center of the formex is the center of its bbox().
         """
         min,max = self.bbox()
-        return vector.midPoint(min,max)
+        return 0.5 * (max+min)
 
     def size(self):
         """Return the size of the Formex.
@@ -506,7 +508,7 @@ class Formex:
         center() of the Formex, and such that no points of the Formex
         are lying outside the sphere.
         """
-        return self.f - self.center()
+        return self.f - array(self.center())
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""
@@ -1486,8 +1488,12 @@ def connect(Flist,nodid=None,bias=None,loop=False):
     ## formices where needed
     ## Maybe give a warning?
     m = len(Flist)
-    for F in Flist:
-        if not isinstance(F,Formex):
+    for i in range(m):
+        if isinstance(Flist[i],Formex):
+            pass
+        elif isinstance(Flist[i],ndarray):
+            Flist[i] = Formex(Flist[i])
+        else:
             raise RuntimeError,'connect(): first argument should be a list of formices'
     if not nodid:
         nodid = [ 0 for i in range(m) ]
@@ -1562,6 +1568,7 @@ if __name__ == "__main__":
         print G[1]
         print G.nodesAndElements()
         print F
+        print F.bbox()
         print F.center()
         print F.bsphere()
 

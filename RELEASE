@@ -3,9 +3,11 @@ VERSION=0.3
 RELEASE=${VERSION}-alpha
 PYMODULES= actors camera canvas colors colorscale config decorations \
   draw flatkeydb formex globaldata gui help helpviewer lima mydict \
-  pyfotemp script turtle units utils vector widgets
+  pyfotemp script turtle units utils vector widgets \
+  file2formex properties simple stl
 EXAMPLES= BarrelVault Baumkuchen Diamatic DoubleLayer \
   Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
+  Pattern \
   ScallopDome Schwedler SpaceTrussRoof Spiral Stars Torus TrussBridge \
   TrussFrame WireStent X_truss X_truss_analysis X_truss_examples
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
