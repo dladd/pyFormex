@@ -39,8 +39,8 @@ show(f1+f2.rosette(6,60.))
 # n = number of repetitions of the base module in circumference (this does not
 #     have to be equal to 6: the base module will be compressed/expanded to
 #     generate a full circle
-# f = if 0, the dome will have sharp edges where repeated mdules meet;
-#     if 1, the dome surface will be smooth over neighbouring modules.
+# f = if 1, the dome will have sharp edges where repeated mdules meet;
+#     if 2, the dome surface will be smooth over neighbouring modules.
 # c = height of the dome at the center of the dome.
 # r = height of the arcs at the circumference of the dome. 
 def scallop(n,f,c,r):
@@ -57,13 +57,15 @@ GD.canvas.camera.setRotation(0,-45)
 show(scallop(6,1,2,0),0,False)
 
 
-howmany = ask("How many more domes do you want?",["None","One","Sequence"])
+howmany = ask("How many / Which domes do you want?",["One","Sequence","Custom"])
 
-if howmany == 1:
+n,f,c,r = [6,1,2,0]
+
+if howmany == 0:
    # The example from the pyformex homepage
    show(scallop(6,1,4,4),0)
         
-elif howmany == 2:
+elif howmany == 1:
    # Present some nice examples
     for n,f,c,r in [
         [6,1,2,0],
@@ -79,3 +81,19 @@ elif howmany == 2:
         [12,1,2,-2],
         [12,1,2,2] ]:
         show(scallop(n,f,c,r),0)
+
+elif howmany == 2:
+   # Customized version
+   while True:
+       res = askItems([['n',n],['f',f],['c',c],['r',r]])
+       n = int(res['n'])
+       f = int(res['f'])
+       c = float(res['c'])
+       r = float(res['r'])
+       show(scallop(n,f,c,r),0)
+       if not ack("Want to try another one?"):
+           exit()
+
+
+       
+   

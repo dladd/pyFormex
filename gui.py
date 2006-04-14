@@ -123,7 +123,7 @@ class GUI:
         fmt = qtgl.QGLFormat.defaultFormat()
         fmt.setDirectRendering(GD.options.dri)
         c = canvas.Canvas(wd,ht,fmt,s)
-        c.setMinimumHeight(100)
+        #c.setMinimumHeight(100)
         c.resize(wd,ht)
         self.canvas = c
         # Create the message board

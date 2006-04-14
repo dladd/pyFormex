@@ -37,7 +37,7 @@ INSTALL= install -c
 INSTALL_PROGRAM= ${INSTALL} -m 0755
 INSTALL_DATA= ${INSTALL} -m 0644
 
-.PHONY: install dist distclean
+.PHONY: install dist distclean manual
 
 all:
 	@echo "Do 'make install' to install pyformex"
@@ -83,3 +83,6 @@ dist: Makefile.dist
 
 version: Makefile.dist
 	${MAKE} -f Makefile.dist version
+
+manual: Makefile.dist
+	${MAKE} -f Makefile.dist manual

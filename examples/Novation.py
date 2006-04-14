@@ -11,13 +11,18 @@
 """Novation"""
 clear()
 n = 40
-# These are triangles
-e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
-# These two look the same in wireframe
-# These are quadrilaterals
-#e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
-# These are lines
+
+form = ask("Create a surface model with",['Triangles','Quadrilaterals'])
+if form == 0:
+    # These are triangles
+    e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
+else:
+    # These are quadrilaterals
+    e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
+
+# These are lines forming quadrilaterals
 #e = Formex([[[0,0,0],[1,0,0]]]).rosad(.5,.5).rinid(n,n,1,1)
+
 # Novation (Spots)
 m = 4
 h = 12
@@ -25,18 +30,24 @@ r = n/m
 s = n/r
 a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
+#create a bottom
 b = e.reverseElements()
+
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
 draw (e,color=red)
-draw (b,color=blue)
+#draw (b,color=blue)
 
 
 if ack('Export to .stl?'):
     import stl
     f = file('novation.stl','w')
-    F = b+e
-    G = F.selectNodes([0,1,2]) + F.selectNodes([2,3,0])
-    stl.stl_export(G,f)
+    F = e # + b
+    # Create triangles
+    G = F.selectNodes([0,1,2])
+    # If polygones, add more triangles
+    for i in range(3,F.nnodel()):
+        G += F.selectNodes([0,i-1,i])
+    stl.write_ascii(G.f,f)
     f.close()

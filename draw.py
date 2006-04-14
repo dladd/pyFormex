@@ -109,7 +109,7 @@ def playScript(scr):
     if GD.canvas:
         GD.canvas.update()
     if GD.gui:
-        print "Activating buttons"
+        #print "Activating buttons"
         GD.gui.actions['Step'].setEnabled(True)
         GD.gui.actions['Continue'].setEnabled(True)
     else:
@@ -145,7 +145,7 @@ def play(fn,name=None):
     """Play a formex script from file fn."""
     global currentView,drawtimeout 
     drawtimeout = GD.cfg.gui.get('drawwait',2)
-    print "drawtimeout = %d" % drawtimeout
+    #print "drawtimeout = %d" % drawtimeout
     currentView = 'front'
     if name:
         GD.scriptName = name

@@ -16,19 +16,19 @@
 %\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
 \author{Tim Neels and Benedict Verhegghe}
-\release{0.3-alpha}
+\release{0.3}
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
 %\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
- 
+
 
 \begin{document}
 \maketitle
 \chapter{Introduction}
 \label{cha:introduction}
 
-\section{What is \pyformex{}?}
+\section{What is \pyformex?}
 \label{sec:what-pyformex}
 You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
@@ -40,17 +40,16 @@ The initial intention of \pyformex{} (and probably still its main use) was the r
 The example of the stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} in the figure below illustrates this clearly. 
 
 \begin{figure}[h]
+  \centering
   \begin{makeimage}
   \end{makeimage}
-  \centering
-  %\htmlimage{scale=0.5}
   \begin{latexonly}
-  \includegraphics[width=12cm]{images/wirestent}
+    \includegraphics[width=12cm]{images/wirestent}
   \end{latexonly}
   \begin{htmlonly}
-    %\hyperimage{../../examples/wirestent.png}
     \htmladdimg{../images/wirestent.png}
-  \end{htmlonly}  \caption{WireStent example.}
+  \end{htmlonly}  
+  \caption{WireStent example.}
 \end{figure}
 
 
@@ -101,15 +100,24 @@ By writing a very simple script, a large geometry can be created by copying, tra
 \end{itemize}
 
 \begin{figure}[tbp,h]
-\centering
-  \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[height=3cm]{images/scallop}}
-  \hfill
-  \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[height=3cm]{images/scallop2}}
-  \hfill
-  \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[height=3cm]{images/scallop3}}
-  \caption{Same script, different domes}
-  \label{scallops}
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[width=5cm]{images/scallopdome-000}}
+    \hfill
+    \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[width=5cm]{images/scallopdome-001}}
+    \hfill
+    \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[width=5cm]{images/scallopdome-002}}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg[WIDTH="300"]{../images/scallopdome-000.png}
+    \htmladdimg{../images/scallopdome-001.png}
+    \htmladdimg{../images/scallopdome-002.png}
+  \end{htmlonly}
+  \caption{Same script, different domes} \label{scallops}
 \end{figure}
+
 
 As mentioned, pyFormex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write pyFormex-scripts, the tutorial you're reading right now should be enough. 
 

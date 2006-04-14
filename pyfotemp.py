@@ -353,7 +353,7 @@ def edit():
     if GD.cfg['edit']:
         cmd = GD.cfg['edit']
         pid = os.spawnlp(os.P_NOWAIT, cmd, cmd, GD.cfg['curfile'])
-        log("Spawned %d" % pid)
+        draw.log("Spawned %d" % pid)
 
 
 def play():

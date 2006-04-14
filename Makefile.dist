@@ -21,12 +21,9 @@ NEWVERSIONSTRING= "pyFormex ${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= releases
 
-.PHONY: dist release distdir modules distclean stamp dist.stamped
+.PHONY: dist release distdir modules distclean stamp dist.stamped manual
 
 ############ Creating Distribution ##################
-
-${HTMLDIR}/%.html: %.py
-	pydoc -w ./$< && mv $*.html ${HTMLDIR}
 
 dist: version ${PYFORMEXDIR}
 	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
@@ -38,6 +35,12 @@ distclean:
 	alldirs . "rm -f *~"
 
 pydoc: ${HTMLDOCS}
+
+${HTMLDIR}/%.html: %.py
+	pydoc -w ./$< && mv $*.html ${HTMLDIR}
+
+manual:
+	make -C manual
 
 stamp: Stamp.template RELEASE
 	${STAMP} -tStamp.template version=${VERSION} -oStamp.stamp
