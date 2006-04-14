@@ -1,4 +1,57 @@
-# Some remarks about creating the manual
+# This file describes some guidelines for creating the pyFormex manual
 #
-- pyFormex: always use the \pyformex command
-- images: see images/README
+
+pyFormex: always use the \pyformex command to set the name pyFormex
+
+images 
+======
+All image files should be put in the image subdirectory.
+All images should be available in both the EPS and PNG formats.
+The images should be created by preference with
+ - white or transparant background
+ - linewidth 2
+ - the definitive size
+ - as little border as possible.
+
+Latex and pdflatex will pickup the correct format (resp. .eps and .png) if
+the extension is omitted in the \includegraphics command.
+
+The html output requires some extra work though. The standard conversion by
+latex2html creates .png images from the .eps sources to include in the html.
+The converted PNGs are however of a far lower quality than what we can export
+directly from pyFormex. Therefore we do not use latex2html's conversion, but 
+we include the PNG's ourselves by adding the required HTML elements to the
+output. 
+Therefore, inclusion of figures should go like this:
+
+\begin{figure}[h]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \includegraphics[width=12cm]{images/wirestent}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg{../images/wirestent.png}
+  \end{htmlonly}  
+  \caption{WireStent example.}
+  \label{fig:wirestent}
+\end{figure}
+
+Comments:
+ - omitting the empty \begin{makeimage}...\end{makeimage} causes errors
+ - put the normal latex \includegraphics commands in a 'latexonly' environment,
+   so that latex2html doies not bother with creating images for html output
+ - include the HTML image elements in a 'htmlonly' environment
+While this asks some discipline from the user, the result is worth it.
+
+
+labels
+======
+labels should start with the type of object they refer to:
+  \label{cha:Chaptername}
+  \label{sec:Sectionname}
+  \label{fig:Figurename}
+  \label{tbl:Tablename}
+etc.
+
