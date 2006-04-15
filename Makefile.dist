@@ -34,7 +34,10 @@ distclean:
 	rm -rf ${PYFORMEXDIR}
 	alldirs . "rm -f *~"
 
-pydoc: ${HTMLDOCS}
+pydoc: ${HTMLDIR}/index.html
+
+${HTMLDIR}/index.html: ${HTMLDOCS}
+	./make_doc_index	
 
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
@@ -54,7 +57,7 @@ dist.stamped:  distclean stamp globaldata.py ${PROGRAM} ${SOURCE} ${EXAMPLEFILES
 	cp examples/__init__.py ${PYFORMEXDIR}/examples
 	cp ${ICONFILES}  ${PYFORMEXDIR}/icons
 	cp ${IMAGEFILES} ${PYFORMEXDIR}/images
-	cp ${HTMLDOCS}   ${PYFORMEXDIR}/html
+	cp ${HTMLDOCS} ${HTMLDIR}/index.html    ${PYFORMEXDIR}/html
 
 version: globaldata.py
 

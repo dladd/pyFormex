@@ -16,41 +16,40 @@
 %\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
 \author{Tim Neels and Benedict Verhegghe}
-\release{0.3-alpha}
+\release{0.3}
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
 %\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
- 
+
 
 \begin{document}
 \maketitle
 \chapter{Introduction}
 \label{cha:introduction}
 
-\section{What is \pyformex{}?}
+\section{What is \pyformex?}
 \label{sec:what-pyformex}
 You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
-The short answer is that \pyformex{} is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
+The short answer is that \pyformex is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
 If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. You will then probably have a better idea of what \pyformex{} is. 
 
-The initial intention of \pyformex{} (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its sub parts and assemblage thereof.
+The initial intention of \pyformex (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its sub parts and assemblage thereof.
 
 The example of the stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} in the figure below illustrates this clearly. 
 
 \begin{figure}[h]
+  \centering
   \begin{makeimage}
   \end{makeimage}
-  \centering
-  %\htmlimage{scale=0.5}
   \begin{latexonly}
-  \includegraphics[width=12cm]{images/wirestent}
+    \includegraphics[width=12cm]{images/wirestent}
   \end{latexonly}
   \begin{htmlonly}
-    %\hyperimage{../../examples/wirestent.png}
     \htmladdimg{../images/wirestent.png}
-  \end{htmlonly}  \caption{WireStent example.}
+  \end{htmlonly}  
+  \caption{WireStent example.}
 \end{figure}
 
 
@@ -71,10 +70,10 @@ In the current version () the GUI mainly serves the following purposes:
 \end{itemize}
 
 The GUI does not (yet) provide a means to interactively design a structure, select parts of a structure or set/show information about (parts of) the structure. Designing a structure is done by writing a small script with the mathematical expressions needed to generate it. Any text editor will be suitable for this purpose. The author uses XEmacs, but this is just a personal preference. 
-A Python aware editor is preferable though, because that is the language used in pyFormex scripts.
+A Python aware editor is preferable though, because that is the language used in \pyformex scripts.
 A \pyformex editor integrated into the GUI remains on our TODO list, but it certainly has not our top priority, because general purpose editors are adequate for most of our purposes. 
 
-The best way to learn to use pyFormex is by studying and changing some of the examples. I suggest that you first take a look at the examples included in the pyFormex GUI and select those that display structures that look interesting to you. Then you can study the source code of those examples and see how the structures got built. 
+The best way to learn to use \pyformex is by studying and changing some of the examples. I suggest that you first take a look at the examples included in the \pyformex GUI and select those that display structures that look interesting to you. Then you can study the source code of those examples and see how the structures got built. 
 When starting up, \pyformex reads through the Examples directory (this is normally the 'examples' subdirecty located under the pyformex installation dir).  
 \menuselection{Examples \sub WireStent}
 
@@ -84,7 +83,7 @@ When starting up, \pyformex reads through the Examples directory (this is normal
 This could be part of the tutorial in chapter 2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{pyFormex --- a tutorial}
+\chapter{\pyformex --- a tutorial}
 {\label{cha:tutorial}
 
 
@@ -101,14 +100,23 @@ By writing a very simple script, a large geometry can be created by copying, tra
 \end{itemize}
 
 \begin{figure}[tbp,h]
-\centering
-  \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[height=3cm]{images/scallop}}
-  \hfill
-  \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[height=3cm]{images/scallop2}}
-  \hfill
-  \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[height=3cm]{images/scallop3}}
-  \caption{Same script, different domes}
-  \label{scallops}
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[width=5cm]{images/scallopdome-000}}
+    \hfill
+    \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[width=5cm]{images/scallopdome-001}}
+    \hfill
+    \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[width=5cm]{images/scallopdome-002}}
+  \end{latexonly}
+  \begin{htmlonly}
+%    \htmladdimg[WIDTH="300"]{../images/scallopdome-000.png}
+    \htmladdimg{../images/scallopdome-000.png}
+    \htmladdimg{../images/scallopdome-001.png}
+    \htmladdimg{../images/scallopdome-002.png}
+  \end{htmlonly}
+  \caption{Same script, different domes} \label{scallops}
 \end{figure}
 
 As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough. 

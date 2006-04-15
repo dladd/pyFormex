@@ -1,0 +1,9 @@
+#!/bin/bash
+# Tag the current repository
+#
+. RELEASE
+echo "Tag current repository as release $RELEASE? (y/n) "
+read ans
+if [ "${ans}" = "y" ]; then
+	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-$RELEASE -m "Tagging the $RELEASE release of the 'pyFormex' project."
+fi

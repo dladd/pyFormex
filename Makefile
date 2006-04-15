@@ -28,7 +28,7 @@ PYSOURCE= ${addsuffix .py, ${PYMODULES}}
 SOURCE= ${PYSOURCE} pyformexrc
 ICONS= icons/*.xbm
 HTMLDIR= html
-HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}}
+HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}} ${HTMLDIR}/index.html
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} __init__}}
 IMAGEFILES =  ${addprefix images/,${addsuffix .png,${IMAGES}}}
 DOCFILES= README COPYING History Makefile FAQ

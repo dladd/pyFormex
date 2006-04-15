@@ -23,14 +23,15 @@ propcolors = ['black','red','green','blue','cyan','magenta','yellow','white']
 [help]
 viewer = ""          # Empty selects the built-in help viewer
 # if set to a string, the command "%s %s" % (viewer,page) will be used
-helpdir = os.path.join(pyformexdir,"manual","html")
+#helpdir = os.path.join(pyformexdir,"manual","html")
+helpdir = os.path.join(pyformexdir,"doc","html")
 homepage = os.path.join(helpdir,"index.html") 
 bookmarks = os.path.join(homedir,".pyformex.bookmarks")
 history = os.path.join(homedir,".pyformex.history")
 
 [gui]
-width =  960         # default window width
-height = 720	     # default window height
+width =  800         # default window width
+height = 600	     # default window height
 localaxes = True     # by default, buttons rotate/pan in local axes
 camerabuttons = True # add camera buttons to toolbar
 examplesmenu = True  # add examples menu

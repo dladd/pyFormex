@@ -210,10 +210,9 @@ MenuData = [
         ("Action","&Continue","draw.fforward"), 
         ("Action","&Clear","draw.clear"),
         ("Action","&Redraw","draw.redraw"),
-        ("Action","&ListAll","draw.listall"),
-#        ("Action","&Print","printit"),
-#        ("Action","&Bbox","printbbox"),
-        ("Action","&Globals","draw.printglobals"),  ]),
+        ("Action","&DrawSelected","draw.drawSelected"),
+        ("Action","&ListFormices","draw.printall"),
+        ("Action","&PrintGlobals","draw.printglobals"),  ]),
     ("Popup","&Help",[
         ("Action","&Help","dohelp"),
         ("Action","&About","help.about"), 

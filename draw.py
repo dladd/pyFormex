@@ -33,8 +33,8 @@ def ask(question,choices=None,default=''):
     else:
         items = [ [question, default] ]
         res,accept = widgets.inputDialog(items,'Config Dialog').process()
-        #GD.gui.update()
-        print res
+        GD.gui.update()
+        #print res
         if accept:
             return res[0][1]
         else:
@@ -420,20 +420,33 @@ def wakeup(mode=0):
     wakeupMode = mode
 
 
-def listall():
-    """List all Formices in globals()"""
-    print "Formices currently in globals():"
+def drawNamed(name,*args):
+    g = globals()
+    if g.has_key(name):
+        F = g[name]
+        if isinstance(F,Formex):
+            draw(F,*args)
+
+def drawSelected(*args):
+    name = ask("Which Formex shall I draw ?")
+    drawNamed(name,*args)
+    
+
+def listAll():
+    """Return a list of all Formices in globals()"""
+    flist = []
     for n,t in globals().items():
         if isinstance(t,Formex):
-            print "%s, " % n
+            flist.append(n)
+    return flist
 
-def printit():
-    global out
-    print out
-def printbbox():
-    global out
-    if out:
-        print "bbox of displayed Formex",out.bbox()
+
+def printall():
+    """Print all Formices in globals()"""
+    print "Formices currently in globals():"
+    print listAll()
+
+
 def printglobals():
     print globals()
 

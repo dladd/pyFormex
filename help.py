@@ -4,7 +4,6 @@
 
 import globaldata as GD
 import helpviewer
-import gui
 import draw
 import qt
 import os
@@ -37,7 +36,7 @@ def help(page=None):
 
 
 def about():
-    gui.about(GD.Version+"""
+    draw.about(GD.Version+"""
 pyFormex is a python implementation of Formex algebra
 
 http://pyformex.berlios.de
@@ -50,4 +49,4 @@ For help or information, mailto benedict.verhegghe@ugent.be
 
 
 def testwarning():
-    gui.info("Smoking may be hazardous to your health!\nWindows is a virus!",["OK"])
+    draw.info("Smoking may be hazardous to your health!\nWindows is a virus!",["OK"])

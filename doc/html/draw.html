@@ -179,6 +179,8 @@ up&nbsp;to&nbsp;the&nbsp;next&nbsp;drawing&nbsp;instruction.<br>
 The&nbsp;user&nbsp;can&nbsp;disable&nbsp;the&nbsp;wait&nbsp;cycle&nbsp;for&nbsp;the&nbsp;next&nbsp;draw&nbsp;operation&nbsp;by<br>
 specifying&nbsp;wait=False.&nbsp;Setting&nbsp;drawtimeout=0&nbsp;will&nbsp;disable&nbsp;the&nbsp;waiting<br>
 mechanism&nbsp;for&nbsp;all&nbsp;subsequent&nbsp;draw&nbsp;statements&nbsp;(until&nbsp;set&nbsp;&gt;0&nbsp;again).</tt></dd></dl>
+ <dl><dt><a name="-drawNamed"><strong>drawNamed</strong></a>(name, *args)</dt></dl>
+ <dl><dt><a name="-drawSelected"><strong>drawSelected</strong></a>(*args)</dt></dl>
  <dl><dt><a name="-drawTriade"><strong>drawTriade</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-drawblock"><strong>drawblock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;indefinitely.</tt></dd></dl>
  <dl><dt><a name="-drawlock"><strong>drawlock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;for&nbsp;the&nbsp;next&nbsp;drawtimeout&nbsp;seconds.</tt></dd></dl>
@@ -242,7 +244,7 @@ the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbs
  <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.</tt></dd></dl>
  <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;indexes&nbsp;similar&nbsp;to&nbsp;argsort&nbsp;except&nbsp;the&nbsp;sorting&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;provided&nbsp;sorting&nbsp;keys.&nbsp;&nbsp;First&nbsp;the&nbsp;sort&nbsp;is&nbsp;done&nbsp;using&nbsp;key[0],&nbsp;then&nbsp;the&nbsp;resulting&nbsp;list&nbsp;of&nbsp;indexes&nbsp;is&nbsp;further&nbsp;manipulated&nbsp;by&nbsp;sorting&nbsp;on&nbsp;key[0].&nbsp;&nbsp;And&nbsp;so&nbsp;forth&nbsp;The&nbsp;result&nbsp;is&nbsp;a&nbsp;sort&nbsp;on&nbsp;multiple&nbsp;keys.&nbsp;&nbsp;If&nbsp;the&nbsp;keys&nbsp;represented&nbsp;columns&nbsp;of&nbsp;a&nbsp;spread-sheet,&nbsp;for&nbsp;example,&nbsp;this&nbsp;would&nbsp;sort&nbsp;using&nbsp;multiple&nbsp;columns.&nbsp;The&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;tuple&nbsp;of&nbsp;things&nbsp;that&nbsp;can&nbsp;be&nbsp;converted&nbsp;to&nbsp;&nbsp;arrays&nbsp;of&nbsp;the&nbsp;same&nbsp;shape.</tt></dd></dl>
  <dl><dt><a name="-linewidth"><strong>linewidth</strong></a>(wid)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;line&nbsp;drawings.</tt></dd></dl>
- <dl><dt><a name="-listall"><strong>listall</strong></a>()</dt><dd><tt>List&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
+ <dl><dt><a name="-listAll"><strong>listAll</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
  <dl><dt><a name="-loads"><strong>loads</strong></a>(...)</dt><dd><tt><a href="#-loads">loads</a>(string)&nbsp;--&nbsp;Load&nbsp;a&nbsp;pickle&nbsp;from&nbsp;the&nbsp;given&nbsp;string</tt></dd></dl>
  <dl><dt><a name="-log"><strong>log</strong></a>(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;cmdlog&nbsp;window.</tt></dd></dl>
  <dl><dt><a name="-matrixmultiply"><strong>matrixmultiply</strong></a> = dot(...)</dt><dd><tt><a href="#-dot">dot</a>(a,v)&nbsp;returns&nbsp;matrix-multiplication&nbsp;between&nbsp;a&nbsp;and&nbsp;b.&nbsp;&nbsp;<br>
@@ -256,9 +258,8 @@ second-to-last&nbsp;dimension&nbsp;of&nbsp;b.</tt></dd></dl>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
 same&nbsp;time.</tt></dd></dl>
- <dl><dt><a name="-printbbox"><strong>printbbox</strong></a>()</dt></dl>
+ <dl><dt><a name="-printall"><strong>printall</strong></a>()</dt><dd><tt>Print&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
  <dl><dt><a name="-printglobals"><strong>printglobals</strong></a>()</dt></dl>
- <dl><dt><a name="-printit"><strong>printit</strong></a>()</dt></dl>
  <dl><dt><a name="-rand"><strong>rand</strong></a>(...)</dt><dd><tt>Return&nbsp;an&nbsp;array&nbsp;of&nbsp;the&nbsp;given&nbsp;dimensions&nbsp;which&nbsp;is&nbsp;initialized&nbsp;to&nbsp;<br>
 random&nbsp;numbers&nbsp;from&nbsp;a&nbsp;uniform&nbsp;distribution&nbsp;in&nbsp;the&nbsp;range&nbsp;[0,1).<br>
 &nbsp;<br>
@@ -387,7 +388,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.concatenator object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab99af50&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab9a5140&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
