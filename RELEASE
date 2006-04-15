@@ -1,6 +1,6 @@
 # pyFormex version
 VERSION=0.3
-RELEASE=${VERSION}-alpha
+RELEASE=${VERSION}
 PYMODULES= actors camera canvas colors colorscale config decorations \
   draw flatkeydb formex globaldata gui help helpviewer lima mydict \
   pyfotemp script turtle units utils vector widgets \
