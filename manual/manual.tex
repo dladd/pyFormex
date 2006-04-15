@@ -16,19 +16,19 @@
 %\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
 \author{Tim Neels and Benedict Verhegghe}
-\release{0.3}
+\release{0.3-alpha}
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
 %\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
-
+ 
 
 \begin{document}
 \maketitle
 \chapter{Introduction}
 \label{cha:introduction}
 
-\section{What is \pyformex?}
+\section{What is \pyformex{}?}
 \label{sec:what-pyformex}
 You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
@@ -40,16 +40,17 @@ The initial intention of \pyformex{} (and probably still its main use) was the r
 The example of the stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} in the figure below illustrates this clearly. 
 
 \begin{figure}[h]
-  \centering
   \begin{makeimage}
   \end{makeimage}
+  \centering
+  %\htmlimage{scale=0.5}
   \begin{latexonly}
-    \includegraphics[width=12cm]{images/wirestent}
+  \includegraphics[width=12cm]{images/wirestent}
   \end{latexonly}
   \begin{htmlonly}
+    %\hyperimage{../../examples/wirestent.png}
     \htmladdimg{../images/wirestent.png}
-  \end{htmlonly}  
-  \caption{WireStent example.}
+  \end{htmlonly}  \caption{WireStent example.}
 \end{figure}
 
 
@@ -90,57 +91,48 @@ This could be part of the tutorial in chapter 2
 %%
 \section{Introduction}
 \label{sec:intro-tut}
-pyFormex is a Python implementation of Formex algebra. Using pyFormex, it is very easy to  generate large geometrical models of 3D structures by a sequence of mathematical transformations. It is especially suited for the automated design of spatial frame structures. But it can also be used for other tasks, like finite element preprocessing, or just for creating some nice pictures.
+\pyformex is a Python implementation of Formex algebra. Using \pyformex, it is very easy to  generate large geometrical models of 3D structures by a sequence of mathematical transformations. It is especially suited for the automated design of spatial frame structures. But it can also be used for other tasks, like finite element preprocessing, or just for creating some nice pictures.
 
-By writing a very simple script, a large geometry can be created by copying, translating, rotating,... Formices. PyFormex will interpret this script and draw what you have created. This is clearly very different than the traditional way of creating a model, like CAD. There are two huge advantages about using pyFormex
+By writing a very simple script, a large geometry can be created by copying, translating, rotating,... Formices. \pyformex will interpret this script and draw what you have created. This is clearly very different than the traditional way of creating a model, like CAD. There are two huge advantages about using \pyformex
 
 \begin{itemize}
 \item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar,... can be rather difficult to draw with CAD, but when using mathematical transformations, it becomes a piece of cake!
-\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let pyFormex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio f/l of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in fig \ref{scallops}: these domes where all created with the same script, but with other values of the parameters.
+\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio f/l of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in fig \ref{scallops}: these domes where all created with the same script, but with other values of the parameters.
 \end{itemize}
 
 \begin{figure}[tbp,h]
-  \centering
-  \begin{makeimage}
-  \end{makeimage}
-  \begin{latexonly}
-    \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[width=5cm]{images/scallopdome-000}}
-    \hfill
-    \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[width=5cm]{images/scallopdome-001}}
-    \hfill
-    \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[width=5cm]{images/scallopdome-002}}
-  \end{latexonly}
-  \begin{htmlonly}
-    \htmladdimg[WIDTH="300"]{../images/scallopdome-000.png}
-    \htmladdimg{../images/scallopdome-001.png}
-    \htmladdimg{../images/scallopdome-002.png}
-  \end{htmlonly}
-  \caption{Same script, different domes} \label{scallops}
+\centering
+  \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[height=3cm]{images/scallop}}
+  \hfill
+  \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[height=3cm]{images/scallop2}}
+  \hfill
+  \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[height=3cm]{images/scallop3}}
+  \caption{Same script, different domes}
+  \label{scallops}
 \end{figure}
 
-
-As mentioned, pyFormex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write pyFormex-scripts, the tutorial you're reading right now should be enough. 
+As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough. 
 
 
 %%
 \section{Getting started}
 \label{sec:getting-started}
-This section holds some basic information on how to use Python and pyFormex. 
+This section holds some basic information on how to use Python and \pyformex. 
 
 \begin{itemize}
-\item To open pyFormex, double click on the file 'pyformex' in the installation directory, or type 'pyformex' in the terminal. Using the terminal can be very useful, because errors that are created while running the script will appear in the terminal. This can provide you with useful information when something goes wrong with your script.
-\item To create a new pyFormex-script, just open a new file with your favorite text-editor and save it as 'myproject.py'.
+\item To open \pyformex, double click on the file \file{pyformex} in the installation directory, or type \emph{pyformex} in the terminal. Using the terminal can be very useful, because errors that are created while running the script will appear in the terminal. This can provide you with useful information when something goes wrong with your script.
+\item To create a new \pyformex-script, just open a new file with your favorite text-editor and save it as \file{myproject.py}.
 \item To edit a script, you can
 	\begin{itemize}
 	\item Open it with your favorite text-editor
-	\item Select 'open' from the 'file'-menu and browse to your script. At this point, the script will be loaded but nothing will 		happen. Now you can select 'edit' from the 'file'-menu, and the script will open in the default text-editor. This default editor 		can be changed in the file '.pyformexrc' in the installation directory.
+	\item Select 'open' from the 'file'-menu and browse to your script. At this point, the script will be loaded but nothing will 		happen. Now you can select 'edit' from the 'file'-menu, and the script will open in the default text-editor. This default editor 		can be changed in the file \file{.pyformexrc} in the installation directory.
 	This way of editing your script makes it possible to immediately draw changes you applied in the script (without reopening 		the file).  Just select 'play' from the 'file'-menu.
 	\end{itemize}
-\item To play a script, 
+\item To play a script, you can
 	\begin{itemize}
 	\item Select 'open' from the 'file'-menu and browse to your script. Then select 'play' from the 'file'-menu.
-	\item Type 'pyformex myproject.py' in the terminal. This will open pyformex and play your script at the same time.
-	\item To play a script without using the GUI (for example in finite element preprocessing, if you only want to write an 		output file, without drawing the structure), type 'pyformex --nogui myproject.py'
+	\item Type \emph{pyformex myproject.py} in the terminal. This will open \pyformex and play your script at the same time.
+	\item To play a script without using the GUI (for example in finite element preprocessing, if you only want to write an 		output file, without drawing the structure), type \emph{pyformex --nogui myproject.py}
 	\end{itemize}
 \item When writing a script in Python, there are some things you should keep in mind:
 	\begin{itemize}
@@ -149,26 +141,28 @@ Simply put: you can either set the arguments in the right order and only give th
 If this isn't entirely clear yet, just look at the examples later in this tutorial or check the Python tutorial.
 	\item Indentation is essential in Python. Indentation is Python's way of grouping statements. In straight-forward scripts, indentation is not needed (and forbidden!), but when you use an if-statement for example, the body of the statement has to be indented. A small example might make this clear. Also notice the ':' 
 \begin{verbatim}
-print 'properties'
-for key, item in properties.iteritems():
-	print key, item
+	print 'properties'
+	for key, item in properties.iteritems():
+	    print key, item
 \end{verbatim}
-%moet inspringen!!!!!
-	\item If you want to use functions from a seperate module (like 'properties'), you add a line on top of the script
+	\item If you want to use functions from a seperate module (like \module{properties}), you add a line on top of the script
 \begin{verbatim}
-from properties import *
+	from properties import *
 \end{verbatim}
 All functions from that module are now available.
 	\item The hash character, "\#", is used to start a comment in Python.
+	\item Python is case sensative.
 	\end{itemize}
 \end{itemize}
 
 
 %%
 \section{Geometric model}
+\label{sec:geom}
 
 
 \subsection{Creating a Formex}
+\label{subsec:create}
 
 \subsubsection{What is a Formex}
 A Formex is a numarray of order 3 (axes 0,1,2) and type Float.
@@ -223,12 +217,12 @@ On the other hand, if you would change the position of the square brackets like 
 
 If we want to define a Formex, similar to the square plane, but consisting of the 4 edges instead of the actual plane, we have to define four elements and combine them in a Formex.
 \begin{verbatim}
-F=Formex([[[0,0],[0,1]], [[0,1],[1,1]], [[1,1],[1,0]], [[1,0],[0,0]]])
+	F=Formex([[[0,0],[0,1]], [[0,1],[1,1]], [[1,1],[1,0]], [[1,0],[0,0]]])
 \end{verbatim}
 
 The previous examples were limited to a 2-D environment for simplicity. Of course, we could add a third dimension. For instance, it's no problem defining a pyramid consisting of 8 elements ('bars').
 \begin{verbatim}
-	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], 		[[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
 \end{verbatim}
 %fig
 However, as you can see, even in this very small example the number of nodes, elements and coordinates you have to declare becomes rather large. Defining large Formices using this method would not be practical. This problem is easily overcome by copying, translating, rotating,... a smaller Formex - as will be explained in the rest of this chapter - or by using patterns.
@@ -237,6 +231,7 @@ However, as you can see, even in this very small example the number of nodes, el
 
 The second way of creating a new Formex, is by defining patterns. In this case, a line segment pattern is created from a string.
 
+%remove this part?
     This function creates a list of line segments where all nodes lie on the
     grid points of a regular grid with unit step.
     The first point of the list is [0,0]. Each character from the given
@@ -247,54 +242,147 @@ The second way of creating a new Formex, is by defining patterns. In this case, 
     / = go to the next point without connecting.
     The resulting list is directly suited to initialize a Formex in the
     (x,y)-plane.
+%until here
 
-This method has important restrictions, since it can only created lines, in a 2-D environment, on a regular grid. However, it can be a much easier and shorter way to define a simple Formex. This is illustrated by the difference in length between code 3 and code ref 4, although they define the same Formex.%ref aanpassen
+This method has important restrictions, since it can only created lines, in a 3-D environment, on a regular grid. However, it can be a much easier and shorter way to define a simple Formex. This is illustrated by the difference in length between code 3 and code ref 4, although they define the same Formex.%ref aanpassen
 \begin{verbatim}
 	F=Formex(pattern('1234'))
 \end{verbatim}
 
+Some simple patterns are defined in \module{simple.py} and are ready for use. These patterns are stacked in a dictionary called 'Patterns'. Items of this dictionary can be accessed like \code{Patterns['cube']}.
+\begin{verbatim}
+	from simple import *
+	c=Formex(pattern(Pattern['cube']))
+	draw(c)
+\end{verbatim}
+
 \subsubsection{Creating a Formex using coordinates from a file}
-In some cases, you might want to read coordinates from a file an combine them into a Formex. This is possible with the file2formex-module and it's function 'fileFormex'. Each point is connected to the following, forming an element (bar).
+In some cases, you might want to read coordinates from a file an combine them into a Formex. This is possible with the module \module{file2formex} and it's function \function{fileFormex()}. Each point is connected to the following, forming an element (bar).
 The next file ('square.txt') would create the same Formex as the previous example. %ref?
 \begin{verbatim}
-0,0,0
-0,1,0
-1,1,0
-1,0,0
+	0,0,0
+	0,1,0
+	1,1,0
+	1,0,0
 \end{verbatim}
 \begin{verbatim}
-from file2formex import *
-F=fileFormex('square.text', closed='yes')
+	from file2formex import *
+	F=fileFormex('square.text', closed='yes')
 \end{verbatim}
 
-
-\subsection{drawing a Formex}
-
-Of course, you'd want to see what you have created. This is accomplished by the 'draw'-function. In code ... the pyramid we created in code ... is drawn.
+\subsection{Adding property numbers}
+\label{subsec:propnr}
+Each Formex element can have a property number. Each property number is represented by another color when the Formex is drawn. This is the first reason why you could use property numbers: to make your drawing more transparent or just more beautiful. However, these numbers can also be used as an entry in a dictionary of properties - thus linking the element with a property. This property can be about anything, but in finite element processing this would be the element section, material, loads,... The use of properties in this way will be futher explained in \ref{sec:props}.
+Property numbers can be specified at creation time, and they can be set, modified or deleted at any time.  
 \begin{verbatim}
-	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
-draw(F)
+>>> F=Formex(pattern('1234'),[5])
+>>> print F.prop()
+>>> G=Formex(pattern('1234'),[6,8,2,4])
+>>> print G.prop()
+>>> F.setProp([6,7])
+>>> print F.prop()
+>>> G.setProp([6,7,8,9])
+>>> print G.prop()
+
+[5 5 5 5]
+[6 8 2 4]
+[6 7 6 7]
+[6 7 8 9]
+\end{verbatim}
+
+\subsection{Drawing a Formex}
+\label{subsec:drawing}
+Of course, you'd want to see what you have created. This is accomplished by the \function{draw()} function. 
+\begin{verbatim}
+	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], 		[[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+	draw(F)
+\end{verbatim}
+
+It also possible to draw multiple Formices at the same time.
+\begin{verbatim}
+	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], 		[[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])	
+	G=Formex(pattern('1234'))
+	draw(F+G)
 \end{verbatim}
  
 It might be important to realize that even if you don't draw a particular Formex, that doesn't mean you didn't create it!
 
-Now, when you are creating a large geometry, you might be interested in seeing the different steps in the creation. This can be accomplished by using the functions 'clear' and 'sleep'...........
+Now, when you are creating a large geometry, you might be interested in seeing the different steps in the creation. To remove all previously drawn Formices, you can use \function{clear()}  what sweepes the screen clean. If you want to see a certain step in the creation longer than the default time, use \function{sleep(t)}, with 't' the delay (in seconds) before executing the next command.
+\begin{verbatim}
+	F=Formex(pattern('164'))
+	draw(F)
+	G=F.replic(5,1,0)
+	clear()
+	draw(G)
+\end{verbatim}
+
 
 \subsection{Information about a Formex}
+\label{subsec:info}
+There are a number of functions available that return information about a Formex. Especially when using \pyformex as finit element preprocessor, the most useful functions are:
+%tabel?
+\begin{table}[h]
+	\begin{tabular}{*{5}{rl}}
+F.nelems()				& Return the number of elements in the formex\\
+F.nnodes() 			& Return the number of nodes in the formex.\\
+F.prop() 				& Return the properties as a numpy array.\\
+F.bbox()				& Return the bounding box of the Formex.\\
+F.center()				& Return the center of the Formex.\\
+F.nodesAndElements() 	& Return a tuple of nodal coordinates and element connectivity.\\
+	\end {tabular}
+\end{table}
 
-\subsection{Changing the Formex}\label{changing F}
+\function{nodesAndElements} is very important in finite element processing. It returns all nodes and all elements of the Formex in a format useful for FE processing. A tuple of two arrays is returned. The first is float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element.
+\begin{verbatim}
+>>> from simple import *
 
-\subsection{Create copies, concatenations,subtractions}\label{copy F}
+>>> c = Formex(pattern(Pattern['cube']))
+>>> draw(c)
+>>> nodes,elems = c.nodesAndElements()
+>>> print 'Nodes'
+>>> print nodes
+>>> print 'Elements'
+>>> print elems
 
-\subsection{Affine transformations}
+Nodes
+[[ 0.  0. -1.]
+ [ 1.  0. -1.]
+ [ 0.  1. -1.]
+ [ 1.  1. -1.]
+ [ 0.  0.  0.]
+ [ 1.  0.  0.]
+ [ 0.  1.  0.]
+ [ 1.  1.  0.]]
+Elements
+[[4 5]
+ [5 7]
+ [7 6]
+ [6 4]
+ [4 0]
+ [5 1]
+ [7 3]
+ [6 2]
+ [0 1]
+ [1 3]
+ [3 2]
+ [2 0]]
+\end{verbatim}
 
-\subsection{Non-affine transformations}
+\subsection{Changing the Formex}
+\label{subsec:changing}
 
-\subsection{Transformations that change the topology}
+%\subsection{Create copies, concatenations,subtractions}\label{copy F}
+
+%\subsection{Affine transformations}
+
+%\subsection{Non-affine transformations}
+
+%\subsection{Transformations that change the topology}
 
 
 %
 \section{Adding properties}
+\label{sec:props}
 
 
 %
@@ -306,7 +394,7 @@ Now, when you are creating a large geometry, you might be interested in seeing t
 
 Some of these tips are already mentioned in the previous sections, but......
 \begin{itemize}
-\item Starting pyFormex using the terminal can be very useful. Errors that are created while running the script will appear in the terminal, you can use the 'print'-function to check a result,... This can be a very useful when controlling your script
+\item Starting \pyformex using the terminal can be very useful. Errors that are created while running the script will appear in the terminal, you can use the 'print'-function to check a result,... This can be a very useful when controlling your script
 \item nog wat hints 
 \end{itemize}
 
@@ -315,7 +403,7 @@ Some of these tips are already mentioned in the previous sections, but......
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{pyFormex --- reference manual}
+\chapter{\pyformex --- reference manual}
 {\label{cha:reference}
 
 \section{formex --- the base module}
