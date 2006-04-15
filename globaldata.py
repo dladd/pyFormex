@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 """Global data for pyFormex."""
-Version = "pyFormex 0.3-alpha"
+Version = "pyFormex 0.3"
 
 import config
 
