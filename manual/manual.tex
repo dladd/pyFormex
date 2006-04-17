@@ -16,40 +16,40 @@
 %\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
 \author{Tim Neels and Benedict Verhegghe}
-\release{0.3}
+\release{0.3-alpha}
 \setshortversion{0.3}
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
-%\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
-
+ 
 
 \begin{document}
 \maketitle
 \chapter{Introduction}
 \label{cha:introduction}
 
-\section{What is \pyformex?}
+\section{What is \pyformex{}?}
 \label{sec:what-pyformex}
 You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
-The short answer is that \pyformex is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
+The short answer is that \pyformex{} is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
 If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. You will then probably have a better idea of what \pyformex{} is. 
 
-The initial intention of \pyformex (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its sub parts and assemblage thereof.
+The initial intention of \pyformex{} (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its sub parts and assemblage thereof.
 
 The example of the stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} in the figure below illustrates this clearly. 
 
 \begin{figure}[h]
-  \centering
   \begin{makeimage}
   \end{makeimage}
+  \centering
+  %\htmlimage{scale=0.5}
   \begin{latexonly}
-    \includegraphics[width=12cm]{images/wirestent}
+  \includegraphics[width=12cm]{images/wirestent}
   \end{latexonly}
   \begin{htmlonly}
+    %\hyperimage{../../examples/wirestent.png}
     \htmladdimg{../images/wirestent.png}
-  \end{htmlonly}  
-  \caption{WireStent example.}
+  \end{htmlonly}  \caption{WireStent example.}
 \end{figure}
 
 
@@ -70,10 +70,10 @@ In the current version () the GUI mainly serves the following purposes:
 \end{itemize}
 
 The GUI does not (yet) provide a means to interactively design a structure, select parts of a structure or set/show information about (parts of) the structure. Designing a structure is done by writing a small script with the mathematical expressions needed to generate it. Any text editor will be suitable for this purpose. The author uses XEmacs, but this is just a personal preference. 
-A Python aware editor is preferable though, because that is the language used in \pyformex scripts.
+A Python aware editor is preferable though, because that is the language used in pyFormex scripts.
 A \pyformex editor integrated into the GUI remains on our TODO list, but it certainly has not our top priority, because general purpose editors are adequate for most of our purposes. 
 
-The best way to learn to use \pyformex is by studying and changing some of the examples. I suggest that you first take a look at the examples included in the \pyformex GUI and select those that display structures that look interesting to you. Then you can study the source code of those examples and see how the structures got built. 
+The best way to learn to use pyFormex is by studying and changing some of the examples. I suggest that you first take a look at the examples included in the pyFormex GUI and select those that display structures that look interesting to you. Then you can study the source code of those examples and see how the structures got built. 
 When starting up, \pyformex reads through the Examples directory (this is normally the 'examples' subdirecty located under the pyformex installation dir).  
 \menuselection{Examples \sub WireStent}
 
@@ -83,7 +83,7 @@ When starting up, \pyformex reads through the Examples directory (this is normal
 This could be part of the tutorial in chapter 2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{\pyformex --- a tutorial}
+\chapter{pyFormex --- a tutorial}
 {\label{cha:tutorial}
 
 
@@ -100,23 +100,14 @@ By writing a very simple script, a large geometry can be created by copying, tra
 \end{itemize}
 
 \begin{figure}[tbp,h]
-  \centering
-  \begin{makeimage}
-  \end{makeimage}
-  \begin{latexonly}
-    \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[width=5cm]{images/scallopdome-000}}
-    \hfill
-    \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[width=5cm]{images/scallopdome-001}}
-    \hfill
-    \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[width=5cm]{images/scallopdome-002}}
-  \end{latexonly}
-  \begin{htmlonly}
-%    \htmladdimg[WIDTH="300"]{../images/scallopdome-000.png}
-    \htmladdimg{../images/scallopdome-000.png}
-    \htmladdimg{../images/scallopdome-001.png}
-    \htmladdimg{../images/scallopdome-002.png}
-  \end{htmlonly}
-  \caption{Same script, different domes} \label{scallops}
+\centering
+  \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[height=3cm]{images/scallop}}
+  \hfill
+  \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[height=3cm]{images/scallop2}}
+  \hfill
+  \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[height=3cm]{images/scallop3}}
+  \caption{Same script, different domes}
+  \label{scallops}
 \end{figure}
 
 As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough. 
@@ -128,17 +119,22 @@ As mentioned, \pyformex is based on the programming language Python \footnote{\u
 This section holds some basic information on how to use Python and \pyformex. 
 
 \begin{itemize}
+\item Each script should begin with \code{\#!/usr/bin/env pyformex}
 \item To open \pyformex, double click on the file \file{pyformex} in the installation directory, or type \emph{pyformex} in the terminal. Using the terminal can be very useful, because errors that are created while running the script will appear in the terminal. This can provide you with useful information when something goes wrong with your script.
 \item To create a new \pyformex-script, just open a new file with your favorite text-editor and save it as \file{myproject.py}.
 \item To edit a script, you can
 	\begin{itemize}
 	\item Open it with your favorite text-editor
-	\item Select 'open' from the 'file'-menu and browse to your script. At this point, the script will be loaded but nothing will 		happen. Now you can select 'edit' from the 'file'-menu, and the script will open in the default text-editor. This default editor 		can be changed in the file \file{.pyformexrc} in the installation directory.
-	This way of editing your script makes it possible to immediately draw changes you applied in the script (without reopening 		the file).  Just select 'play' from the 'file'-menu.
+	\item \menuselection{File \sub Open}
+	At this point, the script will be loaded but nothing will happen. 
+	\menuselection{File \sub Edit}
+	The script will now open in the default text-editor. This default editor can be changed in the \file{.pyformexrc} file in the 		installation directory.
+	This way of editing your script makes it possible to immediately draw changes you applied in the script (without reopening 		the file).  \menuselection{File \sub Play}
 	\end{itemize}
 \item To play a script, you can
 	\begin{itemize}
-	\item Select 'open' from the 'file'-menu and browse to your script. Then select 'play' from the 'file'-menu.
+	\item \menuselection{File \sub Open}\\
+		\menuselection{File \sub Play} 
 	\item Type \emph{pyformex myproject.py} in the terminal. This will open \pyformex and play your script at the same time.
 	\item To play a script without using the GUI (for example in finite element preprocessing, if you only want to write an 		output file, without drawing the structure), type \emph{pyformex --nogui myproject.py}
 	\end{itemize}
@@ -259,6 +255,7 @@ This method has important restrictions, since it can only created lines, in a 3-
 
 Some simple patterns are defined in \module{simple.py} and are ready for use. These patterns are stacked in a dictionary called 'Patterns'. Items of this dictionary can be accessed like \code{Patterns['cube']}.
 \begin{verbatim}
+	#!/usr/bin/env pyformex
 	from simple import *
 	c=Formex(pattern(Pattern['cube']))
 	draw(c)
@@ -274,6 +271,7 @@ The next file ('square.txt') would create the same Formex as the previous exampl
 	1,0,0
 \end{verbatim}
 \begin{verbatim}
+	#!/usr/bin/env pyformex
 	from file2formex import *
 	F=fileFormex('square.text', closed='yes')
 \end{verbatim}
@@ -283,6 +281,7 @@ The next file ('square.txt') would create the same Formex as the previous exampl
 Each Formex element can have a property number. Each property number is represented by another color when the Formex is drawn. This is the first reason why you could use property numbers: to make your drawing more transparent or just more beautiful. However, these numbers can also be used as an entry in a dictionary of properties - thus linking the element with a property. This property can be about anything, but in finite element processing this would be the element section, material, loads,... The use of properties in this way will be futher explained in \ref{sec:props}.
 Property numbers can be specified at creation time, and they can be set, modified or deleted at any time.  
 \begin{verbatim}
+>>> #!/usr/bin/env pyformex
 >>> F=Formex(pattern('1234'),[5])
 >>> print F.prop()
 >>> G=Formex(pattern('1234'),[6,8,2,4])
@@ -342,6 +341,7 @@ F.nodesAndElements() 	& Return a tuple of nodal coordinates and element connecti
 
 \function{nodesAndElements} is very important in finite element processing. It returns all nodes and all elements of the Formex in a format useful for FE processing. A tuple of two arrays is returned. The first is float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element.
 \begin{verbatim}
+>>> #!/usr/bin/env pyformex
 >>> from simple import *
 
 >>> c = Formex(pattern(Pattern['cube']))
@@ -378,6 +378,23 @@ Elements
 
 \subsection{Changing the Formex}
 \label{subsec:changing}
+Untill now, we've only created simple Formices. The strength of \pyformex however is that it is very easy to generate large geometrical models by a sequence of mathematical transformations. After initiating a basic Formex, it's possible to transform it by using copies, translations, rotations, projections,...
+
+There are many transformations available, but this is not the right place to describe them all. This is what the reference manual in chapter \ref{cha:reference} is for. A summary of all possible transformations and functions can be found there.
+
+To illustrate some of these transformations and the recommended way of writing a script, we will analyse some of the examples. More of these interesting examples are found in \file{installdir/examples}. Let's begin with the example \file{Spiral.py}. 
+
+\verbatiminput{scripts/Spiral.py}
+
+During this first read-trough, you will have noticed that every step is drawn. Of course, this is not necessary but can be useful. And above all, it is very educational for use in a tutorial...
+
+The next important thing is that parameters were used. It's recommended to always do this, especially when you want to do a parametric study of course, but it can also come in very handy if at some point you want to change the geometry (for example when you want to re-use the script for another application).
+
+A simple function \function{drawit()} is defined for use in this script only. This function only provides a shorter way of drawing Formices, since it combines \function{clear()} and \function{draw}. 
+
+Now, let's disect the script.%ontleden
+\verbatiminput{scripts/SpiralDeclared.py} 
+ 
 
 %\subsection{Create copies, concatenations,subtractions}\label{copy F}
 
