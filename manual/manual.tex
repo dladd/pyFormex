@@ -133,11 +133,12 @@ This section holds some basic information on how to use Python and \pyformex.
 \item To edit a script, you can
 	\begin{itemize}
 	\item Open it with your favorite text-editor
-	\item \menuselection{File \sub Open}
-	At this point, the script will be loaded but nothing will happen. 
-	\menuselection{File \sub Edit}
-	The script will now open in the default text-editor. This default editor can be changed in the \file{.pyformexrc} file in the 		installation directory.
-	This way of editing your script makes it possible to immediately draw changes you applied in the script (without reopening 		the file).  \menuselection{File \sub Play}
+	\item \menuselection{File \sub Open}\\
+	At this point, the script will be loaded but nothing will happen. \\
+	\menuselection{File \sub Edit}\\
+	The script will now open in the default text-editor. This default editor can be changed in the \file{.pyformexrc} file in 		the installation directory.
+	This way of editing your script makes it possible to immediately draw changes you applied in the script (without 		 reopening the file).  \\
+	\menuselection{File \sub Play}
 	\end{itemize}
 \item To play a script, you can
 	\begin{itemize}
@@ -234,7 +235,9 @@ If we want to define a Formex, similar to the square plane, but consisting of th
 
 The previous examples were limited to a 2-D environment for simplicity. Of course, we could add a third dimension. For instance, it's no problem defining a pyramid consisting of 8 elements ('bars').
 \begin{verbatim}
-	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], 		[[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0], 
+		[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
+		[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
 \end{verbatim}
 %fig
 However, as you can see, even in this very small example the number of nodes, elements and coordinates you have to declare becomes rather large. Defining large Formices using this method would not be practical. This problem is easily overcome by copying, translating, rotating,... a smaller Formex - as will be explained in the rest of this chapter - or by using patterns.
@@ -309,13 +312,17 @@ Property numbers can be specified at creation time, and they can be set, modifie
 \label{subsec:drawing}
 Of course, you'd want to see what you have created. This is accomplished by the \function{draw()} function. 
 \begin{verbatim}
-	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], 		[[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0], 
+		[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
+		[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
 	draw(F)
 \end{verbatim}
 
 It also possible to draw multiple Formices at the same time.
 \begin{verbatim}
-	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], 		[[1,0,0],[0.5,0.5,1]], [[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])	
+	F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],
+		[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
+		[[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])	
 	G=Formex(pattern('1234'))
 	draw(F+G)
 \end{verbatim}
@@ -335,17 +342,20 @@ Now, when you are creating a large geometry, you might be interested in seeing t
 \subsection{Information about a Formex}
 \label{subsec:info}
 There are a number of functions available that return information about a Formex. Especially when using \pyformex as finit element preprocessor, the most useful functions are:
-%tabel?
-\begin{table}[h]
-	\begin{tabular}{*{5}{rl}}
-F.nelems()				& Return the number of elements in the formex\\
-F.nnodes() 			& Return the number of nodes in the formex.\\
-F.prop() 				& Return the properties as a numpy array.\\
-F.bbox()				& Return the bounding box of the Formex.\\
-F.center()				& Return the center of the Formex.\\
-F.nodesAndElements() 	& Return a tuple of nodal coordinates and element connectivity.\\
-	\end {tabular}
-\end{table}
+\begin{tableii}{l|l}{exception}{Function}{Description}
+	\lineii{F.nelems()			}
+		{Return the number of elements in the formex.}
+	\lineii{F.nnodes() 			}
+		{Return the number of nodes in the formex.}
+	\lineii{F.prop() 				}
+		{Return the properties as a numpy array.}
+	\lineii{F.bbox()				}
+		{Return the bounding box of the Formex.}
+	\lineii{F.center()			}
+		{Return the center of the Formex.}
+	\lineii{F.nodesAndElements()	}
+		{Return a tuple of nodal coordinates and element connectivity.}
+\end{tableii}
 
 \function{nodesAndElements} is very important in finite element processing. It returns all nodes and all elements of the Formex in a format useful for FE processing. A tuple of two arrays is returned. The first is float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element.
 \begin{verbatim}
@@ -394,53 +404,14 @@ To illustrate some of these transformations and the recommended way of writing a
 
 \verbatiminput{scripts/Spiral.py}
 
-During this first read-trough, you will have noticed that every step is drawn. Of course, this is not necessary but can be useful. And above all, it is very educational for use in a tutorial...
+During this first read-through, you will have noticed that every step is drawn. Of course, this is not necessary but can be useful. And above all, it is very educational for use in a tutorial...
 
-The next important thing is that parameters were used. It's recommended to always do this, especially when you want to do a parametric study of course, but it can also come in very handy if at some point you want to change the geometry (for example when you want to re-use the script for another application).
+The next important thing is that parameters were used. It's recommended to always do this, especially when you want to do a parametric study of course, but it can also be very convenient if at some point you want to change the geometry (for example when you want to re-use the script for another application).
 
 A simple function \function{drawit()} is defined for use in this script only. This function only provides a shorter way of drawing Formices, since it combines \function{clear()} and \function{draw}. 
 
-Now, let's disect the script.%ontleden
-\verbatim{
-#!/usr/bin/env pyformex
-"""Spiral"""
-
-#This is a small function that is only defined in this script. It clears the screens and draws the Formex at the same time. 
-def drawit(F,view='front'):
-    clear()
-    draw(F,view)
-
-#These are the parameters. They can easily be changed, and a whole new spiral will be created without any extra effort.
-m = 36 # number of cells along torus big circle
-n = 10 # number of cells along torus small circle
-
-#The first step is to create a basic Formex. In this case, it's a triangle which has a different property number for every edge.    
-F = Formex(pattern("164"),[1,2,3]); drawit(F)
-
-#This basic Formex is copied 'm' times in the 0-direction with a translation step of '1' (the length of an edge of the triangle). After that, the new Formex is copied 'n' times in the 1-direction with a translation step of '1'. Because of the recursive definition (F=F.replic), the original Formex F is overwritten by the transformed one.
-F = F.replic(m,1,0); drawit(F)
-F = F.replic(n,1,1); drawit(F)
-
-#Now a copy of this last Formex is translated in direction '2' with a translation step of '1'. This necessary for the transformation into a cilinder.
-#The result of all previous steps is a rectangular pattern with the desired dimensions, in a plane z=1.
-F = F.translate1(2,1); drawit(F,'iso')
-
-#This pattern is rolled up into a cilinder around the 2-axis. 
-F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
-
-#This cilinder is copied 5 times in the 2-direction with a translation step of 'm' (the lenght of the cilinder). 
-F = F.replic(5,m,2); drawit(F,'iso')
-
-#The next step is to rotate this cilinder -10 degrees around the 0-axis. This will determine the pitch angle of the spiral.
-F = F.rotate(-10,0); drawit(F,'iso')
-
-#A copy of this last formex is now translated in direction '0' with a translation step of '5'. 
-F = F.translate1(0,5); drawit(F,'iso')
-
-#Finally, the Formex is rolled up, but around a different axis then before. Due to the pitch angle, a spiral is created. If the pitch angle would be 0 (no rotation of -10 degrees around the 0-axis), the resulting Formex would be a torus. 
-F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
-drawit(F,'right')
-}%\verbatiminput{scripts/SpiralDeclared.py} 
+Now, let's dissect the script.
+\verbatiminput{scripts/SpiralDeclared.py} 
  
 
 %\subsection{Create copies, concatenations,subtractions}\label{copy F}
