@@ -92,7 +92,7 @@ def pattern(s):
     Adding 16 to the ordinal of the character causes an extra move of +1 in
     the z-direction. Adding 48 causes an extra move of -1. This means that
     'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
-    z +/-= 1. THe gives the following schema:
+    z +/-= 1. This gives the following schema:
 
                  z+=1             z unchanged            z -= 1
             

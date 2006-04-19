@@ -13,6 +13,7 @@
 \usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{subfigure}
+\usepackage{verbatim}
 %\usepackage[pdftex]{graphicx}
 \title{pyFormex manual}
 \author{Tim Neels and Benedict Verhegghe}
@@ -219,16 +220,41 @@ The first and most useful way to create a Formex is by specifying it's nodes and
 \begin{verbatim}
 	F=Formex([[[0,0],[1,0],[1,1],[0,1]]])
 \end{verbatim}
-%fig?
+
+\begin{figure}[h]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \includegraphics[width=6cm]{images/square}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg{../images/square.png}
+  \end{htmlonly}  
+  \caption{A very simple Formex}
+  \label{fig:square}
+\end{figure}
 
 This would create a Formex F, which has the nodes (0,0), (0,1), (1,1) and (0,1). These nodes are all part of a single element, thus creating a square plane. This element is also the entire Formex.
 On the other hand, if you would change the position of the square brackets like in the following example, then you'd create a Formex F which is different from the previous. The nodes are the same, but the connection is different. The nodes (0,0) and (1,0) are linked together by an element, and so are the nodes (1,1) and (0,1). The Formex is now a set of 2 parallel bars, instead of a single square plane. 
 \begin{verbatim}
 	F=Formex([[[0,0],[1,0]],[[1,1],[0,1]]])
 \end{verbatim}
-%fig?
 
-If we want to define a Formex, similar to the square plane, but consisting of the 4 edges instead of the actual plane, we have to define four elements and combine them in a Formex.
+\begin{figure}[h]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \includegraphics[width=6cm]{images/parallel}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg{../images/parallel.png}
+  \end{htmlonly}  
+  \caption{Same nodes, different Formex}
+\end{figure}
+
+If we want to define a Formex, similar to the square plane, but consisting of the 4 edges instead of the actual plane, we have to define four elements and combine them in a Formex. This is \emph{not} the same Formex as fig \ref{fig:square}, although it looks exactly the same.
 \begin{verbatim}
 	F=Formex([[[0,0],[0,1]], [[0,1],[1,1]], [[1,1],[1,0]], [[1,0],[0,0]]])
 \end{verbatim}
@@ -239,25 +265,44 @@ The previous examples were limited to a 2-D environment for simplicity. Of cours
 		[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
 		[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
 \end{verbatim}
-%fig
+
+\begin{figure}[h]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \includegraphics[width=6cm]{images/pyramid}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg{../images/pyramid.png}
+  \end{htmlonly}  
+  \caption{Pyramid}
+  \label{pyramid}
+\end{figure}
+
 However, as you can see, even in this very small example the number of nodes, elements and coordinates you have to declare becomes rather large. Defining large Formices using this method would not be practical. This problem is easily overcome by copying, translating, rotating,... a smaller Formex - as will be explained in the rest of this chapter - or by using patterns.
  
 \subsubsection{Creating a Formex using patterns}
 
 The second way of creating a new Formex, is by defining patterns. In this case, a line segment pattern is created from a string.
 
-%remove this part?
-    This function creates a list of line segments where all nodes lie on the
-    grid points of a regular grid with unit step.
-    The first point of the list is [0,0]. Each character from the given
-    string is interpreted as a code specifying how to move to the next node.
-    Currently defined are the following codes:
-    0 = go to origin [0,0]
-    1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE
-    / = go to the next point without connecting.
-    The resulting list is directly suited to initialize a Formex in the
-    (x,y)-plane.
-%until here
+This function creates a list of line segments where all nodes lie on the
+gridpoints of a regular grid with unit step.
+The first point of the list is [0,0,0]. Each character from the given
+string is interpreted as a code specifying how to move to the next node.
+Currently defined are the following codes:
+    0 = goto origin [0,0,0]\\
+    1..8 move in the x,y plane\\
+    9 remains at the same place\\
+    When looking at the plane with the x-axis to the right,
+    1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW, 8 = SE.
+    Adding 16 to the ordinal of the character causes an extra move of +1 in
+    the z-direction. Adding 48 causes an extra move of -1. This means that
+    'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
+    z +/-= 1.              
+    The special character '\' can be put before any character to make the
+    move without making a connection.
+    The effect of any other character is undefined.
 
 This method has important restrictions, since it can only created lines, in a 3-D environment, on a regular grid. However, it can be a much easier and shorter way to define a simple Formex. This is illustrated by the difference in length between code 3 and code ref 4, although they define the same Formex.%ref aanpassen
 \begin{verbatim}
