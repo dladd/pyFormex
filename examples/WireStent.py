@@ -75,22 +75,35 @@ class DoubleHelixStent:
         # Create the full pattern by replication
         dx = 4.
         dy = 4.
-        F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
+        self.F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
         # fold it into a cylinder
-        self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
+        self.G = self.F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
         self.ny = ny
 
     def all(self):
         """Return the Formex with all bar elements."""
-        return self.F
+        return self.G
 
 
 if __name__ == "draw":
 
-
     # show an example
+    drawtimeout = 999
     L = 80.
-    H = DoubleHelixStent(10.,L,0.2,12,30.,ds=-0.2).all()
+    S = DoubleHelixStent(10.,L,0.2,12,30.,ds=-0.2)
+    C = S.cell1
+    D = C+S.cell2
+    F = S.F
+    G = S.G
+    clear()
+    draw (C)
+    clear()
+    draw (D)
+    clear()
+    draw (F)
+    exit()
+    H = S.all()
+    print formatInfo(H)
     clear()
     draw(H,view='iso')
     # and save it in a lot of graphics formats

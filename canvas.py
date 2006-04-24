@@ -31,7 +31,6 @@ try:
 except ImportError:
     _has_gl2ps = False
 
-_start_message = GD.Version + ', by B. Verhegghe'
 
 ##################################################################
 #
@@ -62,8 +61,6 @@ class Canvas(qtgl.QGLWidget):
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # set GL context before creating the camera
         self.camera = camera.Camera()
-        text1=TextActor(_start_message,w/2,h/2,font='tr24',adjust='center',color=red)
-        self.addDecoration(text1)
         
     # These three are defined by the qtgl API
     def initializeGL(self):
@@ -81,15 +78,6 @@ class Canvas(qtgl.QGLWidget):
     # our own name for the canvas update function
     def update(self):
         self.updateGL()
-
-# Do we use/need these??
-##    def setColor(self,s):
-##        """Set the OpenGL color to the named color"""
-##        self.qglColor(qt.QColor(s))
-
-##    def clearGLColor(self,s):
-##        """Clear the OpenGL widget with the named background color"""
-##        self.qglClearColor(qt.QColor(s))
 
     def glinit(self,mode=None):
         if mode:
@@ -132,7 +120,11 @@ class Canvas(qtgl.QGLWidget):
 
     def setLinewidth(self,lw):
         """Set the linewidth for line rendering."""
-        GL.glLineWidth (lw)
+        GL.glLineWidth(lw)
+
+    def setBgColor(self,bg):
+        """Set the background color."""
+        self.bgcolor = GLColor(bg)
 
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
@@ -482,7 +474,7 @@ class Canvas(qtgl.QGLWidget):
 
         #Canvas.savePS = _savePS
 
-        _start_message += '\nCongratulations! You have gl2ps, so I activated drawPS!'
+        _start_message = '\nCongratulations! You have gl2ps, so I activated drawPS!'
 
         _producer = GD.Version + ' (http://pyformex.berlios.de)'
         _gl2ps_types = { 'PS':gl2ps.GL2PS_PS, 'EPS':gl2ps.GL2PS_EPS,

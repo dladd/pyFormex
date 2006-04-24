@@ -26,7 +26,10 @@ class ExitAll(Exception):
 #################### Interacting with the user ###############################
 
 def ask(question,choices=None,default=''):
-    """Ask a question and present possible answers."""
+    """Ask a question and present possible answers.
+
+    Returns index of the chosen answer.
+    """
     if choices:
         # this currently only supports 3 answers
         return info(question,choices)
@@ -77,6 +80,10 @@ def askItems(items):
     for r in res:
         items[r[0]] = r[1]
     return items
+
+def askFilename(cur,files="All files (*.*)",exist=True):
+    """Ask for an existing file name"""
+    return widgets.FileSelectionDialog(cur,files).getFilename()
 
 def log(s):
     """Display a message in the cmdlog window."""
@@ -361,12 +368,17 @@ def fforward():
     
       
 def isPyFormex(filename):
-    """Checks whether a file is a pyFormex script."""
+    """Checks whether a file is a pyFormex script.
+
+    A script is considered to be a pyFormex script if its first line
+    starts with '#!' and contains the substring 'pyformex'
+    """
     ok = filename.endswith(".py")
     if ok:
         try:
             f = file(filename,'r')
-            ok = f.readline().strip().endswith('pyformex')
+            l = f.readline()
+            ok = f.readline().strip().find('pyformex') >= 0
             f.close()
         except IOError:
             ok = False
@@ -430,25 +442,6 @@ def drawNamed(name,*args):
 def drawSelected(*args):
     name = ask("Which Formex shall I draw ?")
     drawNamed(name,*args)
-    
-
-def listAll():
-    """Return a list of all Formices in globals()"""
-    flist = []
-    for n,t in globals().items():
-        if isinstance(t,Formex):
-            flist.append(n)
-    return flist
-
-
-def printall():
-    """Print all Formices in globals()"""
-    print "Formices currently in globals():"
-    print listAll()
-
-
-def printglobals():
-    print globals()
 
 
 def system(cmdline,result='output'):
@@ -471,6 +464,38 @@ def exit(all=False):
     else: # the gui didn't even start
         sys.exit(0)
 
+
+########################## print information ################################
+    
+
+def listAll():
+    """Return a list of all Formices in globals()"""
+    flist = []
+    for n,t in globals().items():
+        if isinstance(t,Formex):
+            flist.append(n)
+    return flist
+
+
+def formatInfo(F):
+    """Return formatted information about a Formex."""
+    bb = F.bbox()
+    return """shape    = %s
+bbox[lo] = %s
+bbox[hi] = %s
+center   = %s
+maxprop  = %s
+""" % (F.shape(),bb[0],bb[1],F.center(),F.maxprop())
+    
+
+def printall():
+    """Print all Formices in globals()"""
+    print "Formices currently in globals():"
+    print listAll()
+
+
+def printglobals():
+    print globals()
 
 ################################ saving images ########################
 
@@ -570,6 +595,26 @@ def saveMulti(fn=None,fmt=None,verbose=False):
 
 ###########################  app  ################################
 
+def savePreferences():
+    """Save the preferences.
+
+    If a local preferences file was read, it will be saved there.
+    Otherwise, it will be saved as the user preferences, possibly
+    creating that file.
+    """
+    f = os.path.join(os.getcwd(),GD.prefs)
+    if not os.path.exists(f):
+        f = GD.userprefs
+    try:
+        fil = file(f,'w')
+        fil.write("%s" % GD.cfg)
+        fil.close()
+        res = "Saved"
+    except:
+        res = "Could not save"
+    print "%s preferences to file %s" % (res,f)
+
+
 def runApp(args):
     """Create and run the qt application."""
     global app_started
@@ -587,5 +632,11 @@ def runApp(args):
             play(arg)
     GD.app_started = True
     GD.app.exec_loop()
+
+    #Save the preferences if they changed
+    if GD.prefsChanged:
+        if GD.options.debug:
+            print "Saving config: ",GD.cfg
+        savePreferences()
 
 #### End

@@ -8,6 +8,7 @@ import sys
 import os.path
 from optparse import OptionParser,make_option
 
+
 ###########################  main  ################################
 
 
@@ -35,19 +36,24 @@ def main(argv=None):
     pyformexdir = os.path.dirname(os.path.realpath(argv[0]))
     # use a read, not an update, to set the pyformexdir as a variable
     GD.cfg.read("pyformexdir = '%s'\n" % pyformexdir)
-
     if os.name == 'posix':
         homedir = os.environ['HOME']
+        prefs = '.pyformex'
+        siteprefs = '/etc/pyformex'
     elif os.name == 'nt':
         homedir = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']
+        prefs = 'pyformex.cfg'
+        siteprefs = None  # Where does Windows put site prefs?
+    GD.prefs = prefs
+    GD.userprefs = os.path.join(homedir,prefs)
     GD.cfg.read("homedir = '%s'\n" % homedir)
     
-    # Read the default config file
+    # Read the default (distribution) config file
     GD.cfg.read(os.path.join(pyformexdir,"pyformexrc"))
     # Read additional config files
-    userConfig = os.path.join(homedir,".pyformexrc")
-    for f in ["/etc/pyformexrc", userConfig, ".pyformexrc" ]:
-        if os.path.exists(f):
+    for f in [ siteprefs, GD.userprefs, GD.prefs ]:
+        if f and os.path.exists(f):
+            print f
             GD.cfg.read(f)
 
     # Process options
@@ -59,14 +65,16 @@ def main(argv=None):
                     action="store_false", dest="dri", default=True),
         make_option("--nogui", help="do not load the GUI",
                     action="store_false", dest="gui", default=True),
+        make_option("--nosplash", help="do not show the startup screen",
+                    action="store_false", dest="splash", default=True),
         make_option("--debug", help="display logging info to sys.stdout",
                     action="store_true", dest="debug", default=False)
         ])
     GD.options, args = parser.parse_args()
 
     if GD.options.debug:
-        print GD.cfg
-        print GD.options
+        print "Options: ",GD.options
+        print "Config: ",GD.cfg
 
     # Run the application with the remaining arguments
     
@@ -77,20 +85,6 @@ def main(argv=None):
         from script import runApp
     
     res = runApp(args)
-
-    #Save the preferences if they changed
-    if GD.prefsChanged:
-        f = ".pyformexrc"
-        if not os.path.exists(f):
-            f = userConfig
-        try:
-            fil = file(f,'w')
-            fil.write("%s" % GD.cfg)
-            fil.close()
-            print "Saved preferences to file %s" % f
-            
-        except:
-            print "Could not save preferences!"
 
     # Exit
     return res

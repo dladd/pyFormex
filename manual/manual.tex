@@ -14,14 +14,19 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{verbatim}
-%\usepackage[pdftex]{graphicx}
-\title{pyFormex manual}
+
+% Document identification
+\title{\pyformex manual}
 \author{Tim Neels and Benedict Verhegghe}
 \release{0.3}
 \setshortversion{0.3}
+
+% pyFormex and its website
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
-%\newenvironment{mycode}{\par\small\sffamily}{} % This should be changed
+% code 
+%\newenvironment{CodePart}{\begin{verbatim}}{\end{verbatim}}
+%\newcommand{\CodeFile}[1]{\verbatiminput{#1}}
 
 
 \begin{document}
@@ -36,9 +41,9 @@ You probably expect to find here a short definition of what \pyformex is and wha
 The short answer is that \pyformex is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
 If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. You will then probably have a better idea of what \pyformex{} is. 
 
-The initial intention of \pyformex (and probably still its main use) was the rapid design of three-dimensional wireframe structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its sub parts and assemblage thereof.
+The initial intent of \pyformex was the rapid design of three-dimensional structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its subparts and assemblage thereof. While during development of the program we have concentrated mostly on wireframe type structures, surface and solid elements have been part of \pyformex right from the beginning. Still, most of the examples included with \pyformex are of frame type and most of the practical use of the program is in this area.
 
-The example of the stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} in the figure below illustrates this clearly. 
+The stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} structure in the figure below is a good illustration of what \pyformex can do and what it was intended for. 
 
 \begin{figure}[h]
   \centering
@@ -53,11 +58,48 @@ The example of the stent\footnote{A stent is a tube-shaped structure that is e.g
   \caption{WireStent example.}
 \end{figure}
 
-The structure has ...
+This structure is composed of 22032 line segments, each with 2 nodes. Nobody in his right mind would ever even try to input all the 132192 coordinates of all the points describing that structure. 
+With \pyformex, one could define the structure by a sequence of operations like this:
+ \begin{itemize}
+ \item Create a planar base module of two crossing wires.
+ \item Extend the base module with a mirrored and translated copy.
+ \item Replicate the base module in both directions of the base plane.
+ \item Roll the planar grid into a cylinder.
+ \end{itemize}
+ The procedure is illustrated by the subsequent images in the figure below.
+ \begin{figure}[h]
+   \centering
+   \begin{makeimage}
+   \end{makeimage}
+   \begin{latexonly}
+     \includegraphics[width=2cm]{images/wirestent-1}
+     \includegraphics[width=2cm]{images/wirestent-2}
+     \includegraphics[width=12cm]{images/wirestent-3}
+   \end{latexonly}
+   \begin{htmlonly}
+     \htmladdimg{../images/wirestent-1.png}
+     \htmladdimg{../images/wirestent-2.png}
+     \htmladdimg{../images/wirestent-3.png}
+   \end{htmlonly}  
+   \caption{WireStent example.}
+ \end{figure}
 
+
+\section{Rationale}
+\label{sec:rationale}
 
 \section{History}
 \label{sec:history}
+
+
+\section{Installation}
+\label{sec:installation}
+\subsection{Installation on Linux platforms}
+\label{sec:installation-linux}
+
+%\subsection{Installation on Windows platforms}
+%\label{sec:installation-windows}
+
 
 \section{Quick tutorial for the \pyformex{} GUI}
 \label{sec:gui-tutorial}
@@ -77,6 +119,10 @@ The best way to learn to use \pyformex is by studying and changing some of the e
 When starting up, \pyformex reads through the Examples directory (this is normally the 'examples' subdirecty located under the pyformex installation dir).  
 \menuselection{Examples \sub WireStent}
 
+
+\section{Quick {Python tutorial}}
+\label{sec:python-tutorial}
+This could be part of the tutorial in chapter 2
 
 \section{Quick NumPy tutorial}
 \label{sec:numpy-tutorial}

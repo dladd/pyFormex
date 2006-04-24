@@ -15,6 +15,8 @@ import sys,time,os,string
 import qt
 import qtgl
 
+    
+
 def askConfigPreferences(items,section=None):
     """Ask preferences stored in config variables.
 
@@ -69,7 +71,8 @@ def prefDrawtimeout():
 def prefBGcolor():
     col = qt.QColorDialog.getColor(qt.QColor(GD.cfg.setdefault('bgcolor','')))
     if col.isValid():
-        GD.cfg['bgcolor'] = col.name()
+        GD.prefsChanged = True
+        GD.cfg['bgcolor'] = str(col.name()) # convert qstring to Python string!
         draw.bgcolor(col)
 
 
@@ -191,7 +194,8 @@ MenuData = [
         ("Action","&Render","prefRender"),
         ("Action","&Light0","prefLight0"),
         ("Action","&Light1","prefLight1"),
-        ("Action","&Help","prefHelp"), ]),
+        ("Action","&Help","prefHelp"),
+        ("Action","&Save Preferences","draw.savePreferences"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","zoomIn"), 
         ("Action","&Zoom Out","zoomOut"), 
@@ -335,8 +339,8 @@ def openFile():
     """Open a file and set it as the current file"""
     cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
     fn = qt.QFileDialog.getSaveFileName(
-        cur,"pyformex scripts (*.frm *.py)",None,"save file dialog",
-        "Choose a file to open (New or Exisiting)" )
+        cur,"pyformex scripts (*.frm *.py)",None,"Open file dialog",
+        "Choose a file to open (New or Existing)" )
     if fn:
         fn = str(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)

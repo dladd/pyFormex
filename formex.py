@@ -443,9 +443,15 @@ class Formex:
     def prop(self):
         """Return the properties as a numpy array"""
         return self.p
+    def maxprop(self):
+        """Return the highest property used, or None"""
+        if type(self.p) == type(None):
+            return None
+        else:
+            return self.p.max()
 #    def items(self):
 #        """Return a list of (element,property) tuples"""
-        
+
 
     def element(self,i):
         """Return element i of the Formex"""
@@ -1467,7 +1473,6 @@ class Formex:
 def connect(Flist,nodid=None,bias=None,loop=False):
     """Return a Formex which connects the formices in list.
 
-    This is a class method, not an instance method!
     Flist is a list of formices, nodid is an optional list of nod ids and
     bias is an optional list of element bias values. All lists should have
     the same length.

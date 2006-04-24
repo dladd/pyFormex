@@ -176,7 +176,7 @@ class TextActor(Decoration):
         self.text = str(text)
         self.font = font
         self.adjust = adjust
-        self.color = color
+        self.color = GLColor(color)
 
     def draw(self,mode='wireframe'):
         """Draw the text."""

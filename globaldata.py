@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 """Global data for pyFormex."""
-Version = "pyFormex 0.3"
+Version = "pyFormex 0.3.1-alpha"
 
 import config
 
@@ -16,6 +16,8 @@ prefsChanged = False
 multisave = False
 canPlay = False
 scriptName = None
+prefs = None
+userprefs = None
 
 def debug(s):
     if options.debug:

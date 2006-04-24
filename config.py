@@ -91,7 +91,7 @@ class Config(Dict):
       aa = 'aa'
       _n = 3
       rng = range(_n)
-    the read configuration dictionary be
+    the resulting configuration dictionary is
     {'aa': 'bb', 'bb': 'bb', 'cc': {'aa': 'aa', 'rng': [0, 1, 2]}}
 
     As far as the resulting Config contents is concerned, the following are

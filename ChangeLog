@@ -1,3 +1,10 @@
+2006-04-18  Benedict Verhegghe  <benedict.verhegghe@ugent.be>
+
+	* draw.py (isPyFormex): now returns True if the first line contains
+	'pyformex', even if it is not at the end.
+
+	* formex.py (Formex.maxprop): new: returns highest property value
+
 2005-12-12    <benedict.verhegghe@ugent.be>
 
 	* canvas.py (TriadeActor): new: shows the global axes 
@@ -10,4 +17,10 @@
 
 	* formex.py: moved from numarray to numpy
 	(Formex.sort): now returns copy, leaves original Formex unchanged
+
+
+	Copyright 2006 Benedict Verhegghe <benedict.verhegghe@ugent.be>
+	Copying and distribution of this file, with or without modification,
+	are permitted provided the copyright notice and this notice are 
+	preserved.
 

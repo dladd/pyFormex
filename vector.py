@@ -91,6 +91,20 @@ def cross (v,w):
     """Return the cross product of two vectors."""
     return [ v[1]*w[2]-v[2]*w[1],  v[2]*w[0]-v[0]*w[2], v[0]*w[1]-v[1]*w[0] ]
 
+def rotation (v,w):
+    """Returns the rotation vector and angle from v to w.
+
+    The return value is a tuple of the unit vector in the direction v*w
+    and the angle in degrees between v and w.
+    It is an error if v//w or v or w have zero length.
+    """
+    n = cross(v,w)
+    l = length(n)
+    a = math.degrees(math.asin(l/length(v)/length(w)))
+    n = scale(n,1./l)
+    return (n,a)
+    
+
 def cartesianToCylindrical (v) :
     """Convert cartesian coordinates [x,y,z] to cylindrical [r,theta,z]
     
@@ -129,7 +143,7 @@ def roll(vector,n):
     return vector[n:] + vector[:n]
 
 def rotationMatrix (axis,angle):
-    """Return a rotation matrix over angle(degrees) around axis.
+    """Return a rotation matrix over angle(degrees) around axis(0|1|2).
 
     This is a matrix for postmultiplying a row vector."""
     m = [ [ 0. for i in range(3) ]  for j in range(3) ]
@@ -147,3 +161,17 @@ def rotationMatrix (axis,angle):
 def matrixMultiply (a,b):
     """Multipy matrices a and b."""
     return [ [ sum( [ a[i][k] * b[k][j] for k in range(len(b)) ] ) for j in range(len(b[0])) ] for i in range(len(a)) ]
+
+
+if __name__ == "__main__":
+
+    n = 12
+    a = [ i*360./n for i in range(0,n+1) ]
+    l = [ 1.+i for i in range(0,n+1) ]
+    r = map(math.radians,a)
+    c = map(math.cos,r)
+    s = map(math.sin,r)
+    X = [ [ len*cosa, len*sina, 0. ] for len,cosa,sina in zip(l,c,s) ]
+    for x,y in zip(X[:-1],X[1:]):
+        print rotation(x,y)
+        

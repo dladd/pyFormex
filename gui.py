@@ -4,6 +4,7 @@
 
 import globaldata as GD
 import canvas
+import decorations
 import script
 import draw
 import widgets
@@ -20,6 +21,7 @@ import qtgl
 
 import pyfotemp as PT
 
+_start_message = GD.Version + ', by B. Verhegghe'
 
 class MyQAction(qt.QAction):
     """A MyQAction is a QAction that sends a string as parameter when clicked."""
@@ -123,8 +125,10 @@ class GUI:
         fmt = qtgl.QGLFormat.defaultFormat()
         fmt.setDirectRendering(GD.options.dri)
         c = canvas.Canvas(wd,ht,fmt,s)
-        #c.setMinimumHeight(100)
+        c.setBgColor(GD.cfg['bgcolor'])
         c.resize(wd,ht)
+        if GD.options.splash:
+            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
         self.canvas = c
         # Create the message board
         b = qt.QTextEdit(s)
