@@ -46,6 +46,16 @@ canvas.py:
 canvas has a setBgColor method to set the background color
  
 
+mydict.py:
+----------
+The __repr__ and __str__ functions of the Dict and CascadingDict classes have
+been reworked to provide sensible/clean output:
+__repr__ (formatting with %r) will result in a string that is valid Python
+to recreate the object, for both Dict and CascadingDict.
+__str__ (formatting with %s) is equivalent to __repr__ for the Dict class, but
+results in a nicely cascading format for the CascadingDict 
+
+
 Experimental/Development 
 ========================
 These files hold new and experimental functions. Their contents may be moved
@@ -59,5 +69,3 @@ to other files in future releases.
 - stl.py: 
 
 - simple.py:
-
-- mydict.py:

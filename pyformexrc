@@ -15,6 +15,8 @@ icondir = os.path.join(pyformexdir,"icons")
 exampledir = os.path.join(pyformexdir,"examples")
 docdir = os.path.join(pyformexdir,"doc")
 edit = 'gnuclient'   # editor command
+bgcolor = '#bfbfbf'
+bgcolor = 'grey'
 #[draw]
 linewidth = 1
 propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 

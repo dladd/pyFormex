@@ -16,6 +16,8 @@ def write_ascii(a,f):
     f.write("solid  Created by %s\n" % GD.Version)
     for e in a:
         normal = cross(e[1]-e[0],e[2]-e[1])
+        length = column_stack([sum(normal*normal,-1)])
+        normal /= length
         f.write("  facet normal %f %f %f\n" % tuple(normal))
         f.write("    outer loop\n")
         for p in e:

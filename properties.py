@@ -38,6 +38,7 @@ def readSections(database):
     for key, item in sect.iteritems():
         sections[key] = item
 
+
 class Property(CascadingDict):
     """A general properties class.
 
@@ -55,14 +56,7 @@ class Property(CascadingDict):
         """
         CascadingDict.__init__(self, data)
         properties[nr] = self 
-    
-    def __repr__(self):
-        """Format a property into a string."""
-        s = ""			#"PropertyClass{ default=%s" % self.default
-        for i in self.items():
-            s += "\n  %s = %s" % i
-        return s + "\n"
-        #it would be great if every level of Properties would indent...!
+
 
 class NodeProperty(Property):
     """Properties related to a single node."""
@@ -169,6 +163,8 @@ class ElemLoad(Property):
 # Test
 
 if __name__ == "__main__":
+
+    CascadingDict.__repr__ = CascadingDict.format
 
     readMaterials('materials.db')
     readSections('sections.db')

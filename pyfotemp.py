@@ -376,7 +376,7 @@ def saveImage():
     """
     global canvas
     dir = GD.cfg.get('workdir',".")
-    fs = widgets.FileSelectionDialog(dir,pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+    fs = widgets.FileSelectionDialog(dir,pattern="Images (*.png *.jpg *.eps)",mode=qt.QFileDialog.AnyFile)
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)

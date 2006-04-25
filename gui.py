@@ -125,6 +125,7 @@ class GUI:
         fmt = qtgl.QGLFormat.defaultFormat()
         fmt.setDirectRendering(GD.options.dri)
         c = canvas.Canvas(wd,ht,fmt,s)
+        print GD.cfg['bgcolor']
         c.setBgColor(GD.cfg['bgcolor'])
         c.resize(wd,ht)
         if GD.options.splash:

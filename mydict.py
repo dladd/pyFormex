@@ -78,14 +78,14 @@ class Dict(dict):
         self.__dict__['default'] = default
 
 
-    def __str__(self):
+    def __repr__(self):
         """Format the Dict as a string.
 
-        We use the format Dict({}), so that the string can be
-        read back as a Dict.
+        We use the format Dict({}), so that the string is a valid Python
+        representation of the Dict.
         """
-        return "Dict(%s)" % dict.__str__(self)
-    
+        return "Dict(%s)" % dict.__repr__(self)
+   
 
     def __getitem__(self, key):
         """Allows items to be addressed as self[key].
@@ -151,6 +151,9 @@ class Dict(dict):
         dict.update(self,data)
 
 
+_indent = 0  # number of spaces to indent in __str__ formatting
+             # incremented by 2 on each level
+
 class CascadingDict(Dict):
     """A cascading Dict: properties not in Dict are searched in all Dicts.
 
@@ -161,11 +164,33 @@ class CascadingDict(Dict):
     As you expect, this will make the lookup cascade into all lower levels
     of CascadingDict's. The cascade will stop if you use a Dict.
     There is no way to guarantee in which order the (Cascading)Dict's are
-    visited, so if multiple Dicts on the same level hold """
+    visited, so if multiple Dicts on the same level hold the same key,
+    you should know yourself what you are doing.
+    """
 
 
     def __init__(self,data={},default=None):
         Dict.__init__(self,data,default)
+
+
+    def __repr__(self):
+        """Format the Dict as a string.
+
+        We use the format Dict({}), so that the string is a valid Python
+        representation of the Dict.
+        """
+        return "CascadingDict(%s)" % dict.__repr__(self)
+
+    
+    def __str__(self):
+        """Format a property into a string."""
+        global _indent
+        s = ""
+        _indent += 2
+        for i in self.items():
+            s += '\n' + (' '*_indent) + "%s = %s" % i
+        _indent -= 2
+        return s
 
 
     def __getitem__(self, key):
@@ -182,16 +207,34 @@ class CascadingDict(Dict):
 
 if __name__ == '__main__':
 
-    def printval(s):
-        """Prints the name and value of a (sequence of) variables."""
-        try:
-            print "%s = %s" % (s,eval(s))
-        except:
-            print "Error in %s" % s
+    global C,Cr,Cs
 
-    C = CascadingDict({'x':CascadingDict({'a':1,'y':CascadingDict({'b':5,'c':6})}),'y':CascadingDict({'c':3,'d':4}),'d':0})
-    printval("C")
-    printval("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
-    printval("C['e']")
-    printval("C.a,C.b,C.c,C.d,C.x.c")
-    printval("C.e")
+    def val(s,typ='s'):
+        """Returns a string assigning the value of s to the name s."""
+        try:
+            return ("%s = %"+typ) % (s,eval(s))
+        except:
+            return "Error in %s" % s
+
+    def show():
+        global C,Cr,Cs
+        Cr = val('C','r')
+        Cs = val('C','s')
+        print Cr
+        print Cs
+        
+
+    C = Dict({'x':Dict({'a':1,'y':Dict({'b':5,'c':6})}),'y':Dict({'c':3,'d':4}),'d':0})
+    show()
+    # now exec this to check if we get the same
+    exec(Cr)
+    show()
+    # now replace Dict with CascadingDict
+    Cr = Cr.replace('Dict','CascadingDict')
+    exec(Cr)
+    show()
+    # show some items
+    print val("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
+    print val("C['e']")
+    print val("C.a,C.b,C.c,C.d,C.x.c")
+    print val("C.e")
