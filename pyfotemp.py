@@ -181,7 +181,7 @@ MenuData = [
         ("Action","E&xit","draw.exit"), ]),
     ("Popup","&Settings",[
 #        ("Action","&Preferences","preferences"), 
-        ("Action","Show &Triade","draw.drawTriade"), 
+        ("Action","Toggle &Triade","draw.toggleTriade"), 
         ("Action","&Drawwait Timeout","prefDrawtimeout"), 
         ("Action","&Background Color","prefBGcolor"), 
         ("Action","Line&Width","prefLinewidth"), 

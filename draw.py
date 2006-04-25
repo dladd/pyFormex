@@ -293,11 +293,31 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     if allowwait and wait:
         drawlock()
 
+_triade = None
+
 def drawTriade():
     """Show the global axes."""
-    GD.canvas.addActor(TriadeActor(1.0))
-    GD.canvas.update()
+    global _triade
+    if not _triade or _triade not in GD.canvas.actors:
+        _triade = TriadeActor(1.0)
+        GD.canvas.addActor(_triade)
+        GD.canvas.update()
 
+def removeTriade():
+    """Remove the global axes."""
+    global _triade
+    if _triade and _triade in GD.canvas.actors:
+        GD.canvas.removeActor(_triade)
+        GD.canvas.update()
+        _triade = None
+        
+def toggleTriade():
+    """Toggle the global axes on or off."""
+    global _triade
+    if _triade:
+        removeTriade()
+    else:
+        drawTriade()
 
 def drawtext(text,x,y,font='9x15'):
     """Show a text at position x,y using font."""
