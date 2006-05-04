@@ -61,7 +61,7 @@ class Property(CascadingDict):
 class NodeProperty(Property):
     """Properties related to a single node."""
 
-    def __init__(self, nr, cload = None, bound = None, coords = 'cartesian'):
+    def __init__(self, nr, cload = None, bound = None, coords = 'cartesian', coordset=[]):
         """Create a new node property. Empty by default
         
         A node property is created and the data is stored in a Dict called 'nodeproperties'. 
@@ -72,9 +72,10 @@ class NodeProperty(Property):
         - bound : a boundary condition
         - coords: the coordinate system which is used for the definition of cload and bound. There are three options:
         cartesian, spherical and cylindrical
+		-coordset: a list of 6 coordinates; the 2 points that specify the transformation 
         """
         if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or bound==None): 
-            CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'coords' : coords})
+            CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'coords' : coords, 'coordset' : coordset})
             nodeproperties[nr] = self
         else: 
             print 'A pointload or a boundary condition has to be a list containing 6 items'
@@ -100,7 +101,7 @@ class ElemProperty(Property):
 class ElemSection(Property):
     """Properties related to the section of a beam."""
 
-    def __init__(self, section = None, material = None, sectiontype = 'general'):  
+    def __init__(self, section = None, material = None, sectiontype = 'general', orientation = None):  
         """Create a new element section property. Empty by default
         
         An element section property can hold the following sub-properties:
@@ -110,12 +111,16 @@ class ElemSection(Property):
         """    
         CascadingDict.__init__(self,{})
         self.sectiontype = sectiontype
+        self.orientation = orientation
         self.addMaterial(material)
         self.addSection(section)
     
     def addSection(self, section):
-        """Create or replace the section properties of the element. If the argument is a dict, it will be added to 'sections'.
-        If the argument is a string, this string will be used as a key to search in 'sections'
+        """Create or replace the section properties of the element.
+
+		If 'section' is a dict, it will be added to 'sections'.
+        If 'section' is a string, this string will be used as a key to search in 'sections'
+		'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section 			axis. This allows to change the orientation of the cross-section.
         """
         if isinstance(section, str):
             if sections.has_key(section):
@@ -149,13 +154,10 @@ class ElemSection(Property):
 
 class ElemLoad(Property):
     """Properties related to the load of a beam."""
-    # cload can only be applied in a node -> useless here??
 
-    def __init__(self, dload = None, cload = None, coords = 'cartesian'):
-        """there are three options: cartesian (global), cylindrical and local""" 
-        CascadingDict.__init__(self, {'dload' : dload, 'cload' : cload})
-#lload=list, 3 elems, cload=? (load+coord-> list [x,y,z,loadx,loady, loadz]? )
-# multiple cloads!! -> ?
+    def __init__(self, magnitude = None, loadlabel = None):
+        CascadingDict.__init__(self, {'magnitude' : magnitude, 'loadlabel' : loadlabel})
+
 
 
 
@@ -163,8 +165,6 @@ class ElemLoad(Property):
 # Test
 
 if __name__ == "__main__":
-
-    CascadingDict.__repr__ = CascadingDict.format
 
     readMaterials('materials.db')
     readSections('sections.db')

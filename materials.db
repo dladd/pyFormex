@@ -1,11 +1,11 @@
 material
 	name=steel
-	elastic_young_modulus=210
-	elastic_shear_modulus=25
+	young_modulus=210
+	shear_modulus=25
 endmaterial
 
 material
 	name=C20/25
-	elastic_young_modulus=15
-	elastic_shear_modulus=3
+	young_modulus=15
+	shear_modulus=3
 endmaterial

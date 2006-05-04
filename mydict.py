@@ -174,7 +174,7 @@ class CascadingDict(Dict):
 
 
     def __repr__(self):
-        """Format the Dict as a string.
+        """Format the CascadingDict as a string.
 
         We use the format Dict({}), so that the string is a valid Python
         representation of the Dict.
@@ -183,7 +183,7 @@ class CascadingDict(Dict):
 
     
     def __str__(self):
-        """Format a property into a string."""
+        """Format a CascadingDict into a string."""
         global _indent
         s = ""
         _indent += 2

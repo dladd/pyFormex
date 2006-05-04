@@ -81,6 +81,7 @@ With \pyformex, one could define the structure by a sequence of operations like 
      \htmladdimg{../images/wirestent-2.png}
      \htmladdimg{../images/wirestent-3.png}
    \end{htmlonly}  
+   \label{fig:WireStent steps}
    \caption{WireStent example.}
  \end{figure}
 
@@ -430,6 +431,22 @@ Now, when you are creating a large geometry, you might be interested in seeing t
 \end{verbatim}
 
 
+\subsection{Creating images}
+\label{subsec:images}
+After drawing the Formex, you might want to save the image. This is very easy to do:\\
+\menuselection{File \sub Save Image}\\
+The filetype should be 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf' or 'tex'. \\
+To create a better looking picture, several settings can be changed:
+\begin{itemize}
+	\item Change the background color \menuselection{Settings \sub Background Color}
+	\item Use a different (bigger) linewidth \menuselection{Settings \sub Linewidth}
+	\item Change the canvas size. This prevents having to cut and rescale the figure with an image manipulation program (and loosing quality by doing so).  \menuselection{Settings \sub Canvas Size}
+% I don't really know what the other function in 'Settings' do...
+\end{itemize}
+It is also possible to save a series of images. This can be especially useful when playing a script which creates several images, and you would like to save them all.  For example, figure \ref{fig:WireStent steps}, which shows the different steps in the creation of the WireStent model, was created this way.\\
+\menuselection{File \sub Toggle MultiSave}\\
+
+
 \subsection{Information about a Formex}
 \label{subsec:info}
 There are a number of functions available that return information about a Formex. Especially when using \pyformex as finit element preprocessor, the most useful functions are:
@@ -502,8 +519,75 @@ The next important thing is that parameters were used. It's recommended to alway
 A simple function \function{drawit()} is defined for use in this script only. This function only provides a shorter way of drawing Formices, since it combines \function{clear()} and \function{draw}. 
 
 Now, let's dissect the script.
-\verbatiminput{scripts/SpiralDeclared.py} 
- 
+
+\begin{verbatim}
+def drawit(F,view='front'):
+    clear()
+    draw(F,view)
+\end{verbatim}
+This is a small function that is only defined in this script. It clears the screen and draws the Formex at the same time. 
+
+\begin{verbatim}
+m = 36 # number of cells along torus big circle
+n = 10 # number of cells along torus small circle
+\end{verbatim}
+These are the parameters. They can easily be changed, and a whole new spiral will be created without any extra effort.
+The first step is to create a basic Formex. In this case, it's a triangle which 
+has a different property number for every edge.
+\begin{verbatim}
+F = Formex(pattern("164"),[1,2,3]); drawit(F)  
+\end{verbatim}
+
+This basic Formex is copied 'm' times in the 0-direction with a translation 
+step of '1' (the length of an edge of the triangle). After that, the new 
+Formex is copied 'n' times in the 1-direction with a translation step of '1'. 
+Because of the recursive definition (F=F.replic), the original Formex F is 
+overwritten by the transformed one.
+\begin{verbatim}
+F = F.replic(m,1,0); drawit(F)
+F = F.replic(n,1,1); drawit(F)
+\end{verbatim}
+
+Now a copy of this last Formex is translated in direction '2' with a 
+translation step of '1'. This necessary for the transformation into a cilinder.
+The result of all previous steps is a rectangular pattern with the desired 
+dimensions, in a plane z=1.
+\begin{verbatim}
+F = F.translate1(2,1); drawit(F,'iso')
+\end{verbatim}
+
+This pattern is rolled up into a cilinder around the 2-axis. 
+\begin{verbatim}
+F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
+\end{verbatim}
+
+This cilinder is copied 5 times in the 2-direction with a translation step of 
+'m' (the lenght of the cilinder). 
+\begin{verbatim}
+F = F.replic(5,m,2); drawit(F,'iso')
+\end{verbatim}
+
+The next step is to rotate this cilinder -10 degrees around the 0-axis. 
+This will determine the pitch angle of the spiral.
+\begin{verbatim}
+F = F.rotate(-10,0); drawit(F,'iso')
+\end{verbatim}
+
+A copy of this last formex is now translated in direction '0' with a 
+translation step of '5'. 
+\begin{verbatim}
+F = F.translate1(0,5); drawit(F,'iso')
+\end{verbatim}
+
+Finally, the Formex is rolled up, but around a different axis then before. 
+Due to the pitch angle, a spiral is created. If the pitch angle would be 0 
+(no rotation of -10 degrees around the 0-axis), the resulting Formex 
+would be a torus. 
+\begin{verbatim}
+F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
+drawit(F,'right')
+\end{verbatim}
+
 
 %\subsection{Create copies, concatenations,subtractions}\label{copy F}
 
