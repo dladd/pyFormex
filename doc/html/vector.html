@@ -61,7 +61,12 @@ If&nbsp;the&nbsp;pos&nbsp;argument&nbsp;is&nbsp;omitted,&nbsp;the&nbsp;midpoint&
  <dl><dt><a name="-projection"><strong>projection</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;(signed)&nbsp;length&nbsp;of&nbsp;the&nbsp;projection&nbsp;of&nbsp;vector&nbsp;v&nbsp;on&nbsp;vector&nbsp;w.</tt></dd></dl>
  <dl><dt><a name="-reverse"><strong>reverse</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;reverse&nbsp;vector&nbsp;[-x,&nbsp;-y,&nbsp;-z]&nbsp;of&nbsp;v[x,y,z]</tt></dd></dl>
  <dl><dt><a name="-roll"><strong>roll</strong></a>(vector, n)</dt><dd><tt>Roll&nbsp;the&nbsp;elements&nbsp;of&nbsp;the&nbsp;vector&nbsp;over&nbsp;n&nbsp;positions&nbsp;forward</tt></dd></dl>
- <dl><dt><a name="-rotationMatrix"><strong>rotationMatrix</strong></a>(axis, angle)</dt><dd><tt>Return&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;over&nbsp;angle(degrees)&nbsp;around&nbsp;axis.<br>
+ <dl><dt><a name="-rotation"><strong>rotation</strong></a>(v, w)</dt><dd><tt>Returns&nbsp;the&nbsp;rotation&nbsp;vector&nbsp;and&nbsp;angle&nbsp;from&nbsp;v&nbsp;to&nbsp;w.<br>
+&nbsp;<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;unit&nbsp;vector&nbsp;in&nbsp;the&nbsp;direction&nbsp;v*w<br>
+and&nbsp;the&nbsp;angle&nbsp;in&nbsp;degrees&nbsp;between&nbsp;v&nbsp;and&nbsp;w.<br>
+It&nbsp;is&nbsp;an&nbsp;error&nbsp;if&nbsp;v//w&nbsp;or&nbsp;v&nbsp;or&nbsp;w&nbsp;have&nbsp;zero&nbsp;length.</tt></dd></dl>
+ <dl><dt><a name="-rotationMatrix"><strong>rotationMatrix</strong></a>(axis, angle)</dt><dd><tt>Return&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;over&nbsp;angle(degrees)&nbsp;around&nbsp;axis(0|1|2).<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;a&nbsp;matrix&nbsp;for&nbsp;postmultiplying&nbsp;a&nbsp;row&nbsp;vector.</tt></dd></dl>
  <dl><dt><a name="-scale"><strong>scale</strong></a>(v, a)</dt><dd><tt>Return&nbsp;the&nbsp;a&nbsp;*&nbsp;[x,&nbsp;y,&nbsp;z],&nbsp;where&nbsp;a&nbsp;is&nbsp;a&nbsp;scalar</tt></dd></dl>

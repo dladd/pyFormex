@@ -102,7 +102,7 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.3'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.3.1-alpha'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-add_docstring"><strong>add_docstring</strong></a>(...)</dt></dl>
  <dl><dt><a name="-arange"><strong>arange</strong></a>(...)</dt><dd><tt><a href="#-arange">arange</a>(start,&nbsp;stop=None,&nbsp;step=1,&nbsp;dtype=int)<br>
@@ -124,7 +124,10 @@ array&nbsp;may&nbsp;be&nbsp;returned.&nbsp;Otherwise,&nbsp;a&nbsp;base-class&nbs
 &nbsp;<br>
 &nbsp;Just&nbsp;like&nbsp;range()&nbsp;except&nbsp;it&nbsp;returns&nbsp;an&nbsp;array&nbsp;whose&nbsp;type&nbsp;can&nbsp;be<br>
 specified&nbsp;by&nbsp;the&nbsp;keyword&nbsp;argument&nbsp;typecode.</tt></dd></dl>
- <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.</tt></dd></dl>
+ <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
+&nbsp;<br>
+Returns&nbsp;index&nbsp;of&nbsp;the&nbsp;chosen&nbsp;answer.</tt></dd></dl>
+ <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, files<font color="#909090">='All files (*.*)'</font>, exist<font color="#909090">=True</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;file&nbsp;name</tt></dd></dl>
  <dl><dt><a name="-askItems"><strong>askItems</strong></a>(items)</dt><dd><tt>Ask&nbsp;the&nbsp;value&nbsp;of&nbsp;some&nbsp;items&nbsp;to&nbsp;the&nbsp;user.&nbsp;!!&nbsp;VERY&nbsp;EXPERIMENTAL!!<br>
 &nbsp;<br>
 Input&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;items&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;[key,value]&nbsp;pairs.<br>
@@ -204,6 +207,7 @@ of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;given&nbsp;type&nbsp;with&nbsp;all&
  <dl><dt><a name="-fastCopyAndTranspose"><strong>fastCopyAndTranspose</strong></a> = _fastCopyAndTranspose(...)</dt><dd><tt>_fastCopyAndTranspose(a)</tt></dd></dl>
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
+ <dl><dt><a name="-formatInfo"><strong>formatInfo</strong></a>(F)</dt><dd><tt>Return&nbsp;formatted&nbsp;information&nbsp;about&nbsp;a&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-frombuffer"><strong>frombuffer</strong></a>(...)</dt><dd><tt><a href="#-frombuffer">frombuffer</a>(buffer=,&nbsp;dtype=int,&nbsp;count=-1,&nbsp;offset=0)<br>
 &nbsp;<br>
 Returns&nbsp;a&nbsp;1-d&nbsp;array&nbsp;of&nbsp;data&nbsp;type&nbsp;dtype&nbsp;from&nbsp;buffer.&nbsp;The&nbsp;buffer<br>
@@ -241,7 +245,10 @@ the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbs
  <dl><dt><a name="-innerproduct"><strong>innerproduct</strong></a> = inner(...)</dt><dd><tt><a href="#-inner">inner</a>(a,b)&nbsp;returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;two&nbsp;arrays,&nbsp;which&nbsp;has<br>
 shape&nbsp;a.shape[:-1]&nbsp;+&nbsp;b.shape[:-1]&nbsp;with&nbsp;elements&nbsp;computed&nbsp;by<br>
 the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbsp;dimensions&nbsp;of&nbsp;a&nbsp;and&nbsp;b.</tt></dd></dl>
- <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.</tt></dd></dl>
+ <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.<br>
+&nbsp;<br>
+A&nbsp;script&nbsp;is&nbsp;considered&nbsp;to&nbsp;be&nbsp;a&nbsp;pyFormex&nbsp;script&nbsp;if&nbsp;its&nbsp;first&nbsp;line<br>
+starts&nbsp;with&nbsp;'#!'&nbsp;and&nbsp;contains&nbsp;the&nbsp;substring&nbsp;'pyformex'</tt></dd></dl>
  <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;indexes&nbsp;similar&nbsp;to&nbsp;argsort&nbsp;except&nbsp;the&nbsp;sorting&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;provided&nbsp;sorting&nbsp;keys.&nbsp;&nbsp;First&nbsp;the&nbsp;sort&nbsp;is&nbsp;done&nbsp;using&nbsp;key[0],&nbsp;then&nbsp;the&nbsp;resulting&nbsp;list&nbsp;of&nbsp;indexes&nbsp;is&nbsp;further&nbsp;manipulated&nbsp;by&nbsp;sorting&nbsp;on&nbsp;key[0].&nbsp;&nbsp;And&nbsp;so&nbsp;forth&nbsp;The&nbsp;result&nbsp;is&nbsp;a&nbsp;sort&nbsp;on&nbsp;multiple&nbsp;keys.&nbsp;&nbsp;If&nbsp;the&nbsp;keys&nbsp;represented&nbsp;columns&nbsp;of&nbsp;a&nbsp;spread-sheet,&nbsp;for&nbsp;example,&nbsp;this&nbsp;would&nbsp;sort&nbsp;using&nbsp;multiple&nbsp;columns.&nbsp;The&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;tuple&nbsp;of&nbsp;things&nbsp;that&nbsp;can&nbsp;be&nbsp;converted&nbsp;to&nbsp;&nbsp;arrays&nbsp;of&nbsp;the&nbsp;same&nbsp;shape.</tt></dd></dl>
  <dl><dt><a name="-linewidth"><strong>linewidth</strong></a>(wid)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;line&nbsp;drawings.</tt></dd></dl>
  <dl><dt><a name="-listAll"><strong>listAll</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
@@ -270,6 +277,7 @@ array&nbsp;of&nbsp;shape&nbsp;(d0,&nbsp;d1,&nbsp;...,&nbsp;dn).<br>
 <a href="#-randn">randn</a>(d0,&nbsp;d1,&nbsp;...,&nbsp;dn)&nbsp;-&gt;&nbsp;random&nbsp;values</tt></dd></dl>
  <dl><dt><a name="-redraw"><strong>redraw</strong></a>()</dt></dl>
  <dl><dt><a name="-register_dtype"><strong>register_dtype</strong></a>(...)</dt><dd><tt><a href="#-register_dtype">register_dtype</a>(a)&nbsp;registers&nbsp;a&nbsp;new&nbsp;type&nbsp;object&nbsp;--&nbsp;gives&nbsp;it&nbsp;a&nbsp;typenum</tt></dd></dl>
+ <dl><dt><a name="-removeTriade"><strong>removeTriade</strong></a>()</dt><dd><tt>Remove&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-renderMode"><strong>renderMode</strong></a>(mode)</dt></dl>
  <dl><dt><a name="-runApp"><strong>runApp</strong></a>(args)</dt><dd><tt>Create&nbsp;and&nbsp;run&nbsp;the&nbsp;qt&nbsp;application.</tt></dd></dl>
  <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>(fn, fmt<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;on&nbsp;file&nbsp;fn&nbsp;in&nbsp;format&nbsp;fmt.<br>
@@ -286,6 +294,11 @@ will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp
 &nbsp;<br>
 Without&nbsp;filename,&nbsp;switches&nbsp;off&nbsp;multisave&nbsp;mode.</tt></dd></dl>
  <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt></dl>
+ <dl><dt><a name="-savePreferences"><strong>savePreferences</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;preferences.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;local&nbsp;preferences&nbsp;file&nbsp;was&nbsp;read,&nbsp;it&nbsp;will&nbsp;be&nbsp;saved&nbsp;there.<br>
+Otherwise,&nbsp;it&nbsp;will&nbsp;be&nbsp;saved&nbsp;as&nbsp;the&nbsp;user&nbsp;preferences,&nbsp;possibly<br>
+creating&nbsp;that&nbsp;file.</tt></dd></dl>
  <dl><dt><a name="-set_numeric_ops"><strong>set_numeric_ops</strong></a>(...)</dt><dd><tt><a href="#-set_numeric_ops">set_numeric_ops</a>(op=func,&nbsp;...)&nbsp;sets&nbsp;some&nbsp;or&nbsp;all&nbsp;of&nbsp;the&nbsp;number&nbsp;methods&nbsp;for&nbsp;all&nbsp;array&nbsp;objects.&nbsp;&nbsp;Don't&nbsp;forget&nbsp;**dict&nbsp;can&nbsp;be&nbsp;used&nbsp;as&nbsp;the&nbsp;argument&nbsp;list.&nbsp;&nbsp;Returns&nbsp;the&nbsp;functions&nbsp;that&nbsp;were&nbsp;replaced&nbsp;--&nbsp;can&nbsp;be&nbsp;stored&nbsp;and&nbsp;set&nbsp;later.</tt></dd></dl>
  <dl><dt><a name="-set_string_function"><strong>set_string_function</strong></a>(...)</dt><dd><tt><a href="#-set_string_function">set_string_function</a>(f,&nbsp;repr=1)&nbsp;sets&nbsp;the&nbsp;python&nbsp;function&nbsp;f&nbsp;to&nbsp;be&nbsp;the&nbsp;function&nbsp;used&nbsp;to&nbsp;obtain&nbsp;a&nbsp;pretty&nbsp;printable&nbsp;string&nbsp;version&nbsp;of&nbsp;a&nbsp;array&nbsp;whenever&nbsp;a&nbsp;array&nbsp;is&nbsp;printed.&nbsp;&nbsp;f(M)&nbsp;should&nbsp;expect&nbsp;a&nbsp;array&nbsp;argument&nbsp;M,&nbsp;and&nbsp;should&nbsp;return&nbsp;a&nbsp;string&nbsp;consisting&nbsp;of&nbsp;the&nbsp;desired&nbsp;representation&nbsp;of&nbsp;M&nbsp;for&nbsp;printing.</tt></dd></dl>
  <dl><dt><a name="-setview"><strong>setview</strong></a>(name, angles)</dt><dd><tt>Declare&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
@@ -297,6 +310,7 @@ a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd><
  <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
  <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>
  <dl><dt><a name="-system"><strong>system</strong></a>(cmdline, result<font color="#909090">='output'</font>)</dt></dl>
+ <dl><dt><a name="-toggleTriade"><strong>toggleTriade</strong></a>()</dt><dd><tt>Toggle&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-update_use_defaults"><strong>update_use_defaults</strong></a>(...)</dt></dl>
  <dl><dt><a name="-view"><strong>view</strong></a>(v, wait<font color="#909090">=False</font>)</dt><dd><tt>Show&nbsp;a&nbsp;named&nbsp;view,&nbsp;either&nbsp;a&nbsp;builtin&nbsp;or&nbsp;a&nbsp;user&nbsp;defined.</tt></dd></dl>
  <dl><dt><a name="-wakeup"><strong>wakeup</strong></a>(mode<font color="#909090">=0</font>)</dt><dd><tt>Wake&nbsp;up&nbsp;from&nbsp;the&nbsp;sleep&nbsp;function.<br>
@@ -388,7 +402,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.concatenator object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab602668&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab6037d0&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>

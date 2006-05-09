@@ -295,6 +295,8 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 Example:&nbsp;E.<a href="#Formex-mapd">mapd</a>(2,lambda&nbsp;d:sqrt(10**2-d**2),f.<a href="#Formex-center">center</a>(),[0,1])<br>
 maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></dl>
 
+<dl><dt><a name="Formex-maxprop"><strong>maxprop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;highest&nbsp;property&nbsp;used,&nbsp;or&nbsp;None</tt></dd></dl>
+
 <dl><dt><a name="Formex-ndim"><strong>ndim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;node.&nbsp;In&nbsp;the<br>
@@ -634,7 +636,6 @@ specified&nbsp;by&nbsp;the&nbsp;keyword&nbsp;argument&nbsp;typecode.</tt></dd></
  <dl><dt><a name="-concatenate"><strong>concatenate</strong></a>(...)</dt><dd><tt><a href="#-concatenate">concatenate</a>((a1,a2,...),axis=None).</tt></dd></dl>
  <dl><dt><a name="-connect"><strong>connect</strong></a>(Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;connects&nbsp;the&nbsp;formices&nbsp;in&nbsp;list.<br>
 &nbsp;<br>
-This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;method!<br>
 Flist&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;formices,&nbsp;nodid&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;nod&nbsp;ids&nbsp;and<br>
 bias&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;element&nbsp;bias&nbsp;values.&nbsp;All&nbsp;lists&nbsp;should&nbsp;have<br>
 the&nbsp;same&nbsp;length.<br>
@@ -746,7 +747,7 @@ When&nbsp;looking&nbsp;at&nbsp;the&nbsp;plane&nbsp;with&nbsp;the&nbsp;x-axis&nbs
 Adding&nbsp;16&nbsp;to&nbsp;the&nbsp;ordinal&nbsp;of&nbsp;the&nbsp;character&nbsp;causes&nbsp;an&nbsp;extra&nbsp;move&nbsp;of&nbsp;+1&nbsp;in<br>
 the&nbsp;z-direction.&nbsp;Adding&nbsp;48&nbsp;causes&nbsp;an&nbsp;extra&nbsp;move&nbsp;of&nbsp;-1.&nbsp;This&nbsp;means&nbsp;that<br>
 'ABCDEFGHI',&nbsp;resp.&nbsp;'abcdefghi',&nbsp;correspond&nbsp;with&nbsp;'123456789'&nbsp;with&nbsp;an&nbsp;extra<br>
-z&nbsp;+/-=&nbsp;1.&nbsp;THe&nbsp;gives&nbsp;the&nbsp;following&nbsp;schema:<br>
+z&nbsp;+/-=&nbsp;1.&nbsp;This&nbsp;gives&nbsp;the&nbsp;following&nbsp;schema:<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z+=1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;unchanged&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&nbsp;-=&nbsp;1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
@@ -872,7 +873,7 @@ in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;A&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.concatenator object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaabaa7320&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaabaa8320&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>

@@ -83,7 +83,10 @@ def askItems(items):
 
 def askFilename(cur,files="All files (*.*)",exist=True):
     """Ask for an existing file name"""
-    return widgets.FileSelectionDialog(cur,files).getFilename()
+    res = widgets.FileSelectionDialog(cur,files,exist).getFilename()
+    GD.gui.update()
+    GD.canvas.update()
+    return res
 
 def log(s):
     """Display a message in the cmdlog window."""

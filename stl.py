@@ -1,24 +1,38 @@
 #!/usr/bin/env pyformex
 # $Id$
 #
-"""Import/Export Formex structures to/from stl format"""
+"""Import/Export Formex structures to/from stl format.
+
+An stl is stored as a numerical array with shape [n,3,3].
+This is compatible with the pyFormex data model.
+"""
 
 import globaldata as GD
 from numpy import *
 
 
+def compute_normals(a,normalized=True):
+    """Compute the normal vectors of the triangles in a[n,3,3].
+
+    Default is to normalize the vectors to unit length.
+    If not essential, this can be switched off to save computing time.
+    """
+    n = cross(a[:,1]-a[:,0],a[:,2]-a[:,1])
+    if normalized:
+        n /= column_stack([sqrt(sum(n*n,-1))])
+    return n
+
+
 def write_ascii(a,f):
-    """Export an [n,3,3] float array as an ascii .stl file"""
+    """Export an [n,3,3] float array as an ascii .stl file."""
 
     own = type(f) == str
     if own:
         f = file(f,'w')
     f.write("solid  Created by %s\n" % GD.Version)
-    for e in a:
-        normal = cross(e[1]-e[0],e[2]-e[1])
-        length = column_stack([sum(normal*normal,-1)])
-        normal /= length
-        f.write("  facet normal %f %f %f\n" % tuple(normal))
+    v = compute_normals(a)
+    for e,n in zip(a,v):
+        f.write("  facet normal %f %f %f\n" % tuple(n))
         f.write("    outer loop\n")
         for p in e:
             f.write("      vertex %f %f %f\n" % tuple(p))

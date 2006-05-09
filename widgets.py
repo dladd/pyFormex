@@ -11,13 +11,17 @@ class FileSelectionDialog(qt.QFileDialog):
     You can specify a default path/filename that will be suggested initially.
     If a pattern is specified, only matching files will be shown.
     A pattern can be something like 'Images (*.png *.jpg)'.
-    Default mode is to accept only existing files. You can specify
-    any QFileDialog mode (e.g. QFileDialog.AnyFile to accept new files)
+    Default mode is to accept any filename. You can specify exist=True
+    to accept only existing files.
     
     """
-    def __init__(self,default=None,pattern=None,mode=qt.QFileDialog.ExistingFile):
+    def __init__(self,default=None,pattern=None,exist=False):
         """The constructor shows the widget."""
         qt.QFileDialog.__init__(self,default,pattern)
+        if exist:
+            mode = qt.QFileDialog.ExistingFile
+        else:
+            mode = qt.QFileDialog.AnyFile
         self.setMode(mode)
         self.show()
         
