@@ -26,7 +26,7 @@ def readMaterials(database):
     mat = FlatDB(['name'], beginrec = 'material', endrec = 'endmaterial')
     mat.readFile(database)
     for key, item in mat.iteritems():#not materials=Dict(mat), because this would erase any material that was already added
-        materials[key] = item
+        materials[key] = CascadingDict(item)
 
 def readSections(database):
     """Import all sections from a database
@@ -34,9 +34,9 @@ def readSections(database):
     For now, it can only read databases using flatkeydb.
     """
     sect = FlatDB(['name'], beginrec = 'section', endrec = 'endsection')
-    sect.readFile('sections.db')
+    sect.readFile(database)
     for key, item in sect.iteritems():
-        sections[key] = item
+        sections[key] = CascadingDict(item)
 
 
 class Property(CascadingDict):
@@ -74,7 +74,7 @@ class NodeProperty(Property):
         cartesian, spherical and cylindrical
 		-coordset: a list of 6 coordinates; the 2 points that specify the transformation 
         """
-        if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or bound==None): 
+        if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or isinstance(bound, str) or bound==None): 
             CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'coords' : coords, 'coordset' : coordset})
             nodeproperties[nr] = self
         else: 
@@ -92,7 +92,7 @@ class ElemProperty(Property):
         This number should be the same as the element property number of the Formex element.
         An element property can hold the following sub-properties:
         - elemsection : the section properties of the element. This is an ElemSection instance.
-        - elemload : the loading of the element. This is an ElemLoad instance.
+        - elemload : the loading of the element. This is a list of ElemLoad instances.
         - elemtype: the type of element that is to be used in the analysis. 
         """    
         CascadingDict.__init__(self, {'elemsection' : elemsection, 'elemload' : elemload, 'elemtype' : elemtype})
@@ -105,9 +105,10 @@ class ElemSection(Property):
         """Create a new element section property. Empty by default
         
         An element section property can hold the following sub-properties:
-        - section : the section properties of the element. The required data in this dict depends on the sectiontype.
-        - material : the element material. 
+        - section : the section properties of the element. This can be a dictionary or a string. The required data in this dict depends on the sectiontype. Currently known keys to f2abq.py are: cross_section, moment_inertia_11, moment_inertia_12, moment_inertia_22, torsional_rigidity, radius
+        - material : the element material. This can be a dictionary or a string. Currently known keys to f2abq.py are: young_modulus, shear_modulus
         - sectiontype: the sectiontype of the element. 
+		- 'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section 			   axis. This allows to change the orientation of the cross-section.
         """    
         CascadingDict.__init__(self,{})
         self.sectiontype = sectiontype
@@ -118,9 +119,10 @@ class ElemSection(Property):
     def addSection(self, section):
         """Create or replace the section properties of the element.
 
+
 		If 'section' is a dict, it will be added to 'sections'.
         If 'section' is a string, this string will be used as a key to search in 'sections'
-		'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section 			axis. This allows to change the orientation of the cross-section.
+
         """
         if isinstance(section, str):
             if sections.has_key(section):
@@ -168,17 +170,40 @@ if __name__ == "__main__":
 
     readMaterials('materials.db')
     readSections('sections.db')
-    Pr1=Property(35, {'colour':'green', 'section':CascadingDict({'I':{'Ix':124,'Iy':65},'A':658}),'comment':'This could be a green pen'})
+    Stick=Property(1, {'colour':'green', 'name':'Stick', 'weight': 25, 'comment':'This could be anything: a gum, a frog, a usb-stick,...'})
+    author=Property(5,{'Name':'Tim Neels', 'Address':CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'})})
+    
+#    print Stick
+#    print properties[1] 
+    
+    Stick.weight=30
+#    print properties[1]
+    
+#    print properties[5]
+    properties[5].street='Voskeslaan'
+#    print author
+#    print properties[5]
+#    print author.street
+    
     P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
     B1 = [ 0.0 ] * 6
-    S1=ElemSection('IPEA100', 'steel')
-    S2=ElemSection({'name':'IPEM800','A':951247,'I':CascadingDict({'Ix':1542,'Iy':6251,'Ixy':352})},{'name':'Steel','E':240})
-    BL1=ElemLoad(0.5)
-    BL2=ElemLoad(cload=[0.2,1])
-    top=ElemProperty(2,S1,BL1)
-    bottom=ElemProperty(3,S2,BL2)
-    diagonal=ElemProperty(4,S1,elemload=BL2)
+
+    vert = ElemSection('IPEA100', 'steel')
+    hor = ElemSection({'name':'IPEM800','A':951247,'I':CascadingDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
+    q = ElemLoad(magnitude=2.5, loadlabel='PZ')
+    top = ElemProperty(1,hor,[q],'B22')
+    column = ElemProperty(2,vert, elemtype='B22')
+    diagonal = ElemProperty(4,hor,elemtype='B22')
+    print 'elemproperties'
+    for key, item in elemproperties.iteritems():
+       print key, item	
+
+    bottom=ElemProperty(3,hor,q)
+
+
+    topnode = NodeProperty(1,cload=[5,0,-75,0,0,0])
+    foot = NodeProperty(2,bound='pinned')
 
     np = {}
     np['1'] = NodeProperty(1, P1)
@@ -188,40 +213,40 @@ if __name__ == "__main__":
     np['1'].cload[1] = 33.0
     np['7'] = NodeProperty(7, bound=B1)
 
-    for key, item in materials.iteritems():
-        print key, item
-
-    print 'properties'
-    for key, item in properties.iteritems():
-        print key, item
-
-    print 'nodeproperties'    
-    for key, item in nodeproperties.iteritems():
-        print key, item
-    
-    print 'elemproperties'
-    for key, item in elemproperties.iteritems():
-        print key, item
-        
-    print elemproperties[3].A
-    bottom.A=555
-    print elemproperties[3]
-    print elemproperties[3].A
-    elemproperties[3].A=444
-    print bottom.A
-    print elemproperties[3].A
-    
-    print "beamsection attributes"
-    for key,item in elemproperties.iteritems():
-        print key,item.elemload
-    
-    for key,item in elemproperties.iteritems():
-        print key,item.E
-    
-    print "cload attributes"
-    for key,item in nodeproperties.iteritems():
-        print key,item.cload
-
-    print "cload attributes"
-    for key,item in np.iteritems():
-        print key,item.cload
+##    for key, item in materials.iteritems():
+##        print key, item
+##
+##    print 'properties'
+##    for key, item in properties.iteritems():
+##        print key, item
+##
+##    print 'nodeproperties'    
+##    for key, item in nodeproperties.iteritems():
+##        print key, item
+##    
+##    print 'elemproperties'
+##    for key, item in elemproperties.iteritems():
+##        print key, item
+####        
+##    print elemproperties[3].A
+##    bottom.A=555
+##    print elemproperties[3]
+##    print elemproperties[3].A
+##    elemproperties[3].A=444
+##    print bottom.A
+##    print elemproperties[3].A
+##    
+##    print "beamsection attributes"
+##    for key,item in elemproperties.iteritems():
+##        print key,item.elemload
+##    
+##    for key,item in elemproperties.iteritems():
+##        print key,item.E
+##    
+##    print "cload attributes"
+##    for key,item in nodeproperties.iteritems():
+##        print key,item.cload
+##
+##    print "cload attributes"
+##    for key,item in np.iteritems():
+##        print key,item.cload
