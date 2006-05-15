@@ -1,3 +1,9 @@
+2006-05-15  Benedict Verhegghe  <benedict.verhegghe@ugent.be>
+
+	* formex.py (Formex.nodesAndElements): The equivalence operation is
+	now repeated by default to remove any equivalent nodes left over by
+	the first call.
+
 2006-04-18  Benedict Verhegghe  <benedict.verhegghe@ugent.be>
 
 	* draw.py (isPyFormex): now returns True if the first line contains

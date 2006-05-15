@@ -9,6 +9,23 @@ This is compatible with the pyFormex data model.
 
 import globaldata as GD
 from numpy import *
+from formex import *
+
+
+class Stl(Formex):
+    """A specialized Formex subclass representing stl models."""
+
+    def __init__(self,*args):
+        Formex.__init__(self,*args)
+        if self.f.shape[1] != 3:
+            if self.f.size == 0:
+                self.f.shape = (0,3,3)
+            else:
+                raise RuntimeError,"Stl: should have 3 nodes per element"   
+        print self.f.shape
+        self.n = None
+        self.a = None
+
 
 
 def compute_normals(a,normalized=True):
@@ -48,7 +65,7 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_ascii(f):
+def stl_import_ascii(f):
     """Read an ascii .stl file into an [n,3,3] float array"""
 
     own = type(f) == str

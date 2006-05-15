@@ -286,12 +286,6 @@ def equivalence(x,nodesperbox=1,shift=0.5):
 ##
 #########################
 #
-# Update 02 Jul 2004
-# For simplicity's sake, we work now only with 3-D coordinates.
-# The user can create formices in a 2-D space,
-# but internally they will be stored with 3 coordinates, adding a z-value 0.
-# A special operator formex2D lets you extract a 2-D coordinate list
-
 # About Formex/Formian newspeak:
 # The author of formex/formian had an incredible preference for newspeak:
 # for every concept or function, a new name was invented. While this may
@@ -362,9 +356,18 @@ class Formex:
     def __init__(self,data=[[[]]],prop=None):
         """Create a new Formex.
 
-        The Formex can be initialized by a 3D coordinate list,
+        The Formex can be initialized by a 2D or 3D coordinate list,
         or by a string to be used in the pattern function to create
         a coordinate list.
+        If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
+        Formices therefore always have 3D coordinates.
+        Thus
+          F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+        Creates a Formex with two elements, each having 2 points in the
+        global z-plane.
+
+        If a prop argument is specified, the setProp() function will be
+        called to assign the properties.
         """
         if type(data) == str:
             data = pattern(data)
@@ -378,8 +381,11 @@ class Formex:
             f = zeros((self.f.shape[:2]+(3,)),dtype=Float)
             f[:,:,:2] = self.f
             self.f = f
-        elif self.f.shape[2] != 0:
-            raise RuntimeError,"Formex: last data dimension should be 2 or 3"   
+        else:
+            if self.f.size == 0:
+                self.f.shape = (0,0,3)
+            else:
+                raise RuntimeError,"Formex: last data dimension should be 2 or 3"   
         if type(prop) != type(None):
             self.setProp(prop)
 
@@ -449,6 +455,7 @@ class Formex:
             return None
         else:
             return self.p.max()
+
 #    def items(self):
 #        """Return a list of (element,property) tuples"""
 
@@ -515,6 +522,7 @@ class Formex:
         are lying outside the sphere.
         """
         return self.f - array(self.center())
+    
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""
@@ -525,8 +533,7 @@ class Formex:
             return unique(self.p)
 
 
-## NEW IMPLEMENTATION : MUCH FASTER ON LARGE FORMICES !!
-    def nodesAndElements(self,nodesperbox=1):
+    def nodesAndElements(self,nodesperbox=1,repeat=True):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -538,14 +545,16 @@ class Formex:
            coords,elems = nodesAndElements(F)
         is accomplished by
            F = Formex(coords[elems])
+
+        There is a (very small) probability that two very close nodes are
+        not equivalenced  by this procedure. Use it mulitple times with
+        different parameters to check.
         """
         f = reshape(self.f,(self.nnodes(),3))
         f,s = equivalence(f,nodesperbox,0.5)
-        #
-        # We really should repeat this operation with another shift (0.75)
-        # and we might have to use higher values of nodesperbox for
-        # extremely large formices --> research needed
-        #
+        if repeat:
+            f,t = equivalence(f,nodesperbox,0.75)
+            s = t[s]
         e = reshape(s,self.f.shape[:2])
         return (f,e)
 
