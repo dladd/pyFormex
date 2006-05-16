@@ -61,7 +61,7 @@ class Property(CascadingDict):
 class NodeProperty(Property):
     """Properties related to a single node."""
 
-    def __init__(self, nr, cload = None, bound = None, coords = 'cartesian', coordset=[]):
+    def __init__(self, nr, cload = None, bound = None, displacement=None, coords = 'cartesian', coordset=[]):
         """Create a new node property. Empty by default
         
         A node property is created and the data is stored in a Dict called 'nodeproperties'. 
@@ -75,7 +75,7 @@ class NodeProperty(Property):
 		-coordset: a list of 6 coordinates; the 2 points that specify the transformation 
         """
         if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or isinstance(bound, str) or bound==None): 
-            CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'coords' : coords, 'coordset' : coordset})
+            CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'displacement':displacement , 'coords' : coords, 'coordset' : coordset})
             nodeproperties[nr] = self
         else: 
             print 'A pointload or a boundary condition has to be a list containing 6 items'
