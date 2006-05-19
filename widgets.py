@@ -5,7 +5,7 @@
 import qt,types
 
 
-class FileSelectionDialog(qt.QFileDialog):
+class FileSelection(qt.QFileDialog):
     """A file selection dialog widget.
 
     You can specify a default path/filename that will be suggested initially.
@@ -17,12 +17,15 @@ class FileSelectionDialog(qt.QFileDialog):
     """
     def __init__(self,default=None,pattern=None,exist=False):
         """The constructor shows the widget."""
-        qt.QFileDialog.__init__(self,default,pattern)
+        qt.QFileDialog.__init__(self,default,pattern,None,'pyf-filesel')
         if exist:
             mode = qt.QFileDialog.ExistingFile
+            caption = "Open existing file"
         else:
             mode = qt.QFileDialog.AnyFile
+            caption = "Save file as"
         self.setMode(mode)
+        self.setCaption(caption)
         self.show()
         
     def getFilename(self):

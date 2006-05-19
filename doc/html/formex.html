@@ -90,9 +90,18 @@ This&nbsp;allows&nbsp;addressing&nbsp;element&nbsp;i&nbsp;of&nbsp;<a href="#Form
 
 <dl><dt><a name="Formex-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">=[[[]]]</font>, prop<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;<a href="#Formex">Formex</a>&nbsp;can&nbsp;be&nbsp;initialized&nbsp;by&nbsp;a&nbsp;3D&nbsp;coordinate&nbsp;list,<br>
+The&nbsp;<a href="#Formex">Formex</a>&nbsp;can&nbsp;be&nbsp;initialized&nbsp;by&nbsp;a&nbsp;2D&nbsp;or&nbsp;3D&nbsp;coordinate&nbsp;list,<br>
 or&nbsp;by&nbsp;a&nbsp;string&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;the&nbsp;pattern&nbsp;function&nbsp;to&nbsp;create<br>
-a&nbsp;coordinate&nbsp;list.</tt></dd></dl>
+a&nbsp;coordinate&nbsp;list.<br>
+If&nbsp;2D&nbsp;coordinates&nbsp;are&nbsp;given,&nbsp;a&nbsp;3-rd&nbsp;coordinate&nbsp;0.0&nbsp;is&nbsp;added.<br>
+Formices&nbsp;therefore&nbsp;always&nbsp;have&nbsp;3D&nbsp;coordinates.<br>
+Thus<br>
+&nbsp;&nbsp;F&nbsp;=&nbsp;<a href="#Formex">Formex</a>([[[1,0],[0,1]],[[0,1],[1,2]]])<br>
+Creates&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;two&nbsp;elements,&nbsp;each&nbsp;having&nbsp;2&nbsp;points&nbsp;in&nbsp;the<br>
+global&nbsp;z-plane.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;prop&nbsp;argument&nbsp;is&nbsp;specified,&nbsp;the&nbsp;<a href="#Formex-setProp">setProp</a>()&nbsp;function&nbsp;will&nbsp;be<br>
+called&nbsp;to&nbsp;assign&nbsp;the&nbsp;properties.</tt></dd></dl>
 
 <dl><dt><a name="Formex-__setitem__"><strong>__setitem__</strong></a>(self, i, val)</dt><dd><tt>Change&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
@@ -341,7 +350,7 @@ number&nbsp;of&nbsp;nodes.<br>
 The&nbsp;properties&nbsp;are&nbsp;not&nbsp;copied&nbsp;over,&nbsp;since&nbsp;they&nbsp;will&nbsp;usually&nbsp;not&nbsp;make<br>
 any&nbsp;sense.</tt></dd></dl>
 
-<dl><dt><a name="Formex-nodesAndElements"><strong>nodesAndElements</strong></a>(self, nodesperbox<font color="#909090">=1</font>)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
+<dl><dt><a name="Formex-nodesAndElements"><strong>nodesAndElements</strong></a>(self, nodesperbox<font color="#909090">=1</font>, repeat<font color="#909090">=True</font>)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
 &nbsp;<br>
 A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;first&nbsp;is&nbsp;float&nbsp;array&nbsp;with<br>
 the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
@@ -351,7 +360,11 @@ the&nbsp;order&nbsp;of&nbsp;the&nbsp;nodes&nbsp;is&nbsp;unspecified.<br>
 By&nbsp;the&nbsp;way,&nbsp;the&nbsp;reverse&nbsp;operation&nbsp;of<br>
 &nbsp;&nbsp;&nbsp;coords,elems&nbsp;=&nbsp;<a href="#Formex-nodesAndElements">nodesAndElements</a>(F)<br>
 is&nbsp;accomplished&nbsp;by<br>
-&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;<a href="#Formex">Formex</a>(coords[elems])</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;F&nbsp;=&nbsp;<a href="#Formex">Formex</a>(coords[elems])<br>
+&nbsp;<br>
+There&nbsp;is&nbsp;a&nbsp;(very&nbsp;small)&nbsp;probability&nbsp;that&nbsp;two&nbsp;very&nbsp;close&nbsp;nodes&nbsp;are<br>
+not&nbsp;equivalenced&nbsp;&nbsp;by&nbsp;this&nbsp;procedure.&nbsp;Use&nbsp;it&nbsp;mulitple&nbsp;times&nbsp;with<br>
+different&nbsp;parameters&nbsp;to&nbsp;check.</tt></dd></dl>
 
 <dl><dt><a name="Formex-nonzero"><strong>nonzero</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;nonzero&nbsp;elements.<br>
 &nbsp;<br>
@@ -873,7 +886,7 @@ in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;A&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.concatenator object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaabaa8320&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64_arrtype'&gt;: &lt;function &lt;lambda&gt; at 0...arrtype'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaabaa7320&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>

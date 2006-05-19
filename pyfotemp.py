@@ -169,6 +169,7 @@ def AddMenuItems(menu, items=[]):
 #
 MenuData = [
     ("Popup","&File",[
+        ("Action","&New","newFile"),
         ("Action","&Open","openFile"),
         ("Action","&Play","play"),
         ("Action","&Edit","edit"),
@@ -326,25 +327,22 @@ def editor():
         GD.gui.showEditor()
 
 
-##def openFile():
-##    """Open a file and set it as the current file"""
-##    dir = GD.cfg.get('workdir',".")
-##    fs = widgets.FileSelectionDialog(dir,"pyformex scripts (*.frm *.py)")
-##    fn = fs.getFilename()
-##    if fn:
-##        GD.cfg['workdir'] = os.path.dirname(fn)
-##        gui.setcurfile(fn)
+def newFile():
+    return openFile(False)
 
-def openFile():
-    """Open a file and set it as the current file"""
+
+def openFile(exist=True):
+    """Open a file selection dialog and set the selection as the current file.
+
+    The default only accepts existing files. Use newFile() to accept new files.
+    """
     cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
-    fn = qt.QFileDialog.getSaveFileName(
-        cur,"pyformex scripts (*.frm *.py)",None,"Open file dialog",
-        "Choose a file to open (New or Existing)" )
+    fs = widgets.FileSelection(cur,"pyformex scripts (*.frm *.py)",exist=exist)
+    fn = fs.getFilename()
     if fn:
-        fn = str(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         gui.setcurfile(fn)
+
         
 def edit():
     """Load the current file in the editor.
@@ -376,7 +374,7 @@ def saveImage():
     """
     global canvas
     dir = GD.cfg.get('workdir',".")
-    fs = widgets.FileSelectionDialog(dir,pattern="Images (*.png *.jpg *.eps)",mode=qt.QFileDialog.AnyFile)
+    fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg *.eps)")
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
@@ -393,7 +391,7 @@ def multiSave():
         fn = None
     else:
         dir = GD.cfg.get('workdir',".")
-        fs = widgets.FileSelectionDialog(dir,pattern="Images (*.png *.jpg)",mode=qt.QFileDialog.AnyFile)
+        fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg)")
         fn = fs.getFilename()
     draw.saveMulti(fn,verbose=True)
 
