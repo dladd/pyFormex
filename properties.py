@@ -177,13 +177,15 @@ if __name__ == "__main__":
 #    print properties[1] 
     
     Stick.weight=30
-#    print properties[1]
+    Stick.length=10
+    print properties[1]
     
 #    print properties[5]
     properties[5].street='Voskeslaan'
-#    print author
-#    print properties[5]
-#    print author.street
+    print author
+    print properties[5]
+    print author.street
+    print author.Address.street
     
     P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
