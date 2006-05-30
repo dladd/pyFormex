@@ -547,7 +547,7 @@ class Formex:
            F = Formex(coords[elems])
 
         There is a (very small) probability that two very close nodes are
-        not equivalenced  by this procedure. Use it mulitple times with
+        not equivalenced  by this procedure. Use it multiple times with
         different parameters to check.
         """
         f = reshape(self.f,(self.nnodes(),3))
@@ -650,7 +650,7 @@ class Formex:
         """Create a property array for the Formex.
 
         A property array is a rank-1 integer array with dimension equal
-        ro the number of elements in the Formex (first dimension of data).
+        to the number of elements in the Formex (first dimension of data).
         You can specify a single value or a list/array of integer values.
         If the number of passed values is less than the number of elements,
         they wil be repeated. If you give more, they will be ignored.

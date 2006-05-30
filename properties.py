@@ -18,8 +18,9 @@ properties = Dict({})
 nodeproperties = Dict({})
 elemproperties = Dict({})
 
+
 def readMaterials(database):
-    """Import all materials from a database
+    """Import all materials from a database.
     
     For now, it can only read databases using flatkeydb.
     """
@@ -28,8 +29,9 @@ def readMaterials(database):
     for key, item in mat.iteritems():#not materials=Dict(mat), because this would erase any material that was already added
         materials[key] = CascadingDict(item)
 
+
 def readSections(database):
-    """Import all sections from a database
+    """Import all sections from a database.
     
     For now, it can only read databases using flatkeydb.
     """
@@ -47,7 +49,7 @@ class Property(CascadingDict):
     of course, connect properties to Formex elements.
     """
 
-    def __init__(self, nr, data={}):
+    def __init__(self, nr, data = {}):
         """Create a new property. Empty by default.
         
         A property is created and the data is stored in a Dict called 'properties'. 
@@ -62,7 +64,7 @@ class NodeProperty(Property):
     """Properties related to a single node."""
 
     def __init__(self, nr, cload = None, bound = None, displacement=None, coords = 'cartesian', coordset=[]):
-        """Create a new node property. Empty by default
+        """Create a new node property. Empty by default.
         
         A node property is created and the data is stored in a Dict called 'nodeproperties'. 
         The key to access the node property is the number.
@@ -70,6 +72,7 @@ class NodeProperty(Property):
         A node property can hold the following sub-properties:
         - cload : a concentrated load
         - bound : a boundary condition
+		- displacement: prescribe a displacement
         - coords: the coordinate system which is used for the definition of cload and bound. There are three options:
         cartesian, spherical and cylindrical
 		-coordset: a list of 6 coordinates; the 2 points that specify the transformation 
@@ -78,14 +81,14 @@ class NodeProperty(Property):
             CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'displacement':displacement , 'coords' : coords, 'coordset' : coordset})
             nodeproperties[nr] = self
         else: 
-            print 'A pointload or a boundary condition has to be a list containing 6 items'
+            print 'A pointload and a boundary condition have to be a list containing 6 items'
 
 
 class ElemProperty(Property):
     """Properties related to a single element."""
     
     def __init__(self, nr, elemsection = None, elemload = None, elemtype = None): 
-        """Create a new element property. Empty by default
+        """Create a new element property. Empty by default.
         
         An element property is created and the data is stored in a Dict called 'elemproperties'. 
         The key to access the element property is the number.
@@ -98,15 +101,16 @@ class ElemProperty(Property):
         CascadingDict.__init__(self, {'elemsection' : elemsection, 'elemload' : elemload, 'elemtype' : elemtype})
         elemproperties[nr] = self
 
+
 class ElemSection(Property):
     """Properties related to the section of a beam."""
 
     def __init__(self, section = None, material = None, sectiontype = 'general', orientation = None):  
-        """Create a new element section property. Empty by default
+        """Create a new element section property. Empty by default.
         
         An element section property can hold the following sub-properties:
         - section : the section properties of the element. This can be a dictionary or a string. The required data in this dict depends on the sectiontype. Currently known keys to f2abq.py are: cross_section, moment_inertia_11, moment_inertia_12, moment_inertia_22, torsional_rigidity, radius
-        - material : the element material. This can be a dictionary or a string. Currently known keys to f2abq.py are: young_modulus, shear_modulus
+        - material : the element material. This can be a dictionary or a string. Currently known keys to f2abq.py are: young_modulus, shear_modulus, density, poisson_ratio
         - sectiontype: the sectiontype of the element. 
 		- 'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section 			   axis. This allows to change the orientation of the cross-section.
         """    
@@ -119,10 +123,8 @@ class ElemSection(Property):
     def addSection(self, section):
         """Create or replace the section properties of the element.
 
-
 		If 'section' is a dict, it will be added to 'sections'.
-        If 'section' is a string, this string will be used as a key to search in 'sections'
-
+        If 'section' is a string, this string will be used as a key to search in 'sections'.
         """
         if isinstance(section, str):
             if sections.has_key(section):
@@ -135,11 +137,13 @@ class ElemSection(Property):
         elif section==None:
             self.section = section
         else: 
-            print "argument needs to be string or dict"
+            print "addSection requires a string or dict"
     
     def addMaterial(self, material):
-        """Create or replace the material properties of the element. If the argument is a dict, it will be added to 'materials'.
-        If the argument is a string, this string will be used as a key to search in 'materials'
+        """Create or replace the material properties of the element.
+
+		If the argument is a dict, it will be added to 'materials'.
+        If the argument is a string, this string will be used as a key to search in 'materials'.
         """
         if isinstance(material, str) :
             if materials.has_key(material):
@@ -152,13 +156,20 @@ class ElemSection(Property):
         elif material==None:
             self.material=material
         else:
-            print "argument needs to be a string or dict"
+            print "addMaterial requires a string or dict"
+
 
 class ElemLoad(Property):
     """Properties related to the load of a beam."""
 
     def __init__(self, magnitude = None, loadlabel = None):
-        CascadingDict.__init__(self, {'magnitude' : magnitude, 'loadlabel' : loadlabel})
+        """Create a new element load. Empty by default.
+        
+        An element load can hold the following sub-properties:
+        - magnitude: the magnitude of the distibuted load.
+        - loadlabel: the distributed load type label.
+        """          
+        Dict.__init__(self, {'magnitude' : magnitude, 'loadlabel' : loadlabel})
 
 
 
@@ -201,7 +212,7 @@ if __name__ == "__main__":
     for key, item in elemproperties.iteritems():
        print key, item	
 
-    bottom=ElemProperty(3,hor,q)
+    bottom=ElemProperty(3,hor,[q])
 
 
     topnode = NodeProperty(1,cload=[5,0,-75,0,0,0])
@@ -215,40 +226,40 @@ if __name__ == "__main__":
     np['1'].cload[1] = 33.0
     np['7'] = NodeProperty(7, bound=B1)
 
-##    for key, item in materials.iteritems():
-##        print key, item
-##
-##    print 'properties'
-##    for key, item in properties.iteritems():
-##        print key, item
-##
-##    print 'nodeproperties'    
-##    for key, item in nodeproperties.iteritems():
-##        print key, item
-##    
-##    print 'elemproperties'
-##    for key, item in elemproperties.iteritems():
-##        print key, item
-####        
-##    print elemproperties[3].A
-##    bottom.A=555
-##    print elemproperties[3]
-##    print elemproperties[3].A
-##    elemproperties[3].A=444
-##    print bottom.A
-##    print elemproperties[3].A
-##    
-##    print "beamsection attributes"
-##    for key,item in elemproperties.iteritems():
-##        print key,item.elemload
-##    
-##    for key,item in elemproperties.iteritems():
-##        print key,item.E
-##    
-##    print "cload attributes"
-##    for key,item in nodeproperties.iteritems():
-##        print key,item.cload
-##
-##    print "cload attributes"
-##    for key,item in np.iteritems():
-##        print key,item.cload
+    for key, item in materials.iteritems():
+        print key, item
+
+    print 'properties'
+    for key, item in properties.iteritems():
+        print key, item
+
+    print 'nodeproperties'    
+    for key, item in nodeproperties.iteritems():
+        print key, item
+    
+    print 'elemproperties'
+    for key, item in elemproperties.iteritems():
+        print key, item
+##        
+    print elemproperties[3].A
+    bottom.A=555
+    print elemproperties[3]
+    print elemproperties[3].A
+    elemproperties[3].A=444
+    print bottom.A
+    print elemproperties[3].A
+    
+    print "beamsection attributes"
+    for key,item in elemproperties.iteritems():
+        print key,item.elemload
+    
+    for key,item in elemproperties.iteritems():
+        print key,item.E
+    
+    print "cload attributes"
+    for key,item in nodeproperties.iteritems():
+        print key,item.cload
+
+    print "cload attributes"
+    for key,item in np.iteritems():
+        print key,item.cload
