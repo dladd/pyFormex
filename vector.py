@@ -103,7 +103,30 @@ def rotation (v,w):
     a = math.degrees(math.asin(l/length(v)/length(w)))
     n = scale(n,1./l)
     return (n,a)
-    
+
+def plane (p,v):
+    """Returns the equation of a plane through point p and having normal v.
+
+    p and v are lists of 3 coordinate values; p represents a point and
+    v a direction vector (does not need to be normalized).
+    Returns a list with the 4 coefficients A,B,C,D of the equation
+    Ax+By+Cz+D=0 of the plane going through the point p and normal to the
+    vector v.
+    """
+    v.append(-dotpr(p,v))
+    return v
+
+def distanceFromPlane(p,pl):
+    """Returns the distance from a point p to the plane pl.
+
+    p is a list of 3 coordinates
+    pl is a list of 4 values A,B,C,D of the equation of the plane:
+    Ax+By+Cz+D=0.
+    See the plane(p,v) function.
+    The returned value is positive if the point is on the positive
+    side of the plane.
+    """
+    return (dotpr(p,pl[:3]) - pl[3]) / length(pl[:3])
 
 def cartesianToCylindrical (v) :
     """Convert cartesian coordinates [x,y,z] to cylindrical [r,theta,z]

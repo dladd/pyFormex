@@ -83,7 +83,7 @@ def askItems(items):
 
 def askFilename(cur,files="All files (*.*)",exist=True):
     """Ask for an existing file name"""
-    res = widgets.FileSelectionDialog(cur,files,exist).getFilename()
+    res = widgets.FileSelection(cur,files,exist).getFilename()
     GD.gui.update()
     GD.canvas.update()
     return res
@@ -283,7 +283,8 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
             color = random.random((F.nelems(),3))
         else:
             color = GLColor(color)
-    GD.canvas.addActor(FormexActor(F,color,GD.cfg.get('linewidth',1),eltype=eltype))
+    actor = FormexActor(F,color,GD.cfg.get('linewidth',1),eltype=eltype)
+    GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
             view = currentView
@@ -295,6 +296,8 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
         GD.canvas.update()
     if allowwait and wait:
         drawlock()
+    return actor
+
 
 _triade = None
 
@@ -324,7 +327,10 @@ def toggleTriade():
 
 def drawtext(text,x,y,font='9x15'):
     """Show a text at position x,y using font."""
-    decorate(TextActor(text,x,y,font))
+    TA = TextActor(text,x,y,font)
+    decorate(TA)
+    return TA
+
 
 def decorate(actor):
     """Draw a decoration."""

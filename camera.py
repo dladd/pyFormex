@@ -2,7 +2,7 @@
 # $Id$
 """camera 0.1 (C) Benedict Verhegghe"""
 
-import sys,math
+import sys
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
@@ -255,7 +255,7 @@ class Camera:
     # These functions do not auto-reload the projection matrix, so you
     # do not need to make the GL-environment current before using them.
     # The client has to explicitely call the loadProjection() method to
-    # make the settings acive 
+    # make the settings active 
     # These functions will flag a change in the camera settings, which
     # can be tested by your display() function to know if it has to reload
     # the projection matrix.

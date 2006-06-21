@@ -45,6 +45,14 @@ Angles&nbsp;are&nbsp;given&nbsp;in&nbsp;degrees:&nbsp;lat:&nbsp;-90..90,&nbsp;lo
 The&nbsp;angle&nbsp;theta&nbsp;must&nbsp;be&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-diff"><strong>diff</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;difference&nbsp;vector&nbsp;v-w</tt></dd></dl>
  <dl><dt><a name="-distance"><strong>distance</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;distance&nbsp;between&nbsp;two&nbsp;points</tt></dd></dl>
+ <dl><dt><a name="-distanceFromPlane"><strong>distanceFromPlane</strong></a>(p, pl)</dt><dd><tt>Returns&nbsp;the&nbsp;distance&nbsp;from&nbsp;a&nbsp;point&nbsp;p&nbsp;to&nbsp;the&nbsp;plane&nbsp;pl.<br>
+&nbsp;<br>
+p&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;3&nbsp;coordinates<br>
+pl&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;4&nbsp;values&nbsp;A,B,C,D&nbsp;of&nbsp;the&nbsp;equation&nbsp;of&nbsp;the&nbsp;plane:<br>
+Ax+By+Cz+D=0.<br>
+See&nbsp;the&nbsp;<a href="#-plane">plane</a>(p,v)&nbsp;function.<br>
+The&nbsp;returned&nbsp;value&nbsp;is&nbsp;positive&nbsp;if&nbsp;the&nbsp;point&nbsp;is&nbsp;on&nbsp;the&nbsp;positive<br>
+side&nbsp;of&nbsp;the&nbsp;plane.</tt></dd></dl>
  <dl><dt><a name="-dotpr"><strong>dotpr</strong></a>(v, w)</dt><dd><tt>Return&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;vectors&nbsp;v&nbsp;and&nbsp;w</tt></dd></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;vector&nbsp;v</tt></dd></dl>
  <dl><dt><a name="-matrixMultiply"><strong>matrixMultiply</strong></a>(a, b)</dt><dd><tt>Multipy&nbsp;matrices&nbsp;a&nbsp;and&nbsp;b.</tt></dd></dl>
@@ -54,6 +62,13 @@ This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;<a href="#-pointOf">pointOf</a>(v,w
  <dl><dt><a name="-norm"><strong>norm</strong></a>(v)</dt><dd><tt>Return&nbsp;the&nbsp;square&nbsp;length&nbsp;[x^2&nbsp;+&nbsp;y^2&nbsp;+&nbsp;z^2&nbsp;of&nbsp;a&nbsp;vector&nbsp;v</tt></dd></dl>
  <dl><dt><a name="-orthogonal"><strong>orthogonal</strong></a>(v, w)</dt><dd><tt>Returns&nbsp;the&nbsp;part&nbsp;of&nbsp;vector&nbsp;v&nbsp;that&nbsp;is&nbsp;orthogonal&nbsp;to&nbsp;vector&nbsp;w</tt></dd></dl>
  <dl><dt><a name="-parallel"><strong>parallel</strong></a>(v, w)</dt><dd><tt>Returns&nbsp;the&nbsp;part&nbsp;of&nbsp;vector&nbsp;v&nbsp;that&nbsp;is&nbsp;parallel&nbsp;to&nbsp;vector&nbsp;w</tt></dd></dl>
+ <dl><dt><a name="-plane"><strong>plane</strong></a>(p, v)</dt><dd><tt>Returns&nbsp;the&nbsp;equation&nbsp;of&nbsp;a&nbsp;plane&nbsp;through&nbsp;point&nbsp;p&nbsp;and&nbsp;having&nbsp;normal&nbsp;v.<br>
+&nbsp;<br>
+p&nbsp;and&nbsp;v&nbsp;are&nbsp;lists&nbsp;of&nbsp;3&nbsp;coordinate&nbsp;values;&nbsp;p&nbsp;represents&nbsp;a&nbsp;point&nbsp;and<br>
+v&nbsp;a&nbsp;direction&nbsp;vector&nbsp;(does&nbsp;not&nbsp;need&nbsp;to&nbsp;be&nbsp;normalized).<br>
+Returns&nbsp;a&nbsp;list&nbsp;with&nbsp;the&nbsp;4&nbsp;coefficients&nbsp;A,B,C,D&nbsp;of&nbsp;the&nbsp;equation<br>
+Ax+By+Cz+D=0&nbsp;of&nbsp;the&nbsp;plane&nbsp;going&nbsp;through&nbsp;the&nbsp;point&nbsp;p&nbsp;and&nbsp;normal&nbsp;to&nbsp;the<br>
+vector&nbsp;v.</tt></dd></dl>
  <dl><dt><a name="-pointOf"><strong>pointOf</strong></a>(v, w, pos<font color="#909090">=0.5</font>)</dt><dd><tt>Return&nbsp;the&nbsp;point&nbsp;on&nbsp;the&nbsp;line&nbsp;v-w&nbsp;defined&nbsp;by&nbsp;the&nbsp;relative&nbsp;coordinate&nbsp;pos.<br>
 &nbsp;<br>
 v&nbsp;has&nbsp;pos&nbsp;0,&nbsp;w&nbsp;has&nbsp;pos&nbsp;1.&nbsp;For&nbsp;values&nbsp;0..1&nbsp;the&nbsp;point&nbsp;lies&nbsp;between&nbsp;v&nbsp;and&nbsp;w.<br>

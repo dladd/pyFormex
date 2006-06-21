@@ -507,6 +507,14 @@ class Formex:
         min,max = self.bbox()
         return 0.5 * (max+min)
 
+    def sizes(self):
+        """Return the sizes of the Formex.
+
+        Returns an array with the length of the bbox along the 3 axes.
+        """
+        min,max = self.bbox()
+        return max-min
+
     def size(self):
         """Return the size of the Formex.
 

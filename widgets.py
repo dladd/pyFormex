@@ -112,3 +112,7 @@ class inputDialog(qt.QDialog):
     def process(self):
         accept = self.exec_loop() == qt.QDialog.Accepted
         return (self.result, accept)
+
+
+# for compatibility
+FileSelectionDialog = FileSelection
