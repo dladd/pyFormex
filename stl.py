@@ -65,7 +65,7 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def stl_import_ascii(f):
+def read_ascii(f):
     """Read an ascii .stl file into an [n,3,3] float array"""
 
     own = type(f) == str

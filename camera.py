@@ -9,10 +9,17 @@ import OpenGL.GLU as GLU
 
 from vector import *
 import numpy
+import distutils.version
+Version=distutils.version.LooseVersion
+if Version(numpy.__version__) < Version('0.9.8'):
+    matrixinverse = numpy.linalg.inverse
+else:
+    matrixinverse = numpy.linalg.linalg.inv
+from numpy import matrixmultiply,array
+    
 import copy
 
-
-## ! For developers: this information is not fully correct
+## ! For developers: the information in this module is not fully correct
 ## ! We now store the rotation of the camera as a combined rotation matrix,
 ##   not by the individual rotation angles.
 
@@ -229,7 +236,7 @@ class Camera:
         """Transform a vertex using the currently saved  Modelview matrix."""
         if len(v) == 3:
             v = v + [ 1. ]
-        v = numpy.matrixMultiply([v],self.m)[0]
+        v = matrixmultiply([v],self.m)[0]
         return [ a/v[3] for a in v[0:3] ]
 
     def toWorld(self,v,trl=False):
@@ -238,10 +245,10 @@ class Camera:
         The specified vector can have 3 or 4 (homogoneous) components.
         This uses the currently saved rotation matrix.
         """
-        a = numpy.linalg.inverse(numpy.array(self.rot))
+        a = matrixinverse(array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
-        v = numpy.matrixmultiply(numpy.array(v),a)
+        v = matrixmultiply(array(v),a)
         return v[0:3] / v[3]
 
     
