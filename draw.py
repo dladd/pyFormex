@@ -153,9 +153,7 @@ def playScript(scr):
 
 def play(fn,name=None):
     """Play a formex script from file fn."""
-    global currentView,drawtimeout 
-    drawtimeout = GD.cfg.gui.get('drawwait',2)
-    #print "drawtimeout = %d" % drawtimeout
+    global currentView
     currentView = 'front'
     if name:
         GD.scriptName = name
@@ -188,7 +186,6 @@ def smooth():
 
 allowwait = True
 drawlocked = False
-drawtimeout = 2
 # set = 0 to disable wait
 # what if we want an indefinite wait (until step pressed)
 drawtimer = None
@@ -198,13 +195,14 @@ def drawwait():
 
     While we are waiting, events are processed.
     """
-    global drawlocked, drawtimeout, drawtimer
+    global drawlocked
     while drawlocked:
         GD.app.processEvents()
 
 def drawlock():
-    """Lock the drawing function for the next drawtimeout seconds."""
-    global drawlocked, drawtimeout, drawtimer
+    """Lock the drawing function for the next drawdelay seconds."""
+    global drawlocked, drawtimer
+    drawtimeout = GD.cfg.gui.get('drawwait',2)
     if not drawlocked and drawtimeout > 0:
         drawlocked = True
         drawtimer = threading.Timer(drawtimeout,drawrelease)
@@ -259,12 +257,13 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     Finally, if color=None is specified, the whole Formex is drawn in black.
     
     Each draw action activates a locking mechanism for the next draw action,
-    which will only be allowed after drawtimeout seconds have elapsed. This
+    which will only be allowed after drawdelay seconds have elapsed. This
     makes it easier to see subsequent images and is far more elegant that an
     explicit sleep() operation, because all script processing will continue
     up to the next drawing instruction.
+    The value of drawdelay is set in the config, or 2 seconds by default.
     The user can disable the wait cycle for the next draw operation by
-    specifying wait=False. Setting drawtimeout=0 will disable the waiting
+    specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait, currentView
@@ -292,8 +291,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
             bbox = F.bbox()
         GD.canvas.setView(bbox,view)
         currentView = view
-        # calculate the bbox and zoom accordingly
-        GD.canvas.update()
+    GD.canvas.update()
     if allowwait and wait:
         drawlock()
     return actor
@@ -394,6 +392,12 @@ def fforward():
     global allowwait
     allowwait = False
     drawrelease()
+
+def delay(i):
+    """Set the draw delay in seconds."""
+    i = int(i)
+    if i >= 0:
+        GD.cfg.gui['drawwait'] = i
     
       
 def isPyFormex(filename):

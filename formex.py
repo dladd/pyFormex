@@ -6,7 +6,7 @@ from numpy import *
 #
 #  We now use numpy instead of numarray
 #  Watch out for the following:
-#     - replace tests like  a == None  by type(a) == type(None)
+#     - replace tests like  a == None  by  a is None
 #     - int array elements can not be used directly as Python integers in
 #       indexing: use  int(p[i])  instead.
 
@@ -278,6 +278,21 @@ def equivalence(x,nodesperbox=1,shift=0.5):
     x = x[flag>0]          # extract unique nodes
     s = sel[argsort(srt)]  # and indices for old nodes
     return (x,s)
+
+
+def distanceFromPlane(f,p,n):
+    """Returns the distance of points f from the plane (p,n).
+
+    f is an [...,3] array of coordinates.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a [...] shaped array with the distance of
+    each point to the plane through p and having normal n.
+    Distance values are positive if the point is on the side of the
+    plane indicated by the positive normal.
+    """
+    return (dot(f,n) - dot(p,n)) / sqrt(dot(n,n))
 
 
 ###########################################################################
@@ -885,6 +900,71 @@ class Formex:
         """
         return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p)
 
+
+# Clipping functions
+
+    def where(self,nodes='all',dir=0,xmin=None,xmax=None):
+        """Flag elements having nodal coordinates between xmin and xmax.
+
+        This function is very convenient in clipping a Formex in one of
+        the coordinate directions. It returns a 1D integer array flagging
+        the elements having nodal coordinates in the required range.
+        Use clip() to create the clipped Formex.
+
+        xmin,xmax are there minimum and maximum values required for the
+        coordinates in direction dir (default is the x or 0 direction).
+        nodes specifies which nodes are taken into account in the comparisons.
+        It should be one of the following:
+        - a single (integer) node number (< the number of nodes)
+        - a list of node numbers
+        - one of the special strings: 'all', 'any', 'none'
+        The default ('all') will flag all the elements that have all their
+        nodes between the planes x=xmin and x=xmax, i.e. the elements that
+        fall completely between these planes. One of the two clipping planes
+        may be left unspecified.
+        """
+        f = self.f
+        if type(nodes)==str:
+            nod = range(f.shape[1])
+        else:
+            nod = nodes
+        if not xmin is None:
+            T1 = f[:,nod,dir] > xmin
+        if not xmax is None:
+            T2 = f[:,nod,dir] < xmax
+        if xmin is None:
+            T = T2
+        elif xmax is None:
+            T = T1
+        else:
+            T = T1 * T2
+        if len(T.shape) == 1:
+            return T
+        if nodes == 'any':
+            T = T.any(1)
+        elif nodes == 'none':
+            T = (1-T.all(1)).astype(bool)
+        else:
+            T = T.all(1)
+        return T
+
+
+    def clip(self,w):
+        """Returns a Formex with all the elements where w>0.
+
+        w should be a 1-D integer array with length equal to the number
+        of elements of the formex.
+        The resulting Formex will contain all elements where w > 0.
+        This is a convenience function for the user, equivalent to
+        F.select(w>0).
+        """
+        return self.select(w>0)
+
+    def cclip(self,w):
+        """THis is the complement of clip, returning a Formex where w<=0.
+        """
+        return self.select(w<=0)
+    
 
 ##############################################################################
 #

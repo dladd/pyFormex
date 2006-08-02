@@ -7,7 +7,7 @@ PYMODULES= actors camera canvas colors colorscale config decorations \
   draw flatkeydb formex globaldata gui help helpviewer lima mydict \
   pyfotemp script turtle units utils vector widgets \
   file2formex properties simple stl
-EXAMPLES= BarrelVault Baumkuchen Diamatic DoubleLayer \
+EXAMPLES= BarrelVault Baumkuchen Clip Diamatic DoubleLayer \
   Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
   Pattern \
   ScallopDome Schwedler SpaceTrussRoof Spiral Stars Torus TrussBridge \
