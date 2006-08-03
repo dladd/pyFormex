@@ -399,24 +399,6 @@ def delay(i):
     if i >= 0:
         GD.cfg.gui['drawwait'] = i
     
-      
-def isPyFormex(filename):
-    """Checks whether a file is a pyFormex script.
-
-    A script is considered to be a pyFormex script if its first line
-    starts with '#!' and contains the substring 'pyformex'
-    """
-    ok = filename.endswith(".py")
-    if ok:
-        try:
-            f = file(filename,'r')
-            l = f.readline()
-            ok = f.readline().strip().find('pyformex') >= 0
-            f.close()
-        except IOError:
-            ok = False
-            warning("I could not open the file %s" % filename)
-    return ok
 
 def exit(all=False):
     if scriptRunning:

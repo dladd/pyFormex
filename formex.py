@@ -295,6 +295,44 @@ def distanceFromPlane(f,p,n):
     return (dot(f,n) - dot(p,n)) / sqrt(dot(n,n))
 
 
+def distanceFromLine(f,p,q):
+    """Returns the distance of points f from the line (p,q).
+
+    f is an [...,3] array of coordinates.
+    p and q are two points specified by 3 coordinates.
+
+    The return value is a [...] shaped array with the distance of
+    each point to the line through p and q.
+    All distance values are positive or zero.
+    """
+    p = array(p)
+    q = array(q)
+    a = f.reshape((-1,3))
+    n = q-p
+    t = cross(n,p-a)
+    t = sum(t*t,-1)
+    d = sqrt(t) / sqrt(dot(n,n))
+    return d.reshape(f.shape[:-1])
+
+
+def distanceFromPoint(f,p):
+    """Returns the distance of points f from the point p.
+
+    f is an [...,3] array of coordinates.
+    p is a point specified by 3 coordinates.
+
+    The return value is a [...] shaped array with the distance of
+    each point to the line through p and q.
+    All distance values are positive or zero.
+    """
+    a = f.reshape((-1,3))
+    p = array(p)
+    d = a-p
+    d = sum(d*d,-1)
+    d = sqrt(d)
+    return d.reshape(f.shape[:-1])
+
+
 ###########################################################################
 ##
 ##   class Formex
