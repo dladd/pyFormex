@@ -407,9 +407,16 @@ class Canvas(qtgl.QGLWidget):
 
     def save(self,fn,fmt='PNG',options=None):
         """Save the current rendering as an image file."""
-        self.makeCurrent()
+        #self.raiseW()
+        #self.makeCurrent()
         if fmt in GD.image_formats_qt:
-            GL.glFinish()
+            GL.glFlush()
+            #GL.glFinish()
+            #GL.glReadBuffer(GL.GL_BACK)
+            #pixels = GL.glReadPixelsub(0,0,20,1,GL.GL_RGB)
+            #print pixels.shape
+            #print pixels
+            #qim = qt.QImage(pixels)
             qim = self.grabFrameBuffer()
             qim.save(fn,fmt)
         elif fmt in GD.image_formats_gl2ps:

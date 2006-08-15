@@ -736,6 +736,14 @@ loop=True&nbsp;however,&nbsp;each&nbsp;<a href="#Formex">Formex</a>&nbsp;will&nb
 encountered,&nbsp;and&nbsp;the&nbsp;order&nbsp;of&nbsp;the&nbsp;result&nbsp;is&nbsp;the&nbsp;maximum&nbsp;order&nbsp;in&nbsp;Flist.</tt></dd></dl>
  <dl><dt><a name="-cosd"><strong>cosd</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;cos&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-digitize"><strong>digitize</strong></a>(...)</dt></dl>
+ <dl><dt><a name="-distanceFromLine"><strong>distanceFromLine</strong></a>(f, p, q)</dt><dd><tt>Returns&nbsp;the&nbsp;distance&nbsp;of&nbsp;points&nbsp;f&nbsp;from&nbsp;the&nbsp;line&nbsp;(p,q).<br>
+&nbsp;<br>
+f&nbsp;is&nbsp;an&nbsp;[...,3]&nbsp;array&nbsp;of&nbsp;coordinates.<br>
+p&nbsp;and&nbsp;q&nbsp;are&nbsp;two&nbsp;points&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
+&nbsp;<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;distance&nbsp;of<br>
+each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;and&nbsp;q.<br>
+All&nbsp;distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;or&nbsp;zero.</tt></dd></dl>
  <dl><dt><a name="-distanceFromPlane"><strong>distanceFromPlane</strong></a>(f, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;distance&nbsp;of&nbsp;points&nbsp;f&nbsp;from&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
 f&nbsp;is&nbsp;an&nbsp;[...,3]&nbsp;array&nbsp;of&nbsp;coordinates.<br>
@@ -746,6 +754,14 @@ The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp
 each&nbsp;point&nbsp;to&nbsp;the&nbsp;plane&nbsp;through&nbsp;p&nbsp;and&nbsp;having&nbsp;normal&nbsp;n.<br>
 Distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;if&nbsp;the&nbsp;point&nbsp;is&nbsp;on&nbsp;the&nbsp;side&nbsp;of&nbsp;the<br>
 plane&nbsp;indicated&nbsp;by&nbsp;the&nbsp;positive&nbsp;normal.</tt></dd></dl>
+ <dl><dt><a name="-distanceFromPoint"><strong>distanceFromPoint</strong></a>(f, p)</dt><dd><tt>Returns&nbsp;the&nbsp;distance&nbsp;of&nbsp;points&nbsp;f&nbsp;from&nbsp;the&nbsp;point&nbsp;p.<br>
+&nbsp;<br>
+f&nbsp;is&nbsp;an&nbsp;[...,3]&nbsp;array&nbsp;of&nbsp;coordinates.<br>
+p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
+&nbsp;<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;distance&nbsp;of<br>
+each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;and&nbsp;q.<br>
+All&nbsp;distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;or&nbsp;zero.</tt></dd></dl>
  <dl><dt><a name="-dot"><strong>dot</strong></a>(...)</dt><dd><tt>matrixproduct(a,b)<br>
 Returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&nbsp;arrays&nbsp;of&nbsp;floating&nbsp;point&nbsp;types.<br>
 Like&nbsp;the&nbsp;generic&nbsp;numpy&nbsp;equivalent&nbsp;the&nbsp;product&nbsp;sum&nbsp;is&nbsp;over<br>
@@ -981,7 +997,7 @@ of&nbsp;floating&nbsp;point&nbsp;and&nbsp;complex&nbsp;types.&nbsp;&nbsp;The&nbs
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64scalar'&gt;: &lt;function &lt;lambda&gt; at 0x2...lscalar'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab5fd668&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64scalar'&gt;: &lt;function &lt;lambda&gt; at 0x2...lscalar'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab5fe668&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>

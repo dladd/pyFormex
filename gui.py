@@ -89,6 +89,11 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
 def addboard():
     GD.board = GD.gui.addBoard()
 
+def printFormat(fmt):
+    print "Double Buffer: ",fmt.doubleBuffer()
+    print "Depth Buffer: ",fmt.depth()
+    print "RGBA: ",fmt.rgba()
+
 class GUI:
     """Implements a GUI for pyformex."""
 
@@ -124,6 +129,8 @@ class GUI:
         # Create an OpenGL canvas with a nice frame around it
         fmt = qtgl.QGLFormat.defaultFormat()
         fmt.setDirectRendering(GD.options.dri)
+        #fmt.setRgba(False)
+        printFormat(fmt)
         c = canvas.Canvas(wd,ht,fmt,s)
         c.setBgColor(GD.cfg['bgcolor'])
         c.resize(wd,ht)

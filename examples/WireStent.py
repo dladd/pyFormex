@@ -44,7 +44,7 @@ class DoubleHelixStent:
         """Create the Wire Stent."""
         D = De - 2*d - ds
         r = 0.5*D
-`        dz = 0.5*(ds+d)
+        dz = 0.5*(ds+d)
         p = pi*D*tand(be)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         #print "pitch",p

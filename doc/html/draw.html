@@ -290,10 +290,6 @@ NB:&nbsp;The&nbsp;first&nbsp;argument&nbsp;is&nbsp;not&nbsp;conjugated.</tt></dd
  <dl><dt><a name="-innerproduct"><strong>innerproduct</strong></a> = inner(...)</dt><dd><tt><a href="#-inner">inner</a>(a,b)&nbsp;returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;two&nbsp;arrays,&nbsp;which&nbsp;has<br>
 shape&nbsp;a.shape[:-1]&nbsp;+&nbsp;b.shape[:-1]&nbsp;with&nbsp;elements&nbsp;computed&nbsp;by<br>
 the&nbsp;product&nbsp;of&nbsp;the&nbsp;elements&nbsp;from&nbsp;the&nbsp;last&nbsp;dimensions&nbsp;of&nbsp;a&nbsp;and&nbsp;b.</tt></dd></dl>
- <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.<br>
-&nbsp;<br>
-A&nbsp;script&nbsp;is&nbsp;considered&nbsp;to&nbsp;be&nbsp;a&nbsp;pyFormex&nbsp;script&nbsp;if&nbsp;its&nbsp;first&nbsp;line<br>
-starts&nbsp;with&nbsp;'#!'&nbsp;and&nbsp;contains&nbsp;the&nbsp;substring&nbsp;'pyformex'</tt></dd></dl>
  <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;returns&nbsp;an&nbsp;array&nbsp;of&nbsp;indexes&nbsp;similar&nbsp;to&nbsp;argsort&nbsp;except&nbsp;the&nbsp;sorting&nbsp;is&nbsp;done&nbsp;using&nbsp;the&nbsp;provided&nbsp;sorting&nbsp;keys.&nbsp;&nbsp;First&nbsp;the&nbsp;sort&nbsp;is&nbsp;done&nbsp;using&nbsp;key[0],&nbsp;then&nbsp;the&nbsp;resulting&nbsp;list&nbsp;of&nbsp;indexes&nbsp;is&nbsp;further&nbsp;manipulated&nbsp;by&nbsp;sorting&nbsp;on&nbsp;key[0].&nbsp;&nbsp;And&nbsp;so&nbsp;forth&nbsp;The&nbsp;result&nbsp;is&nbsp;a&nbsp;sort&nbsp;on&nbsp;multiple&nbsp;keys.&nbsp;&nbsp;If&nbsp;the&nbsp;keys&nbsp;represented&nbsp;columns&nbsp;of&nbsp;a&nbsp;spread-sheet,&nbsp;for&nbsp;example,&nbsp;this&nbsp;would&nbsp;sort&nbsp;using&nbsp;multiple&nbsp;columns.&nbsp;The&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;tuple&nbsp;of&nbsp;things&nbsp;that&nbsp;can&nbsp;be&nbsp;converted&nbsp;to&nbsp;&nbsp;arrays&nbsp;of&nbsp;the&nbsp;same&nbsp;shape.</tt></dd></dl>
  <dl><dt><a name="-linewidth"><strong>linewidth</strong></a>(wid)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;line&nbsp;drawings.</tt></dd></dl>
  <dl><dt><a name="-listAll"><strong>listAll</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
@@ -426,7 +422,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 6<br>
 <strong>SHIFT_OVERFLOW</strong> = 2<br>
 <strong>SHIFT_UNDERFLOW</strong> = 4<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'int64scalar'&gt;, &lt;type 'int16scalar'&gt;, &lt;type 'int64scalar'&gt;, &lt;type 'uint64scalar'&gt;, &lt;type 'float32scalar'&gt;, &lt;type 'boolscalar'&gt;, &lt;type 'voidscalar'&gt;, &lt;type 'int8scalar'&gt;, &lt;type 'uint16scalar'&gt;, &lt;type 'stringscalar'&gt;, &lt;type 'objectscalar'&gt;, &lt;type 'uint64scalar'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'int64scalar'&gt;, &lt;type 'int16scalar'&gt;, &lt;type 'complex64scalar'&gt;, &lt;type 'uint64scalar'&gt;, &lt;type 'int64scalar'&gt;, &lt;type 'voidscalar'&gt;, &lt;type 'int32scalar'&gt;, &lt;type 'complex128scalar'&gt;, &lt;type 'uint8scalar'&gt;, &lt;type 'float64scalar'&gt;, &lt;type 'uint64scalar'&gt;, &lt;type 'int8scalar'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -456,7 +452,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'int64scalar'&gt;: &lt;function &lt;lambda&gt; at 0x2...lscalar'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab5c9f50&gt;}<br>
+<strong>cast</strong> = {&lt;type 'int64scalar'&gt;: &lt;function &lt;lambda&gt; at 0x2...lscalar'&gt;: &lt;function &lt;lambda&gt; at 0x2aaaab889668&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -509,7 +505,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>multisave</strong> = None<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'int64scalar'&gt;: 8, &lt;type 'int16scalar'&gt;: ...e 'unicodescalar'&gt;: 0, &lt;type 'float64scalar'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'int64scalar'&gt;: 8, &lt;type 'int16scalar'&gt;: ...&lt;type 'boolscalar'&gt;: 1, &lt;type 'uint16scalar'&gt;: 2}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>
