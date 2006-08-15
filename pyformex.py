@@ -2,7 +2,7 @@
 # $Id$
 """pyformex is a python implementation of Formex algebra"""
 
-import globaldata as GD
+import pyformex.globaldata as GD
 
 import sys
 import os.path
