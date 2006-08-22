@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# Definition of some RGB colors
 # $Id$
+"""Definition of some RGB colors and color convedrsion functions"""
 
-from qt import QColor
+from PyQt4 import QtGui
+
 
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.
@@ -16,8 +17,8 @@ def GLColor(color):
     Any other input may give unpredictable results.
     """
     if type(color) == str:
-        color = QColor(color)
-    if isinstance(color,QColor):
+        color = QtGui.QColor(color)
+    if isinstance(color,QtGui.QColor):
         color = (color.red(),color.green(),color.blue())
     if len(color) == 3:
         if type(color[0]) == int:
@@ -29,7 +30,7 @@ def GLColor(color):
 
 def RGBA(rgb,alpha=1.0):
     """Adds an alpha channel to an RGB color"""
-    return rgb+(alpha,)
+    return GLColor(rgb)+(alpha,)
 
 
 black   = (0.0, 0.0, 0.0)
@@ -40,6 +41,7 @@ cyan    = (0.0, 1.0, 1.0)
 magenta = (1.0, 0.0, 1.0)
 yellow  = (1.0, 1.0, 0.0)
 white   = (1.0, 1.0, 1.0)
+
 
 def grey(i):
     return (i,i,i)

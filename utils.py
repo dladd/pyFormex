@@ -2,6 +2,28 @@
 # $Id$
 """A collection of misc. utility functions."""
 
+      
+def isPyFormex(filename):
+    """Checks whether a file is a pyFormex script.
+
+    A script is considered to be a pyFormex script if its first line
+    starts with '#!' and contains the substring 'pyformex'
+    A file is considered to be a pyFormex script if its name ends in '.py'
+    and the first line of the file contains the substring 'pyformex'.
+    Typically, a pyFormex script starts with a line:
+      #!/usr/bin/env pyformex
+    """
+    ok = filename.endswith(".py")
+    if ok:
+        try:
+            f = file(filename,'r')
+            ok = f.readline().strip().find('pyformex') >= 0
+            f.close()
+        except IOError:
+            ok = False
+    return ok
+
+
 def imageFormatFromExt(ext):
     """Determine the image format from an extension.
 
@@ -20,6 +42,7 @@ def imageFormatFromExt(ext):
         fmt = 'PNG'
     return fmt
 
+
 def splitEndDigits(s):
     """Split a string in any prefix and a numerical end sequence.
 
@@ -35,6 +58,7 @@ def splitEndDigits(s):
     if not s[i].isdigit():
         i += 1
     return ( s[:i], s[i:] )
+
 
 def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.
@@ -60,6 +84,7 @@ def stuur(x,xval,yval,exp=2.5):
     else:
         return ymax
 
+
 def interrogate(item):
     """Print useful information about item."""
     if hasattr(item, '__name__'):
@@ -80,8 +105,10 @@ def interrogate(item):
         firstline = doc.split('\n')[0]
         print "DOC:     ", firstline
 
+
 def deprecated(old,new):
     print "Function %s is deprecated: use %s instead" % (old,new)
+
 
 def formatDict(dic):
     """Format a dict in Python source representation.

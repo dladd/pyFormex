@@ -3,10 +3,10 @@
 """Display help"""
 
 import globaldata as GD
-import helpviewer
-import draw
-import qt
-import os
+##import helpviewer
+##import draw
+##import qt
+##import os
 
     
 def help(page=None):

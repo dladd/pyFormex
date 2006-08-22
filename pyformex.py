@@ -80,7 +80,7 @@ def main(argv=None):
     
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
-        from draw import runApp
+        from gui.gui import runApp
     else:
         from script import runApp
     

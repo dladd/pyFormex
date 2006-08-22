@@ -4,9 +4,6 @@
 
 import sys
 
-import OpenGL.GL as GL
-import OpenGL.GLU as GLU
-
 from vector import *
 import numpy
 import distutils.version
@@ -18,6 +15,9 @@ else:
 from numpy import matrixmultiply,array
     
 import copy
+
+import OpenGL.GL as GL
+import OpenGL.GLU as GLU
 
 ## ! For developers: the information in this module is not fully correct
 ## ! We now store the rotation of the camera as a combined rotation matrix,

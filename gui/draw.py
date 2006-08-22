@@ -4,11 +4,11 @@
 
 import globaldata as GD
 from formex import *
-from canvas import *
-from colors import *
+#from canvas import *
+#from colors import *
 
 import utils
-import pyfotemp
+#import pyfotemp
 import gui
 import widgets
 import threading,os,sys,commands
@@ -350,6 +350,21 @@ def view(v,wait=False):
     else:
         warning("A view named '%s' has not been created yet" % v)
 
+def frontView():
+    view("front");
+def backView():
+    view("back");
+def leftView():
+    view("left");
+def rightView():
+    view("right");
+def topView():
+    view("top");
+def bottomView():
+    view("bottom");
+def isoView():
+    view("iso");
+
 def bgcolor(color):
     """Change the background color (and redraw)."""
     color = GLColor(color)
@@ -629,29 +644,5 @@ def savePreferences():
         res = "Could not save"
     print "%s preferences to file %s" % (res,f)
 
-
-def runApp(args):
-    """Create and run the qt application."""
-    global app_started
-    GD.app = qt.QApplication(args)
-    qt.QObject.connect(GD.app,qt.SIGNAL("lastWindowClosed()"),GD.app,qt.SLOT("quit()"))
-    # create GUI, show it, run it
-    GD.gui = gui.GUI()
-    GD.canvas = GD.gui.canvas
-    GD.app.setMainWidget(GD.gui.main)
-    GD.gui.main.show()
-    # remaining args are interpreted as scripts
-    GD.app_started = False
-    for arg in args:
-        if os.path.exists(arg):
-            play(arg)
-    GD.app_started = True
-    GD.app.exec_loop()
-
-    #Save the preferences if they changed
-    if GD.prefsChanged:
-        if GD.options.debug:
-            print "Saving config: ",GD.cfg
-        savePreferences()
 
 #### End

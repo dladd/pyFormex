@@ -2,29 +2,22 @@
 # $Id$
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 #
-# TODO : we want to move the Qt dependencies as much as possible out of
-#        this module
 
 import globaldata as GD
-
-import math
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 
-import qt
-import qtgl
-
+import colors
 import camera
-from colors import *
-from actors import *
-from decorations import *
-from utils import stuur
-import vector
+##from actors import *
+##from decorations import *
+##from utils import stuur
 
-GD.image_formats_qt = qt.QImage.outputFormats()
+##import math
+##import vector
 
-### load gl2ps if available
+# load gl2ps if available
 try:
     import gl2ps
     _has_gl2ps = True
@@ -36,14 +29,12 @@ except ImportError:
 #
 #  The Canvas
 #
-class Canvas(qtgl.QGLWidget):
+class Canvas:
     """A canvas for OpenGL rendering."""
     
     def __init__(self,w=640,h=480,*args):
         """Initialize an empty canvas with default settings.
         """
-        qtgl.QGLWidget.__init__(self,*args)
-        self.setFocusPolicy(qt.QWidget.StrongFocus)
         self.actors = []       # an empty scene
         self.decorations = []  # and no decorations
         self.views = { 'front': (0.,0.,0.),
@@ -56,24 +47,13 @@ class Canvas(qtgl.QGLWidget):
                        }   # default views
         # angles are: longitude, latitude, twist
         self.setBbox()
-        self.bgcolor = mediumgrey
+        self.bgcolor = colors.mediumgrey
         self.rendermode = GD.cfg.gui.rendermode
         self.dynamic = None    # what action on mouse move
-        self.makeCurrent()     # set GL context before creating the camera
+        self.makeCurrent()     # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        
-    # These three are defined by the qtgl API
-    def initializeGL(self):
-        #print "initializeGL:",self.rendermode
-        self.glinit()
-
-    def	resizeGL(self,w,h):
-        self.setSize(w,h)
-
-    def	paintGL(self):
-        self.display()
-
-    # The rest are our functions
+        if GD.options.debug:
+            print "camera.rot =",self.camera.rot 
 
     # our own name for the canvas update function
     def update(self):
@@ -82,7 +62,7 @@ class Canvas(qtgl.QGLWidget):
     def glinit(self,mode=None):
         if mode:
             self.rendermode = mode
-	GL.glClearColor(*RGBA(self.bgcolor))# Clear The Background Color
+	GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
 	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
 	GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
@@ -117,6 +97,43 @@ class Canvas(qtgl.QGLWidget):
                     GL.glEnable(i)
         else:
             raise RuntimeError,"Unknown rendering mode"
+    
+    def setSize (self,w,h):
+	if h == 0:	# Prevent A Divide By Zero 
+            h = 1
+	GL.glViewport(0, 0, w, h)
+        self.aspect = float(w)/h
+        self.camera.setLens(aspect=self.aspect)
+        self.display()
+
+    def clear(self):
+        """Clear the canvas to the background color."""
+	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+	GL.glClearColor(*colors.RGBA(self.bgcolor))
+
+    def display(self):
+        """(Re)display all the actors in the scene.
+
+        This should e.g. be used when actors are added to the scene,
+        or after changing  camera position or lens.
+        """
+        self.clear()
+        self.camera.loadProjection()
+        self.camera.loadMatrix()
+        for i in self.actors:
+            GL.glCallList(i.list)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        # Plot viewport decorations
+        GL.glLoadIdentity()
+        GL.glMatrixMode (GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        GLU.gluOrtho2D (0, self.width(), 0, self.height())
+        for i in self.decorations:
+            GL.glCallList(i.list)
+        # end plot viewport decorations
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
 
     def setLinewidth(self,lw):
         """Set the linewidth for line rendering."""
@@ -124,8 +141,8 @@ class Canvas(qtgl.QGLWidget):
 
     def setBgColor(self,bg):
         """Set the background color."""
-        self.bgcolor = GLColor(bg)
-
+        self.bgcolor = bg
+        
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
@@ -217,45 +234,6 @@ class Canvas(qtgl.QGLWidget):
     def redrawAll(self):
         """Redraw all actors in the scene."""
         self.redrawActors(self.actors)
-
-    def clear(self):
-        """Clear the canvas to the background color."""
-        self.makeCurrent()
-	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*RGBA(self.bgcolor))
-
-    def display(self):
-        """(Re)display all the actors in the scene.
-
-        This should e.g. be used when actors are added to the scene,
-        or after changing  camera position or lens.
-        """
-        self.clear()
-        self.camera.loadProjection()
-        self.camera.loadMatrix()
-        for i in self.actors:
-            GL.glCallList(i.list)
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPushMatrix()
-        # Plot viewport decorations
-        GL.glLoadIdentity()
-        GL.glMatrixMode (GL.GL_PROJECTION)
-        GL.glLoadIdentity()
-        GLU.gluOrtho2D (0, self.width(), 0, self.height())
-        for i in self.decorations:
-            GL.glCallList(i.list)
-        # end plot viewport decorations
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPopMatrix()
-    
-    def setSize (self,w,h):
-        self.makeCurrent()
-	if h == 0:	# Prevent A Divide By Zero 
-            h = 1
-	GL.glViewport(0, 0, w, h)
-        self.aspect = float(w)/h
-        self.camera.setLens(aspect=self.aspect)
-        self.display()
 
     def createView(self,name,angles):
         """Create a named view for camera orientation long,lat.
@@ -423,10 +401,7 @@ class Canvas(qtgl.QGLWidget):
             self.savePS(fn,fmt)
 
 
-    # Deprecated
-    useView = setView
-
-######################### ONLY LOADED IF GL2PS FOUND ########################
+# ONLY LOADED IF GL2PS FOUND ########################
 
     if _has_gl2ps:
 

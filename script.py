@@ -151,23 +151,6 @@ def system(cmdline,result='output'):
         return commands.getoutput(cmdline)
     elif result == 'both':
         return commands.getstatusoutput(cmdline)
-      
-def isPyFormex(filename):
-    """Checks whether a file is a pyFormex script.
-
-    A script is considered to be a pyFormex script if its first line
-    starts with '#!' and contains the substring 'pyformex'
-    """
-    ok = filename.endswith(".py")
-    if ok:
-        try:
-            f = file(filename,'r')
-            ok = f.readline().strip().find('pyformex') >= 0
-            f.close()
-        except IOError:
-            ok = False
-            warning("I could not open the file %s" % filename)
-    return ok
 
 def exit(all=False):
     if scriptRunning:
