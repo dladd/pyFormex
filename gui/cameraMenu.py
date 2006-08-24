@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# $Id $
-"""Functions from the File menu."""
+# $Id$
+"""Functions from the Camera menu."""
 
 import globaldata as GD
          

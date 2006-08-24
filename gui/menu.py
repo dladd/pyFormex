@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-# $Id $
+# $Id$
 """Menus for the pyFormex GUI."""
 
 from PyQt4 import QtCore, QtGui
 import globaldata as GD
 import fileMenu
-import viewMenu
+import cameraMenu
 import prefMenu
 import help
 import draw
@@ -89,18 +89,18 @@ MenuData = [
         ("Action","&Help","prefMenu.setHelp"),
         ("Action","&Save Preferences","prefMenu.savePreferences"), ]),
     ("Popup","&Camera",[
-        ("Action","&Zoom In","viewMenu.zoomIn"), 
-        ("Action","&Zoom Out","viewMenu.zoomOut"), 
-        ("Action","&Dolly In","viewMenu.dollyIn"), 
-        ("Action","&Dolly Out","viewMenu.dollyOut"), 
-        ("Action","Pan &Right","viewMenu.transRight"), 
-        ("Action","Pan &Left","viewMenu.transLeft"), 
-        ("Action","Pan &Up","viewMenu.transUp"),
-        ("Action","Pan &Down","viewMenu.transDown"),
-        ("Action","Rotate &Right","viewMenu.rotRight"),
-        ("Action","Rotate &Left","viewMenu.rotLeft"),
-        ("Action","Rotate &Up","viewMenu.rotUp"),
-        ("Action","Rotate &Down","viewMenu.rotDown"),  ]),
+        ("Action","&Zoom In","cameraMenu.zoomIn"), 
+        ("Action","&Zoom Out","cameraMenu.zoomOut"), 
+        ("Action","&Dolly In","cameraMenu.dollyIn"), 
+        ("Action","&Dolly Out","cameraMenu.dollyOut"), 
+        ("Action","Pan &Right","cameraMenu.transRight"), 
+        ("Action","Pan &Left","cameraMenu.transLeft"), 
+        ("Action","Pan &Up","cameraMenu.transUp"),
+        ("Action","Pan &Down","cameraMenu.transDown"),
+        ("Action","Rotate &Right","cameraMenu.rotRight"),
+        ("Action","Rotate &Left","cameraMenu.rotLeft"),
+        ("Action","Rotate &Up","cameraMenu.rotUp"),
+        ("Action","Rotate &Down","cameraMenu.rotDown"),  ]),
     ("Popup","&Actions",[
         ("Action","&Step","draw.step"),
         ("Action","&Continue","draw.fforward"), 
@@ -119,6 +119,21 @@ MenuData = [
 ##
 def dohelp():
     help.help()
+
+
+#####################################################################
+# Opening, Playing and Saving pyformex scripts
+
+save = NotImplemented
+saveAs = NotImplemented
+
+def editor():
+    if GD.gui.editor:
+        print "Close editor"
+        GD.gui.closeEditor()
+    else:
+        print "Open editor"
+        GD.gui.showEditor()
 
 
 # End

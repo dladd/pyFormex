@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id $
+# $Id$
 """Functions from the Pref menu."""
 
 import globaldata as GD
@@ -124,3 +124,5 @@ def setLocalAxes():
     GD.cfg.gui['localaxes'] = True 
 def setGlobalAxes():
     GD.cfg.gui['localaxes'] = False 
+
+# End

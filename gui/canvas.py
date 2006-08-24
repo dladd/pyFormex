@@ -385,17 +385,17 @@ class Canvas:
         if self.dynamic:
             self.dyna(e.x(),e.y())
 
-    def save(self,fn,fmt='PNG',options=None):
+    def save(self,fn,fmt='png',options=None):
         """Save the current rendering as an image file."""
         #self.raiseW()
-        #self.makeCurrent()
+        self.makeCurrent()
         if fmt in GD.image_formats_qt:
             GL.glFlush()
-            #GL.glFinish()
-            #GL.glReadBuffer(GL.GL_BACK)
-            #pixels = GL.glReadPixelsub(0,0,20,1,GL.GL_RGB)
-            #print pixels.shape
-            #print pixels
+            GL.glFinish()
+            GL.glReadBuffer(GL.GL_BACK)
+            pixels = GL.glReadPixelsub(0,0,20,1,GL.GL_RGB)
+            print pixels.shape
+            print pixels
             #qim = qt.QImage(pixels)
             qim = self.grabFrameBuffer()
             qim.save(fn,fmt)
