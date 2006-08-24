@@ -21,6 +21,7 @@ import fileMenu
 import scriptsMenu
 import prefMenu
 import canvas
+import views
 import script
 import draw
 import utils
@@ -210,18 +211,22 @@ class GUI:
         self.box.setLayout(self.boxlayout)
         # Create the top menu and keep a dict with the main menu items
         menu.addMenuItems(self.menu, menu.MenuData)
-        print [[str(a.text()),a] for a in self.menu.actions()]
         self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
         print self.menus
+        # Create a menu with standard views
+        # and insert it before the help menu
+        self.views = None
+        if GD.cfg.gui.setdefault('viewsmenu',True):
+            self.views = views.ViewsMenu()
+            self.menu.insertMenu(self.menus['&Help'],self.views)
+            #self.menus['&Views'] = self.views.action()
+            #print self.menus           
+            self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
+            print self.menus
         # Create a menu with pyFormex examples
         # and insert it before the help menu
         self.examples = scriptsMenu.ScriptsMenu(GD.cfg.exampledir)
         self.menu.insertMenu(self.menus['&Help'],self.examples)
-        # ... and the views menu
-        self.viewsMenu = None
-        if GD.cfg.gui.setdefault('viewsmenu',True):
-            self.viewsMenu = QtGui.QPopupMenu(self.menu)
-            self.menu.insertItem('View',viewsMenu,-1,2)
         # Display the main menubar
         if GD.options.debug:
             printsize(self.main,'Main:')

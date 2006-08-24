@@ -1,12 +1,12 @@
 # A python class for 3D vector operations
 # $Id$
 #
-"""A python class for 3D vector operations.
+"""A python module for 3D vector operations.
 
-A 3D vector is a list of three floats.
+A 3D vector is just a list of three floats.
 All operations are implemented in standard Python.
 If you need high performance numerical operations on lots of vectors,
-you should use numpy instead.
+you should use numpy (http://numeric.scipy.org/) instead.
 """
 
 import math

@@ -13,7 +13,7 @@ class ViewsMenu(QtGui.QMenu):
         """Create a menu with views in list. 
         
         """
-        QtGui.QMenu.__init__(self,'Views')
+        QtGui.QMenu.__init__(self,'&Views')
 
 
 
