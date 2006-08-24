@@ -3,15 +3,17 @@
 """Functions for drawing and for executing pyFormex scripts."""
 
 import globaldata as GD
-from formex import *
-#from canvas import *
-#from colors import *
+import threading,os,sys,commands
+
+from PyQt4 import QtCore  # needed for events, signals
 
 import utils
-#import pyfotemp
 import gui
 import widgets
-import threading,os,sys,commands
+import colors
+import actors
+import formex
+
 
 ######################### Exceptions #########################################
 
@@ -133,7 +135,7 @@ def playScript(scr):
     # scripts.
     g = globals()
     #print "Voor",g.get('__name__','Geen')
-    g.update(Formex.globals())
+    g.update(formex.Globals())
     #print "Na",g.get('__name__','Geen')
     exitall = False
     try:
@@ -151,9 +153,18 @@ def playScript(scr):
     if exitall:
         exit()
 
-def play(fn,name=None):
-    """Play a formex script from file fn."""
+def play(fn=None,name=None):
+    """Play a formex script from file fn or from the current file.
+
+    This function does nothing if no file is passed or no current
+    file was set.
+    """
     global currentView
+    if not fn:
+        if GD.canPlay:
+            fn = GD.cfg['curfile']
+        else:
+            return
     currentView = 'front'
     if name:
         GD.scriptName = name
@@ -275,14 +286,14 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     if type(color) == str:
         if color == 'prop':
             if type(F.p) == type(None):
-                color = GLColor(GD.cfg.get('defaultcolor',black)) 
+                color = colors.GLColor(GD.cfg.get('defaultcolor','black')) 
             else: # use the prop as entry in a color table
-                color = map(GLColor,GD.cfg.get('propcolors',[black]))
+                color = map(colors.GLColor,GD.cfg.get('propcolors',['black']))
         elif color == 'random':
             color = random.random((F.nelems(),3))
         else:
-            color = GLColor(color)
-    actor = FormexActor(F,color,GD.cfg.get('linewidth',1),eltype=eltype)
+            color = colors.GLColor(color)
+    actor = actors.FormexActor(F,color,GD.cfg.get('linewidth',1),eltype=eltype)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
@@ -303,7 +314,7 @@ def drawTriade():
     """Show the global axes."""
     global _triade
     if not _triade or _triade not in GD.canvas.actors:
-        _triade = TriadeActor(1.0)
+        _triade = actors.TriadeActor(1.0)
         GD.canvas.addActor(_triade)
         GD.canvas.update()
 
@@ -325,7 +336,7 @@ def toggleTriade():
 
 def drawtext(text,x,y,font='9x15'):
     """Show a text at position x,y using font."""
-    TA = TextActor(text,x,y,font)
+    TA = actors.TextActor(text,x,y,font)
     decorate(TA)
     return TA
 
@@ -367,7 +378,7 @@ def isoView():
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
-    color = GLColor(color)
+    color = colors.GLColor(color)
     GD.canvas.bgcolor = color
     GD.canvas.display()
     GD.canvas.update()
@@ -431,7 +442,7 @@ def sleep(timeout=None):
     if wakeupMode > 0:  # don't bother : sleeps inactivated
         return
     # prepare for getting wakeup event 
-    qt.QObject.connect(GD.canvas,qt.PYSIGNAL("wakeup"),wakeup)
+    QtCore.QObject.connect(GD.canvas,QtCore.PYSIGNAL("wakeup"),wakeup)
     # create a Timer to wakeup after timeout
     if timeout and timeout > 0:
         timer = threading.Timer(timeout,wakeup)
@@ -446,7 +457,7 @@ def sleep(timeout=None):
         GD.app.processEvents()
         #time.sleep(0.1)
     # ignore further wakeup events
-    qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("wakeup"),wakeup)
+    QtCore.QObject.disconnect(GD.canvas,QtCore.PYSIGNAL("wakeup"),wakeup)
         
 def wakeup(mode=0):
     """Wake up from the sleep function.
@@ -538,7 +549,9 @@ def checkImageFormat(fmt,verbose=False):
     """Checks image format; if verbose, warn if it is not.
 
     Returns the image format, or None if it is not OK.
-    """ 
+    """
+    print "Format requested",fmt
+    print "Formats available",imageFormats()
     if fmt in imageFormats():
         if fmt == 'TEX' and verbose:
             warning("This will only write a LaTeX fragment to include the EPS image\nYou may still have to create the .EPS format image separately.\n")
@@ -595,7 +608,7 @@ def saveMulti(fn=None,fmt=None,verbose=False):
     if not fn:
         if multisave:
             log("Leaving multi save mode")
-            qt.QObject.disconnect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
+            QtCore.QObject.disconnect(GD.canvas,QtCore.PYSIGNAL("save"),saveNext)
         multisave = None
         return
 
@@ -618,31 +631,9 @@ def saveMulti(fn=None,fmt=None,verbose=False):
         name += ext
         if verbose:
             warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-        qt.QObject.connect(GD.canvas,qt.PYSIGNAL("save"),saveNext)
+        QtCore.QObject.connect(GD.canvas,QtCore.PYSIGNAL("save"),saveNext)
         multisave = [ name,nr,fmt ]
 
-
-
-###########################  app  ################################
-
-def savePreferences():
-    """Save the preferences.
-
-    If a local preferences file was read, it will be saved there.
-    Otherwise, it will be saved as the user preferences, possibly
-    creating that file.
-    """
-    f = os.path.join(os.getcwd(),GD.prefs)
-    if not os.path.exists(f):
-        f = GD.userprefs
-    try:
-        fil = file(f,'w')
-        fil.write("%s" % GD.cfg)
-        fil.close()
-        res = "Saved"
-    except:
-        res = "Could not save"
-    print "%s preferences to file %s" % (res,f)
 
 
 #### End

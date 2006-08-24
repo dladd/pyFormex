@@ -14,9 +14,19 @@ import math
 import vector
 import pickle
 
+
 # default float and int types used in the Formex data
 Float = float32
 Int = int32
+
+
+def Globals():
+    """Return the list of globals defined in this module."""
+    g = globals()
+    if g.has_key('__name__'):
+        del g['__name__']
+    return g
+
 
 ###########################################################################
 ##
@@ -392,14 +402,14 @@ class Formex:
     the operation.   
     """
             
-    def globals(self):
-        """Return the list of globals defined in this module."""
-        g = globals()
-        if g.has_key('__name__'):
-            del g['__name__']
-        return g
+##    def globals(self):
+##        """Return the list of globals defined in this module."""
+##        g = globals()
+##        if g.has_key('__name__'):
+##            del g['__name__']
+##        return g
         
-    globals = classmethod(globals)
+##    globals = classmethod(globals)
 
 ###########################################################################
 #

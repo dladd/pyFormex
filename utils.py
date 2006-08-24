@@ -27,19 +27,16 @@ def isPyFormex(filename):
 def imageFormatFromExt(ext):
     """Determine the image format from an extension.
 
-    The extension can start with a '.' or not and be in upper or
-    lower case. The format is usually equal to the extension characters
-    in upper case, except that .jpg/.JPG file extensions return a format JPEG.
-    If the supplied extension is empty, the default format 'PNG' is returned.
+    The extension may or may not have an initial dot and may be in upper or
+    lower case. The format is equal to the extension characters in lower case.
+    If the supplied extension is empty, the default format 'png' is returned.
     """
     if len(ext) > 0:
         if ext[0] == '.':
             ext = ext[1:]
-        fmt = ext.upper()  # remove the initial '.'
-        if fmt == 'JPG':
-            fmt = 'JPEG'
-    else:  # no extension given: save as .png
-        fmt = 'PNG'
+        fmt = ext.lower()
+    else:
+        fmt = 'png'
     return fmt
 
 

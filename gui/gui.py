@@ -17,15 +17,17 @@ import sys,time,os.path,string
 from PyQt4 import QtCore, QtGui, QtOpenGL
 import menu
 import viewMenu
+import fileMenu
+import scriptsMenu
+import prefMenu
 import canvas
 import script
 import draw
+import utils
 
 
 _start_message = GD.Version + ', by B. Verhegghe'
-
-GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
-
+iconType = '.xbm'
 
 class MyQAction(QtGui.QAction):
     """A MyQAction is a QAction that sends a string as parameter when clicked."""
@@ -47,10 +49,10 @@ class MyQAction(QtGui.QAction):
   
 def initViewActions(parent,viewlist):
     """Create the initial set of view actions."""
-    global views
+    global views,iconType
     views = []
     for name in viewlist:
-        icon = name+"view.xbm"
+        icon = name+"view"+iconType
         Name = string.capitalize(name)
         tooltip = Name+" View"
         menutext = "&"+Name
@@ -63,24 +65,26 @@ def createViewAction(parent,name,icon,tooltip,menutext):
     It is added to the viewsMenu and/or the viewsBar if they exist.
     The toolbar button has icon and tooltip. The menu item has menutext. 
     """
-    global views,viewsMenu,viewsBar
+    global views,viewsMenu,viewsBar,iconType
     dir = GD.cfg['icondir']
-    a = MyQAction(name,qt.QIconSet(qt.QPixmap(os.path.join(dir,icon))),menutext,0,parent)
-    qt.QObject.connect(a,qt.PYSIGNAL("Clicked"),draw.view)
+    a = MyQAction(name,QtGui.QIconSet(QtGui.QPixmap(os.path.join(dir,icon))),menutext,0,parent)
+    QtCore.QObject.connect(a,QtCore.PYSIGNAL("Clicked"),draw.view)
     views.append(name)
     if viewsMenu:
         a.addTo(viewsMenu)
     if viewsBar:
         a.addTo(viewsBar)
  
-def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
+def addView(name,angles,icon=None,tooltip=None,menutext=None):
     """Add a new view to the list of predefined views.
 
     This creates a new named view with specified angles for the canvas.
     It also creates a MyQAction which sends the name when activated, and
     adds the MyQAction to the viewsMenu and/or the viewsBar if they exist.
     """
-    global views,viewsMenu,viewsBar
+    global views,viewsMenu,viewsBar,iconType
+    if not icon:
+        icon = 'userview'+iconType
     if tooltip == None:
         tooltip = name
     if menutext == None:
@@ -90,17 +94,31 @@ def addView(name,angles,icon="userview.xbm",tooltip=None,menutext=None):
         createViewAction(GD.gui.main,name,icon,tooltip,menutext)
     GD.canvas.createView(name,angles)
 
+
+###################### Actions #############################################
+# Actions are just python functions, preferably without arguments
+# Actions are often used as slots, which are triggered by signals,
+#   e.g. by clicking a menu item or a tool button.
+# Since signals have no arguments:
+# Can we use python functions with arguments as actions ???
+# - In menus we can have the menuitems send an integer id.
+# - For other cases (like toolbuttons), we can subclass QAction and let it send
+#   a signal with appropriate arguments 
+#
+# The above might no longer be correct for QT4! 
+
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
+    global iconType
     action = {}
     dir = GD.cfg.icondir
-    buttons = [ [ "Play", "next.xbm", script.play, False ],
-                [ "Step", "nextstop.xbm", draw.step, False ],
-                [ "Continue", "ff.xbm", draw.fforward, False ],
+    buttons = [ [ "Play", "next", fileMenu.play, False ],
+                [ "Step", "nextstop", draw.step, False ],
+                [ "Continue", "ff", draw.fforward, False ],
               ]
     for b in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])))
+        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+iconType))
         a = toolbar.addAction(icon,b[0],b[2])
         a.setEnabled(b[3])
         action[b[0]] = a
@@ -109,26 +127,24 @@ def addActionButtons(toolbar):
 ################# Camera action toolbar ###############
 def addCameraButtons(toolbar):
     """Add the camera buttons to a toolbar."""
-    
+    global iconType
     dir = GD.cfg['icondir']
-    buttons = [ [ "Rotate left", "rotleft.xbm", viewMenu.rotLeft ],
-                [ "Rotate right", "rotright.xbm", viewMenu.rotRight ],
-                [ "Rotate up", "rotup.xbm", viewMenu.rotUp ],
-                [ "Rotate down", "rotdown.xbm", viewMenu.rotDown ],
-                [ "Twist left", "twistleft.xbm", viewMenu.twistLeft ],
-                [ "Twist right", "twistright.xbm", viewMenu.twistRight ],
-                [ "Translate left", "left.xbm", viewMenu.transLeft ],
-                [ "Translate right", "right.xbm", viewMenu.transRight ],
-                [ "Translate down", "down.xbm", viewMenu.transDown ],
-                [ "Translate up", "up.xbm", viewMenu.transUp ],
-                [ "Zoom In", "zoomin.xbm", viewMenu.zoomIn ],
-                [ "Zoom Out", "zoomout.xbm", viewMenu.zoomOut ],  ]
+    buttons = [ [ "Rotate left", "rotleft", viewMenu.rotLeft ],
+                [ "Rotate right", "rotright", viewMenu.rotRight ],
+                [ "Rotate up", "rotup", viewMenu.rotUp ],
+                [ "Rotate down", "rotdown", viewMenu.rotDown ],
+                [ "Twist left", "twistleft", viewMenu.twistLeft ],
+                [ "Twist right", "twistright", viewMenu.twistRight ],
+                [ "Translate left", "left", viewMenu.transLeft ],
+                [ "Translate right", "right", viewMenu.transRight ],
+                [ "Translate down", "down", viewMenu.transDown ],
+                [ "Translate up", "up", viewMenu.transUp ],
+                [ "Zoom In", "zoomin", viewMenu.zoomIn ],
+                [ "Zoom Out", "zoomout", viewMenu.zoomOut ],  ]
     for b in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])))
+        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+iconType))
         a = toolbar.addAction(icon,b[0],b[2])
         #a.setAutoRepeat(True)
-    for w in toolbar.children():
-        print w
 
 
 def printFormat(fmt):
@@ -138,6 +154,7 @@ def printFormat(fmt):
     print "RGBA: ",fmt.rgba()
 
 
+################# Message Board ###############
 class Board(QtGui.QTextEdit):
     """Message board for displaying read-only plain text messages."""
     
@@ -153,6 +170,7 @@ class Board(QtGui.QTextEdit):
 ##            self.setPlainText(text)
 
 
+################# OpenGL Canvas ###############
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """A canvas for OpenGL rendering."""
     
@@ -169,7 +187,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         
     def initializeGL(self):
         if GD.options.debug:
-            print "initializeGL: "
+            #print "initializeGL: "
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
         self.glinit()
@@ -180,12 +198,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSize(w,h)
 
     def	paintGL(self):
-        if GD.options.debug:
-            print "paintGL:"
         self.display()
 
-def printsize(w):
-    print "%s x %s" % (w.width(),w.height())
+
+def printsize(w,t=None):
+    print "%s %s x %s" % (t,w.width(),w.height())
 
 
 class GUI:
@@ -245,24 +262,32 @@ class GUI:
         self.boxlayout.addWidget(s)
         s.addWidget(self.canvas)
         s.addWidget(self.board)
-        printsize(self.canvas)
-        printsize(s)
-        printsize(self.board)
         self.box.setLayout(self.boxlayout)
-        # Populate the menubar
-##        PT.insertExampleMenu()
-##        PT.addDefaultMenu(self.menu)
-        menu.addMenuItems(self.menu,menu.MenuData)
+        # Create the top menu and keep a dict with the main menu items
+        menu.addMenuItems(self.menu, menu.MenuData)
+        print [[str(a.text()),a] for a in self.menu.actions()]
+        self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
+        print self.menus
+        # Create a menu with pyFormex examples
+        # and insert it before the help menu
+        self.examples = scriptsMenu.ScriptsMenu(GD.cfg.exampledir)
+        self.menu.insertMenu(self.menus['&Help'],self.examples)
+        # ... and the views menu
+        self.viewsMenu = None
+        if GD.cfg.gui.setdefault('viewsmenu',True):
+            self.viewsMenu = QtGui.QPopupMenu(self.menu)
+            self.menu.insertItem('View',viewsMenu,-1,2)
+        # Display the main menubar
+        if GD.options.debug:
+            printsize(self.main,'Main:')
+            printsize(self.canvas,'Canvas:')
+            printsize(self.board,'Board:')
         self.menu.show()
         # ... and the toolbar
         self.actions = addActionButtons(self.toolbar)
+        self.toolbar.addSeparator()
         if GD.cfg.gui.setdefault('camerabuttons',True):
             addCameraButtons(self.toolbar)
-        # ... and the views menu
-##        viewsMenu = None
-##        if GD.cfg.gui.setdefault('viewsmenu',True):
-##            viewsMenu = QtGui.QPopupMenu(self.menu)
-##            self.menu.insertItem('View',viewsMenu,-1,2)
 ##        # ... and the views toolbar
 ##        viewsBar = None
 ##        if GD.cfg.gui.setdefault('viewsbar',True):
@@ -340,15 +365,16 @@ def setcurfile(filename):
     A file that is not a pyFormex script can be loaded in the editor,
     but it can not be played as a pyFormex script.
     """
+    global iconType
     GD.cfg.curfile = filename
     GD.canPlay = utils.isPyFormex(filename)
     GD.gui.curfile.setText(os.path.basename(filename))
     GD.gui.actions['Play'].setEnabled(GD.canPlay)
     if GD.canPlay:
-        icon = 'happy.xbm'
+        icon = 'happy'
     else:
-        icon = 'unhappy.xbm'
-    GD.gui.smiley.setPixmap(qt.QPixmap(os.path.join(GD.cfg.icondir,icon)))
+        icon = 'unhappy'
+    GD.gui.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg.icondir,icon)+iconType))
 
 
 
@@ -361,7 +387,7 @@ def messageBox(message,level='info',actions=['OK']):
 
     The function returns the number of the button that was clicked.
     """
-    w = qt.QMessageBox()
+    w = QtGui.QMessageBox()
     if level == 'error':
         ans = w.critical(w,GD.Version,message,*actions)
     elif level == 'warning':
@@ -379,10 +405,17 @@ def runApp(args):
     global app_started
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
+
+    # Set some globals
+    GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
+    GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
+    if GD.options.debug:
+        print "Image types for saving: ",GD.image_formats_qt
+        print "Image types for input: ",GD.image_formats_qtr
+        
     # create GUI, show it, run it
     GD.gui = GUI()
-##    GD.canvas = GD.gui.canvas
-##    GD.app.setMainWidget(GD.gui.main)
+    GD.canvas = GD.gui.canvas
     GD.gui.main.show()
     # remaining args are interpreted as scripts
     GD.app_started = False
@@ -401,6 +434,6 @@ def runApp(args):
         else:
             print "Not saving prefs, because nothing changed" 
     if GD.prefsChanged:
-        savePreferences()
+        prefMenu.savePreferences()
 
 #### End

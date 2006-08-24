@@ -8,14 +8,16 @@ import globaldata as GD
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 
+from PyQt4 import QtCore  # needed for events, signals
+
 import colors
 import camera
+import utils
 ##from actors import *
 ##from decorations import *
-##from utils import stuur
 
-##import math
-##import vector
+import math
+import vector
 
 # load gl2ps if available
 try:
@@ -300,7 +302,7 @@ class Canvas:
                 a0 = math.atan2(x0[0],x0[1])
                 a1 = math.atan2(x1[0],x1[1])
                 an = (a1-a0) / math.pi * 180
-                ds = stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
+                ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
                 twist = - an*ds
                 #print "an,d,ds = ",an,d,ds,twist
                 self.camera.rotate(twist,0.,0.,1.)
@@ -311,7 +313,7 @@ class Canvas:
             b = vector.projection(dx,x0)
             #print "x0,dx,b=",x0,dx,b
             if abs(b) > 5:
-                val = stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
+                val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
                 rot =  [ abs(val),-dx[1],dx[0],0 ]
                 #print "val,rot=",val,rot
                 self.camera.rotate(*rot)
@@ -321,27 +323,27 @@ class Canvas:
             dist = self.camera.getDist() * 0.5
             # hor movement sets x value of center
             # vert movement sets y value of center
-            #panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
-            #pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
+            #panx = utils.stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
+            #pany = utils.stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
             #self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
             dx,dy = (x-self.statex,y-self.statey)
-            panx = stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
-            pany = stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
+            panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
+            pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
             #print dx,dy,panx,pany
             self.camera.translate(panx,-pany,0)
             self.statex,self.statey = (x,y)
 
         elif self.dynamic == "zoom":
             # hor movement is lens zooming
-            f = stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
+            f = utils.stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
             self.camera.setLens(f)
 
         elif self.dynamic == "combizoom":
             # hor movement is lens zooming
-            f = stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
+            f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             self.camera.setLens(f)
             # vert movement is dolly zooming
-            d = stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
+            d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
             self.camera.setDist(d*self.state[0])
         self.update()
 
@@ -352,9 +354,9 @@ class Canvas:
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
-        self.emit(qt.PYSIGNAL("wakeup"),())
+        self.emit(QtCore.PYSIGNAL("wakeup"),())
         if e.text() == 's':
-            self.emit(qt.PYSIGNAL("save"),())
+            self.emit(QtCore.PYSIGNAL("save"),())
         e.ignore()
         
     def mousePressEvent(self,e):
@@ -363,15 +365,15 @@ class Canvas:
         self.statey = e.y()
         self.camera.loadMatrix()
         # Other initialisations for the mouse move actions are done here 
-        if e.button() == qt.Qt.LeftButton:
+        if e.button() == QtCore.Qt.LeftButton:
             self.dynamic = "trirotate"
             # the vector from the screen center to the clicked point
             # this is used for the twist angle
             self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-        elif e.button() == qt.Qt.MidButton:
+        elif e.button() == QtCore.Qt.MidButton:
             self.dynamic = "pan"
             self.state = self.camera.getCenter()
-        elif e.button() == qt.Qt.RightButton:
+        elif e.button() == QtCore.Qt.RightButton:
             self.dynamic = "combizoom"
             self.state = [self.camera.getDist(),self.camera.fovy]
         

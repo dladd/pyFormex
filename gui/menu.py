@@ -6,6 +6,7 @@ from PyQt4 import QtCore, QtGui
 import globaldata as GD
 import fileMenu
 import viewMenu
+import prefMenu
 import help
 import draw
 
@@ -70,23 +71,23 @@ MenuData = [
         ("Action","Toggle &MultiSave","fileMenu.multiSave"),
         ("Sep",None,None),
         ("Action","E&xit","GD.app.exit"), ]),
-##    ("Popup","&Settings",[
-###        ("Action","&Preferences","preferences"), 
-##        ("Action","Toggle &Triade","draw.toggleTriade"), 
-##        ("Action","&Drawwait Timeout","prefDrawtimeout"), 
-##        ("Action","&Background Color","prefBGcolor"), 
-##        ("Action","Line&Width","prefLinewidth"), 
-##        ("Action","&Canvas Size","prefCanvasSize"), 
-##        ("Action","&LocalAxes","localAxes"),
-##        ("Action","&GlobalAxes","globalAxes"),
-##        ("Action","&Wireframe","draw.wireframe"),
-##        ("Action","&Flat","draw.flat"),
-##        ("Action","&Smooth","draw.smooth"),
-##        ("Action","&Render","prefRender"),
-##        ("Action","&Light0","prefLight0"),
-##        ("Action","&Light1","prefLight1"),
-##        ("Action","&Help","prefHelp"),
-##        ("Action","&Save Preferences","draw.savePreferences"), ]),
+    ("Popup","&Settings",[
+#        ("Action","&Preferences","preferences"), 
+        ("Action","Toggle &Triade","draw.toggleTriade"), 
+        ("Action","&Drawwait Timeout","prefMenu.setDrawtimeout"), 
+        ("Action","&Background Color","prefMenu.setBGcolor"), 
+        ("Action","Line&Width","prefMenu.setLinewidth"), 
+        ("Action","&Canvas Size","prefMenu.setCanvasSize"), 
+        ("Action","&LocalAxes","prefMenu.setLocalAxes"),
+        ("Action","&GlobalAxes","prefMenu.setGlobalAxes"),
+        ("Action","&Wireframe","draw.wireframe"),
+        ("Action","&Flat","draw.flat"),
+        ("Action","&Smooth","draw.smooth"),
+        ("Action","&Render","prefMenu.setRender"),
+        ("Action","&Light0","prefMenu.setLight0"),
+        ("Action","&Light1","prefMenu.setLight1"),
+        ("Action","&Help","prefMenu.setHelp"),
+        ("Action","&Save Preferences","prefMenu.savePreferences"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","viewMenu.zoomIn"), 
         ("Action","&Zoom Out","viewMenu.zoomOut"), 

@@ -6,6 +6,7 @@ import os
 import globaldata as GD
 import widgets
 import gui
+import draw
 
 
 def newFile():
@@ -38,14 +39,7 @@ def edit():
         draw.log("Spawned %d" % pid)
 
 
-def play():
-    """Play the current file.
-
-    This only does something if the current file is a pyFormex script.
-    """
-    if GD.canPlay:
-        draw.play(GD.cfg['curfile'])
-
+play = draw.play
     
 def saveImage():
     """Save the current rendering in image format.
@@ -59,6 +53,7 @@ def saveImage():
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
+        print "Will now save image"
         draw.saveImage(fn,verbose=True)
 
 def multiSave():

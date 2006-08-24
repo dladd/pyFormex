@@ -5,7 +5,7 @@
 # THIS SHOULD ONLY CONTAIN FUNCTIONS INDEPENDENT FROM THE GUI
 
 import globaldata as GD
-from formex import *
+import formex
 
 import threading,os,commands
 
@@ -96,7 +96,7 @@ def playScript(scr):
     # scripts.
     g = globals()
     #print "Voor",g.get('__name__','Geen')
-    g.update(Formex.globals())
+    g.update(formex.Globals())
     #print "Na",g.get('__name__','Geen')
     exitall = False
     try:

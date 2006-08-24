@@ -39,9 +39,28 @@ class FileSelection(QtGui.QFileDialog):
         """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            return str(self.selectedFiles())
+            return str(self.selectedFiles()[0])
         else:
             return None
+
+
+# !! The QtGui.QColorDialog can not be instantiated or subclassed.
+# !! The color selection dialog is created by the static getColor
+# !! function.
+
+def getColor(col=None):
+    """Create a color selection dialog and return the selected color.
+
+    col is the initial selection.
+    If a valid color is selected, its string name is returned, usually as
+    a hex #RRGGBB string. If the dialog is canceled, None is returned.
+    """
+    col = QtGui.QColorDialog.getColor(QtGui.QColor(col))
+    if col.isValid():
+        return str(col.name())
+    else:
+        return None
+
 
 ## !! THIS IS NOT FULLY FUNCTIONAL YET
 ## It can already be used for string items  
@@ -51,7 +70,7 @@ class inputDialog(QtGui.QDialog):
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption='Input Dialog'):
+    def __init__(self,items,caption='Input Dialog',*args):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -65,7 +84,7 @@ class inputDialog(QtGui.QDialog):
         For each item a label with the name and a LineEdit widget are created,
         with a validator function where appropriate.
         """
-        QtGui.QDialog.__init__(self,None,None,True)
+        QtGui.QDialog.__init__(self,*args)
         self.resize(400,200)
         self.setWindowTitle(caption)
         self.fields = []

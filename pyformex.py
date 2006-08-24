@@ -2,7 +2,7 @@
 # $Id$
 """pyformex is a python implementation of Formex algebra"""
 
-import pyformex.globaldata as GD
+import globaldata as GD
 
 import sys
 import os.path
@@ -17,7 +17,6 @@ def main(argv=None):
 
     It is responsible for reading the configuration file(s),
     processing the command line options and starting the application.
-
     The basic configuration file is 'pyformexrc' located in the pyformex
     directory. It should always be present and be left unchanged.
     You can copy this file to another location if you want to make changes.
