@@ -23,17 +23,32 @@ import draw
 #
 # The above might no longer be correct for QT4! 
 
-class MyQAction(QtGui.QAction):
-    """A MyQAction is a QAction that sends a string as parameter when clicked."""
-    def __init__(self,text,icon=None):
-        QtGui.QAction.__init__(self,text,None)
+
+class DAction(QtGui.QAction):
+    """A DAction is a QAction that sends a string as parameter when clicked."""
+    
+    def __init__(self,name,icon=None,data=None):
+        """Create a new DAction with name, icon and string data.
+
+        If the DAction is used in a menu, a name is sufficient. For use
+        in a toolbar, you will probably want to specify an icon.
+        When the action is triggered, the data is sent as a parameter to
+        the SLOT function connected with the 'Clicked' signal.
+        If no data is specified, the name is used as data. 
+        
+        See the views.py module for an example.
+        """
+        QtGui.QAction.__init__(self,name,None)
         if icon:
             self.setIcon(icon)
+        if not data:
+            data = name
+        self.setData(QtCore.QVariant(data))
         self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
         
     def activated(self):
-        print "Clicked %s" % self.text()
-        self.emit(QtCore.SIGNAL("Clicked"), str(self.text()))
+        print "Clicked %s" % str(self.data().toString())
+        self.emit(QtCore.SIGNAL("Clicked"), str(self.data().toString()))
 
 
 def addMenuItems(menu, items=[]):

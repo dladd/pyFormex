@@ -12,6 +12,7 @@ import gui
 import widgets
 import colors
 import actors
+import decors
 import formex
 
 
@@ -335,14 +336,14 @@ def toggleTriade():
 
 def drawtext(text,x,y,font='9x15'):
     """Show a text at position x,y using font."""
-    TA = actors.TextActor(text,x,y,font)
+    TA = decors.Text(text,x,y,font)
     decorate(TA)
     return TA
 
 
-def decorate(actor):
+def decorate(decor):
     """Draw a decoration."""
-    GD.canvas.addDecoration(actor)
+    GD.canvas.addDecoration(decor)
     GD.canvas.update()
 
 
@@ -406,7 +407,7 @@ def setview(name,angles):
     The angles are (longitude, latitude, twist).
     If the view name is new, and there is a views toolbar,
     a view button will be added to it."""
-    gui.addView(name,angles)
+    GD.gui.addView(name,angles)
 
 
 def pause():

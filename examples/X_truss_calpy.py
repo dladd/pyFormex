@@ -12,11 +12,12 @@
 
 #######################################################################
 # Setting this path correctly is required to import the analysis module
-# You need calpy >= 0.3
+# You need calpy >= 0.3.3
 # It can be downloaded from ftp://bumps.ugent.be/calpy/
-import sys
-sys.path.append('/usr/local/lib/calpy-0.3.2')
+calpy_path = '/usr/local/lib/calpy-0.3.3'
+calpy_path = '/home/bene/prj/calpy/calpy'
 #######################################################################
+
 linewidth(1.0)
 clear()
 from examples.X_truss import X_truss
@@ -70,15 +71,22 @@ clear()
 draw(Formex(reshape(coords,(coords.shape[0],1,coords.shape[1]))),wait=False)
 draw(model)
 
-##### NOW load the analysis code #####
+############################################
+##### NOW load the calpy analysis code #####
+
+# Check if we have calpy:
+import sys
+sys.path.append(calpy_path)
 try:
     from fe_util import *
     from truss3d import *
 except ImportError:
     import globaldata as GD
-    warning("You need calpy-0.3.2 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct path in this example's source file\n(%s)." % GD.scriptName)
+    warning("You need calpy-0.3.3 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct calpy installation path\n in this example's source file\n(%s).\nThe calpy_path variable is set near the top of that file.\nIts current value is: %s" % (GD.cfg.curfile,calpy_path))
     exit()
     
+############################################
+
 nnod = coords.shape[0]
 nelems = elems.shape[0]
 # boundary conditions
@@ -103,6 +111,14 @@ loads[:,0]=AssembleVector(loads[:,0],[ 0.0, -50.0, 0.0 ],bcon[nr_loaded,:])
 message("Performing analysis: this may take some time")
 displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
 
+
+################################
+#Using pyFormex as postprocessor
+################################
+
+from colorscale import *
+import decors
+
 # Creating a formex for displaying results is fairly easy
 results = Formex(coords[elems],range(nelems))
 # Now try to give the formex some meaningful colors.
@@ -124,7 +140,7 @@ bgcolor('lightgreen')
 linewidth(3)
 drawtext('Normal force in the truss members',400,100,'tr24')
 CL = ColorLegend(CS,100)
-CLA = ColorLegendActor(CL,10,10,30,200) 
+CLA = decors.ColorLegend(CL,10,10,30,200) 
 GD.canvas.addDecoration(CLA)
 GD.canvas.update()
 

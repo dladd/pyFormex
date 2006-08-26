@@ -3,14 +3,6 @@
 """Graphical User Interface for pyformex."""
 
 import globaldata as GD
-#import pyfotemp as PT
-#import decorations
-#import widgets
-
-#try:
-#    import editor         ## non-essential module under testing
-#except ImportError:
-#    pass
 
 import sys,time,os.path,string
 
@@ -25,6 +17,11 @@ import views
 import script
 import draw
 import utils
+
+#try:
+#    import editor         ## non-essential module under testing
+#except ImportError:
+#    pass
 
 
 _start_message = GD.Version + ', by B. Verhegghe'
@@ -181,7 +178,7 @@ class GUI:
             printFormat(fmt)
         c = QtCanvas(fmt)
 ##        c = canvas.Canvas(wd,ht,fmt,s)
-        c.setBgColor(GD.cfg['bgcolor'])
+##        c.setBgColor(GD.cfg['bgcolor'])
         c.resize(wd,ht)
 ##        if GD.options.splash:
 ##            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
@@ -197,23 +194,23 @@ class GUI:
         menu.addMenuItems(self.menu, menu.MenuData)
         self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
         print self.menus
+        # ... and the toolbar
+        self.actions = addActionButtons(self.toolbar)
+        self.toolbar.addSeparator()
+        if GD.cfg.gui.setdefault('camerabuttons',True):
+            addCameraButtons(self.toolbar)
         # Create a menu with standard views
         # and insert it before the help menu
         self.views = None
         if GD.cfg.gui.setdefault('viewsmenu',True):
             self.viewsMenu = views.ViewsMenu()
             self.menu.insertMenu(self.menus['&Help'],self.viewsMenu)
-##        # ... and the views toolbar
-##        viewsBar = None
-##        if GD.cfg.gui.setdefault('viewsbar',True):
-##            viewsBar = QtGui.QToolBar("Views",self.main)
-##        # Create View Actions for the default views provided by the canvas
-##        initViewActions(self.main,GD.cfg.gui.setdefault('builtinviews',['front','back','left','right','top','bottom','iso']))
         # Install the default canvas views
         defviews = self.canvas.views.keys()
         # NO, these are not sorted, better:
         defviews = [ 'front', 'back', 'top', 'bottom', 'left', 'right', 'iso' ]
-        self.views = views.Views(defviews,self.viewsMenu)
+        self.toolbar.addSeparator()
+        self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
         # Create a menu with pyFormex examples
         # and insert it before the help menu
         self.examples = scriptsMenu.ScriptsMenu(GD.cfg.exampledir)
@@ -224,11 +221,6 @@ class GUI:
             printsize(self.canvas,'Canvas:')
             printsize(self.board,'Board:')
         self.menu.show()
-        # ... and the toolbar
-        self.actions = addActionButtons(self.toolbar)
-        self.toolbar.addSeparator()
-        if GD.cfg.gui.setdefault('camerabuttons',True):
-            addCameraButtons(self.toolbar)
         self.readSettings()
 
     
@@ -299,6 +291,19 @@ class GUI:
             icon = 'unhappy'
         self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg.icondir,icon)+GD.iconType))
 
+
+    def addView(self,name,angles):
+        """Create a new view and add it to the list of predefined views.
+
+        This creates a named view with specified angles for the canvas.
+        If the name already exists in the canvas views, it is overwritten
+        by the new angles.
+        It adds the view to the views Menu and Toolbar, if these exist and
+        do not have the name yet.
+        """
+        if not GD.canvas.views.has_key(name):
+            self.views.add(name)
+        GD.canvas.createView(name,angles)
 
 
 def messageBox(message,level='info',actions=['OK']):
