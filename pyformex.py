@@ -55,6 +55,14 @@ def main(argv=None):
             print f
             GD.cfg.read(f)
 
+    # HACK !!
+    # set pyformexdir back to the built-in
+    #
+    GD.cfg.pyformexdir = pyformexdir
+    GD.cfg.icondir = os.path.join(GD.cfg.pyformexdir,'icons')
+    GD.cfg.exampledir = os.path.join(GD.cfg.pyformexdir,'examples')
+
+
     # Process options
     parser = OptionParser(
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ]",

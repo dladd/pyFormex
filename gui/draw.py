@@ -92,7 +92,7 @@ def askFilename(cur,files="All files (*.*)",exist=True):
 
 def log(s):
     """Display a message in the cmdlog window."""
-    GD.gui.showMessage(s)
+    GD.gui.board.add(s)
 
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
@@ -134,9 +134,8 @@ def playScript(scr):
     # We might create a module with all operations accepted in
     # scripts.
     g = globals()
-    #print "Voor",g.get('__name__','Geen')
-    g.update(formex.Globals())
-    #print "Na",g.get('__name__','Geen')
+    g.update(formex.__dict__)
+    g.update(colors.__dict__)
     exitall = False
     try:
         try:
@@ -352,6 +351,8 @@ def view(v,wait=False):
     global allowwait,currentView
     if allowwait:
         drawwait()
+    print "Requested View ",v
+    print "Known Views: ",GD.canvas.views.keys()
     if GD.canvas.views.has_key(v):
         GD.canvas.setView(None,v)
         currentView = v

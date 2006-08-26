@@ -50,7 +50,7 @@ def askConfigPreferences(items,section=None):
         GD.prefsChanged = True
         #print "ACCEPTED following values:"
         for r in res:
-            #print r
+            print r
             store[r[0]] = eval(r[1])
     #print GD.cfg
 

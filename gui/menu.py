@@ -11,6 +11,31 @@ import help
 import draw
 
 
+###################### Actions #############################################
+# Actions are just python functions, preferably without arguments
+# Actions are often used as slots, which are triggered by signals,
+#   e.g. by clicking a menu item or a tool button.
+# Since signals have no arguments:
+# Can we use python functions with arguments as actions ???
+# - In menus we can have the menuitems send an integer id.
+# - For other cases (like toolbuttons), we can subclass QAction and let it send
+#   a signal with appropriate arguments 
+#
+# The above might no longer be correct for QT4! 
+
+class MyQAction(QtGui.QAction):
+    """A MyQAction is a QAction that sends a string as parameter when clicked."""
+    def __init__(self,text,icon=None):
+        QtGui.QAction.__init__(self,text,None)
+        if icon:
+            self.setIcon(icon)
+        self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
+        
+    def activated(self):
+        print "Clicked %s" % self.text()
+        self.emit(QtCore.SIGNAL("Clicked"), str(self.text()))
+
+
 def addMenuItems(menu, items=[]):
     """Add a list of items to a menu.
 

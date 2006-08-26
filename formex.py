@@ -20,12 +20,13 @@ Float = float32
 Int = int32
 
 
-def Globals():
-    """Return the list of globals defined in this module."""
-    g = globals()
-    if g.has_key('__name__'):
-        del g['__name__']
-    return g
+##def Globals():
+##    """Return the list of globals defined in this module."""
+##    g = globals()
+###    for n in filter(lambda s:s[0]=='_',g.keys()):
+###        del g[n]
+##    del g['__name__']
+##    return g
 
 
 ###########################################################################

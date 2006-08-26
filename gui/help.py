@@ -3,11 +3,12 @@
 """Display help"""
 
 import globaldata as GD
-##import helpviewer
-##import draw
-##import qt
-##import os
 
+import os
+import draw
+
+##import helpviewer
+##import qt
     
 def help(page=None):
     """Display a html help page.

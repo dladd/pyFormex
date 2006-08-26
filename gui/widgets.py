@@ -89,12 +89,12 @@ class inputDialog(QtGui.QDialog):
         self.setWindowTitle(caption)
         self.fields = []
         self.result = []
-        tab = QtGui.QVBoxLayout(self,11,6)
+        form = QtGui.QVBoxLayout()
         for item in items:
-            line = QtGui.QHBoxLayout(None,0,6)
-            label = QtGui.QLabel(item[0],self)
-            line.addWidget(label)
-            input = QtGui.QLineEdit(str(item[1]),self)
+            # Create the text label
+            label = QtGui.QLabel(item[0])
+            # Create the input field
+            input = QtGui.QLineEdit(str(item[1]))
             if len(item) == 2 or item[2] == 'str':
                 pass
                 #print "%s is a string"%item[0]
@@ -108,23 +108,31 @@ class inputDialog(QtGui.QDialog):
                 pass
                 #print "%s is a float"%item[0]
             input.selectAll()
-            line.addWidget(input)
             self.fields.append([label,input])
-            tab.addLayout(line)
+            # Add label and input field to a horizontal layout in the form
+            line = QtGui.QHBoxLayout()
+            line.addWidget(label)
+            line.addWidget(input)
+            form.addLayout(line)
         # add OK and Cancel buttons
-        but = QtGui.QHBoxLayout(None,0,6)
+        but = QtGui.QHBoxLayout()
         spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
         but.addItem(spacer)
         ok = QtGui.QPushButton("OK",self)
         ok.setDefault(True)
         cancel = QtGui.QPushButton("CANCEL",self)
-        cancel.setAccel(QtGui.QKeyEvent.Key_Escape)
+        #cancel.setAccel(QtGui.QKeyEvent.Key_Escape)
         #cancel.setDefault(True)
         but.addWidget(cancel)
         but.addWidget(ok)
-        tab.addLayout(but)
+        form.addLayout(but)
         self.connect(cancel,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
         self.connect(ok,QtCore.SIGNAL("clicked()"),self.acceptdata)
+        self.setLayout(form)
+        # Set the keyboard focus to the first input field
+        self.setFocusProxy(self.fields[0][1])
+        self.fields[0][0].setFocus()
+        self.show()
         
     def acceptdata(self):
         for label,input in self.fields:

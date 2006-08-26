@@ -4,7 +4,7 @@
 
 import os
 import globaldata as GD
-import menu, utils, gui, fileMenu
+import menu, utils, fileMenu
 from PyQt4 import QtCore, QtGui
 
 
@@ -39,8 +39,9 @@ class ScriptsMenu(QtGui.QMenu):
 
     def run(self,action):
         """Run the selected example."""
-        selected = os.path.join(GD.cfg.exampledir,str(action.text()))+'.py'
-        print selected
-        gui.setcurfile(selected)
+        selected = os.path.join(self.dir,str(action.text()))+'.py'
+        if GD.options.debug:
+            print "Playing ",selected
+        GD.gui.setcurfile(selected)
         fileMenu.play()
         

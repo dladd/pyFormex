@@ -12,12 +12,13 @@
 clear()
 n = 40
 
-form = ask("Create a surface model with",['Triangles','Quadrilaterals'])
-if form == 0:
-    # These are triangles
+baseGeom = ask("Create a surface model with",
+                   ['Triangles','Quadrilaterals'])
+if baseGeom == 0:
+    # The base are two triangles
     e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
 else:
-    # These are quadrilaterals
+    # The base is one quadrilateral
     e = Formex([[[0,0,0],[1,0,0],[1,1,0],[0,1,0]]],1).rinid(n,n,1,1)
 
 # These are lines forming quadrilaterals
@@ -40,7 +41,7 @@ draw (e,color=red)
 #draw (b,color=blue)
 
 
-if ack('Export to .stl?'):
+if baseGeom == 0 and ack('Export to .stl?'):
     import stl
     f = file('novation.stl','w')
     F = e # + b

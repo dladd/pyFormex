@@ -23,7 +23,7 @@ def openFile(exist=True):
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
-        gui.setcurfile(fn)
+        GD.gui.setcurfile(fn)
 
         
 def edit():

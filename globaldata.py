@@ -8,6 +8,7 @@ import config
 cfg = config.Config()
 gui = None
 canvas = None
+board = None
 help = None
 PyFormex = {}  # globals that will be offered to scripts
 image_formats_qt = []
@@ -18,6 +19,7 @@ canPlay = False
 scriptName = None
 prefs = None
 userprefs = None
+iconType = None
 
 def debug(s):
     if options.debug:
