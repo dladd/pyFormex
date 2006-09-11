@@ -1,6 +1,11 @@
 # This file describes some guidelines for creating the pyFormex manual
 #
 
+!! Symlink the python/doc/texinputs to a path searched by kpse
+!! The re-run mktexlsr
+!! Check with kpsewhich manual.cls that the intended manual.cls is used.
+
+
 pyFormex: always use the \pyformex command to set the name pyFormex
 
 images 
@@ -54,4 +59,16 @@ labels should start with the type of object they refer to:
   \label{fig:Figurename}
   \label{tbl:Tablename}
 etc.
+
+Python code
+===========
+should be entered as \code{}
+
+Math
+====
+should be avoided if possible. (It will be converted to graphics, but not all
+math constructions are legal.
+
+(!! I had problems with the conversion because my rgb.txt file was not in the
+default place, due to changing standards on my debian installation)
 
