@@ -17,6 +17,7 @@ import views
 import script
 import draw
 import utils
+import settings
 
 #try:
 #    import editor         ## non-essential module under testing
@@ -25,26 +26,29 @@ import utils
 
 
 _start_message = GD.Version + ', by B. Verhegghe'
-GD.iconType = '.xpm'
 
 
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
     action = {}
-    dir = GD.cfg.icondir
+    dir = GD.cfg['icondir']
+    print GD.cfg['gui']
     buttons = [ [ "Play", "next", fileMenu.play, False ],
                 [ "Step", "nextstop", draw.step, False ],
                 [ "Continue", "ff", draw.fforward, False ],
               ]
     for b in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.iconType))
+        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.cfg['gui/icontype']))
         a = toolbar.addAction(icon,b[0],b[2])
         a.setEnabled(b[3])
         action[b[0]] = a
     return action
 
 ################# Camera action toolbar ###############
+def printButtonClicked():
+    print "Button CLicked!"
+
 def addCameraButtons(toolbar):
     """Add the camera buttons to a toolbar."""
     dir = GD.cfg['icondir']
@@ -60,11 +64,14 @@ def addCameraButtons(toolbar):
                 [ "Translate up", "up", cameraMenu.transUp ],
                 [ "Zoom In", "zoomin", cameraMenu.zoomIn ],
                 [ "Zoom Out", "zoomout", cameraMenu.zoomOut ],  ]
-    for b in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.iconType))
-        a = toolbar.addAction(icon,b[0],b[2])
-        #a.setAutoRepeat(True)
-
+    for but in buttons:
+        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,but[1])+GD.cfg['gui/icontype']))
+        a = toolbar.addAction(icon,but[0],but[2])
+        b =  toolbar.children()[-1]
+        b.setAutoRepeat(True)
+        a.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("trigger()"))
+        b.setToolTip(but[0])
+        
 
 def printFormat(fmt):
     """Print partial information about the OpenGL format."""
@@ -122,8 +129,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.glinit()
 
     def	resizeGL(self,w,h):
-        if GD.options.debug:
-            print "resizeGL: %s x %s" % (w,h)
+        GD.debug("resizeGL: %s x %s" % (w,h))
         self.setSize(w,h)
 
     def	paintGL(self):
@@ -134,16 +140,16 @@ def printsize(w,t=None):
     print "%s %s x %s" % (t,w.width(),w.height())
 
 
+################# GUI ###############
 class GUI:
     """Implements a GUI for pyformex."""
 
-    def __init__(self):
+    def __init__(self,size=(800,600),pos=(0,0)):
         """Constructs the GUI.
 
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
-        wd,ht = (GD.cfg.gui['width'],GD.cfg.gui['height'])
         self.main = QtGui.QMainWindow()
         self.main.setWindowTitle(GD.Version)
         # add widgets to the main window
@@ -178,8 +184,8 @@ class GUI:
             printFormat(fmt)
         c = QtCanvas(fmt)
 ##        c = canvas.Canvas(wd,ht,fmt,s)
-##        c.setBgColor(GD.cfg['bgcolor'])
-        c.resize(wd,ht)
+        c.setBgColor(GD.cfg['draw/bgcolor'])
+##        c.resize(*GD.cfg['size'])
 ##        if GD.options.splash:
 ##            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
         self.canvas = c
@@ -193,16 +199,16 @@ class GUI:
         # Create the top menu and keep a dict with the main menu items
         menu.addMenuItems(self.menu, menu.MenuData)
         self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
-        print self.menus
+        #print self.menus
         # ... and the toolbar
         self.actions = addActionButtons(self.toolbar)
         self.toolbar.addSeparator()
-        if GD.cfg.gui.setdefault('camerabuttons',True):
+        if GD.cfg['gui/camerabuttons']:
             addCameraButtons(self.toolbar)
         # Create a menu with standard views
         # and insert it before the help menu
         self.views = None
-        if GD.cfg.gui.setdefault('viewsmenu',True):
+        if GD.cfg['gui/viewsmenu']:
             self.viewsMenu = views.ViewsMenu()
             self.menu.insertMenu(self.menus['&Help'],self.viewsMenu)
         # Install the default canvas views
@@ -213,18 +219,19 @@ class GUI:
         self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
         # Create a menu with pyFormex examples
         # and insert it before the help menu
-        self.examples = scriptsMenu.ScriptsMenu(GD.cfg.exampledir)
+        self.examples = scriptsMenu.ScriptsMenu(GD.cfg['exampledir'])
         self.menu.insertMenu(self.menus['&Help'],self.examples)
         # Display the main menubar
+        self.menu.show()
+        self.resize(*size)
+        self.moveto(pos[0],pos[1])
         if GD.options.debug:
             printsize(self.main,'Main:')
             printsize(self.canvas,'Canvas:')
             printsize(self.board,'Board:')
-        self.menu.show()
-        self.readSettings()
-
+        
     
-    def resize(self,wd,ht):
+    def resizeCanvas(self,wd,ht):
         """Resize the canvas."""
         self.canvas.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
@@ -247,41 +254,40 @@ class GUI:
     def update(self):
         self.main.update()
 
+
+    def resize(self,w,h):
+        """Resize the gui main window."""
+        self.main.resize(w,h)
+
         
-    def readSettings(self):
-        settings = QtCore.QSettings("pyformex.berlios.de", "pyFormex")
-        pos = settings.value("pos", QtCore.QVariant(QtCore.QPoint(200, 200))).toPoint()
-        size = settings.value("size", QtCore.QVariant(QtCore.QSize(400, 400))).toSize()
-        curfile = str(settings.value("curfile").toString())
-        print "Curfile:",curfile
-        if curfile:
-            self.setcurfile(curfile)
-        print "Will now resize main"
-        self.main.resize(size)
-        print "Will now move main"
-        self.main.move(pos)
-        print "Settings processed"
+    def moveto(self,x,y):
+        """Move the gui main window."""
+        self.main.move(x,y)
 
 
-    def writeSettings(self):
-        if GD.options.debug:
-            print "Saving settings"
-        settings = QtCore.QSettings("pyformex.berlios.de", "pyFormex")
-        settings.setValue("pos", QtCore.QVariant(self.main.pos()))
-        settings.setValue("size", QtCore.QVariant(self.main.size()))
-        if GD.cfg.curfile:
-            settings.setValue("curfile", QtCore.QVariant(GD.cfg.curfile))
-        settings.setValue("help/helpdir", QtCore.QVariant('zaag'))
+    def size(self):
+        """Return the size of the main window()."""
+        s = self.main.size()
+        return s.width(),s.height()
+    
 
+    def pos(self):
+        """Return the position of the main window()."""
+        p = self.main.pos()
+        return p.x(),p.y()
+    
 
-    def setcurfile(self,filename):
+    def setcurfile(self,filename=None):
         """Set the current file and check whether it is a pyFormex script.
 
         The checking is done by the function isPyFormex().
         A file that is not a pyFormex script can be loaded in the editor,
         but it can not be played as a pyFormex script.
         """
-        GD.cfg.curfile = filename
+        if filename:
+            GD.cfg['curfile'] = filename
+        else:
+            filename = GD.cfg['curfile']
         GD.canPlay = utils.isPyFormex(filename)
         self.curfile.setText(os.path.basename(filename))
         self.actions['Play'].setEnabled(GD.canPlay)
@@ -289,7 +295,7 @@ class GUI:
             icon = 'happy'
         else:
             icon = 'unhappy'
-        self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg.icondir,icon)+GD.iconType))
+        self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype']))
 
 
     def addView(self,name,angles):
@@ -334,6 +340,11 @@ def runApp(args):
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
 
+##    if GD.options.config:
+##        GD.Cfg = settings.Settings(filename=GD.options.config)
+##    else:
+##        GD.Cfg = settings.Settings("pyformex.berlios.de", "pyformex")
+
     # Set some globals
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
@@ -342,10 +353,13 @@ def runApp(args):
         print "Image types for input: ",GD.image_formats_qtr
         
     # create GUI, show it, run it
-    GD.gui = GUI()
+    GD.gui = GUI(GD.cfg['gui/size'],GD.cfg['gui/pos'])
+    GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.canvas = GD.gui.canvas
+    print "Canvas Created"
     GD.gui.main.show()
+    print "GUI available"
     GD.board.add(GD.Version+"   (C) B. Verhegghe")
     # remaining args are interpreted as scripts
     GD.app_started = False
@@ -355,15 +369,7 @@ def runApp(args):
     GD.app_started = True
     GD.app.exec_()
 
-    GD.gui.writeSettings()
-
-    #Save the preferences if they changed
-    if GD.options.debug:
-        if GD.prefsChanged:
-            print "Saving prefs: ",GD.cfg
-        else:
-            print "Not saving prefs, because nothing changed" 
-    if GD.prefsChanged:
-        prefMenu.savePreferences()
+    # store the main window size/pos
+    GD.cfg.update({'size':GD.gui.size(),'pos':GD.gui.pos()},name='gui')
 
 #### End

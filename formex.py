@@ -3,30 +3,17 @@
 """Formex algebra in python"""
 
 from numpy import *
-#
-#  We now use numpy instead of numarray
-#  Watch out for the following:
-#     - replace tests like  a == None  by  a is None
-#     - int array elements can not be used directly as Python integers in
-#       indexing: use  int(p[i])  instead.
+
+# Set pyformex version
+__version__='0.4'
 
 import math
 import vector
 import pickle
 
-
 # default float and int types used in the Formex data
 Float = float32
 Int = int32
-
-
-##def Globals():
-##    """Return the list of globals defined in this module."""
-##    g = globals()
-###    for n in filter(lambda s:s[0]=='_',g.keys()):
-###        del g[n]
-##    del g['__name__']
-##    return g
 
 
 ###########################################################################
@@ -36,7 +23,8 @@ Int = int32
 #########################
 
 # multiplier to transform degrees to radians
-rad = math.pi/180.
+#pi = math.pi
+rad = pi/180.
 
 # Convenience functions: trigonometric functions with argument in degrees
 # Should we keep this in ???
@@ -56,7 +44,7 @@ def tand(arg):
 def length(arg):
     """Return the quadratic norm of a vector with all elements of arg."""
     a = arg.flat
-    return math.sqrt(sum(multiply(a,a)))
+    return sqrt(inner(a,a))
 
 def inside(p,mi,ma):
     """Return true if point p is inside bbox defined by points mi and ma"""
@@ -303,7 +291,13 @@ def distanceFromPlane(f,p,n):
     Distance values are positive if the point is on the side of the
     plane indicated by the positive normal.
     """
-    return (dot(f,n) - dot(p,n)) / sqrt(dot(n,n))
+#    return (dot(f,n) - dot(p,n)) / sqrt(dot(n,n))
+    a = f.reshape((-1,3))
+    p = array(p).reshape((3))
+    n = array(n).reshape((3))
+    d = (inner(f,n) - inner(p,n)) / length(n)
+    return d.reshape(f.shape[:-1])
+
 
 
 def distanceFromLine(f,p,q):
@@ -316,13 +310,12 @@ def distanceFromLine(f,p,q):
     each point to the line through p and q.
     All distance values are positive or zero.
     """
-    p = array(p)
-    q = array(q)
     a = f.reshape((-1,3))
+    p = array(p).reshape((3))
+    q = array(q).reshape((3))
     n = q-p
     t = cross(n,p-a)
-    t = sum(t*t,-1)
-    d = sqrt(t) / sqrt(dot(n,n))
+    d = sqrt(sum(t*t,-1)) / length(n)
     return d.reshape(f.shape[:-1])
 
 
@@ -752,9 +745,9 @@ class Formex:
         ## I suggest to use zero property values for the Formex without props
         if type(self.p) != type(None) or type(F.p) != type(None):
             if type(self.p) == type(None):
-                self.p = zeros(shape=self.f.shape[:1],dtype=Int32)
+                self.p = zeros(shape=self.f.shape[:1],dtype=Int)
             if type(F.p) == type(None):
-                p = zeros(shape=F.f.shape[:1],dtype=Int32)
+                p = zeros(shape=F.f.shape[:1],dtype=Int)
             else:
                 p = F.p
             self.p = concatenate((self.p,p))
@@ -1067,7 +1060,7 @@ class Formex:
         The angle is specified in degrees. Default rotation is around z-axis.
         """
         m = rotationMatrix(angle,axis)
-        return Formex(matrixmultiply(self.f,m),self.p)
+        return Formex(dot(self.f,m),self.p)
 
     # This could be made the same function as rotate, but differentiated
     # by means of the value of the second argument
@@ -1078,7 +1071,7 @@ class Formex:
         by a vector of three values. It is an axis through the center.
         """
         m = rotationAboutMatrix(angle,vector)
-        return Formex(matrixmultiply(self.f,m),self.p)
+        return Formex(dot(self.f,m),self.p)
         return self
 
     def shear(self,dir,dir1,skew):
@@ -1105,7 +1098,7 @@ class Formex:
         The returned Formex has coordinates given by mat * xorig + vec,
         where mat is a 3x3 matrix and vec a length 3 list.
         """
-        f = matrixmultiply(self.f,mat)
+        f = dot(self.f,mat)
         if not vec==None:
             f += vec
         return Formex(f,self.p)
@@ -1450,8 +1443,8 @@ class Formex:
         f = self.f - point
         f = array( [ f for i in range(n) ] )
         for i in range(1,n):
-            m = rotationMatrix(i*angle,axis)
-            f[i] = matrixmultiply(f[i],m)
+            m = array(rotationMatrix(i*angle,axis))
+            f[i] = dot(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.p)
 

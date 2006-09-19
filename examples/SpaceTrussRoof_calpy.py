@@ -128,7 +128,7 @@ except ImportError:
 print calpy.options
 
 # boundary conditions
-bcon = zeros([nnod,3])
+bcon = zeros([nnod,3],dtype=int)
 bcon[nodeprops == 0] = [ 1,1,1 ]
 NumberEquations(bcon)
 #materials
@@ -145,79 +145,80 @@ for n in arange(nnod).compress(nodeprops == 3):
 message("Performing analysis: this may take some time")
 displ,frc = static(nodes,bcon,mats,matnod,loads,Echo=False)
 
-
-######################
+################################
 #Using pyFormex as postprocessor
-########################
+################################
 
-from colorscale import *
-import decors
+if GD.options.gui:
 
-# Creating a formex for displaying results is fairly easy
-results = Formex(nodes[elems],range(nelems))
-# Now try to give the formex some meaningful colors.
-# The frc array returns element forces and has shape
-#  (nelems,nforcevalues,nloadcases)
-# In this case there is only one resultant force per element (the
-# normal force), and only load case; we still need to select the
-# scalar element result values from the array into a onedimensional
-# vector val. 
-val = frc[:,0,0]
-# create a colorscale
-CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
-cval = array(map(CS.color,val))
-#aprint(cval,header=['Red','Green','Blue'])
-clear()
-linewidth(3)
-draw(results,color=cval)
-drawtext('Normal force in the truss members',150,20,'tr24')
-CL = ColorLegend(CS,100)
-CLA = decors.ColorLegend(CL,10,10,30,200) 
-GD.canvas.addDecoration(CLA)
-GD.canvas.update()
+    from gui.colorscale import *
+    import gui.decors
 
-# Show upright
-setview('myview1',(0.,-90.,0.))
-view('myview1',True)
+    # Creating a formex for displaying results is fairly easy
+    results = Formex(nodes[elems],range(nelems))
+    # Now give the formex some meaningful colors.
+    # The frc array returns element forces and has shape
+    #  (nelems,nforcevalues,nloadcases)
+    # In this case there is only one resultant force per element (the
+    # normal force), and only load case; we still need to select the
+    # scalar element result values from the array into a onedimensional
+    # vector val. 
+    val = frc[:,0,0]
+    # create a colorscale
+    CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
+    cval = array(map(CS.color,val))
+    #aprint(cval,header=['Red','Green','Blue'])
+    clear()
+    linewidth(3)
+    draw(results,color=cval)
+    drawtext('Normal force in the truss members',150,20,'tr24')
+    CL = ColorLegend(CS,100)
+    CLA = decors.ColorLegend(CL,10,10,30,200) 
+    GD.canvas.addDecoration(CLA)
+    GD.canvas.update()
 
-clear()
-linewidth(1)
-draw(F,view='myview1',color=black)
-linewidth(3)
+    # Show upright
+    setview('myview1',(0.,-90.,0.))
+    view('myview1',True)
 
-siz0 = F.sizes()
-dF = Formex(displ[:,:,0][elems])
-#clear(); draw(dF,color=black)
-siz1 = dF.sizes()
+    clear()
+    linewidth(1)
+    draw(F,view='myview1',color=black)
+    linewidth(3)
 
-def niceNumber(f,approx=floor):
-    """Returns a nice number close to but not smaller than f."""
-    n = int(approx(log10(f)))
-    m = int(str(f)[0])
-    return m*10**n
+    siz0 = F.sizes()
+    dF = Formex(displ[:,:,0][elems])
+    #clear(); draw(dF,color=black)
+    siz1 = dF.sizes()
 
-optscale = niceNumber(1./(siz1/siz0).max())
-            
+    def niceNumber(f,approx=floor):
+        """Returns a nice number close to but not smaller than f."""
+        n = int(approx(log10(f)))
+        m = int(str(f)[0])
+        return m*10**n
 
-# Show a deformed plot
-def deformed_plot(dscale=100.):
-    """Shows a deformed plot with deformations scaled with a factor scale."""
-    dnodes = nodes + dscale * displ[:,:,0]
-    deformed = Formex(dnodes[elems],F.p)
-    # deformed structure
-    FA = draw(deformed,view='myview1',bbox=None)
-    TA = decors.Text('Deformed geometry (scale %.2f)' % dscale,400,100,'tr24')
-    decorate(TA)
-    GD.canvas.removeActor(FA)
-    GD.canvas.removeDecoration(TA)
+    optscale = niceNumber(1./(siz1/siz0).max())
 
 
-for s in optscale/10. * arange(11):
-    deformed_plot(s)
-    
-### Rotate the model
+    # Show a deformed plot
+    def deformed_plot(dscale=100.):
+        """Shows a deformed plot with deformations scaled with a factor scale."""
+        dnodes = nodes + dscale * displ[:,:,0]
+        deformed = Formex(dnodes[elems],F.p)
+        # deformed structure
+        FA = draw(deformed,view='myview1',bbox=None)
+        TA = decors.Text('Deformed geometry (scale %.2f)' % dscale,400,100,'tr24')
+        decorate(TA)
+        GD.canvas.removeActor(FA)
+        GD.canvas.removeDecoration(TA)
 
-##drawtimeout = 0
-##for i in range(19):
-##    setview('myview2',(90.,i*10.,90))
-##    view('myview2',True)
+
+    for s in optscale/10. * arange(11):
+        deformed_plot(s)
+
+    ### Rotate the model
+
+    ##drawtimeout = 0
+    ##for i in range(19):
+    ##    setview('myview2',(90.,i*10.,90))
+    ##    view('myview2',True)

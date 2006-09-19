@@ -22,7 +22,7 @@ number_wires = 6
 pitch_angle = 30.
 
 # during testing
-stent_length = 20.
+stent_length = 10.
 stent = DoubleHelixStent(stent_diameter,stent_length,
                          wire_diameter,number_wires,pitch_angle,nb=1).all()
 
@@ -63,13 +63,13 @@ print "Compressed number of nodes: %s" % nnod
 extra_node = array([[-10.0,0.0,0.0]])
 coords = concatenate([nodes,extra_node])
 nnod = coords.shape[0]
-print "Final number of nodes: %s" % nnod
+print "After adding a node for orientation: %s" % nnod
 
 # Create element definitions: i j k matnr, where k = nnod (the extra node)
 # while incrementing node numbers with 1 (for calpy)
 # (remember props are 1,2,3, so are OK)
 
-thirdnode = nnod*ones(shape=(nel,1))
+thirdnode = nnod*ones(shape=(nel,1),dtype=int)
 matnr = reshape(stent.p,(nel,1))
 elements = concatenate([elems+1,thirdnode,matnr],1)
 
@@ -83,25 +83,43 @@ for n in elems.flat:
     count[n] += 1
 unconnected = arange(nnod)[count==1]
 zvals = nodes[unconnected][:,2]
-print zlo,zhi,zmi,zvals
+#print zlo,zhi,zmi,zvals
 end0 = unconnected[zvals<zmi]
 end1 = unconnected[zvals>zmi]
 print "Nodes at end 0:",end0
 print "Nodes at end 1:",end1
 
+# Create End Connectors to enforce radial boundary conditions
+coords_end0 = coords[end0]
+extra_nodes = coords_end0 * array([0.80,0.80,1.0])
+nnod0 = nnod
+coords = concatenate([coords,extra_nodes])
+nnod = coords.shape[0]
+print "Nodes added for boundary connectors: %s" % (nnod-nnod0)
+print "Final number of nodes: %s" % nnod
+extra_elems = zeros((nnod-nnod0,4),dtype=int)
+end0_ext = arange(nnod0,nnod)
+extra_elems[:,0] = end0_ext + 1
+extra_elems[:,1] = end0 + 1
+extra_elems[:,2] = nnod0
+extra_elems[:,3] = 4  # Extra elements have matnr 4
+print extra_elems
+elements = concatenate([elements,extra_elems])
+
 # Boundary conditions
 s = ""
-for n in end0+1:   # NOTICE THE +1 !
+for n in end0_ext + 1:   # NOTICE THE +1 !
     s += "  %d  1  1  1  1  1  1\n" % n
 # Also clamp the fake extra node
-s += "  %d  1  1  1  1  1  1\n" % nnod
+s += "  %d  1  1  1  1  1  1\n" % nnod0
 print "Specified boundary conditions"
 print s
 bcon = ReadBoundary(nnod,6,s)
 NumberEquations(bcon)
+print bcon
 
 # Materials (E, G, rho, A, Izz, Iyy, J)
-mats = zeros((3,7),float)
+mats = zeros((4,7),float)
 A = math.pi * wire_diameter ** 2
 Izz = Iyy = math.pi * wire_diameter ** 4 / 4
 J = math.pi * wire_diameter ** 4 / 2
@@ -110,7 +128,9 @@ nu = 0.3
 G = E/2/(1+nu)
 rho = 0.
 mats[0] = mats[2] = [ E, G, rho, A, Izz, Iyy, J ]
-mats[1] = [E, 0.0, 0.0, A*10**3, Izz*10**6, Iyy*10**6, 0.0]
+mats[1] = [E, G, 0.0, A*10**3, Izz*10**6, Iyy*10**6, 0.0]
+mats[3] = [E, G, 0.0, 0.0, Izz*10**6, Iyy*10**6, 1.0]
+print mats
 
 # Create loads
 nlc = 1
@@ -121,6 +141,7 @@ for n in end1: # NO +1 HERE!
     loads[:,0] = AssembleVector(loads[:,0],zforce,bcon[n,:])
 
 # Perform analysis
+print elements
 displ,frc = static(coords,bcon,mats,elements,loads,Echo=True)
 
 
@@ -130,8 +151,8 @@ displ,frc = static(coords,bcon,mats,elements,loads,Echo=True)
 
 if GD.options.gui:
 
-    from colorscale import *
-    import decors
+    from gui.colorscale import *
+    import gui.decors
 
     # Creating a formex for displaying results is fairly easy
     elems = elements[:,:2]-1

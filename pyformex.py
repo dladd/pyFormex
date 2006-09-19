@@ -6,10 +6,17 @@ import globaldata as GD
 
 import sys
 import os.path
+from config import Config
 from optparse import OptionParser,make_option
 
 
 ###########################  main  ################################
+
+
+def refLookup(key):
+    """Lookup a key in the reference configuration."""
+    #print "reflookup"
+    return GD.refcfg[key]
 
 
 def main(argv=None):
@@ -22,46 +29,32 @@ def main(argv=None):
     You can copy this file to another location if you want to make changes.
     By default, pyformex will try to read the following extra configuration
     files (in this order:
+       default settings:     <pyformexdir>/pyformexrc
        system-wide settings: /etc/pyformexrc
        user settings:        $HOME/.pyformexrc
        local settings        $PWD/.pyformexrc
     Also, an extra config file can be specified in the command line.
-    Config file settings always override existing ones.
+    Config file settings always override previous ones.
+    On exit, the preferences that were changed are written to the last
+    read config file. Changed settings are those that differ from the settings
+    in all but the last one.
     """
     # this allows us to call main from the interpreter
     if argv is None:
         argv = sys.argv
-    # get the path to the pyformex files, and store it in the config
+        
+    # get/set the path to the pyformex files, and store it in the config
     pyformexdir = os.path.dirname(os.path.realpath(argv[0]))
     # use a read, not an update, to set the pyformexdir as a variable
+    GD.cfg = Config()
     GD.cfg.read("pyformexdir = '%s'\n" % pyformexdir)
+
+    # get/set the user's home dir
     if os.name == 'posix':
         homedir = os.environ['HOME']
-        prefs = '.pyformex'
-        siteprefs = '/etc/pyformex'
     elif os.name == 'nt':
         homedir = os.environ['HOMEDRIVE']+os.environ['HOMEPATH']
-        prefs = 'pyformex.cfg'
-        siteprefs = None  # Where does Windows put site prefs?
-    GD.prefs = prefs
-    GD.userprefs = os.path.join(homedir,prefs)
     GD.cfg.read("homedir = '%s'\n" % homedir)
-    
-    # Read the default (distribution) config file
-    GD.cfg.read(os.path.join(pyformexdir,"pyformexrc"))
-    # Read additional config files
-    for f in [ siteprefs, GD.userprefs, GD.prefs ]:
-        if f and os.path.exists(f):
-            print f
-            GD.cfg.read(f)
-
-    # HACK !!
-    # set pyformexdir back to the built-in
-    #
-    GD.cfg.pyformexdir = pyformexdir
-    GD.cfg.icondir = os.path.join(GD.cfg.pyformexdir,'icons')
-    GD.cfg.exampledir = os.path.join(GD.cfg.pyformexdir,'examples')
-
 
     # Process options
     parser = OptionParser(
@@ -74,17 +67,47 @@ def main(argv=None):
                     action="store_false", dest="gui", default=True),
         make_option("--nosplash", help="do not show the startup screen",
                     action="store_false", dest="splash", default=True),
-        make_option("--debug", help="display logging info to sys.stdout",
+        make_option("--config", help="use file CONFIG for settings",
+                    action="store", dest="config", default=None),
+        make_option("--debug", help="display debugging info to sys.stdout",
                     action="store_true", dest="debug", default=False)
         ])
     GD.options, args = parser.parse_args()
 
-    if GD.options.debug:
-        print "Options: ",GD.options
-        print "Config: ",GD.cfg
+    GD.debug("Options: %s" % GD.options)
+
+    # Read the config files
+    defaults = os.path.join(pyformexdir,"pyformexrc")
+    if os.name == 'posix':
+        siteprefs = '/etc/pyformexrc'
+        prefs = '.pyformexrc'
+    elif os.name == 'nt':
+        siteprefs = None  # Where does Windows put site prefs?
+        prefs = 'pyformex.cfg'
+    homeprefs = os.path.join(homedir,prefs)
+    localprefs = os.path.join(os.getcwd(),prefs)
+
+    sysprefs = filter(os.path.exists,[defaults,siteprefs])
+    userprefs = filter(os.path.exists,[homeprefs,localprefs])
+    if GD.options.config:
+        userprefs.append(GD.options.config)
+    if len(userprefs) == 0:
+        userprefs = [homeprefs]
+    allprefs = sysprefs + userprefs
+    GD.preffile = allprefs.pop()
+    for f in allprefs:
+        GD.debug("Reading config file %s" % f)
+        GD.cfg.read(f)
+    # Save this config as a reference, then load last config file
+    GD.refcfg = GD.cfg
+    GD.cfg = Config(default=refLookup)
+    if os.path.exists(GD.preffile):
+        GD.debug("Reading config file %s" % GD.preffile)
+        GD.cfg.read(GD.preffile)
+    GD.debug("RefConfig: %s" % GD.refcfg)
+    GD.debug("Config: %s" % GD.cfg)
 
     # Run the application with the remaining arguments
-    
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
         from gui.gui import runApp
@@ -92,6 +115,9 @@ def main(argv=None):
         from script import runApp
     
     res = runApp(args)
+
+    #Save the preferences that have changed
+    GD.savePreferences()
 
     # Exit
     return res

@@ -2,6 +2,17 @@
 # $Id$
 """A collection of misc. utility functions."""
 
+import globaldata as GD
+import os
+
+
+def spawn(cmd):
+    """Spawn a child process."""
+    cmd = cmd.split()
+    pid = os.spawnvp(os.P_NOWAIT,cmd[0],cmd)
+    GD.debug("Spawned child process %s for command '%s'" % (pid,cmd))
+    return pid
+
       
 def isPyFormex(filename):
     """Checks whether a file is a pyFormex script.

@@ -37,9 +37,9 @@ class Views:
         a matching button will be inserted in each of these.
         """
         if not icon:
-            iconpath = os.path.join(GD.cfg.icondir,name+'view')+GD.iconType
+            iconpath = os.path.join(GD.cfg['icondir'],name+'view')+GD.cfg['gui/icontype']
             if not os.path.exists(iconpath):
-                iconpath = os.path.join(GD.cfg.icondir,'userview')+GD.iconType
+                iconpath = os.path.join(GD.cfg['icondir'],'userview')+GD.cfg['gui/icontype']
             if os.path.exists(iconpath):
                 icon = QtGui.QIcon(QtGui.QPixmap(iconpath))
         menutext = '&' + name.capitalize()
@@ -64,7 +64,7 @@ class ViewsMenu(QtGui.QMenu):
     def add(view):
         """Add the named view to the views menu.
 
-        When the menubutton is clicked, a PYSIGNAL 'Clicked' is sent with
+        When the menubutton is clicked, a SIGNAL 'Clicked' is sent with
         the view name as parameter.
         """
         pass
@@ -75,7 +75,7 @@ def initViewActions(parent,viewlist):
     global views
     views = []
     for name in viewlist:
-        icon = name+"view"+GD.iconType
+        icon = name+"view"+GD.cfg['gui/icontype']
         Name = string.capitalize(name)
         tooltip = Name+" View"
         menutext = "&"+Name

@@ -85,7 +85,7 @@ class Dict(dict):
         representation of the Dict.
         """
         return "Dict(%s)" % dict.__repr__(self)
-   
+
 
     def __getitem__(self, key):
         """Allows items to be addressed as self[key].
@@ -124,7 +124,7 @@ class Dict(dict):
 
 
     def __setattr__(self, key,value=None):
-        """Allows items to beset as self.key=value.
+        """Allows items to be set as self.key=value.
 
         This works even if the key is an existing attribute of the
         builtin dict class: the key,value pair is stored in the dict,
@@ -217,6 +217,7 @@ if __name__ == '__main__':
             return "Error in %s" % s
 
     def show():
+        """Print C with '%r' and '%s' formatting."""
         global C,Cr,Cs
         Cr = val('C','r')
         Cs = val('C','s')
@@ -238,3 +239,4 @@ if __name__ == '__main__':
     print val("C['e']")
     print val("C.a,C.b,C.c,C.d,C.x.c")
     print val("C.e")
+    

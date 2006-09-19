@@ -26,7 +26,7 @@ other Python dicts inside the top Config dictionary. The current version
 is limited to one level of sectioning.
 """
 
-from mydict import Dict
+import copy
 
 def dicttostr(dic):
     """Format a dict in Python source representation.
@@ -41,6 +41,115 @@ def dicttostr(dic):
             else:
                 s += '%s = %s\n' % (k,v)
     return s
+
+
+_indent = 0  # number of spaces to indent in __str__ formatting
+             # incremented by 2 on each level
+
+
+def returnNone(key):
+    """Always returns None."""
+    return None
+
+def failedLookup(key):
+    """Raise a KeyError."""
+    raise KeyError
+
+
+class Dict(dict):
+    """A Python dictionary with default values and attribute syntax.
+
+    Dict is functionally nearly equivalent with the builtin Python dict,
+    but provides the following extras:
+    - Items can be accessed with attribute syntax as well as dictionary
+      syntax. Thus, if C is a Dict, the following are equivalent:
+          C['foo']   or   C.foo
+      This works as well for accessing values as for setting values.
+      In the following, the words key or attribute therefore have the
+      same meaning.
+    - Lookup of a nonexisting key/attribute does not raise an error, but
+      returns a default value which can be set by the user (None by default).
+
+    There are a few caveats though:
+    - Keys that are also attributes of the builtin dict type, can not be used
+      with the attribute syntax to get values from the Dict. You should use
+      the dictionary syntax to access these items. It is possible to set
+      such keys as attributes. Thus the following will work:
+         C['get'] = 'foo'
+         C.get = 'foo'
+         print C['get']
+      but not
+         print C.get
+
+      This is done so because we want all the dict attributes to be available
+      with their normal binding. Thus,
+         print C.get('get')
+      will print
+         foo
+    """
+
+
+    def __init__(self,data={},default=returnNone):
+        """Create a new Dict instance.
+
+        The Dict can be initialized with a Python dict or a Dict.
+        If defined, default is a function that is used for alternate key
+        lookup if the key was not found in the dict.
+        """
+        dict.__init__(self,data.items())
+        self._default_ = default
+
+
+    def __repr__(self):
+        """Format the Dict as a string.
+
+        We use the format Dict({}), so that the string is a valid Python
+        representation of the Dict.
+        """
+        return "Dict(%s)" % dict.__repr__(self)
+
+
+    def __getitem__(self, key):
+        """Allows items to be addressed as self[key].
+
+        This is equivalent to the dict lookup, except that we
+        provide a default value if the key does not exist.
+        """
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
+            if self._default_:
+                return self._default_(key)
+            else:
+                raise KeyError
+
+
+    def __delitem__(self,key):
+        """Allow items to be deleted using del self[key].
+
+        Silently ignore if key is nonexistant.
+        """
+        try:
+            dict.__delitem__(self, key)
+        except KeyError:
+            pass
+
+
+    def update(self,data={}):
+        """Add a dictionary to the Dict object.
+
+        The data can be a dict or Dict type object. 
+        """
+        dict.update(self,data)
+
+
+    def __deepcopy__(self,memo):
+        """Create a deep copy of ourself."""
+        newdict = Dict(default=self.default)
+        for k,v in self.items():
+            newdict[k] = copy.deepcopy(v,memo)
+        return newdict
+
 
 
 class Config(Dict):
@@ -104,7 +213,7 @@ class Config(Dict):
     """
 
 
-    def __init__(self,data={}):
+    def __init__(self,data={},default=returnNone):
         """Creates a new Config instance.
 
         The configuration can be initialized with a dictionary, or
@@ -112,7 +221,7 @@ class Config(Dict):
         The latter includes the name of a config file, or a multiline string
         holding the contents of a configuration file.
         """
-        Dict.__init__(self)
+        Dict.__init__(self,default=default)
         if isinstance(data,dict):
             self.update(data)
         elif data:
@@ -142,7 +251,7 @@ class Config(Dict):
                 if k[0] == '_':
                     del data[k]
         if name:
-            if not self[name] or not isinstance(self[name],Dict):
+            if not self.has_key(name) or not isinstance(self[name],dict):
                 self[name] = Dict()
             self[name].update(data)
         else:
@@ -218,8 +327,42 @@ class Config(Dict):
         return self
 
 
+    def __getitem__(self, key):
+        """Allows items to be addressed as self[key].
+
+        This is equivalent to the Dict lookup, except that items in
+        subsections can also be retrieved with a single key of the format
+        section/key.
+        While this lookup mechanism works for nested subsections, the syntax
+        for config files allows for only one level of sections!
+        Also beware that because of this functions, no '/' should be used
+        inside normal keys and sections names.
+        """
+        i = key.rfind('/')
+        if i == -1:
+            return Dict.__getitem__(self, key)
+        else:
+            res = self[key[:i]][key[i+1:]]
+            if res:
+                return res
+            else:
+                return self._default_(key)
+
+
+
+    def __setitem__(self, key, val):
+        """Allows items to be set as self[section/key] = val.
+
+        """
+        i = key.rfind('/')
+        if i == -1:
+            self.update({key:val})
+        else:
+            self.update({key[i+1:]:val},key[:i])
+
+
     def __str__(self):
-        """Format the Config in a way that can be red back."""
+        """Format the Config in a way that can be read back."""
         s = "# Config written by pyFormex\n\n"
         for k,v in self.iteritems():
             if not isinstance(v,Dict):
@@ -228,30 +371,44 @@ class Config(Dict):
             if isinstance(v,Dict):
                 s += "\n[%s]\n" % k
                 s += dicttostr(v)
+        s += "\n# End of config\n"
         return s
-    
+
 
 if __name__ == '__main__':
+
 
     C = Config("""# A simple config example
 aa = 'bb'
 bb = aa
 [cc]
 aa = 'aa'    # yes ! comments are allowed (they are stripped by eval())
-_n = 3
+_n = 3       # local: will get stripped
 rng = range(_n)
 """)
     print C
-    print C.aa
     print C['aa']
-    print C.get('dd',1)  # 1
-    print C['dd']        # None
-    print C.dd           # None
-    # beware for this though!
-    print C.get
-    print C['get']
-    C['get'] = 'hallo'
+    print C['cc']
+    print C['cc/aa']
+    print C['dd']
+
+
+    def reflookup(key):
+        return C[key]
+
+    D = Config(default = reflookup)
+
+    print D
+    print D['aa']
+    print D['cc']
+    print D['cc/aa']
+    print D['dd']
+
+    D['aa'] = 'wel'
+    D['dd'] = 'hoe'
+    D['cc/aa'] = 'ziedewel'
+    print D
     print C
-    print C.get('aa',1)
-    print C.get('ab',1)
-        
+    print D['cc/aa']
+    print D['cc/rng']
+    

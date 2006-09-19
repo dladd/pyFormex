@@ -23,9 +23,38 @@ import draw
 #
 # The above might no longer be correct for QT4! 
 
+class FAction(QtGui.QAction):
+    """A FAction is a QAction that calls a function when triggered.
+
+    Most often QActions are created and connected automatically by some
+    action insertion function of QT4. But for these cases where you want
+    to create and connect the QAction before adding it, it is convenient
+    to have this single line option.
+    """
+    
+    def __init__(self,name,func,icon=None,tip=None,key=None):
+        """Create a new FAction connected to method func.
+
+        If the FAction is used in a menu, a name and func is sufficient.
+        For use in a toolbar, you will probably want to specify an icon.
+        Additionally, you can set a tooltip and shortcut key.
+        When the action is triggered, the func is called.
+        """
+        QtGui.QAction.__init__(self,name,None)
+        if icon:
+            self.setIcon(icon)
+        if tip:
+            self.setToolTip(tip)
+        self.connect(self,QtCore.SIGNAL("triggered()"),func)
+
 
 class DAction(QtGui.QAction):
-    """A DAction is a QAction that sends a string as parameter when clicked."""
+    """A DAction is a QAction that emits a signal with a string parameter.
+
+    When triggered, this action sends a signal 'Clicked' with a custom
+    string as parameter. The connected slot can then act depending on this
+    parameter.
+    """
     
     def __init__(self,name,icon=None,data=None):
         """Create a new DAction with name, icon and string data.
@@ -127,7 +156,7 @@ MenuData = [
         ("Action","&Light0","prefMenu.setLight0"),
         ("Action","&Light1","prefMenu.setLight1"),
         ("Action","&Help","prefMenu.setHelp"),
-        ("Action","&Save Preferences","prefMenu.savePreferences"), ]),
+        ("Action","&Save Preferences","GD.savePreferences"), ]),
     ("Popup","&Camera",[
         ("Action","&Zoom In","cameraMenu.zoomIn"), 
         ("Action","&Zoom Out","cameraMenu.zoomOut"), 
@@ -150,15 +179,13 @@ MenuData = [
         ("Action","&ListFormices","draw.printall"),
         ("Action","&PrintGlobals","draw.printglobals"),  ]),
     ("Popup","&Help",[
-        ("Action","&Help","dohelp"),
+##        ("Action","&Help","help.help"),
+        ("Action","&Manual","help.manual"),
+        ("Action","&PyDoc","help.pydoc"),
+        ("Action","pyFormex &Website","help.website"),
         ("Action","&About","help.about"), 
         ("Action","&Warning","help.testwarning"), ]) ]
 
-## We need this because the menufunctions take an argument and the
-## help.help function has a default argument
-##
-def dohelp():
-    help.help()
 
 
 #####################################################################

@@ -37,6 +37,7 @@ class Canvas:
     def __init__(self,w=640,h=480,*args):
         """Initialize an empty canvas with default settings.
         """
+        print "Canvas init"
         self.actors = []       # an empty scene
         self.decorations = []  # and no decorations
         self.views = { 'front': (0.,0.,0.),
@@ -50,7 +51,7 @@ class Canvas:
         # angles are: longitude, latitude, twist
         self.setBbox()
         self.bgcolor = colors.mediumgrey
-        self.rendermode = GD.cfg.gui.rendermode
+        self.rendermode = GD.cfg['render/mode']
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # we need correct OpenGL context for camera
         self.camera = camera.Camera()
@@ -62,6 +63,7 @@ class Canvas:
         self.updateGL()
 
     def glinit(self,mode=None):
+        print "Canvas glinit"
         if mode:
             self.rendermode = mode
 	GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
@@ -78,24 +80,24 @@ class Canvas:
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             #print "set up materials"
             #GL.glMaterialfv(GL.GL_FRONT,GL.GL_AMBIENT_AND_DIFFUSE,(0.5,0.5,0.5,1.))
-            #print GD.cfg.render.specular
-            #print GD.cfg.render.shininess
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,GD.cfg.render.specular)
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg.render.shininess)
+            #print GD.cfg['render']specular
+            #print GD.cfg['render']shininess
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,GD.cfg['render/specular'])
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
             GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
             GL.glEnable(GL.GL_COLOR_MATERIAL)
             #print "set up lights"
-            #print GD.cfg.render.keys()
+            #print GD.cfg['render']keys()
             GL.glEnable(GL.GL_LIGHTING)
             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
                 #print "  set up light ",l,i
-                if GD.cfg.render.has_key(l):
-                    #print GD.cfg.render[l]
+                if GD.cfg['render'].has_key(l):
+                    #print GD.cfg['render'][l]
                     GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
-                    GL.glLightfv(i,GL.GL_AMBIENT,GD.cfg.render[l]['ambient'])
-                    GL.glLightfv(i,GL.GL_DIFFUSE,GD.cfg.render[l]['diffuse'])
-                    GL.glLightfv(i,GL.GL_SPECULAR,GD.cfg.render[l]['specular'])
-                    GL.glLightfv(i,GL.GL_POSITION,GD.cfg.render[l]['position'])
+                    GL.glLightfv(i,GL.GL_AMBIENT,GD.cfg['render'][l]['ambient'])
+                    GL.glLightfv(i,GL.GL_DIFFUSE,GD.cfg['render'][l]['diffuse'])
+                    GL.glLightfv(i,GL.GL_SPECULAR,GD.cfg['render'][l]['specular'])
+                    GL.glLightfv(i,GL.GL_POSITION,GD.cfg['render'][l]['position'])
                     GL.glEnable(i)
         else:
             raise RuntimeError,"Unknown rendering mode"
@@ -354,9 +356,9 @@ class Canvas:
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
-        self.emit(QtCore.PYSIGNAL("wakeup"),())
+        self.emit(QtCore.SIGNAL("Wakeup"),())
         if e.text() == 's':
-            self.emit(QtCore.PYSIGNAL("save"),())
+            self.emit(QtCore.SIGNAL("Save"),())
         e.ignore()
         
     def mousePressEvent(self,e):
@@ -390,12 +392,14 @@ class Canvas:
         #self.raiseW()
         self.makeCurrent()
         if fmt in GD.image_formats_qt:
+            self.display()
             GL.glFlush()
             GL.glFinish()
-            GL.glReadBuffer(GL.GL_BACK)
-            pixels = GL.glReadPixelsub(0,0,20,1,GL.GL_RGB)
-            print pixels.shape
-            print pixels
+            for mode in [ GL.GL_FRONT, GL.GL_BACK ]: 
+                GL.glReadBuffer(mode)
+                pixels = GL.glReadPixelsf(0,0,20,1,GL.GL_RGBA)
+                print pixels.shape
+                print pixels
             #qim = qt.QImage(pixels)
             qim = self.grabFrameBuffer()
             qim.save(fn,fmt)
@@ -448,21 +452,20 @@ class Canvas:
                 bufsize += 1024*1024
                 #print filename,filetype
                 gl2ps.gl2psBeginPage(title, self._producer, viewport, filetype,
-                                     gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA, 0,
-                                     None, 0, 0, 0, bufsize, fp, filename)
+                                     gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA,
+                                     0, None, 0, 0, 0, bufsize, fp, filename)
                 self.display()
                 GL.glFinish()
                 state = gl2ps.gl2psEndPage()
             fp.close()
-            log("File %s written" % filename)
 
         #Canvas.savePS = _savePS
 
         _start_message = '\nCongratulations! You have gl2ps, so I activated drawPS!'
 
         _producer = GD.Version + ' (http://pyformex.berlios.de)'
-        _gl2ps_types = { 'PS':gl2ps.GL2PS_PS, 'EPS':gl2ps.GL2PS_EPS,
-                         'PDF':gl2ps.GL2PS_PDF, 'TEX':gl2ps.GL2PS_TEX }
+        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
+                         'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
         GD.image_formats_gl2ps = _gl2ps_types.keys()
 
         print _start_message

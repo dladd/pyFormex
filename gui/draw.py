@@ -2,11 +2,14 @@
 # $Id$
 """Functions for drawing and for executing pyFormex scripts."""
 
+# THIS SHOULD IMPORT FUNCTIONS FROM 'script'
+
 import globaldata as GD
-import threading,os,sys,commands
+import threading,os,sys,commands,types,copy
 
 from PyQt4 import QtCore  # needed for events, signals
 
+import numpy
 import utils
 import gui
 import widgets
@@ -122,21 +125,27 @@ def playScript(scr):
     if GD.canvas:
         GD.canvas.update()
     if GD.gui:
-        #print "Activating buttons"
         GD.gui.actions['Step'].setEnabled(True)
         GD.gui.actions['Continue'].setEnabled(True)
-    else:
-        print "Not activating buttons"
-        
+        GD.app.processEvents()
     # We need to pass formex globals to the script
     # This would be done automatically if we put this function
-    # in the formex.py file. But hen we need to pass other globals
+    # in the formex.py file. But then we need to pass other globals
     # from this file (like draw,...)
     # We might create a module with all operations accepted in
     # scripts.
-    g = globals()
-    g.update(formex.__dict__)
+
+    # Our solution is to take a copy of the globals in this module,
+    # and add the globals from the 'colors' and 'formex' modules
+    # !! Taking a copy is needed to avoid changing this module's globals !!
+    g = copy.copy(globals())
     g.update(colors.__dict__)
+    g.update(formex.__dict__) # this also imports everything from numpy
+    # Finally, we set the name to 'draw', so that the user can verify that
+    # the script is executed from within the GUI.
+    g.update({'__name__':'draw'})
+    # Now we can execute the script using these collected globals
+    
     exitall = False
     try:
         try:
@@ -213,7 +222,7 @@ def drawwait():
 def drawlock():
     """Lock the drawing function for the next drawdelay seconds."""
     global drawlocked, drawtimer
-    drawtimeout = GD.cfg.gui.get('drawwait',2)
+    drawtimeout = GD.cfg['draw/wait']
     if not drawlocked and drawtimeout > 0:
         drawlocked = True
         drawtimer = threading.Timer(drawtimeout,drawrelease)
@@ -278,22 +287,36 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait, currentView
-    if not isinstance(F,Formex):
+    if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
         drawwait()
     lastdrawn = F
-    if type(color) == str:
-        if color == 'prop':
-            if type(F.p) == type(None):
-                color = colors.GLColor(GD.cfg.get('defaultcolor','black')) 
-            else: # use the prop as entry in a color table
-                color = map(colors.GLColor,GD.cfg.get('propcolors',['black']))
-        elif color == 'random':
-            color = random.random((F.nelems(),3))
+    # Create the colors
+    if color == 'prop':
+        if type(F.p) == type(None):
+            # No properties defined: draw in defaultcolor or black
+            color = colors.GLColor(GD.cfg['draw/fgcolor']) 
         else:
-            color = colors.GLColor(color)
-    actor = actors.FormexActor(F,color,GD.cfg.get('linewidth',1),eltype=eltype)
+            # use the property as entry in a default color table
+            color = GD.cfg['draw/propcolors']
+            color = map(colors.GLColor,color)
+    elif color == 'random':
+        # create random colors
+        color = random.random((F.nelems(),3))
+    elif type(color) == str:
+        # convert named color to RGB tuple
+        color = colors.GLColor(color)
+    elif isinstance(color,numpy.ndarray) and color.shape[-1] == 3:
+        pass
+    elif (type(color) == tuple or type(color) == list) and len(color) == 3:
+        pass
+    else:
+        # The input should be compatible to a list of color compatible items.
+        # An array with 3 colums will be fine.
+        color = map(colors.GLColor,color)
+
+    actor = actors.FormexActor(F,color,GD.cfg['draw/linewidth'],eltype=eltype)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
@@ -352,8 +375,8 @@ def view(v,wait=False):
     global allowwait,currentView
     if allowwait:
         drawwait()
-    print "Requested View ",v
-    print "Known Views: ",GD.canvas.views.keys()
+    #print "Requested View ",v
+    #print "Known Views: ",GD.canvas.views.keys()
     if GD.canvas.views.has_key(v):
         GD.canvas.setView(None,v)
         currentView = v
@@ -388,7 +411,7 @@ def bgcolor(color):
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
     #GD.canvas.setLinewidth(float(wid))
-    GD.cfg.linewidth = wid
+    GD.cfg['linewidth'] = wid
 
 def clear():
     """Clear the canvas"""
@@ -425,7 +448,7 @@ def delay(i):
     """Set the draw delay in seconds."""
     i = int(i)
     if i >= 0:
-        GD.cfg.gui['drawwait'] = i
+        GD.cfg['draw/wait'] = i
     
 
 def exit(all=False):
@@ -444,7 +467,7 @@ def sleep(timeout=None):
     if wakeupMode > 0:  # don't bother : sleeps inactivated
         return
     # prepare for getting wakeup event 
-    QtCore.QObject.connect(GD.canvas,QtCore.PYSIGNAL("wakeup"),wakeup)
+    QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
     # create a Timer to wakeup after timeout
     if timeout and timeout > 0:
         timer = threading.Timer(timeout,wakeup)
@@ -459,7 +482,7 @@ def sleep(timeout=None):
         GD.app.processEvents()
         #time.sleep(0.1)
     # ignore further wakeup events
-    QtCore.QObject.disconnect(GD.canvas,QtCore.PYSIGNAL("wakeup"),wakeup)
+    QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
         
 def wakeup(mode=0):
     """Wake up from the sleep function.
@@ -479,7 +502,7 @@ def drawNamed(name,*args):
     g = globals()
     if g.has_key(name):
         F = g[name]
-        if isinstance(F,Formex):
+        if isinstance(F,formex.Formex):
             draw(F,*args)
 
 def drawSelected(*args):
@@ -515,7 +538,7 @@ def listAll():
     """Return a list of all Formices in globals()"""
     flist = []
     for n,t in globals().items():
-        if isinstance(t,Formex):
+        if isinstance(t,formex.Formex):
             flist.append(n)
     return flist
 
@@ -552,8 +575,8 @@ def checkImageFormat(fmt,verbose=False):
 
     Returns the image format, or None if it is not OK.
     """
-    print "Format requested",fmt
-    print "Formats available",imageFormats()
+    GD.debug("Format requested: %s" % fmt)
+    GD.debug("Formats available: %s" % imageFormats())
     if fmt in imageFormats():
         if fmt == 'TEX' and verbose:
             warning("This will only write a LaTeX fragment to include the EPS image\nYou may still have to create the .EPS format image separately.\n")
@@ -582,11 +605,12 @@ def saveImage(fn,fmt=None,verbose=False):
             ext = '.%s' % fmt.lower()
             fn += ext
         GD.canvas.save(fn,fmt)
+        log("File %s written" % fn)
 
     
 def saveNext():
     global multisave
-    print "Saving to ",multisave
+    message("Saving image to %s" % multisave)
     if multisave:
         name,nr,fmt = multisave
         GD.canvas.save(name % nr,fmt)
@@ -610,7 +634,7 @@ def saveMulti(fn=None,fmt=None,verbose=False):
     if not fn:
         if multisave:
             log("Leaving multi save mode")
-            QtCore.QObject.disconnect(GD.canvas,QtCore.PYSIGNAL("save"),saveNext)
+            QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
         multisave = None
         return
 
@@ -633,7 +657,7 @@ def saveMulti(fn=None,fmt=None,verbose=False):
         name += ext
         if verbose:
             warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-        QtCore.QObject.connect(GD.canvas,QtCore.PYSIGNAL("save"),saveNext)
+        QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
         multisave = [ name,nr,fmt ]
 
 

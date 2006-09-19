@@ -5,10 +5,12 @@
 # THIS SHOULD ONLY CONTAIN FUNCTIONS INDEPENDENT FROM THE GUI
 
 import globaldata as GD
+import threading,os,commands,copy
+
 import formex
 
-import threading,os,commands
 
+######################### Exceptions #########################################
 
 class Exit(Exception):
     """Exception raised to exit from a running script."""
@@ -17,6 +19,8 @@ class Exit(Exception):
 class ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
     pass    
+
+#################### Interacting with the user ###############################
 
 def ask(question,choices=None,default=''):
     """Ask a question and present possible answers.
@@ -66,7 +70,8 @@ def info(message):
 def message(s):
     print s
 
-    
+########################### PLAYING SCRIPTS ##############################
+
 scriptDisabled = False
 scriptRunning = False
  
@@ -90,14 +95,21 @@ def playScript(scr):
         GD.gui.actions['Continue'].setEnabled(True)
     # We need to pass formex globals to the script
     # This would be done automatically if we put this function
-    # in the formex.py file. But hen we need to pass other globals
+    # in the formex.py file. But then we need to pass other globals
     # from this file (like draw,...)
     # We might create a module with all operations accepted in
     # scripts.
-    g = globals()
-    #print "Voor",g.get('__name__','Geen')
-    g.update(formex.Globals())
-    #print "Na",g.get('__name__','Geen')
+
+    # Our solution is to take a copy of the globals in this module,
+    # and add the globals from the 'formex' module
+    # !! Taking a copy is needed to avoid changing this module's globals !!
+    g = copy.copy(globals())
+    g.update(formex.__dict__) # this also imports everything from numpy
+    # Finally, we set the name to 'draw', so that the user can verify that
+    # the script is executed from within the GUI.
+    g.update({'__name__':'draw'})
+    # Now we can execute the script using these collected globals
+    
     exitall = False
     try:
         try:
@@ -119,6 +131,7 @@ def play(fn,name=None):
     message("Running script (%s)" % fn)
     if name:
         GD.scriptName = name
+    message("Running script (%s)" % fn)
     playScript(file(fn,'r'))
     message("Script finished")
 
@@ -171,3 +184,6 @@ def runApp(args):
         if os.path.exists(arg) and isPyFormex(arg):
             GD.scriptName = arg
             play(arg)
+
+
+#### End

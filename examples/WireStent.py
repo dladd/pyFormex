@@ -10,8 +10,8 @@
 #
 """Wire Stent"""
 
+# needed if we import this from another script
 from formex import *
-import globaldata
 
 class DoubleHelixStent:
     """Constructs a double helix wire stent.
@@ -45,7 +45,7 @@ class DoubleHelixStent:
         D = De - 2*d - ds
         r = 0.5*D
         dz = 0.5*(ds+d)
-        p = pi*D*tand(be)
+        p = math.pi*D*tand(be)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         #print "pitch",p
         #print "ny",ny

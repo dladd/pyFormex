@@ -4,7 +4,6 @@
 
 from PyQt4 import QtGui
 
-
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.
 
@@ -20,12 +19,12 @@ def GLColor(color):
         color = QtGui.QColor(color)
     if isinstance(color,QtGui.QColor):
         color = (color.red(),color.green(),color.blue())
-    if len(color) == 3:
+    if (type(color) == tuple or type(color) == list) and len(color) == 3:
         if type(color[0]) == int:
             color = [ c/255. for c in color ]
         if type(color[0]) == float:
             return tuple(color)
-    raise RuntimeError,"GLColor: unexpected input %s" % color
+    raise RuntimeError,"GLColor: unexpected input type %s: %s" % (type(color),color)
 
 
 def RGBA(rgb,alpha=1.0):

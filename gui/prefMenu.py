@@ -8,26 +8,6 @@ import os
 
 import draw
 import widgets
-    
-
-def savePreferences():
-    """Save the preferences.
-
-    If a local preferences file was read, it will be saved there.
-    Otherwise, it will be saved as the user preferences, possibly
-    creating that file.
-    """
-    f = os.path.join(os.getcwd(),GD.prefs)
-    if not os.path.exists(f):
-        f = GD.userprefs
-    try:
-        fil = file(f,'w')
-        fil.write("%s" % GD.cfg)
-        fil.close()
-        res = "Saved"
-    except:
-        res = "Could not save"
-    print "%s preferences to file %s" % (res,f)
 
 
 def askConfigPreferences(items,section=None):
@@ -82,18 +62,18 @@ def setDrawtimeout():
 
 
 def setBGcolor():
-    col = GD.cfg.setdefault('bgcolor','')
+    col = GD.cfg['draw/bgcolor']
     col = widgets.getColor(col)
     if col:
         print "New background color %s" % col
         GD.prefsChanged = True
-        GD.cfg['bgcolor'] = col
+        GD.cfg['draw/bgcolor'] = col
         draw.bgcolor(col)
 
 
 def setLinewidth():
-    askConfigPreferences([['linewidth']])
-    draw.linewidth(GD.cfg['linewidth'])
+    askConfigPreferences([['draw/linewidth']])
+    draw.linewidth(GD.cfg['draw/linewidth'])
 
 def setSize():
     GD.gui.resize(800,600)
@@ -107,7 +87,7 @@ def setRender():
     askConfigPreferences([['specular'], ['shininess']],'render')
 
 def setLight(light=0):
-    store = GD.cfg.render["light%d" % light]
+    store = GD.cfg['render/light%d' % light]
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     newaskConfigPreferences(keys,store)
 
@@ -121,8 +101,8 @@ def setLight1():
 
 
 def setLocalAxes():
-    GD.cfg.gui['localaxes'] = True 
+    GD.cfg['draw/localaxes'] = True 
 def setGlobalAxes():
-    GD.cfg.gui['localaxes'] = False 
+    GD.cfg['draw/localaxes'] = False 
 
 # End

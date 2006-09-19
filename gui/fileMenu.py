@@ -7,6 +7,7 @@ import globaldata as GD
 import widgets
 import gui
 import draw
+import utils
 
 
 def newFile():
@@ -33,10 +34,8 @@ def edit():
     The author uses 'gnuclient' to load the files in a running copy
     of xemacs.
     """
-    if GD.cfg['edit']:
-        cmd = GD.cfg['edit']
-        pid = os.spawnlp(os.P_NOWAIT, cmd, cmd, GD.cfg['curfile'])
-        draw.log("Spawned %d" % pid)
+    if GD.cfg['editor']:
+        pid = utils.spawn(GD.cfg['editor'] % GD.cfg['curfile'])
 
 
 play = draw.play
@@ -48,8 +47,8 @@ def saveImage():
     file is returned, the current OpenGL rendering will be saved to it.
     """
     global canvas
-    dir = GD.cfg.get('workdir',".")
-    fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg *.eps)")
+    indir = GD.cfg['workdir']
+    fs = widgets.FileSelection(indir,pattern="Images (*.png *.jpg *.eps)")
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
@@ -66,7 +65,7 @@ def multiSave():
     if draw.multisave:
         fn = None
     else:
-        dir = GD.cfg.get('workdir',".")
+        dir = GD.cfg['workdir']
         fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg)")
         fn = fs.getFilename()
     draw.saveMulti(fn,verbose=True)

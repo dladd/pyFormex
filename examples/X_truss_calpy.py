@@ -116,8 +116,8 @@ displ,frc = static(coords,bcon,mats,matnod,loads,Echo=True)
 #Using pyFormex as postprocessor
 ################################
 
-from colorscale import *
-import decors
+from gui.colorscale import *
+import gui.decors
 
 # Creating a formex for displaying results is fairly easy
 results = Formex(coords[elems],range(nelems))
