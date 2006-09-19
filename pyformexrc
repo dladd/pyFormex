@@ -40,7 +40,7 @@ panfactor = 5.       # translation factor for pan buttons
 
 [draw]
 wait = 2  # time(sec.) to wait between draw operations (None is indefinitely)
-bgcolor = 'grey'
+bgcolor = 'lightgrey'
 fgcolor = 'black'
 propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 
                  # a default color set for properties

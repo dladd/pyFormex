@@ -23,15 +23,17 @@ PYFORMEXVER= pyformex-${VERSION}
 PYFORMEXREL= pyformex-${RELEASE}
 INSTDIR= ${libdir}/${PYFORMEXVER}
 DOCINSTDIR= ${libdir}/${PYFORMEXVER}/doc
-PROGRAM= pyformex
+PROGLINK= pyformex
 PYSOURCE= ${addsuffix .py, ${PYMODULES}}
-SOURCE= ${PYSOURCE} pyformexrc
-ICONS= icons/*.xbm
+PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
+OTHERSOURCE= pyformexrc
+ICONFILES= icons/*.xpm
 HTMLDIR= html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}} ${HTMLDIR}/index.html
-EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} __init__}}
+EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES =  ${addprefix images/,${addsuffix .png,${IMAGES}}}
 DOCFILES= README COPYING History Makefile FAQ
+MANUAL= ${addprefix manual/, manual.ps manual.pdf }
 
 INSTALL= install -c
 INSTALL_PROGRAM= ${INSTALL} -m 0755
@@ -44,16 +46,18 @@ all:
 
 ############ User installation ######################
 
-install: installdirs ${PROGRAM} ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES} ${HTMLDOCS}
+install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES} ${HTMLDOCS}
 	${INSTALL_PROGRAM} ${PROGRAM} ${DESTDIR}${INSTDIR}
-	${INSTALL_DATA} ${SOURCE} ${DESTDIR}${INSTDIR}
-	${INSTALL_DATA} ${ICONS} ${DESTDIR}${INSTDIR}/icons
+	${INSTALL_DATA} ${PYSOURCE} ${OTHERSOURCE} ${DESTDIR}${INSTDIR}
+	${INSTALL_DATA} ${PYGUISOURCE} ${DESTDIR}${INSTDIR}/gui
+	${INSTALL_DATA} ${ICONFILES} ${DESTDIR}${INSTDIR}/icons
 	${INSTALL_DATA} ${EXAMPLEFILES} ${DESTDIR}${INSTDIR}/examples
 	${INSTALL_DATA} ${DOCFILES} ${DESTDIR}${DOCINSTDIR}
 	${INSTALL_DATA} ${IMAGEFILES} ${DESTDIR}${DOCINSTDIR}/images
 	${INSTALL_DATA} ${HTMLDOCS} ${DESTDIR}${DOCINSTDIR}/html
-	${call makesymlink,${PROGRAM},${PYFORMEXVER}/${PROGRAM}}
+	${call makesymlink,${PROGLINK},${PYFORMEXVER}/${PROGRAM}}
 	ln -sfn ${DOCINSTDIR} ${DESTDIR}${docdir}/${PYFORMEXVER}
+	${INSTALL_DATA} ${MANUAL} ${DESTDIR}${DOCINSTDIR}/manual
 
 # create a symlink $(1) in $(bindir) pointing to $(2) in $(libdir)
 # this will detect the special cases where $(bindir)==$(libdir)/bin or
@@ -61,7 +65,7 @@ install: installdirs ${PROGRAM} ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} $
 makesymlink= if [ $(bindir) = $(subst lib,bin,$(libdir)) ]; then ln -sfn ../lib/$(2) ${DESTDIR}$(bindir)/$(1); elif [ "$(bindir)" = "$(libdir)/bin" ]; then ln -sfn ../$(2) ${DESTDIR}$(bindir)/$(1); else ln -sfn $(libdir)/$(2) ${DESTDIR}$(bindir)/$(1); fi
 
 installdirs:
-	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html
+	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/gui ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html ${DESTDIR}${DOCINSTDIR}/manual
 
 uninstall:
 	echo "There is no automatic uninstall procedure."""

@@ -17,7 +17,6 @@ import views
 import script
 import draw
 import utils
-import settings
 
 #try:
 #    import editor         ## non-essential module under testing
@@ -288,14 +287,15 @@ class GUI:
             GD.cfg['curfile'] = filename
         else:
             filename = GD.cfg['curfile']
-        GD.canPlay = utils.isPyFormex(filename)
-        self.curfile.setText(os.path.basename(filename))
-        self.actions['Play'].setEnabled(GD.canPlay)
-        if GD.canPlay:
-            icon = 'happy'
-        else:
-            icon = 'unhappy'
-        self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype']))
+        if filename:
+            GD.canPlay = utils.isPyFormex(filename)
+            self.curfile.setText(os.path.basename(filename))
+            self.actions['Play'].setEnabled(GD.canPlay)
+            if GD.canPlay:
+                icon = 'happy'
+            else:
+                icon = 'unhappy'
+            self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype']))
 
 
     def addView(self,name,angles):

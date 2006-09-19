@@ -5,7 +5,6 @@
 include RELEASE
 
 PYFORMEXDIR= pyformex-${RELEASE}
-PROGRAM= pyformex.py
 PYSOURCE= ${addsuffix .py, ${PYMODULES}} 
 PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
 OTHERSOURCE= pyformexrc
@@ -52,7 +51,7 @@ stamp: Stamp.template RELEASE
 
 dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERSOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES}  ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
 	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PYSOURCE} ${OTHERSOURCE}
+	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/gui ${PYGUISOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/examples ${EXAMPLEFILES}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${STAMPFILES}
