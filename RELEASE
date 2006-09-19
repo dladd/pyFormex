@@ -1,17 +1,17 @@
 # pyFormex version
-VERSION=0.3.1
+VERSION=0.4
 # Unless you are preparing an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha
 RELEASE=${VERSION}-alpha
-PYMODULES= actors camera canvas colors colorscale config decorations \
-  draw flatkeydb formex globaldata gui help helpviewer lima mydict \
-  pyfotemp script turtle units utils vector widgets \
-  file2formex properties simple stl
-EXAMPLES= BarrelVault Baumkuchen Clip Diamatic DoubleLayer \
-  Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
-  Pattern \
-  ScallopDome Schwedler SpaceTrussRoof Spiral Stars Torus TrussBridge \
-  TrussFrame WireStent X_truss X_truss_analysis X_truss_examples
+PYMODULES= config file2formex flatkeydb formex globaldata lima mydict \
+  properties pyformex script simple stl turtle units utils vector
+PYGUIMODULES = __init__ actors camera cameraMenu canvas colors colorscale \
+  decors draw fileMenu gui help menu prefMenu scriptsMenu views widgets
+EXAMPLES= __init__ BarrelVault Baumkuchen Clip Diamatic DoubleDiamatic \
+  DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
+  Pattern ScallopDome Schwedler SpaceTrussRoof SpaceTrussRoof_calpy \
+  Spiral Stars Torus TrussBridge TrussFrame WireStent \
+  WireStent_calpy X_truss X_truss_calpy
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
   Lima Novation ParabolicTower ScallopDome SpaceTrussRoof Spiral Stars \
   Torus WireStent

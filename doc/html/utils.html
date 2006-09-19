@@ -8,9 +8,18 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>utils</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/utils.py">/home/bene/prj/pyformex/utils.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyf4/utils.py">/home/bene/prj/pyf4/utils.py</a></font></td></tr></table>
     <p><tt>A&nbsp;collection&nbsp;of&nbsp;misc.&nbsp;utility&nbsp;functions.</tt></p>
 <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -23,11 +32,19 @@
 Each&nbsp;(key,value)&nbsp;pair&nbsp;is&nbsp;formatted&nbsp;on&nbsp;a&nbsp;line&nbsp;:&nbsp;key&nbsp;=&nbsp;value.</tt></dd></dl>
  <dl><dt><a name="-imageFormatFromExt"><strong>imageFormatFromExt</strong></a>(ext)</dt><dd><tt>Determine&nbsp;the&nbsp;image&nbsp;format&nbsp;from&nbsp;an&nbsp;extension.<br>
 &nbsp;<br>
-The&nbsp;extension&nbsp;can&nbsp;start&nbsp;with&nbsp;a&nbsp;'.'&nbsp;or&nbsp;not&nbsp;and&nbsp;be&nbsp;in&nbsp;upper&nbsp;or<br>
-lower&nbsp;case.&nbsp;The&nbsp;format&nbsp;is&nbsp;usually&nbsp;equal&nbsp;to&nbsp;the&nbsp;extension&nbsp;characters<br>
-in&nbsp;upper&nbsp;case,&nbsp;except&nbsp;that&nbsp;.jpg/.JPG&nbsp;file&nbsp;extensions&nbsp;return&nbsp;a&nbsp;format&nbsp;JPEG.<br>
-If&nbsp;the&nbsp;supplied&nbsp;extension&nbsp;is&nbsp;empty,&nbsp;the&nbsp;default&nbsp;format&nbsp;'PNG'&nbsp;is&nbsp;returned.</tt></dd></dl>
+The&nbsp;extension&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;have&nbsp;an&nbsp;initial&nbsp;dot&nbsp;and&nbsp;may&nbsp;be&nbsp;in&nbsp;upper&nbsp;or<br>
+lower&nbsp;case.&nbsp;The&nbsp;format&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;extension&nbsp;characters&nbsp;in&nbsp;lower&nbsp;case.<br>
+If&nbsp;the&nbsp;supplied&nbsp;extension&nbsp;is&nbsp;empty,&nbsp;the&nbsp;default&nbsp;format&nbsp;'png'&nbsp;is&nbsp;returned.</tt></dd></dl>
  <dl><dt><a name="-interrogate"><strong>interrogate</strong></a>(item)</dt><dd><tt>Print&nbsp;useful&nbsp;information&nbsp;about&nbsp;item.</tt></dd></dl>
+ <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.<br>
+&nbsp;<br>
+A&nbsp;script&nbsp;is&nbsp;considered&nbsp;to&nbsp;be&nbsp;a&nbsp;pyFormex&nbsp;script&nbsp;if&nbsp;its&nbsp;first&nbsp;line<br>
+starts&nbsp;with&nbsp;'#!'&nbsp;and&nbsp;contains&nbsp;the&nbsp;substring&nbsp;'pyformex'<br>
+A&nbsp;file&nbsp;is&nbsp;considered&nbsp;to&nbsp;be&nbsp;a&nbsp;pyFormex&nbsp;script&nbsp;if&nbsp;its&nbsp;name&nbsp;ends&nbsp;in&nbsp;'.py'<br>
+and&nbsp;the&nbsp;first&nbsp;line&nbsp;of&nbsp;the&nbsp;file&nbsp;contains&nbsp;the&nbsp;substring&nbsp;'pyformex'.<br>
+Typically,&nbsp;a&nbsp;pyFormex&nbsp;script&nbsp;starts&nbsp;with&nbsp;a&nbsp;line:<br>
+&nbsp;&nbsp;#!/usr/bin/env&nbsp;pyformex</tt></dd></dl>
+ <dl><dt><a name="-spawn"><strong>spawn</strong></a>(cmd)</dt><dd><tt>Spawn&nbsp;a&nbsp;child&nbsp;process.</tt></dd></dl>
  <dl><dt><a name="-splitEndDigits"><strong>splitEndDigits</strong></a>(s)</dt><dd><tt>Split&nbsp;a&nbsp;string&nbsp;in&nbsp;any&nbsp;prefix&nbsp;and&nbsp;a&nbsp;numerical&nbsp;end&nbsp;sequence.<br>
 &nbsp;<br>
 A&nbsp;string&nbsp;like&nbsp;'abc-0123'&nbsp;will&nbsp;be&nbsp;split&nbsp;in&nbsp;'abc-'&nbsp;and&nbsp;'0123'.<br>

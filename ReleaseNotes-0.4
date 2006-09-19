@@ -1,0 +1,103 @@
+pyFormex 0.4 - release notes
+==============================
+
+As of version 0.4 the minimum requirements are:
+
+Python 2.3  (2.4 recommended)
+Numpy 0.9.8 (1.0.2 recommended)
+Qt4 + PyQt4 (Qt3 will no longer work!)
+
+
+
+Short overview of the most important design and feature changes
+===============================================================
+
+- Base -
+A recent version of Numpy (Version 0.9.8 or higher) is required.
+Version 1.0.2 or higher is recommended.
+
+- Gui -
+We switched to Qt4. You may have to install PyQt4 from source, because
+most distributions do not have binary packages available yet.
+
+- Configuration -
+The configuration system has been changed so that only the preferences
+that were changed are saved to the user's config file.
+
+
+- Using pyFormex without GUI -
+pyFormex can be used without the GUI.
+ution.
+- Help system -
+There is no longer a built-in help viewer. Either use your prefered 
+browser or the QT4 assistant.
+
+- Documentation -
+A first (incomplete) version of the pyFormex manual is included in the
+distrib 
+
+
+Detailed (though incomplete) changes since Release 0.3:
+=======================================================
+
+pyformex command
+----------------
+- An new option --nosplash prevents display of the startup message on the canvas.
+
+pyformex GUI
+------------
+- Settings->Save Preferences: saves the preferences on demand
+
+
+formex.py
+---------
+- distanceFromPlane(f,p,n) : calculates distance of points to a plane
+
+
+Formex class:
+-------------
+- Clipping functions:
+ where(self,nodes='all',dir=0,xmin=None,xmax=None)
+ clip(w)
+ cclip(w)
+
+
+draw.py:
+--------
+
+
+canvas.py:
+----------
+canvas has a setBgColor method to set the background color
+
+
+camera.py:
+----------
+changes needed by upgrade to numpy 0.9.8
+ 
+
+mydict.py:
+----------
+The __repr__ and __str__ functions of the Dict and CascadingDict classes have
+been reworked to provide sensible/clean output:
+__repr__ (formatting with %r) will result in a string that is valid Python
+to recreate the object, for both Dict and CascadingDict.
+__str__ (formatting with %s) is equivalent to __repr__ for the Dict class, but
+results in a nicely cascading format for the CascadingDict 
+
+
+Experimental/Development 
+========================
+These files hold new and experimental functions. Their contents may be moved
+to other files in future releases.
+
+
+- properties.py :
+
+- file2formex.py: 
+
+- stl.py: 
+   write_ascii(a,f) now writes unit-length normals
+
+- simple.py:
+   unitcircle: defines circles as Formex structure
