@@ -2,29 +2,24 @@
 # $Id$
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 #
-# TODO : we want to move the Qt dependencies as much as possible out of
-#        this module
 
 import globaldata as GD
-
-import math
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 
-import qt
-import qtgl
+from PyQt4 import QtCore  # needed for events, signals
 
+import colors
 import camera
-from colors import *
-from actors import *
-from decorations import *
-from utils import stuur
+import utils
+##from actors import *
+##from decorations import *
+
+import math
 import vector
 
-GD.image_formats_qt = qt.QImage.outputFormats()
-
-### load gl2ps if available
+# load gl2ps if available
 try:
     import gl2ps
     _has_gl2ps = True
@@ -36,14 +31,13 @@ except ImportError:
 #
 #  The Canvas
 #
-class Canvas(qtgl.QGLWidget):
+class Canvas:
     """A canvas for OpenGL rendering."""
     
     def __init__(self,w=640,h=480,*args):
         """Initialize an empty canvas with default settings.
         """
-        qtgl.QGLWidget.__init__(self,*args)
-        self.setFocusPolicy(qt.QWidget.StrongFocus)
+        print "Canvas init"
         self.actors = []       # an empty scene
         self.decorations = []  # and no decorations
         self.views = { 'front': (0.,0.,0.),
@@ -56,33 +50,23 @@ class Canvas(qtgl.QGLWidget):
                        }   # default views
         # angles are: longitude, latitude, twist
         self.setBbox()
-        self.bgcolor = mediumgrey
-        self.rendermode = GD.cfg.gui.rendermode
+        self.bgcolor = colors.mediumgrey
+        self.rendermode = GD.cfg['render/mode']
         self.dynamic = None    # what action on mouse move
-        self.makeCurrent()     # set GL context before creating the camera
+        self.makeCurrent()     # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        
-    # These three are defined by the qtgl API
-    def initializeGL(self):
-        #print "initializeGL:",self.rendermode
-        self.glinit()
-
-    def	resizeGL(self,w,h):
-        self.setSize(w,h)
-
-    def	paintGL(self):
-        self.display()
-
-    # The rest are our functions
+        if GD.options.debug:
+            print "camera.rot =",self.camera.rot 
 
     # our own name for the canvas update function
     def update(self):
         self.updateGL()
 
     def glinit(self,mode=None):
+        print "Canvas glinit"
         if mode:
             self.rendermode = mode
-	GL.glClearColor(*RGBA(self.bgcolor))# Clear The Background Color
+	GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
 	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
 	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
 	GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
@@ -96,27 +80,64 @@ class Canvas(qtgl.QGLWidget):
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             #print "set up materials"
             #GL.glMaterialfv(GL.GL_FRONT,GL.GL_AMBIENT_AND_DIFFUSE,(0.5,0.5,0.5,1.))
-            #print GD.cfg.render.specular
-            #print GD.cfg.render.shininess
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,GD.cfg.render.specular)
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg.render.shininess)
+            #print GD.cfg['render']specular
+            #print GD.cfg['render']shininess
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,GD.cfg['render/specular'])
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
             GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
             GL.glEnable(GL.GL_COLOR_MATERIAL)
             #print "set up lights"
-            #print GD.cfg.render.keys()
+            #print GD.cfg['render']keys()
             GL.glEnable(GL.GL_LIGHTING)
             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
                 #print "  set up light ",l,i
-                if GD.cfg.render.has_key(l):
-                    #print GD.cfg.render[l]
+                if GD.cfg['render'].has_key(l):
+                    #print GD.cfg['render'][l]
                     GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
-                    GL.glLightfv(i,GL.GL_AMBIENT,GD.cfg.render[l]['ambient'])
-                    GL.glLightfv(i,GL.GL_DIFFUSE,GD.cfg.render[l]['diffuse'])
-                    GL.glLightfv(i,GL.GL_SPECULAR,GD.cfg.render[l]['specular'])
-                    GL.glLightfv(i,GL.GL_POSITION,GD.cfg.render[l]['position'])
+                    GL.glLightfv(i,GL.GL_AMBIENT,GD.cfg['render'][l]['ambient'])
+                    GL.glLightfv(i,GL.GL_DIFFUSE,GD.cfg['render'][l]['diffuse'])
+                    GL.glLightfv(i,GL.GL_SPECULAR,GD.cfg['render'][l]['specular'])
+                    GL.glLightfv(i,GL.GL_POSITION,GD.cfg['render'][l]['position'])
                     GL.glEnable(i)
         else:
             raise RuntimeError,"Unknown rendering mode"
+    
+    def setSize (self,w,h):
+	if h == 0:	# Prevent A Divide By Zero 
+            h = 1
+	GL.glViewport(0, 0, w, h)
+        self.aspect = float(w)/h
+        self.camera.setLens(aspect=self.aspect)
+        self.display()
+
+    def clear(self):
+        """Clear the canvas to the background color."""
+	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+	GL.glClearColor(*colors.RGBA(self.bgcolor))
+
+    def display(self):
+        """(Re)display all the actors in the scene.
+
+        This should e.g. be used when actors are added to the scene,
+        or after changing  camera position or lens.
+        """
+        self.clear()
+        self.camera.loadProjection()
+        self.camera.loadMatrix()
+        for i in self.actors:
+            GL.glCallList(i.list)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        # Plot viewport decorations
+        GL.glLoadIdentity()
+        GL.glMatrixMode (GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        GLU.gluOrtho2D (0, self.width(), 0, self.height())
+        for i in self.decorations:
+            GL.glCallList(i.list)
+        # end plot viewport decorations
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
 
     def setLinewidth(self,lw):
         """Set the linewidth for line rendering."""
@@ -124,8 +145,8 @@ class Canvas(qtgl.QGLWidget):
 
     def setBgColor(self,bg):
         """Set the background color."""
-        self.bgcolor = GLColor(bg)
-
+        self.bgcolor = bg
+        
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
@@ -218,45 +239,6 @@ class Canvas(qtgl.QGLWidget):
         """Redraw all actors in the scene."""
         self.redrawActors(self.actors)
 
-    def clear(self):
-        """Clear the canvas to the background color."""
-        self.makeCurrent()
-	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*RGBA(self.bgcolor))
-
-    def display(self):
-        """(Re)display all the actors in the scene.
-
-        This should e.g. be used when actors are added to the scene,
-        or after changing  camera position or lens.
-        """
-        self.clear()
-        self.camera.loadProjection()
-        self.camera.loadMatrix()
-        for i in self.actors:
-            GL.glCallList(i.list)
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPushMatrix()
-        # Plot viewport decorations
-        GL.glLoadIdentity()
-        GL.glMatrixMode (GL.GL_PROJECTION)
-        GL.glLoadIdentity()
-        GLU.gluOrtho2D (0, self.width(), 0, self.height())
-        for i in self.decorations:
-            GL.glCallList(i.list)
-        # end plot viewport decorations
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPopMatrix()
-    
-    def setSize (self,w,h):
-        self.makeCurrent()
-	if h == 0:	# Prevent A Divide By Zero 
-            h = 1
-	GL.glViewport(0, 0, w, h)
-        self.aspect = float(w)/h
-        self.camera.setLens(aspect=self.aspect)
-        self.display()
-
     def createView(self,name,angles):
         """Create a named view for camera orientation long,lat.
 
@@ -322,7 +304,7 @@ class Canvas(qtgl.QGLWidget):
                 a0 = math.atan2(x0[0],x0[1])
                 a1 = math.atan2(x1[0],x1[1])
                 an = (a1-a0) / math.pi * 180
-                ds = stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
+                ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
                 twist = - an*ds
                 #print "an,d,ds = ",an,d,ds,twist
                 self.camera.rotate(twist,0.,0.,1.)
@@ -333,7 +315,7 @@ class Canvas(qtgl.QGLWidget):
             b = vector.projection(dx,x0)
             #print "x0,dx,b=",x0,dx,b
             if abs(b) > 5:
-                val = stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
+                val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
                 rot =  [ abs(val),-dx[1],dx[0],0 ]
                 #print "val,rot=",val,rot
                 self.camera.rotate(*rot)
@@ -343,27 +325,27 @@ class Canvas(qtgl.QGLWidget):
             dist = self.camera.getDist() * 0.5
             # hor movement sets x value of center
             # vert movement sets y value of center
-            #panx = stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
-            #pany = stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
+            #panx = utils.stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
+            #pany = utils.stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
             #self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
             dx,dy = (x-self.statex,y-self.statey)
-            panx = stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
-            pany = stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
+            panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
+            pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
             #print dx,dy,panx,pany
             self.camera.translate(panx,-pany,0)
             self.statex,self.statey = (x,y)
 
         elif self.dynamic == "zoom":
             # hor movement is lens zooming
-            f = stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
+            f = utils.stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
             self.camera.setLens(f)
 
         elif self.dynamic == "combizoom":
             # hor movement is lens zooming
-            f = stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
+            f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             self.camera.setLens(f)
             # vert movement is dolly zooming
-            d = stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
+            d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
             self.camera.setDist(d*self.state[0])
         self.update()
 
@@ -374,9 +356,9 @@ class Canvas(qtgl.QGLWidget):
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
-        self.emit(qt.PYSIGNAL("wakeup"),())
+        self.emit(QtCore.SIGNAL("Wakeup"),())
         if e.text() == 's':
-            self.emit(qt.PYSIGNAL("save"),())
+            self.emit(QtCore.SIGNAL("Save"),())
         e.ignore()
         
     def mousePressEvent(self,e):
@@ -385,15 +367,15 @@ class Canvas(qtgl.QGLWidget):
         self.statey = e.y()
         self.camera.loadMatrix()
         # Other initialisations for the mouse move actions are done here 
-        if e.button() == qt.Qt.LeftButton:
+        if e.button() == QtCore.Qt.LeftButton:
             self.dynamic = "trirotate"
             # the vector from the screen center to the clicked point
             # this is used for the twist angle
             self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-        elif e.button() == qt.Qt.MidButton:
+        elif e.button() == QtCore.Qt.MidButton:
             self.dynamic = "pan"
             self.state = self.camera.getCenter()
-        elif e.button() == qt.Qt.RightButton:
+        elif e.button() == QtCore.Qt.RightButton:
             self.dynamic = "combizoom"
             self.state = [self.camera.getDist(),self.camera.fovy]
         
@@ -405,17 +387,19 @@ class Canvas(qtgl.QGLWidget):
         if self.dynamic:
             self.dyna(e.x(),e.y())
 
-    def save(self,fn,fmt='PNG',options=None):
+    def save(self,fn,fmt='png',options=None):
         """Save the current rendering as an image file."""
         #self.raiseW()
-        #self.makeCurrent()
+        self.makeCurrent()
         if fmt in GD.image_formats_qt:
+            self.display()
             GL.glFlush()
-            #GL.glFinish()
-            #GL.glReadBuffer(GL.GL_BACK)
-            #pixels = GL.glReadPixelsub(0,0,20,1,GL.GL_RGB)
-            #print pixels.shape
-            #print pixels
+            GL.glFinish()
+            for mode in [ GL.GL_FRONT, GL.GL_BACK ]: 
+                GL.glReadBuffer(mode)
+                pixels = GL.glReadPixelsf(0,0,20,1,GL.GL_RGBA)
+                print pixels.shape
+                print pixels
             #qim = qt.QImage(pixels)
             qim = self.grabFrameBuffer()
             qim.save(fn,fmt)
@@ -423,10 +407,7 @@ class Canvas(qtgl.QGLWidget):
             self.savePS(fn,fmt)
 
 
-    # Deprecated
-    useView = setView
-
-######################### ONLY LOADED IF GL2PS FOUND ########################
+# ONLY LOADED IF GL2PS FOUND ########################
 
     if _has_gl2ps:
 
@@ -471,21 +452,20 @@ class Canvas(qtgl.QGLWidget):
                 bufsize += 1024*1024
                 #print filename,filetype
                 gl2ps.gl2psBeginPage(title, self._producer, viewport, filetype,
-                                     gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA, 0,
-                                     None, 0, 0, 0, bufsize, fp, filename)
+                                     gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA,
+                                     0, None, 0, 0, 0, bufsize, fp, filename)
                 self.display()
                 GL.glFinish()
                 state = gl2ps.gl2psEndPage()
             fp.close()
-            log("File %s written" % filename)
 
         #Canvas.savePS = _savePS
 
         _start_message = '\nCongratulations! You have gl2ps, so I activated drawPS!'
 
         _producer = GD.Version + ' (http://pyformex.berlios.de)'
-        _gl2ps_types = { 'PS':gl2ps.GL2PS_PS, 'EPS':gl2ps.GL2PS_EPS,
-                         'PDF':gl2ps.GL2PS_PDF, 'TEX':gl2ps.GL2PS_TEX }
+        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
+                         'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
         GD.image_formats_gl2ps = _gl2ps_types.keys()
 
         print _start_message

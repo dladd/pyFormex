@@ -2,38 +2,33 @@
 #
 # Changes should go to /etc/pyformexrc (for site-wide changes)
 # or to ~/.pyformexrc (for personal settings).
-# If your are missing these files, you can safely copy this file as a start.
+# If your are missing these files, you can safely copy (parts of) this file
+# as a start. 
 # Config settings are read in order from this file, then /etc/pyformexrc,
-# finally ~/.pyformexrc. The last settings will override previous ones.
+# ~/.pyformexrc. The last settings will override previous ones.
 #
 # The config is now read by the config.Config class
 # Two variables are set on entry: pyformexdir, homedir
 #
 import os
 
+# directories
+workdir="."
 icondir = os.path.join(pyformexdir,"icons")
 exampledir = os.path.join(pyformexdir,"examples")
 docdir = os.path.join(pyformexdir,"doc")
-edit = 'gnuclient'   # editor command
-bgcolor = 'grey'
-#[draw]
-linewidth = 1
-propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 
-                 # a default color set for properties
 
-[help]
-viewer = ""          # Empty selects the built-in help viewer
-# if set to a string, the command "%s %s" % (viewer,page) will be used
-#helpdir = os.path.join(pyformexdir,"manual","html")
-helpdir = os.path.join(pyformexdir,"doc","html")
-homepage = os.path.join(helpdir,"index.html") 
-bookmarks = os.path.join(homedir,".pyformex.bookmarks")
-history = os.path.join(homedir,".pyformex.history")
+# commands
+editor = 'gnuclient %s'   # editor and flat text viewer
+viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
+browser = 'firefox %s'    # web browser
+# the %s in the above commands will be replaced with the filename/URL
 
 [gui]
-width =  800         # default window width
-height = 600	     # default window height
-localaxes = True     # by default, buttons rotate/pan in local axes
+size=(800,600)
+pos=(0,0)
+fullscreen = False
+icontype = '.xpm'
 camerabuttons = True # add camera buttons to toolbar
 examplesmenu = True  # add examples menu
 viewsmenu = True     # add a Views menu
@@ -42,12 +37,27 @@ builtinviews = ['front','back','right','left','top','bottom','iso']
 zoomfactor = 1.25    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 5.       # translation factor for pan buttons
-drawwait = 2         # default time (sec.) to wait between draw operations
-                     # (None is indefinitely)
-rendermode = 'wireframe' # Alternatives are 'flat' or 'smooth'
+
+[draw]
+wait = 2  # time(sec.) to wait between draw operations (None is indefinitely)
+bgcolor = 'lightgrey'
+fgcolor = 'black'
+propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 
+                 # a default color set for properties
+linewidth = 1
+localaxes = True     # by default, buttons rotate/pan in local axes
 
 [render]
+mode = 'wireframe' # Alternatives are 'flat' or 'smooth'
 specular = (0.8,0.8,0.8,1.)
 shininess = 0.7
 light0 = { 'ambient':(1.0,1.0,1.0,1.0), 'diffuse': (1.0,1.0,1.0,1.0), 'specular':(0.7,0.7,0.7,1.0), 'position':(1.,0.,1.,0.)}
 #light1 = { 'ambient':(1.0,1.0,1.0,1.0), 'diffuse': (1.0,1.0,1.0,1.0), 'specular':(1.0,1.0,1.0,1.0), 'position':(-10.,0.,10.,0.)}
+
+[help]
+manual = os.path.join(pyformexdir,"manual","html","index.html")
+pydocs = os.path.join(pyformexdir,"doc","html","index.html")
+website = "http://pyformex.berlios.de" 
+about = os.path.join(pyformexdir,"Description")
+#bookmarks = os.path.join(homedir,".pyformex.bookmarks")
+#history = os.path.join(homedir,".pyformex.history")

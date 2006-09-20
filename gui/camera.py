@@ -4,20 +4,22 @@
 
 import sys
 
-import OpenGL.GL as GL
-import OpenGL.GLU as GLU
-
 from vector import *
+
 import numpy
 import distutils.version
 Version=distutils.version.LooseVersion
 if Version(numpy.__version__) < Version('0.9.8'):
-    matrixinverse = numpy.linalg.inverse
+    inverse = numpy.linalg.inverse
 else:
-    matrixinverse = numpy.linalg.linalg.inv
-from numpy import matrixmultiply,array
-    
+    inverse = numpy.linalg.linalg.inv
+multiply = numpy.dot
+array = numpy.array
+
 import copy
+
+import OpenGL.GL as GL
+import OpenGL.GLU as GLU
 
 ## ! For developers: the information in this module is not fully correct
 ## ! We now store the rotation of the camera as a combined rotation matrix,
@@ -174,7 +176,7 @@ class Camera:
 ##        tr = [translation]
 ##        for i in [1,0,2]:
 ##            r = rotationMatrix(i,ang[i])
-##            tr = matrixMultiply(tr, r)
+##            tr = multiply(tr, r)
 ##        self.move(tr[0])
 ##        self.viewChanged = True
 
@@ -236,7 +238,7 @@ class Camera:
         """Transform a vertex using the currently saved  Modelview matrix."""
         if len(v) == 3:
             v = v + [ 1. ]
-        v = matrixmultiply([v],self.m)[0]
+        v = multiply([v],self.m)[0]
         return [ a/v[3] for a in v[0:3] ]
 
     def toWorld(self,v,trl=False):
@@ -245,10 +247,10 @@ class Camera:
         The specified vector can have 3 or 4 (homogoneous) components.
         This uses the currently saved rotation matrix.
         """
-        a = matrixinverse(array(self.rot))
+        a = inverse(array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
-        v = matrixmultiply(array(v),a)
+        v = multiply(array(v),a)
         return v[0:3] / v[3]
 
     

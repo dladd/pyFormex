@@ -1,7 +1,0 @@
-pyFormex is a Free program for generating large structured sets of 3D-coordinates by means of subsequent mathematical transformations. Thanks to a powerful (Python based) scripting language, pyFormex is very well suited for the automated design of spatial frame structures. pyFormex is also being used for other tasks, like finite element preprocessing, or just for creating some nice graphics.
-
-Using pyFormex, the topology of the elements and the final geometrical form can be decoupled, as in the example shown. Often, topology is created first and then mapped onto the geometry. But the scripting language of course lets the user define any sequence of transformations, provided or user defined. 
-Building parametric models becomes a natural thing.
-
-While pyFormex is still under development (http://pyformex.berlios.de), it already provides a fairly stable scripting language and an OpenGL GUI environment for displaying and manipulating the generated structures. 
-

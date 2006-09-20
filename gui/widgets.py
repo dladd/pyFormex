@@ -2,10 +2,11 @@
 # $Id$
 """A collection of custom widgets used in the pyFormex GUI"""
 
-import qt,types
+import types
+from PyQt4 import QtCore, QtGui
 
 
-class FileSelection(qt.QFileDialog):
+class FileSelection(QtGui.QFileDialog):
     """A file selection dialog widget.
 
     You can specify a default path/filename that will be suggested initially.
@@ -15,17 +16,19 @@ class FileSelection(qt.QFileDialog):
     to accept only existing files.
     
     """
-    def __init__(self,default=None,pattern=None,exist=False):
+    def __init__(self,dir,pattern=None,exist=False):
         """The constructor shows the widget."""
-        qt.QFileDialog.__init__(self,default,pattern,None,'pyf-filesel')
+        QtGui.QFileDialog.__init__(self)
+        dir = "."
+        self.setDirectory(dir)
         if exist:
-            mode = qt.QFileDialog.ExistingFile
+            mode = QtGui.QFileDialog.ExistingFile
             caption = "Open existing file"
         else:
-            mode = qt.QFileDialog.AnyFile
+            mode = QtGui.QFileDialog.AnyFile
             caption = "Save file as"
-        self.setMode(mode)
-        self.setCaption(caption)
+        self.setFileMode(mode)
+        self.setWindowTitle(caption)
         self.show()
         
     def getFilename(self):
@@ -34,21 +37,40 @@ class FileSelection(qt.QFileDialog):
         Return the filename selected by the user.
         If the user hits CANCEL or ESC, None is returned.
         """
-        self.exec_loop()
-        if self.result() == qt.QDialog.Accepted:
-            return str(self.selectedFile())
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            return str(self.selectedFiles()[0])
         else:
             return None
 
+
+# !! The QtGui.QColorDialog can not be instantiated or subclassed.
+# !! The color selection dialog is created by the static getColor
+# !! function.
+
+def getColor(col=None):
+    """Create a color selection dialog and return the selected color.
+
+    col is the initial selection.
+    If a valid color is selected, its string name is returned, usually as
+    a hex #RRGGBB string. If the dialog is canceled, None is returned.
+    """
+    col = QtGui.QColorDialog.getColor(QtGui.QColor(col))
+    if col.isValid():
+        return str(col.name())
+    else:
+        return None
+
+
 ## !! THIS IS NOT FULLY FUNCTIONAL YET
 ## It can already be used for string items  
-class inputDialog(qt.QDialog):
+class inputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption='Input Dialog'):
+    def __init__(self,items,caption='Input Dialog',*args):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -62,47 +84,55 @@ class inputDialog(qt.QDialog):
         For each item a label with the name and a LineEdit widget are created,
         with a validator function where appropriate.
         """
-        qt.QDialog.__init__(self,None,None,True)
+        QtGui.QDialog.__init__(self,*args)
         self.resize(400,200)
-        self.setCaption(caption)
+        self.setWindowTitle(caption)
         self.fields = []
         self.result = []
-        tab = qt.QVBoxLayout(self,11,6)
+        form = QtGui.QVBoxLayout()
         for item in items:
-            line = qt.QHBoxLayout(None,0,6)
-            label = qt.QLabel(item[0],self)
-            line.addWidget(label)
-            input = qt.QLineEdit(str(item[1]),self)
+            # Create the text label
+            label = QtGui.QLabel(item[0])
+            # Create the input field
+            input = QtGui.QLineEdit(str(item[1]))
             if len(item) == 2 or item[2] == 'str':
                 pass
                 #print "%s is a string"%item[0]
             elif item[2] == 'int':
                 #print "%s is an integer"%item[0]
                 if len(item) ==3 :
-                    input.setValidator(qt.QIntValidator(input))
+                    input.setValidator(QtGui.QIntValidator(input))
                 else:
-                    input.setValidator(qt.QIntValidator(item[3][0],item[3][1],input))
+                    input.setValidator(QtGui.QIntValidator(item[3][0],item[3][1],input))
             elif item[2] == 'float':
                 pass
                 #print "%s is a float"%item[0]
             input.selectAll()
-            line.addWidget(input)
             self.fields.append([label,input])
-            tab.addLayout(line)
+            # Add label and input field to a horizontal layout in the form
+            line = QtGui.QHBoxLayout()
+            line.addWidget(label)
+            line.addWidget(input)
+            form.addLayout(line)
         # add OK and Cancel buttons
-        but = qt.QHBoxLayout(None,0,6)
-        spacer = qt.QSpacerItem(0,0,qt.QSizePolicy.Expanding, qt.QSizePolicy.Minimum )
+        but = QtGui.QHBoxLayout()
+        spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
         but.addItem(spacer)
-        ok = qt.QPushButton("OK",self)
+        ok = QtGui.QPushButton("OK",self)
         ok.setDefault(True)
-        cancel = qt.QPushButton("CANCEL",self)
-        cancel.setAccel(qt.QKeyEvent.Key_Escape)
+        cancel = QtGui.QPushButton("CANCEL",self)
+        #cancel.setAccel(QtGui.QKeyEvent.Key_Escape)
         #cancel.setDefault(True)
         but.addWidget(cancel)
         but.addWidget(ok)
-        tab.addLayout(but)
-        self.connect(cancel,qt.SIGNAL("clicked()"),self,qt.SLOT("reject()"))
-        self.connect(ok,qt.SIGNAL("clicked()"),self.acceptdata)
+        form.addLayout(but)
+        self.connect(cancel,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
+        self.connect(ok,QtCore.SIGNAL("clicked()"),self.acceptdata)
+        self.setLayout(form)
+        # Set the keyboard focus to the first input field
+        self.setFocusProxy(self.fields[0][1])
+        self.fields[0][0].setFocus()
+        self.show()
         
     def acceptdata(self):
         for label,input in self.fields:
@@ -110,9 +140,5 @@ class inputDialog(qt.QDialog):
         self.accept()
         
     def process(self):
-        accept = self.exec_loop() == qt.QDialog.Accepted
+        accept = self.exec_() == QtGui.QDialog.Accepted
         return (self.result, accept)
-
-
-# for compatibility
-FileSelectionDialog = FileSelection

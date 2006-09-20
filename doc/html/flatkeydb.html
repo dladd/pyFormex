@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>flatkeydb</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/flatkeydb.py">/home/bene/prj/pyformex/flatkeydb.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyf4/flatkeydb.py">/home/bene/prj/pyf4/flatkeydb.py</a></font></td></tr></table>
     <p><tt>Flat&nbsp;Text&nbsp;File&nbsp;Database.<br>
 A&nbsp;simple&nbsp;database&nbsp;stored&nbsp;as&nbsp;a&nbsp;flat&nbsp;text&nbsp;file.<br>
 &nbsp;<br>
@@ -194,7 +194,7 @@ Data and other attributes defined here:<br>
 Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
 <dl><dt><a name="FlatDB-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#FlatDB-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
 
-<dl><dt><a name="FlatDB-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#FlatDB-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+<dl><dt><a name="FlatDB-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>D.<a href="#FlatDB-__contains__">__contains__</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="FlatDB-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#FlatDB-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
 
@@ -248,7 +248,8 @@ If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nb
 
 <dl><dt><a name="FlatDB-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#FlatDB-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#FlatDB-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
 
-<dl><dt><a name="FlatDB-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#FlatDB-update">update</a>(E)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;E:&nbsp;for&nbsp;k&nbsp;in&nbsp;E.<a href="#FlatDB-keys">keys</a>():&nbsp;D[k]&nbsp;=&nbsp;E[k]</tt></dd></dl>
+<dl><dt><a name="FlatDB-update"><strong>update</strong></a>(...)</dt><dd><tt>D.<a href="#FlatDB-update">update</a>(E,&nbsp;**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;E&nbsp;and&nbsp;F:&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+(if&nbsp;E&nbsp;has&nbsp;keys&nbsp;else:&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v)&nbsp;then:&nbsp;for&nbsp;k&nbsp;in&nbsp;F:&nbsp;D[k]&nbsp;=&nbsp;F[k]</tt></dd></dl>
 
 <dl><dt><a name="FlatDB-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#FlatDB-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
 

@@ -1,15 +1,16 @@
 # canvas.py
 # $Id$
-"""OpenGL actors for decorating the canvas(2D)."""
+"""2D decorations for the OpenGL canvas."""
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
 
+# Needed to initialize the fonts
 GLUT.glutInit([])
 
-from colors import *
-from colorscale import *
+import colors
+#import colorscale
 
 ### Some drawing functions ###############################################
 
@@ -167,16 +168,16 @@ class Decoration:
         pass
 
         
-class TextActor(Decoration):
+class Text(Decoration):
     """A viewport decoration showing a text."""
 
-    def __init__(self,text,x,y,font='9x15',adjust='left',color=black):
+    def __init__(self,text,x,y,font='9x15',adjust='left',color=colors.black):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
         self.font = font
         self.adjust = adjust
-        self.color = GLColor(color)
+        self.color = colors.GLColor(color)
 
     def draw(self,mode='wireframe'):
         """Draw the text."""
@@ -184,7 +185,7 @@ class TextActor(Decoration):
         drawText(self.text,self.x,self.y,self.font,self.adjust)
 
 
-class ColorLegendActor(Decoration):
+class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
     def __init__(self,colorlegend,x,y,w,h,font='9x15',dec=2):
         Decoration.__init__(self,x,y)
@@ -215,7 +216,7 @@ class ColorLegendActor(Decoration):
         fh = glutFontHeight(self.font)
         dh = fh + self.ygap # vert. distance between successive labels
         y0 -= dh/2
-        GL.glColor3f(*black)
+        GL.glColor3f(*colors.black)
         for i,v in enumerate(self.cl.limits):
             y2 = y0 + i*dy
             if y2 >= y1 or i == 0:
@@ -223,7 +224,7 @@ class ColorLegendActor(Decoration):
                 y1 = y2 + dh
             
 
-class Grid2Actor(Decoration):
+class Grid2(Decoration):
     """A 2D-grid on the canvas."""
     def __init__(self,x1,y1,x2,y2,nx,ny):
         Decoration.__init__(self,x1,y1)

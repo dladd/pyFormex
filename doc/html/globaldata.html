@@ -8,17 +8,9 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>globaldata</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/globaldata.py">/home/bene/prj/pyformex/globaldata.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyf4/globaldata.py">/home/bene/prj/pyf4/globaldata.py</a></font></td></tr></table>
     <p><tt>Global&nbsp;data&nbsp;for&nbsp;pyFormex.</tt></p>
 <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#aa55cc">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="config.html">config</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -26,6 +18,12 @@
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-debug"><strong>debug</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-savePreferences"><strong>savePreferences</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;preferences.<br>
+&nbsp;<br>
+The&nbsp;name&nbsp;of&nbsp;the&nbsp;preferences&nbsp;file&nbsp;was&nbsp;set&nbsp;in&nbsp;GD.preffile.<br>
+If&nbsp;a&nbsp;local&nbsp;preferences&nbsp;file&nbsp;was&nbsp;read,&nbsp;it&nbsp;will&nbsp;be&nbsp;saved&nbsp;there.<br>
+Otherwise,&nbsp;it&nbsp;will&nbsp;be&nbsp;saved&nbsp;as&nbsp;the&nbsp;user&nbsp;preferences,&nbsp;possibly<br>
+creating&nbsp;that&nbsp;file.</tt></dd></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -34,16 +32,17 @@
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>PyFormex</strong> = {}<br>
-<strong>Version</strong> = 'pyFormex 0.3.1-alpha'<br>
+<strong>Version</strong> = 'pyFormex 0.4-alpha'<br>
+<strong>board</strong> = None<br>
 <strong>canPlay</strong> = False<br>
 <strong>canvas</strong> = None<br>
+<strong>cfg</strong> = None<br>
 <strong>gui</strong> = None<br>
 <strong>help</strong> = None<br>
 <strong>image_formats_gl2ps</strong> = []<br>
 <strong>image_formats_qt</strong> = []<br>
 <strong>multisave</strong> = False<br>
-<strong>prefs</strong> = None<br>
-<strong>prefsChanged</strong> = False<br>
-<strong>scriptName</strong> = None<br>
-<strong>userprefs</strong> = None</td></tr></table>
+<strong>preffile</strong> = None<br>
+<strong>refcfg</strong> = None<br>
+<strong>scriptName</strong> = None</td></tr></table>
 </body></html>

@@ -24,12 +24,21 @@ draw(F)
 
 
 # Define a plane
-p = [3.2,3.0,0.0]
-n = [2.0,1.0,0.0]
+plane_p = [3.2,3.0,0.0]
+plane_n = [2.0,1.0,0.0]
 #number of nodes above/below the plane
-dist = distanceFromPlane(F.f,p,n)
+dist = distanceFromPlane(F.f,plane_p,plane_n)
 above = sum(dist>0.0,-1)
 below = sum(dist<0.0,-1) 
+
+# Define a line
+line_p = [0.0,0.0,0.0]
+line_q = [n,n,n/3]
+d = distanceFromLine(F.f,line_p,line_q)
+#number of nodes close to line 
+close = sum(d < 2.2,-1)
+
+
 
 sel = [ F.where(nodes=0,dir=0,xmin=1.5,xmax=3.5),
         F.where(nodes=[0,1],dir=0,xmin=1.5,xmax=3.5),
@@ -37,7 +46,8 @@ sel = [ F.where(nodes=0,dir=0,xmin=1.5,xmax=3.5),
         F.where(nodes='all',dir=1,xmin=1.5,xmax=3.5),
         F.where(nodes='any',dir=1,xmin=1.5,xmax=3.5),
         F.where(nodes='none',dir=1,xmin=1.5),
-        (above > 0) * (below > 0 )
+        (above > 0) * (below > 0 ),
+        close == 3,
         ]
 
 txt = [ 'First node has x between 1.5 and 3.5',
@@ -46,17 +56,23 @@ txt = [ 'First node has x between 1.5 and 3.5',
         'All nodes have y between 1.5 and 3.5',
         'Any node has y between 1.5 and 3.5',
         'No node has y larger than 1.5',
-        'Touching the plane P = [3.0,3.0,0.0], n = [2.0,1.0,0.0]'
+        'Touching the plane P = [3.2,3.0,0.0], n = [2.0,1.0,0.0]',
+        '3 nodes close to line through [0.0,0.0,0.0] and [1.0,1.0,1.0]',
         ]
-col = GD.cfg.propcolors
 
-p = zeros(F.f.shape[:1])
-for i,s in enumerate(sel):
-    p[s] = i + 1 # omit the black
-    F.setProp(p)
+color = GD.cfg['draw/propcolors'][1:] # omit the black
+while len(color) < len(sel):
+    color.extend(color)
+color[0:0] = ['black'] # restore the black
+prop = zeros(F.f.shape[:1])
+i = 1
+for s,t in zip(sel,txt):
+    prop[s] = i
+    F.setProp(prop)
     clear()
-    message('%s (%s): %s' % (col[i+1],sum(s),txt[i]))
-    draw(F)
+    message('%s (%s): %s' % (color[i],sum(s),t))
+    draw(F,color=color)
+    i += 1
 
 clear()
 message('Clip Formex to last selection')

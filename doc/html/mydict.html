@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>mydict</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/mydict.py">/home/bene/prj/pyformex/mydict.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyf4/mydict.py">/home/bene/prj/pyf4/mydict.py</a></font></td></tr></table>
     <p><tt>Extensions&nbsp;to&nbsp;Pythons&nbsp;built-in&nbsp;dictionary&nbsp;class:<br>
 <a href="#Dict">Dict</a>&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;with&nbsp;default&nbsp;values&nbsp;and&nbsp;alternate&nbsp;attribute&nbsp;syntax.<br>
 <a href="#CascadingDict">CascadingDict</a>&nbsp;is&nbsp;a&nbsp;<a href="#Dict">Dict</a>&nbsp;with&nbsp;lookup&nbsp;cascading&nbsp;into&nbsp;the&nbsp;next&nbsp;level&nbsp;<a href="#Dict">Dict</a>'s<br>
@@ -95,7 +95,7 @@ This&nbsp;makes&nbsp;self.<strong>key</strong>&nbsp;equivalent&nbsp;to&nbsp;self
 is&nbsp;an&nbsp;attribute&nbsp;of&nbsp;the&nbsp;builtin&nbsp;type&nbsp;'<a href="__builtin__.html#dict">dict</a>':&nbsp;then&nbsp;we&nbsp;return&nbsp;that<br>
 attribute&nbsp;instead,&nbsp;so&nbsp;that&nbsp;the&nbsp;'<a href="__builtin__.html#dict">dict</a>'&nbsp;methods&nbsp;keep&nbsp;their&nbsp;binding.</tt></dd></dl>
 
-<dl><dt><a name="CascadingDict-__setattr__"><strong>__setattr__</strong></a>(self, key, value<font color="#909090">=None</font>)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;beset&nbsp;as&nbsp;self.<strong>key</strong>=value.<br>
+<dl><dt><a name="CascadingDict-__setattr__"><strong>__setattr__</strong></a>(self, key, value<font color="#909090">=None</font>)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;be&nbsp;set&nbsp;as&nbsp;self.<strong>key</strong>=value.<br>
 &nbsp;<br>
 This&nbsp;works&nbsp;even&nbsp;if&nbsp;the&nbsp;key&nbsp;is&nbsp;an&nbsp;existing&nbsp;attribute&nbsp;of&nbsp;the<br>
 builtin&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;class:&nbsp;the&nbsp;key,value&nbsp;pair&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>,<br>
@@ -115,7 +115,7 @@ Data and other attributes inherited from <a href="mydict.html#Dict">Dict</a>:<br
 Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
 <dl><dt><a name="CascadingDict-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#CascadingDict-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
 
-<dl><dt><a name="CascadingDict-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#CascadingDict-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+<dl><dt><a name="CascadingDict-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>D.<a href="#CascadingDict-__contains__">__contains__</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="CascadingDict-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#CascadingDict-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
 
@@ -250,7 +250,7 @@ for&nbsp;non-existing&nbsp;keys.</tt></dd></dl>
 We&nbsp;use&nbsp;the&nbsp;format&nbsp;<a href="#Dict">Dict</a>({}),&nbsp;so&nbsp;that&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;valid&nbsp;Python<br>
 representation&nbsp;of&nbsp;the&nbsp;<a href="#Dict">Dict</a>.</tt></dd></dl>
 
-<dl><dt><a name="Dict-__setattr__"><strong>__setattr__</strong></a>(self, key, value<font color="#909090">=None</font>)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;beset&nbsp;as&nbsp;self.<strong>key</strong>=value.<br>
+<dl><dt><a name="Dict-__setattr__"><strong>__setattr__</strong></a>(self, key, value<font color="#909090">=None</font>)</dt><dd><tt>Allows&nbsp;items&nbsp;to&nbsp;be&nbsp;set&nbsp;as&nbsp;self.<strong>key</strong>=value.<br>
 &nbsp;<br>
 This&nbsp;works&nbsp;even&nbsp;if&nbsp;the&nbsp;key&nbsp;is&nbsp;an&nbsp;existing&nbsp;attribute&nbsp;of&nbsp;the<br>
 builtin&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;class:&nbsp;the&nbsp;key,value&nbsp;pair&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>,<br>
@@ -270,7 +270,7 @@ Data and other attributes defined here:<br>
 Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
 <dl><dt><a name="Dict-__cmp__"><strong>__cmp__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__cmp__">__cmp__</a>(y)&nbsp;&lt;==&gt;&nbsp;cmp(x,y)</tt></dd></dl>
 
-<dl><dt><a name="Dict-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+<dl><dt><a name="Dict-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-__contains__">__contains__</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="Dict-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#Dict-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
 

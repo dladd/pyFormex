@@ -5,16 +5,17 @@
 include RELEASE
 
 PYFORMEXDIR= pyformex-${RELEASE}
-PROGRAM= pyformex
-PYSOURCE= ${addsuffix .py, ${PYMODULES}}
-SOURCE= ${PYSOURCE} pyformexrc
-ICONFILES= icons/*.xbm
+PYSOURCE= ${addsuffix .py, ${PYMODULES}} 
+PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
+OTHERSOURCE= pyformexrc
+ICONFILES= icons/*.xpm
 HTMLDIR= doc/html
-HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}}
+HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }
 STAMPFILES= README History Makefile FAQ
 NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION}
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
-IMAGEFILES =  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
+IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
+MANUAL= ${addprefix manual/, manual.ps manual.pdf html}
 STAMP= Stamp 
 VERSIONSTRING= "pyFormex .*"
 NEWVERSIONSTRING= "pyFormex ${RELEASE}"
@@ -48,16 +49,17 @@ manual:
 stamp: Stamp.template RELEASE
 	${STAMP} -tStamp.template version=${VERSION} -oStamp.stamp
 
-dist.stamped:  distclean stamp globaldata.py ${PROGRAM} ${SOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES} examples/__init__.py ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
-	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${SOURCE}
+dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERSOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES}  ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
+	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual
+	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE}
+	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/gui ${PYGUISOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/examples ${EXAMPLEFILES}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${STAMPFILES}
 	cp ${NONSTAMPFILES} ${PYFORMEXDIR}
-	cp examples/__init__.py ${PYFORMEXDIR}/examples
 	cp ${ICONFILES}  ${PYFORMEXDIR}/icons
 	cp ${IMAGEFILES} ${PYFORMEXDIR}/images
 	cp ${HTMLDOCS} ${HTMLDIR}/index.html    ${PYFORMEXDIR}/html
+	cp -R ${MANUAL}   ${PYFORMEXDIR}/manual
 
 version: globaldata.py
 

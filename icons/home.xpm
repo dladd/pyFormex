@@ -1,0 +1,32 @@
+/* XPM */
+static char *home[] = {
+/* width height ncolors chars_per_pixel */
+"22 22 3 1",
+/* colors */
+"  c #000",
+". c #FFF",
+"X c None",
+/* pixels */
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXX  XXXXXXXXXXXXXXX",
+"XXXXX  XXX  XXXXXXXXXX",
+"XXXXX  X      XXXXXXXX",
+"XXXXX           XXXXXX",
+"XXXX              XXXX",
+"XXX                XXX",
+"XXXXX .......... XXXXX",
+"XXXXX ......   . XXXXX",
+"XXXXX ...... . . XXXXX",
+"XXXXX ......   . XXXXX",
+"XXXXX .......... XXXXX",
+"XXXXX ...   .... XXXXX",
+"XXXXX ... X .... XXXXX",
+"XXXXX ... X .... XXXXX",
+"XXXXX ... X .... XXXXX",
+"XXXXX ... X .... XXXXX",
+"XXXXX     X      XXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX"
+};
