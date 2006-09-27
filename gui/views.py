@@ -25,7 +25,12 @@ class Views:
         """
         self.views = []
         self.menu = menu
-        self.toolbar = toolbar
+        if GD.cfg['gui/viewsbar']:
+            self.toolbar = toolbar
+        else:
+            self.toolbar = None
+        if self.toolbar:
+            self.toolbar.addSeparator()
         for name in views:
             self.add(name)
 

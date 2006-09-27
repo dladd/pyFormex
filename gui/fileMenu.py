@@ -52,7 +52,6 @@ def saveImage():
     fn = fs.getFilename()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
-        print "Will now save image"
         draw.saveImage(fn,verbose=True)
 
 def multiSave():

@@ -177,7 +177,7 @@ class GUI:
             printFormat(fmt)
         c = QtCanvas(fmt)
         c.setBgColor(GD.cfg['draw/bgcolor'])
-        c.resize(*GD.cfg['size'])
+        c.resize(*GD.cfg['gui/size'])
 ##        if GD.options.splash:
 ##            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
         self.canvas = c
@@ -199,7 +199,7 @@ class GUI:
             addCameraButtons(self.toolbar)
         # Create a menu with standard views
         # and insert it before the help menu
-        self.viewsmenu = None
+        self.viewsMenu = None
         if GD.cfg['gui/viewsmenu']:
             self.viewsMenu = views.ViewsMenu()
             self.menu.insertMenu(self.menus['&Help'],self.viewsMenu)
@@ -207,10 +207,7 @@ class GUI:
         # defviews = self.canvas.views.keys()
         # NO, these are not sorted, better:
         defviews = [ 'front', 'back', 'top', 'bottom', 'left', 'right', 'iso' ]
-        self.views = None
-        if GD.cfg['gui/viewsbar']:
-            self.toolbar.addSeparator()
-            self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
+        self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
         # Create a menu with pyFormex examples
         # and insert it before the help menu
         self.examples = scriptsMenu.ScriptsMenu(GD.cfg['exampledir'])

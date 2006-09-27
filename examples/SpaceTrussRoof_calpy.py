@@ -124,8 +124,6 @@ except ImportError:
     warning("You need calpy-0.3.3 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct calpy installation path\n in this example's source file\n(%s).\nThe calpy_path variable is set near the top of that file.\nIts current value is: %s" % (GD.cfg['curfile'],calpy_path))
     exit()
 
-print calpy.options
-
 # boundary conditions
 bcon = zeros([nnod,3],dtype=int)
 bcon[nodeprops == 0] = [ 1,1,1 ]
