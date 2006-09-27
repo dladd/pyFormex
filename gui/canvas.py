@@ -34,7 +34,7 @@ except ImportError:
 class Canvas:
     """A canvas for OpenGL rendering."""
     
-    def __init__(self,w=640,h=480,*args):
+    def __init__(self):
         """Initialize an empty canvas with default settings.
         """
         print "Canvas init"

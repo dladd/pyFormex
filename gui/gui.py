@@ -107,6 +107,7 @@ class Board(QtGui.QTextEdit):
 
 ################# OpenGL Canvas ###############
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
+#class QtCanvas(QtOpenGL.QGLWidget):
     """A canvas for OpenGL rendering."""
     
     def __init__(self,*args):
@@ -116,13 +117,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setMinimumSize(32,32)
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        w,h = 800,600
-        self.resize(w,h)
-        canvas.Canvas.__init__(self,w,h)
+        canvas.Canvas.__init__(self)
+        #w,h = 800,600
+        #self.resize(w,h)
         
     def initializeGL(self):
         if GD.options.debug:
-            #print "initializeGL: "
+            print "initializeGL: "
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
         self.glinit()
@@ -132,6 +133,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSize(w,h)
 
     def	paintGL(self):
+        GD.debug("paintGL")
         self.display()
 
 
@@ -182,8 +184,9 @@ class GUI:
         if GD.options.debug:
             printFormat(fmt)
         c = QtCanvas(fmt)
+##        c = Board()
+##        c.setBgColor(GD.cfg['draw/bgcolor'])
 ##        c = canvas.Canvas(wd,ht,fmt,s)
-        c.setBgColor(GD.cfg['draw/bgcolor'])
 ##        c.resize(*GD.cfg['size'])
 ##        if GD.options.splash:
 ##            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
@@ -206,16 +209,18 @@ class GUI:
             addCameraButtons(self.toolbar)
         # Create a menu with standard views
         # and insert it before the help menu
-        self.views = None
+        self.viewsmenu = None
         if GD.cfg['gui/viewsmenu']:
             self.viewsMenu = views.ViewsMenu()
             self.menu.insertMenu(self.menus['&Help'],self.viewsMenu)
         # Install the default canvas views
-        defviews = self.canvas.views.keys()
+        # defviews = self.canvas.views.keys()
         # NO, these are not sorted, better:
         defviews = [ 'front', 'back', 'top', 'bottom', 'left', 'right', 'iso' ]
-        self.toolbar.addSeparator()
-        self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
+        self.views = None
+        if GD.cfg['gui/viewsbar']:
+            self.toolbar.addSeparator()
+            self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
         # Create a menu with pyFormex examples
         # and insert it before the help menu
         self.examples = scriptsMenu.ScriptsMenu(GD.cfg['exampledir'])
