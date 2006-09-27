@@ -18,11 +18,6 @@ import script
 import draw
 import utils
 
-#try:
-#    import editor         ## non-essential module under testing
-#except ImportError:
-#    pass
-
 
 _start_message = GD.Version + ', by B. Verhegghe'
 
@@ -32,7 +27,6 @@ def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
     action = {}
     dir = GD.cfg['icondir']
-    print GD.cfg['gui']
     buttons = [ [ "Play", "next", fileMenu.play, False ],
                 [ "Step", "nextstop", draw.step, False ],
                 [ "Continue", "ff", draw.fforward, False ],
@@ -107,7 +101,6 @@ class Board(QtGui.QTextEdit):
 
 ################# OpenGL Canvas ###############
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
-#class QtCanvas(QtOpenGL.QGLWidget):
     """A canvas for OpenGL rendering."""
     
     def __init__(self,*args):
@@ -133,7 +126,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSize(w,h)
 
     def	paintGL(self):
-        GD.debug("paintGL")
         self.display()
 
 
@@ -184,10 +176,8 @@ class GUI:
         if GD.options.debug:
             printFormat(fmt)
         c = QtCanvas(fmt)
-##        c = Board()
-##        c.setBgColor(GD.cfg['draw/bgcolor'])
-##        c = canvas.Canvas(wd,ht,fmt,s)
-##        c.resize(*GD.cfg['size'])
+        c.setBgColor(GD.cfg['draw/bgcolor'])
+        c.resize(*GD.cfg['size'])
 ##        if GD.options.splash:
 ##            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
         self.canvas = c
@@ -362,15 +352,15 @@ def runApp(args):
     GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.canvas = GD.gui.canvas
-    print "Canvas Created"
-    GD.gui.main.show()
-    print "GUI available"
+    #print "Canvas Created"
+    GD.gui.main.show()   # This creates the X Error ###
+    #print "GUI available"
     GD.board.add(GD.Version+"   (C) B. Verhegghe")
     # remaining args are interpreted as scripts
     GD.app_started = False
     for arg in args:
         if os.path.exists(arg):
-            play(arg)
+            draw.play(arg)
     GD.app_started = True
     GD.app.exec_()
 

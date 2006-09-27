@@ -9,7 +9,8 @@
 
 # root of the installation tree
 prefix = /usr/local
-# where to install pyformex files: some may prefer to use ${PREFIX} 
+# where to install pyformex files: some may prefer to use ${prefix} or
+# ${prefix}/share 
 libdir= ${prefix}/lib
 # where to create a link to the executable files
 bindir= ${prefix}/bin
@@ -32,8 +33,7 @@ HTMLDIR= html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html}} ${HTMLDIR}/index.html
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES =  ${addprefix images/,${addsuffix .png,${IMAGES}}}
-DOCFILES= README COPYING History Makefile FAQ
-MANUAL= ${addprefix manual/, manual.ps manual.pdf }
+DOCFILES= README COPYING History Makefile FAQ Description
 
 INSTALL= install -c
 INSTALL_PROGRAM= ${INSTALL} -m 0755
@@ -57,7 +57,9 @@ install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES
 	${INSTALL_DATA} ${HTMLDOCS} ${DESTDIR}${DOCINSTDIR}/html
 	${call makesymlink,${PROGLINK},${PYFORMEXVER}/${PROGRAM}}
 	ln -sfn ${DOCINSTDIR} ${DESTDIR}${docdir}/${PYFORMEXVER}
-	${INSTALL_DATA} ${MANUAL} ${DESTDIR}${DOCINSTDIR}/manual
+	${INSTALL_DATA} ${MANUAL} ${DESTDIR}${INSTDIR}/manual
+	${INSTALL_DATA} ${MANUALHTML} ${DESTDIR}${INSTDIR}/manual/html
+	${INSTALL_DATA} ${MANUALIMAGES} ${DESTDIR}${INSTDIR}/manual/images
 
 # create a symlink $(1) in $(bindir) pointing to $(2) in $(libdir)
 # this will detect the special cases where $(bindir)==$(libdir)/bin or
@@ -65,7 +67,7 @@ install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES
 makesymlink= if [ $(bindir) = $(subst lib,bin,$(libdir)) ]; then ln -sfn ../lib/$(2) ${DESTDIR}$(bindir)/$(1); elif [ "$(bindir)" = "$(libdir)/bin" ]; then ln -sfn ../$(2) ${DESTDIR}$(bindir)/$(1); else ln -sfn $(libdir)/$(2) ${DESTDIR}$(bindir)/$(1); fi
 
 installdirs:
-	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/gui ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html ${DESTDIR}${DOCINSTDIR}/manual
+	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/gui ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html ${DESTDIR}${INSTDIR}/manual ${DESTDIR}${INSTDIR}/manual/html ${DESTDIR}${INSTDIR}/manual/images
 
 uninstall:
 	echo "There is no automatic uninstall procedure."""

@@ -59,7 +59,7 @@ def transLeft():
     GD.canvas.update()   
 def transRight():
     global canvas
-    GD.canvas.camera.translate(GD.cfg['gui/panfactor'],0,0,GD.cfg['gui/localaxes'])
+    GD.canvas.camera.translate(+GD.cfg['gui/panfactor'],0,0,GD.cfg['gui/localaxes'])
     GD.canvas.update()   
 def transDown():
     global canvas

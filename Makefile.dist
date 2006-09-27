@@ -9,13 +9,14 @@ PYSOURCE= ${addsuffix .py, ${PYMODULES}}
 PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
 OTHERSOURCE= pyformexrc
 ICONFILES= icons/*.xpm
-HTMLDIR= doc/html
+DOCDIR= doc
+HTMLDIR= ${DOCDIR}/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }
+HTMLGUIDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, gui ${addprefix gui.,${PYGUIMODULES}}}}
 STAMPFILES= README History Makefile FAQ
-NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION}
+NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description 
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
-MANUAL= ${addprefix manual/, manual.ps manual.pdf html}
 STAMP= Stamp 
 VERSIONSTRING= "pyFormex .*"
 NEWVERSIONSTRING= "pyFormex ${RELEASE}"
@@ -26,7 +27,15 @@ PKGDIR= releases
 
 ############ Creating Distribution ##################
 
-dist: version ${PYFORMEXDIR}
+# Create the distribution
+dist: ${PKGDIR}/${PKG}
+
+# Publish the distribution to our ftp server
+pub: 
+	scp ${PKGDIR}/${PKG} bumps:/home/ftp/pub/pyformex
+
+${PKGDIR}/${PKG}: version ${PYFORMEXDIR}
+	mkdir -p ${PKGDIR}
 	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
 
 ${PYFORMEXDIR}: dist.stamped
@@ -37,11 +46,17 @@ distclean:
 
 pydoc: ${HTMLDIR}/index.html
 
-${HTMLDIR}/index.html: ${HTMLDOCS}
+${HTMLDIR}/index.html: ${HTMLDOCS} ${HTMLGUIDOCS} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
 	./make_doc_index	
 
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
+
+${HTMLDIR}/gui.html: gui
+	pydoc -w gui && mv gui.html ${HTMLDIR}
+
+${HTMLDIR}/gui.%.html: gui/%.py
+	pydoc -w gui.$* && mv gui.$*.html ${HTMLDIR}
 
 manual:
 	make -C manual
@@ -50,7 +65,7 @@ stamp: Stamp.template RELEASE
 	${STAMP} -tStamp.template version=${VERSION} -oStamp.stamp
 
 dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERSOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES}  ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
-	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual
+	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual ${PYFORMEXDIR}/manual/html ${PYFORMEXDIR}/manual/images
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/gui ${PYGUISOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/examples ${EXAMPLEFILES}
@@ -59,7 +74,9 @@ dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERS
 	cp ${ICONFILES}  ${PYFORMEXDIR}/icons
 	cp ${IMAGEFILES} ${PYFORMEXDIR}/images
 	cp ${HTMLDOCS} ${HTMLDIR}/index.html    ${PYFORMEXDIR}/html
-	cp -R ${MANUAL}   ${PYFORMEXDIR}/manual
+	cp ${MANUAL}   ${PYFORMEXDIR}/manual
+	cp ${MANUALHTML}   ${PYFORMEXDIR}/manual/html
+	cp ${MANUALIMAGES}   ${PYFORMEXDIR}/manual/images
 
 version: globaldata.py
 

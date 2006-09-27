@@ -13,8 +13,8 @@ from PyQt4 import QtCore  # needed for events, signals
 import colors
 import camera
 import utils
-##from actors import *
-##from decorations import *
+
+import numpy
 
 import math
 import vector
@@ -37,7 +37,6 @@ class Canvas:
     def __init__(self):
         """Initialize an empty canvas with default settings.
         """
-        print "Canvas init"
         self.actors = []       # an empty scene
         self.decorations = []  # and no decorations
         self.views = { 'front': (0.,0.,0.),
@@ -55,15 +54,13 @@ class Canvas:
         self.dynamic = None    # what action on mouse move
         self.makeCurrent()     # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        if GD.options.debug:
-            print "camera.rot =",self.camera.rot 
+        GD.debug("camera.rot = %s" % self.camera.rot) 
 
     # our own name for the canvas update function
     def update(self):
         self.updateGL()
 
     def glinit(self,mode=None):
-        print "Canvas glinit"
         if mode:
             self.rendermode = mode
 	GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
@@ -391,16 +388,22 @@ class Canvas:
         """Save the current rendering as an image file."""
         #self.raiseW()
         self.makeCurrent()
+        size = self.size()
+        w = int(size.width())
+        h = int(size.height())
+        GD.debug("Saving image with current size %sx%s" % (w,h))
         if fmt in GD.image_formats_qt:
             self.display()
             GL.glFlush()
-            GL.glFinish()
-            for mode in [ GL.GL_FRONT, GL.GL_BACK ]: 
-                GL.glReadBuffer(mode)
-                pixels = GL.glReadPixelsf(0,0,20,1,GL.GL_RGBA)
-                print pixels.shape
-                print pixels
-            #qim = qt.QImage(pixels)
+##            GL.glFinish()
+##            GL.glPixelStorei(GL.GL_PACK_ALIGNMENT,8)
+##            for i in range(1,9):
+##                GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS,i)
+##                GL.glReadBuffer(GL.GL_FRONT)
+##                pixels = GL.glReadPixelsub(0,4,8,1,GL.GL_RGB)
+##                print pixels.shape
+##                print pixels
+##           #qim = qt.QImage(pixels)
             qim = self.grabFrameBuffer()
             qim.save(fn,fmt)
         elif fmt in GD.image_formats_gl2ps:
@@ -445,14 +448,14 @@ class Canvas:
                 viewport = GL.glGetIntegerv(GL.GL_VIEWPORT)
             bufsize = 0
             state = gl2ps.GL2PS_OVERFLOW
-            options = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET
+            opts = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET
             ##| gl2ps.GL2PS_NO_BLENDING | gl2ps.GL2PS_OCCLUSION_CULL | gl2ps.GL2PS_BEST_ROOT
             ##color = GL[[0.,0.,0.,0.]]
             while state == gl2ps.GL2PS_OVERFLOW:
                 bufsize += 1024*1024
                 #print filename,filetype
                 gl2ps.gl2psBeginPage(title, self._producer, viewport, filetype,
-                                     gl2ps.GL2PS_BSP_SORT, options, GL.GL_RGBA,
+                                     gl2ps.GL2PS_BSP_SORT, opts, GL.GL_RGBA,
                                      0, None, 0, 0, 0, bufsize, fp, filename)
                 self.display()
                 GL.glFinish()
@@ -468,4 +471,4 @@ class Canvas:
                          'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
         GD.image_formats_gl2ps = _gl2ps_types.keys()
 
-        print _start_message
+        GD.debug(_start_message)

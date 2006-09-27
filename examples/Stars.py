@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra
@@ -10,6 +10,7 @@
 #
 """Stars"""
 from numpy import random
+
 nstars = 200 # number of stars
 minpoints = 5 # minimum number of points in the stars
 maxpoints = 15# maximum number of points in the stars

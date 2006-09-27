@@ -7,11 +7,10 @@
 import globaldata as GD
 import threading,os,sys,commands,types,copy
 
-from PyQt4 import QtCore  # needed for events, signals
+from PyQt4 import QtCore, QtGui  # needed for events, signals
 
 import numpy
 import utils
-import gui
 import widgets
 import colors
 import actors
@@ -30,6 +29,27 @@ class ExitAll(Exception):
     pass    
 
 #################### Interacting with the user ###############################
+
+def messageBox(message,level='info',actions=['OK']):
+    """Display a message box and wait for user response.
+
+    The message box displays a text, an icon depending on the level
+    (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
+    with the specified action text. The 'about' level has no buttons.
+
+    The function returns the number of the button that was clicked.
+    """
+    w = QtGui.QMessageBox()
+    if level == 'error':
+        ans = w.critical(w,GD.Version,message,*actions)
+    elif level == 'warning':
+        ans = w.warning(w,GD.Version,message,*actions)
+    elif level == 'info':
+        ans = w.information(w,GD.Version,message,*actions)
+    elif level == 'about':
+        ans = w.about(w,GD.Version,message)
+    GD.gui.update()
+    return ans
 
 def ask(question,choices=None,default=''):
     """Ask a question and present possible answers.
@@ -55,19 +75,19 @@ def ack(question):
     
 def error(message,actions=['OK']):
     """Show an error message and wait for user acknowledgement."""
-    return gui.messageBox(message,'error',actions)
+    return messageBox(message,'error',actions)
     
 def warning(message,actions=['OK']):
     """Show a warning message and wait for user acknowledgement."""
-    return gui.messageBox(message,'warning',actions)
+    return messageBox(message,'warning',actions)
 
 def info(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
-    return gui.messageBox(message,'info',actions)
+    return messageBox(message,'info',actions)
    
 def about(message=GD.Version):
     """Show a informative message and wait for user acknowledgement."""
-    gui.messageBox(message,'about')
+    messageBox(message,'about')
 
 def askItems(items):
     """Ask the value of some items to the user. !! VERY EXPERIMENTAL!!
@@ -458,7 +478,8 @@ def exit(all=False):
         else:
             raise Exit # exit from script only
     else:
-        gui.exit() # exit from pyformex
+        GD.app.quit() # exit from pyformex
+
         
 wakeupMode=0
 def sleep(timeout=None):

@@ -1,0 +1,152 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module gui.canvas</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="gui.html"><font color="#ffffff">gui</font></a>.canvas</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/gui/canvas.py">/home/bene/prj/pyformex/gui/canvas.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;implements&nbsp;an&nbsp;OpenGL&nbsp;drawing&nbsp;widget&nbsp;for&nbsp;painting&nbsp;3D&nbsp;scenes.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
+<a href="OpenGL.GL.html">OpenGL.GL</a><br>
+<a href="OpenGL.GLU.html">OpenGL.GLU</a><br>
+</td><td width="25%" valign=top><a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
+<a href="gui.camera.html">gui.camera</a><br>
+<a href="gui.colors.html">gui.colors</a><br>
+</td><td width="25%" valign=top><a href="gl2ps.html">gl2ps</a><br>
+<a href="math.html">math</a><br>
+<a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
+<a href="vector.html">vector</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="gui.canvas.html#Canvas">Canvas</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Canvas">class <strong>Canvas</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;canvas&nbsp;for&nbsp;OpenGL&nbsp;rendering.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Canvas-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Initialize&nbsp;an&nbsp;empty&nbsp;canvas&nbsp;with&nbsp;default&nbsp;settings.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-addActor"><strong>addActor</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;a&nbsp;3D&nbsp;actor&nbsp;to&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-addDecoration"><strong>addDecoration</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;a&nbsp;2D&nbsp;decoration&nbsp;to&nbsp;the&nbsp;canvas.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-add_actor"><strong>add_actor</strong></a>(self, actor, list)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-clear"><strong>clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;canvas&nbsp;to&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-createView"><strong>createView</strong></a>(self, name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
+&nbsp;<br>
+By&nbsp;default,&nbsp;the&nbsp;following&nbsp;views&nbsp;are&nbsp;created:<br>
+'front',&nbsp;'back',&nbsp;'left',&nbsp;'right',&nbsp;'bottom',&nbsp;'top',&nbsp;'iso'.<br>
+The&nbsp;user&nbsp;can&nbsp;add/delete/overwrite&nbsp;any&nbsp;number&nbsp;of&nbsp;predefined&nbsp;views.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-display"><strong>display</strong></a>(self)</dt><dd><tt>(Re)display&nbsp;all&nbsp;the&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
+&nbsp;<br>
+This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;when&nbsp;actors&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;scene,<br>
+or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position&nbsp;or&nbsp;lens.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-dyna"><strong>dyna</strong></a>(self, x, y)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom/pan/rotation&nbsp;functions</tt></dd></dl>
+
+<dl><dt><a name="Canvas-glinit"><strong>glinit</strong></a>(self, mode<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Canvas-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>#&nbsp;Any&nbsp;keypress&nbsp;with&nbsp;focus&nbsp;in&nbsp;the&nbsp;canvas&nbsp;generates&nbsp;a&nbsp;'wakeup'&nbsp;signal.<br>
+#&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;break&nbsp;out&nbsp;of&nbsp;a&nbsp;wait&nbsp;status.<br>
+#&nbsp;An&nbsp;'s'&nbsp;keypress&nbsp;will&nbsp;generate&nbsp;a&nbsp;'save'&nbsp;signal.<br>
+#&nbsp;Events&nbsp;not&nbsp;handled&nbsp;here&nbsp;could&nbsp;also&nbsp;be&nbsp;handled&nbsp;by&nbsp;the&nbsp;toplevel<br>
+#&nbsp;event&nbsp;handler.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-mouseMoveEvent"><strong>mouseMoveEvent</strong></a>(self, e)</dt></dl>
+
+<dl><dt><a name="Canvas-mousePressEvent"><strong>mousePressEvent</strong></a>(self, e)</dt></dl>
+
+<dl><dt><a name="Canvas-mouseReleaseEvent"><strong>mouseReleaseEvent</strong></a>(self, e)</dt></dl>
+
+<dl><dt><a name="Canvas-recreate_actor"><strong>recreate_actor</strong></a>(self, actor, list)</dt><dd><tt>Recreate&nbsp;an&nbsp;actor&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-redrawActors"><strong>redrawActors</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Redraw&nbsp;(some)&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
+&nbsp;<br>
+This&nbsp;redraws&nbsp;the&nbsp;specified&nbsp;actors&nbsp;(recreating&nbsp;their&nbsp;display&nbsp;list).<br>
+This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;after&nbsp;changing&nbsp;an&nbsp;actor's&nbsp;properties.<br>
+Only&nbsp;actors&nbsp;that&nbsp;are&nbsp;in&nbsp;the&nbsp;current&nbsp;actor&nbsp;list&nbsp;will&nbsp;be&nbsp;redrawn.<br>
+If&nbsp;no&nbsp;actor&nbsp;list&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp;current&nbsp;actorlist&nbsp;is&nbsp;redrawn.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-redrawAll"><strong>redrawAll</strong></a>(self)</dt><dd><tt>Redraw&nbsp;all&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-removeActor"><strong>removeActor</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;a&nbsp;3D&nbsp;actor&nbsp;from&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-removeActors"><strong>removeActors</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Remove&nbsp;all&nbsp;actors&nbsp;in&nbsp;actorlist&nbsp;(default&nbsp;=&nbsp;all)&nbsp;from&nbsp;the&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-removeAll"><strong>removeAll</strong></a>(self)</dt><dd><tt>Remove&nbsp;all&nbsp;actors&nbsp;and&nbsp;decorations</tt></dd></dl>
+
+<dl><dt><a name="Canvas-removeDecoration"><strong>removeDecoration</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;a&nbsp;2D&nbsp;decoration&nbsp;from&nbsp;the&nbsp;canvas.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-removeDecorations"><strong>removeDecorations</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Remove&nbsp;all&nbsp;decorations&nbsp;in&nbsp;actorlist&nbsp;(default&nbsp;=&nbsp;all)&nbsp;from&nbsp;the&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-remove_actor"><strong>remove_actor</strong></a>(self, actor, list)</dt><dd><tt>Remove&nbsp;an&nbsp;actor&nbsp;from&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-save"><strong>save</strong></a>(self, fn, fmt<font color="#909090">='png'</font>, options<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;as&nbsp;an&nbsp;image&nbsp;file.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-savePS"><strong>savePS</strong></a>(self, filename, filetype<font color="#909090">=None</font>, title<font color="#909090">=''</font>, producer<font color="#909090">=''</font>, viewport<font color="#909090">=None</font>)</dt><dd><tt>Export&nbsp;OpenGL&nbsp;rendering&nbsp;to&nbsp;PostScript/PDF/TeX&nbsp;format.<br>
+&nbsp;<br>
+Exporting&nbsp;OpenGL&nbsp;renderings&nbsp;to&nbsp;PostScript&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;PS2GL<br>
+library&nbsp;by&nbsp;Christophe&nbsp;Geuzaine&nbsp;(<a href="http://geuz.org/gl2ps/">http://geuz.org/gl2ps/</a>),&nbsp;linked<br>
+to&nbsp;Python&nbsp;by&nbsp;Toby&nbsp;Whites's&nbsp;wrapper<br>
+(<a href="http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz">http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz</a>)<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;is&nbsp;only&nbsp;defined&nbsp;if&nbsp;the&nbsp;gl2ps&nbsp;module&nbsp;is&nbsp;found.<br>
+&nbsp;<br>
+The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'PS',&nbsp;'EPS',&nbsp;'PDF'&nbsp;or&nbsp;'TEX'.<br>
+If&nbsp;not&nbsp;specified,&nbsp;the&nbsp;type&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;file&nbsp;extension.<br>
+In&nbsp;case&nbsp;of&nbsp;the&nbsp;'TEX'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
+the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extension.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-setBbox"><strong>setBbox</strong></a>(self, bbox<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;scene&nbsp;you&nbsp;want&nbsp;to&nbsp;be&nbsp;visible.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-setBgColor"><strong>setBgColor</strong></a>(self, bg)</dt><dd><tt>Set&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-setLinewidth"><strong>setLinewidth</strong></a>(self, lw)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;for&nbsp;line&nbsp;rendering.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-setSize"><strong>setSize</strong></a>(self, w, h)</dt></dl>
+
+<dl><dt><a name="Canvas-setView"><strong>setView</strong></a>(self, bbox<font color="#909090">=None</font>, side<font color="#909090">='front'</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;from&nbsp;one&nbsp;of&nbsp;the&nbsp;named&nbsp;views.<br>
+&nbsp;<br>
+On&nbsp;startup,&nbsp;the&nbsp;predefined&nbsp;views&nbsp;are&nbsp;'front',&nbsp;'back',&nbsp;'left',<br>
+'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.<br>
+This&nbsp;function&nbsp;does&nbsp;not&nbsp;only&nbsp;set&nbsp;the&nbsp;camera&nbsp;angles,&nbsp;but&nbsp;also<br>
+adjust&nbsp;the&nbsp;zooming.<br>
+If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;to&nbsp;view&nbsp;the<br>
+whole&nbsp;bbox.<br>
+If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nbsp;bbox&nbsp;will&nbsp;be&nbsp;used.<br>
+If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
+bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-update"><strong>update</strong></a>(self)</dt><dd><tt>#&nbsp;our&nbsp;own&nbsp;name&nbsp;for&nbsp;the&nbsp;canvas&nbsp;update&nbsp;function</tt></dd></dl>
+
+<dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

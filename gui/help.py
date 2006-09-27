@@ -36,12 +36,18 @@ def website():
     """Display the pyFormex website."""
     help(GD.cfg['help/website'])
 
+def description():
+    """Display the pyFormex description."""
+    draw.about(file(GD.cfg['help/description']).read())
+
 def about():
-    s = GD.Version
-    desc = GD.cfg['help/about']
-    if os.path.exists(desc):
-        s += file(desc,'r').readlines()
-    draw.about(s)
+    draw.about("""%s
+
+A tool for generating large 3D structures by mathematical transfomations.
+
+Copyright 2004 Benedict Verhegghe.
+Distributed under the GNU GPL.
+""" % GD.Version)
 
 def testwarning():
     draw.info("Smoking may be hazardous to your health!\nWindows is a virus!",["OK"])

@@ -28,12 +28,9 @@ def askConfigPreferences(items,section=None):
     res,accept = widgets.inputDialog(items,'Config Dialog').process()
     if accept:
         GD.prefsChanged = True
-        #print "ACCEPTED following values:"
         for r in res:
-            print r
+            GD.debug("%s" % r)
             store[r[0]] = eval(r[1])
-    #print GD.cfg
-
 
 def newaskConfigPreferences(items,store):
     """Ask preferences stored in config variables.

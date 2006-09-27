@@ -15,7 +15,6 @@
 # You need calpy >= 0.3.3
 # It can be downloaded from ftp://bumps.ugent.be/calpy/
 calpy_path = '/usr/local/lib/calpy-0.3.3'
-calpy_path = '/home/bene/prj/calpy/calpy'
 #######################################################################
 
 ####
@@ -122,7 +121,7 @@ try:
     from truss3d import *
 except ImportError:
     import globaldata as GD
-    warning("You need calpy-0.3.3 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct calpy installation path\n in this example's source file\n(%s).\nThe calpy_path variable is set near the top of that file.\nIts current value is: %s" % (GD.cfg.curfile,calpy_path))
+    warning("You need calpy-0.3.3 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct calpy installation path\n in this example's source file\n(%s).\nThe calpy_path variable is set near the top of that file.\nIts current value is: %s" % (GD.cfg['curfile'],calpy_path))
     exit()
 
 print calpy.options
