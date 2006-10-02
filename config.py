@@ -51,8 +51,9 @@ def returnNone(key):
     """Always returns None."""
     return None
 
-def failedLookup(key):
+def raiseKeyError(key):
     """Raise a KeyError."""
+    #print "Unsuccesful"
     raise KeyError
 
 
@@ -89,7 +90,7 @@ class Dict(dict):
     """
 
 
-    def __init__(self,data={},default=returnNone):
+    def __init__(self,data={},default=raiseKeyError):
         """Create a new Dict instance.
 
         The Dict can be initialized with a Python dict or a Dict.
@@ -122,6 +123,32 @@ class Dict(dict):
                 return self._default_(key)
             else:
                 raise KeyError
+
+
+    def get(self, key, default):
+        """Return the value for key or a default.
+
+        This is the equivalent of the dict get method, except that it
+        returns only the default value if the key was not found in self,
+        and there is no _default_ method or it raised a KeyError.
+        """
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+
+    def setdefault(self, key, default):
+        """Replaces the setdefault function of a normal dictionary.
+
+        This is the same as the get method, except that it also sets the
+        default value if get found a KeyError.
+        """
+        try:
+            return self[key]
+        except KeyError:
+            self[key] = default
+            return default
 
 
     def __delitem__(self,key):
@@ -213,7 +240,7 @@ class Config(Dict):
     """
 
 
-    def __init__(self,data={},default=returnNone):
+    def __init__(self,data={},default=raiseKeyError):
         """Creates a new Config instance.
 
         The configuration can be initialized with a dictionary, or
@@ -327,6 +354,17 @@ class Config(Dict):
         return self
 
 
+    def __setitem__(self, key, val):
+        """Allows items to be set as self[section/key] = val.
+
+        """
+        i = key.rfind('/')
+        if i == -1:
+            self.update({key:val})
+        else:
+            self.update({key[i+1:]:val},key[:i])
+
+
     def __getitem__(self, key):
         """Allows items to be addressed as self[key].
 
@@ -342,23 +380,23 @@ class Config(Dict):
         if i == -1:
             return Dict.__getitem__(self, key)
         else:
-            res = self[key[:i]][key[i+1:]]
-            if res:
-                return res
-            else:
+            try:
+                return self[key[:i]][key[i+1:]]
+            except KeyError:
                 return self._default_(key)
 
 
+    def setdefault(self, key, default):
+        """Replaces the setdefault function of a normal dictionary.
 
-    def __setitem__(self, key, val):
-        """Allows items to be set as self[section/key] = val.
-
+        This is the same as the get method, except that it also sets the
+        default value if get found a KeyError.
         """
-        i = key.rfind('/')
-        if i == -1:
-            self.update({key:val})
-        else:
-            self.update({key[i+1:]:val},key[:i])
+        try:
+            return self[key]
+        except KeyError:
+            self[key] = default
+            return default
 
 
     def __str__(self):

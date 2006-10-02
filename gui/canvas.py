@@ -52,7 +52,11 @@ class Canvas:
         self.bgcolor = colors.mediumgrey
         self.rendermode = GD.cfg['render/mode']
         self.dynamic = None    # what action on mouse move
-        self.makeCurrent()     # we need correct OpenGL context for camera
+        self.camera = None
+
+    def initCamera(self):
+        if GD.options.makecurrent:
+            self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
         GD.debug("camera.rot = %s" % self.camera.rot) 
 

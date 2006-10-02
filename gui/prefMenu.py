@@ -32,44 +32,51 @@ def askConfigPreferences(items,section=None):
             GD.debug("%s" % r)
             store[r[0]] = eval(r[1])
 
-def newaskConfigPreferences(items,store):
+
+def newaskConfigPreferences(items,store=None):
     """Ask preferences stored in config variables.
 
-    Items in list should only be keys. The current values are retrieved
-    from the config.
-    A config section name should be specified if the items are not in the
-    top config level.
+    Items in list should only be keys. store is usually a dictionary, but
+    can be any class that allow the setdefault method for lookup while
+    setting the default, and the store[key]=val syntax for setting the
+    value.
+    The current values are retrieved from the store, and the type returned
+    will be in accordance.
+    If no store is specified, the global config GD.cfg is used.
     """
     if not store:
         store = GD.cfg
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
+    print itemlist
     res,accept = widgets.inputDialog(itemlist,'Config Dialog').process()
     if accept:
-        #print "ACCEPTED following values:"
-        for r in res:
-            #print r
-            store[r[0]] = eval(r[1])
+        for i,r in zip(itemlist,res):
+            GD.debug("IN : %s\nOUT: %s" % (i,r))
+            if type(i[1]) == str:
+                store[r[0]] = r[1]
+            else:
+                store[r[0]] = eval(r[1])
 
 
 def setHelp():
-    askConfigPreferences([['viewer'],['homepage'],['history'],['bookmarks']],'help')
+    newaskConfigPreferences(['viewer','help/manual','help/pydocs'],GD.cfg)
 
 def setDrawtimeout():
-    askConfigPreferences([['drawtimeout','int']])
+    newaskConfigPreferences(['wait'],GD.cfg['draw'])
 
 
 def setBGcolor():
     col = GD.cfg['draw/bgcolor']
     col = widgets.getColor(col)
     if col:
-        print "New background color %s" % col
+        GD.debug("New background color %s" % col)
         GD.prefsChanged = True
         GD.cfg['draw/bgcolor'] = col
         draw.bgcolor(col)
 
 
 def setLinewidth():
-    askConfigPreferences([['draw/linewidth']])
+    newaskConfigPreferences(['draw/linewidth'])
     draw.linewidth(GD.cfg['draw/linewidth'])
 
 def setSize():
@@ -81,7 +88,7 @@ def setCanvasSize():
         
     
 def setRender():
-    askConfigPreferences([['specular'], ['shininess']],'render')
+    newaskConfigPreferences(['specular', 'shininess'],GD.cfg['render'])
 
 def setLight(light=0):
     store = GD.cfg['render/light%d' % light]

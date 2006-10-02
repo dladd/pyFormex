@@ -135,8 +135,8 @@ class inputDialog(QtGui.QDialog):
         self.show()
         
     def acceptdata(self):
-        for label,input in self.fields:
-            self.result.append([str(label.text()),str(input.text())])
+        for label,data in self.fields:
+            self.result.append([str(label.text()),str(data.text())])
         self.accept()
         
     def process(self):

@@ -68,9 +68,15 @@ def addCameraButtons(toolbar):
 
 def printFormat(fmt):
     """Print partial information about the OpenGL format."""
+    print "OpenGL: ",fmt.hasOpenGL()
+    print "OpenGLOverlays: ",fmt.hasOpenGLOverlays()
+    print "Overlay: ",fmt.hasOverlay()
+    print "Plane: ",fmt.plane()
+    print "Direct Rendering: ",fmt.directRendering()
     print "Double Buffer: ",fmt.doubleBuffer()
     print "Depth Buffer: ",fmt.depth()
     print "RGBA: ",fmt.rgba()
+    print "Alpha: ",fmt.alpha()
 
 
 ################# Message Board ###############
@@ -107,18 +113,19 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Initialize an empty canvas with default settings.
         """
         QtOpenGL.QGLWidget.__init__(self,*args)
+        if not self.isValid():
+            raise RuntimeError,"Could not create a valid OpenGL widget"
         self.setMinimumSize(32,32)
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         canvas.Canvas.__init__(self)
-        #w,h = 800,600
-        #self.resize(w,h)
         
     def initializeGL(self):
         if GD.options.debug:
             print "initializeGL: "
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
+        self.initCamera()
         self.glinit()
 
     def	resizeGL(self,w,h):
@@ -171,11 +178,15 @@ class GUI:
         #s.setLineWidth(0)
         # Create an OpenGL canvas with a nice frame around it
         fmt = QtOpenGL.QGLFormat.defaultFormat()
-        fmt.setDirectRendering(GD.options.dri)
+        if GD.options.dri:
+            fmt.setDirectRendering(True)
+        if GD.options.nodri:
+            fmt.setDirectRendering(False)
         #fmt.setRgba(False)
         if GD.options.debug:
             printFormat(fmt)
-        c = QtCanvas(fmt)
+        QtOpenGL.QGLFormat.setDefaultFormat(fmt)
+        c = QtCanvas()
         c.setBgColor(GD.cfg['draw/bgcolor'])
         c.resize(*GD.cfg['gui/size'])
 ##        if GD.options.splash:

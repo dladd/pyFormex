@@ -15,9 +15,16 @@ from optparse import OptionParser,make_option
 
 def refLookup(key):
     """Lookup a key in the reference configuration."""
-    #print "reflookup"
     return GD.refcfg[key]
 
+
+def printcfg(key):
+    try:
+        print "!! refcfg[%s] = %s" % (key,GD.refcfg[key])
+    except KeyError:
+        pass
+    print "!! cfg[%s] = %s" % (key,GD.cfg[key])
+    
 
 def main(argv=None):
     """This is a fairly generic main() function.
@@ -61,8 +68,12 @@ def main(argv=None):
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ]",
         version = GD.Version,
         option_list=[
-        make_option("--nodri", help="do not use Direct Rendering",
-                    action="store_false", dest="dri", default=True),
+        make_option("--dri", help="Force the use of Direct Rendering",
+                    action="store_true", dest="dri", default=False),
+        make_option("--nodri", help="Disables the use of Direct Rendering (overrides the --dri options)",
+                    action="store_true", dest="nodri", default=False),
+        make_option("--makecurrent", help="Call makecurrent on initializing the OpenGL canvas",
+                    action="store_true", dest="makecurrent", default=False),
         make_option("--nogui", help="do not load the GUI",
                     action="store_false", dest="gui", default=True),
         make_option("--nosplash", help="do not show the startup screen",
