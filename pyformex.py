@@ -80,7 +80,9 @@ def main(argv=None):
                     action="store_false", dest="splash", default=True),
         make_option("--config", help="use file CONFIG for settings",
                     action="store", dest="config", default=None),
-        make_option("--debug", help="display debugging info to sys.stdout",
+         make_option("--nodefaultconfig", help="skip all default locations of config files",
+                    action="store_true", dest="nodefaultconfig", default=False),
+       make_option("--debug", help="display debugging info to sys.stdout",
                     action="store_true", dest="debug", default=False)
         ])
     GD.options, args = parser.parse_args()
@@ -100,6 +102,9 @@ def main(argv=None):
 
     sysprefs = filter(os.path.exists,[defaults,siteprefs])
     userprefs = filter(os.path.exists,[homeprefs,localprefs])
+    if GD.options.nodefaultconfig:
+        sysprefs = sysprefs[0:1]
+        userprefs = []
     if GD.options.config:
         userprefs.append(GD.options.config)
     if len(userprefs) == 0:

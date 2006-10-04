@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=pyformex
+Icon=pyformex.png
+Name=pyFormex
+GenericName=pyFormex Space Frame Designer
+Comment=pyFormex is a Python implementation of Framex algebra.

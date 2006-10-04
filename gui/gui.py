@@ -289,7 +289,7 @@ class GUI:
         if filename:
             GD.cfg['curfile'] = filename
         else:
-            filename = GD.cfg['curfile']
+            filename = GD.cfg.get('curfile','')
         if filename:
             GD.canPlay = utils.isPyFormex(filename)
             self.curfile.setText(os.path.basename(filename))

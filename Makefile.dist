@@ -77,6 +77,7 @@ dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERS
 	cp ${MANUAL}   ${PYFORMEXDIR}/manual
 	cp ${MANUALHTML}   ${PYFORMEXDIR}/manual/html
 	cp ${MANUALIMAGES}   ${PYFORMEXDIR}/manual/images
+	cp ${DESKTOPFILE} ${PYFORMEXDIR}/${VENDOR}-${DESKTOPFILE}
 
 version: globaldata.py
 

@@ -19,3 +19,5 @@ IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
 MANUALHTML= manual/html/*.html manual/html/*.png manual/html/manual.css
 MANUALIMAGES= manual/images/*.png
 MANUAL= manual/manual.pdf 
+VENDOR= pyformex
+DESKTOPFILE= pyformex.desktop

@@ -145,7 +145,7 @@ for&nbsp;config&nbsp;files&nbsp;allows&nbsp;for&nbsp;only&nbsp;one&nbsp;level&nb
 Also&nbsp;beware&nbsp;that&nbsp;because&nbsp;of&nbsp;this&nbsp;functions,&nbsp;no&nbsp;'/'&nbsp;should&nbsp;be&nbsp;used<br>
 inside&nbsp;normal&nbsp;keys&nbsp;and&nbsp;sections&nbsp;names.</tt></dd></dl>
 
-<dl><dt><a name="Config-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">={}</font>, default<font color="#909090">=&lt;function returnNone&gt;</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;<a href="#Config">Config</a>&nbsp;instance.<br>
+<dl><dt><a name="Config-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">={}</font>, default<font color="#909090">=&lt;function raiseKeyError&gt;</font>)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;<a href="#Config">Config</a>&nbsp;instance.<br>
 &nbsp;<br>
 The&nbsp;configuration&nbsp;can&nbsp;be&nbsp;initialized&nbsp;with&nbsp;a&nbsp;dictionary,&nbsp;or<br>
 with&nbsp;a&nbsp;variable&nbsp;that&nbsp;can&nbsp;be&nbsp;passed&nbsp;to&nbsp;the&nbsp;<a href="#Config-read">read</a>()&nbsp;function.<br>
@@ -174,6 +174,11 @@ holding&nbsp;the&nbsp;contents&nbsp;of&nbsp;a&nbsp;configuration&nbsp;file.</tt>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;opened.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;function&nbsp;returns&nbsp;self,&nbsp;so&nbsp;that&nbsp;you&nbsp;can&nbsp;write:&nbsp;cfg&nbsp;=&nbsp;<a href="#Config">Config</a>().</tt></dd></dl>
+
+<dl><dt><a name="Config-setdefault"><strong>setdefault</strong></a>(self, key, default)</dt><dd><tt>Replaces&nbsp;the&nbsp;setdefault&nbsp;function&nbsp;of&nbsp;a&nbsp;normal&nbsp;dictionary.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;the&nbsp;get&nbsp;method,&nbsp;except&nbsp;that&nbsp;it&nbsp;also&nbsp;sets&nbsp;the<br>
+default&nbsp;value&nbsp;if&nbsp;get&nbsp;found&nbsp;a&nbsp;KeyError.</tt></dd></dl>
 
 <dl><dt><a name="Config-update"><strong>update</strong></a>(self, data<font color="#909090">={}</font>, name<font color="#909090">=None</font>, removeLocals<font color="#909090">=False</font>)</dt><dd><tt>Add&nbsp;a&nbsp;dictionary&nbsp;to&nbsp;the&nbsp;<a href="#Config">Config</a>&nbsp;object.<br>
 &nbsp;<br>
@@ -204,6 +209,12 @@ Silently&nbsp;ignore&nbsp;if&nbsp;key&nbsp;is&nbsp;nonexistant.</tt></dd></dl>
 &nbsp;<br>
 We&nbsp;use&nbsp;the&nbsp;format&nbsp;<a href="#Dict">Dict</a>({}),&nbsp;so&nbsp;that&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;valid&nbsp;Python<br>
 representation&nbsp;of&nbsp;the&nbsp;<a href="#Dict">Dict</a>.</tt></dd></dl>
+
+<dl><dt><a name="Config-get"><strong>get</strong></a>(self, key, default)</dt><dd><tt>Return&nbsp;the&nbsp;value&nbsp;for&nbsp;key&nbsp;or&nbsp;a&nbsp;default.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;equivalent&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;get&nbsp;method,&nbsp;except&nbsp;that&nbsp;it<br>
+returns&nbsp;only&nbsp;the&nbsp;default&nbsp;value&nbsp;if&nbsp;the&nbsp;key&nbsp;was&nbsp;not&nbsp;found&nbsp;in&nbsp;self,<br>
+and&nbsp;there&nbsp;is&nbsp;no&nbsp;_default_&nbsp;method&nbsp;or&nbsp;it&nbsp;raised&nbsp;a&nbsp;KeyError.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="config.html#Dict">Dict</a>:<br>
@@ -241,8 +252,6 @@ Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
 
 <dl><dt><a name="Config-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#Config-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
 
-<dl><dt><a name="Config-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#Config-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
-
 <dl><dt><a name="Config-has_key"><strong>has_key</strong></a>(...)</dt><dd><tt>D.<a href="#Config-has_key">has_key</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="Config-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#Config-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
@@ -260,8 +269,6 @@ If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nb
 
 <dl><dt><a name="Config-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#Config-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
 2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty</tt></dd></dl>
-
-<dl><dt><a name="Config-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#Config-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#Config-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
 
 <dl><dt><a name="Config-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#Config-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
 
@@ -327,7 +334,7 @@ Silently&nbsp;ignore&nbsp;if&nbsp;key&nbsp;is&nbsp;nonexistant.</tt></dd></dl>
 This&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;lookup,&nbsp;except&nbsp;that&nbsp;we<br>
 provide&nbsp;a&nbsp;default&nbsp;value&nbsp;if&nbsp;the&nbsp;key&nbsp;does&nbsp;not&nbsp;exist.</tt></dd></dl>
 
-<dl><dt><a name="Dict-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">={}</font>, default<font color="#909090">=&lt;function returnNone&gt;</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#Dict">Dict</a>&nbsp;instance.<br>
+<dl><dt><a name="Dict-__init__"><strong>__init__</strong></a>(self, data<font color="#909090">={}</font>, default<font color="#909090">=&lt;function raiseKeyError&gt;</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#Dict">Dict</a>&nbsp;instance.<br>
 &nbsp;<br>
 The&nbsp;<a href="#Dict">Dict</a>&nbsp;can&nbsp;be&nbsp;initialized&nbsp;with&nbsp;a&nbsp;Python&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;or&nbsp;a&nbsp;<a href="#Dict">Dict</a>.<br>
 If&nbsp;defined,&nbsp;default&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;is&nbsp;used&nbsp;for&nbsp;alternate&nbsp;key<br>
@@ -337,6 +344,17 @@ lookup&nbsp;if&nbsp;the&nbsp;key&nbsp;was&nbsp;not&nbsp;found&nbsp;in&nbsp;the&n
 &nbsp;<br>
 We&nbsp;use&nbsp;the&nbsp;format&nbsp;<a href="#Dict">Dict</a>({}),&nbsp;so&nbsp;that&nbsp;the&nbsp;string&nbsp;is&nbsp;a&nbsp;valid&nbsp;Python<br>
 representation&nbsp;of&nbsp;the&nbsp;<a href="#Dict">Dict</a>.</tt></dd></dl>
+
+<dl><dt><a name="Dict-get"><strong>get</strong></a>(self, key, default)</dt><dd><tt>Return&nbsp;the&nbsp;value&nbsp;for&nbsp;key&nbsp;or&nbsp;a&nbsp;default.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;equivalent&nbsp;of&nbsp;the&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;get&nbsp;method,&nbsp;except&nbsp;that&nbsp;it<br>
+returns&nbsp;only&nbsp;the&nbsp;default&nbsp;value&nbsp;if&nbsp;the&nbsp;key&nbsp;was&nbsp;not&nbsp;found&nbsp;in&nbsp;self,<br>
+and&nbsp;there&nbsp;is&nbsp;no&nbsp;_default_&nbsp;method&nbsp;or&nbsp;it&nbsp;raised&nbsp;a&nbsp;KeyError.</tt></dd></dl>
+
+<dl><dt><a name="Dict-setdefault"><strong>setdefault</strong></a>(self, key, default)</dt><dd><tt>Replaces&nbsp;the&nbsp;setdefault&nbsp;function&nbsp;of&nbsp;a&nbsp;normal&nbsp;dictionary.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;the&nbsp;get&nbsp;method,&nbsp;except&nbsp;that&nbsp;it&nbsp;also&nbsp;sets&nbsp;the<br>
+default&nbsp;value&nbsp;if&nbsp;get&nbsp;found&nbsp;a&nbsp;KeyError.</tt></dd></dl>
 
 <dl><dt><a name="Dict-update"><strong>update</strong></a>(self, data<font color="#909090">={}</font>)</dt><dd><tt>Add&nbsp;a&nbsp;dictionary&nbsp;to&nbsp;the&nbsp;<a href="#Dict">Dict</a>&nbsp;object.<br>
 &nbsp;<br>
@@ -380,8 +398,6 @@ Methods inherited from <a href="__builtin__.html#dict">__builtin__.dict</a>:<br>
 
 <dl><dt><a name="Dict-copy"><strong>copy</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-copy">copy</a>()&nbsp;-&gt;&nbsp;a&nbsp;shallow&nbsp;copy&nbsp;of&nbsp;D</tt></dd></dl>
 
-<dl><dt><a name="Dict-get"><strong>get</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
-
 <dl><dt><a name="Dict-has_key"><strong>has_key</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-has_key">has_key</a>(k)&nbsp;-&gt;&nbsp;True&nbsp;if&nbsp;D&nbsp;has&nbsp;a&nbsp;key&nbsp;k,&nbsp;else&nbsp;False</tt></dd></dl>
 
 <dl><dt><a name="Dict-items"><strong>items</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-items">items</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;(key,&nbsp;value)&nbsp;pairs,&nbsp;as&nbsp;2-tuples</tt></dd></dl>
@@ -399,8 +415,6 @@ If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nb
 
 <dl><dt><a name="Dict-popitem"><strong>popitem</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair&nbsp;as&nbsp;a<br>
 2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty</tt></dd></dl>
-
-<dl><dt><a name="Dict-setdefault"><strong>setdefault</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#Dict-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
 
 <dl><dt><a name="Dict-values"><strong>values</strong></a>(...)</dt><dd><tt>D.<a href="#Dict-values">values</a>()&nbsp;-&gt;&nbsp;list&nbsp;of&nbsp;D's&nbsp;values</tt></dd></dl>
 
@@ -421,7 +435,7 @@ v&nbsp;defaults&nbsp;to&nbsp;None.</tt></dl>
 <td width="100%"><dl><dt><a name="-dicttostr"><strong>dicttostr</strong></a>(dic)</dt><dd><tt>Format&nbsp;a&nbsp;<a href="__builtin__.html#dict">dict</a>&nbsp;in&nbsp;Python&nbsp;source&nbsp;representation.<br>
 &nbsp;<br>
 Each&nbsp;(key,value)&nbsp;pair&nbsp;is&nbsp;formatted&nbsp;on&nbsp;a&nbsp;line&nbsp;:&nbsp;key&nbsp;=&nbsp;value.</tt></dd></dl>
- <dl><dt><a name="-failedLookup"><strong>failedLookup</strong></a>(key)</dt><dd><tt>Raise&nbsp;a&nbsp;KeyError.</tt></dd></dl>
+ <dl><dt><a name="-raiseKeyError"><strong>raiseKeyError</strong></a>(key)</dt><dd><tt>Raise&nbsp;a&nbsp;KeyError.</tt></dd></dl>
  <dl><dt><a name="-returnNone"><strong>returnNone</strong></a>(key)</dt><dd><tt>Always&nbsp;returns&nbsp;None.</tt></dd></dl>
 </td></tr></table>
 </body></html>
