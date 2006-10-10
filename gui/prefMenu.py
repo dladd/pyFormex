@@ -6,34 +6,35 @@ import globaldata as GD
 
 import os
 
+import gui
 import draw
 import widgets
 
 
-def askConfigPreferences(items,section=None):
-    """Ask preferences stored in config variables.
+##def askConfigPreferences(items,section=None):
+##    """Ask preferences stored in config variables.
 
-    Items in list should only be keys. The current values are retrieved
-    from the config.
-    A config section name should be specified if the items are not in the
-    top config level.
-    """
-    if section:
-        store = GD.cfg[section]
-    else:
-        store = GD.cfg
-    # insert current values
-    for it in items:
-        it.insert(1,store.setdefault(it[0],''))
-    res,accept = widgets.inputDialog(items,'Config Dialog').process()
-    if accept:
-        GD.prefsChanged = True
-        for r in res:
-            GD.debug("%s" % r)
-            store[r[0]] = eval(r[1])
+##    Items in list should only be keys. The current values are retrieved
+##    from the config.
+##    A config section name should be specified if the items are not in the
+##    top config level.
+##    """
+##    if section:
+##        store = GD.cfg[section]
+##    else:
+##        store = GD.cfg
+##    # insert current values
+##    for it in items:
+##        it.insert(1,store.setdefault(it[0],''))
+##    res,accept = widgets.inputDialog(items,'Config Dialog').process()
+##    if accept:
+##        GD.prefsChanged = True
+##        for r in res:
+##            GD.debug("%s" % r)
+##            store[r[0]] = eval(r[1])
 
 
-def newaskConfigPreferences(items,store=None):
+def askConfigPreferences(items,store=None):
     """Ask preferences stored in config variables.
 
     Items in list should only be keys. store is usually a dictionary, but
@@ -59,10 +60,10 @@ def newaskConfigPreferences(items,store=None):
 
 
 def setHelp():
-    newaskConfigPreferences(['viewer','help/manual','help/pydocs'],GD.cfg)
+    askConfigPreferences(['viewer','help/manual','help/pydocs'],GD.cfg)
 
 def setDrawtimeout():
-    newaskConfigPreferences(['wait'],GD.cfg['draw'])
+    askConfigPreferences(['wait'],GD.cfg['draw'])
 
 
 def setBGcolor():
@@ -76,7 +77,7 @@ def setBGcolor():
 
 
 def setLinewidth():
-    newaskConfigPreferences(['draw/linewidth'])
+    askConfigPreferences(['draw/linewidth'])
     draw.linewidth(GD.cfg['draw/linewidth'])
 
 def setSize():
@@ -88,12 +89,12 @@ def setCanvasSize():
         
     
 def setRender():
-    newaskConfigPreferences(['specular', 'shininess'],GD.cfg['render'])
+    askConfigPreferences(['specular', 'shininess'],GD.cfg['render'])
 
 def setLight(light=0):
     store = GD.cfg['render/light%d' % light]
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
-    newaskConfigPreferences(keys,store)
+    askConfigPreferences(keys,store)
 
 def setLight0():
     setLight(0)
@@ -109,4 +110,18 @@ def setLocalAxes():
 def setGlobalAxes():
     GD.cfg['draw/localaxes'] = False 
 
+
+def setFont():
+    """Set the main application font from a user dialog widget."""
+    font,ok = widgets.selectFont()
+    if ok:
+        GD.app.setFont(font)
+
+
+def setFontSize():
+    askConfigPreferences(['gui/fontsize'])
+    gui.setFontSize()
+   
+
+    
 # End

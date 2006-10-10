@@ -142,3 +142,14 @@ class inputDialog(QtGui.QDialog):
     def process(self):
         accept = self.exec_() == QtGui.QDialog.Accepted
         return (self.result, accept)
+
+
+def selectFont():
+    """Ask the user to select a font.
+
+    A font selection dialog widget is displayed and the user is requested
+    to select a font.
+    Returns a tuple (font,ok), where ok will be true if the user exited
+    the dialog with the OK or ENTER button.
+    """
+    return QtGui.QFontDialog.getFont()

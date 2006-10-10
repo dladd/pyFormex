@@ -8,7 +8,7 @@ PYFORMEXDIR= pyformex-${RELEASE}
 PYSOURCE= ${addsuffix .py, ${PYMODULES}} 
 PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
 OTHERSOURCE= pyformexrc
-ICONFILES= icons/*.xpm
+ICONFILES= $(wildcard icons/*.xpm) $(wildcard icons/pyformex_*.png)
 DOCDIR= doc
 HTMLDIR= ${DOCDIR}/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }

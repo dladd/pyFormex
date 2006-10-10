@@ -60,6 +60,7 @@ install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES
 	${INSTALL_DATA} ${MANUAL} ${DESTDIR}${INSTDIR}/manual
 	${INSTALL_DATA} ${MANUALHTML} ${DESTDIR}${INSTDIR}/manual/html
 	${INSTALL_DATA} ${MANUALIMAGES} ${DESTDIR}${INSTDIR}/manual/images
+	[ -z "$$(type -P xdg-desktop-menu)" ] || xdg-desktop-menu install ${VENDOR}-${DESKTOPFILE}
 
 # create a symlink $(1) in $(bindir) pointing to $(2) in $(libdir)
 # this will detect the special cases where $(bindir)==$(libdir)/bin or
@@ -70,10 +71,9 @@ installdirs:
 	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/gui ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html ${DESTDIR}${INSTDIR}/manual ${DESTDIR}${INSTDIR}/manual/html ${DESTDIR}${INSTDIR}/manual/images
 
 uninstall:
-	echo "There is no automatic uninstall procedure."""
+	echo "There is no automatic uninstall procedure yet."""
 	echo "Remove the entire pyformex directory from where you installed it."
 	echo "Remove the symbolic link to the pyformex program."""
-	echo "Remove the pyformex doc files."""
 
 ${HTMLDIR}/%.html: %.py
 	pydoc -w ./$< && mv $*.html ${HTMLDIR}
@@ -85,7 +85,10 @@ clean:
 ################# SHORTHANDS FOR DEVELOPERS ONLY ##################
 
 dist: Makefile.dist
-	${MAKE} -f Makefile.dist
+	${MAKE} -f Makefile.dist dist
+
+pub: Makefile.dist
+	${MAKE} -f Makefile.dist pub
 
 version: Makefile.dist
 	${MAKE} -f Makefile.dist version

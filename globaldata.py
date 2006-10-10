@@ -9,6 +9,7 @@ cfg = None
 refcfg = None
 preffile = None
 
+app = None
 gui = None
 canvas = None
 board = None

@@ -337,9 +337,22 @@ def messageBox(message,level='info',actions=['OK']):
     return ans
 
 
+def setFontSize(s=None):
+    """Set the main application font size to the given point size."""
+    if s:
+        GD.cfg['gui/fontsize'] = s
+    else:
+        s = GD.cfg.get('gui/fontsize',12)
+    print s
+    font = GD.app.font()
+    font.setPointSize(int(s))
+    GD.app.setFont(font)
+    if GD.gui:
+        GD.gui.update()
+
+
 def runApp(args):
     """Create and run the qt application."""
-    global app_started
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
 
@@ -356,6 +369,7 @@ def runApp(args):
         print "Image types for input: ",GD.image_formats_qtr
         
     # create GUI, show it, run it
+    setFontSize()
     GD.gui = GUI(GD.cfg['gui/size'],GD.cfg['gui/pos'])
     GD.gui.setcurfile()
     GD.board = GD.gui.board
@@ -365,7 +379,6 @@ def runApp(args):
     #print "GUI available"
     GD.board.add(GD.Version+"   (C) B. Verhegghe")
     # remaining args are interpreted as scripts
-    GD.app_started = False
     for arg in args:
         if os.path.exists(arg):
             draw.play(arg)

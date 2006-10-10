@@ -142,6 +142,8 @@ MenuData = [
         ("Action","E&xit","GD.app.exit"), ]),
     ("Popup","&Settings",[
 #        ("Action","&Preferences","preferences"), 
+        ("Action","&Font","prefMenu.setFont"), 
+        ("Action","Font&Size","prefMenu.setFontSize"), 
         ("Action","Toggle &Triade","draw.toggleTriade"), 
         ("Action","&Drawwait Timeout","prefMenu.setDrawtimeout"), 
         ("Action","&Background Color","prefMenu.setBGcolor"), 
