@@ -369,7 +369,9 @@ def runApp(args):
         print "Image types for input: ",GD.image_formats_qtr
         
     # create GUI, show it, run it
-    setFontSize()
+    if GD.cfg.has_key('gui/fontsize'):
+        print "I found a fontsize",GD.cfg['gui/fontsize']
+        setFontSize()
     GD.gui = GUI(GD.cfg['gui/size'],GD.cfg['gui/pos'])
     GD.gui.setcurfile()
     GD.board = GD.gui.board

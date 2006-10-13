@@ -8,6 +8,7 @@ import globaldata as GD
 import threading,os,commands,copy
 
 import formex
+import utils
 
 
 ######################### Exceptions #########################################
@@ -181,7 +182,7 @@ def runApp(args):
     """Run the application without gui."""
     # remaining args are interpreted as scripts
     for arg in args:
-        if os.path.exists(arg) and isPyFormex(arg):
+        if os.path.exists(arg) and utils.isPyFormex(arg):
             GD.scriptName = arg
             play(arg)
 

@@ -109,10 +109,15 @@ def askItems(items):
 
 def askFilename(cur,files="All files (*.*)",exist=True):
     """Ask for an existing file name"""
-    res = widgets.FileSelection(cur,files,exist).getFilename()
+    fn = widgets.FileSelection(cur,files,exist).getFilename()
+    setWorkdirFromFile(fn)
     GD.gui.update()
     GD.canvas.update()
-    return res
+    return fn
+
+def setWorkdirFromFile(fn):
+    if fn:
+        GD.cfg['workdir'] = os.path.dirname(fn)
 
 def log(s):
     """Display a message in the cmdlog window."""
@@ -323,7 +328,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
             color = map(colors.GLColor,color)
     elif color == 'random':
         # create random colors
-        color = random.random((F.nelems(),3))
+        color = numpy.random.random((F.nelems(),3))
     elif type(color) == str:
         # convert named color to RGB tuple
         color = colors.GLColor(color)
