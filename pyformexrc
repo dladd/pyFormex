@@ -34,9 +34,9 @@ examplesmenu = True  # add examples menu
 viewsmenu = True     # add a Views menu
 viewsbar = True      # add a Views toolbar
 builtinviews = ['front','back','right','left','top','bottom','iso']
-zoomfactor = 1.25    # zooming factor for zoom buttons
+zoomfactor = 1.15    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
-panfactor = 5.       # translation factor for pan buttons
+panfactor = 0.01     # translation factor for pan buttons
 
 [draw]
 wait = 2  # time(sec.) to wait between draw operations (None is indefinitely)

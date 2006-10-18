@@ -47,6 +47,9 @@ def saveImage():
     file is returned, the current OpenGL rendering will be saved to it.
     """
     global canvas
+    print "Saving image"
+    print GD.cfg
+    print GD.cfg['workdir']
     indir = GD.cfg['workdir']
     fs = widgets.FileSelection(indir,pattern="Images (*.png *.jpg *.eps)")
     fn = fs.getFilename()

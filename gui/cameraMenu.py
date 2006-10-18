@@ -55,19 +55,23 @@ def twistRight():
     GD.canvas.update()   
 def transLeft():
     global canvas
-    GD.canvas.camera.translate(-GD.cfg['gui/panfactor'],0,0,GD.cfg['gui/localaxes'])
+    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    GD.canvas.camera.translate(-val,0,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transRight():
     global canvas
-    GD.canvas.camera.translate(+GD.cfg['gui/panfactor'],0,0,GD.cfg['gui/localaxes'])
+    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    GD.canvas.camera.translate(+val,0,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transDown():
     global canvas
-    GD.canvas.camera.translate(0,-GD.cfg['gui/panfactor'],0,GD.cfg['gui/localaxes'])
+    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    GD.canvas.camera.translate(0,-val,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transUp():
     global canvas
-    GD.canvas.camera.translate(0,GD.cfg['gui/panfactor'],0,GD.cfg['gui/localaxes'])
+    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    GD.canvas.camera.translate(0,+val,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def dollyIn():
     global canvas

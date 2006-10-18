@@ -108,7 +108,15 @@ def setLight1():
 def setLocalAxes():
     GD.cfg['draw/localaxes'] = True 
 def setGlobalAxes():
-    GD.cfg['draw/localaxes'] = False 
+    GD.cfg['draw/localaxes'] = False
+
+def setRotFactor():
+    askConfigPreferences(['gui/rotfactor'])
+def setPanFactor():
+    askConfigPreferences(['gui/panfactor'])
+def setZoomFactor():
+    askConfigPreferences(['gui/zoomfactor'])
+
 
 
 def setFont():

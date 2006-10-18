@@ -22,5 +22,5 @@ e5 = e1.genid(n-1,n-1,2,1,1,-1).translate([1,1-a,-d]).bb(1./(2*n),1./(2*n)/tan(r
 e6 = e2.genid(n,n,2,1,1,-1).bb(1./(2*n),1./(2*n)/tan(radians(30)))
 e5.setProp(2)
 out = (e4+e5+e6).tran(3,-d)
-print out.nnodes(),out.nelems()
+message("The structure has %s nodes and %s elements" % (out.nnodes(),out.nelems()))
 draw(out)

@@ -7,6 +7,7 @@ include RELEASE
 PYFORMEXDIR= pyformex-${RELEASE}
 PYSOURCE= ${addsuffix .py, ${PYMODULES}} 
 PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
+PLUGINSOURCE= ${addprefix plugins/,${addsuffix .py,${PLUGINMODULES}}}
 OTHERSOURCE= pyformexrc
 ICONFILES= $(wildcard icons/*.xpm) $(wildcard icons/pyformex_*.png)
 DOCDIR= doc
@@ -65,9 +66,10 @@ stamp: Stamp.template RELEASE
 	${STAMP} -tStamp.template version=${VERSION} -oStamp.stamp
 
 dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERSOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES}  ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
-	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual ${PYFORMEXDIR}/manual/html ${PYFORMEXDIR}/manual/images
+	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/plugins ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual ${PYFORMEXDIR}/manual/html ${PYFORMEXDIR}/manual/images
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/gui ${PYGUISOURCE}
+	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/plugins ${PLUGINSOURCE}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/examples ${EXAMPLEFILES}
 	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${STAMPFILES}
 	cp ${NONSTAMPFILES} ${PYFORMEXDIR}

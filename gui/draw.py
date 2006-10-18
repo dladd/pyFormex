@@ -204,7 +204,7 @@ def play(fn=None,name=None):
         GD.scriptName = name
     message("Running script (%s)" % fn)
     playScript(file(fn,'r'))
-    message("Script finished")
+    message("Script (%s) finished" % fn)
 
 
 ############################## drawing functions ########################
@@ -666,6 +666,7 @@ def saveMulti(fn=None,fmt=None,verbose=False):
 
     # Enter multisave mode
     log("Entering multiple save mode to files:")
+    setWorkdirFromFile(fn)
     name,ext = os.path.splitext(fn)
     fmt = utils.imageFormatFromExt(ext)
     log("%s-???.%s (%s)" % (name,ext,fmt))

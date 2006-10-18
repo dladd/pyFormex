@@ -19,8 +19,8 @@ class FileSelection(QtGui.QFileDialog):
     def __init__(self,dir,pattern=None,exist=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
-        dir = "."
         self.setDirectory(dir)
+        self.setFilter(pattern)
         if exist:
             mode = QtGui.QFileDialog.ExistingFile
             caption = "Open existing file"

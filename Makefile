@@ -27,6 +27,7 @@ DOCINSTDIR= ${libdir}/${PYFORMEXVER}/doc
 PROGLINK= pyformex
 PYSOURCE= ${addsuffix .py, ${PYMODULES}}
 PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
+PLUGINSOURCE= ${addprefix plugins/,${addsuffix .py,${PLUGINMODULES}}}
 OTHERSOURCE= pyformexrc
 ICONFILES= icons/*.xpm
 HTMLDIR= html
@@ -50,6 +51,7 @@ install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES
 	${INSTALL_PROGRAM} ${PROGRAM} ${DESTDIR}${INSTDIR}
 	${INSTALL_DATA} ${PYSOURCE} ${OTHERSOURCE} ${DESTDIR}${INSTDIR}
 	${INSTALL_DATA} ${PYGUISOURCE} ${DESTDIR}${INSTDIR}/gui
+	${INSTALL_DATA} ${PLUGINSOURCE} ${DESTDIR}${INSTDIR}/plugins
 	${INSTALL_DATA} ${ICONFILES} ${DESTDIR}${INSTDIR}/icons
 	${INSTALL_DATA} ${EXAMPLEFILES} ${DESTDIR}${INSTDIR}/examples
 	${INSTALL_DATA} ${DOCFILES} ${DESTDIR}${DOCINSTDIR}
@@ -68,7 +70,7 @@ install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES
 makesymlink= if [ $(bindir) = $(subst lib,bin,$(libdir)) ]; then ln -sfn ../lib/$(2) ${DESTDIR}$(bindir)/$(1); elif [ "$(bindir)" = "$(libdir)/bin" ]; then ln -sfn ../$(2) ${DESTDIR}$(bindir)/$(1); else ln -sfn $(libdir)/$(2) ${DESTDIR}$(bindir)/$(1); fi
 
 installdirs:
-	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/gui ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html ${DESTDIR}${INSTDIR}/manual ${DESTDIR}${INSTDIR}/manual/html ${DESTDIR}${INSTDIR}/manual/images
+	install -d ${DESTDIR}${bindir} ${DESTDIR}${docdir} ${DESTDIR}${INSTDIR} ${DESTDIR}${INSTDIR}/gui ${DESTDIR}${INSTDIR}/plugins ${DESTDIR}${INSTDIR}/icons ${DESTDIR}${INSTDIR}/examples ${DESTDIR}${DOCINSTDIR} ${DESTDIR}${DOCINSTDIR}/images ${DESTDIR}${DOCINSTDIR}/html ${DESTDIR}${INSTDIR}/manual ${DESTDIR}${INSTDIR}/manual/html ${DESTDIR}${INSTDIR}/manual/images
 
 uninstall:
 	echo "There is no automatic uninstall procedure yet."""

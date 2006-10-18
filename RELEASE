@@ -2,12 +2,13 @@
 VERSION=0.4
 # Unless you are preparing an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha
-RELEASE=${VERSION}-rc2
+RELEASE=${VERSION}-rc3
 PROGRAM= pyformex.py
 PYMODULES= config file2formex flatkeydb formex globaldata lima mydict \
-  properties script simple stl turtle units utils vector
+  properties script simple turtle units utils vector
 PYGUIMODULES = __init__ actors camera cameraMenu canvas colors colorscale \
-  decors draw fileMenu gui help menu prefMenu scriptsMenu views widgets
+  decors draw fileMenu gui help menu prefMenu scriptsMenu toolbar views widgets
+PLUGINMODULES= __init__ f2abq stl stl_abaqus tetgen
 EXAMPLES= __init__ BarrelVault Baumkuchen Clip Diamatic DoubleDiamatic \
   DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
   Pattern ScallopDome Schwedler SpaceTrussRoof SpaceTrussRoof_calpy \
