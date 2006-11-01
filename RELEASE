@@ -4,14 +4,15 @@ VERSION=0.4
 # to the ${VERSION} to set a release tag. e.g. -alpha
 RELEASE=${VERSION}-rc3
 PROGRAM= pyformex.py
-PYMODULES= config file2formex flatkeydb formex globaldata lima mydict \
-  properties script simple turtle units utils vector
+PYMODULES= config flatkeydb formex globaldata lima mydict \
+  script simple turtle units utils vector
 PYGUIMODULES = __init__ actors camera cameraMenu canvas colors colorscale \
   decors draw fileMenu gui help menu prefMenu scriptsMenu toolbar views widgets
-PLUGINMODULES= __init__ f2abq stl stl_abaqus tetgen
+PLUGINMODULES= __init__ properties f2abq stl stl_abq tetgen
 EXAMPLES= __init__ BarrelVault Baumkuchen Clip Diamatic DoubleDiamatic \
   DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Novation ParabolicTower \
-  Pattern ScallopDome Schwedler SpaceTrussRoof SpaceTrussRoof_calpy \
+  Pattern ScallopDome Schwedler \
+  SpaceTrussRoof SpaceTrussRoof_calpy SpaceTrussRoof_f2abq\
   Spiral Stars Torus TrussBridge TrussFrame WireStent \
   WireStent_calpy X_truss X_truss_calpy
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \

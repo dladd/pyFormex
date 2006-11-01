@@ -20,6 +20,7 @@ def openFile(exist=True):
     The default only accepts existing files. Use newFile() to accept new files.
     """
     cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
+    print cur,os.path.dirname(cur)
     fs = widgets.FileSelection(cur,"pyformex scripts (*.frm *.py)",exist=exist)
     fn = fs.getFilename()
     if fn:

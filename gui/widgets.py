@@ -2,7 +2,7 @@
 # $Id$
 """A collection of custom widgets used in the pyFormex GUI"""
 
-import types
+import os,types
 from PyQt4 import QtCore, QtGui
 
 
@@ -16,10 +16,14 @@ class FileSelection(QtGui.QFileDialog):
     to accept only existing files.
     
     """
-    def __init__(self,dir,pattern=None,exist=False):
+    def __init__(self,path,pattern=None,exist=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
-        self.setDirectory(dir)
+        if os.path.isfile(path):
+            self.setDirectory(os.path.dirname(path))
+            self.selectFile(path)
+        else:
+            self.setDirectory(dir)
         self.setFilter(pattern)
         if exist:
             mode = QtGui.QFileDialog.ExistingFile

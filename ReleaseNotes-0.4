@@ -16,25 +16,38 @@ Short overview of the most important design and feature changes
 A recent version of Numpy (Version 0.9.8 or higher) is required.
 Version 1.0.2 or higher is recommended.
 
+
+- Source splitup -
+The pyFormex source files have been split up over three modules: the core
+files with everything that is essential to pyFormex, the gui module with
+ all GUI related files, and the Plugins, where (optional) extensions are
+ located.
+
+
 - Gui -
 We switched to Qt4. You may have to install PyQt4 from source, because
 most distributions do not have binary packages available yet.
+
+
+- Using pyFormex without GUI -
+pyFormex can now be used without the GUI by adding the --nogui option.
+This is especially useful for automated batch processing of scripts.
+
 
 - Configuration -
 The configuration system has been changed so that only the preferences
 that were changed are saved to the user's config file.
 
 
-- Using pyFormex without GUI -
-pyFormex can be used without the GUI.
-ution.
 - Help system -
-There is no longer a built-in help viewer. Either use your prefered 
-browser or the QT4 assistant.
+There is no longer a built-in help viewer. You can use your prefered 
+HTML browser or the QT4 assistant.
+
 
 - Documentation -
-A first (incomplete) version of the pyFormex manual is included in the
-distrib 
+A first (though incomplete) version of the upcoming pyFormex manual is
+ included in this distribution. The tutorial part may be a good starting
+point for learning to use pyFormex.
 
 
 Detailed (though incomplete) changes since Release 0.3:
@@ -42,7 +55,14 @@ Detailed (though incomplete) changes since Release 0.3:
 
 pyformex command
 ----------------
-- An new option --nosplash prevents display of the startup message on the canvas.
+- The pyformex startup script is now called pyformex.py instead of pyformex.
+  The installation procedure however links it to an executable named pyformex.
+- The option --nogui starts up pyFormex without the GUI. 
+- The option --config sets a (user) configuration file to be read in excess of
+  the default configuration files and to be used for saving changed settings.
+- The option --nodefaultconfigs suppresses the loading of all default config 
+  files, except for the required initialization settings 
+
 
 pyformex GUI
 ------------
@@ -52,6 +72,7 @@ pyformex GUI
 formex.py
 ---------
 - distanceFromPlane(f,p,n) : calculates distance of points to a plane
+- readfile(file,sep=',',plexitude=1,dimension=3) : reads a Formex from file
 
 
 Formex class:
@@ -93,8 +114,6 @@ to other files in future releases.
 
 
 - properties.py :
-
-- file2formex.py: 
 
 - stl.py: 
    write_ascii(a,f) now writes unit-length normals

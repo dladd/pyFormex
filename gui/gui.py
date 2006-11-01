@@ -36,17 +36,14 @@ class Board(QtGui.QTextEdit):
         self.setMinimumSize(24,24)
         self.cursor = self.textCursor()
 
-    def add(self,s):
-        """Append a message to the message board."""
-        #self.cursor = self.textCursor()
-        #print "Voor",self.cursor.position(),self.cursor.anchor()
+    def write(self,s):
+        """Write a string to the message board."""
         self.append(s)
-        #self.cursor = self.textCursor()
-        #print "Na",self.cursor.position(),self.cursor.anchor()
         self.cursor.movePosition(QtGui.QTextCursor.End)
         self.setTextCursor(self.cursor)
-        #self.ensureCursorVisible()
-        #self.update()
+
+    # Obsolete, retained for compatibility, avoid in new code
+    add = write
 
 
 ################# OpenGL Canvas ###############
@@ -184,6 +181,8 @@ class GUI:
         self.menu.show()
         self.resize(*size)
         self.moveto(pos[0],pos[1])
+        if GD.options.redirect:
+            sys.stdout = self.board
         if GD.options.debug:
             printsize(self.main,'Main:')
             printsize(self.canvas,'Canvas:')
@@ -300,7 +299,6 @@ def setFontSize(s=None):
         GD.cfg['gui/fontsize'] = s
     else:
         s = GD.cfg.get('gui/fontsize',12)
-    print s
     font = GD.app.font()
     font.setPointSize(int(s))
     GD.app.setFont(font)
@@ -327,7 +325,6 @@ def runApp(args):
         
     # create GUI, show it, run it
     if GD.cfg.has_key('gui/fontsize'):
-        print "I found a fontsize",GD.cfg['gui/fontsize']
         setFontSize()
     GD.gui = GUI(GD.cfg['gui/size'],GD.cfg['gui/pos'])
     GD.gui.setcurfile()

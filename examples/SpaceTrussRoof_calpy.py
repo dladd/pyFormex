@@ -81,7 +81,7 @@ nodeprops[topcorner]=3
 #Defining and assigning the properties
 #############################
 
-from properties import*
+from plugins.properties import *
 
 Q = 0.5*q*dx*dx
 support = NodeProperty(0, bound = 'pinned')

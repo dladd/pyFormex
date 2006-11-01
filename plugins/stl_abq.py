@@ -1,5 +1,11 @@
 #!/usr/bin/env pyformex
 # $Id$
+"""Create tetraeder mesh in side .STL surface and export in Abaqus format.
+
+Usage: pyformex --nogui stl_abq input.stl
+Generates input-surface.inp and input-volume.inp with the
+surface and volume modules in Abaqus(R) input format. 
+"""
 
 from plugins import f2abq, stl, tetgen
 import commands, os

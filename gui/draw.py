@@ -2,8 +2,6 @@
 # $Id$
 """Functions for drawing and for executing pyFormex scripts."""
 
-# THIS SHOULD IMPORT FUNCTIONS FROM 'script'
-
 import globaldata as GD
 import threading,os,sys,commands,types,copy
 
@@ -16,17 +14,8 @@ import colors
 import actors
 import decors
 import formex
+from script import Exit,ExitAll
 
-
-######################### Exceptions #########################################
-
-class Exit(Exception):
-    """Exception raised to exit from a running script."""
-    pass    
-
-class ExitAll(Exception):
-    """Exception raised to exit pyFormex from a script."""
-    pass    
 
 #################### Interacting with the user ###############################
 
@@ -128,17 +117,18 @@ def log(s):
 # Best candidates are log/info
 message = log
 
-
 ########################### PLAYING SCRIPTS ##############################
 
 scriptDisabled = False
 scriptRunning = False
  
-def playScript(scr):
+def playScript(scr,name=None):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
     same time.
+    If a name is specified, sets the global variable GD.scriptName if and
+    when the script is started.
     """
     global scriptRunning, scriptDisabled, allowwait
     # (We only allow one script executing at a time!)
@@ -164,13 +154,20 @@ def playScript(scr):
     # and add the globals from the 'colors' and 'formex' modules
     # !! Taking a copy is needed to avoid changing this module's globals !!
     g = copy.copy(globals())
-    g.update(colors.__dict__)
+    if GD.gui:
+        g.update(colors.__dict__)
     g.update(formex.__dict__) # this also imports everything from numpy
-    # Finally, we set the name to 'draw', so that the user can verify that
-    # the script is executed from within the GUI.
-    g.update({'__name__':'draw'})
+    # Finally, we set the name to 'script' or 'draw', so that the user can
+    # verify that the script is the main script being excuted (and not merely
+    # an import) and also whether the script is executed under the GUI or not.
+    if GD.gui:
+        modname = 'draw'
+    else:
+        modname = 'script'
+    g.update({'__name__':modname})
     # Now we can execute the script using these collected globals
-    
+
+    GD.scriptName = name
     exitall = False
     try:
         try:
@@ -187,7 +184,7 @@ def playScript(scr):
     if exitall:
         exit()
 
-def play(fn=None,name=None):
+def play(fn=None):
     """Play a formex script from file fn or from the current file.
 
     This function does nothing if no file is passed or no current
@@ -200,11 +197,9 @@ def play(fn=None,name=None):
         else:
             return
     currentView = 'front'
-    if name:
-        GD.scriptName = name
     message("Running script (%s)" % fn)
-    playScript(file(fn,'r'))
-    message("Script (%s) finished" % fn)
+    playScript(file(fn,'r'),fn)
+    message("Script finished")
 
 
 ############################## drawing functions ########################

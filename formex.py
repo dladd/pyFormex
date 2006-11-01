@@ -1472,17 +1472,6 @@ class Formex:
     # The may be removed in future.
     #
 
-    def hasProp(self,*args):
-        import utils
-        utils.deprecated("Formex.hasProp","Formex.withProp")
-        return self.withProp(*args)
-    
-
-    # We changed connect into a global function, not a class method
-    def connect(self,Flist,nodid=None,bias=None,loop=False):
-        return connect(Flist,nodid,bias,loop)
-    connect = classmethod(connect)
-
 
     # Formian compatibility functions
     # These will be moved to a separate file in future.
@@ -1652,6 +1641,26 @@ def connect(Flist,nodid=None,bias=None,loop=False):
         f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
     return Formex(f)
 
+
+def readfile(file,sep=',',plexitude=1,dimension=3):
+    """Read a Formex from file.
+
+    This convenience function uses the numpy fromfile function to read the
+    the coordinates of a Formex from file. 
+    Args:
+      file: either an open file object or a string with the file name.
+      sep: the separator string between subsequent coordinates.
+           There can be extra blanks around the separator, and the separator
+           may be omitted at the end of line.
+           If an empty string is specified, the file is read in binary mode.
+      dimension: the number of coordinates that make up a point (1,2 or 3).
+      plexitude: the number of points that make up an element of the Formex.
+                 The default is to return a plex-1 Formex (unconnected points).
+      closed: If True, an extra point will be added to the
+    The total number of coordinates on the file should be a multiple of
+    dimension * plexitude.
+    ).where the coordinates are read from fileRead a set of coordinates from file in a Formex."""
+    return Formex(fromfile(file,sep=sep).reshape((-1,plexitude,dimension)))
 
 
 ##############################################################################

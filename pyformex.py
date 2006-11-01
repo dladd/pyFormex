@@ -76,14 +76,14 @@ def main(argv=None):
                     action="store_true", dest="makecurrent", default=False),
         make_option("--nogui", help="do not load the GUI",
                     action="store_false", dest="gui", default=True),
-        make_option("--nosplash", help="do not show the startup screen",
-                    action="store_false", dest="splash", default=True),
         make_option("--config", help="use file CONFIG for settings",
                     action="store", dest="config", default=None),
          make_option("--nodefaultconfig", help="skip all default locations of config files",
                     action="store_true", dest="nodefaultconfig", default=False),
+       make_option("--redirect", help="redirect standard output to the message board (only if no --nogui option given)",
+                    action="store_true", dest="redirect", default=False),
        make_option("--debug", help="display debugging info to sys.stdout",
-                    action="store_true", dest="debug", default=False)
+                    action="store_true", dest="debug", default=False),
         ])
     GD.options, args = parser.parse_args()
 
