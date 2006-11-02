@@ -69,6 +69,8 @@ class Canvas:
     def update(self):
         self.updateGL()
 
+    default_light = { 'ambient':0.2, 'diffuse': 1.0, 'specular':1.0, 'position':(0.,0.,1.,0.)}
+
     def glinit(self,mode=None):
         if mode:
             self.rendermode = mode
@@ -86,16 +88,17 @@ class Canvas:
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             GL.glEnable(GL.GL_LIGHTING)
             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
-                GD.debug("  set up light %s %s" % (l,i))
-                if GD.cfg['render'].has_key(l):
-                    GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,rgba(GD.cfg['render/ambient']))
-                    GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
-                    GL.glLightModel(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-                    GL.glLightfv(i,GL.GL_AMBIENT,rgba(GD.cfg['render'][l]['ambient']))
-                    GL.glLightfv(i,GL.GL_DIFFUSE,rgba(GD.cfg['render'][l]['diffuse']))
-                    GL.glLightfv(i,GL.GL_SPECULAR,rgba(GD.cfg['render'][l]['specular']))
-                    GL.glLightfv(i,GL.GL_POSITION,rgba(GD.cfg['render'][l]['position']))
-                    GL.glEnable(i)
+                key = 'render/%s' % l
+                light = GD.cfg.get(key,self.default_light)
+                GD.debug("  set up %s %s" % (l,light))
+                GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,rgba(GD.cfg['render/ambient']))
+                GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
+                GL.glLightModel(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+                GL.glLightfv(i,GL.GL_AMBIENT,rgba(light['ambient']))
+                GL.glLightfv(i,GL.GL_DIFFUSE,rgba(light['diffuse']))
+                GL.glLightfv(i,GL.GL_SPECULAR,rgba(light['specular']))
+                GL.glLightfv(i,GL.GL_POSITION,rgba(light['position']))
+                GL.glEnable(i)
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,rgba(GD.cfg['render/specular']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,rgba(GD.cfg['render/emission']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
@@ -106,7 +109,7 @@ class Canvas:
     
     def setSize (self,w,h):
 	if h == 0:	# Prevent A Divide By Zero 
-            h = 1
+        h = 1
 	GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h
         self.camera.setLens(aspect=self.aspect)
