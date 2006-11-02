@@ -11,29 +11,6 @@ import draw
 import widgets
 
 
-##def askConfigPreferences(items,section=None):
-##    """Ask preferences stored in config variables.
-
-##    Items in list should only be keys. The current values are retrieved
-##    from the config.
-##    A config section name should be specified if the items are not in the
-##    top config level.
-##    """
-##    if section:
-##        store = GD.cfg[section]
-##    else:
-##        store = GD.cfg
-##    # insert current values
-##    for it in items:
-##        it.insert(1,store.setdefault(it[0],''))
-##    res,accept = widgets.inputDialog(items,'Config Dialog').process()
-##    if accept:
-##        GD.prefsChanged = True
-##        for r in res:
-##            GD.debug("%s" % r)
-##            store[r[0]] = eval(r[1])
-
-
 def askConfigPreferences(items,store=None):
     """Ask preferences stored in config variables.
 

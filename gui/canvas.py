@@ -413,6 +413,21 @@ class Canvas:
             qim.save(fn,fmt)
         elif fmt in GD.image_formats_gl2ps:
             self.savePS(fn,fmt)
+        elif fmt in GD.image_formats_fromeps:
+            import commands,os
+            fneps = os.path.splitext(fn)[0] + '.eps'
+            delete = not os.path.exists(fneps)
+            self.savePS(fneps,'eps')
+            if os.path.exists(fneps):
+                cmd = 'pstopnm -portrait -stdout %s' % fneps
+                if fmt != 'ppm':
+                    cmd += '| pnmto%s > %s' % (fmt,fn)
+                GD.debug(cmd)
+                sta,out = commands.getstatusoutput(cmd)
+                if sta:
+                    GD.debug(out)
+                if delete:
+                    os.remove(fneps) 
 
 
 # ONLY LOADED IF GL2PS FOUND ########################
@@ -430,18 +445,17 @@ class Canvas:
 
             This function is only defined if the gl2ps module is found.
 
-            The filetype should be one of 'PS', 'EPS', 'PDF' or 'TEX'.
+            The filetype should be one of 'ps', 'eps', 'pdf' or 'tex'.
             If not specified, the type is derived from the file extension.
-            In case of the 'TEX' filetype, two files are written: one with
+            In case of the 'tex' filetype, two files are written: one with
             the .tex extension, and one with .eps extension.
             """
-            #print self.actors
             fp = file(filename, "wb")
             if filetype:
                 filetype = self._gl2ps_types[filetype]
             else:
-                s = filename.upper()
-                for ext in _gl2ps_types.keys():
+                s = filename.lower()
+                for ext in self._gl2ps_types.keys():
                     if s.endswith('.'+ext):
                         filetype = self._gl2ps_types[ext]
                         break
@@ -475,5 +489,6 @@ class Canvas:
         _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
                          'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
         GD.image_formats_gl2ps = _gl2ps_types.keys()
+        GD.image_formats_fromeps = [ 'ppm', 'png' ]
 
         GD.debug(_start_message)

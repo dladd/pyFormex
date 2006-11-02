@@ -18,6 +18,7 @@ PyFormex = {}  # globals that will be offered to scripts
 image_formats_qt = []
 image_formats_qtr = []
 image_formats_gl2ps = []
+image_formats_fromeps = []
 multisave = False
 canPlay = False
 scriptName = None

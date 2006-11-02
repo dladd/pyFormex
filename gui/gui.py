@@ -312,14 +312,15 @@ def runApp(args):
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
 
-##    if GD.options.config:
-##        GD.Cfg = settings.Settings(filename=GD.options.config)
-##    else:
-##        GD.Cfg = settings.Settings("pyformex.berlios.de", "pyformex")
-
     # Set some globals
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
+    if GD.cfg.get('imagesfromeps',False):
+        print "REMOVING qt image saving"
+        GD.image_formats_qt = []
+        print GD.image_formats_qt
+        print GD.image_formats_gl2ps
+        print GD.image_formats_fromeps
     if GD.options.debug:
         print "Image types for saving: ",GD.image_formats_qt
         print "Image types for input: ",GD.image_formats_qtr

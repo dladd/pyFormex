@@ -27,7 +27,7 @@ draw(g)
 
 # Second, a surface model
 
-clear
+clear()
 base = Formex( [[[0,0,0],[1,0,0],[1,1,0]],
                 [[1,1,0],[0,1,0],[0,0,0]]],
                [1,3])
@@ -36,8 +36,19 @@ draw(base)
 f = base.replic2(nx,ny,1,1)
 draw(f)
 
-g = f.translate([0,a,1]).spherical([2,0,1],[rd,360./nx,bot/(ny+a)])
+h = f.translate([0,a,1]).spherical([2,0,1],[rd,360./nx,bot/(ny+a)])
 clear()
-draw(g)
+draw(h)
 
+
+# Both
+
+g = g.translate([-rd,0,0])
+h = h.translate([rd,0,0])
+clear()
+#GD.cfg['render/ambient'] = 0.4
+#GD.cfg['render/specular'] = 0.1
+bb = (Formex([g.bbox()]) + Formex([h.bbox()])).bbox()
+draw(g,bbox=bb)
+draw(h,bbox=bb)
 

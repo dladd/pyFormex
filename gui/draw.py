@@ -587,14 +587,18 @@ def printglobals():
 
 def printbbox():
     print GD.canvas.bbox
+
+    
+def printconfig():
+    print "Reference Configuration",GD.refcfg
+    print "User Configration",GD.cfg
     
 
 ################################ saving images ########################
 
 def imageFormats():
     """Return a list of the valid image formats."""
-    return GD.image_formats_qt + GD.image_formats_gl2ps
-
+    return GD.image_formats_qt + GD.image_formats_gl2ps + GD.image_formats_fromeps
 
 def checkImageFormat(fmt,verbose=False):
     """Checks image format; if verbose, warn if it is not.
