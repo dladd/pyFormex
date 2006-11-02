@@ -89,21 +89,20 @@ def setCanvasSize():
         
     
 def setRender():
-    askConfigPreferences(['specular', 'shininess'],GD.cfg['render'])
+    askConfigPreferences(['ambient', 'specular', 'emission', 'shininess'],GD.cfg['render'])
+    draw.smooth()
 
 def setLight(light=0):
     store = GD.cfg['render/light%d' % light]
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]
     askConfigPreferences(keys,store)
+    draw.smooth()
 
 def setLight0():
     setLight(0)
-    draw.smooth()
 
 def setLight1():
     setLight(1)
-    draw.smooth()
-
 
 def setLocalAxes():
     GD.cfg['draw/localaxes'] = True 

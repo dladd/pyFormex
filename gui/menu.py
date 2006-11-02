@@ -184,6 +184,7 @@ MenuData = [
         ("Action","&Redraw","draw.redraw"),
         ("Action","&DrawSelected","draw.drawSelected"),
         ("Action","&ListFormices","draw.printall"),
+        ("Action","&PrintBbox","draw.printbbox"),
         ("Action","&PrintGlobals","draw.printglobals"),  ]),
     ("Popup","&Help",[
 ##        ("Action","&Help","help.help"),

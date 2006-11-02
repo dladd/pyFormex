@@ -49,10 +49,12 @@ localaxes = True     # by default, buttons rotate/pan in local axes
 
 [render]
 mode = 'wireframe' # Alternatives are 'flat' or 'smooth'
-specular = (0.8,0.8,0.8,1.)
-shininess = 0.7
-light0 = { 'ambient':(1.0,1.0,1.0,1.0), 'diffuse': (1.0,1.0,1.0,1.0), 'specular':(0.7,0.7,0.7,1.0), 'position':(1.,0.,1.,0.)}
-#light1 = { 'ambient':(1.0,1.0,1.0,1.0), 'diffuse': (1.0,1.0,1.0,1.0), 'specular':(1.0,1.0,1.0,1.0), 'position':(-10.,0.,10.,0.)}
+ambient = 0.3
+specular = 0.8
+emission = 0.0
+shininess = 0.5
+light0 = { 'ambient':0.2, 'diffuse': 1.0, 'specular':1.0, 'position':(0.,0.,1.,0.)}
+light1 = { 'ambient':0.2, 'diffuse': 1.0, 'specular':1.0, 'position':(1.,1.,1.,0.)}
 
 [help]
 manual = os.path.join(pyformexdir,"manual","html","index.html")

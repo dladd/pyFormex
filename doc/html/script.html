@@ -96,13 +96,16 @@ in&nbsp;the&nbsp;choices&nbsp;list.&nbsp;Thus,&nbsp;<a href="#-ask">ask</a>('Do&
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-info"><strong>info</strong></a>(message)</dt></dl>
  <dl><dt><a name="-listall"><strong>listall</strong></a>()</dt><dd><tt>List&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
- <dl><dt><a name="-message"><strong>message</strong></a>(s)</dt></dl>
+ <dl><dt><a name="-log"><strong>log</strong></a>(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;terminal.</tt></dd></dl>
+ <dl><dt><a name="-message"><strong>message</strong></a> = log(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;terminal.</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
- <dl><dt><a name="-play"><strong>play</strong></a>(fn, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.</tt></dd></dl>
- <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+ <dl><dt><a name="-play"><strong>play</strong></a>(fn)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.</tt></dd></dl>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
-same&nbsp;time.</tt></dd></dl>
+same&nbsp;time.<br>
+If&nbsp;a&nbsp;name&nbsp;is&nbsp;specified,&nbsp;sets&nbsp;the&nbsp;global&nbsp;variable&nbsp;GD.scriptName&nbsp;if&nbsp;and<br>
+when&nbsp;the&nbsp;script&nbsp;is&nbsp;started.</tt></dd></dl>
  <dl><dt><a name="-runApp"><strong>runApp</strong></a>(args)</dt><dd><tt>Run&nbsp;the&nbsp;application&nbsp;without&nbsp;gui.</tt></dd></dl>
  <dl><dt><a name="-save"><strong>save</strong></a>(filename, fmt)</dt></dl>
  <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>

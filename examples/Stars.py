@@ -34,7 +34,7 @@ def star(n,noise=0.,prop=0):
     if noise != 0.:
         f = f + noise * random.random(f.shape)
     P = Formex(concatenate([f,f[:1]]))
-    return Formex.connect([P,P],bias=[0,1]).setProp(prop)
+    return connect([P,P],bias=[0,1]).setProp(prop)
 
 # create random number of points, rotation and translation
 npts = random.randint(minpoints-1,maxpoints,(nstars,))

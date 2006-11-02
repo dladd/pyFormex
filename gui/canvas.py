@@ -27,6 +27,11 @@ except ImportError:
     _has_gl2ps = False
 
 
+def rgba(val):
+    """Rteurns a white shade OpenGL color of given intensity (0..1)"""
+    return (val,val,val,1.0)
+
+
 ##################################################################
 #
 #  The Canvas
@@ -79,27 +84,23 @@ class Canvas:
             GL.glDisable(GL.GL_LIGHTING)
         elif self.rendermode == 'smooth':
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
-            #print "set up materials"
-            #GL.glMaterialfv(GL.GL_FRONT,GL.GL_AMBIENT_AND_DIFFUSE,(0.5,0.5,0.5,1.))
-            #print GD.cfg['render']specular
-            #print GD.cfg['render']shininess
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,GD.cfg['render/specular'])
+            GL.glEnable(GL.GL_LIGHTING)
+            for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
+                GD.debug("  set up light %s %s" % (l,i))
+                if GD.cfg['render'].has_key(l):
+                    GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,rgba(GD.cfg['render/ambient']))
+                    GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
+                    GL.glLightModel(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+                    GL.glLightfv(i,GL.GL_AMBIENT,rgba(GD.cfg['render'][l]['ambient']))
+                    GL.glLightfv(i,GL.GL_DIFFUSE,rgba(GD.cfg['render'][l]['diffuse']))
+                    GL.glLightfv(i,GL.GL_SPECULAR,rgba(GD.cfg['render'][l]['specular']))
+                    GL.glLightfv(i,GL.GL_POSITION,rgba(GD.cfg['render'][l]['position']))
+                    GL.glEnable(i)
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,rgba(GD.cfg['render/specular']))
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,rgba(GD.cfg['render/emission']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
             GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
             GL.glEnable(GL.GL_COLOR_MATERIAL)
-            #print "set up lights"
-            #print GD.cfg['render']keys()
-            GL.glEnable(GL.GL_LIGHTING)
-            for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
-                #print "  set up light ",l,i
-                if GD.cfg['render'].has_key(l):
-                    #print GD.cfg['render'][l]
-                    GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
-                    GL.glLightfv(i,GL.GL_AMBIENT,GD.cfg['render'][l]['ambient'])
-                    GL.glLightfv(i,GL.GL_DIFFUSE,GD.cfg['render'][l]['diffuse'])
-                    GL.glLightfv(i,GL.GL_SPECULAR,GD.cfg['render'][l]['specular'])
-                    GL.glLightfv(i,GL.GL_POSITION,GD.cfg['render'][l]['position'])
-                    GL.glEnable(i)
         else:
             raise RuntimeError,"Unknown rendering mode"
     

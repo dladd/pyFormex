@@ -38,7 +38,7 @@ class Board(QtGui.QTextEdit):
 
     def write(self,s):
         """Write a string to the message board."""
-        self.append(s)
+        self.append(s.rstrip('\n'))
         self.cursor.movePosition(QtGui.QTextCursor.End)
         self.setTextCursor(self.cursor)
 
@@ -182,6 +182,7 @@ class GUI:
         self.resize(*size)
         self.moveto(pos[0],pos[1])
         if GD.options.redirect:
+            sys.stderr = self.board
             sys.stdout = self.board
         if GD.options.debug:
             printsize(self.main,'Main:')

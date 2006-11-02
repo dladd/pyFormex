@@ -110,7 +110,7 @@ def setWorkdirFromFile(fn):
 
 def log(s):
     """Display a message in the cmdlog window."""
-    GD.gui.board.add(s)
+    GD.gui.board.write(s)
 
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
@@ -583,6 +583,11 @@ def printall():
 
 def printglobals():
     print globals()
+
+
+def printbbox():
+    print GD.canvas.bbox
+    
 
 ################################ saving images ########################
 

@@ -183,12 +183,18 @@ class FormexActor(Formex):
                                 self.f[:,2,:] - self.f[:,1,:])
                 #print normal
                 #print normal.shape
-                for prop,elem,norm in zip(self.p,self.f,normal):
-                    #print norm
+##                for prop,elem,norm in zip(self.p,self.f,normal):
+##                    #print norm
+##                    col = self.color[int(prop)]
+##                    GL.glColor3f(*(col))
+##                    GL.glNormal3f(*(norm))
+##                    for nod in elem:
+##                        GL.glVertex3f(*nod)
+                for i,prop in enumerate(self.p):
                     col = self.color[int(prop)]
-                    GL.glNormal3f(*(norm))
                     GL.glColor3f(*(col))
-                    for nod in elem:
+                    GL.glNormal3f(*(normal[i]))
+                    for nod in self.f[i]:
                         GL.glVertex3f(*nod)
             GL.glEnd()
             

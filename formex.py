@@ -430,6 +430,7 @@ class Formex:
             data = pattern(data)
         self.f = array(data).astype(Float)
         self.p = None
+        # !!! WE MIGHT ADD ARRAY AXES IF LESS THAN 3 !!!
         if len(self.f.shape) != 3:
             raise RuntimeError,"Formex: Initialization needs rank-3 data array"
         if self.f.shape[2] == 3:
@@ -438,9 +439,10 @@ class Formex:
             f = zeros((self.f.shape[:2]+(3,)),dtype=Float)
             f[:,:,:2] = self.f
             self.f = f
+        # !!! WE MIGHT ALLOW FOR 1-dim FORMICES
         else:
             if self.f.size == 0:
-                self.f.shape = (0,0,3)
+                self.f.shape = (0,0,3) # An empty Formex
             else:
                 raise RuntimeError,"Formex: last data dimension should be 2 or 3"   
         if type(prop) != type(None):
@@ -1143,6 +1145,26 @@ class Formex:
         f[:,:,0] = sqrt(x*x+y*y)
         f[:,:,1] = arctan2(y,x) / rad
         f[:,:,2] = z
+        return Formex(f,self.p)
+    
+    def newspherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
+        """Converts from spherical to cartesian after scaling.
+
+        <dir> specifies which coordinates are interpreted as resp.
+        distance(r), longitude(theta) and latitude(phi).
+        <scale> will scale the coordinate values prior to the transformation.
+        Angles are then interpreted in degrees.
+        Latitude, i.e. the elevation angle is measured from equator in direction
+        of north pole(90). South pole is -90.
+        """
+        f = zeros(self.f.shape,dtype=Float)
+        r = scale[0] * self.f[:,:,dir[0]]
+        theta = (scale[1]*rad) * self.f[:,:,dir[1]]
+        phi = (scale[2]*rad) * self.f[:,:,dir[2]]
+        rc = r*cos(phi)
+        f[:,:,0] = rc*cos(theta)
+        f[:,:,1] = rc*sin(theta)
+        f[:,:,2] = r*sin(phi)
         return Formex(f,self.p)
     
     def spherical(self,dir=[0,1,2],scale=[1.,1.,1.]):

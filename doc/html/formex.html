@@ -264,8 +264,6 @@ of&nbsp;the&nbsp;bbox.</tt></dd></dl>
 
 <dl><dt><a name="Formex-grade"><strong>grade</strong></a> = <a href="#Formex-ndim">ndim</a>(self)</dt></dl>
 
-<dl><dt><a name="Formex-hasProp"><strong>hasProp</strong></a>(self, *args)</dt></dl>
-
 <dl><dt><a name="Formex-lam"><strong>lam</strong></a>(self, dir, dist)</dt></dl>
 
 <dl><dt><a name="Formex-lamic"><strong>lamic</strong></a>(self, *args)</dt></dl>
@@ -636,8 +634,6 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;
 &gt;&gt;&gt;&nbsp;print&nbsp;<a href="#Formex">Formex</a>.<a href="#Formex-concatenate">concatenate</a>([F,F,F])<br>
 {[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0],&nbsp;[1.0,2.0,3.0]}</tt></dd></dl>
 
-<dl><dt><a name="Formex-connect"><strong>connect</strong></a>(self, Flist, nodid<font color="#909090">=None</font>, bias<font color="#909090">=None</font>, loop<font color="#909090">=False</font>)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>#&nbsp;We&nbsp;changed&nbsp;connect&nbsp;into&nbsp;a&nbsp;global&nbsp;function,&nbsp;not&nbsp;a&nbsp;class&nbsp;method</tt></dd></dl>
-
 <dl><dt><a name="Formex-setPrintFunction"><strong>setPrintFunction</strong></a>(clas, func)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Choose&nbsp;the&nbsp;default&nbsp;formatting&nbsp;for&nbsp;printing&nbsp;formices.<br>
 &nbsp;<br>
 This&nbsp;sets&nbsp;how&nbsp;formices&nbsp;will&nbsp;be&nbsp;formatted&nbsp;by&nbsp;a&nbsp;print&nbsp;statement.<br>
@@ -869,7 +865,7 @@ the&nbsp;last&nbsp;dimension&nbsp;of&nbsp;a&nbsp;and&nbsp;b.<br>
 NB:&nbsp;The&nbsp;first&nbsp;argument&nbsp;is&nbsp;not&nbsp;conjugated.</tt></dd></dl>
  <dl><dt><a name="-inside"><strong>inside</strong></a>(p, mi, ma)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;point&nbsp;p&nbsp;is&nbsp;inside&nbsp;bbox&nbsp;defined&nbsp;by&nbsp;points&nbsp;mi&nbsp;and&nbsp;ma</tt></dd></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;quadratic&nbsp;norm&nbsp;of&nbsp;a&nbsp;vector&nbsp;with&nbsp;all&nbsp;elements&nbsp;of&nbsp;arg.</tt></dd></dl>
- <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)<br>
+ <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;-&gt;&nbsp;array&nbsp;of&nbsp;indices.&nbsp;argsort&nbsp;with&nbsp;list&nbsp;of&nbsp;keys.<br>
 &nbsp;<br>
 Return&nbsp;an&nbsp;array&nbsp;of&nbsp;indices&nbsp;similar&nbsp;to&nbsp;argsort,&nbsp;except&nbsp;the&nbsp;sorting&nbsp;is<br>
 done&nbsp;using&nbsp;the&nbsp;provided&nbsp;sorting&nbsp;keys.&nbsp;&nbsp;First&nbsp;the&nbsp;sort&nbsp;is&nbsp;done&nbsp;using<br>
@@ -914,6 +910,23 @@ move&nbsp;without&nbsp;making&nbsp;a&nbsp;connection.<br>
 The&nbsp;effect&nbsp;of&nbsp;any&nbsp;other&nbsp;character&nbsp;is&nbsp;undefined.<br>
 &nbsp;<br>
 The&nbsp;resulting&nbsp;list&nbsp;is&nbsp;directly&nbsp;suited&nbsp;to&nbsp;initialize&nbsp;a&nbsp;<a href="#Formex">Formex</a>.</tt></dd></dl>
+ <dl><dt><a name="-readfile"><strong>readfile</strong></a>(file, sep<font color="#909090">=','</font>, plexitude<font color="#909090">=1</font>, dimension<font color="#909090">=3</font>)</dt><dd><tt>Read&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.<br>
+&nbsp;<br>
+This&nbsp;convenience&nbsp;function&nbsp;uses&nbsp;the&nbsp;numpy&nbsp;fromfile&nbsp;function&nbsp;to&nbsp;read&nbsp;the<br>
+the&nbsp;coordinates&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;file:&nbsp;either&nbsp;an&nbsp;open&nbsp;file&nbsp;object&nbsp;or&nbsp;a&nbsp;string&nbsp;with&nbsp;the&nbsp;file&nbsp;name.<br>
+&nbsp;&nbsp;sep:&nbsp;the&nbsp;separator&nbsp;string&nbsp;between&nbsp;subsequent&nbsp;coordinates.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There&nbsp;can&nbsp;be&nbsp;extra&nbsp;blanks&nbsp;around&nbsp;the&nbsp;separator,&nbsp;and&nbsp;the&nbsp;separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;may&nbsp;be&nbsp;omitted&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;line.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;an&nbsp;empty&nbsp;string&nbsp;is&nbsp;specified,&nbsp;the&nbsp;file&nbsp;is&nbsp;read&nbsp;in&nbsp;binary&nbsp;mode.<br>
+&nbsp;&nbsp;dimension:&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;that&nbsp;make&nbsp;up&nbsp;a&nbsp;point&nbsp;(1,2&nbsp;or&nbsp;3).<br>
+&nbsp;&nbsp;plexitude:&nbsp;the&nbsp;number&nbsp;of&nbsp;points&nbsp;that&nbsp;make&nbsp;up&nbsp;an&nbsp;element&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;default&nbsp;is&nbsp;to&nbsp;return&nbsp;a&nbsp;plex-1&nbsp;<a href="#Formex">Formex</a>&nbsp;(unconnected&nbsp;points).<br>
+&nbsp;&nbsp;closed:&nbsp;If&nbsp;True,&nbsp;an&nbsp;extra&nbsp;point&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the<br>
+The&nbsp;total&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;on&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;a&nbsp;multiple&nbsp;of<br>
+dimension&nbsp;*&nbsp;plexitude.<br>
+).where&nbsp;the&nbsp;coordinates&nbsp;are&nbsp;read&nbsp;from&nbsp;fileRead&nbsp;a&nbsp;set&nbsp;of&nbsp;coordinates&nbsp;from&nbsp;file&nbsp;in&nbsp;a&nbsp;<a href="#Formex">Formex</a>.</tt></dd></dl>
  <dl><dt><a name="-restoredot"><strong>restoredot</strong></a>(...)</dt><dd><tt><a href="#-restoredot">restoredot</a>()&nbsp;restores&nbsp;dots&nbsp;to&nbsp;defaults.</tt></dd></dl>
  <dl><dt><a name="-rotationAboutMatrix"><strong>rotationAboutMatrix</strong></a>(angle, axis)</dt><dd><tt>Returns&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;over&nbsp;angle&nbsp;around&nbsp;an&nbsp;axis&nbsp;thru&nbsp;the&nbsp;origin.<br>
 &nbsp;<br>
@@ -1001,7 +1014,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 6<br>
 <strong>SHIFT_OVERFLOW</strong> = 2<br>
 <strong>SHIFT_UNDERFLOW</strong> = 4<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.int32'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float64'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1021,7 +1034,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...float64'&gt;: &lt;function &lt;lambda&gt; at 0x2b55cc886140&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2....uint64'&gt;: &lt;function &lt;lambda&gt; at 0x2b596c1c9b90&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1065,7 +1078,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.float32'&gt;: 4, &lt;type 'numpy.float64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...pe 'numpy.string_'&gt;: 0, &lt;type 'numpy.uint64'&gt;: 8}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

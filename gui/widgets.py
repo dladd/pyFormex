@@ -23,7 +23,7 @@ class FileSelection(QtGui.QFileDialog):
             self.setDirectory(os.path.dirname(path))
             self.selectFile(path)
         else:
-            self.setDirectory(dir)
+            self.setDirectory(path)
         self.setFilter(pattern)
         if exist:
             mode = QtGui.QFileDialog.ExistingFile

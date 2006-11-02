@@ -27,12 +27,12 @@ clear()
 # We start with the bottom girder, and copy it to the top
 nodes = Formex([[[0,0,b]]]).replic(n+1,Lm)
 draw(nodes,'iso')
-bot_gird = Formex.connect([nodes,nodes],bias=[0,1])
+bot_gird = connect([nodes,nodes],bias=[0,1])
 top_gird = bot_gird.translate([0,H,0])
 
 # Add the verticals and diagonals
-verticals = Formex.connect([bot_gird,top_gird],nodid=[1,1])
-diagonals = Formex.connect([bot_gird,top_gird],nodid=[0,1])
+verticals = connect([bot_gird,top_gird],nodid=[1,1])
+diagonals = connect([bot_gird,top_gird],nodid=[0,1])
 verticals.setProp(3)
 diagonals.setProp(3)
 # We missed the central vertical : we construct it by hand
@@ -41,16 +41,16 @@ central_vertical = Formex([[bot_gird[0,0],top_gird[0,0]]],3)
 # Bridge deck and braces
 nodes_out = nodes.translate([0,0,Bo])
 nodes_up = nodes.translate([0,Hb,0])
-deck_girders = Formex.connect([nodes_out,nodes_out.reflect(2)])
+deck_girders = connect([nodes_out,nodes_out.reflect(2)])
 deck_girders.setProp(1)
-braces = Formex.connect([nodes_out,nodes_up])
+braces = connect([nodes_out,nodes_up])
 braces.setProp(2)
 
 # Wind bracing
 nodes1 = nodes.select([2*i for i in range(n/2+1)]).translate([0,0,-Bi])
 nodes2 = nodes.select([2*i+1 for i in range(n/2)]).translate([0,0,-Bi]).reflect(2)
 draw(nodes1+nodes2)
-wind_bracing = Formex.connect([nodes1,nodes2]) + Formex.connect([nodes2,nodes1],bias=[0,1])
+wind_bracing = connect([nodes1,nodes2]) + connect([nodes2,nodes1],bias=[0,1])
 wind_bracing.setProp(5)
 
 # Assemble half bridge
@@ -60,7 +60,7 @@ quarter = half_truss + braces
 half_bridge = quarter + quarter.reflect(2) + deck_girders + wind_bracing
 draw(half_bridge+central)
 
-# And a full full bridge
+# And a full bridge
 bridge = half_bridge + half_bridge.reflect(0) + central
 
 clear()
