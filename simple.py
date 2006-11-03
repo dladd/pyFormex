@@ -40,7 +40,7 @@ class Sphere2(Formex):
     ny latitude circles and their diagonals.
     """
 
-    def __init__(self,nx,ny,r=1,top=0,bot=180):
+    def __init__(self,nx,ny,r=1,bot=-90,top=90):
         """Construct a new Sphere2 object.
 
         A sphere with radius r is modeled by a regular grid of nx
@@ -57,8 +57,8 @@ class Sphere2(Formex):
         m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
         h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals
         grid = m+d+h
-        a = ny*float(top)/(bot-top)
-        F = grid.translate([0,a,1]).spherical([2,0,1],[r,360./nx,bot/(ny+a)])
+        s = float(top-bot) / ny
+        F = grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
         Formex.__init__(self,F.f,F.p)
 
         
@@ -69,7 +69,7 @@ class Sphere3(Formex):
     nx longitude circles, ny latitude circles and their diagonals.
     """
 
-    def __init__(self,nx,ny,r=1,top=0,bot=180):
+    def __init__(self,nx,ny,r=1,bot=-90,top=90):
         """Construct a new Sphere3 object.
 
         A sphere with radius r is modeled by the triangles fromed by a regular
@@ -84,7 +84,7 @@ class Sphere3(Formex):
         base = Formex( [[[0,0,0],[1,0,0],[1,1,0]],
                         [[1,1,0],[0,1,0],[0,0,0]]],
                        [1,2])
-        grid = base.replic2(nx,ny,1,1).translate([0,-ny*0.5,0])
-        a = ny*float(top)/(bot-top)
-        F = grid.translate([0,0,1]).newspherical([2,0,1],[r,360./nx,bot/(ny+a)])
+        grid = base.replic2(nx,ny,1,1)
+        s = float(top-bot) / ny
+        F = grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
         Formex.__init__(self,F.f,F.p)

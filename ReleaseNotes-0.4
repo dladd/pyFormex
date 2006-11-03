@@ -50,7 +50,7 @@ A first (though incomplete) version of the upcoming pyFormex manual is
 point for learning to use pyFormex.
 
 
-Detailed (though incomplete) changes since Release 0.3:
+Detailed (but incomplete) changes since Release 0.3:
 =======================================================
 
 pyformex command
@@ -75,6 +75,9 @@ formex.py
 ---------
 - distanceFromPlane(f,p,n) : calculates distance of points to a plane
 - readfile(file,sep=',',plexitude=1,dimension=3) : reads a Formex from file
+- bbox(formexlist): calculates the bounding box of a list of Formices
+- spherical(): now uses latitude angle instead of its complement; has an extra
+  option to still use the complement.
 
 
 Formex class:
@@ -86,8 +89,9 @@ Formex class:
 
 simple.py: Predefined simple geometric forms
 ----------
-   unitcircle: defines circles as Formex structure
-
+- circle: defines circles as Formex structure
+- Sphere2: a sphere described by line elements
+- Sphere3: a sphere described by triangles
 
 gui module
 ==========

@@ -108,17 +108,17 @@ class Canvas:
             raise RuntimeError,"Unknown rendering mode"
     
     def setSize (self,w,h):
-	if h == 0:	# Prevent A Divide By Zero 
-        h = 1
-	GL.glViewport(0, 0, w, h)
+        if h == 0:	# Prevent A Divide By Zero 
+            h = 1
+        GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h
         self.camera.setLens(aspect=self.aspect)
         self.display()
 
     def clear(self):
         """Clear the canvas to the background color."""
-	GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-	GL.glClearColor(*colors.RGBA(self.bgcolor))
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        GL.glClearColor(*colors.RGBA(self.bgcolor))
 
     def display(self):
         """(Re)display all the actors in the scene.

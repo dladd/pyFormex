@@ -20,7 +20,7 @@ e1 = Formex(pattern("54"),[1,3]) # diagonals and meridionals
 e2 = Formex(pattern("1"),0)      # horizontals
 f1 = e1.replic2(nx,ny,1,1)
 f2 = e2.replic2(nx,ny+1,1,1)
-g = (f1+f2).translate([0,a,1]).spherical([2,0,1],[rd,360./nx,base/(ny+a)])
+g = (f1+f2).translate([0,a,1]).cospherical(scale=[360./nx,base/(ny+a),rd])
 draw(e1+e2)
 
 draw(f1+f2)

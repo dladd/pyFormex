@@ -1,9 +1,6 @@
 #!/usr/bin/env pyformex
 # $Id$
 
-from simple import unitcircle
-
-
 clear()
 n = 16
 

@@ -73,3 +73,14 @@ def multiSave():
         fn = fs.getFilename()
     draw.saveMulti(fn,verbose=True)
 
+def autoSave():
+    """Automatically save an image on each draw operation.
+    """
+    if draw.autosave:
+        fn = None
+    else:
+        dir = GD.cfg['workdir']
+        fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg)")
+        fn = fs.getFilename()
+    draw.saveAuto(fn,verbose=True)
+

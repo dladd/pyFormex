@@ -42,7 +42,7 @@ draw (e,color=red)
 
 
 if baseGeom == 0 and ack('Export to .stl?'):
-    import stl
+    from plugins import stl
     f = file('novation.stl','w')
     F = e # + b
     # Create triangles

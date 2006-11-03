@@ -138,6 +138,7 @@ MenuData = [
         ("Sep",None,None),
         ("Action","Save &Image","fileMenu.saveImage"),
         ("Action","Toggle &MultiSave","fileMenu.multiSave"),
+        ("Action","Toggle &AutoSave","fileMenu.autoSave"),
         ("Sep",None,None),
         ("Action","E&xit","GD.app.exit"), ]),
     ("Popup","&Settings",[

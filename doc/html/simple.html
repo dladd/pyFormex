@@ -58,7 +58,7 @@ The&nbsp;sphere&nbsp;is&nbsp;modeled&nbsp;by&nbsp;a&nbsp;regular&nbsp;grid&nbsp;
 ny&nbsp;latitude&nbsp;circles&nbsp;and&nbsp;their&nbsp;diagonals.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Sphere2-__init__"><strong>__init__</strong></a>(self, nx, ny, r<font color="#909090">=1</font>, top<font color="#909090">=0</font>, bot<font color="#909090">=180</font>)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;<a href="#Sphere2">Sphere2</a>&nbsp;object.<br>
+<dl><dt><a name="Sphere2-__init__"><strong>__init__</strong></a>(self, nx, ny, r<font color="#909090">=1</font>, bot<font color="#909090">=-90</font>, top<font color="#909090">=90</font>)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;<a href="#Sphere2">Sphere2</a>&nbsp;object.<br>
 &nbsp;<br>
 A&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;r&nbsp;is&nbsp;modeled&nbsp;by&nbsp;a&nbsp;regular&nbsp;grid&nbsp;of&nbsp;nx<br>
 longitude&nbsp;circles,&nbsp;ny&nbsp;latitude&nbsp;circles&nbsp;and&nbsp;their&nbsp;diagonals.<br>
@@ -221,6 +221,8 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;itself.</tt></dd></dl>
 
+<dl><dt><a name="Sphere2-cospherical"><strong>cospherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Same&nbsp;as&nbsp;spherical,&nbsp;but&nbsp;using&nbsp;clotatitude.</tt></dd></dl>
+
 <dl><dt><a name="Sphere2-cylindrical"><strong>cylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cylindrical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
 dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
@@ -326,15 +328,6 @@ numpy&nbsp;module.<br>
 This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map1&nbsp;and&nbsp;mapd.<br>
 Example:&nbsp;E.<a href="#Sphere2-map">map</a>(lambda&nbsp;x,y,z:&nbsp;[2*x,3*y,4*z])<br>
 is&nbsp;equivalent&nbsp;with&nbsp;E.<a href="#Sphere2-scale">scale</a>([2,3,4])</tt></dd></dl>
-
-<dl><dt><a name="Sphere2-newspherical"><strong>newspherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
-&nbsp;<br>
-&lt;dir&gt;&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
-distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;latitude(phi).<br>
-&lt;scale&gt;&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
-Angles&nbsp;are&nbsp;then&nbsp;interpreted&nbsp;in&nbsp;degrees.<br>
-Latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;is&nbsp;measured&nbsp;from&nbsp;equator&nbsp;in&nbsp;direction<br>
-of&nbsp;north&nbsp;pole(90).&nbsp;South&nbsp;pole&nbsp;is&nbsp;-90.</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-nnodel"><strong>nnodel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
 &nbsp;<br>
@@ -532,15 +525,15 @@ Sorting&nbsp;is&nbsp;done&nbsp;according&nbsp;to&nbsp;the&nbsp;bbox&nbsp;of&nbsp
 !!&nbsp;NOT&nbsp;FULLY&nbsp;IMPLEMENTED:&nbsp;CURRENTLY&nbsp;ONLY&nbsp;SORTS&nbsp;ACCORDING&nbsp;TO<br>
 !!&nbsp;THE&nbsp;0-direction&nbsp;OF&nbsp;NODE&nbsp;0</tt></dd></dl>
 
-<dl><dt><a name="Sphere2-spherical"><strong>spherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
+<dl><dt><a name="Sphere2-spherical"><strong>spherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>, colat<font color="#909090">=False</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
 &lt;dir&gt;&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
-distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;colatitude(phi).<br>
+longitude(theta),&nbsp;latitude(phi)&nbsp;and&nbsp;distance(r).<br>
 &lt;scale&gt;&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
 Angles&nbsp;are&nbsp;then&nbsp;interpreted&nbsp;in&nbsp;degrees.<br>
-Colatitude&nbsp;is&nbsp;90&nbsp;degrees&nbsp;-&nbsp;latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured<br>
-from&nbsp;north&nbsp;pole(0)&nbsp;to&nbsp;south&nbsp;pole(180).&nbsp;This&nbsp;choice&nbsp;facilitates&nbsp;the<br>
-creation&nbsp;of&nbsp;spherical&nbsp;domes.</tt></dd></dl>
+Latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle,&nbsp;is&nbsp;measured&nbsp;from&nbsp;equator&nbsp;in<br>
+direction&nbsp;of&nbsp;north&nbsp;pole(90).&nbsp;South&nbsp;pole&nbsp;is&nbsp;-90.<br>
+If&nbsp;colat=True,&nbsp;the&nbsp;third&nbsp;coordinate&nbsp;is&nbsp;the&nbsp;colatitude&nbsp;(90-lat)&nbsp;instead.</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-swapaxes"><strong>swapaxes</strong></a>(self, i, j)</dt><dd><tt>Swap&nbsp;coordinate&nbsp;axes&nbsp;i&nbsp;and&nbsp;j</tt></dd></dl>
 
@@ -556,9 +549,9 @@ The&nbsp;angle&nbsp;value&nbsp;is&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl
 <dl><dt><a name="Sphere2-toSpherical"><strong>toSpherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cartesian&nbsp;to&nbsp;spherical&nbsp;coordinates.<br>
 &nbsp;<br>
 dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;axes&nbsp;are&nbsp;parallel&nbsp;to&nbsp;respectively<br>
-the&nbsp;spherical&nbsp;axes&nbsp;distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;colatitude(phi).<br>
-Colatitude&nbsp;is&nbsp;90&nbsp;degrees&nbsp;-&nbsp;latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured<br>
-from&nbsp;north&nbsp;pole(0)&nbsp;to&nbsp;south&nbsp;pole(180).<br>
+the&nbsp;spherical&nbsp;axes&nbsp;distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;latitude(phi).<br>
+Latitude&nbsp;is&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured&nbsp;from&nbsp;equator&nbsp;in&nbsp;direction<br>
+of&nbsp;north&nbsp;pole(90).&nbsp;South&nbsp;pole&nbsp;is&nbsp;-90.<br>
 Default&nbsp;order&nbsp;is&nbsp;[0,1,2],&nbsp;thus&nbsp;the&nbsp;equator&nbsp;plane&nbsp;is&nbsp;the&nbsp;(x,y)-plane.<br>
 The&nbsp;returned&nbsp;angle&nbsp;values&nbsp;are&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
@@ -657,6 +650,10 @@ The&nbsp;user&nbsp;may&nbsp;create&nbsp;its&nbsp;own&nbsp;formatting&nbsp;method
 This&nbsp;is&nbsp;a&nbsp;class&nbsp;function.&nbsp;It&nbsp;should&nbsp;be&nbsp;used&nbsp;asfollows:<br>
 <a href="formex.html#Formex">Formex</a>.<a href="#Sphere2-setPrintFunction">setPrintFunction</a>(<a href="formex.html#Formex">Formex</a>.asArray).</tt></dd></dl>
 
+<hr>
+Data and other attributes inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
+<dl><dt><strong>utils</strong> = &lt;module 'utils' from './utils.pyc'&gt;</dl>
+
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
@@ -670,7 +667,7 @@ The&nbsp;sphere&nbsp;is&nbsp;modeled&nbsp;by&nbsp;the&nbsp;triangles&nbsp;formed
 nx&nbsp;longitude&nbsp;circles,&nbsp;ny&nbsp;latitude&nbsp;circles&nbsp;and&nbsp;their&nbsp;diagonals.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Sphere3-__init__"><strong>__init__</strong></a>(self, nx, ny, r<font color="#909090">=1</font>, top<font color="#909090">=0</font>, bot<font color="#909090">=180</font>)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;<a href="#Sphere3">Sphere3</a>&nbsp;object.<br>
+<dl><dt><a name="Sphere3-__init__"><strong>__init__</strong></a>(self, nx, ny, r<font color="#909090">=1</font>, bot<font color="#909090">=-90</font>, top<font color="#909090">=90</font>)</dt><dd><tt>Construct&nbsp;a&nbsp;new&nbsp;<a href="#Sphere3">Sphere3</a>&nbsp;object.<br>
 &nbsp;<br>
 A&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;r&nbsp;is&nbsp;modeled&nbsp;by&nbsp;the&nbsp;triangles&nbsp;fromed&nbsp;by&nbsp;a&nbsp;regular<br>
 grid&nbsp;of&nbsp;nx&nbsp;longitude&nbsp;circles,&nbsp;ny&nbsp;latitude&nbsp;circles&nbsp;and&nbsp;their&nbsp;diagonals.<br>
@@ -833,6 +830,8 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-copy"><strong>copy</strong></a>(self)</dt><dd><tt>Returns&nbsp;a&nbsp;deep&nbsp;copy&nbsp;of&nbsp;itself.</tt></dd></dl>
 
+<dl><dt><a name="Sphere3-cospherical"><strong>cospherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Same&nbsp;as&nbsp;spherical,&nbsp;but&nbsp;using&nbsp;clotatitude.</tt></dd></dl>
+
 <dl><dt><a name="Sphere3-cylindrical"><strong>cylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cylindrical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
 dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
@@ -938,15 +937,6 @@ numpy&nbsp;module.<br>
 This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods.&nbsp;See&nbsp;also&nbsp;map1&nbsp;and&nbsp;mapd.<br>
 Example:&nbsp;E.<a href="#Sphere3-map">map</a>(lambda&nbsp;x,y,z:&nbsp;[2*x,3*y,4*z])<br>
 is&nbsp;equivalent&nbsp;with&nbsp;E.<a href="#Sphere3-scale">scale</a>([2,3,4])</tt></dd></dl>
-
-<dl><dt><a name="Sphere3-newspherical"><strong>newspherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
-&nbsp;<br>
-&lt;dir&gt;&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
-distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;latitude(phi).<br>
-&lt;scale&gt;&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
-Angles&nbsp;are&nbsp;then&nbsp;interpreted&nbsp;in&nbsp;degrees.<br>
-Latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;is&nbsp;measured&nbsp;from&nbsp;equator&nbsp;in&nbsp;direction<br>
-of&nbsp;north&nbsp;pole(90).&nbsp;South&nbsp;pole&nbsp;is&nbsp;-90.</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-nnodel"><strong>nnodel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
 &nbsp;<br>
@@ -1144,15 +1134,15 @@ Sorting&nbsp;is&nbsp;done&nbsp;according&nbsp;to&nbsp;the&nbsp;bbox&nbsp;of&nbsp
 !!&nbsp;NOT&nbsp;FULLY&nbsp;IMPLEMENTED:&nbsp;CURRENTLY&nbsp;ONLY&nbsp;SORTS&nbsp;ACCORDING&nbsp;TO<br>
 !!&nbsp;THE&nbsp;0-direction&nbsp;OF&nbsp;NODE&nbsp;0</tt></dd></dl>
 
-<dl><dt><a name="Sphere3-spherical"><strong>spherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
+<dl><dt><a name="Sphere3-spherical"><strong>spherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>, colat<font color="#909090">=False</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;spherical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
 &lt;dir&gt;&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;are&nbsp;interpreted&nbsp;as&nbsp;resp.<br>
-distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;colatitude(phi).<br>
+longitude(theta),&nbsp;latitude(phi)&nbsp;and&nbsp;distance(r).<br>
 &lt;scale&gt;&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;to&nbsp;the&nbsp;transformation.<br>
 Angles&nbsp;are&nbsp;then&nbsp;interpreted&nbsp;in&nbsp;degrees.<br>
-Colatitude&nbsp;is&nbsp;90&nbsp;degrees&nbsp;-&nbsp;latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured<br>
-from&nbsp;north&nbsp;pole(0)&nbsp;to&nbsp;south&nbsp;pole(180).&nbsp;This&nbsp;choice&nbsp;facilitates&nbsp;the<br>
-creation&nbsp;of&nbsp;spherical&nbsp;domes.</tt></dd></dl>
+Latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle,&nbsp;is&nbsp;measured&nbsp;from&nbsp;equator&nbsp;in<br>
+direction&nbsp;of&nbsp;north&nbsp;pole(90).&nbsp;South&nbsp;pole&nbsp;is&nbsp;-90.<br>
+If&nbsp;colat=True,&nbsp;the&nbsp;third&nbsp;coordinate&nbsp;is&nbsp;the&nbsp;colatitude&nbsp;(90-lat)&nbsp;instead.</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-swapaxes"><strong>swapaxes</strong></a>(self, i, j)</dt><dd><tt>Swap&nbsp;coordinate&nbsp;axes&nbsp;i&nbsp;and&nbsp;j</tt></dd></dl>
 
@@ -1168,9 +1158,9 @@ The&nbsp;angle&nbsp;value&nbsp;is&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl
 <dl><dt><a name="Sphere3-toSpherical"><strong>toSpherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cartesian&nbsp;to&nbsp;spherical&nbsp;coordinates.<br>
 &nbsp;<br>
 dir&nbsp;specifies&nbsp;which&nbsp;coordinates&nbsp;axes&nbsp;are&nbsp;parallel&nbsp;to&nbsp;respectively<br>
-the&nbsp;spherical&nbsp;axes&nbsp;distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;colatitude(phi).<br>
-Colatitude&nbsp;is&nbsp;90&nbsp;degrees&nbsp;-&nbsp;latitude,&nbsp;i.e.&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured<br>
-from&nbsp;north&nbsp;pole(0)&nbsp;to&nbsp;south&nbsp;pole(180).<br>
+the&nbsp;spherical&nbsp;axes&nbsp;distance(r),&nbsp;longitude(theta)&nbsp;and&nbsp;latitude(phi).<br>
+Latitude&nbsp;is&nbsp;the&nbsp;elevation&nbsp;angle&nbsp;measured&nbsp;from&nbsp;equator&nbsp;in&nbsp;direction<br>
+of&nbsp;north&nbsp;pole(90).&nbsp;South&nbsp;pole&nbsp;is&nbsp;-90.<br>
 Default&nbsp;order&nbsp;is&nbsp;[0,1,2],&nbsp;thus&nbsp;the&nbsp;equator&nbsp;plane&nbsp;is&nbsp;the&nbsp;(x,y)-plane.<br>
 The&nbsp;returned&nbsp;angle&nbsp;values&nbsp;are&nbsp;given&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
@@ -1268,6 +1258,10 @@ Currently&nbsp;there&nbsp;are&nbsp;two&nbsp;available&nbsp;functions:&nbsp;asFor
 The&nbsp;user&nbsp;may&nbsp;create&nbsp;its&nbsp;own&nbsp;formatting&nbsp;method.<br>
 This&nbsp;is&nbsp;a&nbsp;class&nbsp;function.&nbsp;It&nbsp;should&nbsp;be&nbsp;used&nbsp;asfollows:<br>
 <a href="formex.html#Formex">Formex</a>.<a href="#Sphere3-setPrintFunction">setPrintFunction</a>(<a href="formex.html#Formex">Formex</a>.asArray).</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
+<dl><dt><strong>utils</strong> = &lt;module 'utils' from './utils.pyc'&gt;</dl>
 
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1510,7 +1504,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 6<br>
 <strong>SHIFT_OVERFLOW</strong> = 2<br>
 <strong>SHIFT_UNDERFLOW</strong> = 4<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint64'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.uint8'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1529,7 +1523,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...py.int8'&gt;: &lt;function &lt;lambda&gt; at 0x2b8da83daed8&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2....uint64'&gt;: &lt;function &lt;lambda&gt; at 0x2b016a93ae60&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1573,7 +1567,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...pe 'numpy.uint64'&gt;: 8, &lt;type 'numpy.string_'&gt;: 0}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...numpy.complex128'&gt;: 16, &lt;type 'numpy.uint64'&gt;: 8}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

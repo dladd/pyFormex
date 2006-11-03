@@ -306,7 +306,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-    global allowwait, currentView
+    global allowwait, currentView, autosave
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
@@ -346,6 +346,8 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
         GD.canvas.setView(bbox,view)
         currentView = view
     GD.canvas.update()
+    if autosave:
+        saveNext()
     if allowwait and wait:
         drawlock()
     return actor
@@ -431,7 +433,7 @@ def bgcolor(color):
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
     #GD.canvas.setLinewidth(float(wid))
-    GD.cfg['linewidth'] = wid
+    GD.cfg['draw/linewidth'] = wid
 
 def clear():
     """Clear the canvas"""
@@ -648,6 +650,7 @@ def saveNext():
         multisave = [ name,nr,fmt ]
 
 multisave = None
+autosave = False
 
 
 def saveMulti(fn=None,fmt=None,verbose=False):
@@ -692,5 +695,15 @@ def saveMulti(fn=None,fmt=None,verbose=False):
         multisave = [ name,nr,fmt ]
 
 
+def saveAuto(fn=None,fmt=None,verbose=False):
+    """Start/Stop autosave mode.
+
+    If a filename is specified, starts autosave mode with the specified
+    file name.
+    If no filename is specified and autosave is on, stops autosave mode.
+    """
+    global multisave,autosave
+    saveMulti(fn,fmt,verbose=False)
+    autosave = multisave is not None
 
 #### End

@@ -1032,18 +1032,22 @@ class Formex:
         In the latter case, the scaling is homothetic."""
         return Formex(self.f*scale,self.p)
 
-    def translate(self,vector,distance=None):
-        """Returns a copy translated over distance in direction of vector.
 
+# WE can merge translate and translate1 together
+#   first arg = direction (either axis number or vector) 
+#   second arg = distance (if None, either 1.0 or length of vector)
+    def translate(self,dir,distance=None):
+        """Returns a copy translated over distance in direction dir.
+
+        dir is a vector specifying the direction.
         If no distance is given, translation is over the specified vector.
         If a distance is given, translation is over the specified distance
-        in the direction of the vector."""
-        if len(vector) == 2:
-            vector.append(0.0)
+        in the direction of dir."""
+        if len(dir) == 2:
+            dir.append(0.0)
         if distance:
-            return Formex(self.f + scale(unitvector(vector),distance),self.p)
-        else:
-            return Formex(self.f + vector,self.p)
+            dir = scale(unitvector(dir),distance)
+        return Formex(self.f + dir,self.p)
 
     # This could be replaced by a call to translate(), but it is cheaper
     # because we operate on one third of the coordinates only
@@ -1085,10 +1089,11 @@ class Formex:
         f[:,:,dir] += skew * f[:,:,dir1]
         return Formex(f,self.p)
 
-    def reflect(self,dir,pos=0):
+    def reflect(self,dir=2,pos=0):
         """Returns a Formex mirrored in direction dir against plane at pos.
 
         Default position of the plane is through the origin.
+        Default mirror direction is the z-direction.
         """
         f = self.f.copy()
         f[:,:,dir] = 2*pos - f[:,:,dir]
@@ -1147,54 +1152,36 @@ class Formex:
         f[:,:,2] = z
         return Formex(f,self.p)
     
-    def newspherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
+    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
         """Converts from spherical to cartesian after scaling.
 
         <dir> specifies which coordinates are interpreted as resp.
-        distance(r), longitude(theta) and latitude(phi).
+        longitude(theta), latitude(phi) and distance(r).
         <scale> will scale the coordinate values prior to the transformation.
         Angles are then interpreted in degrees.
-        Latitude, i.e. the elevation angle is measured from equator in direction
-        of north pole(90). South pole is -90.
+        Latitude, i.e. the elevation angle, is measured from equator in
+        direction of north pole(90). South pole is -90.
+        If colat=True, the third coordinate is the colatitude (90-lat) instead.
         """
         f = zeros(self.f.shape,dtype=Float)
-        r = scale[0] * self.f[:,:,dir[0]]
-        theta = (scale[1]*rad) * self.f[:,:,dir[1]]
-        phi = (scale[2]*rad) * self.f[:,:,dir[2]]
+        theta = (scale[0]*rad) * self.f[:,:,dir[0]]
+        phi = (scale[1]*rad) * self.f[:,:,dir[1]]
+        r = scale[2] * self.f[:,:,dir[2]]
+        if colat:
+            phi = 90.0*rad - phi
         rc = r*cos(phi)
         f[:,:,0] = rc*cos(theta)
         f[:,:,1] = rc*sin(theta)
         f[:,:,2] = r*sin(phi)
-        return Formex(f,self.p)
-    
-    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
-        """Converts from spherical to cartesian after scaling.
-
-        <dir> specifies which coordinates are interpreted as resp.
-        distance(r), longitude(theta) and colatitude(phi).
-        <scale> will scale the coordinate values prior to the transformation.
-        Angles are then interpreted in degrees.
-        Colatitude is 90 degrees - latitude, i.e. the elevation angle measured
-        from north pole(0) to south pole(180). This choice facilitates the
-        creation of spherical domes.
-        """
-        f = zeros(self.f.shape,dtype=Float)
-        r = scale[0] * self.f[:,:,dir[0]]
-        theta = (scale[1]*rad) * self.f[:,:,dir[1]]
-        phi = (scale[2]*rad) * self.f[:,:,dir[2]]
-        rc = r*sin(phi)
-        f[:,:,0] = rc*cos(theta)
-        f[:,:,1] = rc*sin(theta)
-        f[:,:,2] = r*cos(phi)
         return Formex(f,self.p)
 
     def toSpherical(self,dir=[0,1,2]):
         """Converts from cartesian to spherical coordinates.
 
         dir specifies which coordinates axes are parallel to respectively
-        the spherical axes distance(r), longitude(theta) and colatitude(phi).
-        Colatitude is 90 degrees - latitude, i.e. the elevation angle measured
-        from north pole(0) to south pole(180).
+        the spherical axes distance(r), longitude(theta) and latitude(phi).
+        Latitude is the elevation angle measured from equator in direction
+        of north pole(90). South pole is -90.
         Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
         The returned angle values are given in degrees.
         """
@@ -1493,7 +1480,11 @@ class Formex:
     # New users should avoid these functions!
     # The may be removed in future.
     #
-
+    import utils
+    
+    def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
+        """Same as spherical, but using clotatitude."""
+        return self.spherical(dir,scale,colat=True)
 
     # Formian compatibility functions
     # These will be moved to a separate file in future.
@@ -1607,7 +1598,7 @@ class Formex:
         return self.cylindrical(scale=[b1,b2,1.])
 
     def bs(self,b1,b2,b3):
-        return self.spherical(scale=[b1,b2,b3])
+        return self.spherical(scale=[b1,b2,b3],colat=True)
 
     pex = unique
     def tic(f):
@@ -1683,6 +1674,15 @@ def readfile(file,sep=',',plexitude=1,dimension=3):
     dimension * plexitude.
     ).where the coordinates are read from fileRead a set of coordinates from file in a Formex."""
     return Formex(fromfile(file,sep=sep).reshape((-1,plexitude,dimension)))
+
+
+def bbox(formexlist):
+    """Computes the bounding box of a collection of formices.
+
+    This is like the bbox() method of the Formex class, but the resulting
+    box encloses all the Formices in the list.
+    """
+    return Formex(concatenate([ [f.bbox()] for f in formexlist ])).bbox()
 
 
 ##############################################################################

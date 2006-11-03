@@ -21,7 +21,7 @@ h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals
 f = m+d+h
 draw(f)
 
-g = f.translate([0,a,1]).spherical([2,0,1],[rd,360./nx,bot/(ny+a)])
+g = f.translate([0,a,1]).cospherical(scale=[360./nx,bot/(ny+a),rd])
 clear()
 draw(g)
 
@@ -30,16 +30,15 @@ draw(g)
 clear()
 base = Formex( [[[0,0,0],[1,0,0],[1,1,0]],
                 [[1,1,0],[0,1,0],[0,0,0]]],
-               [1,3])
+               [1,3] )
 draw(base)
 
 f = base.replic2(nx,ny,1,1)
 draw(f)
 
-h = f.translate([0,a,1]).spherical([2,0,1],[rd,360./nx,bot/(ny+a)])
+h = f.translate([0,a,1]).cospherical(scale=[360./nx,bot/(ny+a),rd])
 clear()
 draw(h)
-
 
 # Both
 
@@ -48,7 +47,10 @@ h = h.translate([rd,0,0])
 clear()
 #GD.cfg['render/ambient'] = 0.4
 #GD.cfg['render/specular'] = 0.1
-bb = (Formex([g.bbox()]) + Formex([h.bbox()])).bbox()
+#bb = (Formex([g.bbox()]) + Formex([h.bbox()])).bbox()
+bb = bbox([g,h])
 draw(g,bbox=bb)
 draw(h,bbox=bb)
 
+smooth()
+GD.canvas.update()

@@ -213,6 +213,8 @@ if GD.options.gui:
     for s in optscale/10. * arange(11):
         deformed_plot(s)
 
+    linewidth(1)
+
     ### Rotate the model
 
     ##drawtimeout = 0
