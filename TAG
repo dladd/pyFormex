@@ -1,7 +1,12 @@
 #!/bin/bash
 # Tag the current repository
 #
-RELEASE=0.3
+[ -n "$1" ] || {
+	echo "Usage: TAG <release>"
+    echo "  Tags the current repository as <release>"
+    exit 1
+}
+RELEASE=$1
 echo "Tag current repository as release $RELEASE? (y/n) "
 read ans
 if [ "${ans}" = "y" ]; then

@@ -162,23 +162,20 @@ class GUI:
         self.toolbar.addSeparator()
         if GD.cfg['gui/camerabuttons']:
             toolbar.addCameraButtons(self.toolbar)
+        self.menu.show()
         # Create a menu with standard views
         # and insert it before the help menu
         self.viewsMenu = None
         if GD.cfg['gui/viewsmenu']:
             self.viewsMenu = views.ViewsMenu()
-            self.menu.insertMenu(self.menus['&Help'],self.viewsMenu)
+            self.insertMenu(self.viewsMenu)
         # Install the default canvas views
         # defviews = self.canvas.views.keys()
         # NO, these are not sorted, better:
         defviews = [ 'front', 'back', 'top', 'bottom', 'left', 'right', 'iso' ]
         self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
-        # Create a menu with pyFormex examples
-        # and insert it before the help menu
-        self.examples = scriptsMenu.ScriptsMenu(GD.cfg['exampledir'])
-        self.menu.insertMenu(self.menus['&Help'],self.examples)
         # Display the main menubar
-        self.menu.show()
+        #self.menu.show()
         self.resize(*size)
         self.moveto(pos[0],pos[1])
         if GD.options.redirect:
@@ -188,6 +185,12 @@ class GUI:
             printsize(self.main,'Main:')
             printsize(self.canvas,'Canvas:')
             printsize(self.board,'Board:')
+
+
+    def insertMenu(self,menu,before='&Help'):
+        """Insert a menu in the menubar before the specified menu."""
+        self.menu.insertMenu(self.menus[before],menu)
+        self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
         
     
     def resizeCanvas(self,wd,ht):
@@ -332,8 +335,12 @@ def runApp(args):
     GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.canvas = GD.gui.canvas
-    #print "Canvas Created"
     GD.gui.main.show()   # This creates the X Error ###
+    # Create a menu with pyFormex examples
+    # and insert it before the help menu
+    GD.gui.examples = scriptsMenu.ScriptsMenu(GD.cfg['exampledir'])
+    GD.gui.insertMenu(GD.gui.examples)
+    #print "Canvas Created"
     #print "GUI available"
     GD.board.add(GD.Version+"   (C) B. Verhegghe")
     # remaining args are interpreted as scripts

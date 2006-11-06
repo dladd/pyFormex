@@ -83,124 +83,39 @@ class DAction(QtGui.QAction):
 def addMenuItems(menu, items=[]):
     """Add a list of items to a menu.
 
-    Each item is a tuple of three strings : Type, Text, Value.
-    Type specifies the menu item type and must be one of
-    'Sep', 'Popup', 'Action', 'VAction'.
-    
-    'Sep' is a separator item. Its Text and Value fields are not used.
-    
-    For the other types, Text is the string that will be displayed in the
-    menu. It can include a '&' character to flag the hotkey.
-    
-    'Popup' is a popup submenu item. Its value should be an item list,
-    defining the menu to pop up when activated.
-    
-    'Action' is an active item. Its value is a python function that will be
-    executed when the item is activated. It should be a global function
-    without arguments.
-    
-    'VAction' is an active item where the value is a tuple of an function
-    and an integer argument. When activated, the function will be executed
-    with the specified argument. With 'VAction', you can bind multiple
-    menu items to the same function.
-    """
-#
-# Using ("SAction","text",foo) is almost equivalent to
-# using ("Action","text","foo"), but the latter allows for functions
-# that have not been defined yet in this scope!
-#
+    Each item is a tuple of two to four elements:
+       Item Text, Action, [ ShortCut, Icon ].
 
-    for key,txt,val in items:
-        if key == "Sep":
+    Item text is the text that will be displayed in the menu. An optional '&'
+    may be used to flag the next character as the shortcut key. The '&' will
+    be stripped off before displaying the text.
+
+    Action can be any of the following:
+      - a Python function or instance method : it will be called when the
+        item is selected,
+      - a list of Menu Items: a popup Menu will be created that will appear
+        when the item is selected,
+      - a string '---' : this will create a separator item with no action,
+      - a string that will evaluate to one of the above.
+    
+    ShortCut is an optional key combination to select the item.
+    """
+    for item in items:
+        txt,val = item[:2]
+        print "Adding item %s: %s" % (txt,val)
+        if val == '---':
             menu.addSeparator()
-        elif key == "Popup":
+            continue
+        if type(val) == str:
+            val = eval(val)
+        if isinstance(val, list):
             pop = QtGui.QMenu(txt,menu)
             addMenuItems(pop,val)
             menu.addMenu(pop)
-        elif key == "Action":
-            menu.addAction(txt,eval(val))
-##        elif key == "VAction":
-##            id = menu.insertItem(txt,eval(val[0]))
-##            menu.setItemParameter(id,val[1])
-##        elif key == "SAction":
-##            menu.insertItem(txt,val)
         else:
-            raise RuntimeError, "Invalid key %s in menu item"%key
-
-MenuData = [
-    ("Popup","&File",[
-        ("Action","&New","fileMenu.newFile"),
-        ("Action","&Open","fileMenu.openFile"),
-        ("Action","&Play","fileMenu.play"),
-        ("Action","&Edit","fileMenu.edit"),
-#        ("Action","&Save","save"),
-#        ("Action","Save &As","saveAs"),
-        ("Sep",None,None),
-        ("Action","Save &Image","fileMenu.saveImage"),
-        ("Action","Toggle &MultiSave","fileMenu.multiSave"),
-        ("Action","Toggle &AutoSave","fileMenu.autoSave"),
-        ("Sep",None,None),
-        ("Action","E&xit","GD.app.exit"), ]),
-    ("Popup","&Settings",[
-#        ("Action","&Preferences","preferences"), 
-        ("Action","&Font","prefMenu.setFont"), 
-        ("Action","Font&Size","prefMenu.setFontSize"), 
-        ("Action","Toggle &Triade","draw.toggleTriade"), 
-        ("Action","&Drawwait Timeout","prefMenu.setDrawtimeout"), 
-        ("Action","&Background Color","prefMenu.setBGcolor"), 
-        ("Action","Line&Width","prefMenu.setLinewidth"), 
-        ("Action","&Canvas Size","prefMenu.setCanvasSize"), 
-        ("Action","&LocalAxes","prefMenu.setLocalAxes"),
-        ("Action","&GlobalAxes","prefMenu.setGlobalAxes"),
-        ("Action","&RotFactor","prefMenu.setRotFactor"),
-        ("Action","&PanFactor","prefMenu.setPanFactor"),
-        ("Action","&ZoomFactor","prefMenu.setZoomFactor"),
-        ("Action","&Wireframe","draw.wireframe"),
-        ("Action","&Flat","draw.flat"),
-        ("Action","&Smooth","draw.smooth"),
-        ("Action","&Render","prefMenu.setRender"),
-        ("Action","&Light0","prefMenu.setLight0"),
-        ("Action","&Light1","prefMenu.setLight1"),
-        ("Action","&Help","prefMenu.setHelp"),
-        ("Action","&Save Preferences","GD.savePreferences"), ]),
-    ("Popup","&Camera",[
-        ("Action","&Zoom In","cameraMenu.zoomIn"), 
-        ("Action","&Zoom Out","cameraMenu.zoomOut"), 
-        ("Action","&Dolly In","cameraMenu.dollyIn"), 
-        ("Action","&Dolly Out","cameraMenu.dollyOut"), 
-        ("Action","Translate &Right","cameraMenu.transRight"), 
-        ("Action","Translate &Left","cameraMenu.transLeft"), 
-        ("Action","Translate &Up","cameraMenu.transUp"),
-        ("Action","Translate &Down","cameraMenu.transDown"),
-        ("Action","Rotate &Right","cameraMenu.rotRight"),
-        ("Action","Rotate &Left","cameraMenu.rotLeft"),
-        ("Action","Rotate &Up","cameraMenu.rotUp"),
-        ("Action","Rotate &Down","cameraMenu.rotDown"), 
-        ("Action","Rotate &ClockWise","cameraMenu.twistRight"),
-        ("Action","Rotate &CCW","cameraMenu.twistLeft"),  ]),
-    ("Popup","&Actions",[
-        ("Action","&Step","draw.step"),
-        ("Action","&Continue","draw.fforward"), 
-        ("Action","&Clear","draw.clear"),
-        ("Action","&Redraw","draw.redraw"),
-        ("Action","&DrawSelected","draw.drawSelected"),
-        ("Action","&ListFormices","draw.printall"),
-        ("Action","&PrintBbox","draw.printbbox"),
-        ("Action","&PrintGlobals","draw.printglobals"),
-        ("Action","&PrintConfig","draw.printconfig"),  ]),
-    ("Popup","&Help",[
-##        ("Action","&Help","help.help"),
-        ("Action","&Manual","help.manual"),
-        ("Action","&PyDoc","help.pydoc"),
-        ("Action","pyFormex &Website","help.website"),
-        ("Action","&Description","help.description"), 
-        ("Action","&About","help.about"), 
-        ("Action","&Warning","help.testwarning"), ]) ]
+            menu.addAction(txt,val)
 
 
-
-#####################################################################
-# Opening, Playing and Saving pyformex scripts
 
 save = NotImplemented
 saveAs = NotImplemented
@@ -212,6 +127,77 @@ def editor():
     else:
         print "Open editor"
         GD.gui.showEditor()
+
+
+MenuData = [
+    ('&File',[
+        ('&New','fileMenu.newFile'),
+        ('&Open','fileMenu.openFile'),
+        ('&Play','fileMenu.play'),
+        ('&Edit','fileMenu.edit'),
+#        ('&Save','save'),
+#        ('Save &As','saveAs'),
+        ('---','---'),
+        ('Save &Image','fileMenu.saveImage'),
+        ('Toggle &MultiSave','fileMenu.multiSave'),
+        ('Toggle &AutoSave','fileMenu.autoSave'),
+        ('---','---'),
+        ('E&xit','GD.app.exit'), ]),
+    ('&Settings',[
+#        ('&Preferences','preferences'), 
+        ('&Font','prefMenu.setFont'), 
+        ('Font&Size','prefMenu.setFontSize'), 
+        ('Toggle &Triade','draw.toggleTriade'), 
+        ('&Drawwait Timeout','prefMenu.setDrawtimeout'), 
+        ('&Background Color','prefMenu.setBGcolor'), 
+        ('Line&Width','prefMenu.setLinewidth'), 
+        ('&Canvas Size','prefMenu.setCanvasSize'), 
+        ('&LocalAxes','prefMenu.setLocalAxes'),
+        ('&GlobalAxes','prefMenu.setGlobalAxes'),
+        ('&RotFactor','prefMenu.setRotFactor'),
+        ('&PanFactor','prefMenu.setPanFactor'),
+        ('&ZoomFactor','prefMenu.setZoomFactor'),
+        ('&Wireframe','draw.wireframe'),
+        ('&Flat','draw.flat'),
+        ('&Smooth','draw.smooth'),
+        ('&Render','prefMenu.setRender'),
+        ('&Light0','prefMenu.setLight0'),
+        ('&Light1','prefMenu.setLight1'),
+        ('&Help','prefMenu.setHelp'),
+        ('&Save Preferences','GD.savePreferences'), ]),
+    ('&Camera',[
+        ('&Zoom In','cameraMenu.zoomIn'), 
+        ('&Zoom Out','cameraMenu.zoomOut'), 
+        ('&Dolly In','cameraMenu.dollyIn'), 
+        ('&Dolly Out','cameraMenu.dollyOut'), 
+        ('Translate &Right','cameraMenu.transRight'), 
+        ('Translate &Left','cameraMenu.transLeft'), 
+        ('Translate &Up','cameraMenu.transUp'),
+        ('Translate &Down','cameraMenu.transDown'),
+        ('Rotate &Right','cameraMenu.rotRight'),
+        ('Rotate &Left','cameraMenu.rotLeft'),
+        ('Rotate &Up','cameraMenu.rotUp'),
+        ('Rotate &Down','cameraMenu.rotDown'), 
+        ('Rotate &ClockWise','cameraMenu.twistRight'),
+        ('Rotate &CCW','cameraMenu.twistLeft'),  ]),
+    ('&Actions',[
+        ('&Step','draw.step'),
+        ('&Continue','draw.fforward'), 
+        ('&Clear','draw.clear'),
+        ('&Redraw','draw.redraw'),
+        ('&DrawSelected','draw.drawSelected'),
+        ('&ListFormices','draw.printall'),
+        ('&PrintBbox','draw.printbbox'),
+        ('&PrintGlobals','draw.printglobals'),
+        ('&PrintConfig','draw.printconfig'),  ]),
+    ('&Help',[
+##        ('&Help','help.help'),
+        ('&Manual','help.manual'),
+        ('&PyDoc','help.pydoc'),
+        ('pyFormex &Website','help.website'),
+        ('&Description','help.description'), 
+        ('&About','help.about'), 
+        ('&Warning','help.testwarning'), ]) ]
 
 
 # End

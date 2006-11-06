@@ -4,6 +4,7 @@
 
 import os,types
 from PyQt4 import QtCore, QtGui
+import globaldata as GD
 
 
 class FileSelection(QtGui.QFileDialog):
@@ -157,3 +158,31 @@ def selectFont():
     the dialog with the OK or ENTER button.
     """
     return QtGui.QFontDialog.getFont()
+
+
+class Menu(QtGui.QMenu):
+    """A popup menu for user actions."""
+
+    def __init__(self,title='UserMenu',insert=False):
+        """Create the user menu."""
+        QtGui.QMenu.__init__(self,title)
+        if insert:
+            GD.gui.insertMenu(self)
+        else:
+            self.setWindowFlags(QtCore.Qt.Dialog)
+            self.setWindowTitle(title)
+        self.done = False
+
+    def addItem(self,item,func):
+        action = self.addAction(item)
+        action.connect(action,QtCore.SIGNAL('triggered()'),func)
+
+    def process(self):
+        if not self.done:
+            self.show()
+            GD.app.processEvents()
+
+    def close(self):
+        """Close the menu."""
+        self.done=True
+# End

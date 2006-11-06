@@ -1,86 +1,131 @@
 #!/usr/bin/env pyformex
 # $Id$
 
+"""Stl.py
+
+All this script does when executed is to construct a specialized menu with
+actions defined in this script, and display the menu.
+Then the script bails out, leaving the user the option to use the menu.
+Selecting an option removes the menu, so each action should redraw it.
+"""
+
 from plugins import f2abq, stl, tetgen, stl_abq
+from gui import widgets
 import commands, os
 
 clear()
 
-def stl_import(fn):
-    """Read and display an stl model from ascii file fn.
-    
-    Returns the model in a Formex.
-    """
-    message("Processing file %s" % fn)
-    F = Formex(stl.read_ascii(fn))
+global project,F,nodes,elems,surf
+project = F = nodes = elems = surf =None
+
+# Actions
+
+def read_stl():
+    global project,F
+    """Read an .stl surface model into a Formex."""
+    message("Choose the input .stl file\nIf you have none, run the Sphere_stl example to create one.")
+    fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
+    if fn:
+        os.chdir(os.path.dirname(fn))
+        message("Your current workdir is %s" % os.getcwd())
+        project = os.path.splitext(fn)[0]
+        message("Reading file %s" % fn)
+        F = Formex(stl.read_ascii(fn))
+        message("There are %d triangles in the model" % F.f.shape[0])
+        message("The bounding box is\n%s" % F.bbox())
+    menu.process()
+
+def show_stl():
+    """Display the .stl model."""
+    global F
     draw(F,color='green')
-    message("There are %d triangles in the model" % F.f.shape[0])
-    message("The bounding box is\n%s" % F.bbox())
-    return F
+    menu.process()
 
 
-def stl_export(fn,F,header="Created by stl_examples.py"):
+def export_stl():
     """Export an stl model stored in Formex F in Abaqus .inp format."""
-    message("Creating nodes and elements. This may take some time!")
-    GD.app.processEvents()
-    nodes,elems = F.nodesAndElements()
-    nnodes = nodes.shape[0]
-    nelems = elems.shape[0]
-    message("There are %d unique nodes and %d triangle elements in the model." % (nnodes,nelems))
-    stl_abq.abq_export(fn,nodes,elems,'S3',header)
+    global project,F
+    if ack("Creating nodes and elements.\nFor a large model, this could take quite some time!"):
+        GD.app.processEvents()
+        message("Creating nodes and elements.")
+        nodes,elems = F.nodesAndElements()
+        nnodes = nodes.shape[0]
+        nelems = elems.shape[0]
+        message("There are %d unique nodes and %d triangle elements in the model." % (nnodes,nelems))
+        stl_abq.abq_export(project+'.inp',nodes,elems,'S3',"Created by stl_examples.py")
+    menu.process()
+    
 
-
-
-def stl_tetgen(fn):
+def create_tetgen():
     """Generate a volume tetraeder mesh inside an stl surface."""
-    sta,out = commands.getstatusoutput('tetgen %s' % fn)
-    message(out)
+    fn = project + '.stl'
+    if os.path.exists(fn):
+        sta,out = commands.getstatusoutput('tetgen %s' % fn)
+        message(out)
+    menu.process()
 
 
-def read_tetgen(fn):
+def read_tetgen(surface=True, volume=True):
     """Read a tetgen model from files  fn.node, fn.ele, fn.smesh."""
-    nodes = tetgen.readNodes(fn+'.node')
+    global nodes,elems,surf
+    nodes = tetgen.readNodes(project+'.1.node')
     print "Read %d nodes" % nodes.shape[0]
-    elems = tetgen.readElems(fn+'.ele')
-    print "Read %d tetraeders" % elems.shape[0]
-    surf = tetgen.readSurface(fn+'.smesh')
-    print "Read %d triangles" % elems.shape[0]
-    return nodes,elems,surf
- 
-# Processing starts here
-    
-os.chdir('/home/bene/prj/pyformex/stl')
-message("Your current workdir is %s" % os.getcwd())
+    if volume:
+        elems = tetgen.readElems(project+'.1.ele')
+        print "Read %d tetraeders" % elems.shape[0]
+    if surface:
+        surf = tetgen.readSurface(project+'.1.smesh')
+        print "Read %d triangles" % surf.shape[0]
+    menu.process()
 
-message("Choose the input .stl file\nIf you have none, run the Sphere_stl example to create one.")
-fn = askFilename(".","Stl files (*.stl)")
-if not fn:
-    exit()
-    
-F = stl_import(fn)
-bn = os.path.splitext(fn)[0]
-    
-if ack("Shall I export this in Abaqus .inp format (May take some time!)?"):
-    stl_export(bn+'.inp',F,"Abaqus model converted from STL file %s" % fn)
 
-if ack("Shall I create a tetraeder mesh inside the surface (You need tetgen!)?"):
-    stl_tetgen(fn)
+def read_tetgen_surface():
+    read_tetgen(volume=False)
 
-if ack("Shall I read the generated mesh?"):
-    nodes,elems,surf = read_tetgen(bn+'.1') # tetgen add extra '.1'
-    volume = Formex(nodes[elems-1])
-    surface = Formex(nodes[surf-1])
-    clear()
-    if ack("Shall I show the surface mesh (triangles)?"):
-        draw(surface)
-    if ack("Shall I show the volume mesh (tetraeders)?"):
+    
+def read_tetgen_volume():
+    read_tetgen(surface=False)
+
+
+def show_tetgen_surface():
+    global nodes,elems,surf
+    if surf is not None:
+        surface = Formex(nodes[surf-1])
         clear()
-        draw(volume,eltype='tet',color='random')
-
-    if ack("Shall I export the surface mesh in Abaqus .inp format?"):
-        stl_abq.abq_export(bn+'-surface.inp',nodes,surf,'S3',"Abaqus model generated by tetgen from surface in STL file %s" % fn)
-    if ack("Shall I export the volume mesh in Abaqus .inp format?"):
-        stl_abq.abq_export(bn+'-volume.inp',nodes,elems,'C3D%d' % elems.shape[1],"Abaqus model generated by tetgen from surface in STL file %s" % fn)
+        draw(surface,color='red')
+    menu.process()
     
+
+def show_tetgen_volume():
+    global nodes,elems,surf
+    if elems is not None:
+        volume = Formex(nodes[elems-1])
+        clear()
+        draw(volume,color='random')
+    menu.process()
+    
+
+# Menu
+menu = widgets.Menu('STL',True) # Should be done before defining MenuData!
+
+MenuData = [
+    ("Action","&Read .stl ",read_stl),
+    ("Action","&Show .stl ",show_stl),
+    ("Action","&Export .stl ",export_stl),
+    ("Action","&Create tetgen",create_tetgen),
+    ("Action","&Read tetgen surface",read_tetgen_surface),
+    ("Action","&Read tetgen volume",read_tetgen_volume),
+    ("Action","&Read tetgen surface+volume",read_tetgen),
+    ("Action","&Show tetgen surface",show_tetgen_surface),
+    ("Action","&Show tetgen volume",show_tetgen_volume),
+    ("Action","&Done",menu.close),
+    ]
+
+for key,txt,val in MenuData:
+    print type(val)
+    menu.addItem(txt,val)
+
+# show the menu
+menu.process()
 
 # End
