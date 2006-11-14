@@ -23,6 +23,9 @@ multisave = False
 canPlay = False
 scriptName = None
 
+calpy_version = None   # do we have calpy?
+magick_version = None  # do we have imagemagick?
+
 def message(s):
     print s
 

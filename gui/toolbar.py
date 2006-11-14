@@ -41,8 +41,9 @@ def addCameraButtons(toolbar):
                 [ "Translate right", "right", cameraMenu.transRight ],
                 [ "Translate down", "down", cameraMenu.transDown ],
                 [ "Translate up", "up", cameraMenu.transUp ],
+                [ "Zoom Out", "zoomout", cameraMenu.zoomOut ],
                 [ "Zoom In", "zoomin", cameraMenu.zoomIn ],
-                [ "Zoom Out", "zoomout", cameraMenu.zoomOut ],  ]
+                ]
     for but in buttons:
         icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,but[1])+GD.cfg['gui/icontype']))
         a = toolbar.addAction(icon,but[0],but[2])

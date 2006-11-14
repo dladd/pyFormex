@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id: DoubleLayer.py 17 2004-10-08 14:37:45Z bene $
+# $Id$
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra

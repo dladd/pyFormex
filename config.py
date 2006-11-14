@@ -204,6 +204,7 @@ class Config(Dict):
 
     Lines starting with '#' are comments and are ignored, as are empty and
     blank lines.
+    Lines ending with '\' are continued on the next line.
     A line starting with '[' starts a new section. A section is nothing more
     than a Python dictionary inside the config dictionary. The section name
     is delimited by '['and ']'. All subsequent lines will be stored in the
@@ -321,12 +322,21 @@ class Config(Dict):
         section = None
         contents = {}
         lineno = 0
+        continuation = False
         for line in fil:
             lineno += 1
-            s = line.strip()
-            if len(s)==0 or s[0] == '#':
+            ls = line.strip()
+            if len(ls)==0 or ls[0] == '#':
                 continue
-            elif s[0] == '[':
+            if continuation:
+                s += ls
+            else:
+                s = ls
+            continuation = s[-1] == '\\'
+            if continuation:
+                s = s[:-1]
+                continue
+            if s[0] == '[':
                 if contents:
                     self.update(name=section,data=contents,removeLocals=True)
                     contents = {}
@@ -401,7 +411,7 @@ class Config(Dict):
 
     def __str__(self):
         """Format the Config in a way that can be read back."""
-        s = "# Config written by pyFormex\n\n"
+        s = "# Config written by pyFormex    -*- PYTHON -*-\n\n"
         for k,v in self.iteritems():
             if not isinstance(v,Dict):
                 s += dicttostr({k:v})

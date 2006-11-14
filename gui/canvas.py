@@ -1,7 +1,6 @@
 # canvas.py
 # $Id$
 """This implements an OpenGL drawing widget for painting 3D scenes."""
-#
 
 import globaldata as GD
 
@@ -28,7 +27,7 @@ except ImportError:
 
 
 def rgba(val):
-    """Rteurns a white shade OpenGL color of given intensity (0..1)"""
+    """Returns a white shade OpenGL color of given intensity (0..1)"""
     return (val,val,val,1.0)
 
 
@@ -394,28 +393,21 @@ class Canvas:
 
     def save(self,fn,fmt='png',options=None):
         """Save the current rendering as an image file."""
-        #self.raiseW()
         self.makeCurrent()
+        self.raise_()
+        self.display()
+        GD.app.processEvents()
         size = self.size()
         w = int(size.width())
         h = int(size.height())
         GD.debug("Saving image with current size %sx%s" % (w,h))
         if fmt in GD.image_formats_qt:
-            self.display()
             GL.glFlush()
-##            GL.glFinish()
-##            GL.glPixelStorei(GL.GL_PACK_ALIGNMENT,8)
-##            for i in range(1,9):
-##                GL.glPixelStorei(GL.GL_PACK_SKIP_PIXELS,i)
-##                GL.glReadBuffer(GL.GL_FRONT)
-##                pixels = GL.glReadPixelsub(0,4,8,1,GL.GL_RGB)
-##                print pixels.shape
-##                print pixels
-##           #qim = qt.QImage(pixels)
             qim = self.grabFrameBuffer()
-            qim.save(fn,fmt)
+            sta = qim.save(fn,fmt)
         elif fmt in GD.image_formats_gl2ps:
             self.savePS(fn,fmt)
+            sta = 0
         elif fmt in GD.image_formats_fromeps:
             import commands,os
             fneps = os.path.splitext(fn)[0] + '.eps'
@@ -430,7 +422,8 @@ class Canvas:
                 if sta:
                     GD.debug(out)
                 if delete:
-                    os.remove(fneps) 
+                    os.remove(fneps)
+        return sta
 
 
 # ONLY LOADED IF GL2PS FOUND ########################
@@ -483,8 +476,8 @@ class Canvas:
                 GL.glFinish()
                 state = gl2ps.gl2psEndPage()
             fp.close()
+            return 0
 
-        #Canvas.savePS = _savePS
 
         _start_message = '\nCongratulations! You have gl2ps, so I activated drawPS!'
 

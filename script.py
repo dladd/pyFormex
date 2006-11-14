@@ -3,11 +3,11 @@
 """Functions for executing pyFormex scripts."""
 
 import globaldata as GD
-import threading,os,commands,copy
+import threading,os,commands,copy,re
 
 import formex
 import utils
-
+    
 
 ######################### Exceptions #########################################
 
@@ -74,6 +74,28 @@ def log(s):
 # The default message handler is set here.
 # Best candidates are log/info
 message = log
+
+def system(cmdline,result='output'):
+    """Run a command and return its output.
+
+    If result == 'status', the exit status of the command is returned.
+    If result == 'output', the output of the command is returned.
+    If result == 'both', a tuple of status and output is returned.
+    """
+    if result == 'status':
+        return os.system(cmdline)
+    elif result == 'output':
+        return commands.getoutput(cmdline)
+    elif result == 'both':
+        return commands.getstatusoutput(cmdline)
+
+# Find interesting supporting software
+
+# Calpy
+m = re.match("Calpy (\S+) .*",system('calpy --version'))
+if m:
+    GD.calpy_version = m.group(1)
+    message("Congratulations! You have calpy version %s" % GD.calpy_version)
 
 ########################### PLAYING SCRIPTS ##############################
 
@@ -170,14 +192,6 @@ def listall():
 def save(filename,fmt):
     pass
 
-
-def system(cmdline,result='output'):
-    if result == 'status':
-        return os.system(cmdline)
-    elif result == 'output':
-        return commands.getoutput(cmdline)
-    elif result == 'both':
-        return commands.getstatusoutput(cmdline)
 
 def exit(all=False):
     if scriptRunning:

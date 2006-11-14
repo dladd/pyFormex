@@ -1,4 +1,4 @@
-# This is the default pyFormex config file. DO NOT CHANGE IT!
+# This is the default pyFormex config file. DO NOT CHANGE IT!  -*- PYTHON -*-
 #
 # Changes should go to /etc/pyformexrc (for site-wide changes)
 # or to ~/.pyformexrc (for personal settings).
@@ -15,11 +15,14 @@ import os
 # directories
 workdir="."
 icondir = os.path.join(pyformexdir,"icons")
-exampledir = os.path.join(pyformexdir,"examples")
 docdir = os.path.join(pyformexdir,"doc")
+# scriptdirs is a list of (title,dir) tuples
+scriptdirs = [ ('Examples',os.path.join(pyformexdir,'examples')) ]
+#imagesfromeps = True
+
 
 # commands
-editor = 'gnuclient %s'   # editor and flat text viewer
+editor = 'gnuclient -q %s'   # editor and flat text viewer
 viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
 browser = 'firefox %s'    # web browser
 # the %s in the above commands will be replaced with the filename/URL

@@ -4,7 +4,7 @@
 
 import globaldata as GD
 
-import sys,time,os.path,string
+import sys,time,os.path,string,re
 
 from PyQt4 import QtCore, QtGui, QtOpenGL
 import menu
@@ -16,11 +16,19 @@ import toolbar
 import canvas
 import views
 import script
-import draw
 import utils
+import draw
 
 
 _start_message = GD.Version + ', by B. Verhegghe'
+
+# Find interesting supporting software
+
+# import (ImageMagick)
+m = re.match("Version: ImageMagick (\S+) .*",script.system('import -version'))
+if m:
+    GD.magick_version = m.group(1)
+    script.message("Congratulations! You have ImageMagick version %s" % GD.magick_version)
 
 
 ################# Message Board ###############
@@ -98,14 +106,14 @@ def printsize(w,t=None):
 class GUI:
     """Implements a GUI for pyformex."""
 
-    def __init__(self,size=(800,600),pos=(0,0)):
+    def __init__(self,windowname,size=(800,600),pos=(0,0)):
         """Constructs the GUI.
 
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
         self.main = QtGui.QMainWindow()
-        self.main.setWindowTitle(GD.Version)
+        self.main.setWindowTitle(windowname)
         # add widgets to the main window
         self.statusbar = self.main.statusBar()
         self.curfile = QtGui.QLabel('No File')
@@ -191,6 +199,22 @@ class GUI:
         """Insert a menu in the menubar before the specified menu."""
         self.menu.insertMenu(self.menus[before],menu)
         self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
+
+    def removeMenu(self,menu):
+        """Remove a menu from the main menubar.
+
+        menu is either a menu title or a menu action.
+        """
+        if type(menu) == str:
+            if self.menus.has_key(menu):
+                menu = self.menus[menu]
+            else:
+                menu = None
+        else:
+            menu = menu.menuAction()
+            if menu not in self.menu.actions():
+                menu = None
+        self.menu.removeAction(menu)
         
     
     def resizeCanvas(self,wd,ht):
@@ -310,6 +334,15 @@ def setFontSize(s=None):
         GD.gui.update()
 
 
+def windowExists(windowname):
+    """Check if a GUI window with the given name exists.
+
+    On X-Window systems, we can use the xwininfo cammand to find out whether
+    a window with the specified name exists.
+    """
+    return not os.system('xwininfo -name "%s" > /dev/null 2>&1' % windowname)
+
+
 def runApp(args):
     """Create and run the qt application."""
     GD.app = QtGui.QApplication(args)
@@ -319,38 +352,47 @@ def runApp(args):
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
     if GD.cfg.get('imagesfromeps',False):
-        print "REMOVING qt image saving"
         GD.image_formats_qt = []
-        print GD.image_formats_qt
-        print GD.image_formats_gl2ps
-        print GD.image_formats_fromeps
     if GD.options.debug:
-        print "Image types for saving: ",GD.image_formats_qt
-        print "Image types for input: ",GD.image_formats_qtr
+        print "Qt image types for saving: ",GD.image_formats_qt
+        print "Qt image types for input: ",GD.image_formats_qtr
+        print "gl2ps image types:",GD.image_formats_gl2ps
+        print "image types converted from EPS:",GD.image_formats_fromeps
         
     # create GUI, show it, run it
+    windowname = GD.Version
+    count = 0
+    while windowExists(windowname):
+        if count > 255:
+            print "Can not open the main window --- bailing out"
+            return 1
+        count += 1
+        windowname = '%s (%s)' % (GD.Version,count)
     if GD.cfg.has_key('gui/fontsize'):
         setFontSize()
-    GD.gui = GUI(GD.cfg['gui/size'],GD.cfg['gui/pos'])
+    GD.gui = GUI(windowname,GD.cfg['gui/size'],GD.cfg['gui/pos'])
     GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.canvas = GD.gui.canvas
     GD.gui.main.show()   # This creates the X Error ###
     # Create a menu with pyFormex examples
     # and insert it before the help menu
-    GD.gui.examples = scriptsMenu.ScriptsMenu(GD.cfg['exampledir'])
-    GD.gui.insertMenu(GD.gui.examples)
-    #print "Canvas Created"
-    #print "GUI available"
+    menus = []
+    for title,dir in GD.cfg['scriptdirs']:
+        m = scriptsMenu.ScriptsMenu(title,dir)
+        GD.gui.insertMenu(m)
+        menus.append(m)
     GD.board.add(GD.Version+"   (C) B. Verhegghe")
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):
             draw.play(arg)
     GD.app_started = True
+    GD.debug("Using window name %s" % GD.gui.main.windowTitle())
     GD.app.exec_()
 
     # store the main window size/pos
     GD.cfg.update({'size':GD.gui.size(),'pos':GD.gui.pos()},name='gui')
+    return 0
 
 #### End

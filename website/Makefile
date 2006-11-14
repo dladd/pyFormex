@@ -3,12 +3,16 @@
 
 HTDOCS= pyformex.html examples.html *.png *.gif favicon.ico docdoc.inc
 DOCDOCS= doc/*.html
+MANDOCS= manual/*.html manual/*.png manual/*.png images/*.png
 RSYNC= rsync -uv -e ssh
 
 tar: web.tar.gz
 
-web.tar.gz: $(HTDOCS) $(DOCDOCS)
-	tar czf web.tar.gz $(HTDOCS) $(DOCDOCS)
+web.tar.gz: $(HTDOCS) $(DOCDOCS) ${MANDOCS}
+	rm -f web.tar.gz
+	tar cvf web.tar $(HTDOCS) $(DOCDOCS)
+	tar rvfh web.tar ${MANDOCS}
+	gzip web.tar
 
 docdoc.inc:
 	@for f in $(DOCDOCS); do echo "<li><a href=\"$$f\">$$(basename $$f)</a></li>"; done > docdoc.inc

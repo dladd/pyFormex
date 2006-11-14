@@ -41,46 +41,29 @@ def edit():
 
 play = draw.play
     
-def saveImage():
-    """Save the current rendering in image format.
+def saveImage(multi=False):
+    """Save an image to file.
 
-    This function will open a file selection dialog, and if a valid
-    file is returned, the current OpenGL rendering will be saved to it.
+    This will show the Save Image dialog, with the multisave mode checked if
+    multi = True. Then, depending on the user's selection, it will either:
+     - save the current Canvas/Window to file
+     - start the multisave/autosave mode
+     - do nothing
     """
-    global canvas
-    print "Saving image"
-    print GD.cfg
-    print GD.cfg['workdir']
-    indir = GD.cfg['workdir']
-    fs = widgets.FileSelection(indir,pattern="Images (*.png *.jpg *.eps)")
-    fn = fs.getFilename()
+    dia = widgets.SaveImageDialog(GD.cfg['workdir'],["Images (*.png)","Images (*.png *.jpg *.eps)"],multi=multi)
+    fn,window,multi,hotkey,auto = dia.getResult()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
-        draw.saveImage(fn,verbose=True)
+        draw.saveImage(fn,window,multi,hotkey,auto)
 
-def multiSave():
-    """Save a sequence of images.
+    
+def saveMulti():
+    """Toggle multisave mode on or off.
 
-    If the filename supplied has a trailing numeric part, subsequent images
-    will be numbered continuing from this number. Otherwise a numeric part
-    -000, -001, will be added to the filename.
+    If multisave mode is on, this will just turn off the mode.
+    If multisave is off, it acts as saveImage with multi==True.
     """
     if draw.multisave:
-        fn = None
+        draw.saveImage()
     else:
-        dir = GD.cfg['workdir']
-        fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg)")
-        fn = fs.getFilename()
-    draw.saveMulti(fn,verbose=True)
-
-def autoSave():
-    """Automatically save an image on each draw operation.
-    """
-    if draw.autosave:
-        fn = None
-    else:
-        dir = GD.cfg['workdir']
-        fs = widgets.FileSelection(dir,pattern="Images (*.png *.jpg)")
-        fn = fs.getFilename()
-    draw.saveAuto(fn,verbose=True)
-
+        saveImage(True)

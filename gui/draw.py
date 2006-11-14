@@ -3,7 +3,7 @@
 """Functions for drawing and for executing pyFormex scripts."""
 
 import globaldata as GD
-import threading,os,sys,commands,types,copy
+import threading,os,sys,types,copy,commands
 
 from PyQt4 import QtCore, QtGui  # needed for events, signals
 
@@ -14,7 +14,7 @@ import colors
 import actors
 import decors
 import formex
-from script import Exit,ExitAll
+from script import Exit,ExitAll,system
 
 
 #################### Interacting with the user ###############################
@@ -121,6 +121,7 @@ message = log
 
 scriptDisabled = False
 scriptRunning = False
+
  
 def playScript(scr,name=None):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -130,7 +131,7 @@ def playScript(scr,name=None):
     If a name is specified, sets the global variable GD.scriptName if and
     when the script is started.
     """
-    global scriptRunning, scriptDisabled, allowwait
+    global scriptRunning, scriptDisabled, allowwait, exportNames
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     if scriptRunning or scriptDisabled :
@@ -167,11 +168,13 @@ def playScript(scr,name=None):
     g.update({'__name__':modname})
     # Now we can execute the script using these collected globals
 
+    exportNames = []
     GD.scriptName = name
     exitall = False
     try:
         try:
             exec scr in g
+            globals().update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
         except ExitAll:
@@ -183,6 +186,15 @@ def playScript(scr,name=None):
             GD.gui.actions['Continue'].setEnabled(False)
     if exitall:
         exit()
+
+def export(names):
+    if type(names) == str:
+        names = [ names ]
+    exportNames.extend(names)
+    
+
+def Globals():
+    return globals()
 
 def play(fn=None):
     """Play a formex script from file fn or from the current file.
@@ -306,7 +318,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-    global allowwait, currentView, autosave
+    global allowwait, currentView, multisave
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
@@ -346,7 +358,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
         GD.canvas.setView(bbox,view)
         currentView = view
     GD.canvas.update()
-    if autosave:
+    if multisave and multisave[4]:
         saveNext()
     if allowwait and wait:
         drawlock()
@@ -532,15 +544,6 @@ def drawSelected(*args):
     name = ask("Which Formex shall I draw ?")
     drawNamed(name,*args)
 
-
-def system(cmdline,result='output'):
-    if result == 'status':
-        return os.system(cmdline)
-    elif result == 'output':
-        return commands.getoutput(cmdline)
-    elif result == 'both':
-        return commands.getstatusoutput(cmdline)
-
 ## exit from program pyformex
 def exit(all=False):
     if scriptRunning:
@@ -599,8 +602,15 @@ def printconfig():
 ################################ saving images ########################
 
 def imageFormats():
-    """Return a list of the valid image formats."""
-    return GD.image_formats_qt + GD.image_formats_gl2ps + GD.image_formats_fromeps
+    """Return a list of the valid image formats.
+
+    image formats are lower case strings as 'png', 'gif', 'ppm', 'eps', etc.
+    The available image formats are derived from the installed software.
+    """
+    return GD.image_formats_qt + \
+           GD.image_formats_gl2ps + \
+           GD.image_formats_fromeps
+
 
 def checkImageFormat(fmt,verbose=False):
     """Checks image format; if verbose, warn if it is not.
@@ -610,100 +620,117 @@ def checkImageFormat(fmt,verbose=False):
     GD.debug("Format requested: %s" % fmt)
     GD.debug("Formats available: %s" % imageFormats())
     if fmt in imageFormats():
-        if fmt == 'TEX' and verbose:
-            warning("This will only write a LaTeX fragment to include the EPS image\nYou may still have to create the .EPS format image separately.\n")
+        if fmt == 'tex' and verbose:
+            warning("This will only write a LaTeX fragment to include the 'eps' image\nYou have to create the .eps image file separately.\n")
         return fmt
     else:
         if verbose:
             error("Sorry, can not save in %s format!\n"
-                  "I suggest you use PNG format ;)"%fmt)
+                  "I suggest you use 'png' format ;)"%fmt)
         return None
-    
 
-def saveImage(fn,fmt=None,verbose=False):
-    """Save the current rendering on file fn in format fmt.
 
-    If no format is specified, it is derived from the extension.
+def save_window(filename,format,windowname=None):
+    """Save the whole window as an image file.
+
+    This function needs a filename AND format.
+    The prefered user function is saveWindow, which can derive the
+    format from the filename extension
+    """
+    if windowname is None:
+        windowname = GD.gui.main.windowTitle()
+    GD.gui.main.raise_()
+    GD.gui.main.repaint()
+    GD.gui.toolbar.repaint()
+    GD.gui.update()
+    GD.canvas.makeCurrent()
+    GD.canvas.raise_()
+    GD.canvas.update()
+    GD.app.processEvents()
+    cmd = 'import -window "%s" %s:%s' % (windowname,format,filename)
+    sta,out = commands.getstatusoutput(cmd)
+    return sta
+
+# global parameters for multisave mode
+multisave = None 
+
+def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,format=None,verbose=False):
+    """Starts or stops saving a sequence of images.
+
+    With a filename, this starts or changes the multisave mode.
+    In multisave mode, each call to saveNext() will save an image to the
+    next generated file name.
+    Filenames are generated by incrementing a numeric part of the name.
+    If the supplied filename (after removing the extension) has a trailing
+    numeric part, subsequent images will be numbered continuing from this
+    number. Otherwise a numeric part '-000' will be added to the filename.
+
+    Without filename, exits the multisave mode. It is acceptable to have
+    two subsequent saveMulti calls with a filename, without an intermediate
+    call without filename.
+
+    If window is True, the full pyFormex window is saved.
+    If window is False, only the canvas is saved.
+
+    If hotkey is True, a new image will be saved by hitting the 'S' key.
+    If autosave is True, a new image will be saved on each execution of
+    the 'draw' function.
+    If neither hotkey nor autosave are True, images can only be saved by
+    executing the saveNext() function from a script.
+
+    If no format is specified, it is derived from the filename extension.
     fmt should be one of the valid formats as returned by imageFormats()
-    If the file has no extension, one is added based on the format.
-    If verbose=True, error/warnings are activated. 
-    """
-    ext = os.path.splitext(fn)[1]
-    if not fmt:
-        fmt = utils.imageFormatFromExt(ext)
-    fmt = checkImageFormat(fmt,verbose)
-    if fmt:
-        if len(ext) == 0:
-            ext = '.%s' % fmt.lower()
-            fn += ext
-        GD.canvas.save(fn,fmt)
-        log("File %s written" % fn)
-
+  
+    If verbose=True, error/warnings are activated. This is usually done when
+    this function is called from the GUI.
     
-def saveNext():
-    global multisave
-    message("Saving image to %s" % multisave)
-    if multisave:
-        name,nr,fmt = multisave
-        GD.canvas.save(name % nr,fmt)
-        nr += 1
-        multisave = [ name,nr,fmt ]
-
-multisave = None
-autosave = False
-
-
-def saveMulti(fn=None,fmt=None,verbose=False):
-    """Save a sequence of images.
-
-    If the filename supplied has a trailing numeric part, subsequent images
-    will be numbered continuing from this number. Otherwise a numeric part
-    -000, -001, will be added to the filename.
-
-    Without filename, switches off multisave mode.
     """
     global multisave
+
     # Leave multisave mode
-    if not fn:
+    if filename is None:
         if multisave:
-            log("Leaving multi save mode")
+            log("Leave multisave mode")
             QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
         multisave = None
         return
 
-    # Enter multisave mode
-    log("Entering multiple save mode to files:")
-    setWorkdirFromFile(fn)
-    name,ext = os.path.splitext(fn)
-    fmt = utils.imageFormatFromExt(ext)
-    log("%s-???.%s (%s)" % (name,ext,fmt))
-    fmt = checkImageFormat(fmt,verbose)
-    if fmt:
-        name,number = utils.splitEndDigits(name)
-        if len(number) > 0:
-            nr = int(number)
-            name += "%%0%dd" % len(number)
+    setWorkdirFromFile(filename)
+    name,ext = os.path.splitext(filename)
+    # Get/Check format
+    if format is None:
+        format = checkImageFormat(utils.imageFormatFromExt(ext))
+    if not format:
+        return
+
+    if multi: # Start multisave mode
+        names = utils.FilenameSequence(name,ext)
+        log("Start multisave mode to files: %s (%s)" % (names.name,format))
+        if hotkey:
+             QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
+             if verbose:
+                 warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
+        multisave = (names,format,window,hotkey,autosave)
+        return multisave is None
+
+    else: # Save the image
+        if window:
+            sta = save_window(filename,format)
         else:
-            nr = 0
-            name += "-%03d"
-        if len(ext) == 0:
-            ext = '.%s' % fmt.lower()
-        name += ext
-        if verbose:
-            warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-        QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
-        multisave = [ name,nr,fmt ]
+            sta = GD.canvas.save(filename,format)
+        if sta:
+            GD.debug("Error while saving image %s" % filename)
+        else:
+            log("Image file %s written" % filename)
+        return
 
-
-def saveAuto(fn=None,fmt=None,verbose=False):
-    """Start/Stop autosave mode.
-
-    If a filename is specified, starts autosave mode with the specified
-    file name.
-    If no filename is specified and autosave is on, stops autosave mode.
-    """
-    global multisave,autosave
-    saveMulti(fn,fmt,verbose=False)
-    autosave = multisave is not None
+    
+def saveNext():
+    """In multisave mode, saves the next image."""
+    global multisave
+    if multisave:
+        names,format,window,hotkey,autosave = multisave
+        name = names.next()
+        saveImage(name,window,False,hotkey,autosave,format,False)
 
 #### End

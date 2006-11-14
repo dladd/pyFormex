@@ -11,43 +11,6 @@ import help
 import draw
 
 
-###################### Actions #############################################
-# Actions are just python functions, preferably without arguments
-# Actions are often used as slots, which are triggered by signals,
-#   e.g. by clicking a menu item or a tool button.
-# Since signals have no arguments:
-# Can we use python functions with arguments as actions ???
-# - In menus we can have the menuitems send an integer id.
-# - For other cases (like toolbuttons), we can subclass QAction and let it send
-#   a signal with appropriate arguments 
-#
-# The above might no longer be correct for QT4! 
-
-class FAction(QtGui.QAction):
-    """A FAction is a QAction that calls a function when triggered.
-
-    Most often QActions are created and connected automatically by some
-    action insertion function of QT4. But for these cases where you want
-    to create and connect the QAction before adding it, it is convenient
-    to have this single line option.
-    """
-    
-    def __init__(self,name,func,icon=None,tip=None,key=None):
-        """Create a new FAction connected to method func.
-
-        If the FAction is used in a menu, a name and func is sufficient.
-        For use in a toolbar, you will probably want to specify an icon.
-        Additionally, you can set a tooltip and shortcut key.
-        When the action is triggered, the func is called.
-        """
-        QtGui.QAction.__init__(self,name,None)
-        if icon:
-            self.setIcon(icon)
-        if tip:
-            self.setToolTip(tip)
-        self.connect(self,QtCore.SIGNAL("triggered()"),func)
-
-
 class DAction(QtGui.QAction):
     """A DAction is a QAction that emits a signal with a string parameter.
 
@@ -76,7 +39,6 @@ class DAction(QtGui.QAction):
         self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
         
     def activated(self):
-        print "Clicked %s" % str(self.data().toString())
         self.emit(QtCore.SIGNAL("Clicked"), str(self.data().toString()))
 
 
@@ -102,7 +64,6 @@ def addMenuItems(menu, items=[]):
     """
     for item in items:
         txt,val = item[:2]
-        print "Adding item %s: %s" % (txt,val)
         if val == '---':
             menu.addSeparator()
             continue
@@ -139,8 +100,8 @@ MenuData = [
 #        ('Save &As','saveAs'),
         ('---','---'),
         ('Save &Image','fileMenu.saveImage'),
-        ('Toggle &MultiSave','fileMenu.multiSave'),
-        ('Toggle &AutoSave','fileMenu.autoSave'),
+        ('Toggle &MultiSave','fileMenu.saveMulti'),
+        ('Save &Next Image','draw.saveNext'),
         ('---','---'),
         ('E&xit','GD.app.exit'), ]),
     ('&Settings',[
