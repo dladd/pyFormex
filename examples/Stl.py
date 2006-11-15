@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: Stl.py 156 2006-11-06 19:14:25Z bverheg $
 
 """Stl.py
 
@@ -16,7 +16,7 @@ import commands, os
 clear()
 
 global project,F,nodes,elems,surf
-project = F = nodes = elems = surf =None
+project = F = nodes = elems = surf = None
 
 # Actions
 
@@ -33,13 +33,14 @@ def read_stl():
         F = Formex(stl.read_ascii(fn))
         message("There are %d triangles in the model" % F.f.shape[0])
         message("The bounding box is\n%s" % F.bbox())
-    menu.process()
+#    menu.process()
 
 def show_stl():
     """Display the .stl model."""
     global F
+    updateGUI()
     draw(F,color='green')
-    menu.process()
+#    menu.process()
 
 
 def export_stl():
@@ -53,7 +54,7 @@ def export_stl():
         nelems = elems.shape[0]
         message("There are %d unique nodes and %d triangle elements in the model." % (nnodes,nelems))
         stl_abq.abq_export(project+'.inp',nodes,elems,'S3',"Created by stl_examples.py")
-    menu.process()
+#    menu.process()
     
 
 def create_tetgen():
@@ -62,7 +63,7 @@ def create_tetgen():
     if os.path.exists(fn):
         sta,out = commands.getstatusoutput('tetgen %s' % fn)
         message(out)
-    menu.process()
+#    menu.process()
 
 
 def read_tetgen(surface=True, volume=True):
@@ -76,7 +77,7 @@ def read_tetgen(surface=True, volume=True):
     if surface:
         surf = tetgen.readSurface(project+'.1.smesh')
         print "Read %d triangles" % surf.shape[0]
-    menu.process()
+#    menu.process()
 
 
 def read_tetgen_surface():
@@ -89,24 +90,26 @@ def read_tetgen_volume():
 
 def show_tetgen_surface():
     global nodes,elems,surf
+    updateGUI()
     if surf is not None:
         surface = Formex(nodes[surf-1])
         clear()
         draw(surface,color='red')
-    menu.process()
+#    menu.process()
     
 
 def show_tetgen_volume():
     global nodes,elems,surf
+    updateGUI()
     if elems is not None:
         volume = Formex(nodes[elems-1])
         clear()
         draw(volume,color='random')
-    menu.process()
+#    menu.process()
     
 
 # Menu
-menu = widgets.Menu('STL',True) # Should be done before defining MenuData!
+menu = widgets.Menu('STL') # Should be done before defining MenuData!
 
 MenuData = [
     ("Action","&Read .stl ",read_stl),
@@ -122,10 +125,9 @@ MenuData = [
     ]
 
 for key,txt,val in MenuData:
-    print type(val)
     menu.addItem(txt,val)
 
 # show the menu
-menu.process()
+#menu.process()
 
 # End

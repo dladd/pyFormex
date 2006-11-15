@@ -597,6 +597,13 @@ def printbbox():
 def printconfig():
     print "Reference Configuration",GD.refcfg
     print "User Configration",GD.cfg
+
+
+def updateGUI():
+    """Update the GUI."""
+    GD.gui.update()
+    GD.canvas.update()
+    GD.app.processEvents()
     
 
 ################################ saving images ########################
@@ -706,6 +713,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     if multi: # Start multisave mode
         names = utils.FilenameSequence(name,ext)
         log("Start multisave mode to files: %s (%s)" % (names.name,format))
+        print hotkey
         if hotkey:
              QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
              if verbose:

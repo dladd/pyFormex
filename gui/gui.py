@@ -46,12 +46,11 @@ class Board(QtGui.QTextEdit):
 
     def write(self,s):
         """Write a string to the message board."""
-        self.append(s.rstrip('\n'))
-        self.cursor.movePosition(QtGui.QTextCursor.End)
-        self.setTextCursor(self.cursor)
-
-    # Obsolete, retained for compatibility, avoid in new code
-    add = write
+        s = s.rstrip('\n')
+        if len(s) > 0:
+            self.append(s)
+            self.cursor.movePosition(QtGui.QTextCursor.End)
+            self.setTextCursor(self.cursor)
 
 
 ################# OpenGL Canvas ###############
@@ -196,9 +195,17 @@ class GUI:
 
 
     def insertMenu(self,menu,before='&Help'):
-        """Insert a menu in the menubar before the specified menu."""
-        self.menu.insertMenu(self.menus[before],menu)
-        self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
+        """Insert a menu in the menubar before the specified menu.
+
+        The new menu can be inserted BEFORE any of the existing menus.
+        By default the new menu will be inserted before the Help menu.
+
+        Also, the menu's title should be unique.
+        """
+        if not self.menus.has_key(str(menu.title())):
+            self.menu.insertMenu(self.menus[before],menu)
+            self.menus = dict([[str(a.text()),a] for a in self.menu.actions()])
+
 
     def removeMenu(self,menu):
         """Remove a menu from the main menubar.
@@ -382,7 +389,7 @@ def runApp(args):
         m = scriptsMenu.ScriptsMenu(title,dir)
         GD.gui.insertMenu(m)
         menus.append(m)
-    GD.board.add(GD.Version+"   (C) B. Verhegghe")
+    GD.board.write(GD.Version+"   (C) B. Verhegghe")
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):

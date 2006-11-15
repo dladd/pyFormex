@@ -205,7 +205,7 @@ def selectFont():
 class Menu(QtGui.QMenu):
     """A popup menu for user actions."""
 
-    def __init__(self,title='UserMenu',insert=False):
+    def __init__(self,title='UserMenu',insert=True):
         """Create the user menu."""
         QtGui.QMenu.__init__(self,title)
         self.insert = insert
