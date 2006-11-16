@@ -22,8 +22,9 @@
 </td><td width="25%" valign=top><a href="copy.html">copy</a><br>
 <a href="formex.html">formex</a><br>
 </td><td width="25%" valign=top><a href="os.html">os</a><br>
-<a href="threading.html">threading</a><br>
-</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
+<a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+<a href="utils.html">utils</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -109,7 +110,11 @@ when&nbsp;the&nbsp;script&nbsp;is&nbsp;started.</tt></dd></dl>
  <dl><dt><a name="-runApp"><strong>runApp</strong></a>(args)</dt><dd><tt>Run&nbsp;the&nbsp;application&nbsp;without&nbsp;gui.</tt></dd></dl>
  <dl><dt><a name="-save"><strong>save</strong></a>(filename, fmt)</dt></dl>
  <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>
- <dl><dt><a name="-system"><strong>system</strong></a>(cmdline, result<font color="#909090">='output'</font>)</dt></dl>
+ <dl><dt><a name="-system"><strong>system</strong></a>(cmdline, result<font color="#909090">='output'</font>)</dt><dd><tt>Run&nbsp;a&nbsp;command&nbsp;and&nbsp;return&nbsp;its&nbsp;output.<br>
+&nbsp;<br>
+If&nbsp;result&nbsp;==&nbsp;'status',&nbsp;the&nbsp;exit&nbsp;status&nbsp;of&nbsp;the&nbsp;command&nbsp;is&nbsp;returned.<br>
+If&nbsp;result&nbsp;==&nbsp;'output',&nbsp;the&nbsp;output&nbsp;of&nbsp;the&nbsp;command&nbsp;is&nbsp;returned.<br>
+If&nbsp;result&nbsp;==&nbsp;'both',&nbsp;a&nbsp;tuple&nbsp;of&nbsp;status&nbsp;and&nbsp;output&nbsp;is&nbsp;returned.</tt></dd></dl>
  <dl><dt><a name="-warning"><strong>warning</strong></a>(message)</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -118,6 +123,7 @@ when&nbsp;the&nbsp;script&nbsp;is&nbsp;started.</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>scriptDisabled</strong> = False<br>
+<td width="100%"><strong>m</strong> = &lt;_sre.SRE_Match object&gt;<br>
+<strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False</td></tr></table>
 </body></html>

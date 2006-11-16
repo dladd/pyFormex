@@ -93,20 +93,22 @@ def setPanFactor():
     askConfigPreferences(['gui/panfactor'])
 def setZoomFactor():
     askConfigPreferences(['gui/zoomfactor'])
-
-
+ 
 
 def setFont():
-    """Set the main application font from a user dialog widget."""
+    """Set the main application font from a user dialog."""
     font,ok = widgets.selectFont()
     if ok:
-        GD.app.setFont(font)
+        gui.setFont(font)
 
 
-def setFontSize():
-    askConfigPreferences(['gui/fontsize'])
-    gui.setFontSize()
-   
+def setAppearance():
+    """Set the main application style and font from user dialog."""
+    style,font = widgets.AppearenceDialog().getResult()
+    if font:
+        gui.setFont(font)
+    if style:
+        gui.setStyle(style)
 
     
 # End

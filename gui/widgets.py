@@ -91,6 +91,63 @@ class SaveImageDialog(FileSelection):
             return None,False,False,False,False
 
 
+        
+class AppearenceDialog(QtGui.QDialog):
+    """A dialog for setting the GUI appearance."""
+    def __init__(self):
+        """Create the Appearance dialog."""
+        self.font = None
+        QtGui.QDialog.__init__(self)
+        # Style
+        styleLabel = QtGui.QLabel('Style')
+        self.styleCombo = QtGui.QComboBox()
+        styles = map(str,QtGui.QStyleFactory().keys())
+        GD.debug("Available styles : %s" % styles)
+        style = GD.app.style().objectName()
+        GD.debug("Current style : %s" % style)
+        self.styleCombo.addItems(styles)
+        self.styleCombo.setCurrentIndex([i.lower() for i in styles].index(style))
+        # Font
+        fontLabel = QtGui.QLabel('Font')
+        font = GD.app.font().toString()
+        GD.debug("Current font : %s" % font)
+        self.fontButton = QtGui.QPushButton(font)
+        self.connect(self.fontButton,QtCore.SIGNAL("clicked()"),self.setFont)
+        # Accept/Cancel Buttons
+        acceptButton = QtGui.QPushButton('OK')
+        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
+        cancelButton = QtGui.QPushButton('Cancel')
+        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
+        # Putting it all together
+        grid = QtGui.QGridLayout()
+        grid.setColumnStretch(1,1)
+        grid.setColumnMinimumWidth(1,250)
+        grid.addWidget(styleLabel,0,0)
+        grid.addWidget(self.styleCombo,0,1,1,2)
+        grid.addWidget(fontLabel,1,0)
+        grid.addWidget(self.fontButton,1,1,1,-1)
+        grid.addWidget(acceptButton,2,3)
+        grid.addWidget(cancelButton,2,4)
+        self.setLayout(grid)
+        
+
+
+    def setFont(self):
+        font,ok = selectFont()
+        if ok:
+            self.fontButton.setText(font.toString())
+            self.font = font
+
+            
+    def getResult(self):
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            style = QtGui.QStyleFactory().create(self.styleCombo.currentText())
+            return style,self.font 
+        else:
+            return None,None
+
+
 # !! The QtGui.QColorDialog can not be instantiated or subclassed.
 # !! The color selection dialog is created by the static getColor
 # !! function.

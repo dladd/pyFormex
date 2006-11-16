@@ -645,9 +645,9 @@ def save_window(filename,format,windowname=None):
     format from the filename extension
     """
     if windowname is None:
-        windowname = GD.gui.main.windowTitle()
-    GD.gui.main.raise_()
-    GD.gui.main.repaint()
+        windowname = GD.gui.windowTitle()
+    GD.gui.raise_()
+    GD.gui.repaint()
     GD.gui.toolbar.repaint()
     GD.gui.update()
     GD.canvas.makeCurrent()

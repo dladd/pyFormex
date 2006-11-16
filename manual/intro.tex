@@ -64,11 +64,45 @@ With \pyformex, one could define the structure by a sequence of operations like 
 
 \section{Installation}
 \label{sec:installation}
+\subsection{Prerequisites}
+\label{sec:prerequisites}
+
+
+\subsection{Downloading}
+\label{sec:downloading}
+The official releases of \pyformex can be downloaded from the 
+\htmladdnormallinkfoot{\pyformex website}{\websiteURL}. As of the writing of this manual, the latest release is \htmladdnormallinkfoot{pyFormex 0.4}{http://prdownload.berlios.de/pyformex/pyformex-0.4.tar.gz}. 
+pyFormex is currently distributed in the form of a \Code{.tar.gz} (tarball) archive. See \ref{sec:installation-linux} for how to proceed further.
+
+Alternatively you can download the tarball releases from our \htmladdnormallinkfoot{local FTP server}{ftp://bumps.ugent.be/pub/pyformex\xspace}. This one is slower, but you occasionally you might find there an interim release or release candidate not (yet) available on the official server.
+
+Finally, you can also get the latest development code from the SVN repository on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. If you have \htmladdnormallinkfoot{Subversion}{http://subversion.tigris.org/} installed on your system, you can just do\CodeLine{svn checkout svn://svn.berlios.de/pyformex/trunk pyformex}
+and the whole current \pyformex tree will be copied to a subdirectory \code{pyformex} on your current path.
+
+\emph{Unless you absolutely need some of the latest features or bugfixes, the tarball releases are what you want to go for. 
+}
+
+
 \subsection{Installation on Linux platforms}
 \label{sec:installation-linux}
+Once you have downloaded the \pyformex tarball, unpack it with
+\CodeLine{tar xvzf pyformex-version.tar.gz}
+Then go to the created pyformex directory:
+\CodeLine{cd pyformex-version}
+and do
+\CodeLine{make install}
+This will install \pyformex in \Code{/usr/local/lib/pyformex-version}.
+If you want to install somewhere else, you need to change the Makefile first.  
 
-%\subsection{Installation on Windows platforms}
-%\label{sec:installation-windows}
+The installation procedure installs everything into this single directory, but also makes a couple of symlinks:
+/usr/local/share/doc/pyformex-version is a link to the doc subdirectory of pyformex, ans /usr/local/bin/pyformex is a link to the main executable pyformex.py.
+
+
+\subsection{Installation on Windows platforms}
+\label{sec:installation-windows}
+There is no installation procedure yet. All the pre-requisite packages are available for Windows, so in theory it is possible to run pyFormex on Windows. We know of some users who are running pyFormex succesfully using the --nogui option, i.e. without the Graphical User Interface (GUI).  
+A few things may need to be changed for running the GUI on Windows. We will have a look at this in the future, but it is not our primary concern.
+Still, any feedback on (succesful or not succesful) installation attempts on Windows is welcome.
 
 
 \section{Quick tutorial for the \pyformex{} GUI}
@@ -82,12 +116,35 @@ In the current version () the GUI mainly serves the following purposes:
 \end{itemize}
 
 The GUI does not (yet) provide a means to interactively design a structure, select parts of a structure or set/show information about (parts of) the structure. Designing a structure is done by writing a small script with the mathematical expressions needed to generate it. Any text editor will be suitable for this purpose. The author uses XEmacs, but this is just a personal preference. 
-A Python aware editor is preferable though, because that is the language used in \pyformex scripts.
 A \pyformex editor integrated into the GUI remains on our TODO list, but it certainly is not our top priority, because general purpose editors are adequate for most of our purposes. 
+
+Since \htmladdnormallinkfoot{Python}{\pythonURL} is the language used in \pyformex scripts, a Python aware editor is preferable. It will highlight the syntax and help you with proper alignment (which is very important in Python). 
+ 
 
 The best way to learn to use \pyformex is by studying and changing some of the examples. I suggest that you first take a look at the examples included in the \pyformex GUI and select those that display structures that look interesting to you. Then you can study the source code of those examples and see how the structures got built. 
 When starting up, \pyformex reads through the Examples directory (this is normally the 'examples' subdirecty located under the pyformex installation dir).  
 \menuselection{Examples \sub WireStent}
+
+
+\subsection{Customizing the GUI}
+\label{sec:customize-gui}
+
+Some parts of the \pyformex GUI can easily be customized by the user. 
+The appearance (widget style and fonts) can be changed from the preferences menu. Custom menus can be added by executing a script. Both are very simple tasks even for beginning users. They are explained shortly hereafter.
+
+Experienced users with a sufficient knowledge of Python and GUI building with Qt can of course use all their skills to tune every single aspect of the \pyformex GUI according to their wishes. If you send us your modifications, we might even include them in the official distribution.
+
+
+\subsubsection{Changing the appearance of the GUI}
+\label{sec:chang-appe-gui}
+
+
+\subsubsection{Adding custom menus}
+\label{sec:adding-custom-menus}
+
+When you start using \pyformex for serious work, you will probably run into complex scripts built from simpler subtasks that are not necessarily always executed in the same order. While the \pyformex scripting language offers enough functions to ask the user which parts of the script should be executed, in some cases it might be better to extend the \pyformex GUI with custom menus to execute some parts of your script.
+
+For this purpose, the gui.widgets module of \pyformex provides a Menu widget class. Its use is illustrated in the example Stl.py.
 
 
 \section{Quick {Python tutorial}}

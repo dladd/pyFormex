@@ -88,7 +88,6 @@ def readSurface(fn):
                     invalid(line,fn)
                     raise
                 if nels > 0:
-                    print nels,nnod
                     elems = zeros((nels,nnod),int)
                     i = 0
                 else:

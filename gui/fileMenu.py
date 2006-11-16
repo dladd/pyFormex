@@ -57,13 +57,13 @@ def saveImage(multi=False):
         draw.saveImage(fn,window,multi,hotkey,auto)
 
     
-def saveMulti():
-    """Toggle multisave mode on or off.
+def startMultiSave():
+    """Start/change multisave mode."""
+    saveImage(True)
 
-    If multisave mode is on, this will just turn off the mode.
-    If multisave is off, it acts as saveImage with multi==True.
-    """
-    if draw.multisave:
-        draw.saveImage()
-    else:
-        saveImage(True)
+
+def stopMultiSave():
+    """Stop multisave mode."""
+    draw.saveImage()
+
+# End

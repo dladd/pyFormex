@@ -102,7 +102,7 @@ def printsize(w,t=None):
 
 
 ################# GUI ###############
-class GUI:
+class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
     def __init__(self,windowname,size=(800,600),pos=(0,0)):
@@ -111,23 +111,23 @@ class GUI:
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
-        self.main = QtGui.QMainWindow()
-        self.main.setWindowTitle(windowname)
+        QtGui.QMainWindow.__init__(self)
+        self.setWindowTitle(windowname)
         # add widgets to the main window
-        self.statusbar = self.main.statusBar()
+        self.statusbar = self.statusBar()
         self.curfile = QtGui.QLabel('No File')
         self.curfile.setLineWidth(0)
         self.statusbar.addWidget(self.curfile)
         self.smiley = QtGui.QLabel()
         self.statusbar.addWidget(self.smiley)
-        self.menu = self.main.menuBar()
-        self.toolbar = self.main.addToolBar('Top ToolBar')
+        self.menu = self.menuBar()
+        self.toolbar = self.addToolBar('Top ToolBar')
         self.editor = None
         # Create a box for the central widget
         self.box = QtGui.QWidget()
         self.boxlayout = QtGui.QVBoxLayout()
         self.box.setLayout(self.boxlayout)
-        self.main.setCentralWidget(self.box)
+        self.setCentralWidget(self.box)
         #self.box.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
         #self.box.setLineWidth(2)
         # Create a splitter
@@ -184,12 +184,12 @@ class GUI:
         # Display the main menubar
         #self.menu.show()
         self.resize(*size)
-        self.moveto(pos[0],pos[1])
+        self.move(*pos)
         if GD.options.redirect:
             sys.stderr = self.board
             sys.stdout = self.board
         if GD.options.debug:
-            printsize(self.main,'Main:')
+            printsize(self,'Main:')
             printsize(self.canvas,'Canvas:')
             printsize(self.board,'Board:')
 
@@ -221,14 +221,16 @@ class GUI:
             menu = menu.menuAction()
             if menu not in self.menu.actions():
                 menu = None
-        self.menu.removeAction(menu)
+        if menu is not None:
+            self.menu.removeAction(menu)
+            self.menus = dict([[str(a.text()),a] for a in self.menu.actions()])
         
     
     def resizeCanvas(self,wd,ht):
         """Resize the canvas."""
         self.canvas.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
-        self.main.adjustSize()
+        self.adjustSize()
     
     def showEditor(self):
         """Start the editor."""
@@ -244,29 +246,15 @@ class GUI:
             self.editor = None
 
 
-    def update(self):
-        self.main.update()
-
-
-    def resize(self,w,h):
-        """Resize the gui main window."""
-        self.main.resize(w,h)
-
-        
-    def moveto(self,x,y):
-        """Move the gui main window."""
-        self.main.move(x,y)
-
-
-    def size(self):
-        """Return the size of the main window()."""
-        s = self.main.size()
+    def Size(self):
+        """Return the size of the main window() as a tuple."""
+        s = self.size()
         return s.width(),s.height()
     
 
-    def pos(self):
-        """Return the position of the main window()."""
-        p = self.main.pos()
+    def Pos(self):
+        """Return the position of the main window() as a tuple."""
+        p = self.pos()
         return p.x(),p.y()
     
 
@@ -328,6 +316,20 @@ def messageBox(message,level='info',actions=['OK']):
     return ans
 
 
+def setStyle(style):
+    """Set the main application style."""
+    GD.app.setStyle(style)
+    if GD.gui:
+        GD.gui.update()
+
+
+def setFont(font):
+    """Set the main application font."""
+    GD.app.setFont(font)
+    if GD.gui:
+        GD.gui.update()
+
+
 def setFontSize(s=None):
     """Set the main application font size to the given point size."""
     if s:
@@ -336,9 +338,7 @@ def setFontSize(s=None):
         s = GD.cfg.get('gui/fontsize',12)
     font = GD.app.font()
     font.setPointSize(int(s))
-    GD.app.setFont(font)
-    if GD.gui:
-        GD.gui.update()
+    setFont(font)
 
 
 def windowExists(windowname):
@@ -381,7 +381,7 @@ def runApp(args):
     GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.canvas = GD.gui.canvas
-    GD.gui.main.show()   # This creates the X Error ###
+    GD.gui.show()   # This creates the X Error ###
     # Create a menu with pyFormex examples
     # and insert it before the help menu
     menus = []
@@ -395,11 +395,11 @@ def runApp(args):
         if os.path.exists(arg):
             draw.play(arg)
     GD.app_started = True
-    GD.debug("Using window name %s" % GD.gui.main.windowTitle())
+    GD.debug("Using window name %s" % GD.gui.windowTitle())
     GD.app.exec_()
 
     # store the main window size/pos
-    GD.cfg.update({'size':GD.gui.size(),'pos':GD.gui.pos()},name='gui')
+    GD.cfg.update({'size':GD.gui.Size(),'pos':GD.gui.Pos()},name='gui')
     return 0
 
 #### End

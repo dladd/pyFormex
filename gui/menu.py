@@ -89,6 +89,8 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
+def Windows():
+    GD.app.setStyle('Windows')
 
 MenuData = [
     ('&File',[
@@ -100,14 +102,14 @@ MenuData = [
 #        ('Save &As','saveAs'),
         ('---','---'),
         ('Save &Image','fileMenu.saveImage'),
-        ('Toggle &MultiSave','fileMenu.saveMulti'),
+        ('Start &MultiSave','fileMenu.startMultiSave'),
+        ('Stop &MultiSave','fileMenu.stopMultiSave'),
         ('Save &Next Image','draw.saveNext'),
         ('---','---'),
         ('E&xit','GD.app.exit'), ]),
     ('&Settings',[
-#        ('&Preferences','preferences'), 
+        ('&Appearance','prefMenu.setAppearance'), 
         ('&Font','prefMenu.setFont'), 
-        ('Font&Size','prefMenu.setFontSize'), 
         ('Toggle &Triade','draw.toggleTriade'), 
         ('&Drawwait Timeout','prefMenu.setDrawtimeout'), 
         ('&Background Color','prefMenu.setBGcolor'), 
