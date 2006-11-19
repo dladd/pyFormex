@@ -114,7 +114,7 @@ def show_tetgen_volume():
     if elems is not None:
         volume = Formex(nodes[elems-1])
         clear()
-        draw(volume,color='random')
+        draw(volume,color='random',eltype='tet')
 
 
 def export_tetgen_surface():

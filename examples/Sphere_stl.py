@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: Sphere_stl.py 154 2006-11-03 19:08:25Z bverheg $
 #
 """Sphere_stl"""
 
@@ -63,11 +63,11 @@ draw(G)
 ##clear()
 ##draw(T)
 
-##if ack('Export this model in STL format?'):
-##    fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
-##    if fn:
-##        from plugins import stl
-##        f = file(fn,'w')
-##        stl.write_ascii(T.f,f)
-##        f.close()
+if ack('Export this model in STL format?'):
+    fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
+    if fn:
+        from plugins import stl
+        f = file(fn,'w')
+        stl.write_ascii(T.f,f)
+        f.close()
 

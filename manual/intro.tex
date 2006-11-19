@@ -66,6 +66,13 @@ With \pyformex, one could define the structure by a sequence of operations like 
 \label{sec:installation}
 \subsection{Prerequisites}
 \label{sec:prerequisites}
+In order to run pyFormex, you need to have the following installed (and working) on your computer.
+\begin{itemize}
+\item \htmladdnormallinkfoot{Python}{\pythonURL}: Version 2.4 or higher is recommended. Versions 2.3 and 2.2 might work with only a few minor changes.
+Nearly all Linux distributions come with Python installed, so this should not be no major obstacle.
+\item \htmladdnormallinkfoot{NumPy}{\numpyURL}: Version 1.0-rc1 or higher. Earlier versions can be made to work, but will require some changes to be made. NumPy is the package we use for fast numerical array operations in Python and is essential for \pyformex.\footnote{We do no longer support the \texttt{Numarray} package, which was used up until pyFormex 0.3.}
+On Linux systems, installing NumPy from source is usually straightforward. Debian users should install the packages python-numpy, python-numpy-dev and python-numpy-ext. There are binary packages for Windows on the \htmladdnormallinkfoot{Sourceforge download page}{http://www.numpy.org/}.
+\end{itemize}
 
 
 \subsection{Downloading}

@@ -32,6 +32,76 @@ def drawSphere(s,color=cyan,ndiv=8):
     GL.glColor(*color)
     GLU.gluSphere(quad,s,ndiv,ndiv)
 
+def drawLines(x,c,w):
+    """Draw a collection of lines.
+
+    x is a (ntri,2,3) shaped array of coordinates.
+    c is a (ntri,3) shaped array of RGB values.
+    w is the linewidth.
+    """
+    GL.glLineWidth(w)
+    GL.glBegin(GL.GL_LINES)
+    for i in range(x.shape[0]):
+        GL.glColor3f(*(c[i]))
+        GL.glVertex3f(*(x[i][0]))
+        GL.glVertex3f(*(x[i][1]))
+    GL.glEnd()
+
+def drawEdges(x,c,w):
+    """Draw a collection of lines.
+
+    x is a (ntri,2*n,3) shaped array of coordinates.
+    c is a (ntri,3) shaped array of RGB values.
+    w is the linewidth.
+    """
+    GL.glLineWidth(w)
+    GL.glBegin(GL.GL_LINES)
+    for i in range(x.shape[0]):
+        for j in range(0,x.shape[1],2):
+            GL.glColor3f(*(c[i]))
+            GL.glVertex3f(*(x[i][j]))
+            GL.glVertex3f(*(x[i][j+1]))
+    GL.glEnd()
+
+def drawPolyLines(x,c,w,close=True):
+    """Draw a collection of polylines.
+
+    x is a (ntri,n,3) shaped array of coordinates. Each polyline consists
+    of n or n-1 line segments, depending on whether the polyline is closed
+    or not. The default is to close the polyline (connecting the last node
+    to the first.
+    c is a (ntri,3) shaped array of RGB values.
+    w is the linewidth.
+    """
+    GL.glLineWidth(w)
+    for i in range(x.shape[0]):
+        if close:
+            GL.glBegin(GL.GL_LINE_LOOP)
+        else:
+            GL.glBegin(GL.GL_LINE_STRIP)
+        GL.glColor3f(*(c[i]))
+        for j in range(x.shape[1]):
+            GL.glVertex3f(*(x[i][j]))
+        GL.glEnd()
+
+def drawTriangles(x,c,mode):
+    """Draw a collection of triangles.
+
+    x is a (ntri,3*n,3) shaped array of coordinates.
+    Each row contains n triangles drawn with the same color.
+    c is a (ntri,3) shaped array of RGB values.
+    mode is either 'flat' or 'smooth'
+    """
+    if mode == 'smooth':
+        normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
+    GL.glBegin(GL.GL_TRIANGLES)
+    for i in range(x.shape[0]):
+        GL.glColor3f(*c[i])
+        if mode == 'smooth':
+            GL.glNormal3f(*normal[i])
+        for j in range(x.shape[1]):
+            GL.glVertex3f(*(x[i][j]))
+    GL.glEnd()
 
 ### Actors ###############################################
 #
@@ -127,9 +197,9 @@ class FormexActor(Formex):
         if len(color) == 3 and type(color[0]) == float and \
            type(color[1]) == float and type(color[2]) == float:
             color = [ color ] # turn single color into a list
-        # now color should be a list of colors, possibly to short
+        # now color should be a list of colors, possibly too short
         mprop = max(self.propSet()) + 1
-        self.color = [ color[v % len(color)] for v in range(mprop) ]
+        self.color = array([ color[v % len(color)] for v in range(mprop) ])
         self.linewidth = float(linewidth)
         if self.nnodel() == 1:
             self.setMark(self.size()/200,"cube")
@@ -148,68 +218,27 @@ class FormexActor(Formex):
                 GL.glPopMatrix()
                 
         elif nnod == 2:
-            GL.glLineWidth(self.linewidth)
-            GL.glBegin(GL.GL_LINES)
-            for prop,elem in zip(self.p,self.f):
-                col = self.color[int(prop)]
-                GL.glColor3f(*(col))
-                for nod in elem:
-                    GL.glVertex3f(*nod)
-            GL.glEnd()
+            print self.p.dtype
+            drawLines(self.f,self.color[self.p],self.linewidth)
             
-        elif mode=='wireframe' and not self.eltype:
-            GL.glLineWidth(self.linewidth)
-            for prop,elem in zip(self.p,self.f):
-                col = self.color[int(prop)]
-                GL.glColor3f(*(col))
-                GL.glBegin(GL.GL_LINE_LOOP)
-                for nod in elem:
-                    GL.glVertex3f(*nod)
-                GL.glEnd()
+        elif mode=='wireframe' :
+            if not self.eltype:
+                drawPolyLines(self.f,self.color[self.p],self.linewidth)
+            elif self.eltype == 'tet':
+                edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
+                coords = self.f[:,edges,:]
+                print coords.shape
+                drawEdges(coords,self.color[self.p],self.linewidth)
                 
         elif nnod == 3:
-            GL.glBegin(GL.GL_TRIANGLES)
-            if mode == 'flat':
-                for prop,elem in zip(self.p,self.f):
-                    col = self.color[int(prop)]
-                    GL.glColor3f(*(col))
-                    for nod in elem:
-                        GL.glVertex3f(*nod)
-            elif mode == 'smooth':
-                # Calc normals
-                #print "Calculating Normals"
-                #print self.f
-                normal = cross(self.f[:,1,:] - self.f[:,0,:],
-                                self.f[:,2,:] - self.f[:,1,:])
-                #print normal
-                #print normal.shape
-##                for prop,elem,norm in zip(self.p,self.f,normal):
-##                    #print norm
-##                    col = self.color[int(prop)]
-##                    GL.glColor3f(*(col))
-##                    GL.glNormal3f(*(norm))
-##                    for nod in elem:
-##                        GL.glVertex3f(*nod)
-                for i,prop in enumerate(self.p):
-                    col = self.color[int(prop)]
-                    GL.glColor3f(*(col))
-                    GL.glNormal3f(*(normal[i]))
-                    for nod in self.f[i]:
-                        GL.glVertex3f(*nod)
-            GL.glEnd()
+            drawTriangles(self.f,self.color[self.p],mode)
             
         elif nnod == 4:
             if self.eltype=='tet':
-                #print "draw surfaces"
-                GL.glBegin(GL.GL_TRIANGLES)
-                for prop,elem in zip(self.p,self.f):
-                    col = self.color[int(prop)]
-                    GL.glColor3f(*(col))
-                    for side in [ [0,1,2], [0,2,3], [0,3,1], [3,2,1] ]:
-                        for nod in elem[side]:
-                            GL.glVertex3f(*nod)
-                GL.glEnd()
-            else:
+                faces = [ 0,1,2, 0,2,3, 0,3,1, 3,2,1 ]
+                coords = self.f[:,faces,:]
+                drawTriangles(coords,self.color[self.p],mode)
+            else: # (possibly non-plane) quadrilateral
                 GL.glBegin(GL.GL_QUADS)
                 for i in range(nelem):
                     col = self.color[int(self.p[i])]
