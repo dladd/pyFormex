@@ -218,7 +218,6 @@ class FormexActor(Formex):
                 GL.glPopMatrix()
                 
         elif nnod == 2:
-            print self.p.dtype
             drawLines(self.f,self.color[self.p],self.linewidth)
             
         elif mode=='wireframe' :

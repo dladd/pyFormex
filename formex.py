@@ -11,6 +11,10 @@ import math
 import vector
 import pickle
 
+
+def deprecated(old,new):
+    print "Function %s is deprecated: use %s instead" % (old,new)
+
 # default float and int types used in the Formex data
 Float = float32
 Int = int32
@@ -396,14 +400,6 @@ class Formex:
     the operation.   
     """
             
-##    def globals(self):
-##        """Return the list of globals defined in this module."""
-##        g = globals()
-##        if g.has_key('__name__'):
-##            del g['__name__']
-##        return g
-        
-##    globals = classmethod(globals)
 
 ###########################################################################
 #
@@ -426,9 +422,12 @@ class Formex:
         If a prop argument is specified, the setProp() function will be
         called to assign the properties.
         """
-        if type(data) == str:
-            data = pattern(data)
-        self.f = array(data).astype(Float)
+        if isinstance(data,Formex):
+            data = data.f
+        else:
+            if type(data) == str:
+                data = pattern(data)
+            self.f = array(data).astype(Float)
         self.p = None
         # !!! WE MIGHT ADD ARRAY AXES IF LESS THAN 3 !!!
         if len(self.f.shape) != 3:
@@ -444,9 +443,10 @@ class Formex:
             if self.f.size == 0:
                 self.f.shape = (0,0,3) # An empty Formex
             else:
-                raise RuntimeError,"Formex: last data dimension should be 2 or 3"   
-        if type(prop) != type(None):
+                raise RuntimeError,"Formex: last data dimension should be 2 or 3"
+        if prop is not None:
             self.setProp(prop)
+
 
 ###########################################################################
 #
@@ -594,7 +594,6 @@ class Formex:
     def propSet(self):
         """Return a list with unique property values on this Formex."""
         if type(self.p) == type(None):
-            print " No Properties!!"
             return None
         else:
             return unique(self.p)
@@ -688,17 +687,18 @@ class Formex:
     #default print function
     __str__ = asFormex
 
+    @classmethod
     def setPrintFunction (clas,func):
         """Choose the default formatting for printing formices.
 
         This sets how formices will be formatted by a print statement.
         Currently there are two available functions: asFormex, asArray.
         The user may create its own formatting method.
-        This is a class function. It should be used asfollows:
+        This is a class method. It should be used asfollows:
         Formex.setPrintFunction(Formex.asArray).
         """
         clas.__str__ = func
-    setPrintFunction = classmethod(setPrintFunction)
+
 
     def fprint(self,fmt="%10.3e %10.3e %10.3e"):
         for el in self.data():
@@ -713,7 +713,7 @@ class Formex:
 #
 ##############################################################################
 
-    def setProp(self,p=0):
+    def setProp(self,p):
         """Create a property array for the Formex.
 
         A property array is a rank-1 integer array with dimension equal
@@ -723,14 +723,13 @@ class Formex:
         they wil be repeated. If you give more, they will be ignored.
         The default argument will give all elements a property value 0.
         """
-        p = array(p).astype(Int)
-        self.p = resize(p,self.f.shape[:1])
+        if p is None:
+            self.p = None
+        else:
+            p = array(p).astype(Int)
+            self.p = resize(p,self.f.shape[:1])
         return self
 
-    def removeProp(self):
-        """Remove the properties from a Formex."""
-        self.p = None
-        return self
 
     def append(self,F):
         """Append the members of Formex F to this one.
@@ -744,16 +743,18 @@ class Formex:
         """
         self.f = concatenate((self.f,F.f))
         ## What to do if one of the formices has properties, the other one not?
-        ## I suggest to use zero property values for the Formex without props
-        if type(self.p) != type(None) or type(F.p) != type(None):
-            if type(self.p) == type(None):
+        ## The current policy is to use zero property values for the Formex
+        ## without props
+        if self.p is not None or F.p is not None:
+            if self.p is None:
                 self.p = zeros(shape=self.f.shape[:1],dtype=Int)
-            if type(F.p) == type(None):
+            if F.p is None:
                 p = zeros(shape=F.f.shape[:1],dtype=Int)
             else:
                 p = F.p
             self.p = concatenate((self.p,p))
         return self
+
 
 ##############################################################################
 ## 
@@ -792,32 +793,47 @@ class Formex:
         ## In all examples it works, I think because the operations on
         ## the array data cause a copy to be made. Need to explore this.
 
+
     def __add__(self,other):
-        """Return the sum of two formices"""
+        """Return the sum of two formices.
+
+        This returns a Formex with all elements of self and other.
+        It allows us to write simple expressions as F+G to concatenate
+        the Formices F and G.
+        """
         return self.copy().append(other)
 
 
-    ## DO we really need this? Could be written as F+F+F
-    ## Find out if there would be performance penalty?
-    ## Then maybe move to deprecated compatibility functions
-    ## It may come in handy though to use a function.
-    ## Should we move this out of the Formex class??
-
-    def concatenate(self,list):
-        """Concatenate all formices in list.
+    @classmethod
+    def concatenate(self,Flist):
+        """Concatenate all formices in Flist.
 
         This is a class method, not an instance method!
-        >>> F = Formex([[[1,2,3]]])
+        >>> F = Formex([[[1,2,3]]],1)
         >>> print Formex.concatenate([F,F,F])
         {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}
+        
+        Formex.concatenate([F,G,H]) is functionally equivalent with F+G+H.
+        The latter is simpler to write for a list with a few elements.
+        If the list becomes large, or the number of items in the list
+        is not fixed, the concatenate method is easier (and faster).
+        We made it a class method and not a global function, because that
+        would interfere with NumPy's own concatenate function.
         """
-        ## return Formex( concatenate([a.f for a in list]) )
-        ## This is not so simple anymore because of the handling of properties
-        F = list[0]
-        for G in list[1:]:
-            F += G
-        return F
-    concatenate = classmethod(concatenate)
+        f = concatenate([ F.f for F in Flist ])
+        plist = [ F.p for F in Flist ]
+        hasp = [ p is not None for p in plist ]
+        nhasp = sum(hasp)
+        if nhasp == 0:
+            p = None # No Formices have properties
+        else:
+            if nhasp < len(Flist):  # Add zero properties where missing
+                for i in range(len(Flist)):
+                    if plist[i] is None:
+                        plist[i] = zeros(shape=(Flist[i].nelems(),),dtype=Int)
+            p = concatenate(plist)
+        return Formex(f,p)
+
 
     def withProp(self,val):
         """Return a Formex which holds only the elements with property val.
@@ -1033,32 +1049,35 @@ class Formex:
         return Formex(self.f*scale,self.p)
 
 
-# WE can merge translate and translate1 together
-#   first arg = direction (either axis number or vector) 
-#   second arg = distance (if None, either 1.0 or length of vector)
     def translate(self,dir,distance=None):
         """Returns a copy translated over distance in direction dir.
 
-        dir is a vector specifying the direction.
-        If no distance is given, translation is over the specified vector.
-        If a distance is given, translation is over the specified distance
-        in the direction of dir."""
+        dir is either an axis number (0,1,2) or a direction vector.
+
+        If a distance is given, the translation is over the specified
+        distance in the specified direction.
+        If no distance is given, and dir is specified as an axis number,
+        translation is over a distance 1.
+        If no distance is given, and dir is specified as a vector, translation
+        is over the specified vector.
+        Thus, the following are all equivalent:
+          F.translate(1)
+          F.translate(1,1)
+          F.translate([0,1,0])
+          F.translate([0,2,0],1)
+        """
+        if type(dir) is int:
+            if distance is None:
+                distance = 1.0
+            f = self.f.copy()
+            f[:,:,dir] += distance
+            return Formex(f,self.p)
         if len(dir) == 2:
             dir.append(0.0)
-        if distance:
+        if distance is not None:
             dir = scale(unitvector(dir),distance)
         return Formex(self.f + dir,self.p)
 
-    # This could be replaced by a call to translate(), but it is cheaper
-    # because we operate on one third of the coordinates only
-    def translate1(self,dir,distance):
-        """Returns a copy translated in direction dir over distance dist.
-
-        The direction is specified by the axis number (0,1,2).
-        """
-        f = self.f.copy()
-        f[:,:,dir] += distance
-        return Formex(f,self.p)
 
     def rotate(self,angle,axis=2):
         """Returns a copy rotated over angle around coordinate axis.
@@ -1267,8 +1286,6 @@ class Formex:
                 d1 = f[:,:,i] - a[i]
                 d += d1*d1
             d = sqrt(d)
-        #print d
-        #print a[dir]/func(0)
         f[:,:,dir] += func(d)*a[dir]/func(0)
         return Formex(f,self.p)
 
@@ -1480,11 +1497,23 @@ class Formex:
     # New users should avoid these functions!
     # The may be removed in future.
     #
-    import utils
     
     def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
-        """Same as spherical, but using clotatitude."""
+        """Same as spherical, but using colatitude."""
         return self.spherical(dir,scale,colat=True)
+
+
+    def removeProp(self):
+        """Remove the properties from a Formex.
+
+        The same can be achieved by setProp(None), which is prefered.
+        """
+        deprecated('removeProp','setProp(None)')
+        return self.setProp(None)
+
+    def translate1(self,dir,distance):
+        deprecated('translate1','translate')
+        self.translate(dir,distance)
 
     # Formian compatibility functions
     # These will be moved to a separate file in future.
@@ -1501,11 +1530,11 @@ class Formex:
     cantle2str = element2str
     signet2str = point2str
     
-    def give():
+    def give(self):
         print self.toFormian()
 
     def tran(self,dir,dist):
-        return self.translate1(dir-1,dist)
+        return self.translate(dir-1,dist)
     
     def ref(self,dir,dist):
         return self.reflect(dir-1,dist)
@@ -1720,25 +1749,27 @@ if __name__ == "__main__":
         print "An empty formex",A
         F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
         print "F =",F
-        F1 = F.tran(1,6)
+        F1 = F.translate(0,6)
         F1.setProp(5)
         print "F1 =",F1
         F2 = F.ref(1,2)
         print "F2 =",F2
-        F3 = F.ref(1,1.5).tran(2,2)
+        F3 = F.ref(1,1.5).translate(1,2)
         F3.setProp([1,2])
         G = F1+F3+F2+F3
         print "F1+F3+F2+F3 =",G
+        H = Formex.concatenate([F1,F3,F2,F3])
+        print "F1+F3+F2+F3 =",H
         print "elbbox:",G.elbbox()
-        print "met prop 1:",G.hasProp(1)
+        print "met prop 1:",G.withProp(1)
         print "unique:",G.unique()
         print "nodes:",G.nodes()
         print "unique nodes:",G.nodes().unique()
         print "size:",G.size()
         F = Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]])
-        G = Formex.connect([F,F],bias=[0,1])
+        G = connect([F,F],bias=[0,1])
         print G
-        G = Formex.connect([F,F],bias=[0,1],loop=True)
+        G = connect([F,F],bias=[0,1],loop=True)
         print G
         print G[1]
         print G.nodesAndElements()

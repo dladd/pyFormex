@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: TrussFrame.py 151 2006-11-02 18:18:49Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra
@@ -28,7 +28,7 @@ h1 = 0.5 # hoogte aan het einde
 xd = [ 0, 0.6 ] + [ 0.6+i*1.2 for i in range(5)] # hor. positie knopen
 ko = Formex([[[x,0.0]] for x in xd])
 ond = connect([ko,ko],bias=[0,1])
-bov = ond.translate1(1,h0).shear(1,0,(h1-h0)/xd[-1])
+bov = ond.translate(1,h0).shear(1,0,(h1-h0)/xd[-1])
 tss = connect([ond,bov],bias=[1,1])
 ond.setProp(2)
 bov.setProp(4)

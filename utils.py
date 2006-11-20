@@ -155,9 +155,16 @@ def interrogate(item):
         print "DOC:     ", firstline
 
 
-def deprecated(old,new):
-    print "Function %s is deprecated: use %s instead" % (old,new)
-
+def deprecated2(func, name=None):
+    if name is None:
+        name = func.__name__
+    def wrapped(*args, **kargs):
+        print "Calling", name, args, kargs
+        result = func(*args, **kargs)
+        print "Called", name, args, kargs, "returned", repr(result)
+        return result
+    wrapped.__doc__ = func.__doc__
+    return wrapped
 
 def formatDict(dic):
     """Format a dict in Python source representation.
