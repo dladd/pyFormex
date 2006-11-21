@@ -562,6 +562,7 @@ class Formex:
         """Return the center of the Formex.
 
         The center of the formex is the center of its bbox().
+        The return value is a list of 3 coordinates.
         """
         min,max = self.bbox()
         return 0.5 * (max+min)
@@ -1080,12 +1081,15 @@ class Formex:
 
 
     def rotate(self,angle,axis=2):
-        """Returns a copy rotated over angle around coordinate axis.
+        """Returns a copy rotated over angle around axis.
 
-        The angle is specified in degrees. Default rotation is around z-axis.
+        The angle is specified in degrees.
+        If no axis is specified, rotation is around the 2(z)-axis. This is
+        convenient for working on 2D-structures.
         """
         m = rotationMatrix(angle,axis)
         return Formex(dot(self.f,m),self.p)
+
 
     # This could be made the same function as rotate, but differentiated
     # by means of the value of the second argument
@@ -1513,7 +1517,8 @@ class Formex:
 
     def translate1(self,dir,distance):
         deprecated('translate1','translate')
-        self.translate(dir,distance)
+        return self.translate(dir,distance)
+
 
     # Formian compatibility functions
     # These will be moved to a separate file in future.

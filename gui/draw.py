@@ -110,6 +110,8 @@ def setWorkdirFromFile(fn):
 
 def log(s):
     """Display a message in the cmdlog window."""
+    if type(s) != str:
+        s = '%s' % s
     GD.gui.board.write(s)
 
 # message is the preferred function to send text info to the user.
@@ -174,6 +176,7 @@ def playScript(scr,name=None):
     try:
         try:
             exec scr in g
+            print g.keys()
             globals().update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
@@ -281,7 +284,7 @@ def drawrelease():
 currentView = 'front'
 
 def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
-    """Draw a Formex on the canvas.
+    """Draw a Formex or a list of Formices on the canvas.
 
     Draws an actor on the canvas, and directs the camera to it from
     the specified view. Named views are either predefined or can be added by
@@ -319,6 +322,10 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait, currentView, multisave
+##    if type(F) == list:
+##        return map(draw,F,view=view,bbox=bbox,color=color,wait=wait,eltyp=eltyp)
+    if type(F) == str and globals().has_key(F):
+        F = globals()[F]
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:

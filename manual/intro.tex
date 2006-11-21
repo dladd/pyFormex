@@ -61,6 +61,9 @@ With \pyformex, one could define the structure by a sequence of operations like 
 \section{History}
 \label{sec:history}
 
+\section{License}
+\label{sec:license}
+
 
 \section{Installation}
 \label{sec:installation}
@@ -72,9 +75,14 @@ In order to run pyFormex, you need to have the following installed (and working)
 Nearly all Linux distributions come with Python installed, so this should not be no major obstacle.
 \item \htmladdnormallinkfoot{NumPy}{\numpyURL}: Version 1.0-rc1 or higher. Earlier versions can be made to work, but will require some changes to be made. NumPy is the package we use for fast numerical array operations in Python and is essential for \pyformex.\footnote{We do no longer support the \texttt{Numarray} package, which was used up until pyFormex 0.3.}
 On Linux systems, installing NumPy from source is usually straightforward. Debian users should install the packages python-numpy, python-numpy-dev and python-numpy-ext. There are binary packages for Windows on the \htmladdnormallinkfoot{Sourceforge download page}{http://www.numpy.org/}.
-\item PyOpenGL
-\item PyQt
 \end{itemize}
+If you only want to use the Formex data model and transformation methods, this will suffice. But most probably you will also want to run the \pyformex Graphical User Interface (GUI) for visualizing your structures. Then you also need the following. 
+\begin{itemize}
+\item \htmladdnormallinkfoot{Qt4}{http://www.trolltech.com/products/qt}: The widget toolkit on which the GUI was built. For Debian users this  come in the packages python-qt4 and python-qt4-dev.
+\item \htmladdnormallinkfoot{PyQt4}{http://www.riverbankcomputing.co.uk/pyqt/index.php}: The Python bindings for Qt4. Debian users shoould install the packages python-qt4, python-qt4-dev, python-qt4-gl.
+\item \htmladdnormallinkfoot{PyOpenGL}{http://pyopengl.sourceforge.net/}: Pytong bindings for OpenGL, used for drawing and manipulating the 3D-structures. For denian users this is in package python-opengl.
+\end{itemize}
+
 
 
 \subsection{Downloading}

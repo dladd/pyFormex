@@ -48,9 +48,58 @@ def show_stl():
     global F
     if F:
         updateGUI()
+        linewidth(1)
         draw(F,color='green')
 
+def center_stl():
+    """Center the stl model."""
+    global F
+    updateGUI()
+    center = array(F.center())
+    print center
+    clear()
+    draw(F,color='yellow',wait=False)
+    F = F.translate(-center)
+    draw(F,color='green')
 
+def rotate_stl():
+    """Rotate the stl model."""
+    global F
+    itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
+    res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').process()
+    if accept:
+        print res
+        updateGUI()
+        clear()
+        draw(F,color='yellow',wait=False)
+        F = F.rotate(float(res[1][1]),int(res[0][1]))
+        draw(F,color='green')
+        
+def clip_stl():
+    """Clip the stl model."""
+    global F
+    itemlist = [['axis',0],['begin',0.0],['end',1.0]]
+    res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
+    if accept:
+        print res
+        updateGUI()
+        clear()
+        bb = F.bbox()
+        print "Original bbox: %s" % bb 
+        xmi = bb[0][0]
+        xma = bb[1][0]
+        dx = xma-xmi
+        axis = int(res[0][1])
+        xc1 = xmi + float(res[1][1]) * dx
+        xc2 = xmi + float(res[2][1]) * dx
+        w = F.where(dir=axis,xmin=xc1,xmax=xc2)
+        oldF = F
+        draw(F.cclip(w),color='yellow',wait=False)
+        F = F.clip(w)
+        print F.bbox()
+        linewidth(2)
+        draw(F,color='green')
+    
 def export_stl():
     """Export an stl model stored in Formex F in Abaqus .inp format."""
     global project,F
@@ -141,6 +190,9 @@ MenuData = [
     ("Action","&New project",new_project),
     ("Action","&Read .stl file",read_stl),
     ("Action","&Show .stl model",show_stl),
+    ("Action","&Center .stl model",center_stl),
+    ("Action","&Rotate .stl model",rotate_stl),
+    ("Action","&Clip .stl model",clip_stl),
     ("Action","&Export .stl model to Abaqus",export_stl),
     ("Action","&Create tetgen model",create_tetgen),
     ("Action","&Read tetgen surface",read_tetgen_surface),

@@ -98,6 +98,7 @@ class AppearenceDialog(QtGui.QDialog):
         """Create the Appearance dialog."""
         self.font = None
         QtGui.QDialog.__init__(self)
+        self.setWindowTitle('Appearance Settings')
         # Style
         styleLabel = QtGui.QLabel('Style')
         self.styleCombo = QtGui.QComboBox()
@@ -147,6 +148,48 @@ class AppearenceDialog(QtGui.QDialog):
         else:
             return None,None
 
+        
+class Selection(QtGui.QDialog):
+    """A dialog for selecting one or more items from a list."""
+    
+    selection_mode = {
+        None: QtGui.QAbstractItemView.NoSelection,
+        'single': QtGui.QAbstractItemView.SingleSelection,
+        'multi': QtGui.QAbstractItemView.MultiSelection,
+        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
+        'extended': QtGui.QAbstractItemView.ExtendedSelection,
+        }
+    
+    def __init__(self,slist=[],title='Selection Dialog',mode=None):
+        """Create the SelectionList dialog."""
+        QtGui.QDialog.__init__(self)
+        self.setWindowTitle(title)
+        # Selection List
+        self.listw = QtGui.QListWidget()
+        self.listw.addItems(slist)
+        self.listw.setSelectionMode(self.selection_mode[mode])
+        # Accept/Cancel Buttons
+        acceptButton = QtGui.QPushButton('OK')
+        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
+        cancelButton = QtGui.QPushButton('Cancel')
+        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
+        # Putting it all together
+        grid = QtGui.QGridLayout()
+        grid.setColumnStretch(1,1)
+        grid.setColumnMinimumWidth(1,250)
+        grid.addWidget(self.listw,0,0)
+        grid.addWidget(acceptButton,1,0)
+        grid.addWidget(cancelButton,1,1)
+        self.setLayout(grid)
+
+    def getResult(self):
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            res = [ i.text() for i in self.listw.selectedItems() ]
+            return map(str,res)
+        else:
+            return []
+        
 
 # !! The QtGui.QColorDialog can not be instantiated or subclassed.
 # !! The color selection dialog is created by the static getColor
