@@ -27,6 +27,8 @@ viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
 browser = 'firefox %s'    # web browser
 # the %s in the above commands will be replaced with the filename/URL
 
+autoglobals = True
+
 [gui]
 size=(800,600)
 pos=(0,0)

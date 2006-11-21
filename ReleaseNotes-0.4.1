@@ -25,3 +25,11 @@ Collection of changes since pyFormex release 0.4
 - draw.py:
   - draw(F) now also accepts a string. If it is the name of an object in
     globals(), that object is drawn.
+  - all Formices created during the run of a script are now exported by default
+    This can be undone by setting GD.cfg['autoglobals'] to False
+
+
+
+- widgets.py:
+  - added Selection dialog to select items from a list
+  - renamed InputDialog.process() to getResult() for consistency

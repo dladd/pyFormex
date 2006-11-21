@@ -160,13 +160,21 @@ class Selection(QtGui.QDialog):
         'extended': QtGui.QAbstractItemView.ExtendedSelection,
         }
     
-    def __init__(self,slist=[],title='Selection Dialog',mode=None):
-        """Create the SelectionList dialog."""
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,\
+                 selected=[]):
+        """Create the SelectionList dialog.
+
+        selected is a list of items that are initially selected.
+        """
         QtGui.QDialog.__init__(self)
         self.setWindowTitle(title)
         # Selection List
         self.listw = QtGui.QListWidget()
         self.listw.addItems(slist)
+        if sort:
+            self.listw.sortItems()
+        if selected:
+            self.setSelected(selected)
         self.listw.setSelectionMode(self.selection_mode[mode])
         # Accept/Cancel Buttons
         acceptButton = QtGui.QPushButton('OK')
@@ -177,11 +185,21 @@ class Selection(QtGui.QDialog):
         grid = QtGui.QGridLayout()
         grid.setColumnStretch(1,1)
         grid.setColumnMinimumWidth(1,250)
-        grid.addWidget(self.listw,0,0)
+        grid.addWidget(self.listw,0,0,1,-1)
         grid.addWidget(acceptButton,1,0)
         grid.addWidget(cancelButton,1,1)
         self.setLayout(grid)
 
+    def setSelected(self,selected):
+        """Mark the specified items as selected."""
+        for s in selected:
+            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
+                print i
+                print dir(i)
+                # i.setSelected(True) # requires Qt 4.2
+                i.setCheckState(QtCore.Qt.Checked)
+
+                
     def getResult(self):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
@@ -286,9 +304,12 @@ class inputDialog(QtGui.QDialog):
             self.result.append([str(label.text()),str(data.text())])
         self.accept()
         
-    def process(self):
+    def getResult(self):
         accept = self.exec_() == QtGui.QDialog.Accepted
+        GD.app.processEvents()
         return (self.result, accept)
+
+    process = getResult
 
 
 def selectFont():

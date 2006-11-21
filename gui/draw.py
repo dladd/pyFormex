@@ -176,7 +176,8 @@ def playScript(scr,name=None):
     try:
         try:
             exec scr in g
-            print g.keys()
+            if GD.cfg['autoglobals']:
+                exportNames.extend(listAll(g))
             globals().update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
@@ -198,6 +199,10 @@ def export(names):
 
 def Globals():
     return globals()
+
+def byName(names):
+    dict = globals()
+    return [ dict[i] for i in names ]
 
 def play(fn=None):
     """Play a formex script from file fn or from the current file.
@@ -567,10 +572,12 @@ def exit(all=False):
 ########################## print information ################################
     
 
-def listAll():
-    """Return a list of all Formices in globals()"""
+def listAll(dict=None):
+    """Return a list of all Formices in dict or by default in globals()"""
+    if dict is None:
+        dict = globals()
     flist = []
-    for n,t in globals().items():
+    for n,t in dict.items():
         if isinstance(t,formex.Formex):
             flist.append(n)
     return flist

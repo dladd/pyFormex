@@ -208,7 +208,4 @@ MenuData = [
 for key,txt,val in MenuData:
     menu.addItem(txt,val)
 
-# show the menu
-#menu.process()
-
 # End
