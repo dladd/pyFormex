@@ -82,11 +82,6 @@ def setLight0():
 def setLight1():
     setLight(1)
 
-def setLocalAxes():
-    GD.cfg['draw/localaxes'] = True 
-def setGlobalAxes():
-    GD.cfg['draw/localaxes'] = False
-
 def setRotFactor():
     askConfigPreferences(['gui/rotfactor'])
 def setPanFactor():

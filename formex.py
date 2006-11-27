@@ -1076,7 +1076,7 @@ class Formex:
         if len(dir) == 2:
             dir.append(0.0)
         if distance is not None:
-            dir = scale(unitvector(dir),distance)
+            dir = vector.scale(vector.unitvector(dir),distance)
         return Formex(self.f + dir,self.p)
 
 
@@ -1687,6 +1687,51 @@ def connect(Flist,nodid=None,bias=None,loop=False):
     for i,j,k in zip(range(m),nodid,bias):
         f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
     return Formex(f)
+
+
+def interpolate(F,G,div):
+    """Create interpolations between two formices.
+
+    F and G are two Formices with the same shape.
+    v is a list of floating point values.
+    The result is the concatenation of the interpolations of F and G at all
+    the values in div.
+    An interpolation of F and G at value v is a Formex H where each coordinate
+    Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
+    Thus, a Formex interpolate(F,G,[0.,0.5,1.0]) will contain all elements
+    of F and G and all elements with mean coordinates between those of F and G.
+
+    As a convenience, if an integer is specified for div, it is taken as a
+    number of division for the interval [0..1].
+    Thus, interpolate(F,G,n) is equivalent with
+    interpolate(F,G,arange(0,n+1)/float(n))
+    """
+    shape = F.shape()
+    if G.shape() != shape:
+        raise RuntimeError,"Can only interpolate between equal size Formices"
+    if type(div) == int:
+        div = arange(div+1) / float(div)
+    else:
+        div = array(div).ravel()
+    c = F.f
+    d = G.f - F.f
+    r = c + outer(div,d).reshape((-1,)+shape)
+    return Formex(r.reshape((-1,) + shape[1:]))
+
+
+def divide(F,div):
+    """Divide
+    """
+    if F.nnodel() != 2:
+        raise RuntimeError,"Can only divide plex-2 Formices"
+    if type(div) == int:
+        div = arange(div+1) / float(div)
+    else:
+        div = array(div).ravel()
+    A = interpolate(F.selectNodes([0]),F.selectNodes([1]),div[:-1])
+    B = interpolate(F.selectNodes([0]),F.selectNodes([1]),div[1:])
+    return connect([A,B])
+
 
 
 def readfile(file,sep=',',plexitude=1,dimension=3):

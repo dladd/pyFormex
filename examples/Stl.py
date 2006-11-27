@@ -30,7 +30,6 @@ def new_project():
         message("Your current workdir is %s" % os.getcwd())
         project = os.path.splitext(fn)[0]
 
-
 def read_stl():
     global project,F
     """Read the .stl surface model into a Formex."""
@@ -42,14 +41,30 @@ def read_stl():
         F = Formex(stl.read_ascii(fn))
         message("There are %d triangles in the model" % F.f.shape[0])
         message("The bounding box is\n%s" % F.bbox())
+        show_stl()
 
 def show_stl():
     """Display the .stl model."""
     global F
     if F:
         updateGUI()
+        GD.gui.update()
+        GD.app.processEvents()
         linewidth(1)
         draw(F,color='green')
+
+def save_stl():
+    """Save the stl model."""
+    global project,F
+    if F is NOne:
+        return
+    fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
+    if fn:
+        os.chdir(os.path.dirname(fn))
+        message("Your current workdir is %s" % os.getcwd())
+        project = os.path.splitext(fn)[0]
+        if not os.path.exists(fn) or ack("File %s already exists. Overwrite?" % fn):
+            stl.write_ascii(F.f,fn)
 
 def center_stl():
     """Center the stl model."""
@@ -61,6 +76,19 @@ def center_stl():
     draw(F,color='yellow',wait=False)
     F = F.translate(-center)
     draw(F,color='green')
+
+def scale_stl():
+    """Scale the stl model."""
+    global F
+    itemlist = [ [ 'X-scale',1.0], [ 'Y-scale',1.0], [ 'Z-scale',1.0] ] 
+    res,accept = widgets.inputDialog(itemlist,'Scaling Parameters').process()
+    if accept:
+        print res
+        updateGUI()
+        clear()
+        draw(F,color='yellow',wait=False)
+        F = F.scale(map(float,[r[1] for r in res]))
+        draw(F,color='green')
 
 def rotate_stl():
     """Rotate the stl model."""
@@ -96,10 +124,63 @@ def clip_stl():
         oldF = F
         draw(F.cclip(w),color='yellow',wait=False)
         F = F.clip(w)
-        print F.bbox()
+        message("Bounding box = %s" % F.bbox())
         linewidth(2)
         draw(F,color='green')
+
+def section_stl():
+    """Sectionize the stl model."""
+    global F,sect,ctr,diam
+    clear()
+    linewidth(1)
+    draw(F,color='yellow')
+    bb = F.bbox()
+    message("Bounding box = %s" % bb)
+
+    itemlist = [['number of sections',20],['relative thickness',0.1]]
+    res,accept = widgets.inputDialog(itemlist,'Sectioning Parameters').process()
+    sect = []
+    ctr = []
+    diam = []
+    if accept:
+        n = int(res[0][1])
+        th = float(res[1][1])
+        xmin = bb[0][0]
+        xmax = bb[1][0]
+        dx = (xmax-xmin) / n
+        dxx = dx * th
+        X = xmin + arange(n+1) * dx
+        message("Sections are taken at X-values: %s" % X)
+
+        c = zeros([n,3],float)
+        d = zeros([n,1],float)
+        linewidth(2)
+
+        for i in range(n+1):
+            G = F.clip(F.where(dir=0,xmin=X[i]-dxx,xmax=X[i]+dxx))
+            draw(G,color='blue',view=None)
+            GD.canvas.update()
+            C = G.center()
+            H = Formex(G.f-C)
+            x,y,z = H.x(),H.y(),H.z()
+            D = 2 * (x*x+y*y+z*z).mean()
+            message("Section Center: %s; Diameter: %s" % (C,D))
+            sect.append(G)
+            ctr.append(C)
+            diam.append(D)
+
+
+def flytru_stl():
+    """Fly through the stl model."""
+    global ctr
+    print ctr
+    fc = array(ctr).reshape((-1,1,3))
+    Fc = Formex(fc)
+    path = connect([Fc,Fc])
+    print path.shape()
+    flyAlong(path)
     
+
 def export_stl():
     """Export an stl model stored in Formex F in Abaqus .inp format."""
     global project,F
@@ -193,7 +274,11 @@ MenuData = [
     ("Action","&Center .stl model",center_stl),
     ("Action","&Rotate .stl model",rotate_stl),
     ("Action","&Clip .stl model",clip_stl),
-    ("Action","&Export .stl model to Abaqus",export_stl),
+    ("Action","&Scale .stl model",scale_stl),
+    ("Action","&Save .stl model",save_stl),
+    ("Action","&Sectionize .stl model",section_stl),
+    ("Action","&Fly .stl model",flytru_stl),
+    ("Action","&Export .stl model to Abaqus (SLOW!)",export_stl),
     ("Action","&Create tetgen model",create_tetgen),
     ("Action","&Read tetgen surface",read_tetgen_surface),
     ("Action","&Read tetgen volume",read_tetgen_volume),

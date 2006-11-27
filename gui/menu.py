@@ -115,8 +115,6 @@ MenuData = [
         ('&Background Color','prefMenu.setBGcolor'), 
         ('Line&Width','prefMenu.setLinewidth'), 
         ('&Canvas Size','prefMenu.setCanvasSize'), 
-        ('&LocalAxes','prefMenu.setLocalAxes'),
-        ('&GlobalAxes','prefMenu.setGlobalAxes'),
         ('&RotFactor','prefMenu.setRotFactor'),
         ('&PanFactor','prefMenu.setPanFactor'),
         ('&ZoomFactor','prefMenu.setZoomFactor'),
@@ -129,6 +127,10 @@ MenuData = [
         ('&Help','prefMenu.setHelp'),
         ('&Save Preferences','GD.savePreferences'), ]),
     ('&Camera',[
+        ('&LocalAxes','draw.setLocalAxes'),
+        ('&GlobalAxes','draw.setGlobalAxes'),
+        ('&Projection','draw.setProjection'),
+        ('&Perspective','draw.setPerspective'),
         ('&Zoom In','cameraMenu.zoomIn'), 
         ('&Zoom Out','cameraMenu.zoomOut'), 
         ('&Dolly In','cameraMenu.dollyIn'), 
@@ -161,6 +163,5 @@ MenuData = [
         ('&Description','help.description'), 
         ('&About','help.about'), 
         ('&Warning','help.testwarning'), ]) ]
-
-
+    
 # End

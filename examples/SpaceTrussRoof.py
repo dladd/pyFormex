@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: SpaceTrussRoof.py 66 2006-02-20 20:08:47Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra
@@ -47,3 +47,8 @@ drawtimeout = 1
 for i in range(19):
     setview('myview2',(i*10.,20.,0.))
     view('myview2',True)
+
+# fly tru
+#if ack("Do you want to fly through the structure?")
+path = divide(Formex([F.bbox()]),20)
+flyAlong(path,sleeptime=0.5)

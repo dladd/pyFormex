@@ -123,9 +123,10 @@ class Canvas:
         """(Re)display all the actors in the scene.
 
         This should e.g. be used when actors are added to the scene,
-        or after changing  camera position or lens.
+        or after changing  camera position/orientation or lens.
         """
         self.clear()
+        # Draw Scene Actors
         self.camera.loadProjection()
         self.camera.loadMatrix()
         for i in self.actors:
@@ -275,9 +276,6 @@ class Canvas:
         else:
             self.bbox = bbox
         center,size = vector.centerDiff(bbox[0],bbox[1])
-        #print "Setting view for bbox",bbox
-        #print "center=",center
-        #print "size=",size
         # calculating the bounding circle: this is rather conservative
         dist = vector.length(size)
         #print "dist = ",dist

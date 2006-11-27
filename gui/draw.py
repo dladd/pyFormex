@@ -618,7 +618,17 @@ def updateGUI():
     GD.gui.update()
     GD.canvas.update()
     GD.app.processEvents()
-    
+
+
+def flyAlong(path,upvector=[0.,1.,0.],sleeptime=0.5):
+    for seg in path:
+        print "Eye: %s" % seg[0]
+        print "Center: %s" % seg[1]
+        GD.canvas.camera.lookAt(seg[0],seg[1],upvector)
+        GD.canvas.display()
+        GD.canvas.update()
+        sleep(sleeptime)
+
 
 ################################ saving images ########################
 
@@ -754,5 +764,23 @@ def saveNext():
         names,format,window,hotkey,autosave = multisave
         name = names.next()
         saveImage(name,window,False,hotkey,autosave,format,False)
+
+
+#### Change settings
+
+def setPerspective(mode=True):
+    GD.canvas.camera.setPerspective(mode)
+    GD.canvas.display()
+    GD.canvas.update()
+
+def setProjection():
+    setPerspective(False)
+
+
+def setLocalAxes(mode=True):
+    GD.cfg['draw/localaxes'] = mode 
+
+def setGlobalAxes():
+    setLocalAxes(False)
 
 #### End

@@ -5,6 +5,7 @@
 import sys
 
 from vector import *
+from math import tan
 
 import numpy
 import distutils.version
@@ -28,8 +29,8 @@ import OpenGL.GLU as GLU
 class Camera:
     """This class defines a camera for OpenGL rendering.
 
-    It provides functions for manipulating the camera position and viewing
-    direction as well as the lens parameters.
+    It provides functions for manipulating the camera position, the viewing
+    direction and the lens parameters.
 
     The camera viewing line can be defined by two points : the position of
     the camera and the center of the scene the camera is looking at.
@@ -37,22 +38,23 @@ class Camera:
     camera angles are stored as such, and not be calculated from the camera
     position and the center point, because the transformation from cartesian
     to spherical coordinates is not unique.
-    Therefore we store the camera as follows:
-        ctr : [ x,y,z ] : the reference point of the camera : this is always
+    Furthermore, to enable smooth mouse-controlled camera rotation based on
+    the current camera angles, it is essential to store the camera angles as
+    the combined rotation matrix, not as the individual angles.
+    
+    Therefore we store the camera position/direction as follows:
+        ctr: [ x,y,z ] : the reference point of the camera: this is always
               a point on the viewing axis. Usualy, it is the center point of
               the scene we are looking at.
-        eye : [ long,lat,dist ] : relative position of the camera with respect
-              to the center point. This is measured in spherical coordinates:
-              long is the rotation around the y-axis,
-              lat is the rotation around the rotated x-axis,
-              dist is the distance from the center.
-              
+
+        rot: 
         twist : rotation angle around the camera's viewing axis
         
     The default camera is at [0,0,1] and aims at point [0,0,0],
     i.e. looking in the -z direction. Near and far clipping planes are by
     default set to 0.1, resp 10 times the camera distance.
-    
+
+    Some camera terminology:
     Position (eye) : position of the camera
     Scene center (ctr) : the point the camera is looking at.
     Up Vector : a vector pointing up from the camera.
@@ -77,7 +79,17 @@ class Camera:
         self.setPerspective(True)
         self.viewChanged = True
 
-    # Using only these access functions make it easier to change implementation
+    # Use only these access functions to make implementation changes easier
+        
+    def getCenter(self):
+        """Return the camera reference point (the scene center)."""
+        return self.ctr
+    def getRot(self):
+        """Return the camera rotation matrix."""
+        return self.rot
+    def getDist(self):
+        """Return the camera distance."""
+        return self.dist
 
     def setCenter(self,x,y,z):
         """Set the center of the camera in global cartesian coordinates."""
@@ -93,21 +105,18 @@ class Camera:
         GL.glRotatef(-long % 360, 0.0, 1.0, 0.0)
         self.rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
         self.viewChanged = True
-
     def setDist(self,dist):
         """Set the distance."""
         self.dist = dist
         self.viewChanged = True
-        
-    def getCenter(self):
-        """Return the camera reference point (the scene center)."""
-        return self.ctr
-    def getRot(self):
-        """Return the camera rotation matrix."""
-        return self.rot
-    def getDist(self):
-        """Return the camera distance."""
-        return self.dist
+
+    def report(self):
+        """Return a report of the current camera settings."""
+        return """Camera Settings:
+  Center: %s
+  Rotation Matrix: %s
+  Distance: %s
+""" % (self.ctr,self.rot,self.dist)
         
     def dolly(self,val):
         """Move the camera eye towards/away from the scene center.
@@ -160,7 +169,6 @@ class Camera:
         """
         center = add(self.getCenter(),translation)
         self.setCenter(*center)
-        self.viewChanged = True
 
 ##    def truck(self,translation):
 ##        """Move the camera translation vector in local coordinates.
@@ -198,6 +206,13 @@ class Camera:
         dx,dy,dz = self.getCenter()
         GL.glTranslatef(-dx,-dy,-dz)
 
+
+    def lookAt(self,eye,center,up):
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glLoadIdentity()
+        GLU.gluLookAt(*numpy.concatenate([eye,center,up]))
+        self.saveMatrix()
+
     def rotate(self,val,vx,vy,vz):
         """Rotate the model around current camera axes."""
         GL.glMatrixMode(GL.GL_MODELVIEW)
@@ -216,8 +231,6 @@ class Camera:
         self.rot = copy.deepcopy(self.m)
         self.trl = copy.deepcopy(self.rot[3][0:3])
         self.rot[3][0:3] = [0.,0.,0.]
-        #print self.trl
-        #print self.rot
 
     def loadMatrix (self):
         """Load the saved ModelView matrix."""
@@ -235,7 +248,7 @@ class Camera:
         self.move([-vx,-vy,-vz])
       
     def transform(self,v):
-        """Transform a vertex using the currently saved  Modelview matrix."""
+        """Transform a vertex using the currently saved Modelview matrix."""
         if len(v) == 3:
             v = v + [ 1. ]
         v = multiply([v],self.m)[0]
@@ -310,8 +323,6 @@ class Camera:
         """
         if val>0:
             self.fovy *= val
-        #self.setClip(dist,2*dist+size[2])
-        #print "Lens = ",self.fovy,self.aspect
         self.lensChanged = True
 
     def loadProjection(self,force=False):
@@ -330,10 +341,14 @@ class Camera:
             GL.glMatrixMode(GL.GL_PROJECTION)
             GL.glLoadIdentity()
             if self.perspective:
-                #print "Lens setting ",self.fovy,self.aspect
                 GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
             else:
-                GL.glOrtho(self.left,self.right,self.top,self.bottom,self.near,self.far)
+                top = tan(self.fovy*0.5) * self.dist
+                bottom = -top
+                right = top * self.aspect
+                left = bottom * self.aspect
+                #print "Ortho",left,right,bottom,top,self.near,self.far
+                GL.glOrtho(left,right,bottom,top,self.near,self.far)
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 
 

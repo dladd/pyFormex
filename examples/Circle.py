@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: Circle.py 154 2006-11-03 19:08:25Z bverheg $
 
 from simple import circle
 
@@ -47,7 +47,7 @@ for i in [3,4,5,6,8,12,20,60,180]:
 clear()
 n = 40
 h = 0.5
-line = Formex(pattern('1'*n)).scale(2./n).translate([-1.,0.,0.],0)
+line = Formex(pattern('1'*n)).scale(2./n).translate([-1.,0.,0.])
 curve = line.bump(1,[0.,h,0.],lambda x: 1.-x**2)
 curve.setProp(1)
 draw(line)
@@ -76,3 +76,8 @@ draw(F)
 conn=range(0,180,15)
 G = Formex.concatenate([ connect([c1.select(conn),c2.select(conn)]) for c1,c2 in zip(circles[:-1],circles[1:]) ])
 draw(G)
+
+
+# Fly through
+if ack("Are you ready for a flight through the tube?"):
+    flyAlong(curve)

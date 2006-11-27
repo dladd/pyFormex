@@ -47,3 +47,9 @@ Stars = Formex.concatenate([ star(n,noise,i).rotateAround(r,a).translate(t) for 
 colors = random.random((nstars,3))
 clear()
 draw(Stars,color=colors)
+
+bb = Stars.bbox()
+print bb
+print
+
+x[0]+outer(c,x[1]-x[0])
