@@ -402,10 +402,12 @@ class Canvas:
         if fmt in GD.image_formats_qt:
             GL.glFlush()
             qim = self.grabFrameBuffer()
-            sta = qim.save(fn,fmt)
+            if qim.save(fn,fmt):
+                sta = 0
+            else:
+                sta = 1
         elif fmt in GD.image_formats_gl2ps:
-            self.savePS(fn,fmt)
-            sta = 0
+            sta = self.savePS(fn,fmt)
         elif fmt in GD.image_formats_fromeps:
             import commands,os
             fneps = os.path.splitext(fn)[0] + '.eps'

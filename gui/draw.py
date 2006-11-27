@@ -303,7 +303,8 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
 
     If bbox == 'auto', the camera will zoom automatically on the shown
     object. A bbox may be specified to have other zoom settings, e.g. to
-    keep the previous settings.
+    keep the previous settings. If bbox == None, the previous bbox will be
+    kept.
 
     If other actors are on the scene, they may or may not be visible with the
     new camera settings. Clear the canvas before drawing if you only want
@@ -370,6 +371,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
         GD.canvas.setView(bbox,view)
         currentView = view
     GD.canvas.update()
+    GD.app.processEvents()
     if multisave and multisave[4]:
         saveNext()
     if allowwait and wait:
@@ -622,11 +624,12 @@ def updateGUI():
 
 def flyAlong(path,upvector=[0.,1.,0.],sleeptime=0.5):
     for seg in path:
-        print "Eye: %s" % seg[0]
-        print "Center: %s" % seg[1]
+        GD.debug("Eye: %s; Center: %s" % (seg[0],seg[1]))
         GD.canvas.camera.lookAt(seg[0],seg[1],upvector)
         GD.canvas.display()
         GD.canvas.update()
+        if multisave and multisave[4]:
+            saveNext()
         sleep(sleeptime)
 
 

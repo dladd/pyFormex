@@ -1663,10 +1663,6 @@ def connect(Flist,nodid=None,bias=None,loop=False):
     loop=True however, each Formex will loop around if its end is
     encountered, and the order of the result is the maximum order in Flist.
     """
-    ## !! Loop does not work correctly. And I'm not sure if we will
-    ## ever fix it: It might be better to let the user extend the
-    ## formices where needed
-    ## Maybe give a warning?
     m = len(Flist)
     for i in range(m):
         if isinstance(Flist[i],Formex):
@@ -1685,7 +1681,10 @@ def connect(Flist,nodid=None,bias=None,loop=False):
         n = min([ Flist[i].nelems() - bias[i] for i in range(m) ])
     f = zeros((n,m,3),dtype=Float)
     for i,j,k in zip(range(m),nodid,bias):
-        f[:,i,:] = resize(Flist[i].f[k:k+n,j,:],(n,3))
+        v = Flist[i].f[k:k+n,j,:]
+        if loop and k > 0:
+            v = concatenate([v,Flist[i].f[:k,j,:]])
+        f[:,i,:] = resize(v,(n,3))
     return Formex(f)
 
 
@@ -1702,7 +1701,7 @@ def interpolate(F,G,div):
     of F and G and all elements with mean coordinates between those of F and G.
 
     As a convenience, if an integer is specified for div, it is taken as a
-    number of division for the interval [0..1].
+    number of divisions for the interval [0..1].
     Thus, interpolate(F,G,n) is equivalent with
     interpolate(F,G,arange(0,n+1)/float(n))
     """
@@ -1720,7 +1719,16 @@ def interpolate(F,G,div):
 
 
 def divide(F,div):
-    """Divide
+    """Divide a plex-2 Formex at the values in div.
+
+    Replaces each member of the Formex F by a sequence of members obtained
+    by dividing the Formex at the relative values specified in div. The values
+    should normally range from 0.0 to 1.0.
+    
+    As a convenience, if an integer is specified for div, it is taken as a
+    number of divisions for the interval [0..1].
+
+    This function only works on plex-2 Formices (line segments).
     """
     if F.nnodel() != 2:
         raise RuntimeError,"Can only divide plex-2 Formices"

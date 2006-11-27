@@ -20,26 +20,19 @@ project = F = nodes = elems = surf = None
 
 # Actions
 
-def new_project():
-    global project
-    """Set a new project name by asking for an .stl filename."""
-    message("Set the project name by choosing the input .stl file\n(Hint: You can run the Sphere_stl example to create one.)")
+def read_stl():
+    global project,F
+    """Read the .stl surface model into a Formex."""
     fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
     if fn:
         os.chdir(os.path.dirname(fn))
         message("Your current workdir is %s" % os.getcwd())
         project = os.path.splitext(fn)[0]
-
-def read_stl():
-    global project,F
-    """Read the .stl surface model into a Formex."""
-    if project is None:
-        new_project()
-    if project:
-        fn = project+'.stl'
         message("Reading file %s" % fn)
         F = Formex(stl.read_ascii(fn))
-        message("There are %d triangles in the model" % F.f.shape[0])
+        name = os.path.basename(project)
+        Globals().update({name:F})
+        message("STL model %s has %d triangles" % (name,F.f.shape[0]))
         message("The bounding box is\n%s" % F.bbox())
         show_stl()
 
@@ -56,10 +49,12 @@ def show_stl():
 def save_stl():
     """Save the stl model."""
     global project,F
-    if F is NOne:
+    if F is None:
         return
     fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
     if fn:
+        if not fn.endswith('.stl'):
+            fn += '.stl'
         os.chdir(os.path.dirname(fn))
         message("Your current workdir is %s" % os.getcwd())
         project = os.path.splitext(fn)[0]
@@ -68,18 +63,19 @@ def save_stl():
 
 def center_stl():
     """Center the stl model."""
-    global F
+    global F,oldF
     updateGUI()
     center = array(F.center())
     print center
     clear()
     draw(F,color='yellow',wait=False)
+    oldF = F
     F = F.translate(-center)
     draw(F,color='green')
 
 def scale_stl():
     """Scale the stl model."""
-    global F
+    global F,oldF
     itemlist = [ [ 'X-scale',1.0], [ 'Y-scale',1.0], [ 'Z-scale',1.0] ] 
     res,accept = widgets.inputDialog(itemlist,'Scaling Parameters').process()
     if accept:
@@ -87,12 +83,13 @@ def scale_stl():
         updateGUI()
         clear()
         draw(F,color='yellow',wait=False)
+        oldF = F
         F = F.scale(map(float,[r[1] for r in res]))
         draw(F,color='green')
 
 def rotate_stl():
     """Rotate the stl model."""
-    global F
+    global F,oldF
     itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
     res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').process()
     if accept:
@@ -100,37 +97,47 @@ def rotate_stl():
         updateGUI()
         clear()
         draw(F,color='yellow',wait=False)
+        oldF = F
         F = F.rotate(float(res[1][1]),int(res[0][1]))
         draw(F,color='green')
         
 def clip_stl():
     """Clip the stl model."""
-    global F
-    itemlist = [['axis',0],['begin',0.0],['end',1.0]]
+    global F,oldF
+    itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
     res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
     if accept:
-        print res
         updateGUI()
         clear()
         bb = F.bbox()
-        print "Original bbox: %s" % bb 
+        message("Original bbox: %s" % bb) 
         xmi = bb[0][0]
         xma = bb[1][0]
         dx = xma-xmi
         axis = int(res[0][1])
         xc1 = xmi + float(res[1][1]) * dx
         xc2 = xmi + float(res[2][1]) * dx
-        w = F.where(dir=axis,xmin=xc1,xmax=xc2)
-        oldF = F
+        nodes = res[3][1]
+        print nodes
+        w = F.where(nodes='any',dir=axis,xmin=xc1,xmax=xc2)
         draw(F.cclip(w),color='yellow',wait=False)
+        oldF = F
         F = F.clip(w)
-        message("Bounding box = %s" % F.bbox())
-        linewidth(2)
+        message("Clipped bbox = %s" % F.bbox())
+        #linewidth(2)
         draw(F,color='green')
+
+def undo_stl():
+    """Undo the last transformation."""
+    global F,oldF
+    clear()
+    linewidth(1)
+    F = oldF
+    draw(F,color='green')
 
 def section_stl():
     """Sectionize the stl model."""
-    global F,sect,ctr,diam
+    global F,sections,ctr,diam
     clear()
     linewidth(1)
     draw(F,color='yellow')
@@ -139,7 +146,7 @@ def section_stl():
 
     itemlist = [['number of sections',20],['relative thickness',0.1]]
     res,accept = widgets.inputDialog(itemlist,'Sectioning Parameters').process()
-    sect = []
+    sections = []
     ctr = []
     diam = []
     if accept:
@@ -157,27 +164,54 @@ def section_stl():
         linewidth(2)
 
         for i in range(n+1):
-            G = F.clip(F.where(dir=0,xmin=X[i]-dxx,xmax=X[i]+dxx))
+            G = F.clip(F.where(nodes='any',dir=0,xmin=X[i]-dxx,xmax=X[i]+dxx))
             draw(G,color='blue',view=None)
             GD.canvas.update()
             C = G.center()
             H = Formex(G.f-C)
             x,y,z = H.x(),H.y(),H.z()
-            D = 2 * (x*x+y*y+z*z).mean()
+            D = 2 * sqrt((x*x+y*y+z*z).mean())
             message("Section Center: %s; Diameter: %s" % (C,D))
-            sect.append(G)
+            sections.append(G)
             ctr.append(C)
             diam.append(D)
+
+def circle_stl():
+    """Draw circles as approximation of the STL model."""
+    global sections,ctr,diam,circles
+    import simple
+    circle = simple.circle().rotate(-90,1)
+    cross = Formex(simple.Pattern['plus']).rotate(-90,1)
+    circles = []
+    n = len(sections)
+    for i in range(n):
+        C = cross.translate(ctr[i])
+        B = circle.scale(diam[i]/2).translate(ctr[i])
+        S = sections[i]
+        print C.bbox()
+        print B.bbox()
+        print S.bbox()
+        clear()
+        draw(S,view='left',wait=False)
+        draw(C,color='red',bbox=None,wait=False)
+        draw(B,color='blue',bbox=None)
+        circles.append(B)
+
+def allcircles_stl():
+    global circles
+    clear()
+    linewidth(1)
+    draw(F,color='yellow',view='front')
+    linewidth(2)
+    for circ in circles:
+        draw(circ,color='blue',bbox=None)
 
 
 def flytru_stl():
     """Fly through the stl model."""
     global ctr
-    print ctr
-    fc = array(ctr).reshape((-1,1,3))
-    Fc = Formex(fc)
-    path = connect([Fc,Fc])
-    print path.shape()
+    Fc = Formex(array(ctr).reshape((-1,1,3)))
+    path = connect([Fc,Fc],bias=[0,1])
     flyAlong(path)
     
 
@@ -201,24 +235,24 @@ def create_tetgen():
     if os.path.exists(fn):
         sta,out = commands.getstatusoutput('tetgen %s' % fn)
         message(out)
-#    menu.process()
 
 
 def read_tetgen(surface=True, volume=True):
     """Read a tetgen model from files  fn.node, fn.ele, fn.smesh."""
     global nodes,elems,surf
-    if project is None:
-        new_project()
-    if project:
-        nodes = tetgen.readNodes(project+'.1.node')
+    fn = askFilename(GD.cfg['workdir'],"Tetgen files (*.node)")
+    if fn:
+        os.chdir(os.path.dirname(fn))
+        message("Your current workdir is %s" % os.getcwd())
+        project = os.path.splitext(fn)[0]
+        nodes = tetgen.readNodes(project+'.node')
         print "Read %d nodes" % nodes.shape[0]
         if volume:
-            elems = tetgen.readElems(project+'.1.ele')
+            elems = tetgen.readElems(project+'.ele')
             print "Read %d tetraeders" % elems.shape[0]
         if surface:
-            surf = tetgen.readSurface(project+'.1.smesh')
+            surf = tetgen.readSurface(project+'.smesh')
             print "Read %d triangles" % surf.shape[0]
-#    menu.process()
 
 
 def read_tetgen_surface():
@@ -268,17 +302,20 @@ def export_tetgen_volume():
 menu = widgets.Menu('STL') # Should be done before defining MenuData!
 
 MenuData = [
-    ("Action","&New project",new_project),
-    ("Action","&Read .stl file",read_stl),
-    ("Action","&Show .stl model",show_stl),
-    ("Action","&Center .stl model",center_stl),
-    ("Action","&Rotate .stl model",rotate_stl),
-    ("Action","&Clip .stl model",clip_stl),
-    ("Action","&Scale .stl model",scale_stl),
-    ("Action","&Save .stl model",save_stl),
-    ("Action","&Sectionize .stl model",section_stl),
-    ("Action","&Fly .stl model",flytru_stl),
-    ("Action","&Export .stl model to Abaqus (SLOW!)",export_stl),
+    #("Action","&New project",new_project),
+    ("Action","&Read STL file",read_stl),
+    ("Action","&Show STL model",show_stl),
+    ("Action","&Center STL model",center_stl),
+    ("Action","&Rotate STL model",rotate_stl),
+    ("Action","&Clip STL model",clip_stl),
+    ("Action","&Scale STL model",scale_stl),
+    ("Action","&Undo LAST STL transformation",undo_stl),
+    ("Action","&Save STL model",save_stl),
+    ("Action","&Sectionize STL model",section_stl),
+    ("Action","&Show individual circles",circle_stl),
+    ("Action","&Show all circles on STL model",allcircles_stl),
+    ("Action","&Fly STL model",flytru_stl),
+    ("Action","&Export STL model to Abaqus (SLOW!)",export_stl),
     ("Action","&Create tetgen model",create_tetgen),
     ("Action","&Read tetgen surface",read_tetgen_surface),
     ("Action","&Read tetgen volume",read_tetgen_volume),

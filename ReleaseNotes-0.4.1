@@ -3,6 +3,8 @@ Collection of changes since pyFormex release 0.4
 - config.py:
   Configuration files now can have continuation lines, flagged by \
 
+GUI:
+====
 - image saving:
    - option settings gathered in a single dialog
    - auto mode saves a new image at each draw() operation
@@ -10,8 +12,9 @@ Collection of changes since pyFormex release 0.4
 
 - when starting multiple pyFormex instances, windows are named differently 
 
-- user menus (see stl.py example)
+- user menus (see Stl.py and Formex.py examples)
 
+- appearance dialog to set the widget Style and Font 
 
 
 - Formex class:
@@ -21,15 +24,28 @@ Collection of changes since pyFormex release 0.4
 
   - translate and translate1 have been merged into a single function
 
+  - fixed the bug in connect() when loop=True and bias != 0
+
+  - interpolate (F,G,[v]) : interpolates between Formices F and G at values v
+
+  - divide(a,[v]) : divide all elements of a plex-2 Formex at values v
+
 
 - draw.py:
   - draw(F) now also accepts a string. If it is the name of an object in
     globals(), that object is drawn.
   - all Formices created during the run of a script are now exported by default
     This can be undone by setting GD.cfg['autoglobals'] to False
-
+  - flyAlong (path): move the camera along path. Each element of path is a 
+    couple of two points : camera position and point to look at. 
+    In autosave mode an image is saved at each camera position.
 
 
 - widgets.py:
   - added Selection dialog to select items from a list
   - renamed InputDialog.process() to getResult() for consistency
+
+
+- Manual:
+  - installation instructions
+  - Some additions to reference manual

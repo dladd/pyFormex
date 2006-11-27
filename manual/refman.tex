@@ -6,14 +6,14 @@
 \section{formex --- the base module}
 {\label{sec:formex}
 
-This module contains all the basic functionality for creating, structuring and transforming sets of coordinates.
+This module contains all the basic functionality for creating, structuring and transforming sets of coordinates. All the definitions in this module are available in your scripts without the need to import the module.
 
-\begin{classdesc}  {Formex}{data=[[[]]],prop=None}
-A class to hold a structured set of coordinates. A \class{Formex} is a three dimensional array of float values. The array has a shape \code{(nelems,nnodel,3)}. Each slice \code{[i,j]} of the array contains the three coordinates of a point in space. We will also call this a \emph{node}. Each slice \code{[i]} of the array contains a connected set of nnodel points: we will refer to it as an \emph{element}. 
+\begin{classdesc}{Formex}{data=[[[]]],prop=None}
+A class to hold a structured set of coordinates. A \class{Formex} is a three dimensional array of float values. The array has a shape \Code{(nelems,nnodel,3)}. Each slice \Code{[i,j]} of the array contains the three coordinates of a point in space. We will also call this a \emph{node}. Each slice \Code{[i]} of the array contains a connected set of nnodel points: we will refer to it as an \emph{element}. 
 
 It is up to the user on how to interprete this connection: two connected nodes will usually represent a line segment between these two points. An element with three nodes however could just as well be interpreted as a triangle or as a (possibly curved) line. And if it is a triangle, it could be either the circumference of the triangle or the part of the plane inside that circumference. As far as the Formex class concerns, each element is just a set of points. 
 
-All elements in a \class{Formex} must have the same number of points, but you can construct \class{Formex} instances with any (positive) number of nodes per element. When \code{nnodel==1}, the \class{Formex} contains only unconnected nodes (each element is just one point).
+All elements in a \class{Formex} must have the same number of points, but you can construct \class{Formex} instances with any (positive) number of nodes per element. When \Code{nnodel==1}, the \class{Formex} contains only unconnected nodes (each element is just one point).
 
 One way of attaching other data to the \class{Formex}, is by the use of the 'property' attribute. The property is an array holding one integer value for each of the elements of the Formex. The use of this property value is completely defined by the user. It could be a code for the type of element, or for the color to draw this element with. Most often it will be used as an index into some other (possibly complex) data structure holding all the characteristics of that element. 
 
@@ -21,15 +21,19 @@ By including this property index into the Formex class, we make sure that when n
 
 \end{classdesc}
 
+\subsection{Formex class members}
+
 \begin{memberdesc}  [array]{f}
 A three dimensional array of float values. The array has a shape (nelems,nnodel,3). Each slice [i,j] of the array contains the three coordinates of a point in space. We will also call this a \emph{node}. Each slice [i] of the array contains a connected set of nnodel points: we will refer to it as an \emph{element}. It is up to the user on how to interprete this connection: two connected nodes will usually represent a line segment between these two points. An element with three nodes however could just as well be interpreted as a triangle or as a (possibly curved) line. And if it is a triangle, it could be either the circumference of the triangle or the part of the plane inside that circumference.   
 \end{memberdesc}
 
-\begin{methoddesc}  {nelems}{}
+\subsection{Formex class methods}
+
+\begin{methoddesc}{nelems}{}
 Return the number of elements in the Formex.
 \end{methoddesc}
 
-\begin{methoddesc}  {nnodel}{}
+\begin{methoddesc}{nnodel}{}
 Return the number of nodes per element.
 
 Examples:\\
@@ -39,42 +43,42 @@ Examples:\\
 4: tetraeders or quadrilaterals or cubic line elements.
 \end{methoddesc}
 
-\begin{methoddesc}  {nnodes}{}
+\begin{methoddesc}{nnodes}{}
 Return the number of nodes in the Formex.
 
 This is the product of the number of elements in the Formex with the number of nodes per element.
 \end{methoddesc}
 
-\begin{methoddesc}  {prop}{}
+\begin{methoddesc}{prop}{}
 Return the properties as a numpy array.
 \end{methoddesc}
 
-\begin{methoddesc}  {bbox}{}
+\begin{methoddesc}{bbox}{}
 Return the bounding box of the Formex.
 
 The bounding box is the smallest rectangular volume in global coordinates, such that no points of the Formex are outside the box. It is returned as a [2,3] array: the first row holds the minimal coordinates and the second one the maximal.
 \end{methoddesc}
 
-\begin{methoddesc}  {center}{}
+\begin{methoddesc}{center}{}
 Return the center of the Formex.
 
 The center of the Formex is the center of its \function{bbox()}.
 \end{methoddesc}
 
-\begin{methoddesc}  {bsphere}{}
+\begin{methoddesc}{bsphere}{}
 Return the diameter of the bounding sphere of the Formex.
 
 The bounding sphere is the smallest sphere with center in the \function{center()} of the Formex, and such that no points of the Formex are lying outside the sphere.
 \end{methoddesc}
 
-\begin{methoddesc}  {nodesAndElements}{nodesperbox=1,repeat=True}
+\begin{methoddesc}{nodesAndElements}{nodesperbox=1,repeat=True}
 Return a tuple of nodal coordinates and element connectivity.
 
 A tuple of two arrays is returned. The first is a float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element. The elements come in the same order as they are in the Formex, but the order of the nodes is unspecified. By the way, the reverse operation of
-\code{coords,elems = nodesAndElements(F)} is accomplished by \code{F = Formex(coords[elems])}. There is a (very small) probability that two very close nodes are not equivalenced by this procedure. Use it multiple times with different parameters to check.
+\Code{coords,elems = nodesAndElements(F)} is accomplished by \Code{F = Formex(coords[elems])}. There is a (very small) probability that two very close nodes are not equivalenced by this procedure. Use it multiple times with different parameters to check.
 \end{methoddesc}
 
-\begin{methoddesc}  {setProp}{p=0}
+\begin{methoddesc}{setProp}{p=0}
 Create a property array for the Formex.
 
 A property array is a rank-1 integer array with dimension equal to the number of elements in the Formex (first dimension of data). You can specify a single value or a list/array of integer values.
@@ -82,94 +86,101 @@ A property array is a rank-1 integer array with dimension equal to the number of
 If the number of passed values is less than the number of elements, they wil be repeated. If you give more, they will be ignored. The default argument will give all elements a property value 0.
 \end{methoddesc}
 
-\begin{methoddesc}  {removeProp}{}
+\begin{methoddesc}{removeProp}{}
 Remove the properties from a Formex.
 \end{methoddesc}
 
-\begin{methoddesc}  {copy}{}
+\begin{methoddesc}{copy}{}
 Returns a deep copy of itself.
 \end{methoddesc}
 
-\begin{methoddesc}  {select}{idx}
+\begin{methoddesc}{select}{idx}
 Return a Formex which holds only elements with numbers in \var{idx}.
 \var{idx} can be a single element number or a list of numbers.
 \end{methoddesc}
 
-\begin{methoddesc}  {selectNodes}{idx}
+\begin{methoddesc}{selectNodes}{idx}
 Return a Formex which holds only some nodes of the parent. \var{idx} is a list of node numbers to select.\\
 Thus, if F is a grade 3 Formex representing triangles, the sides of the triangles are given by\\
 \verb? F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0]) ?\\
 The returned Formex inherits the property of its parent.
 \end{methoddesc}
 
-\begin{methoddesc}  {nodes}{}
+\begin{methoddesc}{nodes}{}
 Return a Formex containing only the nodes.
 
 This is obviously a Formex with plexitude 1. It holds the same data as the original Formex, but in another shape: the number of nodes per element is 1, and the number of elements is equal to the total number of nodes. The properties are not copied over, since they will usually not make any sense.
 \end{methoddesc}
 
-\begin{methoddesc}  {remove}{F}
+\begin{methoddesc}{remove}{F}
 Return a Formex where the elements in \var{F} have been removed.
 
 This is also the subtraction of the current Formex with \var{F}. Elements are only removed if they have the same nodes in the same order. This is a slow operation: for large structures, you should avoid it where possible.
 \end{methoddesc}
 
-\begin{methoddesc}  {scale}{scale}
+\begin{methoddesc}{scale}{scale}
 Returns a copy scaled with \var{scale[i]} in direction \var{i}.
 
 The \var{scale} should be a list of 3 numbers, or a single number. In the latter case, the scaling is homothetic.
 \end{methoddesc}
 
-\begin{methoddesc}  {translate}{vector,distance=None}
-Returns a copy translated over \var{distance} in the direction of \var{vector}.
+\begin{methoddesc}{translate}{dir,distance=None}
+Returns a copy translated over \var{distance} in direction \var{dir}.
 
-If no distance is given, translation is over the specified vector. If a distance is given, translation is over the specified distance in the direction of the vector.
+\var{dir} is either an axis number (0,1,2) or a direction vector.
+
+If a distance is given, the translation is over the specified
+distance in the specified direction.
+If no distance is given, and \var{dir} is specified as an axis number,
+translation is over a distance 1.
+If no distance is given, and \var{dir} is specified as a vector, translation
+is over the specified vector.
+
+Thus, the following are all equivalent:
+\Code{F.translate(1)};
+\Code{F.translate(1,1)};
+\Code{F.translate([0,1,0])};
+\Code{F.translate([0,2,0],1)}
 \end{methoddesc}
 
-\begin{methoddesc}  {translate1}{dir,distance}
-Returns a copy translated in direction \var{dir} over distance \var{dist}. 
-
-The direction is specified by the axis number (0,1,2).
-\end{methoddesc}
-
-\begin{methoddesc}  {rotate}{angle,axis=2}
+\begin{methoddesc}{rotate}{angle,axis=2}
 Returns a copy rotated over \var{angle} around \var{axis}.
 
 The angle is specified in degrees. Default rotation is around z-axis.
 \end{methoddesc}
 
-\begin{methoddesc}  {rotateAround}{vector,angle}
+\begin{methoddesc}{rotateAround}{vector,angle}
 Returns a copy rotated over \var{angle} around \var{vector}.
 
 The angle is specified in degrees. The rotation axis is specified by a vector of three values. It is an axis through the center.
 \end{methoddesc}
 
-\begin{methoddesc}  {shear}{dir,dir1,skew}
+\begin{methoddesc}{shear}{dir,dir1,skew}
 Returns a copy skewed in the direction \var{dir} of plane \var{(dir,dir1)}.
 
-The coordinate \var{dir} is replaced with \code{(dir + skew * dir1)}.
+The coordinate \var{dir} is replaced with \Code{(dir + skew * dir1)}.
 \end{methoddesc}
 
-\begin{methoddesc}  {reflect}{dir,pos=0}
+\begin{methoddesc}{reflect}{dir,pos=0}
 Returns a Formex mirrored in direction \var{dir} against plane at \var{pos}.
 
 Default position of the plane is through the origin.
 \end{methoddesc}
 
-\begin{methoddesc}  {cylindrical}{dir=[0,1,2],scale=[1.,1.,1.]}
+\begin{methoddesc}{cylindrical}{dir=[0,1,2],scale=[1.,1.,1.]}
 Converts from cylindrical to cartesian after scaling.
 
 \var{dir} specifies which coordinates are interpreted as resp. distance(r), angle(theta) and height(z). Default order is [r,theta,z].\\
 \var{scale} will scale the coordinate values prior to the transformation. (scale is given in order r,theta,z). The resulting angle is interpreted in degrees.
 \end{methoddesc}
 
-\begin{methoddesc}  {toCylindrical}{dir=[0,1,2]}
+\begin{methoddesc}{toCylindrical}{dir=[0,1,2]}
 Converts from cartesian to cylindrical coordinates.
 
 \var{dir} specifies which coordinates axes are parallel to respectively the cylindrical axes distance(r), angle(theta) and height(z). Default order is [x,y,z]. The angle value is given in degrees.
 \end{methoddesc}
 
-\begin{methoddesc}  {spherical}{dir=[0,1,2],scale=[1.,1.,1.]}
+\begin{methoddesc}{spherical}{dir=[0,1,2],scale=[1.,1.,1.]}
 Converts from spherical to cartesian after scaling.
 
 \var{dir} specifies which coordinates are interpreted as resp. distance(r), longitude(theta) and colatitude(phi).\\
@@ -178,13 +189,13 @@ Angles are then interpreted in degrees.\\
 Colatitude is 90 degrees - latitude, i.e. the elevation angle measured from north pole(0) to south pole(180). This choice facilitates the creation of spherical domes.
 \end{methoddesc}
 
-\begin{methoddesc}  {toSpherical}{dir=[0,1,2]}
+\begin{methoddesc}{toSpherical}{dir=[0,1,2]}
 Converts from cartesian to spherical coordinates.
 
 \var{dir} specifies which coordinates axes are parallel to respectively the spherical axes distance(r), longitude(theta) and colatitude(phi). Colatitude is 90 degrees - latitude, i.e. the elevation angle measured from north pole(0) to south pole(180). Default order is [0,1,2], thus the equator plane is the (x,y)-plane. The returned angle values are given in degrees.
 \end{methoddesc}
 
-\begin{methoddesc}  {bump1}{dir,a,func,dist}
+\begin{methoddesc}{bump1}{dir,a,func,dist}
 Return a Formex with a one-dimensional bump.
 
 \var{dir} specifies the axis of the modified coordinates.\\
@@ -193,7 +204,7 @@ Return a Formex with a one-dimensional bump.
 \var{func} is a function that calculates the bump intensity from distance. \var{func(0)} should be different from 0.
 \end{methoddesc}
 
-\begin{methoddesc}  {bump2}{dir,a,func}
+\begin{methoddesc}{bump2}{dir,a,func}
 Return a Formex with a two-dimensional bump.
 
 \var{dir} specifies the axis of the modified coordinates.\\
@@ -201,7 +212,7 @@ Return a Formex with a two-dimensional bump.
 \var{func} is a function that calculates the bump intensity from distance. \var{func(0)} should be different from 0.
 \end{methoddesc}
 
-\begin{methoddesc}  {bump}{dir,a,func,dist=None}
+\begin{methoddesc}{bump}{dir,a,func,dist=None}
 Return a Formex with a bump.
 
 A bump is a modification of a set of coordinates by a non-matching point. It can produce various effects, but one of the most common uses is to force a surface to be indented by some point.
@@ -212,82 +223,84 @@ A bump is a modification of a set of coordinates by a non-matching point. It can
 \var{dist} is the direction in which the distance is measured : this can be one of the axes, or a list of one or more axes. If only 1 axis is specified, the effect is like function \function{bump1()}. If 2 axes are specified, the effect is like \function{bump2}. This function can take 3 axes however. Default value is the set of 3 axes minus the direction of modification. This function is then equivalent to \function{bump2()}.
 \end{methoddesc}
 
-\begin{methoddesc}  {newmap}{func}
+\begin{methoddesc}{newmap}{func}
 Return a Formex mapped by a 3-D function.
 
 This is one of the versatile mapping functions.\\
 \var{func} is a numerical function which takes three arguments and produces a list of three output values. The coordinates [x,y,z] will be replaced by func(x,y,z). The function must be applicable to arrays, so it should only include numerical operations and functions understood by the numpy module.
 
 This method is one of several mapping methods. See also \function{map1()} and \function{mapd()}.\\
-Example: \code{E.map(lambda x,y,z: [2*x,3*y,4*z])} is equivalent with \code{E.scale([2,3,4])}.
+Example: \Code{E.map(lambda x,y,z: [2*x,3*y,4*z])} is equivalent with \Code{E.scale([2,3,4])}.
 \end{methoddesc}
 
-\begin{methoddesc}  {map1}{dir,func}
+\begin{methoddesc}{map1}{dir,func}
 Return a Formex where coordinate \var{i} is mapped by a 1-D function.
 
 \var{func} is a numerical function which takes one argument and produces one result. The coordinate \var{dir} will be replaced by func(coord[dir]). The function must be applicable on arrays, so it should only include numerical operations and functions understood by the numpy module. This method is one of several mapping methods. See also \function{map()} and \function{mapd()}.
 \end{methoddesc}
 
-\begin{methoddesc}  {mapd}{dir,func,point,dist=None}
+\begin{methoddesc}{mapd}{dir,func,point,dist=None}
 Maps one coordinate by a function of the distance to a point.
 
-\var{func} is a numerical function which takes one argument and produces one result. The coordinate \var{dir} will be replaced by \code{func(d)}, where \var{d} is calculated as the distance to \var{point}. The function must be applicable on arrays, so it should only include numerical operations and functions understood by the numpy module. By default, the distance \var{d} is calculated in 3-D, but one can specify a limited set of axes to calculate a 2-D or 1-D distance.
+\var{func} is a numerical function which takes one argument and produces one result. The coordinate \var{dir} will be replaced by \Code{func(d)}, where \var{d} is calculated as the distance to \var{point}. The function must be applicable on arrays, so it should only include numerical operations and functions understood by the numpy module. By default, the distance \var{d} is calculated in 3-D, but one can specify a limited set of axes to calculate a 2-D or 1-D distance.
 
 This method is one of several mapping methods. See also \function{map()} and \function{map1()}.\\
-Example: \code{E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])} maps E on a sphere with radius 10.
+Example: \Code{E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])} maps E on a sphere with radius 10.
 \end{methoddesc}
 
-\begin{methoddesc}  {replace}{i,j,other=None}
+\begin{methoddesc}{replace}{i,j,other=None}
 Replace the coordinates along the axes \var{i} by those along \var{j}.
 
 \var{i} and \var{j} are lists of axis numbers.\\
-\code{replace ([0,1,2],[1,2,0])} will roll the axes by 1.\\
-\code{replace ([0,1],[1,0])} will swap axes 0 and 1.\\
+\Code{replace ([0,1,2],[1,2,0])} will roll the axes by 1.\\
+\Code{replace ([0,1],[1,0])} will swap axes 0 and 1.\\
 An optionally third argument may specify another Formex to take the coordinates from. It should have the same dimensions.
 \end{methoddesc}
 
-\begin{methoddesc}  {swapaxes}{i,j}
+\begin{methoddesc}{swapaxes}{i,j}
 Swap coordinate axes \var{i} and \var{j}.
 \end{methoddesc}
 
-\begin{methoddesc}  {replic}{n,step,dir=0}
+\begin{methoddesc}{replic}{n,step,dir=0}
 Return a Formex with \var{n} replications in direction \var{dir} with \var{step}.
 
 The original Formex is the first of the n replicas.
 \end{methoddesc}
 
-\begin{methoddesc}  {replic2}{n1,n2,t1,t2,d1=0,d2=1,bias=0,taper=0}
+\begin{methoddesc}{replic2}{n1,n2,t1,t2,d1=0,d2=1,bias=0,taper=0}
 Replicate in two directions.
 
 \var{n1,n2} : number of replications with steps \var{t1,t2} in directions \var{d1,d2}.\\
 \var{bias, taper} : extra step and extra number of generations in direction \var{d1} for each generation in direction \var{d2}.
 \end{methoddesc}
 
-\begin{methoddesc}  {rosette}{n,angle,axis=2,point=[0.,0.,0.]}
+\begin{methoddesc}{rosette}{n,angle,axis=2,point=[0.,0.,0.]}
 Return a Formex with \var{n} rotational replications with angular step \var{angle} around an axis parallel with one of the coordinate axes going through the given point. \var{axis} is the number of the axis (0,1,2). \var{point} must be given as a list (or array) of three coordinates. The original Formex is the first of the n replicas.
 \end{methoddesc}
 
-\begin{methoddesc}  {translatem}{*args}
+\begin{methoddesc}{translatem}{*args}
 Multiple subsequent translations in axis directions.
 
-The argument \var{list} is a sequence of tuples \var{(axis, step)}. Thus \code{translatem((0,x),(2,z),(1,y))} is equivalent to \code{translate([x,y,z])}. This function is especially conveniant to translate in calculated directions.
+The argument \var{list} is a sequence of tuples \var{(axis, step)}. Thus \Code{translatem((0,x),(2,z),(1,y))} is equivalent to \Code{translate([x,y,z])}. This function is especially conveniant to translate in calculated directions.
 \end{methoddesc}
 
-\begin{methoddesc}  {circulize}{angle}
+\begin{methoddesc}{circulize}{angle}
 Transform a linear sector into a circular one.
 
 A sector of the (0,1) plane with given angle, starting from the 0 axis, is transformed as follows: points on the sector borders remain in place. Points inside the sector are projected from the center on the circle through the intersection points of the sector border axes and the line through the point and perpendicular to the bisector of the angle. See Diamatic example.
 \end{methoddesc}
 
-\begin{methoddesc}  {affine}{mat,vec=None}
+\begin{methoddesc}{affine}{mat,vec=None}
 Returns a general affine transform of the Formex.
 
-The returned Formex has coordinates given by \code{mat * xorig + vec}, where \var{mat} is a 3x3 matrix and \var{vec} a length 3 list.
+The returned Formex has coordinates given by \Code{mat * xorig + vec}, where \var{mat} is a 3x3 matrix and \var{vec} a length 3 list.
 \end{methoddesc}
 
 
 
-\begin{funcdesc}  {pattern}{s}
+\subsection{Functions defined in the formex module}
+
+\begin{funcdesc}{pattern}{s}
 Return a line segment pattern created from a string.
 
 This function creates a list of line segments where all nodes lie on the gridpoints of a regular grid with unit step.
@@ -313,14 +326,69 @@ Adding 16 to the ordinal of the character causes an extra move of +1 in the z-di
 The special character '\verb?\?' can be put before any character to make the move without making a connection. The effect of any other character is undefined. The resulting list is directly suited to initialize a Formex.
 \end{funcdesc}
 
-\begin{funcdesc}  {connect}{Flist,nodid=None,bias=None,loop=False}
+\begin{funcdesc}{connect}{Flist,nodid=None,bias=None,loop=False}
 Return a Formex which connects the formices in \var{Flist}.
 
-\var{Flist} is a list of formices, \var{nodid} is an optional list of nod ids and \var{bias} is an optional list of element bias values. All lists should have the same length. The returned Formex has a plexitude equal to the number of formices in \var{Flist}. Each element of the Formex consist of a node from the corresponding element of each of the formices in \var{Flist}. By default this will be the first node of that element, but a nodid list may be given to specify the node id to be used for each of the formices. Finally, a list of bias values may be given to specify an offset in element number for the subsequent formices.
+\var{Flist} is a list of formices, \var{nodid} is an optional list of nod ids and \var{bias} is an optional list of element bias values. All lists should have the same length. The returned Formex has a plexitude equal to the number of formices in \var{Flist}. Each element of the Formex consist of a node from the corresponding element of each of the Formices in \var{Flist}. By default this will be the first node of that element, but a \var{nodid} list may be given to specify the node ids to be used for each of the formices. Finally, a list of bias values may be given to specify an offset in element number for the subsequent Formices.
 
-If \code{loop==False}, the order of the Formex will be the minimum order of the formices in \var{Flist}, each minus its respective bias. By setting \code{loop=True} however, each Formex will loop around if its end is encountered, and the order of the result is the maximum order in \var{Flist}.
+If \var{loop} is False, the length of the Formex will be the minimum length of the formices in \var{Flist}, each minus its respective bias. By setting \Code{loop} True however, each Formex will loop around when its end is encountered, and the length of the resulting Formex is the maximum length in \var{Flist}.
 \end{funcdesc}
 
+
+
+\begin{funcdesc}{interpolate}{F,G,div}
+Create interpolations between two formices.
+
+\var{F} and \var{G} are two Formices with the same shape.
+\var{v} is a list of floating point values.
+The result is the concatenation of the interpolations of \var{F} and \var{G} at all the values in \var{div}.
+
+An interpolation of \var{F} and \var{G} at value \var{v} is a Formex \var{H} where each coordinate \var{Hijk} is obtained from  \Code{Hijk = Fijk + v * (Gijk-Fijk)}.
+Thus, a Formex \Code{interpolate(F,G,[0.,0.5,1.0])} will contain all elements
+of \var{F} and \var{G} and all elements with mean coordinates between those of \var{F} and \var{G}.
+
+As a convenience, if an integer is specified for \var{div}, it is taken as a
+number of division for the interval [0..1].
+Thus, \Code{interpolate(F,G,n)} is equivalent with
+\Code{interpolate(F,G,arange(0,n+1)/float(n))}
+\end{funcdesc}
+
+\begin{funcdesc}{divide}{F,div}
+Divide a plex-2 Formex at the values in div.
+
+Replaces each member of the Formex \var{F} by a sequence of members obtained
+by dividing the Formex at the relative values specified in \var{div}. The values
+should normally range from 0.0 to 1.0.
+    
+As a convenience, if an integer is specified for \var{div}, it is taken as a
+number of divisions for the interval [0..1].
+
+This function only works on plex-2 Formices (line segments).
+\end{funcdesc}
+
+
+
+\section{simple --- simple geometries}
+{\label{sec:simple}
+This module contains some functions, data and classes for generating Formices with simple geometries. 
+
+
+\begin{funcdesc}{circle}{a1=1.,a2=2.,a3=360.}
+Creates a Formex which is a polygonal approximation to a circle or arc.
+
+All points generated by this function lie on a circle with unit radius at the origin in the x-y-plane.
+
+\var{a1} (the dash angle) is the angle enclosed by the begin and end point of each line segment.\\
+\var{a2} (the module angle) is the angle enclosed between the start points of two subsequent line segments.\\
+\var{a3} (the arc angle) is the total angle enclosed between the first point of the first segment and the en point of the last segment.
+
+All angles are given in degrees and are measured in the direction from x to y-axis. The first point of the first segment is always on the x-axis.
+
+Remark that a1 == a2 produces a continues line, a1 < a2 gives a dashed line.
+The default a3=360. produces a full circle; for a3 < 360, the result is an arc.
+Large angle values result in polygones: circle(120,120) is an equilateral triangle and circle(60,60) is regular hexagone. The default values produces a dashed (near-)circle.
+
+\end{funcdesc}
 
 %%% Local Variables: 
 %%% mode: latex
