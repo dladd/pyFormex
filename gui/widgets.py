@@ -341,6 +341,10 @@ class Menu(QtGui.QMenu):
         action = self.addAction(item)
         action.connect(action,QtCore.SIGNAL('triggered()'),func)
 
+    def addItems(self,itemlist):
+        for txt,val in itemlist:
+            self.addItem(txt,val)
+
     def process(self):
         if not self.done:
             if not self.insert:

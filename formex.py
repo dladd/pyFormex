@@ -303,7 +303,6 @@ def distanceFromPlane(f,p,n):
     return d.reshape(f.shape[:-1])
 
 
-
 def distanceFromLine(f,p,q):
     """Returns the distance of points f from the line (p,q).
 
@@ -401,7 +400,7 @@ class Formex:
     """
             
 
-###########################################################################
+\var{###########################################################################
 #
 #   Create a new Formex
 #
@@ -1431,6 +1430,21 @@ class Formex:
         all bars have nearly same length. See the Diamatic example.
         """
         return self.map(lambda x,y,z:[where(x>0,x-y*y/(x+x),0),where(x>0,y*sqrt(4*x*x-y*y)/(x+x),y),0])
+
+
+    def shrink(self,factor):
+        """Shrinks each element with respect to its own center.
+
+        Each element is scaled with the given factor in a local coordinate
+        system with origin at the element center. The element center is the
+        mean of all its nodes.
+        The shrink operation is typically used (with a factor around 0.9) in
+        wireframe draw mode to show all elements disconnected. A factor above
+        1.0 will grow the elements.
+        """
+        c = self.f.mean(1).reshape((self.f.shape[0],1,self.f.shape[2]))
+        return Formex(factor*(self.f-c)+c,self.p)
+
 
 ##############################################################################
 #

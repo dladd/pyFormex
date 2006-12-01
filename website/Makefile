@@ -24,3 +24,4 @@ public: web.tar.gz
 pub: docdoc.inc
 	$(RSYNC) $(HTDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs
 	$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
+	$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual

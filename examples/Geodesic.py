@@ -37,5 +37,19 @@ f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])
 clear()
 draw(f)
 
+clear()
+draw(f.shrink(0.85))
+
 flat()
-redraw()
+draw(f)
+
+clear()
+draw(f.shrink(0.85))
+
+f.setProp(3)
+clear()
+smooth()
+draw(f)
+
+clear()
+draw(f.shrink(0.85))

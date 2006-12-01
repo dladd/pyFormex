@@ -3,7 +3,8 @@
 
 """Formex.py
 
-Creates a Formex menu"""
+Executing this script creates a Formex menu in the menubar.
+"""
 
 from PyQt4 import QtCore,QtGui
 from gui import widgets
@@ -101,16 +102,15 @@ if __name__ == 'draw':
 
     Menu = widgets.Menu('Formex')
     MenuData = [
-#        ("Action","&List Formices",formex_list),
-        ("Action","&Make Selection",make_selection),
-        ("Action","&Draw Selection",draw_selection),
-        ("Action","&Translate Selection",translate_selection),
-        ("Action","&Center Selection",center_selection),
-        ("Action","&Rotate Selection",rotate_selection),
-        ("Action","&Clip Selection",clip_selection),
-        ("Action","&Close",Menu.close),
+#        ("&List Formices",formex_list),
+        ("&Make Selection",make_selection),
+        ("&Draw Selection",draw_selection),
+        ("&Translate Selection",translate_selection),
+        ("&Center Selection",center_selection),
+        ("&Rotate Selection",rotate_selection),
+        ("&Clip Selection",clip_selection),
+        ("&Close",Menu.close),
         ]
-    for key,txt,val in MenuData:
-        Menu.addItem(txt,val)
+    Menu.addItems(MenuData)
 
 # End

@@ -16,6 +16,8 @@ GUI:
 
 - appearance dialog to set the widget Style and Font 
 
+- toggle between perspective/projective display now works
+
 
 - Formex class:
   - setProp has no longer a default value. If called with a value None,
@@ -24,11 +26,14 @@ GUI:
 
   - translate and translate1 have been merged into a single function
 
+  - shrink(factor) shrinks all elements in the Formex by a factor
+
   - fixed the bug in connect() when loop=True and bias != 0
 
   - interpolate (F,G,[v]) : interpolates between Formices F and G at values v
 
   - divide(a,[v]) : divide all elements of a plex-2 Formex at values v
+
 
 
 - draw.py:
@@ -49,3 +54,12 @@ GUI:
 - Manual:
   - installation instructions
   - Some additions to reference manual
+
+
+KNOWN PROBLEMS:
+--------------
+ - With the mouse zoom function, you can not zoom beyond the center of the
+   displayed scene. (You can do it using the zoom buttons)
+ - Mouse zooming does not work correctly in projective mode.
+ - Mouse zooming will make a jump after a flyAlong().
+

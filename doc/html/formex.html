@@ -804,7 +804,16 @@ p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
 The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;distance&nbsp;of<br>
 each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;and&nbsp;q.<br>
 All&nbsp;distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;or&nbsp;zero.</tt></dd></dl>
- <dl><dt><a name="-divide"><strong>divide</strong></a>(F, div)</dt><dd><tt>Divide</tt></dd></dl>
+ <dl><dt><a name="-divide"><strong>divide</strong></a>(F, div)</dt><dd><tt>Divide&nbsp;a&nbsp;plex-2&nbsp;<a href="#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;values&nbsp;in&nbsp;div.<br>
+&nbsp;<br>
+Replaces&nbsp;each&nbsp;member&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;F&nbsp;by&nbsp;a&nbsp;sequence&nbsp;of&nbsp;members&nbsp;obtained<br>
+by&nbsp;dividing&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;relative&nbsp;values&nbsp;specified&nbsp;in&nbsp;div.&nbsp;The&nbsp;values<br>
+should&nbsp;normally&nbsp;range&nbsp;from&nbsp;0.0&nbsp;to&nbsp;1.0.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&nbsp;for&nbsp;div,&nbsp;it&nbsp;is&nbsp;taken&nbsp;as&nbsp;a<br>
+number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;only&nbsp;works&nbsp;on&nbsp;plex-2&nbsp;Formices&nbsp;(line&nbsp;segments).</tt></dd></dl>
  <dl><dt><a name="-dot"><strong>dot</strong></a>(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)<br>
 Returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&nbsp;arrays&nbsp;of&nbsp;floating&nbsp;point&nbsp;types.<br>
 Like&nbsp;the&nbsp;generic&nbsp;numpy&nbsp;equivalent&nbsp;the&nbsp;product&nbsp;sum&nbsp;is&nbsp;over<br>
@@ -909,7 +918,7 @@ Thus,&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;<a href="#-interpolate">inte
 of&nbsp;F&nbsp;and&nbsp;G&nbsp;and&nbsp;all&nbsp;elements&nbsp;with&nbsp;mean&nbsp;coordinates&nbsp;between&nbsp;those&nbsp;of&nbsp;F&nbsp;and&nbsp;G.<br>
 &nbsp;<br>
 As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&nbsp;for&nbsp;div,&nbsp;it&nbsp;is&nbsp;taken&nbsp;as&nbsp;a<br>
-number&nbsp;of&nbsp;division&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
+number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
 Thus,&nbsp;<a href="#-interpolate">interpolate</a>(F,G,n)&nbsp;is&nbsp;equivalent&nbsp;with<br>
 <a href="#-interpolate">interpolate</a>(F,G,<a href="#-arange">arange</a>(0,n+1)/float(n))</tt></dd></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;quadratic&nbsp;norm&nbsp;of&nbsp;a&nbsp;vector&nbsp;with&nbsp;all&nbsp;elements&nbsp;of&nbsp;arg.</tt></dd></dl>
@@ -1062,7 +1071,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 6<br>
 <strong>SHIFT_OVERFLOW</strong> = 2<br>
 <strong>SHIFT_UNDERFLOW</strong> = 4<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float64'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.uint64'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1082,7 +1091,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...string_'&gt;: &lt;function &lt;lambda&gt; at 0x2ba58a6a50c8&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...string_'&gt;: &lt;function &lt;lambda&gt; at 0x2b4218159f50&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
