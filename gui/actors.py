@@ -191,7 +191,7 @@ class FormexActor(Formex):
         """
         Formex.__init__(self,F.f,F.p)
         self.list = None
-        if type(self.p) == type(None):
+        if self.p is None:
             self.setProp(arange(self.nelems()))
             #print "Properties:",self.p
         if len(color) == 3 and type(color[0]) == float and \

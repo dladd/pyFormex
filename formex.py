@@ -26,8 +26,9 @@ Int = int32
 ##
 #########################
 
-# multiplier to transform degrees to radians
+# pi is defined in numpy
 #pi = math.pi
+# multiplier to transform degrees to radians
 rad = pi/180.
 
 # Convenience functions: trigonometric functions with argument in degrees
@@ -400,7 +401,7 @@ class Formex:
     """
             
 
-\var{###########################################################################
+###########################################################################
 #
 #   Create a new Formex
 #
@@ -509,7 +510,7 @@ class Formex:
         return self.p
     def maxprop(self):
         """Return the highest property used, or None"""
-        if type(self.p) == type(None):
+        if self.p is None:
             return None
         else:
             return self.p.max()
@@ -531,7 +532,7 @@ class Formex:
         return self.f[i][j][k]
 
     def __getitem__(self,i):
-        """Return element i of the Formex.
+        """Return a formex element i of the Formex.
 
         This allows addressing element i of Formex F as F[i].
         """
@@ -593,7 +594,7 @@ class Formex:
 
     def propSet(self):
         """Return a list with unique property values on this Formex."""
-        if type(self.p) == type(None):
+        if self.p is None:
             return None
         else:
             return unique(self.p)
@@ -841,7 +842,7 @@ class Formex:
         If the Formex has no properties, a copy is returned.
         The returned Formex is always without properties.
         """
-        if type(self.p) == type(None):
+        if self.p is None:
             return Formex(self.f)
         else:
             return Formex(self.f[self.p==val])
@@ -884,7 +885,7 @@ class Formex:
                     # i is a duplicate node
                     flag[i] = 0
                     break
-        if type(self.p) == type(None):
+        if self.p is None:
             p = None
         else:
             p = self.p[flag>0]
@@ -900,8 +901,10 @@ class Formex:
     def select(self,idx):
         """Return a Formex which holds only elements with numbers in ids.
 
-        idx can be a single element number or a list of numbers"""
-        if type(self.p) == type(None):
+        idx can be a single element number or a list of numbers or
+        any other index mechanism accepted by numpy's ndarray
+        """
+        if self.p is None:
             p = None
         else:
             p = self.p[idx]
@@ -946,7 +949,7 @@ class Formex:
                     # element i is same as element j of F
                     flag[i] = 0
                     break
-        if type(self.p) == type(None):
+        if self.p is None:
             p = None
         else:
             p = self.p[flag>0]
@@ -1021,7 +1024,7 @@ class Formex:
         return self.select(w>0)
 
     def cclip(self,w):
-        """THis is the complement of clip, returning a Formex where w<=0.
+        """This is the complement of clip, returning a Formex where w<=0.
         """
         return self.select(w<=0)
     
@@ -1396,7 +1399,7 @@ class Formex:
         ## Is there a way to do this in 1 operation ?
         # if self.shape != other.shape:
         # ERROR
-        if type(other) == type(None):
+        if other is None:
             other = self
         f = self.f.copy()
         for k in range(len(i)):

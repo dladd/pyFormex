@@ -2,6 +2,7 @@
 # $Id$
 """Menus for the pyFormex GUI."""
 
+import os
 from PyQt4 import QtCore, QtGui
 import globaldata as GD
 import fileMenu
@@ -89,8 +90,14 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
-def Windows():
-    GD.app.setStyle('Windows')
+def stl_menu():
+    draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','stl_menu.py'))
+##    from plugins import stl_menu
+##    stl_menu.main()
+
+def formex_menu():
+    draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','formex_menu.py'))
+    
 
 MenuData = [
     ('&File',[
@@ -105,6 +112,11 @@ MenuData = [
         ('Start &MultiSave','fileMenu.startMultiSave'),
         ('Stop &MultiSave','fileMenu.stopMultiSave'),
         ('Save &Next Image','draw.saveNext'),
+        ('---','---'),
+        ('Load &Plugins',[
+            ('STL menu','stl_menu'),
+            ('Formex menu','formex_menu'),
+            ]),
         ('---','---'),
         ('E&xit','GD.app.exit'), ]),
     ('&Settings',[
@@ -129,8 +141,9 @@ MenuData = [
     ('&Camera',[
         ('&LocalAxes','draw.setLocalAxes'),
         ('&GlobalAxes','draw.setGlobalAxes'),
-        ('&Projection','draw.setProjection'),
-        ('&Perspective','draw.setPerspective'),
+        ('&Projection','cameraMenu.setProjection'),
+        ('&Perspective','cameraMenu.setPerspective'),
+        ('&Zoom All','draw.zoomAll'), 
         ('&Zoom In','cameraMenu.zoomIn'), 
         ('&Zoom Out','cameraMenu.zoomOut'), 
         ('&Dolly In','cameraMenu.dollyIn'), 

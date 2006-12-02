@@ -15,6 +15,7 @@ import actors
 import decors
 import formex
 from script import Exit,ExitAll,system
+from cameraMenu import setPerspective,setProjection
 
 
 #################### Interacting with the user ###############################
@@ -339,7 +340,7 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     lastdrawn = F
     # Create the colors
     if color == 'prop':
-        if type(F.p) == type(None):
+        if F.p is None:
             # No properties defined: draw in defaultcolor or black
             color = colors.GLColor(GD.cfg['draw/fgcolor']) 
         else:
@@ -435,19 +436,26 @@ def view(v,wait=False):
         warning("A view named '%s' has not been created yet" % v)
 
 def frontView():
-    view("front");
+    view("front")
 def backView():
-    view("back");
+    view("back")
 def leftView():
-    view("left");
+    view("left")
 def rightView():
-    view("right");
+    view("right")
 def topView():
     view("top");
 def bottomView():
-    view("bottom");
+    view("bottom")
 def isoView():
-    view("iso");
+    view("iso")
+
+def zoomAll():
+    print "ZOOM ALL"
+    GD.canvas.setBbox(formex.bbox(GD.canvas.actors))
+    GD.canvas.setCamera()
+    GD.canvas.redrawAll()
+    GD.canvas.update()
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
@@ -770,15 +778,6 @@ def saveNext():
 
 
 #### Change settings
-
-def setPerspective(mode=True):
-    GD.canvas.camera.setPerspective(mode)
-    GD.canvas.display()
-    GD.canvas.update()
-
-def setProjection():
-    setPerspective(False)
-
 
 def setLocalAxes(mode=True):
     GD.cfg['draw/localaxes'] = mode 

@@ -8,12 +8,13 @@ PYMODULES= config flatkeydb formex globaldata lima mydict \
   script simple turtle units utils vector
 PYGUIMODULES = __init__ actors camera cameraMenu canvas colors colorscale \
   decors draw fileMenu gui help menu prefMenu scriptsMenu toolbar views widgets
-PLUGINMODULES= __init__ properties f2abq stl stl_abq tetgen
+PLUGINMODULES= __init__ properties f2abq formex_menu \
+  stl stl_abq stl_menu tetgen
 EXAMPLES= __init__ BarrelVault Baumkuchen Circle Clip Diamatic DoubleDiamatic \
-  DoubleLayer Formex Geodesic Hyparcap KochLine Lamella Lima Novation\
+  DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Novation\
   ParabolicTower Pattern ScallopDome Schwedler Sphere Sphere2 Sphere_stl\
   SpaceTrussRoof SpaceTrussRoof_calpy SpaceTrussRoof_f2abq\
-  Spiral Stars Stl Torus TrussBridge TrussFrame WireStent \
+  Spiral Stars Torus TrussBridge TrussFrame WireStent \
   WireStent_calpy X_truss X_truss_calpy
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
   Lima Novation ParabolicTower ScallopDome SpaceTrussRoof Spiral Stars \

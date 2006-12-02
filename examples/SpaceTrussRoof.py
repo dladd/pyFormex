@@ -33,7 +33,7 @@ col.setProp(2)
 
 F = top+bot+dia+col
 clear()
-
+linewidth(1)
 draw(F)
 
 F = F.rotate(-90,0) # put the structure upright
@@ -49,6 +49,21 @@ for i in range(19):
     view('myview2',True)
 
 # fly tru
-#if ack("Do you want to fly through the structure?")
-path = divide(Formex([F.bbox()]),20)
-flyAlong(path,sleeptime=0.5)
+#if ack("Do you want to fly through the structure?"):
+totaltime = 10
+nsteps = 20
+# make sure bottom iz at y=0
+F = F.translate(1,-F.bbox()[0,1])
+clear()
+linewidth(1)
+draw(F)
+bb = F.bbox()
+# Fly at reasonable height
+bb[0,1] = 0.25 * bb[1,1]
+bb[1,1] = 0.75 * bb[1,1]
+ends = interpolate(Formex([[bb[0]]]),Formex([[bb[1]]]),[-0.5,0.8])
+path = divide(connect([ends,ends],bias=[0,1]),nsteps)
+linewidth(2)
+draw(path)
+steptime = float(totaltime)/nsteps
+flyAlong(path,sleeptime=steptime)

@@ -96,11 +96,10 @@ def clip_selection():
             F = F.clip(w)
             drawChanges(F,oldF)
 
-        
-        
-if __name__ == 'draw':
 
-    Menu = widgets.Menu('Formex')
+def create_menu():
+    """Create the Formex menu."""
+    menu = widgets.Menu('Formex')
     MenuData = [
 #        ("&List Formices",formex_list),
         ("&Make Selection",make_selection),
@@ -109,8 +108,19 @@ if __name__ == 'draw':
         ("&Center Selection",center_selection),
         ("&Rotate Selection",rotate_selection),
         ("&Clip Selection",clip_selection),
-        ("&Close",Menu.close),
+        ("&Close",close_menu),
         ]
-    Menu.addItems(MenuData)
+    menu.addItems(MenuData)
+    return menu
+
+
+def close_menu():
+    """Close the Formex menu."""
+    menu.close()
+        
+        
+if __name__ == 'draw':
+    message(__doc__)
+    menu = create_menu()
 
 # End

@@ -155,7 +155,7 @@ class Canvas:
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
-        if type(bbox) == type(None):
+        if bbox is None:
             if len(self.actors) > 0:
                 self.bbox = self.actors[-1].bbox()
             else:
@@ -259,28 +259,35 @@ class Canvas:
 
         On startup, the predefined views are 'front', 'back', 'left',
         'right', 'top', 'bottom' and 'iso'.
-        This function does not only set the camera angles, but also
-        adjust the zooming.
-        If a bbox is specified, the camera will be zoomed to view the
-        whole bbox.
+        """
+        # select view angles: if undefined use (0,0,0)
+        angles = self.views.get(side,(0,0,0))
+        self.setCamera(bbox,angles)
+
+        
+    def setCamera(self,bbox=None,angles=None):
+        """Sets the camera looking under angles at bbox.
+
+        This function sets the camera angles and adjusts the zooming.
+        The camera distance remains unchanged.
+        If a bbox is specified, the camera will be zoomed to make the whole
+        bbox visible.
         If no bbox is specified, the current scene bbox will be used.
         If no current bbox has been set, it will be calculated as the
         bbox of the whole scene.
         """
         self.makeCurrent()
-        # select view angles: if undefined use (0,0,0)
-        angles = self.views.get(side,(0,0,0))
         # go to a distance to have a good view with a 45 degree angle lens
-        if type(bbox) == type(None):
+        if bbox is None:
             bbox = self.bbox
         else:
             self.bbox = bbox
         center,size = vector.centerDiff(bbox[0],bbox[1])
         # calculating the bounding circle: this is rather conservative
         dist = vector.length(size)
-        #print "dist = ",dist
         self.camera.setCenter(*center)
-        self.camera.setRotation(*angles)
+        if angles:
+            self.camera.setRotation(*angles)
         self.camera.setDist(dist)
         self.camera.setLens(45.,self.aspect)
         if dist > 0.0:
