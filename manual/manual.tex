@@ -6,6 +6,11 @@
 \let\pyurl\url
 \let\url\relax
 %%
+\usepackage{a4wide}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{makeidx}
 \usepackage{hyperref}
 %\usepackage[latex2html]{hyperref}
 %\usepackage[latex2html,pdftex]{hyperref}
@@ -23,7 +28,10 @@
 
 % pyFormex and its website
 \newcommand{\pyformex}{pyFormex\xspace}
+%\let\pyFormex\pyformex  % we tend to mistype this one!
+\let\pyf\pyformex % saves some typing (and mistyping)
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
+\newcommand{\pydocpages}{http://pyformex.berlios.de/doc\xspace}
 \newcommand{\pythonURL}{http://www.python.org\xspace}
 \newcommand{\numpyURL}{http://numpy.scipy.org/\xspace}
 
@@ -35,11 +43,22 @@
 %\newenvironment{CodePart}{\begin{verbatim}}{\end{verbatim}}
 %\newcommand{\CodeFile}[1]{\verbatiminput{#1}}
 
+\makeindex
+
 \begin{document}
 \maketitle
+\begin{latexonly}
+  \tableofcontents
+\end{latexonly}
+\input{preface}
 \input{intro}
 \input{tutorial}
 \input{refman}
+\appendix
+\input{app-gpl}
+
+\addcontentsline{toc}{chapter}{Index}
+\printindex%     first use program MAKEIND to make index !!
 
 \end{document}
 %%% Local Variables: 

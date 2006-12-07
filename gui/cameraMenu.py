@@ -6,10 +6,10 @@ import globaldata as GD
 
          
 def zoomIn():
-    GD.canvas.zoom(1./GD.cfg['gui/zoomfactor'])
+    GD.canvas.zoom(1./float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()
 def zoomOut():
-    GD.canvas.zoom(GD.cfg['gui/zoomfactor'])
+    GD.canvas.zoom(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()
 ##def panRight():
 ##    canvas.camera.pan(+5)
@@ -24,44 +24,44 @@ def zoomOut():
 ##    canvas.camera.pan(-5,0)
 ##    canvas.update()   
 def rotRight():
-    GD.canvas.camera.rotate(+GD.cfg['gui/rotfactor'],0,1,0)
+    GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),0,1,0)
     GD.canvas.update()   
 def rotLeft():
-    GD.canvas.camera.rotate(-GD.cfg['gui/rotfactor'],0,1,0)
+    GD.canvas.camera.rotate(-float(GD.cfg['gui/rotfactor']),0,1,0)
     GD.canvas.update()   
 def rotUp():
-    GD.canvas.camera.rotate(-GD.cfg['gui/rotfactor'],1,0,0)
+    GD.canvas.camera.rotate(-float(GD.cfg['gui/rotfactor']),1,0,0)
     GD.canvas.update()   
 def rotDown():
-    GD.canvas.camera.rotate(+GD.cfg['gui/rotfactor'],1,0,0)
+    GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),1,0,0)
     GD.canvas.update()   
 def twistLeft():
-    GD.canvas.camera.rotate(+GD.cfg['gui/rotfactor'],0,0,1)
+    GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),0,0,1)
     GD.canvas.update()   
 def twistRight():
-    GD.canvas.camera.rotate(-GD.cfg['gui/rotfactor'],0,0,1)
+    GD.canvas.camera.rotate(-float(GD.cfg['gui/rotfactor']),0,0,1)
     GD.canvas.update()   
 def transLeft():
-    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
     GD.canvas.camera.translate(-val,0,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transRight():
-    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
     GD.canvas.camera.translate(+val,0,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transDown():
-    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
     GD.canvas.camera.translate(0,-val,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transUp():
-    val = GD.cfg['gui/panfactor'] * GD.canvas.camera.getDist()
+    val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
     GD.canvas.camera.translate(0,+val,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def dollyIn():
-    GD.canvas.camera.dolly(1./GD.cfg['gui/zoomfactor'])
+    GD.canvas.camera.dolly(1./float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()   
 def dollyOut():
-    GD.canvas.camera.dolly(GD.cfg['gui/zoomfactor'])
+    GD.canvas.camera.dolly(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()   
 def setPerspective(mode=True):
     GD.canvas.camera.setPerspective(mode)

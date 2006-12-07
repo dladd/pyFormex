@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # $Id$
 """Global data for pyFormex."""
-Version = "pyFormex 0.4.1-alpha"
 
+# Set pyformex version
+__version__ = "0.4.1-alpha"
+Version = 'pyFormex %s' % __version__
 options = None
 
 cfg = None

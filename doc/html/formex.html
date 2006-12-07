@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>formex</strong></big></big> (version 0.4)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>formex</strong></big></big> (version 1.0rc1)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/formex.py">/home/bene/prj/pyformex/formex.py</a></font></td></tr></table>
     <p><tt><a href="#Formex">Formex</a>&nbsp;algebra&nbsp;in&nbsp;python</tt></p>
@@ -321,7 +321,7 @@ maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></
 
 <dl><dt><a name="Formex-ndim"><strong>ndim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
 &nbsp;<br>
-This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;node.&nbsp;In&nbsp;the<br>
+This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nbsp;point.&nbsp;In&nbsp;the<br>
 current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nbsp;you&nbsp;can<br>
 define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
 will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
@@ -341,18 +341,9 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 Example:&nbsp;E.<a href="#Formex-map">map</a>(lambda&nbsp;x,y,z:&nbsp;[2*x,3*y,4*z])<br>
 is&nbsp;equivalent&nbsp;with&nbsp;E.<a href="#Formex-scale">scale</a>([2,3,4])</tt></dd></dl>
 
-<dl><dt><a name="Formex-nnodel"><strong>nnodel</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.<br>
-&nbsp;<br>
-Examples:<br>
-1:&nbsp;unconnected&nbsp;nodes,<br>
-2:&nbsp;straight&nbsp;line&nbsp;elements,<br>
-3:&nbsp;triangles&nbsp;or&nbsp;quadratic&nbsp;line&nbsp;elements,<br>
-4:&nbsp;tetraeders&nbsp;or&nbsp;quadrilaterals&nbsp;or&nbsp;cubic&nbsp;line&nbsp;elements.</tt></dd></dl>
+<dl><dt><a name="Formex-nnodel"><strong>nnodel</strong></a> = <a href="#Formex-nplex">nplex</a>(self)</dt></dl>
 
-<dl><dt><a name="Formex-nnodes"><strong>nnodes</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;in&nbsp;the&nbsp;formex.<br>
-&nbsp;<br>
-This&nbsp;is&nbsp;the&nbsp;product&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex<br>
-with&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.</tt></dd></dl>
+<dl><dt><a name="Formex-nnodes"><strong>nnodes</strong></a> = <a href="#Formex-npoints">npoints</a>(self)</dt></dl>
 
 <dl><dt><a name="Formex-nodes"><strong>nodes</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;containing&nbsp;only&nbsp;the&nbsp;nodes.<br>
 &nbsp;<br>
@@ -383,11 +374,24 @@ different&nbsp;parameters&nbsp;to&nbsp;check.</tt></dd></dl>
 &nbsp;<br>
 A&nbsp;zero&nbsp;element&nbsp;is&nbsp;an&nbsp;element&nbsp;where&nbsp;all&nbsp;nodes&nbsp;are&nbsp;equal.</tt></dd></dl>
 
+<dl><dt><a name="Formex-nplex"><strong>nplex</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;points&nbsp;per&nbsp;element.<br>
+&nbsp;<br>
+Examples:<br>
+1:&nbsp;unconnected&nbsp;points,<br>
+2:&nbsp;straight&nbsp;line&nbsp;elements,<br>
+3:&nbsp;triangles&nbsp;or&nbsp;quadratic&nbsp;line&nbsp;elements,<br>
+4:&nbsp;tetraeders&nbsp;or&nbsp;quadrilaterals&nbsp;or&nbsp;cubic&nbsp;line&nbsp;elements.</tt></dd></dl>
+
+<dl><dt><a name="Formex-npoints"><strong>npoints</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;points&nbsp;in&nbsp;the&nbsp;formex.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;product&nbsp;of&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex<br>
+with&nbsp;the&nbsp;number&nbsp;of&nbsp;nodes&nbsp;per&nbsp;element.</tt></dd></dl>
+
 <dl><dt><a name="Formex-order"><strong>order</strong></a> = <a href="#Formex-nelems">nelems</a>(self)</dt></dl>
 
 <dl><dt><a name="Formex-pex"><strong>pex</strong></a> = <a href="#Formex-unique">unique</a>(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt></dl>
 
-<dl><dt><a name="Formex-plexitude"><strong>plexitude</strong></a> = <a href="#Formex-nnodel">nnodel</a>(self)</dt></dl>
+<dl><dt><a name="Formex-plexitude"><strong>plexitude</strong></a> = <a href="#Formex-nplex">nplex</a>(self)</dt></dl>
 
 <dl><dt><a name="Formex-point"><strong>point</strong></a>(self, i, j)</dt><dd><tt>Return&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
 
@@ -506,7 +510,7 @@ The&nbsp;default&nbsp;argument&nbsp;will&nbsp;give&nbsp;all&nbsp;elements&nbsp;a
 <dl><dt><a name="Formex-shape"><strong>shape</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;shape&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
 The&nbsp;shape&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;shape&nbsp;of&nbsp;its&nbsp;data&nbsp;array,<br>
-i.e.&nbsp;a&nbsp;tuple&nbsp;(nelems,&nbsp;nnodel,&nbsp;ndim).</tt></dd></dl>
+i.e.&nbsp;a&nbsp;tuple&nbsp;(nelems,&nbsp;nplex,&nbsp;ndim).</tt></dd></dl>
 
 <dl><dt><a name="Formex-shear"><strong>shear</strong></a>(self, dir, dir1, skew)</dt><dd><tt>Returns&nbsp;a&nbsp;copy&nbsp;skewed&nbsp;in&nbsp;the&nbsp;direction&nbsp;dir&nbsp;of&nbsp;plane&nbsp;(dir,dir1).<br>
 &nbsp;<br>
@@ -1081,12 +1085,12 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 6<br>
 <strong>SHIFT_OVERFLOW</strong> = 2<br>
 <strong>SHIFT_UNDERFLOW</strong> = 4<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.uint8'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.uint8'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
 <strong>WRAP</strong> = 1<br>
-<strong>__version__</strong> = '0.4'<br>
+<strong>__version__</strong> = '1.0rc1'<br>
 <strong>absolute</strong> = &lt;ufunc 'absolute'&gt;<br>
 <strong>add</strong> = &lt;ufunc 'add'&gt;<br>
 <strong>arccos</strong> = &lt;ufunc 'arccos'&gt;<br>
@@ -1101,7 +1105,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...string_'&gt;: &lt;function &lt;lambda&gt; at 0x2ae66e246b90&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...string_'&gt;: &lt;function &lt;lambda&gt; at 0x2b9021b9daa0&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1144,7 +1148,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ... 'numpy.complex64'&gt;: 8, &lt;type 'numpy.uint64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...numpy.uint64'&gt;: 8, &lt;type 'numpy.complex256'&gt;: 32}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

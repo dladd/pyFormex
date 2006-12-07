@@ -102,7 +102,7 @@ if m:
 scriptDisabled = False
 scriptRunning = False
  
-def playScript(scr,name=None):
+def playScript(scr,name=None,argv=[]):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
@@ -145,6 +145,7 @@ def playScript(scr,name=None):
     else:
         modname = 'script'
     g.update({'__name__':modname})
+    g.update({'argv':argv})
     # Now we can execute the script using these collected globals
 
     GD.scriptName = name
@@ -164,12 +165,17 @@ def playScript(scr,name=None):
     if exitall:
         exit()
 
+def play(fn,argv=[]):
+    """Play a formex script from file fn.
 
-def play(fn):
-    """Play a formex script from file fn."""
+    A list of arguments can be passed. They will be available
+    under the name argv.
+    """
     message("Running script (%s)" % fn)
-    playScript(file(fn,'r'),fn)
-    message("Script finished")
+    playScript(file(fn,'r'),fn,argv)
+    message("Finished script %s" % fn)
+
+    #print "End of play: %s" % argv
 
 
 def pause():
@@ -207,10 +213,15 @@ def exit(all=False):
 
 def runApp(args):
     """Run the application without gui."""
-    # remaining args are interpreted as scripts
-    for arg in args:
-        if os.path.exists(arg) and utils.isPyFormex(arg):
-            play(arg)
-
+    # remaining args are interpreted as scripts, possibly interspersed
+    # with arguments for the scripts.
+    # each script should pop the required arguments from the list,
+    # and return the remainder
+    while len(args) > 0:
+        if os.path.exists(args[0]) and utils.isPyFormex(args[0]):
+            args = play(args[0],argv=args[1:])
+            #print "Returned args: %s" % args
+        if type(args) != list:
+            args = []
 
 #### End

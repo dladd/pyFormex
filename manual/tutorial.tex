@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{\pyformex --- a tutorial}
+\chapter{\pyformex tutorial}
 {\label{cha:tutorial}
 
 
@@ -11,7 +11,7 @@
 By writing a very simple script, a large geometry can be created by copying, translating, rotating,... Formices. \pyformex will interpret this script and draw what you have created. This is clearly very different than the traditional way of creating a model, like CAD. There are two huge advantages about using \pyformex:
 \begin{itemize}
 \item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar,... can be rather difficult to draw with CAD, but when using mathematical transformations, it becomes a piece of cake!
-\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio f/l of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in fig \ref{scallops}: these domes were all created with the same script, but with other values of the parameters.
+\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio $f/l$ of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in fig \ref{scallops}: these domes were all created with the same script, but with other values of the parameters.
 \end{itemize}
 \begin{figure}[tbp,h]
   \centering
@@ -42,7 +42,7 @@ By writing a very simple script, a large geometry can be created by copying, tra
 This section holds some basic information on how to use Python and \pyformex. 
 
 \begin{itemize}
-\item Each script should begin with \code{\#!/usr/bin/env pyformex}
+\item Each script should begin with \Code{\#!/usr/bin/env pyformex}
 \item To start the \pyformex GUI, double click on the file \file{pyformex} in the installation directory, or type \emph{pyformex} in the terminal. Using the terminal can be very useful, because errors that are created while running the script will appear in the terminal. This can provide useful information when something goes wrong with your script.
 \item To create a new \pyformex-script, just open a new file with your favorite text editor and save it as \file{myproject.py}.
 \item To edit a script, you can
@@ -93,7 +93,7 @@ All functions from that module are now available.
 \label{subsec:create}
 
 \subsubsection{What is a Formex?}
-A Formex is a numarray of order 3 (axes 0,1,2) and type Float.
+A Formex\index{Formex} is a numarray of order 3 (axes 0,1,2) and type Float.
 A scalar element represents a coordinate (F:uniple).
 
     A row along the axis 2 is a set of coordinates and represents a point
@@ -235,7 +235,7 @@ This method has important restrictions, since it can only create lines on a regu
 	F=Formex(pattern('1234'))
 \end{verbatim}
 
-Some simple patterns are defined in \module{simple.py} and are ready for use. These patterns are stacked in a dictionary called 'Patterns'. Items of this dictionary can be accessed like \code{Patterns['cube']}.
+Some simple patterns are defined in \module{simple.py} and are ready for use. These patterns are stacked in a dictionary called 'Patterns'. Items of this dictionary can be accessed like \Code{Patterns['cube']}.
 \begin{verbatim}
 	#!/usr/bin/env pyformex
 	from simple import *
@@ -472,7 +472,7 @@ translation step of '1'. This necessary for the transformation into a cilinder.
 The result of all previous steps is a rectangular pattern with the desired 
 dimensions, in a plane z=1.
 \begin{verbatim}
-F = F.translate1(2,1); drawit(F,'iso')
+F = F.translate(2,1); drawit(F,'iso')
 \end{verbatim}
 \begin{figure}[h]
   \centering
@@ -530,7 +530,7 @@ F = F.rotate(-10,0); drawit(F,'iso')
 
 This last Formex is now translated in direction '0' with a translation step of '5'. 
 \begin{verbatim}
-F = F.translate1(0,5); drawit(F,'iso')
+F = F.translate(0,5); drawit(F,'iso')
 \end{verbatim}
 
 Finally, the Formex is rolled up, but around a different axis then before. 
@@ -601,10 +601,10 @@ Adding and changing properties is very easy.
 The class NodeProperty can hold properties of nodes in finite element processing. The data is stored in a Dict called 'nodeproperties'. A NodeProperty can hold following sub-properties:
  \begin{description}
  \item [cload] A concentrated load. This is a list of 6 items
- \code{[F_0, F_1, F_2, M_0, M_1, M_2]}. 
+ \Code{[F_0, F_1, F_2, M_0, M_1, M_2]}. 
  \item [bound] A boundary condition. This can be defined in 2 ways:
      \begin{itemize}
-     \item as a list of 6 items \code{[ R_0, R_1, R_2, M_0, M_1, M_2 ]}. These items have 2 possible values:
+     \item as a list of 6 items \Code{[ R_0, R_1, R_2, M_0, M_1, M_2 ]}. These items have 2 possible values:
          \begin{description}
          \item [0] The degree of freedom is not restrained.
          \item [1] The degree of freedom is restrained.
@@ -624,7 +624,7 @@ The class NodeProperty can hold properties of nodes in finite element processing
  \item [displacement] The prescribed displacement. 
  \item [coords] The coordinate system which is used for the definition of cload and bound. There are three options:
          cartesian, spherical and cylindrical.
- \item [coordset] A list of 6 coordinates of the 2 points that specify the transformation: \code{[x_1, y_1, z_1, x_2, y_2, z_2]}.
+ \item [coordset] A list of 6 coordinates of the 2 points that specify the transformation: \Code{[x_1, y_1, z_1, x_2, y_2, z_2]}.
 \end{description}
 
 \begin{verbatim}
@@ -769,12 +769,11 @@ elemproperties
 
 
 %
-\section{Export to finite element programs}
+\section{Exporting to finite element programs}
 
 
 %
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-master: "manual"
 %%% TeX-master: "manual"
 %%% End: 

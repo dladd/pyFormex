@@ -19,8 +19,8 @@ NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 STAMP= Stamp 
-VERSIONSTRING= "pyFormex .*"
-NEWVERSIONSTRING= "pyFormex ${RELEASE}"
+VERSIONSTRING= __version__.*
+NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= releases
 
@@ -84,4 +84,4 @@ dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERS
 version: globaldata.py
 
 globaldata.py: RELEASE
-	replace -f '${VERSIONSTRING}' '${NEWVERSIONSTRING}' $@
+	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@

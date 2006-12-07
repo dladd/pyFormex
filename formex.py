@@ -4,9 +4,6 @@
 
 from numpy import *
 
-# Set pyformex version
-__version__='0.4'
-
 import math
 import vector
 import pickle
@@ -448,6 +445,33 @@ class Formex:
             self.setProp(prop)
 
 
+
+    def __getitem__(self,i):
+        """Return a formex element i of the Formex.
+
+        This allows addressing element i of Formex F as F[i].
+        """
+        return self.f[i]
+
+    def __setitem__(self,i,val):
+        """Change element i of the Formex.
+
+        This allows writing expressions as F[i] = [[1,2,3]].
+        """
+        self.f[i] = val
+
+    def element(self,i):
+        """Return element i of the Formex"""
+        return self.f[i]
+
+    def point(self,i,j):
+        """Return point j of element i"""
+        return self.f[i,j]
+
+    def coord(self,i,j,k):
+        """Return coord k of point j of element i"""
+        return self.f[i,j,k]
+
 ###########################################################################
 #
 #   Return information about a Formex
@@ -456,11 +480,11 @@ class Formex:
         """Return the number of elements in the formex."""
         return self.f.shape[0]
     
-    def nnodel(self):
-        """Return the number of nodes per element.
+    def nplex(self):
+        """Return the number of points per element.
 
         Examples:
-        1: unconnected nodes,
+        1: unconnected points,
         2: straight line elements,
         3: triangles or quadratic line elements,
         4: tetraeders or quadrilaterals or cubic line elements.
@@ -470,15 +494,15 @@ class Formex:
     def ndim(self):
         """Return the number of dimensions.
 
-        This is the number of coordinates for each node. In the
+        This is the number of coordinates for each point. In the
         current implementation this is always 3, though you can
         define 2D Formices by given only two coordinates: the third
         will automatically be set to zero.
         """
         return self.f.shape[2]
     
-    def nnodes(self):
-        """Return the number of nodes in the formex.
+    def npoints(self):
+        """Return the number of points in the formex.
 
         This is the product of the number of elements in the formex
         with the number of nodes per element.
@@ -489,7 +513,7 @@ class Formex:
         """Return the shape of the Formex.
 
         The shape of a Formex is the shape of its data array,
-        i.e. a tuple (nelems, nnodel, ndim).
+        i.e. a tuple (nelems, nplex, ndim).
         """
         return self.f.shape
 
@@ -517,33 +541,6 @@ class Formex:
 
 #    def items(self):
 #        """Return a list of (element,property) tuples"""
-
-
-    def element(self,i):
-        """Return element i of the Formex"""
-        return self.f[i]
-
-    def point(self,i,j):
-        """Return point j of element i"""
-        return self.f[i][j]
-
-    def coord(self,i,j,k):
-        """Return coord k of point j of element i"""
-        return self.f[i][j][k]
-
-    def __getitem__(self,i):
-        """Return a formex element i of the Formex.
-
-        This allows addressing element i of Formex F as F[i].
-        """
-        return self.f[i]
-
-    def __setitem__(self,i,val):
-        """Change element i of the Formex.
-
-        This allows writing expressions as F[i] = [[1,2,3]].
-        """
-        self.f[i] = val
     
     def bbox(self):
         """Return the bounding box of the Formex.
@@ -1537,11 +1534,14 @@ class Formex:
         return self.translate(dir,distance)
 
 
+    nnodel = nplex
+    nnodes = npoints
+    
     # Formian compatibility functions
     # These will be moved to a separate file in future.
     #
     order = nelems
-    plexitude = nnodel
+    plexitude = nplex
     grade = ndim
 
     cantle = element

@@ -100,8 +100,11 @@ in&nbsp;the&nbsp;choices&nbsp;list.&nbsp;Thus,&nbsp;<a href="#-ask">ask</a>('Do&
  <dl><dt><a name="-log"><strong>log</strong></a>(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;terminal.</tt></dd></dl>
  <dl><dt><a name="-message"><strong>message</strong></a> = log(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;terminal.</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
- <dl><dt><a name="-play"><strong>play</strong></a>(fn)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.</tt></dd></dl>
- <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+ <dl><dt><a name="-play"><strong>play</strong></a>(fn, argv<font color="#909090">=[]</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn.<br>
+&nbsp;<br>
+A&nbsp;list&nbsp;of&nbsp;arguments&nbsp;can&nbsp;be&nbsp;passed.&nbsp;They&nbsp;will&nbsp;be&nbsp;available<br>
+under&nbsp;the&nbsp;name&nbsp;argv.</tt></dd></dl>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>, argv<font color="#909090">=[]</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
 same&nbsp;time.<br>
