@@ -3,7 +3,7 @@
 """Global data for pyFormex."""
 
 # Set pyformex version
-__version__ = "0.4.1-alpha"
+__version__ = "0.4.1"
 Version = 'pyFormex %s' % __version__
 options = None
 

@@ -19,7 +19,7 @@ NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 STAMP= Stamp 
-VERSIONSTRING= __version__.*
+VERSIONSTRING= __version__ = .*
 NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= releases
