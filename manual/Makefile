@@ -18,6 +18,9 @@ OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" 
 
 .PHONY html: html/${TGT}.html
 
+pyformex.help:
+	../pyformex.py --help > $@
+
 ${TGT}.pdf: ${TGT}.tex
 	${MKHOWTO} --a4 --pdf $<
 

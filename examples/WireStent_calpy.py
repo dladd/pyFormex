@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: WireStent_calpy.py 147 2006-10-13 09:30:49Z bverheg $
 #
 """Wire stent analysis"""
 
@@ -54,7 +54,7 @@ print "Number of elements: %s" % nel
 print "Original number of nodes: %s" % stent.nnodes()
 # Create FE model
 message("Creating FE model: for a large model this can take a LOT of time!")
-nodes,elems = stent.nodesAndElements()
+nodes,elems = stent.feModel()
 nnod = nodes.shape[0]
 print "Compressed number of nodes: %s" % nnod
 

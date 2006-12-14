@@ -395,7 +395,7 @@ class Model(Dict):
         """Create new model data.
         
         Nodes and elems are tuples, wich can be obtained by 
-            nodes, elems = F.nodesAndElements()
+            nodes, elems = F.feModel()
         nodeprop is a list of all the node property numbers.
         elemprop is a list of all the element property numbers. This list can be obtained by 
             elemprop = F.p
@@ -540,7 +540,7 @@ if __name__ == "__main__":
     diag = ElemProperty(8,S3,elemtype='conn3d2')
     
     #creating the input file
-    nodes,elems = F.nodesAndElements()
+    nodes,elems = F.feModel()
     step1=Analysis(nlgeom='yes', cloadset=[], boundset=[8])
     step2=Analysis(cloadset=[9], dloadset=[], dispset=[9])
     outhist = Odb(type='history')

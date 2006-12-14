@@ -133,7 +133,7 @@ def clip_stl():
         xc2 = xmi + float(res[2][1]) * dx
         nodes = res[3][1]
         print nodes
-        w = F.where(nodes='any',dir=axis,xmin=xc1,xmax=xc2)
+        w = F.where(nodes='any',dir=axis,min=xc1,max=xc2)
         draw(F.cclip(w),color='yellow',wait=False)
         oldF = F
         F = F.clip(w)
@@ -178,7 +178,7 @@ def section_stl():
         linewidth(2)
 
         for i in range(n+1):
-            G = F.clip(F.where(nodes='any',dir=0,xmin=X[i]-dxx,xmax=X[i]+dxx))
+            G = F.clip(F.where(nodes='any',dir=0,min=X[i]-dxx,max=X[i]+dxx))
             draw(G,color='blue',view=None)
             GD.canvas.update()
             C = G.center()
@@ -250,7 +250,7 @@ def export_stl():
     if ack("Creating nodes and elements.\nFor a large model, this could take quite some time!"):
         GD.app.processEvents()
         message("Creating nodes and elements.")
-        nodes,elems = F.nodesAndElements()
+        nodes,elems = F.feModel()
         nnodes = nodes.shape[0]
         nelems = elems.shape[0]
         message("There are %d unique nodes and %d triangle elements in the model." % (nnodes,nelems))

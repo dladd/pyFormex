@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: Clip.py 154 2006-11-03 19:08:25Z bverheg $
 
 clear()
 n = 16
@@ -37,12 +37,12 @@ close = sum(d < 2.2,-1)
 
 
 
-sel = [ F.where(nodes=0,dir=0,xmin=1.5,xmax=3.5),
-        F.where(nodes=[0,1],dir=0,xmin=1.5,xmax=3.5),
-        F.where(nodes=[0,1,2],dir=0,xmin=1.5,xmax=3.5),
-        F.where(nodes='all',dir=1,xmin=1.5,xmax=3.5),
-        F.where(nodes='any',dir=1,xmin=1.5,xmax=3.5),
-        F.where(nodes='none',dir=1,xmin=1.5),
+sel = [ F.where(nodes=0,dir=0,min=1.5,max=3.5),
+        F.where(nodes=[0,1],dir=0,min=1.5,max=3.5),
+        F.where(nodes=[0,1,2],dir=0,min=1.5,max=3.5),
+        F.where(nodes='all',dir=1,min=1.5,max=3.5),
+        F.where(nodes='any',dir=1,min=1.5,max=3.5),
+        F.where(nodes='none',dir=1,min=1.5),
         (above > 0) * (below > 0 ),
         close == 3,
         ]

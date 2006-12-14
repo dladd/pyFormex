@@ -33,7 +33,6 @@ toggle_perspective = None # the toggle perspective button
 def togglePerspective():
     global toggle_perspective
     mode = not GD.canvas.camera.perspective
-    print "Set mode ",mode
     toggle_perspective.setChecked(mode)
     cameraMenu.setPerspective(not GD.canvas.camera.perspective)
 

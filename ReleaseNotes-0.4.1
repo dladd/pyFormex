@@ -19,10 +19,21 @@ GUI:
 - toggle between perspective/projective display now works
 
 
-- Formex class:
+- formex.py:
+  - removed the equal() function: use numpy's allclose() instead.
+
+  Formex class:
   - setProp has no longer a default value. If called with a value None,
     the property numbers are removed.
   - removeProp is deprecated: replace with setProp(None)
+
+  - nodesAndElements is renamed feModel (the old name still exists but is
+    deprecated). This method now has two optional arguments rtol and atol
+    to set the relative and absolute tolerance for deciding on equal 
+    coordinates. The default atol has been set to 1.e-5 to be in better
+    accordance with the single precision. 
+
+  - the arguments xmin, xmax of the where() method have been renamed min, max
 
   - translate and translate1 have been merged into a single function
 
@@ -34,6 +45,12 @@ GUI:
 
   - divide(a,[v]) : divide all elements of a plex-2 Formex at values v
 
+  - the order and interpretation of the spherical coordinates in the methods
+    spherical and toSpherical has changed! Spherical coordinates are now
+    (longitude, latitude, radius). There is an extra parameter colat, which
+    can be set True to use colatitude istead of latitude.
+    For convenience, we provide the method oldspherical, which still works
+    as the old spherical.
 
 
 - draw.py:

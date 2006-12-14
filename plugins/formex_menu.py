@@ -91,7 +91,7 @@ def clip_selection():
         xc1 = xmi + float(res[1][1]) * dx
         xc2 = xmi + float(res[2][1]) * dx
         for F in Flist:
-            w = F.where(dir=axis,xmin=xc1,xmax=xc2)
+            w = F.where(dir=axis,min=xc1,max=xc2)
             oldF = F.cclip(w)
             F = F.clip(w)
             drawChanges(F,oldF)

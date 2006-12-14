@@ -8,9 +8,9 @@ import math
 import vector
 import pickle
 
-
 def deprecated(old,new):
     print "Function %s is deprecated: use %s instead" % (old,new)
+
 
 # default float and int types used in the Formex data
 Float = float32
@@ -66,16 +66,6 @@ def unique(a):
     b = sort(a.ravel())
     return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
 
-##
-## If p1 and p2 are arrays, this can better be replaced by
-## allclose(p1,p2,rtol,atol)
-def equal(p1,p2,tol=1.e-6):
-    """Return true if two points are considered equal within tolerance.
-
-    Each point is a list of three coordinates, or something compatible.
-    """
-    return inside([ p1[i]-p2[i] for i in range(3) ],
-                  [ -tol for i in range(3) ], [ +tol for i in range(3) ] )
 
 def pattern(s):
     """Return a line segment pattern created from a string.
@@ -214,7 +204,7 @@ def rotationAboutMatrix(angle,axis):
              [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
 
 
-def equivalence(x,nodesperbox=1,shift=0.5):
+def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
     """Finds (almost) identical nodes and returns a compressed list.
 
     The input x is an (nnod,3) array of nodal coordinates. This functions finds
@@ -228,8 +218,11 @@ def equivalence(x,nodesperbox=1,shift=0.5):
     The boxes are numbered in the 3 directions and a unique integer scalar
     is computed, that is then used to sort the nodes.
     Then only nodes inside the same box are compared on almost equal
-    coordinates, using the numpy allclose() function. Close nodes are replaced
-    by a single one.
+    coordinates, using the numpy allclose() function. Two coordinates are
+    considered close if they are within a relative tolerance rtol or absolute
+    tolerance atol. See numpy for detail. The default atol is set larger than
+    in numpy, because pyformex typically runs with single precision.
+    Close nodes are replaced by a single one.
 
     Currently the procedure does not guarantee to find all close nodes:
     two close nodes might be in adjacent boxes. The performance hit for
@@ -269,7 +262,7 @@ def equivalence(x,nodesperbox=1,shift=0.5):
     for i in range(nnod):
         j = i-1
         while j>=0 and val[i]==val[j]:
-            if allclose(x[i],x[j]):
+            if allclose(x[i],x[j],rtol=rtol,atol=atol):
                 # node i is same as node j
                 flag[i] = 0
                 sel[i] = sel[j]
@@ -517,21 +510,25 @@ class Formex:
         """
         return self.f.shape
 
+    # Coordinates
     def data(self):
         """Return the Formex as a numpy array"""
         return self.f
     def x(self):
-        """Return the x-plane (can be modified)"""
+        """Return the x-plane"""
         return self.f[:,:,0]
     def y(self):
-        """Return the y-plane (can be modified)"""
+        """Return the y-plane"""
         return self.f[:,:,1]
     def z(self):
-        """Return the z-plane (can be modified)"""
+        """Return the z-plane"""
         return self.f[:,:,2]
+
+    # Properties
     def prop(self):
         """Return the properties as a numpy array"""
         return self.p
+
     def maxprop(self):
         """Return the highest property used, or None"""
         if self.p is None:
@@ -539,9 +536,14 @@ class Formex:
         else:
             return self.p.max()
 
-#    def items(self):
-#        """Return a list of (element,property) tuples"""
-    
+    def propSet(self):
+        """Return a list with unique property values on this Formex."""
+        if self.p is None:
+            return None
+        else:
+            return unique(self.p)
+
+    # Size
     def bbox(self):
         """Return the bounding box of the Formex.
 
@@ -587,17 +589,10 @@ class Formex:
         are lying outside the sphere.
         """
         return self.f - array(self.center())
-    
-
-    def propSet(self):
-        """Return a list with unique property values on this Formex."""
-        if self.p is None:
-            return None
-        else:
-            return unique(self.p)
 
 
-    def nodesAndElements(self,nodesperbox=1,repeat=True):
+    # Data conversion
+    def feModel(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=1.e-5):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -606,7 +601,7 @@ class Formex:
         The elements come in the same order as they are in the Formex, but
         the order of the nodes is unspecified.
         By the way, the reverse operation of
-           coords,elems = nodesAndElements(F)
+           coords,elems = feModel(F)
         is accomplished by
            F = Formex(coords[elems])
 
@@ -615,9 +610,9 @@ class Formex:
         different parameters to check.
         """
         f = reshape(self.f,(self.nnodes(),3))
-        f,s = equivalence(f,nodesperbox,0.5)
+        f,s = equivalence(f,nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:
-            f,t = equivalence(f,nodesperbox,0.75)
+            f,t = equivalence(f,nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
         e = reshape(s,self.f.shape[:2])
         return (f,e)
@@ -627,24 +622,26 @@ class Formex:
 # Create string representations of a Formex
 #
 
-    def point2str(self,sig):
+    @classmethod
+    def point2str(clas,point):
         """Returns a string representation of a point"""
         s = ""
-        if len(sig)>0:
-            s += str(sig[0])
-            if len(sig) > 1:
-                for i in sig[1:]:
+        if len(point)>0:
+            s += str(point[0])
+            if len(point) > 1:
+                for i in point[1:]:
                     s += "," + str(i)
         return s
 
-    def element2str(self,can):
+    @classmethod
+    def element2str(clas,elem):
         """Returns a string representation of an element"""
         s = "["
-        if len(can) > 0:
-            s += self.signet2str(can[0])
-            if len(can) > 1:
-                for i in can[1:]:
-                    s += "; " + self.point2str(i) 
+        if len(elem) > 0:
+            s += clas.point2str(elem[0])
+            if len(elem) > 1:
+                for i in elem[1:]:
+                    s += "; " + clas.point2str(i) 
         return s+"]"
     
     def asFormex(self):
@@ -719,7 +716,8 @@ class Formex:
         You can specify a single value or a list/array of integer values.
         If the number of passed values is less than the number of elements,
         they wil be repeated. If you give more, they will be ignored.
-        The default argument will give all elements a property value 0.
+        
+        If a value None is given, the properties are removed from the Formex.
         """
         if p is None:
             self.p = None
@@ -832,6 +830,65 @@ class Formex:
             p = concatenate(plist)
         return Formex(f,p)
 
+      
+    def select(self,idx):
+        """Return a Formex which holds only elements with numbers in ids.
+
+        idx can be a single element number or a list of numbers or
+        any other index mechanism accepted by numpy's ndarray
+        """
+        if self.p is None:
+            p = None
+        else:
+            p = self.p[idx]
+        return Formex(self.f[idx],p)
+
+      
+    def selectNodes(self,idx):
+        """Return a Formex which holds only some nodes of the parent.
+
+        idx is a list of node numbers to select.
+        Thus, if F is a grade 3 Formex representing triangles, the sides of
+        the triangles are given by
+        F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
+        The returned Formex inherits the property of its parent.
+        """
+        return Formex(self.f[:,idx,:],self.p)
+
+    def nodes(self):
+        """Return a Formex containing only the nodes.
+
+        This is obviously a Formex with plexitude 1. It holds the same data
+        as the original Formex, but in another shape: the number of nodes
+        per element is 1, and the number of elements is equal to the total
+        number of nodes.
+        The properties are not copied over, since they will usually not make
+        any sense.
+        """
+        return Formex(reshape(self.f,(-1,1,self.f.shape[2])))
+
+
+    def remove(self,F):
+        """Return a Formex where the elements in F have been removed.
+
+        This is also the subtraction of the current Formex with F.
+        Elements are only removed if they have the same nodes in the same
+        order. This is a slow operation: for large structures, you should
+        avoid it where possible.
+        """
+        flag = ones((self.f.shape[0],))
+        for i in range(self.f.shape[0]):
+            for j in range(F.f.shape[0]):
+                if allclose(self.f[i],F.f[j]):
+                    # element i is same as element j of F
+                    flag[i] = 0
+                    break
+        if self.p is None:
+            p = None
+        else:
+            p = self.p[flag>0]
+        return Formex(self.f[flag>0],p)
+
 
     def withProp(self,val):
         """Return a Formex which holds only the elements with property val.
@@ -894,63 +951,6 @@ class Formex:
         A zero element is an element where all nodes are equal."""
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
         return Formex(self.f)
-      
-    def select(self,idx):
-        """Return a Formex which holds only elements with numbers in ids.
-
-        idx can be a single element number or a list of numbers or
-        any other index mechanism accepted by numpy's ndarray
-        """
-        if self.p is None:
-            p = None
-        else:
-            p = self.p[idx]
-        return Formex(self.f[idx],p)
-      
-    def selectNodes(self,idx):
-        """Return a Formex which holds only some nodes of the parent.
-
-        idx is a list of node numbers to select.
-        Thus, if F is a grade 3 Formex representing triangles, the sides of
-        the triangles are given by
-        F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
-        The returned Formex inherits the property of its parent.
-        """
-        return Formex(self.f[:,idx,:],self.p)
-
-    def nodes(self):
-        """Return a Formex containing only the nodes.
-
-        This is obviously a Formex with plexitude 1. It holds the same data
-        as the original Formex, but in another shape: the number of nodes
-        per element is 1, and the number of elements is equal to the total
-        number of nodes.
-        The properties are not copied over, since they will usually not make
-        any sense.
-        """
-        return Formex(reshape(self.f,(-1,1,self.f.shape[2])))
-
-
-    def remove(self,F):
-        """Return a Formex where the elements in F have been removed.
-
-        This is also the subtraction of the current Formex with F.
-        Elements are only removed if they have the same nodes in the same
-        order. This is a slow operation: for large structures, you should
-        avoid it where possible.
-        """
-        flag = ones((self.f.shape[0],))
-        for i in range(self.f.shape[0]):
-            for j in range(F.f.shape[0]):
-                if allclose(self.f[i],F.f[j]):
-                    # element i is same as element j of F
-                    flag[i] = 0
-                    break
-        if self.p is None:
-            p = None
-        else:
-            p = self.p[flag>0]
-        return Formex(self.f[flag>0],p)
 
 
     def reverseElements(self):
@@ -960,18 +960,17 @@ class Formex:
         """
         return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p)
 
-
 # Clipping functions
 
-    def where(self,nodes='all',dir=0,xmin=None,xmax=None):
-        """Flag elements having nodal coordinates between xmin and xmax.
+    def where(self,nodes='all',dir=0,min=None,max=None):
+        """Flag elements having nodal coordinates between min and max.
 
         This function is very convenient in clipping a Formex in one of
         the coordinate directions. It returns a 1D integer array flagging
         the elements having nodal coordinates in the required range.
         Use clip() to create the clipped Formex.
 
-        xmin,xmax are there minimum and maximum values required for the
+        min,max are there minimum and maximum values required for the
         coordinates in direction dir (default is the x or 0 direction).
         nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
@@ -979,7 +978,7 @@ class Formex:
         - a list of node numbers
         - one of the special strings: 'all', 'any', 'none'
         The default ('all') will flag all the elements that have all their
-        nodes between the planes x=xmin and x=xmax, i.e. the elements that
+        nodes between the planes x=min and x=max, i.e. the elements that
         fall completely between these planes. One of the two clipping planes
         may be left unspecified.
         """
@@ -988,13 +987,13 @@ class Formex:
             nod = range(f.shape[1])
         else:
             nod = nodes
-        if not xmin is None:
-            T1 = f[:,nod,dir] > xmin
-        if not xmax is None:
-            T2 = f[:,nod,dir] < xmax
-        if xmin is None:
+        if not min is None:
+            T1 = f[:,nod,dir] > min
+        if not max is None:
+            T2 = f[:,nod,dir] < max
+        if min is None:
             T = T2
-        elif xmax is None:
+        elif max is None:
             T = T1
         else:
             T = T1 * T2
@@ -1515,10 +1514,14 @@ class Formex:
     # New users should avoid these functions!
     # The may be removed in future.
     #
+
+    def nodesAndElements(self):
+        deprecated('nodesAndElements','feModel')
+        return self.feModel()
     
-    def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
+    def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
-        return self.spherical(dir,scale,colat=True)
+        return self.cospherical([dir[1],dir[2],dir[0]],scale[1],[scale[2],scale[0]],colat=True)
 
 
     def removeProp(self):
@@ -1762,7 +1765,7 @@ def divide(F,div):
 def readfile(file,sep=',',plexitude=1,dimension=3):
     """Read a Formex from file.
 
-    This convenience function uses the numpy fromfile function to read the
+    This convenience function uses the numpy fromfile function to read
     the coordinates of a Formex from file. 
     Args:
       file: either an open file object or a string with the file name.
@@ -1847,7 +1850,7 @@ if __name__ == "__main__":
         G = connect([F,F],bias=[0,1],loop=True)
         print G
         print G[1]
-        print G.nodesAndElements()
+        print G.feModel()
         print F
         print F.bbox()
         print F.center()
@@ -1858,7 +1861,9 @@ if __name__ == "__main__":
         F = Formex([[[0,0],[1,0],[0,1]],[[1,0],[1,1],[0,1]]])
         print F
         print F.reverseElements()
-
+        Formex.setPrintFunction(Formex.asArray)
+        print F
+        F.fprint()
 
     (f,t) = _test()
     if f == 0:

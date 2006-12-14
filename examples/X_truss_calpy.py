@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: X_truss_calpy.py 147 2006-10-13 09:30:49Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra
@@ -62,7 +62,7 @@ def getmat(key):
 
 # create model for structural analysis
 model = truss.allBars()
-coords,elems = model.nodesAndElements()
+coords,elems = model.feModel()
 props = model.prop()
 propset = model.propSet()
 

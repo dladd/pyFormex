@@ -38,8 +38,10 @@ for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
 draw (e,color=red)
-#draw (b,color=blue)
 
+if ack('Shrink the elements?'):
+    clear()
+    draw(e.shrink(0.85))
 
 if baseGeom == 0 and ack('Export to .stl?'):
     from plugins import stl

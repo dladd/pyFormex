@@ -369,18 +369,18 @@ There are a number of functions available that return information about a Formex
 		{Return the bounding box of the Formex.}
 	\lineii{F.center()			}
 		{Return the center of the Formex.}
-	\lineii{F.nodesAndElements()	}
+	\lineii{F.feModel()	}
 		{Return a tuple of nodal coordinates and element connectivity.}
 \end{tableii}
 
-\function{nodesAndElements()} is very important in finite element processing. It returns all nodes and all elements of the Formex in a format useful for FE processing. A tuple of two arrays is returned. The first is float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element.
+\function{feModel()} is very important in finite element processing. It returns all nodes and all elements of the Formex in a format useful for FE processing. A tuple of two arrays is returned. The first is float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element.
 \begin{verbatim}
 >>> #!/usr/bin/env pyformex
 >>> from simple import *
 
 >>> c = Formex(pattern(Pattern['cube']))
 >>> draw(c)
->>> nodes,elems = c.nodesAndElements()
+>>> nodes,elems = c.feModel()
 >>> print 'Nodes'
 >>> print nodes
 >>> print 'Elements'

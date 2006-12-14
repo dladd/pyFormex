@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: SpaceTrussRoof_f2abq.py 150 2006-11-01 11:13:34Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra
@@ -44,7 +44,7 @@ clear();draw(F)
 #Creating FE-model
 ###################
 
-nodes,elems=F.nodesAndElements()
+nodes,elems=F.feModel()
 nnod=nodes.shape[0]
 
 
