@@ -163,7 +163,6 @@ class GUI(QtGui.QMainWindow):
         # Create the top menu and keep a dict with the main menu items
         menu.addMenuItems(self.menu, menu.MenuData)
         self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
-        #print self.menus
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
         self.toolbar.addSeparator()
@@ -381,12 +380,20 @@ def runApp(args):
     GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.canvas = GD.gui.canvas
-    GD.gui.show()   # This creates the X Error ###
+    GD.gui.show()
+    # Create additional menus (put them in a list to save)
+    menus = []
+    # History
+    history = GD.cfg['history']
+    if type(history) == list:
+        m = scriptsMenu.ScriptsMenu('History',files=history,max=10)
+        GD.gui.insertMenu(m)
+        menus.append(m)
+        GD.gui.history = m
     # Create a menu with pyFormex examples
     # and insert it before the help menu
-    menus = []
     for title,dir in GD.cfg['scriptdirs']:
-        m = scriptsMenu.ScriptsMenu(title,dir)
+        m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
         GD.gui.insertMenu(m)
         menus.append(m)
     GD.board.write(GD.Version+"   (C) B. Verhegghe")
@@ -399,6 +406,7 @@ def runApp(args):
     GD.app.exec_()
 
     # store the main window size/pos
+    GD.cfg['history'] = GD.gui.history.files
     GD.cfg.update({'size':GD.gui.Size(),'pos':GD.gui.Pos()},name='gui')
     return 0
 

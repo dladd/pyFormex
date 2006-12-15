@@ -9,11 +9,13 @@ from PyQt4 import QtCore, QtGui
 
 
 class ScriptsMenu(QtGui.QMenu):
-    """A menu of pyFormex scripts in a directory."""
+    """A menu of pyFormex scripts in a directory or list."""
     
-    def __init__(self,title,dir):
-        """Create a menu with files in dir. 
-        
+    def __init__(self,title,dir=None,files=None,max=0,autoplay=False):
+        """Create a menu with files in dir.
+
+        If dir is a directory, all files in that directory are used.
+        If dir is a list, this list of files is used
         By default, files from dir are only included if:
           - the name ends with '.py'
           - the name does not start with '.' or '_'
@@ -22,29 +24,43 @@ class ScriptsMenu(QtGui.QMenu):
         An option to reload the directory is always included.
         """
         QtGui.QMenu.__init__(self,title)
-        self.load(dir)
+        self.dir = dir
+        self.files = files
+        self.max = max
+        self.autoplay = autoplay
+        self.load()
         
 
-    def load(self,dir):
-        self.dir = dir
-        files = os.listdir(dir)
+    def load(self):
+        if self.dir:
+            files = os.listdir(self.dir)
+        else:
+            files = self.files
         filter1 = lambda s:s[-3:]==".py" and s[0]!='.' and s[0]!='_'
-        filter2 = lambda s:utils.isPyFormex(os.path.join(dir,s))
+        if self.dir:
+            filter2 = lambda s:utils.isPyFormex(os.path.join(self.dir,s))
+        else:
+            filter2 = utils.isPyFormex
         files = filter(filter1,files)
         files = filter(filter2,files)
-        files.sort()
-        self.files = map(lambda s:s[:-3],files)
+        if self.dir:
+            files.sort()
+            files = map(lambda s:s[:-3],files)
+        else:
+            if self.max > 0 and len(files) > self.max:
+                files = files[:self.max]
+        self.files = files
         if GD.options.debug:
-            print "Found Scripts in %s" % dir
+            print "Found Scripts in %s" % self.dir
             print self.files
-        for f in self.files:
-            self.addAction(f)
+        self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
-        self.addSeparator()
-        self.addAction('Run next script',self.runNext)
-        self.addAction('Run all following scripts',self.runAllNext)
-        self.addAction('Run all scripts',self.runAll)
-        self.addAction('Reload scripts',self.reLoad)
+        if self.dir:
+            self.addSeparator()
+            self.addAction('Run next script',self.runNext)
+            self.addAction('Run all following scripts',self.runAllNext)
+            self.addAction('Run all scripts',self.runAll)
+            self.addAction('Reload scripts',self.reLoad)
         self.current = ""
         
 
@@ -58,10 +74,14 @@ class ScriptsMenu(QtGui.QMenu):
     def runScript(self,filename):
         """Run the specified script."""
         self.current = filename
-        selected = os.path.join(self.dir,filename+'.py')
+        if self.dir:
+            selected = os.path.join(self.dir,filename+'.py')
+        else:
+            selected = filename
         GD.debug("Playing script %s" % selected)
         GD.gui.setcurfile(selected)
-        fileMenu.play()
+        if self.autoplay:
+            fileMenu.play()
         
 
     def runAll(self):
@@ -92,7 +112,22 @@ class ScriptsMenu(QtGui.QMenu):
 
 
     def reLoad(self):
-        self.clear()
-        self.load(self.dir)
+        """Reload the scripts from dir."""
+        if self.dir:
+            self.clear()
+            self.load()
+
+
+    def add(self,filename):
+        """Add a new filename to the front of the menu."""
+        files = self.files
+        if filename in files:
+            files.remove(filename)
+        files[0:0] = [ filename ]
+        if self.max > 0 and len(files) > self.max:
+            files = files[:self.max]
+        while len(self.actions) < len(files):
+            self.actions.append(self.addAction(filename))
+        for a,f in zip(self.actions,self.files):
+            a.setText(f)
         
-    

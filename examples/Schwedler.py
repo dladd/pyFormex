@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex
-# $Id$
+# $Id: Schwedler.py 154 2006-11-03 19:08:25Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra

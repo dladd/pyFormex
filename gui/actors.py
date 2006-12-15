@@ -103,6 +103,27 @@ def drawTriangles(x,c,mode):
             GL.glVertex3f(*(x[i][j]))
     GL.glEnd()
 
+    
+def drawQuadrilaterals(x,c,mode):
+    """Draw a collection of quadrilaterals.
+
+    x is a (nquad,4*n,3) shaped array of coordinates.
+    Each row contains n quads drawn with the same color.
+    c is a (nquad,3) shaped array of RGB values.
+    mode is either 'flat' or 'smooth'
+    """
+    if mode == 'smooth':
+        normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
+    GL.glBegin(GL.GL_QUADS)
+    for i in range(x.shape[0]):
+        GL.glColor3f(*c[i])
+        if mode == 'smooth':
+            GL.glNormal3f(*normal[i])
+        for j in range(x.shape[1]):
+            GL.glVertex3f(*(x[i][j]))
+    GL.glEnd()
+
+ 
 ### Actors ###############################################
 #
 # Actors are anything that can be drawn in an openGL 3D scene.
@@ -202,7 +223,11 @@ class FormexActor(Formex):
         self.color = array([ color[v % len(color)] for v in range(mprop) ])
         self.linewidth = float(linewidth)
         if self.nnodel() == 1:
-            self.setMark(self.size()/200,"cube")
+            # ! THIS SHOULD BETTER BE SET FROM THE SCENE SIZE ! 
+            sz = self.size()
+            if sz <= 0.0:
+                sz = 1.0
+            self.setMark(sz/200.,"cube")
         self.eltype = eltype
 
     def draw(self,mode='wireframe'):
@@ -238,13 +263,7 @@ class FormexActor(Formex):
                 coords = self.f[:,faces,:]
                 drawTriangles(coords,self.color[self.p],mode)
             else: # (possibly non-plane) quadrilateral
-                GL.glBegin(GL.GL_QUADS)
-                for i in range(nelem):
-                    col = self.color[int(self.p[i])]
-                    GL.glColor3f(*(col))
-                    for nod in self[i]:
-                        GL.glVertex3f(*nod)
-                GL.glEnd()
+                drawQuadrilaterals(self.f,self.color[self.p],mode)
             
         else:
             for prop,elem in zip(self.p,self.f):

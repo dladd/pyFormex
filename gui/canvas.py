@@ -285,15 +285,14 @@ class Canvas:
         center,size = vector.centerDiff(bbox[0],bbox[1])
         # calculating the bounding circle: this is rather conservative
         dist = vector.length(size)
+        if dist <= 0.0:
+            dist = 1.0
         self.camera.setCenter(*center)
         if angles:
             self.camera.setRotation(*angles)
         self.camera.setDist(dist)
         self.camera.setLens(45.,self.aspect)
-        if dist > 0.0:
-            self.camera.setClip(0.01*dist,100*dist)
-        else:
-            self.camera.setClip(0.0,1.0)
+        self.camera.setClip(0.01*dist,100.*dist)
 
 
     def zoom(self,f):

@@ -19,6 +19,7 @@ docdir = os.path.join(pyformexdir,"doc")
 # scriptdirs is a list of (title,dir) tuples
 scriptdirs = [ ('Examples',os.path.join(pyformexdir,'examples')) ]
 #imagesfromeps = True
+history = []
 
 
 # commands

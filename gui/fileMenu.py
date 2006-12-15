@@ -26,7 +26,8 @@ def openFile(exist=True):
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD.gui.setcurfile(fn)
-
+        GD.gui.history.add(fn)
+        
         
 def edit():
     """Load the current file in the editor.

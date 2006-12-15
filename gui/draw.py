@@ -451,7 +451,6 @@ def isoView():
     view("iso")
 
 def zoomAll():
-    print "ZOOM ALL"
     GD.canvas.setBbox(formex.bbox(GD.canvas.actors))
     GD.canvas.setCamera()
     GD.canvas.redrawAll()

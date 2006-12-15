@@ -1172,6 +1172,7 @@ class Formex:
         f[:,:,1] = arctan2(y,x) / rad
         f[:,:,2] = z
         return Formex(f,self.p)
+
     
     def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
         """Converts from spherical to cartesian after scaling.
@@ -1195,6 +1196,11 @@ class Formex:
         f[:,:,1] = rc*sin(theta)
         f[:,:,2] = r*sin(phi)
         return Formex(f,self.p)
+
+    def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
+        """Same as spherical with colat=True."""
+        return self.spherical(dir,scale,True)
+
 
     def toSpherical(self,dir=[0,1,2]):
         """Converts from cartesian to spherical coordinates.
@@ -1521,7 +1527,7 @@ class Formex:
     
     def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
-        return self.cospherical([dir[1],dir[2],dir[0]],scale[1],[scale[2],scale[0]],colat=True)
+        return self.spherical([dir[1],dir[2],dir[0]],scale[1],[scale[2],scale[0]],colat=True)
 
 
     def removeProp(self):
