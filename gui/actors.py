@@ -112,14 +112,16 @@ def drawQuadrilaterals(x,c,mode):
     c is a (nquad,3) shaped array of RGB values.
     mode is either 'flat' or 'smooth'
     """
+    nplex = x.shape[1]
     if mode == 'smooth':
-        normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
+        edge = [ x[:,i,:] - x[:,i-1,:] for i in range(nplex) ]
+        normal = [ cross(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
     GL.glBegin(GL.GL_QUADS)
     for i in range(x.shape[0]):
         GL.glColor3f(*c[i])
-        if mode == 'smooth':
-            GL.glNormal3f(*normal[i])
-        for j in range(x.shape[1]):
+        for j in range(nplex):
+            if mode == 'smooth':
+                GL.glNormal3f(*normal[j][i])
             GL.glVertex3f(*(x[i][j]))
     GL.glEnd()
 

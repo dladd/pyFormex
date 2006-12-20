@@ -4,7 +4,6 @@
 
 from numpy import *
 
-import math
 import vector
 import pickle
 
@@ -24,8 +23,7 @@ Int = int32
 #########################
 
 # pi is defined in numpy
-#pi = math.pi
-# multiplier to transform degrees to radians
+# rad is a multiplier to transform degrees to radians
 rad = pi/180.
 
 # Convenience functions: trigonometric functions with argument in degrees
@@ -167,8 +165,8 @@ def rotationMatrix(angle,axis=None):
     in a 3D world. A 3x3 rotation matrix is returned.
     """
     a = angle*rad
-    c = math.cos(a)
-    s = math.sin(a)
+    c = cos(a)
+    s = sin(a)
     if axis==None:
         f = [[c,s],[-s,c]]
     else:
@@ -195,8 +193,8 @@ def rotationAboutMatrix(angle,axis):
     but the latter functions are more efficient.
     """
     a = angle*rad
-    c = math.cos(a)
-    s = math.sin(a)
+    c = cos(a)
+    s = sin(a)
     t = 1-c
     X,Y,Z = axis
     return [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],

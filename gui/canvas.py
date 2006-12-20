@@ -351,6 +351,7 @@ class Canvas:
         elif self.dynamic == "combizoom":
             # hor movement is lens zooming
             f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
+            #print "Lens Zooming: %s" % f
             self.camera.setLens(f)
             # vert movement is dolly zooming
             d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)

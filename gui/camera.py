@@ -5,7 +5,7 @@
 import sys
 
 from vector import *
-from math import tan
+from formex import tand
 
 import numpy
 import distutils.version
@@ -21,6 +21,9 @@ import copy
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
+
+def printModelviewMatrix(s="%s"):
+    print s % GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
 
 ## ! For developers: the information in this module is not fully correct
 ## ! We now store the rotation of the camera as a combined rotation matrix,
@@ -105,6 +108,7 @@ class Camera:
         GL.glRotatef(-long % 360, 0.0, 1.0, 0.0)
         self.rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
         self.viewChanged = True
+
     def setDist(self,dist):
         """Set the distance."""
         self.dist = dist
@@ -188,6 +192,8 @@ class Camera:
 ##        self.move(tr[0])
 ##        self.viewChanged = True
 
+
+        
     def setMatrix(self):
         """Set the ModelView matrix from camera parameters.
 
@@ -198,13 +204,17 @@ class Camera:
         # arguments should be taken negative and applied in backwards order
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glLoadIdentity()
+        #printModelviewMatrix("Identity:\n%s")
         # translate over camera distance
         GL.glTranslate(0,0,-self.dist)
+        #printModelviewMatrix("Camera distance:\n%s")
         # rotate
         GL.glMultMatrixf(self.rot)
+        #printModelviewMatrix("Rotation:\n%s")
         # translate to center
         dx,dy,dz = self.getCenter()
         GL.glTranslatef(-dx,-dy,-dz)
+        #printModelviewMatrix("Translation:\n%s")
 
 
     def lookAt(self,eye,center,up):
@@ -230,6 +240,7 @@ class Camera:
         self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
         self.rot = copy.deepcopy(self.m)
         self.trl = copy.deepcopy(self.rot[3][0:3])
+        #print "Translation: %s" % self.trl
         self.rot[3][0:3] = [0.,0.,0.]
 
     def loadMatrix (self):
@@ -343,11 +354,12 @@ class Camera:
             if self.perspective:
                 GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
             else:
-                top = tan(self.fovy*0.5) * self.dist
+                #print "FOVY: %s" % self.fovy
+                top = tand(self.fovy*0.5) * self.dist
                 bottom = -top
                 right = top * self.aspect
                 left = bottom * self.aspect
-                #print "Ortho",left,right,bottom,top,self.near,self.far
+                #print "Ortho %s" % [left,right,bottom,top,self.near,self.far]
                 GL.glOrtho(left,right,bottom,top,self.near,self.far)
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 
