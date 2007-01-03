@@ -281,13 +281,15 @@ Reversing an element means reversing the order of its points.
 
 \subsection{Clipping methods}
 These methods can be use to make a selection of elements based on their nodal coordinates. The heart is the function
-\begin{methoddesc}{where}{nodes='all',dir=0,min=None,max=None}
+\begin{methoddesc}{test}{nodes='all',dir=0,min=None,max=None}
 Flag elements having nodal coordinates between min and max.
 
 This function is very convenient in clipping a Formex in one of
 the coordinate directions. It returns a 1D integer array flagging
-the elements having nodal coordinates in the required range.
-Use clip() to create the clipped Formex.
+(with a value 1) the elements having nodal coordinates in the
+specified range.
+Use \Code{where(result)} to get a list of element numbers passing the test.
+Or directly use the \Code{clip()} or \Code{cclip()} methods to create the clipped Formex.
 
 xmin,xmax are there minimum and maximum values required for the
 coordinates in direction dir (default is the x or 0 direction).
@@ -306,18 +308,18 @@ may be left unspecified.
 
 If you want to have a list of the element numbers that satisfy the specified conditions, you can use numpy's where function on the result. Thus \Code{where(F.where(min=1.0))} returns a list with all elements lying right of the plane \Code{x=1.0}.
 
-\begin{methoddesc}{clip}{w}
-Returns a Formex with all the elements where w>0.
+\begin{methoddesc}{clip}{t}
+Returns a Formex with all the elements where t>0.
 
-w should be a 1-D integer array with length equal to the number
+t should be a 1-D integer array with length equal to the number
 of elements of the formex.
-The resulting Formex will contain all elements where w > 0.
+The resulting Formex will contain all elements where t > 0.
 This is a convenience function for the user, equivalent to
-F.select(w>0).
+\Code{F.select(t>0)}.
 \end{methoddesc}
 
-\begin{methoddesc}{cclip}{w}
-This is the complement of clip, returning a Formex where w<=0.
+\begin{methoddesc}{cclip}{t}
+This is the complement of clip, returning a Formex where t<=0.
 \end{methoddesc}
 
 
@@ -611,6 +613,30 @@ The result has the same format as Formex class \Code{bbox()} method, but the res
 The following functions are defined in the file formex.py, but do not depend on the Formex class. They are defined here because they are mainly supporting functions for the Formex class itself.
 
 
+\begin{funcdesc}{sind}{arg}
+    Return the sin of an angle in degrees.
+\end{funcdesc}
+
+\begin{funcdesc}{cosd}{arg}
+    Return the cos of an angle in degrees.
+\end{funcdesc}
+
+\begin{funcdesc}{tand}{arg}
+    Return the tan of an angle in degrees.
+\end{funcdesc}
+
+\begin{funcdesc}{length}{arg}
+    Return the quadratic norm of a vector with all elements of arg.
+\end{funcdesc}
+
+\begin{funcdesc}{inside}{p,mi,ma}
+    Return true if point p is inside bbox defined by points mi and ma
+\end{funcdesc}
+
+\begin{funcdesc}{unique}{a}
+    Return the unique elements in an integer array.
+\end{funcdesc}
+
 \begin{funcdesc}{pattern}{s}
 Return a line segment pattern created from a string.
 
@@ -636,6 +662,106 @@ Adding 16 to the ordinal of the character causes an extra move of +1 in the z-di
 \end{verbatim}             
 The special character '\verb?\?' can be put before any character to make the move without making a connection. The effect of any other character is undefined. The resulting list is directly suited to initialize a Formex.
 \end{funcdesc}
+
+
+\begin{funcdesc}{translationVector}{dir,dist}
+    Return a translation vector in direction dir over distance dist
+\end{funcdesc}
+
+\begin{funcdesc}{rotationMatrix}{angle,axis=None}
+    Return a rotation matrix over angle, optionally around axis.
+
+    The angle is specified in degrees.
+    If axis==None (default), a 2x2 rotation matrix is returned.
+    Else, axis should be one of [ 0,1,2] and specifies the rotation axis
+    in a 3D world. A 3x3 rotation matrix is returned.
+\end{funcdesc}
+    
+
+\begin{funcdesc}{rotationAboutMatrix}{angle,axis}
+    Return a rotation matrix over angle around an axis thru the origin.
+
+    The angle is specified in degrees.
+    Axis is a list of three components specifying the axis.
+    The result is a 3x3 rotation matrix in list format.
+    Note that:
+      rotationAboutMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
+      rotationAboutMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
+      rotationAboutMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
+    but the latter functions are more efficient.
+\end{funcdesc}
+    
+
+
+\begin{funcdesc}{equivalence}{x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5}
+    Finds (almost) identical nodes and returns a compressed list.
+
+    The input x is an (nnod,3) array of nodal coordinates. This functions finds
+    the nodes that are very close and replaces them with a single node.
+    The return value is a tuple of two arrays: the remaining (nunique,3) nodal
+    coordinates, and an integer (nnod) array holding an index in the unique
+    coordinates array for each of the original nodes.
+
+    The procedure works by first dividing the 3D space in a number of
+    equally sized boxes, with a mean population of nodesperbox.
+    The boxes are numbered in the 3 directions and a unique integer scalar
+    is computed, that is then used to sort the nodes.
+    Then only nodes inside the same box are compared on almost equal
+    coordinates, using the numpy allclose() function. Two coordinates are
+    considered close if they are within a relative tolerance rtol or absolute
+    tolerance atol. See numpy for detail. The default atol is set larger than
+    in numpy, because pyformex typically runs with single precision.
+    Close nodes are replaced by a single one.
+
+    Currently the procedure does not guarantee to find all close nodes:
+    two close nodes might be in adjacent boxes. The performance hit for
+    testing adjacent boxes is rather high, and the probability of separating
+    two close nodes with the computed box limits is very small. Nevertheless
+    we intend to access this problem by repeating the procedure with the
+    boxes shifted in space.
+\end{funcdesc}
+    
+
+
+\begin{funcdesc}{distanceFromPlane}{f,p,n}
+    Return the distance of points f from the plane (p,n).
+
+    f is an [...,3] array of coordinates.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a [...] shaped array with the distance of
+    each point to the plane through p and having normal n.
+    Distance values are positive if the point is on the side of the
+    plane indicated by the positive normal.
+\end{funcdesc}
+    
+
+
+\begin{funcdesc}{distanceFromLine}{f,p,q}
+    Return the distance of points f from the line (p,q).
+
+    f is an [...,3] array of coordinates.
+    p and q are two points specified by 3 coordinates.
+
+    The return value is a [...] shaped array with the distance of
+    each point to the line through p and q.
+    All distance values are positive or zero.
+\end{funcdesc}
+    
+
+
+\begin{funcdesc}{distanceFromPoint}{f,p}
+    Return the distance of points f from the point p.
+
+    f is an [...,3] array of coordinates.
+    p is a point specified by 3 coordinates.
+
+    The return value is a [...] shaped array with the distance of
+    each point to the line through p and q.
+    All distance values are positive or zero.
+\end{funcdesc}
+    
 
 
 \section{simple --- simple geometries}

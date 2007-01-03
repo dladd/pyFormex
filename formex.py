@@ -147,13 +147,13 @@ def pattern(s):
     return l
 
 def translationVector(dir,dist):
-    """Returns a translation vector in direction dir over distance dist"""
+    """Return a translation vector in direction dir over distance dist"""
     f = [0.,0.,0.]
     f[dir] = dist
     return f
 
 def rotationMatrix(angle,axis=None):
-    """Returns a rotation matrix over angle, optionally around axis.
+    """Return a rotation matrix over angle, optionally around axis.
 
     The angle is specified in degrees.
     If axis==None (default), a 2x2 rotation matrix is returned.
@@ -177,7 +177,7 @@ def rotationMatrix(angle,axis=None):
     return f
 
 def rotationAboutMatrix(angle,axis):
-    """Returns a rotation matrix over angle around an axis thru the origin.
+    """Return a rotation matrix over angle around an axis thru the origin.
 
     The angle is specified in degrees.
     Axis is a list of three components specifying the axis.
@@ -269,7 +269,7 @@ def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
 
 
 def distanceFromPlane(f,p,n):
-    """Returns the distance of points f from the plane (p,n).
+    """Return the distance of points f from the plane (p,n).
 
     f is an [...,3] array of coordinates.
     p is a point specified by 3 coordinates.
@@ -289,7 +289,7 @@ def distanceFromPlane(f,p,n):
 
 
 def distanceFromLine(f,p,q):
-    """Returns the distance of points f from the line (p,q).
+    """Return the distance of points f from the line (p,q).
 
     f is an [...,3] array of coordinates.
     p and q are two points specified by 3 coordinates.
@@ -308,7 +308,7 @@ def distanceFromLine(f,p,q):
 
 
 def distanceFromPoint(f,p):
-    """Returns the distance of points f from the point p.
+    """Return the distance of points f from the point p.
 
     f is an [...,3] array of coordinates.
     p is a point specified by 3 coordinates.
@@ -563,7 +563,7 @@ class Formex:
     def sizes(self):
         """Return the sizes of the Formex.
 
-        Returns an array with the length of the bbox along the 3 axes.
+        Return an array with the length of the bbox along the 3 axes.
         """
         min,max = self.bbox()
         return max-min
@@ -618,7 +618,7 @@ class Formex:
 
     @classmethod
     def point2str(clas,point):
-        """Returns a string representation of a point"""
+        """Return a string representation of a point"""
         s = ""
         if len(point)>0:
             s += str(point[0])
@@ -629,7 +629,7 @@ class Formex:
 
     @classmethod
     def element2str(clas,elem):
-        """Returns a string representation of an element"""
+        """Return a string representation of an element"""
         s = "["
         if len(elem) > 0:
             s += clas.point2str(elem[0])
@@ -777,7 +777,7 @@ class Formex:
         return Formex(f,p)
        
     def copy(self):
-        """Returns a deep copy of itself."""
+        """Return a deep copy of itself."""
         return Formex(self.f,self.p)
         ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
         ## In all examples it works, I think because the operations on
@@ -954,15 +954,17 @@ class Formex:
         """
         return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p)
 
-# Clipping functions
+# Test and clipping functions
 
-    def where(self,nodes='all',dir=0,min=None,max=None):
+    def test(self,nodes='all',dir=0,min=None,max=None):
         """Flag elements having nodal coordinates between min and max.
 
         This function is very convenient in clipping a Formex in one of
         the coordinate directions. It returns a 1D integer array flagging
-        the elements having nodal coordinates in the required range.
-        Use clip() to create the clipped Formex.
+        (with a value 1) the elements having nodal coordinates in the
+        required range.
+        Use where(result) to get a list of element numbers passing the test.
+        Or directly use clip() or cclip() to create the clipped Formex.
 
         min,max are there minimum and maximum values required for the
         coordinates in direction dir (default is the x or 0 direction).
@@ -1002,21 +1004,21 @@ class Formex:
         return T
 
 
-    def clip(self,w):
-        """Returns a Formex with all the elements where w>0.
+    def clip(self,t):
+        """Return a Formex with all the elements where t>0.
 
-        w should be a 1-D integer array with length equal to the number
+        t should be a 1-D integer array with length equal to the number
         of elements of the formex.
-        The resulting Formex will contain all elements where w > 0.
+        The resulting Formex will contain all elements where t > 0.
         This is a convenience function for the user, equivalent to
-        F.select(w>0).
+        F.select(t>0).
         """
-        return self.select(w>0)
+        return self.select(t>0)
 
-    def cclip(self,w):
-        """This is the complement of clip, returning a Formex where w<=0.
+    def cclip(self,t):
+        """This is the complement of clip, returning a Formex where t<=0.
         """
-        return self.select(w<=0)
+        return self.select(t<=0)
     
 
 ##############################################################################
@@ -1035,7 +1037,7 @@ class Formex:
 #      Affine
 #
     def scale(self,scale):
-        """Returns a copy scaled with scale[i] in direction i.
+        """Return a copy scaled with scale[i] in direction i.
 
         The scale should be a list of 3 numbers, or a single number.
         In the latter case, the scaling is homothetic."""
@@ -1043,7 +1045,7 @@ class Formex:
 
 
     def translate(self,dir,distance=None):
-        """Returns a copy translated over distance in direction dir.
+        """Return a copy translated over distance in direction dir.
 
         dir is either an axis number (0,1,2) or a direction vector.
 
@@ -1073,7 +1075,7 @@ class Formex:
 
 
     def rotate(self,angle,axis=2):
-        """Returns a copy rotated over angle around axis.
+        """Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
         If no axis is specified, rotation is around the 2(z)-axis. This is
@@ -1086,7 +1088,7 @@ class Formex:
     # This could be made the same function as rotate, but differentiated
     # by means of the value of the second argument
     def rotateAround(self,vector,angle):
-        """Returns a copy rotated over angle around vector.
+        """Return a copy rotated over angle around vector.
 
         The angle is specified in degrees. The rotation axis is specified
         by a vector of three values. It is an axis through the center.
@@ -1096,7 +1098,7 @@ class Formex:
         return self
 
     def shear(self,dir,dir1,skew):
-        """Returns a copy skewed in the direction dir of plane (dir,dir1).
+        """Return a copy skewed in the direction dir of plane (dir,dir1).
 
         The coordinate dir is replaced with (dir + skew * dir1).
         """
@@ -1105,7 +1107,7 @@ class Formex:
         return Formex(f,self.p)
 
     def reflect(self,dir=2,pos=0):
-        """Returns a Formex mirrored in direction dir against plane at pos.
+        """Return a Formex mirrored in direction dir against plane at pos.
 
         Default position of the plane is through the origin.
         Default mirror direction is the z-direction.
@@ -1115,7 +1117,7 @@ class Formex:
         return Formex(f,self.p)
 
     def affine(self,mat,vec=None):
-        """Returns a general affine transform of the Formex.
+        """Return a general affine transform of the Formex.
 
         The returned Formex has coordinates given by mat * xorig + vec,
         where mat is a 3x3 matrix and vec a length 3 list.
@@ -1515,6 +1517,10 @@ class Formex:
     # The may be removed in future.
     #
 
+    def where(self,*args,**kargs):
+        deprecated('nodesAndElements','feModel')
+        return self.test(*args,**kargs)
+
     def nodesAndElements(self):
         deprecated('nodesAndElements','feModel')
         return self.feModel()
@@ -1779,7 +1785,7 @@ def readfile(file,sep=',',plexitude=1,dimension=3):
       closed: If True, an extra point will be added to the
     The total number of coordinates on the file should be a multiple of
     dimension * plexitude.
-    ).where the coordinates are read from fileRead a set of coordinates from file in a Formex."""
+    """
     return Formex(fromfile(file,sep=sep).reshape((-1,plexitude,dimension)))
 
 

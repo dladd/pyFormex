@@ -37,12 +37,12 @@ close = sum(d < 2.2,-1)
 
 
 
-sel = [ F.where(nodes=0,dir=0,min=1.5,max=3.5),
-        F.where(nodes=[0,1],dir=0,min=1.5,max=3.5),
-        F.where(nodes=[0,1,2],dir=0,min=1.5,max=3.5),
-        F.where(nodes='all',dir=1,min=1.5,max=3.5),
-        F.where(nodes='any',dir=1,min=1.5,max=3.5),
-        F.where(nodes='none',dir=1,min=1.5),
+sel = [ F.test(nodes=0,dir=0,min=1.5,max=3.5),
+        F.test(nodes=[0,1],dir=0,min=1.5,max=3.5),
+        F.test(nodes=[0,1,2],dir=0,min=1.5,max=3.5),
+        F.test(nodes='all',dir=1,min=1.5,max=3.5),
+        F.test(nodes='any',dir=1,min=1.5,max=3.5),
+        F.test(nodes='none',dir=1,min=1.5),
         (above > 0) * (below > 0 ),
         close == 3,
         ]

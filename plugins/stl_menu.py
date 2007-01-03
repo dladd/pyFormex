@@ -133,7 +133,7 @@ def clip_stl():
         xc2 = xmi + float(res[2][1]) * dx
         nodes = res[3][1]
         print nodes
-        w = F.where(nodes='any',dir=axis,min=xc1,max=xc2)
+        w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         draw(F.cclip(w),color='yellow',wait=False)
         oldF = F
         F = F.clip(w)
@@ -178,7 +178,7 @@ def section_stl():
         linewidth(2)
 
         for i in range(n+1):
-            G = F.clip(F.where(nodes='any',dir=0,min=X[i]-dxx,max=X[i]+dxx))
+            G = F.clip(F.test(nodes='any',dir=0,min=X[i]-dxx,max=X[i]+dxx))
             draw(G,color='blue',view=None)
             GD.canvas.update()
             C = G.center()
