@@ -4,12 +4,8 @@
 
 from numpy import *
 
-import vector
-import pickle
-
 def deprecated(old,new):
     print "Function %s is deprecated: use %s instead" % (old,new)
-
 
 # default float and int types used in the Formex data
 Float = float32
@@ -577,7 +573,7 @@ class Formex:
 
         The size is the length of the diagonal of the bbox()."""
         min,max = self.bbox()
-        return vector.distance(min,max)
+        return length(max-min)
     
     def bsphere(self):
         """Return the diameter of the bounding sphere of the Formex.
@@ -1072,7 +1068,7 @@ class Formex:
         if len(dir) == 2:
             dir.append(0.0)
         if distance is not None:
-            dir = vector.scale(vector.unitvector(dir),distance)
+            dir *= distance / length(dir)
         return Formex(self.f + dir,self.p)
 
 
