@@ -16,7 +16,7 @@ def abq_export(fn,nodes,elems,eltype,header="Exported by stl_examples.py"):
     fil = file(fn,'w')
     f2abq.writeHeading(fil,header)
     f2abq.writeNodes(fil,nodes)
-    f2abq.writeElems(fil,elems,eltype,nofs=0)
+    f2abq.writeElems(fil,elems,eltype,nofs=1)
     fil.close()
     print "Abaqus file %s written." % fn
 
