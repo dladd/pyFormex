@@ -10,7 +10,7 @@ def invalid(line,fn):
     print line
     
 
-def readNodes(fn):
+def readNodes(fn,offset=-1):
     """Read a tetgen .node file. Returns an array of points."""
     fil = file(fn,'r')
     nodes = None
@@ -27,11 +27,11 @@ def readNodes(fn):
             nodes = zeros((npts,ndim),float)
         else:
             i = int(s[0])
-            if i < 1 or i >npts: 
-                invalid(line,fn)
-                raise RuntimeError
+##             if i < 0 or i >npts: 
+##                 invalid(line,fn)
+##                 raise RuntimeError
             try:
-                nodes[i-1] = map(float,s[1:ndim+1])
+                nodes[i+offset] = map(float,s[1:ndim+1])
             except:
                 invalid(line,fn)
                 raise
@@ -106,6 +106,15 @@ def readSurface(fn):
                     invalid(line,fn)
                     raise RuntimeError                 
     return elems
+
+
+def writeNodes(fn,nodes):
+    """Write a tetgen .node file."""
+    fil = file(fn,'w')
+    fil.write("%s %s 0 0" % nodes.shape)
+    for i,n in enumerate(nodes):
+        fil.write("%s %s %s %s" % (i,n[0],n[1],n[2]))
+    fil.close()
 
 
 if __name__ == "__main__":

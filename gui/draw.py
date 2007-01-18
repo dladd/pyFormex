@@ -119,6 +119,7 @@ def log(s):
 # The default message handler is set here.
 # Best candidates are log/info
 message = log
+GD.message = message
 
 ########################### PLAYING SCRIPTS ##############################
 
@@ -475,6 +476,7 @@ def clear():
         drawwait()
     GD.canvas.removeAll()
     GD.canvas.clear()
+    GD.canvas.update()
 
 def redraw():
     GD.canvas.redrawAll()

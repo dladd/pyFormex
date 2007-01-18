@@ -3,8 +3,16 @@
 """A collection of misc. utility functions."""
 
 import globaldata as GD
-import os
+import os,commands
 
+
+def runCommand(cmd,RaiseError=True):
+    """Run a command and raise error if exited with error."""
+    GD.message("Running command: %s" % cmd)
+    sta,out = commands.getstatusoutput(cmd)
+    if sta != 0 and RaiseError:
+        raise RuntimeError, "Error while executing command:\n  %s" % cmd
+    return sta,out
 
 def spawn(cmd):
     """Spawn a child process."""

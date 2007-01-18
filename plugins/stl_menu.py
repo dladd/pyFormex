@@ -14,7 +14,7 @@ from plugins import f2abq, stl, tetgen, stl_abq
 from gui import widgets
 import commands, os
 
-global project,F,nodes,elems,surf
+#global project,F,nodes,elems,surf
 project = F = nodes = elems = surf = None
 projectLabel = None
 
@@ -268,7 +268,7 @@ def create_tetgen():
 
 def read_tetgen(surface=True, volume=True):
     """Read a tetgen model from files  fn.node, fn.ele, fn.smesh."""
-    global nodes,elems,surf
+    global project,nodes,elems,surf
     fn = askFilename(GD.cfg['workdir'],"Tetgen files (*.node)")
     nodes = elems =surf = None
     if fn:
@@ -353,8 +353,8 @@ def create_menu():
         ("&Fly STL model",flytru_stl),
         ("&Export STL model to Abaqus (SLOW!)",export_stl),
         ("&Create tetgen model",create_tetgen),
-        #("&Read tetgen surface",read_tetgen_surface),
-        #("&Read tetgen volume",read_tetgen_volume),
+        ("&Read tetgen surface",read_tetgen_surface),
+        ("&Read tetgen volume",read_tetgen_volume),
         ("&Read tetgen model",read_tetgen),
         ("&Show tetgen surface",show_tetgen_surface),
         ("&Show tetgen volume",show_tetgen_volume),

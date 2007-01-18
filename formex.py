@@ -244,7 +244,10 @@ def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
     ind = floor((x-ox)/dx).astype(int)
     # Create unique box numbers in smallest direction first
     o = argsort(nx)
+    #print "nx",nx
+    #print "ind",ind.dtype
     val = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
+    #print "val",val.dtype,val.shape
     # sort according to box number
     srt = argsort(val)
     # rearrange the data according to the sort order
@@ -253,7 +256,11 @@ def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
     # now compact
     flag = ones((nnod,))   # 1 = new, 0 = existing node
     sel = arange(nnod)     # replacement unique node nr
+    #print "Start Compacting %s nodes" % nnod
+    #nblk = nnod/100
     for i in range(nnod):
+        #if i % nblk == 0:
+            #print "Blok %s" % (i/nblk)
         j = i-1
         while j>=0 and val[i]==val[j]:
             if allclose(x[i],x[j],rtol=rtol,atol=atol):
@@ -263,6 +270,7 @@ def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
                 sel[i+1:nnod] -= 1
                 break
             j = j-1
+    #print "Finished Compacting"
     x = x[flag>0]          # extract unique nodes
     s = sel[argsort(srt)]  # and indices for old nodes
     return (x,s)

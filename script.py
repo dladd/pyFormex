@@ -74,6 +74,7 @@ def log(s):
 # The default message handler is set here.
 # Best candidates are log/info
 message = log
+GD.message = message
 
 def system(cmdline,result='output'):
     """Run a command and return its output.

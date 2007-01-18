@@ -8,6 +8,7 @@ This is compatible with the pyFormex data model.
 """
 
 import globaldata as GD
+from utils import runCommand
 from numpy import *
 from formex import *
 
@@ -65,15 +66,18 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_ascii(f):
-    """Read an ascii .stl file into an [n,3,3] float array"""
+def read_ascii(f,dtype=float32):
+    """Read an ascii .stl file into an [n,3,3] float array.
 
+    If the .stl is large, read_ascii_large() is recommended, as it is
+    a lot faster.
+    """
     own = type(f) == str
     if own:
         f = file(f,'r')
     n = 100
-    a = zeros(shape=[n,3,3],dtype=float32)
-    x = zeros(shape=[3,3],dtype=float32)
+    a = zeros(shape=[n,3,3],dtype=dtype)
+    x = zeros(shape=[3,3],dtype=dtype)
     i = 0
     j = 0
     cnt = 0
@@ -108,6 +112,22 @@ def read_ascii(f):
         return a[:i]
     raise RuntimeError,"Incorrect stl file: read %d lines, %d facets" % (cnt,i)
         
+
+
+def read_ascii_large(f,dtype=float32):
+    """Read an ascii .stl file into an [n,3,3] float array.
+
+    This is an alternative for read_ascii, which is a lot faster on large
+    STL models.
+    It requires the 'awk' command though, so is probably only useful on
+    Linux/UNIX. It works by first transforming  the input file to a
+    .nodes file and then reading it through numpy's fromfile() function.
+    """
+    tmp = '%s.nodes' % f
+    runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' %s | d2u > %s" % (f,tmp))
+    return fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3))
+                 
+    
 
 if __name__ == '__main__':
     f = file('unit_triangle.stl','r')
