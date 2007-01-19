@@ -1,6 +1,9 @@
 #!/bin/bash
 # Tag the current repository
 #
+echo "This script should be reworked to use the RELEASE file"
+exit
+
 [ -n "$1" ] || {
 	echo "Usage: TAG <release>"
     echo "  Tags the current repository as <release>"

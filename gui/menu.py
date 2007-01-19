@@ -11,6 +11,7 @@ import cameraMenu
 import prefMenu
 import help
 import draw
+from plugins import stl_menu
 
 
 class DAction(QtGui.QAction):
@@ -93,8 +94,8 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
-def stl_menu():
-    draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','stl_menu.py'))
+##def stl_menu():
+##   draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','stl_menu.py'))
 ##    from plugins import stl_menu
 ##    stl_menu.main()
 
@@ -117,7 +118,7 @@ MenuData = [
         (_('Save &Next Image'),'draw.saveNext'),
         (_('---'),'---'),
         (_('Load &Plugins'),[
-            (_('STL menu'),'stl_menu'),
+            (_('STL menu'),'stl_menu.init'),
             (_('Formex menu'),'formex_menu'),
             ]),
         (_('---'),'---'),

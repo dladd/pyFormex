@@ -103,6 +103,7 @@ def askFilename(cur,files="All files (*.*)",exist=True):
     setWorkdirFromFile(fn)
     GD.gui.update()
     GD.canvas.update()
+    GD.app.processEvents()
     return fn
 
 def setWorkdirFromFile(fn):

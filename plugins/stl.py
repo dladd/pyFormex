@@ -8,7 +8,7 @@ This is compatible with the pyFormex data model.
 """
 
 import globaldata as GD
-from utils import runCommand
+from utils import runCommand, changeExt
 from numpy import *
 from formex import *
 
@@ -26,7 +26,6 @@ class Stl(Formex):
         print self.f.shape
         self.n = None
         self.a = None
-
 
 
 def compute_normals(a,normalized=True):
@@ -66,12 +65,14 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_ascii(f,dtype=float32):
+def read_ascii(f,dtype=float32,large=False):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     If the .stl is large, read_ascii_large() is recommended, as it is
     a lot faster.
     """
+    if large:
+        return read_ascii_large(f,dtype=dtype)
     own = type(f) == str
     if own:
         f = file(f,'r')
@@ -124,9 +125,72 @@ def read_ascii_large(f,dtype=float32):
     .nodes file and then reading it through numpy's fromfile() function.
     """
     tmp = '%s.nodes' % f
+    import timer
+    t = timer.Timer()
     runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' %s | d2u > %s" % (f,tmp))
-    return fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3))
-                 
+    print "Converting phase: %s seconds" % t.seconds()
+    t.reset()
+    nodes = fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3,3))
+    print "Input phase: %s seconds" % t.seconds()
+    return nodes
+
+
+def read_off(fn):
+    """Read an .off surface mesh.
+
+    Returns a nodes,elems tuple.
+    """
+    print "Reading .OFF %s" % fn
+    fil = file(fn,'r')
+    mode = -1
+    for line in fil:
+        if mode < 0:
+            if line.startswith('OFF'):
+                mode = 0
+            else:
+                raise RuntimeError,"File %s does not seem to be an .OFF file" % fn
+        elif mode == 0:
+            nnodes,nelems,nedges = map(int,line.split())
+            nodes = zeros((nnodes,3),dtype=Float)
+            elems = zeros((nelems,3),dtype=Int)
+            count = 0
+            mode = 1
+        elif mode == 1:
+            nodes[count] = map(float,line.split()[:3])
+            count += 1
+            if count >= nnodes:
+                count = 0
+                mode = 2
+        elif mode == 2:
+            elems[count] = map(int,line.split()[1:4]) # each line has a '3'
+            count += 1
+            if count >= nelems:
+                print "Read %s nodes and %s faces" % (nnodes,nelems)
+                return nodes,elems
+    raise RuntimeError,"OFF format read erro on file %s" % fn
+
+
+def stl_to_off(stlname,offname=None,sanitize=True):
+    """Transform an .stl model to .off format."""
+    if not offname:
+        offname = changeExt(stlname,'.off')
+    if sanitize:
+        options = ''
+    else:
+        # admesh always wants to perform some actions on the STL. The -c flag
+        # to suppress all actions makes admesh hang. Therefore we include the
+        # action -d (fix normal directions) as the default.
+        options = '-d'    
+    runCommand("admesh %s --write-off %s %s" % (options,offname,stlname))
+    return offname
+
+
+def off_to_tet(fn):
+    """Transform an .off model to tetgen (.node/.smesh) format."""
+    message("Transforming .OFF model %s to tetgen .smesh" % fn)
+    nodes,elems = read_off(fn)
+    write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
+
     
 
 if __name__ == '__main__':

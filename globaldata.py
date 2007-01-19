@@ -3,7 +3,7 @@
 """Global data for pyFormex."""
 
 # Set pyformex version
-__version__ = "0.4.1"
+__version__ = "0.4.2-alpha"
 Version = 'pyFormex %s' % __version__
 options = None
 
@@ -16,7 +16,7 @@ gui = None
 canvas = None
 board = None
 help = None
-PyFormex = {}  # globals that will be offered to scripts
+PF = {}  # globals that will be offered to scripts
 image_formats_qt = []
 image_formats_qtr = []
 image_formats_gl2ps = []

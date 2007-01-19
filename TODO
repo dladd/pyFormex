@@ -1,28 +1,37 @@
-This is a summary of our plans before the next releases:
-
-Release 0.2 : Released 2005-Jan-03
-
-
-Release 0.3 :
- - Rethink, reorganize, complete the formex transformations (LARGELY DONE)
- - Provide short documentation (INITIATED)
- - Change the mouse rotation action  (DONE) 
- - Interface for executing external scripts. (CANCELLED, Python provides it)
- - Online help system (INITIATED)
- - Provide a formian to pyformex translator (POSTPONED)
- - Add config file and config settings dialog (INITIATED)
- - Display camera settings 
-
-
-Release 0.4 :
-  - Better rendering of triangles and polygones.
-  - Decent install/uninstall procedures (INITIATED)
-  - Full manual (INITIATED)
-  - Dedicated editor
-  - Interactive selection/transformation
-
+This is a summary of some ideas for the next releases:
+Each task can have the following keys:
+ - dev(eloper)
+ - sta(tus)
+ - rem(arks)
 
 Release 0.5 :
-  - Multiple views
-  - Rendering of externally provided values on the domain. (INITIATED)
+ - Detect and register extension software (calpy,tetgen,admesh,gl2ps)
+ - Turn the menu plugins (STL, Formex) into importable modules
+     dev: bverheg
+     sta: EXPERIMENTING
+ - Python style installation procedure:
+ - Multiple views:
+ - Display camera settings: 
+ - Rendering of values on the domain:
+     dev: bverheg
+     sta: INITIATED
+     rem: Feasability demonstrated through some examples: *_calpy.py
+ - Manual:
+     dev: all
+     sta: UNDER DEVELOPMENT
+     rem: Obviously, the manual will always stay under development. We will
+          remove it from this todo list when it deals with most aspects
+          of the next pyFormex release.
+ - Interactive selection/transformation:
+ - Faster Formex->FeModel transformation (possibly implement in C):
+ - Faster loading of large STL models (possibly in C):
+ - Export FEA models in Fluent format: 
 
+
+Release 0.6 :
+ - Provide a formian to pyformex translator
+ - Step by step execution of scripts
+ - Move the core modules to a subpackage, others to plugins/gui
+
+Release 0.9 :
+ - Dedicated editor

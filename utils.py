@@ -6,6 +6,11 @@ import globaldata as GD
 import os,commands
 
 
+def mtime(fn):
+    """Return the (UNIX) time of last change of file fn."""
+    return os.stat(fn).st_mtime
+
+
 def runCommand(cmd,RaiseError=True):
     """Run a command and raise error if exited with error."""
     GD.message("Running command: %s" % cmd)
@@ -14,12 +19,25 @@ def runCommand(cmd,RaiseError=True):
         raise RuntimeError, "Error while executing command:\n  %s" % cmd
     return sta,out
 
+
 def spawn(cmd):
     """Spawn a child process."""
     cmd = cmd.split()
     pid = os.spawnvp(os.P_NOWAIT,cmd[0],cmd)
     GD.debug("Spawned child process %s for command '%s'" % (pid,cmd))
     return pid
+
+
+def changeExt(fn,ext):
+    """Change the extension of a file name.
+
+    The extension is the minimal trailing part of the filename starting
+    with a '.'. If the filename has no '.', the extension will be appended.
+    If the given extension does not start with a dot, one is prepended.
+    """
+    if not ext.startswith('.'):
+        ext = ".%s" % ext
+    return os.path.splitext(fn)[0] + ext
 
       
 def isPyFormex(filename):

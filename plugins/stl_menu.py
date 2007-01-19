@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/env python
 # $Id: Stl.py 156 2006-11-06 19:14:25Z bverheg $
 
 """Stl.py
@@ -10,18 +10,99 @@ If you make changes to this script while running pyFormex, you can activate
 these changes by closing the 'Stl' menu and running this script again.
 """
 
+import utils
 from plugins import f2abq, stl, tetgen, stl_abq
 from gui import widgets
+from formex import *
+from gui.draw import *
 import commands, os
-
-#global project,F,nodes,elems,surf
-project = F = nodes = elems = surf = None
-projectLabel = None
-
 
 # Define some Actions
 
-def read_stl(fn=None):
+def convert_stl_to_off():
+    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
+    if fn:     
+        return stl.stl_to_off(fn,sanitize=False)
+
+def sanitize_stl_to_off():
+    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
+    if fn:     
+        return stl.stl_to_off(fn,sanitize=True)
+
+def read_off():
+    fn = askFilename(GD.cfg['workdir'],"OFF files (*.off)")
+    if fn:     
+        GD.PF['off_model'] = stl.read_off(fn)
+        GD.PF['project'] = os.path.splitext(fn)[0]
+
+def show_off():
+    model = GD.PF['off_model']
+    if model:
+        nodes,elems = model
+        F = Formex(nodes[elems])
+        message("BBOX = %s" % F.bbox())
+        draw(F,color='blue')
+
+## The following three functions may provide a faster way to read large
+## files
+
+
+def stl_to_numpy(fn=None,outf=None):
+    """Convert a normalized stl file to a numpy file.
+
+    A numpy file is just the list of coordinates.
+    If no file (fn) is given, one is asked.
+    The file fn should exist and contain an STL model.
+    If no outf is given, one is constructed by replacing the extension
+    with 'numpy'.
+    """
+    if fn is None:
+        fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
+    if fn:     
+        if outf is None:
+            outf = ''.join([os.path.splitext(fn)[0],'.numpy'])
+        cmd = "gawk '/^[ ]*vertex/{print $2\" \"$3\" \"$4}{next}' %s > %s" % (fn,outf)
+        log("Running command: %s" % cmd)
+        sta,out = commands.getstatusoutput(cmd)
+        return 0
+    return 1
+
+
+def read_numpy(fn=None):
+    """Read STL model from file fn.
+
+    If no file is given, one is asked.
+    The file fn should exist and contain a valid STL model in numpy format.
+    The STL model is stored in the Formex F.
+    The workdir and project name are set from the filename.
+    The Formex is stored under the project basename.
+    The model is displayed.
+    """
+    global project,F
+    if fn is None:
+        fn = askFilename(GD.cfg['workdir'],"Stl numpy files (*.numpy)")
+        if fn:
+            clear()
+            linewidth(1)
+        else:
+            return
+    os.chdir(os.path.dirname(fn))
+    message("Your current workdir is %s" % os.getcwd())
+    project = os.path.splitext(fn)[0]
+    message("Reading file %s" % fn)
+    F = readfile(fn,sep=' ',plexitude=3)
+    name = os.path.basename(project)
+    projectLabel.setText(name)
+    Globals().update({name:F})
+    message("STL model %s has %d triangles" % (name,F.f.shape[0]))
+    message("The bounding box is\n%s" % F.bbox())
+    show_stl()
+
+
+def read_large_stl():
+    return read_stl(large=True)
+
+def read_stl(fn=None,large=False):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -43,13 +124,27 @@ def read_stl(fn=None):
     message("Your current workdir is %s" % os.getcwd())
     project = os.path.splitext(fn)[0]
     message("Reading file %s" % fn)
-    F = Formex(stl.read_ascii(fn))
-    name = os.path.basename(project)
-    projectLabel.setText(name)
+    import timer
+    t = timer.Timer()
+    nodes = stl.read_ascii(fn,large=large)
+    s = t.seconds()
+    message("Time to import stl: %s seconds" % s)
+    print nodes.shape
+    #set_stl(Formex(nodes), os.path.basename(project))
+    
+
+def set_stl(newF,name):
+    """Set Formex model and project name."""
+    global F,projectLabel
+    print globals()
+    F = newF
+#    if projectLabel:
+#        projectLabel.setText(name)
     Globals().update({name:F})
     message("STL model %s has %d triangles" % (name,F.f.shape[0]))
     message("The bounding box is\n%s" % F.bbox())
     show_stl()
+
 
 def show_stl():
     """Display the .stl model."""
@@ -60,9 +155,10 @@ def show_stl():
         GD.app.processEvents()
         draw(F,color='green')
 
+
 def save_stl():
     """Save the stl model."""
-    global project,F
+    #global project,F
     if F is None:
         return
     fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
@@ -268,7 +364,7 @@ def create_tetgen():
 
 def read_tetgen(surface=True, volume=True):
     """Read a tetgen model from files  fn.node, fn.ele, fn.smesh."""
-    global project,nodes,elems,surf
+    global nodes,elems,surf
     fn = askFilename(GD.cfg['workdir'],"Tetgen files (*.node)")
     nodes = elems =surf = None
     if fn:
@@ -338,7 +434,14 @@ def create_menu():
     menu = widgets.Menu('STL')
     MenuData = [
         #("&New project",new_project),
+        ("&Convert STL file to OFF file",convert_stl_to_off),
+        ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
+        ("&Read OFF file",read_off),
+        ("&Show OFF model",show_off),
+        ("&Transform STL file to numpy file",stl_to_numpy),
+        ("&Read STL model from numpy file",read_numpy),
         ("&Read STL file",read_stl),
+        ("&Read LARGE STL file",read_large_stl),
         ("&Show STL model",show_stl),
         ("&Center STL model",center_stl),
         ("&Rotate STL model",rotate_stl),
@@ -368,17 +471,21 @@ def create_menu():
 def close_menu():
     """Close the STL menu."""
     # We should also remove the projectLabel widget from the statusbar
-    GD.gui.statusbar.removeWidget(projectLabel)
+    global menu
+    #GD.gui.statusbar.removeWidget(projectLabel)
     menu.close()
     
-
-if __name__ == "draw": # This is executed when the script is 'play'ed
-
-    from PyQt4 import QtGui
-
-    message(__doc__)
+def init():
+    """Create the STL menu."""
+    #from PyQt4 import QtGui
+    global menu
     menu = create_menu()
-    projectLabel = QtGui.QLabel('No Project')
-    GD.gui.statusbar.addWidget(projectLabel)
+    #project = F = nodes = elems = surf = None
+    #projectLabel = QtGui.QLabel('No Project')
+    #GD.gui.statusbar.addWidget(projectLabel)
+    
+
+if __name__ == "main":
+    message(__doc__)
 
 # End
