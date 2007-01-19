@@ -1,11 +1,20 @@
-This is a summary of some ideas for the next releases:
+This is the TODO file for the pyFormex project.
+
+This files holds the plans for new features, enhancements and changes that we
+will try to implement in the future releases. 
+There is no guarantee that the tasks mentioned here will indeed be completed
+in time (if ever!). It is mainly intended for the developers, to see who is
+working on what.
+
+
 Each task can have the following keys:
  - dev(eloper)
  - sta(tus)
  - rem(arks)
 
 Release 0.5 :
- - Detect and register extension software (calpy,tetgen,admesh,gl2ps)
+ - Detect and register extension software (calpy,tetgen,admesh,gl2ps,
+     commands: awk, )
  - Turn the menu plugins (STL, Formex) into importable modules
      dev: bverheg
      sta: EXPERIMENTING
