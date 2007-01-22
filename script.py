@@ -175,8 +175,8 @@ def play(fn,argv=[]):
     message("Running script (%s)" % fn)
     playScript(file(fn,'r'),fn,argv)
     message("Finished script %s" % fn)
-
-    #print "End of play: %s" % argv
+    print "Left arguments: %s" % argv
+    return argv
 
 
 def pause():

@@ -20,6 +20,11 @@ from cameraMenu import setPerspective,setProjection
 
 #################### Interacting with the user ###############################
 
+
+## def gui_update():
+##     GD.gui.update()
+
+
 def messageBox(message,level='info',actions=['OK']):
     """Display a message box and wait for user response.
 
@@ -115,6 +120,8 @@ def log(s):
     if type(s) != str:
         s = '%s' % s
     GD.gui.board.write(s)
+    GD.gui.update()
+    GD.app.processEvents()
 
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
@@ -159,7 +166,11 @@ def playScript(scr,name=None):
     # Our solution is to take a copy of the globals in this module,
     # and add the globals from the 'colors' and 'formex' modules
     # !! Taking a copy is needed to avoid changing this module's globals !!
-    g = copy.copy(globals())
+    #g = copy.copy(globals())
+    # An alternative is to use the GD.PF and update it with these modules
+    # globals
+    g = GD.PF
+    g.update(globals())
     if GD.gui:
         g.update(colors.__dict__)
     g.update(formex.__dict__) # this also imports everything from numpy
@@ -198,10 +209,12 @@ def export(names):
     if type(names) == str:
         names = [ names ]
     exportNames.extend(names)
-    
 
 def Globals():
     return globals()
+
+def Export(dict):
+    globals().update(dict)
 
 def byName(names):
     dict = globals()
@@ -213,14 +226,14 @@ def play(fn=None):
     This function does nothing if no file is passed or no current
     file was set.
     """
-    global currentView
     if not fn:
         if GD.canPlay:
             fn = GD.cfg['curfile']
         else:
             return
-    currentView = 'front'
     message("Running script (%s)" % fn)
+    reset()
+    message(DrawOptions)
     playScript(file(fn,'r'),fn)
     message("Script finished")
 
@@ -289,11 +302,35 @@ def drawrelease():
     if drawtimer:
         drawtimer.cancel()
 
-currentView = 'front'
 
-def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
+
+def reset():
+    global DrawOptions
+    DrawOptions = dict(
+        view = '__last__',       # Keep the current camera angles
+        )
+    
+
+def setView(name,angles=None):
+    """Set the default view for future drawing operations.
+
+    If no angles are specified, the name should be an existing view.
+    If angles are specified, this is equivalent to createView(name,angles)
+    followed by setView(name).
+    """
+    global DrawOptions
+    if angles:
+        createView(name,angles)
+    DrawOptions['view'] = name
+
+
+def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None):
     """Draw a Formex or a list of Formices on the canvas.
 
+    If F is a list, all its items are drawn with the same settings.
+
+    If a setting is unspecified, its current values are used.
+    
     Draws an actor on the canvas, and directs the camera to it from
     the specified view. Named views are either predefined or can be added by
     the user.
@@ -330,9 +367,12 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-    global allowwait, currentView, multisave
-##    if type(F) == list:
-##        return map(draw,F,view=view,bbox=bbox,color=color,wait=wait,eltyp=eltyp)
+    global allowwait, multisave
+    if type(F) == list:
+        return map(draw,F,view,bbox,color,wait,eltyp)
+
+    if view is None:
+        view = DrawOptions['view']
     if type(F) == str and globals().has_key(F):
         F = globals()[F]
     if not isinstance(F,formex.Formex):
@@ -368,11 +408,11 @@ def draw(F,view='__last__',bbox='auto',color='prop',wait=True,eltype=None):
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
-            view = currentView
+            view = DrawOptions['view']
         if bbox == 'auto':
             bbox = F.bbox()
         GD.canvas.setView(bbox,view)
-        currentView = view
+        setView(view)
     GD.canvas.update()
     GD.app.processEvents()
     if multisave and multisave[4]:
@@ -423,14 +463,14 @@ def decorate(decor):
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
-    global allowwait,currentView
+    global allowwait
     if allowwait:
         drawwait()
     #print "Requested View ",v
     #print "Known Views: ",GD.canvas.views.keys()
     if GD.canvas.views.has_key(v):
         GD.canvas.setView(None,v)
-        currentView = v
+        setView(v)
         GD.canvas.update()
         if allowwait and wait:
             drawlock()
@@ -451,6 +491,17 @@ def bottomView():
     view("bottom")
 def isoView():
     view("iso")
+
+def createView(name,angles):
+    """Create a new named view (or redefine an old).
+
+    The angles are (longitude, latitude, twist).
+    If the view name is new, and there is a views toolbar,
+    a view button will be added to it.
+    """
+    GD.gui.addView(name,angles)
+    
+    
 
 def zoomAll():
     GD.canvas.setBbox(formex.bbox(GD.canvas.actors))
@@ -481,14 +532,6 @@ def clear():
 
 def redraw():
     GD.canvas.redrawAll()
-
-def setview(name,angles):
-    """Declare a new named view (or redefine an old).
-
-    The angles are (longitude, latitude, twist).
-    If the view name is new, and there is a views toolbar,
-    a view button will be added to it."""
-    GD.gui.addView(name,angles)
 
 
 def pause():
@@ -587,7 +630,7 @@ def exit(all=False):
 def listAll(dict=None):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
-        dict = globals()
+        dict = GD.PF # globals()
     flist = []
     for n,t in dict.items():
         if isinstance(t,formex.Formex):

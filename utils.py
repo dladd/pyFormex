@@ -6,10 +6,33 @@ import globaldata as GD
 import os,commands
 
 
+
+file_description = {
+    'stl': 'STL files (*.stl)',
+    'off': 'OFF files (*.off)',
+}
+
+def fileDescription(type):
+    """Return a description of the specified file type.
+
+    The description of known types are liste in a dict file_description.
+    If the type is unknown, the returned string has the form
+    'TYPE files (*.type)'
+    """
+    return file_description.get(type,"%s files (*.%s)" % (type.upper(),type))
+    
+
 def mtime(fn):
     """Return the (UNIX) time of last change of file fn."""
     return os.stat(fn).st_mtime
 
+def countLines(fn):
+    """Return the number of lines in a text file."""
+    sta,out = runCommand("wc %s" % fn)
+    if sta == 0:
+        return int(out.split()[0])
+    else:
+        return 0
 
 def runCommand(cmd,RaiseError=True):
     """Run a command and raise error if exited with error."""

@@ -8,7 +8,7 @@ This is compatible with the pyFormex data model.
 """
 
 import globaldata as GD
-from utils import runCommand, changeExt
+from utils import runCommand, changeExt,countLines
 from numpy import *
 from formex import *
 
@@ -65,18 +65,26 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_ascii(f,dtype=float32,large=False):
+def read_ascii(fn,dtype=float32,large=False,guess=False,off=False):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     If the .stl is large, read_ascii_large() is recommended, as it is
     a lot faster.
     """
+    if off:
+        offname = stl_to_off(fn,sanitize=False)
+        if offname:
+            nodes,elems = read_off(offname)
+            if not nodes is None:
+                return nodes[elems]
+        large=True
     if large:
-        return read_ascii_large(f,dtype=dtype)
-    own = type(f) == str
-    if own:
-        f = file(f,'r')
-    n = 100
+        return read_ascii_large(fn,dtype=dtype)
+    if guess:
+        n = countLines(fn) / 7 # ASCII STL has 7 lines per triangle
+    else:
+        n = 100
+    f = file(fn,'r')
     a = zeros(shape=[n,3,3],dtype=dtype)
     x = zeros(shape=[3,3],dtype=dtype)
     i = 0
@@ -106,8 +114,7 @@ def read_ascii(f,dtype=float32,large=False):
         elif s[0] == 'endsolid':
             finished = True
             break
-        
-    if own:
+    if f:    
         f.close()
     if finished:
         return a[:i]
@@ -115,7 +122,7 @@ def read_ascii(f,dtype=float32,large=False):
         
 
 
-def read_ascii_large(f,dtype=float32):
+def read_ascii_large(fn,dtype=float32):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     This is an alternative for read_ascii, which is a lot faster on large
@@ -124,50 +131,30 @@ def read_ascii_large(f,dtype=float32):
     Linux/UNIX. It works by first transforming  the input file to a
     .nodes file and then reading it through numpy's fromfile() function.
     """
-    tmp = '%s.nodes' % f
-    import timer
-    t = timer.Timer()
-    runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' %s | d2u > %s" % (f,tmp))
-    print "Converting phase: %s seconds" % t.seconds()
-    t.reset()
+    tmp = '%s.nodes' % fn
+    runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' %s | d2u > %s" % (fn,tmp))
     nodes = fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3,3))
-    print "Input phase: %s seconds" % t.seconds()
     return nodes
 
 
 def read_off(fn):
-    """Read an .off surface mesh.
+    """Read an OFF surface mesh.
 
+    The mesh should consist of only triangles!
     Returns a nodes,elems tuple.
     """
     print "Reading .OFF %s" % fn
     fil = file(fn,'r')
-    mode = -1
-    for line in fil:
-        if mode < 0:
-            if line.startswith('OFF'):
-                mode = 0
-            else:
-                raise RuntimeError,"File %s does not seem to be an .OFF file" % fn
-        elif mode == 0:
-            nnodes,nelems,nedges = map(int,line.split())
-            nodes = zeros((nnodes,3),dtype=Float)
-            elems = zeros((nelems,3),dtype=Int)
-            count = 0
-            mode = 1
-        elif mode == 1:
-            nodes[count] = map(float,line.split()[:3])
-            count += 1
-            if count >= nnodes:
-                count = 0
-                mode = 2
-        elif mode == 2:
-            elems[count] = map(int,line.split()[1:4]) # each line has a '3'
-            count += 1
-            if count >= nelems:
-                print "Read %s nodes and %s faces" % (nnodes,nelems)
-                return nodes,elems
-    raise RuntimeError,"OFF format read erro on file %s" % fn
+    head = fil.readline().strip()
+    if head != "OFF":
+        print "%s is not an OFF file!" % fn
+        return None,None
+    nnodes,nelems,nedges = map(int,fil.readline().split())
+    nodes = fromfile(file=fil, dtype=float32, count=3*nnodes, sep=' ')
+    # elems have number of vertices + 3 vertex numbers
+    elems = fromfile(file=fil, dtype=int32, count=4*nelems, sep=' ')
+    print "Read %d nodes and %d elems" % (nnodes,nelems)
+    return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
 def stl_to_off(stlname,offname=None,sanitize=True):

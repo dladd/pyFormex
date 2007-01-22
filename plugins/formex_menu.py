@@ -15,7 +15,7 @@ selection = None
 
 def drawChanges(F,oldF):
     clear()
-    #draw(oldF,color='yellow',wait=False)
+    draw(oldF,color='yellow',wait=False)
     draw(F)
 
 def get_selection(mode=None):

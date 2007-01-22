@@ -397,6 +397,7 @@ def runApp(args):
         GD.gui.insertMenu(m)
         menus.append(m)
     GD.board.write(GD.Version+"   (C) B. Verhegghe")
+    draw.reset()
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):

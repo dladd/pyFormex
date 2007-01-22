@@ -10,7 +10,9 @@ If you make changes to this script while running pyFormex, you can activate
 these changes by closing the 'Stl' menu and running this script again.
 """
 
+import globaldata as GD
 import utils
+import timer
 from plugins import f2abq, stl, tetgen, stl_abq
 from gui import widgets
 from formex import *
@@ -18,6 +20,10 @@ from gui.draw import *
 import commands, os
 
 # Define some Actions
+
+def toggle_auto_draw():
+    global autodraw
+    autodraw = not autodraw
 
 def convert_stl_to_off():
     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
@@ -30,18 +36,75 @@ def sanitize_stl_to_off():
         return stl.stl_to_off(fn,sanitize=True)
 
 def read_off():
-    fn = askFilename(GD.cfg['workdir'],"OFF files (*.off)")
-    if fn:     
-        GD.PF['off_model'] = stl.read_off(fn)
-        GD.PF['project'] = os.path.splitext(fn)[0]
+    return read_model(type='off')
 
-def show_off():
-    model = GD.PF['off_model']
-    if model:
-        nodes,elems = model
-        F = Formex(nodes[elems])
-        message("BBOX = %s" % F.bbox())
-        draw(F,color='blue')
+def read_large_stl():
+    return read_model(type='stl',large=True,off=False)
+def read_guess_stl():
+    return read_model(type='stl',guess=True,off=False)
+def read_stl():
+    return read_model(type='stl',off=False)
+def read_off_stl():
+    return read_model(type='stl',off=True)
+
+def read_model(type=['stl','off'],large=False,guess=False,off=True):
+    """Read STL model from file fn.
+
+    If no file is given, one is asked.
+    The file fn should exist and contain a valid STL model.
+    The STL model is stored in the Formex F.
+    The workdir and project name are set from the filename.
+    The Formex is stored under the project basename.
+    The model is displayed.
+    """
+    types = [ utils.fileDescription(t) for t in type ]
+    fn = askFilename(GD.cfg['workdir'],types)
+    if fn:
+        os.chdir(os.path.dirname(fn))
+        message("Your current workdir is %s" % os.getcwd())
+        project,ext = os.path.splitext(fn)
+        message("Reading file %s" % fn)
+        t = timer.Timer()
+        if ext == '.stl':
+            coords = stl.read_ascii(fn,large=large,guess=guess,off=off)
+            GD.PF['stl_model'] = Formex(coords)
+            GD.PF['off_model'] = None
+            message("The model has %d triangles" % (coords.shape[0]))
+        elif ext == '.off':
+            nodes,elems = stl.read_off(fn)
+            GD.PF['off_model'] = (nodes,elems)
+            GD.PF['stl_model'] = None
+            message("The model has %d nodes and %d elems" %
+                    (nodes.shape[0],elems.shape[0]))
+        message("Time to import stl: %s seconds" % t.seconds())
+    #set_stl(Formex(nodes), os.path.basename(project))
+    show_model()
+
+def show_model():
+    """Display the model."""
+    if GD.PF['stl_model'] is None:
+        if GD.PF['off_model'] is not None:
+            nodes,elems = GD.PF['off_model']
+            GD.PF['stl_model'] = Formex(nodes[elems])
+    if GD.PF['stl_model'] is None:
+        return
+    F = GD.PF['stl_model']
+    message("BBOX = %s" % F.bbox())
+    clear()
+    draw(F,color='green')
+
+def show_shrinked():
+    """Display the model."""
+    if GD.PF['stl_model'] is None:
+        if GD.PF['off_model'] is not None:
+            nodes,elems = GD.PF['off_model']
+            GD.PF['stl_model'] = Formex(nodes[elems])
+    if GD.PF['stl_model'] is None:
+        return
+    F = GD.PF['stl_model']
+    message("BBOX = %s" % F.bbox())
+    clear()
+    draw(F.shrink(0.8),color='green')
 
 ## The following three functions may provide a faster way to read large
 ## files
@@ -97,40 +160,6 @@ def read_numpy(fn=None):
     message("STL model %s has %d triangles" % (name,F.f.shape[0]))
     message("The bounding box is\n%s" % F.bbox())
     show_stl()
-
-
-def read_large_stl():
-    return read_stl(large=True)
-
-def read_stl(fn=None,large=False):
-    """Read STL model from file fn.
-
-    If no file is given, one is asked.
-    The file fn should exist and contain a valid STL model.
-    The STL model is stored in the Formex F.
-    The workdir and project name are set from the filename.
-    The Formex is stored under the project basename.
-    The model is displayed.
-    """
-    global project,F
-    if fn is None:
-        fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
-        if fn:
-            clear()
-            linewidth(1)
-        else:
-            return
-    os.chdir(os.path.dirname(fn))
-    message("Your current workdir is %s" % os.getcwd())
-    project = os.path.splitext(fn)[0]
-    message("Reading file %s" % fn)
-    import timer
-    t = timer.Timer()
-    nodes = stl.read_ascii(fn,large=large)
-    s = t.seconds()
-    message("Time to import stl: %s seconds" % s)
-    print nodes.shape
-    #set_stl(Formex(nodes), os.path.basename(project))
     
 
 def set_stl(newF,name):
@@ -144,16 +173,6 @@ def set_stl(newF,name):
     message("STL model %s has %d triangles" % (name,F.f.shape[0]))
     message("The bounding box is\n%s" % F.bbox())
     show_stl()
-
-
-def show_stl():
-    """Display the .stl model."""
-    global F
-    if F:
-        updateGUI()
-        GD.gui.update()
-        GD.app.processEvents()
-        draw(F,color='green')
 
 
 def save_stl():
@@ -434,19 +453,21 @@ def create_menu():
     menu = widgets.Menu('STL')
     MenuData = [
         #("&New project",new_project),
+        ("&Read OFF/STL model",read_model),
+        ("&Show model",show_model),
+        ("&Show shrinked model",show_shrinked),
         ("&Convert STL file to OFF file",convert_stl_to_off),
         ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
         ("&Read OFF file",read_off),
-        ("&Show OFF model",show_off),
-        ("&Transform STL file to numpy file",stl_to_numpy),
         ("&Read STL model from numpy file",read_numpy),
         ("&Read STL file",read_stl),
         ("&Read LARGE STL file",read_large_stl),
-        ("&Show STL model",show_stl),
-        ("&Center STL model",center_stl),
-        ("&Rotate STL model",rotate_stl),
-        ("&Clip STL model",clip_stl),
-        ("&Scale STL model",scale_stl),
+        ("&Read GUESSED SIZE STL file",read_guess_stl),
+        ("&Read STL file over OFF",read_off_stl),
+        ("&Center model",center_stl),
+        ("&Rotate model",rotate_stl),
+        ("&Clip model",clip_stl),
+        ("&Scale model",scale_stl),
         ("&Undo LAST STL transformation",undo_stl),
         ("&Save STL model",save_stl),
         ("&Sectionize STL model",section_stl),
@@ -478,8 +499,9 @@ def close_menu():
 def init():
     """Create the STL menu."""
     #from PyQt4 import QtGui
-    global menu
+    global menu, autodraw
     menu = create_menu()
+    autodraw = False
     #project = F = nodes = elems = surf = None
     #projectLabel = QtGui.QLabel('No Project')
     #GD.gui.statusbar.addWidget(projectLabel)

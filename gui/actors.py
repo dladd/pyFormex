@@ -8,6 +8,9 @@ import OpenGL.GLU as GLU
 from colors import *
 from formex import *
 
+
+markscale = 0.001
+
 ### Some drawing functions ###############################################
 
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
@@ -25,6 +28,7 @@ def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
             GL.glVertex3f(*vertices[j])
     GL.glEnd()
 
+
 def drawSphere(s,color=cyan,ndiv=8):
     """Draws a centered sphere with radius s in given color."""
     quad = GLU.gluNewQuadric()
@@ -32,11 +36,12 @@ def drawSphere(s,color=cyan,ndiv=8):
     GL.glColor(*color)
     GLU.gluSphere(quad,s,ndiv,ndiv)
 
+
 def drawLines(x,c,w):
     """Draw a collection of lines.
 
-    x is a (ntri,2,3) shaped array of coordinates.
-    c is a (ntri,3) shaped array of RGB values.
+    x is a (nlines,2,3) shaped array of coordinates.
+    c is a (nlines,3) shaped array of RGB values.
     w is the linewidth.
     """
     GL.glLineWidth(w)
@@ -46,6 +51,8 @@ def drawLines(x,c,w):
         GL.glVertex3f(*(x[i][0]))
         GL.glVertex3f(*(x[i][1]))
     GL.glEnd()
+
+
 
 def drawEdges(x,c,w):
     """Draw a collection of lines.
@@ -62,6 +69,7 @@ def drawEdges(x,c,w):
             GL.glVertex3f(*(x[i][j]))
             GL.glVertex3f(*(x[i][j+1]))
     GL.glEnd()
+
 
 def drawPolyLines(x,c,w,close=True):
     """Draw a collection of polylines.
@@ -84,6 +92,7 @@ def drawPolyLines(x,c,w,close=True):
             GL.glVertex3f(*(x[i][j]))
         GL.glEnd()
 
+
 def drawTriangles(x,c,mode):
     """Draw a collection of triangles.
 
@@ -101,6 +110,20 @@ def drawTriangles(x,c,mode):
             GL.glNormal3f(*normal[i])
         for j in range(x.shape[1]):
             GL.glVertex3f(*(x[i][j]))
+    GL.glEnd()
+
+
+def drawTri(x,c,mode):
+    GL.glVertexPointerf(x)
+    GL.glColorPointerf(c)
+    GL.glEnable(GL.GL_VERTEX_ARRAY)
+    GL.glEnable(GL.GL_COLOR_ARRAY)
+    if mode == 'smooth':
+        normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
+        GL.glNormalPointerf(normal)
+        GL.glEnable(GL.GL_NORMAL_ARRAY)
+    GL.glBegin(GL.GL_TRIANGLES)
+    GL.glDrawArrays(GL.GL_TRIANGLES,0,x.shape[0])
     GL.glEnd()
 
     
@@ -213,6 +236,8 @@ class FormexActor(Formex):
         in wireframe mode
         """
         Formex.__init__(self,F.f,F.p)
+        if isinstance(color,ndarray):
+            print("color is %s array" % color.dtype)
         self.list = None
         if self.p is None:
             self.setProp(arange(self.nelems()))
@@ -227,9 +252,10 @@ class FormexActor(Formex):
         if self.nnodel() == 1:
             # ! THIS SHOULD BETTER BE SET FROM THE SCENE SIZE ! 
             sz = self.size()
+            print("Size %s" % sz)
             if sz <= 0.0:
                 sz = 1.0
-            self.setMark(sz/200.,"cube")
+            self.setMark(sz*markscale,"cube")
         self.eltype = eltype
 
     def draw(self,mode='wireframe'):
