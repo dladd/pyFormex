@@ -42,6 +42,9 @@ def askConfigPreferences(items,prefix=None,store=None):
 def setHelp():
     askConfigPreferences(['viewer','help/manual','help/pydocs'])
 
+def setCommands():
+    askConfigPreferences(['editor','viewer','browser'])
+
 def setDrawtimeout():
     askConfigPreferences(['draw/wait'])
 

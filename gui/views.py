@@ -13,7 +13,11 @@ import draw
 # They can be activated from menus, or from the  view toolbox
 # A number of views are predefined in the canvas class
 # Any number of new views can be created, deleted, changed.
-# Each view is identified by a string
+#
+#
+# !! As far as this module is concerned,
+# Each view is just a string. The viewing angles are kept in Canvas.
+# So this module might be generalized to any list of strings!
  
 class Views:
     """A list of named views"""

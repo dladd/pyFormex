@@ -94,10 +94,6 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
-##def stl_menu():
-##   draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','stl_menu.py'))
-##    from plugins import stl_menu
-##    stl_menu.main()
 
 def formex_menu():
     draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','formex_menu.py'))
@@ -140,6 +136,7 @@ MenuData = [
         (_('&Render'),'prefMenu.setRender'),
         (_('&Light0'),'prefMenu.setLight0'),
         (_('&Light1'),'prefMenu.setLight1'),
+        (_('&Commands'),'prefMenu.setCommands'),
         (_('&Help'),'prefMenu.setHelp'),
         (_('&Save Preferences'),'GD.savePreferences'), ]),
     (_('&Camera'),[

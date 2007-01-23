@@ -157,15 +157,23 @@ def rotationMatrix(angle,axis=None):
 
     The angle is specified in degrees.
     If axis==None (default), a 2x2 rotation matrix is returned.
-    Else, axis should be one of [ 0,1,2] and specifies the rotation axis
-    in a 3D world. A 3x3 rotation matrix is returned.
+    Else, axis should specifying the rotation axis in a 3D world. It is either
+    one of 0,1,2, specifying a global axis, or a vector with 3 components
+    specifying an axis through the origin.
+    In either case a 3x3 rotation matrix is returned.
+    Note that:
+      rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
+      rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
+      rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
+    but the latter functions calls are more efficient.
+    The result is returned as an array.
     """
     a = angle*rad
     c = cos(a)
     s = sin(a)
     if axis==None:
         f = [[c,s],[-s,c]]
-    else:
+    elif type(axis) == int:
         f = [[0.0 for i in range(3)] for j in range(3)]
         axes = range(3)
         i,j,k = axes[axis:]+axes[:axis]
@@ -174,28 +182,14 @@ def rotationMatrix(angle,axis=None):
         f[j][k] = s
         f[k][j] = -s
         f[k][k] = c
-    return f
-
-def rotationAboutMatrix(angle,axis):
-    """Return a rotation matrix over angle around an axis thru the origin.
-
-    The angle is specified in degrees.
-    Axis is a list of three components specifying the axis.
-    The result is a 3x3 rotation matrix in list format.
-    Note that:
-      rotationAboutMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
-      rotationAboutMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
-      rotationAboutMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
-    but the latter functions are more efficient.
-    """
-    a = angle*rad
-    c = cos(a)
-    s = sin(a)
-    t = 1-c
-    X,Y,Z = axis
-    return [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
-             [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
-             [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
+    else:
+        t = 1-c
+        X,Y,Z = axis
+        f = [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
+              [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
+              [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
+        
+    return array(f)
 
 
 def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
@@ -423,7 +417,7 @@ class Formex:
         self.p = None
         # !!! WE MIGHT ADD ARRAY AXES IF LESS THAN 3 !!!
         if len(self.f.shape) != 3:
-            raise RuntimeError,"Formex: Initialization needs rank-3 data array"
+            raise RuntimeError,"Formex: Initialization needs rank-3 data array, got %s" % str(self.f.shape)
         if self.f.shape[2] == 3:
             pass
         elif self.f.shape[2] == 2:
@@ -1086,24 +1080,15 @@ class Formex:
         """Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
+        The axis is either one of (0,1,2) designating the global axes,
+        or a vector specifying an axis through the origin.
         If no axis is specified, rotation is around the 2(z)-axis. This is
         convenient for working on 2D-structures.
+        
         """
         m = rotationMatrix(angle,axis)
         return Formex(dot(self.f,m),self.p)
 
-
-    # This could be made the same function as rotate, but differentiated
-    # by means of the value of the second argument
-    def rotateAround(self,vector,angle):
-        """Return a copy rotated over angle around vector.
-
-        The angle is specified in degrees. The rotation axis is specified
-        by a vector of three values. It is an axis through the center.
-        """
-        m = rotationAboutMatrix(angle,vector)
-        return Formex(dot(self.f,m),self.p)
-        return self
 
     def shear(self,dir,dir1,skew):
         """Return a copy skewed in the direction dir of plane (dir,dir1).

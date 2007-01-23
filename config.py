@@ -426,6 +426,13 @@ class Config(Dict):
 if __name__ == '__main__':
 
 
+    def show(s):
+        try:
+            v = eval(s)
+            print "%s = %s" % (s,v)
+        except:
+            print "%s ! ERROR" % s
+        
     C = Config("""# A simple config example
 aa = 'bb'
 bb = aa
@@ -434,11 +441,11 @@ aa = 'aa'    # yes ! comments are allowed (they are stripped by eval())
 _n = 3       # local: will get stripped
 rng = range(_n)
 """)
-    print C
-    print C['aa']
-    print C['cc']
-    print C['cc/aa']
-    print C['dd']
+    show("C")
+    show("C['aa']")
+    show("C['cc']")
+    show("C['cc/aa']")
+    show("C['dd']")
 
 
     def reflookup(key):
@@ -446,17 +453,21 @@ rng = range(_n)
 
     D = Config(default = reflookup)
 
-    print D
-    print D['aa']
-    print D['cc']
-    print D['cc/aa']
-    print D['dd']
+    show("D")
+    show("D['aa']")
+    show("D['cc']")
+    show("D['cc/aa']")
+    show("D['dd']")
 
     D['aa'] = 'wel'
     D['dd'] = 'hoe'
     D['cc/aa'] = 'ziedewel'
-    print D
-    print C
-    print D['cc/aa']
-    print D['cc/rng']
+    show("D")
+    show("C")
+    show("D['cc/aa']")
+    show("D['cc/rng']")
+    print "BUT!!!!"
+    show("D['cc']")
+    
+    
     

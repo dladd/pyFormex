@@ -39,10 +39,10 @@ def star(n,noise=0.,prop=0):
 # create random number of points, rotation and translation
 npts = random.randint(minpoints-1,maxpoints,(nstars,))
 rot = random.random((nstars,3))
-ang = random.random((nstars,1)) * maxrot
+ang = random.random((nstars,)) * maxrot
 trl = random.random((nstars,3)) * displ
 # create the stars
-Stars = Formex.concatenate([ star(n,noise,i).rotateAround(r,a).translate(t) for i,n,r,a,t in zip(range(nstars),npts,rot,ang,trl) ])
+Stars = Formex.concatenate([ star(n,noise,i).rotate(a,r).translate(t) for i,n,a,r,t in zip(range(nstars),npts,ang,rot,trl) ])
 # draw them with random colors
 colors = random.random((nstars,3))
 clear()

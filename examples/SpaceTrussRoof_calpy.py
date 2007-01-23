@@ -175,7 +175,7 @@ if GD.options.gui:
     GD.canvas.update()
 
     # Show upright
-    setview('myview1',(0.,-90.,0.))
+    createView('myview1',(0.,-90.,0.))
     view('myview1',True)
 
     clear()
@@ -219,5 +219,5 @@ if GD.options.gui:
 
     ##drawtimeout = 0
     ##for i in range(19):
-    ##    setview('myview2',(90.,i*10.,90))
+    ##    createView('myview2',(90.,i*10.,90))
     ##    view('myview2',True)

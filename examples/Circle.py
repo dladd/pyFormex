@@ -35,7 +35,7 @@ def rotationAngle(A,B,rad=False):
 linewidth(1)
 drawtimeout = 1
 for i in [3,4,5,6,8,12,20,60,180]:
-    print "%s points" % i
+    #print "%s points" % i
     clear()
     draw(circle(360./i,360./i),bbox=None)
     clear()
@@ -68,7 +68,7 @@ ang,rot = rotationAngle(nuc,D)
 # diameters varying linearly with the |x| coordinate
 diam = 0.1*h*(2.-abs(C[:,0]))
 # finally, here are the circles:
-circles = [ circle().scale(d).rotateAround(r,a).translate(c) for d,r,a,c in zip(diam,rot,ang,C) ]
+circles = [ circle().scale(d).rotate(a,r).translate(c) for d,r,a,c in zip(diam,rot,ang,C) ]
 F = Formex.concatenate(circles).setProp(3) 
 draw(F)
 
@@ -80,4 +80,4 @@ draw(G)
 
 # Fly through
 if ack("Are you ready for a flight through the tube?"):
-    flyAlong(curve)
+    flyAlong(curve,sleeptime=0.1)

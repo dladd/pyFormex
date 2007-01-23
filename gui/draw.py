@@ -685,7 +685,8 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=0.5):
         GD.canvas.update()
         if multisave and multisave[4]:
             saveNext()
-        sleep(sleeptime)
+        if sleeptime > 0.0:
+            sleep(sleeptime)
 
 
 ################################ saving images ########################

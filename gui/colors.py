@@ -42,6 +42,10 @@ yellow  = (1.0, 1.0, 0.0)
 white   = (1.0, 1.0, 1.0)
 
 
+def GREY(val,alpha=1.0):
+    """Returns a grey OpenGL color of given intensity (0..1)"""
+    return (val,val,val,1.0)
+
 def grey(i):
     return (i,i,i)
 

@@ -24,35 +24,45 @@ except ImportError:
     _has_gl2ps = False
 
 
-def rgba(val):
-    """Returns a white shade OpenGL color of given intensity (0..1)"""
-    return (val,val,val,1.0)
-
-
 ##################################################################
 #
 #  The Canvas
 #
 class Canvas:
     """A canvas for OpenGL rendering."""
+
+    # Predefined views
+    # Angles are longitude, latitude, twist
+    views = { 'front': (0.,0.,0.),
+              'back': (180.,0.,0.),
+              'right': (90.,0.,0.),
+              'left': (270.,0.,0.),
+              'top': (0.,90.,0.),
+              'bottom': (0.,-90.,0.),
+              'iso': (45.,45.,0.),
+              }
+
+    # default light
+    default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
+
+    @classmethod
+    def createView(clas,name,angles):
+        """Create/change a named view for camera orientation long,lat.
+
+        By default, the following views are created:
+        'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
+        The user can add/delete/overwrite any number of predefined views.
+        """
+        clas.views[name] = angles
+
     
     def __init__(self):
-        """Initialize an empty canvas with default settings.
-        """
+        """Initialize an empty canvas with default settings."""
         self.actors = []       # an empty scene
         self.decorations = []  # and no decorations
-        self.views = { 'front': (0.,0.,0.),
-                       'back': (180.,0.,0.),
-                       'right': (90.,0.,0.),
-                       'left': (270.,0.,0.),
-                       'top': (0.,90.,0.),
-                       'bottom': (0.,-90.,0.),
-                       'iso': (45.,45.,0.),
-                       }   # default views
-        # angles are: longitude, latitude, twist
         self.setBbox()
         self.bgcolor = colors.mediumgrey
-        self.rendermode = GD.cfg['render/mode']
+        self.rendermode = 'wireframe'
         self.dynamic = None    # what action on mouse move
         self.camera = None
 
@@ -62,19 +72,19 @@ class Canvas:
         self.camera = camera.Camera()
         GD.debug("camera.rot = %s" % self.camera.rot) 
 
-    # our own name for the canvas update function
-    def update(self):
-        self.updateGL()
-
-    default_light = { 'ambient':0.2, 'diffuse': 1.0, 'specular':1.0, 'position':(0.,0.,1.,0.)}
+##     # our own name for the canvas update function
+##     def update(self):
+##         self.updateGL()
 
     def glinit(self,mode=None):
         if mode:
             self.rendermode = mode
-	GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
-	GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
-	GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
-	GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
+            
+        GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
+        GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
+        GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
+        GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
+
         if self.rendermode == 'wireframe':
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
@@ -88,21 +98,22 @@ class Canvas:
                 key = 'render/%s' % l
                 light = GD.cfg.get(key,self.default_light)
                 GD.debug("  set up %s %s" % (l,light))
-                GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,rgba(GD.cfg['render/ambient']))
+                GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
                 GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
                 GL.glLightModel(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-                GL.glLightfv(i,GL.GL_AMBIENT,rgba(light['ambient']))
-                GL.glLightfv(i,GL.GL_DIFFUSE,rgba(light['diffuse']))
-                GL.glLightfv(i,GL.GL_SPECULAR,rgba(light['specular']))
-                GL.glLightfv(i,GL.GL_POSITION,rgba(light['position']))
+                GL.glLightfv(i,GL.GL_AMBIENT,colors.GREY(light['ambient']))
+                GL.glLightfv(i,GL.GL_DIFFUSE,colors.GREY(light['diffuse']))
+                GL.glLightfv(i,GL.GL_SPECULAR,colors.GREY(light['specular']))
+                GL.glLightfv(i,GL.GL_POSITION,colors.GREY(light['position']))
                 GL.glEnable(i)
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,rgba(GD.cfg['render/specular']))
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,rgba(GD.cfg['render/emission']))
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
+            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
             GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
             GL.glEnable(GL.GL_COLOR_MATERIAL)
         else:
             raise RuntimeError,"Unknown rendering mode"
+
     
     def setSize (self,w,h):
         if h == 0:	# Prevent A Divide By Zero 
@@ -112,10 +123,12 @@ class Canvas:
         self.camera.setLens(aspect=self.aspect)
         self.display()
 
+
     def clear(self):
         """Clear the canvas to the background color."""
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glClearColor(*colors.RGBA(self.bgcolor))
+
 
     def display(self):
         """(Re)display all the actors in the scene.
@@ -142,13 +155,16 @@ class Canvas:
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
 
+
     def setLinewidth(self,lw):
         """Set the linewidth for line rendering."""
         GL.glLineWidth(lw)
 
+
     def setBgColor(self,bg):
         """Set the background color."""
         self.bgcolor = bg
+
         
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
@@ -171,32 +187,39 @@ class Canvas:
         GL.glEndList()
         list.append(actor)
 
+
     def remove_actor(self,actor,list):
         """Remove an actor from an actorlist."""
         self.makeCurrent()
         list.remove(actor)
         GL.glDeleteLists(actor.list,1)
 
+
     def recreate_actor(self,actor,list):
         """Recreate an actor in a list."""
         self.remove_actor(actor,list)
         self.add_actor(actor,list) 
+
          
     def addActor(self,actor):
         """Add a 3D actor to the 3D scene."""
         self.add_actor(actor,self.actors)
 
+
     def removeActor(self,actor):
         """Remove a 3D actor from the 3D scene."""
         self.remove_actor(actor,self.actors)
+
          
     def addDecoration(self,actor):
         """Add a 2D decoration to the canvas."""
         self.add_actor(actor,self.decorations)
 
+
     def removeDecoration(self,actor):
         """Remove a 2D decoration from the canvas."""
         self.remove_actor(actor,self.decorations)
+
 
     def removeActors(self,actorlist=None):
         """Remove all actors in actorlist (default = all) from the scene."""
@@ -206,6 +229,7 @@ class Canvas:
             self.removeActor(actor)
         self.setBbox()
 
+
     def removeDecorations(self,actorlist=None):
         """Remove all decorations in actorlist (default = all) from the scene."""
         if actorlist == None:
@@ -213,10 +237,12 @@ class Canvas:
         for actor in actorlist:
             self.removeDecoration(actor)
 
+
     def removeAll(self):
         """Remove all actors and decorations"""
         self.removeActors()
         self.removeDecorations()
+
 
     def redrawActors(self,actorlist=None):
         """Redraw (some) actors in the scene.
@@ -238,18 +264,10 @@ class Canvas:
             GL.glEndList() 
         self.display()
 
+
     def redrawAll(self):
         """Redraw all actors in the scene."""
         self.redrawActors(self.actors)
-
-    def createView(self,name,angles):
-        """Create a named view for camera orientation long,lat.
-
-        By default, the following views are created:
-        'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
-        The user can add/delete/overwrite any number of predefined views.
-        """
-        self.views[name] = angles
 
         
     def setView(self,bbox=None,side='front'):
@@ -295,6 +313,7 @@ class Canvas:
 
     def zoom(self,f):
         self.camera.setDist(f*self.camera.getDist())
+
 
     def dyna(self,x,y):
         """Perform dynamic zoom/pan/rotation functions"""
