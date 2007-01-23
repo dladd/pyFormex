@@ -31,6 +31,19 @@ if m:
     script.message("Congratulations! You have ImageMagick version %s" % GD.magick_version)
 
 
+
+
+def Size(widget):
+    """Return the size of a widget as a tuple."""
+    s = widget.size()
+    return s.width(),s.height()
+
+
+def Pos(widget):
+    """Return the position of a widget as a tuple."""
+    p = widget.pos()
+    return p.x(),p.y()
+
 ################# Message Board ###############
 class Board(QtGui.QTextEdit):
     """Message board for displaying read-only plain text messages."""
@@ -42,6 +55,7 @@ class Board(QtGui.QTextEdit):
         self.setAcceptRichText(False)
         self.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.setMinimumSize(24,24)
+        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.cursor = self.textCursor()
 
     def write(self,s):
@@ -56,7 +70,11 @@ class Board(QtGui.QTextEdit):
 ################# OpenGL Canvas ###############
 
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
-    """A canvas for OpenGL rendering."""
+    """A canvas for OpenGL rendering.
+
+    This is a wrapper around our Canvas class, to implement the
+    QT specific methods.
+    """
     
     def __init__(self,*args):
         """Initialize an empty canvas with default settings.
@@ -71,7 +89,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         
     def initializeGL(self):
         if GD.options.debug:
-            print "initializeGL: "
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
         self.initCamera()
@@ -101,11 +118,54 @@ def printsize(w,t=None):
     print "%s %s x %s" % (t,w.width(),w.height())
 
 
+################# MultiViewports ###############
+
+class MultiCanvas(QtGui.QGridLayout):
+    """A viewport that can be splitted."""
+
+    def __init__(self):
+        QtGui.QGridLayout.__init__(self)
+        self.views = []
+        self.active = []
+        self.current = None
+        self.addView(0,0)
+
+    def newView(self):
+        "Adding a View"
+        c = QtCanvas()
+        self.views.append(c)
+        self.active.append(c)
+        self.current = c
+        return(c)
+ 
+    def addView(self,row,col):
+        self.addWidget(self.newView(),row,col)
+
+    def addActor(self,actor):
+        for v in self.active:
+            v.addActor(actor)
+
+    def setView(self,bbox,view):
+        self.current.setView(bbox,view)
+            
+    def update(self):
+        for v in self.views:
+            v.update()
+
+    def removeAll(self):
+        for v in self.active:
+            v.removeAll()
+
+    def clear(self):
+        self.current.clear()
+    
+
+
 ################# GUI ###############
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
-    def __init__(self,windowname,size=(800,600),pos=(0,0)):
+    def __init__(self,windowname,size=(800,600),pos=(0,0),bdsize=(0,0)):
         """Constructs the GUI.
 
         The GUI has a central canvas for drawing, a menubar and a toolbar
@@ -125,15 +185,16 @@ class GUI(QtGui.QMainWindow):
         self.editor = None
         # Create a box for the central widget
         self.box = QtGui.QWidget()
+        self.setCentralWidget(self.box)
         self.boxlayout = QtGui.QVBoxLayout()
         self.box.setLayout(self.boxlayout)
-        self.setCentralWidget(self.box)
         #self.box.setFrameStyle(qt.QFrame.Sunken | qt.QFrame.Panel)
         #self.box.setLineWidth(2)
         # Create a splitter
-        s = QtGui.QSplitter()
-        s.setOrientation(QtCore.Qt.Vertical)
-        s.show()
+        self.splitter = QtGui.QSplitter()
+        self.boxlayout.addWidget(self.splitter)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
+        self.splitter.show()
         #s.moveSplitter(300,0)
         #s.moveSplitter(300,1)
         #s.setLineWidth(0)
@@ -147,18 +208,22 @@ class GUI(QtGui.QMainWindow):
         if GD.options.debug:
             printFormat(fmt)
         QtOpenGL.QGLFormat.setDefaultFormat(fmt)
-        c = QtCanvas()
-        c.setBgColor(GD.cfg['draw/bgcolor'])
-        c.resize(*GD.cfg['gui/size'])
-##        if GD.options.splash:
-##            c.addDecoration(decorations.TextActor(_start_message,wd/2,ht/2,font='tr24',adjust='center',color='red'))
-        self.canvas = c
+        self.viewports = MultiCanvas()
+        #self.canvas.setBgColor(GD.cfg['draw/bgcolor'])
+##         print "RESIZING canvas",GD.cfg['gui/size']
+##         self.viewports.view.resize(*GD.cfg['gui/size'])
+        self.canvas = QtGui.QWidget()
+        #self.canvas.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
+        self.canvas.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
+        self.canvas.resize(*GD.cfg['gui/size'])
+        self.canvas.setLayout(self.viewports)
         # Create the message board
         self.board = Board()
         self.board.setPlainText(GD.Version+' started')
-        self.boxlayout.addWidget(s)
-        s.addWidget(self.canvas)
-        s.addWidget(self.board)
+        # Put everything together
+        self.splitter.addWidget(self.canvas)
+        self.splitter.addWidget(self.board)
+        #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
         # Create the top menu and keep a dict with the main menu items
         menu.addMenuItems(self.menu, menu.MenuData)
@@ -184,6 +249,7 @@ class GUI(QtGui.QMainWindow):
         #self.menu.show()
         self.resize(*size)
         self.move(*pos)
+        self.board.resize(*bdsize)
         if GD.options.redirect:
             sys.stderr = self.board
             sys.stdout = self.board
@@ -227,7 +293,7 @@ class GUI(QtGui.QMainWindow):
     
     def resizeCanvas(self,wd,ht):
         """Resize the canvas."""
-        self.canvas.resize(wd,ht)
+        self.canva.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
         self.adjustSize()
     
@@ -243,18 +309,6 @@ class GUI(QtGui.QMainWindow):
         if hasattr(self,'editor'):
             self.editor.close()
             self.editor = None
-
-
-    def Size(self):
-        """Return the size of the main window() as a tuple."""
-        s = self.size()
-        return s.width(),s.height()
-    
-
-    def Pos(self):
-        """Return the position of the main window() as a tuple."""
-        p = self.pos()
-        return p.x(),p.y()
     
 
     def setcurfile(self,filename=None):
@@ -354,6 +408,13 @@ def runApp(args):
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
 
+    multiview = False
+    for a in args:
+        if a == "--singleview":
+            multiview = False
+        elif a == "--multiview":
+            multiview = True
+        
     # Set some globals
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
@@ -376,10 +437,13 @@ def runApp(args):
         windowname = '%s (%s)' % (GD.Version,count)
     if GD.cfg.has_key('gui/fontsize'):
         setFontSize()
-    GD.gui = GUI(windowname,GD.cfg['gui/size'],GD.cfg['gui/pos'])
+    GD.gui = GUI(windowname,GD.cfg['gui/size'],GD.cfg['gui/pos'],GD.cfg['gui/bdsize'])
     GD.gui.setcurfile()
     GD.board = GD.gui.board
-    GD.canvas = GD.gui.canvas
+    if multiview:
+        GD.canvas = GD.gui.viewports
+    else:
+        GD.canvas = GD.gui.viewports.current
     GD.gui.show()
     # Create additional menus (put them in a list to save)
     menus = []
@@ -408,7 +472,10 @@ def runApp(args):
 
     # store the main window size/pos
     GD.cfg['history'] = GD.gui.history.files
-    GD.cfg.update({'size':GD.gui.Size(),'pos':GD.gui.Pos()},name='gui')
+    GD.cfg.update({'size':Size(GD.gui),
+                   'pos':Pos(GD.gui),
+                   'bdsize':Size(GD.gui.board),
+                   },name='gui')
     return 0
 
 #### End

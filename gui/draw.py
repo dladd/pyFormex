@@ -325,7 +325,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None):
+def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=False):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.

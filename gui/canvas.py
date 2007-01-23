@@ -28,7 +28,7 @@ except ImportError:
 #
 #  The Canvas
 #
-class Canvas:
+class Canvas(object):
     """A canvas for OpenGL rendering."""
 
     # Predefined views
@@ -77,6 +77,7 @@ class Canvas:
 ##         self.updateGL()
 
     def glinit(self,mode=None):
+        GD.debug("canvas GLINIT")
         if mode:
             self.rendermode = mode
             
