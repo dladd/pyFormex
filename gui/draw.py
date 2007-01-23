@@ -308,6 +308,7 @@ def reset():
     global DrawOptions
     DrawOptions = dict(
         view = '__last__',       # Keep the current camera angles
+        bbox = 'auto',           # Automatically zoom on the drawed object
         )
     
 
@@ -375,6 +376,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None):
         view = DrawOptions['view']
     if type(F) == str and globals().has_key(F):
         F = globals()[F]
+
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
@@ -422,6 +424,23 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None):
     return actor
 
 
+def view(v,wait=False):
+    """Show a named view, either a builtin or a user defined."""
+    global allowwait
+    if allowwait:
+        drawwait()
+    #print "Requested View ",v
+    #print "Known Views: ",GD.canvas.views.keys()
+    if GD.canvas.views.has_key(v):
+        GD.canvas.setView(None,v)
+        setView(v)
+        GD.canvas.update()
+        if allowwait and wait:
+            drawlock()
+    else:
+        warning("A view named '%s' has not been created yet" % v)
+
+
 _triade = None
 
 def drawTriade():
@@ -459,23 +478,6 @@ def decorate(decor):
     """Draw a decoration."""
     GD.canvas.addDecoration(decor)
     GD.canvas.update()
-
-
-def view(v,wait=False):
-    """Show a named view, either a builtin or a user defined."""
-    global allowwait
-    if allowwait:
-        drawwait()
-    #print "Requested View ",v
-    #print "Known Views: ",GD.canvas.views.keys()
-    if GD.canvas.views.has_key(v):
-        GD.canvas.setView(None,v)
-        setView(v)
-        GD.canvas.update()
-        if allowwait and wait:
-            drawlock()
-    else:
-        warning("A view named '%s' has not been created yet" % v)
 
 def frontView():
     view("front")

@@ -4,9 +4,7 @@
 
 import globaldata as GD
 
-import OpenGL.GL as GL
-import OpenGL.GLU as GLU
-
+from OpenGL import GL,GLU
 from PyQt4 import QtCore  # needed for events, signals
 
 import colors

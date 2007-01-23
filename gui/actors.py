@@ -2,9 +2,7 @@
 # $Id$
 """OpenGL actors for populating the 3D scene(3D)."""
 
-import OpenGL.GL as GL
-import OpenGL.GLU as GLU
-
+from OpenGL import GL,GLU
 from colors import *
 from formex import *
 
@@ -225,29 +223,34 @@ class TriadeActor:
 class FormexActor(Formex):
     """An OpenGL actor which is a Formex."""
 
-    def __init__(self,F,color=[black],linewidth=1.0,eltype=None):
+    def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,eltype=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
         of the property values in the Formex. If the list has less
         values than the PropSet, it is wrapped around. It can also be
         a single OpenGL color, which will be used for all elements.
+        For surface type elements, a bkcolor color can be given for
+        the backside (inside) of the surface. Default will be the same
+        as the front color.
         The user can specify a linewidth to be used when drawing
-        in wireframe mode
+        in wireframe mode.
         """
         Formex.__init__(self,F.f,F.p)
-        if isinstance(color,ndarray):
-            print("color is %s array" % color.dtype)
         self.list = None
         if self.p is None:
             self.setProp(arange(self.nelems()))
-            #print "Properties:",self.p
-        if len(color) == 3 and type(color[0]) == float and \
-           type(color[1]) == float and type(color[2]) == float:
-            color = [ color ] # turn single color into a list
-        # now color should be a list of colors, possibly too short
+        # make the color list large enough
+        #
+        # WE COULD KEEP A SINGLE COLOR
+        #
         mprop = max(self.propSet()) + 1
-        self.color = array([ color[v % len(color)] for v in range(mprop) ])
+        color = array(color)
+        self.color = resize(array(color),(mprop,3))
+        if bkcolor is None:
+            self.bkcolor = self.color
+        else:
+            self.bkcolor = resize(array(bkcolor),mprop)
         self.linewidth = float(linewidth)
         if self.nnodel() == 1:
             # ! THIS SHOULD BETTER BE SET FROM THE SCENE SIZE ! 
@@ -279,7 +282,6 @@ class FormexActor(Formex):
             elif self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
-                print coords.shape
                 drawEdges(coords,self.color[self.p],self.linewidth)
                 
         elif nnod == 3:
