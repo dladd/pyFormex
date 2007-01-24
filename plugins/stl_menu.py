@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# $Id: Stl.py 156 2006-11-06 19:14:25Z bverheg $
+# $Id: $
 
-"""Stl.py
+"""stl_menu.py
 
 When executed, this script adds a specialized 'Stl' menu to the menubar
 with actions defined in this script. The user can then execute these actions
@@ -37,12 +37,11 @@ def sanitize_stl_to_off():
 
 def read_gambit_neutral(fn):
     """Returns nodes,elems tuple from a gambit neutral file."""
-    utils.runCommand("gambit-neu %s" % fn)
+    utils.runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
     nodesf = utils.changeExt(fn,'.nodes')
     elemsf = utils.changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
     elems = fromfile(elemsf,sep=' ',dtype=Int).reshape((-1,3))
-    #print "Read %s nodes and %s elements", % (nodes.shape[0],elems.shape[0])
     return nodes, elems-1
 
 def read_neu():
@@ -59,7 +58,7 @@ def read_stl():
 def read_off_stl():
     return read_model(types='stl',off=True)
 
-def read_model(types=['stl','off'],large=False,guess=False,off=True):
+def read_model(types=['stl/off','stl','off','neu'],large=False,guess=False,off=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -166,9 +165,9 @@ def set_stl(newF,name):
 
 def save_stl():
     """Save the stl model."""
-    #global project,F
-    if F is None:
+    if GD.PF['stl_model'] is None:
         return
+    F = GD.PF['stl_model']
     fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
     if fn:
         if not fn.endswith('.stl'):
@@ -452,12 +451,12 @@ def create_menu():
         ("&Read LARGE STL file",read_large_stl),
         ("&Read GUESSED SIZE STL file",read_guess_stl),
         ("&Read STL file over OFF",read_off_stl),
+        ("&Save STL model",save_stl),
         ("&Center model",center_stl),
         ("&Rotate model",rotate_stl),
         ("&Clip model",clip_stl),
         ("&Scale model",scale_stl),
         ("&Undo LAST STL transformation",undo_stl),
-        ("&Save STL model",save_stl),
         ("&Sectionize STL model",section_stl),
         ("&Show individual circles",circle_stl),
         ("&Show all circles on STL model",allcircles_stl),
