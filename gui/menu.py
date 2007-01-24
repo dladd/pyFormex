@@ -79,10 +79,10 @@ def addViewport():
 
 MenuData = [
     (_('&File'),[
-        (_('&New'),'fileMenu.newFile'),
-        (_('&Open'),'fileMenu.openFile'),
-        (_('&Play'),'fileMenu.play'),
-        (_('&Edit'),'fileMenu.edit'),
+        (_('&New'),fileMenu.newFile),
+        (_('&Open'),fileMenu.openFile),
+        (_('&Play'),fileMenu.play),
+        (_('&Edit'),fileMenu.edit),
 #        (_('&Save'),'save'),
 #        (_('Save &As'),'saveAs'),
         (_('---'),'---'),
@@ -92,7 +92,7 @@ MenuData = [
         (_('Save &Next Image'),'draw.saveNext'),
         (_('---'),'---'),
         (_('Load &Plugins'),[
-            (_('STL menu'),stl_menu.init),
+            (_('STL menu'),stl_menu.show_menu),
             (_('Formex menu'),formex_menu),
             ]),
         (_('---'),'---'),

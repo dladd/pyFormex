@@ -35,19 +35,31 @@ def sanitize_stl_to_off():
     if fn:     
         return stl.stl_to_off(fn,sanitize=True)
 
+def read_gambit_neutral(fn):
+    """Returns nodes,elems tuple from a gambit neutral file."""
+    utils.runCommand("gambit-neu %s" % fn)
+    nodesf = utils.changeExt(fn,'.nodes')
+    elemsf = utils.changeExt(fn,'.elems')
+    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
+    elems = fromfile(elemsf,sep=' ',dtype=Int).reshape((-1,3))
+    #print "Read %s nodes and %s elements", % (nodes.shape[0],elems.shape[0])
+    return nodes, elems-1
+
+def read_neu():
+    return read_model(types=['neu'])
 def read_off():
-    return read_model(type='off')
+    return read_model(types='off')
 
 def read_large_stl():
-    return read_model(type='stl',large=True,off=False)
+    return read_model(types='stl',large=True,off=False)
 def read_guess_stl():
-    return read_model(type='stl',guess=True,off=False)
+    return read_model(types='stl',guess=True,off=False)
 def read_stl():
-    return read_model(type='stl',off=False)
+    return read_model(types='stl',off=False)
 def read_off_stl():
-    return read_model(type='stl',off=True)
+    return read_model(types='stl',off=True)
 
-def read_model(type=['stl','off'],large=False,guess=False,off=True):
+def read_model(types=['stl','off'],large=False,guess=False,off=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -57,7 +69,9 @@ def read_model(type=['stl','off'],large=False,guess=False,off=True):
     The Formex is stored under the project basename.
     The model is displayed.
     """
-    types = [ utils.fileDescription(t) for t in type ]
+    if type(types) == str:
+        types = [ types ]
+    types = map(utils.fileDescription,types)
     fn = askFilename(GD.cfg['workdir'],types)
     if fn:
         os.chdir(os.path.dirname(fn))
@@ -72,6 +86,12 @@ def read_model(type=['stl','off'],large=False,guess=False,off=True):
             message("The model has %d triangles" % (coords.shape[0]))
         elif ext == '.off':
             nodes,elems = stl.read_off(fn)
+            GD.PF['off_model'] = (nodes,elems)
+            GD.PF['stl_model'] = None
+            message("The model has %d nodes and %d elems" %
+                    (nodes.shape[0],elems.shape[0]))
+        elif ext == '.neu':
+            nodes,elems = read_gambit_neutral(fn)
             GD.PF['off_model'] = (nodes,elems)
             GD.PF['stl_model'] = None
             message("The model has %d nodes and %d elems" %
@@ -130,37 +150,6 @@ def stl_to_numpy(fn=None,outf=None):
         return 0
     return 1
 
-
-def read_numpy(fn=None):
-    """Read STL model from file fn.
-
-    If no file is given, one is asked.
-    The file fn should exist and contain a valid STL model in numpy format.
-    The STL model is stored in the Formex F.
-    The workdir and project name are set from the filename.
-    The Formex is stored under the project basename.
-    The model is displayed.
-    """
-    global project,F
-    if fn is None:
-        fn = askFilename(GD.cfg['workdir'],"Stl numpy files (*.numpy)")
-        if fn:
-            clear()
-            linewidth(1)
-        else:
-            return
-    os.chdir(os.path.dirname(fn))
-    message("Your current workdir is %s" % os.getcwd())
-    project = os.path.splitext(fn)[0]
-    message("Reading file %s" % fn)
-    F = readfile(fn,sep=' ',plexitude=3)
-    name = os.path.basename(project)
-    projectLabel.setText(name)
-    Globals().update({name:F})
-    message("STL model %s has %d triangles" % (name,F.f.shape[0]))
-    message("The bounding box is\n%s" % F.bbox())
-    show_stl()
-    
 
 def set_stl(newF,name):
     """Set Formex model and project name."""
@@ -370,7 +359,6 @@ def export_stl():
         nelems = elems.shape[0]
         message("There are %d unique nodes and %d triangle elements in the model." % (nnodes,nelems))
         stl_abq.abq_export(project+'.inp',nodes,elems,'S3',"Created by stl_examples.py")
-#    menu.process()
     
 
 def create_tetgen():
@@ -453,14 +441,14 @@ def create_menu():
     menu = widgets.Menu('STL')
     MenuData = [
         #("&New project",new_project),
-        ("&Read OFF/STL model",read_model),
+        ("&Read STL/OFF model",read_model),
         ("&Show model",show_model),
         ("&Show shrinked model",show_shrinked),
         ("&Convert STL file to OFF file",convert_stl_to_off),
         ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-        ("&Read OFF file",read_off),
-        ("&Read STL model from numpy file",read_numpy),
         ("&Read STL file",read_stl),
+        ("&Read OFF file",read_off),
+        ("&Read NEU file",read_neu),
         ("&Read LARGE STL file",read_large_stl),
         ("&Read GUESSED SIZE STL file",read_guess_stl),
         ("&Read STL file over OFF",read_off_stl),
@@ -494,20 +482,22 @@ def close_menu():
     # We should also remove the projectLabel widget from the statusbar
     global menu
     #GD.gui.statusbar.removeWidget(projectLabel)
-    menu.close()
+    if menu:
+        menu.close()
+    menu = None
     
-def init():
+def show_menu():
     """Create the STL menu."""
     #from PyQt4 import QtGui
-    global menu, autodraw
+    global menu#, autodraw
     menu = create_menu()
-    autodraw = False
+    #autodraw = False
     #project = F = nodes = elems = surf = None
     #projectLabel = QtGui.QLabel('No Project')
     #GD.gui.statusbar.addWidget(projectLabel)
     
 
 if __name__ == "main":
-    message(__doc__)
+    print __doc__
 
 # End

@@ -8,8 +8,10 @@ import os,commands
 
 
 file_description = {
+    'stl/off': 'STL or OFF files (*.stl, *.off)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',
+    'neu': 'Gambit Neutral files (*.neu)',
 }
 
 def fileDescription(type):
