@@ -14,7 +14,7 @@ import scriptsMenu
 import prefMenu
 import toolbar
 import canvas
-import views
+import actionlist
 import script
 import utils
 import draw
@@ -125,7 +125,7 @@ class MultiCanvas(QtGui.QGridLayout):
 
     def __init__(self):
         QtGui.QGridLayout.__init__(self)
-        self.views = []
+        self.all = []
         self.active = []
         self.current = None
         self.camera = None
@@ -134,7 +134,7 @@ class MultiCanvas(QtGui.QGridLayout):
     def newView(self):
         "Adding a View"
         c = QtCanvas()
-        self.views.append(c)
+        self.all.append(c)
         self.active.append(c)
         self.current = c
         c.initCamera()
@@ -152,7 +152,7 @@ class MultiCanvas(QtGui.QGridLayout):
         self.current.setView(bbox,view)
             
     def update(self):
-        for v in self.views:
+        for v in self.all:
             v.update()
 
     def removeAll(self):
@@ -162,6 +162,18 @@ class MultiCanvas(QtGui.QGridLayout):
     def clear(self):
         self.current.clear()
     
+
+        
+## def initViewActions(parent,viewlist):
+##     """Create the initial set of view actions."""
+##     global views
+##     views = []
+##     for name in viewlist:
+##         icon = name+"view"+GD.cfg['gui/icontype']
+##         Name = string.capitalize(name)
+##         tooltip = Name+" View"
+##         menutext = "&"+Name
+##         createViewAction(parent,name,icon,tooltip,menutext)
 
 
 ################# GUI ###############
@@ -229,6 +241,9 @@ class GUI(QtGui.QMainWindow):
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
         # Create the top menu and keep a dict with the main menu items
+        if GD.options.multiview:
+            print "Activating the multiview feature"
+            menu.insertViewportMenu()
         menu.addMenuItems(self.menu, menu.MenuData)
         self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
         # ... and the toolbar
@@ -241,13 +256,22 @@ class GUI(QtGui.QMainWindow):
         # and insert it before the help menu
         self.viewsMenu = None
         if GD.cfg.get('gui/viewsmenu',True):
-            self.viewsMenu = views.ViewsMenu()
+            self.viewsMenu = QtGui.QMenu('&Views')
             self.insertMenu(self.viewsMenu)
         # Install the default canvas views
         # defviews = self.canvas.views.keys()
         # NO, these are not sorted, better:
         defviews = [ 'front', 'back', 'top', 'bottom', 'left', 'right', 'iso' ]
-        self.views = views.Views(defviews,self.viewsMenu,self.toolbar)
+        if GD.cfg['gui/viewsbar']:
+            tbar = self.toolbar
+            tbar.addSeparator()
+        else:
+            tbar = None
+        self.viewbtns = actionlist.ActionList(
+            defviews,draw.view,
+            menu=self.viewsMenu,
+            toolbar=tbar,
+            iconpath=os.path.join(GD.cfg['icondir'],'%sview')+GD.cfg['gui/icontype'])
         # Display the main menubar
         #self.menu.show()
         self.resize(*size)
@@ -346,7 +370,8 @@ class GUI(QtGui.QMainWindow):
         do not have the name yet.
         """
         if not GD.canvas.views.has_key(name):
-            self.views.add(name)
+            iconpath = os.path.join(GD.cfg['icondir'],'userview')+GD.cfg['gui/icontype']
+            self.views.add(name,iconpath)
         GD.canvas.createView(name,angles)
 
 
@@ -410,13 +435,6 @@ def runApp(args):
     """Create and run the qt application."""
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
-
-    multiview = False
-    for a in args:
-        if a == "--singleview":
-            multiview = False
-        elif a == "--multiview":
-            multiview = True
         
     # Set some globals
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
@@ -447,7 +465,7 @@ def runApp(args):
                  )
     GD.gui.setcurfile()
     GD.board = GD.gui.board
-    if multiview:
+    if GD.options.multiview:
         GD.canvas = GD.gui.viewports
     else:
         GD.canvas = GD.gui.viewports.current

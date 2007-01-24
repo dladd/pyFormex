@@ -80,8 +80,10 @@ def main(argv=None):
                     action="store", dest="config", default=None),
          make_option("--nodefaultconfig", help="skip all default locations of config files",
                     action="store_true", dest="nodefaultconfig", default=False),
-       make_option("--redirect", help="redirect standard output to the message board (only if no --nogui option given)",
+       make_option("--redirect", help="redirect standard output to the message board (ignored with --nogui)",
                     action="store_true", dest="redirect", default=False),
+       make_option("--multiview", help="Activate the multiple viewport feature (ignored with --nogui)",
+                    action="store_true", dest="multiview", default=False),
        make_option("--debug", help="display debugging info to sys.stdout",
                     action="store_true", dest="debug", default=False),
         ])
