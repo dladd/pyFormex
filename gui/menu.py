@@ -97,8 +97,16 @@ def editor():
 
 def formex_menu():
     draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','formex_menu.py'))
+
+def addViewport():
+    n = len(GD.canvas.views)
+    if n < 4:
+        GD.canvas.addView(n/2,n%2)
     
 
+# The menu actions can be simply function names instead of strings, if the
+# functions have already been defined here.
+#
 MenuData = [
     (_('&File'),[
         (_('&New'),'fileMenu.newFile'),
@@ -114,11 +122,12 @@ MenuData = [
         (_('Save &Next Image'),'draw.saveNext'),
         (_('---'),'---'),
         (_('Load &Plugins'),[
-            (_('STL menu'),'stl_menu.init'),
-            (_('Formex menu'),'formex_menu'),
+            (_('STL menu'),stl_menu.init),
+            (_('Formex menu'),formex_menu),
             ]),
         (_('---'),'---'),
-        (_('E&xit'),'GD.app.exit'), ]),
+        (_('E&xit'),'GD.app.exit'),
+        ]),
     (_('&Settings'),[
         (_('&Appearance'),'prefMenu.setAppearance'), 
         (_('&Font'),'prefMenu.setFont'), 
@@ -139,6 +148,9 @@ MenuData = [
         (_('&Commands'),'prefMenu.setCommands'),
         (_('&Help'),'prefMenu.setHelp'),
         (_('&Save Preferences'),'GD.savePreferences'), ]),
+    (_('&Viewport'),[
+        (_('&Add new viewport'),addViewport), 
+        ]),
     (_('&Camera'),[
         (_('&LocalAxes'),'draw.setLocalAxes'),
         (_('&GlobalAxes'),'draw.setGlobalAxes'),
@@ -158,7 +170,8 @@ MenuData = [
         (_('Rotate &Up'),'cameraMenu.rotUp'),
         (_('Rotate &Down'),'cameraMenu.rotDown'), 
         (_('Rotate &ClockWise'),'cameraMenu.twistRight'),
-        (_('Rotate &CCW'),'cameraMenu.twistLeft'),  ]),
+        (_('Rotate &CCW'),'cameraMenu.twistLeft'),
+        ]),
     (_('&Actions'),[
         (_('&Step'),'draw.step'),
         (_('&Continue'),'draw.fforward'), 
@@ -168,7 +181,8 @@ MenuData = [
         (_('&ListFormices'),'draw.printall'),
         (_('&PrintBbox'),'draw.printbbox'),
         (_('&PrintGlobals'),'draw.printglobals'),
-        (_('&PrintConfig'),'draw.printconfig'),  ]),
+        (_('&PrintConfig'),'draw.printconfig'),
+        ]),
     (_('&Help'),[
 ##        (_('&Help'),'help.help'),
         (_('&Manual'),'help.manual'),
@@ -176,6 +190,8 @@ MenuData = [
         (_('pyFormex &Website'),'help.website'),
         (_('&Description'),'help.description'), 
         (_('&About'),'help.about'), 
-        (_('&Warning'),'help.testwarning'), ]) ]
+        (_('&Warning'),'help.testwarning'),
+        ])
+    ]
     
 # End

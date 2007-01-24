@@ -128,6 +128,7 @@ class MultiCanvas(QtGui.QGridLayout):
         self.views = []
         self.active = []
         self.current = None
+        self.camera = None
         self.addView(0,0)
 
     def newView(self):
@@ -136,6 +137,8 @@ class MultiCanvas(QtGui.QGridLayout):
         self.views.append(c)
         self.active.append(c)
         self.current = c
+        c.initCamera()
+        self.camera = c.camera
         return(c)
  
     def addView(self,row,col):
@@ -231,13 +234,13 @@ class GUI(QtGui.QMainWindow):
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
         self.toolbar.addSeparator()
-        if GD.cfg['gui/camerabuttons']:
+        if GD.cfg.get('gui/camerabuttons','True'):
             toolbar.addCameraButtons(self.toolbar)
         self.menu.show()
         # Create a menu with standard views
         # and insert it before the help menu
         self.viewsMenu = None
-        if GD.cfg['gui/viewsmenu']:
+        if GD.cfg.get('gui/viewsmenu',True):
             self.viewsMenu = views.ViewsMenu()
             self.insertMenu(self.viewsMenu)
         # Install the default canvas views
@@ -437,7 +440,11 @@ def runApp(args):
         windowname = '%s (%s)' % (GD.Version,count)
     if GD.cfg.has_key('gui/fontsize'):
         setFontSize()
-    GD.gui = GUI(windowname,GD.cfg['gui/size'],GD.cfg['gui/pos'],GD.cfg['gui/bdsize'])
+    GD.gui = GUI(windowname,
+                 GD.cfg.get('gui/size',(800,600)),
+                 GD.cfg.get('gui/pos',(0,0)),
+                 GD.cfg.get('gui/bdsize',(800,600))
+                 )
     GD.gui.setcurfile()
     GD.board = GD.gui.board
     if multiview:
@@ -448,7 +455,7 @@ def runApp(args):
     # Create additional menus (put them in a list to save)
     menus = []
     # History
-    history = GD.cfg['history']
+    history = GD.cfg.get('history',None)
     if type(history) == list:
         m = scriptsMenu.ScriptsMenu('History',files=history,max=10)
         GD.gui.insertMenu(m)
