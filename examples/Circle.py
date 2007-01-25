@@ -72,11 +72,16 @@ circles = [ circle().scale(d).rotate(a,r).translate(c) for d,r,a,c in zip(diam,r
 F = Formex.concatenate(circles).setProp(3) 
 draw(F)
 
-# And now something more fancy: connect 1 out of 10 points of the circles
-conn=range(0,180,15)
+# And now something more fancy: connect 1 out of 15 points of the circles
+conn = range(0,180,15)
 G = Formex.concatenate([ connect([c1.select(conn),c2.select(conn)]) for c1,c2 in zip(circles[:-1],circles[1:]) ])
 draw(G)
 
+if ack("Create some Triangles on the surface?"):
+    conn1 = concatenate([conn[1:],conn[:1]])
+    G = Formex.concatenate([ connect([c1.select(conn),c2.select(conn),c2.select(conn1)]) for c1,c2 in zip(circles[:-1],circles[1:]) ])
+    smooth()
+    draw(G)
 
 # Fly through
 if ack("Are you ready for a flight through the tube?"):

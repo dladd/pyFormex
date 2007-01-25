@@ -98,6 +98,8 @@ def read_model(types=['stl/off','stl','off','neu'],large=False,guess=False,off=T
         message("Time to import stl: %s seconds" % t.seconds())
     #set_stl(Formex(nodes), os.path.basename(project))
     show_model()
+    return fn
+
 
 def show_model():
     """Display the model."""
