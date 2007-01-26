@@ -155,6 +155,9 @@ def playScript(scr,name=None):
     if GD.gui:
         GD.gui.actions['Step'].setEnabled(True)
         GD.gui.actions['Continue'].setEnabled(True)
+        GD.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+
+       
         GD.app.processEvents()
     # We need to pass formex globals to the script
     # This would be done automatically if we put this function
@@ -200,6 +203,7 @@ def playScript(scr,name=None):
     finally:
         scriptRunning = False # release the lock in case of an error
         if GD.gui:
+            GD.app.restoreOverrideCursor()
             GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
     if exitall:

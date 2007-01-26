@@ -108,7 +108,9 @@ def writeSmesh(fn,facets,nodes=None,holes=None,regions=None):
     fil.write("# part 2: facet list.\n")
     fil.write("%s 0\n" % facets.shape[0])
     for i,n in enumerate(facets):
-        fil.write("3 %s %s %s # %s\n" % (n[0],n[1],n[2],i))
+        # adding comments breaks fast readback
+        # fil.write("3 %s %s %s # %s\n" % (n[0],n[1],n[2],i))
+        fil.write("3 %s %s %s\n" % (n[0],n[1],n[2]))
     fil.write("# part 3: hole list.\n")
     if holes is None:
         fil.write("0\n")

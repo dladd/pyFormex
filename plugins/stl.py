@@ -8,9 +8,11 @@ This is compatible with the pyFormex data model.
 """
 
 import globaldata as GD
+from plugins import tetgen
 from utils import runCommand, changeExt,countLines
 from numpy import *
-from formex import *
+from formex import Formex
+import os
 
 
 # The Stl class should not be used yet! Use the functions instead.
@@ -138,6 +140,15 @@ def read_ascii_large(fn,dtype=float32):
     return nodes
 
 
+def read_stl(fn,sanitize=False):
+    """Read an .stl file into an (nodes,elems) femodel.
+
+    This is done by first coverting the .stl to .off format.
+    """
+    offname = stl_to_off(fn,sanitize=False)
+    return read_off(offname)
+
+
 def read_off(fn):
     """Read an OFF surface mesh.
 
@@ -167,13 +178,45 @@ def read_gambit_neutral(fn):
     runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
-    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
-    elems = fromfile(elemsf,sep=' ',dtype=Int).reshape((-1,3))
+    nodes = fromfile(nodesf,sep=' ',dtype=float32).reshape((-1,3))
+    elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
     return nodes, elems-1
 
 
+def write_stl(fn,nodes,elems):
+    write_ascii(Formex(nodes[elems]),fn)
+
+def write_off(fn,nodes,elems):
+    if nodes.shape[1] != 3 or elems.shape[1] != 3:
+        raise runtimeError, "Invalid arguments or shape"
+    fil = file(fn,'w')
+    fil.write("OFF\n")
+    fil.write("%s %s 0\n" % (nodes.shape[0],elems.shape[0]))
+    fil.write(str(nodes)[1:-1])
+    fil.close()
+
+def write_neu(fn,nodes,elems):
+    pass
+def write_smesh(fn,nodes,elems):
+    tetgen.write_node_smesh(fn,nodes,elems)
+
+def saveSurface(nodes,elems,fn):
+    ext = os.path.splitext(fn)[1]
+    print "Saving as type %s" % ext
+    if ext == '.stl':
+        write_stl(fn,nodes,elems)
+    elif ext == '.off':
+        write_off(fn,nodes,elems)
+    elif ext == '.neu':
+        write_neu(fn,nodes,elems)
+    elif ext == '.smesh':
+        write_smesh(fn,nodes,elems)
+    else:
+        print "Cannot save as file %s" % fn
+   
+
 def stl_to_off(stlname,offname=None,sanitize=True):
-    """Transform an .stl model to .off format."""
+    """Transform an .stl file to .off format."""
     if not offname:
         offname = changeExt(stlname,'.off')
     if sanitize:
@@ -185,6 +228,22 @@ def stl_to_off(stlname,offname=None,sanitize=True):
         options = '-d'    
     runCommand("admesh %s --write-off %s %s" % (options,offname,stlname))
     return offname
+
+
+def stl_to_femodel(formex,sanitize=True):
+    """Transform an .stl model to FEM model.
+
+    This is a faster alternative for the Formex feModel() method.
+    It works by writing the model to file, then using admesh to convert
+    the .stl file to .off format, and finally reading back the .off.
+
+    Returns a tuple of (nodes,elems). If sanitize is False, the result will be
+    such that Formex(nodes[elems]) == formex. By default, admesh sanitizes the
+    STL model and may remove/fix some elements.
+    """
+    fn = changeExt(os.path.tempnam('.','pyformex-tmp'),'.stl')
+    write_ascii(formex.f,fn)
+    return read_stl(fn,sanitize)
 
 
 def off_to_tet(fn):

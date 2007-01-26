@@ -371,7 +371,8 @@ class GUI(QtGui.QMainWindow):
         """
         if not GD.canvas.views.has_key(name):
             iconpath = os.path.join(GD.cfg['icondir'],'userview')+GD.cfg['gui/icontype']
-            self.views.add(name,iconpath)
+            print iconpath
+            self.viewbtns.add(name,iconpath)
         GD.canvas.createView(name,angles)
 
 

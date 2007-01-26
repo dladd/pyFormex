@@ -3,11 +3,7 @@
 
 """stl_menu.py
 
-When executed, this script adds a specialized 'Stl' menu to the menubar
-with actions defined in this script. The user can then execute these actions
-through the menu. Executing this script does not produce any actions.
-If you make changes to this script while running pyFormex, you can activate
-these changes by closing the 'Stl' menu and running this script again.
+STL plugin menu for pyFormex.
 """
 
 import globaldata as GD
@@ -15,9 +11,11 @@ import utils
 import timer
 from plugins import f2abq, stl, tetgen, stl_abq
 from gui import widgets
-from formex import *
 from gui.draw import *
+from formex import Formex
 import commands, os
+
+# Global variables
 
 # Define some Actions
 
@@ -35,21 +33,8 @@ def sanitize_stl_to_off():
     if fn:     
         return stl.stl_to_off(fn,sanitize=True)
 
-def read_neu():
-    return read_model(types=['neu'])
-def read_off():
-    return read_model(types='off')
-def read_stl():
-    return read_model(types='stl',off=False)
 
-##def read_large_stl():
-##    return read_model(types='stl',large=True,off=False)
-##def read_guess_stl():
-##    return read_model(types='stl',guess=True,off=False)
-##def read_off_stl():
-##    return read_model(types='stl',off=True)
-
-def read_model(types=['stl/off','stl','off','neu','smesh'],large=False,guess=False,off=True):
+def read_model(types=['stl/off','stl','off','neu','smesh']):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -70,7 +55,7 @@ def read_model(types=['stl/off','stl','off','neu','smesh'],large=False,guess=Fal
         message("Reading file %s" % fn)
         t = timer.Timer()
         if ext == '.stl':
-            coords = stl.read_ascii(fn,large=large,guess=guess,off=off)
+            coords = stl.read_stl(fn)
             set_stl_model(Formex(coords))
         elif ext == '.off':
             nodes,elems = stl.read_off(fn)
@@ -89,7 +74,7 @@ def read_model(types=['stl/off','stl','off','neu','smesh'],large=False,guess=Fal
 
 def set_off_model(nodes,elems):
     GD.PF['off_model'] = (nodes,elems)
-    GD.PF['stl_model'] = None
+    GD.PF['stl_model'] = Formex(nodes[elems])
     message("The model has %d nodes and %d elems" %
             (nodes.shape[0],elems.shape[0]))
 
@@ -138,45 +123,19 @@ def show_shrinked():
     clear()
     draw(F.shrink(0.8),color='green')
 
-## The following three functions may provide a faster way to read large
-## files
 
-
-##def stl_to_numpy(fn=None,outf=None):
-##    """Convert a normalized stl file to a numpy file.
-
-##    A numpy file is just the list of coordinates.
-##    If no file (fn) is given, one is asked.
-##    The file fn should exist and contain an STL model.
-##    If no outf is given, one is constructed by replacing the extension
-##    with 'numpy'.
-##    """
-##    if fn is None:
-##        fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
-##    if fn:     
-##        if outf is None:
-##            outf = ''.join([os.path.splitext(fn)[0],'.numpy'])
-##        cmd = "gawk '/^[ ]*vertex/{print $2\" \"$3\" \"$4}{next}' %s > %s" % (fn,outf)
-##        log("Running command: %s" % cmd)
-##        sta,out = commands.getstatusoutput(cmd)
-##        return 0
-##    return 1
-
-
-def save_stl():
-    """Save the stl model."""
-    if GD.PF['stl_model'] is None:
+def save_surface(types=['stl/off','stl','off','neu','smesh']):
+    if GD.PF['off_model'] is None:
         return
-    F = GD.PF['stl_model']
-    fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
+    if type(types) == str:
+        types = [ types ]
+    types = map(utils.fileDescription,types)
+    fn = askFilename(GD.cfg['workdir'],types,exist=False)
     if fn:
-        if not fn.endswith('.stl'):
-            fn += '.stl'
-        os.chdir(os.path.dirname(fn))
-        message("Your current workdir is %s" % os.getcwd())
-        project = os.path.splitext(fn)[0]
-        if not os.path.exists(fn) or ack("File %s already exists. Overwrite?" % fn):
-            stl.write_ascii(F.f,fn)
+        print "Exporting surface model to %s" % fn
+        nodes,elems = GD.PF['off_model']
+        stl.saveSurface(nodes,elems,fn)   
+
 
 def center_stl():
     """Center the stl model."""
@@ -220,7 +179,7 @@ def rotate_stl():
         
 def clip_stl():
     """Clip the stl model."""
-    global F,oldF
+    F = GD.PF['stl_model']
     itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
     res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
     if accept:
@@ -238,7 +197,7 @@ def clip_stl():
         print nodes
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         draw(F.cclip(w),color='yellow',wait=False)
-        oldF = F
+        GD.PF['old_model'] = F
         F = F.clip(w)
         message("Clipped bbox = %s" % F.bbox())
         #linewidth(2)
@@ -395,12 +354,17 @@ def read_tetgen_volume():
     read_tetgen(surface=False)
 
 
-def export_tetgen_surface():
-    global nodes,surf
+def export_surface():
+    if GD.PF['off_model'] is None:
+        return
+    types = [ "Abaqus INP files (*.inp)" ]
+    fn = askFilename(GD.cfg['workdir'],types,exist=False)
+    if fn:
+        print "Exporting surface model to %s" % fn
+        saveSurface(nodes,elems,fn)   
+    nodes,elems = GD.PF['off_model']
     updateGUI()
-    if surf is not None:
-        print "Exporting surface model"
-        stl_abq.abq_export('%s-surface.inp' % project,nodes,surf,'S3',"Abaqus model generated by tetgen from surface in STL file %s.stl" % project)
+    stl_abq.abq_export(fn,nodes,elems,'S3',"Abaqus model generated by pyFormex from input file %s" % os.path.basename(fn))
 
 
 
@@ -412,6 +376,9 @@ def export_tetgen_volume():
         stl_abq.abq_export('%s-volume.inp' % project,nodes,elems,'C3D%d' % elems.shape[1],"Abaqus model generated by tetgen from surface in STL file %s.stl" % project)
 
 
+_menu = None
+_oldF = None
+
 def create_menu():
     """Create the STL menu."""
     menu = widgets.Menu('STL')
@@ -422,13 +389,7 @@ def create_menu():
         ("&Show shrinked model",show_shrinked),
         ("&Convert STL file to OFF file",convert_stl_to_off),
         ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-##        ("&Read STL file",read_stl),
-##        ("&Read OFF file",read_off),
-##        ("&Read NEU file",read_neu),
-##        ("&Read LARGE STL file",read_large_stl),
-##        ("&Read GUESSED SIZE STL file",read_guess_stl),
-##        ("&Read STL file over OFF",read_off_stl),
-        ("&Save STL model",save_stl),
+        ("&Save Surface Model",save_surface),
         ("&Center model",center_stl),
         ("&Rotate model",rotate_stl),
         ("&Clip model",clip_stl),
@@ -445,7 +406,7 @@ def create_menu():
         ("&Read tetgen volume",read_tetgen_volume),
         ("&Read tetgen model",read_tetgen),
         ("&Show volume model",show_volume),
-        ("&Export surface to Abaqus",export_tetgen_surface),
+        ("&Export surface to Abaqus",export_surface),
         ("&Export volume to Abaqus",export_tetgen_volume),
         ("&Close Menu",close_menu),
         ]
@@ -455,17 +416,18 @@ def create_menu():
 def close_menu():
     """Close the STL menu."""
     # We should also remove the projectLabel widget from the statusbar
-    global menu
+    global _menu
     #GD.gui.statusbar.removeWidget(projectLabel)
-    if menu:
-        menu.close()
-    menu = None
+    if _menu:
+        _menu.close()
+    _menu = None
     
 def show_menu():
-    """Create the STL menu."""
+    """Show the STL menu."""
     #from PyQt4 import QtGui
-    global menu#, autodraw
-    menu = create_menu()
+    global _menu#, autodraw
+    if not _menu:
+        _menu = create_menu()
     #autodraw = False
     #project = F = nodes = elems = surf = None
     #projectLabel = QtGui.QLabel('No Project')
