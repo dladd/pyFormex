@@ -7,10 +7,11 @@ import os,commands
 
 
 file_description = {
-    'stl/off': 'STL or OFF files (*.stl *.off *.neu)',
+    'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',
     'neu': 'Gambit Neutral files (*.neu)',
+    'smesh': 'Tetgen surface mesh files (*.smesh)',
 }
 
 def fileDescription(type):
@@ -27,6 +28,7 @@ def mtime(fn):
     """Return the (UNIX) time of last change of file fn."""
     return os.stat(fn).st_mtime
 
+
 def countLines(fn):
     """Return the number of lines in a text file."""
     sta,out = runCommand("wc %s" % fn)
@@ -34,6 +36,7 @@ def countLines(fn):
         return int(out.split()[0])
     else:
         return 0
+
 
 def runCommand(cmd,RaiseError=True):
     """Run a command and raise error if exited with error."""

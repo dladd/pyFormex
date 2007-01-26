@@ -35,30 +35,21 @@ def sanitize_stl_to_off():
     if fn:     
         return stl.stl_to_off(fn,sanitize=True)
 
-def read_gambit_neutral(fn):
-    """Returns nodes,elems tuple from a gambit neutral file."""
-    utils.runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
-    nodesf = utils.changeExt(fn,'.nodes')
-    elemsf = utils.changeExt(fn,'.elems')
-    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
-    elems = fromfile(elemsf,sep=' ',dtype=Int).reshape((-1,3))
-    return nodes, elems-1
-
 def read_neu():
     return read_model(types=['neu'])
 def read_off():
     return read_model(types='off')
-
-def read_large_stl():
-    return read_model(types='stl',large=True,off=False)
-def read_guess_stl():
-    return read_model(types='stl',guess=True,off=False)
 def read_stl():
     return read_model(types='stl',off=False)
-def read_off_stl():
-    return read_model(types='stl',off=True)
 
-def read_model(types=['stl/off','stl','off','neu'],large=False,guess=False,off=True):
+##def read_large_stl():
+##    return read_model(types='stl',large=True,off=False)
+##def read_guess_stl():
+##    return read_model(types='stl',guess=True,off=False)
+##def read_off_stl():
+##    return read_model(types='stl',off=True)
+
+def read_model(types=['stl/off','stl','off','neu','smesh'],large=False,guess=False,off=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -80,29 +71,37 @@ def read_model(types=['stl/off','stl','off','neu'],large=False,guess=False,off=T
         t = timer.Timer()
         if ext == '.stl':
             coords = stl.read_ascii(fn,large=large,guess=guess,off=off)
-            GD.PF['stl_model'] = Formex(coords)
-            GD.PF['off_model'] = None
-            message("The model has %d triangles" % (coords.shape[0]))
+            set_stl_model(Formex(coords))
         elif ext == '.off':
             nodes,elems = stl.read_off(fn)
-            GD.PF['off_model'] = (nodes,elems)
-            GD.PF['stl_model'] = None
-            message("The model has %d nodes and %d elems" %
-                    (nodes.shape[0],elems.shape[0]))
+            set_off_model(nodes,elems)
         elif ext == '.neu':
-            nodes,elems = read_gambit_neutral(fn)
-            GD.PF['off_model'] = (nodes,elems)
-            GD.PF['stl_model'] = None
-            message("The model has %d nodes and %d elems" %
-                    (nodes.shape[0],elems.shape[0]))
+            nodes,elems = stl.read_gambit_neutral(fn)
+            set_off_model(nodes,elems)
+        elif ext == '.smesh':
+            nodes,elems = tetgen.readSurface(fn)
+            set_off_model(nodes,elems)
         message("Time to import stl: %s seconds" % t.seconds())
     #set_stl(Formex(nodes), os.path.basename(project))
     show_model()
     return fn
 
 
+def set_off_model(nodes,elems):
+    GD.PF['off_model'] = (nodes,elems)
+    GD.PF['stl_model'] = None
+    message("The model has %d nodes and %d elems" %
+            (nodes.shape[0],elems.shape[0]))
+
+
+def set_stl_model(formex):
+    GD.PF['stl_model'] = formex
+    GD.PF['off_model'] = None
+    message("The model has %d triangles" % (formex.nelems()))
+    
+
 def show_model():
-    """Display the model."""
+    """Display the surface model."""
     if GD.PF['stl_model'] is None:
         if GD.PF['off_model'] is not None:
             nodes,elems = GD.PF['off_model']
@@ -113,6 +112,18 @@ def show_model():
     message("BBOX = %s" % F.bbox())
     clear()
     draw(F,color='green')
+
+
+def show_volume():
+    """Display the surface model."""
+    if GD.PF['tet_model'] is None:
+        return
+#    updateGUI()
+    volume = Formex(nodes[elems-1])
+    clear()
+    draw(volume,color='random',eltype='tet')
+    GD.PF['volume'] = volume
+        
 
 def show_shrinked():
     """Display the model."""
@@ -131,38 +142,25 @@ def show_shrinked():
 ## files
 
 
-def stl_to_numpy(fn=None,outf=None):
-    """Convert a normalized stl file to a numpy file.
+##def stl_to_numpy(fn=None,outf=None):
+##    """Convert a normalized stl file to a numpy file.
 
-    A numpy file is just the list of coordinates.
-    If no file (fn) is given, one is asked.
-    The file fn should exist and contain an STL model.
-    If no outf is given, one is constructed by replacing the extension
-    with 'numpy'.
-    """
-    if fn is None:
-        fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
-    if fn:     
-        if outf is None:
-            outf = ''.join([os.path.splitext(fn)[0],'.numpy'])
-        cmd = "gawk '/^[ ]*vertex/{print $2\" \"$3\" \"$4}{next}' %s > %s" % (fn,outf)
-        log("Running command: %s" % cmd)
-        sta,out = commands.getstatusoutput(cmd)
-        return 0
-    return 1
-
-
-def set_stl(newF,name):
-    """Set Formex model and project name."""
-    global F,projectLabel
-    print globals()
-    F = newF
-#    if projectLabel:
-#        projectLabel.setText(name)
-    Globals().update({name:F})
-    message("STL model %s has %d triangles" % (name,F.f.shape[0]))
-    message("The bounding box is\n%s" % F.bbox())
-    show_stl()
+##    A numpy file is just the list of coordinates.
+##    If no file (fn) is given, one is asked.
+##    The file fn should exist and contain an STL model.
+##    If no outf is given, one is constructed by replacing the extension
+##    with 'numpy'.
+##    """
+##    if fn is None:
+##        fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)")
+##    if fn:     
+##        if outf is None:
+##            outf = ''.join([os.path.splitext(fn)[0],'.numpy'])
+##        cmd = "gawk '/^[ ]*vertex/{print $2\" \"$3\" \"$4}{next}' %s > %s" % (fn,outf)
+##        log("Running command: %s" % cmd)
+##        sta,out = commands.getstatusoutput(cmd)
+##        return 0
+##    return 1
 
 
 def save_stl():
@@ -372,8 +370,7 @@ def create_tetgen():
 
 def read_tetgen(surface=True, volume=True):
     """Read a tetgen model from files  fn.node, fn.ele, fn.smesh."""
-    global nodes,elems,surf
-    fn = askFilename(GD.cfg['workdir'],"Tetgen files (*.node)")
+    fn = askFilename(GD.cfg['workdir'],"Tetgen files (*.node *.smesh *.ele)")
     nodes = elems =surf = None
     if fn:
         os.chdir(os.path.dirname(fn))
@@ -384,40 +381,18 @@ def read_tetgen(surface=True, volume=True):
         if volume:
             elems = tetgen.readElems(project+'.ele')
             print "Read %d tetraeders" % elems.shape[0]
+            PF['tet_model'] = (nodes,elems)
         if surface:
             surf = tetgen.readSurface(project+'.smesh')
             print "Read %d triangles" % surf.shape[0]
+            PF['off_model'] = (nodes,surf)
     show_tetgen_surface()
-
 
 def read_tetgen_surface():
     read_tetgen(volume=False)
 
-    
 def read_tetgen_volume():
     read_tetgen(surface=False)
-
-
-def show_tetgen_surface():
-    global nodes,surf
-    updateGUI()
-    if surf is not None:
-        surface = Formex(nodes[surf-1])
-        name = os.path.basename(project)
-        Globals().update({name+'-surface':surface})
-        clear()
-        draw(surface,color='red')
-
-
-def show_tetgen_volume():
-    global nodes,elems
-    updateGUI()
-    if elems is not None:
-        volume = Formex(nodes[elems-1])
-        name = os.path.basename(project)
-        Globals().update({name+'-volume':volume})
-        clear()
-        draw(volume,color='random',eltype='tet')
 
 
 def export_tetgen_surface():
@@ -447,12 +422,12 @@ def create_menu():
         ("&Show shrinked model",show_shrinked),
         ("&Convert STL file to OFF file",convert_stl_to_off),
         ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-        ("&Read STL file",read_stl),
-        ("&Read OFF file",read_off),
-        ("&Read NEU file",read_neu),
-        ("&Read LARGE STL file",read_large_stl),
-        ("&Read GUESSED SIZE STL file",read_guess_stl),
-        ("&Read STL file over OFF",read_off_stl),
+##        ("&Read STL file",read_stl),
+##        ("&Read OFF file",read_off),
+##        ("&Read NEU file",read_neu),
+##        ("&Read LARGE STL file",read_large_stl),
+##        ("&Read GUESSED SIZE STL file",read_guess_stl),
+##        ("&Read STL file over OFF",read_off_stl),
         ("&Save STL model",save_stl),
         ("&Center model",center_stl),
         ("&Rotate model",rotate_stl),
@@ -469,8 +444,7 @@ def create_menu():
         ("&Read tetgen surface",read_tetgen_surface),
         ("&Read tetgen volume",read_tetgen_volume),
         ("&Read tetgen model",read_tetgen),
-        ("&Show tetgen surface",show_tetgen_surface),
-        ("&Show tetgen volume",show_tetgen_volume),
+        ("&Show volume model",show_volume),
         ("&Export surface to Abaqus",export_tetgen_surface),
         ("&Export volume to Abaqus",export_tetgen_volume),
         ("&Close Menu",close_menu),

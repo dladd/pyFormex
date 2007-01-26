@@ -13,6 +13,7 @@ from numpy import *
 from formex import *
 
 
+# The Stl class should not be used yet! Use the functions instead.
 class Stl(Formex):
     """A specialized Formex subclass representing stl models."""
 
@@ -157,6 +158,20 @@ def read_off(fn):
     return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
+def read_gambit_neutral(fn):
+    """Read a triangular surface mesh in Gambit neutral format.
+
+    The .neu file nodes are numbered from 1!
+    Returns a nodes,elems tuple.
+    """
+    runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
+    nodesf = changeExt(fn,'.nodes')
+    elemsf = changeExt(fn,'.elems')
+    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
+    elems = fromfile(elemsf,sep=' ',dtype=Int).reshape((-1,3))
+    return nodes, elems-1
+
+
 def stl_to_off(stlname,offname=None,sanitize=True):
     """Transform an .stl model to .off format."""
     if not offname:
@@ -178,6 +193,34 @@ def off_to_tet(fn):
     nodes,elems = read_off(fn)
     write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
 
+
+
+def border(elems):
+    """Detect the border elements of an STL model.
+
+    The input is an (nelems,3) integer array of elements each defined
+    by 3 node numbers.
+    The return value is an (nelems) array holding the number (0,1,2 or 3)
+    of border edges for each element.
+    """
+    magic = elems.max() + 1
+    if magic > 2**31:
+        print "TOO MANY ELEMENTS: can not determine border edges"
+        return elems
+
+    triedges = [ [0,1], [1,2], [2,0] ]
+    # all the edges of all elements (nelems,3,2)
+    edges = elems[:,triedges].astype(int64)
+    # encode the edges and reverse edges
+    codes = edges[:,:,0] * magic + edges[:,:,1]  
+    rcodes = edges[:,:,1] * magic + edges[:,:,0]
+    # sort the edges to facilitate searching
+    fcodes = codes.ravel()
+    fcodes.sort()
+    # lookup reverse edges matching edges
+    pos = fcodes.searchsorted(rcodes)
+    f = (fcodes[pos] != rcodes).astype(int32)
+    return f.sum(axis=1)
     
 
 if __name__ == '__main__':
