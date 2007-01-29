@@ -175,7 +175,6 @@ def play(fn,argv=[]):
     message("Running script (%s)" % fn)
     playScript(file(fn,'r'),fn,argv)
     message("Finished script %s" % fn)
-    print "Left arguments: %s" % argv
     return argv
 
 
@@ -219,10 +218,10 @@ def runApp(args):
     # each script should pop the required arguments from the list,
     # and return the remainder
     while len(args) > 0:
-        if os.path.exists(args[0]) and utils.isPyFormex(args[0]):
-            args = play(args[0],argv=args[1:])
-            #print "Returned args: %s" % args
-        if type(args) != list:
-            args = []
+        scr = args.pop(0) 
+        if os.path.exists(scr) and utils.isPyFormex(scr):
+            play(scr,args)
+        else:
+            raise RuntimeError,"No such pyFormex script found: %s" % scr
 
 #### End

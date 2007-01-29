@@ -7,6 +7,7 @@ STL plugin menu for pyFormex.
 """
 
 import globaldata as GD
+from globaldata import PF
 import utils
 import timer
 from plugins import f2abq, stl, tetgen, stl_abq
@@ -34,7 +35,13 @@ def sanitize_stl_to_off():
         return stl.stl_to_off(fn,sanitize=True)
 
 
-def read_model(types=['stl/off','stl','off','neu','smesh']):
+def set_color():
+    color = PF.get('stl_color','green')
+    data = askItems({'stl_color':color})
+    PF['stl_color'] = data['stl_color']
+
+
+def read_model(types=['stl/off','stl','off','neu','smesh'],show=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -54,78 +61,75 @@ def read_model(types=['stl/off','stl','off','neu','smesh']):
         project,ext = os.path.splitext(fn)
         message("Reading file %s" % fn)
         t = timer.Timer()
-        if ext == '.stl':
-            coords = stl.read_stl(fn)
-            set_stl_model(Formex(coords))
-        elif ext == '.off':
-            nodes,elems = stl.read_off(fn)
-            set_off_model(nodes,elems)
-        elif ext == '.neu':
-            nodes,elems = stl.read_gambit_neutral(fn)
-            set_off_model(nodes,elems)
-        elif ext == '.smesh':
-            nodes,elems = tetgen.readSurface(fn)
-            set_off_model(nodes,elems)
+        nodes,elems =stl.readSurface(fn)
+        set_off_model(nodes,elems)
         message("Time to import stl: %s seconds" % t.seconds())
-    #set_stl(Formex(nodes), os.path.basename(project))
-    show_model()
+    if show:
+        show_model()
     return fn
 
 
 def set_off_model(nodes,elems):
-    GD.PF['off_model'] = (nodes,elems)
-    GD.PF['stl_model'] = Formex(nodes[elems])
+    PF['off_model'] = (nodes,elems)
+    PF['stl_model'] = Formex(nodes[elems])
     message("The model has %d nodes and %d elems" %
             (nodes.shape[0],elems.shape[0]))
 
 
-def set_stl_model(formex):
-    GD.PF['stl_model'] = formex
-    GD.PF['off_model'] = None
-    message("The model has %d triangles" % (formex.nelems()))
+def set_stl_model(F):
+    PF['stl_model'] = F
+    PF['off_model'] = None
+    message("The model has %d triangles" % (F.nelems()))
     
 
 def show_model():
     """Display the surface model."""
-    if GD.PF['stl_model'] is None:
-        if GD.PF['off_model'] is not None:
-            nodes,elems = GD.PF['off_model']
-            GD.PF['stl_model'] = Formex(nodes[elems])
-    if GD.PF['stl_model'] is None:
+    if PF['stl_model'] is None:
         return
-    F = GD.PF['stl_model']
+    F = PF['stl_model']
     message("BBOX = %s" % F.bbox())
     clear()
-    draw(F,color='green')
+    draw(F,color=PF.get('stl_color','prop'))
 
 
 def show_volume():
     """Display the surface model."""
-    if GD.PF['tet_model'] is None:
+    if PF['tet_model'] is None:
         return
-#    updateGUI()
+    #    updateGUI()
     volume = Formex(nodes[elems-1])
     clear()
     draw(volume,color='random',eltype='tet')
-    GD.PF['volume'] = volume
+    PF['volume'] = volume
         
 
 def show_shrinked():
     """Display the model."""
-    if GD.PF['stl_model'] is None:
-        if GD.PF['off_model'] is not None:
-            nodes,elems = GD.PF['off_model']
-            GD.PF['stl_model'] = Formex(nodes[elems])
-    if GD.PF['stl_model'] is None:
+    if PF['stl_model'] is None:
         return
-    F = GD.PF['stl_model']
+    F = PF['stl_model']
     message("BBOX = %s" % F.bbox())
     clear()
     draw(F.shrink(0.8),color='green')
 
 
-def save_surface(types=['stl/off','stl','off','neu','smesh']):
-    if GD.PF['off_model'] is None:
+
+
+def write_stl(types=['stl']):
+    if PF['stl_model'] is None:
+        warning("Nothing to save: no stl_model")
+        return
+    types = map(utils.fileDescription,types)
+    fn = askFilename(GD.cfg['workdir'],types,exist=False)
+    if fn:
+        print "Exporting stl model to %s" % fn
+        F = PF['stl_model']
+        stl.write_ascii(F.f,fn)   
+
+
+def write_surface(types=['stl/off','stl','off','neu','smesh']):
+    if PF['off_model'] is None:
+        warning("Nothing to save: no off_model")
         return
     if type(types) == str:
         types = [ types ]
@@ -133,8 +137,8 @@ def save_surface(types=['stl/off','stl','off','neu','smesh']):
     fn = askFilename(GD.cfg['workdir'],types,exist=False)
     if fn:
         print "Exporting surface model to %s" % fn
-        nodes,elems = GD.PF['off_model']
-        stl.saveSurface(nodes,elems,fn)   
+        nodes,elems = PF['off_model']
+        stl.writeSurface(fn,nodes,elems)   
 
 
 def center_stl():
@@ -179,7 +183,7 @@ def rotate_stl():
         
 def clip_stl():
     """Clip the stl model."""
-    F = GD.PF['stl_model']
+    F = PF['stl_model']
     itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
     res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
     if accept:
@@ -197,7 +201,7 @@ def clip_stl():
         print nodes
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         draw(F.cclip(w),color='yellow',wait=False)
-        GD.PF['old_model'] = F
+        PF['old_model'] = F
         F = F.clip(w)
         message("Clipped bbox = %s" % F.bbox())
         #linewidth(2)
@@ -355,14 +359,14 @@ def read_tetgen_volume():
 
 
 def export_surface():
-    if GD.PF['off_model'] is None:
+    if PF['off_model'] is None:
         return
     types = [ "Abaqus INP files (*.inp)" ]
     fn = askFilename(GD.cfg['workdir'],types,exist=False)
     if fn:
         print "Exporting surface model to %s" % fn
         saveSurface(nodes,elems,fn)   
-    nodes,elems = GD.PF['off_model']
+    nodes,elems = PF['off_model']
     updateGUI()
     stl_abq.abq_export(fn,nodes,elems,'S3',"Abaqus model generated by pyFormex from input file %s" % os.path.basename(fn))
 
@@ -376,6 +380,33 @@ def export_tetgen_volume():
         stl_abq.abq_export('%s-volume.inp' % project,nodes,elems,'C3D%d' % elems.shape[1],"Abaqus model generated by tetgen from surface in STL file %s.stl" % project)
 
 
+def show_nodes():
+    n = 0
+    data = askItems({'node number':n})
+    n = int(data['node number'])
+    if n > 0:
+        nodes,elems = PF['off_model']
+        print "Node %s = %s",(n,nodes[n])
+
+def combine():
+    print "First part"
+    read_model(show=False)
+    F = PF['stl_model']
+    F.setProp(1)
+    draw(F)
+
+    print "Second part"
+    read_model(show=False)
+    G = PF['stl_model']
+    F.setProp(2)
+    draw(G)
+
+    PF['stl_model'] = Formex.concatenate([F,G])
+    PF['off_model'] = None
+    PF['color'] = 'prop'
+    show_model()
+
+
 _menu = None
 _oldF = None
 
@@ -387,9 +418,13 @@ def create_menu():
         ("&Read STL/OFF model",read_model),
         ("&Show model",show_model),
         ("&Show shrinked model",show_shrinked),
+        ("&Set color",set_color),
+        ("&Print Nodal Coordinates",show_nodes),
+        ("&Combine two models",combine),
         ("&Convert STL file to OFF file",convert_stl_to_off),
         ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-        ("&Save Surface Model",save_surface),
+        ("&Write Surface Model",write_surface),
+        ("&Write STL Model",write_stl),
         ("&Center model",center_stl),
         ("&Rotate model",rotate_stl),
         ("&Clip model",clip_stl),
@@ -432,6 +467,8 @@ def show_menu():
     #project = F = nodes = elems = surf = None
     #projectLabel = QtGui.QLabel('No Project')
     #GD.gui.statusbar.addWidget(projectLabel)
+
+
     
 
 if __name__ == "main":

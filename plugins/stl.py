@@ -43,7 +43,7 @@ def compute_normals(a,normalized=True):
     return n
 
 
-def write_ascii(a,f):
+def write_ascii(f,a):
     """Export an [n,3,3] float array as an ascii .stl file."""
 
     own = type(f) == str
@@ -182,9 +182,23 @@ def read_gambit_neutral(fn):
     elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
     return nodes, elems-1
 
+def readSurface(fn):
+    ext = os.path.splitext(fn)[1]
+    if ext == '.stl':
+        nodes,elems = read_stl(fn)
+    elif ext == '.off':
+        nodes,elems = read_off(fn)
+    elif ext == '.neu':
+        nodes,elems = read_gambit_neutral(fn)
+    elif ext == '.smesh':
+        nodes,elems = tetgen.readSurface(fn)
+    else:
+        print "Cannot read file %s" % fn
+    return nodes,elems
+
 
 def write_stl(fn,nodes,elems):
-    write_ascii(Formex(nodes[elems]),fn)
+    write_ascii(fn,nodes[elems])
 
 def write_off(fn,nodes,elems):
     if nodes.shape[1] != 3 or elems.shape[1] != 3:
@@ -192,17 +206,20 @@ def write_off(fn,nodes,elems):
     fil = file(fn,'w')
     fil.write("OFF\n")
     fil.write("%s %s 0\n" % (nodes.shape[0],elems.shape[0]))
-    fil.write(str(nodes)[1:-1])
+    for nod in nodes:
+        fil.write("%s %s %s\n" % tuple(nod))
+    for el in elems:
+        fil.write("%s %s %s\n" % tuple(el))
     fil.close()
 
 def write_neu(fn,nodes,elems):
     pass
 def write_smesh(fn,nodes,elems):
-    tetgen.write_node_smesh(fn,nodes,elems)
+    tetgen.writeSurface(fn,nodes,elems)
 
-def saveSurface(nodes,elems,fn):
+def writeSurface(fn,nodes,elems):
     ext = os.path.splitext(fn)[1]
-    print "Saving as type %s" % ext
+    print "Writing %s triangles to file %s" % (elems.shape[0],fn)
     if ext == '.stl':
         write_stl(fn,nodes,elems)
     elif ext == '.off':
@@ -248,7 +265,7 @@ def stl_to_femodel(formex,sanitize=True):
 
 def off_to_tet(fn):
     """Transform an .off model to tetgen (.node/.smesh) format."""
-    message("Transforming .OFF model %s to tetgen .smesh" % fn)
+    GD.message("Transforming .OFF model %s to tetgen .smesh" % fn)
     nodes,elems = read_off(fn)
     write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
 
@@ -280,6 +297,72 @@ def border(elems):
     pos = fcodes.searchsorted(rcodes)
     f = (fcodes[pos] != rcodes).astype(int32)
     return f.sum(axis=1)
+
+
+
+def magic_numbers(elems,magic):
+    elems = elems.astype(int64)
+    elems.sort(axis=1)
+    mag = ( elems[:,0] * magic + elems[:,1] ) * magic + elems[:,2]
+    return mag
+
+
+def demagic(mag,magic):
+    first2,third = mag / magic, mag % magic
+    first,second = first2 / magic, first2 % magic
+    return column_stack([first,second,third]).astype(int)
+
+def find_triangles(elems,triangles):
+    """Find triangles from a surface mesh.
+
+    elems is a (nelems,3) integer array of triangles.
+    triangles is a (ntri,3) integer array of triangles to find.
+    
+    Returns a (ntri,) integer array with the triangles numbers.
+    """
+    magic = elems.max()+1
+
+    mag1 = magic_numbers(elems,magic)
+    mag2 = magic_numbers(triangles,magic)
+
+    nelems = elems.shape[0]
+    srt = mag1.argsort()
+    old = arange(nelems)[srt]
+    mag1 = mag1[srt]
+    pos = mag1.searchsorted(mag2)
+    tri = where(mag1[pos]==mag2, old[pos], -1)
+    return tri
+    
+
+def remove_triangles(elems,remove):
+    """Remove triangles from a surface mesh.
+
+    elems is a (nelems,3) integer array of triangles.
+    remove is a (nremove,3) integer array of triangles to remove.
+    
+    Returns a (nelems-nremove,3) integer array with the triangles of
+    nelems where the triangles of remove have been removed.
+    """
+    print elems,remove
+    GD.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
+    magic = elems.max()+1
+
+    mag1 = magic_numbers(elems,magic)
+    mag2 = magic_numbers(remove,magic)
+
+    mag1.sort()
+    mag2.sort()
+
+    nelems = mag1.shape[0]
+
+    pos = mag1.searchsorted(mag2)
+    mag1[pos] = -1
+    mag1 = mag1[mag1 >= 0]
+
+    elems = demagic(mag1,magic)
+    GD.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
+
+    return elems
     
 
 if __name__ == '__main__':
