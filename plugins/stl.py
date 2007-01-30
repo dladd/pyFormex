@@ -51,6 +51,7 @@ def write_ascii(f,a):
         f = file(f,'w')
     f.write("solid  Created by %s\n" % GD.Version)
     v = compute_normals(a)
+    print "Degenerate facets",where(isnan(v))
     for e,n in zip(a,v):
         f.write("  facet normal %f %f %f\n" % tuple(n))
         f.write("    outer loop\n")
@@ -276,8 +277,11 @@ def border(elems):
 
     The input is an (nelems,3) integer array of elements each defined
     by 3 node numbers.
-    The return value is an (nelems) array holding the number (0,1,2 or 3)
-    of border edges for each element.
+    The return value is an (nelems,3) bool array flagging all the border edges.
+    The result can be further used as follows:
+      where(result) gives a tuple of indices of the border edges
+      result.sum(axis=1) gives the number of border edges for all elements
+      where(any(result,axis=1))[0] gives a list of elements with borders
     """
     magic = elems.max() + 1
     if magic > 2**31:
@@ -295,9 +299,17 @@ def border(elems):
     fcodes.sort()
     # lookup reverse edges matching edges
     pos = fcodes.searchsorted(rcodes)
-    f = (fcodes[pos] != rcodes).astype(int32)
-    return f.sum(axis=1)
+    return fcodes[pos] != rcodes
 
+
+def nborder(elems):
+    """Detect the border elements of an STL model.
+
+    Returns an (nelems) integer array with the number of border edges
+    for each all elements. This is equivalent to
+    border(elems).sum(axis=1).
+    """
+    return border(elems).sum(axis=1)
 
 
 def magic_numbers(elems,magic):
@@ -310,7 +322,7 @@ def magic_numbers(elems,magic):
 def demagic(mag,magic):
     first2,third = mag / magic, mag % magic
     first,second = first2 / magic, first2 % magic
-    return column_stack([first,second,third]).astype(int)
+    return column_stack([first,second,third]).astype(int32)
 
 def find_triangles(elems,triangles):
     """Find triangles from a surface mesh.

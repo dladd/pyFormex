@@ -89,9 +89,9 @@ def readSurface(fn):
 def writeNodes(fn,nodes):
     """Write a tetgen .node file."""
     fil = file(fn,'w')
-    fil.write("%s %s 0 0\n" % nodes.shape)
+    fil.write("%d %d 0 0\n" % nodes.shape)
     for i,n in enumerate(nodes):
-        fil.write("%s %s %s %s\n" % (i,n[0],n[1],n[2]))
+        fil.write("%d %f %f %f\n" % (i,n[0],n[1],n[2]))
     fil.close()
 
 
