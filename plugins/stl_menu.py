@@ -60,12 +60,14 @@ def read_model(types=['stl/off','stl','off','neu','smesh'],show=True):
         message("Your current workdir is %s" % os.getcwd())
         project,ext = os.path.splitext(fn)
         message("Reading file %s" % fn)
+        GD.gui.setBusy()
         t = timer.Timer()
         nodes,elems =stl.readSurface(fn)
         set_off_model(nodes,elems)
+        GD.gui.setBusy(False)
         message("Time to import stl: %s seconds" % t.seconds())
-    if show:
-        show_model()
+        if show:
+            show_model()
     return fn
 
 
@@ -114,19 +116,6 @@ def show_shrinked():
 
 
 
-
-def write_stl(types=['stl']):
-    if PF['stl_model'] is None:
-        warning("Nothing to save: no stl_model")
-        return
-    types = map(utils.fileDescription,types)
-    fn = askFilename(GD.cfg['workdir'],types,exist=False)
-    if fn:
-        print "Exporting stl model to %s" % fn
-        F = PF['stl_model']
-        stl.write_ascii(F.f,fn)   
-
-
 def write_surface(types=['stl/off','stl','off','neu','smesh']):
     if PF['off_model'] is None:
         warning("Nothing to save: no off_model")
@@ -138,7 +127,24 @@ def write_surface(types=['stl/off','stl','off','neu','smesh']):
     if fn:
         print "Exporting surface model to %s" % fn
         nodes,elems = PF['off_model']
+        GD.gui.setBusy()
         stl.writeSurface(fn,nodes,elems)   
+        GD.gui.setBusy(False)
+
+
+
+def write_stl(types=['stl']):
+    if PF['stl_model'] is None:
+        warning("Nothing to save: no stl_model")
+        return
+    types = map(utils.fileDescription,types)
+    fn = askFilename(GD.cfg['workdir'],types,exist=False)
+    if fn:
+        print "Exporting stl model to %s" % fn
+        F = PF['stl_model']
+        GD.gui.setBusy()
+        stl.write_ascii(fn,F.f)   
+        GD.gui.setBusy(False)
 
 
 def center_stl():
@@ -299,7 +305,9 @@ def fill_holes():
             draw(F,color='yellow',view='front')
             oldF = F
             linewidth(2)
-            read_stl(fn1)
+            GD.gui.setBusy()
+            stl.readSurface(fn1)
+            GD.gui.setBusy(False)
 
 
 def flytru_stl():

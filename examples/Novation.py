@@ -55,7 +55,7 @@ if ack('Export to .stl?'):
         G += F.selectNodes([0,i-1,i])
     clear()
     draw(G)
-    stl.write_ascii(G.f,f)
+    stl.write_ascii(f,G.f)
     f.close()
 
 if ack('Show with smooth rendering?'):

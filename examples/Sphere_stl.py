@@ -68,6 +68,6 @@ if ack('Export this model in STL format?'):
     if fn:
         from plugins import stl
         f = file(fn,'w')
-        stl.write_ascii(T.f,f)
+        stl.write_ascii(f,T.f)
         f.close()
 

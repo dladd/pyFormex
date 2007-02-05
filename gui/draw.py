@@ -155,8 +155,6 @@ def playScript(scr,name=None):
     if GD.gui:
         GD.gui.actions['Step'].setEnabled(True)
         GD.gui.actions['Continue'].setEnabled(True)
-        GD.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
-
        
         GD.app.processEvents()
     # We need to pass formex globals to the script
@@ -203,7 +201,6 @@ def playScript(scr,name=None):
     finally:
         scriptRunning = False # release the lock in case of an error
         if GD.gui:
-            GD.app.restoreOverrideCursor()
             GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
     if exitall:
@@ -410,6 +407,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         # An array with 3 colums will be fine.
         color = map(colors.GLColor,color)
 
+    GD.gui.setBusy()
     actor = actors.FormexActor(F,color,GD.cfg['draw/linewidth'],eltype=eltype)
     GD.canvas.addActor(actor)
     if view:
@@ -425,6 +423,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         saveNext()
     if allowwait and wait:
         drawlock()
+    GD.gui.setBusy(False)
     return actor
 
 

@@ -260,7 +260,7 @@ def stl_to_femodel(formex,sanitize=True):
     STL model and may remove/fix some elements.
     """
     fn = changeExt(os.path.tempnam('.','pyformex-tmp'),'.stl')
-    write_ascii(formex.f,fn)
+    write_ascii(fn,formex.f)
     return read_stl(fn,sanitize)
 
 
@@ -297,8 +297,9 @@ def border(elems):
     # sort the edges to facilitate searching
     fcodes = codes.ravel()
     fcodes.sort()
-    # lookup reverse edges matching edges
-    pos = fcodes.searchsorted(rcodes)
+    # lookup reverse edges matching edges: if they exist, fcodes[pos]
+    # will equal rcodes
+    pos = fcodes.searchsorted(rcodes).clip(min=0,max=fcodes.shape[0]-1)
     return fcodes[pos] != rcodes
 
 

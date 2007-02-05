@@ -376,6 +376,16 @@ class GUI(QtGui.QMainWindow):
         GD.canvas.createView(name,angles)
 
 
+    def setBusy(self,busy=True):
+        if busy:
+            GD.app.setOverrideCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+        else:
+            GD.app.restoreOverrideCursor()
+        GD.app.processEvents()
+
+
+
+
 def messageBox(message,level='info',actions=['OK']):
     """Display a message box and wait for user response.
 
@@ -396,6 +406,8 @@ def messageBox(message,level='info',actions=['OK']):
         ans = w.about(w,GD.Version,message)
     GD.gui.update()
     return ans
+
+
 
 
 def setStyle(style):
