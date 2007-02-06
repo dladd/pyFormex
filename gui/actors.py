@@ -5,6 +5,7 @@
 from OpenGL import GL,GLU
 from colors import *
 from formex import *
+from plugins import elements
 
 
 markscale = 0.001
@@ -46,13 +47,58 @@ def drawLines(x,c,w):
     GL.glBegin(GL.GL_LINES)
     for i in range(x.shape[0]):
         GL.glColor3f(*(c[i]))
-        GL.glVertex3f(*(x[i][0]))
-        GL.glVertex3f(*(x[i][1]))
+        GL.glVertex3fv(x[i][0])
+        GL.glVertex3fv(x[i][1])
+    GL.glEnd()
+
+
+def drawEdges(x,edges,color=None,width=None):
+    """Draw a collection of edges.
+
+    x is a (ncoords,3) coordinate array.
+    edges is a (nedges,2) integer array of connected node numbers.
+    color is a 3-component color.
+    width is the linewidth.
+    """
+    print "DRAWEDGES"
+    print x.shape
+    print edges.shape
+    if color is not None:
+        GL.glColor3fv(color)
+    if width is not None:
+        GL.glLineWidth(width)
+    GL.glBegin(GL.GL_LINES)
+    for e in edges:
+        GL.glVertex3fv(x[e[0]])
+        GL.glVertex3fv(x[e[1]])
+    GL.glEnd()
+
+
+def drawColoredEdges(x,edges,color,width=None):
+    """Draw a collection of edges.
+
+    x is a (ncoords,3) coordinate array.
+    edges is a (nedges,2) integer array of connected node numbers.
+    color is a (nedges,3) color array.
+    width is the linewidth.
+    """
+    print "DRAWCOLOREDEDGES"
+    print x.shape
+    print edges.shape
+    print color.shape
+    if width is not None:
+        GL.glLineWidth(width)
+    GL.glBegin(GL.GL_LINES)
+    for c,e in zip(color,edges):
+        print x[e[0]],x[e[1]]
+        GL.glColor3fv(c)
+        GL.glVertex3fv(x[e[0]])
+        GL.glVertex3fv(x[e[1]])
     GL.glEnd()
 
 
 
-def drawEdges(x,c,w):
+def drawTriEdges(x,c,w):
     """Draw a collection of lines.
 
     x is a (ntri,2*n,3) shaped array of coordinates.
@@ -148,35 +194,72 @@ def drawQuadrilaterals(x,c,mode):
 
  
 ### Actors ###############################################
-#
-# Actors are anything that can be drawn in an openGL 3D scene.
-# An actor minimally needs two functions:
-#   bbox() : to calculate the bounding box of the actor.
-#   draw(mode='wireframe') : to actually draw the actor.
 
-class CubeActor:
+class Actor(object):
+    """An Actor is anything that can be drawn in an OpenGL 3D Scene.
+
+    The visualisation of the Scene Actors is dependent on camera position and
+    angles, clipping planes, rendering mode and lighting.
+    
+    An actor minimally should have one attirbute(bbox) and two functions:
+    __init__(): to initialize the actor.
+    draw(mode='wireframe'): to draw the actor. Takes a mode argument so the
+      drawing function can act differently depending on the mode. There are
+      currently 3 modes: wireframe, flat, smooth.
+
+    Subclass __init__() functions should always call the Actor's __init__().
+    If a bounding box is specified, the Actor's bbox attribute will be set.
+    Alternatively, one can call Actor.__init__() without bbox argument,
+    and directly set the bbox attribute.
+    """
+    def __init__(self,bbox=None):
+        if bbox is not None:
+            self.bbox = bbox
+    
+
+class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
     def __init__(self,size,color=[red,cyan,green,magenta,blue,yellow]):
         self.size = size
         self.color = color
-
-    def bbox(self):
-        return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
+        Actor.__init__(self,bbox=(0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]]))
 
     def draw(self,mode='wireframe'):
         """Draw the cube."""
         drawCube(self.size,self.color)
 
-class TriadeActor:
+
+
+class BboxActor(Actor):
+    """Draws a bbox."""
+
+    def __init__(self,bbox,color=None,linewidth=None):
+        Actor.__init__(self,bbox)
+        self.color = color
+        self.linewidth = linewidth
+        self.vertices = array(elements.Hex8.nodes) * (bbox[1]-bbox[0]) + bbox[0]
+        self.edges = array(elements.Hex8.edges)
+        self.facets = array(elements.Hex8.faces)
+
+
+    def draw(self,mode):
+        """Always draws a wireframe model of the bbox."""
+        if self.color is not None and len(self.color.shape) == 2:
+            drawColoredEdges(self.vertices,self.edges,self.color,self.linewidth)
+        else:
+            drawEdges(self.vertices,self.edges,self.color,self.linewidth)
+            
+    
+
+class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes."""
 
     def __init__(self,size,color=[red,green,blue,cyan,magenta,yellow]):
         self.size = size
         self.color = color
-
-    def bbox(self):
-        return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
+        Actor.__init__(self)
+        self.bbox = (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
 
     def draw(self,mode='wireframe'):
         """Draw the triade."""
@@ -220,7 +303,7 @@ class TriadeActor:
         GL.glEnd()
 
 
-class FormexActor(Formex):
+class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
 
     def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,eltype=None):
@@ -237,6 +320,7 @@ class FormexActor(Formex):
         in wireframe mode.
         """
         Formex.__init__(self,F.f,F.p)
+        Actor.__init__(self,F.bbox())
         self.list = None
         if self.p is None:
             self.setProp(arange(self.nelems()))
@@ -282,7 +366,7 @@ class FormexActor(Formex):
             elif self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
-                drawEdges(coords,self.color[self.p],self.linewidth)
+                drawTriEdges(coords,self.color[self.p],self.linewidth)
                 
         elif nnod == 3:
             drawTriangles(self.f,self.color[self.p],mode)
@@ -316,8 +400,32 @@ class FormexActor(Formex):
         GL.glEndList()
 
 
-##class BboxActor(FormexActor):
-##    """Draws a bbox."""
 
-##    def __init__(self,bbox,color=[black],linewidth=1.0):
-##        F = CubeFormex(
+
+
+class SurfaceActor(Actor):
+    """Draws a triangulated surface."""
+
+    def __init__(self,nodes,elems,color=black,linewidth=1.0):
+        
+        Actor.__init__(self)
+        self.color = array(color)
+        self.linewidth = linewidth
+        self.vertices = nodes
+        self.bbox = boundingBox(nodes)
+        edges = elems[:,elements.Tri3.edges].reshape((-1,2))
+        self.edges = edges[edges[:,0] < edges[:,1]]
+        self.facets = elems
+        print "SURFACE ACTOR"
+        print self.color.shape
+        print self.vertices.shape
+        print self.edges.shape
+        print self.facets.shape
+
+    def draw(self,mode):
+        """Always draws a wireframe model of the bbox."""
+        if self.color.ndim == 2:
+        
+            drawColoredEdges(self.vertices,self.edges,self.color,self.linewidth)
+        else:
+            drawEdges(self.vertices,self.edges,self.color,self.linewidth)

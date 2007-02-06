@@ -172,7 +172,7 @@ class Canvas(object):
         # TEST: use last actor
         if bbox is None:
             if len(self.actors) > 0:
-                self.bbox = self.actors[-1].bbox()
+                self.bbox = self.actors[-1].bbox
             else:
                 self.bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
         else:

@@ -9,26 +9,31 @@ This is compatible with the pyFormex data model.
 
 import globaldata as GD
 from plugins import tetgen
-from utils import runCommand, changeExt,countLines
+from utils import runCommand, changeExt,countLines,mtime
 from numpy import *
 from formex import Formex
 import os
 
 
 # The Stl class should not be used yet! Use the functions instead.
-class Stl(Formex):
-    """A specialized Formex subclass representing stl models."""
+class Stl(object):
+    """A 3D surface described by a set of triangles."""
 
     def __init__(self,*args):
-        Formex.__init__(self,*args)
-        if self.f.shape[1] != 3:
-            if self.f.size == 0:
-                self.f.shape = (0,3,3)
-            else:
-                raise RuntimeError,"Stl: should have 3 nodes per element"   
-        print self.f.shape
-        self.n = None
-        self.a = None
+        """Create a new STL surface.
+
+        The surface contains ntri triangles, each having 3 vertices with
+        3 coordinates.
+        The surface can be initialized from one of the following:
+        - a (ntri,3,3) shaped array of floats ;
+        - a 3-plex Formex with ntri elements ;
+        - an (ncoords,3) float array of vertex coordinates and
+          an (ntri,3) integer array of vertex numbers ;
+        - an (ncoords,3) float array of vertex coordinates,
+          an (nedges,2) integer array of vertex numbers,
+          an (ntri,3) integer array of edges numbers.
+        """
+        pass
 
 
 def compute_normals(a,normalized=True):
@@ -186,7 +191,12 @@ def read_gambit_neutral(fn):
 def readSurface(fn):
     ext = os.path.splitext(fn)[1]
     if ext == '.stl':
-        nodes,elems = read_stl(fn)
+        ofn = changeExt(fn,'.off')
+        if os.path.exists(ofn) and mtime(ofn) > mtime(fn):
+            # There is a more recent .off, let's use it
+            nodes,elems = read_off(ofn)
+        else:
+            nodes,elems = read_stl(fn)
     elif ext == '.off':
         nodes,elems = read_off(fn)
     elif ext == '.neu':

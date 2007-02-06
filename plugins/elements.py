@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # $Id$
-"""Element local numbering"""
+"""Element local coordinates and numbering.
+
+The elements in this module are defined in a unit cell of their
+local coordinates. See finite_elements.py for a variant using
+natural coordinates familiar in Finite Element simulations.
+"""
 
 class Element(object):
     """Element base class: an empty element.
@@ -41,10 +46,10 @@ class Tri3(Element):
 
 class Quad4(Element):
     """A 4-node quadrilateral"""
-    nodes = [ [  1.0,  1.0, 0.0 ],
-              [ -1.0,  1.0, 0.0 ],
-              [ -1.0, -1.0, 0.0 ],
-              [  1.0, -1.0, 0.0 ],
+    nodes = [ [  0.0,  0.0, 0.0 ],
+              [  0.0,  1.0, 0.0 ],
+              [  1.0,  1.0, 0.0 ],
+              [  1.0,  0.0, 0.0 ],
               ]
 
     edges = [ [0,1], [1,2], [2,3], [3,0] ]
@@ -82,12 +87,12 @@ class Hex8(Element):
               [ 1.0, 1.0, 1.0 ],
               ]
     
-    edges = [ [0,1], [1,3], [3,2], [2,0],
-              [4,5], [5,7], [7,6], [6,4],
-              [0,4], [1,5], [3,7], [2,6] ]
+    edges = [ [0,1], [2,3], [4,5], [6,7],
+              [0,2], [1,3], [4,6], [5,7],
+              [0,4], [1,5], [2,6], [3,7] ]
     
     faces = [ [0,2,3,1], [4,5,7,6],
               [0,1,5,4], [2,6,7,3],
               [0,4,6,2], [1,3,7,5] ]
 
-    element = [ 0,1,3,2,4,5,7,6 ]
+    element = [ 7,6,4,5,3,2,0,1, ]

@@ -500,6 +500,13 @@ def runApp(args):
         menus.append(m)
     GD.board.write(GD.Version+"   (C) B. Verhegghe")
     draw.reset()
+    # Load plugins
+    for p in GD.cfg.get('gui/plugins',[]):
+        print "loading plugin %s" % p
+        if p == 'stl':
+            from plugins import stl_menu
+            stl_menu.show_menu()
+    GD.gui.update()
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):

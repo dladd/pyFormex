@@ -326,6 +326,16 @@ def distanceFromPoint(f,p):
     d = sqrt(d)
     return d.reshape(f.shape[:-1])
 
+def boundingBox(a):
+    """Return the bounding box of an array of coordinates.
+
+    a is a [...,3] array of coordinates.
+    the return value is a (2,3) array, where the first row holds the
+    minimum and the second row the maximum coordinates.
+    """
+    coords = a.reshape((-1,3))
+    return row_stack([ coords.min(axis=0), coords.max(axis=0) ])
+
 
 ###########################################################################
 ##
@@ -549,9 +559,8 @@ class Formex:
         It is returned as a [2,3] array: the first row holds the
         minimal coordinates and the second one the maximal.
         """
-        min = [ self.f[:,:,i].min() for i in range(self.f.shape[2]) ]
-        max = [ self.f[:,:,i].max() for i in range(self.f.shape[2]) ]
-        return array([min, max])
+        return boundingBox(self.f)
+
 
     def center(self):
         """Return the center of the Formex.

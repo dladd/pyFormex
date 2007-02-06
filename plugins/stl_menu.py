@@ -11,7 +11,7 @@ from globaldata import PF
 import utils
 import timer
 from plugins import f2abq, stl, tetgen, stl_abq
-from gui import widgets
+from gui import widgets,actors,colors
 from gui.draw import *
 from formex import Formex
 import commands, os
@@ -63,9 +63,9 @@ def read_model(types=['stl/off','stl','off','neu','smesh'],show=True):
         GD.gui.setBusy()
         t = timer.Timer()
         nodes,elems =stl.readSurface(fn)
+        message("Time to import stl: %s seconds" % t.seconds())
         set_off_model(nodes,elems)
         GD.gui.setBusy(False)
-        message("Time to import stl: %s seconds" % t.seconds())
         if show:
             show_model()
     return fn
@@ -91,7 +91,25 @@ def show_model():
     F = PF['stl_model']
     message("BBOX = %s" % F.bbox())
     clear()
+    t = timer.Timer()
     draw(F,color=PF.get('stl_color','prop'))
+    message("Time to draw stl: %s seconds" % t.seconds())
+    
+
+def show_surface():
+    """Display the surface model."""
+    if PF['off_model'] is None:
+        print "No surface model available: read one first."
+        return
+    nodes,elems = PF['off_model']
+    clear()
+    t = timer.Timer()
+    actor = actors.SurfaceActor(nodes,elems,color=colors.red)
+    message("BBOX = %s" % actor.bbox)
+    GD.canvas.addActor(actor)
+    GD.canvas.update()
+    message("Time to draw surface: %s seconds" % t.seconds())
+
 
 
 def show_volume():
@@ -423,8 +441,9 @@ def create_menu():
     menu = widgets.Menu('STL')
     MenuData = [
         #("&New project",new_project),
-        ("&Read STL/OFF model",read_model),
+        ("&Read Surface Model",read_model),
         ("&Show model",show_model),
+        ("&Show surface",show_surface),
         ("&Show shrinked model",show_shrinked),
         ("&Set color",set_color),
         ("&Print Nodal Coordinates",show_nodes),
