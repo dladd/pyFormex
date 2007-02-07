@@ -335,8 +335,29 @@ def demagic(mag,magic):
     first,second = first2 / magic, first2 % magic
     return column_stack([first,second,third]).astype(int32)
 
+
+def find_row(mat,row,nmatch=None):
+    """Find all rows in matrix matching given row."""
+    if nmatch is None:
+        nmatch = mat.shape[1]
+    return where((mat == row).sum(axis=1) == nmatch)[0]
+
+
+def find_nodes(nodes,coords):
+    """Find nodes with given coordinates in a node set.
+
+    nodes is a (nnodes,3) float array of coordinates.
+    coords is a (npts,3) float array of coordinates.
+
+    Returns a (n,) integer array with ALL the node numbers matching EXACTLY
+    ALL the coordinates of ANY of the given points.
+    """
+    return concatenate([ find_row(nodes,c) for c in coords])
+
+
+
 def find_triangles(elems,triangles):
-    """Find triangles from a surface mesh.
+    """Find triangles with given node numbers in a surface mesh.
 
     elems is a (nelems,3) integer array of triangles.
     triangles is a (ntri,3) integer array of triangles to find.
