@@ -212,15 +212,30 @@ def write_stl(fn,nodes,elems):
     write_ascii(fn,nodes[elems])
 
 def write_off(fn,nodes,elems):
-    if nodes.shape[1] != 3 or elems.shape[1] != 3:
+    if nodes.shape[1] != 3 or elems.shape[1] < 3:
         raise runtimeError, "Invalid arguments or shape"
     fil = file(fn,'w')
     fil.write("OFF\n")
-    fil.write("%s %s 0\n" % (nodes.shape[0],elems.shape[0]))
+    fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
     for nod in nodes:
-        fil.write("%s %s %s\n" % tuple(nod))
+        fil.write("%f %f %f\n" % tuple(nod))
+    format = "%d %%d %%d %%d\n" % elems.shape[1]
     for el in elems:
-        fil.write("%s %s %s\n" % tuple(el))
+        fil.write(format % tuple(el))
+    fil.close()
+
+def write_gts(fn,nodes,edges,facets):
+    if nodes.shape[1] != 3 or edges.shape[1] != 2 or facets.shape[1] != 3:
+        raise runtimeError, "Invalid arguments or shape"
+    fil = file(fn,'w')
+    fil.write("#Gts file written by pyFormex")
+    fil.write("%d %d %d\n" % (nodes.shape[0],edges.shape[0],facets.shape[0]))
+    for nod in nodes:
+        fil.write("%f %f %f\n" % tuple(nod))
+    for edg in edges+1:
+        fil.write("%d %d\n" % tuple(edg))
+    for fac in facets+1:
+        fil.write("%d %d %d\n" % tuple(fac))
     fil.close()
 
 def write_neu(fn,nodes,elems):

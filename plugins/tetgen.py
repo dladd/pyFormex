@@ -68,6 +68,7 @@ def readSmesh(fn):
     s = line.strip('\n').split()
     nelems = int(s[0])
     elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
+    print elems.shape
     elems = elems.reshape((-1,4))
     return elems[:,1:]
 
