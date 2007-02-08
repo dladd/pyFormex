@@ -201,29 +201,33 @@ class Actor(object):
     The visualisation of the Scene Actors is dependent on camera position and
     angles, clipping planes, rendering mode and lighting.
     
-    An actor minimally should have one attirbute(bbox) and two functions:
+    An Actor subclass should minimally have the following three methods:
     __init__(): to initialize the actor.
+    bbox(): return the actors bounding box.
     draw(mode='wireframe'): to draw the actor. Takes a mode argument so the
       drawing function can act differently depending on the mode. There are
       currently 3 modes: wireframe, flat, smooth.
-
-    Subclass __init__() functions should always call the Actor's __init__().
-    If a bounding box is specified, the Actor's bbox attribute will be set.
-    Alternatively, one can call Actor.__init__() without bbox argument,
-    and directly set the bbox attribute.
     """
-    def __init__(self,bbox=None):
-        if bbox is not None:
-            self.bbox = bbox
+    def __init__(self):
+        pass
+
+    def bbox(self):
+        return array([[0.0,0.0,0.0],[1.0,1.0,1.0]])
+
+    def draw(self):
+        pass
     
 
 class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
     def __init__(self,size,color=[red,cyan,green,magenta,blue,yellow]):
+        Actor.__init__(self)
         self.size = size
         self.color = color
-        Actor.__init__(self,bbox=(0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]]))
+
+    def bbox(self):
+        return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
 
     def draw(self,mode='wireframe'):
         """Draw the cube."""
@@ -235,13 +239,16 @@ class BboxActor(Actor):
     """Draws a bbox."""
 
     def __init__(self,bbox,color=None,linewidth=None):
-        Actor.__init__(self,bbox)
+        Actor.__init__(self)
         self.color = color
         self.linewidth = linewidth
-        self.vertices = array(elements.Hex8.nodes) * (bbox[1]-bbox[0]) + bbox[0]
+        self.bb = bbox
+        self.vertices = array(elements.Hex8.nodes) * (bb[1]-bb[0]) + bb[0]
         self.edges = array(elements.Hex8.edges)
         self.facets = array(elements.Hex8.faces)
 
+    def bbox():
+        return self.bb
 
     def draw(self,mode):
         """Always draws a wireframe model of the bbox."""
@@ -256,10 +263,12 @@ class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes."""
 
     def __init__(self,size,color=[red,green,blue,cyan,magenta,yellow]):
+        Actor.__init__(self)
         self.size = size
         self.color = color
-        Actor.__init__(self)
-        self.bbox = (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
+
+    def bbox(self):
+        return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
 
     def draw(self,mode='wireframe'):
         """Draw the triade."""
@@ -319,8 +328,8 @@ class FormexActor(Actor,Formex):
         The user can specify a linewidth to be used when drawing
         in wireframe mode.
         """
+        Actor.__init__(self)
         Formex.__init__(self,F.f,F.p)
-        Actor.__init__(self,F.bbox())
         self.list = None
         if self.p is None:
             self.setProp(arange(self.nelems()))

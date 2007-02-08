@@ -10,6 +10,7 @@ file_description = {
     'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',
+    'gts': 'GTS files (*.gts)',
     'neu': 'Gambit Neutral files (*.neu)',
     'smesh': 'Tetgen surface mesh files (*.smesh)',
 }

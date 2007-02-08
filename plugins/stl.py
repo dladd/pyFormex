@@ -7,12 +7,11 @@ An stl is stored as a numerical array with shape [n,3,3].
 This is compatible with the pyFormex data model.
 """
 
+import os
 import globaldata as GD
 from plugins import tetgen
 from utils import runCommand, changeExt,countLines,mtime
-from numpy import *
-from formex import Formex
-import os
+from formex import *
 
 
 # The Stl class should not be used yet! Use the functions instead.
@@ -48,7 +47,7 @@ def compute_normals(a,normalized=True):
     return n
 
 
-def write_ascii(f,a):
+def write_stla(f,a):
     """Export an [n,3,3] float array as an ascii .stl file."""
 
     own = type(f) == str
@@ -56,12 +55,13 @@ def write_ascii(f,a):
         f = file(f,'w')
     f.write("solid  Created by %s\n" % GD.Version)
     v = compute_normals(a)
-    print "Degenerate facets",where(isnan(v))
+    degen = where(isnan(v))[0]
+    print "The model contains %d degenerate triangles" % degen.shape[0]
     for e,n in zip(a,v):
-        f.write("  facet normal %f %f %f\n" % tuple(n))
+        f.write("  facet normal %s %s %s\n" % tuple(n))
         f.write("    outer loop\n")
         for p in e:
-            f.write("      vertex %f %f %f\n" % tuple(p))
+            f.write("      vertex %s %s %s\n" % tuple(p))
         f.write("    endloop\n")
         f.write("  endfacet\n")
     f.write("endsolid\n")
@@ -74,7 +74,7 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_ascii(fn,dtype=float32,large=False,guess=False,off=False):
+def read_stla(fn,dtype=float32,large=False,guess=False,off=False):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     If the .stl is large, read_ascii_large() is recommended, as it is
@@ -175,6 +175,23 @@ def read_off(fn):
     return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
+def read_gts(fn):
+    """Read a GTS surface mesh.
+
+    Returns a nodes,edges,faces tuple.
+    """
+    print "Reading GTS file %s" % fn
+    fil = file(fn,'r')
+    nnodes,nedges,nfaces = map(int,fil.readline().split()[:3])
+    nodes = fromfile(file=fil, dtype=float32, count=3*nnodes, sep=' ')
+    edges = fromfile(file=fil, dtype=int32, count=2*nedges, sep=' ')
+    faces = fromfile(file=fil, dtype=int32, count=3*nfaces, sep=' ')
+    print "Read %d nodes, %d edges, %d faces" % (nnodes,nedges,nfaces)
+    return nodes.reshape((-1,3)),\
+           edges.reshape((-1,2)) - 1,\
+           faces.reshape((-1,3)) - 1
+
+
 def read_gambit_neutral(fn):
     """Read a triangular surface mesh in Gambit neutral format.
 
@@ -188,28 +205,6 @@ def read_gambit_neutral(fn):
     elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
     return nodes, elems-1
 
-def readSurface(fn):
-    ext = os.path.splitext(fn)[1]
-    if ext == '.stl':
-        ofn = changeExt(fn,'.off')
-        if os.path.exists(ofn) and mtime(ofn) > mtime(fn):
-            # There is a more recent .off, let's use it
-            nodes,elems = read_off(ofn)
-        else:
-            nodes,elems = read_stl(fn)
-    elif ext == '.off':
-        nodes,elems = read_off(fn)
-    elif ext == '.neu':
-        nodes,elems = read_gambit_neutral(fn)
-    elif ext == '.smesh':
-        nodes,elems = tetgen.readSurface(fn)
-    else:
-        print "Cannot read file %s" % fn
-    return nodes,elems
-
-
-def write_stl(fn,nodes,elems):
-    write_ascii(fn,nodes[elems])
 
 def write_off(fn,nodes,elems):
     if nodes.shape[1] != 3 or elems.shape[1] < 3:
@@ -218,24 +213,24 @@ def write_off(fn,nodes,elems):
     fil.write("OFF\n")
     fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
     for nod in nodes:
-        fil.write("%f %f %f\n" % tuple(nod))
+        fil.write("%s %s %s\n" % tuple(nod))
     format = "%d %%d %%d %%d\n" % elems.shape[1]
     for el in elems:
         fil.write(format % tuple(el))
     fil.close()
 
-def write_gts(fn,nodes,edges,facets):
-    if nodes.shape[1] != 3 or edges.shape[1] != 2 or facets.shape[1] != 3:
+def write_gts(fn,nodes,edges,faces):
+    if nodes.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
         raise runtimeError, "Invalid arguments or shape"
     fil = file(fn,'w')
-    fil.write("#Gts file written by pyFormex")
-    fil.write("%d %d %d\n" % (nodes.shape[0],edges.shape[0],facets.shape[0]))
+    fil.write("%d %d %d\n" % (nodes.shape[0],edges.shape[0],faces.shape[0]))
     for nod in nodes:
-        fil.write("%f %f %f\n" % tuple(nod))
+        fil.write("%s %s %s\n" % tuple(nod))
     for edg in edges+1:
         fil.write("%d %d\n" % tuple(edg))
-    for fac in facets+1:
+    for fac in faces+1:
         fil.write("%d %d %d\n" % tuple(fac))
+    fil.write("#GTS file written by %s\n" % GD.Version)
     fil.close()
 
 def write_neu(fn,nodes,elems):
@@ -243,17 +238,43 @@ def write_neu(fn,nodes,elems):
 def write_smesh(fn,nodes,elems):
     tetgen.writeSurface(fn,nodes,elems)
 
-def writeSurface(fn,nodes,elems):
-    ext = os.path.splitext(fn)[1]
+def readSurface(fn,ftype=None):
+    if ftype is None:
+        ftype = os.path.splitext(fn)[1]  # deduce from extension
+    ftype = ftype.strip('.').lower()
+    if ftype == 'stl':
+        ofn = changeExt(fn,'.off')
+        if os.path.exists(ofn) and mtime(ofn) > mtime(fn):
+            # There is a more recent .off, let's use it
+            nodes,elems = read_off(ofn)
+        else:
+            nodes,elems = read_stl(fn)
+    elif ftype == 'off':
+        nodes,elems = read_off(fn)
+    elif ftype == 'neu':
+        nodes,elems = read_gambit_neutral(fn)
+    elif ftype == 'smesh':
+        nodes,elems = tetgen.readSurface(fn)
+    else:
+        print "Cannot read file %s" % fn
+    return nodes,elems
+
+def writeSurface(fn,nodes,elems,ftype=None):
+    if ftype is None:
+        ftype = os.path.splitext(fn)[1]  # deduce from extension
+    ftype = ftype.strip('.').lower()
     print "Writing %s triangles to file %s" % (elems.shape[0],fn)
-    if ext == '.stl':
-        write_stl(fn,nodes,elems)
-    elif ext == '.off':
+    if ftype == 'stl':
+        write_stla(fn,nodes[elems])
+    elif ftype == 'off':
         write_off(fn,nodes,elems)
-    elif ext == '.neu':
+    elif ftype == 'neu':
         write_neu(fn,nodes,elems)
-    elif ext == '.smesh':
+    elif ftype == 'smesh':
         write_smesh(fn,nodes,elems)
+    elif ftype == 'gts':
+        edges,faces = compactEdges(elems)
+        write_gts(fn,nodes,edges,faces)
     else:
         print "Cannot save as file %s" % fn
    
@@ -295,6 +316,50 @@ def off_to_tet(fn):
     nodes,elems = read_off(fn)
     write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
 
+   
+def compactEdges(elems):
+    """Transform elems to an edges,faces tuple.
+
+    elems is an (nelems,nplex) int32 array of element node numbers.
+
+    Returns a tuple edges,faces where
+    edges is an (nedges,2) int32 array of edges connecting two node numbers.
+    faces is an (nelems,nplex) int32 array with the edge numbers connecting
+    each pair os subsequent nodes in the elements of elems.
+
+    The order of the edges respects the node order, and starts with nodes 0-1.
+    The node numbering in the edges is always lowest node number first.
+    """
+    nelems,nplex = elems.shape
+    magic = elems.max() + 1
+    if magic > 2**31:
+        raise RuntimeError,"Cannot compact edges for more than 2**31 nodes"
+    n = arange(nplex)
+    edg = column_stack([n,roll(n,1)])
+    alledges = elems[:,edg]
+    # sort edge nodes with lowest number first
+    alledges.sort()
+    edg = alledges.astype(int64).reshape((-1,2))
+    # encode the two node numbers in a single edge number
+    codes = edg[:,0] * magic + edg[:,1]
+    # keep the unique edge numbers
+    uniqid,uniq = unique1d(codes,True)
+    # we suppose uniq is sorted 
+    uedges = uniq.searchsorted(codes)
+    edges = column_stack([uniq/magic,uniq%magic])
+    faces = uedges.reshape((nelems,nplex))
+    return edges,faces
+
+
+def expandEdges(edges,faces):
+    elems = edges[faces]
+    flag0 = (elems[:,0,0]==elems[:,1,0]) + (elems[:,0,0]==elems[:,1,1])
+    flag2 = (elems[:,2,0]==elems[:,1,0]) + (elems[:,2,0]==elems[:,1,1])
+    nod0 = where(flag0,elems[:,0,1],elems[:,0,0])
+    nod1 = where(flag0,elems[:,0,0],elems[:,0,1])
+    nod2 = where(flag2,elems[:,2,0],elems[:,2,1])
+    elems = column_stack([nod1,nod2,nod0])
+    return elems
 
 
 def border(elems):
@@ -310,8 +375,7 @@ def border(elems):
     """
     magic = elems.max() + 1
     if magic > 2**31:
-        print "TOO MANY ELEMENTS: can not determine border edges"
-        return elems
+        raise RuntimeError,"Cannot detect border for more than 2**31 nodes"
 
     triedges = [ [0,1], [1,2], [2,0] ]
     # all the edges of all elements (nelems,3,2)
