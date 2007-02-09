@@ -3,11 +3,67 @@
 """A collection of misc. utility functions."""
 
 import globaldata as GD
-import os,commands
+import os,commands,re
+
+
+known_externals = {
+    'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
+    'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
+    'tetgen': ('tetgen -v','Version (\S+)'), 
+    }
+
+
+def checkExternal(name,command=None,answer=None):
+    """Check if the named external command is available on the system.
+
+    name is the generic command name,
+    command is the command as it will be executed to check its operation,
+    answer is a regular expression to match positive answers from the command.
+    answer should contain at least one group. In case of a match, the
+    contents of the match will be stored in the GD.external dict
+    with name as the key. If the result does not match the specified answer,
+    an empty value is inserted.
+
+    Usually, command will contain an option to display the version, and
+    the answer re contains a group to select the version string from
+    the result.
+
+    As a convenience, we provide a list of predeclared external commands,
+    that can be checked by their name alone.
+    """
+    if command is None or answer is None:
+        cmd,ans = known_externals.get(name,(name,'(.+)\n'))
+        if command is None:
+            command = cmd
+        if answer is None:
+            answer = ans
+    m = re.match(answer,commands.getoutput(command))
+    if m:
+        value = m.group(1)
+        GD.message("Congratulations! You have %s (%s)" % (name,value))
+    else:
+        value = ''
+    GD.external[name] = value
+    return value
+
+    
+def hasExternal(name):
+    """Test if we have the external command 'name' available.
+
+    Returns a nonzero string if the command is available,
+    or an empty string if it is not.
+
+    The external command is only checked on the first call.
+    The result is remembered in the GD.external dict.
+    """
+    if GD.external.has_key(name):
+        return GD.external[name]
+    else:
+        return checkExternal(name)
 
 
 file_description = {
-    'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh)',
+    'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',
     'gts': 'GTS files (*.gts)',

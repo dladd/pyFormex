@@ -20,17 +20,8 @@ import utils
 import draw
 
 
-_start_message = GD.Version + ', by B. Verhegghe'
-
 # Find interesting supporting software
-
-# import (ImageMagick)
-m = re.match("Version: ImageMagick (\S+) .*",script.system('import -version'))
-if m:
-    GD.magick_version = m.group(1)
-    script.message("Congratulations! You have ImageMagick version %s" % GD.magick_version)
-
-
+utils.hasExternal('ImageMagick')
 
 
 def Size(widget):
@@ -495,10 +486,12 @@ def runApp(args):
     # Create a menu with pyFormex examples
     # and insert it before the help menu
     for title,dir in GD.cfg['scriptdirs']:
-        m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
-        GD.gui.insertMenu(m)
-        menus.append(m)
+        if os.path.exists(dir):
+            m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
+            GD.gui.insertMenu(m)
+            menus.append(m)
     GD.board.write(GD.Version+"   (C) B. Verhegghe")
+    GD.message = draw.message
     draw.reset()
     # Load plugins
     for p in GD.cfg.get('gui/plugins',[]):

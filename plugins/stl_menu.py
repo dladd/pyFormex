@@ -41,7 +41,7 @@ def set_color():
     PF['stl_color'] = data['stl_color']
 
 
-def read_model(types=['stl/off','stl','off','neu','smesh'],show=True):
+def read_model(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -134,7 +134,7 @@ def show_shrinked():
 
 
 
-def write_surface(types=['stl/off','stl','off','neu','smesh']):
+def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
     if PF['off_model'] is None:
         warning("Nothing to save: no off_model")
         return

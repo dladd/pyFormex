@@ -25,12 +25,12 @@ multisave = False
 canPlay = False
 scriptName = None
 
+external = {} # dict with detected external commands
 calpy_version = None   # do we have calpy?
-magick_version = None  # do we have imagemagick?
+
 
 def message(s):
     print s
-
 
 def debug(s):
     if hasattr(options,'debug'):

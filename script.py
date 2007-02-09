@@ -74,7 +74,6 @@ def log(s):
 # The default message handler is set here.
 # Best candidates are log/info
 message = log
-GD.message = message
 
 def system(cmdline,result='output'):
     """Run a command and return its output.
@@ -217,6 +216,7 @@ def runApp(args):
     # with arguments for the scripts.
     # each script should pop the required arguments from the list,
     # and return the remainder
+    GD.message = message
     while len(args) > 0:
         scr = args.pop(0) 
         if os.path.exists(scr) and utils.isPyFormex(scr):

@@ -10,9 +10,11 @@ This is compatible with the pyFormex data model.
 import os
 import globaldata as GD
 from plugins import tetgen
-from utils import runCommand, changeExt,countLines,mtime
+from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 
+hasExternal('admesh')
+hasExternal('tetgen')
 
 # The Stl class should not be used yet! Use the functions instead.
 class Stl(object):
@@ -74,7 +76,7 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_stla(fn,dtype=float32,large=False,guess=False,off=False):
+def read_stla(fn,dtype=float32,large=False,guess=True,off=False):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     If the .stl is large, read_ascii_large() is recommended, as it is
@@ -175,6 +177,39 @@ def read_off(fn):
     return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
+def read_gambit_neutral(fn):
+    """Read a triangular surface mesh in Gambit neutral format.
+
+    The .neu file nodes are numbered from 1!
+    Returns a nodes,elems tuple.
+    """
+    runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
+    nodesf = changeExt(fn,'.nodes')
+    elemsf = changeExt(fn,'.elems')
+    nodes = fromfile(nodesf,sep=' ',dtype=float32).reshape((-1,3))
+    elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
+    return nodes, elems-1
+
+
+def write_gambit_neutral(fn,nodes,elems):
+    print "Cannot write file %s" % fn
+    pass
+
+
+def write_off(fn,nodes,elems):
+    if nodes.shape[1] != 3 or elems.shape[1] < 3:
+        raise runtimeError, "Invalid arguments or shape"
+    fil = file(fn,'w')
+    fil.write("OFF\n")
+    fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
+    for nod in nodes:
+        fil.write("%s %s %s\n" % tuple(nod))
+    format = "%d %%d %%d %%d\n" % elems.shape[1]
+    for el in elems:
+        fil.write(format % tuple(el))
+    fil.close()
+
+
 def read_gts(fn):
     """Read a GTS surface mesh.
 
@@ -192,33 +227,6 @@ def read_gts(fn):
            faces.reshape((-1,3)) - 1
 
 
-def read_gambit_neutral(fn):
-    """Read a triangular surface mesh in Gambit neutral format.
-
-    The .neu file nodes are numbered from 1!
-    Returns a nodes,elems tuple.
-    """
-    runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
-    nodesf = changeExt(fn,'.nodes')
-    elemsf = changeExt(fn,'.elems')
-    nodes = fromfile(nodesf,sep=' ',dtype=float32).reshape((-1,3))
-    elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
-    return nodes, elems-1
-
-
-def write_off(fn,nodes,elems):
-    if nodes.shape[1] != 3 or elems.shape[1] < 3:
-        raise runtimeError, "Invalid arguments or shape"
-    fil = file(fn,'w')
-    fil.write("OFF\n")
-    fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
-    for nod in nodes:
-        fil.write("%s %s %s\n" % tuple(nod))
-    format = "%d %%d %%d %%d\n" % elems.shape[1]
-    for el in elems:
-        fil.write(format % tuple(el))
-    fil.close()
-
 def write_gts(fn,nodes,edges,faces):
     if nodes.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
         raise runtimeError, "Invalid arguments or shape"
@@ -233,10 +241,10 @@ def write_gts(fn,nodes,edges,faces):
     fil.write("#GTS file written by %s\n" % GD.Version)
     fil.close()
 
-def write_neu(fn,nodes,elems):
-    pass
+
 def write_smesh(fn,nodes,elems):
     tetgen.writeSurface(fn,nodes,elems)
+
 
 def readSurface(fn,ftype=None):
     if ftype is None:
@@ -255,9 +263,13 @@ def readSurface(fn,ftype=None):
         nodes,elems = read_gambit_neutral(fn)
     elif ftype == 'smesh':
         nodes,elems = tetgen.readSurface(fn)
+    elif ftype == 'gts':
+        nodes,edges,faces = read_gts(fn)
+        elems = expandEdges(edges,faces)
     else:
         print "Cannot read file %s" % fn
     return nodes,elems
+
 
 def writeSurface(fn,nodes,elems,ftype=None):
     if ftype is None:
@@ -269,7 +281,7 @@ def writeSurface(fn,nodes,elems,ftype=None):
     elif ftype == 'off':
         write_off(fn,nodes,elems)
     elif ftype == 'neu':
-        write_neu(fn,nodes,elems)
+        write_gambit_neutral(fn,nodes,elems)
     elif ftype == 'smesh':
         write_smesh(fn,nodes,elems)
     elif ftype == 'gts':
@@ -432,6 +444,19 @@ def find_nodes(nodes,coords):
     ALL the coordinates of ANY of the given points.
     """
     return concatenate([ find_row(nodes,c) for c in coords])
+
+
+def find_first_nodes(nodes,coords):
+    """Find nodes with given coordinates in a node set.
+
+    nodes is a (nnodes,3) float array of coordinates.
+    coords is a (npts,3) float array of coordinates.
+
+    Returns a (n,) integer array with THE FIRST node number matching EXACTLY
+    ALL the coordinates of EACH of the given points.
+    """
+    res = [ find_row(nodes,c) for c in coords ]
+    return array([ r[0] for r in res ])
 
 
 
