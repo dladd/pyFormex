@@ -17,7 +17,7 @@ hasExternal('admesh')
 hasExternal('tetgen')
 
 # The Stl class should not be used yet! Use the functions instead.
-class Stl(object):
+class STL(object):
     """A 3D surface described by a set of triangles."""
 
     def __init__(self,*args):
@@ -34,7 +34,17 @@ class Stl(object):
           an (nedges,2) integer array of vertex numbers,
           an (ntri,3) integer array of edges numbers.
         """
-        pass
+        self.coords = self.nodes = self.elems = self.edges = self.faces = None
+        if len(args) == 2:
+            nodes = asanarray(arg[0])
+            elems = asanarray(arg[1])
+            if nodes.dtype.kind == 'f' and elems.dtype.kind == 'i' and \
+                   nodes.ndim == 2 and elems.ndim == 2 and \
+                   nodes.shape[1] == 3 and elems.shape[1] == 3:
+                self.nodes = nodes
+                self.elems = elems
+            else:
+                raise RuntimeError,"Invalid STL initialization data 
 
 
 def compute_normals(a,normalized=True):
