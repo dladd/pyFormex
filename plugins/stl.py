@@ -44,7 +44,7 @@ class STL(object):
                 self.nodes = nodes
                 self.elems = elems
             else:
-                raise RuntimeError,"Invalid STL initialization data 
+                raise RuntimeError,"Invalid STL initialization data"
 
 
 def compute_normals(a,normalized=True):
