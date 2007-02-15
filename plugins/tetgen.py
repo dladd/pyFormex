@@ -22,35 +22,23 @@ def readNodes(fn):
     s = line.strip('\n').split()
     npts,ndim,nattr,nbmark = map(int,s)
     nodes = fromfile(fil,sep=' ',dtype=float32).reshape((npts,ndim+1))
-    return (nodes[:,1:],nodes[:,0].astype(int32))
+    return nodes[:,1:],nodes[:,0].astype(int32)
 
 
 def readElems(fn):
-    """Read a tetgen .ele file. Returns an array of tetraeder elements."""
+    """Read a tetgen .ele file.
+
+    Returns a tuple of 3 arrays:
+      elems : the element connectivity
+      elemnr : the element numbers
+      attr: the element attributes.
+    """
     fil = file(fn,'r')
-    elems = None
-    for line in fil:
-        s = line.strip('\n').split()
-        if len(s) == 0 or s[0][0] == '#':
-            continue
-        if elems is None:
-            try:
-                nels,nnod,nattr = map(int,s)
-            except:
-                invalid(line,fn)
-                raise
-            elems = zeros((nels,nnod),int)
-        else:
-            i = int(s[0])
-            if i < 1 or i >nels: 
-                invalid(line,fn)
-                raise RuntimeError
-            try:
-                elems[i-1] = map(int,s[1:nnod+1])
-            except:
-                invalid(line,fn)
-                raise
-    return elems
+    line = fil.readline()
+    s = line.strip('\n').split()
+    nelems,nplex,nattr = map(int,s)
+    elems = fromfile(fil,sep=' ',dtype=int32).reshape((nelems,nplex+nattr+1))
+    return elems[:,1:nplex+1],elems[:,0],elems[:,nplex+1:]
 
 
 def readSmesh(fn):
@@ -92,7 +80,7 @@ def writeNodes(fn,nodes):
     fil = file(fn,'w')
     fil.write("%d %d 0 0\n" % nodes.shape)
     for i,n in enumerate(nodes):
-        fil.write("%d %f %f %f\n" % (i,n[0],n[1],n[2]))
+        fil.write("%d %s %s %s\n" % (i,n[0],n[1],n[2]))
     fil.close()
 
 

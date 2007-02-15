@@ -16,9 +16,30 @@ from gui.draw import *
 from formex import Formex
 import commands, os
 
-# Global variables
 
-# Define some Actions
+
+def set_surface(nodes,elems,name='surface0'):
+    PF['surface'] = (nodes,elems)
+    PF['stl_model'] = Formex(nodes[elems])
+    message("The model has %d nodes and %d elems" %
+            (nodes.shape[0],elems.shape[0]))
+
+def check_surface():
+    if not PF.has_key('off_model'):
+        message("You need to load a Surface model first.")
+        clear()
+        stl_menu.read_model()
+
+
+def keep_surface(nodes,elems,ask=False):
+    """Replace the current model with a new one."""
+    if not ask or ack('Keep the trimmed model?'):
+        PF['old_model'] = PF['surface']
+        PF['surface'] = (nodes,elems)
+        PF['stl_model'] = None
+
+
+
 
 def toggle_auto_draw():
     global autodraw
@@ -64,26 +85,18 @@ def read_model(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
         t = timer.Timer()
         nodes,elems =stl.readSurface(fn)
         message("Time to import stl: %s seconds" % t.seconds())
-        set_off_model(nodes,elems)
+        set_surface(nodes,elems)
         GD.gui.setBusy(False)
         if show:
-            show_model()
+            # show_model()
+            show_surface()
     return fn
 
-
-def set_off_model(nodes,elems):
-    PF['off_model'] = (nodes,elems)
-    PF['stl_model'] = Formex(nodes[elems])
-    message("The model has %d nodes and %d elems" %
-            (nodes.shape[0],elems.shape[0]))
-
-
-def set_stl_model(F):
-    PF['stl_model'] = F
-    PF['off_model'] = None
-    message("The model has %d triangles" % (F.nelems()))
     
-
+def save_model():
+    """Save the current model (in memory!) under a name."""
+    pass
+    
 def show_model():
     """Display the surface model."""
     if PF['stl_model'] is None:
@@ -98,29 +111,31 @@ def show_model():
 
 def show_surface():
     """Display the surface model."""
-    if PF['off_model'] is None:
+    if PF['surface'] is None:
         print "No surface model available: read one first."
         return
-    nodes,elems = PF['off_model']
+    nodes,elems = PF['surface']
     clear()
     t = timer.Timer()
     actor = actors.SurfaceActor(nodes,elems,color=colors.red)
     message("BBOX = %s" % actor.bbox)
     GD.canvas.addActor(actor)
+    GD.canvas.setView(actor.bbox,'left')
     GD.canvas.update()
+    GD.app.processEvents()
     message("Time to draw surface: %s seconds" % t.seconds())
 
 
-
 def show_volume():
-    """Display the surface model."""
+    """Display the volume model."""
     if PF['tet_model'] is None:
         return
-    #    updateGUI()
-    volume = Formex(nodes[elems-1])
+    nodes,elems = PF['tet_model']
+    F = Formex(nodes[elems])
+    message("BBOX = %s" % F.bbox())
     clear()
-    draw(volume,color='random',eltype='tet')
-    PF['volume'] = volume
+    draw(F,color='random',eltype='tet')
+    PF['vol_model'] = F
         
 
 def show_shrinked():
@@ -135,7 +150,7 @@ def show_shrinked():
 
 
 def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
-    if PF['off_model'] is None:
+    if PF['surface'] is None:
         warning("Nothing to save: no off_model")
         return
     if type(types) == str:
@@ -144,7 +159,7 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
     fn = askFilename(GD.cfg['workdir'],types,exist=False)
     if fn:
         print "Exporting surface model to %s" % fn
-        nodes,elems = PF['off_model']
+        nodes,elems = PF['surface']
         GD.gui.setBusy()
         stl.writeSurface(fn,nodes,elems)   
         GD.gui.setBusy(False)
@@ -359,23 +374,32 @@ def create_tetgen():
 
 def read_tetgen(surface=True, volume=True):
     """Read a tetgen model from files  fn.node, fn.ele, fn.smesh."""
-    fn = askFilename(GD.cfg['workdir'],"Tetgen files (*.node *.smesh *.ele)")
+    ftype = ''
+    if surface:
+        ftype += ' *.smesh'
+    if volume:
+        ftype += ' *.ele'
+    fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype)
     nodes = elems =surf = None
     if fn:
         os.chdir(os.path.dirname(fn))
         message("Your current workdir is %s" % os.getcwd())
         project = os.path.splitext(fn)[0]
-        nodes = tetgen.readNodes(project+'.node')
+        print project
+        nodes,nodenrs = tetgen.readNodes(project+'.node')
         print "Read %d nodes" % nodes.shape[0]
         if volume:
-            elems = tetgen.readElems(project+'.ele')
+            elems,elemnrs,elemattr = tetgen.readElems(project+'.ele')
             print "Read %d tetraeders" % elems.shape[0]
             PF['tet_model'] = (nodes,elems)
         if surface:
             surf = tetgen.readSurface(project+'.smesh')
             print "Read %d triangles" % surf.shape[0]
-            PF['off_model'] = (nodes,surf)
-    show_tetgen_surface()
+            PF['surface'] = (nodes,surf)
+    if surface:
+        show_surface()
+    else:
+        show_volume()
 
 def read_tetgen_surface():
     read_tetgen(volume=False)
@@ -385,25 +409,28 @@ def read_tetgen_volume():
 
 
 def export_surface():
-    if PF['off_model'] is None:
+    if PF['surface'] is None:
         return
     types = [ "Abaqus INP files (*.inp)" ]
     fn = askFilename(GD.cfg['workdir'],types,exist=False)
     if fn:
         print "Exporting surface model to %s" % fn
-        saveSurface(nodes,elems,fn)   
-    nodes,elems = PF['off_model']
-    updateGUI()
-    stl_abq.abq_export(fn,nodes,elems,'S3',"Abaqus model generated by pyFormex from input file %s" % os.path.basename(fn))
+        updateGUI()
+        nodes,elems = PF['surface']
+        stl_abq.abq_export(fn,nodes,elems,'S3',"Abaqus model generated by pyFormex from input file %s" % os.path.basename(fn))
 
 
 
-def export_tetgen_volume():
-    global nodes,elems
-    updateGUI()
-    if elems is not None:
-        print "Exporting volume model"
-        stl_abq.abq_export('%s-volume.inp' % project,nodes,elems,'C3D%d' % elems.shape[1],"Abaqus model generated by tetgen from surface in STL file %s.stl" % project)
+def export_volume():
+    if PF['tet_model'] is None:
+        return
+    types = [ "Abaqus INP files (*.inp)" ]
+    fn = askFilename(GD.cfg['workdir'],types,exist=False)
+    if fn:
+        print "Exporting volume model to %s" % fn
+        updateGUI()
+        nodes,elems = PF['tet_model']
+        stl_abq.abq_export(fn,nodes,elems,'C3D%d' % elems.shape[1],"Abaqus model generated by tetgen from surface in STL file %s.stl" % project)
 
 
 def show_nodes():
@@ -411,7 +438,7 @@ def show_nodes():
     data = askItems({'node number':n})
     n = int(data['node number'])
     if n > 0:
-        nodes,elems = PF['off_model']
+        nodes,elems = PF['surface']
         print "Node %s = %s",(n,nodes[n])
 
 def combine():
@@ -428,10 +455,50 @@ def combine():
     draw(G)
 
     PF['stl_model'] = Formex.concatenate([F,G])
-    PF['off_model'] = None
+    PF['surface'] = None
     PF['color'] = 'prop'
     show_model()
 
+
+def trim_border(elems,nodes,nb,visual=False):
+    """Removes the triangles with nb or more border edges.
+
+    Returns an array with the remaining elements.
+    """
+    b = border(elems)
+    b = b.sum(axis=1)
+    trim = where(b>=nb)[0]
+    keep = where(b<nb)[0]
+    nelems = elems.shape[0]
+    ntrim = trim.shape[0]
+    nkeep = keep.shape[0]
+    print "Selected %s of %s elements, leaving %s" % (ntrim,nelems,nkeep) 
+
+    if visual and ntrim > 0:
+        prop = zeros(shape=(F.nelems(),),dtype=int32)
+        prop[trim] = 2 # red
+        prop[keep] = 1 # yellow
+        F = Formex(nodes[elems],prop)
+        clear()
+        draw(F,view='left')
+        
+    return elems[keep]
+
+
+def trim_surface():
+    check_surface()
+    data = GD.cfg.get('stl/border',{'Number of trim rounds':1, 'Minimum number of border edges':1})
+    GD.cfg['stl/border'] = askItems(data)
+    GD.gui.update()
+    n = int(data['Number of trim rounds'])
+    nb = int(data['Minimum number of border edges'])
+    print "Initial number of elements: %s" % elems.shape[0]
+    for i in range(n):
+        elems = trim_border(elems,nodes,nb)
+        print "Number of elements after border removal: %s" % elems.shape[0]
+    
+
+################### menu #################
 
 _menu = None
 _oldF = None
@@ -440,22 +507,32 @@ def create_menu():
     """Create the STL menu."""
     menu = widgets.Menu('STL')
     MenuData = [
-        #("&New project",new_project),
+        # ("&New project",new_project),
         ("&Read Surface Model",read_model),
+        # ("&Read tetgen surface",read_tetgen_surface),
+        ("&Read Tetgen Volume",read_tetgen_volume),
+        # ("&Read tetgen model",read_tetgen),
         ("&Show model",show_model),
         ("&Show surface",show_surface),
-        ("&Show shrinked model",show_shrinked),
+        ("&Show shrinked surface",show_shrinked),
+        ("&Show volume model",show_volume),
         ("&Set color",set_color),
         ("&Print Nodal Coordinates",show_nodes),
         ("&Combine two models",combine),
-        ("&Convert STL file to OFF file",convert_stl_to_off),
-        ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
+        # ("&Convert STL file to OFF file",convert_stl_to_off),
+        # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
         ("&Write Surface Model",write_surface),
-        ("&Write STL Model",write_stl),
+        # ("&Write STL Model",write_stl),
+##         ("&Transform", [
+##             ("&Center model",center_stl),
+##             ("&Rotate model",rotate_stl),
+##             ("&Scale model",scale_stl),
+##             ] ),
         ("&Center model",center_stl),
         ("&Rotate model",rotate_stl),
-        ("&Clip model",clip_stl),
         ("&Scale model",scale_stl),
+        ("&Clip model",clip_stl),
+        ("&Trim border",trim_surface),
         ("&Undo LAST STL transformation",undo_stl),
         ("&Sectionize STL model",section_stl),
         ("&Show individual circles",circle_stl),
@@ -464,12 +541,8 @@ def create_menu():
         ("&Fly STL model",flytru_stl),
         ("&Export STL model to Abaqus (SLOW!)",export_stl),
         ("&Create tetgen model",create_tetgen),
-        ("&Read tetgen surface",read_tetgen_surface),
-        ("&Read tetgen volume",read_tetgen_volume),
-        ("&Read tetgen model",read_tetgen),
-        ("&Show volume model",show_volume),
         ("&Export surface to Abaqus",export_surface),
-        ("&Export volume to Abaqus",export_tetgen_volume),
+        ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
         ]
     menu.addItems(MenuData)

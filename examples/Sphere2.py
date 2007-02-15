@@ -9,7 +9,7 @@ nx = 4
 ny = 4
 m = 1.6
 ns = 6
-smooth()
+smoothwire()
 setView('front')
 for i in range(ns):
     b = Sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
@@ -18,6 +18,6 @@ for i in range(ns):
     clear()
     bb = bbox([b,s])
     draw(b,bbox=bb,wait=False)
-    draw(s,bbox=bb)
+    draw(s,bbox=bb,color='random')
     nx = int(m*nx)
     ny = int(m*ny)

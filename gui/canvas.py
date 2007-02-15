@@ -89,10 +89,10 @@ class Canvas(object):
         if self.rendermode == 'wireframe':
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-        elif self.rendermode == 'flat':
+        elif self.rendermode.startswith('flat'):
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-        elif self.rendermode == 'smooth':
+        elif self.rendermode.startswith('smooth'):
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             GL.glEnable(GL.GL_LIGHTING)
             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):

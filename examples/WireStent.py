@@ -46,6 +46,7 @@ class DoubleHelixStent:
         r = 0.5*D
         dz = 0.5*(ds+d)
         p = math.pi*D*tand(be)
+        nx = int(nx)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
         #print "pitch",p
         #print "ny",ny
@@ -88,7 +89,7 @@ if __name__ == "draw":
 
     # show an example
     L = 80.
-    H = DoubleHelixStent(10.,L,0.2,12,30.).all()
+    H = DoubleHelixStent(10.,L,0.2,3.7,30.).all()
     clear()
     draw(H,view='iso')
     # and save it in a lot of graphics formats

@@ -4,6 +4,11 @@
 
 from numpy import *
 
+
+def istype(a,c):
+    return asanarray(a).dtype.kind == c
+
+
 if 'roll' not in dir():
     def roll(a, shift, axis=None): 
         """Roll the elements in the array by 'shift' positions along 

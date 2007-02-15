@@ -153,8 +153,10 @@ def read_stl(fn,sanitize=False):
 
     This is done by first coverting the .stl to .off format.
     """
-    offname = stl_to_off(fn,sanitize=False)
-    return read_off(offname)
+    gtsname = stl_to_gts(fn)
+    nodes,edges,faces = read_gts(gtsname)
+    elems = expandEdges(edges,faces)
+    return nodes,elems
 
 
 def read_off(fn):
@@ -217,8 +219,13 @@ def read_gts(fn):
     """
     print "Reading GTS file %s" % fn
     fil = file(fn,'r')
-    nnodes,nedges,nfaces = map(int,fil.readline().split()[:3])
-    nodes = fromfile(file=fil, dtype=float32, count=3*nnodes, sep=' ')
+    header = fil.readline().split()
+    nnodes,nedges,nfaces = map(int,header[:3])
+    if len(header) >= 7 and header[6].endswith('Binary'):
+        sep=''
+    else:
+        sep=' '
+    nodes = fromfile(file=fil, dtype=float32, count=3*nnodes, sep=sep)
     edges = fromfile(file=fil, dtype=int32, count=2*nedges, sep=' ')
     faces = fromfile(file=fil, dtype=int32, count=3*nfaces, sep=' ')
     print "Read %d nodes, %d edges, %d faces" % (nnodes,nedges,nfaces)
@@ -251,12 +258,11 @@ def readSurface(fn,ftype=None):
         ftype = os.path.splitext(fn)[1]  # deduce from extension
     ftype = ftype.strip('.').lower()
     if ftype == 'stl':
-        ofn = changeExt(fn,'.off')
-        if os.path.exists(ofn) and mtime(ofn) > mtime(fn):
-            # There is a more recent .off, let's use it
-            nodes,elems = read_off(ofn)
-        else:
-            nodes,elems = read_stl(fn)
+        ofn = changeExt(fn,'.gts')
+        if (not os.path.exists(ofn)) or (mtime(ofn) < mtime(fn)):
+            stl_to_gts(fn)
+        nodes,edges,faces = read_gts(ofn)
+        elems = expandEdges(edges,faces)
     elif ftype == 'off':
         nodes,elems = read_off(fn)
     elif ftype == 'neu':
@@ -275,6 +281,7 @@ def writeSurface(fn,nodes,elems,ftype=None):
     if ftype is None:
         ftype = os.path.splitext(fn)[1]  # deduce from extension
     ftype = ftype.strip('.').lower()
+    print "Writing %s vertices" % nodes.shape[0]
     print "Writing %s triangles to file %s" % (elems.shape[0],fn)
     if ftype == 'stl':
         write_stla(fn,nodes[elems])
@@ -304,6 +311,14 @@ def stl_to_off(stlname,offname=None,sanitize=True):
         options = '-d'    
     runCommand("admesh %s --write-off %s %s" % (options,offname,stlname))
     return offname
+
+
+def stl_to_gts(stlname,outname=None):
+    """Transform an .stl file to .gts format."""
+    if not outname:
+        outname = changeExt(stlname,'.gts')
+    runCommand("stl2gts < %s > %s" % (stlname,outname))
+    return outname
 
 
 def stl_to_femodel(formex,sanitize=True):
@@ -511,7 +526,7 @@ def remove_triangles(elems,remove):
     GD.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
 
     return elems
-    
+
 
 if __name__ == '__main__':
     f = file('unit_triangle.stl','r')

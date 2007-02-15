@@ -182,6 +182,10 @@ def playScript(scr,name=None):
     else:
         modname = 'script'
     g.update({'__name__':modname})
+#
+#  WE COULD also set __file__ to the script name
+#   g.update({'__file__':name})
+    
     # Now we can execute the script using these collected globals
 
     exportNames = []
@@ -255,6 +259,12 @@ def flat():
     
 def smooth():
     renderMode("smooth")
+
+def smoothwire():
+    renderMode("smoothwire")
+    
+def flatwire():
+    renderMode("flatwire")
 
 
     

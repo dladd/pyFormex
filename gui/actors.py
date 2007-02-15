@@ -206,7 +206,7 @@ class Actor(object):
     bbox(): return the actors bounding box.
     draw(mode='wireframe'): to draw the actor. Takes a mode argument so the
       drawing function can act differently depending on the mode. There are
-      currently 3 modes: wireframe, flat, smooth.
+      currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
     """
     def __init__(self):
         pass
@@ -356,8 +356,17 @@ class FormexActor(Actor,Formex):
 
     def draw(self,mode='wireframe'):
         """Draw the formex."""
+        if mode.endswith('wire'):
+            print "REALLY %s" % mode
+            self.draw('wireframe')
+            #self.draw(mode[:-4])
+            self.draw('wireframe')
+            return
+
+        print "DRAWING %s" % mode
+        print self.color
+        
         nnod = self.nnodel()
-        nelem = self.nelems()
         
         if nnod == 1:
             for elem in self.f:
