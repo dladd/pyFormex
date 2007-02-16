@@ -130,12 +130,15 @@ def drawTriangles(x,c,mode):
     if mode == 'smooth':
         normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
     GL.glBegin(GL.GL_TRIANGLES)
+    print "TRIANGLES"
+    print x.shape
     for i in range(x.shape[0]):
-        GL.glColor3f(*c[i])
+        GL.glColor3fv(c[i])
         if mode == 'smooth':
-            GL.glNormal3f(*normal[i])
+            #print "%s : %s" % (i,normal[i])
+            GL.glNormal3fv(normal[i])
         for j in range(x.shape[1]):
-            GL.glVertex3f(*(x[i][j]))
+            GL.glVertex3fv(x[i][j])
     GL.glEnd()
 
 
@@ -343,7 +346,7 @@ class FormexActor(Actor,Formex):
             self.draw(mode[:-4])
             return
         
-        nnod = self.nnodel()
+        nnod = self.nplex()
         
         if nnod == 1:
             for elem in self.f:

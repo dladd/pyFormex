@@ -60,11 +60,16 @@ class Canvas(object):
         """Initialize an empty canvas with default settings."""
         self.actors = []       # an empty scene
         self.decorations = []  # and no decorations
+        self.lights = []
         self.setBbox()
         self.bgcolor = colors.mediumgrey
         self.rendermode = 'wireframe'
         self.dynamic = None    # what action on mouse move
         self.camera = None
+
+    def addLight(self,position,ambient,diffuse,specular):
+        """Adds a new light to the scene."""
+        
 
     def initCamera(self):
         if GD.options.makecurrent:
@@ -85,6 +90,9 @@ class Canvas(object):
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
         GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
+        #GL.glEnable(GL.GL_CULL_FACE)
+        #GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE) # WIREFRAME!
+        
 
         if self.rendermode == 'wireframe':
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
