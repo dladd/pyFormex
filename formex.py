@@ -35,7 +35,7 @@ def deprecated(old,new):
     print "Function %s is deprecated: use %s instead" % (old,new)
 
 # default float and int types used in the Formex data
-Float = float32
+Float = float64
 Int = int32
 
 

@@ -36,8 +36,8 @@ class STL(object):
         """
         self.coords = self.nodes = self.elems = self.edges = self.faces = None
         if len(args) == 2:
-            nodes = asanarray(arg[0])
-            elems = asanarray(arg[1])
+            nodes = asanyarray(arg[0])
+            elems = asanyarray(arg[1])
             if nodes.dtype.kind == 'f' and elems.dtype.kind == 'i' and \
                    nodes.ndim == 2 and elems.ndim == 2 and \
                    nodes.shape[1] == 3 and elems.shape[1] == 3:
@@ -86,7 +86,7 @@ def read_error(cnt,line):
     raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
-def read_stla(fn,dtype=float32,large=False,guess=True,off=False):
+def read_stla(fn,dtype=Float,large=False,guess=True,off=False):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     If the .stl is large, read_ascii_large() is recommended, as it is
@@ -143,7 +143,7 @@ def read_stla(fn,dtype=float32,large=False,guess=True,off=False):
         
 
 
-def read_ascii_large(fn,dtype=float32):
+def read_ascii_large(fn,dtype=Float):
     """Read an ascii .stl file into an [n,3,3] float array.
 
     This is an alternative for read_ascii, which is a lot faster on large
@@ -182,7 +182,7 @@ def read_off(fn):
         print "%s is not an OFF file!" % fn
         return None,None
     nnodes,nelems,nedges = map(int,fil.readline().split())
-    nodes = fromfile(file=fil, dtype=float32, count=3*nnodes, sep=' ')
+    nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=' ')
     # elems have number of vertices + 3 vertex numbers
     elems = fromfile(file=fil, dtype=int32, count=4*nelems, sep=' ')
     print "Read %d nodes and %d elems" % (nnodes,nelems)
@@ -198,7 +198,7 @@ def read_gambit_neutral(fn):
     runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
-    nodes = fromfile(nodesf,sep=' ',dtype=float32).reshape((-1,3))
+    nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
     elems = fromfile(elemsf,sep=' ',dtype=int32).reshape((-1,3))
     return nodes, elems-1
 
@@ -235,7 +235,7 @@ def read_gts(fn):
         sep=''
     else:
         sep=' '
-    nodes = fromfile(file=fil, dtype=float32, count=3*nnodes, sep=sep)
+    nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=sep)
     edges = fromfile(file=fil, dtype=int32, count=2*nedges, sep=' ')
     faces = fromfile(file=fil, dtype=int32, count=3*nfaces, sep=' ')
     print "Read %d nodes, %d edges, %d faces" % (nnodes,nedges,nfaces)

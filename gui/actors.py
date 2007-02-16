@@ -12,6 +12,34 @@ markscale = 0.001
 
 ### Some drawing functions ###############################################
 
+
+def drawEdges(x,edges,color=None,width=None):
+    """Draw a collection of edges.
+
+    x is a (ncoords,3) coordinate array.
+    edges is a (nedges,2) integer array of connected node numbers.
+    color is a 3-component color or a (nedges,3) color array.
+    width is the linewidth.
+    """
+    if width is not None:
+        GL.glLineWidth(width)
+    if color is not None:
+        color = asanyarray(color)
+        if color.ndim == 1:
+            GL.glColor3fv(color)
+    GL.glBegin(GL.GL_LINES)
+    if color is None or color.ndim > 1: 
+        for c,e in zip(color,edges):
+            GL.glColor3fv(c)
+            GL.glVertex3fv(x[e[0]])
+            GL.glVertex3fv(x[e[1]])
+    else:
+        for e in edges:
+            GL.glVertex3fv(x[e[0]])
+            GL.glVertex3fv(x[e[1]])
+    GL.glEnd()
+
+
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
 
@@ -50,52 +78,6 @@ def drawLines(x,c,w):
         GL.glVertex3fv(x[i][0])
         GL.glVertex3fv(x[i][1])
     GL.glEnd()
-
-
-def drawEdges(x,edges,color=None,width=None):
-    """Draw a collection of edges.
-
-    x is a (ncoords,3) coordinate array.
-    edges is a (nedges,2) integer array of connected node numbers.
-    color is a 3-component color.
-    width is the linewidth.
-    """
-    print "DRAWEDGES"
-    print x.shape
-    print edges.shape
-    if color is not None:
-        GL.glColor3fv(color)
-    if width is not None:
-        GL.glLineWidth(width)
-    GL.glBegin(GL.GL_LINES)
-    for e in edges:
-        GL.glVertex3fv(x[e[0]])
-        GL.glVertex3fv(x[e[1]])
-    GL.glEnd()
-
-
-def drawColoredEdges(x,edges,color,width=None):
-    """Draw a collection of edges.
-
-    x is a (ncoords,3) coordinate array.
-    edges is a (nedges,2) integer array of connected node numbers.
-    color is a (nedges,3) color array.
-    width is the linewidth.
-    """
-    print "DRAWCOLOREDEDGES"
-    print x.shape
-    print edges.shape
-    print color.shape
-    if width is not None:
-        GL.glLineWidth(width)
-    GL.glBegin(GL.GL_LINES)
-    for c,e in zip(color,edges):
-        print x[e[0]],x[e[1]]
-        GL.glColor3fv(c)
-        GL.glVertex3fv(x[e[0]])
-        GL.glVertex3fv(x[e[1]])
-    GL.glEnd()
-
 
 
 def drawTriEdges(x,c,w):
@@ -357,14 +339,9 @@ class FormexActor(Actor,Formex):
     def draw(self,mode='wireframe'):
         """Draw the formex."""
         if mode.endswith('wire'):
-            print "REALLY %s" % mode
             self.draw('wireframe')
-            #self.draw(mode[:-4])
-            self.draw('wireframe')
+            self.draw(mode[:-4])
             return
-
-        print "DRAWING %s" % mode
-        print self.color
         
         nnod = self.nnodel()
         
@@ -427,23 +404,35 @@ class SurfaceActor(Actor):
     def __init__(self,nodes,elems,color=black,linewidth=1.0):
         
         Actor.__init__(self)
-        self.color = array(color)
+        self.color = asanyarray(color)
         self.linewidth = linewidth
-        self.vertices = nodes
-        self.bbox = boundingBox(nodes)
+        self.nodes = nodes
+        self.elems = elems
+        self.bb = boundingBox(nodes)
         edges = elems[:,elements.Tri3.edges].reshape((-1,2))
         self.edges = edges[edges[:,0] < edges[:,1]]
-        self.facets = elems
-        print "SURFACE ACTOR"
-        print self.color.shape
-        print self.vertices.shape
-        print self.edges.shape
-        print self.facets.shape
 
-    def draw(self,mode):
-        """Always draws a wireframe model of the bbox."""
-        if self.color.ndim == 2:
-        
-            drawColoredEdges(self.vertices,self.edges,self.color,self.linewidth)
+
+    def bbox(self):
+        return self.bb
+
+
+    def draw(self,mode,color=None):
+        """Draw the surface."""
+        if mode.endswith('wire'):
+            #self.draw('wireframe',color=[0.,0.,0.])
+            self.draw(mode[:-4])
+            self.draw('wireframe',color=[0.,0.,0.])
+            return
+
+        print "DRAWING MODE %s" % mode
+        if color == None:
+            color = self.color
+        if mode=='wireframe' :
+            drawEdges(self.nodes,self.edges,color,self.linewidth)
         else:
-            drawEdges(self.vertices,self.edges,self.color,self.linewidth)
+            if color.ndim == 1:
+                color = zeros((self.elems.shape[0],3))
+                color[:,:] = self.color
+                print color
+            drawTriangles(self.nodes[self.elems],color,mode)

@@ -21,7 +21,7 @@ def readNodes(fn):
     line = fil.readline()
     s = line.strip('\n').split()
     npts,ndim,nattr,nbmark = map(int,s)
-    nodes = fromfile(fil,sep=' ',dtype=float32).reshape((npts,ndim+1))
+    nodes = fromfile(fil,sep=' ',dtype=Float).reshape((npts,ndim+1))
     return nodes[:,1:],nodes[:,0].astype(int32)
 
 
