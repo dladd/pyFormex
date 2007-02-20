@@ -1,4 +1,36 @@
 # $Id$
+##
+## This file is part of pyFormex 0.4.2 Release Tue Feb 20 08:23:11 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
+
+
+2007-02 BV: Released pyFormex 0.4.2, including lots the work on surface
+            models.
+
+2006-11-03 BV: Released pyFormex 0.4. This release is marked by the transition
+               to the Qt4 widget set.
+
+2006-04-15 BV: Released pyFormex 0.3
+
+2006: pyFormex was used in some of our research projects and proved to be
+      a valuable tool. This necessitated and inspired new development work
+      on pyFormex. Lots of new features were implemented, too many to be
+      listed here.
+      Some of the milestones:
+      - pyFormex was used in the design of wire stents (see WireStent example).
+        The process involved the automatic creation of Finite Element
+        Analysis jobs and automatic processing of the results.
+      - pyFormex was used to measure geometries obtained from medical images
+        and to create a patient specific geometrical hardware model. This
+        initiated our further work with surface models.
+      - pyFormex was used by civil engineering students for their projects
+        in designing shell structures. Some of these will be included as
+        examples in future releases. 
+
 
 2005-12-09 BV : First anniversary release 0.2.2
 2005-12-06 BV : Lots of changes have been made since the 0.2.1 release.

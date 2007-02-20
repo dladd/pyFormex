@@ -1,34 +1,44 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.2.1 Release Fri Apr  8 23:30:39 2005
+## This file is part of pyFormex 0.4.2 Release Tue Feb 20 08:23:11 2007
 ## pyFormex is a python implementation of Formex algebra
 ## Homepage: http://pyformex.berlios.de/
 ## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where otherwise stated 
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
 #
-# pyformex is a program that lets you easily generate large sets of coordinates
-# following simple generation patterns such as translation, rotation,
-# reflection, mathematical functions, replication.
-# It may be useful to generate node and elements sets in finite element mesh
-# generation and in the design of spatial frame structures.
+# pyFormex is a program for generating and working with large geometrical
+# models of 3D structures by subsequent mathematical transformations.
+# It aims primarily at spatial frame structures, but can handle surface and
+# volume models as well.
+# Through its powerful scripting language, it is especially useful
+# for automated and parametric design.
 #
-# But if you find it useful for something else, please go ahead.
-# If you have questions or remarks, feel free to contact the author.
+# If you find it useful for something else, please go ahead.
+# Feel free to contact the author if you have any questions or remarks.
+# 
+# More information on the website: http://pyformex.berlios.de
+# or contact benedict.verhegghe@ugent.be
 #
-# BEWARE: this is very early alpha software, undergoing frequent changes!
+# BEWARE: this is alpha software undergoing frequent changes!
+# AND: pyFormex comes with absolutely no Warranty 
 #
 
 Prerequisites:
 -------------- 
+For scripting and mathematical transformations (without GUI):
+
 python: http://www.python.org  
-	(version 2.2 or higher)
-numarray: http://www.stsci.edu/resources/software_hardware/numarray
-	(version 0.8 or higher)
+	(version 2.4 or higher; 2.3 can work with some minor changes)
+numpy: /http://numpy.scipy.org/
+	(version 1.0-rc1 or higher.)
+
+For the GUI:
+
+Qt4: http://www.trolltech.com/products/qt
+PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
 PyOpenGL: http://pyopengl.sourceforge.net/
-	(version 2.0 or higher)
-PyQt: http://www.riverbankcomputing.co.uk/pyqt/
-	(version 0.9 or higher)
+
 
 Howto install:
 -------------
@@ -40,12 +50,17 @@ Then
   su root
   make install
 
+This will install all pyFormex files under a single directory /usr/local/lib.
+You can change this in the Makefile. 
+The install procedure also creates some symbolic liknks:
+ - in /usr/local/bin (to the executable)
+ - in /usr/local/share/doc (to the pyformex doc directory) 
+
 Howto uninstall:
 ---------------
-There currently is no automatic uninstall procedure.
+There is no automatic uninstall procedure yet.
 Remove the entire pyformex directory from where you installed it.
 Remove the symbolic link to the pyformex program.
-Remove the pyformex doc files.
 
 
 ToDo:

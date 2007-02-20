@@ -237,7 +237,7 @@ def play(fn=None):
             return
     message("Running script (%s)" % fn)
     reset()
-    message(DrawOptions)
+    GD.debug("Current Drawing Options: %s" % DrawOptions)
     playScript(file(fn,'r'),fn)
     message("Script finished")
 
@@ -272,8 +272,6 @@ def flatwire():
 
 allowwait = True
 drawlocked = False
-# set = 0 to disable wait
-# what if we want an indefinite wait (until step pressed)
 drawtimer = None
 
 def drawwait():
@@ -808,7 +806,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     if multi: # Start multisave mode
         names = utils.FilenameSequence(name,ext)
         log("Start multisave mode to files: %s (%s)" % (names.name,format))
-        print hotkey
+        #print hotkey
         if hotkey:
              QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
              if verbose:

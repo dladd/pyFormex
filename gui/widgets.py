@@ -353,9 +353,9 @@ class Menu(QtGui.QMenu):
 
     def close(self):
         """Close the menu."""
-        #self.done=True
-        print self.done
-        print self.insert
-        #if self.insert:
-        #    GD.gui.removeMenu(self)
+        self.done=True
+        #print self.done
+        #print self.insert
+        if self.insert:
+            GD.gui.removeMenu(self)
 # End

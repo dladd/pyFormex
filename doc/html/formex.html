@@ -6,7 +6,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>formex</strong></big></big> (version 1.0rc1)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>formex</strong></big></big> (version 1.0.1)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/formex.py">/home/bene/prj/pyformex/formex.py</a></font></td></tr></table>
     <p><tt><a href="#Formex">Formex</a>&nbsp;algebra&nbsp;in&nbsp;python</tt></p>
@@ -468,13 +468,10 @@ The&nbsp;original&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&
 <dl><dt><a name="Formex-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;axis.<br>
 &nbsp;<br>
 The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
+The&nbsp;axis&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;(0,1,2)&nbsp;designating&nbsp;the&nbsp;global&nbsp;axes,<br>
+or&nbsp;a&nbsp;vector&nbsp;specifying&nbsp;an&nbsp;axis&nbsp;through&nbsp;the&nbsp;origin.<br>
 If&nbsp;no&nbsp;axis&nbsp;is&nbsp;specified,&nbsp;rotation&nbsp;is&nbsp;around&nbsp;the&nbsp;2(z)-axis.&nbsp;This&nbsp;is<br>
 convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.</tt></dd></dl>
-
-<dl><dt><a name="Formex-rotateAround"><strong>rotateAround</strong></a>(self, vector, angle)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;vector.<br>
-&nbsp;<br>
-The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.&nbsp;The&nbsp;rotation&nbsp;axis&nbsp;is&nbsp;specified<br>
-by&nbsp;a&nbsp;vector&nbsp;of&nbsp;three&nbsp;values.&nbsp;It&nbsp;is&nbsp;an&nbsp;axis&nbsp;through&nbsp;the&nbsp;center.</tt></dd></dl>
 
 <dl><dt><a name="Formex-scale"><strong>scale</strong></a>(self, scale)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;scaled&nbsp;with&nbsp;scale[i]&nbsp;in&nbsp;direction&nbsp;i.<br>
 &nbsp;<br>
@@ -756,6 +753,11 @@ is&nbsp;specified,&nbsp;every&nbsp;occurrence&nbsp;of&nbsp;i&nbsp;at&nbsp;a&nbsp
 weights[p]&nbsp;instead&nbsp;of&nbsp;1.<br>
 &nbsp;<br>
 See&nbsp;also:&nbsp;histogram,&nbsp;digitize,&nbsp;unique.</tt></dd></dl>
+ <dl><dt><a name="-boundingBox"><strong>boundingBox</strong></a>(a)</dt><dd><tt>Return&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;an&nbsp;array&nbsp;of&nbsp;coordinates.<br>
+&nbsp;<br>
+a&nbsp;is&nbsp;a&nbsp;[...,3]&nbsp;array&nbsp;of&nbsp;coordinates.<br>
+the&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;(2,3)&nbsp;array,&nbsp;where&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
+minimum&nbsp;and&nbsp;the&nbsp;second&nbsp;row&nbsp;the&nbsp;maximum&nbsp;coordinates.</tt></dd></dl>
  <dl><dt><a name="-can_cast"><strong>can_cast</strong></a>(...)</dt><dd><tt><a href="#-can_cast">can_cast</a>(from=d1,&nbsp;to=d2)<br>
 &nbsp;<br>
 Returns&nbsp;True&nbsp;if&nbsp;data&nbsp;type&nbsp;d1&nbsp;can&nbsp;be&nbsp;cast&nbsp;to&nbsp;data&nbsp;type&nbsp;d2&nbsp;without<br>
@@ -905,7 +907,11 @@ WARNING:&nbsp;This&nbsp;function&nbsp;should&nbsp;be&nbsp;used&nbsp;sparingly&nb
 platform&nbsp;independent.&nbsp;In&nbsp;particular,&nbsp;they&nbsp;contain&nbsp;no&nbsp;endianess&nbsp;or&nbsp;datatype<br>
 information.&nbsp;Nevertheless&nbsp;it&nbsp;can&nbsp;be&nbsp;useful&nbsp;for&nbsp;reading&nbsp;in&nbsp;simply&nbsp;formatted<br>
 or&nbsp;binary&nbsp;data&nbsp;quickly.</tt></dd></dl>
- <dl><dt><a name="-fromiter"><strong>fromiter</strong></a>(...)</dt></dl>
+ <dl><dt><a name="-fromiter"><strong>fromiter</strong></a>(...)</dt><dd><tt><a href="#-fromiter">fromiter</a>(iterable,&nbsp;dtype,&nbsp;count=-1)<br>
+&nbsp;<br>
+Return&nbsp;a&nbsp;new&nbsp;1d&nbsp;array&nbsp;initialized&nbsp;from&nbsp;iterable.&nbsp;If&nbsp;count&nbsp;is<br>
+nonegative,&nbsp;the&nbsp;new&nbsp;array&nbsp;will&nbsp;have&nbsp;count&nbsp;elements,&nbsp;otherwise&nbsp;it's<br>
+size&nbsp;is&nbsp;determined&nbsp;by&nbsp;the&nbsp;generator.</tt></dd></dl>
  <dl><dt><a name="-frompyfunc"><strong>frompyfunc</strong></a>(...)</dt><dd><tt><a href="#-frompyfunc">frompyfunc</a>(func,&nbsp;nin,&nbsp;nout)&nbsp;take&nbsp;an&nbsp;arbitrary&nbsp;python&nbsp;function&nbsp;that&nbsp;takes&nbsp;nin&nbsp;objects&nbsp;as&nbsp;input&nbsp;and&nbsp;returns&nbsp;nout&nbsp;objects&nbsp;and&nbsp;return&nbsp;a&nbsp;universal&nbsp;function&nbsp;(ufunc).&nbsp;&nbsp;This&nbsp;ufunc&nbsp;always&nbsp;returns&nbsp;PyObject&nbsp;arrays</tt></dd></dl>
  <dl><dt><a name="-fromstring"><strong>fromstring</strong></a>(...)</dt><dd><tt><a href="#-fromstring">fromstring</a>(string,&nbsp;dtype=float,&nbsp;count=-1,&nbsp;sep='')<br>
 &nbsp;<br>
@@ -927,6 +933,7 @@ Like&nbsp;the&nbsp;generic&nbsp;NumPy&nbsp;equivalent&nbsp;the&nbsp;product&nbsp
 the&nbsp;last&nbsp;dimension&nbsp;of&nbsp;a&nbsp;and&nbsp;b.<br>
 NB:&nbsp;The&nbsp;first&nbsp;argument&nbsp;is&nbsp;not&nbsp;conjugated.</tt></dd></dl>
  <dl><dt><a name="-inside"><strong>inside</strong></a>(p, mi, ma)</dt><dd><tt>Return&nbsp;true&nbsp;if&nbsp;point&nbsp;p&nbsp;is&nbsp;inside&nbsp;bbox&nbsp;defined&nbsp;by&nbsp;points&nbsp;mi&nbsp;and&nbsp;ma</tt></dd></dl>
+ <dl><dt><a name="-int_asbuffer"><strong>int_asbuffer</strong></a>(...)</dt></dl>
  <dl><dt><a name="-interpolate"><strong>interpolate</strong></a>(F, G, div)</dt><dd><tt>Create&nbsp;interpolations&nbsp;between&nbsp;two&nbsp;formices.<br>
 &nbsp;<br>
 F&nbsp;and&nbsp;G&nbsp;are&nbsp;two&nbsp;Formices&nbsp;with&nbsp;the&nbsp;same&nbsp;shape.<br>
@@ -942,6 +949,7 @@ As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&
 number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
 Thus,&nbsp;<a href="#-interpolate">interpolate</a>(F,G,n)&nbsp;is&nbsp;equivalent&nbsp;with<br>
 <a href="#-interpolate">interpolate</a>(F,G,<a href="#-arange">arange</a>(0,n+1)/float(n))</tt></dd></dl>
+ <dl><dt><a name="-istype"><strong>istype</strong></a>(a, c)</dt></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;quadratic&nbsp;norm&nbsp;of&nbsp;a&nbsp;vector&nbsp;with&nbsp;all&nbsp;elements&nbsp;of&nbsp;arg.</tt></dd></dl>
  <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;-&gt;&nbsp;array&nbsp;of&nbsp;indices.&nbsp;argsort&nbsp;with&nbsp;list&nbsp;of&nbsp;keys.<br>
 &nbsp;<br>
@@ -950,8 +958,10 @@ done&nbsp;using&nbsp;the&nbsp;provided&nbsp;sorting&nbsp;keys.&nbsp;&nbsp;First&
 key[0],&nbsp;then&nbsp;the&nbsp;resulting&nbsp;list&nbsp;of&nbsp;indices&nbsp;is&nbsp;further&nbsp;manipulated&nbsp;by<br>
 sorting&nbsp;on&nbsp;key[1],&nbsp;and&nbsp;so&nbsp;forth.&nbsp;The&nbsp;result&nbsp;is&nbsp;a&nbsp;sort&nbsp;on&nbsp;multiple<br>
 keys.&nbsp;&nbsp;If&nbsp;the&nbsp;keys&nbsp;represented&nbsp;columns&nbsp;of&nbsp;a&nbsp;spreadsheet,&nbsp;for&nbsp;example,<br>
-this&nbsp;would&nbsp;sort&nbsp;using&nbsp;multiple&nbsp;columns.&nbsp;&nbsp;The&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a<br>
-sequence&nbsp;of&nbsp;things&nbsp;that&nbsp;can&nbsp;be&nbsp;converted&nbsp;to&nbsp;arrays&nbsp;of&nbsp;the&nbsp;same&nbsp;shape.</tt></dd></dl>
+this&nbsp;would&nbsp;sort&nbsp;using&nbsp;multiple&nbsp;columns&nbsp;(the&nbsp;last&nbsp;key&nbsp;being&nbsp;used&nbsp;for&nbsp;the<br>
+primary&nbsp;sort&nbsp;order,&nbsp;the&nbsp;second-to-last&nbsp;key&nbsp;for&nbsp;the&nbsp;secondary&nbsp;sort&nbsp;order,&nbsp;<br>
+and&nbsp;so&nbsp;on).&nbsp;&nbsp;The&nbsp;keys&nbsp;argument&nbsp;must&nbsp;be&nbsp;a&nbsp;sequence&nbsp;of&nbsp;things&nbsp;that&nbsp;can&nbsp;be&nbsp;<br>
+converted&nbsp;to&nbsp;arrays&nbsp;of&nbsp;the&nbsp;same&nbsp;shape.</tt></dd></dl>
  <dl><dt><a name="-loads"><strong>loads</strong></a>(...)</dt><dd><tt><a href="#-loads">loads</a>(string)&nbsp;--&nbsp;Load&nbsp;a&nbsp;pickle&nbsp;from&nbsp;the&nbsp;given&nbsp;string</tt></dd></dl>
  <dl><dt><a name="-newbuffer"><strong>newbuffer</strong></a>(...)</dt><dd><tt><a href="#-newbuffer">newbuffer</a>(size)<br>
 &nbsp;<br>
@@ -988,6 +998,9 @@ move&nbsp;without&nbsp;making&nbsp;a&nbsp;connection.<br>
 The&nbsp;effect&nbsp;of&nbsp;any&nbsp;other&nbsp;character&nbsp;is&nbsp;undefined.<br>
 &nbsp;<br>
 The&nbsp;resulting&nbsp;list&nbsp;is&nbsp;directly&nbsp;suited&nbsp;to&nbsp;initialize&nbsp;a&nbsp;<a href="#Formex">Formex</a>.</tt></dd></dl>
+ <dl><dt><a name="-putmask"><strong>putmask</strong></a>(...)</dt><dd><tt><a href="#-putmask">putmask</a>(a,&nbsp;mask,&nbsp;values)&nbsp;sets&nbsp;a.flat[n]&nbsp;=&nbsp;values[n]&nbsp;for&nbsp;each&nbsp;n&nbsp;where<br>
+mask.flat[n]&nbsp;is&nbsp;true.&nbsp;&nbsp;If&nbsp;values&nbsp;is&nbsp;not&nbsp;the&nbsp;same&nbsp;size&nbsp;of&nbsp;a&nbsp;and&nbsp;mask&nbsp;then<br>
+it&nbsp;will&nbsp;repeat.&nbsp;&nbsp;This&nbsp;gives&nbsp;different&nbsp;behavior&nbsp;than&nbsp;a[mask]&nbsp;=&nbsp;values.</tt></dd></dl>
  <dl><dt><a name="-readfile"><strong>readfile</strong></a>(file, sep<font color="#909090">=','</font>, plexitude<font color="#909090">=1</font>, dimension<font color="#909090">=3</font>)</dt><dd><tt>Read&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;convenience&nbsp;function&nbsp;uses&nbsp;the&nbsp;numpy&nbsp;fromfile&nbsp;function&nbsp;to&nbsp;read<br>
@@ -1005,22 +1018,20 @@ Args:<br>
 The&nbsp;total&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;on&nbsp;the&nbsp;file&nbsp;should&nbsp;be&nbsp;a&nbsp;multiple&nbsp;of<br>
 dimension&nbsp;*&nbsp;plexitude.</tt></dd></dl>
  <dl><dt><a name="-restoredot"><strong>restoredot</strong></a>(...)</dt><dd><tt><a href="#-restoredot">restoredot</a>()&nbsp;restores&nbsp;dots&nbsp;to&nbsp;defaults.</tt></dd></dl>
- <dl><dt><a name="-rotationAboutMatrix"><strong>rotationAboutMatrix</strong></a>(angle, axis)</dt><dd><tt>Return&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;over&nbsp;angle&nbsp;around&nbsp;an&nbsp;axis&nbsp;thru&nbsp;the&nbsp;origin.<br>
-&nbsp;<br>
-The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
-Axis&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;three&nbsp;components&nbsp;specifying&nbsp;the&nbsp;axis.<br>
-The&nbsp;result&nbsp;is&nbsp;a&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;in&nbsp;list&nbsp;format.<br>
-Note&nbsp;that:<br>
-&nbsp;&nbsp;<a href="#-rotationAboutMatrix">rotationAboutMatrix</a>(angle,[1,0,0])&nbsp;==&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,0)&nbsp;<br>
-&nbsp;&nbsp;<a href="#-rotationAboutMatrix">rotationAboutMatrix</a>(angle,[0,1,0])&nbsp;==&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,1)&nbsp;<br>
-&nbsp;&nbsp;<a href="#-rotationAboutMatrix">rotationAboutMatrix</a>(angle,[0,0,1])&nbsp;==&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,2)<br>
-but&nbsp;the&nbsp;latter&nbsp;functions&nbsp;are&nbsp;more&nbsp;efficient.</tt></dd></dl>
  <dl><dt><a name="-rotationMatrix"><strong>rotationMatrix</strong></a>(angle, axis<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;rotation&nbsp;matrix&nbsp;over&nbsp;angle,&nbsp;optionally&nbsp;around&nbsp;axis.<br>
 &nbsp;<br>
 The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
 If&nbsp;axis==None&nbsp;(default),&nbsp;a&nbsp;2x2&nbsp;rotation&nbsp;matrix&nbsp;is&nbsp;returned.<br>
-Else,&nbsp;axis&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;[&nbsp;0,1,2]&nbsp;and&nbsp;specifies&nbsp;the&nbsp;rotation&nbsp;axis<br>
-in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;A&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&nbsp;returned.</tt></dd></dl>
+Else,&nbsp;axis&nbsp;should&nbsp;specifying&nbsp;the&nbsp;rotation&nbsp;axis&nbsp;in&nbsp;a&nbsp;3D&nbsp;world.&nbsp;It&nbsp;is&nbsp;either<br>
+one&nbsp;of&nbsp;0,1,2,&nbsp;specifying&nbsp;a&nbsp;global&nbsp;axis,&nbsp;or&nbsp;a&nbsp;vector&nbsp;with&nbsp;3&nbsp;components<br>
+specifying&nbsp;an&nbsp;axis&nbsp;through&nbsp;the&nbsp;origin.<br>
+In&nbsp;either&nbsp;case&nbsp;a&nbsp;3x3&nbsp;rotation&nbsp;matrix&nbsp;is&nbsp;returned.<br>
+Note&nbsp;that:<br>
+&nbsp;&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,[1,0,0])&nbsp;==&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,0)&nbsp;<br>
+&nbsp;&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,[0,1,0])&nbsp;==&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,1)&nbsp;<br>
+&nbsp;&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,[0,0,1])&nbsp;==&nbsp;<a href="#-rotationMatrix">rotationMatrix</a>(angle,2)<br>
+but&nbsp;the&nbsp;latter&nbsp;functions&nbsp;calls&nbsp;are&nbsp;more&nbsp;efficient.<br>
+The&nbsp;result&nbsp;is&nbsp;returned&nbsp;as&nbsp;an&nbsp;array.</tt></dd></dl>
  <dl><dt><a name="-set_numeric_ops"><strong>set_numeric_ops</strong></a>(...)</dt><dd><tt><a href="#-set_numeric_ops">set_numeric_ops</a>(op=func,&nbsp;...)<br>
 &nbsp;<br>
 Set&nbsp;some&nbsp;or&nbsp;all&nbsp;of&nbsp;the&nbsp;number&nbsp;methods&nbsp;for&nbsp;all&nbsp;array&nbsp;objects.&nbsp;&nbsp;Don't<br>
@@ -1068,7 +1079,10 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>CLIP</strong> = 0<br>
 <strong>ERR_CALL</strong> = 3<br>
 <strong>ERR_DEFAULT</strong> = 0<br>
+<strong>ERR_DEFAULT2</strong> = 2084<br>
 <strong>ERR_IGNORE</strong> = 0<br>
+<strong>ERR_LOG</strong> = 5<br>
+<strong>ERR_PRINT</strong> = 4<br>
 <strong>ERR_RAISE</strong> = 2<br>
 <strong>ERR_WARN</strong> = 1<br>
 <strong>FLOATING_POINT_SUPPORT</strong> = 1<br>
@@ -1088,15 +1102,15 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>PZERO</strong> = 0.0<br>
 <strong>RAISE</strong> = 2<br>
 <strong>SHIFT_DIVIDEBYZERO</strong> = 0<br>
-<strong>SHIFT_INVALID</strong> = 6<br>
-<strong>SHIFT_OVERFLOW</strong> = 2<br>
-<strong>SHIFT_UNDERFLOW</strong> = 4<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.unicode_'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float32'&gt;, ...)<br>
+<strong>SHIFT_INVALID</strong> = 9<br>
+<strong>SHIFT_OVERFLOW</strong> = 3<br>
+<strong>SHIFT_UNDERFLOW</strong> = 6<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
 <strong>WRAP</strong> = 1<br>
-<strong>__version__</strong> = '1.0rc1'<br>
+<strong>__version__</strong> = '1.0.1'<br>
 <strong>absolute</strong> = &lt;ufunc 'absolute'&gt;<br>
 <strong>add</strong> = &lt;ufunc 'add'&gt;<br>
 <strong>arccos</strong> = &lt;ufunc 'arccos'&gt;<br>
@@ -1111,7 +1125,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...string_'&gt;: &lt;function &lt;lambda&gt; at 0x2b3c014bae60&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...mplex64'&gt;: &lt;function &lt;lambda&gt; at 0x2aaee5f2ac08&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1155,7 +1169,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...pe 'numpy.object_'&gt;: 8, &lt;type 'numpy.uint64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.bool_'&gt;: 1, &lt;type 'numpy.uint8'&gt;: 1}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

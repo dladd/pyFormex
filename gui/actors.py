@@ -130,8 +130,8 @@ def drawTriangles(x,c,mode):
     if mode == 'smooth':
         normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
     GL.glBegin(GL.GL_TRIANGLES)
-    print "TRIANGLES"
-    print x.shape
+    #print "TRIANGLES"
+    #print x.shape
     for i in range(x.shape[0]):
         GL.glColor3fv(c[i])
         if mode == 'smooth':

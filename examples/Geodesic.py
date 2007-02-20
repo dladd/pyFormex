@@ -14,6 +14,9 @@ wireframe()
 
 m=n=5
 data = askItems({'m':m,'n':n})
+if not data.has_key('m'):
+    exit()
+
 m = int(data['m'])
 n = int(data['n'])
 

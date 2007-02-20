@@ -4,6 +4,15 @@
 
 from numpy import *
 
+def deprecated(replacement):
+    def decorator(func):
+        #print "Replacement %s" % replacement.func_name
+        def wrapper(*__args,**__kw):
+            print "Function %s is deprecated: use %s instead" % (func.func_name,replacement.func_name)
+            return replacement(*__args,**__kw)
+        return wrapper
+    decorator.__doc__ = replacement.__doc__
+    return decorator
 
 def istype(a,c):
     return asanarray(a).dtype.kind == c
@@ -30,9 +39,6 @@ if 'roll' not in dir():
             return res.reshape(a.shape) 
         else: 
             return res
-        
-def deprecated(old,new):
-    print "Function %s is deprecated: use %s instead" % (old,new)
 
 # default float and int types used in the Formex data
 Float = float32
@@ -740,8 +746,8 @@ class Formex:
 #
 ##############################################################################
 
-    def setProp(self,p):
-        """Create a property array for the Formex.
+    def setProp(self,p=None):
+        """Create or destroy the property array for the Formex.
 
         A property array is a rank-1 integer array with dimension equal
         to the number of elements in the Formex (first dimension of data).
@@ -1546,32 +1552,26 @@ class Formex:
     # The may be removed in future.
     #
 
+    @deprecated(test)
     def where(self,*args,**kargs):
-        deprecated('nodesAndElements','feModel')
-        return self.test(*args,**kargs)
+        pass
 
+    @deprecated(feModel)
     def nodesAndElements(self):
-        deprecated('nodesAndElements','feModel')
-        return self.feModel()
+        pass
+
+    @deprecated(translate)
+    def translate1(self,dir,distance):
+        pass
+
+    @deprecated(setProp)
+    def removeProp(self):
+        pass
+
     
     def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
         return self.spherical([dir[1],dir[2],dir[0]],scale[1],[scale[2],scale[0]],colat=True)
-
-
-    def removeProp(self):
-        """Remove the properties from a Formex.
-
-        The same can be achieved by setProp(None), which is prefered.
-        """
-        deprecated('removeProp','setProp(None)')
-        return self.setProp(None)
-
-    def translate1(self,dir,distance):
-        deprecated('translate1','translate')
-        return self.translate(dir,distance)
-
-
     nnodel = nplex
     nnodes = npoints
     
@@ -1899,6 +1899,7 @@ if __name__ == "__main__":
         Formex.setPrintFunction(Formex.asArray)
         print F
         F.fprint()
+        F = F.translate1(1,1)
 
     (f,t) = _test()
     if f == 0:
