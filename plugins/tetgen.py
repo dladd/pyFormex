@@ -4,7 +4,6 @@
 
 import os
 from utils import changeExt
-#from numpy import *
 from formex import *
 
 def invalid(line,fn):
