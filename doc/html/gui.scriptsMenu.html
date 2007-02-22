@@ -46,7 +46,7 @@
 <font color="#000000" face="helvetica, arial"><a name="ScriptsMenu">class <strong>ScriptsMenu</strong></a>(<a href="PyQt4.QtGui.html#QMenu">PyQt4.QtGui.QMenu</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>A&nbsp;menu&nbsp;of&nbsp;pyFormex&nbsp;scripts&nbsp;in&nbsp;a&nbsp;directory.<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>A&nbsp;menu&nbsp;of&nbsp;pyFormex&nbsp;scripts&nbsp;in&nbsp;a&nbsp;directory&nbsp;or&nbsp;list.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.scriptsMenu.html#ScriptsMenu">ScriptsMenu</a></dd>
@@ -59,8 +59,10 @@
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="ScriptsMenu-__init__"><strong>__init__</strong></a>(self, dir)</dt><dd><tt>Create&nbsp;a&nbsp;menu&nbsp;with&nbsp;files&nbsp;in&nbsp;dir.&nbsp;<br>
+<dl><dt><a name="ScriptsMenu-__init__"><strong>__init__</strong></a>(self, title, dir<font color="#909090">=None</font>, files<font color="#909090">=None</font>, max<font color="#909090">=0</font>, autoplay<font color="#909090">=False</font>)</dt><dd><tt>Create&nbsp;a&nbsp;menu&nbsp;with&nbsp;files&nbsp;in&nbsp;dir.<br>
 &nbsp;<br>
+If&nbsp;dir&nbsp;is&nbsp;a&nbsp;directory,&nbsp;all&nbsp;files&nbsp;in&nbsp;that&nbsp;directory&nbsp;are&nbsp;used.<br>
+If&nbsp;dir&nbsp;is&nbsp;a&nbsp;list,&nbsp;this&nbsp;list&nbsp;of&nbsp;files&nbsp;is&nbsp;used<br>
 By&nbsp;default,&nbsp;files&nbsp;from&nbsp;dir&nbsp;are&nbsp;only&nbsp;included&nbsp;if:<br>
 &nbsp;&nbsp;-&nbsp;the&nbsp;name&nbsp;ends&nbsp;with&nbsp;'.py'<br>
 &nbsp;&nbsp;-&nbsp;the&nbsp;name&nbsp;does&nbsp;not&nbsp;start&nbsp;with&nbsp;'.'&nbsp;or&nbsp;'_'<br>
@@ -68,17 +70,21 @@ By&nbsp;default,&nbsp;files&nbsp;from&nbsp;dir&nbsp;are&nbsp;only&nbsp;included&
 &nbsp;<br>
 An&nbsp;option&nbsp;to&nbsp;reload&nbsp;the&nbsp;directory&nbsp;is&nbsp;always&nbsp;included.</tt></dd></dl>
 
-<dl><dt><a name="ScriptsMenu-load"><strong>load</strong></a>(self, dir)</dt></dl>
+<dl><dt><a name="ScriptsMenu-add"><strong>add</strong></a>(self, filename)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;filename&nbsp;to&nbsp;the&nbsp;front&nbsp;of&nbsp;the&nbsp;menu.</tt></dd></dl>
 
-<dl><dt><a name="ScriptsMenu-reLoad"><strong>reLoad</strong></a>(self)</dt></dl>
+<dl><dt><a name="ScriptsMenu-load"><strong>load</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="ScriptsMenu-run"><strong>run</strong></a>(self, action)</dt><dd><tt>Run&nbsp;the&nbsp;selected&nbsp;example.</tt></dd></dl>
+<dl><dt><a name="ScriptsMenu-reLoad"><strong>reLoad</strong></a>(self)</dt><dd><tt>Reload&nbsp;the&nbsp;scripts&nbsp;from&nbsp;dir.</tt></dd></dl>
 
-<dl><dt><a name="ScriptsMenu-runAll"><strong>runAll</strong></a>(self)</dt><dd><tt>Run&nbsp;all&nbsp;examples.</tt></dd></dl>
+<dl><dt><a name="ScriptsMenu-run"><strong>run</strong></a>(self, action)</dt><dd><tt>Run&nbsp;the&nbsp;selected&nbsp;script.</tt></dd></dl>
+
+<dl><dt><a name="ScriptsMenu-runAll"><strong>runAll</strong></a>(self)</dt><dd><tt>Run&nbsp;all&nbsp;scripts.</tt></dd></dl>
+
+<dl><dt><a name="ScriptsMenu-runAllNext"><strong>runAllNext</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="ScriptsMenu-runNext"><strong>runNext</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="ScriptsMenu-runScript"><strong>runScript</strong></a>(self, filename)</dt><dd><tt>Run&nbsp;the&nbsp;specified&nbsp;example.</tt></dd></dl>
+<dl><dt><a name="ScriptsMenu-runScript"><strong>runScript</strong></a>(self, filename)</dt><dd><tt>Run&nbsp;the&nbsp;specified&nbsp;script.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.QtGui.QMenu</a>:<br>

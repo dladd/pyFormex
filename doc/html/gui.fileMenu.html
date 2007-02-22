@@ -19,10 +19,9 @@
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
 <a href="gui.draw.html">gui.draw</a><br>
-</td><td width="25%" valign=top><a href="gui.gui.html">gui.gui</a><br>
-<a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
-<a href="gui.widgets.html">gui.widgets</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="utils.html">utils</a><br>
+</td><td width="25%" valign=top><a href="gui.widgets.html">gui.widgets</a><br>
 </td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
@@ -35,18 +34,18 @@
 This&nbsp;only&nbsp;works&nbsp;if&nbsp;the&nbsp;editor&nbsp;was&nbsp;set&nbsp;in&nbsp;the&nbsp;configuration.<br>
 The&nbsp;author&nbsp;uses&nbsp;'gnuclient'&nbsp;to&nbsp;load&nbsp;the&nbsp;files&nbsp;in&nbsp;a&nbsp;running&nbsp;copy<br>
 of&nbsp;xemacs.</tt></dd></dl>
- <dl><dt><a name="-multiSave"><strong>multiSave</strong></a>()</dt><dd><tt>Save&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
-&nbsp;<br>
-If&nbsp;the&nbsp;filename&nbsp;supplied&nbsp;has&nbsp;a&nbsp;trailing&nbsp;numeric&nbsp;part,&nbsp;subsequent&nbsp;images<br>
-will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp;Otherwise&nbsp;a&nbsp;numeric&nbsp;part<br>
--000,&nbsp;-001,&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;filename.</tt></dd></dl>
  <dl><dt><a name="-newFile"><strong>newFile</strong></a>()</dt></dl>
  <dl><dt><a name="-openFile"><strong>openFile</strong></a>(exist<font color="#909090">=True</font>)</dt><dd><tt>Open&nbsp;a&nbsp;file&nbsp;selection&nbsp;dialog&nbsp;and&nbsp;set&nbsp;the&nbsp;selection&nbsp;as&nbsp;the&nbsp;current&nbsp;file.<br>
 &nbsp;<br>
 The&nbsp;default&nbsp;only&nbsp;accepts&nbsp;existing&nbsp;files.&nbsp;Use&nbsp;<a href="#-newFile">newFile</a>()&nbsp;to&nbsp;accept&nbsp;new&nbsp;files.</tt></dd></dl>
- <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;in&nbsp;image&nbsp;format.<br>
+ <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>(multi<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;an&nbsp;image&nbsp;to&nbsp;file.<br>
 &nbsp;<br>
-This&nbsp;function&nbsp;will&nbsp;open&nbsp;a&nbsp;file&nbsp;selection&nbsp;dialog,&nbsp;and&nbsp;if&nbsp;a&nbsp;valid<br>
-file&nbsp;is&nbsp;returned,&nbsp;the&nbsp;current&nbsp;OpenGL&nbsp;rendering&nbsp;will&nbsp;be&nbsp;saved&nbsp;to&nbsp;it.</tt></dd></dl>
+This&nbsp;will&nbsp;show&nbsp;the&nbsp;Save&nbsp;Image&nbsp;dialog,&nbsp;with&nbsp;the&nbsp;multisave&nbsp;mode&nbsp;checked&nbsp;if<br>
+multi&nbsp;=&nbsp;True.&nbsp;Then,&nbsp;depending&nbsp;on&nbsp;the&nbsp;user's&nbsp;selection,&nbsp;it&nbsp;will&nbsp;either:<br>
+&nbsp;-&nbsp;save&nbsp;the&nbsp;current&nbsp;Canvas/Window&nbsp;to&nbsp;file<br>
+&nbsp;-&nbsp;start&nbsp;the&nbsp;multisave/autosave&nbsp;mode<br>
+&nbsp;-&nbsp;do&nbsp;nothing</tt></dd></dl>
+ <dl><dt><a name="-startMultiSave"><strong>startMultiSave</strong></a>()</dt><dd><tt>Start/change&nbsp;multisave&nbsp;mode.</tt></dd></dl>
+ <dl><dt><a name="-stopMultiSave"><strong>stopMultiSave</strong></a>()</dt><dd><tt>Stop&nbsp;multisave&nbsp;mode.</tt></dd></dl>
 </td></tr></table>
 </body></html>

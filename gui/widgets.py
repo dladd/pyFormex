@@ -220,7 +220,11 @@ def getColor(col=None):
     If a valid color is selected, its string name is returned, usually as
     a hex #RRGGBB string. If the dialog is canceled, None is returned.
     """
-    col = QtGui.QColorDialog.getColor(QtGui.QColor(col))
+    if type(col) == tuple:
+        col = QtGui.QColor.fromRgb(*col)
+    else:
+        col = QtGui.QColor(col)
+    col = QtGui.QColorDialog.getColor(col)
     if col.isValid():
         return str(col.name())
     else:

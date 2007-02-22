@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 # $Id$
+##
+## This file is part of pyFormex 0.4.2 Release Tue Feb 20 15:57:42 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
 """Functions from the File menu."""
 
 import os
 import globaldata as GD
 import widgets
-import gui
 import draw
 import utils
 

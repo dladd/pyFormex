@@ -58,7 +58,6 @@ def ask(question,choices=None,default=''):
         items = [ [question, default] ]
         res,accept = widgets.inputDialog(items,'Config Dialog').process()
         GD.gui.update()
-        #print res
         if accept:
             return res[0][1]
         else:
@@ -94,9 +93,7 @@ def askItems(items):
     """
     if type(items) == dict:
         items = items.items()
-    #print items.items()
     res,status = widgets.inputDialog(items).process()
-    #print res
     items = {}
     for r in res:
         items[r[0]] = r[1]
@@ -415,7 +412,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         color = map(colors.GLColor,color)
 
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color,GD.cfg['draw/linewidth'],eltype=eltype)
+    actor = actors.FormexActor(F,color,linewidth=GD.cfg['draw/linewidth'],eltype=eltype)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
@@ -439,8 +436,6 @@ def view(v,wait=False):
     global allowwait
     if allowwait:
         drawwait()
-    #print "Requested View ",v
-    #print "Known Views: ",GD.canvas.views.keys()
     if GD.canvas.views.has_key(v):
         GD.canvas.setView(None,v)
         setView(v)

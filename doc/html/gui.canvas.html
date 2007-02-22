@@ -36,13 +36,18 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
 <dt><font face="helvetica, arial"><a href="gui.canvas.html#Canvas">Canvas</a>
 </font></dt></dl>
+</dd>
+</dl>
  <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Canvas">class <strong>Canvas</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Canvas">class <strong>Canvas</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>A&nbsp;canvas&nbsp;for&nbsp;OpenGL&nbsp;rendering.<br>&nbsp;</tt></td></tr>
@@ -54,24 +59,22 @@
 
 <dl><dt><a name="Canvas-addDecoration"><strong>addDecoration</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;a&nbsp;2D&nbsp;decoration&nbsp;to&nbsp;the&nbsp;canvas.</tt></dd></dl>
 
+<dl><dt><a name="Canvas-addLight"><strong>addLight</strong></a>(self, position, ambient, diffuse, specular)</dt><dd><tt>Adds&nbsp;a&nbsp;new&nbsp;light&nbsp;to&nbsp;the&nbsp;scene.</tt></dd></dl>
+
 <dl><dt><a name="Canvas-add_actor"><strong>add_actor</strong></a>(self, actor, list)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;an&nbsp;actorlist.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-clear"><strong>clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;canvas&nbsp;to&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-createView"><strong>createView</strong></a>(self, name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
-&nbsp;<br>
-By&nbsp;default,&nbsp;the&nbsp;following&nbsp;views&nbsp;are&nbsp;created:<br>
-'front',&nbsp;'back',&nbsp;'left',&nbsp;'right',&nbsp;'bottom',&nbsp;'top',&nbsp;'iso'.<br>
-The&nbsp;user&nbsp;can&nbsp;add/delete/overwrite&nbsp;any&nbsp;number&nbsp;of&nbsp;predefined&nbsp;views.</tt></dd></dl>
-
 <dl><dt><a name="Canvas-display"><strong>display</strong></a>(self)</dt><dd><tt>(Re)display&nbsp;all&nbsp;the&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
 &nbsp;<br>
 This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;when&nbsp;actors&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;scene,<br>
-or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position&nbsp;or&nbsp;lens.</tt></dd></dl>
+or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position/orientation&nbsp;or&nbsp;lens.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-dyna"><strong>dyna</strong></a>(self, x, y)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom/pan/rotation&nbsp;functions</tt></dd></dl>
 
 <dl><dt><a name="Canvas-glinit"><strong>glinit</strong></a>(self, mode<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Canvas-initCamera"><strong>initCamera</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Canvas-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>#&nbsp;Any&nbsp;keypress&nbsp;with&nbsp;focus&nbsp;in&nbsp;the&nbsp;canvas&nbsp;generates&nbsp;a&nbsp;'wakeup'&nbsp;signal.<br>
 #&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;break&nbsp;out&nbsp;of&nbsp;a&nbsp;wait&nbsp;status.<br>
@@ -119,14 +122,24 @@ to&nbsp;Python&nbsp;by&nbsp;Toby&nbsp;Whites's&nbsp;wrapper<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;is&nbsp;only&nbsp;defined&nbsp;if&nbsp;the&nbsp;gl2ps&nbsp;module&nbsp;is&nbsp;found.<br>
 &nbsp;<br>
-The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'PS',&nbsp;'EPS',&nbsp;'PDF'&nbsp;or&nbsp;'TEX'.<br>
+The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'ps',&nbsp;'eps',&nbsp;'pdf'&nbsp;or&nbsp;'tex'.<br>
 If&nbsp;not&nbsp;specified,&nbsp;the&nbsp;type&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;file&nbsp;extension.<br>
-In&nbsp;case&nbsp;of&nbsp;the&nbsp;'TEX'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
+In&nbsp;case&nbsp;of&nbsp;the&nbsp;'tex'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
 the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extension.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-setBbox"><strong>setBbox</strong></a>(self, bbox<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;scene&nbsp;you&nbsp;want&nbsp;to&nbsp;be&nbsp;visible.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-setBgColor"><strong>setBgColor</strong></a>(self, bg)</dt><dd><tt>Set&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-setCamera"><strong>setCamera</strong></a>(self, bbox<font color="#909090">=None</font>, angles<font color="#909090">=None</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;under&nbsp;angles&nbsp;at&nbsp;bbox.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;sets&nbsp;the&nbsp;camera&nbsp;angles&nbsp;and&nbsp;adjusts&nbsp;the&nbsp;zooming.<br>
+The&nbsp;camera&nbsp;distance&nbsp;remains&nbsp;unchanged.<br>
+If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;to&nbsp;make&nbsp;the&nbsp;whole<br>
+bbox&nbsp;visible.<br>
+If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nbsp;bbox&nbsp;will&nbsp;be&nbsp;used.<br>
+If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
+bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-setLinewidth"><strong>setLinewidth</strong></a>(self, lw)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;for&nbsp;line&nbsp;rendering.</tt></dd></dl>
 
@@ -135,18 +148,27 @@ the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extensi
 <dl><dt><a name="Canvas-setView"><strong>setView</strong></a>(self, bbox<font color="#909090">=None</font>, side<font color="#909090">='front'</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;from&nbsp;one&nbsp;of&nbsp;the&nbsp;named&nbsp;views.<br>
 &nbsp;<br>
 On&nbsp;startup,&nbsp;the&nbsp;predefined&nbsp;views&nbsp;are&nbsp;'front',&nbsp;'back',&nbsp;'left',<br>
-'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.<br>
-This&nbsp;function&nbsp;does&nbsp;not&nbsp;only&nbsp;set&nbsp;the&nbsp;camera&nbsp;angles,&nbsp;but&nbsp;also<br>
-adjust&nbsp;the&nbsp;zooming.<br>
-If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;to&nbsp;view&nbsp;the<br>
-whole&nbsp;bbox.<br>
-If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nbsp;bbox&nbsp;will&nbsp;be&nbsp;used.<br>
-If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
-bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
-
-<dl><dt><a name="Canvas-update"><strong>update</strong></a>(self)</dt><dd><tt>#&nbsp;our&nbsp;own&nbsp;name&nbsp;for&nbsp;the&nbsp;canvas&nbsp;update&nbsp;function</tt></dd></dl>
+'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
+
+<hr>
+Class methods defined here:<br>
+<dl><dt><a name="Canvas-createView"><strong>createView</strong></a>(clas, name, angles)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Create/change&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
+&nbsp;<br>
+By&nbsp;default,&nbsp;the&nbsp;following&nbsp;views&nbsp;are&nbsp;created:<br>
+'front',&nbsp;'back',&nbsp;'left',&nbsp;'right',&nbsp;'bottom',&nbsp;'top',&nbsp;'iso'.<br>
+The&nbsp;user&nbsp;can&nbsp;add/delete/overwrite&nbsp;any&nbsp;number&nbsp;of&nbsp;predefined&nbsp;views.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Canvas' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>default_light</strong> = {'ambient': 0.5, 'diffuse': 1.0, 'position': (0.0, 0.0, 1.0, 0.0), 'specular': 0.5}</dl>
+
+<dl><dt><strong>views</strong> = {'back': (180.0, 0.0, 0.0), 'bottom': (0.0, -90.0, 0.0), 'front': (0.0, 0.0, 0.0), 'iso': (45.0, 45.0, 0.0), 'left': (270.0, 0.0, 0.0), 'right': (90.0, 0.0, 0.0), 'top': (0.0, 90.0, 0.0)}</dl>
 
 </td></tr></table></td></tr></table>
 </body></html>

@@ -21,20 +21,22 @@
 <a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
 <a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
 <a href="PyQt4.QtOpenGL.html">PyQt4.QtOpenGL</a><br>
-<a href="gui.cameraMenu.html">gui.cameraMenu</a><br>
-</td><td width="25%" valign=top><a href="gui.canvas.html">gui.canvas</a><br>
+<a href="gui.actionlist.html">gui.actionlist</a><br>
+</td><td width="25%" valign=top><a href="gui.cameraMenu.html">gui.cameraMenu</a><br>
+<a href="gui.canvas.html">gui.canvas</a><br>
 <a href="gui.draw.html">gui.draw</a><br>
 <a href="gui.fileMenu.html">gui.fileMenu</a><br>
 <a href="gui.menu.html">gui.menu</a><br>
-<a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="gui.prefMenu.html">gui.prefMenu</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="gui.prefMenu.html">gui.prefMenu</a><br>
+<a href="re.html">re</a><br>
 <a href="script.html">script</a><br>
 <a href="gui.scriptsMenu.html">gui.scriptsMenu</a><br>
-<a href="string.html">string</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
 <a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="time.html">time</a><br>
+<a href="time.html">time</a><br>
+<a href="gui.toolbar.html">gui.toolbar</a><br>
 <a href="utils.html">utils</a><br>
-<a href="gui.views.html">gui.views</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -43,6 +45,18 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QGridLayout">PyQt4.QtGui.QGridLayout</a>(<a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gui.gui.html#MultiCanvas">MultiCanvas</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QMainWindow">PyQt4.QtGui.QMainWindow</a>(<a href="PyQt4.QtGui.html#QWidget">PyQt4.QtGui.QWidget</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gui.gui.html#GUI">GUI</a>
+</font></dt></dl>
+</dd>
 <dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QTextEdit">PyQt4.QtGui.QTextEdit</a>(<a href="PyQt4.QtGui.html#QAbstractScrollArea">PyQt4.QtGui.QAbstractScrollArea</a>)
 </font></dt><dd>
 <dl>
@@ -55,14 +69,13 @@
 <dt><font face="helvetica, arial"><a href="gui.gui.html#QtCanvas">QtCanvas</a>(<a href="PyQt4.QtOpenGL.html#QGLWidget">PyQt4.QtOpenGL.QGLWidget</a>, <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>)
 </font></dt></dl>
 </dd>
-<dt><font face="helvetica, arial"><a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>
+<dt><font face="helvetica, arial"><a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.gui.html#QtCanvas">QtCanvas</a>(<a href="PyQt4.QtOpenGL.html#QGLWidget">PyQt4.QtOpenGL.QGLWidget</a>, <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>)
 </font></dt></dl>
 </dd>
-<dt><font face="helvetica, arial"><a href="gui.gui.html#GUI">GUI</a>
-</font></dt></dl>
+</dl>
  <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
@@ -87,7 +100,7 @@
 Methods defined here:<br>
 <dl><dt><a name="Board-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt><dd><tt>Construct&nbsp;the&nbsp;Message&nbsp;<a href="#Board">Board</a>&nbsp;widget.</tt></dd></dl>
 
-<dl><dt><a name="Board-add"><strong>add</strong></a>(self, s)</dt><dd><tt>Append&nbsp;a&nbsp;message&nbsp;to&nbsp;the&nbsp;message&nbsp;board.</tt></dd></dl>
+<dl><dt><a name="Board-write"><strong>write</strong></a>(self, s)</dt><dd><tt>Write&nbsp;a&nbsp;string&nbsp;to&nbsp;the&nbsp;message&nbsp;board.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtGui.html#QTextEdit">PyQt4.QtGui.QTextEdit</a>:<br>
@@ -101,37 +114,11 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QTextEdit">Py
 
 <dl><dt><strong>AutoNone</strong> = 0</dl>
 
-<dl><dt><strong>CursorAction</strong> = &lt;class 'PyQt4.QtGui.CursorAction'&gt;</dl>
-
 <dl><dt><strong>FixedColumnWidth</strong> = 3</dl>
 
 <dl><dt><strong>FixedPixelWidth</strong> = 2</dl>
 
 <dl><dt><strong>LineWrapMode</strong> = &lt;class 'PyQt4.QtGui.LineWrapMode'&gt;</dl>
-
-<dl><dt><strong>MoveBackward</strong> = 0</dl>
-
-<dl><dt><strong>MoveDown</strong> = 5</dl>
-
-<dl><dt><strong>MoveEnd</strong> = 9</dl>
-
-<dl><dt><strong>MoveForward</strong> = 1</dl>
-
-<dl><dt><strong>MoveHome</strong> = 8</dl>
-
-<dl><dt><strong>MoveLineEnd</strong> = 7</dl>
-
-<dl><dt><strong>MoveLineStart</strong> = 6</dl>
-
-<dl><dt><strong>MovePageDown</strong> = 11</dl>
-
-<dl><dt><strong>MovePageUp</strong> = 10</dl>
-
-<dl><dt><strong>MoveUp</strong> = 4</dl>
-
-<dl><dt><strong>MoveWordBackward</strong> = 2</dl>
-
-<dl><dt><strong>MoveWordForward</strong> = 3</dl>
 
 <dl><dt><strong>NoWrap</strong> = 0</dl>
 
@@ -961,13 +948,23 @@ Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper<
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="GUI">class <strong>GUI</strong></a></font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="GUI">class <strong>GUI</strong></a>(<a href="PyQt4.QtGui.html#QMainWindow">PyQt4.QtGui.QMainWindow</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Implements&nbsp;a&nbsp;<a href="#GUI">GUI</a>&nbsp;for&nbsp;pyformex.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
-<td width="100%">Methods defined here:<br>
-<dl><dt><a name="GUI-__init__"><strong>__init__</strong></a>(self, size<font color="#909090">=(800, 600)</font>, pos<font color="#909090">=(0, 0)</font>)</dt><dd><tt>Constructs&nbsp;the&nbsp;<a href="#GUI">GUI</a>.<br>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gui.gui.html#GUI">GUI</a></dd>
+<dd><a href="PyQt4.QtGui.html#QMainWindow">PyQt4.QtGui.QMainWindow</a></dd>
+<dd><a href="PyQt4.QtGui.html#QWidget">PyQt4.QtGui.QWidget</a></dd>
+<dd><a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a></dd>
+<dd><a href="PyQt4.QtGui.html#QPaintDevice">PyQt4.QtGui.QPaintDevice</a></dd>
+<dd><a href="sip.html#wrapper">sip.wrapper</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="GUI-__init__"><strong>__init__</strong></a>(self, windowname, size<font color="#909090">=(800, 600)</font>, pos<font color="#909090">=(0, 0)</font>, bdsize<font color="#909090">=(0, 0)</font>)</dt><dd><tt>Constructs&nbsp;the&nbsp;<a href="#GUI">GUI</a>.<br>
 &nbsp;<br>
 The&nbsp;<a href="#GUI">GUI</a>&nbsp;has&nbsp;a&nbsp;central&nbsp;canvas&nbsp;for&nbsp;drawing,&nbsp;a&nbsp;menubar&nbsp;and&nbsp;a&nbsp;toolbar<br>
 on&nbsp;top,&nbsp;and&nbsp;a&nbsp;statusbar&nbsp;at&nbsp;the&nbsp;bottom.</tt></dd></dl>
@@ -982,13 +979,20 @@ do&nbsp;not&nbsp;have&nbsp;the&nbsp;name&nbsp;yet.</tt></dd></dl>
 
 <dl><dt><a name="GUI-closeEditor"><strong>closeEditor</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;editor.</tt></dd></dl>
 
-<dl><dt><a name="GUI-moveto"><strong>moveto</strong></a>(self, x, y)</dt><dd><tt>Move&nbsp;the&nbsp;gui&nbsp;main&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="GUI-insertMenu"><strong>insertMenu</strong></a>(self, menu, before<font color="#909090">='&amp;Help'</font>)</dt><dd><tt>Insert&nbsp;a&nbsp;menu&nbsp;in&nbsp;the&nbsp;menubar&nbsp;before&nbsp;the&nbsp;specified&nbsp;menu.<br>
+&nbsp;<br>
+The&nbsp;new&nbsp;menu&nbsp;can&nbsp;be&nbsp;inserted&nbsp;BEFORE&nbsp;any&nbsp;of&nbsp;the&nbsp;existing&nbsp;menus.<br>
+By&nbsp;default&nbsp;the&nbsp;new&nbsp;menu&nbsp;will&nbsp;be&nbsp;inserted&nbsp;before&nbsp;the&nbsp;Help&nbsp;menu.<br>
+&nbsp;<br>
+Also,&nbsp;the&nbsp;menu's&nbsp;title&nbsp;should&nbsp;be&nbsp;unique.</tt></dd></dl>
 
-<dl><dt><a name="GUI-pos"><strong>pos</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;position&nbsp;of&nbsp;the&nbsp;main&nbsp;window().</tt></dd></dl>
-
-<dl><dt><a name="GUI-resize"><strong>resize</strong></a>(self, w, h)</dt><dd><tt>Resize&nbsp;the&nbsp;gui&nbsp;main&nbsp;window.</tt></dd></dl>
+<dl><dt><a name="GUI-removeMenu"><strong>removeMenu</strong></a>(self, menu)</dt><dd><tt>Remove&nbsp;a&nbsp;menu&nbsp;from&nbsp;the&nbsp;main&nbsp;menubar.<br>
+&nbsp;<br>
+menu&nbsp;is&nbsp;either&nbsp;a&nbsp;menu&nbsp;title&nbsp;or&nbsp;a&nbsp;menu&nbsp;action.</tt></dd></dl>
 
 <dl><dt><a name="GUI-resizeCanvas"><strong>resizeCanvas</strong></a>(self, wd, ht)</dt><dd><tt>Resize&nbsp;the&nbsp;canvas.</tt></dd></dl>
+
+<dl><dt><a name="GUI-setBusy"><strong>setBusy</strong></a>(self, busy<font color="#909090">=True</font>)</dt></dl>
 
 <dl><dt><a name="GUI-setcurfile"><strong>setcurfile</strong></a>(self, filename<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;current&nbsp;file&nbsp;and&nbsp;check&nbsp;whether&nbsp;it&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.<br>
 &nbsp;<br>
@@ -998,9 +1002,933 @@ but&nbsp;it&nbsp;can&nbsp;not&nbsp;be&nbsp;played&nbsp;as&nbsp;a&nbsp;pyFormex&n
 
 <dl><dt><a name="GUI-showEditor"><strong>showEditor</strong></a>(self)</dt><dd><tt>Start&nbsp;the&nbsp;editor.</tt></dd></dl>
 
-<dl><dt><a name="GUI-size"><strong>size</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;size&nbsp;of&nbsp;the&nbsp;main&nbsp;window().</tt></dd></dl>
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMainWindow">PyQt4.QtGui.QMainWindow</a>:<br>
+<dl><dt><strong>__reduce__</strong> = None</dl>
 
-<dl><dt><a name="GUI-update"><strong>update</strong></a>(self)</dt></dl>
+<dl><dt><strong>__reduce_ex__</strong> = None</dl>
+
+<dl><dt><strong>actionEvent</strong> = &lt;built-in function actionEvent&gt;</dl>
+
+<dl><dt><strong>addDockWidget</strong> = &lt;built-in function addDockWidget&gt;</dl>
+
+<dl><dt><strong>addToolBar</strong> = &lt;built-in function addToolBar&gt;</dl>
+
+<dl><dt><strong>addToolBarBreak</strong> = &lt;built-in function addToolBarBreak&gt;</dl>
+
+<dl><dt><strong>centralWidget</strong> = &lt;built-in function centralWidget&gt;</dl>
+
+<dl><dt><strong>changeEvent</strong> = &lt;built-in function changeEvent&gt;</dl>
+
+<dl><dt><strong>childEvent</strong> = &lt;built-in function childEvent&gt;</dl>
+
+<dl><dt><strong>closeEvent</strong> = &lt;built-in function closeEvent&gt;</dl>
+
+<dl><dt><strong>connectNotify</strong> = &lt;built-in function connectNotify&gt;</dl>
+
+<dl><dt><strong>contextMenuEvent</strong> = &lt;built-in function contextMenuEvent&gt;</dl>
+
+<dl><dt><strong>corner</strong> = &lt;built-in function corner&gt;</dl>
+
+<dl><dt><strong>create</strong> = &lt;built-in function create&gt;</dl>
+
+<dl><dt><strong>createPopupMenu</strong> = &lt;built-in function createPopupMenu&gt;</dl>
+
+<dl><dt><strong>customEvent</strong> = &lt;built-in function customEvent&gt;</dl>
+
+<dl><dt><strong>destroy</strong> = &lt;built-in function destroy&gt;</dl>
+
+<dl><dt><strong>disconnectNotify</strong> = &lt;built-in function disconnectNotify&gt;</dl>
+
+<dl><dt><strong>dockWidgetArea</strong> = &lt;built-in function dockWidgetArea&gt;</dl>
+
+<dl><dt><strong>dragEnterEvent</strong> = &lt;built-in function dragEnterEvent&gt;</dl>
+
+<dl><dt><strong>dragLeaveEvent</strong> = &lt;built-in function dragLeaveEvent&gt;</dl>
+
+<dl><dt><strong>dragMoveEvent</strong> = &lt;built-in function dragMoveEvent&gt;</dl>
+
+<dl><dt><strong>dropEvent</strong> = &lt;built-in function dropEvent&gt;</dl>
+
+<dl><dt><strong>enabledChange</strong> = &lt;built-in function enabledChange&gt;</dl>
+
+<dl><dt><strong>enterEvent</strong> = &lt;built-in function enterEvent&gt;</dl>
+
+<dl><dt><strong>event</strong> = &lt;built-in function event&gt;</dl>
+
+<dl><dt><strong>focusInEvent</strong> = &lt;built-in function focusInEvent&gt;</dl>
+
+<dl><dt><strong>focusNextChild</strong> = &lt;built-in function focusNextChild&gt;</dl>
+
+<dl><dt><strong>focusNextPrevChild</strong> = &lt;built-in function focusNextPrevChild&gt;</dl>
+
+<dl><dt><strong>focusOutEvent</strong> = &lt;built-in function focusOutEvent&gt;</dl>
+
+<dl><dt><strong>focusPreviousChild</strong> = &lt;built-in function focusPreviousChild&gt;</dl>
+
+<dl><dt><strong>fontChange</strong> = &lt;built-in function fontChange&gt;</dl>
+
+<dl><dt><strong>hideEvent</strong> = &lt;built-in function hideEvent&gt;</dl>
+
+<dl><dt><strong>iconSize</strong> = &lt;built-in function iconSize&gt;</dl>
+
+<dl><dt><strong>inputMethodEvent</strong> = &lt;built-in function inputMethodEvent&gt;</dl>
+
+<dl><dt><strong>insertToolBar</strong> = &lt;built-in function insertToolBar&gt;</dl>
+
+<dl><dt><strong>insertToolBarBreak</strong> = &lt;built-in function insertToolBarBreak&gt;</dl>
+
+<dl><dt><strong>keyPressEvent</strong> = &lt;built-in function keyPressEvent&gt;</dl>
+
+<dl><dt><strong>keyReleaseEvent</strong> = &lt;built-in function keyReleaseEvent&gt;</dl>
+
+<dl><dt><strong>languageChange</strong> = &lt;built-in function languageChange&gt;</dl>
+
+<dl><dt><strong>leaveEvent</strong> = &lt;built-in function leaveEvent&gt;</dl>
+
+<dl><dt><strong>menuBar</strong> = &lt;built-in function menuBar&gt;</dl>
+
+<dl><dt><strong>metric</strong> = &lt;built-in function metric&gt;</dl>
+
+<dl><dt><strong>mouseDoubleClickEvent</strong> = &lt;built-in function mouseDoubleClickEvent&gt;</dl>
+
+<dl><dt><strong>mouseMoveEvent</strong> = &lt;built-in function mouseMoveEvent&gt;</dl>
+
+<dl><dt><strong>mousePressEvent</strong> = &lt;built-in function mousePressEvent&gt;</dl>
+
+<dl><dt><strong>mouseReleaseEvent</strong> = &lt;built-in function mouseReleaseEvent&gt;</dl>
+
+<dl><dt><strong>moveEvent</strong> = &lt;built-in function moveEvent&gt;</dl>
+
+<dl><dt><strong>paintEvent</strong> = &lt;built-in function paintEvent&gt;</dl>
+
+<dl><dt><strong>paletteChange</strong> = &lt;built-in function paletteChange&gt;</dl>
+
+<dl><dt><strong>receivers</strong> = &lt;built-in function receivers&gt;</dl>
+
+<dl><dt><strong>removeDockWidget</strong> = &lt;built-in function removeDockWidget&gt;</dl>
+
+<dl><dt><strong>removeToolBar</strong> = &lt;built-in function removeToolBar&gt;</dl>
+
+<dl><dt><strong>resetInputContext</strong> = &lt;built-in function resetInputContext&gt;</dl>
+
+<dl><dt><strong>resizeEvent</strong> = &lt;built-in function resizeEvent&gt;</dl>
+
+<dl><dt><strong>restoreState</strong> = &lt;built-in function restoreState&gt;</dl>
+
+<dl><dt><strong>saveState</strong> = &lt;built-in function saveState&gt;</dl>
+
+<dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
+
+<dl><dt><strong>setCentralWidget</strong> = &lt;built-in function setCentralWidget&gt;</dl>
+
+<dl><dt><strong>setCorner</strong> = &lt;built-in function setCorner&gt;</dl>
+
+<dl><dt><strong>setIconSize</strong> = &lt;built-in function setIconSize&gt;</dl>
+
+<dl><dt><strong>setMenuBar</strong> = &lt;built-in function setMenuBar&gt;</dl>
+
+<dl><dt><strong>setStatusBar</strong> = &lt;built-in function setStatusBar&gt;</dl>
+
+<dl><dt><strong>setToolButtonStyle</strong> = &lt;built-in function setToolButtonStyle&gt;</dl>
+
+<dl><dt><strong>showEvent</strong> = &lt;built-in function showEvent&gt;</dl>
+
+<dl><dt><strong>splitDockWidget</strong> = &lt;built-in function splitDockWidget&gt;</dl>
+
+<dl><dt><strong>statusBar</strong> = &lt;built-in function statusBar&gt;</dl>
+
+<dl><dt><strong>tabletEvent</strong> = &lt;built-in function tabletEvent&gt;</dl>
+
+<dl><dt><strong>timerEvent</strong> = &lt;built-in function timerEvent&gt;</dl>
+
+<dl><dt><strong>toolBarArea</strong> = &lt;built-in function toolBarArea&gt;</dl>
+
+<dl><dt><strong>toolButtonStyle</strong> = &lt;built-in function toolButtonStyle&gt;</dl>
+
+<dl><dt><strong>updateMicroFocus</strong> = &lt;built-in function updateMicroFocus&gt;</dl>
+
+<dl><dt><strong>wheelEvent</strong> = &lt;built-in function wheelEvent&gt;</dl>
+
+<dl><dt><strong>windowActivationChange</strong> = &lt;built-in function windowActivationChange&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt4.QtGui.QWidget</a>:<br>
+<dl><dt><strong>acceptDrops</strong> = &lt;built-in function acceptDrops&gt;</dl>
+
+<dl><dt><strong>accessibleDescription</strong> = &lt;built-in function accessibleDescription&gt;</dl>
+
+<dl><dt><strong>accessibleName</strong> = &lt;built-in function accessibleName&gt;</dl>
+
+<dl><dt><strong>actions</strong> = &lt;built-in function actions&gt;</dl>
+
+<dl><dt><strong>activateWindow</strong> = &lt;built-in function activateWindow&gt;</dl>
+
+<dl><dt><strong>addAction</strong> = &lt;built-in function addAction&gt;</dl>
+
+<dl><dt><strong>addActions</strong> = &lt;built-in function addActions&gt;</dl>
+
+<dl><dt><strong>adjustSize</strong> = &lt;built-in function adjustSize&gt;</dl>
+
+<dl><dt><strong>autoFillBackground</strong> = &lt;built-in function autoFillBackground&gt;</dl>
+
+<dl><dt><strong>backgroundRole</strong> = &lt;built-in function backgroundRole&gt;</dl>
+
+<dl><dt><strong>baseSize</strong> = &lt;built-in function baseSize&gt;</dl>
+
+<dl><dt><strong>childAt</strong> = &lt;built-in function childAt&gt;</dl>
+
+<dl><dt><strong>childrenRect</strong> = &lt;built-in function childrenRect&gt;</dl>
+
+<dl><dt><strong>childrenRegion</strong> = &lt;built-in function childrenRegion&gt;</dl>
+
+<dl><dt><strong>clearFocus</strong> = &lt;built-in function clearFocus&gt;</dl>
+
+<dl><dt><strong>clearMask</strong> = &lt;built-in function clearMask&gt;</dl>
+
+<dl><dt><strong>close</strong> = &lt;built-in function close&gt;</dl>
+
+<dl><dt><strong>contentsRect</strong> = &lt;built-in function contentsRect&gt;</dl>
+
+<dl><dt><strong>contextMenuPolicy</strong> = &lt;built-in function contextMenuPolicy&gt;</dl>
+
+<dl><dt><strong>cursor</strong> = &lt;built-in function cursor&gt;</dl>
+
+<dl><dt><strong>devType</strong> = &lt;built-in function devType&gt;</dl>
+
+<dl><dt><strong>ensurePolished</strong> = &lt;built-in function ensurePolished&gt;</dl>
+
+<dl><dt><strong>find</strong> = &lt;built-in function find&gt;</dl>
+
+<dl><dt><strong>focusPolicy</strong> = &lt;built-in function focusPolicy&gt;</dl>
+
+<dl><dt><strong>focusProxy</strong> = &lt;built-in function focusProxy&gt;</dl>
+
+<dl><dt><strong>focusWidget</strong> = &lt;built-in function focusWidget&gt;</dl>
+
+<dl><dt><strong>font</strong> = &lt;built-in function font&gt;</dl>
+
+<dl><dt><strong>fontInfo</strong> = &lt;built-in function fontInfo&gt;</dl>
+
+<dl><dt><strong>fontMetrics</strong> = &lt;built-in function fontMetrics&gt;</dl>
+
+<dl><dt><strong>foregroundRole</strong> = &lt;built-in function foregroundRole&gt;</dl>
+
+<dl><dt><strong>frameGeometry</strong> = &lt;built-in function frameGeometry&gt;</dl>
+
+<dl><dt><strong>frameSize</strong> = &lt;built-in function frameSize&gt;</dl>
+
+<dl><dt><strong>geometry</strong> = &lt;built-in function geometry&gt;</dl>
+
+<dl><dt><strong>getContentsMargins</strong> = &lt;built-in function getContentsMargins&gt;</dl>
+
+<dl><dt><strong>grabKeyboard</strong> = &lt;built-in function grabKeyboard&gt;</dl>
+
+<dl><dt><strong>grabMouse</strong> = &lt;built-in function grabMouse&gt;</dl>
+
+<dl><dt><strong>grabShortcut</strong> = &lt;built-in function grabShortcut&gt;</dl>
+
+<dl><dt><strong>handle</strong> = &lt;built-in function handle&gt;</dl>
+
+<dl><dt><strong>hasFocus</strong> = &lt;built-in function hasFocus&gt;</dl>
+
+<dl><dt><strong>hasMouseTracking</strong> = &lt;built-in function hasMouseTracking&gt;</dl>
+
+<dl><dt><strong>height</strong> = &lt;built-in function height&gt;</dl>
+
+<dl><dt><strong>heightForWidth</strong> = &lt;built-in function heightForWidth&gt;</dl>
+
+<dl><dt><strong>hide</strong> = &lt;built-in function hide&gt;</dl>
+
+<dl><dt><strong>inputContext</strong> = &lt;built-in function inputContext&gt;</dl>
+
+<dl><dt><strong>inputMethodQuery</strong> = &lt;built-in function inputMethodQuery&gt;</dl>
+
+<dl><dt><strong>insertAction</strong> = &lt;built-in function insertAction&gt;</dl>
+
+<dl><dt><strong>insertActions</strong> = &lt;built-in function insertActions&gt;</dl>
+
+<dl><dt><strong>isActiveWindow</strong> = &lt;built-in function isActiveWindow&gt;</dl>
+
+<dl><dt><strong>isAncestorOf</strong> = &lt;built-in function isAncestorOf&gt;</dl>
+
+<dl><dt><strong>isEnabled</strong> = &lt;built-in function isEnabled&gt;</dl>
+
+<dl><dt><strong>isEnabledTo</strong> = &lt;built-in function isEnabledTo&gt;</dl>
+
+<dl><dt><strong>isEnabledToTLW</strong> = &lt;built-in function isEnabledToTLW&gt;</dl>
+
+<dl><dt><strong>isFullScreen</strong> = &lt;built-in function isFullScreen&gt;</dl>
+
+<dl><dt><strong>isHidden</strong> = &lt;built-in function isHidden&gt;</dl>
+
+<dl><dt><strong>isLeftToRight</strong> = &lt;built-in function isLeftToRight&gt;</dl>
+
+<dl><dt><strong>isMaximized</strong> = &lt;built-in function isMaximized&gt;</dl>
+
+<dl><dt><strong>isMinimized</strong> = &lt;built-in function isMinimized&gt;</dl>
+
+<dl><dt><strong>isModal</strong> = &lt;built-in function isModal&gt;</dl>
+
+<dl><dt><strong>isRightToLeft</strong> = &lt;built-in function isRightToLeft&gt;</dl>
+
+<dl><dt><strong>isTopLevel</strong> = &lt;built-in function isTopLevel&gt;</dl>
+
+<dl><dt><strong>isVisible</strong> = &lt;built-in function isVisible&gt;</dl>
+
+<dl><dt><strong>isVisibleTo</strong> = &lt;built-in function isVisibleTo&gt;</dl>
+
+<dl><dt><strong>isWindow</strong> = &lt;built-in function isWindow&gt;</dl>
+
+<dl><dt><strong>isWindowModified</strong> = &lt;built-in function isWindowModified&gt;</dl>
+
+<dl><dt><strong>keyboardGrabber</strong> = &lt;built-in function keyboardGrabber&gt;</dl>
+
+<dl><dt><strong>layout</strong> = &lt;built-in function layout&gt;</dl>
+
+<dl><dt><strong>layoutDirection</strong> = &lt;built-in function layoutDirection&gt;</dl>
+
+<dl><dt><strong>lower</strong> = &lt;built-in function lower&gt;</dl>
+
+<dl><dt><strong>mapFrom</strong> = &lt;built-in function mapFrom&gt;</dl>
+
+<dl><dt><strong>mapFromGlobal</strong> = &lt;built-in function mapFromGlobal&gt;</dl>
+
+<dl><dt><strong>mapFromParent</strong> = &lt;built-in function mapFromParent&gt;</dl>
+
+<dl><dt><strong>mapTo</strong> = &lt;built-in function mapTo&gt;</dl>
+
+<dl><dt><strong>mapToGlobal</strong> = &lt;built-in function mapToGlobal&gt;</dl>
+
+<dl><dt><strong>mapToParent</strong> = &lt;built-in function mapToParent&gt;</dl>
+
+<dl><dt><strong>mask</strong> = &lt;built-in function mask&gt;</dl>
+
+<dl><dt><strong>maximumHeight</strong> = &lt;built-in function maximumHeight&gt;</dl>
+
+<dl><dt><strong>maximumSize</strong> = &lt;built-in function maximumSize&gt;</dl>
+
+<dl><dt><strong>maximumWidth</strong> = &lt;built-in function maximumWidth&gt;</dl>
+
+<dl><dt><strong>minimumHeight</strong> = &lt;built-in function minimumHeight&gt;</dl>
+
+<dl><dt><strong>minimumSize</strong> = &lt;built-in function minimumSize&gt;</dl>
+
+<dl><dt><strong>minimumSizeHint</strong> = &lt;built-in function minimumSizeHint&gt;</dl>
+
+<dl><dt><strong>minimumWidth</strong> = &lt;built-in function minimumWidth&gt;</dl>
+
+<dl><dt><strong>mouseGrabber</strong> = &lt;built-in function mouseGrabber&gt;</dl>
+
+<dl><dt><strong>move</strong> = &lt;built-in function move&gt;</dl>
+
+<dl><dt><strong>nextInFocusChain</strong> = &lt;built-in function nextInFocusChain&gt;</dl>
+
+<dl><dt><strong>normalGeometry</strong> = &lt;built-in function normalGeometry&gt;</dl>
+
+<dl><dt><strong>overrideWindowFlags</strong> = &lt;built-in function overrideWindowFlags&gt;</dl>
+
+<dl><dt><strong>overrideWindowState</strong> = &lt;built-in function overrideWindowState&gt;</dl>
+
+<dl><dt><strong>paintEngine</strong> = &lt;built-in function paintEngine&gt;</dl>
+
+<dl><dt><strong>palette</strong> = &lt;built-in function palette&gt;</dl>
+
+<dl><dt><strong>parentWidget</strong> = &lt;built-in function parentWidget&gt;</dl>
+
+<dl><dt><strong>pos</strong> = &lt;built-in function pos&gt;</dl>
+
+<dl><dt><strong>raise_</strong> = &lt;built-in function raise_&gt;</dl>
+
+<dl><dt><strong>rect</strong> = &lt;built-in function rect&gt;</dl>
+
+<dl><dt><strong>releaseKeyboard</strong> = &lt;built-in function releaseKeyboard&gt;</dl>
+
+<dl><dt><strong>releaseMouse</strong> = &lt;built-in function releaseMouse&gt;</dl>
+
+<dl><dt><strong>releaseShortcut</strong> = &lt;built-in function releaseShortcut&gt;</dl>
+
+<dl><dt><strong>removeAction</strong> = &lt;built-in function removeAction&gt;</dl>
+
+<dl><dt><strong>repaint</strong> = &lt;built-in function repaint&gt;</dl>
+
+<dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
+
+<dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
+
+<dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
+
+<dl><dt><strong>setAccessibleDescription</strong> = &lt;built-in function setAccessibleDescription&gt;</dl>
+
+<dl><dt><strong>setAccessibleName</strong> = &lt;built-in function setAccessibleName&gt;</dl>
+
+<dl><dt><strong>setAttribute</strong> = &lt;built-in function setAttribute&gt;</dl>
+
+<dl><dt><strong>setAutoFillBackground</strong> = &lt;built-in function setAutoFillBackground&gt;</dl>
+
+<dl><dt><strong>setBackgroundRole</strong> = &lt;built-in function setBackgroundRole&gt;</dl>
+
+<dl><dt><strong>setBaseSize</strong> = &lt;built-in function setBaseSize&gt;</dl>
+
+<dl><dt><strong>setContentsMargins</strong> = &lt;built-in function setContentsMargins&gt;</dl>
+
+<dl><dt><strong>setContextMenuPolicy</strong> = &lt;built-in function setContextMenuPolicy&gt;</dl>
+
+<dl><dt><strong>setCursor</strong> = &lt;built-in function setCursor&gt;</dl>
+
+<dl><dt><strong>setDisabled</strong> = &lt;built-in function setDisabled&gt;</dl>
+
+<dl><dt><strong>setEnabled</strong> = &lt;built-in function setEnabled&gt;</dl>
+
+<dl><dt><strong>setFixedHeight</strong> = &lt;built-in function setFixedHeight&gt;</dl>
+
+<dl><dt><strong>setFixedSize</strong> = &lt;built-in function setFixedSize&gt;</dl>
+
+<dl><dt><strong>setFixedWidth</strong> = &lt;built-in function setFixedWidth&gt;</dl>
+
+<dl><dt><strong>setFocus</strong> = &lt;built-in function setFocus&gt;</dl>
+
+<dl><dt><strong>setFocusPolicy</strong> = &lt;built-in function setFocusPolicy&gt;</dl>
+
+<dl><dt><strong>setFocusProxy</strong> = &lt;built-in function setFocusProxy&gt;</dl>
+
+<dl><dt><strong>setFont</strong> = &lt;built-in function setFont&gt;</dl>
+
+<dl><dt><strong>setForegroundRole</strong> = &lt;built-in function setForegroundRole&gt;</dl>
+
+<dl><dt><strong>setGeometry</strong> = &lt;built-in function setGeometry&gt;</dl>
+
+<dl><dt><strong>setHidden</strong> = &lt;built-in function setHidden&gt;</dl>
+
+<dl><dt><strong>setInputContext</strong> = &lt;built-in function setInputContext&gt;</dl>
+
+<dl><dt><strong>setLayout</strong> = &lt;built-in function setLayout&gt;</dl>
+
+<dl><dt><strong>setLayoutDirection</strong> = &lt;built-in function setLayoutDirection&gt;</dl>
+
+<dl><dt><strong>setMask</strong> = &lt;built-in function setMask&gt;</dl>
+
+<dl><dt><strong>setMaximumHeight</strong> = &lt;built-in function setMaximumHeight&gt;</dl>
+
+<dl><dt><strong>setMaximumSize</strong> = &lt;built-in function setMaximumSize&gt;</dl>
+
+<dl><dt><strong>setMaximumWidth</strong> = &lt;built-in function setMaximumWidth&gt;</dl>
+
+<dl><dt><strong>setMinimumHeight</strong> = &lt;built-in function setMinimumHeight&gt;</dl>
+
+<dl><dt><strong>setMinimumSize</strong> = &lt;built-in function setMinimumSize&gt;</dl>
+
+<dl><dt><strong>setMinimumWidth</strong> = &lt;built-in function setMinimumWidth&gt;</dl>
+
+<dl><dt><strong>setMouseTracking</strong> = &lt;built-in function setMouseTracking&gt;</dl>
+
+<dl><dt><strong>setPalette</strong> = &lt;built-in function setPalette&gt;</dl>
+
+<dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
+
+<dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
+
+<dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
+
+<dl><dt><strong>setSizeIncrement</strong> = &lt;built-in function setSizeIncrement&gt;</dl>
+
+<dl><dt><strong>setSizePolicy</strong> = &lt;built-in function setSizePolicy&gt;</dl>
+
+<dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
+
+<dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
+
+<dl><dt><strong>setToolTip</strong> = &lt;built-in function setToolTip&gt;</dl>
+
+<dl><dt><strong>setUpdatesEnabled</strong> = &lt;built-in function setUpdatesEnabled&gt;</dl>
+
+<dl><dt><strong>setVisible</strong> = &lt;built-in function setVisible&gt;</dl>
+
+<dl><dt><strong>setWhatsThis</strong> = &lt;built-in function setWhatsThis&gt;</dl>
+
+<dl><dt><strong>setWindowFlags</strong> = &lt;built-in function setWindowFlags&gt;</dl>
+
+<dl><dt><strong>setWindowIcon</strong> = &lt;built-in function setWindowIcon&gt;</dl>
+
+<dl><dt><strong>setWindowIconText</strong> = &lt;built-in function setWindowIconText&gt;</dl>
+
+<dl><dt><strong>setWindowModality</strong> = &lt;built-in function setWindowModality&gt;</dl>
+
+<dl><dt><strong>setWindowModified</strong> = &lt;built-in function setWindowModified&gt;</dl>
+
+<dl><dt><strong>setWindowOpacity</strong> = &lt;built-in function setWindowOpacity&gt;</dl>
+
+<dl><dt><strong>setWindowRole</strong> = &lt;built-in function setWindowRole&gt;</dl>
+
+<dl><dt><strong>setWindowState</strong> = &lt;built-in function setWindowState&gt;</dl>
+
+<dl><dt><strong>setWindowTitle</strong> = &lt;built-in function setWindowTitle&gt;</dl>
+
+<dl><dt><strong>show</strong> = &lt;built-in function show&gt;</dl>
+
+<dl><dt><strong>showFullScreen</strong> = &lt;built-in function showFullScreen&gt;</dl>
+
+<dl><dt><strong>showMaximized</strong> = &lt;built-in function showMaximized&gt;</dl>
+
+<dl><dt><strong>showMinimized</strong> = &lt;built-in function showMinimized&gt;</dl>
+
+<dl><dt><strong>showNormal</strong> = &lt;built-in function showNormal&gt;</dl>
+
+<dl><dt><strong>size</strong> = &lt;built-in function size&gt;</dl>
+
+<dl><dt><strong>sizeHint</strong> = &lt;built-in function sizeHint&gt;</dl>
+
+<dl><dt><strong>sizeIncrement</strong> = &lt;built-in function sizeIncrement&gt;</dl>
+
+<dl><dt><strong>sizePolicy</strong> = &lt;built-in function sizePolicy&gt;</dl>
+
+<dl><dt><strong>stackUnder</strong> = &lt;built-in function stackUnder&gt;</dl>
+
+<dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
+
+<dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
+
+<dl><dt><strong>toolTip</strong> = &lt;built-in function toolTip&gt;</dl>
+
+<dl><dt><strong>topLevelWidget</strong> = &lt;built-in function topLevelWidget&gt;</dl>
+
+<dl><dt><strong>underMouse</strong> = &lt;built-in function underMouse&gt;</dl>
+
+<dl><dt><strong>unsetCursor</strong> = &lt;built-in function unsetCursor&gt;</dl>
+
+<dl><dt><strong>unsetLayoutDirection</strong> = &lt;built-in function unsetLayoutDirection&gt;</dl>
+
+<dl><dt><strong>update</strong> = &lt;built-in function update&gt;</dl>
+
+<dl><dt><strong>updateGeometry</strong> = &lt;built-in function updateGeometry&gt;</dl>
+
+<dl><dt><strong>updatesEnabled</strong> = &lt;built-in function updatesEnabled&gt;</dl>
+
+<dl><dt><strong>visibleRegion</strong> = &lt;built-in function visibleRegion&gt;</dl>
+
+<dl><dt><strong>whatsThis</strong> = &lt;built-in function whatsThis&gt;</dl>
+
+<dl><dt><strong>width</strong> = &lt;built-in function width&gt;</dl>
+
+<dl><dt><strong>winId</strong> = &lt;built-in function winId&gt;</dl>
+
+<dl><dt><strong>window</strong> = &lt;built-in function window&gt;</dl>
+
+<dl><dt><strong>windowFlags</strong> = &lt;built-in function windowFlags&gt;</dl>
+
+<dl><dt><strong>windowIcon</strong> = &lt;built-in function windowIcon&gt;</dl>
+
+<dl><dt><strong>windowIconText</strong> = &lt;built-in function windowIconText&gt;</dl>
+
+<dl><dt><strong>windowModality</strong> = &lt;built-in function windowModality&gt;</dl>
+
+<dl><dt><strong>windowOpacity</strong> = &lt;built-in function windowOpacity&gt;</dl>
+
+<dl><dt><strong>windowRole</strong> = &lt;built-in function windowRole&gt;</dl>
+
+<dl><dt><strong>windowState</strong> = &lt;built-in function windowState&gt;</dl>
+
+<dl><dt><strong>windowTitle</strong> = &lt;built-in function windowTitle&gt;</dl>
+
+<dl><dt><strong>windowType</strong> = &lt;built-in function windowType&gt;</dl>
+
+<dl><dt><strong>x</strong> = &lt;built-in function x&gt;</dl>
+
+<dl><dt><strong>x11Info</strong> = &lt;built-in function x11Info&gt;</dl>
+
+<dl><dt><strong>x11PictureHandle</strong> = &lt;built-in function x11PictureHandle&gt;</dl>
+
+<dl><dt><strong>y</strong> = &lt;built-in function y&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
+
+<dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
+
+<dl><dt><strong>connect</strong> = &lt;built-in function connect&gt;</dl>
+
+<dl><dt><strong>deleteLater</strong> = &lt;built-in function deleteLater&gt;</dl>
+
+<dl><dt><strong>disconnect</strong> = &lt;built-in function disconnect&gt;</dl>
+
+<dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
+
+<dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
+
+<dl><dt><strong>eventFilter</strong> = &lt;built-in function eventFilter&gt;</dl>
+
+<dl><dt><strong>findChild</strong> = &lt;built-in function findChild&gt;</dl>
+
+<dl><dt><strong>findChildren</strong> = &lt;built-in function findChildren&gt;</dl>
+
+<dl><dt><strong>inherits</strong> = &lt;built-in function inherits&gt;</dl>
+
+<dl><dt><strong>installEventFilter</strong> = &lt;built-in function installEventFilter&gt;</dl>
+
+<dl><dt><strong>isWidgetType</strong> = &lt;built-in function isWidgetType&gt;</dl>
+
+<dl><dt><strong>killTimer</strong> = &lt;built-in function killTimer&gt;</dl>
+
+<dl><dt><strong>metaObject</strong> = &lt;built-in function metaObject&gt;</dl>
+
+<dl><dt><strong>moveToThread</strong> = &lt;built-in function moveToThread&gt;</dl>
+
+<dl><dt><strong>objectName</strong> = &lt;built-in function objectName&gt;</dl>
+
+<dl><dt><strong>parent</strong> = &lt;built-in function parent&gt;</dl>
+
+<dl><dt><strong>property</strong> = &lt;built-in function property&gt;</dl>
+
+<dl><dt><strong>removeEventFilter</strong> = &lt;built-in function removeEventFilter&gt;</dl>
+
+<dl><dt><strong>setObjectName</strong> = &lt;built-in function setObjectName&gt;</dl>
+
+<dl><dt><strong>setProperty</strong> = &lt;built-in function setProperty&gt;</dl>
+
+<dl><dt><strong>signalsBlocked</strong> = &lt;built-in function signalsBlocked&gt;</dl>
+
+<dl><dt><strong>startTimer</strong> = &lt;built-in function startTimer&gt;</dl>
+
+<dl><dt><strong>thread</strong> = &lt;built-in function thread&gt;</dl>
+
+<dl><dt><strong>tr</strong> = &lt;built-in function tr&gt;</dl>
+
+<dl><dt><strong>trUtf8</strong> = &lt;built-in function trUtf8&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QPaintDevice">PyQt4.QtGui.QPaintDevice</a>:<br>
+<dl><dt><strong>PaintDeviceMetric</strong> = &lt;class 'PyQt4.QtGui.PaintDeviceMetric'&gt;</dl>
+
+<dl><dt><strong>PdmDepth</strong> = 6</dl>
+
+<dl><dt><strong>PdmDpiX</strong> = 7</dl>
+
+<dl><dt><strong>PdmDpiY</strong> = 8</dl>
+
+<dl><dt><strong>PdmHeight</strong> = 2</dl>
+
+<dl><dt><strong>PdmHeightMM</strong> = 4</dl>
+
+<dl><dt><strong>PdmNumColors</strong> = 5</dl>
+
+<dl><dt><strong>PdmPhysicalDpiX</strong> = 9</dl>
+
+<dl><dt><strong>PdmPhysicalDpiY</strong> = 10</dl>
+
+<dl><dt><strong>PdmWidth</strong> = 1</dl>
+
+<dl><dt><strong>PdmWidthMM</strong> = 3</dl>
+
+<dl><dt><strong>depth</strong> = &lt;built-in function depth&gt;</dl>
+
+<dl><dt><strong>heightMM</strong> = &lt;built-in function heightMM&gt;</dl>
+
+<dl><dt><strong>logicalDpiX</strong> = &lt;built-in function logicalDpiX&gt;</dl>
+
+<dl><dt><strong>logicalDpiY</strong> = &lt;built-in function logicalDpiY&gt;</dl>
+
+<dl><dt><strong>numColors</strong> = &lt;built-in function numColors&gt;</dl>
+
+<dl><dt><strong>paintingActive</strong> = &lt;built-in function paintingActive&gt;</dl>
+
+<dl><dt><strong>physicalDpiX</strong> = &lt;built-in function physicalDpiX&gt;</dl>
+
+<dl><dt><strong>physicalDpiY</strong> = &lt;built-in function physicalDpiY&gt;</dl>
+
+<dl><dt><strong>widthMM</strong> = &lt;built-in function widthMM&gt;</dl>
+
+<hr>
+Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><a name="GUI-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#GUI-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="GUI-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#GUI-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="GUI-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#GUI-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#GUI-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MultiCanvas">class <strong>MultiCanvas</strong></a>(<a href="PyQt4.QtGui.html#QGridLayout">PyQt4.QtGui.QGridLayout</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;viewport&nbsp;that&nbsp;can&nbsp;be&nbsp;splitted.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gui.gui.html#MultiCanvas">MultiCanvas</a></dd>
+<dd><a href="PyQt4.QtGui.html#QGridLayout">PyQt4.QtGui.QGridLayout</a></dd>
+<dd><a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a></dd>
+<dd><a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a></dd>
+<dd><a href="PyQt4.QtGui.html#QLayoutItem">PyQt4.QtGui.QLayoutItem</a></dd>
+<dd><a href="sip.html#wrapper">sip.wrapper</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MultiCanvas-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MultiCanvas-addActor"><strong>addActor</strong></a>(self, actor)</dt></dl>
+
+<dl><dt><a name="MultiCanvas-addView"><strong>addView</strong></a>(self, row, col)</dt></dl>
+
+<dl><dt><a name="MultiCanvas-clear"><strong>clear</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MultiCanvas-newView"><strong>newView</strong></a>(self)</dt><dd><tt>Adding&nbsp;a&nbsp;View</tt></dd></dl>
+
+<dl><dt><a name="MultiCanvas-removeAll"><strong>removeAll</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MultiCanvas-setView"><strong>setView</strong></a>(self, bbox, view)</dt></dl>
+
+<dl><dt><a name="MultiCanvas-update"><strong>update</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QGridLayout">PyQt4.QtGui.QGridLayout</a>:<br>
+<dl><dt><strong>__reduce__</strong> = None</dl>
+
+<dl><dt><strong>__reduce_ex__</strong> = None</dl>
+
+<dl><dt><strong>addChildLayout</strong> = &lt;built-in function addChildLayout&gt;</dl>
+
+<dl><dt><strong>addChildWidget</strong> = &lt;built-in function addChildWidget&gt;</dl>
+
+<dl><dt><strong>addItem</strong> = &lt;built-in function addItem&gt;</dl>
+
+<dl><dt><strong>addLayout</strong> = &lt;built-in function addLayout&gt;</dl>
+
+<dl><dt><strong>addWidget</strong> = &lt;built-in function addWidget&gt;</dl>
+
+<dl><dt><strong>alignmentRect</strong> = &lt;built-in function alignmentRect&gt;</dl>
+
+<dl><dt><strong>cellRect</strong> = &lt;built-in function cellRect&gt;</dl>
+
+<dl><dt><strong>childEvent</strong> = &lt;built-in function childEvent&gt;</dl>
+
+<dl><dt><strong>columnCount</strong> = &lt;built-in function columnCount&gt;</dl>
+
+<dl><dt><strong>columnMinimumWidth</strong> = &lt;built-in function columnMinimumWidth&gt;</dl>
+
+<dl><dt><strong>columnStretch</strong> = &lt;built-in function columnStretch&gt;</dl>
+
+<dl><dt><strong>connectNotify</strong> = &lt;built-in function connectNotify&gt;</dl>
+
+<dl><dt><strong>count</strong> = &lt;built-in function count&gt;</dl>
+
+<dl><dt><strong>customEvent</strong> = &lt;built-in function customEvent&gt;</dl>
+
+<dl><dt><strong>disconnectNotify</strong> = &lt;built-in function disconnectNotify&gt;</dl>
+
+<dl><dt><strong>expandingDirections</strong> = &lt;built-in function expandingDirections&gt;</dl>
+
+<dl><dt><strong>getItemPosition</strong> = &lt;built-in function getItemPosition&gt;</dl>
+
+<dl><dt><strong>hasHeightForWidth</strong> = &lt;built-in function hasHeightForWidth&gt;</dl>
+
+<dl><dt><strong>heightForWidth</strong> = &lt;built-in function heightForWidth&gt;</dl>
+
+<dl><dt><strong>invalidate</strong> = &lt;built-in function invalidate&gt;</dl>
+
+<dl><dt><strong>itemAt</strong> = &lt;built-in function itemAt&gt;</dl>
+
+<dl><dt><strong>maximumSize</strong> = &lt;built-in function maximumSize&gt;</dl>
+
+<dl><dt><strong>minimumHeightForWidth</strong> = &lt;built-in function minimumHeightForWidth&gt;</dl>
+
+<dl><dt><strong>minimumSize</strong> = &lt;built-in function minimumSize&gt;</dl>
+
+<dl><dt><strong>originCorner</strong> = &lt;built-in function originCorner&gt;</dl>
+
+<dl><dt><strong>receivers</strong> = &lt;built-in function receivers&gt;</dl>
+
+<dl><dt><strong>rowCount</strong> = &lt;built-in function rowCount&gt;</dl>
+
+<dl><dt><strong>rowMinimumHeight</strong> = &lt;built-in function rowMinimumHeight&gt;</dl>
+
+<dl><dt><strong>rowStretch</strong> = &lt;built-in function rowStretch&gt;</dl>
+
+<dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
+
+<dl><dt><strong>setColumnMinimumWidth</strong> = &lt;built-in function setColumnMinimumWidth&gt;</dl>
+
+<dl><dt><strong>setColumnStretch</strong> = &lt;built-in function setColumnStretch&gt;</dl>
+
+<dl><dt><strong>setDefaultPositioning</strong> = &lt;built-in function setDefaultPositioning&gt;</dl>
+
+<dl><dt><strong>setGeometry</strong> = &lt;built-in function setGeometry&gt;</dl>
+
+<dl><dt><strong>setOriginCorner</strong> = &lt;built-in function setOriginCorner&gt;</dl>
+
+<dl><dt><strong>setRowMinimumHeight</strong> = &lt;built-in function setRowMinimumHeight&gt;</dl>
+
+<dl><dt><strong>setRowStretch</strong> = &lt;built-in function setRowStretch&gt;</dl>
+
+<dl><dt><strong>sizeHint</strong> = &lt;built-in function sizeHint&gt;</dl>
+
+<dl><dt><strong>takeAt</strong> = &lt;built-in function takeAt&gt;</dl>
+
+<dl><dt><strong>timerEvent</strong> = &lt;built-in function timerEvent&gt;</dl>
+
+<dl><dt><strong>widgetEvent</strong> = &lt;built-in function widgetEvent&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a>:<br>
+<dl><dt><strong>SetDefaultConstraint</strong> = 0</dl>
+
+<dl><dt><strong>SetFixedSize</strong> = 3</dl>
+
+<dl><dt><strong>SetMaximumSize</strong> = 4</dl>
+
+<dl><dt><strong>SetMinAndMaxSize</strong> = 5</dl>
+
+<dl><dt><strong>SetMinimumSize</strong> = 2</dl>
+
+<dl><dt><strong>SetNoConstraint</strong> = 1</dl>
+
+<dl><dt><strong>SizeConstraint</strong> = &lt;class 'PyQt4.QtGui.SizeConstraint'&gt;</dl>
+
+<dl><dt><strong>activate</strong> = &lt;built-in function activate&gt;</dl>
+
+<dl><dt><strong>closestAcceptableSize</strong> = &lt;built-in function closestAcceptableSize&gt;</dl>
+
+<dl><dt><strong>geometry</strong> = &lt;built-in function geometry&gt;</dl>
+
+<dl><dt><strong>indexOf</strong> = &lt;built-in function indexOf&gt;</dl>
+
+<dl><dt><strong>isEmpty</strong> = &lt;built-in function isEmpty&gt;</dl>
+
+<dl><dt><strong>isEnabled</strong> = &lt;built-in function isEnabled&gt;</dl>
+
+<dl><dt><strong>layout</strong> = &lt;built-in function layout&gt;</dl>
+
+<dl><dt><strong>margin</strong> = &lt;built-in function margin&gt;</dl>
+
+<dl><dt><strong>menuBar</strong> = &lt;built-in function menuBar&gt;</dl>
+
+<dl><dt><strong>parentWidget</strong> = &lt;built-in function parentWidget&gt;</dl>
+
+<dl><dt><strong>removeItem</strong> = &lt;built-in function removeItem&gt;</dl>
+
+<dl><dt><strong>removeWidget</strong> = &lt;built-in function removeWidget&gt;</dl>
+
+<dl><dt><strong>setAlignment</strong> = &lt;built-in function setAlignment&gt;</dl>
+
+<dl><dt><strong>setEnabled</strong> = &lt;built-in function setEnabled&gt;</dl>
+
+<dl><dt><strong>setMargin</strong> = &lt;built-in function setMargin&gt;</dl>
+
+<dl><dt><strong>setMenuBar</strong> = &lt;built-in function setMenuBar&gt;</dl>
+
+<dl><dt><strong>setSizeConstraint</strong> = &lt;built-in function setSizeConstraint&gt;</dl>
+
+<dl><dt><strong>setSpacing</strong> = &lt;built-in function setSpacing&gt;</dl>
+
+<dl><dt><strong>sizeConstraint</strong> = &lt;built-in function sizeConstraint&gt;</dl>
+
+<dl><dt><strong>spacing</strong> = &lt;built-in function spacing&gt;</dl>
+
+<dl><dt><strong>totalHeightForWidth</strong> = &lt;built-in function totalHeightForWidth&gt;</dl>
+
+<dl><dt><strong>totalMaximumSize</strong> = &lt;built-in function totalMaximumSize&gt;</dl>
+
+<dl><dt><strong>totalMinimumSize</strong> = &lt;built-in function totalMinimumSize&gt;</dl>
+
+<dl><dt><strong>totalSizeHint</strong> = &lt;built-in function totalSizeHint&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
+
+<dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
+
+<dl><dt><strong>connect</strong> = &lt;built-in function connect&gt;</dl>
+
+<dl><dt><strong>deleteLater</strong> = &lt;built-in function deleteLater&gt;</dl>
+
+<dl><dt><strong>disconnect</strong> = &lt;built-in function disconnect&gt;</dl>
+
+<dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
+
+<dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
+
+<dl><dt><strong>event</strong> = &lt;built-in function event&gt;</dl>
+
+<dl><dt><strong>eventFilter</strong> = &lt;built-in function eventFilter&gt;</dl>
+
+<dl><dt><strong>findChild</strong> = &lt;built-in function findChild&gt;</dl>
+
+<dl><dt><strong>findChildren</strong> = &lt;built-in function findChildren&gt;</dl>
+
+<dl><dt><strong>inherits</strong> = &lt;built-in function inherits&gt;</dl>
+
+<dl><dt><strong>installEventFilter</strong> = &lt;built-in function installEventFilter&gt;</dl>
+
+<dl><dt><strong>isWidgetType</strong> = &lt;built-in function isWidgetType&gt;</dl>
+
+<dl><dt><strong>killTimer</strong> = &lt;built-in function killTimer&gt;</dl>
+
+<dl><dt><strong>metaObject</strong> = &lt;built-in function metaObject&gt;</dl>
+
+<dl><dt><strong>moveToThread</strong> = &lt;built-in function moveToThread&gt;</dl>
+
+<dl><dt><strong>objectName</strong> = &lt;built-in function objectName&gt;</dl>
+
+<dl><dt><strong>parent</strong> = &lt;built-in function parent&gt;</dl>
+
+<dl><dt><strong>property</strong> = &lt;built-in function property&gt;</dl>
+
+<dl><dt><strong>removeEventFilter</strong> = &lt;built-in function removeEventFilter&gt;</dl>
+
+<dl><dt><strong>setObjectName</strong> = &lt;built-in function setObjectName&gt;</dl>
+
+<dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
+
+<dl><dt><strong>setProperty</strong> = &lt;built-in function setProperty&gt;</dl>
+
+<dl><dt><strong>signalsBlocked</strong> = &lt;built-in function signalsBlocked&gt;</dl>
+
+<dl><dt><strong>startTimer</strong> = &lt;built-in function startTimer&gt;</dl>
+
+<dl><dt><strong>thread</strong> = &lt;built-in function thread&gt;</dl>
+
+<dl><dt><strong>tr</strong> = &lt;built-in function tr&gt;</dl>
+
+<dl><dt><strong>trUtf8</strong> = &lt;built-in function trUtf8&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayoutItem">PyQt4.QtGui.QLayoutItem</a>:<br>
+<dl><dt><strong>alignment</strong> = &lt;built-in function alignment&gt;</dl>
+
+<dl><dt><strong>spacerItem</strong> = &lt;built-in function spacerItem&gt;</dl>
+
+<dl><dt><strong>widget</strong> = &lt;built-in function widget&gt;</dl>
+
+<hr>
+Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><a name="MultiCanvas-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#MultiCanvas-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="MultiCanvas-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#MultiCanvas-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="MultiCanvas-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#MultiCanvas-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#MultiCanvas-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1009,7 +1937,10 @@ but&nbsp;it&nbsp;can&nbsp;not&nbsp;be&nbsp;played&nbsp;as&nbsp;a&nbsp;pyFormex&n
 <font color="#000000" face="helvetica, arial"><a name="QtCanvas">class <strong>QtCanvas</strong></a>(<a href="PyQt4.QtOpenGL.html#QGLWidget">PyQt4.QtOpenGL.QGLWidget</a>, <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>A&nbsp;canvas&nbsp;for&nbsp;OpenGL&nbsp;rendering.<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>A&nbsp;canvas&nbsp;for&nbsp;OpenGL&nbsp;rendering.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;wrapper&nbsp;around&nbsp;our&nbsp;<a href="gui.canvas.html#Canvas">Canvas</a>&nbsp;class,&nbsp;to&nbsp;implement&nbsp;the<br>
+QT&nbsp;specific&nbsp;methods.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.gui.html#QtCanvas">QtCanvas</a></dd>
@@ -1018,8 +1949,8 @@ but&nbsp;it&nbsp;can&nbsp;not&nbsp;be&nbsp;played&nbsp;as&nbsp;a&nbsp;pyFormex&n
 <dd><a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a></dd>
 <dd><a href="PyQt4.QtGui.html#QPaintDevice">PyQt4.QtGui.QPaintDevice</a></dd>
 <dd><a href="sip.html#wrapper">sip.wrapper</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
 <dd><a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
@@ -1204,10 +2135,6 @@ Data and other attributes inherited from <a href="PyQt4.QtOpenGL.html#QGLWidget"
 <dl><dt><strong>wheelEvent</strong> = &lt;built-in function wheelEvent&gt;</dl>
 
 <dl><dt><strong>windowActivationChange</strong> = &lt;built-in function windowActivationChange&gt;</dl>
-
-<hr>
-Methods inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt4.QtGui.QWidget</a>:<br>
-<dl><dt><a name="QtCanvas-update"><strong>update</strong></a>(self)</dt><dd><tt>#&nbsp;our&nbsp;own&nbsp;name&nbsp;for&nbsp;the&nbsp;canvas&nbsp;update&nbsp;function</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt4.QtGui.QWidget</a>:<br>
@@ -1555,6 +2482,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>unsetLayoutDirection</strong> = &lt;built-in function unsetLayoutDirection&gt;</dl>
 
+<dl><dt><strong>update</strong> = &lt;built-in function update&gt;</dl>
+
 <dl><dt><strong>updateGeometry</strong> = &lt;built-in function updateGeometry&gt;</dl>
 
 <dl><dt><strong>updatesEnabled</strong> = &lt;built-in function updatesEnabled&gt;</dl>
@@ -1715,24 +2644,22 @@ Methods inherited from <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>:<b
 
 <dl><dt><a name="QtCanvas-addDecoration"><strong>addDecoration</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;a&nbsp;2D&nbsp;decoration&nbsp;to&nbsp;the&nbsp;canvas.</tt></dd></dl>
 
+<dl><dt><a name="QtCanvas-addLight"><strong>addLight</strong></a>(self, position, ambient, diffuse, specular)</dt><dd><tt>Adds&nbsp;a&nbsp;new&nbsp;light&nbsp;to&nbsp;the&nbsp;scene.</tt></dd></dl>
+
 <dl><dt><a name="QtCanvas-add_actor"><strong>add_actor</strong></a>(self, actor, list)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;an&nbsp;actorlist.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-clear"><strong>clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;canvas&nbsp;to&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-createView"><strong>createView</strong></a>(self, name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
-&nbsp;<br>
-By&nbsp;default,&nbsp;the&nbsp;following&nbsp;views&nbsp;are&nbsp;created:<br>
-'front',&nbsp;'back',&nbsp;'left',&nbsp;'right',&nbsp;'bottom',&nbsp;'top',&nbsp;'iso'.<br>
-The&nbsp;user&nbsp;can&nbsp;add/delete/overwrite&nbsp;any&nbsp;number&nbsp;of&nbsp;predefined&nbsp;views.</tt></dd></dl>
-
 <dl><dt><a name="QtCanvas-display"><strong>display</strong></a>(self)</dt><dd><tt>(Re)display&nbsp;all&nbsp;the&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
 &nbsp;<br>
 This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;when&nbsp;actors&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;scene,<br>
-or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position&nbsp;or&nbsp;lens.</tt></dd></dl>
+or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position/orientation&nbsp;or&nbsp;lens.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-dyna"><strong>dyna</strong></a>(self, x, y)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom/pan/rotation&nbsp;functions</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-glinit"><strong>glinit</strong></a>(self, mode<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="QtCanvas-initCamera"><strong>initCamera</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="QtCanvas-recreate_actor"><strong>recreate_actor</strong></a>(self, actor, list)</dt><dd><tt>Recreate&nbsp;an&nbsp;actor&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
 
@@ -1768,14 +2695,24 @@ to&nbsp;Python&nbsp;by&nbsp;Toby&nbsp;Whites's&nbsp;wrapper<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;is&nbsp;only&nbsp;defined&nbsp;if&nbsp;the&nbsp;gl2ps&nbsp;module&nbsp;is&nbsp;found.<br>
 &nbsp;<br>
-The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'PS',&nbsp;'EPS',&nbsp;'PDF'&nbsp;or&nbsp;'TEX'.<br>
+The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'ps',&nbsp;'eps',&nbsp;'pdf'&nbsp;or&nbsp;'tex'.<br>
 If&nbsp;not&nbsp;specified,&nbsp;the&nbsp;type&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;file&nbsp;extension.<br>
-In&nbsp;case&nbsp;of&nbsp;the&nbsp;'TEX'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
+In&nbsp;case&nbsp;of&nbsp;the&nbsp;'tex'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
 the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extension.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-setBbox"><strong>setBbox</strong></a>(self, bbox<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;scene&nbsp;you&nbsp;want&nbsp;to&nbsp;be&nbsp;visible.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-setBgColor"><strong>setBgColor</strong></a>(self, bg)</dt><dd><tt>Set&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
+
+<dl><dt><a name="QtCanvas-setCamera"><strong>setCamera</strong></a>(self, bbox<font color="#909090">=None</font>, angles<font color="#909090">=None</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;under&nbsp;angles&nbsp;at&nbsp;bbox.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;sets&nbsp;the&nbsp;camera&nbsp;angles&nbsp;and&nbsp;adjusts&nbsp;the&nbsp;zooming.<br>
+The&nbsp;camera&nbsp;distance&nbsp;remains&nbsp;unchanged.<br>
+If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;to&nbsp;make&nbsp;the&nbsp;whole<br>
+bbox&nbsp;visible.<br>
+If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nbsp;bbox&nbsp;will&nbsp;be&nbsp;used.<br>
+If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
+bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-setLinewidth"><strong>setLinewidth</strong></a>(self, lw)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;for&nbsp;line&nbsp;rendering.</tt></dd></dl>
 
@@ -1784,16 +2721,25 @@ the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extensi
 <dl><dt><a name="QtCanvas-setView"><strong>setView</strong></a>(self, bbox<font color="#909090">=None</font>, side<font color="#909090">='front'</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;from&nbsp;one&nbsp;of&nbsp;the&nbsp;named&nbsp;views.<br>
 &nbsp;<br>
 On&nbsp;startup,&nbsp;the&nbsp;predefined&nbsp;views&nbsp;are&nbsp;'front',&nbsp;'back',&nbsp;'left',<br>
-'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.<br>
-This&nbsp;function&nbsp;does&nbsp;not&nbsp;only&nbsp;set&nbsp;the&nbsp;camera&nbsp;angles,&nbsp;but&nbsp;also<br>
-adjust&nbsp;the&nbsp;zooming.<br>
-If&nbsp;a&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;camera&nbsp;will&nbsp;be&nbsp;zoomed&nbsp;to&nbsp;view&nbsp;the<br>
-whole&nbsp;bbox.<br>
-If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nbsp;bbox&nbsp;will&nbsp;be&nbsp;used.<br>
-If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
-bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
+'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
+
+<hr>
+Class methods inherited from <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>:<br>
+<dl><dt><a name="QtCanvas-createView"><strong>createView</strong></a>(clas, name, angles)<font color="#909090"><font face="helvetica, arial"> from <a href="sip.html#wrappertype">sip.wrappertype</a></font></font></dt><dd><tt>Create/change&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
+&nbsp;<br>
+By&nbsp;default,&nbsp;the&nbsp;following&nbsp;views&nbsp;are&nbsp;created:<br>
+'front',&nbsp;'back',&nbsp;'left',&nbsp;'right',&nbsp;'bottom',&nbsp;'top',&nbsp;'iso'.<br>
+The&nbsp;user&nbsp;can&nbsp;add/delete/overwrite&nbsp;any&nbsp;number&nbsp;of&nbsp;predefined&nbsp;views.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>:<br>
+<dl><dt><strong>__dict__</strong> = {'__doc__': 'A canvas for OpenGL rendering.<font color="#c040c0">\n\n</font>    This is a wr...s, to implement the<font color="#c040c0">\n</font>    QT specific methods.<font color="#c040c0">\n</font>    ', '__init__': &lt;function __init__&gt;, '__module__': 'gui.gui', 'initializeGL': &lt;function initializeGL&gt;, 'paintGL': &lt;function paintGL&gt;, 'resizeGL': &lt;function resizeGL&gt;}<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>default_light</strong> = {'ambient': 0.5, 'diffuse': 1.0, 'position': (0.0, 0.0, 1.0, 0.0), 'specular': 0.5}</dl>
+
+<dl><dt><strong>views</strong> = {'back': (180.0, 0.0, 0.0), 'bottom': (0.0, -90.0, 0.0), 'front': (0.0, 0.0, 0.0), 'iso': (45.0, 45.0, 0.0), 'left': (270.0, 0.0, 0.0), 'right': (90.0, 0.0, 0.0), 'top': (0.0, 90.0, 0.0)}</dl>
 
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1802,8 +2748,8 @@ bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-addActionButtons"><strong>addActionButtons</strong></a>(toolbar)</dt><dd><tt>Add&nbsp;the&nbsp;script&nbsp;action&nbsp;buttons&nbsp;to&nbsp;the&nbsp;toolbar.</tt></dd></dl>
- <dl><dt><a name="-addCameraButtons"><strong>addCameraButtons</strong></a>(toolbar)</dt><dd><tt>Add&nbsp;the&nbsp;camera&nbsp;buttons&nbsp;to&nbsp;a&nbsp;toolbar.</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-Pos"><strong>Pos</strong></a>(widget)</dt><dd><tt>Return&nbsp;the&nbsp;position&nbsp;of&nbsp;a&nbsp;widget&nbsp;as&nbsp;a&nbsp;tuple.</tt></dd></dl>
+ <dl><dt><a name="-Size"><strong>Size</strong></a>(widget)</dt><dd><tt>Return&nbsp;the&nbsp;size&nbsp;of&nbsp;a&nbsp;widget&nbsp;as&nbsp;a&nbsp;tuple.</tt></dd></dl>
  <dl><dt><a name="-messageBox"><strong>messageBox</strong></a>(message, level<font color="#909090">='info'</font>, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;box&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;response.<br>
 &nbsp;<br>
 The&nbsp;message&nbsp;box&nbsp;displays&nbsp;a&nbsp;text,&nbsp;an&nbsp;icon&nbsp;depending&nbsp;on&nbsp;the&nbsp;level<br>
@@ -1811,9 +2757,15 @@ The&nbsp;message&nbsp;box&nbsp;displays&nbsp;a&nbsp;text,&nbsp;an&nbsp;icon&nbsp
 with&nbsp;the&nbsp;specified&nbsp;action&nbsp;text.&nbsp;The&nbsp;'about'&nbsp;level&nbsp;has&nbsp;no&nbsp;buttons.<br>
 &nbsp;<br>
 The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button&nbsp;that&nbsp;was&nbsp;clicked.</tt></dd></dl>
- <dl><dt><a name="-printButtonClicked"><strong>printButtonClicked</strong></a>()</dt><dd><tt>#################&nbsp;Camera&nbsp;action&nbsp;toolbar&nbsp;###############</tt></dd></dl>
  <dl><dt><a name="-printFormat"><strong>printFormat</strong></a>(fmt)</dt><dd><tt>Print&nbsp;partial&nbsp;information&nbsp;about&nbsp;the&nbsp;OpenGL&nbsp;format.</tt></dd></dl>
  <dl><dt><a name="-printsize"><strong>printsize</strong></a>(w, t<font color="#909090">=None</font>)</dt></dl>
  <dl><dt><a name="-runApp"><strong>runApp</strong></a>(args)</dt><dd><tt>Create&nbsp;and&nbsp;run&nbsp;the&nbsp;qt&nbsp;application.</tt></dd></dl>
+ <dl><dt><a name="-setFont"><strong>setFont</strong></a>(font)</dt><dd><tt>Set&nbsp;the&nbsp;main&nbsp;application&nbsp;font.</tt></dd></dl>
+ <dl><dt><a name="-setFontSize"><strong>setFontSize</strong></a>(s<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;main&nbsp;application&nbsp;font&nbsp;size&nbsp;to&nbsp;the&nbsp;given&nbsp;point&nbsp;size.</tt></dd></dl>
+ <dl><dt><a name="-setStyle"><strong>setStyle</strong></a>(style)</dt><dd><tt>Set&nbsp;the&nbsp;main&nbsp;application&nbsp;style.</tt></dd></dl>
+ <dl><dt><a name="-windowExists"><strong>windowExists</strong></a>(windowname)</dt><dd><tt>Check&nbsp;if&nbsp;a&nbsp;<a href="#GUI">GUI</a>&nbsp;window&nbsp;with&nbsp;the&nbsp;given&nbsp;name&nbsp;exists.<br>
+&nbsp;<br>
+On&nbsp;X-Window&nbsp;systems,&nbsp;we&nbsp;can&nbsp;use&nbsp;the&nbsp;xwininfo&nbsp;cammand&nbsp;to&nbsp;find&nbsp;out&nbsp;whether<br>
+a&nbsp;window&nbsp;with&nbsp;the&nbsp;specified&nbsp;name&nbsp;exists.</tt></dd></dl>
 </td></tr></table>
 </body></html>

@@ -18,39 +18,42 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
-</td><td width="25%" valign=top><a href="gui.draw.html">gui.draw</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="gui.draw.html">gui.draw</a><br>
+</td><td width="25%" valign=top><a href="gui.gui.html">gui.gui</a><br>
+<a href="os.html">os</a><br>
 </td><td width="25%" valign=top><a href="gui.widgets.html">gui.widgets</a><br>
-</td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-askConfigPreferences"><strong>askConfigPreferences</strong></a>(items, section<font color="#909090">=None</font>)</dt><dd><tt>Ask&nbsp;preferences&nbsp;stored&nbsp;in&nbsp;config&nbsp;variables.<br>
+<td width="100%"><dl><dt><a name="-askConfigPreferences"><strong>askConfigPreferences</strong></a>(items, prefix<font color="#909090">=None</font>, store<font color="#909090">=None</font>)</dt><dd><tt>Ask&nbsp;preferences&nbsp;stored&nbsp;in&nbsp;config&nbsp;variables.<br>
 &nbsp;<br>
-Items&nbsp;in&nbsp;list&nbsp;should&nbsp;only&nbsp;be&nbsp;keys.&nbsp;The&nbsp;current&nbsp;values&nbsp;are&nbsp;retrieved<br>
-from&nbsp;the&nbsp;config.<br>
-A&nbsp;config&nbsp;section&nbsp;name&nbsp;should&nbsp;be&nbsp;specified&nbsp;if&nbsp;the&nbsp;items&nbsp;are&nbsp;not&nbsp;in&nbsp;the<br>
-top&nbsp;config&nbsp;level.</tt></dd></dl>
- <dl><dt><a name="-newaskConfigPreferences"><strong>newaskConfigPreferences</strong></a>(items, store)</dt><dd><tt>Ask&nbsp;preferences&nbsp;stored&nbsp;in&nbsp;config&nbsp;variables.<br>
-&nbsp;<br>
-Items&nbsp;in&nbsp;list&nbsp;should&nbsp;only&nbsp;be&nbsp;keys.&nbsp;The&nbsp;current&nbsp;values&nbsp;are&nbsp;retrieved<br>
-from&nbsp;the&nbsp;config.<br>
-A&nbsp;config&nbsp;section&nbsp;name&nbsp;should&nbsp;be&nbsp;specified&nbsp;if&nbsp;the&nbsp;items&nbsp;are&nbsp;not&nbsp;in&nbsp;the<br>
-top&nbsp;config&nbsp;level.</tt></dd></dl>
+Items&nbsp;in&nbsp;list&nbsp;should&nbsp;only&nbsp;be&nbsp;keys.&nbsp;store&nbsp;is&nbsp;usually&nbsp;a&nbsp;dictionary,&nbsp;but<br>
+can&nbsp;be&nbsp;any&nbsp;class&nbsp;that&nbsp;allow&nbsp;the&nbsp;setdefault&nbsp;method&nbsp;for&nbsp;lookup&nbsp;while<br>
+setting&nbsp;the&nbsp;default,&nbsp;and&nbsp;the&nbsp;store[key]=val&nbsp;syntax&nbsp;for&nbsp;setting&nbsp;the<br>
+value.<br>
+If&nbsp;a&nbsp;prefix&nbsp;is&nbsp;given,&nbsp;actual&nbsp;keys&nbsp;will&nbsp;be&nbsp;'prefix/key'.&nbsp;<br>
+The&nbsp;current&nbsp;values&nbsp;are&nbsp;retrieved&nbsp;from&nbsp;the&nbsp;store,&nbsp;and&nbsp;the&nbsp;type&nbsp;returned<br>
+will&nbsp;be&nbsp;in&nbsp;accordance.<br>
+If&nbsp;no&nbsp;store&nbsp;is&nbsp;specified,&nbsp;the&nbsp;global&nbsp;config&nbsp;GD.cfg&nbsp;is&nbsp;used.</tt></dd></dl>
+ <dl><dt><a name="-setAppearance"><strong>setAppearance</strong></a>()</dt><dd><tt>Set&nbsp;the&nbsp;main&nbsp;application&nbsp;style&nbsp;and&nbsp;font&nbsp;from&nbsp;user&nbsp;dialog.</tt></dd></dl>
  <dl><dt><a name="-setBGcolor"><strong>setBGcolor</strong></a>()</dt></dl>
  <dl><dt><a name="-setCanvasSize"><strong>setCanvasSize</strong></a>()</dt></dl>
+ <dl><dt><a name="-setCommands"><strong>setCommands</strong></a>()</dt></dl>
  <dl><dt><a name="-setDrawtimeout"><strong>setDrawtimeout</strong></a>()</dt></dl>
- <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>()</dt></dl>
+ <dl><dt><a name="-setFont"><strong>setFont</strong></a>()</dt><dd><tt>Set&nbsp;the&nbsp;main&nbsp;application&nbsp;font&nbsp;from&nbsp;a&nbsp;user&nbsp;dialog.</tt></dd></dl>
  <dl><dt><a name="-setHelp"><strong>setHelp</strong></a>()</dt></dl>
  <dl><dt><a name="-setLight"><strong>setLight</strong></a>(light<font color="#909090">=0</font>)</dt></dl>
  <dl><dt><a name="-setLight0"><strong>setLight0</strong></a>()</dt></dl>
  <dl><dt><a name="-setLight1"><strong>setLight1</strong></a>()</dt></dl>
  <dl><dt><a name="-setLinewidth"><strong>setLinewidth</strong></a>()</dt></dl>
- <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>()</dt></dl>
+ <dl><dt><a name="-setPanFactor"><strong>setPanFactor</strong></a>()</dt></dl>
  <dl><dt><a name="-setRender"><strong>setRender</strong></a>()</dt></dl>
+ <dl><dt><a name="-setRotFactor"><strong>setRotFactor</strong></a>()</dt></dl>
  <dl><dt><a name="-setSize"><strong>setSize</strong></a>()</dt></dl>
+ <dl><dt><a name="-setZoomFactor"><strong>setZoomFactor</strong></a>()</dt></dl>
 </td></tr></table>
 </body></html>

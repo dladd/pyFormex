@@ -14,6 +14,7 @@ DOCDIR= doc
 HTMLDIR= ${DOCDIR}/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }
 HTMLGUIDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, gui ${addprefix gui.,${PYGUIMODULES}}}}
+HTMLPLUGINDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, plugins ${addprefix plugins.,${PLUGINMODULES}}}}
 STAMPFILES= README History Makefile FAQ
 NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description 
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
@@ -24,9 +25,10 @@ NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= releases
 
-.PHONY: dist release distdir modules distclean stamp dist.stamped manual
+.PHONY: dist release distdir modules distclean stamp dist.stamped manual test
 
 ############ Creating Distribution ##################
+
 
 # Create the distribution
 dist: ${PKGDIR}/${PKG}
@@ -47,7 +49,7 @@ distclean:
 
 pydoc: ${HTMLDIR}/index.html
 
-${HTMLDIR}/index.html: ${HTMLDOCS} ${HTMLGUIDOCS} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
+${HTMLDIR}/index.html: ${HTMLDOCS} ${HTMLGUIDOCS} ${HTMLPLUGINDOCS} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
 	./make_doc_index	
 
 ${HTMLDIR}/%.html: %.py
@@ -58,6 +60,12 @@ ${HTMLDIR}/gui.html: gui
 
 ${HTMLDIR}/gui.%.html: gui/%.py
 	pydoc -w gui.$* && mv gui.$*.html ${HTMLDIR}
+
+${HTMLDIR}/plugins.html: gui
+	pydoc -w plugins && mv plugins.html ${HTMLDIR}
+
+${HTMLDIR}/plugins.%.html: plugins/%.py
+	pydoc -w plugins.$* && mv plugins.$*.html ${HTMLDIR}
 
 manual:
 	make -C manual
@@ -75,7 +83,7 @@ dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERS
 	cp ${NONSTAMPFILES} ${PYFORMEXDIR}
 	cp ${ICONFILES}  ${PYFORMEXDIR}/icons
 	cp ${IMAGEFILES} ${PYFORMEXDIR}/images
-	cp ${HTMLDOCS} ${HTMLDIR}/index.html    ${PYFORMEXDIR}/html
+	cp ${HTMLDOCS} ${HTMLGUIDOCS} ${HTMLPLUGINDOCS} ${HTMLDIR}/index.html    ${PYFORMEXDIR}/html
 	cp ${MANUAL}   ${PYFORMEXDIR}/manual
 	cp ${MANUALHTML}   ${PYFORMEXDIR}/manual/html
 	cp ${MANUALIMAGES}   ${PYFORMEXDIR}/manual/images

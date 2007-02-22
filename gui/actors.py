@@ -428,7 +428,7 @@ class SurfaceActor(Actor):
             self.draw('wireframe',color=[0.,0.,0.])
             return
 
-        print "DRAWING MODE %s" % mode
+        #print "DRAWING MODE %s" % mode
         if color == None:
             color = self.color
         if mode=='wireframe' :
@@ -437,5 +437,5 @@ class SurfaceActor(Actor):
             if color.ndim == 1:
                 color = zeros((self.elems.shape[0],3))
                 color[:,:] = self.color
-                print color
+                #print color
             drawTriangles(self.nodes[self.elems],color,mode)

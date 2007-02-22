@@ -35,60 +35,14 @@
 <a href="gui.widgets.html">gui.widgets</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ee77aa">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
-</font></dt><dd>
-<dl>
-<dt><font face="helvetica, arial"><a href="gui.draw.html#Exit">Exit</a>
-</font></dt><dt><font face="helvetica, arial"><a href="gui.draw.html#ExitAll">ExitAll</a>
-</font></dt></dl>
-</dd>
-</dl>
- <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ffc8d8">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Exit">class <strong>Exit</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
-    
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="exceptions.html#Exception">Exception</a>&nbsp;raised&nbsp;to&nbsp;exit&nbsp;from&nbsp;a&nbsp;running&nbsp;script.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;</td>
-<td width="100%">Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
-<dl><dt><a name="Exit-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
-
-<dl><dt><a name="Exit-__init__"><strong>__init__</strong></a>(...)</dt></dl>
-
-<dl><dt><a name="Exit-__str__"><strong>__str__</strong></a>(...)</dt></dl>
-
-</td></tr></table> <p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#ffc8d8">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="ExitAll">class <strong>ExitAll</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
-    
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt><a href="exceptions.html#Exception">Exception</a>&nbsp;raised&nbsp;to&nbsp;exit&nbsp;pyFormex&nbsp;from&nbsp;a&nbsp;script.<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;</td>
-<td width="100%">Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
-<dl><dt><a name="ExitAll-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
-
-<dl><dt><a name="ExitAll-__init__"><strong>__init__</strong></a>(...)</dt></dl>
-
-<dl><dt><a name="ExitAll-__str__"><strong>__str__</strong></a>(...)</dt></dl>
-
-</td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4-rc1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-Export"><strong>Export</strong></a>(dict)</dt></dl>
+ <dl><dt><a name="-Globals"><strong>Globals</strong></a>()</dt></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
@@ -103,13 +57,23 @@ Returns&nbsp;a&nbsp;dictionary&nbsp;(maybe&nbsp;we&nbsp;should&nbsp;just&nbsp;re
  <dl><dt><a name="-backView"><strong>backView</strong></a>()</dt></dl>
  <dl><dt><a name="-bgcolor"><strong>bgcolor</strong></a>(color)</dt><dd><tt>Change&nbsp;the&nbsp;background&nbsp;color&nbsp;(and&nbsp;redraw).</tt></dd></dl>
  <dl><dt><a name="-bottomView"><strong>bottomView</strong></a>()</dt></dl>
+ <dl><dt><a name="-byName"><strong>byName</strong></a>(names)</dt></dl>
  <dl><dt><a name="-checkImageFormat"><strong>checkImageFormat</strong></a>(fmt, verbose<font color="#909090">=False</font>)</dt><dd><tt>Checks&nbsp;image&nbsp;format;&nbsp;if&nbsp;verbose,&nbsp;warn&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
 &nbsp;<br>
 Returns&nbsp;the&nbsp;image&nbsp;format,&nbsp;or&nbsp;None&nbsp;if&nbsp;it&nbsp;is&nbsp;not&nbsp;OK.</tt></dd></dl>
  <dl><dt><a name="-clear"><strong>clear</strong></a>()</dt><dd><tt>Clear&nbsp;the&nbsp;canvas</tt></dd></dl>
+ <dl><dt><a name="-createView"><strong>createView</strong></a>(name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
+&nbsp;<br>
+The&nbsp;angles&nbsp;are&nbsp;(longitude,&nbsp;latitude,&nbsp;twist).<br>
+If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nbsp;a&nbsp;views&nbsp;toolbar,<br>
+a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
  <dl><dt><a name="-decorate"><strong>decorate</strong></a>(decor)</dt><dd><tt>Draw&nbsp;a&nbsp;decoration.</tt></dd></dl>
  <dl><dt><a name="-delay"><strong>delay</strong></a>(i)</dt><dd><tt>Set&nbsp;the&nbsp;draw&nbsp;delay&nbsp;in&nbsp;seconds.</tt></dd></dl>
- <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">='__last__'</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;on&nbsp;the&nbsp;canvas.<br>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
+&nbsp;<br>
+If&nbsp;F&nbsp;is&nbsp;a&nbsp;list,&nbsp;all&nbsp;its&nbsp;items&nbsp;are&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;settings.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;setting&nbsp;is&nbsp;unspecified,&nbsp;its&nbsp;current&nbsp;values&nbsp;are&nbsp;used.<br>
 &nbsp;<br>
 Draws&nbsp;an&nbsp;actor&nbsp;on&nbsp;the&nbsp;canvas,&nbsp;and&nbsp;directs&nbsp;the&nbsp;camera&nbsp;to&nbsp;it&nbsp;from<br>
 the&nbsp;specified&nbsp;view.&nbsp;Named&nbsp;views&nbsp;are&nbsp;either&nbsp;predefined&nbsp;or&nbsp;can&nbsp;be&nbsp;added&nbsp;by<br>
@@ -123,7 +87,8 @@ The&nbsp;initial&nbsp;default&nbsp;view&nbsp;is&nbsp;'front'&nbsp;(looking&nbsp;
 &nbsp;<br>
 If&nbsp;bbox&nbsp;==&nbsp;'auto',&nbsp;the&nbsp;camera&nbsp;will&nbsp;zoom&nbsp;automatically&nbsp;on&nbsp;the&nbsp;shown<br>
 object.&nbsp;A&nbsp;bbox&nbsp;may&nbsp;be&nbsp;specified&nbsp;to&nbsp;have&nbsp;other&nbsp;zoom&nbsp;settings,&nbsp;e.g.&nbsp;to<br>
-keep&nbsp;the&nbsp;previous&nbsp;settings.<br>
+keep&nbsp;the&nbsp;previous&nbsp;settings.&nbsp;If&nbsp;bbox&nbsp;==&nbsp;None,&nbsp;the&nbsp;previous&nbsp;bbox&nbsp;will&nbsp;be<br>
+kept.<br>
 &nbsp;<br>
 If&nbsp;other&nbsp;actors&nbsp;are&nbsp;on&nbsp;the&nbsp;scene,&nbsp;they&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;be&nbsp;visible&nbsp;with&nbsp;the<br>
 new&nbsp;camera&nbsp;settings.&nbsp;Clear&nbsp;the&nbsp;canvas&nbsp;before&nbsp;drawing&nbsp;if&nbsp;you&nbsp;only&nbsp;want<br>
@@ -159,16 +124,22 @@ If&nbsp;a&nbsp;timer&nbsp;is&nbsp;running,&nbsp;cancel&nbsp;it.</tt></dd></dl>
 While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></dd></dl>
  <dl><dt><a name="-error"><strong>error</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Show&nbsp;an&nbsp;error&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-exit"><strong>exit</strong></a>(all<font color="#909090">=False</font>)</dt><dd><tt>##&nbsp;exit&nbsp;from&nbsp;program&nbsp;pyformex</tt></dd></dl>
+ <dl><dt><a name="-export"><strong>export</strong></a>(names)</dt></dl>
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
+ <dl><dt><a name="-flatwire"><strong>flatwire</strong></a>()</dt></dl>
+ <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=0.5</font>)</dt></dl>
  <dl><dt><a name="-formatInfo"><strong>formatInfo</strong></a>(F)</dt><dd><tt>Return&nbsp;formatted&nbsp;information&nbsp;about&nbsp;a&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
- <dl><dt><a name="-imageFormats"><strong>imageFormats</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;valid&nbsp;image&nbsp;formats.</tt></dd></dl>
+ <dl><dt><a name="-imageFormats"><strong>imageFormats</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;valid&nbsp;image&nbsp;formats.<br>
+&nbsp;<br>
+image&nbsp;formats&nbsp;are&nbsp;lower&nbsp;case&nbsp;strings&nbsp;as&nbsp;'png',&nbsp;'gif',&nbsp;'ppm',&nbsp;'eps',&nbsp;etc.<br>
+The&nbsp;available&nbsp;image&nbsp;formats&nbsp;are&nbsp;derived&nbsp;from&nbsp;the&nbsp;installed&nbsp;software.</tt></dd></dl>
  <dl><dt><a name="-info"><strong>info</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Show&nbsp;a&nbsp;neutral&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-isoView"><strong>isoView</strong></a>()</dt></dl>
  <dl><dt><a name="-leftView"><strong>leftView</strong></a>()</dt></dl>
  <dl><dt><a name="-linewidth"><strong>linewidth</strong></a>(wid)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;to&nbsp;be&nbsp;used&nbsp;in&nbsp;line&nbsp;drawings.</tt></dd></dl>
- <dl><dt><a name="-listAll"><strong>listAll</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
+ <dl><dt><a name="-listAll"><strong>listAll</strong></a>(dict<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;Formices&nbsp;in&nbsp;dict&nbsp;or&nbsp;by&nbsp;default&nbsp;in&nbsp;globals()</tt></dd></dl>
  <dl><dt><a name="-log"><strong>log</strong></a>(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;cmdlog&nbsp;window.</tt></dd></dl>
  <dl><dt><a name="-message"><strong>message</strong></a> = log(s)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;in&nbsp;the&nbsp;cmdlog&nbsp;window.</tt></dd></dl>
  <dl><dt><a name="-messageBox"><strong>messageBox</strong></a>(message, level<font color="#909090">='info'</font>, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Display&nbsp;a&nbsp;message&nbsp;box&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;response.<br>
@@ -179,45 +150,74 @@ with&nbsp;the&nbsp;specified&nbsp;action&nbsp;text.&nbsp;The&nbsp;'about'&nbsp;l
 &nbsp;<br>
 The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button&nbsp;that&nbsp;was&nbsp;clicked.</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
- <dl><dt><a name="-play"><strong>play</strong></a>(fn<font color="#909090">=None</font>, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn&nbsp;or&nbsp;from&nbsp;the&nbsp;current&nbsp;file.<br>
+ <dl><dt><a name="-play"><strong>play</strong></a>(fn<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn&nbsp;or&nbsp;from&nbsp;the&nbsp;current&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;does&nbsp;nothing&nbsp;if&nbsp;no&nbsp;file&nbsp;is&nbsp;passed&nbsp;or&nbsp;no&nbsp;current<br>
 file&nbsp;was&nbsp;set.</tt></dd></dl>
- <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
-same&nbsp;time.</tt></dd></dl>
+same&nbsp;time.<br>
+If&nbsp;a&nbsp;name&nbsp;is&nbsp;specified,&nbsp;sets&nbsp;the&nbsp;global&nbsp;variable&nbsp;GD.scriptName&nbsp;if&nbsp;and<br>
+when&nbsp;the&nbsp;script&nbsp;is&nbsp;started.</tt></dd></dl>
  <dl><dt><a name="-printall"><strong>printall</strong></a>()</dt><dd><tt>Print&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
+ <dl><dt><a name="-printbbox"><strong>printbbox</strong></a>()</dt></dl>
+ <dl><dt><a name="-printconfig"><strong>printconfig</strong></a>()</dt></dl>
  <dl><dt><a name="-printglobals"><strong>printglobals</strong></a>()</dt></dl>
  <dl><dt><a name="-redraw"><strong>redraw</strong></a>()</dt></dl>
  <dl><dt><a name="-removeTriade"><strong>removeTriade</strong></a>()</dt><dd><tt>Remove&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-renderMode"><strong>renderMode</strong></a>(mode)</dt></dl>
+ <dl><dt><a name="-reset"><strong>reset</strong></a>()</dt></dl>
  <dl><dt><a name="-rightView"><strong>rightView</strong></a>()</dt></dl>
- <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>(fn, fmt<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;on&nbsp;file&nbsp;fn&nbsp;in&nbsp;format&nbsp;fmt.<br>
+ <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>(filename<font color="#909090">=None</font>, window<font color="#909090">=False</font>, multi<font color="#909090">=False</font>, hotkey<font color="#909090">=True</font>, autosave<font color="#909090">=False</font>, format<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Starts&nbsp;or&nbsp;stops&nbsp;saving&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
 &nbsp;<br>
-If&nbsp;no&nbsp;format&nbsp;is&nbsp;specified,&nbsp;it&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;extension.<br>
+With&nbsp;a&nbsp;filename,&nbsp;this&nbsp;starts&nbsp;or&nbsp;changes&nbsp;the&nbsp;multisave&nbsp;mode.<br>
+In&nbsp;multisave&nbsp;mode,&nbsp;each&nbsp;call&nbsp;to&nbsp;<a href="#-saveNext">saveNext</a>()&nbsp;will&nbsp;save&nbsp;an&nbsp;image&nbsp;to&nbsp;the<br>
+next&nbsp;generated&nbsp;file&nbsp;name.<br>
+Filenames&nbsp;are&nbsp;generated&nbsp;by&nbsp;incrementing&nbsp;a&nbsp;numeric&nbsp;part&nbsp;of&nbsp;the&nbsp;name.<br>
+If&nbsp;the&nbsp;supplied&nbsp;filename&nbsp;(after&nbsp;removing&nbsp;the&nbsp;extension)&nbsp;has&nbsp;a&nbsp;trailing<br>
+numeric&nbsp;part,&nbsp;subsequent&nbsp;images&nbsp;will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this<br>
+number.&nbsp;Otherwise&nbsp;a&nbsp;numeric&nbsp;part&nbsp;'-000'&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;filename.<br>
+&nbsp;<br>
+Without&nbsp;filename,&nbsp;exits&nbsp;the&nbsp;multisave&nbsp;mode.&nbsp;It&nbsp;is&nbsp;acceptable&nbsp;to&nbsp;have<br>
+two&nbsp;subsequent&nbsp;saveMulti&nbsp;calls&nbsp;with&nbsp;a&nbsp;filename,&nbsp;without&nbsp;an&nbsp;intermediate<br>
+call&nbsp;without&nbsp;filename.<br>
+&nbsp;<br>
+If&nbsp;window&nbsp;is&nbsp;True,&nbsp;the&nbsp;full&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.<br>
+If&nbsp;window&nbsp;is&nbsp;False,&nbsp;only&nbsp;the&nbsp;canvas&nbsp;is&nbsp;saved.<br>
+&nbsp;<br>
+If&nbsp;hotkey&nbsp;is&nbsp;True,&nbsp;a&nbsp;new&nbsp;image&nbsp;will&nbsp;be&nbsp;saved&nbsp;by&nbsp;hitting&nbsp;the&nbsp;'S'&nbsp;key.<br>
+If&nbsp;autosave&nbsp;is&nbsp;True,&nbsp;a&nbsp;new&nbsp;image&nbsp;will&nbsp;be&nbsp;saved&nbsp;on&nbsp;each&nbsp;execution&nbsp;of<br>
+the&nbsp;'draw'&nbsp;function.<br>
+If&nbsp;neither&nbsp;hotkey&nbsp;nor&nbsp;autosave&nbsp;are&nbsp;True,&nbsp;images&nbsp;can&nbsp;only&nbsp;be&nbsp;saved&nbsp;by<br>
+executing&nbsp;the&nbsp;<a href="#-saveNext">saveNext</a>()&nbsp;function&nbsp;from&nbsp;a&nbsp;script.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;format&nbsp;is&nbsp;specified,&nbsp;it&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension.<br>
 fmt&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;valid&nbsp;formats&nbsp;as&nbsp;returned&nbsp;by&nbsp;<a href="#-imageFormats">imageFormats</a>()<br>
-If&nbsp;the&nbsp;file&nbsp;has&nbsp;no&nbsp;extension,&nbsp;one&nbsp;is&nbsp;added&nbsp;based&nbsp;on&nbsp;the&nbsp;format.<br>
-If&nbsp;verbose=True,&nbsp;error/warnings&nbsp;are&nbsp;activated.</tt></dd></dl>
- <dl><dt><a name="-saveMulti"><strong>saveMulti</strong></a>(fn<font color="#909090">=None</font>, fmt<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
 &nbsp;<br>
-If&nbsp;the&nbsp;filename&nbsp;supplied&nbsp;has&nbsp;a&nbsp;trailing&nbsp;numeric&nbsp;part,&nbsp;subsequent&nbsp;images<br>
-will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this&nbsp;number.&nbsp;Otherwise&nbsp;a&nbsp;numeric&nbsp;part<br>
--000,&nbsp;-001,&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;filename.<br>
+If&nbsp;verbose=True,&nbsp;error/warnings&nbsp;are&nbsp;activated.&nbsp;This&nbsp;is&nbsp;usually&nbsp;done&nbsp;when<br>
+this&nbsp;function&nbsp;is&nbsp;called&nbsp;from&nbsp;the&nbsp;GUI.</tt></dd></dl>
+ <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt><dd><tt>In&nbsp;multisave&nbsp;mode,&nbsp;saves&nbsp;the&nbsp;next&nbsp;image.</tt></dd></dl>
+ <dl><dt><a name="-save_window"><strong>save_window</strong></a>(filename, format, windowname<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;the&nbsp;whole&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
 &nbsp;<br>
-Without&nbsp;filename,&nbsp;switches&nbsp;off&nbsp;multisave&nbsp;mode.</tt></dd></dl>
- <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt></dl>
- <dl><dt><a name="-setview"><strong>setview</strong></a>(name, angles)</dt><dd><tt>Declare&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
+This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
+The&nbsp;prefered&nbsp;user&nbsp;function&nbsp;is&nbsp;saveWindow,&nbsp;which&nbsp;can&nbsp;derive&nbsp;the<br>
+format&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension</tt></dd></dl>
+ <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>()</dt></dl>
+ <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
+ <dl><dt><a name="-setView"><strong>setView</strong></a>(name, angles<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;view&nbsp;for&nbsp;future&nbsp;drawing&nbsp;operations.<br>
 &nbsp;<br>
-The&nbsp;angles&nbsp;are&nbsp;(longitude,&nbsp;latitude,&nbsp;twist).<br>
-If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nbsp;a&nbsp;views&nbsp;toolbar,<br>
-a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
+If&nbsp;no&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;the&nbsp;name&nbsp;should&nbsp;be&nbsp;an&nbsp;existing&nbsp;view.<br>
+If&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;this&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#-createView">createView</a>(name,angles)<br>
+followed&nbsp;by&nbsp;<a href="#-setView">setView</a>(name).</tt></dd></dl>
+ <dl><dt><a name="-setWorkdirFromFile"><strong>setWorkdirFromFile</strong></a>(fn)</dt></dl>
  <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
  <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
+ <dl><dt><a name="-smoothwire"><strong>smoothwire</strong></a>()</dt></dl>
  <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>
- <dl><dt><a name="-system"><strong>system</strong></a>(cmdline, result<font color="#909090">='output'</font>)</dt></dl>
  <dl><dt><a name="-toggleTriade"><strong>toggleTriade</strong></a>()</dt><dd><tt>Toggle&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
+ <dl><dt><a name="-updateGUI"><strong>updateGUI</strong></a>()</dt><dd><tt>Update&nbsp;the&nbsp;GUI.</tt></dd></dl>
  <dl><dt><a name="-view"><strong>view</strong></a>(v, wait<font color="#909090">=False</font>)</dt><dd><tt>Show&nbsp;a&nbsp;named&nbsp;view,&nbsp;either&nbsp;a&nbsp;builtin&nbsp;or&nbsp;a&nbsp;user&nbsp;defined.</tt></dd></dl>
  <dl><dt><a name="-wakeup"><strong>wakeup</strong></a>(mode<font color="#909090">=0</font>)</dt><dd><tt>Wake&nbsp;up&nbsp;from&nbsp;the&nbsp;sleep&nbsp;function.<br>
 &nbsp;<br>
@@ -226,6 +226,7 @@ Default&nbsp;is&nbsp;to&nbsp;wake&nbsp;up&nbsp;from&nbsp;the&nbsp;current&nbsp;s
 forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
  <dl><dt><a name="-warning"><strong>warning</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Show&nbsp;a&nbsp;warning&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-wireframe"><strong>wireframe</strong></a>()</dt></dl>
+ <dl><dt><a name="-zoomAll"><strong>zoomAll</strong></a>()</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -234,7 +235,6 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>allowwait</strong> = True<br>
-<strong>currentView</strong> = 'front'<br>
 <strong>drawlocked</strong> = False<br>
 <strong>drawtimer</strong> = None<br>
 <strong>multisave</strong> = None<br>
