@@ -66,8 +66,40 @@ def writeElems(fil, elems, type, name='Eall', eofs=1, nofs=1):
 def writeSet(fil, type, name, set, ofs=1):
     """Write a named set of nodes or elements (type=NSET|ELSET)"""
     fil.write("*%s,%s=%s\n" % (type,type,name))
-    for i in set:
-        fil.write("%d,\n"%(i+ofs))
+    for i in set+ofs:
+        fil.write("%d,\n" % i)
+
+
+
+def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
+                             rho=None,orient=None):
+    """Write a general frame section for the named element set.
+
+    The specified values are:
+      A: cross section
+      I11: moment of inertia around the 1 axis
+      I22: moment of inertia around the 2 axis
+      I12: inertia product around the 1-2 axes
+      J: Torsional constant
+      E: Young's modulus of the material
+      G: Shear modulus of the material
+    Optional data:
+      rho: density of the material
+      orient: a vector specifying the direction cosines of the 1 axis
+    """
+    extra = orientation = ''
+    if rho:
+        extra = ',DENSITY=%s' % rho
+    if orient:
+        orientation = '%s %s %s' % (orient[0], orient[1], orient[2])
+    fil.write("""*FRAME SECTION,ELSET=%s,SECTION=general%s
+%s, %s, %s, %s, %s
+%s
+%s, %s
+""" %(elset,extra,
+      A,Iyy,Iyz,Izz,J,
+      orientation,
+      E,G))
 
 
 materialswritten=[]
