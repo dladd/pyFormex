@@ -1,0 +1,115 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module plugins.stl_menu</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="plugins.html"><font color="#ffffff">plugins</font></a>.stl_menu</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/plugins/stl_menu.py">/home/bene/prj/pyformex/plugins/stl_menu.py</a></font></td></tr></table>
+    <p><tt>stl_menu.py<br>
+&nbsp;<br>
+STL&nbsp;plugin&nbsp;menu&nbsp;for&nbsp;pyFormex.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
+<a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
+<a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
+<a href="gui.actors.html">gui.actors</a><br>
+<a href="gui.colors.html">gui.colors</a><br>
+<a href="commands.html">commands</a><br>
+</td><td width="25%" valign=top><a href="copy.html">copy</a><br>
+<a href="gui.decors.html">gui.decors</a><br>
+<a href="plugins.f2abq.html">plugins.f2abq</a><br>
+<a href="formex.html">formex</a><br>
+<a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="plugins.stl.html">plugins.stl</a><br>
+<a href="plugins.stl_abq.html">plugins.stl_abq</a><br>
+<a href="sys.html">sys</a><br>
+<a href="plugins.tetgen.html">plugins.tetgen</a><br>
+<a href="threading.html">threading</a><br>
+<a href="timer.html">timer</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+<a href="utils.html">utils</a><br>
+<a href="gui.widgets.html">gui.widgets</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-allcircles_stl"><strong>allcircles_stl</strong></a>()</dt></dl>
+ <dl><dt><a name="-center_stl"><strong>center_stl</strong></a>()</dt><dd><tt>Center&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-check_surface"><strong>check_surface</strong></a>()</dt></dl>
+ <dl><dt><a name="-circle_stl"><strong>circle_stl</strong></a>()</dt><dd><tt>Draw&nbsp;circles&nbsp;as&nbsp;approximation&nbsp;of&nbsp;the&nbsp;STL&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-clip_stl"><strong>clip_stl</strong></a>()</dt><dd><tt>Clip&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-close_menu"><strong>close_menu</strong></a>()</dt><dd><tt>Close&nbsp;the&nbsp;STL&nbsp;menu.</tt></dd></dl>
+ <dl><dt><a name="-combine"><strong>combine</strong></a>()</dt></dl>
+ <dl><dt><a name="-convert_stl_to_off"><strong>convert_stl_to_off</strong></a>()</dt></dl>
+ <dl><dt><a name="-create_menu"><strong>create_menu</strong></a>()</dt><dd><tt>Create&nbsp;the&nbsp;STL&nbsp;menu.</tt></dd></dl>
+ <dl><dt><a name="-create_tetgen"><strong>create_tetgen</strong></a>()</dt><dd><tt>Generate&nbsp;a&nbsp;volume&nbsp;tetraeder&nbsp;mesh&nbsp;inside&nbsp;an&nbsp;stl&nbsp;surface.</tt></dd></dl>
+ <dl><dt><a name="-draw_changes"><strong>draw_changes</strong></a>(old_surface, new_surface, ask<font color="#909090">=True</font>)</dt></dl>
+ <dl><dt><a name="-export_stl"><strong>export_stl</strong></a>()</dt><dd><tt>Export&nbsp;an&nbsp;stl&nbsp;model&nbsp;stored&nbsp;in&nbsp;Formex&nbsp;F&nbsp;in&nbsp;Abaqus&nbsp;.inp&nbsp;format.</tt></dd></dl>
+ <dl><dt><a name="-export_surface"><strong>export_surface</strong></a>()</dt></dl>
+ <dl><dt><a name="-export_volume"><strong>export_volume</strong></a>()</dt></dl>
+ <dl><dt><a name="-fill_holes"><strong>fill_holes</strong></a>()</dt></dl>
+ <dl><dt><a name="-flytru_stl"><strong>flytru_stl</strong></a>()</dt><dd><tt>Fly&nbsp;through&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-keep_surface"><strong>keep_surface</strong></a>(nodes, elems, ask<font color="#909090">=False</font>)</dt><dd><tt>Replace&nbsp;the&nbsp;current&nbsp;model&nbsp;with&nbsp;a&nbsp;new&nbsp;one.</tt></dd></dl>
+ <dl><dt><a name="-read_model"><strong>read_model</strong></a>(types<font color="#909090">=['stl/off', 'stl', 'off', 'neu', 'smesh', 'gts']</font>, show<font color="#909090">=True</font>)</dt><dd><tt>Read&nbsp;STL&nbsp;model&nbsp;from&nbsp;file&nbsp;fn.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;file&nbsp;is&nbsp;given,&nbsp;one&nbsp;is&nbsp;asked.<br>
+The&nbsp;file&nbsp;fn&nbsp;should&nbsp;exist&nbsp;and&nbsp;contain&nbsp;a&nbsp;valid&nbsp;STL&nbsp;model.<br>
+The&nbsp;STL&nbsp;model&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;Formex&nbsp;F.<br>
+The&nbsp;workdir&nbsp;and&nbsp;project&nbsp;name&nbsp;are&nbsp;set&nbsp;from&nbsp;the&nbsp;filename.<br>
+The&nbsp;Formex&nbsp;is&nbsp;stored&nbsp;under&nbsp;the&nbsp;project&nbsp;basename.<br>
+The&nbsp;model&nbsp;is&nbsp;displayed.</tt></dd></dl>
+ <dl><dt><a name="-read_tetgen"><strong>read_tetgen</strong></a>(surface<font color="#909090">=True</font>, volume<font color="#909090">=True</font>)</dt><dd><tt>Read&nbsp;a&nbsp;tetgen&nbsp;model&nbsp;from&nbsp;files&nbsp;&nbsp;fn.node,&nbsp;fn.ele,&nbsp;fn.smesh.</tt></dd></dl>
+ <dl><dt><a name="-read_tetgen_surface"><strong>read_tetgen_surface</strong></a>()</dt></dl>
+ <dl><dt><a name="-read_tetgen_volume"><strong>read_tetgen_volume</strong></a>()</dt></dl>
+ <dl><dt><a name="-rotate_stl"><strong>rotate_stl</strong></a>()</dt><dd><tt>Rotate&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-sanitize_stl_to_off"><strong>sanitize_stl_to_off</strong></a>()</dt></dl>
+ <dl><dt><a name="-save_model"><strong>save_model</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;model&nbsp;(in&nbsp;memory!)&nbsp;under&nbsp;a&nbsp;name.</tt></dd></dl>
+ <dl><dt><a name="-scale_surface"><strong>scale_surface</strong></a>()</dt><dd><tt>Scale&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-scale_volume"><strong>scale_volume</strong></a>()</dt></dl>
+ <dl><dt><a name="-section_stl"><strong>section_stl</strong></a>()</dt><dd><tt>Sectionize&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-set_color"><strong>set_color</strong></a>()</dt></dl>
+ <dl><dt><a name="-set_surface"><strong>set_surface</strong></a>(nodes, elems, name<font color="#909090">='surface0'</font>)</dt></dl>
+ <dl><dt><a name="-show_menu"><strong>show_menu</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;STL&nbsp;menu.</tt></dd></dl>
+ <dl><dt><a name="-show_model"><strong>show_model</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;surface&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-show_nodes"><strong>show_nodes</strong></a>()</dt></dl>
+ <dl><dt><a name="-show_shrinked"><strong>show_shrinked</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-show_surface"><strong>show_surface</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;surface&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-show_volume"><strong>show_volume</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;volume&nbsp;model.</tt></dd></dl>
+ <dl><dt><a name="-toggle_auto_draw"><strong>toggle_auto_draw</strong></a>()</dt></dl>
+ <dl><dt><a name="-trim_border"><strong>trim_border</strong></a>(elems, nodes, nb, visual<font color="#909090">=False</font>)</dt><dd><tt>Removes&nbsp;the&nbsp;triangles&nbsp;with&nbsp;nb&nbsp;or&nbsp;more&nbsp;border&nbsp;edges.<br>
+&nbsp;<br>
+Returns&nbsp;an&nbsp;array&nbsp;with&nbsp;the&nbsp;remaining&nbsp;elements.</tt></dd></dl>
+ <dl><dt><a name="-trim_surface"><strong>trim_surface</strong></a>()</dt></dl>
+ <dl><dt><a name="-undo_stl"><strong>undo_stl</strong></a>()</dt><dd><tt>Undo&nbsp;the&nbsp;last&nbsp;transformation.</tt></dd></dl>
+ <dl><dt><a name="-write_stl"><strong>write_stl</strong></a>(types<font color="#909090">=['stl']</font>)</dt></dl>
+ <dl><dt><a name="-write_surface"><strong>write_surface</strong></a>(types<font color="#909090">=['stl/off', 'stl', 'off', 'neu', 'smesh', 'gts']</font>)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>PF</strong> = {'stl_color': (1.0, 0.0, 0.0)}<br>
+<strong>allowwait</strong> = True<br>
+<strong>drawlocked</strong> = False<br>
+<strong>drawtimer</strong> = None<br>
+<strong>multisave</strong> = None<br>
+<strong>scriptDisabled</strong> = False<br>
+<strong>scriptRunning</strong> = False<br>
+<strong>wakeupMode</strong> = 0</td></tr></table>
+</body></html>

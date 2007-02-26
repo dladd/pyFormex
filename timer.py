@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # $Id$
+##
+## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
 """A timer class."""
 
 from datetime import datetime

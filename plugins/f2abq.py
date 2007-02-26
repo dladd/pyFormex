@@ -2,8 +2,11 @@
 # $Id$
 """A number of functions to write an Abaqus input file.
 
-These functions read data from the property module and write them to an Abaqus input file. 
-Abaqus has no built in units, so the chosen units must be selfconsistant.
+There are low level functions that just generate a part of an Abaqus
+input file, conforming to the Keywords manual.
+
+Then there are higher level functions that read data from the property module
+and write them to the Abaqus input file.
 """
 
 from properties import *
@@ -15,7 +18,7 @@ from numpy import *
 
 
 ##################################################
-## Some Abaqus format output routines
+## Some Abaqus .inp format output routines
 ##################################################
 
 def writeHeading(fil, text=''):
@@ -70,9 +73,8 @@ def writeSet(fil, type, name, set, ofs=1):
         fil.write("%d,\n" % i)
 
 
-
 def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
-                             rho=None,orient=None):
+                      rho=None,orient=None):
     """Write a general frame section for the named element set.
 
     The specified values are:
@@ -97,10 +99,14 @@ def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
 %s
 %s, %s
 """ %(elset,extra,
-      A,Iyy,Iyz,Izz,J,
+      A,I11,I12,I22,J,
       orientation,
       E,G))
 
+
+##################################################
+## Some higher level functions, interfacing with the properties module
+##################################################
 
 materialswritten=[]
 def writeSection(fil, nr):

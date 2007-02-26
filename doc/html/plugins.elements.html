@@ -1,0 +1,229 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module plugins.elements</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="plugins.html"><font color="#ffffff">plugins</font></a>.elements</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/plugins/elements.py">/home/bene/prj/pyformex/plugins/elements.py</a></font></td></tr></table>
+    <p><tt><a href="#Element">Element</a>&nbsp;local&nbsp;coordinates&nbsp;and&nbsp;numbering.<br>
+&nbsp;<br>
+The&nbsp;elements&nbsp;in&nbsp;this&nbsp;module&nbsp;are&nbsp;defined&nbsp;in&nbsp;a&nbsp;unit&nbsp;cell&nbsp;of&nbsp;their<br>
+local&nbsp;coordinates.&nbsp;See&nbsp;finite_elements.py&nbsp;for&nbsp;a&nbsp;variant&nbsp;using<br>
+natural&nbsp;coordinates&nbsp;familiar&nbsp;in&nbsp;Finite&nbsp;<a href="#Element">Element</a>&nbsp;simulations.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="plugins.elements.html#Element">Element</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="plugins.elements.html#Hex8">Hex8</a>
+</font></dt><dt><font face="helvetica, arial"><a href="plugins.elements.html#Quad4">Quad4</a>
+</font></dt><dt><font face="helvetica, arial"><a href="plugins.elements.html#Tet4">Tet4</a>
+</font></dt><dt><font face="helvetica, arial"><a href="plugins.elements.html#Tri3">Tri3</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Element">class <strong>Element</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Element">Element</a>&nbsp;base&nbsp;class:&nbsp;an&nbsp;empty&nbsp;element.<br>
+&nbsp;<br>
+Each&nbsp;element&nbsp;is&nbsp;defined&nbsp;by&nbsp;the&nbsp;following&nbsp;attributes:<br>
+nodes:&nbsp;the&nbsp;natural&nbsp;coordinates&nbsp;of&nbsp;its&nbsp;nodes,<br>
+edges:&nbsp;a&nbsp;list&nbsp;of&nbsp;edges,&nbsp;each&nbsp;defined&nbsp;by&nbsp;a&nbsp;couple&nbsp;of&nbsp;node&nbsp;numbers,<br>
+faces:&nbsp;a&nbsp;list&nbsp;of&nbsp;faces,&nbsp;each&nbsp;defined&nbsp;by&nbsp;a&nbsp;list&nbsp;of&nbsp;minimum&nbsp;3&nbsp;node&nbsp;numbers,<br>
+element:&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;node&nbsp;numbers<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Element-nedges"><strong>nedges</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Element-nfaces"><strong>nfaces</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Element-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Element' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>edges</strong> = [[]]</dl>
+
+<dl><dt><strong>element</strong> = []</dl>
+
+<dl><dt><strong>faces</strong> = [[]]</dl>
+
+<dl><dt><strong>nodes</strong> = [[]]</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Hex8">class <strong>Hex8</strong></a>(<a href="plugins.elements.html#Element">Element</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;8-node&nbsp;heaxeder<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="plugins.elements.html#Hex8">Hex8</a></dd>
+<dd><a href="plugins.elements.html#Element">Element</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>edges</strong> = [[0, 1], [2, 3], [4, 5], [6, 7], [0, 2], [1, 3], [4, 6], [5, 7], [0, 4], [1, 5], [2, 6], [3, 7]]</dl>
+
+<dl><dt><strong>element</strong> = [7, 6, 4, 5, 3, 2, 0, 1]</dl>
+
+<dl><dt><strong>faces</strong> = [[0, 2, 3, 1], [4, 5, 7, 6], [0, 1, 5, 4], [2, 6, 7, 3], [0, 4, 6, 2], [1, 3, 7, 5]]</dl>
+
+<dl><dt><strong>nodes</strong> = [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 1.0, 0.0], [0.0, 0.0, 1.0], [1.0, 0.0, 1.0], [0.0, 1.0, 1.0], [1.0, 1.0, 1.0]]</dl>
+
+<hr>
+Methods inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><a name="Hex8-nedges"><strong>nedges</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Hex8-nfaces"><strong>nfaces</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Hex8-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Element' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Quad4">class <strong>Quad4</strong></a>(<a href="plugins.elements.html#Element">Element</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;4-node&nbsp;quadrilateral<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="plugins.elements.html#Quad4">Quad4</a></dd>
+<dd><a href="plugins.elements.html#Element">Element</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>edges</strong> = [[0, 1], [1, 2], [2, 3], [3, 0]]</dl>
+
+<dl><dt><strong>element</strong> = [0, 1, 2, 3]</dl>
+
+<dl><dt><strong>faces</strong> = [[0, 1, 2, 3]]</dl>
+
+<dl><dt><strong>nodes</strong> = [[0.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 1.0, 0.0], [1.0, 0.0, 0.0]]</dl>
+
+<hr>
+Methods inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><a name="Quad4-nedges"><strong>nedges</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Quad4-nfaces"><strong>nfaces</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Quad4-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Element' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Tet4">class <strong>Tet4</strong></a>(<a href="plugins.elements.html#Element">Element</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;4-node&nbsp;tetraeder<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="plugins.elements.html#Tet4">Tet4</a></dd>
+<dd><a href="plugins.elements.html#Element">Element</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>edges</strong> = [[0, 1], [1, 2], [2, 0], [0, 3], [1, 3], [2, 3]]</dl>
+
+<dl><dt><strong>element</strong> = [0, 1, 2, 3]</dl>
+
+<dl><dt><strong>faces</strong> = [[0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3]]</dl>
+
+<dl><dt><strong>nodes</strong> = [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]</dl>
+
+<hr>
+Methods inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><a name="Tet4-nedges"><strong>nedges</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Tet4-nfaces"><strong>nfaces</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Tet4-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Element' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Tri3">class <strong>Tri3</strong></a>(<a href="plugins.elements.html#Element">Element</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;3-node&nbsp;triangle<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="plugins.elements.html#Tri3">Tri3</a></dd>
+<dd><a href="plugins.elements.html#Element">Element</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>edges</strong> = [[0, 1], [1, 2], [2, 0]]</dl>
+
+<dl><dt><strong>element</strong> = [0, 1, 2]</dl>
+
+<dl><dt><strong>faces</strong> = [[0, 1, 2]]</dl>
+
+<dl><dt><strong>nodes</strong> = [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]</dl>
+
+<hr>
+Methods inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><a name="Tri3-nedges"><strong>nedges</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Tri3-nfaces"><strong>nfaces</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Tri3-nnodes"><strong>nnodes</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes inherited from <a href="plugins.elements.html#Element">Element</a>:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Element' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

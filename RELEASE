@@ -1,11 +1,11 @@
 # pyFormex version
 VERSION=0.4.2
-# Unless you are preparing an official release, a tail should be added
-# to the ${VERSION} to set a release tag. e.g. -alpha
-RELEASE=${VERSION}
+# Unless you are creating an official release, a tail should be added
+# to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
+RELEASE=${VERSION}-rc1
 PROGRAM= pyformex.py
 PYMODULES= config flatkeydb formex globaldata mydict \
-  script simple units utils vector
+  script simple timer units utils vector
 PYGUIMODULES = __init__ actionlist actors camera cameraMenu canvas \
   colors colorscale decors draw fileMenu gui help \
   menu prefMenu scriptsMenu toolbar widgets

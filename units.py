@@ -1,9 +1,10 @@
 # units.py
 ##
-## This file is part of calpy 0.1 Release Fri Mar 12 09:45:54 2004
-## calpy is a Finite Element program written in Python
-## (c) 1997,2003 Benedict Verhegghe (email: benedict.verhegghe@ugent.be)
-## Distributed under the General Public License, see file COPYING for details
+## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
 #
 #  This file provides unit conversion for physical quantities.

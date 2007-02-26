@@ -1,14 +1,14 @@
 
 <!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><title>Python: module lima</title>
+<html><head><title>Python: module plugins.lima</title>
 </head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>lima</strong></big></big></font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="plugins.html"><font color="#ffffff">plugins</font></a>.lima</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/lima.py">/home/bene/prj/pyformex/lima.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/plugins/lima.py">/home/bene/prj/pyformex/plugins/lima.py</a></font></td></tr></table>
     <p><tt>Lindenmayer&nbsp;Systems</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -17,7 +17,7 @@
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="turtle.html">turtle</a><br>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="plugins.turtle.html">plugins.turtle</a><br>
 </td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -26,7 +26,7 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="lima.html#Lima">Lima</a>
+<dt><font face="helvetica, arial"><a href="plugins.lima.html#Lima">Lima</a>
 </font></dt></dl>
  <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -40,7 +40,7 @@
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="Lima-__init__"><strong>__init__</strong></a>(self, axiom<font color="#909090">=''</font>, rules<font color="#909090">={}</font>)</dt></dl>
 
-<dl><dt><a name="Lima-addRule"><strong>addRule</strong></a>(self, atom, product)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;rule&nbsp;(or&nbsp;overwrite&nbsp;an&nbsp;exisiting)</tt></dd></dl>
+<dl><dt><a name="Lima-addRule"><strong>addRule</strong></a>(self, atom, product)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;rule&nbsp;(or&nbsp;overwrite&nbsp;an&nbsp;existing)</tt></dd></dl>
 
 <dl><dt><a name="Lima-grow"><strong>grow</strong></a>(self, ngen<font color="#909090">=1</font>)</dt></dl>
 
@@ -50,7 +50,7 @@
 &nbsp;<br>
 If&nbsp;keep=True&nbsp;is&nbsp;specified,&nbsp;atoms&nbsp;that&nbsp;do&nbsp;not&nbsp;have&nbsp;a&nbsp;translation<br>
 in&nbsp;the&nbsp;rule&nbsp;set,&nbsp;will&nbsp;be&nbsp;kept&nbsp;unchanged.<br>
-The&nbsp;default&nbsp;(keep=False)&nbsp;is&nbsp;to&nbsp;reove&nbsp;those&nbsp;atoms.</tt></dd></dl>
+The&nbsp;default&nbsp;(keep=False)&nbsp;is&nbsp;to&nbsp;remove&nbsp;those&nbsp;atoms.</tt></dd></dl>
 
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -65,6 +65,11 @@ axiom&nbsp;is&nbsp;the&nbsp;initial&nbsp;string,<br>
 rules&nbsp;are&nbsp;translation&nbsp;rules&nbsp;for&nbsp;the&nbsp;characters&nbsp;in&nbsp;the&nbsp;string,<br>
 level&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;generations&nbsp;to&nbsp;produce,<br>
 turtlecmds&nbsp;are&nbsp;the&nbsp;translation&nbsp;rules&nbsp;of&nbsp;the&nbsp;final&nbsp;string&nbsp;to&nbsp;turtle&nbsp;cmds,<br>
-glob&nbsp;is&nbsp;an&nbsp;optionallist&nbsp;of&nbsp;globals&nbsp;to&nbsp;pass&nbsp;to&nbsp;the&nbsp;turtle&nbsp;script&nbsp;player.</tt></dd></dl>
+glob&nbsp;is&nbsp;an&nbsp;optional&nbsp;list&nbsp;of&nbsp;globals&nbsp;to&nbsp;pass&nbsp;to&nbsp;the&nbsp;turtle&nbsp;script&nbsp;player.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;convenience&nbsp;function&nbsp;for&nbsp;quickly&nbsp;creating&nbsp;a&nbsp;drawing&nbsp;of&nbsp;a<br>
+single&nbsp;generation&nbsp;member.&nbsp;If&nbsp;you&nbsp;intend&nbsp;to&nbsp;draw&nbsp;multiple&nbsp;generations<br>
+of&nbsp;the&nbsp;same&nbsp;<a href="#Lima">Lima</a>,&nbsp;it&nbsp;is&nbsp;better&nbsp;to&nbsp;use&nbsp;the&nbsp;grow()&nbsp;and&nbsp;translate()&nbsp;methods<br>
+directly.</tt></dd></dl>
 </td></tr></table>
 </body></html>
