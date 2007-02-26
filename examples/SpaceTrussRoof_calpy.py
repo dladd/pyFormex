@@ -194,7 +194,7 @@ if GD.options.gui:
         m = int(str(f)[0])
         return m*10**n
 
-    optscale = niceNumber(1./(siz1/siz0).max())
+    optimscale = niceNumber(1./(siz1/siz0).max())
 
 
     # Show a deformed plot
@@ -203,21 +203,53 @@ if GD.options.gui:
         dnodes = nodes + dscale * displ[:,:,0]
         deformed = Formex(dnodes[elems],F.p)
         # deformed structure
-        FA = draw(deformed,view='myview1',bbox=None)
+        FA = draw(deformed,view='myview1',bbox=None,wait=False)
         TA = decors.Text('Deformed geometry (scale %.2f)' % dscale,400,100,'tr24')
         decorate(TA)
-        GD.canvas.removeActor(FA)
-        GD.canvas.removeDecoration(TA)
+        return FA,TA
 
 
-    for s in optscale/10. * arange(11):
-        deformed_plot(s)
+    def framescale(nframes=10,cycle='up',shape='linear'):
+        """Return a sequence of scale values between -1 and +1.
 
-    linewidth(1)
+        nframes is the number of steps between 0 and |1| values.
 
-    ### Rotate the model
+        cycle determines how subsequent cycles occur:
+          'up' : ramping up
+          'updown': ramping up and down
+          'revert': ramping up and down then reverse up and down
 
-    ##drawtimeout = 0
-    ##for i in range(19):
-    ##    createView('myview2',(90.,i*10.,90))
-    ##    view('myview2',True)
+        form determines the form of the amplitude curve:
+          'linear': linear scaling
+          'sine': sinusoidal scaling
+        """
+        s = arange(nframes+1)
+        if cycle in [ 'updown', 'revert' ]:
+            s = concatenate([s, fliplr(s[:-1].reshape((1,-1)))[0]])
+        if cycle in [ 'revert' ]: 
+            s = concatenate([s, -fliplr(s[:-1].reshape((1,-1)))[0]])
+        return s.astype(float)/nframes
+    
+
+    def animate_deformed_plot(amplitude,sleeptime=1,count=1):
+        """Shows an animation of the deformation plot using nframes."""
+        FA = TA = None
+        while count > 0:
+            count -= 1
+            for s in amplitude:
+                F,T = deformed_plot(s)
+                if FA:
+                    GD.canvas.removeActor(FA)
+                if TA:
+                    GD.canvas.removeDecoration(TA)
+                TA,FA = T,F
+                sleep(sleeptime)
+
+
+    linewidth(2)
+    nframes = 10
+    amp = framescale(nframes,'revert') * optimscale
+    #print amp
+    animate_deformed_plot(amp,20./nframes,10)
+
+# End
