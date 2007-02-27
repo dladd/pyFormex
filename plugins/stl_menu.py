@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # $Id: $
+##
+## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
 
 """stl_menu.py
 
@@ -189,6 +196,21 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
 # The following functions operate on the stl_model, but should
 # be changed to working on the surface model
 
+
+def center_surface():
+    """Center the stl model."""
+    if not check_surface():
+        return
+    updateGUI()
+    nodes,elems = PF['old_surface'] = PF['surface']
+    F = Formex(nodes.reshape((-1,1,3)))
+    center = F.center()
+    nodes = F.translate(-center).f
+    PF['surface'] = nodes,elems
+    clear()
+    show_changes(PF['old_surface'],PF['surface'])
+
+
 def scale_surface():
     """Scale the stl model."""
     if not check_surface():
@@ -200,48 +222,40 @@ def scale_surface():
         scale = map(float,[r[1] for r in res])
         print scale
         nodes,elems = PF['old_surface'] = PF['surface']
-        nodes = Formex(nodes.reshape((-1,1,3))).scale(scale).f
+        F = Formex(nodes.reshape((-1,1,3)))
+        nodes = F.scale(scale).f
         PF['surface'] = nodes,elems
         clear()
         show_changes(PF['old_surface'],PF['surface'])
 
 
-def center_stl():
-    """Center the stl model."""
-    global F,oldF
-    updateGUI()
-    center = array(F.center())
-    print center
-    clear()
-    draw(F,color='yellow',wait=False)
-    oldF = F
-    F = F.translate(-center)
-    draw(F,color='green')
-
-
-def rotate_stl():
+def rotate_surface():
     """Rotate the stl model."""
-    global F,oldF
+    if not check_surface():
+        return
     itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
     res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').process()
     if accept:
-        print res
         updateGUI()
+        print res
+        nodes,elems = PF['old_surface'] = PF['surface']
+        F = Formex(nodes.reshape((-1,1,3)))
+        nodes = F.rotate(float(res[1][1]),int(res[0][1])).f
+        PF['surface'] = nodes,elems
         clear()
-        draw(F,color='yellow',wait=False)
-        oldF = F
-        F = F.rotate(float(res[1][1]),int(res[0][1]))
-        draw(F,color='green')
+        show_changes(PF['old_surface'],PF['surface'])
 
         
-def clip_stl():
+def clip_surface():
     """Clip the stl model."""
-    F = PF['stl_model']
+    if not check_surface():
+        return
     itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
     res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
     if accept:
         updateGUI()
-        clear()
+        nodes,elems = PF['old_surface'] = PF['surface']
+        F = Formex(nodes[elems])
         bb = F.bbox()
         GD.message("Original bbox: %s" % bb) 
         xmi = bb[0][0]
@@ -250,15 +264,15 @@ def clip_stl():
         axis = int(res[0][1])
         xc1 = xmi + float(res[1][1]) * dx
         xc2 = xmi + float(res[2][1]) * dx
-        nodes = res[3][1]
-        print nodes
-        w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
-        draw(F.cclip(w),color='yellow',wait=False)
-        PF['old_model'] = F
+        nodid = res[3][1]
+        print nodid
+        clear()
+        draw(F,color='yellow')
+        w = F.test(nodid='any',dir=axis,min=xc1,max=xc2)
         F = F.clip(w)
-        GD.message("Clipped bbox = %s" % F.bbox())
-        #linewidth(2)
-        draw(F,color='green')
+        draw(F,clor='red')
+        
+
 
 def undo_stl():
     """Undo the last transformation."""
@@ -561,12 +575,10 @@ def create_menu():
 ##             ("&Rotate model",rotate_stl),
 ##             ("&Scale model",scale_stl),
 ##             ] ),
-        ("&Center model",center_stl),
-        ("&Rotate model",rotate_stl),
+        ("&Center model",center_surface),
         ("&Scale model",scale_surface),
-        ("&Read Tetgen Volume",read_tetgen_volume),
-        ("&Scale Volume model with factor 0.01",scale_volume),
-        ("&Clip model",clip_stl),
+        ("&Rotate model",rotate_surface),
+        ("&Clip model",clip_surface),
         ("&Trim border",trim_surface),
         ("&Undo LAST STL transformation",undo_stl),
         ("&Sectionize STL model",section_stl),
@@ -574,8 +586,10 @@ def create_menu():
         ("&Show all circles on STL model",allcircles_stl),
         ("&Fill the holes in STL model",fill_holes),
         ("&Fly STL model",flytru_stl),
-        ("&Export STL model to Abaqus (SLOW!)",export_stl),
+#        ("&Export STL model to Abaqus (SLOW!)",export_stl),
         ("&Create tetgen model",create_tetgen),
+        ("&Read Tetgen Volume",read_tetgen_volume),
+        ("&Scale Volume model with factor 0.01",scale_volume),
         ("&Export surface to Abaqus",export_surface),
         ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
