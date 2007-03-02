@@ -6,6 +6,7 @@
 Executing this script creates a Formex menu in the menubar.
 """
 
+import globaldata as GD
 from PyQt4 import QtCore,QtGui
 from gui import widgets
 import commands, os
@@ -30,11 +31,9 @@ def formex_list():
 def make_selection():
     global selection
     selection = get_selection('multi')
-    print selection
 
 def draw_selection():
     global selection
-    print selection
     if selection:
         map(draw,selection)
 
@@ -47,7 +46,7 @@ def translate_selection():
     if accept:
         dir = int(res[0][1])
         dist = float(res[1][1])
-        for F in byName(selection):
+        for F in map(named,selection):
             oldF = F
             F = F.translate(dir,dist)
             drawChanges(F,oldF)
@@ -58,7 +57,7 @@ def center_selection():
     global selection
     for F in byName(selection):
         oldF = F
-        F = F.translate(-array(F.center()))
+        F = F.translate(F.center())
         drawChanges(F,oldF)
 
 

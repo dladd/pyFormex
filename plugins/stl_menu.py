@@ -24,6 +24,9 @@ from formex import Formex
 import commands, os
 
 
+def set_project(name):
+    PF['project'] = name
+    
 
 def set_surface(nodes,elems,name='surface0'):
     PF['surface'] = (nodes,elems)
@@ -99,16 +102,16 @@ def read_surface(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
     if fn:
         os.chdir(os.path.dirname(fn))
         GD.message("Your current workdir is %s" % os.getcwd())
-        project,ext = os.path.splitext(fn)
+        set_project(utils.projectName(fn))
         GD.message("Reading file %s" % fn)
         GD.gui.setBusy()
         t = timer.Timer()
         nodes,elems =stl.readSurface(fn)
         GD.message("Time to import stl: %s seconds" % t.seconds())
-        set_surface(nodes,elems)
         GD.gui.setBusy(False)
+        set_surface(nodes,elems)
         if show:
-            show_surface()
+            show_surface(view='front')
     return fn
 
     
@@ -128,7 +131,7 @@ def name_surface():
 ##    GD.message("Time to draw stl: %s seconds" % t.seconds())
     
 
-def show_surface(surface=None,color=None,clearing=True):
+def show_surface(surface=None,color=None,clearing=True,view=None):
     """Display the surface model."""
     if surface is None:
         if check_surface():
@@ -144,7 +147,7 @@ def show_surface(surface=None,color=None,clearing=True):
     actor = actors.SurfaceActor(nodes,elems,color=color)
     GD.message("BBOX = %s" % actor.bbox())
     GD.canvas.addActor(actor)
-    GD.canvas.setView(actor.bbox(),'front')
+    GD.canvas.setCamera(actor.bbox(),view)
     GD.canvas.update()
     GD.app.processEvents()
     GD.message("Time to draw surface: %s seconds" % t.seconds())
@@ -181,6 +184,21 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
         stl.writeSurface(fn,nodes,elems)   
         GD.gui.setBusy(False)
 
+
+
+def toFormex():
+    """Transforme the surface model to a named Formex."""
+    if not check_surface():
+        return
+    itemlist = [ [ 'name', PF.get('project','')] ] 
+    res,accept = widgets.inputDialog(itemlist,'Name of the Formex').process()
+    if accept:
+        name = res[0][1]
+        print name
+        nodes,elems = PF['surface']
+        print nodes.shape
+        print elems.shape
+        PF[name] = Formex(nodes[elems])
 
 ##def write_stl(types=['stl']):
 ##    if not check_stl():
@@ -268,7 +286,7 @@ def clip_surface():
         print nodid
         clear()
         draw(F,color='yellow')
-        w = F.test(nodid='any',dir=axis,min=xc1,max=xc2)
+        w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         F = F.clip(w)
         draw(F,clor='red')
         
@@ -564,6 +582,7 @@ def create_menu():
         ("&Show shrinked surface",show_shrinked),
         ("&Show volume model",show_volume),
         ("&Set color",set_color),
+        ("&Convert to Formex",toFormex),
         #("&Print Nodal Coordinates",show_nodes),
         ("&Combine two models",combine),
         # ("&Convert STL file to OFF file",convert_stl_to_off),

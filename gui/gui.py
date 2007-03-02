@@ -71,7 +71,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """A canvas for OpenGL rendering.
 
     This is a wrapper around our Canvas class, to implement the
-    QT specific methods.
+    QT specific OpenGL methods.
     """
     
     def __init__(self,*args):
@@ -118,6 +118,10 @@ def printsize(w,t=None):
 
 ################# MultiViewports ###############
 
+def vpfocus(canv):
+    print "vpfocus %s" % canv
+    GD.gui.viewports.set_current(canv)
+
 class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
 
@@ -126,28 +130,41 @@ class MultiCanvas(QtGui.QGridLayout):
         self.all = []
         self.active = []
         self.current = None
-        self.camera = None
-        self.addView(0,0)
+        #self.addView(0,0)
 
     def newView(self):
         "Adding a View"
-        c = QtCanvas()
-        self.all.append(c)
-        self.active.append(c)
-        self.current = c
-        c.initCamera()
-        self.camera = c.camera
-        return(c)
+        canv = QtCanvas()
+        #QtCore.QObject.connect(canv,QtCore.SIGNAL("VPFocus"),vpfocus)
+        canv.initCamera()
+        self.all.append(canv)
+        self.active.append(canv)
+        self.set_current(canv)
+        return(canv)
+
+    def set_current(self,canv):
+        print self.all
+        print self.current
+        if canv in self.all:
+            GD.canvas = self.current = canv
  
     def addView(self,row,col):
-        self.addWidget(self.newView(),row,col)
+        w = self.newView()
+        self.addWidget(w,row,col)
+        w.raise_()
 
-    def addActor(self,actor):
-        for v in self.active:
-            v.addActor(actor)
+    def removeView(self):
+        if len(self.all) > 1:
+            w = self.all.pop()
+            if self.current == w:
+                self.set_current(self.all[-1])
+            if w in self.active:
+                self.active.remove(w)
+            self.removeWidget(w)
 
-    def setView(self,bbox,view):
-        self.current.setView(bbox,view)
+        
+##     def setCamera(self,bbox,view):
+##         self.current.setCamera(bbox,view)
             
     def update(self):
         for v in self.all:
@@ -157,9 +174,13 @@ class MultiCanvas(QtGui.QGridLayout):
         for v in self.active:
             v.removeAll()
 
-    def clear(self):
-        self.current.clear()
-    
+##     def clear(self):
+##         self.current.clear()  
+
+    def addActor(self,actor):
+        for v in self.active:
+            v.addActor(actor)
+
 
         
 ## def initViewActions(parent,viewlist):
@@ -172,6 +193,8 @@ class MultiCanvas(QtGui.QGridLayout):
 ##         tooltip = Name+" View"
 ##         menutext = "&"+Name
 ##         createViewAction(parent,name,icon,tooltip,menutext)
+
+
 
 
 ################# GUI ###############
@@ -358,7 +381,7 @@ class GUI(QtGui.QMainWindow):
             self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype']))
 
 
-    def addView(self,name,angles):
+    def setViewAngles(self,name,angles):
         """Create a new view and add it to the list of predefined views.
 
         This creates a named view with specified angles for the canvas.
@@ -380,7 +403,6 @@ class GUI(QtGui.QMainWindow):
         else:
             GD.app.restoreOverrideCursor()
         GD.app.processEvents()
-
 
 
 
@@ -474,12 +496,9 @@ def runApp(args):
                  GD.cfg.get('gui/pos',(0,0)),
                  GD.cfg.get('gui/bdsize',(800,600))
                  )
+    GD.gui.viewports.addView(0,0)
     GD.gui.setcurfile()
     GD.board = GD.gui.board
-    if GD.options.multiview:
-        GD.canvas = GD.gui.viewports
-    else:
-        GD.canvas = GD.gui.viewports.current
     GD.gui.show()
     # Create additional menus (put them in a list to save)
     menus = []

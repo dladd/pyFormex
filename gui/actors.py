@@ -136,6 +136,9 @@ def drawTriangles(x,c,mode):
     """
     if mode == 'smooth':
         normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
+        normal = cross(x[:,2,:] - x[:,1,:], x[:,0,:] - x[:,2,:])
+        normal = cross(x[:,0,:] - x[:,2,:], x[:,1,:] - x[:,0,:])
+        #normal[:,:] = array([0.0,0.0,1.0])
     GL.glBegin(GL.GL_TRIANGLES)
     #print "TRIANGLES"
     #print x.shape

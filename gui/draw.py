@@ -132,6 +132,7 @@ def log(s):
 # Best candidates are log/info
 message = log
 
+
 ########################### PLAYING SCRIPTS ##############################
 
 scriptDisabled = False
@@ -224,9 +225,16 @@ def Globals():
 def Export(dict):
     globals().update(dict)
 
-def byName(names):
-    dict = globals()
-    return [ dict[i] for i in names ]
+def named(name):
+    """Returns the global object named name."""
+    print "name %s" % name
+    if globals().has_key(name):
+        print "Found %s in globals()" % name
+        dict = globals()
+    elif GD.PF.has_key(name):
+        print "Found %s in GD.PF" % name
+        dict = GD.PF
+    return dict[name]
 
 def play(fn=None):
     """Play a formex script from file fn or from the current file.
@@ -381,19 +389,21 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait, multisave
-    if type(F) == list:
-        return map(draw,F,view,bbox,color,wait,eltyp)
+##     if type(F) == list:
+##         return map(draw,F,view,bbox,color,wait,eltype,allviews)
+
+    if type(F) == str:
+        F = named(F)
+        if F is None:
+            return None
 
     if view is None:
         view = DrawOptions['view']
-    if type(F) == str and globals().has_key(F):
-        F = globals()[F]
 
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
         drawwait()
-    lastdrawn = F
     # Create the colors
     if color == 'prop':
         if F.p is None:
@@ -426,8 +436,9 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
             view = DrawOptions['view']
         if bbox == 'auto':
             bbox = F.bbox()
-        GD.canvas.setView(bbox,view)
-        setView(view)
+        print "DRAW: bbox=%s, view=%s" % (bbox,view)
+        GD.canvas.setCamera(bbox,view)
+        #setView(view)
     GD.canvas.update()
     GD.app.processEvents()
     if multisave and multisave[4]:
@@ -443,8 +454,9 @@ def view(v,wait=False):
     global allowwait
     if allowwait:
         drawwait()
-    if GD.canvas.views.has_key(v):
-        GD.canvas.setView(None,v)
+    angles = GD.canvas.camera.getAngles(v)
+    if angles:
+        GD.canvas.setCamera(None,angles)
         setView(v)
         GD.canvas.update()
         if allowwait and wait:
@@ -513,8 +525,7 @@ def createView(name,angles):
     If the view name is new, and there is a views toolbar,
     a view button will be added to it.
     """
-    GD.gui.addView(name,angles)
-    
+    GD.gui.setViewAngles(name,angles)   
     
 
 def zoomAll():
@@ -540,6 +551,7 @@ def clear():
     global allowwait
     if allowwait:
         drawwait()
+    print "CLEAR: %s" % GD.canvas
     GD.canvas.removeAll()
     GD.canvas.clear()
     GD.canvas.update()
@@ -614,16 +626,16 @@ def wakeup(mode=0):
     wakeupMode = mode
 
 
-def drawNamed(name,*args):
-    g = globals()
-    if g.has_key(name):
-        F = g[name]
-        if isinstance(F,formex.Formex):
-            draw(F,*args)
+## def drawNamed(name,*args):
+##     g = globals()
+##     if g.has_key(name):
+##         F = g[name]
+##         if isinstance(F,formex.Formex):
+##             draw(F,*args)
 
-def drawSelected(*args):
-    name = ask("Which Formex shall I draw ?")
-    drawNamed(name,*args)
+## def drawSelected(*args):
+##     name = ask("Which Formex shall I draw ?")
+##     drawNamed(name,*args)
 
 ## exit from program pyformex
 def exit(all=False):

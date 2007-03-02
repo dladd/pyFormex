@@ -37,30 +37,30 @@ except ImportError:
 #
 class Canvas(object):
     """A canvas for OpenGL rendering."""
-
-    # Predefined views
-    # Angles are longitude, latitude, twist
-    views = { 'front': (0.,0.,0.),
-              'back': (180.,0.,0.),
-              'right': (90.,0.,0.),
-              'left': (270.,0.,0.),
-              'top': (0.,90.,0.),
-              'bottom': (0.,-90.,0.),
-              'iso': (45.,45.,0.),
-              }
-
+    
     # default light
     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
+    
+##     # Predefined views
+##     # Angles are longitude, latitude, twist
+##     views = { 'front': (0.,0.,0.),
+##               'back': (180.,0.,0.),
+##               'right': (90.,0.,0.),
+##               'left': (270.,0.,0.),
+##               'top': (0.,90.,0.),
+##               'bottom': (0.,-90.,0.),
+##               'iso': (45.,45.,0.),
+##               }
 
-    @classmethod
-    def createView(clas,name,angles):
-        """Create/change a named view for camera orientation long,lat.
+##     @classmethod
+##     def createView(clas,name,angles):
+##         """Create/change a named view for camera orientation long,lat.
 
-        By default, the following views are created:
-        'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
-        The user can add/delete/overwrite any number of predefined views.
-        """
-        clas.views[name] = angles
+##         By default, the following views are created:
+##         'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
+##         The user can add/delete/overwrite any number of predefined views.
+##         """
+##         clas.views[name] = angles
 
     
     def __init__(self):
@@ -286,15 +286,14 @@ class Canvas(object):
         self.redrawActors(self.actors)
 
         
-    def setView(self,bbox=None,side='front'):
-        """Sets the camera looking from one of the named views.
-
-        On startup, the predefined views are 'front', 'back', 'left',
-        'right', 'top', 'bottom' and 'iso'.
-        """
-        # select view angles: if undefined use (0,0,0)
-        angles = self.views.get(side,(0,0,0))
-        self.setCamera(bbox,angles)
+##     def setView(self,bbox=None,side=None):
+##         """Sets the camera looking from one of the named views."""
+## ##         # select view angles: if undefined use (0,0,0)
+## ##         if side:
+## ##             angles = self.camera.getAngles(side)
+## ##         else:
+## ##             angles = None
+##         self.setCamera(bbox,angles)
 
         
     def setCamera(self,bbox=None,angles=None):
@@ -321,7 +320,8 @@ class Canvas(object):
             dist = 1.0
         self.camera.setCenter(*center)
         if angles:
-            self.camera.setRotation(*angles)
+            self.camera.setAngles(angles)
+#            self.camera.setRotation(*angles)
         self.camera.setDist(dist)
         self.camera.setLens(45.,self.aspect)
         self.camera.setClip(0.01*dist,100.*dist)
@@ -404,6 +404,10 @@ class Canvas(object):
         e.ignore()
         
     def mousePressEvent(self,e):
+        print "Canvas.MOUSE %s" % self
+        print "Focus: %s" % self.hasFocus()
+        #self.emit(QtCore.SIGNAL("VPFocus"),(self))
+        GD.gui.viewports.set_current(self)
         # Remember the place of the click
         self.statex = e.x()
         self.statey = e.y()

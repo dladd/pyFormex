@@ -79,6 +79,39 @@ class Camera:
     to MODELVIEW.
     """
 
+    # Predefined viewing angles
+    # Angles are longitude, latitude, twist
+    view_angles = { 'front': (0.,0.,0.),
+                    'back': (180.,0.,0.),
+                    'right': (90.,0.,0.),
+                    'left': (270.,0.,0.),
+                    'top': (0.,90.,0.),
+                    'bottom': (0.,-90.,0.),
+                    'iso': (45.,45.,0.),
+                    }
+
+    def getAngles(clas,name):
+        """Get the angles for a named view.
+
+        name is any string
+        Returns a tuple of angles (longitude, latitude, twist) if the
+        named view was defined, or None otherwise
+        """
+        return clas.view_angles.get(name,None)
+    
+    def setAngles(clas,name,angles):
+        """Create/change a named view for camera orientation long,lat.
+
+        name is any string
+        angles is a tuple of angels (longitude, latitude, twist)
+        
+        By default, the following named view angles exist:
+        'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
+        The user can add/delete/overwrite any number of predefined views.
+        """
+        clas.view_angles[name] = angles
+
+
     def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=0.):
         """Create a new camera at position (0,0,0) looking along the -z axis"""
         self.setCenter(*center)
@@ -101,10 +134,27 @@ class Camera:
         """Return the camera distance."""
         return self.dist
 
+
     def setCenter(self,x,y,z):
         """Set the center of the camera in global cartesian coordinates."""
         self.ctr = [x,y,z]
         self.viewChanged = True
+
+
+    def setAngles(self,angles):
+        """Set the rotation angles.
+
+        angles is either:
+            - a tuple of angles (long,lat,twist)
+            - a named view corresponding to angles in view_angles
+            - None
+        """
+        if type(angles) is str:
+            angles = self.getAngles(angles)
+        if angles is None:
+            return
+        self.setRotation(*angles)
+            
 
     def setRotation(self,long,lat,twist=0):
         """Set the rotation matrix of the camera from three angles."""

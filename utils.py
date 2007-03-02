@@ -88,6 +88,15 @@ def fileDescription(type):
     return file_description.get(type,"%s files (*.%s)" % (type.upper(),type))
     
 
+
+def projectName(fn):
+    """Derive a project name from a file name.
+
+    The project name is the basename f the file without the extension.
+    """
+    return os.path.splitext(os.path.basename(fn))[0]
+
+
 def mtime(fn):
     """Return the (UNIX) time of last change of file fn."""
     return os.stat(fn).st_mtime

@@ -18,6 +18,7 @@ import cameraMenu
 import prefMenu
 import help
 import draw
+import gui
 from plugins import stl_menu
 
 
@@ -73,11 +74,6 @@ def editor():
 
 def formex_menu():
     draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','formex_menu.py'))
-
-def addViewport():
-    n = len(GD.canvas.views)
-    if n < 4:
-        GD.canvas.addView(n/2,n%2)
     
 
 # The menu actions can be simply function names instead of strings, if the
@@ -153,7 +149,7 @@ MenuData = [
         (_('&Continue'),'draw.fforward'), 
         (_('&Clear'),'draw.clear'),
         (_('&Redraw'),'draw.redraw'),
-        (_('&DrawSelected'),'draw.drawSelected'),
+##         (_('&DrawSelected'),'draw.drawSelected'),
         (_('&ListFormices'),'draw.printall'),
         (_('&PrintBbox'),'draw.printbbox'),
         (_('&PrintGlobals'),'draw.printglobals'),
@@ -171,9 +167,22 @@ MenuData = [
     ]
 
 
+def addViewport():
+    """Add a new viewport."""
+    n = len(GD.gui.viewports.all)
+    if n < 4:
+        GD.gui.viewports.addView(n/2,n%2)
+
+def removeViewport():
+    """Remove a new viewport."""
+    n = len(GD.gui.viewports.all)
+    if n > 1:
+        GD.gui.viewports.removeView()
+
 ViewportMenuData = [
     (_('&Viewport'),[
         (_('&Add new viewport'),addViewport), 
+        (_('&Remove last viewport'),removeViewport), 
         ]),
     ]
 
