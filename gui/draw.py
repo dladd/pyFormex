@@ -389,8 +389,9 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     mechanism for all subsequent draw statements (until set >0 again).
     """
     global allowwait, multisave
-##     if type(F) == list:
-##         return map(draw,F,view,bbox,color,wait,eltype,allviews)
+
+    if type(F) == list:
+        return [ draw(Fi,view,bbox,color,wait,eltype,allviews) for Fi in F ]
 
     if type(F) == str:
         F = named(F)

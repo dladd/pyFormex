@@ -1,5 +1,12 @@
 #!/usr/bin/env pyformex
 # $Id$
+##
+## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
 #
 """Import/Export Formex structures to/from stl format.
 
@@ -53,10 +60,7 @@ def compute_normals(a,normalized=True):
     Default is to normalize the vectors to unit length.
     If not essential, this can be switched off to save computing time.
     """
-    n = cross(a[:,1]-a[:,0],a[:,2]-a[:,1])
-    if normalized:
-        n /= column_stack([sqrt(sum(n*n,-1))])
-    return n
+    return computeNormals(a[:,1]-a[:,0],a[:,2]-a[:,1])
 
 
 def write_stla(f,a):

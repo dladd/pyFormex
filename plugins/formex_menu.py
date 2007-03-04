@@ -7,35 +7,40 @@ Executing this script creates a Formex menu in the menubar.
 """
 
 import globaldata as GD
-from PyQt4 import QtCore,QtGui
-from gui import widgets
+from gui.draw import *
+
+#from PyQt4 import QtCore,QtGui
+#from gui import widgets
 import commands, os
 
 
 selection = None
+
 
 def drawChanges(F,oldF):
     clear()
     draw(oldF,color='yellow',wait=False)
     draw(F)
 
+        
 def get_selection(mode=None):
     """Show the list of formices (and return a selection)"""
     return widgets.Selection(listAll(),'Known Formices',mode,sort=True,\
                              selected=selection).getResult()
 
-def formex_list():
-    """Show a list of known formices."""
-    message(get_selection())
+##def formex_list():
+##    """Show a list of known formices."""
+##    message(get_selection())
     
 def make_selection():
     global selection
     selection = get_selection('multi')
 
+
 def draw_selection():
     global selection
     if selection:
-        map(draw,selection)
+        draw(selection)
 
 
 def translate_selection():
@@ -46,16 +51,18 @@ def translate_selection():
     if accept:
         dir = int(res[0][1])
         dist = float(res[1][1])
-        for F in map(named,selection):
-            oldF = F
-            F = F.translate(dir,dist)
-            drawChanges(F,oldF)
-        
+        oldF = map(named,selection)
+        F = [ Fi.translate(dir,dist) for Fi in oldF ]
+        drawChanges(F,oldF)
+        if ack("Keep the changes?"):
+            Export(zip(selection,F))
+            clear()
+            draw(selection)
 
 def center_selection():
     """Center the selection."""
     global selection
-    for F in byName(selection):
+    for F in map(named,selection):
         oldF = F
         F = F.translate(F.center())
         drawChanges(F,oldF)
@@ -96,12 +103,18 @@ def clip_selection():
             drawChanges(F,oldF)
 
 
+
+################### menu #################
+
+_menu = None
+
 def create_menu():
     """Create the Formex menu."""
+    print "formex_menu.create_menu"
     menu = widgets.Menu('Formex')
     MenuData = [
 #        ("&List Formices",formex_list),
-        ("&Make Selection",make_selection),
+        ("&Select",make_selection),
         ("&Draw Selection",draw_selection),
         ("&Translate Selection",translate_selection),
         ("&Center Selection",center_selection),
@@ -112,14 +125,24 @@ def create_menu():
     menu.addItems(MenuData)
     return menu
 
-
 def close_menu():
     """Close the Formex menu."""
-    menu.close()
-        
-        
-if __name__ == 'draw':
-    message(__doc__)
-    menu = create_menu()
+    global _menu
+    if _menu:
+        _menu.close()
+    _menu = None
+    
+def show_menu():
+    """Show the Formex menu."""
+    global _menu
+    print _menu
+    if not _menu:
+        print "Adding the formex menu"
+        _menu = create_menu()
+    
+
+if __name__ == "main":
+    print __doc__
 
 # End
+

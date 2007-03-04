@@ -101,6 +101,37 @@ def unique(a):
     return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
 
 
+
+def isClose(values,target,rtol=1.e-5,atol=1.e-8):
+    """Returns an array flagging the elements close to target.
+
+    values is a float array, target is a float value.
+    values and target should be broadcastable to the same shape.
+    
+    The return value is an boolean aray with shape of values flagging
+    where the values are close to target.
+    Two values a and b  are considered close if
+        | a - b | < atol + rtol * | b |
+    """
+    values = array(values)
+    target = array(target) 
+    return abs(values - target) < atol + rtol * abs(target) 
+
+def computeNormals(vec1,vec2,normalized=True):
+    """Compute vectors normal to vec1 and vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n,3) shaped array of vectors normal to each couple
+    (edg1,edg2).
+    Default is to normalize the vectors to unit length.
+    If not essential, this can be switched off to save computing time.
+    """
+    n = cross(vec1,vec2)
+    if normalized:
+        n /= sqrt(sum(n*n,axis=-1)).reshape((-1,1))
+    return n
+
+
 def pattern(s):
     """Return a line segment pattern created from a string.
 

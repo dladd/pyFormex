@@ -19,7 +19,7 @@ import prefMenu
 import help
 import draw
 import gui
-from plugins import stl_menu
+from plugins import stl_menu,formex_menu
 
 
 def addMenuItems(menu, items=[]):
@@ -71,10 +71,7 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
-
-def formex_menu():
-    draw.play(os.path.join(GD.cfg['pyformexdir'],'plugins','formex_menu.py'))
-    
+   
 
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
@@ -96,7 +93,7 @@ MenuData = [
         (_('---'),'---'),
         (_('Load &Plugins'),[
             (_('STL menu'),stl_menu.show_menu),
-            (_('Formex menu'),formex_menu),
+            (_('Formex menu'),formex_menu.show_menu),
             ]),
         (_('---'),'---'),
         (_('E&xit'),'GD.app.exit'),

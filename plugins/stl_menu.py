@@ -569,7 +569,6 @@ def show_volume():
 ################### menu #################
 
 _menu = None
-_oldF = None
 
 def create_menu():
     """Create the STL menu."""

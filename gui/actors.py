@@ -135,17 +135,11 @@ def drawTriangles(x,c,mode):
     mode is either 'flat' or 'smooth'
     """
     if mode == 'smooth':
-        normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
-        normal = cross(x[:,2,:] - x[:,1,:], x[:,0,:] - x[:,2,:])
-        normal = cross(x[:,0,:] - x[:,2,:], x[:,1,:] - x[:,0,:])
-        #normal[:,:] = array([0.0,0.0,1.0])
+        normal = computeNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     GL.glBegin(GL.GL_TRIANGLES)
-    #print "TRIANGLES"
-    #print x.shape
     for i in range(x.shape[0]):
         GL.glColor3fv(c[i])
         if mode == 'smooth':
-            #print "%s : %s" % (i,normal[i])
             GL.glNormal3fv(normal[i])
         for j in range(x.shape[1]):
             GL.glVertex3fv(x[i][j])
@@ -158,7 +152,7 @@ def drawTri(x,c,mode):
     GL.glEnable(GL.GL_VERTEX_ARRAY)
     GL.glEnable(GL.GL_COLOR_ARRAY)
     if mode == 'smooth':
-        normal = cross(x[:,1,:] - x[:,0,:], x[:,2,:] - x[:,1,:])
+        normal = computeNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
         GL.glNormalPointerf(normal)
         GL.glEnable(GL.GL_NORMAL_ARRAY)
     GL.glBegin(GL.GL_TRIANGLES)
@@ -177,14 +171,16 @@ def drawQuadrilaterals(x,c,mode):
     nplex = x.shape[1]
     if mode == 'smooth':
         edge = [ x[:,i,:] - x[:,i-1,:] for i in range(nplex) ]
-        normal = [ cross(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
+        normal = [ computeNormals(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
+##        normal = [ cross(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
+##        normal /= column_stack([sqrt(sum(normal*normal,-1))])
     GL.glBegin(GL.GL_QUADS)
     for i in range(x.shape[0]):
-        GL.glColor3f(*c[i])
+        GL.glColor3fv(c[i])
         for j in range(nplex):
             if mode == 'smooth':
-                GL.glNormal3f(*normal[j][i])
-            GL.glVertex3f(*(x[i][j]))
+                GL.glNormal3fv(normal[j][i])
+            GL.glVertex3fv(x[i][j])
     GL.glEnd()
 
  

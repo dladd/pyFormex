@@ -520,11 +520,16 @@ def runApp(args):
     GD.message = draw.message
     draw.reset()
     # Load plugins
+    # This should be replaced with a plugin registering function
+    # in the plugin __init__ ?
     for p in GD.cfg.get('gui/plugins',[]):
         print "loading plugin %s" % p
         if p == 'stl':
             from plugins import stl_menu
             stl_menu.show_menu()
+        elif p == 'formex':
+            from plugins import formex_menu
+            formex_menu.show_menu()
     GD.gui.update()
     # remaining args are interpreted as scripts
     for arg in args:
