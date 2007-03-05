@@ -41,28 +41,7 @@ class Canvas(object):
     # default light
     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
     
-##     # Predefined views
-##     # Angles are longitude, latitude, twist
-##     views = { 'front': (0.,0.,0.),
-##               'back': (180.,0.,0.),
-##               'right': (90.,0.,0.),
-##               'left': (270.,0.,0.),
-##               'top': (0.,90.,0.),
-##               'bottom': (0.,-90.,0.),
-##               'iso': (45.,45.,0.),
-##               }
 
-##     @classmethod
-##     def createView(clas,name,angles):
-##         """Create/change a named view for camera orientation long,lat.
-
-##         By default, the following views are created:
-##         'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
-##         The user can add/delete/overwrite any number of predefined views.
-##         """
-##         clas.views[name] = angles
-
-    
     def __init__(self):
         """Initialize an empty canvas with default settings."""
         self.actors = []       # an empty scene
@@ -73,20 +52,20 @@ class Canvas(object):
         self.rendermode = 'wireframe'
         self.dynamic = None    # what action on mouse move
         self.camera = None
+        self.view_angles = camera.view_angles
 
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
-        
+        pass
+    
 
     def initCamera(self):
         if GD.options.makecurrent:
             self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        GD.debug("camera.rot = %s" % self.camera.rot) 
+        GD.debug("camera.rot = %s" % self.camera.rot)
+        GD.debug("view angles: %s" % self.view_angles)
 
-##     # our own name for the canvas update function
-##     def update(self):
-##         self.updateGL()
 
     def glinit(self,mode=None):
         GD.debug("canvas GLINIT")
@@ -170,6 +149,8 @@ class Canvas(object):
         # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
+##         # Display angles
+##         self.camera.getCurrentAngles()
 
 
     def setLinewidth(self,lw):

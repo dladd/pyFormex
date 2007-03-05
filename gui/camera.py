@@ -12,7 +12,7 @@
 import sys
 
 from vector import *
-from formex import tand
+from formex import tand,Formex
 
 import numpy
 import distutils.version
@@ -31,6 +31,42 @@ import OpenGL.GLU as GLU
 
 def printModelviewMatrix(s="%s"):
     print s % GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+
+
+
+class ViewAngles(dict):
+    """A dict to keep named camera angle settings.
+
+    This class keeps a dictionary of named angle settings. Each value is
+    a tuple of (longitude, latitude, twist) camera angles.
+    This is a static class which should not need to be instantiated.
+
+    There are seven predefined values: six for looking along global
+    coordinate axes, one isometric view.
+    """
+
+    def __init__(self,data = { 'front': (0.,0.,0.),
+                          'back': (180.,0.,0.),
+                          'right': (90.,0.,0.),
+                          'left': (270.,0.,0.),
+                          'top': (0.,90.,0.),
+                          'bottom': (0.,-90.,0.),
+                          'iso': (45.,45.,0.),
+                          }):
+        dict.__init__(self,data)
+        
+
+    def get(self,name):
+        """Get the angles for a named view.
+
+        Returns a tuple of angles (longitude, latitude, twist) if the
+        named view was defined, or None otherwise
+        """
+        return dict.get(self,name,None)
+
+
+view_angles = ViewAngles()
+
 
 ## ! For developers: the information in this module is not fully correct
 ## ! We now store the rotation of the camera as a combined rotation matrix,
@@ -60,8 +96,8 @@ class Camera:
         rot: 
         twist : rotation angle around the camera's viewing axis
         
-    The default camera is at [0,0,1] and aims at point [0,0,0],
-    i.e. looking in the -z direction. Near and far clipping planes are by
+    The default camera is at [0,0,0] and looking in the -z direction.
+    Near and far clipping planes are by
     default set to 0.1, resp 10 times the camera distance.
 
     Some camera terminology:
@@ -78,39 +114,6 @@ class Camera:
     For other operations we explicitely switch before and afterwards back
     to MODELVIEW.
     """
-
-    # Predefined viewing angles
-    # Angles are longitude, latitude, twist
-    view_angles = { 'front': (0.,0.,0.),
-                    'back': (180.,0.,0.),
-                    'right': (90.,0.,0.),
-                    'left': (270.,0.,0.),
-                    'top': (0.,90.,0.),
-                    'bottom': (0.,-90.,0.),
-                    'iso': (45.,45.,0.),
-                    }
-
-    def getAngles(clas,name):
-        """Get the angles for a named view.
-
-        name is any string
-        Returns a tuple of angles (longitude, latitude, twist) if the
-        named view was defined, or None otherwise
-        """
-        return clas.view_angles.get(name,None)
-    
-    def setAngles(clas,name,angles):
-        """Create/change a named view for camera orientation long,lat.
-
-        name is any string
-        angles is a tuple of angels (longitude, latitude, twist)
-        
-        By default, the following named view angles exist:
-        'front', 'back', 'left', 'right', 'bottom', 'top', 'iso'.
-        The user can add/delete/overwrite any number of predefined views.
-        """
-        clas.view_angles[name] = angles
-
 
     def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=0.):
         """Create a new camera at position (0,0,0) looking along the -z axis"""
@@ -150,7 +153,7 @@ class Camera:
             - None
         """
         if type(angles) is str:
-            angles = self.getAngles(angles)
+            angles = view_angles.get(angles)
         if angles is None:
             return
         self.setRotation(*angles)
@@ -331,9 +334,24 @@ class Camera:
         a = inverse(array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
+        print v
         v = multiply(array(v),a)
+        print v
         return v[0:3] / v[3]
 
+
+##     def getCurrentAngles(self):
+##         print self.rot
+##         P = self.toWorld([1.,0.,0.])
+##         Q = self.toWorld([0.,1.,0.])
+##         R = self.toWorld([0.,0.,1.])
+##         print "TOWORLD %s" % P
+##         F = Formex([[P,Q,R]])
+##         print "F %s" % F
+##         G = F.toSpherical()
+##         print "SPHERICAL %s" % G
+        
+        
     
     # Camera Lens Setting.
     #

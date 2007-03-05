@@ -54,13 +54,14 @@ class STL(object):
                 raise RuntimeError,"Invalid STL initialization data"
 
 
-def compute_normals(a,normalized=True):
-    """Compute the normal vectors of the triangles in a[n,3,3].
+def areaNormals(a):
+    """Compute the area and normal vectors of the triangles in a[n,3,3].
 
-    Default is to normalize the vectors to unit length.
-    If not essential, this can be switched off to save computing time.
+    The normal vectors are normalized.
+    The area is always positive.
     """
-    return computeNormals(a[:,1]-a[:,0],a[:,2]-a[:,1])
+    area,normals = vectorPairAreaNormals(a[:,1]-a[:,0],a[:,2]-a[:,1])
+    return 0.5 * area, normals
 
 
 def write_stla(f,a):

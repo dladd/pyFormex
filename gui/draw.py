@@ -450,12 +450,17 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     return actor
 
 
+def undraw(actor):
+    GD.canvas.removeActor(actor)
+    GD.canvas.update()
+    
+
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
     global allowwait
     if allowwait:
         drawwait()
-    angles = GD.canvas.camera.getAngles(v)
+    angles = GD.canvas.view_angles.get(v)
     if angles:
         GD.canvas.setCamera(None,angles)
         setView(v)
@@ -552,7 +557,7 @@ def clear():
     global allowwait
     if allowwait:
         drawwait()
-    print "CLEAR: %s" % GD.canvas
+    #print "CLEAR: %s" % GD.canvas
     GD.canvas.removeAll()
     GD.canvas.clear()
     GD.canvas.update()

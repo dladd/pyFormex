@@ -117,7 +117,24 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     target = array(target) 
     return abs(values - target) < atol + rtol * abs(target) 
 
-def computeNormals(vec1,vec2,normalized=True):
+
+def vectorPairAreaNormals(vec1,vec2):
+    """Compute area of and normals on parallellograms formed by vec1 and vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is a tuple of two array:
+      area (n) : the area of the parallellogram formed by vec1 and vec2.
+      normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
+    These are caluculated from the cross prduct of vec1 and vec, which indeed
+    gives area * normal.
+    """
+    normal = cross(vec1,vec2)
+    area = sqrt(sum(normal*normal,axis=-1))
+    normal /= area.reshape((-1,1))
+    return area,normal
+
+
+def vectorPairNormals(vec1,vec2,normalized=True):
     """Compute vectors normal to vec1 and vec2.
 
     vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
@@ -126,10 +143,20 @@ def computeNormals(vec1,vec2,normalized=True):
     Default is to normalize the vectors to unit length.
     If not essential, this can be switched off to save computing time.
     """
-    n = cross(vec1,vec2)
     if normalized:
-        n /= sqrt(sum(n*n,axis=-1)).reshape((-1,1))
-    return n
+        return vectorPairAreaNormals(vec1,vec2)[1]
+    else:
+        return cross(vec1,vec2)
+
+
+def vectorPairArea(vec1,vec2):
+    """Compute area of the parallellogram formed by a vector pair vec1,vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n) shaped array with the area of the parallellograms
+    formed by each pair of vectors (vec1,vec2).
+    """
+    return vectorPairAreaNormals(vec1,vec2)[0]
 
 
 def pattern(s):
@@ -1254,17 +1281,16 @@ class Formex:
         direction of north pole(90). South pole is -90.
         If colat=True, the third coordinate is the colatitude (90-lat) instead.
         """
-        f = zeros(self.f.shape,dtype=Float)
-        theta = (scale[0]*rad) * self.f[:,:,dir[0]]
-        phi = (scale[1]*rad) * self.f[:,:,dir[1]]
-        r = scale[2] * self.f[:,:,dir[2]]
+        f = self.f.reshape((-1,3))
+        theta = (scale[0]*rad) * f[:,dir[0]]
+        phi = (scale[1]*rad) * f[:,dir[1]]
+        r = scale[2] * f[:,dir[2]]
         if colat:
             phi = 90.0*rad - phi
         rc = r*cos(phi)
-        f[:,:,0] = rc*cos(theta)
-        f[:,:,1] = rc*sin(theta)
-        f[:,:,2] = r*sin(phi)
-        return Formex(f,self.p)
+        f = column_stack([rc*cos(theta),rc*sin(theta),r*sin(phi)])
+        return Formex(f.reshape(self.f.shape),self.p)
+
 
     def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
         """Same as spherical with colat=True."""
@@ -1281,12 +1307,13 @@ class Formex:
         Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
         The returned angle values are given in degrees.
         """
-        f = zeros(self.f.shape,dtype=Float)
-        x,y,z = [f[:,:,i] for i in dir]
-        distance = length(v)
-        longitude = arctan2(v[0],v[2]) / rad
-        latitude = arcsin(v[1]/distance) / rad
-        return [ longitude, latitude, distance ]
+        v = self.f[:,:,dir].reshape((-1,3))
+        dist = sqrt(sum(v*v,-1))
+        long = arctan2(v[:,0],v[:,2]) / rad
+        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / rad)
+        f = column_stack([long,lat,dist])
+        return Formex(f.reshape(self.f.shape),self.p)
+
 
     def bump1(self,dir,a,func,dist):
         """Return a Formex with a one-dimensional bump.
@@ -1385,9 +1412,9 @@ class Formex:
         x,y,z = func(self.f[:,:,0].flat,self.f[:,:,1].flat,self.f[:,:,2].flat)
         shape = list(self.f.shape)
         shape[2] = 1
-        print shape,reshape(x,shape)
+        #print shape,reshape(x,shape)
         f = concatenate([reshape(x,shape),reshape(y,shape),reshape(z,shape)],2)
-        print f.shape
+        #print f.shape
         return Formex(f,self.p)
 
     def map(self,func):

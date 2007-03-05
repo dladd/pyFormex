@@ -90,6 +90,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
         self.initCamera()
+        print self.view_angles
         self.glinit()
 
     def	resizeGL(self,w,h):
@@ -245,9 +246,6 @@ class GUI(QtGui.QMainWindow):
             printFormat(fmt)
         QtOpenGL.QGLFormat.setDefaultFormat(fmt)
         self.viewports = MultiCanvas()
-        #self.canvas.setBgColor(GD.cfg['draw/bgcolor'])
-##         print "RESIZING canvas",GD.cfg['gui/size']
-##         self.viewports.view.resize(*GD.cfg['gui/size'])
         self.canvas = QtGui.QWidget()
         #self.canvas.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.canvas.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
@@ -390,11 +388,10 @@ class GUI(QtGui.QMainWindow):
         It adds the view to the views Menu and Toolbar, if these exist and
         do not have the name yet.
         """
-        if not GD.canvas.views.has_key(name):
+        if name not in self.viewbtns.names():
             iconpath = os.path.join(GD.cfg['icondir'],'userview')+GD.cfg['gui/icontype']
-            print iconpath
             self.viewbtns.add(name,iconpath)
-        GD.canvas.createView(name,angles)
+        GD.canvas.view_angles[name] = angles
 
 
     def setBusy(self,busy=True):

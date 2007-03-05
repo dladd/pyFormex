@@ -135,7 +135,7 @@ def drawTriangles(x,c,mode):
     mode is either 'flat' or 'smooth'
     """
     if mode == 'smooth':
-        normal = computeNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+        normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     GL.glBegin(GL.GL_TRIANGLES)
     for i in range(x.shape[0]):
         GL.glColor3fv(c[i])
@@ -146,13 +146,13 @@ def drawTriangles(x,c,mode):
     GL.glEnd()
 
 
-def drawTri(x,c,mode):
+def drawTriArray(x,c,mode):
     GL.glVertexPointerf(x)
     GL.glColorPointerf(c)
     GL.glEnable(GL.GL_VERTEX_ARRAY)
     GL.glEnable(GL.GL_COLOR_ARRAY)
     if mode == 'smooth':
-        normal = computeNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+        normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
         GL.glNormalPointerf(normal)
         GL.glEnable(GL.GL_NORMAL_ARRAY)
     GL.glBegin(GL.GL_TRIANGLES)
@@ -171,7 +171,7 @@ def drawQuadrilaterals(x,c,mode):
     nplex = x.shape[1]
     if mode == 'smooth':
         edge = [ x[:,i,:] - x[:,i-1,:] for i in range(nplex) ]
-        normal = [ computeNormals(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
+        normal = [ vectorPairNormals(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
 ##        normal = [ cross(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
 ##        normal /= column_stack([sqrt(sum(normal*normal,-1))])
     GL.glBegin(GL.GL_QUADS)
