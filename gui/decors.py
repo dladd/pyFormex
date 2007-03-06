@@ -50,30 +50,46 @@ def glutFontHeight(font):
     """
     return int(font[-2:])
 
-## These functions come from our Taster project
+
+def drawLine(x1, y1, x2, y2):
+    """Draw a straight line from (x1,y1) to (x2,y2) in canvas coordinates."""
+    GL.glBegin(GL.GL_LINES)
+    GL.glVertex2f(x1, y1)
+    GL.glVertex2f(x2, y2)
+    GL.glEnd()
+
 
 def drawGrid(x1, y1, x2, y2, nx, ny):
     """Draw a rectangular grid of lines
         
     The rectangle has (x1,y1) and and (x2,y2) as opposite corners.
     There are (nx,ny) subdivisions along the (x,y)-axis. So the grid
-    has (nx+1) * (ny+1) lines. nx=ny=1 draws a rectangle. nx=0 draws 1
-    vertical line (at x1). nx=-1 gives only horizontal lines.
-    
+    has (nx+1) * (ny+1) lines. nx=ny=1 draws a rectangle.
+    nx=0 draws 1 vertical line (at x1). nx=-1 draws no vertical lines.
+    ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.
     """
     GL.glBegin(GL.GL_LINES)
     ix = range(nx+1)
-    jx = [ nx-i for i in ix ]
+    if nx==0:
+        jx = [1]
+        nx = 1
+    else:
+        jx = ix[::-1] 
     for i,j in zip(ix,jx):
-        x = (i*x1+j*x2)/nx
+        x = (i*x2+j*x1)/nx
         GL.glVertex2f(x, y1)
         GL.glVertex2f(x, y2)
-        iy = range(ny+1)
-        jy = [ ny-i for i in iy ]
-        for i,j in zip(iy,jy):
-            y = (i*y1+j*y2)/ny
-            GL.glVertex2f(x1, y)
-            GL.glVertex2f(x2, y)
+
+    iy = range(ny+1)
+    if ny==0:
+        jy = [1]
+        ny = 1
+    else:
+        jy = iy[::-1] 
+    for i,j in zip(iy,jy):
+        y = (i*y2+j*y1)/ny
+        GL.glVertex2f(x1, y)
+        GL.glVertex2f(x2, y)
     GL.glEnd()
 
 
@@ -123,7 +139,7 @@ def drawMarker(x,y):
     y1 = y-marksize
     y2 = y+marksize
     GL.glRectf(x1,y1,x2,y2)
-    GL.glColor3f(*blue)
+    GL.glColor3fv(blue)
     GL.glBegin(GL.GL_LINE_STRIP)
     GL.glVertex2f(x1, y1)
     GL.glVertex2f(x2, y2)
@@ -231,7 +247,7 @@ class ColorLegend(Decoration):
                 y1 = y2 + dh
             
 
-class Grid2(Decoration):
+class Grid(Decoration):
     """A 2D-grid on the canvas."""
     def __init__(self,x1,y1,x2,y2,nx,ny):
         Decoration.__init__(self,x1,y1)
@@ -244,4 +260,16 @@ class Grid2(Decoration):
 
     def draw(self,mode='wireframe'):
         drawGrid(self.x1,self.y1,self.x2,self.y2,self.nx,self.ny)
+            
 
+class Line(Decoration):
+    """A straight line on the canvas."""
+    def __init__(self,x1,y1,x2,y2):
+        Decoration.__init__(self,x1,y1)
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+
+    def draw(self,mode='wireframe'):
+        drawLine(self.x1,self.y1,self.x2,self.y2)

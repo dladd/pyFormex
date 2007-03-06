@@ -19,6 +19,8 @@ enable-auto-props = yes
 #!/usr/bin/env python
 # $Id: $
 
+- Never change the $Id line: it is automatically handled by subversion
+
 - .py files should end with a section
 
 if __name__ == "__main__":

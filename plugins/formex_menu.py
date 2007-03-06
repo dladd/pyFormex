@@ -8,10 +8,11 @@ Executing this script creates a Formex menu in the menubar.
 
 import globaldata as GD
 from gui.draw import *
+from formex import *
 
 #from PyQt4 import QtCore,QtGui
 #from gui import widgets
-import commands, os
+import commands, os, timer
 
 
 selection = None
@@ -41,6 +42,32 @@ def draw_selection():
     global selection
     if selection:
         draw(selection)
+
+        
+def save_selection():
+    global selection
+    if selection:
+        for name in selection:
+            writeFormex(named(name),"%s.fmx" % name)
+
+def read_formex():
+    """Read STL model from asked file name.
+
+    """
+    types = [ 'Formex Files (*.fmx)' ]
+    fn = askFilename(GD.cfg['workdir'],types)
+    if fn:
+        os.chdir(os.path.dirname(fn))
+        GD.message("Your current workdir is %s" % os.getcwd())
+        name = utils.projectName(fn)
+        GD.message("Reading file %s" % fn)
+        #GD.gui.setBusy()
+        t = timer.Timer()
+        F = readFormex(fn)
+        GD.message("Time to import Formex: %s seconds" % t.seconds())
+        #GD.gui.setBusy(False)
+        Export({name:F})
+    return fn
 
 
 def translate_selection():
@@ -115,7 +142,9 @@ def create_menu():
     MenuData = [
 #        ("&List Formices",formex_list),
         ("&Select",make_selection),
+        ("&Read Formex File",read_formex),
         ("&Draw Selection",draw_selection),
+        ("&Save Selection",save_selection),
         ("&Translate Selection",translate_selection),
         ("&Center Selection",center_selection),
         ("&Rotate Selection",rotate_selection),

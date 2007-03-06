@@ -1859,8 +1859,7 @@ def divide(F,div):
     A = interpolate(F.selectNodes([0]),F.selectNodes([1]),div[:-1])
     B = interpolate(F.selectNodes([0]),F.selectNodes([1]),div[1:])
     return connect([A,B])
-
-
+    
 
 def readfile(file,sep=',',plexitude=1,dimension=3):
     """Read a Formex from file.
@@ -1892,11 +1891,47 @@ def bbox(formexlist):
     return Formex(concatenate([ [f.bbox()] for f in formexlist ])).bbox()
 
 
+#################### Read/Write Formex File ##################################
+
+def writeFormex(F,filnam,sep=' '):
+    """Write a Formex to file."""
+    fil = file(filnam,'w')
+    fil.write("# Formex File Format 1.0 (http://pyformex.berlios.de)\n")
+    fil.write("# nelems=%s; nplex=%s; props=%s\n" % (F.nelems(),F.nplex(),F.p is not None))
+    F.f.tofile(fil,sep)
+    fil.write('\n')
+    if F.p is not None:
+        F.p.tofile(fil,sep)
+    fil.write('\n')
+    fil.close()
+        
+
+def readFormex(filnam):
+    """Read a Formex from file."""
+    fil = file(filnam,'r')
+    s = fil.readline()
+    if not s.startswith('# Formex'):
+        return None
+    while s.startswith('#'):
+        s = fil.readline()
+        if s.startswith('# nelems'):
+            print s[1:].strip()
+            exec(s[1:].strip())
+            break
+    print "Read %d elems of plexitude %d" % (nelems,nplex)
+    f = fromfile(file=fil, dtype=Float, count=3*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
+    if props:
+        p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
+    else:
+        p = None
+    return Formex(f,p)
+
+
 ##############################################################################
 #
 #  Testing
 #
-#  Some of the docstrings above hold test examples. They should be carefully 
+#  Some of the docstrings above hold test examples. They should be careflly 
 #  crafted to test the functionality of the Formex class.
 #
 #  Ad hoc test examples during development can be added to the test() function

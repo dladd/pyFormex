@@ -162,6 +162,10 @@ class Canvas(object):
         """Set the background color."""
         self.bgcolor = bg
 
+    def setFgColor(self,fg):
+        """Set the default foreground color."""
+        GL.glColor3fv(fg)
+
         
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
@@ -385,8 +389,8 @@ class Canvas(object):
         e.ignore()
         
     def mousePressEvent(self,e):
-        print "Canvas.MOUSE %s" % self
-        print "Focus: %s" % self.hasFocus()
+        #print "Canvas.MOUSE %s" % self
+        #print "Focus: %s" % self.hasFocus()
         #self.emit(QtCore.SIGNAL("VPFocus"),(self))
         GD.gui.viewports.set_current(self)
         # Remember the place of the click

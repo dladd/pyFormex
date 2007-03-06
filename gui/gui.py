@@ -90,7 +90,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
         self.initCamera()
-        print self.view_angles
+        #print self.view_angles
         self.glinit()
 
     def	resizeGL(self,w,h):
@@ -144,8 +144,8 @@ class MultiCanvas(QtGui.QGridLayout):
         return(canv)
 
     def set_current(self,canv):
-        print self.all
-        print self.current
+        #print self.all
+        #print self.current
         if canv in self.all:
             GD.canvas = self.current = canv
  

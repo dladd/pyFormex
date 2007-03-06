@@ -334,9 +334,7 @@ class Camera:
         a = inverse(array(self.rot))
         if len(v) == 3:
             v = v + [ 1. ]
-        print v
         v = multiply(array(v),a)
-        print v
         return v[0:3] / v[3]
 
 

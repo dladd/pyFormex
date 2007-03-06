@@ -21,7 +21,8 @@ import colors
 import actors
 import decors
 import formex
-from script import Exit,ExitAll,system
+#from script import Exit,ExitAll,system,writeFormex,readFormex
+from script import *
 from cameraMenu import setPerspective,setProjection
 
 
@@ -437,7 +438,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
             view = DrawOptions['view']
         if bbox == 'auto':
             bbox = F.bbox()
-        print "DRAW: bbox=%s, view=%s" % (bbox,view)
+        #print "DRAW: bbox=%s, view=%s" % (bbox,view)
         GD.canvas.setCamera(bbox,view)
         #setView(view)
     GD.canvas.update()
@@ -509,6 +510,13 @@ def decorate(decor):
     GD.canvas.addDecoration(decor)
     GD.canvas.update()
 
+
+def undecorate(decor):
+    GD.canvas.removeDecoration(decor)
+    GD.canvas.update()
+
+
+
 def frontView():
     view("front")
 def backView():
@@ -546,6 +554,13 @@ def bgcolor(color):
     GD.canvas.bgcolor = color
     GD.canvas.display()
     GD.canvas.update()
+
+def fgcolor(color):
+    """Set the default foreground color."""
+    color = colors.GLColor(color)
+    print color
+    GD.canvas.setFgColor(color)
+
 
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
@@ -662,7 +677,8 @@ def exit(all=False):
 def listAll(dict=None):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
-        dict = GD.PF # globals()
+        dict = Globals()
+        dict.update(GD.PF)
     flist = []
     for n,t in dict.items():
         if isinstance(t,formex.Formex):
@@ -860,7 +876,7 @@ def saveNext():
 def setLocalAxes(mode=True):
     GD.cfg['draw/localaxes'] = mode 
 
-def setGlobalAxes():
-    setLocalAxes(False)
+def setGlobalAxes(mode=True):
+    setLocalAxes(not mode)
 
 #### End
