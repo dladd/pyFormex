@@ -132,9 +132,12 @@ def main(argv=None):
     GD.debug("RefConfig: %s" % GD.refcfg)
     GD.debug("Config: %s" % GD.cfg)
 
+
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
+        # Make the workdir the current dir
+        os.chdir(GD.cfg['workdir'])
         from gui.gui import runApp
     else:
         from script import runApp

@@ -16,7 +16,7 @@ n = 40
 baseGeom = ask("Create a surface model with",
                    ['Triangles','Quadrilaterals'])
 if baseGeom == 0:
-    # The base are two triangles
+    # The base consists of two triangles
     e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
 else:
     # The base is one quadrilateral
@@ -32,9 +32,10 @@ r = n/m
 s = n/r
 a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
-#create a bottom
+# create a bottom
 b = e.reverseElements()
 
+# create the bumps
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
@@ -55,7 +56,7 @@ if ack('Export to .stl?'):
         G += F.selectNodes([0,i-1,i])
     clear()
     draw(G)
-    stl.write_ascii(f,G.f)
+    stl.write_stla(f,G.f)
     f.close()
 
 if ack('Show with smooth rendering?'):

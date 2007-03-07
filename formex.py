@@ -87,18 +87,20 @@ def inside(p,mi,ma):
     return p[0] >= mi[0] and p[1] >= mi[1] and p[2] >= mi[2] and \
            p[0] <= ma[0] and p[1] <= ma[1] and p[2] <= ma[2]
 
-def unique(a):
-    """Return the unique elements in an integer array."""
-    ## OK, this looks complex. And there might be a simpler way
-    ## to do this in numpy, I just couldn't find any.
-    ## Our algorithm:
-    ## First we sort the values (1-D). Then we create an array
-    ## that flags with a "1" all the elements which are larger
-    ## than their predecessor.
-    ## The first element always gets flagged with a "1".
-    ## Finally we take the flagged elements from the sorted array.
-    b = sort(a.ravel())
-    return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
+## OBSOLETE: numpy provides unique
+
+## def unique(a):
+##     """Return the unique elements in an integer array."""
+##     ## OK, this looks complex. And there might be a simpler way
+##     ## to do this in numpy, I just couldn't find any.
+##     ## Our algorithm:
+##     ## First we sort the values (1-D). Then we create an array
+##     ## that flags with a "1" all the elements which are larger
+##     ## than their predecessor.
+##     ## The first element always gets flagged with a "1".
+##     ## Finally we take the flagged elements from the sorted array.
+##     b = sort(a.ravel())
+##     return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
 
 
 

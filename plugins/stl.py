@@ -54,27 +54,57 @@ class STL(object):
                 raise RuntimeError,"Invalid STL initialization data"
 
 
-def areaNormals(a):
-    """Compute the area and normal vectors of the triangles in a[n,3,3].
+def areaNormals(x):
+    """Compute the area and normal vectors of the triangles in x[n,3,3].
 
     The normal vectors are normalized.
     The area is always positive.
     """
-    area,normals = vectorPairAreaNormals(a[:,1]-a[:,0],a[:,2]-a[:,1])
+    area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
     return 0.5 * area, normals
 
 
-def write_stla(f,a):
-    """Export an [n,3,3] float array as an ascii .stl file."""
+def degenerate(area,norm):
+    """Return a list of the degenerate faces according to area and normals.
+
+    A face is degenerate if its surface is less or equal to zero or the
+    normal has a nan.
+    """
+    return unique(concatenate([where(area<=0)[0],where(isnan(norm))[0]]))
+
+
+def write_stla(f,x):
+    """Export an x[n,3,3] float array as an ascii .stl file."""
 
     own = type(f) == str
     if own:
         f = file(f,'w')
     f.write("solid  Created by %s\n" % GD.Version)
-    v = compute_normals(a)
-    degen = where(isnan(v))[0]
+    area,norm = areaNormals(x)
+    degen = degenerate(area,norm)
     print "The model contains %d degenerate triangles" % degen.shape[0]
-    for e,n in zip(a,v):
+    for e,n in zip(x,norm):
+        f.write("  facet normal %s %s %s\n" % tuple(n))
+        f.write("    outer loop\n")
+        for p in e:
+            f.write("      vertex %s %s %s\n" % tuple(p))
+        f.write("    endloop\n")
+        f.write("  endfacet\n")
+    f.write("endsolid\n")
+    if own:
+        f.close()
+
+def write_stlb(f,x):
+    """Export an x[n,3,3] float array as an binary .stl file."""
+
+    own = type(f) == str
+    if own:
+        f = file(f,'w')
+    f.write("solid  Created by %s\n" % GD.Version)
+    a,n = areaNormals(x)
+    degen = degenerate(a,n)
+    print "The model contains %d degenerate triangles" % degen.shape[0]
+    for e,n in zip(x,v):
         f.write("  facet normal %s %s %s\n" % tuple(n))
         f.write("    outer loop\n")
         for p in e:
