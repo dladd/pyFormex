@@ -2001,7 +2001,7 @@ if __name__ == "__main__":
         Formex.setPrintFunction(Formex.asArray)
         print F
         F.fprint()
-        F = F.translate1(1,1)
+        #F = F.translate1(1,1)
 
     (f,t) = _test()
     if f == 0:

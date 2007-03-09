@@ -345,6 +345,8 @@ class FormexActor(Actor,Formex):
             self.setMark(sz*markscale,"cube")
         self.eltype = eltype
 
+    bbox = Formex.bbox
+
     def draw(self,mode='wireframe'):
         """Draw the formex."""
         if mode.endswith('wire'):

@@ -372,6 +372,7 @@ class GUI(QtGui.QMainWindow):
             GD.canPlay = utils.isPyFormex(filename)
             self.curfile.setText(os.path.basename(filename))
             self.actions['Play'].setEnabled(GD.canPlay)
+            self.actions['Step'].setEnabled(GD.canPlay)
             if GD.canPlay:
                 icon = 'happy'
             else:
@@ -461,10 +462,19 @@ def windowExists(windowname):
     return not os.system('xwininfo -name "%s" > /dev/null 2>&1' % windowname)
 
 
+def quit():
+    """Quit the GUI"""
+    sys.stderr = sys.__stderr__
+    sys.stdout = sys.__stdout__
+    print "Quitting!!"
+    draw.drawrelease()
+
+
 def runApp(args):
     """Create and run the qt application."""
     GD.app = QtGui.QApplication(args)
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
+    QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
         
     # Set some globals
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
@@ -535,6 +545,9 @@ def runApp(args):
     GD.app_started = True
     GD.debug("Using window name %s" % GD.gui.windowTitle())
     GD.app.exec_()
+
+    # Cleanup
+    draw.drawrelease()
 
     # store the main window size/pos
     GD.cfg['history'] = GD.gui.history.files

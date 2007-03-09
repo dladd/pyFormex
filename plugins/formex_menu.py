@@ -29,13 +29,18 @@ def get_selection(mode=None):
     return widgets.Selection(listAll(),'Known Formices',mode,sort=True,\
                              selected=selection).getResult()
 
-##def formex_list():
-##    """Show a list of known formices."""
-##    message(get_selection())
     
 def make_selection():
     global selection
     selection = get_selection('multi')
+
+
+def set_selection(list):
+    """Set the selection to a list of names.
+
+    You shoud make sure this is a list of Formices!
+    """
+    selection = list 
 
 
 def draw_selection():
@@ -48,13 +53,14 @@ def save_selection():
     global selection
     if selection:
         for name in selection:
-            writeFormex(named(name),"%s.fmx" % name)
+            writeFormex(named(name),"%s.formex" % name)
 
-def read_formex():
+def read_formex(draw=True):
     """Read STL model from asked file name.
 
     """
-    types = [ 'Formex Files (*.fmx)' ]
+    global selection
+    types = [ 'Formex Files (*.formex)' ]
     fn = askFilename(GD.cfg['workdir'],types)
     if fn:
         os.chdir(os.path.dirname(fn))
@@ -67,6 +73,9 @@ def read_formex():
         GD.message("Time to import Formex: %s seconds" % t.seconds())
         #GD.gui.setBusy(False)
         Export({name:F})
+    if draw:
+        selection = [ name ]
+        draw_selection()
     return fn
 
 
@@ -137,14 +146,13 @@ _menu = None
 
 def create_menu():
     """Create the Formex menu."""
-    print "formex_menu.create_menu"
     menu = widgets.Menu('Formex')
     MenuData = [
 #        ("&List Formices",formex_list),
         ("&Select",make_selection),
-        ("&Read Formex File",read_formex),
         ("&Draw Selection",draw_selection),
-        ("&Save Selection",save_selection),
+        ("&Save Selection to Formex file",save_selection),
+        ("&Read Formex File",read_formex),
         ("&Translate Selection",translate_selection),
         ("&Center Selection",center_selection),
         ("&Rotate Selection",rotate_selection),
@@ -164,9 +172,7 @@ def close_menu():
 def show_menu():
     """Show the Formex menu."""
     global _menu
-    print _menu
     if not _menu:
-        print "Adding the formex menu"
         _menu = create_menu()
     
 

@@ -140,13 +140,17 @@ scriptDisabled = False
 scriptRunning = False
 
  
-def playScript(scr,name=None):
+def playScript(scr,name=None,step=False):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
     same time.
     If a name is specified, sets the global variable GD.scriptName if and
     when the script is started.
+    
+    If step==True, an indefinite pause will be started after each line of
+    the script that starts with 'draw'. Also (in this case), each line
+    (including comments) is echoed to the message board.
     """
     global scriptRunning, scriptDisabled, allowwait, exportNames
     # (We only allow one script executing at a time!)
@@ -199,7 +203,10 @@ def playScript(scr,name=None):
     exitall = False
     try:
         try:
-            exec scr in g
+            if step:
+                step_script(scr,g,True)
+            else:
+                exec scr in g
             if GD.cfg['autoglobals']:
                 exportNames.extend(listAll(g))
             globals().update([(k,g[k]) for k in exportNames])
@@ -210,10 +217,18 @@ def playScript(scr,name=None):
     finally:
         scriptRunning = False # release the lock in case of an error
         if GD.gui:
-            GD.gui.actions['Step'].setEnabled(False)
+            #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
     if exitall:
         exit()
+
+
+def step_script(s,glob,paus=True):
+    for line in s: #.split('\n'):
+        if paus and line.strip().startswith('draw'):
+            pause()
+        message(line)
+        exec(line) in glob
 
 def export(names):
     if type(names) == str:
@@ -237,7 +252,7 @@ def named(name):
         dict = GD.PF
     return dict[name]
 
-def play(fn=None):
+def play(fn=None,step=False):
     """Play a formex script from file fn or from the current file.
 
     This function does nothing if no file is passed or no current
@@ -251,7 +266,7 @@ def play(fn=None):
     message("Running script (%s)" % fn)
     reset()
     GD.debug("Current Drawing Options: %s" % DrawOptions)
-    playScript(file(fn,'r'),fn)
+    playScript(file(fn,'r'),fn,step=step)
     message("Script finished")
 
 
@@ -279,7 +294,6 @@ def smoothwire():
 def flatwire():
     renderMode("flatwire")
 
-
     
 # A timed lock to slow down drawing processes
 
@@ -295,6 +309,8 @@ def drawwait():
     global drawlocked
     while drawlocked:
         GD.app.processEvents()
+        GD.canvas.update()
+        #sleep(0.5)
 
 def drawlock():
     """Lock the drawing function for the next drawdelay seconds."""
@@ -459,7 +475,7 @@ def undraw(actor):
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
     global allowwait
-    if allowwait:
+    if allowwait and wait:
         drawwait()
     angles = GD.canvas.view_angles.get(v)
     if angles:
@@ -584,8 +600,19 @@ def redraw():
 def pause():
     drawblock()
 
+
 def step():
-    drawrelease()
+    """Perform one step of a script.
+
+    A step is a set of instructions until the next draw operation.
+    If a script is running, this just releases the draw lock.
+    Else, it starts the script in step mode.
+    """
+    if scriptRunning:
+        drawrelease()
+    else:
+        play(step=True)
+        
 
 def fforward():
     global allowwait
