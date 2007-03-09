@@ -50,14 +50,8 @@ def askSelection(mode=None):
     This just returns a list of selected Formex names.
     It does not set the current selection. (see makeSelection)
     """
-    l = listAll()
-    #w = widgets.Selection(l,'Known Formices',mode,sort=True,
-    #                         selected=selection)
-    #r = w.getResult()
-    #return widgets.Selection(listAll(),'Known Formices',mode,sort=True,
-    #                        selected=selection).getResult()
-    return []
-
+    return widgets.Selection(listAll(),'Known Formices',mode,sort=True,
+                            selected=selection).getResult()
 
 def makeSelection():
     """Interactively sets the current selection."""

@@ -185,7 +185,6 @@ def playScript(scr,name=None,step=False):
     global scriptRunning, scriptDisabled, allowwait, exportNames
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
-    print "HAHA %s %s" % (scriptRunning,scriptDisabled)
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
@@ -210,8 +209,11 @@ def playScript(scr,name=None,step=False):
     #g = copy.copy(globals())
     # An alternative is to use the GD.PF and update it with these modules
     # globals
-    g = GD.PF
-    g.update(globals())
+    # OOPS! THis was a big mistake!
+    #g = GD.PF
+    #g.update(globals())
+    g = copy.copy(globals())
+    g.update(GD.PF)  # We could do away with PF altogether
     if GD.gui:
         g.update(colors.__dict__)
     g.update(formex.__dict__) # this also imports everything from numpy
@@ -742,7 +744,6 @@ def listAll(dict=None):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
         dict = Globals()
-        print GD.PF.keys()
         #dict.update(GD.PF)
     flist = []
     for n,t in dict.items():

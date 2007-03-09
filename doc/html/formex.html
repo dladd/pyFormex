@@ -947,6 +947,15 @@ As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&
 number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
 Thus,&nbsp;<a href="#-interpolate">interpolate</a>(F,G,n)&nbsp;is&nbsp;equivalent&nbsp;with<br>
 <a href="#-interpolate">interpolate</a>(F,G,<a href="#-arange">arange</a>(0,n+1)/float(n))</tt></dd></dl>
+ <dl><dt><a name="-isClose"><strong>isClose</strong></a>(values, target, rtol<font color="#909090">=1.0000000000000001e-05</font>, atol<font color="#909090">=1e-08</font>)</dt><dd><tt>Returns&nbsp;an&nbsp;array&nbsp;flagging&nbsp;the&nbsp;elements&nbsp;close&nbsp;to&nbsp;target.<br>
+&nbsp;<br>
+values&nbsp;is&nbsp;a&nbsp;float&nbsp;array,&nbsp;target&nbsp;is&nbsp;a&nbsp;float&nbsp;value.<br>
+values&nbsp;and&nbsp;target&nbsp;should&nbsp;be&nbsp;broadcastable&nbsp;to&nbsp;the&nbsp;same&nbsp;shape.<br>
+&nbsp;<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;an&nbsp;boolean&nbsp;aray&nbsp;with&nbsp;shape&nbsp;of&nbsp;values&nbsp;flagging<br>
+where&nbsp;the&nbsp;values&nbsp;are&nbsp;close&nbsp;to&nbsp;target.<br>
+Two&nbsp;values&nbsp;a&nbsp;and&nbsp;b&nbsp;&nbsp;are&nbsp;considered&nbsp;close&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;a&nbsp;-&nbsp;b&nbsp;|&nbsp;&lt;&nbsp;atol&nbsp;+&nbsp;rtol&nbsp;*&nbsp;|&nbsp;b&nbsp;|</tt></dd></dl>
  <dl><dt><a name="-istype"><strong>istype</strong></a>(a, c)</dt></dl>
  <dl><dt><a name="-length"><strong>length</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;quadratic&nbsp;norm&nbsp;of&nbsp;a&nbsp;vector&nbsp;with&nbsp;all&nbsp;elements&nbsp;of&nbsp;arg.</tt></dd></dl>
  <dl><dt><a name="-lexsort"><strong>lexsort</strong></a>(...)</dt><dd><tt><a href="#-lexsort">lexsort</a>(keys=,&nbsp;axis=-1)&nbsp;-&gt;&nbsp;array&nbsp;of&nbsp;indices.&nbsp;argsort&nbsp;with&nbsp;list&nbsp;of&nbsp;keys.<br>
@@ -999,6 +1008,7 @@ The&nbsp;resulting&nbsp;list&nbsp;is&nbsp;directly&nbsp;suited&nbsp;to&nbsp;init
  <dl><dt><a name="-putmask"><strong>putmask</strong></a>(...)</dt><dd><tt><a href="#-putmask">putmask</a>(a,&nbsp;mask,&nbsp;values)&nbsp;sets&nbsp;a.flat[n]&nbsp;=&nbsp;values[n]&nbsp;for&nbsp;each&nbsp;n&nbsp;where<br>
 mask.flat[n]&nbsp;is&nbsp;true.&nbsp;&nbsp;If&nbsp;values&nbsp;is&nbsp;not&nbsp;the&nbsp;same&nbsp;size&nbsp;of&nbsp;a&nbsp;and&nbsp;mask&nbsp;then<br>
 it&nbsp;will&nbsp;repeat.&nbsp;&nbsp;This&nbsp;gives&nbsp;different&nbsp;behavior&nbsp;than&nbsp;a[mask]&nbsp;=&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-readFormex"><strong>readFormex</strong></a>(filnam)</dt><dd><tt>Read&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.</tt></dd></dl>
  <dl><dt><a name="-readfile"><strong>readfile</strong></a>(file, sep<font color="#909090">=','</font>, plexitude<font color="#909090">=1</font>, dimension<font color="#909090">=3</font>)</dt><dd><tt>Read&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;convenience&nbsp;function&nbsp;uses&nbsp;the&nbsp;numpy&nbsp;fromfile&nbsp;function&nbsp;to&nbsp;read<br>
@@ -1045,10 +1055,29 @@ consisting&nbsp;of&nbsp;the&nbsp;desired&nbsp;representation&nbsp;of&nbsp;M&nbsp
  <dl><dt><a name="-sind"><strong>sind</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;sin&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-tand"><strong>tand</strong></a>(arg)</dt><dd><tt>Return&nbsp;the&nbsp;tan&nbsp;of&nbsp;an&nbsp;angle&nbsp;in&nbsp;degrees.</tt></dd></dl>
  <dl><dt><a name="-translationVector"><strong>translationVector</strong></a>(dir, dist)</dt><dd><tt>Return&nbsp;a&nbsp;translation&nbsp;vector&nbsp;in&nbsp;direction&nbsp;dir&nbsp;over&nbsp;distance&nbsp;dist</tt></dd></dl>
- <dl><dt><a name="-unique"><strong>unique</strong></a>(a)</dt><dd><tt>Return&nbsp;the&nbsp;unique&nbsp;elements&nbsp;in&nbsp;an&nbsp;integer&nbsp;array.</tt></dd></dl>
  <dl><dt><a name="-vdot"><strong>vdot</strong></a>(...)</dt><dd><tt><a href="#-vdot">vdot</a>(a,b)<br>
 Returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&nbsp;scalars&nbsp;and&nbsp;vectors<br>
 of&nbsp;floating&nbsp;point&nbsp;and&nbsp;complex&nbsp;types.&nbsp;&nbsp;The&nbsp;first&nbsp;argument,&nbsp;a,&nbsp;is&nbsp;conjugated.</tt></dd></dl>
+ <dl><dt><a name="-vectorPairArea"><strong>vectorPairArea</strong></a>(vec1, vec2)</dt><dd><tt>Compute&nbsp;area&nbsp;of&nbsp;the&nbsp;parallellogram&nbsp;formed&nbsp;by&nbsp;a&nbsp;vector&nbsp;pair&nbsp;vec1,vec2.<br>
+&nbsp;<br>
+vec1&nbsp;and&nbsp;vec2&nbsp;are&nbsp;(n,3)&nbsp;shaped&nbsp;arrays&nbsp;holding&nbsp;collections&nbsp;of&nbsp;vectors.<br>
+The&nbsp;result&nbsp;is&nbsp;an&nbsp;(n)&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;area&nbsp;of&nbsp;the&nbsp;parallellograms<br>
+formed&nbsp;by&nbsp;each&nbsp;pair&nbsp;of&nbsp;vectors&nbsp;(vec1,vec2).</tt></dd></dl>
+ <dl><dt><a name="-vectorPairAreaNormals"><strong>vectorPairAreaNormals</strong></a>(vec1, vec2)</dt><dd><tt>Compute&nbsp;area&nbsp;of&nbsp;and&nbsp;normals&nbsp;on&nbsp;parallellograms&nbsp;formed&nbsp;by&nbsp;vec1&nbsp;and&nbsp;vec2.<br>
+&nbsp;<br>
+vec1&nbsp;and&nbsp;vec2&nbsp;are&nbsp;(n,3)&nbsp;shaped&nbsp;arrays&nbsp;holding&nbsp;collections&nbsp;of&nbsp;vectors.<br>
+The&nbsp;result&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;array:<br>
+&nbsp;&nbsp;area&nbsp;(n)&nbsp;:&nbsp;the&nbsp;area&nbsp;of&nbsp;the&nbsp;parallellogram&nbsp;formed&nbsp;by&nbsp;vec1&nbsp;and&nbsp;vec2.<br>
+&nbsp;&nbsp;normal&nbsp;(n,3)&nbsp;:&nbsp;(normalized)&nbsp;vectors&nbsp;normal&nbsp;to&nbsp;each&nbsp;couple&nbsp;(vec1,2).<br>
+These&nbsp;are&nbsp;caluculated&nbsp;from&nbsp;the&nbsp;cross&nbsp;prduct&nbsp;of&nbsp;vec1&nbsp;and&nbsp;vec,&nbsp;which&nbsp;indeed<br>
+gives&nbsp;area&nbsp;*&nbsp;normal.</tt></dd></dl>
+ <dl><dt><a name="-vectorPairNormals"><strong>vectorPairNormals</strong></a>(vec1, vec2, normalized<font color="#909090">=True</font>)</dt><dd><tt>Compute&nbsp;vectors&nbsp;normal&nbsp;to&nbsp;vec1&nbsp;and&nbsp;vec2.<br>
+&nbsp;<br>
+vec1&nbsp;and&nbsp;vec2&nbsp;are&nbsp;(n,3)&nbsp;shaped&nbsp;arrays&nbsp;holding&nbsp;collections&nbsp;of&nbsp;vectors.<br>
+The&nbsp;result&nbsp;is&nbsp;an&nbsp;(n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;vectors&nbsp;normal&nbsp;to&nbsp;each&nbsp;couple<br>
+(edg1,edg2).<br>
+Default&nbsp;is&nbsp;to&nbsp;normalize&nbsp;the&nbsp;vectors&nbsp;to&nbsp;unit&nbsp;length.<br>
+If&nbsp;not&nbsp;essential,&nbsp;this&nbsp;can&nbsp;be&nbsp;switched&nbsp;off&nbsp;to&nbsp;save&nbsp;computing&nbsp;time.</tt></dd></dl>
  <dl><dt><a name="-where"><strong>where</strong></a>(...)</dt><dd><tt><a href="#-where">where</a>(condition,&nbsp;|&nbsp;x,&nbsp;y)<br>
 &nbsp;<br>
 The&nbsp;result&nbsp;is&nbsp;shaped&nbsp;like&nbsp;condition&nbsp;and&nbsp;has&nbsp;elements&nbsp;of&nbsp;x&nbsp;and&nbsp;y&nbsp;where<br>
@@ -1061,6 +1090,7 @@ To&nbsp;group&nbsp;the&nbsp;indices&nbsp;by&nbsp;element,&nbsp;rather&nbsp;than&
 &nbsp;<br>
 instead.&nbsp;This&nbsp;always&nbsp;results&nbsp;in&nbsp;a&nbsp;2d&nbsp;array,&nbsp;with&nbsp;a&nbsp;row&nbsp;of&nbsp;indices&nbsp;for<br>
 each&nbsp;element&nbsp;that&nbsp;satisfies&nbsp;the&nbsp;condition.</tt></dd></dl>
+ <dl><dt><a name="-writeFormex"><strong>writeFormex</strong></a>(F, filnam, sep<font color="#909090">=' '</font>)</dt><dd><tt>Write&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;to&nbsp;file.</tt></dd></dl>
  <dl><dt><a name="-zeros"><strong>zeros</strong></a>(...)</dt><dd><tt><a href="#-zeros">zeros</a>((d1,...,dn),dtype=float,order='C')<br>
 &nbsp;<br>
 Return&nbsp;a&nbsp;new&nbsp;array&nbsp;of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;type&nbsp;typecode&nbsp;with&nbsp;all<br>
@@ -1103,7 +1133,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.float64'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1123,7 +1153,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...nicode_'&gt;: &lt;function &lt;lambda&gt; at 0x2acb2385bde8&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...object_'&gt;: &lt;function &lt;lambda&gt; at 0x2b77c04c5140&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1167,7 +1197,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.float32'&gt;: 4, &lt;type 'numpy.object_'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.uint8'&gt;: 1, &lt;type 'numpy.object_'&gt;: 8}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>
