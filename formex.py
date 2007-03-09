@@ -1917,10 +1917,10 @@ def readFormex(filnam):
     while s.startswith('#'):
         s = fil.readline()
         if s.startswith('# nelems'):
-            print s[1:].strip()
+            #print s[1:].strip()
             exec(s[1:].strip())
             break
-    print "Read %d elems of plexitude %d" % (nelems,nplex)
+    #print "Read %d elems of plexitude %d" % (nelems,nplex)
     f = fromfile(file=fil, dtype=Float, count=3*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
     if props:
         p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')

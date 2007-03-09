@@ -253,7 +253,7 @@ class GUI(QtGui.QMainWindow):
         self.canvas.setLayout(self.viewports)
         # Create the message board
         self.board = Board()
-        self.board.setPlainText(GD.Version+' started')
+        #self.board.setPlainText(GD.Version+' started')
         # Put everything together
         self.splitter.addWidget(self.canvas)
         self.splitter.addWidget(self.board)
@@ -506,6 +506,7 @@ def runApp(args):
     GD.gui.viewports.addView(0,0)
     GD.gui.setcurfile()
     GD.board = GD.gui.board
+    GD.board.write(GD.Version+"  (C) B. Verhegghe")
     GD.gui.show()
     # Create additional menus (put them in a list to save)
     menus = []
@@ -523,14 +524,13 @@ def runApp(args):
             m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
             GD.gui.insertMenu(m)
             menus.append(m)
-    GD.board.write(GD.Version+"   (C) B. Verhegghe")
     GD.message = draw.message
     draw.reset()
     # Load plugins
     # This should be replaced with a plugin registering function
     # in the plugin __init__ ?
     for p in GD.cfg.get('gui/plugins',[]):
-        print "loading plugin %s" % p
+        print "loading plugin: %s" % p
         if p == 'stl':
             from plugins import stl_menu
             stl_menu.show_menu()

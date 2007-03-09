@@ -22,10 +22,11 @@ class FileSelection(QtGui.QFileDialog):
     A pattern can be something like 'Images (*.png *.jpg)' or a list
     of such strings.
     Default mode is to accept any filename. You can specify exist=True
-    to accept only existing files.
-    
+    to accept only existing files. Or set exist=True and multi=True to
+    accept multiple files.
+    If dir==True, a single existing directory is asked.
     """
-    def __init__(self,path,pattern=None,exist=False):
+    def __init__(self,path,pattern=None,exist=False,multi=False,dir=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
         if os.path.isfile(path):
@@ -37,9 +38,16 @@ class FileSelection(QtGui.QFileDialog):
             self.setFilter(pattern)
         else: # should be a list of patterns
             self.setFilters(pattern)
-        if exist:
-            mode = QtGui.QFileDialog.ExistingFile
-            caption = "Open existing file"
+        if dir:
+            mode = QtGui.QFileDialog.Directory
+            caption = "Select a directory"
+        elif exist:
+            if multi:
+                mode = QtGui.QFileDialog.ExistingFiles
+                caption = "Select existing files"
+            else:
+                mode = QtGui.QFileDialog.ExistingFile
+                caption = "Open existing file"
         else:
             mode = QtGui.QFileDialog.AnyFile
             caption = "Save file as"
@@ -54,7 +62,11 @@ class FileSelection(QtGui.QFileDialog):
         """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            return str(self.selectedFiles()[0])
+            files = map(str,self.selectedFiles())
+            if self.fileMode() == QtGui.QFileDialog.ExistingFiles:
+                return files
+            else:
+                return files[0]
         else:
             return None
 

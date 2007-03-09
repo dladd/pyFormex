@@ -100,8 +100,7 @@ def read_surface(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
     types = map(utils.fileDescription,types)
     fn = askFilename(GD.cfg['workdir'],types)
     if fn:
-        os.chdir(os.path.dirname(fn))
-        GD.message("Your current workdir is %s" % os.getcwd())
+        chdir(fn)
         set_project(utils.projectName(fn))
         GD.message("Reading file %s" % fn)
         GD.gui.setBusy()
@@ -518,9 +517,8 @@ def read_tetgen(surface=True, volume=True):
     fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype)
     nodes = elems =surf = None
     if fn:
-        os.chdir(os.path.dirname(fn))
-        GD.message("Your current workdir is %s" % os.getcwd())
-        project = os.path.splitext(fn)[0]
+        chdir(fn)
+        project = utils.projectName(fn)
         set_project(project)
         nodes,nodenrs = tetgen.readNodes(project+'.node')
 #        print "Read %d nodes" % nodes.shape[0]
@@ -534,8 +532,9 @@ def read_tetgen(surface=True, volume=True):
             PF['surface'] = (nodes,surf)
     if surface:
         show_surface()
-    #else:
-    #    show_volume()
+    else:
+        show_volume()
+
 
 def read_tetgen_surface():
     read_tetgen(volume=False)

@@ -107,18 +107,48 @@ def askItems(items):
         items[r[0]] = r[1]
     return items
 
-def askFilename(cur,files="All files (*.*)",exist=True):
-    """Ask for an existing file name"""
-    fn = widgets.FileSelection(cur,files,exist).getFilename()
-    setWorkdirFromFile(fn)
+def askFilename(cur,files="All files (*.*)",exist=True,multi=False):
+    """Ask for an existing file name or multiple file names."""
+    fn = widgets.FileSelection(cur,files,exist,multi).getFilename()
+    if fn:
+        if multi:
+            chdir(fn[0])
+        else:
+            chdir(fn)
     GD.gui.update()
     GD.canvas.update()
     GD.app.processEvents()
     return fn
 
-def setWorkdirFromFile(fn):
+def askDirname(cur,):
+    """Ask for an existing directory name."""
+    fn = widgets.FileSelection(cur,dir=True).getFilename()
     if fn:
-        GD.cfg['workdir'] = os.path.dirname(fn)
+        chdir(fn)
+    GD.gui.update()
+    GD.canvas.update()
+    GD.app.processEvents()
+    return fn
+
+
+def chdir(fn):
+    """Change the current pyFormex working directory.
+
+    If fn is a directory name, the current directory is set to fn.
+    If fn is a file name, the current directory is set to the directory
+    holding fn.
+    In either case, the current dirctory is stored in GD.cfg['workdir']
+    for persistence between pyFormex invocations.
+    
+    If fn does not exist, nothing is done.
+    """
+    if os.path.exists:
+        if not os.path.isdir(fn):
+            fn = os.path.dirname(fn)
+        os.chdir(fn)
+        GD.cfg['workdir'] = fn
+        GD.message("Your current workdir is %s" % os.getcwd())
+
 
 def log(s):
     """Display a message in the cmdlog window."""
@@ -155,6 +185,7 @@ def playScript(scr,name=None,step=False):
     global scriptRunning, scriptDisabled, allowwait, exportNames
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
+    print "HAHA %s %s" % (scriptRunning,scriptDisabled)
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
@@ -201,6 +232,10 @@ def playScript(scr,name=None,step=False):
     exportNames = []
     GD.scriptName = name
     exitall = False
+    print "EXEC globals:"
+    k = g.keys()
+    k.sort()
+    print k
     try:
         try:
             if step:
@@ -224,7 +259,9 @@ def playScript(scr,name=None,step=False):
 
 
 def step_script(s,glob,paus=True):
-    for line in s: #.split('\n'):
+    print type(s)
+    for line in s:
+        print s.next()
         if paus and line.strip().startswith('draw'):
             pause()
         message(line)
@@ -705,10 +742,12 @@ def listAll(dict=None):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
         dict = Globals()
-        dict.update(GD.PF)
+        print GD.PF.keys()
+        #dict.update(GD.PF)
     flist = []
     for n,t in dict.items():
         if isinstance(t,formex.Formex):
+            #t.__class__.__name__ == 'Formex':
             flist.append(n)
     return flist
 
@@ -858,7 +897,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
         multisave = None
         return
 
-    setWorkdirFromFile(filename)
+    #chdir(filename)
     name,ext = os.path.splitext(filename)
     # Get/Check format
     if format is None:
