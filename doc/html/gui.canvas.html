@@ -141,24 +141,13 @@ If&nbsp;no&nbsp;bbox&nbsp;is&nbsp;specified,&nbsp;the&nbsp;current&nbsp;scene&nb
 If&nbsp;no&nbsp;current&nbsp;bbox&nbsp;has&nbsp;been&nbsp;set,&nbsp;it&nbsp;will&nbsp;be&nbsp;calculated&nbsp;as&nbsp;the<br>
 bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 
+<dl><dt><a name="Canvas-setFgColor"><strong>setFgColor</strong></a>(self, fg)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;foreground&nbsp;color.</tt></dd></dl>
+
 <dl><dt><a name="Canvas-setLinewidth"><strong>setLinewidth</strong></a>(self, lw)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;for&nbsp;line&nbsp;rendering.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-setSize"><strong>setSize</strong></a>(self, w, h)</dt></dl>
 
-<dl><dt><a name="Canvas-setView"><strong>setView</strong></a>(self, bbox<font color="#909090">=None</font>, side<font color="#909090">='front'</font>)</dt><dd><tt>Sets&nbsp;the&nbsp;camera&nbsp;looking&nbsp;from&nbsp;one&nbsp;of&nbsp;the&nbsp;named&nbsp;views.<br>
-&nbsp;<br>
-On&nbsp;startup,&nbsp;the&nbsp;predefined&nbsp;views&nbsp;are&nbsp;'front',&nbsp;'back',&nbsp;'left',<br>
-'right',&nbsp;'top',&nbsp;'bottom'&nbsp;and&nbsp;'iso'.</tt></dd></dl>
-
 <dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
-
-<hr>
-Class methods defined here:<br>
-<dl><dt><a name="Canvas-createView"><strong>createView</strong></a>(clas, name, angles)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Create/change&nbsp;a&nbsp;named&nbsp;view&nbsp;for&nbsp;camera&nbsp;orientation&nbsp;long,lat.<br>
-&nbsp;<br>
-By&nbsp;default,&nbsp;the&nbsp;following&nbsp;views&nbsp;are&nbsp;created:<br>
-'front',&nbsp;'back',&nbsp;'left',&nbsp;'right',&nbsp;'bottom',&nbsp;'top',&nbsp;'iso'.<br>
-The&nbsp;user&nbsp;can&nbsp;add/delete/overwrite&nbsp;any&nbsp;number&nbsp;of&nbsp;predefined&nbsp;views.</tt></dd></dl>
 
 <hr>
 Data and other attributes defined here:<br>
@@ -167,8 +156,6 @@ Data and other attributes defined here:<br>
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Canvas' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>default_light</strong> = {'ambient': 0.5, 'diffuse': 1.0, 'position': (0.0, 0.0, 1.0, 0.0), 'specular': 0.5}</dl>
-
-<dl><dt><strong>views</strong> = {'back': (180.0, 0.0, 0.0), 'bottom': (0.0, -90.0, 0.0), 'front': (0.0, 0.0, 0.0), 'iso': (45.0, 45.0, 0.0), 'left': (270.0, 0.0, 0.0), 'right': (90.0, 0.0, 0.0), 'top': (0.0, 90.0, 0.0)}</dl>
 
 </td></tr></table></td></tr></table>
 </body></html>

@@ -999,12 +999,12 @@ class Formex:
         """Return a Formex which holds only the elements with property val.
 
         If the Formex has no properties, a copy is returned.
-        The returned Formex is always without properties.
+        The returned Formex inherits the matching properties.
         """
         if self.p is None:
             return Formex(self.f)
         else:
-            return Formex(self.f[self.p==val])
+            return Formex(self.f[self.p==val],val)
 
 
     def elbbox(self):

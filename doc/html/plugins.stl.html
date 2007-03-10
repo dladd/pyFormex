@@ -101,6 +101,10 @@ the&nbsp;arguments.<br>
 For&nbsp;floating&nbsp;point&nbsp;arguments,&nbsp;the&nbsp;length&nbsp;of&nbsp;the&nbsp;result&nbsp;is&nbsp;ceil((stop&nbsp;-<br>
 start)/step).&nbsp;&nbsp;This&nbsp;rule&nbsp;may&nbsp;result&nbsp;in&nbsp;the&nbsp;last&nbsp;element&nbsp;of&nbsp;the&nbsp;result<br>
 being&nbsp;greater&nbsp;than&nbsp;stop.</tt></dd></dl>
+ <dl><dt><a name="-areaNormals"><strong>areaNormals</strong></a>(x)</dt><dd><tt>Compute&nbsp;the&nbsp;area&nbsp;and&nbsp;normal&nbsp;vectors&nbsp;of&nbsp;the&nbsp;triangles&nbsp;in&nbsp;x[n,3,3].<br>
+&nbsp;<br>
+The&nbsp;normal&nbsp;vectors&nbsp;are&nbsp;normalized.<br>
+The&nbsp;area&nbsp;is&nbsp;always&nbsp;positive.</tt></dd></dl>
  <dl><dt><a name="-array"><strong>array</strong></a>(...)</dt><dd><tt><a href="#-array">array</a>(<a href="__builtin__.html#object">object</a>,&nbsp;dtype=None,&nbsp;copy=1,order=None,&nbsp;subok=0,ndmin=0)<br>
 &nbsp;<br>
 Return&nbsp;an&nbsp;array&nbsp;from&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;the&nbsp;specified&nbsp;date-type.<br>
@@ -164,10 +168,6 @@ each&nbsp;pair&nbsp;os&nbsp;subsequent&nbsp;nodes&nbsp;in&nbsp;the&nbsp;elements
 The&nbsp;order&nbsp;of&nbsp;the&nbsp;edges&nbsp;respects&nbsp;the&nbsp;node&nbsp;order,&nbsp;and&nbsp;starts&nbsp;with&nbsp;nodes&nbsp;0-1.<br>
 The&nbsp;node&nbsp;numbering&nbsp;in&nbsp;the&nbsp;edges&nbsp;is&nbsp;always&nbsp;lowest&nbsp;node&nbsp;number&nbsp;first.</tt></dd></dl>
  <dl><dt><a name="-compare_chararrays"><strong>compare_chararrays</strong></a>(...)</dt></dl>
- <dl><dt><a name="-compute_normals"><strong>compute_normals</strong></a>(a, normalized<font color="#909090">=True</font>)</dt><dd><tt>Compute&nbsp;the&nbsp;normal&nbsp;vectors&nbsp;of&nbsp;the&nbsp;triangles&nbsp;in&nbsp;a[n,3,3].<br>
-&nbsp;<br>
-Default&nbsp;is&nbsp;to&nbsp;normalize&nbsp;the&nbsp;vectors&nbsp;to&nbsp;unit&nbsp;length.<br>
-If&nbsp;not&nbsp;essential,&nbsp;this&nbsp;can&nbsp;be&nbsp;switched&nbsp;off&nbsp;to&nbsp;save&nbsp;computing&nbsp;time.</tt></dd></dl>
  <dl><dt><a name="-concatenate"><strong>concatenate</strong></a>(...)</dt><dd><tt><a href="#-concatenate">concatenate</a>((a1,&nbsp;a2,&nbsp;...),&nbsp;axis=0)<br>
 &nbsp;<br>
 Join&nbsp;arrays&nbsp;together.<br>
@@ -179,6 +179,10 @@ Example:<br>
 &nbsp;<br>
 &gt;&gt;&gt;&nbsp;<a href="#-concatenate">concatenate</a>(&nbsp;([0,1,2],&nbsp;[5,6,7])&nbsp;)<br>
 <a href="#-array">array</a>([0,&nbsp;1,&nbsp;2,&nbsp;5,&nbsp;6,&nbsp;7])</tt></dd></dl>
+ <dl><dt><a name="-degenerate"><strong>degenerate</strong></a>(area, norm)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;degenerate&nbsp;faces&nbsp;according&nbsp;to&nbsp;area&nbsp;and&nbsp;normals.<br>
+&nbsp;<br>
+A&nbsp;face&nbsp;is&nbsp;degenerate&nbsp;if&nbsp;its&nbsp;surface&nbsp;is&nbsp;less&nbsp;or&nbsp;equal&nbsp;to&nbsp;zero&nbsp;or&nbsp;the<br>
+normal&nbsp;has&nbsp;a&nbsp;nan.</tt></dd></dl>
  <dl><dt><a name="-demagic"><strong>demagic</strong></a>(mag, magic)</dt></dl>
  <dl><dt><a name="-digitize"><strong>digitize</strong></a>(...)</dt><dd><tt><a href="#-digitize">digitize</a>(x,bins)<br>
 &nbsp;<br>
@@ -385,7 +389,8 @@ each&nbsp;element&nbsp;that&nbsp;satisfies&nbsp;the&nbsp;condition.</tt></dd></d
  <dl><dt><a name="-write_gts"><strong>write_gts</strong></a>(fn, nodes, edges, faces)</dt></dl>
  <dl><dt><a name="-write_off"><strong>write_off</strong></a>(fn, nodes, elems)</dt></dl>
  <dl><dt><a name="-write_smesh"><strong>write_smesh</strong></a>(fn, nodes, elems)</dt></dl>
- <dl><dt><a name="-write_stla"><strong>write_stla</strong></a>(f, a)</dt><dd><tt>Export&nbsp;an&nbsp;[n,3,3]&nbsp;float&nbsp;array&nbsp;as&nbsp;an&nbsp;ascii&nbsp;.stl&nbsp;file.</tt></dd></dl>
+ <dl><dt><a name="-write_stla"><strong>write_stla</strong></a>(f, x)</dt><dd><tt>Export&nbsp;an&nbsp;x[n,3,3]&nbsp;float&nbsp;array&nbsp;as&nbsp;an&nbsp;ascii&nbsp;.stl&nbsp;file.</tt></dd></dl>
+ <dl><dt><a name="-write_stlb"><strong>write_stlb</strong></a>(f, x)</dt><dd><tt>Export&nbsp;an&nbsp;x[n,3,3]&nbsp;float&nbsp;array&nbsp;as&nbsp;an&nbsp;binary&nbsp;.stl&nbsp;file.</tt></dd></dl>
  <dl><dt><a name="-zeros"><strong>zeros</strong></a>(...)</dt><dd><tt><a href="#-zeros">zeros</a>((d1,...,dn),dtype=float,order='C')<br>
 &nbsp;<br>
 Return&nbsp;a&nbsp;new&nbsp;array&nbsp;of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;type&nbsp;typecode&nbsp;with&nbsp;all<br>
@@ -428,7 +433,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -447,7 +452,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...plex256'&gt;: &lt;function &lt;lambda&gt; at 0x2b32859a8500&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...plex256'&gt;: &lt;function &lt;lambda&gt; at 0x2b7a99d49578&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -491,7 +496,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...umpy.string_'&gt;: 0, &lt;type 'numpy.complex256'&gt;: 32}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...'numpy.uint8'&gt;: 1, &lt;type 'numpy.complex256'&gt;: 32}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

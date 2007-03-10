@@ -21,17 +21,18 @@
 <a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
 <a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
 <a href="gui.actors.html">gui.actors</a><br>
-</td><td width="25%" valign=top><a href="gui.colors.html">gui.colors</a><br>
-<a href="commands.html">commands</a><br>
+<a href="gui.colors.html">gui.colors</a><br>
+</td><td width="25%" valign=top><a href="commands.html">commands</a><br>
 <a href="copy.html">copy</a><br>
 <a href="gui.decors.html">gui.decors</a><br>
-</td><td width="25%" valign=top><a href="formex.html">formex</a><br>
+<a href="formex.html">formex</a><br>
 <a href="numpy.html">numpy</a><br>
-<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="re.html">re</a><br>
 <a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+<a href="threading.html">threading</a><br>
 <a href="types.html">types</a><br>
-<a href="utils.html">utils</a><br>
+</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -42,12 +43,13 @@
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-Export"><strong>Export</strong></a>(dict)</dt></dl>
  <dl><dt><a name="-Globals"><strong>Globals</strong></a>()</dt></dl>
- <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2-rc1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
 Returns&nbsp;index&nbsp;of&nbsp;the&nbsp;chosen&nbsp;answer.</tt></dd></dl>
- <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, files<font color="#909090">='All files (*.*)'</font>, exist<font color="#909090">=True</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;file&nbsp;name</tt></dd></dl>
+ <dl><dt><a name="-askDirname"><strong>askDirname</strong></a>(cur)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;directory&nbsp;name.</tt></dd></dl>
+ <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, files<font color="#909090">='All files (*.*)'</font>, exist<font color="#909090">=True</font>, multi<font color="#909090">=False</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;file&nbsp;name&nbsp;or&nbsp;multiple&nbsp;file&nbsp;names.</tt></dd></dl>
  <dl><dt><a name="-askItems"><strong>askItems</strong></a>(items)</dt><dd><tt>Ask&nbsp;the&nbsp;value&nbsp;of&nbsp;some&nbsp;items&nbsp;to&nbsp;the&nbsp;user.&nbsp;!!&nbsp;VERY&nbsp;EXPERIMENTAL!!<br>
 &nbsp;<br>
 Input&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;items&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;[key,value]&nbsp;pairs.<br>
@@ -57,7 +59,15 @@ Returns&nbsp;a&nbsp;dictionary&nbsp;(maybe&nbsp;we&nbsp;should&nbsp;just&nbsp;re
  <dl><dt><a name="-backView"><strong>backView</strong></a>()</dt></dl>
  <dl><dt><a name="-bgcolor"><strong>bgcolor</strong></a>(color)</dt><dd><tt>Change&nbsp;the&nbsp;background&nbsp;color&nbsp;(and&nbsp;redraw).</tt></dd></dl>
  <dl><dt><a name="-bottomView"><strong>bottomView</strong></a>()</dt></dl>
- <dl><dt><a name="-byName"><strong>byName</strong></a>(names)</dt></dl>
+ <dl><dt><a name="-chdir"><strong>chdir</strong></a>(fn)</dt><dd><tt>Change&nbsp;the&nbsp;current&nbsp;pyFormex&nbsp;working&nbsp;directory.<br>
+&nbsp;<br>
+If&nbsp;fn&nbsp;is&nbsp;a&nbsp;directory&nbsp;name,&nbsp;the&nbsp;current&nbsp;directory&nbsp;is&nbsp;set&nbsp;to&nbsp;fn.<br>
+If&nbsp;fn&nbsp;is&nbsp;a&nbsp;file&nbsp;name,&nbsp;the&nbsp;current&nbsp;directory&nbsp;is&nbsp;set&nbsp;to&nbsp;the&nbsp;directory<br>
+holding&nbsp;fn.<br>
+In&nbsp;either&nbsp;case,&nbsp;the&nbsp;current&nbsp;dirctory&nbsp;is&nbsp;stored&nbsp;in&nbsp;GD.cfg['workdir']<br>
+for&nbsp;persistence&nbsp;between&nbsp;pyFormex&nbsp;invocations.<br>
+&nbsp;<br>
+If&nbsp;fn&nbsp;does&nbsp;not&nbsp;exist,&nbsp;nothing&nbsp;is&nbsp;done.</tt></dd></dl>
  <dl><dt><a name="-checkImageFormat"><strong>checkImageFormat</strong></a>(fmt, verbose<font color="#909090">=False</font>)</dt><dd><tt>Checks&nbsp;image&nbsp;format;&nbsp;if&nbsp;verbose,&nbsp;warn&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
 &nbsp;<br>
 Returns&nbsp;the&nbsp;image&nbsp;format,&nbsp;or&nbsp;None&nbsp;if&nbsp;it&nbsp;is&nbsp;not&nbsp;OK.</tt></dd></dl>
@@ -110,8 +120,6 @@ The&nbsp;value&nbsp;of&nbsp;drawdelay&nbsp;is&nbsp;set&nbsp;in&nbsp;the&nbsp;con
 The&nbsp;user&nbsp;can&nbsp;disable&nbsp;the&nbsp;wait&nbsp;cycle&nbsp;for&nbsp;the&nbsp;next&nbsp;draw&nbsp;operation&nbsp;by<br>
 specifying&nbsp;wait=False.&nbsp;Setting&nbsp;drawdelay=0&nbsp;will&nbsp;disable&nbsp;the&nbsp;waiting<br>
 mechanism&nbsp;for&nbsp;all&nbsp;subsequent&nbsp;draw&nbsp;statements&nbsp;(until&nbsp;set&nbsp;&gt;0&nbsp;again).</tt></dd></dl>
- <dl><dt><a name="-drawNamed"><strong>drawNamed</strong></a>(name, *args)</dt></dl>
- <dl><dt><a name="-drawSelected"><strong>drawSelected</strong></a>(*args)</dt></dl>
  <dl><dt><a name="-drawTriade"><strong>drawTriade</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-drawblock"><strong>drawblock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;indefinitely.</tt></dd></dl>
  <dl><dt><a name="-drawlock"><strong>drawlock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;for&nbsp;the&nbsp;next&nbsp;drawdelay&nbsp;seconds.</tt></dd></dl>
@@ -126,6 +134,7 @@ While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></
  <dl><dt><a name="-exit"><strong>exit</strong></a>(all<font color="#909090">=False</font>)</dt><dd><tt>##&nbsp;exit&nbsp;from&nbsp;program&nbsp;pyformex</tt></dd></dl>
  <dl><dt><a name="-export"><strong>export</strong></a>(names)</dt></dl>
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
+ <dl><dt><a name="-fgcolor"><strong>fgcolor</strong></a>(color)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;foreground&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
  <dl><dt><a name="-flatwire"><strong>flatwire</strong></a>()</dt></dl>
  <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=0.5</font>)</dt></dl>
@@ -149,17 +158,22 @@ The&nbsp;message&nbsp;box&nbsp;displays&nbsp;a&nbsp;text,&nbsp;an&nbsp;icon&nbsp
 with&nbsp;the&nbsp;specified&nbsp;action&nbsp;text.&nbsp;The&nbsp;'about'&nbsp;level&nbsp;has&nbsp;no&nbsp;buttons.<br>
 &nbsp;<br>
 The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button&nbsp;that&nbsp;was&nbsp;clicked.</tt></dd></dl>
+ <dl><dt><a name="-named"><strong>named</strong></a>(name)</dt><dd><tt>Returns&nbsp;the&nbsp;global&nbsp;object&nbsp;named&nbsp;name.</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
- <dl><dt><a name="-play"><strong>play</strong></a>(fn<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn&nbsp;or&nbsp;from&nbsp;the&nbsp;current&nbsp;file.<br>
+ <dl><dt><a name="-play"><strong>play</strong></a>(fn<font color="#909090">=None</font>, step<font color="#909090">=False</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn&nbsp;or&nbsp;from&nbsp;the&nbsp;current&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;does&nbsp;nothing&nbsp;if&nbsp;no&nbsp;file&nbsp;is&nbsp;passed&nbsp;or&nbsp;no&nbsp;current<br>
 file&nbsp;was&nbsp;set.</tt></dd></dl>
- <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>, step<font color="#909090">=False</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
 same&nbsp;time.<br>
 If&nbsp;a&nbsp;name&nbsp;is&nbsp;specified,&nbsp;sets&nbsp;the&nbsp;global&nbsp;variable&nbsp;GD.scriptName&nbsp;if&nbsp;and<br>
-when&nbsp;the&nbsp;script&nbsp;is&nbsp;started.</tt></dd></dl>
+when&nbsp;the&nbsp;script&nbsp;is&nbsp;started.<br>
+&nbsp;<br>
+If&nbsp;step==True,&nbsp;an&nbsp;indefinite&nbsp;pause&nbsp;will&nbsp;be&nbsp;started&nbsp;after&nbsp;each&nbsp;line&nbsp;of<br>
+the&nbsp;script&nbsp;that&nbsp;starts&nbsp;with&nbsp;'draw'.&nbsp;Also&nbsp;(in&nbsp;this&nbsp;case),&nbsp;each&nbsp;line<br>
+(including&nbsp;comments)&nbsp;is&nbsp;echoed&nbsp;to&nbsp;the&nbsp;message&nbsp;board.</tt></dd></dl>
  <dl><dt><a name="-printall"><strong>printall</strong></a>()</dt><dd><tt>Print&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
  <dl><dt><a name="-printbbox"><strong>printbbox</strong></a>()</dt></dl>
  <dl><dt><a name="-printconfig"><strong>printconfig</strong></a>()</dt></dl>
@@ -203,20 +217,26 @@ this&nbsp;function&nbsp;is&nbsp;called&nbsp;from&nbsp;the&nbsp;GUI.</tt></dd></d
 This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
 The&nbsp;prefered&nbsp;user&nbsp;function&nbsp;is&nbsp;saveWindow,&nbsp;which&nbsp;can&nbsp;derive&nbsp;the<br>
 format&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension</tt></dd></dl>
- <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>()</dt></dl>
+ <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setView"><strong>setView</strong></a>(name, angles<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;view&nbsp;for&nbsp;future&nbsp;drawing&nbsp;operations.<br>
 &nbsp;<br>
 If&nbsp;no&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;the&nbsp;name&nbsp;should&nbsp;be&nbsp;an&nbsp;existing&nbsp;view.<br>
 If&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;this&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#-createView">createView</a>(name,angles)<br>
 followed&nbsp;by&nbsp;<a href="#-setView">setView</a>(name).</tt></dd></dl>
- <dl><dt><a name="-setWorkdirFromFile"><strong>setWorkdirFromFile</strong></a>(fn)</dt></dl>
  <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
  <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
  <dl><dt><a name="-smoothwire"><strong>smoothwire</strong></a>()</dt></dl>
- <dl><dt><a name="-step"><strong>step</strong></a>()</dt></dl>
+ <dl><dt><a name="-step"><strong>step</strong></a>()</dt><dd><tt>Perform&nbsp;one&nbsp;step&nbsp;of&nbsp;a&nbsp;script.<br>
+&nbsp;<br>
+A&nbsp;step&nbsp;is&nbsp;a&nbsp;set&nbsp;of&nbsp;instructions&nbsp;until&nbsp;the&nbsp;next&nbsp;draw&nbsp;operation.<br>
+If&nbsp;a&nbsp;script&nbsp;is&nbsp;running,&nbsp;this&nbsp;just&nbsp;releases&nbsp;the&nbsp;draw&nbsp;lock.<br>
+Else,&nbsp;it&nbsp;starts&nbsp;the&nbsp;script&nbsp;in&nbsp;step&nbsp;mode.</tt></dd></dl>
+ <dl><dt><a name="-step_script"><strong>step_script</strong></a>(s, glob, paus<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-toggleTriade"><strong>toggleTriade</strong></a>()</dt><dd><tt>Toggle&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
+ <dl><dt><a name="-undecorate"><strong>undecorate</strong></a>(decor)</dt></dl>
+ <dl><dt><a name="-undraw"><strong>undraw</strong></a>(actor)</dt></dl>
  <dl><dt><a name="-updateGUI"><strong>updateGUI</strong></a>()</dt><dd><tt>Update&nbsp;the&nbsp;GUI.</tt></dd></dl>
  <dl><dt><a name="-view"><strong>view</strong></a>(v, wait<font color="#909090">=False</font>)</dt><dd><tt>Show&nbsp;a&nbsp;named&nbsp;view,&nbsp;either&nbsp;a&nbsp;builtin&nbsp;or&nbsp;a&nbsp;user&nbsp;defined.</tt></dd></dl>
  <dl><dt><a name="-wakeup"><strong>wakeup</strong></a>(mode<font color="#909090">=0</font>)</dt><dd><tt>Wake&nbsp;up&nbsp;from&nbsp;the&nbsp;sleep&nbsp;function.<br>
@@ -237,6 +257,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <td width="100%"><strong>allowwait</strong> = True<br>
 <strong>drawlocked</strong> = False<br>
 <strong>drawtimer</strong> = None<br>
+<strong>m</strong> = &lt;_sre.SRE_Match object&gt;<br>
 <strong>multisave</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>

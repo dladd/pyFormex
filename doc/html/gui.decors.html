@@ -33,7 +33,8 @@
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.decors.html#ColorLegend">ColorLegend</a>
-</font></dt><dt><font face="helvetica, arial"><a href="gui.decors.html#Grid2">Grid2</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gui.decors.html#Grid">Grid</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gui.decors.html#Line">Line</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gui.decors.html#Text">Text</a>
 </font></dt></dl>
 </dd>
@@ -76,15 +77,29 @@ All&nbsp;decoration&nbsp;have&nbsp;at&nbsp;least&nbsp;the&nbsp;following&nbsp;at
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Grid2">class <strong>Grid2</strong></a>(<a href="gui.decors.html#Decoration">Decoration</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Grid">class <strong>Grid</strong></a>(<a href="gui.decors.html#Decoration">Decoration</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>A&nbsp;2D-grid&nbsp;on&nbsp;the&nbsp;canvas.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
-<dl><dt><a name="Grid2-__init__"><strong>__init__</strong></a>(self, x1, y1, x2, y2, nx, ny)</dt></dl>
+<dl><dt><a name="Grid-__init__"><strong>__init__</strong></a>(self, x1, y1, x2, y2, nx, ny)</dt></dl>
 
-<dl><dt><a name="Grid2-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt></dl>
+<dl><dt><a name="Grid-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Line">class <strong>Line</strong></a>(<a href="gui.decors.html#Decoration">Decoration</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;straight&nbsp;line&nbsp;on&nbsp;the&nbsp;canvas.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Line-__init__"><strong>__init__</strong></a>(self, x1, y1, x2, y2)</dt></dl>
+
+<dl><dt><a name="Line-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -111,8 +126,10 @@ All&nbsp;decoration&nbsp;have&nbsp;at&nbsp;least&nbsp;the&nbsp;following&nbsp;at
 &nbsp;&nbsp;&nbsp;&nbsp;<br>
 The&nbsp;rectangle&nbsp;has&nbsp;(x1,y1)&nbsp;and&nbsp;and&nbsp;(x2,y2)&nbsp;as&nbsp;opposite&nbsp;corners.<br>
 There&nbsp;are&nbsp;(nx,ny)&nbsp;subdivisions&nbsp;along&nbsp;the&nbsp;(x,y)-axis.&nbsp;So&nbsp;the&nbsp;grid<br>
-has&nbsp;(nx+1)&nbsp;*&nbsp;(ny+1)&nbsp;lines.&nbsp;nx=ny=1&nbsp;draws&nbsp;a&nbsp;rectangle.&nbsp;nx=0&nbsp;draws&nbsp;1<br>
-vertical&nbsp;line&nbsp;(at&nbsp;x1).&nbsp;nx=-1&nbsp;gives&nbsp;only&nbsp;horizontal&nbsp;lines.</tt></dd></dl>
+has&nbsp;(nx+1)&nbsp;*&nbsp;(ny+1)&nbsp;lines.&nbsp;nx=ny=1&nbsp;draws&nbsp;a&nbsp;rectangle.<br>
+nx=0&nbsp;draws&nbsp;1&nbsp;vertical&nbsp;line&nbsp;(at&nbsp;x1).&nbsp;nx=-1&nbsp;draws&nbsp;no&nbsp;vertical&nbsp;lines.<br>
+ny=0&nbsp;draws&nbsp;1&nbsp;horizontal&nbsp;line&nbsp;(at&nbsp;y1).&nbsp;ny=-1&nbsp;draws&nbsp;no&nbsp;horizontal&nbsp;lines.</tt></dd></dl>
+ <dl><dt><a name="-drawLine"><strong>drawLine</strong></a>(x1, y1, x2, y2)</dt><dd><tt>Draw&nbsp;a&nbsp;straight&nbsp;line&nbsp;from&nbsp;(x1,y1)&nbsp;to&nbsp;(x2,y2)&nbsp;in&nbsp;canvas&nbsp;coordinates.</tt></dd></dl>
  <dl><dt><a name="-drawMarker"><strong>drawMarker</strong></a>(x, y)</dt><dd><tt>Draw&nbsp;a&nbsp;marker&nbsp;at&nbsp;position&nbsp;x,y&nbsp;of&nbsp;the&nbsp;current&nbsp;window.</tt></dd></dl>
  <dl><dt><a name="-drawText"><strong>drawText</strong></a>(text, x, y, font<font color="#909090">='9x15'</font>, adjust<font color="#909090">='left'</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;given&nbsp;text&nbsp;at&nbsp;given&nbsp;2D&nbsp;position&nbsp;in&nbsp;window.<br>
 &nbsp;<br>

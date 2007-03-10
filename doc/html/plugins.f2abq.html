@@ -11,8 +11,11 @@
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/plugins/f2abq.py">/home/bene/prj/pyformex/plugins/f2abq.py</a></font></td></tr></table>
     <p><tt>A&nbsp;number&nbsp;of&nbsp;functions&nbsp;to&nbsp;write&nbsp;an&nbsp;Abaqus&nbsp;input&nbsp;file.<br>
 &nbsp;<br>
-These&nbsp;functions&nbsp;read&nbsp;data&nbsp;from&nbsp;the&nbsp;property&nbsp;module&nbsp;and&nbsp;write&nbsp;them&nbsp;to&nbsp;an&nbsp;Abaqus&nbsp;input&nbsp;file.&nbsp;<br>
-Abaqus&nbsp;has&nbsp;no&nbsp;built&nbsp;in&nbsp;units,&nbsp;so&nbsp;the&nbsp;chosen&nbsp;units&nbsp;must&nbsp;be&nbsp;selfconsistant.</tt></p>
+There&nbsp;are&nbsp;low&nbsp;level&nbsp;functions&nbsp;that&nbsp;just&nbsp;generate&nbsp;a&nbsp;part&nbsp;of&nbsp;an&nbsp;Abaqus<br>
+input&nbsp;file,&nbsp;conforming&nbsp;to&nbsp;the&nbsp;Keywords&nbsp;manual.<br>
+&nbsp;<br>
+Then&nbsp;there&nbsp;are&nbsp;higher&nbsp;level&nbsp;functions&nbsp;that&nbsp;read&nbsp;data&nbsp;from&nbsp;the&nbsp;property&nbsp;module<br>
+and&nbsp;write&nbsp;them&nbsp;to&nbsp;the&nbsp;Abaqus&nbsp;input&nbsp;file.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -960,6 +963,19 @@ If&nbsp;a&nbsp;name&nbsp;different&nbsp;from&nbsp;'Eall'&nbsp;is&nbsp;specified,
 be&nbsp;added&nbsp;to&nbsp;a&nbsp;set&nbsp;named&nbsp;'Eall'.<br>
 The&nbsp;eofs&nbsp;and&nbsp;nofs&nbsp;specify&nbsp;offsets&nbsp;for&nbsp;element&nbsp;and&nbsp;node&nbsp;numbers.<br>
 The&nbsp;default&nbsp;is&nbsp;1,&nbsp;because&nbsp;Abaqus&nbsp;numbering&nbsp;starts&nbsp;at&nbsp;1.</tt></dd></dl>
+ <dl><dt><a name="-writeFrameSection"><strong>writeFrameSection</strong></a>(fil, elset, A, I11, I12, I22, J, E, G, rho<font color="#909090">=None</font>, orient<font color="#909090">=None</font>)</dt><dd><tt>Write&nbsp;a&nbsp;general&nbsp;frame&nbsp;section&nbsp;for&nbsp;the&nbsp;named&nbsp;element&nbsp;set.<br>
+&nbsp;<br>
+The&nbsp;specified&nbsp;values&nbsp;are:<br>
+&nbsp;&nbsp;A:&nbsp;cross&nbsp;section<br>
+&nbsp;&nbsp;I11:&nbsp;moment&nbsp;of&nbsp;inertia&nbsp;around&nbsp;the&nbsp;1&nbsp;axis<br>
+&nbsp;&nbsp;I22:&nbsp;moment&nbsp;of&nbsp;inertia&nbsp;around&nbsp;the&nbsp;2&nbsp;axis<br>
+&nbsp;&nbsp;I12:&nbsp;inertia&nbsp;product&nbsp;around&nbsp;the&nbsp;1-2&nbsp;axes<br>
+&nbsp;&nbsp;J:&nbsp;Torsional&nbsp;constant<br>
+&nbsp;&nbsp;E:&nbsp;Young's&nbsp;modulus&nbsp;of&nbsp;the&nbsp;material<br>
+&nbsp;&nbsp;G:&nbsp;Shear&nbsp;modulus&nbsp;of&nbsp;the&nbsp;material<br>
+Optional&nbsp;data:<br>
+&nbsp;&nbsp;rho:&nbsp;density&nbsp;of&nbsp;the&nbsp;material<br>
+&nbsp;&nbsp;orient:&nbsp;a&nbsp;vector&nbsp;specifying&nbsp;the&nbsp;direction&nbsp;cosines&nbsp;of&nbsp;the&nbsp;1&nbsp;axis</tt></dd></dl>
  <dl><dt><a name="-writeHeading"><strong>writeHeading</strong></a>(fil, text<font color="#909090">=''</font>)</dt><dd><tt>Write&nbsp;the&nbsp;heading&nbsp;of&nbsp;the&nbsp;Abaqus&nbsp;input&nbsp;file.</tt></dd></dl>
  <dl><dt><a name="-writeNodes"><strong>writeNodes</strong></a>(fil, nodes, name<font color="#909090">='Nall'</font>, nofs<font color="#909090">=1</font>)</dt><dd><tt>Write&nbsp;nodal&nbsp;coordinates.<br>
 &nbsp;<br>
@@ -1040,7 +1056,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.float32'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1060,7 +1076,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.int32'&gt;: &lt;function &lt;lambda&gt; at 0x2b6060df6320&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.uint8'&gt;: &lt;function &lt;lambda&gt; at 0x2ad07b6992a8&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1106,7 +1122,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.uint8'&gt;: 1, &lt;type 'numpy.int32'&gt;: 4}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.uint8'&gt;: 1, &lt;type 'numpy.float64'&gt;: 8}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

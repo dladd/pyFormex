@@ -1,5 +1,12 @@
 #!/usr/bin/env pyformex
 # $Id$
+##
+## This file is part of pyFormex 0.4.2 Release Sat Mar 10 20:05:55 2007
+## pyFormex is a python implementation of Formex algebra
+## Homepage: http://pyformex.berlios.de/
+## Distributed under the GNU General Public License, see file COPYING
+## Copyright (C) Benedict Verhegghe except where stated otherwise 
+##
 
 """Formex.py
 
@@ -9,6 +16,7 @@ Executing this script creates a Formex menu in the menubar.
 import globaldata as GD
 from gui.draw import *
 from formex import *
+from plugins.partition import *
 
 import commands, os, timer
 
@@ -17,6 +25,27 @@ selection = []
 newvalues = []
 
 ##################### select, read and write ##########################
+
+
+def checkSelection(single=False):
+    """Check that we have a current selection.
+
+    Returns the list of Formices corresponding to the current selection.
+    If single==True, the selection should hold exactly one Formex name and
+    a single Formex instance is returned.
+    If there is no selection, or more than one in case of single==True,
+    an error message is displayed and an empty list is returned.
+    """
+    if not selection:
+        warning("No Formex selected")
+        return []
+    if single and len(selection) > 1:
+        warning("You should select exactly one Formex")
+        return []
+    if single:
+        return named(selection[0])
+    else:
+        return map(named,selection)
 
 
 def setSelection(list):
@@ -66,9 +95,9 @@ def drawSelection():
 
         
 def writeSelection():
-    """Writes the currently selected Frmices to .formex files."""
+    """Writes the currently selected Formices to .formex files."""
     if selection:
-        fn = askDirname()
+        fn = askDirname(GD.cfg['workdir'])
         print "DIR:%s" % fn
         print os.getcwd()
         if fn:
@@ -184,11 +213,12 @@ def combineSelection():
         res,accept = widgets.inputDialog(itemlist,'Name for the concatenation').process()
         if accept:
             F = Formex.concatenate(oldF)
-            ask
+            info("This is not implemented yet!")
         
 def clipSelection():
     """Clip the stl model."""
-    global F
+    if not selection:
+        return
     itemlist = [['axis',0],['begin',0.0],['end',1.0]]
     res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
     if accept:
@@ -205,7 +235,28 @@ def clipSelection():
             oldF = F.cclip(w)
             F = F.clip(w)
             drawChanges(F,oldF)
+    
 
+def partitionSelection():
+    """Partition the selection."""
+    F = checkSelection(single=True)
+    if not F:
+        return
+
+    name = selection[0]
+    GD.message("Partitioning Formex '%s'" % name)
+    cuts = partition(F)
+    print array(cuts)
+    
+
+def createParts():
+    """Create parts of the current selection, based on property values."""
+    F = checkSelection(single=True)
+    if not F:
+        return
+
+    name = selection[0]
+    splitProp(F,name)
 
 
 ################### menu #################
@@ -225,6 +276,8 @@ def create_menu():
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
         ("&Clip Selection",clipSelection),
+        ("&Partition Selection",partitionSelection),
+        ("&Create Parts",createParts),
         ("&Close",close_menu),
         ]
     menu.addItems(MenuData)

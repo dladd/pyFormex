@@ -120,9 +120,9 @@ def askFilename(cur,files="All files (*.*)",exist=True,multi=False):
     GD.app.processEvents()
     return fn
 
-def askDirname(cur,):
+def askDirname(cur):
     """Ask for an existing directory name."""
-    fn = widgets.FileSelection(cur,dir=True).getFilename()
+    fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
     if fn:
         chdir(fn)
     GD.gui.update()
@@ -234,10 +234,10 @@ def playScript(scr,name=None,step=False):
     exportNames = []
     GD.scriptName = name
     exitall = False
-    print "EXEC globals:"
-    k = g.keys()
-    k.sort()
-    print k
+    #print "EXEC globals:"
+    #k = g.keys()
+    #k.sort()
+    #print k
     try:
         try:
             if step:
@@ -261,13 +261,19 @@ def playScript(scr,name=None,step=False):
 
 
 def step_script(s,glob,paus=True):
-    print type(s)
+    buf = ''
     for line in s:
-        print s.next()
-        if paus and line.strip().startswith('draw'):
+        if buf.endswith('\\'):
+            buf[-1:] = line
+            break
+        else:
+            buf = line
+        if paus and buf.strip().startswith('draw'):
             pause()
-        message(line)
-        exec(line) in glob
+        message(buf)
+        exec(buf) in glob
+    info("Finished stepping through script!")
+
 
 def export(names):
     if type(names) == str:
@@ -282,12 +288,12 @@ def Export(dict):
 
 def named(name):
     """Returns the global object named name."""
-    print "name %s" % name
+    GD.debug("name %s" % name)
     if globals().has_key(name):
-        print "Found %s in globals()" % name
+        GD.debug("Found %s in globals()" % name)
         dict = globals()
     elif GD.PF.has_key(name):
-        print "Found %s in GD.PF" % name
+        GD.debug("Found %s in GD.PF" % name)
         dict = GD.PF
     return dict[name]
 
@@ -613,7 +619,7 @@ def bgcolor(color):
 def fgcolor(color):
     """Set the default foreground color."""
     color = colors.GLColor(color)
-    print color
+    #print color
     GD.canvas.setFgColor(color)
 
 
@@ -744,11 +750,10 @@ def listAll(dict=None):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
         dict = Globals()
-        #dict.update(GD.PF)
+        dict.update(GD.PF)
     flist = []
     for n,t in dict.items():
-        if isinstance(t,formex.Formex):
-            #t.__class__.__name__ == 'Formex':
+        if isinstance(t,formex.Formex) and t.__class__.__name__ == 'Formex':
             flist.append(n)
     return flist
 

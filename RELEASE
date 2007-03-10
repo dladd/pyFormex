@@ -10,7 +10,7 @@ PYGUIMODULES = __init__ actionlist actors camera cameraMenu canvas \
   colors colorscale decors draw fileMenu gui help \
   menu prefMenu scriptsMenu toolbar widgets
 PLUGINMODULES= __init__ properties elements f2abq formex_menu \
-  lima stl stl_abq stl_menu tetgen turtle
+  lima partition stl stl_abq stl_menu tetgen turtle
 EXAMPLES= __init__ BarrelVault Baumkuchen Circle Clip Diamatic \
   DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Novation\
   ParabolicTower Pattern ScallopDome Schwedler Sphere Sphere2 Sphere_stl\
