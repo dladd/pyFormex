@@ -23,8 +23,8 @@ calpy_path = '/usr/local/lib/calpy-0.3.4'
 
 dx = 1800 # Modular size [mm]
 ht = 1500  # Deck height [mm]
-nx = 5     # number of bottom deck modules in x direction 
-ny = 4   # number of bottom deck modules in y direction 
+nx = 8     # number of bottom deck modules in x direction 
+ny = 6   # number of bottom deck modules in y direction 
 
 q = -0.005 #distributed load [N/mm^2]
 
@@ -44,7 +44,9 @@ dia.setProp(1)
 
 F = (top+bottom+dia)
 
-clear();linewidth(1);draw(F)
+# Show upright
+createView('myview1',(0.,-90.,0.))
+clear();linewidth(1);draw(F,view='myview1')
 
 
 ############
@@ -119,6 +121,8 @@ sys.path.append(calpy_path)
 try:
     from fe_util import *
     from truss3d import *
+    #if nelems > 100:
+    #    calpy.options.optimize=True
 except ImportError:
     import globaldata as GD
     warning("You need calpy-0.3.4 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct calpy installation path\n in this example's source file\n(%s).\nThe calpy_path variable is set near the top of that file.\nIts current value is: %s" % (GD.cfg['curfile'],calpy_path))
@@ -174,13 +178,10 @@ if GD.options.gui:
     GD.canvas.addDecoration(CLA)
     GD.canvas.update()
 
-    # Show upright
-    createView('myview1',(0.,-90.,0.))
-    view('myview1',True)
 
     clear()
     linewidth(1)
-    draw(F,view='myview1',color=black)
+    draw(F,color=black)
     linewidth(3)
 
     siz0 = F.sizes()
@@ -203,7 +204,7 @@ if GD.options.gui:
         dnodes = nodes + dscale * displ[:,:,0]
         deformed = Formex(dnodes[elems],F.p)
         # deformed structure
-        FA = draw(deformed,view='myview1',bbox=None,wait=False)
+        FA = draw(deformed,bbox=None,wait=False)
         TA = decors.Text('Deformed geometry (scale %.2f)' % dscale,400,100,'tr24')
         decorate(TA)
         return FA,TA
@@ -234,6 +235,7 @@ if GD.options.gui:
     def animate_deformed_plot(amplitude,sleeptime=1,count=1):
         """Shows an animation of the deformation plot using nframes."""
         FA = TA = None
+        clear()
         while count > 0:
             count -= 1
             for s in amplitude:
@@ -246,10 +248,31 @@ if GD.options.gui:
                 sleep(sleeptime)
 
 
+    # Show a deformed plot
     linewidth(2)
-    nframes = 10
-    amp = framescale(nframes,'revert') * optimscale
-    #print amp
-    animate_deformed_plot(amp,20./nframes,10)
+    print optimscale
+    deformed_plot(optimscale)
+    #view('__last__',True)
 
+
+    # Show animated deformation
+    scale = optimscale
+    nframes = 10
+    form = 'revert'
+    duration = 5./nframes
+    ncycles = 2
+    while ack('Show an animated deformation plot?'):
+        items = [ ['scale',scale], ['nframes',nframes],
+                  ['form',form],
+                  ['duration',duration], ['ncycles',ncycles] ]
+        res = askItems(items,'Animation Parameters')
+        scale = float(res['scale'])
+        nframes = int(res['nframes'])
+        duration = float(res['duration'])
+        ncycles = int(res['ncycles'])
+        form = res['form']
+        if form in [ 'up', 'updown', 'revert' ]:
+            amp = scale * framescale(nframes,form)
+            animate_deformed_plot(amp,duration,ncycles)
+            
 # End

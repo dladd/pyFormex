@@ -194,7 +194,7 @@ def rotateSelection():
     if not selection:
         return
     itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
-    res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').process()
+    res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').getResult()
     if accept:
         axis = int(res[0][1])
         angle = float(res[1][1])
@@ -210,7 +210,7 @@ def combineSelection():
     oldF = map(named,selection)
     plexitude = array([ F.nplex() for F in oldF ])
     if plexitude.min() == plexitude.max():
-        res,accept = widgets.inputDialog(itemlist,'Name for the concatenation').process()
+        res,accept = widgets.inputDialog(itemlist,'Name for the concatenation').getResult()
         if accept:
             F = Formex.concatenate(oldF)
             info("This is not implemented yet!")
@@ -220,7 +220,7 @@ def clipSelection():
     if not selection:
         return
     itemlist = [['axis',0],['begin',0.0],['end',1.0]]
-    res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').process()
+    res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').getResult()
     if accept:
         Flist = byName(selection)
         bb = bbox(Flist)

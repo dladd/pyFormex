@@ -332,8 +332,6 @@ class inputDialog(QtGui.QDialog):
         GD.app.processEvents()
         return (self.result, accept)
 
-    process = getResult
-
 
 def selectFont():
     """Ask the user to select a font.

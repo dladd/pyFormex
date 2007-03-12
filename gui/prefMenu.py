@@ -35,7 +35,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res,accept = widgets.inputDialog(itemlist,'Config Dialog').process()
+    res,accept = widgets.inputDialog(itemlist,'Config Dialog').getResult()
     if accept:
         for i,r in zip(itemlist,res):
             GD.debug("IN : %s\nOUT: %s" % (i,r))

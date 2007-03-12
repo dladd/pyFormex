@@ -64,7 +64,7 @@ def ask(question,choices=None,default=''):
         return info(question,choices)
     else:
         items = [ [question, default] ]
-        res,accept = widgets.inputDialog(items,'Config Dialog').process()
+        res,accept = widgets.inputDialog(items,'Config Dialog').getResult()
         GD.gui.update()
         if accept:
             return res[0][1]
@@ -91,7 +91,7 @@ def about(message=GD.Version):
     """Show a informative message and wait for user acknowledgement."""
     messageBox(message,'about')
 
-def askItems(items):
+def askItems(items,caption=None):
     """Ask the value of some items to the user. !! VERY EXPERIMENTAL!!
 
     Input is a dictionary of items or a list of [key,value] pairs.
@@ -101,7 +101,11 @@ def askItems(items):
     """
     if type(items) == dict:
         items = items.items()
-    res,status = widgets.inputDialog(items).process()
+    if type(caption) is str:
+        w = widgets.inputDialog(items,caption)
+    else:
+        w = widgets.inputDialog(items)
+    res,status = w.getResult()
     items = {}
     for r in res:
         items[r[0]] = r[1]
@@ -397,12 +401,13 @@ def reset():
 def setView(name,angles=None):
     """Set the default view for future drawing operations.
 
-    If no angles are specified, the name should be an existing view.
+    If no angles are specified, the name should be an existing view, or
+    the predefined value '__last__'.
     If angles are specified, this is equivalent to createView(name,angles)
     followed by setView(name).
     """
     global DrawOptions
-    if angles:
+    if name != '__last__' and angles:
         createView(name,angles)
     DrawOptions['view'] = name
 
@@ -462,6 +467,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
 
     if view is None:
         view = DrawOptions['view']
+        #print view
 
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"
@@ -522,15 +528,16 @@ def view(v,wait=False):
     global allowwait
     if allowwait and wait:
         drawwait()
-    angles = GD.canvas.view_angles.get(v)
-    if angles:
+    if v != '__last__':
+        angles = GD.canvas.view_angles.get(v)
+        if not angles:
+            warning("A view named '%s' has not been created yet" % v)
+            return
         GD.canvas.setCamera(None,angles)
-        setView(v)
-        GD.canvas.update()
-        if allowwait and wait:
-            drawlock()
-    else:
-        warning("A view named '%s' has not been created yet" % v)
+    setView(v)
+    GD.canvas.update()
+    if allowwait and wait:
+        drawlock()
 
 
 _triade = None
