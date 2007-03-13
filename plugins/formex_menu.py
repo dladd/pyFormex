@@ -20,11 +20,39 @@ from plugins.partition import *
 
 import commands, os, timer
 
-
-selection = []
-newvalues = []
+# The selection should only be set by setSelection()!!
+selection = []  # a list of names of the currently selected Formices
+oldvalues = []  # a list of Formex instances corresponding to the selection
+                # BEFORE the last transformation  
 
 ##################### select, read and write ##########################
+
+
+def setSelection(list):
+    """Set the selection to a list of names.
+
+    You should make sure this is a list of Formex names!
+    This will also set oldvalues to the corresponding Formices.
+    """
+    global selection
+    selection = list
+    oldvalues = map(named,list)
+    print selection
+
+
+def clearSelection():
+    """Clear the current selection."""
+    setSelection([])
+
+
+## def saveSelection():
+##     """Save the current values of selection so that changes can be undone."""
+##     setSelection(selection)
+
+
+def changeSelection(newvalues):
+    """Replace the current values of selection by new ones."""
+    Export(dict(zip(selection,newvalues)))
 
 
 def checkSelection(single=False):
@@ -46,32 +74,7 @@ def checkSelection(single=False):
         return named(selection[0])
     else:
         return map(named,selection)
-
-
-def setSelection(list):
-    """Set the selection to a list of names.
-
-    You should make sure this is a list of Formex names!
-    """
-    global selection
-    selection = list 
-    print selection
     
-
-def setNewvalues(list):
-    """Set the list of new values for the names in selection.
-
-    You should make sure this is a list of Formices!
-    """
-    global newvalues
-    newvalues = list 
-
-
-def clearSelection():
-    """Clear the current selection and newvalues."""
-    global selection,newvalues
-    selection = newvalues = []
-
 
 def askSelection(mode=None):
     """Show the names of known formices and let the user select (one or more).
@@ -93,22 +96,26 @@ def drawSelection():
     if selection:
         draw(selection)
 
-        
+
+#################### Read/Write Formex File ##################################
+
+
 def writeSelection():
     """Writes the currently selected Formices to .formex files."""
-    if selection:
-        fn = askDirname(GD.cfg['workdir'])
-        print "DIR:%s" % fn
-        print os.getcwd()
+    if len(selection) == 1:
+        name = selection[0]
+        fn = askFilename(GD.cfg['workdir'],file="%s.formex" % name,
+                         filter=['(*.formex)','*'],exist=False)
         if fn:
-            for name in selection:
-                writeFormex(named(name),"%s.formex" % name)
+            print "Writing Formex '%s' to file '%s'" % (name,fn)
+            chdir(fn)
+            named(name).write(fn)
 
 
 def read_Formex(fn):
     GD.message("Reading file %s" % fn)
     t = timer.Timer()
-    F = readFormex(fn)
+    F = Formex.read(fn)
     nelems,nplex = F.f.shape[0:2]
     GD.message("Read %d elems of plexitude %d in %s seconds" % (nelems,nplex, t.seconds()))
     return F
@@ -120,7 +127,7 @@ def readSelection(select=True,draw=True):
     If select is True (default), this becomes the current selection.
     If select and draw are True (default), the selection is drawn.
     """
-    types = [ 'Formex Files (*.formex)' ]
+    types = [ 'Formex Files (*.formex)', 'All Files (*)' ]
     fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=True)
     if fn:
         chdir(fn[0])
@@ -148,20 +155,13 @@ def drawChanges(old,new):
     draw(new)
 
 
-def keepChanges():
-    """Draws old and new versions and replaces ol by new after confirmation.
+def undoChanges():
+    """Undo the changes of the last transformation.
 
-    The current versions of the selection and new versions are displayed
-    together, with different colors. Then the user is asked for confirmation
-    to replace the current with the new versions.
-    Finally, the (replaced or not) current selection is drawn.
-
-    Before using this function, selection should be set to a list of names,
-    and newvalues should be set to an equally long list of Formices.
+    The current versions of the selection are set back to the values prior
+    to the last transformation.
     """
-    drawChanges(selection,newvalues)
-    if ack("Keep the changes to the displayed Formices?"):
-        Export(dict(zip(selection,newvalues)))
+    changeSelection(oldvalues)
     clear()
     drawSelection()
     
@@ -191,16 +191,22 @@ def centerSelection():
 
 def rotateSelection():
     """Rotate the selection."""
-    if not selection:
+    FL = checkSelection()
+    if not FL:
         return
-    itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
-    res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').getResult()
-    if accept:
-        axis = int(res[0][1])
-        angle = float(res[1][1])
-        oldF = map(named,selection)
-        setNewvalues([ F.rotate(angle,axis) for F in oldF ])
-        keepChanges()
+##     itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
+##     res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').getResult()
+##     if accept:
+##         axis = int(res[0][1])
+##         angle = float(res[1][1])
+##         oldF = map(named,selection)
+##         setNewvalues([ F.rotate(angle,axis) for F in oldF ])
+##         keepChanges()
+    res = askItems([['axis',0],['angle','0.0']])
+    if res:
+        axis = int(res['axis'])
+        angle = float(res['angle'])
+        changeSelection([ F.rotate(angle,axis) for F in FL ])
 
 
 def combineSelection():
@@ -270,7 +276,7 @@ def create_menu():
 #        ("&List Formices",formex_list),
         ("&Select",makeSelection),
         ("&Draw Selection",drawSelection),
-        ("&Save Selection in Formex file",writeSelection),
+        ("&Save Selection to file(s)",writeSelection),
         ("&Read Formex Files",readSelection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
@@ -278,6 +284,7 @@ def create_menu():
         ("&Clip Selection",clipSelection),
         ("&Partition Selection",partitionSelection),
         ("&Create Parts",createParts),
+        ("&Undo Last Changes",undoChanges),
         ("&Close",close_menu),
         ]
     menu.addItems(MenuData)

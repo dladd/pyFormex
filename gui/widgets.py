@@ -53,6 +53,10 @@ class FileSelection(QtGui.QFileDialog):
             caption = "Save file as"
         self.setFileMode(mode)
         self.setWindowTitle(caption)
+        if exist:
+            self.setLabelText(QtGui.QFileDialog.Accept,'Open')
+        else:
+            self.setLabelText(QtGui.QFileDialog.Accept,'Save')
         
     def getFilename(self):
         """Ask for a filename by user interaction.

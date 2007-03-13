@@ -906,7 +906,7 @@ class Formex:
 
 
     @classmethod
-    def concatenate(self,Flist):
+    def concatenate(clas,Flist):
         """Concatenate all formices in Flist.
 
         This is a class method, not an instance method!
@@ -1610,14 +1610,64 @@ class Formex:
             tr[d] += t
         return self.translate(tr)
 
-    #########################################################################
-    #
-    # Obsolete and deprecated functions
-    #
-    # These functions are retained mainly for compatibility reasons.
-    # New users should avoid these functions!
-    # The may be removed in future.
-    #
+
+#################### Read/Write Formex File ##################################
+
+
+    def write(self,fil,sep=' '):
+        """Write a Formex to file.
+
+        If fil is a string, a file with that name is opened. Else fil should
+        be an open file.
+        The Formex is then written to that file in a native format.
+        If fil is a string, the file is closed prior to returning.
+        """
+        isname = type(fil) == str
+        if isname:
+            fil = file(fil,'w')
+        fil.write("# Formex File Format 1.0 (http://pyformex.berlios.de)\n")
+        nelems,nplex = self.f.shape[:2]
+        hasp = self.p is not None
+        fil.write("# nelems=%d; nplex=%d; props=%d\n" % (nelems,nplex,hasp))
+        self.f.tofile(fil,sep)
+        fil.write('\n')
+        if hasp:
+            self.p.tofile(fil,sep)
+        fil.write('\n')
+        if isname:
+            fil.close()
+
+
+    @classmethod
+    def read(clas,filnam):
+        """Read a Formex from file."""
+        fil = file(filnam,'r')
+        s = fil.readline()
+        if not s.startswith('# Formex'):
+            return None
+        while s.startswith('#'):
+            s = fil.readline()
+            if s.startswith('# nelems'):
+                #print s[1:].strip()
+                exec(s[1:].strip())
+                break
+        #print "Read %d elems of plexitude %d" % (nelems,nplex)
+        f = fromfile(file=fil, dtype=Float, count=3*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
+        if props:
+            p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
+        else:
+            p = None
+        return Formex(f,p)
+
+
+#########################################################################
+#
+# Obsolete and deprecated functions
+#
+# These functions are retained mainly for compatibility reasons.
+# New users should avoid these functions!
+# The may be removed in future.
+#
 
     @deprecated(test)
     def where(self,*args,**kargs):
@@ -1762,6 +1812,7 @@ class Formex:
     def ric(f):
         return int(round(f))
 
+
 ##############################################################################
 #
 #    Functions which are not Formex class methods
@@ -1892,41 +1943,6 @@ def bbox(formexlist):
     """
     return Formex(concatenate([ [f.bbox()] for f in formexlist ])).bbox()
 
-
-#################### Read/Write Formex File ##################################
-
-def writeFormex(F,filnam,sep=' '):
-    """Write a Formex to file."""
-    fil = file(filnam,'w')
-    fil.write("# Formex File Format 1.0 (http://pyformex.berlios.de)\n")
-    fil.write("# nelems=%s; nplex=%s; props=%s\n" % (F.nelems(),F.nplex(),F.p is not None))
-    F.f.tofile(fil,sep)
-    fil.write('\n')
-    if F.p is not None:
-        F.p.tofile(fil,sep)
-    fil.write('\n')
-    fil.close()
-        
-
-def readFormex(filnam):
-    """Read a Formex from file."""
-    fil = file(filnam,'r')
-    s = fil.readline()
-    if not s.startswith('# Formex'):
-        return None
-    while s.startswith('#'):
-        s = fil.readline()
-        if s.startswith('# nelems'):
-            #print s[1:].strip()
-            exec(s[1:].strip())
-            break
-    #print "Read %d elems of plexitude %d" % (nelems,nplex)
-    f = fromfile(file=fil, dtype=Float, count=3*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
-    if props:
-        p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
-    else:
-        p = None
-    return Formex(f,p)
 
 
 ##############################################################################

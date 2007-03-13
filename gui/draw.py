@@ -111,9 +111,12 @@ def askItems(items,caption=None):
         items[r[0]] = r[1]
     return items
 
-def askFilename(cur,files="All files (*.*)",exist=True,multi=False):
+def askFilename(cur,filter="All files (*.*)",file=None,exist=True,multi=False):
     """Ask for an existing file name or multiple file names."""
-    fn = widgets.FileSelection(cur,files,exist,multi).getFilename()
+    w = widgets.FileSelection(cur,filter,exist,multi)
+    if file:
+        w.selectFile(file)
+    fn = w.getFilename()
     if fn:
         if multi:
             chdir(fn[0])

@@ -575,12 +575,12 @@ def create_menu():
     MenuData = [
         # ("&New project",new_project),
         ("&Read Surface",read_surface),
+        ("&Convert to Formex",toFormex),
         # ("&Show model",show_model),
         ("&Show surface",show_surface),
         ("&Show shrinked surface",show_shrinked),
         ("&Show volume model",show_volume),
         ("&Set color",set_color),
-        ("&Convert to Formex",toFormex),
         #("&Print Nodal Coordinates",show_nodes),
         ("&Combine two models",combine),
         # ("&Convert STL file to OFF file",convert_stl_to_off),
