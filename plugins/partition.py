@@ -1,4 +1,5 @@
 #!/usr/bin/env pyformex
+# $Id:$
 ##
 ## This file is part of pyFormex 0.4.2 Release Sat Mar 10 20:15:18 2007
 ## pyFormex is a python implementation of Formex algebra
@@ -89,7 +90,10 @@ def partition(Fin,prop=0):
     By default, the parts will get properties 0,1,...
     If prop >= 0, the parts will get incremental props starting from prop.
 
-    Returns a list of cutplanes.
+    Returns the cutplanes in an array with shape (ncuts,2,3), where
+      (i,0,:) is a point in the plane i and
+      (i,1,:) is the normal vector on the plane i .
+    
     As a side effect, the properties of the input Formex will be changed
     to flag the parts between successive cut planes by incrementing
     property values.
@@ -159,7 +163,7 @@ def partition(Fin,prop=0):
     clear()
     draw(F)
     Fin.setProp(F.p)
-    return cut_planes
+    return array(cut_planes)
 
    
 def savePartitions(F):

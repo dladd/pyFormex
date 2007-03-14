@@ -21,7 +21,6 @@ import colors
 import actors
 import decors
 import formex
-#from script import Exit,ExitAll,system,writeFormex,readFormex
 from script import *
 from cameraMenu import setPerspective,setProjection
 
@@ -470,7 +469,6 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
 
     if view is None:
         view = DrawOptions['view']
-        #print view
 
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"

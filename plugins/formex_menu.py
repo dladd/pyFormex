@@ -34,10 +34,9 @@ def setSelection(list):
     You should make sure this is a list of Formex names!
     This will also set oldvalues to the corresponding Formices.
     """
-    global selection
+    global selection,oldvalues
     selection = list
-    oldvalues = map(named,list)
-    print selection
+    oldvalues = map(named,selection)
 
 
 def clearSelection():
@@ -52,6 +51,8 @@ def clearSelection():
 
 def changeSelection(newvalues):
     """Replace the current values of selection by new ones."""
+    global oldvalues
+    oldvalues = map(named,selection)
     Export(dict(zip(selection,newvalues)))
 
 
@@ -85,14 +86,16 @@ def askSelection(mode=None):
     return widgets.Selection(listAll(),'Known Formices',mode,sort=True,
                             selected=selection).getResult()
 
+
 def makeSelection():
     """Interactively sets the current selection."""
     setSelection(askSelection('multi'))
-
+    drawSelection()
 
 
 def drawSelection():
     """Draws the current selection."""
+    clear()
     if selection:
         draw(selection)
 
@@ -145,14 +148,15 @@ def readSelection(select=True,draw=True):
 
 ################### Perform operations on Formex #######################
 
-def drawChanges(old,new):
+def drawChanges():
     """Draws old and new version of a Formex with differrent colors.
 
     old and new can be a either Formex instances or names or lists thereof.
     old are drawn in yellow, new in the current color.
     """
-    draw(old,color='yellow',wait=False)
-    draw(new)
+    clear()
+    draw(selection,wait=False)
+    draw(oldvalues,color='yellow',bbox=None)
 
 
 def undoChanges():
@@ -162,85 +166,73 @@ def undoChanges():
     to the last transformation.
     """
     changeSelection(oldvalues)
-    clear()
     drawSelection()
     
 
 def translateSelection():
     """Translate the selection."""
-    if not selection:
-        return
-    itemlist = [ [ 'direction',0], ['distance','1.0'] ] 
-    res,accept = widgets.inputDialog(itemlist,'Translation Parameters').getResult()
-    if accept:
-        dir = int(res[0][1])
-        dist = float(res[1][1])
-        oldF = map(named,selection)
-        setNewvalues([ F.translate(dir,dist) for F in oldF ])
-        keepChanges()
+    FL = checkSelection()
+    if FL:
+        res = askItems([['direction',0],['distance','1.0']],
+                       caption = 'Translation Parameters')
+        if res:
+            dir = int(res['direction'])
+            dist = float(res['distance'])
+            changeSelection([ F.translate(dir,dist) for F in FL ])
+            drawChanges()
 
 
 def centerSelection():
     """Center the selection."""
-    if not selection:
-        return
-    oldF = map(named,selection)
-    setNewvalues([ F.translate(-F.center()) for F in oldF ])
-    keepChanges()
+    FL = checkSelection()
+    if FL:
+        changeSelection([ F.translate(-F.center()) for F in FL ])
+        drawChanges()
 
 
 def rotateSelection():
     """Rotate the selection."""
     FL = checkSelection()
-    if not FL:
-        return
-##     itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
-##     res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').getResult()
-##     if accept:
-##         axis = int(res[0][1])
-##         angle = float(res[1][1])
-##         oldF = map(named,selection)
-##         setNewvalues([ F.rotate(angle,axis) for F in oldF ])
-##         keepChanges()
-    res = askItems([['axis',0],['angle','0.0']])
-    if res:
-        axis = int(res['axis'])
-        angle = float(res['angle'])
-        changeSelection([ F.rotate(angle,axis) for F in FL ])
-
-
-def combineSelection():
-    """Rotate the selection."""
-    if not selection:
-        return
-    oldF = map(named,selection)
-    plexitude = array([ F.nplex() for F in oldF ])
-    if plexitude.min() == plexitude.max():
-        res,accept = widgets.inputDialog(itemlist,'Name for the concatenation').getResult()
-        if accept:
-            F = Formex.concatenate(oldF)
-            info("This is not implemented yet!")
+    if FL:
+        res = askItems([['axis',2],['angle','90.0']])
+        if res:
+            axis = int(res['axis'])
+            angle = float(res['angle'])
+            changeSelection([ F.rotate(angle,axis) for F in FL ])
+            drawChanges()
+            
         
 def clipSelection():
-    """Clip the stl model."""
-    if not selection:
-        return
-    itemlist = [['axis',0],['begin',0.0],['end',1.0]]
-    res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').getResult()
-    if accept:
-        Flist = byName(selection)
-        bb = bbox(Flist)
-        axis = int(res[0][1])
-        xmi = bb[0][axis]
-        xma = bb[1][axis]
-        dx = xma-xmi
-        xc1 = xmi + float(res[1][1]) * dx
-        xc2 = xmi + float(res[2][1]) * dx
-        for F in Flist:
-            w = F.test(dir=axis,min=xc1,max=xc2)
-            oldF = F.cclip(w)
-            F = F.clip(w)
-            drawChanges(F,oldF)
+    """Clip the selection."""
+    FL = checkSelection()
+    if FL:
+        res = askItems([['axis',0],['begin',0.0],['end',1.0]],caption='Clipping Parameters')
+        if res:
+            bb = bbox(FL)
+            axis = int(res['axis'])
+            xmi = bb[0][axis]
+            xma = bb[1][axis]
+            dx = xma-xmi
+            xc1 = xmi + float(res['begin']) * dx
+            xc2 = xmi + float(res['end']) * dx
+            changeSelection([ F.clip(F.test(dir=axis,min=xc1,max=xc2)) for F in FL ])
+            drawChanges()
+
+
+def concatenateSelection():
+    """Concatenate the selection."""
+    FL = checkSelection()
+    if FL:
+        plexitude = array([ F.nplex() for F in FL ])
+        if plexitude.min() == plexitude.max():
+            res = askItems([['name','combined']],'Name for the concatenation')
+            if res:
+                name = res['name']
+                Export({name:Formex.concatenate(FL)})
+                setSelection([name])
+                drawSelection()
+        else:
+            warning('You can only concatenate Formices with the same plexitude!')
     
 
 def partitionSelection():
@@ -252,7 +244,7 @@ def partitionSelection():
     name = selection[0]
     GD.message("Partitioning Formex '%s'" % name)
     cuts = partition(F)
-    print array(cuts)
+    GD.message("Subsequent cutting planes: %s" % cuts)
     
 
 def createParts():
@@ -276,12 +268,14 @@ def create_menu():
 #        ("&List Formices",formex_list),
         ("&Select",makeSelection),
         ("&Draw Selection",drawSelection),
+#        ("&Draw Changes",drawChanges),
         ("&Save Selection to file(s)",writeSelection),
         ("&Read Formex Files",readSelection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
         ("&Clip Selection",clipSelection),
+        ("&Concatenate Selection",concatenateSelection),
         ("&Partition Selection",partitionSelection),
         ("&Create Parts",createParts),
         ("&Undo Last Changes",undoChanges),

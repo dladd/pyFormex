@@ -186,17 +186,17 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
 
 
 def toFormex():
-    """Transforme the surface model to a named Formex."""
+    """Transform the surface model to a named Formex."""
     if not check_surface():
         return
     itemlist = [ [ 'name', PF.get('project','')] ] 
     res,accept = widgets.inputDialog(itemlist,'Name of the Formex').getResult()
     if accept:
         name = res[0][1]
-        print name
+        #print name
         nodes,elems = PF['surface']
-        print nodes.shape
-        print elems.shape
+        #print nodes.shape
+        #print elems.shape
         PF[name] = Formex(nodes[elems])
 
 ##def write_stl(types=['stl']):
@@ -441,24 +441,6 @@ def show_nodes():
         nodes,elems = PF['surface']
         print "Node %s = %s",(n,nodes[n])
 
-def combine():
-    print "First part"
-    part1 = read_surface(show=False)
-    F = PF['stl_model']
-    F.setProp(1)
-    draw(F)
-
-    print "Second part"
-    read_surface(show=False)
-    G = PF['stl_model']
-    F.setProp(2)
-    draw(G)
-
-    PF['stl_model'] = Formex.concatenate([F,G])
-    PF['surface'] = None
-    PF['color'] = 'prop'
-    show_surface()
-
 
 def trim_border(elems,nodes,nb,visual=False):
     """Removes the triangles with nb or more border edges.
@@ -582,7 +564,6 @@ def create_menu():
         ("&Show volume model",show_volume),
         ("&Set color",set_color),
         #("&Print Nodal Coordinates",show_nodes),
-        ("&Combine two models",combine),
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
         ("&Write Surface Model",write_surface),
