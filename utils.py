@@ -12,6 +12,12 @@
 import globaldata as GD
 import os,commands,re
 
+## import distutils.version
+## Version=distutils.version.LooseVersion
+
+## def checkModule(name,version)
+## if Version(numpy.__version__) < Version('0.9.8'):
+
 
 known_externals = {
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),

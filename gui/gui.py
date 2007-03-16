@@ -25,6 +25,7 @@ import actionlist
 import script
 import utils
 import draw
+import widgets
 
 
 # Find interesting supporting software

@@ -280,17 +280,20 @@ def step_script(s,glob,paus=True):
         exec(buf) in glob
     info("Finished stepping through script!")
 
+## def exportNames(names):
+##     globals().update(dict)
 
-def export(names):
-    if type(names) == str:
-        names = [ names ]
-    exportNames.extend(names)
-
-def Globals():
-    return globals()
-
-def Export(dict):
+def export(dict):
     globals().update(dict)
+
+Globals = globals
+Export = export
+
+def forget(names):
+    g = globals()
+    for name in names:
+        if g.has_key(name):
+            del g[name]
 
 def named(name):
     """Returns the global object named name."""

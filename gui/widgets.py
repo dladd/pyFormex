@@ -217,10 +217,11 @@ class Selection(QtGui.QDialog):
         """Mark the specified items as selected."""
         for s in selected:
             for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                print i
-                print dir(i)
+                # OBSOLETE: should be changed with Qt version 4.2 or later
+                self.listw.setItemSelected(i,True)
+                # SHOULD BECOME:
                 # i.setSelected(True) # requires Qt 4.2
-                i.setCheckState(QtCore.Qt.Checked)
+                # i.setCheckState(QtCore.Qt.Checked)
 
                 
     def getResult(self):
@@ -362,9 +363,17 @@ class Menu(QtGui.QMenu):
             self.setWindowTitle(title)
         self.done = False
 
-    def addItem(self,item,func):
-        action = self.addAction(item)
-        action.connect(action,QtCore.SIGNAL('triggered()'),func)
+    def addItem(self,item,val=None):
+        if item == '---':
+            self.addSeparator()
+        elif isinstance(val, list):
+            pop = Menu(item,insert=False)
+            pop.addItems(val)
+            self.addMenu(pop)
+        else:
+            if type(val) == str:
+                val = eval(val)
+            self.addAction(item,val)
 
     def addItems(self,itemlist):
         for txt,val in itemlist:

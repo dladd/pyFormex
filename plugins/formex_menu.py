@@ -146,6 +146,32 @@ def readSelection(select=True,draw=True):
     return fn
 
 
+
+################### Change attributes of Formex #######################
+
+def setProperty():
+    """Set the property of the current selection.
+
+    If the user gives a negative value, the property is removed.
+    """
+    FL = checkSelection()
+    if FL:
+        res = askItems([['property',0]],
+                       caption = 'Set Property Number of Selection')
+        if res:
+            p = int(res['property'])
+            if p < 0:
+                p = None
+            for F in FL:
+                F.setProp(p)
+            drawSelection()
+
+
+def forgetSelection():
+    if selection:
+        forget(selection)
+
+
 ################### Perform operations on Formex #######################
 
 def drawChanges():
@@ -271,6 +297,9 @@ def create_menu():
 #        ("&Draw Changes",drawChanges),
         ("&Save Selection to file(s)",writeSelection),
         ("&Read Formex Files",readSelection),
+        ("---",None),
+        ("&Set Property",setProperty),
+        ("&Forget ",forgetSelection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),

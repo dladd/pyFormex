@@ -18,7 +18,6 @@ import cameraMenu
 import prefMenu
 import help
 import draw
-import gui
 from plugins import stl_menu,formex_menu
 
 
