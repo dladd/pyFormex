@@ -14,6 +14,9 @@ import globaldata as GD
 import sys,time,os.path,string,re
 
 from PyQt4 import QtCore, QtGui, QtOpenGL
+
+print "Congratulations! You have Qt version %s" % QtCore.QT_VERSION_STR
+
 import menu
 import cameraMenu
 import fileMenu
