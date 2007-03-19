@@ -16,6 +16,7 @@ Executing this script creates a Formex menu in the menubar.
 import globaldata as GD
 from gui.draw import *
 from formex import *
+from plugins import stl
 from plugins.partition import *
 
 import commands, os, timer
@@ -111,8 +112,22 @@ def writeSelection():
                          filter=['(*.formex)','*'],exist=False)
         if fn:
             print "Writing Formex '%s' to file '%s'" % (name,fn)
+            print named(name).bbox()
             chdir(fn)
             named(name).write(fn)
+
+
+def writeSelectionSTL():
+    """Writes the currently selected Formices to .stl files."""
+    if len(selection) == 1:
+        name = selection[0]
+        fn = askFilename(GD.cfg['workdir'],file="%s.stl" % name,
+                         filter=['(*.stl)','*'],exist=False)
+        if fn:
+            print "Writing Formex '%s' to file '%s'" % (name,fn)
+            print named(name).bbox()
+            chdir(fn)
+            stl.write_stla(fn,named(name).f)
 
 
 def read_Formex(fn):
@@ -194,6 +209,18 @@ def undoChanges():
     changeSelection(oldvalues)
     drawSelection()
     
+
+def scaleSelection():
+    """Scale the selection."""
+    FL = checkSelection()
+    if FL:
+        res = askItems([['scale',0]],
+                       caption = 'Scale Factor')
+        if res:
+            scale = float(res['scale'])
+            changeSelection([ F.scale(scale) for F in FL ])
+            drawChanges()
+
 
 def translateSelection():
     """Translate the selection."""
@@ -295,11 +322,13 @@ def create_menu():
         ("&Select",makeSelection),
         ("&Draw Selection",drawSelection),
 #        ("&Draw Changes",drawChanges),
-        ("&Save Selection to file(s)",writeSelection),
+        ("&Save Selection as Formex)",writeSelection),
+        ("&Save Selection as STL File",writeSelectionSTL),
         ("&Read Formex Files",readSelection),
         ("---",None),
         ("&Set Property",setProperty),
         ("&Forget ",forgetSelection),
+        ("&Scale Selection",scaleSelection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
