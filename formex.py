@@ -1903,7 +1903,7 @@ def divide(F,div):
 
     This function only works on plex-2 Formices (line segments).
     """
-    if F.nnodel() != 2:
+    if F.nplex() != 2:
         raise RuntimeError,"Can only divide plex-2 Formices"
     if type(div) == int:
         div = arange(div+1) / float(div)

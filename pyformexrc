@@ -47,7 +47,7 @@ rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 0.01     # translation factor for pan buttons
 
 [draw]
-wait = 2  # time(sec.) to wait between draw operations (None is indefinitely)
+wait = 0  # time(sec.) to wait between draw operations (None is indefinitely)
 bgcolor = 'lightgrey'
 fgcolor = 'black'
 propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 

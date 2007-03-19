@@ -199,16 +199,17 @@ def toFormex():
         #print elems.shape
         PF[name] = Formex(nodes[elems])
 
-##def write_stl(types=['stl']):
-##    if not check_stl():
-##    types = map(utils.fileDescription,types)
-##    fn = askFilename(GD.cfg['workdir'],types,exist=False)
-##    if fn:
-##        print "Exporting stl model to %s" % fn
-##        F = PF['stl_model']
-##        GD.gui.setBusy()
-##        stl.write_ascii(fn,F.f)   
-##        GD.gui.setBusy(False)
+
+def write_stl(types=['stl']):
+    if not check_stl():
+        types = map(utils.fileDescription,types)
+    fn = askFilename(GD.cfg['workdir'],types,exist=False)
+    if fn:
+        print "Exporting stl model to %s" % fn
+        F = PF['stl_model']
+        GD.gui.setBusy()
+        stl.write_stla(fn,F.f)   
+        GD.gui.setBusy(False)
 
 # The following functions operate on the stl_model, but should
 # be changed to working on the surface model
@@ -567,15 +568,15 @@ def create_menu():
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
         ("&Write Surface Model",write_surface),
-        # ("&Write STL Model",write_stl),
-##         ("&Transform", [
-##             ("&Center model",center_stl),
-##             ("&Rotate model",rotate_stl),
-##             ("&Scale model",scale_stl),
-##             ] ),
-        ("&Center model",center_surface),
-        ("&Scale model",scale_surface),
-        ("&Rotate model",rotate_surface),
+        ("&Write STL Model",write_stl),
+        ("&Transform", [
+            ("&Center model",center_surface),
+            ("&Rotate model",rotate_surface),
+            ("&Scale model",scale_surface),
+            ] ),
+##         ("&Center model",center_surface),
+##         ("&Scale model",scale_surface),
+##         ("&Rotate model",rotate_surface),
         ("&Clip model",clip_surface),
         ("&Trim border",trim_surface),
         ("&Undo LAST STL transformation",undo_stl),
