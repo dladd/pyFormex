@@ -110,7 +110,7 @@ def askItems(items,caption=None):
         items[r[0]] = r[1]
     return items
 
-def askFilename(cur,filter="All files (*.*)",file=None,exist=True,multi=False):
+def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for an existing file name or multiple file names."""
     w = widgets.FileSelection(cur,filter,exist,multi)
     if file:
@@ -472,6 +472,9 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
 
     if view is None:
         view = DrawOptions['view']
+        #print "VIEW=%s" % view
+    elif view != '__last__':
+        setView(view)
 
     if not isinstance(F,formex.Formex):
         raise RuntimeError,"draw() can only draw Formex instances"

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: $
+# $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
 ## pyFormex is a python implementation of Formex algebra
@@ -67,14 +67,14 @@ def toggle_auto_draw():
 
 def convert_stl_to_off():
     """Converts an stl to off format without reading it into pyFormex."""
-    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
+    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
     if fn:     
         return stl.stl_to_off(fn,sanitize=False)
 
 
 def sanitize_stl_to_off():
     """Sanitizes an stl to off format without reading it into pyFormex."""
-    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
+    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
     if fn:     
         return stl.stl_to_off(fn,sanitize=True)
 
@@ -98,7 +98,7 @@ def read_surface(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
     if type(types) == str:
         types = [ types ]
     types = map(utils.fileDescription,types)
-    fn = askFilename(GD.cfg['workdir'],types)
+    fn = askFilename(GD.cfg['workdir'],types,exist=True)
     if fn:
         chdir(fn)
         set_project(utils.projectName(fn))
@@ -300,77 +300,6 @@ def undo_stl():
     F = oldF
     draw(F,color='green')
 
-def section_stl():
-    """Sectionize the stl model."""
-    global F,sections,ctr,diam
-    clear()
-    linewidth(1)
-    draw(F,color='yellow')
-    bb = F.bbox()
-    GD.message("Bounding box = %s" % bb)
-
-    itemlist = [['number of sections',20],['relative thickness',0.1]]
-    res,accept = widgets.inputDialog(itemlist,'Sectioning Parameters').getResult()
-    sections = []
-    ctr = []
-    diam = []
-    if accept:
-        n = int(res[0][1])
-        th = float(res[1][1])
-        xmin = bb[0][0]
-        xmax = bb[1][0]
-        dx = (xmax-xmin) / n
-        dxx = dx * th
-        X = xmin + arange(n+1) * dx
-        GD.message("Sections are taken at X-values: %s" % X)
-
-        c = zeros([n,3],float)
-        d = zeros([n,1],float)
-        linewidth(2)
-
-        for i in range(n+1):
-            G = F.clip(F.test(nodes='any',dir=0,min=X[i]-dxx,max=X[i]+dxx))
-            draw(G,color='blue',view=None)
-            GD.canvas.update()
-            C = G.center()
-            H = Formex(G.f-C)
-            x,y,z = H.x(),H.y(),H.z()
-            D = 2 * sqrt((x*x+y*y+z*z).mean())
-            GD.message("Section Center: %s; Diameter: %s" % (C,D))
-            sections.append(G)
-            ctr.append(C)
-            diam.append(D)
-
-def circle_stl():
-    """Draw circles as approximation of the STL model."""
-    global sections,ctr,diam,circles
-    import simple
-    circle = simple.circle().rotate(-90,1)
-    cross = Formex(simple.Pattern['plus']).rotate(-90,1)
-    circles = []
-    n = len(sections)
-    for i in range(n):
-        C = cross.translate(ctr[i])
-        B = circle.scale(diam[i]/2).translate(ctr[i])
-        S = sections[i]
-        print C.bbox()
-        print B.bbox()
-        print S.bbox()
-        clear()
-        draw(S,view='left',wait=False)
-        draw(C,color='red',bbox=None,wait=False)
-        draw(B,color='blue',bbox=None)
-        circles.append(B)
-
-def allcircles_stl():
-    global circles
-    clear()
-    linewidth(1)
-    draw(F,color='yellow',view='front')
-    linewidth(2)
-    for circ in circles:
-        draw(circ,color='blue',bbox=None)
-        
 def fill_holes():
     global F,oldF
     fn = project + '.stl'
@@ -497,7 +426,7 @@ def read_tetgen(surface=True, volume=True):
         ftype += ' *.smesh'
     if volume:
         ftype += ' *.ele'
-    fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype)
+    fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype,exist=True)
     nodes = elems =surf = None
     if fn:
         chdir(fn)
@@ -553,8 +482,8 @@ def show_volume():
 _menu = None
 
 def create_menu():
-    """Create the STL menu."""
-    menu = widgets.Menu('STL',GD.gui)
+    """Create the Surface menu."""
+    menu = widgets.Menu('Surface',GD.gui)
     MenuData = [
         # ("&New project",new_project),
         ("&Read Surface",read_surface),
@@ -579,12 +508,7 @@ def create_menu():
         ("&Clip model",clip_surface),
         ("&Trim border",trim_surface),
         ("&Undo LAST STL transformation",undo_stl),
-        ("&Sectionize STL model",section_stl),
-        ("&Show individual circles",circle_stl),
-        ("&Show all circles on STL model",allcircles_stl),
         ("&Fill the holes in STL model",fill_holes),
-        ("&Fly STL model",flytru_stl),
-#        ("&Export STL model to Abaqus (SLOW!)",export_stl),
         ("&Create tetgen model",create_tetgen),
         ("&Read Tetgen Volume",read_tetgen_volume),
         ("&Scale Volume model with factor 0.01",scale_volume),
@@ -607,7 +531,7 @@ def close_menu():
 
     
 def show_menu():
-    """Show the STL menu."""
+    """Show the surface menu."""
     #from PyQt4 import QtGui
     global _menu
     if not _menu:

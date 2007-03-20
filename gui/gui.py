@@ -481,7 +481,7 @@ def runApp(args):
     GD.board.write(GD.Version+"  (C) B. Verhegghe")
     GD.gui.show()
     # Create additional menus (put them in a list to save)
-    #menus = []
+    menus = []
     # History
     history = GD.cfg.get('history',None)
     if type(history) == list:
@@ -492,10 +492,12 @@ def runApp(args):
     # Create a menu with pyFormex examples
     # and insert it before the help menu
     for title,dir in GD.cfg['scriptdirs']:
+        GD.debug("Loading script dir %s" % dir)
         if os.path.exists(dir):
             m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
             GD.gui.menu.insertMenu(m)
-            #menus.append(m)
+            menus.append(m)   # Needed to keep m linked to a name,
+                              # else the menu is destroyed!
     GD.message = draw.message
     draw.reset()
     # Load plugins

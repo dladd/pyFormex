@@ -18,6 +18,7 @@ from gui.draw import *
 from formex import *
 from plugins import stl
 from plugins.partition import *
+from plugins.sectionize import *
 
 import commands, os, timer
 
@@ -44,16 +45,11 @@ def clearSelection():
     setSelection([])
 
 
-## def saveSelection():
-##     """Save the current values of selection so that changes can be undone."""
-##     setSelection(selection)
-
-
 def changeSelection(newvalues):
     """Replace the current values of selection by new ones."""
     global oldvalues
     oldvalues = map(named,selection)
-    Export(dict(zip(selection,newvalues)))
+    export(dict(zip(selection,newvalues)))
 
 
 def checkSelection(single=False):
@@ -152,7 +148,7 @@ def readSelection(select=True,draw=True):
         GD.gui.setBusy()
         F = map(read_Formex,fn)
         GD.gui.setBusy(False)
-        Export(dict(zip(names,F)))
+        export(dict(zip(names,F)))
         if select:
             setSelection(names)
             if draw:
@@ -287,7 +283,7 @@ def concatenateSelection():
             res = askItems([['name','combined']],'Name for the concatenation')
             if res:
                 name = res['name']
-                Export({name:Formex.concatenate(FL)})
+                export({name:Formex.concatenate(FL)})
                 setSelection([name])
                 drawSelection()
         else:
@@ -304,6 +300,14 @@ def partitionSelection():
     GD.message("Partitioning Formex '%s'" % name)
     cuts = partition(F)
     GD.message("Subsequent cutting planes: %s" % cuts)
+    if ack('Save cutting plane data?'):
+        types = [ 'Text Files (*.txt)', 'All Files (*)' ]
+        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        if fn:
+            chdir(fn)
+            fil = file(fn,'w')
+            fil.write("%s\n" % cuts)
+            fil.close()
     
 
 def createParts():
@@ -315,6 +319,39 @@ def createParts():
     name = selection[0]
     splitProp(F,name)
 
+
+def sectionizeSelection():
+    """Sectionize the selection."""
+    F = checkSelection(single=True)
+    if not F:
+        return
+
+    name = selection[0]
+    GD.message("Sectionizing Formex '%s'" % name)
+    sections,ctr,diam = sectionize(F)
+    GD.message("Centers: %s" % ctr)
+    GD.message("Diameters: %s" % diam)
+    if ack('Save section data?'):
+        types = [ 'Text Files (*.txt)', 'All Files (*)' ]
+        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        if fn:
+            chdir(fn)
+            fil = file(fn,'w')
+            fil.write("%s\n" % ctr)
+            fil.write("%s\n" % diam)
+            fil.close()
+    if ack('Draw circles?'):
+        circles = drawCircles(sections,ctr,diam)
+        export({'circles':Formex.concatenate(circles)})
+        if ack('Draw circles on Formex ?'):
+            drawAllCircles(F,circles)
+        if ack('Fly through the Formex ?'):
+            path = flytruCircles(ctr)
+            export({'flypath':path})
+##        if ack('Fly through in smooth mode ?'):
+##            smooth()
+##            flytruCircles(ctr)
+        
 
 ################### menu #################
 
@@ -336,16 +373,19 @@ def create_menu():
         ("---",None),
         ("&Set Property",setProperty),
         ("&Forget ",forgetSelection),
+        ("&Undo Last Changes",undoChanges),
         ("---",None),
         ("&Scale Selection",scaleSelection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
         ("&Clip Selection",clipSelection),
+        ("---",None),
         ("&Concatenate Selection",concatenateSelection),
         ("&Partition Selection",partitionSelection),
         ("&Create Parts",createParts),
-        ("&Undo Last Changes",undoChanges),
+        ("&Sectionize Selection",sectionizeSelection),
+        ("---",None),
         ("&Close",close_menu),
         ]
     menu.addItems(MenuData)

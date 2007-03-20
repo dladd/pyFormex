@@ -1193,10 +1193,16 @@ class Formex:
         or a vector specifying an axis through the origin.
         If no axis is specified, rotation is around the 2(z)-axis. This is
         convenient for working on 2D-structures.
-        
         """
-        m = rotationMatrix(angle,axis)
-        return Formex(dot(self.f,m),self.p)
+        return self.rotateM(rotationMatrix(angle,axis))
+
+
+    def rotateM(self,mat):
+        """Return a copy rotated by multiplying with rotation matrix.
+
+        The roation matrix is 3x3.
+        """
+        return Formex(dot(self.f,mat),self.p)
 
 
     def shear(self,dir,dir1,skew):

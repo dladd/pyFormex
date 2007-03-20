@@ -21,10 +21,10 @@ calpy_path = '/usr/local/lib/calpy-0.3.4'
 #Data
 ###################
 
-dx = 1800 # Modular size [mm]
+dx = 1800  # Modular size [mm]
 ht = 1500  # Deck height [mm]
 nx = 8     # number of bottom deck modules in x direction 
-ny = 6   # number of bottom deck modules in y direction 
+ny = 6     # number of bottom deck modules in y direction 
 
 q = -0.005 #distributed load [N/mm^2]
 
@@ -254,8 +254,8 @@ if GD.options.gui:
     linewidth(2)
     print optimscale
     deformed_plot(optimscale)
-    #view('__last__',True)
-
+    view('__last__',True)
+    exit()
 
     # Show animated deformation
     scale = optimscale
