@@ -195,6 +195,8 @@ if GD.options.gui:
         m = int(str(f)[0])
         return m*10**n
 
+    print siz1
+    print siz0
     optimscale = niceNumber(1./(siz1/siz0).max())
 
 

@@ -554,7 +554,7 @@ _menu = None
 
 def create_menu():
     """Create the STL menu."""
-    menu = widgets.Menu('STL')
+    menu = widgets.Menu('STL',GD.gui)
     MenuData = [
         # ("&New project",new_project),
         ("&Read Surface",read_surface),
@@ -569,14 +569,13 @@ def create_menu():
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
         ("&Write Surface Model",write_surface),
         ("&Write STL Model",write_stl),
+        ("---1",None),
         ("&Transform", [
             ("&Center model",center_surface),
             ("&Rotate model",rotate_surface),
             ("&Scale model",scale_surface),
             ] ),
-##         ("&Center model",center_surface),
-##         ("&Scale model",scale_surface),
-##         ("&Rotate model",rotate_surface),
+        ("---2",None),
         ("&Clip model",clip_surface),
         ("&Trim border",trim_surface),
         ("&Undo LAST STL transformation",undo_stl),
@@ -596,6 +595,7 @@ def create_menu():
     menu.addItems(MenuData)
     return menu
 
+
 def close_menu():
     """Close the STL menu."""
     # We should also remove the projectLabel widget from the statusbar
@@ -604,6 +604,7 @@ def close_menu():
     if _menu:
         _menu.close()
     _menu = None
+
     
 def show_menu():
     """Show the STL menu."""

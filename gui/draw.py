@@ -782,8 +782,7 @@ maxprop  = %s
 
 def printall():
     """Print all Formices in globals()"""
-    print "Formices currently in globals():"
-    print listAll()
+    GD.message("Formices currently in globals():\n%s" % listAll())
 
 
 def printglobals():

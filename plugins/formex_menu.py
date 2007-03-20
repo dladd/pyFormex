@@ -28,7 +28,6 @@ oldvalues = []  # a list of Formex instances corresponding to the selection
 
 ##################### select, read and write ##########################
 
-
 def setSelection(list):
     """Set the selection to a list of names.
 
@@ -187,6 +186,13 @@ def forgetSelection():
         forget(selection)
 
 
+def printBbox():
+    """Print the bbox of the current selection."""
+    FL = checkSelection()
+    if FL:
+        GD.message("Bbox of selection: %s" % bbox(FL))
+                   
+
 ################### Perform operations on Formex #######################
 
 def drawChanges():
@@ -312,22 +318,25 @@ def createParts():
 
 ################### menu #################
 
-_menu = None
+_menu = None  # protect against duplicate creation
 
 def create_menu():
     """Create the Formex menu."""
-    menu = widgets.Menu('Formex')
+    menu = widgets.Menu('Formex',GD.gui)
     MenuData = [
 #        ("&List Formices",formex_list),
+        ('&List Formices',printall),
         ("&Select",makeSelection),
         ("&Draw Selection",drawSelection),
+        ('&Print Bbox',printBbox),
 #        ("&Draw Changes",drawChanges),
-        ("&Save Selection as Formex)",writeSelection),
+        ("&Save Selection as Formex",writeSelection),
         ("&Save Selection as STL File",writeSelectionSTL),
         ("&Read Formex Files",readSelection),
         ("---",None),
         ("&Set Property",setProperty),
         ("&Forget ",forgetSelection),
+        ("---",None),
         ("&Scale Selection",scaleSelection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),

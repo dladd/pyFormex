@@ -13,7 +13,6 @@
 # We use the lima module
 from plugins import lima,turtle
 
-
 linewidth(2)
 
 # return standard Turtle rules 
@@ -59,9 +58,10 @@ def show(L,turtle_cmds):
     turtle_script = L.translate(turtle_cmds)
     coords = turtle.play("reset();" + turtle_script)
     if len(coords) > 0:
-        return Formex(coords)
+        F = Formex(coords)
         clear()
         draw(F)
+    #return F
     
 # and display them in series
 for a,r,g,t in limas:

@@ -199,9 +199,6 @@ class MultiCanvas(QtGui.QGridLayout):
 ##         menutext = "&"+Name
 ##         createViewAction(parent,name,icon,tooltip,menutext)
 
-
-
-
 ################# GUI ###############
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
@@ -221,7 +218,9 @@ class GUI(QtGui.QMainWindow):
         self.statusbar.addWidget(self.curfile)
         self.smiley = QtGui.QLabel()
         self.statusbar.addWidget(self.smiley)
-        self.menu = self.menuBar()
+        self.menu = widgets.MenuBar()
+        self.setMenuBar(self.menu)
+        
         self.toolbar = self.addToolBar('Top ToolBar')
         self.editor = None
         # Create a box for the central widget
@@ -267,8 +266,9 @@ class GUI(QtGui.QMainWindow):
         if GD.options.multiview:
             print "Activating the multiview feature"
             menu.insertViewportMenu()
-        menu.addMenuItems(self.menu, menu.MenuData)
-        self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
+        self.menu.addItems(menu.MenuData)
+        #widgets.addMenuItems(self.menu, menu.MenuData)
+        #self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
         self.toolbar.addSeparator()
@@ -280,7 +280,7 @@ class GUI(QtGui.QMainWindow):
         self.viewsMenu = None
         if GD.cfg.get('gui/viewsmenu',True):
             self.viewsMenu = QtGui.QMenu('&Views')
-            self.insertMenu(self.viewsMenu)
+            self.menu.insertMenu(self.viewsMenu)
         # Install the default canvas views
         # defviews = self.canvas.views.keys()
         # NO, these are not sorted, better:
@@ -307,38 +307,6 @@ class GUI(QtGui.QMainWindow):
             printsize(self,'Main:')
             printsize(self.canvas,'Canvas:')
             printsize(self.board,'Board:')
-
-
-    def insertMenu(self,menu,before='&Help'):
-        """Insert a menu in the menubar before the specified menu.
-
-        The new menu can be inserted BEFORE any of the existing menus.
-        By default the new menu will be inserted before the Help menu.
-
-        Also, the menu's title should be unique.
-        """
-        if not self.menus.has_key(str(menu.title())):
-            self.menu.insertMenu(self.menus[before],menu)
-            self.menus = dict([[str(a.text()),a] for a in self.menu.actions()])
-
-
-    def removeMenu(self,menu):
-        """Remove a menu from the main menubar.
-
-        menu is either a menu title or a menu action.
-        """
-        if type(menu) == str:
-            if self.menus.has_key(menu):
-                menu = self.menus[menu]
-            else:
-                menu = None
-        else:
-            menu = menu.menuAction()
-            if menu not in self.menu.actions():
-                menu = None
-        if menu is not None:
-            self.menu.removeAction(menu)
-            self.menus = dict([[str(a.text()),a] for a in self.menu.actions()])
         
     
     def resizeCanvas(self,wd,ht):
@@ -513,21 +481,21 @@ def runApp(args):
     GD.board.write(GD.Version+"  (C) B. Verhegghe")
     GD.gui.show()
     # Create additional menus (put them in a list to save)
-    menus = []
+    #menus = []
     # History
     history = GD.cfg.get('history',None)
     if type(history) == list:
         m = scriptsMenu.ScriptsMenu('History',files=history,max=10)
-        GD.gui.insertMenu(m)
-        menus.append(m)
+        GD.gui.menu.insertMenu(m)
+        #menus.append(m)
         GD.gui.history = m
     # Create a menu with pyFormex examples
     # and insert it before the help menu
     for title,dir in GD.cfg['scriptdirs']:
         if os.path.exists(dir):
             m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
-            GD.gui.insertMenu(m)
-            menus.append(m)
+            GD.gui.menu.insertMenu(m)
+            #menus.append(m)
     GD.message = draw.message
     draw.reset()
     # Load plugins
