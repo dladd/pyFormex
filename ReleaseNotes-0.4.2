@@ -21,6 +21,12 @@ GUI:
 
 - formex.py:
   - removed the equal() function: use numpy's allclose() instead.
+  - added a function roll() for compatibility with older numpy not
+    providing it.
+  - removed unique() because numpy provides it
+  - added new functions:  isClose(), boundingBox(), 
+    vectorPairAreaNormals(), vectorPairNormals(), vectorPairArea()
+  - merged rotateMatrix and rotateAboutMatrix
 
   Formex class:
   - setProp has no longer a default value. If called with a value None,
@@ -38,6 +44,7 @@ GUI:
   - translate and translate1 have been merged into a single method
 
   - rotate and rotateAround have been merged into a single methode
+    rotate will also accept a roation matrix as argument
 
   - shrink(factor) shrinks all elements in the Formex by a factor
 
@@ -54,6 +61,8 @@ GUI:
     For convenience, we provide the method oldspherical, which still works
     as the old spherical.
 
+  - write() and read() methods provide access to a native file format for
+    persistent storage of Formices.
 
 - draw.py:
   - draw(F) now also accepts a string. If it is the name of an object in

@@ -75,14 +75,16 @@ def main(argv=None):
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ]",
         version = GD.Version,
         option_list=[
+        make_option("--gui", help="start the GUI",
+                    action="store_true", dest="gui", default=None),
+        make_option("--nogui", help="do not load the GUI",
+                    action="store_false", dest="gui", default=None),
         make_option("--dri", help="Force the use of Direct Rendering",
                     action="store_true", dest="dri", default=False),
-        make_option("--nodri", help="Disables the use of Direct Rendering (overrides the --dri options)",
+        make_option("--nodri", help="Disables the use of Direct Rendering (overrides the --dri option)",
                     action="store_true", dest="nodri", default=False),
         make_option("--makecurrent", help="Call makecurrent on initializing the OpenGL canvas",
                     action="store_true", dest="makecurrent", default=False),
-        make_option("--nogui", help="do not load the GUI",
-                    action="store_false", dest="gui", default=True),
         make_option("--config", help="use file CONFIG for settings",
                     action="store", dest="config", default=None),
          make_option("--nodefaultconfig", help="skip all default locations of config files",
@@ -95,6 +97,7 @@ def main(argv=None):
                     action="store_true", dest="debug", default=False),
         ])
     GD.options, args = parser.parse_args()
+    GD.print_help = parser.print_help
 
     GD.debug("Options: %s" % GD.options)
 
@@ -132,7 +135,13 @@ def main(argv=None):
     GD.debug("RefConfig: %s" % GD.refcfg)
     GD.debug("Config: %s" % GD.cfg)
 
-
+    if GD.options.gui is None:
+        GD.message(GD.Version)
+        GD.message("""
+!! The pyformex command line options have changed !!
+!! By default pyformex will now run without the GUI !!
+!! Use pyformex --gui to start the Graphical User Interface.
+""")
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:

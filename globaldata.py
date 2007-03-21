@@ -13,6 +13,7 @@
 __version__ = "0.4.2-rc1"
 Version = 'pyFormex %s' % __version__
 options = None
+print_help = None
 
 cfg = None
 refcfg = None
@@ -22,7 +23,6 @@ app = None
 gui = None
 canvas = None
 board = None
-help = None
 PF = {}  # globals that will be offered to scripts
 image_formats_qt = []
 image_formats_qtr = []

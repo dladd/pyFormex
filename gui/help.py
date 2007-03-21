@@ -18,9 +18,11 @@ import utils
 def help(page=None):
     """Display a html help page.
 
-    If GD.help.viewer == None, the help page is displayed using the
-    built-in help browser. GD.help.viewer can be set to a string to
-    display the page in an external browser.
+    If no page is specified, the help manual is displayed.
+
+    If page is a string starting with 'http:', the page is displayed with
+    the command set in GD.cfg['browser'], else with the command in
+    GD.cfg['viewer']
     """
     if not page:
         page = GD.cfg['help/manual']
@@ -30,6 +32,10 @@ def help(page=None):
         browser = GD.cfg['viewer']
     pid = utils.spawn(browser % page)
 
+
+def cmdline():
+    """Display the pyFormex comaand line help."""
+    GD.print_help()
 
 def manual():
     """Display the pyFormex manual."""

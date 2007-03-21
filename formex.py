@@ -110,7 +110,7 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     values is a float array, target is a float value.
     values and target should be broadcastable to the same shape.
     
-    The return value is an boolean aray with shape of values flagging
+    The return value is a boolean array with shape of values flagging
     where the values are close to target.
     Two values a and b  are considered close if
         | a - b | < atol + rtol * | b |
@@ -124,16 +124,26 @@ def vectorPairAreaNormals(vec1,vec2):
     """Compute area of and normals on parallellograms formed by vec1 and vec2.
 
     vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-    The result is a tuple of two array:
+    The result is a tuple of two arrays:
       area (n) : the area of the parallellogram formed by vec1 and vec2.
       normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
-    These are caluculated from the cross prduct of vec1 and vec, which indeed
+    These are calculated from the cross product of vec1 and vec, which indeed
     gives area * normal.
     """
     normal = cross(vec1,vec2)
     area = sqrt(sum(normal*normal,axis=-1))
     normal /= area.reshape((-1,1))
     return area,normal
+
+
+def vectorPairArea(vec1,vec2):
+    """Compute area of the parallellogram formed by a vector pair vec1,vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is an (n) shaped array with the area of the parallellograms
+    formed by each pair of vectors (vec1,vec2).
+    """
+    return vectorPairAreaNormals(vec1,vec2)[0]
 
 
 def vectorPairNormals(vec1,vec2,normalized=True):
@@ -149,16 +159,6 @@ def vectorPairNormals(vec1,vec2,normalized=True):
         return vectorPairAreaNormals(vec1,vec2)[1]
     else:
         return cross(vec1,vec2)
-
-
-def vectorPairArea(vec1,vec2):
-    """Compute area of the parallellogram formed by a vector pair vec1,vec2.
-
-    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-    The result is an (n) shaped array with the area of the parallellograms
-    formed by each pair of vectors (vec1,vec2).
-    """
-    return vectorPairAreaNormals(vec1,vec2)[0]
 
 
 def pattern(s):
@@ -636,7 +636,7 @@ class Formex:
         return self.p
 
     def maxprop(self):
-        """Return the highest property used, or None"""
+        """Return the highest property value used, or None"""
         if self.p is None:
             return None
         else:
@@ -766,10 +766,6 @@ class Formex:
                 for i in self.f[1:]:
                     s += ", " + self.element2str(i)
         return s+"}"
-                
-    def asArray(self):
-        """Return string representation as a numpy array."""
-        return self.f.__str__()
 
     def asFormexWithProp(self):
         """Return string representation as Formex with properties.
@@ -783,6 +779,10 @@ class Formex:
         else:
             s += " no prop "
         return s
+                
+    def asArray(self):
+        """Return string representation as a numpy array."""
+        return self.f.__str__()
 
     #default print function
     __str__ = asFormex
@@ -1193,16 +1193,13 @@ class Formex:
         or a vector specifying an axis through the origin.
         If no axis is specified, rotation is around the 2(z)-axis. This is
         convenient for working on 2D-structures.
+
+        As a convenience, the user may also specify a 3x3 rotation matrix,
+        in which case the function rotate(mat) is equivalent to affine(mat).
         """
-        return self.rotateM(rotationMatrix(angle,axis))
-
-
-    def rotateM(self,mat):
-        """Return a copy rotated by multiplying with rotation matrix.
-
-        The roation matrix is 3x3.
-        """
-        return Formex(dot(self.f,mat),self.p)
+        if not isinstance(angle,ndarray):
+            angle = rotationMatrix(angle,axis)
+        return self.affine(angle)
 
 
     def shear(self,dir,dir1,skew):
@@ -1231,7 +1228,7 @@ class Formex:
         where mat is a 3x3 matrix and vec a length 3 list.
         """
         f = dot(self.f,mat)
-        if not vec==None:
+        if vec is not None:
             f += vec
         return Formex(f,self.p)
 #
@@ -1645,9 +1642,11 @@ class Formex:
 
 
     @classmethod
-    def read(clas,filnam):
+    def read(clas,fil):
         """Read a Formex from file."""
-        fil = file(filnam,'r')
+        isname = type(fil) == str
+        if isname:
+            fil = file(fil,'r')
         s = fil.readline()
         if not s.startswith('# Formex'):
             return None
@@ -1663,6 +1662,8 @@ class Formex:
             p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
         else:
             p = None
+        if isname:
+            fil.close()
         return Formex(f,p)
 
 

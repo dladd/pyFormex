@@ -179,7 +179,7 @@ Use it as follows: \Code{Formex.setPrintFunction(Formex.asArray)}.
 
 
 \begin{methoddesc}{fprint}{fmt="\%10.3e \%10.3e \%10.3e"}
-Prints all the points of the formex with the specified format. The format should hod three formatting codes, for the three coordinates of the point. 
+Prints all the points of the formex with the specified format. The format should hold three formatting codes, for the three coordinates of the point. 
 \end{methoddesc}
 
 
@@ -352,16 +352,20 @@ Thus, the following are all equivalent:
 \end{methoddesc}
 
 \begin{methoddesc}{rotate}{angle,axis=2}
-Returns a copy rotated over \var{angle} around \var{axis}.
+Return a copy rotated over \var{angle} around \var{axis}.
 
-The angle is specified in degrees. Default rotation is around z-axis.
+The angle is specified in degrees.
+The axis is either one of 0,1,2 designating one of the global axes,
+or a 3-component vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.
+
+Positive angles rotate clockwise when looking in the positive direction of the axis.
+
+As a convenience, the user may also specify a 3x3 rotation matrix as argument.
+In that case rotate(mat) is equivalent to affine(mat).
 \end{methoddesc}
 
-\begin{methoddesc}{rotateAround}{vector,angle}
-Returns a copy rotated over \var{angle} around \var{vector}.
-
-The angle is specified in degrees. The rotation axis is specified by a vector of three values. It is an axis through the center.
-\end{methoddesc}
 
 \begin{methoddesc}{shear}{dir,dir1,skew}
 Returns a copy skewed in the direction \var{dir} of plane \var{(dir,dir1)}.
@@ -541,9 +545,36 @@ The argument \var{list} is a sequence of tuples \var{(axis, step)}. Thus \Code{t
 \end{methoddesc}
 
 
+\subsection{Write to file, read from file}
+
+
+\begin{methoddesc}{write}{fil,sep=' '}
+Write a Formex to file.
+
+If \var{fil} is a string, a file with that name is opened. Else \var{fil} should
+be an open file.
+The Formex is then written to that file in a native format. It is advised, though not required, to use filenames ending in '.formex' for this purpose.
+If \var{fil} is a string, the file is closed prior to returning.
+
+If \var{sep} is specified, it will be used as a separator between subsequent coordinates. If an empty string is specified, the formex will be stored in a binary format. The default is to use an ASCII format with a single space as separator.
+\end{methoddesc}
+
+
+\begin{methoddesc}{read}{fil}
+Read a Formex from a file in native format. 
+
+This class method can be used to read back the data stored with the \Code{write(fil,sep)} method. \var{fil} is either a filename, or an open file.
+
+There is no need to specify the separator that was used in the write operation: it will be detected from the file header.
+
+Also, note the existence of a \var{readfile} function that can be used to read Formex data from a file that is not in native format. 
+
+\classmethod
+\end{methoddesc}
+
 
 \subsection{Non-member functions}
-The following functions operate on or return Formex objects, but are not part of the Formex class.
+The following functions operate on or return Formex objects, but are not part of the Formex class.\footnote{They might be implemented as class methods in future releases.}
 
 \begin{funcdesc}{connect}{Flist,nodid=None,bias=None,loop=False}
 Return a Formex which connects the formices in \var{Flist}.
@@ -633,9 +664,49 @@ The following functions are defined in the file formex.py, but do not depend on 
     Return true if point p is inside bbox defined by points mi and ma
 \end{funcdesc}
 
-\begin{funcdesc}{unique}{a}
-    Return the unique elements in an integer array.
+% \begin{funcdesc}{unique}{a}
+%     Return the unique elements in an integer array.
+% \end{funcdesc}
+
+\begin{funcdesc}{isClose}{values,target,rtol=1.e-5,atol=1.e-8}
+Return an array flagging the elements in values that are close to target.
+
+\var{values} is a float array, \var{target} is a float value.
+\var{values} and \var{target} should be broadcastable to the same shape.
+    
+The return value is a boolean array with shape of \var{values} flagging
+the values that are close to target.
+Two values \var{a} and \var{b}  are considered close if 
+\Code{abs(a-b) < atol + rtol * abs(b)}
 \end{funcdesc}
+
+\begin{funcdesc}{vectorPairAreaNormals}{vec1,vec2}
+Compute area of and normals on parallellograms formed by two vectors.
+
+\var{vec1} and \var{vec2} are (n,3)-shaped arrays holding collections of vectors. 
+The result is a tuple of two arrays:
+\begin{itemize}
+\item \var{area}, with shape (n): the area of the parallellogram formed by corresponding vectors of \var{vec1} and \var{vec2}.
+\item \var{normal}, with shape (n,3): unit-length normal vectors to each pair of vectors. The positive direction of the normals is thus that a rotation of \var{vec1} to \var{vec2} corresponds to a positive rotation around the normal.
+\end{itemize}
+Both values are calculated from the cross prduct of \var{vec1} and \var{vec2}, which indeed results in \var{area} * \var{normal}.
+\end{funcdesc}
+
+\begin{funcdesc}{vectorPairArea}{vec1,vec2}
+Compute the area of the parallellogram formed by two vectors.
+
+This returns the first part of \Code{vectorPairAreaNormals(vec1,vec2)}.
+\end{funcdesc}
+
+\begin{funcdesc}{vectorPairNormals}{vec1,vec2,normalized=True}
+Compute the normal vectors to pairs of two vectors.
+
+With \Code{normalized=True}, this returns the second part of \Code{vectorPairAreaNormals(vec1,vec2)}.
+
+With \Code{normalized=False}, returns unnormalized normal vectors. This does not use the \Code{vectorPairAreaNormals} function and is provided only to save computing time with very large arrays when normalization is not required. It is equivalent to \Code{cross(vec1,vec2)}.
+
+\end{funcdesc}
+
 
 \begin{funcdesc}{pattern}{s}
 Return a line segment pattern created from a string.
