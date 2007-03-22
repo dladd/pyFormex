@@ -1,0 +1,36 @@
+% pyformex manual --- gui
+% $Id$
+% (C) B.Verhegghe
+
+\chapter{The Graphical User Interface}
+\label{cha:gui}
+
+\section{Starting the GUI}
+You start the \pyf GUI by entering the command \Code{pyformex --gui}. Depending on your installation, you may also have a panel or menu button on your desktop to start the pyFormex interface. Finally you can start the GUI with the command \Code{startGUI()} in a \pyf script.
+
+
+
+\section{Customizing the GUI}
+\label{sec:customize-gui}
+
+Some parts of the \pyformex GUI can easily be customized by the user. 
+The appearance (widget style and fonts) can be changed from the preferences menu. Custom menus can be added by executing a script. Both are very simple tasks even for beginning users. They are explained shortly hereafter.
+
+Experienced users with a sufficient knowledge of Python and GUI building with Qt can of course use all their skills to tune every single aspect of the \pyformex GUI according to their wishes. If you send us your modifications, we might even include them in the official distribution.
+
+
+\subsection{Changing the appearance of the GUI}
+\label{sec:chang-appe-gui}
+
+
+\subsection{Adding custom menus}
+\label{sec:adding-custom-menus}
+
+When you start using \pyformex for serious work, you will probably run into complex scripts built from simpler subtasks that are not necessarily always executed in the same order. While the \pyformex scripting language offers enough functions to ask the user which parts of the script should be executed, in some cases it might be better to extend the \pyformex GUI with custom menus to execute some parts of your script.
+
+For this purpose, the gui.widgets module of \pyformex provides a Menu widget class. Its use is illustrated in the example Stl.py.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 

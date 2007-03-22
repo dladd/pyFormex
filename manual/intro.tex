@@ -1,4 +1,6 @@
-% Chapter 1 of the pyformex manual
+% pyformex manual --- introduction
+% $Id$
+% (C) B.Verhegghe
 
 \chapter{Introduction}
 \label{cha:introduction}
@@ -189,34 +191,19 @@ When starting up, \pyformex reads through the Examples directory (this is normal
 \menuselection{Examples \sub WireStent}
 
 
-\subsection{Customizing the GUI}
-\label{sec:customize-gui}
-
-Some parts of the \pyformex GUI can easily be customized by the user. 
-The appearance (widget style and fonts) can be changed from the preferences menu. Custom menus can be added by executing a script. Both are very simple tasks even for beginning users. They are explained shortly hereafter.
-
-Experienced users with a sufficient knowledge of Python and GUI building with Qt can of course use all their skills to tune every single aspect of the \pyformex GUI according to their wishes. If you send us your modifications, we might even include them in the official distribution.
-
-
-\subsubsection{Changing the appearance of the GUI}
-\label{sec:chang-appe-gui}
-
-
-\subsubsection{Adding custom menus}
-\label{sec:adding-custom-menus}
-
-When you start using \pyformex for serious work, you will probably run into complex scripts built from simpler subtasks that are not necessarily always executed in the same order. While the \pyformex scripting language offers enough functions to ask the user which parts of the script should be executed, in some cases it might be better to extend the \pyformex GUI with custom menus to execute some parts of your script.
-
-For this purpose, the gui.widgets module of \pyformex provides a Menu widget class. Its use is illustrated in the example Stl.py.
-
-
 \section{Quick {Python tutorial}}
 \label{sec:python-tutorial}
-This could be part of the tutorial in chapter 2
+\pyf is written in the Python language, and Python is also the scripting language of \pyf. Since the intent of \pyf is to design structures by using scripts, you will at least need to have some basic knowledge of Python before you can use \pyf for your own projects.
+
+There is ample documentation about Python freely available on the \htmladdnormallinkfoot{web}{\pythonURL}. 
+If you are new to Python, but have already some programming experience, the \htmladdnormallinkfoot{Python tutorial}{\pythonTUT} may be a good starting point.
+Or else, you can take a look at one of the \htmladdnormallinkfoot{beginners' guides}{\pythonBEG}.
+
 
 \section{Quick NumPy tutorial}
 \label{sec:numpy-tutorial}
-This could be part of the tutorial in chapter 2
+Numerical Python (or NumPy for short) is an extension to the Python language that allows for efficient operations on large (numerical) arrays. \pyf relies heavily on NumPy, and most likely you will need to use some NumPy functions in your scripts. As NumPy is still quite young, the available documentation is not so extensive yet. Still, the \htmladdnormallinkfoot{tentative NumPy tutorial}{http://www.scipy.org/Tentative_NumPy_Tutorial} already provides the basics.
+
 
 %%% Local Variables: 
 %%% mode: latex
