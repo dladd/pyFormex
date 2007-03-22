@@ -68,4 +68,5 @@ light1 = { 'ambient':0.4, 'diffuse': 0.2, 'specular':0.4, 'position':(0.,1.,1.,0
 manual = os.path.join(pyformexdir,"manual","html","index.html")
 pydocs = os.path.join(pyformexdir,"doc","html","index.html")
 website = "http://pyformex.berlios.de" 
-description = os.path.join(pyformexdir,"doc","Description")
+webmanual = website+"/manual" 
+readme = os.path.join(pyformexdir,"doc","README")

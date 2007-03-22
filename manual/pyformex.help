@@ -1,15 +1,18 @@
 usage: pyformex.py [<options>] [ --  <Qapp-options> ]
 
 options:
+  --gui              start the GUI
+  --nogui            do not load the GUI (default)
   --dri              Force the use of Direct Rendering
   --nodri            Disables the use of Direct Rendering (overrides the --dri
-                     options)
+                     option)
   --makecurrent      Call makecurrent on initializing the OpenGL canvas
-  --nogui            do not load the GUI
   --config=CONFIG    use file CONFIG for settings
   --nodefaultconfig  skip all default locations of config files
-  --redirect         redirect standard output to the message board (only if no
-                     --nogui option given)
+  --redirect         redirect standard output to the message board (ignored
+                     with --nogui)
+  --multiview        Activate the multiple viewport feature (ignored with
+                     --nogui)
   --debug            display debugging info to sys.stdout
   --version          show program's version number and exit
   -h, --help         show this help message and exit

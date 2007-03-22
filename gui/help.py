@@ -49,9 +49,13 @@ def website():
     """Display the pyFormex website."""
     help(GD.cfg['help/website'])
 
-def description():
+def webman():
+    """Display the pyFormex website."""
+    help(GD.cfg['help/webmanual'])
+
+def readme():
     """Display the pyFormex description."""
-    draw.about(file(GD.cfg['help/description']).read())
+    draw.about(file(GD.cfg['help/readme']).read())
 
 def about():
     draw.about("""%s

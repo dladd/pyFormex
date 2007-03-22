@@ -5,6 +5,7 @@ PYTHONDIR=/usr/lib/python2.4
 MKHOWTO=${PYTHONDIR}/doc/tools/mkhowto
 TEXINPUTS=${PYTHONDIR}/doc/texinputs
 TGT=manual
+SRC=${TGT}.tex pyformex.help 
 HTMLDIR=html
 FAVICON=../favicon.ico
 OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" --image-type png --favicon ${FAVICON}
@@ -18,14 +19,14 @@ OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" 
 
 .PHONY html: html/${TGT}.html
 
-pyformex.help:
+pyformex.help: ../pyformex.py
 	../pyformex.py --help > $@
 
-${TGT}.pdf: ${TGT}.tex
+${TGT}.pdf: ${SRC}
 	${MKHOWTO} --a4 --pdf $<
 
-${TGT}.ps: ${TGT}.tex
+${TGT}.ps: ${SRC}
 	${MKHOWTO} --a4 --ps $<
 
-html/${TGT}.html: ${TGT}.tex
+html/${TGT}.html: ${SRC}
 	${MKHOWTO} --html --dir ${HTMLDIR} $(OPTIONS)  $<

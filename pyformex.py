@@ -77,7 +77,7 @@ def main(argv=None):
         option_list=[
         make_option("--gui", help="start the GUI",
                     action="store_true", dest="gui", default=None),
-        make_option("--nogui", help="do not load the GUI",
+        make_option("--nogui", help="do not load the GUI (default)",
                     action="store_false", dest="gui", default=None),
         make_option("--dri", help="Force the use of Direct Rendering",
                     action="store_true", dest="dri", default=False),
@@ -125,7 +125,7 @@ def main(argv=None):
     GD.preffile = allprefs.pop()
     for f in allprefs:
         GD.debug("Reading config file %s" % f)
-        GD.cfg.read(f)
+        GD.cfg.read(f) 
     # Save this config as a reference, then load last config file
     GD.refcfg = GD.cfg
     GD.cfg = Config(default=refLookup)
@@ -135,12 +135,13 @@ def main(argv=None):
     GD.debug("RefConfig: %s" % GD.refcfg)
     GD.debug("Config: %s" % GD.cfg)
 
-    if GD.options.gui is None:
+    if GD.options.gui is None and GD.Version.startswith('0.4') :
         GD.message(GD.Version)
         GD.message("""
 !! The pyformex command line options have changed !!
 !! By default pyformex will now run without the GUI !!
 !! Use pyformex --gui to start the Graphical User Interface.
+!! (This message will go away in release 0.5).
 """)
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!

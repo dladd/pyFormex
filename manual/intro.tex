@@ -148,21 +148,23 @@ A few things may need to be changed for running the GUI on Windows. We will have
 Still, any feedback on (succesful or not succesful) installation attempts on Windows is welcome.
 
 
-\section{Running \pyformex}
+\section{Running \pyf}
 \label{sec:running}
 To start \pyf, enter the command \Code{pyformex --gui}. This will start the \pyf Graphical User Interface (GUI), from where you can launch examples or load, edit and run your own \pyf scripts.
 
 The installation procedure may have installed \pyf into your desktop menu or even have created a start button in the desktop panel. These provide convenient shortcuts to start the \pyf GUI.
 
-The \pyf program takes some optional command line options, that modify the working of the program.
+The \pyf program takes some optional command line options, that modify the behaviour of the program.
 
 \subsection{Command line options}
 The whole list of possible command line options can be seen by executing the command \Code{pyformex --help}. This will produce the following output.
 \verbatiminput{pyformex.help}
 
+\emph{As of version 0.4.2, the\Code{--nogui} option has become the default. This is because the command line will mostly be used to start non-interactive execution of \pyf, while the GUI will often be launched from a start button or menu, which can easily incorporate the --gui option. 
+}
 \subsection{Running \pyFormex without the GUI}
-If you start \pyf with the \Code{--nogui} option, no Graphical User Interface is created. This is extremely useful to run automated scripts in batch mode. When run with the \Code{--nogui} option, \pyf will interprete all arguments remaining after interpreting the options, as filenames of scripts to be run (and possibly arguments to be interpreted by these scripts).
-Thus, if you want to run a \pyf script \Code{myscript.py} in batch mode, just give the command \Code{pyformex --nogui myscript.py}.
+If you start \pyf without the \Code{--gui} option, no Graphical User Interface is created. This is extremely useful to run automated scripts in batch mode. When run without the \Code{--gui} option, \pyf will interprete all arguments remaining after interpreting the options, as filenames of scripts to be run (and possibly arguments to be interpreted by these scripts).
+Thus, if you want to run a \pyf script \Code{myscript.py} in batch mode, just give the command \Code{pyformex myscript.py}.
  
 
 \section{Quick tutorial for the \pyformex GUI}
@@ -173,6 +175,7 @@ In the current version () the GUI mainly serves the following purposes:
 \item Save a view in one of the supported image formats. Most of the images in this manual and on the \pyformex{} website were created that way. 
 \item Changing \pyformex settings (though there aren't many yet that can be changed through the GUI).
 \item Running \pyformex scripts, possibly starting other programs and display their results.
+\item Interactively construct, change, import or export Formex structures. 
 \end{itemize}
 
 The GUI does not (yet) provide a means to interactively design a structure, select parts of a structure or set/show information about (parts of) the structure. Designing a structure is done by writing a small script with the mathematical expressions needed to generate it. Any text editor will be suitable for this purpose. The author uses XEmacs, but this is just a personal preference. 
