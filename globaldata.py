@@ -42,7 +42,7 @@ def message(s):
 def debug(s):
     if hasattr(options,'debug'):
         if options.debug:
-            print s
+            print "DEBUG: %s" % s
 
 
 
