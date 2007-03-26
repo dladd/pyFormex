@@ -31,8 +31,8 @@ def turtlecmds(rules={}):
 # Each tuple holds an axiom, grow rules, generations and turtle rules
 limas = [ [ "F", {"F":"F+G","G":"F-G"},10,turtlecmds() ],
           [ "F", {"F":"F*F//F*F"},6,turtlecmds() ],  # KOCH line
-          [ "F+F+F+F", {"F":"FF+FF--FF+F"},5,turtlecmds() ],
-          [ "F+F+F+F", {"F":"FF+F+F-F+FF"},5,turtlecmds() ],
+          [ "F+F+F+F", {"F":"FF+FF--FF+F"},4,turtlecmds() ],
+          [ "F+F+F+F", {"F":"FF+F+F-F+FF"},4,turtlecmds() ],
           [ "F//F//F", {"F":"F*F//F*F"},5,turtlecmds() ], # KOCH snowflake
           [ "F+F+F+F", {"F":"FF+F++F+F"},4,turtlecmds() ],
           [ "F+F+F+F", {"F":"FF+F+F+F+F+F-F"},4,turtlecmds() ],
