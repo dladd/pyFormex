@@ -32,6 +32,32 @@ from cameraMenu import setPerspective,setProjection
 ##     GD.gui.update()
 
 
+##def textView(text,actions=['OK']):
+##    """Display a text file and wait for user response."""
+##    w = QtGui.QMessageBox()
+##    w.setText(text)
+##    w.setIcon(QtGui.QMessageBox.Question)
+##    w.show()
+##    w.resize(100,40)
+##    w.update()
+##    return w.exec_()
+
+def textView(text):
+    """Display a text file and wait for user response."""
+    w = QtGui.QDialog()
+    t = QtGui.QTextEdit()
+    t.setReadOnly(True)
+    t.setPlainText(text)
+    b = QtGui.QPushButton('Close')
+    QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("accept()"))
+    l = QtGui.QVBoxLayout()
+    l.addWidget(t)
+    l.addWidget(b)
+    w.setLayout(l)
+    w.resize(800,400)
+    return w.exec_()
+    
+
 def messageBox(message,level='info',actions=['OK']):
     """Display a message box and wait for user response.
 
@@ -685,15 +711,6 @@ def delay(i):
         GD.cfg['draw/wait'] = i
     
 
-def exit(all=False):
-    if scriptRunning:
-        if all:
-            raise ExitAll # exit from pyformex
-        else:
-            raise Exit # exit from script only
-    else:
-        GD.app.quit() # exit from pyformex
-
         
 wakeupMode=0
 def sleep(timeout=None):
@@ -744,8 +761,9 @@ def wakeup(mode=0):
 ##     name = ask("Which Formex shall I draw ?")
 ##     drawNamed(name,*args)
 
-## exit from program pyformex
+
 def exit(all=False):
+    """Exit from the current script or from pyformex if no script running."""
     if scriptRunning:
         if all:
             raise ExitAll # exit from pyformex

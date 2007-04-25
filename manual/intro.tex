@@ -12,9 +12,9 @@ You probably expect to find here a short definition of what \pyformex is and wha
 The short answer is that \pyformex is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
 If you find this definition too dull, incomprehensible or just not descriptive enough, read on through this section and look at some of the examples in this manual and on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. You will then probably have a better idea of what \pyformex{} is. 
 
-The initial intent of \pyformex was the rapid design of three-dimensional structures with a configuration that can easier be obtained through mathematical description than through interactive generation of its subparts and assemblage thereof. While during development of the program we have concentrated mostly on wireframe type structures, surface and solid elements have been part of \pyformex right from the beginning. Still, most of the examples included with \pyformex are of frame type and most of the practical use of the program is in this area.
+The initial intent of \pyformex was the rapid design of three-dimensional structures with a geometry that can easier be obtained through mathematical description than through interactive generation of its subparts and assemblage thereof. While during development of the program we have concentrated mostly on wireframe type structures, surface and solid elements have been part of \pyformex right from the beginning. Still, most of the examples included with \pyformex are of frame type and most of the practical use of the program is in this area. There is also an extensive plugin for working with triangulated surfaces.
 
-The stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} structure in the figure below is a good illustration of what \pyformex can do and what it was intended for. 
+The stent\footnote{A stent is a tube-shaped structure that is e.g. used to reopen (and keep open) obstructed blood vessels.} structure in the figure~\ref{fig:WireStent-example} is a good illustration of what \pyformex can do and what it was intended for. It is one of the many examples provided with \pyf.
 
 \begin{figure}[h]
   \centering
@@ -26,25 +26,26 @@ The stent\footnote{A stent is a tube-shaped structure that is e.g. used to reope
   \begin{htmlonly}
     \htmladdimg{../images/wirestent.png}
   \end{htmlonly}  
-  \caption{WireStent example.}
+  \caption{WireStent example.}   \label{fig:WireStent-example}
+
 \end{figure}
 
-This structure is composed of 22032 line segments, each with 2 nodes. Nobody in his right mind would ever even try to input all the 132192 coordinates of all the points describing that structure. 
-With \pyformex, one could define the structure by a sequence of operations like this:
+The structure is composed of 22032 line segments, each defined by 2 points. Nobody in his right mind would ever even try to input all the 132192 coordinates of all the points describing that structure. 
+With \pyformex, one could define the structure by the following sequence of operations, illustrated in the figure~\ref{fig:wirestent-steps}:
  \begin{itemize}
- \item Create a planar base module of two crossing wires.
+ \item Create a nearly planar base module of two crossing wires. (The wires have a slight out-of-plane bend, to enable the crossing.) 
  \item Extend the base module with a mirrored and translated copy.
  \item Replicate the base module in both directions of the base plane.
  \item Roll the planar grid into a cylinder.
  \end{itemize}
- The procedure is illustrated by the subsequent images in the figure below.
+\pyf provides all the needed operations to define the geometry in this way.
  \begin{figure}[h]
    \centering
    \begin{makeimage}
    \end{makeimage}
    \begin{latexonly}
-     \includegraphics[width=2cm]{images/wirestent-1}
-     \includegraphics[width=2cm]{images/wirestent-2}
+     \includegraphics[width=2cm]{images/wirestent-1}\\
+     \includegraphics[width=2cm]{images/wirestent-2}\\
      \includegraphics[width=12cm]{images/wirestent-3}
    \end{latexonly}
    \begin{htmlonly}
@@ -52,25 +53,25 @@ With \pyformex, one could define the structure by a sequence of operations like 
      \htmladdimg{../images/wirestent-2.png}
      \htmladdimg{../images/wirestent-3.png}
    \end{htmlonly}  
-   \label{fig:WireStent steps}
-   \caption{WireStent example.}
+   \caption{Steps in building the WireStent example.}   \label{fig:WireStent-steps}
+
  \end{figure}
 
 
-\section{Rationale}
-\label{sec:rationale}
-\pyformex does not fit into a single category of traditional (mostly commercial) software packages, because it is not being developed as a program with a specific purpose, but rather as a collection of tools we need is some of our research projects. Many of the tasks for which we now use \pyformex could as well or sometimes even better be done with some other software package, like a CAD program %(e.g. SolidWorks\textregistered)
+%\section{Rationale}
+%\label{sec:rationale}
+\pyformex does not fit into a single category of traditional (mostly commercial) software packages, because it is not being developed as a program with a specific purpose, but rather as a collection of tools and scripts which we needed at some point in our research projects. Many of the tasks for which we now use \pyformex could be done also with some other software package, like a CAD program %(e.g. SolidWorks\textregistered)
 or a %(MatLab\textregistered{} style)
 matrix calculation package or a solid modeler/renderer %genre Blender
 or a finite element preprocessor%(such as GiD)
-. Each of these is very well suited for the task it was designed for, but none provides all the features of \pyformex in a single consistent packages. 
+. Each of these is very well suited for the task it was designed for, but none provides all the features of \pyformex in a single consistent environment, and certainly not as free software. 
 
 Perhaps the most important feature of \pyformex is that is was primarily intended to be an easy scripting language for creating geometrical models of 3D-structures. The Graphical User Interface was only added as a convenient means to visualize the designed structure. \pyformex can still run without user interface, and this makes it ideal for use in a batch toolchain.
 
-The author of \pyformex, professor in structural engineering and heavy computer user since mainframe times, deeply regrets that computing skills of nowadays engineering students are often limited to using graphical interfaces of mostly commercial packages. This greatly limits their abilities, because in their mind: 'If there is no menu item to do a certain task, then it can not be done!'
-The hope to get some of them back to coding has been a stimulus in continuing our work on \pyformex. 
+The author of \pyformex, professor in structural engineering and heavy computer user since mainframe times, deeply regrets that computing skills of nowadays engineering students are often limited to using graphical interfaces of mostly commercial packages. This greatly limits their skills, because in their way of thinking: 'If there is no menu item to do some task, then it can not be done!'
+The hope to get some of them back into coding has been a stimulus in continuing our work on \pyformex. 
  
-Finally, \pyformex is, and will always be, free software in both meanings of free: guaranteeing your freedom (see \ref{sec:license}) and without paying. 
+Finally, \pyformex is, and will always be, free software in both meanings of free: guaranteeing your freedom (see \ref{sec:license}) and without charging a fee for it. 
 
 
 %\section{History}
@@ -78,7 +79,7 @@ Finally, \pyformex is, and will always be, free software in both meanings of fre
 
 \section{License and Disclaimer}
 \label{sec:license}
-\pyformex \copyright 2004-2007 Benedict Verhegghe
+\pyformex is \copyright 2004-2007 Benedict Verhegghe
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the \htmladdnormallinkfoot{GNU General Public License}{http://www.gnu.org/licenses/gpl.html} as published by
@@ -101,14 +102,14 @@ In order to run \pyformex, you need to have the following installed (and working
 \begin{itemize}
 \item \htmladdnormallinkfoot{Python}{\pythonURL}: Version 2.4 or higher is recommended. Versions 2.3 and 2.2 might work with only a few minor changes.
 Nearly all Linux distributions come with Python installed, so this should not be no major obstacle.
-\item \htmladdnormallinkfoot{NumPy}{\numpyURL}: Version 1.0-rc1 or higher. Earlier versions can be made to work, but will require some changes to be made. NumPy is the package we use for fast numerical array operations in Python and is essential for \pyformex.\footnote{The \texttt{Numarray} package, which was used up until \pyformex 0.3, is no longer supported }
-On Linux systems, installing NumPy from source is usually straightforward. Debian users should install the packages python-numpy, python-numpy-dev and python-numpy-ext. There are binary packages for Windows on the \htmladdnormallinkfoot{Sourceforge download page}{http://www.numpy.org/}.
+\item \htmladdnormallinkfoot{NumPy}{\numpyURL}: Version 1.0-rc1 or higher. Earlier versions can be made to work, but will require some changes to be made. NumPy is the package used for fast numerical array operations in Python and is essential for \pyformex.\footnote{The \texttt{Numarray} package, which was used up until \pyformex 0.3, is no longer supported }
+On Linux systems, installing NumPy from source is usually straightforward. Debian users can install the packages python-numpy, python-numpy-dev and python-numpy-ext. There are binary packages for Windows on the \htmladdnormallinkfoot{Sourceforge download page}{http://www.numpy.org/}.
 \end{itemize}
-If you only want to use the Formex data model and transformation methods, this will suffice. But most probably you will also want to run the \pyformex Graphical User Interface (GUI) for visualizing your structures. Then you also need the following. 
+If you only want to use the Formex data model and transformation methods, the above will suffice. But most probably you will also want to run the \pyformex Graphical User Interface (GUI) for visualizing your structures. Then you also need the following. 
 \begin{itemize}
-\item \htmladdnormallinkfoot{Qt4}{http://www.trolltech.com/products/qt}: The widget toolkit on which the GUI was built. For Debian users this  come in the packages python-qt4 and python-qt4-dev.
-\item \htmladdnormallinkfoot{PyQt4}{http://www.riverbankcomputing.co.uk/pyqt/index.php}: The Python bindings for Qt4. Debian users shoould install the packages python-qt4, python-qt4-dev, python-qt4-gl.
-\item \htmladdnormallinkfoot{PyOpenGL}{http://pyopengl.sourceforge.net/}: Pytong bindings for OpenGL, used for drawing and manipulating the 3D-structures. For denian users this is in package python-opengl.
+\item \htmladdnormallinkfoot{Qt4}{http://www.trolltech.com/products/qt}: The widget toolkit on which the GUI was built. For Debian users this  comes in the packages python-qt4 and python-qt4-dev.
+\item \htmladdnormallinkfoot{PyQt4}{http://www.riverbankcomputing.co.uk/pyqt/index.php}: The Python bindings for Qt4. Debian users should install the packages python-qt4, python-qt4-dev and python-qt4-gl.
+\item \htmladdnormallinkfoot{PyOpenGL}{http://pyopengl.sourceforge.net/}: Python bindings for OpenGL, used for drawing and manipulating the 3D-structures. For debian users this is in the package python-opengl.
 \end{itemize}
 
 
@@ -116,15 +117,15 @@ If you only want to use the Formex data model and transformation methods, this w
 \subsection{Downloading}
 \label{sec:downloading}
 The official releases of \pyformex can be downloaded from the 
-\htmladdnormallinkfoot{\pyformex website}{\websiteURL}. As of the writing of this manual, the latest release is \htmladdnormallinkfoot{pyformex 0.4}{http://prdownload.berlios.de/pyformex/pyformex-0.4.tar.gz}. 
+\htmladdnormallinkfoot{\pyformex website}{\websiteURL}. As of the writing of this manual, the latest release is \htmladdnormallinkfoot{\pyf \release}{\latestpyf}. 
 \pyformex is currently distributed in the form of a \Code{.tar.gz} (tarball) archive. See \ref{sec:installation-linux} for how to proceed further.
 
-Alternatively you can download the tarball releases from our \htmladdnormallinkfoot{local FTP server}{ftp://bumps.ugent.be/pub/pyformex\xspace}. This one is slower, but you occasionally you might find there an interim release or release candidate not (yet) available on the official server.
+Alternatively you can download the tarball releases from our \htmladdnormallinkfoot{local FTP server}{ftp://bumps.ugent.be/pub/pyformex\xspace}. The server may be slower, but occasionally you can find there an interim release or release candidate not (yet) available on the official server.
 
-Finally, you can also get the latest development code from the SVN repository on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. If you have \htmladdnormallinkfoot{Subversion}{http://subversion.tigris.org/} installed on your system, you can just do\CodeLine{svn checkout svn://svn.berlios.de/pyformex/trunk \pyformex}
+Finally, you can also get the latest development code from the SVN repository on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. If you have \htmladdnormallinkfoot{Subversion}{http://subversion.tigris.org/} installed on your system, you can just do\CodeLine{svn checkout svn://svn.berlios.de/pyformex/trunk pyformex}
 and the whole current \pyformex tree will be copied to a subdirectory \code{pyformex} on your current path.
 
-\emph{Unless you absolutely need some of the latest features or bugfixes, the tarball releases are what you want to go for. 
+\emph{Unless you want to help with the development or you absolutely need some of the latest features or bugfixes, the tarball releases are what you want to go for. 
 }
 
 
@@ -140,42 +141,44 @@ This will install \pyformex in \Code{/usr/local/lib/pyformex-version}.
 If you want to install somewhere else, you need to change the Makefile first.  
 
 The installation procedure installs everything into this single directory, but also makes a couple of symlinks:
-/usr/local/share/doc/pyformex-version is a link to the doc subdirectory of pyformex, ans /usr/local/bin/pyformex is a link to the main executable pyformex.py.
+\Code{/usr/local/share/doc/pyformex-VERSION} is a link to the \Code{doc} subdirectory of pyformex, and \Code{/usr/local/bin/pyformex} is a link to the main executable \Code{pyformex.py}.
 
 
 \subsection{Installation on Windows platforms}
 \label{sec:installation-windows}
-There is no installation procedure yet. All the pre-requisite packages are available for Windows, so in theory it is possible to run \pyformex on Windows. We know of some users who are running \pyformex succesfully using the --nogui option, i.e. without the Graphical User Interface (GUI).  
-A few things may need to be changed for running the GUI on Windows. We will have a look at this in the future, but it is not our primary concern.
+There is no installation procedure yet. All the pre-requisite packages are available for Windows, so in theory it is possible to run \pyformex on Windows. We know of some users who are running \pyformex succesfully using the \Code{{-}{-}nogui} option, i.e. without the Graphical User Interface (GUI).  
+A few things may need to be changed for running the GUI on Windows. We might eventually have a look at this in the future, but it certainly is not our primary concern.
 Still, any feedback on (succesful or not succesful) installation attempts on Windows is welcome.
 
 
 \section{Running \pyf}
 \label{sec:running}
-To start \pyf, enter the command \Code{pyformex --gui}. This will start the \pyf Graphical User Interface (GUI), from where you can launch examples or load, edit and run your own \pyf scripts.
+To start \pyf, enter the command \Code{pyformex {-}{-}gui}. This will start the \pyf Graphical User Interface (GUI), from where you can launch examples or load, edit and run your own \pyf scripts.
 
 The installation procedure may have installed \pyf into your desktop menu or even have created a start button in the desktop panel. These provide convenient shortcuts to start the \pyf GUI.
 
-The \pyf program takes some optional command line options, that modify the behaviour of the program.
+The \pyf program takes some optional command line arguments, that modify the behaviour of the program.
 
 \subsection{Command line options}
-The whole list of possible command line options can be seen by executing the command \Code{pyformex --help}. This will produce the following output.
+The whole list of possible command line options can be seen by executing the command \Code{pyformex {-}{-}help}. This will produce the following output.
 \verbatiminput{pyformex.help}
 
-\emph{As of version 0.4.2, the\Code{--nogui} option has become the default. This is because the command line will mostly be used to start non-interactive execution of \pyf, while the GUI will often be launched from a start button or menu, which can easily incorporate the --gui option. 
+\emph{As of version 0.4.2, the\Code{{-}{-}nogui} option has become the default. This is because the command line will mostly be used to start non-interactive execution of \pyf, while the GUI will often be launched from a start button or menu, which can easily incorporate the \Code{{-}{-}gui} option. 
 }
 \subsection{Running \pyFormex without the GUI}
-If you start \pyf without the \Code{--gui} option, no Graphical User Interface is created. This is extremely useful to run automated scripts in batch mode. When run without the \Code{--gui} option, \pyf will interprete all arguments remaining after interpreting the options, as filenames of scripts to be run (and possibly arguments to be interpreted by these scripts).
+If you start \pyf \emph{without} the \Code{{-}{-}gui} option, no Graphical User Interface is created. This is extremely useful to run automated scripts in batch mode. In this operating mode, \pyf will interprete all arguments remaining after interpreting the options, as filenames of scripts to be run (and possibly arguments to be interpreted by these scripts).
 Thus, if you want to run a \pyf script \Code{myscript.py} in batch mode, just give the command \Code{pyformex myscript.py}.
+
+The running script has access to the remaining arguments in the global list variable \var{argv}. The script can use any arguments of it and pop them of the list. Any arguments remaining in the \var{argv} list when the script finishes, will be used for another \pyf execution cycle. This means that the first remaining argument should again be a \pyf script.
  
 
 \section{Quick tutorial for the \pyformex GUI}
 \label{sec:gui-tutorial}
-In the current version () the GUI mainly serves the following purposes:
+In the current version (\release) the GUI mainly serves the following purposes:
 \begin{itemize}
 \item Display a structure in 3D. This includes changing the viewpoint, orientation and viewing distance. Thus you can interactively rotate, translate, zoom.
 \item Save a view in one of the supported image formats. Most of the images in this manual and on the \pyformex{} website were created that way. 
-\item Changing \pyformex settings (though there aren't many yet that can be changed through the GUI).
+\item Changing \pyformex settings (though not everything can be changed through the GUI yet).
 \item Running \pyformex scripts, possibly starting other programs and display their results.
 \item Interactively construct, change, import or export Formex structures. 
 \end{itemize}

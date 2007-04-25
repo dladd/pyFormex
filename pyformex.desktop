@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=pyformex
+Exec=pyformex --gui --redirect
 Icon=pyformex.png
 Name=pyFormex
 GenericName=pyFormex Space Frame Designer

@@ -25,7 +25,7 @@ NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= releases
 
-.PHONY: dist release distdir modules distclean stamp dist.stamped manual test
+.PHONY: dist pub distclean pydoc manual stamp dist.stamped version tag
 
 ############ Creating Distribution ##################
 
@@ -41,7 +41,7 @@ ${PKGDIR}/${PKG}: version ${PYFORMEXDIR}
 	mkdir -p ${PKGDIR}
 	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
 
-${PYFORMEXDIR}: dist.stamped
+${PYFORMEXDIR}: pydoc dist.stamped
 
 distclean:
 	rm -rf ${PYFORMEXDIR}

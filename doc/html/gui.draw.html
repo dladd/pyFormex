@@ -41,16 +41,18 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-Export"><strong>Export</strong></a>(dict)</dt></dl>
- <dl><dt><a name="-Globals"><strong>Globals</strong></a>()</dt></dl>
- <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2-rc1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-Export"><strong>Export</strong></a> = export(dict)</dt></dl>
+ <dl><dt><a name="-Globals"><strong>Globals</strong></a> = globals(...)</dt><dd><tt>globals()&nbsp;-&gt;&nbsp;dictionary<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2-rc2'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
 Returns&nbsp;index&nbsp;of&nbsp;the&nbsp;chosen&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-askDirname"><strong>askDirname</strong></a>(cur)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;directory&nbsp;name.</tt></dd></dl>
- <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, files<font color="#909090">='All files (*.*)'</font>, exist<font color="#909090">=True</font>, multi<font color="#909090">=False</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;file&nbsp;name&nbsp;or&nbsp;multiple&nbsp;file&nbsp;names.</tt></dd></dl>
- <dl><dt><a name="-askItems"><strong>askItems</strong></a>(items)</dt><dd><tt>Ask&nbsp;the&nbsp;value&nbsp;of&nbsp;some&nbsp;items&nbsp;to&nbsp;the&nbsp;user.&nbsp;!!&nbsp;VERY&nbsp;EXPERIMENTAL!!<br>
+ <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, filter<font color="#909090">='All files (*.*)'</font>, file<font color="#909090">=None</font>, exist<font color="#909090">=False</font>, multi<font color="#909090">=False</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;file&nbsp;name&nbsp;or&nbsp;multiple&nbsp;file&nbsp;names.</tt></dd></dl>
+ <dl><dt><a name="-askItems"><strong>askItems</strong></a>(items, caption<font color="#909090">=None</font>)</dt><dd><tt>Ask&nbsp;the&nbsp;value&nbsp;of&nbsp;some&nbsp;items&nbsp;to&nbsp;the&nbsp;user.&nbsp;!!&nbsp;VERY&nbsp;EXPERIMENTAL!!<br>
 &nbsp;<br>
 Input&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;items&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;[key,value]&nbsp;pairs.<br>
 The&nbsp;latter&nbsp;is&nbsp;recommended,&nbsp;because&nbsp;a&nbsp;dictionary&nbsp;does&nbsp;not&nbsp;guarantee<br>
@@ -131,13 +133,14 @@ If&nbsp;a&nbsp;timer&nbsp;is&nbsp;running,&nbsp;cancel&nbsp;it.</tt></dd></dl>
 &nbsp;<br>
 While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></dd></dl>
  <dl><dt><a name="-error"><strong>error</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Show&nbsp;an&nbsp;error&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
- <dl><dt><a name="-exit"><strong>exit</strong></a>(all<font color="#909090">=False</font>)</dt><dd><tt>##&nbsp;exit&nbsp;from&nbsp;program&nbsp;pyformex</tt></dd></dl>
- <dl><dt><a name="-export"><strong>export</strong></a>(names)</dt></dl>
+ <dl><dt><a name="-exit"><strong>exit</strong></a>(all<font color="#909090">=False</font>)</dt><dd><tt>Exit&nbsp;from&nbsp;the&nbsp;current&nbsp;script&nbsp;or&nbsp;from&nbsp;pyformex&nbsp;if&nbsp;no&nbsp;script&nbsp;running.</tt></dd></dl>
+ <dl><dt><a name="-export"><strong>export</strong></a>(dict)</dt></dl>
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-fgcolor"><strong>fgcolor</strong></a>(color)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;foreground&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
  <dl><dt><a name="-flatwire"><strong>flatwire</strong></a>()</dt></dl>
  <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=0.5</font>)</dt></dl>
+ <dl><dt><a name="-forget"><strong>forget</strong></a>(names)</dt></dl>
  <dl><dt><a name="-formatInfo"><strong>formatInfo</strong></a>(F)</dt><dd><tt>Return&nbsp;formatted&nbsp;information&nbsp;about&nbsp;a&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
  <dl><dt><a name="-imageFormats"><strong>imageFormats</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;valid&nbsp;image&nbsp;formats.<br>
@@ -221,7 +224,8 @@ format&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension</tt></dd></dl>
  <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setView"><strong>setView</strong></a>(name, angles<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;view&nbsp;for&nbsp;future&nbsp;drawing&nbsp;operations.<br>
 &nbsp;<br>
-If&nbsp;no&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;the&nbsp;name&nbsp;should&nbsp;be&nbsp;an&nbsp;existing&nbsp;view.<br>
+If&nbsp;no&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;the&nbsp;name&nbsp;should&nbsp;be&nbsp;an&nbsp;existing&nbsp;view,&nbsp;or<br>
+the&nbsp;predefined&nbsp;value&nbsp;'__last__'.<br>
 If&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;this&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#-createView">createView</a>(name,angles)<br>
 followed&nbsp;by&nbsp;<a href="#-setView">setView</a>(name).</tt></dd></dl>
  <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
@@ -233,6 +237,7 @@ A&nbsp;step&nbsp;is&nbsp;a&nbsp;set&nbsp;of&nbsp;instructions&nbsp;until&nbsp;th
 If&nbsp;a&nbsp;script&nbsp;is&nbsp;running,&nbsp;this&nbsp;just&nbsp;releases&nbsp;the&nbsp;draw&nbsp;lock.<br>
 Else,&nbsp;it&nbsp;starts&nbsp;the&nbsp;script&nbsp;in&nbsp;step&nbsp;mode.</tt></dd></dl>
  <dl><dt><a name="-step_script"><strong>step_script</strong></a>(s, glob, paus<font color="#909090">=True</font>)</dt></dl>
+ <dl><dt><a name="-textView"><strong>textView</strong></a>(text)</dt><dd><tt>Display&nbsp;a&nbsp;text&nbsp;file&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;response.</tt></dd></dl>
  <dl><dt><a name="-toggleTriade"><strong>toggleTriade</strong></a>()</dt><dd><tt>Toggle&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
  <dl><dt><a name="-undecorate"><strong>undecorate</strong></a>(decor)</dt></dl>

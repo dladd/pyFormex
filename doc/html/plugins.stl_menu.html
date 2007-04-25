@@ -48,16 +48,16 @@ STL&nbsp;plugin&nbsp;menu&nbsp;for&nbsp;pyFormex.</tt></p>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-allcircles_stl"><strong>allcircles_stl</strong></a>()</dt></dl>
+<td width="100%"><dl><dt><a name="-Globals"><strong>Globals</strong></a> = globals(...)</dt><dd><tt>globals()&nbsp;-&gt;&nbsp;dictionary<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
  <dl><dt><a name="-center_surface"><strong>center_surface</strong></a>()</dt><dd><tt>Center&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-check_stl"><strong>check_stl</strong></a>()</dt></dl>
  <dl><dt><a name="-check_surface"><strong>check_surface</strong></a>()</dt></dl>
- <dl><dt><a name="-circle_stl"><strong>circle_stl</strong></a>()</dt><dd><tt>Draw&nbsp;circles&nbsp;as&nbsp;approximation&nbsp;of&nbsp;the&nbsp;STL&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-clip_surface"><strong>clip_surface</strong></a>()</dt><dd><tt>Clip&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-close_menu"><strong>close_menu</strong></a>()</dt><dd><tt>Close&nbsp;the&nbsp;STL&nbsp;menu.</tt></dd></dl>
- <dl><dt><a name="-combine"><strong>combine</strong></a>()</dt></dl>
  <dl><dt><a name="-convert_stl_to_off"><strong>convert_stl_to_off</strong></a>()</dt><dd><tt>Converts&nbsp;an&nbsp;stl&nbsp;to&nbsp;off&nbsp;format&nbsp;without&nbsp;reading&nbsp;it&nbsp;into&nbsp;pyFormex.</tt></dd></dl>
- <dl><dt><a name="-create_menu"><strong>create_menu</strong></a>()</dt><dd><tt>Create&nbsp;the&nbsp;STL&nbsp;menu.</tt></dd></dl>
+ <dl><dt><a name="-create_menu"><strong>create_menu</strong></a>()</dt><dd><tt>Create&nbsp;the&nbsp;Surface&nbsp;menu.</tt></dd></dl>
  <dl><dt><a name="-create_tetgen"><strong>create_tetgen</strong></a>()</dt><dd><tt>Generate&nbsp;a&nbsp;volume&nbsp;tetraeder&nbsp;mesh&nbsp;inside&nbsp;an&nbsp;stl&nbsp;surface.</tt></dd></dl>
  <dl><dt><a name="-export_stl"><strong>export_stl</strong></a>()</dt><dd><tt>Export&nbsp;an&nbsp;stl&nbsp;model&nbsp;stored&nbsp;in&nbsp;Formex&nbsp;F&nbsp;in&nbsp;Abaqus&nbsp;.inp&nbsp;format.</tt></dd></dl>
  <dl><dt><a name="-export_surface"><strong>export_surface</strong></a>()</dt></dl>
@@ -81,25 +81,25 @@ The&nbsp;model&nbsp;is&nbsp;displayed.</tt></dd></dl>
  <dl><dt><a name="-sanitize_stl_to_off"><strong>sanitize_stl_to_off</strong></a>()</dt><dd><tt>Sanitizes&nbsp;an&nbsp;stl&nbsp;to&nbsp;off&nbsp;format&nbsp;without&nbsp;reading&nbsp;it&nbsp;into&nbsp;pyFormex.</tt></dd></dl>
  <dl><dt><a name="-scale_surface"><strong>scale_surface</strong></a>()</dt><dd><tt>Scale&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-scale_volume"><strong>scale_volume</strong></a>()</dt></dl>
- <dl><dt><a name="-section_stl"><strong>section_stl</strong></a>()</dt><dd><tt>Sectionize&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-set_color"><strong>set_color</strong></a>()</dt></dl>
  <dl><dt><a name="-set_project"><strong>set_project</strong></a>(name)</dt></dl>
  <dl><dt><a name="-set_surface"><strong>set_surface</strong></a>(nodes, elems, name<font color="#909090">='surface0'</font>)</dt></dl>
  <dl><dt><a name="-show_changes"><strong>show_changes</strong></a>(old_surface, new_surface, ask<font color="#909090">=True</font>)</dt></dl>
- <dl><dt><a name="-show_menu"><strong>show_menu</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;STL&nbsp;menu.</tt></dd></dl>
+ <dl><dt><a name="-show_menu"><strong>show_menu</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;surface&nbsp;menu.</tt></dd></dl>
  <dl><dt><a name="-show_nodes"><strong>show_nodes</strong></a>()</dt></dl>
  <dl><dt><a name="-show_shrinked"><strong>show_shrinked</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;surface&nbsp;model&nbsp;in&nbsp;shrinked&nbsp;mode.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-show_surface"><strong>show_surface</strong></a>(surface<font color="#909090">=None</font>, color<font color="#909090">=None</font>, clearing<font color="#909090">=True</font>, view<font color="#909090">=None</font>)</dt><dd><tt>Display&nbsp;the&nbsp;surface&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-show_volume"><strong>show_volume</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;volume&nbsp;model.</tt></dd></dl>
- <dl><dt><a name="-toFormex"><strong>toFormex</strong></a>()</dt><dd><tt>Transforme&nbsp;the&nbsp;surface&nbsp;model&nbsp;to&nbsp;a&nbsp;named&nbsp;Formex.</tt></dd></dl>
+ <dl><dt><a name="-toFormex"><strong>toFormex</strong></a>()</dt><dd><tt>Transform&nbsp;the&nbsp;surface&nbsp;model&nbsp;to&nbsp;a&nbsp;named&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-toggle_auto_draw"><strong>toggle_auto_draw</strong></a>()</dt></dl>
  <dl><dt><a name="-trim_border"><strong>trim_border</strong></a>(elems, nodes, nb, visual<font color="#909090">=False</font>)</dt><dd><tt>Removes&nbsp;the&nbsp;triangles&nbsp;with&nbsp;nb&nbsp;or&nbsp;more&nbsp;border&nbsp;edges.<br>
 &nbsp;<br>
 Returns&nbsp;an&nbsp;array&nbsp;with&nbsp;the&nbsp;remaining&nbsp;elements.</tt></dd></dl>
  <dl><dt><a name="-trim_surface"><strong>trim_surface</strong></a>()</dt></dl>
  <dl><dt><a name="-undo_stl"><strong>undo_stl</strong></a>()</dt><dd><tt>Undo&nbsp;the&nbsp;last&nbsp;transformation.</tt></dd></dl>
+ <dl><dt><a name="-write_stl"><strong>write_stl</strong></a>(types<font color="#909090">=['stl']</font>)</dt></dl>
  <dl><dt><a name="-write_surface"><strong>write_surface</strong></a>(types<font color="#909090">=['stl/off', 'stl', 'off', 'neu', 'smesh', 'gts']</font>)</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">

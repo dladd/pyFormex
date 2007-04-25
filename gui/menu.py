@@ -53,7 +53,7 @@ MenuData = [
         (_('Save &Next Image'),draw.saveNext),
         (_('---'),None),
         (_('Load &Plugins'),[
-            (_('STL menu'),stl_menu.show_menu),
+            (_('Surface menu'),stl_menu.show_menu),
             (_('Formex menu'),formex_menu.show_menu),
             ]),
         (_('---'),None),

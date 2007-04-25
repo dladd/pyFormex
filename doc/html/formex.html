@@ -327,7 +327,7 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 Example:&nbsp;E.<a href="#Formex-mapd">mapd</a>(2,lambda&nbsp;d:sqrt(10**2-d**2),f.<a href="#Formex-center">center</a>(),[0,1])<br>
 maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></dl>
 
-<dl><dt><a name="Formex-maxprop"><strong>maxprop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;highest&nbsp;property&nbsp;used,&nbsp;or&nbsp;None</tt></dd></dl>
+<dl><dt><a name="Formex-maxprop"><strong>maxprop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;highest&nbsp;property&nbsp;value&nbsp;used,&nbsp;or&nbsp;None</tt></dd></dl>
 
 <dl><dt><a name="Formex-ndim"><strong>ndim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
 &nbsp;<br>
@@ -469,7 +469,10 @@ The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
 The&nbsp;axis&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;(0,1,2)&nbsp;designating&nbsp;the&nbsp;global&nbsp;axes,<br>
 or&nbsp;a&nbsp;vector&nbsp;specifying&nbsp;an&nbsp;axis&nbsp;through&nbsp;the&nbsp;origin.<br>
 If&nbsp;no&nbsp;axis&nbsp;is&nbsp;specified,&nbsp;rotation&nbsp;is&nbsp;around&nbsp;the&nbsp;2(z)-axis.&nbsp;This&nbsp;is<br>
-convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.</tt></dd></dl>
+convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;the&nbsp;user&nbsp;may&nbsp;also&nbsp;specify&nbsp;a&nbsp;3x3&nbsp;rotation&nbsp;matrix,<br>
+in&nbsp;which&nbsp;case&nbsp;the&nbsp;function&nbsp;<a href="#Formex-rotate">rotate</a>(mat)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#Formex-affine">affine</a>(mat).</tt></dd></dl>
 
 <dl><dt><a name="Formex-scale"><strong>scale</strong></a>(self, scale)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;scaled&nbsp;with&nbsp;scale[i]&nbsp;in&nbsp;direction&nbsp;i.<br>
 &nbsp;<br>
@@ -682,7 +685,7 @@ would&nbsp;interfere&nbsp;with&nbsp;NumPy's&nbsp;own&nbsp;concatenate&nbsp;funct
 
 <dl><dt><a name="Formex-point2str"><strong>point2str</strong></a>(clas, point)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
 
-<dl><dt><a name="Formex-read"><strong>read</strong></a>(clas, filnam)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Read&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.</tt></dd></dl>
+<dl><dt><a name="Formex-read"><strong>read</strong></a>(clas, fil)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Read&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;from&nbsp;file.</tt></dd></dl>
 
 <dl><dt><a name="Formex-setPrintFunction"><strong>setPrintFunction</strong></a>(clas, func)<font color="#909090"><font face="helvetica, arial"> from __builtin__.classobj</font></font></dt><dd><tt>Choose&nbsp;the&nbsp;default&nbsp;formatting&nbsp;for&nbsp;printing&nbsp;formices.<br>
 &nbsp;<br>
@@ -961,7 +964,7 @@ Thus,&nbsp;<a href="#-interpolate">interpolate</a>(F,G,n)&nbsp;is&nbsp;equivalen
 values&nbsp;is&nbsp;a&nbsp;float&nbsp;array,&nbsp;target&nbsp;is&nbsp;a&nbsp;float&nbsp;value.<br>
 values&nbsp;and&nbsp;target&nbsp;should&nbsp;be&nbsp;broadcastable&nbsp;to&nbsp;the&nbsp;same&nbsp;shape.<br>
 &nbsp;<br>
-The&nbsp;return&nbsp;value&nbsp;is&nbsp;an&nbsp;boolean&nbsp;aray&nbsp;with&nbsp;shape&nbsp;of&nbsp;values&nbsp;flagging<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;boolean&nbsp;array&nbsp;with&nbsp;shape&nbsp;of&nbsp;values&nbsp;flagging<br>
 where&nbsp;the&nbsp;values&nbsp;are&nbsp;close&nbsp;to&nbsp;target.<br>
 Two&nbsp;values&nbsp;a&nbsp;and&nbsp;b&nbsp;&nbsp;are&nbsp;considered&nbsp;close&nbsp;if<br>
 &nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;a&nbsp;-&nbsp;b&nbsp;|&nbsp;&lt;&nbsp;atol&nbsp;+&nbsp;rtol&nbsp;*&nbsp;|&nbsp;b&nbsp;|</tt></dd></dl>
@@ -1074,10 +1077,10 @@ formed&nbsp;by&nbsp;each&nbsp;pair&nbsp;of&nbsp;vectors&nbsp;(vec1,vec2).</tt></
  <dl><dt><a name="-vectorPairAreaNormals"><strong>vectorPairAreaNormals</strong></a>(vec1, vec2)</dt><dd><tt>Compute&nbsp;area&nbsp;of&nbsp;and&nbsp;normals&nbsp;on&nbsp;parallellograms&nbsp;formed&nbsp;by&nbsp;vec1&nbsp;and&nbsp;vec2.<br>
 &nbsp;<br>
 vec1&nbsp;and&nbsp;vec2&nbsp;are&nbsp;(n,3)&nbsp;shaped&nbsp;arrays&nbsp;holding&nbsp;collections&nbsp;of&nbsp;vectors.<br>
-The&nbsp;result&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;array:<br>
+The&nbsp;result&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays:<br>
 &nbsp;&nbsp;area&nbsp;(n)&nbsp;:&nbsp;the&nbsp;area&nbsp;of&nbsp;the&nbsp;parallellogram&nbsp;formed&nbsp;by&nbsp;vec1&nbsp;and&nbsp;vec2.<br>
 &nbsp;&nbsp;normal&nbsp;(n,3)&nbsp;:&nbsp;(normalized)&nbsp;vectors&nbsp;normal&nbsp;to&nbsp;each&nbsp;couple&nbsp;(vec1,2).<br>
-These&nbsp;are&nbsp;caluculated&nbsp;from&nbsp;the&nbsp;cross&nbsp;prduct&nbsp;of&nbsp;vec1&nbsp;and&nbsp;vec,&nbsp;which&nbsp;indeed<br>
+These&nbsp;are&nbsp;calculated&nbsp;from&nbsp;the&nbsp;cross&nbsp;product&nbsp;of&nbsp;vec1&nbsp;and&nbsp;vec,&nbsp;which&nbsp;indeed<br>
 gives&nbsp;area&nbsp;*&nbsp;normal.</tt></dd></dl>
  <dl><dt><a name="-vectorPairNormals"><strong>vectorPairNormals</strong></a>(vec1, vec2, normalized<font color="#909090">=True</font>)</dt><dd><tt>Compute&nbsp;vectors&nbsp;normal&nbsp;to&nbsp;vec1&nbsp;and&nbsp;vec2.<br>
 &nbsp;<br>
@@ -1140,7 +1143,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.string_'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.bool_'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1160,7 +1163,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.int32'&gt;: &lt;function &lt;lambda&gt; at 0x2b5747069140&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...plex128'&gt;: &lt;function &lt;lambda&gt; at 0x2ba49f5e1aa0&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1204,7 +1207,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...'numpy.int32'&gt;: 4, &lt;type 'numpy.complex256'&gt;: 32}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.uint8'&gt;: 1, &lt;type 'numpy.string_'&gt;: 0}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

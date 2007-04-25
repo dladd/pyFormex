@@ -22,6 +22,16 @@
 \usepackage{subfigure}
 \usepackage{verbatim}
 
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\lhead[\sf\leftmark]{}
+\rhead[]{\sf\rightmark}
+\lfoot[\sf\thepage]{}
+\rfoot[]{\sf\thepage}
+
+
 % Document identification
 \title{\pyformex manual}
 \author{Tim Neels and Benedict Verhegghe}
@@ -39,6 +49,7 @@
 \newcommand{\pythonBEG}{http://wiki.python.org/moin/BeginnersGuide/\xspace}
 \newcommand{\numpyURL}{http://numpy.scipy.org/\xspace}
 \newcommand{\numpyTUT}{http://www.scipy.org/Tentative_NumPy_Tutorial\xspace}
+\newcommand{\latestpyf}{http://prdownload.berlios.de/pyformex/pyformex.tar.gz\xspace}
 
 % code 
 % The following is just for illustration how to include code.
@@ -53,6 +64,11 @@
 
 \begin{document}
 \maketitle
+\begin{titlepage}
+~
+\end{titlepage}
+\thispagestyle{empty}
+%\setcounter{page}{0}
 \begin{latexonly}
   \tableofcontents
 \end{latexonly}

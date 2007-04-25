@@ -362,10 +362,10 @@ def create_menu():
     menu = widgets.Menu('Formex',GD.gui)
     MenuData = [
 #        ("&List Formices",formex_list),
-        ('&List Formices',printall),
         ("&Select",makeSelection),
         ("&Draw Selection",drawSelection),
         ('&Print Bbox',printBbox),
+        ('&List Formices',printall),
 #        ("&Draw Changes",drawChanges),
         ("&Save Selection as Formex",writeSelection),
         ("&Save Selection as STL File",writeSelectionSTL),

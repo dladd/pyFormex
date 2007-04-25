@@ -389,13 +389,21 @@ def addMenuItems(menu, items=[]):
                 a.setToolTip(item[4])
 
 
+def normalize(s):
+    """Normalize a string.
+
+    Text normalization removes all '&' characters and converts to lower case.
+    """
+    return s.replace('&','').lower()
+
+                 
 def menuDict(menu):
     """Returns the menudict of a menu.
 
     The menudict holds the normalized text labels and corresponding actions.
     Text normalization removes all '&' characters and converts to lower case.
     """
-    return dict([[str(a.text()).replace('&','').lower(),a] for a in menu.actions()])
+    return dict([[normalize(str(a.text())),a] for a in menu.actions()])
     
 
 def menuItem(menu, text):
@@ -403,7 +411,7 @@ def menuItem(menu, text):
 
     Text normalization removes all '&' characters and converts to lower case.
     """
-    return menuDict(menu).get(text,None)
+    return menuDict(menu).get(normalize(text),None)
 
 
 class Menu(QtGui.QMenu):
@@ -448,12 +456,11 @@ class Menu(QtGui.QMenu):
         """Close the menu."""
         self.done=True
         if self.parent == GD.gui:
-            GD.gui.removeMenu(self)
+            GD.gui.menu.removeMenu(str(self.title()))
 
 
 class MenuBar(QtGui.QMenuBar):
     """A menu bar allowing easy menu creation."""
-
 
     def __init__(self):
         """Create the menubar."""

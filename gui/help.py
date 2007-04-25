@@ -34,7 +34,7 @@ def help(page=None):
 
 
 def cmdline():
-    """Display the pyFormex comaand line help."""
+    """Display the pyFormex command line help."""
     GD.print_help()
 
 def manual():
@@ -55,14 +55,14 @@ def webman():
 
 def readme():
     """Display the pyFormex description."""
-    draw.about(file(GD.cfg['help/readme']).read())
+    draw.textView(file(GD.cfg['help/readme']).read())
 
 def about():
     draw.about("""%s
 
 A tool for generating large 3D structures by mathematical transfomations.
 
-Copyright 2004 Benedict Verhegghe.
+Copyright 2004-2007 Benedict Verhegghe.
 Distributed under the GNU GPL.
 """ % GD.Version)
 

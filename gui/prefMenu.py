@@ -10,12 +10,10 @@
 """Functions from the Pref menu."""
 
 import globaldata as GD
-
 import os
 
-import gui
-import draw
 import widgets
+import draw
 
 
 def askConfigPreferences(items,prefix=None,store=None):

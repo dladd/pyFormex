@@ -26,12 +26,27 @@ def GLColor(color):
         color = QtGui.QColor(color)
     if isinstance(color,QtGui.QColor):
         color = (color.red(),color.green(),color.blue())
-    if (type(color) == tuple or type(color) == list) and len(color) == 3:
-        if type(color[0]) == int:
-            color = [ c/255. for c in color ]
-        if type(color[0]) == float:
-            return tuple(color)
-    raise RuntimeError,"GLColor: unexpected input type %s: %s" % (type(color),color)
+    try:
+        #print type(color),list(color)
+        #print "OK"
+        color = list(color)
+        #print color
+        #print len(color)
+        if len(color) == 3:
+            if type(color[0]) == int:
+                color = [ c/255. for c in color ]
+            #print "color is now",color
+            if type(color[0]) == float:
+                return tuple(color)
+            else:
+                #print "type:",type(color[0])
+                pass
+        else:
+            #print "len is not 3"
+            pass
+        raise
+    except:
+        raise RuntimeError,"GLColor: unexpected input type %s: %s" % (type(color),color)
 
 
 def RGBA(rgb,alpha=1.0):
