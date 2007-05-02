@@ -1695,7 +1695,7 @@ class Formex:
     
     def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
-        return self.spherical([dir[1],dir[2],dir[0]],scale[1],[scale[2],scale[0]],colat=True)
+        return self.spherical([dir[1],dir[2],dir[0]],[scale[1],scale[2],scale[0]],colat=True)
     nnodel = nplex
     nnodes = npoints
     
