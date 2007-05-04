@@ -89,7 +89,7 @@ if __name__ == "draw":
 
     # show an example
     L = 80.
-    H = DoubleHelixStent(10.,L,0.2,3.7,30.).all()
+    H = DoubleHelixStent(10.,L,0.2,1,30.).all().withProp(1)
     clear()
     draw(H,view='iso')
     # and save it in a lot of graphics formats

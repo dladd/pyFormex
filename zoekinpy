@@ -1,4 +1,4 @@
 #!/bin/sh
 # Zoek een string in all .py files
 #
-fgrep "$1" *.py gui/*.py plugins/*.py examples/*.py stent/*.py
+fgrep "$1" *.py gui/*.py plugins/*.py examples/*.py stent/*.py myscripts/*.py

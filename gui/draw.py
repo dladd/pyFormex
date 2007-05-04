@@ -426,7 +426,13 @@ def reset():
     DrawOptions = dict(
         view = '__last__',       # Keep the current camera angles
         bbox = 'auto',           # Automatically zoom on the drawed object
+        linewidth = GD.cfg['draw/linewidth'],
+        bgcolor = GD.cfg['draw/bgcolor'],
         )
+    bgcolor(DrawOptions['bgcolor'])
+    clear()
+    view('front')
+    
     
 
 def setView(name,angles=None):

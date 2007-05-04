@@ -187,7 +187,42 @@ def printBbox():
     FL = checkSelection()
     if FL:
         GD.message("Bbox of selection: %s" % bbox(FL))
-                   
+
+
+def showPrincipal():
+    """Show the principal axes."""
+    F = checkSelection(single=True)
+    if not F:
+        return
+    ctr = F.center()
+    Fc = F.translate(-ctr)
+    GD.debug(Fc.size())
+    G = Formex(centroid(Fc.f).reshape((-1,1,3)))
+    print G.bbox()
+    print G.sizes()
+    GD.debug(G.size())
+    clear()
+    draw(G)
+    I = inertia(G.f,mass=3)
+    GD.message("Inertia tensor: %s" % I)
+    Iprin,Iaxes = principal(I)
+    GD.debug("Principal Values: %s" % Iprin)
+    GD.debug("Principal Directions: %s" % Iaxes)
+    
+    siz = G.size()
+    Hx = Formex(pattern('1'),5).translate([-0.5,0.0,0.0]).scale(siz)
+    Hy = Hx.rotate(90)
+    Hz = Hx.rotate(-90,1)
+    Hx.setProp(4)
+    Hy.setProp(5)
+    Hz.setProp(6)
+    H = Formex.concatenate([Hx,Hy,Hz]).affine(Iaxes,ctr)
+    clear()
+    draw([F,H])
+    export({'principalAxes':H})
+    return I,Iprin,Iaxes,H
+
+
 
 ################### Perform operations on Formex #######################
 
@@ -216,10 +251,22 @@ def scaleSelection():
     """Scale the selection."""
     FL = checkSelection()
     if FL:
-        res = askItems([['scale',0]],
+        res = askItems([['scale',1.0]],
                        caption = 'Scale Factor')
         if res:
             scale = float(res['scale'])
+            changeSelection([ F.scale(scale) for F in FL ])
+            drawChanges()
+
+            
+def scale3Selection():
+    """Scale the selection with 3 scale values."""
+    FL = checkSelection()
+    if FL:
+        res = askItems([['x-scale',1.0],['y-scale',1.0],['z-scale',1.0]],
+                       caption = 'Scaling Factors')
+        if res:
+            scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
             changeSelection([ F.scale(scale) for F in FL ])
             drawChanges()
 
@@ -342,15 +389,28 @@ def sectionizeSelection():
             fil.close()
     if ack('Draw circles?'):
         circles = drawCircles(sections,ctr,diam)
-        export({'circles':Formex.concatenate(circles)})
         if ack('Draw circles on Formex ?'):
             drawAllCircles(F,circles)
+        circles = Formex.concatenate(circles)
+        ctrline = connectPoints(ctr)
+        circles.setProp(3)
+        ctrline.setProp(1)
+        export({'circles':circles,'ctrline':ctrline,'flypath':ctrline})
         if ack('Fly through the Formex ?'):
-            path = flytruCircles(ctr)
-            export({'flypath':path})
+            flyAlong(ctrline)
 ##        if ack('Fly through in smooth mode ?'):
 ##            smooth()
 ##            flytruCircles(ctr)
+    drawSelection()
+
+
+def flyThru():
+    """Fly through the structure along the flypath."""
+    path = named('flypath')
+    if path:
+        flyAlong(path)
+    else:
+        warning("You have to define a flypath first!")
         
 
 ################### menu #################
@@ -376,15 +436,20 @@ def create_menu():
         ("&Undo Last Changes",undoChanges),
         ("---",None),
         ("&Scale Selection",scaleSelection),
+        ("&Non-uniformly Scale Selection",scale3Selection),
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
         ("&Clip Selection",clipSelection),
         ("---",None),
+        ("Show &Principal Axes",showPrincipal),
+        ("---",None),
         ("&Concatenate Selection",concatenateSelection),
         ("&Partition Selection",partitionSelection),
         ("&Create Parts",createParts),
         ("&Sectionize Selection",sectionizeSelection),
+        ("---",None),
+        ("&Fly",flyThru),
         ("---",None),
         ("&Close",close_menu),
         ]

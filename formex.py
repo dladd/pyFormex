@@ -1224,7 +1224,7 @@ class Formex:
     def affine(self,mat,vec=None):
         """Return a general affine transform of the Formex.
 
-        The returned Formex has coordinates given by mat * xorig + vec,
+        The returned Formex has coordinates given by xorig * mat + vec,
         where mat is a 3x3 matrix and vec a length 3 list.
         """
         f = dot(self.f,mat)

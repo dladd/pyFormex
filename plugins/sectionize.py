@@ -128,11 +128,13 @@ def drawAllCircles(F,circles):
     zoomAll()
 
 
-def flytruCircles(ctr):
-    """Fly through the Formex and circles."""
-    Fc = Formex(array(ctr).reshape((-1,1,3)))
-    path = connect([Fc,Fc],bias=[0,1])
-    flyAlong(path)
-    return path
+def connectPoints(ptlist):
+    """Create a Formex connecting all points in the ptlist.
+
+    ptlist is any (n,3) shaped structure (sequence|list|array) of floats.
+    """
+    Fc = Formex(array(ptlist).reshape((-1,1,3)))
+    return connect([Fc,Fc],bias=[0,1])
+
 
 # End
