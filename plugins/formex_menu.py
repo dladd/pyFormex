@@ -52,7 +52,7 @@ def changeSelection(newvalues):
     export(dict(zip(selection,newvalues)))
 
 
-def checkSelection(single=False):
+def checkSelection(single=False,warn=True):
     """Check that we have a current selection.
 
     Returns the list of Formices corresponding to the current selection.
@@ -62,10 +62,12 @@ def checkSelection(single=False):
     an error message is displayed and an empty list is returned.
     """
     if not selection:
-        warning("No Formex selected")
+        if warn:
+            warning("No Formex selected")
         return []
     if single and len(selection) > 1:
-        warning("You should select exactly one Formex")
+        if warn:
+            warning("You should select exactly one Formex")
         return []
     if single:
         return named(selection[0])
@@ -210,7 +212,7 @@ def showPrincipal():
     GD.debug("Principal Directions: %s" % Iaxes)
     
     siz = G.size()
-    Hx = Formex(pattern('1'),5).translate([-0.5,0.0,0.0]).scale(siz)
+    Hx = Formex(pattern('1')).translate([-0.5,0.0,0.0]).scale(siz)
     Hy = Hx.rotate(90)
     Hz = Hx.rotate(-90,1)
     Hx.setProp(4)

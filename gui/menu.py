@@ -32,7 +32,10 @@ def editor():
         print "Open editor"
         GD.gui.showEditor()
 
-   
+ 
+def resetGUI():
+    GD.gui.setBusy(False)
+  
 
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
@@ -107,7 +110,8 @@ MenuData = [
         (_('&Continue'),draw.fforward), 
         (_('&Clear'),draw.clear),
         (_('&Redraw'),draw.redraw),
-##         (_('&DrawSelected'),draw.drawSelected),
+        (_('&Reset'),draw.reset),
+        (_('&Reset GUI'),resetGUI),
         (_('&ListFormices'),draw.printall),
         (_('&PrintBbox'),draw.printbbox),
         (_('&PrintGlobals'),draw.printglobals),

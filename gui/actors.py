@@ -15,7 +15,7 @@ from formex import *
 from plugins import elements
 
 
-markscale = 0.001
+markscale = 0.01
 
 ### Some drawing functions ###############################################
 

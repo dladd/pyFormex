@@ -47,7 +47,21 @@ def principal(inertia):
     """Returns the principal values and axes of the inertia tensor."""
     Ixx,Iyy,Izz,Iyz,Izx,Ixy = inertia
     Itensor = array([ [Ixx,Ixy,Izx], [Ixy,Iyy,Iyz], [Izx,Iyz,Izz] ])
-    return linalg.eig(Itensor)
+    Iprin,Iaxes = linalg.eig(Itensor)
+    if allclose(Iaxes[:,0],Iaxes[:,1]):
+        # two equal eigenvectors are equal
+        if allclose(Iaxes[:,0],Iaxes[:,2]):
+            # three eigenvectors are equal
+            Iaxes = identity(3)
+        else:
+            Iaxes = Iaxes[:,[0,2,1]]
+    else:
+        # Make sure we have a right-handed system
+        print "Original: ",Iaxes[2]
+        Iaxes[2] = cross(Iaxes[0],Iaxes[1])
+        print "Cross: ",Iaxes[2]
+            
+    return Iprin,Iaxes
 
 
 def sectionize(F):
