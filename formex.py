@@ -523,25 +523,23 @@ class Formex:
         else:
             if type(data) == str:
                 data = pattern(data)
-            self.f = array(data).astype(Float)
-        self.p = None
-        # !!! WE MIGHT ADD ARRAY AXES IF LESS THAN 3 !!!
-        if len(self.f.shape) != 3:
-            raise RuntimeError,"Formex: Initialization needs rank-3 data array, got %s" % str(self.f.shape)
-        if self.f.shape[2] == 3:
-            pass
-        elif self.f.shape[2] == 2:
-            f = zeros((self.f.shape[:2]+(3,)),dtype=Float)
-            f[:,:,:2] = self.f
-            self.f = f
-        # !!! WE MIGHT ALLOW FOR 1-dim FORMICES
-        else:
-            if self.f.size == 0:
-                self.f.shape = (0,0,3) # An empty Formex
+            data = array(data).astype(Float)
+
+            if data.size == 0:
+                data.shape = (0,0,3) # An empty Formex
             else:
-                raise RuntimeError,"Formex: last data dimension should be 2 or 3"
-        if prop is not None:
-            self.setProp(prop)
+                # check dimensions of data
+                if not len(data.shape) in [2,3]:
+                    raise RuntimeError,"Formex init: needs a rank-2 or rank-3 data array, got shape %s" % str(data.shape)
+                if not data.shape[-1] in [2,3]:
+                    raise RuntimeError,"Formex init: last axis dimension of data array should be 2 or 3, got shape %s" % str(data.shape)
+                # add 3-rd dimension if data are 2-d
+                if data.shape[-1] == 2:
+                    z = zeros((data.shape[0],1),dtype=Float)
+                    data = column_stack([data,z])
+        # data should be OK now
+        self.f = data
+        self.setProp(prop)
 
 
 
@@ -1509,9 +1507,20 @@ class Formex:
             f[:,:,i[k]] = other.f[:,:,j[k]]
         return Formex(f,self.p)
 
+
     def swapaxes(self,i,j):
         """Swap coordinate axes i and j"""
         return self.replace([i,j],[j,i])
+
+
+    def rollaxes(self,n=1):
+        """Roll the axes over the given amount.
+
+        Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+        2 becomes 0.
+        """
+        return Formex(roll(self.f, int(n) % 3,axis=-1),self.p)
+        
 
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
@@ -1819,6 +1828,9 @@ class Formex:
     def ric(f):
         return int(round(f))
 
+
+    rot = rotate
+    trl = translate
 
 ##############################################################################
 #

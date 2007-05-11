@@ -17,7 +17,7 @@ import globaldata as GD
 from globaldata import PF
 import utils
 import timer
-from plugins import f2abq, stl, tetgen, stl_abq
+from plugins import f2abq, stl, tetgen, stl_abq, formex_menu
 from gui import widgets,actors,colors
 from gui.draw import *
 from formex import Formex
@@ -111,6 +111,12 @@ def read_surface(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
         set_surface(nodes,elems)
         if show:
             show_surface(view='front')
+        if ack('Convert to Formex?'):
+            name = toFormex()
+            # This is convenient for the user
+            if name:
+                formex_menu.setSelection(name)
+                #formex_menu.drawSelection()
     return fn
 
     
@@ -186,7 +192,11 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
 
 
 def toFormex():
-    """Transform the surface model to a named Formex."""
+    """Transform the surface model to a named Formex.
+
+    The name of the Formex is returned, unless the user cancelled the
+    operation.
+    """
     if not check_surface():
         return
     itemlist = [ [ 'name', PF.get('project','')] ] 
@@ -198,6 +208,8 @@ def toFormex():
         #print nodes.shape
         #print elems.shape
         PF[name] = Formex(nodes[elems])
+        return name
+    return None
 
 
 def write_stl(types=['stl']):

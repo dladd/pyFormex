@@ -14,54 +14,7 @@ Create, measure and approximate cross section of a Formex.
 ##from gui import widgets,actors,colors
 from gui.draw import *
 from formex import *
-##import commands, os
 
-
-
-def centroid(X):
-    """Compute the centroids of the points of a set of elements.
-
-    X (nelems,nplex,3)
-    """
-    return X.sum(axis=1) / X.shape[1]
-
-
-def inertia(X,mass=None):
-    """Compute the inertia tensor of an array of points.
-
-    mass is an optional array of masses to be atributed to the
-    points. The default is to attribute a mass=1 to all points.
-
-    The result is an (6,) shaped array with the values (in order):
-     Ixx, Iyy, Izz, Ixy, Ixz, Iyz
-    """
-    X = X.reshape((-1,X.shape[-1]))
-    x,y,z = X[:,0],X[:,1],X[:,2]
-    I = column_stack([ x*x, y*y, z*z, -y*z, -z*x, -x*y ])
-    if mass is not None:
-        I *= mass
-    return I.sum(axis=0)
-
-
-def principal(inertia):
-    """Returns the principal values and axes of the inertia tensor."""
-    Ixx,Iyy,Izz,Iyz,Izx,Ixy = inertia
-    Itensor = array([ [Ixx,Ixy,Izx], [Ixy,Iyy,Iyz], [Izx,Iyz,Izz] ])
-    Iprin,Iaxes = linalg.eig(Itensor)
-    if allclose(Iaxes[:,0],Iaxes[:,1]):
-        # two equal eigenvectors are equal
-        if allclose(Iaxes[:,0],Iaxes[:,2]):
-            # three eigenvectors are equal
-            Iaxes = identity(3)
-        else:
-            Iaxes = Iaxes[:,[0,2,1]]
-    else:
-        # Make sure we have a right-handed system
-        print "Original: ",Iaxes[2]
-        Iaxes[2] = cross(Iaxes[0],Iaxes[1])
-        print "Cross: ",Iaxes[2]
-            
-    return Iprin,Iaxes
 
 
 def sectionize(F):

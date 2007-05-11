@@ -16,27 +16,29 @@ Executing this script creates a Formex menu in the menubar.
 import globaldata as GD
 from gui.draw import *
 from formex import *
-from plugins import stl
-from plugins.partition import *
-from plugins.sectionize import *
+from plugins import stl,inertia,partition,sectionize
+
 
 import commands, os, timer
 
 # The selection should only be set by setSelection()!!
 selection = []  # a list of names of the currently selected Formices
 oldvalues = []  # a list of Formex instances corresponding to the selection
-                # BEFORE the last transformation  
+                # BEFORE the last transformation
+data = {} # a dict with global data
 
 ##################### select, read and write ##########################
 
-def setSelection(list):
+def setSelection(namelist):
     """Set the selection to a list of names.
 
     You should make sure this is a list of Formex names!
     This will also set oldvalues to the corresponding Formices.
     """
     global selection,oldvalues
-    selection = list
+    if type(namelist) == str:
+        namelist = [ namelist ]
+    selection = namelist
     oldvalues = map(named,selection)
 
 
@@ -191,38 +193,52 @@ def printBbox():
         GD.message("Bbox of selection: %s" % bbox(FL))
 
 
-def showPrincipal():
-    """Show the principal axes."""
-    F = checkSelection(single=True)
-    if not F:
-        return
-    ctr = F.center()
-    Fc = F.translate(-ctr)
-    GD.debug(Fc.size())
-    G = Formex(centroid(Fc.f).reshape((-1,1,3)))
-    print G.bbox()
-    print G.sizes()
-    GD.debug(G.size())
-    clear()
-    draw(G)
-    I = inertia(G.f,mass=3)
-    GD.message("Inertia tensor: %s" % I)
-    Iprin,Iaxes = principal(I)
-    GD.debug("Principal Values: %s" % Iprin)
-    GD.debug("Principal Directions: %s" % Iaxes)
-    
-    siz = G.size()
-    Hx = Formex(pattern('1')).translate([-0.5,0.0,0.0]).scale(siz)
+def unitAxes():
+    """Create a set of three axes."""
+    Hx = Formex(pattern('1'),5).translate([-0.5,0.0,0.0])
     Hy = Hx.rotate(90)
     Hz = Hx.rotate(-90,1)
     Hx.setProp(4)
     Hy.setProp(5)
     Hz.setProp(6)
-    H = Formex.concatenate([Hx,Hy,Hz]).affine(Iaxes,ctr)
-    clear()
-    draw([F,H])
+    return Formex.concatenate([Hx,Hy,Hz])    
+
+
+def showPrincipal():
+    """Show the principal axes."""
+    global data
+    F = checkSelection(single=True)
+    if not F:
+        return
+    # compute the axes
+    C,I = inertia.inertia(F.f)
+    GD.message("Center of gravity: %s" % C)
+    GD.message("Inertia tensor: %s" % I)
+    Iprin,Iaxes = inertia.principal(I)
+    GD.message("Principal Values: %s" % Iprin)
+    GD.message("Principal Directions: %s" % Iaxes)
+    data['principal'] = (C,I,Iprin,Iaxes)
+    # now display the axes
+    siz = F.size()
+    H = unitAxes().scale(1.1*siz).affine(Iaxes.transpose(),C)
+    A = 0.1*siz * Iaxes.transpose()
+    G = Formex([[C,C+Ax] for Ax in A],3)
+    draw([G,H])
     export({'principalAxes':H})
-    return I,Iprin,Iaxes,H
+    return data['principal']
+
+
+def rotatePrincipal():
+    """Rotate the selection according to the last shown principal axes."""
+    global data
+    if not data.has_key('principal'):
+        showPrincipal() 
+    FL = checkSelection()
+    if FL:
+        ctr = data['principal'][0]
+        rot = data['principal'][3]
+        changeSelection([ F.trl(-ctr).rot(rot).trl(ctr) for F in FL ])
+        drawChanges()
 
 
 
@@ -304,6 +320,13 @@ def rotateSelection():
             angle = float(res['angle'])
             changeSelection([ F.rotate(angle,axis) for F in FL ])
             drawChanges()
+
+def rollAxes():
+    """Rotate the selection."""
+    FL = checkSelection()
+    if FL:
+        changeSelection([ F.rollaxes() for F in FL ])
+        drawChanges()
             
         
 def clipSelection():
@@ -377,7 +400,7 @@ def sectionizeSelection():
 
     name = selection[0]
     GD.message("Sectionizing Formex '%s'" % name)
-    sections,ctr,diam = sectionize(F)
+    sections,ctr,diam = sectionize.sectionize(F)
     GD.message("Centers: %s" % ctr)
     GD.message("Diameters: %s" % diam)
     if ack('Save section data?'):
@@ -390,13 +413,14 @@ def sectionizeSelection():
             fil.write("%s\n" % diam)
             fil.close()
     if ack('Draw circles?'):
-        circles = drawCircles(sections,ctr,diam)
+        circles = sectionize.drawCircles(sections,ctr,diam)
+        ctrline = sectionize.connectPoints(ctr)
         if ack('Draw circles on Formex ?'):
-            drawAllCircles(F,circles)
+            sectionize.drawAllCircles(F,circles)
         circles = Formex.concatenate(circles)
-        ctrline = connectPoints(ctr)
         circles.setProp(3)
         ctrline.setProp(1)
+        draw(ctrline,color='red')
         export({'circles':circles,'ctrline':ctrline,'flypath':ctrline})
         if ack('Fly through the Formex ?'):
             flyAlong(ctrline)
@@ -442,9 +466,11 @@ def create_menu():
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
+        ("&Roll Axes",rollAxes),
         ("&Clip Selection",clipSelection),
         ("---",None),
         ("Show &Principal Axes",showPrincipal),
+        ("Rotate to &Principal Axes",rotatePrincipal),
         ("---",None),
         ("&Concatenate Selection",concatenateSelection),
         ("&Partition Selection",partitionSelection),
