@@ -43,8 +43,8 @@ class STL(object):
         """
         self.coords = self.nodes = self.elems = self.edges = self.faces = None
         if len(args) == 2:
-            nodes = asanyarray(arg[0])
-            elems = asanyarray(arg[1])
+            nodes = asarray(arg[0])
+            elems = asarray(arg[1])
             if nodes.dtype.kind == 'f' and elems.dtype.kind == 'i' and \
                    nodes.ndim == 2 and elems.ndim == 2 and \
                    nodes.shape[1] == 3 and elems.shape[1] == 3:

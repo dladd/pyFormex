@@ -31,7 +31,7 @@ def drawEdges(x,edges,color=None,width=None):
     if width is not None:
         GL.glLineWidth(width)
     if color is not None:
-        color = asanyarray(color)
+        color = asarray(color)
         if color.ndim == 1:
             GL.glColor3fv(color)
     GL.glBegin(GL.GL_LINES)
@@ -415,7 +415,7 @@ class SurfaceActor(Actor):
     def __init__(self,nodes,elems,color=black,linewidth=1.0):
         
         Actor.__init__(self)
-        self.color = asanyarray(color)
+        self.color = asarray(color)
         self.linewidth = linewidth
         self.nodes = nodes
         self.elems = elems

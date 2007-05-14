@@ -22,7 +22,7 @@ def deprecated(replacement):
     return decorator
 
 def istype(a,c):
-    return asanarray(a).dtype.kind == c
+    return asarray(a).dtype.kind == c
 
 
 if 'roll' not in dir():
@@ -32,7 +32,7 @@ if 'roll' not in dir():
 
         A positive shift moves elements to the 'right' in a 1D array.
         """ 
-        a = asanyarray(a) 
+        a = asarray(a) 
         if axis is None: 
             n = a.size 
             reshape=1 
@@ -79,7 +79,7 @@ def tand(arg):
 
 def length(arg):
     """Return the quadratic norm of a vector with all elements of arg."""
-    a = arg.flat
+    a = asarray(arg).flat
     return sqrt(inner(a,a))
 
 def inside(p,mi,ma):
@@ -115,8 +115,8 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     Two values a and b  are considered close if
         | a - b | < atol + rtol * | b |
     """
-    values = array(values)
-    target = array(target) 
+    values = asarray(values)
+    target = asarray(target) 
     return abs(values - target) < atol + rtol * abs(target) 
 
 
@@ -384,26 +384,26 @@ def distanceFromPlane(f,p,n):
     """
 #    return (dot(f,n) - dot(p,n)) / sqrt(dot(n,n))
     a = f.reshape((-1,3))
-    p = array(p).reshape((3))
-    n = array(n).reshape((3))
+    p = asarray(p).reshape((3))
+    n = asarray(n).reshape((3))
     d = (inner(f,n) - inner(p,n)) / length(n)
     return d.reshape(f.shape[:-1])
 
 
-def distanceFromLine(f,p,q):
-    """Return the distance of points f from the line (p,q).
+def distanceFromLine(f,p,n):
+    """Return the distance of points f from the line (p,n).
 
     f is an [...,3] array of coordinates.
-    p and q are two points specified by 3 coordinates.
+    p is a point on the line specified by 3 coordinates.
+    n is a vector specifying the direction of the line through p.
 
     The return value is a [...] shaped array with the distance of
-    each point to the line through p and q.
+    each point to the line through p with direction n.
     All distance values are positive or zero.
     """
     a = f.reshape((-1,3))
-    p = array(p).reshape((3))
-    q = array(q).reshape((3))
-    n = q-p
+    p = asarray(p).reshape((3))
+    n = asarray(n).reshape((3))
     t = cross(n,p-a)
     d = sqrt(sum(t*t,-1)) / length(n)
     return d.reshape(f.shape[:-1])
@@ -420,7 +420,7 @@ def distanceFromPoint(f,p):
     All distance values are positive or zero.
     """
     a = f.reshape((-1,3))
-    p = array(p)
+    p = asarray(p).reshape((3))
     d = a-p
     d = sum(d*d,-1)
     d = sqrt(d)
@@ -531,6 +531,8 @@ class Formex:
                 # check dimensions of data
                 if not len(data.shape) in [2,3]:
                     raise RuntimeError,"Formex init: needs a rank-2 or rank-3 data array, got shape %s" % str(data.shape)
+                if len(data.shape) == 2:
+                    data.shape = (data.shape[0],1,data.shape[1])
                 if not data.shape[-1] in [2,3]:
                     raise RuntimeError,"Formex init: last axis dimension of data array should be 2 or 3, got shape %s" % str(data.shape)
                 # add 3-rd dimension if data are 2-d
@@ -941,10 +943,9 @@ class Formex:
         any other index mechanism accepted by numpy's ndarray
         """
         if self.p is None:
-            p = None
+            return Formex(self.f[idx])
         else:
-            p = self.p[idx]
-        return Formex(self.f[idx],p)
+            return Formex(self.f[idx],self.p[idx])
 
       
     def selectNodes(self,idx):
@@ -1831,6 +1832,10 @@ class Formex:
 
     rot = rotate
     trl = translate
+
+    def divide(self,n):
+        return divide(self,n)
+    
 
 ##############################################################################
 #

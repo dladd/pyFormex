@@ -28,10 +28,10 @@ dist = distanceFromPlane(F.f,plane_p,plane_n)
 above = sum(dist>0.0,-1)
 below = sum(dist<0.0,-1) 
 
-# Define a line
+# Define a line by a point and direction
 line_p = [0.0,0.0,0.0]
-line_q = [n,n,n/3]
-d = distanceFromLine(F.f,line_p,line_q)
+line_n = [1.,1.,1./3]
+d = distanceFromLine(F.f,line_p,line_n)
 #number of nodes close to line 
 close = sum(d < 2.2,-1)
 
