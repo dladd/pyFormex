@@ -48,6 +48,7 @@ panfactor = 0.01     # translation factor for pan buttons
 
 [draw]
 wait = 0  # time(sec.) to wait between draw operations (None is indefinitely)
+flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying
 bgcolor = 'lightgrey'
 fgcolor = 'black'
 propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 

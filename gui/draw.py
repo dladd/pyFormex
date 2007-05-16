@@ -832,7 +832,7 @@ def updateGUI():
     GD.app.processEvents()
 
 
-def flyAlong(path,upvector=[0.,1.,0.],sleeptime=0.5):
+def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
     for seg in path:
         GD.debug("Eye: %s; Center: %s" % (seg[0],seg[1]))
         GD.canvas.camera.lookAt(seg[0],seg[1],upvector)
@@ -840,6 +840,9 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=0.5):
         GD.canvas.update()
         if multisave and multisave[4]:
             saveNext()
+        if sleeptime is None:
+            sleeptime = GD.cfg['draw/flywait']
+        sleeptime = float(sleeptime)
         if sleeptime > 0.0:
             sleep(sleeptime)
 

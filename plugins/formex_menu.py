@@ -321,6 +321,20 @@ def rotateSelection():
             changeSelection([ F.rotate(angle,axis) for F in FL ])
             drawChanges()
 
+
+def rotateAround():
+    """Rotate the selection."""
+    FL = checkSelection()
+    if FL:
+        res = askItems([['axis',2],['angle','90.0'],['around','[0.0,0.0,0.0]']])
+        if res:
+            axis = int(res['axis'])
+            angle = float(res['angle'])
+            around = eval(res['around'])
+            GD.debug('around = %s'%around)
+            changeSelection([ F.rotate(angle,axis,around) for F in FL ])
+            drawChanges()
+
 def rollAxes():
     """Rotate the selection."""
     FL = checkSelection()
@@ -400,9 +414,13 @@ def sectionizeSelection():
 
     name = selection[0]
     GD.message("Sectionizing Formex '%s'" % name)
-    sections,ctr,diam = sectionize.sectionize(F)
-    GD.message("Centers: %s" % ctr)
-    GD.message("Diameters: %s" % diam)
+    ns,th,segments = sectionize.createSegments(F)
+    if not ns:
+        return
+    
+    sections,ctr,diam = sectionize.sectionize(F,segments,th)
+    #GD.message("Centers: %s" % ctr)
+    #GD.message("Diameters: %s" % diam)
     if ack('Save section data?'):
         types = [ 'Text Files (*.txt)', 'All Files (*)' ]
         fn = askFilename(GD.cfg['workdir'],types,exist=False)
@@ -466,6 +484,7 @@ def create_menu():
         ("&Translate Selection",translateSelection),
         ("&Center Selection",centerSelection),
         ("&Rotate Selection",rotateSelection),
+        ("&Rotate Selection Around",rotateAround),
         ("&Roll Axes",rollAxes),
         ("&Clip Selection",clipSelection),
         ("---",None),

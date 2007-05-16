@@ -80,7 +80,7 @@ def tand(arg):
 def length(arg):
     """Return the quadratic norm of a vector with all elements of arg."""
     a = asarray(arg).flat
-    return sqrt(inner(a,a))
+    return sqrt(inner(a,a))   # a*a doesn't work here
 
 def inside(p,mi,ma):
     """Return true if point p is inside bbox defined by points mi and ma"""
@@ -1184,7 +1184,7 @@ class Formex:
         return Formex(self.f + dir,self.p)
 
 
-    def rotate(self,angle,axis=2):
+    def rotate(self,angle,axis=2,around=None):
         """Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
@@ -1195,10 +1195,17 @@ class Formex:
 
         As a convenience, the user may also specify a 3x3 rotation matrix,
         in which case the function rotate(mat) is equivalent to affine(mat).
+
+        All rotations are performed around the point [0,0,0], unless a
+        rotation origin is specified in the argument 'around'. 
         """
         if not isinstance(angle,ndarray):
             angle = rotationMatrix(angle,axis)
-        return self.affine(angle)
+        if around is None:
+            return self.affine(angle)
+        else:
+            around = asarray(around)
+            return self.translate(-around).affine(angle,around)
 
 
     def shear(self,dir,dir1,skew):
@@ -1829,7 +1836,9 @@ class Formex:
     def ric(f):
         return int(round(f))
 
-
+    # Convenience short notations
+    rep = replic
+    ros = rosette
     rot = rotate
     trl = translate
 
