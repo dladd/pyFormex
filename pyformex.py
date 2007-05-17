@@ -101,13 +101,16 @@ def main(argv=None):
 
     GD.debug("Options: %s" % GD.options)
 
+##     if GD.options.multiview:
+##         GD.message("The --multiview option has become obsolete!")
+
     # Read the config files
     defaults = os.path.join(pyformexdir,"pyformexrc")
     if os.name == 'posix':
         siteprefs = '/etc/pyformexrc'
         prefs = '.pyformexrc'
     elif os.name == 'nt':
-        siteprefs = None  # Where does Windows put site prefs?
+        siteprefs = None  # Where does Windoze put site prefs?
         prefs = 'pyformex.cfg'
     homeprefs = os.path.join(homedir,prefs)
     localprefs = os.path.join(os.getcwd(),prefs)

@@ -6,12 +6,6 @@
 Create, measure and approximate cross section of a Formex.
 """
 
-##import globaldata as GD
-##from globaldata import PF
-##import utils
-##import timer
-##from plugins import f2abq, stl, tetgen, stl_abq
-##from gui import widgets,actors,colors
 from gui.draw import *
 from formex import *
 
@@ -36,7 +30,7 @@ def createSegments(F):
     return 0,0,[]
 
 
-def sectionize(F,segments,th=0.1):
+def sectionize(F,segments,th=0.1,visual=True):
     """Sectionize a Formex in planes perpendicular to the segments.
 
     F is any Formex.
@@ -54,11 +48,11 @@ def sectionize(F,segments,th=0.1):
     sections = []
     ctr = []
     diam = []
-    normals = []
-    clear()
-    linewidth(1)
-    draw(F,color='yellow')
-    linewidth(2)
+    if visual:
+        clear()
+        linewidth(1)
+        draw(F,color='yellow')
+        linewidth(2)
     for s in segments:
         c = 0.5 * (s[0]+s[1])
         d = s[1]-s[0]
@@ -68,15 +62,16 @@ def sectionize(F,segments,th=0.1):
         test = abs(distanceFromPlane(F.f,c,n)) < th*l
         test = test.sum(axis=-1)
         G = F.select(test==3)
-        draw(G,color='blue',view=None)
-        GD.canvas.update()
+        if visual:
+            draw(G,color='blue',view=None)
+            GD.canvas.update()
         C = G.center()
         D = 2 * distanceFromLine(G.f,C,n).mean()
         GD.message("Section Center: %s; Diameter: %s" % (C,D))
         sections.append(G)
         ctr.append(C)
         diam.append(D)
-    return sections,ctr,diam,normals
+    return sections,ctr,diam
 
 
 def drawCircles(sections,ctr,diam):
