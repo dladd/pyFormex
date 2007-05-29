@@ -14,7 +14,6 @@ import os
 
 import widgets
 import draw
-import gui
 
 
 def askConfigPreferences(items,prefix=None,store=None):
@@ -99,20 +98,47 @@ def setZoomFactor():
     askConfigPreferences(['gui/zoomfactor'])
  
 
-def setFont():
-    """Set the main application font from a user dialog."""
-    font,ok = widgets.selectFont()
-    if ok:
-        gui.setFont(font)
+def setFont(font=None):
+    """Set the main application font.
+
+    If no font is specified, a user dialog pops up to select it.
+    """
+    if font is None:
+        font,ok = widgets.selectFont()
+        if not ok:
+            return
+    GD.app.setFont(font)
+    if GD.gui:
+        GD.gui.update()
+
+
+def setFontSize(s=None):
+    """Set the main application font size to the given point size.
+
+    If no size is specified, it is set from the configuration.
+    """
+    if s:
+        GD.cfg['gui/fontsize'] = s
+    else:
+        s = GD.cfg.get('gui/fontsize',12)
+    font = GD.app.font()
+    font.setPointSize(int(s))
+    setFont(font)
+
+
+def setStyle(style):
+    """Set the main application style."""
+    GD.app.setStyle(style)
+    if GD.gui:
+        GD.gui.update()
 
 
 def setAppearance():
     """Set the main application style and font from user dialog."""
     style,font = widgets.AppearenceDialog().getResult()
     if font:
-        gui.setFont(font)
+        setFont(font)
     if style:
-        gui.setStyle(style)
-
+        setStyle(style)
     
 # End

@@ -29,15 +29,16 @@ STL&nbsp;plugin&nbsp;menu&nbsp;for&nbsp;pyFormex.</tt></p>
 <a href="gui.decors.html">gui.decors</a><br>
 <a href="plugins.f2abq.html">plugins.f2abq</a><br>
 <a href="formex.html">formex</a><br>
+<a href="plugins.formex_menu.html">plugins.formex_menu</a><br>
 <a href="numpy.html">numpy</a><br>
-<a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="re.html">re</a><br>
 <a href="plugins.stl.html">plugins.stl</a><br>
 <a href="plugins.stl_abq.html">plugins.stl_abq</a><br>
 <a href="sys.html">sys</a><br>
 <a href="plugins.tetgen.html">plugins.tetgen</a><br>
-<a href="threading.html">threading</a><br>
-</td><td width="25%" valign=top><a href="timer.html">timer</a><br>
+</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+<a href="timer.html">timer</a><br>
 <a href="types.html">types</a><br>
 <a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
@@ -92,7 +93,10 @@ The&nbsp;model&nbsp;is&nbsp;displayed.</tt></dd></dl>
 This&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-show_surface"><strong>show_surface</strong></a>(surface<font color="#909090">=None</font>, color<font color="#909090">=None</font>, clearing<font color="#909090">=True</font>, view<font color="#909090">=None</font>)</dt><dd><tt>Display&nbsp;the&nbsp;surface&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-show_volume"><strong>show_volume</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;volume&nbsp;model.</tt></dd></dl>
- <dl><dt><a name="-toFormex"><strong>toFormex</strong></a>()</dt><dd><tt>Transform&nbsp;the&nbsp;surface&nbsp;model&nbsp;to&nbsp;a&nbsp;named&nbsp;Formex.</tt></dd></dl>
+ <dl><dt><a name="-toFormex"><strong>toFormex</strong></a>()</dt><dd><tt>Transform&nbsp;the&nbsp;surface&nbsp;model&nbsp;to&nbsp;a&nbsp;named&nbsp;Formex.<br>
+&nbsp;<br>
+The&nbsp;name&nbsp;of&nbsp;the&nbsp;Formex&nbsp;is&nbsp;returned,&nbsp;unless&nbsp;the&nbsp;user&nbsp;cancelled&nbsp;the<br>
+operation.</tt></dd></dl>
  <dl><dt><a name="-toggle_auto_draw"><strong>toggle_auto_draw</strong></a>()</dt></dl>
  <dl><dt><a name="-trim_border"><strong>trim_border</strong></a>(elems, nodes, nb, visual<font color="#909090">=False</font>)</dt><dd><tt>Removes&nbsp;the&nbsp;triangles&nbsp;with&nbsp;nb&nbsp;or&nbsp;more&nbsp;border&nbsp;edges.<br>
 &nbsp;<br>
@@ -116,5 +120,6 @@ Returns&nbsp;an&nbsp;array&nbsp;with&nbsp;the&nbsp;remaining&nbsp;elements.</tt>
 <strong>multisave</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>
+<strong>stepmode</strong> = False<br>
 <strong>wakeupMode</strong> = 0</td></tr></table>
 </body></html>

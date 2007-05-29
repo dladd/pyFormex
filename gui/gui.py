@@ -398,31 +398,9 @@ def messageBox(message,level='info',actions=['OK']):
     return ans
 
 
-
-
-def setStyle(style):
-    """Set the main application style."""
-    GD.app.setStyle(style)
-    if GD.gui:
-        GD.gui.update()
-
-
-def setFont(font):
-    """Set the main application font."""
-    GD.app.setFont(font)
-    if GD.gui:
-        GD.gui.update()
-
-
-def setFontSize(s=None):
-    """Set the main application font size to the given point size."""
-    if s:
-        GD.cfg['gui/fontsize'] = s
-    else:
-        s = GD.cfg.get('gui/fontsize',12)
-    font = GD.app.font()
-    font.setPointSize(int(s))
-    setFont(font)
+setFont = prefMenu.setFont
+setFontSize = prefMenu.setFontSize
+setStyle = prefMenu.setStyle
 
 
 def windowExists(windowname):
@@ -448,7 +426,7 @@ def runApp(args):
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
         
-    # Set some globals
+     # Set some globals
     GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
     if GD.cfg.get('imagesfromeps',False):
