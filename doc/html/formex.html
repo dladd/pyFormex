@@ -111,7 +111,7 @@ This&nbsp;allows&nbsp;writing&nbsp;expressions&nbsp;as&nbsp;F[i]&nbsp;=&nbsp;[[1
 
 <dl><dt><a name="Formex-affine"><strong>affine</strong></a>(self, mat, vec<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;general&nbsp;affine&nbsp;transform&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;has&nbsp;coordinates&nbsp;given&nbsp;by&nbsp;mat&nbsp;*&nbsp;xorig&nbsp;+&nbsp;vec,<br>
+The&nbsp;returned&nbsp;<a href="#Formex">Formex</a>&nbsp;has&nbsp;coordinates&nbsp;given&nbsp;by&nbsp;xorig&nbsp;*&nbsp;mat&nbsp;+&nbsp;vec,<br>
 where&nbsp;mat&nbsp;is&nbsp;a&nbsp;3x3&nbsp;matrix&nbsp;and&nbsp;vec&nbsp;a&nbsp;length&nbsp;3&nbsp;list.</tt></dd></dl>
 
 <dl><dt><a name="Formex-append"><strong>append</strong></a>(self, F)</dt><dd><tt>Append&nbsp;the&nbsp;members&nbsp;of&nbsp;<a href="#Formex">Formex</a>&nbsp;F&nbsp;to&nbsp;this&nbsp;one.<br>
@@ -146,8 +146,8 @@ the&nbsp;words&nbsp;"with&nbsp;prop"&nbsp;and&nbsp;a&nbsp;list&nbsp;of&nbsp;the&
 The&nbsp;bounding&nbsp;box&nbsp;is&nbsp;the&nbsp;smallest&nbsp;rectangular&nbsp;volume&nbsp;in&nbsp;global<br>
 coordinates,&nbsp;such&nbsp;at&nbsp;no&nbsp;points&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;are&nbsp;outside&nbsp;the<br>
 box.<br>
-It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;[2,3]&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
-minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;one&nbsp;the&nbsp;maximal.</tt></dd></dl>
+It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;(2,3)&nbsp;shaped&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
+minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;row&nbsp;the&nbsp;maximal.</tt></dd></dl>
 
 <dl><dt><a name="Formex-bc"><strong>bc</strong></a>(self, b1, b2, b3)</dt></dl>
 
@@ -200,8 +200,15 @@ func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&n
 
 <dl><dt><a name="Formex-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;center&nbsp;of&nbsp;the&nbsp;formex&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#Formex-bbox">bbox</a>().<br>
-The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;3&nbsp;coordinates.</tt></dd></dl>
+The&nbsp;center&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#Formex-bbox">bbox</a>().<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;(3,)&nbsp;shaped&nbsp;array.</tt></dd></dl>
+
+<dl><dt><a name="Formex-centroid"><strong>centroid</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;centroid&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;centroid&nbsp;of&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;point&nbsp;whose&nbsp;coordinates<br>
+are&nbsp;the&nbsp;mean&nbsp;values&nbsp;of&nbsp;all&nbsp;points&nbsp;in&nbsp;the&nbsp;<a href="#Formex">Formex</a>,&nbsp;each&nbsp;with<br>
+its&nbsp;multiplixity.<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;(3,)&nbsp;shaped&nbsp;array.</tt></dd></dl>
 
 <dl><dt><a name="Formex-circulize"><strong>circulize</strong></a>(self, angle)</dt><dd><tt>Transform&nbsp;a&nbsp;linear&nbsp;sector&nbsp;into&nbsp;a&nbsp;circular&nbsp;one.<br>
 &nbsp;<br>
@@ -245,6 +252,8 @@ scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
 <dl><dt><a name="Formex-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array</tt></dd></dl>
+
+<dl><dt><a name="Formex-divide"><strong>divide</strong></a>(self, n)</dt></dl>
 
 <dl><dt><a name="Formex-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
 &nbsp;<br>
@@ -413,6 +422,8 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="Formex-removeProp"><strong>removeProp</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
+<dl><dt><a name="Formex-rep"><strong>rep</strong></a> = <a href="#Formex-replic">replic</a>(self, n, step, dir<font color="#909090">=0</font>)</dt></dl>
+
 <dl><dt><a name="Formex-replace"><strong>replace</strong></a>(self, i, j, other<font color="#909090">=None</font>)</dt><dd><tt>Replace&nbsp;the&nbsp;coordinates&nbsp;along&nbsp;the&nbsp;axes&nbsp;i&nbsp;by&nbsp;those&nbsp;along&nbsp;j.<br>
 &nbsp;<br>
 i&nbsp;and&nbsp;j&nbsp;are&nbsp;lists&nbsp;of&nbsp;axis&nbsp;numbers.<br>
@@ -449,7 +460,12 @@ Reversing&nbsp;an&nbsp;element&nbsp;means&nbsp;reversing&nbsp;the&nbsp;order&nbs
 
 <dl><dt><a name="Formex-rinit"><strong>rinit</strong></a>(self, n1, n2, t1, t2)</dt></dl>
 
-<dl><dt><a name="Formex-ros"><strong>ros</strong></a>(self, i, j, x, y, n, angle)</dt></dl>
+<dl><dt><a name="Formex-rollaxes"><strong>rollaxes</strong></a>(self, n<font color="#909090">=1</font>)</dt><dd><tt>Roll&nbsp;the&nbsp;axes&nbsp;over&nbsp;the&nbsp;given&nbsp;amount.<br>
+&nbsp;<br>
+Default&nbsp;is&nbsp;1,&nbsp;thus&nbsp;axis&nbsp;0&nbsp;becomes&nbsp;the&nbsp;new&nbsp;1&nbsp;axis,&nbsp;1&nbsp;becomes&nbsp;2&nbsp;and<br>
+2&nbsp;becomes&nbsp;0.</tt></dd></dl>
+
+<dl><dt><a name="Formex-ros"><strong>ros</strong></a> = <a href="#Formex-rosette">rosette</a>(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt></dl>
 
 <dl><dt><a name="Formex-rosad"><strong>rosad</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
 
@@ -463,7 +479,9 @@ going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nb
 point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
 The&nbsp;original&nbsp;<a href="#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
-<dl><dt><a name="Formex-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;axis.<br>
+<dl><dt><a name="Formex-rot"><strong>rot</strong></a> = <a href="#Formex-rotate">rotate</a>(self, angle, axis<font color="#909090">=2</font>, around<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Formex-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>, around<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;axis.<br>
 &nbsp;<br>
 The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
 The&nbsp;axis&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;(0,1,2)&nbsp;designating&nbsp;the&nbsp;global&nbsp;axes,<br>
@@ -472,7 +490,10 @@ If&nbsp;no&nbsp;axis&nbsp;is&nbsp;specified,&nbsp;rotation&nbsp;is&nbsp;around&n
 convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.<br>
 &nbsp;<br>
 As&nbsp;a&nbsp;convenience,&nbsp;the&nbsp;user&nbsp;may&nbsp;also&nbsp;specify&nbsp;a&nbsp;3x3&nbsp;rotation&nbsp;matrix,<br>
-in&nbsp;which&nbsp;case&nbsp;the&nbsp;function&nbsp;<a href="#Formex-rotate">rotate</a>(mat)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#Formex-affine">affine</a>(mat).</tt></dd></dl>
+in&nbsp;which&nbsp;case&nbsp;the&nbsp;function&nbsp;<a href="#Formex-rotate">rotate</a>(mat)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#Formex-affine">affine</a>(mat).<br>
+&nbsp;<br>
+All&nbsp;rotations&nbsp;are&nbsp;performed&nbsp;around&nbsp;the&nbsp;point&nbsp;[0,0,0],&nbsp;unless&nbsp;a<br>
+rotation&nbsp;origin&nbsp;is&nbsp;specified&nbsp;in&nbsp;the&nbsp;argument&nbsp;'around'.</tt></dd></dl>
 
 <dl><dt><a name="Formex-scale"><strong>scale</strong></a>(self, scale)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;scaled&nbsp;with&nbsp;scale[i]&nbsp;in&nbsp;direction&nbsp;i.<br>
 &nbsp;<br>
@@ -631,6 +652,8 @@ The&nbsp;argument&nbsp;list&nbsp;is&nbsp;a&nbsp;sequence&nbsp;of&nbsp;tuples&nbs
 Thus&nbsp;<a href="#Formex-translatem">translatem</a>((0,x),(2,z),(1,y))&nbsp;is&nbsp;equivalent&nbsp;to<br>
 <a href="#Formex-translate">translate</a>([x,y,z]).&nbsp;This&nbsp;function&nbsp;is&nbsp;especially&nbsp;conveniant<br>
 to&nbsp;translate&nbsp;in&nbsp;calculated&nbsp;directions.</tt></dd></dl>
+
+<dl><dt><a name="Formex-trl"><strong>trl</strong></a> = <a href="#Formex-translate">translate</a>(self, dir, distance<font color="#909090">=None</font>)</dt></dl>
 
 <dl><dt><a name="Formex-uniple"><strong>uniple</strong></a> = <a href="#Formex-coord">coord</a>(self, i, j, k)</dt></dl>
 
@@ -811,13 +834,14 @@ bins&nbsp;is&nbsp;monotonically&nbsp;increasing,&nbsp;or&nbsp;bins&nbsp;[i-1]&nb
 bins&nbsp;is&nbsp;monotonically&nbsp;decreasing.<br>
 &nbsp;<br>
 Beyond&nbsp;the&nbsp;bounds&nbsp;of&nbsp;the&nbsp;bins&nbsp;0&nbsp;or&nbsp;len(bins)&nbsp;is&nbsp;returned&nbsp;as&nbsp;appropriate.</tt></dd></dl>
- <dl><dt><a name="-distanceFromLine"><strong>distanceFromLine</strong></a>(f, p, q)</dt><dd><tt>Return&nbsp;the&nbsp;distance&nbsp;of&nbsp;points&nbsp;f&nbsp;from&nbsp;the&nbsp;line&nbsp;(p,q).<br>
+ <dl><dt><a name="-distanceFromLine"><strong>distanceFromLine</strong></a>(f, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;distance&nbsp;of&nbsp;points&nbsp;f&nbsp;from&nbsp;the&nbsp;line&nbsp;(p,n).<br>
 &nbsp;<br>
 f&nbsp;is&nbsp;an&nbsp;[...,3]&nbsp;array&nbsp;of&nbsp;coordinates.<br>
-p&nbsp;and&nbsp;q&nbsp;are&nbsp;two&nbsp;points&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
+p&nbsp;is&nbsp;a&nbsp;point&nbsp;on&nbsp;the&nbsp;line&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
+n&nbsp;is&nbsp;a&nbsp;vector&nbsp;specifying&nbsp;the&nbsp;direction&nbsp;of&nbsp;the&nbsp;line&nbsp;through&nbsp;p.<br>
 &nbsp;<br>
 The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;distance&nbsp;of<br>
-each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;and&nbsp;q.<br>
+each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;with&nbsp;direction&nbsp;n.<br>
 All&nbsp;distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;or&nbsp;zero.</tt></dd></dl>
  <dl><dt><a name="-distanceFromPlane"><strong>distanceFromPlane</strong></a>(f, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;distance&nbsp;of&nbsp;points&nbsp;f&nbsp;from&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
@@ -1143,7 +1167,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float32'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.int8'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1163,7 +1187,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...nicode_'&gt;: &lt;function &lt;lambda&gt; at 0x2b9b8195ff50&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...string_'&gt;: &lt;function &lt;lambda&gt; at 0x2b21bfc68230&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1207,7 +1231,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.bool_'&gt;: 1, &lt;type 'numpy.uint8'&gt;: 1}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.uint8'&gt;: 1, &lt;type 'numpy.string_'&gt;: 0}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

@@ -30,7 +30,7 @@ show(f1)
 message("Transform the octant into a circular sector")
 f2 = f1.circulize1()
 f1.setProp(1)
-f2.setProp(0)
+f2.setProp(2)
 show(f1+f2)
 #
 message("Make circular copies to obtain a full circle")

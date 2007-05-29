@@ -177,8 +177,8 @@ in&nbsp;wireframe&nbsp;mode.</tt></dd></dl>
 The&nbsp;bounding&nbsp;box&nbsp;is&nbsp;the&nbsp;smallest&nbsp;rectangular&nbsp;volume&nbsp;in&nbsp;global<br>
 coordinates,&nbsp;such&nbsp;at&nbsp;no&nbsp;points&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;are&nbsp;outside&nbsp;the<br>
 box.<br>
-It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;[2,3]&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
-minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;one&nbsp;the&nbsp;maximal.</tt></dd></dl>
+It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;(2,3)&nbsp;shaped&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
+minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;row&nbsp;the&nbsp;maximal.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.</tt></dd></dl>
 
@@ -208,7 +208,7 @@ This&nbsp;allows&nbsp;writing&nbsp;expressions&nbsp;as&nbsp;F[i]&nbsp;=&nbsp;[[1
 
 <dl><dt><a name="FormexActor-affine"><strong>affine</strong></a>(self, mat, vec<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;general&nbsp;affine&nbsp;transform&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;coordinates&nbsp;given&nbsp;by&nbsp;mat&nbsp;*&nbsp;xorig&nbsp;+&nbsp;vec,<br>
+The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;coordinates&nbsp;given&nbsp;by&nbsp;xorig&nbsp;*&nbsp;mat&nbsp;+&nbsp;vec,<br>
 where&nbsp;mat&nbsp;is&nbsp;a&nbsp;3x3&nbsp;matrix&nbsp;and&nbsp;vec&nbsp;a&nbsp;length&nbsp;3&nbsp;list.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-append"><strong>append</strong></a>(self, F)</dt><dd><tt>Append&nbsp;the&nbsp;members&nbsp;of&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;F&nbsp;to&nbsp;this&nbsp;one.<br>
@@ -289,8 +289,15 @@ func&nbsp;is&nbsp;a&nbsp;function&nbsp;that&nbsp;calculates&nbsp;the&nbsp;bump&n
 
 <dl><dt><a name="FormexActor-center"><strong>center</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;center&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
-The&nbsp;center&nbsp;of&nbsp;the&nbsp;formex&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#FormexActor-bbox">bbox</a>().<br>
-The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;3&nbsp;coordinates.</tt></dd></dl>
+The&nbsp;center&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;center&nbsp;of&nbsp;its&nbsp;<a href="#FormexActor-bbox">bbox</a>().<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;(3,)&nbsp;shaped&nbsp;array.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-centroid"><strong>centroid</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;centroid&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
+&nbsp;<br>
+The&nbsp;centroid&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;point&nbsp;whose&nbsp;coordinates<br>
+are&nbsp;the&nbsp;mean&nbsp;values&nbsp;of&nbsp;all&nbsp;points&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>,&nbsp;each&nbsp;with<br>
+its&nbsp;multiplixity.<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;(3,)&nbsp;shaped&nbsp;array.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-circulize"><strong>circulize</strong></a>(self, angle)</dt><dd><tt>Transform&nbsp;a&nbsp;linear&nbsp;sector&nbsp;into&nbsp;a&nbsp;circular&nbsp;one.<br>
 &nbsp;<br>
@@ -339,6 +346,8 @@ scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-divide"><strong>divide</strong></a>(self, n)</dt></dl>
 
 <dl><dt><a name="FormexActor-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
 &nbsp;<br>
@@ -426,7 +435,7 @@ This&nbsp;method&nbsp;is&nbsp;one&nbsp;of&nbsp;several&nbsp;mapping&nbsp;methods
 Example:&nbsp;E.<a href="#FormexActor-mapd">mapd</a>(2,lambda&nbsp;d:sqrt(10**2-d**2),f.<a href="#FormexActor-center">center</a>(),[0,1])<br>
 maps&nbsp;E&nbsp;on&nbsp;a&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;10</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-maxprop"><strong>maxprop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;highest&nbsp;property&nbsp;used,&nbsp;or&nbsp;None</tt></dd></dl>
+<dl><dt><a name="FormexActor-maxprop"><strong>maxprop</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;highest&nbsp;property&nbsp;value&nbsp;used,&nbsp;or&nbsp;None</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-ndim"><strong>ndim</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;dimensions.<br>
 &nbsp;<br>
@@ -534,6 +543,10 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-removeProp"><strong>removeProp</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
+<dl><dt><a name="FormexActor-rep"><strong>rep</strong></a> = replic(self, n, step, dir<font color="#909090">=0</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;replications&nbsp;in&nbsp;direction&nbsp;dir&nbsp;with&nbsp;step.<br>
+&nbsp;<br>
+The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
+
 <dl><dt><a name="FormexActor-replace"><strong>replace</strong></a>(self, i, j, other<font color="#909090">=None</font>)</dt><dd><tt>Replace&nbsp;the&nbsp;coordinates&nbsp;along&nbsp;the&nbsp;axes&nbsp;i&nbsp;by&nbsp;those&nbsp;along&nbsp;j.<br>
 &nbsp;<br>
 i&nbsp;and&nbsp;j&nbsp;are&nbsp;lists&nbsp;of&nbsp;axis&nbsp;numbers.<br>
@@ -570,7 +583,16 @@ Reversing&nbsp;an&nbsp;element&nbsp;means&nbsp;reversing&nbsp;the&nbsp;order&nbs
 
 <dl><dt><a name="FormexActor-rinit"><strong>rinit</strong></a>(self, n1, n2, t1, t2)</dt></dl>
 
-<dl><dt><a name="FormexActor-ros"><strong>ros</strong></a>(self, i, j, x, y, n, angle)</dt></dl>
+<dl><dt><a name="FormexActor-rollaxes"><strong>rollaxes</strong></a>(self, n<font color="#909090">=1</font>)</dt><dd><tt>Roll&nbsp;the&nbsp;axes&nbsp;over&nbsp;the&nbsp;given&nbsp;amount.<br>
+&nbsp;<br>
+Default&nbsp;is&nbsp;1,&nbsp;thus&nbsp;axis&nbsp;0&nbsp;becomes&nbsp;the&nbsp;new&nbsp;1&nbsp;axis,&nbsp;1&nbsp;becomes&nbsp;2&nbsp;and<br>
+2&nbsp;becomes&nbsp;0.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-ros"><strong>ros</strong></a> = rosette(self, n, angle, axis<font color="#909090">=2</font>, point<font color="#909090">=[0.0, 0.0, 0.0]</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;n&nbsp;rotational&nbsp;replications&nbsp;with&nbsp;angular<br>
+step&nbsp;angle&nbsp;around&nbsp;an&nbsp;axis&nbsp;parallel&nbsp;with&nbsp;one&nbsp;of&nbsp;the&nbsp;coordinate&nbsp;axes<br>
+going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;axis&nbsp;(0,1,2).<br>
+point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
+The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-rosad"><strong>rosad</strong></a>(self, a, b, n<font color="#909090">=4</font>, angle<font color="#909090">=90</font>)</dt></dl>
 
@@ -584,13 +606,33 @@ going&nbsp;through&nbsp;the&nbsp;given&nbsp;point.&nbsp;axis&nbsp;is&nbsp;the&nb
 point&nbsp;must&nbsp;be&nbsp;given&nbsp;as&nbsp;a&nbsp;list&nbsp;(or&nbsp;array)&nbsp;of&nbsp;three&nbsp;coordinates.<br>
 The&nbsp;original&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;the&nbsp;first&nbsp;of&nbsp;the&nbsp;n&nbsp;replicas.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;axis.<br>
+<dl><dt><a name="FormexActor-rot"><strong>rot</strong></a> = rotate(self, angle, axis<font color="#909090">=2</font>, around<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;axis.<br>
 &nbsp;<br>
 The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
 The&nbsp;axis&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;(0,1,2)&nbsp;designating&nbsp;the&nbsp;global&nbsp;axes,<br>
 or&nbsp;a&nbsp;vector&nbsp;specifying&nbsp;an&nbsp;axis&nbsp;through&nbsp;the&nbsp;origin.<br>
 If&nbsp;no&nbsp;axis&nbsp;is&nbsp;specified,&nbsp;rotation&nbsp;is&nbsp;around&nbsp;the&nbsp;2(z)-axis.&nbsp;This&nbsp;is<br>
-convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.</tt></dd></dl>
+convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;the&nbsp;user&nbsp;may&nbsp;also&nbsp;specify&nbsp;a&nbsp;3x3&nbsp;rotation&nbsp;matrix,<br>
+in&nbsp;which&nbsp;case&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-rotate">rotate</a>(mat)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#FormexActor-affine">affine</a>(mat).<br>
+&nbsp;<br>
+All&nbsp;rotations&nbsp;are&nbsp;performed&nbsp;around&nbsp;the&nbsp;point&nbsp;[0,0,0],&nbsp;unless&nbsp;a<br>
+rotation&nbsp;origin&nbsp;is&nbsp;specified&nbsp;in&nbsp;the&nbsp;argument&nbsp;'around'.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-rotate"><strong>rotate</strong></a>(self, angle, axis<font color="#909090">=2</font>, around<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;rotated&nbsp;over&nbsp;angle&nbsp;around&nbsp;axis.<br>
+&nbsp;<br>
+The&nbsp;angle&nbsp;is&nbsp;specified&nbsp;in&nbsp;degrees.<br>
+The&nbsp;axis&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;(0,1,2)&nbsp;designating&nbsp;the&nbsp;global&nbsp;axes,<br>
+or&nbsp;a&nbsp;vector&nbsp;specifying&nbsp;an&nbsp;axis&nbsp;through&nbsp;the&nbsp;origin.<br>
+If&nbsp;no&nbsp;axis&nbsp;is&nbsp;specified,&nbsp;rotation&nbsp;is&nbsp;around&nbsp;the&nbsp;2(z)-axis.&nbsp;This&nbsp;is<br>
+convenient&nbsp;for&nbsp;working&nbsp;on&nbsp;2D-structures.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;the&nbsp;user&nbsp;may&nbsp;also&nbsp;specify&nbsp;a&nbsp;3x3&nbsp;rotation&nbsp;matrix,<br>
+in&nbsp;which&nbsp;case&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-rotate">rotate</a>(mat)&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#FormexActor-affine">affine</a>(mat).<br>
+&nbsp;<br>
+All&nbsp;rotations&nbsp;are&nbsp;performed&nbsp;around&nbsp;the&nbsp;point&nbsp;[0,0,0],&nbsp;unless&nbsp;a<br>
+rotation&nbsp;origin&nbsp;is&nbsp;specified&nbsp;in&nbsp;the&nbsp;argument&nbsp;'around'.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-scale"><strong>scale</strong></a>(self, scale)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;scaled&nbsp;with&nbsp;scale[i]&nbsp;in&nbsp;direction&nbsp;i.<br>
 &nbsp;<br>
@@ -750,6 +792,22 @@ Thus&nbsp;<a href="#FormexActor-translatem">translatem</a>((0,x),(2,z),(1,y))&nb
 <a href="#FormexActor-translate">translate</a>([x,y,z]).&nbsp;This&nbsp;function&nbsp;is&nbsp;especially&nbsp;conveniant<br>
 to&nbsp;translate&nbsp;in&nbsp;calculated&nbsp;directions.</tt></dd></dl>
 
+<dl><dt><a name="FormexActor-trl"><strong>trl</strong></a> = translate(self, dir, distance<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;copy&nbsp;translated&nbsp;over&nbsp;distance&nbsp;in&nbsp;direction&nbsp;dir.<br>
+&nbsp;<br>
+dir&nbsp;is&nbsp;either&nbsp;an&nbsp;axis&nbsp;number&nbsp;(0,1,2)&nbsp;or&nbsp;a&nbsp;direction&nbsp;vector.<br>
+&nbsp;<br>
+If&nbsp;a&nbsp;distance&nbsp;is&nbsp;given,&nbsp;the&nbsp;translation&nbsp;is&nbsp;over&nbsp;the&nbsp;specified<br>
+distance&nbsp;in&nbsp;the&nbsp;specified&nbsp;direction.<br>
+If&nbsp;no&nbsp;distance&nbsp;is&nbsp;given,&nbsp;and&nbsp;dir&nbsp;is&nbsp;specified&nbsp;as&nbsp;an&nbsp;axis&nbsp;number,<br>
+translation&nbsp;is&nbsp;over&nbsp;a&nbsp;distance&nbsp;1.<br>
+If&nbsp;no&nbsp;distance&nbsp;is&nbsp;given,&nbsp;and&nbsp;dir&nbsp;is&nbsp;specified&nbsp;as&nbsp;a&nbsp;vector,&nbsp;translation<br>
+is&nbsp;over&nbsp;the&nbsp;specified&nbsp;vector.<br>
+Thus,&nbsp;the&nbsp;following&nbsp;are&nbsp;all&nbsp;equivalent:<br>
+&nbsp;&nbsp;F.<a href="#FormexActor-translate">translate</a>(1)<br>
+&nbsp;&nbsp;F.<a href="#FormexActor-translate">translate</a>(1,1)<br>
+&nbsp;&nbsp;F.<a href="#FormexActor-translate">translate</a>([0,1,0])<br>
+&nbsp;&nbsp;F.<a href="#FormexActor-translate">translate</a>([0,2,0],1)</tt></dd></dl>
+
 <dl><dt><a name="FormexActor-uniple"><strong>uniple</strong></a> = coord(self, i, j, k)</dt><dd><tt>Return&nbsp;coord&nbsp;k&nbsp;of&nbsp;point&nbsp;j&nbsp;of&nbsp;element&nbsp;i</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-unique"><strong>unique</strong></a>(self, rtol<font color="#909090">=0.0001</font>, atol<font color="#909090">=9.9999999999999995e-07</font>)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;which&nbsp;holds&nbsp;only&nbsp;the&nbsp;unique&nbsp;elements.<br>
@@ -768,6 +826,13 @@ permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
 If&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;has&nbsp;no&nbsp;properties,&nbsp;a&nbsp;copy&nbsp;is&nbsp;returned.<br>
 The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;inherits&nbsp;the&nbsp;matching&nbsp;properties.</tt></dd></dl>
 
+<dl><dt><a name="FormexActor-write"><strong>write</strong></a>(self, fil, sep<font color="#909090">=' '</font>)</dt><dd><tt>Write&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;to&nbsp;file.<br>
+&nbsp;<br>
+If&nbsp;fil&nbsp;is&nbsp;a&nbsp;string,&nbsp;a&nbsp;file&nbsp;with&nbsp;that&nbsp;name&nbsp;is&nbsp;opened.&nbsp;Else&nbsp;fil&nbsp;should<br>
+be&nbsp;an&nbsp;open&nbsp;file.<br>
+The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;is&nbsp;then&nbsp;written&nbsp;to&nbsp;that&nbsp;file&nbsp;in&nbsp;a&nbsp;native&nbsp;format.<br>
+If&nbsp;fil&nbsp;is&nbsp;a&nbsp;string,&nbsp;the&nbsp;file&nbsp;is&nbsp;closed&nbsp;prior&nbsp;to&nbsp;returning.</tt></dd></dl>
+
 <dl><dt><a name="FormexActor-x"><strong>x</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;x-plane</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-y"><strong>y</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;y-plane</tt></dd></dl>
@@ -778,7 +843,7 @@ The&nbsp;returned&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;inherits&nbs
 Class methods inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
 <dl><dt><a name="FormexActor-cantle2str"><strong>cantle2str</strong></a> = element2str(clas, elem)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-concatenate"><strong>concatenate</strong></a>(self, Flist)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Concatenate&nbsp;all&nbsp;formices&nbsp;in&nbsp;Flist.<br>
+<dl><dt><a name="FormexActor-concatenate"><strong>concatenate</strong></a>(clas, Flist)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Concatenate&nbsp;all&nbsp;formices&nbsp;in&nbsp;Flist.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;method!<br>
 &gt;&gt;&gt;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>([[[1,2,3]]],1)<br>
@@ -795,6 +860,8 @@ would&nbsp;interfere&nbsp;with&nbsp;NumPy's&nbsp;own&nbsp;concatenate&nbsp;funct
 <dl><dt><a name="FormexActor-element2str"><strong>element2str</strong></a>(clas, elem)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-point2str"><strong>point2str</strong></a>(clas, point)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-read"><strong>read</strong></a>(clas, fil)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Read&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;from&nbsp;file.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-setPrintFunction"><strong>setPrintFunction</strong></a>(clas, func)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Choose&nbsp;the&nbsp;default&nbsp;formatting&nbsp;for&nbsp;printing&nbsp;formices.<br>
 &nbsp;<br>
@@ -1149,7 +1216,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex64'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1170,7 +1237,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...py.int8'&gt;: &lt;function &lt;lambda&gt; at 0x2b375b2e3c80&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...object_'&gt;: &lt;function &lt;lambda&gt; at 0x2b8745d8f2a8&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1212,7 +1279,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>logical_or</strong> = &lt;ufunc 'logical_or'&gt;<br>
 <strong>logical_xor</strong> = &lt;ufunc 'logical_xor'&gt;<br>
 <strong>magenta</strong> = (1.0, 0.0, 1.0)<br>
-<strong>markscale</strong> = 0.001<br>
+<strong>markscale</strong> = 0.01<br>
 <strong>maximum</strong> = &lt;ufunc 'maximum'&gt;<br>
 <strong>mediumgrey</strong> = (0.69999999999999996, 0.69999999999999996, 0.69999999999999996)<br>
 <strong>mgrid</strong> = &lt;numpy.lib.index_tricks.nd_grid object&gt;<br>
@@ -1221,7 +1288,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...type 'numpy.uint64'&gt;: 8, &lt;type 'numpy.uint8'&gt;: 1}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.uint8'&gt;: 1, &lt;type 'numpy.object_'&gt;: 8}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

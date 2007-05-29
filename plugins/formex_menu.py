@@ -384,7 +384,7 @@ def partitionSelection():
 
     name = selection[0]
     GD.message("Partitioning Formex '%s'" % name)
-    cuts = partition(F)
+    cuts = partition.partition(F)
     GD.message("Subsequent cutting planes: %s" % cuts)
     if ack('Save cutting plane data?'):
         types = [ 'Text Files (*.txt)', 'All Files (*)' ]
@@ -403,7 +403,7 @@ def createParts():
         return
 
     name = selection[0]
-    splitProp(F,name)
+    partition.splitProp(F,name)
 
 
 def sectionizeSelection():

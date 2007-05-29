@@ -45,7 +45,7 @@
  <dl><dt><a name="-Globals"><strong>Globals</strong></a> = globals(...)</dt><dd><tt>globals()&nbsp;-&gt;&nbsp;dictionary<br>
 &nbsp;<br>
 Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
- <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2-r1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
@@ -139,7 +139,7 @@ While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></
  <dl><dt><a name="-fgcolor"><strong>fgcolor</strong></a>(color)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;foreground&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
  <dl><dt><a name="-flatwire"><strong>flatwire</strong></a>()</dt></dl>
- <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=0.5</font>)</dt></dl>
+ <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=None</font>)</dt></dl>
  <dl><dt><a name="-forget"><strong>forget</strong></a>(names)</dt></dl>
  <dl><dt><a name="-formatInfo"><strong>formatInfo</strong></a>(F)</dt><dd><tt>Return&nbsp;formatted&nbsp;information&nbsp;about&nbsp;a&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
@@ -167,7 +167,7 @@ The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button
 &nbsp;<br>
 This&nbsp;function&nbsp;does&nbsp;nothing&nbsp;if&nbsp;no&nbsp;file&nbsp;is&nbsp;passed&nbsp;or&nbsp;no&nbsp;current<br>
 file&nbsp;was&nbsp;set.</tt></dd></dl>
- <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>, step<font color="#909090">=False</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
+ <dl><dt><a name="-playScript"><strong>playScript</strong></a>(scr, name<font color="#909090">=None</font>)</dt><dd><tt>Play&nbsp;a&nbsp;pyformex&nbsp;script&nbsp;scr.&nbsp;scr&nbsp;should&nbsp;be&nbsp;a&nbsp;valid&nbsp;Python&nbsp;text.<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;lock&nbsp;to&nbsp;prevent&nbsp;multiple&nbsp;scripts&nbsp;from&nbsp;being&nbsp;executed&nbsp;at&nbsp;the<br>
 same&nbsp;time.<br>
@@ -220,6 +220,7 @@ this&nbsp;function&nbsp;is&nbsp;called&nbsp;from&nbsp;the&nbsp;GUI.</tt></dd></d
 This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
 The&nbsp;prefered&nbsp;user&nbsp;function&nbsp;is&nbsp;saveWindow,&nbsp;which&nbsp;can&nbsp;derive&nbsp;the<br>
 format&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension</tt></dd></dl>
+ <dl><dt><a name="-setDrawingOptions"><strong>setDrawingOptions</strong></a>(d)</dt></dl>
  <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setView"><strong>setView</strong></a>(name, angles<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;view&nbsp;for&nbsp;future&nbsp;drawing&nbsp;operations.<br>
@@ -228,6 +229,7 @@ If&nbsp;no&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;the&nbsp;name&nbsp;should&n
 the&nbsp;predefined&nbsp;value&nbsp;'__last__'.<br>
 If&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;this&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#-createView">createView</a>(name,angles)<br>
 followed&nbsp;by&nbsp;<a href="#-setView">setView</a>(name).</tt></dd></dl>
+ <dl><dt><a name="-showDrawingOptions"><strong>showDrawingOptions</strong></a>()</dt></dl>
  <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
  <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
  <dl><dt><a name="-smoothwire"><strong>smoothwire</strong></a>()</dt></dl>
@@ -266,5 +268,6 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>multisave</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>
+<strong>stepmode</strong> = False<br>
 <strong>wakeupMode</strong> = 0</td></tr></table>
 </body></html>

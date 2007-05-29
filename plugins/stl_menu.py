@@ -425,9 +425,9 @@ def trim_surface():
 
 def create_tetgen():
     """Generate a volume tetraeder mesh inside an stl surface."""
-    fn = project + '.stl'
+    fn = PF['project'] + '.stl'
     if os.path.exists(fn):
-        sta,out = commands.getstatusoutput('tetgen %s' % fn)
+        sta,out = commands.getstatusoutput('tetgen -z %s' % fn)
         GD.message(out)
 
 

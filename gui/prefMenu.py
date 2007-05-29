@@ -14,6 +14,7 @@ import os
 
 import widgets
 import draw
+import gui
 
 
 def askConfigPreferences(items,prefix=None,store=None):

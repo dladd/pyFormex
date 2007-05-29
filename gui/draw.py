@@ -138,7 +138,10 @@ def askItems(items,caption=None):
 
 def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for an existing file name or multiple file names."""
+    GD.debug("Create widget")
     w = widgets.FileSelection(cur,filter,exist,multi)
+    sleep(5)
+    GD.debug("Get filename")
     if file:
         w.selectFile(file)
     fn = w.getFilename()
@@ -200,9 +203,10 @@ message = log
 
 scriptDisabled = False
 scriptRunning = False
+stepmode = False
 
  
-def playScript(scr,name=None,step=False):
+def playScript(scr,name=None):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
@@ -214,9 +218,10 @@ def playScript(scr,name=None,step=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    global scriptRunning, scriptDisabled, allowwait, exportNames
+    global scriptRunning, scriptDisabled, allowwait, stepmode, exportNames
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
+    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
@@ -269,10 +274,10 @@ def playScript(scr,name=None,step=False):
     #print "EXEC globals:"
     #k = g.keys()
     #k.sort()
-    #print k
+    GD.debug('NOW RUNNING SCRIPT')
     try:
         try:
-            if step:
+            if stepmode:
                 step_script(scr,g,True)
             else:
                 exec scr in g
@@ -285,9 +290,11 @@ def playScript(scr,name=None,step=False):
             exitall = True
     finally:
         scriptRunning = False # release the lock in case of an error
+        stepmode = False
         if GD.gui:
             #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
+    #print scriptRunning,stepmode
     if exitall:
         exit()
 
@@ -300,11 +307,13 @@ def step_script(s,glob,paus=True):
             break
         else:
             buf = line
-        if paus and buf.strip().startswith('draw'):
+        if paus and ( buf.strip().startswith('draw') or
+                      buf.find('draw(') >= 0 ):
             pause()
         message(buf)
         exec(buf) in glob
     info("Finished stepping through script!")
+
 
 ## def exportNames(names):
 ##     globals().update(dict)
@@ -338,6 +347,7 @@ def play(fn=None,step=False):
     This function does nothing if no file is passed or no current
     file was set.
     """
+    global stepmode
     if not fn:
         if GD.canPlay:
             fn = GD.cfg['curfile']
@@ -346,7 +356,8 @@ def play(fn=None,step=False):
     message("Running script (%s)" % fn)
     reset()
     GD.debug("Current Drawing Options: %s" % DrawOptions)
-    playScript(file(fn,'r'),fn,step=step)
+    stepmode = step
+    playScript(file(fn,'r'),fn)
     message("Script finished")
 
 
@@ -420,7 +431,6 @@ def drawrelease():
         drawtimer.cancel()
 
 
-
 def reset():
     global DrawOptions
     DrawOptions = dict(
@@ -428,10 +438,19 @@ def reset():
         bbox = 'auto',           # Automatically zoom on the drawed object
         linewidth = GD.cfg['draw/linewidth'],
         bgcolor = GD.cfg['draw/bgcolor'],
+        clear = False,
         )
     bgcolor(DrawOptions['bgcolor'])
     clear()
     view('front')
+    
+def setDrawingOptions(d):
+    global DrawOptions
+    DrawOptions.update(d)
+    
+def showDrawingOptions():
+    global DrawOptions
+    GD.message("Current Drawing Options: %s" % DrawOptions)
     
     
 
@@ -502,6 +521,9 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         if F is None:
             return None
 
+    if DrawOptions.get('clear',False):
+        clear()
+
     if view is None:
         view = DrawOptions['view']
         #print "VIEW=%s" % view
@@ -552,6 +574,9 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     if multisave and multisave[4]:
         saveNext()
     if allowwait and wait:
+##        if stepmode:
+##            drawblock()
+##        else:
         drawlock()
     GD.gui.setBusy(False)
     return actor
@@ -822,7 +847,7 @@ def printbbox():
     
 def printconfig():
     print "Reference Configuration",GD.refcfg
-    print "User Configration",GD.cfg
+    print "User Configuration",GD.cfg
 
 
 def updateGUI():

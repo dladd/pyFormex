@@ -86,12 +86,28 @@ class DoubleHelixStent:
 
 if __name__ == "draw":
 
-
     # show an example
+
+    D = 10.
     L = 80.
-    H = DoubleHelixStent(10.,L,0.2,1,30.).all().withProp(1)
+    d = 0.2
+    n = 12
+    b = 30.
+    res = askItems([['Diameter',D],['Length',L],['WireDiam',d],['NWires',n],
+                    ['Pitch',b]])
+    D = float(res['Diameter'])
+    L = float(res['Length'])
+    d = float(res['WireDiam'])
+    n = int(res['NWires'])
+    if (n % 2) != 0:
+        warning('Number of wires must be even!')
+        exit()
+    b = float(res['Pitch'])
+
+    H = DoubleHelixStent(D,L,d,n,b).all()
     clear()
     draw(H,view='iso')
+    
     # and save it in a lot of graphics formats
     if ack("Do you want to save this image (in lots of formats) ?"):
         for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 

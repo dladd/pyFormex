@@ -537,8 +537,8 @@ class Formex:
                     raise RuntimeError,"Formex init: last axis dimension of data array should be 2 or 3, got shape %s" % str(data.shape)
                 # add 3-rd dimension if data are 2-d
                 if data.shape[-1] == 2:
-                    z = zeros((data.shape[0],1),dtype=Float)
-                    data = column_stack([data,z])
+                    z = zeros((data.shape[0],data.shape[1],1),dtype=Float)
+                    data = concatenate([data,z],axis=-1)
         # data should be OK now
         self.f = data
         self.setProp(prop)
@@ -656,8 +656,8 @@ class Formex:
         The bounding box is the smallest rectangular volume in global
         coordinates, such at no points of the Formex are outside the
         box.
-        It is returned as a [2,3] array: the first row holds the
-        minimal coordinates and the second one the maximal.
+        It is returned as a (2,3) shaped array: the first row holds the
+        minimal coordinates and the second row the maximal.
         """
         return boundingBox(self.f)
 
@@ -665,11 +665,23 @@ class Formex:
     def center(self):
         """Return the center of the Formex.
 
-        The center of the formex is the center of its bbox().
-        The return value is a list of 3 coordinates.
+        The center of a Formex is the center of its bbox().
+        The return value is a (3,) shaped array.
         """
         min,max = self.bbox()
         return 0.5 * (max+min)
+
+
+    def centroid(self):
+        """Return the centroid of the Formex.
+
+        The centroid of a Formex is the point whose coordinates
+        are the mean values of all points in the Formex, each with
+        its multiplixity.
+        The return value is a (3,) shaped array.
+        """
+        return self.f.reshape((-1,3)).mean(axis=0)
+
 
     def sizes(self):
         """Return the sizes of the Formex.
@@ -2039,7 +2051,7 @@ if __name__ == "__main__":
         print G.feModel()
         print F
         print F.bbox()
-        print F.center()
+        print F.center(),F.centroid()
         print F.bsphere()
 
         F.fprint()
@@ -2052,6 +2064,7 @@ if __name__ == "__main__":
         F.fprint()
         #F = F.translate1(1,1)
 
+    f = 0
     (f,t) = _test()
     if f == 0:
         test()
