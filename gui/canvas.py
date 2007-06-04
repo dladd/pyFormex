@@ -379,13 +379,10 @@ class Canvas(object):
 
     # Any keypress with focus in the canvas generates a 'wakeup' signal.
     # This is used to break out of a wait status.
-    # An 's' keypress will generate a 'save' signal.
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
         self.emit(QtCore.SIGNAL("Wakeup"),())
-        if e.text() == 's':
-            self.emit(QtCore.SIGNAL("Save"),())
         e.ignore()
         
     def mousePressEvent(self,e):

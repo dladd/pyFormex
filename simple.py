@@ -40,6 +40,11 @@ def circle(a1=1.,a2=2.,a3=360.):
     return Formex([[[1.,0.,0.],[cos(a1),sin(a1),0.]]]).rosette(n,a2,axis=2,point=[0.,0.,0.])
 
 
+def triangle():
+    """An equilateral triangle"""
+    return circle(120.,120.)
+
+
 class Sphere2(Formex):
     """A sphere consisting of line elements.
 

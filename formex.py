@@ -386,7 +386,8 @@ def distanceFromPlane(f,p,n):
     a = f.reshape((-1,3))
     p = asarray(p).reshape((3))
     n = asarray(n).reshape((3))
-    d = (inner(f,n) - inner(p,n)) / length(n)
+    n /= length(n)
+    d = inner(f,n) - inner(p,n)
     return d.reshape(f.shape[:-1])
 
 
@@ -425,6 +426,45 @@ def distanceFromPoint(f,p):
     d = sum(d*d,-1)
     d = sqrt(d)
     return d.reshape(f.shape[:-1])
+
+
+def intersectionWithPlane(f,p,n):
+    """Return the intersection of line segments f with the plane (p,n).
+
+    f is an [n,2,3] array of coordinates.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a [n] shaped array of parameter values t,
+    such that for each segment L the intersection point is given
+    by (1-t)*L[0]+ t*L[1].
+    """
+    if f.shape[1:] != (2,3):
+        raise RuntimeError,"Needs a (n,2,3) shaped array as first arg."
+    p = asarray(p).reshape((3))
+    n = asarray(n).reshape((3))
+    n /= length(n)
+    t = (inner(p,n) - inner(f[:,0,:],n)) / inner((f[:,1,:]-f[:,0,:]),n)
+    return t
+
+
+def intersectionPointsWithPlane(f,p,n):
+    """Returns the intersection points of line segments f with plane p,n."""
+    t = intersectionWithPlane(f,p,n).reshape((-1,1))
+    return (1.-t) * f[:,0,:] + t * f[:,1,:]
+
+    
+def cutAtPlane(f,p,n):
+    """Given a [n,2,3] array. Returns all elements cut at plane."""
+    d = distanceFromPlane(f,p,n)
+    #t = intersectionWithPlane(f,p,n)
+    g = intersectionPointsWithPlane(f,p,n)
+    i0 = d[:,0] < 0.
+    i1 = d[:,1] < 0.
+    f[i0,0,:] = g[i0]
+    f[i1,1,:] = g[i1]
+    return f
+
 
 def boundingBox(a):
     """Return the bounding box of an array of coordinates.
@@ -1579,6 +1619,18 @@ class Formex:
         """
         c = self.f.mean(1).reshape((self.f.shape[0],1,self.f.shape[2]))
         return Formex(factor*(self.f-c)+c,self.p)
+
+
+    def projectOnSphere(self,radius,center=[0.,0.,0.]):
+        """Project a Formex on a sphere."""
+        d = distanceFromPoint(self.f,center)
+        s = radius / d
+        g = self.f - center
+        g[:,:,0] *= s
+        g[:,:,1] *= s
+        g[:,:,2] *= s
+        g += center
+        return Formex(g,self.p)
 
 
 ##############################################################################

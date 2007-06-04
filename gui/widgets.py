@@ -418,8 +418,11 @@ class Menu(QtGui.QMenu):
     """A popup menu for user actions."""
 
     def __init__(self,title='UserMenu',parent=None):
-        """Create the user menu.
+        """Create a popup/pulldown menu.
 
+        If parent==None, the menu is a standalone popup menu.
+        If parent is given, the menu will be inserted in the parent menu.
+        If parent==GD.gui, the menu is inserted in the main menu bar.
         
         If insert == True, the menu will be inserted in the main menubar
         before the item specified by before.

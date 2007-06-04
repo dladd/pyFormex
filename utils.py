@@ -166,6 +166,16 @@ def isPyFormex(filename):
             ok = False
     return ok
 
+
+def saveRectangle(x,y,w,h,filename,format):
+    """Save a rectangular part of the screen to a an image file."""
+    cmd = 'import -window root -crop "%sx%s+%s+%s" %s:%s' % (w,h,x,y,format,filename)
+    GD.debug(cmd)
+    sta,out = commands.getstatusoutput(cmd)
+    return sta
+
+
+
 class FilenameSequence(object):
     """A class for autogenerating sequences of file names.
 

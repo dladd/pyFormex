@@ -904,11 +904,11 @@ def checkImageFormat(fmt,verbose=False):
 
 
 def save_window(filename,format,windowname=None):
-    """Save the whole window as an image file.
+    """Save a window as an image file.
 
     This function needs a filename AND format.
-    The prefered user function is saveWindow, which can derive the
-    format from the filename extension
+    If a window is specified, the named window is saved.
+    Else, the main pyFormex window is saved.
     """
     if windowname is None:
         windowname = GD.gui.windowTitle()
@@ -923,6 +923,27 @@ def save_window(filename,format,windowname=None):
     cmd = 'import -window "%s" %s:%s' % (windowname,format,filename)
     sta,out = commands.getstatusoutput(cmd)
     return sta
+
+
+def saveWindow(filename,format,border=False):
+    """Save the main window as an image file.
+
+    This function needs a filename AND format.
+    If a window is specified, the named window is saved.
+    Else, the main pyFormex window is saved.
+    """
+    GD.gui.repaint()
+    GD.gui.toolbar.repaint()
+    GD.gui.update()
+    GD.canvas.update()
+    GD.app.processEvents()
+    if border:
+        geom = GD.gui.frameGeometry()
+    else:
+        geom = GD.gui.geometry()
+    x,y,w,h = geom.getRect()
+    return utils.saveRectangle(x,y,w,h,filename,format)
+
 
 # global parameters for multisave mode
 multisave = None 
@@ -964,7 +985,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     if filename is None:
         if multisave:
             log("Leave multisave mode")
-            QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
+            QtCore.QObject.disconnect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
         multisave = None
         return
 
@@ -981,7 +1002,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
         log("Start multisave mode to files: %s (%s)" % (names.name,format))
         #print hotkey
         if hotkey:
-             QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Save"),saveNext)
+             QtCore.QObject.connect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
                  warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
         multisave = (names,format,window,hotkey,autosave)
@@ -989,7 +1010,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
 
     else: # Save the image
         if window:
-            sta = save_window(filename,format)
+            sta = saveWindow(filename,format)
         else:
             sta = GD.canvas.save(filename,format)
         if sta:

@@ -375,6 +375,18 @@ class GUI(QtGui.QMainWindow):
         GD.app.processEvents()
 
 
+    def keyPressEvent (self,e):
+        """Top level key press event handler.
+
+        Events get here if they are not handled by a lower level handler.
+        """
+        self.emit(QtCore.SIGNAL("Wakeup"),())
+        if e.key() == QtCore.Qt.Key_F2:
+            GD.debug('F2 pressed!')
+            self.emit(QtCore.SIGNAL("Save"),())
+        e.ignore()
+
+
 
 def messageBox(message,level='info',actions=['OK']):
     """Display a message box and wait for user response.
