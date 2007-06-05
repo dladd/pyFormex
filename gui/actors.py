@@ -339,7 +339,7 @@ class FormexActor(Actor,Formex):
         if self.nnodel() == 1:
             # ! THIS SHOULD BETTER BE SET FROM THE SCENE SIZE ! 
             sz = self.size()
-            print("Size %s" % sz)
+            # print "Mark size %s" % sz
             if sz <= 0.0:
                 sz = 1.0
             self.setMark(sz*markscale,"cube")

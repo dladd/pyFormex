@@ -188,7 +188,7 @@ def read_ascii_large(fn,dtype=Float):
     .nodes file and then reading it through numpy's fromfile() function.
     """
     tmp = '%s.nodes' % fn
-    runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' %s | d2u > %s" % (fn,tmp))
+    runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' '%s' | d2u > '%s'" % (fn,tmp))
     nodes = fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3,3))
     return nodes
 
@@ -230,7 +230,7 @@ def read_gambit_neutral(fn):
     The .neu file nodes are numbered from 1!
     Returns a nodes,elems tuple.
     """
-    runCommand("%s/external/gambit-neu %s" % (GD.cfg['pyformexdir'],fn))
+    runCommand("%s/external/gambit-neu '%s'" % (GD.cfg['pyformexdir'],fn))
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
@@ -354,7 +354,7 @@ def stl_to_off(stlname,offname=None,sanitize=True):
         # to suppress all actions makes admesh hang. Therefore we include the
         # action -d (fix normal directions) as the default.
         options = '-d'    
-    runCommand("admesh %s --write-off %s %s" % (options,offname,stlname))
+    runCommand("admesh %s --write-off '%s' '%s'" % (options,offname,stlname))
     return offname
 
 
@@ -362,7 +362,7 @@ def stl_to_gts(stlname,outname=None):
     """Transform an .stl file to .gts format."""
     if not outname:
         outname = changeExt(stlname,'.gts')
-    runCommand("stl2gts < %s > %s" % (stlname,outname))
+    runCommand("stl2gts < '%s' > '%s'" % (stlname,outname))
     return outname
 
 

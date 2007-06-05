@@ -1091,7 +1091,7 @@ class Formex:
         flag = ones((self.f.shape[0],))
         for i in range(self.f.shape[0]):
             for j in range(i):
-                if allclose(self.f[i],self.f[j]):
+                if allclose(self.f[i],self.f[j],rtol=rtol,atol=atol):
                     # i is a duplicate node
                     flag[i] = 0
                     break
