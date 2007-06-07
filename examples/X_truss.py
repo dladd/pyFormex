@@ -1,5 +1,5 @@
-#!/usr/bin/env pyformex
-# $Id$
+#!/usr/bin/env python pyformex.py
+# $Id: X_truss.py 131 2006-09-19 17:57:54Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra

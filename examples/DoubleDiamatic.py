@@ -1,5 +1,5 @@
-#!/usr/bin/env pyformex
-# $Id$
+#!/usr/bin/env python pyformex.py
+# $Id: DoubleDiamatic.py 53 2005-12-05 18:23:28Z bverheg $
 ##
 ## This file is part of pyformex 0.1.2 Release Fri Jul  9 14:48:57 2004
 ## pyformex is a python implementation of Formex algebra

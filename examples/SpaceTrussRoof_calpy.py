@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/env python pyformex.py
 # $Id: SpaceTrussRoof_calpy.py 154 2006-11-03 19:08:25Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006

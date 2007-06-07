@@ -1,5 +1,5 @@
-#!/usr/bin/env pyformex
-# $Id$
+#!/usr/bin/env python pyformex.py
+# $Id: TrussBridge.py 151 2006-11-02 18:18:49Z bverheg $
 ##
 ## This file is part of pyFormex 0.3 Release Mon Feb 20 21:04:03 2006
 ## pyFormex is a python implementation of Formex algebra

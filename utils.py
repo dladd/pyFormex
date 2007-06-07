@@ -154,7 +154,7 @@ def isPyFormex(filename):
     A file is considered to be a pyFormex script if its name ends in '.py'
     and the first line of the file contains the substring 'pyformex'.
     Typically, a pyFormex script starts with a line:
-      #!/usr/bin/env pyformex
+      #!/usr/bin/env python pyformex.py
     """
     ok = filename.endswith(".py")
     if ok:

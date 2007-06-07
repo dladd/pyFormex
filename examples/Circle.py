@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/env python pyformex.py
 # $Id: Circle.py 154 2006-11-03 19:08:25Z bverheg $
 
 from simple import circle

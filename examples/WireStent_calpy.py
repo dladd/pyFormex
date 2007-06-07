@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/env python pyformex.py
 # $Id: WireStent_calpy.py 147 2006-10-13 09:30:49Z bverheg $
 #
 """Wire stent analysis"""

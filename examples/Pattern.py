@@ -1,5 +1,5 @@
-#!/usr/bin/env pyformex
-# $Id$
+#!/usr/bin/env python pyformex.py
+# $Id: Pattern.py 85 2006-04-02 12:36:40Z bverheg $
 
 import simple
 
