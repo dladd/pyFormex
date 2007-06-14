@@ -1695,6 +1695,29 @@ class Formex:
         return self.translate(tr)
 
 
+    def divide(self,div):
+        """Divide a plex-2 Formex at the values in div.
+
+        Replaces each member of the Formex by a sequence of members obtained
+        by dividing the Formex at the relative values specified in div.
+        The values should normally range from 0.0 to 1.0.
+
+        As a convenience, if an integer is specified for div, it is taken as a
+        number of divisions for the interval [0..1].
+
+        This function only works on plex-2 Formices (line segments).
+        """
+        if self.nplex() != 2:
+            raise RuntimeError,"Can only divide plex-2 Formices"
+        if type(div) == int:
+            div = arange(div+1) / float(div)
+        else:
+            div = array(div).ravel()
+        A = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[:-1])
+        B = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[1:])
+        return connect([A,B])
+
+
 #################### Read/Write Formex File ##################################
 
 
@@ -1772,7 +1795,6 @@ class Formex:
     @deprecated(setProp)
     def removeProp(self):
         pass
-
     
     def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
@@ -1986,29 +2008,6 @@ def interpolate(F,G,div):
     d = G.f - F.f
     r = c + outer(div,d).reshape((-1,)+shape)
     return Formex(r.reshape((-1,) + shape[1:]))
-
-
-def divide(F,div):
-    """Divide a plex-2 Formex at the values in div.
-
-    Replaces each member of the Formex F by a sequence of members obtained
-    by dividing the Formex at the relative values specified in div. The values
-    should normally range from 0.0 to 1.0.
-    
-    As a convenience, if an integer is specified for div, it is taken as a
-    number of divisions for the interval [0..1].
-
-    This function only works on plex-2 Formices (line segments).
-    """
-    if F.nplex() != 2:
-        raise RuntimeError,"Can only divide plex-2 Formices"
-    if type(div) == int:
-        div = arange(div+1) / float(div)
-    else:
-        div = array(div).ravel()
-    A = interpolate(F.selectNodes([0]),F.selectNodes([1]),div[:-1])
-    B = interpolate(F.selectNodes([0]),F.selectNodes([1]),div[1:])
-    return connect([A,B])
     
 
 def readfile(file,sep=',',plexitude=1,dimension=3):
@@ -2040,6 +2039,10 @@ def bbox(formexlist):
     """
     return Formex(concatenate([ [f.bbox()] for f in formexlist ])).bbox()
 
+
+@deprecated(Formex.divide)
+def divide(F,div):
+    pass
 
 
 ##############################################################################

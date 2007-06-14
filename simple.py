@@ -33,7 +33,8 @@ def circle(a1=1.,a2=2.,a3=360.):
     a1 == a2 gives a full circle, a1 < a2 gives a dashed circle.
     If a3 < 360, the result is an arc.
     The default values give a dashed circle.
-    Large angle values result in polygones.
+    Large angle values result in polygones. Thus circle(120.,120.) is an
+    equilateral triangle.
     """
     n = int(round(a3/a2))
     a1 *= pi/180.
@@ -41,8 +42,8 @@ def circle(a1=1.,a2=2.,a3=360.):
 
 
 def triangle():
-    """An equilateral triangle"""
-    return circle(120.,120.)
+    """An equilateral triangle with base [0,1] on axis 0"""
+    return Formex([[[0.,0.,0.],[1.,0.,0.],[0.5,0.5*sqrt(3.),0.]]])
 
 
 class Sphere2(Formex):
