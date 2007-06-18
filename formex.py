@@ -120,6 +120,16 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     return abs(values - target) < atol + rtol * abs(target) 
 
 
+def vectorNormalize(vec):
+    """Normalize a set of vectors.
+
+    vec is a (n,3) shaped arrays holding a collection of vectors.
+    The result is the same set of vectors each normalized to a unit length
+    """
+    length = sqrt(sum(vec*vec,axis=-1))
+    return vec / length.reshape((-1,1))
+
+
 def vectorPairAreaNormals(vec1,vec2):
     """Compute area of and normals on parallellograms formed by vec1 and vec2.
 
@@ -586,7 +596,7 @@ class Formex:
 
 
     def __getitem__(self,i):
-        """Return a formex element i of the Formex.
+        """Return element i of the Formex.
 
         This allows addressing element i of Formex F as F[i].
         """
@@ -656,9 +666,20 @@ class Formex:
         """
         return self.f.shape
 
+
     # Coordinates
+    def view(self):
+        """Return the Formex as a numpy array (ndarray).
+
+        Since the ndarray object has a method view() returning a view on
+        the ndarray, this method allows writing code tha works with both
+        Formex and ndarray instances. The results is of course always an
+        ndarray.
+        This method is prefered over the (deprecated) data().
+        """
+        return self.f
     def data(self):
-        """Return the Formex as a numpy array"""
+        """Return the Formex as a numpy array (ndarray)"""
         return self.f
     def x(self):
         """Return the x-plane"""
@@ -672,7 +693,7 @@ class Formex:
 
     # Properties
     def prop(self):
-        """Return the properties as a numpy array"""
+        """Return the properties as a numpy array (ndarray)"""
         return self.p
 
     def maxprop(self):
@@ -2117,6 +2138,7 @@ if __name__ == "__main__":
         Formex.setPrintFunction(Formex.asArray)
         print F
         F.fprint()
+        print type(F)
         #F = F.translate1(1,1)
 
     f = 0

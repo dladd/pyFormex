@@ -140,7 +140,7 @@ def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for an existing file name or multiple file names."""
     GD.debug("Create widget")
     w = widgets.FileSelection(cur,filter,exist,multi)
-    sleep(5)
+    #sleep(5)
     GD.debug("Get filename")
     if file:
         w.selectFile(file)
@@ -468,7 +468,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=False):
+def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=False,marksize=None):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -558,8 +558,13 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         # An array with 3 colums will be fine.
         color = map(colors.GLColor,color)
 
+    try:
+        marksize = float(marksize)
+    except:
+        marksize = GD.cfg.get('marksize',0.01)
+
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color,linewidth=GD.cfg['draw/linewidth'],eltype=eltype)
+    actor = actors.FormexActor(F,color,linewidth=GD.cfg['draw/linewidth'],eltype=eltype,markscale=marksize)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':

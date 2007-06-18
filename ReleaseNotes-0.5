@@ -1,0 +1,42 @@
+Collection of changes since pyFormex release 0.4.2 (revision 240)
+
+(See ReleaseNotes-0.4.2 for earlier changes)
+==================================================
+
+- command line:
+
+- config.py:
+
+GUI:
+====
+#- Multiple views functionality is now always activated.
+#  The --multiview command line option is unneeded and will be removed in
+#  a future release.
+
+- formex.py:
+
+  Formex class: 
+    - Now implemented as a Python new-style class (derived from object)
+    - A Formex may be initilaized with a 2-dimensional array: It will be
+      interpreted as a Formex with plexitude 1 (collection of points).
+    - divide() method replaces the divide(F) function
+    - rotate accepts an optional around=.. argument to rotate around a point
+      different from the origin
+    - new centroid() method, returns the point with mean coordinates
+
+- draw.py:
+
+
+- widgets.py:
+
+
+- Manual:
+ 
+
+KNOWN PROBLEMS:
+--------------
+ - With the mouse zoom function, you can not zoom beyond the center of the
+   displayed scene. (You can do it using the zoom buttons)
+ - Mouse zooming does not work correctly in projective mode.
+ - Mouse zooming will make a jump after a flyAlong().
+

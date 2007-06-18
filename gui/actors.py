@@ -15,8 +15,6 @@ from formex import *
 from plugins import elements
 
 
-markscale = 0.01
-
 ### Some drawing functions ###############################################
 
 
@@ -306,7 +304,7 @@ class TriadeActor(Actor):
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
 
-    def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,eltype=None):
+    def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,markscale=0.01,eltype=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
