@@ -82,6 +82,24 @@ def length(arg):
     a = asarray(arg).flat
     return sqrt(inner(a,a))   # a*a doesn't work here
 
+def norm(v,n=2):
+    """Return a norm on the vector v.
+
+    Default is the quadratic norm (vector length)
+    n == 1 returns the sum
+    n <= 0 returns the max absolute value
+    """
+    a = asarray(v).flat
+    if n == 2:
+        return sqrt((a*a).sum())
+    if n > 2:
+        return (a**n).sum()**(1./n)
+    if n == 1:
+        return a.sum()
+    if n <= 0:
+        return abs(a).max()
+    return
+
 def inside(p,mi,ma):
     """Return true if point p is inside bbox defined by points mi and ma"""
     return p[0] >= mi[0] and p[1] >= mi[1] and p[2] >= mi[2] and \
@@ -124,10 +142,13 @@ def vectorNormalize(vec):
     """Normalize a set of vectors.
 
     vec is a (n,3) shaped arrays holding a collection of vectors.
-    The result is the same set of vectors each normalized to a unit length
+    The result is a tuple of two arrays:
+      length (n) : the length of the vectors vec.
+      normal (n,3) : unit-length vectors along vec.
     """
-    length = sqrt(sum(vec*vec,axis=-1))
-    return vec / length.reshape((-1,1))
+    length = sqrt((vec*vec).sum(axis=-1))
+    normal = vec / length.reshape((-1,1))
+    return length,normal
 
 
 def vectorPairAreaNormals(vec1,vec2):
@@ -141,7 +162,7 @@ def vectorPairAreaNormals(vec1,vec2):
     gives area * normal.
     """
     normal = cross(vec1,vec2)
-    area = sqrt(sum(normal*normal,axis=-1))
+    area = sqrt((normal*normal).sum(axis=-1))
     normal /= area.reshape((-1,1))
     return area,normal
 
