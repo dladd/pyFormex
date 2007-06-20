@@ -104,6 +104,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def	paintGL(self):
         self.display()
 
+##    def update(self):
+##        print "Updating QtCanvas"
+##        QtOpenGL.QGLWidget.update(self)
+##        #canvas.Canvas.update(self)
+        
+
 
 def printFormat(fmt):
     """Print partial information about the OpenGL format."""
@@ -174,6 +180,8 @@ class MultiCanvas(QtGui.QGridLayout):
     def update(self):
         for v in self.all:
             v.update()
+        print "Processing events"
+        GD.app.processEvents()
 
     def removeAll(self):
         for v in self.active:

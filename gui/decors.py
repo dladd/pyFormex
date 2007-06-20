@@ -171,7 +171,7 @@ def unProject(x,y,win):
 
 ### Decorations ###############################################
 
-class Decoration:
+class Decoration(object):
     """A decoration is a 2-D drawing at canvas position x,y.
 
     All decoration have at least the following attributes:

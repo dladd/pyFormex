@@ -47,10 +47,21 @@ limas = [ [ "F", {"F":"F+G","G":"F-G"},10,turtlecmds() ],
           # some examples of plants
           [ "+F", {"F":"F[*F]F[/F]F"},5,turtlecmds({'*':'ro(25);','/':'ro(-25);'}) ],
           [ "+Y", {"Y":"YFX[*Y][/Y]", "X":"[/F][*F]FX"},7,turtlecmds({'*':'ro(25);','/':'ro(-25);'}) ],
-          [ "+F", {"F":"FF/[/F*F*F]*[*F/F/F]"},4,turtlecmds({'*':'ro(22.5);','/':'ro(-22.5);'}) ],
+          [ "+F", {"F":"FF[//F*F*F][*F/F/F]"},4,turtlecmds({'*':'ro(22.55);','/':'ro(-22.5);'}) ], # breezy bush
+          # islands and lakes
+          [ "F-F-F-F", {"F":"F-J+FF-F-FF-FJ-FF+J-FF+F+FF+FJ+FFF", "J":"JJJJJJ"},2,turtlecmds() ],
           # hexagones
           [ "F*F*F*F*F*F", {"F":"[//J*G*F*G]J", "G":"[//K*G*F*G]J"},5,turtlecmds() ],
-          [ "F+F", {"F":"F*FF**F**FF*F"},4,turtlecmds() ]
+          # lace
+          [ "F+F", {"F":"F*FF**F**FF*F"},4,turtlecmds() ],
+          # Testing new ones
+          [ "F++F", {"F":"*F//F*"}, 12, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
+          [ "F+F+F+F", {"F":"*F//G*","G":"/F**G/"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
+          [ "G+G+G+G", {"F":"*F//G*","G":"/F**G/"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
+          [ "+F", {"F":"GH", "G":"GG", "H":"G[*F][/F]"}, 12, turtlecmds({'*':'ro(22.5);','/':'ro(-22.5);'}) ],
+          #[ "F", {"F":"*F-F*"}, 12, turtlecmds({'*':'ro(45);'}) ],
+          #[ "JF", {"F":"*F-FF+F*","J":"/J"}, 8, turtlecmds({'*':'ro(45);','/':'ro(-45);'}) ],
+          #[ "F", {"F":"F-F++F-F"}, 4, turtlecmds() ],
         ]
 
 def show(L,turtle_cmds):
@@ -64,7 +75,7 @@ def show(L,turtle_cmds):
     #return F
     
 # and display them in series
-for a,r,g,t in limas:
+for a,r,g,t in limas[-1:]:
     L = lima.Lima(a,r)
     show(L,t)
     for i in range(g):

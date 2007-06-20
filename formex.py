@@ -594,7 +594,7 @@ class Formex:
         else:
             if type(data) == str:
                 data = pattern(data)
-            data = array(data).astype(Float)
+            data = asarray(data).astype(Float)
 
             if data.size == 0:
                 data.shape = (0,0,3) # An empty Formex
@@ -763,6 +763,16 @@ class Formex:
         The return value is a (3,) shaped array.
         """
         return self.f.reshape((-1,3)).mean(axis=0)
+
+
+    def centroids(self):
+        """Return the centroids of all elements of the Formex.
+
+        The centroid of an element is the point whose coordinates
+        are the mean values of all points of the element.
+        The return value is a plex-1 Formex.
+        """
+        return Formex(self.f.mean(axis=1))
 
 
     def sizes(self):

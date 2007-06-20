@@ -1,7 +1,7 @@
 #!/usr/bin/env python pyformex.py
 # $Id: Clip.py 154 2006-11-03 19:08:25Z bverheg $
 
-clear()
+reset()
 n = 16
 
 # These are triangles

@@ -26,6 +26,14 @@ class ExitAll(Exception):
     """Exception raised to exit pyFormex from a script."""
     pass    
 
+class ExitSeq(Exception):
+    """Exception raised to exit from a sequence of scripts."""
+    pass    
+
+class TimeOut(Exception):
+    """Exception raised to timeout from a dialog widget."""
+    pass    
+
 #################### Interacting with the user ###############################
 
 def ask(question,choices=None,default=''):

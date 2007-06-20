@@ -1,4 +1,4 @@
-# canvas.py
+# actors.py
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -7,7 +7,7 @@
 ## Distributed under the GNU General Public License, see file COPYING
 ## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
-"""OpenGL actors for populating the 3D scene(3D)."""
+"""OpenGL actors for populating the 3D scene."""
 
 from OpenGL import GL,GLU
 from colors import *
@@ -197,6 +197,7 @@ class Actor(object):
       drawing function can act differently depending on the mode. There are
       currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
     """
+    
     def __init__(self):
         pass
 
@@ -205,13 +206,14 @@ class Actor(object):
 
     def draw(self):
         pass
+
     
 
 class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
 
     def __init__(self,size,color=[red,cyan,green,magenta,blue,yellow]):
-        Actor.__init__(self)
+        FacingActor.__init__(self)
         self.size = size
         self.color = color
 
@@ -303,6 +305,7 @@ class TriadeActor(Actor):
 
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
+    mark = False
 
     def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,markscale=0.01,eltype=None):
         """Create a multicolored Formex actor.

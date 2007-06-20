@@ -27,6 +27,43 @@ oldvalues = []  # a list of Formex instances corresponding to the selection
                 # BEFORE the last transformation
 data = {} # a dict with global data
 
+
+# If True, this makes element numbers to be displayed by drawSelection
+show_numbers = False
+shown_numbers = []  # The collection of numbers
+
+
+def toggleNumbers(value=None):
+    """Toggle the display of number On or Off.
+
+    If given, value is True or False. 
+    If no value is given, this works as a toggle. 
+    """
+    global show_numbers
+    if value is None:
+        show_numbers = not show_numbers
+    elif value:
+        show_numbers = True
+    else:
+        show_numbers = False
+    if show_numbers:
+        showSelectionNumbers()
+    else:
+        removeSelectionNumbers()
+
+
+def showSelectionNumbers():
+    """Draw the nubers for the current selection."""
+    global shown_numbers
+    for F in checkSelection(warn=False):
+        shown_numbers.append(drawNumbers(F))
+
+
+def removeSelectionNumbers():
+    """Remove (all) the element numbers."""
+    map(undraw,shown_numbers)
+
+
 ##################### select, read and write ##########################
 
 def setSelection(namelist):
@@ -98,7 +135,9 @@ def drawSelection():
     clear()
     if selection:
         draw(selection)
-
+        if show_numbers:
+            showSelectionNumbers()
+            
 
 #################### Read/Write Formex File ##################################
 
@@ -476,6 +515,7 @@ def create_menu():
         ("&Read Formex Files",readSelection),
         ("---",None),
         ("&Set Property",setProperty),
+        ("&Toggle Numbers",toggleNumbers),
         ("&Forget ",forgetSelection),
         ("&Undo Last Changes",undoChanges),
         ("---",None),

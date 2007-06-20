@@ -13,9 +13,13 @@ import globaldata as GD
 import os
 from PyQt4 import QtCore, QtGui
 
-import fileMenu
+import fileMenu, scriptsMenu
 import cameraMenu
 import draw
+
+def stop():
+    GD.debug("Stopping Run Sequence")
+    scriptsMenu.stopRunSequence()
 
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
@@ -25,6 +29,7 @@ def addActionButtons(toolbar):
     buttons = [ [ "Play", "next", fileMenu.play, False ],
                 [ "Step", "nextstop", draw.step, False ],
                 [ "Continue", "ff", draw.fforward, False ],
+                [ "Stop", "stop", stop, False ],
               ]
     for b in buttons:
         icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.cfg['gui/icontype']))

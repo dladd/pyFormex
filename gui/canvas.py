@@ -16,6 +16,9 @@ from PyQt4 import QtCore  # needed for events, signals
 
 import colors
 import camera
+import actors
+import decors
+import marks
 import utils
 
 import numpy
@@ -31,6 +34,51 @@ except ImportError:
     _has_gl2ps = False
 
 
+
+class ActorList(list):
+
+    def __init__(self,canvas,useDisplayLists=True):
+        self.canvas = canvas
+        self.uselists = useDisplayLists
+        list.__init__(self)
+        
+    def add(self,actor):
+        """Add an actor to an actorlist."""
+        if self.uselists:
+            self.canvas.makeCurrent()
+            actor.list = GL.glGenLists(1)
+            GL.glNewList(actor.list,GL.GL_COMPILE)
+            actor.draw(self.canvas.rendermode)
+            GL.glEndList()
+        self.append(actor)
+
+    def delete(self,actor):
+        """Remove an actor from an actorlist."""
+        self.remove(actor)
+        if self.uselists and actor.list:
+            self.canvas.makeCurrent()
+            GL.glDeleteLists(actor.list,1)
+
+    def redraw(self,actorlist=None):
+        """Redraw (some) actors in the scene.
+
+        This redraws the specified actors (recreating their display list).
+        This should e.g. be used after changing an actor's properties.
+        Only actors that are in the current actor list will be redrawn.
+        If no actor list is specified, the whole current actorlist is redrawn.
+        """
+        if actorlist is None:
+            actorlist = self
+        if self.uselists:
+            for actor in actorlist:
+                if actor.list:
+                    GL.glDeleteLists(actor.list,1)
+                actor.list = GL.glGenLists(1)
+                GL.glNewList(actor.list,GL.GL_COMPILE)
+                actor.draw(self.canvas.rendermode)
+                GL.glEndList() 
+
+
 ##################################################################
 #
 #  The Canvas
@@ -44,8 +92,9 @@ class Canvas(object):
 
     def __init__(self):
         """Initialize an empty canvas with default settings."""
-        self.actors = []       # an empty scene
-        self.decorations = []  # and no decorations
+        self.actors = ActorList(self)       # start with an empty scene
+        self.annotations = ActorList(self)  # without annotations
+        self.decorations = ActorList(self)  # and no decorations either
         self.lights = []
         self.setBbox()
         self.bgcolor = colors.mediumgrey
@@ -65,6 +114,10 @@ class Canvas(object):
         self.camera = camera.Camera()
         GD.debug("camera.rot = %s" % self.camera.rot)
         GD.debug("view angles: %s" % self.view_angles)
+
+
+##    def update(self):
+##        GD.app.processEvents()
 
 
     def glinit(self,mode=None):
@@ -135,8 +188,10 @@ class Canvas(object):
         # Draw Scene Actors
         self.camera.loadProjection()
         self.camera.loadMatrix()
-        for i in self.actors:
-            GL.glCallList(i.list)
+        for actor in self.actors:
+            GL.glCallList(actor.list)
+        for actor in self.annotations:
+            actor.draw()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         # Plot viewport decorations
@@ -144,8 +199,8 @@ class Canvas(object):
         GL.glMatrixMode (GL.GL_PROJECTION)
         GL.glLoadIdentity()
         GLU.gluOrtho2D (0, self.width(), 0, self.height())
-        for i in self.decorations:
-            GL.glCallList(i.list)
+        for actor in self.decorations:
+            GL.glCallList(actor.list)
         # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
@@ -179,48 +234,47 @@ class Canvas(object):
             self.bbox = bbox
 
          
-    def add_actor(self,actor,list):
-        """Add an actor to an actorlist."""
-        self.makeCurrent()
-        actor.list = GL.glGenLists(1)
-        GL.glNewList(actor.list,GL.GL_COMPILE)
-        actor.draw(self.rendermode)
-        GL.glEndList()
-        list.append(actor)
-
-
-    def remove_actor(self,actor,list):
-        """Remove an actor from an actorlist."""
-        self.makeCurrent()
-        list.remove(actor)
-        GL.glDeleteLists(actor.list,1)
-
-
-    def recreate_actor(self,actor,list):
-        """Recreate an actor in a list."""
-        self.remove_actor(actor,list)
-        self.add_actor(actor,list) 
-
-         
     def addActor(self,actor):
         """Add a 3D actor to the 3D scene."""
-        self.add_actor(actor,self.actors)
-
+        self.actors.add(actor)
 
     def removeActor(self,actor):
         """Remove a 3D actor from the 3D scene."""
-        self.remove_actor(actor,self.actors)
+        self.actors.delete(actor)
+
+         
+    def addMark(self,actor):
+        """Add an annotation to the 3D scene."""
+        self.annotations.add(actor)
+
+    def removeMark(self,actor):
+        """Remove an annotation from the 3D scene."""
+        self.annotations.delete(actor)
 
          
     def addDecoration(self,actor):
         """Add a 2D decoration to the canvas."""
-        self.add_actor(actor,self.decorations)
-
+        self.decorations.add(actor)
 
     def removeDecoration(self,actor):
         """Remove a 2D decoration from the canvas."""
-        self.remove_actor(actor,self.decorations)
+        self.decorations.delete(actor)
 
+    def remove(self,itemlist):
+        """Remove a list of any actor/annotation/decoration items.
+
+        itemlist can also be a single item instead of a list.
+        """
+        if not type(itemlist) == list:
+            itemlist = [ itemlist ]
+        for item in itemlist:
+            if isinstance(item,actors.Actor):
+                self.actors.delete(item)
+            elif isinstance(item,marks.Mark):
+                self.annotations.delete(item)
+            elif isinstance(item,decors.Decoration):
+                self.decorations.delete(item)
+        
 
     def removeActors(self,actorlist=None):
         """Remove all actors in actorlist (default = all) from the scene."""
@@ -229,6 +283,14 @@ class Canvas(object):
         for actor in actorlist:
             self.removeActor(actor)
         self.setBbox()
+
+
+    def removeMarks(self,actorlist=None):
+        """Remove all actors in actorlist (default = all) from the scene."""
+        if actorlist == None:
+            actorlist = self.annotations[:]
+        for actor in actorlist:
+            self.removeMark(actor)
 
 
     def removeDecorations(self,actorlist=None):
@@ -242,33 +304,17 @@ class Canvas(object):
     def removeAll(self):
         """Remove all actors and decorations"""
         self.removeActors()
+        self.removeMarks()
         self.removeDecorations()
-
-
-    def redrawActors(self,actorlist=None):
-        """Redraw (some) actors in the scene.
-
-        This redraws the specified actors (recreating their display list).
-        This should e.g. be used after changing an actor's properties.
-        Only actors that are in the current actor list will be redrawn.
-        If no actor list is specified, the whole current actorlist is redrawn.
-        """
-        self.makeCurrent()
-        if actorlist == None:
-            actorlist = self.actors
-        for actor in actorlist:
-            if actor.list:
-                GL.glDeleteLists(actor.list,1)
-            actor.list = GL.glGenLists(1)
-            GL.glNewList(actor.list,GL.GL_COMPILE)
-            actor.draw(self.rendermode)
-            GL.glEndList() 
         self.display()
 
 
     def redrawAll(self):
         """Redraw all actors in the scene."""
-        self.redrawActors(self.actors)
+        self.actors.redraw()
+        self.annotations.redraw()
+        self.decorations.redraw()
+        self.display()
 
         
 ##     def setView(self,bbox=None,side=None):

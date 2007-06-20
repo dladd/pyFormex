@@ -15,6 +15,13 @@ import menu, utils, fileMenu
 from PyQt4 import QtCore, QtGui
 
 
+stopRunScripts = False
+
+def stopRunSequence():
+    global stopRunScripts
+    stopRunScripts = True
+    
+
 class ScriptsMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list."""
     
@@ -93,9 +100,8 @@ class ScriptsMenu(QtGui.QMenu):
 
     def runAll(self):
         """Run all scripts."""
-        print "Running all scripts"
-        for f in self.files:
-            self.runScript(f)
+        self.current = ""
+        self.runAllNext()
 
 
     def runNext(self):
@@ -103,19 +109,27 @@ class ScriptsMenu(QtGui.QMenu):
             i = self.files.index(self.current) + 1
         except ValueError:
             i = 0
-        print "This is script %s out of %s" % (i,len(self.files))
+        GD.debug("This is script %s out of %s" % (i,len(self.files)))
         if i < len(self.files):
             self.runScript(self.files[i])
 
 
     def runAllNext(self):
+        global stopRunScripts
         try:
             i = self.files.index(self.current)
         except ValueError:
             i = 0
-        print "Running scripts %s-%s" % (i,len(self.files))
+        GD.debug("Running scripts %s-%s" % (i,len(self.files)))
+        GD.gui.actions['Stop'].setEnabled(True)
         for f in self.files[i:]:
             self.runScript(f)
+            if stopRunScripts:
+                stopRunScripts = False
+                GD.debug("Exiting the sequence")
+                break
+        GD.gui.actions['Stop'].setEnabled(False)
+        GD.debug("Exiting runAllNext")
 
 
     def reLoad(self):

@@ -20,6 +20,7 @@ import widgets
 import colors
 import actors
 import decors
+import marks
 import formex
 from script import *
 from cameraMenu import setPerspective,setProjection
@@ -79,7 +80,24 @@ def messageBox(message,level='info',actions=['OK']):
     GD.gui.update()
     return ans
 
-def ask(question,choices=None,default=''):
+
+outtimer = None
+
+def outrelease():
+    """Release the outtime."""
+    global outtimer
+    if outtimer:
+        outtimer.release()
+        outtimer = None
+        
+def timeout(secs):
+    """Raise a timeout error after secs."""
+    global outtimer
+    outtimer = threading.Timer(secs,outrelease)
+    outtimer.start()
+    
+
+def ask(question,choices=None,default='',timeout=-1):
     """Ask a question and present possible answers.
 
     Returns index of the chosen answer.
@@ -296,6 +314,7 @@ def playScript(scr,name=None):
             GD.gui.actions['Continue'].setEnabled(False)
     #print scriptRunning,stepmode
     if exitall:
+        print "Calling exit() from playscript"
         exit()
 
 
@@ -587,9 +606,10 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     return actor
 
 
-def undraw(actor):
-    GD.canvas.removeActor(actor)
+def undraw(itemlist):
+    GD.canvas.remove(itemlist)
     GD.canvas.update()
+    GD.app.processEvents()
     
 
 def view(v,wait=False):
@@ -647,11 +667,19 @@ def decorate(decor):
     GD.canvas.addDecoration(decor)
     GD.canvas.update()
 
-
 def undecorate(decor):
     GD.canvas.removeDecoration(decor)
     GD.canvas.update()
 
+
+def drawNumbers(F):
+    """Draw numbers on all elements."""
+    FC = F.centroids()
+    M = [ marks.TextMark(P,'%s'%i) for i,P in enumerate(FC.f[:,0,:]) ]
+    for m in M:
+        GD.canvas.addMark(m)
+    GD.canvas.update()
+    return M
 
 
 def frontView():
@@ -685,12 +713,14 @@ def zoomAll():
     GD.canvas.redrawAll()
     GD.canvas.update()
 
+
 def bgcolor(color):
     """Change the background color (and redraw)."""
     color = colors.GLColor(color)
     GD.canvas.bgcolor = color
     GD.canvas.display()
     GD.canvas.update()
+
 
 def fgcolor(color):
     """Set the default foreground color."""
@@ -704,6 +734,7 @@ def linewidth(wid):
     #GD.canvas.setLinewidth(float(wid))
     GD.cfg['draw/linewidth'] = wid
 
+
 def clear():
     """Clear the canvas"""
     global allowwait
@@ -713,6 +744,7 @@ def clear():
     GD.canvas.removeAll()
     GD.canvas.clear()
     GD.canvas.update()
+
 
 def redraw():
     GD.canvas.redrawAll()
@@ -739,6 +771,7 @@ def fforward():
     global allowwait
     allowwait = False
     drawrelease()
+
 
 def delay(i):
     """Set the draw delay in seconds."""
@@ -806,6 +839,7 @@ def exit(all=False):
         else:
             raise Exit # exit from script only
     if GD.app and GD.app_started: # exit from GUI
+        GD.debug("draw.exit called while no script running")
         GD.app.quit() 
     else: # the gui didn't even start
         sys.exit(0)

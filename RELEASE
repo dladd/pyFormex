@@ -8,7 +8,7 @@ PYMODULES= config flatkeydb formex globaldata mydict \
   script simple timer units utils vector
 PYGUIMODULES = __init__ actionlist actors camera cameraMenu canvas \
   colors colorscale decors draw fileMenu gui help \
-  menu prefMenu scriptsMenu toolbar widgets
+  marks menu prefMenu scriptsMenu toolbar widgets
 PLUGINMODULES= __init__ elements f2abq formex_menu inertia \
   lima partition properties sectionize \
   stl stl_abq stl_menu tetgen turtle
