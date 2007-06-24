@@ -51,6 +51,18 @@ def glutFontHeight(font):
     return int(font[-2:])
 
 
+def drawGlutText(text,font):
+    """Draw a text in given font at the current rasterpoint.
+
+    font should be one  of the legal fonts returned by glutFont().
+    If text is not a string, it will be formatted to a string
+    before drawing.
+    After drawing, the rasterpos will have been updated!
+    """
+    for character in str(text):
+        GLUT.glutBitmapCharacter(font, ord(character))
+
+
 def drawLine(x1, y1, x2, y2):
     """Draw a straight line from (x1,y1) to (x2,y2) in canvas coordinates."""
     GL.glBegin(GL.GL_LINES)
@@ -105,7 +117,7 @@ def myBitmapLength(font, text):
     return len
 
 
-def drawText(text, x,y, font='9x15', adjust='left'):
+def drawText2D(text, x,y, font='9x15', adjust='left'):
     """Draw the given text at given 2D position in window.
 
     If adjust == 'center', the text will be horizontally centered on
@@ -119,39 +131,16 @@ def drawText(text, x,y, font='9x15', adjust='left'):
     #print "font = ",font
     if adjust != 'left':
         len1 = myBitmapLength(font, text)
-        len2 = GLUT.glutBitmapLength(font, text)
-        if len1 != len2:
-            print "incorrect glutBitmapLength",len1,len2
+##  UNCOMMENT THESE LINES TO SEE WHEN gluBitmapLength GOES WRONG !
+##        len2 = GLUT.glutBitmapLength(font, text)
+##        if len1 != len2:
+##            print "incorrect glutBitmapLength",len1,len2
         if adjust == 'center':
             x -= len1/2
         elif adjust == 'right':
             x -= len1 
     GL.glRasterPos2f(float(x),float(y));
-    for character in text:
-        GLUT.glutBitmapCharacter(font, ord(character));
-
-
-def drawMarker(x,y):
-    """ Draw a marker at position x,y of the current window."""
-    marksize = 16.0 / 2
-    x1 = x-marksize
-    x2 = x+marksize
-    y1 = y-marksize
-    y2 = y+marksize
-    GL.glRectf(x1,y1,x2,y2)
-    GL.glColor3fv(blue)
-    GL.glBegin(GL.GL_LINE_STRIP)
-    GL.glVertex2f(x1, y1)
-    GL.glVertex2f(x2, y2)
-    GL.glVertex2f(x1, y2)
-    GL.glVertex2f(x2, y1)
-    GL.glVertex2f(x1, y1)
-    GL.glVertex2f(x1, y2)
-    GL.glEnd()
-    GL.glBegin(GL.GL_LINES)
-    GL.glVertex2f(x2, y2)
-    GL.glVertex2f(x2, y1)
-    GL.glEnd()
+    drawGlutText(text,font)
 
 
 def unProject(x,y,win):
@@ -205,7 +194,7 @@ class Text(Decoration):
     def draw(self,mode='wireframe'):
         """Draw the text."""
         GL.glColor3f(*(self.color))
-        drawText(self.text,self.x,self.y,self.font,self.adjust)
+        drawText2D(self.text,self.x,self.y,self.font,self.adjust)
 
 
 class ColorLegend(Decoration):
@@ -243,7 +232,7 @@ class ColorLegend(Decoration):
         for i,v in enumerate(self.cl.limits):
             y2 = y0 + i*dy
             if y2 >= y1 or i == 0:
-                drawText(("%%.%df" % self.dec) % v,x1,y2)   
+                drawText2D(("%%.%df" % self.dec) % v,x1,y2)   
                 y1 = y2 + dh
             
 

@@ -130,11 +130,13 @@ def makeSelection():
     drawSelection()
 
 
-def drawSelection():
-    """Draws the current selection."""
+def drawSelection(*args):
+    """Draws the current selection.
+
+    Any arguments are passed to draw()"""
     clear()
     if selection:
-        draw(selection)
+        draw(selection,*args)
         if show_numbers:
             showSelectionNumbers()
             
@@ -290,7 +292,7 @@ def drawChanges():
     old are drawn in yellow, new in the current color.
     """
     clear()
-    draw(selection,wait=False)
+    drawSelection(wait=False)
     draw(oldvalues,color='yellow',bbox=None)
 
 

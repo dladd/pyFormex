@@ -606,7 +606,22 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     return actor
 
 
+def drawNumbers(F):
+    """Draw numbers on all elements of F."""
+    FC = F.centroids()
+    M = marks.MarkList(FC.f[:,0,:],range(FC.nelems()))
+    GD.canvas.addMark(M)
+    GD.canvas.update()
+    return M
+
+
 def undraw(itemlist):
+    """Remove an item or a number of items from the canvas.
+
+    Use the return value from one of the draw... functions to remove
+    the item that was drawn from the canvas.
+    A single item or a list of items may be specified.
+    """
     GD.canvas.remove(itemlist)
     GD.canvas.update()
     GD.app.processEvents()
@@ -627,7 +642,6 @@ def view(v,wait=False):
     GD.canvas.update()
     if allowwait and wait:
         drawlock()
-
 
 _triade = None
 
@@ -661,7 +675,6 @@ def drawtext(text,x,y,font='9x15'):
     decorate(TA)
     return TA
 
-
 def decorate(decor):
     """Draw a decoration."""
     GD.canvas.addDecoration(decor)
@@ -672,14 +685,6 @@ def undecorate(decor):
     GD.canvas.update()
 
 
-def drawNumbers(F):
-    """Draw numbers on all elements."""
-    FC = F.centroids()
-    M = [ marks.TextMark(P,'%s'%i) for i,P in enumerate(FC.f[:,0,:]) ]
-    for m in M:
-        GD.canvas.addMark(m)
-    GD.canvas.update()
-    return M
 
 
 def frontView():

@@ -1063,18 +1063,17 @@ class Formex:
         """
         return Formex(self.f[:,idx,:],self.p)
 
-    def nodes(self):
-        """Return a Formex containing only the nodes.
+    def points(self):
+        """Return a Formex containing only the points.
 
         This is obviously a Formex with plexitude 1. It holds the same data
-        as the original Formex, but in another shape: the number of nodes
+        as the original Formex, but in another shape: the number of points
         per element is 1, and the number of elements is equal to the total
-        number of nodes.
+        number of points.
         The properties are not copied over, since they will usually not make
         any sense.
         """
-        return Formex(reshape(self.f,(-1,1,self.f.shape[2])))
-
+        return Formex(self.f.reshape((-1,1,3)))
 
     def remove(self,F):
         """Return a Formex where the elements in F have been removed.
@@ -1824,13 +1823,17 @@ class Formex:
 
 
 #########################################################################
-#
-# Obsolete and deprecated functions
-#
-# These functions are retained mainly for compatibility reasons.
-# New users should avoid these functions!
-# The may be removed in future.
-#
+    #
+    # Obsolete and deprecated functions
+    #
+    # These functions are retained mainly for compatibility reasons.
+    # New users should avoid these functions!
+    # They may (will) be removed in future.
+
+
+    @deprecated(points)
+    def nodes(self):
+        pass
 
     @deprecated(test)
     def where(self,*args,**kargs):

@@ -54,10 +54,12 @@ class ActorList(list):
 
     def delete(self,actor):
         """Remove an actor from an actorlist."""
-        self.remove(actor)
-        if self.uselists and actor.list:
-            self.canvas.makeCurrent()
-            GL.glDeleteLists(actor.list,1)
+        if actor in self:
+            self.remove(actor)
+            if self.uselists and actor.list:
+                self.canvas.makeCurrent()
+                GL.glDeleteLists(actor.list,1)
+
 
     def redraw(self,actorlist=None):
         """Redraw (some) actors in the scene.
@@ -76,9 +78,9 @@ class ActorList(list):
                 actor.list = GL.glGenLists(1)
                 GL.glNewList(actor.list,GL.GL_COMPILE)
                 actor.draw(self.canvas.rendermode)
-                GL.glEndList() 
+                GL.glEndList()
 
-
+                
 ##################################################################
 #
 #  The Canvas
@@ -191,7 +193,8 @@ class Canvas(object):
         for actor in self.actors:
             GL.glCallList(actor.list)
         for actor in self.annotations:
-            actor.draw()
+            GL.glCallList(actor.list)
+            #actor.draw()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         # Plot viewport decorations
@@ -316,6 +319,13 @@ class Canvas(object):
         self.decorations.redraw()
         self.display()
 
+
+    def pickActors(self):
+        """Return the actors close to the mouse pointer."""
+        # STILL NEED TO IMPLEMENT !!
+        # this will be based on
+        # GLU.pickMatrix()
+        pass
         
 ##     def setView(self,bbox=None,side=None):
 ##         """Sets the camera looking from one of the named views."""
@@ -560,3 +570,6 @@ class Canvas(object):
         GD.image_formats_fromeps = [ 'ppm', 'png' ]
 
         GD.debug(_start_message)
+
+
+### End

@@ -17,7 +17,7 @@ GUI:
 
   Formex class: 
     - Now implemented as a Python new-style class (derived from object)
-    - A Formex may be initilaized with a 2-dimensional array: It will be
+    - A Formex may be initialized with a 2-dimensional array: It will be
       interpreted as a Formex with plexitude 1 (collection of points).
     - divide() method replaces the divide(F) function
     - rotate accepts an optional around=.. argument to rotate around a point
@@ -25,7 +25,10 @@ GUI:
     - new centroid() method, returns the point with mean coordinates
 
 - draw.py:
-
+  - Drawing a plex-1 Formex now shows points as fixed size dots. The old
+    behavior of drawing 3D colored cubes (that follow rotations and scaling)
+    can still be achieved by specifying 'eltype=point3d' as an argument in the
+    draw() instruction.
 
 - widgets.py:
 

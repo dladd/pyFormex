@@ -5,7 +5,7 @@
 from OpenGL import GL,GLU,GLUT
 from colors import *
 from formex import *
-from decors import glutFont 
+from decors import glutFont,drawGlutText
 
  
 ### Marks ###############################################
@@ -36,6 +36,30 @@ class TextMark(Mark):
     def draw(self,mode='wireframe'):
         GL.glColor3f(0.0,0.0,0.0)
         GL.glRasterPos3fv(self.pos)
-        for character in self.text:
-            GLUT.glutBitmapCharacter(self.font, ord(character));
-        GL.glFlush()
+        drawGlutText(self.text,self.font)
+
+        
+class MarkList(Mark):
+    """An list of numbers drawn at 3D positions."""
+    
+    def __init__(self,pos,val,font='9x15'):
+        """Create a number list.
+
+        pos is an (N,3) array of positions.
+        val is an (N,) array of marks to be plot at those positions.
+
+        While intended to plot integer numbers, val can be any object
+        that allows index operations for the required length N and allows
+        its items to be formatted as a string.
+        """
+        if len(val) < len(pos):
+            raise ValueError,"Not enough values for positions"
+        Mark.__init__(self,pos)
+        self.val = val
+        self.font = glutFont(font)
+
+    def draw(self,mode='wireframe'):
+        GL.glColor3f(0.0,0.0,0.0)
+        for p,v in zip(self.pos,self.val):
+            GL.glRasterPos3fv(p)
+            drawGlutText(str(v),self.font)

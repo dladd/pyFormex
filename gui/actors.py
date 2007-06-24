@@ -69,6 +69,48 @@ def drawSphere(s,color=cyan,ndiv=8):
     GLU.gluSphere(quad,s,ndiv,ndiv)
 
 
+def drawPoints(x,c,s):
+    """Draw a collection of points with same color c and size s.
+
+    x is a (npoints,3) shaped array of coordinates.
+    c is the point color
+    s is the point size
+    """
+    GL.glColor3fv(c)
+    GL.glPointSize(s)
+    GL.glBegin(GL.GL_POINTS)
+    for i in range(x.shape[0]):
+        GL.glVertex3fv(x[i])
+    GL.glEnd()
+
+
+def drawColorPoints(x,c,s):
+    """Draw a collection of points with colors c and size s.
+
+    x is a (npoints,3) shaped array of coordinates.
+    s is the point size
+    """
+    GL.glPointSize(s)
+    GL.glBegin(GL.GL_POINTS)
+    for i in range(x.shape[0]):
+        GL.glColor3fv(c[i])
+        GL.glVertex3fv(x[i])
+    GL.glEnd()
+
+
+def drawAtPoints(x,mark):
+    """Draw a copy of a 3D actor mark at all points in x.
+
+    x is a (npoints,3) shaped array of coordinates.
+    mark is any 3D Actor having a display list.
+    """
+    for xi in x:
+        GL.glPushMatrix()
+        GL.glTranslatef(*xi)
+        GL.glCallList(mark)
+        GL.glPopMatrix()
+
+
 def drawLines(x,c,w):
     """Draw a collection of lines.
 
@@ -79,7 +121,7 @@ def drawLines(x,c,w):
     GL.glLineWidth(w)
     GL.glBegin(GL.GL_LINES)
     for i in range(x.shape[0]):
-        GL.glColor3f(*(c[i]))
+        GL.glColor3fv(c[i])
         GL.glVertex3fv(x[i][0])
         GL.glVertex3fv(x[i][1])
     GL.glEnd()
@@ -307,7 +349,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,markscale=0.01,eltype=None):
+    def __init__(self,F,color=[black],bkcolor=None,linewidth=1.0,markscale=0.02,marksize=None,eltype=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -319,34 +361,51 @@ class FormexActor(Actor,Formex):
         as the front color.
         The user can specify a linewidth to be used when drawing
         in wireframe mode.
+
+        plex-1: if eltype == 'point3D', a 3D cube with 6 differently colored
+                faces is drawn, else a fixed size dot is drawn.
         """
         Actor.__init__(self)
-        Formex.__init__(self,F.f,F.p)
+        if F.p is None:
+            # Create a NEW formex because we have to add properties
+            p = arange(F.f.shape[0])
+            Formex.__init__(self,F.f,p)
+        else:
+            # Initializing with F alone gives problems with self.p !
+            Formex.__init__(self,F.f,F.p)
         self.list = None
-        if self.p is None:
-            self.setProp(arange(self.nelems()))
+        #print self.f.shape
+        #print self.p.shape
         # make the color list large enough
         #
-        # WE COULD KEEP A SINGLE COLOR
+        # WE COULD KEEP A SINGLE COLOR AS SPECIAL CASE,
+        # THEN FORMICES WITHOUT PROPERTIES WOULD BE SINGLE COLOR
         #
         mprop = max(self.propSet()) + 1
         color = array(color)
-        self.color = resize(array(color),(mprop,3))
+        self.color = resize(color,(mprop,3))
         if bkcolor is None:
             self.bkcolor = self.color
         else:
             self.bkcolor = resize(array(bkcolor),mprop)
         self.linewidth = float(linewidth)
-        if self.nnodel() == 1:
-            # ! THIS SHOULD BETTER BE SET FROM THE SCENE SIZE ! 
-            sz = self.size()
-            # print "Mark size %s" % sz
-            if sz <= 0.0:
-                sz = 1.0
-            self.setMark(sz*markscale,"cube")
+        if self.nplex() == 1:
+            if marksize is None:
+                if eltype == 'point3d':
+                    # ! THIS SHOULD BE SET FROM THE SCENE SIZE
+                    #   RATHER THAN FORMEX SIZE 
+                    marksize = self.size() * float(markscale)
+                    if marksize <= 0.0:
+                        marksize = 1.0
+                    self.setMark(marksize,"cube")
+                else:
+                    marksize = 4.0
+            self.marksize = marksize
         self.eltype = eltype
 
+
     bbox = Formex.bbox
+
 
     def draw(self,mode='wireframe'):
         """Draw the formex."""
@@ -358,11 +417,11 @@ class FormexActor(Actor,Formex):
         nnod = self.nplex()
         
         if nnod == 1:
-            for elem in self.f:
-                GL.glPushMatrix()
-                GL.glTranslatef (*elem[0])
-                GL.glCallList(self.mark)
-                GL.glPopMatrix()
+            x = self.f.reshape((-1,3))
+            if self.eltype == 'point3d':
+                drawAtPoints(x,self.mark)
+            else:
+                drawPoints(x,self.color[self.p],self.marksize)
                 
         elif nnod == 2:
             drawLines(self.f,self.color[self.p],self.linewidth)
@@ -397,7 +456,7 @@ class FormexActor(Actor,Formex):
 
 
     def setMark(self,size,type):
-        """Create a symbol for drawing vertices."""
+        """Create a symbol for drawing 3D points."""
         self.mark = GL.glGenLists(1)
         GL.glNewList(self.mark,GL.GL_COMPILE)
         if type == "sphere":
@@ -437,7 +496,6 @@ class SurfaceActor(Actor):
             self.draw('wireframe',color=[0.,0.,0.])
             return
 
-        #print "DRAWING MODE %s" % mode
         if color == None:
             color = self.color
         if mode=='wireframe' :
@@ -446,5 +504,6 @@ class SurfaceActor(Actor):
             if color.ndim == 1:
                 color = zeros((self.elems.shape[0],3))
                 color[:,:] = self.color
-                #print color
             drawTriangles(self.nodes[self.elems],color,mode)
+
+### End
