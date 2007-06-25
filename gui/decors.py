@@ -63,7 +63,7 @@ def drawGlutText(text,font):
         GLUT.glutBitmapCharacter(font, ord(character))
 
 
-def drawLine(x1, y1, x2, y2):
+def drawLine(x1,y1,x2,y2):
     """Draw a straight line from (x1,y1) to (x2,y2) in canvas coordinates."""
     GL.glBegin(GL.GL_LINES)
     GL.glVertex2f(x1, y1)
@@ -71,7 +71,7 @@ def drawLine(x1, y1, x2, y2):
     GL.glEnd()
 
 
-def drawGrid(x1, y1, x2, y2, nx, ny):
+def drawGrid(x1,y1,x2,y2,nx,ny):
     """Draw a rectangular grid of lines
         
     The rectangle has (x1,y1) and and (x2,y2) as opposite corners.
@@ -103,6 +103,10 @@ def drawGrid(x1, y1, x2, y2, nx, ny):
         GL.glVertex2f(x1, y)
         GL.glVertex2f(x2, y)
     GL.glEnd()
+
+
+##def drawRect(x1,y1,x2,y2):
+##    drawGrid(x1,y1,x2,y2,1,1)
 
 
 def myBitmapLength(font, text):
@@ -193,7 +197,7 @@ class Text(Decoration):
 
     def draw(self,mode='wireframe'):
         """Draw the text."""
-        GL.glColor3f(*(self.color))
+        GL.glColor3fv(self.color)
         drawText2D(self.text,self.x,self.y,self.font,self.adjust)
 
 
@@ -238,7 +242,7 @@ class ColorLegend(Decoration):
 
 class Grid(Decoration):
     """A 2D-grid on the canvas."""
-    def __init__(self,x1,y1,x2,y2,nx,ny):
+    def __init__(self,x1,y1,x2,y2,nx=1,ny=1,color=None):
         Decoration.__init__(self,x1,y1)
         self.x1 = x1
         self.y1 = y1
@@ -246,8 +250,14 @@ class Grid(Decoration):
         self.y2 = y2
         self.nx = nx
         self.ny = ny
+        if color is None:
+            self.color = None
+        else:
+            self.color = colors.GLColor(color)
 
     def draw(self,mode='wireframe'):
+        if self.color:
+            GL.glColor3fv(self.color)
         drawGrid(self.x1,self.y1,self.x2,self.y2,self.nx,self.ny)
             
 

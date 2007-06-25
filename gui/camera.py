@@ -409,13 +409,16 @@ class Camera:
             self.fovy *= val
         self.lensChanged = True
 
-    def loadProjection(self,force=False):
+    def loadProjection(self,force=False,pick=None):
         """Load the projection/perspective matrix.
 
         The caller will have to setup the correct GL environment beforehand.
         No need to set matrix mode though. This function will switch to
         GL_PROJECTION mode before loading the matrix, and go back to
         GL_MODELVIEW mode on exit.
+
+        A pick region can be defined to use the camera in picking mode.
+        pick defines the picking region center and size (x,y,w,h).
 
         This function does it best at autodetecting changes in the lens
         settings, and will only reload the matrix if such changes are
@@ -424,6 +427,8 @@ class Camera:
         if self.lensChanged or force:
             GL.glMatrixMode(GL.GL_PROJECTION)
             GL.glLoadIdentity()
+            if pick:
+                GLU.gluPickMatrix(*pick)
             if self.perspective:
                 GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
             else:

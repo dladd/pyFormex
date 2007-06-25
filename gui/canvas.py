@@ -100,10 +100,13 @@ class Canvas(object):
         self.lights = []
         self.setBbox()
         self.bgcolor = colors.mediumgrey
+        self.fgcolor = colors.black
+        self.slcolor = colors.red
         self.rendermode = 'wireframe'
         self.dynamic = None    # what action on mouse move
         self.camera = None
         self.view_angles = camera.view_angles
+        self.mousemode = 'dynamic'
 
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
@@ -199,9 +202,9 @@ class Canvas(object):
         GL.glPushMatrix()
         # Plot viewport decorations
         GL.glLoadIdentity()
-        GL.glMatrixMode (GL.GL_PROJECTION)
+        GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
-        GLU.gluOrtho2D (0, self.width(), 0, self.height())
+        GLU.gluOrtho2D(0, self.width(), 0, self.height())
         for actor in self.decorations:
             GL.glCallList(actor.list)
         # end plot viewport decorations
@@ -210,6 +213,30 @@ class Canvas(object):
 ##         # Display angles
 ##         self.camera.getCurrentAngles()
 
+
+    def pickActors(self,x,y,w,h):
+        """Return the actors close to the mouse pointer."""
+        # STILL NEED TO IMPLEMENT !!
+        # this will be based on
+        # GLU.pickMatrix()
+        GL.glSelectBuffer(80)
+        GL.glRenderMode(GL.GL_SELECT)
+        GL.glInitNames() # init the name stack
+        GL.glPushName(0) # push a fake id on the stack to prevent load error
+        GL.glPopName()   # get the zero off the stack.
+        # self.clear()
+        # w,h = self.width(),self.height()
+        self.camera.loadProjection(pick=[x,y,w,h])
+        self.camera.loadMatrix()
+        for i,actor in enumerate(self.actors):
+            GL.glPushName(i)
+            GL.glCallList(actor.list)
+            GL.glPopName()
+        buf = GL.glRenderMode(GL.GL_RENDER)
+        GL.glFlush()
+        return buf
+        
+        
 
     def setLinewidth(self,lw):
         """Set the linewidth for line rendering."""
@@ -220,9 +247,11 @@ class Canvas(object):
         """Set the background color."""
         self.bgcolor = bg
 
+
     def setFgColor(self,fg):
         """Set the default foreground color."""
-        GL.glColor3fv(fg)
+        self.fgcolor = fg
+        GL.glColor3fv(self.fgcolor)
 
         
     def setBbox(self,bbox=None):
@@ -319,13 +348,6 @@ class Canvas(object):
         self.decorations.redraw()
         self.display()
 
-
-    def pickActors(self):
-        """Return the actors close to the mouse pointer."""
-        # STILL NEED TO IMPLEMENT !!
-        # this will be based on
-        # GLU.pickMatrix()
-        pass
         
 ##     def setView(self,bbox=None,side=None):
 ##         """Sets the camera looking from one of the named views."""
@@ -442,6 +464,7 @@ class Canvas(object):
         e.ignore()
         
     def mousePressEvent(self,e):
+        """Process a mouse press event."""
         #print "Canvas.MOUSE %s" % self
         #print "Focus: %s" % self.hasFocus()
         #self.emit(QtCore.SIGNAL("VPFocus"),(self))
