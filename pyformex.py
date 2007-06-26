@@ -149,8 +149,12 @@ def main(argv=None):
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
-        # Make the workdir the current dir
-        os.chdir(GD.cfg['workdir'])
+        if os.path.isdir(GD.cfg['workdir']):
+            # Make the workdir the current dir
+            os.chdir(GD.cfg['workdir'])
+        else:
+            # Save the current dir as workdir
+            GD.cfg['workdir'] = os.getcwd()
         from gui.gui import runApp
     else:
         from script import runApp

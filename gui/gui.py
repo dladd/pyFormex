@@ -438,6 +438,8 @@ def quit():
     sys.stdout = sys.__stdout__
     print "Quitting!!"
     draw.drawrelease()
+    if GD.app:
+        GD.app.exit()
 
 
 def runApp(args):

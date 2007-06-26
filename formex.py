@@ -1769,6 +1769,18 @@ class Formex:
         return connect([A,B])
 
 
+#################### Misc Operations #########################################
+
+    def split(self):
+        """Split a Formex in its elements.
+
+        Returns a list of Formices each comprising one element.
+        """
+        if self.p is None:
+            return [ Formex([f]) for f in self.f ]
+        else:
+            return [ Formex([f],p) for f,p in zip(self.f,self.p) ]
+
 #################### Read/Write Formex File ##################################
 
 
