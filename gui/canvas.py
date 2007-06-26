@@ -14,6 +14,13 @@ import globaldata as GD
 from OpenGL import GL,GLU
 from PyQt4 import QtCore  # needed for events, signals
 
+# mouse buttons
+LEFT = QtCore.Qt.LeftButton
+MIDDLE = QtCore.Qt.MidButton
+RIGHT = QtCore.Qt.RightButton
+
+
+
 import colors
 import camera
 import actors
@@ -103,11 +110,18 @@ class Canvas(object):
         self.fgcolor = colors.black
         self.slcolor = colors.red
         self.rendermode = 'wireframe'
+        self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
+        self.mousefunc = {}
+        self.setMouse(QtCore.Qt.LeftButton,self.pickActors) 
+
         self.camera = None
         self.view_angles = camera.view_angles
-        self.mousemode = 'dynamic'
 
+
+    def setMouse(self,button,func):
+        self.mousefunc[button] = func
+    
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
         pass
@@ -214,28 +228,36 @@ class Canvas(object):
 ##         self.camera.getCurrentAngles()
 
 
-    def pickActors(self,x,y,w,h):
+    def pickActors(self):
         """Return the actors close to the mouse pointer."""
-        # STILL NEED TO IMPLEMENT !!
-        # this will be based on
-        # GLU.pickMatrix()
-        GL.glSelectBuffer(80)
+        x = self.statex
+        y = self.height() - self.statey
+        w,h = GD.cfg.get('pick/size',(20,20))
+        
+        G = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color='cyan',linewidth=1)
+        self.addDecoration(G)
+        GL.glSelectBuffer(16+2*len(self.actors))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames() # init the name stack
-        GL.glPushName(0) # push a fake id on the stack to prevent load error
-        GL.glPopName()   # get the zero off the stack.
-        # self.clear()
-        # w,h = self.width(),self.height()
+##        GL.glPushName(0) # push a fake id on the stack to prevent load error
+##        GL.glPopName()   # get the zero off the stack.
         self.camera.loadProjection(pick=[x,y,w,h])
         self.camera.loadMatrix()
         for i,actor in enumerate(self.actors):
+            #print "Adding name %s" % i
             GL.glPushName(i)
             GL.glCallList(actor.list)
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
-        GL.glFlush()
-        return buf
-        
+        self.selection = []
+        for r in buf:
+            for i in r[2]:
+                self.selection.append(self.actors[i])
+##                FA = actors.FormexActor(self.actors[i],color='red')
+##                self.actors.delete(self.actors[i])
+##                self.addActor(FA)
+##        self.display()
+        #self.removeDecoration(G)
         
 
     def setLinewidth(self,lw):
@@ -391,11 +413,25 @@ class Canvas(object):
 
 
     def zoom(self,f):
+        """Dolly zooming."""
         self.camera.setDist(f*self.camera.getDist())
 
 
     def dyna(self,x,y):
-        """Perform dynamic zoom/pan/rotation functions"""
+        """Perform dynamic zoom/pan/rotation functions
+
+        This function processes a mouse move events while in
+        dynamouse mode. The result is dependent on the current setting of
+        self.dynamic.
+        Currently available dynamic operating modes:
+        'trirotate': rotate in 3D by changing the camera rotation matrix
+        'pan'      : translate in 3D using camera pan operation
+        'combizoom': a combination of lens zooming (horizontal movement)
+                     and dolly zooming (vertical movement)
+        'zoom'     : lens zooming only
+        The first three operations are by default bound to the first three
+        mouse buttons.
+        """
         w,h = self.width(),self.height()
         if self.dynamic == "trirotate":
             # set all three rotations from mouse movement
@@ -462,9 +498,21 @@ class Canvas(object):
     def keyPressEvent (self,e):
         self.emit(QtCore.SIGNAL("Wakeup"),())
         e.ignore()
+
         
     def mousePressEvent(self,e):
-        """Process a mouse press event."""
+        """Process a mouse press event.
+
+        The mouse either operates in dynamic or in static mode.
+        In dynamic mode (self.dynamouse == True), a press/release of a
+        mouse button starts/stops the corresponding dynamic operation.
+        The dynamic operation is controlled by the mouse movement, whose
+        events are processed by the function dyna().
+        In static mode (self.dynamouse == False)
+        
+          a dynamic mouse mode. is dependent on the value of
+        self.dynamouse
+        """
         #print "Canvas.MOUSE %s" % self
         #print "Focus: %s" % self.hasFocus()
         #self.emit(QtCore.SIGNAL("VPFocus"),(self))
@@ -472,23 +520,32 @@ class Canvas(object):
         # Remember the place of the click
         self.statex = e.x()
         self.statey = e.y()
-        self.camera.loadMatrix()
-        # Other initialisations for the mouse move actions are done here 
-        if e.button() == QtCore.Qt.LeftButton:
-            self.dynamic = "trirotate"
-            # the vector from the screen center to the clicked point
-            # this is used for the twist angle
-            self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-        elif e.button() == QtCore.Qt.MidButton:
-            self.dynamic = "pan"
-            self.state = self.camera.getCenter()
-        elif e.button() == QtCore.Qt.RightButton:
-            self.dynamic = "combizoom"
-            self.state = [self.camera.getDist(),self.camera.fovy]
+        button = e.button()
+        if self.dynamouse:
+            self.camera.loadMatrix()
+            # Other initialisations for the mouse move actions are done here 
+            if button == QtCore.Qt.LeftButton:
+                self.dynamic = "trirotate"
+                # the vector from the screen center to the clicked point
+                # this is used for the twist angle
+                self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
+            elif button == QtCore.Qt.MidButton:
+                self.dynamic = "pan"
+                self.state = self.camera.getCenter()
+            elif button == QtCore.Qt.RightButton:
+                self.dynamic = "combizoom"
+                self.state = [self.camera.getDist(),self.camera.fovy]
+                
         
     def mouseReleaseEvent(self,e):
-        self.dynamic = None
-        self.camera.saveMatrix()          
+        if self.dynamouse:
+            self.dynamic = None
+            self.camera.saveMatrix()          
+        else:
+            button = e.button()
+            if self.mousefunc.has_key(button):
+                self.mousefunc[button]()
+        self.dynamouse = True
         
     def mouseMoveEvent(self,e):
         if self.dynamic:

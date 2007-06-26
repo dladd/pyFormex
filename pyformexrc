@@ -56,6 +56,10 @@ propcolors = ['black','red','green','blue','cyan','magenta','yellow','white']
 linewidth = 1
 localaxes = True     # by default, buttons rotate/pan in local axes
 
+
+[pick]
+size=(40,40) # size of the pick window
+
 [render]
 mode = 'wireframe' # Alternatives are 'flat' or 'smooth'
 ambient = 0.3

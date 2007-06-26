@@ -69,6 +69,11 @@ def setSize():
 def setCanvasSize():
     res = draw.askItems([['w',GD.canvas.width()],['h',GD.canvas.height()]])
     GD.canvas.resize(int(res['w']),int(res['h']))
+
+def setPickSize():
+    w,h = GD.cfg['pick/size']
+    res = draw.askItems([['w',w],['h',h]])
+    GD.cfg['pick/size'] = (int(res['w']),int(res['h']))
         
     
 def setRender():

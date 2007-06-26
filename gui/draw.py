@@ -916,6 +916,22 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
             sleep(sleeptime)
 
 
+def pick():
+    GD.canvas.dynamouse = False
+    GD.canvas.selection =[]
+    while len(GD.canvas.selection) == 0:
+        sleep(0.1)
+        GD.app.processEvents()
+    GD.canvas.dynamouse = True
+    return GD.canvas.selection
+
+def pickDraw():
+    K = pick()
+    if len(K) > 0:
+        undraw(K)
+        draw(K,color='red',bbox=None)
+
+
 ################################ saving images ########################
 
 def imageFormats():
