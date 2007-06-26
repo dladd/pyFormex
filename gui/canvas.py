@@ -18,6 +18,10 @@ from PyQt4 import QtCore  # needed for events, signals
 LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
+# mouse actions
+PRESS = 0
+MOVE = 1
+RELEASE = 2
 
 
 
@@ -113,8 +117,9 @@ class Canvas(object):
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
         self.mousefunc = {}
-        self.setMouse(QtCore.Qt.LeftButton,self.pickActors) 
-
+        self.setMouse(LEFT,self.dynarot) 
+        self.setMouse(MIDDLE,self.dynapan) 
+        self.setMouse(RIGHT,self.dynazoom) 
         self.camera = None
         self.view_angles = camera.view_angles
 
@@ -226,38 +231,6 @@ class Canvas(object):
         GL.glPopMatrix()
 ##         # Display angles
 ##         self.camera.getCurrentAngles()
-
-
-    def pickActors(self):
-        """Return the actors close to the mouse pointer."""
-        x = self.statex
-        y = self.height() - self.statey
-        w,h = GD.cfg.get('pick/size',(20,20))
-        
-        G = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color='cyan',linewidth=1)
-        self.addDecoration(G)
-        GL.glSelectBuffer(16+2*len(self.actors))
-        GL.glRenderMode(GL.GL_SELECT)
-        GL.glInitNames() # init the name stack
-##        GL.glPushName(0) # push a fake id on the stack to prevent load error
-##        GL.glPopName()   # get the zero off the stack.
-        self.camera.loadProjection(pick=[x,y,w,h])
-        self.camera.loadMatrix()
-        for i,actor in enumerate(self.actors):
-            #print "Adding name %s" % i
-            GL.glPushName(i)
-            GL.glCallList(actor.list)
-            GL.glPopName()
-        buf = GL.glRenderMode(GL.GL_RENDER)
-        self.selection = []
-        for r in buf:
-            for i in r[2]:
-                self.selection.append(self.actors[i])
-##                FA = actors.FormexActor(self.actors[i],color='red')
-##                self.actors.delete(self.actors[i])
-##                self.addActor(FA)
-##        self.display()
-        #self.removeDecoration(G)
         
 
     def setLinewidth(self,lw):
@@ -417,23 +390,33 @@ class Canvas(object):
         self.camera.setDist(f*self.camera.getDist())
 
 
-    def dyna(self,x,y):
-        """Perform dynamic zoom/pan/rotation functions
+####### MOUSE EVENT HANDLERS ############################
 
-        This function processes a mouse move events while in
-        dynamouse mode. The result is dependent on the current setting of
-        self.dynamic.
-        Currently available dynamic operating modes:
-        'trirotate': rotate in 3D by changing the camera rotation matrix
-        'pan'      : translate in 3D using camera pan operation
-        'combizoom': a combination of lens zooming (horizontal movement)
-                     and dolly zooming (vertical movement)
-        'zoom'     : lens zooming only
-        The first three operations are by default bound to the first three
-        mouse buttons.
+    # Mouse functions can be bound to any of the mousse buttons
+    # LEFT, MIDDLE or RIGHT.
+    # Each mouse function should accept three possible actions:
+    # PRESS, MOVE, RELEASE.
+    # On a mouse button PRESS, the mouse screen position and the pressed
+    # button are always saved in self.statex,self.statey,self.button.
+    # The mouse function does not need to save these and can directly use
+    # their values.
+    # On a mouse button RELEASE, self.button is cleared, to avoid further
+    # move actions.
+    # Functions that change the camera settings should call saveMatrix()
+    # when they are done.
+
+
+    def dynarot(self,x,y,action):
+        """Perform dynamic rotation operation.
+
+        This function processes mouse button events controlling a dynamic
+        rotation operation. The action is one of PRESS, MOVE or RELEASE.
         """
-        w,h = self.width(),self.height()
-        if self.dynamic == "trirotate":
+        if action == PRESS:
+            self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
+
+        elif action == MOVE:
+            w,h = self.width(),self.height()
             # set all three rotations from mouse movement
             # tangential movement sets twist,
             # but only if initial vector is big enough
@@ -460,27 +443,50 @@ class Canvas(object):
                 #print "val,rot=",val,rot
                 self.camera.rotate(*rot)
                 self.statex,self.statey = (x,y)
+            self.update()
 
-        elif self.dynamic == "pan":
+        elif action == RELEASE:
+            self.update()
+            self.camera.saveMatrix()
+
+            
+    def dynapan(self,x,y,action):
+        """Perform dynamic pan operation.
+
+        This function processes mouse button events controlling a dynamic
+        pan operation. The action is one of PRESS, MOVE or RELEASE.
+        """
+        if action == PRESS:
+            pass
+
+        elif action == MOVE:
+            w,h = self.width(),self.height()
             dist = self.camera.getDist() * 0.5
-            # hor movement sets x value of center
-            # vert movement sets y value of center
-            #panx = utils.stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
-            #pany = utils.stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
-            #self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
+            # get distance from where button was pressed
             dx,dy = (x-self.statex,y-self.statey)
             panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
             pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
-            #print dx,dy,panx,pany
+            # print dx,dy,panx,pany
             self.camera.translate(panx,-pany,0)
             self.statex,self.statey = (x,y)
+            self.update()
 
-        elif self.dynamic == "zoom":
-            # hor movement is lens zooming
-            f = utils.stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
-            self.camera.setLens(f)
+        elif action == RELEASE:
+            self.update()
+            self.camera.saveMatrix()          
 
-        elif self.dynamic == "combizoom":
+            
+    def dynazoom(self,x,y,action):
+        """Perform dynamic zoom operation.
+
+        This function processes mouse button events controlling a dynamic
+        zoom operation. The action is one of PRESS, MOVE or RELEASE.
+        """
+        if action == PRESS:
+            self.state = [self.camera.getDist(),self.camera.fovy]
+
+        elif action == MOVE:
+            w,h = self.width(),self.height()
             # hor movement is lens zooming
             f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             #print "Lens Zooming: %s" % f
@@ -488,7 +494,193 @@ class Canvas(object):
             # vert movement is dolly zooming
             d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
             self.camera.setDist(d*self.state[0])
-        self.update()
+            self.update()
+
+        elif action == RELEASE:
+            self.update()
+            self.camera.saveMatrix()          
+
+
+    def pickActors(self):
+        """Return the actors close to the mouse pointer."""
+        x = self.statex
+        y = self.height() - self.statey
+        w,h = GD.cfg.get('pick/size',(20,20))
+        
+        G = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color='cyan',linewidth=1)
+        self.addDecoration(G)
+        GL.glSelectBuffer(16+2*len(self.actors))
+        GL.glRenderMode(GL.GL_SELECT)
+        GL.glInitNames() # init the name stack
+##        GL.glPushName(0) # push a fake id on the stack to prevent load error
+##        GL.glPopName()   # get the zero off the stack.
+        self.camera.loadProjection(pick=[x,y,w,h])
+        self.camera.loadMatrix()
+        for i,actor in enumerate(self.actors):
+            #print "Adding name %s" % i
+            GL.glPushName(i)
+            GL.glCallList(actor.list)
+            GL.glPopName()
+        buf = GL.glRenderMode(GL.GL_RENDER)
+        self.selection = []
+        for r in buf:
+            GD.debug(r)
+            for i in r[2]:
+                self.selection.append(self.actors[i])
+
+
+##     def dyna(self,x,y):
+##         """Perform dynamic zoom/pan/rotation functions
+
+##         This function processes a mouse move events while in
+##         dynamouse mode. The result is dependent on the current setting of
+##         self.dynamic.
+##         Currently available dynamic operating modes:
+##         'trirotate': rotate in 3D by changing the camera rotation matrix
+##         'pan'      : translate in 3D using camera pan operation
+##         'combizoom': a combination of lens zooming (horizontal movement)
+##                      and dolly zooming (vertical movement)
+##         'zoom'     : lens zooming only
+##         The first three operations are by default bound to the first three
+##         mouse buttons.
+##         """
+##         w,h = self.width(),self.height()
+##         if self.dynamic == "trirotate":
+##             # set all three rotations from mouse movement
+##             # tangential movement sets twist,
+##             # but only if initial vector is big enough
+##             x0 = self.state        # initial vector
+##             d = vector.length(x0)
+##             if d > h/8:
+##                 x1 = [x-w/2, h/2-y, 0]     # new vector
+##                 a0 = math.atan2(x0[0],x0[1])
+##                 a1 = math.atan2(x1[0],x1[1])
+##                 an = (a1-a0) / math.pi * 180
+##                 ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
+##                 twist = - an*ds
+##                 #print "an,d,ds = ",an,d,ds,twist
+##                 self.camera.rotate(twist,0.,0.,1.)
+##                 self.state = x1
+##             # radial movement rotates around vector in lens plane
+##             x0 = [self.statex-w/2, h/2-self.statey, 0]    # initial vector
+##             dx = [x-self.statex, self.statey-y,0]         # movement
+##             b = vector.projection(dx,x0)
+##             #print "x0,dx,b=",x0,dx,b
+##             if abs(b) > 5:
+##                 val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
+##                 rot =  [ abs(val),-dx[1],dx[0],0 ]
+##                 #print "val,rot=",val,rot
+##                 self.camera.rotate(*rot)
+##                 self.statex,self.statey = (x,y)
+
+##         elif self.dynamic == "pan":
+##             dist = self.camera.getDist() * 0.5
+##             # hor movement sets x value of center
+##             # vert movement sets y value of center
+##             #panx = utils.stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
+##             #pany = utils.stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
+##             #self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
+##             dx,dy = (x-self.statex,y-self.statey)
+##             panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
+##             pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
+##             #print dx,dy,panx,pany
+##             self.camera.translate(panx,-pany,0)
+##             self.statex,self.statey = (x,y)
+
+##         elif self.dynamic == "zoom":
+##             # hor movement is lens zooming
+##             f = utils.stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
+##             self.camera.setLens(f)
+
+##         elif self.dynamic == "combizoom":
+##             # hor movement is lens zooming
+##             f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
+##             #print "Lens Zooming: %s" % f
+##             self.camera.setLens(f)
+##             # vert movement is dolly zooming
+##             d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
+##             self.camera.setDist(d*self.state[0])
+##         self.update()
+
+
+##     def mousePressEvent(self,e):
+##         """Process a mouse press event.
+
+##         The mouse either operates in dynamic or in static mode.
+##         In dynamic mode (self.dynamouse == True), a press/release of a
+##         mouse button starts/stops the corresponding dynamic operation.
+##         The dynamic operation is controlled by the mouse movement, whose
+##         events are processed by the function dyna().
+##         In static mode (self.dynamouse == False)
+        
+##           a dynamic mouse mode. is dependent on the value of
+##         self.dynamouse
+##         """
+##         #print "Canvas.MOUSE %s" % self
+##         #print "Focus: %s" % self.hasFocus()
+##         #self.emit(QtCore.SIGNAL("VPFocus"),(self))
+##         GD.gui.viewports.set_current(self)
+##         # Remember the place of the click
+##         self.statex = e.x()
+##         self.statey = e.y()
+##         button = e.button()
+##         if self.dynamouse:
+##             self.camera.loadMatrix()
+##             # Other initialisations for the mouse move actions are done here 
+##             if button == QtCore.Qt.LeftButton:
+##                 self.dynamic = "trirotate"
+##                 # the vector from the screen center to the clicked point
+##                 # this is used for the twist angle
+##                 self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
+##             elif button == QtCore.Qt.MidButton:
+##                 self.dynamic = "pan"
+##                 self.state = self.camera.getCenter()
+##             elif button == QtCore.Qt.RightButton:
+##                 self.dynamic = "combizoom"
+##                 self.state = [self.camera.getDist(),self.camera.fovy]
+                
+        
+##     def mouseReleaseEvent(self,e):
+##         if self.dynamouse:
+##             self.dynamic = None
+##             self.camera.saveMatrix()          
+##         else:
+##             button = e.button()
+##             if self.mousefunc.has_key(button):
+##                 self.mousefunc[button]()
+##         self.dynamouse = True
+        
+##     def mouseMoveEvent(self,e):
+##         if self.dynamic:
+##             self.dyna(e.x(),e.y())
+
+        
+    def mousePressEvent(self,e):
+        """Process a mouse press event."""
+        GD.gui.viewports.set_current(self)
+        # on PRESS, always remember mouse position and button
+        self.statex = e.x()
+        self.statey = e.y()
+        self.button = e.button()
+        func = self.mousefunc.get(e.button(),None)
+        if func:
+            func(e.x(),e.y(),PRESS)
+        
+    def mouseMoveEvent(self,e):
+        """Process a mouse move event."""
+        # the MOVE event does not identify a button, use the saved one
+        func = self.mousefunc.get(self.button,None)
+        if func:
+            func(e.x(),e.y(),MOVE)
+
+    def mouseReleaseEvent(self,e):
+        """Process a mouse release event."""
+        # clear the stored button
+        self.button = None
+        func = self.mousefunc.get(e.button(),None)
+        if func:
+            func(e.x(),e.y(),RELEASE)
+
 
 
     # Any keypress with focus in the canvas generates a 'wakeup' signal.
@@ -499,57 +691,6 @@ class Canvas(object):
         self.emit(QtCore.SIGNAL("Wakeup"),())
         e.ignore()
 
-        
-    def mousePressEvent(self,e):
-        """Process a mouse press event.
-
-        The mouse either operates in dynamic or in static mode.
-        In dynamic mode (self.dynamouse == True), a press/release of a
-        mouse button starts/stops the corresponding dynamic operation.
-        The dynamic operation is controlled by the mouse movement, whose
-        events are processed by the function dyna().
-        In static mode (self.dynamouse == False)
-        
-          a dynamic mouse mode. is dependent on the value of
-        self.dynamouse
-        """
-        #print "Canvas.MOUSE %s" % self
-        #print "Focus: %s" % self.hasFocus()
-        #self.emit(QtCore.SIGNAL("VPFocus"),(self))
-        GD.gui.viewports.set_current(self)
-        # Remember the place of the click
-        self.statex = e.x()
-        self.statey = e.y()
-        button = e.button()
-        if self.dynamouse:
-            self.camera.loadMatrix()
-            # Other initialisations for the mouse move actions are done here 
-            if button == QtCore.Qt.LeftButton:
-                self.dynamic = "trirotate"
-                # the vector from the screen center to the clicked point
-                # this is used for the twist angle
-                self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-            elif button == QtCore.Qt.MidButton:
-                self.dynamic = "pan"
-                self.state = self.camera.getCenter()
-            elif button == QtCore.Qt.RightButton:
-                self.dynamic = "combizoom"
-                self.state = [self.camera.getDist(),self.camera.fovy]
-                
-        
-    def mouseReleaseEvent(self,e):
-        if self.dynamouse:
-            self.dynamic = None
-            self.camera.saveMatrix()          
-        else:
-            button = e.button()
-            if self.mousefunc.has_key(button):
-                self.mousefunc[button]()
-        self.dynamouse = True
-        
-    def mouseMoveEvent(self,e):
-        if self.dynamic:
-            self.dyna(e.x(),e.y())
 
     def save(self,fn,fmt='png',options=None):
         """Save the current rendering as an image file."""
