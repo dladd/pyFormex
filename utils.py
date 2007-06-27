@@ -18,11 +18,11 @@ import os,commands,re
 ## def checkModule(name,version)
 ## if Version(numpy.__version__) < Version('0.9.8'):
 
-
+# tetgen -v no longer works in 1.4.2 !!
 known_externals = {
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
-    'tetgen': ('tetgen -v','Version (\S+)'), 
+    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'), 
     }
 
 
@@ -50,6 +50,7 @@ def checkExternal(name,command=None,answer=None):
             command = cmd
         if answer is None:
             answer = ans
+
     m = re.match(answer,commands.getoutput(command))
     if m:
         value = m.group(1)

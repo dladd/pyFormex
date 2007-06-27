@@ -71,4 +71,7 @@ def principal(inertia):
     Iprin,Iaxes = linalg.eig(Itensor)
     return Iprin,Iaxes
 
+
+
 # End
+

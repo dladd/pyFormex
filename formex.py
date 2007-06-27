@@ -83,7 +83,7 @@ def length(arg):
     return sqrt(inner(a,a))   # a*a doesn't work here
 
 def norm(v,n=2):
-    """Return a norm on the vector v.
+    """Return a norm of the vector v.
 
     Default is the quadratic norm (vector length)
     n == 1 returns the sum
@@ -457,44 +457,6 @@ def distanceFromPoint(f,p):
     d = sum(d*d,-1)
     d = sqrt(d)
     return d.reshape(f.shape[:-1])
-
-
-def intersectionWithPlane(f,p,n):
-    """Return the intersection of line segments f with the plane (p,n).
-
-    f is an [n,2,3] array of coordinates.
-    p is a point specified by 3 coordinates.
-    n is the normal vector to a plane, specified by 3 components.
-
-    The return value is a [n] shaped array of parameter values t,
-    such that for each segment L the intersection point is given
-    by (1-t)*L[0]+ t*L[1].
-    """
-    if f.shape[1:] != (2,3):
-        raise RuntimeError,"Needs a (n,2,3) shaped array as first arg."
-    p = asarray(p).reshape((3))
-    n = asarray(n).reshape((3))
-    n /= length(n)
-    t = (inner(p,n) - inner(f[:,0,:],n)) / inner((f[:,1,:]-f[:,0,:]),n)
-    return t
-
-
-def intersectionPointsWithPlane(f,p,n):
-    """Returns the intersection points of line segments f with plane p,n."""
-    t = intersectionWithPlane(f,p,n).reshape((-1,1))
-    return (1.-t) * f[:,0,:] + t * f[:,1,:]
-
-    
-def cutAtPlane(f,p,n):
-    """Given a [n,2,3] array. Returns all elements cut at plane."""
-    d = distanceFromPlane(f,p,n)
-    #t = intersectionWithPlane(f,p,n)
-    g = intersectionPointsWithPlane(f,p,n)
-    i0 = d[:,0] < 0.
-    i1 = d[:,1] < 0.
-    f[i0,0,:] = g[i0]
-    f[i1,1,:] = g[i1]
-    return f
 
 
 def boundingBox(a):
@@ -1172,16 +1134,20 @@ class Formex:
     def test(self,nodes='all',dir=0,min=None,max=None):
         """Flag elements having nodal coordinates between min and max.
 
-        This function is very convenient in clipping a Formex in one of
-        the coordinate directions. It returns a 1D integer array flagging
-        (with a value 1) the elements having nodal coordinates in the
-        required range.
+        This function is very convenient in clipping a Formex in a specified direction.
+        It returns a 1D integer array flagging (with a value 1) the elements
+        having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
         Or directly use clip() or cclip() to create the clipped Formex.
-
-        min,max are there minimum and maximum values required for the
-        coordinates in direction dir (default is the x or 0 direction).
-        nodes specifies which nodes are taken into account in the comparisons.
+        
+        This function can be used in two distinct ways:
+        - min,max are the minimum and maximum values required for the
+        coordinates in direction dir (default is the x or 0 direction,
+        other possibilities for the direction dir in this case are 1 or 2).
+        - a direction vector can be specified for dir. min,max are points in this case,
+        specified by 3 coordinates. 
+        
+        Nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
         - a single (integer) node number (< the number of nodes)
         - a list of node numbers
@@ -1191,21 +1157,35 @@ class Formex:
         fall completely between these planes. One of the two clipping planes
         may be left unspecified.
         """
+        if min is None and max is None:
+            raise ValueError,"At least one of min or max have to be specified."
         f = self.f
         if type(nodes)==str:
             nod = range(f.shape[1])
         else:
             nod = nodes
-        if not min is None:
-            T1 = f[:,nod,dir] > min
-        if not max is None:
-            T2 = f[:,nod,dir] < max
-        if min is None:
-            T = T2
-        elif max is None:
-            T = T1
+        if type(dir) == list:
+            if not min is None:
+                T1 = distanceFromPlane(f,min,dir) > 0
+            if not max is None:
+                T2 = distanceFromPlane(f,max,dir) < 0
+            if min is None:
+                T = T2
+            elif max is None:
+                T = T1
+            else:
+                T = T1 * T2
         else:
-            T = T1 * T2
+            if not min is None:
+                T1 = f[:,nod,dir] > min
+            if not max is None:
+                T2 = f[:,nod,dir] < max
+            if min is None:
+                T = T2
+            elif max is None:
+                T = T1
+            else:
+                T = T1 * T2
         if len(T.shape) == 1:
             return T
         if nodes == 'any':
@@ -1228,11 +1208,61 @@ class Formex:
         """
         return self.select(t>0)
 
+
     def cclip(self,t):
         """This is the complement of clip, returning a Formex where t<=0.
         """
         return self.select(t<=0)
+
+# Intersection functions
+
+    def intersectionWithPlane(self,p,n):
+        """Return the intersection of a Formex with the plane (p,n).
     
+        The Formex should have plexitude 2.
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+    
+        The return value is a [n] shaped array of parameter values t,
+        such that for each segment L the intersection point is given
+        by (1-t)*L[0]+ t*L[1].
+        """
+        f = self.f
+        if f.shape[1:] != (2,3):
+            raise RuntimeError,"Formex should have plexitude 2."
+        p = asarray(p).reshape((3))
+        n = asarray(n).reshape((3))
+        n /= length(n)
+        t = (inner(p,n) - inner(f[:,0,:],n)) / inner((f[:,1,:]-f[:,0,:]),n)
+        return t
+    
+    
+    def intersectionPointsWithPlane(self,p,n):
+        """Returns the intersection points of a Formex with plane p,n.
+        
+        The Formex should have plexitude 2.
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+        """
+        f = self.f
+        t = self.intersectionWithPlane(p,n).reshape((-1,1))
+        return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
+    
+    def cutAtPlane(self,p,n):
+        """Returns all elements of the Formex cut at plane.
+        The Formex should have plexitude 2.
+        p is a point specified by 3 coordinates.
+        n is the normal vector to a plane, specified by 3 components.
+        """
+        f = self.f
+        d = distanceFromPlane(f,p,n)
+        #t = intersectionWithPlane(f,p,n)
+        g = self.intersectionPointsWithPlane(p,n)
+        i0 = d[:,0] < 0.
+        i1 = d[:,1] < 0.
+        f[i0,0,:] = g[i0]
+        f[i1,1,:] = g[i1]
+        return Formex(f)
 
 ##############################################################################
 #
