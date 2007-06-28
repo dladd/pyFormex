@@ -20,10 +20,13 @@
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
 <a href="OpenGL.GL.html">OpenGL.GL</a><br>
 <a href="OpenGL.GLU.html">OpenGL.GLU</a><br>
-</td><td width="25%" valign=top><a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
+<a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
+</td><td width="25%" valign=top><a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
+<a href="gui.actors.html">gui.actors</a><br>
 <a href="gui.camera.html">gui.camera</a><br>
 <a href="gui.colors.html">gui.colors</a><br>
-</td><td width="25%" valign=top><a href="gl2ps.html">gl2ps</a><br>
+</td><td width="25%" valign=top><a href="gui.decors.html">gui.decors</a><br>
+<a href="gui.marks.html">gui.marks</a><br>
 <a href="math.html">math</a><br>
 <a href="numpy.html">numpy</a><br>
 </td><td width="25%" valign=top><a href="utils.html">utils</a><br>
@@ -36,6 +39,12 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#list">__builtin__.list</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gui.canvas.html#ActorList">ActorList</a>
+</font></dt></dl>
+</dd>
 <dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
 </font></dt><dd>
 <dl>
@@ -44,6 +53,118 @@
 </dd>
 </dl>
  <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ActorList">class <strong>ActorList</strong></a>(<a href="__builtin__.html#list">__builtin__.list</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gui.canvas.html#ActorList">ActorList</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ActorList-__init__"><strong>__init__</strong></a>(self, canvas, useDisplayLists<font color="#909090">=True</font>)</dt></dl>
+
+<dl><dt><a name="ActorList-add"><strong>add</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+
+<dl><dt><a name="ActorList-delete"><strong>delete</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;an&nbsp;actor&nbsp;from&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+
+<dl><dt><a name="ActorList-redraw"><strong>redraw</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Redraw&nbsp;(some)&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
+&nbsp;<br>
+This&nbsp;redraws&nbsp;the&nbsp;specified&nbsp;actors&nbsp;(recreating&nbsp;their&nbsp;display&nbsp;<a href="__builtin__.html#list">list</a>).<br>
+This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;after&nbsp;changing&nbsp;an&nbsp;actor's&nbsp;properties.<br>
+Only&nbsp;actors&nbsp;that&nbsp;are&nbsp;in&nbsp;the&nbsp;current&nbsp;actor&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;will&nbsp;be&nbsp;redrawn.<br>
+If&nbsp;no&nbsp;actor&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp;current&nbsp;actorlist&nbsp;is&nbsp;redrawn.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'ActorList' objects&gt;<dd><tt><a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="ActorList-__add__"><strong>__add__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__eq__"><strong>__eq__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__eq__">__eq__</a>(y)&nbsp;&lt;==&gt;&nbsp;x==y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__hash__"><strong>__hash__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__hash__">__hash__</a>()&nbsp;&lt;==&gt;&nbsp;hash(x)</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__mul__"><strong>__mul__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__mul__">__mul__</a>(n)&nbsp;&lt;==&gt;&nbsp;x*n</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="ActorList-__rmul__"><strong>__rmul__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__rmul__">__rmul__</a>(n)&nbsp;&lt;==&gt;&nbsp;n*x</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="ActorList-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ActorList-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-append">append</a>(<a href="__builtin__.html#object">object</a>)&nbsp;--&nbsp;append&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="ActorList-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ActorList-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="ActorList-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ActorList-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-insert">insert</a>(index,&nbsp;<a href="__builtin__.html#object">object</a>)&nbsp;--&nbsp;insert&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="ActorList-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="ActorList-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ActorList-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="ActorList-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#ActorList-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#ActorList-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -61,7 +182,7 @@
 
 <dl><dt><a name="Canvas-addLight"><strong>addLight</strong></a>(self, position, ambient, diffuse, specular)</dt><dd><tt>Adds&nbsp;a&nbsp;new&nbsp;light&nbsp;to&nbsp;the&nbsp;scene.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-add_actor"><strong>add_actor</strong></a>(self, actor, list)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+<dl><dt><a name="Canvas-addMark"><strong>addMark</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;an&nbsp;annotation&nbsp;to&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-clear"><strong>clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;canvas&nbsp;to&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
 
@@ -70,7 +191,24 @@
 This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;when&nbsp;actors&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;scene,<br>
 or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position/orientation&nbsp;or&nbsp;lens.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-dyna"><strong>dyna</strong></a>(self, x, y)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom/pan/rotation&nbsp;functions</tt></dd></dl>
+<dl><dt><a name="Canvas-draw_cursor"><strong>draw_cursor</strong></a>(self, x, y)</dt></dl>
+
+<dl><dt><a name="Canvas-draw_rectangle"><strong>draw_rectangle</strong></a>(self, x, y)</dt></dl>
+
+<dl><dt><a name="Canvas-dynapan"><strong>dynapan</strong></a>(self, x, y, action)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;pan&nbsp;operation.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;processes&nbsp;mouse&nbsp;button&nbsp;events&nbsp;controlling&nbsp;a&nbsp;dynamic<br>
+pan&nbsp;operation.&nbsp;The&nbsp;action&nbsp;is&nbsp;one&nbsp;of&nbsp;PRESS,&nbsp;MOVE&nbsp;or&nbsp;RELEASE.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-dynarot"><strong>dynarot</strong></a>(self, x, y, action)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;rotation&nbsp;operation.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;processes&nbsp;mouse&nbsp;button&nbsp;events&nbsp;controlling&nbsp;a&nbsp;dynamic<br>
+rotation&nbsp;operation.&nbsp;The&nbsp;action&nbsp;is&nbsp;one&nbsp;of&nbsp;PRESS,&nbsp;MOVE&nbsp;or&nbsp;RELEASE.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-dynazoom"><strong>dynazoom</strong></a>(self, x, y, action)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom&nbsp;operation.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;processes&nbsp;mouse&nbsp;button&nbsp;events&nbsp;controlling&nbsp;a&nbsp;dynamic<br>
+zoom&nbsp;operation.&nbsp;The&nbsp;action&nbsp;is&nbsp;one&nbsp;of&nbsp;PRESS,&nbsp;MOVE&nbsp;or&nbsp;RELEASE.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-glinit"><strong>glinit</strong></a>(self, mode<font color="#909090">=None</font>)</dt></dl>
 
@@ -78,26 +216,24 @@ or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position/orientation&nbsp;or&
 
 <dl><dt><a name="Canvas-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>#&nbsp;Any&nbsp;keypress&nbsp;with&nbsp;focus&nbsp;in&nbsp;the&nbsp;canvas&nbsp;generates&nbsp;a&nbsp;'wakeup'&nbsp;signal.<br>
 #&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;break&nbsp;out&nbsp;of&nbsp;a&nbsp;wait&nbsp;status.<br>
-#&nbsp;An&nbsp;'s'&nbsp;keypress&nbsp;will&nbsp;generate&nbsp;a&nbsp;'save'&nbsp;signal.<br>
 #&nbsp;Events&nbsp;not&nbsp;handled&nbsp;here&nbsp;could&nbsp;also&nbsp;be&nbsp;handled&nbsp;by&nbsp;the&nbsp;toplevel<br>
 #&nbsp;event&nbsp;handler.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-mouseMoveEvent"><strong>mouseMoveEvent</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="Canvas-mouseMoveEvent"><strong>mouseMoveEvent</strong></a>(self, e)</dt><dd><tt>Process&nbsp;a&nbsp;mouse&nbsp;move&nbsp;event.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-mousePressEvent"><strong>mousePressEvent</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="Canvas-mousePressEvent"><strong>mousePressEvent</strong></a>(self, e)</dt><dd><tt>Process&nbsp;a&nbsp;mouse&nbsp;press&nbsp;event.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-mouseReleaseEvent"><strong>mouseReleaseEvent</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="Canvas-mouseReleaseEvent"><strong>mouseReleaseEvent</strong></a>(self, e)</dt><dd><tt>Process&nbsp;a&nbsp;mouse&nbsp;release&nbsp;event.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-recreate_actor"><strong>recreate_actor</strong></a>(self, actor, list)</dt><dd><tt>Recreate&nbsp;an&nbsp;actor&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
+<dl><dt><a name="Canvas-pick"><strong>pick</strong></a>(self)</dt><dd><tt>Go&nbsp;into&nbsp;picking&nbsp;mode&nbsp;and&nbsp;return&nbsp;the&nbsp;selection.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-redrawActors"><strong>redrawActors</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Redraw&nbsp;(some)&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
-&nbsp;<br>
-This&nbsp;redraws&nbsp;the&nbsp;specified&nbsp;actors&nbsp;(recreating&nbsp;their&nbsp;display&nbsp;list).<br>
-This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;after&nbsp;changing&nbsp;an&nbsp;actor's&nbsp;properties.<br>
-Only&nbsp;actors&nbsp;that&nbsp;are&nbsp;in&nbsp;the&nbsp;current&nbsp;actor&nbsp;list&nbsp;will&nbsp;be&nbsp;redrawn.<br>
-If&nbsp;no&nbsp;actor&nbsp;list&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp;current&nbsp;actorlist&nbsp;is&nbsp;redrawn.</tt></dd></dl>
+<dl><dt><a name="Canvas-pick_actors"><strong>pick_actors</strong></a>(self, x, y, action)</dt><dd><tt>Return&nbsp;the&nbsp;actors&nbsp;close&nbsp;to&nbsp;the&nbsp;mouse&nbsp;pointer.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-redrawAll"><strong>redrawAll</strong></a>(self)</dt><dd><tt>Redraw&nbsp;all&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="Canvas-remove"><strong>remove</strong></a>(self, itemlist)</dt><dd><tt>Remove&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;any&nbsp;actor/annotation/decoration&nbsp;items.<br>
+&nbsp;<br>
+itemlist&nbsp;can&nbsp;also&nbsp;be&nbsp;a&nbsp;single&nbsp;item&nbsp;instead&nbsp;of&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-removeActor"><strong>removeActor</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;a&nbsp;3D&nbsp;actor&nbsp;from&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
 
@@ -109,23 +245,9 @@ If&nbsp;no&nbsp;actor&nbsp;list&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp
 
 <dl><dt><a name="Canvas-removeDecorations"><strong>removeDecorations</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Remove&nbsp;all&nbsp;decorations&nbsp;in&nbsp;actorlist&nbsp;(default&nbsp;=&nbsp;all)&nbsp;from&nbsp;the&nbsp;scene.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-remove_actor"><strong>remove_actor</strong></a>(self, actor, list)</dt><dd><tt>Remove&nbsp;an&nbsp;actor&nbsp;from&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+<dl><dt><a name="Canvas-removeMark"><strong>removeMark</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;an&nbsp;annotation&nbsp;from&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
 
-<dl><dt><a name="Canvas-save"><strong>save</strong></a>(self, fn, fmt<font color="#909090">='png'</font>, options<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;as&nbsp;an&nbsp;image&nbsp;file.</tt></dd></dl>
-
-<dl><dt><a name="Canvas-savePS"><strong>savePS</strong></a>(self, filename, filetype<font color="#909090">=None</font>, title<font color="#909090">=''</font>, producer<font color="#909090">=''</font>, viewport<font color="#909090">=None</font>)</dt><dd><tt>Export&nbsp;OpenGL&nbsp;rendering&nbsp;to&nbsp;PostScript/PDF/TeX&nbsp;format.<br>
-&nbsp;<br>
-Exporting&nbsp;OpenGL&nbsp;renderings&nbsp;to&nbsp;PostScript&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;PS2GL<br>
-library&nbsp;by&nbsp;Christophe&nbsp;Geuzaine&nbsp;(<a href="http://geuz.org/gl2ps/">http://geuz.org/gl2ps/</a>),&nbsp;linked<br>
-to&nbsp;Python&nbsp;by&nbsp;Toby&nbsp;Whites's&nbsp;wrapper<br>
-(<a href="http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz">http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz</a>)<br>
-&nbsp;<br>
-This&nbsp;function&nbsp;is&nbsp;only&nbsp;defined&nbsp;if&nbsp;the&nbsp;gl2ps&nbsp;module&nbsp;is&nbsp;found.<br>
-&nbsp;<br>
-The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'ps',&nbsp;'eps',&nbsp;'pdf'&nbsp;or&nbsp;'tex'.<br>
-If&nbsp;not&nbsp;specified,&nbsp;the&nbsp;type&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;file&nbsp;extension.<br>
-In&nbsp;case&nbsp;of&nbsp;the&nbsp;'tex'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
-the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extension.</tt></dd></dl>
+<dl><dt><a name="Canvas-removeMarks"><strong>removeMarks</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Remove&nbsp;all&nbsp;actors&nbsp;in&nbsp;actorlist&nbsp;(default&nbsp;=&nbsp;all)&nbsp;from&nbsp;the&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-setBbox"><strong>setBbox</strong></a>(self, bbox<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;scene&nbsp;you&nbsp;want&nbsp;to&nbsp;be&nbsp;visible.</tt></dd></dl>
 
@@ -145,17 +267,31 @@ bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="Canvas-setLinewidth"><strong>setLinewidth</strong></a>(self, lw)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;for&nbsp;line&nbsp;rendering.</tt></dd></dl>
 
+<dl><dt><a name="Canvas-setMouse"><strong>setMouse</strong></a>(self, button, func)</dt></dl>
+
 <dl><dt><a name="Canvas-setSize"><strong>setSize</strong></a>(self, w, h)</dt></dl>
 
-<dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
+<dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt><dd><tt>Dolly&nbsp;zooming.</tt></dd></dl>
 
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Canvas' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Canvas' objects&gt;<dd><tt><a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>default_light</strong> = {'ambient': 0.5, 'diffuse': 1.0, 'position': (0.0, 0.0, 1.0, 0.0), 'specular': 0.5}</dl>
 
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>LEFT</strong> = 1<br>
+<strong>MIDDLE</strong> = 4<br>
+<strong>MOVE</strong> = 1<br>
+<strong>PRESS</strong> = 0<br>
+<strong>RELEASE</strong> = 2<br>
+<strong>RIGHT</strong> = 2</td></tr></table>
 </body></html>

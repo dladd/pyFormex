@@ -917,19 +917,15 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
 
 
 def pick():
-    GD.canvas.dynamouse = False
-    GD.canvas.selection =[]
-    while len(GD.canvas.selection) == 0:
-        sleep(0.1)
-        GD.app.processEvents()
-    GD.canvas.dynamouse = True
-    return GD.canvas.selection
+    return GD.canvas.pick() 
+
 
 def pickDraw():
     K = pick()
     if len(K) > 0:
         undraw(K)
         draw(K,color='red',bbox=None)
+    return K
 
 
 ################################ saving images ########################
@@ -1082,11 +1078,28 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     
 def saveNext():
     """In multisave mode, saves the next image."""
-    global multisave
     if multisave:
         names,format,window,hotkey,autosave = multisave
         name = names.next()
         saveImage(name,window,False,hotkey,autosave,format,False)
+
+
+def createMovie():
+    """Create a movie from a saved sequence of images."""
+    if not multisave:
+        warning('You need to start multisave mode first!')
+        return
+
+    names,format,window,hotkey,autosave = multisave
+    glob = names.glob()
+    if glob.split('.')[-1] != 'y4m':
+        warning("Currently you need to save in 'y4m' format to create movies")
+        return
+    
+    cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
+    GD.debug(cmd)
+    utils.runCommand(cmd)
+         
 
 
 #### Change settings

@@ -50,10 +50,11 @@ MenuData = [
 #        (_('&Save'),'save'),
 #        (_('Save &As'),'saveAs'),
         (_('---'),None),
-        (_('Save &Image'),fileMenu.saveImage),
+        (_('&Save Image'),fileMenu.saveImage),
         (_('Start &MultiSave'),fileMenu.startMultiSave),
-        (_('Stop &MultiSave'),fileMenu.stopMultiSave),
         (_('Save &Next Image'),draw.saveNext),
+        (_('Create &Movie'),draw.createMovie),
+        (_('&Stop MultiSave'),fileMenu.stopMultiSave),
         (_('---'),None),
         (_('Load &Plugins'),[
             (_('Surface menu'),stl_menu.show_menu),

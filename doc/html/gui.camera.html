@@ -108,12 +108,15 @@ a&nbsp;dolly&nbsp;operation.</tt></dd></dl>
 
 <dl><dt><a name="Camera-loadMatrix"><strong>loadMatrix</strong></a>(self)</dt><dd><tt>Load&nbsp;the&nbsp;saved&nbsp;ModelView&nbsp;matrix.</tt></dd></dl>
 
-<dl><dt><a name="Camera-loadProjection"><strong>loadProjection</strong></a>(self, force<font color="#909090">=False</font>)</dt><dd><tt>Load&nbsp;the&nbsp;projection/perspective&nbsp;matrix.<br>
+<dl><dt><a name="Camera-loadProjection"><strong>loadProjection</strong></a>(self, force<font color="#909090">=False</font>, pick<font color="#909090">=None</font>)</dt><dd><tt>Load&nbsp;the&nbsp;projection/perspective&nbsp;matrix.<br>
 &nbsp;<br>
 The&nbsp;caller&nbsp;will&nbsp;have&nbsp;to&nbsp;setup&nbsp;the&nbsp;correct&nbsp;GL&nbsp;environment&nbsp;beforehand.<br>
 No&nbsp;need&nbsp;to&nbsp;set&nbsp;matrix&nbsp;mode&nbsp;though.&nbsp;This&nbsp;function&nbsp;will&nbsp;switch&nbsp;to<br>
 GL_PROJECTION&nbsp;mode&nbsp;before&nbsp;loading&nbsp;the&nbsp;matrix,&nbsp;and&nbsp;go&nbsp;back&nbsp;to<br>
 GL_MODELVIEW&nbsp;mode&nbsp;on&nbsp;exit.<br>
+&nbsp;<br>
+A&nbsp;pick&nbsp;region&nbsp;can&nbsp;be&nbsp;defined&nbsp;to&nbsp;use&nbsp;the&nbsp;camera&nbsp;in&nbsp;picking&nbsp;mode.<br>
+pick&nbsp;defines&nbsp;the&nbsp;picking&nbsp;region&nbsp;center&nbsp;and&nbsp;size&nbsp;(x,y,w,h).<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;does&nbsp;it&nbsp;best&nbsp;at&nbsp;autodetecting&nbsp;changes&nbsp;in&nbsp;the&nbsp;lens<br>
 settings,&nbsp;and&nbsp;will&nbsp;only&nbsp;reload&nbsp;the&nbsp;matrix&nbsp;if&nbsp;such&nbsp;changes&nbsp;are<br>

@@ -1545,8 +1545,11 @@ Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper<
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="Menu-__init__"><strong>__init__</strong></a>(self, title<font color="#909090">='UserMenu'</font>, parent<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;the&nbsp;user&nbsp;menu.<br>
+<dl><dt><a name="Menu-__init__"><strong>__init__</strong></a>(self, title<font color="#909090">='UserMenu'</font>, parent<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;popup/pulldown&nbsp;menu.<br>
 &nbsp;<br>
+If&nbsp;parent==None,&nbsp;the&nbsp;menu&nbsp;is&nbsp;a&nbsp;standalone&nbsp;popup&nbsp;menu.<br>
+If&nbsp;parent&nbsp;is&nbsp;given,&nbsp;the&nbsp;menu&nbsp;will&nbsp;be&nbsp;inserted&nbsp;in&nbsp;the&nbsp;parent&nbsp;menu.<br>
+If&nbsp;parent==GD.gui,&nbsp;the&nbsp;menu&nbsp;is&nbsp;inserted&nbsp;in&nbsp;the&nbsp;main&nbsp;menu&nbsp;bar.<br>
 &nbsp;<br>
 If&nbsp;insert&nbsp;==&nbsp;True,&nbsp;the&nbsp;menu&nbsp;will&nbsp;be&nbsp;inserted&nbsp;in&nbsp;the&nbsp;main&nbsp;menubar<br>
 before&nbsp;the&nbsp;item&nbsp;specified&nbsp;by&nbsp;before.<br>

@@ -29,11 +29,7 @@ import script
 import utils
 import draw
 import widgets
-
-
-# Find interesting supporting software
-utils.hasExternal('ImageMagick')
-
+import image
 
 def Size(widget):
     """Return the size of a widget as a tuple."""
@@ -104,12 +100,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def	paintGL(self):
         self.display()
 
+    def save(self,*args):
+        return image.save(self,*args)
+
 ##    def update(self):
 ##        print "Updating QtCanvas"
 ##        QtOpenGL.QGLWidget.update(self)
 ##        #canvas.Canvas.update(self)
-        
-
 
 def printFormat(fmt):
     """Print partial information about the OpenGL format."""

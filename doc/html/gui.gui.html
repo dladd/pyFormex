@@ -26,16 +26,17 @@
 </td><td width="25%" valign=top><a href="gui.canvas.html">gui.canvas</a><br>
 <a href="gui.draw.html">gui.draw</a><br>
 <a href="gui.fileMenu.html">gui.fileMenu</a><br>
+<a href="gui.image.html">gui.image</a><br>
 <a href="gui.menu.html">gui.menu</a><br>
 <a href="os.html">os</a><br>
-<a href="gui.prefMenu.html">gui.prefMenu</a><br>
-</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="gui.prefMenu.html">gui.prefMenu</a><br>
+<a href="re.html">re</a><br>
 <a href="script.html">script</a><br>
 <a href="gui.scriptsMenu.html">gui.scriptsMenu</a><br>
 <a href="string.html">string</a><br>
 <a href="sys.html">sys</a><br>
-<a href="time.html">time</a><br>
-</td><td width="25%" valign=top><a href="gui.toolbar.html">gui.toolbar</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+<a href="gui.toolbar.html">gui.toolbar</a><br>
 <a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
 </td></tr></table></td></tr></table><p>
@@ -972,6 +973,10 @@ on&nbsp;top,&nbsp;and&nbsp;a&nbsp;statusbar&nbsp;at&nbsp;the&nbsp;bottom.</tt></
 
 <dl><dt><a name="GUI-closeEditor"><strong>closeEditor</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;editor.</tt></dd></dl>
 
+<dl><dt><a name="GUI-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>Top&nbsp;level&nbsp;key&nbsp;press&nbsp;event&nbsp;handler.<br>
+&nbsp;<br>
+Events&nbsp;get&nbsp;here&nbsp;if&nbsp;they&nbsp;are&nbsp;not&nbsp;handled&nbsp;by&nbsp;a&nbsp;lower&nbsp;level&nbsp;handler.</tt></dd></dl>
+
 <dl><dt><a name="GUI-resizeCanvas"><strong>resizeCanvas</strong></a>(self, wd, ht)</dt><dd><tt>Resize&nbsp;the&nbsp;canvas.</tt></dd></dl>
 
 <dl><dt><a name="GUI-setBusy"><strong>setBusy</strong></a>(self, busy<font color="#909090">=True</font>)</dt></dl>
@@ -1067,8 +1072,6 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMainWindow">
 <dl><dt><strong>insertToolBar</strong> = &lt;built-in function insertToolBar&gt;</dl>
 
 <dl><dt><strong>insertToolBarBreak</strong> = &lt;built-in function insertToolBarBreak&gt;</dl>
-
-<dl><dt><strong>keyPressEvent</strong> = &lt;built-in function keyPressEvent&gt;</dl>
 
 <dl><dt><strong>keyReleaseEvent</strong> = &lt;built-in function keyReleaseEvent&gt;</dl>
 
@@ -1952,19 +1955,20 @@ Methods defined here:<br>
 
 <dl><dt><a name="QtCanvas-resizeGL"><strong>resizeGL</strong></a>(self, w, h)</dt></dl>
 
+<dl><dt><a name="QtCanvas-save"><strong>save</strong></a>(self, *args)</dt></dl>
+
 <hr>
 Methods inherited from <a href="PyQt4.QtOpenGL.html#QGLWidget">PyQt4.QtOpenGL.QGLWidget</a>:<br>
 <dl><dt><a name="QtCanvas-keyPressEvent"><strong>keyPressEvent</strong></a>(self, e)</dt><dd><tt>#&nbsp;Any&nbsp;keypress&nbsp;with&nbsp;focus&nbsp;in&nbsp;the&nbsp;canvas&nbsp;generates&nbsp;a&nbsp;'wakeup'&nbsp;signal.<br>
 #&nbsp;This&nbsp;is&nbsp;used&nbsp;to&nbsp;break&nbsp;out&nbsp;of&nbsp;a&nbsp;wait&nbsp;status.<br>
-#&nbsp;An&nbsp;'s'&nbsp;keypress&nbsp;will&nbsp;generate&nbsp;a&nbsp;'save'&nbsp;signal.<br>
 #&nbsp;Events&nbsp;not&nbsp;handled&nbsp;here&nbsp;could&nbsp;also&nbsp;be&nbsp;handled&nbsp;by&nbsp;the&nbsp;toplevel<br>
 #&nbsp;event&nbsp;handler.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-mouseMoveEvent"><strong>mouseMoveEvent</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="QtCanvas-mouseMoveEvent"><strong>mouseMoveEvent</strong></a>(self, e)</dt><dd><tt>Process&nbsp;a&nbsp;mouse&nbsp;move&nbsp;event.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-mousePressEvent"><strong>mousePressEvent</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="QtCanvas-mousePressEvent"><strong>mousePressEvent</strong></a>(self, e)</dt><dd><tt>Process&nbsp;a&nbsp;mouse&nbsp;press&nbsp;event.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-mouseReleaseEvent"><strong>mouseReleaseEvent</strong></a>(self, e)</dt></dl>
+<dl><dt><a name="QtCanvas-mouseReleaseEvent"><strong>mouseReleaseEvent</strong></a>(self, e)</dt><dd><tt>Process&nbsp;a&nbsp;mouse&nbsp;release&nbsp;event.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtOpenGL.html#QGLWidget">PyQt4.QtOpenGL.QGLWidget</a>:<br>
@@ -2636,7 +2640,7 @@ Methods inherited from <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>:<b
 
 <dl><dt><a name="QtCanvas-addLight"><strong>addLight</strong></a>(self, position, ambient, diffuse, specular)</dt><dd><tt>Adds&nbsp;a&nbsp;new&nbsp;light&nbsp;to&nbsp;the&nbsp;scene.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-add_actor"><strong>add_actor</strong></a>(self, actor, list)</dt><dd><tt>Add&nbsp;an&nbsp;actor&nbsp;to&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+<dl><dt><a name="QtCanvas-addMark"><strong>addMark</strong></a>(self, actor)</dt><dd><tt>Add&nbsp;an&nbsp;annotation&nbsp;to&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-clear"><strong>clear</strong></a>(self)</dt><dd><tt>Clear&nbsp;the&nbsp;canvas&nbsp;to&nbsp;the&nbsp;background&nbsp;color.</tt></dd></dl>
 
@@ -2645,22 +2649,38 @@ Methods inherited from <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>:<b
 This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;when&nbsp;actors&nbsp;are&nbsp;added&nbsp;to&nbsp;the&nbsp;scene,<br>
 or&nbsp;after&nbsp;changing&nbsp;&nbsp;camera&nbsp;position/orientation&nbsp;or&nbsp;lens.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-dyna"><strong>dyna</strong></a>(self, x, y)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom/pan/rotation&nbsp;functions</tt></dd></dl>
+<dl><dt><a name="QtCanvas-draw_cursor"><strong>draw_cursor</strong></a>(self, x, y)</dt></dl>
+
+<dl><dt><a name="QtCanvas-draw_rectangle"><strong>draw_rectangle</strong></a>(self, x, y)</dt></dl>
+
+<dl><dt><a name="QtCanvas-dynapan"><strong>dynapan</strong></a>(self, x, y, action)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;pan&nbsp;operation.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;processes&nbsp;mouse&nbsp;button&nbsp;events&nbsp;controlling&nbsp;a&nbsp;dynamic<br>
+pan&nbsp;operation.&nbsp;The&nbsp;action&nbsp;is&nbsp;one&nbsp;of&nbsp;PRESS,&nbsp;MOVE&nbsp;or&nbsp;RELEASE.</tt></dd></dl>
+
+<dl><dt><a name="QtCanvas-dynarot"><strong>dynarot</strong></a>(self, x, y, action)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;rotation&nbsp;operation.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;processes&nbsp;mouse&nbsp;button&nbsp;events&nbsp;controlling&nbsp;a&nbsp;dynamic<br>
+rotation&nbsp;operation.&nbsp;The&nbsp;action&nbsp;is&nbsp;one&nbsp;of&nbsp;PRESS,&nbsp;MOVE&nbsp;or&nbsp;RELEASE.</tt></dd></dl>
+
+<dl><dt><a name="QtCanvas-dynazoom"><strong>dynazoom</strong></a>(self, x, y, action)</dt><dd><tt>Perform&nbsp;dynamic&nbsp;zoom&nbsp;operation.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;processes&nbsp;mouse&nbsp;button&nbsp;events&nbsp;controlling&nbsp;a&nbsp;dynamic<br>
+zoom&nbsp;operation.&nbsp;The&nbsp;action&nbsp;is&nbsp;one&nbsp;of&nbsp;PRESS,&nbsp;MOVE&nbsp;or&nbsp;RELEASE.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-glinit"><strong>glinit</strong></a>(self, mode<font color="#909090">=None</font>)</dt></dl>
 
 <dl><dt><a name="QtCanvas-initCamera"><strong>initCamera</strong></a>(self)</dt></dl>
 
-<dl><dt><a name="QtCanvas-recreate_actor"><strong>recreate_actor</strong></a>(self, actor, list)</dt><dd><tt>Recreate&nbsp;an&nbsp;actor&nbsp;in&nbsp;a&nbsp;list.</tt></dd></dl>
+<dl><dt><a name="QtCanvas-pick"><strong>pick</strong></a>(self)</dt><dd><tt>Go&nbsp;into&nbsp;picking&nbsp;mode&nbsp;and&nbsp;return&nbsp;the&nbsp;selection.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-redrawActors"><strong>redrawActors</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Redraw&nbsp;(some)&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.<br>
-&nbsp;<br>
-This&nbsp;redraws&nbsp;the&nbsp;specified&nbsp;actors&nbsp;(recreating&nbsp;their&nbsp;display&nbsp;list).<br>
-This&nbsp;should&nbsp;e.g.&nbsp;be&nbsp;used&nbsp;after&nbsp;changing&nbsp;an&nbsp;actor's&nbsp;properties.<br>
-Only&nbsp;actors&nbsp;that&nbsp;are&nbsp;in&nbsp;the&nbsp;current&nbsp;actor&nbsp;list&nbsp;will&nbsp;be&nbsp;redrawn.<br>
-If&nbsp;no&nbsp;actor&nbsp;list&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp;current&nbsp;actorlist&nbsp;is&nbsp;redrawn.</tt></dd></dl>
+<dl><dt><a name="QtCanvas-pick_actors"><strong>pick_actors</strong></a>(self, x, y, action)</dt><dd><tt>Return&nbsp;the&nbsp;actors&nbsp;close&nbsp;to&nbsp;the&nbsp;mouse&nbsp;pointer.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-redrawAll"><strong>redrawAll</strong></a>(self)</dt><dd><tt>Redraw&nbsp;all&nbsp;actors&nbsp;in&nbsp;the&nbsp;scene.</tt></dd></dl>
+
+<dl><dt><a name="QtCanvas-remove"><strong>remove</strong></a>(self, itemlist)</dt><dd><tt>Remove&nbsp;a&nbsp;list&nbsp;of&nbsp;any&nbsp;actor/annotation/decoration&nbsp;items.<br>
+&nbsp;<br>
+itemlist&nbsp;can&nbsp;also&nbsp;be&nbsp;a&nbsp;single&nbsp;item&nbsp;instead&nbsp;of&nbsp;a&nbsp;list.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-removeActor"><strong>removeActor</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;a&nbsp;3D&nbsp;actor&nbsp;from&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
 
@@ -2672,23 +2692,9 @@ If&nbsp;no&nbsp;actor&nbsp;list&nbsp;is&nbsp;specified,&nbsp;the&nbsp;whole&nbsp
 
 <dl><dt><a name="QtCanvas-removeDecorations"><strong>removeDecorations</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Remove&nbsp;all&nbsp;decorations&nbsp;in&nbsp;actorlist&nbsp;(default&nbsp;=&nbsp;all)&nbsp;from&nbsp;the&nbsp;scene.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-remove_actor"><strong>remove_actor</strong></a>(self, actor, list)</dt><dd><tt>Remove&nbsp;an&nbsp;actor&nbsp;from&nbsp;an&nbsp;actorlist.</tt></dd></dl>
+<dl><dt><a name="QtCanvas-removeMark"><strong>removeMark</strong></a>(self, actor)</dt><dd><tt>Remove&nbsp;an&nbsp;annotation&nbsp;from&nbsp;the&nbsp;3D&nbsp;scene.</tt></dd></dl>
 
-<dl><dt><a name="QtCanvas-save"><strong>save</strong></a>(self, fn, fmt<font color="#909090">='png'</font>, options<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;rendering&nbsp;as&nbsp;an&nbsp;image&nbsp;file.</tt></dd></dl>
-
-<dl><dt><a name="QtCanvas-savePS"><strong>savePS</strong></a>(self, filename, filetype<font color="#909090">=None</font>, title<font color="#909090">=''</font>, producer<font color="#909090">=''</font>, viewport<font color="#909090">=None</font>)</dt><dd><tt>Export&nbsp;OpenGL&nbsp;rendering&nbsp;to&nbsp;PostScript/PDF/TeX&nbsp;format.<br>
-&nbsp;<br>
-Exporting&nbsp;OpenGL&nbsp;renderings&nbsp;to&nbsp;PostScript&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;PS2GL<br>
-library&nbsp;by&nbsp;Christophe&nbsp;Geuzaine&nbsp;(<a href="http://geuz.org/gl2ps/">http://geuz.org/gl2ps/</a>),&nbsp;linked<br>
-to&nbsp;Python&nbsp;by&nbsp;Toby&nbsp;Whites's&nbsp;wrapper<br>
-(<a href="http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz">http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz</a>)<br>
-&nbsp;<br>
-This&nbsp;function&nbsp;is&nbsp;only&nbsp;defined&nbsp;if&nbsp;the&nbsp;gl2ps&nbsp;module&nbsp;is&nbsp;found.<br>
-&nbsp;<br>
-The&nbsp;filetype&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;'ps',&nbsp;'eps',&nbsp;'pdf'&nbsp;or&nbsp;'tex'.<br>
-If&nbsp;not&nbsp;specified,&nbsp;the&nbsp;type&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;file&nbsp;extension.<br>
-In&nbsp;case&nbsp;of&nbsp;the&nbsp;'tex'&nbsp;filetype,&nbsp;two&nbsp;files&nbsp;are&nbsp;written:&nbsp;one&nbsp;with<br>
-the&nbsp;.tex&nbsp;extension,&nbsp;and&nbsp;one&nbsp;with&nbsp;.eps&nbsp;extension.</tt></dd></dl>
+<dl><dt><a name="QtCanvas-removeMarks"><strong>removeMarks</strong></a>(self, actorlist<font color="#909090">=None</font>)</dt><dd><tt>Remove&nbsp;all&nbsp;actors&nbsp;in&nbsp;actorlist&nbsp;(default&nbsp;=&nbsp;all)&nbsp;from&nbsp;the&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-setBbox"><strong>setBbox</strong></a>(self, bbox<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;bounding&nbsp;box&nbsp;of&nbsp;the&nbsp;scene&nbsp;you&nbsp;want&nbsp;to&nbsp;be&nbsp;visible.</tt></dd></dl>
 
@@ -2708,13 +2714,15 @@ bbox&nbsp;of&nbsp;the&nbsp;whole&nbsp;scene.</tt></dd></dl>
 
 <dl><dt><a name="QtCanvas-setLinewidth"><strong>setLinewidth</strong></a>(self, lw)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;for&nbsp;line&nbsp;rendering.</tt></dd></dl>
 
+<dl><dt><a name="QtCanvas-setMouse"><strong>setMouse</strong></a>(self, button, func)</dt></dl>
+
 <dl><dt><a name="QtCanvas-setSize"><strong>setSize</strong></a>(self, w, h)</dt></dl>
 
-<dl><dt><a name="QtCanvas-zoom"><strong>zoom</strong></a>(self, f)</dt></dl>
+<dl><dt><a name="QtCanvas-zoom"><strong>zoom</strong></a>(self, f)</dt><dd><tt>Dolly&nbsp;zooming.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="gui.canvas.html#Canvas">gui.canvas.Canvas</a>:<br>
-<dl><dt><strong>__dict__</strong> = {'__doc__': 'A canvas for OpenGL rendering.<font color="#c040c0">\n\n</font>    This is a wr...mplement the<font color="#c040c0">\n</font>    QT specific OpenGL methods.<font color="#c040c0">\n</font>    ', '__init__': &lt;function __init__&gt;, '__module__': 'gui.gui', 'initializeGL': &lt;function initializeGL&gt;, 'paintGL': &lt;function paintGL&gt;, 'resizeGL': &lt;function resizeGL&gt;}<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__dict__</strong> = {'__doc__': 'A canvas for OpenGL rendering.<font color="#c040c0">\n\n</font>    This is a wr...mplement the<font color="#c040c0">\n</font>    QT specific OpenGL methods.<font color="#c040c0">\n</font>    ', '__init__': &lt;function __init__&gt;, '__module__': 'gui.gui', 'initializeGL': &lt;function initializeGL&gt;, 'paintGL': &lt;function paintGL&gt;, 'resizeGL': &lt;function resizeGL&gt;, 'save': &lt;function save&gt;}<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>default_light</strong> = {'ambient': 0.5, 'diffuse': 1.0, 'position': (0.0, 0.0, 1.0, 0.0), 'specular': 0.5}</dl>
 

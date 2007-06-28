@@ -12,7 +12,7 @@
 import globaldata as GD
 
 from OpenGL import GL,GLU
-from PyQt4 import QtCore  # needed for events, signals
+from PyQt4 import QtCore, QtGui # needed for signals, threads, cursors
 
 # mouse buttons
 LEFT = QtCore.Qt.LeftButton
@@ -36,14 +36,6 @@ import numpy
 
 import math
 import vector
-
-# load gl2ps if available
-try:
-    import gl2ps
-    _has_gl2ps = True
-except ImportError:
-    _has_gl2ps = False
-
 
 
 class ActorList(list):
@@ -390,6 +382,18 @@ class Canvas(object):
         self.camera.setDist(f*self.camera.getDist())
 
 
+    def pick(self):
+        """Go into picking mode and return the selection."""
+        self.setMouse(LEFT,self.pick_actors)  
+        self.selection =[]
+        timer = QtCore.QThread
+        while len(self.selection) == 0:
+            timer.usleep(200)
+            GD.app.processEvents()
+        return GD.canvas.selection
+
+
+
 ####### MOUSE EVENT HANDLERS ############################
 
     # Mouse functions can be bound to any of the mousse buttons
@@ -404,6 +408,8 @@ class Canvas(object):
     # move actions.
     # Functions that change the camera settings should call saveMatrix()
     # when they are done.
+    # ATTENTION! The y argument is positive upwards, as in normal OpenGL
+    # operations!
 
 
     def dynarot(self,x,y,action):
@@ -423,24 +429,21 @@ class Canvas(object):
             x0 = self.state        # initial vector
             d = vector.length(x0)
             if d > h/8:
-                x1 = [x-w/2, h/2-y, 0]     # new vector
+                x1 = [x-w/2, y-h/2, 0]     # new vector
                 a0 = math.atan2(x0[0],x0[1])
                 a1 = math.atan2(x1[0],x1[1])
                 an = (a1-a0) / math.pi * 180
                 ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
                 twist = - an*ds
-                #print "an,d,ds = ",an,d,ds,twist
                 self.camera.rotate(twist,0.,0.,1.)
                 self.state = x1
             # radial movement rotates around vector in lens plane
-            x0 = [self.statex-w/2, h/2-self.statey, 0]    # initial vector
-            dx = [x-self.statex, self.statey-y,0]         # movement
+            x0 = [self.statex-w/2, self.statey-h/2, 0]    # initial vector
+            dx = [x-self.statex, y-self.statey,0]         # movement
             b = vector.projection(dx,x0)
-            #print "x0,dx,b=",x0,dx,b
             if abs(b) > 5:
                 val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
                 rot =  [ abs(val),-dx[1],dx[0],0 ]
-                #print "val,rot=",val,rot
                 self.camera.rotate(*rot)
                 self.statex,self.statey = (x,y)
             self.update()
@@ -467,7 +470,7 @@ class Canvas(object):
             panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
             pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
             # print dx,dy,panx,pany
-            self.camera.translate(panx,-pany,0)
+            self.camera.translate(panx,pany,0)
             self.statex,self.statey = (x,y)
             self.update()
 
@@ -492,7 +495,7 @@ class Canvas(object):
             #print "Lens Zooming: %s" % f
             self.camera.setLens(f)
             # vert movement is dolly zooming
-            d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
+            d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
             self.camera.setDist(d*self.state[0])
             self.update()
 
@@ -501,177 +504,84 @@ class Canvas(object):
             self.camera.saveMatrix()          
 
 
-    def pickActors(self):
-        """Return the actors close to the mouse pointer."""
-        x = self.statex
-        y = self.height() - self.statey
+    def draw_cursor(self,x,y):
+        if self.cursor:
+            self.removeDecoration(self.cursor)
         w,h = GD.cfg.get('pick/size',(20,20))
-        
-        G = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color='cyan',linewidth=1)
-        self.addDecoration(G)
-        GL.glSelectBuffer(16+2*len(self.actors))
-        GL.glRenderMode(GL.GL_SELECT)
-        GL.glInitNames() # init the name stack
-##        GL.glPushName(0) # push a fake id on the stack to prevent load error
-##        GL.glPopName()   # get the zero off the stack.
-        self.camera.loadProjection(pick=[x,y,w,h])
-        self.camera.loadMatrix()
-        for i,actor in enumerate(self.actors):
-            #print "Adding name %s" % i
-            GL.glPushName(i)
-            GL.glCallList(actor.list)
-            GL.glPopName()
-        buf = GL.glRenderMode(GL.GL_RENDER)
-        self.selection = []
-        for r in buf:
-            GD.debug(r)
-            for i in r[2]:
-                self.selection.append(self.actors[i])
+        self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color='cyan',linewidth=1)
+        self.addDecoration(self.cursor)
 
+    def draw_rectangle(self,x,y):
+        if self.cursor:
+            self.removeDecoration(self.cursor)
+        self.cursor = decors.Grid(self.statex,self.statey,x,y,color='cyan',linewidth=1)
+        self.addDecoration(self.cursor)
+       
 
-##     def dyna(self,x,y):
-##         """Perform dynamic zoom/pan/rotation functions
+    def pick_actors(self,x,y,action):
+        """Return the actors close to the mouse pointer."""
+        if action == PRESS:
+            GD.debug("Start picking mode")
+            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.draw_cursor(self.statex,self.statey)
+            self.selection = []
+            self.update()
+            
+        elif action == MOVE:
+            GD.debug("Move picking window")
+            self.draw_rectangle(x,y)
+            self.update()
 
-##         This function processes a mouse move events while in
-##         dynamouse mode. The result is dependent on the current setting of
-##         self.dynamic.
-##         Currently available dynamic operating modes:
-##         'trirotate': rotate in 3D by changing the camera rotation matrix
-##         'pan'      : translate in 3D using camera pan operation
-##         'combizoom': a combination of lens zooming (horizontal movement)
-##                      and dolly zooming (vertical movement)
-##         'zoom'     : lens zooming only
-##         The first three operations are by default bound to the first three
-##         mouse buttons.
-##         """
-##         w,h = self.width(),self.height()
-##         if self.dynamic == "trirotate":
-##             # set all three rotations from mouse movement
-##             # tangential movement sets twist,
-##             # but only if initial vector is big enough
-##             x0 = self.state        # initial vector
-##             d = vector.length(x0)
-##             if d > h/8:
-##                 x1 = [x-w/2, h/2-y, 0]     # new vector
-##                 a0 = math.atan2(x0[0],x0[1])
-##                 a1 = math.atan2(x1[0],x1[1])
-##                 an = (a1-a0) / math.pi * 180
-##                 ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
-##                 twist = - an*ds
-##                 #print "an,d,ds = ",an,d,ds,twist
-##                 self.camera.rotate(twist,0.,0.,1.)
-##                 self.state = x1
-##             # radial movement rotates around vector in lens plane
-##             x0 = [self.statex-w/2, h/2-self.statey, 0]    # initial vector
-##             dx = [x-self.statex, self.statey-y,0]         # movement
-##             b = vector.projection(dx,x0)
-##             #print "x0,dx,b=",x0,dx,b
-##             if abs(b) > 5:
-##                 val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
-##                 rot =  [ abs(val),-dx[1],dx[0],0 ]
-##                 #print "val,rot=",val,rot
-##                 self.camera.rotate(*rot)
-##                 self.statex,self.statey = (x,y)
-
-##         elif self.dynamic == "pan":
-##             dist = self.camera.getDist() * 0.5
-##             # hor movement sets x value of center
-##             # vert movement sets y value of center
-##             #panx = utils.stuur(x,[0,self.statex,w],[-dist,0.,+dist],1.0)
-##             #pany = utils.stuur(y,[0,self.statey,h],[-dist,0.,+dist],1.0)
-##             #self.camera.setCenter (self.state[0] - panx, self.state[1] + pany, self.state[2])
-##             dx,dy = (x-self.statex,y-self.statey)
-##             panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
-##             pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
-##             #print dx,dy,panx,pany
-##             self.camera.translate(panx,-pany,0)
-##             self.statex,self.statey = (x,y)
-
-##         elif self.dynamic == "zoom":
-##             # hor movement is lens zooming
-##             f = utils.stuur(x,[0,self.statex,w],[180,self.statef,0],1.2)
-##             self.camera.setLens(f)
-
-##         elif self.dynamic == "combizoom":
-##             # hor movement is lens zooming
-##             f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
-##             #print "Lens Zooming: %s" % f
-##             self.camera.setLens(f)
-##             # vert movement is dolly zooming
-##             d = utils.stuur(y,[0,self.statey,h],[0.2,1,5],1.2)
-##             self.camera.setDist(d*self.state[0])
-##         self.update()
-
-
-##     def mousePressEvent(self,e):
-##         """Process a mouse press event.
-
-##         The mouse either operates in dynamic or in static mode.
-##         In dynamic mode (self.dynamouse == True), a press/release of a
-##         mouse button starts/stops the corresponding dynamic operation.
-##         The dynamic operation is controlled by the mouse movement, whose
-##         events are processed by the function dyna().
-##         In static mode (self.dynamouse == False)
-        
-##           a dynamic mouse mode. is dependent on the value of
-##         self.dynamouse
-##         """
-##         #print "Canvas.MOUSE %s" % self
-##         #print "Focus: %s" % self.hasFocus()
-##         #self.emit(QtCore.SIGNAL("VPFocus"),(self))
-##         GD.gui.viewports.set_current(self)
-##         # Remember the place of the click
-##         self.statex = e.x()
-##         self.statey = e.y()
-##         button = e.button()
-##         if self.dynamouse:
-##             self.camera.loadMatrix()
-##             # Other initialisations for the mouse move actions are done here 
-##             if button == QtCore.Qt.LeftButton:
-##                 self.dynamic = "trirotate"
-##                 # the vector from the screen center to the clicked point
-##                 # this is used for the twist angle
-##                 self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-##             elif button == QtCore.Qt.MidButton:
-##                 self.dynamic = "pan"
-##                 self.state = self.camera.getCenter()
-##             elif button == QtCore.Qt.RightButton:
-##                 self.dynamic = "combizoom"
-##                 self.state = [self.camera.getDist(),self.camera.fovy]
-                
-        
-##     def mouseReleaseEvent(self,e):
-##         if self.dynamouse:
-##             self.dynamic = None
-##             self.camera.saveMatrix()          
-##         else:
-##             button = e.button()
-##             if self.mousefunc.has_key(button):
-##                 self.mousefunc[button]()
-##         self.dynamouse = True
-        
-##     def mouseMoveEvent(self,e):
-##         if self.dynamic:
-##             self.dyna(e.x(),e.y())
+        elif action == RELEASE:
+            GD.debug("End picking mode")
+            if self.cursor:
+                self.removeDecoration(self.cursor)
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            self.update()
+            GL.glSelectBuffer(16+3*len(self.actors))
+            GL.glRenderMode(GL.GL_SELECT)
+            GL.glInitNames() # init the name stack
+            GD.debug((x,y))
+            GD.debug((self.statex,self.statey))
+            x,y = (x+self.statex)/2., (y+self.statey)/2.
+            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
+            if w <= 0 or h <= 0:
+               w,h = GD.cfg.get('pick/size',(20,20))
+            GD.debug((x,y,w,h))
+            self.camera.loadProjection(pick=[x,y,w,h])
+            self.camera.loadMatrix()
+            for i,actor in enumerate(self.actors):
+                #print "Adding name %s" % i
+                GL.glPushName(i)
+                GL.glCallList(actor.list)
+                GL.glPopName()
+            buf = GL.glRenderMode(GL.GL_RENDER)
+            self.selection = []
+            for r in buf:
+                GD.debug(r)
+                for i in r[2]:
+                    self.selection.append(self.actors[i])
+            self.setMouse(LEFT,self.dynarot)
+            GD.debug("Re-enabling dynarot")
+            self.update()
 
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
         GD.gui.viewports.set_current(self)
         # on PRESS, always remember mouse position and button
-        self.statex = e.x()
-        self.statey = e.y()
+        self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()
-        func = self.mousefunc.get(e.button(),None)
+        func = self.mousefunc.get(self.button,None)
         if func:
-            func(e.x(),e.y(),PRESS)
+            func(self.statex,self.y,PRESS)
         
     def mouseMoveEvent(self,e):
         """Process a mouse move event."""
         # the MOVE event does not identify a button, use the saved one
         func = self.mousefunc.get(self.button,None)
         if func:
-            func(e.x(),e.y(),MOVE)
+            func(e.x(),self.height()-e.y(),MOVE)
 
     def mouseReleaseEvent(self,e):
         """Process a mouse release event."""
@@ -679,7 +589,7 @@ class Canvas(object):
         self.button = None
         func = self.mousefunc.get(e.button(),None)
         if func:
-            func(e.x(),e.y(),RELEASE)
+            func(e.x(),self.height()-e.y(),RELEASE)
 
 
 
@@ -690,107 +600,6 @@ class Canvas(object):
     def keyPressEvent (self,e):
         self.emit(QtCore.SIGNAL("Wakeup"),())
         e.ignore()
-
-
-    def save(self,fn,fmt='png',options=None):
-        """Save the current rendering as an image file."""
-        self.makeCurrent()
-        self.raise_()
-        self.display()
-        GD.app.processEvents()
-        size = self.size()
-        w = int(size.width())
-        h = int(size.height())
-        GD.debug("Saving image with current size %sx%s" % (w,h))
-        if fmt in GD.image_formats_qt:
-            GL.glFlush()
-            qim = self.grabFrameBuffer()
-            if qim.save(fn,fmt):
-                sta = 0
-            else:
-                sta = 1
-        elif fmt in GD.image_formats_gl2ps:
-            sta = self.savePS(fn,fmt)
-        elif fmt in GD.image_formats_fromeps:
-            import commands,os
-            fneps = os.path.splitext(fn)[0] + '.eps'
-            delete = not os.path.exists(fneps)
-            self.savePS(fneps,'eps')
-            if os.path.exists(fneps):
-                cmd = 'pstopnm -portrait -stdout %s' % fneps
-                if fmt != 'ppm':
-                    cmd += '| pnmto%s > %s' % (fmt,fn)
-                GD.debug(cmd)
-                sta,out = commands.getstatusoutput(cmd)
-                if sta:
-                    GD.debug(out)
-                if delete:
-                    os.remove(fneps)
-        return sta
-
-
-# ONLY LOADED IF GL2PS FOUND ########################
-
-    if _has_gl2ps:
-
-        def savePS(self,filename,filetype=None,title='',producer='',
-                   viewport=None):
-            """ Export OpenGL rendering to PostScript/PDF/TeX format.
-
-            Exporting OpenGL renderings to PostScript is based on the PS2GL
-            library by Christophe Geuzaine (http://geuz.org/gl2ps/), linked
-            to Python by Toby Whites's wrapper
-            (http://www.esc.cam.ac.uk/~twhi03/software/python-gl2ps-1.1.2.tar.gz)
-
-            This function is only defined if the gl2ps module is found.
-
-            The filetype should be one of 'ps', 'eps', 'pdf' or 'tex'.
-            If not specified, the type is derived from the file extension.
-            In case of the 'tex' filetype, two files are written: one with
-            the .tex extension, and one with .eps extension.
-            """
-            fp = file(filename, "wb")
-            if filetype:
-                filetype = self._gl2ps_types[filetype]
-            else:
-                s = filename.lower()
-                for ext in self._gl2ps_types.keys():
-                    if s.endswith('.'+ext):
-                        filetype = self._gl2ps_types[ext]
-                        break
-                if not filetype:
-                    filetype = gl2ps.GL2PS_EPS
-            if not title:
-                title = filename
-            if not viewport:
-                viewport = GL.glGetIntegerv(GL.GL_VIEWPORT)
-            bufsize = 0
-            state = gl2ps.GL2PS_OVERFLOW
-            opts = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET
-            ##| gl2ps.GL2PS_NO_BLENDING | gl2ps.GL2PS_OCCLUSION_CULL | gl2ps.GL2PS_BEST_ROOT
-            ##color = GL[[0.,0.,0.,0.]]
-            while state == gl2ps.GL2PS_OVERFLOW:
-                bufsize += 1024*1024
-                #print filename,filetype
-                gl2ps.gl2psBeginPage(title, self._producer, viewport, filetype,
-                                     gl2ps.GL2PS_BSP_SORT, opts, GL.GL_RGBA,
-                                     0, None, 0, 0, 0, bufsize, fp, filename)
-                self.display()
-                GL.glFinish()
-                state = gl2ps.gl2psEndPage()
-            fp.close()
-            return 0
-
-
-        _start_message = '\nCongratulations! You have gl2ps, so I activated drawPS!'
-
-        _producer = GD.Version + ' (http://pyformex.berlios.de)'
-        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
-                         'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
-        GD.image_formats_gl2ps = _gl2ps_types.keys()
-        GD.image_formats_fromeps = [ 'ppm', 'png' ]
-
-        GD.debug(_start_message)
 
 
 ### End

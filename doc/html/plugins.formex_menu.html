@@ -35,15 +35,16 @@ Executing&nbsp;this&nbsp;script&nbsp;creates&nbsp;a&nbsp;Formex&nbsp;menu&nbsp;i
 <a href="plugins.inertia.html">plugins.inertia</a><br>
 <a href="numpy.linalg.html">numpy.linalg</a><br>
 <a href="numpy.core.ma.html">numpy.core.ma</a><br>
-</td><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="gui.marks.html">gui.marks</a><br>
+<a href="math.html">math</a><br>
 <a href="numpy.html">numpy</a><br>
 <a href="os.html">os</a><br>
 <a href="plugins.partition.html">plugins.partition</a><br>
 <a href="numpy.random.html">numpy.random</a><br>
 <a href="re.html">re</a><br>
 <a href="numpy.core.records.html">numpy.core.records</a><br>
-<a href="plugins.sectionize.html">plugins.sectionize</a><br>
-</td><td width="25%" valign=top><a href="plugins.stl.html">plugins.stl</a><br>
+</td><td width="25%" valign=top><a href="plugins.sectionize.html">plugins.sectionize</a><br>
+<a href="plugins.stl.html">plugins.stl</a><br>
 <a href="sys.html">sys</a><br>
 <a href="threading.html">threading</a><br>
 <a href="timer.html">timer</a><br>
@@ -168,7 +169,9 @@ NB:&nbsp;The&nbsp;first&nbsp;argument&nbsp;is&nbsp;not&nbsp;conjugated.</tt></dd
 &nbsp;<br>
 old&nbsp;and&nbsp;new&nbsp;can&nbsp;be&nbsp;a&nbsp;either&nbsp;Formex&nbsp;instances&nbsp;or&nbsp;names&nbsp;or&nbsp;lists&nbsp;thereof.<br>
 old&nbsp;are&nbsp;drawn&nbsp;in&nbsp;yellow,&nbsp;new&nbsp;in&nbsp;the&nbsp;current&nbsp;color.</tt></dd></dl>
- <dl><dt><a name="-drawSelection"><strong>drawSelection</strong></a>()</dt><dd><tt>Draws&nbsp;the&nbsp;current&nbsp;selection.</tt></dd></dl>
+ <dl><dt><a name="-drawSelection"><strong>drawSelection</strong></a>(*args)</dt><dd><tt>Draws&nbsp;the&nbsp;current&nbsp;selection.<br>
+&nbsp;<br>
+Any&nbsp;arguments&nbsp;are&nbsp;passed&nbsp;to&nbsp;draw()</tt></dd></dl>
  <dl><dt><a name="-empty"><strong>empty</strong></a>(...)</dt><dd><tt><a href="#-empty">empty</a>((d1,...,dn),dtype=float,order='C')<br>
 &nbsp;<br>
 Return&nbsp;a&nbsp;new&nbsp;array&nbsp;of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;given&nbsp;type&nbsp;with&nbsp;all&nbsp;its<br>
@@ -263,6 +266,7 @@ it&nbsp;will&nbsp;repeat.&nbsp;&nbsp;This&nbsp;gives&nbsp;different&nbsp;behavio
 If&nbsp;select&nbsp;is&nbsp;True&nbsp;(default),&nbsp;this&nbsp;becomes&nbsp;the&nbsp;current&nbsp;selection.<br>
 If&nbsp;select&nbsp;and&nbsp;draw&nbsp;are&nbsp;True&nbsp;(default),&nbsp;the&nbsp;selection&nbsp;is&nbsp;drawn.</tt></dd></dl>
  <dl><dt><a name="-read_Formex"><strong>read_Formex</strong></a>(fn)</dt></dl>
+ <dl><dt><a name="-removeSelectionNumbers"><strong>removeSelectionNumbers</strong></a>()</dt><dd><tt>Remove&nbsp;(all)&nbsp;the&nbsp;element&nbsp;numbers.</tt></dd></dl>
  <dl><dt><a name="-restoredot"><strong>restoredot</strong></a>(...)</dt><dd><tt><a href="#-restoredot">restoredot</a>()&nbsp;restores&nbsp;dots&nbsp;to&nbsp;defaults.</tt></dd></dl>
  <dl><dt><a name="-rollAxes"><strong>rollAxes</strong></a>()</dt><dd><tt>Rotate&nbsp;the&nbsp;selection.</tt></dd></dl>
  <dl><dt><a name="-rotateAround"><strong>rotateAround</strong></a>()</dt><dd><tt>Rotate&nbsp;the&nbsp;selection.</tt></dd></dl>
@@ -291,7 +295,12 @@ f(M)&nbsp;should&nbsp;expect&nbsp;an&nbsp;array&nbsp;argument&nbsp;M,&nbsp;and&n
 consisting&nbsp;of&nbsp;the&nbsp;desired&nbsp;representation&nbsp;of&nbsp;M&nbsp;for&nbsp;printing.</tt></dd></dl>
  <dl><dt><a name="-seterrobj"><strong>seterrobj</strong></a>(...)</dt></dl>
  <dl><dt><a name="-showPrincipal"><strong>showPrincipal</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;principal&nbsp;axes.</tt></dd></dl>
+ <dl><dt><a name="-showSelectionNumbers"><strong>showSelectionNumbers</strong></a>()</dt><dd><tt>Draw&nbsp;the&nbsp;nubers&nbsp;for&nbsp;the&nbsp;current&nbsp;selection.</tt></dd></dl>
  <dl><dt><a name="-show_menu"><strong>show_menu</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;Formex&nbsp;menu.</tt></dd></dl>
+ <dl><dt><a name="-toggleNumbers"><strong>toggleNumbers</strong></a>(value<font color="#909090">=None</font>)</dt><dd><tt>Toggle&nbsp;the&nbsp;display&nbsp;of&nbsp;number&nbsp;On&nbsp;or&nbsp;Off.<br>
+&nbsp;<br>
+If&nbsp;given,&nbsp;value&nbsp;is&nbsp;True&nbsp;or&nbsp;False.&nbsp;<br>
+If&nbsp;no&nbsp;value&nbsp;is&nbsp;given,&nbsp;this&nbsp;works&nbsp;as&nbsp;a&nbsp;toggle.</tt></dd></dl>
  <dl><dt><a name="-translateSelection"><strong>translateSelection</strong></a>()</dt><dd><tt>Translate&nbsp;the&nbsp;selection.</tt></dd></dl>
  <dl><dt><a name="-undoChanges"><strong>undoChanges</strong></a>()</dt><dd><tt>Undo&nbsp;the&nbsp;changes&nbsp;of&nbsp;the&nbsp;last&nbsp;transformation.<br>
 &nbsp;<br>
@@ -357,7 +366,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.uint32'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -377,7 +386,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.int32'&gt;: &lt;function &lt;lambda&gt; at 0x2b02a5fb2500&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.int32'&gt;: &lt;function &lt;lambda&gt; at 0x2b971255b848&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -426,13 +435,14 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>multisave</strong> = None<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ... &lt;type 'numpy.uint8'&gt;: 1, &lt;type 'numpy.int8'&gt;: 1}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.uint8'&gt;: 1, &lt;type 'numpy.int32'&gt;: 4}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>
 <strong>ogrid</strong> = &lt;numpy.lib.index_tricks.nd_grid object&gt;<br>
 <strong>oldvalues</strong> = []<br>
 <strong>ones_like</strong> = &lt;ufunc 'ones_like'&gt;<br>
+<strong>outtimer</strong> = None<br>
 <strong>pi</strong> = 3.1415926535897931<br>
 <strong>pkgload</strong> = &lt;numpy._import_tools.PackageLoader instance&gt;<br>
 <strong>power</strong> = &lt;ufunc 'power'&gt;<br>
@@ -449,6 +459,8 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>sctypeNA</strong> = {'?': 'Bool', 'B': 'UInt8', 'Bool': &lt;type 'numpy.bool_'&gt;, 'Complex128': &lt;type 'numpy.complex256'&gt;, 'Complex32': &lt;type 'numpy.complex64'&gt;, 'Complex64': &lt;type 'numpy.complex128'&gt;, 'D': 'Complex64', 'F': 'Complex32', 'Float128': &lt;type 'numpy.float128'&gt;, 'Float32': &lt;type 'numpy.float32'&gt;, ...}<br>
 <strong>sctypes</strong> = {'complex': [&lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;], 'float': [&lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.float128'&gt;], 'int': [&lt;type 'numpy.int8'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.int64'&gt;], 'others': [&lt;type 'bool'&gt;, &lt;type 'object'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'numpy.void'&gt;], 'uint': [&lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.uint64'&gt;]}<br>
 <strong>selection</strong> = []<br>
+<strong>show_numbers</strong> = False<br>
+<strong>shown_numbers</strong> = []<br>
 <strong>sign</strong> = &lt;ufunc 'sign'&gt;<br>
 <strong>signbit</strong> = &lt;ufunc 'signbit'&gt;<br>
 <strong>sin</strong> = &lt;ufunc 'sin'&gt;<br>

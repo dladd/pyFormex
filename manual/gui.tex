@@ -6,7 +6,35 @@
 \label{cha:gui}
 
 \section{Starting the GUI}
-You start the \pyf GUI by entering the command \Code{pyformex --gui}. Depending on your installation, you may also have a panel or menu button on your desktop to start the pyFormex interface. Finally you can start the GUI with the command \Code{startGUI()} in a \pyf script.
+You start the \pyf GUI by entering the command \Code{pyformex --gui}. Depending on your installation, you may also have a panel or menu button on your desktop from which you can start the pyFormex graphical interface by a simple mouse click. 
+%Finally, you can start the GUI with the command \Code{startGUI()} in a \pyf script.
+
+When the main window appears, it will look like the one shown in the figure~\ref{fig:gui}. Your window manager will most likely have put some decorations around it, but these are ver much OS and window manager dependent and are therefore not shown in the figure.
+
+\begin{figure}[h]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \includegraphics[width=4cm]{images/gui}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg{../images/gui.png}
+  \end{htmlonly}  
+  \caption{The pyFormex main window}
+  \label{fig:gui}
+\end{figure}
+
+\section{Basic use of the GUI}
+
+The pyFormex window (figure~\ref{fig:gui}) comprises 5 parts. From top to bottom these are:
+\begin{enumerate}
+\item the menu bar,
+\item the tool bar,
+\item the canvas (empty in the figure),
+\item the message board, and
+\item the status bar.
+\end{enumerate}
 
 
 

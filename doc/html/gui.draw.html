@@ -26,13 +26,14 @@
 <a href="copy.html">copy</a><br>
 <a href="gui.decors.html">gui.decors</a><br>
 <a href="formex.html">formex</a><br>
-<a href="numpy.html">numpy</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="gui.marks.html">gui.marks</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
 <a href="re.html">re</a><br>
 <a href="sys.html">sys</a><br>
 <a href="threading.html">threading</a><br>
-<a href="types.html">types</a><br>
-</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
+<a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -47,7 +48,7 @@
 Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
  <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2-r1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
- <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
+ <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
 Returns&nbsp;index&nbsp;of&nbsp;the&nbsp;chosen&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-askDirname"><strong>askDirname</strong></a>(cur)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;directory&nbsp;name.</tt></dd></dl>
@@ -74,6 +75,7 @@ If&nbsp;fn&nbsp;does&nbsp;not&nbsp;exist,&nbsp;nothing&nbsp;is&nbsp;done.</tt></
 &nbsp;<br>
 Returns&nbsp;the&nbsp;image&nbsp;format,&nbsp;or&nbsp;None&nbsp;if&nbsp;it&nbsp;is&nbsp;not&nbsp;OK.</tt></dd></dl>
  <dl><dt><a name="-clear"><strong>clear</strong></a>()</dt><dd><tt>Clear&nbsp;the&nbsp;canvas</tt></dd></dl>
+ <dl><dt><a name="-createMovie"><strong>createMovie</strong></a>()</dt><dd><tt>Create&nbsp;a&nbsp;movie&nbsp;from&nbsp;a&nbsp;saved&nbsp;sequence&nbsp;of&nbsp;images.</tt></dd></dl>
  <dl><dt><a name="-createView"><strong>createView</strong></a>(name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
 &nbsp;<br>
 The&nbsp;angles&nbsp;are&nbsp;(longitude,&nbsp;latitude,&nbsp;twist).<br>
@@ -81,7 +83,7 @@ If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nb
 a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
  <dl><dt><a name="-decorate"><strong>decorate</strong></a>(decor)</dt><dd><tt>Draw&nbsp;a&nbsp;decoration.</tt></dd></dl>
  <dl><dt><a name="-delay"><strong>delay</strong></a>(i)</dt><dd><tt>Set&nbsp;the&nbsp;draw&nbsp;delay&nbsp;in&nbsp;seconds.</tt></dd></dl>
- <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
 &nbsp;<br>
 If&nbsp;F&nbsp;is&nbsp;a&nbsp;list,&nbsp;all&nbsp;its&nbsp;items&nbsp;are&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;settings.<br>
 &nbsp;<br>
@@ -122,6 +124,7 @@ The&nbsp;value&nbsp;of&nbsp;drawdelay&nbsp;is&nbsp;set&nbsp;in&nbsp;the&nbsp;con
 The&nbsp;user&nbsp;can&nbsp;disable&nbsp;the&nbsp;wait&nbsp;cycle&nbsp;for&nbsp;the&nbsp;next&nbsp;draw&nbsp;operation&nbsp;by<br>
 specifying&nbsp;wait=False.&nbsp;Setting&nbsp;drawdelay=0&nbsp;will&nbsp;disable&nbsp;the&nbsp;waiting<br>
 mechanism&nbsp;for&nbsp;all&nbsp;subsequent&nbsp;draw&nbsp;statements&nbsp;(until&nbsp;set&nbsp;&gt;0&nbsp;again).</tt></dd></dl>
+ <dl><dt><a name="-drawNumbers"><strong>drawNumbers</strong></a>(F)</dt><dd><tt>Draw&nbsp;numbers&nbsp;on&nbsp;all&nbsp;elements&nbsp;of&nbsp;F.</tt></dd></dl>
  <dl><dt><a name="-drawTriade"><strong>drawTriade</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-drawblock"><strong>drawblock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;indefinitely.</tt></dd></dl>
  <dl><dt><a name="-drawlock"><strong>drawlock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;for&nbsp;the&nbsp;next&nbsp;drawdelay&nbsp;seconds.</tt></dd></dl>
@@ -162,7 +165,10 @@ with&nbsp;the&nbsp;specified&nbsp;action&nbsp;text.&nbsp;The&nbsp;'about'&nbsp;l
 &nbsp;<br>
 The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button&nbsp;that&nbsp;was&nbsp;clicked.</tt></dd></dl>
  <dl><dt><a name="-named"><strong>named</strong></a>(name)</dt><dd><tt>Returns&nbsp;the&nbsp;global&nbsp;object&nbsp;named&nbsp;name.</tt></dd></dl>
+ <dl><dt><a name="-outrelease"><strong>outrelease</strong></a>()</dt><dd><tt>Release&nbsp;the&nbsp;outtime.</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
+ <dl><dt><a name="-pick"><strong>pick</strong></a>()</dt></dl>
+ <dl><dt><a name="-pickDraw"><strong>pickDraw</strong></a>()</dt></dl>
  <dl><dt><a name="-play"><strong>play</strong></a>(fn<font color="#909090">=None</font>, step<font color="#909090">=False</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn&nbsp;or&nbsp;from&nbsp;the&nbsp;current&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;does&nbsp;nothing&nbsp;if&nbsp;no&nbsp;file&nbsp;is&nbsp;passed&nbsp;or&nbsp;no&nbsp;current<br>
@@ -215,11 +221,16 @@ fmt&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;valid&nbsp;formats&nbsp;a
 If&nbsp;verbose=True,&nbsp;error/warnings&nbsp;are&nbsp;activated.&nbsp;This&nbsp;is&nbsp;usually&nbsp;done&nbsp;when<br>
 this&nbsp;function&nbsp;is&nbsp;called&nbsp;from&nbsp;the&nbsp;GUI.</tt></dd></dl>
  <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt><dd><tt>In&nbsp;multisave&nbsp;mode,&nbsp;saves&nbsp;the&nbsp;next&nbsp;image.</tt></dd></dl>
- <dl><dt><a name="-save_window"><strong>save_window</strong></a>(filename, format, windowname<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;the&nbsp;whole&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
+ <dl><dt><a name="-saveWindow"><strong>saveWindow</strong></a>(filename, format, border<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;the&nbsp;main&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
-The&nbsp;prefered&nbsp;user&nbsp;function&nbsp;is&nbsp;saveWindow,&nbsp;which&nbsp;can&nbsp;derive&nbsp;the<br>
-format&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension</tt></dd></dl>
+If&nbsp;a&nbsp;window&nbsp;is&nbsp;specified,&nbsp;the&nbsp;named&nbsp;window&nbsp;is&nbsp;saved.<br>
+Else,&nbsp;the&nbsp;main&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.</tt></dd></dl>
+ <dl><dt><a name="-save_window"><strong>save_window</strong></a>(filename, format, windowname<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;a&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
+If&nbsp;a&nbsp;window&nbsp;is&nbsp;specified,&nbsp;the&nbsp;named&nbsp;window&nbsp;is&nbsp;saved.<br>
+Else,&nbsp;the&nbsp;main&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.</tt></dd></dl>
  <dl><dt><a name="-setDrawingOptions"><strong>setDrawingOptions</strong></a>(d)</dt></dl>
  <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
@@ -240,10 +251,15 @@ If&nbsp;a&nbsp;script&nbsp;is&nbsp;running,&nbsp;this&nbsp;just&nbsp;releases&nb
 Else,&nbsp;it&nbsp;starts&nbsp;the&nbsp;script&nbsp;in&nbsp;step&nbsp;mode.</tt></dd></dl>
  <dl><dt><a name="-step_script"><strong>step_script</strong></a>(s, glob, paus<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-textView"><strong>textView</strong></a>(text)</dt><dd><tt>Display&nbsp;a&nbsp;text&nbsp;file&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;response.</tt></dd></dl>
+ <dl><dt><a name="-timeout"><strong>timeout</strong></a>(secs)</dt><dd><tt>Raise&nbsp;a&nbsp;timeout&nbsp;error&nbsp;after&nbsp;secs.</tt></dd></dl>
  <dl><dt><a name="-toggleTriade"><strong>toggleTriade</strong></a>()</dt><dd><tt>Toggle&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
  <dl><dt><a name="-undecorate"><strong>undecorate</strong></a>(decor)</dt></dl>
- <dl><dt><a name="-undraw"><strong>undraw</strong></a>(actor)</dt></dl>
+ <dl><dt><a name="-undraw"><strong>undraw</strong></a>(itemlist)</dt><dd><tt>Remove&nbsp;an&nbsp;item&nbsp;or&nbsp;a&nbsp;number&nbsp;of&nbsp;items&nbsp;from&nbsp;the&nbsp;canvas.<br>
+&nbsp;<br>
+Use&nbsp;the&nbsp;return&nbsp;value&nbsp;from&nbsp;one&nbsp;of&nbsp;the&nbsp;draw...&nbsp;functions&nbsp;to&nbsp;remove<br>
+the&nbsp;item&nbsp;that&nbsp;was&nbsp;drawn&nbsp;from&nbsp;the&nbsp;canvas.<br>
+A&nbsp;single&nbsp;item&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;may&nbsp;be&nbsp;specified.</tt></dd></dl>
  <dl><dt><a name="-updateGUI"><strong>updateGUI</strong></a>()</dt><dd><tt>Update&nbsp;the&nbsp;GUI.</tt></dd></dl>
  <dl><dt><a name="-view"><strong>view</strong></a>(v, wait<font color="#909090">=False</font>)</dt><dd><tt>Show&nbsp;a&nbsp;named&nbsp;view,&nbsp;either&nbsp;a&nbsp;builtin&nbsp;or&nbsp;a&nbsp;user&nbsp;defined.</tt></dd></dl>
  <dl><dt><a name="-wakeup"><strong>wakeup</strong></a>(mode<font color="#909090">=0</font>)</dt><dd><tt>Wake&nbsp;up&nbsp;from&nbsp;the&nbsp;sleep&nbsp;function.<br>
@@ -266,6 +282,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>drawtimer</strong> = None<br>
 <strong>m</strong> = &lt;_sre.SRE_Match object&gt;<br>
 <strong>multisave</strong> = None<br>
+<strong>outtimer</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>
 <strong>stepmode</strong> = False<br>

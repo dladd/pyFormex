@@ -203,20 +203,26 @@ class FilenameSequence(object):
             FilenameSequence('dir/hallo23','5.png') will generate names
                 dir/hallo235.png, hallo245.png, ...
         """
-        name,number = splitEndDigits(filename)
+        base,number = splitEndDigits(filename)
         if len(number) > 0:
             self.nr = int(number)
             format = "%%0%dd" % len(number)
         else:
             self.nr = 0
             format = "-%03d"
-        self.name = name+format+ext
+        self.name = base+format+ext
 
     def next(self):
         """Return the next filename in the sequence"""
         fn = self.name % self.nr
         self.nr += 1
         return fn
+
+    def glob(self):
+        """Return a UNIX glob pattern for the filesnames"""
+        i = self.name.find('%')
+        j = self.name.find('d',i)
+        return self.name[:i]+'*'+self.name[j+1:]
 
 
 def imageFormatFromExt(ext):
