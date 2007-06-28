@@ -7,13 +7,13 @@
 ## Distributed under the GNU General Public License, see file COPYING
 ## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
-"""Graphical User Interface for pyformex."""
+"""Graphical User Interface for pyFormex."""
 
 import globaldata as GD
 
 import sys,time,os.path,string,re
 
-from PyQt4 import QtCore, QtGui, QtOpenGL
+from PyQt4 import QtCore, QtGui
 
 print "Congratulations! You have Qt version %s" % QtCore.QT_VERSION_STR
 
@@ -23,13 +23,18 @@ import fileMenu
 import scriptsMenu
 import prefMenu
 import toolbar
-import canvas
+import viewport
+
 import actionlist
 import script
 import utils
 import draw
 import widgets
-import image
+
+
+############### General Qt utility functions #######
+
+## might go to a qtutils module
 
 def Size(widget):
     """Return the size of a widget as a tuple."""
@@ -42,7 +47,11 @@ def Pos(widget):
     p = widget.pos()
     return p.x(),p.y()
 
+def printsize(w,t=None):
+    print "%s %s x %s" % (t,w.width(),w.height())
+
 ################# Message Board ###############
+
 class Board(QtGui.QTextEdit):
     """Message board for displaying read-only plain text messages."""
     
@@ -65,134 +74,7 @@ class Board(QtGui.QTextEdit):
             self.setTextCursor(self.cursor)
 
 
-################# OpenGL Canvas ###############
-
-class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
-    """A canvas for OpenGL rendering.
-
-    This is a wrapper around our Canvas class, to implement the
-    QT specific OpenGL methods.
-    """
-    
-    def __init__(self,*args):
-        """Initialize an empty canvas with default settings.
-        """
-        QtOpenGL.QGLWidget.__init__(self,*args)
-        if not self.isValid():
-            raise RuntimeError,"Could not create a valid OpenGL widget"
-        self.setMinimumSize(32,32)
-        self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-        self.setFocusPolicy(QtCore.Qt.StrongFocus)
-        canvas.Canvas.__init__(self)
-        
-    def initializeGL(self):
-        if GD.options.debug:
-            p = self.sizePolicy()
-            print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
-        self.initCamera()
-        #print self.view_angles
-        self.glinit()
-
-    def	resizeGL(self,w,h):
-        GD.debug("resizeGL: %s x %s" % (w,h))
-        self.setSize(w,h)
-
-    def	paintGL(self):
-        self.display()
-
-    def save(self,*args):
-        return image.save(self,*args)
-
-##    def update(self):
-##        print "Updating QtCanvas"
-##        QtOpenGL.QGLWidget.update(self)
-##        #canvas.Canvas.update(self)
-
-def printFormat(fmt):
-    """Print partial information about the OpenGL format."""
-    print "OpenGL: ",fmt.hasOpenGL()
-    print "OpenGLOverlays: ",fmt.hasOpenGLOverlays()
-    print "Overlay: ",fmt.hasOverlay()
-    print "Plane: ",fmt.plane()
-    print "Direct Rendering: ",fmt.directRendering()
-    print "Double Buffer: ",fmt.doubleBuffer()
-    print "Depth Buffer: ",fmt.depth()
-    print "RGBA: ",fmt.rgba()
-    print "Alpha: ",fmt.alpha()
-
-def printsize(w,t=None):
-    print "%s %s x %s" % (t,w.width(),w.height())
-
-
-################# MultiViewports ###############
-
-def vpfocus(canv):
-    print "vpfocus %s" % canv
-    GD.gui.viewports.set_current(canv)
-
-class MultiCanvas(QtGui.QGridLayout):
-    """A viewport that can be splitted."""
-
-    def __init__(self):
-        QtGui.QGridLayout.__init__(self)
-        self.all = []
-        self.active = []
-        self.current = None
-        #self.addView(0,0)
-
-    def newView(self):
-        "Adding a View"
-        canv = QtCanvas()
-        #QtCore.QObject.connect(canv,QtCore.SIGNAL("VPFocus"),vpfocus)
-        canv.initCamera()
-        self.all.append(canv)
-        self.active.append(canv)
-        self.set_current(canv)
-        return(canv)
-
-    def set_current(self,canv):
-        #print self.all
-        #print self.current
-        if canv in self.all:
-            GD.canvas = self.current = canv
- 
-    def addView(self,row,col):
-        w = self.newView()
-        self.addWidget(w,row,col)
-        w.raise_()
-
-    def removeView(self):
-        if len(self.all) > 1:
-            w = self.all.pop()
-            if self.current == w:
-                self.set_current(self.all[-1])
-            if w in self.active:
-                self.active.remove(w)
-            self.removeWidget(w)
-
-        
-##     def setCamera(self,bbox,view):
-##         self.current.setCamera(bbox,view)
-            
-    def update(self):
-        for v in self.all:
-            v.update()
-        print "Processing events"
-        GD.app.processEvents()
-
-    def removeAll(self):
-        for v in self.active:
-            v.removeAll()
-
-##     def clear(self):
-##         self.current.clear()  
-
-    def addActor(self,actor):
-        for v in self.active:
-            v.addActor(actor)
-
-
-        
+## # WHERE SHOULD THIS GO?
 ## def initViewActions(parent,viewlist):
 ##     """Create the initial set of view actions."""
 ##     global views
@@ -203,6 +85,7 @@ class MultiCanvas(QtGui.QGridLayout):
 ##         tooltip = Name+" View"
 ##         menutext = "&"+Name
 ##         createViewAction(parent,name,icon,tooltip,menutext)
+
 
 ################# GUI ###############
 class GUI(QtGui.QMainWindow):
@@ -243,22 +126,18 @@ class GUI(QtGui.QMainWindow):
         #s.moveSplitter(300,0)
         #s.moveSplitter(300,1)
         #s.setLineWidth(0)
+        
         # Create an OpenGL canvas with a nice frame around it
-        fmt = QtOpenGL.QGLFormat.defaultFormat()
-        if GD.options.dri:
-            fmt.setDirectRendering(True)
-        if GD.options.nodri:
-            fmt.setDirectRendering(False)
-        #fmt.setRgba(False)
-        if GD.options.debug:
-            printFormat(fmt)
-        QtOpenGL.QGLFormat.setDefaultFormat(fmt)
-        self.viewports = MultiCanvas()
+        viewport.setOpenglFormat()
+        self.viewports = viewport.MultiCanvas()
+
+        # self.canvas is the complete central widget of the main window
         self.canvas = QtGui.QWidget()
         #self.canvas.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.canvas.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.canvas.resize(*GD.cfg['gui/size'])
         self.canvas.setLayout(self.viewports)
+
         # Create the message board
         self.board = Board()
         #self.board.setPlainText(GD.Version+' started')
@@ -269,7 +148,7 @@ class GUI(QtGui.QMainWindow):
         self.box.setLayout(self.boxlayout)
         # Create the top menu and keep a dict with the main menu items
         if GD.options.multiview:
-            print "Activating the multiview feature"
+            GD.message("Activating the multiview feature")
             menu.insertViewportMenu()
         self.menu.addItems(menu.MenuData)
         #widgets.addMenuItems(self.menu, menu.MenuData)

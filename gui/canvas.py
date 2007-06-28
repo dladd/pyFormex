@@ -24,7 +24,6 @@ MOVE = 1
 RELEASE = 2
 
 
-
 import colors
 import camera
 import actors
