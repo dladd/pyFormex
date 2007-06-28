@@ -11,30 +11,16 @@
 
 import globaldata as GD
 
+from numpy import *
 from OpenGL import GL,GLU
-from PyQt4 import QtCore, QtGui # needed for signals, threads, cursors
 
-# mouse buttons
-LEFT = QtCore.Qt.LeftButton
-MIDDLE = QtCore.Qt.MidButton
-RIGHT = QtCore.Qt.RightButton
-# mouse actions
-PRESS = 0
-MOVE = 1
-RELEASE = 2
-
-
+from formex import length
 import colors
 import camera
 import actors
 import decors
 import marks
 import utils
-
-import numpy
-
-import math
-import vector
 
 
 class ActorList(list):
@@ -108,15 +94,8 @@ class Canvas(object):
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
         self.mousefunc = {}
-        self.setMouse(LEFT,self.dynarot) 
-        self.setMouse(MIDDLE,self.dynapan) 
-        self.setMouse(RIGHT,self.dynazoom) 
         self.camera = None
         self.view_angles = camera.view_angles
-
-
-    def setMouse(self,button,func):
-        self.mousefunc[button] = func
     
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
@@ -245,11 +224,10 @@ class Canvas(object):
         # TEST: use last actor
         if bbox is None:
             if len(self.actors) > 0:
-                self.bbox = self.actors[-1].bbox()
+                bbox = self.actors[-1].bbox()
             else:
-                self.bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
-        else:
-            self.bbox = bbox
+                bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
+        self.bbox = asarray(bbox)
 
          
     def addActor(self,actor):
@@ -358,13 +336,13 @@ class Canvas(object):
         """
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens
-        if bbox is None:
-            bbox = self.bbox
-        else:
-            self.bbox = bbox
-        center,size = vector.centerDiff(bbox[0],bbox[1])
+        if not bbox is None:
+            self.setBbox(bbox)
+        bbox = self.bbox
+        center = (bbox[0]+bbox[1]) / 2
+        size = bbox[1] - bbox[0]
         # calculating the bounding circle: this is rather conservative
-        dist = vector.length(size)
+        dist = length(size)
         if dist <= 0.0:
             dist = 1.0
         self.camera.setCenter(*center)
@@ -381,128 +359,6 @@ class Canvas(object):
         self.camera.setDist(f*self.camera.getDist())
 
 
-    def pick(self):
-        """Go into picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_actors)  
-        self.selection =[]
-        timer = QtCore.QThread
-        while len(self.selection) == 0:
-            timer.usleep(200)
-            GD.app.processEvents()
-        return GD.canvas.selection
-
-
-
-####### MOUSE EVENT HANDLERS ############################
-
-    # Mouse functions can be bound to any of the mousse buttons
-    # LEFT, MIDDLE or RIGHT.
-    # Each mouse function should accept three possible actions:
-    # PRESS, MOVE, RELEASE.
-    # On a mouse button PRESS, the mouse screen position and the pressed
-    # button are always saved in self.statex,self.statey,self.button.
-    # The mouse function does not need to save these and can directly use
-    # their values.
-    # On a mouse button RELEASE, self.button is cleared, to avoid further
-    # move actions.
-    # Functions that change the camera settings should call saveMatrix()
-    # when they are done.
-    # ATTENTION! The y argument is positive upwards, as in normal OpenGL
-    # operations!
-
-
-    def dynarot(self,x,y,action):
-        """Perform dynamic rotation operation.
-
-        This function processes mouse button events controlling a dynamic
-        rotation operation. The action is one of PRESS, MOVE or RELEASE.
-        """
-        if action == PRESS:
-            self.state = [self.statex-self.width()/2, -(self.statey-self.height()/2), 0.]
-
-        elif action == MOVE:
-            w,h = self.width(),self.height()
-            # set all three rotations from mouse movement
-            # tangential movement sets twist,
-            # but only if initial vector is big enough
-            x0 = self.state        # initial vector
-            d = vector.length(x0)
-            if d > h/8:
-                x1 = [x-w/2, y-h/2, 0]     # new vector
-                a0 = math.atan2(x0[0],x0[1])
-                a1 = math.atan2(x1[0],x1[1])
-                an = (a1-a0) / math.pi * 180
-                ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
-                twist = - an*ds
-                self.camera.rotate(twist,0.,0.,1.)
-                self.state = x1
-            # radial movement rotates around vector in lens plane
-            x0 = [self.statex-w/2, self.statey-h/2, 0]    # initial vector
-            dx = [x-self.statex, y-self.statey,0]         # movement
-            b = vector.projection(dx,x0)
-            if abs(b) > 5:
-                val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
-                rot =  [ abs(val),-dx[1],dx[0],0 ]
-                self.camera.rotate(*rot)
-                self.statex,self.statey = (x,y)
-            self.update()
-
-        elif action == RELEASE:
-            self.update()
-            self.camera.saveMatrix()
-
-            
-    def dynapan(self,x,y,action):
-        """Perform dynamic pan operation.
-
-        This function processes mouse button events controlling a dynamic
-        pan operation. The action is one of PRESS, MOVE or RELEASE.
-        """
-        if action == PRESS:
-            pass
-
-        elif action == MOVE:
-            w,h = self.width(),self.height()
-            dist = self.camera.getDist() * 0.5
-            # get distance from where button was pressed
-            dx,dy = (x-self.statex,y-self.statey)
-            panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
-            pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
-            # print dx,dy,panx,pany
-            self.camera.translate(panx,pany,0)
-            self.statex,self.statey = (x,y)
-            self.update()
-
-        elif action == RELEASE:
-            self.update()
-            self.camera.saveMatrix()          
-
-            
-    def dynazoom(self,x,y,action):
-        """Perform dynamic zoom operation.
-
-        This function processes mouse button events controlling a dynamic
-        zoom operation. The action is one of PRESS, MOVE or RELEASE.
-        """
-        if action == PRESS:
-            self.state = [self.camera.getDist(),self.camera.fovy]
-
-        elif action == MOVE:
-            w,h = self.width(),self.height()
-            # hor movement is lens zooming
-            f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
-            #print "Lens Zooming: %s" % f
-            self.camera.setLens(f)
-            # vert movement is dolly zooming
-            d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
-            self.camera.setDist(d*self.state[0])
-            self.update()
-
-        elif action == RELEASE:
-            self.update()
-            self.camera.saveMatrix()          
-
-
     def draw_cursor(self,x,y):
         if self.cursor:
             self.removeDecoration(self.cursor)
@@ -515,90 +371,8 @@ class Canvas(object):
             self.removeDecoration(self.cursor)
         self.cursor = decors.Grid(self.statex,self.statey,x,y,color='cyan',linewidth=1)
         self.addDecoration(self.cursor)
-       
 
-    def pick_actors(self,x,y,action):
-        """Return the actors close to the mouse pointer."""
-        if action == PRESS:
-            GD.debug("Start picking mode")
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
-            self.draw_cursor(self.statex,self.statey)
-            self.selection = []
-            self.update()
-            
-        elif action == MOVE:
-            GD.debug("Move picking window")
-            self.draw_rectangle(x,y)
-            self.update()
-
-        elif action == RELEASE:
-            GD.debug("End picking mode")
-            if self.cursor:
-                self.removeDecoration(self.cursor)
-            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-            self.update()
-            GL.glSelectBuffer(16+3*len(self.actors))
-            GL.glRenderMode(GL.GL_SELECT)
-            GL.glInitNames() # init the name stack
-            GD.debug((x,y))
-            GD.debug((self.statex,self.statey))
-            x,y = (x+self.statex)/2., (y+self.statey)/2.
-            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
-            if w <= 0 or h <= 0:
-               w,h = GD.cfg.get('pick/size',(20,20))
-            GD.debug((x,y,w,h))
-            self.camera.loadProjection(pick=[x,y,w,h])
-            self.camera.loadMatrix()
-            for i,actor in enumerate(self.actors):
-                #print "Adding name %s" % i
-                GL.glPushName(i)
-                GL.glCallList(actor.list)
-                GL.glPopName()
-            buf = GL.glRenderMode(GL.GL_RENDER)
-            self.selection = []
-            for r in buf:
-                GD.debug(r)
-                for i in r[2]:
-                    self.selection.append(self.actors[i])
-            self.setMouse(LEFT,self.dynarot)
-            GD.debug("Re-enabling dynarot")
-            self.update()
-
-        
-    def mousePressEvent(self,e):
-        """Process a mouse press event."""
-        GD.gui.viewports.set_current(self)
-        # on PRESS, always remember mouse position and button
-        self.statex,self.statey = e.x(), self.height()-e.y()
-        self.button = e.button()
-        func = self.mousefunc.get(self.button,None)
-        if func:
-            func(self.statex,self.y,PRESS)
-        
-    def mouseMoveEvent(self,e):
-        """Process a mouse move event."""
-        # the MOVE event does not identify a button, use the saved one
-        func = self.mousefunc.get(self.button,None)
-        if func:
-            func(e.x(),self.height()-e.y(),MOVE)
-
-    def mouseReleaseEvent(self,e):
-        """Process a mouse release event."""
-        # clear the stored button
-        self.button = None
-        func = self.mousefunc.get(e.button(),None)
-        if func:
-            func(e.x(),self.height()-e.y(),RELEASE)
-
-
-
-    # Any keypress with focus in the canvas generates a 'wakeup' signal.
-    # This is used to break out of a wait status.
-    # Events not handled here could also be handled by the toplevel
-    # event handler.
-    def keyPressEvent (self,e):
-        self.emit(QtCore.SIGNAL("Wakeup"),())
-        e.ignore()
-
+    def save(self,*args):
+        return image.save(self,*args)
 
 ### End
