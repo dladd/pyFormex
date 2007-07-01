@@ -649,17 +649,13 @@ def setTriade(on=None):
     If on is True, the axes triade is displayed, if False it is
     removed. The default (None) toggles between on and off.
     """
-    GD.debug("setTriade %s" % on)
     if on is None:
-        GD.debug(hasattr(GD.canvas,'triade'))
-        GD.debug(GD.canvas.triade)
         on = not hasattr(GD.canvas,'triade') or GD.canvas.triade is None
-    GD.debug("setTriade %s" % on)
     if on:
         GD.canvas.triade = actors.TriadeActor(1.0)
-        GD.canvas.addActor(GD.canvas.triade)
+        GD.canvas.addMark(GD.canvas.triade)
     else:
-        GD.canvas.removeActor(GD.canvas.triade)
+        GD.canvas.removeMark(GD.canvas.triade)
         GD.canvas.triade = None
     GD.canvas.update()
         

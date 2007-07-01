@@ -6,10 +6,10 @@
 \label{cha:gui}
 
 \section{Starting the GUI}
-You start the \pyf GUI by entering the command \Code{pyformex --gui}. Depending on your installation, you may also have a panel or menu button on your desktop from which you can start the pyFormex graphical interface by a simple mouse click. 
+You start the \pyf GUI by entering the command \Code{pyformex --gui}. Depending on your installation, you may also have a panel or menu button on your desktop from which you can start the \pyf graphical interface by a simple mouse click. 
 %Finally, you can start the GUI with the command \Code{startGUI()} in a \pyf script.
 
-When the main window appears, it will look like the one shown in the figure~\ref{fig:gui}. Your window manager will most likely have put some decorations around it, but these are ver much OS and window manager dependent and are therefore not shown in the figure.
+When the main window appears, it will look like the one shown in the figure~\ref{fig:gui}. Your window manager will most likely have put some decorations around it, but these are very much OS and window manager dependent and are therefore not shown in the figure.
 
 \begin{figure}[h]
   \centering
@@ -27,7 +27,9 @@ When the main window appears, it will look like the one shown in the figure~\ref
 
 \section{Basic use of the GUI}
 
-The pyFormex window (figure~\ref{fig:gui}) comprises 5 parts. From top to bottom these are:
+As \pyf is still in its infancy, the GUI is subject to frequent changes and it would make no sense to cover here every single aspect of it. Rather we will describe the most important functions, so that users can quickly get used to working with \pyf. Also we will present some of the more obscure features that users may not expect but yet might be very useful. 
+
+The \pyf window (figure~\ref{fig:gui}) comprises 5 parts. From top to bottom these are:
 \begin{enumerate}
 \item the menu bar,
 \item the tool bar,
@@ -35,6 +37,31 @@ The pyFormex window (figure~\ref{fig:gui}) comprises 5 parts. From top to bottom
 \item the message board, and
 \item the status bar.
 \end{enumerate}
+
+Many of these parts look and work in a rather familiar way. The menu bar gives access to most of the \pyf GUI features through a series of pull-down menus.
+The most import functions are described in following sections.
+
+The toolbar contains a series of buttons that trigger actions when clicked upon. This provides an easier access to some frequently used functions, mainly for changing the viewing parameters.
+
+The canvas is where drawing board where your \pyf scripts can show the created geometrical structures with a full 3D view. The canvas can hold more than one view simultaneously. See section~\ref{sec:viewport-menu} for details.
+
+In the message board \pyf displays informative messages, requested results, possibly also errors and any text that your \pyf script writes out.
+
+The status bar shows the current status of the GUI. For now this only contains the filename of the current script and an indicator if this file has been recognized as a \pyf script (happy face) or not (unhappy face).
+
+
+Between the canvas and the message board is a splitter allowing resizing the parts of the window occupied by the canvas and message board. The mouse cursor changes to a vertical resizing symbol when you move over it. Just click on the splitter and move the mouse up or down to adjust the canvas/message board to your likings. 
+
+The \pyf main window can be resized in the usual ways. 
+
+   
+\section{The file menu}
+\label{sec:file-menu}
+
+
+   
+\section{The viewport menu}
+\label{sec:viewport-menu}
 
 
 
