@@ -85,6 +85,7 @@ class Canvas(object):
         self.actors = ActorList(self)       # start with an empty scene
         self.annotations = ActorList(self)  # without annotations
         self.decorations = ActorList(self)  # and no decorations either
+        self.triade = None
         self.lights = []
         self.setBbox()
         self.bgcolor = colors.mediumgrey
@@ -96,6 +97,7 @@ class Canvas(object):
         self.mousefunc = {}
         self.camera = None
         self.view_angles = camera.view_angles
+
     
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""

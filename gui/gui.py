@@ -147,8 +147,8 @@ class GUI(QtGui.QMainWindow):
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
         # Create the top menu and keep a dict with the main menu items
-        if GD.cfg.get('gui/viewportmenu','True'):
-            menu.insertViewportMenu()
+        if GD.cfg.get('gui/cameramenu','True'):
+            menu.insertCameraMenu()
         self.menu.addItems(menu.MenuData)
         #widgets.addMenuItems(self.menu, menu.MenuData)
         #self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])

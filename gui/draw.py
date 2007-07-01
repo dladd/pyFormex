@@ -643,31 +643,37 @@ def view(v,wait=False):
     if allowwait and wait:
         drawlock()
 
-_triade = None
+def setTriade(on=None):
+    """Toggle the display of the global axes on or off.
 
-def drawTriade():
-    """Show the global axes."""
-    global _triade
-    if not _triade or _triade not in GD.canvas.actors:
-        _triade = actors.TriadeActor(1.0)
-        GD.canvas.addActor(_triade)
-        GD.canvas.update()
-
-def removeTriade():
-    """Remove the global axes."""
-    global _triade
-    if _triade and _triade in GD.canvas.actors:
-        GD.canvas.removeActor(_triade)
-        GD.canvas.update()
-        _triade = None
-        
-def toggleTriade():
-    """Toggle the global axes on or off."""
-    global _triade
-    if _triade:
-        removeTriade()
+    If on is True, the axes triade is displayed, if False it is
+    removed. The default (None) toggles between on and off.
+    """
+    GD.debug("setTriade %s" % on)
+    if on is None:
+        GD.debug(hasattr(GD.canvas,'triade'))
+        GD.debug(GD.canvas.triade)
+        on = not hasattr(GD.canvas,'triade') or GD.canvas.triade is None
+    GD.debug("setTriade %s" % on)
+    if on:
+        GD.canvas.triade = actors.TriadeActor(1.0)
+        GD.canvas.addActor(GD.canvas.triade)
     else:
-        drawTriade()
+        GD.canvas.removeActor(GD.canvas.triade)
+        GD.canvas.triade = None
+    GD.canvas.update()
+        
+@formex.deprecated(setTriade)
+def drawTriade():
+    setTriade(True)
+
+@formex.deprecated(setTriade)
+def removeTriade():
+    setTriade(False)
+        
+@formex.deprecated(setTriade)
+def toggleTriade():
+    pass
 
 def drawtext(text,x,y,font='9x15'):
     """Show a text at position x,y using font."""
