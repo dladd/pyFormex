@@ -1,4 +1,13 @@
 #!/bin/sh
 # Zoek een string in all .py files
 #
-fgrep "$1" *.py gui/*.py plugins/*.py examples/*.py stent/*.py myscripts/*.py
+#set -f
+files="*.py gui/*.py plugins/*.py examples/*.py"
+for d in local stent; do
+	[ -d "$d" ] && files="$files $d/*.py"
+done
+#echo "$files"
+#set +f
+#echo $files
+ 
+fgrep "$1" $files

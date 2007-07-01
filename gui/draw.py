@@ -107,7 +107,7 @@ def ask(question,choices=None,default='',timeout=-1):
         return info(question,choices)
     else:
         items = [ [question, default] ]
-        res,accept = widgets.inputDialog(items,'Config Dialog').getResult()
+        res,accept = widgets.InputDialog(items,'Config Dialog').getResult()
         GD.gui.update()
         if accept:
             return res[0][1]
@@ -145,9 +145,9 @@ def askItems(items,caption=None):
     if type(items) == dict:
         items = items.items()
     if type(caption) is str:
-        w = widgets.inputDialog(items,caption)
+        w = widgets.InputDialog(items,caption)
     else:
-        w = widgets.inputDialog(items)
+        w = widgets.InputDialog(items)
     res,status = w.getResult()
     items = {}
     for r in res:

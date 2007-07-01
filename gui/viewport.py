@@ -367,6 +367,7 @@ class MultiCanvas(QtGui.QGridLayout):
             if w in self.active:
                 self.active.remove(w)
             self.removeWidget(w)
+            w.close()
 
         
 ##     def setCamera(self,bbox,view):

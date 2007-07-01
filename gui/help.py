@@ -57,13 +57,17 @@ def readme():
     """Display the pyFormex description."""
     draw.textView(file(GD.cfg['help/readme']).read())
 
+def license():
+    """Display the pyFormex description."""
+    draw.textView(file(GD.cfg['help/license']).read())
+
 def about():
     draw.about("""%s
 
-A tool for generating large 3D structures by mathematical transfomations.
+A tool for generating and operating on large 3D structures by mathematical transfomations.
 
 Copyright 2004-2007 Benedict Verhegghe.
-Distributed under the GNU GPL.
+Distributed under the GNU GPL v2 or higher.
 """ % GD.Version)
 
 def testwarning():

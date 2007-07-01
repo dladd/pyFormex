@@ -147,8 +147,7 @@ class GUI(QtGui.QMainWindow):
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
         # Create the top menu and keep a dict with the main menu items
-        if GD.options.multiview:
-            GD.message("Activating the multiview feature")
+        if GD.cfg.get('gui/viewportmenu','True'):
             menu.insertViewportMenu()
         self.menu.addItems(menu.MenuData)
         #widgets.addMenuItems(self.menu, menu.MenuData)

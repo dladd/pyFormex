@@ -200,7 +200,7 @@ def toFormex():
     if not check_surface():
         return
     itemlist = [ [ 'name', PF.get('project','')] ] 
-    res,accept = widgets.inputDialog(itemlist,'Name of the Formex').getResult()
+    res,accept = widgets.InputDialog(itemlist,'Name of the Formex').getResult()
     if accept:
         name = res[0][1]
         #print name
@@ -246,7 +246,7 @@ def scale_surface():
     if not check_surface():
         return
     itemlist = [ [ 'X-scale',1.0], [ 'Y-scale',1.0], [ 'Z-scale',1.0] ] 
-    res,accept = widgets.inputDialog(itemlist,'Scaling Parameters').getResult()
+    res,accept = widgets.InputDialog(itemlist,'Scaling Parameters').getResult()
     if accept:
         updateGUI()
         scale = map(float,[r[1] for r in res])
@@ -264,7 +264,7 @@ def rotate_surface():
     if not check_surface():
         return
     itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
-    res,accept = widgets.inputDialog(itemlist,'Rotation Parameters').getResult()
+    res,accept = widgets.InputDialog(itemlist,'Rotation Parameters').getResult()
     if accept:
         updateGUI()
         print res
@@ -281,7 +281,7 @@ def clip_surface():
     if not check_surface():
         return
     itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
-    res,accept = widgets.inputDialog(itemlist,'Clipping Parameters').getResult()
+    res,accept = widgets.InputDialog(itemlist,'Clipping Parameters').getResult()
     if accept:
         updateGUI()
         nodes,elems = PF['old_surface'] = PF['surface']

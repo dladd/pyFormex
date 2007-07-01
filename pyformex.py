@@ -91,8 +91,6 @@ def main(argv=None):
                     action="store_true", dest="nodefaultconfig", default=False),
        make_option("--redirect", help="redirect standard output to the message board (ignored with --nogui)",
                     action="store_true", dest="redirect", default=False),
-       make_option("--multiview", help="Activate the multiple viewport feature (ignored with --nogui)",
-                    action="store_true", dest="multiview", default=False),
        make_option("--debug", help="display debugging info to sys.stdout",
                     action="store_true", dest="debug", default=False),
         ])
@@ -100,9 +98,6 @@ def main(argv=None):
     GD.print_help = parser.print_help
 
     GD.debug("Options: %s" % GD.options)
-
-##     if GD.options.multiview:
-##         GD.message("The --multiview option has become obsolete!")
 
     # Read the config files
     defaults = os.path.join(pyformexdir,"pyformexrc")
@@ -138,7 +133,7 @@ def main(argv=None):
     GD.debug("RefConfig: %s" % GD.refcfg)
     GD.debug("Config: %s" % GD.cfg)
 
-    if GD.options.gui is None and GD.Version.startswith('0.4') :
+    if GD.options.gui is None and GD.__version__.startswith('0.4') :
         GD.message(GD.Version)
         GD.message("""
 !! The pyformex command line options have changed !!

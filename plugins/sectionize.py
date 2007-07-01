@@ -15,7 +15,7 @@ def createSegments(F):
     bb = F.bbox()
     GD.message("Bounding box = %s" % bb)
     itemlist = [['number of sections',20],['relative thickness',0.1]]
-    res,accept = widgets.inputDialog(itemlist,'Sectioning Parameters').getResult()
+    res,accept = widgets.InputDialog(itemlist,'Sectioning Parameters').getResult()
     if accept:
         ns = int(res[0][1])
         th = float(res[1][1])

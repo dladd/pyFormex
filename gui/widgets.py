@@ -255,8 +255,53 @@ def getColor(col=None):
 
 
 ## !! THIS IS NOT FULLY FUNCTIONAL YET
-## It can already be used for string items  
-class inputDialog(QtGui.QDialog):
+
+class InputItem(QtGui.QHBoxLayout):
+    """A single input item with a name label in front.
+
+    The widget is a QHBoxLayout which can be embedded in the vertical
+    layout of a dialog.
+    """
+    
+    def __init__(self,name,value,typ=None,*args):
+        """Creates a new inputitem with a name label in front.
+        
+        
+        The item can be any of the following:
+        - a string
+        - a bool
+        - an int
+        - a float
+        - a tuple or list
+        If no type is given, it is determined from the value. The return
+        value will be cast to the type.
+        """
+        QtGui.QHBoxLayout.__init__(self,*args)
+        self.label = QtGui.QLabel(name)
+        if typ is None:
+            typ = type(value)
+        self.type = typ
+        if self.type == str:
+            self.input = QtGui.QLineEdit(str(value))
+        else:
+            GD.debug("Invalid InputWidget type %s" % self.type)
+        self.addWidget(self.label)
+        self.addWidget(self.input)
+
+    def name(self):
+        """Return the widget's name."""
+        return str(self.label.text())
+
+    def value(self):
+        """Return the widget's value."""
+        if self.type == str:
+           return str(self.input.text())
+    def show(self,*args):
+         QtGui.QHBoxLayout.__init__(self,*args)
+         self.input.selectAll()
+
+
+class InputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
     This feature is still experimental (though already used in a few places.
@@ -283,6 +328,14 @@ class inputDialog(QtGui.QDialog):
         self.result = []
         form = QtGui.QVBoxLayout()
         for item in items:
+            if len(item) == 2 or item[2] == 'str':
+                # Test the new widget
+                line = InputItem(item[0],item[1],str)
+                form.addLayout(line)
+                self.fields.append(['__NEW__',line])
+                continue
+
+            
             # Create the text label
             label = QtGui.QLabel(item[0])
             # Create the input field
@@ -322,13 +375,20 @@ class inputDialog(QtGui.QDialog):
         self.connect(ok,QtCore.SIGNAL("clicked()"),self.acceptdata)
         self.setLayout(form)
         # Set the keyboard focus to the first input field
-        self.setFocusProxy(self.fields[0][1])
-        self.fields[0][0].setFocus()
+        if self.fields[0][0] == '__NEW__':
+            self.fields[0][1].input.setFocus()
+        else:
+            self.setFocusProxy(self.fields[0][1])
+            self.fields[0][0].setFocus()
         self.show()
         
     def acceptdata(self):
         for label,data in self.fields:
-            self.result.append([str(label.text()),str(data.text())])
+            if label == "__NEW__":
+                GD.debug(data)
+                self.result.append([data.name(),data.value()])
+            else:
+                self.result.append([str(label.text()),str(data.text())])
         self.accept()
         
     def getResult(self):
