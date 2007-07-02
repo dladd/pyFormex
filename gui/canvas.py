@@ -149,7 +149,7 @@ class Canvas(object):
         self.settings.reset(dict)
 
 
-    def setLinewidth(self,lw):
+    def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
         self.settings.linewidth = float(lw)
 

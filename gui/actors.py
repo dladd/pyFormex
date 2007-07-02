@@ -51,18 +51,15 @@ def drawPoints(x,c,s):
     s is the point size
     """
     GL.glPointSize(s)
-    if len(c.shape) == 1:
+    multicolor = len(c.shape) > 1
+    if not multicolor:
         GL.glColor3fv(c)
-        GL.glBegin(GL.GL_POINTS)
-        for i in range(x.shape[0]):
-            GL.glVertex3fv(x[i])
-        GL.glEnd()
-    else:
-        GL.glBegin(GL.GL_POINTS)
-        for i in range(x.shape[0]):
+    GL.glBegin(GL.GL_POINTS)
+    for i in range(x.shape[0]):
+        if multicolor:
             GL.glColor3fv(c[i])
-            GL.glVertex3fv(x[i])
-        GL.glEnd()
+        GL.glVertex3fv(x[i])
+    GL.glEnd()
 
 
 def drawAtPoints(x,mark):
@@ -86,22 +83,17 @@ def drawLines(x,c,w):
       or (3,) when all lines have same color
     w is the linewidth.
     """
-    print c
     GL.glLineWidth(w)
-    if len(c.shape) == 1:
+    multicolor = len(c.shape) > 1
+    if not multicolor:
         GL.glColor3fv(c)
-        GL.glBegin(GL.GL_LINES)
-        for i in range(x.shape[0]):
-            GL.glVertex3fv(x[i][0])
-            GL.glVertex3fv(x[i][1])
-        GL.glEnd()
-    else:
-        GL.glBegin(GL.GL_LINES)
-        for i in range(x.shape[0]):
+    GL.glBegin(GL.GL_LINES)
+    for i in range(x.shape[0]):
+        if multicolor:
             GL.glColor3fv(c[i])
-            GL.glVertex3fv(x[i][0])
-            GL.glVertex3fv(x[i][1])
-        GL.glEnd()
+        GL.glVertex3fv(x[i][0])
+        GL.glVertex3fv(x[i][1])
+    GL.glEnd()
 
 
 def drawEdges(x,edges,c,w):
@@ -182,24 +174,18 @@ def drawTriangles(x,c,mode):
     """
     if mode == 'smooth':
         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-    if len(c.shape) == 1:
+    multicolor = len(c.shape) > 1
+    if not multicolor:
         GL.glColor3fv(c)
-        GL.glBegin(GL.GL_TRIANGLES)
-        for i in range(x.shape[0]):
-            if mode == 'smooth':
-                GL.glNormal3fv(normal[i])
-            for j in range(x.shape[1]):
-                GL.glVertex3fv(x[i][j])
-        GL.glEnd()
-    else:
-        GL.glBegin(GL.GL_TRIANGLES)
-        for i in range(x.shape[0]):
+    GL.glBegin(GL.GL_TRIANGLES)
+    for i in range(x.shape[0]):
+        if multicolor:
             GL.glColor3fv(c[i])
-            #if mode == 'smooth':
+        if mode == 'smooth':
             GL.glNormal3fv(normal[i])
-            for j in range(x.shape[1]):
-                GL.glVertex3fv(x[i][j])
-        GL.glEnd()
+        for j in range(x.shape[1]):
+            GL.glVertex3fv(x[i][j])
+    GL.glEnd()
        
 
 def drawTriArray(x,c,mode):

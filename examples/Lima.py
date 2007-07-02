@@ -58,7 +58,7 @@ limas = [ [ "F", {"F":"F+G","G":"F-G"},10,turtlecmds() ],
           [ "F++F", {"F":"*F//F*"}, 12, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
           [ "F+F+F+F", {"F":"*F//G*","G":"/F**G/"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
           [ "G+G+G+G", {"F":"*F//G*","G":"/F**G/"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
-          [ "+F", {"F":"GH", "G":"GG", "H":"G[*F][/F]"}, 12, turtlecmds({'*':'ro(22.5);','/':'ro(-22.5);'}) ],
+          #[ "+F", {"F":"GH", "G":"GG", "H":"G[*F][/F]"}, 12, turtlecmds({'*':'ro(22.5);','/':'ro(-22.5);'}) ],
           #[ "F", {"F":"*F-F*"}, 12, turtlecmds({'*':'ro(45);'}) ],
           #[ "JF", {"F":"*F-FF+F*","J":"/J"}, 8, turtlecmds({'*':'ro(45);','/':'ro(-45);'}) ],
           #[ "F", {"F":"F-F++F-F"}, 4, turtlecmds() ],
@@ -75,7 +75,7 @@ def show(L,turtle_cmds):
     #return F
     
 # and display them in series
-for a,r,g,t in limas[-1:]:
+for a,r,g,t in limas:
     L = lima.Lima(a,r)
     show(L,t)
     for i in range(g):

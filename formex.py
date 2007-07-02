@@ -2072,9 +2072,7 @@ class Formex:
     rot = rotate
     trl = translate
 
-    def divide(self,n):
-        return divide(self,n)
-    
+
 
 ##############################################################################
 #
