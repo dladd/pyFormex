@@ -130,6 +130,8 @@ class GUI(QtGui.QMainWindow):
         # Create an OpenGL canvas with a nice frame around it
         viewport.setOpenglFormat()
         self.viewports = viewport.MultiCanvas()
+        # and update the default settings
+        self.viewports.setDefaults(GD.cfg['canvas'])
 
         # self.canvas is the complete central widget of the main window
         self.canvas = QtGui.QWidget()
@@ -194,7 +196,7 @@ class GUI(QtGui.QMainWindow):
     
     def resizeCanvas(self,wd,ht):
         """Resize the canvas."""
-        self.canva.resize(wd,ht)
+        self.canvas.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
         self.adjustSize()
     

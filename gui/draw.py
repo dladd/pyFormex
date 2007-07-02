@@ -459,11 +459,8 @@ def reset():
     DrawOptions = dict(
         view = '__last__',       # Keep the current camera angles
         bbox = 'auto',           # Automatically zoom on the drawed object
-        linewidth = GD.cfg['draw/linewidth'],
-        bgcolor = GD.cfg['draw/bgcolor'],
         clear = False,
         )
-    #bgcolor(DrawOptions['bgcolor'])
     GD.canvas.reset()
     clear()
     view('front')
@@ -630,7 +627,6 @@ def undraw(itemlist):
     GD.canvas.remove(itemlist)
     GD.canvas.update()
     GD.app.processEvents()
-    
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
@@ -663,18 +659,8 @@ def setTriade(on=None):
         GD.canvas.removeMark(GD.canvas.triade)
         GD.canvas.triade = None
     GD.canvas.update()
-        
-@formex.deprecated(setTriade)
-def drawTriade():
-    setTriade(True)
+    GD.app.processEvents()
 
-@formex.deprecated(setTriade)
-def removeTriade():
-    setTriade(False)
-        
-@formex.deprecated(setTriade)
-def toggleTriade():
-    pass
 
 def drawtext(text,x,y,font='9x15'):
     """Show a text at position x,y using font."""
@@ -728,22 +714,19 @@ def zoomAll():
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
-    GD.canvas.current.bgcolor = colors.GLColor(color)
+    GD.canvas.setBgColor(color)
     GD.canvas.display()
     GD.canvas.update()
 
 
 def fgcolor(color):
     """Set the default foreground color."""
-    color = colors.GLColor(color)
-    #print color
     GD.canvas.setFgColor(color)
 
 
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
-    #GD.canvas.setLinewidth(float(wid))
-    GD.cfg['draw/linewidth'] = wid
+    GD.canvas.setLineWidth(wid)
 
 
 def clear():
@@ -752,6 +735,7 @@ def clear():
     if allowwait:
         drawwait()
     #print "CLEAR: %s" % GD.canvas
+    #setTriade(False)
     GD.canvas.removeAll()
     GD.canvas.clear()
     GD.canvas.update()

@@ -79,11 +79,39 @@ from config import dicttostr
 class CanvasSettings(object):
     """A collection of settings for an OpenGL Canvas."""
 
-    mode = 'wireframe'
-    linewidth = 1.0
-    bgcolor = colors.mediumgrey
-    fgcolor = colors.black
-    slcolor = colors.red     # color for selected items
+    default = dict(
+        rendermode = 'wireframe',
+        linewidth = 1.0,
+        bgcolor = colors.mediumgrey,
+        fgcolor = colors.black,
+        slcolor = colors.red,     # color for selected items
+        )
+
+    @classmethod
+    def checkDict(clas,dict):
+        """Transform a dict to acceptable settings."""
+        ok = {}
+        keys = dict.keys()
+        if 'rendermode' in keys:
+            ok['rendermode'] = dict['rendermode']
+        if 'linewidth' in keys:
+            ok['linewidth'] =  float(dict['linewidth'])
+        for c in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
+            if c in keys:
+                ok[c] = colors.GLColor(dict[c])
+        return ok
+        
+    def __init__(self,dict={}):
+        self.reset()
+
+    def reset(self,dict={}):
+        """Reset to default settings
+
+        If a dict is specified, these settings will override defaults.
+        """
+        self.__dict__.update(CanvasSettings.default)
+        if dict:
+            self.__dict__.update(CanvasSettings.checkDict(dict))
     
     def __str__(self):
         return dicttostr(self.__dict__)
@@ -107,8 +135,7 @@ class Canvas(object):
         self.triade = None
         self.lights = []
         self.setBbox()
-        self.default = CanvasSettings()
-        self.current = CanvasSettings()
+        self.settings = CanvasSettings()
         self.rendermode = 'wireframe'
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
@@ -117,10 +144,24 @@ class Canvas(object):
         self.view_angles = camera.view_angles
 
 
-
-    def reset(self):
+    def reset(self,dict={}):
         """Return all the settings to their default values."""
-        self.current.__dict__.update(self.default.__dict__)
+        self.settings.reset(dict)
+
+
+    def setLinewidth(self,lw):
+        """Set the linewidth for line rendering."""
+        self.settings.linewidth = float(lw)
+
+
+    def setBgColor(self,bg):
+        """Set the background color."""
+        self.settings.bgcolor = colors.GLColor(bg)
+
+
+    def setFgColor(self,fg):
+        """Set the default foreground color."""
+        self.settings.fgcolor = colors.GLColor(fg)
     
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
@@ -135,12 +176,7 @@ class Canvas(object):
         GD.debug("view angles: %s" % self.view_angles)
 
 
-##    def update(self):
-##        GD.app.processEvents()
-
-
     def glinit(self,mode=None):
-        GD.debug("canvas GLINIT")
         if mode:
             self.rendermode = mode
 
@@ -182,6 +218,14 @@ class Canvas(object):
         else:
             raise RuntimeError,"Unknown rendering mode"
 
+
+    def clear(self):
+        """Clear the canvas to the background color."""
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+        GL.glClearColor(*colors.RGBA(self.settings.bgcolor))
+        GL.glColor3fv(self.settings.fgcolor)
+        GL.glLineWidth(self.settings.linewidth)
+
     
     def setSize (self,w,h):
         if h == 0:	# Prevent A Divide By Zero 
@@ -192,12 +236,6 @@ class Canvas(object):
         self.display()
 
 
-    def clear(self):
-        """Clear the canvas to the background color."""
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        GL.glClearColor(*colors.RGBA(self.current.bgcolor))
-
-
     def display(self):
         """(Re)display all the actors in the scene.
 
@@ -206,20 +244,20 @@ class Canvas(object):
         """
         self.clear()
         # Draw Scene Actors
+        # GD.debug("%s / %s" % (len(self.actors),len(self.annotations)))
         self.camera.loadProjection()
         self.camera.loadMatrix()
         for actor in self.actors:
             GL.glCallList(actor.list)
         for actor in self.annotations:
             GL.glCallList(actor.list)
-            #actor.draw()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         # Plot viewport decorations
         GL.glLoadIdentity()
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
-        GLU.gluOrtho2D(0, self.width(), 0, self.height())
+        GLU.gluOrtho2D(0,self.width(),0,self.height())
         for actor in self.decorations:
             GL.glCallList(actor.list)
         # end plot viewport decorations
@@ -227,22 +265,6 @@ class Canvas(object):
         GL.glPopMatrix()
 ##         # Display angles
 ##         self.camera.getCurrentAngles()
-        
-
-    def setLinewidth(self,lw):
-        """Set the linewidth for line rendering."""
-        GL.glLineWidth(lw)
-
-
-    def setBgColor(self,bg):
-        """Set the background color."""
-        self.bgcolor = bg
-
-
-    def setFgColor(self,fg):
-        """Set the default foreground color."""
-        self.fgcolor = fg
-        GL.glColor3fv(self.fgcolor)
 
         
     def setBbox(self,bbox=None):
@@ -263,7 +285,6 @@ class Canvas(object):
     def removeActor(self,actor):
         """Remove a 3D actor from the 3D scene."""
         self.actors.delete(actor)
-
          
     def addMark(self,actor):
         """Add an annotation to the 3D scene."""
@@ -271,8 +292,9 @@ class Canvas(object):
 
     def removeMark(self,actor):
         """Remove an annotation from the 3D scene."""
+        if actor == self.triade:
+            self.triade = None
         self.annotations.delete(actor)
-
          
     def addDecoration(self,actor):
         """Add a 2D decoration to the canvas."""
@@ -354,11 +376,14 @@ class Canvas(object):
 
         This function sets the camera angles and adjusts the zooming.
         The camera distance remains unchanged.
+        
         If a bbox is specified, the camera will be zoomed to make the whole
         bbox visible.
         If no bbox is specified, the current scene bbox will be used.
         If no current bbox has been set, it will be calculated as the
         bbox of the whole scene.
+
+        If no camera angles are given, the camera orientation is kept.
         """
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens

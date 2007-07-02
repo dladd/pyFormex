@@ -78,8 +78,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """
     
     def __init__(self,*args):
-        """Initialize an empty canvas with default settings.
-        """
+        """Initialize an empty canvas with default settings."""
         QtOpenGL.QGLWidget.__init__(self,*args)
         if not self.isValid():
             raise RuntimeError,"Could not create a valid OpenGL widget"
@@ -90,6 +89,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setMouse(LEFT,self.dynarot) 
         self.setMouse(MIDDLE,self.dynapan) 
         self.setMouse(RIGHT,self.dynazoom) 
+
 
     def setMouse(self,button,func):
         self.mousefunc[button] = func
@@ -113,8 +113,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
         self.initCamera()
-        #print self.view_angles
         self.glinit()
+        self.resizeGL(self.width(),self.height())
+        self.setCamera()
 
     def	resizeGL(self,w,h):
         GD.debug("resizeGL: %s x %s" % (w,h))
@@ -123,10 +124,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def	paintGL(self):
         self.display()
 
-##    def update(self):
-##        print "Updating QtCanvas"
-##        QtOpenGL.QGLWidget.update(self)
-##        #canvas.Canvas.update(self)
 
 ####### MOUSE EVENT HANDLERS ############################
 
@@ -324,7 +321,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         e.ignore()
 
 
-################# Multiiple Viewports ###############
+################# Multiple Viewports ###############
 
 def vpfocus(canv):
     print "vpfocus %s" % canv
@@ -340,11 +337,16 @@ class MultiCanvas(QtGui.QGridLayout):
         self.current = None
         #self.addView(0,0)
 
+
+    def setDefaults(self,dict):
+        """Update the default settings of the canvas class."""
+        canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(dict))
+
     def newView(self):
         "Adding a View"
         canv = QtCanvas()
         #QtCore.QObject.connect(canv,QtCore.SIGNAL("VPFocus"),vpfocus)
-        canv.initCamera()
+        #canv.initCamera() # THis is already done in the __init__()
         self.all.append(canv)
         self.active.append(canv)
         self.set_current(canv)
@@ -355,6 +357,9 @@ class MultiCanvas(QtGui.QGridLayout):
         #print self.current
         if canv in self.all:
             GD.canvas = self.current = canv
+
+    def currentView(self):
+        return self.all.index(GD.canvas)
  
     def addView(self,row,col):
         w = self.newView()
@@ -371,14 +376,12 @@ class MultiCanvas(QtGui.QGridLayout):
             self.removeWidget(w)
             w.close()
 
-        
 ##     def setCamera(self,bbox,view):
 ##         self.current.setCamera(bbox,view)
             
     def update(self):
         for v in self.all:
             v.update()
-        print "Processing events"
         GD.app.processEvents()
 
     def removeAll(self):

@@ -47,6 +47,14 @@ zoomfactor = 1.15    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 0.01     # translation factor for pan buttons
 
+[canvas]
+bgcolor = 'lightgrey'
+fgcolor = 'black'
+slcolor = 'red'
+linewidth = 1
+localaxes = True     # by default, buttons rotate/pan in local axes
+
+
 [draw]
 wait = 0  # time(sec.) to wait between draw operations (None is indefinitely)
 flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying
