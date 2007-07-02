@@ -40,7 +40,7 @@ class TextMark(Mark):
 
         
 class MarkList(Mark):
-    """An list of numbers drawn at 3D positions."""
+    """A list of numbers drawn at 3D positions."""
     
     def __init__(self,pos,val,font='9x15'):
         """Create a number list.

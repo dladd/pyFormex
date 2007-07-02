@@ -10,7 +10,7 @@
 """Functions for drawing and for executing pyFormex scripts."""
 
 import globaldata as GD
-import threading,os,sys,types,copy,commands
+import threading,os,sys,types,copy,commands,time
 
 from PyQt4 import QtCore, QtGui  # needed for events, signals
 
@@ -222,6 +222,7 @@ message = log
 scriptDisabled = False
 scriptRunning = False
 stepmode = False
+starttime = 0.0
 
  
 def playScript(scr,name=None):
@@ -236,7 +237,7 @@ def playScript(scr,name=None):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    global scriptRunning, scriptDisabled, allowwait, stepmode, exportNames
+    global scriptRunning, scriptDisabled, allowwait, stepmode, exportNames, starttime
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
@@ -292,7 +293,8 @@ def playScript(scr,name=None):
     #print "EXEC globals:"
     #k = g.keys()
     #k.sort()
-    GD.debug('NOW RUNNING SCRIPT')
+    starttime = time.clock()
+    GD.debug('STARTING SCRIPT (%s)' % starttime)
     try:
         try:
             if stepmode:
@@ -309,12 +311,14 @@ def playScript(scr,name=None):
     finally:
         scriptRunning = False # release the lock in case of an error
         stepmode = False
+        elapsed = time.clock() - starttime
+        GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if GD.gui:
             #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
     #print scriptRunning,stepmode
     if exitall:
-        print "Calling exit() from playscript"
+        GD.DEBUG("Calling exit() from playscript")
         exit()
 
 
@@ -459,7 +463,8 @@ def reset():
         bgcolor = GD.cfg['draw/bgcolor'],
         clear = False,
         )
-    bgcolor(DrawOptions['bgcolor'])
+    #bgcolor(DrawOptions['bgcolor'])
+    GD.canvas.reset()
     clear()
     view('front')
     
@@ -608,7 +613,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
 
 def drawNumbers(F):
     """Draw numbers on all elements of F."""
-    FC = F.centroids()
+    FC = F.centroids().trl([0.,0.,0.1])
     M = marks.MarkList(FC.f[:,0,:],range(FC.nelems()))
     GD.canvas.addMark(M)
     GD.canvas.update()
@@ -723,8 +728,7 @@ def zoomAll():
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
-    color = colors.GLColor(color)
-    GD.canvas.bgcolor = color
+    GD.canvas.current.bgcolor = colors.GLColor(color)
     GD.canvas.display()
     GD.canvas.update()
 
@@ -1102,6 +1106,11 @@ def createMovie():
     GD.debug(cmd)
     utils.runCommand(cmd)
          
+
+def runtime():
+    """Return the time elapsed since start of execution of the script."""
+    return time.clock() - starttime
+    
 
 
 #### Change settings

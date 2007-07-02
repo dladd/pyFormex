@@ -164,5 +164,5 @@ is&nbsp;returned.</tt></dd></dl>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>file_description</strong> = {'gts': 'GTS files (*.gts)', 'neu': 'Gambit Neutral files (*.neu)', 'off': 'OFF files (*.off)', 'smesh': 'Tetgen surface mesh files (*.smesh)', 'stl': 'STL files (*.stl)', 'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)'}<br>
-<strong>known_externals</strong> = {'ImageMagick': ('import -version', r'Version: ImageMagick (\S+)'), 'admesh': ('admesh --version', r'ADMesh - version (\S+)'), 'tetgen': ('tetgen -v', r'Version (\S+)')}</td></tr></table>
+<strong>known_externals</strong> = {'ImageMagick': ('import -version', r'Version: ImageMagick (\S+)'), 'admesh': ('admesh --version', r'ADMesh - version (\S+)'), 'tetgen': ('tetgen -h |fgrep Version', r'Version (\S+)')}</td></tr></table>
 </body></html>

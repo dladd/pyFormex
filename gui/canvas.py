@@ -20,6 +20,7 @@ import camera
 import actors
 import decors
 import marks
+import image
 import utils
 
 
@@ -71,6 +72,24 @@ class ActorList(list):
                 
 ##################################################################
 #
+#  The Canvas Settings
+#
+from config import dicttostr
+
+class CanvasSettings(object):
+    """A collection of settings for an OpenGL Canvas."""
+
+    mode = 'wireframe'
+    linewidth = 1.0
+    bgcolor = colors.mediumgrey
+    fgcolor = colors.black
+    slcolor = colors.red     # color for selected items
+    
+    def __str__(self):
+        return dicttostr(self.__dict__)
+                
+##################################################################
+#
 #  The Canvas
 #
 class Canvas(object):
@@ -88,9 +107,8 @@ class Canvas(object):
         self.triade = None
         self.lights = []
         self.setBbox()
-        self.bgcolor = colors.mediumgrey
-        self.fgcolor = colors.black
-        self.slcolor = colors.red
+        self.default = CanvasSettings()
+        self.current = CanvasSettings()
         self.rendermode = 'wireframe'
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
@@ -98,6 +116,11 @@ class Canvas(object):
         self.camera = None
         self.view_angles = camera.view_angles
 
+
+
+    def reset(self):
+        """Return all the settings to their default values."""
+        self.current.__dict__.update(self.default.__dict__)
     
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
@@ -120,8 +143,9 @@ class Canvas(object):
         GD.debug("canvas GLINIT")
         if mode:
             self.rendermode = mode
-            
-        GL.glClearColor(*colors.RGBA(self.bgcolor))# Clear The Background Color
+
+        self.clear()
+        #GL.glClearColor(*colors.RGBA(self.default.bgcolor))# Clear The Background Color
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
         GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
@@ -171,7 +195,7 @@ class Canvas(object):
     def clear(self):
         """Clear the canvas to the background color."""
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        GL.glClearColor(*colors.RGBA(self.bgcolor))
+        GL.glClearColor(*colors.RGBA(self.current.bgcolor))
 
 
     def display(self):

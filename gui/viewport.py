@@ -12,6 +12,7 @@ The basic OpenGL drawing functionality is implemented in the canvas module.
 import globaldata as GD
 
 from PyQt4 import QtCore, QtGui, QtOpenGL
+from OpenGL import GL
 
 from vector import length,projection
 from math import atan2,pi
@@ -25,6 +26,7 @@ import utils
 LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
+
 # mouse actions
 PRESS = 0
 MOVE = 1

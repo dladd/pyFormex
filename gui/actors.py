@@ -18,33 +18,6 @@ from plugins import elements
 ### Some drawing functions ###############################################
 
 
-def drawEdges(x,edges,color=None,width=None):
-    """Draw a collection of edges.
-
-    x is a (ncoords,3) coordinate array.
-    edges is a (nedges,2) integer array of connected node numbers.
-    color is a 3-component color or a (nedges,3) color array.
-    width is the linewidth.
-    """
-    if width is not None:
-        GL.glLineWidth(width)
-    if color is not None:
-        color = asarray(color)
-        if color.ndim == 1:
-            GL.glColor3fv(color)
-    GL.glBegin(GL.GL_LINES)
-    if color is None or color.ndim > 1: 
-        for c,e in zip(color,edges):
-            GL.glColor3fv(c)
-            GL.glVertex3fv(x[e[0]])
-            GL.glVertex3fv(x[e[1]])
-    else:
-        for e in edges:
-            GL.glVertex3fv(x[e[0]])
-            GL.glVertex3fv(x[e[1]])
-    GL.glEnd()
-
-
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
 
@@ -70,32 +43,26 @@ def drawSphere(s,color=cyan,ndiv=8):
 
 
 def drawPoints(x,c,s):
-    """Draw a collection of points with same color c and size s.
+    """Draw a collection of points with color c and size s.
 
     x is a (npoints,3) shaped array of coordinates.
-    c is the point color
-    s is the point size
-    """
-    GL.glColor3fv(c)
-    GL.glPointSize(s)
-    GL.glBegin(GL.GL_POINTS)
-    for i in range(x.shape[0]):
-        GL.glVertex3fv(x[i])
-    GL.glEnd()
-
-
-def drawColorPoints(x,c,s):
-    """Draw a collection of points with colors c and size s.
-
-    x is a (npoints,3) shaped array of coordinates.
+    c is the point color, either (npoints,3) for differently colored points
+      or (3,) when all points have same color
     s is the point size
     """
     GL.glPointSize(s)
-    GL.glBegin(GL.GL_POINTS)
-    for i in range(x.shape[0]):
-        GL.glColor3fv(c[i])
-        GL.glVertex3fv(x[i])
-    GL.glEnd()
+    if len(c.shape) == 1:
+        GL.glColor3fv(c)
+        GL.glBegin(GL.GL_POINTS)
+        for i in range(x.shape[0]):
+            GL.glVertex3fv(x[i])
+        GL.glEnd()
+    else:
+        GL.glBegin(GL.GL_POINTS)
+        for i in range(x.shape[0]):
+            GL.glColor3fv(c[i])
+            GL.glVertex3fv(x[i])
+        GL.glEnd()
 
 
 def drawAtPoints(x,mark):
@@ -115,15 +82,46 @@ def drawLines(x,c,w):
     """Draw a collection of lines.
 
     x is a (nlines,2,3) shaped array of coordinates.
-    c is a (nlines,3) shaped array of RGB values.
+    c is the line color, either (nlines,3) for differently colored lines
+      or (3,) when all lines have same color
+    w is the linewidth.
+    """
+    print c
+    GL.glLineWidth(w)
+    if len(c.shape) == 1:
+        GL.glColor3fv(c)
+        GL.glBegin(GL.GL_LINES)
+        for i in range(x.shape[0]):
+            GL.glVertex3fv(x[i][0])
+            GL.glVertex3fv(x[i][1])
+        GL.glEnd()
+    else:
+        GL.glBegin(GL.GL_LINES)
+        for i in range(x.shape[0]):
+            GL.glColor3fv(c[i])
+            GL.glVertex3fv(x[i][0])
+            GL.glVertex3fv(x[i][1])
+        GL.glEnd()
+
+
+def drawEdges(x,edges,c,w):
+    """Draw a collection of edges.
+
+    x is a (ncoords,3) coordinate array.
+    edges is a (nedges,2) integer array of connected node numbers.
+    c is a 3-component color or a (nedges,3) color array.
     w is the linewidth.
     """
     GL.glLineWidth(w)
+    multicolor = len(c.shape) > 1
+    if not multicolor:
+        GL.glColor3fv(c)
     GL.glBegin(GL.GL_LINES)
-    for i in range(x.shape[0]):
-        GL.glColor3fv(c[i])
-        GL.glVertex3fv(x[i][0])
-        GL.glVertex3fv(x[i][1])
+    for i,e in enumerate(edges):
+        if multicolor:
+            GL.glColor3fv(c[i])
+        GL.glVertex3fv(x[e[0]])
+        GL.glVertex3fv(x[e[1]])
     GL.glEnd()
 
 
@@ -131,38 +129,46 @@ def drawTriEdges(x,c,w):
     """Draw a collection of lines.
 
     x is a (ntri,2*n,3) shaped array of coordinates.
-    c is a (ntri,3) shaped array of RGB values.
+    c is a 3-component color or a (ntri,3) color array.
     w is the linewidth.
     """
     GL.glLineWidth(w)
+    multicolor = len(c.shape) > 1
+    if not multicolor:
+        GL.glColor3fv(c)
     GL.glBegin(GL.GL_LINES)
     for i in range(x.shape[0]):
         for j in range(0,x.shape[1],2):
-            GL.glColor3f(*(c[i]))
-            GL.glVertex3f(*(x[i][j]))
-            GL.glVertex3f(*(x[i][j+1]))
+            if multicolor:
+                GL.glColor3fv(c[i])
+            GL.glVertex3fv(x[i][j])
+            GL.glVertex3fv(x[i][j+1])
     GL.glEnd()
 
 
 def drawPolyLines(x,c,w,close=True):
     """Draw a collection of polylines.
 
-    x is a (ntri,n,3) shaped array of coordinates. Each polyline consists
+    x is a (npts,n,3) shaped array of coordinates. Each polyline consists
     of n or n-1 line segments, depending on whether the polyline is closed
     or not. The default is to close the polyline (connecting the last node
     to the first.
-    c is a (ntri,3) shaped array of RGB values.
+    c is a 3-component color or a (npts(+1),3) color array.
     w is the linewidth.
     """
     GL.glLineWidth(w)
+    multicolor = len(c.shape) > 1
+    if not multicolor:
+        GL.glColor3fv(c)
     for i in range(x.shape[0]):
         if close:
             GL.glBegin(GL.GL_LINE_LOOP)
         else:
             GL.glBegin(GL.GL_LINE_STRIP)
-        GL.glColor3f(*(c[i]))
+        if multicolor:
+            GL.glColor3fv(c[i])
         for j in range(x.shape[1]):
-            GL.glVertex3f(*(x[i][j]))
+            GL.glVertex3fv(x[i][j])
         GL.glEnd()
 
 
@@ -171,20 +177,30 @@ def drawTriangles(x,c,mode):
 
     x is a (ntri,3*n,3) shaped array of coordinates.
     Each row contains n triangles drawn with the same color.
-    c is a (ntri,3) shaped array of RGB values.
+    c is a 3-component color or a (ntri,3) color array.
     mode is either 'flat' or 'smooth'
     """
     if mode == 'smooth':
         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-    GL.glBegin(GL.GL_TRIANGLES)
-    for i in range(x.shape[0]):
-        GL.glColor3fv(c[i])
-        if mode == 'smooth':
+    if len(c.shape) == 1:
+        GL.glColor3fv(c)
+        GL.glBegin(GL.GL_TRIANGLES)
+        for i in range(x.shape[0]):
+            if mode == 'smooth':
+                GL.glNormal3fv(normal[i])
+            for j in range(x.shape[1]):
+                GL.glVertex3fv(x[i][j])
+        GL.glEnd()
+    else:
+        GL.glBegin(GL.GL_TRIANGLES)
+        for i in range(x.shape[0]):
+            GL.glColor3fv(c[i])
+            #if mode == 'smooth':
             GL.glNormal3fv(normal[i])
-        for j in range(x.shape[1]):
-            GL.glVertex3fv(x[i][j])
-    GL.glEnd()
-
+            for j in range(x.shape[1]):
+                GL.glVertex3fv(x[i][j])
+        GL.glEnd()
+       
 
 def drawTriArray(x,c,mode):
     GL.glVertexPointerf(x)
@@ -283,12 +299,11 @@ class BboxActor(Actor):
     def bbox():
         return self.bb
 
-    def draw(self,mode):
+    def draw(self,mode,color=None):
         """Always draws a wireframe model of the bbox."""
-        if self.color is not None and len(self.color.shape) == 2:
-            drawColoredEdges(self.vertices,self.edges,self.color,self.linewidth)
-        else:
-            drawEdges(self.vertices,self.edges,self.color,self.linewidth)
+        if color is None:
+            color = self.color
+        drawEdges(self.vertices,self.edges,color,self.linewidth)
             
     
 
@@ -407,43 +422,58 @@ class FormexActor(Actor,Formex):
     bbox = Formex.bbox
 
 
-    def draw(self,mode='wireframe'):
-        """Draw the formex."""
+    def draw(self,mode='wireframe',color=None):
+        """Draw the formex.
+
+        If a color is specified, it should be either a single color
+        or an (nelems,3) array of colors.
+        If not, the Formex will be drawn with the colors set on creating
+        the FormexActor.
+
+        if mode enda with wire (smoothwire or flatwire), two drawing
+          operationsis are done: one with wirframe and color black, and
+          one with mode[:-4] and specified color.
+        """
+
         if mode.endswith('wire'):
-            self.draw('wireframe')
-            self.draw(mode[:-4])
+            self.draw(mode[:-4],color=color)
+            self.draw('wireframe',color=[0.,0.,0.])
             return
         
         nnod = self.nplex()
+        print "color = %s" % color
+        if color is None:
+            color = self.color[self.p]
+        color = asarray(color)
         
         if nnod == 1:
             x = self.f.reshape((-1,3))
             if self.eltype == 'point3d':
                 drawAtPoints(x,self.mark)
             else:
-                drawPoints(x,self.color[self.p],self.marksize)
+                drawPoints(x,color,self.marksize)
                 
         elif nnod == 2:
-            drawLines(self.f,self.color[self.p],self.linewidth)
+            drawLines(self.f,color,self.linewidth)
             
         elif mode=='wireframe' :
             if not self.eltype:
-                drawPolyLines(self.f,self.color[self.p],self.linewidth)
+                drawPolyLines(self.f,color,self.linewidth)
             elif self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
-                drawTriEdges(coords,self.color[self.p],self.linewidth)
+                drawTriEdges(coords,color,self.linewidth)
                 
         elif nnod == 3:
-            drawTriangles(self.f,self.color[self.p],mode)
+            drawTriangles(self.f,color,mode)
             
         elif nnod == 4:
             if self.eltype=='tet':
                 faces = [ 0,1,2, 0,2,3, 0,3,1, 3,2,1 ]
                 coords = self.f[:,faces,:]
-                drawTriangles(coords,self.color[self.p],mode)
+                drawTriangles(coords,color,mode)
             else: # (possibly non-plane) quadrilateral
-                drawQuadrilaterals(self.f,self.color[self.p],mode)
+                drawQuadrilaterals(self.f,color,mode)
             
         else:
             for prop,elem in zip(self.p,self.f):
