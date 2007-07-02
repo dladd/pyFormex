@@ -325,6 +325,17 @@ def rotationMatrix(angle,axis=None):
     return array(f)
 
 
+def boundingBox(a):
+    """Return the bounding box of an array of coordinates.
+
+    a is a [...,3] array of coordinates.
+    the return value is a (2,3) array, where the first row holds the
+    minimum and the second row the maximum coordinates.
+    """
+    coords = a.reshape((-1,3))
+    return row_stack([ coords.min(axis=0), coords.max(axis=0) ])
+
+
 def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
     """Finds (almost) identical nodes and returns a compressed list.
 
@@ -460,16 +471,70 @@ def distanceFromPoint(f,p):
     d = sqrt(d)
     return d.reshape(f.shape[:-1])
 
+# Intersection functions
+#
+# !! These functions currently also exist as formex methods.
+# !! They only work on plex-2 formices.
+# !! Therefore it is not clear if they really belong in the formex class,
+# !! or should go to a specialized subclass
+# !! It is also not clear what their return value should be.
+# !! Until this is decided, we keep them here as global functions.
 
-def boundingBox(a):
-    """Return the bounding box of an array of coordinates.
 
-    a is a [...,3] array of coordinates.
-    the return value is a (2,3) array, where the first row holds the
-    minimum and the second row the maximum coordinates.
+def intersectionWithPlane(F,p,n):
+    """Return the intersection of a Formex F with the plane (p,n).
+
+    The Formex should have plexitude 2.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a [n] shaped array of parameter values t,
+    such that for each segment L the intersection point is given
+    by (1-t)*L[0]+ t*L[1].
     """
-    coords = a.reshape((-1,3))
-    return row_stack([ coords.min(axis=0), coords.max(axis=0) ])
+    f = F.f
+    if f.shape[1] != 2:
+        raise RuntimeError,"Formex should have plexitude 2."
+    p = asarray(p).reshape((3))
+    n = asarray(n).reshape((3))
+    n /= length(n)
+    t = (inner(p,n) - inner(f[:,0,:],n)) / inner((f[:,1,:]-f[:,0,:]),n)
+    return t
+
+
+def intersectionPointsWithPlane(F,p,n):
+    """Returns the intersection points of a Formex with plane p,n.
+
+    The Formex should have plexitude 2.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+    """
+    f = F.f
+    t = intersectionWithPlane(F,p,n).reshape((-1,1))
+    return (1.-t) * f[:,0,:] + t * f[:,1,:]
+
+
+def cutAtPlane(F,p,n):
+    """Returns all elements of the Formex cut at plane.
+
+    F is a Formex of plexitude 2 and all its segments should cut the
+    plane.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a Formex with the shape of F where each segment
+    has been replaced by the part of the segment at the positive side of
+    the plane (p,n).
+    """
+    f = F.f
+    d = distanceFromPlane(f,p,n)
+    #t = intersectionWithPlane(f,p,n)
+    g = intersectionPointsWithPlane(F,p,n)
+    i0 = d[:,0] < 0.
+    i1 = d[:,1] < 0.
+    f[i0,0,:] = g[i0]
+    f[i1,1,:] = g[i1]
+    return Formex(f)
 
 
 ###########################################################################
@@ -1136,9 +1201,9 @@ class Formex:
     def test(self,nodes='all',dir=0,min=None,max=None):
         """Flag elements having nodal coordinates between min and max.
 
-        This function is very convenient in clipping a Formex in a specified direction.
-        It returns a 1D integer array flagging (with a value 1) the elements
-        having nodal coordinates in the required range.
+        This function is very convenient in clipping a Formex in a specified
+        direction. It returns a 1D integer array flagging (with a value 1 or
+        True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
         Or directly use clip() or cclip() to create the clipped Formex.
         
@@ -1146,8 +1211,8 @@ class Formex:
         - min,max are the minimum and maximum values required for the
         coordinates in direction dir (default is the x or 0 direction,
         other possibilities for the direction dir in this case are 1 or 2).
-        - a direction vector can be specified for dir. min,max are points in this case,
-        specified by 3 coordinates. 
+        - a direction vector can be specified for dir. min,max are points
+        in this case, specified by 3 coordinates. 
         
         Nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
@@ -1216,55 +1281,35 @@ class Formex:
         """
         return self.select(t<=0)
 
+
 # Intersection functions
+#
+# !! These functions only work on plex-2 formices.
+# !! It is not clear if they really belong here, or should go to a subclass
 
     def intersectionWithPlane(self,p,n):
-        """Return the intersection of a Formex with the plane (p,n).
+        """Return the intersection of a plex-2 Formex with the plane (p,n).
     
-        The Formex should have plexitude 2.
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
-    
-        The return value is a [n] shaped array of parameter values t,
-        such that for each segment L the intersection point is given
-        by (1-t)*L[0]+ t*L[1].
+        This is equivalent with the function intersectionWithPlane(F,p,n).
         """
-        f = self.f
-        if f.shape[1:] != (2,3):
-            raise RuntimeError,"Formex should have plexitude 2."
-        p = asarray(p).reshape((3))
-        n = asarray(n).reshape((3))
-        n /= length(n)
-        t = (inner(p,n) - inner(f[:,0,:],n)) / inner((f[:,1,:]-f[:,0,:]),n)
-        return t
+        return intersectionWithPlane(self,p,n)
     
     
     def intersectionPointsWithPlane(self,p,n):
-        """Returns the intersection points of a Formex with plane p,n.
-        
-        The Formex should have plexitude 2.
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
+        """Return the intersection points of a plex-2 Formex with plane (p,n).
+    
+        This is equivalent with the function intersectionWithPlane(F,p,n),
+        but returns a Formex instead of an array of points.
         """
-        f = self.f
-        t = self.intersectionWithPlane(p,n).reshape((-1,1))
-        return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
+        return Formex(intersectionPointsWithPlane(self,p,n))
+
     
     def cutAtPlane(self,p,n):
-        """Returns all elements of the Formex cut at plane.
-        The Formex should have plexitude 2.
-        p is a point specified by 3 coordinates.
-        n is the normal vector to a plane, specified by 3 components.
+        """Return all elements of a plex-2 Formex cut at plane.
+        This is equivalent with the function intersectionWithPlane(F,p,n).
         """
-        f = self.f
-        d = distanceFromPlane(f,p,n)
-        #t = intersectionWithPlane(f,p,n)
-        g = self.intersectionPointsWithPlane(p,n)
-        i0 = d[:,0] < 0.
-        i1 = d[:,1] < 0.
-        f[i0,0,:] = g[i0]
-        f[i1,1,:] = g[i1]
-        return Formex(f)
+        return cutAtPlane(self,p,n)   
+
 
 ##############################################################################
 #
