@@ -536,6 +536,71 @@ def cutAtPlane(F,p,n):
     f[i1,1,:] = g[i1]
     return Formex(f,F.p)
 
+    
+def cut3AtPlane(F,p,n):
+    """Returns all elements of the Formex cut at plane.
+
+    F is a Formex of plexitude 3.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a Formex with the same plexitude with all elements located
+    at the positive side of the plane (p,n). The elements of F intersecting the plane are cut
+    and are replaced by new elements with the same plexitude.
+    """
+    c1 = F.test('any',n, p) 
+    c2 = F.test('any',[-n[0],-n[1],-n[2]],p)
+    c = c1*c2
+    G = F.cclip(c2)
+    S = F.clip(c) #select elements that will be cut by plane
+    C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
+    t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
+    T = (t >= 0)*(t <= 1)
+    P = P[T].reshape(-1,2,3)
+    #split problem into two cases
+    d = distanceFromPlane(S.f,p,n)
+    w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
+    w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
+    T1 = T[w1]
+    T2 = T[w2]
+    P1 = P[w1]
+    P2 = P[w2]
+    S1 = S[w1]
+    S2 = S[w2]
+    #case 1: triangle after cut
+    v0 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
+    K2 = asarray([S1[i,v0[i]] for i in range(shape(S1)[0])]).reshape(-1,1,3)
+    E1 = column_stack([P1,K2])
+    #case 2: quadrilateral after cut
+    v1 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
+    v2 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
+    L2 = asarray([S2[i,v1[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
+    L3 = asarray([S2[i,v2[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
+    E2 = column_stack([P2,L2])
+    E3 = column_stack([P2[:,0].reshape(-1,1,3),L2,L3])
+    #join all the pieces
+    E = Formex(E1)+Formex(E2)+Formex(E3)+G
+    return E
+
+
+def intersectionLinesWithPlane(F,p,n):
+    """Returns the intersection lines of a Formex with plane (p,n).
+    
+    F is a Formex of plexitude 3.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+    """
+    C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
+    t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
+    T = (t >= 0)*(t <= 1)
+    w = where(T.sum(axis=-1) == 2)
+    P = P[w]
+    T = T[w]
+    Q = P[T].reshape(-1,2,3)
+    return Formex(Q)
+
 
 ###########################################################################
 ##
@@ -1306,9 +1371,33 @@ class Formex:
     
     def cutAtPlane(self,p,n):
         """Return all elements of a plex-2 Formex cut at plane.
-        This is equivalent with the function intersectionWithPlane(F,p,n).
+        This is equivalent with the function cutAtPlane(F,p,n).
         """
         return cutAtPlane(self,p,n)   
+
+# !! These functions only work on plex-2 formices.
+# !! It is not clear if they really belong here, or should go to a subclass
+
+    def cut3AtPlane(F,p,n):
+        """Return all elements of a plex-3 Formex cut at plane.
+        This is equivalent with the function cut3AtPlane(F,p,n).
+        """
+        return cut3AtPlane(self,p,n)
+
+
+    def intersectionLinesWithPlane(self,p,n):
+        """Returns the intersection lines of a plex-3 Formex with plane (p,n).
+       This is equivalent with the function intersectionLinesWithPlane(F,p,n).
+        """
+        C = [connect([self,self],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
+        t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
+        P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
+        T = (t >= 0)*(t <= 1)
+        w = where(T.sum(axis=-1) == 2)
+        P = P[w]
+        T = T[w]
+        Q = P[T].reshape(-1,2,3)
+        return Formex(Q)
 
 
 ##############################################################################
