@@ -46,6 +46,6 @@ Stars = Formex.concatenate([ star(n,noise,i).rotate(a,r).translate(t) for i,n,a,
 # draw them with random colors
 colors = random.random((nstars,3))
 clear()
-draw(Stars,color=colors)
+draw(Stars,colormap=colors)
 
 # End

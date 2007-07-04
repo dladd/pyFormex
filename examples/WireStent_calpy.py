@@ -157,7 +157,7 @@ if GD.options.gui:
     elems = elements[:,:2]-1
     results = Formex(coords[elems])
     clear()
-    draw(results,color=black)
+    draw(results,color='black')
 
     # Now try to give the formex some meaningful colors.
     # The frc array returns element forces and has shape

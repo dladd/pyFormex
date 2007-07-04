@@ -130,13 +130,13 @@ def makeSelection():
     drawSelection()
 
 
-def drawSelection(*args):
+def drawSelection(*args,**kargs):
     """Draws the current selection.
 
     Any arguments are passed to draw()"""
     clear()
     if selection:
-        draw(selection,*args)
+        draw(selection,*args,**kargs)
         if show_numbers:
             showSelectionNumbers()
             

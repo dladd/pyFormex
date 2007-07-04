@@ -85,20 +85,26 @@ def set_color():
         PF['stl_color'] = colors.GLColor(color)
 
 
-def read_surface(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
+def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert=None,show=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
-    The file fn should exist and contain a valid STL model.
+    The file fn should exist and contain a valid surface model.
+    
     The STL model is stored in the Formex F.
     The workdir and project name are set from the filename.
     The Formex is stored under the project basename.
     The model is displayed.
+
+    If convert == True, the model is converted to a Formex.
+    If convert == False, it will not be converted.
+    The default is to ask the user.
     """
-    if type(types) == str:
-        types = [ types ]
-    types = map(utils.fileDescription,types)
-    fn = askFilename(GD.cfg['workdir'],types,exist=True)
+    if not (fn and os.path.exists(fn)):
+        if type(types) == str:
+            types = [ types ]
+        types = map(utils.fileDescription,types)
+        fn = askFilename(GD.cfg['workdir'],types,exist=True)
     if fn:
         chdir(fn)
         set_project(utils.projectName(fn))
@@ -106,17 +112,24 @@ def read_surface(types=['stl/off','stl','off','neu','smesh','gts'],show=True):
         GD.gui.setBusy()
         t = timer.Timer()
         nodes,elems =stl.readSurface(fn)
-        GD.message("Time to import stl: %s seconds" % t.seconds())
+        GD.message("Time to import surface: %s seconds" % t.seconds())
         GD.gui.setBusy(False)
         set_surface(nodes,elems)
         if show:
             show_surface(view='front')
-        if ack('Convert to Formex?'):
-            name = toFormex()
+        if convert is None:
+            convert = ack('Convert to Formex?')
+        if convert:
+            GD.debug("GOING")
+            name = toFormex(PF.get('project',''))
             # This is convenient for the user
             if name:
                 formex_menu.setSelection(name)
-                #formex_menu.drawSelection()
+                if show:
+                    formex_menu.drawSelection()
+        else:
+            pass
+        
     return fn
 
     
@@ -191,7 +204,7 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
 
 
 
-def toFormex():
+def toFormex(name=''):
     """Transform the surface model to a named Formex.
 
     The name of the Formex is returned, unless the user cancelled the
@@ -199,17 +212,19 @@ def toFormex():
     """
     if not check_surface():
         return
-    itemlist = [ [ 'name', PF.get('project','')] ] 
-    res,accept = widgets.InputDialog(itemlist,'Name of the Formex').getResult()
-    if accept:
-        name = res[0][1]
-        #print name
+    
+    if not name:
+        itemlist = [ ['name', PF.get('project','')] ] 
+        res,accept = widgets.InputDialog(itemlist,'Name of the Formex').getResult()
+        if accept:
+            name = res[0][1]
+    if name:
+        GD.debug("Converting to Formex with name '%s" % name)
         nodes,elems = PF['surface']
-        #print nodes.shape
-        #print elems.shape
         PF[name] = Formex(nodes[elems])
-        return name
-    return None
+
+    return name
+
 
 
 def write_stl(types=['stl']):
@@ -300,7 +315,7 @@ def clip_surface():
         draw(F,color='yellow')
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         F = F.clip(w)
-        draw(F,clor='red')
+        draw(F,color='red')
         
 
 
@@ -555,7 +570,7 @@ def show_menu():
     PF['old_surface'] = None
     PF['volume'] = None
     PF['stl_model'] = None
-    PF['stl_color'] = colors.red    # could be replaced by a general fgcolor
+    PF['stl_color'] = colors.blue    # could be replaced by a general fgcolor
 
 
     

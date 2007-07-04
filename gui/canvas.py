@@ -35,6 +35,7 @@ class ActorList(list):
         """Add an actor to an actorlist."""
         if self.uselists:
             self.canvas.makeCurrent()
+            self.canvas.setDefaults()
             actor.list = GL.glGenLists(1)
             GL.glNewList(actor.list,GL.GL_COMPILE)
             actor.draw(self.canvas.rendermode)
@@ -61,7 +62,9 @@ class ActorList(list):
         if actorlist is None:
             actorlist = self
         if self.uselists:
+            self.canvas.makeCurrent()
             for actor in actorlist:
+                self.canvas.setDefaults()
                 if actor.list:
                     GL.glDeleteLists(actor.list,1)
                 actor.list = GL.glGenLists(1)
@@ -85,6 +88,9 @@ class CanvasSettings(object):
         bgcolor = colors.mediumgrey,
         fgcolor = colors.black,
         slcolor = colors.red,     # color for selected items
+        # colormap for mapping property values
+        propcolors = [ colors.black, colors.red, colors.green, colors.blue,
+                       colors.cyan, colors.magenta, colors.yellow, colors.white ],
         )
 
     @classmethod
@@ -99,17 +105,20 @@ class CanvasSettings(object):
         for c in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
             if c in keys:
                 ok[c] = colors.GLColor(dict[c])
+        if 'propcolors' in keys:
+            ok['propcolors'] = map(colors.GLColor,dict['propcolors'])
         return ok
         
     def __init__(self,dict={}):
-        self.reset()
+        """Create a new set of CanvasSettings, possibly changing defaults."""
+        self.reset(dict)
 
     def reset(self,dict={}):
         """Reset to default settings
 
         If a dict is specified, these settings will override defaults.
         """
-        self.__dict__.update(CanvasSettings.default)
+        self.__dict__.update(CanvasSettings.checkDict(CanvasSettings.default))
         if dict:
             self.__dict__.update(CanvasSettings.checkDict(dict))
     
@@ -162,6 +171,7 @@ class Canvas(object):
     def setFgColor(self,fg):
         """Set the default foreground color."""
         self.settings.fgcolor = colors.GLColor(fg)
+
     
     def addLight(self,position,ambient,diffuse,specular):
         """Adds a new light to the scene."""
@@ -219,10 +229,20 @@ class Canvas(object):
             raise RuntimeError,"Unknown rendering mode"
 
 
+    def glupdate(self):
+        """Flush all OpenGL commands, making sure the display is updated."""
+        GL.glFlush()
+        
+
     def clear(self):
         """Clear the canvas to the background color."""
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glClearColor(*colors.RGBA(self.settings.bgcolor))
+        self.setDefaults()
+
+
+    def setDefaults(self):
+        """Activate the canvas settings in the GL machine."""
         GL.glColor3fv(self.settings.fgcolor)
         GL.glLineWidth(self.settings.linewidth)
 
@@ -265,6 +285,8 @@ class Canvas(object):
         GL.glPopMatrix()
 ##         # Display angles
 ##         self.camera.getCurrentAngles()
+        # ADDED TO MAKE SURE SCENE IS UPTODATE
+        GL.glFlush()
 
         
     def setBbox(self,bbox=None):

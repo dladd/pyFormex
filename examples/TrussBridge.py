@@ -26,7 +26,7 @@ clear()
 
 # We start with the bottom girder, and copy it to the top
 nodes = Formex([[[0,0,b]]]).replic(n+1,Lm)
-draw(nodes,'iso')
+draw(nodes,view='iso')
 bot_gird = connect([nodes,nodes],bias=[0,1])
 top_gird = bot_gird.translate([0,H,0])
 

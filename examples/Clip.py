@@ -2,6 +2,8 @@
 # $Id: Clip.py 154 2006-11-03 19:08:25Z bverheg $
 
 reset()
+setDrawOptions({'clear':True})
+
 n = 16
 
 # These are triangles
@@ -57,24 +59,21 @@ txt = [ 'First node has x between 1.5 and 3.5',
         '3 nodes close to line through [0.0,0.0,0.0] and [1.0,1.0,1.0]',
         ]
 
-color = GD.cfg['draw/propcolors'][1:] # omit the black
-while len(color) < len(sel):
-    color.extend(color)
-color[0:0] = ['black'] # restore the black
-prop = zeros(F.f.shape[:1])
+##color = GD.cfg['draw/propcolors'][1:] # omit the black
+##while len(color) < len(sel):
+##    color.extend(color)
+##color[0:0] = ['black'] # restore the black
+prop = zeros(F.nelems())
 i = 1
 for s,t in zip(sel,txt):
     prop[s] = i
     F.setProp(prop)
-    clear()
-    message('%s (%s): %s' % (color[i],sum(s),t))
-    draw(F,color=color)
+    #message('%s (%s): %s' % (color[i],sum(s),t))
+    draw(F)
     i += 1
 
-clear()
 message('Clip Formex to last selection')
 draw(F.clip(s),view=None)
 
-clear()
 message('Clip complement')
 draw(F.cclip(s))

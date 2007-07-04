@@ -424,12 +424,12 @@ def drawwait():
     while drawlocked:
         GD.app.processEvents()
         GD.canvas.update()
-        #sleep(0.5)
+
 
 def drawlock():
     """Lock the drawing function for the next drawdelay seconds."""
     global drawlocked, drawtimer
-    drawtimeout = GD.cfg['draw/wait']
+    drawtimeout = DrawOptions['wait']
     if not drawlocked and drawtimeout > 0:
         drawlocked = True
         drawtimer = threading.Timer(drawtimeout,drawrelease)
@@ -460,16 +460,17 @@ def reset():
         view = '__last__',       # Keep the current camera angles
         bbox = 'auto',           # Automatically zoom on the drawed object
         clear = False,
+        wait = GD.cfg['draw/wait']
         )
     GD.canvas.reset()
     clear()
     view('front')
     
-def setDrawingOptions(d):
+def setDrawOptions(d):
     global DrawOptions
     DrawOptions.update(d)
     
-def showDrawingOptions():
+def showDrawOptions():
     global DrawOptions
     GD.message("Current Drawing Options: %s" % DrawOptions)
     
@@ -489,7 +490,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=False,marksize=None):
+def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=False,marksize=None,colormap=None,linewidth=None):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -535,7 +536,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
     global allowwait, multisave
 
     if type(F) == list:
-        return [ draw(Fi,view,bbox,color,wait,eltype,allviews) for Fi in F ]
+        return [ draw(Fi,view,bbox,color,wait,eltype,allviews,marksize) for Fi in F ]
 
     if type(F) == str:
         F = named(F)
@@ -555,29 +556,29 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
         drawwait()
-    # Create the colors
-    if color == 'prop':
-        if F.p is None:
-            # No properties defined: draw in defaultcolor or black
-            color = colors.GLColor(GD.cfg['draw/fgcolor']) 
-        else:
-            # use the property as entry in a default color table
-            color = GD.cfg['draw/propcolors']
-            color = map(colors.GLColor,color)
-    elif color == 'random':
-        # create random colors
-        color = numpy.random.random((F.nelems(),3))
-    elif type(color) == str:
-        # convert named color to RGB tuple
-        color = colors.GLColor(color)
-    elif isinstance(color,numpy.ndarray) and color.shape[-1] == 3:
-        pass
-    elif (type(color) == tuple or type(color) == list) and len(color) == 3:
-        pass
-    else:
-        # The input should be compatible to a list of color compatible items.
-        # An array with 3 colums will be fine.
-        color = map(colors.GLColor,color)
+##    # Create the colors
+##    if color == 'prop':
+##        if F.p is None:
+##            # No properties defined: draw in defaultcolor or black
+##            color = colors.GLColor(GD.cfg['draw/fgcolor']) 
+##        else:
+##            # use the property as entry in a default color table
+##            color = GD.cfg['draw/propcolors']
+##            color = map(colors.GLColor,color)
+##    elif color == 'random':
+##        # create random colors
+##        color = numpy.random.random((F.nelems(),3))
+##    elif type(color) == str:
+##        # convert named color to RGB tuple
+##        color = colors.GLColor(color)
+##    elif isinstance(color,numpy.ndarray) and color.shape[-1] == 3:
+##        pass
+##    elif (type(color) == tuple or type(color) == list) and len(color) == 3:
+##        pass
+##    else:
+##        # The input should be compatible to a list of color compatible items.
+##        # An array with 3 colums will be fine.
+##        color = map(colors.GLColor,color)
 
     try:
         marksize = float(marksize)
@@ -585,7 +586,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color,linewidth=GD.cfg['draw/linewidth'],eltype=eltype,markscale=marksize)
+    actor = actors.FormexActor(F,color=color,linewidth=linewidth,eltype=eltype,markscale=marksize,colormap=colormap)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
@@ -743,6 +744,7 @@ def clear():
 
 def redraw():
     GD.canvas.redrawAll()
+    GD.canvas.update()
 
 
 def pause():
