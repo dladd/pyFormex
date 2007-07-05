@@ -490,7 +490,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=False,marksize=None,colormap=None,linewidth=None):
+def draw(F,view=None,bbox='auto',wait=True,eltype=None,allviews=False,marksize=None,color='prop',colormap=None,linewidth=None):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -556,29 +556,13 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         raise RuntimeError,"draw() can only draw Formex instances"
     if allowwait:
         drawwait()
-##    # Create the colors
-##    if color == 'prop':
-##        if F.p is None:
-##            # No properties defined: draw in defaultcolor or black
-##            color = colors.GLColor(GD.cfg['draw/fgcolor']) 
-##        else:
-##            # use the property as entry in a default color table
-##            color = GD.cfg['draw/propcolors']
-##            color = map(colors.GLColor,color)
-##    elif color == 'random':
-##        # create random colors
-##        color = numpy.random.random((F.nelems(),3))
-##    elif type(color) == str:
-##        # convert named color to RGB tuple
-##        color = colors.GLColor(color)
-##    elif isinstance(color,numpy.ndarray) and color.shape[-1] == 3:
-##        pass
-##    elif (type(color) == tuple or type(color) == list) and len(color) == 3:
-##        pass
-##    else:
-##        # The input should be compatible to a list of color compatible items.
-##        # An array with 3 colums will be fine.
-##        color = map(colors.GLColor,color)
+        
+    # Create the colors
+    if color == 'prop':
+        color = F.p
+    elif color == 'random':
+        # create random colors
+        color = numpy.random.random((F.nelems(),3))
 
     try:
         marksize = float(marksize)
@@ -586,7 +570,7 @@ def draw(F,view=None,bbox='auto',color='prop',wait=True,eltype=None,allviews=Fal
         marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color=color,linewidth=linewidth,eltype=eltype,markscale=marksize,colormap=colormap)
+    actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,markscale=marksize)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':

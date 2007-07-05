@@ -190,13 +190,16 @@ def drawTriArray(x,c,mode):
     GL.glEnd()
 
     
-def drawQuadrilaterals(x,c,mode):
+def drawQuadrilaterals(x,mode,color=None):
     """Draw a collection of quadrilaterals.
 
     x is a (nquad,4*n,3) shaped array of coordinates.
     Each row contains n quads drawn with the same color.
-    c is a (nquad,3) shaped array of RGB values.
-    mode is either 'flat' or 'smooth'
+
+    If color is given it is an (npoly,3) array of RGB values.
+
+    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+    for the lighting are calculated and set
     """
     nplex = x.shape[1]
     if mode == 'smooth':
@@ -206,12 +209,15 @@ def drawQuadrilaterals(x,c,mode):
 ##        normal /= column_stack([sqrt(sum(normal*normal,-1))])
     GL.glBegin(GL.GL_QUADS)
     for i in range(x.shape[0]):
-        GL.glColor3fv(c[i])
+        if color is not None:
+            GL.glColor3fv(color[i])
         for j in range(nplex):
             if mode == 'smooth':
                 GL.glNormal3fv(normal[j][i])
             GL.glVertex3fv(x[i][j])
     GL.glEnd()
+
+    
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
 
@@ -235,7 +241,119 @@ def drawSphere(s,color=cyan,ndiv=8):
     GL.glColor(*color)
     GLU.gluSphere(quad,s,ndiv,ndiv)
 
- 
+
+### Settings ###############################################
+#
+# These are not intended for users but to sanitize user input
+#
+
+def saneLineWidth(linewidth):
+    """Return a sane value for the line width.
+
+    A sane value is one that will be usable by the draw method.
+    It can be either of the following:
+
+    - a float value indicating the line width to be set by draw()
+    - None: indicating that the default line width is to be used
+
+    The line width is used in wireframe mode if plex > 1
+    and in rendering mode if plex==2.
+    """
+    if linewidth is not None:
+        linewidth = float(linewidth)
+    return linewidth
+
+   
+def saneColor(color=None):
+    """Return a sane color array derived from the input color.
+
+    A sane color is one that will be usable by the draw method.
+    The input value of color can be either of the following:
+
+    - None: indicates that the default color will be used,
+    - a single color value in a format accepted by colors.GLColor,
+    - a tuple or list of such colors,
+    - an (3,) shaped array of RGB values, ranging from 0.0 to 1.0,
+    - an (n,3) shaped array of RGB values,
+    - an (n,) shaped array of integer color indices.
+
+    The return value is one of the following:
+    - None, indicating no color (current color will be used),
+    - a float array with shape (3,), indicating a single color, 
+    - a float array with shape (n,3), holding a collectiong of colors,
+    - an integer array with shape (n,), holding color index values.
+
+    !! Note that a single color can not be specified as integer RGB values.
+    A single list of integers will be interpreted as a color index !
+    Turning the single color into a list with one item will work though.
+    [[ 0, 0, 255 ]] will be the same as [ 'blue' ], while
+    [ 0,0,255 ] would be a color index with 3 values. 
+    """
+    if color is None:
+        return None # use canvas fgcolor
+
+    # detect color index
+    try:
+        c = asarray(color)
+        if c.dtype.kind == 'i' and c.ndim == 1:
+            # We have a color index
+            return c
+    except:
+        pass
+
+    # not a color index: it must be colors
+    try:
+        color = GLColor(color)
+    except ValueError:
+
+        try:
+            color = map(GLColor,color)
+        except ValueError:
+            pass
+
+    # Convert to array
+    try:
+        color = asarray(color).squeeze()
+        if color.dtype.kind == 'f' and color.ndim <= 2 and color.shape[-1] == 3:
+            # Looks like we have a sane color array
+            return color
+    except:
+        pass
+
+    return None
+
+
+def saneColorSet(color=None,colormap=None,ncolors=1):
+    """Return a sane set of colors.
+
+    A sane set of colors is one that guarantees correct use by the
+    draw functions. This means either
+    - no color (None)
+    - a single color
+    - at least as many colors as the value ncolors specifies
+    - a color index and a color map with enough colors to satisfy the index.
+    The return value is a tuple color,colormap. colormap will return
+    unchanged, unless color is an integer array, meaning a color index.
+    """
+    GD.debug("COLOR IN: %s" % str(color))
+    color = saneColor(color)
+    if color is not None:
+        if color.dtype.kind == 'i':
+            ncolors = color.max()+1
+            if colormap is None:
+                colormap = saneColor(GD.canvas.settings.propcolors)
+            if colormap.shape[0] < ncolors:
+                colormap = resize(colormap,(ncolors,3))
+        else:
+            if color.ndim == 2 and color.shape[0] < ncolors:
+                color = resize(color,(ncolors,3))
+
+    GD.debug("COLOR OUT: %s" % str(color))
+    if colormap is not None:
+        print "MAP: %s" % str(colormap)
+    return color,colormap
+
+
 ### Actors ###############################################
 
 class Actor(object):
@@ -261,7 +379,17 @@ class Actor(object):
     def draw(self):
         pass
 
+    def nelems(self):
+        return 1
     
+    def setLineWidth(self,linewidth):
+        """Set the linewidth of the Actor."""
+        self.linewidth = saneLineWidth(linewidth)
+
+    def setColor(self,color=None,colormap=None):
+        """Set the color of the Actor."""
+        self.color,self.colormap = saneColorSet(color=color) 
+
 
 class CubeActor(Actor):
     """An OpenGL actor with cubic shape and 6 colored sides."""
@@ -360,7 +488,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,bkcolor=None,colormap=None,linewidth=None,markscale=0.02,marksize=None,eltype=None):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,markscale=None,marksize=None,eltype=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -379,79 +507,25 @@ class FormexActor(Actor,Formex):
         Actor.__init__(self)
         # Initializing with F alone gives problems with self.p !
         Formex.__init__(self,F.f,F.p)
-        self.setColor(color,bkcolor)
-        self.setLineWidth(linewidth)
         self.eltype = eltype
+        
+        self.setLineWidth(linewidth)
+        self.setColor(color,colormap)
+        self.setBkColor(bkcolor,bkcolormap)
+        
         if self.nplex() == 1:
             self.setMarkSize(marksize)
         self.list = None
 
 
-    def setColor(self,color=None,bkcolor=None,colormap=None):
-        """Set the color of the Formex, and possible the backplane color.
-
-        If color is None, it will be drawn with the current foreground color.
-        
-        """
-        #GD.debug("SETTING COLOR")
-        #GD.debug(color)
-        if color is None:
-            pass # use canvas fgcolor
-        
-        elif color == 'prop':
-            #GD.debug(self.p)
-            if self.p is None:
-                # no properties defined: use viewport fgcolor
-                color = None
-            else:
-                self.setColorMap(colormap)
-               
-        elif color == 'random':
-            # create random colors
-            color = random.random((self.nelems(),3))
-            
-        elif type(color) == str:
-            # convert named color to RGB tuple
-            color = asarray(GLColor(color))
-            
-        elif isinstance(color,ndarray) and color.shape[-1] == 3:
-            pass
-        
-        elif (type(color) == tuple or type(color) == list) and len(color) == 3:
-            color = asarray(color)
-        
-        else:
-            # The input should be compatible to a list of color compatible items.
-            # An array with 3 colums will be fine.
-            color = map(GLColor,color)
-            color = asarray(color)
-
-        #GD.debug(color)
-        self.color = color
-
-##### CURRENTLY WE DO NOT SET THE bkcolor
-##        if bkcolor is None:
-##            self.bkcolor = self.color
-##        else:
-##            self.bkcolor = resize(asarray(bkcolor),mprop)
+    def setColor(self,color=None,colormap=None):
+        """Set the color of the Actor."""
+        self.color,self.colormap = saneColorSet(color,colormap,self.nelems()) 
 
 
-    def setColorMap(self,colormap=None):
-        """Set the color map for propcolor drawing.
-
-        colormap should be a list of GLColors (RGB triplets).
-        If none is given, the default colormap fom the current canvas
-        is used.
-        In either case, the colormap is extended to provide enough
-        entries for all values in the property array.
-        """
-        if colormap is None:
-            colormap = GD.canvas.settings.propcolors
-        # make sure we have enough entries in the colormap
-        mprop = max(self.propSet()) + 1
-        self.colormap = resize(colormap,(mprop,3))
-        #GD.debug("USING COLORMAP")
-        #GD.debug(self.colormap)
+    def setBkColor(self,color=None,colormap=None):
+        """Set the backside color of the Actor."""
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.nelems()) 
 
 
     def setMarkSize(self,marksize):
@@ -483,19 +557,6 @@ class FormexActor(Actor,Formex):
         else:
             drawCube(size)
         GL.glEndList()
-
-
-    def setLineWidth(self,linewidth):
-        """Set the line width.
-
-        The line width is used in wireframe mode if plex > 1
-        and in rendering mode if plex==2.
-        If linewidth is None, the default canvas linewidth is used.
-        """
-        if linewidth is None:
-            self.linewidth = None
-        else:
-            self.linewidth = float(linewidth)
         
 
     bbox = Formex.bbox
@@ -511,40 +572,41 @@ class FormexActor(Actor,Formex):
         elements 
 
         if mode ends with wire (smoothwire or flatwire), two drawing
-          operations are done: one with wireframe and color black, and
-          one with mode[:-4] and self.color.
+        operations are done: one with wireframe and color black, and
+        one with mode[:-4] and self.color.
         """
 
         if mode.endswith('wire'):
             self.draw(mode[:-4],color=color)
-            self.draw('wireframe',color=black)
+            self.draw('wireframe',color=asarray(black))
             return
 
-        if color is None:
+
+        ## CURRENTLY, ONLY color=None is used
+        
+        if color is None:  
             color = self.color
+
         
-        if isinstance(color,ndarray):
-            #GD.debug(color.shape)
+        
+        if color is None:  # no color
+            #GD.debug("NO COLOR")
             pass
         
-        if color is None:
+        elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
+            #GD.debug("SINGLE COLOR %s" % str(color))
+            GL.glColor3fv(color)
+            color = None
+
+        elif color.dtype.kind == 'i': # color index
+            #GD.debug("COLOR INDEX %s\n%s" % (str(color),str(self.colormap)))
+            color = self.colormap[color]
+
+        else: # a full color array : use as is
             pass
-        elif color == 'prop':
-            color = self.colormap[self.p]
-            #GD.debug("PROPCOLOR")
-            #GD.debug(self.p.shape)
-        else:
-            color = asarray(color)
-            if len(color.shape) == 1:
-                GL.glColor3fv(color)
-                color = None
-            else:
-                # color should be a full color array
-                pass
 
-
-        #GD.debug("Final color is %s" % str(color))
-        ## !! WE SHOULD CHECK THE COLOR MORE THOROUGHLY !
+##        if color is not None:
+##            GD.debug("FULL COLOR %s" % str(color))
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
@@ -583,19 +645,71 @@ class FormexActor(Actor,Formex):
             drawPolygons(self.f,mode,color=None)
 
 
-class SurfaceActor(Actor):
-    """Draws a triangulated surface."""
 
-    def __init__(self,nodes,elems,color=black,linewidth=1.0):
+
+class SurfaceActor(Actor):
+    """Draws a triangulated surface specified by points and connectivity."""
+
+    def __init__(self,nodes,elems,color=None,linewidth=None):
         
         Actor.__init__(self)
-        self.color = asarray(color)
-        self.linewidth = linewidth
+        
         self.nodes = nodes
         self.elems = elems
         self.bb = boundingBox(nodes)
+        
+        self.setColor(color)
+        self.setLineWidth(linewidth)
+
+        # Create the edges for faster drawing
+        # In wireframe, most triangle edges will be drawn twice
         edges = elems[:,elements.Tri3.edges].reshape((-1,2))
+        # This will select only the edges with first node lowest
+        # Beware!! some edges will be missing if the surface is not closed
+        # We should detect these first!
+        # This should be done in the TriSurface class methods
+        self.edgeselect = edges[:,0] < edges[:,1]
         self.edges = edges[edges[:,0] < edges[:,1]]
+
+
+    def nelems(self):
+        return self.elems.shape[0]
+
+
+    def setColor(self,color=None):
+        """Set the color and possibly the colormap of the Actor.
+
+        If color is None, it will be drawn with the current foreground color.
+        
+        """
+        if color is None:
+            pass # use canvas fgcolor
+               
+        elif color == 'random':
+            # create random colors
+            color = random.random((self.nelems(),3))
+            
+        elif type(color) == str:
+            # convert named color to RGB tuple
+            color = asarray(GLColor(color))
+            
+        elif isinstance(color,ndarray) and color.shape[-1] == 3:
+            pass
+        
+        elif (type(color) == tuple or type(color) == list) and len(color) == 3:
+            color = asarray(color)
+        
+        else:
+            # The input should be compatible to a list of color compatible items.
+            # An array with 3 colums will be fine.
+            color = map(GLColor,color)
+            color = asarray(color)
+
+        if isinstance (color,ndarray) and color.ndim > 1:
+            color = resize(color.reshape((-1,3)),(self.nelems(),3))
+
+        #GD.debug(color)
+        self.color = color
 
 
     def bbox(self):
@@ -605,13 +719,27 @@ class SurfaceActor(Actor):
     def draw(self,mode,color=None):
         """Draw the surface."""
         if mode.endswith('wire'):
-            #self.draw('wireframe',color=[0.,0.,0.])
-            self.draw(mode[:-4])
-            self.draw('wireframe',color=[0.,0.,0.])
+            self.draw(mode[:-4],color=color)
+            self.draw('wireframe',color=black)
             return
 
         if color == None:
             color = self.color
+
+        if color is None:
+            pass
+        else:
+            color = asarray(color)
+            if color.ndim == 1:
+                GL.glColor3fv(color)
+                color = None
+            else:
+                # color is a full color array
+                if mode == 'wireframe':
+                    # adapt color array to edgeselect
+                    color = concatenate([self.color,self.color,self.color],axis=-1)
+                    color = color.reshape((-1,2))[self.edgeselect]
+
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
@@ -619,9 +747,6 @@ class SurfaceActor(Actor):
         if mode=='wireframe' :
             drawLineElems(self.nodes,self.edges,color)
         else:
-            if color.ndim == 1:
-                color = zeros((self.elems.shape[0],3))
-                color[:,:] = self.color
             drawTriangles(self.nodes[self.elems],mode,color)
 
 ### End

@@ -16,37 +16,38 @@ def GLColor(color):
 
     The output is a tuple of three RGB float values ranging from 0.0 to 1.0.
     The input can be any of the following:
-    - a string specifying the Xwindow name of the color
     - a QColor
-    - a tuple or list of 3 int values 0..255
-    - a tuple or list of 3 float values 0.0..1.0
+    - a string specifying the Xwindow name of the color
+    - a hex string '#RGB' with 1 to 4 hexadecimal digits per color 
+    - a tuple or list of 3 integer values in the range 0..255
+    - a tuple or list of 3 float values in the range 0.0..1.0
     Any other input may give unpredictable results.
     """
-    if type(color) == str:
-        color = QtGui.QColor(color)
-    if isinstance(color,QtGui.QColor):
-        color = (color.red(),color.green(),color.blue())
-    try:
-        #print type(color),list(color)
-        #print "OK"
-        color = list(color)
-        #print color
-        #print len(color)
-        if len(color) == 3:
-            if type(color[0]) == int:
-                color = [ c/255. for c in color ]
-            #print "color is now",color
-            if type(color[0]) == float:
-                return tuple(color)
-            else:
-                #print "type:",type(color[0])
-                pass
-        else:
-            #print "len is not 3"
+    col = color
+
+    # include this test because QtGui.Qcolor spits output if given
+    # an erroneous string.
+    if not ( type(col) == tuple or type(col) == list ):
+        # Convert strings or QColors to a color tuple
+        try:
+            col = QtGui.QColor(col)
+            col = (col.red(),col.green(),col.blue())
+        except:
             pass
-        raise
-    except:
-        raise RuntimeError,"GLColor: unexpected input type %s: %s" % (type(color),color)
+
+    # col should now be a 3-tuple
+    if (type(col) == tuple or type(col) == list) and len(col) == 3:
+        try:
+            if type(col[0]) == int:
+                # convert int values to float
+                col = [ c/255. for c in col ]
+            col = map(float,col)
+            # SUCCESS !
+            return tuple(col)
+        except:
+            pass
+
+    raise ValueError,"GLColor: unexpected input type %s: %s" % (type(color),color)
 
 
 def RGBA(rgb,alpha=1.0):
@@ -76,6 +77,7 @@ mediumgrey = grey(0.7)
 darkgrey = grey(0.5)
 
 if __name__ == "__main__":
+    print GLColor(QtGui.QColor('red'))
     print GLColor('red')
     print GLColor(red)
     print GLColor([200,200,255])

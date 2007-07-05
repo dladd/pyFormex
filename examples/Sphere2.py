@@ -5,6 +5,8 @@
 
 from simple import Sphere2,Sphere3
 
+reset()
+
 nx = 4
 ny = 4
 m = 1.6
