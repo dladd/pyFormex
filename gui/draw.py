@@ -329,12 +329,12 @@ def step_script(s,glob,paus=True):
             buf[-1:] = line
             break
         else:
-            buf = line
-        if paus and ( buf.strip().startswith('draw') or
-                      buf.find('draw(') >= 0 ):
+            buf += line
+        if paus and (line.strip().startswith('draw') or
+                     line.find('draw(') >= 0 ):
             pause()
-        message(buf)
-        exec(buf) in glob
+            message(buf)
+            exec(buf) in glob
     info("Finished stepping through script!")
 
 
