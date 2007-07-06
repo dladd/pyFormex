@@ -140,19 +140,15 @@ def askItems(items,caption=None):
     Input is a dictionary of items or a list of [key,value] pairs.
     The latter is recommended, because a dictionary does not guarantee
     the order of the items.
-    Returns a dictionary (maybe we should just return the list??)
+    Returns a dictionary with the results, equal to the input if the user
+    exited with a cancel.
     """
     if type(items) == dict:
         items = items.items()
-    if type(caption) is str:
-        w = widgets.InputDialog(items,caption)
-    else:
-        w = widgets.InputDialog(items)
+    w = widgets.InputDialog(items,caption)
     res,status = w.getResult()
-    items = {}
-    for r in res:
-        items[r[0]] = r[1]
-    return items
+    return res
+
 
 def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for an existing file name or multiple file names."""

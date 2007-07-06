@@ -113,6 +113,20 @@ class SaveImageDialog(FileSelection):
             return None,False,False,False,False
 
 
+def selectFont():
+    """Ask the user to select a font.
+
+    A font selection dialog widget is displayed and the user is requested
+    to select a font.
+    Returns a font if the user exited the dialog with the OK button.
+    Returns None if the user clicked CANCEL.
+    """
+    font,ok = QtGui.QFontDialog.getFont()
+    if ok:
+        return font
+    else:
+        return None
+
         
 class AppearenceDialog(QtGui.QDialog):
     """A dialog for setting the GUI appearance."""
@@ -156,8 +170,8 @@ class AppearenceDialog(QtGui.QDialog):
 
 
     def setFont(self):
-        font,ok = selectFont()
-        if ok:
+        font = selectFont()
+        if font:
             self.fontButton.setText(font.toString())
             self.font = font
 
@@ -267,35 +281,68 @@ class InputItem(QtGui.QHBoxLayout):
         """Creates a new inputitem with a name label in front.
         
         
-        The item can be any of the following:
-        - a string
-        - a bool
-        - an int
-        - a float
-        - a tuple or list
+        The item type can be any of the following:
+        - str
+        - bool
+        - int
+        - float
+        - tuple or list
+        - 'check' (a single checkable item)
+        
         If no type is given, it is determined from the value. The return
         value will be cast to the type.
         """
         QtGui.QHBoxLayout.__init__(self,*args)
-        self.label = QtGui.QLabel(name)
+        GD.debug("New field %s, %s, %s" % (name,value,typ))
         if typ is None:
             typ = type(value)
         self.type = typ
-        if self.type == str:
-            self.input = QtGui.QLineEdit(str(value))
+        if self.type == bool:
+            self.input = QtGui.QCheckBox(name)
+            if self.value:
+                self.input.setCheckState(QtCore.Qt.Checked)
+            else:
+                self.input.setCheckState(QtCore.Qt.Unchecked)
+            label = False
+        elif self.type == list or self.type == tuple:
+            self.input = QtGui.QComboBox()
+            for v in value:
+                self.input.addItem(str(v))
+            label = True
         else:
-            GD.debug("Invalid InputWidget type %s" % self.type)
-        self.addWidget(self.label)
+            self.type == str
+            self.input = QtGui.QLineEdit(str(value))
+            label = True
+        if label:
+            self.label = QtGui.QLabel(name)
+            self.addWidget(self.label)
+        else:
+            self.label = None
         self.addWidget(self.input)
+##                 if len(item) ==3 :
+##                     input.setValidator(QtGui.QIntValidator(input))
+##                 else:
+##                     input.setValidator(QtGui.QIntValidator(item[3][0],item[3][1],input))
+##             elif item[2] == 'float':
+##                 pass
+##                 #print "%s is a float"%item[0]
 
     def name(self):
         """Return the widget's name."""
-        return str(self.label.text())
+        if self.label:
+            return str(self.label.text())
+        elif self.type == list or self.type == tuple:
+            return str(self.currentText())
+        else:
+            return str(self.input.text())
 
     def value(self):
         """Return the widget's value."""
-        if self.type == str:
-           return str(self.input.text())
+        if self.type == bool:
+            return (self.input.checkState() == QtCore.Qt.Checked)
+        else:
+            return (str(self.input.text()))
+
     def show(self,*args):
          QtGui.QHBoxLayout.__init__(self,*args)
          self.input.selectAll()
@@ -307,7 +354,7 @@ class InputDialog(QtGui.QDialog):
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption='Input Dialog',*args):
+    def __init__(self,items,caption=None,*args):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -323,42 +370,17 @@ class InputDialog(QtGui.QDialog):
         """
         QtGui.QDialog.__init__(self,*args)
         self.resize(400,200)
-        self.setWindowTitle(caption)
+        if caption is None:
+            caption = 'pyFormex-input'
+        self.setWindowTitle(str(caption))
         self.fields = []
-        self.result = []
+        self.result = {}
         form = QtGui.QVBoxLayout()
         for item in items:
-            if len(item) == 2 or item[2] == 'str':
-                # Test the new widget
-                line = InputItem(item[0],item[1],str)
-                form.addLayout(line)
-                self.fields.append(['__NEW__',line])
-                continue
-
-            
-            # Create the text label
-            label = QtGui.QLabel(item[0])
-            # Create the input field
-            input = QtGui.QLineEdit(str(item[1]))
-            if len(item) == 2 or item[2] == 'str':
-                pass
-                #print "%s is a string"%item[0]
-            elif item[2] == 'int':
-                #print "%s is an integer"%item[0]
-                if len(item) ==3 :
-                    input.setValidator(QtGui.QIntValidator(input))
-                else:
-                    input.setValidator(QtGui.QIntValidator(item[3][0],item[3][1],input))
-            elif item[2] == 'float':
-                pass
-                #print "%s is a float"%item[0]
-            input.selectAll()
-            self.fields.append([label,input])
-            # Add label and input field to a horizontal layout in the form
-            line = QtGui.QHBoxLayout()
-            line.addWidget(label)
-            line.addWidget(input)
+            line = InputItem(*item)
             form.addLayout(line)
+            self.fields.append(line)
+
         # add OK and Cancel buttons
         but = QtGui.QHBoxLayout()
         spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
@@ -375,20 +397,12 @@ class InputDialog(QtGui.QDialog):
         self.connect(ok,QtCore.SIGNAL("clicked()"),self.acceptdata)
         self.setLayout(form)
         # Set the keyboard focus to the first input field
-        if self.fields[0][0] == '__NEW__':
-            self.fields[0][1].input.setFocus()
-        else:
-            self.setFocusProxy(self.fields[0][1])
-            self.fields[0][0].setFocus()
+        self.fields[0].input.setFocus()
         self.show()
         
     def acceptdata(self):
-        for label,data in self.fields:
-            if label == "__NEW__":
-                GD.debug(data)
-                self.result.append([data.name(),data.value()])
-            else:
-                self.result.append([str(label.text()),str(data.text())])
+        self.result = {}
+        self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
         self.accept()
         
     def getResult(self):
@@ -396,16 +410,6 @@ class InputDialog(QtGui.QDialog):
         GD.app.processEvents()
         return (self.result, accept)
 
-
-def selectFont():
-    """Ask the user to select a font.
-
-    A font selection dialog widget is displayed and the user is requested
-    to select a font.
-    Returns a tuple (font,ok), where ok will be true if the user exited
-    the dialog with the OK or ENTER button.
-    """
-    return QtGui.QFontDialog.getFont()
 
 
 ############################# Menu ##############################

@@ -101,49 +101,28 @@ def setPanFactor():
     askConfigPreferences(['gui/panfactor'])
 def setZoomFactor():
     askConfigPreferences(['gui/zoomfactor'])
- 
+
 
 def setFont(font=None):
-    """Set the main application font.
-
-    If no font is specified, a user dialog pops up to select it.
-    """
+    """Ask and set the main application font."""
     if font is None:
-        font,ok = widgets.selectFont()
-        if not ok:
-            return
-    GD.app.setFont(font)
-    if GD.gui:
-        GD.gui.update()
-
-
-def setFontSize(s=None):
-    """Set the main application font size to the given point size.
-
-    If no size is specified, it is set from the configuration.
-    """
-    if s:
-        GD.cfg['gui/fontsize'] = s
-    else:
-        s = GD.cfg.get('gui/fontsize',12)
-    font = GD.app.font()
-    font.setPointSize(int(s))
-    setFont(font)
-
-
-def setStyle(style):
-    """Set the main application style."""
-    GD.app.setStyle(style)
-    if GD.gui:
-        GD.gui.update()
+        font = widgets.selectFont()
+    if font:
+        GD.cfg['gui/font'] = str(font.toString())
+        GD.cfg['gui/fontfamily'] = str(font.family())
+        GD.cfg['gui/fontsize'] = font.pointSize()
+        GD.gui.setFont(font)
 
 
 def setAppearance():
-    """Set the main application style and font from user dialog."""
+    """Ask and set the main application appearence."""
     style,font = widgets.AppearenceDialog().getResult()
+    if style:
+        # Get style name, strip off the leading 'Q' and trailing 'Style'
+        stylename = style.metaObject().className()[1:-5]
+        GD.cfg['gui/style'] = stylename
+        GD.gui.setStyle(stylename)
     if font:
         setFont(font)
-    if style:
-        setStyle(style)
-    
+   
 # End

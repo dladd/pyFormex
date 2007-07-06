@@ -33,6 +33,7 @@ browser = 'firefox %s'    # web browser
 autoglobals = True
 
 [gui]
+style = "Plastique"
 size=(800,600)
 pos=(0,0)
 fullscreen = False

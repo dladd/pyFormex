@@ -13,8 +13,17 @@ clear()
 wireframe()
 n = 40
 
-baseGeom = ask("Create a surface model with",
-                   ['Triangles','Quadrilaterals'])
+## baseGeom = ask("Create a surface model with",
+##                    ['Triangles','Quadrilaterals'])
+
+choices = ['Triangles','Quadrilaterals']
+res = askItems([['Type of surface element:',choices]])
+print res
+baseGeom = choices.index(res['Type of surface element:'])
+print baseGeom
+exit()
+   
+
 if baseGeom == 0:
     # The base consists of two triangles
     e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)

@@ -192,7 +192,38 @@ class GUI(QtGui.QMainWindow):
             printsize(self,'Main:')
             printsize(self.canvas,'Canvas:')
             printsize(self.board,'Board:')
-        
+
+
+    def setStyle(self,style):
+        """Set the main application style."""
+        GD.debug('Setting new style: %s' % style)
+        GD.app.setStyle(style)
+        self.update()
+
+
+    def setFont(self,font):
+        """Set the main application font."""
+        if type(font) == str:
+            f = QtGui.QFont()
+            f.fromString(font)
+            font = f
+        GD.app.setFont(font)
+        self.update()
+
+
+    def setFontFamily(self,family):
+        """Set the main application font size to the given point size."""
+        font = GD.app.font()
+        font.setFamily(family)
+        self.setFont(font)
+
+
+    def setFontSize(self,size):
+        """Set the main application font size to the given point size."""
+        font = GD.app.font()
+        font.setPointSize(int(size))
+        self.setFont(font)
+         
     
     def resizeCanvas(self,wd,ht):
         """Resize the canvas."""
@@ -295,11 +326,6 @@ def messageBox(message,level='info',actions=['OK']):
     return ans
 
 
-setFont = prefMenu.setFont
-setFontSize = prefMenu.setFontSize
-setStyle = prefMenu.setStyle
-
-
 def windowExists(windowname):
     """Check if a GUI window with the given name exists.
 
@@ -345,15 +371,27 @@ def runApp(args):
             return 1
         count += 1
         windowname = '%s (%s)' % (GD.Version,count)
-    if GD.cfg.has_key('gui/fontsize'):
-        setFontSize()
+
     GD.gui = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
                  GD.cfg.get('gui/pos',(0,0)),
                  GD.cfg.get('gui/bdsize',(800,600))
                  )
+
+    # set the appearence
+    GD.gui.setStyle(GD.cfg.get('gui/style','Plastique'))
+    font = GD.cfg.get('gui/font',None)
+    if font:
+        GD.gui.setFont(font)
+    else:
+        fontfamily = GD.cfg.get('gui/fontfamily',None)
+        if fontfamily:
+            GD.gui.setFontFamily(fontfamily)
+        fontsize =  GD.cfg.get('gui/fontsize',None)
+        if fontsize:
+            GD.gui.setFontSize(fontsize)
+    
     GD.gui.viewports.addView(0,0)
-    GD.gui.setcurfile()
     GD.board = GD.gui.board
     GD.board.write(GD.Version+"  (C) B. Verhegghe")
     GD.gui.show()
