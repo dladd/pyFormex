@@ -9,20 +9,29 @@
 ##
 #
 """Novation"""
-clear()
-wireframe()
+reset()
+
 n = 40
 
 ## baseGeom = ask("Create a surface model with",
 ##                    ['Triangles','Quadrilaterals'])
 
-choices = ['Triangles','Quadrilaterals']
-res = askItems([['Type of surface element:',choices]])
-print res
-baseGeom = choices.index(res['Type of surface element:'])
-print baseGeom
-exit()
-   
+basechoices = ['Triangles','Quadrilaterals']
+renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
+res = askItems([['Type of surface element',basechoices],
+                ['Number of bumps',3],
+                ['Render mode',renderchoices],
+                ['Add a bottom plate',False],
+                ['Shrink elements',False],
+                ])
+if not res:
+    exit()
+
+baseGeom = basechoices.index(res['Type of surface element'])
+rendermode = res['Render mode']
+nbumps = int(res['Number of bumps'])
+bottom = res['Add a bottom plate']
+shrink = res['Shrink elements']
 
 if baseGeom == 0:
     # The base consists of two triangles
@@ -35,24 +44,27 @@ else:
 #e = Formex([[[0,0,0],[1,0,0]]]).rosad(.5,.5).rinid(n,n,1,1)
 
 # Novation (Spots)
-m = 4
+s = nbumps+1
+r = n/s
 h = 12
-r = n/m
-s = n/r
 a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
-# create a bottom
-b = e.reverseElements()
-
+if bottom:
+    # create a bottom
+    b = e.reverseElements()
+    b.setProp(2)
+    
 # create the bumps
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
-draw (e,color=red)
-
-if ack('Shrink the elements?'):
-    clear()
-    draw(e.shrink(0.8))
+renderMode(rendermode)
+if bottom:
+    draw(b)
+if shrink:
+    draw(e.shrink(0.8),color=blue)
+else:
+    draw(e,color=blue)
 
 if ack('Export to .stl?'):
     from plugins import stl
@@ -67,8 +79,3 @@ if ack('Export to .stl?'):
     draw(G)
     stl.write_stla(f,G.f)
     f.close()
-
-if ack('Show with smooth rendering?'):
-    clear()
-    smooth()
-    draw(e)

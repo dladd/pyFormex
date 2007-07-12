@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -49,6 +48,28 @@ def GLColor(color):
 
     raise ValueError,"GLColor: unexpected input type %s: %s" % (type(color),color)
 
+def colorName(color):
+    """Return a string designation for the color.
+
+    color can be anything that is accepted by GLColor.
+    In most cases
+    If color can not be converted, None is returned.
+    """
+    try:
+        return str(QtGui.QColor.fromRgbF(*(GLColor(color))).name())
+    except:
+        return None
+
+def createColorDict():
+    for c in QtGui.QColor.colorNames():
+        col = QtGui.QColor
+        print "Color %s = %s" % (c,colorName(c))
+
+
+def closestColorName(color):
+    """Return the closest color name."""
+    pass
+
 
 def RGBA(rgb,alpha=1.0):
     """Adds an alpha channel to an RGB color"""
@@ -83,4 +104,11 @@ if __name__ == "__main__":
     print GLColor([200,200,255])
     print GLColor([1.,1.,1.])
     print GLColor(lightgrey)
+    print GLColor('#ffddff')
     
+    print colorName(red)
+    print colorName('red')
+    print colorName('#ffddff')
+    print colorName([1.,1.,1.])
+        
+    createColorDict()

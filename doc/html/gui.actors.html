@@ -17,19 +17,20 @@
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="OpenGL.GL.html">OpenGL.GL</a><br>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
+<a href="OpenGL.GL.html">OpenGL.GL</a><br>
 <a href="OpenGL.GLU.html">OpenGL.GLU</a><br>
 <a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
-<a href="numpy.add_newdocs.html">numpy.add_newdocs</a><br>
-</td><td width="25%" valign=top><a href="numpy.core.defchararray.html">numpy.core.defchararray</a><br>
+</td><td width="25%" valign=top><a href="numpy.add_newdocs.html">numpy.add_newdocs</a><br>
+<a href="numpy.core.defchararray.html">numpy.core.defchararray</a><br>
 <a href="numpy.ctypeslib.html">numpy.ctypeslib</a><br>
 <a href="plugins.elements.html">plugins.elements</a><br>
-<a href="numpy.lib.scimath.html">numpy.lib.scimath</a><br>
-</td><td width="25%" valign=top><a href="numpy.fft.html">numpy.fft</a><br>
+</td><td width="25%" valign=top><a href="numpy.lib.scimath.html">numpy.lib.scimath</a><br>
+<a href="numpy.fft.html">numpy.fft</a><br>
 <a href="numpy.linalg.html">numpy.linalg</a><br>
 <a href="numpy.core.ma.html">numpy.core.ma</a><br>
-<a href="math.html">math</a><br>
-</td><td width="25%" valign=top><a href="numpy.random.html">numpy.random</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+<a href="numpy.random.html">numpy.random</a><br>
 <a href="numpy.core.records.html">numpy.core.records</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -81,6 +82,12 @@ An&nbsp;<a href="#Actor">Actor</a>&nbsp;subclass&nbsp;should&nbsp;minimally&nbsp
 
 <dl><dt><a name="Actor-draw"><strong>draw</strong></a>(self)</dt></dl>
 
+<dl><dt><a name="Actor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Actor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
+<dl><dt><a name="Actor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
@@ -107,7 +114,15 @@ Methods defined here:<br>
 
 <dl><dt><a name="BboxActor-bbox"><strong>bbox</strong></a>()</dt></dl>
 
-<dl><dt><a name="BboxActor-draw"><strong>draw</strong></a>(self, mode)</dt><dd><tt>Always&nbsp;draws&nbsp;a&nbsp;wireframe&nbsp;model&nbsp;of&nbsp;the&nbsp;bbox.</tt></dd></dl>
+<dl><dt><a name="BboxActor-draw"><strong>draw</strong></a>(self, mode, color<font color="#909090">=None</font>)</dt><dd><tt>Always&nbsp;draws&nbsp;a&nbsp;wireframe&nbsp;model&nbsp;of&nbsp;the&nbsp;bbox.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="BboxActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BboxActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
+<dl><dt><a name="BboxActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
@@ -138,6 +153,14 @@ Methods defined here:<br>
 <dl><dt><a name="CubeActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;cube.</tt></dd></dl>
 
 <hr>
+Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="CubeActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="CubeActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
+<dl><dt><a name="CubeActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
+<hr>
 Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
 <dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
 
@@ -160,7 +183,7 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="FormexActor-__init__"><strong>__init__</strong></a>(self, F, color<font color="#909090">=[(0.0, 0.0, 0.0)]</font>, bkcolor<font color="#909090">=None</font>, linewidth<font color="#909090">=1.0</font>, markscale<font color="#909090">=0.02</font>, marksize<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
+<dl><dt><a name="FormexActor-__init__"><strong>__init__</strong></a>(self, F, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>, bkcolor<font color="#909090">=None</font>, bkcolormap<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, markscale<font color="#909090">=None</font>, marksize<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
 &nbsp;<br>
 The&nbsp;colors&nbsp;argument&nbsp;specifies&nbsp;a&nbsp;list&nbsp;of&nbsp;OpenGL&nbsp;colors&nbsp;for&nbsp;each<br>
 of&nbsp;the&nbsp;property&nbsp;values&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;If&nbsp;the&nbsp;list&nbsp;has&nbsp;less<br>
@@ -183,13 +206,37 @@ box.<br>
 It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;(2,3)&nbsp;shaped&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
 minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;row&nbsp;the&nbsp;maximal.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.</tt></dd></dl>
+<dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.<br>
+&nbsp;<br>
+if&nbsp;color&nbsp;is&nbsp;None,&nbsp;it&nbsp;is&nbsp;drawn&nbsp;with&nbsp;the&nbsp;color&nbsp;specified&nbsp;on&nbsp;creation.<br>
+if&nbsp;color&nbsp;==&nbsp;'prop'&nbsp;and&nbsp;a&nbsp;colormap&nbsp;was&nbsp;installed,&nbsp;props&nbsp;define&nbsp;color.<br>
+else,&nbsp;color&nbsp;should&nbsp;be&nbsp;an&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values,&nbsp;either&nbsp;with&nbsp;shape<br>
+(3,)&nbsp;for&nbsp;a&nbsp;single&nbsp;color,&nbsp;or&nbsp;(nelems,3)&nbsp;for&nbsp;differently&nbsp;colored<br>
+elements&nbsp;<br>
+&nbsp;<br>
+if&nbsp;mode&nbsp;ends&nbsp;with&nbsp;wire&nbsp;(smoothwire&nbsp;or&nbsp;flatwire),&nbsp;two&nbsp;drawing<br>
+operations&nbsp;are&nbsp;done:&nbsp;one&nbsp;with&nbsp;wireframe&nbsp;and&nbsp;color&nbsp;black,&nbsp;and<br>
+one&nbsp;with&nbsp;mode[:-4]&nbsp;and&nbsp;self.<strong>color</strong>.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-setBkColor"><strong>setBkColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;backside&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-setMark"><strong>setMark</strong></a>(self, size, type)</dt><dd><tt>Create&nbsp;a&nbsp;symbol&nbsp;for&nbsp;drawing&nbsp;3D&nbsp;points.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-setMarkSize"><strong>setMarkSize</strong></a>(self, marksize)</dt><dd><tt>Set&nbsp;the&nbsp;mark&nbsp;size.<br>
+&nbsp;<br>
+The&nbsp;mark&nbsp;size&nbsp;is&nbsp;currently&nbsp;only&nbsp;used&nbsp;with&nbsp;plex-1&nbsp;Formices.</tt></dd></dl>
 
 <hr>
 Data and other attributes defined here:<br>
 <dl><dt><strong>mark</strong> = False</dl>
+
+<hr>
+Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="FormexActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="FormexActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
@@ -350,10 +397,11 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-cospherical"><strong>cospherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Same&nbsp;as&nbsp;spherical&nbsp;with&nbsp;colat=True.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-cutAtPlane"><strong>cutAtPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;all&nbsp;elements&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.</tt></dd></dl>
+<dl><dt><a name="FormexActor-cut3AtPlane"><strong>cut3AtPlane</strong></a>(F, p, n)</dt><dd><tt>Return&nbsp;all&nbsp;elements&nbsp;of&nbsp;a&nbsp;plex-3&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-cut3AtPlane">cut3AtPlane</a>(F,p,n).</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-cutAtPlane"><strong>cutAtPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;all&nbsp;elements&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-cutAtPlane">cutAtPlane</a>(F,p,n).</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-cylindrical"><strong>cylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cylindrical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
@@ -365,7 +413,16 @@ The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt
 
 <dl><dt><a name="FormexActor-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array&nbsp;(ndarray)</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-divide"><strong>divide</strong></a>(self, n)</dt></dl>
+<dl><dt><a name="FormexActor-divide"><strong>divide</strong></a>(self, div)</dt><dd><tt>Divide&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;values&nbsp;in&nbsp;div.<br>
+&nbsp;<br>
+Replaces&nbsp;each&nbsp;member&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;by&nbsp;a&nbsp;sequence&nbsp;of&nbsp;members&nbsp;obtained<br>
+by&nbsp;dividing&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;relative&nbsp;values&nbsp;specified&nbsp;in&nbsp;div.<br>
+The&nbsp;values&nbsp;should&nbsp;normally&nbsp;range&nbsp;from&nbsp;0.0&nbsp;to&nbsp;1.0.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&nbsp;for&nbsp;div,&nbsp;it&nbsp;is&nbsp;taken&nbsp;as&nbsp;a<br>
+number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;only&nbsp;works&nbsp;on&nbsp;plex-2&nbsp;Formices&nbsp;(line&nbsp;segments).</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
 &nbsp;<br>
@@ -407,21 +464,17 @@ current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nb
 define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
 will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-intersectionPointsWithPlane"><strong>intersectionPointsWithPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;p,n.<br>
-&nbsp;<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.</tt></dd></dl>
+<dl><dt><a name="FormexActor-intersectionLinesWithPlane"><strong>intersectionLinesWithPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;intersection&nbsp;lines&nbsp;of&nbsp;a&nbsp;plex-3&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;(p,n).<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-intersectionLinesWithPlane">intersectionLinesWithPlane</a>(F,p,n).</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-intersectionWithPlane"><strong>intersectionWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
+<dl><dt><a name="FormexActor-intersectionPointsWithPlane"><strong>intersectionPointsWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-intersectionWithPlane">intersectionWithPlane</a>(F,p,n),<br>
+but&nbsp;returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;instead&nbsp;of&nbsp;an&nbsp;array&nbsp;of&nbsp;points.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-intersectionWithPlane"><strong>intersectionWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
-The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[n]&nbsp;shaped&nbsp;array&nbsp;of&nbsp;parameter&nbsp;values&nbsp;t,<br>
-such&nbsp;that&nbsp;for&nbsp;each&nbsp;segment&nbsp;L&nbsp;the&nbsp;intersection&nbsp;point&nbsp;is&nbsp;given<br>
-by&nbsp;(1-t)*L[0]+&nbsp;t*L[1].</tt></dd></dl>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#FormexActor-intersectionWithPlane">intersectionWithPlane</a>(F,p,n).</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-lam"><strong>lam</strong></a>(self, dir, dist)</dt></dl>
 
@@ -477,8 +530,6 @@ This&nbsp;is&nbsp;the&nbsp;number&nbsp;of&nbsp;coordinates&nbsp;for&nbsp;each&nb
 current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nbsp;you&nbsp;can<br>
 define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
 will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
-
-<dl><dt><a name="FormexActor-nelems"><strong>nelems</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;elements&nbsp;in&nbsp;the&nbsp;formex.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-newmap"><strong>newmap</strong></a>(self, func)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;mapped&nbsp;by&nbsp;a&nbsp;3-D&nbsp;function.<br>
 &nbsp;<br>
@@ -752,9 +803,9 @@ Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;each&nbsp;comprising&nbsp;on
 
 <dl><dt><a name="FormexActor-test"><strong>test</strong></a>(self, nodes<font color="#909090">='all'</font>, dir<font color="#909090">=0</font>, min<font color="#909090">=None</font>, max<font color="#909090">=None</font>)</dt><dd><tt>Flag&nbsp;elements&nbsp;having&nbsp;nodal&nbsp;coordinates&nbsp;between&nbsp;min&nbsp;and&nbsp;max.<br>
 &nbsp;<br>
-This&nbsp;function&nbsp;is&nbsp;very&nbsp;convenient&nbsp;in&nbsp;clipping&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;in&nbsp;a&nbsp;specified&nbsp;direction.<br>
-It&nbsp;returns&nbsp;a&nbsp;1D&nbsp;integer&nbsp;array&nbsp;flagging&nbsp;(with&nbsp;a&nbsp;value&nbsp;1)&nbsp;the&nbsp;elements<br>
-having&nbsp;nodal&nbsp;coordinates&nbsp;in&nbsp;the&nbsp;required&nbsp;range.<br>
+This&nbsp;function&nbsp;is&nbsp;very&nbsp;convenient&nbsp;in&nbsp;clipping&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;in&nbsp;a&nbsp;specified<br>
+direction.&nbsp;It&nbsp;returns&nbsp;a&nbsp;1D&nbsp;integer&nbsp;array&nbsp;flagging&nbsp;(with&nbsp;a&nbsp;value&nbsp;1&nbsp;or<br>
+True)&nbsp;the&nbsp;elements&nbsp;having&nbsp;nodal&nbsp;coordinates&nbsp;in&nbsp;the&nbsp;required&nbsp;range.<br>
 Use&nbsp;<a href="#FormexActor-where">where</a>(result)&nbsp;to&nbsp;get&nbsp;a&nbsp;list&nbsp;of&nbsp;element&nbsp;numbers&nbsp;passing&nbsp;the&nbsp;test.<br>
 Or&nbsp;directly&nbsp;use&nbsp;<a href="#FormexActor-clip">clip</a>()&nbsp;or&nbsp;<a href="#FormexActor-cclip">cclip</a>()&nbsp;to&nbsp;create&nbsp;the&nbsp;clipped&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
@@ -762,8 +813,8 @@ This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;in&nbsp;two&nbsp;distinct&nbs
 -&nbsp;min,max&nbsp;are&nbsp;the&nbsp;minimum&nbsp;and&nbsp;maximum&nbsp;values&nbsp;required&nbsp;for&nbsp;the<br>
 coordinates&nbsp;in&nbsp;direction&nbsp;dir&nbsp;(default&nbsp;is&nbsp;the&nbsp;x&nbsp;or&nbsp;0&nbsp;direction,<br>
 other&nbsp;possibilities&nbsp;for&nbsp;the&nbsp;direction&nbsp;dir&nbsp;in&nbsp;this&nbsp;case&nbsp;are&nbsp;1&nbsp;or&nbsp;2).<br>
--&nbsp;a&nbsp;direction&nbsp;vector&nbsp;can&nbsp;be&nbsp;specified&nbsp;for&nbsp;dir.&nbsp;min,max&nbsp;are&nbsp;points&nbsp;in&nbsp;this&nbsp;case,<br>
-specified&nbsp;by&nbsp;3&nbsp;coordinates.&nbsp;<br>
+-&nbsp;a&nbsp;direction&nbsp;vector&nbsp;can&nbsp;be&nbsp;specified&nbsp;for&nbsp;dir.&nbsp;min,max&nbsp;are&nbsp;points<br>
+in&nbsp;this&nbsp;case,&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.&nbsp;<br>
 &nbsp;<br>
 Nodes&nbsp;specifies&nbsp;which&nbsp;nodes&nbsp;are&nbsp;taken&nbsp;into&nbsp;account&nbsp;in&nbsp;the&nbsp;comparisons.<br>
 It&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;following:<br>
@@ -934,7 +985,7 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method.&nbsp;It&nbsp;should&nbsp;be&nbsp;use
 <font color="#000000" face="helvetica, arial"><a name="SurfaceActor">class <strong>SurfaceActor</strong></a>(<a href="gui.actors.html#Actor">Actor</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>Draws&nbsp;a&nbsp;triangulated&nbsp;surface.<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>Draws&nbsp;a&nbsp;triangulated&nbsp;surface&nbsp;specified&nbsp;by&nbsp;points&nbsp;and&nbsp;connectivity.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.actors.html#SurfaceActor">SurfaceActor</a></dd>
@@ -943,11 +994,21 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method.&nbsp;It&nbsp;should&nbsp;be&nbsp;use
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="SurfaceActor-__init__"><strong>__init__</strong></a>(self, nodes, elems, color<font color="#909090">=(0.0, 0.0, 0.0)</font>, linewidth<font color="#909090">=1.0</font>)</dt></dl>
+<dl><dt><a name="SurfaceActor-__init__"><strong>__init__</strong></a>(self, nodes, elems, color<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>)</dt></dl>
 
 <dl><dt><a name="SurfaceActor-bbox"><strong>bbox</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="SurfaceActor-draw"><strong>draw</strong></a>(self, mode, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;surface.</tt></dd></dl>
+
+<dl><dt><a name="SurfaceActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SurfaceActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;and&nbsp;possibly&nbsp;the&nbsp;colormap&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;None,&nbsp;it&nbsp;will&nbsp;be&nbsp;drawn&nbsp;with&nbsp;the&nbsp;current&nbsp;foreground&nbsp;color.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="SurfaceActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
@@ -976,6 +1037,14 @@ Methods defined here:<br>
 <dl><dt><a name="TriadeActor-bbox"><strong>bbox</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="TriadeActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;triade.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="TriadeActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TriadeActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
+
+<dl><dt><a name="TriadeActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
@@ -1075,60 +1144,76 @@ Returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&n
 Like&nbsp;the&nbsp;generic&nbsp;numpy&nbsp;equivalent&nbsp;the&nbsp;product&nbsp;sum&nbsp;is&nbsp;over<br>
 the&nbsp;last&nbsp;dimension&nbsp;of&nbsp;a&nbsp;and&nbsp;the&nbsp;second-to-last&nbsp;dimension&nbsp;of&nbsp;b.<br>
 NB:&nbsp;The&nbsp;first&nbsp;argument&nbsp;is&nbsp;not&nbsp;conjugated.</tt></dd></dl>
- <dl><dt><a name="-drawAtPoints"><strong>drawAtPoints</strong></a>(x, mark)</dt><dd><tt>Draw&nbsp;a&nbsp;copy&nbsp;of&nbsp;a&nbsp;3D&nbsp;actor&nbsp;mark&nbsp;at&nbsp;all&nbsp;points&nbsp;in&nbsp;x.<br>
+ <dl><dt><a name="-drawAtPoints"><strong>drawAtPoints</strong></a>(x, mark, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;copy&nbsp;of&nbsp;a&nbsp;3D&nbsp;actor&nbsp;mark&nbsp;at&nbsp;all&nbsp;points&nbsp;in&nbsp;x.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(npoints,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
-mark&nbsp;is&nbsp;any&nbsp;3D&nbsp;<a href="#Actor">Actor</a>&nbsp;having&nbsp;a&nbsp;display&nbsp;list.</tt></dd></dl>
- <dl><dt><a name="-drawColorPoints"><strong>drawColorPoints</strong></a>(x, c, s)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;points&nbsp;with&nbsp;colors&nbsp;c&nbsp;and&nbsp;size&nbsp;s.<br>
-&nbsp;<br>
-x&nbsp;is&nbsp;a&nbsp;(npoints,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
-s&nbsp;is&nbsp;the&nbsp;point&nbsp;size</tt></dd></dl>
+mark&nbsp;is&nbsp;any&nbsp;3D&nbsp;<a href="#Actor">Actor</a>&nbsp;having&nbsp;a&nbsp;display&nbsp;list&nbsp;attribute.<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(npoints,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.&nbsp;It&nbsp;only<br>
+makes&nbsp;sense&nbsp;if&nbsp;the&nbsp;mark&nbsp;was&nbsp;created&nbsp;without&nbsp;color!</tt></dd></dl>
  <dl><dt><a name="-drawCube"><strong>drawCube</strong></a>(s, color<font color="#909090">=[(1.0, 0.0, 0.0), (0.0, 1.0, 1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 1.0), (0.0, 0.0, 1.0), (1.0, 1.0, 0.0)]</font>)</dt><dd><tt>Draws&nbsp;a&nbsp;centered&nbsp;cube&nbsp;with&nbsp;side&nbsp;2*s&nbsp;and&nbsp;colored&nbsp;faces.<br>
 &nbsp;<br>
 Colors&nbsp;are&nbsp;specified&nbsp;in&nbsp;the&nbsp;order&nbsp;[FRONT,BACK,RIGHT,LEFT,TOP,BOTTOM].</tt></dd></dl>
- <dl><dt><a name="-drawEdges"><strong>drawEdges</strong></a>(x, edges, color<font color="#909090">=None</font>, width<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;edges.<br>
+ <dl><dt><a name="-drawEdges"><strong>drawEdges</strong></a>(x, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;edges.<br>
 &nbsp;<br>
+x&nbsp;is&nbsp;a&nbsp;(ntri,2*n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.&nbsp;Each&nbsp;of&nbsp;the&nbsp;n&nbsp;pairs<br>
+define&nbsp;a&nbsp;line&nbsp;segment.&nbsp;<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(ntri,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-drawLineElems"><strong>drawLineElems</strong></a>(x, elems, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;lines.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;drawLines,&nbsp;except&nbsp;that&nbsp;the&nbsp;lines&nbsp;are&nbsp;defined<br>
+by&nbsp;an&nbsp;array&nbsp;of&nbsp;points&nbsp;and&nbsp;a&nbsp;connection&nbsp;table.<br>
 x&nbsp;is&nbsp;a&nbsp;(ncoords,3)&nbsp;coordinate&nbsp;array.<br>
-edges&nbsp;is&nbsp;a&nbsp;(nedges,2)&nbsp;integer&nbsp;array&nbsp;of&nbsp;connected&nbsp;node&nbsp;numbers.<br>
-color&nbsp;is&nbsp;a&nbsp;3-component&nbsp;color&nbsp;or&nbsp;a&nbsp;(nedges,3)&nbsp;color&nbsp;array.<br>
-width&nbsp;is&nbsp;the&nbsp;linewidth.</tt></dd></dl>
- <dl><dt><a name="-drawLines"><strong>drawLines</strong></a>(x, c, w)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;lines.<br>
+elems&nbsp;is&nbsp;a&nbsp;(nlines,2)&nbsp;integer&nbsp;array&nbsp;of&nbsp;connected&nbsp;node&nbsp;numbers.<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(nlines,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-drawLines"><strong>drawLines</strong></a>(x, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;lines.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(nlines,2,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
-c&nbsp;is&nbsp;a&nbsp;(nlines,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
-w&nbsp;is&nbsp;the&nbsp;linewidth.</tt></dd></dl>
- <dl><dt><a name="-drawPoints"><strong>drawPoints</strong></a>(x, c, s)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;points&nbsp;with&nbsp;same&nbsp;color&nbsp;c&nbsp;and&nbsp;size&nbsp;s.<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(nlines,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-drawPoints"><strong>drawPoints</strong></a>(x, size<font color="#909090">=None</font>, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;points&nbsp;with&nbsp;default&nbsp;or&nbsp;given&nbsp;size&nbsp;and&nbsp;color.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(npoints,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
-c&nbsp;is&nbsp;the&nbsp;point&nbsp;color<br>
-s&nbsp;is&nbsp;the&nbsp;point&nbsp;size</tt></dd></dl>
- <dl><dt><a name="-drawPolyLines"><strong>drawPolyLines</strong></a>(x, c, w, close<font color="#909090">=True</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;polylines.<br>
+If&nbsp;size&nbsp;(float)&nbsp;is&nbsp;given,&nbsp;it&nbsp;specifies&nbsp;the&nbsp;point&nbsp;size.<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(npoints,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-drawPolyLines"><strong>drawPolyLines</strong></a>(x, color<font color="#909090">=None</font>, close<font color="#909090">=True</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;polylines.<br>
 &nbsp;<br>
-x&nbsp;is&nbsp;a&nbsp;(ntri,n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.&nbsp;Each&nbsp;polyline&nbsp;consists<br>
+x&nbsp;is&nbsp;a&nbsp;(npoly,n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.&nbsp;Each&nbsp;polyline&nbsp;consists<br>
 of&nbsp;n&nbsp;or&nbsp;n-1&nbsp;line&nbsp;segments,&nbsp;depending&nbsp;on&nbsp;whether&nbsp;the&nbsp;polyline&nbsp;is&nbsp;closed<br>
 or&nbsp;not.&nbsp;The&nbsp;default&nbsp;is&nbsp;to&nbsp;close&nbsp;the&nbsp;polyline&nbsp;(connecting&nbsp;the&nbsp;last&nbsp;node<br>
 to&nbsp;the&nbsp;first.<br>
-c&nbsp;is&nbsp;a&nbsp;(ntri,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
-w&nbsp;is&nbsp;the&nbsp;linewidth.</tt></dd></dl>
- <dl><dt><a name="-drawQuadrilaterals"><strong>drawQuadrilaterals</strong></a>(x, c, mode)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;quadrilaterals.<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(npoly,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-drawPolygons"><strong>drawPolygons</strong></a>(x, mode, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;polygones.<br>
+&nbsp;<br>
+x&nbsp;is&nbsp;a&nbsp;(npoly,n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
+Each&nbsp;row&nbsp;contains&nbsp;n&nbsp;triangles&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;color.<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(npoly,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
+&nbsp;<br>
+mode&nbsp;is&nbsp;either&nbsp;'flat'&nbsp;or&nbsp;'smooth'&nbsp;:&nbsp;in&nbsp;'smooth'&nbsp;mode&nbsp;the&nbsp;normals<br>
+for&nbsp;the&nbsp;lighting&nbsp;are&nbsp;calculated&nbsp;and&nbsp;set</tt></dd></dl>
+ <dl><dt><a name="-drawQuadrilaterals"><strong>drawQuadrilaterals</strong></a>(x, mode, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;quadrilaterals.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(nquad,4*n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
 Each&nbsp;row&nbsp;contains&nbsp;n&nbsp;quads&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;color.<br>
-c&nbsp;is&nbsp;a&nbsp;(nquad,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
-mode&nbsp;is&nbsp;either&nbsp;'flat'&nbsp;or&nbsp;'smooth'</tt></dd></dl>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(npoly,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
+&nbsp;<br>
+mode&nbsp;is&nbsp;either&nbsp;'flat'&nbsp;or&nbsp;'smooth'&nbsp;:&nbsp;in&nbsp;'smooth'&nbsp;mode&nbsp;the&nbsp;normals<br>
+for&nbsp;the&nbsp;lighting&nbsp;are&nbsp;calculated&nbsp;and&nbsp;set</tt></dd></dl>
  <dl><dt><a name="-drawSphere"><strong>drawSphere</strong></a>(s, color<font color="#909090">=(0.0, 1.0, 1.0)</font>, ndiv<font color="#909090">=8</font>)</dt><dd><tt>Draws&nbsp;a&nbsp;centered&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;s&nbsp;in&nbsp;given&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-drawTriArray"><strong>drawTriArray</strong></a>(x, c, mode)</dt></dl>
- <dl><dt><a name="-drawTriEdges"><strong>drawTriEdges</strong></a>(x, c, w)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;lines.<br>
-&nbsp;<br>
-x&nbsp;is&nbsp;a&nbsp;(ntri,2*n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
-c&nbsp;is&nbsp;a&nbsp;(ntri,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
-w&nbsp;is&nbsp;the&nbsp;linewidth.</tt></dd></dl>
- <dl><dt><a name="-drawTriangles"><strong>drawTriangles</strong></a>(x, c, mode)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;triangles.<br>
+ <dl><dt><a name="-drawTriangles"><strong>drawTriangles</strong></a>(x, mode, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;triangles.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(ntri,3*n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
 Each&nbsp;row&nbsp;contains&nbsp;n&nbsp;triangles&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;color.<br>
-c&nbsp;is&nbsp;a&nbsp;(ntri,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
-mode&nbsp;is&nbsp;either&nbsp;'flat'&nbsp;or&nbsp;'smooth'</tt></dd></dl>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(npoly,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.<br>
+&nbsp;<br>
+mode&nbsp;is&nbsp;either&nbsp;'flat'&nbsp;or&nbsp;'smooth'&nbsp;:&nbsp;in&nbsp;'smooth'&nbsp;mode&nbsp;the&nbsp;normals<br>
+for&nbsp;the&nbsp;lighting&nbsp;are&nbsp;calculated&nbsp;and&nbsp;set</tt></dd></dl>
  <dl><dt><a name="-empty"><strong>empty</strong></a>(...)</dt><dd><tt><a href="#-empty">empty</a>((d1,...,dn),dtype=float,order='C')<br>
 &nbsp;<br>
 Return&nbsp;a&nbsp;new&nbsp;array&nbsp;of&nbsp;shape&nbsp;(d1,...,dn)&nbsp;and&nbsp;given&nbsp;type&nbsp;with&nbsp;all&nbsp;its<br>
@@ -1214,6 +1299,49 @@ Return&nbsp;a&nbsp;new&nbsp;uninitialized&nbsp;buffer&nbsp;<a href="__builtin__.
 mask.flat[n]&nbsp;is&nbsp;true.&nbsp;&nbsp;If&nbsp;values&nbsp;is&nbsp;not&nbsp;the&nbsp;same&nbsp;size&nbsp;of&nbsp;a&nbsp;and&nbsp;mask&nbsp;then<br>
 it&nbsp;will&nbsp;repeat.&nbsp;&nbsp;This&nbsp;gives&nbsp;different&nbsp;behavior&nbsp;than&nbsp;a[mask]&nbsp;=&nbsp;values.</tt></dd></dl>
  <dl><dt><a name="-restoredot"><strong>restoredot</strong></a>(...)</dt><dd><tt><a href="#-restoredot">restoredot</a>()&nbsp;restores&nbsp;dots&nbsp;to&nbsp;defaults.</tt></dd></dl>
+ <dl><dt><a name="-saneColor"><strong>saneColor</strong></a>(color<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;sane&nbsp;color&nbsp;array&nbsp;derived&nbsp;from&nbsp;the&nbsp;input&nbsp;color.<br>
+&nbsp;<br>
+A&nbsp;sane&nbsp;color&nbsp;is&nbsp;one&nbsp;that&nbsp;will&nbsp;be&nbsp;usable&nbsp;by&nbsp;the&nbsp;draw&nbsp;method.<br>
+The&nbsp;input&nbsp;value&nbsp;of&nbsp;color&nbsp;can&nbsp;be&nbsp;either&nbsp;of&nbsp;the&nbsp;following:<br>
+&nbsp;<br>
+-&nbsp;None:&nbsp;indicates&nbsp;that&nbsp;the&nbsp;default&nbsp;color&nbsp;will&nbsp;be&nbsp;used,<br>
+-&nbsp;a&nbsp;single&nbsp;color&nbsp;value&nbsp;in&nbsp;a&nbsp;format&nbsp;accepted&nbsp;by&nbsp;colors.GLColor,<br>
+-&nbsp;a&nbsp;tuple&nbsp;or&nbsp;list&nbsp;of&nbsp;such&nbsp;colors,<br>
+-&nbsp;an&nbsp;(3,)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values,&nbsp;ranging&nbsp;from&nbsp;0.0&nbsp;to&nbsp;1.0,<br>
+-&nbsp;an&nbsp;(n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values,<br>
+-&nbsp;an&nbsp;(n,)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;integer&nbsp;color&nbsp;indices.<br>
+&nbsp;<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;one&nbsp;of&nbsp;the&nbsp;following:<br>
+-&nbsp;None,&nbsp;indicating&nbsp;no&nbsp;color&nbsp;(current&nbsp;color&nbsp;will&nbsp;be&nbsp;used),<br>
+-&nbsp;a&nbsp;float&nbsp;array&nbsp;with&nbsp;shape&nbsp;(3,),&nbsp;indicating&nbsp;a&nbsp;single&nbsp;color,&nbsp;<br>
+-&nbsp;a&nbsp;float&nbsp;array&nbsp;with&nbsp;shape&nbsp;(n,3),&nbsp;holding&nbsp;a&nbsp;collectiong&nbsp;of&nbsp;colors,<br>
+-&nbsp;an&nbsp;integer&nbsp;array&nbsp;with&nbsp;shape&nbsp;(n,),&nbsp;holding&nbsp;color&nbsp;index&nbsp;values.<br>
+&nbsp;<br>
+!!&nbsp;Note&nbsp;that&nbsp;a&nbsp;single&nbsp;color&nbsp;can&nbsp;not&nbsp;be&nbsp;specified&nbsp;as&nbsp;integer&nbsp;RGB&nbsp;values.<br>
+A&nbsp;single&nbsp;list&nbsp;of&nbsp;integers&nbsp;will&nbsp;be&nbsp;interpreted&nbsp;as&nbsp;a&nbsp;color&nbsp;index&nbsp;!<br>
+Turning&nbsp;the&nbsp;single&nbsp;color&nbsp;into&nbsp;a&nbsp;list&nbsp;with&nbsp;one&nbsp;item&nbsp;will&nbsp;work&nbsp;though.<br>
+[[&nbsp;0,&nbsp;0,&nbsp;255&nbsp;]]&nbsp;will&nbsp;be&nbsp;the&nbsp;same&nbsp;as&nbsp;[&nbsp;'blue'&nbsp;],&nbsp;while<br>
+[&nbsp;0,0,255&nbsp;]&nbsp;would&nbsp;be&nbsp;a&nbsp;color&nbsp;index&nbsp;with&nbsp;3&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-saneColorSet"><strong>saneColorSet</strong></a>(color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>, ncolors<font color="#909090">=1</font>)</dt><dd><tt>Return&nbsp;a&nbsp;sane&nbsp;set&nbsp;of&nbsp;colors.<br>
+&nbsp;<br>
+A&nbsp;sane&nbsp;set&nbsp;of&nbsp;colors&nbsp;is&nbsp;one&nbsp;that&nbsp;guarantees&nbsp;correct&nbsp;use&nbsp;by&nbsp;the<br>
+draw&nbsp;functions.&nbsp;This&nbsp;means&nbsp;either<br>
+-&nbsp;no&nbsp;color&nbsp;(None)<br>
+-&nbsp;a&nbsp;single&nbsp;color<br>
+-&nbsp;at&nbsp;least&nbsp;as&nbsp;many&nbsp;colors&nbsp;as&nbsp;the&nbsp;value&nbsp;ncolors&nbsp;specifies<br>
+-&nbsp;a&nbsp;color&nbsp;index&nbsp;and&nbsp;a&nbsp;color&nbsp;map&nbsp;with&nbsp;enough&nbsp;colors&nbsp;to&nbsp;satisfy&nbsp;the&nbsp;index.<br>
+The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;tuple&nbsp;color,colormap.&nbsp;colormap&nbsp;will&nbsp;return<br>
+unchanged,&nbsp;unless&nbsp;color&nbsp;is&nbsp;an&nbsp;integer&nbsp;array,&nbsp;meaning&nbsp;a&nbsp;color&nbsp;index.</tt></dd></dl>
+ <dl><dt><a name="-saneLineWidth"><strong>saneLineWidth</strong></a>(linewidth)</dt><dd><tt>Return&nbsp;a&nbsp;sane&nbsp;value&nbsp;for&nbsp;the&nbsp;line&nbsp;width.<br>
+&nbsp;<br>
+A&nbsp;sane&nbsp;value&nbsp;is&nbsp;one&nbsp;that&nbsp;will&nbsp;be&nbsp;usable&nbsp;by&nbsp;the&nbsp;draw&nbsp;method.<br>
+It&nbsp;can&nbsp;be&nbsp;either&nbsp;of&nbsp;the&nbsp;following:<br>
+&nbsp;<br>
+-&nbsp;a&nbsp;float&nbsp;value&nbsp;indicating&nbsp;the&nbsp;line&nbsp;width&nbsp;to&nbsp;be&nbsp;set&nbsp;by&nbsp;draw()<br>
+-&nbsp;None:&nbsp;indicating&nbsp;that&nbsp;the&nbsp;default&nbsp;line&nbsp;width&nbsp;is&nbsp;to&nbsp;be&nbsp;used<br>
+&nbsp;<br>
+The&nbsp;line&nbsp;width&nbsp;is&nbsp;used&nbsp;in&nbsp;wireframe&nbsp;mode&nbsp;if&nbsp;plex&nbsp;&gt;&nbsp;1<br>
+and&nbsp;in&nbsp;rendering&nbsp;mode&nbsp;if&nbsp;plex==2.</tt></dd></dl>
  <dl><dt><a name="-set_numeric_ops"><strong>set_numeric_ops</strong></a>(...)</dt><dd><tt><a href="#-set_numeric_ops">set_numeric_ops</a>(op=func,&nbsp;...)<br>
 &nbsp;<br>
 Set&nbsp;some&nbsp;or&nbsp;all&nbsp;of&nbsp;the&nbsp;number&nbsp;methods&nbsp;for&nbsp;all&nbsp;array&nbsp;objects.&nbsp;&nbsp;Don't<br>
@@ -1283,7 +1411,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.float32'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex256'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1304,7 +1432,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...float64'&gt;: &lt;function &lt;lambda&gt; at 0x2b60c1fda500&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.uint8'&gt;: &lt;function &lt;lambda&gt; at 0x2b38fb3cf668&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1354,7 +1482,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.int64'&gt;: 8, &lt;type 'numpy.float64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.uint8'&gt;: 1, &lt;type 'numpy.bool_'&gt;: 1}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

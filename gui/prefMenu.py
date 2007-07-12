@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -7,11 +6,12 @@
 ## Distributed under the GNU General Public License, see file COPYING
 ## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
-"""Functions from the Pref menu."""
+"""Functions for the Pref menu."""
 
 import globaldata as GD
 import os
 
+from gettext import gettext as _
 import widgets
 import draw
 
@@ -35,12 +35,20 @@ def askConfigPreferences(items,prefix=None,store=None):
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
     res,accept = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if accept:
-        for i,r in zip(itemlist,res):
-            GD.debug("IN : %s\nOUT: %s" % (i,r))
-            if type(i[1]) == str:
-                store[r[0]] = r[1]
-            else:
-                store[r[0]] = eval(r[1])
+        GD.debug(res)
+        if draw.ack("Update the settings?"):
+            # This does not work for our Config class!
+            # store.update(res)
+            # Therefore, set individually
+            for k,v in res.items():
+                store[k] = v
+##        for i,r in zip(itemlist,res):
+##            GD.debug("IN : %s\nOUT: %s" % (i,r))
+##            if type(i[1]) == str:
+##                store[r[0]] = r[1]
+##            else:
+##                store[r[0]] = eval(r[1])
+        GD.debug(GD.cfg)
     return accept
 
 
@@ -58,7 +66,6 @@ def setBGcolor():
     col = widgets.getColor(col)
     if col:
         GD.cfg['draw/bgcolor'] = col
-        draw.bgcolor(col)
 
 def setLinewidth():
     askConfigPreferences(['draw/linewidth'])
@@ -124,5 +131,31 @@ def setAppearance():
         GD.gui.setStyle(stylename)
     if font:
         setFont(font)
+
+
+    
+
+MenuData = [
+    (_('&Settings'),[
+        (_('&Appearance'),setAppearance), 
+        (_('&Font'),setFont), 
+        (_('&Drawwait Timeout'),setDrawtimeout), 
+#        (_('&Background Color'),setBGcolor), 
+#        (_('Line&Width'),setLinewidth), 
+        (_('&Canvas Size'),setCanvasSize), 
+        (_('&Pick Size'),setPickSize), 
+        (_('&RotFactor'),setRotFactor),
+        (_('&PanFactor'),setPanFactor),
+        (_('&ZoomFactor'),setZoomFactor),
+        (_('&Rendering'),setRender),
+        (_('&Light0'),setLight0),
+        (_('&Light1'),setLight1),
+        (_('&Commands'),setCommands),
+        (_('&Help'),setHelp),
+        (_('&Save Preferences'),GD.savePreferences),
+        ]),
+    ]
+
+
    
 # End

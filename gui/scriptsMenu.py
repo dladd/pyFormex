@@ -13,13 +13,7 @@ import os
 import globaldata as GD
 import menu, utils, fileMenu
 from PyQt4 import QtCore, QtGui
-
-
-stopRunScripts = False
-
-def stopRunSequence():
-    global stopRunScripts
-    stopRunScripts = True
+import draw
     
 
 class ScriptsMenu(QtGui.QMenu):
@@ -115,7 +109,6 @@ class ScriptsMenu(QtGui.QMenu):
 
 
     def runAllNext(self):
-        global stopRunScripts
         try:
             i = self.files.index(self.current)
         except ValueError:
@@ -124,9 +117,8 @@ class ScriptsMenu(QtGui.QMenu):
         GD.gui.actions['Stop'].setEnabled(True)
         for f in self.files[i:]:
             self.runScript(f)
-            if stopRunScripts:
-                stopRunScripts = False
-                GD.debug("Exiting the sequence")
+            GD.debug("draw.exitrequested == %s" % draw.exitrequested)
+            if draw.exitrequested:
                 break
         GD.gui.actions['Stop'].setEnabled(False)
         GD.debug("Exiting runAllNext")

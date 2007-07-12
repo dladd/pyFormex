@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -16,6 +15,7 @@ import globaldata as GD
 import fileMenu
 import cameraMenu
 import prefMenu
+import viewportMenu
 import help
 import draw
 from plugins import stl_menu,formex_menu
@@ -35,6 +35,11 @@ def editor():
  
 def resetGUI():
     GD.gui.setBusy(False)
+    GD.gui.actions['Play'].setEnabled(True)
+    GD.gui.actions['Step'].setEnabled(True)
+    GD.gui.actions['Continue'].setEnabled(False)
+    GD.gui.actions['Stop'].setEnabled(False)
+
   
 
 def addViewport():
@@ -49,6 +54,12 @@ def removeViewport():
     if n > 1:
         GD.gui.viewports.removeView()
 
+
+def viewportSettings():
+    """Interactively set the viewport settings."""
+    
+
+            
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
 #
@@ -75,45 +86,17 @@ MenuData = [
         (_('---'),None),
         (_('E&xit'),'GD.app.exit'),
         ]),
-    (_('&Settings'),[
-        (_('&Appearance'),prefMenu.setAppearance), 
-        (_('&Font'),prefMenu.setFont), 
-        (_('&Drawwait Timeout'),prefMenu.setDrawtimeout), 
-        (_('&Background Color'),prefMenu.setBGcolor), 
-        (_('Line&Width'),prefMenu.setLinewidth), 
-        (_('&Canvas Size'),prefMenu.setCanvasSize), 
-        (_('&Pick Size'),prefMenu.setPickSize), 
-        (_('&RotFactor'),prefMenu.setRotFactor),
-        (_('&PanFactor'),prefMenu.setPanFactor),
-        (_('&ZoomFactor'),prefMenu.setZoomFactor),
-        (_('&Wireframe'),draw.wireframe),
-        (_('&Flat'),draw.flat),
-        (_('&Flat + Wireframe'),draw.flatwire),
-        (_('&Smooth'),draw.smooth),
-        (_('&Smooth + Wireframe'),draw.smoothwire),
-        (_('&Render'),prefMenu.setRender),
-        (_('&Light0'),prefMenu.setLight0),
-        (_('&Light1'),prefMenu.setLight1),
-        (_('&Commands'),prefMenu.setCommands),
-        (_('&Help'),prefMenu.setHelp),
-        (_('&Save Preferences'),GD.savePreferences), ]),
-    (_('&Viewport'),[
-        (_('&Clear'),draw.clear),
-        (_('Toggle &Triade'),draw.setTriade), 
-        (_('&Redraw'),draw.redraw),
-        (_('&Reset'),draw.reset),
-        (_('&Add new viewport'),addViewport), 
-        (_('&Remove last viewport'),removeViewport), 
-        ]),
     (_('&Actions'),[
         (_('&Step'),draw.step),
         (_('&Continue'),draw.fforward), 
         (_('&Reset GUI'),resetGUI),
-        (_('&Pick'),draw.pickDraw),
+        (_('&Force Finish Script'),draw.force_finish),
+        (_('&Test Pick'),draw.pickDraw),
         (_('&ListFormices'),draw.printall),
         (_('&PrintBbox'),draw.printbbox),
         (_('&PrintGlobals'),draw.printglobals),
         (_('&PrintConfig'),draw.printconfig),
+        (_('&PrintViewportSettings'),draw.printviewportsettings),
         ]),
     (_('&Help'),[
         (_('&pyformex options'),help.cmdline),
@@ -153,9 +136,14 @@ CameraMenuData = [
     ]
 
 
-def insertCameraMenu():
-    """Insert the camera menu data into the global menu data."""
-    MenuData[3:3] = CameraMenuData
-
+def createMenuData():
+    """Returns the full data menu."""
+    # Insert configurable menus
+    if GD.cfg.get('gui/prefsmenu','True'):
+        MenuData[1:1] = prefMenu.MenuData
+    if GD.cfg.get('gui/viewportmenu','True'):
+        MenuData[2:2] = viewportMenu.MenuData
+    if GD.cfg.get('gui/cameramenu','True'):
+        MenuData[3:3] = CameraMenuData
     
 # End

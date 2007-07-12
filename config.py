@@ -35,7 +35,7 @@ is limited to one level of sectioning.
 
 import copy
 
-def dicttostr(dic):
+def formatDict(dic):
     """Format a dict in Python source representation.
 
     Each (key,value) pair is formatted on a line : key = value.
@@ -421,11 +421,11 @@ class Config(Dict):
         s = "# Config written by pyFormex    -*- PYTHON -*-\n\n"
         for k,v in self.iteritems():
             if not isinstance(v,Dict):
-                s += dicttostr({k:v})
+                s += formatDict({k:v})
         for k,v in self.iteritems():
             if isinstance(v,Dict):
                 s += "\n[%s]\n" % k
-                s += dicttostr(v)
+                s += formatDict(v)
         s += "\n# End of config\n"
         return s
 

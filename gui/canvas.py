@@ -1,4 +1,3 @@
-# canvas.py
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -20,9 +19,7 @@ import camera
 import actors
 import decors
 import marks
-import image
 import utils
-
 
 class ActorList(list):
 
@@ -77,17 +74,16 @@ class ActorList(list):
 #
 #  The Canvas Settings
 #
-from config import dicttostr
 
 class CanvasSettings(object):
     """A collection of settings for an OpenGL Canvas."""
 
     default = dict(
-        rendermode = 'wireframe',
         linewidth = 1.0,
         bgcolor = colors.mediumgrey,
         fgcolor = colors.black,
         slcolor = colors.red,     # color for selected items
+        transparency = 1.0,       # opaque
         # colormap for mapping property values
         propcolors = [ colors.black, colors.red, colors.green, colors.blue,
                        colors.cyan, colors.magenta, colors.yellow, colors.white ],
@@ -98,8 +94,8 @@ class CanvasSettings(object):
         """Transform a dict to acceptable settings."""
         ok = {}
         keys = dict.keys()
-        if 'rendermode' in keys:
-            ok['rendermode'] = dict['rendermode']
+##        if 'rendermode' in keys:
+##            ok['rendermode'] = dict['rendermode']
         if 'linewidth' in keys:
             ok['linewidth'] =  float(dict['linewidth'])
         for c in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
@@ -123,7 +119,7 @@ class CanvasSettings(object):
             self.__dict__.update(CanvasSettings.checkDict(dict))
     
     def __str__(self):
-        return dicttostr(self.__dict__)
+        return utils.formatDict(self.__dict__)
                 
 ##################################################################
 #
@@ -131,7 +127,9 @@ class CanvasSettings(object):
 #
 class Canvas(object):
     """A canvas for OpenGL rendering."""
-    
+
+    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire']
+  
     # default light
     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
     
@@ -151,12 +149,27 @@ class Canvas(object):
         self.mousefunc = {}
         self.camera = None
         self.view_angles = camera.view_angles
+        GD.debug("Canvas Setting:\n%s"% self.settings)
 
 
-    def reset(self,dict={}):
+    def resetDefaults(self,dict={}):
         """Return all the settings to their default values."""
         self.settings.reset(dict)
 
+
+    def setRenderMode(self,rm):
+        """Set the rendermode.
+
+        This changes the rendermode and redraws everything with the new mode.
+        """
+        GD.debug("Changing Render Mode to %s" % rm)
+        if rm != self.rendermode:
+            if rm not in Canvas.rendermodes:
+                rm = Canvas.rendermodes[0]
+            self.rendermode = rm
+            GD.debug("Redrawing with mode %s" % self.rendermode)
+            self.glinit(self.rendermode)
+            self.redrawAll()
 
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
@@ -166,7 +179,9 @@ class Canvas(object):
     def setBgColor(self,bg):
         """Set the background color."""
         self.settings.bgcolor = colors.GLColor(bg)
-
+        self.clear()
+        self.redrawAll()
+        
 
     def setFgColor(self,fg):
         """Set the default foreground color."""
@@ -243,6 +258,7 @@ class Canvas(object):
 
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
+        GD.debug("CANVAS DEFAULTS: %s" % self.settings.linewidth)
         GL.glColor3fv(self.settings.fgcolor)
         GL.glLineWidth(self.settings.linewidth)
 
@@ -436,16 +452,16 @@ class Canvas(object):
         if self.cursor:
             self.removeDecoration(self.cursor)
         w,h = GD.cfg.get('pick/size',(20,20))
-        self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color='cyan',linewidth=1)
+        col = GD.cfg.get('pick/color','yellow')
+        self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color=col,linewidth=1)
         self.addDecoration(self.cursor)
 
     def draw_rectangle(self,x,y):
         if self.cursor:
             self.removeDecoration(self.cursor)
-        self.cursor = decors.Grid(self.statex,self.statey,x,y,color='cyan',linewidth=1)
+        col = GD.cfg.get('pick/color','yellow')
+        self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
         self.addDecoration(self.cursor)
 
-    def save(self,*args):
-        return image.save(self,*args)
 
 ### End

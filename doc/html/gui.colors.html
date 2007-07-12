@@ -29,10 +29,11 @@
 &nbsp;<br>
 The&nbsp;output&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;three&nbsp;RGB&nbsp;float&nbsp;values&nbsp;ranging&nbsp;from&nbsp;0.0&nbsp;to&nbsp;1.0.<br>
 The&nbsp;input&nbsp;can&nbsp;be&nbsp;any&nbsp;of&nbsp;the&nbsp;following:<br>
--&nbsp;a&nbsp;string&nbsp;specifying&nbsp;the&nbsp;Xwindow&nbsp;name&nbsp;of&nbsp;the&nbsp;color<br>
 -&nbsp;a&nbsp;QColor<br>
--&nbsp;a&nbsp;tuple&nbsp;or&nbsp;list&nbsp;of&nbsp;3&nbsp;int&nbsp;values&nbsp;0..255<br>
--&nbsp;a&nbsp;tuple&nbsp;or&nbsp;list&nbsp;of&nbsp;3&nbsp;float&nbsp;values&nbsp;0.0..1.0<br>
+-&nbsp;a&nbsp;string&nbsp;specifying&nbsp;the&nbsp;Xwindow&nbsp;name&nbsp;of&nbsp;the&nbsp;color<br>
+-&nbsp;a&nbsp;hex&nbsp;string&nbsp;'#RGB'&nbsp;with&nbsp;1&nbsp;to&nbsp;4&nbsp;hexadecimal&nbsp;digits&nbsp;per&nbsp;color&nbsp;<br>
+-&nbsp;a&nbsp;tuple&nbsp;or&nbsp;list&nbsp;of&nbsp;3&nbsp;integer&nbsp;values&nbsp;in&nbsp;the&nbsp;range&nbsp;0..255<br>
+-&nbsp;a&nbsp;tuple&nbsp;or&nbsp;list&nbsp;of&nbsp;3&nbsp;float&nbsp;values&nbsp;in&nbsp;the&nbsp;range&nbsp;0.0..1.0<br>
 Any&nbsp;other&nbsp;input&nbsp;may&nbsp;give&nbsp;unpredictable&nbsp;results.</tt></dd></dl>
  <dl><dt><a name="-GREY"><strong>GREY</strong></a>(val, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;grey&nbsp;OpenGL&nbsp;color&nbsp;of&nbsp;given&nbsp;intensity&nbsp;(0..1)</tt></dd></dl>
  <dl><dt><a name="-RGBA"><strong>RGBA</strong></a>(rgb, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Adds&nbsp;an&nbsp;alpha&nbsp;channel&nbsp;to&nbsp;an&nbsp;RGB&nbsp;color</tt></dd></dl>

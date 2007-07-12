@@ -25,21 +25,22 @@ STL&nbsp;plugin&nbsp;menu&nbsp;for&nbsp;pyFormex.</tt></p>
 <a href="gui.actors.html">gui.actors</a><br>
 <a href="gui.colors.html">gui.colors</a><br>
 <a href="commands.html">commands</a><br>
-</td><td width="25%" valign=top><a href="copy.html">copy</a><br>
-<a href="gui.decors.html">gui.decors</a><br>
+<a href="copy.html">copy</a><br>
+</td><td width="25%" valign=top><a href="gui.decors.html">gui.decors</a><br>
 <a href="plugins.f2abq.html">plugins.f2abq</a><br>
 <a href="formex.html">formex</a><br>
 <a href="plugins.formex_menu.html">plugins.formex_menu</a><br>
 <a href="gui.marks.html">gui.marks</a><br>
-</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="numpy.html">numpy</a><br>
 <a href="os.html">os</a><br>
-<a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
 <a href="plugins.stl.html">plugins.stl</a><br>
 <a href="plugins.stl_abq.html">plugins.stl_abq</a><br>
 <a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="plugins.tetgen.html">plugins.tetgen</a><br>
+<a href="plugins.tetgen.html">plugins.tetgen</a><br>
 <a href="threading.html">threading</a><br>
-<a href="timer.html">timer</a><br>
+<a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="timer.html">timer</a><br>
 <a href="types.html">types</a><br>
 <a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
@@ -68,14 +69,19 @@ Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope
  <dl><dt><a name="-flytru_stl"><strong>flytru_stl</strong></a>()</dt><dd><tt>Fly&nbsp;through&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-keep_surface"><strong>keep_surface</strong></a>(nodes, elems, ask<font color="#909090">=False</font>)</dt><dd><tt>Replace&nbsp;the&nbsp;current&nbsp;model&nbsp;with&nbsp;a&nbsp;new&nbsp;one.</tt></dd></dl>
  <dl><dt><a name="-name_surface"><strong>name_surface</strong></a>()</dt><dd><tt>Save&nbsp;the&nbsp;current&nbsp;model&nbsp;(in&nbsp;memory!)&nbsp;under&nbsp;a&nbsp;name.</tt></dd></dl>
- <dl><dt><a name="-read_surface"><strong>read_surface</strong></a>(types<font color="#909090">=['stl/off', 'stl', 'off', 'neu', 'smesh', 'gts']</font>, show<font color="#909090">=True</font>)</dt><dd><tt>Read&nbsp;STL&nbsp;model&nbsp;from&nbsp;file&nbsp;fn.<br>
+ <dl><dt><a name="-read_surface"><strong>read_surface</strong></a>(fn<font color="#909090">=''</font>, types<font color="#909090">=['stl/off', 'stl', 'off', 'neu', 'smesh', 'gts']</font>, convert<font color="#909090">=None</font>, show<font color="#909090">=True</font>)</dt><dd><tt>Read&nbsp;STL&nbsp;model&nbsp;from&nbsp;file&nbsp;fn.<br>
 &nbsp;<br>
 If&nbsp;no&nbsp;file&nbsp;is&nbsp;given,&nbsp;one&nbsp;is&nbsp;asked.<br>
-The&nbsp;file&nbsp;fn&nbsp;should&nbsp;exist&nbsp;and&nbsp;contain&nbsp;a&nbsp;valid&nbsp;STL&nbsp;model.<br>
+The&nbsp;file&nbsp;fn&nbsp;should&nbsp;exist&nbsp;and&nbsp;contain&nbsp;a&nbsp;valid&nbsp;surface&nbsp;model.<br>
+&nbsp;<br>
 The&nbsp;STL&nbsp;model&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;Formex&nbsp;F.<br>
 The&nbsp;workdir&nbsp;and&nbsp;project&nbsp;name&nbsp;are&nbsp;set&nbsp;from&nbsp;the&nbsp;filename.<br>
 The&nbsp;Formex&nbsp;is&nbsp;stored&nbsp;under&nbsp;the&nbsp;project&nbsp;basename.<br>
-The&nbsp;model&nbsp;is&nbsp;displayed.</tt></dd></dl>
+The&nbsp;model&nbsp;is&nbsp;displayed.<br>
+&nbsp;<br>
+If&nbsp;convert&nbsp;==&nbsp;True,&nbsp;the&nbsp;model&nbsp;is&nbsp;converted&nbsp;to&nbsp;a&nbsp;Formex.<br>
+If&nbsp;convert&nbsp;==&nbsp;False,&nbsp;it&nbsp;will&nbsp;not&nbsp;be&nbsp;converted.<br>
+The&nbsp;default&nbsp;is&nbsp;to&nbsp;ask&nbsp;the&nbsp;user.</tt></dd></dl>
  <dl><dt><a name="-read_tetgen"><strong>read_tetgen</strong></a>(surface<font color="#909090">=True</font>, volume<font color="#909090">=True</font>)</dt><dd><tt>Read&nbsp;a&nbsp;tetgen&nbsp;model&nbsp;from&nbsp;files&nbsp;&nbsp;fn.node,&nbsp;fn.ele,&nbsp;fn.smesh.</tt></dd></dl>
  <dl><dt><a name="-read_tetgen_surface"><strong>read_tetgen_surface</strong></a>()</dt></dl>
  <dl><dt><a name="-read_tetgen_volume"><strong>read_tetgen_volume</strong></a>()</dt></dl>
@@ -94,7 +100,7 @@ The&nbsp;model&nbsp;is&nbsp;displayed.</tt></dd></dl>
 This&nbsp;is&nbsp;based&nbsp;on&nbsp;the&nbsp;stl&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-show_surface"><strong>show_surface</strong></a>(surface<font color="#909090">=None</font>, color<font color="#909090">=None</font>, clearing<font color="#909090">=True</font>, view<font color="#909090">=None</font>)</dt><dd><tt>Display&nbsp;the&nbsp;surface&nbsp;model.</tt></dd></dl>
  <dl><dt><a name="-show_volume"><strong>show_volume</strong></a>()</dt><dd><tt>Display&nbsp;the&nbsp;volume&nbsp;model.</tt></dd></dl>
- <dl><dt><a name="-toFormex"><strong>toFormex</strong></a>()</dt><dd><tt>Transform&nbsp;the&nbsp;surface&nbsp;model&nbsp;to&nbsp;a&nbsp;named&nbsp;Formex.<br>
+ <dl><dt><a name="-toFormex"><strong>toFormex</strong></a>(name<font color="#909090">=''</font>)</dt><dd><tt>Transform&nbsp;the&nbsp;surface&nbsp;model&nbsp;to&nbsp;a&nbsp;named&nbsp;Formex.<br>
 &nbsp;<br>
 The&nbsp;name&nbsp;of&nbsp;the&nbsp;Formex&nbsp;is&nbsp;returned,&nbsp;unless&nbsp;the&nbsp;user&nbsp;cancelled&nbsp;the<br>
 operation.</tt></dd></dl>
@@ -122,6 +128,7 @@ Returns&nbsp;an&nbsp;array&nbsp;with&nbsp;the&nbsp;remaining&nbsp;elements.</tt>
 <strong>outtimer</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>
+<strong>starttime</strong> = 0.0<br>
 <strong>stepmode</strong> = False<br>
 <strong>wakeupMode</strong> = 0</td></tr></table>
 </body></html>

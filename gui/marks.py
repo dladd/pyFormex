@@ -63,3 +63,21 @@ class MarkList(Mark):
         for p,v in zip(self.pos,self.val):
             GL.glRasterPos3fv(p)
             drawGlutText(str(v),self.font)
+
+
+    def drawpick(self):
+        GL.glSelectBuffer(16+3*len(self.val))
+        GL.glRenderMode(GL.GL_SELECT)
+        GL.glInitNames() # init the name stack
+        for p,v in zip(self.pos,self.val):
+            GL.glPushName(v)
+            GL.glRasterPos3fv(p)
+            drawGlutText(str(v),self.font)
+            GL.glPopName()
+        buf = GL.glRenderMode(GL.GL_RENDER)
+        numbers =[]
+        for r in buf:
+            print r[2]
+            numbers += map(int,r[2])
+        return numbers
+        

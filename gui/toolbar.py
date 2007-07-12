@@ -17,9 +17,6 @@ import fileMenu, scriptsMenu
 import cameraMenu
 import draw
 
-def stop():
-    GD.debug("Stopping Run Sequence")
-    scriptsMenu.stopRunSequence()
 
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
@@ -29,7 +26,23 @@ def addActionButtons(toolbar):
     buttons = [ [ "Play", "next", fileMenu.play, False ],
                 [ "Step", "nextstop", draw.step, False ],
                 [ "Continue", "ff", draw.fforward, False ],
-                [ "Stop", "stop", stop, False ],
+                [ "Stop", "stop", draw.stopatbreakpt, False ],
+              ]
+    for b in buttons:
+        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.cfg['gui/icontype']))
+        a = toolbar.addAction(icon,b[0],b[2])
+        a.setEnabled(b[3])
+        action[b[0]] = a
+    return action
+
+################### Script action toolbar ###########
+def addRenderButtons(toolbar):
+    """Add the rendermode buttons to the toolbar."""
+    action = {}
+    dir = GD.cfg['icondir']
+    buttons = [ [ "Wireframe", "wireframe", draw.wireframe, True ],
+                [ "Smooth", "smooth", draw.smooth, True ],
+                [ "Flat", "flat", draw.flat, True ],
               ]
     for b in buttons:
         icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.cfg['gui/icontype']))

@@ -1,4 +1,3 @@
-# actors.py
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -18,6 +17,18 @@ from plugins import elements
 
 
 ### Some drawing functions ###############################################
+
+def glColor(color,alpha=1.0):
+    """Set the OpenGL color, possibly with transparency.
+
+    color is a tuple of 3 real values.
+    alpha is a single real value.
+    All values are between 0.0 and 1.0
+    """
+    if alpha == 1.0:
+        GL.glColor3fv(color)
+    else:
+        GL.glColor4fv(tuple(color) + (alpha,)) 
 
 
 def drawPoints(x,size=None,color=None):
@@ -131,7 +142,7 @@ def drawPolyLines(x,color=None,close=True):
         GL.glEnd()
 
 
-def drawTriangles(x,mode,color=None):
+def drawTriangles(x,mode,color=None,alpha=1.0):
     """Draw a collection of triangles.
 
     x is a (ntri,3*n,3) shaped array of coordinates.
@@ -147,7 +158,7 @@ def drawTriangles(x,mode,color=None):
     GL.glBegin(GL.GL_TRIANGLES)
     for i in range(x.shape[0]):
         if color is not None:
-            GL.glColor3fv(color[i])
+            glColor(color[i],alpha)
         if mode == 'smooth':
             GL.glNormal3fv(normal[i])
         for j in range(x.shape[1]):
@@ -341,7 +352,8 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
         if color.dtype.kind == 'i':
             ncolors = color.max()+1
             if colormap is None:
-                colormap = saneColor(GD.canvas.settings.propcolors)
+                colormap = GD.canvas.settings.propcolors
+            colormap = saneColor(colormap)
             if colormap.shape[0] < ncolors:
                 colormap = resize(colormap,(ncolors,3))
         else:
@@ -350,7 +362,7 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
 
     GD.debug("COLOR OUT: %s" % str(color))
     if colormap is not None:
-        print "MAP: %s" % str(colormap)
+        GD.debug("MAP: %s" % str(colormap))
     return color,colormap
 
 
@@ -488,7 +500,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,markscale=None,marksize=None,eltype=None):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,markscale=None,marksize=None,eltype=None,alpha=1.0):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -525,7 +537,13 @@ class FormexActor(Actor,Formex):
 
     def setBkColor(self,color=None,colormap=None):
         """Set the backside color of the Actor."""
-        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.nelems()) 
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.nelems())
+
+    def setAlpha(self,alpha):
+        """Set the Actors alpha value."""
+        self.alpha = float(alpha)
+        if alpha != 1.0:
+            GD.debug("Setting Actor's ALPHA value to %f" % alpha)
 
 
     def setMarkSize(self,marksize):
@@ -536,15 +554,14 @@ class FormexActor(Actor,Formex):
 #### DEFAULT MARK SIZE SHOULD BECOME A CANVAS SETTING!!
         
         if marksize is None:
-            if self.eltype == 'point3d':
-                # ! THIS SHOULD BE SET FROM THE SCENE SIZE
-                #   RATHER THAN FORMEX SIZE 
-                marksize = self.size() * float(markscale)
-                if marksize <= 0.0:
-                    marksize = 1.0
-                self.setMark(marksize,"cube")
-            else:
-                marksize = 4.0 # default size 
+            marksize = 4.0 # default size 
+        if self.eltype == 'point3d':
+            # ! THIS SHOULD BE SET FROM THE SCENE SIZE
+            #   RATHER THAN FORMEX SIZE 
+            marksize = self.size() * marksize
+            if marksize <= 0.0:
+                marksize = 1.0
+            self.setMark(marksize,"cube")
         self.marksize = marksize
 
 
@@ -562,7 +579,7 @@ class FormexActor(Actor,Formex):
     bbox = Formex.bbox
 
 
-    def draw(self,mode='wireframe',color=None):
+    def draw(self,mode='wireframe',color=None,alpha=1.0):
         """Draw the formex.
 
         if color is None, it is drawn with the color specified on creation.
@@ -631,7 +648,7 @@ class FormexActor(Actor,Formex):
                 drawPolyLines(self.f,color)
                 
         elif nnod == 3:
-            drawTriangles(self.f,mode,color)
+            drawTriangles(self.f,mode,color,alpha)
             
         elif nnod == 4:
             if self.eltype=='tet':

@@ -76,11 +76,14 @@ draw(F)
 
 res = askItems([['Connect circles',True],['Create Triangles',True],['Fly Through',True]])
 
+if res:
 
-if res['Connect circles']:
-    conn = range(0,180,15)
-    G = Formex.concatenate([ connect([c1.select(conn),c2.select(conn)]) for c1,c2 in zip(circles[:-1],circles[1:]) ])
-    draw(G)
+    if res['Connect circles'] or res['Create Triangles']:
+        conn = range(0,180,15)
+        
+    if res['Connect circles']:
+        G = Formex.concatenate([ connect([c1.select(conn),c2.select(conn)]) for c1,c2 in zip(circles[:-1],circles[1:]) ])
+        draw(G)
 
     if res['Create Triangles']:
         conn1 = concatenate([conn[1:],conn[:1]])
@@ -88,11 +91,11 @@ if res['Connect circles']:
         smooth()
         draw(G)
 
-if res['Fly Through']:
-    flyAlong(curve,sleeptime=0.1)
-    clear()
-    draw(line)
-    draw(curve)
-    draw(F)
+    if res['Fly Through']:
+        flyAlong(curve,sleeptime=0.1)
+        clear()
+        draw(line)
+        draw(curve)
+        draw(F)
 
 

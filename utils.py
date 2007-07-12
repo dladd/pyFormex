@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -11,6 +10,7 @@
 
 import globaldata as GD
 import os,commands,re
+from config import formatDict
 
 ## import distutils.version
 ## Version=distutils.version.LooseVersion
@@ -304,28 +304,15 @@ def interrogate(item):
         print "DOC:     ", firstline
 
 
-def deprecated2(func, name=None):
-    if name is None:
-        name = func.__name__
-    def wrapped(*args, **kargs):
-        print "Calling", name, args, kargs
-        result = func(*args, **kargs)
-        print "Called", name, args, kargs, "returned", repr(result)
-        return result
-    wrapped.__doc__ = func.__doc__
-    return wrapped
+def deprecated(replacement):
+    def decorator(func):
+        #print "Replacement %s" % replacement.func_name
+        def wrapper(*__args,**__kw):
+            print "Function %s is deprecated: use %s instead" % (func.func_name,replacement.func_name)
+            return replacement(*__args,**__kw)
+        return wrapper
+    decorator.__doc__ = replacement.__doc__
+    return decorator
 
-def formatDict(dic):
-    """Format a dict in Python source representation.
 
-    Each (key,value) pair is formatted on a line : key = value.
-    """
-    s = ""
-    if isinstance(dic,dict):
-        for k,v in dic.iteritems():
-            if type(v) == str:
-                s += '%s = "%s"\n' % (k,v)
-            else:
-                s += '%s = %s\n' % (k,v)
-    return s
-
+### End

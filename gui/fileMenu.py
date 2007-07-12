@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -16,10 +15,6 @@ import draw
 import utils
 
 
-def newFile():
-    return openFile(False)
-
-
 def openFile(exist=True):
     """Open a file selection dialog and set the selection as the current file.
 
@@ -33,6 +28,10 @@ def openFile(exist=True):
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD.gui.setcurfile(fn)
         GD.gui.history.add(fn)
+
+
+def newFile():
+    return openFile(False)
         
         
 def edit():
@@ -40,7 +39,7 @@ def edit():
 
     This only works if the editor was set in the configuration.
     The author uses 'gnuclient' to load the files in a running copy
-    of xemacs.
+    of (X)Emacs.
     """
     if GD.cfg['editor']:
         pid = utils.spawn(GD.cfg['editor'] % GD.cfg['curfile'])

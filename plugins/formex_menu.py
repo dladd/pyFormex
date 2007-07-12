@@ -8,9 +8,10 @@
 ## Copyright (C) Benedict Verhegghe except where stated otherwise 
 ##
 
-"""Formex.py
+"""formex_menu.py
 
-Executing this script creates a Formex menu in the menubar.
+This is a pyFormex plugin. It is not intended to be executed as a script,
+but to be loaded as a plugin.
 """
 
 import globaldata as GD

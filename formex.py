@@ -11,15 +11,6 @@
 
 from numpy import *
 
-def deprecated(replacement):
-    def decorator(func):
-        #print "Replacement %s" % replacement.func_name
-        def wrapper(*__args,**__kw):
-            print "Function %s is deprecated: use %s instead" % (func.func_name,replacement.func_name)
-            return replacement(*__args,**__kw)
-        return wrapper
-    decorator.__doc__ = replacement.__doc__
-    return decorator
 
 def istype(a,c):
     return asarray(a).dtype.kind == c
@@ -790,12 +781,9 @@ class Formex:
         the ndarray, this method allows writing code tha works with both
         Formex and ndarray instances. The results is of course always an
         ndarray.
-        This method is prefered over the (deprecated) data().
         """
         return self.f
-    def data(self):
-        """Return the Formex as a numpy array (ndarray)"""
-        return self.f
+
     def x(self):
         """Return the x-plane"""
         return self.f[:,:,0]
@@ -2007,7 +1995,11 @@ class Formex:
     # These functions are retained mainly for compatibility reasons.
     # New users should avoid these functions!
     # They may (will) be removed in future.
+    from utils import deprecated
 
+    @deprecated(view)
+    def data(self):
+        pass
 
     @deprecated(points)
     def nodes(self):
@@ -2270,6 +2262,10 @@ def bbox(formexlist):
     """
     return Formex(concatenate([ [f.bbox()] for f in formexlist ])).bbox()
 
+
+############### DEPRECATED FUNCTIONS ##################
+
+from utils import deprecated
 
 @deprecated(Formex.divide)
 def divide(F,div):

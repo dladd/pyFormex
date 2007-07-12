@@ -32,7 +32,8 @@
 <a href="re.html">re</a><br>
 <a href="sys.html">sys</a><br>
 <a href="threading.html">threading</a><br>
-</td><td width="25%" valign=top><a href="types.html">types</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+<a href="types.html">types</a><br>
 <a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
 </td></tr></table></td></tr></table><p>
@@ -46,7 +47,7 @@
  <dl><dt><a name="-Globals"><strong>Globals</strong></a> = globals(...)</dt><dd><tt>globals()&nbsp;-&gt;&nbsp;dictionary<br>
 &nbsp;<br>
 Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
- <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.4.2-r1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex version 0.4.2-r1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
@@ -58,7 +59,8 @@ Returns&nbsp;index&nbsp;of&nbsp;the&nbsp;chosen&nbsp;answer.</tt></dd></dl>
 Input&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;items&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;[key,value]&nbsp;pairs.<br>
 The&nbsp;latter&nbsp;is&nbsp;recommended,&nbsp;because&nbsp;a&nbsp;dictionary&nbsp;does&nbsp;not&nbsp;guarantee<br>
 the&nbsp;order&nbsp;of&nbsp;the&nbsp;items.<br>
-Returns&nbsp;a&nbsp;dictionary&nbsp;(maybe&nbsp;we&nbsp;should&nbsp;just&nbsp;return&nbsp;the&nbsp;list??)</tt></dd></dl>
+Returns&nbsp;a&nbsp;dictionary&nbsp;with&nbsp;the&nbsp;results,&nbsp;equal&nbsp;to&nbsp;the&nbsp;input&nbsp;if&nbsp;the&nbsp;user<br>
+exited&nbsp;with&nbsp;a&nbsp;cancel.</tt></dd></dl>
  <dl><dt><a name="-backView"><strong>backView</strong></a>()</dt></dl>
  <dl><dt><a name="-bgcolor"><strong>bgcolor</strong></a>(color)</dt><dd><tt>Change&nbsp;the&nbsp;background&nbsp;color&nbsp;(and&nbsp;redraw).</tt></dd></dl>
  <dl><dt><a name="-bottomView"><strong>bottomView</strong></a>()</dt></dl>
@@ -83,7 +85,7 @@ If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nb
 a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
  <dl><dt><a name="-decorate"><strong>decorate</strong></a>(decor)</dt><dd><tt>Draw&nbsp;a&nbsp;decoration.</tt></dd></dl>
  <dl><dt><a name="-delay"><strong>delay</strong></a>(i)</dt><dd><tt>Set&nbsp;the&nbsp;draw&nbsp;delay&nbsp;in&nbsp;seconds.</tt></dd></dl>
- <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, colormap<font color="#909090">=None</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
 &nbsp;<br>
 If&nbsp;F&nbsp;is&nbsp;a&nbsp;list,&nbsp;all&nbsp;its&nbsp;items&nbsp;are&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;settings.<br>
 &nbsp;<br>
@@ -125,7 +127,6 @@ The&nbsp;user&nbsp;can&nbsp;disable&nbsp;the&nbsp;wait&nbsp;cycle&nbsp;for&nbsp;
 specifying&nbsp;wait=False.&nbsp;Setting&nbsp;drawdelay=0&nbsp;will&nbsp;disable&nbsp;the&nbsp;waiting<br>
 mechanism&nbsp;for&nbsp;all&nbsp;subsequent&nbsp;draw&nbsp;statements&nbsp;(until&nbsp;set&nbsp;&gt;0&nbsp;again).</tt></dd></dl>
  <dl><dt><a name="-drawNumbers"><strong>drawNumbers</strong></a>(F)</dt><dd><tt>Draw&nbsp;numbers&nbsp;on&nbsp;all&nbsp;elements&nbsp;of&nbsp;F.</tt></dd></dl>
- <dl><dt><a name="-drawTriade"><strong>drawTriade</strong></a>()</dt><dd><tt>Show&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-drawblock"><strong>drawblock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;indefinitely.</tt></dd></dl>
  <dl><dt><a name="-drawlock"><strong>drawlock</strong></a>()</dt><dd><tt>Lock&nbsp;the&nbsp;drawing&nbsp;function&nbsp;for&nbsp;the&nbsp;next&nbsp;drawdelay&nbsp;seconds.</tt></dd></dl>
  <dl><dt><a name="-drawrelease"><strong>drawrelease</strong></a>()</dt><dd><tt>Release&nbsp;the&nbsp;drawing&nbsp;function.<br>
@@ -143,6 +144,7 @@ While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
  <dl><dt><a name="-flatwire"><strong>flatwire</strong></a>()</dt></dl>
  <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=None</font>)</dt></dl>
+ <dl><dt><a name="-force_finish"><strong>force_finish</strong></a>()</dt></dl>
  <dl><dt><a name="-forget"><strong>forget</strong></a>(names)</dt></dl>
  <dl><dt><a name="-formatInfo"><strong>formatInfo</strong></a>(F)</dt><dd><tt>Return&nbsp;formatted&nbsp;information&nbsp;about&nbsp;a&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
@@ -169,6 +171,7 @@ The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
  <dl><dt><a name="-pick"><strong>pick</strong></a>()</dt></dl>
  <dl><dt><a name="-pickDraw"><strong>pickDraw</strong></a>()</dt></dl>
+ <dl><dt><a name="-pickNumbers"><strong>pickNumbers</strong></a>(marks<font color="#909090">=None</font>)</dt></dl>
  <dl><dt><a name="-play"><strong>play</strong></a>(fn<font color="#909090">=None</font>, step<font color="#909090">=False</font>)</dt><dd><tt>Play&nbsp;a&nbsp;formex&nbsp;script&nbsp;from&nbsp;file&nbsp;fn&nbsp;or&nbsp;from&nbsp;the&nbsp;current&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;does&nbsp;nothing&nbsp;if&nbsp;no&nbsp;file&nbsp;is&nbsp;passed&nbsp;or&nbsp;no&nbsp;current<br>
@@ -188,10 +191,10 @@ the&nbsp;script&nbsp;that&nbsp;starts&nbsp;with&nbsp;'draw'.&nbsp;Also&nbsp;(in&
  <dl><dt><a name="-printconfig"><strong>printconfig</strong></a>()</dt></dl>
  <dl><dt><a name="-printglobals"><strong>printglobals</strong></a>()</dt></dl>
  <dl><dt><a name="-redraw"><strong>redraw</strong></a>()</dt></dl>
- <dl><dt><a name="-removeTriade"><strong>removeTriade</strong></a>()</dt><dd><tt>Remove&nbsp;the&nbsp;global&nbsp;axes.</tt></dd></dl>
  <dl><dt><a name="-renderMode"><strong>renderMode</strong></a>(mode)</dt></dl>
  <dl><dt><a name="-reset"><strong>reset</strong></a>()</dt></dl>
  <dl><dt><a name="-rightView"><strong>rightView</strong></a>()</dt></dl>
+ <dl><dt><a name="-runtime"><strong>runtime</strong></a>()</dt><dd><tt>Return&nbsp;the&nbsp;time&nbsp;elapsed&nbsp;since&nbsp;start&nbsp;of&nbsp;execution&nbsp;of&nbsp;the&nbsp;script.</tt></dd></dl>
  <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>(filename<font color="#909090">=None</font>, window<font color="#909090">=False</font>, multi<font color="#909090">=False</font>, hotkey<font color="#909090">=True</font>, autosave<font color="#909090">=False</font>, format<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Starts&nbsp;or&nbsp;stops&nbsp;saving&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
 &nbsp;<br>
 With&nbsp;a&nbsp;filename,&nbsp;this&nbsp;starts&nbsp;or&nbsp;changes&nbsp;the&nbsp;multisave&nbsp;mode.<br>
@@ -231,16 +234,20 @@ Else,&nbsp;the&nbsp;main&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.</tt></dd>
 This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
 If&nbsp;a&nbsp;window&nbsp;is&nbsp;specified,&nbsp;the&nbsp;named&nbsp;window&nbsp;is&nbsp;saved.<br>
 Else,&nbsp;the&nbsp;main&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.</tt></dd></dl>
- <dl><dt><a name="-setDrawingOptions"><strong>setDrawingOptions</strong></a>(d)</dt></dl>
+ <dl><dt><a name="-setDrawOptions"><strong>setDrawOptions</strong></a>(d)</dt></dl>
  <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
+ <dl><dt><a name="-setTriade"><strong>setTriade</strong></a>(on<font color="#909090">=None</font>)</dt><dd><tt>Toggle&nbsp;the&nbsp;display&nbsp;of&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.<br>
+&nbsp;<br>
+If&nbsp;on&nbsp;is&nbsp;True,&nbsp;the&nbsp;axes&nbsp;triade&nbsp;is&nbsp;displayed,&nbsp;if&nbsp;False&nbsp;it&nbsp;is<br>
+removed.&nbsp;The&nbsp;default&nbsp;(None)&nbsp;toggles&nbsp;between&nbsp;on&nbsp;and&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-setView"><strong>setView</strong></a>(name, angles<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;view&nbsp;for&nbsp;future&nbsp;drawing&nbsp;operations.<br>
 &nbsp;<br>
 If&nbsp;no&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;the&nbsp;name&nbsp;should&nbsp;be&nbsp;an&nbsp;existing&nbsp;view,&nbsp;or<br>
 the&nbsp;predefined&nbsp;value&nbsp;'__last__'.<br>
 If&nbsp;angles&nbsp;are&nbsp;specified,&nbsp;this&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;<a href="#-createView">createView</a>(name,angles)<br>
 followed&nbsp;by&nbsp;<a href="#-setView">setView</a>(name).</tt></dd></dl>
- <dl><dt><a name="-showDrawingOptions"><strong>showDrawingOptions</strong></a>()</dt></dl>
+ <dl><dt><a name="-showDrawOptions"><strong>showDrawOptions</strong></a>()</dt></dl>
  <dl><dt><a name="-sleep"><strong>sleep</strong></a>(timeout<font color="#909090">=None</font>)</dt><dd><tt>Sleep&nbsp;until&nbsp;key/mouse&nbsp;press&nbsp;in&nbsp;the&nbsp;canvas&nbsp;or&nbsp;until&nbsp;timeout</tt></dd></dl>
  <dl><dt><a name="-smooth"><strong>smooth</strong></a>()</dt></dl>
  <dl><dt><a name="-smoothwire"><strong>smoothwire</strong></a>()</dt></dl>
@@ -252,7 +259,6 @@ Else,&nbsp;it&nbsp;starts&nbsp;the&nbsp;script&nbsp;in&nbsp;step&nbsp;mode.</tt>
  <dl><dt><a name="-step_script"><strong>step_script</strong></a>(s, glob, paus<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-textView"><strong>textView</strong></a>(text)</dt><dd><tt>Display&nbsp;a&nbsp;text&nbsp;file&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;response.</tt></dd></dl>
  <dl><dt><a name="-timeout"><strong>timeout</strong></a>(secs)</dt><dd><tt>Raise&nbsp;a&nbsp;timeout&nbsp;error&nbsp;after&nbsp;secs.</tt></dd></dl>
- <dl><dt><a name="-toggleTriade"><strong>toggleTriade</strong></a>()</dt><dd><tt>Toggle&nbsp;the&nbsp;global&nbsp;axes&nbsp;on&nbsp;or&nbsp;off.</tt></dd></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
  <dl><dt><a name="-undecorate"><strong>undecorate</strong></a>(decor)</dt></dl>
  <dl><dt><a name="-undraw"><strong>undraw</strong></a>(itemlist)</dt><dd><tt>Remove&nbsp;an&nbsp;item&nbsp;or&nbsp;a&nbsp;number&nbsp;of&nbsp;items&nbsp;from&nbsp;the&nbsp;canvas.<br>
@@ -285,6 +291,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>outtimer</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>
+<strong>starttime</strong> = 0.0<br>
 <strong>stepmode</strong> = False<br>
 <strong>wakeupMode</strong> = 0</td></tr></table>
 </body></html>

@@ -11,6 +11,7 @@
 import os,types
 from PyQt4 import QtCore, QtGui
 import globaldata as GD
+import colors
 
 
 class FileSelection(QtGui.QFileDialog):
@@ -250,7 +251,7 @@ class Selection(QtGui.QDialog):
 # !! The color selection dialog is created by the static getColor
 # !! function.
 
-def getColor(col=None):
+def getColor(col=None,caption=None):
     """Create a color selection dialog and return the selected color.
 
     col is the initial selection.
@@ -267,85 +268,179 @@ def getColor(col=None):
     else:
         return None
 
-
-## !! THIS IS NOT FULLY FUNCTIONAL YET
+#####################################################################
+########### General Input Dialog ####################################
 
 class InputItem(QtGui.QHBoxLayout):
-    """A single input item with a name label in front.
+    """A single input item, usually with a label in front.
 
     The widget is a QHBoxLayout which can be embedded in the vertical
     layout of a dialog.
+    
+    This is a super class, which just creates the label. The input
+    field(s) should be added by a dedicated subclass.
+
+    This class also defines default values for the name() and value()
+    methods.
+
+    Subclasses should override:
+    - name(): if they called the superclass __init__() method without a name;
+    - value(): if they did not create a self.input widget who's text() is
+      the return value of the item.
+
+    Subclases can set validators on the input, like
+      input.setValidator(QtGui.QIntValidator(input))
+    Subclasses can define a show() method e.g. to select the data in the
+    input field on display of the dialog.
     """
     
-    def __init__(self,name,value,typ=None,*args):
+    def __init__(self,name=None,*args):
         """Creates a new inputitem with a name label in front.
         
-        
-        The item type can be any of the following:
-        - str
-        - bool
-        - int
-        - float
-        - tuple or list
-        - 'check' (a single checkable item)
-        
-        If no type is given, it is determined from the value. The return
-        value will be cast to the type.
+        If a name is given, a label is created and added to the layout.
         """
         QtGui.QHBoxLayout.__init__(self,*args)
-        GD.debug("New field %s, %s, %s" % (name,value,typ))
-        if typ is None:
-            typ = type(value)
-        self.type = typ
-        if self.type == bool:
-            self.input = QtGui.QCheckBox(name)
-            if self.value:
-                self.input.setCheckState(QtCore.Qt.Checked)
-            else:
-                self.input.setCheckState(QtCore.Qt.Unchecked)
-            label = False
-        elif self.type == list or self.type == tuple:
-            self.input = QtGui.QComboBox()
-            for v in value:
-                self.input.addItem(str(v))
-            label = True
-        else:
-            self.type == str
-            self.input = QtGui.QLineEdit(str(value))
-            label = True
-        if label:
+        if name:
             self.label = QtGui.QLabel(name)
             self.addWidget(self.label)
-        else:
-            self.label = None
-        self.addWidget(self.input)
-##                 if len(item) ==3 :
-##                     input.setValidator(QtGui.QIntValidator(input))
-##                 else:
-##                     input.setValidator(QtGui.QIntValidator(item[3][0],item[3][1],input))
-##             elif item[2] == 'float':
-##                 pass
-##                 #print "%s is a float"%item[0]
 
     def name(self):
         """Return the widget's name."""
-        if self.label:
-            return str(self.label.text())
-        elif self.type == list or self.type == tuple:
-            return str(self.currentText())
-        else:
-            return str(self.input.text())
+        return str(self.label.text())
 
     def value(self):
         """Return the widget's value."""
-        if self.type == bool:
-            return (self.input.checkState() == QtCore.Qt.Checked)
-        else:
-            return (str(self.input.text()))
+        return str(self.input.text())
 
-    def show(self,*args):
-         QtGui.QHBoxLayout.__init__(self,*args)
-         self.input.selectAll()
+
+class InputString(InputItem):
+    """A string input item."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new string input field with a label in front."""
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QLineEdit(str(value))
+        self.addWidget(self.input)
+
+    def show(self):
+        """Select all text on first display.""" 
+        InputItem.show(self,*args)
+        self.input.selectAll()
+
+
+class InputBool(InputItem):
+    """A boolean input item."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new checkbox for the input of a boolean value.
+        
+        Displays the name next to a checkbox, which will initially be set
+        if value evaluates to True. (Does not use the label)
+        The value is either True or False,depending on the setting
+        of the checkbox.
+        """
+        InputItem.__init__(self,None,*args)
+        self.input = QtGui.QCheckBox(name)
+        if value:
+            self.input.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.input.setCheckState(QtCore.Qt.Unchecked)
+        self.addWidget(self.input)
+
+    def name(self):
+        """Return the widget's name."""
+        return str(self.input.text())
+
+    def value(self):
+        """Return the widget's value."""
+        return self.input.checkState() == QtCore.Qt.Checked
+
+    
+class InputSelect(InputItem):
+    """A selection InputItem."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new combobox for the selection of a value from a list.
+
+        value is a list/tuple of possible values.
+        Displays the name next to a combobox, which will initially be set
+        to the first value in the list.
+        The value is always one either True or False,depending on the setting
+        of the checkbox.
+        """
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QComboBox()
+        for v in value:
+            self.input.addItem(str(v))
+        self.addWidget(self.input)
+
+    def value(self):
+        """Return the widget's value."""
+        return str(self.input.currentText())
+
+
+class InputInteger(InputItem):
+    """An integer input item."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new integer input field with a label in front."""
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QLineEdit(str(value))
+        self.validator = QtGui.QIntValidator(self)
+        self.input.setValidator(self.validator)
+        self.addWidget(self.input)
+
+    def show(self):
+        """Select all text on first display.""" 
+        InputItem.show(self,*args)
+        self.input.selectAll()
+
+    def value(self):
+        """Return the widget's value."""
+        return int(self.input.text())
+
+
+class InputFloat(InputItem):
+    """An float input item."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new float input field with a label in front."""
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QLineEdit(str(value))
+        self.validator = QtGui.QDoubleValidator(self)
+        self.input.setValidator(self.validator)
+        self.addWidget(self.input)
+
+    def show(self):
+        """Select all text on first display.""" 
+        InputItem.show(self,*args)
+        self.input.selectAll()
+
+    def value(self):
+        """Return the widget's value."""
+        return int(self.input.text())
+
+
+class InputColor(InputItem):
+    """A color input item."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new color input field with a label in front.
+
+        The color input field is a button displaying the current color.
+        Clicking on the button opens a color dialog, and the returned
+        value is set in the button.
+        """
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QPushButton(colors.colorName(value))
+        self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
+        self.addWidget(self.input)
+
+    def setColor(self):
+        color = getColor(self.input.text())
+        if color:
+            self.input.setText(str(color))
+
 
 
 class InputDialog(QtGui.QDialog):
@@ -377,7 +472,43 @@ class InputDialog(QtGui.QDialog):
         self.result = {}
         form = QtGui.QVBoxLayout()
         for item in items:
-            line = InputItem(*item)
+            name,value = item[:2]
+            if len(item) > 2:
+                itemtype = item[2]
+            else:
+                itemtype = type(value)
+            GD.debug("INPUT ITEM %s TYPE %s" % (name,itemtype))
+            if itemtype == bool:
+                line = InputBool(name,value)
+
+            elif itemtype == int:
+                line = InputInteger(name,value)
+                if len(item) > 3:
+                    line.validator.setBottom(int(item[3]))
+                if len(item) > 4:
+                    line.validator.setTop(int(item[4]))
+
+            elif itemtype == float:
+                line = InputFloat(name,value)
+                if len(item) > 3:
+                    line.validator.setBottom(float(item[3]))
+                if len(item) > 4:
+                    line.validator.setTop(float(item[4]))
+                if len(item) > 5:
+                    line.validator.setDecimals(int(item[5]))
+
+            elif itemtype == 'color':
+                line = InputColor(name,value)
+
+            elif itemtype == tuple or itemtype == list or itemtype == 'select' :
+                line = InputSelect(name,value)
+                if len(item) > 3:
+                    line.input.setCurrentIndex(item[1].index(item[3]))
+
+            else: # Anything else is handled as a string
+                #itemtype = str:
+                line = InputString(name,value)
+                
             form.addLayout(line)
             self.fields.append(line)
 

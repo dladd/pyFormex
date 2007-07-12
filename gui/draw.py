@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
@@ -21,6 +20,7 @@ import colors
 import actors
 import decors
 import marks
+import image
 import formex
 from script import *
 from cameraMenu import setPerspective,setProjection
@@ -151,7 +151,7 @@ def askItems(items,caption=None):
 
 
 def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
-    """Ask for an existing file name or multiple file names."""
+    """Ask for a file name or multiple file names."""
     GD.debug("Create widget")
     w = widgets.FileSelection(cur,filter,exist,multi)
     #sleep(5)
@@ -201,9 +201,7 @@ def chdir(fn):
 
 def log(s):
     """Display a message in the cmdlog window."""
-    if type(s) != str:
-        s = '%s' % s
-    GD.gui.board.write(s)
+    GD.gui.board.write(str(s))
     GD.gui.update()
     GD.app.processEvents()
 
@@ -218,6 +216,7 @@ message = log
 scriptDisabled = False
 scriptRunning = False
 stepmode = False
+exitrequested = False
 starttime = 0.0
 
  
@@ -233,19 +232,23 @@ def playScript(scr,name=None):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    global scriptRunning, scriptDisabled, allowwait, stepmode, exportNames, starttime
+    global scriptDisabled,scriptRunning,stepmode,exitrequested, \
+           allowwait,exportNames,starttime
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
+    exitrequested = False
     allowwait = True
     if GD.canvas:
         GD.canvas.update()
     if GD.gui:
-        GD.gui.actions['Step'].setEnabled(True)
+        GD.gui.actions['Play'].setEnabled(False)
+        #GD.gui.actions['Step'].setEnabled(True)
         GD.gui.actions['Continue'].setEnabled(True)
+        GD.gui.actions['Stop'].setEnabled(True)
        
         GD.app.processEvents()
     # We need to pass formex globals to the script
@@ -258,14 +261,14 @@ def playScript(scr,name=None):
     # Our solution is to take a copy of the globals in this module,
     # and add the globals from the 'colors' and 'formex' modules
     # !! Taking a copy is needed to avoid changing this module's globals !!
-    #g = copy.copy(globals())
-    # An alternative is to use the GD.PF and update it with these modules
-    # globals
-    # OOPS! THis was a big mistake!
-    #g = GD.PF
-    #g.update(globals())
+    # Also, do not be tempted to take a user dict and update it with this
+    # module's globals: you might override many user variables.
     g = copy.copy(globals())
-    g.update(GD.PF)  # We could do away with PF altogether
+    # Add the user globals (We could do away with PF altogether,
+    # if we always store them in this module's globals.
+    g.update(GD.PF)
+    # Add these last, because too much would go broke if the user
+    # overrides them.
     if GD.gui:
         g.update(colors.__dict__)
     g.update(formex.__dict__) # this also imports everything from numpy
@@ -277,18 +280,17 @@ def playScript(scr,name=None):
     else:
         modname = 'script'
     g.update({'__name__':modname})
-#
-#  WE COULD also set __file__ to the script name
-#   g.update({'__file__':name})
+    #
+    #  WE COULD also set __file__ to the script name
+    #  Would this help the user in debugging?
+    #   g.update({'__file__':name})
     
     # Now we can execute the script using these collected globals
 
     exportNames = []
     GD.scriptName = name
     exitall = False
-    #print "EXEC globals:"
-    #k = g.keys()
-    #k.sort()
+
     starttime = time.clock()
     GD.debug('STARTING SCRIPT (%s)' % starttime)
     try:
@@ -310,12 +312,37 @@ def playScript(scr,name=None):
         elapsed = time.clock() - starttime
         GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if GD.gui:
+            GD.gui.actions['Play'].setEnabled(True)
             #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
-    #print scriptRunning,stepmode
+            GD.gui.actions['Stop'].setEnabled(False)
+
     if exitall:
         GD.DEBUG("Calling exit() from playscript")
         exit()
+
+
+def breakpt(msg=None):
+    """Set a breakpoint where the script can be halted on pressing a button.
+
+    If an argument is specified, it will be written to the message board.
+    """
+    if exitrequested:
+        if msg is not None:
+            GD.message(msg)
+        raise Exit
+
+
+def stopatbreakpt():
+    """Set the exitrequested flag."""
+    global exitrequested
+    exitrequested = True
+
+
+def force_finish():
+    global scriptRunning,stepmode
+    scriptRunning = False # release the lock in case of an error
+    stepmode = False
 
 
 def step_script(s,glob,paus=True):
@@ -334,14 +361,9 @@ def step_script(s,glob,paus=True):
     info("Finished stepping through script!")
 
 
-## def exportNames(names):
-##     globals().update(dict)
 
 def export(dict):
     globals().update(dict)
-
-Globals = globals
-Export = export
 
 def forget(names):
     g = globals()
@@ -383,11 +405,9 @@ def play(fn=None,step=False):
 ############################## drawing functions ########################
 
 def renderMode(mode):
-    global allowwait
-    if allowwait:
-        drawwait()
-    GD.canvas.glinit(mode)
-    GD.canvas.redrawAll()
+    GD.canvas.setRenderMode(mode)
+    GD.canvas.update()
+    GD.app.processEvents()
     
 def wireframe():
     renderMode("wireframe")
@@ -458,7 +478,7 @@ def reset():
         clear = False,
         wait = GD.cfg['draw/wait']
         )
-    GD.canvas.reset()
+    #GD.canvas.reset()
     clear()
     view('front')
     
@@ -486,7 +506,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',wait=True,eltype=None,allviews=False,marksize=None,color='prop',colormap=None,linewidth=None):
+def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=1.0):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -532,7 +552,7 @@ def draw(F,view=None,bbox='auto',wait=True,eltype=None,allviews=False,marksize=N
     global allowwait, multisave
 
     if type(F) == list:
-        return [ draw(Fi,view,bbox,color,wait,eltype,allviews,marksize) for Fi in F ]
+        return [ draw(Fi,view,bbox,color,colormap,wait,eltype,allviews,marksize,linewidth,alpha) for Fi in F ]
 
     if type(F) == str:
         F = named(F)
@@ -566,7 +586,7 @@ def draw(F,view=None,bbox='auto',wait=True,eltype=None,allviews=False,marksize=N
         marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,markscale=marksize)
+    actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,markscale=marksize,alpha=alpha)
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
@@ -594,6 +614,7 @@ def drawNumbers(F):
     FC = F.centroids().trl([0.,0.,0.1])
     M = marks.MarkList(FC.f[:,0,:],range(FC.nelems()))
     GD.canvas.addMark(M)
+    GD.canvas.numbers = M
     GD.canvas.update()
     return M
 
@@ -699,11 +720,13 @@ def bgcolor(color):
     GD.canvas.display()
     GD.canvas.update()
 
-
 def fgcolor(color):
     """Set the default foreground color."""
     GD.canvas.setFgColor(color)
 
+def opacity(alpha):
+    """Set the viewports transparency."""
+    GD.canvas.alpha = float(alpha)
 
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
@@ -781,6 +804,7 @@ def sleep(timeout=None):
         #time.sleep(0.1)
     # ignore further wakeup events
     QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+
         
 def wakeup(mode=0):
     """Wake up from the sleep function.
@@ -866,6 +890,11 @@ def printconfig():
     print "User Configuration",GD.cfg
 
 
+def printviewportsettings():
+    GD.gui.viewports.printSettings()
+        
+
+
 def updateGUI():
     """Update the GUI."""
     GD.gui.update()
@@ -894,11 +923,18 @@ def pick():
 
 def pickDraw():
     K = pick()
+    GD.debug("PICKED: %s"%K)
     if len(K) > 0:
         undraw(K)
+        GD.debug("DRAWING PICKED: %s"%K)
         draw(K,color='red',bbox=None)
     return K
 
+
+def pickNumbers(marks=None):
+    if marks:
+        GD.canvas.numbers = marks
+    return GD.canvas.pickNumbers()
 
 ################################ saving images ########################
 
@@ -976,7 +1012,7 @@ def saveWindow(filename,format,border=False):
 # global parameters for multisave mode
 multisave = None 
 
-def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,format=None,verbose=False):
+def saveView(filename=None,window=False,multi=False,hotkey=True,autosave=False,format=None,verbose=False):
     """Starts or stops saving a sequence of images.
 
     With a filename, this starts or changes the multisave mode.
@@ -1040,7 +1076,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
         if window:
             sta = saveWindow(filename,format)
         else:
-            sta = GD.canvas.save(filename,format)
+            sta = image.save(GD.canvas,filename,format)
         if sta:
             GD.debug("Error while saving image %s" % filename)
         else:
@@ -1086,5 +1122,28 @@ def setLocalAxes(mode=True):
 
 def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
+
+
+######### DEPRECATED ############################
+    
+from utils import deprecated
+
+@deprecated(saveView)
+def saveImage(*args):
+    pass
+
+@deprecated(globals)
+def Globals():
+    pass
+
+@deprecated(export)
+def Export(dict):
+    pass
+
+@deprecated(export)
+def export(dict):
+    pass
+
+
 
 #### End

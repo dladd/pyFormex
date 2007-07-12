@@ -148,17 +148,17 @@ class GUI(QtGui.QMainWindow):
         self.splitter.addWidget(self.board)
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
-        # Create the top menu and keep a dict with the main menu items
-        if GD.cfg.get('gui/cameramenu','True'):
-            menu.insertCameraMenu()
+        # Create the top menu
+        menu.createMenuData()
         self.menu.addItems(menu.MenuData)
-        #widgets.addMenuItems(self.menu, menu.MenuData)
-        #self.menus = dict([ [str(a.text()),a] for a in self.menu.actions()])
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
-        self.toolbar.addSeparator()
         if GD.cfg.get('gui/camerabuttons','True'):
+            self.toolbar.addSeparator()
             toolbar.addCameraButtons(self.toolbar)
+        if GD.cfg.get('gui/renderbuttons','True'):
+            self.render = toolbar.addRenderButtons(self.toolbar)
+            self.toolbar.addSeparator()
         self.menu.show()
         # Create a menu with standard views
         # and insert it before the help menu
@@ -185,6 +185,7 @@ class GUI(QtGui.QMainWindow):
         self.resize(*size)
         self.move(*pos)
         self.board.resize(*bdsize)
+        self.setcurfile()
         if GD.options.redirect:
             sys.stderr = self.board
             sys.stdout = self.board

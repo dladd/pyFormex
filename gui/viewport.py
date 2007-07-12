@@ -32,6 +32,10 @@ PRESS = 0
 MOVE = 1
 RELEASE = 2
 
+# modifiers
+SHIFT = QtCore.Qt.ShiftModifier
+
+
 ############### OpenGL Format #################################
 
 def setOpenglFormat():
@@ -98,6 +102,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def pick(self):
         """Go into picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_actors)  
+        self.selection =[]
+        timer = QtCore.QThread
+        while len(self.selection) == 0:
+            timer.usleep(200)
+            GD.app.processEvents()
+        return GD.canvas.selection
+
+    def pickNumbers(self):
+        """Go into number picking mode and return the selection."""
+        self.setMouse(LEFT,self.pick_numbers)  
         self.selection =[]
         timer = QtCore.QThread
         while len(self.selection) == 0:
@@ -285,6 +299,47 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("Re-enabling dynarot")
             self.update()
 
+            
+    def pick_numbers(self,x,y,action):
+        """Return the numbers close to the mouse pointer."""
+        if action == PRESS:
+            GD.debug("Start picking mode")
+            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.draw_cursor(self.statex,self.statey)
+            self.selection = []
+            self.update()
+            
+        elif action == MOVE:
+            GD.debug("Move picking window")
+            self.draw_rectangle(x,y)
+            self.update()
+
+        elif action == RELEASE:
+            GD.debug("End picking mode")
+            if self.cursor:
+                self.removeDecoration(self.cursor)
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            self.update()
+
+            
+            GD.debug((x,y))
+            GD.debug((self.statex,self.statey))
+            x,y = (x+self.statex)/2., (y+self.statey)/2.
+            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
+            if w <= 0 or h <= 0:
+               w,h = GD.cfg.get('pick/size',(20,20))
+            GD.debug((x,y,w,h))
+            self.camera.loadProjection(pick=[x,y,w,h])
+            self.camera.loadMatrix()
+            if self.numbers:
+                self.selection = self.numbers.drawpick()
+            self.setMouse(LEFT,self.dynarot)
+            GD.debug("Re-enabling dynarot")
+            self.update()
+
+    @classmethod
+    def has_modifier(clas,e,mod):
+        return ( e.modifiers() & mod ) == mod
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
@@ -340,6 +395,7 @@ class MultiCanvas(QtGui.QGridLayout):
 
     def setDefaults(self,dict):
         """Update the default settings of the canvas class."""
+        GD.debug("Setting canvas defaults:\n%s" % dict)
         canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(dict))
 
     def newView(self):
@@ -396,5 +452,12 @@ class MultiCanvas(QtGui.QGridLayout):
             v.addActor(actor)
 
 
-
+    def printSettings(self):
+        for i,v in enumerate(self.all):
+            GD.message("""
+## VIEWPORTS ##
+Viewport %s;  Active:%s;  Current:%s;  Settings:
+%s
+""" % (i,v in self.active, v == self.current, v.settings))
+                       
 #### End
