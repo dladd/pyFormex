@@ -14,7 +14,21 @@ GUI:
 #  a future release.
 
 - formex.py:
+  
+  - norm(v,n=2): Return a norm of the vector v.
+  - vectorNormalize(vec): Normalize a set of vectors
 
+  Some interesting new functions (cureently available both as functions 
+  and as Formex methods): 
+  - intersectionWithPlane(F,p,n): Return the intersection of a Formex F with
+    the plane (p,n).
+  - intersectionPointsWithPlane(F,p,n): Return the intersection points of a 
+    Formex with plane p,n
+  - cutAtPlane(F,p,n): Return all elements of the Formex cut at plane.
+  - cut3AtPlane(F,p,n): Returns all elements of the Formex cut at plane.
+  - intersectionLinesWithPlane(F,p,n): Returns the intersection lines of a 
+    Formex with plane (p,n).
+ 
   Formex class: 
     - Now implemented as a Python new-style class (derived from object)
     - A Formex may be initialized with a 2-dimensional array: It will be
@@ -23,6 +37,12 @@ GUI:
     - rotate accepts an optional around=.. argument to rotate around a point
       different from the origin
     - new centroid() method, returns the point with mean coordinates
+    - test() has been generalized to test on distance from planes with
+      general orientation and position
+    - rollaxes() rolls the coordinate axes
+    - projectOnSphere() projects a Formex on a sphere
+    - split() splits a Formex in its elements
+    - data() renamed to view()
 
 - draw.py:
   - Drawing a plex-1 Formex now shows points as fixed size dots. The old
