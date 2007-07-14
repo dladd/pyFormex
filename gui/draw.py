@@ -145,7 +145,7 @@ def askItems(items,caption=None):
     """
     if type(items) == dict:
         items = items.items()
-    w = widgets.InputDialog(items,caption)
+    w = widgets.InputDialog(items,caption,GD.gui)
     res,status = w.getResult()
     return res
 

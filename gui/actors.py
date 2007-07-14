@@ -142,6 +142,30 @@ def drawPolyLines(x,color=None,close=True):
         GL.glEnd()
 
 
+def drawCurves(x,color=None):
+    """Draw a collection of curves.
+
+    x is a (nlines,3,3) shaped array of coordinates.
+
+    If color is given it is an (nlines,3) array of RGB values.
+    """
+    nurb = GLU.gluNewNurbsRenderer()
+    nkots = 7
+    knots = arange(nkots+1) / float(nkots)
+    knots = array([0.,0.,0.,0.,1.,1.,1.,1.])
+    
+    if not nurb:
+        return
+    for i,xi in enumerate(x):
+        if color is not None:
+            GL.glColor3fv(color[i])
+        print knots
+        print xi
+        GLU.gluBeginCurve(nurb)
+        GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
+        GLU.gluEndCurve(nurb)
+
+
 def drawTriangles(x,mode,color=None,alpha=1.0):
     """Draw a collection of triangles.
 
@@ -638,6 +662,9 @@ class FormexActor(Actor,Formex):
                 
         elif nnod == 2:
             drawLines(self.f,color)
+            
+        elif self.eltype == 'curve':
+            drawCurves(self.f,color)
             
         elif mode=='wireframe' :
             if self.eltype == 'tet':

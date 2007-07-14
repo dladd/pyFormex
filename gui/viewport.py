@@ -59,13 +59,17 @@ def printOpenglFormat(fmt):
     """Print some information about the OpenGL format."""
     print "OpenGL: ",fmt.hasOpenGL()
     print "OpenGLOverlays: ",fmt.hasOpenGLOverlays()
-    print "Overlay: ",fmt.hasOverlay()
-    print "Plane: ",fmt.plane()
-    print "Direct Rendering: ",fmt.directRendering()
     print "Double Buffer: ",fmt.doubleBuffer()
     print "Depth Buffer: ",fmt.depth()
     print "RGBA: ",fmt.rgba()
-    print "Alpha: ",fmt.alpha()
+    print "Alpha Channel: ",fmt.alpha()
+    print "Accumulation Buffer: ",fmt.accum()
+    print "Stencil Buffer: ",fmt.stencil()
+    print "Stereao: ",fmt.stereo()
+    print "Direct Rendering: ",fmt.directRendering()
+    print "Overlay: ",fmt.hasOverlay()
+    print "Plane: ",fmt.plane()
+    print "Multisample Buffers: ",fmt.sampleBuffers()
 
 
 ################# Single Interactive OpenGL Canvas ###############

@@ -55,9 +55,9 @@ limas = [ [ "F", {"F":"F+G","G":"F-G"},10,turtlecmds() ],
           # lace
           [ "F+F", {"F":"F*FF**F**FF*F"},4,turtlecmds() ],
           # Testing new ones
-          [ "F++F", {"F":"*F//F*"}, 12, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
-          [ "F+F+F+F", {"F":"*F//G*","G":"/F**G/"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
-          [ "G+G+G+G", {"F":"*F//G*","G":"/F**G/"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
+          [ "F++F", {"F":"*F//F*"}, 10, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
+          [ "F+F+F+F", {"F":"*F//G*","G":"/F**G/"}, 8, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
+          [ "G+G+G+G", {"F":"*F//G*","G":"/F**G/"}, 8, turtlecmds({'*':'ro(30);','/':'ro(-30);'}) ],
           #[ "+F", {"F":"GH", "G":"GG", "H":"G[*F][/F]"}, 12, turtlecmds({'*':'ro(22.5);','/':'ro(-22.5);'}) ],
           #[ "F", {"F":"*F-F*"}, 12, turtlecmds({'*':'ro(45);'}) ],
           #[ "JF", {"F":"*F-FF+F*","J":"/J"}, 8, turtlecmds({'*':'ro(45);','/':'ro(-45);'}) ],
@@ -72,6 +72,7 @@ def show(L,turtle_cmds):
         F = Formex(coords)
         clear()
         draw(F)
+    breakpt()
     #return F
     
 # and display them in series

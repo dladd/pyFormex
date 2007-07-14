@@ -33,7 +33,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res,accept = widgets.InputDialog(itemlist,'Config Dialog').getResult()
+    res,accept = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
     if accept:
         GD.debug(res)
         if draw.ack("Update the settings?"):

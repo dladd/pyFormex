@@ -158,7 +158,6 @@ class GUI(QtGui.QMainWindow):
             toolbar.addCameraButtons(self.toolbar)
         if GD.cfg.get('gui/renderbuttons','True'):
             self.render = toolbar.addRenderButtons(self.toolbar)
-            self.toolbar.addSeparator()
         self.menu.show()
         # Create a menu with standard views
         # and insert it before the help menu

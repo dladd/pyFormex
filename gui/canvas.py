@@ -258,7 +258,6 @@ class Canvas(object):
 
     def setDefaults(self):
         """Activate the canvas settings in the GL machine."""
-        GD.debug("CANVAS DEFAULTS: %s" % self.settings.linewidth)
         GL.glColor3fv(self.settings.fgcolor)
         GL.glLineWidth(self.settings.linewidth)
 

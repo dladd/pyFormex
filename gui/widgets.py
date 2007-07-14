@@ -317,15 +317,28 @@ class InputString(InputItem):
     """A string input item."""
     
     def __init__(self,name,value,*args):
-        """Creates a new string input field with a label in front."""
+        """Creates a new string input field with a label in front.
+
+        If the type of value is not a string, the input string
+        will be eval'ed before returning.
+        """
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QLineEdit(str(value))
         self.addWidget(self.input)
+        self.str = type(value) == str
 
     def show(self):
         """Select all text on first display.""" 
         InputItem.show(self,*args)
         self.input.selectAll()
+
+    def value(self):
+        """Return the widget's value."""
+        s = str(self.input.text())
+        if self.str:
+            return s
+        else:
+            return eval(s)
 
 
 class InputBool(InputItem):
@@ -418,7 +431,7 @@ class InputFloat(InputItem):
 
     def value(self):
         """Return the widget's value."""
-        return int(self.input.text())
+        return float(self.input.text())
 
 
 class InputColor(InputItem):
@@ -500,7 +513,7 @@ class InputDialog(QtGui.QDialog):
             elif itemtype == 'color':
                 line = InputColor(name,value)
 
-            elif itemtype == tuple or itemtype == list or itemtype == 'select' :
+            elif itemtype == 'select' :
                 line = InputSelect(name,value)
                 if len(item) > 3:
                     line.input.setCurrentIndex(item[1].index(item[3]))
