@@ -42,7 +42,8 @@ def edit():
     of (X)Emacs.
     """
     if GD.cfg['editor']:
-        pid = utils.spawn(GD.cfg['editor'] % GD.cfg['curfile'])
+        #GD.debug('%s "%s"' % (GD.cfg['editor'],GD.cfg['curfile']))
+        pid = utils.spawn('%s "%s"' % (GD.cfg['editor'],GD.cfg['curfile']))
 
 
 play = draw.play
@@ -56,7 +57,8 @@ def saveImage(multi=False):
      - start the multisave/autosave mode
      - do nothing
     """
-    dia = widgets.SaveImageDialog(GD.cfg['workdir'],["Images (*.png)","Images (*.png *.jpg *.eps)"],multi=multi)
+    pat = map(utils.fileDescription, ['img','icon','all'])  
+    dia = widgets.SaveImageDialog(GD.cfg['workdir'],pat,multi=multi)
     fn,window,multi,hotkey,auto = dia.getResult()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)

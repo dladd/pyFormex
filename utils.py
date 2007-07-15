@@ -76,7 +76,16 @@ def hasExternal(name):
         return checkExternal(name)
 
 
+def all_image_extensions():
+    """Return a list with all known image extensions."""
+    imgfmt = []
+    
+
 file_description = {
+    'all': 'All files (*)',
+    'img': 'Images (*.png *.jpg *.eps)',
+    'png': 'PNG images (*.png)',
+    'icon': 'Icons (*.xpm)',
     'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',

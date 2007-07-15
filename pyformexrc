@@ -24,7 +24,7 @@ history = []
 
 
 # commands
-editor = 'gnuclient -q %s'   # editor and flat text viewer
+editor = os.environ.get('VISUAL',os.environ.get('EDITOR',None))
 #viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
 viewer = 'firefox %s'   # html viewer
 browser = 'firefox %s'    # web browser
