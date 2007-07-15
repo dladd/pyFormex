@@ -24,10 +24,11 @@ history = []
 
 
 # commands
-editor = os.environ.get('VISUAL',os.environ.get('EDITOR',None))
+### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE
+editor = os.environ.get('VISUAL',None)
 #viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
-viewer = 'firefox %s'   # html viewer
-browser = 'firefox %s'    # web browser
+viewer = 'firefox'   # html viewer
+browser = 'firefox'    # web browser
 # the %s in the above commands will be replaced with the filename/URL
 
 autoglobals = True

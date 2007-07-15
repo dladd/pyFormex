@@ -12,6 +12,7 @@ import os,types
 from PyQt4 import QtCore, QtGui
 import globaldata as GD
 import colors
+import utils
 
 
 class FileSelection(QtGui.QFileDialog):
@@ -82,7 +83,7 @@ class SaveImageDialog(FileSelection):
         if path is None:
             path = GD.cfg['workdir']
         if pattern is None:
-            pattern = "Images (*.png *.jpg)"
+            pattern = map(utils.fileDescription, ['img','icon','all'])  
         FileSelection.__init__(self,path,pattern,exist)
         grid = self.layout()
         nr,nc = grid.rowCount(),grid.columnCount()

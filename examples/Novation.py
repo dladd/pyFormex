@@ -18,11 +18,12 @@ n = 40
 
 basechoices = ['Triangles','Quadrilaterals']
 renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
-res = askItems([['Type of surface element',basechoices],
+res = askItems([['Type of surface element',basechoices,'select'],
                 ['Number of bumps',3],
-                ['Render mode',renderchoices],
+                ['Render mode',renderchoices,'select'],
                 ['Add a bottom plate',False],
                 ['Shrink elements',False],
+                ['Export to .stl',False],
                 ])
 if not res:
     exit()
@@ -32,6 +33,7 @@ rendermode = res['Render mode']
 nbumps = int(res['Number of bumps'])
 bottom = res['Add a bottom plate']
 shrink = res['Shrink elements']
+export = res['Export to .stl']
 
 if baseGeom == 0:
     # The base consists of two triangles
@@ -66,7 +68,7 @@ if shrink:
 else:
     draw(e,color=blue)
 
-if ack('Export to .stl?'):
+if export:
     from plugins import stl
     f = file('novation.stl','w')
     F = e # + b

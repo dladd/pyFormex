@@ -30,7 +30,7 @@ def help(page=None):
         browser = GD.cfg['browser']
     else:
         browser = GD.cfg['viewer']
-    pid = utils.spawn(browser % page)
+    pid = utils.spawn(' '.join([browser,page]))
 
 
 def cmdline():
