@@ -102,8 +102,18 @@ def fileDescription(type):
     'TYPE files (*.type)'
     """
     return file_description.get(type,"%s files (*.%s)" % (type.upper(),type))
-    
 
+
+def findIcon(name):
+    """Return the file name for an icon with given name.
+
+    If no icon file is found, returns the question mark icon.
+    """
+    fname = os.path.join(GD.cfg['icondir'],name) + GD.cfg['gui/icontype']
+    if os.path.exists(fname):
+        return fname
+    return os.path.join(GD.cfg['icondir'],'question') + GD.cfg['gui/icontype']
+                                                               
 
 def projectName(fn):
     """Derive a project name from a file name.

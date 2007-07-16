@@ -556,16 +556,14 @@ class InputDialog(QtGui.QDialog):
         return (self.result, accept)
 
 
-
 ############################# Menu ##############################
-
 
 
 def addMenuItems(menu, items=[]):
     """Add a list of items to a menu.
 
     Each item is a tuple of two to five elements:
-       Item Text, Action, [ ShortCut, Icon, ToolTip ].
+       Text, Action, [ Icon,  ShortCut, ToolTip ].
 
     Item text is the text that will be displayed in the menu. An optional '&'
     may be used to flag the next character as the shortcut key. The '&' will
@@ -579,8 +577,10 @@ def addMenuItems(menu, items=[]):
       - a list of Menu Items: a popup Menu will be created that will appear
         when the item is selected,
       - None : this will create a separator item with no action.
-    
+
+    Icon is the name of one of the icons in the installed icondir.
     ShortCut is an optional key combination to select the item.
+    Tooltip is a popup help string.
     """
     for item in items:
         txt,val = item[:2]
@@ -594,7 +594,11 @@ def addMenuItems(menu, items=[]):
             if type(val) == str:
                 val = eval(val)
             a = menu.addAction(txt,val)
-            if len(item) >= 5:
+            if len(item) > 2 and item[2]:
+                a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(item[2]))))
+            if len(item) > 3 and item[3]:
+                a.setShortcut(item[3])
+            if len(item) > 4 and item[4]:
                 a.setToolTip(item[4])
 
 
@@ -706,5 +710,100 @@ class MenuBar(QtGui.QMenuBar):
         if menu:
             self.removeAction(menu)
 
+
+
+###################### Action List ############################################
+
+class DAction(QtGui.QAction):
+    """A DAction is a QAction that emits a signal with a string parameter.
+
+    When triggered, this action sends a signal (default 'Clicked') with a
+    custom string as parameter. The connected slot can then act depending
+    on this parameter.
+    """
+
+    signal = "Clicked"
+    
+    def __init__(self,name,icon=None,data=None):
+        """Create a new DAction with name, icon and string data.
+
+        If the DAction is used in a menu, a name is sufficient. For use
+        in a toolbar, you will probably want to specify an icon.
+        When the action is triggered, the data is sent as a parameter to
+        the SLOT function connected with the 'Clicked' signal.
+        If no data is specified, the name is used as data. 
+        
+        See the views.py module for an example.
+        """
+        QtGui.QAction.__init__(self,name,None)
+        if icon:
+            self.setIcon(icon)
+        if not data:
+            data = name
+        self.setData(QtCore.QVariant(data))
+        self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
+        
+    def activated(self):
+        self.emit(QtCore.SIGNAL(DAction.signal), str(self.data().toString()))
+
+
+class ActionList(object):
+    """Menu and toolbar with named actions.
+
+    An action list is a list of strings, each connected to some action.
+    The actions can be presented in a menu and/or a toolbar.
+    On activating one of the menu or toolbar buttons, a given signal is
+    emitted with the button string as parameter. A fixed function can be
+    connected to this signal to act dependent on the string value.
+    """
+
+    def __init__(self,actions=[],function=None,menu=None,toolbar=None,icons=None):
+        """Create an new action list, empty by default.
+
+        A list of strings can be passed to initialize the actions.
+        If a menu and/or toolbar are passed, a button is added to them
+        for each string in the action list.
+        If a function is passed, it will be called with the string as
+        parameter when the item is triggered.
+
+        If no icon names are specified, they are taken equal to the
+        action names. Icons will be taken from the installed icon directory.
+        If you want to specify other icons, use the add() method.
+        """
+        self.actions = []
+        self.function = function
+        self.menu = menu
+        self.toolbar = toolbar
+        if icons is None:
+            icons = actions
+        icons = map(utils.findIcon,icons)
+        for name,icon in zip(actions,icons):
+            self.add(name,icon)
+
+
+    def add(self,name,icon=None):
+        """Add a new name to the actions list and create a matching DAction.
+
+        If the actions list has an associated menu or toolbar,
+        a matching button will be inserted in each of these.
+        If an icon is specified, it will be used on the menu and toolbar.
+        The icon is either a filename or a QIcon object. 
+        """
+        if type(icon) == str and os.path.exists(icon):
+            icon = QtGui.QIcon(QtGui.QPixmap(icon))
+        menutext = '&' + name.capitalize()
+        a = DAction(menutext,icon,name)
+        if self.function:
+            QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),self.function)
+        self.actions.append([name,a])
+        if self.menu:
+            self.menu.addAction(a)
+        if self.toolbar:
+            self.toolbar.addAction(a)
+
+
+    def names(self):
+        """Return an ordered list of names of the action items."""
+        return [ i[0] for i in self.actions ]
 
 #End

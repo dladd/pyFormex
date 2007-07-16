@@ -79,11 +79,6 @@ MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
         (_('Toggle &Triade'),draw.setTriade), 
-        (_('&Wireframe'),draw.wireframe),
-        (_('&Flat'),draw.flat),
-        (_('&Flat + Wireframe'),draw.flatwire),
-        (_('&Smooth'),draw.smooth),
-        (_('&Smooth + Wireframe'),draw.smoothwire),
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
         (_('&Foreground Color'),setFgColor), 

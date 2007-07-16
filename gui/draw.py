@@ -219,38 +219,27 @@ stepmode = False
 exitrequested = False
 starttime = 0.0
 
- 
-def playScript(scr,name=None):
-    """Play a pyformex script scr. scr should be a valid Python text.
 
-    There is a lock to prevent multiple scripts from being executed at the
-    same time.
-    If a name is specified, sets the global variable GD.scriptName if and
-    when the script is started.
-    
-    If step==True, an indefinite pause will be started after each line of
-    the script that starts with 'draw'. Also (in this case), each line
-    (including comments) is echoed to the message board.
+# We currently have two mechanisms for transferring variables between
+# scripts by using global variables.
+# - put them into globaldata.PF (GD.PF), see stl_menu plugin
+# - export them using the export() function, see formex_menu plugin
+
+
+def Globals():
+    """Return the globals that are pased to the scripts on execution.
+
+    This basically contains the globals defined in draw.py, colors.py,
+    and formex.py, as well as the globals from numpy.
+    It also contains the definitions put into the globaldata.PF
+    Finally, because the scripts are executed in the context of the
+    draw module, it will also contain any global definitions made in
+    your scripts or explicitely exported by a script.
+    During execution of the script, the global variable __name__ will be
+    set to either 'draw' or 'script' depending on whether the script
+    was executed in the 'draw' module (--gui option) or the 'script'
+    module (--nogui option).
     """
-    global scriptDisabled,scriptRunning,stepmode,exitrequested, \
-           allowwait,exportNames,starttime
-    # (We only allow one script executing at a time!)
-    # and scripts are non-reentrant
-    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
-    if scriptRunning or scriptDisabled :
-        return
-    scriptRunning = True
-    exitrequested = False
-    allowwait = True
-    if GD.canvas:
-        GD.canvas.update()
-    if GD.gui:
-        GD.gui.actions['Play'].setEnabled(False)
-        #GD.gui.actions['Step'].setEnabled(True)
-        GD.gui.actions['Continue'].setEnabled(True)
-        GD.gui.actions['Stop'].setEnabled(True)
-       
-        GD.app.processEvents()
     # We need to pass formex globals to the script
     # This would be done automatically if we put this function
     # in the formex.py file. But then we need to pass other globals
@@ -284,9 +273,43 @@ def playScript(scr,name=None):
     #  WE COULD also set __file__ to the script name
     #  Would this help the user in debugging?
     #   g.update({'__file__':name})
-    
-    # Now we can execute the script using these collected globals
+    return g
 
+ 
+def playScript(scr,name=None):
+    """Play a pyformex script scr. scr should be a valid Python text.
+
+    There is a lock to prevent multiple scripts from being executed at the
+    same time.
+    If a name is specified, sets the global variable GD.scriptName if and
+    when the script is started.
+    
+    If step==True, an indefinite pause will be started after each line of
+    the script that starts with 'draw'. Also (in this case), each line
+    (including comments) is echoed to the message board.
+    """
+    global scriptDisabled,scriptRunning,stepmode,exitrequested, \
+           allowwait,exportNames,starttime
+    # (We only allow one script executing at a time!)
+    # and scripts are non-reentrant
+    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
+    if scriptRunning or scriptDisabled :
+        return
+    scriptRunning = True
+    exitrequested = False
+    allowwait = True
+    if GD.canvas:
+        GD.canvas.update()
+    if GD.gui:
+        GD.gui.actions['Play'].setEnabled(False)
+        #GD.gui.actions['Step'].setEnabled(True)
+        GD.gui.actions['Continue'].setEnabled(True)
+        GD.gui.actions['Stop'].setEnabled(True)
+       
+        GD.app.processEvents()
+    
+    # Get the globals
+    g = Globals()
     exportNames = []
     GD.scriptName = name
     exitall = False
@@ -852,7 +875,7 @@ def exit(all=False):
 def listAll(dict=None):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
-        dict = Globals()
+        dict = globals()
         dict.update(GD.PF)
     flist = []
     for n,t in dict.items():
@@ -1112,7 +1135,7 @@ def createMovie():
 def runtime():
     """Return the time elapsed since start of execution of the script."""
     return time.clock() - starttime
-    
+
 
 
 #### Change settings
@@ -1132,9 +1155,6 @@ from utils import deprecated
 def saveImage(*args):
     pass
 
-@deprecated(globals)
-def Globals():
-    pass
 
 @deprecated(export)
 def Export(dict):

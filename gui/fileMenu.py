@@ -58,7 +58,7 @@ def saveImage(multi=False):
      - start the multisave/autosave mode
      - do nothing
     """
-    #pat = map(utils.fileDescription, ['img','icon','all'])  
+    pat = map(utils.fileDescription, ['img','icon','all'])  
     dia = widgets.SaveImageDialog(GD.cfg['workdir'],pat,multi=multi)
     fn,window,multi,hotkey,auto = dia.getResult()
     if fn:

@@ -7,7 +7,7 @@ wireframe()
 nx=32   # number of modules in circumferential direction
 ny=32   # number of modules in meridional direction
 rd=100  # radius of the sphere cap
-top=45 # latitude angle at the top (90 = closed)
+top=70 # latitude angle at the top (90 = closed)
 bot=-70 # latitude angle of the bottom (-90 = closed)
 
 a = ny*float(top)/(bot-top)

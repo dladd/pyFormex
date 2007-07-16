@@ -25,7 +25,6 @@ import prefMenu
 import toolbar
 import viewport
 
-import actionlist
 import script
 import utils
 import draw
@@ -87,7 +86,10 @@ class Board(QtGui.QTextEdit):
 ##         createViewAction(parent,name,icon,tooltip,menutext)
 
 
+#####################################
 ################# GUI ###############
+#####################################
+            
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
@@ -156,29 +158,47 @@ class GUI(QtGui.QMainWindow):
         if GD.cfg.get('gui/camerabuttons','True'):
             self.toolbar.addSeparator()
             toolbar.addCameraButtons(self.toolbar)
-        if GD.cfg.get('gui/renderbuttons','True'):
-            self.render = toolbar.addRenderButtons(self.toolbar)
         self.menu.show()
-        # Create a menu with standard views
-        # and insert it before the help menu
+
+        ##  RENDER MODE menu and toolbar ##
+##         if GD.cfg.get('gui/renderbuttons','True'):
+##             self.render = toolbar.addRenderButtons(self.toolbar)
+        modes = [ 'wireframe', 'smooth', 'smoothwire', 'flat', 'flatwire' ]
+        if GD.cfg['gui/modemenu']:
+            mmenu = QtGui.QMenu('Render Mode')
+        else:
+            mmenu = None
+        if GD.cfg['gui/modebar']:
+            tbar = self.toolbar
+            tbar.addSeparator()
+        else:
+            tbar = None
+        self.modebtns = widgets.ActionList(
+            modes,draw.renderMode,menu=mmenu,toolbar=tbar)
+        if mmenu:
+            # insert the menu in the viewport menu
+            pmenu = widgets.menuItem(self.menu,'viewport').menu()
+            before = widgets.menuItem(pmenu,'background color')
+            GD.debug("BEFORE = %s" % before)
+            pmenu.insertMenu(before,mmenu)
+        ##  VIEWS menu and toolbar
         self.viewsMenu = None
         if GD.cfg.get('gui/viewsmenu',True):
             self.viewsMenu = QtGui.QMenu('&Views')
             self.menu.insertMenu(self.viewsMenu)
-        # Install the default canvas views
-        # defviews = self.canvas.views.keys()
-        # NO, these are not sorted, better:
-        defviews = [ 'front', 'back', 'top', 'bottom', 'left', 'right', 'iso' ]
+        views = GD.cfg['gui/builtinviews']
         if GD.cfg['gui/viewsbar']:
             tbar = self.toolbar
             tbar.addSeparator()
         else:
             tbar = None
-        self.viewbtns = actionlist.ActionList(
-            defviews,draw.view,
+        self.viewbtns = widgets.ActionList(
+            views,draw.view,
             menu=self.viewsMenu,
             toolbar=tbar,
-            iconpath=os.path.join(GD.cfg['icondir'],'%sview')+GD.cfg['gui/icontype'])
+            icons=['%sview' % t for t in views]
+            )
+        
         # Display the main menubar
         #self.menu.show()
         self.resize(*size)

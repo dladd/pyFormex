@@ -16,20 +16,20 @@ from PyQt4 import QtCore, QtGui
 import fileMenu, scriptsMenu
 import cameraMenu
 import draw
+import utils
 
 
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
     action = {}
-    dir = GD.cfg['icondir']
     buttons = [ [ "Play", "next", fileMenu.play, False ],
                 [ "Step", "nextstop", draw.step, False ],
                 [ "Continue", "ff", draw.fforward, False ],
                 [ "Stop", "stop", draw.stopatbreakpt, False ],
               ]
     for b in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.cfg['gui/icontype']))
+        icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(b[1])))
         a = toolbar.addAction(icon,b[0],b[2])
         a.setEnabled(b[3])
         action[b[0]] = a
@@ -39,17 +39,17 @@ def addActionButtons(toolbar):
 def addRenderButtons(toolbar):
     """Add the rendermode buttons to the toolbar."""
     action = {}
-    dir = GD.cfg['icondir']
     buttons = [ [ "Wireframe", "wireframe", draw.wireframe, True ],
                 [ "Smooth", "smooth", draw.smooth, True ],
                 [ "Flat", "flat", draw.flat, True ],
               ]
     for b in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,b[1])+GD.cfg['gui/icontype']))
+        icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(b[1])))
         a = toolbar.addAction(icon,b[0],b[2])
         a.setEnabled(b[3])
         action[b[0]] = a
     return action
+    
 
 ################# Camera action toolbar ###############
 
@@ -64,7 +64,6 @@ def togglePerspective():
 def addCameraButtons(toolbar):
     """Add the camera buttons to a toolbar."""
     global toggle_perspective
-    dir = GD.cfg['icondir']
     # The buttons have the following fields:
     #  0 : tooltip
     #  1 : icon
@@ -86,7 +85,7 @@ def addCameraButtons(toolbar):
                 [ "Zoom All", "zoomall", draw.zoomAll, False ],
                 ]
     for but in buttons:
-        icon = QtGui.QIcon(QtGui.QPixmap(os.path.join(dir,but[1])+GD.cfg['gui/icontype']))
+        icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(but[1])))
         a = toolbar.addAction(icon,but[0],but[2])
         b =  toolbar.children()[-1] # Get the QToolButton for the last action
         if len(but) < 4 or but[3]:
@@ -99,8 +98,8 @@ def addCameraButtons(toolbar):
         b.setToolTip(but[0])
 
     # Add the toggle_perspective button
-    icon_on = QtGui.QPixmap(os.path.join(dir,'perspect')+GD.cfg['gui/icontype'])
-    icon_off = QtGui.QPixmap(os.path.join(dir,'project')+GD.cfg['gui/icontype'])
+    icon_on = QtGui.QPixmap(utils.findIcon('perspect'))
+    icon_off = QtGui.QPixmap(utils.findIcon('project'))
     icon = QtGui.QIcon()
     icon.addPixmap(icon_on,QtGui.QIcon.Normal,QtGui.QIcon.On)
     icon.addPixmap(icon_off,QtGui.QIcon.Normal,QtGui.QIcon.Off)
