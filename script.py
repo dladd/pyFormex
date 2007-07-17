@@ -107,10 +107,7 @@ def system(cmdline,result='output'):
 # Find interesting supporting software
 
 # Calpy
-m = re.match("Calpy (\S+) .*",system('calpy --version'))
-if m:
-    GD.calpy_version = m.group(1)
-    message("Congratulations! You have calpy version %s" % GD.calpy_version)
+utils.hasModule('calpy')
 
 ########################### PLAYING SCRIPTS ##############################
 

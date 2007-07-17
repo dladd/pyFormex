@@ -12,13 +12,81 @@ import globaldata as GD
 import os,commands,re
 from config import formatDict
 
-## import distutils.version
-## Version=distutils.version.LooseVersion
+import distutils.version
+Version = distutils.version.LooseVersion
 
-## def checkModule(name,version)
-## if Version(numpy.__version__) < Version('0.9.8'):
 
-# tetgen -v no longer works in 1.4.2 !!
+def congratulations(name,version,typ='module'):
+    """Report a detected module/program."""
+    if version:
+        GD.message("Congratulations! You have %s (%s)" % (name,version))
+    else:
+        GD.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
+
+
+def checkVersion(name,version,external=False):
+    """Checks a version of a program/module.
+
+    name is either a module or an external program whose availability has
+    been registered.
+    Default is to treat name as a module. Add external=True for a program.
+
+    Return value is -1, 0 or 1, depending on a version found that is
+    <, == or > than the requested values.
+    This should normally understand version numbers in the format 2.10.1
+    """
+    if external:
+        ver = GD.external.get(name,'0')
+    else:
+        ver = GD.version.get(name,'0')
+    if Version(ver) > Version(version):
+        return 1
+    elif Version(ver) == Version(version):
+        return 0
+    else:
+        return -1
+
+            
+def checkModule(name):
+    """Check if the named Python module is available, and record its version.
+
+    The version string is returned, empty if the module could not be loaded.
+    The (name,version) pair is also inserted into the GD.version dict.
+    """
+    version = ''
+    try:
+        if name == 'numpy':
+            import numpy
+            version =  numpy.__version__
+        elif name == 'pyqt4':
+            import PyQt4.QtCore
+            version = PyQt4.QtCore.QT_VERSION_STR
+        elif name == 'calpy':
+            import calpy
+            version = calpy.__doc__.split('\n')[0].split()[1]
+    except:
+        pass
+    congratulations(name,version,'module')
+    GD.version[name] = version
+    return version
+
+    
+def hasModule(name):
+    """Test if we have the named module available.
+
+    Returns a nonzero (version) string if the module is available,
+    or an empty string if it is not.
+
+    The module is only checked on the first call.
+    The result is remembered in the GD.version dict.
+    """
+    if GD.version.has_key(name):
+        return GD.version[name]
+    else:
+        return checkModule(name)
+
+            
+# tetgen -v no longer works in 1.4.2: use -h !!
 known_externals = {
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
@@ -53,12 +121,12 @@ def checkExternal(name,command=None,answer=None):
 
     m = re.match(answer,commands.getoutput(command))
     if m:
-        value = m.group(1)
-        GD.message("Congratulations! You have %s (%s)" % (name,value))
+        version = m.group(1)
     else:
-        value = ''
-    GD.external[name] = value
-    return value
+        version = ''
+    congratulations(name,version,'program')
+    GD.external[name] = version
+    return version
 
     
 def hasExternal(name):

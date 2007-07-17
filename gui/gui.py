@@ -10,12 +10,16 @@
 """Graphical User Interface for pyFormex."""
 
 import globaldata as GD
+import sys,utils
+if not (utils.hasModule('numpy') and
+        utils.hasModule('pyqt4')):
+    sys.exit()
 
-import sys,time,os.path,string,re
+utils.hasModule('calpy')
+
+import time,os.path,string,re
 
 from PyQt4 import QtCore, QtGui
-
-print "Congratulations! You have Qt version %s" % QtCore.QT_VERSION_STR
 
 import menu
 import cameraMenu
@@ -26,7 +30,6 @@ import toolbar
 import viewport
 
 import script
-import utils
 import draw
 import widgets
 
