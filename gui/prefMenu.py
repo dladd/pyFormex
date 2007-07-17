@@ -58,6 +58,9 @@ def setHelp():
 def setCommands():
     askConfigPreferences(['editor','viewer','browser'])
 
+def setSysPath():
+    askConfigPreferences(['syspath'])
+
 def setDrawtimeout():
     askConfigPreferences(['draw/wait'])
 
@@ -151,6 +154,7 @@ MenuData = [
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
         (_('&Commands'),setCommands),
+        (_('&SysPath'),setSysPath),
         (_('&Help'),setHelp),
         (_('&Save Preferences'),GD.savePreferences),
         ]),

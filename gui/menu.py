@@ -97,6 +97,7 @@ MenuData = [
         (_('&PrintGlobals'),draw.printglobals),
         (_('&PrintConfig'),draw.printconfig),
         (_('&PrintViewportSettings'),draw.printviewportsettings),
+        (_('&Print Detected Software'),draw.printdetected),
         ]),
     (_('&Help'),[
         (_('&pyformex options'),help.cmdline),
@@ -107,6 +108,7 @@ MenuData = [
         (_('&Readme'),help.readme), 
         (_('&About'),help.about), 
         (_('&License'),help.license), 
+        (_('&Detected Software'),help.detected), 
         (_('&Warning'),help.testwarning),
         ])
     ]

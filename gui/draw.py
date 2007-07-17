@@ -897,7 +897,7 @@ maxprop  = %s
 
 def printall():
     """Print all Formices in globals()"""
-    GD.message("Formices currently in globals():\n%s" % listAll())
+    print "Formices currently in globals():\n%s" % listAll()
 
 
 def printglobals():
@@ -909,13 +909,23 @@ def printbbox():
 
     
 def printconfig():
-    print "Reference Configuration",GD.refcfg
-    print "User Configuration",GD.cfg
+    print "Reference Configuration: " + str(GD.refcfg)
+    print "User Configuration: " + str(GD.cfg)
 
 
 def printviewportsettings():
     GD.gui.viewports.printSettings()
         
+
+def printdetected():
+    print "Detected Python Modules:"
+    for k,v in GD.version.items():
+        if v:
+            print "%s (%s)" % ( k,v)
+    print "\nDetected External Programs:"
+    for k,v in GD.external.items():
+        if v:
+            print "%s (%s)" % ( k,v)
 
 
 def updateGUI():

@@ -133,6 +133,8 @@ def main(argv=None):
     GD.debug("RefConfig: %s" % GD.refcfg)
     GD.debug("Config: %s" % GD.cfg)
 
+    sys.path[-1:] = GD.cfg.get('syspath',[])
+
     if GD.options.gui is None and GD.__version__.startswith('0.4') :
         GD.message(GD.Version)
         GD.message("""

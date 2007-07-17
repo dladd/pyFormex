@@ -21,7 +21,8 @@ examplesdir = os.path.join(pyformexdir,'examples')
 scriptdirs = [ ('Examples',examplesdir) ]
 #imagesfromeps = True
 history = []
-
+# extra paths to append tot sys.path
+syspath = []
 
 # commands
 ### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE

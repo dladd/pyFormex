@@ -58,6 +58,9 @@ def checkModule(name):
         if name == 'numpy':
             import numpy
             version =  numpy.__version__
+        elif name == 'pyopengl':
+            import OpenGL
+            version =  OpenGL.__version__
         elif name == 'pyqt4':
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR

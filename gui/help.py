@@ -11,9 +11,10 @@
 
 import globaldata as GD
 
-import os
+import os,sys
 import draw
 import utils
+import tempfile
 
 def help(page=None):
     """Display a html help page.
@@ -32,6 +33,19 @@ def help(page=None):
         browser = GD.cfg['viewer']
     pid = utils.spawn(' '.join([browser,page]))
 
+
+def catchAndDisplay(cmd):
+    """Catch stdout from a Python cmd and display it in a window."""
+    save = sys.stdout
+    try:
+        f = tempfile.TemporaryFile('w+')
+        sys.stdout = f
+        eval(cmd)
+        f.seek(0)
+        draw.textView(f.read())
+    finally:
+        sys.stdout = save
+        
 
 def cmdline():
     """Display the pyFormex command line help."""
@@ -60,6 +74,9 @@ def readme():
 def license():
     """Display the pyFormex description."""
     draw.textView(file(GD.cfg['help/license']).read())
+
+def detected():
+    catchAndDisplay('draw.printdetected()')
 
 def about():
     draw.about("""%s

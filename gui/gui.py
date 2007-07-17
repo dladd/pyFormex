@@ -11,8 +11,9 @@
 
 import globaldata as GD
 import sys,utils
-if not (utils.hasModule('numpy') and
-        utils.hasModule('pyqt4')):
+if not ( utils.hasModule('numpy') and
+         utils.hasModule('pyopengl') and
+         utils.hasModule('pyqt4') ):
     sys.exit()
 
 utils.hasModule('calpy')

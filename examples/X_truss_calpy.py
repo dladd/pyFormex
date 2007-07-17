@@ -10,12 +10,18 @@
 #
 """X-shaped truss analysis"""
 
-#######################################################################
-# Setting this path correctly is required to import the analysis module
-# You need calpy >= 0.3.4
-# It can be downloaded from ftp://bumps.ugent.be/calpy/
-calpy_path = '/usr/local/lib/calpy-0.3.4'
-#######################################################################
+############################
+# Load the needed calpy modules    
+
+import utils
+if not utils.hasModule('calpy'):
+    warning("Sorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it).")
+    exit()
+
+from fe_util import *
+from truss3d import *
+############################
+
 
 linewidth(1.0)
 clear()
@@ -70,19 +76,6 @@ clear()
 draw(Formex(reshape(coords,(coords.shape[0],1,coords.shape[1]))),wait=False)
 draw(model)
 
-############################################
-##### NOW load the calpy analysis code #####
-
-# Check if we have calpy:
-import sys
-sys.path.append(calpy_path)
-try:
-    from fe_util import *
-    from truss3d import *
-except ImportError:
-    import globaldata as GD
-    warning("You need calpy-0.3.4 or higher to perform the analysis.\nIt can be obtained from ftp://bumps.ugent.be/calpy/\nYou should also set the correct calpy installation path\n in this example's source file\n(%s).\nThe calpy_path variable is set near the top of that file.\nIts current value is: %s" % (GD.cfg['curfile'],calpy_path))
-    exit()
     
 ############################################
 
