@@ -18,10 +18,11 @@
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
-</td><td width="25%" valign=top><a href="commands.html">commands</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="commands.html">commands</a><br>
+</td><td width="25%" valign=top><a href="distutils.html">distutils</a><br>
+<a href="os.html">os</a><br>
 </td><td width="25%" valign=top><a href="re.html">re</a><br>
-</td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -84,7 +85,8 @@ Data and other attributes defined here:<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-changeExt"><strong>changeExt</strong></a>(fn, ext)</dt><dd><tt>Change&nbsp;the&nbsp;extension&nbsp;of&nbsp;a&nbsp;file&nbsp;name.<br>
+<td width="100%"><dl><dt><a name="-all_image_extensions"><strong>all_image_extensions</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;with&nbsp;all&nbsp;known&nbsp;image&nbsp;extensions.</tt></dd></dl>
+ <dl><dt><a name="-changeExt"><strong>changeExt</strong></a>(fn, ext)</dt><dd><tt>Change&nbsp;the&nbsp;extension&nbsp;of&nbsp;a&nbsp;file&nbsp;name.<br>
 &nbsp;<br>
 The&nbsp;extension&nbsp;is&nbsp;the&nbsp;minimal&nbsp;trailing&nbsp;part&nbsp;of&nbsp;the&nbsp;filename&nbsp;starting<br>
 with&nbsp;a&nbsp;'.'.&nbsp;If&nbsp;the&nbsp;filename&nbsp;has&nbsp;no&nbsp;'.',&nbsp;the&nbsp;extension&nbsp;will&nbsp;be&nbsp;appended.<br>
@@ -105,16 +107,30 @@ the&nbsp;result.<br>
 &nbsp;<br>
 As&nbsp;a&nbsp;convenience,&nbsp;we&nbsp;provide&nbsp;a&nbsp;list&nbsp;of&nbsp;predeclared&nbsp;external&nbsp;commands,<br>
 that&nbsp;can&nbsp;be&nbsp;checked&nbsp;by&nbsp;their&nbsp;name&nbsp;alone.</tt></dd></dl>
+ <dl><dt><a name="-checkModule"><strong>checkModule</strong></a>(name)</dt><dd><tt>Check&nbsp;if&nbsp;the&nbsp;named&nbsp;Python&nbsp;module&nbsp;is&nbsp;available,&nbsp;and&nbsp;record&nbsp;its&nbsp;version.<br>
+&nbsp;<br>
+The&nbsp;version&nbsp;string&nbsp;is&nbsp;returned,&nbsp;empty&nbsp;if&nbsp;the&nbsp;module&nbsp;could&nbsp;not&nbsp;be&nbsp;loaded.<br>
+The&nbsp;(name,version)&nbsp;pair&nbsp;is&nbsp;also&nbsp;inserted&nbsp;into&nbsp;the&nbsp;GD.version&nbsp;dict.</tt></dd></dl>
+ <dl><dt><a name="-checkVersion"><strong>checkVersion</strong></a>(name, version, external<font color="#909090">=False</font>)</dt><dd><tt>Checks&nbsp;a&nbsp;version&nbsp;of&nbsp;a&nbsp;program/module.<br>
+&nbsp;<br>
+name&nbsp;is&nbsp;either&nbsp;a&nbsp;module&nbsp;or&nbsp;an&nbsp;external&nbsp;program&nbsp;whose&nbsp;availability&nbsp;has<br>
+been&nbsp;registered.<br>
+Default&nbsp;is&nbsp;to&nbsp;treat&nbsp;name&nbsp;as&nbsp;a&nbsp;module.&nbsp;Add&nbsp;external=True&nbsp;for&nbsp;a&nbsp;program.<br>
+&nbsp;<br>
+Return&nbsp;value&nbsp;is&nbsp;-1,&nbsp;0&nbsp;or&nbsp;1,&nbsp;depending&nbsp;on&nbsp;a&nbsp;version&nbsp;found&nbsp;that&nbsp;is<br>
+&lt;,&nbsp;==&nbsp;or&nbsp;&gt;&nbsp;than&nbsp;the&nbsp;requested&nbsp;values.<br>
+This&nbsp;should&nbsp;normally&nbsp;understand&nbsp;version&nbsp;numbers&nbsp;in&nbsp;the&nbsp;format&nbsp;2.10.1</tt></dd></dl>
+ <dl><dt><a name="-congratulations"><strong>congratulations</strong></a>(name, version, typ<font color="#909090">='module'</font>)</dt><dd><tt>Report&nbsp;a&nbsp;detected&nbsp;module/program.</tt></dd></dl>
  <dl><dt><a name="-countLines"><strong>countLines</strong></a>(fn)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;lines&nbsp;in&nbsp;a&nbsp;text&nbsp;file.</tt></dd></dl>
- <dl><dt><a name="-deprecated2"><strong>deprecated2</strong></a>(func, name<font color="#909090">=None</font>)</dt></dl>
+ <dl><dt><a name="-deprecated"><strong>deprecated</strong></a>(replacement)</dt></dl>
  <dl><dt><a name="-fileDescription"><strong>fileDescription</strong></a>(type)</dt><dd><tt>Return&nbsp;a&nbsp;description&nbsp;of&nbsp;the&nbsp;specified&nbsp;file&nbsp;type.<br>
 &nbsp;<br>
 The&nbsp;description&nbsp;of&nbsp;known&nbsp;types&nbsp;are&nbsp;liste&nbsp;in&nbsp;a&nbsp;dict&nbsp;file_description.<br>
 If&nbsp;the&nbsp;type&nbsp;is&nbsp;unknown,&nbsp;the&nbsp;returned&nbsp;string&nbsp;has&nbsp;the&nbsp;form<br>
 'TYPE&nbsp;files&nbsp;(*.type)'</tt></dd></dl>
- <dl><dt><a name="-formatDict"><strong>formatDict</strong></a>(dic)</dt><dd><tt>Format&nbsp;a&nbsp;dict&nbsp;in&nbsp;Python&nbsp;source&nbsp;representation.<br>
+ <dl><dt><a name="-findIcon"><strong>findIcon</strong></a>(name)</dt><dd><tt>Return&nbsp;the&nbsp;file&nbsp;name&nbsp;for&nbsp;an&nbsp;icon&nbsp;with&nbsp;given&nbsp;name.<br>
 &nbsp;<br>
-Each&nbsp;(key,value)&nbsp;pair&nbsp;is&nbsp;formatted&nbsp;on&nbsp;a&nbsp;line&nbsp;:&nbsp;key&nbsp;=&nbsp;value.</tt></dd></dl>
+If&nbsp;no&nbsp;icon&nbsp;file&nbsp;is&nbsp;found,&nbsp;returns&nbsp;the&nbsp;question&nbsp;mark&nbsp;icon.</tt></dd></dl>
  <dl><dt><a name="-hasExternal"><strong>hasExternal</strong></a>(name)</dt><dd><tt>Test&nbsp;if&nbsp;we&nbsp;have&nbsp;the&nbsp;external&nbsp;command&nbsp;'name'&nbsp;available.<br>
 &nbsp;<br>
 Returns&nbsp;a&nbsp;nonzero&nbsp;string&nbsp;if&nbsp;the&nbsp;command&nbsp;is&nbsp;available,<br>
@@ -122,6 +138,13 @@ or&nbsp;an&nbsp;empty&nbsp;string&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
 &nbsp;<br>
 The&nbsp;external&nbsp;command&nbsp;is&nbsp;only&nbsp;checked&nbsp;on&nbsp;the&nbsp;first&nbsp;call.<br>
 The&nbsp;result&nbsp;is&nbsp;remembered&nbsp;in&nbsp;the&nbsp;GD.external&nbsp;dict.</tt></dd></dl>
+ <dl><dt><a name="-hasModule"><strong>hasModule</strong></a>(name)</dt><dd><tt>Test&nbsp;if&nbsp;we&nbsp;have&nbsp;the&nbsp;named&nbsp;module&nbsp;available.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;nonzero&nbsp;(version)&nbsp;string&nbsp;if&nbsp;the&nbsp;module&nbsp;is&nbsp;available,<br>
+or&nbsp;an&nbsp;empty&nbsp;string&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
+&nbsp;<br>
+The&nbsp;module&nbsp;is&nbsp;only&nbsp;checked&nbsp;on&nbsp;the&nbsp;first&nbsp;call.<br>
+The&nbsp;result&nbsp;is&nbsp;remembered&nbsp;in&nbsp;the&nbsp;GD.version&nbsp;dict.</tt></dd></dl>
  <dl><dt><a name="-imageFormatFromExt"><strong>imageFormatFromExt</strong></a>(ext)</dt><dd><tt>Determine&nbsp;the&nbsp;image&nbsp;format&nbsp;from&nbsp;an&nbsp;extension.<br>
 &nbsp;<br>
 The&nbsp;extension&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;have&nbsp;an&nbsp;initial&nbsp;dot&nbsp;and&nbsp;may&nbsp;be&nbsp;in&nbsp;upper&nbsp;or<br>
@@ -163,6 +186,6 @@ is&nbsp;returned.</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>file_description</strong> = {'gts': 'GTS files (*.gts)', 'neu': 'Gambit Neutral files (*.neu)', 'off': 'OFF files (*.off)', 'smesh': 'Tetgen surface mesh files (*.smesh)', 'stl': 'STL files (*.stl)', 'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)'}<br>
+<td width="100%"><strong>file_description</strong> = {'all': 'All files (*)', 'gts': 'GTS files (*.gts)', 'icon': 'Icons (*.xpm)', 'img': 'Images (*.png *.jpg *.eps)', 'neu': 'Gambit Neutral files (*.neu)', 'off': 'OFF files (*.off)', 'png': 'PNG images (*.png)', 'smesh': 'Tetgen surface mesh files (*.smesh)', 'stl': 'STL files (*.stl)', 'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)'}<br>
 <strong>known_externals</strong> = {'ImageMagick': ('import -version', r'Version: ImageMagick (\S+)'), 'admesh': ('admesh --version', r'ADMesh - version (\S+)'), 'tetgen': ('tetgen -h |fgrep Version', r'Version (\S+)')}</td></tr></table>
 </body></html>

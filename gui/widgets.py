@@ -805,5 +805,4 @@ class ActionList(object):
     def names(self):
         """Return an ordered list of names of the action items."""
         return [ i[0] for i in self.actions ]
-
 #End

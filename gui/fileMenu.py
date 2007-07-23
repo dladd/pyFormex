@@ -14,6 +14,8 @@ import widgets
 import draw
 import utils
 
+from image import saveImage,saveNext,createMovie
+
 
 def openFile(exist=True):
     """Open a file selection dialog and set the selection as the current file.

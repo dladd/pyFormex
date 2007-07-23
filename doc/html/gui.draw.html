@@ -26,13 +26,14 @@
 <a href="copy.html">copy</a><br>
 <a href="gui.decors.html">gui.decors</a><br>
 <a href="formex.html">formex</a><br>
-<a href="gui.marks.html">gui.marks</a><br>
-</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="gui.image.html">gui.image</a><br>
+</td><td width="25%" valign=top><a href="gui.marks.html">gui.marks</a><br>
+<a href="numpy.html">numpy</a><br>
 <a href="os.html">os</a><br>
 <a href="re.html">re</a><br>
 <a href="sys.html">sys</a><br>
-<a href="threading.html">threading</a><br>
-</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+<a href="time.html">time</a><br>
 <a href="types.html">types</a><br>
 <a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
@@ -43,17 +44,25 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-Export"><strong>Export</strong></a> = export(dict)</dt></dl>
- <dl><dt><a name="-Globals"><strong>Globals</strong></a> = globals(...)</dt><dd><tt>globals()&nbsp;-&gt;&nbsp;dictionary<br>
+<td width="100%"><dl><dt><a name="-Globals"><strong>Globals</strong></a>()</dt><dd><tt>Return&nbsp;the&nbsp;globals&nbsp;that&nbsp;are&nbsp;pased&nbsp;to&nbsp;the&nbsp;scripts&nbsp;on&nbsp;execution.<br>
 &nbsp;<br>
-Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
- <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex version 0.4.2-r1'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+This&nbsp;basically&nbsp;contains&nbsp;the&nbsp;globals&nbsp;defined&nbsp;in&nbsp;draw.py,&nbsp;colors.py,<br>
+and&nbsp;formex.py,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;globals&nbsp;from&nbsp;numpy.<br>
+It&nbsp;also&nbsp;contains&nbsp;the&nbsp;definitions&nbsp;put&nbsp;into&nbsp;the&nbsp;globaldata.PF<br>
+Finally,&nbsp;because&nbsp;the&nbsp;scripts&nbsp;are&nbsp;executed&nbsp;in&nbsp;the&nbsp;context&nbsp;of&nbsp;the<br>
+draw&nbsp;module,&nbsp;it&nbsp;will&nbsp;also&nbsp;contain&nbsp;any&nbsp;global&nbsp;definitions&nbsp;made&nbsp;in<br>
+your&nbsp;scripts&nbsp;or&nbsp;explicitely&nbsp;exported&nbsp;by&nbsp;a&nbsp;script.<br>
+During&nbsp;execution&nbsp;of&nbsp;the&nbsp;script,&nbsp;the&nbsp;global&nbsp;variable&nbsp;__name__&nbsp;will&nbsp;be<br>
+set&nbsp;to&nbsp;either&nbsp;'draw'&nbsp;or&nbsp;'script'&nbsp;depending&nbsp;on&nbsp;whether&nbsp;the&nbsp;script<br>
+was&nbsp;executed&nbsp;in&nbsp;the&nbsp;'draw'&nbsp;module&nbsp;(--gui&nbsp;option)&nbsp;or&nbsp;the&nbsp;'script'<br>
+module&nbsp;(--nogui&nbsp;option).</tt></dd></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex version 0.5-alpha'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
 Returns&nbsp;index&nbsp;of&nbsp;the&nbsp;chosen&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-askDirname"><strong>askDirname</strong></a>(cur)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;directory&nbsp;name.</tt></dd></dl>
- <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, filter<font color="#909090">='All files (*.*)'</font>, file<font color="#909090">=None</font>, exist<font color="#909090">=False</font>, multi<font color="#909090">=False</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;an&nbsp;existing&nbsp;file&nbsp;name&nbsp;or&nbsp;multiple&nbsp;file&nbsp;names.</tt></dd></dl>
+ <dl><dt><a name="-askFilename"><strong>askFilename</strong></a>(cur, filter<font color="#909090">='All files (*.*)'</font>, file<font color="#909090">=None</font>, exist<font color="#909090">=False</font>, multi<font color="#909090">=False</font>)</dt><dd><tt>Ask&nbsp;for&nbsp;a&nbsp;file&nbsp;name&nbsp;or&nbsp;multiple&nbsp;file&nbsp;names.</tt></dd></dl>
  <dl><dt><a name="-askItems"><strong>askItems</strong></a>(items, caption<font color="#909090">=None</font>)</dt><dd><tt>Ask&nbsp;the&nbsp;value&nbsp;of&nbsp;some&nbsp;items&nbsp;to&nbsp;the&nbsp;user.&nbsp;!!&nbsp;VERY&nbsp;EXPERIMENTAL!!<br>
 &nbsp;<br>
 Input&nbsp;is&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;items&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;[key,value]&nbsp;pairs.<br>
@@ -64,6 +73,9 @@ exited&nbsp;with&nbsp;a&nbsp;cancel.</tt></dd></dl>
  <dl><dt><a name="-backView"><strong>backView</strong></a>()</dt></dl>
  <dl><dt><a name="-bgcolor"><strong>bgcolor</strong></a>(color)</dt><dd><tt>Change&nbsp;the&nbsp;background&nbsp;color&nbsp;(and&nbsp;redraw).</tt></dd></dl>
  <dl><dt><a name="-bottomView"><strong>bottomView</strong></a>()</dt></dl>
+ <dl><dt><a name="-breakpt"><strong>breakpt</strong></a>(msg<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;a&nbsp;breakpoint&nbsp;where&nbsp;the&nbsp;script&nbsp;can&nbsp;be&nbsp;halted&nbsp;on&nbsp;pressing&nbsp;a&nbsp;button.<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;argument&nbsp;is&nbsp;specified,&nbsp;it&nbsp;will&nbsp;be&nbsp;written&nbsp;to&nbsp;the&nbsp;message&nbsp;board.</tt></dd></dl>
  <dl><dt><a name="-chdir"><strong>chdir</strong></a>(fn)</dt><dd><tt>Change&nbsp;the&nbsp;current&nbsp;pyFormex&nbsp;working&nbsp;directory.<br>
 &nbsp;<br>
 If&nbsp;fn&nbsp;is&nbsp;a&nbsp;directory&nbsp;name,&nbsp;the&nbsp;current&nbsp;directory&nbsp;is&nbsp;set&nbsp;to&nbsp;fn.<br>
@@ -85,7 +97,7 @@ If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nb
 a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
  <dl><dt><a name="-decorate"><strong>decorate</strong></a>(decor)</dt><dd><tt>Draw&nbsp;a&nbsp;decoration.</tt></dd></dl>
  <dl><dt><a name="-delay"><strong>delay</strong></a>(i)</dt><dd><tt>Set&nbsp;the&nbsp;draw&nbsp;delay&nbsp;in&nbsp;seconds.</tt></dd></dl>
- <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, colormap<font color="#909090">=None</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, colormap<font color="#909090">=None</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
 &nbsp;<br>
 If&nbsp;F&nbsp;is&nbsp;a&nbsp;list,&nbsp;all&nbsp;its&nbsp;items&nbsp;are&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;settings.<br>
 &nbsp;<br>
@@ -138,7 +150,6 @@ If&nbsp;a&nbsp;timer&nbsp;is&nbsp;running,&nbsp;cancel&nbsp;it.</tt></dd></dl>
 While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></dd></dl>
  <dl><dt><a name="-error"><strong>error</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Show&nbsp;an&nbsp;error&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-exit"><strong>exit</strong></a>(all<font color="#909090">=False</font>)</dt><dd><tt>Exit&nbsp;from&nbsp;the&nbsp;current&nbsp;script&nbsp;or&nbsp;from&nbsp;pyformex&nbsp;if&nbsp;no&nbsp;script&nbsp;running.</tt></dd></dl>
- <dl><dt><a name="-export"><strong>export</strong></a>(dict)</dt></dl>
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-fgcolor"><strong>fgcolor</strong></a>(color)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;foreground&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
@@ -167,6 +178,7 @@ with&nbsp;the&nbsp;specified&nbsp;action&nbsp;text.&nbsp;The&nbsp;'about'&nbsp;l
 &nbsp;<br>
 The&nbsp;function&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;the&nbsp;button&nbsp;that&nbsp;was&nbsp;clicked.</tt></dd></dl>
  <dl><dt><a name="-named"><strong>named</strong></a>(name)</dt><dd><tt>Returns&nbsp;the&nbsp;global&nbsp;object&nbsp;named&nbsp;name.</tt></dd></dl>
+ <dl><dt><a name="-opacity"><strong>opacity</strong></a>(alpha)</dt><dd><tt>Set&nbsp;the&nbsp;viewports&nbsp;transparency.</tt></dd></dl>
  <dl><dt><a name="-outrelease"><strong>outrelease</strong></a>()</dt><dd><tt>Release&nbsp;the&nbsp;outtime.</tt></dd></dl>
  <dl><dt><a name="-pause"><strong>pause</strong></a>()</dt></dl>
  <dl><dt><a name="-pick"><strong>pick</strong></a>()</dt></dl>
@@ -189,13 +201,16 @@ the&nbsp;script&nbsp;that&nbsp;starts&nbsp;with&nbsp;'draw'.&nbsp;Also&nbsp;(in&
  <dl><dt><a name="-printall"><strong>printall</strong></a>()</dt><dd><tt>Print&nbsp;all&nbsp;Formices&nbsp;in&nbsp;globals()</tt></dd></dl>
  <dl><dt><a name="-printbbox"><strong>printbbox</strong></a>()</dt></dl>
  <dl><dt><a name="-printconfig"><strong>printconfig</strong></a>()</dt></dl>
+ <dl><dt><a name="-printdetected"><strong>printdetected</strong></a>()</dt></dl>
  <dl><dt><a name="-printglobals"><strong>printglobals</strong></a>()</dt></dl>
+ <dl><dt><a name="-printviewportsettings"><strong>printviewportsettings</strong></a>()</dt></dl>
  <dl><dt><a name="-redraw"><strong>redraw</strong></a>()</dt></dl>
  <dl><dt><a name="-renderMode"><strong>renderMode</strong></a>(mode)</dt></dl>
  <dl><dt><a name="-reset"><strong>reset</strong></a>()</dt></dl>
  <dl><dt><a name="-rightView"><strong>rightView</strong></a>()</dt></dl>
  <dl><dt><a name="-runtime"><strong>runtime</strong></a>()</dt><dd><tt>Return&nbsp;the&nbsp;time&nbsp;elapsed&nbsp;since&nbsp;start&nbsp;of&nbsp;execution&nbsp;of&nbsp;the&nbsp;script.</tt></dd></dl>
- <dl><dt><a name="-saveImage"><strong>saveImage</strong></a>(filename<font color="#909090">=None</font>, window<font color="#909090">=False</font>, multi<font color="#909090">=False</font>, hotkey<font color="#909090">=True</font>, autosave<font color="#909090">=False</font>, format<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Starts&nbsp;or&nbsp;stops&nbsp;saving&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
+ <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt><dd><tt>In&nbsp;multisave&nbsp;mode,&nbsp;saves&nbsp;the&nbsp;next&nbsp;image.</tt></dd></dl>
+ <dl><dt><a name="-saveView"><strong>saveView</strong></a>(filename<font color="#909090">=None</font>, window<font color="#909090">=False</font>, multi<font color="#909090">=False</font>, hotkey<font color="#909090">=True</font>, autosave<font color="#909090">=False</font>, format<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Starts&nbsp;or&nbsp;stops&nbsp;saving&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
 &nbsp;<br>
 With&nbsp;a&nbsp;filename,&nbsp;this&nbsp;starts&nbsp;or&nbsp;changes&nbsp;the&nbsp;multisave&nbsp;mode.<br>
 In&nbsp;multisave&nbsp;mode,&nbsp;each&nbsp;call&nbsp;to&nbsp;<a href="#-saveNext">saveNext</a>()&nbsp;will&nbsp;save&nbsp;an&nbsp;image&nbsp;to&nbsp;the<br>
@@ -223,7 +238,6 @@ fmt&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;valid&nbsp;formats&nbsp;a
 &nbsp;<br>
 If&nbsp;verbose=True,&nbsp;error/warnings&nbsp;are&nbsp;activated.&nbsp;This&nbsp;is&nbsp;usually&nbsp;done&nbsp;when<br>
 this&nbsp;function&nbsp;is&nbsp;called&nbsp;from&nbsp;the&nbsp;GUI.</tt></dd></dl>
- <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt><dd><tt>In&nbsp;multisave&nbsp;mode,&nbsp;saves&nbsp;the&nbsp;next&nbsp;image.</tt></dd></dl>
  <dl><dt><a name="-saveWindow"><strong>saveWindow</strong></a>(filename, format, border<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;the&nbsp;main&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
@@ -257,6 +271,7 @@ A&nbsp;step&nbsp;is&nbsp;a&nbsp;set&nbsp;of&nbsp;instructions&nbsp;until&nbsp;th
 If&nbsp;a&nbsp;script&nbsp;is&nbsp;running,&nbsp;this&nbsp;just&nbsp;releases&nbsp;the&nbsp;draw&nbsp;lock.<br>
 Else,&nbsp;it&nbsp;starts&nbsp;the&nbsp;script&nbsp;in&nbsp;step&nbsp;mode.</tt></dd></dl>
  <dl><dt><a name="-step_script"><strong>step_script</strong></a>(s, glob, paus<font color="#909090">=True</font>)</dt></dl>
+ <dl><dt><a name="-stopatbreakpt"><strong>stopatbreakpt</strong></a>()</dt><dd><tt>Set&nbsp;the&nbsp;exitrequested&nbsp;flag.</tt></dd></dl>
  <dl><dt><a name="-textView"><strong>textView</strong></a>(text)</dt><dd><tt>Display&nbsp;a&nbsp;text&nbsp;file&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;response.</tt></dd></dl>
  <dl><dt><a name="-timeout"><strong>timeout</strong></a>(secs)</dt><dd><tt>Raise&nbsp;a&nbsp;timeout&nbsp;error&nbsp;after&nbsp;secs.</tt></dd></dl>
  <dl><dt><a name="-topView"><strong>topView</strong></a>()</dt></dl>
@@ -286,7 +301,7 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <td width="100%"><strong>allowwait</strong> = True<br>
 <strong>drawlocked</strong> = False<br>
 <strong>drawtimer</strong> = None<br>
-<strong>m</strong> = &lt;_sre.SRE_Match object&gt;<br>
+<strong>exitrequested</strong> = False<br>
 <strong>multisave</strong> = None<br>
 <strong>outtimer</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>

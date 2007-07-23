@@ -75,8 +75,8 @@ MenuData = [
         (_('---'),None),
         (_('&Save Image'),fileMenu.saveImage),
         (_('Start &MultiSave'),fileMenu.startMultiSave),
-        (_('Save &Next Image'),draw.saveNext),
-        (_('Create &Movie'),draw.createMovie),
+        (_('Save &Next Image'),fileMenu.saveNext),
+        (_('Create &Movie'),fileMenu.createMovie),
         (_('&Stop MultiSave'),fileMenu.stopMultiSave),
         (_('---'),None),
         (_('Load &Plugins'),[

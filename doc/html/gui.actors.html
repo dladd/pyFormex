@@ -183,7 +183,7 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="FormexActor-__init__"><strong>__init__</strong></a>(self, F, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>, bkcolor<font color="#909090">=None</font>, bkcolormap<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, markscale<font color="#909090">=None</font>, marksize<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
+<dl><dt><a name="FormexActor-__init__"><strong>__init__</strong></a>(self, F, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>, bkcolor<font color="#909090">=None</font>, bkcolormap<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, markscale<font color="#909090">=None</font>, marksize<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
 &nbsp;<br>
 The&nbsp;colors&nbsp;argument&nbsp;specifies&nbsp;a&nbsp;list&nbsp;of&nbsp;OpenGL&nbsp;colors&nbsp;for&nbsp;each<br>
 of&nbsp;the&nbsp;property&nbsp;values&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;If&nbsp;the&nbsp;list&nbsp;has&nbsp;less<br>
@@ -206,7 +206,7 @@ box.<br>
 It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;(2,3)&nbsp;shaped&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
 minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;row&nbsp;the&nbsp;maximal.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.<br>
+<dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>, color<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.<br>
 &nbsp;<br>
 if&nbsp;color&nbsp;is&nbsp;None,&nbsp;it&nbsp;is&nbsp;drawn&nbsp;with&nbsp;the&nbsp;color&nbsp;specified&nbsp;on&nbsp;creation.<br>
 if&nbsp;color&nbsp;==&nbsp;'prop'&nbsp;and&nbsp;a&nbsp;colormap&nbsp;was&nbsp;installed,&nbsp;props&nbsp;define&nbsp;color.<br>
@@ -217,6 +217,8 @@ elements&nbsp;<br>
 if&nbsp;mode&nbsp;ends&nbsp;with&nbsp;wire&nbsp;(smoothwire&nbsp;or&nbsp;flatwire),&nbsp;two&nbsp;drawing<br>
 operations&nbsp;are&nbsp;done:&nbsp;one&nbsp;with&nbsp;wireframe&nbsp;and&nbsp;color&nbsp;black,&nbsp;and<br>
 one&nbsp;with&nbsp;mode[:-4]&nbsp;and&nbsp;self.<strong>color</strong>.</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-setAlpha"><strong>setAlpha</strong></a>(self, alpha)</dt><dd><tt>Set&nbsp;the&nbsp;Actors&nbsp;alpha&nbsp;value.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-setBkColor"><strong>setBkColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;backside&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
@@ -411,7 +413,9 @@ scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;
 (scale&nbsp;is&nbsp;given&nbsp;in&nbsp;order&nbsp;r,theta,z).<br>
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array&nbsp;(ndarray)</tt></dd></dl>
+<dl><dt><a name="FormexActor-data"><strong>data</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
+
+<dl><dt><a name="FormexActor-deprecated"><strong>deprecated</strong></a>(replacement)</dt></dl>
 
 <dl><dt><a name="FormexActor-divide"><strong>divide</strong></a>(self, div)</dt><dd><tt>Divide&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;values&nbsp;in&nbsp;div.<br>
 &nbsp;<br>
@@ -921,8 +925,7 @@ permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
 Since&nbsp;the&nbsp;ndarray&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;has&nbsp;a&nbsp;method&nbsp;<a href="#FormexActor-view">view</a>()&nbsp;returning&nbsp;a&nbsp;view&nbsp;on<br>
 the&nbsp;ndarray,&nbsp;this&nbsp;method&nbsp;allows&nbsp;writing&nbsp;code&nbsp;tha&nbsp;works&nbsp;with&nbsp;both<br>
 <a href="formex.html#Formex">Formex</a>&nbsp;and&nbsp;ndarray&nbsp;instances.&nbsp;The&nbsp;results&nbsp;is&nbsp;of&nbsp;course&nbsp;always&nbsp;an<br>
-ndarray.<br>
-This&nbsp;method&nbsp;is&nbsp;prefered&nbsp;over&nbsp;the&nbsp;(deprecated)&nbsp;<a href="#FormexActor-data">data</a>().</tt></dd></dl>
+ndarray.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-where"><strong>where</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
@@ -1153,6 +1156,11 @@ makes&nbsp;sense&nbsp;if&nbsp;the&nbsp;mark&nbsp;was&nbsp;created&nbsp;without&n
  <dl><dt><a name="-drawCube"><strong>drawCube</strong></a>(s, color<font color="#909090">=[(1.0, 0.0, 0.0), (0.0, 1.0, 1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 1.0), (0.0, 0.0, 1.0), (1.0, 1.0, 0.0)]</font>)</dt><dd><tt>Draws&nbsp;a&nbsp;centered&nbsp;cube&nbsp;with&nbsp;side&nbsp;2*s&nbsp;and&nbsp;colored&nbsp;faces.<br>
 &nbsp;<br>
 Colors&nbsp;are&nbsp;specified&nbsp;in&nbsp;the&nbsp;order&nbsp;[FRONT,BACK,RIGHT,LEFT,TOP,BOTTOM].</tt></dd></dl>
+ <dl><dt><a name="-drawCurves"><strong>drawCurves</strong></a>(x, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;curves.<br>
+&nbsp;<br>
+x&nbsp;is&nbsp;a&nbsp;(nlines,3,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
+&nbsp;<br>
+If&nbsp;color&nbsp;is&nbsp;given&nbsp;it&nbsp;is&nbsp;an&nbsp;(nlines,3)&nbsp;array&nbsp;of&nbsp;RGB&nbsp;values.</tt></dd></dl>
  <dl><dt><a name="-drawEdges"><strong>drawEdges</strong></a>(x, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;edges.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(ntri,2*n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.&nbsp;Each&nbsp;of&nbsp;the&nbsp;n&nbsp;pairs<br>
@@ -1205,7 +1213,7 @@ mode&nbsp;is&nbsp;either&nbsp;'flat'&nbsp;or&nbsp;'smooth'&nbsp;:&nbsp;in&nbsp;'
 for&nbsp;the&nbsp;lighting&nbsp;are&nbsp;calculated&nbsp;and&nbsp;set</tt></dd></dl>
  <dl><dt><a name="-drawSphere"><strong>drawSphere</strong></a>(s, color<font color="#909090">=(0.0, 1.0, 1.0)</font>, ndiv<font color="#909090">=8</font>)</dt><dd><tt>Draws&nbsp;a&nbsp;centered&nbsp;sphere&nbsp;with&nbsp;radius&nbsp;s&nbsp;in&nbsp;given&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-drawTriArray"><strong>drawTriArray</strong></a>(x, c, mode)</dt></dl>
- <dl><dt><a name="-drawTriangles"><strong>drawTriangles</strong></a>(x, mode, color<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;triangles.<br>
+ <dl><dt><a name="-drawTriangles"><strong>drawTriangles</strong></a>(x, mode, color<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;collection&nbsp;of&nbsp;triangles.<br>
 &nbsp;<br>
 x&nbsp;is&nbsp;a&nbsp;(ntri,3*n,3)&nbsp;shaped&nbsp;array&nbsp;of&nbsp;coordinates.<br>
 Each&nbsp;row&nbsp;contains&nbsp;n&nbsp;triangles&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;color.<br>
@@ -1274,6 +1282,11 @@ Create&nbsp;a&nbsp;buffer&nbsp;<a href="__builtin__.html#object">object</a>&nbsp
 length&nbsp;size&nbsp;starting&nbsp;at&nbsp;offset.&nbsp;&nbsp;Default&nbsp;is&nbsp;the&nbsp;entire&nbsp;buffer.&nbsp;A<br>
 read-write&nbsp;buffer&nbsp;is&nbsp;attempted&nbsp;followed&nbsp;by&nbsp;a&nbsp;read-only&nbsp;buffer.</tt></dd></dl>
  <dl><dt><a name="-geterrobj"><strong>geterrobj</strong></a>(...)</dt></dl>
+ <dl><dt><a name="-glColor"><strong>glColor</strong></a>(color, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Set&nbsp;the&nbsp;OpenGL&nbsp;color,&nbsp;possibly&nbsp;with&nbsp;transparency.<br>
+&nbsp;<br>
+color&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;3&nbsp;real&nbsp;values.<br>
+alpha&nbsp;is&nbsp;a&nbsp;single&nbsp;real&nbsp;value.<br>
+All&nbsp;values&nbsp;are&nbsp;between&nbsp;0.0&nbsp;and&nbsp;1.0</tt></dd></dl>
  <dl><dt><a name="-inner"><strong>inner</strong></a>(...)</dt><dd><tt>innerproduct(a,b)<br>
 Returns&nbsp;the&nbsp;inner&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&nbsp;arrays&nbsp;of&nbsp;floating&nbsp;point&nbsp;types.<br>
 Like&nbsp;the&nbsp;generic&nbsp;NumPy&nbsp;equivalent&nbsp;the&nbsp;product&nbsp;sum&nbsp;is&nbsp;over<br>
@@ -1411,7 +1424,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex256'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1432,7 +1445,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.uint8'&gt;: &lt;function &lt;lambda&gt; at 0x2b38fb3cf668&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...object_'&gt;: &lt;function &lt;lambda&gt; at 0x2b85c3abf758&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1482,7 +1495,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.uint8'&gt;: 1, &lt;type 'numpy.bool_'&gt;: 1}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.float64'&gt;: 8, &lt;type 'numpy.object_'&gt;: 8}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

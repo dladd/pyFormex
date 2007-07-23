@@ -20,9 +20,11 @@
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
 <a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
 </td><td width="25%" valign=top><a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
-<a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="types.html">types</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<a href="gui.colors.html">gui.colors</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="types.html">types</a><br>
+</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -30,6 +32,12 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QAction">PyQt4.QtGui.QAction</a>(<a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gui.widgets.html#DAction">DAction</a>
+</font></dt></dl>
+</dd>
 <dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>(<a href="PyQt4.QtGui.html#QWidget">PyQt4.QtGui.QWidget</a>)
 </font></dt><dd>
 <dl>
@@ -56,6 +64,8 @@
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.widgets.html#InputBool">InputBool</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#InputColor">InputColor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#InputFloat">InputFloat</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#InputInteger">InputInteger</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#InputSelect">InputSelect</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#InputString">InputString</a>
@@ -75,8 +85,57 @@
 <dt><font face="helvetica, arial"><a href="gui.widgets.html#MenuBar">MenuBar</a>
 </font></dt></dl>
 </dd>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gui.widgets.html#ActionList">ActionList</a>
+</font></dt></dl>
+</dd>
 </dl>
  <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ActionList">class <strong>ActionList</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Menu">Menu</a>&nbsp;and&nbsp;toolbar&nbsp;with&nbsp;named&nbsp;actions.<br>
+&nbsp;<br>
+An&nbsp;action&nbsp;list&nbsp;is&nbsp;a&nbsp;list&nbsp;of&nbsp;strings,&nbsp;each&nbsp;connected&nbsp;to&nbsp;some&nbsp;action.<br>
+The&nbsp;actions&nbsp;can&nbsp;be&nbsp;presented&nbsp;in&nbsp;a&nbsp;menu&nbsp;and/or&nbsp;a&nbsp;toolbar.<br>
+On&nbsp;activating&nbsp;one&nbsp;of&nbsp;the&nbsp;menu&nbsp;or&nbsp;toolbar&nbsp;buttons,&nbsp;a&nbsp;given&nbsp;signal&nbsp;is<br>
+emitted&nbsp;with&nbsp;the&nbsp;button&nbsp;string&nbsp;as&nbsp;parameter.&nbsp;A&nbsp;fixed&nbsp;function&nbsp;can&nbsp;be<br>
+connected&nbsp;to&nbsp;this&nbsp;signal&nbsp;to&nbsp;act&nbsp;dependent&nbsp;on&nbsp;the&nbsp;string&nbsp;value.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ActionList-__init__"><strong>__init__</strong></a>(self, actions<font color="#909090">=[]</font>, function<font color="#909090">=None</font>, menu<font color="#909090">=None</font>, toolbar<font color="#909090">=None</font>, icons<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;an&nbsp;new&nbsp;action&nbsp;list,&nbsp;empty&nbsp;by&nbsp;default.<br>
+&nbsp;<br>
+A&nbsp;list&nbsp;of&nbsp;strings&nbsp;can&nbsp;be&nbsp;passed&nbsp;to&nbsp;initialize&nbsp;the&nbsp;actions.<br>
+If&nbsp;a&nbsp;menu&nbsp;and/or&nbsp;toolbar&nbsp;are&nbsp;passed,&nbsp;a&nbsp;button&nbsp;is&nbsp;added&nbsp;to&nbsp;them<br>
+for&nbsp;each&nbsp;string&nbsp;in&nbsp;the&nbsp;action&nbsp;list.<br>
+If&nbsp;a&nbsp;function&nbsp;is&nbsp;passed,&nbsp;it&nbsp;will&nbsp;be&nbsp;called&nbsp;with&nbsp;the&nbsp;string&nbsp;as<br>
+parameter&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;triggered.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;icon&nbsp;names&nbsp;are&nbsp;specified,&nbsp;they&nbsp;are&nbsp;taken&nbsp;equal&nbsp;to&nbsp;the<br>
+action&nbsp;names.&nbsp;Icons&nbsp;will&nbsp;be&nbsp;taken&nbsp;from&nbsp;the&nbsp;installed&nbsp;icon&nbsp;directory.<br>
+If&nbsp;you&nbsp;want&nbsp;to&nbsp;specify&nbsp;other&nbsp;icons,&nbsp;use&nbsp;the&nbsp;<a href="#ActionList-add">add</a>()&nbsp;method.</tt></dd></dl>
+
+<dl><dt><a name="ActionList-add"><strong>add</strong></a>(self, name, icon<font color="#909090">=None</font>)</dt><dd><tt>Add&nbsp;a&nbsp;new&nbsp;name&nbsp;to&nbsp;the&nbsp;actions&nbsp;list&nbsp;and&nbsp;create&nbsp;a&nbsp;matching&nbsp;<a href="#DAction">DAction</a>.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;actions&nbsp;list&nbsp;has&nbsp;an&nbsp;associated&nbsp;menu&nbsp;or&nbsp;toolbar,<br>
+a&nbsp;matching&nbsp;button&nbsp;will&nbsp;be&nbsp;inserted&nbsp;in&nbsp;each&nbsp;of&nbsp;these.<br>
+If&nbsp;an&nbsp;icon&nbsp;is&nbsp;specified,&nbsp;it&nbsp;will&nbsp;be&nbsp;used&nbsp;on&nbsp;the&nbsp;menu&nbsp;and&nbsp;toolbar.<br>
+The&nbsp;icon&nbsp;is&nbsp;either&nbsp;a&nbsp;filename&nbsp;or&nbsp;a&nbsp;QIcon&nbsp;<a href="__builtin__.html#object">object</a>.</tt></dd></dl>
+
+<dl><dt><a name="ActionList-names"><strong>names</strong></a>(self)</dt><dd><tt>Return&nbsp;an&nbsp;ordered&nbsp;list&nbsp;of&nbsp;names&nbsp;of&nbsp;the&nbsp;action&nbsp;items.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'ActionList' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -444,6 +503,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -514,6 +577,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -525,6 +590,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -573,6 +640,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -630,7 +699,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -645,6 +714,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -738,7 +809,261 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#AppearenceDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#AppearenceDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DAction">class <strong>DAction</strong></a>(<a href="PyQt4.QtGui.html#QAction">PyQt4.QtGui.QAction</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;<a href="#DAction">DAction</a>&nbsp;is&nbsp;a&nbsp;<a href="PyQt4.QtGui.html#QAction">QAction</a>&nbsp;that&nbsp;emits&nbsp;a&nbsp;signal&nbsp;with&nbsp;a&nbsp;string&nbsp;parameter.<br>
+&nbsp;<br>
+When&nbsp;triggered,&nbsp;this&nbsp;action&nbsp;sends&nbsp;a&nbsp;signal&nbsp;(default&nbsp;'Clicked')&nbsp;with&nbsp;a<br>
+custom&nbsp;string&nbsp;as&nbsp;parameter.&nbsp;The&nbsp;connected&nbsp;slot&nbsp;can&nbsp;then&nbsp;act&nbsp;depending<br>
+on&nbsp;this&nbsp;parameter.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gui.widgets.html#DAction">DAction</a></dd>
+<dd><a href="PyQt4.QtGui.html#QAction">PyQt4.QtGui.QAction</a></dd>
+<dd><a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a></dd>
+<dd><a href="sip.html#wrapper">sip.wrapper</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="DAction-__init__"><strong>__init__</strong></a>(self, name, icon<font color="#909090">=None</font>, data<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#DAction">DAction</a>&nbsp;with&nbsp;name,&nbsp;icon&nbsp;and&nbsp;string&nbsp;data.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;<a href="#DAction">DAction</a>&nbsp;is&nbsp;used&nbsp;in&nbsp;a&nbsp;menu,&nbsp;a&nbsp;name&nbsp;is&nbsp;sufficient.&nbsp;For&nbsp;use<br>
+in&nbsp;a&nbsp;toolbar,&nbsp;you&nbsp;will&nbsp;probably&nbsp;want&nbsp;to&nbsp;specify&nbsp;an&nbsp;icon.<br>
+When&nbsp;the&nbsp;action&nbsp;is&nbsp;triggered,&nbsp;the&nbsp;data&nbsp;is&nbsp;sent&nbsp;as&nbsp;a&nbsp;parameter&nbsp;to<br>
+the&nbsp;SLOT&nbsp;function&nbsp;connected&nbsp;with&nbsp;the&nbsp;'Clicked'&nbsp;signal.<br>
+If&nbsp;no&nbsp;data&nbsp;is&nbsp;specified,&nbsp;the&nbsp;name&nbsp;is&nbsp;used&nbsp;as&nbsp;data.&nbsp;<br>
+&nbsp;<br>
+See&nbsp;the&nbsp;views.py&nbsp;module&nbsp;for&nbsp;an&nbsp;example.</tt></dd></dl>
+
+<dl><dt><a name="DAction-activated"><strong>activated</strong></a>(self)</dt></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>signal</strong> = 'Clicked'</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QAction">PyQt4.QtGui.QAction</a>:<br>
+<dl><dt><strong>AboutQtRole</strong> = 3</dl>
+
+<dl><dt><strong>AboutRole</strong> = 4</dl>
+
+<dl><dt><strong>ActionEvent</strong> = &lt;class 'PyQt4.QtGui.ActionEvent'&gt;</dl>
+
+<dl><dt><strong>ApplicationSpecificRole</strong> = 2</dl>
+
+<dl><dt><strong>Hover</strong> = 1</dl>
+
+<dl><dt><strong>MenuRole</strong> = &lt;class 'PyQt4.QtGui.MenuRole'&gt;</dl>
+
+<dl><dt><strong>NoRole</strong> = 0</dl>
+
+<dl><dt><strong>PreferencesRole</strong> = 5</dl>
+
+<dl><dt><strong>QuitRole</strong> = 6</dl>
+
+<dl><dt><strong>TextHeuristicRole</strong> = 1</dl>
+
+<dl><dt><strong>Trigger</strong> = 0</dl>
+
+<dl><dt><strong>__reduce__</strong> = None</dl>
+
+<dl><dt><strong>__reduce_ex__</strong> = None</dl>
+
+<dl><dt><strong>actionGroup</strong> = &lt;built-in function actionGroup&gt;</dl>
+
+<dl><dt><strong>activate</strong> = &lt;built-in function activate&gt;</dl>
+
+<dl><dt><strong>associatedWidgets</strong> = &lt;built-in function associatedWidgets&gt;</dl>
+
+<dl><dt><strong>autoRepeat</strong> = &lt;built-in function autoRepeat&gt;</dl>
+
+<dl><dt><strong>childEvent</strong> = &lt;built-in function childEvent&gt;</dl>
+
+<dl><dt><strong>connectNotify</strong> = &lt;built-in function connectNotify&gt;</dl>
+
+<dl><dt><strong>customEvent</strong> = &lt;built-in function customEvent&gt;</dl>
+
+<dl><dt><strong>data</strong> = &lt;built-in function data&gt;</dl>
+
+<dl><dt><strong>disconnectNotify</strong> = &lt;built-in function disconnectNotify&gt;</dl>
+
+<dl><dt><strong>event</strong> = &lt;built-in function event&gt;</dl>
+
+<dl><dt><strong>font</strong> = &lt;built-in function font&gt;</dl>
+
+<dl><dt><strong>hover</strong> = &lt;built-in function hover&gt;</dl>
+
+<dl><dt><strong>icon</strong> = &lt;built-in function icon&gt;</dl>
+
+<dl><dt><strong>iconText</strong> = &lt;built-in function iconText&gt;</dl>
+
+<dl><dt><strong>isCheckable</strong> = &lt;built-in function isCheckable&gt;</dl>
+
+<dl><dt><strong>isChecked</strong> = &lt;built-in function isChecked&gt;</dl>
+
+<dl><dt><strong>isEnabled</strong> = &lt;built-in function isEnabled&gt;</dl>
+
+<dl><dt><strong>isSeparator</strong> = &lt;built-in function isSeparator&gt;</dl>
+
+<dl><dt><strong>isVisible</strong> = &lt;built-in function isVisible&gt;</dl>
+
+<dl><dt><strong>menu</strong> = &lt;built-in function menu&gt;</dl>
+
+<dl><dt><strong>menuRole</strong> = &lt;built-in function menuRole&gt;</dl>
+
+<dl><dt><strong>parentWidget</strong> = &lt;built-in function parentWidget&gt;</dl>
+
+<dl><dt><strong>receivers</strong> = &lt;built-in function receivers&gt;</dl>
+
+<dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
+
+<dl><dt><strong>setActionGroup</strong> = &lt;built-in function setActionGroup&gt;</dl>
+
+<dl><dt><strong>setAutoRepeat</strong> = &lt;built-in function setAutoRepeat&gt;</dl>
+
+<dl><dt><strong>setCheckable</strong> = &lt;built-in function setCheckable&gt;</dl>
+
+<dl><dt><strong>setChecked</strong> = &lt;built-in function setChecked&gt;</dl>
+
+<dl><dt><strong>setData</strong> = &lt;built-in function setData&gt;</dl>
+
+<dl><dt><strong>setDisabled</strong> = &lt;built-in function setDisabled&gt;</dl>
+
+<dl><dt><strong>setEnabled</strong> = &lt;built-in function setEnabled&gt;</dl>
+
+<dl><dt><strong>setFont</strong> = &lt;built-in function setFont&gt;</dl>
+
+<dl><dt><strong>setIcon</strong> = &lt;built-in function setIcon&gt;</dl>
+
+<dl><dt><strong>setIconText</strong> = &lt;built-in function setIconText&gt;</dl>
+
+<dl><dt><strong>setMenu</strong> = &lt;built-in function setMenu&gt;</dl>
+
+<dl><dt><strong>setMenuRole</strong> = &lt;built-in function setMenuRole&gt;</dl>
+
+<dl><dt><strong>setSeparator</strong> = &lt;built-in function setSeparator&gt;</dl>
+
+<dl><dt><strong>setShortcut</strong> = &lt;built-in function setShortcut&gt;</dl>
+
+<dl><dt><strong>setShortcutContext</strong> = &lt;built-in function setShortcutContext&gt;</dl>
+
+<dl><dt><strong>setShortcuts</strong> = &lt;built-in function setShortcuts&gt;</dl>
+
+<dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
+
+<dl><dt><strong>setText</strong> = &lt;built-in function setText&gt;</dl>
+
+<dl><dt><strong>setToolTip</strong> = &lt;built-in function setToolTip&gt;</dl>
+
+<dl><dt><strong>setVisible</strong> = &lt;built-in function setVisible&gt;</dl>
+
+<dl><dt><strong>setWhatsThis</strong> = &lt;built-in function setWhatsThis&gt;</dl>
+
+<dl><dt><strong>shortcut</strong> = &lt;built-in function shortcut&gt;</dl>
+
+<dl><dt><strong>shortcutContext</strong> = &lt;built-in function shortcutContext&gt;</dl>
+
+<dl><dt><strong>shortcuts</strong> = &lt;built-in function shortcuts&gt;</dl>
+
+<dl><dt><strong>showStatusText</strong> = &lt;built-in function showStatusText&gt;</dl>
+
+<dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
+
+<dl><dt><strong>text</strong> = &lt;built-in function text&gt;</dl>
+
+<dl><dt><strong>timerEvent</strong> = &lt;built-in function timerEvent&gt;</dl>
+
+<dl><dt><strong>toggle</strong> = &lt;built-in function toggle&gt;</dl>
+
+<dl><dt><strong>toolTip</strong> = &lt;built-in function toolTip&gt;</dl>
+
+<dl><dt><strong>trigger</strong> = &lt;built-in function trigger&gt;</dl>
+
+<dl><dt><strong>whatsThis</strong> = &lt;built-in function whatsThis&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
+
+<dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
+
+<dl><dt><strong>connect</strong> = &lt;built-in function connect&gt;</dl>
+
+<dl><dt><strong>deleteLater</strong> = &lt;built-in function deleteLater&gt;</dl>
+
+<dl><dt><strong>disconnect</strong> = &lt;built-in function disconnect&gt;</dl>
+
+<dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
+
+<dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
+
+<dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
+
+<dl><dt><strong>eventFilter</strong> = &lt;built-in function eventFilter&gt;</dl>
+
+<dl><dt><strong>findChild</strong> = &lt;built-in function findChild&gt;</dl>
+
+<dl><dt><strong>findChildren</strong> = &lt;built-in function findChildren&gt;</dl>
+
+<dl><dt><strong>inherits</strong> = &lt;built-in function inherits&gt;</dl>
+
+<dl><dt><strong>installEventFilter</strong> = &lt;built-in function installEventFilter&gt;</dl>
+
+<dl><dt><strong>isWidgetType</strong> = &lt;built-in function isWidgetType&gt;</dl>
+
+<dl><dt><strong>killTimer</strong> = &lt;built-in function killTimer&gt;</dl>
+
+<dl><dt><strong>metaObject</strong> = &lt;built-in function metaObject&gt;</dl>
+
+<dl><dt><strong>moveToThread</strong> = &lt;built-in function moveToThread&gt;</dl>
+
+<dl><dt><strong>objectName</strong> = &lt;built-in function objectName&gt;</dl>
+
+<dl><dt><strong>parent</strong> = &lt;built-in function parent&gt;</dl>
+
+<dl><dt><strong>property</strong> = &lt;built-in function property&gt;</dl>
+
+<dl><dt><strong>removeEventFilter</strong> = &lt;built-in function removeEventFilter&gt;</dl>
+
+<dl><dt><strong>setObjectName</strong> = &lt;built-in function setObjectName&gt;</dl>
+
+<dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
+
+<dl><dt><strong>setProperty</strong> = &lt;built-in function setProperty&gt;</dl>
+
+<dl><dt><strong>signalsBlocked</strong> = &lt;built-in function signalsBlocked&gt;</dl>
+
+<dl><dt><strong>startTimer</strong> = &lt;built-in function startTimer&gt;</dl>
+
+<dl><dt><strong>thread</strong> = &lt;built-in function thread&gt;</dl>
+
+<dl><dt><strong>tr</strong> = &lt;built-in function tr&gt;</dl>
+
+<dl><dt><strong>trUtf8</strong> = &lt;built-in function trUtf8&gt;</dl>
+
+<hr>
+Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><a name="DAction-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#DAction-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="DAction-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#DAction-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="DAction-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#DAction-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#DAction-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1241,6 +1566,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -1313,6 +1642,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -1324,6 +1655,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -1372,6 +1705,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -1429,7 +1764,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -1444,6 +1779,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -1537,7 +1874,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#FileSelection-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#FileSelection-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1736,7 +2073,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -1751,6 +2088,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -1816,7 +2155,291 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputBool-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputBool-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="InputColor">class <strong>InputColor</strong></a>(<a href="gui.widgets.html#InputItem">InputItem</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;color&nbsp;input&nbsp;item.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gui.widgets.html#InputColor">InputColor</a></dd>
+<dd><a href="gui.widgets.html#InputItem">InputItem</a></dd>
+<dd><a href="PyQt4.QtGui.html#QHBoxLayout">PyQt4.QtGui.QHBoxLayout</a></dd>
+<dd><a href="PyQt4.QtGui.html#QBoxLayout">PyQt4.QtGui.QBoxLayout</a></dd>
+<dd><a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a></dd>
+<dd><a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a></dd>
+<dd><a href="PyQt4.QtGui.html#QLayoutItem">PyQt4.QtGui.QLayoutItem</a></dd>
+<dd><a href="sip.html#wrapper">sip.wrapper</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="InputColor-__init__"><strong>__init__</strong></a>(self, name, value, *args)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;color&nbsp;input&nbsp;field&nbsp;with&nbsp;a&nbsp;label&nbsp;in&nbsp;front.<br>
+&nbsp;<br>
+The&nbsp;color&nbsp;input&nbsp;field&nbsp;is&nbsp;a&nbsp;button&nbsp;displaying&nbsp;the&nbsp;current&nbsp;color.<br>
+Clicking&nbsp;on&nbsp;the&nbsp;button&nbsp;opens&nbsp;a&nbsp;color&nbsp;dialog,&nbsp;and&nbsp;the&nbsp;returned<br>
+value&nbsp;is&nbsp;set&nbsp;in&nbsp;the&nbsp;button.</tt></dd></dl>
+
+<dl><dt><a name="InputColor-setColor"><strong>setColor</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="gui.widgets.html#InputItem">InputItem</a>:<br>
+<dl><dt><a name="InputColor-name"><strong>name</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="InputColor-value"><strong>value</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;value.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QHBoxLayout">PyQt4.QtGui.QHBoxLayout</a>:<br>
+<dl><dt><strong>__reduce__</strong> = None</dl>
+
+<dl><dt><strong>__reduce_ex__</strong> = None</dl>
+
+<dl><dt><strong>addChildLayout</strong> = &lt;built-in function addChildLayout&gt;</dl>
+
+<dl><dt><strong>addChildWidget</strong> = &lt;built-in function addChildWidget&gt;</dl>
+
+<dl><dt><strong>alignmentRect</strong> = &lt;built-in function alignmentRect&gt;</dl>
+
+<dl><dt><strong>childEvent</strong> = &lt;built-in function childEvent&gt;</dl>
+
+<dl><dt><strong>connectNotify</strong> = &lt;built-in function connectNotify&gt;</dl>
+
+<dl><dt><strong>customEvent</strong> = &lt;built-in function customEvent&gt;</dl>
+
+<dl><dt><strong>disconnectNotify</strong> = &lt;built-in function disconnectNotify&gt;</dl>
+
+<dl><dt><strong>insertItem</strong> = &lt;built-in function insertItem&gt;</dl>
+
+<dl><dt><strong>receivers</strong> = &lt;built-in function receivers&gt;</dl>
+
+<dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
+
+<dl><dt><strong>timerEvent</strong> = &lt;built-in function timerEvent&gt;</dl>
+
+<dl><dt><strong>widgetEvent</strong> = &lt;built-in function widgetEvent&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QBoxLayout">PyQt4.QtGui.QBoxLayout</a>:<br>
+<dl><dt><strong>BottomToTop</strong> = 3</dl>
+
+<dl><dt><strong>Direction</strong> = &lt;class 'PyQt4.QtGui.Direction'&gt;</dl>
+
+<dl><dt><strong>Down</strong> = 2</dl>
+
+<dl><dt><strong>LeftToRight</strong> = 0</dl>
+
+<dl><dt><strong>RightToLeft</strong> = 1</dl>
+
+<dl><dt><strong>TopToBottom</strong> = 2</dl>
+
+<dl><dt><strong>Up</strong> = 3</dl>
+
+<dl><dt><strong>addItem</strong> = &lt;built-in function addItem&gt;</dl>
+
+<dl><dt><strong>addLayout</strong> = &lt;built-in function addLayout&gt;</dl>
+
+<dl><dt><strong>addSpacing</strong> = &lt;built-in function addSpacing&gt;</dl>
+
+<dl><dt><strong>addStretch</strong> = &lt;built-in function addStretch&gt;</dl>
+
+<dl><dt><strong>addStrut</strong> = &lt;built-in function addStrut&gt;</dl>
+
+<dl><dt><strong>addWidget</strong> = &lt;built-in function addWidget&gt;</dl>
+
+<dl><dt><strong>count</strong> = &lt;built-in function count&gt;</dl>
+
+<dl><dt><strong>direction</strong> = &lt;built-in function direction&gt;</dl>
+
+<dl><dt><strong>expandingDirections</strong> = &lt;built-in function expandingDirections&gt;</dl>
+
+<dl><dt><strong>hasHeightForWidth</strong> = &lt;built-in function hasHeightForWidth&gt;</dl>
+
+<dl><dt><strong>heightForWidth</strong> = &lt;built-in function heightForWidth&gt;</dl>
+
+<dl><dt><strong>insertLayout</strong> = &lt;built-in function insertLayout&gt;</dl>
+
+<dl><dt><strong>insertSpacing</strong> = &lt;built-in function insertSpacing&gt;</dl>
+
+<dl><dt><strong>insertStretch</strong> = &lt;built-in function insertStretch&gt;</dl>
+
+<dl><dt><strong>insertWidget</strong> = &lt;built-in function insertWidget&gt;</dl>
+
+<dl><dt><strong>invalidate</strong> = &lt;built-in function invalidate&gt;</dl>
+
+<dl><dt><strong>itemAt</strong> = &lt;built-in function itemAt&gt;</dl>
+
+<dl><dt><strong>maximumSize</strong> = &lt;built-in function maximumSize&gt;</dl>
+
+<dl><dt><strong>minimumHeightForWidth</strong> = &lt;built-in function minimumHeightForWidth&gt;</dl>
+
+<dl><dt><strong>minimumSize</strong> = &lt;built-in function minimumSize&gt;</dl>
+
+<dl><dt><strong>setDirection</strong> = &lt;built-in function setDirection&gt;</dl>
+
+<dl><dt><strong>setGeometry</strong> = &lt;built-in function setGeometry&gt;</dl>
+
+<dl><dt><strong>setStretchFactor</strong> = &lt;built-in function setStretchFactor&gt;</dl>
+
+<dl><dt><strong>sizeHint</strong> = &lt;built-in function sizeHint&gt;</dl>
+
+<dl><dt><strong>takeAt</strong> = &lt;built-in function takeAt&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a>:<br>
+<dl><dt><strong>SetDefaultConstraint</strong> = 0</dl>
+
+<dl><dt><strong>SetFixedSize</strong> = 3</dl>
+
+<dl><dt><strong>SetMaximumSize</strong> = 4</dl>
+
+<dl><dt><strong>SetMinAndMaxSize</strong> = 5</dl>
+
+<dl><dt><strong>SetMinimumSize</strong> = 2</dl>
+
+<dl><dt><strong>SetNoConstraint</strong> = 1</dl>
+
+<dl><dt><strong>SizeConstraint</strong> = &lt;class 'PyQt4.QtGui.SizeConstraint'&gt;</dl>
+
+<dl><dt><strong>activate</strong> = &lt;built-in function activate&gt;</dl>
+
+<dl><dt><strong>closestAcceptableSize</strong> = &lt;built-in function closestAcceptableSize&gt;</dl>
+
+<dl><dt><strong>geometry</strong> = &lt;built-in function geometry&gt;</dl>
+
+<dl><dt><strong>indexOf</strong> = &lt;built-in function indexOf&gt;</dl>
+
+<dl><dt><strong>isEmpty</strong> = &lt;built-in function isEmpty&gt;</dl>
+
+<dl><dt><strong>isEnabled</strong> = &lt;built-in function isEnabled&gt;</dl>
+
+<dl><dt><strong>layout</strong> = &lt;built-in function layout&gt;</dl>
+
+<dl><dt><strong>margin</strong> = &lt;built-in function margin&gt;</dl>
+
+<dl><dt><strong>menuBar</strong> = &lt;built-in function menuBar&gt;</dl>
+
+<dl><dt><strong>parentWidget</strong> = &lt;built-in function parentWidget&gt;</dl>
+
+<dl><dt><strong>removeItem</strong> = &lt;built-in function removeItem&gt;</dl>
+
+<dl><dt><strong>removeWidget</strong> = &lt;built-in function removeWidget&gt;</dl>
+
+<dl><dt><strong>setAlignment</strong> = &lt;built-in function setAlignment&gt;</dl>
+
+<dl><dt><strong>setEnabled</strong> = &lt;built-in function setEnabled&gt;</dl>
+
+<dl><dt><strong>setMargin</strong> = &lt;built-in function setMargin&gt;</dl>
+
+<dl><dt><strong>setMenuBar</strong> = &lt;built-in function setMenuBar&gt;</dl>
+
+<dl><dt><strong>setSizeConstraint</strong> = &lt;built-in function setSizeConstraint&gt;</dl>
+
+<dl><dt><strong>setSpacing</strong> = &lt;built-in function setSpacing&gt;</dl>
+
+<dl><dt><strong>sizeConstraint</strong> = &lt;built-in function sizeConstraint&gt;</dl>
+
+<dl><dt><strong>spacing</strong> = &lt;built-in function spacing&gt;</dl>
+
+<dl><dt><strong>totalHeightForWidth</strong> = &lt;built-in function totalHeightForWidth&gt;</dl>
+
+<dl><dt><strong>totalMaximumSize</strong> = &lt;built-in function totalMaximumSize&gt;</dl>
+
+<dl><dt><strong>totalMinimumSize</strong> = &lt;built-in function totalMinimumSize&gt;</dl>
+
+<dl><dt><strong>totalSizeHint</strong> = &lt;built-in function totalSizeHint&gt;</dl>
+
+<dl><dt><strong>update</strong> = &lt;built-in function update&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
+
+<dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
+
+<dl><dt><strong>connect</strong> = &lt;built-in function connect&gt;</dl>
+
+<dl><dt><strong>deleteLater</strong> = &lt;built-in function deleteLater&gt;</dl>
+
+<dl><dt><strong>disconnect</strong> = &lt;built-in function disconnect&gt;</dl>
+
+<dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
+
+<dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
+
+<dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
+
+<dl><dt><strong>event</strong> = &lt;built-in function event&gt;</dl>
+
+<dl><dt><strong>eventFilter</strong> = &lt;built-in function eventFilter&gt;</dl>
+
+<dl><dt><strong>findChild</strong> = &lt;built-in function findChild&gt;</dl>
+
+<dl><dt><strong>findChildren</strong> = &lt;built-in function findChildren&gt;</dl>
+
+<dl><dt><strong>inherits</strong> = &lt;built-in function inherits&gt;</dl>
+
+<dl><dt><strong>installEventFilter</strong> = &lt;built-in function installEventFilter&gt;</dl>
+
+<dl><dt><strong>isWidgetType</strong> = &lt;built-in function isWidgetType&gt;</dl>
+
+<dl><dt><strong>killTimer</strong> = &lt;built-in function killTimer&gt;</dl>
+
+<dl><dt><strong>metaObject</strong> = &lt;built-in function metaObject&gt;</dl>
+
+<dl><dt><strong>moveToThread</strong> = &lt;built-in function moveToThread&gt;</dl>
+
+<dl><dt><strong>objectName</strong> = &lt;built-in function objectName&gt;</dl>
+
+<dl><dt><strong>parent</strong> = &lt;built-in function parent&gt;</dl>
+
+<dl><dt><strong>property</strong> = &lt;built-in function property&gt;</dl>
+
+<dl><dt><strong>removeEventFilter</strong> = &lt;built-in function removeEventFilter&gt;</dl>
+
+<dl><dt><strong>setObjectName</strong> = &lt;built-in function setObjectName&gt;</dl>
+
+<dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
+
+<dl><dt><strong>setProperty</strong> = &lt;built-in function setProperty&gt;</dl>
+
+<dl><dt><strong>signalsBlocked</strong> = &lt;built-in function signalsBlocked&gt;</dl>
+
+<dl><dt><strong>startTimer</strong> = &lt;built-in function startTimer&gt;</dl>
+
+<dl><dt><strong>thread</strong> = &lt;built-in function thread&gt;</dl>
+
+<dl><dt><strong>tr</strong> = &lt;built-in function tr&gt;</dl>
+
+<dl><dt><strong>trUtf8</strong> = &lt;built-in function trUtf8&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayoutItem">PyQt4.QtGui.QLayoutItem</a>:<br>
+<dl><dt><strong>alignment</strong> = &lt;built-in function alignment&gt;</dl>
+
+<dl><dt><strong>spacerItem</strong> = &lt;built-in function spacerItem&gt;</dl>
+
+<dl><dt><strong>widget</strong> = &lt;built-in function widget&gt;</dl>
+
+<hr>
+Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><a name="InputColor-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#InputColor-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="InputColor-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#InputColor-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="InputColor-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#InputColor-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputColor-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -2199,6 +2822,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -2271,6 +2898,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -2282,6 +2911,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -2330,6 +2961,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -2387,7 +3020,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -2402,6 +3035,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -2495,7 +3130,287 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="InputFloat">class <strong>InputFloat</strong></a>(<a href="gui.widgets.html#InputItem">InputItem</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;float&nbsp;input&nbsp;item.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="gui.widgets.html#InputFloat">InputFloat</a></dd>
+<dd><a href="gui.widgets.html#InputItem">InputItem</a></dd>
+<dd><a href="PyQt4.QtGui.html#QHBoxLayout">PyQt4.QtGui.QHBoxLayout</a></dd>
+<dd><a href="PyQt4.QtGui.html#QBoxLayout">PyQt4.QtGui.QBoxLayout</a></dd>
+<dd><a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a></dd>
+<dd><a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a></dd>
+<dd><a href="PyQt4.QtGui.html#QLayoutItem">PyQt4.QtGui.QLayoutItem</a></dd>
+<dd><a href="sip.html#wrapper">sip.wrapper</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="InputFloat-__init__"><strong>__init__</strong></a>(self, name, value, *args)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;float&nbsp;input&nbsp;field&nbsp;with&nbsp;a&nbsp;label&nbsp;in&nbsp;front.</tt></dd></dl>
+
+<dl><dt><a name="InputFloat-show"><strong>show</strong></a>(self)</dt><dd><tt>Select&nbsp;all&nbsp;text&nbsp;on&nbsp;first&nbsp;display.</tt></dd></dl>
+
+<dl><dt><a name="InputFloat-value"><strong>value</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;value.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gui.widgets.html#InputItem">InputItem</a>:<br>
+<dl><dt><a name="InputFloat-name"><strong>name</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;name.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QHBoxLayout">PyQt4.QtGui.QHBoxLayout</a>:<br>
+<dl><dt><strong>__reduce__</strong> = None</dl>
+
+<dl><dt><strong>__reduce_ex__</strong> = None</dl>
+
+<dl><dt><strong>addChildLayout</strong> = &lt;built-in function addChildLayout&gt;</dl>
+
+<dl><dt><strong>addChildWidget</strong> = &lt;built-in function addChildWidget&gt;</dl>
+
+<dl><dt><strong>alignmentRect</strong> = &lt;built-in function alignmentRect&gt;</dl>
+
+<dl><dt><strong>childEvent</strong> = &lt;built-in function childEvent&gt;</dl>
+
+<dl><dt><strong>connectNotify</strong> = &lt;built-in function connectNotify&gt;</dl>
+
+<dl><dt><strong>customEvent</strong> = &lt;built-in function customEvent&gt;</dl>
+
+<dl><dt><strong>disconnectNotify</strong> = &lt;built-in function disconnectNotify&gt;</dl>
+
+<dl><dt><strong>insertItem</strong> = &lt;built-in function insertItem&gt;</dl>
+
+<dl><dt><strong>receivers</strong> = &lt;built-in function receivers&gt;</dl>
+
+<dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
+
+<dl><dt><strong>timerEvent</strong> = &lt;built-in function timerEvent&gt;</dl>
+
+<dl><dt><strong>widgetEvent</strong> = &lt;built-in function widgetEvent&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QBoxLayout">PyQt4.QtGui.QBoxLayout</a>:<br>
+<dl><dt><strong>BottomToTop</strong> = 3</dl>
+
+<dl><dt><strong>Direction</strong> = &lt;class 'PyQt4.QtGui.Direction'&gt;</dl>
+
+<dl><dt><strong>Down</strong> = 2</dl>
+
+<dl><dt><strong>LeftToRight</strong> = 0</dl>
+
+<dl><dt><strong>RightToLeft</strong> = 1</dl>
+
+<dl><dt><strong>TopToBottom</strong> = 2</dl>
+
+<dl><dt><strong>Up</strong> = 3</dl>
+
+<dl><dt><strong>addItem</strong> = &lt;built-in function addItem&gt;</dl>
+
+<dl><dt><strong>addLayout</strong> = &lt;built-in function addLayout&gt;</dl>
+
+<dl><dt><strong>addSpacing</strong> = &lt;built-in function addSpacing&gt;</dl>
+
+<dl><dt><strong>addStretch</strong> = &lt;built-in function addStretch&gt;</dl>
+
+<dl><dt><strong>addStrut</strong> = &lt;built-in function addStrut&gt;</dl>
+
+<dl><dt><strong>addWidget</strong> = &lt;built-in function addWidget&gt;</dl>
+
+<dl><dt><strong>count</strong> = &lt;built-in function count&gt;</dl>
+
+<dl><dt><strong>direction</strong> = &lt;built-in function direction&gt;</dl>
+
+<dl><dt><strong>expandingDirections</strong> = &lt;built-in function expandingDirections&gt;</dl>
+
+<dl><dt><strong>hasHeightForWidth</strong> = &lt;built-in function hasHeightForWidth&gt;</dl>
+
+<dl><dt><strong>heightForWidth</strong> = &lt;built-in function heightForWidth&gt;</dl>
+
+<dl><dt><strong>insertLayout</strong> = &lt;built-in function insertLayout&gt;</dl>
+
+<dl><dt><strong>insertSpacing</strong> = &lt;built-in function insertSpacing&gt;</dl>
+
+<dl><dt><strong>insertStretch</strong> = &lt;built-in function insertStretch&gt;</dl>
+
+<dl><dt><strong>insertWidget</strong> = &lt;built-in function insertWidget&gt;</dl>
+
+<dl><dt><strong>invalidate</strong> = &lt;built-in function invalidate&gt;</dl>
+
+<dl><dt><strong>itemAt</strong> = &lt;built-in function itemAt&gt;</dl>
+
+<dl><dt><strong>maximumSize</strong> = &lt;built-in function maximumSize&gt;</dl>
+
+<dl><dt><strong>minimumHeightForWidth</strong> = &lt;built-in function minimumHeightForWidth&gt;</dl>
+
+<dl><dt><strong>minimumSize</strong> = &lt;built-in function minimumSize&gt;</dl>
+
+<dl><dt><strong>setDirection</strong> = &lt;built-in function setDirection&gt;</dl>
+
+<dl><dt><strong>setGeometry</strong> = &lt;built-in function setGeometry&gt;</dl>
+
+<dl><dt><strong>setStretchFactor</strong> = &lt;built-in function setStretchFactor&gt;</dl>
+
+<dl><dt><strong>sizeHint</strong> = &lt;built-in function sizeHint&gt;</dl>
+
+<dl><dt><strong>takeAt</strong> = &lt;built-in function takeAt&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt4.QtGui.QLayout</a>:<br>
+<dl><dt><strong>SetDefaultConstraint</strong> = 0</dl>
+
+<dl><dt><strong>SetFixedSize</strong> = 3</dl>
+
+<dl><dt><strong>SetMaximumSize</strong> = 4</dl>
+
+<dl><dt><strong>SetMinAndMaxSize</strong> = 5</dl>
+
+<dl><dt><strong>SetMinimumSize</strong> = 2</dl>
+
+<dl><dt><strong>SetNoConstraint</strong> = 1</dl>
+
+<dl><dt><strong>SizeConstraint</strong> = &lt;class 'PyQt4.QtGui.SizeConstraint'&gt;</dl>
+
+<dl><dt><strong>activate</strong> = &lt;built-in function activate&gt;</dl>
+
+<dl><dt><strong>closestAcceptableSize</strong> = &lt;built-in function closestAcceptableSize&gt;</dl>
+
+<dl><dt><strong>geometry</strong> = &lt;built-in function geometry&gt;</dl>
+
+<dl><dt><strong>indexOf</strong> = &lt;built-in function indexOf&gt;</dl>
+
+<dl><dt><strong>isEmpty</strong> = &lt;built-in function isEmpty&gt;</dl>
+
+<dl><dt><strong>isEnabled</strong> = &lt;built-in function isEnabled&gt;</dl>
+
+<dl><dt><strong>layout</strong> = &lt;built-in function layout&gt;</dl>
+
+<dl><dt><strong>margin</strong> = &lt;built-in function margin&gt;</dl>
+
+<dl><dt><strong>menuBar</strong> = &lt;built-in function menuBar&gt;</dl>
+
+<dl><dt><strong>parentWidget</strong> = &lt;built-in function parentWidget&gt;</dl>
+
+<dl><dt><strong>removeItem</strong> = &lt;built-in function removeItem&gt;</dl>
+
+<dl><dt><strong>removeWidget</strong> = &lt;built-in function removeWidget&gt;</dl>
+
+<dl><dt><strong>setAlignment</strong> = &lt;built-in function setAlignment&gt;</dl>
+
+<dl><dt><strong>setEnabled</strong> = &lt;built-in function setEnabled&gt;</dl>
+
+<dl><dt><strong>setMargin</strong> = &lt;built-in function setMargin&gt;</dl>
+
+<dl><dt><strong>setMenuBar</strong> = &lt;built-in function setMenuBar&gt;</dl>
+
+<dl><dt><strong>setSizeConstraint</strong> = &lt;built-in function setSizeConstraint&gt;</dl>
+
+<dl><dt><strong>setSpacing</strong> = &lt;built-in function setSpacing&gt;</dl>
+
+<dl><dt><strong>sizeConstraint</strong> = &lt;built-in function sizeConstraint&gt;</dl>
+
+<dl><dt><strong>spacing</strong> = &lt;built-in function spacing&gt;</dl>
+
+<dl><dt><strong>totalHeightForWidth</strong> = &lt;built-in function totalHeightForWidth&gt;</dl>
+
+<dl><dt><strong>totalMaximumSize</strong> = &lt;built-in function totalMaximumSize&gt;</dl>
+
+<dl><dt><strong>totalMinimumSize</strong> = &lt;built-in function totalMinimumSize&gt;</dl>
+
+<dl><dt><strong>totalSizeHint</strong> = &lt;built-in function totalSizeHint&gt;</dl>
+
+<dl><dt><strong>update</strong> = &lt;built-in function update&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
+
+<dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
+
+<dl><dt><strong>connect</strong> = &lt;built-in function connect&gt;</dl>
+
+<dl><dt><strong>deleteLater</strong> = &lt;built-in function deleteLater&gt;</dl>
+
+<dl><dt><strong>disconnect</strong> = &lt;built-in function disconnect&gt;</dl>
+
+<dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
+
+<dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
+
+<dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
+
+<dl><dt><strong>event</strong> = &lt;built-in function event&gt;</dl>
+
+<dl><dt><strong>eventFilter</strong> = &lt;built-in function eventFilter&gt;</dl>
+
+<dl><dt><strong>findChild</strong> = &lt;built-in function findChild&gt;</dl>
+
+<dl><dt><strong>findChildren</strong> = &lt;built-in function findChildren&gt;</dl>
+
+<dl><dt><strong>inherits</strong> = &lt;built-in function inherits&gt;</dl>
+
+<dl><dt><strong>installEventFilter</strong> = &lt;built-in function installEventFilter&gt;</dl>
+
+<dl><dt><strong>isWidgetType</strong> = &lt;built-in function isWidgetType&gt;</dl>
+
+<dl><dt><strong>killTimer</strong> = &lt;built-in function killTimer&gt;</dl>
+
+<dl><dt><strong>metaObject</strong> = &lt;built-in function metaObject&gt;</dl>
+
+<dl><dt><strong>moveToThread</strong> = &lt;built-in function moveToThread&gt;</dl>
+
+<dl><dt><strong>objectName</strong> = &lt;built-in function objectName&gt;</dl>
+
+<dl><dt><strong>parent</strong> = &lt;built-in function parent&gt;</dl>
+
+<dl><dt><strong>property</strong> = &lt;built-in function property&gt;</dl>
+
+<dl><dt><strong>removeEventFilter</strong> = &lt;built-in function removeEventFilter&gt;</dl>
+
+<dl><dt><strong>setObjectName</strong> = &lt;built-in function setObjectName&gt;</dl>
+
+<dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
+
+<dl><dt><strong>setProperty</strong> = &lt;built-in function setProperty&gt;</dl>
+
+<dl><dt><strong>signalsBlocked</strong> = &lt;built-in function signalsBlocked&gt;</dl>
+
+<dl><dt><strong>startTimer</strong> = &lt;built-in function startTimer&gt;</dl>
+
+<dl><dt><strong>thread</strong> = &lt;built-in function thread&gt;</dl>
+
+<dl><dt><strong>tr</strong> = &lt;built-in function tr&gt;</dl>
+
+<dl><dt><strong>trUtf8</strong> = &lt;built-in function trUtf8&gt;</dl>
+
+<hr>
+Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayoutItem">PyQt4.QtGui.QLayoutItem</a>:<br>
+<dl><dt><strong>alignment</strong> = &lt;built-in function alignment&gt;</dl>
+
+<dl><dt><strong>spacerItem</strong> = &lt;built-in function spacerItem&gt;</dl>
+
+<dl><dt><strong>widget</strong> = &lt;built-in function widget&gt;</dl>
+
+<hr>
+Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><a name="InputFloat-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#InputFloat-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="InputFloat-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#InputFloat-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="InputFloat-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#InputFloat-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputFloat-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -2519,7 +3434,7 @@ Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper<
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="InputInteger-__init__"><strong>__init__</strong></a>(self, name, value, minval<font color="#909090">=None</font>, maxval<font color="#909090">=None</font>, *args)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;integer&nbsp;input&nbsp;field&nbsp;with&nbsp;a&nbsp;label&nbsp;in&nbsp;front.</tt></dd></dl>
+<dl><dt><a name="InputInteger-__init__"><strong>__init__</strong></a>(self, name, value, *args)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;integer&nbsp;input&nbsp;field&nbsp;with&nbsp;a&nbsp;label&nbsp;in&nbsp;front.</tt></dd></dl>
 
 <dl><dt><a name="InputInteger-show"><strong>show</strong></a>(self)</dt><dd><tt>Select&nbsp;all&nbsp;text&nbsp;on&nbsp;first&nbsp;display.</tt></dd></dl>
 
@@ -2693,7 +3608,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -2708,6 +3623,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -2773,7 +3690,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputInteger-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputInteger-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -2987,7 +3904,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -3002,6 +3919,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -3067,7 +3986,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputItem-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputItem-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -3269,7 +4188,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -3284,6 +4203,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -3349,7 +4270,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputSelect-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputSelect-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -3373,15 +4294,18 @@ Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper<
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="InputString-__init__"><strong>__init__</strong></a>(self, name, value, *args)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;string&nbsp;input&nbsp;field&nbsp;with&nbsp;a&nbsp;label&nbsp;in&nbsp;front.</tt></dd></dl>
+<dl><dt><a name="InputString-__init__"><strong>__init__</strong></a>(self, name, value, *args)</dt><dd><tt>Creates&nbsp;a&nbsp;new&nbsp;string&nbsp;input&nbsp;field&nbsp;with&nbsp;a&nbsp;label&nbsp;in&nbsp;front.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;type&nbsp;of&nbsp;value&nbsp;is&nbsp;not&nbsp;a&nbsp;string,&nbsp;the&nbsp;input&nbsp;string<br>
+will&nbsp;be&nbsp;eval'ed&nbsp;before&nbsp;returning.</tt></dd></dl>
 
 <dl><dt><a name="InputString-show"><strong>show</strong></a>(self)</dt><dd><tt>Select&nbsp;all&nbsp;text&nbsp;on&nbsp;first&nbsp;display.</tt></dd></dl>
+
+<dl><dt><a name="InputString-value"><strong>value</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;value.</tt></dd></dl>
 
 <hr>
 Methods inherited from <a href="gui.widgets.html#InputItem">InputItem</a>:<br>
 <dl><dt><a name="InputString-name"><strong>name</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;name.</tt></dd></dl>
-
-<dl><dt><a name="InputString-value"><strong>value</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;widget's&nbsp;value.</tt></dd></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtGui.html#QHBoxLayout">PyQt4.QtGui.QHBoxLayout</a>:<br>
@@ -3547,7 +4471,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QLayout">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -3562,6 +4486,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -3627,7 +4553,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputString-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#InputString-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -3755,6 +4681,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.
 
 <dl><dt><strong>insertSeparator</strong> = &lt;built-in function insertSeparator&gt;</dl>
 
+<dl><dt><strong>isEmpty</strong> = &lt;built-in function isEmpty&gt;</dl>
+
 <dl><dt><strong>isTearOffEnabled</strong> = &lt;built-in function isTearOffEnabled&gt;</dl>
 
 <dl><dt><strong>isTearOffMenuVisible</strong> = &lt;built-in function isTearOffMenuVisible&gt;</dl>
@@ -3795,6 +4723,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.
 
 <dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
 
+<dl><dt><strong>separatorsCollapsible</strong> = &lt;built-in function separatorsCollapsible&gt;</dl>
+
 <dl><dt><strong>setActiveAction</strong> = &lt;built-in function setActiveAction&gt;</dl>
 
 <dl><dt><strong>setDefaultAction</strong> = &lt;built-in function setDefaultAction&gt;</dl>
@@ -3802,6 +4732,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.
 <dl><dt><strong>setIcon</strong> = &lt;built-in function setIcon&gt;</dl>
 
 <dl><dt><strong>setNoReplayFor</strong> = &lt;built-in function setNoReplayFor&gt;</dl>
+
+<dl><dt><strong>setSeparatorsCollapsible</strong> = &lt;built-in function setSeparatorsCollapsible&gt;</dl>
 
 <dl><dt><strong>setTearOffEnabled</strong> = &lt;built-in function setTearOffEnabled&gt;</dl>
 
@@ -4021,6 +4953,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -4093,6 +5029,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -4104,6 +5042,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -4154,6 +5094,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -4211,7 +5153,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -4226,6 +5168,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -4321,7 +5265,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#Menu-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#Menu-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -4431,6 +5375,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenuBar">PyQ
 <dl><dt><strong>hideEvent</strong> = &lt;built-in function hideEvent&gt;</dl>
 
 <dl><dt><strong>inputMethodEvent</strong> = &lt;built-in function inputMethodEvent&gt;</dl>
+
+<dl><dt><strong>insertSeparator</strong> = &lt;built-in function insertSeparator&gt;</dl>
 
 <dl><dt><strong>isDefaultUp</strong> = &lt;built-in function isDefaultUp&gt;</dl>
 
@@ -4684,6 +5630,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -4756,6 +5706,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -4767,6 +5719,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -4817,6 +5771,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -4874,7 +5830,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -4889,6 +5845,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -4982,7 +5940,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#MenuBar-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#MenuBar-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -5481,6 +6439,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -5553,6 +6515,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -5564,6 +6528,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -5612,6 +6578,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -5669,7 +6637,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -5684,6 +6652,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -5777,7 +6747,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#SaveImageDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#SaveImageDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -6153,6 +7123,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -6225,6 +7199,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -6236,6 +7212,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -6284,6 +7262,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -6341,7 +7321,7 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQt4.QtCore.QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dl>
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
@@ -6356,6 +7336,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -6449,7 +7431,7 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
-<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#Selection-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#Selection-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -6461,7 +7443,7 @@ Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper<
 <td width="100%"><dl><dt><a name="-addMenuItems"><strong>addMenuItems</strong></a>(menu, items<font color="#909090">=[]</font>)</dt><dd><tt>Add&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;to&nbsp;a&nbsp;menu.<br>
 &nbsp;<br>
 Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;to&nbsp;five&nbsp;elements:<br>
-&nbsp;&nbsp;&nbsp;Item&nbsp;Text,&nbsp;Action,&nbsp;[&nbsp;ShortCut,&nbsp;Icon,&nbsp;ToolTip&nbsp;].<br>
+&nbsp;&nbsp;&nbsp;Text,&nbsp;Action,&nbsp;[&nbsp;Icon,&nbsp;&nbsp;ShortCut,&nbsp;ToolTip&nbsp;].<br>
 &nbsp;<br>
 Item&nbsp;text&nbsp;is&nbsp;the&nbsp;text&nbsp;that&nbsp;will&nbsp;be&nbsp;displayed&nbsp;in&nbsp;the&nbsp;menu.&nbsp;An&nbsp;optional&nbsp;'&amp;'<br>
 may&nbsp;be&nbsp;used&nbsp;to&nbsp;flag&nbsp;the&nbsp;next&nbsp;character&nbsp;as&nbsp;the&nbsp;shortcut&nbsp;key.&nbsp;The&nbsp;'&amp;'&nbsp;will<br>
@@ -6476,8 +7458,10 @@ Action&nbsp;can&nbsp;be&nbsp;any&nbsp;of&nbsp;the&nbsp;following:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;selected,<br>
 &nbsp;&nbsp;-&nbsp;None&nbsp;:&nbsp;this&nbsp;will&nbsp;create&nbsp;a&nbsp;separator&nbsp;item&nbsp;with&nbsp;no&nbsp;action.<br>
 &nbsp;<br>
-ShortCut&nbsp;is&nbsp;an&nbsp;optional&nbsp;key&nbsp;combination&nbsp;to&nbsp;select&nbsp;the&nbsp;item.</tt></dd></dl>
- <dl><dt><a name="-getColor"><strong>getColor</strong></a>(col<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;color&nbsp;selection&nbsp;dialog&nbsp;and&nbsp;return&nbsp;the&nbsp;selected&nbsp;color.<br>
+Icon&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;icons&nbsp;in&nbsp;the&nbsp;installed&nbsp;icondir.<br>
+ShortCut&nbsp;is&nbsp;an&nbsp;optional&nbsp;key&nbsp;combination&nbsp;to&nbsp;select&nbsp;the&nbsp;item.<br>
+Tooltip&nbsp;is&nbsp;a&nbsp;popup&nbsp;help&nbsp;string.</tt></dd></dl>
+ <dl><dt><a name="-getColor"><strong>getColor</strong></a>(col<font color="#909090">=None</font>, caption<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;color&nbsp;selection&nbsp;dialog&nbsp;and&nbsp;return&nbsp;the&nbsp;selected&nbsp;color.<br>
 &nbsp;<br>
 col&nbsp;is&nbsp;the&nbsp;initial&nbsp;selection.<br>
 If&nbsp;a&nbsp;valid&nbsp;color&nbsp;is&nbsp;selected,&nbsp;its&nbsp;string&nbsp;name&nbsp;is&nbsp;returned,&nbsp;usually&nbsp;as<br>

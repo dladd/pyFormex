@@ -556,7 +556,8 @@ Write a Formex to file.
 If \var{fil} is a string, a file with that name is opened. Else \var{fil} should
 be an open file.
 The Formex is then written to that file in a native format. It is advised, though not required, to use filenames ending in '.formex' for this purpose.
-If \var{fil} is a string, the file is closed prior to returning.
+
+If \var{fil} is a string, the file is closed prior to returning. If an open file is specified, multiple Formices can be written to it before closing the file.
 
 If \var{sep} is specified, it will be used as a separator between subsequent coordinates. If an empty string is specified, the formex will be stored in a binary format. The default is to use an ASCII format with a single space as separator.
 \end{methoddesc}
@@ -566,6 +567,8 @@ If \var{sep} is specified, it will be used as a separator between subsequent coo
 Read a Formex from a file in native format. 
 
 This class method can be used to read back the data stored with the \Code{write(fil,sep)} method. \var{fil} is either a filename, or an open file.
+ 
+This method will always return a single Formex, event if the file contains more than one. Use it repeatibly with an open file as argument to read more Formices from the same file.
 
 There is no need to specify the separator that was used in the write operation: it will be detected from the file header.
 

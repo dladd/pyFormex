@@ -213,6 +213,7 @@ def runCommand(cmd,RaiseError=True):
     GD.message("Running command: %s" % cmd)
     sta,out = commands.getstatusoutput(cmd)
     if sta != 0 and RaiseError:
+        GD.debug(out)
         raise RuntimeError, "Error while executing command:\n  %s" % cmd
     return sta,out
 
@@ -258,14 +259,6 @@ def isPyFormex(filename):
     return ok
 
 
-def saveRectangle(x,y,w,h,filename,format):
-    """Save a rectangular part of the screen to a an image file."""
-    cmd = 'import -window root -crop "%sx%s+%s+%s" %s:%s' % (w,h,x,y,format,filename)
-    GD.debug(cmd)
-    sta,out = commands.getstatusoutput(cmd)
-    return sta
-
-
 
 class FilenameSequence(object):
     """A class for autogenerating sequences of file names.
@@ -288,6 +281,8 @@ class FilenameSequence(object):
         filename.
 
         Examples:
+            FilenameSequence('hallo.00') will generate names
+                hallo.00, hallo.01, ...
             FilenameSequence('hallo','.png') will generate names
                 hallo-000.png, hallo-001.png, ...
             FilenameSequence('dir/hallo23','5.png') will generate names
@@ -313,22 +308,6 @@ class FilenameSequence(object):
         i = self.name.find('%')
         j = self.name.find('d',i)
         return self.name[:i]+'*'+self.name[j+1:]
-
-
-def imageFormatFromExt(ext):
-    """Determine the image format from an extension.
-
-    The extension may or may not have an initial dot and may be in upper or
-    lower case. The format is equal to the extension characters in lower case.
-    If the supplied extension is empty, the default format 'png' is returned.
-    """
-    if len(ext) > 0:
-        if ext[0] == '.':
-            ext = ext[1:]
-        fmt = ext.lower()
-    else:
-        fmt = 'png'
-    return fmt
 
 
 def splitEndDigits(s):

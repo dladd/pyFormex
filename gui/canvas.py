@@ -146,7 +146,6 @@ class Canvas(object):
         self.rendermode = 'wireframe'
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
-        self.mousefunc = {}
         self.camera = None
         self.view_angles = camera.view_angles
         GD.debug("Canvas Setting:\n%s"% self.settings)

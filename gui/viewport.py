@@ -22,18 +22,22 @@ import image
 import utils
 
 
-# mouse buttons
-LEFT = QtCore.Qt.LeftButton
-MIDDLE = QtCore.Qt.MidButton
-RIGHT = QtCore.Qt.RightButton
-
 # mouse actions
 PRESS = 0
 MOVE = 1
 RELEASE = 2
 
+# mouse buttons
+LEFT = QtCore.Qt.LeftButton
+MIDDLE = QtCore.Qt.MidButton
+RIGHT = QtCore.Qt.RightButton
+
 # modifiers
+NONE = QtCore.Qt.NoModifier
 SHIFT = QtCore.Qt.ShiftModifier
+CONTROL = QtCore.Qt.ControlModifier
+ALT = QtCore.Qt.AltModifier
+ALLMODS = SHIFT | CONTROL | ALT
 
 
 ############### OpenGL Format #################################
@@ -94,13 +98,19 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         canvas.Canvas.__init__(self)
+        self.mousefunc = {}
+        self.mouseshiftfunc = {}
         self.setMouse(LEFT,self.dynarot) 
         self.setMouse(MIDDLE,self.dynapan) 
-        self.setMouse(RIGHT,self.dynazoom) 
+        self.setMouse(RIGHT,self.dynazoom)
+        self.mouseshiftfunc.update(self.mousefunc) # initially the same
+        
 
-
-    def setMouse(self,button,func):
-        self.mousefunc[button] = func
+    def setMouse(self,button,func,mod=None):
+        if mod == SHIFT:
+            self.mouseshiftfunc[button] = func
+        else:
+            self.mousefunc[button] = func
 
 
     def pick(self):
@@ -344,6 +354,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     @classmethod
     def has_modifier(clas,e,mod):
         return ( e.modifiers() & mod ) == mod
+
+    def getMouseFunc(self):
+        if self.mod == SHIFT:
+            return self.mouseshiftfunc.get(self.button,None)
+        else:
+            return self.mousefunc.get(self.button,None)
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
@@ -351,22 +367,22 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         # on PRESS, always remember mouse position and button
         self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()
-        func = self.mousefunc.get(self.button,None)
+        self.mod = e.modifiers() & ALLMODS
+        func = self.getMouseFunc()
         if func:
             func(self.statex,self.y,PRESS)
         
     def mouseMoveEvent(self,e):
         """Process a mouse move event."""
         # the MOVE event does not identify a button, use the saved one
-        func = self.mousefunc.get(self.button,None)
+        func = self.getMouseFunc()
         if func:
             func(e.x(),self.height()-e.y(),MOVE)
 
     def mouseReleaseEvent(self,e):
         """Process a mouse release event."""
-        # clear the stored button
-        self.button = None
-        func = self.mousefunc.get(e.button(),None)
+        func = self.getMouseFunc()
+        self.button = None        # clear the stored button
         if func:
             func(e.x(),self.height()-e.y(),RELEASE)
 

@@ -9,9 +9,10 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="plugins.html"><font color="#ffffff">plugins</font></a>.formex_menu</strong></big></big></font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/bene/prj/pyformex/plugins/formex_menu.py">/home/bene/prj/pyformex/plugins/formex_menu.py</a></font></td></tr></table>
-    <p><tt>Formex.py<br>
+    <p><tt>formex_menu.py<br>
 &nbsp;<br>
-Executing&nbsp;this&nbsp;script&nbsp;creates&nbsp;a&nbsp;Formex&nbsp;menu&nbsp;in&nbsp;the&nbsp;menubar.</tt></p>
+This&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;plugin.&nbsp;It&nbsp;is&nbsp;not&nbsp;intended&nbsp;to&nbsp;be&nbsp;executed&nbsp;as&nbsp;a&nbsp;script,<br>
+but&nbsp;to&nbsp;be&nbsp;loaded&nbsp;as&nbsp;a&nbsp;plugin.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -32,12 +33,13 @@ Executing&nbsp;this&nbsp;script&nbsp;creates&nbsp;a&nbsp;Formex&nbsp;menu&nbsp;i
 <a href="numpy.lib.scimath.html">numpy.lib.scimath</a><br>
 <a href="numpy.fft.html">numpy.fft</a><br>
 <a href="formex.html">formex</a><br>
+<a href="gui.image.html">gui.image</a><br>
 <a href="plugins.inertia.html">plugins.inertia</a><br>
 <a href="numpy.linalg.html">numpy.linalg</a><br>
 <a href="numpy.core.ma.html">numpy.core.ma</a><br>
 <a href="gui.marks.html">gui.marks</a><br>
-<a href="math.html">math</a><br>
-</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+<a href="numpy.html">numpy</a><br>
 <a href="os.html">os</a><br>
 <a href="plugins.partition.html">plugins.partition</a><br>
 <a href="numpy.random.html">numpy.random</a><br>
@@ -45,8 +47,8 @@ Executing&nbsp;this&nbsp;script&nbsp;creates&nbsp;a&nbsp;Formex&nbsp;menu&nbsp;i
 <a href="numpy.core.records.html">numpy.core.records</a><br>
 <a href="plugins.sectionize.html">plugins.sectionize</a><br>
 <a href="plugins.stl.html">plugins.stl</a><br>
-<a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+<a href="threading.html">threading</a><br>
 <a href="time.html">time</a><br>
 <a href="timer.html">timer</a><br>
 <a href="types.html">types</a><br>
@@ -59,10 +61,7 @@ Executing&nbsp;this&nbsp;script&nbsp;creates&nbsp;a&nbsp;Formex&nbsp;menu&nbsp;i
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-Globals"><strong>Globals</strong></a> = globals(...)</dt><dd><tt>globals()&nbsp;-&gt;&nbsp;dictionary<br>
-&nbsp;<br>
-Return&nbsp;the&nbsp;dictionary&nbsp;containing&nbsp;the&nbsp;current&nbsp;scope's&nbsp;global&nbsp;variables.</tt></dd></dl>
- <dl><dt><a name="-add_docstring"><strong>add_docstring</strong></a>(...)</dt><dd><tt>docstring(obj,&nbsp;docstring)<br>
+<td width="100%"><dl><dt><a name="-add_docstring"><strong>add_docstring</strong></a>(...)</dt><dd><tt>docstring(obj,&nbsp;docstring)<br>
 &nbsp;<br>
 Add&nbsp;a&nbsp;docstring&nbsp;to&nbsp;a&nbsp;built-in&nbsp;obj&nbsp;if&nbsp;possible.<br>
 If&nbsp;the&nbsp;obj&nbsp;already&nbsp;has&nbsp;a&nbsp;docstring&nbsp;raise&nbsp;a&nbsp;RuntimeError<br>
@@ -367,7 +366,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.object_'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex256'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -387,7 +386,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...mplex64'&gt;: &lt;function &lt;lambda&gt; at 0x2ab15d4a68c0&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...plex256'&gt;: &lt;function &lt;lambda&gt; at 0x2b23f0dcd398&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -398,6 +397,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>drawtimer</strong> = None<br>
 <strong>e</strong> = 2.7182818284590451<br>
 <strong>equal</strong> = &lt;ufunc 'equal'&gt;<br>
+<strong>exitrequested</strong> = False<br>
 <strong>exp</strong> = &lt;ufunc 'exp'&gt;<br>
 <strong>expm1</strong> = &lt;ufunc 'expm1'&gt;<br>
 <strong>fabs</strong> = &lt;ufunc 'fabs'&gt;<br>
@@ -427,7 +427,6 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>logical_not</strong> = &lt;ufunc 'logical_not'&gt;<br>
 <strong>logical_or</strong> = &lt;ufunc 'logical_or'&gt;<br>
 <strong>logical_xor</strong> = &lt;ufunc 'logical_xor'&gt;<br>
-<strong>m</strong> = &lt;_sre.SRE_Match object&gt;<br>
 <strong>maximum</strong> = &lt;ufunc 'maximum'&gt;<br>
 <strong>mgrid</strong> = &lt;numpy.lib.index_tricks.nd_grid object&gt;<br>
 <strong>minimum</strong> = &lt;ufunc 'minimum'&gt;<br>
@@ -436,7 +435,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>multisave</strong> = None<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.uint8'&gt;: 1, &lt;type 'numpy.complex64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...type 'numpy.uint16'&gt;: 2, &lt;type 'numpy.int32'&gt;: 4}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

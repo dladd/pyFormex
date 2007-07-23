@@ -20,10 +20,11 @@
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="globaldata.html">globaldata</a><br>
 <a href="PyQt4.QtCore.html">PyQt4.QtCore</a><br>
 </td><td width="25%" valign=top><a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
-<a href="gui.fileMenu.html">gui.fileMenu</a><br>
-</td><td width="25%" valign=top><a href="gui.menu.html">gui.menu</a><br>
-<a href="os.html">os</a><br>
-</td><td width="25%" valign=top><a href="utils.html">utils</a><br>
+<a href="gui.draw.html">gui.draw</a><br>
+</td><td width="25%" valign=top><a href="gui.fileMenu.html">gui.fileMenu</a><br>
+<a href="gui.menu.html">gui.menu</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="utils.html">utils</a><br>
 </td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
@@ -170,6 +171,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.
 
 <dl><dt><strong>insertSeparator</strong> = &lt;built-in function insertSeparator&gt;</dl>
 
+<dl><dt><strong>isEmpty</strong> = &lt;built-in function isEmpty&gt;</dl>
+
 <dl><dt><strong>isTearOffEnabled</strong> = &lt;built-in function isTearOffEnabled&gt;</dl>
 
 <dl><dt><strong>isTearOffMenuVisible</strong> = &lt;built-in function isTearOffMenuVisible&gt;</dl>
@@ -210,6 +213,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.
 
 <dl><dt><strong>sender</strong> = &lt;built-in function sender&gt;</dl>
 
+<dl><dt><strong>separatorsCollapsible</strong> = &lt;built-in function separatorsCollapsible&gt;</dl>
+
 <dl><dt><strong>setActiveAction</strong> = &lt;built-in function setActiveAction&gt;</dl>
 
 <dl><dt><strong>setDefaultAction</strong> = &lt;built-in function setDefaultAction&gt;</dl>
@@ -217,6 +222,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">PyQt4.
 <dl><dt><strong>setIcon</strong> = &lt;built-in function setIcon&gt;</dl>
 
 <dl><dt><strong>setNoReplayFor</strong> = &lt;built-in function setNoReplayFor&gt;</dl>
+
+<dl><dt><strong>setSeparatorsCollapsible</strong> = &lt;built-in function setSeparatorsCollapsible&gt;</dl>
 
 <dl><dt><strong>setTearOffEnabled</strong> = &lt;built-in function setTearOffEnabled&gt;</dl>
 
@@ -438,6 +445,10 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>resize</strong> = &lt;built-in function resize&gt;</dl>
 
+<dl><dt><strong>restoreGeometry</strong> = &lt;built-in function restoreGeometry&gt;</dl>
+
+<dl><dt><strong>saveGeometry</strong> = &lt;built-in function saveGeometry&gt;</dl>
+
 <dl><dt><strong>scroll</strong> = &lt;built-in function scroll&gt;</dl>
 
 <dl><dt><strong>setAcceptDrops</strong> = &lt;built-in function setAcceptDrops&gt;</dl>
@@ -510,6 +521,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 
 <dl><dt><strong>setParent</strong> = &lt;built-in function setParent&gt;</dl>
 
+<dl><dt><strong>setShortcutAutoRepeat</strong> = &lt;built-in function setShortcutAutoRepeat&gt;</dl>
+
 <dl><dt><strong>setShortcutEnabled</strong> = &lt;built-in function setShortcutEnabled&gt;</dl>
 
 <dl><dt><strong>setShown</strong> = &lt;built-in function setShown&gt;</dl>
@@ -521,6 +534,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>setStatusTip</strong> = &lt;built-in function setStatusTip&gt;</dl>
 
 <dl><dt><strong>setStyle</strong> = &lt;built-in function setStyle&gt;</dl>
+
+<dl><dt><strong>setStyleSheet</strong> = &lt;built-in function setStyleSheet&gt;</dl>
 
 <dl><dt><strong>setTabOrder</strong> = &lt;built-in function setTabOrder&gt;</dl>
 
@@ -571,6 +586,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">PyQt
 <dl><dt><strong>statusTip</strong> = &lt;built-in function statusTip&gt;</dl>
 
 <dl><dt><strong>style</strong> = &lt;built-in function style&gt;</dl>
+
+<dl><dt><strong>styleSheet</strong> = &lt;built-in function styleSheet&gt;</dl>
 
 <dl><dt><strong>testAttribute</strong> = &lt;built-in function testAttribute&gt;</dl>
 
@@ -643,6 +660,8 @@ Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">PyQ
 <dl><dt><strong>dumpObjectInfo</strong> = &lt;built-in function dumpObjectInfo&gt;</dl>
 
 <dl><dt><strong>dumpObjectTree</strong> = &lt;built-in function dumpObjectTree&gt;</dl>
+
+<dl><dt><strong>dynamicPropertyNames</strong> = &lt;built-in function dynamicPropertyNames&gt;</dl>
 
 <dl><dt><strong>emit</strong> = &lt;built-in function emit&gt;</dl>
 
@@ -740,20 +759,5 @@ Methods inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 Data and other attributes inherited from <a href="sip.html#wrapper">sip.wrapper</a>:<br>
 <dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#ScriptsMenu-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
-</td></tr></table></td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#eeaa77">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-stopRunSequence"><strong>stopRunSequence</strong></a>()</dt></dl>
-</td></tr></table><p>
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
-<tr bgcolor="#55aa55">
-<td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
-    
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>stopRunScripts</strong> = False</td></tr></table>
+</td></tr></table></td></tr></table>
 </body></html>

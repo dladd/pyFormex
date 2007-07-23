@@ -263,7 +263,9 @@ scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;
 (scale&nbsp;is&nbsp;given&nbsp;in&nbsp;order&nbsp;r,theta,z).<br>
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
-<dl><dt><a name="Formex-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array&nbsp;(ndarray)</tt></dd></dl>
+<dl><dt><a name="Formex-data"><strong>data</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
+
+<dl><dt><a name="Formex-deprecated"><strong>deprecated</strong></a>(replacement)</dt></dl>
 
 <dl><dt><a name="Formex-divide"><strong>divide</strong></a>(self, div)</dt><dd><tt>Divide&nbsp;a&nbsp;plex-2&nbsp;<a href="#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;values&nbsp;in&nbsp;div.<br>
 &nbsp;<br>
@@ -716,8 +718,7 @@ permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
 Since&nbsp;the&nbsp;ndarray&nbsp;object&nbsp;has&nbsp;a&nbsp;method&nbsp;<a href="#Formex-view">view</a>()&nbsp;returning&nbsp;a&nbsp;view&nbsp;on<br>
 the&nbsp;ndarray,&nbsp;this&nbsp;method&nbsp;allows&nbsp;writing&nbsp;code&nbsp;tha&nbsp;works&nbsp;with&nbsp;both<br>
 <a href="#Formex">Formex</a>&nbsp;and&nbsp;ndarray&nbsp;instances.&nbsp;The&nbsp;results&nbsp;is&nbsp;of&nbsp;course&nbsp;always&nbsp;an<br>
-ndarray.<br>
-This&nbsp;method&nbsp;is&nbsp;prefered&nbsp;over&nbsp;the&nbsp;(deprecated)&nbsp;<a href="#Formex-data">data</a>().</tt></dd></dl>
+ndarray.</tt></dd></dl>
 
 <dl><dt><a name="Formex-where"><strong>where</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
@@ -896,7 +897,6 @@ n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;speci
 The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;<a href="#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;shape&nbsp;of&nbsp;F&nbsp;where&nbsp;each&nbsp;segment<br>
 has&nbsp;been&nbsp;replaced&nbsp;by&nbsp;the&nbsp;part&nbsp;of&nbsp;the&nbsp;segment&nbsp;at&nbsp;the&nbsp;positive&nbsp;side&nbsp;of<br>
 the&nbsp;plane&nbsp;(p,n).</tt></dd></dl>
- <dl><dt><a name="-deprecated"><strong>deprecated</strong></a>(replacement)</dt></dl>
  <dl><dt><a name="-digitize"><strong>digitize</strong></a>(...)</dt><dd><tt><a href="#-digitize">digitize</a>(x,bins)<br>
 &nbsp;<br>
 Return&nbsp;the&nbsp;index&nbsp;of&nbsp;the&nbsp;bin&nbsp;to&nbsp;which&nbsp;each&nbsp;value&nbsp;of&nbsp;x&nbsp;belongs.<br>
@@ -933,7 +933,6 @@ p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
 The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;distance&nbsp;of<br>
 each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;and&nbsp;q.<br>
 All&nbsp;distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;or&nbsp;zero.</tt></dd></dl>
- <dl><dt><a name="-divide"><strong>divide</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
  <dl><dt><a name="-dot"><strong>dot</strong></a>(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)<br>
 Returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&nbsp;arrays&nbsp;of&nbsp;floating&nbsp;point&nbsp;types.<br>
 Like&nbsp;the&nbsp;generic&nbsp;numpy&nbsp;equivalent&nbsp;the&nbsp;product&nbsp;sum&nbsp;is&nbsp;over<br>
@@ -1262,7 +1261,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint64'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.bool_'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1282,7 +1281,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.uint8'&gt;: &lt;function &lt;lambda&gt; at 0x2b4d364752a8&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...plex256'&gt;: &lt;function &lt;lambda&gt; at 0x2aed29af6398&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1326,7 +1325,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.int32'&gt;: 4, &lt;type 'numpy.float64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ... 'numpy.int8'&gt;: 1, &lt;type 'numpy.complex256'&gt;: 32}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>
