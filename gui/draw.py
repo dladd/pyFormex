@@ -155,10 +155,7 @@ def askItems(items,caption=None):
 
 def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for a file name or multiple file names."""
-    GD.debug("Create widget")
     w = widgets.FileSelection(cur,filter,exist,multi)
-    #sleep(5)
-    GD.debug("Get filename")
     if file:
         w.selectFile(file)
     fn = w.getFilename()
@@ -381,7 +378,7 @@ def step_script(s,glob,paus=True):
             buf += line
         if paus and (line.strip().startswith('draw') or
                      line.find('draw(') >= 0 ):
-            pause()
+            drawblock()
             message(buf)
             exec(buf) in glob
     info("Finished stepping through script!")
@@ -776,7 +773,10 @@ def redraw():
 
 
 def pause():
-    drawblock()
+    if allowwait:
+        drawblock()    # will need external event to release it
+        while (drawlocked):
+            sleep(0.5)
 
 
 def step():
@@ -789,7 +789,14 @@ def step():
     if scriptRunning:
         drawrelease()
     else:
-        play(step=True)
+        if ack("""
+STEP MODE is currently only possible with specially designed,
+very well behaving scripts. If you're not sure what you are
+doing, you should cancel the operation now.
+
+Are you REALLY SURE you want to run this script in step mode?
+"""):
+            play(step=True)
         
 
 def fforward():
