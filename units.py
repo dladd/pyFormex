@@ -1,22 +1,25 @@
 # units.py
 ##
-## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where stated otherwise 
+## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##
-#
-#  This file provides unit conversion for physical quantities.
-#  In this version, it only works under UNIX type operating systems
-#  (e.g. GNU/Linux). It uses the GNU `units' command availbale from
-#  http://www.gnu.org/software/units/units.html 
-#
-#  If you really insist on running another OS lacking the units command,
-#  have a look at http://home.tiscali.be/be052320/Unum.html and make an
-#  implementation based on unum. If you GPL it and send it to me, I might
-#  include it in this distribution.
-#
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
+"""A Python wrapper for unit conversion of physical quantities.
+
+This module uses the standard UNIX program 'units' (available from
+http://www.gnu.org/software/units/units.html) to do the actual conversions.
+Obviously, it will only work on systems that have this program available.
+
+If you really insist on running another OS lacking the units command,
+have a look at http://home.tiscali.be/be052320/Unum.html and make an
+implementation based on unum. If you GPL it and send it to me, I might
+include it in this distribution.
+"""
+
 import commands,string
 
     
@@ -144,3 +147,4 @@ class UnitsSystem:
 if __name__ == '__main__':
     pass
 
+### End

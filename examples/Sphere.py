@@ -1,6 +1,14 @@
 #!/usr/bin/env python pyformex.py
 # $Id: Sphere.py 154 2006-11-03 19:08:25Z bverheg $
-#
+##
+## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+###
 """Sphere"""
 clear()
 wireframe()

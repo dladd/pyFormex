@@ -18,6 +18,7 @@ EXAMPLES= __init__ BarrelVault Baumkuchen Circle Clip Diamatic \
   SpaceTrussRoof SpaceTrussRoof_calpy SpaceTrussRoof_f2abq\
   Spiral Stars Torus TrussBridge TrussFrame WireStent \
   WireStent_calpy X_truss X_truss_calpy
+EXAMPLEDATA= materials.db
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
   Lima Novation ParabolicTower ScallopDome SpaceTrussRoof Spiral Stars \
   Torus WireStent

@@ -19,7 +19,10 @@ STAMPFILES= README History Makefile FAQ
 NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description 
 EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
-STAMP= Stamp 
+
+STAMPABLE= ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE} ${PYGUISOURCE} ${PLUGINSOURCE}  ${EXAMPLEFILES} ${STAMPFILES}
+
+STAMP= stamp 
 VERSIONSTRING= __version__ = .*
 NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
@@ -71,7 +74,10 @@ manual:
 	make -C manual
 
 stamp: Stamp.template RELEASE
-	${STAMP} -tStamp.template version=${VERSION} -oStamp.stamp
+	${STAMP} -tStamp.template version=${VERSION} -sStamp.stamp
+
+stampall: stamp
+	${STAMP} -tStamp.stamp -i ${STAMPABLE}
 
 dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERSOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES}  ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
 	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/plugins ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual ${PYFORMEXDIR}/manual/html ${PYFORMEXDIR}/manual/images

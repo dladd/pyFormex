@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.4.2 Release Sat Mar 10 20:05:55 2007
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where stated otherwise 
+## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##
-
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
 """General framework for attributing properties to Formex elements.
 
 Properties can really be just about any Python object.
@@ -18,6 +19,36 @@ prop values that are stored in the Formex.
 from flatkeydb import *
 from mydict import *
 
+
+class Materials(Dict):
+    """A class for storing material properties."""
+    
+    def __init__(self,data={}):
+        """Initialize a materials database.
+
+        If data is a dict, it contains the database.
+        If data is a string, it specifies a filename where the
+        database can be read.
+        """
+        Dict.__init__(self,{})
+        if type(data) == str:
+            self.readMaterials(data)
+        elif type(data) == dict:
+            self.update(data)
+        else:
+            raise ValueError,"Expected a filename or a dict."
+
+        
+    def readMaterials(self,filename):
+        """Import all materials from a database file.
+
+        For now, it can only read databases using flatkeydb.
+        """
+        mat = FlatDB(['name'], beginrec = 'material', endrec = 'endmaterial')
+        mat.readFile(filename)
+        self.update(mat)
+
+               
 materials = Dict({})
 sections = Dict({})
 
@@ -185,6 +216,11 @@ class ElemLoad(Property):
 # Test
 
 if __name__ == "__main__":
+
+
+    Mat = Materials('materials.db')
+    print Mat
+    sys.exit()
 
     readMaterials('materials.db')
     readSections('sections.db')

@@ -1,14 +1,18 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.4.2 Release Tue Feb 20 08:23:11 2007
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where stated otherwise 
+## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
 ##
 
+2007-08 BV: Released pyFormex 0.5, a major step towards a multifunctional
+            program.
 
-2007-02 BV: Released pyFormex 0.4.2, including lots the work on surface
+2007-02 BV: Released pyFormex 0.4.2, including lots of work on surface
             models.
 
 2006-11-03 BV: Released pyFormex 0.4. This release is marked by the transition

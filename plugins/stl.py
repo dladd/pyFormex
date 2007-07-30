@@ -1,13 +1,14 @@
 #!/usr/bin/env python pyformex.py
 # $Id$
 ##
-## This file is part of pyFormex 0.4.2 Release Mon Feb 26 08:57:40 2007
-## pyFormex is a python implementation of Formex algebra
-## Homepage: http://pyformex.berlios.de/
-## Distributed under the GNU General Public License, see file COPYING
-## Copyright (C) Benedict Verhegghe except where stated otherwise 
+## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##
-#
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+###
 """Import/Export Formex structures to/from stl format.
 
 An stl is stored as a numerical array with shape [n,3,3].
