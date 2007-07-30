@@ -1,0 +1,90 @@
+% pyformex manual --- canvas
+% $Id$
+% (C) B.Verhegghe
+
+\chapter{The Canvas}
+\label{cha:canvas}
+
+\section{Introduction}
+When you have create a nice and powerful script to generate a 3D structure, you will most likely want to visually inspect that you have indeed created that what you intended. Usually you even will want or need to see intermediate results before you can continue your development. 
+For this purpose the \pyformex GUI offers a canvas where structures can be drawn by functions called from a script and interactively be manipulated by menus options and toolbar buttons.
+
+The 3D drawing and rendering functionality is based on OpenGL. Therefore you will need to have OpenGL available on your machine, either in hardware or software. Hardware accelerated OpenGL will of course speed up and ease operations.
+
+The drawing canvas of \pyformex actually is not a single canvas, but can be split up into one to four viewports, which can each individually be used for your drawing purposes. See the viewport menu of the GUI for details about using multiple viewports. In the remainder of this section we will treat the canvas as if it was a single viewport.
+
+\pyformex distinguishes three types of items that can be drawn on the canvas: actors, marks and decorations. The most important class are the actors: these are 3D geometrical structures defined in the global world coordinates. The 3D scene formed by the actors is viewed by a camera from a certain position, with a certain orientation and lens. The result as viewed by the camera is shown on the canvas. The \pyformex scripting language and the GUI provide ample means to move the camera and change the lens settings, allowing translation, rotation, zooming, changing perspective. All the user needs to do to get an actor displayed with the current camera settings, is to add that actor to the scene. There are different types of actors available, but the most important is the FormexActor: a graphical representation of a Formex. It is so important that there is a special function with lots of options to create a FormexActor and add it to the OpenGL scene.
+This function, \Code{draw()}, will be explained in detail in the next section.
+
+The second type of canvas items, marks, differ from the actors in that only their position in world coordinates is fixed, but not their orientation. Marks are always drawn in the same way, irrespective of the camera settings. The observer will always have the same view of the item, though it can (and will) move over the canvas when the camera is changed. Marks are primarily used to attach fixed attributes to certain points of the actors, e.g. a big dot, or a text dispaying some identification of the point.
+
+Finally, \pyformex offers decorations, which are items drawn in 2D viewport coordinates and unchangeably attached to the viewport. This can e.g. be used to display text or color legends on the view.
+
+   
+\section{Drawing a Formex}
+The most important action performed on the canvas is the drawing of a Formex.
+This is accomplished with the \Code{draw()} function.
+ 
+\begin{funcdesc}{draw}{F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=1.0}
+
+Draw a Formex or a list of Formices on the canvas.
+
+    If F is a list, all its items are drawn with the same settings.
+
+    If a setting is unspecified, its current values are used.
+    
+    Draws an actor on the canvas, and directs the camera to it from
+    the specified view. Named views are either predefined or can be added by
+    the user.
+    If view=None is specified, the camera settings remain unchanged.
+    This may make the drawn object out of view!
+    A special name '__last__' may be used to keep the same camera angles
+    as in the last draw operation. The camera will be zoomed on the newly
+    drawn object.
+    The initial default view is 'front' (looking in the -z direction).
+
+    If bbox == 'auto', the camera will zoom automatically on the shown
+    object. A bbox may be specified to have other zoom settings, e.g. to
+    keep the previous settings. If bbox == None, the previous bbox will be
+    kept.
+
+    If other actors are on the scene, they may or may not be visible with the
+    new camera settings. Clear the canvas before drawing if you only want
+    a single actor!
+
+    If the Formex has properties and a color list is specified, then the
+    the properties will be used as an index in the color list and each member
+    will be drawn with the resulting color.
+    If color is one color value, the whole Formex will be drawn with
+    that color.
+    Finally, if color=None is specified, the whole Formex is drawn in black.
+    
+    Each draw action activates a locking mechanism for the next draw action,
+    which will only be allowed after drawdelay seconds have elapsed. This
+    makes it easier to see subsequent images and is far more elegant that an
+    explicit sleep() operation, because all script processing will continue
+    up to the next drawing instruction.
+    The value of drawdelay is set in the config, or 2 seconds by default.
+    The user can disable the wait cycle for the next draw operation by
+    specifying wait=False. Setting drawdelay=0 will disable the waiting
+    mechanism for all subsequent draw statements (until set >0 again).
+
+\end{funcdesc}
+
+\section{Viewing the scene}
+
+\section{Other canvas items}
+
+
+\subsection{Actors}
+
+\subsection{Marks}
+
+\subsection{Decorations}
+  
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 
