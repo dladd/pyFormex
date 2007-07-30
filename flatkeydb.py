@@ -68,7 +68,7 @@ class FlatDB(dict):
     primary key. This field should have unique values for all records.
     
     The database itself is also a dictionary, with the value of the primary
-    key as key and the full rcord as value.
+    key as key and the full record as value.
     
     On constructing the database a list of keys must be specified that will be
     required for each record. The first key in this list will be used as the
@@ -178,7 +178,7 @@ class FlatDB(dict):
         Default is to raise a runtime error.
         Can be overriden in subclasses.
         """
-        raise RuntimeError, "FlatDB: invalid record : %s" % record
+        raise ValueError, "FlatDB: invalid record : %s" % record
 
         
     def __setitem__(self, key, record):

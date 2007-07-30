@@ -20,7 +20,31 @@ from flatkeydb import *
 from mydict import *
 
 
-class Materials(Dict):
+class Database(Dict):
+    """A class for storing properties in a database."""
+    
+    def __init__(self,data={}):
+        """Initialize a database.
+
+        The database can be initialized with a dict.
+        """
+        Dict.__init__(self,data)
+
+        
+    def readDatabase(self,filename,*args,**kargs):
+        """Import all records from a database file.
+
+        For now, it can only read databases using flatkeydb.
+        args and kargs can be used to specify arguments for the
+        FlatDB constructor.
+        """
+        mat = FlatDB(*args,**kargs)
+        mat.readFile(filename)
+        for k,v in mat.iteritems():
+            self[k] = Dict(v)
+
+            
+class MaterialDB(Database):
     """A class for storing material properties."""
     
     def __init__(self,data={}):
@@ -32,51 +56,49 @@ class Materials(Dict):
         """
         Dict.__init__(self,{})
         if type(data) == str:
-            self.readMaterials(data)
+            self.readDatabase(data,['name'],beginrec='material',endrec='endmaterial')
         elif type(data) == dict:
             self.update(data)
         else:
             raise ValueError,"Expected a filename or a dict."
 
-        
-    def readMaterials(self,filename):
-        """Import all materials from a database file.
 
-        For now, it can only read databases using flatkeydb.
+class SectionDB(Database):
+    """A class for storing section properties."""
+    
+    def __init__(self,data={}):
+        """Initialize a section database.
+
+        If data is a dict, it contains the database.
+        If data is a string, it specifies a filename where the
+        database can be read.
         """
-        mat = FlatDB(['name'], beginrec = 'material', endrec = 'endmaterial')
-        mat.readFile(filename)
-        self.update(mat)
+        Dict.__init__(self,{})
+        if type(data) == str:
+            self.readDatabase(data,['name'],beginrec='section',endrec='endsection')
+        elif type(data) == dict:
+            self.update(data)
+        else:
+            raise ValueError,"Expected a filename or a dict."
 
-               
-materials = Dict({})
-sections = Dict({})
+    
+materials = None
+sections = None
 
-properties = Dict({})
+#properties = Dict({})
 nodeproperties = Dict({})
 elemproperties = Dict({})
 
 
-def readMaterials(database):
-    """Import all materials from a database.
-    
-    For now, it can only read databases using flatkeydb.
-    """
-    mat = FlatDB(['name'], beginrec = 'material', endrec = 'endmaterial')
-    mat.readFile(database)
-    for key, item in mat.iteritems():#not materials=Dict(mat), because this would erase any material that was already added
-        materials[key] = CascadingDict(item)
+def setMaterialDB(aDict):
+    global materials
+    if isinstance(aDict,MaterialDB):
+        materials = aDict
 
-
-def readSections(database):
-    """Import all sections from a database.
-    
-    For now, it can only read databases using flatkeydb.
-    """
-    sect = FlatDB(['name'], beginrec = 'section', endrec = 'endsection')
-    sect.readFile(database)
-    for key, item in sect.iteritems():
-        sections[key] = CascadingDict(item)
+def setSectionDB(aDict):
+    global sections
+    if isinstance(aDict,SectionDB):
+        sections = aDict
 
 
 class Property(CascadingDict):
@@ -110,10 +132,10 @@ class NodeProperty(Property):
         A node property can hold the following sub-properties:
         - cload : a concentrated load
         - bound : a boundary condition
-		- displacement: prescribe a displacement
+        - displacement: prescribe a displacement
         - coords: the coordinate system which is used for the definition of cload and bound. There are three options:
         cartesian, spherical and cylindrical
-		-coordset: a list of 6 coordinates; the 2 points that specify the transformation 
+        -coordset: a list of 6 coordinates; the 2 points that specify the transformation 
         """
         if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or isinstance(bound, str) or bound==None): 
             CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'displacement':displacement , 'coords' : coords, 'coordset' : coordset})
@@ -143,7 +165,7 @@ class ElemProperty(Property):
 class ElemSection(Property):
     """Properties related to the section of a beam."""
 
-    def __init__(self, section = None, material = None, sectiontype = 'general', orientation = None):  
+    def __init__(self, section = None, material = None, sectiontype = 'general', orientation = None, behavior = None, range = 0.0):  
         """Create a new element section property. Empty by default.
         
         An element section property can hold the following sub-properties:
@@ -151,10 +173,13 @@ class ElemSection(Property):
         - material : the element material. This can be a dictionary or a string. Currently known keys to f2abq.py are: young_modulus, shear_modulus, density, poisson_ratio
         - sectiontype: the sectiontype of the element. 
 		- 'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section 			   axis. This allows to change the orientation of the cross-section.
+        - behavior: the behavior of the connector
         """    
         CascadingDict.__init__(self,{})
         self.sectiontype = sectiontype
         self.orientation = orientation
+        self.behavior = behavior
+        self.range = range
         self.addMaterial(material)
         self.addSection(section)
     
@@ -213,17 +238,21 @@ class ElemLoad(Property):
 
 
 
+
+
 # Test
 
 if __name__ == "__main__":
 
+    import sys,os
+    #print __file__
+    #print os.path.dirname(__file__)
+    #sys.exit()
+    Mat = MaterialDB('examples/materials.db')
+    setMaterialDB(Mat)
+    Sec = SectionDB('examples/sections.db')
+    setSectionDB(Sec)
 
-    Mat = Materials('materials.db')
-    print Mat
-    sys.exit()
-
-    readMaterials('materials.db')
-    readSections('sections.db')
     Stick=Property(1, {'colour':'green', 'name':'Stick', 'weight': 25, 'comment':'This could be anything: a gum, a frog, a usb-stick,...'})
     author=Property(5,{'Name':'Tim Neels', 'Address':CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'})})
     
@@ -235,7 +264,7 @@ if __name__ == "__main__":
     print properties[1]
     
 #    print properties[5]
-    properties[5].street='Voskeslaan'
+    properties[5].street='Voskenslaan'
     print author
     print properties[5]
     print author.street
@@ -245,6 +274,8 @@ if __name__ == "__main__":
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
     B1 = [ 0.0 ] * 6
 
+    print Mat
+    print Sec
     vert = ElemSection('IPEA100', 'steel')
     hor = ElemSection({'name':'IPEM800','A':951247,'I':CascadingDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
     q = ElemLoad(magnitude=2.5, loadlabel='PZ')

@@ -124,22 +124,23 @@ def writeSection(fil, nr):
     nr is the property number of the element set.
     """
     el=elemproperties[nr]
+    print el
     ############
     ##FRAME elements
     ##########################
     if el.elemtype.upper() in ['FRAME3D', 'FRAME2D']:
         if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*FRAME SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%f
-%f, %f, %f, %f, %f \n"""%(nr,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+            fil.write("""*FRAME SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%s
+%s, %s, %s, %s, %s \n"""%(nr,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
-                fil.write("""%f,%f,%f"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %f, %f \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
+            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
-            fil.write("""*FRAME SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%f
-%f \n"""%(nr,float(el.density),float(el.radius)))
+            fil.write("""*FRAME SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%s
+%s \n"""%(nr,float(el.density),float(el.radius)))
             if el.orientation != None:
-                fil.write("""%f,%f,%f"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %f, %f \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
+            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
     ##############
     ##connector elements
     ##########################  
@@ -156,35 +157,35 @@ def writeSection(fil, nr):
         if el.material.name not in materialswritten:
             fil.write("""*MATERIAL, NAME=%s
 *ELASTIC
-%f,%f
+%s,%s
 *DENSITY
-%f
+%s
 """%(el.material.name, float(el.young_modulus), float(el.poisson_ratio), float(el.density)))
             materialswritten.append(el.material.name)
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
-%f
+%s
 """ %(nr,el.material.name, float(el.cross_section)))
         elif el.sectiontype.upper() == 'CIRC':
             fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
-%f
+%s
 """ %(nr,el.material.name, float(el.radius)**2*math.pi))
     ############
     ##BEAM elements
     ##########################
     elif el.elemtype.upper() in ['B21', 'B21H','B22', 'B22H', 'B23','B23H','B31', 'B31H','B32','B32H','B33','B33H']:
         if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%f
-%f, %f, %f, %f, %f \n"""%(nr,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+            fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%s
+%s, %s, %s, %s, %s \n"""%(nr,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
-                fil.write("""%f,%f,%f"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %f, %f \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
+            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
-            fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%f
-%f \n"""%(nr,float(el.density),float(el.radius)))
+            fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%s
+%s \n"""%(nr,float(el.density),float(el.radius)))
             if el.orientation != None:
-                fil.write("""%f,%f,%f"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %f, %f \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
+            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
     else:
         print ('Sorry, elementtype %s is not yet supported'%el.elemtype)
     
@@ -195,15 +196,15 @@ def transform(fil, propnr):
     if n.coords.lower()=='cartesian':
         if n.coordset!=[]:
             fil.write("""*TRANSFORM, NSET=Nodeset_%s, TYPE=R
-%f,%f,%f,%f,%f,%f
+%s,%s,%s,%s,%s,%s
 """%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     elif n.coords.lower()=='spherical':
         fil.write("""*TRANSFORM, NSET=Nodeset_%s, TYPE=S
-%f,%f,%f,%f,%f,%f
+%s,%s,%s,%s,%s,%s
 """%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     elif n.coords.lower()=='cylindrical':
         fil.write("""*TRANSFORM, NSET=Nodeset_%s, TYPE=C
-%f,%f,%f,%f,%f,%f
+%s,%s,%s,%s,%s,%s
 """%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     else:
         print '%s is not a valid coordinate system'%nodeproperties[propnr].coords
@@ -389,7 +390,7 @@ def writeStepData(fil, kind , set='ALL', ID=None, globalaxes='No'):
                     fil.write("%s \n"%ID[j])
 
 
-def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='all', opcl='NEW', dloadset='all', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', outp=[], dat=[]):
+def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', outp=[], dat=[]):
     """Write a load step.
         
     analysistype is the analysis type. Currently, only STATIC is supported.
@@ -407,7 +408,7 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='all
     if analysis.upper()=='STATIC':
         fil.write("""*STEP, NLGEOM=%s
 *STATIC
-%f, %f, %f, %f
+%s, %s, %s, %s
 """ % (nlgeom, time[0], time[1], time[2], time[3]))
         writeBoundaries(fil, boundset, opb)
         writeDisplacements(fil, dispset,op)
@@ -423,19 +424,6 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='all
 ##################################################
 ## Some classes to store all the required information
 ################################################## 
-
-class AbqData(CascadingDict):
-    """Contains all data required to write the abaqus input file."""
-    
-    def __init__(self, model, analysis=[], dat=[], odb=[]):
-        """Create new AbqData. 
-        
-        model is a Model instance.
-        analysis is a list of Analysis instances.
-        dat is a list of Dat instances.
-        odb is a list of Odb instances.
-        """
-        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'dat':dat, 'odb':odb})
 
 
 class Model(Dict):
@@ -457,7 +445,7 @@ class Model(Dict):
 class Analysis(Dict):
     """Contains all data about the analysis."""
     
-    def __init__(self, analysistype='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='All', opcl='NEW', dloadset='all', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD'):
+    def __init__(self, analysistype='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD'):
         """Create new analysis data.
         
         analysistype is the analysis type. Currently, only STATIC is supported.
@@ -465,7 +453,7 @@ class Analysis(Dict):
         If nlgeom='YES', the analysis will be non-linear.
         Cloadset is a list of property numbers of which the cloads will be used in this analysis.
         Dloadset is a list of property numbers of which the dloads will be used in this analysis.
-        Boundset is a list of propery numbers of which the bounds will be used in this analysis. Initial boundaries are defined in a Model instance.
+        Boundset is a list of property numbers of which the bounds will be used in this analysis. Initial boundaries are defined in a Model instance.
         By default, the load is applied as a new load, i.e. loads
         from previous steps are removed. The user can set op='MOD'
         to keep/modify the previous loads.
@@ -502,6 +490,20 @@ class Dat(Dict):
         Dict.__init__(self, {'kind':kind, 'set':set, 'ID':ID, 'globalaxes':globalaxes})
 
 
+class AbqData(CascadingDict):
+    """Contains all data required to write the abaqus input file."""
+    
+    def __init__(self, model, analysis=[], dat=[], odb=[]):
+        """Create new AbqData. 
+        
+        model is a Model instance.
+        analysis is a list of Analysis instances.
+        dat is a list of Dat instances.
+        odb is a list of Odb instances.
+        """
+        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'dat':dat, 'odb':odb})
+
+
 ##################################################
 ## Combine all previous functions to write the Abaqus input file
 ##################################################
@@ -515,7 +517,7 @@ def writeAbqInput(abqdata, job=str(GD.scriptName)[:-3]):
     # Create the Abaqus input file
     filnam = job+'.inp'
     fil = file(filnam,'w')
-    print "Writing %s"%filnam
+    print "Writing %s" % filnam
     
     #write the heading
     writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
@@ -570,9 +572,12 @@ if __name__ == "__main__":
     #creating the formex
     F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
     
-    #reading databases
-    readMaterials('materials.db')
-    readSections('sections.db')
+    #install example databases
+    # either like this
+    Mat = MaterialDB('examples/materials.db')
+    setMaterialDB(Mat)
+    # or like this
+    setSectionDB(SectionDB('examples/sections.db'))
     
     # creating properties
     S1=ElemSection('IPEA100', 'steel')
@@ -580,7 +585,7 @@ if __name__ == "__main__":
     S3=ElemSection(sectiontype='join')
     BL1=ElemLoad(0.5,loadlabel='PZ')
     BL2=ElemLoad(loadlabel='Grav')
-    S2.density=7850
+    #S2.density=7850
     S2.cross_section=572
     np1=NodeProperty(9,[2,6,4,0,0,0], displacement=[[3,5]],coords='cylindrical',coordset=[0,0,0,0,0,1])
     np2=NodeProperty(8,cload=[9,2,5,3,0,4], bound='pinned')
@@ -599,6 +604,7 @@ if __name__ == "__main__":
     nodedat = Dat(kind='node',set=[7,9], ID=['U','coord'])
     model = Model(nodes, elems, [9,8,0,7], F.p, initialboundaries=[7])
     total = AbqData(model, analysis=[step1, step2], dat=[elemdat, nodedat], odb=[outhist, outfield])
+    print model
     writeAbqInput(total, job='testing')
     
     

@@ -237,10 +237,11 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-cospherical"><strong>cospherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Same&nbsp;as&nbsp;spherical&nbsp;with&nbsp;colat=True.</tt></dd></dl>
 
-<dl><dt><a name="Sphere2-cutAtPlane"><strong>cutAtPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;all&nbsp;elements&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.</tt></dd></dl>
+<dl><dt><a name="Sphere2-cut3AtPlane"><strong>cut3AtPlane</strong></a>(F, p, n)</dt><dd><tt>Return&nbsp;all&nbsp;elements&nbsp;of&nbsp;a&nbsp;plex-3&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere2-cut3AtPlane">cut3AtPlane</a>(F,p,n).</tt></dd></dl>
+
+<dl><dt><a name="Sphere2-cutAtPlane"><strong>cutAtPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;all&nbsp;elements&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere2-cutAtPlane">cutAtPlane</a>(F,p,n).</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-cylindrical"><strong>cylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cylindrical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
@@ -250,9 +251,20 @@ scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;
 (scale&nbsp;is&nbsp;given&nbsp;in&nbsp;order&nbsp;r,theta,z).<br>
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
-<dl><dt><a name="Sphere2-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array&nbsp;(ndarray)</tt></dd></dl>
+<dl><dt><a name="Sphere2-data"><strong>data</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
-<dl><dt><a name="Sphere2-divide"><strong>divide</strong></a>(self, n)</dt></dl>
+<dl><dt><a name="Sphere2-deprecated"><strong>deprecated</strong></a>(replacement)</dt></dl>
+
+<dl><dt><a name="Sphere2-divide"><strong>divide</strong></a>(self, div)</dt><dd><tt>Divide&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;values&nbsp;in&nbsp;div.<br>
+&nbsp;<br>
+Replaces&nbsp;each&nbsp;member&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;by&nbsp;a&nbsp;sequence&nbsp;of&nbsp;members&nbsp;obtained<br>
+by&nbsp;dividing&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;relative&nbsp;values&nbsp;specified&nbsp;in&nbsp;div.<br>
+The&nbsp;values&nbsp;should&nbsp;normally&nbsp;range&nbsp;from&nbsp;0.0&nbsp;to&nbsp;1.0.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&nbsp;for&nbsp;div,&nbsp;it&nbsp;is&nbsp;taken&nbsp;as&nbsp;a<br>
+number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;only&nbsp;works&nbsp;on&nbsp;plex-2&nbsp;Formices&nbsp;(line&nbsp;segments).</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
 &nbsp;<br>
@@ -294,21 +306,17 @@ current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nb
 define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
 will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
 
-<dl><dt><a name="Sphere2-intersectionPointsWithPlane"><strong>intersectionPointsWithPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;p,n.<br>
-&nbsp;<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.</tt></dd></dl>
+<dl><dt><a name="Sphere2-intersectionLinesWithPlane"><strong>intersectionLinesWithPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;intersection&nbsp;lines&nbsp;of&nbsp;a&nbsp;plex-3&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;(p,n).<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere2-intersectionLinesWithPlane">intersectionLinesWithPlane</a>(F,p,n).</tt></dd></dl>
 
-<dl><dt><a name="Sphere2-intersectionWithPlane"><strong>intersectionWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
+<dl><dt><a name="Sphere2-intersectionPointsWithPlane"><strong>intersectionPointsWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere2-intersectionWithPlane">intersectionWithPlane</a>(F,p,n),<br>
+but&nbsp;returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;instead&nbsp;of&nbsp;an&nbsp;array&nbsp;of&nbsp;points.</tt></dd></dl>
+
+<dl><dt><a name="Sphere2-intersectionWithPlane"><strong>intersectionWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
-The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[n]&nbsp;shaped&nbsp;array&nbsp;of&nbsp;parameter&nbsp;values&nbsp;t,<br>
-such&nbsp;that&nbsp;for&nbsp;each&nbsp;segment&nbsp;L&nbsp;the&nbsp;intersection&nbsp;point&nbsp;is&nbsp;given<br>
-by&nbsp;(1-t)*L[0]+&nbsp;t*L[1].</tt></dd></dl>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere2-intersectionWithPlane">intersectionWithPlane</a>(F,p,n).</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-lam"><strong>lam</strong></a>(self, dir, dist)</dt></dl>
 
@@ -639,9 +647,9 @@ Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;each&nbsp;comprising&nbsp;on
 
 <dl><dt><a name="Sphere2-test"><strong>test</strong></a>(self, nodes<font color="#909090">='all'</font>, dir<font color="#909090">=0</font>, min<font color="#909090">=None</font>, max<font color="#909090">=None</font>)</dt><dd><tt>Flag&nbsp;elements&nbsp;having&nbsp;nodal&nbsp;coordinates&nbsp;between&nbsp;min&nbsp;and&nbsp;max.<br>
 &nbsp;<br>
-This&nbsp;function&nbsp;is&nbsp;very&nbsp;convenient&nbsp;in&nbsp;clipping&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;in&nbsp;a&nbsp;specified&nbsp;direction.<br>
-It&nbsp;returns&nbsp;a&nbsp;1D&nbsp;integer&nbsp;array&nbsp;flagging&nbsp;(with&nbsp;a&nbsp;value&nbsp;1)&nbsp;the&nbsp;elements<br>
-having&nbsp;nodal&nbsp;coordinates&nbsp;in&nbsp;the&nbsp;required&nbsp;range.<br>
+This&nbsp;function&nbsp;is&nbsp;very&nbsp;convenient&nbsp;in&nbsp;clipping&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;in&nbsp;a&nbsp;specified<br>
+direction.&nbsp;It&nbsp;returns&nbsp;a&nbsp;1D&nbsp;integer&nbsp;array&nbsp;flagging&nbsp;(with&nbsp;a&nbsp;value&nbsp;1&nbsp;or<br>
+True)&nbsp;the&nbsp;elements&nbsp;having&nbsp;nodal&nbsp;coordinates&nbsp;in&nbsp;the&nbsp;required&nbsp;range.<br>
 Use&nbsp;<a href="#Sphere2-where">where</a>(result)&nbsp;to&nbsp;get&nbsp;a&nbsp;list&nbsp;of&nbsp;element&nbsp;numbers&nbsp;passing&nbsp;the&nbsp;test.<br>
 Or&nbsp;directly&nbsp;use&nbsp;<a href="#Sphere2-clip">clip</a>()&nbsp;or&nbsp;<a href="#Sphere2-cclip">cclip</a>()&nbsp;to&nbsp;create&nbsp;the&nbsp;clipped&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
@@ -649,8 +657,8 @@ This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;in&nbsp;two&nbsp;distinct&nbs
 -&nbsp;min,max&nbsp;are&nbsp;the&nbsp;minimum&nbsp;and&nbsp;maximum&nbsp;values&nbsp;required&nbsp;for&nbsp;the<br>
 coordinates&nbsp;in&nbsp;direction&nbsp;dir&nbsp;(default&nbsp;is&nbsp;the&nbsp;x&nbsp;or&nbsp;0&nbsp;direction,<br>
 other&nbsp;possibilities&nbsp;for&nbsp;the&nbsp;direction&nbsp;dir&nbsp;in&nbsp;this&nbsp;case&nbsp;are&nbsp;1&nbsp;or&nbsp;2).<br>
--&nbsp;a&nbsp;direction&nbsp;vector&nbsp;can&nbsp;be&nbsp;specified&nbsp;for&nbsp;dir.&nbsp;min,max&nbsp;are&nbsp;points&nbsp;in&nbsp;this&nbsp;case,<br>
-specified&nbsp;by&nbsp;3&nbsp;coordinates.&nbsp;<br>
+-&nbsp;a&nbsp;direction&nbsp;vector&nbsp;can&nbsp;be&nbsp;specified&nbsp;for&nbsp;dir.&nbsp;min,max&nbsp;are&nbsp;points<br>
+in&nbsp;this&nbsp;case,&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.&nbsp;<br>
 &nbsp;<br>
 Nodes&nbsp;specifies&nbsp;which&nbsp;nodes&nbsp;are&nbsp;taken&nbsp;into&nbsp;account&nbsp;in&nbsp;the&nbsp;comparisons.<br>
 It&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;following:<br>
@@ -757,8 +765,7 @@ permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
 Since&nbsp;the&nbsp;ndarray&nbsp;object&nbsp;has&nbsp;a&nbsp;method&nbsp;<a href="#Sphere2-view">view</a>()&nbsp;returning&nbsp;a&nbsp;view&nbsp;on<br>
 the&nbsp;ndarray,&nbsp;this&nbsp;method&nbsp;allows&nbsp;writing&nbsp;code&nbsp;tha&nbsp;works&nbsp;with&nbsp;both<br>
 <a href="formex.html#Formex">Formex</a>&nbsp;and&nbsp;ndarray&nbsp;instances.&nbsp;The&nbsp;results&nbsp;is&nbsp;of&nbsp;course&nbsp;always&nbsp;an<br>
-ndarray.<br>
-This&nbsp;method&nbsp;is&nbsp;prefered&nbsp;over&nbsp;the&nbsp;(deprecated)&nbsp;<a href="#Sphere2-data">data</a>().</tt></dd></dl>
+ndarray.</tt></dd></dl>
 
 <dl><dt><a name="Sphere2-where"><strong>where</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
@@ -1008,10 +1015,11 @@ avoid&nbsp;it&nbsp;where&nbsp;possible.</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-cospherical"><strong>cospherical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Same&nbsp;as&nbsp;spherical&nbsp;with&nbsp;colat=True.</tt></dd></dl>
 
-<dl><dt><a name="Sphere3-cutAtPlane"><strong>cutAtPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;all&nbsp;elements&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.</tt></dd></dl>
+<dl><dt><a name="Sphere3-cut3AtPlane"><strong>cut3AtPlane</strong></a>(F, p, n)</dt><dd><tt>Return&nbsp;all&nbsp;elements&nbsp;of&nbsp;a&nbsp;plex-3&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere3-cut3AtPlane">cut3AtPlane</a>(F,p,n).</tt></dd></dl>
+
+<dl><dt><a name="Sphere3-cutAtPlane"><strong>cutAtPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;all&nbsp;elements&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;cut&nbsp;at&nbsp;plane.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere3-cutAtPlane">cutAtPlane</a>(F,p,n).</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-cylindrical"><strong>cylindrical</strong></a>(self, dir<font color="#909090">=[0, 1, 2]</font>, scale<font color="#909090">=[1.0, 1.0, 1.0]</font>)</dt><dd><tt>Converts&nbsp;from&nbsp;cylindrical&nbsp;to&nbsp;cartesian&nbsp;after&nbsp;scaling.<br>
 &nbsp;<br>
@@ -1021,9 +1029,20 @@ scale&nbsp;will&nbsp;scale&nbsp;the&nbsp;coordinate&nbsp;values&nbsp;prior&nbsp;
 (scale&nbsp;is&nbsp;given&nbsp;in&nbsp;order&nbsp;r,theta,z).<br>
 The&nbsp;resulting&nbsp;angle&nbsp;is&nbsp;interpreted&nbsp;in&nbsp;degrees.</tt></dd></dl>
 
-<dl><dt><a name="Sphere3-data"><strong>data</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;as&nbsp;a&nbsp;numpy&nbsp;array&nbsp;(ndarray)</tt></dd></dl>
+<dl><dt><a name="Sphere3-data"><strong>data</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
-<dl><dt><a name="Sphere3-divide"><strong>divide</strong></a>(self, n)</dt></dl>
+<dl><dt><a name="Sphere3-deprecated"><strong>deprecated</strong></a>(replacement)</dt></dl>
+
+<dl><dt><a name="Sphere3-divide"><strong>divide</strong></a>(self, div)</dt><dd><tt>Divide&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;values&nbsp;in&nbsp;div.<br>
+&nbsp;<br>
+Replaces&nbsp;each&nbsp;member&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;by&nbsp;a&nbsp;sequence&nbsp;of&nbsp;members&nbsp;obtained<br>
+by&nbsp;dividing&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;at&nbsp;the&nbsp;relative&nbsp;values&nbsp;specified&nbsp;in&nbsp;div.<br>
+The&nbsp;values&nbsp;should&nbsp;normally&nbsp;range&nbsp;from&nbsp;0.0&nbsp;to&nbsp;1.0.<br>
+&nbsp;<br>
+As&nbsp;a&nbsp;convenience,&nbsp;if&nbsp;an&nbsp;integer&nbsp;is&nbsp;specified&nbsp;for&nbsp;div,&nbsp;it&nbsp;is&nbsp;taken&nbsp;as&nbsp;a<br>
+number&nbsp;of&nbsp;divisions&nbsp;for&nbsp;the&nbsp;interval&nbsp;[0..1].<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;only&nbsp;works&nbsp;on&nbsp;plex-2&nbsp;Formices&nbsp;(line&nbsp;segments).</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-elbbox"><strong>elbbox</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;where&nbsp;each&nbsp;element&nbsp;is&nbsp;replaced&nbsp;by&nbsp;its&nbsp;bbox.<br>
 &nbsp;<br>
@@ -1065,21 +1084,17 @@ current&nbsp;implementation&nbsp;this&nbsp;is&nbsp;always&nbsp;3,&nbsp;though&nb
 define&nbsp;2D&nbsp;Formices&nbsp;by&nbsp;given&nbsp;only&nbsp;two&nbsp;coordinates:&nbsp;the&nbsp;third<br>
 will&nbsp;automatically&nbsp;be&nbsp;set&nbsp;to&nbsp;zero.</tt></dd></dl>
 
-<dl><dt><a name="Sphere3-intersectionPointsWithPlane"><strong>intersectionPointsWithPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;p,n.<br>
-&nbsp;<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.</tt></dd></dl>
+<dl><dt><a name="Sphere3-intersectionLinesWithPlane"><strong>intersectionLinesWithPlane</strong></a>(self, p, n)</dt><dd><tt>Returns&nbsp;the&nbsp;intersection&nbsp;lines&nbsp;of&nbsp;a&nbsp;plex-3&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;(p,n).<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere3-intersectionLinesWithPlane">intersectionLinesWithPlane</a>(F,p,n).</tt></dd></dl>
 
-<dl><dt><a name="Sphere3-intersectionWithPlane"><strong>intersectionWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
+<dl><dt><a name="Sphere3-intersectionPointsWithPlane"><strong>intersectionPointsWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;points&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
-The&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;should&nbsp;have&nbsp;plexitude&nbsp;2.<br>
-p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
-n&nbsp;is&nbsp;the&nbsp;normal&nbsp;vector&nbsp;to&nbsp;a&nbsp;plane,&nbsp;specified&nbsp;by&nbsp;3&nbsp;components.<br>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere3-intersectionWithPlane">intersectionWithPlane</a>(F,p,n),<br>
+but&nbsp;returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;instead&nbsp;of&nbsp;an&nbsp;array&nbsp;of&nbsp;points.</tt></dd></dl>
+
+<dl><dt><a name="Sphere3-intersectionWithPlane"><strong>intersectionWithPlane</strong></a>(self, p, n)</dt><dd><tt>Return&nbsp;the&nbsp;intersection&nbsp;of&nbsp;a&nbsp;plex-2&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;the&nbsp;plane&nbsp;(p,n).<br>
 &nbsp;<br>
-The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[n]&nbsp;shaped&nbsp;array&nbsp;of&nbsp;parameter&nbsp;values&nbsp;t,<br>
-such&nbsp;that&nbsp;for&nbsp;each&nbsp;segment&nbsp;L&nbsp;the&nbsp;intersection&nbsp;point&nbsp;is&nbsp;given<br>
-by&nbsp;(1-t)*L[0]+&nbsp;t*L[1].</tt></dd></dl>
+This&nbsp;is&nbsp;equivalent&nbsp;with&nbsp;the&nbsp;function&nbsp;<a href="#Sphere3-intersectionWithPlane">intersectionWithPlane</a>(F,p,n).</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-lam"><strong>lam</strong></a>(self, dir, dist)</dt></dl>
 
@@ -1410,9 +1425,9 @@ Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;each&nbsp;comprising&nbsp;on
 
 <dl><dt><a name="Sphere3-test"><strong>test</strong></a>(self, nodes<font color="#909090">='all'</font>, dir<font color="#909090">=0</font>, min<font color="#909090">=None</font>, max<font color="#909090">=None</font>)</dt><dd><tt>Flag&nbsp;elements&nbsp;having&nbsp;nodal&nbsp;coordinates&nbsp;between&nbsp;min&nbsp;and&nbsp;max.<br>
 &nbsp;<br>
-This&nbsp;function&nbsp;is&nbsp;very&nbsp;convenient&nbsp;in&nbsp;clipping&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;in&nbsp;a&nbsp;specified&nbsp;direction.<br>
-It&nbsp;returns&nbsp;a&nbsp;1D&nbsp;integer&nbsp;array&nbsp;flagging&nbsp;(with&nbsp;a&nbsp;value&nbsp;1)&nbsp;the&nbsp;elements<br>
-having&nbsp;nodal&nbsp;coordinates&nbsp;in&nbsp;the&nbsp;required&nbsp;range.<br>
+This&nbsp;function&nbsp;is&nbsp;very&nbsp;convenient&nbsp;in&nbsp;clipping&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;in&nbsp;a&nbsp;specified<br>
+direction.&nbsp;It&nbsp;returns&nbsp;a&nbsp;1D&nbsp;integer&nbsp;array&nbsp;flagging&nbsp;(with&nbsp;a&nbsp;value&nbsp;1&nbsp;or<br>
+True)&nbsp;the&nbsp;elements&nbsp;having&nbsp;nodal&nbsp;coordinates&nbsp;in&nbsp;the&nbsp;required&nbsp;range.<br>
 Use&nbsp;<a href="#Sphere3-where">where</a>(result)&nbsp;to&nbsp;get&nbsp;a&nbsp;list&nbsp;of&nbsp;element&nbsp;numbers&nbsp;passing&nbsp;the&nbsp;test.<br>
 Or&nbsp;directly&nbsp;use&nbsp;<a href="#Sphere3-clip">clip</a>()&nbsp;or&nbsp;<a href="#Sphere3-cclip">cclip</a>()&nbsp;to&nbsp;create&nbsp;the&nbsp;clipped&nbsp;<a href="formex.html#Formex">Formex</a>.<br>
 &nbsp;<br>
@@ -1420,8 +1435,8 @@ This&nbsp;function&nbsp;can&nbsp;be&nbsp;used&nbsp;in&nbsp;two&nbsp;distinct&nbs
 -&nbsp;min,max&nbsp;are&nbsp;the&nbsp;minimum&nbsp;and&nbsp;maximum&nbsp;values&nbsp;required&nbsp;for&nbsp;the<br>
 coordinates&nbsp;in&nbsp;direction&nbsp;dir&nbsp;(default&nbsp;is&nbsp;the&nbsp;x&nbsp;or&nbsp;0&nbsp;direction,<br>
 other&nbsp;possibilities&nbsp;for&nbsp;the&nbsp;direction&nbsp;dir&nbsp;in&nbsp;this&nbsp;case&nbsp;are&nbsp;1&nbsp;or&nbsp;2).<br>
--&nbsp;a&nbsp;direction&nbsp;vector&nbsp;can&nbsp;be&nbsp;specified&nbsp;for&nbsp;dir.&nbsp;min,max&nbsp;are&nbsp;points&nbsp;in&nbsp;this&nbsp;case,<br>
-specified&nbsp;by&nbsp;3&nbsp;coordinates.&nbsp;<br>
+-&nbsp;a&nbsp;direction&nbsp;vector&nbsp;can&nbsp;be&nbsp;specified&nbsp;for&nbsp;dir.&nbsp;min,max&nbsp;are&nbsp;points<br>
+in&nbsp;this&nbsp;case,&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.&nbsp;<br>
 &nbsp;<br>
 Nodes&nbsp;specifies&nbsp;which&nbsp;nodes&nbsp;are&nbsp;taken&nbsp;into&nbsp;account&nbsp;in&nbsp;the&nbsp;comparisons.<br>
 It&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;following:<br>
@@ -1528,8 +1543,7 @@ permutation&nbsp;of&nbsp;the&nbsp;other's.</tt></dd></dl>
 Since&nbsp;the&nbsp;ndarray&nbsp;object&nbsp;has&nbsp;a&nbsp;method&nbsp;<a href="#Sphere3-view">view</a>()&nbsp;returning&nbsp;a&nbsp;view&nbsp;on<br>
 the&nbsp;ndarray,&nbsp;this&nbsp;method&nbsp;allows&nbsp;writing&nbsp;code&nbsp;tha&nbsp;works&nbsp;with&nbsp;both<br>
 <a href="formex.html#Formex">Formex</a>&nbsp;and&nbsp;ndarray&nbsp;instances.&nbsp;The&nbsp;results&nbsp;is&nbsp;of&nbsp;course&nbsp;always&nbsp;an<br>
-ndarray.<br>
-This&nbsp;method&nbsp;is&nbsp;prefered&nbsp;over&nbsp;the&nbsp;(deprecated)&nbsp;<a href="#Sphere3-data">data</a>().</tt></dd></dl>
+ndarray.</tt></dd></dl>
 
 <dl><dt><a name="Sphere3-where"><strong>where</strong></a> = wrapper(*__args, **__kw)</dt><dd><tt>#print&nbsp;"Replacement&nbsp;%s"&nbsp;%&nbsp;replacement.func_name</tt></dd></dl>
 
@@ -1841,7 +1855,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
@@ -1860,7 +1874,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...object_'&gt;: &lt;function &lt;lambda&gt; at 0x2b38d1e47578&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...y.bool_'&gt;: &lt;function &lt;lambda&gt; at 0x2b14d5971488&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1904,7 +1918,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.uint8'&gt;: 1, &lt;type 'numpy.object_'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...&lt;type 'numpy.uint8'&gt;: 1, &lt;type 'numpy.bool_'&gt;: 1}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>
