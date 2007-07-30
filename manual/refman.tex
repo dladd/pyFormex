@@ -10,18 +10,41 @@
 
 This module contains all the basic functionality for creating, structuring and transforming sets of coordinates. All the definitions in this module are available in your scripts without the need to import the module.
 
-\begin{classdesc}{Formex}{data=[[[]]],prop=None}
-A class to hold a structured set of coordinates. A \class{Formex} is a three dimensional array of float values. The array has a shape \Code{(nelems,nplex,3)}. Each slice \Code{[i,j]} of the array contains the three coordinates of a point in space. Each slice \Code{[i]} of the array contains a connected set of \var{nplex} points: we will refer to it as an \emph{element}. The number of points in an element is also called the \emph{plexitude} of the element.
+The largest and most important part of this module is the Formex class. Most algorythms in this and other modules of \pyformex are implemented to operate on data structures of this type. Some functions however operate on NumPy's ndarray type objects.
+ 
 
-It is up to the user on how to interprete the grouping of some points into an element. An element with two points  will usually represent a line segment between its two points. But these could just as well be the two opposite corners of a rectangle.
-A element with plexitude 3 (in short: plex-3 element) could be interpreted as a triangle or as a polygonal or curved line. And if it is a triangle, it could be either the circumference of the triangle or the part of the plane inside that circumference. As far as the Formex class concerns, each element is just a set of points. 
+\subsection{The Formex class}
+This class represents a structured set of 3D coordinates. Basically, a \class{Formex} is a three dimensional array\footnote{Currently, this is implemented as a NumPy ndarray object. If you want to do complex things in \pyformex, some basic knowledge of NumPy may be required .} of float values. The array has a shape \Code{(nelems,nplex,3)}. Each slice \Code{[i,j]} of the array contains the three coordinates of a point in space. Each slice \Code{[i]} of the array contains a connected set of \var{nplex} points: we will refer to it as an \emph{element}. The number of points in an element is also called the \emph{plexitude} of the element or the plexitude of the Formex (since all elements in a Formex have the same number of points). 
+
+The Formex class does not attribute any geometrical interpretation to the grouping of points in an element. This is left to the user, or to subclasses.
+
+Thus, an element consisting of two points could (and usually will) represent a straight line segment between this two points. But the points could just as well be the two opposite corners of a rectangle.
+An element with plexitude 3 (in short: plex-3 element) could be interpreted as a triangle or as two straight line segments or as a curved line or even as a circle through these points. If it is a triangle, it could be either the circumference of the triangle or the part of the plane inside that circumference. As far as the Formex class concerns, each element is just a set of points. 
 
 All elements in a \class{Formex} must have the same number of points, but you can construct \class{Formex} instances with any (positive) number of nodes per element. A plex-1 \class{Formex} is just a collection of unconnected nodes (each element is a single point).
 
-One way of attaching other data to the \class{Formex}, is by the use of the 'property' attribute. The property is an array holding one integer value for each of the elements of the Formex. The use of this property value is completely defined by the user. It could be a code for the type of element, or for the color to draw this element with. Most often it will be used as an index into some other (possibly complex) data structure holding all the characteristics of that element. 
-
+One way of attaching other data (than the coordinates of its points) to the elements of a \class{Formex}, is by using the 'property' attribute. The property is an array holding one integer value for each of the elements of the Formex. The interpretation of this property value is again completely left to the user. It could be a code for the type of element, or for the color to draw this element with. Often it will be used as an index into some other (possibly complex) data structure holding all the characteristics of that element. 
 By including this property index into the Formex class, we make sure that when new elements are constructed from existing ones, the element properties are automatically propagated.
 
+
+\begin{classdesc}{Formex}{data=[[[]]],prop=None}
+Create a new Formex from the specified data and optional property values.
+The data can either be: another Formex instance, a string that can be 
+interpreted by the pattern() method to create coordinates, or a 2D or 3D array
+of coordinates or a structure (e.g. compound list) that can be transformed to
+such an array.
+ 
+If 2D coordinates are given, a 3-rd coordinate 0.0 will be added.
+Internally, a Forme always has 3D coordinates.
+      
+Example: \code{F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])}
+creates a Formex with two elements, each having 2 points in the global z-plane.
+
+If a prop argument is specified, the setProp() method will be called with this
+argument to assign the properties to the Formex.
+
+If no data are specified, an empty Formex is created. The use of empty Formices
+is not very well tested yet, and therefore not not encouraged.
 \end{classdesc}
 
 \subsection{Formex class members}

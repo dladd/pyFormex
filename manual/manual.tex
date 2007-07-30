@@ -17,7 +17,6 @@
 %\usepackage[latex2html]{hyperref}
 %\usepackage[latex2html,pdftex]{hyperref}
 \usepackage{html}
-\usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{verbatim}
@@ -31,25 +30,50 @@
 \lfoot[\sf\thepage]{}
 \rfoot[]{\sf\thepage}
 
+\usepackage{xspace}
 
 % Document identification
 \title{\pyformex manual}
-\author{Tim Neels and Benedict Verhegghe}
-\release{0.4.2}
-\setshortversion{0.4.2}
+\author{Tim Neels \& Benedict Verhegghe}
+%\authoraddress{
+%	\strong{Python Software Foundation}\\
+%	Email: \email{benedict.verhegghe@ugent.be}
+%}
 
-% pyFormex and its website
+%%% !! put a fixed date on releasing !
+\date{\today{}}
+
+% pyFormex version
+\renewcommand{\releasename}{pyFormex}
+\release{0.5-alpha}
+\setshortversion{0.5}
+\newcommand{\pyfversion}{pyFormex \version}
+
+%% In the text use \version to refer to the version string only,
+%% or \pyfversion to refer to  pyFormex + version string 
+
+% pyFormex and its websites
+
+%%%
+%%% !! All the following definitions should end with \xspace
+%%% !! \xspace in de URLs geeft problemen met nieuwe TeXLive 2007 !
+%%%
+%%% xspace.sty v1.06 werkt goed! v1.12 niet!
+%%%
+
 \newcommand{\pyformex}{pyFormex\xspace}
 \newcommand{\pyFormex}{pyFormex\xspace}  % we tend to mistype this one!
 \newcommand{\pyf}{pyFormex\xspace} % saves some typing (and mistyping)
+
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
-\newcommand{\pydocpages}{http://pyformex.berlios.de/doc\xspace}
+\newcommand{\pydocpages}{http://pyformex.berlios.de/doc/index.html\xspace}
 \newcommand{\pythonURL}{http://www.python.org\xspace}
 \newcommand{\pythonTUT}{http://docs.python.org/tut/\xspace}
 \newcommand{\pythonBEG}{http://wiki.python.org/moin/BeginnersGuide/\xspace}
 \newcommand{\numpyURL}{http://numpy.scipy.org/\xspace}
 \newcommand{\numpyTUT}{http://www.scipy.org/Tentative_NumPy_Tutorial\xspace}
 \newcommand{\latestpyf}{http://prdownload.berlios.de/pyformex/pyformex.tar.gz\xspace}
+\newcommand{\bumpsFTPserver}{ftp://bumps.ugent.be/pub/pyformex\xspace}
 
 % code 
 % The following is just for illustration how to include code.
@@ -64,15 +88,12 @@
 
 \begin{document}
 \maketitle
-\begin{titlepage}
-~
-\end{titlepage}
 \thispagestyle{empty}
-%\setcounter{page}{0}
 \begin{latexonly}
   \tableofcontents
 \end{latexonly}
-\input{preface}
+\upshape    % For some reason, the html text defaults to italic
+\input{front}
 \input{intro}
 \input{tutorial}
 \input{gui}
@@ -83,8 +104,10 @@
 \appendix
 \input{app-gpl}
 
-\addcontentsline{toc}{chapter}{Index}
-\printindex%     first use program MAKEIND to make index !!
+%\pagebreak
+%\addcontentsline{toc}{chapter}{Index}
+%\printindex%     first use program MAKEIND to make index !!
+\input{manual.ind}			% Index
 
 \end{document}
 %%% Local Variables: 

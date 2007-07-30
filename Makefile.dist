@@ -89,10 +89,13 @@ dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERS
 	cp ${MANUALIMAGES}   ${PYFORMEXDIR}/manual/images
 	cp ${DESKTOPFILE} ${PYFORMEXDIR}/${VENDOR}-${DESKTOPFILE}
 
-version: globaldata.py
+version: globaldata.py manual/manual.tex
 
 globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
+
+manual/manual.tex: RELEASE
+	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
 
 tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."

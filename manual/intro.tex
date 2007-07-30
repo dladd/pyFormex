@@ -5,8 +5,17 @@
 \chapter{Introduction}
 \label{cha:introduction}
 
+\ifhtml
+\begin{abstract}
+\fi
+\noindent
+This section explains shortly what \pyformex is and what it is not. It sets the conditions under which you are allowed to use, modify and distribute the program. Next is a list of prerequisites software parts that you need to have installed in order to be able to run this program. We explain how to download and install \pyformex. Finally, you'll find out what basic knowledge you should have in order to understand the tutorial and succesfully use \pyformex. 
+\ifhtml\end{abstract}\fi
+
+
 \section{What is \pyformex?}
 \label{sec:what-pyformex}
+
 You probably expect to find here a short definition of what \pyformex is and what it can do for you. I may have to disappoint you: describing the essence of \pyformex in a few lines is not an easy task to do, because the program can be (and is being) used for very different tasks. So I will give you two answers here: a short one and a long one.
 
 The short answer is that \pyformex is a program to \emph{generate large structured sets of coordinates by means of subsequent mathematical transformations gathered in a script.}
@@ -117,10 +126,10 @@ If you only want to use the Formex data model and transformation methods, the ab
 \subsection{Downloading}
 \label{sec:downloading}
 The official releases of \pyformex can be downloaded from the 
-\htmladdnormallinkfoot{\pyformex website}{\websiteURL}. As of the writing of this manual, the latest release is \htmladdnormallinkfoot{\pyf \release}{\latestpyf}. 
+\htmladdnormallinkfoot{\pyformex website}{\websiteURL}. As of the writing of this manual, the latest release is \htmladdnormallinkfoot{\pyfversion}{\latestpyf}. 
 \pyformex is currently distributed in the form of a \Code{.tar.gz} (tarball) archive. See \ref{sec:installation-linux} for how to proceed further.
 
-Alternatively you can download the tarball releases from our \htmladdnormallinkfoot{local FTP server}{ftp://bumps.ugent.be/pub/pyformex\xspace}. The server may be slower, but occasionally you can find there an interim release or release candidate not (yet) available on the official server.
+Alternatively you can download the tarball releases from our \htmladdnormallinkfoot{local FTP server}{\bumpsFTPserver}. The server may be slower, but occasionally you can find there an interim release or release candidate not (yet) available on the official server.
 
 Finally, you can also get the latest development code from the SVN repository on the \htmladdnormallinkfoot{\pyformex website}{\websiteURL}. If you have \htmladdnormallinkfoot{Subversion}{http://subversion.tigris.org/} installed on your system, you can just do\CodeLine{svn checkout svn://svn.berlios.de/pyformex/trunk pyformex}
 and the whole current \pyformex tree will be copied to a subdirectory \code{pyformex} on your current path.
@@ -174,7 +183,7 @@ The running script has access to the remaining arguments in the global list vari
 
 \section{Quick tutorial for the \pyformex GUI}
 \label{sec:gui-tutorial}
-In the current version (\release) the GUI mainly serves the following purposes:
+In the current version (\version) the GUI mainly serves the following purposes:
 \begin{itemize}
 \item Display a structure in 3D. This includes changing the viewpoint, orientation and viewing distance. Thus you can interactively rotate, translate, zoom.
 \item Save a view in one of the supported image formats. Most of the images in this manual and on the \pyformex{} website were created that way. 

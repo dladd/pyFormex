@@ -8,25 +8,27 @@ TGT=manual
 SRC=${TGT}.tex pyformex.help 
 HTMLDIR=html
 FAVICON=../favicon.ico
-OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" --image-type png --favicon ${FAVICON}
+OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" --image-type png --favicon ${FAVICON} 
+TESTOPTIONS= --l2h-init=fix.perl --keep
+TESTOPTIONS= --keep
 
 # Default target
-.PHONY all: pdf ps html
-
-.PHONY pdf: ${TGT}.pdf
+.PHONY all: ps pdf html
 
 .PHONY ps: ${TGT}.ps
+
+.PHONY pdf: ${TGT}.pdf
 
 .PHONY html: html/${TGT}.html
 
 pyformex.help: ../pyformex.py
 	../pyformex.py --help > $@
 
-${TGT}.pdf: ${SRC}
-	${MKHOWTO} --a4 --pdf $<
-
 ${TGT}.ps: ${SRC}
 	${MKHOWTO} --a4 --ps $<
 
+${TGT}.pdf: ${SRC}
+	${MKHOWTO} --a4 --pdf --keep $<
+
 html/${TGT}.html: ${SRC}
-	${MKHOWTO} --html --dir ${HTMLDIR} $(OPTIONS)  $<
+	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<

@@ -251,8 +251,11 @@ def writeDisplacements(fil, dispset='ALL', op='MOD'):
     !!!! This means that initial condtions are also removed!
     """
     fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s\n" % op)
+    print type(dispset)
+    print dispset
     if isinstance(dispset, list):
         for i in dispset:
+            print i,nodeproperties[i]
             if nodeproperties[i].displacement!=None:
                 for d in range(len(nodeproperties[i].displacement)):
                     fil.write("Nodeset_%s, %s, %s, %s\n" % (i,nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))

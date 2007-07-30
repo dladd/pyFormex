@@ -661,11 +661,11 @@ class Formex:
     def __init__(self,data=[[[]]],prop=None):
         """Create a new Formex.
 
-        The Formex can be initialized by a 2D or 3D coordinate list,
-        or by a string to be used in the pattern function to create
-        a coordinate list.
+        The Formex data can be initialized by another Formex,
+        by a 2D or 3D coordinate list, or by a string to be used in the
+        pattern function to create a coordinate list.
         If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
-        Formices therefore always have 3D coordinates.
+        Internally, Formices always work with 3D coordinates.
         Thus
           F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
         Creates a Formex with two elements, each having 2 points in the

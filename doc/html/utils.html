@@ -63,6 +63,8 @@ This&nbsp;makes&nbsp;it&nbsp;possible&nbsp;to&nbsp;put&nbsp;the&nbsp;numeric&nbs
 filename.<br>
 &nbsp;<br>
 Examples:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#FilenameSequence">FilenameSequence</a>('hallo.00')&nbsp;will&nbsp;generate&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hallo.00,&nbsp;hallo.01,&nbsp;...<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#FilenameSequence">FilenameSequence</a>('hallo','.png')&nbsp;will&nbsp;generate&nbsp;names<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hallo-000.png,&nbsp;hallo-001.png,&nbsp;...<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#FilenameSequence">FilenameSequence</a>('dir/hallo23','5.png')&nbsp;will&nbsp;generate&nbsp;names<br>
@@ -145,11 +147,6 @@ or&nbsp;an&nbsp;empty&nbsp;string&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
 &nbsp;<br>
 The&nbsp;module&nbsp;is&nbsp;only&nbsp;checked&nbsp;on&nbsp;the&nbsp;first&nbsp;call.<br>
 The&nbsp;result&nbsp;is&nbsp;remembered&nbsp;in&nbsp;the&nbsp;GD.version&nbsp;dict.</tt></dd></dl>
- <dl><dt><a name="-imageFormatFromExt"><strong>imageFormatFromExt</strong></a>(ext)</dt><dd><tt>Determine&nbsp;the&nbsp;image&nbsp;format&nbsp;from&nbsp;an&nbsp;extension.<br>
-&nbsp;<br>
-The&nbsp;extension&nbsp;may&nbsp;or&nbsp;may&nbsp;not&nbsp;have&nbsp;an&nbsp;initial&nbsp;dot&nbsp;and&nbsp;may&nbsp;be&nbsp;in&nbsp;upper&nbsp;or<br>
-lower&nbsp;case.&nbsp;The&nbsp;format&nbsp;is&nbsp;equal&nbsp;to&nbsp;the&nbsp;extension&nbsp;characters&nbsp;in&nbsp;lower&nbsp;case.<br>
-If&nbsp;the&nbsp;supplied&nbsp;extension&nbsp;is&nbsp;empty,&nbsp;the&nbsp;default&nbsp;format&nbsp;'png'&nbsp;is&nbsp;returned.</tt></dd></dl>
  <dl><dt><a name="-interrogate"><strong>interrogate</strong></a>(item)</dt><dd><tt>Print&nbsp;useful&nbsp;information&nbsp;about&nbsp;item.</tt></dd></dl>
  <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.<br>
 &nbsp;<br>
@@ -164,7 +161,6 @@ Typically,&nbsp;a&nbsp;pyFormex&nbsp;script&nbsp;starts&nbsp;with&nbsp;a&nbsp;li
 &nbsp;<br>
 The&nbsp;project&nbsp;name&nbsp;is&nbsp;the&nbsp;basename&nbsp;f&nbsp;the&nbsp;file&nbsp;without&nbsp;the&nbsp;extension.</tt></dd></dl>
  <dl><dt><a name="-runCommand"><strong>runCommand</strong></a>(cmd, RaiseError<font color="#909090">=True</font>)</dt><dd><tt>Run&nbsp;a&nbsp;command&nbsp;and&nbsp;raise&nbsp;error&nbsp;if&nbsp;exited&nbsp;with&nbsp;error.</tt></dd></dl>
- <dl><dt><a name="-saveRectangle"><strong>saveRectangle</strong></a>(x, y, w, h, filename, format)</dt><dd><tt>Save&nbsp;a&nbsp;rectangular&nbsp;part&nbsp;of&nbsp;the&nbsp;screen&nbsp;to&nbsp;a&nbsp;an&nbsp;image&nbsp;file.</tt></dd></dl>
  <dl><dt><a name="-spawn"><strong>spawn</strong></a>(cmd)</dt><dd><tt>Spawn&nbsp;a&nbsp;child&nbsp;process.</tt></dd></dl>
  <dl><dt><a name="-splitEndDigits"><strong>splitEndDigits</strong></a>(s)</dt><dd><tt>Split&nbsp;a&nbsp;string&nbsp;in&nbsp;any&nbsp;prefix&nbsp;and&nbsp;a&nbsp;numerical&nbsp;end&nbsp;sequence.<br>
 &nbsp;<br>

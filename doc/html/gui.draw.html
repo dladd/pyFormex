@@ -85,11 +85,7 @@ In&nbsp;either&nbsp;case,&nbsp;the&nbsp;current&nbsp;dirctory&nbsp;is&nbsp;store
 for&nbsp;persistence&nbsp;between&nbsp;pyFormex&nbsp;invocations.<br>
 &nbsp;<br>
 If&nbsp;fn&nbsp;does&nbsp;not&nbsp;exist,&nbsp;nothing&nbsp;is&nbsp;done.</tt></dd></dl>
- <dl><dt><a name="-checkImageFormat"><strong>checkImageFormat</strong></a>(fmt, verbose<font color="#909090">=False</font>)</dt><dd><tt>Checks&nbsp;image&nbsp;format;&nbsp;if&nbsp;verbose,&nbsp;warn&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
-&nbsp;<br>
-Returns&nbsp;the&nbsp;image&nbsp;format,&nbsp;or&nbsp;None&nbsp;if&nbsp;it&nbsp;is&nbsp;not&nbsp;OK.</tt></dd></dl>
  <dl><dt><a name="-clear"><strong>clear</strong></a>()</dt><dd><tt>Clear&nbsp;the&nbsp;canvas</tt></dd></dl>
- <dl><dt><a name="-createMovie"><strong>createMovie</strong></a>()</dt><dd><tt>Create&nbsp;a&nbsp;movie&nbsp;from&nbsp;a&nbsp;saved&nbsp;sequence&nbsp;of&nbsp;images.</tt></dd></dl>
  <dl><dt><a name="-createView"><strong>createView</strong></a>(name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
 &nbsp;<br>
 The&nbsp;angles&nbsp;are&nbsp;(longitude,&nbsp;latitude,&nbsp;twist).<br>
@@ -159,10 +155,6 @@ While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></
  <dl><dt><a name="-forget"><strong>forget</strong></a>(names)</dt></dl>
  <dl><dt><a name="-formatInfo"><strong>formatInfo</strong></a>(F)</dt><dd><tt>Return&nbsp;formatted&nbsp;information&nbsp;about&nbsp;a&nbsp;Formex.</tt></dd></dl>
  <dl><dt><a name="-frontView"><strong>frontView</strong></a>()</dt></dl>
- <dl><dt><a name="-imageFormats"><strong>imageFormats</strong></a>()</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;valid&nbsp;image&nbsp;formats.<br>
-&nbsp;<br>
-image&nbsp;formats&nbsp;are&nbsp;lower&nbsp;case&nbsp;strings&nbsp;as&nbsp;'png',&nbsp;'gif',&nbsp;'ppm',&nbsp;'eps',&nbsp;etc.<br>
-The&nbsp;available&nbsp;image&nbsp;formats&nbsp;are&nbsp;derived&nbsp;from&nbsp;the&nbsp;installed&nbsp;software.</tt></dd></dl>
  <dl><dt><a name="-info"><strong>info</strong></a>(message, actions<font color="#909090">=['OK']</font>)</dt><dd><tt>Show&nbsp;a&nbsp;neutral&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-isoView"><strong>isoView</strong></a>()</dt></dl>
  <dl><dt><a name="-leftView"><strong>leftView</strong></a>()</dt></dl>
@@ -209,45 +201,6 @@ the&nbsp;script&nbsp;that&nbsp;starts&nbsp;with&nbsp;'draw'.&nbsp;Also&nbsp;(in&
  <dl><dt><a name="-reset"><strong>reset</strong></a>()</dt></dl>
  <dl><dt><a name="-rightView"><strong>rightView</strong></a>()</dt></dl>
  <dl><dt><a name="-runtime"><strong>runtime</strong></a>()</dt><dd><tt>Return&nbsp;the&nbsp;time&nbsp;elapsed&nbsp;since&nbsp;start&nbsp;of&nbsp;execution&nbsp;of&nbsp;the&nbsp;script.</tt></dd></dl>
- <dl><dt><a name="-saveNext"><strong>saveNext</strong></a>()</dt><dd><tt>In&nbsp;multisave&nbsp;mode,&nbsp;saves&nbsp;the&nbsp;next&nbsp;image.</tt></dd></dl>
- <dl><dt><a name="-saveView"><strong>saveView</strong></a>(filename<font color="#909090">=None</font>, window<font color="#909090">=False</font>, multi<font color="#909090">=False</font>, hotkey<font color="#909090">=True</font>, autosave<font color="#909090">=False</font>, format<font color="#909090">=None</font>, verbose<font color="#909090">=False</font>)</dt><dd><tt>Starts&nbsp;or&nbsp;stops&nbsp;saving&nbsp;a&nbsp;sequence&nbsp;of&nbsp;images.<br>
-&nbsp;<br>
-With&nbsp;a&nbsp;filename,&nbsp;this&nbsp;starts&nbsp;or&nbsp;changes&nbsp;the&nbsp;multisave&nbsp;mode.<br>
-In&nbsp;multisave&nbsp;mode,&nbsp;each&nbsp;call&nbsp;to&nbsp;<a href="#-saveNext">saveNext</a>()&nbsp;will&nbsp;save&nbsp;an&nbsp;image&nbsp;to&nbsp;the<br>
-next&nbsp;generated&nbsp;file&nbsp;name.<br>
-Filenames&nbsp;are&nbsp;generated&nbsp;by&nbsp;incrementing&nbsp;a&nbsp;numeric&nbsp;part&nbsp;of&nbsp;the&nbsp;name.<br>
-If&nbsp;the&nbsp;supplied&nbsp;filename&nbsp;(after&nbsp;removing&nbsp;the&nbsp;extension)&nbsp;has&nbsp;a&nbsp;trailing<br>
-numeric&nbsp;part,&nbsp;subsequent&nbsp;images&nbsp;will&nbsp;be&nbsp;numbered&nbsp;continuing&nbsp;from&nbsp;this<br>
-number.&nbsp;Otherwise&nbsp;a&nbsp;numeric&nbsp;part&nbsp;'-000'&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;the&nbsp;filename.<br>
-&nbsp;<br>
-Without&nbsp;filename,&nbsp;exits&nbsp;the&nbsp;multisave&nbsp;mode.&nbsp;It&nbsp;is&nbsp;acceptable&nbsp;to&nbsp;have<br>
-two&nbsp;subsequent&nbsp;saveMulti&nbsp;calls&nbsp;with&nbsp;a&nbsp;filename,&nbsp;without&nbsp;an&nbsp;intermediate<br>
-call&nbsp;without&nbsp;filename.<br>
-&nbsp;<br>
-If&nbsp;window&nbsp;is&nbsp;True,&nbsp;the&nbsp;full&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.<br>
-If&nbsp;window&nbsp;is&nbsp;False,&nbsp;only&nbsp;the&nbsp;canvas&nbsp;is&nbsp;saved.<br>
-&nbsp;<br>
-If&nbsp;hotkey&nbsp;is&nbsp;True,&nbsp;a&nbsp;new&nbsp;image&nbsp;will&nbsp;be&nbsp;saved&nbsp;by&nbsp;hitting&nbsp;the&nbsp;'S'&nbsp;key.<br>
-If&nbsp;autosave&nbsp;is&nbsp;True,&nbsp;a&nbsp;new&nbsp;image&nbsp;will&nbsp;be&nbsp;saved&nbsp;on&nbsp;each&nbsp;execution&nbsp;of<br>
-the&nbsp;'draw'&nbsp;function.<br>
-If&nbsp;neither&nbsp;hotkey&nbsp;nor&nbsp;autosave&nbsp;are&nbsp;True,&nbsp;images&nbsp;can&nbsp;only&nbsp;be&nbsp;saved&nbsp;by<br>
-executing&nbsp;the&nbsp;<a href="#-saveNext">saveNext</a>()&nbsp;function&nbsp;from&nbsp;a&nbsp;script.<br>
-&nbsp;<br>
-If&nbsp;no&nbsp;format&nbsp;is&nbsp;specified,&nbsp;it&nbsp;is&nbsp;derived&nbsp;from&nbsp;the&nbsp;filename&nbsp;extension.<br>
-fmt&nbsp;should&nbsp;be&nbsp;one&nbsp;of&nbsp;the&nbsp;valid&nbsp;formats&nbsp;as&nbsp;returned&nbsp;by&nbsp;<a href="#-imageFormats">imageFormats</a>()<br>
-&nbsp;<br>
-If&nbsp;verbose=True,&nbsp;error/warnings&nbsp;are&nbsp;activated.&nbsp;This&nbsp;is&nbsp;usually&nbsp;done&nbsp;when<br>
-this&nbsp;function&nbsp;is&nbsp;called&nbsp;from&nbsp;the&nbsp;GUI.</tt></dd></dl>
- <dl><dt><a name="-saveWindow"><strong>saveWindow</strong></a>(filename, format, border<font color="#909090">=False</font>)</dt><dd><tt>Save&nbsp;the&nbsp;main&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
-&nbsp;<br>
-This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
-If&nbsp;a&nbsp;window&nbsp;is&nbsp;specified,&nbsp;the&nbsp;named&nbsp;window&nbsp;is&nbsp;saved.<br>
-Else,&nbsp;the&nbsp;main&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.</tt></dd></dl>
- <dl><dt><a name="-save_window"><strong>save_window</strong></a>(filename, format, windowname<font color="#909090">=None</font>)</dt><dd><tt>Save&nbsp;a&nbsp;window&nbsp;as&nbsp;an&nbsp;image&nbsp;file.<br>
-&nbsp;<br>
-This&nbsp;function&nbsp;needs&nbsp;a&nbsp;filename&nbsp;AND&nbsp;format.<br>
-If&nbsp;a&nbsp;window&nbsp;is&nbsp;specified,&nbsp;the&nbsp;named&nbsp;window&nbsp;is&nbsp;saved.<br>
-Else,&nbsp;the&nbsp;main&nbsp;pyFormex&nbsp;window&nbsp;is&nbsp;saved.</tt></dd></dl>
  <dl><dt><a name="-setDrawOptions"><strong>setDrawOptions</strong></a>(d)</dt></dl>
  <dl><dt><a name="-setGlobalAxes"><strong>setGlobalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
  <dl><dt><a name="-setLocalAxes"><strong>setLocalAxes</strong></a>(mode<font color="#909090">=True</font>)</dt></dl>
@@ -302,7 +255,6 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <strong>drawlocked</strong> = False<br>
 <strong>drawtimer</strong> = None<br>
 <strong>exitrequested</strong> = False<br>
-<strong>multisave</strong> = None<br>
 <strong>outtimer</strong> = None<br>
 <strong>scriptDisabled</strong> = False<br>
 <strong>scriptRunning</strong> = False<br>
