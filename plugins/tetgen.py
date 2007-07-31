@@ -83,6 +83,17 @@ def readSurface(fn):
         elems = elems-1
     return nodes,elems
 
+def readNeigh(fn):
+    """Read a tetgen .neigh file.
+
+    Returns an arrays containing the tetrahedra neighbours:
+    """
+    fil = file(fn,'r')
+    line = fil.readline()
+    s = line.strip('\n').split()
+    nelems, nneigh = map(int,s)
+    elems = fromfile(fil,sep=' ',dtype=int32).reshape((nelems,nneigh+1))
+    return elems[:,1:]
 
 def writeNodes(fn,nodes):
     """Write a tetgen .node file."""

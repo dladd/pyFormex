@@ -182,9 +182,10 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     if mode == 'smooth':
         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     GL.glBegin(GL.GL_TRIANGLES)
+    print "DRAW TRIANGLES WITH ALPHA %s" % alpha
     for i in range(x.shape[0]):
         if color is not None:
-            glColor(color[i],alpha)
+            glColor(color+(alpha,))
         if mode == 'smooth':
             GL.glNormal3fv(normal[i])
         for j in range(x.shape[1]):
@@ -549,6 +550,7 @@ class FormexActor(Actor,Formex):
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
+        self.setAlpha(alpha)
         
         if self.nplex() == 1:
             self.setMarkSize(marksize)
@@ -604,7 +606,7 @@ class FormexActor(Actor,Formex):
     bbox = Formex.bbox
 
 
-    def draw(self,mode='wireframe',color=None,alpha=1.0):
+    def draw(self,mode='wireframe',color=None,alpha=None):
         """Draw the formex.
 
         if color is None, it is drawn with the color specified on creation.
@@ -623,7 +625,9 @@ class FormexActor(Actor,Formex):
             self.draw('wireframe',color=asarray(black))
             return
 
-
+        if alpha is None:
+            alpha = self.alpha
+            
         ## CURRENTLY, ONLY color=None is used
         
         if color is None:  
@@ -636,8 +640,8 @@ class FormexActor(Actor,Formex):
             pass
         
         elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
-            #GD.debug("SINGLE COLOR %s" % str(color))
-            GL.glColor3fv(color)
+            GD.debug("SINGLE COLOR %s ALPHA %s" % (str(color),alpha))
+            GL.glColor(color+(alpha,))
             color = None
 
         elif color.dtype.kind == 'i': # color index

@@ -454,7 +454,7 @@ def distanceFromPoint(f,p):
     p is a point specified by 3 coordinates.
 
     The return value is a [...] shaped array with the distance of
-    each point to the line through p and q.
+    each point to point p.
     All distance values are positive or zero.
     """
     a = f.reshape((-1,3))
