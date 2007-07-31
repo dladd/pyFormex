@@ -185,7 +185,7 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     print "DRAW TRIANGLES WITH ALPHA %s" % alpha
     for i in range(x.shape[0]):
         if color is not None:
-            glColor(color+(alpha,))
+            GL.glColor(append(color[i],alpha))
         if mode == 'smooth':
             GL.glNormal3fv(normal[i])
         for j in range(x.shape[1]):
@@ -641,7 +641,8 @@ class FormexActor(Actor,Formex):
         
         elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
             GD.debug("SINGLE COLOR %s ALPHA %s" % (str(color),alpha))
-            GL.glColor(color+(alpha,))
+            GL.glColor(append(color,alpha))
+            print append(color,alpha)
             color = None
 
         elif color.dtype.kind == 'i': # color index
