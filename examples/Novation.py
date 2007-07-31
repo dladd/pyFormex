@@ -22,6 +22,7 @@ renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
 res = askItems([['Type of surface element',basechoices,'select'],
                 ['Number of bumps',3],
                 ['Render mode',renderchoices,'select'],
+                ['Transparent',False],
                 ['Add a bottom plate',False],
                 ['Shrink elements',False],
                 ['Export to .stl',False],
@@ -32,6 +33,7 @@ if not res:
 baseGeom = basechoices.index(res['Type of surface element'])
 rendermode = res['Render mode']
 nbumps = int(res['Number of bumps'])
+transparent = res['Transparent']
 bottom = res['Add a bottom plate']
 shrink = res['Shrink elements']
 export = res['Export to .stl']
@@ -55,19 +57,21 @@ a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 if bottom:
     # create a bottom
     b = e.reverseElements()
-    b.setProp(2)
+    #b.setProp(2)
     
 # create the bumps
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
 
 renderMode(rendermode)
+if transparent:
+    GD.canvas.alphablend = True
 if bottom:
-    draw(b)
+    draw(b,color=yellow,alpha=1.0)
 if shrink:
-    draw(e.shrink(0.8),color=blue)
+    draw(e.shrink(0.8),alpha=0.5)
 else:
-    draw(e,color=blue)
+    draw(e,alpha=0.5)
 
 if export:
     from plugins import stl

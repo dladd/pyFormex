@@ -57,12 +57,15 @@ def setOpenglFormat():
     The default OpenGL format can be changed by command line options.
     --dri   : use the DIrect Rendering Infrastructure
     --nodri : do no use the DRI
+    --alpha : enable the alpha buffer 
     """
     fmt = QtOpenGL.QGLFormat.defaultFormat()
     if GD.options.dri:
         fmt.setDirectRendering(True)
     if GD.options.nodri:
         fmt.setDirectRendering(False)
+    if GD.options.alpha:
+        fmt.setAlpha(True)
     #fmt.setRgba(False)
     if GD.options.debug:
         printOpenglFormat(fmt)

@@ -409,6 +409,8 @@ class Actor(object):
     """
     
     def __init__(self):
+        self.trans = False
+        self.list = None
         pass
 
     def bbox(self):
@@ -417,6 +419,19 @@ class Actor(object):
     def draw(self):
         pass
 
+    def display(self):
+        if self.trans:
+            print "ENABLE TRANS"
+            GL.glEnable (GL.GL_BLEND)
+            GL.glDepthMask (GL.GL_FALSE)
+            GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+        GL.glCallList(self.list)
+        if self.trans:
+            GL.glDepthMask (GL.GL_TRUE)
+            GL.glDisable (GL.GL_BLEND)
+
+
+      
     def nelems(self):
         return 1
     
@@ -569,7 +584,8 @@ class FormexActor(Actor,Formex):
     def setAlpha(self,alpha):
         """Set the Actors alpha value."""
         self.alpha = float(alpha)
-        if alpha != 1.0:
+        self.trans = self.alpha < 1.0
+        if self.trans:
             GD.debug("Setting Actor's ALPHA value to %f" % alpha)
 
 

@@ -130,7 +130,7 @@ class CanvasSettings(object):
 class Canvas(object):
     """A canvas for OpenGL rendering."""
 
-    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire', 'flattrans']
+    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire']
   
     # default light
     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
@@ -146,6 +146,7 @@ class Canvas(object):
         self.setBbox()
         self.settings = CanvasSettings()
         self.rendermode = 'wireframe'
+        self.alphablend = False
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
         self.camera = None
@@ -195,8 +196,8 @@ class Canvas(object):
     
 
     def initCamera(self):
-        if GD.options.makecurrent:
-            self.makeCurrent()  # we need correct OpenGL context for camera
+##         if GD.options.makecurrent:
+##             self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
         GD.debug("camera.rot = %s" % self.camera.rot)
         GD.debug("view angles: %s" % self.view_angles)
@@ -288,8 +289,23 @@ class Canvas(object):
         # GD.debug("%s / %s" % (len(self.actors),len(self.annotations)))
         self.camera.loadProjection()
         self.camera.loadMatrix()
-        for actor in self.actors:
-            GL.glCallList(actor.list)
+        if self.alphablend:
+            print "ENABLE TRANS"
+            opaque = [ a for a in self.actors if not a.trans ]
+            transp = [ a for a in self.actors if a.trans ]
+            for actor in opaque:
+               GL.glCallList(actor.list)
+            GL.glEnable (GL.GL_BLEND)
+            GL.glDepthMask (GL.GL_FALSE)
+            GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+            for actor in transp:
+                GL.glCallList(actor.list)
+            GL.glDepthMask (GL.GL_TRUE)
+            GL.glDisable (GL.GL_BLEND)
+        else:
+            for actor in self.actors:
+                GL.glCallList(actor.list)
+
         for actor in self.annotations:
             GL.glCallList(actor.list)
         GL.glMatrixMode(GL.GL_MODELVIEW)

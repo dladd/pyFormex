@@ -166,9 +166,10 @@ def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
             chdir(fn[0])
         else:
             chdir(fn)
-    GD.gui.update()
-    GD.canvas.update()
-    GD.app.processEvents()
+    print "Got file names %s" % str(fn)
+    #GD.gui.update()
+    #GD.canvas.update()
+    #GD.app.processEvents()
     return fn
 
 def askDirname(cur):
