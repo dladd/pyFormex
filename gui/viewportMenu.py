@@ -66,6 +66,7 @@ def viewportSettings():
     """Interactively set the viewport settings."""
     mode = GD.canvas.rendermode
     modes = canvas.Canvas.rendermodes
+    print modes
     s = GD.canvas.settings
     itemlist = [('rendermode', modes, 'select', mode),
                 ('bgcolor', s.bgcolor, 'color'),

@@ -130,7 +130,7 @@ class CanvasSettings(object):
 class Canvas(object):
     """A canvas for OpenGL rendering."""
 
-    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire']
+    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire', 'flattrans']
   
     # default light
     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
@@ -221,6 +221,11 @@ class Canvas(object):
         elif self.rendermode.startswith('flat'):
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
+            if self.rendermode.find('trans') >= 0:
+                GL.glEnable (GL.GL_BLEND)              # Enables Alpha Transparency
+                GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+                GL.glDisable(GL.GL_DEPTH_TEST)	 # Disable Depth Testing
+               
         elif self.rendermode.startswith('smooth'):
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             GL.glEnable(GL.GL_LIGHTING)
