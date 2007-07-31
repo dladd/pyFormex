@@ -29,6 +29,8 @@ from script import *
 # import some functions for scripts:
 
 from cameraMenu import setPerspective,setProjection
+
+# import a few functions for user scripts
 from image import saveImage,saveNext
 
 #################### Interacting with the user ###############################
@@ -166,10 +168,9 @@ def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
             chdir(fn[0])
         else:
             chdir(fn)
-    print "Got file names %s" % str(fn)
-    #GD.gui.update()
-    #GD.canvas.update()
-    #GD.app.processEvents()
+    GD.gui.update()
+    GD.canvas.update()
+    GD.app.processEvents()
     return fn
 
 def askDirname(cur):
@@ -429,6 +430,12 @@ def play(fn=None,step=False):
 
 
 ############################## drawing functions ########################
+
+
+def transparency(mode):
+    GD.canvas.setTransparency(mode)
+    GD.canvas.update()
+    GD.app.processEvents()
 
 def renderMode(mode):
     GD.canvas.setRenderMode(mode)

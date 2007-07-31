@@ -15,8 +15,7 @@ import globaldata as GD
 import widgets
 import draw
 import utils
-
-from image import saveImage,saveNext,createMovie
+import image
 
 
 def openFile(exist=True):
@@ -67,7 +66,7 @@ def saveImage(multi=False):
     fn,window,multi,hotkey,auto = dia.getResult()
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
-        draw.saveImage(fn,window,multi,hotkey,auto)
+        image.saveImage(fn,window,multi,hotkey,auto)
 
     
 def startMultiSave():
@@ -77,6 +76,6 @@ def startMultiSave():
 
 def stopMultiSave():
     """Stop multisave mode."""
-    draw.saveImage()
+    image.saveImage()
 
 # End

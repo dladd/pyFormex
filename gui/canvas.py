@@ -173,6 +173,10 @@ class Canvas(object):
             self.glinit(self.rendermode)
             self.redrawAll()
 
+
+    def setTransparency(self,mode):
+        self.alphablend = mode
+
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
         self.settings.linewidth = float(lw)

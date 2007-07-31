@@ -19,6 +19,7 @@ import cameraMenu
 import prefMenu
 import viewportMenu
 import help
+import image
 import draw
 from plugins import stl_menu,formex_menu
 
@@ -77,8 +78,8 @@ MenuData = [
         (_('---'),None),
         (_('&Save Image'),fileMenu.saveImage),
         (_('Start &MultiSave'),fileMenu.startMultiSave),
-        (_('Save &Next Image'),fileMenu.saveNext),
-        (_('Create &Movie'),fileMenu.createMovie),
+        (_('Save &Next Image'),image.saveNext),
+        (_('Create &Movie'),image.createMovie),
         (_('&Stop MultiSave'),fileMenu.stopMultiSave),
         (_('---'),None),
         (_('Load &Plugins'),[

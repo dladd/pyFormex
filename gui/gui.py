@@ -118,6 +118,7 @@ class GUI(QtGui.QMainWindow):
         self.setMenuBar(self.menu)
         
         self.toolbar = self.addToolBar('Top ToolBar')
+        self.toolbar2 = self.addToolBar('Second ToolBar')
         self.editor = None
         # Create a box for the central widget
         self.box = QtGui.QWidget()
@@ -175,7 +176,7 @@ class GUI(QtGui.QMainWindow):
         else:
             mmenu = None
         if GD.cfg['gui/modebar']:
-            tbar = self.toolbar
+            tbar = self.toolbar2
             tbar.addSeparator()
         else:
             tbar = None

@@ -88,7 +88,7 @@ def save(canvas,fn,fmt='png',options=None):
     fn is the name of the file
     fmt is the image file format
     """
-    # mak sure we have the current content displayed (on top)
+    # make sure we have the current content displayed (on top)
     canvas.makeCurrent()
     canvas.raise_()
     canvas.display()
@@ -290,7 +290,7 @@ def saveImage(filename=None,multi=False,hotkey=True,autosave=False,format=None,v
     #chdir(filename)
     name,ext = os.path.splitext(filename)
     # Get/Check format
-    if format is None:
+    if not format: # is None:
         format = checkImageFormat(imageFormatFromExt(ext))
     if not format:
         return

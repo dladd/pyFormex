@@ -189,20 +189,20 @@ def readSelection(select=True,draw=True):
     """
     types = [ 'Formex Files (*.formex)', 'All Files (*)' ]
     fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=True)
-    print fn
-    return fn
+    #print fn
+    #return fn
     if fn:
         chdir(fn[0])
         names = map(utils.projectName,fn)
-        #GD.gui.setBusy()
+        GD.gui.setBusy()
         F = map(read_Formex,fn)
-        #GD.gui.setBusy(False)
+        GD.gui.setBusy(False)
         export(dict(zip(names,F)))
         if select:
             print "Got selection %s" % str(names)
             setSelection(names)
-            #if draw:
-            #    drawSelection()
+            if draw:
+                drawSelection()
     return fn
 
 
