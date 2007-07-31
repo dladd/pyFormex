@@ -95,9 +95,16 @@ class Board(QtGui.QTextEdit):
 #####################################
 ################# GUI ###############
 #####################################
-            
+
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
+
+    toolbarArea = { 'top': QtCore.Qt.TopToolBarArea,
+                    'bottom': QtCore.Qt.BottomToolBarArea,
+                    'left': QtCore.Qt.LeftToolBarArea,
+                    'right': QtCore.Qt.RightToolBarArea,
+                    }
+
     def __init__(self,windowname,size=(800,600),pos=(0,0),bdsize=(0,0)):
         """Constructs the GUI.
 
@@ -117,8 +124,6 @@ class GUI(QtGui.QMainWindow):
         self.setMenuBar(self.menu)
         
         self.toolbar = self.addToolBar('Top ToolBar')
-        self.toolbar2 = self.addToolBar('Second ToolBar')
-        self.toolbar3 = self.addToolBar('Third ToolBar')
         self.editor = None
         # Create a box for the central widget
         self.box = QtGui.QWidget()
@@ -166,46 +171,68 @@ class GUI(QtGui.QMainWindow):
             self.toolbar.addSeparator()
             toolbar.addCameraButtons(self.toolbar)
         self.menu.show()
-        #add buttons to toolbar2
-        self.perspective = toolbar.addPerspectiveButton(self.toolbar2)
-        self.trans = toolbar.addTransButton(self.toolbar2)
 
         ##  RENDER MODE menu and toolbar ##
-##         if GD.cfg.get('gui/renderbuttons','True'):
-##             self.render = toolbar.addRenderButtons(self.toolbar)
         modes = [ 'wireframe', 'smooth', 'smoothwire', 'flat', 'flatwire' ]
         if GD.cfg['gui/modemenu']:
             mmenu = QtGui.QMenu('Render Mode')
         else:
             mmenu = None
-        if GD.cfg['gui/modebar']:
-            tbar = self.toolbar2
-##            tbar.addSeparator()
+        # we add a modebar depending on the config:
+        # modebar = None: forget it
+        # modebar = 'left', 'right', 'top' or 'bottom' : seperate toolbar
+        # modebar = 'default' (or anything else): in the default top toolbar
+        area = GD.cfg['gui/modebar']
+        if area:
+            area = self.toolbarArea.get(area,None)
+            if area:
+                self.modebar = QtGui.QToolBar('Render Mode ToolBar')
+                self.addToolBar(area,self.modebar)
+            else: # default
+                self.modebar = self.toolbar
+                self.toolbar.addSeparator()
         else:
-            tbar = None
+            self.modebar = None
+            
+        # OK, we know where the actions will go, so create them
+        # Add the perspective button
+        if self.modebar:
+            toolbar.addPerspectiveButton(self.modebar)
         self.modebtns = widgets.ActionList(
-            modes,draw.renderMode,menu=mmenu,toolbar=tbar)
+            modes,draw.renderMode,menu=mmenu,toolbar=self.modebar)
+        # Add the transparency button
+        if self.modebar:
+            toolbar.addTransparencyButton(self.modebar)
+         
         if mmenu:
             # insert the menu in the viewport menu
             pmenu = widgets.menuItem(self.menu,'viewport').menu()
             before = widgets.menuItem(pmenu,'background color')
             GD.debug("BEFORE = %s" % before)
             pmenu.insertMenu(before,mmenu)
+
         ##  VIEWS menu and toolbar
         self.viewsMenu = None
-        if GD.cfg.get('gui/viewsmenu',True):
+        if GD.cfg.get('gui/viewmenu',True):
             self.viewsMenu = QtGui.QMenu('&Views')
             self.menu.insertMenu(self.viewsMenu)
         views = GD.cfg['gui/builtinviews']
-        if GD.cfg['gui/viewsbar']:
-            tbar = self.toolbar3
-##            tbar.addSeparator()
+        area = GD.cfg['gui/viewbar']
+        if area:
+            area = self.toolbarArea.get(area,None)
+            if area:
+                self.viewbar = QtGui.QToolBar('Views ToolBar')
+                self.addToolBar(area,self.viewbar)
+            else: # default
+                self.viewbar = self.toolbar
+                self.toolbar.addSeparator()
         else:
-            tbar = None
+            self.viewbar = None
+
         self.viewbtns = widgets.ActionList(
             views,draw.view,
             menu=self.viewsMenu,
-            toolbar=tbar,
+            toolbar=self.viewbar,
             icons=['%sview' % t for t in views]
             )
         

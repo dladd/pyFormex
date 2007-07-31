@@ -19,7 +19,6 @@ import fileMenu, scriptsMenu
 import cameraMenu
 import draw
 import utils
-import gui
 
 
 ################### Script action toolbar ###########
@@ -58,7 +57,6 @@ def addActionButtons(toolbar):
 
 def addCameraButtons(toolbar):
     """Add the camera buttons to a toolbar."""
-    global toggle_perspective, toggle_transparency
     # The buttons have the following fields:
     #  0 : tooltip
     #  1 : icon
@@ -92,7 +90,9 @@ def addCameraButtons(toolbar):
             
         b.setToolTip(but[0])
 
-################# Script Transparency Button ###############
+# We should probably make a general framework for toggle buttons ?
+
+################# Transparency Button ###############
 
 toggle_transparency = None # the toggle transparency button
 
@@ -102,7 +102,7 @@ def toggleTransparency():
     draw.transparency(mode)
     toggle_transparency.setChecked(mode)
 
-def addTransButton(toolbar):
+def addTransparencyButton(toolbar):
     global toggle_transparency
     icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon('transparent')))    
     a = toolbar.addAction(icon,'Toggle Transparent Mode', toggleTransparency)
@@ -110,9 +110,8 @@ def addTransButton(toolbar):
     b.setCheckable(True)
     b.setChecked(False)
     toggle_transparency = b
-    return a
-    
-################# Script Perspective Button ###############
+
+################# Perspective Button ###############
 
 toggle_perspective = None # the toggle perspective button
 
@@ -121,6 +120,7 @@ def togglePerspective():
     mode = not GD.canvas.camera.perspective
     cameraMenu.setPerspective(mode)
     toggle_perspective.setChecked(mode)
+
 
 def addPerspectiveButton(toolbar):
     global toggle_perspective
@@ -135,8 +135,6 @@ def addPerspectiveButton(toolbar):
     #b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
     b.setChecked(True)
     #toggle()
-    toggle_perspective = b   
-    return a
-
+    toggle_perspective = b     
 
 # End

@@ -298,7 +298,7 @@ def drawChanges():
     """
     clear()
     drawSelection(wait=False)
-    draw(oldvalues,color='yellow',bbox=None)
+    draw(oldvalues,color='yellow',bbox=None,alpha=0.5)
 
 
 def undoChanges():
