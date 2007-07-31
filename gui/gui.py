@@ -98,7 +98,6 @@ class Board(QtGui.QTextEdit):
             
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
-
     def __init__(self,windowname,size=(800,600),pos=(0,0),bdsize=(0,0)):
         """Constructs the GUI.
 
@@ -119,6 +118,7 @@ class GUI(QtGui.QMainWindow):
         
         self.toolbar = self.addToolBar('Top ToolBar')
         self.toolbar2 = self.addToolBar('Second ToolBar')
+        self.toolbar3 = self.addToolBar('Third ToolBar')
         self.editor = None
         # Create a box for the central widget
         self.box = QtGui.QWidget()
@@ -166,6 +166,9 @@ class GUI(QtGui.QMainWindow):
             self.toolbar.addSeparator()
             toolbar.addCameraButtons(self.toolbar)
         self.menu.show()
+        #add buttons to toolbar2
+        self.perspective = toolbar.addPerspectiveButton(self.toolbar2)
+        self.trans = toolbar.addTransButton(self.toolbar2)
 
         ##  RENDER MODE menu and toolbar ##
 ##         if GD.cfg.get('gui/renderbuttons','True'):
@@ -177,7 +180,7 @@ class GUI(QtGui.QMainWindow):
             mmenu = None
         if GD.cfg['gui/modebar']:
             tbar = self.toolbar2
-            tbar.addSeparator()
+##            tbar.addSeparator()
         else:
             tbar = None
         self.modebtns = widgets.ActionList(
@@ -195,8 +198,8 @@ class GUI(QtGui.QMainWindow):
             self.menu.insertMenu(self.viewsMenu)
         views = GD.cfg['gui/builtinviews']
         if GD.cfg['gui/viewsbar']:
-            tbar = self.toolbar
-            tbar.addSeparator()
+            tbar = self.toolbar3
+##            tbar.addSeparator()
         else:
             tbar = None
         self.viewbtns = widgets.ActionList(

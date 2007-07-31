@@ -19,6 +19,7 @@ import fileMenu, scriptsMenu
 import cameraMenu
 import draw
 import utils
+import gui
 
 
 ################### Script action toolbar ###########
@@ -53,26 +54,7 @@ def addActionButtons(toolbar):
 ##     return action
     
 
-################# Transparency Button ###############
-
-toggle_transparency = None # the toggle transparency button
-
-def toggleTransparency():
-    global toggle_transparency
-    mode = not GD.canvas.alphablend
-    draw.transparency(mode)
-    toggle_transparency.setChecked(mode)
-
 ################# Camera action toolbar ###############
-
-toggle_perspective = None # the toggle perspective button
-
-def togglePerspective():
-    global toggle_perspective
-    mode = not GD.canvas.camera.perspective
-    cameraMenu.setPerspective(mode)
-    toggle_perspective.setChecked(mode)
-
 
 def addCameraButtons(toolbar):
     """Add the camera buttons to a toolbar."""
@@ -110,7 +92,38 @@ def addCameraButtons(toolbar):
             
         b.setToolTip(but[0])
 
-    # Add the toggle_perspective button
+################# Script Transparency Button ###############
+
+toggle_transparency = None # the toggle transparency button
+
+def toggleTransparency():
+    global toggle_transparency
+    mode = not GD.canvas.alphablend
+    draw.transparency(mode)
+    toggle_transparency.setChecked(mode)
+
+def addTransButton(toolbar):
+    global toggle_transparency
+    icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon('transparent')))    
+    a = toolbar.addAction(icon,'Toggle Transparent Mode', toggleTransparency)
+    b = toolbar.children()[-1]
+    b.setCheckable(True)
+    b.setChecked(False)
+    toggle_transparency = b
+    return a
+    
+################# Script Perspective Button ###############
+
+toggle_perspective = None # the toggle perspective button
+
+def togglePerspective():
+    global toggle_perspective
+    mode = not GD.canvas.camera.perspective
+    cameraMenu.setPerspective(mode)
+    toggle_perspective.setChecked(mode)
+
+def addPerspectiveButton(toolbar):
+    global toggle_perspective
     icon_on = QtGui.QPixmap(utils.findIcon('perspect'))
     icon_off = QtGui.QPixmap(utils.findIcon('project'))
     icon = QtGui.QIcon()
@@ -122,14 +135,8 @@ def addCameraButtons(toolbar):
     #b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
     b.setChecked(True)
     #toggle()
-    toggle_perspective = b     
+    toggle_perspective = b   
+    return a
 
-    # Add the transparency button
-    icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon('transparent')))    
-    a = toolbar.addAction(icon,'Toggle Transparent Mode', toggleTransparency)
-    b = toolbar.children()[-1]
-    b.setCheckable(True)
-    b.setChecked(False)
-    toggle_transparency = b
 
 # End
