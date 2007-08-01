@@ -16,7 +16,7 @@ static char *dummy[]={
 "b c #53531a",
 "l c #1a1aff",
 "g c #1bb61b",
-". c #d3d3d3",
+". c None",
 "o c #ff1bff",
 "f c #ffff1a",
 "................................",
