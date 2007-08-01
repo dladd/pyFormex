@@ -15,6 +15,11 @@ import globaldata as GD
 from numpy import *
 from OpenGL import GL,GLU
 
+import string
+keys = [ k for k in GL.__dict__.keys() if k.startswith('gl') ]
+keys = sort(keys)
+print keys
+
 from formex import length
 import colors
 import camera

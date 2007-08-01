@@ -242,7 +242,7 @@ def save_rect(x,y,w,h,filename,format):
 
 #### USER FUNCTIONS ################
 
-def saveImage(filename=None,multi=False,hotkey=True,autosave=False,format=None,verbose=False,window=False,border=False):
+def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,format=None,verbose=False,border=False):
     """Saves an image to file or Starts/stops multisave maode.
 
     With a filename and multi==False (default), the current rendering
