@@ -15,11 +15,6 @@ import globaldata as GD
 from numpy import *
 from OpenGL import GL,GLU
 
-import string
-keys = [ k for k in GL.__dict__.keys() if k.startswith('gl') ]
-keys = sort(keys)
-print keys
-
 from formex import length
 import colors
 import camera
@@ -243,9 +238,9 @@ class Canvas(object):
                 key = 'render/%s' % l
                 light = GD.cfg.get(key,self.default_light)
                 GD.debug("  set up %s %s" % (l,light))
-                GL.glLightModel(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
-                GL.glLightModel(GL.GL_LIGHT_MODEL_TWO_SIDE, GL.GL_TRUE)
-                GL.glLightModel(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+                GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
+                GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
+                GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
                 GL.glLightfv(i,GL.GL_AMBIENT,colors.GREY(light['ambient']))
                 GL.glLightfv(i,GL.GL_DIFFUSE,colors.GREY(light['diffuse']))
                 GL.glLightfv(i,GL.GL_SPECULAR,colors.GREY(light['specular']))
