@@ -29,7 +29,7 @@ from math import atan2,pi
 import canvas
 import image
 import utils
-
+import toolbar
 
 # mouse actions
 PRESS = 0
@@ -445,6 +445,9 @@ class MultiCanvas(QtGui.QGridLayout):
         #print self.current
         if canv in self.all:
             GD.canvas = self.current = canv
+            toolbar.setTransparencyButton(self.current.alphablend)
+            #toolbar.setPerspectiveButton(self.current.camera.perspective)
+
 
     def currentView(self):
         return self.all.index(GD.canvas)

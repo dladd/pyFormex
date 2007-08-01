@@ -111,6 +111,10 @@ def addTransparencyButton(toolbar):
     b.setChecked(False)
     toggle_transparency = b
 
+def setTransparencyButton(mode):
+    toggle_transparency.setChecked(mode)
+   
+
 ################# Perspective Button ###############
 
 toggle_perspective = None # the toggle perspective button
@@ -136,5 +140,8 @@ def addPerspectiveButton(toolbar):
     b.setChecked(True)
     #toggle()
     toggle_perspective = b     
+
+def setPerspectiveButton(mode):
+    toggle_perspective.setChecked(mode)
 
 # End

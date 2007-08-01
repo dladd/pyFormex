@@ -64,7 +64,6 @@ def saveImage(multi=False):
     pat = map(utils.fileDescription, ['img','icon','all'])  
     dia = widgets.SaveImageDialog(GD.cfg['workdir'],pat,multi=multi)
     fn,window,multi,hotkey,auto = dia.getResult()
-    print fn,window,multi,hotkey,auto
     if fn:
         GD.cfg['workdir'] = os.path.dirname(fn)
         image.saveImage(fn,window,multi,hotkey,auto)

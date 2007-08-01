@@ -234,17 +234,16 @@ class Canvas(object):
         elif self.rendermode.startswith('smooth'):
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
             GL.glEnable(GL.GL_LIGHTING)
+            GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
+            GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
+            GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
-                key = 'render/%s' % l
-                light = GD.cfg.get(key,self.default_light)
+                light = GD.cfg.get('render/%s' % l,self.default_light)
                 GD.debug("  set up %s %s" % (l,light))
-                GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
-                GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
-                GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
                 GL.glLightfv(i,GL.GL_AMBIENT,colors.GREY(light['ambient']))
                 GL.glLightfv(i,GL.GL_DIFFUSE,colors.GREY(light['diffuse']))
                 GL.glLightfv(i,GL.GL_SPECULAR,colors.GREY(light['specular']))
-                GL.glLightfv(i,GL.GL_POSITION,colors.GREY(light['position']))
+                GL.glLightfv(i,GL.GL_POSITION,light['position'])
                 GL.glEnable(i)
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
@@ -294,7 +293,6 @@ class Canvas(object):
         self.camera.loadProjection()
         self.camera.loadMatrix()
         if self.alphablend:
-            print "ENABLE TRANS"
             opaque = [ a for a in self.actors if not a.trans ]
             transp = [ a for a in self.actors if a.trans ]
             for actor in opaque:
