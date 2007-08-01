@@ -54,6 +54,37 @@ def askConfigPreferences(items,prefix=None,store=None):
     return accept
 
 
+def setToolbarPlacement(store=None):
+    """Ask placement of toolbars.
+
+    Items in list should be existing toolbar widgets.
+    """
+    if store is None:
+        store = GD.cfg
+    toolbar = [ GD.gui.modebar, GD.gui.viewbar ]
+    setting = ['gui/modebar', 'gui/viewbar' ]
+    options = [ None, 'default', 'left', 'right', 'top', 'bottom' ]
+    label = [ str(tb.windowTitle()) for tb in toolbar ]
+    current = [ store[s] for s in setting ]
+    print current
+    itemlist = [(l, options, 'select',) for (l,c) in zip(label,setting)]
+    itemlist.append(('Store these settings as defaults', False))
+    res,accept = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
+    if accept:
+        GD.debug(res)
+        if res['Store these settings as defaults']:
+            # The following  does not work for our Config class!
+            #    store.update(res)
+            # Therefore, we set the items individually
+            for s,l in zip(setting,label):
+                val = res[l]
+                if val == "None":
+                    val = None
+                store[s] = val
+        GD.debug(store)
+    return accept
+
+
 def setHelp():
     askConfigPreferences(['viewer','help/manual','help/pydocs'])
 
@@ -144,6 +175,7 @@ MenuData = [
     (_('&Settings'),[
         (_('&Appearance'),setAppearance), 
         (_('&Font'),setFont), 
+        (_('&Toolbar Placement'),setToolbarPlacement), 
         (_('&Drawwait Timeout'),setDrawtimeout), 
 #        (_('&Background Color'),setBGcolor), 
 #        (_('Line&Width'),setLinewidth), 

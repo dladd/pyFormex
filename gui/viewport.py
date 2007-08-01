@@ -437,7 +437,8 @@ class MultiCanvas(QtGui.QGridLayout):
         #canv.initCamera() # THis is already done in the __init__()
         self.all.append(canv)
         self.active.append(canv)
-        self.set_current(canv)
+        # DO NOT USE self.set_current(canv) HERE, because no camera yet
+        GD.canvas = self.current = canv
         return(canv)
 
     def set_current(self,canv):
@@ -445,9 +446,9 @@ class MultiCanvas(QtGui.QGridLayout):
         #print self.current
         if canv in self.all:
             GD.canvas = self.current = canv
-            toolbar.setTransparencyButton(self.current.alphablend)
-            #toolbar.setPerspectiveButton(self.current.camera.perspective)
-
+            toolbar.setTransparency(self.current.alphablend)
+            toolbar.setPerspective(self.current.camera.perspective)
+            
 
     def currentView(self):
         return self.all.index(GD.canvas)

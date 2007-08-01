@@ -186,7 +186,7 @@ class GUI(QtGui.QMainWindow):
         if area:
             area = self.toolbarArea.get(area,None)
             if area:
-                self.modebar = QtGui.QToolBar('Render Mode ToolBar')
+                self.modebar = QtGui.QToolBar('Render Mode ToolBar',self)
                 self.addToolBar(area,self.modebar)
             else: # default
                 self.modebar = self.toolbar
@@ -221,7 +221,7 @@ class GUI(QtGui.QMainWindow):
         if area:
             area = self.toolbarArea.get(area,None)
             if area:
-                self.viewbar = QtGui.QToolBar('Views ToolBar')
+                self.viewbar = QtGui.QToolBar('Views ToolBar',self)
                 self.addToolBar(area,self.viewbar)
             else: # default
                 self.viewbar = self.toolbar

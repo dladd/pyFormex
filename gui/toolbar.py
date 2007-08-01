@@ -53,6 +53,44 @@ def addActionButtons(toolbar):
 ##     return action
     
 
+def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,icon0=None):
+    """Add a button to a toolbar.
+
+    toolbar is where the button will be added, 
+    text appears as tooltip,
+    icon is the name of the icon to be displayed on the button,
+    func is called when button is pressed,
+
+    repeat == True: func will repeatedly be called if button is held down.
+    toggle == True: button is a toggle (stays in pressed state).
+    If the button is a toggle, checked is the initial state and icon1 may
+    specify an icon that will be displayed when button is not checked.
+    """
+    iconset = QtGui.QIcon()
+    icon_on = QtGui.QPixmap(utils.findIcon(icon))
+    iconset.addPixmap(icon_on,QtGui.QIcon.Normal,QtGui.QIcon.On)
+    if toggle and icon0:
+        icon_off = QtGui.QPixmap(utils.findIcon(icon0))
+        iconset.addPixmap(icon_off,QtGui.QIcon.Normal,QtGui.QIcon.Off)
+                                 
+    a = toolbar.addAction(iconset,text,func)
+    b =  toolbar.children()[-1] # Get the QToolButton for the last action
+
+    if repeat:
+        b.setAutoRepeat(True)
+        QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("trigger()"))
+
+    if toggle:
+        b.setCheckable(True)
+        b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
+        b.setChecked(checked)
+
+    b.setToolTip(text)
+
+    return b
+    
+
+
 ################# Camera action toolbar ###############
 
 def addCameraButtons(toolbar):
@@ -94,54 +132,54 @@ def addCameraButtons(toolbar):
 
 ################# Transparency Button ###############
 
-toggle_transparency = None # the toggle transparency button
+transparency_button = None # the toggle transparency button
 
-def toggleTransparency():
-    global toggle_transparency
+def toggleTransparency(): # Called by the button
     mode = not GD.canvas.alphablend
-    draw.transparency(mode)
-    toggle_transparency.setChecked(mode)
+    GD.canvas.setTransparency(mode)
+    GD.canvas.update()
+    GD.app.processEvents()
 
 def addTransparencyButton(toolbar):
-    global toggle_transparency
-    icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon('transparent')))    
-    a = toolbar.addAction(icon,'Toggle Transparent Mode', toggleTransparency)
-    b = toolbar.children()[-1]
-    b.setCheckable(True)
-    b.setChecked(False)
-    toggle_transparency = b
+    global transparency_button
+    transparency_button = addButton(toolbar,'Toggle Transparent Mode',
+                                    'transparent',toggleTransparency,
+                                    toggle=True)    
 
-def setTransparencyButton(mode):
-    toggle_transparency.setChecked(mode)
-   
+def setTransparency(mode):
+    GD.canvas.setTransparency(mode)
+    GD.canvas.update()
+    if transparency_button:
+        transparency_button.setChecked(mode)
+    GD.app.processEvents()
+  
 
 ################# Perspective Button ###############
 
-toggle_perspective = None # the toggle perspective button
+perspective_button = None # the toggle perspective button
 
-def togglePerspective():
-    global toggle_perspective
+def togglePerspective(): # Called by the button
     mode = not GD.canvas.camera.perspective
-    cameraMenu.setPerspective(mode)
-    toggle_perspective.setChecked(mode)
-
+    #setPerspective(mode)
+    GD.canvas.camera.setPerspective(mode)
+    GD.canvas.display()
+    GD.canvas.update()
+    GD.app.processEvents()
 
 def addPerspectiveButton(toolbar):
-    global toggle_perspective
-    icon_on = QtGui.QPixmap(utils.findIcon('perspect'))
-    icon_off = QtGui.QPixmap(utils.findIcon('project'))
-    icon = QtGui.QIcon()
-    icon.addPixmap(icon_on,QtGui.QIcon.Normal,QtGui.QIcon.On)
-    icon.addPixmap(icon_off,QtGui.QIcon.Normal,QtGui.QIcon.Off)
-    a = toolbar.addAction(icon,'Toggle Perspective/Projective Mode', togglePerspective)
-    b = toolbar.children()[-1]
-    b.setCheckable(True)
-    #b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
-    b.setChecked(True)
-    #toggle()
-    toggle_perspective = b     
+    global perspective_button
+    perspective_button = addButton(toolbar,'Toggle Perspective/Projective Mode',
+                                    'perspect',togglePerspective,
+                                    toggle=True,icon0='project',checked=True)    
+def setPerspective(mode=True):
+    GD.canvas.camera.setPerspective(mode)
+    GD.canvas.display()
+    GD.canvas.update()
+    if perspective_button:
+        perspective_button.setChecked(mode)
+    GD.app.processEvents()
 
-def setPerspectiveButton(mode):
-    toggle_perspective.setChecked(mode)
+def setProjection():
+    setPerspective(False)
 
 # End

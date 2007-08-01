@@ -18,6 +18,7 @@ import fileMenu
 import cameraMenu
 import prefMenu
 import viewportMenu
+import toolbar
 import help
 import image
 import draw
@@ -120,8 +121,8 @@ CameraMenuData = [
     (_('&Camera'),[
         (_('&LocalAxes'),draw.setLocalAxes),
         (_('&GlobalAxes'),draw.setGlobalAxes),
-        (_('&Projection'),cameraMenu.setProjection),
-        (_('&Perspective'),cameraMenu.setPerspective),
+        (_('&Projection'),toolbar.setProjection),
+        (_('&Perspective'),toolbar.setPerspective),
         (_('&Zoom All'),draw.zoomAll), 
         (_('&Zoom In'),cameraMenu.zoomIn), 
         (_('&Zoom Out'),cameraMenu.zoomOut), 

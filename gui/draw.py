@@ -18,6 +18,7 @@ from PyQt4 import QtCore, QtGui  # needed for events, signals
 import numpy
 import utils
 import widgets
+import toolbar
 import colors
 import actors
 import decors
@@ -28,7 +29,7 @@ from script import *
 
 # import some functions for scripts:
 
-from cameraMenu import setPerspective,setProjection
+from toolbar import setPerspective as perspective, setTransparency as transparency
 
 # import a few functions for user scripts
 from image import saveImage,saveNext
@@ -409,6 +410,7 @@ def named(name):
         dict = GD.PF
     return dict[name]
 
+
 def play(fn=None,step=False):
     """Play a formex script from file fn or from the current file.
 
@@ -421,9 +423,10 @@ def play(fn=None,step=False):
             fn = GD.cfg['curfile']
         else:
             return
-    message("Running script (%s)" % fn)
+    stepmode = step
     reset()
     GD.debug("Current Drawing Options: %s" % DrawOptions)
+    message("Running script (%s)" % fn)
     stepmode = step
     playScript(file(fn,'r'),fn)
     message("Script finished")
@@ -431,11 +434,6 @@ def play(fn=None,step=False):
 
 ############################## drawing functions ########################
 
-
-def transparency(mode):
-    GD.canvas.setTransparency(mode)
-    GD.canvas.update()
-    GD.app.processEvents()
 
 def renderMode(mode):
     GD.canvas.setRenderMode(mode)
@@ -542,7 +540,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=1.0):
+def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.

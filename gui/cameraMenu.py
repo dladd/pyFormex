@@ -72,9 +72,3 @@ def dollyIn():
 def dollyOut():
     GD.canvas.camera.dolly(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()   
-def setPerspective(mode=True):
-    GD.canvas.camera.setPerspective(mode)
-    GD.canvas.display()
-    GD.canvas.update()
-def setProjection():
-    setPerspective(False)
