@@ -421,7 +421,6 @@ class Actor(object):
 
     def display(self):
         if self.trans:
-            print "ENABLE TRANS"
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
@@ -541,7 +540,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,markscale=None,marksize=None,eltype=None,alpha=1.0):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each

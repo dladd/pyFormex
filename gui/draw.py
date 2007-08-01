@@ -585,6 +585,7 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=Non
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
+
     global allowwait
 
     if type(F) == list:
@@ -622,7 +623,8 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=Non
         marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,markscale=marksize,alpha=alpha)
+    actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha)
+ 
     GD.canvas.addActor(actor)
     if view:
         if view == '__last__':
