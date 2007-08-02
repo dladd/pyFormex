@@ -540,7 +540,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5):
+def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -587,26 +587,38 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=Non
     global allowwait
 
     if type(F) == list:
-        return [ draw(Fi,view,bbox,color,colormap,wait,eltype,allviews,marksize,linewidth,alpha) for Fi in F ]
+        actor = []
+        nowait = False
+        for Fi in F:
+            if Fi == F[-1]:
+                nowait = wait
+            actor.append(draw(Fi,view,bbox,color,colormap,nowait,clear,eltype,allviews,marksize,linewidth,alpha))
+            if Fi == F[0]:
+                clear = False
+                view = None
+        return actor
 
     if type(F) == str:
         F = named(F)
         if F is None:
             return None
 
-    if DrawOptions.get('clear',False):
-        clear()
+    if not isinstance(F,formex.Formex):
+        raise RuntimeError,"draw() can only draw Formex instances"
+
+    if allowwait:
+        drawwait()
+
+    if clear is None:
+        clear = DrawOptions.get('clear',False)
+    if clear:
+        clear_canvas()
 
     if view is None:
         view = DrawOptions['view']
         #print "VIEW=%s" % view
     elif view != '__last__':
         setView(view)
-
-    if not isinstance(F,formex.Formex):
-        raise RuntimeError,"draw() can only draw Formex instances"
-    if allowwait:
-        drawwait()
         
     # Create the colors
     if color == 'prop':
@@ -634,7 +646,8 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,eltype=Non
         #setView(view)
     GD.canvas.update()
     GD.app.processEvents()
-    image.saveNext()
+    if image.autoSaveOn():
+        image.saveNext()
     if allowwait and wait:
 ##        if stepmode:
 ##            drawblock()
@@ -768,15 +781,21 @@ def linewidth(wid):
     GD.canvas.setLineWidth(wid)
 
 
+def clear_canvas():
+    """Clear the canvas.
+
+    This is a low level function not intended for the user.
+    """
+    GD.canvas.removeAll()
+    GD.canvas.clear()
+
+
 def clear():
     """Clear the canvas"""
     global allowwait
     if allowwait:
         drawwait()
-    #print "CLEAR: %s" % GD.canvas
-    #setTriade(False)
-    GD.canvas.removeAll()
-    GD.canvas.clear()
+    clear_canvas()
     GD.canvas.update()
 
 

@@ -14,6 +14,7 @@
 import globaldata as GD
 
 from OpenGL import GL
+from PyQt4 import QtCore
 import utils
 import os
 
@@ -245,8 +246,8 @@ def save_rect(x,y,w,h,filename,format):
 def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,format=None,verbose=False):
     """Saves an image to file or Starts/stops multisave maode.
 
-    With a filename and multi==False (default), the current rendering
-    viewport is saved to the named file.
+    With a filename and multi==False (default), the current viewport rendering
+    is saved to the named file.
 
     With a filename and multi==True, multisave mode is started.
     Without a filename, multisave mode is turned off.
@@ -262,6 +263,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     number. Otherwise a numeric part '-000' will be added to the filename.
     
     If window is True, the full pyFormex window is saved.
+    If window and border are True, the window decorations will be included.
     If window is False, only the current canvas viewport is saved.
 
     If hotkey is True, a new image will be saved by hitting the 'S' key.
@@ -323,13 +325,21 @@ def saveNext():
 
     This is a quiet function that does nothing if multisave was not activated.
     It can thus safely be called on regular places in scripts where one would
-    like to have a saved image if the multisave mode was activated before.
+    like to have a saved image and then either activate the multisave mode
+    or not.
     """
-    if multisave and multisave[4]:
+    if multisave:
         names,format,window,border,hotkey,autosave = multisave
         name = names.next()
         saveImage(name,window,False,hotkey,autosave,border,format,False)
 
+
+def autoSaveOn():
+    """Returns True if autosave multisave mode is currently on.
+
+    Use this function instead of directly accessing the autosave variable.
+    """
+    return multisave and multisave[-1]
 
 
 def createMovie():
