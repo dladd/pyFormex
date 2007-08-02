@@ -242,7 +242,7 @@ def save_rect(x,y,w,h,filename,format):
 
 #### USER FUNCTIONS ################
 
-def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,format=None,verbose=False,border=False):
+def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,format=None,verbose=False):
     """Saves an image to file or Starts/stops multisave maode.
 
     With a filename and multi==False (default), the current rendering
@@ -303,7 +303,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
              QtCore.QObject.connect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
                  warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-        multisave = (names,format,window,hotkey,autosave)
+        multisave = (names,format,window,border,hotkey,autosave)
         return multisave is None
 
     else: # Save the image
@@ -326,9 +326,9 @@ def saveNext():
     like to have a saved image if the multisave mode was activated before.
     """
     if multisave and multisave[4]:
-        names,format,window,hotkey,autosave = multisave
+        names,format,window,border,hotkey,autosave = multisave
         name = names.next()
-        saveImage(name,window,False,hotkey,autosave,format,False)
+        saveImage(name,window,False,hotkey,autosave,border,format,False)
 
 
 
@@ -338,7 +338,7 @@ def createMovie():
         warning('You need to start multisave mode first!')
         return
 
-    names,format,window,hotkey,autosave = multisave
+    names,format,window,border,hotkey,autosave = multisave
     glob = names.glob()
     if glob.split('.')[-1] != 'y4m':
         warning("Currently you need to save in 'y4m' format to create movies")

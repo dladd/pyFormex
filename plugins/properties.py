@@ -85,6 +85,9 @@ class SectionDB(Database):
 materials = None
 sections = None
 
+materials = MaterialDB()
+sections = SectionDB()
+
 #properties = Dict({})
 nodeproperties = Dict({})
 elemproperties = Dict({})
