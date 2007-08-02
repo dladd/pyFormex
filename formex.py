@@ -885,7 +885,7 @@ class Formex:
 
 
     # Data conversion
-    def feModel(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=1.e-5):
+    def feModel(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -901,7 +901,12 @@ class Formex:
         There is a (very small) probability that two very close nodes are
         not equivalenced  by this procedure. Use it multiple times with
         different parameters to check.
+        You can also set the rtol /atol parameters to influence the
+        equivalence checking of two points.
+        The default settting for atol is rtol * self.size()
         """
+        if atol is None:
+            atol = rtol * self.size()
         f = reshape(self.f,(self.nnodes(),3))
         f,s = equivalence(f,nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:
