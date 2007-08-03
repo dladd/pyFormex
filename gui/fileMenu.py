@@ -49,8 +49,6 @@ def edit():
     else:
         draw.warning('No known editor was found or configured')
 
-
-play = draw.play
     
 def saveImage(multi=False):
     """Save an image to file.

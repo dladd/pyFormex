@@ -27,29 +27,16 @@ import image
 import formex
 from script import *
 
-# import some functions for scripts:
+## # import some functions for scripts:
 
 from toolbar import setPerspective as perspective, setTransparency as transparency
 
-# import a few functions for user scripts
-from image import saveImage,saveNext
+## # import a few functions for user scripts
+## from image import saveImage,saveNext
 
 #################### Interacting with the user ###############################
 
 
-## def gui_update():
-##     GD.gui.update()
-
-
-##def textView(text,actions=['OK']):
-##    """Display a text file and wait for user response."""
-##    w = QtGui.QMessageBox()
-##    w.setText(text)
-##    w.setIcon(QtGui.QMessageBox.Question)
-##    w.show()
-##    w.resize(100,40)
-##    w.update()
-##    return w.exec_()
 
 def textView(text):
     """Display a text file and wait for user response."""

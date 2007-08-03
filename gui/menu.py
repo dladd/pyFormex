@@ -72,7 +72,7 @@ MenuData = [
     (_('&File'),[
         (_('&New'),fileMenu.newFile),
         (_('&Open'),fileMenu.openFile),
-        (_('&Play'),fileMenu.play),
+        (_('&Play'),draw.play),
         (_('&Edit'),fileMenu.edit),
 #        (_('&Save'),'save'),
 #        (_('Save &As'),'saveAs'),

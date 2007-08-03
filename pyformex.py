@@ -9,7 +9,7 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""pyFormex is a 3D geometry design and manipulation program.
+"""pyFormex is a program for the design and manipulation of 3D geometry.
 
 """
 
@@ -35,6 +35,34 @@ def printcfg(key):
     except KeyError:
         pass
     print "!! cfg[%s] = %s" % (key,GD.cfg[key])
+
+
+def gen_pydoc():
+    try:
+        from pydoc2 import PackageDocumentationGenerator
+    except ImportError:
+        print "I can not generate the documentation, because you do no have pydoc2."
+        return
+    excludes = [ 'OpenGL.GL',
+                 'OpenGL.GLU',
+                 'OpenGL.GLUT',
+                 'OpenGL.GLE',
+                 'OpenGL.GLX',
+                 'numpy',
+                 'PyQt4.QtCore',
+                 'PyQt4.QtGui',
+                 'plugins.properties',
+                 ]
+    modules = [ 'pyformex', 'config', 'simple', 'utils',
+                'gui',
+                'plugins',
+                ]
+    PackageDocumentationGenerator(
+        baseModules = modules,
+        destinationDirectory = 'doc/html',
+        exclusions = excludes,
+        ).process ()
+    
     
 
 def main(argv=None):
@@ -97,12 +125,18 @@ def main(argv=None):
                     action="store_true", dest="redirect", default=False),
        make_option("--debug", help="display debugging info to sys.stdout",
                     action="store_true", dest="debug", default=False),
+       make_option("--pydoc", help="Generate html documentation from the Python podules",
+                    action="store_true", dest="pydoc", default=False),
         ])
     GD.options, args = parser.parse_args()
     GD.print_help = parser.print_help
 
     GD.debug("Options: %s" % GD.options)
 
+    if GD.options.pydoc:
+        gen_pydoc()
+        return 0
+        
     # Read the config files
     defaults = os.path.join(pyformexdir,"pyformexrc")
     if os.name == 'posix':

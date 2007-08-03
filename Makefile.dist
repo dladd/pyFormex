@@ -49,25 +49,14 @@ distclean:
 	rm -rf ${PYFORMEXDIR}
 	alldirs . "rm -f *~"
 
+
 pydoc: ${HTMLDIR}/index.html
 
-${HTMLDIR}/index.html: ${HTMLDOCS} ${HTMLGUIDOCS} ${HTMLPLUGINDOCS} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
+${HTMLDIR}/index.html: ${PYSOURCE} ${PYGUISOURCE} ${PLUGINSOURCE} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
+	rm -f ${HTMLDIR}/*
+	pydoc_gen.py $ -d ${HTMLDIR} ${PYMODULES} gui plugins
 	./make_doc_index	
 
-${HTMLDIR}/%.html: %.py
-	pydoc -w ./$< && mv $*.html ${HTMLDIR}
-
-${HTMLDIR}/gui.html: gui
-	pydoc -w gui && mv gui.html ${HTMLDIR}
-
-${HTMLDIR}/gui.%.html: gui/%.py
-	pydoc -w gui.$* && mv gui.$*.html ${HTMLDIR}
-
-${HTMLDIR}/plugins.html: gui
-	pydoc -w plugins && mv plugins.html ${HTMLDIR}
-
-${HTMLDIR}/plugins.%.html: plugins/%.py
-	pydoc -w plugins.$* && mv plugins.$*.html ${HTMLDIR}
 
 manual:
 	make -C manual

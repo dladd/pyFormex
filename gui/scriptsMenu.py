@@ -13,8 +13,10 @@
 
 import os
 import globaldata as GD
-import menu, utils, fileMenu
+
 from PyQt4 import QtCore, QtGui
+
+import utils
 import draw
     
 
@@ -91,7 +93,7 @@ class ScriptsMenu(QtGui.QMenu):
         GD.debug("Playing script %s" % selected)
         GD.gui.setcurfile(selected)
         if self.autoplay:
-            fileMenu.play()
+            draw.play()
         
 
     def runAll(self):

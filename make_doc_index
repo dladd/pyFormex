@@ -1,6 +1,7 @@
 #!/bin/bash
 # Create the index.html for the python docs
 #
+
 cd doc/html
 {
   cat ../htmlindex.header

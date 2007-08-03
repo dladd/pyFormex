@@ -15,7 +15,8 @@ import globaldata as GD
 import os
 from PyQt4 import QtCore, QtGui
 
-import fileMenu, scriptsMenu
+import fileMenu
+import scriptsMenu
 import cameraMenu
 import draw
 import utils
@@ -25,7 +26,7 @@ import utils
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""
     action = {}
-    buttons = [ [ "Play", "next", fileMenu.play, False ],
+    buttons = [ [ "Play", "next", draw.play, False ],
                 [ "Step", "nextstop", draw.step, False ],
                 [ "Continue", "ff", draw.fforward, False ],
                 [ "Stop", "stop", draw.stopatbreakpt, False ],
@@ -37,21 +38,7 @@ def addActionButtons(toolbar):
         action[b[0]] = a
     return action
 
-################### Script action toolbar ###########
-## def addRenderButtons(toolbar):
-##     """Add the rendermode buttons to the toolbar."""
-##     action = {}
-##     buttons = [ [ "Wireframe", "wireframe", draw.wireframe, True ],
-##                 [ "Smooth", "smooth", draw.smooth, True ],
-##                 [ "Flat", "flat", draw.flat, True ],
-##               ]
-##     for b in buttons:
-##         icon = QtGui.QIcon(QtGui.QPixmap(utils.findIcon(b[1])))
-##         a = toolbar.addAction(icon,b[0],b[2])
-##         a.setEnabled(b[3])
-##         action[b[0]] = a
-##     return action
-    
+################### General Button Functions ###########
 
 def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,icon0=None):
     """Add a button to a toolbar.
@@ -181,5 +168,6 @@ def setPerspective(mode=True):
 
 def setProjection():
     setPerspective(False)
+
 
 # End

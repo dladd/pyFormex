@@ -54,7 +54,7 @@ class MaterialDB(Database):
         If data is a string, it specifies a filename where the
         database can be read.
         """
-        Dict.__init__(self,{})
+        Database.__init__(self,data)
         if type(data) == str:
             self.readDatabase(data,['name'],beginrec='material',endrec='endmaterial')
         elif type(data) == dict:
@@ -73,7 +73,7 @@ class SectionDB(Database):
         If data is a string, it specifies a filename where the
         database can be read.
         """
-        Dict.__init__(self,{})
+        Database.__init__(self,{})
         if type(data) == str:
             self.readDatabase(data,['name'],beginrec='section',endrec='endsection')
         elif type(data) == dict:
@@ -84,13 +84,22 @@ class SectionDB(Database):
     
 materials = None
 sections = None
+properties = None
+nodeproperties = None
+elemproperties = None
 
-materials = MaterialDB()
-sections = SectionDB()
+def __init__():
+    if materials is None:
+        materials = MaterialDB({})
+    if sections is None:
+        sections = SectionDB()
+    if properties is None:
+        properties = CascadingDict()
+    if nodeproperties is None:
+        properties = CascadingDict()
+    if elemproperties is None:
+        properties = CascadingDict()
 
-#properties = Dict({})
-nodeproperties = Dict({})
-elemproperties = Dict({})
 
 
 def setMaterialDB(aDict):
