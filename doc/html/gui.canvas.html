@@ -44,13 +44,13 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="__builtin__.html#list">__builtin__.list</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+<dt><font face="helvetica, arial"><a href="__builtin__.html#list">list</a>(<a href="__builtin__.html#object">object</a>)
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.canvas.html#ActorList">ActorList</a>
 </font></dt></dl>
 </dd>
-<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">object</a>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.canvas.html#Canvas">Canvas</a>
@@ -62,13 +62,13 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="ActorList">class <strong>ActorList</strong></a>(<a href="__builtin__.html#list">__builtin__.list</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="ActorList">class <strong>ActorList</strong></a>(<a href="__builtin__.html#list">list</a>)</font></td></tr>
     
 <tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.canvas.html#ActorList">ActorList</a></dd>
-<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+<dd><a href="__builtin__.html#list">list</a></dd>
+<dd><a href="__builtin__.html#object">object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
@@ -92,7 +92,7 @@ Data and other attributes defined here:<br>
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'ActorList' objects&gt;<dd><tt><a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <hr>
-Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+Methods inherited from <a href="__builtin__.html#list">list</a>:<br>
 <dl><dt><a name="ActorList-__add__"><strong>__add__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
 
 <dl><dt><a name="ActorList-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#ActorList-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
@@ -167,14 +167,14 @@ Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</t
 cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
 
 <hr>
-Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+Data and other attributes inherited from <a href="__builtin__.html#list">list</a>:<br>
 <dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object&gt;<dd><tt>T.<a href="#ActorList-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Canvas">class <strong>Canvas</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Canvas">class <strong>Canvas</strong></a>(<a href="__builtin__.html#object">object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>A&nbsp;canvas&nbsp;for&nbsp;OpenGL&nbsp;rendering.<br>&nbsp;</tt></td></tr>
@@ -258,6 +258,8 @@ This&nbsp;changes&nbsp;the&nbsp;rendermode&nbsp;and&nbsp;redraws&nbsp;everything
 
 <dl><dt><a name="Canvas-setSize"><strong>setSize</strong></a>(self, w, h)</dt></dl>
 
+<dl><dt><a name="Canvas-setTransparency"><strong>setTransparency</strong></a>(self, mode)</dt></dl>
+
 <dl><dt><a name="Canvas-zoom"><strong>zoom</strong></a>(self, f)</dt><dd><tt>Dolly&nbsp;zooming.</tt></dd></dl>
 
 <hr>
@@ -274,7 +276,7 @@ Data and other attributes defined here:<br>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="CanvasSettings">class <strong>CanvasSettings</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="CanvasSettings">class <strong>CanvasSettings</strong></a>(<a href="__builtin__.html#object">object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>A&nbsp;collection&nbsp;of&nbsp;settings&nbsp;for&nbsp;an&nbsp;OpenGL&nbsp;<a href="#Canvas">Canvas</a>.<br>&nbsp;</tt></td></tr>
@@ -290,7 +292,7 @@ If&nbsp;a&nbsp;dict&nbsp;is&nbsp;specified,&nbsp;these&nbsp;settings&nbsp;will&n
 
 <hr>
 Class methods defined here:<br>
-<dl><dt><a name="CanvasSettings-checkDict"><strong>checkDict</strong></a>(clas, dict)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Transform&nbsp;a&nbsp;dict&nbsp;to&nbsp;acceptable&nbsp;settings.</tt></dd></dl>
+<dl><dt><a name="CanvasSettings-checkDict"><strong>checkDict</strong></a>(clas, dict)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Transform&nbsp;a&nbsp;dict&nbsp;to&nbsp;acceptable&nbsp;settings.</tt></dd></dl>
 
 <hr>
 Data and other attributes defined here:<br>
@@ -546,11 +548,13 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.float32'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex64'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
 <strong>WRAP</strong> = 1<br>
+<strong>__file__</strong> = '/home/bene/prj/pyformex/gui/canvas.pyc'<br>
+<strong>__name__</strong> = 'gui.canvas'<br>
 <strong>__version__</strong> = '1.0.1'<br>
 <strong>absolute</strong> = &lt;ufunc 'absolute'&gt;<br>
 <strong>add</strong> = &lt;ufunc 'add'&gt;<br>
@@ -566,7 +570,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...float64'&gt;: &lt;function &lt;lambda&gt; at 0x2ad606651d70&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...mplex64'&gt;: &lt;function &lt;lambda&gt; at 0x2acdaea821b8&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -611,7 +615,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.int64'&gt;: 8, &lt;type 'numpy.float64'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.float32'&gt;: 4, &lt;type 'numpy.uint8'&gt;: 1}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

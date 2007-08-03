@@ -40,7 +40,7 @@
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="__builtin__.html#object">__builtin__.object</a>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#object">object</a>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.actors.html#Actor">Actor</a>
@@ -48,7 +48,7 @@
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.actors.html#BboxActor">BboxActor</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gui.actors.html#CubeActor">CubeActor</a>
-</font></dt><dt><font face="helvetica, arial"><a href="gui.actors.html#FormexActor">FormexActor</a>(<a href="gui.actors.html#Actor">Actor</a>, <a href="formex.html#Formex">formex.Formex</a>)
+</font></dt><dt><font face="helvetica, arial"><a href="gui.actors.html#FormexActor">FormexActor</a>(<a href="gui.actors.html#Actor">Actor</a>, <a href="formex.html#Formex">Formex</a>)
 </font></dt><dt><font face="helvetica, arial"><a href="gui.actors.html#SurfaceActor">SurfaceActor</a>
 </font></dt><dt><font face="helvetica, arial"><a href="gui.actors.html#TriadeActor">TriadeActor</a>
 </font></dt></dl>
@@ -60,7 +60,7 @@
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Actor">class <strong>Actor</strong></a>(<a href="__builtin__.html#object">__builtin__.object</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Actor">class <strong>Actor</strong></a>(<a href="__builtin__.html#object">object</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>An&nbsp;<a href="#Actor">Actor</a>&nbsp;is&nbsp;anything&nbsp;that&nbsp;can&nbsp;be&nbsp;drawn&nbsp;in&nbsp;an&nbsp;OpenGL&nbsp;3D&nbsp;Scene.<br>
@@ -79,6 +79,8 @@ An&nbsp;<a href="#Actor">Actor</a>&nbsp;subclass&nbsp;should&nbsp;minimally&nbsp
 <dl><dt><a name="Actor-__init__"><strong>__init__</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Actor-bbox"><strong>bbox</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Actor-display"><strong>display</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="Actor-draw"><strong>draw</strong></a>(self)</dt></dl>
 
@@ -106,7 +108,7 @@ Data and other attributes defined here:<br>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.actors.html#BboxActor">BboxActor</a></dd>
 <dd><a href="gui.actors.html#Actor">Actor</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+<dd><a href="__builtin__.html#object">object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
@@ -118,6 +120,8 @@ Methods defined here:<br>
 
 <hr>
 Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="BboxActor-display"><strong>display</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="BboxActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="BboxActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
@@ -142,7 +146,7 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.actors.html#CubeActor">CubeActor</a></dd>
 <dd><a href="gui.actors.html#Actor">Actor</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+<dd><a href="__builtin__.html#object">object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
@@ -154,6 +158,8 @@ Methods defined here:<br>
 
 <hr>
 Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="CubeActor-display"><strong>display</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="CubeActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="CubeActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
@@ -170,7 +176,7 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="FormexActor">class <strong>FormexActor</strong></a>(<a href="gui.actors.html#Actor">Actor</a>, <a href="formex.html#Formex">formex.Formex</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="FormexActor">class <strong>FormexActor</strong></a>(<a href="gui.actors.html#Actor">Actor</a>, <a href="formex.html#Formex">Formex</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>An&nbsp;OpenGL&nbsp;actor&nbsp;which&nbsp;is&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>.<br>&nbsp;</tt></td></tr>
@@ -178,12 +184,12 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.actors.html#FormexActor">FormexActor</a></dd>
 <dd><a href="gui.actors.html#Actor">Actor</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
-<dd><a href="formex.html#Formex">formex.Formex</a></dd>
+<dd><a href="__builtin__.html#object">object</a></dd>
+<dd><a href="formex.html#Formex">Formex</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="FormexActor-__init__"><strong>__init__</strong></a>(self, F, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>, bkcolor<font color="#909090">=None</font>, bkcolormap<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, markscale<font color="#909090">=None</font>, marksize<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
+<dl><dt><a name="FormexActor-__init__"><strong>__init__</strong></a>(self, F, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>, bkcolor<font color="#909090">=None</font>, bkcolormap<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, marksize<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Create&nbsp;a&nbsp;multicolored&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;actor.<br>
 &nbsp;<br>
 The&nbsp;colors&nbsp;argument&nbsp;specifies&nbsp;a&nbsp;list&nbsp;of&nbsp;OpenGL&nbsp;colors&nbsp;for&nbsp;each<br>
 of&nbsp;the&nbsp;property&nbsp;values&nbsp;in&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;If&nbsp;the&nbsp;list&nbsp;has&nbsp;less<br>
@@ -206,7 +212,7 @@ box.<br>
 It&nbsp;is&nbsp;returned&nbsp;as&nbsp;a&nbsp;(2,3)&nbsp;shaped&nbsp;array:&nbsp;the&nbsp;first&nbsp;row&nbsp;holds&nbsp;the<br>
 minimal&nbsp;coordinates&nbsp;and&nbsp;the&nbsp;second&nbsp;row&nbsp;the&nbsp;maximal.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>, color<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.<br>
+<dl><dt><a name="FormexActor-draw"><strong>draw</strong></a>(self, mode<font color="#909090">='wireframe'</font>, color<font color="#909090">=None</font>, alpha<font color="#909090">=None</font>)</dt><dd><tt>Draw&nbsp;the&nbsp;formex.<br>
 &nbsp;<br>
 if&nbsp;color&nbsp;is&nbsp;None,&nbsp;it&nbsp;is&nbsp;drawn&nbsp;with&nbsp;the&nbsp;color&nbsp;specified&nbsp;on&nbsp;creation.<br>
 if&nbsp;color&nbsp;==&nbsp;'prop'&nbsp;and&nbsp;a&nbsp;colormap&nbsp;was&nbsp;installed,&nbsp;props&nbsp;define&nbsp;color.<br>
@@ -236,6 +242,8 @@ Data and other attributes defined here:<br>
 
 <hr>
 Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="FormexActor-display"><strong>display</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="FormexActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="FormexActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
@@ -247,7 +255,7 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 <dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'Actor' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <hr>
-Methods inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
+Methods inherited from <a href="formex.html#Formex">Formex</a>:<br>
 <dl><dt><a name="FormexActor-__add__"><strong>__add__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;the&nbsp;sum&nbsp;of&nbsp;two&nbsp;formices.<br>
 &nbsp;<br>
 This&nbsp;returns&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;with&nbsp;all&nbsp;elements&nbsp;of&nbsp;self&nbsp;and&nbsp;other.<br>
@@ -435,7 +443,7 @@ of&nbsp;the&nbsp;bbox.</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a></tt></dd></dl>
 
-<dl><dt><a name="FormexActor-feModel"><strong>feModel</strong></a>(self, nodesperbox<font color="#909090">=1</font>, repeat<font color="#909090">=True</font>, rtol<font color="#909090">=1.0000000000000001e-05</font>, atol<font color="#909090">=1.0000000000000001e-05</font>)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
+<dl><dt><a name="FormexActor-feModel"><strong>feModel</strong></a>(self, nodesperbox<font color="#909090">=1</font>, repeat<font color="#909090">=True</font>, rtol<font color="#909090">=1.0000000000000001e-05</font>, atol<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
 &nbsp;<br>
 A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;first&nbsp;is&nbsp;float&nbsp;array&nbsp;with<br>
 the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="formex.html#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
@@ -449,7 +457,10 @@ is&nbsp;accomplished&nbsp;by<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;(very&nbsp;small)&nbsp;probability&nbsp;that&nbsp;two&nbsp;very&nbsp;close&nbsp;nodes&nbsp;are<br>
 not&nbsp;equivalenced&nbsp;&nbsp;by&nbsp;this&nbsp;procedure.&nbsp;Use&nbsp;it&nbsp;multiple&nbsp;times&nbsp;with<br>
-different&nbsp;parameters&nbsp;to&nbsp;check.</tt></dd></dl>
+different&nbsp;parameters&nbsp;to&nbsp;check.<br>
+You&nbsp;can&nbsp;also&nbsp;set&nbsp;the&nbsp;rtol&nbsp;/atol&nbsp;parameters&nbsp;to&nbsp;influence&nbsp;the<br>
+equivalence&nbsp;checking&nbsp;of&nbsp;two&nbsp;points.<br>
+The&nbsp;default&nbsp;settting&nbsp;for&nbsp;atol&nbsp;is&nbsp;rtol&nbsp;*&nbsp;<a href="#FormexActor-size">size</a>()</tt></dd></dl>
 
 <dl><dt><a name="FormexActor-fprint"><strong>fprint</strong></a>(self, fmt<font color="#909090">='%10.3e %10.3e %10.3e'</font>)</dt></dl>
 
@@ -948,10 +959,10 @@ If&nbsp;fil&nbsp;is&nbsp;a&nbsp;string,&nbsp;the&nbsp;file&nbsp;is&nbsp;closed&n
 <dl><dt><a name="FormexActor-z"><strong>z</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;z-plane</tt></dd></dl>
 
 <hr>
-Class methods inherited from <a href="formex.html#Formex">formex.Formex</a>:<br>
-<dl><dt><a name="FormexActor-cantle2str"><strong>cantle2str</strong></a> = element2str(clas, elem)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
+Class methods inherited from <a href="formex.html#Formex">Formex</a>:<br>
+<dl><dt><a name="FormexActor-cantle2str"><strong>cantle2str</strong></a> = element2str(clas, elem)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-concatenate"><strong>concatenate</strong></a>(clas, Flist)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Concatenate&nbsp;all&nbsp;formices&nbsp;in&nbsp;Flist.<br>
+<dl><dt><a name="FormexActor-concatenate"><strong>concatenate</strong></a>(clas, Flist)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Concatenate&nbsp;all&nbsp;formices&nbsp;in&nbsp;Flist.<br>
 &nbsp;<br>
 This&nbsp;is&nbsp;a&nbsp;class&nbsp;method,&nbsp;not&nbsp;an&nbsp;instance&nbsp;method!<br>
 &gt;&gt;&gt;&nbsp;F&nbsp;=&nbsp;<a href="formex.html#Formex">Formex</a>([[[1,2,3]]],1)<br>
@@ -965,13 +976,13 @@ is&nbsp;not&nbsp;fixed,&nbsp;the&nbsp;concatenate&nbsp;method&nbsp;is&nbsp;easie
 We&nbsp;made&nbsp;it&nbsp;a&nbsp;class&nbsp;method&nbsp;and&nbsp;not&nbsp;a&nbsp;global&nbsp;function,&nbsp;because&nbsp;that<br>
 would&nbsp;interfere&nbsp;with&nbsp;NumPy's&nbsp;own&nbsp;concatenate&nbsp;function.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-element2str"><strong>element2str</strong></a>(clas, elem)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
+<dl><dt><a name="FormexActor-element2str"><strong>element2str</strong></a>(clas, elem)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;an&nbsp;element</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-point2str"><strong>point2str</strong></a>(clas, point)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
+<dl><dt><a name="FormexActor-point2str"><strong>point2str</strong></a>(clas, point)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-read"><strong>read</strong></a>(clas, fil)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Read&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;from&nbsp;file.</tt></dd></dl>
+<dl><dt><a name="FormexActor-read"><strong>read</strong></a>(clas, fil)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Read&nbsp;a&nbsp;<a href="formex.html#Formex">Formex</a>&nbsp;from&nbsp;file.</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-setPrintFunction"><strong>setPrintFunction</strong></a>(clas, func)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Choose&nbsp;the&nbsp;default&nbsp;formatting&nbsp;for&nbsp;printing&nbsp;formices.<br>
+<dl><dt><a name="FormexActor-setPrintFunction"><strong>setPrintFunction</strong></a>(clas, func)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Choose&nbsp;the&nbsp;default&nbsp;formatting&nbsp;for&nbsp;printing&nbsp;formices.<br>
 &nbsp;<br>
 This&nbsp;sets&nbsp;how&nbsp;formices&nbsp;will&nbsp;be&nbsp;formatted&nbsp;by&nbsp;a&nbsp;print&nbsp;statement.<br>
 Currently&nbsp;there&nbsp;are&nbsp;two&nbsp;available&nbsp;functions:&nbsp;asFormex,&nbsp;asArray.<br>
@@ -979,7 +990,7 @@ The&nbsp;user&nbsp;may&nbsp;create&nbsp;its&nbsp;own&nbsp;formatting&nbsp;method
 This&nbsp;is&nbsp;a&nbsp;class&nbsp;method.&nbsp;It&nbsp;should&nbsp;be&nbsp;used&nbsp;asfollows:<br>
 <a href="formex.html#Formex">Formex</a>.<a href="#FormexActor-setPrintFunction">setPrintFunction</a>(<a href="formex.html#Formex">Formex</a>.asArray).</tt></dd></dl>
 
-<dl><dt><a name="FormexActor-signet2str"><strong>signet2str</strong></a> = point2str(clas, point)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">__builtin__.type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
+<dl><dt><a name="FormexActor-signet2str"><strong>signet2str</strong></a> = point2str(clas, point)<font color="#909090"><font face="helvetica, arial"> from <a href="__builtin__.html#type">type</a></font></font></dt><dd><tt>Return&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;point</tt></dd></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -993,7 +1004,7 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method.&nbsp;It&nbsp;should&nbsp;be&nbsp;use
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.actors.html#SurfaceActor">SurfaceActor</a></dd>
 <dd><a href="gui.actors.html#Actor">Actor</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+<dd><a href="__builtin__.html#object">object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
@@ -1011,6 +1022,8 @@ If&nbsp;color&nbsp;is&nbsp;None,&nbsp;it&nbsp;will&nbsp;be&nbsp;drawn&nbsp;with&
 
 <hr>
 Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="SurfaceActor-display"><strong>display</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="SurfaceActor-setLineWidth"><strong>setLineWidth</strong></a>(self, linewidth)</dt><dd><tt>Set&nbsp;the&nbsp;linewidth&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
 
 <hr>
@@ -1031,7 +1044,7 @@ Data and other attributes inherited from <a href="gui.actors.html#Actor">Actor</
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.actors.html#TriadeActor">TriadeActor</a></dd>
 <dd><a href="gui.actors.html#Actor">Actor</a></dd>
-<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+<dd><a href="__builtin__.html#object">object</a></dd>
 </dl>
 <hr>
 Methods defined here:<br>
@@ -1043,6 +1056,8 @@ Methods defined here:<br>
 
 <hr>
 Methods inherited from <a href="gui.actors.html#Actor">Actor</a>:<br>
+<dl><dt><a name="TriadeActor-display"><strong>display</strong></a>(self)</dt></dl>
+
 <dl><dt><a name="TriadeActor-nelems"><strong>nelems</strong></a>(self)</dt></dl>
 
 <dl><dt><a name="TriadeActor-setColor"><strong>setColor</strong></a>(self, color<font color="#909090">=None</font>, colormap<font color="#909090">=None</font>)</dt><dd><tt>Set&nbsp;the&nbsp;color&nbsp;of&nbsp;the&nbsp;<a href="#Actor">Actor</a>.</tt></dd></dl>
@@ -1424,11 +1439,13 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.bool_'&gt;, &lt;type 'numpy.float128'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.object_'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.string_'&gt;, &lt;type 'numpy.float128'&gt;, &lt;type 'numpy.complex64'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
 <strong>WRAP</strong> = 1<br>
+<strong>__file__</strong> = '/home/bene/prj/pyformex/gui/actors.pyc'<br>
+<strong>__name__</strong> = 'gui.actors'<br>
 <strong>absolute</strong> = &lt;ufunc 'absolute'&gt;<br>
 <strong>add</strong> = &lt;ufunc 'add'&gt;<br>
 <strong>arccos</strong> = &lt;ufunc 'arccos'&gt;<br>
@@ -1445,7 +1462,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>black</strong> = (0.0, 0.0, 0.0)<br>
 <strong>blue</strong> = (0.0, 0.0, 1.0)<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...object_'&gt;: &lt;function &lt;lambda&gt; at 0x2b85c3abf758&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...mplex64'&gt;: &lt;function &lt;lambda&gt; at 0x2acdaea821b8&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1495,7 +1512,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.float64'&gt;: 8, &lt;type 'numpy.object_'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...ype 'numpy.float32'&gt;: 4, &lt;type 'numpy.uint8'&gt;: 1}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>

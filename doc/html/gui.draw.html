@@ -22,19 +22,20 @@
 <a href="PyQt4.QtGui.html">PyQt4.QtGui</a><br>
 <a href="gui.actors.html">gui.actors</a><br>
 <a href="gui.colors.html">gui.colors</a><br>
-</td><td width="25%" valign=top><a href="commands.html">commands</a><br>
-<a href="copy.html">copy</a><br>
+<a href="commands.html">commands</a><br>
+</td><td width="25%" valign=top><a href="copy.html">copy</a><br>
 <a href="gui.decors.html">gui.decors</a><br>
 <a href="formex.html">formex</a><br>
 <a href="gui.image.html">gui.image</a><br>
-</td><td width="25%" valign=top><a href="gui.marks.html">gui.marks</a><br>
+<a href="gui.marks.html">gui.marks</a><br>
 <a href="numpy.html">numpy</a><br>
-<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
 <a href="re.html">re</a><br>
 <a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top><a href="threading.html">threading</a><br>
+<a href="threading.html">threading</a><br>
 <a href="time.html">time</a><br>
-<a href="types.html">types</a><br>
+<a href="gui.toolbar.html">gui.toolbar</a><br>
+</td><td width="25%" valign=top><a href="types.html">types</a><br>
 <a href="utils.html">utils</a><br>
 <a href="gui.widgets.html">gui.widgets</a><br>
 </td></tr></table></td></tr></table><p>
@@ -56,7 +57,7 @@ During&nbsp;execution&nbsp;of&nbsp;the&nbsp;script,&nbsp;the&nbsp;global&nbsp;va
 set&nbsp;to&nbsp;either&nbsp;'draw'&nbsp;or&nbsp;'script'&nbsp;depending&nbsp;on&nbsp;whether&nbsp;the&nbsp;script<br>
 was&nbsp;executed&nbsp;in&nbsp;the&nbsp;'draw'&nbsp;module&nbsp;(--gui&nbsp;option)&nbsp;or&nbsp;the&nbsp;'script'<br>
 module&nbsp;(--nogui&nbsp;option).</tt></dd></dl>
- <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex version 0.5-alpha'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
+ <dl><dt><a name="-about"><strong>about</strong></a>(message<font color="#909090">='pyFormex 0.5-alpha'</font>)</dt><dd><tt>Show&nbsp;a&nbsp;informative&nbsp;message&nbsp;and&nbsp;wait&nbsp;for&nbsp;user&nbsp;acknowledgement.</tt></dd></dl>
  <dl><dt><a name="-ack"><strong>ack</strong></a>(question)</dt><dd><tt>Show&nbsp;a&nbsp;Yes/No&nbsp;question&nbsp;and&nbsp;return&nbsp;True/False&nbsp;depending&nbsp;on&nbsp;answer.</tt></dd></dl>
  <dl><dt><a name="-ask"><strong>ask</strong></a>(question, choices<font color="#909090">=None</font>, default<font color="#909090">=''</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt>Ask&nbsp;a&nbsp;question&nbsp;and&nbsp;present&nbsp;possible&nbsp;answers.<br>
 &nbsp;<br>
@@ -86,6 +87,9 @@ for&nbsp;persistence&nbsp;between&nbsp;pyFormex&nbsp;invocations.<br>
 &nbsp;<br>
 If&nbsp;fn&nbsp;does&nbsp;not&nbsp;exist,&nbsp;nothing&nbsp;is&nbsp;done.</tt></dd></dl>
  <dl><dt><a name="-clear"><strong>clear</strong></a>()</dt><dd><tt>Clear&nbsp;the&nbsp;canvas</tt></dd></dl>
+ <dl><dt><a name="-clear_canvas"><strong>clear_canvas</strong></a>()</dt><dd><tt>Clear&nbsp;the&nbsp;canvas.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;low&nbsp;level&nbsp;function&nbsp;not&nbsp;intended&nbsp;for&nbsp;the&nbsp;user.</tt></dd></dl>
  <dl><dt><a name="-createView"><strong>createView</strong></a>(name, angles)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;named&nbsp;view&nbsp;(or&nbsp;redefine&nbsp;an&nbsp;old).<br>
 &nbsp;<br>
 The&nbsp;angles&nbsp;are&nbsp;(longitude,&nbsp;latitude,&nbsp;twist).<br>
@@ -93,7 +97,7 @@ If&nbsp;the&nbsp;view&nbsp;name&nbsp;is&nbsp;new,&nbsp;and&nbsp;there&nbsp;is&nb
 a&nbsp;view&nbsp;button&nbsp;will&nbsp;be&nbsp;added&nbsp;to&nbsp;it.</tt></dd></dl>
  <dl><dt><a name="-decorate"><strong>decorate</strong></a>(decor)</dt><dd><tt>Draw&nbsp;a&nbsp;decoration.</tt></dd></dl>
  <dl><dt><a name="-delay"><strong>delay</strong></a>(i)</dt><dd><tt>Set&nbsp;the&nbsp;draw&nbsp;delay&nbsp;in&nbsp;seconds.</tt></dd></dl>
- <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, colormap<font color="#909090">=None</font>, wait<font color="#909090">=True</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, alpha<font color="#909090">=1.0</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
+ <dl><dt><a name="-draw"><strong>draw</strong></a>(F, view<font color="#909090">=None</font>, bbox<font color="#909090">='auto'</font>, color<font color="#909090">='prop'</font>, colormap<font color="#909090">=None</font>, wait<font color="#909090">=True</font>, clear<font color="#909090">=None</font>, eltype<font color="#909090">=None</font>, allviews<font color="#909090">=False</font>, marksize<font color="#909090">=None</font>, linewidth<font color="#909090">=None</font>, alpha<font color="#909090">=0.5</font>)</dt><dd><tt>Draw&nbsp;a&nbsp;Formex&nbsp;or&nbsp;a&nbsp;list&nbsp;of&nbsp;Formices&nbsp;on&nbsp;the&nbsp;canvas.<br>
 &nbsp;<br>
 If&nbsp;F&nbsp;is&nbsp;a&nbsp;list,&nbsp;all&nbsp;its&nbsp;items&nbsp;are&nbsp;drawn&nbsp;with&nbsp;the&nbsp;same&nbsp;settings.<br>
 &nbsp;<br>
@@ -149,6 +153,7 @@ While&nbsp;we&nbsp;are&nbsp;waiting,&nbsp;events&nbsp;are&nbsp;processed.</tt></
  <dl><dt><a name="-fforward"><strong>fforward</strong></a>()</dt></dl>
  <dl><dt><a name="-fgcolor"><strong>fgcolor</strong></a>(color)</dt><dd><tt>Set&nbsp;the&nbsp;default&nbsp;foreground&nbsp;color.</tt></dd></dl>
  <dl><dt><a name="-flat"><strong>flat</strong></a>()</dt></dl>
+ <dl><dt><a name="-flattrans"><strong>flattrans</strong></a>()</dt></dl>
  <dl><dt><a name="-flatwire"><strong>flatwire</strong></a>()</dt></dl>
  <dl><dt><a name="-flyAlong"><strong>flyAlong</strong></a>(path, upvector<font color="#909090">=[0.0, 1.0, 0.0]</font>, sleeptime<font color="#909090">=None</font>)</dt></dl>
  <dl><dt><a name="-force_finish"><strong>force_finish</strong></a>()</dt></dl>
@@ -251,7 +256,9 @@ forces&nbsp;wakeup&nbsp;for&nbsp;longer&nbsp;period.</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>allowwait</strong> = True<br>
+<td width="100%"><strong>__file__</strong> = '/home/bene/prj/pyformex/gui/draw.py'<br>
+<strong>__name__</strong> = 'gui.draw'<br>
+<strong>allowwait</strong> = True<br>
 <strong>drawlocked</strong> = False<br>
 <strong>drawtimer</strong> = None<br>
 <strong>exitrequested</strong> = False<br>
