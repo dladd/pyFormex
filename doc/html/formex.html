@@ -285,7 +285,7 @@ of&nbsp;the&nbsp;bbox.</tt></dd></dl>
 
 <dl><dt><a name="Formex-element"><strong>element</strong></a>(self, i)</dt><dd><tt>Return&nbsp;element&nbsp;i&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a></tt></dd></dl>
 
-<dl><dt><a name="Formex-feModel"><strong>feModel</strong></a>(self, nodesperbox<font color="#909090">=1</font>, repeat<font color="#909090">=True</font>, rtol<font color="#909090">=1.0000000000000001e-05</font>, atol<font color="#909090">=1.0000000000000001e-05</font>)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
+<dl><dt><a name="Formex-feModel"><strong>feModel</strong></a>(self, nodesperbox<font color="#909090">=1</font>, repeat<font color="#909090">=True</font>, rtol<font color="#909090">=1.0000000000000001e-05</font>, atol<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;a&nbsp;tuple&nbsp;of&nbsp;nodal&nbsp;coordinates&nbsp;and&nbsp;element&nbsp;connectivity.<br>
 &nbsp;<br>
 A&nbsp;tuple&nbsp;of&nbsp;two&nbsp;arrays&nbsp;is&nbsp;returned.&nbsp;The&nbsp;first&nbsp;is&nbsp;float&nbsp;array&nbsp;with<br>
 the&nbsp;coordinates&nbsp;of&nbsp;the&nbsp;unique&nbsp;nodes&nbsp;of&nbsp;the&nbsp;<a href="#Formex">Formex</a>.&nbsp;The&nbsp;second&nbsp;is<br>
@@ -299,7 +299,10 @@ is&nbsp;accomplished&nbsp;by<br>
 &nbsp;<br>
 There&nbsp;is&nbsp;a&nbsp;(very&nbsp;small)&nbsp;probability&nbsp;that&nbsp;two&nbsp;very&nbsp;close&nbsp;nodes&nbsp;are<br>
 not&nbsp;equivalenced&nbsp;&nbsp;by&nbsp;this&nbsp;procedure.&nbsp;Use&nbsp;it&nbsp;multiple&nbsp;times&nbsp;with<br>
-different&nbsp;parameters&nbsp;to&nbsp;check.</tt></dd></dl>
+different&nbsp;parameters&nbsp;to&nbsp;check.<br>
+You&nbsp;can&nbsp;also&nbsp;set&nbsp;the&nbsp;rtol&nbsp;/atol&nbsp;parameters&nbsp;to&nbsp;influence&nbsp;the<br>
+equivalence&nbsp;checking&nbsp;of&nbsp;two&nbsp;points.<br>
+The&nbsp;default&nbsp;settting&nbsp;for&nbsp;atol&nbsp;is&nbsp;rtol&nbsp;*&nbsp;<a href="#Formex-size">size</a>()</tt></dd></dl>
 
 <dl><dt><a name="Formex-fprint"><strong>fprint</strong></a>(self, fmt<font color="#909090">='%10.3e %10.3e %10.3e'</font>)</dt></dl>
 
@@ -781,7 +784,8 @@ This&nbsp;is&nbsp;a&nbsp;class&nbsp;method.&nbsp;It&nbsp;should&nbsp;be&nbsp;use
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-add_docstring"><strong>add_docstring</strong></a>(...)</dt><dd><tt>docstring(obj,&nbsp;docstring)<br>
+<td width="100%"><dl><dt><a name="-_test"><strong>_test</strong></a>()</dt><dd><tt>Run&nbsp;the&nbsp;examples&nbsp;in&nbsp;the&nbsp;docstrings.</tt></dd></dl>
+ <dl><dt><a name="-add_docstring"><strong>add_docstring</strong></a>(...)</dt><dd><tt>docstring(obj,&nbsp;docstring)<br>
 &nbsp;<br>
 Add&nbsp;a&nbsp;docstring&nbsp;to&nbsp;a&nbsp;built-in&nbsp;obj&nbsp;if&nbsp;possible.<br>
 If&nbsp;the&nbsp;obj&nbsp;already&nbsp;has&nbsp;a&nbsp;docstring&nbsp;raise&nbsp;a&nbsp;RuntimeError<br>
@@ -931,7 +935,7 @@ f&nbsp;is&nbsp;an&nbsp;[...,3]&nbsp;array&nbsp;of&nbsp;coordinates.<br>
 p&nbsp;is&nbsp;a&nbsp;point&nbsp;specified&nbsp;by&nbsp;3&nbsp;coordinates.<br>
 &nbsp;<br>
 The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;[...]&nbsp;shaped&nbsp;array&nbsp;with&nbsp;the&nbsp;distance&nbsp;of<br>
-each&nbsp;point&nbsp;to&nbsp;the&nbsp;line&nbsp;through&nbsp;p&nbsp;and&nbsp;q.<br>
+each&nbsp;point&nbsp;to&nbsp;point&nbsp;p.<br>
 All&nbsp;distance&nbsp;values&nbsp;are&nbsp;positive&nbsp;or&nbsp;zero.</tt></dd></dl>
  <dl><dt><a name="-dot"><strong>dot</strong></a>(...)</dt><dd><tt><a href="#-dot">dot</a>(a,b)<br>
 Returns&nbsp;the&nbsp;dot&nbsp;product&nbsp;of&nbsp;a&nbsp;and&nbsp;b&nbsp;for&nbsp;arrays&nbsp;of&nbsp;floating&nbsp;point&nbsp;types.<br>
@@ -1261,11 +1265,13 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>SHIFT_INVALID</strong> = 9<br>
 <strong>SHIFT_OVERFLOW</strong> = 3<br>
 <strong>SHIFT_UNDERFLOW</strong> = 6<br>
-<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.complex256'&gt;, ...)<br>
+<strong>ScalarType</strong> = (&lt;type 'int'&gt;, &lt;type 'float'&gt;, &lt;type 'complex'&gt;, &lt;type 'long'&gt;, &lt;type 'bool'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'buffer'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.void'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.complex192'&gt;, &lt;type 'numpy.int8'&gt;, &lt;type 'numpy.float32'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.object_'&gt;, ...)<br>
 <strong>True_</strong> = True<br>
 <strong>UFUNC_BUFSIZE_DEFAULT</strong> = 10000<br>
 <strong>UFUNC_PYVALS_NAME</strong> = 'UFUNC_PYVALS'<br>
 <strong>WRAP</strong> = 1<br>
+<strong>__file__</strong> = '/home/bene/prj/pyformex/formex.pyc'<br>
+<strong>__name__</strong> = 'formex'<br>
 <strong>__version__</strong> = '1.0.1'<br>
 <strong>absolute</strong> = &lt;ufunc 'absolute'&gt;<br>
 <strong>add</strong> = &lt;ufunc 'add'&gt;<br>
@@ -1281,7 +1287,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>bitwise_or</strong> = &lt;ufunc 'bitwise_or'&gt;<br>
 <strong>bitwise_xor</strong> = &lt;ufunc 'bitwise_xor'&gt;<br>
 <strong>c_</strong> = &lt;numpy.lib.index_tricks.c_class object&gt;<br>
-<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x2...object_'&gt;: &lt;function &lt;lambda&gt; at 0x2aca3a6d5320&gt;}<br>
+<strong>cast</strong> = {&lt;type 'numpy.int64'&gt;: &lt;function &lt;lambda&gt; at 0x3...numpy.int32'&gt;: &lt;function &lt;lambda&gt; at 0x3ae50844&gt;}<br>
 <strong>ceil</strong> = &lt;ufunc 'ceil'&gt;<br>
 <strong>conj</strong> = &lt;ufunc 'conjugate'&gt;<br>
 <strong>conjugate</strong> = &lt;ufunc 'conjugate'&gt;<br>
@@ -1325,7 +1331,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>modf</strong> = &lt;ufunc 'modf'&gt;<br>
 <strong>multiply</strong> = &lt;ufunc 'multiply'&gt;<br>
 <strong>nan</strong> = nan<br>
-<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.float64'&gt;: 8, &lt;type 'numpy.object_'&gt;: 8}<br>
+<strong>nbytes</strong> = {&lt;type 'numpy.int64'&gt;: 8, &lt;type 'numpy.int16'&gt;: ...e 'numpy.uint32'&gt;: 4, &lt;type 'numpy.unicode_'&gt;: 0}<br>
 <strong>negative</strong> = &lt;ufunc 'negative'&gt;<br>
 <strong>newaxis</strong> = None<br>
 <strong>not_equal</strong> = &lt;ufunc 'not_equal'&gt;<br>
@@ -1341,9 +1347,9 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>right_shift</strong> = &lt;ufunc 'right_shift'&gt;<br>
 <strong>rint</strong> = &lt;ufunc 'rint'&gt;<br>
 <strong>s_</strong> = &lt;numpy.lib.index_tricks._index_expression_class object&gt;<br>
-<strong>sctypeDict</strong> = {0: &lt;type 'numpy.bool_'&gt;, 1: &lt;type 'numpy.int8'&gt;, 2: &lt;type 'numpy.uint8'&gt;, 3: &lt;type 'numpy.int16'&gt;, 4: &lt;type 'numpy.uint16'&gt;, 5: &lt;type 'numpy.int32'&gt;, 6: &lt;type 'numpy.uint32'&gt;, 7: &lt;type 'numpy.int64'&gt;, 8: &lt;type 'numpy.uint64'&gt;, 9: &lt;type 'numpy.int64'&gt;, ...}<br>
-<strong>sctypeNA</strong> = {'?': 'Bool', 'B': 'UInt8', 'Bool': &lt;type 'numpy.bool_'&gt;, 'Complex128': &lt;type 'numpy.complex256'&gt;, 'Complex32': &lt;type 'numpy.complex64'&gt;, 'Complex64': &lt;type 'numpy.complex128'&gt;, 'D': 'Complex64', 'F': 'Complex32', 'Float128': &lt;type 'numpy.float128'&gt;, 'Float32': &lt;type 'numpy.float32'&gt;, ...}<br>
-<strong>sctypes</strong> = {'complex': [&lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex256'&gt;], 'float': [&lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.float128'&gt;], 'int': [&lt;type 'numpy.int8'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.int64'&gt;], 'others': [&lt;type 'bool'&gt;, &lt;type 'object'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'numpy.void'&gt;], 'uint': [&lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.uint64'&gt;]}<br>
+<strong>sctypeDict</strong> = {0: &lt;type 'numpy.bool_'&gt;, 1: &lt;type 'numpy.int8'&gt;, 2: &lt;type 'numpy.uint8'&gt;, 3: &lt;type 'numpy.int16'&gt;, 4: &lt;type 'numpy.uint16'&gt;, 5: &lt;type 'numpy.int32'&gt;, 6: &lt;type 'numpy.uint32'&gt;, 7: &lt;type 'numpy.int32'&gt;, 8: &lt;type 'numpy.uint32'&gt;, 9: &lt;type 'numpy.int64'&gt;, ...}<br>
+<strong>sctypeNA</strong> = {'?': 'Bool', 'B': 'UInt8', 'Bool': &lt;type 'numpy.bool_'&gt;, 'Complex32': &lt;type 'numpy.complex64'&gt;, 'Complex64': &lt;type 'numpy.complex128'&gt;, 'Complex96': &lt;type 'numpy.complex192'&gt;, 'D': 'Complex64', 'F': 'Complex32', 'Float32': &lt;type 'numpy.float32'&gt;, 'Float64': &lt;type 'numpy.float64'&gt;, ...}<br>
+<strong>sctypes</strong> = {'complex': [&lt;type 'numpy.complex64'&gt;, &lt;type 'numpy.complex128'&gt;, &lt;type 'numpy.complex192'&gt;], 'float': [&lt;type 'numpy.float32'&gt;, &lt;type 'numpy.float64'&gt;, &lt;type 'numpy.float96'&gt;], 'int': [&lt;type 'numpy.int8'&gt;, &lt;type 'numpy.int16'&gt;, &lt;type 'numpy.int32'&gt;, &lt;type 'numpy.int64'&gt;, &lt;type 'numpy.int32'&gt;], 'others': [&lt;type 'bool'&gt;, &lt;type 'object'&gt;, &lt;type 'str'&gt;, &lt;type 'unicode'&gt;, &lt;type 'numpy.void'&gt;], 'uint': [&lt;type 'numpy.uint8'&gt;, &lt;type 'numpy.uint16'&gt;, &lt;type 'numpy.uint32'&gt;, &lt;type 'numpy.uint64'&gt;, &lt;type 'numpy.uint32'&gt;]}<br>
 <strong>sign</strong> = &lt;ufunc 'sign'&gt;<br>
 <strong>signbit</strong> = &lt;ufunc 'signbit'&gt;<br>
 <strong>sin</strong> = &lt;ufunc 'sin'&gt;<br>
@@ -1354,7 +1360,7 @@ it's&nbsp;entries&nbsp;initialized&nbsp;to&nbsp;zero.</tt></dd></dl>
 <strong>tan</strong> = &lt;ufunc 'tan'&gt;<br>
 <strong>tanh</strong> = &lt;ufunc 'tanh'&gt;<br>
 <strong>true_divide</strong> = &lt;ufunc 'true_divide'&gt;<br>
-<strong>typeDict</strong> = {0: &lt;type 'numpy.bool_'&gt;, 1: &lt;type 'numpy.int8'&gt;, 2: &lt;type 'numpy.uint8'&gt;, 3: &lt;type 'numpy.int16'&gt;, 4: &lt;type 'numpy.uint16'&gt;, 5: &lt;type 'numpy.int32'&gt;, 6: &lt;type 'numpy.uint32'&gt;, 7: &lt;type 'numpy.int64'&gt;, 8: &lt;type 'numpy.uint64'&gt;, 9: &lt;type 'numpy.int64'&gt;, ...}<br>
-<strong>typeNA</strong> = {'?': 'Bool', 'B': 'UInt8', 'Bool': &lt;type 'numpy.bool_'&gt;, 'Complex128': &lt;type 'numpy.complex256'&gt;, 'Complex32': &lt;type 'numpy.complex64'&gt;, 'Complex64': &lt;type 'numpy.complex128'&gt;, 'D': 'Complex64', 'F': 'Complex32', 'Float128': &lt;type 'numpy.float128'&gt;, 'Float32': &lt;type 'numpy.float32'&gt;, ...}<br>
+<strong>typeDict</strong> = {0: &lt;type 'numpy.bool_'&gt;, 1: &lt;type 'numpy.int8'&gt;, 2: &lt;type 'numpy.uint8'&gt;, 3: &lt;type 'numpy.int16'&gt;, 4: &lt;type 'numpy.uint16'&gt;, 5: &lt;type 'numpy.int32'&gt;, 6: &lt;type 'numpy.uint32'&gt;, 7: &lt;type 'numpy.int32'&gt;, 8: &lt;type 'numpy.uint32'&gt;, 9: &lt;type 'numpy.int64'&gt;, ...}<br>
+<strong>typeNA</strong> = {'?': 'Bool', 'B': 'UInt8', 'Bool': &lt;type 'numpy.bool_'&gt;, 'Complex32': &lt;type 'numpy.complex64'&gt;, 'Complex64': &lt;type 'numpy.complex128'&gt;, 'Complex96': &lt;type 'numpy.complex192'&gt;, 'D': 'Complex64', 'F': 'Complex32', 'Float32': &lt;type 'numpy.float32'&gt;, 'Float64': &lt;type 'numpy.float64'&gt;, ...}<br>
 <strong>typecodes</strong> = {'All': '?bhilqpBHILQPfdgFDGSUVO', 'AllFloat': 'fdgFDG', 'AllInteger': 'bBhHiIlLqQpP', 'Character': 'S1', 'Complex': 'FDG', 'Float': 'fdg', 'Integer': 'bhilqp', 'UnsignedInteger': 'BHILQP'}</td></tr></table>
 </body></html>
