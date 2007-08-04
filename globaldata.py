@@ -77,8 +77,12 @@ def savePreferences():
     If a local preferences file was read, it will be saved there.
     Otherwise, it will be saved as the user preferences, possibly
     creating that file.
+    If GD.preffile is None, preferences are not saved.
     """
     f = preffile
+    if not f:
+        return
+    
     del cfg['__ref__']
     debug("!!!Saving config:\n%s" % cfg)
 

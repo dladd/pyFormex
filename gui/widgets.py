@@ -575,7 +575,7 @@ def addMenuItems(menu, items=[]):
     Item text is the text that will be displayed in the menu. An optional '&'
     may be used to flag the next character as the shortcut key. The '&' will
     be stripped off before displaying the text. If the text starts with '---',
-    a separator is created. 
+    or Action is None, a separator is created. 
 
     Action can be any of the following:
       - a Python function or instance method : it will be called when the
@@ -594,7 +594,7 @@ def addMenuItems(menu, items=[]):
         if txt.startswith('---') or val is None:
             menu.addSeparator()
         elif isinstance(val, list):
-            pop = QtGui.QMenu(txt,menu)
+            pop = Menu(txt,menu)
             addMenuItems(pop,val)
             menu.addMenu(pop)
         else:
@@ -614,7 +614,7 @@ def normalize(s):
 
     Text normalization removes all '&' characters and converts to lower case.
     """
-    return s.replace('&','').lower()
+    return str(s).replace('&','').lower()
 
                  
 def menuDict(menu):
@@ -623,7 +623,7 @@ def menuDict(menu):
     The menudict holds the normalized text labels and corresponding actions.
     Text normalization removes all '&' characters and converts to lower case.
     """
-    return dict([[normalize(str(a.text())),a] for a in menu.actions()])
+    return dict([[normalize(a.text()),a] for a in menu.actions()])
     
 
 def menuItem(menu, text):
@@ -631,8 +631,10 @@ def menuItem(menu, text):
 
     Text normalization removes all '&' characters and converts to lower case.
     """
-    return menuDict(menu).get(normalize(text),None)
-
+    d =  menuDict(menu)
+    t = normalize(text)
+    a = menuDict(menu).get(normalize(text),None)
+    return a
 
 class Menu(QtGui.QMenu):
     """A popup menu for user actions."""
@@ -667,6 +669,19 @@ class Menu(QtGui.QMenu):
     def addItems(self,itemlist):
         addMenuItems(self,itemlist)
 
+
+    def insertMenu(self,menu,before=None):
+        """Insert a menu before the specified item.
+
+        If no place is specified, it is added to the end.
+        """
+        if before is not None:
+            before = menuItem(self,before)
+        if before:
+            QtGui.QMenu.insertMenu(self,before,menu)
+        else:
+            self.addMenu(menu)
+            
 
     def process(self):
         if not self.done:

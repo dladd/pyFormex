@@ -155,17 +155,15 @@ def main(argv=None):
         userprefs = []
     if GD.options.config:
         userprefs.append(GD.options.config)
-    if len(userprefs) == 0:
-        userprefs = [homeprefs]
-    allprefs = sysprefs + userprefs
-    GD.preffile = allprefs.pop()
-    for f in allprefs:
+    refprefs = sysprefs + userprefs[:-1]
+    for f in refprefs:
         GD.debug("Reading config file %s" % f)
         GD.cfg.read(f) 
-    # Save this config as a reference, then load last config file
+    # Save this config as a reference, then load last user config file
     GD.refcfg = GD.cfg
     GD.cfg = Config(default=refLookup)
-    if os.path.exists(GD.preffile):
+    if len(userprefs) > 0:
+        GD.preffile = userprefs[-1] # Settings will be saved here
         GD.debug("Reading config file %s" % GD.preffile)
         GD.cfg.read(GD.preffile)
     GD.debug("RefConfig: %s" % GD.refcfg)

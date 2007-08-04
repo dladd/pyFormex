@@ -206,7 +206,7 @@ class GUI(QtGui.QMainWindow):
             pmenu = widgets.menuItem(self.menu,'viewport').menu()
             before = widgets.menuItem(pmenu,'background color')
             GD.debug("BEFORE = %s" % before)
-            pmenu.insertMenu(before,mmenu)
+            pmenu.insertMenu(mmenu,before)
 
         ##  VIEWS menu and toolbar
         self.viewsMenu = None
@@ -393,10 +393,12 @@ def quit():
     """Quit the GUI"""
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
-    print "Quitting!!"
+    #print "Quitting!!"
     draw.drawrelease()
     if GD.app:
         GD.app.exit()
+
+
 
 
 def runApp(args):
@@ -449,24 +451,46 @@ def runApp(args):
     GD.board = GD.gui.board
     GD.board.write(GD.Version+"  (C) B. Verhegghe")
     GD.gui.show()
+    
     # Create additional menus (put them in a list to save)
-    menus = []
-    # History
+    
+    # History Menu
     history = GD.cfg.get('history',None)
     if type(history) == list:
-        m = scriptsMenu.ScriptsMenu('History',files=history,max=10)
-        GD.gui.menu.insertMenu(m)
-        #menus.append(m)
-        GD.gui.history = m
+        GD.gui.history = scriptsMenu.ScriptsMenu('History',files=history,max=20)
+
+    if GD.cfg.get('gui/history_in_main_menu',False):
+        GD.gui.menu.insertMenu(GD.gui.history)
+    else:
+        filemenu = widgets.menuItem(GD.gui.menu,'file').menu()
+        GD.debug(widgets.menuDict(filemenu))
+        filemenu.insertMenu(GD.gui.history,'save image')
+        
     # Create a menu with pyFormex examples
     # and insert it before the help menu
-    for title,dir in GD.cfg['scriptdirs']:
-        GD.debug("Loading script dir %s" % dir)
-        if os.path.exists(dir):
-            m = scriptsMenu.ScriptsMenu(title,dir,autoplay=True)
-            GD.gui.menu.insertMenu(m)
-            menus.append(m)   # Needed to keep m linked to a name,
-                              # else the menu is destroyed!
+    menus = []
+    scriptdirs = GD.cfg['scriptdirs']
+
+    if GD.cfg.get('gui/separatescriptdirs',False):
+        # This will create seperate menus for all scriptdirs
+        pass
+    else:
+        # The default is to collect all scriptdirs in a single main menu
+        if len(scriptdirs) > 1:
+            scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
+            GD.gui.menu.insertMenu(scriptsmenu)
+        else:
+            scriptsmenu = GD.gui.menu
+
+        for title,dirname in scriptdirs:
+            GD.debug("Loading script dir %s" % dirname)
+            if os.path.exists(dirname):
+                m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
+                scriptsmenu.insertMenu(m)
+                menus.append(m)   # Needed to keep m linked to a name,
+                                  # else the menu is destroyed!
+
+    # Set interaction functions
     GD.message = draw.message
     GD.warning = draw.warning
     draw.reset()

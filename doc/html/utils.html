@@ -140,13 +140,14 @@ or&nbsp;an&nbsp;empty&nbsp;string&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
 &nbsp;<br>
 The&nbsp;external&nbsp;command&nbsp;is&nbsp;only&nbsp;checked&nbsp;on&nbsp;the&nbsp;first&nbsp;call.<br>
 The&nbsp;result&nbsp;is&nbsp;remembered&nbsp;in&nbsp;the&nbsp;GD.external&nbsp;dict.</tt></dd></dl>
- <dl><dt><a name="-hasModule"><strong>hasModule</strong></a>(name)</dt><dd><tt>Test&nbsp;if&nbsp;we&nbsp;have&nbsp;the&nbsp;named&nbsp;module&nbsp;available.<br>
+ <dl><dt><a name="-hasModule"><strong>hasModule</strong></a>(name, check<font color="#909090">=False</font>)</dt><dd><tt>Test&nbsp;if&nbsp;we&nbsp;have&nbsp;the&nbsp;named&nbsp;module&nbsp;available.<br>
 &nbsp;<br>
 Returns&nbsp;a&nbsp;nonzero&nbsp;(version)&nbsp;string&nbsp;if&nbsp;the&nbsp;module&nbsp;is&nbsp;available,<br>
 or&nbsp;an&nbsp;empty&nbsp;string&nbsp;if&nbsp;it&nbsp;is&nbsp;not.<br>
 &nbsp;<br>
-The&nbsp;module&nbsp;is&nbsp;only&nbsp;checked&nbsp;on&nbsp;the&nbsp;first&nbsp;call.<br>
-The&nbsp;result&nbsp;is&nbsp;remembered&nbsp;in&nbsp;the&nbsp;GD.version&nbsp;dict.</tt></dd></dl>
+By&nbsp;default,&nbsp;the&nbsp;module&nbsp;is&nbsp;only&nbsp;checked&nbsp;on&nbsp;the&nbsp;first&nbsp;call.&nbsp;<br>
+The&nbsp;result&nbsp;is&nbsp;remembered&nbsp;in&nbsp;the&nbsp;GD.version&nbsp;dict.<br>
+The&nbsp;optional&nbsp;argument&nbsp;check==True&nbsp;forces&nbsp;a&nbsp;new&nbsp;detection.</tt></dd></dl>
  <dl><dt><a name="-interrogate"><strong>interrogate</strong></a>(item)</dt><dd><tt>Print&nbsp;useful&nbsp;information&nbsp;about&nbsp;item.</tt></dd></dl>
  <dl><dt><a name="-isPyFormex"><strong>isPyFormex</strong></a>(filename)</dt><dd><tt>Checks&nbsp;whether&nbsp;a&nbsp;file&nbsp;is&nbsp;a&nbsp;pyFormex&nbsp;script.<br>
 &nbsp;<br>
@@ -182,8 +183,8 @@ is&nbsp;returned.</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__file__</strong> = '/home/bene/prj/pyformex/utils.pyc'<br>
+<td width="100%"><strong>__file__</strong> = '/home/bene/prj/pyformex/utils.py'<br>
 <strong>__name__</strong> = 'utils'<br>
 <strong>file_description</strong> = {'all': 'All files (*)', 'gts': 'GTS files (*.gts)', 'icon': 'Icons (*.xpm)', 'img': 'Images (*.png *.jpg *.eps)', 'neu': 'Gambit Neutral files (*.neu)', 'off': 'OFF files (*.off)', 'png': 'PNG images (*.png)', 'smesh': 'Tetgen surface mesh files (*.smesh)', 'stl': 'STL files (*.stl)', 'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)'}<br>
-<strong>known_externals</strong> = {'ImageMagick': ('import -version', r'Version: ImageMagick (\S+)'), 'admesh': ('admesh --version', r'ADMesh - version (\S+)'), 'tetgen': ('tetgen -h |fgrep Version', r'Version (\S+)')}</td></tr></table>
+<strong>known_externals</strong> = {'ImageMagick': ('import -version', r'Version: ImageMagick (\S+)'), 'admesh': ('admesh --version', r'ADMesh - version (\S+)'), 'calpy': ('calpy --version', r'Calpy (\S+)'), 'tetgen': ('tetgen -h |fgrep Version', r'Version (\S+)')}</td></tr></table>
 </body></html>
