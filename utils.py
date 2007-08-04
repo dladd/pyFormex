@@ -76,16 +76,17 @@ def checkModule(name):
     return version
 
     
-def hasModule(name):
+def hasModule(name,check=False):
     """Test if we have the named module available.
 
     Returns a nonzero (version) string if the module is available,
     or an empty string if it is not.
 
-    The module is only checked on the first call.
+    By default, the module is only checked on the first call. 
     The result is remembered in the GD.version dict.
+    The optional argument check==True forces a new detection.
     """
-    if GD.version.has_key(name):
+    if GD.version.has_key(name) and not check:
         return GD.version[name]
     else:
         return checkModule(name)
@@ -95,6 +96,7 @@ def hasModule(name):
 known_externals = {
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
+    'calpy': ('calpy --version','Calpy (\S+)'), 
     'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'), 
     }
 

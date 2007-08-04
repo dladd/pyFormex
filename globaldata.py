@@ -50,6 +50,15 @@ image_formats_fromeps = []
 def message(s):
     print s
 
+def warning(s):
+    if gui:
+        from gui import draw
+        draw.warning(s)
+    else:
+        import script
+        script.warning(s)
+    
+
 def debug(s):
     if hasattr(options,'debug'):
         if options.debug:

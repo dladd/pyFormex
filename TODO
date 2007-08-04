@@ -8,39 +8,70 @@ working on what.
 
 
 Each task can have the following keys:
- - dev(eloper)
- - sta(tus)
- - rem(arks)
+ dev(eloper)
+ sta(tus)
+ rem(arks)
 
-Release 0.5 :
+o [bverheg] Release 0.5 :
+
+
  - Detect and register extension software (calpy,tetgen,admesh,gl2ps,
      commands: awk, )
+     dev: bverheg
+     sta: DONE
  - Turn the menu plugins (STL, Formex) into importable modules
      dev: bverheg
-     sta: EXPERIMENTING
- - Python style installation procedure:
+     sta: DONE
  - Multiple views:
- - Display camera settings: 
+     dev: bverheg
+     sta: PARTIAL
+     rem: One to Four independent viewports are available.
+          In future, linking of viewports will be possible.
  - Rendering of values on the domain:
      dev: bverheg
      sta: INITIATED
-     rem: Feasability demonstrated through some examples: *_calpy.py
+     rem: Some basic classes available.
+          Feasability demonstrated through some examples: *_calpy.py
  - Manual:
      dev: all
-     sta: UNDER DEVELOPMENT
+     sta: CONTINUOUSLY UNDER DEVELOPMENT
      rem: Obviously, the manual will always stay under development. We will
           remove it from this todo list when it deals with most aspects
           of the next pyFormex release.
  - Interactive selection/transformation:
+     dev: bverheg
+     sta: PARTIAL
+     rem: partially implemented and in Formex menu and local scripts
  - Faster Formex->FeModel transformation (possibly implement in C):
+     dev: bverheg
+     sta: PARTIAL
+     rem: A (moderate) speedup of the default transformation has been
+          achieved. For stl surface, an important speedup is achieved
+          by using the stl->gts transform.
  - Faster loading of large STL models (possibly in C):
+     dev: bverheg
+     sta: DONE
+     rem: Done via external 'gts': transform to GTS format 
  - Export FEA models in Fluent format: 
+     dev: pmortier?
+     sta: INITIATED
+ - Group script menus into a single one
+ - Move history menu to the File Menu
+ - Add default values and timeout to user interaction widgets
 
 
-Release 0.6 :
+* Release 0.6 :
+ - Display camera settings: 
  - Provide a formian to pyformex translator
  - Step by step execution of scripts
  - Move the core modules to a subpackage, others to plugins/gui
+ - Python style installation procedure:
 
-Release 0.9 :
+* Release 0.9 :
  - Dedicated editor
+
+* Release 1.0:
+
+
+* testje
+

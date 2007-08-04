@@ -9,7 +9,7 @@ PYMODULES= config flatkeydb formex globaldata mydict \
 PYGUIMODULES = __init__  actors camera cameraMenu canvas \
   colors colorscale decors draw fileMenu gui help image \
   marks menu prefMenu scriptsMenu toolbar viewport viewportMenu widgets
-PLUGINMODULES= __init__ elements f2abq formex_menu inertia \
+PLUGINMODULES= __init__ calpy elements f2abq formex_menu inertia \
   lima partition properties sectionize \
   stl stl_abq stl_menu tetgen turtle
 EXAMPLES= __init__ BarrelVault Baumkuchen Circle Clip Diamatic \

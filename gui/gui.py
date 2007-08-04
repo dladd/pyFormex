@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
@@ -17,8 +16,6 @@ if not ( utils.hasModule('numpy') and
          utils.hasModule('pyopengl') and
          utils.hasModule('pyqt4') ):
     sys.exit()
-
-utils.hasModule('calpy')
 
 import time,os.path,string,re
 
@@ -471,6 +468,7 @@ def runApp(args):
             menus.append(m)   # Needed to keep m linked to a name,
                               # else the menu is destroyed!
     GD.message = draw.message
+    GD.warning = draw.warning
     draw.reset()
     # Load plugins
     # This should be replaced with a plugin registering function

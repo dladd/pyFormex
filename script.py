@@ -106,10 +106,6 @@ def system(cmdline,result='output'):
     elif result == 'both':
         return commands.getstatusoutput(cmdline)
 
-# Find interesting supporting software
-
-# Calpy
-utils.hasModule('calpy')
 
 ########################### PLAYING SCRIPTS ##############################
 

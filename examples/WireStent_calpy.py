@@ -13,10 +13,9 @@
 
 ############################
 # Load the needed calpy modules    
-import utils
-if not utils.hasModule('calpy'):
-    warning("Sorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it).")
-    exit()
+
+from plugins import calpy_itf
+calpy_itf.check()
 
 import calpy
 calpy.options.optimize=True
