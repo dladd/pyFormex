@@ -3,5 +3,5 @@ Type=Application
 Exec=pyformex --gui --redirect
 Icon=pyformex.png
 Name=pyFormex
-GenericName=pyFormex Space Frame Designer
-Comment=pyFormex is a Python implementation of Framex algebra.
+GenericName=pyFormex 3D Geometry Designer
+Comment=pyFormex is a program to design, manipulate and operate on 3D geometrical structures.
