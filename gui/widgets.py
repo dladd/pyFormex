@@ -565,50 +565,6 @@ class InputDialog(QtGui.QDialog):
 
 ############################# Menu ##############################
 
-
-def addMenuItems(menu, items=[]):
-    """Add a list of items to a menu.
-
-    Each item is a tuple of two to five elements:
-       Text, Action, [ Icon,  ShortCut, ToolTip ].
-
-    Item text is the text that will be displayed in the menu. An optional '&'
-    may be used to flag the next character as the shortcut key. The '&' will
-    be stripped off before displaying the text. If the text starts with '---',
-    or Action is None, a separator is created. 
-
-    Action can be any of the following:
-      - a Python function or instance method : it will be called when the
-        item is selected,
-      - a string with the name of a function/method,
-      - a list of Menu Items: a popup Menu will be created that will appear
-        when the item is selected,
-      - None : this will create a separator item with no action.
-
-    Icon is the name of one of the icons in the installed icondir.
-    ShortCut is an optional key combination to select the item.
-    Tooltip is a popup help string.
-    """
-    for item in items:
-        txt,val = item[:2]
-        if txt.startswith('---') or val is None:
-            menu.addSeparator()
-        elif isinstance(val, list):
-            pop = Menu(txt,menu)
-            addMenuItems(pop,val)
-            menu.addMenu(pop)
-        else:
-            if type(val) == str:
-                val = eval(val)
-            a = menu.addAction(txt,val)
-            if len(item) > 2 and item[2]:
-                a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(item[2]))))
-            if len(item) > 3 and item[3]:
-                a.setShortcut(item[3])
-            if len(item) > 4 and item[4]:
-                a.setToolTip(item[4])
-
-
 def normalize(s):
     """Normalize a string.
 
@@ -616,30 +572,133 @@ def normalize(s):
     """
     return str(s).replace('&','').lower()
 
-                 
-def menuDict(menu):
-    """Returns the menudict of a menu.
 
-    The menudict holds the normalized text labels and corresponding actions.
-    Text normalization removes all '&' characters and converts to lower case.
+class BaseMenu(object):
+    """A general menu class.
+
+    This class is not intended for direct use, but through subclasses.
+    Subclasses should implement at least the following methods:
+      addSeparator()              insertSeperator(before)
+      addAction(text,action)      insertAction(before,text,action)
+      addMenu(text,menu)          insertMenu(before,text,menu)
+      
+    QtGui.Menu and QtGui.MenuBar provide these methods.
     """
-    return dict([[normalize(a.text()),a] for a in menu.actions()])
+
+    def __init__(self,title='AMenu',parent=None,before=None,items=None):
+        """Create a menu.
+
+        This is a hierarchical menu that keeps a list of its item
+        names and actions.
+        """
+        self.title = title
+        self.parent = parent
+        if parent and isinstance(parent,BaseMenu):
+            if before:
+                before = parent.itemAction(before)
+            parent.insert_menu(self,before)
+        self.menuitems = []
+        if items:
+            self.insertItems(items)
+
+
+    def item(self,text):
+        """Get the menu item with given normalized text.
+
+        Text normalization removes all '&' characters and
+        converts to lower case.
+        """
+        return dict(self.menuitems).get(normalize(text),None)
+
+
+    def itemAction(self,item):
+        """Return the action corresponding to item.
+
+        item is either one of the menu's item texts, or one of its
+        values. This method guarantees that the return value is either the
+        corresponding Action, or None.
+        """
+        if item not in dict(self.menuitems).values():
+            item = self.item(item)
+        if isinstance(item,QtGui.QMenu):
+            item = item.menuAction()
+        return item
     
 
-def menuItem(menu, text):
-    """Get the menu item with given normalized text.
+    def insert_sep(self,before=None):
+        """Create and insert a separator"""
+        if before:
+            return self.insertSeparator(before)
+        else:
+            return self.addSeparator()
 
-    Text normalization removes all '&' characters and converts to lower case.
-    """
-    d =  menuDict(menu)
-    t = normalize(text)
-    a = menuDict(menu).get(normalize(text),None)
-    return a
+    def insert_menu(self,menu,before=None):
+        """Insert an existing menu."""
+        if before:
+            return self.insertMenu(before,menu)
+        else:
+            return self.addMenu(menu)
 
-class Menu(QtGui.QMenu):
-    """A popup menu for user actions."""
+    def insert_action(self,str,val,before=None):
+        """Create and insert an action.""" 
+        if before:
+            return self.insertAction(before,str,val)
+        else:
+            return self.addAction(str,val)
+    
 
-    def __init__(self,title='UserMenu',parent=None):
+    def insertItems(self,items,before=None):
+        """Insert a list of items in the menu.
+        
+        Each item is a tuple of two to five elements:
+           Text, Action, [ Icon,  ShortCut, ToolTip ].
+
+        Item text is the text that will be displayed in the menu.
+        It will be stored in a normalized way: all lower case and with
+        '&' removed.
+
+        Action can be any of the following:
+          - a Python function or instance method : it will be called when the
+            item is selected,
+          - a string with the name of a function/method,
+          - a list of Menu Items: a popup Menu will be created that will appear
+            when the item is selected,
+          - None : this will create a separator item with no action.
+
+        Icon is the name of one of the icons in the installed icondir.
+        ShortCut is an optional key combination to select the item.
+        Tooltip is a popup help string.
+
+        If before is given, it specifies the text OR the action of one of the
+        items in the menu: the new items will be inserted before that one.
+        """
+        if before:
+            before = self.itemAction(before)
+        for item in items:
+            txt,val = item[:2]
+            if  val is None:
+                a = self.insert_sep(before)
+            elif isinstance(val, list):
+                a = Menu(txt,self)
+                a.insertItems(val)
+                #self.insert_menu(a,before)
+            else:
+                if type(val) == str:
+                    val = eval(val)
+                a = self.insert_action(txt,val,before)
+                if len(item) > 2 and item[2]:
+                    a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(item[2]))))
+                if len(item) > 3 and item[3]:
+                    a.setShortcut(item[3])
+                if len(item) > 4 and item[4]:
+                    a.setToolTip(item[4])
+            self.menuitems.append((normalize(txt),a))
+
+
+class Menu(BaseMenu,QtGui.QMenu):
+    """A popup/pulldown menu."""
+
+    def __init__(self,title='UserMenu',parent=None,before=None,items=None):
         """Create a popup/pulldown menu.
 
         If parent==None, the menu is a standalone popup menu.
@@ -657,30 +716,11 @@ class Menu(QtGui.QMenu):
         and the user will have to process it explicitely.
         """
         QtGui.QMenu.__init__(self,title,parent)
-        self.parent = parent
-        if self.parent == GD.gui:
-            GD.gui.menu.insertMenu(self)
-        elif parent is None:
+        BaseMenu.__init__(self,title,parent,before,items)
+        if parent is None:
             self.setWindowFlags(QtCore.Qt.Dialog)
             self.setWindowTitle(title)
         self.done = False
-
-
-    def addItems(self,itemlist):
-        addMenuItems(self,itemlist)
-
-
-    def insertMenu(self,menu,before=None):
-        """Insert a menu before the specified item.
-
-        If no place is specified, it is added to the end.
-        """
-        if before is not None:
-            before = menuItem(self,before)
-        if before:
-            QtGui.QMenu.insertMenu(self,before,menu)
-        else:
-            self.addMenu(menu)
             
 
     def process(self):
@@ -690,48 +730,20 @@ class Menu(QtGui.QMenu):
             GD.app.processEvents()
 
 
-    def close(self):
-        """Close the menu."""
+    def remove(self):
+        """Remove this menu from its parent."""
         self.done=True
         if self.parent == GD.gui:
-            GD.gui.menu.removeMenu(str(self.title()))
+            GD.gui.menu.removeAction(self.menuAction())
 
 
-class MenuBar(QtGui.QMenuBar):
+class MenuBar(BaseMenu,QtGui.QMenuBar):
     """A menu bar allowing easy menu creation."""
 
     def __init__(self):
         """Create the menubar."""
         QtGui.QMenuBar.__init__(self)
-
-
-    def addItems(self,itemlist):
-        addMenuItems(self,itemlist)
-
-
-    def insertMenu(self,menu,before='help'):
-        """Insert a menu in the menubar before the specified menu.
-
-        The new menu can be inserted BEFORE any of the existing menus.
-        By default the new menu will be inserted before the Help menu.
-        """
-        item = menuItem(self,before)
-        if item:
-            QtGui.QMenuBar.insertMenu(self,item,menu)
-        else:
-            GD.debug("No such menu item: %s" % before)
-
-
-    def removeMenu(self,menu):
-        """Remove a menu from the main menubar.
-
-        menu is either a menu title or a menu action.
-        """
-        if type(menu) == str:
-            menu = menuItem(self,menu)
-        if menu:
-            self.removeAction(menu)
-
+        BaseMenu.__init__(self)
 
 
 ###################### Action List ############################################

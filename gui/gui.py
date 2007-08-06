@@ -161,7 +161,7 @@ class GUI(QtGui.QMainWindow):
         self.box.setLayout(self.boxlayout)
         # Create the top menu
         menu.createMenuData()
-        self.menu.addItems(menu.MenuData)
+        self.menu.insertItems(menu.MenuData)
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
         if GD.cfg.get('gui/camerabuttons','True'):
@@ -202,17 +202,14 @@ class GUI(QtGui.QMainWindow):
             toolbar.addTransparencyButton(self.modebar)
          
         if mmenu:
-            # insert the menu in the viewport menu
-            pmenu = widgets.menuItem(self.menu,'viewport').menu()
-            before = widgets.menuItem(pmenu,'background color')
-            GD.debug("BEFORE = %s" % before)
-            pmenu.insertMenu(mmenu,before)
+            # insert the mode menu in the viewport menu
+            pmenu = self.menu.item('viewport')
+            pmenu.insertMenu(pmenu.item('background color'),mmenu)
 
         ##  VIEWS menu and toolbar
         self.viewsMenu = None
         if GD.cfg.get('gui/viewmenu',True):
-            self.viewsMenu = QtGui.QMenu('&Views')
-            self.menu.insertMenu(self.viewsMenu)
+            self.viewsMenu = widgets.Menu('&Views',parent=self.menu,before='help')
         views = GD.cfg['gui/builtinviews']
         area = GD.cfg['gui/viewbar']
         if area:
@@ -460,25 +457,30 @@ def runApp(args):
         GD.gui.history = scriptsMenu.ScriptsMenu('History',files=history,max=20)
 
     if GD.cfg.get('gui/history_in_main_menu',False):
-        GD.gui.menu.insertMenu(GD.gui.history)
+        before = GD.gui.menu.item('help').menuAction()
+        GD.gui.menu.insertMenu(before,GD.gui.history)
     else:
-        filemenu = widgets.menuItem(GD.gui.menu,'file').menu()
-        GD.debug(widgets.menuDict(filemenu))
-        filemenu.insertMenu(GD.gui.history,'save image')
-        
+        filemenu = GD.gui.menu.item('file')
+        before = filemenu.item('---1')
+        filemenu.insertMenu(before,GD.gui.history)
+
+
+    #print widgets.menuDict(filemenu)
+    #sys.exit()
     # Create a menu with pyFormex examples
     # and insert it before the help menu
     menus = []
     scriptdirs = GD.cfg['scriptdirs']
 
-    if GD.cfg.get('gui/separatescriptdirs',False):
+    if GD.cfg.get('gui/separate_script_dirs',False):
         # This will create seperate menus for all scriptdirs
         pass
     else:
         # The default is to collect all scriptdirs in a single main menu
         if len(scriptdirs) > 1:
             scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
-            GD.gui.menu.insertMenu(scriptsmenu)
+            before = GD.gui.menu.item('help').menuAction()
+            GD.gui.menu.insertMenu(before,scriptsmenu)
         else:
             scriptsmenu = GD.gui.menu
 
@@ -486,7 +488,7 @@ def runApp(args):
             GD.debug("Loading script dir %s" % dirname)
             if os.path.exists(dirname):
                 m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
-                scriptsmenu.insertMenu(m)
+                scriptsmenu.addMenu(m)
                 menus.append(m)   # Needed to keep m linked to a name,
                                   # else the menu is destroyed!
 

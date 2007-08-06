@@ -511,7 +511,6 @@ _menu = None
 
 def create_menu():
     """Create the Surface menu."""
-    menu = widgets.Menu('Surface',GD.gui)
     MenuData = [
         # ("&New project",new_project),
         ("&Read Surface",read_surface),
@@ -544,8 +543,7 @@ def create_menu():
         ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
         ]
-    menu.addItems(MenuData)
-    return menu
+    return widgets.Menu('Surface',items=MenuData,parent=GD.gui.menu,before='help')
 
 
 def close_menu():
@@ -554,7 +552,7 @@ def close_menu():
     global _menu
     #GD.gui.statusbar.removeWidget(projectLabel)
     if _menu:
-        _menu.close()
+        _menu.remove()
     _menu = None
 
     

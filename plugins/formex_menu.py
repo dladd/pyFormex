@@ -509,7 +509,6 @@ _menu = None  # protect against duplicate creation
 
 def create_menu():
     """Create the Formex menu."""
-    menu = widgets.Menu('Formex',GD.gui)
     MenuData = [
 #        ("&List Formices",formex_list),
         ("&Select",makeSelection),
@@ -547,14 +546,14 @@ def create_menu():
         ("---",None),
         ("&Close",close_menu),
         ]
-    menu.addItems(MenuData)
-    return menu
+    return widgets.Menu('Formex',items=MenuData,parent=GD.gui.menu,before='help')
+
 
 def close_menu():
     """Close the Formex menu."""
     global _menu
     if _menu:
-        _menu.close()
+        _menu.remove()
     _menu = None
     
 def show_menu():
