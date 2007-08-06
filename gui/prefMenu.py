@@ -108,10 +108,6 @@ def setLinewidth():
 
 def setSize():
     GD.gui.resize(800,600)
-    
-def setCanvasSize():
-    res = draw.askItems([['w',GD.canvas.width()],['h',GD.canvas.height()]])
-    GD.canvas.resize(int(res['w']),int(res['h']))
 
 def setPickSize():
     w,h = GD.cfg['pick/size']
@@ -179,7 +175,6 @@ MenuData = [
         (_('&Drawwait Timeout'),setDrawtimeout), 
 #        (_('&Background Color'),setBGcolor), 
 #        (_('Line&Width'),setLinewidth), 
-        (_('&Canvas Size'),setCanvasSize), 
         (_('&Pick Size'),setPickSize), 
         (_('&RotFactor'),setRotFactor),
         (_('&PanFactor'),setPanFactor),

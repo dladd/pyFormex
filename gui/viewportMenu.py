@@ -61,6 +61,13 @@ def setLineWidth():
     if accept:
         GD.canvas.setLineWidth(res['Line Width'])
     
+def setCanvasSize():
+    """Save the current viewport size"""
+    itemlist = [('w',GD.canvas.width()),('h',GD.canvas.height())]
+    res,accept = widgets.InputDialog(itemlist,'Set Canvas Size').getResult()
+    if accept:
+        GD.canvas.resize(int(res['w']),int(res['h']))
+
 
 def viewportSettings():
     """Interactively set the viewport settings."""
@@ -93,6 +100,7 @@ MenuData = [
         (_('&Background Color'),setBgColor), 
         (_('&Foreground Color'),setFgColor), 
         (_('Line&Width'),setLineWidth), 
+        (_('&Canvas Size'),setCanvasSize), 
         (_('&All Viewport Settings'),viewportSettings), 
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),
