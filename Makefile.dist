@@ -52,10 +52,17 @@ distclean:
 
 pydoc: ${HTMLDIR}/index.html
 
-${HTMLDIR}/index.html: ${PYSOURCE} ${PYGUISOURCE} ${PLUGINSOURCE} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
-	rm -f ${HTMLDIR}/*
-	pydoc_gen.py $ -d ${HTMLDIR} ${PYMODULES} gui plugins
-	./make_doc_index	
+${HTMLDIR}/index.html: ${HTMLDOCS} ${HTMLGUIDOCS} ${HTMLPLUGINDOCS} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
+	./make_doc_index
+
+${HTMLDIR}/%.html: %.py
+	pydoc_gen.py $ -d ${HTMLDIR} $<
+
+${HTMLDIR}/gui.%.html: gui/%.py
+	pydoc_gen.py $ -d ${HTMLDIR} gui.$*
+
+${HTMLDIR}/plugins.%.html: plugins/%.py
+	pydoc_gen.py $ -d ${HTMLDIR} plugins.$*
 
 
 manual:

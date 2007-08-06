@@ -73,23 +73,18 @@
 </dd>
 </dl>
 </dd>
-<dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QMenu">QMenu</a>(<a href="PyQt4.QtGui.html#QWidget">QWidget</a>)
-</font></dt><dd>
-<dl>
-<dt><font face="helvetica, arial"><a href="gui.widgets.html#Menu">Menu</a>
-</font></dt></dl>
-</dd>
-<dt><font face="helvetica, arial"><a href="PyQt4.QtGui.html#QMenuBar">QMenuBar</a>(<a href="PyQt4.QtGui.html#QWidget">QWidget</a>)
-</font></dt><dd>
-<dl>
-<dt><font face="helvetica, arial"><a href="gui.widgets.html#MenuBar">MenuBar</a>
-</font></dt></dl>
-</dd>
 <dt><font face="helvetica, arial"><a href="__builtin__.html#object">object</a>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="gui.widgets.html#ActionList">ActionList</a>
+</font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#BaseMenu">BaseMenu</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="gui.widgets.html#Menu">Menu</a>(<a href="gui.widgets.html#BaseMenu">BaseMenu</a>, <a href="PyQt4.QtGui.html#QMenu">QMenu</a>)
+</font></dt><dt><font face="helvetica, arial"><a href="gui.widgets.html#MenuBar">MenuBar</a>(<a href="gui.widgets.html#BaseMenu">BaseMenu</a>, <a href="PyQt4.QtGui.html#QMenuBar">QMenuBar</a>)
 </font></dt></dl>
+</dd>
+</dl>
 </dd>
 </dl>
  <p>
@@ -810,6 +805,76 @@ Methods inherited from <a href="sip.html#wrapper">wrapper</a>:<br>
 <hr>
 Data and other attributes inherited from <a href="sip.html#wrapper">wrapper</a>:<br>
 <dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of sip.wrappertype object&gt;<dd><tt>T.<a href="#AppearenceDialog-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BaseMenu">class <strong>BaseMenu</strong></a>(<a href="__builtin__.html#object">object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;general&nbsp;menu&nbsp;class.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;is&nbsp;not&nbsp;intended&nbsp;for&nbsp;direct&nbsp;use,&nbsp;but&nbsp;through&nbsp;subclasses.<br>
+Subclasses&nbsp;should&nbsp;implement&nbsp;at&nbsp;least&nbsp;the&nbsp;following&nbsp;methods:<br>
+&nbsp;&nbsp;addSeparator()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insertSeperator(before)<br>
+&nbsp;&nbsp;addAction(text,action)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insertAction(before,text,action)<br>
+&nbsp;&nbsp;addMenu(text,menu)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insertMenu(before,text,menu)<br>
+&nbsp;&nbsp;<br>
+QtGui.<a href="#Menu">Menu</a>&nbsp;and&nbsp;QtGui.<a href="#MenuBar">MenuBar</a>&nbsp;provide&nbsp;these&nbsp;methods.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BaseMenu-__init__"><strong>__init__</strong></a>(self, title<font color="#909090">='AMenu'</font>, parent<font color="#909090">=None</font>, before<font color="#909090">=None</font>, items<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;menu.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;hierarchical&nbsp;menu&nbsp;that&nbsp;keeps&nbsp;a&nbsp;list&nbsp;of&nbsp;its&nbsp;item<br>
+names&nbsp;and&nbsp;actions.</tt></dd></dl>
+
+<dl><dt><a name="BaseMenu-insertItems"><strong>insertItems</strong></a>(self, items, before<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;in&nbsp;the&nbsp;menu.<br>
+&nbsp;<br>
+Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;to&nbsp;five&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;Text,&nbsp;Action,&nbsp;[&nbsp;Icon,&nbsp;&nbsp;ShortCut,&nbsp;ToolTip&nbsp;].<br>
+&nbsp;<br>
+Item&nbsp;text&nbsp;is&nbsp;the&nbsp;text&nbsp;that&nbsp;will&nbsp;be&nbsp;displayed&nbsp;in&nbsp;the&nbsp;menu.<br>
+It&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;a&nbsp;normalized&nbsp;way:&nbsp;all&nbsp;lower&nbsp;case&nbsp;and&nbsp;with<br>
+'&amp;'&nbsp;removed.<br>
+&nbsp;<br>
+Action&nbsp;can&nbsp;be&nbsp;any&nbsp;of&nbsp;the&nbsp;following:<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;Python&nbsp;function&nbsp;or&nbsp;instance&nbsp;method&nbsp;:&nbsp;it&nbsp;will&nbsp;be&nbsp;called&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;item&nbsp;is&nbsp;selected,<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;string&nbsp;with&nbsp;the&nbsp;name&nbsp;of&nbsp;a&nbsp;function/method,<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Menu">Menu</a>&nbsp;Items:&nbsp;a&nbsp;popup&nbsp;<a href="#Menu">Menu</a>&nbsp;will&nbsp;be&nbsp;created&nbsp;that&nbsp;will&nbsp;appear<br>
+&nbsp;&nbsp;&nbsp;&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;selected,<br>
+&nbsp;&nbsp;-&nbsp;None&nbsp;:&nbsp;this&nbsp;will&nbsp;create&nbsp;a&nbsp;separator&nbsp;item&nbsp;with&nbsp;no&nbsp;action.<br>
+&nbsp;<br>
+Icon&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;icons&nbsp;in&nbsp;the&nbsp;installed&nbsp;icondir.<br>
+ShortCut&nbsp;is&nbsp;an&nbsp;optional&nbsp;key&nbsp;combination&nbsp;to&nbsp;select&nbsp;the&nbsp;item.<br>
+Tooltip&nbsp;is&nbsp;a&nbsp;popup&nbsp;help&nbsp;string.<br>
+&nbsp;<br>
+If&nbsp;before&nbsp;is&nbsp;given,&nbsp;it&nbsp;specifies&nbsp;the&nbsp;text&nbsp;OR&nbsp;the&nbsp;action&nbsp;of&nbsp;one&nbsp;of&nbsp;the<br>
+items&nbsp;in&nbsp;the&nbsp;menu:&nbsp;the&nbsp;new&nbsp;items&nbsp;will&nbsp;be&nbsp;inserted&nbsp;before&nbsp;that&nbsp;one.</tt></dd></dl>
+
+<dl><dt><a name="BaseMenu-insert_action"><strong>insert_action</strong></a>(self, str, val, before<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;and&nbsp;insert&nbsp;an&nbsp;action.</tt></dd></dl>
+
+<dl><dt><a name="BaseMenu-insert_menu"><strong>insert_menu</strong></a>(self, menu, before<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;an&nbsp;existing&nbsp;menu.</tt></dd></dl>
+
+<dl><dt><a name="BaseMenu-insert_sep"><strong>insert_sep</strong></a>(self, before<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;and&nbsp;insert&nbsp;a&nbsp;separator</tt></dd></dl>
+
+<dl><dt><a name="BaseMenu-item"><strong>item</strong></a>(self, text)</dt><dd><tt>Get&nbsp;the&nbsp;menu&nbsp;item&nbsp;with&nbsp;given&nbsp;normalized&nbsp;text.<br>
+&nbsp;<br>
+Text&nbsp;normalization&nbsp;removes&nbsp;all&nbsp;'&amp;'&nbsp;characters&nbsp;and<br>
+converts&nbsp;to&nbsp;lower&nbsp;case.</tt></dd></dl>
+
+<dl><dt><a name="BaseMenu-itemAction"><strong>itemAction</strong></a>(self, item)</dt><dd><tt>Return&nbsp;the&nbsp;action&nbsp;corresponding&nbsp;to&nbsp;item.<br>
+&nbsp;<br>
+item&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;the&nbsp;menu's&nbsp;item&nbsp;texts,&nbsp;or&nbsp;one&nbsp;of&nbsp;its<br>
+values.&nbsp;This&nbsp;method&nbsp;guarantees&nbsp;that&nbsp;the&nbsp;return&nbsp;value&nbsp;is&nbsp;either&nbsp;the<br>
+corresponding&nbsp;Action,&nbsp;or&nbsp;None.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__dict__</strong> = &lt;dictproxy object&gt;<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'BaseMenu' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 </td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -4559,13 +4624,14 @@ Data and other attributes inherited from <a href="sip.html#wrapper">wrapper</a>:
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="Menu">class <strong>Menu</strong></a>(<a href="PyQt4.QtGui.html#QMenu">QMenu</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="Menu">class <strong>Menu</strong></a>(<a href="gui.widgets.html#BaseMenu">BaseMenu</a>, <a href="PyQt4.QtGui.html#QMenu">QMenu</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
-<td colspan=2><tt>A&nbsp;popup&nbsp;menu&nbsp;for&nbsp;user&nbsp;actions.<br>&nbsp;</tt></td></tr>
+<td colspan=2><tt>A&nbsp;popup/pulldown&nbsp;menu.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.widgets.html#Menu">Menu</a></dd>
+<dd><a href="gui.widgets.html#BaseMenu">BaseMenu</a></dd>
 <dd><a href="PyQt4.QtGui.html#QMenu">QMenu</a></dd>
 <dd><a href="PyQt4.QtGui.html#QWidget">QWidget</a></dd>
 <dd><a href="PyQt4.QtCore.html#QObject">QObject</a></dd>
@@ -4575,7 +4641,7 @@ Data and other attributes inherited from <a href="sip.html#wrapper">wrapper</a>:
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="Menu-__init__"><strong>__init__</strong></a>(self, title<font color="#909090">='UserMenu'</font>, parent<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;popup/pulldown&nbsp;menu.<br>
+<dl><dt><a name="Menu-__init__"><strong>__init__</strong></a>(self, title<font color="#909090">='UserMenu'</font>, parent<font color="#909090">=None</font>, before<font color="#909090">=None</font>, items<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;popup/pulldown&nbsp;menu.<br>
 &nbsp;<br>
 If&nbsp;parent==None,&nbsp;the&nbsp;menu&nbsp;is&nbsp;a&nbsp;standalone&nbsp;popup&nbsp;menu.<br>
 If&nbsp;parent&nbsp;is&nbsp;given,&nbsp;the&nbsp;menu&nbsp;will&nbsp;be&nbsp;inserted&nbsp;in&nbsp;the&nbsp;parent&nbsp;menu.<br>
@@ -4591,11 +4657,58 @@ from&nbsp;the&nbsp;main&nbsp;menu.<br>
 If&nbsp;insert&nbsp;==&nbsp;False,&nbsp;the&nbsp;created&nbsp;menu&nbsp;will&nbsp;be&nbsp;an&nbsp;independent&nbsp;dialog<br>
 and&nbsp;the&nbsp;user&nbsp;will&nbsp;have&nbsp;to&nbsp;process&nbsp;it&nbsp;explicitely.</tt></dd></dl>
 
-<dl><dt><a name="Menu-addItems"><strong>addItems</strong></a>(self, itemlist)</dt></dl>
-
-<dl><dt><a name="Menu-close"><strong>close</strong></a>(self)</dt><dd><tt>Close&nbsp;the&nbsp;menu.</tt></dd></dl>
-
 <dl><dt><a name="Menu-process"><strong>process</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Menu-remove"><strong>remove</strong></a>(self)</dt><dd><tt>Remove&nbsp;this&nbsp;menu&nbsp;from&nbsp;its&nbsp;parent.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="gui.widgets.html#BaseMenu">BaseMenu</a>:<br>
+<dl><dt><a name="Menu-insertItems"><strong>insertItems</strong></a>(self, items, before<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;in&nbsp;the&nbsp;menu.<br>
+&nbsp;<br>
+Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;to&nbsp;five&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;Text,&nbsp;Action,&nbsp;[&nbsp;Icon,&nbsp;&nbsp;ShortCut,&nbsp;ToolTip&nbsp;].<br>
+&nbsp;<br>
+Item&nbsp;text&nbsp;is&nbsp;the&nbsp;text&nbsp;that&nbsp;will&nbsp;be&nbsp;displayed&nbsp;in&nbsp;the&nbsp;menu.<br>
+It&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;a&nbsp;normalized&nbsp;way:&nbsp;all&nbsp;lower&nbsp;case&nbsp;and&nbsp;with<br>
+'&amp;'&nbsp;removed.<br>
+&nbsp;<br>
+Action&nbsp;can&nbsp;be&nbsp;any&nbsp;of&nbsp;the&nbsp;following:<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;Python&nbsp;function&nbsp;or&nbsp;instance&nbsp;method&nbsp;:&nbsp;it&nbsp;will&nbsp;be&nbsp;called&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;item&nbsp;is&nbsp;selected,<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;string&nbsp;with&nbsp;the&nbsp;name&nbsp;of&nbsp;a&nbsp;function/method,<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Menu">Menu</a>&nbsp;Items:&nbsp;a&nbsp;popup&nbsp;<a href="#Menu">Menu</a>&nbsp;will&nbsp;be&nbsp;created&nbsp;that&nbsp;will&nbsp;appear<br>
+&nbsp;&nbsp;&nbsp;&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;selected,<br>
+&nbsp;&nbsp;-&nbsp;None&nbsp;:&nbsp;this&nbsp;will&nbsp;create&nbsp;a&nbsp;separator&nbsp;item&nbsp;with&nbsp;no&nbsp;action.<br>
+&nbsp;<br>
+Icon&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;icons&nbsp;in&nbsp;the&nbsp;installed&nbsp;icondir.<br>
+ShortCut&nbsp;is&nbsp;an&nbsp;optional&nbsp;key&nbsp;combination&nbsp;to&nbsp;select&nbsp;the&nbsp;item.<br>
+Tooltip&nbsp;is&nbsp;a&nbsp;popup&nbsp;help&nbsp;string.<br>
+&nbsp;<br>
+If&nbsp;before&nbsp;is&nbsp;given,&nbsp;it&nbsp;specifies&nbsp;the&nbsp;text&nbsp;OR&nbsp;the&nbsp;action&nbsp;of&nbsp;one&nbsp;of&nbsp;the<br>
+items&nbsp;in&nbsp;the&nbsp;menu:&nbsp;the&nbsp;new&nbsp;items&nbsp;will&nbsp;be&nbsp;inserted&nbsp;before&nbsp;that&nbsp;one.</tt></dd></dl>
+
+<dl><dt><a name="Menu-insert_action"><strong>insert_action</strong></a>(self, str, val, before<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;and&nbsp;insert&nbsp;an&nbsp;action.</tt></dd></dl>
+
+<dl><dt><a name="Menu-insert_menu"><strong>insert_menu</strong></a>(self, menu, before<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;an&nbsp;existing&nbsp;menu.</tt></dd></dl>
+
+<dl><dt><a name="Menu-insert_sep"><strong>insert_sep</strong></a>(self, before<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;and&nbsp;insert&nbsp;a&nbsp;separator</tt></dd></dl>
+
+<dl><dt><a name="Menu-item"><strong>item</strong></a>(self, text)</dt><dd><tt>Get&nbsp;the&nbsp;menu&nbsp;item&nbsp;with&nbsp;given&nbsp;normalized&nbsp;text.<br>
+&nbsp;<br>
+Text&nbsp;normalization&nbsp;removes&nbsp;all&nbsp;'&amp;'&nbsp;characters&nbsp;and<br>
+converts&nbsp;to&nbsp;lower&nbsp;case.</tt></dd></dl>
+
+<dl><dt><a name="Menu-itemAction"><strong>itemAction</strong></a>(self, item)</dt><dd><tt>Return&nbsp;the&nbsp;action&nbsp;corresponding&nbsp;to&nbsp;item.<br>
+&nbsp;<br>
+item&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;the&nbsp;menu's&nbsp;item&nbsp;texts,&nbsp;or&nbsp;one&nbsp;of&nbsp;its<br>
+values.&nbsp;This&nbsp;method&nbsp;guarantees&nbsp;that&nbsp;the&nbsp;return&nbsp;value&nbsp;is&nbsp;either&nbsp;the<br>
+corresponding&nbsp;Action,&nbsp;or&nbsp;None.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="gui.widgets.html#BaseMenu">BaseMenu</a>:<br>
+<dl><dt><strong>__dict__</strong> = {'__doc__': 'A popup/pulldown menu.', '__init__': &lt;function __init__&gt;, '__module__': 'gui.widgets', 'process': &lt;function process&gt;, 'remove': &lt;function remove&gt;}<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'BaseMenu' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenu">QMenu</a>:<br>
@@ -4786,6 +4899,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">QWid
 <dl><dt><strong>clearFocus</strong> = &lt;built-in function clearFocus&gt;</dl>
 
 <dl><dt><strong>clearMask</strong> = &lt;built-in function clearMask&gt;</dl>
+
+<dl><dt><strong>close</strong> = &lt;built-in function close&gt;</dl>
 
 <dl><dt><strong>contentsRect</strong> = &lt;built-in function contentsRect&gt;</dl>
 
@@ -5153,8 +5268,6 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">QWid
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
-
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
 <dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
@@ -5271,13 +5384,14 @@ Data and other attributes inherited from <a href="sip.html#wrapper">wrapper</a>:
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="MenuBar">class <strong>MenuBar</strong></a>(<a href="PyQt4.QtGui.html#QMenuBar">QMenuBar</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="MenuBar">class <strong>MenuBar</strong></a>(<a href="gui.widgets.html#BaseMenu">BaseMenu</a>, <a href="PyQt4.QtGui.html#QMenuBar">QMenuBar</a>)</font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>A&nbsp;menu&nbsp;bar&nbsp;allowing&nbsp;easy&nbsp;menu&nbsp;creation.<br>&nbsp;</tt></td></tr>
 <tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="gui.widgets.html#MenuBar">MenuBar</a></dd>
+<dd><a href="gui.widgets.html#BaseMenu">BaseMenu</a></dd>
 <dd><a href="PyQt4.QtGui.html#QMenuBar">QMenuBar</a></dd>
 <dd><a href="PyQt4.QtGui.html#QWidget">QWidget</a></dd>
 <dd><a href="PyQt4.QtCore.html#QObject">QObject</a></dd>
@@ -5289,16 +5403,54 @@ Data and other attributes inherited from <a href="sip.html#wrapper">wrapper</a>:
 Methods defined here:<br>
 <dl><dt><a name="MenuBar-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Create&nbsp;the&nbsp;menubar.</tt></dd></dl>
 
-<dl><dt><a name="MenuBar-addItems"><strong>addItems</strong></a>(self, itemlist)</dt></dl>
-
-<dl><dt><a name="MenuBar-insertMenu"><strong>insertMenu</strong></a>(self, menu, before<font color="#909090">='help'</font>)</dt><dd><tt>Insert&nbsp;a&nbsp;menu&nbsp;in&nbsp;the&nbsp;menubar&nbsp;before&nbsp;the&nbsp;specified&nbsp;menu.<br>
+<hr>
+Methods inherited from <a href="gui.widgets.html#BaseMenu">BaseMenu</a>:<br>
+<dl><dt><a name="MenuBar-insertItems"><strong>insertItems</strong></a>(self, items, before<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;in&nbsp;the&nbsp;menu.<br>
 &nbsp;<br>
-The&nbsp;new&nbsp;menu&nbsp;can&nbsp;be&nbsp;inserted&nbsp;BEFORE&nbsp;any&nbsp;of&nbsp;the&nbsp;existing&nbsp;menus.<br>
-By&nbsp;default&nbsp;the&nbsp;new&nbsp;menu&nbsp;will&nbsp;be&nbsp;inserted&nbsp;before&nbsp;the&nbsp;Help&nbsp;menu.</tt></dd></dl>
-
-<dl><dt><a name="MenuBar-removeMenu"><strong>removeMenu</strong></a>(self, menu)</dt><dd><tt>Remove&nbsp;a&nbsp;menu&nbsp;from&nbsp;the&nbsp;main&nbsp;menubar.<br>
+Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;to&nbsp;five&nbsp;elements:<br>
+&nbsp;&nbsp;&nbsp;Text,&nbsp;Action,&nbsp;[&nbsp;Icon,&nbsp;&nbsp;ShortCut,&nbsp;ToolTip&nbsp;].<br>
 &nbsp;<br>
-menu&nbsp;is&nbsp;either&nbsp;a&nbsp;menu&nbsp;title&nbsp;or&nbsp;a&nbsp;menu&nbsp;action.</tt></dd></dl>
+Item&nbsp;text&nbsp;is&nbsp;the&nbsp;text&nbsp;that&nbsp;will&nbsp;be&nbsp;displayed&nbsp;in&nbsp;the&nbsp;menu.<br>
+It&nbsp;will&nbsp;be&nbsp;stored&nbsp;in&nbsp;a&nbsp;normalized&nbsp;way:&nbsp;all&nbsp;lower&nbsp;case&nbsp;and&nbsp;with<br>
+'&amp;'&nbsp;removed.<br>
+&nbsp;<br>
+Action&nbsp;can&nbsp;be&nbsp;any&nbsp;of&nbsp;the&nbsp;following:<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;Python&nbsp;function&nbsp;or&nbsp;instance&nbsp;method&nbsp;:&nbsp;it&nbsp;will&nbsp;be&nbsp;called&nbsp;when&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;item&nbsp;is&nbsp;selected,<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;string&nbsp;with&nbsp;the&nbsp;name&nbsp;of&nbsp;a&nbsp;function/method,<br>
+&nbsp;&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Menu">Menu</a>&nbsp;Items:&nbsp;a&nbsp;popup&nbsp;<a href="#Menu">Menu</a>&nbsp;will&nbsp;be&nbsp;created&nbsp;that&nbsp;will&nbsp;appear<br>
+&nbsp;&nbsp;&nbsp;&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;selected,<br>
+&nbsp;&nbsp;-&nbsp;None&nbsp;:&nbsp;this&nbsp;will&nbsp;create&nbsp;a&nbsp;separator&nbsp;item&nbsp;with&nbsp;no&nbsp;action.<br>
+&nbsp;<br>
+Icon&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;icons&nbsp;in&nbsp;the&nbsp;installed&nbsp;icondir.<br>
+ShortCut&nbsp;is&nbsp;an&nbsp;optional&nbsp;key&nbsp;combination&nbsp;to&nbsp;select&nbsp;the&nbsp;item.<br>
+Tooltip&nbsp;is&nbsp;a&nbsp;popup&nbsp;help&nbsp;string.<br>
+&nbsp;<br>
+If&nbsp;before&nbsp;is&nbsp;given,&nbsp;it&nbsp;specifies&nbsp;the&nbsp;text&nbsp;OR&nbsp;the&nbsp;action&nbsp;of&nbsp;one&nbsp;of&nbsp;the<br>
+items&nbsp;in&nbsp;the&nbsp;menu:&nbsp;the&nbsp;new&nbsp;items&nbsp;will&nbsp;be&nbsp;inserted&nbsp;before&nbsp;that&nbsp;one.</tt></dd></dl>
+
+<dl><dt><a name="MenuBar-insert_action"><strong>insert_action</strong></a>(self, str, val, before<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;and&nbsp;insert&nbsp;an&nbsp;action.</tt></dd></dl>
+
+<dl><dt><a name="MenuBar-insert_menu"><strong>insert_menu</strong></a>(self, menu, before<font color="#909090">=None</font>)</dt><dd><tt>Insert&nbsp;an&nbsp;existing&nbsp;menu.</tt></dd></dl>
+
+<dl><dt><a name="MenuBar-insert_sep"><strong>insert_sep</strong></a>(self, before<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;and&nbsp;insert&nbsp;a&nbsp;separator</tt></dd></dl>
+
+<dl><dt><a name="MenuBar-item"><strong>item</strong></a>(self, text)</dt><dd><tt>Get&nbsp;the&nbsp;menu&nbsp;item&nbsp;with&nbsp;given&nbsp;normalized&nbsp;text.<br>
+&nbsp;<br>
+Text&nbsp;normalization&nbsp;removes&nbsp;all&nbsp;'&amp;'&nbsp;characters&nbsp;and<br>
+converts&nbsp;to&nbsp;lower&nbsp;case.</tt></dd></dl>
+
+<dl><dt><a name="MenuBar-itemAction"><strong>itemAction</strong></a>(self, item)</dt><dd><tt>Return&nbsp;the&nbsp;action&nbsp;corresponding&nbsp;to&nbsp;item.<br>
+&nbsp;<br>
+item&nbsp;is&nbsp;either&nbsp;one&nbsp;of&nbsp;the&nbsp;menu's&nbsp;item&nbsp;texts,&nbsp;or&nbsp;one&nbsp;of&nbsp;its<br>
+values.&nbsp;This&nbsp;method&nbsp;guarantees&nbsp;that&nbsp;the&nbsp;return&nbsp;value&nbsp;is&nbsp;either&nbsp;the<br>
+corresponding&nbsp;Action,&nbsp;or&nbsp;None.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="gui.widgets.html#BaseMenu">BaseMenu</a>:<br>
+<dl><dt><strong>__dict__</strong> = {'__doc__': 'A menu bar allowing easy menu creation.', '__init__': &lt;function __init__&gt;, '__module__': 'gui.widgets'}<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dl>
+
+<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'BaseMenu' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenuBar">QMenuBar</a>:<br>
@@ -5375,6 +5527,8 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QMenuBar">QMe
 <dl><dt><strong>hideEvent</strong> = &lt;built-in function hideEvent&gt;</dl>
 
 <dl><dt><strong>inputMethodEvent</strong> = &lt;built-in function inputMethodEvent&gt;</dl>
+
+<dl><dt><strong>insertMenu</strong> = &lt;built-in function insertMenu&gt;</dl>
 
 <dl><dt><strong>insertSeparator</strong> = &lt;built-in function insertSeparator&gt;</dl>
 
@@ -5830,8 +5984,6 @@ Data and other attributes inherited from <a href="PyQt4.QtGui.html#QWidget">QWid
 
 <hr>
 Data and other attributes inherited from <a href="PyQt4.QtCore.html#QObject">QObject</a>:<br>
-<dl><dt><strong>__weakref__</strong> = &lt;attribute '__weakref__' of 'QObject' objects&gt;<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;<a href="__builtin__.html#object">object</a>&nbsp;(if&nbsp;defined)</tt></dl>
-
 <dl><dt><strong>blockSignals</strong> = &lt;built-in function blockSignals&gt;</dl>
 
 <dl><dt><strong>children</strong> = &lt;built-in function children&gt;</dl>
@@ -7440,39 +7592,11 @@ Data and other attributes inherited from <a href="sip.html#wrapper">wrapper</a>:
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-addMenuItems"><strong>addMenuItems</strong></a>(menu, items<font color="#909090">=[]</font>)</dt><dd><tt>Add&nbsp;a&nbsp;list&nbsp;of&nbsp;items&nbsp;to&nbsp;a&nbsp;menu.<br>
-&nbsp;<br>
-Each&nbsp;item&nbsp;is&nbsp;a&nbsp;tuple&nbsp;of&nbsp;two&nbsp;to&nbsp;five&nbsp;elements:<br>
-&nbsp;&nbsp;&nbsp;Text,&nbsp;Action,&nbsp;[&nbsp;Icon,&nbsp;&nbsp;ShortCut,&nbsp;ToolTip&nbsp;].<br>
-&nbsp;<br>
-Item&nbsp;text&nbsp;is&nbsp;the&nbsp;text&nbsp;that&nbsp;will&nbsp;be&nbsp;displayed&nbsp;in&nbsp;the&nbsp;menu.&nbsp;An&nbsp;optional&nbsp;'&amp;'<br>
-may&nbsp;be&nbsp;used&nbsp;to&nbsp;flag&nbsp;the&nbsp;next&nbsp;character&nbsp;as&nbsp;the&nbsp;shortcut&nbsp;key.&nbsp;The&nbsp;'&amp;'&nbsp;will<br>
-be&nbsp;stripped&nbsp;off&nbsp;before&nbsp;displaying&nbsp;the&nbsp;text.&nbsp;If&nbsp;the&nbsp;text&nbsp;starts&nbsp;with&nbsp;'---',<br>
-a&nbsp;separator&nbsp;is&nbsp;created.&nbsp;<br>
-&nbsp;<br>
-Action&nbsp;can&nbsp;be&nbsp;any&nbsp;of&nbsp;the&nbsp;following:<br>
-&nbsp;&nbsp;-&nbsp;a&nbsp;Python&nbsp;function&nbsp;or&nbsp;instance&nbsp;method&nbsp;:&nbsp;it&nbsp;will&nbsp;be&nbsp;called&nbsp;when&nbsp;the<br>
-&nbsp;&nbsp;&nbsp;&nbsp;item&nbsp;is&nbsp;selected,<br>
-&nbsp;&nbsp;-&nbsp;a&nbsp;string&nbsp;with&nbsp;the&nbsp;name&nbsp;of&nbsp;a&nbsp;function/method,<br>
-&nbsp;&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Menu">Menu</a>&nbsp;Items:&nbsp;a&nbsp;popup&nbsp;<a href="#Menu">Menu</a>&nbsp;will&nbsp;be&nbsp;created&nbsp;that&nbsp;will&nbsp;appear<br>
-&nbsp;&nbsp;&nbsp;&nbsp;when&nbsp;the&nbsp;item&nbsp;is&nbsp;selected,<br>
-&nbsp;&nbsp;-&nbsp;None&nbsp;:&nbsp;this&nbsp;will&nbsp;create&nbsp;a&nbsp;separator&nbsp;item&nbsp;with&nbsp;no&nbsp;action.<br>
-&nbsp;<br>
-Icon&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;one&nbsp;of&nbsp;the&nbsp;icons&nbsp;in&nbsp;the&nbsp;installed&nbsp;icondir.<br>
-ShortCut&nbsp;is&nbsp;an&nbsp;optional&nbsp;key&nbsp;combination&nbsp;to&nbsp;select&nbsp;the&nbsp;item.<br>
-Tooltip&nbsp;is&nbsp;a&nbsp;popup&nbsp;help&nbsp;string.</tt></dd></dl>
- <dl><dt><a name="-getColor"><strong>getColor</strong></a>(col<font color="#909090">=None</font>, caption<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;color&nbsp;selection&nbsp;dialog&nbsp;and&nbsp;return&nbsp;the&nbsp;selected&nbsp;color.<br>
+<td width="100%"><dl><dt><a name="-getColor"><strong>getColor</strong></a>(col<font color="#909090">=None</font>, caption<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;color&nbsp;selection&nbsp;dialog&nbsp;and&nbsp;return&nbsp;the&nbsp;selected&nbsp;color.<br>
 &nbsp;<br>
 col&nbsp;is&nbsp;the&nbsp;initial&nbsp;selection.<br>
 If&nbsp;a&nbsp;valid&nbsp;color&nbsp;is&nbsp;selected,&nbsp;its&nbsp;string&nbsp;name&nbsp;is&nbsp;returned,&nbsp;usually&nbsp;as<br>
 a&nbsp;hex&nbsp;#RRGGBB&nbsp;string.&nbsp;If&nbsp;the&nbsp;dialog&nbsp;is&nbsp;canceled,&nbsp;None&nbsp;is&nbsp;returned.</tt></dd></dl>
- <dl><dt><a name="-menuDict"><strong>menuDict</strong></a>(menu)</dt><dd><tt>Returns&nbsp;the&nbsp;menudict&nbsp;of&nbsp;a&nbsp;menu.<br>
-&nbsp;<br>
-The&nbsp;menudict&nbsp;holds&nbsp;the&nbsp;normalized&nbsp;text&nbsp;labels&nbsp;and&nbsp;corresponding&nbsp;actions.<br>
-Text&nbsp;normalization&nbsp;removes&nbsp;all&nbsp;'&amp;'&nbsp;characters&nbsp;and&nbsp;converts&nbsp;to&nbsp;lower&nbsp;case.</tt></dd></dl>
- <dl><dt><a name="-menuItem"><strong>menuItem</strong></a>(menu, text)</dt><dd><tt>Get&nbsp;the&nbsp;menu&nbsp;item&nbsp;with&nbsp;given&nbsp;normalized&nbsp;text.<br>
-&nbsp;<br>
-Text&nbsp;normalization&nbsp;removes&nbsp;all&nbsp;'&amp;'&nbsp;characters&nbsp;and&nbsp;converts&nbsp;to&nbsp;lower&nbsp;case.</tt></dd></dl>
  <dl><dt><a name="-normalize"><strong>normalize</strong></a>(s)</dt><dd><tt>Normalize&nbsp;a&nbsp;string.<br>
 &nbsp;<br>
 Text&nbsp;normalization&nbsp;removes&nbsp;all&nbsp;'&amp;'&nbsp;characters&nbsp;and&nbsp;converts&nbsp;to&nbsp;lower&nbsp;case.</tt></dd></dl>
