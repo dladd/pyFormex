@@ -733,8 +733,8 @@ class Menu(BaseMenu,QtGui.QMenu):
     def remove(self):
         """Remove this menu from its parent."""
         self.done=True
-        if self.parent == GD.gui:
-            GD.gui.menu.removeAction(self.menuAction())
+        if self.parent:
+            self.parent.removeAction(self.menuAction())
 
 
 class MenuBar(BaseMenu,QtGui.QMenuBar):
