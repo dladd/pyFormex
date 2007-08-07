@@ -1,0 +1,32 @@
+/* XPM */
+static char *ff[] = {
+/* width height ncolors chars_per_pixel */
+"22 22 3 1",
+/* colors */
+"  c #000",
+". c #FFF",
+"X c None",
+/* pixels */
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXX XXXXX XXXXXXXXXXX",
+"XXXX  XXXX  XXXXXXXXXX",
+"XXXX   XXX   XXXXXXXXX",
+"XXXX    XX    XXXXXXXX",
+"XXXX     X     XXXXXXX",
+"XXXX            XXXXXX",
+"XXXX             XXXXX",
+"XXXX              XXXX",
+"XXXX              XXXX",
+"XXXX             XXXXX",
+"XXXX            XXXXXX",
+"XXXX     X     XXXXXXX",
+"XXXX    XX    XXXXXXXX",
+"XXXX   XXX   XXXXXXXXX",
+"XXXX  XXXX  XXXXXXXXXX",
+"XXXX XXXXX XXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXXXXXXXX"
+};

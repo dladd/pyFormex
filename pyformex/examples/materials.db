@@ -1,0 +1,9 @@
+# Sample materials database
+# Units are N and mm
+material
+	name=steel
+	young_modulus=210000
+	shear_modulus=85000
+	density = 7.85e-9
+	poisson_ratio = 0.3
+endmaterial

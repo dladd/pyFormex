@@ -1,0 +1,34 @@
+section
+	name=koker
+	cross_section=500
+	moment_inertia_11=1256
+	moment_inertia_12=695
+	moment_inertia_22=365499
+	torsional_rigidity=635256
+endsection
+
+section
+	name=IPEA100
+	cross_section=878
+	moment_inertia_11=1412000
+	moment_inertia_12=1254
+	moment_inertia_22=1140000
+	torsional_rigidity=1542
+endsection
+
+# The following style could be used with units
+
+section name=IPE80 
+  height = 80 mm
+  width = 46 mm
+  web thickness = 3.8 mm
+  flange thickness = 5.2 mm
+  fillet radius = 5 mm
+  specific mass = 6 kg/m
+  A = 764.3 mm^2
+  I11 = 80.1 cm^4
+  W1 = 20.0 cm^3
+  I22 = 8.49 cm^4
+  W2 = 3.69 cm^3
+endsection
+   

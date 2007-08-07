@@ -1,0 +1,99 @@
+# This is the default pyFormex config file. DO NOT CHANGE IT!  -*- PYTHON -*-
+##
+## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
+#
+# Changes should go to /etc/pyformexrc (for site-wide changes)
+# or to ~/.pyformexrc (for personal settings).
+# If your are missing these files, you can safely copy (parts of) this file
+# as a start. 
+# Config settings are read in order from this file, then /etc/pyformexrc,
+# ~/.pyformexrc. The last settings will override previous ones.
+#
+# The config is now read by the config.Config class
+# Two variables are set on entry: pyformexdir, homedir
+#
+import os
+
+# directories
+workdir="."
+icondir = os.path.join(pyformexdir,'icons')
+docdir = os.path.join(pyformexdir,'doc')
+examplesdir = os.path.join(pyformexdir,'examples')
+# scriptdirs is a list of (title,dir) tuples
+scriptdirs = [ ('Examples',examplesdir) ]
+#imagesfromeps = True
+history = []
+# extra paths to append tot sys.path
+syspath = []
+
+# commands
+### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE
+editor = os.environ.get('VISUAL',None)
+#viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
+viewer = 'firefox'   # html viewer
+browser = 'firefox'    # web browser
+# the %s in the above commands will be replaced with the filename/URL
+
+autoglobals = True
+
+[gui]
+style = "Plastique"
+size=(800,600)
+pos=(0,0)
+fullscreen = False
+icontype = '.xpm'
+cameramenu = True    # add camera menu
+camerabuttons = True # add camera buttons to toolbar
+examplesmenu = True  # add examples menu
+modemenu = True      # add a Mode menu
+modebar = True       # add a Mode toolbar
+viewmenu = True      # add a Views menu
+viewbar = True       # add a Views toolbar
+builtinviews = ['front','back','right','left','top','bottom','iso']
+zoomfactor = 1.15    # zooming factor for zoom buttons
+rotfactor = 5.       # rotation angle for rotation buttons
+panfactor = 0.01     # translation factor for pan buttons
+
+[canvas]
+bgcolor = 'lightgrey'
+fgcolor = 'black'
+slcolor = 'red'
+linewidth = 1
+propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 
+                 # a default color set for properties
+
+[draw]
+wait = 0  # time(sec.) to wait between draw operations (None is indefinitely)
+flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying
+localaxes = True     # by default, buttons rotate/pan in local axes
+
+
+[pick]
+size=(20,20) # size of the pick window
+
+[render]
+mode = 'wireframe'
+ambient = 0.3
+specular = 0.3
+emission = 0.0
+shininess = 0.3
+light0 = {'position':(0.,0.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
+light1 = {'position':(1.,1.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
+light2 = {'position':(-1.,1.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
+
+
+
+[help]
+manual = os.path.join(pyformexdir,"manual","html","index.html")
+pydocs = os.path.join(pyformexdir,"doc","html","index.html")
+readme = os.path.join(pyformexdir,"doc","README")
+license = os.path.join(pyformexdir,"doc","COPYING")
+website = "http://pyformex.berlios.de" 
+webmanual = website+"/manual" 

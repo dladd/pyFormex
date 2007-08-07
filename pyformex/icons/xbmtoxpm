@@ -1,0 +1,21 @@
+#!/bin/sh
+# Transform xbm to xpm
+#
+[ -n "$1" ] || {
+    echo "Usage: $(basename $0) <xbm-files>"
+    echo "  Transforms the .xbm icons to .xpm format (using netpbm)"
+    echo "  White is transformed to transparant"
+    exit
+}
+for f in "$@"; do
+    name=${f%.xbm}
+    [ -f ${name}.xbm ] && {
+	xbmtopbm ${name}.xbm > ${name}.pbm
+	pbmmask ${name}.pbm | pnminvert > ${name}_mask.pbm
+	ppmtobmp ${name}.pbm > ${name}.bmp
+	pnmtopng -alpha ${name}_mask.pbm ${name}.pbm >${name}.png
+	pnmtopng ${name}.pbm >${name}_opak.png
+	ppmtoxpm -alphamask ${name}_mask.pbm ${name}.pbm > ${name}.xpm
+	#rm ${name}.pbm ${name}_mask.pbm
+    }
+done
