@@ -1,0 +1,14 @@
+prune *
+include COPYING
+include pyformex/*.py
+include pyformex/pyformex
+include pyformex/pyformexrc
+include pyformex/gui/*.py
+include pyformex/plugins/*.py
+include pyformex/examples/*
+include pyformex/icons/*.xpm
+include manual/manual.pdf
+include manual/manual.ps
+include manual/html/*
+include manual/images/*
+include pyformex.desktop

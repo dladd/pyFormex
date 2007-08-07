@@ -90,9 +90,9 @@ dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERS
 	cp ${MANUALIMAGES}   ${PYFORMEXDIR}/manual/images
 	cp ${DESKTOPFILE} ${PYFORMEXDIR}/${VENDOR}-${DESKTOPFILE}
 
-version: globaldata.py manual/manual.tex
+version: pyformex/globaldata.py manual/manual.tex
 
-globaldata.py: RELEASE
+pyformex/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 
 manual/manual.tex: RELEASE

@@ -2,7 +2,7 @@
 VERSION=0.5
 # Unless you are creating an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
-RELEASE=${VERSION}-alpha
+RELEASE=${VERSION}a1
 PROGRAM= pyformex.py
 PYMODULES= config flatkeydb formex globaldata mydict \
   script simple timer units utils vector

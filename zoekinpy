@@ -2,7 +2,7 @@
 # Zoek een string in all .py files
 #
 #set -f
-files="*.py gui/*.py plugins/*.py examples/*.py"
+files="pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/examples/*.py"
 for d in local stent; do
 	[ -d "$d" ] && files="$files $d/*.py"
 done
