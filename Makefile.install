@@ -103,5 +103,8 @@ clean:
 
 ################# REDIRECT OTHER TARGETS TO DEVELOPERS MAKEFILE ###############
 
+dist:
+	${MAKE} -f Makefile.dist dist
+
 %:
 	${MAKE} -f Makefile.dist $@

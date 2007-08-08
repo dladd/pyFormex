@@ -21,8 +21,8 @@ TESTOPTIONS= --keep
 
 .PHONY html: html/${TGT}.html
 
-pyformex.help: ../pyformex.py
-	../pyformex.py --help > $@
+pyformex.help: ../pyformex/pyformex
+	../pyformex/pyformex --help > $@
 
 ${TGT}.ps: ${SRC}
 	${MKHOWTO} --a4 --ps $<
