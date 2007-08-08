@@ -207,9 +207,9 @@ You will need proper permissions to actually delete the files.
         else:
             # Save the current dir as workdir
             GD.cfg['workdir'] = os.getcwd()
-        from pyformex.gui.gui import runApp
+        from gui.gui import runApp
     else:
-        from pyformex.script import runApp
+        from script import runApp
     
     res = runApp(args)
 
