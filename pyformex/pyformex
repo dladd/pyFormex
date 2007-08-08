@@ -24,15 +24,12 @@ try:
     sys.path[-1:] = [pyformexdir]
 
 except:
-    print "Pyformex was not correctly installed!"
-
+    print "pyFormex was not correctly installed!"
 
 print "I found pyFormex in %s " % sys.path[0]
 
 import globaldata as GD
 
-import sys
-import os.path
 from config import Config
 from optparse import OptionParser,make_option
 from utils import isPyFormex
@@ -122,7 +119,7 @@ def main(argv=None):
     GD.print_help = parser.print_help
 
     if GD.options.whereami:
-        print "pyFormex path: %s" % __path__
+        print "pyFormex path: %s" % pyformexdir
         sys.exit()
 
     GD.debug("Options: %s" % GD.options)
