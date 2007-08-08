@@ -771,7 +771,8 @@ class DAction(QtGui.QAction):
         """
         QtGui.QAction.__init__(self,name,None)
         if icon:
-            self.setIcon(icon)
+            print "ICON %s " % icon
+            #self.setIcon(icon)
         if not data:
             data = name
         self.setData(QtCore.QVariant(data))
@@ -823,8 +824,13 @@ class ActionList(object):
         If an icon is specified, it will be used on the menu and toolbar.
         The icon is either a filename or a QIcon object. 
         """
-        if type(icon) == str and os.path.exists(icon):
-            icon = QtGui.QIcon(QtGui.QPixmap(icon))
+        if type(icon) == str:
+            print os.getcwd()
+            print "CREATE ICON %s" % icon
+            if os.path.exists(icon):
+                icon = QtGui.QIcon(QtGui.QPixmap(icon))
+            else:
+                raise RuntimeError,'Icons not installed properly'
         menutext = '&' + name.capitalize()
         a = DAction(menutext,icon,name)
         if self.function:

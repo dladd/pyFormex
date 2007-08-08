@@ -15,18 +15,23 @@
 
 # Get the pyformex dir and put it on the head of sys.path
 import sys,os
-try:
-    sys.path[:0] = ['.']
-    import pyformex
-    pyformexdir = pyformex.__path__[0]
-    sys.path[:1] = []
-    #sys.path[:0] = [pyformexdir]
-    sys.path[-1:] = [pyformexdir]
+print "Script started from %s" % sys.path[0]
+pyformexdir = sys.path[0]
+if os.path.basename(pyformexdir) != 'pyformex':
+    print "This script is not inside the pyformex directory.\nI will try to find the pyformex directory first."
 
-except:
-    print "pyFormex was not correctly installed!"
+    try:
+        import pyformex
+        pyformexdir = pyformex.__path__[0]
+        sys.path.append(pyformexdir)
 
-print "I found pyFormex in %s " % sys.path[0]
+    except:
+        print "I could not find the pyformex directory"
+        print "pyFormex was not correctly installed!"
+        sys.exit()
+
+print "I found pyFormex in %s " %  pyformexdir
+
 
 import globaldata as GD
 
@@ -51,7 +56,6 @@ def printcfg(key):
     print "!! cfg[%s] = %s" % (key,GD.cfg[key])
 
     
-
 def main(argv=None):
     """This is a fairly generic main() function.
 
