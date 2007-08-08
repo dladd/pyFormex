@@ -53,9 +53,26 @@ class DoubleHelixStent:
         #print "ny",ny
         # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
-        base = Formex(pattern('1')).replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
+        A=Formex(pattern('1'),0)
+        GD.message("Step 1: Create a Formex: a line of length 1 oriented along the X-axis")
+        draw(A)
+        pause()
+##        clear() 
+        B=Formex(A.replic(nb,1.0),1)
+        GD.message("Step 2: Copy the formex nb times in the X-direction")
+        draw(B)
+        pause()
+##        clear() 
+##        base = Formex(pattern('1')).replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
+        base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),2)
+        draw(base)
+        pause()
+        clear()
                 # scale back to size 1.
         base = base.scale([1./nb,1./nb,1.])
+        draw(base)
+        pause()
+        clear()
         # NE and SE directed struts
         NE = base.shear(1,0,1.)
         SE = base.reflect(2).shear(1,0,-1.)
@@ -89,13 +106,13 @@ class DoubleHelixStent:
         clear()
         F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
         GD.message("Step 3: Replicate the base module in both directions of the base plane")
-        draw(F)
+        draw(F,view='iso')
         pause()
         clear()
         # fold it into a cylinder
         self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
         GD.message("Step 4: Roll the nearly planar grid into a cylinder")
-        draw(self.F,view='last')
+        draw(self.F,view='iso')
         pause()
         clear()
         self.ny = ny
