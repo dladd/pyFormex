@@ -885,6 +885,60 @@ Large angle values result in polygones: circle(120,120) is an equilateral triang
 
 \end{funcdesc}
 
+
+
+\section{Drawing}
+\label{sec:drawing}
+
+The following function provide drawing capabilities to your scripts.
+
+ 
+\begin{funcdesc}{draw}{F, view=None, bbox='auto', color='prop', colormap=None, wait=True, eltype=None, allviews=False, marksize=None, linewidth=None, alpha=0.5}
+
+Draw a Formex or a list of Formices on the canvas.
+
+    If F is a list, all its items are drawn with the same settings.
+
+    If a setting is unspecified, its current values are used.
+    
+    Draws an actor on the canvas, and directs the camera to it from
+    the specified view. Named views are either predefined or can be added by
+    the user.
+    If view=None is specified, the camera settings remain unchanged.
+    This may make the drawn object out of view!
+    A special name '__last__' may be used to keep the same camera angles
+    as in the last draw operation. The camera will be zoomed on the newly
+    drawn object.
+    The initial default view is 'front' (looking in the -z direction).
+
+    If bbox == 'auto', the camera will zoom automatically on the shown
+    object. A bbox may be specified to have other zoom settings, e.g. to
+    keep the previous settings. If bbox == None, the previous bbox will be
+    kept.
+
+    If other actors are on the scene, they may or may not be visible with the
+    new camera settings. Clear the canvas before drawing if you only want
+    a single actor!
+
+    If the Formex has properties and a color list is specified, then the
+    the properties will be used as an index in the color list and each member
+    will be drawn with the resulting color.
+    If color is one color value, the whole Formex will be drawn with
+    that color.
+    Finally, if color=None is specified, the whole Formex is drawn in black.
+    
+    Each draw action activates a locking mechanism for the next draw action,
+    which will only be allowed after drawdelay seconds have elapsed. This
+    makes it easier to see subsequent images and is far more elegant that an
+    explicit sleep() operation, because all script processing will continue
+    up to the next drawing instruction.
+    The value of drawdelay is set in the config, or 2 seconds by default.
+    The user can disable the wait cycle for the next draw operation by
+    specifying wait=False. Setting drawdelay=0 will disable the waiting
+    mechanism for all subsequent draw statements (until set >0 again).
+
+\end{funcdesc}
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "manual"

@@ -23,55 +23,28 @@ Finally, \pyformex offers decorations, which are items drawn in 2D viewport coor
    
 \section{Drawing a Formex}
 The most important action performed on the canvas is the drawing of a Formex.
-This is accomplished with the \Code{draw()} function.
+This is accomplished with the \Code{draw()} function. If you look at the reference page of this function~\ref{sec:drawing}, the number of arguments looks frightening. However, most of these arguments have sensible default values, making the access to drawing functionality easy even for beginners. To display your created Formex \Code{F} on the screen, a simple \Code{draw(F)} will suffice in many cases.
+
+If you draw several Formices with subsequent \Code{draw()} commands, they will clutter the view. You can use the \Code{clear()} instruction to wipe out the screen before drawing the next one. If you want to see them together in the same view, you can use different colors to differentiate. Color drawing is as easy as \Code{draw(F,color='red')}. The color specification can take various forms. It can be a single color or an array of colors or even an array of indices in a color table. In the latter case you use \Code{draw(F,color=indices,colormap=table)} to draw the Formex. If multiple colors are specified, each elementof the Formex will be drawn with the corresponding color, and if the color array (or the color indices array) has less entries than the number of elements, it is wrapped around.
+
+A single color entry can be specified by a string ('red') or by a triple of RGB values in the range 0.0..1.0 (e.g. red is (1.0,0.0,0.0)) or a triplet of integer values in the range 0..255 or a hexadecimal string ('\#FF0000') or generally any of the values that can be converted by the colors.glColor() function to a triplet of RGB values.
+
+If no color is specified and your Formex has no properties, \pyformex will draw it with the current drawing color. If the Formex has properties, \pyformex will use the properies as a color index into the specified color map or a (configurable) default color map.
+
+\Todo{There should be some examples here.}
+
+
  
-\begin{funcdesc}{draw}{F, view=None, bbox='auto', color='prop', colormap=None, wait=True, eltype=None, allviews=False, marksize=None, linewidth=None, alpha=1.0}
-
-Draw a Formex or a list of Formices on the canvas.
-
-    If F is a list, all its items are drawn with the same settings.
-
-    If a setting is unspecified, its current values are used.
-    
-    Draws an actor on the canvas, and directs the camera to it from
-    the specified view. Named views are either predefined or can be added by
-    the user.
-    If view=None is specified, the camera settings remain unchanged.
-    This may make the drawn object out of view!
-    A special name '__last__' may be used to keep the same camera angles
-    as in the last draw operation. The camera will be zoomed on the newly
-    drawn object.
-    The initial default view is 'front' (looking in the -z direction).
-
-    If bbox == 'auto', the camera will zoom automatically on the shown
-    object. A bbox may be specified to have other zoom settings, e.g. to
-    keep the previous settings. If bbox == None, the previous bbox will be
-    kept.
-
-    If other actors are on the scene, they may or may not be visible with the
-    new camera settings. Clear the canvas before drawing if you only want
-    a single actor!
-
-    If the Formex has properties and a color list is specified, then the
-    the properties will be used as an index in the color list and each member
-    will be drawn with the resulting color.
-    If color is one color value, the whole Formex will be drawn with
-    that color.
-    Finally, if color=None is specified, the whole Formex is drawn in black.
-    
-    Each draw action activates a locking mechanism for the next draw action,
-    which will only be allowed after drawdelay seconds have elapsed. This
-    makes it easier to see subsequent images and is far more elegant that an
-    explicit sleep() operation, because all script processing will continue
-    up to the next drawing instruction.
-    The value of drawdelay is set in the config, or 2 seconds by default.
-    The user can disable the wait cycle for the next draw operation by
-    specifying wait=False. Setting drawdelay=0 will disable the waiting
-    mechanism for all subsequent draw statements (until set >0 again).
-
-\end{funcdesc}
-
 \section{Viewing the scene}
+Once the Formex is drawn, you can manipulate it interactively using the mouse: you can rotate, translate and zoom with any of the methods decribed in \ref{cha:gui}. You should understand though that these methods do not change your Formex, but only how it is viewed by the observer. 
+
+Our drawing board is based on OpenGL. The whole OpenGL drawing/viewing process can best be understood by making the comparison with the set of a movie, in which actors appear in a 3D scene, and a camera that creates a 2D image by looking at the scene with a certain lens from some angle and distance. Drawing a Formex then is nothing more than making an actor appear on the scene. The OpenGL machine will render it according to the current camera settings. 
+
+Viewing transformations using the mouse will only affect the camera, but not the scene. Thus, if you move the Formex by sliding your mouse with button 3 depressed to the right, the Formex will \emph{look like it is moving to the right,} though it is actually not: we simply move the camera in the opposite direction. Therefore, you will notice that moving the scene will not just translation the picture: its shape will change too, because of changing perspective.
+
+This also explains why there are two ways of zooming: either by changing the focal length of the lens (lens zooming) or by moving the camera towards or away from the scene (dolly zooming). The first one will change the perspective view of the scene, while the second one will not. 
+
+The easiest way to set all camera parameters for properly viewing a scene is by justing telling the direction from which you want to look, and let the program determine the rest of the settings itself. \pyformex even goes a step further and has a number of built in directions readily available: 'top', 'bottom', 'left', 'right', 'front', 'back' will set up the camera looking from that direction.
 
 \section{Other canvas items}
 

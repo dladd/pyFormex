@@ -1,5 +1,6 @@
 prune *
 include COPYING
+include README
 include pyformex/*.py
 include pyformex/pyformex
 include pyformex/pyformexrc
