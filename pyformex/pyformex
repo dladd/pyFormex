@@ -16,22 +16,23 @@
 # Get the pyformex dir and put it on the head of sys.path
 import sys,os
 scriptdir = sys.path[0]
-print "Script started from %s" % scriptdir
-pyformexdir = sys.path[0]
-if os.path.basename(pyformexdir) != 'pyformex':
-    print "This script is not inside the pyformex directory.\nI will try to find the pyformex directory first."
 
-    try:
-        import pyformex
-        pyformexdir = pyformex.__path__[0]
-        sys.path.append(pyformexdir)
+# In case we execute the pyformex script from inside the
+# pyformex package dir: add the parent to the front of sys.path
+# to pick up this package by preference
 
-    except:
-        print "I could not find the pyformex directory"
-        print "pyFormex was not correctly installed!"
-        sys.exit()
+if scriptdir.endswith('pyformex'):
+    sys.path[:0] = [ os.path.dirname(scriptdir) ]
 
-print "I found pyFormex in %s " %  pyformexdir
+try:
+    import pyformex
+    # we could remove the sys.path[0] again?
+except:
+    print "Could not import pyformex."
+    print "This probably means that pyFormex was not properly installed."
+
+pyformexdir = pyformex.__path__[0]
+sys.path[:0] = [ pyformexdir ]
 
 
 import globaldata as GD
@@ -134,7 +135,8 @@ def main(argv=None):
     GD.print_help = parser.print_help
 
     if GD.options.whereami:
-        print "pyFormex path: %s" % pyformexdir
+        print "Script started from %s" % scriptdir
+        print "I found pyFormex in %s " %  pyformexdir
         sys.exit()
         
     if GD.options.remove:
@@ -192,7 +194,11 @@ You will need proper permissions to actually delete the files.
         GD.cfg.read(GD.preffile)
     GD.debug("Config: %s" % GD.cfg)
 
-    sys.path[-1:] = GD.cfg.get('syspath',[])
+    #sys.path[-1:] = GD.cfg.get('syspath',[])
+##     print sys.path
+##     import pyformex
+##     print sys.path
+##     sys.exit()
 
     # Set default --nogui if first remaining argument is a pyformex script.
     if GD.options.gui is None:

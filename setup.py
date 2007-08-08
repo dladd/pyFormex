@@ -12,6 +12,7 @@ transformations.
       author_email='benedict.verhegghe@ugent.be',
       url='http://pyformex.berlios.de/',
       packages=['pyformex','pyformex.gui','pyformex.plugins','pyformex.examples'],
-      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db']},
+      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','doc/*']},
       scripts=['pyformex/pyformex'],
+#      data_files=[('pyformex/doc',['README','COPYING'])],
 )

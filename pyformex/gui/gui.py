@@ -446,7 +446,12 @@ def runApp(args):
     
     GD.gui.viewports.addView(0,0)
     GD.board = GD.gui.board
-    GD.board.write(GD.Version+"  (C) B. Verhegghe")
+    GD.board.write("""%s  (C) B. Verhegghe
+
+pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+See Help->License or the file COPYING for details.
+""" % GD.Version)
     GD.gui.show()
     
     # Create additional menus (put them in a list to save)
@@ -481,14 +486,16 @@ def runApp(args):
             scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
             before = GD.gui.menu.item('help').menuAction()
             GD.gui.menu.insertMenu(before,scriptsmenu)
+            before = None
         else:
             scriptsmenu = GD.gui.menu
+            before = scriptsmenu.itemAction('help')
 
         for title,dirname in scriptdirs:
             GD.debug("Loading script dir %s" % dirname)
             if os.path.exists(dirname):
                 m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
-                scriptsmenu.addMenu(m)
+                scriptsmenu.insert_menu(m,before)
                 menus.append(m)   # Needed to keep m linked to a name,
                                   # else the menu is destroyed!
 

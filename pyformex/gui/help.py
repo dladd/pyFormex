@@ -90,4 +90,4 @@ Distributed under the GNU GPL v2 or higher.
 """ % GD.Version)
 
 def testwarning():
-    draw.info("Smoking may be hazardous to your health!\nWindows is a virus!",["OK"])
+    draw.info("Smoking may be hazardous to your health!\nWindows is a virus!\nCoincidence does not exist. Perfection does.",["OK"])

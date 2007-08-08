@@ -11,6 +11,7 @@ include pyformex/gui/*.py
 include pyformex/plugins/*.py
 include pyformex/examples/*
 include pyformex/icons/*.xpm
+include pyformex/doc/*
 include manual/manual.pdf
 include manual/manual.ps
 include manual/html/*
