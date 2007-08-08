@@ -32,30 +32,12 @@ PKGDIR= dist
 
 ############ Creating Distribution ##################
 
-# Create the distribution
-dist: ${PKGDIR}/${PKG}
-
-# THIS IS THE OLD DISTRIBUTION WAY
-# 
-#${PKGDIR}/${PKG}: version ${PYFORMEXDIR}
-#	mkdir -p ${PKGDIR}
-#	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
-
-# THIS IS THE NEW DIST
-${PKGDIR}/${PKG}: version
-	python setup.py sdist
-
-# Publish the distribution to our ftp server
-pub: 
-	scp ${PKGDIR}/${PKG} bumps:/home/ftp/pub/pyformex
-
-
-${PYFORMEXDIR}: pydoc dist.stamped
 
 distclean:
 	rm -rf ${PYFORMEXDIR}
 	alldirs . "rm -f *~"
 
+# Create the pydoc html files
 
 pydoc: ${HTMLDIR}/index.html
 
@@ -72,30 +54,12 @@ ${HTMLDIR}/plugins.%.html: plugins/%.py
 	pydoc_gen.py $ -d ${HTMLDIR} plugins.$*
 
 
+# Create the manual
+
 manual:
 	make -C manual
 
-stamp: Stamp.template RELEASE
-	${STAMP} -tStamp.template version=${VERSION} -sStamp.stamp
-
-stampall: stamp
-	${STAMP} -tStamp.stamp -i ${STAMPABLE}
-
-dist.stamped:  distclean stamp globaldata.py ${PYSOURCE} ${PYGUISOURCE} ${OTHERSOURCE} ${EXAMPLEFILES} ${STAMPFILES} ${NONSTAMPFILES}  ${ICONFILES} ${IMAGEFILES}  ${HTMLDOCS}
-	mkdir ${PYFORMEXDIR} ${PYFORMEXDIR}/gui ${PYFORMEXDIR}/icons ${PYFORMEXDIR}/plugins ${PYFORMEXDIR}/examples ${PYFORMEXDIR}/images ${PYFORMEXDIR}/html ${PYFORMEXDIR}/manual ${PYFORMEXDIR}/manual/html ${PYFORMEXDIR}/manual/images
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE}
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/gui ${PYGUISOURCE}
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/plugins ${PLUGINSOURCE}
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR}/examples ${EXAMPLEFILES}
-	${STAMP} -tStamp.stamp -d${PYFORMEXDIR} ${STAMPFILES}
-	cp ${NONSTAMPFILES} ${PYFORMEXDIR}
-	cp ${ICONFILES}  ${PYFORMEXDIR}/icons
-	cp ${IMAGEFILES} ${PYFORMEXDIR}/images
-	cp ${HTMLDOCS} ${HTMLGUIDOCS} ${HTMLPLUGINDOCS} ${HTMLDIR}/index.html    ${PYFORMEXDIR}/html
-	cp ${MANUAL}   ${PYFORMEXDIR}/manual
-	cp ${MANUALHTML}   ${PYFORMEXDIR}/manual/html
-	cp ${MANUALIMAGES}   ${PYFORMEXDIR}/manual/images
-	cp ${DESKTOPFILE} ${PYFORMEXDIR}/${VENDOR}-${DESKTOPFILE}
+# Set a new version
 
 version: pyformex/globaldata.py manual/manual.tex
 
@@ -105,5 +69,28 @@ pyformex/globaldata.py: RELEASE
 manual/manual.tex: RELEASE
 	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
 
+
+# Stamp files with the version/release date
+
+stamp: Stamp.template RELEASE
+	${STAMP} -tStamp.template version=${VERSION} -sStamp.stamp
+
+stampall: stamp
+	${STAMP} -tStamp.stamp -i ${STAMPABLE}
+
+# Create the distribution
+dist: ${PKGDIR}/${PKG}
+
+${PKGDIR}/${PKG}: version
+	python setup.py sdist
+
+# Publish the distribution to our ftp server
+pub: 
+	scp ${PKGDIR}/${PKG} bumps:/home/ftp/pub/pyformex
+
+
+# Tag the release in the svn repository
+
 tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
+
