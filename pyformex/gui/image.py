@@ -243,7 +243,7 @@ def save_rect(x,y,w,h,filename,format):
 
 #### USER FUNCTIONS ################
 
-def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,format=None,verbose=False):
+def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,verbose=False):
     """Saves an image to file or Starts/stops multisave maode.
 
     With a filename and multi==False (default), the current viewport rendering
@@ -304,13 +304,16 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
         if hotkey:
              QtCore.QObject.connect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
-                 warning("Each time you hit the 'S' key,\nthe image will be saved to the next number.")
-        multisave = (names,format,window,border,hotkey,autosave)
+                 warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
+        multisave = (names,format,window,border,hotkey,autosave,rootcrop)
         return multisave is None
 
     else: # Save the image
         if window:
-            sta = save_main_window(filename,format,border=border)
+            if rootcrop:
+                sta = save_main_window(filename,format,border=border)
+            else:
+                sta = save_window(filename,format)
         else:
             sta = save(GD.canvas,filename,format)
         if sta:
@@ -329,9 +332,9 @@ def saveNext():
     or not.
     """
     if multisave:
-        names,format,window,border,hotkey,autosave = multisave
+        names,format,window,border,hotkey,autosave,rootcrop = multisave
         name = names.next()
-        saveImage(name,window,False,hotkey,autosave,border,format,False)
+        saveImage(name,window,False,hotkey,autosave,border,rootcrop,format,False)
 
 
 def autoSaveOn():

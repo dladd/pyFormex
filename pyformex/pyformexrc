@@ -97,3 +97,6 @@ readme = os.path.join(pyformexdir,"doc","README")
 license = os.path.join(pyformexdir,"doc","COPYING")
 website = "http://pyformex.berlios.de" 
 webmanual = website+"/manual" 
+
+[keys]
+save = 'F2'

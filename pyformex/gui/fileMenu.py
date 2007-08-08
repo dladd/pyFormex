@@ -61,10 +61,19 @@ def saveImage(multi=False):
     """
     pat = map(utils.fileDescription, ['img','icon','all'])  
     dia = widgets.SaveImageDialog(GD.cfg['workdir'],pat,multi=multi)
-    fn,window,border,multi,hotkey,auto = dia.getResult()
-    if fn:
-        GD.cfg['workdir'] = os.path.dirname(fn)
-        image.saveImage(fn,window,multi,hotkey,auto,border)
+    #fn,window,border,multi,hotkey,auto = dia.getResult()
+    opt = dia.getResult()
+    if opt:
+        GD.cfg['workdir'] = os.path.dirname(opt.fn)
+#        image.saveImage(fn,window,multi,hotkey,auto,border)
+        image.saveImage(filename=opt.fn,
+                        window=opt.wi,
+                        multi=opt.mu,
+                        hotkey=opt.hk,
+                        autosave=opt.as,
+                        border=opt.bo,
+                        rootcrop=opt.rc
+                        )
 
     
 def startMultiSave():
