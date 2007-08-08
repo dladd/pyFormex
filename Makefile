@@ -26,7 +26,7 @@ STAMP= stamp
 VERSIONSTRING= __version__ = .*
 NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
-PKGDIR= releases
+PKGDIR= dist
 
 .PHONY: dist pub distclean pydoc manual stamp dist.stamped version tag
 
@@ -35,13 +35,20 @@ PKGDIR= releases
 # Create the distribution
 dist: ${PKGDIR}/${PKG}
 
+# THIS IS THE OLD DISTRIBUTION WAY
+# 
+#${PKGDIR}/${PKG}: version ${PYFORMEXDIR}
+#	mkdir -p ${PKGDIR}
+#	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
+
+# THIS IS THE NEW DIST
+${PKGDIR}/${PKG}: version
+	python setup.py sdist
+
 # Publish the distribution to our ftp server
 pub: 
 	scp ${PKGDIR}/${PKG} bumps:/home/ftp/pub/pyformex
 
-${PKGDIR}/${PKG}: version ${PYFORMEXDIR}
-	mkdir -p ${PKGDIR}
-	tar czf ${PKGDIR}/${PKG} ${PYFORMEXDIR}
 
 ${PYFORMEXDIR}: pydoc dist.stamped
 
