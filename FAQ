@@ -24,13 +24,13 @@ Answers
 1. How was the pyFormex logo created?
 
 With the Gimp: Xtra -> Script-Fu -> Logos -> Alien-neon
-Font Size: 120
-Font: Blippo
+Font Size: 150 
+Font: Blippo-Heavy
 Glow Color: 0xFF3366
 Background Color: 0x000000
 Width of Bands: 2
 Width of Gaps: 2
-Number of Bands: 4
+Number of Bands: 7
 Fade Away: Yes
 
 Then switch off background layer and save as .png format.

@@ -1,0 +1,73 @@
+Creating filelist for examples
+Creating filelist for gui
+Creating filelist for myscripts
+Creating filelist for plugins
+Creating filelist for pyformex
+Creating filelist for stent
+Creating filelist for visc06
+Categorizing files.
+Finding a working MD5 command....
+Found a working MD5 command.
+WARNING! File /home/bene/prj/pyformex/myscripts/hesperia.py~ has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/tmp/tempfile.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/tmp/tempfile.2.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/tmp/tempfile.3.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/tmp/tempfile.4.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/tmp/tempfile.5.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/tmp/tempfile.7.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/text-base/f2flu.py.svn-base has unknown start: #!/usr/local/bin/pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/.svn/text-base/stl-menu.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/plugins/stl.py~ has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/tmp/tempfile.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/tmp/tempfile.2.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/tmp/tempfile.3.tmp has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_optim18_02.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_abq.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_data_wang_hoek.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_data_Jedwab.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_optim.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/320-80-01.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_param.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_data_cardiatis_length.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStentFromFile.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_Multilayer_WP.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_Multilayer_inp.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_data_cardiatis.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/Multilayer_opbouw.py.svn-base has unknown start: #!/usr/bin/env pyformex
+WARNING! File /home/bene/prj/pyformex/stent/.svn/text-base/WireStent_data.py.svn-base has unknown start: #!/usr/bin/env pyformex
+Computing results.
+
+
+SLOC	Directory	SLOC-by-Language (Sorted)
+6230    gui             python=5904,cpp=326
+3988    stent           python=3988
+3963    plugins         python=3963
+3032    pyformex        python=3010,sh=22
+1588    examples        python=1588
+1573    visc06          python=1513,sh=44,awk=16
+1081    myscripts       python=1081
+
+
+Totals grouped by language (dominant language first):
+python:       21047 (98.10%)
+cpp:            326 (1.52%)
+sh:              66 (0.31%)
+awk:             16 (0.07%)
+
+
+
+
+Total Physical Source Lines of Code (SLOC)                = 21,455
+Development Effort Estimate, Person-Years (Person-Months) = 5.00 (60.02)
+ (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
+Schedule Estimate, Years (Months)                         = 0.99 (11.85)
+ (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
+Estimated Average Number of Developers (Effort/Schedule)  = 5.07
+Total Estimated Cost to Develop                           = $ 675,689
+ (average salary = $56,286/year, overhead = 2.40).
+SLOCCount, Copyright (C) 2001-2004 David A. Wheeler
+SLOCCount is Open Source Software/Free Software, licensed under the GNU GPL.
+SLOCCount comes with ABSOLUTELY NO WARRANTY, and you are welcome to
+redistribute it under certain conditions as specified by the GNU GPL license;
+see the documentation for details.
+Please credit this data as "generated using David A. Wheeler's 'SLOCCount'."

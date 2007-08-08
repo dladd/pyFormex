@@ -1,0 +1,74 @@
+HOWTO for pyFormex developers:       -*- outline-*-
+==============================
+(Hint: this file can best be viewed/edited with GNU/Emacs)
+
+* Things that can be done by any developer
+
+** Create the manual
+
+You need to install the following packages (on debian):
+  python-dev
+  latex2html
+
+In the main pyformex directory (svn tree) do:
+  make manual
+This will generate: 
+  - PDF version:  manual/manual.pdf
+  - PS version:   manual/manual.ps
+  - HTML version: manual/html/
+
+            
+** Create a distribution
+
+In the main pyformex directory (svn tree) do:
+  make dist
+This will create a pyformex-${VERSION}.tar.gz in dist/
+
+
+** Create/change your local subversion tree
+
+*** checkout the current subversion archive in a subdir 'pyformex'
+svn co svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk pyformex
+
+*** create a branch 'mybranch' of the current subversion archive
+svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch -m "Creating a branch for some purpose"
+
+*** change your local directory to another branch:
+svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
+
+
+* Things that are (currently) for project manager only
+
+** Make a distribution available on our own FTP server
+  make pub
+
+
+** Release a distribution to the general public
+Create a distribution
+  make dist
+Check in (creating the dist may modify some files)
+  svn ci -m "Creating release ..."
+Create a Tag
+  make tag
+Put the file on berlios ftp server
+  ftp ftp.berlios.de
+  name: ftp (anoniem)
+  cd incoming
+  lcd releases
+  put fullfilename
+Release the file via project administration
+  inloggen
+  project
+  admin
+  edit/release files
+  QRS: quick release a file
+    Release: vb: 0.4.2
+    Select a file
+    File type : source gz
+    Processor type :Any
+    Release NOtes
+  Release file
+
+(That was easy, uh?)
+
+
