@@ -3,7 +3,7 @@ include COPYING
 include README
 include INSTALL
 include FAQ
-include ReleasNotes-0.5
+include ReleaseNotes-0.5
 include pyformex/*.py
 include pyformex/pyformex
 include pyformex/pyformexrc

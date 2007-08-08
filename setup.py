@@ -14,5 +14,21 @@ transformations.
       packages=['pyformex','pyformex.gui','pyformex.plugins','pyformex.examples'],
       package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','doc/*']},
       scripts=['pyformex/pyformex'],
-#      data_files=[('pyformex/doc',['README','COPYING'])],
-)
+      classifiers=[
+    'Development Status :: 3 - Alpha',
+    'Environment :: Console',
+    'Environment :: X11 Applications :: Qt',
+    'Intended Audience :: End Users/Desktop',
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Education',
+    'License :: OSI Approved :: GNU General Public License (GPL)',
+    'Operating System :: POSIX :: Linux',
+    'Operating System :: POSIX',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Topic :: Scientific/Engineering :: Mathematics',
+    'Topic :: Scientific/Engineering :: Visualization',
+    'Topic :: Scientific/Engineering :: Physics',
+#    'Topic :: Scientific/Engineering :: Medical Science Apps.',
+    ],
+      )
