@@ -17,7 +17,11 @@
 # !! be relative to that installation path.
 
 # root of the installation tree
+# !!! THis is the only configurable parameter with the new (>= 0.5)
+# !!! installation procedure using python setup.py
 prefix = /usr/local
+#
+############# OLD PARAMETERS #########################################
 # where to install pyformex files: some may prefer to use ${prefix} or
 # ${prefix}/share 
 libdir= ${prefix}/lib
@@ -56,7 +60,11 @@ all:
 
 ############ User installation ######################
 
-install: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES} ${HTMLDOCS}
+## !! installation new goes through python setup.py
+install:
+	python setup.py install --prefix=${prefix}
+
+oldinstall: installdirs ${SOURCE} ${ICONS} ${EXAMPLEFILES} ${DOCFILES} ${IMAGEFILES} ${HTMLDOCS}
 	${INSTALL_PROGRAM} ${PROGRAM} ${DESTDIR}${INSTDIR}
 	${INSTALL_DATA} ${PYSOURCE} ${OTHERSOURCE} ${DESTDIR}${INSTDIR}
 	${INSTALL_DATA} ${PYGUISOURCE} ${DESTDIR}${INSTDIR}/gui
@@ -93,16 +101,7 @@ clean:
 	rm -f *.pyc
 	rm -f examples/*.pyc
 
-################# SHORTHANDS FOR DEVELOPERS ONLY ##################
+################# REDIRECT OTHER TARGETS TO DEVELOPERS MAKEFILE ###############
 
-dist: Makefile.dist
-	${MAKE} -f Makefile.dist dist
-
-pub: Makefile.dist
-	${MAKE} -f Makefile.dist pub
-
-version: Makefile.dist
-	${MAKE} -f Makefile.dist version
-
-manual: Makefile.dist
-	${MAKE} -f Makefile.dist manual
+%:
+	${MAKE} -f Makefile.dist $@
