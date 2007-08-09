@@ -87,7 +87,12 @@ nodeprops[topcorner]=3
 #############################
 
 from plugins.properties import *
-init_properties()
+
+NP = CascadingDict()
+setNodePropDB(NP)
+
+
+
 
 Q = 0.5*q*dx*dx
 support = NodeProperty(0, bound = 'pinned')

@@ -82,25 +82,25 @@ class SectionDB(Database):
             raise ValueError,"Expected a filename or a dict."
 
     
-materials = None
-sections = None
-properties = None
-nodeproperties = None
-elemproperties = None
+materials = MaterialDB()
+sections = SectionDB()
+properties = CascadingDict()
+nodeproperties = CascadingDict()
+elemproperties = CascadingDict()
 
-def init_properties():
-    global materials, sections, properties, nodeproperties, elemproperties
-    print "INITIALIZING THE properties MODULE"
-    if materials is None:
-        materials = MaterialDB({})
-    if sections is None:
-        sections = SectionDB()
-    if properties is None:
-        properties = CascadingDict()
-    if nodeproperties is None:
-        properties = CascadingDict()
-    if elemproperties is None:
-        properties = CascadingDict()
+## def init_properties():
+##     global materials, sections, properties, nodeproperties, elemproperties
+##     print "INITIALIZING THE properties MODULE"
+##     if materials is None:
+##         materials = MaterialDB({})
+##     if sections is None:
+##         sections = SectionDB()
+##     if properties is None:
+##         properties = CascadingDict()
+##     if nodeproperties is None:
+##         properties = CascadingDict()
+##     if elemproperties is None:
+##         properties = CascadingDict()
 
 
 
@@ -113,6 +113,11 @@ def setSectionDB(aDict):
     global sections
     if isinstance(aDict,SectionDB):
         sections = aDict
+
+def setNodePropDB(aDict):
+    global nodeproperties
+    if isinstance(aDict,CascadingDict):
+        nodeproperties = aDict
 
 
 class Property(CascadingDict):
@@ -252,9 +257,9 @@ class ElemLoad(Property):
 
 
 
-# INITIALIZE
+## # INITIALIZE
 
-init_properties()
+## init_properties()
 
 
 

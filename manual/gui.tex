@@ -78,6 +78,19 @@ Experienced users with a sufficient knowledge of Python and GUI building with Qt
 \label{sec:chang-appe-gui}
 
 
+\subsection{Adding your scripts in a menu}
+\label{sec:adding-scripts-menu}
+By default, pyFormex adds all the example scripts that come with the distribution in a single menu accessible from the menubar. The scripts in this menu are executed by selecting them from the menu. This is easier than opening the file and then executing it.
+
+You can customize this scripts menu and add your own scripts directories to it.
+Just add a line like the following to the main section of your .pyformexrc configuration file:\\
+\Code{scriptdirs = [('Examples', None), ('My Scripts', '/home/me/myscripts'), ('More', '/home/me/morescripts')]}
+
+Each tuple in this list consists of a string to be used as menu title and the absolute path of a directory with your scripts. From each such directory all the files that are recognized as \pyformex scripts and do no start with a '.' or '_', will be included in the menu. If your scriptdirs setting has only one item, the menu item will be created directly in the menubar. If there are multiple items, a top menu named 'Scripts' will be created with submenus for each entry.
+
+Notice the special entry for the examples supplied with the distribution. You do not specify the directory where the examples are: you would probably not even know the correct path, and it could change when a new version of \pyf is installed. As long as you keep its name to 'Examples' (in any case: 'examples' would work as well) and the path set to None (unquoted!), \pyformex will itself try to detect the path to the installed examples. 
+
+
 \subsection{Adding custom menus}
 \label{sec:adding-custom-menus}
 
