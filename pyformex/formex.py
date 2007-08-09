@@ -542,15 +542,14 @@ def cutAtPlane(F,p,n):
     has been replaced by the part of the segment at the positive side of
     the plane (p,n).
     """
-    f = F.f
-    d = distanceFromPlane(f,p,n)
-    #t = intersectionWithPlane(f,p,n)
+    d = distanceFromPlane(F.f,p,n)
     g = intersectionPointsWithPlane(F,p,n)
     i0 = d[:,0] < 0.
     i1 = d[:,1] < 0.
-    f[i0,0,:] = g[i0]
-    f[i1,1,:] = g[i1]
-    return Formex(f,F.p)
+    F[i0,0,:] = g[i0].reshape(-1,3)
+    F[i1,1,:] = g[i1].reshape(-1,3)
+    F = F.cclip(i0*i1)
+    return F
 
     
 def cut3AtPlane(F,p,n):
