@@ -46,7 +46,7 @@ Therefore, inclusion of figures should go like this:
 Comments:
  - omitting the empty \begin{makeimage}...\end{makeimage} causes errors
  - put the normal latex \includegraphics commands in a 'latexonly' environment,
-   so that latex2html doies not bother with creating images for html output
+   so that latex2html does not bother with creating images for html output
  - include the HTML image elements in a 'htmlonly' environment
 While this asks some discipline from the user, the result is worth it.
 
