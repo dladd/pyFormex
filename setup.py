@@ -1,5 +1,10 @@
 from distutils.core import setup
 
+#
+# We could add a part here to build the pydoc html docs
+#
+
+
 setup(name='pyformex',
       version='0.5',
       description='A tool to generate and manipulate complex 3D geometries.',
