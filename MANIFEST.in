@@ -1,9 +1,13 @@
 prune *
+include BUGS
 include COPYING
 include README
 include INSTALL
 include FAQ
 include ReleaseNotes-0.5
+include post-install
+include pyformex-pyformex.desktop
+include pyformex.png
 include pyformex/*.py
 include pyformex/pyformex
 include pyformex/pyformexrc

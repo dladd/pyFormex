@@ -1,11 +1,5 @@
 KNOWN BUGS:
 
-Problem:
-If multisave mode is activated more than once during a pyformex session,
-each hot-key pressed causes multiple images to be saved.
-
-Solution:
-Exit pyformex after each multisave operation.
 
 
 If you find any bugs or malfunctions in pyFormex, please submit them to

@@ -1,8 +1,10 @@
 from distutils.core import setup
 
-#
-# We could add a part here to build the pydoc html docs
-#
+import os
+
+def post_install():
+    """Perform some post install actions."""
+    os .system('post-install')
 
 
 setup(name='pyformex',
@@ -37,3 +39,7 @@ transformations.
 #    'Topic :: Scientific/Engineering :: Medical Science Apps.',
     ],
       )
+
+post_install()
+
+

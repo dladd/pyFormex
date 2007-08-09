@@ -55,23 +55,21 @@ o [bverheg] Release 0.5 :
  - Export FEA models in Fluent format: 
      dev: pmortier?
      sta: INITIATED
- - Group script menus into a single one
- - Move history menu to the File Menu
+ - Step by step execution of scripts
+     dev: bverheg
+     sta: PARTIAL
+     rem: Possible if the script is 'simple'. 
+
+
+* Release 0.6 : 
  - Add default values and timeout to user interaction widgets
-
-
-* Release 0.6 :
  - Display camera settings: 
  - Provide a formian to pyformex translator
- - Step by step execution of scripts
- - Move the core modules to a subpackage, others to plugins/gui
- - Python style installation procedure:
+
 
 * Release 0.9 :
- - Dedicated editor
+ - Dedicated editor ? 
+
 
 * Release 1.0:
-
-
-* testje
-
+ - Conquer the world ;)

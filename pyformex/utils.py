@@ -308,6 +308,10 @@ class FilenameSequence(object):
         self.nr += 1
         return fn
 
+    def peek(self):
+        """Return the next filename in the sequence without incrementing."""
+        return self.name % self.nr
+
     def glob(self):
         """Return a UNIX glob pattern for the filesnames"""
         i = self.name.find('%')
@@ -315,21 +319,32 @@ class FilenameSequence(object):
         return self.name[:i]+'*'+self.name[j+1:]
 
 
+string_digits = re.compile('(.*?)(\d*)$')
+
 def splitEndDigits(s):
     """Split a string in any prefix and a numerical end sequence.
 
     A string like 'abc-0123' will be split in 'abc-' and '0123'.
     Any of both can be empty.
     """
-    i = len(s)
-    if i == 0:
-        return ( '', '' )
-    i -= 1
-    while s[i].isdigit() and i > 0:
-        i -= 1
-    if not s[i].isdigit():
-        i += 1
-    return ( s[:i], s[i:] )
+    return string_digits.match(s).groups()
+    
+    
+## def splitEndDigits(s):
+##     """Split a string in any prefix and a numerical end sequence.
+
+##     A string like 'abc-0123' will be split in 'abc-' and '0123'.
+##     Any of both can be empty.
+##     """
+##     i = len(s)
+##     if i == 0:
+##         return ( '', '' )
+##     i -= 1
+##     while s[i].isdigit() and i > 0:
+##         i -= 1
+##     if not s[i].isdigit():
+##         i += 1
+##     return ( s[:i], s[i:] )
 
 
 def stuur(x,xval,yval,exp=2.5):

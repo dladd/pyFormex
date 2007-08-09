@@ -9,8 +9,9 @@
 ## version 2 or later (see file COPYING for details)
 ##
 #
-# pyFormex is a program for generating and working with large geometrical
-# models of 3D structures by subsequent mathematical transformations.
+# pyFormex is a program for generating, manipulating and operating on
+# large geometrical models of 3D structures by subsequent mathematical
+# transformations.
 # It aims primarily at spatial frame structures, but can handle surface and
 # volume models as well.
 # Through its powerful scripting language, it is especially useful
@@ -42,36 +43,23 @@ PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
 PyOpenGL: http://pyopengl.sourceforge.net/
 
 
-Howto install:
--------------
-Unpack the tarball and go to the pyformex directory
-  tar -xvzf pyformex-VERSION.tar.gz
-  cd pyformex-VERSION
-Edit the top lines of the Makefile to suit your installation
-Then
-  su root
-  make install
-
-This will install all pyFormex files under a single directory /usr/local/lib.
-You can change this in the Makefile. 
-The install procedure also creates some symbolic liknks:
- - in /usr/local/bin (to the executable)
- - in /usr/local/share/doc (to the pyformex doc directory) 
-
-Howto uninstall:
----------------
-There is no automatic uninstall procedure yet.
-Remove the entire pyformex directory from where you installed it.
-Remove the symbolic link to the pyformex program.
+Howto install/uninstall:
+------------------------
+See file INSTALL
 
 
-ToDo:
-----
-A LOT!
+Documentation:
+--------------
 
+The manual is included with the pyFormex distribution. Execute the command
+pyformex --whereami to find out where the pyformex files are installed.
+When working with the pyFormex gui, you can load the manual in your browser
+through the help menu, or view the online manual at
+http://pyformex.berlios.de/manual    
 
-Short Documentation:
--------------------
+The rest of this documentation has become superfluous and will probably be
+removed in a next release. 
+
 Because it is not obvious from the GUI:
 
 The canvas showing the Formex has dynamic zoom/pan/rotate functionality.
@@ -86,7 +74,7 @@ Moving the mouse with one of the buttons depressed will activate this:
   MIDDLE mouse button : pan
   RIGHT mouse button : zoom : horizontal movement zooms by camera lens angle,
         vertical movement zooms by changing camera distance. The first mode 
-	keeps the perspecive, the second one changes it.
+	keeps the perspective, the second one changes it.
 	Moving right and up zooms in, left and down zooms out. Moving 
 	diagonally from upper left to lower right more or less keeps the
 	image size, while changing the perspective.
@@ -95,8 +83,7 @@ To use pyFormex, you create a script that builds a structure layout and
 geometry. Look at the examples to get the feeling of how it is working. 
 Use the File->Play menu selection to display the structure. 
 
-The examples and the python source are relatively well documented. You can
-use pydoc to display it or the Help viewer.
+The examples and the python source are relatively well documented.
 
 
 

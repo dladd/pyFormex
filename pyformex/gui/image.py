@@ -281,12 +281,13 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     """
     global multisave
 
-    # Leave multisave mode
-    if filename is None:
-        if multisave:
-            GD.message("Leave multisave mode")
-            QtCore.QObject.disconnect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
+    # Leave multisave mode if no filename or starting new multisave mode
+    if multisave and (filename is None or multi):
+        GD.message("Leave multisave mode")
+        QtCore.QObject.disconnect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
         multisave = None
+
+    if filename is None:
         return
 
     #chdir(filename)
@@ -299,6 +300,8 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
 
     if multi: # Start multisave mode
         names = utils.FilenameSequence(name,ext)
+        if os.path.exists(names.peek()):
+            next = names.next()
         GD.message("Start multisave mode to files: %s (%s)" % (names.name,format))
         #print hotkey
         if hotkey:
