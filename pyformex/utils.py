@@ -20,10 +20,11 @@ Version = distutils.version.LooseVersion
 
 def congratulations(name,version,typ='module'):
     """Report a detected module/program."""
-    if version:
-        GD.message("Congratulations! You have %s (%s)" % (name,version))
-    else:
-        GD.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
+    if GD.options.debug:
+        if version:
+            GD.message("Congratulations! You have %s (%s)" % (name,version))
+        else:
+            GD.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
 
 
 def checkVersion(name,version,external=False):

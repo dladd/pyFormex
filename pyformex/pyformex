@@ -194,11 +194,6 @@ You will need proper permissions to actually delete the files.
         GD.cfg.read(GD.preffile)
     GD.debug("Config: %s" % GD.cfg)
 
-    #sys.path[-1:] = GD.cfg.get('syspath',[])
-##     print sys.path
-##     import pyformex
-##     print sys.path
-##     sys.exit()
 
     # Set default --nogui if first remaining argument is a pyformex script.
     if GD.options.gui is None:

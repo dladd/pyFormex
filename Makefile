@@ -61,13 +61,16 @@ manual:
 
 # Set a new version
 
-version: pyformex/globaldata.py manual/manual.tex
+version: pyformex/globaldata.py manual/manual.tex setup.py
 
 pyformex/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 
 manual/manual.tex: RELEASE
 	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
+
+setup.py: RELEASE
+	sed -i "s|version='.*'|version='${RELEASE}'|" $@
 
 
 # Stamp files with the version/release date

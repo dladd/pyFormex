@@ -88,8 +88,8 @@ nodeprops[topcorner]=3
 
 from plugins.properties import *
 
-NP = CascadingDict()
-setNodePropDB(NP)
+## NP = CascadingDict()
+## setNodePropDB(NP)
 
 
 
@@ -192,8 +192,8 @@ if GD.options.gui:
         m = int(str(f)[0])
         return m*10**n
 
-    print siz1
-    print siz0
+    #print siz1
+    #print siz0
     optimscale = niceNumber(1./(siz1/siz0).max())
 
 
@@ -249,7 +249,7 @@ if GD.options.gui:
 
     # Show a deformed plot
     linewidth(2)
-    print optimscale
+    #print optimscale
     deformed_plot(optimscale)
     view('__last__',True)
     exit()
