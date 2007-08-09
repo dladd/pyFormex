@@ -118,7 +118,7 @@ def partition(Fin,prop=0):
 
     # draw it
     linewidth(1)
-    setPerspective(False)
+    perspective(False)
     clear()
     FA = draw(F,view='front')
 

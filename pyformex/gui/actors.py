@@ -182,7 +182,7 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     if mode == 'smooth':
         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     GL.glBegin(GL.GL_TRIANGLES)
-    print "DRAW TRIANGLES WITH ALPHA %s" % alpha
+    #print "DRAW TRIANGLES WITH ALPHA %s" % alpha
     for i in range(x.shape[0]):
         if color is not None:
             GL.glColor(append(color[i],alpha))

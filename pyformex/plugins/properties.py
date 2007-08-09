@@ -88,7 +88,9 @@ properties = None
 nodeproperties = None
 elemproperties = None
 
-def __init__():
+def init_properties():
+    global materials, sections, properties, nodeproperties, elemproperties
+    print "INITIALIZING THE properties MODULE"
     if materials is None:
         materials = MaterialDB({})
     if sections is None:
@@ -120,7 +122,7 @@ class Property(CascadingDict):
     add, change and delete properties, lookup, print, and
     of course, connect properties to Formex elements.
     """
-
+    global properties
     def __init__(self, nr, data = {}):
         """Create a new property. Empty by default.
         
@@ -149,8 +151,10 @@ class NodeProperty(Property):
         cartesian, spherical and cylindrical
         -coordset: a list of 6 coordinates; the 2 points that specify the transformation 
         """
+        global nodeproperties
         if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or isinstance(bound, str) or bound==None): 
             CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'displacement':displacement , 'coords' : coords, 'coordset' : coordset})
+            print nodeproperties
             nodeproperties[nr] = self
         else: 
             print 'A pointload and a boundary condition have to be a list containing 6 items'
@@ -248,7 +252,9 @@ class ElemLoad(Property):
 
 
 
+# INITIALIZE
 
+init_properties()
 
 
 

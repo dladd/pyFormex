@@ -116,6 +116,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setMouse(MIDDLE,self.dynapan) 
         self.setMouse(RIGHT,self.dynazoom)
         self.mouseshiftfunc.update(self.mousefunc) # initially the same
+        self.mod = NONE
         
 
     def setMouse(self,button,func,mod=None):

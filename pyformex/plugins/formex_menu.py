@@ -217,7 +217,7 @@ def setProperty():
     FL = checkSelection()
     if FL:
         res = askItems([['property',0]],
-                       caption = 'Set Property Number of Selection')
+                       caption = 'Set Property Number of Selection (negative value to remove)')
         if res:
             p = int(res['property'])
             if p < 0:
@@ -404,6 +404,26 @@ def clipSelection():
             xc2 = xmi + float(res['end']) * dx
             changeSelection([ F.clip(F.test(dir=axis,min=xc1,max=xc2)) for F in FL ])
             drawChanges()
+        
+
+def cutAtPlane():
+     """Cut the selection with a plane."""
+     FL = checkSelection()
+     FLnot = [ F for F in FL if F.nplex() > 3 ]
+     if FLnot:
+         warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
+         return
+
+     res = askItems([['Point',(0.0,0.0,0.0)],
+                     ['Normal',(0.0,0.0,1.0)],
+                     ['New props',[0,1,1]],],
+                     caption = 'Define the cutting plane')
+     if res:
+         P = res['Point']
+         N = res['Normal']
+         p = res['New props']
+         changeSelection([ F.cutAtPlane(P,N,p) for F in FL ])
+         drawChanges()
 
 
 def concatenateSelection():
@@ -501,7 +521,8 @@ def flyThru():
         flyAlong(path)
     else:
         warning("You have to define a flypath first!")
-        
+     
+   
 
 ################### menu #################
 
@@ -534,6 +555,7 @@ def create_menu():
           ("&Rotate Selection Around",rotateAround),
           ("&Roll Axes",rollAxes),
           ("&Clip Selection",clipSelection),
+          ("&Cut at Plane",cutAtPlane),
           ]),
         ("---",None),
         ("Show &Principal Axes",showPrincipal),

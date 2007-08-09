@@ -16,7 +16,7 @@ import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
 
 # Needed to initialize the fonts
-#GLUT.glutInit([])
+GLUT.glutInit([])
 
 import colors
 #import colorscale

@@ -502,7 +502,8 @@ def intersectionPointsWithPlane(F,p,n):
     p is a point specified by 3 coordinates.
     n is the normal vector to a plane, specified by 3 components.
 
-    The result is a plex-1 Formex.
+    The result is a plex-1 Formex with the same number of elements as the
+    original. Some of the points may be NaN's.
     """
     f = F.f
     t = intersectionWithPlane(F,p,n).reshape((-1,1))
@@ -552,7 +553,7 @@ def cutAtPlane(F,p,n):
     return F
 
     
-def cut3AtPlane(F,p,n):
+def cut3AtPlane(F,p,n,newprops=None):
     """Returns all elements of the Formex cut at plane.
 
     F is a Formex of plexitude 3.
@@ -565,17 +566,18 @@ def cut3AtPlane(F,p,n):
     elements intersecting the plane replaced by new elements filling up
     the parts at the positive side.
     """
-    c1 = F.test('any',n, p) 
-    c2 = F.test('any',[-n[0],-n[1],-n[2]],p)
-    c = c1*c2
-    G = F.cclip(c2)
-    S = F.clip(c) #select elements that will be cut by plane
+    n = asarray(n)
+    p = asarray(p)
+    F = F.clip(F.test('any',n, p)) # remove elements at the negative side
+    c = F.test('all',n,p)
+    G = F.clip(c)  # save elements completely at positive side
+    S = F.cclip(c) # select elements that will be cut by plane
     C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
     P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
     T = (t >= 0)*(t <= 1)
     P = P[T].reshape(-1,2,3)
-    #split problem into two cases
+    # split problem into two cases
     d = distanceFromPlane(S.f,p,n)
     w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
     w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
@@ -585,20 +587,25 @@ def cut3AtPlane(F,p,n):
     P2 = P[w2]
     S1 = S[w1]
     S2 = S[w2]
-    #case 1: triangle after cut
+    # case 1: triangle after cut
     v0 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
     K2 = asarray([S1[i,v0[i]] for i in range(shape(S1)[0])]).reshape(-1,1,3)
     E1 = column_stack([P1,K2])
-    #case 2: quadrilateral after cut
+    # case 2: quadrilateral after cut
     v1 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
     v2 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
     L2 = asarray([S2[i,v1[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
     L3 = asarray([S2[i,v2[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
     E2 = column_stack([P2,L2])
     E3 = column_stack([P2[:,0].reshape(-1,1,3),L2,L3])
-    #join all the pieces
-    E = Formex(E1)+Formex(E2)+Formex(E3)+G
-    return E
+    # join all the pieces
+    if F.p is None:
+        return Formex(E1)+Formex(E2)+Formex(E3)+G
+    else:
+        if newprops is None:
+            newprops = range(3)
+        return Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])+G
+        
 
 
 ###########################################################################
@@ -690,7 +697,13 @@ class Formex:
             data = asarray(data).astype(Float)
 
             if data.size == 0:
-                data.shape = (0,0,3) # An empty Formex
+                if len(data.shape) == 3:
+                    nplex = data.shape[1]
+                elif len(data.shape) == 2:
+                    nplex = 1
+                else:
+                    nplex = 0
+                data.shape = (0,nplex,3) # An empty Formex
             else:
                 # check dimensions of data
                 if not len(data.shape) in [2,3]:
@@ -1273,12 +1286,14 @@ class Formex:
         Use where(result) to get a list of element numbers passing the test.
         Or directly use clip() or cclip() to create the clipped Formex.
         
-        This function can be used in two distinct ways:
-        - min,max are the minimum and maximum values required for the
-        coordinates in direction dir (default is the x or 0 direction,
-        other possibilities for the direction dir in this case are 1 or 2).
-        - a direction vector can be specified for dir. min,max are points
-        in this case, specified by 3 coordinates. 
+        The test plane can be define in two ways depending on the value of dir.
+        If dir == 0, 1 or 2, it specifies a global axis and min and max are
+        the minimum and maximum values for the coordinates along that axis.
+        Default is the 0 (or x) direction.
+
+        Else, dir should be compaitble with a (3,) shaped array and specifies
+        the direction of the normal on the planes. In this case, min and max
+        are points and should also evaluate to (3,) shaped arrays.
         
         Nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
@@ -1297,28 +1312,24 @@ class Formex:
             nod = range(f.shape[1])
         else:
             nod = nodes
-        if type(dir) == list:
-            if not min is None:
-                T1 = distanceFromPlane(f,min,dir) > 0
-            if not max is None:
-                T2 = distanceFromPlane(f,max,dir) < 0
-            if min is None:
-                T = T2
-            elif max is None:
-                T = T1
-            else:
-                T = T1 * T2
-        else:
+
+        if type(dir) == int:
             if not min is None:
                 T1 = f[:,nod,dir] > min
             if not max is None:
                 T2 = f[:,nod,dir] < max
-            if min is None:
-                T = T2
-            elif max is None:
-                T = T1
-            else:
-                T = T1 * T2
+        else:
+            if not min is None:
+                T1 = distanceFromPlane(f,min,dir) > 0
+            if not max is None:
+                T2 = distanceFromPlane(f,max,dir) < 0
+
+        if min is None:
+            T = T2
+        elif max is None:
+            T = T1
+        else:
+            T = T1 * T2
         if len(T.shape) == 1:
             return T
         if nodes == 'any':
@@ -1379,16 +1390,19 @@ class Formex:
         return Formex(intersectionPointsWithPlane(self,p,n))
 
     
-    def cutAtPlane(self,p,n):
+    def cutAtPlane(self,p,n,newprops=None):
         """Return all elements of a plex-2 or plex-3 Formex cut at plane.
 
         This is equivalent with the function cutAtPlane(F,p,n) or
         cut3AtPlane(F,p,n).
         """
+        if self.nplex == 1:
+            # THIS NEEDS TO BE IMPLEMENTED
+            return F
         if self.nplex() == 2:
             return cutAtPlane(self,p,n)
         if self.nplex() == 3:
-            return cut3AtPlane(self,p,n)
+            return cut3AtPlane(self,p,n,newprops)
         raise ValueError,"Formex should be plex-2 or plex-3"
 
 

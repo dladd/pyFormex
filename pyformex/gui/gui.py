@@ -476,6 +476,8 @@ See Help->License or the file COPYING for details.
     # and insert it before the help menu
     menus = []
     scriptdirs = GD.cfg['scriptdirs']
+    knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
+    print "KNOWN", knownscriptdirs
 
     if GD.cfg.get('gui/separate_script_dirs',False):
         # This will create seperate menus for all scriptdirs
@@ -493,6 +495,10 @@ See Help->License or the file COPYING for details.
 
         for title,dirname in scriptdirs:
             GD.debug("Loading script dir %s" % dirname)
+            if not dirname:
+                print title,dirname
+                dirname = knownscriptdirs[title.lower()]
+                print dirname
             if os.path.exists(dirname):
                 m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
                 scriptsmenu.insert_menu(m,before)
