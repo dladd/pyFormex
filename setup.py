@@ -1,10 +1,10 @@
 from distutils.core import setup
 
-import os
+## import os
 
-def post_install():
-    """Perform some post install actions."""
-    os .system('post-install')
+## def post_install():
+##     """Perform some post install actions."""
+##     os .system('post-install')
 
 
 setup(name='pyformex',
@@ -40,6 +40,6 @@ transformations.
     ],
       )
 
-post_install()
+# post_install()
 
 
