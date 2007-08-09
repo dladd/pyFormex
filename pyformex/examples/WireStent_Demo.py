@@ -53,44 +53,64 @@ class DoubleHelixStent:
         #print "ny",ny
         # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
-        A=Formex(pattern('1'),0)
-        GD.message("Step 1: Create a Formex: a line of length 1 oriented along the X-axis")
-        draw(A)
+        A=Formex(pattern('1'),1)
+        GD.message("Step 1: Create a Formex: a line of length 1 oriented along the X-axis [A=Formex(pattern('1'),0)]")
+        draw(A,view='bottom')
         pause()
 ##        clear() 
-        B=Formex(A.replic(nb,1.0),1)
-        GD.message("Step 2: Copy the formex nb times in the X-direction")
-        draw(B)
+        B=Formex(A.replic(nb,1.0),3)
+        GD.message("Step 2: Copy the Formex nb times in the X(0)-direction [B=Formex(A.replic(nb,1.0),1)]")
+        draw(B,view='last')
         pause()
-##        clear() 
-##        base = Formex(pattern('1')).replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
-        base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),2)
-        draw(base)
+        clear() 
+        base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),3)
+        GD.message("Step 3: Create a bump in the Z(2)-direction [base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),3)]")
+        draw(base,view='last')
         pause()
         clear()
                 # scale back to size 1.
         base = base.scale([1./nb,1./nb,1.])
-        draw(base)
+        GD.message("Step 4: Rescale the base cell to size 1 [base = base.scale([1./nb,1./nb,1.])]")
+        draw(base,view='last')
         pause()
         clear()
         # NE and SE directed struts
         NE = base.shear(1,0,1.)
-        SE = base.reflect(2).shear(1,0,-1.)
         NE.setProp(1)
+        GD.message("Step 5: Reorient the base cell to NE [NE = base.shear(1,0,1.)]. For a good view rotate up 6 times!!!")
+        draw(NE,view='front')
+        pause()
+        clear()
+        SE = base.reflect(2).shear(1,0,-1.)
         SE.setProp(3)
+        GD.message("Step 6: Reorient the base cell to SE [SE = base.reflect(2).shear(1,0,-1.)]")
+        draw(SE,view='last')
+        pause()
+        clear()
+##        NE.setProp(1)
+##        SE.setProp(3)
+        cell=(NE+SE)
+        GD.message("Step 7: Create the base cell by combining the NE and SE formices [cell=(NE+SE)]")
+        draw(cell,view='last')
+        pause()
+        clear()
         # a unit cell of crossing struts
-        cell1 = (NE+SE).rosette(2,180)
-##        GD.message("Step 0: Create a unit cell of 2 crossing wires")
-##        draw(cell1)
-##        pause()
-##        clear()
+        cell1 = (cell).rosette(2,180)
+        GD.message("Step 8: Create the base module (cell1) of two crossing wires by replicating the base cell by an angular rotation [(cell).rosette(2,180)]")
+        draw(cell1,view='last')
+        pause()
+        clear()
         # add a connector between first points of NE and SE
         if connectors:
             cell1 += Formex([[NE[0][0],SE[0][0]]],2)
+        GD.message("Step 9: Add a connector between the first points of NE and SE of the base module [cell1 += Formex([[NE[0][0],SE[0][0]]],2)]")
+        draw(cell1,view='last')
+        pause()
+        clear()    
         # and create its mirror
         cell2 = cell1.reflect(2)
-        GD.message("Step 1: Create a nearly planar and connected base module of two crossing wires")
-        draw(cell2)
+        GD.message("Step 10: Create a mirror in Z(2)-direction of the base module [cell2 = cell1.reflect(2)]")
+        draw(cell2,view='last')
         pause()
         clear()
         # and move both to appropriate place
@@ -100,19 +120,23 @@ class DoubleHelixStent:
         # Create the full pattern by replication
         dx = 4.
         dy = 4.
-        GD.message("Step 2: Extend the base module with a mirrored and translated copy")
-        draw(self.cell1+self.cell2,view='last')
+        module=(self.cell1+self.cell2)
+        GD.message("Step 11: Extend the base module with its mirrored and translated copy [module=(self.cell1+self.cell2)]")
+        draw(module,view='last')
         pause()
         clear()
-        F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
-        GD.message("Step 3: Replicate the base module in both directions of the base plane")
-        draw(F,view='iso')
+        F = module.replic2(nx,ny,dx,dy)
+        GD.message("Step 12: Replicate the base module in both directions of the base plane [F = module.replic2(nx,ny,dx,dy)]")
+        draw(F,view='last')
         pause()
         clear()
         # fold it into a cylinder
         self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
-        GD.message("Step 4: Roll the nearly planar grid into a cylinder")
-        draw(self.F,view='iso')
+        GD.message("Step 13: Roll the nearly planar grid into a cylinder [self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])]")
+        draw(self.F,view='front')
+        pause()
+        clear()
+        draw(self.F,view='left')
         pause()
         clear()
         self.ny = ny
@@ -125,12 +149,12 @@ class DoubleHelixStent:
 if __name__ == "draw":
 
     # show an example
-## The following default values come from Jedwab and Clerc
+## The following default values come from Jedwab and Clerc (except for L=87.5 and b-30.85)
     D = 16.71
-    L = 87.5
+    L = 40.
     d = 0.22
     n = 12
-    b = 30.85
+    b = 40
     res = askItems([['Diameter',D],['Length',L],['WireDiam',d],['NWires',n],
                     ['Pitch',b]])
     D = float(res['Diameter'])
