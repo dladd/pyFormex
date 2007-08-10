@@ -31,7 +31,7 @@ def star(n,noise=0.,prop=0):
         n = 3
     if n % 2 == 0:
         n += 1
-    f = Formex([[[0,1]]]).rosette(n,(n/2)*360./n).data()
+    f = Formex([[[0,1]]]).rosette(n,(n/2)*360./n).view()
     if noise != 0.:
         f = f + noise * random.random(f.shape)
     P = Formex(concatenate([f,f[:1]]))

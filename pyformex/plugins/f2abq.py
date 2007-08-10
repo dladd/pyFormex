@@ -18,6 +18,7 @@ Then there are higher level functions that read data from the property module
 and write them to the Abaqus input file.
 """
 
+
 from properties import *
 from mydict import *
 import globaldata as GD
@@ -124,7 +125,7 @@ def writeSection(fil, nr):
     nr is the property number of the element set.
     """
     el=elemproperties[nr]
-    print el
+    #print el
     ############
     ##FRAME elements
     ##########################
@@ -187,7 +188,7 @@ def writeSection(fil, nr):
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
     else:
-        print ('Sorry, elementtype %s is not yet supported'%el.elemtype)
+        warning('Sorry, elementtype %s is not yet supported' % el.elemtype)
     
 
 def transform(fil, propnr):
@@ -207,7 +208,7 @@ def transform(fil, propnr):
 %s,%s,%s,%s,%s,%s
 """%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     else:
-        print '%s is not a valid coordinate system'%nodeproperties[propnr].coords
+        warning('%s is not a valid coordinate system'%nodeproperties[propnr].coords)
 
     
 def writeBoundaries(fil, boundset='ALL', opb=None):
@@ -240,7 +241,7 @@ def writeBoundaries(fil, boundset='ALL', opb=None):
                     elif isinstance(nodeproperties[i].bound,str):
                         fil.write("Nodeset_%s, %s\n"%(i,nodeproperties[i].bound))
         else:
-            print "The boundaries have to defined in a list 'boundset'"
+            warning("The boundaries have to defined in a list 'boundset'")
 
 
 def writeDisplacements(fil, dispset='ALL', op='MOD'):
@@ -254,11 +255,11 @@ def writeDisplacements(fil, dispset='ALL', op='MOD'):
     !!!! This means that initial condtions are also removed!
     """
     fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s\n" % op)
-    print type(dispset)
-    print dispset
+    #print type(dispset)
+    #print dispset
     if isinstance(dispset, list):
         for i in dispset:
-            print i,nodeproperties[i]
+            #print i,nodeproperties[i]
             if nodeproperties[i].displacement!=None:
                 for d in range(len(nodeproperties[i].displacement)):
                     fil.write("Nodeset_%s, %s, %s, %s\n" % (i,nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
@@ -289,7 +290,7 @@ def writeCloads(fil, cloadset='ALL', opcl='NEW'):
                     if nodeproperties[i].cload[cl]!=0:
                         fil.write("Nodeset_%s, %s, %s\n" % (i,cl+1,nodeproperties[i].cload[cl]))
     else:
-        print "The loads have to be defined in a list 'cloadset'"
+        warning("The loads have to be defined in a list 'cloadset'")
 
 
 def writeDloads(fil, dloadset='ALL', opdl='NEW'):
@@ -316,7 +317,7 @@ def writeDloads(fil, dloadset='ALL', opdl='NEW'):
                     else:
                         fil.write("Elementset_%s, %s, %s\n" % (i,elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
     else:
-        print "The loads have to be defined in a list 'dloadset'"
+        warning("The loads have to be defined in a list 'dloadset'")
 
 
 def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL', ID=None):
@@ -342,7 +343,7 @@ def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL'
                 for j in range(len(ID)):
                     fil.write("%s \n"%ID[j])
         else:
-            print "The set should be a list"
+            warning("The set should be a list")
     if kind.upper()=='NODE':
         if isinstance(set,list):
             for j in range(len(set)):
@@ -356,7 +357,7 @@ def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL'
                 for j in range(len(ID)):
                     fil.write("%s \n"%ID[j])
         else:
-            print "The set should be a list of property numbers."
+            warning("The set should be a list of property numbers.")
 
 
 def writeStepData(fil, kind , set='ALL', ID=None, globalaxes='No'):
@@ -517,7 +518,7 @@ def writeAbqInput(abqdata, job=str(GD.scriptName)[:-3]):
     # Create the Abaqus input file
     filnam = job+'.inp'
     fil = file(filnam,'w')
-    print "Writing %s" % filnam
+    GD.message("Writing %s" % filnam)
     
     #write the heading
     writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
@@ -527,15 +528,15 @@ Script: %s
     # number of nodes and elems
     nnod = abqdata.nodes.shape[0]
     nel = len(abqdata.elems)
-    print "Number of elements: %s" % nel
-    print "Compressed number of nodes: %s" % nnod
+    GD.message("Number of elements: %s" % nel)
+    GD.message("Compressed number of nodes: %s" % nnod)
     
     #write all nodes
-    print "Writing nodes" 
+    GD.message("Writing nodes")
     writeNodes(fil, abqdata.nodes)
     
     #write nodesets and their transformations
-    print "Writing nodesets"
+    GD.message("Writing nodesets")
     nlist = arange(nnod)
     for i in nodeproperties.iterkeys():
         nodeset = nlist[array(abqdata.nodeprop) == i]
@@ -543,7 +544,7 @@ Script: %s
         transform(fil,i)
 
     #write elemsets and their section
-    print "Writing element sets"
+    GD.message("Writing element sets")
     n=1
     elemlist = arange(nel)
     for i in elemproperties.iterkeys():
@@ -553,13 +554,13 @@ Script: %s
         writeSection(fil, i)
 
     #write steps
-    print "Writing steps"
+    GD.message("Writing steps")
     writeBoundaries(fil, abqdata.initialboundaries)
     for i in range(len(abqdata.analysis)):
         a=abqdata.analysis[i]
         writeStep(fil, a.analysistype,a.time, a.nlgeom, a.cloadset, a.opcl, a.dloadset, a. opdl, a.boundset, a.opb, a.dispset, a.op, abqdata.odb, abqdata.dat)
 
-    print "Done"
+    GD.message("Done")
 
 
 ##################################################

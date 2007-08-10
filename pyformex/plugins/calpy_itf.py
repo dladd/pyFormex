@@ -40,16 +40,16 @@ def detect():
         sta,out = utils.runCommand('calpy --whereami')
         if not sta:
             path = os.path.dirname(out)
-            print "I found calpy in %s" % path
+            GD.debug("I found calpy in %s" % path)
     if not path:
         trypaths = [ '/usr/local/lib', '/usr/local' ]
         for p in trypaths:
             path = '%s/calpy-%s' % (p,calpy)
             if os.path.exists(path):
-                print 'path exists: %s' % path
+                GD.debug('path exists: %s' % path)
                 break
             else:
-                print 'path does not exist: %s' % path
+                GD.debug('path does not exist: %s' % path)
                 path = ''
     if path:
         GD.message("I found calpy in '%s'" % path)
@@ -71,7 +71,7 @@ def check():
 if __name__ == "__main__":
     print __doc__
 else:
-    print __name__
+    GD.debug("Loading plugin %s" % __name__)
     check()
 
 

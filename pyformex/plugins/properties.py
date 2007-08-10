@@ -16,6 +16,8 @@ Properties are identified and connected to a Formex element by the
 prop values that are stored in the Formex.
 """
 
+import globaldata as GD
+
 from flatkeydb import *
 from mydict import *
 
@@ -159,10 +161,10 @@ class NodeProperty(Property):
         global nodeproperties
         if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or isinstance(bound, str) or bound==None): 
             CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'displacement':displacement , 'coords' : coords, 'coordset' : coordset})
-            print nodeproperties
+            #print nodeproperties
             nodeproperties[nr] = self
         else: 
-            print 'A pointload and a boundary condition have to be a list containing 6 items'
+            warning('A pointload and a boundary condition have to be a list containing 6 items')
 
 
 class ElemProperty(Property):
@@ -214,14 +216,14 @@ class ElemSection(Property):
             if sections.has_key(section):
                 self.section = sections[section]
             else:
-                print "This section is not available in the database"
+                warning("This section is not available in the database")
         elif isinstance(section,dict):
             sections[section['name']] = CascadingDict(section)
             self.section = sections[section['name']]
         elif section==None:
             self.section = section
         else: 
-            print "addSection requires a string or dict"
+            warning("addSection requires a string or dict")
     
     def addMaterial(self, material):
         """Create or replace the material properties of the element.
@@ -233,14 +235,14 @@ class ElemSection(Property):
             if materials.has_key(material):
                 self.material = materials[material] 
             else:
-                print "This material is not available in the database"
+                warning("This material is not available in the database")
         elif isinstance(material, dict):
             materials[material['name']] = CascadingDict(material)
             self.material = materials[material['name']]
         elif material==None:
             self.material=material
         else:
-            print "addMaterial requires a string or dict"
+            warning("addMaterial requires a string or dict")
 
 
 class ElemLoad(Property):

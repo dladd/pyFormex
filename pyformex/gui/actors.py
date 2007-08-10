@@ -657,7 +657,7 @@ class FormexActor(Actor,Formex):
         elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
             GD.debug("SINGLE COLOR %s ALPHA %s" % (str(color),alpha))
             GL.glColor(append(color,alpha))
-            print append(color,alpha)
+            #print append(color,alpha)
             color = None
 
         elif color.dtype.kind == 'i': # color index
