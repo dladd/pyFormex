@@ -44,6 +44,10 @@ svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
 
 
 ** Release a distribution to the general public
+Set the version in RELEASE and then
+  make version
+Stamp the files with the version
+  make stampall
 Create a distribution
   make dist
 Check in (creating the dist may modify some files)
@@ -66,7 +70,7 @@ Release the file via project administration
     Select a file
     File type : source gz
     Processor type :Any
-    Release NOtes
+    Release Notes
   Release file
 
 (That was easy, uh?)
