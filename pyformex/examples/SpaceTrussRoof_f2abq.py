@@ -1,7 +1,7 @@
 #!/usr/bin/env python pyformex.py
 # $Id: SpaceTrussRoof_f2abq.py 150 2006-11-01 11:13:34Z bverheg $
 ##
-## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 

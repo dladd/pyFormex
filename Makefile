@@ -1,14 +1,23 @@
 #  -*- Makefile -*-  for creating pyFormex releases
 # $Id: Makefile 53 2005-12-05 18:23:28Z bverheg $
+##
+## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
 #
 
 include RELEASE
 
 PYFORMEXDIR= pyformex-${RELEASE}
-PYSOURCE= ${addsuffix .py, ${PYMODULES}} 
-PYGUISOURCE= ${addprefix gui/,${addsuffix .py,${PYGUIMODULES}}}
-PLUGINSOURCE= ${addprefix plugins/,${addsuffix .py,${PLUGINMODULES}}}
-OTHERSOURCE= pyformexrc
+PYSOURCE= ${addprefix pyformex/,${addsuffix .py, ${PYMODULES}}}
+PYGUISOURCE= ${addprefix pyformex/gui/,${addsuffix .py,${PYGUIMODULES}}}
+PLUGINSOURCE= ${addprefix pyformex/plugins/,${addsuffix .py,${PLUGINMODULES}}}
+OTHERSOURCE= pyformex/pyformexrc
 ICONFILES= $(wildcard icons/*.xpm) $(wildcard icons/pyformex_*.png)
 DOCDIR= doc
 HTMLDIR= ${DOCDIR}/html
@@ -17,10 +26,10 @@ HTMLGUIDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, gui ${addprefix gui.,${
 HTMLPLUGINDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, plugins ${addprefix plugins.,${PLUGINMODULES}}}}
 STAMPFILES= README History Makefile FAQ
 NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description 
-EXAMPLEFILES= ${addprefix examples/,${addsuffix .py, ${EXAMPLES} }}
+EXAMPLEFILES= ${addprefix pyformex/examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 
-STAMPABLE= ${PROGRAM} ${PYSOURCE} ${OTHERSOURCE} ${PYGUISOURCE} ${PLUGINSOURCE}  ${EXAMPLEFILES} ${STAMPFILES}
+STAMPABLE= pyformex/${PROGRAM} ${PYSOURCE} ${OTHERSOURCE} ${PYGUISOURCE} ${PLUGINSOURCE}  ${EXAMPLEFILES} ${STAMPFILES}
 
 STAMP= stamp 
 VERSIONSTRING= __version__ = .*

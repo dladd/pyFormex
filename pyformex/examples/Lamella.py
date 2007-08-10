@@ -1,14 +1,14 @@
 #!/usr/bin/env python pyformex.py
 # $Id$
 ##
-## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
+## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
-###
+##
 """Lamella Dome"""
 clear()
 nx=12   # number of modules in circumferential direction
