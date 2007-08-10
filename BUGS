@@ -1,4 +1,13 @@
+# pyFormex 0.5 known bugs    ( best viewed with emacs  -*- outline -*- )
+
 KNOWN BUGS:
+
+* With the mouse dolly zoom function (vertical mouse movement zooming), you can not move the camera beyond beyond the center of the displayed scene. 
+  You can do it using the toolbar buttons or menus, and you can use mouse lens zooming (horizontal movement) to view further.
+
+* Mouse zooming does not work correctly in projective mode.
+
+* Mouse zooming can make a jump after a flyAlong().
 
 
 
