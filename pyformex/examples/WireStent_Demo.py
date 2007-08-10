@@ -9,7 +9,12 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Wire Stent"""
+"""Wire Stent Demo"""
+##
+##This Demo is intended for educational purposes by rewirting the WireStent.py 
+##example and adding lots of drawing instructions and comments. More details
+##regarding the used definitions can be found in the Pyformex reference manual.
+###
 
 # needed if we import this from another script
 from formex import *
@@ -49,67 +54,65 @@ class DoubleHelixStent:
         p = math.pi*D*tand(be)
         nx = int(nx)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
-        #print "pitch",p
-        #print "ny",ny
         # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
-        A=Formex(pattern('1'),1)
-        GD.message("Step 1: Create a Formex: a line of length 1 oriented along the X-axis [A=Formex(pattern('1'),0)]")
+        A=Formex(pattern('1'),3)
+        GD.message("Step 1: Create a Formex: a line of length 1 (with property 3) oriented along the X-axis\n               [A = Formex(pattern('1'),3)]")
         draw(A,view='bottom')
         pause()
-##        clear() 
-        B=Formex(A.replic(nb,1.0),3)
-        GD.message("Step 2: Copy the Formex nb times in the X(0)-direction [B=Formex(A.replic(nb,1.0),1)]")
+        B=Formex(A.replic(nb,1.0),1)
+        GD.message("Step 2: Copy the Formex nb times in the X(0)-direction\n               [B = Formex(A.replic(nb,1.0),1)]")
         draw(B,view='last')
         pause()
         clear() 
-        base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),3)
-        GD.message("Step 3: Create a bump in the Z(2)-direction [base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),3)]")
+        base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),1)
+        GD.message("Step 3: Create a bump in the Z(2)-direction\n               [base = Formex(B.bump1(2,[0.,0.,dz],bump_z,0),1)]")
         draw(base,view='last')
         pause()
         clear()
-                # scale back to size 1.
+        # scale back to size 1.
         base = base.scale([1./nb,1./nb,1.])
-        GD.message("Step 4: Rescale the base cell to size 1 [base = base.scale([1./nb,1./nb,1.])]")
+        GD.message("Step 4: Rescale the base line to size 1\n               [base = base.scale([1./nb,1./nb,1.])]")
         draw(base,view='last')
         pause()
         clear()
         # NE and SE directed struts
         NE = base.shear(1,0,1.)
         NE.setProp(1)
-        GD.message("Step 5: Reorient the base cell to NE [NE = base.shear(1,0,1.)]. For a good view rotate up 6 times!!!")
-        draw(NE,view='front')
+        GD.message("Step 5: Reorient the base line to NE\n               [NE = base.shear(1,0,1.)].")
+##      The nxt two lines serve to rotate the camera up over 30°, i.e. 6 times the rotUp definition from cameraMenu 
+        GD.canvas.camera.rotate(30,1,0,0)
+        GD.canvas.update()   
+        draw(NE)
         pause()
         clear()
         SE = base.reflect(2).shear(1,0,-1.)
         SE.setProp(3)
-        GD.message("Step 6: Reorient the base cell to SE [SE = base.reflect(2).shear(1,0,-1.)]")
+        GD.message("Step 6: Create a mirrored base line and orient it to SE\n               [SE = base.reflect(2).shear(1,0,-1.)]")
         draw(SE,view='last')
         pause()
         clear()
-##        NE.setProp(1)
-##        SE.setProp(3)
         cell=(NE+SE)
-        GD.message("Step 7: Create the base cell by combining the NE and SE formices [cell=(NE+SE)]")
+        GD.message("Step 7: Create the base cell by combining the NE and SE formices\n               [cell = (NE+SE)]")
         draw(cell,view='last')
         pause()
         clear()
         # a unit cell of crossing struts
         cell1 = (cell).rosette(2,180)
-        GD.message("Step 8: Create the base module (cell1) of two crossing wires by replicating the base cell by an angular rotation [(cell).rosette(2,180)]")
+        GD.message("Step 8: Create the base module (cell1) of two crossing wires by replicating the base cell by an angular rotation\n               [cell1 = (cell).rosette(2,180)]")
         draw(cell1,view='last')
         pause()
         clear()
         # add a connector between first points of NE and SE
         if connectors:
             cell1 += Formex([[NE[0][0],SE[0][0]]],2)
-        GD.message("Step 9: Add a connector between the first points of NE and SE of the base module [cell1 += Formex([[NE[0][0],SE[0][0]]],2)]")
+        GD.message("Step 9: Add a connector between the first points of NE and SE of the base module\n               [cell1 += Formex([[NE[0][0],SE[0][0]]],2)]")
         draw(cell1,view='last')
         pause()
         clear()    
         # and create its mirror
         cell2 = cell1.reflect(2)
-        GD.message("Step 10: Create a mirror in Z(2)-direction of the base module [cell2 = cell1.reflect(2)]")
+        GD.message("Step 10: Create a mirror in Z(2)-direction of the base module\n               [cell2 = cell1.reflect(2)]")
         draw(cell2,view='last')
         pause()
         clear()
@@ -121,18 +124,18 @@ class DoubleHelixStent:
         dx = 4.
         dy = 4.
         module=(self.cell1+self.cell2)
-        GD.message("Step 11: Extend the base module with its mirrored and translated copy [module=(self.cell1+self.cell2)]")
+        GD.message("Step 11: Extend the base module with its mirrored and translated copy\n               [module = (self.cell1+self.cell2)]")
         draw(module,view='last')
         pause()
         clear()
         F = module.replic2(nx,ny,dx,dy)
-        GD.message("Step 12: Replicate the base module in both directions of the base plane [F = module.replic2(nx,ny,dx,dy)]")
+        GD.message("Step 12: Replicate the base module in both directions of the base plane\n               [F = module.replic2(nx,ny,dx,dy)]")
         draw(F,view='last')
         pause()
         clear()
         # fold it into a cylinder
         self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
-        GD.message("Step 13: Roll the nearly planar grid into a cylinder [self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])]")
+        GD.message("Step 13: Roll the nearly planar grid into a cylinder\n               [self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])]")
         draw(self.F,view='front')
         pause()
         clear()
@@ -149,7 +152,7 @@ class DoubleHelixStent:
 if __name__ == "draw":
 
     # show an example
-## The following default values come from Jedwab and Clerc (except for L=87.5 and b-30.85)
+## The following default values are obtained from Jedwab and Clerc (except for L=87.5 and b-30.85)
     D = 16.71
     L = 40.
     d = 0.22
