@@ -58,7 +58,7 @@ Put the file on berlios ftp server
   ftp ftp.berlios.de
   name: ftp (anoniem)
   cd incoming
-  lcd releases
+  lcd dist
   put fullfilename
 Release the file via project administration
   inloggen
