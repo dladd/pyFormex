@@ -80,7 +80,7 @@ class DoubleHelixStent:
         # NE and SE directed struts
         NE = base.shear(1,0,1.)
         NE.setProp(1)
-        GD.message("Step 5: Reorient the base line to NE\n               NE = base.shear(1,0,1.)")
+        GD.message("Step 5: Skew the base line to NE-direction\n               NE = base.shear(1,0,1.)")
 ##      The nxt two lines serve to rotate the camera up over 30°, i.e. 6 times the rotUp definition from cameraMenu 
         GD.canvas.camera.rotate(30,1,0,0)
         GD.canvas.update()   
@@ -89,7 +89,7 @@ class DoubleHelixStent:
         clear()
         SE = base.reflect(2).shear(1,0,-1.)
         SE.setProp(3)
-        GD.message("Step 6: Create a mirrored base line and orient it to SE\n               SE = base.reflect(2).shear(1,0,-1.)")
+        GD.message("Step 6: Create a mirrored base line and skew it to SE-direction\n               SE = base.reflect(2).shear(1,0,-1.)")
         draw(SE,view='last')
         pause()
         clear()
@@ -135,8 +135,13 @@ class DoubleHelixStent:
         pause()
         clear()
         # fold it into a cylinder
-        self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
-        GD.message("Step 13: Roll the nearly planar grid into a cylinder\n               self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])")
+        C=F.translate([0.,0.,r])
+        GD.message("Step 13: Translate the full patern over the stent radius in Z-direction\n               C=F.translate([0.,0.,r])")
+        draw(C,view='last')
+        pause()
+        clear()
+        self.F = C.cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
+        GD.message("Step 14: Roll the nearly planar grid into a cylinder\n               self.F = C.cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])")
         draw(self.F,view='front')
         pause()
         clear()
