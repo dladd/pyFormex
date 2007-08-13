@@ -250,6 +250,8 @@ def showBbox():
     if FL:
         GD.message("Bbox of selection: %s" % bbox(FL))
         bboxA = actors.BboxActor(bbox(FL))
+        GD.canvas.addActor(bboxA)
+        GD.canvas.update()
 
 def removeBbox():
     """Remove the bbox of the current selection."""

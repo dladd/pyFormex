@@ -43,10 +43,6 @@ class Element(object):
         return len(self.faces)
 
 
-    # For compatibility with old version:
-    nodes = vertices
-    nnodes = nvertices
-
 
 class Tri3(Element):
     """A 3-node triangle"""

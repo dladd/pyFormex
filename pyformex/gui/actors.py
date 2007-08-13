@@ -468,7 +468,8 @@ class BboxActor(Actor):
         self.color = color
         self.linewidth = linewidth
         self.bb = bbox
-        self.vertices = array(elements.Hex8.nodes) * (bbox[1]-bbox[0]) + bbox[0]
+        self.vertices = array(elements.Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
+        print "VERTICES",self.vertices
         self.edges = array(elements.Hex8.edges)
         self.facets = array(elements.Hex8.faces)
 
@@ -479,7 +480,9 @@ class BboxActor(Actor):
         """Always draws a wireframe model of the bbox."""
         if color is None:
             color = self.color
-        drawLineElems(self.vertices,self.edges,color,self.linewidth)
+        if self.linewidth is not None:
+            GL.glLineWidth(self.linewidth)
+        drawLineElems(self.vertices,self.edges,color)
             
     
 
