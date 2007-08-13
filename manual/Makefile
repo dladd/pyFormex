@@ -13,7 +13,7 @@ TESTOPTIONS= --l2h-init=fix.perl --keep
 TESTOPTIONS= --keep
 
 # Default target
-.PHONY all: ps pdf html
+.PHONY all: pdf html
 
 .PHONY ps: ${TGT}.ps
 

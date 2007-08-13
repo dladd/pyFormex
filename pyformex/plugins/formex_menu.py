@@ -18,6 +18,7 @@ but to be loaded as a plugin.
 import globaldata as GD
 from gui.draw import *
 from formex import *
+from gui import actors
 from plugins import stl,inertia,partition,sectionize
 
 
@@ -232,12 +233,33 @@ def forgetSelection():
         forget(selection)
 
 
+#################### BBox ####################################
+
+bboxA = None
+
 def printBbox():
     """Print the bbox of the current selection."""
     FL = checkSelection()
     if FL:
         GD.message("Bbox of selection: %s" % bbox(FL))
 
+def showBbox():
+    """Draw the bbox of the current selection."""
+    global bboxA
+    FL = checkSelection()
+    if FL:
+        GD.message("Bbox of selection: %s" % bbox(FL))
+        bboxA = actors.BboxActor(bbox(FL))
+
+def removeBbox():
+    """Remove the bbox of the current selection."""
+    global bboxA
+    if bboxA:
+        undraw(bboxA)
+        bboxA = None
+
+
+#################### Axes ####################################
 
 def unitAxes():
     """Create a set of three axes."""
@@ -532,20 +554,24 @@ def create_menu():
     """Create the Formex menu."""
     MenuData = [
 #        ("&List Formices",formex_list),
+        ("&Read Formex Files",readSelection),
         ("&Select",makeSelection),
         ("&Draw Selection",drawSelection),
-        ('&Print Bbox',printBbox),
+        ("&Forget ",forgetSelection),
         ('&List Formices',printall),
 #        ("&Draw Changes",drawChanges),
         ("&Save Selection as Formex",writeSelection),
         ("&Save Selection as STL File",writeSelectionSTL),
-        ("&Read Formex Files",readSelection),
         ("---",None),
         ("&Set Property",setProperty),
         ("&Toggle Numbers",toggleNumbers),
-        ("&Forget ",forgetSelection),
         ("&Undo Last Changes",undoChanges),
         ("---",None),
+        ("&Bbox",
+         [('&Show Bbox',showBbox),
+          ('&Remove Bbox',removeBbox),
+          ('&Print Bbox',printBbox),
+          ]),
         ("&Transform",
          [("&Scale Selection",scaleSelection),
           ("&Non-uniformly Scale Selection",scale3Selection),

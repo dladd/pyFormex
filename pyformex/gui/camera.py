@@ -286,7 +286,7 @@ class Camera:
         self.saveMatrix()
 
     def rotate(self,val,vx,vy,vz):
-        """Rotate the model around current camera axes."""
+        """Rotate the camera around current camera axes."""
         GL.glMatrixMode(GL.GL_MODELVIEW)
         self.saveMatrix()
         GL.glLoadIdentity()
