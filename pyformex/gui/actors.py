@@ -484,7 +484,8 @@ class BboxActor(Actor):
             GL.glLineWidth(self.linewidth)
         drawLineElems(self.vertices,self.edges,color)
             
-    
+        
+   
 
 class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes."""
