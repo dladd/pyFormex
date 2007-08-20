@@ -1,2 +1,6 @@
-# We currently do not keep a detailed log of all changes to the pyFormex source,
-# it is still changing too frequently.
+2007-08-20  Benedict Verhegghe  <bene@bumpy.ugent.be>
+
+	* simple.py: added regularGrid
+
+	* actors.py: added drawGridLines, drawGridPlanes, GridActor, CoordPlaneActor
+	

@@ -15,6 +15,7 @@ import globaldata as GD
 from OpenGL import GL,GLU
 from colors import *
 from formex import *
+from simple import regularGrid
 from plugins import elements
 
 
@@ -30,7 +31,7 @@ def glColor(color,alpha=1.0):
     if alpha == 1.0:
         GL.glColor3fv(color)
     else:
-        GL.glColor4fv(tuple(color) + (alpha,)) 
+        GL.glColor4fv(append(color,alpha)) 
 
 
 def drawPoints(x,size=None,color=None):
@@ -182,10 +183,9 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     if mode == 'smooth':
         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     GL.glBegin(GL.GL_TRIANGLES)
-    #print "DRAW TRIANGLES WITH ALPHA %s" % alpha
     for i in range(x.shape[0]):
         if color is not None:
-            GL.glColor(append(color[i],alpha))
+            glColor(color[i],alpha)
         if mode == 'smooth':
             GL.glNormal3fv(normal[i])
         for j in range(x.shape[1]):
@@ -279,6 +279,65 @@ def drawSphere(s,color=cyan,ndiv=8):
     GLU.gluSphere(quad,s,ndiv,ndiv)
 
 
+def drawGridLines(x0,x1,nx):
+    """Draw a 3D rectangular grid of lines.
+        
+    A grid of lines parallel to the axes is drawn in the domain bounded
+    by the rectangular box [x0,x1]. The grid has nx divisions in the axis
+    directions, thus lines will be drawn at nx[i]+1 positions in direction i.
+    If nx[i] == 0, lines are only drawn for the initial coordinate x0.
+    Thus nx=(0,2,3) results in a grid of 3x4 lines in the plane // (y,z) at
+    coordinate x=x0[0].
+    """
+    x0 = asarray(x0)
+    x1 = asarray(x1)
+    nx = asarray(nx)
+
+    for i in range(3):
+        if nx[i] > 0:
+            axes = (asarray([1,2]) + i) % 3
+            base = regularGrid(x0[axes],x1[axes],nx[axes]).reshape((-1,2))
+            x = zeros((base.shape[0],2,3))
+            x[:,0,axes] = base
+            x[:,1,axes] = base
+            x[:,0,i] = x0[i]
+            x[:,1,i] = x1[i]
+            GL.glBegin(GL.GL_LINES)
+            for p in x.reshape((-1,3)):
+                GL.glVertex3fv(p)
+            GL.glEnd()
+
+    
+def drawGridPlanes(x0,x1,nx):
+    """Draw a 3D rectangular grid of planes.
+        
+    A grid of planes parallel to the axes is drawn in the domain bounded
+    by the rectangular box [x0,x1]. The grid has nx divisions in the axis
+    directions, thus planes will be drawn at nx[i]+1 positions in direction i.
+    If nx[i] == 0, planes are only drawn for the initial coordinate x0.
+    Thus nx=(0,2,3) results in a grid of 3x4 planes // x and
+    one plane // (y,z) at coordinate x=x0[0].
+    """
+    x0 = asarray(x0)
+    x1 = asarray(x1)
+    nx = asarray(nx)
+
+    for i in range(3):
+        axes = (asarray([1,2]) + i) % 3
+        if all(nx[axes] > 0):
+            j,k = axes
+            base = regularGrid(x0[i],x1[i],nx[i]).ravel()
+            x = zeros((base.shape[0],4,3))
+            corners = array([x0[axes],[x1[j],x0[k]],x1[axes],[x0[j],x1[k]]])
+            for j in range(4):
+                x[:,j,i] = base
+            x[:,:,axes] = corners
+            GL.glBegin(GL.GL_QUADS)
+            for p in x.reshape((-1,3)):
+                GL.glVertex3fv(p)
+            GL.glEnd()
+
+
 ### Settings ###############################################
 #
 # These are not intended for users but to sanitize user input
@@ -317,7 +376,7 @@ def saneColor(color=None):
     The return value is one of the following:
     - None, indicating no color (current color will be used),
     - a float array with shape (3,), indicating a single color, 
-    - a float array with shape (n,3), holding a collectiong of colors,
+    - a float array with shape (n,3), holding a collection of colors,
     - an integer array with shape (n,), holding color index values.
 
     !! Note that a single color can not be specified as integer RGB values.
@@ -428,8 +487,6 @@ class Actor(object):
         if self.trans:
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)
-
-
       
     def nelems(self):
         return 1
@@ -459,7 +516,7 @@ class CubeActor(Actor):
         drawCube(self.size,self.color)
 
 
-
+# This could be subclassed from GridActor
 class BboxActor(Actor):
     """Draws a bbox."""
 
@@ -539,6 +596,77 @@ class TriadeActor(Actor):
         GL.glVertex3f(0.0,0.0,2.0)
         GL.glEnd()
 
+  
+class GridActor(Actor):
+    """Draws a (set of) grid(s) in one of the coordinate planes."""
+
+    def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.2,lines=True,planes=True):
+        Actor.__init__(self)
+        self.linecolor = saneColor(linecolor)
+        self.planecolor = saneColor(planecolor)
+        self.linewidth = linewidth
+        self.alpha = alpha
+        self.trans = True
+        self.lines = lines
+        self.planes = planes
+        self.nx = asarray(nx)
+        self.x0 = asarray(ox)
+        self.x1 = self.x0 + self.nx * asarray(dx)
+
+    def bbox(self):
+        return array([self.x0,self.x1])
+
+    def draw(self,mode):
+        """Draw the grid."""
+
+        print "BBOX %s" % self.bbox()
+        if self.lines:
+            if self.linewidth:
+                GL.glLineWidth(self.linewidth)
+            glColor(self.linecolor)
+            drawGridLines(self.x0,self.x1,self.nx)
+        
+        if self.planes:
+            glColor(self.planecolor,self.alpha)
+            drawGridPlanes(self.x0,self.x1,self.nx)
+
+            
+class CoordPlaneActor(Actor):
+    """Draws a set of 3 coordinate planes."""
+
+    def __init__(self,nx=(1,1,1),ox=(0.0,0.0,0.0),dx=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+        Actor.__init__(self)
+        self.linecolor = saneColor(linecolor)
+        self.planecolor = saneColor(planecolor)
+        self.linewidth = linewidth
+        self.alpha = alpha
+        self.trans = True
+        self.lines = lines
+        self.planes = planes
+        self.nx = asarray(nx)
+        self.x0 = asarray(ox)
+        self.x1 = self.x0 + self.nx * asarray(dx)
+
+    def bbox(self):
+        return array([self.x0,self.x1])
+
+    def draw(self,mode):
+        """Draw the grid."""
+
+        for i in range(3):
+            nx = self.nx.copy()
+            nx[i] = 0
+            
+            if self.lines:
+                glColor(self.linecolor)
+                drawGridLines(self.x0,self.x1,nx)
+
+            if self.planes:
+                glColor(self.planecolor,self.alpha)
+                drawGridPlanes(self.x0,self.x1,nx)
+        
+
+
 
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
@@ -588,8 +716,8 @@ class FormexActor(Actor,Formex):
         """Set the Actors alpha value."""
         self.alpha = float(alpha)
         self.trans = self.alpha < 1.0
-        if self.trans:
-            GD.debug("Setting Actor's ALPHA value to %f" % alpha)
+        #if self.trans:
+        #    GD.debug("Setting Actor's ALPHA value to %f" % alpha)
 
 
     def setMarkSize(self,marksize):

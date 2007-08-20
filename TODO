@@ -59,9 +59,16 @@ Each task can have the following keys:
 
  - Provide a formian to pyformex translator
 
+ - Derive BBoxActor from GridActor
+
+ - Add a CoordPlaneActor to the formex_menu
+
+ - Complete the transparent rendering for all actors
+
 
 * Release 0.9 :
- - Dedicated editor ? 
+ - Dedicated editor? 
+   Do we need one? General purpose editors have been doing fine for now. 
 
 
 * Release 1.0:

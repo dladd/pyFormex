@@ -75,6 +75,33 @@ class Sphere2(Formex):
         F = grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
         Formex.__init__(self,F.f,F.p)
 
+
+
+def regularGrid(x0,x1,nx):
+    """Create a regular grid between points x0 and x1.
+
+    x0 and x1 are n-dimensional points (usually 1D, 2D or 3D).
+    The space between x0 and x1 is divided in nx equal parts. nx should have
+    the same dimension as x0 and x1.
+    The result is a rectangular grid of coordinates in an array with
+    shape ( nx[0]+1, nx[1]+1, ..., n ).
+    """
+    x0 = asarray(x0).ravel()
+    x1 = asarray(x1).ravel()
+    nx = asarray(nx).ravel()
+    if x0.size != x1.size or nx.size != x0.size:
+        raise ValueError,"Expected equally sized 1D arrays x0,x1,nx"
+    if any(nx < 0):
+        raise ValueError,"nx values should be >= 0"
+    n = x0.size
+    ind = indices(nx+1).reshape((n,-1))
+    shape = append(tuple(nx+1),n)
+    nx[nx==0] = 1
+    jnd = nx.reshape((n,-1)) - ind
+    ind = ind.transpose()
+    jnd = jnd.transpose()
+    return ( (x0*jnd + x1*ind) / nx ).reshape(shape)
+
         
 class Sphere3(Formex):
     """A sphere consisting of surface triangles.

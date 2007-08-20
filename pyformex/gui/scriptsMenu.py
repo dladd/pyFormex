@@ -20,13 +20,18 @@ import utils
 import draw
     
 
+
+# This is used for scripts menus and history menu.
+# Maybe we should create a common base class and subclass two type of menus 
+
 class ScriptsMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list."""
     
     def __init__(self,title,dir=None,files=None,max=0,autoplay=False):
         """Create a menu with files in dir.
 
-        If dir is a directory, all files in that directory are used.
+        If dir is a directory path, a cascading menu of all pyFormex scripts
+        in that directory and subdirectories will be created.
         If dir is a list, this list of files is used
         By default, files from dir are only included if:
           - the name ends with '.py'
