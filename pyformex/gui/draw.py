@@ -214,7 +214,7 @@ starttime = 0.0
 
 # We currently have two mechanisms for transferring variables between
 # scripts by using global variables.
-# - put them into globaldata.PF (GD.PF), see stl_menu plugin
+# - put them into globaldata.PF (GD.PF), see surface_menu plugin
 # - export them using the export() function, see formex_menu plugin
 
 

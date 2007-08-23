@@ -505,12 +505,15 @@ See Help->License or the file COPYING for details.
     GD.message = draw.message
     GD.warning = draw.warning
     draw.reset()
-    # Load plugins
+    # Load plugins, ignore if not found
     import plugins
     for p in GD.cfg.get('gui/plugins',[]):
-        m = getattr(plugins,p)
-        if hasattr(m,'show_menu'):
-            m.show_menu()
+        try:
+            m = getattr(plugins,p)
+            if hasattr(m,'show_menu'):
+                m.show_menu()
+        except:
+            GD.debug('ERROR while loading plugin %s' % p)
     GD.gui.update()
     # remaining args are interpreted as scripts
     for arg in args:

@@ -74,7 +74,7 @@ else:
     draw(e,alpha=0.5)
 
 if export:
-    from plugins import stl
+    from plugins import surface
     f = file('novation.stl','w')
     F = e # + b
     # Create triangles
@@ -84,5 +84,5 @@ if export:
         G += F.selectNodes([0,i-1,i])
     clear()
     draw(G)
-    stl.write_stla(f,G.f)
+    surface.write_stla(f,G.f)
     f.close()

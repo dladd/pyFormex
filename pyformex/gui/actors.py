@@ -664,6 +664,41 @@ class CoordPlaneActor(Actor):
             if self.planes:
                 glColor(self.planecolor,self.alpha)
                 drawGridPlanes(self.x0,self.x1,nx)
+
+            
+class PlaneActor(Actor):
+    """Draws a plane."""
+
+    def __init__(self,P,N,nx=(2,2,2),ox=(0.,0.,0.),size=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+        Actor.__init__(self)
+        self.linecolor = saneColor(linecolor)
+        self.planecolor = saneColor(planecolor)
+        self.linewidth = linewidth
+        self.alpha = alpha
+        self.trans = True
+        self.lines = lines
+        self.planes = planes
+        self.nx = asarray(nx)
+        self.x0 = asarray(ox)
+        self.x1 = self.x0 + self.nx * asarray(dx)
+
+    def bbox(self):
+        return array([self.x0,self.x1])
+
+    def draw(self,mode):
+        """Draw the grid."""
+
+        for i in range(3):
+            nx = self.nx.copy()
+            nx[i] = 0
+            
+            if self.lines:
+                glColor(self.linecolor)
+                drawGridLines(self.x0,self.x1,nx)
+
+            if self.planes:
+                glColor(self.planecolor,self.alpha)
+                drawGridPlanes(self.x0,self.x1,nx)
         
 
 

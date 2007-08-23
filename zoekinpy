@@ -14,4 +14,4 @@ fi
 #set +f
 #echo $files
  
-fgrep "$1" $files
+grep "$@" $files

@@ -16,7 +16,7 @@ Generates input-surface.inp and input-volume.inp with the
 surface and volume modules in Abaqus(R) input format. 
 """
 
-from plugins import f2abq, stl, tetgen
+from plugins import surface, f2abq, tetgen
 import commands, os
 
 

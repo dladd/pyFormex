@@ -22,7 +22,7 @@ import toolbar
 import help
 import image
 import draw
-from plugins import stl_menu,formex_menu
+from plugins import surface_menu,formex_menu
 
 
 save = NotImplemented
@@ -84,7 +84,7 @@ MenuData = [
         (_('&Stop MultiSave'),fileMenu.stopMultiSave),
         (_('---2'),None),
         (_('Load &Plugins'),[
-            (_('Surface menu'),stl_menu.show_menu),
+            (_('Surface menu'),surface_menu.show_menu),
             (_('Formex menu'),formex_menu.show_menu),
             ]),
         (_('---3'),None),

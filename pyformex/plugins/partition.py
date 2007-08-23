@@ -15,7 +15,7 @@ from gui import decors,colors
 from gui.camera import inverse
 from gui.draw import *
 from formex import *
-from plugins import stl
+from plugins import surface
 
 VA=None
 
@@ -26,7 +26,7 @@ def prepare(V):
     P = V.center()
     print "Initial P = %s" % P
     VA = draw(V,bbox=None,color='black')
-    area,norm = stl.areaNormals(V.f)
+    area,norm = surface.areaNormals(V.f)
     N = norm[0]
     return V,P,N
 
@@ -47,7 +47,7 @@ def testview(F,V,P):
     print F.center()
     undraw(VA)
     VA = draw(V)
-    area,norm = stl.areaNormals(V.f)
+    area,norm = surface.areaNormals(V.f)
     N = norm[0]
     return P,N
 

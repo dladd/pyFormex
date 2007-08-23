@@ -19,7 +19,7 @@ import globaldata as GD
 from gui.draw import *
 from formex import *
 from gui import actors
-from plugins import stl,inertia,partition,sectionize
+from plugins import surface,inertia,partition,sectionize
 
 
 import commands, os, timer
@@ -170,7 +170,7 @@ def writeSelectionSTL():
             print "Writing Formex '%s' to file '%s'" % (name,fn)
             print named(name).bbox()
             chdir(fn)
-            stl.write_stla(fn,named(name).f)
+            surface.write_stla(fn,named(name).f)
 
 
 def read_Formex(fn):
@@ -259,6 +259,30 @@ def removeBbox():
     if bboxA:
         undraw(bboxA)
         bboxA = None
+
+
+#################### CoordPlanes ####################################
+
+bboxB = None
+
+def showBboxB():
+    """Draw the bbox on the current selection."""
+    global bboxB
+    FL = checkSelection()
+    if FL:
+        bb = bbox(FL)
+        GD.message("Bbox of selection: %s" % bb)
+        nx = array([4,4,4])
+        bboxB = actors.CoordPlaneActor(nx=nx,ox=bb[0],dx=(bb[1]-bb[0])/nx)
+        GD.canvas.addActor(bboxB)
+        GD.canvas.update()
+
+def removeBboxB():
+    """Remove the bbox of the current selection."""
+    global bboxB
+    if bboxB:
+        undraw(bboxB)
+        bboxB = None
 
 
 #################### Axes ####################################
@@ -572,6 +596,8 @@ def create_menu():
         ("&Bbox",
          [('&Show Bbox',showBbox),
           ('&Remove Bbox',removeBbox),
+          ('&Show Bbox Planes',showBboxB),
+          ('&Remove Bbox Planes',removeBboxB),
           ('&Print Bbox',printBbox),
           ]),
         ("&Transform",

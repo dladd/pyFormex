@@ -11,7 +11,7 @@ PYGUIMODULES = __init__  actors camera cameraMenu canvas \
   marks menu prefMenu scriptsMenu toolbar viewport viewportMenu widgets
 PLUGINMODULES= __init__ calpy_itf elements f2abq formex_menu inertia \
   lima partition properties sectionize \
-  stl stl_abq stl_menu tetgen turtle
+  surface surface_abq surface_menu tetgen turtle
 EXAMPLES= __init__ BarrelVault Baumkuchen Circle Clip Diamatic \
   DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Novation\
   ParabolicTower Pattern ScallopDome Schwedler Sphere Sphere2 Sphere_stl\

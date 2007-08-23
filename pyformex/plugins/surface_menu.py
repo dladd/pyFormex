@@ -9,7 +9,7 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""stl_menu.py
+"""surface_menu.py
 
 STL plugin menu for pyFormex.
 """
@@ -18,7 +18,7 @@ import globaldata as GD
 from globaldata import PF
 import utils
 import timer
-from plugins import f2abq, stl, tetgen, stl_abq, formex_menu
+from plugins import surface, f2abq, tetgen, surface_abq, formex_menu
 from gui import widgets,actors,colors
 from gui.draw import *
 from formex import Formex
@@ -70,14 +70,14 @@ def convert_stl_to_off():
     """Converts an stl to off format without reading it into pyFormex."""
     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
     if fn:     
-        return stl.stl_to_off(fn,sanitize=False)
+        return surface.stl_to_off(fn,sanitize=False)
 
 
 def sanitize_stl_to_off():
     """Sanitizes an stl to off format without reading it into pyFormex."""
     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
     if fn:     
-        return stl.stl_to_off(fn,sanitize=True)
+        return surface.stl_to_off(fn,sanitize=True)
 
 
 def set_color():
@@ -112,7 +112,7 @@ def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert
         GD.message("Reading file %s" % fn)
         GD.gui.setBusy()
         t = timer.Timer()
-        nodes,elems =stl.readSurface(fn)
+        nodes,elems =surface.readSurface(fn)
         GD.message("Time to import surface: %s seconds" % t.seconds())
         GD.gui.setBusy(False)
         set_surface(nodes,elems)
@@ -200,7 +200,7 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
         print "Exporting surface model to %s" % fn
         nodes,elems = PF['surface']
         GD.gui.setBusy()
-        stl.writeSurface(fn,nodes,elems)   
+        surface.writeSurface(fn,nodes,elems)   
         GD.gui.setBusy(False)
 
 
@@ -236,7 +236,7 @@ def write_stl(types=['stl']):
         print "Exporting stl model to %s" % fn
         F = PF['stl_model']
         GD.gui.setBusy()
-        stl.write_stla(fn,F.f)   
+        surface.write_stla(fn,F.f)   
         GD.gui.setBusy(False)
 
 # The following functions operate on the stl_model, but should
@@ -342,7 +342,7 @@ def fill_holes():
             oldF = F
             linewidth(2)
             GD.gui.setBusy()
-            stl.readSurface(fn1)
+            surface.readSurface(fn1)
             GD.gui.setBusy(False)
 
 

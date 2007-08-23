@@ -1,5 +1,5 @@
 #!/usr/bin/env python pyformex.py
-# $Id: Sphere_stl.py 154 2006-11-03 19:08:25Z bverheg $
+# $Id: Sphere_surface.py 154 2006-11-03 19:08:25Z bverheg $
 ##
 ## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
 ## pyFormex is a Python implementation of Formex algebra
@@ -74,8 +74,8 @@ draw(G)
 if ack('Export this model in STL format?'):
     fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
     if fn:
-        from plugins import stl
+        from plugins import surface
         f = file(fn,'w')
-        stl.write_ascii(f,T.f)
+        surface.write_ascii(f,T.f)
         f.close()
 
