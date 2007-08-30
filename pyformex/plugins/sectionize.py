@@ -14,8 +14,11 @@
 Create, measure and approximate cross section of a Formex.
 """
 
-from gui.draw import *
+import globaldata as GD
+import simple
 from formex import *
+from gui.draw import *
+
 
 
 def createSegments(F,ns=None,th=None):
@@ -53,7 +56,7 @@ def sectionize(F,segments,th=0.1,visual=True):
 
     th is the relative thickness of the selected part of the Formex.
     If th = 0.5, that part will be delimited by two planes in the endpoints
-    of and perpendiocular to the segments.
+    of and perpendicular to the segments.
     """
     sections = []
     ctr = []
@@ -86,7 +89,6 @@ def sectionize(F,segments,th=0.1,visual=True):
 
 def drawCircles(sections,ctr,diam):
     """Draw circles as approximation of Formices."""
-    import simple
     circle = simple.circle().rotate(-90,1)
     cross = Formex(simple.Pattern['plus']).rotate(-90,1)
     circles = []
@@ -117,13 +119,19 @@ def drawAllCircles(F,circles):
     zoomAll()
 
 
-def connectPoints(ptlist):
-    """Create a Formex connecting all points in the ptlist.
+def connectPoints(F,close=False):
+    """Return a Formex with straight segments connecting subsequent points.
 
-    ptlist is any (n,3) shaped structure (sequence|list|array) of floats.
+    F can be a Formex or data that can be turned into a Formex (e.g. an (n,3)
+    array of points). The result is a plex-2 Formex connecting the subsequent
+    points of F or the first point of subsequent elements in case the plexitude
+    of F > 1.    
+    If close=True, the last point is connected back to the first to create a
+    closed polyline.
     """
-    Fc = Formex(array(ptlist).reshape((-1,1,3)))
-    return connect([Fc,Fc],bias=[0,1])
+    if not isinstance(F,formex.Formex):
+        F = Formex(F)
+    return formex.connect([F,F],bias=[0,1],loop=close)
 
 
 # End

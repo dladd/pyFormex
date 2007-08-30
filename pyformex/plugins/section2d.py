@@ -6,6 +6,8 @@ This is a plugin for pyFormex.
 (C) 2002 B. Verhegghe
 """
 
+from plugins import sectionize
+
 ## We should probably turn this into a class planeSection
 
 class planeSection(object):
@@ -34,7 +36,7 @@ class planeSection(object):
         rather meaningless.
         """
         if F.nplex() == 1:
-            self.F = connectPoints(F)
+            self.F = sectionize.connectPoints(F,close=True)
         elif F.nplex() == 2:
             self.F = F
         else:
@@ -76,16 +78,6 @@ def loopCurve(elems):
     if any(srt == -1):
         print "The curve is not closed"
     return srt
-        
-                 
-def connectPoints(F,close=True):
-    """Returns a Formex with straight segemnts connectin subsequent points.
-
-    F is normally a plex-1 Formex, else, the first node of each element
-    will be used.
-    If close=True, the last pointcircumference of the plane section F.
-    """
-    return connect([F,F],bias=[0,1],loop=close)
 
 
 def sectionChar(F):
@@ -192,7 +184,7 @@ if __name__ == "draw":
 
     def square_example(scale=[1.,1.,1.]):
         P = Formex([[[1,1]]]).rosette(4,90).scale(scale)
-        F = connectPoints(P)
+        F = sectionize.connectPoints(P,close=True)
         draw(F)
         return sectionChar(F)
 

@@ -301,9 +301,9 @@ class Camera:
         """Save the ModelView matrix."""
         self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
         self.rot = copy.deepcopy(self.m)
-        self.trl = copy.deepcopy(self.rot[3][0:3])
+        self.trl = copy.deepcopy(self.rot[3,0:3])
         #print "Translation: %s" % self.trl
-        self.rot[3][0:3] = [0.,0.,0.]
+        self.rot[3,0:3] = [0.,0.,0.]
 
     def loadMatrix (self):
         """Load the saved ModelView matrix."""

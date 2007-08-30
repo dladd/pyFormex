@@ -1937,8 +1937,8 @@ class Formex:
             div = arange(div+1) / float(div)
         else:
             div = array(div).ravel()
-        A = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[:-1])
-        B = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[1:])
+        A = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[:-1],swap=True)
+        B = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[1:],swap=True)
         return connect([A,B])
 
 
@@ -2222,7 +2222,7 @@ def connect(Flist,nodid=None,bias=None,loop=False):
     return Formex(f)
 
 
-def interpolate(F,G,div):
+def interpolate(F,G,div,swap=False):
     """Create interpolations between two formices.
 
     F and G are two Formices with the same shape.
@@ -2238,6 +2238,12 @@ def interpolate(F,G,div):
     number of divisions for the interval [0..1].
     Thus, interpolate(F,G,n) is equivalent with
     interpolate(F,G,arange(0,n+1)/float(n))
+
+    The swap argument sets the order of the elements in the resulting Formex.
+    By default, if n interpolations are created of an m-element Formex, the
+    element order is in-Formex first (n sequences of m elements).
+    If swap==True, the order is swapped and you get m sequences of n
+    interpolations.
     """
     shape = F.shape()
     if G.shape() != shape:
@@ -2249,6 +2255,8 @@ def interpolate(F,G,div):
     c = F.f
     d = G.f - F.f
     r = c + outer(div,d).reshape((-1,)+shape)
+    if swap:
+        r = r.reshape((len(div),) + F.f.shape).swapaxes(0,1)
     return Formex(r.reshape((-1,) + shape[1:]))
     
 

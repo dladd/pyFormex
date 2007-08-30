@@ -13,11 +13,39 @@
 import globaldata as GD
 
 from OpenGL import GL,GLU
-from colors import *
-from formex import *
 from simple import regularGrid
 from plugins import elements
+from colors import *
+from formex import *
 
+
+
+def rotMatrix(v,n=3):
+    """Create a rotation matrix that rotates axis 0 to the given vector.
+
+    Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
+    """
+    if n != 4:
+        n = 3
+    vl = length(v)
+    if vl == 0.0:
+        return identity(n)
+    v /= vl
+    w = cross(v,[1,0,0])
+    wl = length(w)
+    if wl == 0.0:
+        w = cross(n,[0,1,0])
+        wl = length(w)
+    w /= wl
+    x = cross(v,w)
+    x /= length(x)
+    m = row_stack([v,w,x])
+    if n == 3:
+        return m
+    else:
+        a = identity(4)
+        a[0:3,0:3] = m
+        return a
 
 ### Some drawing functions ###############################################
 
@@ -478,15 +506,15 @@ class Actor(object):
     def draw(self):
         pass
 
-    def display(self):
-        if self.trans:
-            GL.glEnable (GL.GL_BLEND)
-            GL.glDepthMask (GL.GL_FALSE)
-            GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-        GL.glCallList(self.list)
-        if self.trans:
-            GL.glDepthMask (GL.GL_TRUE)
-            GL.glDisable (GL.GL_BLEND)
+##     def display(self):
+##         if self.trans:
+##             GL.glEnable (GL.GL_BLEND)
+##             GL.glDepthMask (GL.GL_FALSE)
+##             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+##         GL.glCallList(self.list)
+##         if self.trans:
+##             GL.glDepthMask (GL.GL_TRUE)
+##             GL.glDisable (GL.GL_BLEND)
       
     def nelems(self):
         return 1
@@ -498,6 +526,55 @@ class Actor(object):
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
         self.color,self.colormap = saneColorSet(color=color) 
+
+     
+class TranslatedActor(Actor):
+    """An Actor translated to another position."""
+
+    def __init__(self,A,trl=(0.,0.,0.)):
+        Actor.__init__(self)
+        self.actor = A
+        self.trans = A.trans
+        self.trl = asarray(trl)
+
+    def bbox(self):
+        return self.actor.bbox() + self.trl
+
+    def draw(self,mode):
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glTranslate(*self.trl)
+        GL.glCallList(self.actor.list)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
+
+
+     
+class RotatedActor(Actor):
+    """An Actor rotated to another position."""
+
+    def __init__(self,A,normal=(1.,0.,0.),twist=0.0):
+        """Ceated a new rotated actor.
+
+        The rotation is specified by the direction of the local 0 axis
+        of the actor.
+        """
+        Actor.__init__(self)
+        self.actor = A
+        self.trans = A.trans
+        self.rot = rotMatrix(normal,4)
+
+
+    def bbox(self):
+        return self.actor.bbox() # TODO : rotate the bbox !
+
+    def draw(self,mode):
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glMultMatrixf(self.rot)
+        GL.glCallList(self.actor.list)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
 
 
 class CubeActor(Actor):
@@ -667,9 +744,13 @@ class CoordPlaneActor(Actor):
 
             
 class PlaneActor(Actor):
-    """Draws a plane."""
+    """A plane in a 3D scene."""
 
-    def __init__(self,P,N,nx=(2,2,2),ox=(0.,0.,0.),size=(1.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+    def __init__(self,P,N,nx=(2,2,2),ox=(0.,0.,0.),size=(0.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+        """Create a new Plane.
+
+        The plane is defined by a point P in the plane and a normal N.
+        """
         Actor.__init__(self)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)
@@ -679,8 +760,10 @@ class PlaneActor(Actor):
         self.lines = lines
         self.planes = planes
         self.nx = asarray(nx)
-        self.x0 = asarray(ox)
-        self.x1 = self.x0 + self.nx * asarray(dx)
+        ox = asarray(ox)
+        sz = 0.5*asarray(size)
+        self.x0,self.x1 = ox-sz, ox+sz
+        print self.x0
 
     def bbox(self):
         return array([self.x0,self.x1])

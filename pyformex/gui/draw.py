@@ -19,11 +19,11 @@ import numpy
 import utils
 import widgets
 import toolbar
-import colors
 import actors
 import decors
 import marks
 import image
+import colors
 import formex
 from script import *
 
@@ -644,14 +644,20 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
     return actor
 
 
-def drawNumbers(F):
+def drawNumbers(F,color=colors.black):
     """Draw numbers on all elements of F."""
     FC = F.centroids().trl([0.,0.,0.1])
-    M = marks.MarkList(FC.f[:,0,:],range(FC.nelems()))
+    M = marks.MarkList(FC.f[:,0,:],range(FC.nelems()),color=color)
     GD.canvas.addMark(M)
     GD.canvas.numbers = M
     GD.canvas.update()
     return M
+
+
+def drawActor(A):
+    """Draw an actor and update the screen."""
+    GD.canvas.addActor(A)
+    GD.canvas.update()
 
 
 def undraw(itemlist):
@@ -664,6 +670,7 @@ def undraw(itemlist):
     GD.canvas.remove(itemlist)
     GD.canvas.update()
     GD.app.processEvents()
+
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""

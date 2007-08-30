@@ -51,7 +51,7 @@ class TextMark(Mark):
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
-    def __init__(self,pos,val,font='9x15'):
+    def __init__(self,pos,val,color=black,font='9x15'):
         """Create a number list.
 
         pos is an (N,3) array of positions.
@@ -65,10 +65,12 @@ class MarkList(Mark):
             raise ValueError,"Not enough values for positions"
         Mark.__init__(self,pos)
         self.val = val
+        self.color = color
         self.font = glutFont(font)
 
     def draw(self,mode='wireframe'):
-        GL.glColor3f(0.0,0.0,0.0)
+        if self.color:
+            GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
             GL.glRasterPos3fv(p)
             drawGlutText(str(v),self.font)
