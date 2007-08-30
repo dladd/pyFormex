@@ -20,6 +20,53 @@ from formex import *
 from gui.draw import *
 
 
+def connectPoints(F,close=False):
+    """Return a Formex with straight segments connecting subsequent points.
+
+    F can be a Formex or data that can be turned into a Formex (e.g. an (n,3)
+    array of points). The result is a plex-2 Formex connecting the subsequent
+    points of F or the first point of subsequent elements in case the plexitude
+    of F > 1.    
+    If close=True, the last point is connected back to the first to create a
+    closed polyline.
+    """
+    if not isinstance(F,formex.Formex):
+        F = Formex(F)
+    return formex.connect([F,F],bias=[0,1],loop=close)
+
+
+def centerline(F,dir,nx=2,mode=2,th=0.2):
+    """Compute the centerline in the direction dir.
+
+    """
+    bb = F.bbox()
+    x0 = F.center()
+    x1 = F.center()
+    x0[dir] = bb[0][dir]
+    x1[dir] = bb[1][dir]
+    n = array((0,0,0))
+    n[dir] = nx
+    
+    grid = simple.regularGrid(x0,x1,n).reshape((-1,3))
+
+    if mode > 0:
+        th *= (x1[dir]-x0[dir])/nx
+        n = zeros((3,))
+        n[dir] = 1.0
+        center = []
+        for P in grid:
+            test = abs(distanceFromPlane(F.f,P,n)) < th
+            if mode == 1:
+                C = F.f[test].mean(axis=0)
+            elif mode == 2:
+                test = test.sum(axis=-1)
+                G = F.select(test==F.f.shape[1])
+                C = G.center()
+            center.append(C)
+        grid = array(center)
+
+    return Formex(connectPoints(grid))
+
 
 def createSegments(F,ns=None,th=None):
     """Create segments along 0 axis for sectionizing the Formex F."""
@@ -117,21 +164,6 @@ def drawAllCircles(F,circles):
         bb[1] += d
         draw(circ,color='blue',bbox=bb)
     zoomAll()
-
-
-def connectPoints(F,close=False):
-    """Return a Formex with straight segments connecting subsequent points.
-
-    F can be a Formex or data that can be turned into a Formex (e.g. an (n,3)
-    array of points). The result is a plex-2 Formex connecting the subsequent
-    points of F or the first point of subsequent elements in case the plexitude
-    of F > 1.    
-    If close=True, the last point is connected back to the first to create a
-    closed polyline.
-    """
-    if not isinstance(F,formex.Formex):
-        F = Formex(F)
-    return formex.connect([F,F],bias=[0,1],loop=close)
 
 
 # End
