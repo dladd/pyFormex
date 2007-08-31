@@ -1387,7 +1387,7 @@ class Formex:
 
         This is equivalent with the function intersectionLinesWithPlane(F,p,n).
         """
-        return Formex(intersectionPointsWithPlane(self,p,n))
+        return Formex(intersectionLinesWithPlane(self,p,n))
 
     
     def cutAtPlane(self,p,n,newprops=None):

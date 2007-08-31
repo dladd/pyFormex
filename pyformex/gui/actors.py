@@ -933,13 +933,17 @@ class FormexActor(Actor,Formex):
                 
         elif nnod == 2:
             drawLines(self.f,color)
-            
+        
         elif self.eltype == 'curve':
             drawCurves(self.f,color)
             
         elif mode=='wireframe' :
             if self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
+                coords = self.f[:,edges,:]
+                drawEdges(coords,color)
+            elif self.eltype == 'hex':
+                edges = [ 0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
                 coords = self.f[:,edges,:]
                 drawEdges(coords,color)
             else:
@@ -955,7 +959,13 @@ class FormexActor(Actor,Formex):
                 drawTriangles(coords,mode,color)
             else: # (possibly non-plane) quadrilateral
                 drawQuadrilaterals(self.f,mode,color)
-            
+
+        elif nnod == 8:
+            if self.eltype=='hex':
+                faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]
+                coords = self.f[:,faces,:]
+                drawQuadrilaterals(coords,mode,color)
+        
         else:
             drawPolygons(self.f,mode,color=None)
 

@@ -30,6 +30,23 @@ Pattern = {
     }
 
 
+def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
+    """Return a Formex which is a line between two specified points.
+    
+    p1: first point, p2: second point
+    The line is split up in n segments.
+    """
+    p1 = asarray(p1)
+    p2 = asarray(p2)
+    dir = p2-p1
+    r = array([])
+    for i in range(n):
+        b = p1+dir/n
+        r = append(r,[p1,b])
+        p1 = b
+    return Formex(r.reshape(-1,2,3))
+
+    
 def regularGrid(x0,x1,nx):
     """Create a regular grid between points x0 and x1.
 
