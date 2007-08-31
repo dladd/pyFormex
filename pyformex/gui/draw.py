@@ -239,7 +239,7 @@ def Globals():
     # We might create a module with all operations accepted in
     # scripts.
 
-    # Our solution is to take a copy of the globals in this module,
+    # Our current solution is to take a copy of the globals in this module,
     # and add the globals from the 'colors' and 'formex' modules
     # !! Taking a copy is needed to avoid changing this module's globals !!
     # Also, do not be tempted to take a user dict and update it with this
@@ -938,6 +938,10 @@ def printall():
 def printglobals():
     print globals()
 
+def printglobalnames():
+    a = globals().keys()
+    a.sort()
+    print a
 
 def printbbox():
     print GD.canvas.bbox

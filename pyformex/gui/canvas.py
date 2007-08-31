@@ -411,7 +411,6 @@ class Canvas(object):
         self.removeActors()
         self.removeMarks()
         self.removeDecorations()
-        self.display()
 
 
     def redrawAll(self):

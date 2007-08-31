@@ -34,7 +34,7 @@ def rotMatrix(v,n=3):
     w = cross(v,[1,0,0])
     wl = length(w)
     if wl == 0.0:
-        w = cross(n,[0,1,0])
+        w = cross(v,[0,1,0])
         wl = length(w)
     w /= wl
     x = cross(v,w)
@@ -763,7 +763,7 @@ class PlaneActor(Actor):
         ox = asarray(ox)
         sz = 0.5*asarray(size)
         self.x0,self.x1 = ox-sz, ox+sz
-        print self.x0
+        #print self.x0
 
     def bbox(self):
         return array([self.x0,self.x1])

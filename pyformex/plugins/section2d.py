@@ -7,6 +7,7 @@ This is a plugin for pyFormex.
 """
 
 from plugins import sectionize
+from numpy import *
 
 ## We should probably turn this into a class planeSection
 

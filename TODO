@@ -65,6 +65,11 @@ Each task can have the following keys:
 
  - Complete the transparent rendering for all actors
 
+ - Change the design of actors/actorlist: 
+     actors should get a dedicated method to create their display list
+     instead of being dependent on addition to an actorlist
+
+
 
 * Release 0.9 :
  - Dedicated editor? 
