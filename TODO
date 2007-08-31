@@ -69,6 +69,8 @@ Each task can have the following keys:
      actors should get a dedicated method to create their display list
      instead of being dependent on addition to an actorlist
 
+ - Use our own globals dict for script environment:
+     This would allow us to reset the globals to a known state
 
 
 * Release 0.9 :

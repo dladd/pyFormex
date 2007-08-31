@@ -31,7 +31,7 @@ def rotMatrix(v,n=3):
     if vl == 0.0:
         return identity(n)
     v /= vl
-    w = cross(v,[1,0,0])
+    w = cross(v,[0,0,1])
     wl = length(w)
     if wl == 0.0:
         w = cross(v,[0,1,0])
@@ -495,7 +495,7 @@ class Actor(object):
       currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
     """
     
-    def __init__(self):
+    def __init__(self,useDisplayLists=True):
         self.trans = False
         self.list = None
         pass
