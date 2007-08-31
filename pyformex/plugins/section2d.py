@@ -58,6 +58,7 @@ def loopCurve(elems):
     ie = 0
     je = 0
     rev = False
+    k = elems[je][0]
     while True:
         if rev:
             srt[ie] =  elems[je][[1,0]]
@@ -67,16 +68,19 @@ def loopCurve(elems):
         #print srt
         #print elems
         j = srt[ie][1]
-        if j == 0:
+        if j == k:
             #print "Finished"
             break
         w = where(elems == j)
         if w[0].size == 0:
             print "No match found"
+            break
         je = w[0][0]
         ie += 1
         rev = w[1][0] == 1
     if any(srt == -1):
+        print "The curve consists of multiple segments"
+    if srt[-1][1] != srt[0][0]:
         print "The curve is not closed"
     return srt
 
