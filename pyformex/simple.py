@@ -29,23 +29,6 @@ Pattern = {
     'star3d' : '1/02/03/04/05/06/07/08/0A/0B/0C/0D/0E/0F/0G/0H/0a/0b/0c/0d/0e/0f/0g/0h'
     }
 
-
-def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
-    """Return a Formex which is a line between two specified points.
-    
-    p1: first point, p2: second point
-    The line is split up in n segments.
-    """
-    p1 = asarray(p1)
-    p2 = asarray(p2)
-    dir = p2-p1
-    r = array([])
-    for i in range(n):
-        b = p1+dir/n
-        r = append(r,[p1,b])
-        p1 = b
-    return Formex(r.reshape(-1,2,3))
-
     
 def regularGrid(x0,x1,nx):
     """Create a regular grid between points x0 and x1.
@@ -80,6 +63,15 @@ def shape(name):
     from one of the patterns defined in the simple.Pattern dictionary.
     """
     return Formex(pattern(Pattern[name]))
+
+
+def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
+    """Return a Formex which is a line between two specified points.
+    
+    p1: first point, p2: second point
+    The line is split up in n segments.
+    """
+    return Formex([[p1,p2]]).divide(n)
     
 
 def circle(a1=1.,a2=2.,a3=360.):
