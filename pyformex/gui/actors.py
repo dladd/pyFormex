@@ -487,35 +487,54 @@ class Actor(object):
     The visualisation of the Scene Actors is dependent on camera position and
     angles, clipping planes, rendering mode and lighting.
     
-    An Actor subclass should minimally have the following three methods:
-    __init__(): to initialize the actor.
-    bbox(): return the actors bounding box.
-    draw(mode='wireframe'): to draw the actor. Takes a mode argument so the
-      drawing function can act differently depending on the mode. There are
-      currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
+    An Actor subclass should minimally reimplement the following methods:
+      bbox(): return the actors bounding box.
+      drawGL(mode): to draw the actor. Takes a mode argument so the
+        drawing function can act differently depending on the mode. There are
+        currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
+      drawGL should only contain OpenGL calls that are allowed inside a display
+        list. This may include calling the display list of another actor but NOT
+        creating a new display list.
     """
     
-    def __init__(self,useDisplayLists=True):
+    def __init__(self):
         self.trans = False
         self.list = None
-        pass
 
     def bbox(self):
         return array([[0.0,0.0,0.0],[1.0,1.0,1.0]])
 
-    def draw(self):
-        pass
+    def drawGL(self,mode):
+        """Perform the OpenGL drawing functions to display the actor."""
+        raise NotImplementedError
 
-##     def display(self):
-##         if self.trans:
-##             GL.glEnable (GL.GL_BLEND)
-##             GL.glDepthMask (GL.GL_FALSE)
-##             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-##         GL.glCallList(self.list)
-##         if self.trans:
-##             GL.glDepthMask (GL.GL_TRUE)
-##             GL.glDisable (GL.GL_BLEND)
-      
+    def draw(self,mode):
+        if self.list is None:
+            self.create_list(mode)
+        GL.glCallList(self.list)
+
+    def redraw(self,mode):
+        self.delete_list()
+        self.create_list(mode)
+        GL.glCallList(self.list)
+
+    def use_list(self):
+        if self.list:
+            GL.glCallList(self.list)
+
+    def create_list(self,mode):
+        self.list = GL.glGenLists(1)
+        GL.glNewList(self.list,GL.GL_COMPILE)
+        try:
+            self.drawGL(mode)
+        finally:
+            GL.glEndList()
+
+    def delete_list(self):
+        if self.list:
+            GL.glDeleteLists(self.list,1)
+        self.list = None
+        
     def nelems(self):
         return 1
     
@@ -540,11 +559,11 @@ class TranslatedActor(Actor):
     def bbox(self):
         return self.actor.bbox() + self.trl
 
-    def draw(self,mode):
+    def drawGL(self,mode):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glTranslate(*self.trl)
-        GL.glCallList(self.actor.list)
+        self.actor.use_list()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
 
@@ -554,7 +573,7 @@ class RotatedActor(Actor):
     """An Actor rotated to another position."""
 
     def __init__(self,A,normal=(1.,0.,0.),twist=0.0):
-        """Ceated a new rotated actor.
+        """Created a new rotated actor.
 
         The rotation is specified by the direction of the local 0 axis
         of the actor.
@@ -564,15 +583,14 @@ class RotatedActor(Actor):
         self.trans = A.trans
         self.rot = rotMatrix(normal,4)
 
-
     def bbox(self):
         return self.actor.bbox() # TODO : rotate the bbox !
 
-    def draw(self,mode):
+    def drawGL(self,mode):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glMultMatrixf(self.rot)
-        GL.glCallList(self.actor.list)
+        self.actor.use_list()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
 
@@ -588,7 +606,7 @@ class CubeActor(Actor):
     def bbox(self):
         return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         """Draw the cube."""
         drawCube(self.size,self.color)
 
@@ -610,7 +628,7 @@ class BboxActor(Actor):
     def bbox():
         return self.bb
 
-    def draw(self,mode,color=None):
+    def drawGL(self,mode,color=None):
         """Always draws a wireframe model of the bbox."""
         if color is None:
             color = self.color
@@ -618,8 +636,6 @@ class BboxActor(Actor):
             GL.glLineWidth(self.linewidth)
         drawLineElems(self.vertices,self.edges,color)
             
-        
-   
 
 class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes."""
@@ -632,7 +648,7 @@ class TriadeActor(Actor):
     def bbox(self):
         return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         """Draw the triade."""
         GL.glShadeModel(GL.GL_FLAT)
         GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
@@ -693,7 +709,7 @@ class GridActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def draw(self,mode):
+    def drawGL(self,mode):
         """Draw the grid."""
 
         print "BBOX %s" % self.bbox()
@@ -727,7 +743,7 @@ class CoordPlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def draw(self,mode):
+    def drawGL(self,mode):
         """Draw the grid."""
 
         for i in range(3):
@@ -768,7 +784,7 @@ class PlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def draw(self,mode):
+    def drawGL(self,mode):
         """Draw the grid."""
 
         for i in range(3):
@@ -783,8 +799,6 @@ class PlaneActor(Actor):
                 glColor(self.planecolor,self.alpha)
                 drawGridPlanes(self.x0,self.x1,nx)
         
-
-
 
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
@@ -871,7 +885,7 @@ class FormexActor(Actor,Formex):
     bbox = Formex.bbox
 
 
-    def draw(self,mode='wireframe',color=None,alpha=None):
+    def drawGL(self,mode='wireframe',color=None,alpha=None):
         """Draw the formex.
 
         if color is None, it is drawn with the color specified on creation.
@@ -970,8 +984,6 @@ class FormexActor(Actor,Formex):
             drawPolygons(self.f,mode,color=None)
 
 
-
-
 class SurfaceActor(Actor):
     """Draws a triangulated surface specified by points and connectivity."""
 
@@ -1041,11 +1053,11 @@ class SurfaceActor(Actor):
         return self.bb
 
 
-    def draw(self,mode,color=None):
+    def drawGL(self,mode,color=None):
         """Draw the surface."""
         if mode.endswith('wire'):
-            self.draw(mode[:-4],color=color)
-            self.draw('wireframe',color=black)
+            self.drawGL(mode[:-4],color=color)
+            self.drawGL('wireframe',color=black)
             return
 
         if color == None:

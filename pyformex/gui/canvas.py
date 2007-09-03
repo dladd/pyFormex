@@ -23,55 +23,81 @@ import decors
 import marks
 import utils
 
+## class ActorList(list):
+
+##     def __init__(self,canvas,useDisplayLists=True):
+##         self.canvas = canvas
+##         self.uselists = useDisplayLists
+##         list.__init__(self)
+        
+##     def add(self,actor):
+##         """Add an actor to an actorlist."""
+##         if self.uselists:
+##             self.canvas.makeCurrent()
+##             self.canvas.setDefaults()
+##             actor.list = GL.glGenLists(1)
+##             GL.glNewList(actor.list,GL.GL_COMPILE)
+##             actor.draw(self.canvas.rendermode)
+##             GL.glEndList()
+##         self.append(actor)
+
+##     def delete(self,actor):
+##         """Remove an actor from an actorlist."""
+##         if actor in self:
+##             self.remove(actor)
+##             if self.uselists and actor.list:
+##                 self.canvas.makeCurrent()
+##                 GL.glDeleteLists(actor.list,1)
+
+
+##     def redraw(self,actorlist=None):
+##         """Redraw (some) actors in the scene.
+
+##         This redraws the specified actors (recreating their display list).
+##         This should e.g. be used after changing an actor's properties.
+##         Only actors that are in the current actor list will be redrawn.
+##         If no actor list is specified, the whole current actorlist is redrawn.
+##         """
+##         if actorlist is None:
+##             actorlist = self
+##         if self.uselists:
+##             self.canvas.makeCurrent()
+##             for actor in actorlist:
+##                 self.canvas.setDefaults()
+##                 if actor.list:
+##                     GL.glDeleteLists(actor.list,1)
+##                 actor.list = GL.glGenLists(1)
+##                 GL.glNewList(actor.list,GL.GL_COMPILE)
+##                 actor.draw(self.canvas.rendermode)
+##                 GL.glEndList()
+
+ 
 class ActorList(list):
 
-    def __init__(self,canvas,useDisplayLists=True):
+    def __init__(self,canvas):
         self.canvas = canvas
-        self.uselists = useDisplayLists
         list.__init__(self)
         
     def add(self,actor):
         """Add an actor to an actorlist."""
-        if self.uselists:
-            self.canvas.makeCurrent()
-            self.canvas.setDefaults()
-            actor.list = GL.glGenLists(1)
-            GL.glNewList(actor.list,GL.GL_COMPILE)
-            actor.draw(self.canvas.rendermode)
-            GL.glEndList()
         self.append(actor)
 
     def delete(self,actor):
         """Remove an actor from an actorlist."""
         if actor in self:
             self.remove(actor)
-            if self.uselists and actor.list:
-                self.canvas.makeCurrent()
-                GL.glDeleteLists(actor.list,1)
 
-
-    def redraw(self,actorlist=None):
+    def redraw(self):
         """Redraw (some) actors in the scene.
 
         This redraws the specified actors (recreating their display list).
         This should e.g. be used after changing an actor's properties.
-        Only actors that are in the current actor list will be redrawn.
-        If no actor list is specified, the whole current actorlist is redrawn.
         """
-        if actorlist is None:
-            actorlist = self
-        if self.uselists:
-            self.canvas.makeCurrent()
-            for actor in actorlist:
-                self.canvas.setDefaults()
-                if actor.list:
-                    GL.glDeleteLists(actor.list,1)
-                actor.list = GL.glGenLists(1)
-                GL.glNewList(actor.list,GL.GL_COMPILE)
-                actor.draw(self.canvas.rendermode)
-                GL.glEndList()
+        for actor in self:
+            actor.redraw(self.canvas.rendermode)
 
-                
+
+
 ##################################################################
 #
 #  The Canvas Settings
@@ -296,20 +322,21 @@ class Canvas(object):
             opaque = [ a for a in self.actors if not a.trans ]
             transp = [ a for a in self.actors if a.trans ]
             for actor in opaque:
-               GL.glCallList(actor.list)
+               actor.draw(self.rendermode)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             for actor in transp:
-                GL.glCallList(actor.list)
+                actor.draw(self.rendermode)
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)
         else:
             for actor in self.actors:
-                GL.glCallList(actor.list)
+                actor.draw(self.rendermode)
 
         for actor in self.annotations:
-            GL.glCallList(actor.list)
+            actor.draw(self.rendermode)
+
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         # Plot viewport decorations
@@ -318,7 +345,7 @@ class Canvas(object):
         GL.glLoadIdentity()
         GLU.gluOrtho2D(0,self.width(),0,self.height())
         for actor in self.decorations:
-            GL.glCallList(actor.list)
+            actor.draw(self.rendermode)
         # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
