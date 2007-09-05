@@ -98,6 +98,7 @@ MenuData = [
         (_('&Test Pick'),draw.pickDraw),
         (_('&ListFormices'),draw.printall),
         (_('&PrintBbox'),draw.printbbox),
+        (_('&PrintGlobalNames'),draw.printglobalnames),
         (_('&PrintGlobals'),draw.printglobals),
         (_('&PrintConfig'),draw.printconfig),
         (_('&PrintViewportSettings'),draw.printviewportsettings),

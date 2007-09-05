@@ -395,6 +395,8 @@ def named(name):
     elif GD.PF.has_key(name):
         GD.debug("Found %s in GD.PF" % name)
         dict = GD.PF
+    else:
+        raise NameError,"Name %s is neither in globals() nor GD.PF" % name
     return dict[name]
 
 
@@ -671,6 +673,19 @@ def undraw(itemlist):
     GD.canvas.update()
     GD.app.processEvents()
 
+
+
+def focus(object):
+    """Move the camera thus that object comes fully into view.
+
+    object can be anything having a bbox() method.
+
+    The camera is moved with fixed axis directions to a place
+    where the whole object can be viewed using a 45. degrees lens opening.
+    This technique may change in future!
+    """
+    GD.canvas.setCamera(bbox=object.bbox())
+    
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
@@ -1034,9 +1049,9 @@ from utils import deprecated
 def Export(dict):
     pass
 
-@deprecated(export)
-def export(dict):
-    pass
+## @deprecated(export)
+## def export(dict):
+##     pass
 
 
 

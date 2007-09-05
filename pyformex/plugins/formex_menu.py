@@ -127,9 +127,9 @@ def askSelection(mode=None):
                             selected=selection).getResult()
 
 
-def makeSelection():
+def makeSelection(mode='multi'):
     """Interactively sets the current selection."""
-    setSelection(askSelection('multi'))
+    setSelection(askSelection(mode))
     drawSelection()
 
 
@@ -182,16 +182,16 @@ def read_Formex(fn):
     return F
 
 
-def readSelection(select=True,draw=True):
+def readSelection(select=True,draw=True,multi=True):
     """Read a Formex (or list) from asked file name(s).
 
     If select is True (default), this becomes the current selection.
     If select and draw are True (default), the selection is drawn.
     """
     types = [ 'Formex Files (*.formex)', 'All Files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=True)
-    #print fn
-    #return fn
+    fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=multi)
+    if not multi:
+        fn = [ fn ]
     if fn:
         chdir(fn[0])
         names = map(utils.projectName,fn)
@@ -200,7 +200,7 @@ def readSelection(select=True,draw=True):
         GD.gui.setBusy(False)
         export(dict(zip(names,F)))
         if select:
-            print "Got selection %s" % str(names)
+            GD.message("Set selection to %s" % str(names))
             setSelection(names)
             if draw:
                 drawSelection()

@@ -22,55 +22,6 @@ import actors
 import decors
 import marks
 import utils
-
-## class ActorList(list):
-
-##     def __init__(self,canvas,useDisplayLists=True):
-##         self.canvas = canvas
-##         self.uselists = useDisplayLists
-##         list.__init__(self)
-        
-##     def add(self,actor):
-##         """Add an actor to an actorlist."""
-##         if self.uselists:
-##             self.canvas.makeCurrent()
-##             self.canvas.setDefaults()
-##             actor.list = GL.glGenLists(1)
-##             GL.glNewList(actor.list,GL.GL_COMPILE)
-##             actor.draw(self.canvas.rendermode)
-##             GL.glEndList()
-##         self.append(actor)
-
-##     def delete(self,actor):
-##         """Remove an actor from an actorlist."""
-##         if actor in self:
-##             self.remove(actor)
-##             if self.uselists and actor.list:
-##                 self.canvas.makeCurrent()
-##                 GL.glDeleteLists(actor.list,1)
-
-
-##     def redraw(self,actorlist=None):
-##         """Redraw (some) actors in the scene.
-
-##         This redraws the specified actors (recreating their display list).
-##         This should e.g. be used after changing an actor's properties.
-##         Only actors that are in the current actor list will be redrawn.
-##         If no actor list is specified, the whole current actorlist is redrawn.
-##         """
-##         if actorlist is None:
-##             actorlist = self
-##         if self.uselists:
-##             self.canvas.makeCurrent()
-##             for actor in actorlist:
-##                 self.canvas.setDefaults()
-##                 if actor.list:
-##                     GL.glDeleteLists(actor.list,1)
-##                 actor.list = GL.glGenLists(1)
-##                 GL.glNewList(actor.list,GL.GL_COMPILE)
-##                 actor.draw(self.canvas.rendermode)
-##                 GL.glEndList()
-
  
 class ActorList(list):
 
@@ -299,7 +250,7 @@ class Canvas(object):
 
     
     def setSize (self,w,h):
-        if h == 0:	# Prevent A Divide By Zero 
+        if h == 0:	# prevent divide by zero 
             h = 1
         GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h
@@ -477,10 +428,9 @@ class Canvas(object):
         if not bbox is None:
             self.setBbox(bbox)
         bbox = self.bbox
-        center = (bbox[0]+bbox[1]) / 2
-        size = bbox[1] - bbox[0]
+        center = 0.5 * (bbox[0]+bbox[1])
         # calculating the bounding circle: this is rather conservative
-        dist = length(size)
+        dist = length(bbox[1] - bbox[0])
         if dist <= 0.0:
             dist = 1.0
         self.camera.setCenter(*center)

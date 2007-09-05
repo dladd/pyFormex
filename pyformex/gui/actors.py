@@ -27,11 +27,12 @@ def rotMatrix(v,n=3):
     """
     if n != 4:
         n = 3
+    #v = array(v,dtype=float64)
     vl = length(v)
     if vl == 0.0:
         return identity(n)
     v /= vl
-    w = cross(v,[0,0,1])
+    w = cross([0.,0.,1.],v)
     wl = length(w)
     if wl == 0.0:
         w = cross(v,[0,1,0])
@@ -919,7 +920,7 @@ class FormexActor(Actor,Formex):
             pass
         
         elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
-            GD.debug("SINGLE COLOR %s ALPHA %s" % (str(color),alpha))
+            #GD.debug("SINGLE COLOR %s ALPHA %s" % (str(color),alpha))
             GL.glColor(append(color,alpha))
             #print append(color,alpha)
             color = None

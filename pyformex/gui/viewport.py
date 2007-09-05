@@ -110,6 +110,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         canvas.Canvas.__init__(self)
+        self.button = None
         self.mousefunc = {}
         self.mouseshiftfunc = {}
         self.setMouse(LEFT,self.dynarot) 
