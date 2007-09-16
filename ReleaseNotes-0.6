@@ -1,0 +1,52 @@
+
+pyFormex 0.6  Releasenotes 
+============
+
+This is a collection of the most prominent changes in pyFormex 0.6
+(compared to the prevous release 0.5)
+
+INSTALLATION
+============
+
+COMMAND LINE
+============
+
+GUI:
+====
+
+CORE:
+=====
+
+The implementation of the Formex class has changed drastically!!
+
+The coordinates and most of the methods that only deal with coordinate
+information are now implemented by a new class Coords, defined in coords.py.
+This was done so that the Coords class and all its transformations can be 
+reused in other data structures, such as (geometric) surfaces or Finite Element
+models.
+
+The Coords class is a subclass of numpy's ndarray, so that all
+numeric array processing can be applied on a Coords object.
+The class is somewhat more general than the former Formex coords attribute:
+the shape of a Coords array can be anything if only the last axis has a length
+of 3.
+
+While this change is a very important one, we have tried to keep the changes 
+to Formex API minimal. This means that user scripts will only rarely need to 
+be changed (and only if you directly accessed the coordinates attribute f).
+ 
+
+- formex.py:
+  
+  The distanceFrom... (Plane,Line,Point) functions were turned into Formex
+  class methods. The function versions are deprecated and will be removed
+  in future.
+
+  Formex class:
+    - distanceFromPlane(p,n), distanceFromLine(p,n), distanceFromPoint(p)
+ 
+- draw.py:
+ 
+
+MANUAL:
+=======

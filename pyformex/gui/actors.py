@@ -13,11 +13,12 @@
 import globaldata as GD
 
 from OpenGL import GL,GLU
-from simple import regularGrid
-from plugins import elements
+
 from colors import *
 from formex import *
 
+import simple
+from plugins import elements
 
 
 def rotMatrix(v,n=3):
@@ -174,7 +175,28 @@ def drawPolyLines(x,color=None,close=True):
         GL.glEnd()
 
 
-def drawCurves(x,color=None):
+def drawQuadraticCurves(x,color=None,n=8):
+    """Draw a collection of curves.
+
+    x is a (nlines,3,3) shaped array of coordinates.
+    For each member a quadratic curve through its points is drawn.
+    The quadratic curve is approximated with 2*n straight segments.
+
+    If color is given it is an (nlines,3) array of RGB values.
+    """
+    import simple
+    H = simple.quadraticCurve(identity(3),n)
+    for i in range(x.shape[0]):
+        if color is not None:
+            GL.glColor3fv(color[i])
+        P = dot(H,x[i])
+        GL.glBegin(GL.GL_LINE_STRIP)
+        for p in P:
+            GL.glVertex3fv(p)
+        GL.glEnd()
+
+
+def drawNurbsCurves(x,color=None):
     """Draw a collection of curves.
 
     x is a (nlines,3,3) shaped array of coordinates.
@@ -325,7 +347,7 @@ def drawGridLines(x0,x1,nx):
     for i in range(3):
         if nx[i] > 0:
             axes = (asarray([1,2]) + i) % 3
-            base = regularGrid(x0[axes],x1[axes],nx[axes]).reshape((-1,2))
+            base = simple.regularGrid(x0[axes],x1[axes],nx[axes]).reshape((-1,2))
             x = zeros((base.shape[0],2,3))
             x[:,0,axes] = base
             x[:,1,axes] = base
@@ -355,7 +377,7 @@ def drawGridPlanes(x0,x1,nx):
         axes = (asarray([1,2]) + i) % 3
         if all(nx[axes] > 0):
             j,k = axes
-            base = regularGrid(x0[i],x1[i],nx[i]).ravel()
+            base = simple.regularGrid(x0[i],x1[i],nx[i]).ravel()
             x = zeros((base.shape[0],4,3))
             corners = array([x0[axes],[x1[j],x0[k]],x1[axes],[x0[j],x1[k]]])
             for j in range(4):
@@ -622,7 +644,7 @@ class BboxActor(Actor):
         self.linewidth = linewidth
         self.bb = bbox
         self.vertices = array(elements.Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
-        print "VERTICES",self.vertices
+        #print "VERTICES",self.vertices
         self.edges = array(elements.Hex8.edges)
         self.facets = array(elements.Hex8.faces)
 
@@ -713,7 +735,7 @@ class GridActor(Actor):
     def drawGL(self,mode):
         """Draw the grid."""
 
-        print "BBOX %s" % self.bbox()
+        #print "BBOX %s" % self.bbox()
         if self.lines:
             if self.linewidth:
                 GL.glLineWidth(self.linewidth)
@@ -801,6 +823,7 @@ class PlaneActor(Actor):
                 drawGridPlanes(self.x0,self.x1,nx)
         
 
+quadratic_curve_ndiv = 8
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
@@ -901,8 +924,8 @@ class FormexActor(Actor,Formex):
         """
 
         if mode.endswith('wire'):
-            self.draw(mode[:-4],color=color)
-            self.draw('wireframe',color=asarray(black))
+            self.drawGL(mode[:-4],color=color)
+            self.drawGL('wireframe',color=asarray(black))
             return
 
         if alpha is None:
@@ -912,8 +935,6 @@ class FormexActor(Actor,Formex):
         
         if color is None:  
             color = self.color
-
-        
         
         if color is None:  # no color
             #GD.debug("NO COLOR")
@@ -949,8 +970,8 @@ class FormexActor(Actor,Formex):
         elif nnod == 2:
             drawLines(self.f,color)
         
-        elif self.eltype == 'curve':
-            drawCurves(self.f,color)
+        elif nnod == 3 and self.eltype == 'curve':
+            drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
             
         elif mode=='wireframe' :
             if self.eltype == 'tet':
@@ -992,9 +1013,8 @@ class SurfaceActor(Actor):
         
         Actor.__init__(self)
         
-        self.nodes = nodes
+        self.nodes = Coords(nodes)
         self.elems = elems
-        self.bb = boundingBox(nodes)
         
         self.setColor(color)
         self.setLineWidth(linewidth)
@@ -1051,7 +1071,7 @@ class SurfaceActor(Actor):
 
 
     def bbox(self):
-        return self.bb
+        return self.nodes.bbox()
 
 
     def drawGL(self,mode,color=None):

@@ -54,7 +54,7 @@ def testview(F,V,P):
 
 def colorCut(F,P,N,prop):
     """Color a Formex in two by a plane (P,N)"""
-    dist = distanceFromPlane(F.f,P,N)
+    dist = F.distanceFromPlane(P,N)
     right = any(dist>0.0,axis=1)
     F.p[right] = prop
     nright = right.sum()

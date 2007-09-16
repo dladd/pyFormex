@@ -15,11 +15,17 @@ pyFormex Frequently Asked Questions (and answers)
 Questions
 =========
 
+0. How to install pyFormex?
 1. How was the pyFormex logo created?
 2. Why is pyFormex written in Python? Isn't it slow? 
 
 Answers
 =======
+
+0. How to install pyFormex?
+
+See the file INSTALL
+
 
 1. How was the pyFormex logo created?
 

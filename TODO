@@ -72,6 +72,10 @@ Each task can have the following keys:
  - Use our own globals dict for script environment:
      This would allow us to reset the globals to a known state
 
+ - Include installation of python-gl2ps in the pyFormex setup.py
+     We need to check if we can distribute python-gl2ps together
+     with pyFormex. 
+
 
 * Release 0.9 :
  - Dedicated editor? 

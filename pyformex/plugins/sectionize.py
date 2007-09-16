@@ -55,7 +55,7 @@ def centerline(F,dir,nx=2,mode=2,th=0.2):
         n[dir] = 1.0
         center = []
         for P in grid:
-            test = abs(distanceFromPlane(F.f,P,n)) < th
+            test = abs(F.distanceFromPlane(P,n)) < th
             if mode == 1:
                 C = F.f[test].mean(axis=0)
             elif mode == 2:
@@ -119,14 +119,14 @@ def sectionize(F,segments,th=0.1,visual=True):
         l = length(d)
         n = d/l
         t = th*l
-        test = abs(distanceFromPlane(F.f,c,n)) < th*l
+        test = abs(F.distanceFromPlane(c,n)) < th*l
         test = test.sum(axis=-1)
         G = F.select(test==3)
         if visual:
             draw(G,color='blue',view=None)
             GD.canvas.update()
         C = G.center()
-        D = 2 * distanceFromLine(G.f,C,n).mean()
+        D = 2 * G.distanceFromLine(C,n).mean()
         GD.message("Section Center: %s; Diameter: %s" % (C,D))
         sections.append(G)
         ctr.append(C)

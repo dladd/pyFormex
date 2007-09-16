@@ -94,6 +94,24 @@ def triangle():
     return Formex([[[0.,0.,0.],[1.,0.,0.],[0.5,0.5*sqrt(3.),0.]]])
 
 
+def quadraticCurve(x=None,n=8):
+    """CreateDraw a collection of curves.
+
+    x is a (3,3) shaped array of coordinates, specifying 3 points.
+
+    Return an array with 2*n+1 points lying on the quadratic curve through
+    the points x. Each of the intervals [x0,x1] and [x1,x2] will be divided
+    in n segments.
+    """
+    #if x.shape != (3,3):
+    #    raise ValueError,"Expected a (3,3) shaped array."
+    # Interpolation functions in normalized coordinates (-1..1)
+    h = [ lambda x: x*(x-1)/2, lambda x: (1+x)*(1-x), lambda x: x*(1+x)/2 ]
+    t = arange(-n,n+1) / float(n)
+    H = column_stack([ hi(t) for hi in h ])
+    return dot(H,x)
+
+
 class Sphere2(Formex):
     """A sphere consisting of line elements.
 

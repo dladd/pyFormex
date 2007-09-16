@@ -11,124 +11,32 @@
 ##
 """Formex algebra in python"""
 
-from numpy import *
-
-
-def istype(a,c):
-    return asarray(a).dtype.kind == c
-
-
-if 'roll' not in dir():
-    def roll(a, shift, axis=None): 
-        """Roll the elements in the array by 'shift' positions along 
-        the given axis.
-
-        A positive shift moves elements to the 'right' in a 1D array.
-        """ 
-        a = asarray(a) 
-        if axis is None: 
-            n = a.size 
-            reshape=1 
-        else: 
-            n = a.shape[axis] 
-            reshape=0 
-        shift %= n 
-        indexes = concatenate((arange(n-shift,n),arange(n-shift))) 
-        res = a.take(indexes, axis) 
-        if reshape: 
-            return res.reshape(a.shape) 
-        else: 
-            return res
-
-# default float and int types used in the Formex data
-Float = float32
-Int = int32
-
-
-###########################################################################
-##
-##   some math functions
-##
-#########################
-
-# pi is defined in numpy
-# rad is a multiplier to transform degrees to radians
-rad = pi/180.
-
-# Convenience functions: trigonometric functions with argument in degrees
-# Should we keep this in ???
-
-def sind(arg):
-    """Return the sin of an angle in degrees."""
-    return sin(arg*rad)
-
-def cosd(arg):
-    """Return the cos of an angle in degrees."""
-    return cos(arg*rad)
-
-def tand(arg):
-    """Return the tan of an angle in degrees."""
-    return tan(arg*rad)
-
-def length(arg):
-    """Return the quadratic norm of a vector with all elements of arg."""
-    a = asarray(arg).flat
-    return sqrt(inner(a,a))   # a*a doesn't work here
-
-def norm(v,n=2):
-    """Return a norm of the vector v.
-
-    Default is the quadratic norm (vector length)
-    n == 1 returns the sum
-    n <= 0 returns the max absolute value
-    """
-    a = asarray(v).flat
-    if n == 2:
-        return sqrt((a*a).sum())
-    if n > 2:
-        return (a**n).sum()**(1./n)
-    if n == 1:
-        return a.sum()
-    if n <= 0:
-        return abs(a).max()
-    return
-
-def inside(p,mi,ma):
-    """Return true if point p is inside bbox defined by points mi and ma"""
-    return p[0] >= mi[0] and p[1] >= mi[1] and p[2] >= mi[2] and \
-           p[0] <= ma[0] and p[1] <= ma[1] and p[2] <= ma[2]
-
-## OBSOLETE: numpy provides unique
-
-## def unique(a):
-##     """Return the unique elements in an integer array."""
-##     ## OK, this looks complex. And there might be a simpler way
-##     ## to do this in numpy, I just couldn't find any.
-##     ## Our algorithm:
-##     ## First we sort the values (1-D). Then we create an array
-##     ## that flags with a "1" all the elements which are larger
-##     ## than their predecessor.
-##     ## The first element always gets flagged with a "1".
-##     ## Finally we take the flagged elements from the sorted array.
-##     b = sort(a.ravel())
-##     return b[ concatenate(([1],(b[1:]) > (b[:-1]))) > 0 ]
+from coords import *
 
 
 
-def isClose(values,target,rtol=1.e-5,atol=1.e-8):
-    """Returns an array flagging the elements close to target.
+## def coordsmethod(replacement):
+##     def decorator(func):
+##         def wrapper(self,*__args,**__kw):
+##             return replacement(self.f,*__args,**__kw)
+##         return wrapper
+##     decorator.__doc__ = replacement.__doc__
+##     return decorator
 
-    values is a float array, target is a float value.
-    values and target should be broadcastable to the same shape.
-    
-    The return value is a boolean array with shape of values flagging
-    where the values are close to target.
-    Two values a and b  are considered close if
-        | a - b | < atol + rtol * | b |
-    """
-    values = asarray(values)
-    target = asarray(target) 
-    return abs(values - target) < atol + rtol * abs(target) 
+
+## def coordsmethod():
+##     def decorator(func):
+##         global replacement
+##         replacement = getattr(Coords,func.func_name)
+##         def wrapper(self,*__args,**__kw):
+##             """Get the same function from the Coords class"""
+##             print "Function %s is implemented by %s" % (func,replacement)
+##             return replacement(self.f,*__args,**__kw)
+##         return wrapper
+##     decorator.__doc__ = replacement.__doc__
+##     return decorator
+
+
 
 
 def vectorNormalize(vec):
@@ -272,198 +180,6 @@ def pattern(s):
         connect=True
     return l
 
-def translationVector(dir,dist):
-    """Return a translation vector in direction dir over distance dist"""
-    f = [0.,0.,0.]
-    f[dir] = dist
-    return f
-
-def rotationMatrix(angle,axis=None):
-    """Return a rotation matrix over angle, optionally around axis.
-
-    The angle is specified in degrees.
-    If axis==None (default), a 2x2 rotation matrix is returned.
-    Else, axis should specifying the rotation axis in a 3D world. It is either
-    one of 0,1,2, specifying a global axis, or a vector with 3 components
-    specifying an axis through the origin.
-    In either case a 3x3 rotation matrix is returned.
-    Note that:
-      rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
-      rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
-      rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
-    but the latter functions calls are more efficient.
-    The result is returned as an array.
-    """
-    a = angle*rad
-    c = cos(a)
-    s = sin(a)
-    if axis==None:
-        f = [[c,s],[-s,c]]
-    elif type(axis) == int:
-        f = [[0.0 for i in range(3)] for j in range(3)]
-        axes = range(3)
-        i,j,k = axes[axis:]+axes[:axis]
-        f[i][i] = 1.0
-        f[j][j] = c
-        f[j][k] = s
-        f[k][j] = -s
-        f[k][k] = c
-    else:
-        t = 1-c
-        X,Y,Z = axis
-        f = [ [ t*X*X + c  , t*X*Y + s*Z, t*X*Z - s*Y ],
-              [ t*Y*X - s*Z, t*Y*Y + c  , t*Y*Z + s*X ],
-              [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
-        
-    return array(f)
-
-
-def boundingBox(a):
-    """Return the bounding box of an array of coordinates.
-
-    a is a [...,3] array of coordinates.
-    the return value is a (2,3) array, where the first row holds the
-    minimum and the second row the maximum coordinates.
-    """
-    coords = a.reshape((-1,3))
-    return row_stack([ coords.min(axis=0), coords.max(axis=0) ])
-
-
-def equivalence(x,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
-    """Finds (almost) identical nodes and returns a compressed list.
-
-    The input x is an (nnod,3) array of nodal coordinates. This functions finds
-    the nodes that are very close and replaces them with a single node.
-    The return value is a tuple of two arrays: the remaining (nunique,3) nodal
-    coordinates, and an integer (nnod) array holding an index in the unique
-    coordinates array for each of the original nodes.
-
-    The procedure works by first dividing the 3D space in a number of
-    equally sized boxes, with a mean population of nodesperbox.
-    The boxes are numbered in the 3 directions and a unique integer scalar
-    is computed, that is then used to sort the nodes.
-    Then only nodes inside the same box are compared on almost equal
-    coordinates, using the numpy allclose() function. Two coordinates are
-    considered close if they are within a relative tolerance rtol or absolute
-    tolerance atol. See numpy for detail. The default atol is set larger than
-    in numpy, because pyformex typically runs with single precision.
-    Close nodes are replaced by a single one.
-
-    Currently the procedure does not guarantee to find all close nodes:
-    two close nodes might be in adjacent boxes. The performance hit for
-    testing adjacent boxes is rather high, and the probability of separating
-    two close nodes with the computed box limits is very small. Nevertheless
-    we intend to access this problem by repeating the procedure with the
-    boxes shifted in space.
-    """
-    if len(x.shape) != 2 or x.shape[1] != 3:
-        raise RuntimeError, "equivalence: expects an (nnod,3) coordinate array"
-    nnod = x.shape[0]
-    # Calculate box size
-    lo = array([ x[:,i].min() for i in range(3) ])
-    hi = array([ x[:,i].max() for i in range(3) ])
-    sz = hi-lo
-    esz = sz[sz > 0.0]  # only keep the nonzero dimensions
-    vol = esz.prod()
-    nboxes = nnod / nodesperbox # ideal total number of boxes
-    boxsz = (vol/nboxes) ** (1./esz.shape[0])
-    nx = (sz/boxsz).astype(int)
-    dx = where(nx>0,sz/nx,boxsz)
-    nx = array(nx) + 1
-    ox = lo - dx*shift # origin :  0 < shift < 1
-    # Create box coordinates for all nodes
-    ind = floor((x-ox)/dx).astype(int)
-    # Create unique box numbers in smallest direction first
-    o = argsort(nx)
-    #print "nx",nx
-    #print "ind",ind.dtype
-    val = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
-    #print "val",val.dtype,val.shape
-    # sort according to box number
-    srt = argsort(val)
-    # rearrange the data according to the sort order
-    val = val[srt]
-    x = x[srt]
-    # now compact
-    flag = ones((nnod,))   # 1 = new, 0 = existing node
-    sel = arange(nnod)     # replacement unique node nr
-    #print "Start Compacting %s nodes" % nnod
-    #nblk = nnod/100
-    for i in range(nnod):
-        #if i % nblk == 0:
-            #print "Blok %s" % (i/nblk)
-        j = i-1
-        while j>=0 and val[i]==val[j]:
-            if allclose(x[i],x[j],rtol=rtol,atol=atol):
-                # node i is same as node j
-                flag[i] = 0
-                sel[i] = sel[j]
-                sel[i+1:nnod] -= 1
-                break
-            j = j-1
-    #print "Finished Compacting"
-    x = x[flag>0]          # extract unique nodes
-    s = sel[argsort(srt)]  # and indices for old nodes
-    return (x,s)
-
-
-def distanceFromPlane(f,p,n):
-    """Return the distance of points f from the plane (p,n).
-
-    f is an [...,3] array of coordinates.
-    p is a point specified by 3 coordinates.
-    n is the normal vector to a plane, specified by 3 components.
-
-    The return value is a [...] shaped array with the distance of
-    each point to the plane through p and having normal n.
-    Distance values are positive if the point is on the side of the
-    plane indicated by the positive normal.
-    """
-#    return (dot(f,n) - dot(p,n)) / sqrt(dot(n,n))
-    a = f.reshape((-1,3))
-    p = asarray(p).reshape((3))
-    n = asarray(n).reshape((3))
-    n /= length(n)
-    d = inner(f,n) - inner(p,n)
-    return d.reshape(f.shape[:-1])
-
-
-def distanceFromLine(f,p,n):
-    """Return the distance of points f from the line (p,n).
-
-    f is an [...,3] array of coordinates.
-    p is a point on the line specified by 3 coordinates.
-    n is a vector specifying the direction of the line through p.
-
-    The return value is a [...] shaped array with the distance of
-    each point to the line through p with direction n.
-    All distance values are positive or zero.
-    """
-    a = f.reshape((-1,3))
-    p = asarray(p).reshape((3))
-    n = asarray(n).reshape((3))
-    t = cross(n,p-a)
-    d = sqrt(sum(t*t,-1)) / length(n)
-    return d.reshape(f.shape[:-1])
-
-
-def distanceFromPoint(f,p):
-    """Return the distance of points f from the point p.
-
-    f is an [...,3] array of coordinates.
-    p is a point specified by 3 coordinates.
-
-    The return value is a [...] shaped array with the distance of
-    each point to point p.
-    All distance values are positive or zero.
-    """
-    a = f.reshape((-1,3))
-    p = asarray(p).reshape((3))
-    d = a-p
-    d = sum(d*d,-1)
-    d = sqrt(d)
-    return d.reshape(f.shape[:-1])
-
 # Intersection functions
 #
 # !! These functions currently also exist as formex methods.
@@ -543,7 +259,7 @@ def cutAtPlane(F,p,n):
     has been replaced by the part of the segment at the positive side of
     the plane (p,n).
     """
-    d = distanceFromPlane(F.f,p,n)
+    d = F.distanceFromPlane(p,n)
     g = intersectionPointsWithPlane(F,p,n)
     i0 = d[:,0] < 0.
     i1 = d[:,1] < 0.
@@ -578,7 +294,7 @@ def cut3AtPlane(F,p,n,newprops=None):
     T = (t >= 0)*(t <= 1)
     P = P[T].reshape(-1,2,3)
     # split problem into two cases
-    d = distanceFromPlane(S.f,p,n)
+    d = S.f.distanceFromPlane(p,n)
     w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
     w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
     T1 = T[w1]
@@ -717,9 +433,8 @@ class Formex:
                     z = zeros((data.shape[0],data.shape[1],1),dtype=Float)
                     data = concatenate([data,z],axis=-1)
         # data should be OK now
-        self.f = data
+        self.f = Coords(data)    # make sure coordinates are a Coords object 
         self.setProp(prop)
-
 
 
     def __getitem__(self,i):
@@ -805,15 +520,6 @@ class Formex:
         """
         return self.f
 
-    def x(self):
-        """Return the x-plane"""
-        return self.f[:,:,0]
-    def y(self):
-        """Return the y-plane"""
-        return self.f[:,:,1]
-    def z(self):
-        """Return the z-plane"""
-        return self.f[:,:,2]
 
     # Properties
     def prop(self):
@@ -834,38 +540,33 @@ class Formex:
         else:
             return unique(self.p)
 
-    # Size
+    # The following functions get the corresponding information from
+    # the underlying Coords object
+
+    def x(self):
+        return self.f.x()
+    def y(self):
+        return self.f.y()
+    def z(self):
+        return self.f.z()
+
     def bbox(self):
-        """Return the bounding box of the Formex.
-
-        The bounding box is the smallest rectangular volume in global
-        coordinates, such at no points of the Formex are outside the
-        box.
-        It is returned as a (2,3) shaped array: the first row holds the
-        minimal coordinates and the second row the maximal.
-        """
-        return boundingBox(self.f)
-
+        return self.f.bbox()
 
     def center(self):
-        """Return the center of the Formex.
-
-        The center of a Formex is the center of its bbox().
-        The return value is a (3,) shaped array.
-        """
-        min,max = self.bbox()
-        return 0.5 * (max+min)
-
+        return self.f.center()
 
     def centroid(self):
-        """Return the centroid of the Formex.
+        return self.f.centroid()
 
-        The centroid of a Formex is the point whose coordinates
-        are the mean values of all points in the Formex, each with
-        its multiplixity.
-        The return value is a (3,) shaped array.
-        """
-        return self.f.reshape((-1,3)).mean(axis=0)
+    def sizes(self):
+        return self.f.sizes()
+
+    def diagonal(self):
+        return self.f.diagonal()
+
+    def bsphere(self):
+        return self.f.bsphere()
 
 
     def centroids(self):
@@ -877,33 +578,19 @@ class Formex:
         """
         return Formex(self.f.mean(axis=1))
 
+    #  Distance
 
-    def sizes(self):
-        """Return the sizes of the Formex.
+    def distanceFromPlane(self,*args,**kargs):
+        self.f.distanceFromPlane(*args,**kargs)
 
-        Return an array with the length of the bbox along the 3 axes.
-        """
-        min,max = self.bbox()
-        return max-min
+    def distanceFromLine(self,*args,**kargs):
+        self.f.distanceFromLine(*args,**kargs)
 
-    def size(self):
-        """Return the size of the Formex.
-
-        The size is the length of the diagonal of the bbox()."""
-        min,max = self.bbox()
-        return length(max-min)
-    
-    def bsphere(self):
-        """Return the diameter of the bounding sphere of the Formex.
-
-        The bounding sphere is the smallest sphere with center in the
-        center() of the Formex, and such that no points of the Formex
-        are lying outside the sphere.
-        """
-        return self.f - array(self.center())
-
+    def distanceFromPoint(self,*args,**kargs):
+        self.f.distanceFromPoint(*args,**kargs)
 
     # Data conversion
+    
     def feModel(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
@@ -927,9 +614,9 @@ class Formex:
         if atol is None:
             atol = rtol * self.size()
         f = reshape(self.f,(self.nnodes(),3))
-        f,s = equivalence(f,nodesperbox,0.5,rtol=rtol,atol=atol)
+        f,s = f.unique(nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:
-            f,t = equivalence(f,nodesperbox,0.75,rtol=rtol,atol=atol)
+            f,t = f.unique(nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
         e = reshape(s,self.f.shape[:2])
         return (f,e)
@@ -1012,12 +699,9 @@ class Formex:
         clas.__str__ = func
 
 
-    def fprint(self,fmt="%10.3e %10.3e %10.3e"):
-        for el in self.data():
-            for nod in el:
-                print fmt % tuple(nod)
-                
-            
+    def fprint(self,*args,**kargs):
+        self.f.fprint(*args,**kargs)
+           
 
 ##############################################################################
 #
@@ -1054,7 +738,7 @@ class Formex:
         >>> print F
         {[1.0,1.0,1.0], [1.0,1.0,1.0]}
         """
-        self.f = concatenate((self.f,F.f))
+        self.f = Coords(concatenate((self.f,F.f)))
         ## What to do if one of the formices has properties, the other one not?
         ## The current policy is to use zero property values for the Formex
         ## without props
@@ -1239,14 +923,13 @@ class Formex:
         are close. Two values are close if they are both small compared to atol
         or their difference divided by the second value is small compared to
         rtol.
-        Two elements are not considered equal if one's elements are a
+        Two elements are not considered equal if one's points are a
         permutation of the other's.
         """
         ##
-        ##  THIS IS SLOW!! IT NEEDS TO BE REIMPLEMENTED AFTER THE sort
-        ##  FUNCTION HAS BEEN DONE
+        ##  THIS IS SLOW!! IT NEEDS TO BE REIMPLEMENTED BASED ON THE
+        ##  feModel, and should probably be moved to a dedicated class
         ##
-        ## Maybe we need a variant that tests for equal permutations?
         flag = ones((self.f.shape[0],))
         for i in range(self.f.shape[0]):
             for j in range(i):
@@ -1320,9 +1003,9 @@ class Formex:
                 T2 = f[:,nod,dir] < max
         else:
             if not min is None:
-                T1 = distanceFromPlane(f,min,dir) > 0
+                T1 = f.distanceFromPlane(min,dir) > 0
             if not max is None:
-                T2 = distanceFromPlane(f,max,dir) < 0
+                T2 = f.distanceFromPlane(max,dir) < 0
 
         if min is None:
             T = T2
@@ -1411,400 +1094,68 @@ class Formex:
 #
 #   Transformations that preserve the topology (but change coordinates)
 #
-#
-#   A. Affine transformations
-#
-#      Scaling
-#      Translation
-#      Central Dilatation = Scaling + Translation
-#      Rotation
-#      Shear
-#      Reflection
-#      Affine
-#
-    def scale(self,scale):
-        """Return a copy scaled with scale[i] in direction i.
-
-        The scale should be a list of 3 numbers, or a single number.
-        In the latter case, the scaling is homothetic."""
-        return Formex(self.f*scale,self.p)
-
-
-    def translate(self,dir,distance=None):
-        """Return a copy translated over distance in direction dir.
-
-        dir is either an axis number (0,1,2) or a direction vector.
-
-        If a distance is given, the translation is over the specified
-        distance in the specified direction.
-        If no distance is given, and dir is specified as an axis number,
-        translation is over a distance 1.
-        If no distance is given, and dir is specified as a vector, translation
-        is over the specified vector.
-        Thus, the following are all equivalent:
-          F.translate(1)
-          F.translate(1,1)
-          F.translate([0,1,0])
-          F.translate([0,2,0],1)
-        """
-        if type(dir) is int:
-            if distance is None:
-                distance = 1.0
-            f = self.f.copy()
-            f[:,:,dir] += distance
-            return Formex(f,self.p)
-        if len(dir) == 2:
-            dir.append(0.0)
-        if distance is not None:
-            dir *= distance / length(dir)
-        return Formex(self.f + dir,self.p)
-
-
-    def rotate(self,angle,axis=2,around=None):
-        """Return a copy rotated over angle around axis.
-
-        The angle is specified in degrees.
-        The axis is either one of (0,1,2) designating the global axes,
-        or a vector specifying an axis through the origin.
-        If no axis is specified, rotation is around the 2(z)-axis. This is
-        convenient for working on 2D-structures.
-
-        As a convenience, the user may also specify a 3x3 rotation matrix,
-        in which case the function rotate(mat) is equivalent to affine(mat).
-
-        All rotations are performed around the point [0,0,0], unless a
-        rotation origin is specified in the argument 'around'. 
-        """
-        if not isinstance(angle,ndarray):
-            angle = rotationMatrix(angle,axis)
-        if around is None:
-            return self.affine(angle)
-        else:
-            around = asarray(around)
-            return self.translate(-around).affine(angle,around)
-
-
-    def shear(self,dir,dir1,skew):
-        """Return a copy skewed in the direction dir of plane (dir,dir1).
-
-        The coordinate dir is replaced with (dir + skew * dir1).
-        """
-        f = self.f.copy()
-        f[:,:,dir] += skew * f[:,:,dir1]
-        return Formex(f,self.p)
-
-    def reflect(self,dir=2,pos=0):
-        """Return a Formex mirrored in direction dir against plane at pos.
-
-        Default position of the plane is through the origin.
-        Default mirror direction is the z-direction.
-        """
-        f = self.f.copy()
-        f[:,:,dir] = 2*pos - f[:,:,dir]
-        return Formex(f,self.p)
-
-    def affine(self,mat,vec=None):
-        """Return a general affine transform of the Formex.
-
-        The returned Formex has coordinates given by xorig * mat + vec,
-        where mat is a 3x3 matrix and vec a length 3 list.
-        """
-        f = dot(self.f,mat)
-        if vec is not None:
-            f += vec
-        return Formex(f,self.p)
-#
-#
-#   B. Non-Affine transformations
-#
-#        Cylindrical, Spherical, Isoparametric
+#   These functions are the equivalents of the corresponding Coords methods.
+#   However, they do not change the original Formex, but create a copy!
 #
 
-    def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.]):
-        """Converts from cylindrical to cartesian after scaling.
+    def scale(self,*args,**kargs):
+        return Formex(self.f.scale(*args,**kargs),self.p)
 
-        dir specifies which coordinates are interpreted as resp.
-        distance(r), angle(theta) and height(z). Default order is [r,theta,z].
-        scale will scale the coordinate values prior to the transformation.
-        (scale is given in order r,theta,z).
-        The resulting angle is interpreted in degrees.
-        """
-        # We put in a optional scaling, because doing this together with the
-        # transforming is cheaper than first scaling and then transforming.
-        f = zeros(self.f.shape,dtype=Float)
-        r = scale[0] * self.f[:,:,dir[0]]
-        theta = (scale[1]*rad) * self.f[:,:,dir[1]]
-        f[:,:,0] = r*cos(theta)
-        f[:,:,1] = r*sin(theta)
-        f[:,:,2] = scale[2] *  self.f[:,:,dir[2]]
-        return Formex(f,self.p)
+    def translate(self,*args,**kargs):
+        return Formex(self.f.translate(*args,**kargs),self.p)
 
-    def toCylindrical(self,dir=[0,1,2]):
-        """Converts from cartesian to cylindrical coordinates.
+    def rotate(self,*args,**kargs):
+        return Formex(self.f.rotate(*args,**kargs),self.p)
 
-        dir specifies which coordinates axes are parallel to respectively the
-        cylindrical axes distance(r), angle(theta) and height(z). Default
-        order is [x,y,z].
-        The angle value is given in degrees.
-        """
-        # We can not just leave the z's in place, because there might be
-        # permutation of axes.
-        f = zeros(self.f.shape,dtype=Float)
-        x,y,z = [ self.f[:,:,i] for i in dir ]
-        f[:,:,0] = sqrt(x*x+y*y)
-        f[:,:,1] = arctan2(y,x) / rad
-        f[:,:,2] = z
-        return Formex(f,self.p)
-
+    def shear(self,*args,**kargs):
+        return Formex(self.f.shear(*args,**kargs),self.p)
     
-    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
-        """Converts from spherical to cartesian after scaling.
+    def reflect(self,*args,**kargs):
+        return Formex(self.f.reflect(*args,**kargs),self.p)
 
-        <dir> specifies which coordinates are interpreted as resp.
-        longitude(theta), latitude(phi) and distance(r).
-        <scale> will scale the coordinate values prior to the transformation.
-        Angles are then interpreted in degrees.
-        Latitude, i.e. the elevation angle, is measured from equator in
-        direction of north pole(90). South pole is -90.
-        If colat=True, the third coordinate is the colatitude (90-lat) instead.
-        """
-        f = self.f.reshape((-1,3))
-        theta = (scale[0]*rad) * f[:,dir[0]]
-        phi = (scale[1]*rad) * f[:,dir[1]]
-        r = scale[2] * f[:,dir[2]]
-        if colat:
-            phi = 90.0*rad - phi
-        rc = r*cos(phi)
-        f = column_stack([rc*cos(theta),rc*sin(theta),r*sin(phi)])
-        return Formex(f.reshape(self.f.shape),self.p)
+    def affine(self,*args,**kargs):
+        return Formex(self.f.affine(*args,**kargs),self.p)
 
+    def cylindrical(self,*args,**kargs):
+        return Formex(self.f.cylindrical(*args,**kargs),self.p)
 
-    def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
-        """Same as spherical with colat=True."""
-        return self.spherical(dir,scale,True)
-
-
-    def toSpherical(self,dir=[0,1,2]):
-        """Converts from cartesian to spherical coordinates.
-
-        dir specifies which coordinates axes are parallel to respectively
-        the spherical axes distance(r), longitude(theta) and latitude(phi).
-        Latitude is the elevation angle measured from equator in direction
-        of north pole(90). South pole is -90.
-        Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
-        The returned angle values are given in degrees.
-        """
-        v = self.f[:,:,dir].reshape((-1,3))
-        dist = sqrt(sum(v*v,-1))
-        long = arctan2(v[:,0],v[:,2]) / rad
-        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / rad)
-        f = column_stack([long,lat,dist])
-        return Formex(f.reshape(self.f.shape),self.p)
-
-
-    def bump1(self,dir,a,func,dist):
-        """Return a Formex with a one-dimensional bump.
-
-        dir specifies the axis of the modified coordinates;
-        a is the point that forces the bumping;
-        dist specifies the direction in which the distance is measured;
-        func is a function that calculates the bump intensity from distance
-        !! func(0) should be different from 0.
-        """
-        f = self.f.copy()
-        d = f[:,:,dist] - a[dist]
-        f[:,:,dir] += func(d)*a[dir]/func(0)
-        return Formex(f,self.p)
+    def toCylindrical(self,*args,**kargs):
+        return Formex(self.f.toCylindrical(*args,**kargs),self.p)
     
-    def bump2(self,dir,a,func):
-        """Return a Formex with a two-dimensional bump.
-
-        dir specifies the axis of the modified coordinates;
-        a is the point that forces the bumping;
-        func is a function that calculates the bump intensity from distance
-        !! func(0) should be different from 0.
-        """
-        f = self.f.copy()
-        dist = [0,1,2]
-        dist.remove(dir)
-        d1 = f[:,:,dist[0]] - a[dist[0]]
-        d2 = f[:,:,dist[1]] - a[dist[1]]
-        d = sqrt(d1*d1+d2*d2)
-        f[:,:,dir] += func(d)*a[dir]/func(0)
-        return Formex(f,self.p)
-
+    def spherical(self,*args,**kargs):
+        return Formex(self.f.spherical(*args,**kargs),self.p)
     
-    # This is a generalization of both the bump1 and bump2 methods.
-    # If it proves to be useful, it might replace them one day
+    def cospherical(self,*args,**kargs):
+        return Formex(self.f.cospherical(*args,**kargs),self.p)
 
-    # An interesting modification might be to have a point for definiing
-    # the distance and a point for defining the intensity (3-D) of the
-    # modification
-    def bump(self,dir,a,func,dist=None):
-        """Return a Formex with a bump.
+    def toSpherical(self,*args,**kargs):
+        return Formex(self.f.toSpherical(*args,**kargs),self.p)
 
-        A bump is a modification of a set of coordinates by a non-matching
-        point. It can produce various effects, but one of the most common
-        uses is to force a surface to be indented by some point.
-        
-        dir specifies the axis of the modified coordinates;
-        a is the point that forces the bumping;
-        func is a function that calculates the bump intensity from distance
-        (!! func(0) should be different from 0)
-        dist is the direction in which the distance is measured : this can
-        be one of the axes, or a list of one or more axes.
-        If only 1 axis is specified, the effect is like function bump1
-        If 2 axes are specified, the effect is like bump2
-        This function can take 3 axes however.
-        Default value is the set of 3 axes minus the direction of modification.
-        This function is then equivalent to bump2.
-        """
-        f = self.f.copy()
-        if dist == None:
-            dist = [0,1,2]
-            dist.remove(dir)
-        try:
-            l = len(dist)
-        except TypeError:
-            l = 1
-            dist = [dist]
-        d = f[:,:,dist[0]] - a[dist[0]]
-        if l==1:
-            d = abs(d)
-        else:
-            d = d*d
-            for i in dist[1:]:
-                d1 = f[:,:,i] - a[i]
-                d += d1*d1
-            d = sqrt(d)
-        f[:,:,dir] += func(d)*a[dir]/func(0)
-        return Formex(f,self.p)
+    def bump(self,*args,**kargs):
+        return Formex(self.f.bump(*args,**kargs),self.p)
+    def bump1(self,*args,**kargs):
+        return Formex(self.f.bump1(*args,**kargs),self.p)
+    def bump2(self,*args,**kargs):
+        return Formex(self.f.bump2(*args,**kargs),self.p)
 
-    # NEW implementation flattens coordinate sets to ease use of
-    # complicated functions
-    def newmap(self,func):
-        """Return a Formex mapped by a 3-D function.
+    def map(self,*args,**kargs):
+        return Formex(self.f.map(*args,**kargs),self.p)
+    def map1(self,*args,**kargs):
+        return Formex(self.f.map1(*args,**kargs),self.p)
+    def mapd(self,*args,**kargs):
+        return Formex(self.f.mapd(*args,**kargs),self.p)
+    def newmap(self,*args,**kargs):
+        return Formex(self.f.newmap(*args,**kargs),self.p)
 
-        This is one of the versatile mapping functions.
-        func is a numerical function which takes three arguments and produces
-        a list of three output values. The coordinates [x,y,z] will be
-        replaced by func(x,y,z).
-        The function must be applicable to arrays, so it should
-        only include numerical operations and functions understood by the
-        numpy module.
-        This method is one of several mapping methods. See also map1 and mapd.
-        Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
-        is equivalent with E.scale([2,3,4])
-        """
-        x,y,z = func(self.f[:,:,0].flat,self.f[:,:,1].flat,self.f[:,:,2].flat)
-        shape = list(self.f.shape)
-        shape[2] = 1
-        #print shape,reshape(x,shape)
-        f = concatenate([reshape(x,shape),reshape(y,shape),reshape(z,shape)],2)
-        #print f.shape
-        return Formex(f,self.p)
+    def replace(self,*args,**kargs):
+        return Formex(self.f.replace(*args,**kargs),self.p)
+    def swapaxes(self,*args,**kargs):
+        return Formex(self.f.swapaxes(*args,**kargs),self.p)
+    def rollaxes(self,*args,**kargs):
+        return Formex(self.f.rollaxes(*args,**kargs),self.p)
 
-    def map(self,func):
-        """Return a Formex mapped by a 3-D function.
-
-        This is one of the versatile mapping functions.
-        func is a numerical function which takes three arguments and produces
-        a list of three output values. The coordinates [x,y,z] will be
-        replaced by func(x,y,z).
-        The function must be applicable to arrays, so it should
-        only include numerical operations and functions understood by the
-        numpy module.
-        This method is one of several mapping methods. See also map1 and mapd.
-        Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
-        is equivalent with E.scale([2,3,4])
-        """
-        f = zeros(self.f.shape,dtype=Float)
-        f[:,:,0],f[:,:,1],f[:,:,2] = func(self.f[:,:,0],self.f[:,:,1],self.f[:,:,2])
-        return Formex(f,self.p)
-
-    def map1(self,dir,func):
-        """Return a Formex where coordinate i is mapped by a 1-D function.
-
-        <func> is a numerical function which takes one argument and produces
-        one result. The coordinate dir will be replaced by func(coord[dir]).
-        The function must be applicable on arrays, so it should only
-        include numerical operations and functions understood by the
-        numpy module.
-        This method is one of several mapping methods. See also map and mapd.
-        """
-        f = self.f.copy()
-        f[:,:,dir] = func[i](self.f[:,:,dir])
-        return Formex(f,self.p)
-
-    def mapd(self,dir,func,point,dist=None):
-        """Maps one coordinate by a function of the distance to a point.
-
-        <func> is a numerical function which takes one argument and produces
-        one result. The coordinate dir will be replaced by func(d), where <d>
-        is calculated as the distance to <point>.
-        The function must be applicable on arrays, so it should only
-        include numerical operations and functions understood by the
-        numpy module.
-        By default, the distance d is calculated in 3-D, but one can specify
-        a limited set of axes to calculate a 2-D or 1-D distance.
-        This method is one of several mapping methods. See also map3 and map1.
-        Example: E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
-        maps E on a sphere with radius 10
-        """
-        f = self.f.copy()
-        if dist == None:
-            dist = [0,1,2]
-        try:
-            l = len(dist)
-        except TypeError:
-            l = 1
-            dist = [dist]
-        d = f[:,:,dist[0]] - point[dist[0]]
-        if l==1:
-            d = abs(d)
-        else:
-            d = d*d
-            for i in dist[1:]:
-                d1 = f[:,:,i] - point[i]
-                d += d1*d1
-            d = sqrt(d)
-        f[:,:,dir] = func(d)
-        return Formex(f,self.p)
-
-    # This could be done by a map, but it is slightly cheaper to do it this way
-    def replace(self,i,j,other=None):
-        """Replace the coordinates along the axes i by those along j.
-
-        i and j are lists of axis numbers.
-        replace ([0,1,2],[1,2,0]) will roll the axes by 1.
-        replace ([0,1],[1,0]) will swap axes 0 and 1.
-        An optionally third argument may specify another Formex to take
-        the coordinates from. It should have the same dimensions.
-        """
-        ## Is there a way to do this in 1 operation ?
-        # if self.shape != other.shape:
-        # ERROR
-        if other is None:
-            other = self
-        f = self.f.copy()
-        for k in range(len(i)):
-            f[:,:,i[k]] = other.f[:,:,j[k]]
-        return Formex(f,self.p)
-
-
-    def swapaxes(self,i,j):
-        """Swap coordinate axes i and j"""
-        return self.replace([i,j],[j,i])
-
-
-    def rollaxes(self,n=1):
-        """Roll the axes over the given amount.
-
-        Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
-        2 becomes 0.
-        """
-        return Formex(roll(self.f, int(n) % 3,axis=-1),self.p)
-        
+    def projectOnSphere(self,*args,**kargs):
+        return Formex(self.f.projectOnSphere(*args,**kargs),self.p)
 
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
@@ -1843,18 +1194,6 @@ class Formex:
         """
         c = self.f.mean(1).reshape((self.f.shape[0],1,self.f.shape[2]))
         return Formex(factor*(self.f-c)+c,self.p)
-
-
-    def projectOnSphere(self,radius,center=[0.,0.,0.]):
-        """Project a Formex on a sphere."""
-        d = distanceFromPoint(self.f,center)
-        s = radius / d
-        g = self.f - center
-        g[:,:,0] *= s
-        g[:,:,1] *= s
-        g[:,:,2] *= s
-        g += center
-        return Formex(g,self.p)
 
 
 ##############################################################################
@@ -1905,7 +1244,7 @@ class Formex:
 
     ## A formian compatibility function that we may keep
         
-    def translatem(self,*args):
+    def translatem(self,*args,**kargs):
         """Multiple subsequent translations in axis directions.
 
         The argument list is a sequence of tuples (axis, step). 
@@ -2016,6 +1355,10 @@ class Formex:
     # They may (will) be removed in future.
     from utils import deprecated
 
+    @deprecated(diagonal)
+    def size(self):
+        pass
+
     @deprecated(view)
     def data(self):
         pass
@@ -2086,7 +1429,7 @@ class Formex:
         elif (i,j) == (1,3):
             return self.rosette(n,-angle,1,[x,0,y])
 
-    def tranic(self,*args):
+    def tranic(self,*args,**kargs):
         n = len(args)/2
         d = [ i-1 for i in args[:n] ]
         return self.translatem(*zip(d,args[n:]))
@@ -2108,7 +1451,7 @@ class Formex:
     def tranax(self,a1,a2,a3,b1,b2,b3,t=None):
         return self.translate([b1-a1,b2-a2,b3-a3],t)
    
-    def rinic(self,*args):
+    def rinic(self,*args,**kargs):
         n = len(args)/3
         F = self
         for d,m,t in zip(args[:n],args[n:2*n],args[2*n:]):
@@ -2121,7 +1464,7 @@ class Formex:
     def rinit(self,n1,n2,t1,t2):
         return self.rin(2,n1,t1).rin(3,n2,t2)
 
-    def lamic(self,*args):
+    def lamic(self,*args,**kargs):
         n = len(args)/2
         F = self
         for d,p in zip(args[:n],args[n:]):
@@ -2292,12 +1635,30 @@ def bbox(formexlist):
 
 ############### DEPRECATED FUNCTIONS ##################
 
-from utils import deprecated
+def functionBecameMethod(replacement):
+    def decorator(func):
+        def wrapper(object,*args,**kargs):
+            print "Function %s is deprecated: use method %s instead" % (func.func_name,replacement)
+            repfunc = getattr(object,replacement)
+            return repfunc(*args,**kargs)
+        return wrapper
+    return decorator
 
-@deprecated(Formex.divide)
+@functionBecameMethod('divide')
 def divide(F,div):
     pass
 
+@functionBecameMethod('distanceFromPlane')
+def distanceFromPlane(F,p,n):
+    pass
+
+@functionBecameMethod('distanceFromLine')
+def distanceFromLine(F,p,n):
+    pass
+
+@functionBecameMethod('distanceFromPoint')
+def distanceFromPoint(F,p):
+    pass
 
 ##############################################################################
 #
@@ -2362,15 +1723,14 @@ if __name__ == "__main__":
         print F.bbox()
         print F.center(),F.centroid()
         print F.bsphere()
-
-        F.fprint()
-
         F = Formex([[[0,0],[1,0],[0,1]],[[1,0],[1,1],[0,1]]])
         print F
         print F.reverseElements()
         Formex.setPrintFunction(Formex.asArray)
         print F
         F.fprint()
+        F.fprint("%10.3f %10.4f %10.5f")
+        F.fprint(fmt="%10.4f %10.5f %10.6f")
         print type(F)
         #F = F.translate1(1,1)
 
