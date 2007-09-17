@@ -13,8 +13,8 @@
 
 import sys
 
-from vector import *
-from formex import tand,Formex
+from coords import tand
+from formex import Formex
 
 import numpy
 import distutils.version
@@ -230,11 +230,12 @@ class Camera:
     def move(self,translation):
         """Move the camera over translation vector in global coordinates.
 
+        translation is a list of 3 values.
         The center of the camera is moved over the specified translation
         vector. This has the effect of moving the scene in opposite direction.
         """
-        center = add(self.getCenter(),translation)
-        self.setCenter(*center)
+        x,y,z = self.center
+        self.setCenter(x+translation[0],y+translation[1],z+translation[2])
 
 ##    def truck(self,translation):
 ##        """Move the camera translation vector in local coordinates.
@@ -318,7 +319,7 @@ class Camera:
     def translate(self,vx,vy,vz,local=True):
         if local:
             vx,vy,vz = self.toWorld([vx,vy,vz,1])
-        self.move([-vx,-vy,-vz])
+        self.move(-vx,-vy,-vz)
       
     def transform(self,v):
         """Transform a vertex using the currently saved Modelview matrix."""

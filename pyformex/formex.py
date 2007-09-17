@@ -55,9 +55,7 @@ def vectorNormalize(vec):
 def vectorPairAreaNormals(vec1,vec2):
     """Compute area of and normals on parallellograms formed by vec1 and vec2.
 
-    vec1 and vec2 are (n,3) shaped arrays holding coimport math
-import vector
-llections of vectors.
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
     The result is a tuple of two arrays:
       area (n) : the area of the parallellogram formed by vec1 and vec2.
       normal (n,3) : (normalized) vectors normal to each couple (vec1,2).

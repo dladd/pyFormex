@@ -66,8 +66,7 @@ def setToolbarPlacement(store=None):
     options = [ None, 'default', 'left', 'right', 'top', 'bottom' ]
     label = [ str(tb.windowTitle()) for tb in toolbar ]
     current = [ store[s] for s in setting ]
-    print current
-    itemlist = [(l, options, 'select',) for (l,c) in zip(label,setting)]
+    itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
     itemlist.append(('Store these settings as defaults', False))
     res,accept = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
     if accept:
@@ -94,7 +93,10 @@ def setCommands():
 def setSysPath():
     askConfigPreferences(['syspath'])
 
-def setDrawtimeout():
+def setInputTimeout():
+    askConfigPreferences(['input/timeout'])
+
+def setDrawWait():
     askConfigPreferences(['draw/wait'])
 
 def setBGcolor():
@@ -172,7 +174,8 @@ MenuData = [
         (_('&Appearance'),setAppearance), 
         (_('&Font'),setFont), 
         (_('&Toolbar Placement'),setToolbarPlacement), 
-        (_('&Drawwait Timeout'),setDrawtimeout), 
+        (_('&Input Timeout'),setInputTimeout), 
+        (_('&Draw Wait Time'),setDrawWait), 
 #        (_('&Background Color'),setBGcolor), 
 #        (_('Line&Width'),setLinewidth), 
         (_('&Pick Size'),setPickSize), 

@@ -81,7 +81,7 @@ def detected():
     catchAndDisplay('draw.printdetected()')
 
 def about():
-    draw.about("""%s
+    draw.info("""%s
 
 A tool for generating and operating on large 3D structures by mathematical transfomations.
 

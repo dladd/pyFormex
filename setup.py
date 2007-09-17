@@ -8,7 +8,7 @@ from distutils.core import setup
 
 
 setup(name='pyformex',
-      version='0.5.1a1',
+      version='0.6a1',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 

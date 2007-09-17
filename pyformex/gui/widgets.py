@@ -385,27 +385,76 @@ class InputBool(InputItem):
         return self.input.checkState() == QtCore.Qt.Checked
 
     
-class InputSelect(InputItem):
-    """A selection InputItem."""
+class InputCombo(InputItem):
+    """A combobox InputItem."""
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,choices,default,*args):
         """Creates a new combobox for the selection of a value from a list.
 
-        value is a list/tuple of possible values.
-        Displays the name next to a combobox, which will initially be set
-        to the first value in the list.
-        The value is always one either True or False,depending on the setting
-        of the checkbox.
+        choices is a list/tuple of possible values.
+        default is the initial/default choice.
+        If default is not in the choices list, it is prepended.
+        If default is None, the first item of choices is taken as the default.
+       
+        The choices are presented to the user as a combobox, which will
+        initially be set to the default value.
         """
+        if default is None:
+            default = choices[0]
+        elif default not in choices:
+            print "Adding default to choices"
+            choices[0:0] = [ default ]
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QComboBox()
-        for v in value:
+        for v in choices:
             self.input.addItem(str(v))
+        self.input.setCurrentIndex(choices.index(default))
         self.addWidget(self.input)
 
     def value(self):
         """Return the widget's value."""
         return str(self.input.currentText())
+
+    
+class InputRadio(InputItem):
+    """A radiobuttons InputItem."""
+    
+    def __init__(self,name,choices,default,*args):
+        """Creates radiobuttons for the selection of a value from a list.
+
+        choices is a list/tuple of possible values.
+        default is the initial/default choice.
+        If default is not in the choices list, it is prepended.
+        If default is None, the first item of choices is taken as the default.
+       
+        The choices are presented to the user as a hbox with radio buttons,
+        of which the default will initially be pressed.
+        """
+        if default is None:
+            default = choices[0]
+        elif default not in choices:
+            choices[0:0] = [ default ]
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QGroupBox()
+        self.hbox = QtGui.QHBoxLayout()
+        self.rb = []
+        self.hbox.addStretch(1)
+
+        for v in choices:
+            rb = QtGui.QRadioButton(v)
+            self.hbox.addWidget(rb)
+            self.rb.append(rb)
+
+        self.rb[choices.index(default)].setChecked(True)
+        self.input.setLayout(self.hbox)
+        self.addWidget(self.input)
+
+    def value(self):
+        """Return the widget's value."""
+        for rb in self.rb:
+            if rb.isChecked():
+                return str(rb.text())
+        return ''
 
 
 class InputInteger(InputItem):
@@ -478,21 +527,54 @@ class InputDialog(QtGui.QDialog):
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption=None,*args):
+    def __init__(self,items,caption=None,parent=None,flags=None):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
         of the item, and optionally some more elements that limit the type
         of data that can be entered. The general format of an item is:
-          name,value,type,range,default
+          name,value,type,range
         It should fit one of the following schemes:
-        ('name') or ('name',str) : type string, any string input allowed
+        ('name',str) : type string, any string input allowed
         ('name',int) : type int, any integer value allowed
         ('name',int,'min','max') : type int, only min <= value <= max allowed
         For each item a label with the name and a LineEdit widget are created,
         with a validator function where appropriate.
+
+        Input items are defined by a list with the following structure:
+        [ name, value, type, range... ]
+        The fields have the following meaning:
+          name:  the name of the field,
+          value: the initial or default value of the field,
+          type:  the type of values the field can accept,
+          range: the range of values the field can accept,
+        The first two fields are mandatory. In many cases the type can be
+        determined from the value and no other fields are required. Thus:
+        [ 'name', 'value' ] will accept any string (initial string = 'value'),
+        [ 'name', True ] will show a checkbox with the item checked,
+        [ 'name', 10 ] will accept any integer,
+        [ 'name', 1.5 ] will accept any float.
+
+        Range settings for int and float types:
+        [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive;
+        [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
+           from 0.0 to 1.0 with a maximum of two decimals.
+
+        Composed types:
+        [ 'name', 'option1', 'select', ['option0','option1','option2']] will
+        present a combobox to select between one of the options. The initial
+        and default value is 'option1'.
+        [ 'name', 'red', 'color' ] will present a color selection widget,
+        with 'red' as the initial choice.
+
+        Timeout:
+        If a timeout (in seconds) is given, a timer will be started and if no
+        user input is detected during this period, the input dialog returns
+        with the default values set 
         """
-        QtGui.QDialog.__init__(self,*args)
+        if parent is None:
+            parent = GD.gui
+        QtGui.QDialog.__init__(self,parent)
         self.resize(400,200)
         if caption is None:
             caption = 'pyFormex-input'
@@ -530,9 +612,18 @@ class InputDialog(QtGui.QDialog):
                 line = InputColor(name,value)
 
             elif itemtype == 'select' :
-                line = InputSelect(name,value)
                 if len(item) > 3:
-                    line.input.setCurrentIndex(item[1].index(item[3]))
+                    choices = item[3]
+                else:
+                    choices = []
+                line = InputCombo(name,choices,value)
+
+            elif itemtype == 'radio' :
+                if len(item) > 3:
+                    choices = item[3]
+                else:
+                    choices = []
+                line = InputRadio(name,choices,value)
 
             else: # Anything else is handled as a string
                 #itemtype = str:
@@ -561,17 +652,40 @@ class InputDialog(QtGui.QDialog):
         self.show()
         
     def acceptdata(self):
+        """This function is called when the user clicks 'ok'"""
+        print "CLICKED OK"
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
+        print self.result
+        print "ACCEPTED"
         self.accept()
         
-    def getResult(self):
+    def getResult(self,timeout=None):
+        # Start the timer:
+        if timeout:
+            #print "Creating the timer" 
+            try:
+                timeout = float(timeout)
+                if timeout > 0.0:
+                    timer = QtCore.QTimer()
+                    self.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
+                    #self.connect(timer,QtCore.SIGNAL("timeout()"),timedOut)
+                    timer.setSingleShot(True)
+                    timeout = int(1000*timeout)
+                    #print "Starting the timer for %s msecs" % timeout
+                    timer.start(timeout)
+            except:
+                raise
+            
         accept = self.exec_() == QtGui.QDialog.Accepted
         GD.app.processEvents()
         return (self.result, accept)
 
 
 ############################# Menu ##############################
+
+#def timedOut():
+#    print "The timer has timed out!"
 
 def normalize(s):
     """Normalize a string.

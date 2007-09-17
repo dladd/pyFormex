@@ -61,6 +61,9 @@ zoomfactor = 1.15    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 0.01     # translation factor for pan buttons
 
+[input]
+timeout = -1         # never timeout
+
 [canvas]
 bgcolor = 'lightgrey'
 fgcolor = 'black'

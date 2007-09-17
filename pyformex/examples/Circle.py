@@ -18,6 +18,14 @@ def length(A,axis=-1):
     """
     return sqrt((A*A).sum(axis))
 
+def normalize(A,axis=-1):
+    """Normalize the vectors of A in the direction of axis.
+
+    The default axis is the last.
+    """
+    return A / length(A,axis).reshape((-1,1))
+    
+
 def rotationAngle(A,B,rad=False):
     """Return rotation vector and angle for rotation of A to B.
 
@@ -30,8 +38,11 @@ def rotationAngle(A,B,rad=False):
     along the rotation axis.
     If rad==True, the returned angles are in radians.
     """
+    A = normalize(A)
+    B = normalize(B)
     N = cross(A,B)
     L = length(N)
+    #print L
     S = L / (length(A)*length(B))
     ANG = arcsin(S.clip(min=-1.0,max=1.0))
     N = N/column_stack([L])

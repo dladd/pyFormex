@@ -23,13 +23,26 @@ import globaldata as GD
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from OpenGL import GL
 
-from vector import length,projection
-from math import atan2,pi
-
 import canvas
 import image
 import utils
 import toolbar
+
+import math
+
+# Some 2D vector operations
+
+def dotpr (v,w):
+    """Return the dot product of vectors v and w"""
+    return v[0]*w[0] + v[1]*w[1]
+
+def length (v):
+    """Return the length of the vector v"""
+    return math.sqrt(dotpr(v,v))
+
+def projection(v,w):
+    """Return the (signed) length of the projection of vector v on vector w."""
+    return dotpr(v,w)/length(w)
 
 # mouse actions
 PRESS = 0
@@ -193,7 +206,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """
         if action == PRESS:
             w,h = self.width(),self.height()
-            self.state = [self.statex-w/2, self.statey-h/2, 0.]
+            self.state = [self.statex-w/2, self.statey-h/2 ]
 
         elif action == MOVE:
             w,h = self.width(),self.height()
@@ -204,17 +217,17 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             d = length(x0)
             if d > h/8:
                 # GD.debug(d)
-                x1 = [x-w/2, y-h/2, 0]     # new vector
-                a0 = atan2(x0[0],x0[1])
-                a1 = atan2(x1[0],x1[1])
-                an = (a1-a0) / pi * 180
+                x1 = [x-w/2, y-h/2]     # new vector
+                a0 = math.atan2(x0[0],x0[1])
+                a1 = math.atan2(x1[0],x1[1])
+                an = (a1-a0) / math.pi * 180
                 ds = utils.stuur(d,[-h/4,h/8,h/4],[-1,0,1],2)
                 twist = - an*ds
                 self.camera.rotate(twist,0.,0.,1.)
                 self.state = x1
             # radial movement rotates around vector in lens plane
-            x0 = [self.statex-w/2, self.statey-h/2, 0]    # initial vector
-            dx = [x-self.statex, y-self.statey,0]         # movement
+            x0 = [self.statex-w/2, self.statey-h/2]    # initial vector
+            dx = [x-self.statex, y-self.statey]         # movement
             b = projection(dx,x0)
             if abs(b) > 5:
                 val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)

@@ -3,7 +3,7 @@
 """Grid"""
 import gui.actors
 
-res = askItems([('nx',4),('ny',3),('nz',2),('Grid type',['Box','Plane'],'select'),('alpha',0.3)])
+res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',['Box','Plane']),('alpha',0.3)])
 
 nx = (res['nx'],res['ny'],res['nz'])
 gridtype = res['Grid type']

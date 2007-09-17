@@ -246,7 +246,7 @@ class Config(Dict):
     C.read("key='value'\n")
     There is an important difference though: the second line will make a
     variable key (with value 'value') available in subsequent Config read()
-    function calls.
+    method calls.
     """
 
 

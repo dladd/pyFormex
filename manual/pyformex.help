@@ -1,2 +1,20 @@
-Could not import pyformex.
-This probably means that pyFormex was not properly installed.
+usage: pyformex [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]
+
+options:
+  --gui              start the GUI (default if no scriptfile argument is
+                     given)
+  --nogui            do not load the GUI (default if a scriptfile argument is
+                     given)
+  --dri              Force the use of Direct Rendering
+  --nodri            Disables the use of Direct Rendering (overrides the --dri
+                     option)
+  --alpha            Enable the Alpha Channel buffer
+  --config=CONFIG    use file CONFIG for settings
+  --nodefaultconfig  skip all default locations of config files
+  --redirect         redirect standard output to the message board (ignored
+                     with --nogui)
+  --debug            display debugging info to sys.stdout
+  --whereami         show where the pyformex package is located
+  --remove           remove the pyformex installation
+  --version          show program's version number and exit
+  -h, --help         show this help message and exit

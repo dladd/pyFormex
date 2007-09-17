@@ -939,6 +939,35 @@ Draw a Formex or a list of Formices on the canvas.
 
 \end{funcdesc}
 
+\subsection{Render mode}
+
+The \pyformex drawing engine has multiple rendering modes. Depending on the task you are trying to perform, one of the rendering modes may be more suited that the others. While smooth opaque rendering with lighting enabled may produce the most realistic view of some final object, modes that allow some transparency through the model may be better suited at many stages of the building of the object.
+
+The different rendering modes in \pyformex are:
+\begin{description}
+  \item[wireframe] All objects are displayed only with lines marking its edges. A line element is drawn as a line; a triangle element is drawn as three lines along its border. The wireframe mode permits transparency through the model and is computationally efficient. It is the default mode and mostly used during model construction.
+  \item[smooth] Smooth rendering will try to display the objects in a very realisitc way. 
+\end{description}
+
+
+\begin{funcdesc}{renderMode}{mode}
+Set the rendermode for the current viewport. The argument is the name of one of the defined rendering modes.
+\end{funcdesc}
+
+The following convenience functions provide an easy alternative for switching to the corresponding rendering mode.
+    
+\begin{funcdesc}{wireframe}{}
+\end{funcdesc}
+\begin{funcdesc}{flat}{}
+\end{funcdesc}
+\begin{funcdesc}{flatwire}{}
+\end{funcdesc}
+\begin{funcdesc}{smooth}{}
+\end{funcdesc}
+\begin{funcdesc}{smoothwire}{}
+\end{funcdesc}
+
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "manual"

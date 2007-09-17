@@ -235,7 +235,7 @@ if __name__ == "draw":
                  'CloseLoop' : close_loop_example,
                  }
     
-    res = askItems([('Select an example',examples.keys(),'select')])
+    res = askItems([('Select an example','','select',examples.keys())])
     if res:
         S = examples[res['Select an example']]()
         S.update(extendedSectionChar(S))

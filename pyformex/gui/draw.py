@@ -54,26 +54,35 @@ def textView(text):
     return w.exec_()
     
 
-def messageBox(message,level='info',actions=['OK']):
+def messageBox(message,level='info',choices=['OK']):
     """Display a message box and wait for user response.
 
     The message box displays a text, an icon depending on the level
     (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
     with the specified action text. The 'about' level has no buttons.
 
-    The function returns the number of the button that was clicked.
+    The function returns the text of the button that was clicked or
+    an empty string is ESC was hit.
     """
     w = QtGui.QMessageBox()
+    w.setText(message)
     if level == 'error':
-        ans = w.critical(w,GD.Version,message,*actions)
+        w.setIcon(QtGui.QMessageBox.Critical)
     elif level == 'warning':
-        ans = w.warning(w,GD.Version,message,*actions)
+        w.setIcon(QtGui.QMessageBox.Warning)
     elif level == 'info':
-        ans = w.information(w,GD.Version,message,*actions)
-    elif level == 'about':
-        ans = w.about(w,GD.Version,message)
+        w.setIcon(QtGui.QMessageBox.Information)
+    elif level == 'question':
+        w.setIcon(QtGui.QMessageBox.Question)
+    for a in choices:
+        w.addButton(a,QtGui.QMessageBox.AcceptRole)
+    w.exec_()
     GD.gui.update()
-    return ans
+    b = w.clickedButton()
+    if b:
+        return str(b.text())
+    else:
+        return ''
 
 
 outtimer = None
@@ -92,56 +101,69 @@ def timeout(secs):
     outtimer.start()
     
 
-def ask(question,choices=None,default='',timeout=-1):
+def ask(question,choices=None,default=None,timeout=-1):
     """Ask a question and present possible answers.
 
-    Returns index of the chosen answer.
+    Return answer.
     """
     if choices:
-        # this currently only supports 3 answers
-        return info(question,choices)
-    else:
+        return messageBox(question,'question',choices)
+
+    if choices is None:
+        if default is None:
+            default = ''
         items = [ [question, default] ]
-        res,accept = widgets.InputDialog(items,'Config Dialog').getResult()
-        GD.gui.update()
-        if accept:
-            return res[0][1]
-        else:
-            return default
+    else:
+        items = [ [question, choices, 'combo', default] ]
+
+    res,accept = widgets.InputDialog(items,'Ask Question').getResult()
+    GD.gui.update()
+    if accept:
+        return res[question]
+    else:
+        return default
+
 
 def ack(question):
     """Show a Yes/No question and return True/False depending on answer."""
-    return ask(question,['Yes','No']) == 0
+    return ask(question,['Yes','No']) == 'Yes'
     
 def error(message,actions=['OK']):
     """Show an error message and wait for user acknowledgement."""
-    return messageBox(message,'error',actions)
+    messageBox(message,'error',actions)
     
 def warning(message,actions=['OK']):
     """Show a warning message and wait for user acknowledgement."""
-    return messageBox(message,'warning',actions)
+    messageBox(message,'warning',actions)
 
 def info(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
-    return messageBox(message,'info',actions)
-   
-def about(message=GD.Version):
-    """Show a informative message and wait for user acknowledgement."""
-    messageBox(message,'about')
+    messageBox(message,'info',actions)
 
-def askItems(items,caption=None):
-    """Ask the value of some items to the user. !! VERY EXPERIMENTAL!!
 
-    Input is a dictionary of items or a list of [key,value] pairs.
-    The latter is recommended, because a dictionary does not guarantee
-    the order of the items.
-    Returns a dictionary with the results, equal to the input if the user
-    exited with a cancel.
+
+def askItems(items,caption=None,timeout=None):
+    """Ask the value of some items to the user.
+
+    Create an interactive widget to let the user set the value of some items.
+    Input is a list of input items (basically [key,value] pairs).
+    See the widgets.InputDialog class for complete description of the
+    available input items.
+    A timeout (in seconds) can be specified to have the input dialog
+    interrupted automatically.
+
+    Return a dictionary with the results: for each input item there is a
+    (key,value) pair.
+    
+    If the user exited with a cancel or a timeout has occurred, the output
+    values will be equal to the input.
     """
     if type(items) == dict:
         items = items.items()
-    w = widgets.InputDialog(items,caption,GD.gui)
-    res,status = w.getResult()
+    w = widgets.InputDialog(items,caption)
+    if timeout is None:
+        timeout = GD.cfg.get('input/timeout',-1)
+    res,status = w.getResult(timeout)
     return res
 
 

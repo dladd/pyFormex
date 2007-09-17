@@ -34,7 +34,7 @@ def setRenderMode():
     """Change the rendering mode."""
     mode = GD.canvas.rendermode
     modes = canvas.Canvas.rendermodes
-    itemlist = [('Render Mode', modes, 'select', mode)]
+    itemlist = [('Render Mode', mode, 'select', modes)]
     res,accept = widgets.InputDialog(itemlist,'Select Render Mode').getResult()
     if accept:
         GD.canvas.setRenderMode(res['Render Mode'])
@@ -75,7 +75,7 @@ def viewportSettings():
     modes = canvas.Canvas.rendermodes
     print modes
     s = GD.canvas.settings
-    itemlist = [('rendermode', modes, 'select', mode),
+    itemlist = [('rendermode', mode, 'select', modes),
                 ('bgcolor', s.bgcolor, 'color'),
                 ('fgcolor', s.fgcolor, 'color'),
                 ('slcolor', s.slcolor, 'color'),

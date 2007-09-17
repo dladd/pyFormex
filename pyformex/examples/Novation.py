@@ -10,8 +10,9 @@
 ## version 2 or later (see file COPYING for details)
 ##
 """Novation"""
-reset()
 
+reset()
+#GD.cfg['input/timeout'] = 2
 n = 40
 
 ## baseGeom = ask("Create a surface model with",
@@ -19,9 +20,9 @@ n = 40
 
 basechoices = ['Triangles','Quadrilaterals']
 renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
-res = askItems([['Type of surface element',basechoices,'select'],
+res = askItems([['Type of surface element','Triangles','radio',basechoices],
                 ['Number of bumps',3],
-                ['Render mode',renderchoices,'select'],
+                ['Render mode',None,'select',renderchoices],
                 ['Transparent',False],
                 ['Add a bottom plate',False],
                 ['Shrink elements',False],
