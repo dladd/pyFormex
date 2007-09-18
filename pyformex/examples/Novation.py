@@ -63,16 +63,16 @@ if bottom:
 # create the bumps
 for p in a:
     e = e.bump(2,p, lambda x:exp(-0.5*x),[0,1])
+if shrink:
+    e = e.shrink(0.8)
 
 renderMode(rendermode)
 if transparent:
     GD.canvas.alphablend = True
 if bottom:
     draw(b,color=yellow,alpha=1.0)
-if shrink:
-    draw(e.shrink(0.8),alpha=0.5)
-else:
-    draw(e,alpha=0.5)
+
+draw(e,alpha=0.8)
 
 if export:
     from plugins import surface

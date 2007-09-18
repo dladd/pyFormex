@@ -15,30 +15,6 @@ from coords import *
 
 
 
-## def coordsmethod(replacement):
-##     def decorator(func):
-##         def wrapper(self,*__args,**__kw):
-##             return replacement(self.f,*__args,**__kw)
-##         return wrapper
-##     decorator.__doc__ = replacement.__doc__
-##     return decorator
-
-
-## def coordsmethod():
-##     def decorator(func):
-##         global replacement
-##         replacement = getattr(Coords,func.func_name)
-##         def wrapper(self,*__args,**__kw):
-##             """Get the same function from the Coords class"""
-##             print "Function %s is implemented by %s" % (func,replacement)
-##             return replacement(self.f,*__args,**__kw)
-##         return wrapper
-##     decorator.__doc__ = replacement.__doc__
-##     return decorator
-
-
-
-
 def vectorNormalize(vec):
     """Normalize a set of vectors.
 
@@ -346,6 +322,22 @@ def cut3AtPlane(F,p,n,newprops=None):
 # (this will be mostly in functions array() and zeros()
 #
 
+def coordsmethod(f):
+    """Define a Formex method as the equivalent Coords method.
+
+    This decorator replaces a Formex method with the equally named
+    Coords method applied on the Formex coordinates attribute (.f).
+    The return value is a Formex with changed coordinates but unchanged
+    properties.
+    """
+    def newf(self,*args,**kargs):
+        repl = getattr(Coords,f.__name__)
+        return Formex(repl(self.f,*args,**kargs),self.p)
+        newf.__name__ = f.__name__
+        newf.__doc__ = repl.__doc__
+    return newf
+
+
 class Formex:
     """A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
@@ -617,7 +609,7 @@ class Formex:
             f,t = f.unique(nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
         e = reshape(s,self.f.shape[:2])
-        return (f,e)
+        return f,e
 
 
 ##############################################################################
@@ -1096,23 +1088,31 @@ class Formex:
 #   However, they do not change the original Formex, but create a copy!
 #
 
+
+ 
+    @coordsmethod
     def scale(self,*args,**kargs):
-        return Formex(self.f.scale(*args,**kargs),self.p)
+        pass
 
+    @coordsmethod
     def translate(self,*args,**kargs):
-        return Formex(self.f.translate(*args,**kargs),self.p)
+        pass
 
+    @coordsmethod
     def rotate(self,*args,**kargs):
-        return Formex(self.f.rotate(*args,**kargs),self.p)
+        pass
 
+    @coordsmethod
     def shear(self,*args,**kargs):
-        return Formex(self.f.shear(*args,**kargs),self.p)
-    
-    def reflect(self,*args,**kargs):
-        return Formex(self.f.reflect(*args,**kargs),self.p)
+        pass
 
+    @coordsmethod
+    def reflect(self,*args,**kargs):
+        pass
+
+    @coordsmethod
     def affine(self,*args,**kargs):
-        return Formex(self.f.affine(*args,**kargs),self.p)
+        pass
 
     def cylindrical(self,*args,**kargs):
         return Formex(self.f.cylindrical(*args,**kargs),self.p)

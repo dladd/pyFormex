@@ -16,11 +16,10 @@ but to be loaded as a plugin.
 """
 
 import globaldata as GD
+from gui import actors
 from gui.draw import *
 from formex import *
-from gui import actors
 from plugins import surface,inertia,partition,sectionize
-
 
 import commands, os, timer
 
@@ -142,6 +141,11 @@ def drawSelection(*args,**kargs):
         draw(selection,*args,**kargs)
         if show_numbers:
             showSelectionNumbers()
+
+
+def forgetSelection():
+    if selection:
+        forget(selection)
             
 
 #################### Read/Write Formex File ##################################
@@ -226,11 +230,6 @@ def setProperty():
             for F in FL:
                 F.setProp(p)
             drawSelection()
-
-
-def forgetSelection():
-    if selection:
-        forget(selection)
 
 
 #################### BBox ####################################

@@ -26,6 +26,7 @@ import image
 import colors
 import formex
 from script import *
+from plugins import surface
 
 ## # import some functions for scripts:
 
@@ -400,6 +401,7 @@ def step_script(s,glob,paus=True):
 
 
 def export(dict):
+    print "EXPORTING %s " % dict.keys()
     globals().update(dict)
 
 def forget(names):
@@ -614,8 +616,8 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         if F is None:
             return None
 
-    if not isinstance(F,formex.Formex):
-        raise RuntimeError,"draw() can only draw Formex instances"
+    if not (isinstance(F,formex.Formex) or isinstance(F,surface.Surface)):
+        raise RuntimeError,"draw() can only draw Formex or Surface objects"
 
     if allowwait:
         drawwait()
@@ -644,27 +646,32 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
-    actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha)
- 
-    GD.canvas.addActor(actor)
-    if view:
-        if view == '__last__':
-            view = DrawOptions['view']
-        if bbox == 'auto':
-            bbox = F.bbox()
-        #print "DRAW: bbox=%s, view=%s" % (bbox,view)
-        GD.canvas.setCamera(bbox,view)
-        #setView(view)
-    GD.canvas.update()
-    GD.app.processEvents()
-    if image.autoSaveOn():
-        image.saveNext()
-    if allowwait and wait:
-##        if stepmode:
-##            drawblock()
-##        else:
-        drawlock()
-    GD.gui.setBusy(False)
+    try:
+        if isinstance(F,formex.Formex):
+            actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha)
+        elif isinstance(F,surface.Surface):
+            actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
+
+        GD.canvas.addActor(actor)
+        if view:
+            if view == '__last__':
+                view = DrawOptions['view']
+            if bbox == 'auto':
+                bbox = F.bbox()
+            #print "DRAW: bbox=%s, view=%s" % (bbox,view)
+            GD.canvas.setCamera(bbox,view)
+            #setView(view)
+        GD.canvas.update()
+        GD.app.processEvents()
+        if image.autoSaveOn():
+            image.saveNext()
+        if allowwait and wait:
+    ##        if stepmode:
+    ##            drawblock()
+    ##        else:
+            drawlock()
+    finally:
+        GD.gui.setBusy(False)
     return actor
 
 
@@ -944,14 +951,14 @@ def exit(all=False):
 ########################## print information ################################
     
 
-def listAll(dict=None):
+def listAll(dict=None,clas=formex.Formex):
     """Return a list of all Formices in dict or by default in globals()"""
     if dict is None:
         dict = globals()
         dict.update(GD.PF)
     flist = []
     for n,t in dict.items():
-        if isinstance(t,formex.Formex) and t.__class__.__name__ == 'Formex':
+        if isinstance(t,clas): # and t.__class__.__name__ == 'Formex':
             flist.append(n)
     return flist
 

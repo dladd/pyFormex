@@ -19,6 +19,7 @@ from formex import *
 
 import simple
 from plugins import elements
+from plugins.surface import Surface
 
 
 def rotMatrix(v,n=3):
@@ -124,13 +125,14 @@ def drawLineElems(x,elems,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    GL.glBegin(GL.GL_LINES)
-    for i,e in enumerate(elems):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        GL.glVertex3fv(x[e[0]])
-        GL.glVertex3fv(x[e[1]])
-    GL.glEnd()
+    drawLines(x[elems],color)
+##     GL.glBegin(GL.GL_LINES)
+##     for i,e in enumerate(elems):
+##         if color is not None:
+##             GL.glColor3fv(color[i])
+##         GL.glVertex3fv(x[e[0]])
+##         GL.glVertex3fv(x[e[1]])
+##     GL.glEnd()
 
 
 
@@ -243,6 +245,24 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
             GL.glVertex3fv(x[i][j])
     GL.glEnd()
 
+
+def drawTriangleElems(coords,elems,mode,color=None,alpha=1.0):
+    drawTriangles(coords[elems],mode,color,alpha)
+
+# Experiment using arrays
+## def drawTriArray(x,c,mode):
+##     GL.glVertexPointerf(x)
+##     GL.glColorPointerf(c)
+##     GL.glEnable(GL.GL_VERTEX_ARRAY)
+##     GL.glEnable(GL.GL_COLOR_ARRAY)
+##     if mode == 'smooth':
+##         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+##         GL.glNormalPointerf(normal)
+##         GL.glEnable(GL.GL_NORMAL_ARRAY)
+##     GL.glBegin(GL.GL_TRIANGLES)
+##     GL.glDrawArrays(GL.GL_TRIANGLES,0,x.shape[0])
+##     GL.glEnd()
+
     
 def drawPolygons(x,mode,color=None):
     """Draw a collection of polygones.
@@ -262,20 +282,6 @@ def drawPolygons(x,mode,color=None):
         for xij in xi:
             GL.glVertex3fv(xij)
         GL.glEnd()
-
-
-def drawTriArray(x,c,mode):
-    GL.glVertexPointerf(x)
-    GL.glColorPointerf(c)
-    GL.glEnable(GL.GL_VERTEX_ARRAY)
-    GL.glEnable(GL.GL_COLOR_ARRAY)
-    if mode == 'smooth':
-        normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-        GL.glNormalPointerf(normal)
-        GL.glEnable(GL.GL_NORMAL_ARRAY)
-    GL.glBegin(GL.GL_TRIANGLES)
-    GL.glDrawArrays(GL.GL_TRIANGLES,0,x.shape[0])
-    GL.glEnd()
 
     
 def drawQuadrilaterals(x,mode,color=None):
@@ -823,6 +829,8 @@ class PlaneActor(Actor):
                 drawGridPlanes(self.x0,self.x1,nx)
         
 
+###########################################################################
+
 quadratic_curve_ndiv = 8
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
@@ -1006,105 +1014,81 @@ class FormexActor(Actor,Formex):
             drawPolygons(self.f,mode,color=None)
 
 
-class SurfaceActor(Actor):
+#############################################################################
+
+class SurfaceActor(Actor,Surface):
     """Draws a triangulated surface specified by points and connectivity."""
 
-    def __init__(self,nodes,elems,color=None,linewidth=None):
+    def __init__(self,S,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,alpha=1.0):
         
         Actor.__init__(self)
+        Surface.__init__(self,S.coords,S.edges,S.faces)
         
-        self.nodes = Coords(nodes)
-        self.elems = elems
-        
-        self.setColor(color)
         self.setLineWidth(linewidth)
+        self.setColor(color,colormap)
+        self.setBkColor(bkcolor,bkcolormap)
+        self.setAlpha(alpha)
 
-        # Create the edges for faster drawing
-        # In wireframe, most triangle edges will be drawn twice
-        edges = elems[:,elements.Tri3.edges].reshape((-1,2))
-        # This will select only the edges with first node lowest
-        # Beware!! some edges will be missing if the surface is not closed
-        # We should detect these first!
-        # This should be done in the TriSurface class methods
-        self.edgeselect = edges[:,0] < edges[:,1]
-        self.edges = edges[edges[:,0] < edges[:,1]]
+        self.list = None
 
 
-    def nelems(self):
-        return self.elems.shape[0]
+    def setColor(self,color=None,colormap=None):
+        """Set the color of the Actor."""
+        self.color,self.colormap = saneColorSet(color,colormap,self.nelems()) 
 
 
-    def setColor(self,color=None):
-        """Set the color and possibly the colormap of the Actor.
+    def setBkColor(self,color=None,colormap=None):
+        """Set the backside color of the Actor."""
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.nelems())
 
-        If color is None, it will be drawn with the current foreground color.
-        
-        """
-        if color is None:
-            pass # use canvas fgcolor
-               
-        elif color == 'random':
-            # create random colors
-            color = random.random((self.nelems(),3))
-            
-        elif type(color) == str:
-            # convert named color to RGB tuple
-            color = asarray(GLColor(color))
-            
-        elif isinstance(color,ndarray) and color.shape[-1] == 3:
-            pass
-        
-        elif (type(color) == tuple or type(color) == list) and len(color) == 3:
-            color = asarray(color)
-        
-        else:
-            # The input should be compatible to a list of color compatible items.
-            # An array with 3 colums will be fine.
-            color = map(GLColor,color)
-            color = asarray(color)
-
-        if isinstance (color,ndarray) and color.ndim > 1:
-            color = resize(color.reshape((-1,3)),(self.nelems(),3))
-
-        #GD.debug(color)
-        self.color = color
+    def setAlpha(self,alpha):
+        """Set the Actors alpha value."""
+        self.alpha = float(alpha)
+        self.trans = self.alpha < 1.0
 
 
-    def bbox(self):
-        return self.nodes.bbox()
+    bbox = Surface.bbox
 
 
-    def drawGL(self,mode,color=None):
+    def drawGL(self,mode,color=None,alpha=None):
         """Draw the surface."""
         if mode.endswith('wire'):
             self.drawGL(mode[:-4],color=color)
-            self.drawGL('wireframe',color=black)
+            self.drawGL('wireframe',color=asarray(black))
             return
+
+        if alpha is None:
+            alpha = self.alpha           
 
         if color == None:
             color = self.color
 
-        if color is None:
+##                 if mode == 'wireframe':
+##                     # adapt color array to edgeselect
+##                     color = concatenate([self.color,self.color,self.color],axis=-1)
+##                     color = color.reshape((-1,2))[self.edgeselect]
+        
+        if color is None:  # no color
             pass
-        else:
-            color = asarray(color)
-            if color.ndim == 1:
-                GL.glColor3fv(color)
-                color = None
-            else:
-                # color is a full color array
-                if mode == 'wireframe':
-                    # adapt color array to edgeselect
-                    color = concatenate([self.color,self.color,self.color],axis=-1)
-                    color = color.reshape((-1,2))[self.edgeselect]
+        
+        elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
+            GL.glColor(append(color,alpha))
+            color = None
+
+        elif color.dtype.kind == 'i': # color index
+            color = self.colormap[color]
+
+        else: # a full color array : use as is
+            pass
 
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
 
         if mode=='wireframe' :
-            drawLineElems(self.nodes,self.edges,color)
+            drawLines(self.coords[self.edges],color)
         else:
-            drawTriangles(self.nodes[self.elems],mode,color)
+            self.refresh()
+            drawTriangles(self.coords[self.elems],mode,color,alpha)
 
 ### End
