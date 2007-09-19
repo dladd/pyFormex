@@ -1586,19 +1586,18 @@ def interpolate(F,G,div,swap=False):
     If swap==True, the order is swapped and you get m sequences of n
     interpolations.
     """
-    shape = F.shape()
-    if G.shape() != shape:
-        raise RuntimeError,"Can only interpolate between equal size Formices"
-    if type(div) == int:
-        div = arange(div+1) / float(div)
-    else:
-        div = array(div).ravel()
-    c = F.f
-    d = G.f - F.f
-    r = c + outer(div,d).reshape((-1,)+shape)
+    r = Coords.interpolate(F.f,G.f,div)
+    # r is a 4-dim array
     if swap:
-        r = r.reshape((len(div),) + F.f.shape).swapaxes(0,1)
-    return Formex(r.reshape((-1,) + shape[1:]))
+##         r = r.reshape((len(div),) + F.f.shape)
+##         print r.shape
+        r = r.swapaxes(0,1)
+##         print "SWAP"
+##         print r.shape
+##     else:
+##         #r = r.reshape((-1,)+shape)
+##         print r.shape
+    return Formex(r.reshape((-1,) + r.shape[-2:]))
     
 
 def readfile(file,sep=',',plexitude=1,dimension=3):

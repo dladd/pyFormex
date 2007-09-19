@@ -521,6 +521,8 @@ class InputColor(InputItem):
 
 
 
+input_timeout = -1
+
 class InputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
@@ -577,7 +579,7 @@ class InputDialog(QtGui.QDialog):
         QtGui.QDialog.__init__(self,parent)
         self.resize(400,200)
         if caption is None:
-            caption = 'pyFormex-input'
+            caption = 'pyFormex-dialog'
         self.setWindowTitle(str(caption))
         self.fields = []
         self.result = {}
@@ -650,42 +652,44 @@ class InputDialog(QtGui.QDialog):
         # Set the keyboard focus to the first input field
         self.fields[0].input.setFocus()
         self.show()
+
         
     def acceptdata(self):
         """This function is called when the user clicks 'ok'"""
-        print "CLICKED OK"
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
-        print self.result
-        print "ACCEPTED"
         self.accept()
+
         
     def getResult(self,timeout=None):
+        if timeout is None:
+            #timeout = GD.cfg.get('input/timeout',-1)
+            timeout = input_timeout
+
         # Start the timer:
         if timeout:
-            #print "Creating the timer" 
             try:
                 timeout = float(timeout)
                 if timeout > 0.0:
                     timer = QtCore.QTimer()
                     self.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
-                    #self.connect(timer,QtCore.SIGNAL("timeout()"),timedOut)
+                    ## The following line would return empty values after timeout
+                    ## self.connect(timer,QtCore.SIGNAL("timeout()"),self,QtCore.SLOT("reject()"))
                     timer.setSingleShot(True)
                     timeout = int(1000*timeout)
-                    #print "Starting the timer for %s msecs" % timeout
                     timer.start(timeout)
             except:
                 raise
             
         accept = self.exec_() == QtGui.QDialog.Accepted
+        self.activateWindow()
+        self.raise_()
         GD.app.processEvents()
         return (self.result, accept)
 
 
 ############################# Menu ##############################
 
-#def timedOut():
-#    print "The timer has timed out!"
 
 def normalize(s):
     """Normalize a string.

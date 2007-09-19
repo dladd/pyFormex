@@ -37,6 +37,7 @@ board = None       # the message board
 
 PF = {}            # globals that will be offered to scripts
 
+
 # These image format should probably be moved to image.py
 image_formats_qt = []
 image_formats_qtr = []
@@ -84,6 +85,10 @@ def savePreferences():
         return
     
     del cfg['__ref__']
+
+    # Dangerous to set permanently!
+    del cfg['input/timeout']
+    
     debug("!!!Saving config:\n%s" % cfg)
 
     try:

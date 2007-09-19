@@ -188,7 +188,9 @@ MenuData = [
         (_('&Commands'),setCommands),
         (_('&SysPath'),setSysPath),
         (_('&Help'),setHelp),
+        ('---',None),
         (_('&Save Preferences'),GD.savePreferences),
+        (_('Toggle Timeout'),draw.timeout),
         ]),
     ]
 

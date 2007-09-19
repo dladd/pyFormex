@@ -859,12 +859,15 @@ class Coords(ndarray):
         return f
 
 
-    def swapaxes(self,i,j):
-        """Swap coordinate axes i and j"""
+    def swapAxes(self,i,j):
+        """Swap coordinate axes i and j.
+
+        Beware! This is different from numpy's swapaxes() method !
+        """
         return self.replace([i,j],[j,i])
 
 
-    def rollaxes(self,n=1):
+    def rollAxes(self,n=1):
         """Roll the axes over the given amount.
 
         Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
@@ -994,52 +997,35 @@ class Coords(ndarray):
         """
         return Coords(fromfile(*args).reshape((-1,3)))
 
-
-##############################################################################
-#
-#    Functions which are not Coords class methods
-#
-
-
-def interpolate(X,Y,div,swap=False):
-    """Create interpolations between two Coords.
-
-    F and G are two Formices with the same shape.
-    v is a list of floating point values.
-    The result is the concatenation of the interpolations of F and G at all
-    the values in div.
-    An interpolation of F and G at value v is a Formex H where each coordinate
-    Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
-    Thus, a Formex interpolate(F,G,[0.,0.5,1.0]) will contain all elements
-    of F and G and all elements with mean coordinates between those of F and G.
-
-    As a convenience, if an integer is specified for div, it is taken as a
-    number of divisions for the interval [0..1].
-    Thus, interpolate(F,G,n) is equivalent with
-    interpolate(F,G,arange(0,n+1)/float(n))
-
-    The swap argument sets the order of the elements in the resulting Formex.
-    By default, if n interpolations are created of an m-element Formex, the
-    element order is in-Formex first (n sequences of m elements).
-    If swap==True, the order is swapped and you get m sequences of n
-    interpolations.
-    """
-    shape = F.shape()
-    if G.shape() != shape:
-        raise RuntimeError,"Can only interpolate between equal size Formices"
-    if type(div) == int:
-        div = arange(div+1) / float(div)
-    else:
-        div = array(div).ravel()
-    c = F.f
-    d = G.f - F.f
-    r = c + outer(div,d).reshape((-1,)+shape)
-    if swap:
-        r = r.reshape((len(div),) + F.f.shape).swapaxes(0,1)
-    return Formex(r.reshape((-1,) + shape[1:]))
     
+    @classmethod
+    def interpolate(clas,F,G,div):
+        """Create interpolations between two Coords.
 
+        F and G are two Coords with the same shape.
+        v is a list of floating point values.
+        The result is the concatenation of the interpolations of F and G at all
+        the values in div.
+        An interpolation of F and G at value v is a Coords H where each
+        coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
+        Thus, a Coords interpolate(F,G,[0.,0.5,1.0]) will contain all points of
+        F and G and all points with mean coordinates between those of F and G.
 
+        As a convenience, if an integer is specified for div, it is taken as a
+        number of divisions for the interval [0..1].
+        Thus, interpolate(F,G,n) is equivalent with
+        interpolate(F,G,arange(0,n+1)/float(n))
+
+        The resulting Coords array has an extra axis (the first). Its shape is
+        (n,) + F.shape, where n is the number of divisions.
+        """
+        if F.shape != G.shape:
+            raise RuntimeError,"Expected Coords objects with equal shape!"
+        if type(div) == int:
+            div = arange(div+1) / float(div)
+        else:
+            div = array(div).ravel()
+        return F + outer(div,G-F).reshape((-1,)+F.shape)
 
 
 ##############################################################################

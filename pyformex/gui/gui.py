@@ -396,6 +396,41 @@ def quit():
         GD.app.exit()
 
 
+    
+def createScriptMenu(scriptdirs,menu,recursive=True):
+    """Create a menu with pyFormex scripts and insert it in specified menu.
+
+    scriptsdirs is a list of (title,dir) tuples, where title is the menu
+    title and dir is a directory to be scanned for scripts.
+    If recursive is True, subdirectories will be added as a submenu.
+    As a convenience, if an empty dirname is specified and the title
+    is one of the keys in known_scriptdirs, the corresponding dir entry
+    will be used. This enables the user to add pyFormex system script dirs
+    into his config.
+    Returns the list of created menu items.
+    """
+    menus = []
+    known_scriptdirs = { 'examples': GD.cfg['examplesdir'] }
+
+    if len(scriptdirs) > 1:
+        scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
+        before = GD.gui.menu.item('help').menuAction()
+        GD.gui.menu.insertMenu(before,scriptsmenu)
+        before = None
+    else:
+        scriptsmenu = GD.gui.menu
+        before = scriptsmenu.itemAction('help')
+        
+    for title,dirname in scriptdirs:
+        GD.debug("Loading script dir %s" % dirname)
+        if not dirname:
+            dirname = known_scriptdirs[title.lower()]
+        if os.path.exists(dirname):
+            m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
+            scriptsmenu.insert_menu(m,before)
+            menus.append(m)   # Needed to keep m linked to a name
+    return menus
+
 
 
 def runApp(args):

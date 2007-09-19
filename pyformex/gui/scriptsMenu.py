@@ -20,41 +20,72 @@ import utils
 import draw
     
 
-
-# This is used for scripts menus and history menu.
-# Maybe we should create a common base class and subclass two type of menus 
-
 class ScriptsMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list."""
     
-    def __init__(self,title,dir=None,files=None,max=0,autoplay=False):
-        """Create a menu with files in dir.
+    def __init__(self,title,files,max=0,autoplay=False,recursive=True):
+        """Create a menu with pyFormex scripts to play.
 
-        If dir is a directory path, a cascading menu of all pyFormex scripts
+        files is either a list of files (including path) to insert in the
+        menu, or a directory path from which the files will be autoloaded.
+        
+        If it is a list of filenames, their paths may be different. This is
+        e.g. used to create a history of previously played scripts
+        
+        If files is a directory path, a cascading menu of all pyFormex scripts
         in that directory and subdirectories will be created.
-        If dir is a list, this list of files is used
-        By default, files from dir are only included if:
+
+        By default, files are only included if:
           - the name ends with '.py'
           - the name does not start with '.' or '_'
           - the file is recognized as a pyFormex script by isPyFormex()
-        
-        An option to reload the directory is always included.
+
+        If files is a directory path, extra options will be included to
+        play all scripts, the next script or all following scripts or to
+        reload the scripts from that directory.
+
+        If files is a list, a maximum number of items in the list may be
+        specified. If it is > 0, no more than max scripts will be allowed.
+        New ones are added on top, while bottom ones will drop off.
         """
         QtGui.QMenu.__init__(self,title)
-        self.dir = dir
-        self.files = files
+        self.dir = None
+        self.files = None
+        if type(files) == str:
+            self.dir = files
+        else:
+            self.files = files
         self.max = max
         self.autoplay = autoplay
+        self.recursive = recursive
+        self.menus = []
         self.load()
-        
+
+
+    def loadSubmenus(self,dirs):
+        filter2 = lambda s:os.path.isdir(os.path.join(self.dir,s))
+        dirs = filter(filter2,dirs)
+        dirs.sort()
+        print dirs
+        for d in dirs:
+            m = ScriptsMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
+            self.addMenu(m)
+            self.menus.append(m)
+            
 
     def load(self):
         if self.dir:
             files = os.listdir(self.dir)
         else:
             files = self.files
-        filter1 = lambda s:s[-3:]==".py" and s[0]!='.' and s[0]!='_'
+        filter1 = lambda s: s[0]!='.' and s[0]!='_'
+        files = filter(filter1,files)
+        
+        filter1 = lambda s: s[-3:]==".py"
         if self.dir:
+            print "DIR %s" % self.dir
+            if self.recursive:
+                self.loadSubmenus(files)
             filter2 = lambda s:utils.isPyFormex(os.path.join(self.dir,s))
         else:
             filter2 = utils.isPyFormex
@@ -152,4 +183,3 @@ class ScriptsMenu(QtGui.QMenu):
             self.actions.append(self.addAction(filename))
         for a,f in zip(self.actions,self.files):
             a.setText(f)
-        

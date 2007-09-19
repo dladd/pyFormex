@@ -36,6 +36,20 @@ class TimeOut(Exception):
     """Exception raised to timeout from a dialog widget."""
     pass    
 
+############################# Globals for scripts ############################
+
+
+def Globals():
+    g = copy.copy(GD.PF)
+    g.update(globals())
+    g.update(formex.__dict__) 
+    g.update({'__name__':'script'})
+    return g
+
+def export(dict):
+    GD.PF.update(dict)
+        
+
 #################### Interacting with the user ###############################
 
 def ask(question,choices=None,default=''):

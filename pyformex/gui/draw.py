@@ -28,13 +28,30 @@ import formex
 from script import *
 from plugins import surface
 
-## # import some functions for scripts:
-
+# import some functions for scripts:
 from toolbar import setPerspective as perspective, setTransparency as transparency
 
-## # import a few functions for user scripts
-## from image import saveImage,saveNext
 
+############################# Globals for scripts ############################
+
+
+def Globals():
+    g = copy.copy(GD.PF)
+    g.update(colors.__dict__)
+    g.update(globals())
+    g.update(formex.__dict__) 
+    g.update({'__name__':'draw'})
+    return g
+
+def timeout(onoff=None):
+    if onoff is None:
+        onoff = widgets.input_timeout < 0
+    if onoff:
+        widgets.input_timeout = GD.cfg.get('input/timeout',-1)
+    else:
+        widgets.input_timeout = -1
+
+        
 #################### Interacting with the user ###############################
 
 
@@ -84,25 +101,9 @@ def messageBox(message,level='info',choices=['OK']):
         return str(b.text())
     else:
         return ''
+   
 
-
-outtimer = None
-
-def outrelease():
-    """Release the outtime."""
-    global outtimer
-    if outtimer:
-        outtimer.release()
-        outtimer = None
-        
-def timeout(secs):
-    """Raise a timeout error after secs."""
-    global outtimer
-    outtimer = threading.Timer(secs,outrelease)
-    outtimer.start()
-    
-
-def ask(question,choices=None,default=None,timeout=-1):
+def ask(question,choices=None,default=None,timeout=None):
     """Ask a question and present possible answers.
 
     Return answer.
@@ -117,7 +118,7 @@ def ask(question,choices=None,default=None,timeout=-1):
     else:
         items = [ [question, choices, 'combo', default] ]
 
-    res,accept = widgets.InputDialog(items,'Ask Question').getResult()
+    res,accept = widgets.InputDialog(items,'Ask Question').getResult(timeout)
     GD.gui.update()
     if accept:
         return res[question]
@@ -162,8 +163,6 @@ def askItems(items,caption=None,timeout=None):
     if type(items) == dict:
         items = items.items()
     w = widgets.InputDialog(items,caption)
-    if timeout is None:
-        timeout = GD.cfg.get('input/timeout',-1)
     res,status = w.getResult(timeout)
     return res
 
@@ -235,60 +234,66 @@ exitrequested = False
 starttime = 0.0
 
 
-# We currently have two mechanisms for transferring variables between
-# scripts by using global variables.
-# - put them into globaldata.PF (GD.PF), see surface_menu plugin
-# - export them using the export() function, see formex_menu plugin
+## # We currently have two mechanisms for transferring variables between
+## # scripts by using global variables.
+## # - put them into globaldata.PF (GD.PF), see surface_menu plugin
+## # - export them using the export() function, see formex_menu plugin
 
 
-def Globals():
-    """Return the globals that are pased to the scripts on execution.
+## def Globals():
+##     """Return the globals that are pased to the scripts on execution.
 
-    This basically contains the globals defined in draw.py, colors.py,
-    and formex.py, as well as the globals from numpy.
-    It also contains the definitions put into the globaldata.PF
-    Finally, because the scripts are executed in the context of the
-    draw module, it will also contain any global definitions made in
-    your scripts or explicitely exported by a script.
-    During execution of the script, the global variable __name__ will be
-    set to either 'draw' or 'script' depending on whether the script
-    was executed in the 'draw' module (--gui option) or the 'script'
-    module (--nogui option).
-    """
-    # We need to pass formex globals to the script
-    # This would be done automatically if we put this function
-    # in the formex.py file. But then we need to pass other globals
-    # from this file (like draw,...)
-    # We might create a module with all operations accepted in
-    # scripts.
+##     This basically contains the globals defined in draw.py, colors.py,
+##     and formex.py, as well as the globals from numpy.
+##     It also contains the definitions put into the globaldata.PF
+##     Finally, because the scripts are executed in the context of the
+##     draw module, it will also contain any global definitions made in
+##     your scripts or explicitely exported by a script.
+##     During execution of the script, the global variable __name__ will be
+##     set to either 'draw' or 'script' depending on whether the script
+##     was executed in the 'draw' module (--gui option) or the 'script'
+##     module (--nogui option).
+##     """
+##     # We need to pass formex globals to the script
+##     # This would be done automatically if we put this function
+##     # in the formex.py file. But then we need to pass other globals
+##     # from this file (like draw,...)
+##     # We might create a module with all operations accepted in
+##     # scripts.
 
-    # Our current solution is to take a copy of the globals in this module,
-    # and add the globals from the 'colors' and 'formex' modules
-    # !! Taking a copy is needed to avoid changing this module's globals !!
-    # Also, do not be tempted to take a user dict and update it with this
-    # module's globals: you might override many user variables.
-    g = copy.copy(globals())
-    # Add the user globals (We could do away with PF altogether,
-    # if we always store them in this module's globals.
-    g.update(GD.PF)
-    # Add these last, because too much would go broke if the user
-    # overrides them.
-    if GD.gui:
-        g.update(colors.__dict__)
-    g.update(formex.__dict__) # this also imports everything from numpy
-    # Finally, we set the name to 'script' or 'draw', so that the user can
-    # verify that the script is the main script being excuted (and not merely
-    # an import) and also whether the script is executed under the GUI or not.
-    if GD.gui:
-        modname = 'draw'
-    else:
-        modname = 'script'
-    g.update({'__name__':modname})
-    #
-    #  WE COULD also set __file__ to the script name
-    #  Would this help the user in debugging?
-    #   g.update({'__file__':name})
-    return g
+##     # Our current solution is to take a copy of the globals in this module,
+##     # and add the globals from the 'colors' and 'formex' modules
+##     # !! Taking a copy is needed to avoid changing this module's globals !!
+##     # Also, do not be tempted to take a user dict and update it with this
+##     # module's globals: you might override many user variables.
+##     g = copy.copy(globals())
+##     # Add the user globals (We could do away with PF altogether,
+##     # if we always store them in this module's globals.
+##     g.update(GD.PF)
+##     # Add these last, because too much would go broke if the user
+##     # overrides them.
+##     if GD.gui:
+##         g.update(colors.__dict__)
+##     g.update(formex.__dict__) # this also imports everything from numpy
+##     # Finally, we set the name to 'script' or 'draw', so that the user can
+##     # verify that the script is the main script being excuted (and not merely
+##     # an import) and also whether the script is executed under the GUI or not.
+##     if GD.gui:
+##         modname = 'draw'
+##     else:
+##         modname = 'script'
+##     g.update({'__name__':modname})
+##     #
+##     #  WE COULD also set __file__ to the script name
+##     #  Would this help the user in debugging?
+##     #   g.update({'__file__':name})
+##     return g
+
+
+
+## def export(dict):
+##     #print "EXPORTING %s " % dict.keys()
+##     globals().update(dict)
 
  
 def playScript(scr,name=None):
@@ -325,7 +330,7 @@ def playScript(scr,name=None):
     
     # Get the globals
     g = Globals()
-    exportNames = []
+    #exportNames = []
     GD.scriptName = name
     exitall = False
 
@@ -337,9 +342,9 @@ def playScript(scr,name=None):
                 step_script(scr,g,True)
             else:
                 exec scr in g
-            if GD.cfg['autoglobals']:
-                exportNames.extend(listAll(g))
-            globals().update([(k,g[k]) for k in exportNames])
+            #if GD.cfg['autoglobals']:
+            #    exportNames.extend(listAll(g))
+            #globals().update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
         except ExitAll:
@@ -399,11 +404,6 @@ def step_script(s,glob,paus=True):
     info("Finished stepping through script!")
 
 
-
-def export(dict):
-    print "EXPORTING %s " % dict.keys()
-    globals().update(dict)
-
 def forget(names):
     g = globals()
     for name in names:
@@ -440,6 +440,7 @@ def play(fn=None,step=False):
     reset()
     GD.debug("Current Drawing Options: %s" % DrawOptions)
     message("Running script (%s)" % fn)
+    GD.gui.history.add(fn)
     stepmode = step
     playScript(file(fn,'r'),fn)
     message("Script finished")
@@ -1077,10 +1078,6 @@ from utils import deprecated
 @deprecated(export)
 def Export(dict):
     pass
-
-## @deprecated(export)
-## def export(dict):
-##     pass
 
 
 

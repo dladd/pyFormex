@@ -13,6 +13,12 @@ from plugins.surface import *
 
 import commands, os, timer
 
+
+class Selection(list):
+
+    def __init__(self,data):
+
+        list.__init__(data)
 # The selection should only be set by setSelection()!!
 selection = []  # a list of names of the currently selected Formices
 
