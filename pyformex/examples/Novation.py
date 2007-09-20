@@ -15,8 +15,6 @@ reset()
 #GD.cfg['input/timeout'] = 2
 n = 40
 
-## baseGeom = ask("Create a surface model with",
-##                    ['Triangles','Quadrilaterals'])
 
 basechoices = ['Triangles','Quadrilaterals']
 renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']

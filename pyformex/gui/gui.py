@@ -164,7 +164,14 @@ class GUI(QtGui.QMainWindow):
         self.menu.insertItems(menu.MenuData)
         # ... and the toolbar
         self.actions = toolbar.addActionButtons(self.toolbar)
-        if GD.cfg.get('gui/camerabuttons','True'):
+
+        # timeout button 
+        if GD.cfg.get('gui/timeoutbutton',False):
+            toolbar.addTimeoutButton(self.toolbar)
+
+
+        # camera buttons
+        if GD.cfg.get('gui/camerabuttons',True):
             self.toolbar.addSeparator()
             toolbar.addCameraButtons(self.toolbar)
         self.menu.show()
@@ -177,7 +184,7 @@ class GUI(QtGui.QMainWindow):
             mmenu = None
         # we add a modebar depending on the config:
         # modebar = None: forget it
-        # modebar = 'left', 'right', 'top' or 'bottom' : seperate toolbar
+        # modebar = 'left', 'right', 'top' or 'bottom' : separate toolbar
         # modebar = 'default' (or anything else): in the default top toolbar
         area = GD.cfg['gui/modebar']
         if area:
@@ -513,7 +520,7 @@ See Help->License or the file COPYING for details.
     #print "KNOWN", knownscriptdirs
 
     if GD.cfg.get('gui/separate_script_dirs',False):
-        # This will create seperate menus for all scriptdirs
+        # This will create separate menus for all scriptdirs
         pass
     else:
         # The default is to collect all scriptdirs in a single main menu

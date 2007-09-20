@@ -18,6 +18,7 @@ from PyQt4 import QtCore, QtGui
 import fileMenu
 import scriptsMenu
 import cameraMenu
+import widgets
 import draw
 import utils
 
@@ -169,5 +170,31 @@ def setPerspective(mode=True):
 def setProjection():
     setPerspective(False)
 
+################# Timeout Button ###############
+
+timeout_button = None # the toggle timeout button
+
+def toggleTimeout(onoff=None):
+    print "TOGGLE TIMEOUT"
+    print widgets.input_timeout
+    if onoff is None:
+        onoff = widgets.input_timeout < 0
+    if onoff:
+        widgets.input_timeout = GD.cfg.get('input/timeout',-1)
+    else:
+        widgets.input_timeout = -1
+    print widgets.input_timeout
+    onoff = widgets.input_timeout > 0
+    print "Button should be checked: %s" % onoff 
+    return onoff
+
+
+def addTimeoutButton(toolbar):
+    global timeout_button
+    timeout_button = addButton(toolbar,'Toggle Timeout','clock',toggleTimeout,
+                               toggle=True,checked=False)
+
+def timeout(onoff=None):
+    timeout_button.setChecked( toggleTimeout(onoff) )
 
 # End

@@ -58,15 +58,16 @@ GD.canvas.camera.setRotation(0,-45)
 show(scallop(6,1,2,0),0,False)
 
 
-howmany = ask("How many / Which domes do you want?",["One","Sequence","Custom"])
+howmany = ask("How many / Which domes do you want?",
+              ['One','Sequence','Custom','None'])
 
 n,f,c,r = [6,1,2,0]
 
-if howmany == 0:
+if howmany == 'One':
    # The example from the pyformex homepage
    show(scallop(6,1,4,4),0)
         
-elif howmany == 1:
+elif howmany == 'Sequence':
    # Present some nice examples
     for n,f,c,r in [
         [6,1,2,0],
@@ -83,7 +84,7 @@ elif howmany == 1:
         [12,1,2,2] ]:
         show(scallop(n,f,c,r),0)
 
-elif howmany == 2:
+elif howmany == 'Custom':
    # Customized version
    while True:
        res = askItems([['n',n],['f',f],['c',c],['r',r]])

@@ -221,7 +221,7 @@ if __name__ == "draw":
 
         print sorted
 
-        ask('Click to continue',['Continue'])
+        info('Click to continue')
         clear()
         F = Formex(nodes[sorted])
         draw(F,color=blue)

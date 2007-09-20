@@ -74,19 +74,28 @@ def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     return Formex([[p1,p2]]).divide(n)
     
 
-def circle(a1=1.,a2=2.,a3=360.):
+def circle(a1=2.,a2=0.,a3=360.):
     """Return a Formex which is a unit circle at the origin in the x-y-plane.
 
     a1: dash angle in degrees, a2: modular angle in degrees, a3: total angle.
     a1 == a2 gives a full circle, a1 < a2 gives a dashed circle.
     If a3 < 360, the result is an arc.
-    The default values give a dashed circle.
+
+    I a2 == 0, a2 is taken equal to a1.
+    The default values give a full circle.
     Large angle values result in polygones. Thus circle(120.,120.) is an
     equilateral triangle.
     """
+    if a2 == 0.0:
+        a2 = a1
     n = int(round(a3/a2))
     a1 *= pi/180.
     return Formex([[[1.,0.,0.],[cos(a1),sin(a1),0.]]]).rosette(n,a2,axis=2,point=[0.,0.,0.])
+
+
+def polygon(n):
+    """A regular polygon with n sides."""
+    return circle(360./n)
 
 
 def triangle():

@@ -663,16 +663,17 @@ class InputDialog(QtGui.QDialog):
         
     def getResult(self,timeout=None):
         if timeout is None:
-            #timeout = GD.cfg.get('input/timeout',-1)
             timeout = input_timeout
+            print "TIMEOUT=%s" % input_timeout
 
         # Start the timer:
         if timeout:
             try:
                 timeout = float(timeout)
                 if timeout > 0.0:
+                    print "STARTING TIMER"
                     timer = QtCore.QTimer()
-                    self.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
                     ## The following line would return empty values after timeout
                     ## self.connect(timer,QtCore.SIGNAL("timeout()"),self,QtCore.SLOT("reject()"))
                     timer.setSingleShot(True)
@@ -687,6 +688,53 @@ class InputDialog(QtGui.QDialog):
         GD.app.processEvents()
         return (self.result, accept)
 
+    
+def messageBox(message,level='info',choices=['OK'],timeout=None):
+    """Display a message box and wait for user response.
+
+    The message box displays a text, an icon depending on the level
+    (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
+    with the specified action text. The 'about' level has no buttons.
+
+    The function returns the text of the button that was clicked or
+    an empty string is ESC was hit.
+    """
+    w = QtGui.QMessageBox()
+    w.setText(message)
+    if level == 'error':
+        w.setIcon(QtGui.QMessageBox.Critical)
+    elif level == 'warning':
+        w.setIcon(QtGui.QMessageBox.Warning)
+    elif level == 'info':
+        w.setIcon(QtGui.QMessageBox.Information)
+    elif level == 'question':
+        w.setIcon(QtGui.QMessageBox.Question)
+    for a in choices:
+        w.addButton(a,QtGui.QMessageBox.AcceptRole)
+        
+    if timeout is None:
+        timeout = input_timeout
+
+    # Start the timer:
+    if timeout:
+        try:
+            timeout = float(timeout)
+            if timeout > 0.0:
+                timer = QtCore.QTimer()
+                timer.connect(timer,QtCore.SIGNAL("timeout()"),w,QtCore.SLOT("accept()"))
+                timer.setSingleShot(True)
+                timeout = int(1000*timeout)
+                timer.start(timeout)
+        except:
+            raise
+            
+    w.exec_()
+    GD.gui.update()
+    b = w.clickedButton()
+    if b:
+        return str(b.text())
+    else:
+        return ''
 
 ############################# Menu ##############################
 

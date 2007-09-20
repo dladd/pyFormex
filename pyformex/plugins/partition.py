@@ -145,10 +145,10 @@ def partition(Fin,prop=0):
     V,P,N = prepare(V)
     while True:
         res = ask("",["Adjust Cut","Keep Cut", "Finish"])
-        if res == 0:
+        if res == "Adjust Cut":
             P,N = testview(F,V,P)
             print "Plane: point %s, normal %s" % (P,N)
-        elif res == 1:
+        elif res == "Keep Cut":
             undraw(FA)
             #undraw(VA)
             cut_planes.append((P,N))

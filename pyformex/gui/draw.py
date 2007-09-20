@@ -29,7 +29,7 @@ from script import *
 from plugins import surface
 
 # import some functions for scripts:
-from toolbar import setPerspective as perspective, setTransparency as transparency
+from toolbar import setPerspective as perspective, setTransparency as transparency, timeout
 
 
 ############################# Globals for scripts ############################
@@ -42,15 +42,6 @@ def Globals():
     g.update(formex.__dict__) 
     g.update({'__name__':'draw'})
     return g
-
-def timeout(onoff=None):
-    if onoff is None:
-        onoff = widgets.input_timeout < 0
-    if onoff:
-        widgets.input_timeout = GD.cfg.get('input/timeout',-1)
-    else:
-        widgets.input_timeout = -1
-
         
 #################### Interacting with the user ###############################
 
@@ -70,37 +61,6 @@ def textView(text):
     w.setLayout(l)
     w.resize(800,400)
     return w.exec_()
-    
-
-def messageBox(message,level='info',choices=['OK']):
-    """Display a message box and wait for user response.
-
-    The message box displays a text, an icon depending on the level
-    (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
-    with the specified action text. The 'about' level has no buttons.
-
-    The function returns the text of the button that was clicked or
-    an empty string is ESC was hit.
-    """
-    w = QtGui.QMessageBox()
-    w.setText(message)
-    if level == 'error':
-        w.setIcon(QtGui.QMessageBox.Critical)
-    elif level == 'warning':
-        w.setIcon(QtGui.QMessageBox.Warning)
-    elif level == 'info':
-        w.setIcon(QtGui.QMessageBox.Information)
-    elif level == 'question':
-        w.setIcon(QtGui.QMessageBox.Question)
-    for a in choices:
-        w.addButton(a,QtGui.QMessageBox.AcceptRole)
-    w.exec_()
-    GD.gui.update()
-    b = w.clickedButton()
-    if b:
-        return str(b.text())
-    else:
-        return ''
    
 
 def ask(question,choices=None,default=None,timeout=None):
@@ -109,15 +69,16 @@ def ask(question,choices=None,default=None,timeout=None):
     Return answer.
     """
     if choices:
-        return messageBox(question,'question',choices)
+        return widgets.messageBox(question,'question',choices)
 
     if choices is None:
         if default is None:
-            default = ''
+            default = choices[0]
         items = [ [question, default] ]
     else:
         items = [ [question, choices, 'combo', default] ]
 
+    print "INPUT TIMEOUT %s" % timeout
     res,accept = widgets.InputDialog(items,'Ask Question').getResult(timeout)
     GD.gui.update()
     if accept:
@@ -526,7 +487,7 @@ def reset():
         clear = False,
         wait = GD.cfg['draw/wait']
         )
-    #GD.canvas.reset()
+    GD.canvas.resetDefaults(GD.cfg['canvas'])
     clear()
     view('front')
     
