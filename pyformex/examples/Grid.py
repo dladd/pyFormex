@@ -5,6 +5,9 @@ import gui.actors
 
 res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',['Box','Plane']),('alpha',0.3)])
 
+if not res:
+    exit()
+    
 nx = (res['nx'],res['ny'],res['nz'])
 gridtype = res['Grid type']
 alpha = res['alpha']

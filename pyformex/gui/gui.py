@@ -361,29 +361,6 @@ class GUI(QtGui.QMainWindow):
         e.ignore()
 
 
-
-def messageBox(message,level='info',actions=['OK']):
-    """Display a message box and wait for user response.
-
-    The message box displays a text, an icon depending on the level
-    (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
-    with the specified action text. The 'about' level has no buttons.
-
-    The function returns the number of the button that was clicked.
-    """
-    w = QtGui.QMessageBox()
-    if level == 'error':
-        ans = w.critical(w,GD.Version,message,*actions)
-    elif level == 'warning':
-        ans = w.warning(w,GD.Version,message,*actions)
-    elif level == 'info':
-        ans = w.information(w,GD.Version,message,*actions)
-    elif level == 'about':
-        ans = w.about(w,GD.Version,message)
-    GD.gui.update()
-    return ans
-
-
 def windowExists(windowname):
     """Check if a GUI window with the given name exists.
 

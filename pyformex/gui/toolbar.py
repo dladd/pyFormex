@@ -157,8 +157,8 @@ def togglePerspective(): # Called by the button
 def addPerspectiveButton(toolbar):
     global perspective_button
     perspective_button = addButton(toolbar,'Toggle Perspective/Projective Mode',
-                                    'perspect',togglePerspective,
-                                    toggle=True,icon0='project',checked=True)    
+                                   'perspect',togglePerspective,
+                                   toggle=True,icon0='project',checked=True)    
 def setPerspective(mode=True):
     GD.canvas.camera.setPerspective(mode)
     GD.canvas.display()
@@ -175,17 +175,17 @@ def setProjection():
 timeout_button = None # the toggle timeout button
 
 def toggleTimeout(onoff=None):
-    print "TOGGLE TIMEOUT"
-    print widgets.input_timeout
+    #print "TOGGLE TIMEOUT"
+    #print widgets.input_timeout
     if onoff is None:
         onoff = widgets.input_timeout < 0
     if onoff:
         widgets.input_timeout = GD.cfg.get('input/timeout',-1)
     else:
         widgets.input_timeout = -1
-    print widgets.input_timeout
+    #print widgets.input_timeout
     onoff = widgets.input_timeout > 0
-    print "Button should be checked: %s" % onoff 
+    #print "Button should be checked: %s" % onoff 
     return onoff
 
 

@@ -66,7 +66,7 @@ class ScriptsMenu(QtGui.QMenu):
         filter2 = lambda s:os.path.isdir(os.path.join(self.dir,s))
         dirs = filter(filter2,dirs)
         dirs.sort()
-        print dirs
+        #print dirs
         for d in dirs:
             m = ScriptsMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
             self.addMenu(m)
@@ -83,7 +83,7 @@ class ScriptsMenu(QtGui.QMenu):
         
         filter1 = lambda s: s[-3:]==".py"
         if self.dir:
-            print "DIR %s" % self.dir
+            #print "DIR %s" % self.dir
             if self.recursive:
                 self.loadSubmenus(files)
             filter2 = lambda s:utils.isPyFormex(os.path.join(self.dir,s))

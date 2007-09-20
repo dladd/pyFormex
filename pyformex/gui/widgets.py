@@ -402,7 +402,7 @@ class InputCombo(InputItem):
         if default is None:
             default = choices[0]
         elif default not in choices:
-            print "Adding default to choices"
+            #print "Adding default to choices"
             choices[0:0] = [ default ]
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QComboBox()
@@ -664,14 +664,14 @@ class InputDialog(QtGui.QDialog):
     def getResult(self,timeout=None):
         if timeout is None:
             timeout = input_timeout
-            print "TIMEOUT=%s" % input_timeout
+            #print "TIMEOUT=%s" % input_timeout
 
         # Start the timer:
         if timeout:
             try:
                 timeout = float(timeout)
                 if timeout > 0.0:
-                    print "STARTING TIMER"
+                    #print "STARTING TIMER"
                     timer = QtCore.QTimer()
                     timer.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
                     ## The following line would return empty values after timeout
