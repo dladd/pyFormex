@@ -4,7 +4,7 @@
 PYTHONDIR=/usr/lib/python2.4
 MKHOWTO=${PYTHONDIR}/doc/tools/mkhowto
 TEXINPUTS=${PYTHONDIR}/doc/texinputs
-TGT=manual
+TGT=pyformex
 SRC=${TGT}.tex pyformex.help 
 HTMLDIR=html
 FAVICON=../favicon.ico
