@@ -20,6 +20,7 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{verbatim}
+\usepackage{units}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -30,11 +31,25 @@
 \lfoot[\sf\thepage]{}
 \rfoot[]{\sf\thepage}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%SCRIPT%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%voor de programmeercode...
+\usepackage{listings}                   % Voor het weergeven van letterlijke text en codelistings (-> verbatim)
+\usepackage{textcomp}
+\lstset{basicstyle=\scriptsize\sffamily, stringstyle=\ttfamily, numbers=left, language=Python, showstringspaces=false, xleftmargin=1cm, xrightmargin=1cm, breaklines=true, frame=lines, upquote=true}
+%het volgende is om te nummeren of juist niet
+%dit doen we door bijvoorbeeld:\lstset{style=nonumbers} voor \begin{lstlisting} te plaatsen
+\lstdefinestyle{numbers}
+{numbers=left, stepnumber=1, numberstyle=\tiny, numbersep=10pt}
+\lstdefinestyle{nonumbers}
+{numbers=none}
+\renewcommand{\lstlistingname}{Script}
+\renewcommand{\lstlistlistingname}{List of scripts}
+
 \usepackage{xspace}
 
 % Document identification
 \title{\pyformex manual}
-\author{Tim Neels \& Benedict Verhegghe}
+\author{Benedict Verhegghe}
 %\authoraddress{
 %	\strong{Python Software Foundation}\\
 %	Email: \email{benedict.verhegghe@ugent.be}
@@ -110,7 +125,7 @@
 %\pagebreak
 %\addcontentsline{toc}{chapter}{Index}
 %\printindex%     first use program MAKEIND to make index !!
-\input{manual.ind}			% Index
+%\input{manual.ind}			% Index
 
 \end{document}
 %%% Local Variables: 

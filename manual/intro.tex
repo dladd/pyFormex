@@ -9,7 +9,7 @@
 \begin{abstract}
 \fi
 \noindent
-This section explains shortly what \pyformex is and what it is not. It sets the conditions under which you are allowed to use, modify and distribute the program. Next is a list of prerequisites software parts that you need to have installed in order to be able to run this program. We explain how to download and install \pyformex. Finally, you'll find out what basic knowledge you should have in order to understand the tutorial and succesfully use \pyformex. 
+This section explains shortly what \pyformex is and what it is not. It sets the conditions under which you are allowed to use, modify and distribute the program. Next is a list of prerequisite software parts that you need to have installed in order to be able to run this program. We explain how to download and install \pyformex. Finally, you'll find out what basic knowledge you should have in order to understand the tutorial and succesfully use \pyformex. 
 \ifhtml\end{abstract}\fi
 
 
@@ -40,7 +40,7 @@ The stent\footnote{A stent is a tube-shaped structure that is e.g. used to reope
 \end{figure}
 
 The structure is composed of 22032 line segments, each defined by 2 points. Nobody in his right mind would ever even try to input all the 132192 coordinates of all the points describing that structure. 
-With \pyformex, one could define the structure by the following sequence of operations, illustrated in the figure~\ref{fig:wirestent-steps}:
+With \pyformex, one could define the structure by the following sequence of operations, illustrated in the figure~\ref{fig:WireStent-steps}:
  \begin{itemize}
  \item Create a nearly planar base module of two crossing wires. (The wires have a slight out-of-plane bend, to enable the crossing.) 
  \item Extend the base module with a mirrored and translated copy.
@@ -72,7 +72,7 @@ With \pyformex, one could define the structure by the following sequence of oper
 \pyformex does not fit into a single category of traditional (mostly commercial) software packages, because it is not being developed as a program with a specific purpose, but rather as a collection of tools and scripts which we needed at some point in our research projects. Many of the tasks for which we now use \pyformex could be done also with some other software package, like a CAD program %(e.g. SolidWorks\textregistered)
 or a %(MatLab\textregistered{} style)
 matrix calculation package or a solid modeler/renderer %genre Blender
-or a finite element preprocessor%(such as GiD)
+or a finite element pre- and postprocessor%(such as GiD)
 . Each of these is very well suited for the task it was designed for, but none provides all the features of \pyformex in a single consistent environment, and certainly not as free software. 
 
 Perhaps the most important feature of \pyformex is that it was primarily intended to be an easy scripting language for creating geometrical models of 3D-structures. The Graphical User Interface was only added as a convenient means to visualize the designed structure. \pyformex can still run without user interface, and this makes it ideal for use in a batch toolchain.
