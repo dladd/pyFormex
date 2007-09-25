@@ -18,99 +18,14 @@ import globaldata as GD
 from gui import actors
 from gui.draw import *
 from plugins.surface import *
-
-#from globaldata import PF
-#import utils
-#from plugins import f2abq, tetgen, surface_abq, formex_menu
-#from gui import widgets,actors,colors
-#from gui.draw import *
-#from formex import Formex
+from plugins.objects import *
 
 import commands, os, timer
 
-# The selection should only be set by setSelection()!!
-selection = []  # a list of names of the currently selected Formices
-
-
 ##################### select, read and write ##########################
 
-def setSelection(namelist):
-    """Set the selection to a list of names.
 
-    You should make sure this is a list of Formex names!
-    This will also set oldvalues to the corresponding Formices.
-    """
-    global selection
-    if type(namelist) == str:
-        namelist = [ namelist ]
-    selection = namelist
-
-
-def clearSelection():
-    """Clear the current selection."""
-    setSelection([])
-
-
-def changeSelection(newvalues):
-    """Replace the current values of selection by new ones."""
-    export(dict(zip(selection,newvalues)))
-
-
-def checkSelection(single=False,warn=True):
-    """Check that we have a current selection.
-
-    Returns the list of Surfaces corresponding to the current selection.
-    If single==True, the selection should hold exactly one Surface name and
-    a single Surface instance is returned.
-    If there is no selection, or more than one in case of single==True,
-    an error message is displayed and an empty list is returned.
-    """
-    if not selection:
-        if warn:
-            warning("No Surface selected")
-        return []
-    if single and len(selection) > 1:
-        if warn:
-            warning("You should select exactly one Surface")
-        return []
-    if single:
-        return named(selection[0])
-    else:
-        return map(named,selection)
-    
-
-def askSelection(mode=None):
-    """Show the names of known formices and let the user select (one or more).
-
-    This just returns a list of selected Formex names.
-    It does not set the current selection. (see makeSelection)
-    """
-    return widgets.Selection(listAll(clas=surface.Surface),'Known Surfaces',
-                             mode,sort=True,selected=selection).getResult()
-
-
-def makeSelection(mode='multi'):
-    """Interactively sets the current selection."""
-    setSelection(askSelection(mode))
-    drawSelection()
-
-
-def drawSelection(*args,**kargs):
-    """Draws the current selection.
-
-    Any arguments are passed to draw()"""
-    clear()
-    if selection:
-        for n in selection:
-            print named(n)
-        draw(selection,*args,**kargs)
-        #if show_numbers:
-        #    showSelectionNumbers()
-
-
-def forgetSelection():
-    if selection:
-        forget(selection)
+selection = DrawableObjects(clas=Surface)
 
 
 def read_Surface(fn):
@@ -142,50 +57,41 @@ def readSelection(select=True,draw=True,multi=True):
             GD.message("Set selection to %s" % str(names))
             for n in names:
                 print "%s = %s" % (n,named(n))
-            setSelection(names)
+            selection.set(names)
             if draw:
-                drawSelection()
+                selection.draw()
     return fn
-
-
-
-
-
-
-
-def set_project(name):
-    PF['project'] = name
     
 
-def set_surface(nodes,elems,name='surface0'):
-    PF['surface'] = (nodes,elems)
-    PF['stl_model'] = None
-    GD.message("The model has %d nodes and %d elems" %
-            (nodes.shape[0],elems.shape[0]))
+def printSize(name):
+    for s in selection.names:
+        S = named(s)
+        GD.message("Surface %s has %d vertices, %s edges and %d faces" %
+                   (S.ncoords(),S.nedges(),S.nelems()))
 
 
-def check_surface():
-    if PF['surface'] is None:
-        GD.message("You need to load a Surface model first.")
-        clear()
-        read_surface()
-    return PF['surface'] is not None
+def toFormex(suffix=''):
+    """Transform the selection to Formices.
 
+    If a suffix is given, the Formices are stored with names equal to the
+    surface names plus the suffix, else, the surface names will be used
+    (and the surfaces will thus be cleared from memory).
+    """
+    if not selection.check():
+        selection.ask()
 
-def check_stl():
-    if PF['stl_model'] is None:
-        if check_surface():
-            nodes,elems = PF['surface']
-            PF['stl_model'] = Formex(nodes[elems])
-    return PF['stl_model'] is not None
+    if not selection.names:
+        return
 
+    newnames = selection.names
+    if suffix:
+        newnames = [ n + suffix for n in newnames ]
 
-def keep_surface(nodes,elems,ask=False):
-    """Replace the current model with a new one."""
-    if not ask or ack('Keep the trimmed model?'):
-        PF['old_surface'] = PF['surface']
-        PF['surface'] = (nodes,elems)
-        PF['stl_model'] = None
+    newvalues = [ named(n).toFormex() for n in selection.names ]
+    export2(newnames,newvalues)
+
+    if not suffix:
+        selection.clear()
 
 
 
@@ -262,23 +168,7 @@ def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert
             pass
         
     return fn
-
-    
-def name_surface():
-    """Save the current model (in memory!) under a name."""
-    pass
-    
-##def show_model():
-##    """Display the surface model."""
-##    if PF['stl_model'] is None:
-##        return
-##    F = PF['stl_model']
-##    GD.message("BBOX = %s" % F.bbox())
-##    clear()
-##    t = timer.Timer()
-##    draw(F,color=PF.get('stl_color','prop'))
-##    GD.message("Time to draw stl: %s seconds" % t.seconds())
-    
+   
 
 def show_surface(surface=None,color=None,clearing=True,view=None):
     """Display the surface model."""
@@ -299,7 +189,6 @@ def show_surface(surface=None,color=None,clearing=True,view=None):
     GD.canvas.setCamera(actor.bbox(),view)
     GD.canvas.update()
     GD.app.processEvents()
-    GD.message("Time to draw surface: %s seconds" % t.seconds())
         
 
 def show_shrinked():
@@ -332,29 +221,6 @@ def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
         GD.gui.setBusy()
         surface.writeSurface(fn,nodes,elems)   
         GD.gui.setBusy(False)
-
-
-
-def toFormex(name=''):
-    """Transform the surface model to a named Formex.
-
-    The name of the Formex is returned, unless the user cancelled the
-    operation.
-    """
-    if not check_surface():
-        return
-    
-    if not name:
-        itemlist = [ ['name', PF.get('project','')] ] 
-        res,accept = widgets.InputDialog(itemlist,'Name of the Formex').getResult()
-        if accept:
-            name = res[0][1]
-    if name:
-        GD.debug("Converting to Formex with name '%s" % name)
-        nodes,elems = PF['surface']
-        PF[name] = Formex(nodes[elems])
-
-    return name
 
 
 
@@ -643,10 +509,10 @@ def create_menu():
     """Create the Surface menu."""
     MenuData = [
         ("&Read Surface Files",readSelection),
-        ("&Select Surface(s)",makeSelection),
-        ("&Draw Selection",drawSelection),
-        ("&Forget Selection",forgetSelection),
-        ('&List Formices',printall),
+        ("&Select Surface(s)",selection.ask),
+        ("&Draw Selection",selection.draw),
+        ("&Forget Selection",selection.forget),
+        ('&List Selection',printSize),
         ("&Convert to Formex",toFormex),
         # ("&Show model",show_model),
         ("&Show surface",show_surface),

@@ -144,13 +144,14 @@ Once you have downloaded the \pyformex tarball, unpack it with
 \CodeLine{tar xvzf pyformex-version.tar.gz}
 Then go to the created pyformex directory:
 \CodeLine{cd pyformex-version}
-and do
-\CodeLine{make install}
-This will install \pyformex in \Code{/usr/local/lib/pyformex-version}.
-If you want to install somewhere else, you need to change the Makefile first.  
+and do (with root privileges) 
+\CodeLine{python setup.py install prefix=/usr/local}
+This will install \pyformex under \Code{/usr/local/}. You can change the prefix to install in some other place.
 
-The installation procedure installs everything into this single directory, but also makes a couple of symlinks:
-\Code{/usr/local/share/doc/pyformex-VERSION} is a link to the \Code{doc} subdirectory of pyformex, and \Code{/usr/local/bin/pyformex} is a link to the main executable \Code{pyformex.py}.
+The installation procedure installs everything into a single directory, and creates a symlink to the executable in \Code{/usr/local/bin}.
+You can use the command \Code{pyformex --whereami} to find out where \pyformex is installed. 
+
+Finally, a \pyformex installation can usually be removed by giving the command \Code{pyformex --remove} and answering 'yes' to the question.
 
 
 \subsection{Installation on Windows platforms}

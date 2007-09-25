@@ -255,12 +255,18 @@ class Selection(QtGui.QDialog):
 
                 
     def getResult(self):
+        """Return the list of selected values.
+
+        If the user cancels the selection operation, the return value is None.
+        Else, the result is always a list, possibly empty or with a single
+        value.
+        """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
             res = [ i.text() for i in self.listw.selectedItems() ]
             return map(str,res)
         else:
-            return []
+            return None
         
 
 # !! The QtGui.QColorDialog can not be instantiated or subclassed.

@@ -30,5 +30,8 @@ ${TGT}.ps: ${SRC}
 ${TGT}.pdf: ${SRC}
 	${MKHOWTO} --a4 --pdf --keep $<
 
+${TGT}.ind: ${SRC}
+	makeindex $<
+
 html/${TGT}.html: ${SRC}
 	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<

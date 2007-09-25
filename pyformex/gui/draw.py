@@ -42,6 +42,29 @@ def Globals():
     g.update(formex.__dict__) 
     g.update({'__name__':'draw'})
     return g
+
+
+## def listAll(clas=formex.Formex,dic=None):
+##     """Return a list of all objects in dic that are of given clas.
+
+##     If no class is given, Formex objects are sought.
+##     If no dict is given, the objects from both GD.PF and locals()
+##     are returned.
+##     """
+##     if dic is None:
+##         #return listAll(clas,GD.PF) + listAll(clas,locals())
+##         dic = Globals()
+
+##     k = dic.keys()
+##     k.sort()
+##     print k
+##     flist = []
+##     for n,t in dic.items():
+##         if isinstance(t,clas):
+##             # if hasattr(t,'__class__') and t.__class__.__name__ == 'Formex':
+##             flist.append(n)
+##     return flist
+
         
 #################### Interacting with the user ###############################
 
@@ -78,7 +101,7 @@ def ask(question,choices=None,default=None,timeout=None):
     else:
         items = [ [question, choices, 'combo', default] ]
 
-    print "INPUT TIMEOUT %s" % timeout
+    #print "INPUT TIMEOUT %s" % timeout
     res,accept = widgets.InputDialog(items,'Ask Question').getResult(timeout)
     GD.gui.update()
     if accept:
@@ -291,7 +314,7 @@ def playScript(scr,name=None):
     
     # Get the globals
     g = Globals()
-    #exportNames = []
+    exportNames = []
     GD.scriptName = name
     exitall = False
 
@@ -303,9 +326,9 @@ def playScript(scr,name=None):
                 step_script(scr,g,True)
             else:
                 exec scr in g
-            #if GD.cfg['autoglobals']:
-            #    exportNames.extend(listAll(g))
-            #globals().update([(k,g[k]) for k in exportNames])
+            if GD.cfg['autoglobals']:
+                exportNames.extend(listAll(dic=g))
+            GD.PF.update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
         except ExitAll:
@@ -363,26 +386,6 @@ def step_script(s,glob,paus=True):
             message(buf)
             exec(buf) in glob
     info("Finished stepping through script!")
-
-
-def forget(names):
-    g = globals()
-    for name in names:
-        if g.has_key(name):
-            del g[name]
-
-def named(name):
-    """Returns the global object named name."""
-    GD.debug("name %s" % name)
-    if globals().has_key(name):
-        GD.debug("Found %s in globals()" % name)
-        dict = globals()
-    elif GD.PF.has_key(name):
-        GD.debug("Found %s in GD.PF" % name)
-        dict = GD.PF
-    else:
-        raise NameError,"Name %s is neither in globals() nor GD.PF" % name
-    return dict[name]
 
 
 def play(fn=None,step=False):
@@ -912,17 +915,6 @@ def exit(all=False):
 
 ########################## print information ################################
     
-
-def listAll(dict=None,clas=formex.Formex):
-    """Return a list of all Formices in dict or by default in globals()"""
-    if dict is None:
-        dict = globals()
-        dict.update(GD.PF)
-    flist = []
-    for n,t in dict.items():
-        if isinstance(t,clas): # and t.__class__.__name__ == 'Formex':
-            flist.append(n)
-    return flist
 
 
 def formatInfo(F):

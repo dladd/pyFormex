@@ -54,8 +54,14 @@ def testview(F,V,P):
 
 def colorCut(F,P,N,prop):
     """Color a Formex in two by a plane (P,N)"""
+    print F.bbox()
+    print P
+    print N
+    print prop
     dist = F.distanceFromPlane(P,N)
+    print dist
     right = any(dist>0.0,axis=1)
+    print right
     F.p[right] = prop
     nright = right.sum()
     nleft = F.nelems() - nright
@@ -74,7 +80,7 @@ def splitProp(F,name):
         d = { name:F }
     else:
         d = dict([['%s-%s' % (name,p),F.withProp(p)] for p in F.propSet()])
-    Export(d)
+    export(d)
     return d
 
 
@@ -179,7 +185,7 @@ def savePartitions(F):
     
 
     d = splitProp(F,'part')
-    Export(d)
+    export(d)
 
     if ack("Save the partitions separately?"):
         for (k,v) in d.iteritems():

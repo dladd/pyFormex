@@ -14,8 +14,8 @@ include pyformex/examples/*
 include pyformex/examples/*/*
 include pyformex/icons/*.xpm
 include pyformex/doc/*
-include manual/manual.pdf
-#include manual/manual.ps
+include manual/pyformex.pdf
+#include manual/pyformex.ps
 include manual/html/*
 include manual/images/*.png
 include pyformex.desktop

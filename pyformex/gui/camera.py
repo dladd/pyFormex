@@ -227,17 +227,16 @@ class Camera:
         self.pan(val,1)
         self.viewChanged = True
 
-    def move(self,translation):
-        """Move the camera over translation vector in global coordinates.
+    def move(self,dx,dy,dz):
+        """Move the camera over translation (dx,dy,dz) in global coordinates.
 
-        translation is a list of 3 values.
         The center of the camera is moved over the specified translation
         vector. This has the effect of moving the scene in opposite direction.
         """
-        x,y,z = self.center
-        self.setCenter(x+translation[0],y+translation[1],z+translation[2])
+        x,y,z = self.ctr
+        self.setCenter(x+dx,y+dy,z+dz)
 
-##    def truck(self,translation):
+##    def truck(self,dx,dy,dz):
 ##        """Move the camera translation vector in local coordinates.
 
 ##        This has the effect of moving the scene in opposite direction.
@@ -248,11 +247,11 @@ class Camera:
 ##        """
 ##        #pos = self.getPosition()
 ##        ang = self.getAngles()
-##        tr = [translation]
+##        tr = [dx,dy,dz]
 ##        for i in [1,0,2]:
 ##            r = rotationMatrix(i,ang[i])
 ##            tr = multiply(tr, r)
-##        self.move(tr[0])
+##        self.move(*tr)
 ##        self.viewChanged = True
 
 
@@ -498,29 +497,29 @@ if __name__ == "__main__":
         elif key == 'T':
             cam.tilt(-5.)
         elif key == 'h':
-            cam.move([0.2,0.,0.])
+            cam.move(0.2,0.,0.)
         elif key == 'H':
-            cam.move([-0.2,0.,0.])
+            cam.move(-0.2,0.,0.)
         elif key == 'v':
-            cam.move([0.,0.2,0.])
+            cam.move(0.,0.2,0.)
         elif key == 'V':
-            cam.move([0.,-0.2,0.])
+            cam.move(0.,-0.2,0.)
         elif key == '+':
             cam.zoom(0.8)
         elif key == '-':
             cam.zoom(1.25)
-        elif key == 'x':
-            cam.truck([0.5,0.,0.])
-        elif key == 'X':
-            cam.truck([-0.5,0.,0.])
-        elif key == 'y':
-            cam.truck([0.,0.5,0.])
-        elif key == 'Y':
-            cam.truck([0.,-0.5,0.])
-        elif key == 'z':
-            cam.truck([0.,0.,0.5])
-        elif key == 'Z':
-            cam.truck([0.,0.,-0.5])
+##         elif key == 'x':
+##             cam.truck([0.5,0.,0.])
+##         elif key == 'X':
+##             cam.truck([-0.5,0.,0.])
+##         elif key == 'y':
+##             cam.truck([0.,0.5,0.])
+##         elif key == 'Y':
+##             cam.truck([0.,-0.5,0.])
+##         elif key == 'z':
+##             cam.truck([0.,0.,0.5])
+##         elif key == 'Z':
+##             cam.truck([0.,0.,-0.5])
         elif key == 'o':
             cam.setPerspective(not cam.perspective)
             cam.loadProjection

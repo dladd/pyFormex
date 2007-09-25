@@ -571,13 +571,15 @@ class Formex:
     #  Distance
 
     def distanceFromPlane(self,*args,**kargs):
-        self.f.distanceFromPlane(*args,**kargs)
+        return self.f.distanceFromPlane(*args,**kargs)
 
     def distanceFromLine(self,*args,**kargs):
-        self.f.distanceFromLine(*args,**kargs)
+        return self.f.distanceFromLine(*args,**kargs)
+
 
     def distanceFromPoint(self,*args,**kargs):
-        self.f.distanceFromPoint(*args,**kargs)
+        return self.f.distanceFromPoint(*args,**kargs)
+ 
 
     # Data conversion
     

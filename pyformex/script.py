@@ -36,6 +36,7 @@ class TimeOut(Exception):
     """Exception raised to timeout from a dialog widget."""
     pass    
 
+
 ############################# Globals for scripts ############################
 
 
@@ -46,9 +47,53 @@ def Globals():
     g.update({'__name__':'script'})
     return g
 
-def export(dict):
-    GD.PF.update(dict)
+
+def export(dic):
+    GD.PF.update(dic)
+
+
+def export2(names,values):
+    export(dict(zip(names,values)))
+
+
+def forget(names):
+    g = GD.PF
+    for name in names:
+        if g.has_key(name):
+            del g[name]
         
+
+def listAll(clas=formex.Formex,dic=None):
+    """Return a list of all objects in dic that are of given clas.
+
+    If no class is given, Formex objects are sought.
+    If no dict is given, the objects from both GD.PF and locals()
+    are returned.
+    """
+    if dic is None:
+        dic = Globals()
+
+    flist = []
+    for n,t in dic.items():
+        if isinstance(t,clas):
+            # if hasattr(t,'__class__') and t.__class__.__name__ == 'Formex':
+            flist.append(n)
+    return flist
+
+
+def named(name):
+    """Returns the global object named name."""
+    #GD.debug("name %s" % name)
+    if GD.PF.has_key(name):
+        GD.debug("Found %s in GD.PF" % name)
+        dic = GD.PF
+    elif globals().has_key(name):
+        GD.debug("Found %s in globals()" % name)
+        dic = globals()
+    else:
+        raise NameError,"Name %s is in neither GD.PF nor globals()" % name
+    return dic[name]
+
 
 #################### Interacting with the user ###############################
 
@@ -199,27 +244,6 @@ def play(fn,argv=[]):
     playScript(file(fn,'r'),fn,argv)
     message("Finished script %s" % fn)
     return argv
-
-
-def pause():
-    pass
-
-def step():
-    pass
-
-def fforward():
-    pass
-
-
-def listall():
-    """List all Formices in globals()"""
-    print "Formices currently in globals():"
-    for n,t in globals().items():
-        if isinstance(t,Formex):
-            print "%s, " % n
-
-def save(filename,fmt):
-    pass
 
 
 def exit(all=False):

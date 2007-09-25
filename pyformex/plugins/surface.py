@@ -211,7 +211,7 @@ class Surface(object):
         self.coords = self.edges = self.faces = None
         self.elems = None
         self.p = None
-        print len(args)
+        #print len(args)
         if len(args) == 0:
             return
         if len(args) == 1:
@@ -223,15 +223,15 @@ class Surface(object):
 
         else:
             a = Coords(args[0])
-            print a.shape
-            print a.dtype.kind
+            #print a.shape
+            #print a.dtype.kind
             if len(a.shape) != 2:
                 raise ValueError,"Expected a 2-dim coordinates array"
             self.coords = a
             
             a = asarray(args[1])
-            print a.shape
-            print a.dtype.kind
+            #print a.shape
+            #print a.dtype.kind
             if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 2):
                 raise "Got invalid second argument"
             if a.max() >= self.coords.shape[0]:
@@ -242,8 +242,8 @@ class Surface(object):
                 self.edges = a
 
                 a = asarray(args[2])
-                print a.shape
-                print a.dtype.kind
+                #print a.shape
+                #print a.dtype.kind
                 if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 3):
                     raise "Got invalid third argument"
                 if a.max() >= self.edges.shape[0]:
@@ -323,7 +323,12 @@ class Surface(object):
         else:
             raise "Unknown Surface type, cannot read file %s" % fn
 
-            
+
+    def toFormex(self):
+        """Convert the surface to a Formex."""
+        self.refresh()
+        return Formex(self.coords[self.elems])
+          
 
 def areaNormals(x):
     """Compute the area and normal vectors of the triangles in x[n,3,3].
@@ -367,25 +372,8 @@ def write_stla(f,x):
 
 def write_stlb(f,x):
     """Export an x[n,3,3] float array as an binary .stl file."""
-
-    own = type(f) == str
-    if own:
-        f = file(f,'w')
-    f.write("solid  Created by %s\n" % GD.Version)
-    a,n = areaNormals(x)
-    degen = degenerate(a,n)
-    print "The model contains %d degenerate triangles" % degen.shape[0]
-    for e,n in zip(x,v):
-        f.write("  facet normal %s %s %s\n" % tuple(n))
-        f.write("    outer loop\n")
-        for p in e:
-            f.write("      vertex %s %s %s\n" % tuple(p))
-        f.write("    endloop\n")
-        f.write("  endfacet\n")
-    f.write("endsolid\n")
-    if own:
-        f.close()
-
+    pass
+    
 
 def read_error(cnt,line):
     """Raise an error on reading the stl file."""

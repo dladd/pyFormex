@@ -70,7 +70,7 @@ manual:
 
 # Set a new version
 
-version: pyformex/globaldata.py manual/manual.tex setup.py
+version: pyformex/globaldata.py manual/pyformex.tex setup.py
 
 pyformex/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@

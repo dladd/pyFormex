@@ -20,17 +20,12 @@ from gui import actors
 from gui.draw import *
 from formex import *
 from plugins import surface,inertia,partition,sectionize
+from plugins.objects import *
 
 import commands, os, timer
 
-# The selection should only be set by setSelection()!!
-selection = []  # a list of names of the currently selected Formices
-oldvalues = []  # a list of Formex instances corresponding to the selection
-                # BEFORE the last transformation
-data = {} # a dict with global data
 
-
-# If True, this makes element numbers to be displayed by drawSelection
+# If True, this makes element numbers to be displayed by selection.draw()
 show_numbers = False
 shown_numbers = []  # The collection of numbers
 
@@ -57,7 +52,7 @@ def toggleNumbers(value=None):
 def showSelectionNumbers():
     """Draw the nubers for the current selection."""
     global shown_numbers
-    for F in checkSelection(warn=False):
+    for F in selection.check(warn=False):
         shown_numbers.append(drawNumbers(F))
 
 
@@ -68,113 +63,7 @@ def removeSelectionNumbers():
 
 ##################### select, read and write ##########################
 
-def setSelection(namelist):
-    """Set the selection to a list of names.
-
-    You should make sure this is a list of Formex names!
-    This will also set oldvalues to the corresponding Formices.
-    """
-    global selection,oldvalues
-    if type(namelist) == str:
-        namelist = [ namelist ]
-    selection = namelist
-    oldvalues = map(named,selection)
-
-
-def clearSelection():
-    """Clear the current selection."""
-    setSelection([])
-
-
-def changeSelection(newvalues):
-    """Replace the current values of selection by new ones."""
-    global oldvalues
-    oldvalues = map(named,selection)
-    export(dict(zip(selection,newvalues)))
-
-
-def checkSelection(single=False,warn=True):
-    """Check that we have a current selection.
-
-    Returns the list of Formices corresponding to the current selection.
-    If single==True, the selection should hold exactly one Formex name and
-    a single Formex instance is returned.
-    If there is no selection, or more than one in case of single==True,
-    an error message is displayed and an empty list is returned.
-    """
-    if not selection:
-        if warn:
-            warning("No Formex selected")
-        return []
-    if single and len(selection) > 1:
-        if warn:
-            warning("You should select exactly one Formex")
-        return []
-    if single:
-        return named(selection[0])
-    else:
-        return map(named,selection)
-    
-
-def askSelection(mode=None):
-    """Show the names of known formices and let the user select (one or more).
-
-    This just returns a list of selected Formex names.
-    It does not set the current selection. (see makeSelection)
-    """
-    return widgets.Selection(listAll(),'Known Formices',mode,sort=True,
-                            selected=selection).getResult()
-
-
-def makeSelection(mode='multi'):
-    """Interactively sets the current selection."""
-    setSelection(askSelection(mode))
-    drawSelection()
-
-
-def drawSelection(*args,**kargs):
-    """Draws the current selection.
-
-    Any arguments are passed to draw()"""
-    clear()
-    if selection:
-        draw(selection,*args,**kargs)
-        if show_numbers:
-            showSelectionNumbers()
-
-
-def forgetSelection():
-    if selection:
-        forget(selection)
-            
-
-#################### Read/Write Formex File ##################################
-
-
-def writeSelection():
-    """Writes the currently selected Formices to .formex files."""
-    if len(selection) == 1:
-        name = selection[0]
-        fn = askFilename(GD.cfg['workdir'],file="%s.formex" % name,
-                         filter=['(*.formex)','*'],exist=False)
-        if fn:
-            print "Writing Formex '%s' to file '%s'" % (name,fn)
-            print named(name).bbox()
-            chdir(fn)
-            named(name).write(fn)
-
-
-def writeSelectionSTL():
-    """Writes the currently selected Formices to .stl files."""
-    if len(selection) == 1:
-        name = selection[0]
-        fn = askFilename(GD.cfg['workdir'],file="%s.stl" % name,
-                         filter=['(*.stl)','*'],exist=False)
-        if fn:
-            print "Writing Formex '%s' to file '%s'" % (name,fn)
-            print named(name).bbox()
-            chdir(fn)
-            surface.write_stla(fn,named(name).f)
+selection = DrawableObjects(clas=Formex)
 
 
 def read_Formex(fn):
@@ -205,10 +94,43 @@ def readSelection(select=True,draw=True,multi=True):
         export(dict(zip(names,F)))
         if select:
             GD.message("Set selection to %s" % str(names))
-            setSelection(names)
+            selection.set(names)
             if draw:
-                drawSelection()
+                selection.draw()
     return fn
+    
+
+def printSize():
+    for s in selection.names:
+        S = named(s)
+        GD.message("Formex %s has shape %s" % (s,S.shape()))
+
+
+def writeSelection():
+    """Writes the currently selected Formex to .formex file."""
+    F = selection.check(single=True)
+    if F:
+        name = selection.names[0]
+        fn = askFilename(GD.cfg['workdir'],file="%s.formex" % name,
+                         filter=['(*.formex)','*'],exist=False)
+        if fn:
+            GD.message("Writing Formex '%s' to file '%s'" % (name,fn))
+            chdir(fn)
+            F.write(fn)
+
+
+## def writeSelectionSTL():
+##     """Writes the currently selected Formices to .stl files."""
+##     F = selection.check(single=True)
+##     if F:
+##         name = selection.names[0]
+##         fn = askFilename(GD.cfg['workdir'],file="%s.stl" % name,
+##                          filter=['(*.stl)','*'],exist=False)
+##         if fn:
+##             print "Writing Formex '%s' to file '%s'" % (name,fn)
+##             print named(name).bbox()
+##             chdir(fn)
+##             surface.write_stla(fn,named(name).f)
 
 
 
@@ -219,7 +141,7 @@ def setProperty():
 
     If the user gives a negative value, the property is removed.
     """
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['property',0]],
                        caption = 'Set Property Number of Selection (negative value to remove)')
@@ -229,7 +151,7 @@ def setProperty():
                 p = None
             for F in FL:
                 F.setProp(p)
-            drawSelection()
+            selection.draw()
 
 
 #################### BBox ####################################
@@ -238,14 +160,14 @@ bboxA = None
 
 def printBbox():
     """Print the bbox of the current selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         GD.message("Bbox of selection: %s" % bbox(FL))
 
 def showBbox():
     """Draw the bbox of the current selection."""
     global bboxA
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         GD.message("Bbox of selection: %s" % bbox(FL))
         bboxA = actors.BboxActor(bbox(FL))
@@ -267,7 +189,7 @@ bboxB = None
 def showBboxB():
     """Draw the bbox on the current selection."""
     global bboxB
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         bb = bbox(FL)
         GD.message("Bbox of selection: %s" % bb)
@@ -299,8 +221,7 @@ def unitAxes():
 
 def showPrincipal():
     """Show the principal axes."""
-    global data
-    F = checkSelection(single=True)
+    F = selection.check(single=True)
     if not F:
         return
     # compute the axes
@@ -310,114 +231,95 @@ def showPrincipal():
     Iprin,Iaxes = inertia.principal(I)
     GD.message("Principal Values: %s" % Iprin)
     GD.message("Principal Directions: %s" % Iaxes)
-    data['principal'] = (C,I,Iprin,Iaxes)
+    data = (C,I,Iprin,Iaxes)
     # now display the axes
-    siz = F.size()
+    siz = F.diagonal()
     H = unitAxes().scale(1.1*siz).affine(Iaxes.transpose(),C)
     A = 0.1*siz * Iaxes.transpose()
     G = Formex([[C,C+Ax] for Ax in A],3)
     draw([G,H])
-    export({'principalAxes':H})
-    return data['principal']
+    export({'principalAxes':H,'_principal_data_':data})
+    return data
 
 
 def rotatePrincipal():
     """Rotate the selection according to the last shown principal axes."""
-    global data
-    if not data.has_key('principal'):
-        showPrincipal() 
-    FL = checkSelection()
+    try:
+        data = named('_principal_data_')
+    except:
+        data = showPrincipal() 
+    FL = selection.check()
     if FL:
-        ctr = data['principal'][0]
-        rot = data['principal'][3]
-        changeSelection([ F.trl(-ctr).rot(rot).trl(ctr) for F in FL ])
-        drawChanges()
+        ctr = data[0]
+        rot = data[3]
+        selection.changeValues([ F.trl(-ctr).rot(rot).trl(ctr) for F in FL ])
+        selection.drawChanges()
 
 
 
 ################### Perform operations on Formex #######################
-
-def drawChanges():
-    """Draws old and new version of a Formex with differrent colors.
-
-    old and new can be a either Formex instances or names or lists thereof.
-    old are drawn in yellow, new in the current color.
-    """
-    clear()
-    drawSelection(wait=False)
-    draw(oldvalues,color='yellow',bbox=None,alpha=0.5)
-
-
-def undoChanges():
-    """Undo the changes of the last transformation.
-
-    The current versions of the selection are set back to the values prior
-    to the last transformation.
-    """
-    changeSelection(oldvalues)
-    drawSelection()
     
 
 def scaleSelection():
     """Scale the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['scale',1.0]],
                        caption = 'Scale Factor')
         if res:
             scale = float(res['scale'])
-            changeSelection([ F.scale(scale) for F in FL ])
-            drawChanges()
+            selection.changeValues([ F.scale(scale) for F in FL ])
+            selection.drawChanges()
 
             
 def scale3Selection():
     """Scale the selection with 3 scale values."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['x-scale',1.0],['y-scale',1.0],['z-scale',1.0]],
                        caption = 'Scaling Factors')
         if res:
             scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
-            changeSelection([ F.scale(scale) for F in FL ])
-            drawChanges()
+            selection.changeValues([ F.scale(scale) for F in FL ])
+            selection.drawChanges()
 
 
 def translateSelection():
     """Translate the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['direction',0],['distance','1.0']],
                        caption = 'Translation Parameters')
         if res:
             dir = int(res['direction'])
             dist = float(res['distance'])
-            changeSelection([ F.translate(dir,dist) for F in FL ])
-            drawChanges()
+            selection.changeValues([ F.translate(dir,dist) for F in FL ])
+            selection.drawChanges()
 
 
 def centerSelection():
     """Center the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
-        changeSelection([ F.translate(-F.center()) for F in FL ])
-        drawChanges()
+        selection.changeValues([ F.translate(-F.center()) for F in FL ])
+        selection.drawChanges()
 
 
 def rotateSelection():
     """Rotate the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['axis',2],['angle','90.0']])
         if res:
             axis = int(res['axis'])
             angle = float(res['angle'])
-            changeSelection([ F.rotate(angle,axis) for F in FL ])
-            drawChanges()
+            selection.changeValues([ F.rotate(angle,axis) for F in FL ])
+            selection.drawChanges()
 
 
 def rotateAround():
     """Rotate the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['axis',2],['angle','90.0'],['around','[0.0,0.0,0.0]']])
         if res:
@@ -425,20 +327,20 @@ def rotateAround():
             angle = float(res['angle'])
             around = eval(res['around'])
             GD.debug('around = %s'%around)
-            changeSelection([ F.rotate(angle,axis,around) for F in FL ])
-            drawChanges()
+            selection.changeValues([ F.rotate(angle,axis,around) for F in FL ])
+            selection.drawChanges()
 
 def rollAxes():
     """Rotate the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
-        changeSelection([ F.rollaxes() for F in FL ])
-        drawChanges()
+        selection.changeValues([ F.rollaxes() for F in FL ])
+        selection.drawChanges()
             
         
 def clipSelection():
     """Clip the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         res = askItems([['axis',0],['begin',0.0],['end',1.0]],caption='Clipping Parameters')
         if res:
@@ -449,13 +351,13 @@ def clipSelection():
             dx = xma-xmi
             xc1 = xmi + float(res['begin']) * dx
             xc2 = xmi + float(res['end']) * dx
-            changeSelection([ F.clip(F.test(dir=axis,min=xc1,max=xc2)) for F in FL ])
-            drawChanges()
+            selection.changeValues([ F.clip(F.test(dir=axis,min=xc1,max=xc2)) for F in FL ])
+            selection.drawChanges()
         
 
 def cutAtPlane():
      """Cut the selection with a plane."""
-     FL = checkSelection()
+     FL = selection.check()
      FLnot = [ F for F in FL if F.nplex() > 3 ]
      if FLnot:
          warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
@@ -469,13 +371,13 @@ def cutAtPlane():
          P = res['Point']
          N = res['Normal']
          p = res['New props']
-         changeSelection([ F.cutAtPlane(P,N,p) for F in FL ])
-         drawChanges()
+         selection.changeValues([ F.cutAtPlane(P,N,p) for F in FL ])
+         selection.drawChanges()
 
 
 def concatenateSelection():
     """Concatenate the selection."""
-    FL = checkSelection()
+    FL = selection.check()
     if FL:
         plexitude = array([ F.nplex() for F in FL ])
         if plexitude.min() == plexitude.max():
@@ -484,14 +386,14 @@ def concatenateSelection():
                 name = res['name']
                 export({name:Formex.concatenate(FL)})
                 setSelection([name])
-                drawSelection()
+                selection.draw()
         else:
             warning('You can only concatenate Formices with the same plexitude!')
     
 
 def partitionSelection():
     """Partition the selection."""
-    F = checkSelection(single=True)
+    F = selection.check(single=True)
     if not F:
         return
 
@@ -511,7 +413,7 @@ def partitionSelection():
 
 def createParts():
     """Create parts of the current selection, based on property values."""
-    F = checkSelection(single=True)
+    F = selection.check(single=True)
     if not F:
         return
 
@@ -521,7 +423,7 @@ def createParts():
 
 def sectionizeSelection():
     """Sectionize the selection."""
-    F = checkSelection(single=True)
+    F = selection.check(single=True)
     if not F:
         return
 
@@ -558,7 +460,7 @@ def sectionizeSelection():
 ##        if ack('Fly through in smooth mode ?'):
 ##            smooth()
 ##            flytruCircles(ctr)
-    drawSelection()
+    selection.draw()
 
 
 def flyThru():
@@ -578,19 +480,19 @@ _menu = None  # protect against duplicate creation
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
-#        ("&List Formices",formex_list),
         ("&Read Formex Files",readSelection),
-        ("&Select",makeSelection),
-        ("&Draw Selection",drawSelection),
-        ("&Forget ",forgetSelection),
-        ('&List Formices',printall),
-#        ("&Draw Changes",drawChanges),
+        ("&Select",selection.ask),
+        ("&Draw Selection",selection.draw),
+        ("&Forget Selection",selection.forget),
+        ('&List Selection',printSize),
+#        ('&List Formices',printall),
+#        ("&Draw Changes",selection.drawChanges),
         ("&Save Selection as Formex",writeSelection),
-        ("&Save Selection as STL File",writeSelectionSTL),
+#        ("&Save Selection as STL File",writeSelectionSTL),
         ("---",None),
         ("&Set Property",setProperty),
         ("&Toggle Numbers",toggleNumbers),
-        ("&Undo Last Changes",undoChanges),
+        ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
         ("&Bbox",
          [('&Show Bbox',showBbox),
