@@ -161,51 +161,13 @@ def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert
             name = toFormex(PF.get('project',''))
             # This is convenient for the user
             if name:
-                formex_menu.setSelection(name)
+                formex_menu.selection.set(name)
                 if show:
                     formex_menu.drawSelection()
         else:
             pass
         
     return fn
-   
-
-def show_surface(surface=None,color=None,clearing=True,view=None):
-    """Display the surface model."""
-    if surface is None:
-        if check_surface():
-            surface = PF['surface']
-    if surface is None:
-        return
-    nodes,elems = surface
-    if clearing:
-        clear()
-    t = timer.Timer()
-    if color is None:
-        color = PF['stl_color']
-    actor = actors.SurfaceActor(nodes,elems,color=color)
-    GD.message("BBOX = %s" % actor.bbox())
-    GD.canvas.addActor(actor)
-    GD.canvas.setCamera(actor.bbox(),view)
-    GD.canvas.update()
-    GD.app.processEvents()
-        
-
-def show_shrinked():
-    """Display the surface model in shrinked mode.
-
-    This is based on the stl model.
-    """
-    if check_stl():
-        F = PF['stl_model']
-        GD.message("BBOX = %s" % F.bbox())
-        clear()
-        draw(F.shrink(0.8),color=PF['stl_color'])
-
-
-def show_changes(old_surface,new_surface,ask=True):
-    show_surface(surface=old_surface,color=colors.yellow)
-    show_surface(surface=new_surface,color=colors.red,clearing=False)
 
 
 def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):

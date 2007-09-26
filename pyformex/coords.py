@@ -874,7 +874,7 @@ class Coords(ndarray):
         2 becomes 0.
         """
         return roll(self, int(n) % 3,axis=-1)
-    
+
 
     def projectOnSphere(self,radius,center=[0.,0.,0.]):
         """Project Coords on a sphere."""

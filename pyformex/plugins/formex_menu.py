@@ -25,42 +25,6 @@ from plugins.objects import *
 import commands, os, timer
 
 
-# If True, this makes element numbers to be displayed by selection.draw()
-show_numbers = False
-shown_numbers = []  # The collection of numbers
-
-
-def toggleNumbers(value=None):
-    """Toggle the display of number On or Off.
-
-    If given, value is True or False. 
-    If no value is given, this works as a toggle. 
-    """
-    global show_numbers
-    if value is None:
-        show_numbers = not show_numbers
-    elif value:
-        show_numbers = True
-    else:
-        show_numbers = False
-    if show_numbers:
-        showSelectionNumbers()
-    else:
-        removeSelectionNumbers()
-
-
-def showSelectionNumbers():
-    """Draw the nubers for the current selection."""
-    global shown_numbers
-    for F in selection.check(warn=False):
-        shown_numbers.append(drawNumbers(F))
-
-
-def removeSelectionNumbers():
-    """Remove (all) the element numbers."""
-    map(undraw,shown_numbers)
-
-
 ##################### select, read and write ##########################
 
 selection = DrawableObjects(clas=Formex)
@@ -152,6 +116,54 @@ def setProperty():
             for F in FL:
                 F.setProp(p)
             selection.draw()
+
+
+def shrink():
+    """Toggle the shrink mode"""
+    if selection.shrink is None:
+        selection.shrink = 0.8
+    else:
+        selection.shrink = None
+    selection.draw()
+
+
+# If True, this makes element numbers to be displayed by selection.draw()
+show_numbers = False
+shown_numbers = []  # The collection of numbers
+
+def toggleNames(onoff=None):
+    pass
+
+def toggleNumbers(onoff=None):
+    """Toggle the display of number On or Off.
+
+    If given, onoff is True or False. 
+    If no onoff is given, this works as a toggle. 
+    """
+    global show_numbers
+    if onoff is None:
+        show_numbers = not show_numbers
+    elif onoff:
+        show_numbers = True
+    else:
+        show_numbers = False
+    if show_numbers:
+        showSelectionNumbers()
+    else:
+        removeSelectionNumbers()
+
+
+def showSelectionNumbers():
+    """Draw the nubers for the current selection."""
+    global shown_numbers
+    for F in selection.check(warn=False):
+        shown_numbers.append(drawNumbers(F))
+
+
+def removeSelectionNumbers():
+    """Remove (all) the element numbers."""
+    map(undraw,shown_numbers)
+    
 
 
 #################### BBox ####################################
@@ -330,11 +342,12 @@ def rotateAround():
             selection.changeValues([ F.rotate(angle,axis,around) for F in FL ])
             selection.drawChanges()
 
+
 def rollAxes():
     """Rotate the selection."""
     FL = selection.check()
     if FL:
-        selection.changeValues([ F.rollaxes() for F in FL ])
+        selection.changeValues([ F.rollAxes() for F in FL ])
         selection.drawChanges()
             
         
@@ -342,7 +355,7 @@ def clipSelection():
     """Clip the selection."""
     FL = selection.check()
     if FL:
-        res = askItems([['axis',0],['begin',0.0],['end',1.0]],caption='Clipping Parameters')
+        res = askItems([['axis',0],['begin',0.0],['end',1.0],['nodes','all','select',['all','any','none']]],caption='Clipping Parameters')
         if res:
             bb = bbox(FL)
             axis = int(res['axis'])
@@ -351,7 +364,7 @@ def clipSelection():
             dx = xma-xmi
             xc1 = xmi + float(res['begin']) * dx
             xc2 = xmi + float(res['end']) * dx
-            selection.changeValues([ F.clip(F.test(dir=axis,min=xc1,max=xc2)) for F in FL ])
+            selection.changeValues([ F.clip(F.test(nodes=res['nodes'],dir=axis,min=xc1,max=xc2)) for F in FL ])
             selection.drawChanges()
         
 
@@ -385,7 +398,7 @@ def concatenateSelection():
             if res:
                 name = res['name']
                 export({name:Formex.concatenate(FL)})
-                setSelection([name])
+                selection.set(name)
                 selection.draw()
         else:
             warning('You can only concatenate Formices with the same plexitude!')
@@ -491,6 +504,8 @@ def create_menu():
 #        ("&Save Selection as STL File",writeSelectionSTL),
         ("---",None),
         ("&Set Property",setProperty),
+        ("&Shrink",shrink),
+        ("&Toggle Names",toggleNames),
         ("&Toggle Numbers",toggleNumbers),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),

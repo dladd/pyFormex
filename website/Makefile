@@ -3,8 +3,8 @@
 
 HTDOCS= pyformex.html examples.html surface.html *.png *.gif *.jpg favicon.ico
 DOCDOCS= doc/*.html
-MANDOCS= manual/*.html manual/*.png manual/*.png
-IMAGES= images/*.png
+MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
+IMAGES= ../manual/images/*.png
 RSYNC= rsync -uv -e ssh
 
 tar: web.tar.gz

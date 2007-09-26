@@ -518,7 +518,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5):
+def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5,shrink=None):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -570,7 +570,7 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         for Fi in F:
             if Fi == F[-1]:
                 nowait = wait
-            actor.append(draw(Fi,view,bbox,color,colormap,nowait,clear,eltype,allviews,marksize,linewidth,alpha))
+            actor.append(draw(Fi,view,bbox,color,colormap,nowait,clear,eltype,allviews,marksize,linewidth,alpha,shrink))
             if Fi == F[0]:
                 clear = False
                 view = None
@@ -611,6 +611,9 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
+    if shrink is not None:
+        GD.debug("DRAWING WITH SHRINK = %s" % shrink)
+        F = _shrink(F,shrink)
     try:
         if isinstance(F,formex.Formex):
             actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha)
@@ -638,6 +641,17 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
     finally:
         GD.gui.setBusy(False)
     return actor
+
+
+def _shrink(F,factor):
+    """Return a shrinked object.
+
+    A shrinked object is one where each element is shrinked with a factor
+    around its own center.
+    """
+    if isinstance(F,surface.Surface):
+        F = F.toFormex()
+    return F.shrink(factor)
 
 
 def drawNumbers(F,color=colors.black):

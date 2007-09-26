@@ -147,11 +147,13 @@ class DrawableObjects(Objects):
         self.show_vert_numbers = False
         self.show_edge_numbers = False
         self.show_elem_numbers = False
+        self.shrink = None
 
 
     def draw(self,*args,**kargs):
         clear()
-        draw(self.names,clear=False,*args,**kargs)
+        print "DRAWING WITH SHRINK = %s" % self.shrink
+        draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         #if show_numbers:
         #    showNumbers()
 
@@ -170,7 +172,7 @@ class DrawableObjects(Objects):
         old are drawn in yellow, new in the current color.
         """
         self.draw(wait=False)
-        draw(self.values,color='yellow',bbox=None,alpha=0.5)
+        draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
  
 
     def undoChanges(self):

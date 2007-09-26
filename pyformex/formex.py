@@ -1095,67 +1095,74 @@ class Formex:
     @coordsmethod
     def scale(self,*args,**kargs):
         pass
-
     @coordsmethod
     def translate(self,*args,**kargs):
         pass
-
     @coordsmethod
     def rotate(self,*args,**kargs):
         pass
-
     @coordsmethod
     def shear(self,*args,**kargs):
         pass
-
     @coordsmethod
     def reflect(self,*args,**kargs):
         pass
-
     @coordsmethod
     def affine(self,*args,**kargs):
         pass
+    @coordsmethod
 
     def cylindrical(self,*args,**kargs):
-        return Formex(self.f.cylindrical(*args,**kargs),self.p)
-
+        pass
+    @coordsmethod
     def toCylindrical(self,*args,**kargs):
-        return Formex(self.f.toCylindrical(*args,**kargs),self.p)
-    
+        pass
+    @coordsmethod
     def spherical(self,*args,**kargs):
-        return Formex(self.f.spherical(*args,**kargs),self.p)
-    
+        pass
+    @coordsmethod
     def cospherical(self,*args,**kargs):
-        return Formex(self.f.cospherical(*args,**kargs),self.p)
-
+        pass
+    @coordsmethod
     def toSpherical(self,*args,**kargs):
-        return Formex(self.f.toSpherical(*args,**kargs),self.p)
+        pass
+    @coordsmethod
 
     def bump(self,*args,**kargs):
-        return Formex(self.f.bump(*args,**kargs),self.p)
+        pass
+    @coordsmethod
     def bump1(self,*args,**kargs):
-        return Formex(self.f.bump1(*args,**kargs),self.p)
+        pass
+    @coordsmethod
     def bump2(self,*args,**kargs):
-        return Formex(self.f.bump2(*args,**kargs),self.p)
+        pass
+    @coordsmethod
 
     def map(self,*args,**kargs):
-        return Formex(self.f.map(*args,**kargs),self.p)
+        pass
+    @coordsmethod
     def map1(self,*args,**kargs):
-        return Formex(self.f.map1(*args,**kargs),self.p)
+        pass
+    @coordsmethod
     def mapd(self,*args,**kargs):
-        return Formex(self.f.mapd(*args,**kargs),self.p)
+        pass
+    @coordsmethod
     def newmap(self,*args,**kargs):
-        return Formex(self.f.newmap(*args,**kargs),self.p)
+        pass
 
+    @coordsmethod
     def replace(self,*args,**kargs):
-        return Formex(self.f.replace(*args,**kargs),self.p)
-    def swapaxes(self,*args,**kargs):
-        return Formex(self.f.swapaxes(*args,**kargs),self.p)
-    def rollaxes(self,*args,**kargs):
-        return Formex(self.f.rollaxes(*args,**kargs),self.p)
+        pass
+    @coordsmethod
+    def swapAxes(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def rollAxes(self,*args,**kargs):
+        pass
 
+    @coordsmethod
     def projectOnSphere(self,*args,**kargs):
-        return Formex(self.f.projectOnSphere(*args,**kargs),self.p)
+        pass
 
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
