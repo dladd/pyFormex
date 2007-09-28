@@ -777,6 +777,7 @@ class BaseMenu(object):
             if before:
                 before = parent.itemAction(before)
             parent.insert_menu(self,before)
+            parent.menuitems.append((normalize(title),self))
         self.menuitems = []
         if items:
             self.insertItems(items)
@@ -915,6 +916,9 @@ class Menu(BaseMenu,QtGui.QMenu):
         self.done=True
         if self.parent:
             self.parent.removeAction(self.menuAction())
+            for i,item in enumerate(self.parent.menuitems):
+                if item[1] == self:
+                    del self.parent.menuitems[i]
 
 
 class MenuBar(BaseMenu,QtGui.QMenuBar):

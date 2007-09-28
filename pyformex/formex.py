@@ -1382,10 +1382,6 @@ class Formex:
     def nodesAndElements(self):
         pass
 
-    @deprecated(translate)
-    def translate1(self,dir,distance):
-        pass
-
     @deprecated(setProp)
     def removeProp(self):
         pass
@@ -1738,7 +1734,6 @@ if __name__ == "__main__":
         F.fprint("%10.3f %10.4f %10.5f")
         F.fprint(fmt="%10.4f %10.5f %10.6f")
         print type(F)
-        #F = F.translate1(1,1)
 
     f = 0
     (f,t) = _test()

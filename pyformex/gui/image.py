@@ -11,6 +11,8 @@
 ##
 """Functions for saving renderings to image files."""
 
+__all__ = [ 'saveImage', 'saveNext' ]
+
 import globaldata as GD
 
 from OpenGL import GL

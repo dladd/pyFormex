@@ -545,10 +545,17 @@ See Help->License or the file COPYING for details.
     # Cleanup
     draw.drawrelease()
 
-    # store the main window size/pos
+    # store the history and main window size/pos
     GD.cfg['history'] = GD.gui.history.files
+
+    # Sometimes, a negative value is stored, making restart partially obscured
+    x,y = Pos(GD.gui)
+    if x < 0:
+        x = 0
+    if y < 0:
+        y = 0
     GD.cfg.update({'size':Size(GD.gui),
-                   'pos':Pos(GD.gui),
+                   'pos':(x,y),
                    'bdsize':Size(GD.gui.board),
                    },name='gui')
     return 0

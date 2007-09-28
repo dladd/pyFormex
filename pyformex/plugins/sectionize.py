@@ -73,11 +73,12 @@ def createSegments(F,ns=None,th=None):
     bb = F.bbox()
     GD.message("Bounding box = %s" % bb)
     if ns is None or th is None:
-        itemlist = [['number of sections',20],['relative thickness',0.1]]
-        res,accept = widgets.InputDialog(itemlist,'Sectioning Parameters').getResult()
-        if accept:
-            ns = int(res[0][1])
-            th = float(res[1][1])
+        res = askItems([['number of sections',20],
+                        ['relative thickness',0.1]],
+                       'Sectioning Parameters')
+        if res:
+            ns = int(res['number of sections'])
+            th = float(res['relative thickness'])
     if type(ns) == int and type(th) == float:
         xmin,ymin,zmin = bb[0]
         xmax,ymax,zmax = bb[1]

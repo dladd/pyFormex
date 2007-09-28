@@ -1120,15 +1120,6 @@ if __name__ == "__main__":
 
         F.fprint()
 
-        F = Formex([[[0,0],[1,0],[0,1]],[[1,0],[1,1],[0,1]]])
-        print F
-        print F.reverseElements()
-        Formex.setPrintFunction(Formex.asArray)
-        print F
-        F.fprint()
-        print type(F)
-        #F = F.translate1(1,1)
-
 if __name__ == "__main__":
     def test():
         """Run some additional examples.

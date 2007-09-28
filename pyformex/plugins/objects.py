@@ -37,6 +37,8 @@ class Objects(object):
             self.dic = dic
         self.clas = clas
         self.filter = filter
+        self.names = []
+        self.values = []
         self.clear()
         if namelist:
             self.set(namelist)
@@ -77,12 +79,20 @@ class Objects(object):
         self.set(self.listAll(self.clas))
 
 
+    def remember(self):
+        self.values = map(named,self.names)
+        print self.values
+        
+
     def changeValues(self,newvalues):
         """Replace the current values of selection by new ones.
 
         The old values are stored locally, to enable undo operations.
+
+        This is only needed to change the values of objects that can not
+        be changed inplace!
         """
-        self.values = map(named,self.names)
+        self.remember()
         export2(self.names,newvalues)
 
 
@@ -134,7 +144,6 @@ class Objects(object):
         """Remove the selection from the globals."""
         forget(self.names)
         self.clear()
-
 
 
 class DrawableObjects(Objects):

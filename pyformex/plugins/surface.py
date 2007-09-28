@@ -20,6 +20,7 @@ import globaldata as GD
 from plugins import tetgen
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
+import tempfile
 
 hasExternal('admesh')
 hasExternal('tetgen')
@@ -186,6 +187,72 @@ def read_gambit_neutral(fn):
     return nodes, elems-1
 
 
+# Input of surface file formats
+
+def write_gts(fn,nodes,edges,faces):
+    if nodes.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
+        raise runtimeError, "Invalid arguments or shape"
+    fil = file(fn,'w')
+    fil.write("%d %d %d\n" % (nodes.shape[0],edges.shape[0],faces.shape[0]))
+    for nod in nodes:
+        fil.write("%s %s %s\n" % tuple(nod))
+    for edg in edges+1:
+        fil.write("%d %d\n" % tuple(edg))
+    for fac in faces+1:
+        fil.write("%d %d %d\n" % tuple(fac))
+    fil.write("#GTS file written by %s\n" % GD.Version)
+    fil.close()
+
+
+def write_stla(f,x):
+    """Export an x[n,3,3] float array as an ascii .stl file."""
+
+    own = type(f) == str
+    if own:
+        f = file(f,'w')
+    f.write("solid  Created by %s\n" % GD.Version)
+    area,norm = areaNormals(x)
+    degen = degenerate(area,norm)
+    print "The model contains %d degenerate triangles" % degen.shape[0]
+    for e,n in zip(x,norm):
+        f.write("  facet normal %s %s %s\n" % tuple(n))
+        f.write("    outer loop\n")
+        for p in e:
+            f.write("      vertex %s %s %s\n" % tuple(p))
+        f.write("    endloop\n")
+        f.write("  endfacet\n")
+    f.write("endsolid\n")
+    if own:
+        f.close()
+
+
+def write_stlb(f,x):
+    """Export an x[n,3,3] float array as an binary .stl file."""
+    pass
+
+
+def write_gambit_neutral(fn,nodes,elems):
+    print "Cannot write file %s" % fn
+    pass
+
+
+def write_off(fn,nodes,elems):
+    if nodes.shape[1] != 3 or elems.shape[1] < 3:
+        raise runtimeError, "Invalid arguments or shape"
+    fil = file(fn,'w')
+    fil.write("OFF\n")
+    fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
+    for nod in nodes:
+        fil.write("%s %s %s\n" % tuple(nod))
+    format = "%d %%d %%d %%d\n" % elems.shape[1]
+    for el in elems:
+        fil.write(format % tuple(el))
+    fil.close()
+
+
+def write_smesh(fn,nodes,elems):
+    tetgen.writeSurface(fn,nodes,elems)
+
 ############################################################################
 # The Surface class
 
@@ -287,6 +354,9 @@ class Surface(object):
 
     nelems = nfaces
 
+    def size(self):
+        return self.ncoords(),self.nedges(),self.nfaces()
+
     def bbox(self):
         return self.coords.bbox()
 
@@ -324,11 +394,85 @@ class Surface(object):
             raise "Unknown Surface type, cannot read file %s" % fn
 
 
+    def write(self,fname,ftype=None):
+        """Write the surface to file.
+
+        If no filetype is given, it is deduced from the filename extension.
+        If the filename has no extension, the 'gts' file type is used.
+        """
+        if ftype is None:
+            ftype = os.path.splitext(fn)[1]
+        if ftype == '':
+            ftype = 'gts'
+        else:
+            ftype = ftype.strip('.').lower()
+
+        GD.message("Writing surface to file %s" % fname)
+        if ftype == 'gts':
+            write_gts(fname,self.coords,self.edges,self.faces)
+            GD.message("Wrote %s vertices, %s edges, %s faces" % self.size())
+        elif ftype in ['stl','off','neu','smesh']:
+            self.refresh()
+            if ftype == 'stl':
+                write_stla(fname,self.coords[self.elems])
+            elif ftype == 'off':
+                write_off(fname,self.coords,self.elems)
+            elif ftype == 'neu':
+                write_gambit_neutral(fname,self.coords,self.elems)
+            elif ftype == 'smesh':
+                write_smesh(fname,self.coords,self.elems)
+            GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nfaces()))
+        else:
+            print "Cannot save Surface as file %s" % fname
+
+
     def toFormex(self):
         """Convert the surface to a Formex."""
         self.refresh()
         return Formex(self.coords[self.elems])
-          
+
+
+    def scale(self,*args,**kargs):
+        self.coords = self.coords.scale(*args,**kargs)
+        
+
+    def coarsen(self,min_edges=None,max_cost=None,
+                mid_vertex=False, length_cost=False, max_fold = 1.0,
+                volume_weight=0.5, boundary_weight=0.5, shape_weight=0.0,
+                progressive=False, log=False, verbose=False):
+        """Coarsen the surface using gtscoarsen."""
+        if min_edges is None and max_cost is None:
+            min_edges = self.nedges() / 2
+        cmd = 'gtscoarsen'
+        if min_edges:
+            cmd += ' -n %d' % min_edges
+        if max_cost:
+            cmd += ' -c %d' % max_cost
+        if mid_vertex:
+            cmd += ' -m'
+        if length_cost:
+            cmd += ' -l'
+        if max_fold:
+            cmd += ' -f %f' % max_fold
+        cmd += ' -w %f' % volume_weight
+        cmd += ' -b %f' % boundary_weight
+        cmd += ' -s %f' % shape_weight
+        if progressive:
+            cmd += ' -p'
+        if log:
+            cmd += ' -l'
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        tmp1 = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Coarsening with command\n %s" % cmd)
+        cmd += ' < %s > %s' % (tmp,tmp1)
+        runCommand(cmd)
+        GD.message("Reading coarsened model from %s" % tmp1)
+        self.__init__(*read_gts(tmp1))        
+
 
 def areaNormals(x):
     """Compute the area and normal vectors of the triangles in x[n,3,3].
@@ -347,32 +491,6 @@ def degenerate(area,norm):
     normal has a nan.
     """
     return unique(concatenate([where(area<=0)[0],where(isnan(norm))[0]]))
-
-
-def write_stla(f,x):
-    """Export an x[n,3,3] float array as an ascii .stl file."""
-
-    own = type(f) == str
-    if own:
-        f = file(f,'w')
-    f.write("solid  Created by %s\n" % GD.Version)
-    area,norm = areaNormals(x)
-    degen = degenerate(area,norm)
-    print "The model contains %d degenerate triangles" % degen.shape[0]
-    for e,n in zip(x,norm):
-        f.write("  facet normal %s %s %s\n" % tuple(n))
-        f.write("    outer loop\n")
-        for p in e:
-            f.write("      vertex %s %s %s\n" % tuple(p))
-        f.write("    endloop\n")
-        f.write("  endfacet\n")
-    f.write("endsolid\n")
-    if own:
-        f.close()
-
-def write_stlb(f,x):
-    """Export an x[n,3,3] float array as an binary .stl file."""
-    pass
     
 
 def read_error(cnt,line):
@@ -450,66 +568,6 @@ def read_ascii_large(fn,dtype=Float):
     runCommand("awk '/^[ ]*vertex[ ]+/{print $2,$3,$4}' '%s' | d2u > '%s'" % (fn,tmp))
     nodes = fromfile(tmp,sep=' ',dtype=dtype).reshape((-1,3,3))
     return nodes
-
-
-def write_gambit_neutral(fn,nodes,elems):
-    print "Cannot write file %s" % fn
-    pass
-
-
-def write_off(fn,nodes,elems):
-    if nodes.shape[1] != 3 or elems.shape[1] < 3:
-        raise runtimeError, "Invalid arguments or shape"
-    fil = file(fn,'w')
-    fil.write("OFF\n")
-    fil.write("%d %d 0\n" % (nodes.shape[0],elems.shape[0]))
-    for nod in nodes:
-        fil.write("%s %s %s\n" % tuple(nod))
-    format = "%d %%d %%d %%d\n" % elems.shape[1]
-    for el in elems:
-        fil.write(format % tuple(el))
-    fil.close()
-
-
-def write_gts(fn,nodes,edges,faces):
-    if nodes.shape[1] != 3 or edges.shape[1] != 2 or faces.shape[1] != 3:
-        raise runtimeError, "Invalid arguments or shape"
-    fil = file(fn,'w')
-    fil.write("%d %d %d\n" % (nodes.shape[0],edges.shape[0],faces.shape[0]))
-    for nod in nodes:
-        fil.write("%s %s %s\n" % tuple(nod))
-    for edg in edges+1:
-        fil.write("%d %d\n" % tuple(edg))
-    for fac in faces+1:
-        fil.write("%d %d %d\n" % tuple(fac))
-    fil.write("#GTS file written by %s\n" % GD.Version)
-    fil.close()
-
-
-def write_smesh(fn,nodes,elems):
-    tetgen.writeSurface(fn,nodes,elems)
-
-
-
-def writeSurface(fn,nodes,elems,ftype=None):
-    if ftype is None:
-        ftype = os.path.splitext(fn)[1]  # deduce from extension
-    ftype = ftype.strip('.').lower()
-    print "Writing %s vertices" % nodes.shape[0]
-    print "Writing %s triangles to file %s" % (elems.shape[0],fn)
-    if ftype == 'stl':
-        write_stla(fn,nodes[elems])
-    elif ftype == 'off':
-        write_off(fn,nodes,elems)
-    elif ftype == 'neu':
-        write_gambit_neutral(fn,nodes,elems)
-    elif ftype == 'smesh':
-        write_smesh(fn,nodes,elems)
-    elif ftype == 'gts':
-        edges,faces = expandElems(elems)
-        write_gts(fn,nodes,edges,faces)
-    else:
-        print "Cannot save as file %s" % fn
 
 
 def stl_to_femodel(formex,sanitize=True):

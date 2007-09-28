@@ -94,6 +94,14 @@ def toFormex(suffix=''):
         selection.clear()
 
 
+def toggle_shrink():
+    """Toggle the shrink mode"""
+    if selection.shrink is None:
+        selection.shrink = 0.8
+    else:
+        selection.shrink = None
+    selection.draw()
+
 
 def toggle_auto_draw():
     global autodraw
@@ -112,12 +120,6 @@ def sanitize_stl_to_off():
     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
     if fn:     
         return surface.stl_to_off(fn,sanitize=True)
-
-
-def set_color():
-    color = widgets.getColor(PF.get('stl_color','green'))
-    if color:
-        PF['stl_color'] = colors.GLColor(color)
 
 
 def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert=None,show=True):
@@ -197,6 +199,34 @@ def write_stl(types=['stl']):
         surface.write_stla(fn,F.f)   
         GD.gui.setBusy(False)
 
+#
+# Operations using gts library
+#
+def coarsen():
+    S = selection.check('single')
+    if S:
+        res = askItems([('min_edges',-1),
+                        ('max_cost',-1),
+                        ('mid_vertex',False),
+                        ('length_cost',False),
+                        ('max_fold',1.0),
+                        ('volume_weight',0.5),
+                        ('boundary_weight',0.5),
+                        ('shape_weight',0.0),
+                        ('progressive',False),
+                        ('log',False),
+                        ('verbose',False),
+                        ])
+        if res:
+            selection.remember()
+            if res['min_edges'] <= 0:
+                res['min_edges'] = None
+            if res['max_cost'] <= 0:
+                res['max_cost'] = None
+            S.coarsen(**res)
+            selection.draw()
+
+
 # The following functions operate on the stl_model, but should
 # be changed to working on the surface model
 
@@ -214,23 +244,17 @@ def center_surface():
     clear()
     show_changes(PF['old_surface'],PF['surface'])
 
-
-def scale_surface():
-    """Scale the stl model."""
-    if not check_surface():
-        return
-    itemlist = [ [ 'X-scale',1.0], [ 'Y-scale',1.0], [ 'Z-scale',1.0] ] 
-    res,accept = widgets.InputDialog(itemlist,'Scaling Parameters').getResult()
-    if accept:
-        updateGUI()
-        scale = map(float,[r[1] for r in res])
-        print scale
-        nodes,elems = PF['old_surface'] = PF['surface']
-        F = Formex(nodes.reshape((-1,1,3)))
-        nodes = F.scale(scale).f
-        PF['surface'] = nodes,elems
-        clear()
-        show_changes(PF['old_surface'],PF['surface'])
+            
+def scale3Selection():
+    """Scale the selection with 3 scale values."""
+    FL = selection.check()
+    if FL:
+        res = askItems([['x-scale',1.0],['y-scale',1.0],['z-scale',1.0]],
+                       caption = 'Scaling Factors')
+        if res:
+            scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
+            selection.changeValues([ F.scale(scale) for F in FL ])
+            selection.drawChanges()
 
 
 def rotate_surface():
@@ -394,7 +418,7 @@ def trim_surface():
     for i in range(n):
         elems = trim_border(elems,nodes,nb)
         print "Number of elements after border removal: %s" % elems.shape[0]
-    
+
     
 
 def create_tetgen():
@@ -476,23 +500,38 @@ def create_menu():
         ("&Forget Selection",selection.forget),
         ('&List Selection',printSize),
         ("&Convert to Formex",toFormex),
-        # ("&Show model",show_model),
-        ("&Show surface",show_surface),
-        ("&Show shrinked surface",show_shrinked),
+        ("&Write Surface Model",write_surface),
+        ("&Write STL Model",write_stl),
+        ("---",None),
+#        ("&Set Property",setProperty),
+        ("&Shrink",toggle_shrink),
+#        ("&Toggle Names",toggleNames),
+#        ("&Toggle Numbers",toggleNumbers),
+        ("&Undo Last Changes",selection.undoChanges),
+        ("---",None),
+        ("&Coarsen surface",coarsen),
+        ("---",None),
+        ("&Transform",
+         [("&Scale Selection",scale3Selection),
+##           ("&Translate Selection",translateSelection),
+##           ("&Center Selection",centerSelection),
+##           ("&Rotate Selection",rotateSelection),
+##           ("&Rotate Selection Around",rotateAround),
+##           ("&Roll Axes",rollAxes),
+##           ("&Clip Selection",clipSelection),
+##           ("&Cut at Plane",cutAtPlane),
+          ]),
+        ("---",None),
+                ("&Transform", [
+            ("&Center model",center_surface),
+            ("&Rotate model",rotate_surface),
+#            ("&Scale model",scale_surface),
+            ] ),
+        ("---",None),
         ("&Show volume model",show_volume),
-        ("&Set color",set_color),
         #("&Print Nodal Coordinates",show_nodes),
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-        ("&Write Surface Model",write_surface),
-        ("&Write STL Model",write_stl),
-        ("---1",None),
-        ("&Transform", [
-            ("&Center model",center_surface),
-            ("&Rotate model",rotate_surface),
-            ("&Scale model",scale_surface),
-            ] ),
-        ("---2",None),
         ("&Clip model",clip_surface),
         ("&Trim border",trim_surface),
         ("&Undo LAST STL transformation",undo_stl),
@@ -509,9 +548,7 @@ def create_menu():
 
 def close_menu():
     """Close the STL menu."""
-    # We should also remove the projectLabel widget from the statusbar
     global _menu
-    #GD.gui.statusbar.removeWidget(projectLabel)
     if _menu:
         _menu.remove()
     _menu = None
@@ -519,18 +556,12 @@ def close_menu():
     
 def show_menu():
     """Show the surface menu."""
-    #from PyQt4 import QtGui
     global _menu
     if not _menu:
         _menu = create_menu()
-    #project = F = nodes = elems = surf = None
-    #projectLabel = QtGui.QLabel('No Project')
-    #GD.gui.statusbar.addWidget(projectLabel)
-    PF['surface'] = None
-    PF['old_surface'] = None
-    PF['volume'] = None
-    PF['stl_model'] = None
-    PF['stl_color'] = colors.blue    # could be replaced by a general fgcolor
+##     PF['volume'] = None
+##     PF['stl_model'] = None
+##     PF['stl_color'] = colors.blue    # could be replaced by a general fgcolor
 
 
     
