@@ -13,9 +13,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{makeidx}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 %\usepackage[latex2html]{hyperref}
-%\usepackage[latex2html,pdftex]{hyperref}
+\usepackage[latex2html,pdftex]{hyperref}
 \usepackage{html}
 \usepackage{graphicx}
 \usepackage{subfigure}
@@ -31,7 +31,6 @@
 \lfoot[\sf\thepage]{}
 \rfoot[]{\sf\thepage}
 
-\usepackage{xspace}
 
 % Document identification
 \title{\pyformex manual}
@@ -60,7 +59,7 @@
 
 % pyFormex version
 \renewcommand{\releasename}{pyFormex}
-\release{0.6a1}
+\release{0.6a2}
 \setshortversion{0.6}
 \newcommand{\pyfversion}{pyFormex \version}
 
@@ -76,9 +75,19 @@
 %%% xspace.sty v1.06 werkt goed! v1.12 niet!
 %%%
 
+\usepackage{xspace}
+
 \newcommand{\pyformex}{pyFormex\xspace}
-\newcommand{\pyFormex}{pyFormex\xspace}  % we tend to mistype this one!
-\newcommand{\pyf}{pyFormex\xspace} % saves some typing (and mistyping)
+\newcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
+\newcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
+\begin{htmlonly}
+\renewcommand{\pyformex}{pyFormex~}
+\renewcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
+\renewcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
+\end{htmlonly}
+%\let\pyFormex\pyformex  %% These do not work!
+%\let\pyf\pyformex
+
 
 \newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
 \newcommand{\pydocpages}{http://pyformex.berlios.de/doc/index.html\xspace}

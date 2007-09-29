@@ -129,7 +129,7 @@ The single bumped strut (\code{base}) is rescaled homothetically in the XY-plane
 
 \subsection{Extending the base module}
 
-Subsequently, a mirrored copy of the base cell is generated. Both Formices are translated to their appropriate side by side position with the \code{translate()}-option and form the complete extended base module with 4 by 4 dimensions as depicted in Figure \ref{BASE}. Furthermore, both Formices are defined as an attribute of the \code{DoubleHelixStent} class by the \code{self}-statement, allowing their use after every \code{DoubleHelixStent} initialisation. Such further use is impossible with local variables, such as for example the \code{NE} and \code{SE} Formices.
+Subsequently, a mirrored copy of the base cell is generated. Both Formices are translated to their appropriate side by side position with the \code{translate()}-option and form the complete extended base module with 4 by 4 dimensions as depicted in Figure~\ref{fig:base}. Furthermore, both Formices are defined as an attribute of the \code{DoubleHelixStent} class by the \code{self}-statement, allowing their use after every \code{DoubleHelixStent} initialisation. Such further use is impossible with local variables, such as for example the \code{NE} and \code{SE} Formices.
 %
 \verbatiminput{scripts/WireStent5.py}
 
@@ -163,7 +163,7 @@ Subsequently, a mirrored copy of the base cell is generated. Both Formices are t
      \htmladdimg{../images/WireStentDemot2Step11.png}
    \end{htmlonly} 
 	\caption {Creation of the complete extended base module (b) from the original and mirrored (a) unit cell.} 
-	\label{BASE}
+	\label{fig:base}
 \end{figure}
 
 \subsection{Full nearly planar pattern}

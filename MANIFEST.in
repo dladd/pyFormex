@@ -5,6 +5,8 @@ include README
 include INSTALL
 include FAQ
 include ReleaseNotes-0.6
+include pyformex.desktop
+include pyformex.png
 include pyformex/*.py
 include pyformex/pyformex
 include pyformex/pyformexrc
@@ -14,9 +16,9 @@ include pyformex/examples/*
 include pyformex/examples/*/*
 include pyformex/icons/*.xpm
 include pyformex/doc/*
-include manual/pyformex.pdf
-#include manual/pyformex.ps
-include manual/html/*
-include manual/images/*.png
-include pyformex.desktop
-include pyformex.png
+include pyformex/manual/html/*.html
+include pyformex/manual/html/*.css
+include pyformex/manual/html/*.png
+prune  pyformex/manual/html/img*.png
+include pyformex/manual/images/*.png
+include pyformex/manual/pyformex.pdf

@@ -9,14 +9,15 @@
 %%
 \section{Introduction}
 \label{sec:intro-tut}
+
 \pyformex is a Python implementation of Formex algebra. Using \pyformex, it is very easy to  generate large geometrical models of 3D structures by a sequence of mathematical transformations. It is especially suited for the automated design of spatial frame structures. But it can also be used for other tasks, like finite element preprocessing, or just for creating some nice pictures.
 
 By writing a very simple script, a large geometry can be created by copying, translating, rotating,... Formices. \pyformex will interpret this script and draw what you have created. This is clearly very different than the traditional way of creating a model, like CAD. There are two huge advantages about using \pyformex:
 \begin{itemize}
 \item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar,... can be rather difficult to draw with CAD, but when using mathematical transformations, it becomes a piece of cake!
-\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio $f/l$ of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in fig \ref{scallops}: these domes were all created with the same script, but with other values of the parameters.
+\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio $f/l$ of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in figure~\ref{fig:scallops}: these domes were all created with the same script, but with other values of the parameters.
 \end{itemize}
-\begin{figure}[tbp,h]
+\begin{figure}[h]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -33,7 +34,7 @@ By writing a very simple script, a large geometry can be created by copying, tra
     \htmladdimg{../images/scallopdome-001.png}
     \htmladdimg{../images/scallopdome-002.png}
   \end{htmlonly}
-  \caption{Same script, different domes} \label{scallops}
+  \caption{Same script, different domes} \label{fig:scallops}
 \end{figure}
 
 % As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough. 

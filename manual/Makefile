@@ -34,4 +34,5 @@ ${TGT}.ind: ${SRC}
 	makeindex $<
 
 html/${TGT}.html: ${SRC}
+	rm -rf ${HTMLDIR}
 	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<

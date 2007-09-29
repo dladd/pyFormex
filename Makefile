@@ -68,6 +68,9 @@ ${HTMLDIR}/plugins.%.html: plugins/%.py
 manual:
 	make -C manual
 
+#pyformex/doc/pyformex-htmldocs.tar.gz: manual
+#	tar czf $@ manual/html manual/images
+
 # Set a new version
 
 version: pyformex/globaldata.py manual/pyformex.tex setup.py
@@ -75,8 +78,9 @@ version: pyformex/globaldata.py manual/pyformex.tex setup.py
 pyformex/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 
-manual/manual.tex: RELEASE
+manual/pyformex.tex: RELEASE
 	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
+
 
 setup.py: RELEASE
 	sed -i "s|version='.*'|version='${RELEASE}'|" $@
@@ -93,7 +97,7 @@ stampall: stamp
 # Create the distribution
 dist: ${PKGDIR}/${PKG}
 
-${PKGDIR}/${PKG}: version
+${PKGDIR}/${PKG}: version #pyformex/doc/pyformex-htmldocs.tar.gz
 	python setup.py sdist
 
 # Publish the distribution to our ftp server

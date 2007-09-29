@@ -342,6 +342,16 @@ def saveNext():
         saveImage(name,window,False,hotkey,autosave,border,rootcrop,format,False)
 
 
+def saveIcon(fn,size=32):
+    """Save the current rendering as an icon."""
+    savew,saveh = GD.canvas.width(),GD.canvas.height()
+    GD.canvas.resize(size,size)
+    if not fn.endswith('.xpm'):
+        fn += '.xpm'
+    saveImage(fn)
+    GD.canvas.resize(savew,saveh)
+
+
 def autoSaveOn():
     """Returns True if autosave multisave mode is currently on.
 
