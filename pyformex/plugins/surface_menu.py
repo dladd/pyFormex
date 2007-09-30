@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: $
+# $Id:$
 ##
 ## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
 ## pyFormex is a Python implementation of Formex algebra
@@ -55,8 +55,8 @@ def readSelection(select=True,draw=True,multi=True):
         export(dict(zip(names,F)))
         if select:
             GD.message("Set selection to %s" % str(names))
-            for n in names:
-                print "%s = %s" % (n,named(n))
+            #for n in names:
+            #    print "%s = %s" % (n,named(n))
             selection.set(names)
             if draw:
                 selection.draw()
@@ -227,22 +227,27 @@ def coarsen():
             selection.draw()
 
 
-# The following functions operate on the stl_model, but should
-# be changed to working on the surface model
+#############################################################################
+# Transformation of the vertex coordinates (based on Coords)
 
-
-def center_surface():
-    """Center the stl model."""
-    if not check_surface():
-        return
-    updateGUI()
-    nodes,elems = PF['old_surface'] = PF['surface']
-    F = Formex(nodes.reshape((-1,1,3)))
-    center = F.center()
-    nodes = F.translate(-center).f
-    PF['surface'] = nodes,elems
-    clear()
-    show_changes(PF['old_surface'],PF['surface'])
+#
+# !! These functions could be made identical to those in Formex_menu
+# !! (and thus could be unified) if the surface transfromations were not done
+# !! inplace but returned a new surface instance instead.
+#
+            
+def scaleSelection():
+    """Scale the selection."""
+    FL = selection.check()
+    if FL:
+        res = askItems([['scale',1.0]],
+                       caption = 'Scaling Factor')
+        if res:
+            scale = float(res['scale'])
+            selection.remember(True)
+            for F in FL:
+                F.scale(scale)
+            selection.drawChanges()
 
             
 def scale3Selection():
@@ -253,25 +258,76 @@ def scale3Selection():
                        caption = 'Scaling Factors')
         if res:
             scale = map(float,[res['%c-scale'%c] for c in 'xyz'])
-            selection.changeValues([ F.scale(scale) for F in FL ])
+            selection.remember(True)
+            for F in FL:
+                F.scale(scale)
             selection.drawChanges()
 
 
-def rotate_surface():
-    """Rotate the stl model."""
-    if not check_surface():
-        return
-    itemlist = [ [ 'axis',0], ['angle','0.0'] ] 
-    res,accept = widgets.InputDialog(itemlist,'Rotation Parameters').getResult()
-    if accept:
-        updateGUI()
-        print res
-        nodes,elems = PF['old_surface'] = PF['surface']
-        F = Formex(nodes.reshape((-1,1,3)))
-        nodes = F.rotate(float(res[1][1]),int(res[0][1])).f
-        PF['surface'] = nodes,elems
-        clear()
-        show_changes(PF['old_surface'],PF['surface'])
+def translateSelection():
+    """Translate the selection."""
+    FL = selection.check()
+    if FL:
+        res = askItems([['direction',0],['distance','1.0']],
+                       caption = 'Translation Parameters')
+        if res:
+            dir = int(res['direction'])
+            dist = float(res['distance'])
+            selection.remember(True)
+            for F in FL:
+                F.translate(dir,dist)
+            selection.drawChanges()
+
+
+def centerSelection():
+    """Center the selection."""
+    FL = selection.check()
+    if FL:
+        selection.remember(True)
+        for F in FL:
+            F.translate(-F.coords.center())
+        selection.drawChanges()
+
+
+def rotateSelection():
+    """Rotate the selection."""
+    FL = selection.check()
+    if FL:
+        res = askItems([['axis',2],['angle','90.0']])
+        if res:
+            axis = int(res['axis'])
+            angle = float(res['angle'])
+            selection.remember(True)
+            for F in FL:
+                F.rotate(angle,axis)
+            selection.drawChanges()
+
+
+def rotateAround():
+    """Rotate the selection."""
+    FL = selection.check()
+    if FL:
+        res = askItems([['axis',2],['angle','90.0'],['around','[0.0,0.0,0.0]']])
+        if res:
+            axis = int(res['axis'])
+            angle = float(res['angle'])
+            around = eval(res['around'])
+            GD.debug('around = %s'%around)
+            selection.remember(True)
+            for F in FL:
+                F.rotate(angle,axis,around)
+            selection.drawChanges()
+
+
+def rollAxes():
+    """Rotate the selection."""
+    FL = selection.check()
+    if FL:
+        selection.remember(True)
+        for F in FL:
+            F.coords.rollAxes()
+        selection.drawChanges()
+
 
         
 def clip_surface():
@@ -293,7 +349,7 @@ def clip_surface():
         xc1 = xmi + float(res[1][1]) * dx
         xc2 = xmi + float(res[2][1]) * dx
         nodid = res[3][1]
-        print nodid
+        #print nodid
         clear()
         draw(F,color='yellow')
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
@@ -500,8 +556,8 @@ def create_menu():
         ("&Forget Selection",selection.forget),
         ('&List Selection',printSize),
         ("&Convert to Formex",toFormex),
-        ("&Write Surface Model",write_surface),
-        ("&Write STL Model",write_stl),
+#        ("&Write Surface Model",write_surface),
+#        ("&Write STL Model",write_stl),
         ("---",None),
 #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
@@ -512,35 +568,30 @@ def create_menu():
         ("&Coarsen surface",coarsen),
         ("---",None),
         ("&Transform",
-         [("&Scale Selection",scale3Selection),
-##           ("&Translate Selection",translateSelection),
-##           ("&Center Selection",centerSelection),
-##           ("&Rotate Selection",rotateSelection),
-##           ("&Rotate Selection Around",rotateAround),
-##           ("&Roll Axes",rollAxes),
-##           ("&Clip Selection",clipSelection),
-##           ("&Cut at Plane",cutAtPlane),
+         [("&Scale Selection",scaleSelection),
+          ("&Non-uniformly Scale Selection",scale3Selection),
+          ("&Translate Selection",translateSelection),
+          ("&Center Selection",centerSelection),
+          ("&Rotate Selection",rotateSelection),
+          ("&Rotate Selection Around",rotateAround),
+#          ("&Roll Axes",rollAxes),
+#          ("&Clip Selection",clipSelection),
+#          ("&Cut at Plane",cutAtPlane),
           ]),
         ("---",None),
-                ("&Transform", [
-            ("&Center model",center_surface),
-            ("&Rotate model",rotate_surface),
-#            ("&Scale model",scale_surface),
-            ] ),
-        ("---",None),
-        ("&Show volume model",show_volume),
+#        ("&Show volume model",show_volume),
         #("&Print Nodal Coordinates",show_nodes),
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-        ("&Clip model",clip_surface),
-        ("&Trim border",trim_surface),
-        ("&Undo LAST STL transformation",undo_stl),
-        ("&Fill the holes in STL model",fill_holes),
-        ("&Create tetgen model",create_tetgen),
-        ("&Read Tetgen Volume",read_tetgen_volume),
-        ("&Scale Volume model with factor 0.01",scale_volume),
+#        ("&Clip model",clip_surface),
+#        ("&Trim border",trim_surface),
+#        ("&Undo LAST STL transformation",undo_stl),
+#        ("&Fill the holes in STL model",fill_holes),
+#        ("&Create tetgen model",create_tetgen),
+#        ("&Read Tetgen Volume",read_tetgen_volume),
+#        ("&Scale Volume model with factor 0.01",scale_volume),
         ("&Export surface to Abaqus",export_surface),
-        ("&Export volume to Abaqus",export_volume),
+#        ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
         ]
     return widgets.Menu('Surface',items=MenuData,parent=GD.gui.menu,before='help')

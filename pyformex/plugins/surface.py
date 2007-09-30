@@ -256,6 +256,23 @@ def write_smesh(fn,nodes,elems):
 ############################################################################
 # The Surface class
 
+def coordsmethod(f):
+    """Define a Surface method as the equivalent Coords method.
+
+    This decorator replaces the Surface's vertex coordinates with the
+    ones resulting from applying the transform f.
+    
+    The coordinates are changed inplane, so copy them before if you do not
+    want them to be lost.
+    """
+    def newf(self,*args,**kargs):
+        repl = getattr(Coords,f.__name__)
+        self.coords = repl(self.coords,*args,**kargs)
+        newf.__name__ = f.__name__
+        newf.__doc__ = repl.__doc__
+    return newf
+
+
 class Surface(object):
     """A class for handling triangulated 3D surfaces."""
 
@@ -432,9 +449,25 @@ class Surface(object):
         return Formex(self.coords[self.elems])
 
 
+    @coordsmethod
     def scale(self,*args,**kargs):
-        self.coords = self.coords.scale(*args,**kargs)
-        
+        pass
+    @coordsmethod
+    def translate(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def rotate(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def shear(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def reflect(self,*args,**kargs):
+        pass
+    @coordsmethod
+    def affine(self,*args,**kargs):
+        pass
+    
 
     def coarsen(self,min_edges=None,max_cost=None,
                 mid_vertex=False, length_cost=False, max_fold = 1.0,
@@ -710,7 +743,7 @@ def remove_triangles(elems,remove):
     Returns a (nelems-nremove,3) integer array with the triangles of
     nelems where the triangles of remove have been removed.
     """
-    print elems,remove
+    #print elems,remove
     GD.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
     magic = elems.max()+1
 

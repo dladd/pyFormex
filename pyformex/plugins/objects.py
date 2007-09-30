@@ -10,6 +10,7 @@ import globaldata as GD
 from formex import Formex
 from plugins.surface import Surface
 from gui.draw import *
+from copy import deepcopy
 
 
 class Objects(object):
@@ -79,8 +80,16 @@ class Objects(object):
         self.set(self.listAll(self.clas))
 
 
-    def remember(self):
+    def remember(self,copy=False):
+        """Remember the current values of the variables in selection.
+
+        If copy==True, the values are copied, so that the variables' current
+        values can be changed inplace without affecting the remembered values.
+        """
         self.values = map(named,self.names)
+        if copy:
+            self.values = map(deepcopy,self.values) 
+        print 'REMEMBER'
         print self.values
         
 

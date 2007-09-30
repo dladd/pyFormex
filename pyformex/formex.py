@@ -1110,8 +1110,8 @@ class Formex:
     @coordsmethod
     def affine(self,*args,**kargs):
         pass
-    @coordsmethod
 
+    @coordsmethod
     def cylindrical(self,*args,**kargs):
         pass
     @coordsmethod
