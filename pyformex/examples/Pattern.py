@@ -1,7 +1,7 @@
 #!/usr/bin/env python pyformex.py
 # $Id: Pattern.py 85 2006-04-02 12:36:40Z bverheg $
 ##
-## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
+## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 

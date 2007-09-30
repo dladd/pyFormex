@@ -1,7 +1,7 @@
 #!/usr/bin/env python pyformex.py
 # $Id: KochLine.py 66 2006-02-20 20:08:47Z bverheg $
 ##
-## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
+## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
