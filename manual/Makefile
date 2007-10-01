@@ -2,7 +2,8 @@
 #
 
 PYTHONDIR=/usr/lib/python2.4
-MKHOWTO=${PYTHONDIR}/doc/tools/mkhowto
+MKHOWTO=mkhowto 
+#${PYTHONDIR}/doc/tools/mkhowto
 TEXINPUTS=${PYTHONDIR}/doc/texinputs
 TGT=pyformex
 SRC=${TGT}.tex pyformex.help 

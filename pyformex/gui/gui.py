@@ -207,6 +207,9 @@ class GUI(QtGui.QMainWindow):
         # Add the transparency button
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
+        # Add the shrink button
+        if self.modebar:
+            toolbar.addShrinkButton(self.modebar)
          
         if mmenu:
             # insert the mode menu in the viewport menu

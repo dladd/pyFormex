@@ -1022,6 +1022,8 @@ class SurfaceActor(Actor,Surface):
     def __init__(self,S,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,alpha=1.0):
         
         Actor.__init__(self)
+        #print type(S.coords)
+        #print S.coords.shape
         Surface.__init__(self,S.coords,S.edges,S.faces)
         
         self.setLineWidth(linewidth)

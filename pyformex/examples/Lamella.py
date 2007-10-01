@@ -24,7 +24,7 @@ if rings:
     f2 = e2.replic2(nx,ny+1,2,2)
 else:
     f2 = e2.replic2(nx,2,2,2*ny)
-g = (f1+f2).translate([0,a,1]).cospherical(scale=[180/nx,t/(2*ny+a),rd])
+g = (f1+f2).translate([0,a,1]).spherical(scale=[180/nx,t/(2*ny+a),rd],colat=True)
 draw(e1+e2)
 
 draw(f1+f2)

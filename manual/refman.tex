@@ -3,10 +3,10 @@
 % (C) B.Verhegghe
 
 \chapter{pyFormex --- reference manual}
-{\label{cha:reference}
+\label{cha:reference}
 
 \section{formex --- the base module}
-{\label{sec:formex}
+\label{sec:formex}
 
 This module contains all the basic functionality for creating, structuring and transforming sets of coordinates. All the definitions in this module are available in your scripts without the need to import the module.
 
@@ -49,7 +49,7 @@ is not very well tested yet, and therefore not not encouraged.
 
 \subsection{Formex class members}
 
-\begin{memberdesc}  [array]{f}
+\begin{memberdesc}  [Coords]{f}
 A three dimensional array of float values. The array always has a shape with three components (nelems,nplex,3), even if the Formex is empty. An empty Formex has shape[0] == 0.
 \end{memberdesc}
 
@@ -113,6 +113,9 @@ i.e. a tuple (nelems, nplex, ndim).
 
 \begin{methoddesc}{data}{}
   Return the Formex as a numpy array.
+        Since the ndarray object has a method \var{view()} returning a view on
+        the ndarray, this method allows writing code that works with both
+        Formex and ndarray instances. The results is always an ndarray.
 \end{methoddesc}
 \begin{methoddesc}{x}{}
   Return the x-plane.
@@ -147,12 +150,17 @@ The bounding box is the smallest rectangular volume in global coordinates, such 
 Return the center of the Formex. This is the center of its \function{bbox()}.
 \end{methoddesc}
 
+\begin{methoddesc}{centroid}{}
+Return the centroid of the Formex. This is the point whose coordinates
+ are the mean values of those of all the pointsof the Formex.
+\end{methoddesc}
+
 \begin{methoddesc}{sizes}{}
 Returns an array with shape (3,) holding the length of the bbox along the 3 axes.
 \end{methoddesc}
 
-\begin{methoddesc}{size}{}
-Return the size of the Formex. This is defined as the length of the diagonal of the bbox().
+\begin{methoddesc}{diagonal}{}
+Return the length of the diagonal of the bbox().
 \end{methoddesc}
 
 \begin{methoddesc}{bsphere}{}
@@ -160,6 +168,51 @@ Return the diameter of the bounding sphere of the Formex.
 
 The bounding sphere is the smallest sphere with center in the \function{center()} of the Formex, and such that no points of the Formex are lying outside the sphere. It is not necessarily the smallest sphere surrounding all points of the Formex.
 \end{methoddesc}
+
+
+\begin{methoddesc}{centroids}{}
+        Return the centroids of all elements of the Formex.
+
+        The centroid of an element is the point whose coordinates
+        are the mean values of all points of the element.
+        The return value is a plex-1 Formex.
+\end{methoddesc}
+
+
+\begin{methoddesc}{distanceFromPlane}{p,n}
+    Return the distance from the plane (p,n) for all points of the Formex.
+
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a (nelems(),nplex()) shaped array with the distance of
+    each point to the plane containing the point  p and having normal n.
+    Distance values are positive if the point is on the side of the
+    plane indicated by the positive normal.
+\end{methoddesc}
+
+
+\begin{methoddesc}{distanceFromLine}{p,q}
+    Return the distance from the line (p,q) for all points of the Formex.
+
+    p and q are two points specified by 3 coordinates.
+
+    The return value is a (nelems(),nplex()) shaped array with the distance of
+    each point to the line through p and q.
+    All distance values are positive or zero.
+\end{methoddesc}
+
+
+\begin{methoddesc}{distanceFromPoint}{p}
+    Return the distance from the point p for all points of the Formex.
+
+    p is a point specified by 3 coordinates.
+
+    The return value is a (nelems(),nplex()) shaped array with the distance of
+    each point to the line through p and q.
+    All distance values are positive or zero.
+\end{methoddesc}
+
 
 \begin{methoddesc}{feModel}{nodesperbox=1,repeat=True,rtol=1.e-5,atol=1.e-5}
 Return a tuple of nodal coordinates and element connectivity.
@@ -258,10 +311,10 @@ Thus, if F is a grade 3 Formex representing triangles, the sides of the triangle
 The returned Formex inherits the property of its parent.
 \end{methoddesc}
 
-\begin{methoddesc}{nodes}{}
-Return a Formex containing only the nodes.
+\begin{methoddesc}{points}{}
+Return a Formex containing only the points.
 
-This is obviously a Formex with plexitude 1. It holds the same data as the original Formex, but in another shape: the number of nodes per element is 1, and the number of elements is equal to the total number of nodes. The properties are not copied over, since they will usually not make any sense.
+This is obviously a Formex with plexitude 1. It holds the same data as the original Formex, but in another shape: the number of points per element is 1, and the number of elements is equal to the total number of points. The properties are not copied over, since they will usually not make any sense.
 \end{methoddesc}
 
 \begin{methoddesc}{remove}{F}
@@ -295,6 +348,7 @@ Two elements are not considered equal if one's elements are a
 permutation of the other's.
 
 Warning: this operation is slow when performed on large Formices.
+Its use is decouraged.
 \end{methoddesc}
 
 \begin{methoddesc}{reverseElements}{}
@@ -311,22 +365,32 @@ Flag elements having nodal coordinates between min and max.
 
 This function is very convenient in clipping a Formex in one of
 the coordinate directions. It returns a 1D integer array flagging
-(with a value 1) the elements having nodal coordinates in the
+(with a value 1 or True) the elements having points with coordinates in the
 specified range.
 Use \Code{where(result)} to get a list of element numbers passing the test.
 Or directly use the \Code{clip()} or \Code{cclip()} methods to create the clipped Formex.
+       
+The test plane can be defined in two ways, depending on the value of dir.
+If \var{dir} is a single integer (0, 1 or 2), it specifies a global axis
+and \var{min} and \var{max} are the minimum and maximum values for the
+coordinates along that axis.
+Default is the 0 (or x) direction.
+Else, \var{dir} should be compatible with a (3,) shaped array and specifies
+the direction of the normal on the planes. In this case, \var{min} and \var{max}
+are points and should also evaluate to (3,) shaped arrays.
 
 xmin,xmax are there minimum and maximum values required for the
 coordinates in direction dir (default is the x or 0 direction).
-nodes specifies which nodes are taken into account in the comparisons.
+
+\var{nodes} specifies which points are taken into account in the comparisons.
 It should be one of the following:
 \begin{itemize}
-\item a single (integer) node number (< the number of nodes)
-\item a list of node numbers
+\item a single (integer) node number (< the number of points in an element)
+\item a list of point numbers
 \item one of the special strings: 'all', 'any', 'none'
 \end{itemize}
 The default ('all') will flag all the elements that have all their
-nodes between the planes x=min and x=max, i.e. the elements that
+points between the planes x=min and x=max, i.e. the elements that
 fall completely between these planes. One of the two clipping planes
 may be left unspecified.
 \end{methoddesc}
@@ -509,7 +573,19 @@ An optionally third argument may specify another Formex to take the coordinates 
 
 \begin{methoddesc}{swapaxes}{i,j}
 Swap coordinate axes \var{i} and \var{j}.
+Beware! This is different from numpy's swapaxes() method, which swaps array axesof the ndarray object!
 \end{methoddesc}
+
+\begin{methoddesc}{rollAxes}{n=1}
+Roll the coordinate axes over the given amount.
+
+Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and 2 becomes 0.
+\end{methoddesc}
+
+\begin{methoddesc}{projectOnSphere}{radius,center=[0.,0.,0.]}
+Project the points of the Formex on a sphere with given center and radius.
+\end{methoddesc}
+
 
 \begin{methoddesc}{circulize}{angle}
 Transform a linear sector into a circular one.
@@ -570,6 +646,53 @@ The argument \var{list} is a sequence of tuples \var{(axis, step)}. Thus \Code{t
 \end{methoddesc}
 
 
+\subsection{Transformations that are limited to specific plexitudes.}
+The following methods are only applicable for specific values of the plexitude.
+
+
+\begin{methoddesc}{divide}{div}
+Divide a plex-2 Formex at the values in div.
+
+Replaces each member of the Formex \var{F} by a sequence of members obtained
+by dividing the Formex at the relative values specified in \var{div}. The values
+should normally range from 0.0 to 1.0.
+    
+As a convenience, if an integer is specified for \var{div}, it is taken as a
+number of divisions for the interval [0..1].
+\end{methoddesc}
+
+\begin{methoddesc}{intersectionWithPlane}{p,n}
+  Return the intersection of a plex-2 Formex with the plane (p,n).
+  
+  This is equivalent with the function intersectionWithPlane(F,p,n).
+\end{methoddesc}
+    
+\begin{methoddesc}{intersectionPointsWithPlane}{p,n}
+  Return the intersection points of a plex-2 Formex with plane (p,n).
+    
+  This is equivalent with the function intersectionWithPlane(F,p,n),
+  but returns a Formex instead of an array of points.
+\end{methoddesc}
+
+\begin{methoddesc}{intersectionLinesWithPlane}{p,n}
+  Returns the intersection lines of a plex-3 Formex with plane (p,n).
+  
+  This is equivalent with the function intersectionLinesWithPlane(F,p,n).
+\end{methoddesc}
+
+\begin{methoddesc}{cutAtPlane}{p,n,newprops=None}
+  Return all elements of a plex-2 or plex-3 Formex cut at plane.
+  
+  This is equivalent with the function cutAtPlane(F,p,n) or
+  cut3AtPlane(F,p,n,newprops).
+\end{methoddesc}
+ 
+\begin{methoddesc}{split}
+  Split a Formex in its elements.
+  
+  Returns a list of Formices each comprising one element.
+\end{methoddesc}
+
 \subsection{Write to file, read from file}
 
 
@@ -628,20 +751,6 @@ As a convenience, if an integer is specified for \var{div}, it is taken as a
 number of division for the interval [0..1].
 Thus, \Code{interpolate(F,G,n)} is equivalent with
 \Code{interpolate(F,G,arange(0,n+1)/float(n))}
-\end{funcdesc}
-
-
-\begin{funcdesc}{divide}{F,div}
-Divide a plex-2 Formex at the values in div.
-
-Replaces each member of the Formex \var{F} by a sequence of members obtained
-by dividing the Formex at the relative values specified in \var{div}. The values
-should normally range from 0.0 to 1.0.
-    
-As a convenience, if an integer is specified for \var{div}, it is taken as a
-number of divisions for the interval [0..1].
-
-This function only works on plex-2 Formices (line segments).
 \end{funcdesc}
 
 
@@ -822,69 +931,69 @@ The special character '\verb?\?' can be put before any character to make the mov
     
 
 
-\begin{funcdesc}{distanceFromPlane}{f,p,n}
-    Return the distance of points f from the plane (p,n).
-
-    f is an [...,3] array of coordinates.
-    p is a point specified by 3 coordinates.
-    n is the normal vector to a plane, specified by 3 components.
-
-    The return value is a [...] shaped array with the distance of
-    each point to the plane through p and having normal n.
-    Distance values are positive if the point is on the side of the
-    plane indicated by the positive normal.
-\end{funcdesc}
-    
-
-
-\begin{funcdesc}{distanceFromLine}{f,p,q}
-    Return the distance of points f from the line (p,q).
-
-    f is an [...,3] array of coordinates.
-    p and q are two points specified by 3 coordinates.
-
-    The return value is a [...] shaped array with the distance of
-    each point to the line through p and q.
-    All distance values are positive or zero.
-\end{funcdesc}
-    
-
-
-\begin{funcdesc}{distanceFromPoint}{f,p}
-    Return the distance of points f from the point p.
-
-    f is an [...,3] array of coordinates.
-    p is a point specified by 3 coordinates.
-
-    The return value is a [...] shaped array with the distance of
-    each point to the line through p and q.
-    All distance values are positive or zero.
-\end{funcdesc}
-    
-
-
 \section{simple --- simple geometries}
-{\label{sec:simple}
+\label{sec:simple}
 This module contains some functions, data and classes for generating Formices with simple geometries. 
 
 
-\begin{funcdesc}{circle}{a1=1.,a2=2.,a3=360.}
+\begin{funcdesc}{regularGrid}{x0,x1,nx}
+  Create a regular grid between points \var{x0} and \var{x1}.
+
+  x0 and x1 are n-dimensional points (usually 1D, 2D or 3D).
+  The space between x0 and x1 is divided in nx equal parts. nx should have
+  the same dimension as x0 and x1.
+  The result is a rectangular grid of coordinates in an array with
+  shape ( nx[0]+1, nx[1]+1, ..., n ).
+\end{funcdesc}
+
+
+\begin{funcdesc}{shape}{name}
+  Return a Formex with one of the predefined named shapes.
+
+  This is a convenience function returning a plex-2 Formex constructed
+  from one of the patterns defined in the simple.Pattern dictionary.
+
+  Currently, the following patterns are defined: line, angle, square, plus,
+  cross, diamond, rtriangle, cube, star, star3d.
+\end{funcdesc}
+  
+
+\begin{funcdesc}{line}{p1=[0.,0.,0.],p2=[1.,0.,0.],n=1}
+  Return a Formex which is a line between two specified points.
+    
+  p1: first point, p2: second point
+  The line is split up in n segments.
+\end{funcdesc}
+
+
+\begin{funcdesc}{circle}{a1=2.,a2=0.,a3=360.}
 Creates a Formex which is a polygonal approximation to a circle or arc.
 
 All points generated by this function lie on a circle with unit radius at the origin in the x-y-plane.
 
 \var{a1} (the dash angle) is the angle enclosed by the begin and end point of each line segment.\\
-\var{a2} (the module angle) is the angle enclosed between the start points of two subsequent line segments.\\
+\var{a2} (the module angle) is the angle enclosed between the start points of two subsequent line segments. If a2==0.0 is given, it will be taken equal to a1.\\
 \var{a3} (the arc angle) is the total angle enclosed between the first point of the first segment and the en point of the last segment.
 
 All angles are given in degrees and are measured in the direction from x to y-axis. The first point of the first segment is always on the x-axis.
 
-Remark that a1 == a2 produces a continues line, a1 < a2 gives a dashed line.
-The default a3=360. produces a full circle; for a3 < 360, the result is an arc.
-Large angle values result in polygones: circle(120,120) is an equilateral triangle and circle(60,60) is regular hexagone. The default values produces a dashed (near-)circle.
+The default values produce a full circle (approximately). If a3 < 360, the result is an arc.
+Large values of a1 and a2 result in polygones. Thus circle(120.) is an
+equilateral triangle and circle(60.) is regular hexagone.
+
+Remark that the default a2 == a1 produces a continuous line, while a2 > a1 results in a dashed line.
 
 \end{funcdesc}
 
+
+\begin{funcdesc}{polygon}{n}
+  A regular polygon with n sides.
+\end{funcdesc}
+
+
+\begin{funcdesc}{triangle}
+  An equilateral triangle with base [0,1] on axis 0.
+\end{funcdesc}
 
 
 \section{Drawing}
@@ -970,5 +1079,5 @@ The following convenience functions provide an easy alternative for switching to
 
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-master: "manual"
+%%% TeX-master: "pyformex"
 %%% End: 

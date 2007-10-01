@@ -162,12 +162,13 @@ file_description = {
     'img': 'Images (*.png *.jpg *.eps)',
     'png': 'PNG images (*.png)',
     'icon': 'Icons (*.xpm)',
-    'stl/off': 'STL or OFF files (*.stl *.off *.neu *.smesh *.gts)',
+    'formex': 'Formex files (*.formex)',
+    'gts': 'GTS files (*.gts)',
     'stl': 'STL files (*.stl)',
     'off': 'OFF files (*.off)',
-    'gts': 'GTS files (*.gts)',
-    'neu': 'Gambit Neutral files (*.neu)',
     'smesh': 'Tetgen surface mesh files (*.smesh)',
+    'neu': 'Gambit Neutral files (*.neu)',
+    'surface': 'Any Surface file ( *.gts *.stl *.off *.smesh *.neu)',
 }
 
 def fileDescription(type):

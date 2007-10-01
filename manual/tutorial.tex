@@ -3,7 +3,7 @@
 % (C) B.Verhegghe
 
 \chapter{pyFormex tutorial}
-{\label{cha:tutorial}
+\label{cha:tutorial}
 
 
 %%
@@ -17,7 +17,7 @@ By writing a very simple script, a large geometry can be created by copying, tra
 \item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar,... can be rather difficult to draw with CAD, but when using mathematical transformations, it becomes a piece of cake!
 \item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio $f/l$ of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in figure~\ref{fig:scallops}: these domes were all created with the same script, but with other values of the parameters.
 \end{itemize}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -44,13 +44,10 @@ By writing a very simple script, a large geometry can be created by copying, tra
 \section{Getting started}
 \label{sec:getting-started}
 
-
-THis i the first paragrph.
-
 This section holds some basic information on how to use Python and \pyformex. 
 
 \begin{itemize}
-\item Each script should begin with \Code{\#!/usr/bin/env pyformex}
+\item Each script should begin with \Code{\#!/usr/bin/env python pyformex.py}
 \item To start the \pyformex GUI, double click on the file \file{pyformex} in the installation directory, or type \emph{pyformex} in the terminal. Using the terminal can be very useful, because errors that are created while running the script will appear in the terminal. This can provide useful information when something goes wrong with your script.
 \item To create a new \pyformex-script, just open a new file with your favorite text editor and save it as \file{myproject.py}.
 \item To edit a script, you can
@@ -59,7 +56,7 @@ This section holds some basic information on how to use Python and \pyformex.
 	\item \menuselection{File \sub Open}\\
 	At this point, the script will be loaded but nothing will happen. \\
 	\menuselection{File \sub Edit}\\
-	The script will now open in the default text editor. This default editor can be changed in the file \file{.pyformexrc} in 		the installation directory.
+	The script will now open in the default text editor. This default editor can be changed in the user configuration file (\file{~/.pyformexrc}) or using the \menuselection{Settings \sub Commands} menu option.
 	\end{itemize}
 \item To play a script, you can
 	\begin{itemize}
@@ -135,7 +132,7 @@ A scalar element represents a coordinate (F:uniple).
     the operation.   
 
 Simply put: a Formex is a set of elements, and every element can have a property number.
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -155,7 +152,7 @@ The first and most useful way to create a Formex is by specifying it's nodes and
 	F=Formex([[[0,0],[1,0],[1,1],[0,1]]])
 \end{verbatim}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -175,7 +172,7 @@ On the other hand, if you would change the position of the square brackets like 
 	F=Formex([[[0,0],[1,0]],[[1,1],[0,1]]])
 \end{verbatim}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -200,7 +197,7 @@ The previous examples were limited to a 2-D environment for simplicity's sake. O
 		[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
 \end{verbatim}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -251,7 +248,7 @@ Some simple patterns are defined in \module{simple.py} and are ready for use. Th
 	clear();draw(c)
 \end{verbatim}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -321,7 +318,7 @@ It also possible to draw multiple Formices at the same time.
 	G=Formex(pattern(Pattern['cube'])).setProp(3)
 	draw(F+G)
 \end{verbatim}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -359,7 +356,7 @@ To create a better looking picture, several settings can be changed:
 	\item Change the canvas size. This prevents having to cut and rescale the figure with an image manipulation program (and loosing quality by doing so).  \menuselection{Settings \sub Canvas Size}
 \end{itemize}
 
-It is also possible to save a series of images. This can be especially useful when playing a script which creates several images, and you would like to save them all.  For example, figure \ref{fig:WireStent steps}, which shows the different steps in the creation of the WireStent model, was created this way.\\
+It is also possible to save a series of images. This can be especially useful when playing a script which creates several images, and you would like to save them all.  For example, figure \ref{fig:WireStent-steps}, which shows the different steps in the creation of the WireStent model, was created this way.\\
 \menuselection{File \sub Toggle MultiSave}\\
 
 
@@ -452,7 +449,7 @@ The first step is to create a basic Formex. In this case, it's a triangle which 
 \begin{verbatim}
 F = Formex(pattern("164"),[1,2,3]); drawit(F)  
 \end{verbatim}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -482,7 +479,7 @@ dimensions, in a plane z=1.
 \begin{verbatim}
 F = F.translate(2,1); drawit(F,'iso')
 \end{verbatim}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -499,7 +496,7 @@ This pattern is rolled up into a cilinder around the 2-axis.
 \begin{verbatim}
 F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
 \end{verbatim}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -523,7 +520,7 @@ This will determine the pitch angle of the spiral.
 \begin{verbatim}
 F = F.rotate(-10,0); drawit(F,'iso')
 \end{verbatim}
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -549,7 +546,7 @@ would be a torus.
 F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
 drawit(F,'right')
 \end{verbatim}
- \begin{figure}[h]
+ \begin{figure}[ht]
    \centering
    \begin{makeimage}
    \end{makeimage}
@@ -783,5 +780,5 @@ elemproperties
 %
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-master: "manual"
+%%% TeX-master: "pyformex"
 %%% End: 

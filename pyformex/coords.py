@@ -645,11 +645,6 @@ class Coords(ndarray):
         return f.reshape(self.shape)
 
 
-    def cospherical(self,dir=[0,1,2],scale=[1.,1.,1.]):
-        """Same as spherical with colat=True."""
-        return self.spherical(dir,scale,True)
-
-
     def toSpherical(self,dir=[0,1,2]):
         """Converts from cartesian to spherical coordinates.
 

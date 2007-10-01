@@ -228,11 +228,12 @@ def write_stla(f,x):
 
 def write_stlb(f,x):
     """Export an x[n,3,3] float array as an binary .stl file."""
+    print "Cannot write binary STL files yet!" % fn
     pass
 
 
 def write_gambit_neutral(fn,nodes,elems):
-    print "Cannot write file %s" % fn
+    print "Cannot write Gambit neutral files yet!" % fn
     pass
 
 
@@ -316,12 +317,13 @@ class Surface(object):
             a = asarray(args[1])
             #print a.shape
             #print a.dtype.kind
-            if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 2):
+            if a.dtype.kind != 'i' or a.ndim != 2 or a.shape[1]+len(args) != 5:
                 raise "Got invalid second argument"
             if a.max() >= self.coords.shape[0]:
                 raise ValueError,"Some vertex number is too high"
             if len(args) == 2:
                 self.elems = a
+                self.refresh()
             elif len(args) == 3:
                 self.edges = a
 
@@ -356,6 +358,8 @@ class Surface(object):
             self.coords = Coords(self.coords)
         if self.edges is None or self.faces is None:
             self.edges,self.faces = expandElems(self.elems)
+            #print self.edges
+            #print self.faces
         if self.elems is None:
             self.elems = compactElems(self.edges,self.faces)
 
@@ -406,6 +410,10 @@ class Surface(object):
         elif ftype == 'neu':
             return Surface(*read_gambit_neutral(fn))
         elif ftype == 'smesh':
+            nodes,elems = tetgen.readSurface(fn)
+            #print nodes
+            #print elems
+            #return Surface(nodes,elems)
             return Surface(*tetgen.readSurface(fn))
         else:
             raise "Unknown Surface type, cannot read file %s" % fn
@@ -418,7 +426,7 @@ class Surface(object):
         If the filename has no extension, the 'gts' file type is used.
         """
         if ftype is None:
-            ftype = os.path.splitext(fn)[1]
+            ftype = os.path.splitext(fname)[1]
         if ftype == '':
             ftype = 'gts'
         else:

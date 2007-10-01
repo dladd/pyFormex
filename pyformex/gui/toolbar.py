@@ -170,6 +170,33 @@ def setPerspective(mode=True):
 def setProjection():
     setPerspective(False)
 
+################# Shrink Button ###############
+
+#
+# The shrink button currently does not redraw, it only sets the default
+# shrink factor and clears the viewport
+#
+shrink_button = None # the toggle shrink button
+
+def toggleShrink(): # Called by the button
+    mode = draw.DrawOptions.get('shrink',None)
+    if mode is None:
+        mode = 0.8
+    else:
+        mode = None
+    draw.shrink(mode)
+
+def addShrinkButton(toolbar):
+    global shrink_button
+    shrink_button = addButton(toolbar,'Toggle Shrink Mode',
+                              'shrink',toggleShrink,
+                              toggle=True)    
+
+def setShrink(mode):
+    draw.shrink(mode)
+    if shrink_button:
+        shrink_button.setChecked(mode != None)
+
 ################# Timeout Button ###############
 
 timeout_button = None # the toggle timeout button

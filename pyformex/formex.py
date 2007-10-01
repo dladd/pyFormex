@@ -501,14 +501,13 @@ class Formex:
 
     # Coordinates
     def view(self):
-        """Return the Formex as a numpy array (ndarray).
+        """Return the Formex coordinates as a numpy array (ndarray).
 
         Since the ndarray object has a method view() returning a view on
-        the ndarray, this method allows writing code tha works with both
-        Formex and ndarray instances. The results is of course always an
-        ndarray.
+        the ndarray, this method allows writing code that works with both
+        Formex and ndarray instances. The results is always an ndarray.
         """
-        return self.f
+        return self.f.view()
 
 
     # Properties
@@ -934,6 +933,7 @@ class Formex:
         else:
             p = self.p[flag>0]
         return Formex(self.f[flag>0],p)
+
       
     def nonzero(self):
         """Return a Formex which holds only the nonzero elements.
@@ -961,7 +961,7 @@ class Formex:
         Use where(result) to get a list of element numbers passing the test.
         Or directly use clip() or cclip() to create the clipped Formex.
         
-        The test plane can be define in two ways depending on the value of dir.
+        The test plane can be defined in two ways, depending on the value of dir.
         If dir == 0, 1 or 2, it specifies a global axis and min and max are
         the minimum and maximum values for the coordinates along that axis.
         Default is the 0 (or x) direction.
@@ -970,10 +970,10 @@ class Formex:
         the direction of the normal on the planes. In this case, min and max
         are points and should also evaluate to (3,) shaped arrays.
         
-        Nodes specifies which nodes are taken into account in the comparisons.
+        nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
-        - a single (integer) node number (< the number of nodes)
-        - a list of node numbers
+        - a single (integer) point number (< the number of points in the Formex)
+        - a list of point numbers
         - one of the special strings: 'all', 'any', 'none'
         The default ('all') will flag all the elements that have all their
         nodes between the planes x=min and x=max, i.e. the elements that
@@ -1035,54 +1035,6 @@ class Formex:
 
 
 ##############################################################################
-# Intersection functions
-#
-# !! These functions only work on plex-2 or plex-3 formices.
-# !! It is not clear if they really belong here, or should go to a subclass
-
-    def intersectionWithPlane(self,p,n):
-        """Return the intersection of a plex-2 Formex with the plane (p,n).
-    
-        This is equivalent with the function intersectionWithPlane(F,p,n).
-        """
-        return intersectionWithPlane(self,p,n)
-    
-    
-    def intersectionPointsWithPlane(self,p,n):
-        """Return the intersection points of a plex-2 Formex with plane (p,n).
-    
-        This is equivalent with the function intersectionWithPlane(F,p,n),
-        but returns a Formex instead of an array of points.
-        """
-        return Formex(intersectionPointsWithPlane(self,p,n))
-
-
-    def intersectionLinesWithPlane(self,p,n):
-        """Returns the intersection lines of a plex-3 Formex with plane (p,n).
-
-        This is equivalent with the function intersectionLinesWithPlane(F,p,n).
-        """
-        return Formex(intersectionLinesWithPlane(self,p,n))
-
-    
-    def cutAtPlane(self,p,n,newprops=None):
-        """Return all elements of a plex-2 or plex-3 Formex cut at plane.
-
-        This is equivalent with the function cutAtPlane(F,p,n) or
-        cut3AtPlane(F,p,n).
-        """
-        if self.nplex == 1:
-            # THIS NEEDS TO BE IMPLEMENTED
-            return F
-        if self.nplex() == 2:
-            return cutAtPlane(self,p,n)
-        if self.nplex() == 3:
-            return cut3AtPlane(self,p,n,newprops)
-        raise ValueError,"Formex should be plex-2 or plex-3"
-
-
-
-##############################################################################
 #
 #   Transformations that preserve the topology (but change coordinates)
 #
@@ -1119,9 +1071,6 @@ class Formex:
         pass
     @coordsmethod
     def spherical(self,*args,**kargs):
-        pass
-    @coordsmethod
-    def cospherical(self,*args,**kargs):
         pass
     @coordsmethod
     def toSpherical(self,*args,**kargs):
@@ -1265,6 +1214,13 @@ class Formex:
         return self.translate(tr)
 
 
+##############################################################################
+#
+#   Transformations that work only for some plexitudes
+#        
+# !! It is not clear if they really belong here, or should go to a subclass
+
+
     def divide(self,div):
         """Divide a plex-2 Formex at the values in div.
 
@@ -1288,6 +1244,47 @@ class Formex:
         return connect([A,B])
 
 
+    def intersectionWithPlane(self,p,n):
+        """Return the intersection of a plex-2 Formex with the plane (p,n).
+    
+        This is equivalent with the function intersectionWithPlane(F,p,n).
+        """
+        return intersectionWithPlane(self,p,n)
+    
+    
+    def intersectionPointsWithPlane(self,p,n):
+        """Return the intersection points of a plex-2 Formex with plane (p,n).
+    
+        This is equivalent with the function intersectionWithPlane(F,p,n),
+        but returns a Formex instead of an array of points.
+        """
+        return Formex(intersectionPointsWithPlane(self,p,n))
+
+
+    def intersectionLinesWithPlane(self,p,n):
+        """Returns the intersection lines of a plex-3 Formex with plane (p,n).
+
+        This is equivalent with the function intersectionLinesWithPlane(F,p,n).
+        """
+        return Formex(intersectionLinesWithPlane(self,p,n))
+
+    
+    def cutAtPlane(self,p,n,newprops=None):
+        """Return all elements of a plex-2 or plex-3 Formex cut at plane.
+
+        This is equivalent with the function cutAtPlane(F,p,n) or
+        cut3AtPlane(F,p,n).
+        """
+        if self.nplex == 1:
+            # THIS NEEDS TO BE IMPLEMENTED
+            return F
+        if self.nplex() == 2:
+            return cutAtPlane(self,p,n)
+        if self.nplex() == 3:
+            return cut3AtPlane(self,p,n,newprops)
+        raise ValueError,"Formex should be plex-2 or plex-3"
+
+
 #################### Misc Operations #########################################
 
     def split(self):
@@ -1299,6 +1296,7 @@ class Formex:
             return [ Formex([f]) for f in self.f ]
         else:
             return [ Formex([f],p) for f,p in zip(self.f,self.p) ]
+
 
 #################### Read/Write Formex File ##################################
 

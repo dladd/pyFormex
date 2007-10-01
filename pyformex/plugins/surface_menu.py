@@ -64,11 +64,17 @@ def readSelection(select=True,draw=True,multi=True):
     return fn
     
 
-def printSize(name):
+def printSize():
     for s in selection.names:
         S = named(s)
         GD.message("Surface %s has %d vertices, %s edges and %d faces" %
-                   (S.ncoords(),S.nedges(),S.nelems()))
+                   (s,S.ncoords(),S.nedges(),S.nelems()))
+    
+
+def printBbox():
+    for s in selection.names:
+        S = named(s)
+        GD.message("Surface %s has bbox %s" % (s,S.bbox()))
 
 
 def toFormex(suffix=''):
@@ -123,7 +129,7 @@ def sanitize_stl_to_off():
         return surface.stl_to_off(fn,sanitize=True)
 
 
-def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert=None,show=True):
+def read_surface(fn='',types=['surface','gts','stl','off','neu','smesh'],convert=None,show=True):
     """Read STL model from file fn.
 
     If no file is given, one is asked.
@@ -173,32 +179,18 @@ def read_surface(fn='',types=['stl/off','stl','off','neu','smesh','gts'],convert
     return fn
 
 
-def write_surface(types=['stl/off','stl','off','neu','smesh','gts']):
-    if not check_surface():
-        return
-    if type(types) == str:
-        types = [ types ]
-    types = map(utils.fileDescription,types)
-    fn = askFilename(GD.cfg['workdir'],types,exist=False)
-    if fn:
-        print "Exporting surface model to %s" % fn
-        nodes,elems = PF['surface']
-        GD.gui.setBusy()
-        surface.writeSurface(fn,nodes,elems)   
-        GD.gui.setBusy(False)
-
-
-
-def write_stl(types=['stl']):
-    if not check_stl():
+def write_surface(types=['surface','gts','stl','off','neu','smesh']):
+    F = selection.check('single')
+    if F:
+        if type(types) == str:
+            types = [ types ]
         types = map(utils.fileDescription,types)
-    fn = askFilename(GD.cfg['workdir'],types,exist=False)
-    if fn:
-        print "Exporting stl model to %s" % fn
-        F = PF['stl_model']
-        GD.gui.setBusy()
-        surface.write_stla(fn,F.f)   
-        GD.gui.setBusy(False)
+        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        if fn:
+            GD.message("Exporting surface model to %s" % fn)
+            GD.gui.setBusy()
+            F.write(fn)   
+            GD.gui.setBusy(False)
 
 #
 # Operations using gts library
@@ -290,34 +282,56 @@ def centerSelection():
         selection.drawChanges()
 
 
-def rotateSelection():
-    """Rotate the selection."""
+def rotate(mode='global'):
+    """Rotate the selection.
+
+    mode is one of 'global','parallel','central','general'
+    """
     FL = selection.check()
     if FL:
-        res = askItems([['axis',2],['angle','90.0']])
+        if mode == 'global':
+            res = askItems([['angle','90.0'],['axis',2]])
+            if res:
+                angle = float(res['angle'])
+                axis = int(res['axis'])
+                around = None
+        elif mode == 'parallel':
+            res = askItems([['angle','90.0'],['axis',2],['point','[0.0,0.0,0.0]']])
+            if res:
+                axis = int(res['axis'])
+                angle = float(res['angle'])
+                around = eval(res['point'])
+        elif mode == 'central':
+            res = askItems([['angle','90.0'],['axis','[0.0,0.0,0.0]']])
+            if res:
+                angle = float(res['angle'])
+                axis = eval(res['axis'])
+                around = None
+        elif mode == 'general':
+            res = askItems([['angle','90.0'],['axis','[0.0,0.0,0.0]'],['point','[0.0,0.0,0.0]']])
+            if res:
+                angle = float(res['angle'])
+                axis = eval(res['axis'])
+                around = eval(res['point'])
         if res:
-            axis = int(res['axis'])
-            angle = float(res['angle'])
             selection.remember(True)
             for F in FL:
-                F.rotate(angle,axis)
-            selection.drawChanges()
-
-
-def rotateAround():
-    """Rotate the selection."""
-    FL = selection.check()
-    if FL:
-        res = askItems([['axis',2],['angle','90.0'],['around','[0.0,0.0,0.0]']])
-        if res:
-            axis = int(res['axis'])
-            angle = float(res['angle'])
-            around = eval(res['around'])
-            GD.debug('around = %s'%around)
-            selection.remember(True)
-            for F in FL:
+                #print "ROTATE %s %s %s " % (angle,axis,around)
                 F.rotate(angle,axis,around)
             selection.drawChanges()
+
+
+def rotateGlobal():
+    rotate('global')
+
+def rotateParallel():
+    rotate('parallel')
+
+def rotateCentral():
+    rotate('central')
+
+def rotateGeneral():
+    rotate('general')
 
 
 def rollAxes():
@@ -555,30 +569,35 @@ def create_menu():
         ("&Select Surface(s)",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
-        ('&List Selection',printSize),
         ("&Convert to Formex",toFormex),
-#        ("&Write Surface Model",write_surface),
-#        ("&Write STL Model",write_stl),
-        ("---",None),
-#        ("&Set Property",setProperty),
+        ("&Write Surface Model",write_surface),
+#        ("---",None),
+        ("&Print Information",
+         [('&Size',printSize),
+          ('&Bbox',printBbox),
+          ]),
+        #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
 #        ("&Toggle Names",toggleNames),
 #        ("&Toggle Numbers",toggleNumbers),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
-        ("&Coarsen surface",coarsen),
-        ("---",None),
-        ("&Transform",
-         [("&Scale Selection",scaleSelection),
-          ("&Non-uniformly Scale Selection",scale3Selection),
-          ("&Translate Selection",translateSelection),
-          ("&Center Selection",centerSelection),
-          ("&Rotate Selection",rotateSelection),
-          ("&Rotate Selection Around",rotateAround),
-#          ("&Roll Axes",rollAxes),
-#          ("&Clip Selection",clipSelection),
-#          ("&Cut at Plane",cutAtPlane),
+        ("&Transform coordinates",
+         [("&Scale",scaleSelection),
+          ("&Scale non-uniformly",scale3Selection),
+          ("&Translate",translateSelection),
+          ("&Center",centerSelection),
+          ("&Rotate",
+           [("&Around Global Axis",rotateGlobal),
+            ("&Around Parallel Axis",rotateParallel),
+            ("&Around Central Axis",rotateCentral),
+            ("&Around General Axis",rotateGeneral),
+            ]),
+          ("&Roll Axes",rollAxes),
+          #          ("&Clip Selection",clipSelection),
+          #          ("&Cut at Plane",cutAtPlane),
           ]),
+        ("&Coarsen surface",coarsen),
         ("---",None),
 #        ("&Show volume model",show_volume),
         #("&Print Nodal Coordinates",show_nodes),

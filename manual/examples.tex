@@ -365,7 +365,7 @@ Besides being used for creating geometries, \pyf also offers interesting possibi
 
 A stent is a medical device used to reopen narrowed arteries. The vast majority of stents are balloon-expandable, which means that the metal structure is deployed by inflating a balloon, located inside the stent. Figure~\ref{fig:cypher-stent} shows an example of such a stent prior to expansion (balloon not shown). The 3D surface is obtained by micro CT and consists of triangles.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -383,7 +383,7 @@ The structure of such a device can be quite complex and difficult to analyse. Th
  
 \code{F = F.toCylindrical().scale([1.,2*radius*pi/360,1.])}
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -399,7 +399,7 @@ The structure of such a device can be quite complex and difficult to analyse. Th
 
 This unrolled geometry can then be used for further investigations. An important property of such a stent is the circumference of a single stent cell. The \code{clip()} method can be used to isolate a single stent cell. In order to obtain a line describing the stent cell, the function \code{intersectionLinesWithPlane()} has been used. The result can be seen in figure~\ref{fig:stent-cell}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
@@ -412,7 +412,7 @@ This unrolled geometry can then be used for further investigations. An important
     \htmladdimg{../images/stent-cell.png}
   \end{htmlonly}  
   \caption{Intersection of stent cell with plane and inner line of stent cell}
-  \label{fig:stent-cell-cell}
+  \label{fig:stent-cell}
 \end{figure}
 
 Finally, the \code{length()} function returns the circumference of the cell, which is 9.19 mm.

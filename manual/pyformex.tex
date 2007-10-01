@@ -13,9 +13,9 @@
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{makeidx}
-%\usepackage{hyperref}
+\usepackage{hyperref}
 %\usepackage[latex2html]{hyperref}
-\usepackage[latex2html,pdftex]{hyperref}
+%\usepackage[latex2html,pdftex]{hyperref}
 \usepackage{html}
 \usepackage{graphicx}
 \usepackage{subfigure}
@@ -132,9 +132,18 @@
 \appendix
 \input{app-gpl}
 
+%\chapter{My INdex}
+%\printindex
+%\begin{theindex}
+%\end{theindex}
+%\chapter*{fake}
+%\label{genindex}
+%\begin{theindex}
+%\end{theindex}
 %\pagebreak
+%\label{genindex}
 %\addcontentsline{toc}{chapter}{Index}
-%\printindex%     first use program MAKEIND to make index !!
+%\addtocounter{page}{2}
 \input{pyformex.ind}			% Index
 
 \end{document}

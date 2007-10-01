@@ -89,8 +89,8 @@ class Objects(object):
         self.values = map(named,self.names)
         if copy:
             self.values = map(deepcopy,self.values) 
-        print 'REMEMBER'
-        print self.values
+        #print 'REMEMBER'
+        #print self.values
         
 
     def changeValues(self,newvalues):
@@ -170,7 +170,7 @@ class DrawableObjects(Objects):
 
     def draw(self,*args,**kargs):
         clear()
-        print "DRAWING WITH SHRINK = %s" % self.shrink
+        #rint "DRAWING WITH SHRINK = %s" % self.shrink
         draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         #if show_numbers:
         #    showNumbers()

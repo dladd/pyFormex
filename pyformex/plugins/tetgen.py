@@ -65,7 +65,6 @@ def readSmesh(fn):
     s = line.strip('\n').split()
     nelems = int(s[0])
     elems = fromfile(fil,sep=' ',dtype=int32, count=4*nelems)
-    print elems.shape
     elems = elems.reshape((-1,4))
     return elems[:,1:]
 
@@ -79,9 +78,11 @@ def readSurface(fn):
     nodes,numbers = readNodes(changeExt(fn,'.node'))
     print "Read %s nodes" % nodes.shape[0]
     elems = readSmesh(changeExt(fn,'.smesh'))
-    if numbers[0] > 0:
-        elems = elems-1
+    print "Read %s elems" % elems.shape[0]
+    if numbers[0] == 1:
+        elems -= 1 
     return nodes,elems
+
 
 def readNeigh(fn):
     """Read a tetgen .neigh file.

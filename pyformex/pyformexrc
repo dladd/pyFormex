@@ -83,12 +83,12 @@ size=(20,20) # size of the pick window
 
 [render]
 mode = 'wireframe'
-ambient = 0.3
-specular = 0.3
+ambient = 0.4
+specular = 0.4
 emission = 0.0
-shininess = 0.3
-light0 = {'position':(0.,0.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
-light1 = {'position':(1.,1.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
+shininess = 0.4
+light0 = {'position':(0.,0.,1.,0.),'specular':0.6,'diffuse':0.6,'ambient':0.6}
+light1 = {'position':(1.,1.,1.,0.),'specular':0.6,'diffuse':0.6,'ambient':0.6}
 light2 = {'position':(-1.,1.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
 
 

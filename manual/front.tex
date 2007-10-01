@@ -5,21 +5,21 @@
 % This makes the contents more accessible from the front page of the HTML.
 \ifhtml
 \chapter*{Front Matter}\label{front}
-\fi
-
-%\input{copyright}
-
+\else
 \begin{abstract}
+\fi
 
 \noindent
 This document is to become the \pyformex manual. As the \pyformex program itself is still under development, this document is by no means final and does not even pretend to be accurate for any version of \pyformex. 
 However, since partial documentation is better than none, we decided to make this preliminary version available to the general public. This document may evolve fast, so check back regularly.
 For the most recent information and for topics that are not yet covered in this manual, we refer the user to the \htmladdnormallinkfoot{pydoc pages}{\pydocpages} that were automatically generated from the \pyformex source.\\\\
 The contributors to this manual are Benedict Verhegghe, Tim Neels, Matthieu De Beule and Peter Mortier.
+\ifhtml
+\else
 \end{abstract}
-
+\fi
 
 %%% Local Variables: 
 %%% mode: latex
-%%% TeX-master: "manual"
+%%% TeX-master: "pyformex"
 %%% End: 

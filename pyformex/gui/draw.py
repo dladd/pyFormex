@@ -488,6 +488,7 @@ def reset():
         view = '__last__',       # Keep the current camera angles
         bbox = 'auto',           # Automatically zoom on the drawed object
         clear = False,
+        shrink = None,
         wait = GD.cfg['draw/wait']
         )
     GD.canvas.resetDefaults(GD.cfg['canvas'])
@@ -501,7 +502,10 @@ def setDrawOptions(d):
 def showDrawOptions():
     global DrawOptions
     GD.message("Current Drawing Options: %s" % DrawOptions)
-    
+
+
+def shrink(v):
+    setDrawOptions({'shrink':v})
     
 
 def setView(name,angles=None):
@@ -597,6 +601,9 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         #print "VIEW=%s" % view
     elif view != '__last__':
         setView(view)
+
+    if shrink is None:
+        shrink = DrawOptions.get('shrink',None)
         
     # Create the colors
     if color == 'prop':
