@@ -12,7 +12,69 @@ This script should be executed with the command
 import sys
 from plugins import tetgen
 from plugins.elements import Tet4 
+from time import strftime, gmtime
+from numpy import *
 
+def writeHeading(fil, nodes, elems, text=''):
+    """Write the heading of the Gambit neutral file.""" #currently only for hexahedral mesh
+    fil.write("        CONTROL INFO 2.2.30\n")
+    fil.write("** GAMBIT NEUTRAL FILE\n")
+    fil.write('%s\n' %text)
+    fil.write('PROGRAM:                Gambit     VERSION:  2.2.30\n')
+    fil.write(strftime('%d %b %Y    %H:%M:%S\n', gmtime()))
+    fil.write('     NUMNP     NELEM     NGRPS    NBSETS     NDFCD     NDFVL\n')
+    fil.write('%10i%10i%10i%10i%10i%10i\n' % (shape(nodes)[0],shape(elems)[0],1,0,3,3))
+    fil.write('ENDOFSECTION\n')
+
+def writeNodes(fil, nodes, nofs=1):
+    """Write nodal coordinates.
+
+    The nofs specifies an offset for the node numbers.
+    The default is 1, because Gambit numbering starts at 1.  
+    """
+    fil.write('   NODAL COORDINATES 2.2.30\n')
+    for i,n in enumerate(nodes):
+        fil.write("%10d%20.11e%20.11e%20.11e\n" % ((i+nofs,)+tuple(n)))
+    fil.write('ENDOFSECTION\n')
+
+def writeElems(fil, elems1, eofs=1, nofs=1):
+    """Write element connectivity.
+
+    The eofs and nofs specify offsets for element and node numbers.
+    The default is 1, because Gambit numbering starts at 1.  
+    """
+    #pyFormex uses the same convention for hexahedral elements as ABAQUS
+    #Gambit uses a different convention
+    #function currently only for hexahedral mesh
+    elems = elems1.copy()
+    elems[:,2] = elems1[:,3]
+    elems[:,3] = elems1[:,2]
+
+    elems[:,6] = elems1[:,7]
+    elems[:,7] = elems1[:,6]
+    
+    fil.write('      ELEMENTS/CELLS 2.2.30\n')
+    for i,e in enumerate(elems+nofs):
+        fil.write('%8d %2d %2d %8d%8d%8d%8d%8d%8d%8d\n               %8d\n' % ((i+eofs,4,8)+tuple(e)))
+    fil.write('ENDOFSECTION\n')
+    
+def writeGroup(fil, elems):
+    """Write group of elements.
+
+    The eofs and nofs specify offsets for element and node numbers.
+    The default is 1, because Gambit numbering starts at 1.  
+    """
+    fil.write('       ELEMENT GROUP 2.2.30\n')
+    fil.write('GROUP:%11d ELEMENTS:%11d MATERIAL:%11d NFLAGS:%11d\n' % (1,shape(elems)[0],2,1))
+    fil.write('%32s\n' %'fluid')
+    fil.write('%8d\n' %0)
+    n =  shape(elems)[0]/10
+    for i in range(n):
+        fil.write('%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n' %(10*i+1,10*i+2,10*i+3,10*i+4,10*i+5,10*i+6,10*i+7,10*i+8,10*i+9,10*i+10))
+    for j in range(shape(elems)[0]-10*n):
+        fil.write('%8d' %(10*n+j+1))
+    fil.write('\n')
+    fil.write('ENDOFSECTION\n')
 
 def read_tetgen(filename):
     """Read a tetgen tetraeder model.
