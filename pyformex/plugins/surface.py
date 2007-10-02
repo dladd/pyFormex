@@ -295,16 +295,21 @@ class Surface(object):
         """
         self.coords = self.edges = self.faces = None
         self.elems = None
+        self.area_ = None
+        self.normals = None
         self.p = None
         #print len(args)
         if len(args) == 0:
             return
         if len(args) == 1:
             # a Formex/STL model
-            a = Formex(args[0])
+            a = args[0]
+            if not isinstance(a,Formex):
+                a = Formex(a)
             if a.nplex() != 3:
                 raise ValueError,"Expected a plex-3 Formex"
             self.coords,self.elems = a.feModel()
+            self.refresh()
 
         else:
             a = Coords(args[0])
@@ -510,19 +515,57 @@ class Surface(object):
         self.write(tmp,'gts')
         GD.message("Coarsening with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
-        runCommand(cmd)
+        sta,out = runCommand(cmd)
+        if sta or verbose:
+            GD.message(out)
         GD.message("Reading coarsened model from %s" % tmp1)
         self.__init__(*read_gts(tmp1))        
 
 
-def areaNormals(x):
-    """Compute the area and normal vectors of the triangles in x[n,3,3].
+    def smooth(self,lambda_value=0.5,n_iterations=2,
+               fold_smoothing=None,verbose=False):
+        """Smooth the surface using gtssmooth."""
+        cmd = 'gtssmooth'
+        if fold_smoothing:
+            cmd += ' -f %s' % fold_smoothing
+        cmd += ' %s %s' % (lambda_value,n_iterations)
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        tmp1 = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Smoothing with command\n %s" % cmd)
+        cmd += ' < %s > %s' % (tmp,tmp1)
+        sta,out = runCommand(cmd)
+        if sta or verbose:
+            GD.message(out)
+        GD.message("Reading smoothed model from %s" % tmp1)
+        self.__init__(*read_gts(tmp1))        
 
-    The normal vectors are normalized.
-    The area is always positive.
-    """
-    area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
-    return 0.5 * area, normals
+
+    def areaNormals(self):
+        """Compute the area and normal vectors of the surface triangles.
+
+        The normal vectors are normalized.
+        The area is always positive.
+
+        The values are returned and saved in the object.
+        """
+        self.refresh()
+        x = self.coords[self.elems]
+        if self.area_ is None or self.normals is None:
+            area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
+            area *= 0.5
+            self.area_,self.normals = area,normals
+        return self.area_,self.normals
+
+
+    def area(self):
+        """Return the area of the surface"""
+        if self.area_ is None:
+            self.areaNormals()
+        return self.area_.sum()
 
 
 def degenerate(area,norm):
@@ -533,6 +576,60 @@ def degenerate(area,norm):
     """
     return unique(concatenate([where(area<=0)[0],where(isnan(norm))[0]]))
     
+
+    
+def cut3AtPlane(F,p,n,newprops=None):
+    """Returns all elements of the Formex cut at plane.
+
+    F is a Formex of plexitude 3.
+    p is a point specified by 3 coordinates.
+    n is the normal vector to a plane, specified by 3 components.
+
+    The return value is a Formex of the same plexitude with all elements
+    located completely at the positive side of the plane (p,n) retained,
+    all elements lying completely at the negative side removed and the
+    elements intersecting the plane replaced by new elements filling up
+    the parts at the positive side.
+    """
+    n = asarray(n)
+    p = asarray(p)
+    F = F.clip(F.test('any',n, p)) # remove elements at the negative side
+    c = F.test('all',n,p)
+    G = F.clip(c)  # save elements completely at positive side
+    S = F.cclip(c) # select elements that will be cut by plane
+    C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
+    t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
+    T = (t >= 0)*(t <= 1)
+    P = P[T].reshape(-1,2,3)
+    # split problem into two cases
+    d = S.f.distanceFromPlane(p,n)
+    w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
+    w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
+    T1 = T[w1]
+    T2 = T[w2]
+    P1 = P[w1]
+    P2 = P[w2]
+    S1 = S[w1]
+    S2 = S[w2]
+    # case 1: triangle after cut
+    v0 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
+    K2 = asarray([S1[i,v0[i]] for i in range(shape(S1)[0])]).reshape(-1,1,3)
+    E1 = column_stack([P1,K2])
+    # case 2: quadrilateral after cut
+    v1 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
+    v2 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
+    L2 = asarray([S2[i,v1[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
+    L3 = asarray([S2[i,v2[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
+    E2 = column_stack([P2,L2])
+    E3 = column_stack([P2[:,0].reshape(-1,1,3),L2,L3])
+    # join all the pieces
+    if F.p is None:
+        return Formex(E1)+Formex(E2)+Formex(E3)+G
+    else:
+        if newprops is None:
+            newprops = range(3)
+        return Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])+G
 
 def read_error(cnt,line):
     """Raise an error on reading the stl file."""

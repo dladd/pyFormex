@@ -21,7 +21,7 @@ transformations.
       packages=['pyformex','pyformex.gui','pyformex.plugins','pyformex.examples'],
       package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
       scripts=['pyformex/pyformex'],
-      data_files=[('doc',['manual/html'])],
+#      data_files=[('doc',['manual/html/*'])],
       classifiers=[
     'Development Status :: 3 - Alpha',
     'Environment :: Console',

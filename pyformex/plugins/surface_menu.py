@@ -20,6 +20,7 @@ from gui import actors
 from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
+from plugins import formex_menu
 
 import commands, os, timer
 
@@ -69,12 +70,16 @@ def printSize():
         S = named(s)
         GD.message("Surface %s has %d vertices, %s edges and %d faces" %
                    (s,S.ncoords(),S.nedges(),S.nelems()))
-    
 
 def printBbox():
     for s in selection.names:
         S = named(s)
         GD.message("Surface %s has bbox %s" % (s,S.bbox()))
+
+def printArea():
+    for s in selection.names:
+        S = named(s)
+        GD.message("Surface %s has area %s" % (s,S.area()))
 
 
 def toFormex(suffix=''):
@@ -94,11 +99,38 @@ def toFormex(suffix=''):
     if suffix:
         newnames = [ n + suffix for n in newnames ]
 
-    newvalues = [ named(n).toFormex() for n in selection.names ]
+    newvalues = [ named(n).toFormex() for n in newnames ]
     export2(newnames,newvalues)
 
     if not suffix:
         selection.clear()
+    formex_menu.selection.set(newnames)
+
+
+
+def fromFormex(suffix=''):
+    """Transform the Formex selection to Surfaces.
+
+    If a suffix is given, the Surfaces are stored with names equal to the
+    Formex names plus the suffix, else, the Formex names will be used
+    (and the Formices will thus be cleared from memory).
+    """
+    if not formex_menu.selection.check():
+        formex_menu.selection.ask()
+
+    if not formex_menu.selection.names:
+        return
+
+    newnames = formex_menu.selection.names
+    if suffix:
+        newnames = [ n + suffix for n in newnames ]
+
+    okformices = dict([ (n,Surface(named(n))) for n in newnames if named(n).nplex() == 3 ])
+    export(okformices)
+
+    if not suffix:
+        formex_menu.selection.clear()
+    selection.set(okformices.keys())
 
 
 def toggle_shrink():
@@ -217,6 +249,22 @@ def coarsen():
             if res['max_cost'] <= 0:
                 res['max_cost'] = None
             S.coarsen(**res)
+            selection.draw()
+
+
+def smooth():
+    S = selection.check('single')
+    if S:
+        res = askItems([('lambda_value',0.5),
+                        ('n_iterations',2),
+                        ('fold_smoothing',None),
+                        ('verbose',False),
+                        ],'Laplacian Smoothing')
+        if res:
+            selection.remember()
+            if res['fold_smoothing'] is not None:
+                res['fold_smoothing'] = float(res['fold_smoothing'])
+            S.smooth(**res)
             selection.draw()
 
 
@@ -570,11 +618,13 @@ def create_menu():
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
         ("&Convert to Formex",toFormex),
+        ("&Convert from Formex",fromFormex),
         ("&Write Surface Model",write_surface),
 #        ("---",None),
         ("&Print Information",
          [('&Size',printSize),
           ('&Bbox',printBbox),
+          ('&Area',printArea),
           ]),
         #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
@@ -598,6 +648,7 @@ def create_menu():
           #          ("&Cut at Plane",cutAtPlane),
           ]),
         ("&Coarsen surface",coarsen),
+        ("&Smooth surface",smooth),
         ("---",None),
 #        ("&Show volume model",show_volume),
         #("&Print Nodal Coordinates",show_nodes),
