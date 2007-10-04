@@ -1,4 +1,3 @@
-# canvas.py
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
@@ -14,6 +13,8 @@
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
+
+from actors import Actor
 
 # Needed to initialize the fonts
 GLUT.glutInit([])
@@ -166,7 +167,7 @@ def unProject(x,y,win):
 
 ### Decorations ###############################################
 
-class Decoration(object):
+class Decoration(Actor):
     """A decoration is a 2-D drawing at canvas position x,y.
 
     All decoration have at least the following attributes:
@@ -180,10 +181,7 @@ class Decoration(object):
         """Create a decoration at acnvas coordinates x,y"""
         self.x = int(x)
         self.y = int(y)
-
-    def draw(self,mode='wireframe'):
-        """Draw the decoration."""
-        pass
+        Actor.__init__(self)
 
         
 class Text(Decoration):
@@ -197,7 +195,7 @@ class Text(Decoration):
         self.adjust = adjust
         self.color = colors.GLColor(color)
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         """Draw the text."""
         GL.glColor3fv(self.color)
         drawText2D(self.text,self.x,self.y,self.font,self.adjust)
@@ -215,7 +213,7 @@ class ColorLegend(Decoration):
         self.font = font
         self.dec = 2   # number of decimals
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         n = len(self.cl.colors)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
@@ -261,7 +259,7 @@ class Grid(Decoration):
         else:
             self.linewidth = float(linewidth)
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         if self.color:
             GL.glColor3fv(self.color)
         if self.linewidth:
@@ -278,5 +276,5 @@ class Line(Decoration):
         self.x2 = x2
         self.y2 = y2
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         drawLine(self.x1,self.y1,self.x2,self.y2)

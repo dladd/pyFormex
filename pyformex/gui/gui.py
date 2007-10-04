@@ -208,7 +208,7 @@ class GUI(QtGui.QMainWindow):
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
         # Add the shrink button
-        if self.modebar:
+        if self.modebar and GD.cfg.get('gui/shrinkbutton',False):
             toolbar.addShrinkButton(self.modebar)
          
         if mmenu:

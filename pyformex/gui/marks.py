@@ -1,4 +1,3 @@
-# marks.py
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
@@ -15,11 +14,12 @@ from OpenGL import GL,GLU,GLUT
 from colors import *
 from formex import *
 from decors import glutFont,drawGlutText
+from actors import Actor
 
  
 ### Marks ###############################################
 
-class Mark(object):
+class Mark(Actor):
     """An 2D drawing inserted at a 3D position of the scene.
 
     The minimum attributes and methods are:
@@ -29,9 +29,7 @@ class Mark(object):
     
     def __init__(self,pos):
         self.pos = pos
-
-    def draw(self,mode='wireframe'):
-        pass
+        Actor.__init__(self)
 
 
 class TextMark(Mark):
@@ -42,7 +40,7 @@ class TextMark(Mark):
         self.text = text
         self.font = glutFont(font)
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         GL.glColor3f(0.0,0.0,0.0)
         GL.glRasterPos3fv(self.pos)
         drawGlutText(self.text,self.font)
@@ -68,7 +66,7 @@ class MarkList(Mark):
         self.color = color
         self.font = glutFont(font)
 
-    def draw(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe'):
         if self.color:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
