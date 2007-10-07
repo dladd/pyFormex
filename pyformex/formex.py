@@ -69,6 +69,18 @@ def vectorPairNormals(vec1,vec2,normalized=True):
         return cross(vec1,vec2)
 
 
+def vectorTripleProduct(vec1,vec2,vec3):
+    """Compute triple product vec1 . (vec2 x vec3).
+
+    vec1, vec2, vec3 are (n,3) shaped arrays holding collections of vectors.
+    The result is a (n,) shaped array with the triple product of each set
+    of corresponding vectors fromvec1,vec2,vec3.
+    This is also the square of the volume of the parallellepid formex by
+    the 3 vectors.
+    """
+    return dot(vec1,cross(vec2,vec3))
+
+
 def pattern(s):
     """Return a line segment pattern created from a string.
 

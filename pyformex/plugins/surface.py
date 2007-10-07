@@ -74,10 +74,10 @@ def compactElems(edges,faces):
     elems = edges[faces]
     flag0 = (elems[:,0,0]==elems[:,1,0]) + (elems[:,0,0]==elems[:,1,1])
     flag2 = (elems[:,2,0]==elems[:,1,0]) + (elems[:,2,0]==elems[:,1,1])
-    nod0 = where(flag0,elems[:,0,1],elems[:,0,0])
-    nod1 = where(flag0,elems[:,0,0],elems[:,0,1])
-    nod2 = where(flag2,elems[:,2,0],elems[:,2,1])
-    elems = column_stack([nod1,nod2,nod0])
+    nod0 = where(flag0,elems[:,0,0],elems[:,0,1])
+    nod1 = where(flag2,elems[:,2,0],elems[:,2,1])
+    nod2 = where(flag0,elems[:,0,1],elems[:,0,0])
+    elems = column_stack([nod0,nod1,nod2])
     return elems
 
 
@@ -253,6 +253,24 @@ def write_off(fn,nodes,elems):
 
 def write_smesh(fn,nodes,elems):
     tetgen.writeSurface(fn,nodes,elems)
+
+
+def surface_volume(x,pt=None):
+    """Return the volume inside a 3-plex Formex.
+
+    For each element of Formex, return the volume of the tetrahedron
+    formed by the point pt (default the center of x) and the 3 points
+    of the element.
+    """
+    x -= x.center()
+    a,b,c = [ x[:,i,:] for i in range(3) ]
+    d = cross(b,c)
+    #print d.shape
+    e = (a*d).sum(axis=-1)
+    #print e
+    v = sign(e) * abs(e)/6.
+    #print v
+    return v
 
 ############################################################################
 # The Surface class
@@ -480,7 +498,25 @@ class Surface(object):
     @coordsmethod
     def affine(self,*args,**kargs):
         pass
-    
+ 
+
+    def check(self,verbose=False):
+        """Check the surface using gtscheck."""
+        cmd = 'gtscheck'
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Checking with command\n %s" % cmd)
+        cmd += ' < %s' % tmp
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        GD.message(out)
+        if sta == 0:
+            GD.message('The surface is a closed, orientable non self-intersecting manifold')
+
+   
 
     def coarsen(self,min_edges=None,max_cost=None,
                 mid_vertex=False, length_cost=False, max_fold = 1.0,
@@ -516,6 +552,8 @@ class Surface(object):
         GD.message("Coarsening with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
         sta,out = runCommand(cmd)
+        os.remove(tmp)
+        os.remove(tmp1)
         if sta or verbose:
             GD.message(out)
         GD.message("Reading coarsened model from %s" % tmp1)
@@ -538,6 +576,8 @@ class Surface(object):
         GD.message("Smoothing with command\n %s" % cmd)
         cmd += ' < %s > %s' % (tmp,tmp1)
         sta,out = runCommand(cmd)
+        os.remove(tmp)
+        os.remove(tmp1)
         if sta or verbose:
             GD.message(out)
         GD.message("Reading smoothed model from %s" % tmp1)
@@ -566,6 +606,13 @@ class Surface(object):
         if self.area_ is None:
             self.areaNormals()
         return self.area_.sum()
+
+
+    def volume(self):
+        self.refresh()
+        x = self.coords[self.elems]
+        return surface_volume(x).sum()
+
 
 
 def degenerate(area,norm):

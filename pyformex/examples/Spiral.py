@@ -15,6 +15,7 @@ m = 36 # number of cells along torus big circle
 n = 10 # number of cells along torus small circle
 # First create a long rectangle
 
+reset()
 setDrawOptions({'clear':True})
 F = Formex(pattern("164"),[1,2,3]); draw(F)
 F = F.replic(m,1,0); draw(F)
