@@ -77,8 +77,8 @@ def setOpenglFormat():
         fmt.setDirectRendering(True)
     if GD.options.nodri:
         fmt.setDirectRendering(False)
-    if GD.options.alpha:
-        fmt.setAlpha(True)
+    #if GD.options.alpha:
+    #    fmt.setAlpha(True)
     #fmt.setRgba(False)
     if GD.options.debug:
         printOpenglFormat(fmt)

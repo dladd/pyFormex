@@ -52,7 +52,9 @@ def export(dic):
     GD.PF.update(dic)
 
 
-def export2(names,values):
+def export2(names,values=None):
+    if values is None:
+        values = [ Globals().get(n,None) for n in names ]
     export(dict(zip(names,values)))
 
 

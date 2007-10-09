@@ -327,6 +327,7 @@ class Surface(object):
             if a.nplex() != 3:
                 raise ValueError,"Expected a plex-3 Formex"
             self.coords,self.elems = a.feModel()
+            self.p = a.p
             self.refresh()
 
         else:
@@ -366,8 +367,9 @@ class Surface(object):
     # To keep the data consistent:
     # ANY function that uses self.elems should call self.refresh()
     #     BEFORE using it.
-    # ANY function that changes self.elems should call self.refresh()
-    #     AFTER changing it.
+    # ANY function that changes self.elems should
+    #     - invalidate self.edges and/or self.faces by setting it to None,
+    #     - call self.refresh() AFTER changing it.
 
     def refresh(self):
         """Make the internal information consistent and complete.
@@ -477,7 +479,7 @@ class Surface(object):
     def toFormex(self):
         """Convert the surface to a Formex."""
         self.refresh()
-        return Formex(self.coords[self.elems])
+        return Formex(self.coords[self.elems],self.p)
 
 
     @coordsmethod

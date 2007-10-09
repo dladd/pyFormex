@@ -118,7 +118,6 @@ def toFormex(suffix=''):
     formex_menu.selection.set(newnames)
 
 
-
 def fromFormex(suffix=''):
     """Transform the Formex selection to Surfaces.
 

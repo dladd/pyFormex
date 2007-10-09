@@ -21,6 +21,7 @@ import simple
 from plugins import elements
 from plugins.surface import Surface
 
+import timer
 
 def rotMatrix(v,n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
@@ -115,6 +116,17 @@ def drawLines(x,color=None):
     GL.glEnd()
 
 
+def drawArrayElems(x,elems,mode):
+    print x.shape
+    print elems.shape
+    print "x is contiguous: %s" % x.flags['C_CONTIGUOUS']
+    print "elems is contiguous: %s" % elems.flags['C_CONTIGUOUS']
+    GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
+    GL.glVertexPointerf(x)
+    GL.glDrawElementsui(mode,elems)
+    GL.glDisableClientState(GL.GL_VERTEX_ARRAY)
+
+
 def drawLineElems(x,elems,color=None):
     """Draw a collection of lines.
 
@@ -125,15 +137,11 @@ def drawLineElems(x,elems,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    drawLines(x[elems],color)
-##     GL.glBegin(GL.GL_LINES)
-##     for i,e in enumerate(elems):
-##         if color is not None:
-##             GL.glColor3fv(color[i])
-##         GL.glVertex3fv(x[e[0]])
-##         GL.glVertex3fv(x[e[1]])
-##     GL.glEnd()
-
+    if GD.options.arrays:
+        drawArrayElems(x,elems,GL.GL_LINES)
+    else:
+        drawLines(x[elems],color)
+        
 
 
 ## PERHAPS THIS COULD BE REPLACED WITH drawLines by reshaping the x ARRAY
@@ -246,22 +254,11 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     GL.glEnd()
 
 
-def drawTriangleElems(coords,elems,mode,color=None,alpha=1.0):
-    drawTriangles(coords[elems],mode,color,alpha)
-
-# Experiment using arrays
-## def drawTriArray(x,c,mode):
-##     GL.glVertexPointerf(x)
-##     GL.glColorPointerf(c)
-##     GL.glEnable(GL.GL_VERTEX_ARRAY)
-##     GL.glEnable(GL.GL_COLOR_ARRAY)
-##     if mode == 'smooth':
-##         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-##         GL.glNormalPointerf(normal)
-##         GL.glEnable(GL.GL_NORMAL_ARRAY)
-##     GL.glBegin(GL.GL_TRIANGLES)
-##     GL.glDrawArrays(GL.GL_TRIANGLES,0,x.shape[0])
-##     GL.glEnd()
+def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
+    if GD.options.arrays:
+        drawArrayElems(x,elems,GL.GL_TRIANGLES)
+    else:
+        drawTriangles(x[elems],mode,color,alpha)
 
     
 def drawPolygons(x,mode,color=None):
@@ -1016,6 +1013,8 @@ class FormexActor(Actor,Formex):
 
 #############################################################################
 
+from plugins.connectivity import reverseIndex
+
 class SurfaceActor(Actor,Surface):
     """Draws a triangulated surface specified by points and connectivity."""
 
@@ -1083,14 +1082,23 @@ class SurfaceActor(Actor,Surface):
         else: # a full color array : use as is
             pass
 
+        print "SURFACE COLOR = %s" % str(color)
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
 
+        t = timer.Timer()
         if mode=='wireframe' :
-            drawLines(self.coords[self.edges],color)
+            #print color.shape
+            #print self.edges.shape
+            #print self.faces.shape
+            rev = reverseIndex(self.faces)
+            if color is not None:
+                color = color[rev[:,-1]]
+            drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            drawTriangles(self.coords[self.elems],mode,color,alpha)
+            drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+        GD.message("Drawing time: %s seconds" % t.seconds())
 
 ### End

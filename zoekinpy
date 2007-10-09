@@ -2,7 +2,7 @@
 # Zoek een string in all .py files
 #
 #set -f
-files="pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/examples/*.py"
+files="pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py pyformex/examples/*.py pyformex/examples/*/*.py"
 
 if [ "$1" = "-a" ]; then
     shift
