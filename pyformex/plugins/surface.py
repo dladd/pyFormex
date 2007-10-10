@@ -675,8 +675,7 @@ class Surface(object):
                     p = p + 1
                 else: 
                     flag = -1
-        self.p = prop
-        return self.p
+        return prop
 
 
 

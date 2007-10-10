@@ -299,7 +299,7 @@ def detectParts():
         res  = askItems([('angle',45.)])
         if res:
             selection.remember()
-            S.detectParts(**res)
+            S.p = S.detectParts(**res)
             selection.draw()
 
 
