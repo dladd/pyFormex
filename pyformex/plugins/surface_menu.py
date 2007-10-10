@@ -16,7 +16,7 @@ STL plugin menu for pyFormex.
 """
 
 import globaldata as GD
-from gui import actors
+from gui import actors,colors
 from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
@@ -27,7 +27,23 @@ import commands, os, timer
 ##################### select, read and write ##########################
 
 
+def draw_edge_numbers(n):
+    """Draw the edge numbers of the named surface."""
+    S = named(n)
+    F = Formex(S.coords[S.edges]) 
+    return drawNumbers(F,color=colors.red)
+
+def draw_node_numbers(n):
+    """Draw the node numbers of the named surface."""
+    S = named(n)
+    F = Formex(S.coords) 
+    return drawNumbers(F,color=colors.blue)
+
+
 selection = DrawableObjects(clas=Surface)
+selection.annotations.extend([[draw_edge_numbers,False],
+                              [draw_node_numbers,False],
+                              ])
 
 def read_Surface(fn):
     GD.message("Reading file %s" % fn)
@@ -625,6 +641,15 @@ def show_volume():
     PF['vol_model'] = F
 
 
+## def toggleNames():
+##     selection.toggleAnnotation(0)
+## def toggleElemNumbers():
+##     selection.toggleAnnotation(1)
+def toggleEdgeNumbers():
+    selection.toggleAnnotation(2)
+def toggleNodeNumbers():
+    selection.toggleAnnotation(3)
+    
 ################### menu #################
 
 _menu = None
@@ -650,7 +675,9 @@ def create_menu():
         #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
         ("&Toggle Names",selection.toggleNames),
-        ("&Toggle Numbers",selection.toggleNumbers),
+        ("&Toggle Face Numbers",selection.toggleNumbers),
+        ("&Toggle Edge Numbers",toggleEdgeNumbers),
+        ("&Toggle Node Numbers",toggleNodeNumbers),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
         ("&Characteristics",

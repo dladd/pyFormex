@@ -474,7 +474,7 @@ class Surface(object):
         are the mean values of all points of the element.
         The return value is an (nfaces,3) shaped Coords array.
         """
-        return self.coords.mean(axis=0)
+        return self.toFormex().centroids()
 
     #  Distance
 

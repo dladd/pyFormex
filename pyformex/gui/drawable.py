@@ -15,6 +15,10 @@ import globaldata as GD
 from OpenGL import GL,GLU
 
 from colors import *
+from numpy import *
+from formex import vectorPairNormals
+
+import simple
 
 def rotMatrix(v,n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
@@ -187,7 +191,6 @@ def drawQuadraticCurves(x,color=None,n=8):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    import simple
     H = simple.quadraticCurve(identity(3),n)
     for i in range(x.shape[0]):
         if color is not None:
@@ -478,7 +481,7 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
     The return value is a tuple color,colormap. colormap will return
     unchanged, unless color is an integer array, meaning a color index.
     """
-    #GD.debug("COLOR IN: %s" % str(color))
+    GD.debug("COLOR IN: %s" % str(color))
     color = saneColor(color)
     if color is not None:
         if color.dtype.kind == 'i':
@@ -492,9 +495,9 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
             if color.ndim == 2 and color.shape[0] < ncolors:
                 color = resize(color,(ncolors,3))
 
-    #GD.debug("COLOR OUT: %s" % str(color))
-    #if colormap is not None:
-        #GD.debug("MAP: %s" % str(colormap))
+    GD.debug("COLOR OUT: %s" % str(color))
+    if colormap is not None:
+        GD.debug("MAP: %s" % str(colormap))
     return color,colormap
 
 
@@ -559,21 +562,22 @@ class Drawable(object):
             self.drawGL(mode)
         finally:
             GL.glEndList()
+        
+    def nelems(self):
+        return 1
 
     def delete_list(self):
         if self.list:
             GL.glDeleteLists(self.list,1)
         self.list = None
-        
-    def nelems(self):
-        return 1
     
     def setLineWidth(self,linewidth):
         """Set the linewidth of the Actor."""
         self.linewidth = saneLineWidth(linewidth)
 
-    def setColor(self,color=None,colormap=None):
-        """Set the color of the Actor."""
-        self.color,self.colormap = saneColorSet(color,colormap,self.nelems()) 
+    def setColor(self,color=None,colormap=None,ncolors=1):
+        """Set the color of the Drawable."""
+        self.color,self.colormap = saneColorSet(color,colormap)
+
 
 ### End

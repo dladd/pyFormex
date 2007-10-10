@@ -444,8 +444,8 @@ def flyThru():
         flyAlong(path)
     else:
         warning("You have to define a flypath first!")
-     
    
+
 
 ################### menu #################
 

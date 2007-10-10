@@ -155,28 +155,42 @@ class Objects(object):
         self.clear()
 
 
+
+def draw_object_name(n):
+    """Draw the name of an object at its center."""
+    return drawText3D(named(n).center(),n)
+
+def draw_elem_numbers(n):
+    """Draw the numbers of an object's elements."""
+    return drawNumbers(named(n))
+
+   
+
 class DrawableObjects(Objects):
     """A selection of drawable objects from the globals().
 
+    annotations, if set, is a list of (func,active) tuples, where
+    func is a function that is to be called with the object name as argument
+      to draw some annotation for the object,
+    active is a flag to signal if the annotation should be drawn or not.
+
+    The default is to provide object name and element numbers.
     """
     def __init__(self,*args,**kargs):
         Objects.__init__(self,*args,**kargs)
         self.autodraw = False
-        self.show_vert_numbers = False
-        self.show_edge_numbers = False
-        self.show_elem_numbers = False
         self.shrink = None
-        self.show_numbers = False
-        self.shownnumbers = []
-        self.show_names = False
-        self.shownnames = []
+        self.annotations = [[draw_object_name,False],[draw_elem_numbers,False]]
+        self._annotations = {}
 
 
     def draw(self,*args,**kargs):
         clear()
         draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
-        if self.show_numbers:
-            self.showNumbers()
+        #print self.annotations
+        for i,a in enumerate(self.annotations):
+            if a[1]:
+                self.drawAnnotation(i)
 
 
     def ask(self,mode='multi'):
@@ -202,64 +216,48 @@ class DrawableObjects(Objects):
         self.draw()
 
 
-    def toggleNumbers(self,onoff=None):
+    def toggleAnnotation(self,i=0,onoff=None):
         """Toggle the display of number On or Off.
 
         If given, onoff is True or False. 
         If no onoff is given, this works as a toggle. 
         """
+        active = self.annotations[i][1]
+        #print "WAS"
+        #print self.annotations
         if onoff is None:
-            self.show_numbers = not self.show_numbers
+            active = not active
         elif onoff:
-            self.show_numbers = True
+            active = True
         else:
-            self.show_numbers = False
-        if self.show_numbers:
-            self.showNumbers()
+            active = False
+        self.annotations[i][1] = active
+        #print "BECOMES"
+        #print self.annotations
+        if active:
+            self.drawAnnotation(i)
         else:
-            self.removeNumbers()
+            self.removeAnnotation(i)
+        #print self._annotations
 
 
-    def showNumbers(self):
-        """Draw the numbers for the current selection."""
-        self.shownnumbers = [ drawNumbers(named(n)) for n in self.names ]
+    def drawAnnotation(self,i=0):
+        """Draw some annotation for the current selection."""
+        #print "DRAW %s" % i
+        self._annotations[i] = [ self.annotations[i][0](n) for n in self.names ]
 
 
-    def removeNumbers(self):
-        """Remove (all) the element numbers."""
-        map(undraw,self.shownnumbers)
-        self.shownnumbers = []
+    def removeAnnotation(self,i=0):
+        """Remove the annotation i."""
+        #print "REMOVE %s" % i
+        map(undraw,self._annotations[i])
+        del self._annotations[i]
 
 
-    def toggleNames(self,onoff=None):
-        """Toggle the display of name On or Off.
-
-        If given, onoff is True or False. 
-        If no onoff is given, this works as a toggle. 
-        """
-        if onoff is None:
-            self.show_names = not self.show_names
-        elif onoff:
-            self.show_names = True
-        else:
-            self.show_names = False
-        if self.show_names:
-            self.showNames()
-        else:
-            self.removeNames()
-        pass
-
-
-    def showNames(self):
-        """Draw the nubers for the current selection."""
-        self.shownnames = [ drawText3D(named(n).center(),n) for n in self.names ]
-
-
-    def removeNames(self):
-        """Remove (all) the element names."""
-        map(undraw,self.shownnames)
-        self.shownnames = []
-      
+    def toggleNames(self):
+        self.toggleAnnotation(0)
+    def toggleNumbers(self):
+        self.toggleAnnotation(1)
 
 if __name__ == "__main__":
     print __doc__
