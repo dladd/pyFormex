@@ -17,7 +17,7 @@ This is compatible with the pyFormex data model.
 
 import os
 import globaldata as GD
-from plugins import tetgen, connectivity, stl
+from plugins import tetgen,connectivity
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
@@ -179,7 +179,7 @@ def read_gambit_neutral(fn):
     The .neu file nodes are numbered from 1!
     Returns a nodes,elems tuple.
     """
-    runCommand("/home/pmortier/pyformex/external/gambit-neu '%s'" % fn)
+    runCommand("%s/external/gambit-neu '%s'" % (GD.cfg['pyformexdir'],fn))
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
@@ -614,8 +614,34 @@ class Surface(object):
         self.refresh()
         x = self.coords[self.elems]
         return surface_volume(x).sum()
-    
-    
+
+
+    def edgeElems(self):
+        """Find the elems connected to edges."""
+        return connectivity.reverseIndex(self.faces)
+
+
+    def edgeNelems(self):
+        """Find the number of elems connected to edges."""
+        return (self.edgeElems() >=0).sum(axis=-1)
+
+
+    def borderEdges(self):
+        """Detect the border elements of Surface.
+
+        The border elements are the edges having less than 2 connected elements.
+        Returns a list of edge numbers.
+        """
+        return where(self.edgeNelems() <= 1)[0]
+
+
+    def border(self):
+        """Return the border of Surface as a Plex-2 Formex.
+
+        The border elements are the edges having less than 2 connected elements.
+        Returns a list of edge numbers.
+        """
+        return Formex(self.coords[self.edges[self.borderEdges()]])
     def detectParts(self,angle):
         """Detects different parts of the surface.
         
@@ -651,6 +677,7 @@ class Surface(object):
                     flag = -1
         self.p = prop
         return self.p
+
 
 
 def degenerate(area,norm):
@@ -814,46 +841,6 @@ def off_to_tet(fn):
     GD.message("Transforming .OFF model %s to tetgen .smesh" % fn)
     nodes,elems = read_off(fn)
     write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
-
-
-def border(elems):
-    """Detect the border elements of an STL model.
-
-    The input is an (nelems,3) integer array of elements each defined
-    by 3 node numbers.
-    The return value is an (nelems,3) bool array flagging all the border edges.
-    The result can be further used as follows:
-      where(result) gives a tuple of indices of the border edges
-      result.sum(axis=1) gives the number of border edges for all elements
-      where(any(result,axis=1))[0] gives a list of elements with borders
-    """
-    magic = elems.max() + 1
-    if magic > 2**31:
-        raise RuntimeError,"Cannot detect border for more than 2**31 nodes"
-
-    triedges = [ [0,1], [1,2], [2,0] ]
-    # all the edges of all elements (nelems,3,2)
-    edges = elems[:,triedges].astype(int64)
-    # encode the edges and reverse edges
-    codes = edges[:,:,0] * magic + edges[:,:,1]  
-    rcodes = edges[:,:,1] * magic + edges[:,:,0]
-    # sort the edges to facilitate searching
-    fcodes = codes.ravel()
-    fcodes.sort()
-    # lookup reverse edges matching edges: if they exist, fcodes[pos]
-    # will equal rcodes
-    pos = fcodes.searchsorted(rcodes).clip(min=0,max=fcodes.shape[0]-1)
-    return fcodes[pos] != rcodes
-
-
-def nborder(elems):
-    """Detect the border elements of an STL model.
-
-    Returns an (nelems) integer array with the number of border edges
-    for each all elements. This is equivalent to
-    border(elems).sum(axis=1).
-    """
-    return border(elems).sum(axis=1)
 
 
 def magic_numbers(elems,magic):

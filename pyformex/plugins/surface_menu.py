@@ -236,6 +236,20 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
             GD.gui.setBusy(False)
 
 #
+# Operations with surface type, border, ...
+#
+def printBorder():
+    S = selection.check('single')
+    if S:
+        print S.edgeElems()
+        print S.edgeNelems()
+        print S.borderEdges()
+        F = S.border()
+        print F.shape
+        draw(F,color='red')
+        export({'border':F})
+
+#
 # Operations using gts library
 #
 def coarsen():
@@ -659,6 +673,10 @@ def create_menu():
 #        ("&Toggle Names",toggleNames),
 #        ("&Toggle Numbers",toggleNumbers),
         ("&Undo Last Changes",selection.undoChanges),
+        ("---",None),
+        ("&Border",
+         [("&Print Border",printBorder),
+          ]),
         ("---",None),
         ("&Transform coordinates",
          [("&Scale",scaleSelection),
