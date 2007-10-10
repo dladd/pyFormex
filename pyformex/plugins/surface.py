@@ -17,7 +17,7 @@ This is compatible with the pyFormex data model.
 
 import os
 import globaldata as GD
-from plugins import tetgen
+from plugins import tetgen, connectivity, stl
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
@@ -179,7 +179,7 @@ def read_gambit_neutral(fn):
     The .neu file nodes are numbered from 1!
     Returns a nodes,elems tuple.
     """
-    runCommand("%s/external/gambit-neu '%s'" % (GD.cfg['pyformexdir'],fn))
+    runCommand("/home/pmortier/pyformex/external/gambit-neu '%s'" % fn)
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
@@ -614,7 +614,43 @@ class Surface(object):
         self.refresh()
         x = self.coords[self.elems]
         return surface_volume(x).sum()
-
+    
+    
+    def detectParts(self,angle):
+        """Detects different parts of the surface.
+        
+        Faces are considered to belong to a different part,
+        when the angle between these faces is larger than a predefined value.
+        """
+        rev = connectivity.reverseIndex(self.faces)
+        NB = rev[self.faces]
+        nor = self.areaNormals()[1]
+        z = zeros(shape(self.faces)[0]).astype(int)+1
+        prop = zeros(shape(self.faces)[0]).astype(int)
+        s = [0]
+        z[s] = 0
+        flag = 1
+        p = 1
+        while flag > 0:
+            t = NB[s].reshape(-1,2)
+            test = diagonal(inner(nor[t[:,0]],nor[t[:,1]])>cos(angle*pi/180.))
+            t = t[test]
+            if shape(t)[0]>0:
+                s = unique(t.reshape(-1))
+                s = asarray(s[where(z[s])[0]]).reshape(-1)
+                z[s] = 0
+            else:
+                z[s] = 0
+                s = array([])
+            if not shape(s)[0] > 0:
+                if shape(where(z)[0])[0] > 0:
+                    s = [where(z)[0][0]]
+                    prop[where(z)[0]] = p
+                    p = p + 1
+                else: 
+                    flag = -1
+        self.p = prop
+        return self.p
 
 
 def degenerate(area,norm):

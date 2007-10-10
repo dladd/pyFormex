@@ -279,6 +279,16 @@ def smooth():
             selection.draw()
 
 
+def detectParts():
+    S = selection.check('single')
+    if S:
+        res  = askItems([('angle',45.)])
+        if res:
+            selection.remember()
+            S.detectParts(**res)
+            selection.draw()
+
+
 def check():
     S = selection.check('single')
     if S:
@@ -668,6 +678,7 @@ def create_menu():
         ('&Check surface',check),
         ("&Coarsen surface",coarsen),
         ("&Smooth surface",smooth),
+        ("&Detect parts",detectParts),
         ("---",None),
 #        ("&Show volume model",show_volume),
         #("&Print Nodal Coordinates",show_nodes),
