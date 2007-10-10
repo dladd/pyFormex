@@ -14,13 +14,11 @@ import globaldata as GD
 
 from OpenGL import GL,GLU
 
-from colors import *
+from drawable import *
 from formex import *
-
 import simple
 from plugins import elements
 from plugins.surface import Surface
-
 import timer
 
 def rotMatrix(v,n=3):
@@ -1082,7 +1080,7 @@ class SurfaceActor(Actor,Surface):
         else: # a full color array : use as is
             pass
 
-        print "SURFACE COLOR = %s" % str(color)
+        #print "SURFACE COLOR = %s" % str(color)
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)

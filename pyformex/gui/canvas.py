@@ -351,11 +351,15 @@ class Canvas(object):
         if not type(itemlist) == list:
             itemlist = [ itemlist ]
         for item in itemlist:
+            print "CANVAS REMOVE %s" % item
             if isinstance(item,actors.Actor):
+                print "REMOVE ACTOR"
                 self.actors.delete(item)
             elif isinstance(item,marks.Mark):
+                print "REMOVE MARK"
                 self.annotations.delete(item)
             elif isinstance(item,decors.Decoration):
+                print "REMOVE DECORATION"
                 self.decorations.delete(item)
         
 

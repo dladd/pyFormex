@@ -14,12 +14,12 @@ from OpenGL import GL,GLU,GLUT
 from colors import *
 from formex import *
 from decors import glutFont,drawGlutText
-from actors import Actor
+from drawable import Drawable
 
  
 ### Marks ###############################################
 
-class Mark(Actor):
+class Mark(Drawable):
     """An 2D drawing inserted at a 3D position of the scene.
 
     The minimum attributes and methods are:
@@ -29,19 +29,20 @@ class Mark(Actor):
     
     def __init__(self,pos):
         self.pos = pos
-        Actor.__init__(self)
+        Drawable.__init__(self)
 
 
 class TextMark(Mark):
     """A text drawn at a 3D position."""
     
-    def __init__(self,pos,text,font='9x15'):
+    def __init__(self,pos,text,color=black,font='9x15'):
         Mark.__init__(self,pos)
         self.text = text
+        self.color = color
         self.font = glutFont(font)
 
-    def drawGL(self,mode='wireframe'):
-        GL.glColor3f(0.0,0.0,0.0)
+    def drawGL(self,mode=None):
+        GL.glColor3fv(self.color)
         GL.glRasterPos3fv(self.pos)
         drawGlutText(self.text,self.font)
 
@@ -66,7 +67,7 @@ class MarkList(Mark):
         self.color = color
         self.font = glutFont(font)
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode=None):
         if self.color:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
@@ -90,3 +91,4 @@ class MarkList(Mark):
             numbers += map(int,r[2])
         return numbers
         
+# End

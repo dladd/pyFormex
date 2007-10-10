@@ -272,6 +272,7 @@ def surface_volume(x,pt=None):
     #print v
     return v
 
+
 ############################################################################
 # The Surface class
 
@@ -388,6 +389,10 @@ class Surface(object):
         if self.elems is None:
             self.elems = compactElems(self.edges,self.faces)
 
+###########################################################################
+    #
+    #   Return information about a Surface
+    #
 
     def ncoords(self):
         return self.coords.shape[0]
@@ -398,13 +403,99 @@ class Surface(object):
     def nfaces(self):
         return self.faces.shape[0]
 
+    # The following are defined to get a unified interface with Formex
     nelems = nfaces
+   
+    def nplex(self):
+        return 3
+    
+    def ndim(self):
+        return 3
 
-    def size(self):
-        return self.ncoords(),self.nedges(),self.nfaces()
+    npoints = ncoords
+    
+    def shape(self):
+        """Return the number of ;points, edges, faces of the Surface."""
+        return self.coords.shape[0],self.edges.shape[0],self.faces.shape[0]
+
+
+    # Properties
+    def prop(self):
+        """Return the properties as a numpy array (ndarray)"""
+        return self.p
+
+    def maxprop(self):
+        """Return the highest property value used, or None"""
+        if self.p is None:
+            return None
+        else:
+            return self.p.max()
+
+    def propSet(self):
+        """Return a list with unique property values."""
+        if self.p is None:
+            return None
+        else:
+            return unique(self.p)
+
+    # The following functions get the corresponding information from
+    # the underlying Coords object
+
+    def x(self):
+        return self.coords.x()
+    def y(self):
+        return self.coords.y()
+    def z(self):
+        return self.coords.z()
 
     def bbox(self):
         return self.coords.bbox()
+
+    def center(self):
+        return self.coords.center()
+
+    def centroid(self):
+        return self.coords.centroid()
+
+    def sizes(self):
+        return self.coords.sizes()
+
+    def diagonal(self):
+        return self.coords.diagonal()
+
+    def bsphere(self):
+        return self.coords.bsphere()
+
+
+    def centroids(self):
+        """Return the centroids of all elements of the Formex.
+
+        The centroid of an element is the point whose coordinates
+        are the mean values of all points of the element.
+        The return value is an (nfaces,3) shaped Coords array.
+        """
+        return self.coords.mean(axis=0)
+
+    #  Distance
+
+    def distanceFromPlane(self,*args,**kargs):
+        return self.coords.distanceFromPlane(*args,**kargs)
+
+    def distanceFromLine(self,*args,**kargs):
+        return self.coords.distanceFromLine(*args,**kargs)
+
+
+    def distanceFromPoint(self,*args,**kargs):
+        return self.coords.distanceFromPoint(*args,**kargs)
+ 
+
+    # Data conversion
+    
+    def feModel(self):
+        """Return a tuple of nodal coordinates and element connectivity."""
+        self.refresh()
+        return self.coords,self.elems
+
 
 
     @classmethod
@@ -632,8 +723,18 @@ class Surface(object):
         The border elements are the edges having less than 2 connected elements.
         Returns a list of edge numbers.
         """
-        return where(self.edgeNelems() <= 1)[0]
+        return self.edgeNelems() <= 1
 
+
+    def isManifold(self):
+        print self.borderEdges().sum()
+        return self.borderEdges().sum() == 0
+
+
+    def isClosedManifold(self):
+        print self.edgeNelems()
+        return (self.edgeNelems() != 2).sum() == 0
+               
 
     def border(self):
         """Return the border of Surface as a Plex-2 Formex.
@@ -642,7 +743,19 @@ class Surface(object):
         Returns a list of edge numbers.
         """
         return Formex(self.coords[self.edges[self.borderEdges()]])
-    def detectParts(self,angle):
+
+
+    def edgeElems(self):
+        """Find the elems connected to edges."""
+        return connectivity.reverseIndex(self.faces)
+
+
+    def edgeNelems(self):
+        """Find the number of elems connected to edges."""
+        return (self.edgeElems() >=0).sum(axis=-1)
+
+
+    def partitionByAngle(self,angle):
         """Detects different parts of the surface.
         
         Faces are considered to belong to a different part,
@@ -651,25 +764,31 @@ class Surface(object):
         rev = connectivity.reverseIndex(self.faces)
         NB = rev[self.faces]
         nor = self.areaNormals()[1]
-        z = zeros(shape(self.faces)[0]).astype(int)+1
-        prop = zeros(shape(self.faces)[0]).astype(int)
+        prop = zeros((self.faces.shape[0],),dtype=Int)
+        z = prop + 1
         s = [0]
         z[s] = 0
         flag = 1
         p = 1
+        cosangle = cosd(angle)
         while flag > 0:
             t = NB[s].reshape(-1,2)
-            test = diagonal(inner(nor[t[:,0]],nor[t[:,1]])>cos(angle*pi/180.))
+            #print t
+            #print inner(nor[t[:,0]],nor[t[:,1]])
+            #print inner(nor[t[:,0]],nor[t[:,1]]) > cosangle
+            test = diagonal(inner(nor[t[:,0]],nor[t[:,1]]) > cosangle)
+            #print test
+            #test1 = nor[t[:0]] * nor[t[:,1]]
             t = t[test]
-            if shape(t)[0]>0:
+            if t.shape[0] > 0:
                 s = unique(t.reshape(-1))
                 s = asarray(s[where(z[s])[0]]).reshape(-1)
                 z[s] = 0
             else:
                 z[s] = 0
                 s = array([])
-            if not shape(s)[0] > 0:
-                if shape(where(z)[0])[0] > 0:
+            if not s.shape[0] > 0:
+                if where(z)[0].shape[0] > 0:
                     s = [where(z)[0][0]]
                     prop[where(z)[0]] = p
                     p = p + 1

@@ -166,14 +166,17 @@ class DrawableObjects(Objects):
         self.show_edge_numbers = False
         self.show_elem_numbers = False
         self.shrink = None
+        self.show_numbers = False
+        self.shownnumbers = []
+        self.show_names = False
+        self.shownnames = []
 
 
     def draw(self,*args,**kargs):
         clear()
-        #rint "DRAWING WITH SHRINK = %s" % self.shrink
         draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
-        #if show_numbers:
-        #    showNumbers()
+        if self.show_numbers:
+            self.showNumbers()
 
 
     def ask(self,mode='multi'):
@@ -197,7 +200,66 @@ class DrawableObjects(Objects):
         """Undo the last changes of the values."""
         Objects.undoChanges(self)
         self.draw()
-       
+
+
+    def toggleNumbers(self,onoff=None):
+        """Toggle the display of number On or Off.
+
+        If given, onoff is True or False. 
+        If no onoff is given, this works as a toggle. 
+        """
+        if onoff is None:
+            self.show_numbers = not self.show_numbers
+        elif onoff:
+            self.show_numbers = True
+        else:
+            self.show_numbers = False
+        if self.show_numbers:
+            self.showNumbers()
+        else:
+            self.removeNumbers()
+
+
+    def showNumbers(self):
+        """Draw the numbers for the current selection."""
+        self.shownnumbers = [ drawNumbers(named(n)) for n in self.names ]
+
+
+    def removeNumbers(self):
+        """Remove (all) the element numbers."""
+        map(undraw,self.shownnumbers)
+        self.shownnumbers = []
+
+
+    def toggleNames(self,onoff=None):
+        """Toggle the display of name On or Off.
+
+        If given, onoff is True or False. 
+        If no onoff is given, this works as a toggle. 
+        """
+        if onoff is None:
+            self.show_names = not self.show_names
+        elif onoff:
+            self.show_names = True
+        else:
+            self.show_names = False
+        if self.show_names:
+            self.showNames()
+        else:
+            self.removeNames()
+        pass
+
+
+    def showNames(self):
+        """Draw the nubers for the current selection."""
+        self.shownnames = [ drawText3D(named(n).center(),n) for n in self.names ]
+
+
+    def removeNames(self):
+        """Remove (all) the element names."""
+        map(undraw,self.shownnames)
+        self.shownnames = []
+      
 
 if __name__ == "__main__":
     print __doc__

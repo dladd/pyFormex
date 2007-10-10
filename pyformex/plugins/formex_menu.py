@@ -124,44 +124,6 @@ def shrink():
     else:
         selection.shrink = None
     selection.draw()
-
-
-# If True, this makes element numbers to be displayed by selection.draw()
-show_numbers = False
-shown_numbers = []  # The collection of numbers
-
-def toggleNames(onoff=None):
-    pass
-
-def toggleNumbers(onoff=None):
-    """Toggle the display of number On or Off.
-
-    If given, onoff is True or False. 
-    If no onoff is given, this works as a toggle. 
-    """
-    global show_numbers
-    if onoff is None:
-        show_numbers = not show_numbers
-    elif onoff:
-        show_numbers = True
-    else:
-        show_numbers = False
-    if show_numbers:
-        showSelectionNumbers()
-    else:
-        removeSelectionNumbers()
-
-
-def showSelectionNumbers():
-    """Draw the nubers for the current selection."""
-    global shown_numbers
-    for F in selection.check(warn=False):
-        shown_numbers.append(drawNumbers(F))
-
-
-def removeSelectionNumbers():
-    """Remove (all) the element numbers."""
-    map(undraw,shown_numbers)
     
 
 
@@ -504,8 +466,8 @@ def create_menu():
         ("---",None),
         ("&Set Property",setProperty),
         ("&Shrink",shrink),
-        ("&Toggle Names",toggleNames),
-        ("&Toggle Numbers",toggleNumbers),
+        ("&Toggle Names",selection.toggleNames),
+        ("&Toggle Numbers",selection.toggleNumbers),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
         ("&Bbox",

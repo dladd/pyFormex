@@ -663,10 +663,18 @@ def _shrink(F,factor):
 
 def drawNumbers(F,color=colors.black):
     """Draw numbers on all elements of F."""
-    FC = F.centroids().trl([0.,0.,0.1])
-    M = marks.MarkList(FC.f[:,0,:],range(FC.nelems()),color=color)
+    FC = F.centroids().trl([0.,0.,0.1]) # put labels in front
+    M = marks.MarkList(FC,range(FC.shape[0]),color=color)
     GD.canvas.addMark(M)
     GD.canvas.numbers = M
+    GD.canvas.update()
+    return M
+
+
+def drawText3D(P,text,color=colors.black):
+    """Draw a text at a 3D point."""
+    M = marks.TextMark(P,text,color=color)
+    GD.canvas.addMark(M)
     GD.canvas.update()
     return M
 

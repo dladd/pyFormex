@@ -14,7 +14,6 @@
 from coords import *
 
 
-
 def vectorNormalize(vec):
     """Normalize a set of vectors.
 
@@ -575,9 +574,9 @@ class Formex:
 
         The centroid of an element is the point whose coordinates
         are the mean values of all points of the element.
-        The return value is a plex-1 Formex.
+        The return value is a Coords object with nelems points.
         """
-        return Formex(self.f.mean(axis=1))
+        return self.f.mean(axis=1)
 
     #  Distance
 

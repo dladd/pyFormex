@@ -29,7 +29,6 @@ import commands, os, timer
 
 selection = DrawableObjects(clas=Surface)
 
-
 def read_Surface(fn):
     GD.message("Reading file %s" % fn)
     t = timer.Timer()
@@ -85,6 +84,17 @@ def printArea():
     for s in selection.names:
         S = named(s)
         GD.message("Surface %s has area %s" % (s,S.area()))
+
+
+def printType():
+    for s in selection.names:
+        S = named(s)
+        if S.isClosedManifold():
+            GD.message("Surface %s is a closed manifold" % s)
+        elif S.isManifold():
+            GD.message("Surface %s is an open manifold" % s)
+        else:
+            GD.message("Surface %s is not a manifold" % s)
 
 
 def printVolume():
@@ -171,55 +181,6 @@ def sanitize_stl_to_off():
         return surface.stl_to_off(fn,sanitize=True)
 
 
-## def read_surface(fn='',types=['surface','gts','stl','off','neu','smesh'],convert=None,show=True):
-##     """Read STL model from file fn.
-
-##     If no file is given, one is asked.
-##     The file fn should exist and contain a valid surface model.
-    
-##     The STL model is stored in the Formex F.
-##     The workdir and project name are set from the filename.
-##     The Formex is stored under the project basename.
-##     The model is displayed.
-
-##     If convert == True, the model is converted to a Formex.
-##     If convert == False, it will not be converted.
-##     The default is to ask the user.
-##     """
-##     if not (fn and os.path.exists(fn)):
-##         if type(types) == str:
-##             types = [ types ]
-##         types = map(utils.fileDescription,types)
-##         fn = askFilename(GD.cfg['workdir'],types,exist=True)
-##     if fn:
-##         chdir(fn)
-##         set_project(utils.projectName(fn))
-##         GD.message("Reading file %s" % fn)
-##         GD.gui.setBusy()
-##         try:
-##             t = timer.Timer()
-##             nodes,elems =surface.readSurface(fn)
-##             GD.message("Time to import surface: %s seconds" % t.seconds())
-##         finally:
-##             GD.gui.setBusy(False)
-##         set_surface(nodes,elems)
-##         if show:
-##             is 
-##             show_surface(view='front')
-##         if convert is None:
-##             convert = ack('Convert to Formex?')
-##         if convert:
-##             GD.debug("GOING")
-##             name = toFormex(PF.get('project',''))
-##             # This is convenient for the user
-##             if name:
-##                 formex_menu.selection.set(name)
-##                 if show:
-##                     formex_menu.drawSelection()
-##         else:
-##             pass
-        
-##     return fn
 
 
 def write_surface(types=['surface','gts','stl','off','neu','smesh']):
@@ -238,16 +199,43 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 #
 # Operations with surface type, border, ...
 #
-def printBorder():
+def showBorder():
     S = selection.check('single')
     if S:
         print S.edgeElems()
         print S.edgeNelems()
         print S.borderEdges()
         F = S.border()
-        print F.shape
-        draw(F,color='red')
-        export({'border':F})
+        if F.nelems() > 0:
+            draw(F,color='red')
+            export({'border':F})
+        else:
+            warning("The surface %s does not have a border" % selection[0])
+
+
+def showAdjacency():
+    S = selection.check('single')
+    if S:
+        print S.edgeElems()
+        print S.edgeNelems()
+        print S.borderEdges()
+        F = S.border()
+        if F.nelems() > 0:
+            draw(F,color='red')
+            export({'border':F})
+        else:
+            warning("The surface %s does not have a border" % selection[0])
+
+
+def partitionByAngle():
+    S = selection.check('single')
+    if S:
+        res  = askItems([('angle',45.)])
+        if res:
+            selection.remember()
+            S.p = S.partitionByAngle(**res)
+            print S.p
+            selection.draw()
 
 #
 # Operations using gts library
@@ -290,16 +278,6 @@ def smooth():
             if res['fold_smoothing'] is not None:
                 res['fold_smoothing'] = float(res['fold_smoothing'])
             S.smooth(**res)
-            selection.draw()
-
-
-def detectParts():
-    S = selection.check('single')
-    if S:
-        res  = askItems([('angle',45.)])
-        if res:
-            selection.remember()
-            S.p = S.detectParts(**res)
             selection.draw()
 
 
@@ -661,21 +639,24 @@ def create_menu():
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
         ("&Write Surface Model",write_surface),
-#        ("---",None),
+        ("---",None),
         ("&Print Information",
          [('&Data Size',printSize),
           ('&Bounding Box',printBbox),
           ('&Surface Area',printArea),
+          ('&Surface Type',printType),
           ('&Enclosed Volume',printVolume),
           ]),
         #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
-#        ("&Toggle Names",toggleNames),
-#        ("&Toggle Numbers",toggleNumbers),
+        ("&Toggle Names",selection.toggleNames),
+        ("&Toggle Numbers",selection.toggleNumbers),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
-        ("&Border",
-         [("&Print Border",printBorder),
+        ("&Characteristics",
+         [("&Border Line",showBorder),
+          ("&Adjacency",showAdjacency),
+          ("&Partition By Angle",partitionByAngle),
           ]),
         ("---",None),
         ("&Transform coordinates",
@@ -696,7 +677,6 @@ def create_menu():
         ('&Check surface',check),
         ("&Coarsen surface",coarsen),
         ("&Smooth surface",smooth),
-        ("&Detect parts",detectParts),
         ("---",None),
 #        ("&Show volume model",show_volume),
         #("&Print Nodal Coordinates",show_nodes),
