@@ -24,7 +24,7 @@ from plugins import formex_menu
 
 import commands, os, timer
 
-##################### select, read and write ##########################
+##################### selection and annotations ##########################
 
 
 def draw_edge_numbers(n):
@@ -39,11 +39,30 @@ def draw_node_numbers(n):
     F = Formex(S.coords) 
     return drawNumbers(F,color=colors.blue)
 
+def draw_normals(n):
+    S = named(n)
+    C = S.centroids()
+    A,N = S.areaNormals()
+    D = C + sqrt(A).reshape((-1,1))*N
+    F = connect([Formex(C),Formex(D)])
+    return draw(F,color='red')
+    
+
+def toggleEdgeNumbers():
+    selection.toggleAnnotation(2)
+def toggleNodeNumbers():
+    selection.toggleAnnotation(3)
+def toggleNormals():
+    selection.toggleAnnotation(4)
+
 
 selection = DrawableObjects(clas=Surface)
 selection.annotations.extend([[draw_edge_numbers,False],
                               [draw_node_numbers,False],
+                              [draw_normals,False],
                               ])
+
+##################### select, read and write ##########################
 
 def read_Surface(fn):
     GD.message("Reading file %s" % fn)
@@ -246,7 +265,7 @@ def showAdjacency():
 def partitionByAngle():
     S = selection.check('single')
     if S:
-        res  = askItems([('angle',45.)])
+        res  = askItems([('angle',45.),('nruns',-1)])
         if res:
             selection.remember()
             S.p = S.partitionByAngle(**res)
@@ -640,15 +659,6 @@ def show_volume():
     draw(F,color='random',eltype='tet')
     PF['vol_model'] = F
 
-
-## def toggleNames():
-##     selection.toggleAnnotation(0)
-## def toggleElemNumbers():
-##     selection.toggleAnnotation(1)
-def toggleEdgeNumbers():
-    selection.toggleAnnotation(2)
-def toggleNodeNumbers():
-    selection.toggleAnnotation(3)
     
 ################### menu #################
 
@@ -665,7 +675,7 @@ def create_menu():
         ("&Convert from Formex",fromFormex),
         ("&Write Surface Model",write_surface),
         ("---",None),
-        ("&Print Information",
+        ("Print &Information",
          [('&Data Size',printSize),
           ('&Bounding Box',printBbox),
           ('&Surface Area',printArea),
@@ -674,12 +684,13 @@ def create_menu():
           ]),
         #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
-        ("&Toggle Names",selection.toggleNames),
-        ("&Toggle Face Numbers",selection.toggleNumbers),
-        ("&Toggle Edge Numbers",toggleEdgeNumbers),
-        ("&Toggle Node Numbers",toggleNodeNumbers),
-        ("&Undo Last Changes",selection.undoChanges),
-        ("---",None),
+        ("Toggle &Annotations",
+         [("&Names",selection.toggleNames),
+          ("&Face Numbers",selection.toggleNumbers),
+          ("&Edge Numbers",toggleEdgeNumbers),
+          ("&Node Numbers",toggleNodeNumbers),
+          ("&Normals",toggleNormals),
+          ]),
         ("&Characteristics",
          [("&Border Line",showBorder),
           ("&Adjacency",showAdjacency),
@@ -701,6 +712,7 @@ def create_menu():
           #          ("&Clip Selection",clipSelection),
           #          ("&Cut at Plane",cutAtPlane),
           ]),
+        ("&Undo Last Changes",selection.undoChanges),
         ('&Check surface',check),
         ("&Coarsen surface",coarsen),
         ("&Smooth surface",smooth),
@@ -736,11 +748,6 @@ def show_menu():
     global _menu
     if not _menu:
         _menu = create_menu()
-##     PF['volume'] = None
-##     PF['stl_model'] = None
-##     PF['stl_color'] = colors.blue    # could be replaced by a general fgcolor
-
-
     
 
 if __name__ == "main":

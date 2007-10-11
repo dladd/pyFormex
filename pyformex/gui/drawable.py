@@ -16,7 +16,7 @@ from OpenGL import GL,GLU
 
 from colors import *
 from numpy import *
-from formex import vectorPairNormals
+from formex import *
 
 import simple
 

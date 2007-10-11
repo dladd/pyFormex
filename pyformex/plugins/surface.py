@@ -755,15 +755,21 @@ class Surface(object):
         return (self.edgeElems() >=0).sum(axis=-1)
 
 
-    def partitionByAngle(self,angle):
+    def partitionByAngle(self,angle,nruns=-1):
         """Detects different parts of the surface.
         
         Faces are considered to belong to a different part,
         when the angle between these faces is larger than a predefined value.
         """
+        print "coords\n%s" % self.coords
+        print "edges\n%s" % self.edges
+        print "faces\n%s" % self.faces
         rev = connectivity.reverseIndex(self.faces)
+        print "rev\n%s" % rev
         NB = rev[self.faces]
+        print "NB\n%s" % NB
         nor = self.areaNormals()[1]
+        print "nor\n%s" % nor
         prop = zeros((self.faces.shape[0],),dtype=Int)
         z = prop + 1
         s = [0]
@@ -771,13 +777,16 @@ class Surface(object):
         flag = 1
         p = 1
         cosangle = cosd(angle)
-        while flag > 0:
+        print "COSANGLE=%s" % cosangle
+        run = 0
+        while flag > 0 and (nruns < 0 or run < nruns):
+            run += 1
             t = NB[s].reshape(-1,2)
-            #print t
-            #print inner(nor[t[:,0]],nor[t[:,1]])
-            #print inner(nor[t[:,0]],nor[t[:,1]]) > cosangle
+            print t
+            print inner(nor[t[:,0]],nor[t[:,1]])
+            print inner(nor[t[:,0]],nor[t[:,1]]) > cosangle
             test = diagonal(inner(nor[t[:,0]],nor[t[:,1]]) > cosangle)
-            #print test
+            print test
             #test1 = nor[t[:0]] * nor[t[:,1]]
             t = t[test]
             if t.shape[0] > 0:
