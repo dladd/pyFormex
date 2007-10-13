@@ -23,6 +23,7 @@ import actors
 import decors
 import marks
 import image
+import canvas
 import colors
 import formex
 from script import *
@@ -36,6 +37,17 @@ from toolbar import setPerspective as perspective, setTransparency as transparen
 
 
 def Globals():
+    """Return the globals that are pased to the scripts on execution.
+
+    This basically contains the globals defined in draw.py, colors.py,
+    and formex.py, as well as the globals from numpy.
+    It also contains the definitions put into the globaldata.PF, by
+    preference using the export() function.
+    During execution of the script, the global variable __name__ will be
+    set to either 'draw' or 'script' depending on whether the script
+    was executed in the 'draw' module (--gui option) or the 'script'
+    module (--nogui option).
+    """
     g = copy.copy(GD.PF)
     g.update(colors.__dict__)
     g.update(globals())
@@ -125,7 +137,6 @@ def warning(message,actions=['OK']):
 def info(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
-
 
 
 def askItems(items,caption=None,timeout=None):
@@ -218,68 +229,6 @@ exitrequested = False
 starttime = 0.0
 
 
-## # We currently have two mechanisms for transferring variables between
-## # scripts by using global variables.
-## # - put them into globaldata.PF (GD.PF), see surface_menu plugin
-## # - export them using the export() function, see formex_menu plugin
-
-
-## def Globals():
-##     """Return the globals that are pased to the scripts on execution.
-
-##     This basically contains the globals defined in draw.py, colors.py,
-##     and formex.py, as well as the globals from numpy.
-##     It also contains the definitions put into the globaldata.PF
-##     Finally, because the scripts are executed in the context of the
-##     draw module, it will also contain any global definitions made in
-##     your scripts or explicitely exported by a script.
-##     During execution of the script, the global variable __name__ will be
-##     set to either 'draw' or 'script' depending on whether the script
-##     was executed in the 'draw' module (--gui option) or the 'script'
-##     module (--nogui option).
-##     """
-##     # We need to pass formex globals to the script
-##     # This would be done automatically if we put this function
-##     # in the formex.py file. But then we need to pass other globals
-##     # from this file (like draw,...)
-##     # We might create a module with all operations accepted in
-##     # scripts.
-
-##     # Our current solution is to take a copy of the globals in this module,
-##     # and add the globals from the 'colors' and 'formex' modules
-##     # !! Taking a copy is needed to avoid changing this module's globals !!
-##     # Also, do not be tempted to take a user dict and update it with this
-##     # module's globals: you might override many user variables.
-##     g = copy.copy(globals())
-##     # Add the user globals (We could do away with PF altogether,
-##     # if we always store them in this module's globals.
-##     g.update(GD.PF)
-##     # Add these last, because too much would go broke if the user
-##     # overrides them.
-##     if GD.gui:
-##         g.update(colors.__dict__)
-##     g.update(formex.__dict__) # this also imports everything from numpy
-##     # Finally, we set the name to 'script' or 'draw', so that the user can
-##     # verify that the script is the main script being excuted (and not merely
-##     # an import) and also whether the script is executed under the GUI or not.
-##     if GD.gui:
-##         modname = 'draw'
-##     else:
-##         modname = 'script'
-##     g.update({'__name__':modname})
-##     #
-##     #  WE COULD also set __file__ to the script name
-##     #  Would this help the user in debugging?
-##     #   g.update({'__file__':name})
-##     return g
-
-
-
-## def export(dict):
-##     #print "EXPORTING %s " % dict.keys()
-##     globals().update(dict)
-
- 
 def playScript(scr,name=None):
     """Play a pyformex script scr. scr should be a valid Python text.
 
@@ -522,7 +471,7 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5,shrink=None):
+def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5,shrink=None,color1=None):
     """Draw a Formex or a list of Formices on the canvas.
 
     If F is a list, all its items are drawn with the same settings.
@@ -574,7 +523,7 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         for Fi in F:
             if Fi == F[-1]:
                 nowait = wait
-            actor.append(draw(Fi,view,bbox,color,colormap,nowait,clear,eltype,allviews,marksize,linewidth,alpha,shrink))
+            actor.append(draw(Fi,view,bbox,color,colormap,nowait,clear,eltype,allviews,marksize,linewidth,alpha,shrink,color1))
             if Fi == F[0]:
                 clear = False
                 view = None
@@ -598,8 +547,9 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
 
     if view is None:
         view = DrawOptions['view']
-        #print "VIEW=%s" % view
+        print "VIEW=%s" % view
     elif view != '__last__':
+        print "SETTING VIEW"
         setView(view)
 
     if shrink is None:
@@ -623,17 +573,21 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         F = _shrink(F,shrink)
     try:
         if isinstance(F,formex.Formex):
-            actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha)
+            if color1 is not None:
+                GD.debug("DRAWING WITH COLOR1\n%s" % str(color1))
+                canvas.glSmooth()
+            actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
         elif isinstance(F,surface.Surface):
             actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
 
         GD.canvas.addActor(actor)
-        if view:
+        if view != '__last__':
+            print "CHANGING CAMERA"
             if view == '__last__':
                 view = DrawOptions['view']
             if bbox == 'auto':
                 bbox = F.bbox()
-            #print "DRAW: bbox=%s, view=%s" % (bbox,view)
+            print "DRAW: bbox=%s, view=%s" % (bbox,view)
             GD.canvas.setCamera(bbox,view)
             #setView(view)
         GD.canvas.update()

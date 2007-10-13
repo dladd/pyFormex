@@ -305,7 +305,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0,color1=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -334,7 +334,9 @@ class FormexActor(Actor,Formex):
         if self.nplex() == 1:
             self.setMarkSize(marksize)
         self.list = None
-
+        self.color1 = None
+        if color1 is not None:
+            self.color1,self.colormap = saneColorSet(color1,None,self.nelems())
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
@@ -410,6 +412,8 @@ class FormexActor(Actor,Formex):
             
         ## CURRENTLY, ONLY color=None is used
         
+        color1 = None
+        
         if color is None:  
             color = self.color
         
@@ -424,14 +428,15 @@ class FormexActor(Actor,Formex):
             color = None
 
         elif color.dtype.kind == 'i': # color index
-            #GD.debug("COLOR INDEX %s\n%s" % (str(color),str(self.colormap)))
+            GD.debug("COLOR INDEX %s\n%s" % (str(color),str(self.colormap)))
             color = self.colormap[color]
+            if self.color1:
+                color1 = self.colormap[self.color1]
 
         else: # a full color array : use as is
-            pass
-
-##        if color is not None:
-##            GD.debug("FULL COLOR %s" % str(color))
+            #pass
+            GD.debug("FULL COLOR")
+            color1 = self.color1
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
@@ -445,7 +450,7 @@ class FormexActor(Actor,Formex):
                 drawPoints(x,self.marksize,color)
                 
         elif nnod == 2:
-            drawLines(self.f,color)
+            drawLines(self.f,color,color1)
         
         elif nnod == 3 and self.eltype == 'curve':
             drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)

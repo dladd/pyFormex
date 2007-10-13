@@ -97,18 +97,22 @@ def drawAtPoints(x,mark,color=None):
         GL.glPopMatrix()
 
 
-def drawLines(x,color=None):
+def drawLines(x,color=None,color1=None):
     """Draw a collection of lines.
 
     x is a (nlines,2,3) shaped array of coordinates.
 
     If color is given it is an (nlines,3) array of RGB values.
+    If a second color is given, make sure that smooth shading is on,
+    or the color redering will be flat accoprding to the second color.
     """
     GL.glBegin(GL.GL_LINES)
     for i,xi in enumerate(x):
         if color is not None:
             GL.glColor3fv(color[i])
         GL.glVertex3fv(xi[0])
+        if color1 is not None:
+             GL.glColor3fv(color1[i])
         GL.glVertex3fv(xi[1])
     GL.glEnd()
 

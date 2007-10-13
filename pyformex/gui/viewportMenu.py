@@ -90,7 +90,6 @@ def viewportSettings():
         GD.canvas.redrawAll()
         if res['Store these settings as defaults']:
             GD.cfg.update(GD.canvas.settings.__dict__,name='canvas')
-    
 
 MenuData = [
     (_('&Viewport'),[
@@ -101,7 +100,11 @@ MenuData = [
         (_('&Foreground Color'),setFgColor), 
         (_('Line&Width'),setLineWidth), 
         (_('&Canvas Size'),setCanvasSize), 
-        (_('&All Viewport Settings'),viewportSettings), 
+        (_('&All Viewport Settings'),viewportSettings),
+        ('&OpenGL Settings',
+         [('&Flat',canvas.glFlat),
+          ('&Smooth',canvas.glSmooth),
+          ]),
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),
         (_('&Add new viewport'),addViewport), 

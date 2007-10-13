@@ -23,6 +23,13 @@ import decors
 import marks
 import utils
  
+def glFlat():
+    """Disable smooth shading"""
+    GL.glShadeModel(GL.GL_FLAT)
+def glSmooth():
+    """Enable smooth shading"""
+    GL.glShadeModel(GL.GL_SMOOTH)
+            
 class ActorList(list):
 
     def __init__(self,canvas):
@@ -203,10 +210,10 @@ class Canvas(object):
         elif self.rendermode.startswith('flat'):
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-            if self.rendermode.find('trans') >= 0:
-                GL.glEnable (GL.GL_BLEND)              # Enables Alpha Transparency
-                GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-                GL.glDisable(GL.GL_DEPTH_TEST)	 # Disable Depth Testing
+##             if self.rendermode.find('trans') >= 0:
+##                 GL.glEnable (GL.GL_BLEND)              # Enables Alpha Transparency
+##                 GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+##                 GL.glDisable(GL.GL_DEPTH_TEST)	 # Disable Depth Testing
                
         elif self.rendermode.startswith('smooth'):
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
@@ -351,15 +358,11 @@ class Canvas(object):
         if not type(itemlist) == list:
             itemlist = [ itemlist ]
         for item in itemlist:
-            print "CANVAS REMOVE %s" % item
             if isinstance(item,actors.Actor):
-                print "REMOVE ACTOR"
                 self.actors.delete(item)
             elif isinstance(item,marks.Mark):
-                print "REMOVE MARK"
                 self.annotations.delete(item)
             elif isinstance(item,decors.Decoration):
-                print "REMOVE DECORATION"
                 self.decorations.delete(item)
         
 

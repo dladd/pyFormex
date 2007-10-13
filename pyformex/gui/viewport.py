@@ -227,7 +227,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 self.state = x1
             # radial movement rotates around vector in lens plane
             x0 = [self.statex-w/2, self.statey-h/2]    # initial vector
-            dx = [x-self.statex, y-self.statey]         # movement
+            if x0 == [0.,0.]:
+                x0 = [1.,0.]
+            dx = [x-self.statex, y-self.statey]        # movement
             b = projection(dx,x0)
             if abs(b) > 5:
                 val = utils.stuur(b,[-2*h,0,2*h],[-180,0,+180],1)
