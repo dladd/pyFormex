@@ -32,7 +32,37 @@ A single color entry can be specified by a string ('red') or by a triple of RGB 
 If no color is specified and your Formex has no properties, \pyformex will draw it with the current drawing color. If the Formex has properties, \pyformex will use the properies as a color index into the specified color map or a (configurable) default color map.
 
 \Todo{There should be some examples here.}
+Draw object(s) with specified settings and direct camera to it.
 
+%     The first argument is an object to be drawn. All other arguments are
+%     settings that influence how  the object is being drawn.
+
+%     object is either a Formex or a Surface object, or a name of such object
+%     (global or exported), or a list thereof.
+%     If object is a list, the draw() function is called repeatedly with each of
+%     ithe items of the list as first argument and with the remaining arguments
+%     unchanged.
+
+%     All settings have default values, and the most common use of the draw()
+%     function is to specify only the object(s).
+
+%     The settings arguments are of three types:
+%     1. Settings that determine the aspect of the drawn object.
+%        - color, colormap, eltype, marksize, linewidth, alpha,shrink, color1
+%     2. Settings that determine how the camera will be directed after drawing:
+%        - view, bbox
+%     3. Settings that determine the functionality of the draw cycle:
+%        - wait, clear, allviews
+
+%     Making a 3D object visible on the canvas involves three actions:
+%     - creating a 3D object ('actor'),
+%     - adding the actor to the 3D scene,
+%     - directing the camera to the actor.
+
+%     While pyFormex provides the flexibility to individually perform and
+%     tune each of this actions, the draw() function takes the burdon from
+%     the user by doing it all in one operation with sensible values of the
+%     settings.
 
  
 \section{Viewing the scene}

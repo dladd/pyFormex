@@ -434,8 +434,8 @@ def drawrelease():
 def reset():
     global DrawOptions
     DrawOptions = dict(
-        view = '__last__',       # Keep the current camera angles
-        bbox = 'auto',           # Automatically zoom on the drawed object
+        view = None,       # Keep the current camera angles
+        bbox = 'auto',     # Automatically zoom on the drawed object
         clear = False,
         shrink = None,
         wait = GD.cfg['draw/wait']
@@ -471,31 +471,46 @@ def setView(name,angles=None):
     DrawOptions['view'] = name
 
 
-def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None,eltype=None,allviews=False,marksize=None,linewidth=None,alpha=0.5,shrink=None,color1=None):
-    """Draw a Formex or a list of Formices on the canvas.
+def draw(F, view=None,bbox='auto',
+         color='prop',colormap=None,linewidth=None,alpha=0.5,
+         shrink=None,eltype=None,marksize=None,color1=None,
+         wait=True,clear=None,allviews=False):
+    """Draw object(s) with specified settings and direct camera to it.
 
-    If F is a list, all its items are drawn with the same settings.
+    The first argument is an object to be drawn. All other arguments are
+    settings that influence how  the object is being drawn.
 
-    If a setting is unspecified, its current values are used.
-    
-    Draws an actor on the canvas, and directs the camera to it from
-    the specified view. Named views are either predefined or can be added by
-    the user.
-    If view=None is specified, the camera settings remain unchanged.
-    This may make the drawn object out of view!
-    A special name '__last__' may be used to keep the same camera angles
-    as in the last draw operation. The camera will be zoomed on the newly
-    drawn object.
+    F is either a Formex or a Surface object, or a name of such object
+    (global or exported), or a list thereof.
+    If F is a list, the draw() function is called repeatedly with each of
+    ithe items of the list as first argument and with the remaining arguments
+    unchanged.
+
+    view is either the name of a defined view or 'last' or None.
+    Predefined views are 'front','back','top','bottom','left','right','iso'.
+    With view=None the camera settings remain unchanged (but might be changed
+    interactively through the user interface). This may make the drawn object
+    out of view!
+    With view='last', the camera angles will be set to the same camera angles
+    as in the last draw operation, undoing any interactive changes.
     The initial default view is 'front' (looking in the -z direction).
 
-    If bbox == 'auto', the camera will zoom automatically on the shown
-    object. A bbox may be specified to have other zoom settings, e.g. to
-    keep the previous settings. If bbox == None, the previous bbox will be
-    kept.
+    bbox specifies the 3D volume at which the camera will be aimed (using the
+    angles set by view). The camera position wil be set so that the volume
+    comes in view using the current lens (default 45 degrees).
+    bbox is a list of two points or compatible (array with shape (2,3)).
+    Setting the bbox to a volume not enclosing the object may make the object
+    invisible on the canvas.
+    The default bbox='auto' will use the bounding box of the objects getting
+    drawn (object.bbox()), thus ensuring that the camera will focus on the
+    shown object.
+    With bbox=None, the camera's target volume remains unchanged.
 
-    If other actors are on the scene, they may or may not be visible with the
-    new camera settings. Clear the canvas before drawing if you only want
-    a single actor!
+    color,colormap,linewidth,alpha,eltype,marksize,color1 are passed to the
+    creation of the 3D actor.
+
+    shrink is a floating point shrink factor that will be applied to object
+    before drawing it.
 
     If the Formex has properties and a color list is specified, then the
     the properties will be used as an index in the color list and each member
@@ -523,7 +538,10 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
         for Fi in F:
             if Fi == F[-1]:
                 nowait = wait
-            actor.append(draw(Fi,view,bbox,color,colormap,nowait,clear,eltype,allviews,marksize,linewidth,alpha,shrink,color1))
+            actor.append(draw(Fi,view,bbox,
+                              color,colormap,linewidth,alpha,
+                              shrink,eltype,marksize,color1,
+                              wait,clear,allviews))
             if Fi == F[0]:
                 clear = False
                 view = None
@@ -545,11 +563,8 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
     if clear:
         clear_canvas()
 
-    if view is None:
-        view = DrawOptions['view']
-        print "VIEW=%s" % view
-    elif view != '__last__':
-        print "SETTING VIEW"
+    if view is not None and view != 'last':
+        GD.debug("SETTING VIEW to %s" % view)
         setView(view)
 
     if shrink is None:
@@ -581,13 +596,13 @@ def draw(F,view=None,bbox='auto',color='prop',colormap=None,wait=True,clear=None
             actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
 
         GD.canvas.addActor(actor)
-        if view != '__last__':
-            print "CHANGING CAMERA"
-            if view == '__last__':
+        if view is not None:
+            GD.debug("CHANGING VIEW to %s" % view)
+            if view == 'last':
                 view = DrawOptions['view']
             if bbox == 'auto':
                 bbox = F.bbox()
-            print "DRAW: bbox=%s, view=%s" % (bbox,view)
+            GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
             GD.canvas.setCamera(bbox,view)
             #setView(view)
         GD.canvas.update()
