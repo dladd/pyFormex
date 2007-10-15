@@ -35,7 +35,7 @@ syspath = []
 
 # commands
 ### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE
-editor = os.environ.get('VISUAL',None)
+editor = os.environ.get('VISUAL','')
 #viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
 viewer = 'firefox'   # html viewer
 browser = 'firefox'    # web browser

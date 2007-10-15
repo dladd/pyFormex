@@ -68,6 +68,10 @@ ${HTMLDIR}/plugins.%.html: plugins/%.py
 manual:
 	make -C manual
 
+# Create the C library
+lib:
+	make -C pyformex/lib
+
 #pyformex/doc/pyformex-htmldocs.tar.gz: manual
 #	tar czf $@ manual/html manual/images
 
