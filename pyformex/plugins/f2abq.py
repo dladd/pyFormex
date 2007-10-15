@@ -150,7 +150,7 @@ def writeSection(fil, nr):
             fil.write("""*CONNECTOR SECTION,ELSET=Elementset_%s
 %s
 """ %(nr,el.sectiontype.upper()))
-	############
+    ############
     ##TRUSS elements
     ##########################  
     elif el.elemtype.upper() in ['T2D2', 'T2D2H' , 'T2D3', 'T2D3H', 'T3D2', 'T3D2H', 'T3D3', 'T3D3H']:
@@ -179,14 +179,25 @@ def writeSection(fil, nr):
             fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%s
 %s, %s, %s, %s, %s \n"""%(nr,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
-                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+                fil.write("%s,%s,%s"%(el.orientation[0],el.orientation[1],el.orientation[2]))
+            fil.write("\n %s, %s \n"%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
             fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%s
 %s \n"""%(nr,float(el.density),float(el.radius)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+    ############
+    ## SHELL elements
+    ##########################
+    elif el.elemtype.upper() in ['STRI3', 'S3','S3R', 'S3RS', 'STRI65','S4','S4R', 'S4RS','S4RSW','S4R5','S8R','S8R5', 'S9R5',]:
+        if el.sectiontype.upper() == 'SHELL':
+            fil.write("""*SHELL SECTION, ELSET=Elementset_%s, MATERIAL=%s
+%s \n"""%(nr,float(el.material),float(el.thickness)))
+            
+    ############
+    ## UNSUPPORTED elements
+    ##########################
     else:
         warning('Sorry, elementtype %s is not yet supported' % el.elemtype)
     
