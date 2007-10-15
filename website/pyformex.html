@@ -1,96 +1,105 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
 <head>
-  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <title>pyFormex Home Page</title>
-  <meta content="Benedict Verhegghe" name="author">
+<title>pyFormex</title>
+<link rel="stylesheet" href="pyformex.css" type="text/css" />
+<meta name="description" content="pyFormex - tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
+<meta name="keywords" content="geometries" />
+
 </head>
-<body style="background-color: rgb(204, 204, 204);">
-<h1><a href="http://pyformex.berlios.de/"><img src="pyformex_logo.png"
- alt="pyFormex" border="0"></a>
-<img src="scallop_dome_small.png" alt="scallop_dome" border="0"></h1>
-<p>pyFormex is a python
-implementation of Formex algebra.<br>
-pyFormex lets you generate large geometrical models of 3D structures by
-a sequence of mathematical transformations.<br>
-It is especially suited for the automated design of spatial frame
-structures. But as the examples show,<br>
-it can also be used for other tasks, like finite element preprocessing,
-or just for creating some nice pictures.
-</p>
-<table align="center" cellpadding="0" cellspacing="0" width="100%">
-  <tbody>
-    <tr bgcolor="#99a9c0">
-      <td colspan="3" rowspan="1"
- style="color: rgb(255, 255, 255); font-size: 12px;" align="center"
- height="25" valign="middle" width="0">
-	<big>
-<a href="examples.html">Examples</a>
-|<a href="manual/index.html">Manual (<em>NEW!)</em></a>
-| <a href="http://developer.berlios.de/projects/pyformex/">Summary</a>
-| <a href="http://developer.berlios.de/forum/?group_id=2717">Forums</a>
-| <a href="http://developer.berlios.de/project/filelist.php?group_id=2717">Download</a>
-| <a href="http://developer.berlios.de/mail/?group_id=2717">Mailing
-lists</a> | <a href="http://developer.berlios.de/svn/?group_id=2717">SVN</a>
-| <a href="http://developer.berlios.de/bugs/?group_id=2717">Report
-bugs</a>
-	</big></td>
-    </tr>
-  </tbody>
-</table>
-<table>
-  <tbody>
-    <tr>
-      <td>
-      <h2>News</h2>
-<!--#include file="projnews.cache" --> </td>
-    </tr>
-  </tbody>
-</table>
+<body>
 
-<h2>Examples</h2>
-<ul>
-<li><a href="examples.html">Creating geometry</a>: Some simple examples of what you can do with pyFormex are gathered on <a href="examples.html">this page</a>. They are taken from the extensive set of examples included with the distribution.</li>
-<li><a href="surface.html">Operating on surface meshes</a>: We have frequently used pyFormex for executing specialized operations on surface meshes, usually STL type triangulated meshes originating from medical scan (CT) images. Some of the algorithms developed were included in pyFormex.
- <a href="surface.html">This page</a> shows some examples of their use.</li>
-</ul>
+<div id="page">
 
-<h2>Prerequisites</h2>
-<p>
-If you only want to use the Formex class, its mathenatical transformation methods and scripting, without a Graphical User Interface(GUI), all you need is recent versions of <a href="http://www.python.org/">Python</a> and <a href="http://numeric.scipy.org/">NumPy</a>.
-</p>
-<p>
-If you want to use the Graphical User Interface to run scripts and to render the created structures either to screen or to image files, you also need <a href="http://pyopengl.sourceforge.net/">PyOpenGL</a>, <a href="http://www.trolltech.com/products/qt">Qt4</a> and <a href="http://www.riverbankcomputing.co.uk/pyqt/">PyQt4</a>
-</p>
-<p>
-Full details are <a href="http://pyformex.berlios.de/manual/node7.html">in the manual</a>
-</p>
-
-<h2>Platform</h2>
-pyFormex is written completely in Python. While it is developed on Linux
-platforms, it can be made to work on other platforms too, provided you have
-installed the required packages. 
-
-<h2>Optional packages</h2>
-<ul>
-<li> If you want to save the images in .PS, .EPS or .PDF format
-(as shown in the WireStent example),
-you need the <a href="http://www.geuz.org/gl2ps/">gl2ps</a> 
-OpenGL to PostScript printing library.</li>
-<li> If you want to perform the structural analysis of the truss in the 
-X_truss_analysis example, you need the <a href="ftp://bumps.ugent.be/pub/calpy/">calpy</a> analysis package version 0.3.4 or higher. Install by preference from the source; compiling should work without problems if you have a full NumPy installation.
-</li>
-</ul>
+	<div id="top1">
+	<img src="images/scallop_dome_small_silver.png" border="0" hspace="20" vspace="12" align="left">
+	<img src="images/pyformex_logo_silver.png" border="0" hspace="10" vspace="12" align="left">
+	</div>
 
 
-<h2>Documentation</h2>
-<ul>
-<li><a href="manual/index.html">pyFormex Manual</a>: While pyFormex is still in an early development stage, we have already started work on what is to become the pyFormex manual. It is far from finished and by no means complete or fully accurate, but has proved to be already quite useful. A tutorial is included.
-</li>
-<li><a href="doc/index.html">pydoc Pages</a>: These pages were automatically generated by pydoc from the Python sources. They may be more accurate and uptodate than the manual, but may require a more skilled reader.</li>
-</p>
-<hr><a href="http://developer.berlios.de" title="BerliOS Developer">
-<img src="http://developer.berlios.de/bslogo.php?group_id=2717"
- alt="BerliOS Developer Logo" border="0" height="32" width="124"></a><!-- Created: Fri Dec 10 18:40:53 CET 2004 --><!-- hhmts start -->Last modified: Sun Jul 15 21:43:51 CEST 2007 <!-- hhmts end -->
+	<div id="nav">
+	<ul>
+
+	<li><a class="main" href="index.html">Home</a>
+		<ul>
+		<li><a href="#about">About</a></li>
+		<li><a href="#news">News</a></li>
+		<li><a href="#prerequisites">Prerequisites</a></li>
+		<li><a href="#platform">Platform</a></li>
+		<li><a href="#optional packages">Optional packages</a></li>
+		<li><a href="#license">License</a></li>
+		</ul>	
+	</li>
+
+	<li><a class="main" href="documentation.html">Documentation</a></li>
+	<li><a class="main" href="examples.html">Examples</a></li>
+	<li><a class="main" href="screenshots.html">Screenshots</a></li>
+	<li><a class="main" href="download.html">Download</a></li>
+	<li><a class="main" href="developer.html">Developer</a></li>
+	<li><a class="main" href="links.html">Links</a></li>
+
+	</ul>
+	</div>
+
+	<div id="content">
+
+	  
+	<a name="about" />
+	<h2>About</h2>
+
+	<p>A python implementation of Formex algebra.</p>
+	<p>pyFormex is a tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical 	transformations.</p>
+	<p>It is especially suited for the automated design of spatial frame structures. But as the examples show,
+	it can also be used for other tasks, like finite element preprocessing, or just for creating some nice pictures.
+	pyFormex also offers interesting possibilities for executing specialized operations on surface meshes, usually STL type triangulated meshes 	originating from CT or MRI images.</p>
+
+	  
+	<a name="news"/>
+	<h2>News</h2>
+
+	<!--#include file="projnews.cache" -->
+
+	  
+	<a name="prerequisites"/>
+	<h2>Prerequisites</h2>
+	<p>If you only want to use the Formex class, its mathematical transformation methods and scripting, without a Graphical User Interface(GUI), all you 	need is recent versions of <a href="http://www.python.org">Python</a> and <a href="http://numpy.scipy.org//" target="blank">NumPy</a>	</p>
+	<p>If you want to use the Graphical User Interface to run scripts and to render the created structures either to screen or to image files, you also 	need <a href="http://pyopengl.sourceforge.net/">PyOpenGL</a>, <a href="http://trolltech.com/products/qt" target="blank">Qt4</a> and <a 	href="http://www.riverbankcomputing.co.uk/pyqt/" target="blank">PyQt4</a></p>
+	<p>Full details are in the documentation.</p>
+
+	  
+	<a name="platform"/>
+	<h2>Platform</h2>
+	<p>pyFormex is written completely in Python. While it is developed on Linux platforms, it can be made to work on other platforms too, provided you 	have installed the required packages.</p>
+
+	  
+	<a name="optional packages"/>
+	<h2>Optional packages</h2>
+	<ul>
+		<li>If you want to save the images in .PS, .EPS or .PDF format (as shown in the WireStent example), you need the gl2ps OpenGL to PostScript 	printing library.</li>
+		<li>If you want to perform the structural analysis of the truss in the X_truss_analysis example, you need the <a 	href="ftp://bumps.ugent.be/pub/calpy/">calpy</a> analysis package version 0.3.4 or higher. Install by preference from the source; 	compiling should work without problems if you have a full NumPy installation.</li>
+	</ul>
+	
+	
+	<a name="license"/>
+	<h2>License</h2>
+	<p>This program is free software; you can redistribute it and/or modify
+	it under the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.</p>
+	
+	<br>
+<br>
+<br>
+<br>
+
+<hr>
+
+<!-- hhmts start -->Last modified: Mon Oct 15 19:56:35 CEST 2007 <!-- hhmts end -->
+	
+	</div>	
+</div>
+
+
 </body>
 </html>
+

@@ -1,0 +1,131 @@
+body {
+	background-color: rgb(235,235,235);
+	font-family: 'Bitstream Vera Sans', 'Lucida Grande', Verdana, Arial, 'sans-serif';
+}
+
+
+
+#top1 { 
+   height: 125px;
+   width: 100%;
+   background: silver; 
+   border-bottom: 1px solid gray;
+}
+
+#topfig1 { 
+   width: 400px;
+   height: 103px;
+   position: absolute;
+   z-index: 4;
+   top: 40px;
+   left: 245px;
+   background-image: url("images/pyformex_logo.png");
+}
+
+#topfig2 { 
+   width: 150px;
+   height: 100px;
+   position: absolute;
+   z-index: 4;
+   top: 40px;
+   left: 75px;
+   background-image: url("images/scallop_dome_small.png");
+}
+
+#page
+{
+	background-color: white;
+	border: 1px solid gray;
+	margin-left: 40px;
+	margin-right: 40px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	
+}
+
+#nav {
+	left: 55px;
+	position: absolute;
+	display: block;
+	width: 165px;
+	padding-left: 15px;
+	padding-right: 0px;
+	padding-top: 30px;
+	background-color: white;
+	font-size: small;
+}
+
+#nav ul {
+	margin: 0;
+	padding-left: 5px;
+}
+
+#nav ul ul {
+	list-style-type: none;
+	padding-left: 20px;
+}
+
+#nav ul li {
+	list-style-type: none;
+
+}
+
+#nav ul ul li {
+
+}
+
+
+#nav a {
+	text-decoration: none;
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+	color: 	#000099;
+}
+
+#nav a.main {
+	color: #000033;
+}
+
+
+#nav a:hover {
+	color: white;
+	background-color: silver;
+}
+
+#content {
+	z-index: 5;
+	background-color: white;
+	top: 0px;
+	color: #000033;
+	font-size: small;
+	margin-left: 200px;
+	margin-bottom: 30px;
+	padding-bottom: 30px;
+	margin-right: 10px;
+}
+
+#post {
+	color: rgb(100,100,100);
+	font-size: 0.9em;
+	margin-top: -10px;
+
+}
+
+h2 {
+	padding-top: 10px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000033;
+	color: #000033;
+}
+
+img {
+	border: none;
+}
+
+small
+{
+	font-family: 'Bitstream Vera Sans', 'Lucida Grande', Verdana, Arial, 'sans-serif';
+	font-size: 0.9em;
+	line-height: 1.5em;
+}
