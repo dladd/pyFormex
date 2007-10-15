@@ -1,10 +1,13 @@
 # Makefile for the pyformex WEB site
 #
 
-HTDOCS= pyformex.html examples.html surface.html *.png *.gif *.jpg favicon.ico
-DOCDOCS= doc/*.html
+HTDOCS= developer.html documentation.html download.html examples.html \
+  examples_geometry.html examples_surface.html index.html links.html \
+  pyformex.html screenshots.html pyformex.css favicon.ico
+IMAGES= images/*.png images/*.gif images/*.jpg
+DOCDOCS= ../doc/html/*.html
 MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
-IMAGES= ../manual/images/*.png
+MANIMAGES= ../manual/images/*.png
 RSYNC= rsync -uv -e ssh
 
 tar: web.tar.gz
@@ -20,13 +23,13 @@ web.tar.gz: $(HTDOCS) $(DOCDOCS) ${MANDOCS}
 
 
 # tranfer files to berlios.de
-# This one packs everything in a tarball: need to iunpack on berlios
+# This one packs everything in a tarball: need to unpack on berlios
 public: web.tar.gz
 	$(RSYNC) web.tar.gz bverheg@shell.berlios.de:/home/users/bverheg/
 
 # this one transfers directly in the correct place
 pub: docdoc.inc
 	$(RSYNC) $(HTDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs
-	$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
-	$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
 	$(RSYNC) $(IMAGES) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
+	#$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
+	#$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
