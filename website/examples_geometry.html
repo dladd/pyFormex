@@ -95,7 +95,7 @@
 				</td>
 				<td>
 					First we create two triangles. We give them different colors so that they are easy to distinguish.<BR><BR>
-            			<pre>v=0.5*sqrt(3.)<br>a = Formex([[[0,0],[1,0],[0.5,v]]],1)<br>aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)<br></pre>
+            			<pre>v=0.5*sqrt(3.)<br/>a = Formex([[[0,0],[1,0],[0.5,v]]],1)<br>aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)<br></pre>
 				</td>
 			</tr>
 			<tr>
@@ -104,7 +104,7 @@
 				</td>
 				<td>
 					Next we copy the triangles a number of times in two directions, generating the triangular pattern at the left.<BR><BR>
-            			<pre>m=5; n=5;<br>d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)<br>dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)<br></pre>
+            			<pre>m=5; n=5;<br/>d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)<br>dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)<br></pre>
 				</td>
 
 			</tr>
@@ -114,7 +114,7 @@
 				</td>
 				<td>
 					Then we copy-rotate the pattern into a hexagon.<BR><BR>
-            			<pre>e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])<br></pre>
+            			<pre>e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])<br/></pre>
 				</td>
 
 			</tr>
@@ -124,7 +124,7 @@
 				</td>
 				<td>
 					Lastly the pattern is mapped on a sphere, resulting in a geodesic dome from which we give a perspective view.<BR><BR>
-            			<pre>f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])<br></pre>
+            			<pre>f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])<br/></pre>
 				</td>
 
 			</tr>
@@ -229,12 +229,12 @@ draw(Stars)
 	</table>
 
 
-<br>
-<br>
-<br>
-<br>
+<br/>
+<br/>
+<br/>
+<br/>
 
-<hr>
+<hr/>
 
 <!-- hhmts start -->Last modified: Mon Oct 15 18:40:31 CEST 2007 <!-- hhmts end -->
 
