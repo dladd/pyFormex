@@ -596,7 +596,7 @@ def draw(F, view=None,bbox='auto',
             actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
 
         GD.canvas.addActor(actor)
-        if view is not None:
+        if view is not None or bbox is not None:
             GD.debug("CHANGING VIEW to %s" % view)
             if view == 'last':
                 view = DrawOptions['view']
