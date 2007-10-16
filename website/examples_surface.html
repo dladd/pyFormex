@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>pyFormex</title>
+<link rel="stylesheet" href="pyformex.css" type="text/css" />
+<meta name="description" content="pyFormex - tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
+<meta name="keywords" content="geometries" />
+
+</head>
+<body>
+<div id="page">
+<div id="top1">
+
+<img src="images/scallop_dome_small_silver.png" border="0" hspace="20" vspace="12" align="left">
+<img src="images/pyformex_logo_silver.png" border="0" hspace="10" vspace="12" align="left">
+
+</div>
+
+
+
+<div id="nav">
+<ul>
+
+<li><a class="main" href="index.html">Home</a></li>
+<li><a class="main" href="http://developer.berlios.de/project/showfiles.php?group_id=1833">Download</a></li>
+<li><a class="main" href="documentation.html">Documentation</a></li>
+
+<li><a class="main" href="examples.html">Examples</a>
+	<ul>
+	<li><a href="creatingGeometry.html">Creating geometry</a></li>
+	<li><a href="surfaceMeshes.html">Surface meshes</a></li>
+	</ul>
+</li>
+
+<li><a class="main" href="screenshots.html">Screenshots</a></li>
+<li><a class="main" href="developer.html">Developer</a></li>
+<li><a class="main" href="links.html">Links</a></li>
+
+</ul>
+</div>
+
+<div id="content">
+
+<h2>Operating on surface meshes</h2>
+
+<h3>Approximating geometry</h3>
+<p align="justify">An artery with a kink was imported as a triangulated surface, obtained from medical CT scan images. The artery was approximated by a sequence of circles with varying diameters and non collinear center points. The figure below shows part of the triangulated surface (yellow), a subset of the approximating circles (blue) and the line connecting the centers of the circles (red). The view is taken from inside the artery.</p>
+<div align="center"><a href="images/tata-0114.jpg"><img src="images/tata-0114_small.png"border="0" vspace="20" alt="centerline" ></a></div>
+
+
+<h3>Stent geometry evaluation</h3>
+<p align="justify">The next figures show four stages in the evaluation of the geometry of a stent device. The first figure is the imported 3D surface, reconstructed from CT scan images. In pyFormex, the tubular stent is unrolled to a planar structure (second figure). This is cut with a plane, producing the circumference, from which the basic cell is taken which is shown in the third figure. Finally, the fourth figure shows the resulting circumference of the opening between the stent material.</p>
+
+
+<div align="center"><img src="images/cypher_orig.png" border="0" hspace="5" vspace="5"></div>
+<div align="center"><img src="images/cypher_unroll.png" border="0" hspace="5" vspace="5"></div>
+<div align="center"><img src="images/cypher_unroll_cell.png" border="0" hspace="5" vspace="5"></div>
+<div align="center"><img src="images/cypher_unroll_cell2.png" border="0" hspace="5" vspace="5"></div>
+
+<br/>
+<br/>
+
+
+<h3>Want other examples?</h3>
+More examples are included in the pyFormex distribution.
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+<hr/>
+
+<!-- hhmts start -->Last modified: Mon Oct 15 18:40:31 CEST 2007 <!-- hhmts end -->
+
+</div>
+</div>
+
+
+</body>
+</html>

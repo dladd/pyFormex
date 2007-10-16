@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>pyFormex</title>
+<link rel="stylesheet" href="pyformex.css" type="text/css" />
+<meta name="description" content="pyFormex - tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
+<meta name="keywords" content="geometries" />
+
+</head>
+<body>
+<div id="page">
+	<div id="top1">
+	<img src="images/scallop_dome_small_silver.png" border="0" hspace="20" vspace="12" align="left">
+	<img src="images/pyformex_logo_silver.png" border="0" hspace="10" vspace="12" align="left">
+	</div>
+
+
+	<div id="nav">
+	<ul>
+
+	<li><a class="main" href="index.html">Home</a></li>
+	<li><a class="main" href="http://developer.berlios.de/project/showfiles.php?group_id=1833">Download</a></li>
+	<li><a class="main" href="documentation.html">Documentation</a></li>
+
+	<li><a class="main" href="examples.html">Examples</a>
+		<ul>
+		<li><a href="creatingGeometry.html">Creating geometry</a></li>
+		<li><a href="surfaceMeshes.html">Surface meshes</a></li>
+		</ul>
+	</li>
+
+	<li><a class="main" href="screenshots.html">Screenshots</a></li>
+	<li><a class="main" href="developer.html">Developer</a></li>
+	<li><a class="main" href="links.html">Links</a></li>
+
+	</ul>
+	</div>
+
+	<div id="content">
+
+	<h2>Creating spatial structures</h2>
+	
+	<h3>Hesperia dome</h3>
+	The Hesperia dome is a enormous construction made of glass on top of a hotel in Barcelona. A parametric 3D model of this dome was created with pyFormex, which allows to evaluate geometric variations changing one or more parameters (e.g. the span or height of a dome, the amount of secondary triangles, etc.) as shown in the figure below. As illustrated, geometries can be displayed in several ways (e.g. wireframe, flat, smooth, transparent). Automated generation of finite element input files can be incorporated in pyFormex. 
+	<table align="center" right: 40px>
+			<tr>
+				<td>
+					<div align="center"><img src="images/hesperia3.jpg" border="0" vspace="20"></div>
+				</td>
+				<td>
+					<div align="center"><img src="images/dome.png" border="0" hspace="5" vspace="20"></div>
+				</td>
+
+			</tr>
+	</table>
+	
+	<h3>Hyparcap</h3>
+	A space frame in the form of a five-pointed star of hypars.
+	<BR>
+	<BR>
+	<BR>
+	<div align ="center"><img src="images/Hyparcap.png" alt="Hyparcap" border="0"></div>
+	<BR>
+	<BR>
+
+	<h3>Scallop dome</h3>
+	Example showing the parametric capabilities of pyFormex.
+	<table align="center" right: 40px>
+			<tr>
+				<td>
+					<div align="center"><img src="images/scallop8.png" border="0" hspace="5" vspace="20"></div>
+				</td>
+				<td>
+					<div align="center"><img src="images/scallop12.png" border="0" hspace="5" vspace="20"></div>
+				</td>
+			</tr>
+	</table>
+
+	<h3>SpaceTrussRoof</h3>
+	A space truss used for the roof of an industrial building. Click on the picture to view a large size animated gif.
+	<BR>
+	<BR>
+	<BR>
+	<div align ="center"><a href="images/roof-movie.gif"><img src="images/SpaceTrussRoof.png" alt="SpaceTrussRoof" border="0"></a></div>
+	<BR>
+	<BR>
+
+
+      <h3>Geodesic Dome</h3>
+	This example illustrates the use of surface elements. It shows four steps in the creation of a geodesic dome.
+	<table align="center" right: 40px>
+			<tr>
+				<td>
+					<div align="center"><img src="images/Geodesic-1.png" border="0" hspace="15" vspace="20"></div>
+				</td>
+				<td>
+					First we create two triangles. We give them different colors so that they are easy to distinguish.<BR><BR>
+            			<pre>v=0.5*sqrt(3.)<br/>a = Formex([[[0,0],[1,0],[0.5,v]]],1)<br>aa = Formex([[[1,0],[1.5,v],[0.5,v]]],2)<br></pre>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div align="center"><img src="images/Geodesic-2.png" border="0" hspace="15" vspace="20"></div>
+				</td>
+				<td>
+					Next we copy the triangles a number of times in two directions, generating the triangular pattern at the left.<BR><BR>
+            			<pre>m=5; n=5;<br/>d = a.replic2(m,min(m,n),1.,v,bias=0.5,taper=-1)<br>dd = aa.replic2(m-1,min(m-1,n),1.,v,bias=0.5,taper=-1)<br></pre>
+				</td>
+
+			</tr>
+			<tr>
+				<td>
+					<div align="center"><img src="images/Geodesic-3.png" border="0" hspace="15" vspace="20"></div>
+				</td>
+				<td>
+					Then we copy-rotate the pattern into a hexagon.<BR><BR>
+            			<pre>e = (d+dd).rosette(6,60,point=[m*0.5,m*v,0])<br/></pre>
+				</td>
+
+			</tr>
+			<tr>
+				<td>
+					<div align="center"><img src="images/Geodesic-4.png" border="0" hspace="15" vspace="20"></div>
+				</td>
+				<td>
+					Lastly the pattern is mapped on a sphere, resulting in a geodesic dome from which we give a perspective view.<BR><BR>
+            			<pre>f = e.mapd(2,lambda d:0.8*sqrt((m+1)**2-d**2),e.center(),[0,1])<br/></pre>
+				</td>
+
+			</tr>
+
+	</table>
+
+
+	<h2>Creating stent geometries</h2>
+
+	<h3>Wire stent</h3>
+	A single layered (top) and a double layered (bottom) wire stent. Both are generated by the script below.
+	<div align="center"><img src="images/WireStent.png" border="0" hspace="15" vspace="20"></div>
+	<pre>
+#!/usr/bin/env pyfromex
+class WireStent:
+    def __init__(self,r,l,nx,ny,nb,dz,connectors=True):
+        dz = 0.5*dz
+        bump_z=lambda x: 1.-(x/nb)**2
+        base = Formex(pattern('1')).replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
+        base = base.scale([1./nb,1./nb,1.])
+        NE = base.shear(1,0,1.)
+        SE = base.reflect(2).shear(1,0,-1.)
+        NE.setProp(1)
+        SE.setProp(3)
+        cell1 = (NE+SE).rosette(2,180)
+        if connectors:
+            cell1 += Formex([[NE[0][0],SE[0][0]]],2)
+        cell2 = cell1.reflect(2)
+        cell1 = cell1.translate([1.,1.,0.])
+        cell2 = cell2.translate([-1.,-1.,0.])
+        dx = 4.
+        dy = 4.
+        F = (cell1+cell2).replic2(nx,ny,dx,dy)
+        F = F.translate([0.,0.,r])
+        self.F = cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),l/ny/dy])
+    def all(self):
+        return self.F
+
+clear()
+F = WireStent(10.,200.,12,12,4,1.).all()
+G = WireStent(8.,200.,12,12,4,1.).all()
+draw(F)
+draw(G)
+draw(F.translate([0.,30.,0.]))
+</pre><BR>
+
+	<h3>Balloon expandable stent</h3>
+	pyFormex can be used for the parametric design of balloon expandable stents. As illustrated below, both the geometric design and the mesh can easily be modified.
+	<BR>
+	<BR>
+	<BR>
+	<div align ="center"><img src="images/BalloonExpandableStent1.png" border="0"></div>
+	<BR>
+	<div align ="center"><img src="images/BalloonExpandableStent2.png" border="0"></div>
+	<BR>
+	<BR>
+
+
+
+	<h2>Creating illustrations</h2>
+	
+	<h3>Stars</h3>
+	pyFormex can also be used for other purposes. These collection of stars was generated by the script shown below.
+	<BR>
+	<BR>
+	<BR>
+	<div align ="center"><img src="images/stars.png" alt="stars" border="0"></div>
+	<BR>
+<pre>
+#!/usr/bin/env pyformex
+from numarray import random_array
+nstars = 100 # number of stars
+npoints = 7 # number of points in the star
+noise = 0.3 # relative amplitude of noise
+displ = nstars*0.6 # relative displacement
+def star(n,noise=0.,prop=0):
+    m = n/2
+    f = Formex([[[0,1]]]).rosette(n,m*360./n).data()
+    if noise != 0.:
+        f = f + noise * random_array.random(f.shape)
+    P = Formex(concatenate([f,f[:1]]))
+    return Formex.connect([P,P],bias=[0,1]).setProp(prop)
+Stars = Formex.concatenate( \
+    [ star(npoints,noise,i).translate(displ*random_array.random((3,))) \
+      for i in range(nstars) ])
+clear()
+draw(Stars)
+</pre>	<BR>
+	<BR>
+
+	<h3>Other illustrations</h3>
+
+	<table align="center" right: 40px>
+			<tr>
+				<td>
+					<div align="center"><img src="images/lima.png" border="0" hspace="5" vspace="20"></div>
+				</td>
+				<td>
+					<div align="center"><img src="images/KochLine.png" border="0" hspace="5" vspace="20"></div>
+				</td>
+			</tr>
+	</table>
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+<hr/>
+
+<!-- hhmts start -->Last modified: Mon Oct 15 18:40:31 CEST 2007 <!-- hhmts end -->
+
+	</div>
+</div>
+
+
+</body>
+</html>
+
