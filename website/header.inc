@@ -10,3 +10,11 @@
 </head>
 
 <body>
+
+<div id="page">
+
+<div id="top1">
+  <img src="images/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left"/>
+  <img src="images/pyformex_logo.png" alt="pyformex logo" border="0" hspace="10" vspace="12" align="left"/>
+</div>
+
