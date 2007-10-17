@@ -29,10 +29,10 @@ By writing a very simple script, a large geometry can be created by copying, tra
     \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[width=5cm]{images/scallopdome-002}}
   \end{latexonly}
   \begin{htmlonly}
-%    \htmladdimg[WIDTH="300"]{../images/scallopdome-000.png}
-    \htmladdimg{../images/scallopdome-000.png}
-    \htmladdimg{../images/scallopdome-001.png}
-    \htmladdimg{../images/scallopdome-002.png}
+%    \htmladdimg[WIDTH="300"]{images/scallopdome-000.png}
+    \htmladdimg{images/scallopdome-000.png}
+    \htmladdimg{images/scallopdome-001.png}
+    \htmladdimg{images/scallopdome-002.png}
   \end{htmlonly}
   \caption{Same script, different domes} \label{fig:scallops}
 \end{figure}
@@ -137,10 +137,10 @@ Simply put: a Formex is a set of elements, and every element can have a property
   \begin{makeimage}
   \end{makeimage}
   \begin{latexonly}
-    \includegraphics[width=4cm]{images/Formex}
+    \includegraphics{images/Formex}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/Formex.png}
+    \htmladdimg{images/Formex.png}
   \end{htmlonly}  
   \caption{The scheme of a Formex}
 \end{figure}
@@ -160,7 +160,7 @@ The first and most useful way to create a Formex is by specifying it's nodes and
     \includegraphics[width=4cm]{images/square}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/square.png}
+    \htmladdimg{images/square.png}
   \end{htmlonly}  
   \caption{A very simple Formex}
   \label{fig:square}
@@ -180,7 +180,7 @@ On the other hand, if you would change the position of the square brackets like 
     \includegraphics[width=4cm]{images/parallel}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/parallel.png}
+    \htmladdimg{images/parallel.png}
   \end{htmlonly}  
   \caption{Same nodes, different Formex}
 \end{figure}
@@ -205,7 +205,7 @@ The previous examples were limited to a 2-D environment for simplicity's sake. O
     \includegraphics[width=6cm]{images/pyramide}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/pyramide.png}
+    \htmladdimg{images/pyramide.png}
   \end{htmlonly}  
   \caption{A pyramid}
   \label{fig:pyramid}
@@ -256,7 +256,7 @@ Some simple patterns are defined in \module{simple.py} and are ready for use. Th
     \includegraphics[width=6cm]{images/cube}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/cube.png}
+    \htmladdimg{images/cube.png}
   \end{htmlonly}  
   \caption{A cube}
   \label{fig:cube}
@@ -326,7 +326,7 @@ It also possible to draw multiple Formices at the same time.
     \includegraphics[width=6cm]{images/house}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/house.png}
+    \htmladdimg{images/house.png}
   \end{htmlonly}  
   \caption{Drawing multiple Formices}
   \label{fig:multiple}
@@ -457,7 +457,7 @@ F = Formex(pattern("164"),[1,2,3]); drawit(F)
     \includegraphics[width=6cm]{images/spiral-000}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/spiral-000.png}
+    \htmladdimg{images/spiral-000.png}
   \end{htmlonly}  
   \caption{The basic Formex}
 \end{figure}
@@ -487,7 +487,7 @@ F = F.translate(2,1); drawit(F,'iso')
     \includegraphics[width=6cm]{images/spiral-003}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/spiral-003.png}
+    \htmladdimg{images/spiral-003.png}
   \end{htmlonly}  
   \caption{The rectangular pattern}
 \end{figure}
@@ -504,7 +504,7 @@ F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
     \includegraphics[width=6cm]{images/spiral-004}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/spiral-004.png}
+    \htmladdimg{images/spiral-004.png}
   \end{htmlonly}  
   \caption{The cylinder}
 \end{figure}
@@ -528,7 +528,7 @@ F = F.rotate(-10,0); drawit(F,'iso')
     \includegraphics[width=6cm]{images/spiral-006}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/spiral-006.png}
+    \htmladdimg{images/spiral-006.png}
   \end{htmlonly}  
   \caption{The new cylinder}
 \end{figure}
@@ -555,8 +555,8 @@ drawit(F,'right')
      \includegraphics[width=5cm]{images/spiral-008}
    \end{latexonly}
    \begin{htmlonly}
-     \htmladdimg{../images/spiral-007.png}
-     \htmladdimg{../images/spiral-008.png}
+     \htmladdimg{images/spiral-007.png}
+     \htmladdimg{images/spiral-008.png}
    \end{htmlonly}  
    \caption{The spiral}
  \end{figure}

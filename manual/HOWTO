@@ -37,7 +37,7 @@ Therefore, inclusion of figures should go like this:
     \includegraphics[width=12cm]{images/wirestent}
   \end{latexonly}
   \begin{htmlonly}
-    \htmladdimg{../images/wirestent.png}
+    \htmladdimg{images/wirestent.png}
   \end{htmlonly}  
   \caption{WireStent example.}
   \label{fig:wirestent}

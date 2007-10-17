@@ -8,7 +8,7 @@ options:
   --dri              Force the use of Direct Rendering
   --nodri            Disables the use of Direct Rendering (overrides the --dri
                      option)
-  --alpha            Enable the Alpha Channel buffer
+  --arrays           Use vertex arrays for display
   --config=CONFIG    use file CONFIG for settings
   --nodefaultconfig  skip all default locations of config files
   --redirect         redirect standard output to the message board (ignored
