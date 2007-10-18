@@ -4,10 +4,10 @@ body {
 }
 
 
-
 #top1 { 
    height: 125px;
    width: 100%;
+   right: 40px;
    background: silver; 
    border-bottom: 1px solid gray;
 }
@@ -16,20 +16,20 @@ body {
    width: 400px;
    height: 103px;
    position: absolute;
-   z-index: 6;
-   top: 50px;
+   z-index: 4;
+   top: 30px;
    left: 245px;
-   background-image: url("images/pyformex_logo_silver.png");
+   background-image: url("images/pyformex_logo.png");
 }
 
 #topfig2 { 
    width: 150px;
    height: 100px;
    position: absolute;
-   z-index: 6;
-   top: 50px;
+   z-index: 4;
+   top: 30px;
    left: 75px;
-   background-image: url("images/scallop_dome_small_silver.png");
+   background-image: url("images/scallop_dome_small.png");
 }
 
 #page
@@ -40,13 +40,11 @@ body {
 	margin-right: 40px;
 	margin-top: 20px;
 	margin-bottom: 20px;
-	
-}
+}	
 
 #nav {
+	position: fixed;
 	left: 55px;
-	position: absolute;
-	display: block;
 	width: 165px;
 	padding-left: 15px;
 	padding-right: 0px;
@@ -76,9 +74,10 @@ body {
 
 
 #nav a {
-	text-decoration: none;
 	padding-left: 0.3em;
 	padding-right: 0.3em;
+	text-decoration: none;
+	display: block;
 	color: 	#000099;
 }
 
@@ -92,10 +91,9 @@ body {
 	background-color: silver;
 }
 
+
 #content {
-	z-index: 5;
 	background-color: white;
-	top: 0px;
 	color: #000033;
 	font-size: small;
 	margin-left: 200px;
@@ -121,11 +119,4 @@ h2 {
 
 img {
 	border: none;
-}
-
-small
-{
-	font-family: 'Bitstream Vera Sans', 'Lucida Grande', Verdana, Arial, 'sans-serif';
-	font-size: 0.9em;
-	line-height: 1.5em;
 }

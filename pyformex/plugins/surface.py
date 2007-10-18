@@ -785,7 +785,7 @@ class Surface(object):
             print t
             print inner(nor[t[:,0]],nor[t[:,1]])
             print inner(nor[t[:,0]],nor[t[:,1]]) > cosangle
-            test = diagonal(inner(nor[t[:,0]],nor[t[:,1]]) > cosangle)
+            test = sqrt((nor[t[:,0]]*nor[t[:,1]]).sum(axis=-1)) > cosangle
             print test
             #test1 = nor[t[:0]] * nor[t[:,1]]
             t = t[test]
