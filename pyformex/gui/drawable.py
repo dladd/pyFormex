@@ -254,6 +254,32 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     GL.glEnd()
 
 
+def drawPolygonColor(x,color,alpha=1.0,normals=False):
+    """Draw a collection of polygones with smooth color shading.
+
+    x is a (ntri,nplex,3) shaped array of coordinates of the vertices.
+    nplex should be >= 3.
+    color is a (ntri,nplex,3) shaped array of color values at the vertices.
+    """
+    #if mode == 'smooth':
+    #    normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+    if x.shape != color.shape:
+        raise RuntimeError,"Shape of x and color should be the same"
+    nplex = x.shape[:2]
+    if nplex == 3:
+        GL.glBegin(GL.GL_TRIANGLES)
+    elif nplex == 4:
+        GL.glBegin(GL.GL_QUAD)
+    else:
+        GL.glBegin(GL.GL_POLYGON)
+    x = x.reshape((-1,3))
+    color = color.reshape((-1,3))
+    for i in range(x.shape[0]):
+        glColor(color[i][j],alpha)
+        GL.glVertex3fv(x[i][j])
+    GL.glEnd()
+
+
 def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
     if GD.options.arrays:
         drawArrayElems(x,elems,GL.GL_TRIANGLES)

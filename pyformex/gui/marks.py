@@ -35,10 +35,14 @@ class Mark(Drawable):
 class TextMark(Mark):
     """A text drawn at a 3D position."""
     
-    def __init__(self,pos,text,color=black,font='9x15'):
+    def __init__(self,pos,text,color=None,font=None):
         Mark.__init__(self,pos)
         self.text = text
+        if color is None:
+            color = black
         self.color = color
+        if font is None:
+            font = '9x15'
         self.font = glutFont(font)
 
     def drawGL(self,mode=None):

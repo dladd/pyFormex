@@ -3,12 +3,12 @@
 
 HTDOCS= developer.html documentation.html download.html examples.html \
   examples_geometry.html examples_surface.html index.html links.html \
-  pyformex.html screenshots.html pyformex.css favicon.ico
+  screenshots.html pyformex.css favicon.ico home_header.inc home_footer.inc
 IMAGES= images/*.png images/*.gif images/*.jpg
 DOCDOCS= ../doc/html/*.html
 MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png
-RSYNC= rsync -uv -e ssh
+RSYNC= rsync -uvl -e ssh
 
 tar: web.tar.gz
 
@@ -33,3 +33,8 @@ pub: docdoc.inc
 	$(RSYNC) $(IMAGES) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
 	#$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
 	#$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
+
+homepage: pyformex.html
+
+pyformex.html: home_header.inc projnews.cache home_footer.inc 
+	cat home_header.inc projnews.cache home_footer.inc > $@

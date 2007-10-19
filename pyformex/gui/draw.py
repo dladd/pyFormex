@@ -640,9 +640,9 @@ def drawNumbers(F,color=colors.black):
     return M
 
 
-def drawText3D(P,text,color=colors.black):
+def drawText3D(P,text,color=colors.black,font=None):
     """Draw a text at a 3D point."""
-    M = marks.TextMark(P,text,color=color)
+    M = marks.TextMark(P,text,color=color,font=font)
     GD.canvas.addMark(M)
     GD.canvas.update()
     return M

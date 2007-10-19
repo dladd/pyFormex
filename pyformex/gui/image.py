@@ -181,8 +181,7 @@ if _has_gl2ps:
         ##color = GL[[0.,0.,0.,0.]]
         while state == gl2ps.GL2PS_OVERFLOW:
             bufsize += 1024*1024
-            #print filename,filetype
-            gl2ps.gl2psBeginPage(title, _producer, viewport, filetype,
+            gl2ps.gl2psBeginPage(title, _producer, tuple(viewport), filetype,
                                  gl2ps.GL2PS_BSP_SORT, opts, GL.GL_RGBA,
                                  0, None, 0, 0, 0, bufsize, fp, filename)
             canvas.display()

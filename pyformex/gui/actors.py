@@ -305,7 +305,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0,color1=None):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0,color1=None,color2=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -335,8 +335,11 @@ class FormexActor(Actor,Formex):
             self.setMarkSize(marksize)
         self.list = None
         self.color1 = None
+        self.color2 = None
         if color1 is not None:
             self.color1,self.colormap = saneColorSet(color1,None,self.nelems())
+        if color2 is not None:
+            self.color2,self.colormap = saneColorSet(color2,None,self.nelems())
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
@@ -413,6 +416,7 @@ class FormexActor(Actor,Formex):
         ## CURRENTLY, ONLY color=None is used
         
         color1 = None
+        color2 = None
         
         if color is None:  
             color = self.color
@@ -428,15 +432,14 @@ class FormexActor(Actor,Formex):
             color = None
 
         elif color.dtype.kind == 'i': # color index
-            GD.debug("COLOR INDEX %s\n%s" % (str(color),str(self.colormap)))
+            #GD.debug("COLOR INDEX %s\n%s" % (str(color),str(self.colormap)))
             color = self.colormap[color]
-            if self.color1:
-                color1 = self.colormap[self.color1]
 
         else: # a full color array : use as is
             #pass
             GD.debug("FULL COLOR")
             color1 = self.color1
+            color2 = self.color2
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
@@ -468,7 +471,11 @@ class FormexActor(Actor,Formex):
                 drawPolyLines(self.f,color)
                 
         elif nnod == 3:
-            drawTriangles(self.f,mode,color,alpha)
+            if color2 is None:
+                drawTriangles(self.f,mode,color,alpha)
+            else:
+                color = concatenate([color,color1,color2],axis=1)
+                drawPolygonColor(x,color,alpha)
             
         elif nnod == 4:
             if self.eltype=='tet':

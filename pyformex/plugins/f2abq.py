@@ -114,18 +114,41 @@ def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
       E,G))
 
 
+materialswritten=[]
+def writeMaterial(fil, mat):
+    """Write a material section.
+    
+    mat is the property dict of the material.
+    If the matrial has a name and has already been written, this function
+    does nothing.
+    """
+    if mat.name is not None and mat.name not in materialswritten:
+        if mat.poisson_ratio is None and mat.shear_modulus is not None:
+            mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
+        fil.write("""*MATERIAL, NAME=%s
+*ELASTIC
+%s,%s
+*DENSITY
+%s
+"""%(mat.name, float(mat.young_modulus), float(mat.poisson_ratio), float(mat.density)))
+        materialswritten.append(mat.name)
+        
+
 ##################################################
 ## Some higher level functions, interfacing with the properties module
 ##################################################
 
-materialswritten=[]
 def writeSection(fil, nr):
     """Write an element section for the named element set.
     
     nr is the property number of the element set.
     """
-    el=elemproperties[nr]
-    #print el
+    el = elemproperties[nr]
+
+    mat = el.material
+    if mat is not None:
+        writeMaterial(fil,mat)
+
     ############
     ##FRAME elements
     ##########################
@@ -142,6 +165,7 @@ def writeSection(fil, nr):
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+
     ##############
     ##connector elements
     ##########################  
@@ -150,19 +174,11 @@ def writeSection(fil, nr):
             fil.write("""*CONNECTOR SECTION,ELSET=Elementset_%s
 %s
 """ %(nr,el.sectiontype.upper()))
+
     ############
     ##TRUSS elements
     ##########################  
     elif el.elemtype.upper() in ['T2D2', 'T2D2H' , 'T2D3', 'T2D3H', 'T3D2', 'T3D2H', 'T3D3', 'T3D3H']:
-        #print materialswritten
-        if el.material.name not in materialswritten:
-            fil.write("""*MATERIAL, NAME=%s
-*ELASTIC
-%s,%s
-*DENSITY
-%s
-"""%(el.material.name, float(el.young_modulus), float(el.poisson_ratio), float(el.density)))
-            materialswritten.append(el.material.name)
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
 %s
@@ -171,6 +187,7 @@ def writeSection(fil, nr):
             fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
 %s
 """ %(nr,el.material.name, float(el.radius)**2*math.pi))
+
     ############
     ##BEAM elements
     ##########################
@@ -187,13 +204,15 @@ def writeSection(fil, nr):
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+
     ############
     ## SHELL elements
     ##########################
     elif el.elemtype.upper() in ['STRI3', 'S3','S3R', 'S3RS', 'STRI65','S4','S4R', 'S4RS','S4RSW','S4R5','S8R','S8R5', 'S9R5',]:
         if el.sectiontype.upper() == 'SHELL':
-            fil.write("""*SHELL SECTION, ELSET=Elementset_%s, MATERIAL=%s
-%s \n"""%(nr,float(el.material),float(el.thickness)))
+            if mat is not None:
+                fil.write("""*SHELL SECTION, ELSET=Elementset_%s, MATERIAL=%s
+%s \n""" % (nr,mat.name,float(el.thickness)))
             
     ############
     ## UNSUPPORTED elements

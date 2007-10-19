@@ -188,29 +188,41 @@ class ElemProperty(Property):
 class ElemSection(Property):
     """Properties related to the section of a beam."""
 
-    def __init__(self, section = None, material = None, sectiontype = 'general', orientation = None, behavior = None, range = 0.0):  
+    def __init__(self, section = None, material = None, orientation = None, behavior = None, range = 0.0):
+
+        ### sectiontype is now an attribute of section ###
+        
         """Create a new element section property. Empty by default.
         
         An element section property can hold the following sub-properties:
-        - section : the section properties of the element. This can be a dictionary or a string. The required data in this dict depends on the sectiontype. Currently known keys to f2abq.py are: cross_section, moment_inertia_11, moment_inertia_12, moment_inertia_22, torsional_rigidity, radius
-        - material : the element material. This can be a dictionary or a string. Currently known keys to f2abq.py are: young_modulus, shear_modulus, density, poisson_ratio
+        - section: the section properties of the element. This can be a dict
+          or a string. The required data in this dict depend on the
+          sectiontype. Currently known keys to f2abq.py are:
+            cross_section, moment_inertia_11, moment_inertia_12,
+            moment_inertia_22, torsional_rigidity, radius
+        - material: the element material. This can be a dict or a string.
+          Currently known keys to f2abq.py are:
+            young_modulus, shear_modulus, density, poisson_ratio
         - sectiontype: the sectiontype of the element. 
-		- 'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section 			   axis. This allows to change the orientation of the cross-section.
+        - 'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section axis. This allows to change the orientation of the cross-section.
         - behavior: the behavior of the connector
         """    
         CascadingDict.__init__(self,{})
-        self.sectiontype = sectiontype
+        #self.sectiontype = sectiontype
         self.orientation = orientation
         self.behavior = behavior
         self.range = range
         self.addMaterial(material)
         self.addSection(section)
+        if self.section.sectiontype is None:
+            self.sectiontype = 'general'
     
     def addSection(self, section):
         """Create or replace the section properties of the element.
 
-		If 'section' is a dict, it will be added to 'sections'.
-        If 'section' is a string, this string will be used as a key to search in 'sections'.
+        If 'section' is a dict, it will be added to 'sections'.
+        If 'section' is a string, this string will be used as a key to
+        search in 'sections'.
         """
         if isinstance(section, str):
             if sections.has_key(section):
@@ -228,8 +240,9 @@ class ElemSection(Property):
     def addMaterial(self, material):
         """Create or replace the material properties of the element.
 
-		If the argument is a dict, it will be added to 'materials'.
-        If the argument is a string, this string will be used as a key to search in 'materials'.
+        If the argument is a dict, it will be added to 'materials'.
+        If the argument is a string, this string will be used as a key to
+        search in 'materials'.
         """
         if isinstance(material, str) :
             if materials.has_key(material):
