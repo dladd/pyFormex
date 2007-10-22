@@ -10,20 +10,6 @@
 ## version 2 or later (see file COPYING for details)
 ##
 from simple import circle
-
-def length(A,axis=-1):
-    """Returns the length of the vectors of A in the direction of axis.
-
-    The default axis is the last.
-    """
-    return sqrt((A*A).sum(axis))
-
-def normalize(A,axis=-1):
-    """Normalize the vectors of A in the direction of axis.
-
-    The default axis is the last.
-    """
-    return A / length(A,axis).reshape((-1,1))
     
 
 def rotationAngle(A,B,rad=False):

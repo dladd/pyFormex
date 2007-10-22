@@ -22,6 +22,8 @@ def istype(a,c):
     return asarray(a).dtype.kind == c
 
 
+# Implement 'roll' for older versions of numpy
+
 if 'roll' not in dir():
     def roll(a, shift, axis=None): 
         """Roll the elements in the array by 'shift' positions along 
@@ -70,10 +72,38 @@ def tand(arg):
     """Return the tan of an angle in degrees."""
     return tan(arg*rad)
 
-def length(arg):
-    """Return the quadratic norm of a vector with all elements of arg."""
-    a = asarray(arg).flat
-    return sqrt(inner(a,a))   # a*a doesn't work here
+## def length(arg):
+##     """Return the quadratic norm of a vector with all elements of arg."""
+##     a = asarray(arg).flat
+##     return sqrt(inner(a,a))   # a*a doesn't work here
+
+def dotpr (A,B,axis=-1):
+    """Return the dot product of vectors of A and B in the direction of axis.
+
+    The default axis is the last.
+    """
+    return (A*B).sum(axis)
+
+def length(A,axis=-1):
+    """Returns the length of the vectors of A in the direction of axis.
+
+    The default axis is the last.
+    """
+    return sqrt((A*A).sum(axis))
+
+def normalize(A,axis=-1):
+    """Normalize the vectors of A in the direction of axis.
+
+    The default axis is the last.
+    """
+    return A / length(A,axis)#.reshape((-1,1))
+
+def projection(A,B,axis=-1):
+    """Return the (signed) length of the projection of vector of A on B.
+
+    The default axis is the last.
+    """
+    return dotpr(A,B,axis)/length(B,axis)
 
 def norm(v,n=2):
     """Return a norm of the vector v.

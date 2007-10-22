@@ -707,14 +707,35 @@ class Surface(object):
         return surface_volume(x).sum()
 
 
-    def edgeElems(self):
+    def connected(self):
         """Find the elems connected to edges."""
         return connectivity.reverseIndex(self.faces)
 
 
-    def edgeNelems(self):
+    def nConnected(self):
         """Find the number of elems connected to edges."""
-        return (self.edgeElems() >=0).sum(axis=-1)
+        return (self.connected() >=0).sum(axis=-1)
+
+
+    def adjacent(self):
+        """Find the elems adjacent to elems."""
+        self.refresh()
+        return connectivity.reverseIndex(self.elems)
+
+
+    def nAdjacent(self):
+        """Find the number of elems connected to edges."""
+        return (self.adjacent() >=0).sum(axis=-1)
+
+
+    def surfaceType(self):
+        ncon = self.nConnected()
+        nadj = self.nAdjacent()
+        maxcon = ncon.max()
+        mincon = ncon.min()
+        manifold = maxcon == 2
+        closed = mincon == 2
+        return manifold,closed    
 
 
     def borderEdges(self):
@@ -723,18 +744,17 @@ class Surface(object):
         The border elements are the edges having less than 2 connected elements.
         Returns a list of edge numbers.
         """
-        return self.edgeNelems() <= 1
-
+        return self.nConnected() <= 1
+        
 
     def isManifold(self):
-        print self.borderEdges().sum()
-        return self.borderEdges().sum() == 0
+        return self.surfaceType()[0] 
 
 
     def isClosedManifold(self):
-        print self.edgeNelems()
-        return (self.edgeNelems() != 2).sum() == 0
-               
+        stype = self.surfaceType()
+        return stype[0] and stype[1]
+    
 
     def border(self):
         """Return the border of Surface as a Plex-2 Formex.
@@ -745,66 +765,136 @@ class Surface(object):
         return Formex(self.coords[self.edges[self.borderEdges()]])
 
 
-    def edgeElems(self):
-        """Find the elems connected to edges."""
-        return connectivity.reverseIndex(self.faces)
+    def edgeAngles(self):
+        """Return the cos of the angles over all edges.
+        
+        The surface should be a manifold (max. 2 elements per edge).
+        Edges with only one element get angles = 1.0.
+        """
+        conn = self.connected()
+        # Bail out if some edge has more than two connected faces
+        if conn.shape[1] != 2:
+            raise RuntimeError,"Surface is not a manifold"
+        angles = ones(self.nedges())
+        conn2 = (conn >= 0).sum(axis=-1) == 2
+        n = self.areaNormals()[1][conn[conn2]]
+        angles[conn2] = dotpr(n[:,0],n[:,1])
+        return angles
 
 
-    def edgeNelems(self):
-        """Find the number of elems connected to edges."""
-        return (self.edgeElems() >=0).sum(axis=-1)
-
-
-    def partitionByAngle(self,angle,nruns=-1):
+    def partitionByAngle(self,angle,nruns=-1,firstprop=0):
         """Detects different parts of the surface.
         
-        Faces are considered to belong to a different part,
-        when the angle between these faces is larger than a predefined value.
+        Faces are considered to belong to the same part if the angle between
+        these faces is smaller than the given value.
         """
-        print "coords\n%s" % self.coords
-        print "edges\n%s" % self.edges
-        print "faces\n%s" % self.faces
-        rev = connectivity.reverseIndex(self.faces)
-        print "rev\n%s" % rev
-        NB = rev[self.faces]
-        print "NB\n%s" % NB
-        nor = self.areaNormals()[1]
-        print "nor\n%s" % nor
-        prop = zeros((self.faces.shape[0],),dtype=Int)
-        z = prop + 1
-        s = [0]
-        z[s] = 0
-        flag = 1
-        p = 1
-        cosangle = cosd(angle)
-        print "COSANGLE=%s" % cosangle
-        run = 0
-        while flag > 0 and (nruns < 0 or run < nruns):
-            run += 1
-            t = NB[s].reshape(-1,2)
-            print t
-            print inner(nor[t[:,0]],nor[t[:,1]])
-            print inner(nor[t[:,0]],nor[t[:,1]]) > cosangle
-            test = sqrt((nor[t[:,0]]*nor[t[:,1]]).sum(axis=-1)) > cosangle
-            print test
-            #test1 = nor[t[:0]] * nor[t[:,1]]
-            t = t[test]
-            if t.shape[0] > 0:
-                s = unique(t.reshape(-1))
-                s = asarray(s[where(z[s])[0]]).reshape(-1)
-                z[s] = 0
-            else:
-                z[s] = 0
-                s = array([])
-            if not s.shape[0] > 0:
-                if where(z)[0].shape[0] > 0:
-                    s = [where(z)[0][0]]
-                    prop[where(z)[0]] = p
-                    p = p + 1
-                else: 
-                    flag = -1
-        return prop
+        p = -ones((self.nfaces()),dtype=int)
+        if self.nfaces() <= 0:
+            return p
+        # Construct table of elements connected to each edge
+        conn = self.connected()
+        # Bail out if some edge has more than two connected faces
+        if conn.shape[1] != 2:
+            warning("Surface is not a manifold")
+            return p
 
+        # Flag edges that connect two faces
+        conn2 = (conn >= 0).sum(axis=-1) == 2
+        # compute normals and flag small angles over edges
+        cosangle = cosd(angle)
+        n = self.areaNormals()[1][conn[conn2]]
+        small_angle = ones(conn2.shape,dtype=bool)
+        small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
+
+        # Remember edges and elements left for processing
+        todo = ones((self.nedges(),),dtype=bool)
+
+        # start with element 0
+        elems = array([0])
+        prop = max(0,firstprop)
+        run = 0
+        while elems.size > 0 and (nruns < 0 or run < nruns):
+            run += 1
+            # Store prop value
+            p[elems] = prop
+            # Determine border
+            edges = unique(self.faces[elems])
+            edges = edges[todo[edges]]
+
+            if edges.size > 0:
+                # flag edges as done
+                todo[edges] = 0
+                # take elements connected over small angle
+                elems = conn[edges][small_angle[edges]].ravel()
+                if elems.size > 0:
+                    continue
+
+            # No more elements in this part: start a new one
+            elems = where(p<firstprop)[0]
+            if elems.size > 0:
+                # Start a new part
+                elems = elems[[0]]
+                prop += 1
+                
+        return p
+
+
+##     def partitionByAngle(self,angle,nruns=-1):
+##         """Detects different parts of the surface.
+        
+##         Faces are considered to belong to a different part,
+##         when the angle between these faces is larger than a predefined value.
+##         """
+##         #print "coords\n%s" % self.coords
+##         #print "edges\n%s" % self.edges
+##         #print "faces\n%s" % self.faces
+##         rev = connectivity.reverseIndex(self.faces)
+##         #print "rev\n%s" % rev
+##         NB = rev[self.faces]
+##         #print "NB\n%s" % NB
+##         nor = self.areaNormals()[1]
+##         prop = zeros((self.faces.shape[0],),dtype=Int)
+##         z = prop + 1
+##         s = array([0])
+##         z[s] = 0
+##         flag = 1
+##         p = 1
+##         cosangle = cosd(angle)
+##         #print "COSANGLE=%s" % cosangle
+##         run = 0
+##         while flag > 0 and (nruns < 0 or run < nruns):
+##             run += 1
+##             t = NB[s].reshape(-1,2)
+##             #print "s\n%s" % s
+##             #print "t\n%s" % t
+##             test = sqrt((nor[t[:,0]]*nor[t[:,1]]).sum(axis=-1)) > cosangle
+##             #print "test\n%s" % test
+##             t = t[test]
+##             if t.shape[0] > 0:
+##                 s = unique(t)
+##                 s = s[where(z[s])[0]].reshape(-1)
+##                 z[s] = 0
+##             else:
+##                 z[s] = 0
+##                 s = array([])
+##             if not s.shape[0] > 0:
+##                 if where(z)[0].shape[0] > 0:
+##                     s = [where(z)[0][0]]
+##                     prop[where(z)[0]] = p
+##                     p = p + 1
+##                 else: 
+##                     flag = -1
+##         return prop
+
+
+    def cutAtPlane(self,*args):
+        """Cut a surface with a plane."""
+        self.__init__(self.toFormex().cutAtPlane(*args))
+        
+
+def read_error(cnt,line):
+    """Raise an error on reading the stl file."""
+    raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
 def degenerate(area,norm):
@@ -814,65 +904,6 @@ def degenerate(area,norm):
     normal has a nan.
     """
     return unique(concatenate([where(area<=0)[0],where(isnan(norm))[0]]))
-    
-
-    
-def cut3AtPlane(F,p,n,newprops=None):
-    """Returns all elements of the Formex cut at plane.
-
-    F is a Formex of plexitude 3.
-    p is a point specified by 3 coordinates.
-    n is the normal vector to a plane, specified by 3 components.
-
-    The return value is a Formex of the same plexitude with all elements
-    located completely at the positive side of the plane (p,n) retained,
-    all elements lying completely at the negative side removed and the
-    elements intersecting the plane replaced by new elements filling up
-    the parts at the positive side.
-    """
-    n = asarray(n)
-    p = asarray(p)
-    F = F.clip(F.test('any',n, p)) # remove elements at the negative side
-    c = F.test('all',n,p)
-    G = F.clip(c)  # save elements completely at positive side
-    S = F.cclip(c) # select elements that will be cut by plane
-    C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
-    t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
-    T = (t >= 0)*(t <= 1)
-    P = P[T].reshape(-1,2,3)
-    # split problem into two cases
-    d = S.f.distanceFromPlane(p,n)
-    w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
-    w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
-    T1 = T[w1]
-    T2 = T[w2]
-    P1 = P[w1]
-    P2 = P[w2]
-    S1 = S[w1]
-    S2 = S[w2]
-    # case 1: triangle after cut
-    v0 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
-    K2 = asarray([S1[i,v0[i]] for i in range(shape(S1)[0])]).reshape(-1,1,3)
-    E1 = column_stack([P1,K2])
-    # case 2: quadrilateral after cut
-    v1 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
-    v2 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
-    L2 = asarray([S2[i,v1[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
-    L3 = asarray([S2[i,v2[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
-    E2 = column_stack([P2,L2])
-    E3 = column_stack([P2[:,0].reshape(-1,1,3),L2,L3])
-    # join all the pieces
-    if F.p is None:
-        return Formex(E1)+Formex(E2)+Formex(E3)+G
-    else:
-        if newprops is None:
-            newprops = range(3)
-        return Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])+G
-
-def read_error(cnt,line):
-    """Raise an error on reading the stl file."""
-    raise RuntimeError,"Invalid .stl format while reading line %s\n%s" % (cnt,line)
 
 
 def read_stla(fn,dtype=Float,large=False,guess=True,off=False):

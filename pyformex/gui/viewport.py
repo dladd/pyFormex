@@ -31,6 +31,8 @@ import toolbar
 import math
 
 # Some 2D vector operations
+# We could do this with the general functions of coords.py,
+# but that would be overkill for this simple 2D vectors
 
 def dotpr (v,w):
     """Return the dot product of vectors v and w"""

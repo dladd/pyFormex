@@ -16,7 +16,8 @@ STL plugin menu for pyFormex.
 """
 
 import globaldata as GD
-from gui import actors,colors
+from gui import actors,colors,decors
+from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
@@ -237,8 +238,8 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 def showBorder():
     S = selection.check('single')
     if S:
-        print S.edgeElems()
-        print S.edgeNelems()
+        print S.connected()
+        print S.nConnected()
         print S.borderEdges()
         F = S.border()
         if F.nelems() > 0:
@@ -248,29 +249,70 @@ def showBorder():
             warning("The surface %s does not have a border" % selection[0])
 
 
-def showAdjacency():
+def showNConnected():
     S = selection.check('single')
     if S:
-        print S.edgeElems()
-        print S.edgeNelems()
-        print S.borderEdges()
-        F = S.border()
-        if F.nelems() > 0:
-            draw(F,color='red')
-            export({'border':F})
-        else:
-            warning("The surface %s does not have a border" % selection[0])
+        F = Formex(S.coords[S.edges],S.nConnected())
+        draw(F)
+        export({'nConnected':F})
+
+
+def showNAdjacent():
+    S = selection.check('single')
+    if S:
+        self.refresh()
+        F = Formex(S.coords[S.elems],S.nAdjacent())
+        draw(F)
+        export({'nAdjacent':F})
+
+
+def showFaceArea():
+    S = selection.check('single')
+    if S:
+        val = S.areaNormals()[0]
+        mi,ma = val.min(),val.max()
+        print "EXTREME VALUES: %s %s" % (mi,ma)
+        # create a colorscale and draw the colorlegend
+        CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
+        cval = array(map(CS.color,val))
+        clear()
+        CL = ColorLegend(CS,100)
+        CLA = decors.ColorLegend(CL,10,10,30,200) 
+        GD.canvas.addDecoration(CLA)
+        drawtext("Face Area",10,230,'tr24')
+        draw(S,color=cval)
+
+
+def showEdgeAngle():
+    S = selection.check('single')
+    if S:
+        val = arccos(S.edgeAngles()) / rad
+        mi,ma = val.min(),val.max()
+        print "EXTREME VALUES: %s %s" % (mi,ma)
+        # create a colorscale and draw the colorlegend
+        CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
+        cval = array(map(CS.color,val))
+        clear()
+        CL = ColorLegend(CS,100)
+        CLA = decors.ColorLegend(CL,10,10,30,200) 
+        GD.canvas.addDecoration(CLA)
+        drawtext("Edge Angles",150,30,'tr24')
+        F = Formex(S.coords[S.edges])
+        draw(F,color=cval)#,linewidth=2)
 
 
 def partitionByAngle():
     S = selection.check('single')
     if S:
-        res  = askItems([('angle',45.),('nruns',-1)])
+        res  = askItems([('angle',60.)])
+        GD.app.processEvents()
         if res:
             selection.remember()
+            t = timer.Timer()
             S.p = S.partitionByAngle(**res)
-            print S.p
+            print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
             selection.draw()
+        
 
 #
 # Operations using gts library
@@ -472,6 +514,26 @@ def clip_surface():
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         F = F.clip(w)
         draw(F,color='red')
+        
+
+def cutAtPlane():
+     """Cut the selection with a plane."""
+     FL = selection.check()
+     FLnot = [ F for F in FL if F.nplex() > 3 ]
+     if FLnot:
+         warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
+         return
+
+     res = askItems([['Point',(0.0,0.0,0.0)],
+                     ['Normal',(0.0,0.0,1.0)],
+                     ['New props',[1,2,2]],],
+                     caption = 'Define the cutting plane')
+     if res:
+         P = res['Point']
+         N = res['Normal']
+         p = res['New props']
+         selection.changeValues([ F.cutAtPlane(P,N,p) for F in FL ])
+         selection.drawChanges()
         
 
 
@@ -693,8 +755,11 @@ def create_menu():
           ("&Normals",toggleNormals),
           ]),
         ("&Characteristics",
-         [("&Border Line",showBorder),
-          ("&Adjacency",showAdjacency),
+         [("&Face Area",showFaceArea),
+          ("&Border Line",showBorder),
+          ("&# Connected Elems",showNConnected),
+          ("&# Adjacent Elems",showNConnected),
+          ("&Edge Angles",showEdgeAngle),
           ("&Partition By Angle",partitionByAngle),
           ]),
         ("---",None),
@@ -711,7 +776,7 @@ def create_menu():
             ]),
           ("&Roll Axes",rollAxes),
           #          ("&Clip Selection",clipSelection),
-          #          ("&Cut at Plane",cutAtPlane),
+          ("&Cut at Plane",cutAtPlane),
           ]),
         ("&Undo Last Changes",selection.undoChanges),
         ('&Check surface',check),

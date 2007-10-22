@@ -115,7 +115,7 @@ class ColorLegend:
         The full value range of the colorscale is divided in n subranges,
         each half range being divided in n/2 subranges.
         This sets n+1 limits of the subranges.
-        The n colors of the subranges corrsepond to the subrange middle value.
+        The n colors of the subranges correspond to the subrange middle value.
         """
         self.cs = colorscale
         n = int(n)
