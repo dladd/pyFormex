@@ -253,83 +253,63 @@ def showBorder():
             warning("The surface %s does not have a border" % selection[0])
 
 
-def showNConnected():
-    S = selection.check('single')
-    if S:
-        F = Formex(S.coords[S.edges],S.nConnected())
-        draw(F)
-        export({'nConnected':F})
-
-
 def showFaceArea():
-    showElemValue('Area')
+    showValue('Area')
 def showAspectRatio():
-    showElemValue('Aspect ratio')
+    showValue('Aspect ratio')
 def showSmallestAltitude():
-    showElemValue('Smallest altitude')
+    showValue('Smallest altitude')
 def showLongestEdge():
-    showElemValue('Longest Edge')
+    showValue('Longest Edge')
 def showShortestEdge():
-    showElemValue('Shortest Edge')
+    showValue('Shortest Edge')
 def showNAdjacent():
-    showElemValue('# of adjacent elements')
-##     S = selection.check('single')
-##     if S:
-##         S.refresh()
-##         F = Formex(S.coords[S.elems],S.nAdjacent())
-##         draw(F)
-##         export({'nAdjacent':F})
+    showValue('# of adjacent elements')
+def showEdgeAngle():
+    showValue('Edge angle',onEdges=True)
+def showNConnected():
+    showValue('# of connected elements',onEdges=True)
 
-def showElemValue(val):
+def showValue(txt,onEdges=False):
     S = selection.check('single')
     if S:
-        if val == 'Area':
+        if txt == 'Area':
             val = S.areaNormals()[0]
-        elif val == 'Aspect ratio':
+        elif txt == 'Aspect ratio':
             val = S.aspectRatio()
-        elif val == 'Smallest altitude':
+        elif txt == 'Smallest altitude':
             val = S.smallestAltitude()
-        elif val == 'Longest Edge':
+        elif txt == 'Longest Edge':
             val = S.longestEdge()
-        elif val == 'Shortest Edge':
+        elif txt == 'Shortest Edge':
             val = S.shortestEdge()
-        elif val == '# of adjacent elements':
+        elif txt == '# of adjacent elements':
             val = S.nAdjacent()
+        elif txt == 'Edge angle':
+            val = arccos(S.edgeAngles()) / rad
+        elif txt == '# of connected elements':
+            val = S.nConnected()
         mi,ma = val.min(),val.max()
         print "EXTREME VALUES: %s %s" % (mi,ma)
         dec = min(abs(mi),abs(ma))
         print "MIN %s" % dec
         dec = int(log10(dec))
         print "LOG MIN %s" % dec
-        dec = max(0,-dec)
+        dec = max(0,3-dec)
         print "DEC %s" % dec
         # create a colorscale and draw the colorlegend
         CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
         cval = array(map(CS.color,val))
         clear()
-        draw(S,color=cval)
+        if onEdges:
+            F = Formex(S.coords[S.edges])
+            draw(F,color=cval)#,linewidth=2)
+        else:
+            draw(S,color=cval)
         CL = ColorLegend(CS,100)
         CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
         GD.canvas.addDecoration(CLA)
-        drawtext(val,10,230,'tr24')
-
-
-def showEdgeAngle():
-    S = selection.check('single')
-    if S:
-        val = arccos(S.edgeAngles()) / rad
-        mi,ma = val.min(),val.max()
-        print "EXTREME VALUES: %s %s" % (mi,ma)
-        # create a colorscale and draw the colorlegend
-        CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
-        cval = array(map(CS.color,val))
-        clear()
-        CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,10,30,200) 
-        GD.canvas.addDecoration(CLA)
-        drawtext("Edge Angles",150,30,'tr24')
-        F = Formex(S.coords[S.edges])
-        draw(F,color=cval)#,linewidth=2)
+        drawtext(txt,10,230,'hv18')
 
 
 def partitionByAngle():

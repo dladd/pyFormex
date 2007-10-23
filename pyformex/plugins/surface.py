@@ -722,11 +722,13 @@ class Surface(object):
 
     def adjacent(self):
         """Find the elems adjacent to elems."""
-        conn = self.connected()
-        print "CONN",conn.shape
-        print self.nfaces()
-        adj = conn[self.edges].reshape((self.nfaces(),-1))
-        print adj
+        nfaces = self.nfaces()
+        rfaces = connectivity.reverseIndex(self.faces)
+        # this gives all adjacent elements including element itself
+        adj = rfaces[self.faces].reshape((nfaces,-1))
+        fnr = arange(nfaces).reshape((nfaces,-1))
+        # remove the element itself
+        adj = adj[adj != fnr].reshape((nfaces,-1))
         return adj
 
 
@@ -835,6 +837,17 @@ class Surface(object):
             volume = self.volume()
         else:
             volume = 0.0
+        print  (
+            self.ncoords(),self.nedges(),self.nfaces(),
+            bbox[0],bbox[1],
+            mincon,maxcon,
+            manifold,closed,
+            self.areas.min(),self.areas.max(),
+            self.edglen.min(),self.edglen.max(),
+            self.altmin.min(),self.aspect.max(),
+            angles.min(),angles.max(),
+            area,volume
+            )
         s = """
 Size: %d vertices, %s edges and %d faces
 Bounding box: min %s, max %s
@@ -846,7 +859,7 @@ Shortest altitude: %s; largest aspect ratio: %s
 Angle between adjacent faces: smallest: %s; largest: %s
 Total area: %s; Enclosed volume: %s   
 """ % (
-            self.ncoords,self.nedges(),self.nfaces(),
+            self.ncoords(),self.nedges(),self.nfaces(),
             bbox[0],bbox[1],
             mincon,maxcon,
             manifold,closed,

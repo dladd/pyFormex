@@ -511,7 +511,7 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
     The return value is a tuple color,colormap. colormap will return
     unchanged, unless color is an integer array, meaning a color index.
     """
-    GD.debug("COLOR IN: %s" % str(color))
+    #GD.debug("COLOR IN: %s" % str(color))
     color = saneColor(color)
     if color is not None:
         if color.dtype.kind == 'i':
@@ -525,9 +525,9 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
             if color.ndim == 2 and color.shape[0] < ncolors:
                 color = resize(color,(ncolors,3))
 
-    GD.debug("COLOR OUT: %s" % str(color))
-    if colormap is not None:
-        GD.debug("MAP: %s" % str(colormap))
+    #GD.debug("COLOR OUT: %s" % str(color))
+    #if colormap is not None:
+        #GD.debug("MAP: %s" % str(colormap))
     return color,colormap
 
 

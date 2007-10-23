@@ -868,7 +868,7 @@ class BaseMenu(object):
                     val = eval(val)
                 a = self.insert_action(txt,val,before)
                 if len(item) > 2:
-                    print 'item = %s' % str(item)
+                    #print 'item = %s' % str(item)
                     for k,v in item[2].items():
                         if k == 'icon':
                             a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))

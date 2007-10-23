@@ -208,10 +208,10 @@ class ColorLegend(Decoration):
         self.cl = colorlegend
         self.w = int(w)
         self.h = int(h)
-        self.xgap = 4  # hor. gap between coloras and labels 
+        self.xgap = 4  # hor. gap between colors and labels 
         self.ygap = 4  # vert. gap between labels
         self.font = font
-        self.dec = 2   # number of decimals
+        self.dec = dec   # number of decimals
 
     def drawGL(self,mode='wireframe'):
         n = len(self.cl.colors)

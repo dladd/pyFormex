@@ -87,11 +87,11 @@ def named(name):
     """Returns the global object named name."""
     #GD.debug("name %s" % name)
     if GD.PF.has_key(name):
-        GD.debug("Found %s in GD.PF" % name)
+        #GD.debug("Found %s in GD.PF" % name)
         dic = GD.PF
-    elif globals().has_key(name):
-        GD.debug("Found %s in globals()" % name)
-        dic = globals()
+    #elif globals().has_key(name):
+    #    GD.debug("Found %s in globals()" % name)
+    #    dic = globals()
     else:
         raise NameError,"Name %s is in neither GD.PF nor globals()" % name
     return dic[name]
