@@ -314,8 +314,12 @@ class Surface(object):
         """
         self.coords = self.edges = self.faces = None
         self.elems = None
-        self.area_ = None
+        self.areas = None
         self.normals = None
+        self.conn = None
+        self.adj = None
+        if hasattr(self,'edglen'):
+            del self.edglen
         self.p = None
         #print len(args)
         if len(args) == 0:
@@ -551,7 +555,7 @@ class Surface(object):
         GD.message("Writing surface to file %s" % fname)
         if ftype == 'gts':
             write_gts(fname,self.coords,self.edges,self.faces)
-            GD.message("Wrote %s vertices, %s edges, %s faces" % self.size())
+            GD.message("Wrote %s vertices, %s edges, %s faces" % self.shape())
         elif ftype in ['stl','off','neu','smesh']:
             self.refresh()
             if ftype == 'stl':
@@ -685,20 +689,19 @@ class Surface(object):
 
         The values are returned and saved in the object.
         """
-        self.refresh()
-        x = self.coords[self.elems]
-        if self.area_ is None or self.normals is None:
+        if self.areas is None or self.normals is None:
+            self.refresh()
+            x = self.coords[self.elems]
             area,normals = vectorPairAreaNormals(x[:,1]-x[:,0],x[:,2]-x[:,1])
             area *= 0.5
-            self.area_,self.normals = area,normals
-        return self.area_,self.normals
+            self.areas,self.normals = area,normals
+        return self.areas,self.normals
 
 
     def area(self):
         """Return the area of the surface"""
-        if self.area_ is None:
-            self.areaNormals()
-        return self.area_.sum()
+        area = self.areaNormals()[0]
+        return area.sum()
 
 
     def volume(self):
@@ -719,12 +722,16 @@ class Surface(object):
 
     def adjacent(self):
         """Find the elems adjacent to elems."""
-        self.refresh()
-        return connectivity.reverseIndex(self.elems)
+        conn = self.connected()
+        print "CONN",conn.shape
+        print self.nfaces()
+        adj = conn[self.edges].reshape((self.nfaces(),-1))
+        print adj
+        return adj
 
 
     def nAdjacent(self):
-        """Find the number of elems connected to edges."""
+        """Find the number of adjacent elems."""
         return (self.adjacent() >=0).sum(axis=-1)
 
 
@@ -735,7 +742,7 @@ class Surface(object):
         mincon = ncon.min()
         manifold = maxcon == 2
         closed = mincon == 2
-        return manifold,closed    
+        return manifold,closed,mincon,maxcon
 
 
     def borderEdges(self):
@@ -781,6 +788,76 @@ class Surface(object):
         angles[conn2] = dotpr(n[:,0],n[:,1])
         return angles
 
+
+    def data(self):
+        """Compute data for all edges and faces."""
+        if hasattr(self,'edglen'):
+            return
+        self.areaNormals()
+        edg = self.coords[self.edges]
+        edglen = length(edg[:,1]-edg[:,0])
+        facedg = edglen[self.faces]
+        edgmin = facedg.min(axis=-1)
+        edgmax = facedg.max(axis=-1)
+        altmin = 2*self.areas / edgmax
+        aspect = edgmax/altmin
+        self.edglen,self.facedg,self.edgmin,self.edgmax,self.altmin,self.aspect = edglen,facedg,edgmin,edgmax,altmin,aspect 
+
+
+    def aspectRatio(self):
+        self.data()
+        return self.aspect
+
+ 
+    def smallestAltitude(self):
+        self.data()
+        return self.altmin
+
+
+    def longestEdge(self):
+        self.data()
+        return self.edgmax
+
+
+    def shortestEdge(self):
+        self.data()
+        return self.edgmin
+
+   
+    def stats(self):
+        """Return a text with full statistics."""
+        bbox = self.bbox()
+        manifold,closed,mincon,maxcon = self.surfaceType()
+        self.data()
+        angles = arccos(self.edgeAngles())/rad
+        area = self.area()
+        if manifold and closed:
+            volume = self.volume()
+        else:
+            volume = 0.0
+        s = """
+Size: %d vertices, %s edges and %d faces
+Bounding box: min %s, max %s
+Minimal/maximal number of connected faces per edge: %s/%s
+Surface is manifold: %s; surface is closed: %s
+Smallest area: %s; largest area: %s
+Shortest edge: %s; longest edge: %s
+Shortest altitude: %s; largest aspect ratio: %s
+Angle between adjacent faces: smallest: %s; largest: %s
+Total area: %s; Enclosed volume: %s   
+""" % (
+            self.ncoords,self.nedges(),self.nfaces(),
+            bbox[0],bbox[1],
+            mincon,maxcon,
+            manifold,closed,
+            self.areas.min(),self.areas.max(),
+            self.edglen.min(),self.edglen.max(),
+            self.altmin.min(),self.aspect.max(),
+            angles.min(),angles.max(),
+            area,volume
+            )
+        return s
+    
 
     def partitionByAngle(self,angle,nruns=-1,firstprop=0):
         """Detects different parts of the surface.

@@ -116,12 +116,6 @@ def printBbox():
         S = named(s)
         GD.message("Surface %s has bbox %s" % (s,S.bbox()))
 
-def printArea():
-    for s in selection.names:
-        S = named(s)
-        GD.message("Surface %s has area %s" % (s,S.area()))
-
-
 def printType():
     for s in selection.names:
         S = named(s)
@@ -132,12 +126,22 @@ def printType():
         else:
             GD.message("Surface %s is not a manifold" % s)
 
+def printArea():
+    for s in selection.names:
+        S = named(s)
+        GD.message("Surface %s has area %s" % (s,S.area()))
 
 def printVolume():
     for s in selection.names:
         S = named(s)
         GD.message("Surface %s has volume %s" % (s,S.volume()))
 
+
+def printStats():
+    for s in selection.names:
+        S = named(s)
+        GD.message("Statistics for surface %s" % s)
+        print S.stats()
 
 def toFormex(suffix=''):
     """Transform the selection to Formices.
@@ -257,30 +261,57 @@ def showNConnected():
         export({'nConnected':F})
 
 
-def showNAdjacent():
-    S = selection.check('single')
-    if S:
-        self.refresh()
-        F = Formex(S.coords[S.elems],S.nAdjacent())
-        draw(F)
-        export({'nAdjacent':F})
-
-
 def showFaceArea():
+    showElemValue('Area')
+def showAspectRatio():
+    showElemValue('Aspect ratio')
+def showSmallestAltitude():
+    showElemValue('Smallest altitude')
+def showLongestEdge():
+    showElemValue('Longest Edge')
+def showShortestEdge():
+    showElemValue('Shortest Edge')
+def showNAdjacent():
+    showElemValue('# of adjacent elements')
+##     S = selection.check('single')
+##     if S:
+##         S.refresh()
+##         F = Formex(S.coords[S.elems],S.nAdjacent())
+##         draw(F)
+##         export({'nAdjacent':F})
+
+def showElemValue(val):
     S = selection.check('single')
     if S:
-        val = S.areaNormals()[0]
+        if val == 'Area':
+            val = S.areaNormals()[0]
+        elif val == 'Aspect ratio':
+            val = S.aspectRatio()
+        elif val == 'Smallest altitude':
+            val = S.smallestAltitude()
+        elif val == 'Longest Edge':
+            val = S.longestEdge()
+        elif val == 'Shortest Edge':
+            val = S.shortestEdge()
+        elif val == '# of adjacent elements':
+            val = S.nAdjacent()
         mi,ma = val.min(),val.max()
         print "EXTREME VALUES: %s %s" % (mi,ma)
+        dec = min(abs(mi),abs(ma))
+        print "MIN %s" % dec
+        dec = int(log10(dec))
+        print "LOG MIN %s" % dec
+        dec = max(0,-dec)
+        print "DEC %s" % dec
         # create a colorscale and draw the colorlegend
         CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
         cval = array(map(CS.color,val))
         clear()
-        CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,10,30,200) 
-        GD.canvas.addDecoration(CLA)
-        drawtext("Face Area",10,230,'tr24')
         draw(S,color=cval)
+        CL = ColorLegend(CS,100)
+        CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
+        GD.canvas.addDecoration(CLA)
+        drawtext(val,10,230,'tr24')
 
 
 def showEdgeAngle():
@@ -741,26 +772,33 @@ def create_menu():
         ("Print &Information",
          [('&Data Size',printSize),
           ('&Bounding Box',printBbox),
-          ('&Surface Area',printArea),
           ('&Surface Type',printType),
+          ('&Total Area',printArea),
           ('&Enclosed Volume',printVolume),
+          ('&All Statistics',printStats),
           ]),
         #        ("&Set Property",setProperty),
         ("&Shrink",toggle_shrink),
         ("Toggle &Annotations",
-         [("&Names",selection.toggleNames),
-          ("&Face Numbers",selection.toggleNumbers),
-          ("&Edge Numbers",toggleEdgeNumbers),
-          ("&Node Numbers",toggleNodeNumbers),
-          ("&Normals",toggleNormals),
+         [("&Names",selection.toggleNames,dict(checkable=True)),
+          ("&Face Numbers",selection.toggleNumbers,dict(checkable=True)),
+          ("&Edge Numbers",toggleEdgeNumbers,dict(checkable=True)),
+          ("&Node Numbers",toggleNodeNumbers,dict(checkable=True)),
+          ("&Normals",toggleNormals,dict(checkable=True)),
           ]),
         ("&Characteristics",
          [("&Face Area",showFaceArea),
-          ("&Border Line",showBorder),
+          ("&Aspect Ratio",showAspectRatio),
+          ("&Smallest Altitude",showSmallestAltitude),
+          ("&Longest Edge",showLongestEdge),
+          ("&Shortest Edge",showShortestEdge),
+          ("&# Adjacent Elems",showNAdjacent),
+          ("---",None),
           ("&# Connected Elems",showNConnected),
-          ("&# Adjacent Elems",showNConnected),
           ("&Edge Angles",showEdgeAngle),
+          ("---",None),
           ("&Partition By Angle",partitionByAngle),
+          ("&Border Line",showBorder),
           ]),
         ("---",None),
         ("&Transform coordinates",
@@ -800,6 +838,9 @@ def create_menu():
         ]
     return widgets.Menu('Surface',items=MenuData,parent=GD.gui.menu,before='help')
 
+def check_menu_item(itemname,mode=None):
+    global _menu
+    
 
 def close_menu():
     """Close the STL menu."""

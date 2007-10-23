@@ -867,12 +867,17 @@ class BaseMenu(object):
                 if type(val) == str:
                     val = eval(val)
                 a = self.insert_action(txt,val,before)
-                if len(item) > 2 and item[2]:
-                    a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(item[2]))))
-                if len(item) > 3 and item[3]:
-                    a.setShortcut(item[3])
-                if len(item) > 4 and item[4]:
-                    a.setToolTip(item[4])
+                if len(item) > 2:
+                    print 'item = %s' % str(item)
+                    for k,v in item[2].items():
+                        if k == 'icon':
+                            a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
+                        elif k == 'shortcut':
+                            a.setShortcut(v)
+                        elif k == 'tooltip':
+                            a.setToolTip(v)
+                        elif k == 'checkable':
+                            a.setCheckable(v)
             self.menuitems.append((normalize(txt),a))
 
 
