@@ -312,6 +312,15 @@ def showValue(txt,onEdges=False):
         drawtext(txt,10,230,'hv18')
 
 
+def showHistogram():
+    S = selection.check('single')
+    if S:
+        asp = S.aspectRatio()
+        hist = histogram(asp)
+        print hist
+
+
+
 def partitionByAngle():
     S = selection.check('single')
     if S:
@@ -773,6 +782,7 @@ def create_menu():
           ("&Longest Edge",showLongestEdge),
           ("&Shortest Edge",showShortestEdge),
           ("&# Adjacent Elems",showNAdjacent),
+          ("&Histogram of aspect ratio",showHistogram),
           ("---",None),
           ("&# Connected Elems",showNConnected),
           ("&Edge Angles",showEdgeAngle),

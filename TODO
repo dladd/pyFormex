@@ -22,9 +22,11 @@ Each task can have the following keys:
 
  - Rendering of values on the domain:
      dev: bverheg
-     sta: INITIATED
-     rem: Some basic classes available.
+     sta: PARTIAL
+     rem: Basic classes available.
           Feasability demonstrated through some examples: *_calpy.py
+          Local script hesperia2 shows more features
+          Surface_menu plugin has nice examples.
 
  - Interactive selection/transformation:
      dev: bverheg
@@ -81,9 +83,11 @@ Each task can have the following keys:
     sta: DONE
 
  - Include installation of python-gl2ps in the pyFormex setup.py
-     We need to check if we can distribute python-gl2ps together
-     with pyFormex. 
-    NO, WE CAN NOT !
+    NO, WE CAN NOT (because of license)
+
+
+* Release 0.7 : 
+ - Add an interactive command window to the GUI
 
 
 * Release 0.9 :
