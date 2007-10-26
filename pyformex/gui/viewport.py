@@ -175,7 +175,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setCamera()
 
     def	resizeGL(self,w,h):
-        GD.debug("resizeGL: %s x %s" % (w,h))
+        #GD.debug("resizeGL: %s x %s" % (w,h))
         self.setSize(w,h)
 
     def	paintGL(self):

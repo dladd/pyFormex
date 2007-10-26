@@ -29,11 +29,12 @@ The Coords class is a subclass of numpy's ndarray, so that all
 numeric array processing can be applied on a Coords object.
 The class is somewhat more general than the former Formex coords attribute:
 the shape of a Coords array can be anything if only the last axis has a length
-of 3.
+of 3. (As a convenience in initializing Coords arrays, an array with last axis
+length 1 or 2 will be expanded to 3 by adding 0.0 coordinates).
 
-While this change is a very important one, we have tried to keep the changes 
-to Formex API minimal. This means that user scripts will only rarely need to 
-be changed (and only if you directly accessed the coordinates attribute f).
+While this change is a very important one, the changes to the Formex API are
+minimal. This means that user scripts will only rarely need to 
+be changed (mostly where you directly accessed the coordinates attribute f).
  
 
 - formex.py:
@@ -44,6 +45,10 @@ be changed (and only if you directly accessed the coordinates attribute f).
 
   Formex class:
     - distanceFromPlane(p,n), distanceFromLine(p,n), distanceFromPoint(p)
+
+    - translate(vector,distance) will now translate over vctor*distance,
+      not over unitVector(vector)*distance.
+ 
  
 - draw.py:
   removed about(): use info() instead

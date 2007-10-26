@@ -28,7 +28,7 @@ hasExternal('tetgen')
 
 
 # Conversion of surface data models
-   
+
 def expandElems(elems):
     """Transform elems to edges and faces.
 
@@ -50,7 +50,7 @@ def expandElems(elems):
     if magic > 2**31:
         raise RuntimeError,"Cannot compact edges for more than 2**31 nodes"
     n = arange(nplex)
-    edg = column_stack([n,roll(n,1)])
+    edg = column_stack([n,roll(n,-1)])
     alledges = elems[:,edg]
     # sort edge nodes with lowest number first
     alledges.sort()
@@ -72,11 +72,11 @@ def compactElems(edges,faces):
     This is the inverse operation of expandElems.
     """
     elems = edges[faces]
-    flag0 = (elems[:,0,0]==elems[:,1,0]) + (elems[:,0,0]==elems[:,1,1])
+    flag1 = (elems[:,0,0]==elems[:,1,0]) + (elems[:,0,0]==elems[:,1,1])
     flag2 = (elems[:,2,0]==elems[:,1,0]) + (elems[:,2,0]==elems[:,1,1])
-    nod0 = where(flag0,elems[:,0,0],elems[:,0,1])
-    nod1 = where(flag2,elems[:,2,0],elems[:,2,1])
-    nod2 = where(flag0,elems[:,0,1],elems[:,0,0])
+    nod0 = where(flag1,elems[:,0,1],elems[:,0,0])
+    nod1 = where(flag1,elems[:,0,0],elems[:,0,1])
+    nod2 = where(flag2,elems[:,2,0],elems[:,2,1])
     elems = column_stack([nod0,nod1,nod2])
     return elems
 
@@ -612,7 +612,22 @@ class Surface(object):
         GD.message(out)
         if sta == 0:
             GD.message('The surface is a closed, orientable non self-intersecting manifold')
+ 
 
+    def split(self,base,verbose=False):
+        """Check the surface using gtscheck."""
+        cmd = 'gtssplit -v %s' % base
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Splitting with command\n %s" % cmd)
+        cmd += ' < %s' % tmp
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        if sta or verbose:
+            GD.message(out)
    
 
     def coarsen(self,min_edges=None,max_cost=None,
@@ -698,6 +713,10 @@ class Surface(object):
         return self.areas,self.normals
 
 
+    def facetArea(self):
+        return self.areaNormals()[0]
+        
+
     def area(self):
         """Return the area of the surface"""
         area = self.areaNormals()[0]
@@ -774,7 +793,7 @@ class Surface(object):
         return Formex(self.coords[self.edges[self.borderEdges()]])
 
 
-    def edgeAngles(self):
+    def edgeCosAngles(self):
         """Return the cos of the angles over all edges.
         
         The surface should be a manifold (max. 2 elements per edge).
@@ -789,6 +808,11 @@ class Surface(object):
         n = self.areaNormals()[1][conn[conn2]]
         angles[conn2] = dotpr(n[:,0],n[:,1])
         return angles
+
+
+    def edgeAngles(self):
+        """Return the angles over all edges (in degrees)."""
+        return arccos(self.edgeCosAngles()) / rad
 
 
     def data(self):
@@ -831,7 +855,7 @@ class Surface(object):
         bbox = self.bbox()
         manifold,closed,mincon,maxcon = self.surfaceType()
         self.data()
-        angles = arccos(self.edgeAngles())/rad
+        angles = self.edgeAngles()
         area = self.area()
         if manifold and closed:
             volume = self.volume()

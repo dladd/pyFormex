@@ -805,7 +805,8 @@ class BaseMenu(object):
             item = item.menuAction()
         return item
     
-
+    # The need for the following functions demonstrates how much more
+    # defective the C++ language is compared to Python
     def insert_sep(self,before=None):
         """Create and insert a separator"""
         if before:
@@ -820,7 +821,14 @@ class BaseMenu(object):
         else:
             return self.addMenu(menu)
 
-    def insert_action(self,str,val,before=None):
+    def insert_action(self,action,before=None):
+        """Insert an action.""" 
+        if before:
+            return self.insertAction(before,action)
+        else:
+            return self.addAction(action)
+
+    def create_insert_action(self,str,val,before=None):
         """Create and insert an action.""" 
         if before:
             return self.insertAction(before,str,val)
@@ -866,7 +874,11 @@ class BaseMenu(object):
             else:
                 if type(val) == str:
                     val = eval(val)
-                a = self.insert_action(txt,val,before)
+                if len(item) > 2 and item[2].has_key('data'):
+                    a = DAction(txt,data=item[2]['data'])
+                    self.insert_action(a,before)
+                else:
+                    a = self.create_insert_action(txt,val,before)
                 if len(item) > 2:
                     #print 'item = %s' % str(item)
                     for k,v in item[2].items():
@@ -947,7 +959,7 @@ class DAction(QtGui.QAction):
 
     signal = "Clicked"
     
-    def __init__(self,name,icon=None,data=None):
+    def __init__(self,name,icon=None,data=None,signal=None):
         """Create a new DAction with name, icon and string data.
 
         If the DAction is used in a menu, a name is sufficient. For use
@@ -960,15 +972,17 @@ class DAction(QtGui.QAction):
         """
         QtGui.QAction.__init__(self,name,None)
         if icon:
-            #print "ICON %s " % icon
             self.setIcon(icon)
-        if not data:
+        if signal is None:
+            signal = DAction.signal
+        self.signal = signal
+        if data is None:
             data = name
         self.setData(QtCore.QVariant(data))
         self.connect(self,QtCore.SIGNAL("triggered()"),self.activated)
         
     def activated(self):
-        self.emit(QtCore.SIGNAL(DAction.signal), str(self.data().toString()))
+        self.emit(QtCore.SIGNAL(self.signal), str(self.data().toString()))
 
 
 class ActionList(object):

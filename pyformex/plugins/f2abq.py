@@ -545,6 +545,8 @@ def writeAbqInput(abqdata, job=str(GD.scriptName)[:-3]):
     abqdata is an AbqData-instance.
     job is the name of the inputfile.
     """
+    global materialswritten
+    materialswritten = []
     # Create the Abaqus input file
     filnam = job+'.inp'
     fil = file(filnam,'w')

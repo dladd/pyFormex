@@ -55,31 +55,8 @@ def Globals():
     g.update({'__name__':'draw'})
     return g
 
-
-## def listAll(clas=formex.Formex,dic=None):
-##     """Return a list of all objects in dic that are of given clas.
-
-##     If no class is given, Formex objects are sought.
-##     If no dict is given, the objects from both GD.PF and locals()
-##     are returned.
-##     """
-##     if dic is None:
-##         #return listAll(clas,GD.PF) + listAll(clas,locals())
-##         dic = Globals()
-
-##     k = dic.keys()
-##     k.sort()
-##     print k
-##     flist = []
-##     for n,t in dic.items():
-##         if isinstance(t,clas):
-##             # if hasattr(t,'__class__') and t.__class__.__name__ == 'Formex':
-##             flist.append(n)
-##     return flist
-
         
 #################### Interacting with the user ###############################
-
 
 
 def textView(text):
@@ -177,6 +154,7 @@ def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     GD.canvas.update()
     GD.app.processEvents()
     return fn
+
 
 def askDirname(cur):
     """Ask for an existing directory name."""
@@ -584,12 +562,12 @@ def draw(F, view=None,bbox='auto',
 
     GD.gui.setBusy()
     if shrink is not None:
-        GD.debug("DRAWING WITH SHRINK = %s" % shrink)
+        #GD.debug("DRAWING WITH SHRINK = %s" % shrink)
         F = _shrink(F,shrink)
     try:
         if isinstance(F,formex.Formex):
             if color1 is not None:
-                GD.debug("DRAWING WITH COLOR1\n%s" % str(color1))
+                #GD.debug("DRAWING WITH COLOR1\n%s" % str(color1))
                 canvas.glSmooth()
             actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
         elif isinstance(F,surface.Surface):
@@ -597,12 +575,12 @@ def draw(F, view=None,bbox='auto',
 
         GD.canvas.addActor(actor)
         if view is not None or bbox is not None:
-            GD.debug("CHANGING VIEW to %s" % view)
+            #GD.debug("CHANGING VIEW to %s" % view)
             if view == 'last':
                 view = DrawOptions['view']
             if bbox == 'auto':
                 bbox = F.bbox()
-            GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+            #GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
             GD.canvas.setCamera(bbox,view)
             #setView(view)
         GD.canvas.update()

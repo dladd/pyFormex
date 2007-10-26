@@ -48,6 +48,7 @@ for i in [3,4,5,6,8,12,20,60,180]:
     clear()
     draw(circle(360./i,360./i,180.),bbox=None)
 
+
 # Example of the use
 clear()
 n = 40

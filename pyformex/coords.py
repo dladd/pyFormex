@@ -82,6 +82,8 @@ def dotpr (A,B,axis=-1):
 
     The default axis is the last.
     """
+    A = asarray(A)
+    B = asarray(B)
     return (A*B).sum(axis)
 
 def length(A,axis=-1):
@@ -89,6 +91,7 @@ def length(A,axis=-1):
 
     The default axis is the last.
     """
+    A = asarray(A)
     return sqrt((A*A).sum(axis))
 
 def normalize(A,axis=-1):
@@ -96,7 +99,17 @@ def normalize(A,axis=-1):
 
     The default axis is the last.
     """
-    return A / length(A,axis)#.reshape((-1,1))
+    A = asarray(A)
+    shape = list(A.shape)
+    shape[axis] = 1
+    return A / length(A,axis).reshape(shape)
+
+## def normalize(A,axis=-1):
+##     """Normalize the vectors of A in the direction of axis.
+
+##     The default axis is the last.
+##     """
+##     return A / length(A,axis).reshape((-1,1))
 
 def projection(A,B,axis=-1):
     """Return the (signed) length of the projection of vector of A on B.
@@ -144,11 +157,16 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     target = asarray(target) 
     return abs(values - target) < atol + rtol * abs(target) 
 
-def translationVector(dir,dist):
-    """Return a translation vector in direction dir over distance dist"""
-    f = [0.,0.,0.]
-    f[dir] = dist
-    return f
+
+def unitVector(axis):
+    """Return a unit vector in the direction of a global axis (0,1,2).
+
+    Use normalize() to get a unit vector in a general direction.
+    """
+    u = zeros((3),dtype=Float)
+    u[axis] = 1.0
+    return u
+
 
 def rotationMatrix(angle,axis=None):
     """Return a rotation matrix over angle, optionally around axis.
@@ -224,8 +242,12 @@ class Coords(ndarray):
 
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
-        if ar.shape[-1] != 3:
-            raise ValueError,"Expected a length = 3 for last array axis"
+        if ar.shape[-1] == 3:
+            pass
+        elif ar.shape[-1] in [1,2]:
+            ar = concatenate([ar,zeros(ar.shape[:-1]+(3-ar.shape[-1],))],axis=-1)
+        else:
+            raise ValueError,"Expected a length 1,2 or 3 for last array axis"
 
 
         # Make sure dtype is a float type
@@ -505,37 +527,36 @@ class Coords(ndarray):
         return out
     
 
-    def translate(self,dir,distance=None,inplace=False):
-        """Return a copy translated over distance in direction dir.
+    def translate(self,vector,distance=None,inplace=False):
+        """Translate a Coords object.
 
-        dir is either an axis number (0,1,2) or a direction vector.
+        The translation vector can be specified in one of the following ways:
+        - an axis number (0,1,2),
+        - a single translation vector,
+        - an array of translation vectors.
+        If an axis number is given, a unit vector in the direction of the
+        specified axis will be used.
+        If an array of translation vectors is given, it should be
+        broadcastable to the size of the Coords array.
+        If a distance value is given, the translation vector is multiplied
+        with this value before it is added to the coordinates.
 
-        If a distance is given, the translation is over the specified
-        distance in the specified direction.
-        If no distance is given, and dir is specified as an axis number,
-        translation is over a distance 1.
-        If no distance is given, and dir is specified as a vector, translation
-        is over the specified vector.
         Thus, the following are all equivalent:
           F.translate(1)
           F.translate(1,1)
           F.translate([0,1,0])
-          F.translate([0,2,0],1)
+          F.translate([0,2,0],0.5)
         """
         if inplace:
             out = self
         else:
             out = self.copy()
-        if type(dir) is int:
-            if distance is None:
-                distance = 1.0
-            out[...,dir] += distance
-        else:
-            if len(dir) == 2:
-                dir.append(0.0)
-            if distance is not None:
-                dir *= distance / length(dir)
-            out += dir
+        if type(vector) is int:
+            vector = unitVector(vector)
+        vector = Coords(vector)
+        if distance is not None:
+            vector *= distance 
+        out += vector
         return out
     
 

@@ -253,71 +253,81 @@ def showBorder():
             warning("The surface %s does not have a border" % selection[0])
 
 
-def showFaceArea():
-    showValue('Area')
-def showAspectRatio():
-    showValue('Aspect ratio')
-def showSmallestAltitude():
-    showValue('Smallest altitude')
-def showLongestEdge():
-    showValue('Longest Edge')
-def showShortestEdge():
-    showValue('Shortest Edge')
-def showNAdjacent():
-    showValue('# of adjacent elements')
-def showEdgeAngle():
-    showValue('Edge angle',onEdges=True)
-def showNConnected():
-    showValue('# of connected elements',onEdges=True)
+# Selectable values for display/histogram
+# Each key is a description of a result
+# Each value consist of a tuple
+#  - function to calculate the values
+#  - domain to display: True to display on edges, False to display on elements
 
-def showValue(txt,onEdges=False):
+SelectableStatsValues = {
+    'Facet Area': (Surface.facetArea,False),
+    'Aspect ratio': (Surface.aspectRatio,False),
+    'Smallest altitude': (Surface.smallestAltitude,False),
+    'Longest edge': (Surface.longestEdge,False),
+    'Shortest edge': (Surface.shortestEdge,False),
+    'Number of adjacent elements': (Surface.nAdjacent,False),
+    'Edge angle': (Surface.edgeAngles,True),
+    'Number of connected elements': (Surface.nConnected,True),
+    }
+
+
+def showStatistics():
     S = selection.check('single')
     if S:
-        if txt == 'Area':
-            val = S.areaNormals()[0]
-        elif txt == 'Aspect ratio':
-            val = S.aspectRatio()
-        elif txt == 'Smallest altitude':
-            val = S.smallestAltitude()
-        elif txt == 'Longest Edge':
-            val = S.longestEdge()
-        elif txt == 'Shortest Edge':
-            val = S.shortestEdge()
-        elif txt == '# of adjacent elements':
-            val = S.nAdjacent()
-        elif txt == 'Edge angle':
-            val = arccos(S.edgeAngles()) / rad
-        elif txt == '# of connected elements':
-            val = S.nConnected()
-        mi,ma = val.min(),val.max()
-        print "EXTREME VALUES: %s %s" % (mi,ma)
-        dec = min(abs(mi),abs(ma))
-        print "MIN %s" % dec
-        dec = int(log10(dec))
-        print "LOG MIN %s" % dec
-        dec = max(0,3-dec)
-        print "DEC %s" % dec
-        # create a colorscale and draw the colorlegend
-        CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
-        cval = array(map(CS.color,val))
-        clear()
-        if onEdges:
-            F = Formex(S.coords[S.edges])
-            draw(F,color=cval)#,linewidth=2)
-        else:
-            draw(S,color=cval)
-        CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
-        GD.canvas.addDecoration(CLA)
-        drawtext(txt,10,230,'hv18')
+        dispmodes = ['On Domain','Histogram','Cumulative Histogram']
+        res  = askItems([('Select Value',None,'select',SelectableStatsValues.keys()),
+                         ('Display Mode',None,'select',dispmodes)
+                         ])
+        GD.app.processEvents()
+        if res:
+            key = res['Select Value']
+            func,onEdges = SelectableStatsValues[key]
+            val = func(S)
+            mode = res['Display Mode']
+            if mode == 'On Domain':
+                showSurfaceValue(S,key,val,onEdges)
+            else: 
+                showHistogram(key,val,cumulative= mode.startswith('Cumul'))
+
+                                              
+def showSurfaceValue(S,txt,val,onEdges):
+    mi,ma = val.min(),val.max()
+    dec = min(abs(mi),abs(ma))
+    dec = int(log10(dec))
+    dec = max(0,3-dec)
+    # create a colorscale and draw the colorlegend
+    CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
+    cval = array(map(CS.color,val))
+    clear()
+    if onEdges:
+        F = Formex(S.coords[S.edges])
+        draw(F,color=cval)#,linewidth=2)
+    else:
+        draw(S,color=cval)
+    CL = ColorLegend(CS,100)
+    CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
+    GD.canvas.addDecoration(CLA)
+    drawtext(txt,10,230,'hv18')
 
 
-def showHistogram():
-    S = selection.check('single')
-    if S:
-        asp = S.aspectRatio()
-        hist = histogram(asp)
-        print hist
+def showHistogram(txt,val,cumulative=False):
+    try:
+        import Gnuplot
+    except:
+        warning("I could not create the plot.\nMaybe you do not have gnuplot or the Python interface.")
+        return
+
+    y,x = histogram(val)
+    #hist = column_stack([hist[1],hist[0]])
+    if cumulative:
+        y = y.cumsum()
+    data = Gnuplot.Data(x,y,
+                        title=txt,
+                        with='histeps')  # boxes?
+    g = Gnuplot.Gnuplot(persist=1)
+    g.title('Histogram of %s' % txt)
+    #g('set boxwidth 1')
+    g.plot(data)
 
 
 
@@ -337,6 +347,20 @@ def partitionByAngle():
 #
 # Operations using gts library
 #
+
+
+def check():
+    S = selection.check('single')
+    if S:
+        GD.message(S.check(verbose=True))
+
+
+def split():
+    S = selection.check('single')
+    if S:
+        GD.message(S.split(base=selection[0],verbose=True))
+
+
 def coarsen():
     S = selection.check('single')
     if S:
@@ -376,12 +400,6 @@ def smooth():
                 res['fold_smoothing'] = float(res['fold_smoothing'])
             S.smooth(**res)
             selection.draw()
-
-
-def check():
-    S = selection.check('single')
-    if S:
-        GD.message(S.check(verbose=True))
         
 
 #############################################################################
@@ -775,21 +793,10 @@ def create_menu():
           ("&Node Numbers",toggleNodeNumbers,dict(checkable=True)),
           ("&Normals",toggleNormals,dict(checkable=True)),
           ]),
-        ("&Characteristics",
-         [("&Face Area",showFaceArea),
-          ("&Aspect Ratio",showAspectRatio),
-          ("&Smallest Altitude",showSmallestAltitude),
-          ("&Longest Edge",showLongestEdge),
-          ("&Shortest Edge",showShortestEdge),
-          ("&# Adjacent Elems",showNAdjacent),
-          ("&Histogram of aspect ratio",showHistogram),
-          ("---",None),
-          ("&# Connected Elems",showNConnected),
-          ("&Edge Angles",showEdgeAngle),
-          ("---",None),
-          ("&Partition By Angle",partitionByAngle),
-          ("&Border Line",showBorder),
-          ]),
+        ("&Statistics",showStatistics),
+        ("---",None),
+        ("&Partition By Angle",partitionByAngle),
+        ("&Border Line",showBorder),
         ("---",None),
         ("&Transform coordinates",
          [("&Scale",scaleSelection),
@@ -808,6 +815,7 @@ def create_menu():
           ]),
         ("&Undo Last Changes",selection.undoChanges),
         ('&Check surface',check),
+        ('&Split surface',split),
         ("&Coarsen surface",coarsen),
         ("&Smooth surface",smooth),
         ("---",None),
