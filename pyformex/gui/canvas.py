@@ -193,8 +193,8 @@ class Canvas(object):
     
 
     def initCamera(self):
-##         if GD.options.makecurrent:
-##             self.makeCurrent()  # we need correct OpenGL context for camera
+        #if GD.options.makecurrent:
+        self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
         GD.debug("camera.rot = %s" % self.camera.rot)
         GD.debug("view angles: %s" % self.view_angles)

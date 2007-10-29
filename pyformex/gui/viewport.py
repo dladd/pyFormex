@@ -79,9 +79,8 @@ def setOpenglFormat():
         fmt.setDirectRendering(True)
     if GD.options.nodri:
         fmt.setDirectRendering(False)
-    #if GD.options.alpha:
-    #    fmt.setAlpha(True)
-    #fmt.setRgba(False)
+    if GD.options.alpha:
+        fmt.setAlpha(True)
     if GD.options.debug:
         printOpenglFormat(fmt)
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
@@ -89,6 +88,7 @@ def setOpenglFormat():
 def printOpenglFormat(fmt):
     """Print some information about the OpenGL format."""
     print "OpenGL: ",fmt.hasOpenGL()
+    print "OpenGL Version: %s" % str(fmt.openGLVersionFlags()) 
     print "OpenGLOverlays: ",fmt.hasOpenGLOverlays()
     print "Double Buffer: ",fmt.doubleBuffer()
     print "Depth Buffer: ",fmt.depth()
@@ -96,7 +96,7 @@ def printOpenglFormat(fmt):
     print "Alpha Channel: ",fmt.alpha()
     print "Accumulation Buffer: ",fmt.accum()
     print "Stencil Buffer: ",fmt.stencil()
-    print "Stereao: ",fmt.stereo()
+    print "Stereo: ",fmt.stereo()
     print "Direct Rendering: ",fmt.directRendering()
     print "Overlay: ",fmt.hasOverlay()
     print "Plane: ",fmt.plane()
@@ -118,9 +118,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     
     def __init__(self,*args):
         """Initialize an empty canvas with default settings."""
+        print args
         QtOpenGL.QGLWidget.__init__(self,*args)
-        if not self.isValid():
-            raise RuntimeError,"Could not create a valid OpenGL widget"
         self.setMinimumSize(32,32)
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)

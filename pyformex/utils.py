@@ -67,6 +67,10 @@ def checkModule(name):
         elif name == 'pyqt4':
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
+        elif name == 'pyqt4gl':
+            import PyQt4.QtOpenGL
+            import PyQt4.QtCore
+            version = PyQt4.QtCore.QT_VERSION_STR
         elif name == 'calpy':
             import calpy
             version = calpy.__doc__.split('\n')[0].split()[1]
