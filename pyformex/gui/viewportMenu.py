@@ -104,6 +104,8 @@ MenuData = [
         ('&OpenGL Settings',
          [('&Flat',canvas.glFlat),
           ('&Smooth',canvas.glSmooth),
+          ('&Polygon Line',canvas.glLine),
+          ('&Polygon Fill',canvas.glFill),
           ]),
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),

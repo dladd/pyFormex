@@ -585,6 +585,7 @@ def draw(F, view=None,bbox='auto',
             #setView(view)
         GD.canvas.update()
         GD.app.processEvents()
+        GD.debug("AUTOSAVE %s" % image.autoSaveOn())
         if image.autoSaveOn():
             image.saveNext()
         if allowwait and wait:

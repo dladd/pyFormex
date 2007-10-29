@@ -57,7 +57,7 @@ def checkImageFormat(fmt,verbose=False):
     GD.debug("Formats available: %s" % imageFormats())
     if fmt in imageFormats():
         if fmt == 'tex' and verbose:
-            warning("This will only write a LaTeX fragment to include the 'eps' image\nYou have to create the .eps image file separately.\n")
+            GD.warning("This will only write a LaTeX fragment to include the 'eps' image\nYou have to create the .eps image file separately.\n")
         return fmt
     else:
         if verbose:
@@ -282,6 +282,8 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     """
     global multisave
 
+    print "AUTOSAVE %s" % autosave
+
     # Leave multisave mode if no filename or starting new multisave mode
     if multisave and (filename is None or multi):
         GD.message("Leave multisave mode")
@@ -308,8 +310,9 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
         if hotkey:
              QtCore.QObject.connect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
-                 warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
+                 GD.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
         multisave = (names,format,window,border,hotkey,autosave,rootcrop)
+        print "MULTISAVE %s "% str(multisave)
         return multisave is None
 
     else: # Save the image
@@ -356,19 +359,19 @@ def autoSaveOn():
 
     Use this function instead of directly accessing the autosave variable.
     """
-    return multisave and multisave[-1]
+    return multisave and multisave[-2]
 
 
 def createMovie():
     """Create a movie from a saved sequence of images."""
     if not multisave:
-        warning('You need to start multisave mode first!')
+        GD.warning('You need to start multisave mode first!')
         return
 
     names,format,window,border,hotkey,autosave = multisave
     glob = names.glob()
     if glob.split('.')[-1] != 'y4m':
-        warning("Currently you need to save in 'y4m' format to create movies")
+        GD.warning("Currently you need to save in 'y4m' format to create movies")
         return
     
     cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()

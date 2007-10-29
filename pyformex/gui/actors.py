@@ -148,9 +148,9 @@ class TriadeActor(Actor):
 
     def drawGL(self,mode='wireframe'):
         """Draw the triade."""
-        GL.glShadeModel(GL.GL_FLAT)
-        GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
-        GL.glPolygonMode(GL.GL_BACK, GL.GL_LINE)
+        #GL.glShadeModel(GL.GL_FLAT)
+        #GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
+        #GL.glPolygonMode(GL.GL_BACK, GL.GL_LINE)
         GL.glBegin(GL.GL_TRIANGLES)
         GL.glColor(*self.color[0])
         GL.glVertex3f(0.0,0.0,0.0)

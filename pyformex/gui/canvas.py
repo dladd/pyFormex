@@ -26,9 +26,18 @@ import utils
 def glFlat():
     """Disable smooth shading"""
     GL.glShadeModel(GL.GL_FLAT)
+    GD.canvas.glupdate()
 def glSmooth():
     """Enable smooth shading"""
     GL.glShadeModel(GL.GL_SMOOTH)
+    GD.canvas.glupdate()
+def glFill():
+    GL.glPolygonMode(GL.GL_FRONT,GL.GL_FILL)
+    GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL)
+    GD.canvas.glupdate()
+def glLine():
+    GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
+    GD.canvas.glupdate()
             
 class ActorList(list):
 
@@ -201,22 +210,20 @@ class Canvas(object):
         GL.glDepthFunc(GL.GL_LESS)	       # The Type Of Depth Test To Do
         GL.glEnable(GL.GL_DEPTH_TEST)	       # Enables Depth Testing
         #GL.glEnable(GL.GL_CULL_FACE)
-        #GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE) # WIREFRAME!
         
 
         if self.rendermode == 'wireframe':
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE) # WIREFRAME!
         elif self.rendermode.startswith('flat'):
             GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
             GL.glDisable(GL.GL_LIGHTING)
-##             if self.rendermode.find('trans') >= 0:
-##                 GL.glEnable (GL.GL_BLEND)              # Enables Alpha Transparency
-##                 GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-##                 GL.glDisable(GL.GL_DEPTH_TEST)	 # Disable Depth Testing
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
                
         elif self.rendermode.startswith('smooth'):
             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
             GL.glEnable(GL.GL_LIGHTING)
             GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
             GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)

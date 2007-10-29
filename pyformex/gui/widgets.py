@@ -16,6 +16,8 @@ import globaldata as GD
 import colors
 import utils
 
+class Options:
+    pass
 
 class FileSelection(QtGui.QFileDialog):
     """A file selection dialog widget.
@@ -114,8 +116,6 @@ class SaveImageDialog(FileSelection):
     def getResult(self):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            class Options:
-                pass
             opt = Options()
             opt.fn = str(self.selectedFiles()[0])
             opt.wi = self.win.isChecked()
@@ -124,10 +124,9 @@ class SaveImageDialog(FileSelection):
             opt.mu = self.mul.isChecked()
             opt.hk = self.hot.isChecked()
             opt.as = self.aut.isChecked()
-            #return fn,wi,bo,mu,hk,as
             return opt
         else:
-            return None#,False,False,False,False,False,False
+            return None
 
 
 def selectFont():
@@ -596,7 +595,7 @@ class InputDialog(QtGui.QDialog):
                 itemtype = item[2]
             else:
                 itemtype = type(value)
-            GD.debug("INPUT ITEM %s TYPE %s" % (name,itemtype))
+            #GD.debug("INPUT ITEM %s TYPE %s" % (name,itemtype))
             if itemtype == bool:
                 line = InputBool(name,value)
 
