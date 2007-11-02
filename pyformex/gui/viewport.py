@@ -118,7 +118,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     
     def __init__(self,*args):
         """Initialize an empty canvas with default settings."""
-        print args
         QtOpenGL.QGLWidget.__init__(self,*args)
         self.setMinimumSize(32,32)
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
