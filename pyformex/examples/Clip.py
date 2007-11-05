@@ -9,7 +9,7 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-reset()
+resetAll()
 setDrawOptions({'clear':True})
 
 n = 16

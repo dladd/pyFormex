@@ -99,22 +99,6 @@ def writeSelection():
 
 ################### Change attributes of Formex #######################
 
-def setProperty():
-    """Set the property of the current selection.
-
-    If the user gives a negative value, the property is removed.
-    """
-    FL = selection.check()
-    if FL:
-        res = askItems([['property',0]],
-                       caption = 'Set Property Number of Selection (negative value to remove)')
-        if res:
-            p = int(res['property'])
-            if p < 0:
-                p = None
-            for F in FL:
-                F.setProp(p)
-            selection.draw()
 
 
 def shrink():
@@ -125,34 +109,6 @@ def shrink():
         selection.shrink = None
     selection.draw()
     
-
-
-#################### BBox ####################################
-
-bboxA = None
-
-def printBbox():
-    """Print the bbox of the current selection."""
-    FL = selection.check()
-    if FL:
-        GD.message("Bbox of selection: %s" % bbox(FL))
-
-def showBbox():
-    """Draw the bbox of the current selection."""
-    global bboxA
-    FL = selection.check()
-    if FL:
-        GD.message("Bbox of selection: %s" % bbox(FL))
-        bboxA = actors.BboxActor(bbox(FL))
-        GD.canvas.addActor(bboxA)
-        GD.canvas.update()
-
-def removeBbox():
-    """Remove the bbox of the current selection."""
-    global bboxA
-    if bboxA:
-        undraw(bboxA)
-        bboxA = None
 
 
 #################### CoordPlanes ####################################
@@ -458,24 +414,23 @@ def create_menu():
         ("&Select",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
-        ('&List Selection',printSize),
-#        ('&List Formices',printall),
-#        ("&Draw Changes",selection.drawChanges),
         ("&Save Selection as Formex",writeSelection),
-#        ("&Save Selection as STL File",writeSelectionSTL),
         ("---",None),
-        ("&Set Property",setProperty),
+        ("Print &Information",
+         [('&Data Size',printSize),
+          ('&Bounding Box',selection.printBbox),
+          ]),
+        ("&Set Property",selection.setProperty),
         ("&Shrink",shrink),
-        ("&Toggle Names",selection.toggleNames),
-        ("&Toggle Numbers",selection.toggleNumbers),
-        ("&Undo Last Changes",selection.undoChanges),
+        ("Toggle &Annotations",
+         [("&Names",selection.toggleNames,dict(checkable=True)),
+          ("&Numbers",selection.toggleNumbers,dict(checkable=True)),
+          ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
+          ]),
         ("---",None),
         ("&Bbox",
-         [('&Show Bbox',showBbox),
-          ('&Remove Bbox',removeBbox),
-          ('&Show Bbox Planes',showBboxB),
+         [('&Show Bbox Planes',showBboxB),
           ('&Remove Bbox Planes',removeBboxB),
-          ('&Print Bbox',printBbox),
           ]),
         ("&Transform",
          [("&Scale Selection",scaleSelection),
@@ -488,6 +443,7 @@ def create_menu():
           ("&Clip Selection",clipSelection),
           ("&Cut at Plane",cutAtPlane),
           ]),
+        ("&Undo Last Changes",selection.undoChanges),
         ("---",None),
         ("Show &Principal Axes",showPrincipal),
         ("Rotate to &Principal Axes",rotatePrincipal),

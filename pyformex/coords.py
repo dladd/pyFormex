@@ -1074,6 +1074,17 @@ class Coords(ndarray):
         return F + outer(div,G-F).reshape((-1,)+F.shape)
 
 
+def bbox(objects):
+    """Compute the bounding box of a list of objects.
+
+    All the objects in list should have
+    This is like the bbox() method of the Formex class, but the resulting
+    box encloses all the Formices in the list.
+    """
+    print [[f.bbox()] for f in objects ]
+    return Coords(concatenate([ [f.bbox()] for f in objects ])).bbox()
+
+
 ##############################################################################
 #
 #  Testing
@@ -1135,11 +1146,13 @@ if __name__ == "__main__":
         prt("X_trl2",X.translate([10.,100.,1000.]))
         prt("X_rot",X.rotate(90.))
         prt("X_rot2",X.rotate(90.,0))
+        
+        Y=prt("X_ref",X.reflect(1,2))
+
+        print X.bbox()
+        print Y.bbox()
+        print bbox([X,Y])
         return
-        X2 = X1.reflect(1,2)
-        print "X =",X
-        print "X1 =",X1
-        print "X2 =",X2
         X3 = X.copy().reflect(1,1.5).translate(1,2)
         print "X =",X
         print "X3 =",X3
@@ -1156,15 +1169,8 @@ if __name__ == "__main__":
         print Y
         Y.translate([0.,100.,0.])
         print Y
-        
-        return
-        print "sizes:",G.sizes()
-        print G.bbox()
-        print G.center(),G.centroid()
-        return
-        print G.bsphere()
 
-        F.fprint()
+        return
 
 if __name__ == "__main__":
     def test():

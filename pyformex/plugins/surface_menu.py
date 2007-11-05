@@ -48,16 +48,16 @@ def draw_normals(n):
     F = connect([Formex(C),Formex(D)])
     return draw(F,color='red')
     
-
-def toggleEdgeNumbers():
-    selection.toggleAnnotation(2)
-def toggleNodeNumbers():
-    selection.toggleAnnotation(3)
-def toggleNormals():
-    selection.toggleAnnotation(4)
-
-
 selection = DrawableObjects(clas=Surface)
+ntoggles = len(selection.annotations)
+def toggleEdgeNumbers():
+    selection.toggleAnnotation(0+ntoggles)
+def toggleNodeNumbers():
+    selection.toggleAnnotation(1+ntoggles)
+def toggleNormals():
+    selection.toggleAnnotation(2+ntoggles)
+
+
 selection.annotations.extend([[draw_edge_numbers,False],
                               [draw_node_numbers,False],
                               [draw_normals,False],
@@ -87,7 +87,9 @@ def readSelection(select=True,draw=True,multi=True):
         chdir(fn[0])
         names = map(utils.projectName,fn)
         GD.gui.setBusy()
+        print "READING SURFACE"
         F = map(read_Surface,fn)
+        print "READ SURFACE"
         GD.gui.setBusy(False)
         export(dict(zip(names,F)))
         if select:
@@ -110,11 +112,6 @@ def printSize():
         S = named(s)
         GD.message("Surface %s has %d vertices, %s edges and %d faces" %
                    (s,S.ncoords(),S.nedges(),S.nelems()))
-
-def printBbox():
-    for s in selection.names:
-        S = named(s)
-        GD.message("Surface %s has bbox %s" % (s,S.bbox()))
 
 def printType():
     for s in selection.names:
@@ -207,18 +204,18 @@ def toggle_auto_draw():
     autodraw = not autodraw
 
 
-def convert_stl_to_off():
-    """Converts an stl to off format without reading it into pyFormex."""
-    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
-    if fn:     
-        return surface.stl_to_off(fn,sanitize=False)
+## def convert_stl_to_off():
+##     """Converts an stl to off format without reading it into pyFormex."""
+##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
+##     if fn:     
+##         return surface.stl_to_off(fn,sanitize=False)
 
 
-def sanitize_stl_to_off():
-    """Sanitizes an stl to off format without reading it into pyFormex."""
-    fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
-    if fn:     
-        return surface.stl_to_off(fn,sanitize=True)
+## def sanitize_stl_to_off():
+##     """Sanitizes an stl to off format without reading it into pyFormex."""
+##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
+##     if fn:     
+##         return surface.stl_to_off(fn,sanitize=True)
 
 
 
@@ -242,7 +239,7 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 def showBorder():
     S = selection.check('single')
     if S:
-        print S.connected()
+        #print S.connections()
         print S.nConnected()
         print S.borderEdges()
         F = S.border()
@@ -331,10 +328,21 @@ def showHistogram(txt,val,cumulative=False):
 
 
 
+def partitionByConnection():
+    S = selection.check('single')
+    if S:
+        selection.remember()
+        t = timer.Timer()
+        S.p = S.partitionByConnection()
+        print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+        selection.draw()
+ 
+
+
 def partitionByAngle():
     S = selection.check('single')
     if S:
-        res  = askItems([('angle',60.)])
+        res  = askItems([('angle',60.),('firstprop',1),('startat',0),('maxruns',-1)])
         GD.app.processEvents()
         if res:
             selection.remember()
@@ -342,7 +350,21 @@ def partitionByAngle():
             S.p = S.partitionByAngle(**res)
             print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
             selection.draw()
-        
+
+
+
+def partitionByAngle2():
+    S = selection.check('single')
+    if S:
+        res  = askItems([('angle',60.),('firstprop',1),('startat',0),('maxruns',-1)])
+        GD.app.processEvents()
+        if res:
+            selection.remember()
+            t = timer.Timer()
+            S.p = S.partitionByAngle2(**res)
+            print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+            selection.draw()
+         
 
 #
 # Operations using gts library
@@ -383,6 +405,24 @@ def coarsen():
             if res['max_cost'] <= 0:
                 res['max_cost'] = None
             S.coarsen(**res)
+            selection.draw()
+
+
+def refine():
+    S = selection.check('single')
+    if S:
+        res = askItems([('max_edges',-1),
+                        ('min_cost',-1),
+                        ('log',False),
+                        ('verbose',False),
+                        ])
+        if res:
+            selection.remember()
+            if res['max_edges'] <= 0:
+                res['max_edges'] = None
+            if res['min_cost'] <= 0:
+                res['min_cost'] = None
+            S.refine(**res)
             selection.draw()
 
 
@@ -778,13 +818,13 @@ def create_menu():
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),
-          ('&Bounding Box',printBbox),
+          ('&Bounding Box',selection.printBbox),
           ('&Surface Type',printType),
           ('&Total Area',printArea),
           ('&Enclosed Volume',printVolume),
           ('&All Statistics',printStats),
           ]),
-        #        ("&Set Property",setProperty),
+        ("&Set Property",selection.setProperty),
         ("&Shrink",toggle_shrink),
         ("Toggle &Annotations",
          [("&Names",selection.toggleNames,dict(checkable=True)),
@@ -792,10 +832,13 @@ def create_menu():
           ("&Edge Numbers",toggleEdgeNumbers,dict(checkable=True)),
           ("&Node Numbers",toggleNodeNumbers,dict(checkable=True)),
           ("&Normals",toggleNormals,dict(checkable=True)),
+          ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
           ]),
         ("&Statistics",showStatistics),
         ("---",None),
         ("&Partition By Angle",partitionByAngle),
+        ("&Partition By Angle 2",partitionByAngle2),
+        ("&Partition By Connection",partitionByConnection),
         ("&Border Line",showBorder),
         ("---",None),
         ("&Transform coordinates",
@@ -817,6 +860,7 @@ def create_menu():
         ('&Check surface',check),
         ('&Split surface',split),
         ("&Coarsen surface",coarsen),
+        ("&Refine surface",refine),
         ("&Smooth surface",smooth),
         ("---",None),
 #        ("&Show volume model",show_volume),

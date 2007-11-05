@@ -87,10 +87,11 @@ ambient = 0.4
 specular = 0.4
 emission = 0.0
 shininess = 0.4
-light0 = {'position':(0.,0.,1.,0.),'specular':0.6,'diffuse':0.6,'ambient':0.6}
-light1 = {'position':(1.,1.,1.,0.),'specular':0.6,'diffuse':0.6,'ambient':0.6}
-light2 = {'position':(-1.,1.,1.,0.),'specular':0.4,'diffuse':0.2,'ambient':0.4}
-
+light0 = {'position':(0.,0.,1.,0.),'specular':0.3,'diffuse':0.5,'ambient':0.4}
+light1 = {'position':(1.,0.,1.,0.),'specular':0.3,'diffuse':0.5,'ambient':0.4}
+light2 = {'position':(0.,1.,1.,0.),'specular':0.3,'diffuse':0.5,'ambient':0.4}
+#light3 = {'position':(-1.,0.,1.,0.),'specular':0.3,'diffuse':0.5,'ambient':0.4}
+#light4 = {'position':(0.,-1.,1.,0.),'specular':0.3,'diffuse':0.5,'ambient':0.5}
 
 
 [help]
@@ -103,3 +104,7 @@ webmanual = website+"/manual"
 
 [keys]
 save = 'F2'
+
+
+[surface]
+stlread = '.gts'

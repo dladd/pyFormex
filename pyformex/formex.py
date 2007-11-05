@@ -1635,15 +1635,6 @@ def readfile(file,sep=',',plexitude=1,dimension=3):
     return Formex(fromfile(file,sep=sep).reshape((-1,plexitude,dimension)))
 
 
-def bbox(formexlist):
-    """Computes the bounding box of a collection of formices.
-
-    This is like the bbox() method of the Formex class, but the resulting
-    box encloses all the Formices in the list.
-    """
-    return Formex(concatenate([ [f.bbox()] for f in formexlist ])).bbox()
-
-
 ############### DEPRECATED FUNCTIONS ##################
 
 def functionBecameMethod(replacement):

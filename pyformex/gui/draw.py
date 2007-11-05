@@ -27,7 +27,7 @@ import canvas
 import colors
 import formex
 from script import *
-from plugins import surface
+from plugins import surface,plane
 
 # import some functions for scripts:
 from toolbar import setPerspective as perspective, setTransparency as transparency, timeout
@@ -421,6 +421,10 @@ def reset():
     GD.canvas.resetDefaults(GD.cfg['canvas'])
     clear()
     view('front')
+
+def resetAll():
+    wireframe()
+    reset()
     
 def setDrawOptions(d):
     global DrawOptions
@@ -550,7 +554,10 @@ def draw(F, view=None,bbox='auto',
         
     # Create the colors
     if color == 'prop':
-        color = F.p
+        if hasattr(F,'p'):
+            color = F.p
+        else:
+            color = colors.black
     elif color == 'random':
         # create random colors
         color = numpy.random.random((F.nelems(),3))
@@ -572,7 +579,8 @@ def draw(F, view=None,bbox='auto',
             actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
         elif isinstance(F,surface.Surface):
             actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
-
+        elif isinstance(F,plane.Plane):
+            actor = actors.PlaneActor(F.p,F.n,linecolor=color,linewidth=linewidth,alpha=alpha)
         GD.canvas.addActor(actor)
         if view is not None or bbox is not None:
             #GD.debug("CHANGING VIEW to %s" % view)
@@ -627,6 +635,13 @@ def drawText3D(P,text,color=colors.black,font=None):
     return M
 
 
+def drawBbox(A):
+    """Draw the bbox of the actor A."""
+    B = actors.BboxActor(A.bbox())
+    drawActor(B)
+    return B
+
+
 def drawActor(A):
     """Draw an actor and update the screen."""
     GD.canvas.addActor(A)
@@ -643,7 +658,6 @@ def undraw(itemlist):
     GD.canvas.remove(itemlist)
     GD.canvas.update()
     GD.app.processEvents()
-
 
 
 def focus(object):

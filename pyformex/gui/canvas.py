@@ -32,8 +32,8 @@ def glSmooth():
     GL.glShadeModel(GL.GL_SMOOTH)
     GD.canvas.glupdate()
 def glFill():
-    GL.glPolygonMode(GL.GL_FRONT,GL.GL_FILL)
-    GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL)
+    GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
+    #GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL)
     GD.canvas.glupdate()
 def glLine():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
@@ -115,7 +115,44 @@ class CanvasSettings(object):
     
     def __str__(self):
         return utils.formatDict(self.__dict__)
-                
+
+
+############### OpenGL Lighting #################################
+    
+
+class Light(object):
+
+    def __init__(self,nr,*args,**kargs):
+        self.light = GL.GL_LIGHT0 + (nr % GL.GL_MAX_LIGHTS)
+        self.set(**kargs)
+
+    def set(self,ambient=0.5,diffuse=0.5,specular=0.5,position=(0.,0.,1.,0.)):
+##         print 'ambient',ambient
+##         print 'diffuse',diffuse
+##         print 'specular',specular
+##         print 'position',position
+        self.ambient = colors.GREY(ambient)
+        self.diffuse = colors.GREY(diffuse)
+        self.specular = colors.GREY(specular)
+        self.position = position
+##         print 'self.ambient',self.ambient
+##         print 'self.diffuse',self.diffuse
+##         print 'self.specular',self.specular
+##         print 'self.position',self.position
+
+    def enable(self):
+        GD.debug("  Enable light %s" % (self.light-GL.GL_LIGHT0))
+        GL.glLightfv(self.light,GL.GL_POSITION,self.position)
+        GL.glLightfv(self.light,GL.GL_AMBIENT,self.ambient)
+        GL.glLightfv(self.light,GL.GL_DIFFUSE,self.diffuse)
+        GL.glLightfv(self.light,GL.GL_SPECULAR,self.specular)
+        GL.glEnable(self.light)
+
+    def disable(self):
+        GD.debug("  Disable light %s" % (self.light-GL.GL_LIGHT0))
+        GL.glDisable(self.light)
+
+
 ##################################################################
 #
 #  The Canvas
@@ -125,8 +162,8 @@ class Canvas(object):
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire']
   
-    # default light
-    default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
+##     # default light
+##     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
     
 
     def __init__(self):
@@ -135,7 +172,8 @@ class Canvas(object):
         self.annotations = ActorList(self)  # without annotations
         self.decorations = ActorList(self)  # and no decorations either
         self.triade = None
-        self.lights = []
+        self.resetLights()
+        print "ALL LIGHTS:",self.lights
         self.setBbox()
         self.settings = CanvasSettings()
         self.rendermode = 'wireframe'
@@ -150,6 +188,16 @@ class Canvas(object):
     def resetDefaults(self,dict={}):
         """Return all the settings to their default values."""
         self.settings.reset(dict)
+        self.resetLights()
+
+
+    def resetLights(self):
+        self.lights = []
+        for i in range(8):
+            light = GD.cfg.get('render/light%d' % i, None)
+            if light is not None:
+                GD.debug("  Add light %s: %s: " % (i,light))
+                self.lights.append(Light(i,light))
 
 
     def setRenderMode(self,rm):
@@ -187,9 +235,15 @@ class Canvas(object):
         self.settings.fgcolor = colors.GLColor(fg)
 
     
-    def addLight(self,position,ambient,diffuse,specular):
-        """Adds a new light to the scene."""
-        pass
+    def setLight(self,nr,ambient,diffuse,specular,position):
+        """(Re)Define a light on the scene."""
+        self.lights[nr].set(ambient,diffuse,specular,position)
+    def enableLight(self,nr):
+        """Enable an existing light."""
+        self.lights[nr].enable()
+    def disableLight(self,nr):
+        """Disable an existing light."""
+        self.lights[nr].disable()
     
 
     def initCamera(self):
@@ -228,14 +282,16 @@ class Canvas(object):
             GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
             GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
             GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-            for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
-                light = GD.cfg.get('render/%s' % l,self.default_light)
-                GD.debug("  set up %s %s" % (l,light))
-                GL.glLightfv(i,GL.GL_AMBIENT,colors.GREY(light['ambient']))
-                GL.glLightfv(i,GL.GL_DIFFUSE,colors.GREY(light['diffuse']))
-                GL.glLightfv(i,GL.GL_SPECULAR,colors.GREY(light['specular']))
-                GL.glLightfv(i,GL.GL_POSITION,light['position'])
-                GL.glEnable(i)
+            for l in self.lights:
+                l.enable()
+##             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
+##                 light = GD.cfg.get('render/%s' % l,self.default_light)
+##                 GD.debug("  set up %s %s" % (l,light))
+##                 GL.glLightfv(i,GL.GL_AMBIENT,colors.GREY(light['ambient']))
+##                 GL.glLightfv(i,GL.GL_DIFFUSE,colors.GREY(light['diffuse']))
+##                 GL.glLightfv(i,GL.GL_SPECULAR,colors.GREY(light['specular']))
+##                 GL.glLightfv(i,GL.GL_POSITION,light['position'])
+##                 GL.glEnable(i)
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])

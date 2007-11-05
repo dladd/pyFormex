@@ -1,4 +1,3 @@
-#!/usr/bin/env python pyformex.py
 # $Id$
 
 """objects.py
@@ -7,6 +6,7 @@ This is a support module for other pyFormex plugins.
 """
 
 import globaldata as GD
+from coords import bbox
 from formex import Formex
 from plugins.surface import Surface
 from gui.draw import *
@@ -155,7 +155,20 @@ class Objects(object):
         self.clear()
 
 
+    def printBbox(self):
+        """Print the bbox of the current selection."""
+        objects = self.check()
+        for n,o in zip(self.names,objects):
+            GD.message("Object %s has bbox %s" % (n,o.bbox()))
+        if len(self.names) > 1:
+            GD.message("Overal bbox is %s" % bbox(objects))
 
+
+
+###################### Drawable Objects #############################
+
+# Default Annotations
+            
 def draw_object_name(n):
     """Draw the name of an object at its center."""
     return drawText3D(named(n).center(),n)
@@ -164,6 +177,9 @@ def draw_elem_numbers(n):
     """Draw the numbers of an object's elements."""
     return drawNumbers(named(n))
 
+def draw_bbox(n):
+    """Draw the bbox of an object."""
+    return drawBbox(named(n))
    
 
 class DrawableObjects(Objects):
@@ -180,7 +196,10 @@ class DrawableObjects(Objects):
         Objects.__init__(self,*args,**kargs)
         self.autodraw = False
         self.shrink = None
-        self.annotations = [[draw_object_name,False],[draw_elem_numbers,False]]
+        self.annotations = [[draw_object_name,False],
+                            [draw_elem_numbers,False],
+                            [draw_bbox,False],
+                            ]
         self._annotations = {}
 
 
@@ -258,6 +277,32 @@ class DrawableObjects(Objects):
         self.toggleAnnotation(0)
     def toggleNumbers(self):
         self.toggleAnnotation(1)
+    def toggleBbox(self):
+        self.toggleAnnotation(2)
+
+
+    def setProperty(self,prop=None):
+        """Set the property of the current selection.
+
+        prop should be a single integer value or None.
+        If None is given, a value will be asked from the user.
+        If a negative value isgiven, the property is removed.
+        If a selected object does not have a setProp method, it is ignored.
+        """
+        objects = self.check()
+        if objects:
+            if prop is None:
+                res = askItems([['property',0]],
+                               caption = 'Set Property Number for Selection (negative value to remove)')
+                if res:
+                    prop = int(res['property'])
+                    if prop < 0:
+                        prop = None
+            for o in objects:
+                if hasattr(o,'setProp'):
+                    o.setProp(prop)
+            self.draw()
+
 
 if __name__ == "__main__":
     print __doc__

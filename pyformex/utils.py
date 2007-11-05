@@ -221,7 +221,11 @@ def countLines(fn):
 def runCommand(cmd,RaiseError=True):
     """Run a command and raise error if exited with error."""
     GD.message("Running command: %s" % cmd)
+    if GD.gui:
+        GD.gui.setBusy(True)
     sta,out = commands.getstatusoutput(cmd)
+    if GD.gui:
+        GD.gui.setBusy(False)
     if sta != 0 and RaiseError:
         GD.debug(out)
         raise RuntimeError, "Error while executing command:\n  %s" % cmd
