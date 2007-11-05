@@ -282,8 +282,6 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
     """
     global multisave
 
-    print "AUTOSAVE %s" % autosave
-
     # Leave multisave mode if no filename or starting new multisave mode
     if multisave and (filename is None or multi):
         GD.message("Leave multisave mode")
