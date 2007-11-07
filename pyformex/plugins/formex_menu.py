@@ -18,15 +18,14 @@ import globaldata as GD
 from gui import actors
 from gui.draw import *
 from formex import *
-from plugins import surface,inertia,partition,sectionize
-from plugins.objects import *
+from plugins import objects,surface,inertia,partition,sectionize
 
 import commands, os, timer
 
 
 ##################### select, read and write ##########################
 
-selection = DrawableObjects(clas=Formex)
+selection = objects.DrawableObjects(clas=Formex)
 
 
 def read_Formex(fn):

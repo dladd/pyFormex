@@ -270,15 +270,17 @@ def cut3AtPlane(F,p,n,newprops=None):
     n = asarray(n)
     p = asarray(p)
     F = F.clip(F.test('any',n, p)) # remove elements at the negative side
+    if F.nelems() == 0:
+        return F
     c = F.test('all',n,p)
     G = F.clip(c)  # save elements completely at positive side
     S = F.cclip(c) # select elements that will be cut by plane
     C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
     P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
-    T = (t >= 0)*(t <= 1)
+    T = (t >= 0.)*(t <= 1.)
     P = P[T].reshape(-1,2,3)
-    # split problem into two cases
+    # split problem in two cases
     d = S.f.distanceFromPlane(p,n)
     w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
     w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
@@ -843,6 +845,11 @@ class Formex:
         if self.p is None:
             return Formex(self.f[idx])
         else:
+            idx = asarray(idx)
+            print "IDX",idx
+            g = Coords(self.f)
+            print "COORDS",g
+            print g[idx]
             return Formex(self.f[idx],self.p[idx])
 
       

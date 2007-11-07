@@ -1,5 +1,10 @@
 # $Id$
-from plugins.objects import *
+
+
+from plugins import objects
+from formex import *
+
+
 
 class Plane(object):
 
@@ -17,7 +22,7 @@ class Plane(object):
 
 ##################### select, read and write ##########################
 
-selection = DrawableObjects(clas=Formex)
+selection = objects.DrawableObjects(clas=Formex)
 
 def createPlane():
     res = askItems([('Point',(0.,0.,0.)),

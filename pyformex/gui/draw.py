@@ -27,7 +27,7 @@ import canvas
 import colors
 import formex
 from script import *
-from plugins import surface,tools
+from plugins import surface#,tools
 
 # import some functions for scripts:
 from toolbar import setPerspective as perspective, setTransparency as transparency, timeout
@@ -579,8 +579,8 @@ def draw(F, view=None,bbox='auto',
             actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
         elif isinstance(F,surface.Surface):
             actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
-        elif isinstance(F,tools.Plane):
-            actor = actors.PlaneActor(F.p,F.n,linecolor=color,linewidth=linewidth,alpha=alpha)
+        #elif isinstance(F,tools.Plane):
+        #    actor = actors.PlaneActor(F.p,F.n,linecolor=color,linewidth=linewidth,alpha=alpha)
         GD.canvas.addActor(actor)
         if view is not None or bbox is not None:
             #GD.debug("CHANGING VIEW to %s" % view)

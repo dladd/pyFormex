@@ -6,10 +6,10 @@ This is a support module for other pyFormex plugins.
 """
 
 import globaldata as GD
+
 from coords import bbox
 from formex import Formex
 from plugins.surface import Surface
-from gui.draw import *
 from copy import deepcopy
 
 
@@ -181,6 +181,8 @@ def draw_bbox(n):
     """Draw the bbox of an object."""
     return drawBbox(named(n))
    
+
+from gui.draw import *
 
 class DrawableObjects(Objects):
     """A selection of drawable objects from the globals().
