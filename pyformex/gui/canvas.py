@@ -353,9 +353,11 @@ class Canvas(object):
             GL.glDisable (GL.GL_BLEND)
         else:
             for actor in self.actors:
+                self.setDefaults()
                 actor.draw(self.rendermode)
 
         for actor in self.annotations:
+            self.setDefaults()
             actor.draw(self.rendermode)
 
         GL.glMatrixMode(GL.GL_MODELVIEW)
@@ -366,6 +368,7 @@ class Canvas(object):
         GL.glLoadIdentity()
         GLU.gluOrtho2D(0,self.width(),0,self.height())
         for actor in self.decorations:
+            self.setDefaults()
             actor.draw(self.rendermode)
         # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)

@@ -803,8 +803,6 @@ def show_volume():
     
 ################### menu #################
 
-_menu = None
-
 def create_menu():
     """Create the Surface menu."""
     MenuData = [
@@ -880,26 +878,26 @@ def create_menu():
         ]
     return widgets.Menu('Surface',items=MenuData,parent=GD.gui.menu,before='help')
 
-def check_menu_item(itemname,mode=None):
-    global _menu
-    
-
-def close_menu():
-    """Close the STL menu."""
-    global _menu
-    if _menu:
-        _menu.remove()
-    _menu = None
-
     
 def show_menu():
-    """Show the surface menu."""
-    global _menu
-    if not _menu:
-        _menu = create_menu()
+    """Show the Tools menu."""
+    if not GD.gui.menu.item('Surface'):
+        create_menu()
+
+
+def close_menu():
+    """Close the Tools menu."""
+    m = GD.gui.menu.item('Surface')
+    if m :
+        m.remove()
     
 
-if __name__ == "main":
+if __name__ == "draw":
+    # If executed as a pyformex script
+    close_menu()
+    show_menu()
+    
+elif __name__ == "__main__":
     print __doc__
 
 # End

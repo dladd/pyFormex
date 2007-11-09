@@ -1,3 +1,4 @@
+#!/usr/bin/env python pyformex
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
@@ -404,8 +405,6 @@ def flyThru():
 
 ################### menu #################
 
-_menu = None  # protect against duplicate creation
-
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
@@ -458,22 +457,26 @@ def create_menu():
         ]
     return widgets.Menu('Formex',items=MenuData,parent=GD.gui.menu,before='help')
 
-
-def close_menu():
-    """Close the Formex menu."""
-    global _menu
-    if _menu:
-        _menu.remove()
-    _menu = None
     
 def show_menu():
-    """Show the Formex menu."""
-    global _menu
-    if not _menu:
-        _menu = create_menu()
-    
+    """Show the Tools menu."""
+    if not GD.gui.menu.item('Formex'):
+        create_menu()
 
-if __name__ == "main":
+
+def close_menu():
+    """Close the Tools menu."""
+    m = GD.gui.menu.item('Formex')
+    if m :
+        m.remove()
+      
+
+if __name__ == "draw":
+    # If executed as a pyformex script
+    close_menu()
+    show_menu()
+    
+elif __name__ == "__main__":
     print __doc__
 
 # End

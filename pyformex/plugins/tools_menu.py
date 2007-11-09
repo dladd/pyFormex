@@ -1,3 +1,4 @@
+#!/usr/bin/env python pyformex
 # $Id$
 
 """tools_menu.py
@@ -32,8 +33,6 @@ def createPlane():
 
 ################### menu #################
 
-_menu = None  # protect against duplicate creation
-
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
@@ -46,22 +45,26 @@ def create_menu():
         ]
     return widgets.Menu('Tools',items=MenuData,parent=GD.gui.menu,before='help')
 
-
-def close_menu():
-    """Close the Tools menu."""
-    global _menu
-    if _menu:
-        _menu.remove()
-    _menu = None
     
 def show_menu():
     """Show the Tools menu."""
-    global _menu
-    if not _menu:
-        _menu = create_menu()
+    if not GD.gui.menu.item('Tools'):
+        create_menu()
+
+
+def close_menu():
+    """Close the Tools menu."""
+    m = GD.gui.menu.item('Hesperia')
+    if m :
+        m.remove()
     
 
-if __name__ == "main":
+if __name__ == "draw":
+    # If executed as a pyformex script
+    close_menu()
+    show_menu()
+    
+elif __name__ == "__main__":
     print __doc__
 
 

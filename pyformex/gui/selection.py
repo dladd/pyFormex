@@ -138,7 +138,7 @@ def readSelection(select=True,draw=True,multi=True):
                 drawSelection()
     return fn
 
-if __name__ == "main":
+if __name__ == "__main__":
     print __doc__
 
 # End
