@@ -876,6 +876,7 @@ class Formex:
         """
         return Formex(self.f.reshape((-1,1,3)))
 
+
     def remove(self,F):
         """Return a Formex where the elements in F have been removed.
 
@@ -897,18 +898,27 @@ class Formex:
             p = self.p[flag>0]
         return Formex(self.f[flag>0],p)
 
-
+    
     def withProp(self,val):
         """Return a Formex which holds only the elements with property val.
 
-        If the Formex has no properties, a copy is returned.
+        val is either a single integer, or a list/array of integers.
+        The return value is a Formex holding all the elements that
+        have the property val, resp. one of the values in val.
         The returned Formex inherits the matching properties.
+        
+        If the Formex has no properties, a copy with all elements is returned.
         """
         if self.p is None:
             return Formex(self.f)
-        else:
+        elif type(val) == int:
             return Formex(self.f[self.p==val],val)
-
+        else:
+            t = zeros(self.p.shape,dtype=bool)
+            for v in asarray(val).flat:
+                t += (self.p == v)
+            return Formex(self.f[t],self.p[t])
+            
 
     def elbbox(self):
         """Return a Formex where each element is replaced by its bbox.

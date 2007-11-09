@@ -42,7 +42,7 @@ class Lima:
         The default (keep=False) is to remove those atoms.
         """
         product = ""
-        default=""
+        default = ""
         for c in self.product:
             if keep:
                 default=c

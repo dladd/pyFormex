@@ -22,7 +22,7 @@ import toolbar
 import help
 import image
 import draw
-from plugins import surface_menu,formex_menu,tools
+from plugins import surface_menu,formex_menu,tools_menu
 
 
 save = NotImplemented
@@ -61,6 +61,7 @@ def removeViewport():
 
 def viewportSettings():
     """Interactively set the viewport settings."""
+    pass
     
 
             
@@ -86,7 +87,7 @@ MenuData = [
         (_('Load &Plugins'),[
             (_('Surface menu'),surface_menu.show_menu),
             (_('Formex menu'),formex_menu.show_menu),
-            (_('Tools menu'),tools.show_menu),
+            (_('Tools menu'),tools_menu.show_menu),
             ]),
         (_('---3'),None),
         (_('E&xit'),'GD.app.exit'),

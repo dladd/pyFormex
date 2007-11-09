@@ -28,7 +28,6 @@ draw(f1+f2)
 
 clear()
 draw(g)
-h = g.withProp(0)+g.withProp(3) # only horizontals and meridionals
-
+h = g.withProp([0,3]) # only horizontals and meridionals
 clear()
 draw(g+h.translate([2*rd,0,0]))
