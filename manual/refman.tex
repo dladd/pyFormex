@@ -326,8 +326,12 @@ This is also the subtraction of the current Formex with \var{F}. Elements are on
 \begin{methoddesc}{withProp}{val}
 Return a Formex which holds only the elements with property val.
 
-If the Formex has no properties, a copy is returned.
-The returned Formex is always without properties.
+\var{val} is either a single integer, or a list/array of integers.
+The return value is a Formex holding all the elements that
+have the property \var{val}, resp. one of the values in \var{val}.
+The returned Formex inherits the matching properties.
+        
+If the Formex has no properties, a copy with all elements is returned.
 \end{methoddesc}
 
 \begin{methoddesc}{elbbox}{}

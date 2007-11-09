@@ -1,0 +1,30 @@
+% pyformex manual --- faq
+% $Id$
+% (C) B.Verhegghe
+
+\chapter{pyFormex FAQ 'n TRICKS}
+\label{cha:faq}
+
+This chapter answers some frequently asked questions about \pyformex and present some nice tips to solve common problems. If you have some question that you want answered, or want to present a original solution to some problem, feel free to communicate it to us\footnote{By preference via the forums on the \pyformex web site}, and we'll probably include it in the next version.  
+
+\section{FAQ}
+\label{Sec:faq}
+
+\section{TRICKS}
+\label{sec:tricks}
+
+\begin{enumerate}
+\item Set the directory where a script is found as the current working directory:
+Start your script with the following code snippet:
+\begin{verbatim}
+    import os
+    os.chdir(os.path.dirname(GD.cfg['curfile']))
+\end{verbatim}
+ 
+\end{enumerate}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "manual"
+%%% End: 
