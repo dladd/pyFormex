@@ -55,10 +55,6 @@ Each task can have the following keys:
      sta: PARTIAL
      rem: Possible if the script is 'simple'. 
 
- - Add default values and timeout to user interaction widgets
-     dev: bverheg
-     sta: DONE
-
  - Display camera settings: 
       This could be made part of a generalized 'Camera handling'
       plugin which could provide also things like move a camera
@@ -71,21 +67,6 @@ Each task can have the following keys:
  - Add a CoordPlaneActor to the formex_menu
 
  - Create PATH and PLANE objects
-
- - Complete the transparent rendering for all actors
-    dev: bverheg
-    sta: DONE
-
- - Change the design of actors/actorlist: 
-     actors should get a dedicated method to create their display list
-     instead of being dependent on addition to an actorlist
-    dev: bverheg
-    sta: DONE
-
- - Use our own globals dict for script environment:
-     This would allow us to reset the globals to a known state
-    dev: bverheg
-    sta: DONE
 
  - Include installation of python-gl2ps in the pyFormex setup.py
     NO, WE CAN NOT (because of license)

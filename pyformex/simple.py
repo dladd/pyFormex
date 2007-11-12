@@ -81,7 +81,7 @@ def circle(a1=2.,a2=0.,a3=360.):
     a1 == a2 gives a full circle, a1 < a2 gives a dashed circle.
     If a3 < 360, the result is an arc.
 
-    I a2 == 0, a2 is taken equal to a1.
+    If a2 == 0, a2 is taken equal to a1.
     The default values give a full circle.
     Large angle values result in polygones. Thus circle(120.,120.) is an
     equilateral triangle.
@@ -121,58 +121,45 @@ def quadraticCurve(x=None,n=8):
     return dot(H,x)
 
 
-class Sphere2(Formex):
-    """A sphere consisting of line elements.
+def sphere2(nx,ny,r=1,bot=-90,top=90):
+    """Return a sphere consisting of line elements.
 
-    The sphere is modeled by a regular grid of nx longitude circles,
-    ny latitude circles and their diagonals.
+    A sphere with radius r is modeled by a regular grid of nx
+    longitude circles, ny latitude circles and their diagonals.
+    
+    The 3 sets of lines can be distinguished by their property number:
+    1: diagonals, 2: meridionals, 3: horizontals.
+
+    The sphere caps can be cut off by specifying top and bottom latitude
+    angles (measured in degrees from 0 at north pole to 180 at south pole.
     """
-
-    def __init__(self,nx,ny,r=1,bot=-90,top=90):
-        """Construct a new Sphere2 object.
-
-        A sphere with radius r is modeled by a regular grid of nx
-        longitude circles, ny latitude circles and their diagonals.
-        
-        The 3 sets of lines can be distinguished by their property number:
-        1: diagonals, 2: meridionals, 3: horizontals.
-        
-        The sphere caps can be cut off by specifying top and bottom latitude
-        angles (measured in degrees from 0 at north pole to 180 at south pole.
-        """
-        base = Formex(pattern("543"),[1,2,3])     # single cell
-        d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals
-        m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
-        h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals
-        grid = m+d+h
-        s = float(top-bot) / ny
-        F = grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
-        Formex.__init__(self,F.f,F.p)
+    base = Formex(pattern("543"),[1,2,3])     # single cell
+    d = base.select([0]).replic2(nx,ny,1,1)   # all diagonals
+    m = base.select([1]).replic2(nx,ny,1,1)   # all meridionals
+    h = base.select([2]).replic2(nx,ny+1,1,1) # all horizontals
+    grid = m+d+h
+    s = float(top-bot) / ny
+    return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
 
         
-class Sphere3(Formex):
-    """A sphere consisting of surface triangles.
+def sphere3(nx,ny,r=1,bot=-90,top=90):
+    """Return a sphere consisting of surface triangles
 
-    The sphere is modeled by the triangles formed by a regular grid of
-    nx longitude circles, ny latitude circles and their diagonals.
+    A sphere with radius r is modeled by the triangles fromed by a regular
+    grid of nx longitude circles, ny latitude circles and their diagonals.
+
+    The two sets of triangles can be distinguished by their property number:
+    1: horizontal at the bottom, 2: horizontal at the top.
+
+    The sphere caps can be cut off by specifying top and bottom latitude
+    angles (measured in degrees from 0 at north pole to 180 at south pole.
     """
+    base = Formex( [[[0,0,0],[1,0,0],[1,1,0]],
+                    [[1,1,0],[0,1,0],[0,0,0]]],
+                   [1,2])
+    grid = base.replic2(nx,ny,1,1)
+    s = float(top-bot) / ny
+    return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
 
-    def __init__(self,nx,ny,r=1,bot=-90,top=90):
-        """Construct a new Sphere3 object.
 
-        A sphere with radius r is modeled by the triangles fromed by a regular
-        grid of nx longitude circles, ny latitude circles and their diagonals.
-
-        The two sets of triangles can be distinguished by their property number:
-        1: horizontal at the bottom, 2: horizontal at the top.
-
-        The sphere caps can be cut off by specifying top and bottom latitude
-        angles (measured in degrees from 0 at north pole to 180 at south pole.
-        """
-        base = Formex( [[[0,0,0],[1,0,0],[1,1,0]],
-                        [[1,1,0],[0,1,0],[0,0,0]]],
-                       [1,2])
-        grid = base.replic2(nx,ny,1,1)
-        s = float(top-bot) / ny
-        F = grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
-        Formex.__init__(self,F.f,F.p)
+# End

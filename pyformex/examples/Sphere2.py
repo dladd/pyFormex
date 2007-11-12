@@ -11,7 +11,7 @@
 ##
 """Sphere2"""
 
-from simple import Sphere2,Sphere3
+from simple import sphere2,sphere3
 
 reset()
 
@@ -23,8 +23,8 @@ ns = 6
 smooth()
 setView('front')
 for i in range(ns):
-    b = Sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
-    s = Sphere3(nx,ny,bot=-90,top=90).translate(0,1.0)
+    b = sphere2(nx,ny,bot=-90,top=90).translate(0,-1.0)
+    s = sphere3(nx,ny,bot=-90,top=90).translate(0,1.0)
     s.setProp(3)
     clear()
     bb = bbox([b,s])

@@ -17,10 +17,17 @@ This chapter answers some frequently asked questions about \pyformex and present
 \item Set the directory where a script is found as the current working directory:
 Start your script with the following code snippet:
 \begin{verbatim}
-    import os
-    os.chdir(os.path.dirname(GD.cfg['curfile']))
+import os
+os.chdir(os.path.dirname(GD.cfg['curfile']))
 \end{verbatim}
- 
+
+\item Automatically load plugin menus on startup:
+Plugin menus can be loaded automatically on pyFormex startup, by adding a line to the \code{gui} section of your configuration file (\verb|~/.pyformexrc|).
+\begin{verbatim}
+[gui]
+plugins = ['surface_menu', 'formex_menu']
+\end{verbatim}
+
 \end{enumerate}
 
 

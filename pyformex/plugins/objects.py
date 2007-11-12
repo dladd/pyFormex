@@ -77,7 +77,7 @@ class Objects(object):
     
 
     def selectAll(self):
-        self.set(self.listAll(self.clas))
+        self.set(self.listAll(clas=self.clas))
 
 
     def remember(self,copy=False):

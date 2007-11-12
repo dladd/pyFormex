@@ -254,7 +254,7 @@ def playScript(scr,name=None):
             else:
                 exec scr in g
             if GD.cfg['autoglobals']:
-                exportNames.extend(listAll(dic=g))
+                exportNames.extend(listAll(clas=formex.Formex,dic=g))
             GD.PF.update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
@@ -923,7 +923,7 @@ maxprop  = %s
 
 def printall():
     """Print all Formices in globals()"""
-    print "Formices currently in globals():\n%s" % listAll()
+    print "Formices currently in globals():\n%s" % listAll(clas=formex.Formex)
 
 
 def printglobals():
