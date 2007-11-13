@@ -691,7 +691,7 @@ number of divisions for the interval [0..1].
   cut3AtPlane(F,p,n,newprops).
 \end{methoddesc}
  
-\begin{methoddesc}{split}
+\begin{methoddesc}{split}{}
   Split a Formex in its elements.
   
   Returns a list of Formices each comprising one element.
@@ -997,13 +997,16 @@ Remark that the default \Code{a2 == a1} produces a continuous line, while a2 > a
 
 
 \begin{funcdesc}{polygon}{n}
-  A regular polygon with n sides.
+Creates the circumference of a regular polygon with $n$ sides, inscribed in a circle with radius 1 and center at the origin. The first point lies on the axis 0. All points are in the (0,1) plane. 
+The return value is a plex-2 Formex. 
+This function is equivalent to \Code{circle(360./n)}.
 \end{funcdesc}
 
 
-\begin{funcdesc}{triangle}
-  An equilateral triangle with base [0,1] on axis 0.
+\begin{funcdesc}{triangle}{}
+Returns an equilateral triangle with side length 1. The first point is the origin, the second points is on the axis 0. The return value is a plex-3 Formex.
 \end{funcdesc}
+
 
 \begin{funcdesc}{sphere2}{nx,ny,r=1,bot=-90,top=90}
 Return a sphere consisting of line elements.
@@ -1123,7 +1126,7 @@ The following convenience functions provide an easy alternative for switching to
 
 The \Code{pyformex.utils} module provides general functions and classes that are used in different places of \pyformex. Some of these functions may be very useful to the user and are described below.
 
-\begin{classdesc}{NameSequence}
+\begin{classdesc}{NameSequence}{}
 A class for autogenerating sequences of names.
 
 The name includes a numeric part, whose number is incremented

@@ -36,5 +36,6 @@ ${TGT}.ind: ${SRC}
 
 html/${TGT}.html: ${SRC}
 	rm -rf ${HTMLDIR}
-	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<
+	mkdir ${HTMLDIR}
 	ln -s ../images ${HTMLDIR}/images
+	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<
