@@ -8,7 +8,7 @@ Graphic Tools plugin menu for pyFormex.
 
 import globaldata as GD
 
-from gui import actors
+from gui import actors,colors
 from formex import *
 from gui.draw import *
 from plugins import objects
@@ -27,6 +27,11 @@ Formex.edit = editFormex
 ##################### database tools ##########################
 
 database = objects.Objects()
+    
+
+def printall():
+    """Print all global variable names."""
+    print listAll()
     
 
 def printval():
@@ -88,8 +93,15 @@ def createPlane():
 
 
 def test():
-    for a in GD.canvas.actors:
-        print a
+    picked = GD.canvas.pick()
+    print picked
+    for p in picked:
+        GD.canvas.removeActor(p)
+        p.redraw(GD.canvas.rendermode,color=colors.red)
+        GD.canvas.addActor(p)
+    GD.canvas.update()
+    
+
 
 ################### menu #################
 

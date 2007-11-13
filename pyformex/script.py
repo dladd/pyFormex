@@ -65,7 +65,7 @@ def forget(names):
             del g[name]
         
 
-def listAll(clas=formex.Formex,dic=None):
+def listAll(clas=None,dic=None):
     """Return a list of all objects in dic that are of given clas.
 
     If no class is given, Formex objects are sought.
@@ -74,18 +74,11 @@ def listAll(clas=formex.Formex,dic=None):
     """
     if dic is None:
         dic = GD.PF
-##         dic = Globals()
 
     if clas is None:
         return dic.keys()
     else:
         return [ k for k in dic.keys() if isinstance(dic[k],clas) ]
-##     flist = []
-##     for n,t in dic.items():
-##         if isinstance(t,clas):
-##             # if hasattr(t,'__class__') and t.__class__.__name__ == 'Formex':
-##             flist.append(n)
-##     return flist
 
 
 def named(name):

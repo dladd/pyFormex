@@ -195,7 +195,7 @@ class Text(Decoration):
         self.adjust = adjust
         self.color = colors.GLColor(color)
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe',color=None):
         """Draw the text."""
         GL.glColor3fv(self.color)
         drawText2D(self.text,self.x,self.y,self.font,self.adjust)
@@ -213,7 +213,7 @@ class ColorLegend(Decoration):
         self.font = font
         self.dec = dec   # number of decimals
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe',color=None):
         n = len(self.cl.colors)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
@@ -259,7 +259,7 @@ class Grid(Decoration):
         else:
             self.linewidth = float(linewidth)
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe',color=None):
         if self.color:
             GL.glColor3fv(self.color)
         if self.linewidth:
@@ -276,5 +276,5 @@ class Line(Decoration):
         self.x2 = x2
         self.y2 = y2
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe',color=None):
         drawLine(self.x1,self.y1,self.x2,self.y2)

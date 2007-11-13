@@ -150,6 +150,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.app.processEvents()
         return GD.canvas.selection
 
+
     def pickNumbers(self):
         """Go into number picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_numbers)  
@@ -325,7 +326,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             if w <= 0 or h <= 0:
                w,h = GD.cfg.get('pick/size',(20,20))
             GD.debug((x,y,w,h))
-            self.camera.loadProjection(pick=[x,y,w,h])
+            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            print "VIEWPORT %s" % vp
+            self.camera.loadProjection(pick=[x,y,w,h,vp])
             self.camera.loadMatrix()
             for i,actor in enumerate(self.actors):
                 #print "Adding name %s" % i
@@ -371,8 +374,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
             if w <= 0 or h <= 0:
                w,h = GD.cfg.get('pick/size',(20,20))
-            GD.debug((x,y,w,h))
-            self.camera.loadProjection(pick=[x,y,w,h])
+            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
+            self.camera.loadProjection(pick=(x,y,w,h,vp))
             self.camera.loadMatrix()
             if self.numbers:
                 self.selection = self.numbers.drawpick()

@@ -567,7 +567,7 @@ class Drawable(object):
     def bbox(self):
         return array([[0.0,0.0,0.0],[1.0,1.0,1.0]])
 
-    def drawGL(self,mode):
+    def drawGL(self,mode,color=None):
         """Perform the OpenGL drawing functions to display the actor."""
         raise NotImplementedError
 
@@ -576,20 +576,20 @@ class Drawable(object):
             self.create_list(mode)
         GL.glCallList(self.list)
 
-    def redraw(self,mode):
+    def redraw(self,mode,color=None):
         self.delete_list()
-        self.create_list(mode)
+        self.create_list(mode,color)
         GL.glCallList(self.list)
 
     def use_list(self):
         if self.list:
             GL.glCallList(self.list)
 
-    def create_list(self,mode):
+    def create_list(self,mode,color=None):
         self.list = GL.glGenLists(1)
         GL.glNewList(self.list,GL.GL_COMPILE)
         try:
-            self.drawGL(mode)
+            self.drawGL(mode,color)
         finally:
             GL.glEndList()
         

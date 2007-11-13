@@ -1,3 +1,4 @@
+#!/usr/bin/env python pyformex
 # $Id$
 
 """objects.py
@@ -213,7 +214,7 @@ class DrawableObjects(Objects):
 
 
     def draw(self,*args,**kargs):
-        clear()
+        #clear()
         print "SELECTION: %s" % self.names
         self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         #print self.annotations
@@ -314,7 +315,11 @@ class DrawableObjects(Objects):
             self.draw()
 
 
-if __name__ == "__main__":
+if __name__ == "draw":
+    # If executed as a pyformex script
+    GD.debug('Reloading module %s' % __file__)
+    
+elif __name__ == "__main__":
     print __doc__
 
 # End

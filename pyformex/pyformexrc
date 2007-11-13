@@ -79,7 +79,7 @@ localaxes = True     # by default, buttons rotate/pan in local axes
 
 
 [pick]
-size=(20,20) # size of the pick window
+size=(12,12) # size of the pick window
 
 [render]
 mode = 'wireframe'

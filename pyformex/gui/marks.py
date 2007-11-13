@@ -45,7 +45,7 @@ class TextMark(Mark):
             font = '9x15'
         self.font = glutFont(font)
 
-    def drawGL(self,mode=None):
+    def drawGL(self,mode=None,color=None):
         GL.glColor3fv(self.color)
         GL.glRasterPos3fv(self.pos)
         drawGlutText(self.text,self.font)
@@ -71,7 +71,7 @@ class MarkList(Mark):
         self.color = color
         self.font = glutFont(font)
 
-    def drawGL(self,mode=None):
+    def drawGL(self,mode=None,color=None):
         if self.color:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):

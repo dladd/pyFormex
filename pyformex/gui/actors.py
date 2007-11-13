@@ -57,7 +57,11 @@ class TranslatedActor(Actor):
     def bbox(self):
         return self.actor.bbox() + self.trl
 
-    def drawGL(self,mode):
+    def redraw(self,mode,color=None):
+        self.actor.redraw(mode,color)
+        Drawable.redraw(self,mode,color)
+
+    def drawGL(self,mode,color=None):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glTranslate(*self.trl)
@@ -84,7 +88,11 @@ class RotatedActor(Actor):
     def bbox(self):
         return self.actor.bbox() # TODO : rotate the bbox !
 
-    def drawGL(self,mode):
+    def redraw(self,mode,color=None):
+        self.actor.redraw(mode,color)
+        Drawable.redraw(self,mode,color)
+
+    def drawGL(self,mode,color=None):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glMultMatrixf(self.rot)
@@ -104,7 +112,7 @@ class CubeActor(Actor):
     def bbox(self):
         return (0.5 * self.size) * array([[-1.,-1.,-1.],[1.,1.,1.]])
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe',color=None):
         """Draw the cube."""
         drawCube(self.size,self.color)
 
@@ -146,7 +154,7 @@ class TriadeActor(Actor):
     def bbox(self):
         return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
 
-    def drawGL(self,mode='wireframe'):
+    def drawGL(self,mode='wireframe',color=None):
         """Draw the triade."""
         #GL.glShadeModel(GL.GL_FLAT)
         #GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
@@ -207,7 +215,7 @@ class GridActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode):
+    def drawGL(self,mode,color=None):
         """Draw the grid."""
 
         #print "BBOX %s" % self.bbox()
@@ -241,7 +249,7 @@ class CoordPlaneActor(Actor):
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode):
+    def drawGL(self,mode,color=None):
         """Draw the grid."""
 
         for i in range(3):
@@ -274,12 +282,11 @@ class PlaneActor(Actor):
         ox = asarray(ox)
         sz = 0.5*asarray(size)
         self.x0,self.x1 = ox-sz, ox+sz
-        #print self.x0
 
     def bbox(self):
         return array([self.x0,self.x1])
 
-    def drawGL(self,mode):
+    def drawGL(self,mode,color=None):
         """Draw the grid."""
 
         for i in range(3):
@@ -287,7 +294,10 @@ class PlaneActor(Actor):
             nx[i] = 0
             
             if self.lines:
-                glColor(self.linecolor)
+                if color is None:
+                    glColor(self.linecolor)
+                else:
+                    glColor(color)
                 drawGridLines(self.x0,self.x1,nx)
 
             if self.planes:
@@ -417,6 +427,8 @@ class FormexActor(Actor,Formex):
         
         if color is None:  
             color = self.color
+        else:
+            color = saneColor(color)
         
         if color is None:  # no color
             #GD.debug("NO COLOR")
