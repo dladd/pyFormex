@@ -1116,6 +1116,71 @@ The following convenience functions provide an easy alternative for switching to
 \end{funcdesc}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Utilities}
+\label{sec:utilities}
+
+The \Code{pyformex.utils} module provides general functions and classes that are used in different places of \pyformex. Some of these functions may be very useful to the user and are described below.
+
+\begin{classdesc}{NameSequence}
+A class for autogenerating sequences of names.
+
+The name includes a numeric part, whose number is incremented
+at each call of the 'next()' method.
+
+This class is often used for automatically generating filename families.
+    
+\begin{memberdesc}{__init__}{name,ext=''}
+Create a new NameSequence from name,ext.
+
+If the name starts with a non-numeric part, it is taken as a constant part.
+If the name ends with a numeric part, the next generated names will
+be obtained by incrementing this part.
+If not, a string '-000' will be appended and names will be generated
+by incrementing this part.
+
+If an extension is given, it will be appended as is to the names.
+This makes it possible to put the numeric part anywhere inside the
+names.
+
+Examples:
+\Code{NameSequence('hallo.98')} will generate names hallo.98, hallo.99, hallo.100, ...
+\Code{NameSequence('hallo','.png')} will generate names hallo-000.png, hallo-001.png, ...
+\Code{NameSequence('/home/user/hallo23','5.png')} will generate names
+/home/user/hallo235.png, /home/user/hallo245.png, ...
+"""
+\end{memberdesc}
+
+\begin{memberdesc}{next}
+Returns the next name in the sequence.
+\end{memberdesc}
+
+\begin{memberdesc}{peek}
+Returns the next name in the sequence without actually incrementing the counter.
+The next call to peek() or next() will return the same name.
+\end{memberdesc}
+
+\begin{memberdesc}{glob}
+Returns a UNIX-style glob pattern for the generated names.
+
+A NameSequence is often used as a generator for file names.
+The glob() method returns a pattern that can be used in a
+UNIX-like shell command to select all the generated file names.
+\end{memberdesc}
+\end{classdesc}
+
+
+\begin{funcdesc}{splitEndDigits}{s}
+    Split a string in any prefix and a numerical end sequence.
+
+    A string like 'abc-0123' will be split in 'abc-' and '0123'.
+    Any of both can be empty.
+\end{funcdesc} 
+
+
+
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "pyformex"

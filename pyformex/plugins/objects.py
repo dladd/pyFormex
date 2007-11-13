@@ -67,8 +67,7 @@ class Objects(object):
 
     def clear(self):
         """Clear the selection."""
-        self.names = []
-        self.values = []
+        self.set([])
         
 
     def __getitem__(self,i):
@@ -155,6 +154,13 @@ class Objects(object):
         self.clear()
 
 
+    def printval(self):
+        """Print the selection."""
+        objects = self.check()
+        for n,o in zip(self.names,objects):
+            print "%s = %s" % (n,str(o))
+
+
     def printBbox(self):
         """Print the bbox of the current selection."""
         objects = self.check()
@@ -203,12 +209,13 @@ class DrawableObjects(Objects):
                             [draw_bbox,False],
                             ]
         self._annotations = {}
+        self._actors = []
 
 
     def draw(self,*args,**kargs):
         clear()
         print "SELECTION: %s" % self.names
-        draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
+        self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         #print self.annotations
         for i,a in enumerate(self.annotations):
             if a[1]:

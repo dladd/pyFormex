@@ -27,6 +27,13 @@ Formex.edit = editFormex
 ##################### database tools ##########################
 
 database = objects.Objects()
+    
+
+def printval():
+    """Print selected global variables."""
+    database.ask()
+    database.printval()
+    
 
 def forget():
     """Forget global variables."""
@@ -38,17 +45,37 @@ def edit():
     database.ask(mode='single')
     F = database.check(single=True)
     if F and hasattr(F,'edit'):
-        F.edit()
+        name = database[0]
+        F.edit(name)
        
+
+def editByName(name):
+    pass
 
 ##################### select, read and write ##########################
 
 selection = objects.DrawableObjects(clas=Plane)
+pname = utils.NameSequence('Plane-0')
+
+def editPlane(plane,name):
+    res = askItems([('Point',list(plane.point())),
+                    ('Normal',list(plane.normal())),
+                    ('Name',name)],
+                   caption = 'Edit Plane')
+    if res:
+        p = res['Point']
+        n = res['Normal']
+        name = res['Name']
+        P = Plane(p,n)
+        export({name:P})
+        
+Plane.edit = editPlane
+
 
 def createPlane():
     res = askItems([('Point',(0.,0.,0.)),
                     ('Normal',(1.,0.,0.)),
-                    ('Name','Plane0')],
+                    ('Name',pname.next())],
                    caption = 'Create a new Plane')
     if res:
         p = res['Point']
@@ -56,7 +83,13 @@ def createPlane():
         name = res['Name']
         P = Plane(p,n)
         export({name:P})
+        selection.set([name])
+        selection.draw()
 
+
+def test():
+    for a in GD.canvas.actors:
+        print a
 
 ################### menu #################
 
@@ -64,6 +97,7 @@ def create_menu():
     """Create the Tools menu."""
     MenuData = [
         ("&Show Variables",printall),
+        ("&Print Variables",printval),
         ("&Edit Variable",edit),
         ("&Forget Variables",forget),
         ("---",None),
@@ -71,6 +105,8 @@ def create_menu():
         ("&Select Plane",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
+        ("---",None),
+        ("&Test",test),
         ("---",None),
         ("&Close",close_menu),
         ]

@@ -260,11 +260,8 @@ class CoordPlaneActor(Actor):
 class PlaneActor(Actor):
     """A plane in a 3D scene."""
 
-    def __init__(self,P,N,nx=(2,2,2),ox=(0.,0.,0.),size=(0.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
-        """Create a new Plane.
-
-        The plane is defined by a point P in the plane and a normal N.
-        """
+    def __init__(self,nx=(2,2,2),ox=(0.,0.,0.),size=(0.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+        """A plane perpendicular to the x-axis at the origin."""
         Actor.__init__(self)
         self.linecolor = saneColor(linecolor)
         self.planecolor = saneColor(planecolor)

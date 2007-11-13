@@ -29,4 +29,7 @@ class Plane(object):
     def bbox(self):
         return self.P.bbox()
 
+    def __str__(self):
+        return 'P:%s n:%s' % (list(self.P),tuple(self.n)) 
+
 # End

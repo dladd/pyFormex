@@ -300,7 +300,7 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
         return
 
     if multi: # Start multisave mode
-        names = utils.FilenameSequence(name,ext)
+        names = utils.NameSequence(name,ext)
         if os.path.exists(names.peek()):
             next = names.next()
         GD.message("Start multisave mode to files: %s (%s)" % (names.name,format))
