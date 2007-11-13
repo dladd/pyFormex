@@ -16,20 +16,20 @@ body {
    width: 400px;
    height: 103px;
    position: absolute;
-   z-index: 6;
-   top: 50px;
+   z-index: 4;
+   top: 40px;
    left: 245px;
-   background-image: url("images/pyformex_logo_silver.png");
+   background-image: url("images/pyformex_logo.png");
 }
 
 #topfig2 { 
    width: 150px;
    height: 100px;
    position: absolute;
-   z-index: 6;
-   top: 50px;
+   z-index: 4;
+   top: 40px;
    left: 75px;
-   background-image: url("images/scallop_dome_small_silver.png");
+   background-image: url("images/scallop_dome_small.png");
 }
 
 #page

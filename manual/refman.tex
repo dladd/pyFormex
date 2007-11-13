@@ -1018,6 +1018,19 @@ The sphere caps can be cut off by specifying top and bottom latitude
 angles (measured in degrees from 0 at north pole to 180 at south pole.
 \end{funcdesc}
 
+        
+\begin{funcdesc}{sphere3}{nx,ny,r=1,bot=-90,top=90}
+Return a sphere consisting of surface triangles
+
+A sphere with radius r is modeled by the triangles fromed by a regular
+grid of nx longitude circles, ny latitude circles and their diagonals.
+
+The two sets of triangles can be distinguished by their property number:
+1: horizontal at the bottom, 2: horizontal at the top.
+
+The sphere caps can be cut off by specifying top and bottom latitude
+angles (measured in degrees from 0 at north pole to 180 at south pole.
+\end{funcdesc}
 
 
 
