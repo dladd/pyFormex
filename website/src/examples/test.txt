@@ -1,0 +1,10 @@
+restindex	
+    crumb: Examples Index
+    format: rest
+    page-title: pyFormex Examples Index
+    section-pages: ,geometry,surface
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+    promoteheaders: 0	
+/restindex

@@ -1,0 +1,21 @@
+restindex	
+    crumb: Examples
+    format: rest
+    page-title: pyFormex Examples
+    section-pages: ,geometry,surface
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+    promoteheaders: 0	
+/restindex
+  
+
+Examples
+--------  
+
+.. _`Creating Geometry`: geometry.html
+.. _`Operations on surface meshes`: surface.html
+
+- `Creating Geometry`_: This page may give you a niceidea of what you can do with pyFormex. The examples are taken from the extensive set included with the distribution.
+
+- `Operations on surface meshes`_: We have frequently used pyFormex for performing specialized operations on surface meshes, like STL type triangulated meshes originating from medical scan (CT) images. Some of the developed algorithms have already been included in pyFormex. This page shows some examples of their use.

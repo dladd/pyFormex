@@ -1,0 +1,25 @@
+restindex	
+    crumb: Screenshots
+    format: html
+    page-title: pyFormex Screenshots
+    encoding: utf-8
+    output-encoding: None
+/restindex
+
+
+
+<h2>Screenshots</h2>
+
+<ul>
+
+<li><a href="<% path_to_root %>../images/stent_unroll.png"> Stent unroll procedure:</a> This screenshot shows four stages in the evaluation of the geometry of a stent device.</li>
+
+<li><a href="<% path_to_root %>../images/transparency.png"> Transparency:</a> The transparent mode can be useful for many applications, such as the one shown in this screenshot. By using the transparent mode, it is possible to visualize the complete stent structure, which is implanted in a diseased artery.</li>
+
+<li><a href="<% path_to_root %>../images/WS_screenshot.png"> Wire stent:</a> This screenshot shows the main stages during the generation of the wire stent geometry.</li>
+
+<li><a href="<% path_to_root %>../images/intersection.png"> Surface mesh manipulations:</a> The top viewports show a stent device (acquired from CT scan images) in smooth rendering. At the bottom, some cross section are shown which have been created with pyFormex.</li>
+
+<li><a href="<% path_to_root %>../images/cfd.png"> Fluid simulations:</a> pyFormex can also be used to create grids for Computational Fluid Dynamics (CFD). Again, many parameters can easily be modified (anlge of intersection, number of boundary layers,...).</li>
+
+</ul>

@@ -1,0 +1,21 @@
+restindex	
+    crumb: Links
+    format: rest
+    page-title: pyFormex Links
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+    promoteheaders: 0	
+/restindex
+
+
+Links
+-----
+  
+.. _`stent research group`: http://www.stent-ibitech.ugent.be/
+.. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be/
+.. _`BuMPer cluster`: http://bumps.ugent.be/bumper/
+
+- The `stent research group`_ at IBiTech hosts several developers and users of pyFormex.
+- `IBiTech - Ghent University`_.
+- The `BuMPer cluster`_.

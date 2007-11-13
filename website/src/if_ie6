@@ -1,0 +1,6 @@
+<![if !(IE 6)]>
+<link rel="stylesheet" href="<% path_to_root %>../pyformex.css" type="text/css" />
+<![endif]>
+<!--[if gte IE 6]>
+<link rel="stylesheet" href="<% path_to_root %>../pyformex_ie6.css" type="text/css" />
+<![endif]-->

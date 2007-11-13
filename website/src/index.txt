@@ -1,0 +1,10 @@
+restindex	
+    crumb: Site Index
+    format: rest
+    page-title: pyFormex Site Index
+    section-pages: ,pyformex,documentation,examples/index,screenshots,download,developer,links
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+    promoteheaders: 0	
+/restindex

@@ -1,0 +1,28 @@
+restindex	
+    crumb: Download
+    format: rest
+    page-title: pyFormex Download
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+    promoteheaders: 0	
+/restindex
+  
+
+Download pyFormex
+-----------------  
+You can get pyFormex from one of the following sources:
+  
+.. _`Official releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
+.. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex/
+.. _`SVN repository`: http://developer.berlios.de/svn/?group_id=2717
+.. _`BuMPix Linux Live CD`: ftp://bumps.ugent.be/pub/bumpix/
+
+
+- `Official releases`_ are available from the developer pages. For most users this is the prefered way get pyFormex.
+
+- Occasionally pre-releases with new functionality are available from our `local FTP server`_.
+
+- The latest source is always available from the `SVN repository`_.
+
+- If you can not install all the prerequisites but would still like to try out the program, you can run pyFormex directly from the `BuMPix Linux Live CD`_.

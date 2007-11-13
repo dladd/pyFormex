@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title><% title %></title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="description" content="pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
+<meta name="keywords" content="3D geometry surface mesh" />
+</head>
+<link rel="stylesheet" href="<% path_to_root %>../pyformex.css" type="text/css" 
+
+
+<body>
+
+<div id="page">
+
+<div id="top1">
+  <img src="<% path_to_root %>../images/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="<% path_to_root %>../images/pyformex_logo.png" alt="pyformex logo" border="0" hspace="10" vspace="12" align="left" />
+</div>
+
+
+<div id="nav">
+  <ul>
+<#
+  for page in sidebar(indextree):
+    val = page['crumb']
+    if 'Index' in val:
+      continue
+    link = page['target']
+    if thispage['crumb'] == val:
+      clas = 'class="this"'
+    else:
+      clas = 'class="main"'
+    print '<li><a %s href="%s">%s</a>' % (clas,link,val)
+    if thispage['crumb'] == val:
+       if page['uservalues'].has_key('anchors'):
+         print '<ul>'
+         for a in anchors.split(','):
+           print '<li><a href="#%s">%s</a></li>' % (a,a)
+         print '</ul>'
+    print '</li>'	
+#>
+  <li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a></li>
+</ul>
+
+</div>
+
+
+<div id="content">
+
+  <% body %>
+  
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  
+  <hr/>
+  <div align="left">Last modified: <% modtime %></div>
+  <div align="right" valign="top">Site built with <a href="http://www.voidspace.org.uk/python/rest2web/">rest2web</a></div>
+</div>	
+</div>
+
+</body>
+</html>
