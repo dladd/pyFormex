@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex
+#!/usr/bin/env pyformex
 from numpy import random
 nstars = 100 # number of stars
 npoints = 7 # number of points in the star

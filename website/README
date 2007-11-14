@@ -1,0 +1,28 @@
+# This directory is used for building the pyFormex web pages.
+# 
+# The static html pages (in the html subdirectory) should not be edited
+# directly. They are built from the source files (in src) using rest2web 
+# (http://www.voidspace.org.uk/python/rest2web/)
+# You need to install this software if you want to change the source files
+# and rebuild the pages. (On Debian:  apt-get install rest2web)
+# The html pages are built by executing the command 'r2w' in this directory.
+#
+# Being automatically build, the html pages should not be added to the
+# repository.
+#
+# All images used in the pages should be put in the images subdir.
+#
+
+#
+# !!! You may need to apply a patch to rest2web to get the proper working !!!
+#
+# The patch is in the file rest2web.diff in this directory. To apply it, 
+# proceed as follows (you will likely need root permissions):
+# - find out were rest2web is installed 
+#   (Debian: /usr/share/python-support/rest2web/rest2web)
+# - go to that directory: there should be a file restindex.py
+# - give the following command:
+# patch < full_path_to_the_rest2web.diff
+# (You can add a --dry-run option first to check out if it works, 
+# without actually making the changes.)
+#

@@ -7,7 +7,7 @@
 <meta name="description" content="pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
 <meta name="keywords" content="3D geometry surface mesh" />
 </head>
-<link rel="stylesheet" href="<% path_to_root %>../pyformex.css" type="text/css" 
+<link rel="stylesheet" href="<% path_to_root %>pyformex.css" type="text/css" 
 
 
 <body>
@@ -15,8 +15,8 @@
 <div id="page">
 
 <div id="top1">
-  <img src="<% path_to_root %>../images/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
-  <img src="<% path_to_root %>../images/pyformex_logo.png" alt="pyformex logo" border="0" hspace="10" vspace="12" align="left" />
+  <img src="<% path_to_root %>images/scallop_dome_small.png" alt="scallop dome" border="0" hspace="20" vspace="12" align="left" />
+  <img src="<% path_to_root %>images/pyformex_logo.png" alt="pyformex logo" border="0" hspace="10" vspace="12" align="left" />
 </div>
 
 

@@ -10,6 +10,12 @@ MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png
 RSYNC= rsync -uvl -e ssh
 
+.PHONY: html
+
+html: 
+	r2w
+
+
 tar: web.tar.gz
 
 web.tar.gz: $(HTDOCS) $(DOCDOCS) ${MANDOCS}
