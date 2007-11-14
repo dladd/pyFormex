@@ -1,0 +1,6 @@
+#!/bin/sh
+#
+# Split the home page
+#
+gawk 'BEGIN{ok=1}/News will get inserted here/{ok=0;next}{if (ok) print}' pyformex.html > home_header.inc
+gawk 'BEGIN{ok=0}/News will get inserted here/{ok=1;next}{if (ok) print}' pyformex.html > home_footer.inc

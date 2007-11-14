@@ -1,28 +1,29 @@
 # Makefile for the pyformex WEB site
 #
 
-HTDOCS= developer.html documentation.html download.html examples.html \
-  examples_geometry.html examples_surface.html index.html links.html \
-  screenshots.html pyformex.css favicon.ico home_header.inc home_footer.inc
+HTDOCS= developer.html documentation.html download.html index.html links.html screenshots.html home_header.inc home_footer.inc pyformex.css favicon.ico
+EXAMPLES= examples/*.html
 IMAGES= images/*.png images/*.gif images/*.jpg
+SCRIPTS= scripts/*.py
+HOMEPARTS= home_header.inc home_footer.inc
 DOCDOCS= ../doc/html/*.html
 MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png
-RSYNC= rsync -uvl -e ssh
+RSYNC= rsync -av -e ssh
 
-.PHONY: html
+.PHONY: html pub
 
 html: 
 	r2w
 
 
-tar: web.tar.gz
+#tar: web.tar.gz
 
-web.tar.gz: $(HTDOCS) $(DOCDOCS) ${MANDOCS}
-	rm -f web.tar.gz
-	tar cvf web.tar $(HTDOCS) $(DOCDOCS)
-	tar rvfh web.tar ${MANDOCS}
-	gzip web.tar
+#web.tar.gz: $(HTDOCS) $(DOCDOCS) ${MANDOCS}
+#	rm -f web.tar.gz
+#	tar cvf web.tar $(HTDOCS) $(DOCDOCS)
+#	tar rvfh web.tar ${MANDOCS}
+#	gzip web.tar
 
 #docdoc.inc:
 #	@for f in $(DOCDOCS); do echo "<li><a href=\"$$f\">$$(basename $$f)</a></li>"; done > docdoc.inc
@@ -30,17 +31,18 @@ web.tar.gz: $(HTDOCS) $(DOCDOCS) ${MANDOCS}
 
 # tranfer files to berlios.de
 # This one packs everything in a tarball: need to unpack on berlios
-public: web.tar.gz
-	$(RSYNC) web.tar.gz bverheg@shell.berlios.de:/home/users/bverheg/
+#public: web.tar.gz
+#	$(RSYNC) web.tar.gz bverheg@shell.berlios.de:/home/users/bverheg/
 
-# this one transfers directly in the correct place
-pub: docdoc.inc
+
+$(HOMEPARTS): pyformex.html
+	./split_home
+
+# Transfers the files to BerliOs
+pub: $(HOMEPARTS)
 	$(RSYNC) $(HTDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs
+	$(RSYNC) $(EXAMPLES) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/examples
 	$(RSYNC) $(IMAGES) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
+	$(RSYNC) $(SCRIPTS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/scripts
 	#$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
 	#$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
-
-homepage: pyformex.html
-
-pyformex.html: home_header.inc projnews.cache home_footer.inc 
-	cat home_header.inc projnews.cache home_footer.inc > $@
