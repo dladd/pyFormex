@@ -1,11 +1,11 @@
 # Makefile for the pyformex WEB site
 #
 
-HTDOCS= developer.html documentation.html download.html index.html links.html screenshots.html home_header.inc home_footer.inc pyformex.css favicon.ico
+HOMEPARTS= home_header.inc home_footer.inc
+HTDOCS= developer.html documentation.html download.html index.html links.html screenshots.html $(HOMEPARTS) pyformex.css favicon.ico
 EXAMPLES= examples/*.html
 IMAGES= images/*.png images/*.gif images/*.jpg
 SCRIPTS= scripts/*.py
-HOMEPARTS= home_header.inc home_footer.inc
 DOCDOCS= ../doc/html/*.html
 MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png
@@ -46,3 +46,4 @@ pub: $(HOMEPARTS)
 	$(RSYNC) $(SCRIPTS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/scripts
 	#$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
 	#$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
+	ssh bverheg@shell.berlios.de ./get_projhtml

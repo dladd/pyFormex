@@ -214,7 +214,7 @@ class DrawableObjects(Objects):
 
 
     def draw(self,*args,**kargs):
-        #clear()
+        clear()
         print "SELECTION: %s" % self.names
         self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         #print self.annotations
@@ -297,7 +297,7 @@ class DrawableObjects(Objects):
 
         prop should be a single integer value or None.
         If None is given, a value will be asked from the user.
-        If a negative value isgiven, the property is removed.
+        If a negative value is given, the property is removed.
         If a selected object does not have a setProp method, it is ignored.
         """
         objects = self.check()

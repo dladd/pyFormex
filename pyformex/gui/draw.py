@@ -25,6 +25,7 @@ import marks
 import image
 import canvas
 import colors
+import coords
 import formex
 from script import *
 from plugins import surface,tools
@@ -763,7 +764,7 @@ def createView(name,angles):
     
 
 def zoomAll():
-    GD.canvas.setBbox(formex.bbox(GD.canvas.actors))
+    GD.canvas.setBbox(coords.bbox(GD.canvas.actors))
     GD.canvas.setCamera()
     GD.canvas.redrawAll()
     GD.canvas.update()

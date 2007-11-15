@@ -16,7 +16,7 @@ STL plugin menu for pyFormex.
 """
 
 import globaldata as GD
-from gui import actors,colors,decors
+from gui import actors,colors,decors,widgets
 from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.surface import *
@@ -87,15 +87,13 @@ def readSelection(select=True,draw=True,multi=True):
         chdir(fn[0])
         names = map(utils.projectName,fn)
         GD.gui.setBusy()
-        print "READING SURFACE"
-        F = map(read_Surface,fn)
-        print "READ SURFACE"
+        surfaces = map(read_Surface,fn)
+        for i,S in enumerate(surfaces):
+            S.setProp(i)
         GD.gui.setBusy(False)
-        export(dict(zip(names,F)))
+        export(dict(zip(names,surfaces)))
         if select:
             GD.message("Set selection to %s" % str(names))
-            #for n in names:
-            #    print "%s = %s" % (n,named(n))
             selection.set(names)
             if draw:
                 if max([named(s).nfaces() for s in selection]) < 100000 or ack("""
@@ -221,7 +219,7 @@ def toggle_auto_draw():
 
 
 def write_surface(types=['surface','gts','stl','off','neu','smesh']):
-    F = selection.check('single')
+    F = selection.check(single=True)
     if F:
         if type(types) == str:
             types = [ types ]
@@ -237,7 +235,7 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 # Operations with surface type, border, ...
 #
 def showBorder():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         #print S.connections()
         print S.nConnected()
@@ -269,7 +267,7 @@ SelectableStatsValues = {
 
 
 def showStatistics():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         dispmodes = ['On Domain','Histogram','Cumulative Histogram']
         res  = askItems([('Select Value',None,'select',SelectableStatsValues.keys()),
@@ -329,7 +327,7 @@ def showHistogram(txt,val,cumulative=False):
 
 
 def partitionByConnection():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         selection.remember()
         t = timer.Timer()
@@ -340,7 +338,7 @@ def partitionByConnection():
 
 
 def partitionByAngle():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         res  = askItems([('angle',60.),('firstprop',1),('startat',0),('maxruns',-1)])
         GD.app.processEvents()
@@ -354,7 +352,7 @@ def partitionByAngle():
 
 
 def partitionByAngle2():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         res  = askItems([('angle',60.),('firstprop',1),('startat',0),('maxruns',-1)])
         GD.app.processEvents()
@@ -372,19 +370,19 @@ def partitionByAngle2():
 
 
 def check():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         GD.message(S.check(verbose=True))
 
 
 def split():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         GD.message(S.split(base=selection[0],verbose=True))
 
 
 def coarsen():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         res = askItems([('min_edges',-1),
                         ('max_cost',-1),
@@ -409,7 +407,7 @@ def coarsen():
 
 
 def refine():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         res = askItems([('max_edges',-1),
                         ('min_cost',-1),
@@ -427,7 +425,7 @@ def refine():
 
 
 def smooth():
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         res = askItems([('lambda_value',0.5),
                         ('n_iterations',2),
@@ -662,7 +660,7 @@ def export_stl():
         stl_abq.abq_export(project+'.inp',nodes,elems,'S3',"Created by stl_examples.py")
 
 def export_surface():       
-    S = selection.check('single')
+    S = selection.check(single=True)
     if S:
         types = [ "Abaqus INP files (*.inp)" ]
         fn = askFilename(GD.cfg['workdir'],types,exist=False)

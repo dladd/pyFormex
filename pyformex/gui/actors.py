@@ -543,6 +543,7 @@ class SurfaceActor(Actor,Surface):
 
     def drawGL(self,mode,color=None,alpha=None):
         """Draw the surface."""
+        print "SURFACE.DRAWGL"
         if mode.endswith('wire'):
             self.drawGL(mode[:-4],color=color)
             self.drawGL('wireframe',color=asarray(black))

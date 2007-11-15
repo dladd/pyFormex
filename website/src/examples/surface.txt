@@ -10,7 +10,7 @@ restindex
   <h2>Operations on surface meshes</h2>
   
   <h3>Approximating geometry</h3>
-  <p align="justify">An artery with a kink was imported as a triangulated surface, reconstructed from medical CT scan images. The arterial wall surface was then approximated by a sequence of circles with varying diameters and non collinear center points. The figure below shows part of the triangulated surface (yellow), a subset of the approximating circles (blue) and the line connecting the centers of the circles (red). The view is taken from inside the artery.</p>
+  <p align="justify">An artery with a kink was imported as a triangulated surface, reconstructed from medical CT scan images. The arterial wall surface was then approximated by a sequence of circles with varying diameters and non collinear center points. The figure below shows part of the triangulated surface (yellow), a subset of the approximating circles (blue) and the line connecting the centers of the circles (red). The view is taken from inside the artery. Click on the image for a larger view.</p>
 <div align="center"><a href="<% path_to_root %>images/tata-0114.jpg"><img src="<% path_to_root %>images/tata-0114_small.png" alt="Artery approximated with circles" border="0" vspace="20"/></a></div>
 
 
@@ -23,5 +23,7 @@ restindex
 <div align="center"><img src="<% path_to_root %>images/cypher_unroll_cell.png" alt="Cut with a plane" border="0" hspace="5" vspace="5"/></div>
 <div align="center"><img src="<% path_to_root %>images/cypher_unroll_cell2.png" alt="Basic cell" border="0" hspace="5" vspace="5"/></div>
 
-<br/>
-<br/>
+
+<h3>Human skeleton</h3>
+The individual bones, reconstructed from CT scans, of the lower human skeleton were obtained from the <a href="http://www.ulb.ac.be/project/vakhum/">VAKHUM</a> project. The original .STL files were converted to <a href="http://gts.sourceforge.net/">GTS</a> format, coarsened, and read into pyFormex, where they were aligned to recreate the skeleton. Colors were added to distinct the bones.
+<img src="<% path_to_root %>images/skelet1.png" alt="A stent device" border="0" hspace="5" vspace="5"/>

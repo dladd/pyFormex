@@ -295,11 +295,8 @@ def surface_volume(x,pt=None):
     x -= x.center()
     a,b,c = [ x[:,i,:] for i in range(3) ]
     d = cross(b,c)
-    #print d.shape
     e = (a*d).sum(axis=-1)
-    #print e
     v = sign(e) * abs(e)/6.
-    #print v
     return v
 
 
@@ -351,7 +348,6 @@ class Surface(object):
         if hasattr(self,'edglen'):
             del self.edglen
         self.p = None
-        #print len(args)
         if len(args) == 0:
             return
         if len(args) == 1:
@@ -367,15 +363,11 @@ class Surface(object):
 
         else:
             a = Coords(args[0])
-            #print a.shape
-            #print a.dtype.kind
             if len(a.shape) != 2:
                 raise ValueError,"Expected a 2-dim coordinates array"
             self.coords = a
             
             a = asarray(args[1])
-            #print a.shape
-            #print a.dtype.kind
             if a.dtype.kind != 'i' or a.ndim != 2 or a.shape[1]+len(args) != 5:
                 raise "Got invalid second argument"
             if a.max() >= self.coords.shape[0]:
@@ -387,8 +379,6 @@ class Surface(object):
                 self.edges = a
 
                 a = asarray(args[2])
-                #print a.shape
-                #print a.dtype.kind
                 if not (a.dtype.kind == 'i' and a.ndim == 2 and a.shape[1] == 3):
                     raise "Got invalid third argument"
                 if a.max() >= self.edges.shape[0]:
@@ -418,8 +408,6 @@ class Surface(object):
             self.coords = Coords(self.coords)
         if self.edges is None or self.faces is None:
             self.edges,self.faces = expandElems(self.elems)
-            #print self.edges
-            #print self.faces
         if self.elems is None:
             self.elems = compactElems(self.edges,self.faces)
 
@@ -562,20 +550,17 @@ class Surface(object):
           - .neu (Gambit Neutral)
           - .smesh (Tetgen)
         """
-        print "READING SURFACE NOW"
-        print fn
         if ftype is None:
             ftype = os.path.splitext(fn)[1]  # deduce from extension
         ftype = ftype.strip('.').lower()
-        print "FTYPE %s" % ftype
         if ftype == 'off':
             return Surface(*read_off(fn))
         elif ftype == 'gts':
-            print "READING GTS"
+            #print "READING GTS"
             ret = read_gts(fn)
-            print ret
+            #print ret
             S = Surface(*ret)
-            print S.shape()
+            #print S.shape()
             return S
         elif ftype == 'stl':
             return Surface(*read_stl(fn))
