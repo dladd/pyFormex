@@ -82,13 +82,24 @@ body {
 	color: 	#000099;
 }
 
-#nav a.main {
+#nav a.page {
 	color: #000033;
 }
 
 
-#nav a.this {
+#nav a.thispage {
+	color: #ff3366;
+}
+
+
+#nav a.section {
         color: #000033;
+        font-weight: bold;
+}
+
+
+#nav a.thissection {
+        color: #ff3366;
         font-weight: bold;
 }
 

@@ -6,9 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="description" content="pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
 <meta name="keywords" content="3D geometry surface mesh" />
+<link rel="stylesheet" href="<% path_to_root %>pyformex.css" type="text/css" />
 </head>
-<link rel="stylesheet" href="<% path_to_root %>pyformex.css" type="text/css" 
-
 
 <body>
 
@@ -21,29 +20,28 @@
 
 
 <div id="nav">
-  <ul>
 <#
   for page in sidebar(indextree):
     val = page['crumb']
     if 'Index' in val:
       continue
     link = page['target']
-    if thispage['crumb'] == val:
-      clas = 'class="this"'
+    if page['title']:
+      clas = 'section'
     else:
-      clas = 'class="main"'
-    print '<li><a %s href="%s">%s</a>' % (clas,link,val)
+      clas = 'page'
     if thispage['crumb'] == val:
-       if page['uservalues'].has_key('anchors'):
-         print '<ul>'
-         for a in anchors.split(','):
-           print '<li><a href="#%s">%s</a></li>' % (a,a)
-         print '</ul>'
-    print '</li>'	
+      clas = 'this'+clas
+    clas = 'class="%s"' % clas
+    print '<br/><a %s href="%s">%s</a>' % (clas,link,val)
+    if thispage['crumb'] == val:
+      if page['uservalues'].has_key('anchors'):
+        print '<ul>'
+        for a in anchors.split(','):
+          print '<li><a href="#%s">%s</a></li>' % (a,a)
+        print '</ul>'
 #>
-  <li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a></li>
-</ul>
-
+<br/><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a>
 </div>
 
 
@@ -58,7 +56,7 @@
   
   <hr/>
   <div align="left">Last modified: <% modtime %></div>
-  <div align="right" valign="top">Site built with <a href="http://www.voidspace.org.uk/python/rest2web/">rest2web</a></div>
+  <div align="right">Site built with <a href="http://www.voidspace.org.uk/python/rest2web/">rest2web</a></div>
 </div>	
 </div>
 
