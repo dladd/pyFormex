@@ -1,6 +1,6 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -91,7 +91,6 @@ def ask(question,choices=None,default=None,timeout=None):
     else:
         items = [ [question, choices, 'combo', default] ]
 
-    #print "INPUT TIMEOUT %s" % timeout
     res,accept = widgets.InputDialog(items,'Ask Question').getResult(timeout)
     GD.gui.update()
     if accept:
@@ -157,8 +156,10 @@ def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
     return fn
 
 
-def askDirname(cur):
+def askDirname(cur=None):
     """Ask for an existing directory name."""
+    if cur is None:
+        cur = GD.cfg['workdir']
     fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
     if fn:
         chdir(fn)
@@ -273,7 +274,7 @@ def playScript(scr,name=None):
             GD.gui.actions['Stop'].setEnabled(False)
 
     if exitall:
-        GD.DEBUG("Calling exit() from playscript")
+        GD.debug("Calling exit() from playscript")
         exit()
 
 
@@ -596,7 +597,7 @@ def draw(F, view=None,bbox='auto',
             #setView(view)
         GD.canvas.update()
         GD.app.processEvents()
-        GD.debug("AUTOSAVE %s" % image.autoSaveOn())
+        #GD.debug("AUTOSAVE %s" % image.autoSaveOn())
         if image.autoSaveOn():
             image.saveNext()
         if allowwait and wait:
@@ -720,9 +721,9 @@ def setTriade(on=None):
     GD.app.processEvents()
 
 
-def drawtext(text,x,y,font='9x15'):
+def drawtext(text,x,y,font='9x15',adjust='left'):
     """Show a text at position x,y using font."""
-    TA = decors.Text(text,x,y,font)
+    TA = decors.Text(text,x,y,font,adjust)
     decorate(TA)
     return TA
 

@@ -1,6 +1,6 @@
 # pyFormex FAQ
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -9,45 +9,5 @@
 ## version 2 or later (see file COPYING for details)
 ##
 #
-pyFormex Frequently Asked Questions (and answers)
-=================================================
-
-Questions
-=========
-
-0. How to install pyFormex?
-1. How was the pyFormex logo created?
-2. Why is pyFormex written in Python? Isn't it slow? 
-
-Answers
-=======
-
-0. How to install pyFormex?
-
-See the file INSTALL
-
-
-1. How was the pyFormex logo created?
-
-With the Gimp: Xtra -> Script-Fu -> Logos -> Alien-neon
-Font Size: 150 
-Font: Blippo-Heavy
-Glow Color: 0xFF3366
-Background Color: 0x000000
-Width of Bands: 2
-Width of Gaps: 2
-Number of Bands: 7
-Fade Away: Yes
-
-Then switch off background layer and save as .png format.
-Export the image with Save Background Color switched off!
-
-
-2. Why is pyFormex written in Python? Isn't it slow?
-----------
-Because
- - it is very easy to learn (See www.python.org)
- - it is extremely powerful (More on www.python.org)
-As a scripting language, it allows for quick program development.
-And because it provides so many plugins to libraries implemented in 
-C or Fortran, it can be surprisingly fast.
+# The pyFormex FAQ have been moved to the manual.
+#

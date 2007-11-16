@@ -1,7 +1,7 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex --gui
 # $Id: Sphere2.py 154 2006-11-03 19:08:25Z bverheg $
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -30,6 +30,7 @@ for i in range(ns):
     bb = bbox([b,s])
     draw(b,bbox=bb,wait=False)
     draw(s,bbox=bb)#,color='random')
+    #GD.canvas.update()
     nx = int(m*nx)
     ny = int(m*ny)
 

@@ -1,7 +1,7 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex --gui
 # $Id: Lima.py 66 2006-02-20 20:08:47Z bverheg $
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -14,6 +14,7 @@
 # We use the lima module
 from plugins import lima,turtle
 
+wireframe()
 linewidth(2)
 
 # return standard Turtle rules 
@@ -88,7 +89,7 @@ def grow(rule,clearing):
     FA = None
     TA = None
     clear()
-    GD.message(rule)
+    #GD.message(rule)
     drawtext(rule,20,40)
     a,r,g,t = limas[rule]
     L = lima.Lima(a,r)

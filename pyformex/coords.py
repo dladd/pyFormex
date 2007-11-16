@@ -281,7 +281,7 @@ class Coords(ndarray):
 
     # General
 
-    def simple(self):
+    def points(self):
         """Return the data as a simple set of points.
 
         This reshapes the array to a 2-dimensional array, flattening
@@ -321,7 +321,7 @@ class Coords(ndarray):
         It is returned as a Coords object with shape (2,3): the first row
         holds the minimal coordinates and the second row the maximal.
         """
-        s = self.simple()
+        s = self.points()
         return row_stack([ s.min(axis=0), s.max(axis=0) ])
 
 
@@ -342,7 +342,7 @@ class Coords(ndarray):
         are the mean values of all points.
         The return value is a (3,) shaped Coords object.
         """
-        return self.simple().mean(axis=0)
+        return self.points().mean(axis=0)
 
 
     def sizes(self):
@@ -485,7 +485,7 @@ class Coords(ndarray):
         The supplied format should contain 3 formatting sequences for the
         three coordinates of a point.
         """
-        for p in self.simple():
+        for p in self.points():
             print fmt % tuple(p)
 
 
@@ -964,7 +964,7 @@ class Coords(ndarray):
         we intend to access this problem by repeating the procedure with the
         boxes shifted in space.
         """
-        x = self.simple()
+        x = self.points()
         nnod = x.shape[0]
         # Calculate box size
         lo = array([ x[:,i].min() for i in range(3) ])
@@ -1081,7 +1081,7 @@ def bbox(objects):
     This is like the bbox() method of the Formex class, but the resulting
     box encloses all the Formices in the list.
     """
-    print [[f.bbox()] for f in objects ]
+    #print [[f.bbox()] for f in objects ]
     return Coords(concatenate([ [f.bbox()] for f in objects ])).bbox()
 
 
@@ -1120,7 +1120,7 @@ if __name__ == "__main__":
         prt("###################################\nTests for Coords X",X)
 
         # Info
-        prt("simple",X.simple())
+        prt("points",X.points())
         prt("pshape",X.pshape())
         prt("npoints",X.npoints())
         prt("y",X.y())

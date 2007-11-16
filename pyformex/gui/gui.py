@@ -1,6 +1,6 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -256,9 +256,9 @@ class GUI(QtGui.QMainWindow):
             sys.stderr = self.board
             sys.stdout = self.board
         if GD.options.debug:
-            printsize(self,'Main:')
-            printsize(self.canvas,'Canvas:')
-            printsize(self.board,'Board:')
+            printsize(self,'DEBUG: Main:')
+            printsize(self.canvas,'DEBUG: Canvas:')
+            printsize(self.board,'DEBUG: Board:')
 
 
     def setStyle(self,style):
@@ -383,7 +383,6 @@ def quit():
     """Quit the GUI"""
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
-    #print "Quitting!!"
     draw.drawrelease()
     if GD.app:
         GD.app.exit()
@@ -480,6 +479,7 @@ and you are welcome to redistribute it under certain conditions.
 See Help->License or the file COPYING for details.
 """ % GD.Version)
     GD.gui.show()
+    GD.debug("Using window name %s" % GD.gui.windowTitle())
     
     # Create additional menus (put them in a list to save)
     
@@ -502,7 +502,6 @@ See Help->License or the file COPYING for details.
     menus = []
     scriptdirs = GD.cfg['scriptdirs']
     knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
-    #print "KNOWN", knownscriptdirs
 
     if GD.cfg.get('gui/separate_script_dirs',False):
         # This will create separate menus for all scriptdirs
@@ -546,8 +545,14 @@ See Help->License or the file COPYING for details.
     for arg in args:
         if os.path.exists(arg):
             draw.play(arg)
+
+    if os.path.isdir(GD.cfg['workdir']):
+        # Make the workdir the current dir
+        os.chdir(GD.cfg['workdir'])
+    else:
+        # Save the current dir as workdir
+        GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
-    GD.debug("Using window name %s" % GD.gui.windowTitle())
     GD.app.exec_()
 
     # Cleanup

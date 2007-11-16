@@ -1,6 +1,6 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -377,7 +377,7 @@ class FormexActor(Actor,Formex):
         if self.eltype == 'point3d':
             # ! THIS SHOULD BE SET FROM THE SCENE SIZE
             #   RATHER THAN FORMEX SIZE 
-            marksize = self.size() * marksize
+            marksize = self.diagonal() * marksize
             if marksize <= 0.0:
                 marksize = 1.0
             self.setMark(marksize,"cube")

@@ -1,6 +1,6 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -75,8 +75,7 @@ MenuData = [
         (_('&Open'),fileMenu.openFile),
         (_('&Play'),draw.play),
         (_('&Edit'),fileMenu.edit),
-#        (_('&Save'),'save'),
-#        (_('Save &As'),'saveAs'),
+        (_('&ChDir'),draw.askDirname),
         (_('---1'),None),
         (_('&Save Image'),fileMenu.saveImage),
         (_('Start &MultiSave'),fileMenu.startMultiSave),

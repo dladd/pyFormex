@@ -198,7 +198,6 @@ You will need proper permissions to actually delete the files.
         GD.cfg.read(GD.preffile)
     GD.debug("Config: %s" % GD.cfg)
 
-
     # Set default --nogui if first remaining argument is a pyformex script.
     if GD.options.gui is None:
         GD.options.gui = not (len(args) > 0 and isPyFormex(args[0]))
@@ -206,16 +205,10 @@ You will need proper permissions to actually delete the files.
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
-        if os.path.isdir(GD.cfg['workdir']):
-            # Make the workdir the current dir
-            os.chdir(GD.cfg['workdir'])
-        else:
-            # Save the current dir as workdir
-            GD.cfg['workdir'] = os.getcwd()
         from gui.gui import runApp
     else:
         from script import runApp
-    
+
     res = runApp(args)
 
     #Save the preferences that have changed

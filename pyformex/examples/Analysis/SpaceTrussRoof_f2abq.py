@@ -83,7 +83,7 @@ support = NodeProperty(0, bound = [1,1,1,0,0,0])
 edge = NodeProperty(3,cload = [0,0,Q/2,0,0,0])
 loaded = NodeProperty(1,cload = [0,0,Q,0,0,0])
 
-circ20 = ElemSection(section={'name':'circ20','radius':10, 'cross_section':314.159}, material={'name':'S500', 'young_modulus':210000, 'shear_modulus':81000, 'poisson_ratio':0.3, 'yield_stress' : 500,'density':0.000007850}, sectiontype='Circ')
+circ20 = ElemSection(section={'name':'circ20','sectiontype':'Circ','radius':10, 'cross_section':314.159}, material={'name':'S500', 'young_modulus':210000, 'shear_modulus':81000, 'poisson_ratio':0.3, 'yield_stress' : 500,'density':0.000007850})
 diabar = ElemProperty(1,elemsection = circ20, elemtype='T3D2')
 bottombar = ElemProperty(0,elemsection = circ20, elemtype='T3D2')
 topbar = ElemProperty(3,elemsection = circ20, elemtype='T3D2')

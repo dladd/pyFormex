@@ -1,7 +1,7 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex --gui
 # $Id: KochLine.py 66 2006-02-20 20:08:47Z bverheg $
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -13,6 +13,7 @@
 
 from plugins.lima import lima
 
+wireframe()
 linewidth(2)
 n = 6 # number of generations
 
@@ -25,10 +26,23 @@ clear()
 # scale each Formex individually to obtain same length
 sc = [ 3**(-i) for i in range(n) ]
 sz = sc[0]/3.
-draw(Formex.concatenate([ 
-    F[i].scale(sc[i]).translate([0,sz*(i-1),0]) for i in range(n)]))
-draw(Formex.concatenate([ 
-    F[i].scale(sc[i]).translate([0,sz*n,0]) for i in range(n)]))
-# a variant which dispays the lines as radii of a six-pointed star
-#clear()
-#draw(Formex.concatenate([F[i].rotate(60*i).scale(math.pow(3,5-i)) for i in range(6)]).translate()
+
+F = [F[i].scale(sc[i]) for i in range(n)] 
+
+
+mode = random.randint(3)
+if mode == 0:
+    # on top of each other
+    draw([F[i].translate([0,sz*(i-1),0]) for i in range(n)])
+
+elif mode == 1:
+    # one above the other
+    draw([F[i].translate([0,sz*n,0]) for i in range(n)])
+
+else:
+    # as radii of an n-pointed star
+    draw([F[i].rotate(360.*i/n) for i in range(n)])
+
+zoomAll()
+
+# End

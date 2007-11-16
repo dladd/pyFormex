@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex --gui
 # $Id$
 """Grid"""
 import gui.actors

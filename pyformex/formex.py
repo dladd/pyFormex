@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -613,10 +613,10 @@ class Formex:
         different parameters to check.
         You can also set the rtol /atol parameters to influence the
         equivalence checking of two points.
-        The default settting for atol is rtol * self.size()
+        The default settting for atol is rtol * self.diagonal()
         """
         if atol is None:
-            atol = rtol * self.size()
+            atol = rtol * self.diagonal()
         f = reshape(self.f,(self.nnodes(),3))
         f,s = f.unique(nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:
@@ -1730,7 +1730,7 @@ if __name__ == "__main__":
         print "unique:",G.unique()
         print "nodes:",G.nodes()
         print "unique nodes:",G.nodes().unique()
-        print "size:",G.size()
+        print "diagonal size:",G.diagonal()
         F = Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]])
         G = connect([F,F],bias=[0,1])
         print G

@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex --gui
 # $Id$
 
 from formex import *  # Needed if we want to use this example as a module

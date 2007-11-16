@@ -8,7 +8,7 @@ from distutils.core import setup
 
 
 setup(name='pyformex',
-      version='0.6a7',
+      version='0.6',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 
@@ -19,7 +19,7 @@ transformations.
       author_email='benedict.verhegghe@ugent.be',
       url='http://pyformex.berlios.de/',
       packages=['pyformex','pyformex.gui','pyformex.plugins','pyformex.examples'],
-      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
+      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
       scripts=['pyformex/pyformex'],
 #      data_files=[('doc',['manual/html/*'])],
       classifiers=[

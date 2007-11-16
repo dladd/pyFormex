@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Sun Sep 30 14:33:15 2007
+## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -177,6 +177,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         #GD.debug("resizeGL: %s x %s" % (w,h))
         self.setSize(w,h)
 
+    def getSize(self):
+        return int(self.width()),int(self.height())
+
     def	paintGL(self):
         self.display()
 
@@ -206,11 +209,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         rotation operation. The action is one of PRESS, MOVE or RELEASE.
         """
         if action == PRESS:
-            w,h = self.width(),self.height()
+            w,h = self.getSize()
             self.state = [self.statex-w/2, self.statey-h/2 ]
 
         elif action == MOVE:
-            w,h = self.width(),self.height()
+            w,h = self.getSize()
             # set all three rotations from mouse movement
             # tangential movement sets twist,
             # but only if initial vector is big enough
@@ -254,7 +257,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             pass
 
         elif action == MOVE:
-            w,h = self.width(),self.height()
+            w,h = self.getSize()
             dist = self.camera.getDist() * 0.5
             # get distance from where button was pressed
             dx,dy = (x-self.statex,y-self.statey)
@@ -280,7 +283,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.state = [self.camera.getDist(),self.camera.fovy]
 
         elif action == MOVE:
-            w,h = self.width(),self.height()
+            w,h = self.getSize()
             # hor movement is lens zooming
             f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             #print "Lens Zooming: %s" % f
