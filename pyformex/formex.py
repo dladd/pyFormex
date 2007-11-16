@@ -846,10 +846,10 @@ class Formex:
             return Formex(self.f[idx])
         else:
             idx = asarray(idx)
-            print "IDX",idx
-            g = Coords(self.f)
-            print "COORDS",g
-            print g[idx]
+            #print "IDX",idx
+            #g = Coords(self.f)
+            #print "COORDS",g
+            #print g[idx]
             return Formex(self.f[idx],self.p[idx])
 
       
