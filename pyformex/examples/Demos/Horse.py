@@ -24,7 +24,7 @@ GD.message('Click Step to continue')
 
 say('A Horse Story...')
 y -= 10
-F = Formex.read('horse.formex')
+F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
 A = draw(F)
 pause()
 
