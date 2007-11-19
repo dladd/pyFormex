@@ -1,18 +1,1 @@
-# Create (compressed) mpeg movies from a series of still images
-
-From PNG images:
-# First get the size of the images
-  file roof*.png #:shows the size of the images
-# then create movie
-  mencoder mf://roof-*.png -mf w=796:h=516:fps=5:type=png -ovc copy -oac copy -o roof.avi
-
-From JPEG images (a lot faster, because the individual images are already 
-compressed, but of lower quality than PNG images)
-  ffmpeg -r 5 -b 800 -i kink-%03d.jpg kink.mp4
-
-
-# Create MNPG movies from PNG keeps the quality, but the resulting file is
-# very large: only for a limited number of images, like a slide show.
-# And, most Windows machines do not have the MNPG codec installed.
-... I should add the command here, forgot ...
- 
+# The contents of this file was moved inside the pyFormex manual (FAQ'nTRICKS)

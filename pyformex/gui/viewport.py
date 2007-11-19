@@ -168,6 +168,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if GD.options.debug:
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
+        GD.debug("INITIALIZING CAMERA of %s" % self)
         self.initCamera()
         self.glinit()
         self.resizeGL(self.width(),self.height())
@@ -399,7 +400,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
-        GD.gui.viewports.set_current(self)
+        GD.gui.viewports.setCurrent(self)
         # on PRESS, always remember mouse position and button
         self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()
@@ -436,17 +437,19 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 def vpfocus(canv):
     print "vpfocus %s" % canv
-    GD.gui.viewports.set_current(canv)
+    GD.gui.viewports.setCurrent(canv)
+
 
 class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
 
-    def __init__(self):
+    def __init__(self,ncols=2):
         QtGui.QGridLayout.__init__(self)
         self.all = []
         self.active = []
         self.current = None
-        #self.addView(0,0)
+        self.ncols = ncols
+        #self.addView(0,0)    First viewport is added by gui
 
 
     def setDefaults(self,dict):
@@ -455,19 +458,18 @@ class MultiCanvas(QtGui.QGridLayout):
         canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(dict))
 
     def newView(self):
-        "Adding a View"
+        "Create a new viewport"
         canv = QtCanvas()
         #QtCore.QObject.connect(canv,QtCore.SIGNAL("VPFocus"),vpfocus)
-        #canv.initCamera() # THis is already done in the __init__()
         self.all.append(canv)
         self.active.append(canv)
-        # DO NOT USE self.set_current(canv) HERE, because no camera yet
+        # DO NOT USE self.setCurrent(canv) HERE, because no camera yet
         GD.canvas = self.current = canv
         return(canv)
 
-    def set_current(self,canv):
-        #print self.all
-        #print self.current
+    def setCurrent(self,canv):
+        if type(canv) == int and canv in range(len(self.all)):
+            canv = self.all[canv]
         if canv in self.all:
             GD.canvas = self.current = canv
             toolbar.setTransparency(self.current.alphablend)
@@ -476,21 +478,32 @@ class MultiCanvas(QtGui.QGridLayout):
 
     def currentView(self):
         return self.all.index(GD.canvas)
- 
-    def addView(self,row,col):
-        w = self.newView()
+
+
+    def showWidget(self,w):
+        """Show the view w"""
+        row,col = divmod(self.all.index(w),self.ncols)
         self.addWidget(w,row,col)
         w.raise_()
+        
+
+    def addView(self):
+        """Add a new viewport to the widget"""
+        w = self.newView()
+        self.showWidget(w)
+        w.initializeGL()   # Initialize OpenGL context and camera
+
 
     def removeView(self):
         if len(self.all) > 1:
             w = self.all.pop()
             if self.current == w:
-                self.set_current(self.all[-1])
+                self.setCurrent(self.all[-1])
             if w in self.active:
                 self.active.remove(w)
             self.removeWidget(w)
             w.close()
+
 
 ##     def setCamera(self,bbox,view):
 ##         self.current.setCamera(bbox,view)

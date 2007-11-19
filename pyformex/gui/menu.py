@@ -10,10 +10,9 @@
 ##
 """Menus for the pyFormex GUI."""
 
-import os
-from gettext import gettext as _
-from PyQt4 import QtCore, QtGui
 import globaldata as GD
+
+from gettext import gettext as _
 import fileMenu
 import cameraMenu
 import prefMenu
@@ -62,7 +61,12 @@ def removeViewport():
 def viewportSettings():
     """Interactively set the viewport settings."""
     pass
-    
+
+def toggleDebug(onoff=None):
+    """Toggle debug information on/off"""
+    if onoff is None:
+        onoff = not GD.options.debug
+    GD.options.debug = onoff
 
             
 # The menu actions can be simply function names instead of strings, if the
@@ -88,6 +92,7 @@ MenuData = [
             (_('Formex menu'),formex_menu.show_menu),
             (_('Tools menu'),tools_menu.show_menu),
             ]),
+        (_('&Toggle Debug'),toggleDebug),
         (_('---3'),None),
         (_('E&xit'),'GD.app.exit'),
         ]),

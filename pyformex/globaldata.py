@@ -62,9 +62,9 @@ def warning(s):
     
 
 def debug(s):
-    if hasattr(options,'debug'):
-        if options.debug:
-            print "DEBUG: %s" % str(s)
+    #if hasattr(options,'debug'):
+    if options.debug:
+        print "DEBUG: %s" % str(s)
 
 
 # we couldn't put these in gui.py because we can't import gui in other modules

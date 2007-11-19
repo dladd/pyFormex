@@ -366,15 +366,35 @@ def createMovie():
         GD.warning('You need to start multisave mode first!')
         return
 
-    names,format,window,border,hotkey,autosave = multisave
+    names,format,window,border,hotkey,autosave,rootcrop = multisave
     glob = names.glob()
-    if glob.split('.')[-1] != 'y4m':
-        GD.warning("Currently you need to save in 'y4m' format to create movies")
+    if glob.split('.')[-1] != 'jpg':
+        GD.warning("Currently you need to save in 'jpg' format to create movies")
         return
     
-    cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
+    #cmd = "mencoder -ovc lavc -fps 5 -o output.avi %s" % names.glob()
+    cmd = "ffmpeg -r 1 -i %s output.mp4" % names.glob()
     GD.debug(cmd)
     utils.runCommand(cmd)
+
+
+def saveMovie(filename,format,windowname=None):
+    """Create a movie from the pyFormex window."""
+    if windowname is None:
+        windowname = GD.gui.windowTitle()
+    GD.gui.raise_()
+    GD.gui.repaint()
+    GD.gui.toolbar.repaint()
+    GD.gui.update()
+    GD.canvas.makeCurrent()
+    GD.canvas.raise_()
+    GD.canvas.update()
+    GD.app.processEvents()
+    windowid = windowname
+    cmd = "xvidcap --fps 5 --window %s --file %s" % (windowid,filename)
+    GD.debug(cmd)
+    #sta,out = utils.runCommand(cmd)
+    return sta
 
 
 ### End

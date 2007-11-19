@@ -72,6 +72,12 @@ Release the file via project administration
     Processor type :Any
     Release Notes
   Release file
+Announce the release on the pyFormex news
+  admin....(todo)
+Bump the RELEASE and VERSION variables in the file RELEASE, then
+  make version
+  svn ci -m 'Bump version after release'
+
 
 (That was easy, uh?)
 

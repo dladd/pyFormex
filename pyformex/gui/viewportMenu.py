@@ -19,9 +19,7 @@ from gettext import gettext as _
 
 def addViewport():
     """Add a new viewport."""
-    n = len(GD.gui.viewports.all)
-    if n < 4:
-        GD.gui.viewports.addView(n/2,n%2)
+    GD.gui.viewports.addView()
 
 def removeViewport():
     """Remove a new viewport."""
