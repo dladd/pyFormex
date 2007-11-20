@@ -17,17 +17,6 @@ import draw
 from gettext import gettext as _
 
 
-def addViewport():
-    """Add a new viewport."""
-    GD.gui.viewports.addView()
-
-def removeViewport():
-    """Remove a new viewport."""
-    n = len(GD.gui.viewports.all)
-    if n > 1:
-        GD.gui.viewports.removeView()
-
-
 def setRenderMode():
     """Change the rendering mode."""
     mode = GD.canvas.rendermode
@@ -67,6 +56,9 @@ def setCanvasSize():
         GD.canvas.resize(int(res['w']),int(res['h']))
 
 
+
+
+
 def viewportSettings():
     """Interactively set the viewport settings."""
     mode = GD.canvas.rendermode
@@ -89,6 +81,45 @@ def viewportSettings():
         if res['Store these settings as defaults']:
             GD.cfg.update(GD.canvas.settings.__dict__,name='canvas')
 
+
+def viewportLayout():
+    """Set the viewport layout."""
+    directions = [ 'rowwise','columnwise' ]
+    if GD.gui.viewports.rowwise:
+        current = directions[0]
+    else:
+        current = directions[1]
+    itemlist = [('Number of viewports',len(GD.gui.viewports.all)),
+                ('Viewport layout direction',current,'select',directions),
+                ('Number of viewports per row/column',GD.gui.viewports.ncols),
+                ]
+    res,accept = widgets.InputDialog(itemlist,'Config Dialog').getResult()
+    if accept:
+        GD.debug(res)
+        nvps = res['Number of viewports']
+        rowwise = res['Viewport layout direction'] == 'rowwise'
+        ncols = res['Number of viewports per row/column']
+        if rowwise:
+            nrows = None
+        else:
+            nrows = ncols
+            ncols = None
+        GD.gui.viewports.changeLayout(nvps,ncols,nrows)
+#        if res['Store these settings as defaults']:
+#            GD.cfg.update()
+
+
+
+def addViewport():
+    """Add a new viewport."""
+    GD.gui.viewports.addView()
+
+def removeViewport():
+    """Remove a new viewport."""
+    n = len(GD.gui.viewports.all)
+    if n > 1:
+        GD.gui.viewports.removeView()
+
 MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
@@ -107,6 +138,7 @@ MenuData = [
           ]),
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),
+        (_('&Change viewport layout'),viewportLayout), 
         (_('&Add new viewport'),addViewport), 
         (_('&Remove last viewport'),removeViewport), 
         ]),

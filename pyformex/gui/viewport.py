@@ -168,26 +168,24 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if GD.options.debug:
             p = self.sizePolicy()
             print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
-        GD.debug("INITIALIZING CAMERA of %s" % self)
         self.initCamera()
         self.glinit()
         self.resizeGL(self.width(),self.height())
         self.setCamera()
 
     def	resizeGL(self,w,h):
-        #GD.debug("resizeGL: %s x %s" % (w,h))
         self.setSize(w,h)
-
-    def getSize(self):
-        return int(self.width()),int(self.height())
 
     def	paintGL(self):
         self.display()
 
 
+    def getSize(self):
+        return int(self.width()),int(self.height())
+
 ####### MOUSE EVENT HANDLERS ############################
 
-    # Mouse functions can be bound to any of the mousse buttons
+    # Mouse functions can be bound to any of the mouse buttons
     # LEFT, MIDDLE or RIGHT.
     # Each mouse function should accept three possible actions:
     # PRESS, MOVE, RELEASE.
@@ -443,14 +441,14 @@ def vpfocus(canv):
 class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
 
-    def __init__(self,ncols=2):
+    def __init__(self):
         QtGui.QGridLayout.__init__(self)
         self.all = []
         self.active = []
         self.current = None
-        self.ncols = ncols
-        #self.addView(0,0)    First viewport is added by gui
-
+        self.ncols = 2
+        self.rowwise = True
+ 
 
     def setDefaults(self,dict):
         """Update the default settings of the canvas class."""
@@ -483,7 +481,10 @@ class MultiCanvas(QtGui.QGridLayout):
     def showWidget(self,w):
         """Show the view w"""
         row,col = divmod(self.all.index(w),self.ncols)
-        self.addWidget(w,row,col)
+        if self.rowwise:
+            self.addWidget(w,row,col)
+        else:
+            self.addWidget(w,col,row)
         w.raise_()
         
 
@@ -509,9 +510,10 @@ class MultiCanvas(QtGui.QGridLayout):
 ##         self.current.setCamera(bbox,view)
             
     def update(self):
-        for v in self.all:
-            v.update()
-        GD.app.processEvents()
+         GD.debug("UPDATING ALL VIEWPORTS")
+         for v in self.all:
+             v.update()
+         GD.app.processEvents()
 
     def removeAll(self):
         for v in self.active:
@@ -532,5 +534,42 @@ class MultiCanvas(QtGui.QGridLayout):
 Viewport %s;  Active:%s;  Current:%s;  Settings:
 %s
 """ % (i,v in self.active, v == self.current, v.settings))
+
+
+    def changeLayout(self, nvps=None,ncols=None, nrows=None):
+        """Lay out the viewports.
+
+        You can specify the number of viewports and the number of columns or
+        rows.
+
+        If a number of viewports is given, viewports will be added
+        or removed to match the number requested.
+        By default they are layed out rowwise over two columns.
+
+        If ncols is an int, viewports are laid out rowwise over ncols
+        columns and nrows is ignored. If ncols is None and nrows is an int,
+        viewports are laid out columnwise over nrows rows.
+        """
+        if type(nvps) == int:
+            while len(self.all) > nvps:
+                self.removeView()
+            while len(self.all) < nvps:
+                self.addView()
+
+        if type(ncols) == int:
+            rowwise = True
+        elif type(nrows) == int:
+            ncols = nrows
+            rowwise = False
+        else:
+            return
+
+        for w in self.all:
+            self.removeWidget(w)
+        self.ncols = ncols
+        self.rowwise = rowwise
+        for w in self.all:
+            self.showWidget(w)
+
                        
 #### End

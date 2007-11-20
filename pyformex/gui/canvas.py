@@ -284,14 +284,6 @@ class Canvas(object):
             GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
             for l in self.lights:
                 l.enable()
-##             for l,i in zip(['light0','light1'],[GL.GL_LIGHT0,GL.GL_LIGHT1]):
-##                 light = GD.cfg.get('render/%s' % l,self.default_light)
-##                 GD.debug("  set up %s %s" % (l,light))
-##                 GL.glLightfv(i,GL.GL_AMBIENT,colors.GREY(light['ambient']))
-##                 GL.glLightfv(i,GL.GL_DIFFUSE,colors.GREY(light['diffuse']))
-##                 GL.glLightfv(i,GL.GL_SPECULAR,colors.GREY(light['specular']))
-##                 GL.glLightfv(i,GL.GL_POSITION,light['position'])
-##                 GL.glEnable(i)
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
             GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
@@ -303,6 +295,7 @@ class Canvas(object):
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
+        GD.debug("UPDATING CURRENT OPENGL CANVAS")
         GL.glFlush()
         
 

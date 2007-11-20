@@ -470,7 +470,7 @@ def runApp(args):
         fontsize =  GD.cfg.get('gui/fontsize',None)
         if fontsize:
             GD.gui.setFontSize(fontsize)
-    GD.gui.viewports.addView()
+    GD.gui.viewports.changeLayout(1)
     GD.board = GD.gui.board
     GD.board.write("""%s  (C) B. Verhegghe
 
