@@ -509,7 +509,7 @@ class MultiCanvas(QtGui.QGridLayout):
 ##     def setCamera(self,bbox,view):
 ##         self.current.setCamera(bbox,view)
             
-    def update(self):
+    def updateGL(self):
          GD.debug("UPDATING ALL VIEWPORTS")
          for v in self.all:
              v.update()
@@ -570,6 +570,20 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
         self.rowwise = rowwise
         for w in self.all:
             self.showWidget(w)
+
+
+    def link(self,vp,to):
+        """Link viewport vp to to"""
+        nvps = len(self.all)
+        if vp < nvps and to < nvps:
+            vp = self.all[vp]
+            to = self.all[to]
+            vp.actors = to.actors
+            vp.bbox = to.bbox
+            vp.setCamera()
+            vp.redrawAll()
+            vp.updateGL()
+            GD.app.processEvents()
 
                        
 #### End

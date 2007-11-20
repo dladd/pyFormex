@@ -970,6 +970,34 @@ def printdetected():
         if v:
             print "%s (%s)" % ( k,v)
 
+#################### viewports ##################################
+
+def layout(nvps=None,ncols=None,nrows=None):
+    """Set the viewports layout."""
+    GD.gui.viewports.changeLayout(nvps,ncols,nrows)
+
+def addViewport():
+    """Add a new viewport."""
+    GD.gui.viewports.addView()
+
+def removeViewport():
+    """Remove a new viewport."""
+    n = len(GD.gui.viewports.all)
+    if n > 1:
+        GD.gui.viewports.removeView()
+
+def linkViewport(vp,tovp):
+    """Link viewport vp to viewport tovp.
+
+    Both vp and tovp should be numbers of viewports. 
+    """
+    GD.gui.viewports.link(vp,tovp)
+
+def viewport(n):
+    """Select the current viewport"""
+    GD.gui.viewports.setCurrent(n)
+
+####################
 
 def updateGUI():
     """Update the GUI."""

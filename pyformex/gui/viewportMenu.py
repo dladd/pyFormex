@@ -108,18 +108,6 @@ def viewportLayout():
 #        if res['Store these settings as defaults']:
 #            GD.cfg.update()
 
-
-
-def addViewport():
-    """Add a new viewport."""
-    GD.gui.viewports.addView()
-
-def removeViewport():
-    """Remove a new viewport."""
-    n = len(GD.gui.viewports.all)
-    if n > 1:
-        GD.gui.viewports.removeView()
-
 MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
@@ -139,8 +127,8 @@ MenuData = [
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),
         (_('&Change viewport layout'),viewportLayout), 
-        (_('&Add new viewport'),addViewport), 
-        (_('&Remove last viewport'),removeViewport), 
+        (_('&Add new viewport'),draw.addViewport), 
+        (_('&Remove last viewport'),draw.removeViewport), 
         ]),
     ]
 
