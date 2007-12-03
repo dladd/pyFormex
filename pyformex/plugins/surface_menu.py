@@ -180,7 +180,9 @@ def fromFormex(suffix=''):
     if suffix:
         newnames = [ n + suffix for n in newnames ]
 
+    t = timer.Timer()
     okformices = dict([ (n,Surface(named(n))) for n in newnames if named(n).nplex() == 3 ])
+    print "Converted in %s seconds" % t.seconds()
     export(okformices)
 
     if not suffix:

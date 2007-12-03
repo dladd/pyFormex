@@ -18,9 +18,10 @@ from plugins import calpy_itf
 calpy_itf.check()
 
 import calpy
-calpy.options.optimize=True
-from fe_util import *
-from beam3d import *
+import calpy.fe_util
+from calpy.fe_util import *
+from calpy.beam3d import *
+exit()
 ############################
 
 ############################################
@@ -140,6 +141,8 @@ for n in end1: # NO +1 HERE!
     loads[:,0] = AssembleVector(loads[:,0],zforce,bcon[n,:])
 
 # Perform analysis
+import calpy
+calpy.options.optimize=True
 print elements
 displ,frc = static(coords,bcon,mats,elements,loads,Echo=True)
 

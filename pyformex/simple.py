@@ -65,6 +65,14 @@ def shape(name):
     return Formex(pattern(Pattern[name]))
 
 
+def point(x=0.,y=0.,z=0.):
+    """Return a Formex which is a point, by default at the origin.
+    
+    Each of the coordinates can be specified and is zero by default.
+    """
+    return Formex([[[x,y,z]]])
+ 
+
 def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     """Return a Formex which is a line between two specified points.
     
@@ -72,7 +80,7 @@ def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     The line is split up in n segments.
     """
     return Formex([[p1,p2]]).divide(n)
-    
+   
 
 def circle(a1=2.,a2=0.,a3=360.):
     """Return a Formex which is a unit circle at the origin in the x-y-plane.

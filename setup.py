@@ -1,10 +1,18 @@
-from distutils.core import setup
+# $Id$
+#
+# setup.py for pyFormex
+#
+
+from distutils.core import setup, Extension
 
 ## import os
 
 ## def post_install():
 ##     """Perform some post install actions."""
 ##     os .system('post-install')
+
+module_drawgl = Extension('drawgl',
+                          sources = ['gui/drawgl.c'])
 
 
 setup(name='pyformex',
@@ -18,6 +26,7 @@ transformations.
       author='Benedict Verhegghe',
       author_email='benedict.verhegghe@ugent.be',
       url='http://pyformex.berlios.de/',
+      ext_modules = [module_drawgl],
       packages=['pyformex','pyformex.gui','pyformex.plugins','pyformex.examples'],
       package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
       scripts=['pyformex/pyformex'],

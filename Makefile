@@ -64,7 +64,6 @@ ${HTMLDIR}/plugins.%.html: plugins/%.py
 
 
 # Create the manual
-
 manual:
 	make -C manual
 

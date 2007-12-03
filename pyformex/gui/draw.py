@@ -555,7 +555,10 @@ def draw(F, view=None,bbox='auto',
 
     if shrink is None:
         shrink = DrawOptions.get('shrink',None)
-        
+ 
+    if marksize is None:
+        marksize = DrawOptions.get('marksize',GD.cfg.get('marksize',0.01))
+       
     # Create the colors
     if color == 'prop':
         if hasattr(F,'p'):
@@ -565,11 +568,6 @@ def draw(F, view=None,bbox='auto',
     elif color == 'random':
         # create random colors
         color = numpy.random.random((F.nelems(),3))
-
-    try:
-        marksize = float(marksize)
-    except:
-        marksize = GD.cfg.get('marksize',0.01)
 
     GD.gui.setBusy()
     if shrink is not None:

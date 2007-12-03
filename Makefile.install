@@ -17,7 +17,7 @@
 # !! be relative to that installation path.
 
 # root of the installation tree
-# !!! THis is the only configurable parameter with the new (>= 0.5)
+# !!! This is the only configurable parameter with the new (>= 0.5)
 # !!! installation procedure using python setup.py
 prefix = /usr/local
 #

@@ -618,9 +618,9 @@ class Formex:
         if atol is None:
             atol = rtol * self.diagonal()
         f = reshape(self.f,(self.nnodes(),3))
-        f,s = f.unique(nodesperbox,0.5,rtol=rtol,atol=atol)
+        f,s = f.fuse(nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:
-            f,t = f.unique(nodesperbox,0.75,rtol=rtol,atol=atol)
+            f,t = f.fuse(nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
         e = reshape(s,self.f.shape[:2])
         return f,e

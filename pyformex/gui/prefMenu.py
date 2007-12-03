@@ -166,6 +166,16 @@ def setAppearance():
     if font:
         setFont(font)
 
+def setOptions():
+    res = draw.askItems([('test',GD.options.test),
+                         ('uselib',GD.options.uselib),
+                         ('fastencode',GD.options.fastencode),
+                         ])
+    if res:
+        GD.options.test = res['test']
+        GD.options.uselib = res['uselib']
+        GD.options.fastencode = res['fastencode']
+                    
 
     
 
@@ -188,6 +198,8 @@ MenuData = [
         (_('&Commands'),setCommands),
         (_('&SysPath'),setSysPath),
         (_('&Help'),setHelp),
+        ('---',None),
+        (_('&Options'),setOptions),
         ('---',None),
         (_('&Save Preferences'),GD.savePreferences),
         (_('Toggle Timeout'),draw.timeout),

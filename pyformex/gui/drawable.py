@@ -104,7 +104,7 @@ def drawLines(x,color=None,color1=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     If a second color is given, make sure that smooth shading is on,
-    or the color redering will be flat accoprding to the second color.
+    or the color redering will be flat with the second color.
     """
     GL.glBegin(GL.GL_LINES)
     for i,xi in enumerate(x):
@@ -241,16 +241,36 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
     for the lighting are calculated and set
     """
+    normal = None
     if mode == 'smooth':
         normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+    if GD.options.uselib:
+        # The library does not include color yet !
+        GD.message("USING THE PYFORMEX COMPILED LIBRARY FOR DRAWING")
+        try:
+            from pyformex.lib import drawgl
+            drawgl.drawTrianglesNormals(x,normal)      
+             return
+        except:
+            GD.message("SOME ERROR OCCURRED WITH THE PYFORMEX LIBRARY")
+            GD.message("WE'LL TRY THE PYTHON INTERFACE NEXT")
+            pass
     GL.glBegin(GL.GL_TRIANGLES)
-    for i in range(x.shape[0]):
-        if color is not None:
-            glColor(color[i],alpha)
+    if GD.options.test:
+        # The following is marginally faster because of the implied loop
         if mode == 'smooth':
-            GL.glNormal3fv(normal[i])
-        for j in range(x.shape[1]):
-            GL.glVertex3fv(x[i][j])
+            print "DRAWTRIANGLES NEW"
+            [ (GL.glNormal3fv(normal[i]), [ GL.glVertex3fv(x[i][j]) for j in range(x.shape[1]) ]) for i in range(x.shape[0]) ]
+        else:
+            [ [ GL.glVertex3fv(x[i][j]) for j in range(x.shape[1]) ] for i in range(x.shape[0]) ]
+    else:
+        for i in range(x.shape[0]):
+            if color is not None:
+                glColor(color[i],alpha)
+            if mode == 'smooth':
+                GL.glNormal3fv(normal[i])
+            for j in range(x.shape[1]):
+                GL.glVertex3fv(x[i][j])
     GL.glEnd()
 
 
@@ -571,9 +591,9 @@ class Drawable(object):
         """Perform the OpenGL drawing functions to display the actor."""
         raise NotImplementedError
 
-    def draw(self,mode):
+    def draw(self,mode,color=None):
         if self.list is None:
-            self.create_list(mode)
+            self.create_list(mode,color)
         GL.glCallList(self.list)
 
     def redraw(self,mode,color=None):

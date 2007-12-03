@@ -26,7 +26,7 @@ import sys,os
 
 calpy_path = None  # never tried to detect
 
-def detect():
+def detect(trypaths=None):
     """Check if we have calpy and if so, add its path to sys.path."""
 
     global calpy_path
@@ -44,7 +44,8 @@ def detect():
             path = os.path.dirname(out)
             GD.debug("I found calpy in %s" % path)
     if not path:
-        trypaths = [ '/usr/local/lib', '/usr/local' ]
+        if trypaths is None:
+            trypaths = [ '/usr/local/lib', '/usr/local' ]
         for p in trypaths:
             path = '%s/calpy-%s' % (p,calpy)
             if os.path.exists(path):
@@ -54,16 +55,17 @@ def detect():
                 GD.debug('path does not exist: %s' % path)
                 path = ''
     if path:
+        path += '/calpy'
         GD.message("I found calpy in '%s'" % path)
         sys.path.append(path)
 
     calpy_path = path
 
 
-def check():
+def check(trypaths=None):
     """Warn the user that calpy was not found."""
     if calpy_path is None:
-        detect()
+        detect(trypaths)
 
     if not utils.hasModule('calpy',check=True):
         GD.warning("Sorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it).")

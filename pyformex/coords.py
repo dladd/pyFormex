@@ -12,6 +12,12 @@
 """Coordinates of points in 3D space"""
 
 from numpy import *
+try:
+    from lib.drawgl import fuse
+    fast_fuse = True
+except:
+    fast_fuse = False
+    
 
 
 # default float and int types
@@ -238,7 +244,7 @@ class Coords(ndarray):
         If no dtype is given that of data are used, or float32 by default.
         """
         if data is None:
-            data = zeros((3,))
+            data = zeros((3,),dtype=Float)
 
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
@@ -936,15 +942,15 @@ class Coords(ndarray):
 
 ##############################################################################
 
-    def unique(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
-        """Finds (almost) identical nodes and returns a compressed set.
+    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
+        """Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them
         with a single point. The return value is a tuple of two arrays:
         - the unique points as a Coords object,
         - an integer (nnod) array holding an index in the unique
         coordinates array for each of the original nodes. This index will
-        have the same shape als the pshape() of the coords array.
+        have the same shape as the pshape() of the coords array.
 
         The procedure works by first dividing the 3D space in a number of
         equally sized boxes, with a mean population of nodesperbox.
@@ -982,41 +988,45 @@ class Coords(ndarray):
         ind = floor((x-ox)/dx).astype(int)
         # Create unique box numbers in smallest direction first
         o = argsort(nx)
-        #print "nx",nx
-        #print "ind",ind.dtype
         val = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
-        #print "val",val.dtype,val.shape
         # sort according to box number
         srt = argsort(val)
         # rearrange the data according to the sort order
         val = val[srt]
         x = x[srt]
         # now compact
-        flag = ones((nnod,))   # 1 = new, 0 = existing node
+        flag = ones((nnod,),dtype=Int)   # 1 = new, 0 = existing node
         sel = arange(nnod)     # replacement unique node nr
-        #print "Start Compacting %s nodes" % nnod
-        #nblk = nnod/100
-        for i in range(nnod):
-            #if i % nblk == 0:
-                #print "Blok %s" % (i/nblk)
-            j = i-1
-            while j>=0 and val[i]==val[j]:
-                if allclose(x[i],x[j],rtol=rtol,atol=atol):
-                    # node i is same as node j
-                    flag[i] = 0
-                    sel[i] = sel[j]
-                    sel[i+1:nnod] -= 1
-                    break
-                j = j-1
-        #print "Finished Compacting"
+        tol = max(abs(rtol*self.sizes()).max(),atol)
+        if fast_fuse:
+            print "Using FAST FUSE"
+            #print x.dtype
+            #print val.dtype
+            #print flag.dtype
+            #print sel.dtype
+            #print "tolerance = %s" % tol
+            #print x
+            #print val
+            #print flag
+            #print sel
+            fuse(x,val,flag,sel,tol)
+            #print flag
+            #print sel
+        else:
+            for i in range(nnod):
+                j = i-1
+                while j>=0 and val[i]==val[j]:
+                    if allclose(x[i],x[j],rtol=0.,atol=tol):
+                        # node i is same as node j
+                        flag[i] = 0
+                        sel[i] = sel[j]
+                        sel[i+1:nnod] -= 1
+                        break
+                    j = j-1
+                    
         x = x[flag>0]          # extract unique nodes
         s = sel[argsort(srt)]  # and indices for old nodes
         return (x,s.reshape(self.shape[:-1]))
-
-
-    # Convenient shorter notations
-    rot = rotate
-    trl = translate
 
 
     @classmethod
@@ -1074,6 +1084,12 @@ class Coords(ndarray):
         return F + outer(div,G-F).reshape((-1,)+F.shape)
 
 
+    # Convenient shorter notations
+    rot = rotate
+    trl = translate
+
+
+
 def bbox(objects):
     """Compute the bounding box of a list of objects.
 
@@ -1081,7 +1097,6 @@ def bbox(objects):
     This is like the bbox() method of the Formex class, but the resulting
     box encloses all the Formices in the list.
     """
-    #print [[f.bbox()] for f in objects ]
     return Coords(concatenate([ [f.bbox()] for f in objects ])).bbox()
 
 
@@ -1169,10 +1184,9 @@ if __name__ == "__main__":
         print Y
         Y.translate([0.,100.,0.])
         print Y
-
         return
+    
 
-if __name__ == "__main__":
     def test():
         """Run some additional examples.
 
@@ -1185,6 +1199,26 @@ if __name__ == "__main__":
         testX(Coords())
         return
 
+
+    def testweave():
+        
+        code = r"""
+float xm,ym,zm;
+xm = ym = zm = 0.;
+int i;
+for(i=0;i<Na[0];i++) {
+xm += A2(i,0)
+ym += A2(i,1)
+zm += A2(i,2)
+}
+xm /= Na[0];
+ym /= Na[0];
+zm /= Na[0];
+
+return val = xm;
+"""
+        
+        
     f = 0
 
     #import doctest, formex
