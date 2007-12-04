@@ -106,6 +106,17 @@ def drawLines(x,color=None,color1=None):
     If a second color is given, make sure that smooth shading is on,
     or the color redering will be flat with the second color.
     """
+    if GD.options.uselib:
+        # The library does not include color yet !
+        GD.message("USING THE PYFORMEX COMPILED LIBRARY FOR DRAWING")
+        try:
+            from pyformex.lib import drawgl
+            drawgl.drawLines(x)      
+            return
+        except:
+            GD.message("SOME ERROR OCCURRED WITH THE PYFORMEX LIBRARY")
+            GD.message("WE'LL TRY THE PYTHON INTERFACE NEXT")
+            pass
     GL.glBegin(GL.GL_LINES)
     for i,xi in enumerate(x):
         if color is not None:
@@ -146,6 +157,7 @@ def drawLineElems(x,elems,color=None):
 
 
 ## PERHAPS THIS COULD BE REPLACED WITH drawLines by reshaping the x ARRAY
+## (MIGHT NEED ADJUSTMENT OF color)
 def drawEdges(x,color=None):
     """Draw a collection of edges.
 
@@ -249,28 +261,20 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
         GD.message("USING THE PYFORMEX COMPILED LIBRARY FOR DRAWING")
         try:
             from pyformex.lib import drawgl
-            drawgl.drawTrianglesNormals(x,normal)      
+            drawgl.drawTriangles(x,normal)      
             return
         except:
             GD.message("SOME ERROR OCCURRED WITH THE PYFORMEX LIBRARY")
             GD.message("WE'LL TRY THE PYTHON INTERFACE NEXT")
             pass
     GL.glBegin(GL.GL_TRIANGLES)
-    if GD.options.test:
-        # The following is marginally faster because of the implied loop
+    for i in range(x.shape[0]):
+        if color is not None:
+            glColor(color[i],alpha)
         if mode == 'smooth':
-            print "DRAWTRIANGLES NEW"
-            [ (GL.glNormal3fv(normal[i]), [ GL.glVertex3fv(x[i][j]) for j in range(x.shape[1]) ]) for i in range(x.shape[0]) ]
-        else:
-            [ [ GL.glVertex3fv(x[i][j]) for j in range(x.shape[1]) ] for i in range(x.shape[0]) ]
-    else:
-        for i in range(x.shape[0]):
-            if color is not None:
-                glColor(color[i],alpha)
-            if mode == 'smooth':
-                GL.glNormal3fv(normal[i])
-            for j in range(x.shape[1]):
-                GL.glVertex3fv(x[i][j])
+            GL.glNormal3fv(normal[i])
+        for j in range(x.shape[1]):
+            GL.glVertex3fv(x[i][j])
     GL.glEnd()
 
 

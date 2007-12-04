@@ -193,13 +193,13 @@ coords_fuse(PyObject *dummy, PyObject *args)
 }
 
 
-/********************************************** drawgl.draw_triangles ****/
-/* Draw triangles */
+/********************************************** drawgl.draw_lines ****/
+/* Draw lines */
 /* args:  x
-     x   : (ntri*3,3) coordinates
+     x   : (nlines*2,3) coordinates
 */  
 static PyObject *
-draw_triangles(PyObject *dummy, PyObject *args)
+draw_lines(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL;
   PyObject *arr1=NULL;
@@ -212,12 +212,11 @@ draw_triangles(PyObject *dummy, PyObject *args)
   
   npy_intp * dims;
   dims = PyArray_DIMS(arr1);
-  int ntri;
-  ntri = dims[0];
-  printf("ntri = %d\n",ntri);
-  glBegin(GL_TRIANGLES);
+  int nlines;
+  nlines = dims[0];
+  glBegin(GL_LINES);
   int i;
-  for (i=0; i<9*ntri; i+=3) {
+  for (i=0; i<2*3*nlines; i+=3) {
     glVertex3fv(x+i);
   }
   glEnd();
@@ -231,13 +230,15 @@ draw_triangles(PyObject *dummy, PyObject *args)
 /*   Py_XDECREF(arr1); */
 /*   return NULL; */
 }
+
+
 /********************************************** drawgl.draw_triangles ****/
 /* Draw triangles */
 /* args:  x
      x   : (npts*3,3) coordinates
 */  
 static PyObject *
-draw_triangles_normals(PyObject *dummy, PyObject *args)
+draw_triangles(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL;
   PyObject *arr1=NULL, *arr2=NULL;
@@ -292,8 +293,8 @@ static PyMethodDef DrawglMethods[] = {
     {"printf", drawgl_printf, METH_VARARGS, "Print a string."},
     {"addar2", drawgl_addar, METH_VARARGS, "Add two arrays."},
     {"fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
+    {"drawLines", draw_lines, METH_VARARGS, "Draw lines."},
     {"drawTriangles", draw_triangles, METH_VARARGS, "Draw triangles."},
-    {"drawTrianglesNormals", draw_triangles_normals, METH_VARARGS, "Draw triangles."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
