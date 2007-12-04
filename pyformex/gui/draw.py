@@ -891,18 +891,6 @@ def wakeup(mode=0):
     wakeupMode = mode
 
 
-## def drawNamed(name,*args):
-##     g = globals()
-##     if g.has_key(name):
-##         F = g[name]
-##         if isinstance(F,formex.Formex):
-##             draw(F,*args)
-
-## def drawSelected(*args):
-##     name = ask("Which Formex shall I draw ?")
-##     drawNamed(name,*args)
-
-
 def exit(all=False):
     """Exit from the current script or from pyformex if no script running."""
     if scriptRunning:

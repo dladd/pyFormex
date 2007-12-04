@@ -38,7 +38,8 @@ def glFill():
 def glLine():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
     GD.canvas.glupdate()
-            
+
+
 class ActorList(list):
 
     def __init__(self,canvas):
@@ -368,7 +369,7 @@ class Canvas(object):
         GL.glPopMatrix()
 ##         # Display angles
 ##         self.camera.getCurrentAngles()
-        # ADDED TO MAKE SURE SCENE IS UPTODATE
+        # make sure canvas is updated
         GL.glFlush()
 
         

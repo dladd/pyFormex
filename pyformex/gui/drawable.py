@@ -250,7 +250,7 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
         try:
             from pyformex.lib import drawgl
             drawgl.drawTrianglesNormals(x,normal)      
-             return
+            return
         except:
             GD.message("SOME ERROR OCCURRED WITH THE PYFORMEX LIBRARY")
             GD.message("WE'LL TRY THE PYTHON INTERFACE NEXT")
@@ -554,7 +554,7 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
 ### Drawable Objects ###############################################
 
 class Drawable(object):
-    """An Drawable is anything that can be drawn on the OpenGL Canvas.
+    """A Drawable is anything that can be drawn on the OpenGL Canvas.
 
     This defines the interface for all drawbale objects, but does not
     implement any drawable objects.
@@ -598,8 +598,7 @@ class Drawable(object):
 
     def redraw(self,mode,color=None):
         self.delete_list()
-        self.create_list(mode,color)
-        GL.glCallList(self.list)
+        self.draw(mode,color)
 
     def use_list(self):
         if self.list:

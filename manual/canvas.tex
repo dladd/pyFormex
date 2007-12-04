@@ -11,7 +11,7 @@ For this purpose the \pyformex GUI offers a canvas where structures can be drawn
 
 The 3D drawing and rendering functionality is based on OpenGL. Therefore you will need to have OpenGL available on your machine, either in hardware or software. Hardware accelerated OpenGL will of course speed up and ease operations.
 
-The drawing canvas of \pyformex actually is not a single canvas, but can be split up into one to four viewports, which can each individually be used for your drawing purposes. See the viewport menu of the GUI for details about using multiple viewports. In the remainder of this section we will treat the canvas as if it was a single viewport.
+The drawing canvas of \pyformex actually is not a single canvas, but can be split up into multiple viewports. They can be used individually for drawing different items, but can also be linked together to show different views of the same scene. The details about using multiple viewports are described in section~\ref{sec:multiple-viewports}. The remainder of this chapter will treat the canvas as if it was a single viewport.
 
 \pyformex distinguishes three types of items that can be drawn on the canvas: actors, marks and decorations. The most important class are the actors: these are 3D geometrical structures defined in the global world coordinates. The 3D scene formed by the actors is viewed by a camera from a certain position, with a certain orientation and lens. The result as viewed by the camera is shown on the canvas. The \pyformex scripting language and the GUI provide ample means to move the camera and change the lens settings, allowing translation, rotation, zooming, changing perspective. All the user needs to do to get an actor displayed with the current camera settings, is to add that actor to the scene. There are different types of actors available, but the most important is the FormexActor: a graphical representation of a Formex. It is so important that there is a special function with lots of options to create a FormexActor and add it to the OpenGL scene.
 This function, \Code{draw()}, will be explained in detail in the next section.
@@ -85,6 +85,48 @@ The easiest way to set all camera parameters for properly viewing a scene is by 
 
 \subsection{Decorations}
   
+
+
+\section{Multiple viewports}
+\label{sec:multiple-viewports}
+
+Drawing in \pyformex is not limited to a single canvas. You can create any number of canvas widgets laid out in an array with given number of rows or columns. The following functions are available for manipulating the viewports.
+
+\begin{funcdesc}{layout}{nvps=None,ncols=None,nrows=None}
+Set the viewports layout.
+        You can specify the number of viewports and the number of columns or
+        rows.
+
+        If a number of viewports is given, viewports will be added
+        or removed to match the number requested.
+        By default they are layed out rowwise over two columns.
+
+        If ncols is an int, viewports are laid out rowwise over ncols
+        columns and nrows is ignored. If ncols is None and nrows is an int,
+        viewports are laid out columnwise over nrows rows.
+\end{funcdesc}
+
+\begin{funcdesc}{addViewport}{}
+Add a new viewport.
+\end{funcdesc}
+
+\begin{funcdesc}{removeViewport}{}
+Remove the last viewport.
+\end{funcdesc}
+
+\begin{funcdesc}{linkViewport}{vp,tovp}
+Link viewport vp to viewport tovp.
+
+Both vp and tovp should be numbers of viewports. The viewport vp will now show the same contents as the viewport tovp.
+
+\end{funcdesc}
+
+\begin{funcdesc}{viewport}{n}
+Select the current viewport. All drawing related functions will henceforth operate on that viewport. 
+
+This action is also implicitly called by clicking with the mouse inside a viewport.
+\end{funcdesc}
+
 
 
 %%% Local Variables: 
