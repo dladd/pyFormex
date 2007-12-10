@@ -20,6 +20,17 @@ from formex import *
 
 import simple
 
+try:
+    import lib.drawgl as LD
+    GD.debug("Succesfully loaded the pyFormex compiled library")
+except ImportError:
+    GD.debug("Error while loading the pyFormex compiled library")
+    GD.debug("Reverting to scripted versions")
+    GD.options.uselib = False
+
+import drawgl as D
+
+
 def rotMatrix(v,n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
 
@@ -106,26 +117,25 @@ def drawLines(x,color=None,color1=None):
     If a second color is given, make sure that smooth shading is on,
     or the color redering will be flat with the second color.
     """
+    #print color
+    #print color1
+    if color1 is not None and color is not None:
+        c = concatenate([color,color1]).reshape((-1,2,3))
+    elif color is not None:
+        c = color.reshape((-1,3))
+    else:
+        c = None
+    #print x.shape
+    #print x.dtype
+    #print x.flags
+    #if c is not None:
+        #print c.shape
+        #print c.dtype
+        #print c.flags
     if GD.options.uselib:
-        # The library does not include color yet !
-        GD.message("USING THE PYFORMEX COMPILED LIBRARY FOR DRAWING")
-        try:
-            from pyformex.lib import drawgl
-            drawgl.drawLines(x)      
-            return
-        except:
-            GD.message("SOME ERROR OCCURRED WITH THE PYFORMEX LIBRARY")
-            GD.message("WE'LL TRY THE PYTHON INTERFACE NEXT")
-            pass
-    GL.glBegin(GL.GL_LINES)
-    for i,xi in enumerate(x):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        GL.glVertex3fv(xi[0])
-        if color1 is not None:
-             GL.glColor3fv(color1[i])
-        GL.glVertex3fv(xi[1])
-    GL.glEnd()
+        LD.drawLines(x,c)
+    else:
+        D.drawLines(x,c)
 
 
 def drawArrayElems(x,elems,mode):
@@ -149,10 +159,7 @@ def drawLineElems(x,elems,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    if GD.options.arrays:
-        drawArrayElems(x,elems,GL.GL_LINES)
-    else:
-        drawLines(x[elems],color)
+    drawLines(x[elems],color)
         
 
 
@@ -253,29 +260,49 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
     for the lighting are calculated and set
     """
-    normal = None
+    n = None
     if mode == 'smooth':
-        normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+        n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     if GD.options.uselib:
-        # The library does not include color yet !
-        GD.message("USING THE PYFORMEX COMPILED LIBRARY FOR DRAWING")
-        try:
-            from pyformex.lib import drawgl
-            drawgl.drawTriangles(x,normal)      
-            return
-        except:
-            GD.message("SOME ERROR OCCURRED WITH THE PYFORMEX LIBRARY")
-            GD.message("WE'LL TRY THE PYTHON INTERFACE NEXT")
-            pass
-    GL.glBegin(GL.GL_TRIANGLES)
-    for i in range(x.shape[0]):
+        LD.drawTriangles(x,n,color,alpha)
+    else:
+        D.drawTriangles(x,n,color)
+##     GL.glBegin(GL.GL_TRIANGLES)
+##     for i in range(x.shape[0]):
+##         if color is not None:
+##             glColor(color[i],alpha)
+##         if mode == 'smooth':
+##             GL.glNormal3fv(normal[i])
+##         for j in range(x.shape[1]):
+##             GL.glVertex3fv(x[i][j])
+##     GL.glEnd()
+
+
+def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
+##     if GD.options.arrays:
+##         drawArrayElems(x,elems,GL.GL_TRIANGLES)
+##     else:
+    drawTriangles(x[elems],mode,color,alpha)
+
+    
+def drawPolygons(x,mode,color=None):
+    """Draw a collection of polygones.
+
+    x is a (npoly,n,3) shaped array of coordinates.
+    Each row contains n triangles drawn with the same color.
+
+    If color is given it is an (npoly,3) array of RGB values.
+
+    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+    for the lighting are calculated and set
+    """
+    for i,xi in enumerate(x):
         if color is not None:
-            glColor(color[i],alpha)
-        if mode == 'smooth':
-            GL.glNormal3fv(normal[i])
-        for j in range(x.shape[1]):
-            GL.glVertex3fv(x[i][j])
-    GL.glEnd()
+            GL.glColor3fv(color[i])
+        GL.glBegin(GL.GL_POLYGON)
+        for xij in xi:
+            GL.glVertex3fv(xij)
+        GL.glEnd()
 
 
 def drawPolygonColor(x,color,alpha=1.0,normals=False):
@@ -302,33 +329,6 @@ def drawPolygonColor(x,color,alpha=1.0,normals=False):
         glColor(color[i][j],alpha)
         GL.glVertex3fv(x[i][j])
     GL.glEnd()
-
-
-def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
-    if GD.options.arrays:
-        drawArrayElems(x,elems,GL.GL_TRIANGLES)
-    else:
-        drawTriangles(x[elems],mode,color,alpha)
-
-    
-def drawPolygons(x,mode,color=None):
-    """Draw a collection of polygones.
-
-    x is a (npoly,n,3) shaped array of coordinates.
-    Each row contains n triangles drawn with the same color.
-
-    If color is given it is an (npoly,3) array of RGB values.
-
-    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set
-    """
-    for i,xi in enumerate(x):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        GL.glBegin(GL.GL_POLYGON)
-        for xij in xi:
-            GL.glVertex3fv(xij)
-        GL.glEnd()
 
     
 def drawQuadrilaterals(x,mode,color=None):
@@ -516,7 +516,7 @@ def saneColor(color=None):
         color = asarray(color).squeeze()
         if color.dtype.kind == 'f' and color.ndim <= 2 and color.shape[-1] == 3:
             # Looks like we have a sane color array
-            return color
+            return color.astype(float32)
     except:
         pass
 

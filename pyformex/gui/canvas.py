@@ -328,6 +328,8 @@ class Canvas(object):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position/orientation or lens.
         """
+        GD.debug("REDISPLAY CURRENT OPENGL CANVAS")
+        self.makeCurrent()
         self.clear()
         # Draw Scene Actors
         # GD.debug("%s / %s" % (len(self.actors),len(self.annotations)))

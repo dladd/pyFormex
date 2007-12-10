@@ -43,6 +43,8 @@ browser = 'firefox'    # web browser
 
 autoglobals = True
 
+options = [ ]
+
 [gui]
 style = "Plastique"
 size=(800,600)

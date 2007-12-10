@@ -540,12 +540,15 @@ See Help->License or the file COPYING for details.
                 m.show_menu()
         except:
             GD.debug('ERROR while loading plugin %s' % p)
+    GD.gui.setBusy(False)
     GD.gui.update()
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):
             draw.play(arg)
 
+    GD.gui.setBusy(False)
+    GD.gui.update()
     if os.path.isdir(GD.cfg['workdir']):
         # Make the workdir the current dir
         os.chdir(GD.cfg['workdir'])
@@ -557,6 +560,7 @@ See Help->License or the file COPYING for details.
 
     # Cleanup
     draw.drawrelease()
+    GD.gui.setBusy(False)
 
     # store the history and main window size/pos
     GD.cfg['history'] = GD.gui.history.files

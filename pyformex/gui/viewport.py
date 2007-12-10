@@ -75,10 +75,7 @@ def setOpenglFormat():
     --alpha : enable the alpha buffer 
     """
     fmt = QtOpenGL.QGLFormat.defaultFormat()
-    if GD.options.dri:
-        fmt.setDirectRendering(True)
-    if GD.options.nodri:
-        fmt.setDirectRendering(False)
+    fmt.setDirectRendering(GD.options.dri)
     if GD.options.alpha:
         fmt.setAlpha(True)
     if GD.options.debug:
@@ -472,6 +469,7 @@ class MultiCanvas(QtGui.QGridLayout):
             GD.canvas = self.current = canv
             toolbar.setTransparency(self.current.alphablend)
             toolbar.setPerspective(self.current.camera.perspective)
+            self.current.display()
             
 
     def currentView(self):

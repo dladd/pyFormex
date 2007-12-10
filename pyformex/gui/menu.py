@@ -62,11 +62,14 @@ def viewportSettings():
     """Interactively set the viewport settings."""
     pass
 
-def toggleDebug(onoff=None):
-    """Toggle debug information on/off"""
-    if onoff is None:
-        onoff = not GD.options.debug
-    GD.options.debug = onoff
+
+def setOptions():
+    options = ['test','debug','uselib','fastencode']
+    items = [ (o,getattr(GD.options,o)) for o in options ]
+    res = draw.askItems(items)
+    if res:
+        for o in options:
+            setattr(GD.options,o,res[o])
 
             
 # The menu actions can be simply function names instead of strings, if the
@@ -92,7 +95,7 @@ MenuData = [
             (_('Formex menu'),formex_menu.show_menu),
             (_('Tools menu'),tools_menu.show_menu),
             ]),
-        (_('&Toggle Debug'),toggleDebug),
+        (_('&Options'),setOptions),
         (_('---3'),None),
         (_('E&xit'),'GD.app.exit'),
         ]),

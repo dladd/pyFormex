@@ -55,6 +55,7 @@ def transLeft():
     GD.canvas.camera.translate(-val,0,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   
 def transRight():
+    print "transright"
     val = float(GD.cfg['gui/panfactor']) * GD.canvas.camera.getDist()
     GD.canvas.camera.translate(+val,0,0,GD.cfg['draw/localaxes'])
     GD.canvas.update()   

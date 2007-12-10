@@ -13,7 +13,7 @@
 
 from numpy import *
 try:
-    from lib.drawgl import fuse
+    from lib.misc import fuse
     fast_fuse = True
 except:
     fast_fuse = False
@@ -999,19 +999,7 @@ class Coords(ndarray):
         sel = arange(nnod)     # replacement unique node nr
         tol = max(abs(rtol*self.sizes()).max(),atol)
         if fast_fuse:
-            print "Using FAST FUSE"
-            #print x.dtype
-            #print val.dtype
-            #print flag.dtype
-            #print sel.dtype
-            #print "tolerance = %s" % tol
-            #print x
-            #print val
-            #print flag
-            #print sel
             fuse(x,val,flag,sel,tol)
-            #print flag
-            #print sel
         else:
             for i in range(nnod):
                 j = i-1

@@ -567,7 +567,7 @@ def draw(F, view=None,bbox='auto',
             color = colors.black
     elif color == 'random':
         # create random colors
-        color = numpy.random.random((F.nelems(),3))
+        color = numpy.random.random((F.nelems(),3),dtype=float32)
 
     GD.gui.setBusy()
     if shrink is not None:

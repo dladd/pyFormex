@@ -81,6 +81,13 @@ def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,ico
 
 ################# Camera action toolbar ###############
 
+nclicked = 0
+def transright():
+    global nclicked
+    nclicked += 1
+    print "CLICKED %d" % nclicked
+    cameraMenu.transRight
+
 def addCameraButtons(toolbar):
     """Add the camera buttons to a toolbar."""
     # The buttons have the following fields:
@@ -96,7 +103,7 @@ def addCameraButtons(toolbar):
                 [ "Twist left", "twistleft", cameraMenu.twistLeft ],
                 [ "Twist right", "twistright", cameraMenu.twistRight ],
                 [ "Translate left", "left", cameraMenu.transLeft ],
-                [ "Translate right", "right", cameraMenu.transRight ],
+                [ "Translate right", "right", transright ],
                 [ "Translate down", "down", cameraMenu.transDown ],
                 [ "Translate up", "up", cameraMenu.transUp ],
                 [ "Zoom Out", "zoomout", cameraMenu.zoomOut ],
@@ -109,10 +116,11 @@ def addCameraButtons(toolbar):
         b =  toolbar.children()[-1] # Get the QToolButton for the last action
         if len(but) < 4 or but[3]:
             b.setAutoRepeat(True)
-            QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("trigger()"))
+            b.setAutoRepeatDelay(5000)
+            QtCore.QObject.connect(b,QtCore.SIGNAL("released()"),a,QtCore.SLOT("trigger()"))
         if len(but) >= 5:
             b.setCheckable(but[4])
-            b.connect(b,QtCore.SIGNAL("clicked()"),QtCore.SLOT("toggle()"))
+            b.connect(b,QtCore.SIGNAL("released()"),QtCore.SLOT("toggle()"))
             
         b.setToolTip(but[0])
 
