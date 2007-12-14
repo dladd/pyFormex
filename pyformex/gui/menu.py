@@ -64,7 +64,7 @@ def viewportSettings():
 
 
 def setOptions():
-    options = ['test','debug','uselib','fastencode']
+    options = ['test','debug','uselib','safelib','fastencode']
     items = [ (o,getattr(GD.options,o)) for o in options ]
     res = draw.askItems(items)
     if res:

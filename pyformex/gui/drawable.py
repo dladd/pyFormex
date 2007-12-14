@@ -117,25 +117,46 @@ def drawLines(x,color=None,color1=None):
     If a second color is given, make sure that smooth shading is on,
     or the color redering will be flat with the second color.
     """
-    #print color
-    #print color1
     if color1 is not None and color is not None:
         c = concatenate([color,color1]).reshape((-1,2,3))
     elif color is not None:
         c = color.reshape((-1,3))
     else:
         c = None
-    #print x.shape
-    #print x.dtype
-    #print x.flags
-    #if c is not None:
-        #print c.shape
-        #print c.dtype
-        #print c.flags
     if GD.options.uselib:
+        if GD.options.safelib:
+            x = x.astype(float32)
+            if c is not None:
+                c = c.astype(float32)
         LD.drawLines(x,c)
     else:
         D.drawLines(x,c)
+
+
+def drawTriangles(x,mode,color=None,alpha=1.0):
+    """Draw a collection of triangles.
+
+    x is a (ntri,3*n,3) shaped array of coordinates.
+    Each row contains n triangles drawn with the same color.
+
+    If color is given it is an (npoly,3) array of RGB values.
+
+    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+    for the lighting are calculated and set
+    """
+    n = None
+    if mode == 'smooth':
+        n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+    if GD.options.uselib:
+        if GD.options.safelib:
+            x = x.astype(float32)
+            if n is not None:
+                n = n.astype(float32)
+            if color is not None:
+                color = color.astype(float32)
+        LD.drawTriangles(x,n,color,alpha)
+    else:
+        D.drawTriangles(x,n,color)
 
 
 def drawArrayElems(x,elems,mode):
@@ -247,35 +268,6 @@ def drawNurbsCurves(x,color=None):
         GLU.gluBeginCurve(nurb)
         GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
         GLU.gluEndCurve(nurb)
-
-
-def drawTriangles(x,mode,color=None,alpha=1.0):
-    """Draw a collection of triangles.
-
-    x is a (ntri,3*n,3) shaped array of coordinates.
-    Each row contains n triangles drawn with the same color.
-
-    If color is given it is an (npoly,3) array of RGB values.
-
-    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set
-    """
-    n = None
-    if mode == 'smooth':
-        n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-    if GD.options.uselib:
-        LD.drawTriangles(x,n,color,alpha)
-    else:
-        D.drawTriangles(x,n,color)
-##     GL.glBegin(GL.GL_TRIANGLES)
-##     for i in range(x.shape[0]):
-##         if color is not None:
-##             glColor(color[i],alpha)
-##         if mode == 'smooth':
-##             GL.glNormal3fv(normal[i])
-##         for j in range(x.shape[1]):
-##             GL.glVertex3fv(x[i][j])
-##     GL.glEnd()
 
 
 def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
