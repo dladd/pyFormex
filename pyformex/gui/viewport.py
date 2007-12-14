@@ -344,7 +344,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("Re-enabling dynarot")
             self.update()
 
-            
+
     def pick_numbers(self,x,y,action):
         """Return the numbers close to the mouse pointer."""
         if action == PRESS:

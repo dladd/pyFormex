@@ -175,7 +175,7 @@ class GUI(QtGui.QMainWindow):
         if GD.cfg.get('gui/timeoutbutton',False):
             toolbar.addTimeoutButton(self.toolbar)
 
-
+    
         # camera buttons
         if GD.cfg.get('gui/camerabuttons',True):
             self.toolbar.addSeparator()

@@ -13,7 +13,6 @@ from formex import Formex
 from plugins.surface import Surface
 from copy import deepcopy
 
-
 class Objects(object):
     """A selection of objects from the globals().
 
@@ -31,7 +30,7 @@ class Objects(object):
         The filter will be applied dynamically on the dict.
 
         If a list of names is given, the current selection will be set to
-        those names (provided they are in the dictionary.
+        those names (provided they are in the dictionary).
         """
         if dict is None:
             self.dic = GD.PF
@@ -238,7 +237,7 @@ class DrawableObjects(Objects):
         """
         self.draw(wait=False)
         draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
- 
+
 
     def undoChanges(self):
         """Undo the last changes of the values."""

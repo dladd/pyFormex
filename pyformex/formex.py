@@ -223,6 +223,7 @@ def intersectionLinesWithPlane(F,p,n):
     P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
     T = (t >= 0)*(t <= 1)
     w = where(T.sum(axis=-1) == 2)
+    print w
     P = P[w]
     T = T[w]
     Q = P[T].reshape(-1,2,3)
