@@ -1,0 +1,31 @@
+/* XPM */
+static char * view_yl_zd_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"22 22 3 1",
+/* colors */
+" 	c None",
+".	c black",
+"X	c white",
+/* pixels */
+"                      ",
+"                      ",
+"               .      ",
+"               ..     ",
+"    ..............    ",
+"    .          ..XX   ",
+"    .          .      ",
+"    .          XXXXX  ",
+"    .          X.  .  ",
+"    .          X.  .  ",
+"    .          X.. .  ",
+"    .          X ...  ",
+"    .          X   .  ",
+"    .          X   .  ",
+"    .          X.  .  ",
+"    .   .....    ..   ",
+"  .....    ..         ",
+"   ...    .X          ",
+"    .   ..            ",
+"        .....         ",
+"                      ",
+"                      "};
