@@ -66,7 +66,7 @@ ALLMODS = SHIFT | CONTROL | ALT
 
 ############### OpenGL Format #################################
 
-def setOpenglFormat():
+def setOpenGLFormat():
     """Set the correct OpenGL format.
 
     The default OpenGL format can be changed by command line options.
@@ -79,10 +79,17 @@ def setOpenglFormat():
     if GD.options.alpha:
         fmt.setAlpha(True)
     if GD.options.debug:
-        printOpenglFormat(fmt)
+        printOpenGLFormat(fmt)
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
+    return fmt
 
-def printOpenglFormat(fmt):
+def getOpenGLContext():
+    ctxt = QtOpenGL.QGLContext.currentContext()
+    if ctxt is not None:
+        printOpenGLContext(ctxt)
+    return ctxt
+
+def printOpenGLFormat(fmt):
     """Print some information about the OpenGL format."""
     print "OpenGL: ",fmt.hasOpenGL()
     print "OpenGL Version: %s" % str(fmt.openGLVersionFlags()) 
@@ -100,6 +107,14 @@ def printOpenglFormat(fmt):
     print "Multisample Buffers: ",fmt.sampleBuffers()
 
 
+def printOpenGLContext(ctxt):
+    if ctxt:
+        print "context is valid: %d" % ctxt.isValid()
+        print "context is sharing: %d" % ctxt.isSharing()
+    else:
+        print "No OpenGL context yet!"
+
+        
 ################# Single Interactive OpenGL Canvas ###############
 
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
@@ -175,7 +190,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def	paintGL(self):
         self.display()
-
 
     def getSize(self):
         return int(self.width()),int(self.height())
@@ -292,7 +306,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         elif action == RELEASE:
             self.update()
             self.camera.saveMatrix()          
-
        
 
     def pick_actors(self,x,y,action):
@@ -326,7 +339,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                w,h = GD.cfg.get('pick/size',(20,20))
             GD.debug((x,y,w,h))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
-            print "VIEWPORT %s" % vp
+            #print "VIEWPORT %s" % vp
             self.camera.loadProjection(pick=[x,y,w,h,vp])
             self.camera.loadMatrix()
             for i,actor in enumerate(self.actors):
@@ -402,7 +415,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.mod = e.modifiers() & ALLMODS
         func = self.getMouseFunc()
         if func:
-            func(self.statex,self.y,PRESS)
+            func(self.statex,self.statey,PRESS)
         
     def mouseMoveEvent(self,e):
         """Process a mouse move event."""
@@ -438,29 +451,47 @@ def vpfocus(canv):
 class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
 
-    def __init__(self):
+    def __init__(self,parent=None):
+        """Initialize the multicanvas.
+
+        A context should be given to make sure the viewports
+        share the same context.
+        """
         QtGui.QGridLayout.__init__(self)
         self.all = []
         self.active = []
         self.current = None
         self.ncols = 2
         self.rowwise = True
- 
+        self.parent = parent
+        # With QtOPenGL, the context should refer to the QGLWidget,
+        # therefore we can not use one single context
+        #self.context = context
 
+        
     def setDefaults(self,dict):
         """Update the default settings of the canvas class."""
         GD.debug("Setting canvas defaults:\n%s" % dict)
         canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(dict))
 
-    def newView(self):
+    def newView(self,shared=None):
         "Create a new viewport"
-        canv = QtCanvas()
+        canv = QtCanvas(self.parent,shared)
+        #printOpenGLContext(canv.context())
+        return(canv)
+        
+
+    def addView(self):
+        """Add a new viewport to the widget"""
+        canv = self.newView()
         #QtCore.QObject.connect(canv,QtCore.SIGNAL("VPFocus"),vpfocus)
         self.all.append(canv)
         self.active.append(canv)
+        self.showWidget(canv)
+        canv.initializeGL()   # Initialize OpenGL context and camera
         # DO NOT USE self.setCurrent(canv) HERE, because no camera yet
         GD.canvas = self.current = canv
-        return(canv)
+
 
     def setCurrent(self,canv):
         if type(canv) == int and canv in range(len(self.all)):
@@ -484,13 +515,6 @@ class MultiCanvas(QtGui.QGridLayout):
         else:
             self.addWidget(w,col,row)
         w.raise_()
-        
-
-    def addView(self):
-        """Add a new viewport to the widget"""
-        w = self.newView()
-        self.showWidget(w)
-        w.initializeGL()   # Initialize OpenGL context and camera
 
 
     def removeView(self):
@@ -507,7 +531,7 @@ class MultiCanvas(QtGui.QGridLayout):
 ##     def setCamera(self,bbox,view):
 ##         self.current.setCamera(bbox,view)
             
-    def updateGL(self):
+    def updateAll(self):
          GD.debug("UPDATING ALL VIEWPORTS")
          for v in self.all:
              v.update()
@@ -574,13 +598,20 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
         """Link viewport vp to to"""
         nvps = len(self.all)
         if vp < nvps and to < nvps:
-            vp = self.all[vp]
             to = self.all[to]
+            oldvp = self.all[vp]
+            newvp = self.newView(to)
+            self.all[vp] = newvp
+            self.removeWidget(oldvp)
+            oldvp.close()
+            self.showWidget(newvp)
+            vp = newvp
             vp.actors = to.actors
             vp.bbox = to.bbox
+            vp.show()
             vp.setCamera()
             vp.redrawAll()
-            vp.updateGL()
+            #vp.updateGL()
             GD.app.processEvents()
 
                        

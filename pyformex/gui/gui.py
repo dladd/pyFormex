@@ -143,25 +143,25 @@ class GUI(QtGui.QMainWindow):
         #s.moveSplitter(300,0)
         #s.moveSplitter(300,1)
         #s.setLineWidth(0)
+
+        # self.central is the complete central widget of the main window
+        self.central = QtGui.QWidget()
+        #self.central.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
+        self.central.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
+        self.central.resize(*GD.cfg['gui/size'])
         
         # Create an OpenGL canvas with a nice frame around it
-        viewport.setOpenglFormat()
         self.viewports = viewport.MultiCanvas()
         # and update the default settings
         self.viewports.setDefaults(GD.cfg['canvas'])
 
-        # self.canvas is the complete central widget of the main window
-        self.canvas = QtGui.QWidget()
-        #self.canvas.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
-        self.canvas.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
-        self.canvas.resize(*GD.cfg['gui/size'])
-        self.canvas.setLayout(self.viewports)
+        self.central.setLayout(self.viewports)
 
         # Create the message board
         self.board = Board()
         #self.board.setPlainText(GD.Version+' started')
         # Put everything together
-        self.splitter.addWidget(self.canvas)
+        self.splitter.addWidget(self.central)
         self.splitter.addWidget(self.board)
         #self.splitter.setSizes([(800,200),(800,600)])
         self.box.setLayout(self.boxlayout)
@@ -257,7 +257,7 @@ class GUI(QtGui.QMainWindow):
             sys.stdout = self.board
         if GD.options.debug:
             printsize(self,'DEBUG: Main:')
-            printsize(self.canvas,'DEBUG: Canvas:')
+            printsize(self.central,'DEBUG: Canvas:')
             printsize(self.board,'DEBUG: Board:')
 
 
@@ -294,7 +294,7 @@ class GUI(QtGui.QMainWindow):
     
     def resizeCanvas(self,wd,ht):
         """Resize the canvas."""
-        self.canvas.resize(wd,ht)
+        self.central.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
         self.adjustSize()
     
