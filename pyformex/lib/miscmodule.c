@@ -127,40 +127,44 @@ coords_fuse(PyObject *dummy, PyObject *args)
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
   float *x;
   int *flag;
-  long *val,*sel;
+  int *val,*sel;
   float tol;
   if (!PyArg_ParseTuple(args, "OOOOf", &arg1, &arg2, &arg3, &arg4, &tol)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
-  arr2 = PyArray_FROM_OTF(arg2, NPY_LONGLONG, NPY_IN_ARRAY);
+  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
   if (arr2 == NULL) goto fail;
   arr3 = PyArray_FROM_OTF(arg3, NPY_INT, NPY_INOUT_ARRAY);
   if (arr3 == NULL) goto fail;
-  arr4 = PyArray_FROM_OTF(arg4, NPY_LONGLONG, NPY_INOUT_ARRAY);
+  arr4 = PyArray_FROM_OTF(arg4, NPY_INT, NPY_INOUT_ARRAY);
   if (arr4 == NULL) goto fail;
   /* We suppose the dimensions are correct*/
   npy_intp * dims;
   dims = PyArray_DIMS(arg1);
-  int nnod,i;
+  int nnod;
   nnod = dims[0];
   x = (float *)PyArray_DATA(arr1);
-  val = (long *)PyArray_DATA(arr2);
+  val = (int *)PyArray_DATA(arr2);
   flag = (int *)PyArray_DATA(arr3);
-  sel = (long *)PyArray_DATA(arr4);
-  int j,ki,kj;
+  sel = (int *)PyArray_DATA(arr4);
+  int i,j,ki,kj;
+/*   printf("Fast Fuse Data:\n"); */
+/*   for (i=0; i<nnod; i++) { */
+/*     ki = 3*i; */
+/*     printf(" node %d: %12.8f, %12.8f, %12.8f; %lld; %d; %lld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]); */
+/*   } */
   for (i=0; i<nnod; i++) {
     ki = 3*i;
-    printf(" node %d: %12.8f, %12.8f, %12.8f; %ld; %d; %ld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]);
+/*     printf(" node %d: %12.8f, %12.8f, %12.8f; %lld; %d; %lld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]); */
   
     j = i-1;
     while (j >= 0 && val[i]==val[j]) {
-      printf("Compare %d and %d\n",i,j);
-      ki = 3*i;
+/*       printf("Compare %d and %d\n",i,j); */
       kj = 3*j;
       if ( fabs(x[ki]-x[kj]) < tol && \
 	   fabs(x[ki+1]-x[kj+1]) < tol && \
 	   fabs(x[ki+2]-x[kj+2]) < tol ) {
-	printf("Nodes %d and %d are close\n",i,j);	\
+/* 	printf("Nodes %d and %d are close\n",i,j);	\ */
 	flag[i] = 0;
 	sel[i] = sel[j];
 	j = i+1;
@@ -171,10 +175,10 @@ coords_fuse(PyObject *dummy, PyObject *args)
     }
   }
   /* Clean up and return */
-  for (i=0; i<nnod; i++) {
-    ki = 3*i;
-    printf(" node %d: %12.8f, %12.8f, %12.8f; %ld; %d; %ld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]);
-  }
+/*   for (i=0; i<nnod; i++) { */
+/*     ki = 3*i; */
+/*     printf(" node %d: %12.8f, %12.8f, %12.8f; %ld; %d; %ld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]); */
+/*   } */
   //printf("Cleaning up\n");
   Py_DECREF(arr1);
   Py_DECREF(arr2);

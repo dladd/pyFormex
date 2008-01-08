@@ -983,12 +983,12 @@ class Coords(ndarray):
         vol = esz.prod()
         nboxes = nnod / nodesperbox # ideal total number of boxes
         boxsz = (vol/nboxes) ** (1./esz.shape[0])
-        nx = (sz/boxsz).astype(int)
+        nx = (sz/boxsz).astype(int32)
         dx = where(nx>0,sz/nx,boxsz)
         nx = array(nx) + 1
         ox = lo - dx*shift # origin :  0 < shift < 1
         # Create box coordinates for all nodes
-        ind = floor((x-ox)/dx).astype(int)
+        ind = floor((x-ox)/dx).astype(int32)
         # Create unique box numbers in smallest direction first
         o = argsort(nx)
         val = ( ind[:,o[2]] * nx[o[2]] + ind[:,o[1]] ) * nx[o[1]] + ind[:,o[0]]
@@ -998,8 +998,12 @@ class Coords(ndarray):
         val = val[srt]
         x = x[srt]
         # now compact
-        flag = ones((nnod,),dtype=Int)   # 1 = new, 0 = existing node
-        sel = arange(nnod)     # replacement unique node nr
+        # make sure we use int32 (for the fast fuse function)
+        # Using int32 limits this procedure to 10**9 points, which is more
+        # than enough for all practical purposes
+        val = val.astype(int32)
+        flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
+        sel = arange(nnod).astype(int32)   # replacement unique node nr
         tol = max(abs(rtol*self.sizes()).max(),atol)
         if have_fast_fuse and GD.options.fastfuse:
             fuse(x,val,flag,sel,tol)
