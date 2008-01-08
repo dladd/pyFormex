@@ -12,12 +12,14 @@
 """Coordinates of points in 3D space"""
 
 from numpy import *
+
+import globaldata as GD
+
 try:
     from lib.misc import fuse
-    fast_fuse = True
+    have_fast_fuse = True
 except:
-    fast_fuse = False
-    
+    have_fast_fuse = False
 
 
 # default float and int types
@@ -230,6 +232,7 @@ class Coords(ndarray):
     !! It is the responsibility of the user to keep consistency. 
     Each set of 3 values along the last axis represents a single point in 3D.
     """
+
 
     # !! DO WE NEED AN EMPTY Coords  OBJECT?
     # I guess not, so we made the default constructor generate a single
@@ -998,13 +1001,13 @@ class Coords(ndarray):
         flag = ones((nnod,),dtype=Int)   # 1 = new, 0 = existing node
         sel = arange(nnod)     # replacement unique node nr
         tol = max(abs(rtol*self.sizes()).max(),atol)
-        if fast_fuse:
+        if have_fast_fuse and GD.options.fastfuse:
             fuse(x,val,flag,sel,tol)
         else:
             for i in range(nnod):
                 j = i-1
                 while j>=0 and val[i]==val[j]:
-                    if allclose(x[i],x[j],rtol=0.,atol=tol):
+                    if allclose(x[i],x[j],rtol=rtol,atol=atol):
                         # node i is same as node j
                         flag[i] = 0
                         sel[i] = sel[j]

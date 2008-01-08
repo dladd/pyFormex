@@ -150,11 +150,11 @@ coords_fuse(PyObject *dummy, PyObject *args)
   int j,ki,kj;
   for (i=0; i<nnod; i++) {
     ki = 3*i;
-    //printf(" node %d: %12.8f, %12.8f, %12.8f; %ld; %d; %ld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]);
+    printf(" node %d: %12.8f, %12.8f, %12.8f; %ld; %d; %ld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]);
   
     j = i-1;
     while (j >= 0 && val[i]==val[j]) {
-      //printf("Compare %d and %d\n",i,j);
+      printf("Compare %d and %d\n",i,j);
       ki = 3*i;
       kj = 3*j;
       if ( fabs(x[ki]-x[kj]) < tol && \
