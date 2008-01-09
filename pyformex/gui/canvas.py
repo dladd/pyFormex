@@ -22,7 +22,24 @@ import actors
 import decors
 import marks
 import utils
- 
+
+def glLight(onoff):
+    """Toggle lights on/off."""
+    if onoff:
+        GL.glEnable(GL.GL_LIGHTING)
+        GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+        for l in GD.canvas.lights:
+            l.enable()
+        GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
+        GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
+        GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
+        GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
+        GL.glEnable(GL.GL_COLOR_MATERIAL)
+    else:
+        GL.glDisable(GL.GL_LIGHTING)
+
 def glFlat():
     """Disable smooth shading"""
     GL.glShadeModel(GL.GL_FLAT)
@@ -178,6 +195,8 @@ class Canvas(object):
         self.setBbox()
         self.settings = CanvasSettings()
         self.rendermode = 'wireframe'
+        self.polygonfill = False
+        self.lighting = False
         self.alphablend = False
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
@@ -277,26 +296,19 @@ class Canvas(object):
             GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
                
         elif self.rendermode.startswith('smooth'):
-            GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
-            GL.glEnable(GL.GL_LIGHTING)
-            GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
-            GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
-            GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-            for l in self.lights:
-                l.enable()
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
-            GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
-            GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
-            GL.glEnable(GL.GL_COLOR_MATERIAL)
+            glSmooth()
+            glFill()
+            glLight(True)
+##             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
+##             GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
+##             GL.glEnable(GL.GL_LIGHTING)
         else:
             raise RuntimeError,"Unknown rendering mode"
 
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
-        GD.debug("UPDATING CURRENT OPENGL CANVAS")
+        #GD.debug("UPDATING CURRENT OPENGL CANVAS")
         GL.glFlush()
         
 

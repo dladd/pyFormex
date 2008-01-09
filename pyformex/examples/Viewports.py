@@ -46,4 +46,18 @@ draw(G) # this draws in the 4 viewports !
 GD.gui.viewports.updateAll()
 
 
+sleep(nsl)
+smooth()
+GD.gui.viewports.updateAll()
+
+
+from gui import canvas
+sleep(nsl)
+canvas.glLine()
+canvas.glFlat()
+GD.gui.viewports.updateAll()
+
+
+
+
 #End

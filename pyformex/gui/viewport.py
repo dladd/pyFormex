@@ -57,11 +57,11 @@ MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
 
 # modifiers
-NONE = QtCore.Qt.NoModifier
-SHIFT = QtCore.Qt.ShiftModifier
-CONTROL = QtCore.Qt.ControlModifier
-ALT = QtCore.Qt.AltModifier
-ALLMODS = SHIFT | CONTROL | ALT
+NONE = int(QtCore.Qt.NoModifier)
+SHIFT = int(QtCore.Qt.ShiftModifier)
+CTRL = int(QtCore.Qt.ControlModifier)
+ALT = int(QtCore.Qt.AltModifier)
+ALLMODS = SHIFT | CTRL | ALT
 
 
 ############### OpenGL Format #################################
@@ -136,75 +136,61 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         canvas.Canvas.__init__(self)
         self.button = None
-        self.mousefunc = {}
-        self.mouseshiftfunc = {}
+        self.mod = NONE
+        self.mousefnc = { NONE: {} }
         self.setMouse(LEFT,self.dynarot) 
         self.setMouse(MIDDLE,self.dynapan) 
         self.setMouse(RIGHT,self.dynazoom)
-        self.mouseshiftfunc.update(self.mousefunc) # initially the same
-        self.mod = NONE
+        self.mousefnc[SHIFT] = self.mousefnc[NONE]   # initially the same
+        self.mousefnc[CTRL] = self.mousefnc[ALT] = {} # initially empty
+        #print self.mousefnc
         
 
-    def setMouse(self,button,func,mod=None):
-        if mod == SHIFT:
-            self.mouseshiftfunc[button] = func
-        else:
-            self.mousefunc[button] = func
+    def setMouse(self,button,func,mod=NONE):
+        self.mousefnc[mod][button] = func
+
+
+    def waitSelection(self):
+        """Wait for the user to make a selection, then return it."""
+        self.selection =[]
+        timer = QtCore.QThread
+        #
+        # THIS SHOULD BE CHANGED TO A MOUSE RELEASE EVENT !!!
+        #
+        while len(self.selection) == 0:
+            timer.usleep(200)
+            GD.app.processEvents()
+        return self.selection
 
 
     def pick(self):
         """Go into picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_actors)  
-        self.selection =[]
-        timer = QtCore.QThread
-        while len(self.selection) == 0:
-            timer.usleep(200)
-            GD.app.processEvents()
-        return GD.canvas.selection
-
+        return self.waitSelection()
+    
 
     def pickNumbers(self):
         """Go into number picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_numbers)
-        self.selection =[]
-        timer = QtCore.QThread
-        while len(self.selection) == 0:
-            timer.usleep(200)
-            GD.app.processEvents()
-        return GD.canvas.selection
+        return self.waitSelection()
 
     
     def pickPoints(self):
-        """Go into line picking mode and return the selection."""
+        """Go into point picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_points)
-        self.selection =[]
-        timer = QtCore.QThread
-        while len(self.selection) == 0:
-            timer.usleep(200)
-            GD.app.processEvents()
-        return GD.canvas.selection
+        return self.waitSelection()
 
     
     def pickLines(self):
         """Go into line picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_lines)
-        self.selection =[]
-        timer = QtCore.QThread
-        while len(self.selection) == 0:
-            timer.usleep(200)
-            GD.app.processEvents()
-        return GD.canvas.selection
+        return self.waitSelection()
     
 
     def pickElements(self):
         """Go into element picking mode and return the selection."""
         self.setMouse(LEFT,self.pick_elements)
-        self.selection =[]
-        timer = QtCore.QThread
-        while len(self.selection) == 0:
-            timer.usleep(200)
-            GD.app.processEvents()
-        return GD.canvas.selection
+        return self.waitSelection()
 
     ##### QtOpenGL interface #####
         
@@ -384,7 +370,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             for r in buf:
                 GD.debug(r)
                 for i in r[2]:
-                    self.selection.append(self.actors[i])
+                    GD.debug("item %s is of type %s" % (i,type(i)))
+                    self.selection.append(self.actors[int(i)])
             self.setMouse(LEFT,self.dynarot)
             GD.debug("Re-enabling dynarot")
             self.update()
@@ -546,10 +533,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return ( e.modifiers() & mod ) == mod
 
     def getMouseFunc(self):
-        if self.mod == SHIFT:
-            return self.mouseshiftfunc.get(self.button,None)
-        else:
-            return self.mousefunc.get(self.button,None)
+        """Return the mouse function bound to self.button and self.mod"""
+        #print self.mousefnc
+        #print self.button
+        #print int(self.mod)
+        #print self.mousefnc.get(int(self.mod),{})
+        #print self.mousefnc.get(int(self.mod),{}).get(self.button,None)
+        return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""

@@ -575,9 +575,13 @@ class SurfaceActor(Actor,Surface):
 
     def drawGL(self,mode,color=None,alpha=None):
         """Draw the surface."""
+
         if mode.endswith('wire'):
             self.drawGL(mode[:-4],color=color)
+            print "NOW DRAWING THE EDGES"
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
             self.drawGL('wireframe',color=asarray(black))
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
             return
 
         if alpha is None:
@@ -610,17 +614,17 @@ class SurfaceActor(Actor,Surface):
             GL.glLineWidth(self.linewidth)
 
         t = timer.Timer()
-        if mode=='wireframe' :
-            #print color.shape
-            #print self.edges.shape
-            #print self.faces.shape
-            rev = reverseIndex(self.faces)
-            if color is not None:
-                color = color[rev[:,-1]]
-            drawLineElems(self.coords,self.edges,color)
-        else:
-            self.refresh()
-            drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+##         if mode=='wireframe' :
+##             #print color.shape
+##             #print self.edges.shape
+##             #print self.faces.shape
+##             rev = reverseIndex(self.faces)
+##             if color is not None:
+##                 color = color[rev[:,-1]]
+##             drawLineElems(self.coords,self.edges,color)
+##         else:
+        self.refresh()
+        drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
 
 
