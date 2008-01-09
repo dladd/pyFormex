@@ -254,17 +254,17 @@ def drawNurbsCurves(x,color=None):
     If color is given it is an (nlines,3) array of RGB values.
     """
     nurb = GLU.gluNewNurbsRenderer()
-    nkots = 7
-    knots = arange(nkots+1) / float(nkots)
-    knots = array([0.,0.,0.,0.,1.,1.,1.,1.])
-    
+##    nkots = 7
+##    knots = arange(nkots+1) / float(nkots)
+    if x.shape[1] == 4:
+        knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
+    if x.shape[1] == 3:
+        knots = array([0.,0.,0.,1.0,1.0,1.0])
     if not nurb:
         return
     for i,xi in enumerate(x):
         if color is not None:
             GL.glColor3fv(color[i])
-        print knots
-        print xi
         GLU.gluBeginCurve(nurb)
         GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
         GLU.gluEndCurve(nurb)

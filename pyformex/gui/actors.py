@@ -469,6 +469,9 @@ class FormexActor(Actor,Formex):
         elif nnod == 3 and self.eltype == 'curve':
             drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
             
+        elif (nnod == 3 or nnod == 4) and self.eltype == 'nurbs':
+            drawNurbsCurves(self.f,color)
+            
         elif mode=='wireframe' :
             if self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
