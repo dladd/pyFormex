@@ -15,6 +15,7 @@ functions in the compiled library.
 """
 
 from OpenGL import GL,GLU
+from numpy import *
 
 def glColor(color,alpha=1.0):
     """Set the OpenGL color, possibly with transparency.
@@ -94,8 +95,83 @@ def drawTriangles(x,n=None,c=None):
         else:
             for xi,ni,ci in zip(x.reshape((-1,3)),n.reshape((-1,3)),c.reshape((-1,3))):
                 GL.glColor3fv(ci[0])
-                GL.glNormal3fv(ni[0])
-                GL.glVertex3fv(xi[0])
-    GL.glEnd()
 
+
+def pickPoints(x):
+    """Pick from a collection of points.
+    """
+    GL.glSelectBuffer(16+3*x.shape[0])
+    GL.glRenderMode(GL.GL_SELECT)
+    GL.glInitNames() # init the name stack
+    for i,xi in enumerate(x): 
+        GL.glPushName(i)
+        GL.glBegin(GL.GL_POINTS)
+        for xij in xi:
+            GL.glVertex3fv(xij)
+        GL.glEnd()
+        GL.glPopName()
+    buf = asarray(GL.glRenderMode(GL.GL_RENDER))
+    numbers = []
+    if len(buf) != 0:
+        r0 = asarray([r[0] for r in buf])
+        w = where(r0 == r0.min())[0]
+        buf = buf[w]
+        for r in buf:
+            numbers += map(int,r[2])
+    else:
+        print "NO POINTS SELECTED"
+    return numbers
+
+
+def pickLines(x):
+    """Pick from a collection of lines.
+    """
+    GL.glSelectBuffer(16+3*x.shape[0])
+    GL.glRenderMode(GL.GL_SELECT)
+    GL.glInitNames() # init the name stack
+    for i,xi in enumerate(x): 
+        GL.glPushName(i)
+        GL.glBegin(GL.GL_LINES)
+        for xij in xi:
+            GL.glVertex3fv(xij)
+        GL.glEnd()
+        GL.glPopName()
+    buf = asarray(GL.glRenderMode(GL.GL_RENDER))
+    numbers = []
+    if len(buf) != 0:
+        r0 = asarray([r[0] for r in buf])
+        w = where(r0 == r0.min())[0]
+        buf = buf[w]
+        for r in buf:
+            numbers += map(int,r[2])
+    else:
+        print "NO LINES SELECTED"
+    return numbers
+
+
+def pickElements(x):
+    """Pick from a collection of elements.
+    """
+    GL.glSelectBuffer(16+3*x.shape[0])
+    GL.glRenderMode(GL.GL_SELECT)
+    GL.glInitNames() # init the name stack
+    for i,xi in enumerate(x): 
+        GL.glPushName(i)
+        GL.glBegin(GL.GL_POLYGON)
+        for xij in xi:
+            GL.glVertex3fv(xij)
+        GL.glEnd()
+        GL.glPopName()
+    buf = asarray(GL.glRenderMode(GL.GL_RENDER))
+    numbers = []
+    if len(buf) != 0:
+        r0 = asarray([r[0] for r in buf])
+        w = where(r0 == r0.min())[0]
+        buf = buf[w]
+        for r in buf:
+            numbers += map(int,r[2])
+    else:
+        print "NO ELEMENTS SELECTED"
+    return numbers
+    
 ### End

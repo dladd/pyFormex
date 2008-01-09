@@ -165,7 +165,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def pickNumbers(self):
         """Go into number picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_numbers)  
+        self.setMouse(LEFT,self.pick_numbers)
         self.selection =[]
         timer = QtCore.QThread
         while len(self.selection) == 0:
@@ -173,6 +173,38 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.app.processEvents()
         return GD.canvas.selection
 
+    
+    def pickPoints(self):
+        """Go into line picking mode and return the selection."""
+        self.setMouse(LEFT,self.pick_points)
+        self.selection =[]
+        timer = QtCore.QThread
+        while len(self.selection) == 0:
+            timer.usleep(200)
+            GD.app.processEvents()
+        return GD.canvas.selection
+
+    
+    def pickLines(self):
+        """Go into line picking mode and return the selection."""
+        self.setMouse(LEFT,self.pick_lines)
+        self.selection =[]
+        timer = QtCore.QThread
+        while len(self.selection) == 0:
+            timer.usleep(200)
+            GD.app.processEvents()
+        return GD.canvas.selection
+    
+
+    def pickElements(self):
+        """Go into element picking mode and return the selection."""
+        self.setMouse(LEFT,self.pick_elements)
+        self.selection =[]
+        timer = QtCore.QThread
+        while len(self.selection) == 0:
+            timer.usleep(200)
+            GD.app.processEvents()
+        return GD.canvas.selection
 
     ##### QtOpenGL interface #####
         
@@ -305,8 +337,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             self.update()
-            self.camera.saveMatrix()          
-       
+            self.camera.saveMatrix()
+
 
     def pick_actors(self,x,y,action):
         """Return the actors close to the mouse pointer."""
@@ -378,7 +410,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 self.removeDecoration(self.cursor)
             self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
             self.update()
-
             
             GD.debug((x,y))
             GD.debug((self.statex,self.statey))
@@ -392,6 +423,120 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.camera.loadMatrix()
             if self.numbers:
                 self.selection = self.numbers.drawpick()
+            self.setMouse(LEFT,self.dynarot)
+            GD.debug("Re-enabling dynarot")
+            self.update()
+
+    
+    def pick_points(self,x,y,action):
+        """Return the lines close to the mouse pointer."""
+        if action == PRESS:
+            GD.debug("Start picking mode")
+            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.draw_cursor(self.statex,self.statey)
+            self.selection = []
+            self.update()
+            
+        elif action == MOVE:
+            GD.debug("Move picking window")
+            self.draw_rectangle(x,y)
+            self.update()
+            
+        elif action == RELEASE:
+            GD.debug("End picking mode")
+            if self.cursor:
+                self.removeDecoration(self.cursor)
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            self.update()
+            
+            GD.debug((x,y))
+            GD.debug((self.statex,self.statey))
+            x,y = (x+self.statex)/2., (y+self.statey)/2.
+            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
+            if w <= 0 or h <= 0:
+               w,h = GD.cfg.get('pick/size',(20,20))
+            
+            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
+            self.camera.loadProjection(pick=(x,y,w,h,vp))
+            self.camera.loadMatrix()
+            self.selection = self.actors[0].drawpick('points')
+            self.setMouse(LEFT,self.dynarot)
+            GD.debug("Re-enabling dynarot")
+            self.update()
+
+    
+    def pick_lines(self,x,y,action):
+        """Return the lines close to the mouse pointer."""
+        if action == PRESS:
+            GD.debug("Start picking mode")
+            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.draw_cursor(self.statex,self.statey)
+            self.selection = []
+            self.update()
+            
+        elif action == MOVE:
+            GD.debug("Move picking window")
+            self.draw_rectangle(x,y)
+            self.update()
+            
+        elif action == RELEASE:
+            GD.debug("End picking mode")
+            if self.cursor:
+                self.removeDecoration(self.cursor)
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            self.update()
+            
+            GD.debug((x,y))
+            GD.debug((self.statex,self.statey))
+            x,y = (x+self.statex)/2., (y+self.statey)/2.
+            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
+            if w <= 0 or h <= 0:
+               w,h = GD.cfg.get('pick/size',(20,20))
+            
+            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
+            self.camera.loadProjection(pick=(x,y,w,h,vp))
+            self.camera.loadMatrix()
+            self.selection = self.actors[0].drawpick('lines')
+            self.setMouse(LEFT,self.dynarot)
+            GD.debug("Re-enabling dynarot")
+            self.update()
+    
+
+    def pick_elements(self,x,y,action):
+        """Return the elements close to the mouse pointer."""
+        if action == PRESS:
+            GD.debug("Start picking mode")
+            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.draw_cursor(self.statex,self.statey)
+            self.selection = []
+            self.update()
+            
+        elif action == MOVE:
+            GD.debug("Move picking window")
+            self.draw_rectangle(x,y)
+            self.update()
+            
+        elif action == RELEASE:
+            GD.debug("End picking mode")
+            if self.cursor:
+                self.removeDecoration(self.cursor)
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            self.update()
+            
+            GD.debug((x,y))
+            GD.debug((self.statex,self.statey))
+            x,y = (x+self.statex)/2., (y+self.statey)/2.
+            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
+            if w <= 0 or h <= 0:
+               w,h = GD.cfg.get('pick/size',(20,20))
+            
+            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
+            self.camera.loadProjection(pick=(x,y,w,h,vp))
+            self.camera.loadMatrix()
+            self.selection = self.actors[0].drawpick('elements')
             self.setMouse(LEFT,self.dynarot)
             GD.debug("Re-enabling dynarot")
             self.update()

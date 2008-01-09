@@ -19,8 +19,10 @@ from formex import *
 from plugins import elements
 from plugins.surface import Surface
 from plugins.connectivity import reverseIndex
+from drawgl import pickPoints,pickLines,pickElements
 
 import timer
+
 
 
 ### Actors ###############################################
@@ -44,7 +46,7 @@ class Actor(Drawable):
     def __init__(self):
         Drawable.__init__(self)
 
-     
+
 class TranslatedActor(Actor):
     """An Actor translated to another position."""
 
@@ -502,7 +504,34 @@ class FormexActor(Actor,Formex):
         
         else:
             drawPolygons(self.f,mode,color=None)
+    
 
+    def drawpick(self,shape):
+        if shape == 'points':
+            picked = pickPoints(self.f.reshape(-1,1,3))
+            selected = self.f.reshape(-1,1,3)[picked]
+        if shape == 'lines':
+            nplex = self.nplex()
+            L = range(nplex)
+            LL = [[L[i],L[i+1]] for i in L[:-1]]
+            LL.append([L[-1],L[0]])
+            C = [connect([Formex(self),Formex(self)],nodid=ax) for ax in LL]
+            C = Formex.concatenate(C)
+            picked = pickLines(C.f)
+            selected = C.f[picked]
+        if shape == 'elements':
+            picked = pickElements(self.f)
+            selected = self.f[picked]
+        flag = ones((selected.shape[0],))
+        for i in range(selected.shape[0]):
+            for j in range(i):
+                if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
+                    # i is a duplicate node
+                    flag[i] = 0
+                    break
+        selected = selected[flag>0]
+        print "SELECTION: %s" % selected
+        return selected
 
 #############################################################################
 
@@ -556,7 +585,7 @@ class SurfaceActor(Actor,Surface):
 
 ##                 if mode == 'wireframe':
 ##                     # adapt color array to edgeselect
-##                     color = concatenate([self.color,self.color,self.color],axis=-1)
+##                     color = concatenate([self.color,self.color,coords[self.elems]self.color],axis=-1)
 ##                     color = color.reshape((-1,2))[self.edgeselect]
         
         if color is None:  # no color
@@ -591,4 +620,25 @@ class SurfaceActor(Actor,Surface):
             drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
 
-### End
+
+    def drawpick(self,shape):
+        if shape == 'points':
+            picked = pickPoints(self.coords.reshape(-1,1,3))
+            selected = self.coords.reshape(-1,1,3)[picked]
+        if shape == 'lines':
+            picked = pickLines(self.coords[self.edges])
+            selected = self.coords[self.edges][picked]
+        if shape == 'elements':
+            picked = pickElements(self.coords[self.elems])
+            selected = self.coords[self.elems][picked]
+        flag = ones((selected.shape[0],))
+        for i in range(selected.shape[0]):
+            for j in range(i):
+                if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
+                    # i is a duplicate node
+                    flag[i] = 0
+                    break
+        selected = selected[flag>0]
+        print "SELECTION: %s" % selected
+        return selected
+
