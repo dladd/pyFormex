@@ -525,16 +525,18 @@ class FormexActor(Actor,Formex):
         if shape == 'elements':
             picked = pickElements(self.f)
             selected = self.f[picked]
-        flag = ones((selected.shape[0],))
-        for i in range(selected.shape[0]):
-            for j in range(i):
-                if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
-                    # i is a duplicate node
-                    flag[i] = 0
-                    break
-        selected = selected[flag>0]
-        print "SELECTION: %s" % selected
+        if len(selected) != 0:
+            flag = ones((selected.shape[0],))
+            for i in range(selected.shape[0]):
+                for j in range(i):
+                    if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
+                        # i is a duplicate node
+                        flag[i] = 0
+                        break
+            selected = selected[flag>0]
+            print "SELECTION: %s" % selected
         return selected
+
 
 #############################################################################
 
@@ -638,14 +640,15 @@ class SurfaceActor(Actor,Surface):
         if shape == 'elements':
             picked = pickElements(self.coords[self.elems])
             selected = self.coords[self.elems][picked]
-        flag = ones((selected.shape[0],))
-        for i in range(selected.shape[0]):
-            for j in range(i):
-                if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
-                    # i is a duplicate node
-                    flag[i] = 0
-                    break
-        selected = selected[flag>0]
-        print "SELECTION: %s" % selected
+        if len(selected) != 0:
+            flag = ones((selected.shape[0],))
+            for i in range(selected.shape[0]):
+                for j in range(i):
+                    if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
+                        # i is a duplicate node
+                        flag[i] = 0
+                        break
+            selected = selected[flag>0]
+            print "SELECTION: %s" % selected
         return selected
 

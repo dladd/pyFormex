@@ -30,6 +30,8 @@ import toolbar
 
 import math
 
+from coords import Coords
+
 # Some 2D vector operations
 # We could do this with the general functions of coords.py,
 # but that would be overkill for this simple 2D vectors
@@ -56,7 +58,7 @@ LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
 
-# modifiers
+# modifiersdrawSe
 NONE = int(QtCore.Qt.NoModifier)
 SHIFT = int(QtCore.Qt.ShiftModifier)
 CTRL = int(QtCore.Qt.ControlModifier)
@@ -114,7 +116,7 @@ def printOpenGLContext(ctxt):
     else:
         print "No OpenGL context yet!"
 
-        
+
 ################# Single Interactive OpenGL Canvas ###############
 
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
@@ -175,22 +177,47 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return self.waitSelection()
 
     
-    def pickPoints(self):
-        """Go into point picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_points)
-        return self.waitSelection()
+    def enableSelect(self,shape):
+        """Start selection mode."""
+        self.selection = []
+        if shape == 'points':
+            self.setMouse(LEFT,self.pick_points)
+        if shape == 'lines':
+            self.setMouse(LEFT,self.pick_lines)
+        if shape == 'elements':
+            self.setMouse(LEFT,self.pick_elements)
+        self.mousefnc[CTRL][LEFT] = self.mousefnc[NONE][LEFT]
+        self.mousefnc[SHIFT] = {}
+        self.mousefnc[SHIFT][LEFT] = self.dynarot
 
-    
-    def pickLines(self):
-        """Go into line picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_lines)
-        return self.waitSelection()
-    
 
-    def pickElements(self):
-        """Go into element picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_elements)
-        return self.waitSelection()
+    def makeSelection(self):
+        """Wait for the user to make a selection.
+        
+        When the CTRL button is pressed, add the selected item to selection,
+        otherwise, replace selection.
+        """
+        self.selected = []
+        while GD.gui.pushbutton.checkState() == False and len(self.selected) == 0:
+            GD.app.processEvents()
+        if GD.gui.pushbutton.checkState() == False:
+            if int(self.mod) == CTRL:
+                if len(self.selection) == 0:
+                    self.selection = self.selected
+                else:
+                    self.selection = Coords.concatenate([self.selection,self.selected])
+            else:
+                self.selection = self.selected
+        return self.selection
+
+
+    def disableSelect(self):
+        """End selection mode."""
+        self.setMouse(LEFT,self.dynarot)
+        GD.debug("Re-enabling dynarot")
+        self.mousefnc[CTRL] = {}
+        self.mousefnc[SHIFT] = self.mousefnc[NONE]
+
 
     ##### QtOpenGL interface #####
         
@@ -421,7 +448,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("Start picking mode")
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
             self.draw_cursor(self.statex,self.statey)
-            self.selection = []
             self.update()
             
         elif action == MOVE:
@@ -447,10 +473,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
             self.camera.loadProjection(pick=(x,y,w,h,vp))
             self.camera.loadMatrix()
-            self.selection = self.actors[0].drawpick('points')
-            self.setMouse(LEFT,self.dynarot)
-            GD.debug("Re-enabling dynarot")
-            self.update()
+            self.selected = self.actors[-1].drawpick('points')
 
     
     def pick_lines(self,x,y,action):
@@ -459,7 +482,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("Start picking mode")
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
             self.draw_cursor(self.statex,self.statey)
-            self.selection = []
             self.update()
             
         elif action == MOVE:
@@ -485,10 +507,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
             self.camera.loadProjection(pick=(x,y,w,h,vp))
             self.camera.loadMatrix()
-            self.selection = self.actors[0].drawpick('lines')
-            self.setMouse(LEFT,self.dynarot)
-            GD.debug("Re-enabling dynarot")
-            self.update()
+            self.selected = self.actors[-1].drawpick('lines')
     
 
     def pick_elements(self,x,y,action):
@@ -497,7 +516,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("Start picking mode")
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
             self.draw_cursor(self.statex,self.statey)
-            self.selection = []
             self.update()
             
         elif action == MOVE:
@@ -523,10 +541,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
             self.camera.loadProjection(pick=(x,y,w,h,vp))
             self.camera.loadMatrix()
-            self.selection = self.actors[0].drawpick('elements')
-            self.setMouse(LEFT,self.dynarot)
-            GD.debug("Re-enabling dynarot")
-            self.update()
+            self.selected = self.actors[-1].drawpick('elements')
+
 
     @classmethod
     def has_modifier(clas,e,mod):

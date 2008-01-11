@@ -29,6 +29,7 @@ import coords
 import formex
 from script import *
 from plugins import surface,tools
+from formex import Formex
 
 # import some functions for scripts:
 from toolbar import setPerspective as perspective, setTransparency as transparency, timeout
@@ -617,6 +618,25 @@ def _shrink(F,factor):
     if isinstance(F,surface.Surface):
         F = F.toFormex()
     return F.shrink(factor)
+
+
+def drawSelection(shape):
+    GD.gui.selectionbar = QtGui.QToolBar('Selection ToolBar',GD.gui)
+    GD.gui.addToolBar(GD.gui.toolbarArea.get('top'),GD.gui.selectionbar)
+    GD.gui.pushbutton = QtGui.QCheckBox('End selection')
+    GD.gui.selectionbar.addWidget(GD.gui.pushbutton)
+    GD.canvas.enableSelect(shape)
+    while GD.gui.pushbutton.checkState() == False:
+        selection = GD.canvas.makeSelection()
+        if GD.gui.pushbutton.checkState() == False:
+            S = Formex(selection,5)
+            draw([S,GD.canvas.actors[-1]],linewidth=4,marksize=10,clear=True)
+            zoomAll()
+            GD.canvas.update()
+    GD.gui.removeToolBar(GD.gui.selectionbar)
+    GD.canvas.disableSelect()
+    print "SELECTION: %s" % selection
+    return selection
 
 
 def drawPlane(P,N):
