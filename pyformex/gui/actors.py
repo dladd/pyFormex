@@ -19,7 +19,6 @@ from formex import *
 from plugins import elements
 from plugins.surface import Surface
 from plugins.connectivity import reverseIndex
-from drawgl import pickPoints,pickLines,pickElements
 
 import timer
 
@@ -652,3 +651,4 @@ class SurfaceActor(Actor,Surface):
             print "SELECTION: %s" % selected
         return selected
 
+# End
