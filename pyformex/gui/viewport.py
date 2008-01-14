@@ -618,6 +618,9 @@ class MultiCanvas(QtGui.QGridLayout):
         # With QtOPenGL, the context should refer to the QGLWidget,
         # therefore we can not use one single context
         #self.context = context
+	OGLfmt = setOpenGLFormat()
+	OGLctxt = getOpenGLContext()
+	print OGLctxt
 
         
     def setDefaults(self,dict):
