@@ -78,11 +78,16 @@ def setOptions():
 
 MenuData = [
     (_('&File'),[
-        (_('&New'),fileMenu.newFile),
-        (_('&Open'),fileMenu.openFile),
-        (_('&Play'),draw.play),
-        (_('&Edit'),fileMenu.edit),
-        (_('&ChDir'),draw.askDirname),
+        (_('&Start new project'),fileMenu.createProject),
+        ("&Open existing project",fileMenu.openProject),
+        ("&Save project",fileMenu.saveProject),
+        ("&Save and close project",fileMenu.closeProject),
+        ("---",None),
+        (_('&Create new script'),fileMenu.createScript),
+        (_('&Select existing script'),fileMenu.openScript),
+        (_('&Play script'),draw.play),
+        (_('&Edit script'),fileMenu.edit),
+        (_('&Change workdir'),draw.askDirname),
         (_('---1'),None),
         (_('&Save Image'),fileMenu.saveImage),
         (_('Start &MultiSave'),fileMenu.startMultiSave),

@@ -615,17 +615,14 @@ class SurfaceActor(Actor,Surface):
             GL.glLineWidth(self.linewidth)
 
         t = timer.Timer()
-##         if mode=='wireframe' :
-##             #print color.shape
-##             #print self.edges.shape
-##             #print self.faces.shape
-##             rev = reverseIndex(self.faces)
-##             if color is not None:
-##                 color = color[rev[:,-1]]
-##             drawLineElems(self.coords,self.edges,color)
-##         else:
-        self.refresh()
-        drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+        if mode=='wireframe' :
+            rev = reverseIndex(self.faces)
+            if color is not None:
+                color = color[rev[:,-1]]
+            drawLineElems(self.coords,self.edges,color)
+        else:
+            self.refresh()
+            drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
 
 

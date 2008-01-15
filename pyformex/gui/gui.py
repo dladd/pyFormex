@@ -117,15 +117,30 @@ class GUI(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
         self.setWindowTitle(windowname)
         # add widgets to the main window
+
+
+        # The status bar
         self.statusbar = self.statusBar()
+        self.curproj = QtGui.QLabel('No Project')
+        self.curproj.setLineWidth(0)
+        self.statusbar.addWidget(self.curproj)
+        cf = QtGui.QWidget()
+        hl = QtGui.QHBoxLayout()
+        hl.setSpacing(0)
+        hl.setMargin(0)
+        cf.setLayout(hl) 
         self.curfile = QtGui.QLabel('No File')
         self.curfile.setLineWidth(0)
-        self.statusbar.addWidget(self.curfile)
         self.smiley = QtGui.QLabel()
-        self.statusbar.addWidget(self.smiley)
+        hl.addWidget(self.smiley)
+        hl.addWidget(self.curfile)
+        self.statusbar.addWidget(cf)
+
+        # The menu bar
         self.menu = widgets.MenuBar()
         self.setMenuBar(self.menu)
-        
+
+        # The toolbar
         self.toolbar = self.addToolBar('Top ToolBar')
         self.editor = None
         # Create a box for the central widget
@@ -312,6 +327,13 @@ class GUI(QtGui.QMainWindow):
             self.editor = None
     
 
+    def setcurproj(self,project=''):
+        """Show the current project name."""
+        if project:
+            project = os.path.basename(project)
+        self.curproj.setText(project)
+
+
     def setcurfile(self,filename=None):
         """Set the current file and check whether it is a pyFormex script.
 
@@ -329,9 +351,9 @@ class GUI(QtGui.QMainWindow):
             self.actions['Play'].setEnabled(GD.canPlay)
             self.actions['Step'].setEnabled(GD.canPlay)
             if GD.canPlay:
-                icon = 'happy'
+                icon = 'ok'
             else:
-                icon = 'unhappy'
+                icon = 'notok'
             self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype']))
 
 

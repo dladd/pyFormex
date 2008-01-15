@@ -11,7 +11,7 @@ import globaldata as GD
 from gui import actors,colors
 from formex import *
 from gui.draw import *
-from plugins import objects,project
+from plugins import objects
 from plugins.tools import *
 
 
@@ -24,32 +24,6 @@ def editFormex(F):
 Formex.edit = editFormex
 
 
-##################### project tools ##########################
-
-the_project = None
-
-def createProject():
-    openProject(False)
-
-def openProject(exist=True):
-    global the_project
-    types = [ 'pyFormex projects (*.pyf)', 'All files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types,exist=exist)
-    if fn:
-        GD.debug("Opening project %s" % fn)
-        the_project = project.Project(fn)
-        GD.PF = the_project
-
-def saveProject():
-    if the_project is not None:
-        the_project.save()
-
-def closeProject():
-    global the_project
-    the_project.save()
-    GD.PF = {}
-    GD.PF.update(the_project)
-    the_project = None
 
 ##################### database tools ##########################
 
@@ -268,11 +242,6 @@ def test():
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
-        ("&Start new project",createProject),
-        ("&Open existing project",openProject),
-        ("&Save project",saveProject),
-        ("&Save and close project",closeProject),
-        ("---",None),
         ("&Show Variables",printall),
         ("&Print Variables",printval),
         ("&Edit Variable",edit),
