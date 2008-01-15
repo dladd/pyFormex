@@ -213,8 +213,9 @@ class DrawableObjects(Objects):
 
 
     def draw(self,*args,**kargs):
+        clear()
         print "Drawing SELECTION: %s" % self.names
-        self._actors = draw(self.names,clear=True,shrink=self.shrink,*args,**kargs)
+        self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         for i,a in enumerate(self.annotations):
             if a[1]:
                 self.drawAnnotation(i)
