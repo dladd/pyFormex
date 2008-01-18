@@ -13,6 +13,7 @@ from formex import *
 from gui.draw import *
 from plugins import objects
 from plugins.tools import *
+from numpy import *
 
 
 def editFormex(F):
@@ -236,6 +237,55 @@ def test():
     GD.canvas.update()
     
 
+################# Query Information ###################
+    
+def queryDistance():
+    GD.message("Select first node")
+    p1 = drawSelection('points')
+    while array(p1).shape[0] > 1:
+        GD.message("Please select only one node")
+        GD.message("Select first node")
+        p1 = drawSelection('points')
+    if array(p1).shape[0]:
+        GD.message("First node: %s" %p1[0,0])
+        GD.message("Select second node")
+        p2 = drawSelection('points')
+        while array(p2).shape[0] > 1:
+            GD.message("Please select only one node")
+            GD.message("Select second node")
+            p2 = drawSelection('points')
+        if array(p2).shape[0]:
+            GD.message("Second node: %s" %p2[0,0])
+            vec = p1-p2
+            dist = sqrt(sum(vec*vec,-1))
+            GD.message("The distance between the two nodes is: %s" %dist[0,0])
+
+def queryNode():
+    GD.message("Select node")
+    p = drawSelection('points')
+    while array(p).shape[0] > 1:
+        GD.message("Please select only one node")
+        GD.message("Select node")
+        p = drawSelection('points')
+    GD.message("Node information: %s" %p)
+
+def queryEdge():
+    GD.message("Select edge")
+    e = drawSelection('lines')
+    while array(e).shape[0] > 1:
+        GD.message("Please select only one edge")
+        GD.message("Select edge")
+        e = drawSelection('lines')
+    GD.message("Edge information: %s" %e)
+    
+def queryElement():
+    GD.message("Select element")
+    e = drawSelection('elements')
+    while array(e).shape[0] > 1:
+        GD.message("Please select only one element")
+        GD.message("Select element")
+        e = drawSelection('elements')
+    GD.message("Element information: %s" %e)
 
 ################### menu #################
 
@@ -251,6 +301,13 @@ def create_menu():
         ("&Select Plane",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
+        ("---",None),
+        ('&Print information',
+         [('&Node',queryNode),
+          ('&Edge',queryEdge),
+          ('&Element',queryElement),
+          ('&Distance',queryDistance),
+          ]),
         ("---",None),
         ("&Test",test),
         ("---",None),
