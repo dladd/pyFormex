@@ -6,6 +6,7 @@
 from simple import line,circle
 from numpy import *
 from gui import actors
+from formex import *
 
 
 def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
@@ -90,10 +91,9 @@ def gridBetween2Curves(curve1,curve2,n):
     """Create a grid with quadrilaterals defined by two boundary curves
     
     The two curves should be (m,2,3) formices with the same number of elements!
-    These curves should lay within the YZ plane!
+    These curves should lay within the YZ plane if you want to use the sweepGrid definition!
     n is the number of elements between the two curves.
     """
-
     nc1 = append(curve1[:,0],curve1[-1,-1].reshape(-1,3),0)
     nc2 = append(curve2[:,0],curve2[-1,-1].reshape(-1,3),0)
     nodes = array([])

@@ -7,10 +7,12 @@ Determine the (inner) voronoi diagram of a triangulated surface.
 Determine approximation for the centerline.
 """
 
+import globaldata as GD
 import os
 from numpy import *
-from plugins import surface,tetgen
+from plugins import surface,tetgen,connectivity
 from utils import runCommand
+import coords
 
 
 def det3(f):
@@ -33,6 +35,15 @@ def det4(f):
     return det
 
 
+def encode2(i,j,n):
+    return n*i+j
+
+    
+def decode2(code,n):
+    i,j = code/n, code%n
+    return i,j
+
+    
 def circumcenter(nodes,elems):
     """Calculate the circumcenters of a list of tetrahedrons.
     
@@ -99,9 +110,7 @@ def voronoiInner(fn):
     sta,out = runCommand('tetgen -zp %s.smesh' %fn)
     #information tetrahedra
     elems = tetgen.readElems('%s.1.ele' %fn)[0]
-    print elems.shape
-    nodes = tetgen.readNodes('%s.1.node' %fn)[0]
-    print nodes.shape
+    nodes = tetgen.readNodes('%s.1.node' %fn)[0].astype(float64)
     #calculate surface normal for each point
     elemsS = array(S.elems)
     NT = S.areaNormals()[1]
@@ -165,3 +174,86 @@ def selectMaxVor(nodesVor,rad,r1=1.,r2=2.,q=0.7,maxruns=-1):
         radCent = append(radCent,maxR)
         run += 1
     return nodesCent.reshape(-1,1,3),radCent
+
+
+def removeDoubles(elems):
+    """Remove the double lines from the centerline.
+    
+    This is a clean-up function for the centerline.
+    Lines appearing twice in the centerline are removed by this function.
+    Both input and output are the connectivity of the centerline.
+    """
+    elems.sort(1)
+    magic = elems.shape[0]+1
+    code = encode2(elems[:,0],elems[:,1],magic)
+    r = unique(code.reshape(-1))
+    elemsU = decode2(r,magic)
+    return transpose(array(elemsU))
+
+
+def connectVorNodes(nodes,rad):
+    """Create connections between the voronoi nodes.
+    
+    Each of the nodes is connected with its closest neighbours.
+    The input is an array of n nodes and an array of n corresponding radii.
+    Two voronoi nodes are connected if the distance between these two nodes
+    is smaller than the sum of their corresponding radii.
+    The output is an array containing the connectivity information.
+    """
+    connections = array([]).astype(int)
+    v = 4
+    for i in range(nodes.shape[0]):
+        t1 =  (nodes[:] > (nodes[i]-v*rad[i])).all(axis=2)
+        t2 =  (nodes[:] < (nodes[i]+v*rad[i])).all(axis=2)
+        t = t1*t2
+        t[i] = False
+        w1 = where(t == 1)[0]
+        c = coords.Coords(nodes[w1])
+        d =c.distanceFromPoint(nodes[i]).reshape(-1)
+        w2 = d < rad[w1] + rad[i]
+        w = w1[w2]
+        for j in w:
+            connections = append(connections,i)
+            connections = append(connections,j)
+    connections = connections.reshape(-1,2)
+    connections = removeDoubles(connections)
+    return connections.reshape(-1,2)
+
+
+def removeTriangles(elems):
+    """Remove the triangles from the centerline.
+    
+    This is a clean-up function for the centerline.
+    Triangles appearing in the centerline are removed by this function.
+    Both input and output are the connectivity of the centerline.
+    """
+    rev = connectivity.reverseIndex(elems)
+    if rev.shape[1] > 2:
+        w =  where(rev[:,-3] != -1)[0]
+        for i in w:
+            el = rev[i].compress(rev[i] != -1)
+            u = unique(elems[el].reshape(-1))
+            NB = u.compress(u != i)
+            int = intersect1d(w,NB)
+            if int.shape[0] == 2:
+                tri = append(int,i)
+                w1 = where(tri != tri.min())[0]
+                t = (elems[:,0] == tri[w1[0]])*(elems[:,1] == tri[w1[1]])
+                elems[t] = -1
+    w2 = where(elems[:,0] != -1)[0]
+    return elems[w2]
+    
+
+def centerline(fn):
+    """Determine an approximated centerline corresponding with a triangulated surface.
+    
+    fn is the file name of a surface, including the extension (.off, .stl, .gts, .neu or .smesh)
+    The output are the centerline nodes, an array containing the connectivity information
+    and radii of the voronoi spheres.
+    """
+    nodesVor,rad= voronoiInner('%s' %fn)
+    print nodesVor.shape
+    nodesC,rad=selectMaxVor(nodesVor,rad)
+    elemsC = connectVorNodes(nodesC,rad)
+    elemsC = removeTriangles(elemsC)
+    return nodesC,elemsC,rad

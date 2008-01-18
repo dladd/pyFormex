@@ -30,7 +30,7 @@ def readNodes(fn):
     line = fil.readline()
     s = line.strip('\n').split()
     npts,ndim,nattr,nbmark = map(int,s)
-    nodes = fromfile(fil,sep=' ',dtype=Float).reshape((npts,ndim+1))
+    nodes = fromfile(fil,sep=' ',dtype=Float,count=npts*(ndim+1)).reshape((npts,ndim+1))
     return nodes[:,1:],nodes[:,0].astype(int32)
 
 
@@ -46,7 +46,7 @@ def readElems(fn):
     line = fil.readline()
     s = line.strip('\n').split()
     nelems,nplex,nattr = map(int,s)
-    elems = fromfile(fil,sep=' ',dtype=int32).reshape((nelems,nplex+nattr+1))
+    elems = fromfile(fil,sep=' ',dtype=int32,count=(nplex+1)*nelems).reshape((nelems,nplex+nattr+1))
     return elems[:,1:nplex+1],elems[:,0],elems[:,nplex+1:]
 
 
