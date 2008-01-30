@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
@@ -48,6 +47,16 @@ def projection(v,w):
     """Return the (signed) length of the projection of vector v on vector w."""
     return dotpr(v,w)/length(w)
 
+
+# signals
+CANCEL = QtCore.SIGNAL("Cancel")
+DONE   = QtCore.SIGNAL("Done")
+WAKEUP = QtCore.SIGNAL("Wakeup")
+
+# keys
+ESC = QtCore.Qt.Key_Escape
+ENTER = QtCore.Qt.Key_Enter
+
 # mouse actions
 PRESS = 0
 MOVE = 1
@@ -58,11 +67,11 @@ LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
 
-# modifiers
-NONE = int(QtCore.Qt.NoModifier)
-SHIFT = int(QtCore.Qt.ShiftModifier)
-CTRL = int(QtCore.Qt.ControlModifier)
-ALT = int(QtCore.Qt.AltModifier)
+# modifiersdrawSe
+NONE = QtCore.Qt.NoModifier
+SHIFT = QtCore.Qt.ShiftModifier
+CTRL = QtCore.Qt.ControlModifier
+ALT = QtCore.Qt.AltModifier
 ALLMODS = SHIFT | CTRL | ALT
 
 
@@ -150,35 +159,87 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(LEFT,self.dynarot,mod) 
             self.setMouse(MIDDLE,self.dynapan,mod) 
             self.setMouse(RIGHT,self.dynazoom,mod)
-        
+        self.selection_mode = None
+        self.pick_funcs = {
+            'actors'  : self.pick_actors,
+            'numbers' : self.pick_numbers,
+            'elements': self.pick_elements,
+            'lines'   : self.pick_lines,
+            'points'  : self.pick_points,
+            }
+
 
     def setMouse(self,button,func,mod=NONE):
         self.mousefnc[mod][button] = func
 
 
-    def waitSelection(self):
+    def getMouseFunc(self):
+        """Return the mouse function bound to self.button and self.mod"""
+        #print self.mousefnc
+        #print self.button
+        #print int(self.mod)
+        #print self.mousefnc.get(int(self.mod),{})
+        #print self.mousefnc.get(int(self.mod),{}).get(self.button,None)
+        print "MODIFIER:%s" % modifierName(int(self.mod))
+        return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
+
+
+    def start_selection(self,mode):
+        """Start an interactive picking mode."""
+        if self.selection_mode is None:
+            GD.debug("START SELECTION MODE: %s" % mode)
+            self.setMouse(LEFT,self.pick_funcs[mode])
+            self.setMouse(LEFT,self.pick_funcs[mode],CTRL)
+            self.setMouse(RIGHT,self.emit_cancel)
+            self.connect(self,CANCEL,self.cancel_selection)
+            self.selection_mode = mode
+            self.selection =[]
+
+    def wait_selection(self):
         """Wait for the user to make a selection, then return it."""
-        self.selection =[]
-        timer = QtCore.QThread
-        #
-        # THIS SHOULD BE CHANGED TO A MOUSE RELEASE EVENT !!!
-        #
-        while len(self.selection) == 0:
-            timer.usleep(200)
+        self.selection_timer = QtCore.QThread
+        while self.selection_mode is not None:
+            self.selection_timer.msleep(20)
+            #GD.debug("Processing events %s %s" % (self.selection_mode,count))
             GD.app.processEvents()
+        GD.debug("WE'RE DONE")
+
+    def modify_selection(self):
+        """Wait for the user to make a selection, then return it."""
+        pass
+
+    def finish_selection(self):
+        """End a picking mode."""
+        GD.debug("END SELECTION MODE: ")
+        self.setMouse(LEFT,self.dynarot)
+        self.setMouse(LEFT,None,CTRL)
+        self.setMouse(RIGHT,self.dynazoom)
+        self.selection_mode = None
+
+
+    def cancel_selection(self):
+        GD.debug("CANCEL SELECTION MODE: ")
+        self.selection = []
+        self.finish_selection()
+       
+
+    def pick(self):
+        self.start_selection('actors')
+        self.wait_selection()
+        GD.debug("SELECTION HAS %s ITEMS" % len(self.selection))
         return self.selection
 
 
-    def pick(self):
-        """Go into picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_actors)  
-        return self.waitSelection()
+##     def pick(self):
+##         """Go into picking mode and return the selection."""
+##         self.setMouse(LEFT,self.pick_actors)  
+##         return self.waitSelection()
     
 
-    def pickNumbers(self):
-        """Go into number picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_numbers)
-        return self.waitSelection()
+##     def pickNumbers(self):
+##         """Go into number picking mode and return the selection."""
+##         self.setMouse(LEFT,self.pick_numbers)
+##         return self.waitSelection()
 
     
     def enableSelect(self,shape):
@@ -360,22 +421,36 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.camera.saveMatrix()
 
 
+    def emit_cancel(self,x,y,action):
+        """Emit a CANCEL event by clicking the mouse.
+
+        This is equivalent to pressing the ESC button."""
+        if action == RELEASE:
+            self.emit(CANCEL,())
+
+
+    def pick_finish(self,x,y,action):
+        """Finish the selection mode by clicking a mouse button."""
+        if action == RELEASE:
+            self.finish_selection()
+
+
     def pick_actors(self,x,y,action):
         """Return the actors close to the mouse pointer."""
         if action == PRESS:
-            GD.debug("Start picking mode")
+            #GD.debug("Start picking mode")
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
             self.draw_cursor(self.statex,self.statey)
             self.selection = []
             self.update()
             
         elif action == MOVE:
-            GD.debug("Move picking window")
+            #GD.debug("Move picking window")
             self.draw_rectangle(x,y)
             self.update()
 
         elif action == RELEASE:
-            GD.debug("End picking mode")
+            #GD.debug("End picking mode")
             if self.cursor:
                 self.removeDecoration(self.cursor)
             self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
@@ -383,32 +458,31 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glSelectBuffer(16+3*len(self.actors))
             GL.glRenderMode(GL.GL_SELECT)
             GL.glInitNames() # init the name stack
-            GD.debug((x,y))
-            GD.debug((self.statex,self.statey))
+            #GD.debug((x,y))
+            #GD.debug((self.statex,self.statey))
             x,y = (x+self.statex)/2., (y+self.statey)/2.
             w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
             if w <= 0 or h <= 0:
                w,h = GD.cfg.get('pick/size',(20,20))
-            GD.debug((x,y,w,h))
+            #GD.debug((x,y,w,h))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
             #print "VIEWPORT %s" % vp
             self.camera.loadProjection(pick=[x,y,w,h,vp])
             self.camera.loadMatrix()
             for i,actor in enumerate(self.actors):
-                #print "Adding name %s" % i
+                #print "Adding name %s (type %s)" % (i,type(i))
                 GL.glPushName(i)
                 GL.glCallList(actor.list)
                 GL.glPopName()
             buf = GL.glRenderMode(GL.GL_RENDER)
             self.selection = []
             for r in buf:
-                GD.debug(r)
+                #GD.debug(r)
                 for i in r[2]:
-                    GD.debug("item %s is of type %s" % (i,type(i)))
+                    #GD.debug("item %s is of type %s" % (i,type(i)))
                     self.selection.append(self.actors[int(i)])
-            self.setMouse(LEFT,self.dynarot)
-            GD.debug("Re-enabling dynarot")
             self.update()
+            self.finish_selection()
 
 
     def pick_numbers(self,x,y,action):
@@ -570,19 +644,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 self.selected = self.actors[-1].drawpick('elements_3d')
 
 
+
+
     @classmethod
     def has_modifier(clas,e,mod):
         return ( e.modifiers() & mod ) == mod
-
-    def getMouseFunc(self):
-        """Return the mouse function bound to self.button and self.mod"""
-        #print self.mousefnc
-        #print self.button
-        #print int(self.mod)
-        #print self.mousefnc.get(int(self.mod),{})
-        #print self.mousefnc.get(int(self.mod),{}).get(self.button,None)
-        print "MODIFIER:%s" % modifierName(int(self.mod))
-        return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
@@ -591,9 +657,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()
         self.mod = e.modifiers() & ALLMODS
+        #GD.debug("PRESS BUTTON %s WITH MODIFIER %s" % (self.button,self.mod))
         func = self.getMouseFunc()
         if func:
             func(self.statex,self.statey,PRESS)
+        e.accept()
         
     def mouseMoveEvent(self,e):
         """Process a mouse move event."""
@@ -601,13 +669,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         func = self.getMouseFunc()
         if func:
             func(e.x(),self.height()-e.y(),MOVE)
+        e.accept()
 
     def mouseReleaseEvent(self,e):
         """Process a mouse release event."""
+        #GD.debug("RELEASE BUTTON %s" % self.button)
         func = self.getMouseFunc()
         self.button = None        # clear the stored button
         if func:
             func(e.x(),self.height()-e.y(),RELEASE)
+        e.accept()
 
 
     # Any keypress with focus in the canvas generates a 'wakeup' signal.
@@ -615,8 +686,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     # Events not handled here could also be handled by the toplevel
     # event handler.
     def keyPressEvent (self,e):
-        self.emit(QtCore.SIGNAL("Wakeup"),())
-        e.ignore()
+        self.emit(WAKEUP,())
+        if e.key() == ESC:
+            self.emit(CANCEL,())
+            e.accept()
+            self.cancel_selection()
+        elif e.key() == ENTER:
+            self.emit(DONE,())
+            e.accept()
+        else:
+            e.ignore()
 
 
 ################# Multiple Viewports ###############
@@ -790,4 +869,4 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
             GD.app.processEvents()
 
                        
-#### End
+# End

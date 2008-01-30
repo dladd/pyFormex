@@ -783,10 +783,11 @@ def createView(name,angles):
     
 
 def zoomAll():
-    GD.canvas.setBbox(coords.bbox(GD.canvas.actors))
-    GD.canvas.setCamera()
-    GD.canvas.redrawAll()
-    GD.canvas.update()
+    if GD.canvas.actors:
+        GD.canvas.setBbox(coords.bbox(GD.canvas.actors))
+        GD.canvas.setCamera()
+        GD.canvas.redrawAll()
+        GD.canvas.update()
 
 
 def bgcolor(color):
