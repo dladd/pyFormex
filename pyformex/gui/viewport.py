@@ -58,12 +58,16 @@ LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
 
-# modifiersdrawSe
+# modifiers
 NONE = int(QtCore.Qt.NoModifier)
 SHIFT = int(QtCore.Qt.ShiftModifier)
 CTRL = int(QtCore.Qt.ControlModifier)
 ALT = int(QtCore.Qt.AltModifier)
 ALLMODS = SHIFT | CTRL | ALT
+
+
+def modifierName(mod):
+    return {NONE:'NONE',SHIFT:'SHIFT',CTRL:'CTRL',ALT:'ALT'}.get(mod,'UNKNOWN')
 
 
 ############### OpenGL Format #################################
@@ -139,13 +143,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         canvas.Canvas.__init__(self)
         self.button = None
         self.mod = NONE
-        self.mousefnc = { NONE: {} }
-        self.setMouse(LEFT,self.dynarot) 
-        self.setMouse(MIDDLE,self.dynapan) 
-        self.setMouse(RIGHT,self.dynazoom)
-        self.mousefnc[SHIFT] = self.mousefnc[NONE]   # initially the same
-        self.mousefnc[CTRL] = self.mousefnc[ALT] = {} # initially empty
-        #print self.mousefnc
+        self.mousefnc = { NONE:{}, SHIFT:{}, CTRL:{}, ALT:{} }
+        # Initial mouse funcs are dynamic handling
+        # ALT is initially same as NONE and should never be changed
+        for mod in (NONE,ALT):
+            self.setMouse(LEFT,self.dynarot,mod) 
+            self.setMouse(MIDDLE,self.dynapan,mod) 
+            self.setMouse(RIGHT,self.dynazoom,mod)
         
 
     def setMouse(self,button,func,mod=NONE):
@@ -577,6 +581,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         #print int(self.mod)
         #print self.mousefnc.get(int(self.mod),{})
         #print self.mousefnc.get(int(self.mod),{}).get(self.button,None)
+        print "MODIFIER:%s" % modifierName(int(self.mod))
         return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
         
     def mousePressEvent(self,e):
@@ -616,10 +621,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 ################# Multiple Viewports ###############
 
-def vpfocus(canv):
-    print "vpfocus %s" % canv
-    GD.gui.viewports.setCurrent(canv)
-
 
 class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
@@ -653,14 +654,12 @@ class MultiCanvas(QtGui.QGridLayout):
     def newView(self,shared=None):
         "Create a new viewport"
         canv = QtCanvas(self.parent,shared)
-        #printOpenGLContext(canv.context())
         return(canv)
         
 
     def addView(self):
         """Add a new viewport to the widget"""
         canv = self.newView()
-        #QtCore.QObject.connect(canv,QtCore.SIGNAL("VPFocus"),vpfocus)
         self.all.append(canv)
         self.active.append(canv)
         self.showWidget(canv)
