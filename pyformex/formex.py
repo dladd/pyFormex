@@ -920,6 +920,19 @@ class Formex:
             return Formex(self.f[t],self.p[t])
             
 
+    def splitProp(self):
+        """Partition a Formex according to its prop values.
+
+        Returns a dict with the prop values as keys and the corresponding
+        partitions as values. Each value is a Formex instance.
+        It the Formex has no props, an empty dict is returned.
+        """
+        if self.p is None:
+            return {}
+        else:
+            return dict([(p,self.withProp(p)) for p in self.propSet()])
+
+
     def elbbox(self):
         """Return a Formex where each element is replaced by its bbox.
 

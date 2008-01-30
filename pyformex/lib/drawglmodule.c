@@ -47,7 +47,7 @@ draw_lines(PyObject *dummy, PyObject *args)
   float *x, *c=NULL;
   int nels,nd=0;
 
-  printf("** draw_lines\n");
+  //printf("** draw_lines\n");
 
   if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2)) return NULL;
 
@@ -65,20 +65,20 @@ draw_lines(PyObject *dummy, PyObject *args)
   glBegin(GL_LINES);
   int i;
   if (nd == 0) {
-    printf("** Draw without color\n");
+    //printf("** Draw without color\n");
     for (i=0; i<2*3*nels; i+=3) {
       //printf("coordinate %d\n",i);
       glVertex3fv(x+i);
     }
   } else if (nd == 2) {
-    printf("** Draw with 1 color\n");
+    //printf("** Draw with 1 color\n");
     for (i=0; i<3*nels; i+=3) {
       glColor3fv(c+i);
       glVertex3fv(x+2*i);
       glVertex3fv(x+2*i+3);
     }
   } else if (nd == 3) {
-    printf("** Draw with 2 colors\n");
+    //printf("** Draw with 2 colors\n");
     for (i=0; i<2*3*nels; i+=3) {
       glColor3fv(c+i);
       glVertex3fv(x+i);
@@ -87,7 +87,7 @@ draw_lines(PyObject *dummy, PyObject *args)
   glEnd();
 
   /* Cleanup */
-  printf("** Cleanup\n");
+  //printf("** Cleanup\n");
   Py_DECREF(arr1);
   if (arr2 != NULL) { Py_DECREF(arr2); }
   Py_INCREF(Py_None);

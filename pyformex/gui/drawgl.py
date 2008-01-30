@@ -70,23 +70,20 @@ def drawTriangles(x,n=None,c=None):
         else:
             for xi,ni in zip(x,n):
                 GL.glNormal3fv(ni)
-                GL.glVertex3fv(xi[0])
-                GL.glVertex3fv(xi[1])
-                GL.glVertex3fv(xi[2])
+                for j in range(3):
+                    GL.glVertex3fv(xi[j])
     elif c.ndim == 2:
         if n is None:
             for xi,ci in zip(x,c):
                 GL.glColor3fv(ci)
-                GL.glVertex3fv(xi[0])
-                GL.glVertex3fv(xi[1])
-                GL.glVertex3fv(xi[2])
+                for j in range(3):
+                    GL.glVertex3fv(xi[j])
         else:
             for xi,ni,ci in zip(x,n,c):
                 GL.glColor3fv(ci)
                 GL.glNormal3fv(ni)
-                GL.glVertex3fv(xi[0])
-                GL.glVertex3fv(xi[1])
-                GL.glVertex3fv(xi[2])
+                for j in range(3):
+                    GL.glVertex3fv(xi[j])
     elif c.ndim == 3:
         if n is None:
             for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):
@@ -95,7 +92,7 @@ def drawTriangles(x,n=None,c=None):
         else:
             for xi,ni,ci in zip(x.reshape((-1,3)),n.reshape((-1,3)),c.reshape((-1,3))):
                 GL.glColor3fv(ci[0])
-
+    GL.glEnd()
 
     
 ### End
