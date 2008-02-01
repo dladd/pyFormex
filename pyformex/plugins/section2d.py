@@ -19,7 +19,7 @@ class planeSection(object):
     segments connecting them.
     """
 
-    def __init__(F):
+    def __init__(self,F):
         """Initialize a plane section.
 
         Initialization can be done either by a list of points or a set of line
@@ -42,6 +42,9 @@ class planeSection(object):
             self.F = F
         else:
             raise ValueError,"Expected a plex-1 or plex-2 Formex"
+
+    def sectionChar(self):
+        return sectionChar(self.F)
 
         
 def loopCurve(elems):
@@ -90,10 +93,10 @@ def sectionChar(F):
 
     The plane sections are described by their circumference, consisting of a
     sequence of straight segments.
-    The segment end point data are gathered in a plex-1 Formex.
+    The segment end point data are gathered in a plex-2 Formex.
+    The segments should form a closed curve.
     The z-value of the coordinates does not have to be specified,
     and will be ignored if it is.
-    Each point is connected to the following one, and the last one to the first.
     The resulting path through the points should rotate positively around the
     z axis to yield a positive surface.
 
@@ -107,8 +110,8 @@ def sectionChar(F):
     'Ixy' : product moment of area around global x,y-axes
     """
     if F.nplex() != 2:
-        raise ValueError, "Expected a plex-1 Formex!"
-    GD.debug("The circumference has %d segments" % F.nelems())
+        raise ValueError, "Expected a plex-2 Formex!"
+    #GD.debug("The circumference has %d segments" % F.nelems())
     x = F.x()
     y = F.y()
     x0 = x[:,0]

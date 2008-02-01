@@ -111,7 +111,7 @@ draw_triangles(PyObject *dummy, PyObject *args)
   float *x, *n=NULL, *c=NULL, alpha;
   int nels,nd=0;
 
-  printf("** draw_triangles **\n");
+  printf("** draw_triangles\n");
   if (!PyArg_ParseTuple(args, "OOOf", &arg1, &arg2, &arg3, &alpha)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
@@ -129,7 +129,7 @@ draw_triangles(PyObject *dummy, PyObject *args)
     nd = PyArray_NDIM(arr3);
   }
   
-  printf("nd = %d\n",nd);
+  printf("** nd = %d\n",nd);
   glBegin(GL_TRIANGLES);
   int i,j;
   if (nd == 0) {
@@ -199,7 +199,7 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
   float *x,*n=NULL,*c=NULL;
   int *e;
 
-  printf("** draw_triangle_elements **\n");
+  printf("** draw_triangle_elements\n");
   if (!PyArg_ParseTuple(args, "OOOO", &arg1, &arg2, &arg3, &arg4)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;

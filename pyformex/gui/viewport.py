@@ -175,12 +175,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def getMouseFunc(self):
         """Return the mouse function bound to self.button and self.mod"""
-        #print self.mousefnc
-        #print self.button
-        #print int(self.mod)
-        #print self.mousefnc.get(int(self.mod),{})
-        #print self.mousefnc.get(int(self.mod),{}).get(self.button,None)
-        print "MODIFIER:%s" % modifierName(int(self.mod))
+        #print "MODIFIER:%s" % modifierName(int(self.mod))
         return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
 
 
