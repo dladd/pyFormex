@@ -430,7 +430,7 @@ class Camera:
             GL.glMatrixMode(GL.GL_PROJECTION)
             GL.glLoadIdentity()
             if pick:
-                print 'PICK: %s' % str(pick)
+                #print 'PICK: %s' % str(pick)
                 GLU.gluPickMatrix(*pick)
             if self.perspective:
                 GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)

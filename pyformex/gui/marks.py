@@ -80,6 +80,7 @@ class MarkList(Mark):
 
 
     def drawpick(self):
+        """This functions mimicks the drawing of a number list for picking."""
         GL.glSelectBuffer(16+3*len(self.val))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames() # init the name stack
@@ -91,7 +92,7 @@ class MarkList(Mark):
         buf = GL.glRenderMode(GL.GL_RENDER)
         numbers =[]
         for r in buf:
-            print r[2]
+            #print r[2]
             numbers += map(int,r[2])
         return numbers
         

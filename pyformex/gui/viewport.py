@@ -184,9 +184,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Start an interactive picking mode."""
         if self.selection_mode is None:
             GD.debug("START SELECTION MODE: %s" % mode)
-            self.setMouse(LEFT,self.pick_funcs[mode])
-            self.setMouse(LEFT,self.pick_funcs[mode],SHIFT)
-            self.setMouse(LEFT,self.pick_funcs[mode],CTRL)
+            self.setMouse(LEFT,self.mouse_pick)
+            self.setMouse(LEFT,self.mouse_pick,SHIFT)
+            self.setMouse(LEFT,self.mouse_pick,CTRL)
             self.setMouse(RIGHT,self.emit_done)
             self.setMouse(RIGHT,self.emit_cancel,SHIFT)
             self.connect(self,DONE,self.accept_selection)
@@ -247,7 +247,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
         self.selection = set([])
         self.selection_canceled = False
-        self.start_selection('actors')
+        self.start_selection(mode)
         while not self.selection_canceled:
             self.wait_selection()
             if not self.selection_canceled:
@@ -267,10 +267,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return list(self.selection)
     
 
-    def pickNumbers(self):
-        """Go into number picking mode and return the selection."""
-        self.setMouse(LEFT,self.pick_numbers)
-        return self.waitSelection()
+##     def pickNumbers(self):
+##         """Go into number picking mode and return the selection."""
+##         self.setMouse(LEFT,self.pick_numbers)
+##         return self.waitSelection()
 
     
     def enableSelect(self,shape):
@@ -467,18 +467,18 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.emit(CANCEL,())
 
 
-    def pick_finish(self,x,y,action):
-        """Finish the selection mode by clicking a mouse button."""
-        if action == RELEASE:
-            self.finish_selection()
+##     def pick_finish(self,x,y,action):
+##         """Finish the selection mode by clicking a mouse button."""
+##         if action == RELEASE:
+##             self.finish_selection()
 
 
-    def pick_actors(self,x,y,action):
-        """Return the actors close to the mouse pointer.
+    def mouse_pick(self,x,y,action):
+        """Process mouse events during intractive picking.
 
         On PRESS, record the mouse position.
         On MOVE, create a rectangular picking window.
-        On RELEASE, pick the actors inside the rectangle.
+        On RELEASE, pick the objects inside the rectangle.
         """
         if action == PRESS:
             self.draw_cursor(self.statex,self.statey)
@@ -489,69 +489,57 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
 
         elif action == RELEASE:
-            GL.glSelectBuffer(16+3*len(self.actors))
-            GL.glRenderMode(GL.GL_SELECT)
-            GL.glInitNames() # init the name stack
             x,y = (x+self.statex)/2., (y+self.statey)/2.
             w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
             if w <= 0 or h <= 0:
                w,h = GD.cfg.get('pick/size',(20,20))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
-            self.camera.loadProjection(pick=[x,y,w,h,vp])
-            self.camera.loadMatrix()
-            for i,actor in enumerate(self.actors):
-                GL.glPushName(i)
-                GL.glCallList(actor.list)
-                GL.glPopName()
-            buf = GL.glRenderMode(GL.GL_RENDER)
-            self.picked = []
-            for r in buf:
-                #GD.debug(r)
-                for i in r[2]:
-                    #GD.debug("item %s is of type %s" % (i,type(i)))
-                    self.picked.append(self.actors[int(i)])
+            self.pick_window = (x,y,w,h,vp)
+            self.pick_funcs[self.selection_mode]()
             if self.cursor:
                 self.removeDecoration(self.cursor)
             self.selection_busy = False
             self.update()
 
 
-    def pick_numbers(self,x,y,action):
-        """Return the numbers close to the mouse pointer."""
-        if action == PRESS:
-            GD.debug("Start picking mode")
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
-            self.draw_cursor(self.statex,self.statey)
-            self.picked = []
-            self.update()
-            
-        elif action == MOVE:
-            GD.debug("Move picking window")
-            self.draw_rectangle(x,y)
-            self.update()
+    def do_pick(self):
+        """Return the objects inside the pick window.
 
-        elif action == RELEASE:
-            GD.debug("End picking mode")
-            if self.cursor:
-                self.removeDecoration(self.cursor)
-            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-            self.update()
+        The pick window is set by self.pick_window.
+        The type of objects to be picked is set by self.selection_mode.
+        The list of picked objects is set in self.picked.
+        This function is implemented by a set of mode dependent functions.
+        """
+        self.pick_funcs[self.selection_mode]()
+
             
-            GD.debug((x,y))
-            GD.debug((self.statex,self.statey))
-            x,y = (x+self.statex)/2., (y+self.statey)/2.
-            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
-            if w <= 0 or h <= 0:
-               w,h = GD.cfg.get('pick/size',(20,20))
-            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
-            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
-            self.camera.loadProjection(pick=(x,y,w,h,vp))
-            self.camera.loadMatrix()
-            if self.numbers:
-                self.picked = self.numbers.drawpick()
-            self.setMouse(LEFT,self.dynarot)
-            GD.debug("Re-enabling dynarot")
-            self.update()
+    def pick_actors(self):
+        """Return the actors inside the pick_window."""
+        self.camera.loadProjection(pick=self.pick_window)
+        self.camera.loadMatrix()
+        GL.glSelectBuffer(16+3*len(self.actors))
+        GL.glRenderMode(GL.GL_SELECT)
+        GL.glInitNames() # init the name stack
+        for i,actor in enumerate(self.actors):
+            GL.glPushName(i)
+            GL.glCallList(actor.list)
+            GL.glPopName()
+        buf = GL.glRenderMode(GL.GL_RENDER)
+        self.picked = []
+        for r in buf:
+            #GD.debug(r)
+            for i in r[2]:
+                #GD.debug("item %s is of type %s" % (i,type(i)))
+                self.picked.append(self.actors[int(i)])
+
+
+    def pick_numbers(self):
+        """Return the numbers inside the pick_window."""
+        self.camera.loadProjection(pick=self.pick_window)
+        self.camera.loadMatrix()
+        self.picked = [0,1,2,3]
+        if self.numbers:
+            self.picked = self.numbers.drawpick()
 
     
     def pick_points(self,x,y,action):
