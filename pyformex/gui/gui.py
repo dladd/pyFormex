@@ -161,7 +161,8 @@ class GUI(QtGui.QMainWindow):
 
         # self.central is the complete central widget of the main window
         self.central = QtGui.QWidget()
-        #self.central.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
+        self.central.autoFillBackground()
+          #self.central.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.central.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.central.resize(*GD.cfg['gui/size'])
         

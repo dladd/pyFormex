@@ -393,8 +393,24 @@ class Surface(object):
     # ANY function that uses self.elems should call self.refresh()
     #     BEFORE using it.
     # ANY function that changes self.elems should
-    #     - invalidate self.edges and/or self.faces by setting it to None,
+    #     - invalidate self.edges and/or self.faces by setting them to None,
     #     - call self.refresh() AFTER changing it.
+
+    # A safer approach is to only use getElems() and setElems()
+    #
+
+    # This may (and probably will) change in future implementations
+
+    def getElems(self):
+        """Get the elems data."""
+        self.refresh()
+        return self.elems
+
+    def setElems(self,elems):
+        """Change the elems data."""
+        self.edges = self.faces = None
+        self.elems = elems
+        self.refresh()
 
     def refresh(self):
         """Make the internal information consistent and complete.
@@ -783,6 +799,10 @@ class Surface(object):
 
 
     def volume(self):
+        """Return the enclosed volume of the surface.
+
+        This will only be correct if the surface is a closed manifold.
+        """
         self.refresh()
         x = self.coords[self.elems]
         return surface_volume(x).sum()

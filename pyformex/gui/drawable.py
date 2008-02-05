@@ -667,7 +667,6 @@ class Drawable(object):
     def draw(self,mode,color=None):
         if self.list is None:
             self.create_list(mode,color)
-        #GD.debug(">>>> drawing display list %s" % int(self.list)) 
         GL.glCallList(self.list)
 
     def redraw(self,mode,color=None):

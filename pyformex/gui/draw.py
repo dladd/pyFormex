@@ -1031,6 +1031,10 @@ def pick():
     return GD.canvas.pick() 
 
 
+def drawPicked(K):
+    draw(K,color='red',bbox=None)
+    
+
 def pickDraw():
     K = pick()
     GD.debug("PICKED: %s"%K)
