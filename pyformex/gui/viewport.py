@@ -268,10 +268,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return list(self.selection)
     
 
-##     def pickNumbers(self):
-##         """Go into number picking mode and return the selection."""
-##         self.setMouse(LEFT,self.pick_numbers)
-##         return self.waitSelection()
+    def pickNumbers(self,*args,**kargs):
+        """Go into number picking mode and return the selection."""
+        return self.pick('numbers',*args,**kargs)
 
     
     def enableSelect(self,shape):

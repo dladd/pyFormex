@@ -112,10 +112,9 @@ def warning(message,actions=['OK']):
     """Show a warning message and wait for user acknowledgement."""
     widgets.messageBox(message,'warning',actions)
 
-def info(message,actions=['OK']):
+def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
-
 
 def askItems(items,caption=None,timeout=None):
     """Ask the value of some items to the user.
@@ -315,7 +314,7 @@ def step_script(s,glob,paus=True):
             drawblock()
             message(buf)
             exec(buf) in glob
-    info("Finished stepping through script!")
+    showInfo("Finished stepping through script!")
 
 
 def play(fn=None,step=False):

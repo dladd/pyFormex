@@ -55,7 +55,7 @@ def detect(trypaths=None):
                 GD.debug('path does not exist: %s' % path)
                 path = ''
     if path:
-        path += '/calpy'
+        #path += '/calpy'
         GD.message("I found calpy in '%s'" % path)
         sys.path.append(path)
 
@@ -68,7 +68,7 @@ def check(trypaths=None):
         detect(trypaths)
 
     if not utils.hasModule('calpy',check=True):
-        GD.warning("Sorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it).")
+        GD.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)
         exit()
 
 

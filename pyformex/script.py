@@ -139,7 +139,7 @@ def warning(message):
     if not ack("Do you want to continue?"):
         exit()
 
-def info(message):
+def showInfo(message):
     print "pyFormex Info: "+message
 
 ##def log(s):
