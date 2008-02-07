@@ -114,7 +114,7 @@ def pattern(s):
     
     The resulting list is directly suited to initialize a Formex.
     """
-    x = y = z =0
+    x = y = z = 0
     l = []
     connect=True
     for c in s:

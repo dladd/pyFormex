@@ -287,6 +287,8 @@ def drawPolygons(x,mode,color=None):
 
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
     for the lighting are calculated and set
+
+    REM: THE SMOOTH MODE HAS NOT BEEN IMPLEMENTED YET!
     """
     for i,xi in enumerate(x):
         if color is not None:

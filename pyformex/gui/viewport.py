@@ -163,6 +163,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.selection_mode = None
         self.pick_funcs = {
             'actors'  : self.pick_actors,
+            'actor_elements': self.pick_actor_elements,
             'numbers' : self.pick_numbers,
             'elements': self.pick_elements,
             'lines'   : self.pick_lines,
@@ -519,10 +520,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.camera.loadMatrix()
         GL.glSelectBuffer(16+3*len(self.actors))
         GL.glRenderMode(GL.GL_SELECT)
-        GL.glInitNames() # init the name stack
-        for i,actor in enumerate(self.actors):
+        GL.glInitNames()
+        for i,a in enumerate(self.actors):
             GL.glPushName(i)
-            GL.glCallList(actor.list)
+            GL.glCallList(a.list)
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = []
@@ -531,6 +532,58 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             for i in r[2]:
                 #GD.debug("item %s is of type %s" % (i,type(i)))
                 self.picked.append(self.actors[int(i)])
+
+
+    def pick_actor_elements(self):
+        """Return the actors' elements inside the pick_window."""
+        self.camera.loadProjection(pick=self.pick_window)
+        self.camera.loadMatrix()
+        nbuf = len(self.actors)
+        for a in self.actors:
+            nbuf += a.f.shape[0]
+        GL.glSelectBuffer(16+3*nbuf)
+        GL.glRenderMode(GL.GL_SELECT)
+        GL.glInitNames()
+        for i,a in enumerate(self.actors):
+            GL.glPushName(i)
+            GL.glCallList(a.list)
+            GL.glPopName()
+        buf = GL.glRenderMode(GL.GL_RENDER)
+        self.picked = []
+        for r in buf:
+            #GD.debug(r)
+            for i in r[2]:
+                #GD.debug("item %s is of type %s" % (i,type(i)))
+                self.picked.append(self.actors[int(i)])
+##         for i,a in enumerate(self.actors):
+##             GL.glPushName(i)
+##             for j,xi in enumerate(a.f): 
+##                 GL.glPushName(j)
+##                 GL.glBegin(GL.GL_POLYGON)
+##                 for xij in xi:
+##                     GL.glVertex3fv(xij)
+##                 GL.glEnd()
+##                 GL.glPopName()
+##             GL.glPopName()
+##         buf = GL.glRenderMode(GL.GL_RENDER)
+##         self.picked = []
+##         for r in buf:
+##             GD.debug(r)
+##             for i in r[2]:
+##                 #GD.debug("item %s is of type %s" % (i,type(i)))
+##                 self.picked.append(self.actors[int(i)])
+
+##         buf = asarray(GL.glRenderMode(GL.GL_RENDER))
+##         numbers = []
+##         if len(buf) != 0:
+##             r0 = asarray([r[0] for r in buf])
+##             w = where(r0 == r0.min())[0]
+##             buf = buf[w]
+##             for r in buf:
+##                 numbers += map(int,r[2])
+##         else:
+##             print "NO ELEMENTS SELECTED"
+##         return numbers
 
 
     def pick_numbers(self):

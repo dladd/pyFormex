@@ -165,6 +165,7 @@ class GUI(QtGui.QMainWindow):
           #self.central.setFrameStyle(QtGui.QFrame.StyledPanel | QtGui.QFrame.Sunken)
         self.central.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.central.resize(*GD.cfg['gui/size'])
+
         
         # Create an OpenGL canvas with a nice frame around it
         self.viewports = viewport.MultiCanvas()
@@ -465,6 +466,16 @@ def runApp(args):
         print "gl2ps image types:",GD.image_formats_gl2ps
         print "image types converted from EPS:",GD.image_formats_fromeps
         
+    # Load the splash image
+    splash = None
+    print "XXXXXXXXXXX %s XXXXXXXXXXXXXX" % GD.cfg['gui/splash']
+    if os.path.exists(GD.cfg['gui/splash']):
+        GD.debug('Loading splash %s' % GD.cfg['gui/splash'])
+        splashimage = QtGui.QPixmap(GD.cfg['gui/splash'])
+        splash = QtGui.QSplashScreen(splashimage)
+        splash.showMessage(GD.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
+        splash.show()
+        
     # create GUI, show it, run it
     windowname = GD.Version
     count = 0
@@ -565,6 +576,11 @@ See Help->License or the file COPYING for details.
             GD.debug('ERROR while loading plugin %s' % p)
     GD.gui.setBusy(False)
     GD.gui.update()
+
+    # remove the splash window
+    if splash is not None:
+        splash.finish(GD.gui)
+
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):
