@@ -624,6 +624,10 @@ class Coords(ndarray):
         return out
 
 
+    # An alias
+    mirror = reflect
+    
+
     def affine(self,mat,vec=None,inplace=False):
         """Return a general affine transform of the Coords.
 

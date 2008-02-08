@@ -1551,11 +1551,13 @@ class Formex:
     def ric(f):
         return int(round(f))
 
-    # Convenience short notations
+    # Convenience short notations and aliases
     rep = replic
     ros = rosette
     rot = rotate
     trl = translate
+    mirror = reflect
+    
 
 
 

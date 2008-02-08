@@ -76,6 +76,12 @@ def setOptions():
 # functions have already been defined here.
 #
 
+def my_exit():
+    GD.canvas.cancel_selection()
+    GD.app.processEvents()
+    GD.app.exit()
+                          
+
 MenuData = [
     (_('&File'),[
         (_('&Start new project'),fileMenu.createProject),
@@ -102,7 +108,8 @@ MenuData = [
             ]),
         (_('&Options'),setOptions),
         (_('---3'),None),
-        (_('E&xit'),'GD.app.exit'),
+#        (_('E&xit'),'GD.app.exit'),
+        (_('E&xit'),my_exit),
         ]),
     (_('&Actions'),[
         (_('&Step'),draw.step),

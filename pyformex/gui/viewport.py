@@ -143,6 +143,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     functions in a separate class makes it esier to use the Canvas class
     in non-interactive situations or combining it with other GUI toolsets.
     """
+
+    ##
+    ##
+    ##  IMPORTANT : The mouse functionality should (and will) be moved
+    ##              to the MultiCanvas class!
+    ##
+
     
     def __init__(self,*args):
         """Initialize an empty canvas with default settings."""
@@ -525,12 +532,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glCallList(a.list)
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
-        self.picked = []
-        for r in buf:
-            #GD.debug(r)
-            for i in r[2]:
-                #GD.debug("item %s is of type %s" % (i,type(i)))
-                self.picked.append(self.actors[int(i)])
+        self.picked = [ r[2][0] for r in buf ]
+##         for r in buf:
+##             for i in r[2]:
+##                 self.picked.append(self.actors[int(i)])
 
 
     def pick_actor_elements(self):
@@ -545,44 +550,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         GL.glInitNames()
         for i,a in enumerate(self.actors):
             GL.glPushName(i)
-            GL.glCallList(a.list)
+            for j,xi in enumerate(a.f): 
+                GL.glPushName(j)
+                GL.glBegin(GL.GL_POLYGON)
+                for xij in xi:
+                    GL.glVertex3fv(xij)
+                GL.glEnd()
+                GL.glPopName()
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
-        self.picked = []
-        for r in buf:
-            #GD.debug(r)
-            for i in r[2]:
-                #GD.debug("item %s is of type %s" % (i,type(i)))
-                self.picked.append(self.actors[int(i)])
-##         for i,a in enumerate(self.actors):
-##             GL.glPushName(i)
-##             for j,xi in enumerate(a.f): 
-##                 GL.glPushName(j)
-##                 GL.glBegin(GL.GL_POLYGON)
-##                 for xij in xi:
-##                     GL.glVertex3fv(xij)
-##                 GL.glEnd()
-##                 GL.glPopName()
-##             GL.glPopName()
-##         buf = GL.glRenderMode(GL.GL_RENDER)
-##         self.picked = []
-##         for r in buf:
-##             GD.debug(r)
-##             for i in r[2]:
-##                 #GD.debug("item %s is of type %s" % (i,type(i)))
-##                 self.picked.append(self.actors[int(i)])
-
-##         buf = asarray(GL.glRenderMode(GL.GL_RENDER))
-##         numbers = []
-##         if len(buf) != 0:
-##             r0 = asarray([r[0] for r in buf])
-##             w = where(r0 == r0.min())[0]
-##             buf = buf[w]
-##             for r in buf:
-##                 numbers += map(int,r[2])
-##         else:
-##             print "NO ELEMENTS SELECTED"
-##         return numbers
+        self.picked = [ r[2] for r in buf ]
 
 
     def pick_numbers(self):
