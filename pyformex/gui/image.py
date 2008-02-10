@@ -20,15 +20,6 @@ from PyQt4 import QtCore
 import utils
 import os
 
-# load gl2ps if available
-try:
-    import gl2ps
-    _has_gl2ps = True
-    print 'Congratulations! You have gl2ps, so I activated drawPS!'    
-
-except ImportError:
-    _has_gl2ps = False
-
 # Find interesting supporting software
 utils.hasExternal('ImageMagick')
 
@@ -134,7 +125,9 @@ def save(canvas,fn,fmt='png',options=None):
 
 #### ONLY LOADED IF GL2PS FOUND ########################
 
-if _has_gl2ps:
+if utils.hasModule('gl2ps'):
+
+    import gl2ps
 
     _producer = GD.Version + ' (http://pyformex.berlios.de)'
     _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,

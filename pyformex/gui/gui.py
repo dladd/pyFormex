@@ -169,9 +169,7 @@ class GUI(QtGui.QMainWindow):
         
         # Create an OpenGL canvas with a nice frame around it
         self.viewports = viewport.MultiCanvas()
-        # and update the default settings
         self.viewports.setDefaults(GD.cfg['canvas'])
-
         self.central.setLayout(self.viewports)
 
         # Create the message board
@@ -262,7 +260,7 @@ class GUI(QtGui.QMainWindow):
             toolbar=self.viewbar,
             icons=['%sview' % t for t in views]
             )
-        
+       
         # Display the main menubar
         #self.menu.show()
         self.resize(*size)
@@ -470,7 +468,6 @@ def runApp(args):
         
     # Load the splash image
     splash = None
-    print "XXXXXXXXXXX %s XXXXXXXXXXXXXX" % GD.cfg['gui/splash']
     if os.path.exists(GD.cfg['gui/splash']):
         GD.debug('Loading splash %s' % GD.cfg['gui/splash'])
         splashimage = QtGui.QPixmap(GD.cfg['gui/splash'])

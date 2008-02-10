@@ -225,16 +225,6 @@ def createPlane():
         export({name:P})
         selection.set([name])
         selection.draw()
-
-
-def test():
-    picked = GD.canvas.pick()
-    print picked
-    for p in picked:
-        GD.canvas.removeActor(p)
-        p.redraw(GD.canvas.rendermode,color=colors.red)
-        GD.canvas.addActor(p)
-    GD.canvas.update()
     
 
 ################# Query Information ###################
@@ -309,7 +299,8 @@ def create_menu():
           ('&Distance',queryDistance),
           ]),
         ("---",None),
-        ("&Test",test),
+        ("&Pick Actors",pickActors),
+        ("&Pick Elements",pickElements),
         ("---",None),
         ("&Close",close_menu),
         ]

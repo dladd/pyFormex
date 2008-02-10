@@ -148,7 +148,6 @@ def main(argv=None):
                     action="store_true", dest="remove", default=False),
         ])
     GD.options, args = parser.parse_args(argv)
-    print args
     GD.print_help = parser.print_help
 
     if GD.options.whereami:

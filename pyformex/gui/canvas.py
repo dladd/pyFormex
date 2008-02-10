@@ -79,7 +79,7 @@ class ActorList(list):
         This should e.g. be used after changing an actor's properties.
         """
         for actor in self:
-            actor.redraw(self.canvas.rendermode)
+            actor.redraw(mode=self.canvas.rendermode)
 
 
 
@@ -216,7 +216,7 @@ class Canvas(object):
         for i in range(8):
             light = GD.cfg.get('render/light%d' % i, None)
             if light is not None:
-                GD.debug("  Add light %s: %s: " % (i,light))
+                #GD.debug("  Add light %s: %s: " % (i,light))
                 self.lights.append(Light(i,light))
 
 
@@ -351,22 +351,22 @@ class Canvas(object):
             opaque = [ a for a in self.actors if not a.trans ]
             transp = [ a for a in self.actors if a.trans ]
             for actor in opaque:
-               actor.draw(self.rendermode)
+               actor.draw(mode=self.rendermode)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             for actor in transp:
-                actor.draw(self.rendermode)
+                actor.draw(mode=self.rendermode)
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)
         else:
             for actor in self.actors:
                 self.setDefaults()
-                actor.draw(self.rendermode)
+                actor.draw(mode=self.rendermode)
 
         for actor in self.annotations:
             self.setDefaults()
-            actor.draw(self.rendermode)
+            actor.draw(mode=self.rendermode)
 
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
@@ -377,7 +377,7 @@ class Canvas(object):
         GLU.gluOrtho2D(0,self.width(),0,self.height())
         for actor in self.decorations:
             self.setDefaults()
-            actor.draw(self.rendermode)
+            actor.draw(mode=self.rendermode)
         # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()

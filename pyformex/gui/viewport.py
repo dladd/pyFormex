@@ -22,6 +22,7 @@ import globaldata as GD
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from OpenGL import GL
 
+from numtools import Collection
 import canvas
 import image
 import utils
@@ -168,11 +169,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(MIDDLE,self.dynapan,mod) 
             self.setMouse(RIGHT,self.dynazoom,mod)
         self.selection_mode = None
-        self.pick_funcs = {
+        self.selection = Collection()
+        self.pick_func = {
             'actors'  : self.pick_actors,
-            'actor_elements': self.pick_actor_elements,
-            'numbers' : self.pick_numbers,
             'elements': self.pick_elements,
+            'numbers' : self.pick_numbers,
             'lines'   : self.pick_lines,
             'points'  : self.pick_points,
             }
@@ -184,7 +185,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def getMouseFunc(self):
         """Return the mouse function bound to self.button and self.mod"""
-        #print "MODIFIER:%s" % modifierName(int(self.mod))
         return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
 
 
@@ -230,7 +230,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """
         GD.debug("CANCEL SELECTION MODE")
         if clear:
-            self.selection = []
+            self.selection.clear()
         self.selection_canceled = True
         self.selection_busy = False
 
@@ -248,36 +248,45 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         a picking operation. The default is to let the user
         modify his selection and only to return after an explicit
         cancel (ESC or right mouse button).
-        - func: if specified, this function will be called with the current
-        selection as argument after each atomic pick operation. This
-        can e.g. be used to highlight the selected objects.
+        - func: if specified, this function will be called after each
+        atomic pick operation. The Collection with the currently selected
+        objects is passed as an argument.
+        This can e.g. be used to highlight the selected objects during picking.
+
+        When the picking operation is finished, the selection is returned.
+        The return value is always a Collection object.
         """
-        GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
-        self.selection = set([])
+        if not single:
+            GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
+        self.selection.clear()
         self.selection_canceled = False
         self.start_selection(mode)
         while not self.selection_canceled:
             self.wait_selection()
             if not self.selection_canceled:
-                selection = set(self.picked)
+                self.pick_func[self.selection_mode]()
                 if self.mod == NONE:
-                    self.selection = selection
+                    self.selection.set(self.picked)
                 elif self.mod == SHIFT:
-                    self.selection |= selection
+                    self.selection.add(self.picked)
                 elif self.mod == CTRL:
-                    self.selection -= selection
-            GD.debug("SELECTION HAS %s ITEMS" % len(self.selection))
-            if func is not None:
-                func(list(self.selection))
+                    GD.debug("REMOVING LAST PICK")
+                    self.selection.remove(self.picked)
+            GD.debug("Selection: %s" % self.selection)
+            if func:
+                func(self.selection)
             if single:
                 self.selection_canceled =True
         self.finish_selection()
-        return list(self.selection)
+        return self.selection
     
 
     def pickNumbers(self,*args,**kargs):
         """Go into number picking mode and return the selection."""
         return self.pick('numbers',*args,**kargs)
+
+
+#### START OF OBSOLETE FUNCS
 
     
     def enableSelect(self,shape):
@@ -287,8 +296,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(LEFT,self.pick_points)
         if shape == 'lines':
             self.setMouse(LEFT,self.pick_lines)
-        if shape == 'elements':
-            self.setMouse(LEFT,self.pick_elements)
         if shape == 'elements_3d':
             self.setMouse(LEFT,self.pick_elements_3d)
         self.mousefnc[CTRL][LEFT] = self.mousefnc[NONE][LEFT]
@@ -502,61 +509,44 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                w,h = GD.cfg.get('pick/size',(20,20))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
             self.pick_window = (x,y,w,h,vp)
-            self.pick_funcs[self.selection_mode]()
             if self.cursor:
                 self.removeDecoration(self.cursor)
             self.selection_busy = False
             self.update()
 
-
-    def do_pick(self):
-        """Return the objects inside the pick window.
-
-        The pick window is set by self.pick_window.
-        The type of objects to be picked is set by self.selection_mode.
-        The list of picked objects is set in self.picked.
-        This function is implemented by a set of mode dependent functions.
-        """
-        self.pick_funcs[self.selection_mode]()
-
             
     def pick_actors(self):
-        """Return the actors inside the pick_window."""
+        """Set the list of actors inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
-        GL.glSelectBuffer(16+3*len(self.actors))
+        stackdepth = 1
+        npickable = len(self.actors)
+        GL.glSelectBuffer(npickable*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
         for i,a in enumerate(self.actors):
+            GD.debug("PICK actor %s = %s" % (i,a.list))
             GL.glPushName(i)
             GL.glCallList(a.list)
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
-        self.picked = [ r[2][0] for r in buf ]
-##         for r in buf:
-##             for i in r[2]:
-##                 self.picked.append(self.actors[int(i)])
+        self.picked = [ r[2][0] for r in buf]
 
 
-    def pick_actor_elements(self):
-        """Return the actors' elements inside the pick_window."""
+    def pick_elements(self):
+        """Set the list of actor elements inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
-        nbuf = len(self.actors)
+        stackdepth = 2
+        npickable = 0
         for a in self.actors:
-            nbuf += a.f.shape[0]
-        GL.glSelectBuffer(16+3*nbuf)
+             npickable += a.nelems()
+        GL.glSelectBuffer(npickable*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
         for i,a in enumerate(self.actors):
             GL.glPushName(i)
-            for j,xi in enumerate(a.f): 
-                GL.glPushName(j)
-                GL.glBegin(GL.GL_POLYGON)
-                for xij in xi:
-                    GL.glVertex3fv(xij)
-                GL.glEnd()
-                GL.glPopName()
+            a.pickGL('elements')
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2] for r in buf ]
@@ -626,34 +616,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.camera.loadMatrix()
             self.selected = self.actors[-1].drawpick('lines')
     
-
-    def pick_elements(self,x,y,action):
-        """Return the elements close to the mouse pointer."""
-        if action == PRESS:
-            GD.debug("Start picking mode")
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
-            self.draw_cursor(self.statex,self.statey)
-            self.draw_square(self.statex-5,self.statey-5,self.statex+5,self.statey+5)
-            self.update()
-            
-        elif action == RELEASE:
-            GD.debug("End picking mode")
-            if self.cursor:
-                self.removeDecoration(self.cursor)
-            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-            self.update()
-            
-            GD.debug((x,y))
-            GD.debug((self.statex,self.statey))
-            x,y = self.statex, self.statey
-            w,h = 10., 10.
-            
-            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
-            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
-            self.camera.loadProjection(pick=(x,y,w,h,vp))
-            self.camera.loadMatrix()
-            self.selected = self.actors[-1].drawpick('elements')
-
     
     def pick_elements_3d(self,x,y,action):
         """Return the elements close to the mouse pointer."""
@@ -751,11 +713,7 @@ class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
 
     def __init__(self,parent=None):
-        """Initialize the multicanvas.
-
-        A context should be given to make sure the viewports
-        share the same context.
-        """
+        """Initialize the multicanvas."""
         QtGui.QGridLayout.__init__(self)
         self.all = []
         self.active = []
@@ -767,8 +725,8 @@ class MultiCanvas(QtGui.QGridLayout):
         # therefore we can not use one single context
         #self.context = context
 	OGLfmt = setOpenGLFormat()
-	OGLctxt = getOpenGLContext()
-	print OGLctxt
+	#OGLctxt = getOpenGLContext()
+	#print OGLctxt
 
         
     def setDefaults(self,dict):
@@ -914,5 +872,22 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
             #vp.updateGL()
             GD.app.processEvents()
 
-                       
+
+if __name__ == "__main__":
+    print "Testing the Collection object"
+    a = Collection()
+    a.add(range(7),3)
+    a.add(range(4))
+    a.remove([2,4],3)
+    print a
+    a.add([[2,0],[2,3],[-1,7],[3,88]])
+    print a
+    a[2] = [1,2,3]
+    print a
+    a[2] = []
+    print a
+    a.set([[2,0],[2,3],[-1,7],[3,88]])
+    print a
+
+                    
 # End

@@ -161,6 +161,8 @@ def toFormex(suffix=''):
     if not suffix:
         selection.clear()
     formex_menu.selection.set(newnames)
+    clear()
+    formex_menu. selection.draw()
 
 
 def fromFormex(suffix=''):

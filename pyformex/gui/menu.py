@@ -116,7 +116,6 @@ MenuData = [
         (_('&Continue'),draw.fforward), 
         (_('&Reset GUI'),resetGUI),
         (_('&Force Finish Script'),draw.force_finish),
-        (_('&Test Pick'),draw.pickDraw),
         (_('&ListFormices'),draw.printall),
         (_('&PrintBbox'),draw.printbbox),
         (_('&PrintGlobalNames'),draw.printglobalnames),
@@ -135,7 +134,7 @@ MenuData = [
         (_('&About'),help.about), 
         (_('&License'),help.license), 
         (_('&Detected Software'),help.detected), 
-        (_('&Warning'),help.testwarning),
+        (_('&Fortune Cookie'),help.cookie),
         ])
     ]
 

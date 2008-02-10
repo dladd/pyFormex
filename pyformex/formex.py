@@ -165,6 +165,69 @@ def pattern(s):
         connect=True
     return l
 
+def mpattern(s):
+    """This is like pattern, but allowing lists with more than 2 points.
+
+    Subsequent points are included in the same list until a '-' occurs.
+    A '-' character splits lists. Each list starts at the last point of
+    the previous list.
+    All lists should have equal length if you want to use the resulting
+    list to initialize a Formex.
+    """
+    x = y = z = 0
+    li = [[x,y,z]]
+    l = []
+    connect=True
+    for c in s:
+        if c == '/':
+            connect = False
+            continue
+        elif c == '-':
+            l.append(li)
+            li = []
+        elif c == '0':
+            x = y = z = 0
+        else:
+            i = ord(c)
+            d = i/16
+            if d == 3:
+                pass
+            elif d == 4:
+                z += 1
+            elif d == 6:
+                z -= 1
+            else:
+                raise RuntimeError,"Unknown pattern character %c ignored" % c
+            i %= 16
+            if i == 1:
+                x += 1
+            elif i == 2:
+                y += 1
+            elif i == 3:
+                x -= 1
+            elif i == 4:
+                y -= 1
+            elif i == 5:
+                x += 1
+                y += 1
+            elif i == 6:
+                x -= 1
+                y += 1
+            elif i == 7:
+                x -= 1
+                y -= 1
+            elif i == 8:
+                x += 1
+                y -= 1
+            elif i == 9:
+                pass
+            else:
+                raise RuntimeError,"Unknown pattern character %c ignored" % c
+        if connect:
+            li.append([x,y,z])
+    l.append(li)
+    return l
+
 # Intersection functions
 #
 # !! These functions currently also exist as formex methods.
@@ -473,7 +536,8 @@ class Formex:
     def nelems(self):
         """Return the number of elements in the formex."""
         return self.f.shape[0]
-    
+
+
     def nplex(self):
         """Return the number of points per element.
 

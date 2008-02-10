@@ -145,7 +145,7 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     for the lighting are calculated and set
     """
     n = None
-    if mode == 'smooth':
+    if mode.startswith('smooth'):
         n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
     if GD.options.uselib:
         if GD.options.safelib:
@@ -436,6 +436,34 @@ def drawGridPlanes(x0,x1,nx):
             GL.glEnd()
 
 
+######################## Draw mimicking for picking ########################
+
+def pickPolygons(x):
+    """Basic element picking function."""
+    for i,xi in enumerate(x): 
+        GL.glPushName(i)
+        GL.glBegin(GL.GL_POLYGON)
+        for xij in xi:
+            GL.glVertex3fv(xij)
+        GL.glEnd()
+        GL.glPopName()
+
+
+def pickPolygonElements(x,e):
+    """Basic element picking function."""
+    for i,ei in enumerate(e): 
+        GL.glPushName(i)
+        GL.glBegin(GL.GL_POLYGON)
+        for eij in ei:
+            GL.glVertex3fv(x[eij])
+        GL.glEnd()
+        GL.glPopName()
+
+#
+# The following functions should be removed when their functionality
+# has been taken over by the new picking funcs.
+#
+
 def pickPoints(x):
     """Pick from a collection of points.
     """
@@ -488,30 +516,6 @@ def pickLines(x):
     return numbers
 
 
-def pickElements(x):
-    """Pick from a collection of elements.
-    """
-    GL.glSelectBuffer(16+3*x.shape[0])
-    GL.glRenderMode(GL.GL_SELECT)
-    GL.glInitNames() # init the name stack
-    for i,xi in enumerate(x): 
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_POLYGON)
-        for xij in xi:
-            GL.glVertex3fv(xij)
-        GL.glEnd()
-        GL.glPopName()
-    buf = asarray(GL.glRenderMode(GL.GL_RENDER))
-    numbers = []
-    if len(buf) != 0:
-        r0 = asarray([r[0] for r in buf])
-        w = where(r0 == r0.min())[0]
-        buf = buf[w]
-        for r in buf:
-            numbers += map(int,r[2])
-    else:
-        print "NO ELEMENTS SELECTED"
-    return numbers
 
 ### Settings ###############################################
 #
@@ -646,6 +650,7 @@ class Drawable(object):
     
     A Drawable subclass should minimally reimplement the following methods:
       bbox(): return the actors bounding box.
+      nelems(): return the number of elements of the actor.
       drawGL(mode): to draw the object. Takes a mode argument so the
         drawing function can act differently depending on the rendering mode.
         There are currently 5 modes:
@@ -659,36 +664,47 @@ class Drawable(object):
         self.trans = False
         self.list = None
 
-    def bbox(self):
-        return array([[0.0,0.0,0.0],[1.0,1.0,1.0]])
+# NOTE: we uncommented the default bbox and nelems methods,
+# because they mask the corresponding Formex/Surface methods in the actors       
 
-    def drawGL(self,mode,color=None):
+##     def bbox(self):
+##         return array([[0.0,0.0,0.0],[1.0,1.0,1.0]])
+        
+##     def nelems(self):
+##         return 1
+
+    def drawGL(self,**kargs):
         """Perform the OpenGL drawing functions to display the actor."""
         raise NotImplementedError
 
-    def draw(self,mode,color=None):
+    def pickGL(self,**kargs):
+        """Mimick the OpenGL drawing functions to pick (from) the actor."""
+        pass
+
+    def draw(self,**kargs):
         if self.list is None:
-            self.create_list(mode,color)
+            self.create_list(**kargs)
         GL.glCallList(self.list)
 
-    def redraw(self,mode,color=None):
+    def redraw(self,**kargs):
         self.delete_list()
-        self.draw(mode,color)
+        self.draw(**kargs)
 
     def use_list(self):
         if self.list:
             GL.glCallList(self.list)
 
-    def create_list(self,mode,color=None):
+    def create_list(self,**kargs):
         self.list = GL.glGenLists(1)
         GL.glNewList(self.list,GL.GL_COMPILE)
+        ok = False
         try:
-            self.drawGL(mode,color)
+            self.drawGL(**kargs)
+            ok = True
         finally:
+            if not ok:
+                GD.debug("Error while creating a display list")
             GL.glEndList()
-        
-    def nelems(self):
-        return 1
 
     def delete_list(self):
         if self.list:

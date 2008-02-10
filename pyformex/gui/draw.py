@@ -1025,23 +1025,83 @@ def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
         if sleeptime > 0.0:
             sleep(sleeptime)
 
-
-def pick():
-    return GD.canvas.pick() 
-
-
-def drawPicked(K):
-    draw(K,color='red',bbox=None)
     
+highlight_colormap = ['black','red']
 
-def pickDraw():
-    K = pick()
-    GD.debug("PICKED: %s"%K)
-    if len(K) > 0:
-        undraw(K)
-        GD.debug("DRAWING PICKED: %s"%K)
-        draw(K,color='red',bbox=None)
-    return K
+def highlightActors(K,colormap=highlight_colormap):
+    """Highlight a selection of actors on the canvas.
+
+    K is Collection of actors as returned by the pick() method.
+    colormap is a list of two colors, for the actors not in, resp. in
+    the Collection K.
+    """
+    for i,A in enumerate(GD.canvas.actors):
+        if i in K.get(-1,[]):
+            color = colormap[1]
+        else:
+            color = colormap[0]
+        #
+        # For some reason, redrawing a surface does not work
+        # Therefore we undraw it and draw it again
+        #
+        if isinstance(A,surface.Surface):
+            undraw(A)
+            draw(A,color=color)
+        else:
+            A.redraw(mode=GD.canvas.rendermode,color=color)
+    GD.canvas.update()
+
+
+def highlightElements(K,colormap=highlight_colormap):
+    """Highlight a selection of actor elements on the canvas.
+
+    K is Collection of actor elements as returned by the pick() method.
+    colormap is a list of two colors, for the elements not in, resp. in
+    the Collection K.
+    """
+    for i,A in enumerate(GD.canvas.actors):
+        p = numpy.zeros((A.nelems(),),dtype=int)
+        if i in K.keys():
+            p[K[i]] = 1
+        if isinstance(A,surface.Surface):
+            undraw(A)
+            draw(A,color=p,colormap=colormap)
+        else:
+            A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
+    GD.canvas.update()
+
+highlight_funcs = { 'actors': highlightActors,
+                    'elements': highlightElements,
+                    }
+
+def pick(mode='actors',single=False,func=None):
+    """Enter interactive picking mode and return selection.
+
+    See viewport.py for more details.
+    This function differs in that it provides default highlighting
+    during the picking operation.
+    """
+    if func is None:
+        func = highlight_funcs.get(mode,None)
+    return GD.canvas.pick(mode,single,func) 
+    
+def pickActors(single=False,func=None):
+    return pick('actors',single,func)
+
+def pickElements(single=False,func=None):
+    return pick('elements',single,func)
+
+
+def highlight(K,mode,colormap=highlight_colormap):
+    """Highlight a Collection of actor/elements.
+
+    K is usually the return value of a pick operation, but might also
+    be set by the user.
+    mode is one of the pick modes.
+    """
+    func = highlight_funcs.get(mode,None)
+    if func:
+        func(K,colormap)
 
 
 def pickNumbers(marks=None):

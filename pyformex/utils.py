@@ -13,6 +13,7 @@
 import globaldata as GD
 import os,commands,re
 from config import formatDict
+from numpy import unique1d,union1d,setdiff1d
 
 import distutils.version
 Version = distutils.version.LooseVersion
@@ -74,6 +75,9 @@ def checkModule(name):
         elif name == 'calpy':
             import calpy
             version = calpy.__doc__.split('\n')[0].split()[1]
+        elif name == 'gl2ps':
+            import gl2ps
+            version = gl2ps.GL2PS_VERSION
     except:
         pass
     congratulations(name,version,'module')

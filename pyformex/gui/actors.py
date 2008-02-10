@@ -309,6 +309,8 @@ class PlaneActor(Actor):
 ###########################################################################
 
 quadratic_curve_ndiv = 8
+
+
 class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
@@ -396,10 +398,10 @@ class FormexActor(Actor,Formex):
         GL.glEndList()
         
 
-    bbox = Formex.bbox
+    #bbox = Formex.bbox
 
 
-    def drawGL(self,mode='wireframe',color=None,alpha=None):
+    def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):
         """Draw the formex.
 
         if color is None, it is drawn with the color specified on creation.
@@ -414,40 +416,32 @@ class FormexActor(Actor,Formex):
         """
 
         if mode.endswith('wire'):
-            self.drawGL(mode[:-4],color=color)
-            self.drawGL('wireframe',color=asarray(black))
+            self.drawGL(mode=mode[:-4],color=color,colormap=None)
+            self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
             return
 
         if alpha is None:
             alpha = self.alpha
             
-        ## CURRENTLY, ONLY color=None is used
-        
         color1 = None
         color2 = None
         
         if color is None:  
-            color = self.color
+            color,colormap = self.color,self.colormap
         else:
-            color = saneColor(color)
+            color,colormap = saneColorSet(color,colormap,self.nelems())
         
         if color is None:  # no color
-            #GD.debug("NO COLOR")
             pass
         
         elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
-            #GD.debug("SINGLE COLOR %s ALPHA %s" % (str(color),alpha))
             GL.glColor(append(color,alpha))
-            #print append(color,alpha)
             color = None
 
         elif color.dtype.kind == 'i': # color index
-            #GD.debug("COLOR INDEX %s\n%s" % (str(color),str(self.colormap)))
-            color = self.colormap[color]
+            color = colormap[color]
 
         else: # a full color array : use as is
-            #pass
-            GD.debug("FULL COLOR")
             color1 = self.color1
             color2 = self.color2
 
@@ -508,6 +502,15 @@ class FormexActor(Actor,Formex):
             drawPolygons(self.f,mode,color=None)
     
 
+    def pickGL(self,mode):
+        """ Allow picking of parts of the actor.
+
+        mode can be 'elements' or 'points'
+        """
+        if mode == 'elements':
+            pickPolygons(self.f)
+            
+## drawpick should be removed when new picking funcs are fully operational
     def drawpick(self,shape):
         if shape == 'points':
             picked = pickPoints(self.f.reshape(-1,1,3))
@@ -521,9 +524,6 @@ class FormexActor(Actor,Formex):
             C = Formex.concatenate(C)
             picked = pickLines(C.f)
             selected = C.f[picked]
-        if shape == 'elements':
-            picked = pickElements(self.f)
-            selected = self.f[picked]
         if len(selected) != 0:
             flag = ones((selected.shape[0],))
             for i in range(selected.shape[0]):
@@ -571,30 +571,28 @@ class SurfaceActor(Actor,Surface):
         self.trans = self.alpha < 1.0
 
 
-    bbox = Surface.bbox
+    # override the defaults (unneeded since we commected out the defaults) 
+    #bbox = Surface.bbox
+    #nelems = Surface.nelems
 
 
-    def drawGL(self,mode,color=None,alpha=None):
+    def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):
         """Draw the surface."""
 
         if mode.endswith('wire'):
-            self.drawGL(mode[:-4],color=color)
-            print "NOW DRAWING THE EDGES"
+            self.drawGL(mode=mode[:-4],color=color,colormap=None)
             GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
-            self.drawGL('wireframe',color=asarray(black))
+            self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
             GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
             return
 
         if alpha is None:
             alpha = self.alpha           
 
-        if color == None:
-            color = self.color
-
-##                 if mode == 'wireframe':
-##                     # adapt color array to edgeselect
-##                     color = concatenate([self.color,self.color,coords[self.elems]self.color],axis=-1)
-##                     color = color.reshape((-1,2))[self.edgeselect]
+        if color is None:  
+            color,colormap = self.color,self.colormap
+        else:
+            color,colormap = saneColorSet(color,colormap,self.nelems())
         
         if color is None:  # no color
             pass
@@ -604,12 +602,10 @@ class SurfaceActor(Actor,Surface):
             color = None
 
         elif color.dtype.kind == 'i': # color index
-            color = self.colormap[color]
+            color = colormap[color]
 
         else: # a full color array : use as is
             pass
-
-        #print "SURFACE COLOR = %s" % str(color)
 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
@@ -619,11 +615,26 @@ class SurfaceActor(Actor,Surface):
             rev = reverseIndex(self.faces)
             if color is not None:
                 color = color[rev[:,-1]]
-            drawLineElems(self.coords,self.edges,color)
+            drawLines(self.coords[self.edges],color)
+            #drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+            drawTriangles(self.coords[self.elems],mode,color,alpha)
+            #drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
+    
+
+    def pickGL(self,mode):
+        """ Allow picking of parts of the actor.
+
+        mode can be 'elements' or 'points'
+        """
+##         if mode == 'actors':
+##             self.use_list()
+##         el
+        if mode == 'elements':
+            self.refresh()
+            pickPolygons(self.coords[self.elems])
 
 
     def drawpick(self,shape):
@@ -633,9 +644,6 @@ class SurfaceActor(Actor,Surface):
         if shape == 'lines':
             picked = pickLines(self.coords[self.edges])
             selected = self.coords[self.edges][picked]
-        if shape == 'elements':
-            picked = pickElements(self.coords[self.elems])
-            selected = self.coords[self.elems][picked]
         if len(selected) != 0:
             flag = ones((selected.shape[0],))
             for i in range(selected.shape[0]):

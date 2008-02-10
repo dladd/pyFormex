@@ -17,6 +17,7 @@ import os,sys
 import draw
 import utils
 import tempfile
+import random
 
 def help(page=None):
     """Display a html help page.
@@ -89,5 +90,21 @@ Copyright 2004-2007 Benedict Verhegghe.
 Distributed under the GNU GPL v2 or higher.
 """ % GD.Version)
 
-def testwarning():
-    draw.showInfo("Smoking may be hazardous to your health!\nWindows is a virus!\nCoincidence does not exist. Perfection does.",["OK"])
+cookies = [
+    "Smoking may be hazardous to your health.",
+    "Windows is a virus.",
+    "Coincidence does not exist. Perfection does.",
+    "It's all in the code.",
+    "Python is the universal glue.",
+    ]    
+
+random.shuffle(cookies)
+
+def roll(l):
+    l.append(l.pop(0))
+
+def cookie():
+    draw.showInfo(cookies[0],["OK"])
+    roll(cookies)
+
+# End
