@@ -213,6 +213,15 @@ def writeSection(fil, nr):
             if mat is not None:
                 fil.write("""*SHELL SECTION, ELSET=Elementset_%s, MATERIAL=%s
 %s \n""" % (nr,mat.name,float(el.thickness)))
+
+    ############
+    ## 2D SOLID elements
+    ##########################
+    elif el.elemtype.upper() in ['CPE3','CPE3H','CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH','CPE6','CPE6H','CPE6M','CPE6MH','CPE8','CPE8H','CPE8R','CPE8RH']:
+        if el.sectiontype.upper() == 'SOLID':
+            if mat is not None:
+                fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
+%s \n""" % (nr,mat.name,float(el.thickness)))
             
     ############
     ## UNSUPPORTED elements

@@ -266,20 +266,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             if not self.selection_canceled:
                 self.pick_func[self.selection_mode]()
                 if self.mod == NONE:
-                    print self.picked
                     self.selection.set(self.picked)
                 elif self.mod == SHIFT:
-                    print self.picked
                     self.selection.add(self.picked)
                 elif self.mod == CTRL:
-                    GD.debug("REMOVING LAST PICK")
-                    print self.picked
                     self.selection.remove(self.picked)
             GD.debug("Selection: %s" % self.selection)
             if func:
                 func(self.selection)
             if single:
-                self.selection_canceled =True
+                self.selection_canceled = True
         self.finish_selection()
         return self.selection
     

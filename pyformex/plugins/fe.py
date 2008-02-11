@@ -15,7 +15,23 @@
 
 import numpy
 
-def mergeNodes(femodels):
+def mergeNodes(nodes):
+    """Merge all the nodes of a list of node sets.
+
+    Each item in nodes is a Coords array.
+    The return value is a tuple with:
+     - the coordinates of all unique nodes,
+     - a list of indices translating the old node numbers to the new.
+    """
+    coords = numpy.concatenate([x for x in nodes],axis=0)
+    coords,index = coords.fuse()
+    n = numpy.array([0] + [ x.npoints for x in nodes ])
+    print n
+    print n.cumsum()
+    return coords,index
+
+
+def mergeModels(femodels):
     """Merge all the nodes of a list of FE models.
 
     Each item in femodels is a (coords,elems) tuple.
@@ -27,7 +43,7 @@ def mergeNodes(femodels):
     """
     coords = numpy.concatenate([x for x,e in femodels],axis=0)
     coords,index = coords.fuse()
-    return coords,[index[e] for x,e in femodels]
+    return coords,index,[index[e] for x,e in femodels]
               
 
 
