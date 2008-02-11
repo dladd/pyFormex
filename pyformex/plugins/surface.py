@@ -451,6 +451,9 @@ class Surface(object):
         return 3
 
     npoints = ncoords
+
+    def vertices(self):
+        return self.coords
     
     def shape(self):
         """Return the number of ;points, edges, faces of the Surface."""

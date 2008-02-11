@@ -173,9 +173,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.pick_func = {
             'actors'  : self.pick_actors,
             'elements': self.pick_elements,
+            'points'  : self.pick_points,
             'numbers' : self.pick_numbers,
             'lines'   : self.pick_lines,
-            'points'  : self.pick_points,
             }
 
 
@@ -243,7 +243,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Interactively pick objects from the viewport.
 
         - mode: defines what to pick : one of
-        ['actors','numbers','elements','points']
+        ['actors','elements','points','numbers']
         - single: if True, the function returns as soon as the user ends
         a picking operation. The default is to let the user
         modify his selection and only to return after an explicit
@@ -295,8 +295,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def enableSelect(self,shape):
         """Start selection mode."""
         self.selection = []
-        if shape == 'points':
-            self.setMouse(LEFT,self.pick_points)
         if shape == 'lines':
             self.setMouse(LEFT,self.pick_lines)
         if shape == 'elements_3d':
@@ -555,6 +553,25 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.picked = [ r[2] for r in buf ]
 
 
+    def pick_points(self):
+        """Set the list of actor points inside the pick_window."""
+        self.camera.loadProjection(pick=self.pick_window)
+        self.camera.loadMatrix()
+        stackdepth = 2
+        npickable = 0
+        for a in self.actors:
+             npickable += a.npoints()
+        GL.glSelectBuffer(npickable*(3+stackdepth))
+        GL.glRenderMode(GL.GL_SELECT)
+        GL.glInitNames()
+        for i,a in enumerate(self.actors):
+            GL.glPushName(i)
+            a.pickGL('points')
+            GL.glPopName()
+        buf = GL.glRenderMode(GL.GL_RENDER)
+        self.picked = [ r[2] for r in buf ]
+
+
     def pick_numbers(self):
         """Return the numbers inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
@@ -562,34 +579,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.picked = [0,1,2,3]
         if self.numbers:
             self.picked = self.numbers.drawpick()
-
-    
-    def pick_points(self,x,y,action):
-        """Return the lines close to the mouse pointer."""
-        if action == PRESS:
-            GD.debug("Start picking mode")
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
-            self.draw_cursor(self.statex,self.statey)
-            self.draw_square(self.statex-5.,self.statey-5.,self.statex+5.,self.statey+5.)
-            self.update()
-            
-        elif action == RELEASE:
-            GD.debug("End picking mode")
-            if self.cursor:
-                self.removeDecoration(self.cursor)
-            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-            self.update()
-            
-            GD.debug((x,y))
-            GD.debug((self.statex,self.statey))
-            x,y = self.statex, self.statey
-            w,h = 10., 10.
-            
-            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
-            GD.debug("PICK: cursor %s, viewport %s" % ((x,y,w,h),vp))
-            self.camera.loadProjection(pick=(x,y,w,h,vp))
-            self.camera.loadMatrix()
-            self.selected = self.actors[-1].drawpick('points')
 
     
     def pick_lines(self,x,y,action):

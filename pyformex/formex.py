@@ -928,6 +928,7 @@ class Formex:
         """
         return Formex(self.f[:,idx,:],self.p)
 
+
     def points(self):
         """Return a Formex containing only the points.
 
@@ -937,8 +938,21 @@ class Formex:
         number of points.
         The properties are not copied over, since they will usually not make
         any sense.
+        
+        The vertices() method returns the same data, but as a Coords object.
         """
         return Formex(self.f.reshape((-1,1,3)))
+
+
+    def vertices(self):
+        """Return the points of a Formex as a 2dim Coords object.
+
+        The return value holds the same coordinate data as the input Formex,
+        but in another shape: (npoints,3).
+        
+        The points() method returns the same data, but as a Formex.
+        """
+        return self.f.reshape((-1,3))
 
 
     def remove(self,F):

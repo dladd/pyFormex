@@ -406,11 +406,11 @@ class Canvas(object):
         """Remove a 3D actor from the 3D scene."""
         self.actors.delete(actor)
          
-    def addMark(self,actor):
+    def addAnnotation(self,actor):
         """Add an annotation to the 3D scene."""
         self.annotations.add(actor)
 
-    def removeMark(self,actor):
+    def removeAnnotation(self,actor):
         """Remove an annotation from the 3D scene."""
         if actor == self.triade:
             self.triade = None
@@ -449,12 +449,12 @@ class Canvas(object):
         self.setBbox()
 
 
-    def removeMarks(self,actorlist=None):
+    def removeAnnotations(self,actorlist=None):
         """Remove all actors in actorlist (default = all) from the scene."""
         if actorlist == None:
             actorlist = self.annotations[:]
         for actor in actorlist:
-            self.removeMark(actor)
+            self.removeAnnotation(actor)
 
 
     def removeDecorations(self,actorlist=None):
@@ -468,7 +468,7 @@ class Canvas(object):
     def removeAll(self):
         """Remove all actors and decorations"""
         self.removeActors()
-        self.removeMarks()
+        self.removeAnnotations()
         self.removeDecorations()
 
 

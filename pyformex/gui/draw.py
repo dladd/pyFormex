@@ -653,7 +653,7 @@ def drawNumbers(F,color=colors.black):
     """Draw numbers on all elements of F."""
     FC = F.centroids().trl([0.,0.,0.1]) # put labels in front
     M = marks.MarkList(FC,range(FC.shape[0]),color=color)
-    GD.canvas.addMark(M)
+    GD.canvas.addAnnotation(M)
     GD.canvas.numbers = M
     GD.canvas.update()
     return M
@@ -662,7 +662,7 @@ def drawNumbers(F,color=colors.black):
 def drawText3D(P,text,color=colors.black,font=None):
     """Draw a text at a 3D point."""
     M = marks.TextMark(P,text,color=color,font=font)
-    GD.canvas.addMark(M)
+    GD.canvas.addAnnotation(M)
     GD.canvas.update()
     return M
 
@@ -730,9 +730,9 @@ def setTriade(on=None):
         on = not hasattr(GD.canvas,'triade') or GD.canvas.triade is None
     if on:
         GD.canvas.triade = actors.TriadeActor(1.0)
-        GD.canvas.addMark(GD.canvas.triade)
+        GD.canvas.addAnnotation(GD.canvas.triade)
     else:
-        GD.canvas.removeMark(GD.canvas.triade)
+        GD.canvas.removeAnnotation(GD.canvas.triade)
         GD.canvas.triade = None
     GD.canvas.update()
     GD.app.processEvents()
@@ -743,6 +743,15 @@ def drawtext(text,x,y,font='9x15',adjust='left'):
     TA = decors.Text(text,x,y,font,adjust)
     decorate(TA)
     return TA
+
+def annotate(annot):
+    """Draw an annotation."""
+    GD.canvas.addAnnotation(annot)
+    GD.canvas.update()
+
+def unannotate(annot):
+    GD.canvas.removeAnnotation(annot)
+    GD.canvas.update()
 
 def decorate(decor):
     """Draw a decoration."""
@@ -1070,8 +1079,33 @@ def highlightElements(K,colormap=highlight_colormap):
             A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
     GD.canvas.update()
 
+
+highlight_pts = None
+
+def highlightPoints(K,colormap=highlight_colormap):
+    """Highlight a selection of actor elements on the canvas.
+
+    K is Collection of actor elements as returned by the pick() method.
+    colormap is a list of two colors, for the elements not in, resp. in
+    the Collection K.
+    """
+    global highlight_pts
+    if highlight_pts is not None:
+        unannotate(highlight_pts)
+        highlight_pts = None
+    pts = []
+    for i,A in enumerate(GD.canvas.actors):
+        if i in K.keys():
+            pts.append(A.vertices()[K[i]])
+    pts = Formex(numpy.concatenate(pts,axis=0))
+    highlight_pts = actors.FormexActor(pts,marksize=10,color=highlight_colormap[1])
+    annotate(highlight_pts)
+    return highlight_pts
+
+
 highlight_funcs = { 'actors': highlightActors,
                     'elements': highlightElements,
+                    'points': highlightPoints,
                     }
 
 def pick(mode='actors',single=False,func=None):

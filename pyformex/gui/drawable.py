@@ -438,6 +438,17 @@ def drawGridPlanes(x0,x1,nx):
 
 ######################## Draw mimicking for picking ########################
 
+
+def pickPoints(x):
+    x = x.reshape((-1,3))
+    for i,xi in enumerate(x):
+        GL.glPushName(i)
+        GL.glBegin(GL.GL_POINTS)
+        GL.glVertex3fv(xi)
+        GL.glEnd()
+        GL.glPopName()
+
+
 def pickPolygons(x):
     """Basic element picking function."""
     for i,xi in enumerate(x): 
@@ -449,7 +460,7 @@ def pickPolygons(x):
         GL.glPopName()
 
 
-def pickPolygonElements(x,e):
+def pickPolygonElems(x,e):
     """Basic element picking function."""
     for i,ei in enumerate(e): 
         GL.glPushName(i)
@@ -463,31 +474,6 @@ def pickPolygonElements(x,e):
 # The following functions should be removed when their functionality
 # has been taken over by the new picking funcs.
 #
-
-def pickPoints(x):
-    """Pick from a collection of points.
-    """
-    GL.glSelectBuffer(16+3*x.shape[0])
-    GL.glRenderMode(GL.GL_SELECT)
-    GL.glInitNames() # init the name stack
-    for i,xi in enumerate(x): 
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_POINTS)
-        for xij in xi:
-            GL.glVertex3fv(xij)
-        GL.glEnd()
-        GL.glPopName()
-    buf = asarray(GL.glRenderMode(GL.GL_RENDER))
-    numbers = []
-    if len(buf) != 0:
-        r0 = asarray([r[0] for r in buf])
-        w = where(r0 == r0.min())[0]
-        buf = buf[w]
-        for r in buf:
-            numbers += map(int,r[2])
-    else:
-        print "NO POINTS SELECTED"
-    return numbers
 
 
 def pickLines(x):

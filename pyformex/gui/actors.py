@@ -509,12 +509,11 @@ class FormexActor(Actor,Formex):
         """
         if mode == 'elements':
             pickPolygons(self.f)
+        elif mode == 'points':
+            pickPoints(self.f)
             
 ## drawpick should be removed when new picking funcs are fully operational
     def drawpick(self,shape):
-        if shape == 'points':
-            picked = pickPoints(self.f.reshape(-1,1,3))
-            selected = self.f.reshape(-1,1,3)[picked]
         if shape == 'lines':
             nplex = self.nplex()
             L = range(nplex)
@@ -619,8 +618,8 @@ class SurfaceActor(Actor,Surface):
             #drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            drawTriangles(self.coords[self.elems],mode,color,alpha)
-            #drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+            #drawTriangles(self.coords[self.elems],mode,color,alpha)
+            drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
     
 
@@ -634,13 +633,13 @@ class SurfaceActor(Actor,Surface):
 ##         el
         if mode == 'elements':
             self.refresh()
-            pickPolygons(self.coords[self.elems])
+            #pickPolygons(self.coords[self.elems])
+            pickPolygonElems(self.coords,self.elems)
+        elif mode == 'points':
+            pickPoints(self.coords)
 
 
     def drawpick(self,shape):
-        if shape == 'points':
-            picked = pickPoints(self.coords.reshape(-1,1,3))
-            selected = self.coords.reshape(-1,1,3)[picked]
         if shape == 'lines':
             picked = pickLines(self.coords[self.edges])
             selected = self.coords[self.edges][picked]
