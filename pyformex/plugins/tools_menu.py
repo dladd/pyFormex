@@ -301,6 +301,7 @@ def create_menu():
         ("---",None),
         ("&Pick Actors",pickActors),
         ("&Pick Elements",pickElements),
+        ("&Pick Points",pickPoints),
         ("---",None),
         ("&Close",close_menu),
         ]

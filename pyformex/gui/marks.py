@@ -95,5 +95,7 @@ class MarkList(Mark):
             #print r[2]
             numbers += map(int,r[2])
         return numbers
-        
+
+
+
 # End

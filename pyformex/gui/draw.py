@@ -1125,6 +1125,9 @@ def pickActors(single=False,func=None):
 def pickElements(single=False,func=None):
     return pick('elements',single,func)
 
+def pickPoints(single=False,func=None):
+    return pick('points',single,func)
+
 
 def highlight(K,mode,colormap=highlight_colormap):
     """Highlight a Collection of actor/elements.

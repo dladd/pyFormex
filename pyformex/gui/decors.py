@@ -278,3 +278,31 @@ class Line(Decoration):
 
     def drawGL(self,mode='wireframe',color=None):
         drawLine(self.x1,self.y1,self.x2,self.y2)
+            
+
+class LineDrawing(Decoration):
+    """A collection of straight lines on the canvas."""
+    def __init__(self,data):
+        """Initially a Line Drawing.
+
+        data can be a 2-plex Formex or equivalent coordinate data.
+        The z-coordinates of the Formex are unused.
+        A (n,2) shaped array will do as well.
+        """
+        Decoration.__init__(self,x1,y1)
+        data = data.view()
+        data = data.reshape((-1,data.shape[-1]))
+        data = data[:,:2]
+        self.data = data.astype(Float)
+        
+
+    def drawGL(self,mode=None,color=None):
+        GL.glBegin(GL.GL_LINES)
+        for e in self.data:
+            GL.glVertex2fv(e[0])
+            GL.glVertex2fv(e[1])
+        GL.glEnd()
+
+
+
+# End

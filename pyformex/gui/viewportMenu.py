@@ -121,6 +121,8 @@ MenuData = [
         ('&OpenGL Settings',
          [('&Flat',canvas.glFlat),
           ('&Smooth',canvas.glSmooth),
+          ('&Culling',canvas.glCulling),
+          ('&No Culling',canvas.glNoCulling),
           ('&Polygon Line',canvas.glLine),
           ('&Polygon Fill',canvas.glFill),
           ]),

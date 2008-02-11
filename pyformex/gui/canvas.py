@@ -48,6 +48,14 @@ def glSmooth():
     """Enable smooth shading"""
     GL.glShadeModel(GL.GL_SMOOTH)
     GD.canvas.glupdate()
+def glCulling():
+    """Enable culling"""
+    GL.glEnable(GL.GL_CULL_FACE)
+    GD.canvas.glupdate()
+def glNoCulling():
+    """Disable culling"""
+    GL.glDisable(GL.GL_CULL_FACE)
+    GD.canvas.glupdate()
 def glFill():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
     #GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL)
