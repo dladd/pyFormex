@@ -14,6 +14,7 @@
 This is a collection of definitions that depend on the numpy module.
 """
 
+import globaldata as GD
 from numpy import *
 
 ################# Collection of Actors or Actor Elements ###############
@@ -71,13 +72,21 @@ class Collection:
 
     def remove(self,data,key=-1):
         """Remove data from the collection."""
-        key = int(key)
-        if self.d.has_key(key):
-            data = setdiff1d(self.d[key],unique1d(data))
-            if data.size > 0:
-                self.d[key] = data
+        data = asarray(data)
+        if data.ndim == 2:
+            for key in unique1d(data[:,0]):
+                self.remove(data[data[:,0]==key,1],key)
+
+        else:
+            key = int(key)
+            if self.d.has_key(key):
+                data = setdiff1d(self.d[key],unique1d(data))
+                if data.size > 0:
+                    self.d[key] = data
+                else:
+                    del self.d[key]
             else:
-                del self.d[key]
+                GD.debug("Not removing from non-existing selection for actor %s" % key)
 
     def has_key(self,key):
         """Check whether the collection has an entry for the key."""
