@@ -11,6 +11,8 @@ include pyformex/*.py
 include pyformex/pyformex
 include pyformex/pyformexrc
 include pyformex/gui/*.py
+include pyformex/lib/Makefile
+include pyformex/lib/*.c
 include pyformex/plugins/*.py
 include pyformex/examples/*
 include pyformex/examples/*/*

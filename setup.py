@@ -12,11 +12,11 @@ from distutils.core import setup, Extension
 ##     os .system('post-install')
 
 module_drawgl = Extension('drawgl',
-                          sources = ['gui/drawgl.c'])
+                          sources = ['lib/drawglmodule.c'])
 
 
 setup(name='pyformex',
-      version='0.6.1-a1',
+      version='0.6.1-a2',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 

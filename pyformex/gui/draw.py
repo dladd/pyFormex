@@ -170,7 +170,7 @@ def askDirname(cur=None):
 
 
 def chdir(fn):
-    """Change the current pyFormex working directory.
+    """Change the current working directory.
 
     If fn is a directory name, the current directory is set to fn.
     If fn is a file name, the current directory is set to the directory
@@ -186,6 +186,11 @@ def chdir(fn):
         os.chdir(fn)
         GD.cfg['workdir'] = fn
         GD.message("Your current workdir is %s" % os.getcwd())
+
+
+def workHere():
+    """Change the current working directory to the script's location."""
+    os.chdir(os.path.dirname(GD.cfg['curfile']))
 
 
 def log(s):
@@ -557,7 +562,7 @@ def draw(F, view=None,bbox='auto',
         shrink = DrawOptions.get('shrink',None)
  
     if marksize is None:
-        marksize = DrawOptions.get('marksize',GD.cfg.get('marksize',0.01))
+        marksize = DrawOptions.get('marksize',GD.cfg.get('marksize',5.0))
        
     # Create the colors
     if color == 'prop':

@@ -18,7 +18,7 @@ Then there are higher level functions that read data from the property module
 and write them to the Abaqus input file.
 """
 
-
+import os
 from properties import *
 from mydict import *
 import globaldata as GD
@@ -72,8 +72,7 @@ def writeElems(fil, elems, type, name='Eall', eofs=1, nofs=1):
     fmt = '%d' + nn*', %d' + '\n'
     for i,e in enumerate(elems+nofs):
         fil.write(fmt % ((i+eofs,)+tuple(e)))
-    if name != 'Eall':
-        fil.write('*ELSET, ELSET=Eall\n%s\n' % name)    
+    writeSubset(fil, 'ELSET', 'Eall', name)
 
 
 def writeSet(fil, type, name, set, ofs=1):
@@ -81,6 +80,11 @@ def writeSet(fil, type, name, set, ofs=1):
     fil.write("*%s,%s=%s\n" % (type,type,name))
     for i in set+ofs:
         fil.write("%d,\n" % i)
+
+
+def writeSubset(fil, type, name, subname):
+    """Make a named set a subset of another one (type=NSET|ELSET)"""
+    fil.write('*%s, %s=%s\n%s\n' % (type,type,name,subname))
 
 
 def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
@@ -472,13 +476,19 @@ class Model(Dict):
     def __init__(self, nodes, elems, nodeprop, elemprop, initialboundaries='ALL'):
         """Create new model data.
         
-        Nodes and elems are tuples, wich can be obtained by 
+        Nodes and elems are arrays, such as those obtained by 
             nodes, elems = F.feModel()
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
+        !! This limits the model to elements with the same number of nodes
+        !! A solution would be to use a list of elems arrays 
+        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         nodeprop is a list of all the node property numbers.
         elemprop is a list of all the element property numbers. This list can be obtained by 
             elemprop = F.p
         initialboundaries is a list of all the initial boundaries. It can also be the string 'ALL'. This is the default.
         """
+##         if not type(elems) == list:
+##             elems = [ elems ]
         Dict.__init__(self, {'nodes':nodes, 'elems':elems, 'nodeprop':nodeprop, 'elemprop':elemprop, 'initialboundaries':initialboundaries}) 
 
 
@@ -543,13 +553,31 @@ class AbqData(CascadingDict):
         """
         CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'dat':dat, 'odb':odb})
 
-
+    
 ##################################################
 ## Combine all previous functions to write the Abaqus input file
 ##################################################
 
-def writeAbqInput(abqdata, job=str(GD.scriptName)[:-3]):
-    """write an Abaqus input file.
+def abqInputNames(job):
+    """Returns corresponding Abq jobname and input filename.
+
+    job can be either a jobname or input file name, with or without
+    directory part, with or without extension (.inp)
+    
+    The Abq jobname is the basename without the extension.
+    The abq filename is the abspath of the job with extension '.inp'
+    """
+    jobname = os.path.basename(job)
+    if jobname.endswith('.inp'):
+        jobname = jobname[:-4]
+    filename = os.path.abspath(job)
+    if not filename.endswith('.inp'):
+        filename += '.inp'
+    return jobname,filename
+
+
+def writeAbqInput(abqdata, jobname=None):
+    """Write an Abaqus input file.
     
     abqdata is an AbqData-instance.
     job is the name of the inputfile.
@@ -557,41 +585,51 @@ def writeAbqInput(abqdata, job=str(GD.scriptName)[:-3]):
     global materialswritten
     materialswritten = []
     # Create the Abaqus input file
-    filnam = job+'.inp'
-    fil = file(filnam,'w')
-    GD.message("Writing %s" % filnam)
+    if jobname is None:
+        jobname = str(GD.scriptName)[:-3]
+    jobname,filename = abqInputNames(jobname)
+    fil = file(filename,'w')
+    GD.message("Writing to file %s" % (filename))
     
     #write the heading
     writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
 Script: %s 
-""" % (job, datetime.date.today(), GD.scriptName))
-    
-    # number of nodes and elems
-    nnod = abqdata.nodes.shape[0]
-    nel = len(abqdata.elems)
-    GD.message("Number of elements: %s" % nel)
-    GD.message("Compressed number of nodes: %s" % nnod)
+""" % (jobname, datetime.date.today(), GD.scriptName))
     
     #write all nodes
-    GD.message("Writing nodes")
+    nnod = abqdata.nodes.shape[0]
+    GD.message("Writing %s nodes" % nnod)
     writeNodes(fil, abqdata.nodes)
     
     #write nodesets and their transformations
-    GD.message("Writing nodesets")
+    GD.message("Writing node sets")
     nlist = arange(nnod)
-    for i in nodeproperties.iterkeys():
+    for i in nodeproperties:
         nodeset = nlist[array(abqdata.nodeprop) == i]
         writeSet(fil, 'NSET', 'Nodeset_'+str(i), nodeset)
         transform(fil,i)
 
-    #write elemsets and their section
+    #write elemsets
     GD.message("Writing element sets")
-    n=1
-    elemlist = arange(nel)
-    for i in elemproperties.iterkeys():
-        elemset = elemlist[abqdata.elemprop == i]
-        writeElems(fil, abqdata.elems[elemset],elemproperties[i].elemtype, 'Elementset_'+str(i),eofs=n)
-        n = n + len(elemset)
+    n=0
+    # we process the elementgroups one by one
+    GD.message("Number of element groups: %s" % len(abqdata.elems))
+    for j,elems in enumerate(abqdata.elems):
+        ne = len(elems)
+        eprop = abqdata.elemprop[n:n+ne]
+        GD.message("Number of elements in group %s: %s" % (j,ne))
+        for i in elemproperties:
+            elemset = arange(ne)[eprop == i] # The elems with property i
+            if len(elemset) > 0:
+                print "Elements in group %s with property %s: %s" % (j,i,elemset)
+                subsetname = 'Elementset_%s_%s' % (j,i)
+                writeElems(fil, elems[elemset],elemproperties[i].elemtype, subsetname,eofs=n+1)
+                n += len(elemset)
+                writeSubset(fil, 'ELSET', 'Elementset_%s' % i, subsetname)
+    GD.message("Total number of elements: %s" % n)
+    # Write element sections
+    GD.message("Writing element sections")
+    for i in elemproperties:
         writeSection(fil, i)
 
     #write steps
@@ -647,6 +685,6 @@ if __name__ == "__main__":
     model = Model(nodes, elems, [9,8,0,7], F.p, initialboundaries=[7])
     total = AbqData(model, analysis=[step1, step2], dat=[elemdat, nodedat], odb=[outhist, outfield])
     print model
-    writeAbqInput(total, job='testing')
+    writeAbqInput(total, jobname='testing')
     
     

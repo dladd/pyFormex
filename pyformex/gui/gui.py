@@ -580,6 +580,13 @@ See Help->License or the file COPYING for details.
     if splash is not None:
         splash.finish(GD.gui)
 
+    # Add the autorun script to the remaining args
+    ar = GD.cfg.get('autorun','')
+    if ar:
+        if type(ar) == str:
+            ar = [ar]
+        args = ar + args
+
     # remaining args are interpreted as scripts
     for arg in args:
         if os.path.exists(arg):
