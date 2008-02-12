@@ -11,11 +11,12 @@ MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png
 RSYNC= rsync -av -e ssh
 
-.PHONY: html pub
+.PHONY: html pub all
 
 html: 
 	r2w
 
+all:	pub
 
 #tar: web.tar.gz
 

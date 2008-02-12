@@ -39,3 +39,8 @@ html/${TGT}.html: ${SRC}
 	mkdir ${HTMLDIR}
 	ln -s ../images ${HTMLDIR}/images
 	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<
+
+
+pub: pdf
+	scp pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
+

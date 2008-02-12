@@ -54,14 +54,26 @@ Start your script with the following code snippet:
 import os
 os.chdir(os.path.dirname(GD.cfg['curfile']))
 \end{verbatim}
+or the equivalent shortcut:
+\begin{verbatim}
+workHere()
+\end{verbatim}
 
 \item Automatically load plugin menus on startup:
-Plugin menus can be loaded automatically on pyFormex startup, by adding a line to the \code{gui} section of your configuration file (\verb|~/.pyformexrc|).
+Plugin menus can be loaded automatically on \pyformex startup, by adding a line to the \code{gui} section of your configuration file (\verb|~/.pyformexrc|).
 \begin{verbatim}
 [gui]
 plugins = ['surface_menu', 'formex_menu']
 \end{verbatim}
 
+\item Automatically execute your own scripts on startup:
+If you create your own pugin menus for \pyformex, you cannot autoload them like the regular plugin menus from the distribution, because they are not in the plugin directory of the installation.\footnote{Do not be tempted to put your own files under the installation directory (even if you can acquire the permissions to do so), because on removal or reinstall your files might be deleted!}
+You can however automatically execute your own scripts by adding their full path names in the \code{autorun} variable of your configuration file.
+\begin{verbatim}
+autorun = '/home/user/myscripts/startup/'
+\end{verbatim}
+This script will then be run when the \pyformex GUI starts up. You can even specify a list of scripts, which will be executed in order.
+The autorun scripts are executed as any other \pyformex script, before any scripts specified on the command line, and before giving the input focus to the user.
 
 \item Create a movie from a sequence of recorded images.
 The multisave option allows you to easily record a series of images while working with \pyformex. You may want to turn this sequence into a movie afterwards. THis can be done with the \Code{mencoder} and/or \Code{ffmpeg} programs. The internet provides comprehensive information on how to use these video encoders. 

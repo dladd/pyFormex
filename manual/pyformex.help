@@ -8,7 +8,14 @@ options:
   --dri              Force the use of Direct Rendering
   --nodri            Disables the use of Direct Rendering (overrides the --dri
                      option)
+  --uselib           Use the pyFormex C-lib where possible.
+  --nouselib         Do not use the pyFormex C-lib. This is the default.
+  --safelib          Convert data types to match C-lib. This is the default.
+  --unsafelib        Do not convert data types to match C-lib. BEWARE: this
+                     may make the C-lib calls impossible. Use only for
+                     debugging purposes.
   --fastencode       Use a fast algorithm to encode edges.
+  --fastfuse         Use a fast algorithm to fuse points.
   --alpha            Enable the Alpha Channel buffer
   --arrays           Use vertex arrays for display
   --config=CONFIG    use file CONFIG for settings
@@ -16,6 +23,7 @@ options:
   --redirect         redirect standard output to the message board (ignored
                      with --nogui)
   --debug            display debugging info to sys.stdout
+  --test             testing mode: only for developers!
   --whereami         show where the pyformex package is located
   --remove           remove the pyformex installation
   --version          show program's version number and exit

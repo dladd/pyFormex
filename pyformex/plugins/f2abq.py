@@ -31,6 +31,18 @@ from numpy import *
 ## Some Abaqus .inp format output routines
 ##################################################
 
+# Create automatic names for node and element sets
+
+def autoName(base,*args):
+    return (base + '_%s' * len(args)) % args 
+
+def Nset(*args):
+    return autoName('Nset',*args)
+
+def Eset(*args):
+    return autoName('Eset',*args)
+
+
 def writeHeading(fil, text=''):
     """Write the heading of the Abaqus input file."""
     head = """**  Abaqus input file created by pyFormex (c) B.Verhegghe
@@ -158,14 +170,14 @@ def writeSection(fil, nr):
     ##########################
     if el.elemtype.upper() in ['FRAME3D', 'FRAME2D']:
         if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*FRAME SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(nr,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+            fil.write("""*FRAME SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
+%s, %s, %s, %s, %s \n"""%(Eset(nr),float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
-            fil.write("""*FRAME SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%s
-%s \n"""%(nr,float(el.density),float(el.radius)))
+            fil.write("""*FRAME SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
+%s \n"""%(Eset(nr),float(el.density),float(el.radius)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
@@ -175,36 +187,36 @@ def writeSection(fil, nr):
     ##########################  
     elif el.elemtype.upper() in ['CONN3D2', 'CONN2D2']:
         if el.sectiontype.upper() != 'GENERAL':
-            fil.write("""*CONNECTOR SECTION,ELSET=Elementset_%s
+            fil.write("""*CONNECTOR SECTION,ELSET=%s
 %s
-""" %(nr,el.sectiontype.upper()))
+""" %(Eset(nr),el.sectiontype.upper()))
 
     ############
     ##TRUSS elements
     ##########################  
     elif el.elemtype.upper() in ['T2D2', 'T2D2H' , 'T2D3', 'T2D3H', 'T3D2', 'T3D2H', 'T3D3', 'T3D3H']:
         if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
+            fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s
-""" %(nr,el.material.name, float(el.cross_section)))
+""" %(Eset(nr),el.material.name, float(el.cross_section)))
         elif el.sectiontype.upper() == 'CIRC':
-            fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
+            fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s
-""" %(nr,el.material.name, float(el.radius)**2*math.pi))
+""" %(Eset(nr),el.material.name, float(el.radius)**2*math.pi))
 
     ############
     ##BEAM elements
     ##########################
     elif el.elemtype.upper() in ['B21', 'B21H','B22', 'B22H', 'B23','B23H','B31', 'B31H','B32','B32H','B33','B33H']:
         if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(nr,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+            fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
+%s, %s, %s, %s, %s \n"""%(Eset(nr),float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
                 fil.write("%s,%s,%s"%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("\n %s, %s \n"%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
-            fil.write("""*BEAM GENERAL SECTION, ELSET=Elementset_%s, SECTION=CIRC, DENSITY=%s
-%s \n"""%(nr,float(el.density),float(el.radius)))
+            fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
+%s \n"""%(Eset(nr),float(el.density),float(el.radius)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
@@ -215,8 +227,8 @@ def writeSection(fil, nr):
     elif el.elemtype.upper() in ['STRI3', 'S3','S3R', 'S3RS', 'STRI65','S4','S4R', 'S4RS','S4RSW','S4R5','S8R','S8R5', 'S9R5',]:
         if el.sectiontype.upper() == 'SHELL':
             if mat is not None:
-                fil.write("""*SHELL SECTION, ELSET=Elementset_%s, MATERIAL=%s
-%s \n""" % (nr,mat.name,float(el.thickness)))
+                fil.write("""*SHELL SECTION, ELSET=%s, MATERIAL=%s
+%s \n""" % (Eset(nr),mat.name,float(el.thickness)))
 
     ############
     ## 2D SOLID elements
@@ -224,8 +236,8 @@ def writeSection(fil, nr):
     elif el.elemtype.upper() in ['CPE3','CPE3H','CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH','CPE6','CPE6H','CPE6M','CPE6MH','CPE8','CPE8H','CPE8R','CPE8RH']:
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
-                fil.write("""*SOLID SECTION, ELSET=Elementset_%s, MATERIAL=%s
-%s \n""" % (nr,mat.name,float(el.thickness)))
+                fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
+%s \n""" % (Eset(nr),mat.name,float(el.thickness)))
             
     ############
     ## UNSUPPORTED elements
@@ -239,17 +251,17 @@ def transform(fil, propnr):
     n = nodeproperties[propnr]
     if n.coords.lower()=='cartesian':
         if n.coordset!=[]:
-            fil.write("""*TRANSFORM, NSET=Nodeset_%s, TYPE=R
+            fil.write("""*TRANSFORM, NSET=%s, TYPE=R
 %s,%s,%s,%s,%s,%s
-"""%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
+"""%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     elif n.coords.lower()=='spherical':
-        fil.write("""*TRANSFORM, NSET=Nodeset_%s, TYPE=S
+        fil.write("""*TRANSFORM, NSET=%s, TYPE=S
 %s,%s,%s,%s,%s,%s
-"""%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
+"""%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     elif n.coords.lower()=='cylindrical':
-        fil.write("""*TRANSFORM, NSET=Nodeset_%s, TYPE=C
+        fil.write("""*TRANSFORM, NSET=%s, TYPE=C
 %s,%s,%s,%s,%s,%s
-"""%(propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
+"""%(Nset(propnr),propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     else:
         warning('%s is not a valid coordinate system'%nodeproperties[propnr].coords)
 
@@ -271,18 +283,18 @@ def writeBoundaries(fil, boundset='ALL', opb=None):
                     if isinstance(nodeproperties[i].bound,list):
                         for b in range(6):
                             if nodeproperties[i].bound[b]==1:
-                                fil.write("Nodeset_%s, %s\n" % (i,b+1))
+                                fil.write("%s, %s\n" % (Nset(i),b+1))
                     elif isinstance(nodeproperties[i].bound,str):
-                        fil.write("Nodeset_%s, %s\n"%(i,nodeproperties[i].bound))
+                        fil.write("%s, %s\n" % (Nset(i),nodeproperties[i].bound))
         elif boundset.upper() =='ALL':
             for i in nodeproperties.iterkeys():
                 if nodeproperties[i].bound!=None:
                     if isinstance(nodeproperties[i].bound,list):
                         for b in range(6):
                             if nodeproperties[i].bound[b]==1:
-                                fil.write("Nodeset_%s, %s\n"%(i,b+1))
+                                fil.write("%s, %s\n" % (Nset(i),b+1))
                     elif isinstance(nodeproperties[i].bound,str):
-                        fil.write("Nodeset_%s, %s\n"%(i,nodeproperties[i].bound))
+                        fil.write("%s, %s\n" % (Nset(i),nodeproperties[i].bound))
         else:
             warning("The boundaries have to defined in a list 'boundset'")
 
@@ -298,19 +310,16 @@ def writeDisplacements(fil, dispset='ALL', op='MOD'):
     !!!! This means that initial condtions are also removed!
     """
     fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s\n" % op)
-    #print type(dispset)
-    #print dispset
     if isinstance(dispset, list):
         for i in dispset:
-            #print i,nodeproperties[i]
             if nodeproperties[i].displacement!=None:
                 for d in range(len(nodeproperties[i].displacement)):
-                    fil.write("Nodeset_%s, %s, %s, %s\n" % (i,nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
+                    fil.write("%s, %s, %s, %s\n" % (Nset(i),nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
     elif dispset.upper()=='ALL':
         for i in nodeproperties.iterkeys():
             if nodeproperties[i].displacement!=None:
                 for d in range(len(nodeproperties[i].displacement)):
-                    fil.write("Nodeset_%s, %s, %s, %s\n" % (i,nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
+                    fil.write("%s, %s, %s, %s\n" % (Nset(i),nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
             
             
 def writeCloads(fil, cloadset='ALL', opcl='NEW'):
@@ -325,13 +334,13 @@ def writeCloads(fil, cloadset='ALL', opcl='NEW'):
             if nodeproperties[i].cload!=None:
                 for cl in range(6):
                     if nodeproperties[i].cload[cl]!=0:
-                        fil.write("Nodeset_%s, %s, %s\n" % (i,cl+1,nodeproperties[i].cload[cl]))
+                        fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
     elif cloadset.upper()=='ALL':
         for i in nodeproperties.iterkeys():
             if nodeproperties[i].cload!=None:
                 for cl in range(6):
                     if nodeproperties[i].cload[cl]!=0:
-                        fil.write("Nodeset_%s, %s, %s\n" % (i,cl+1,nodeproperties[i].cload[cl]))
+                        fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
     else:
         warning("The loads have to be defined in a list 'cloadset'")
 
@@ -348,17 +357,17 @@ def writeDloads(fil, dloadset='ALL', opdl='NEW'):
             if isinstance(elemproperties[i].elemload, list):
                 for load in range(len(elemproperties[i].elemload)):
                     if elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
-                        fil.write("Elementset_%s, GRAV, 9.81, 0, 0 ,-1\n" % (i))
+                        fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
                     else:
-                        fil.write("Elementset_%s, %s, %s\n" % (i,elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
+                        fil.write("%s, %s, %s\n" % (Eset(i),elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
     elif dloadset.upper()=='ALL':
         for i in elemproperties.iterkeys():
             if isinstance(elemproperties[i].elemload, list):
                 for load in range(len(elemproperties[i].elemload)):
                     if elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
-                        fil.write("Elementset_%s, GRAV, 9.81, 0, 0 ,-1\n" % (i))
+                        fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
                     else:
-                        fil.write("Elementset_%s, %s, %s\n" % (i,elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
+                        fil.write("%s, %s, %s\n" % (Eset(i),elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
     else:
         warning("The loads have to be defined in a list 'dloadset'")
 
@@ -376,7 +385,7 @@ def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL'
     if kind.upper()=='ELEMENT':
         if isinstance(set,list):
             for j in range(len(set)):
-                fil.write("*ELEMENT OUTPUT, ELSET=Elementset_%s\n"%str(set[j]))
+                fil.write("*ELEMENT OUTPUT, ELSET=%s\n" % Eset(str(set[j])))
                 if ID!=None:
                     for j in range(len(ID)):
                         fil.write("%s \n"%ID[j])
@@ -390,7 +399,7 @@ def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL'
     if kind.upper()=='NODE':
         if isinstance(set,list):
             for j in range(len(set)):
-                fil.write("*NODE OUTPUT, NSET=Nodeset_%s\n"%str(set[j]))
+                fil.write("*NODE OUTPUT, NSET=%s\n"% Nset(str(set[j])))
                 if ID!=None:
                     for j in range(len(ID)):
                         fil.write("%s \n"%ID[j])
@@ -415,17 +424,17 @@ def writeStepData(fil, kind , set='ALL', ID=None, globalaxes='No'):
         if kind.upper()=='NODE':
             if isinstance(set, list):
                 for i in set:
-                    fil.write("*NODE PRINT, NSET = Nodeset_%s, GLOBAL = %s \n"%(str(i),globalaxes))
+                    fil.write("*NODE PRINT, NSET=%s, GLOBAL=%s\n"%(Nset(str(i)),globalaxes))
                     for j in range(len(ID)):
                         fil.write("%s \n"%ID[j])
             if isinstance(set, str):
-                fil.write("*NODE PRINT, GLOBAL = %s \n"%globalaxes)
+                fil.write("*NODE PRINT, GLOBAL=%s \n"%globalaxes)
                 for j in range(len(ID)):
                     fil.write("%s \n"%ID[j])
         if kind.upper()=='ELEMENT':
             if isinstance(set, list):
                 for i in set:
-                    fil.write("*EL PRINT, ELSET = Elementset_%s \n"%str(i))
+                    fil.write("*EL PRINT, ELSET=%s \n" % Eset(str(i)))
                     for j in range(len(ID)):
                         fil.write("%s \n"%ID[j])
             if isinstance(set, str):
@@ -606,7 +615,7 @@ Script: %s
     nlist = arange(nnod)
     for i in nodeproperties:
         nodeset = nlist[array(abqdata.nodeprop) == i]
-        writeSet(fil, 'NSET', 'Nodeset_'+str(i), nodeset)
+        writeSet(fil, 'NSET', Nset(str(i)), nodeset)
         transform(fil,i)
 
     #write elemsets
@@ -622,10 +631,10 @@ Script: %s
             elemset = arange(ne)[eprop == i] # The elems with property i
             if len(elemset) > 0:
                 print "Elements in group %s with property %s: %s" % (j,i,elemset)
-                subsetname = 'Elementset_%s_%s' % (j,i)
+                subsetname = '%s' % Eset(j,i)
                 writeElems(fil, elems[elemset],elemproperties[i].elemtype, subsetname,eofs=n+1)
                 n += len(elemset)
-                writeSubset(fil, 'ELSET', 'Elementset_%s' % i, subsetname)
+                writeSubset(fil, 'ELSET', Eset(i), subsetname)
     GD.message("Total number of elements: %s" % n)
     # Write element sections
     GD.message("Writing element sections")

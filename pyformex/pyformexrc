@@ -33,6 +33,8 @@ history = []
 # extra paths to append tot sys.path
 syspath = []
 
+autorun = '.pyformex.startup'
+
 # commands
 ### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE
 editor = os.environ.get('VISUAL','')

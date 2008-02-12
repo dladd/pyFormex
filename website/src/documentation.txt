@@ -12,7 +12,8 @@ Documentation
 
 .. _`Online manual`: http://pyformex.berlios.de/manual/index.html
 .. _`pydoc`: http://pyformex.berlios.de/doc/index.html
+.. _`PDF-version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
 
 - `Online manual`_.
-- Download PDF-version of the manual.
+- Download `PDF-version`_ of the manual.
 - Automatically generated `pydoc`_ documentation (mostly useful for developers).
