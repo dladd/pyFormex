@@ -208,6 +208,14 @@ def projectName(fn):
     return os.path.splitext(os.path.basename(fn))[0]
 
 
+def splitme(s):
+    return s[::2],s[1::2]
+
+
+def mergeme(s1,s2):
+    return ''.join([a+b for a,b in zip(s1,s2)])
+
+
 def mtime(fn):
     """Return the (UNIX) time of last change of file fn."""
     return os.stat(fn).st_mtime

@@ -40,7 +40,7 @@ html/${TGT}.html: ${SRC}
 	ln -s ../images ${HTMLDIR}/images
 	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<
 
-
+# Transfers the files to BerliOs
 pub: pdf
 	scp pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 

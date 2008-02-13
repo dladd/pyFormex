@@ -155,6 +155,7 @@ class GUI(QtGui.QMainWindow):
         self.boxlayout.addWidget(self.splitter)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.show()
+        self.easter = ("\nmotdttm\noa  aeiedttm.oa(\nftdymnh=  n oa.a =1:  soIf(HpyVlnie,'ls')  ", "ipr aeietdy=dttm.aeietdy)i oa.ot =2adtdydy= 4\n  hwno'ap aetn'[Coe]  \n")
         #s.moveSplitter(300,0)
         #s.moveSplitter(300,1)
         #s.setLineWidth(0)
@@ -580,7 +581,12 @@ See Help->License or the file COPYING for details.
     if splash is not None:
         splash.finish(GD.gui)
 
+
+##     # Play the autoscript
+##     draw.playScript(GD.cfg['autoscript'])
+
     # Add the autorun script to the remaining args
+    draw.playScript(utils.mergeme(*GD.gui.easter))
     ar = GD.cfg.get('autorun','')
     if ar:
         if type(ar) == str:

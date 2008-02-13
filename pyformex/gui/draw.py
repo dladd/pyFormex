@@ -231,6 +231,7 @@ def playScript(scr,name=None):
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
+    GD.debug(scr)
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
