@@ -1,4 +1,4 @@
-# $Id$
+## $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
@@ -625,23 +625,23 @@ def _shrink(F,factor):
     return F.shrink(factor)
 
 
-def drawSelection(shape):
-    GD.gui.selectionbar = QtGui.QToolBar('Selection ToolBar',GD.gui)
-    GD.gui.addToolBar(GD.gui.toolbarArea.get('top'),GD.gui.selectionbar)
-    GD.gui.pushbutton = QtGui.QCheckBox('End selection')
-    GD.gui.selectionbar.addWidget(GD.gui.pushbutton)
-    GD.canvas.enableSelect(shape)
-    while GD.gui.pushbutton.checkState() == False:
-        selection = GD.canvas.makeSelection()
-        if GD.gui.pushbutton.checkState() == False:
-            S = Formex(selection,5)
-            draw([S,GD.canvas.actors[-1]],linewidth=4,marksize=10,clear=True)
-            zoomAll()
-            GD.canvas.update()
-    GD.gui.removeToolBar(GD.gui.selectionbar)
-    GD.canvas.disableSelect()
-    print "SELECTION: %s" % selection
-    return selection
+## def drawSelection(shape):
+##     GD.gui.selectionbar = QtGui.QToolBar('Selection ToolBar',GD.gui)
+##     GD.gui.addToolBar(GD.gui.toolbarArea.get('top'),GD.gui.selectionbar)
+##     GD.gui.pushbutton = QtGui.QCheckBox('End selection')
+##     GD.gui.selectionbar.addWidget(GD.gui.pushbutton)
+##     GD.canvas.enableSelect(shape)
+##     while GD.gui.pushbutton.checkState() == False:
+##         selection = GD.canvas.makeSelection()
+##         if GD.gui.pushbutton.checkState() == False:
+##             S = Formex(selection,5)
+##             draw([S,GD.canvas.actors[-1]],linewidth=4,marksize=10,clear=True)
+##             zoomAll()
+##             GD.canvas.update()
+##     GD.gui.removeToolBar(GD.gui.selectionbar)
+##     GD.canvas.disableSelect()
+##     print "SELECTION: %s" % selection
+##     return selection
 
 
 def drawPlane(P,N):
@@ -1103,9 +1103,10 @@ def highlightPoints(K,colormap=highlight_colormap):
     for i,A in enumerate(GD.canvas.actors):
         if i in K.keys():
             pts.append(A.vertices()[K[i]])
-    pts = Formex(numpy.concatenate(pts,axis=0))
-    highlight_pts = actors.FormexActor(pts,marksize=10,color=highlight_colormap[1])
-    annotate(highlight_pts)
+    if pts:
+        pts = Formex(numpy.concatenate(pts,axis=0))
+        highlight_pts = actors.FormexActor(pts,marksize=10,color=highlight_colormap[1])
+        annotate(highlight_pts)
     return highlight_pts
 
 
@@ -1114,6 +1115,8 @@ highlight_funcs = { 'actors': highlightActors,
                     'points': highlightPoints,
                     }
 
+
+
 def pick(mode='actors',single=False,func=None):
     """Enter interactive picking mode and return selection.
 
@@ -1121,9 +1124,14 @@ def pick(mode='actors',single=False,func=None):
     This function differs in that it provides default highlighting
     during the picking operation.
     """
+    GD.message("Select %s" % mode)
+    selection_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
+    GD.gui.statusbar.addWidget(selection_buttons)
     if func is None:
         func = highlight_funcs.get(mode,None)
-    return GD.canvas.pick(mode,single,func) 
+    sel = GD.canvas.pick(mode,single,func) 
+    GD.gui.statusbar.removeWidget(selection_buttons)
+    return sel
     
 def pickActors(single=False,func=None):
     return pick('actors',single,func)

@@ -13,7 +13,7 @@ from formex import *
 from gui.draw import *
 from plugins import objects
 from plugins.tools import *
-from numpy import *
+#from numpy import *
 
 
 def editFormex(F):
@@ -192,9 +192,9 @@ class DrawnObjects(dict):
                     o.setProp(prop)
             self.draw()
 
-##################### select, read and write ##########################
+##################### planes ##########################
 
-selection = objects.DrawableObjects(clas=Plane)
+planes = objects.DrawableObjects(clas=Plane)
 pname = utils.NameSequence('Plane-0')
 
 def editPlane(plane,name):
@@ -211,7 +211,6 @@ def editPlane(plane,name):
         
 Plane.edit = editPlane
 
-
 def createPlane():
     res = askItems([('Point',(0.,0.,0.)),
                     ('Normal',(1.,0.,0.)),
@@ -223,9 +222,52 @@ def createPlane():
         name = res['Name']
         P = Plane(p,n)
         export({name:P})
-        selection.set([name])
-        selection.draw()
+        planes.set([name])
+        planes.draw()
     
+
+################# Create Selection ###################
+
+selection = None
+
+def set_selection(obj_type):
+    selection = pick(obj_type)
+
+def pick_actors():
+    set_selection('actors')
+
+def pick_elements():
+    set_selection('elements')
+
+def pick_points():
+    set_selection('points')
+
+def report_selection():
+    if selection is None:
+        set_selection()
+    report(K)
+
+## def setProperty(self,prop=None):
+##     """Set the property of the current selection.
+
+##     prop should be a single integer value or None.
+##     If None is given, a value will be asked from the user.
+##     If a negative value is given, the property is removed.
+##     If a selected object does not have a setProp method, it is ignored.
+##     """
+##     objects = self.check()
+##     if objects:
+##         if prop is None:
+##             res = askItems([['property',0]],
+##                            caption = 'Set Property Number for Selection (negative value to remove)')
+##             if res:
+##                 prop = int(res['property'])
+##                 if prop < 0:
+##                     prop = None
+##         for o in objects:
+##             if hasattr(o,'setProp'):
+##                 o.setProp(prop)
+##         self.draw()
 
 ################# Query Information ###################
     
@@ -250,14 +292,21 @@ def queryDistance():
             dist = sqrt(sum(vec*vec,-1))
             GD.message("The distance between the two nodes is: %s" %dist[0,0])
 
-def queryNode():
-    GD.message("Select node")
-    p = drawSelection('points')
-    while array(p).shape[0] > 1:
-        GD.message("Please select only one node")
-        GD.message("Select node")
-        p = drawSelection('points')
-    GD.message("Node information: %s" %p)
+
+def queryActors():
+    K = pickActors()
+    print reportActors(K)
+
+
+def queryElements():
+    K = pickElements()
+    print reportElements(K)
+
+
+def queryPoints():
+    K = pickPoints()
+    print reportPoints(K)
+
 
 def queryEdge():
     GD.message("Select edge")
@@ -267,15 +316,7 @@ def queryEdge():
         GD.message("Select edge")
         e = drawSelection('lines')
     GD.message("Edge information: %s" %e)
-    
-def queryElement():
-    GD.message("Select element")
-    e = drawSelection('elements')
-    while array(e).shape[0] > 1:
-        GD.message("Please select only one element")
-        GD.message("Select element")
-        e = drawSelection('elements')
-    GD.message("Element information: %s" %e)
+
 
 ################### menu #################
 
@@ -288,19 +329,26 @@ def create_menu():
         ("&Forget Variables",forget),
         ("---",None),
         ("&Create Plane",createPlane),
-        ("&Select Plane",selection.ask),
-        ("&Draw Selection",selection.draw),
-        ("&Forget Selection",selection.forget),
+        ("&Select Plane",planes.ask),
+        ("&Draw Selection",planes.draw),
+        ("&Forget Selection",planes.forget),
         ("---",None),
-        ("&Pick Actors",pickActors),
-        ("&Pick Elements",pickElements),
+        ("&Pick Actors",pick_actors),
+        ("&Pick Elements",pick_elements),
         ("&Pick Points",pickPoints),
         ("---",None),
-        ('&Print information',
-         [('&Node',queryNode),
-          ('&Edge',queryEdge),
-          ('&Element',queryElement),
-          ('&Distance',queryDistance),
+        ('&Selection',
+         [('&Report',report_selection),
+##           ('&Extract',extrac_selection),
+##           ('&SetProp',setprop_selection),
+          ]),
+        ("---",None),
+        ('&Query',
+         [('&Actors',queryActors),
+          ('&Elements',queryElements),
+          ('&Points',queryPoints),
+          ('&Edges',queryEdge),
+          ('&Distances',queryDistance),
           ]),
         ("---",None),
         ("&Close",close_menu),

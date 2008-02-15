@@ -461,6 +461,49 @@ class InputRadio(InputItem):
                 return str(rb.text())
         return ''
 
+    
+class InputPush(InputItem):
+    """A pushbuttons InputItem."""
+    
+    def __init__(self,name,choices,default=None,*args):
+        """Creates pushbuttons for the selection of a value from a list.
+
+        choices is a list/tuple of possible values.
+        default is the initial/default choice.
+        If default is not in the choices list, it is prepended.
+        If default is None, the first item of choices is taken as the default.
+       
+        The choices are presented to the user as a hbox with push buttons,
+        of which the default will initially be pressed.
+        """
+        if default is None:
+            default = choices[0]
+        elif default not in choices:
+            choices[0:0] = [ default ]
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QGroupBox()
+        self.input.setFlat(True)
+        self.hbox = QtGui.QHBoxLayout()
+        self.hbox.setSpacing(0)
+        self.hbox.setMargin(0)
+
+        self.rb = []
+        for v in choices:
+            rb = QtGui.QPushButton(v)
+            self.hbox.addWidget(rb)
+            self.rb.append(rb)
+
+        self.rb[choices.index(default)].setChecked(True)
+        self.input.setLayout(self.hbox)
+        self.addWidget(self.input)
+
+    def value(self):
+        """Return the widget's value."""
+        for rb in self.rb:
+            if rb.isChecked():
+                return str(rb.text())
+        return ''
+
 
 class InputInteger(InputItem):
     """An integer input item."""
@@ -569,8 +612,15 @@ class InputDialog(QtGui.QDialog):
 
         Composed types:
         [ 'name', 'option1', 'select', ['option0','option1','option2']] will
-        present a combobox to select between one of the options. The initial
-        and default value is 'option1'.
+        present a combobox to select between one of the options.
+        The initial and default value is 'option1'.
+        [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
+        present a group of radiobuttons to select between one of the options.
+        The initial and default value is 'option1'.
+        [ 'name', 'option1', 'push', ['option0','option1','option2']] will
+        present a group of pushbuttons to select between one of the options.
+        The initial and default value is 'option1'.
+
         [ 'name', 'red', 'color' ] will present a color selection widget,
         with 'red' as the initial choice.
 
@@ -631,6 +681,13 @@ class InputDialog(QtGui.QDialog):
                 else:
                     choices = []
                 line = InputRadio(name,choices,value)
+
+            elif itemtype == 'push' :
+                if len(item) > 3:
+                    choices = item[3]
+                else:
+                    choices = []
+                line = InputPush(name,choices,value)
 
             else: # Anything else is handled as a string
                 #itemtype = str:
@@ -740,6 +797,21 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
         return str(b.text())
     else:
         return ''
+
+
+############################# Status Bar button box ###########################
+
+
+class ButtonBox(QtGui.QWidget):
+    def __init__(self,name,choices,funcs,*args):
+        QtGui.QWidget.__init__(self,*args)
+        s = InputPush(name,choices)
+        s.setSpacing(0)
+        s.setMargin(0)
+        for r,f in zip(s.rb,funcs):
+            self.connect(r,QtCore.SIGNAL("clicked()"),f)
+        self.setLayout(s)
+
 
 ############################# Menu ##############################
 

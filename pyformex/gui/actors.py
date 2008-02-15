@@ -351,6 +351,9 @@ class FormexActor(Actor,Formex):
         if color2 is not None:
             self.color2,self.colormap = saneColorSet(color2,None,self.nelems())
 
+    def atype(self):
+        return 'Formex'
+
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
         self.color,self.colormap = saneColorSet(color,colormap,self.nelems())
@@ -554,6 +557,8 @@ class SurfaceActor(Actor,Surface):
 
         self.list = None
 
+    def atype(self):
+        return 'Surface'
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""

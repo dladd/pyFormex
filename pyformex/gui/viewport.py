@@ -259,6 +259,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if not single:
             GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
         self.selection.clear()
+        self.selection.setType(mode)
         self.selection_canceled = False
         self.start_selection(mode)
         while not self.selection_canceled:

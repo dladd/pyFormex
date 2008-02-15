@@ -650,14 +650,18 @@ class Drawable(object):
         self.trans = False
         self.list = None
 
-# NOTE: we uncommented the default bbox and nelems methods,
-# because they mask the corresponding Formex/Surface methods in the actors       
+#NOTE: we uncommented the default bbox and nelems methods,
+#because they mask the corresponding Formex/Surface methods in the actors       
 
 ##     def bbox(self):
 ##         return array([[0.0,0.0,0.0],[1.0,1.0,1.0]])
         
 ##     def nelems(self):
 ##         return 1
+        
+        
+    def atype(self):
+        return 'unknown'
 
     def drawGL(self,**kargs):
         """Perform the OpenGL drawing functions to display the actor."""

@@ -19,7 +19,7 @@ from numpy import *
 
 ################# Collection of Actors or Actor Elements ###############
 
-class Collection:
+class Collection(object):
     """A collection  is a set of (int,int) tuples.
 
     The first part of the tuple has a limited number of values and are used
@@ -31,6 +31,10 @@ class Collection:
     """
     def __init__(self):
         self.d = {}
+        self.obj_type = None
+
+    def setType(self,obj_type):
+        self.obj_type = obj_type
 
     def clear(self,keys=[]):
         if keys:
