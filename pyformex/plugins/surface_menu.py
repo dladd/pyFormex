@@ -568,7 +568,6 @@ def rollAxes():
         selection.drawChanges()
 
 
-        
 def clip_surface():
     """Clip the stl model."""
     if not check_surface():
@@ -594,27 +593,42 @@ def clip_surface():
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
         F = F.clip(w)
         draw(F,color='red')
-        
+
+
+def clipSelection():
+    """Clip the selection.
+    
+    The coords list is not changed.
+    """
+    FL = selection.check()
+    if FL:
+        res = askItems([['axis',0],['begin',0.0],['end',1.0],['nodes','all','select',['all','any','none']]],caption='Clipping Parameters')
+        if res:
+            bb = bbox(FL)
+            axis = int(res['axis'])
+            xmi = bb[0][axis]
+            xma = bb[1][axis]
+            dx = xma-xmi
+            xc1 = xmi + float(res['begin']) * dx
+            xc2 = xmi + float(res['end']) * dx
+            selection.changeValues([ F.clip(F.test(nodes=res['nodes'],dir=axis,min=xc1,max=xc2)) for F in FL ])
+            selection.drawChanges()
+
 
 def cutAtPlane():
-     """Cut the selection with a plane."""
-     FL = selection.check()
-     FLnot = [ F for F in FL if F.nplex() > 3 ]
-     if FLnot:
-         warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
-         return
-
-     res = askItems([['Point',(0.0,0.0,0.0)],
+    """Cut the selection with a plane."""
+    FL = selection.check()
+    res = askItems([['Point',(0.0,0.0,0.0)],
                      ['Normal',(0.0,0.0,1.0)],
                      ['New props',[1,2,2]],],
                      caption = 'Define the cutting plane')
-     if res:
-         P = res['Point']
-         N = res['Normal']
-         p = res['New props']
-         selection.changeValues([ F.cutAtPlane(P,N,p) for F in FL ])
-         selection.drawChanges()
-        
+    if res:
+        P = res['Point']
+        N = res['Normal']
+        p = res['New props']
+        selection.remember(True)
+        [F.cutAtPlane(P,N,p) for F in FL]
+        selection.drawChanges()
 
 
 def undo_stl():
@@ -853,7 +867,7 @@ def create_menu():
             ("&Around General Axis",rotateGeneral),
             ]),
           ("&Roll Axes",rollAxes),
-          #          ("&Clip Selection",clipSelection),
+          ("&Clip Selection",clipSelection),
           ("&Cut at Plane",cutAtPlane),
           ]),
         ("&Undo Last Changes",selection.undoChanges),
