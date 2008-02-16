@@ -468,8 +468,11 @@ class Surface(object):
         
         """
         self.refresh()
-        return Surface(self.coords, self.elems[idx])
-
+        S = Surface(self.coords, self.elems[idx])
+        if self.p is not None:
+            S.setProp(self.p[idx])
+        return S
+    
 
     # Properties
     def setProp(self,p=None):
