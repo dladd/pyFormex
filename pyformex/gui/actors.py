@@ -508,11 +508,11 @@ class FormexActor(Actor,Formex):
     def pickGL(self,mode):
         """ Allow picking of parts of the actor.
 
-        mode can be 'elements' or 'points'
+        mode can be 'element' or 'point'
         """
-        if mode == 'elements':
+        if mode == 'element':
             pickPolygons(self.f)
-        elif mode == 'points':
+        elif mode == 'point':
             pickPoints(self.f)
             
 ## drawpick should be removed when new picking funcs are fully operational
@@ -631,21 +631,21 @@ class SurfaceActor(Actor,Surface):
     def pickGL(self,mode):
         """ Allow picking of parts of the actor.
 
-        mode can be 'elements' or 'points'
+        mode can be 'element' or 'point'
         """
-##         if mode == 'actors':
+##         if mode == 'actor':
 ##             self.use_list()
 ##         el
-        if mode == 'elements':
+        if mode == 'element':
             self.refresh()
             #pickPolygons(self.coords[self.elems])
             pickPolygonElems(self.coords,self.elems)
-        elif mode == 'points':
+        elif mode == 'point':
             pickPoints(self.coords)
 
 
     def drawpick(self,shape):
-        if shape == 'lines':
+        if shape == 'edge':
             picked = pickLines(self.coords[self.edges])
             selected = self.coords[self.edges][picked]
         if len(selected) != 0:

@@ -114,6 +114,8 @@ tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 
 
-minutes:
-	rst2latex pyformex-user-meeting-0.rst > pyformex-user-meeting-0.tex
+minutes: pyformex-user-meeting-0.tex
 	pdflatex pyformex-user-meeting-0.tex
+
+pyformex-user-meeting-0.tex: pyformex-user-meeting-0.rst
+	rst2latex pyformex-user-meeting-0.rst > pyformex-user-meeting-0.tex

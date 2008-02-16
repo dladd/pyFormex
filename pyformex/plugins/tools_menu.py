@@ -231,61 +231,87 @@ def createPlane():
 selection = None
 
 def set_selection(obj_type):
+    global selection
     selection = pick(obj_type)
 
 def pick_actors():
-    set_selection('actors')
+    set_selection('actor')
 
 def pick_elements():
-    set_selection('elements')
+    set_selection('element')
 
 def pick_points():
-    set_selection('points')
+    set_selection('point')
+                   
 
 def report_selection():
     if selection is None:
-        set_selection()
-    report(K)
+        warning("You need to pick something first.")
+        return
+    print selection
+    print report(selection)
 
-## def setProperty(self,prop=None):
-##     """Set the property of the current selection.
 
-##     prop should be a single integer value or None.
-##     If None is given, a value will be asked from the user.
-##     If a negative value is given, the property is removed.
-##     If a selected object does not have a setProp method, it is ignored.
-##     """
-##     objects = self.check()
-##     if objects:
-##         if prop is None:
-##             res = askItems([['property',0]],
-##                            caption = 'Set Property Number for Selection (negative value to remove)')
-##             if res:
-##                 prop = int(res['property'])
-##                 if prop < 0:
-##                     prop = None
-##         for o in objects:
-##             if hasattr(o,'setProp'):
-##                 o.setProp(prop)
-##         self.draw()
+def setprop_selection():
+    """Set the property of the current selection.
+
+    A property value is asked from the user and all items in the selection
+    that have property have their value set to it.
+    """
+    if selection is None:
+        warning("You need to pick something first.")
+        return
+    print selection
+    res = askItems([['property',0]],
+                   caption = 'Set Property Number for Selection (negative value to remove)')
+    if res:
+        prop = int(res['property'])
+        if prop < 0:
+            prop = None
+        setpropCollection(selection,prop)
+
+
+def export_selection():
+    if selection is None:
+        warning("You need to pick something first.")
+        return
+    print selection
+    sel = getCollection(selection)
+    if len(sel) == 0:
+        warning("Nothing to export!")
+        return
+    options = ['list','single item']
+    default = options[0]
+    if len(sel) == 1:
+        default = options[1]
+    res = askItems([('Export with name',''),
+                    ('Export as',default,'radio',options),
+                    ])
+    if res:
+        name = res['Export with name']
+        if res['Export as'] == options[0]:
+            export({name:sel})
+        elif res['Export as'] == options[1]:
+            export(dict([ ("name-%s"%i,v) for i,v in enumerate(sel)]))
+
 
 ################# Query Information ###################
     
 def queryDistance():
     GD.message("Select first node")
-    p1 = drawSelection('points')
+    p1 = drawSelection('point')
     while array(p1).shape[0] > 1:
         GD.message("Please select only one node")
         GD.message("Select first node")
-        p1 = drawSelection('points')
+        p1 = drawSelection('point')
     if array(p1).shape[0]:
         GD.message("First node: %s" %p1[0,0])
         GD.message("Select second node")
-        p2 = drawSelection('points')
+        p2 = drawSelection('point')
         while array(p2).shape[0] > 1:
             GD.message("Please select only one node")
             GD.message("Select second node")
-            p2 = drawSelection('points')
+            p2 = drawSelection('point')
         if array(p2).shape[0]:
             GD.message("Second node: %s" %p2[0,0])
             vec = p1-p2
@@ -338,9 +364,9 @@ def create_menu():
         ("&Pick Points",pickPoints),
         ("---",None),
         ('&Selection',
-         [('&Report',report_selection),
-##           ('&Extract',extrac_selection),
-##           ('&SetProp',setprop_selection),
+         [('&Create Report',report_selection),
+          ('&Set Property',setprop_selection),
+          ('&Export',export_selection),
           ]),
         ("---",None),
         ('&Query',

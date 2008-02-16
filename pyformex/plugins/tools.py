@@ -36,12 +36,13 @@ class Plane(object):
 ################# Report information about picked objects ################
 
 def report(K):
-    if K.obj_type == 'elements':
-        return reportElements(K)
-    elif K.obj_type == 'points':
-        return reportElements(K)
-    else:
-        return ''
+    if K is not None and hasattr(K,'obj_type'):
+        print K.obj_type
+        if K.obj_type == 'element':
+            return reportElements(K)
+        elif K.obj_type == 'point':
+            return reportPoints(K)
+    return ''
 
 def reportElements(K):
     s = "Element report\n"
@@ -70,4 +71,65 @@ def reportPoints(K):
             s += "  Point %s: %s\n" % (p,x[p]) 
     return s
 
+
+def getObjectItems(obj,items,mode):
+    """Get the specified items from object."""
+    if mode == 'actor':
+        return [ obj[i] for i in items ]
+    elif mode == 'element':
+        if hasattr(obj,'select'):
+            return obj.select(items)
+    elif mode == 'point':
+        if hasattr(obj,'vertices'):
+            return obj.vertices[items]
+    return None
+
+
+def getCollection(K):
+    """Returns a collection."""
+    if K.obj_type == 'actor':
+        return [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
+    elif K.obj_type in ['element','point']:
+        return [ getObjectItems(GD.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
+    else:
+        return None
+
+   
+def setpropCollection(K,prop):
+    """Set the property of a collection.
+
+    prop should be a single non-negative integer value or None.
+    If None is given, the prop attribute will be removed from the objects
+    in collection even the non-selected items.
+    If a selected object does not have a setProp method, it is ignored.
+    """
+    if K.obj_type == 'actor':
+        obj = [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
+        for o in obj:
+            if hasattr(o,'setProp'):
+                o.setProp(prop)
+            
+    elif K.obj_type in ['element','point']:
+        for k in K.keys():
+            o = GD.canvas.actors[k]
+            if prop is None:
+                o.setProp(prop)
+            elif hasattr(o,'setProp'):
+                if not hasattr(o,'p'):
+                    o.setProp(0)
+                o.p[K[k]] = prop
+
+    
+def exportObjects(obj,name,single=False):
+    """Export a list of objects under the given name.
+
+    If obj is a list, and single=True, each element of the list is exported
+    as a single item. The items will be given the names name-0, name-1, etc.
+    Else, the obj is exported as is under the name.
+    """
+    if single and type(obj) == list:
+        export(dict([ ("name-%s"%i,v) for i,v in enumerate(obj)]))
+    else:
+        export({name:obj})
+                
 # End

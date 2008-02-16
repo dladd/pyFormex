@@ -1110,14 +1110,14 @@ def highlightPoints(K,colormap=highlight_colormap):
     return highlight_pts
 
 
-highlight_funcs = { 'actors': highlightActors,
-                    'elements': highlightElements,
-                    'points': highlightPoints,
+highlight_funcs = { 'actor': highlightActors,
+                    'element': highlightElements,
+                    'point': highlightPoints,
                     }
 
 
 
-def pick(mode='actors',single=False,func=None):
+def pick(mode='actor',single=False,func=None):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
@@ -1134,13 +1134,13 @@ def pick(mode='actors',single=False,func=None):
     return sel
     
 def pickActors(single=False,func=None):
-    return pick('actors',single,func)
+    return pick('actor',single,func)
 
 def pickElements(single=False,func=None):
-    return pick('elements',single,func)
+    return pick('element',single,func)
 
 def pickPoints(single=False,func=None):
-    return pick('points',single,func)
+    return pick('point',single,func)
 
 
 def highlight(K,mode,colormap=highlight_colormap):

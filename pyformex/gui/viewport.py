@@ -171,11 +171,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.selection_mode = None
         self.selection = Collection()
         self.pick_func = {
-            'actors'  : self.pick_actors,
-            'elements': self.pick_elements,
-            'points'  : self.pick_points,
-            'numbers' : self.pick_numbers,
-            'lines'   : self.pick_lines,
+            'actor'  : self.pick_actors,
+            'element': self.pick_elements,
+            'point'  : self.pick_points,
+            'number' : self.pick_numbers,
+            'edge'   : self.pick_lines,
             }
 
 
@@ -239,11 +239,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.accept_selection(clear=True)
 
 
-    def pick(self,mode='actors',single=False,func=None):
+    def pick(self,mode='actor',single=False,func=None):
         """Interactively pick objects from the viewport.
 
         - mode: defines what to pick : one of
-        ['actors','elements','points','numbers']
+        ['actor','element','point','number','edge']
         - single: if True, the function returns as soon as the user ends
         a picking operation. The default is to let the user
         modify his selection and only to return after an explicit
@@ -294,8 +294,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.selection = []
         if shape == 'lines':
             self.setMouse(LEFT,self.pick_lines)
-        if shape == 'elements_3d':
-            self.setMouse(LEFT,self.pick_elements_3d)
         self.mousefnc[CTRL][LEFT] = self.mousefnc[NONE][LEFT]
         self.mousefnc[ALT][LEFT] = self.mousefnc[NONE][LEFT]
         self.mousefnc[SHIFT] = {}
@@ -544,7 +542,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         GL.glInitNames()
         for i,a in enumerate(self.actors):
             GL.glPushName(i)
-            a.pickGL('elements')
+            a.pickGL('element')
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2] for r in buf ]
@@ -563,7 +561,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         GL.glInitNames()
         for i,a in enumerate(self.actors):
             GL.glPushName(i)
-            a.pickGL('points')
+            a.pickGL('point')
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2] for r in buf ]

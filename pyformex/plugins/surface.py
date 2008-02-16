@@ -458,6 +458,17 @@ class Surface(object):
     def shape(self):
         """Return the number of ;points, edges, faces of the Surface."""
         return self.coords.shape[0],self.edges.shape[0],self.faces.shape[0]
+    
+    def select(self,idx):
+        """Return a Surface which holds only elements with numbers in ids.
+
+        self.coords is not changed
+        idx can be a single element number or a list of numbers or
+        any other index mechanism accepted by numpy's ndarray
+        
+        """
+        self.refresh()
+        return Surface(self.coords, self.elems[idx])
 
 
     # Properties
@@ -548,17 +559,6 @@ class Surface(object):
 
  
     # Test and clipping functions
-    
-    def select(self,idx):
-        """Return a Surface which holds only elements with numbers in ids.
-
-        self.coords is not changed
-        idx can be a single element number or a list of numbers or
-        any other index mechanism accepted by numpy's ndarray
-        
-        """
-        self.refresh()
-        return Surface(self.coords, self.elems[idx])
     
 
     def test(self,nodes='all',dir=0,min=None,max=None):
