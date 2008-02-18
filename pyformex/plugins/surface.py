@@ -458,6 +458,17 @@ class Surface(object):
     def shape(self):
         """Return the number of ;points, edges, faces of the Surface."""
         return self.coords.shape[0],self.edges.shape[0],self.faces.shape[0]
+       
+    def copy(self):
+        """Return a (deep) copy of the surface.
+
+        If an index is given, only the specified faces are retained.
+        """
+        self.refresh()
+        S = Surface(self.coords.copy(),self.elems.copy())
+        if self.p is not None:
+            S.setProp(self.p)
+        return S
     
     def select(self,idx):
         """Return a Surface which holds only elements with numbers in ids.
