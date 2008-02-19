@@ -185,6 +185,23 @@ def rotatePrincipal():
         selection.drawChanges()
 
 
+def transformPrincipal():
+    """Transform the selection according to the last shown principal axes.
+
+    This is analog to rotatePrincipal, but positions the Formex at its center.
+    """
+    try:
+        data = named('_principal_data_')
+    except:
+        data = showPrincipal() 
+    FL = selection.check()
+    if FL:
+        ctr = data[0]
+        rot = data[3]
+        selection.changeValues([ F.trl(-ctr).rot(rot) for F in FL ])
+        selection.drawChanges()
+
+
 
 ################### Perform operations on Formex #######################
     
@@ -445,6 +462,7 @@ def create_menu():
         ("---",None),
         ("Show &Principal Axes",showPrincipal),
         ("Rotate to &Principal Axes",rotatePrincipal),
+        ("Transform to &Principal Axes",transformPrincipal),
         ("---",None),
         ("&Concatenate Selection",concatenateSelection),
         ("&Partition Selection",partitionSelection),

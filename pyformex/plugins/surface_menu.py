@@ -162,8 +162,8 @@ def toFormex(suffix=''):
         selection.clear()
     formex_menu.selection.set(newnames)
     clear()
-    formex_menu. selection.draw()
-
+    formex_menu.selection.draw()
+    
 
 def fromFormex(suffix=''):
     """Transform the Formex selection to Surfaces.
@@ -178,18 +178,20 @@ def fromFormex(suffix=''):
     if not formex_menu.selection.names:
         return
 
-    newnames = formex_menu.selection.names
+    names = formex_menu.selection.names
+    formices = [ named(n) for n in names ]
     if suffix:
-        newnames = [ n + suffix for n in newnames ]
+        names = [ n + suffix for n in names ]
 
     t = timer.Timer()
-    okformices = dict([ (n,Surface(named(n))) for n in newnames if named(n).nplex() == 3 ])
+    surfaces =  dict([ (n,Surface(F)) for n,F in zip(names,formices) if F.nplex() == 3])
     print "Converted in %s seconds" % t.seconds()
-    export(okformices)
+    print surfaces.keys()
+    export(surfaces)
 
     if not suffix:
         formex_menu.selection.clear()
-    selection.set(okformices.keys())
+    selection.set(surfaces.keys())
 
 
 def toggle_shrink():
