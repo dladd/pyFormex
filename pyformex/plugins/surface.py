@@ -427,6 +427,22 @@ class Surface(object):
         if self.elems is None:
             self.elems = compactElems(self.edges,self.faces)
 
+    def compress(self):
+        """Remove all nodes which are not used.
+
+        Normally, the surface definition can hold nodes that are not
+        used in the edge/facet tables. They do however influence the
+        bounding box of the surface.
+        This method will remove all the unconnected nodes.
+        """
+        newnodes = unique1d(self.edges)
+        reverse = -ones(self.ncoords(),dtype=int32)
+        reverse[newnodes] = arange(newnodes.size)
+        self.coords = self.coords[newnodes]
+        self.edges = reverse[self.edges]
+        self.elems = None
+
+                                  
 ###########################################################################
     #
     #   Return information about a Surface
@@ -470,18 +486,22 @@ class Surface(object):
             S.setProp(self.p)
         return S
     
-    def select(self,idx):
+    def select(self,idx,compress=True):
         """Return a Surface which holds only elements with numbers in ids.
 
         self.coords is not changed
         idx can be a single element number or a list of numbers or
         any other index mechanism accepted by numpy's ndarray
-        
+        By default, the vertex list will be compressed to hold only those
+        used in the selected elements.
+        Setting compress==True will keep all original nodes in the surface.
         """
         self.refresh()
         S = Surface(self.coords, self.elems[idx])
         if self.p is not None:
             S.setProp(self.p[idx])
+        if compress:
+            S.compress()
         return S
     
 

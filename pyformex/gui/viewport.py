@@ -256,8 +256,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         When the picking operation is finished, the selection is returned.
         The return value is always a Collection object.
         """
-        if not single:
-            GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
+        #if not single:
+        #    GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
         self.selection.clear()
         self.selection.setType(mode)
         self.selection_canceled = False
@@ -272,7 +272,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                     self.selection.add(self.picked)
                 elif self.mod == CTRL:
                     self.selection.remove(self.picked)
-            GD.debug("Selection: %s" % self.selection)
+            #GD.debug("Selection: %s" % self.selection)
             if func:
                 func(self.selection)
             if single:

@@ -102,7 +102,7 @@ def ask(question,choices=None,default=None,timeout=None):
 
 def ack(question):
     """Show a Yes/No question and return True/False depending on answer."""
-    return ask(question,['Yes','No']) == 'Yes'
+    return ask(question,['No','Yes']) == 'Yes'
     
 def error(message,actions=['OK']):
     """Show an error message and wait for user acknowledgement."""
@@ -1077,6 +1077,7 @@ def highlightElements(K,colormap=highlight_colormap):
     for i,A in enumerate(GD.canvas.actors):
         p = numpy.zeros((A.nelems(),),dtype=int)
         if i in K.keys():
+            GD.debug("Actor %s: Selection %s" % (i,K[i]))
             p[K[i]] = 1
         if isinstance(A,surface.Surface):
             undraw(A)
