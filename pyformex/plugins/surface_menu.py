@@ -266,6 +266,7 @@ SelectableStatsValues = {
     'Smallest altitude': (Surface.smallestAltitude,False),
     'Longest edge': (Surface.longestEdge,False),
     'Shortest edge': (Surface.shortestEdge,False),
+    'Number of node adjacent elements': (Surface.nNodeAdjacent,False),
     'Number of edge adjacent elements': (Surface.nEdgeAdjacent,False),
     'Edge angle': (Surface.edgeAngles,True),
     'Number of connected elements': (Surface.nEdgeConnected,True),
@@ -276,7 +277,9 @@ def showStatistics():
     S = selection.check(single=True)
     if S:
         dispmodes = ['On Domain','Histogram','Cumulative Histogram']
-        res  = askItems([('Select Value',None,'select',SelectableStatsValues.keys()),
+        keys = SelectableStatsValues.keys()
+        keys.sort()
+        res  = askItems([('Select Value',None,'select',keys),
                          ('Display Mode',None,'select',dispmodes)
                          ])
         GD.app.processEvents()
@@ -392,16 +395,25 @@ def walkByFront(self,startat=0,okedges=None):
 def colorByFront():
     S = selection.check(single=True)
     if S:
-        res  = askItems([('number of colors',0),('front width',1),('start at',0),('first prop',0)])
+        res  = askItems([('front type',None,'select',['node','edge']),
+                         ('number of colors',0),
+                         ('front width',1),
+                         ('start at',0),
+                         ('first prop',0),
+                         ])
         GD.app.processEvents()
         if res:
             selection.remember()
             t = timer.Timer()
+            ftype = res['front type']
             nwidth = res['front width']
             nsteps = nwidth * res['number of colors']
             startat = res['start at']
             firstprop = res['first prop']
-            p = S.walkEdgeFront(nsteps=nsteps,startat=startat)
+            if ftype == 'node':
+                p = S.walkNodeFront(nsteps=nsteps,startat=startat)
+            else:
+                p = S.walkEdgeFront(nsteps=nsteps,startat=startat)
             S.setProp(p/nwidth + firstprop)
             print "Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
             selection.draw()
@@ -878,6 +890,31 @@ def show_volume():
     draw(F,color='random',eltype='tet')
     PF['vol_model'] = F
 
+
+
+def createGrid():
+    res = askItems([('name','__auto__'),('nx',2),('ny',2)])
+    if res:
+        name = res['name']
+        nx = res['nx']
+        ny = res['ny']
+        F = Formex(mpattern('12-34')).replic2(nx,ny,1,1)    
+        M = Surface(F)
+        export({name:M})
+        selection.set([name])
+        selection.draw()
+
+
+def createSphere():
+    res = askItems([('name','__auto__'),('grade',4),])
+    if res:
+        name = res['name']
+        level = res['grade']
+        M = unitSphere(level,verbose=True,filename=name+'.gts')
+        export({name:M})
+        selection.set([name])
+        selection.draw()
+
     
 ################### menu #################
 
@@ -891,6 +928,11 @@ def create_menu():
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
         ("&Write Surface Model",write_surface),
+        ("---",None),
+        ("&Create surface",
+         [('&Plane Grid',createGrid),
+          ('&Sphere',createSphere),
+          ]),
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),

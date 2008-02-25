@@ -344,8 +344,9 @@ class Surface(object):
         self.areas = None
         self.normals = None
         self.econn = None
-        self.nconn = None
+        self.conn = None
         self.eadj = None
+        self.adj = None
         if hasattr(self,'edglen'):
             del self.edglen
         self.p = None
@@ -953,10 +954,10 @@ class Surface(object):
 
     def nodeConnections(self):
         """Find the elems connected to nodes."""
-        if self.nconn is None:
+        if self.conn is None:
             self.refresh()
-            self.nconn = connectivity.reverseIndex(self.elems)
-        return self.nconn
+            self.conn = connectivity.reverseIndex(self.elems)
+        return self.conn
     
 
     def nEdgeConnected(self):
@@ -970,10 +971,10 @@ class Surface(object):
 
 
     def edgeAdjacency(self):
-        """Find the elems adjacent to elems."""
+        """Find the elems adjacent to elems via an edge."""
         if self.eadj is None:
             nfaces = self.nfaces()
-            rfaces = connectivity.reverseIndex(self.faces)
+            rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
             adj = rfaces[self.faces].reshape((nfaces,-1))
             fnr = arange(nfaces).reshape((nfaces,-1))
@@ -985,6 +986,19 @@ class Surface(object):
     def nEdgeAdjacent(self):
         """Find the number of adjacent elems."""
         return (self.edgeAdjacency() >=0).sum(axis=-1)
+
+
+    def nodeAdjacency(self):
+        """Find the elems adjacent to elems via one or two nodes."""
+        if self.adj is None:
+            self.refresh()
+            self.adj = connectivity.adjacent(self.elems,self.nodeConnections())
+        return self.adj
+
+
+    def nNodeAdjacent(self):
+        """Find the number of adjacent elems."""
+        return (self.nodeAdjacency() >=0).sum(axis=-1)
 
 
     def surfaceType(self):
@@ -1183,6 +1197,44 @@ Total area: %s; Enclosed volume: %s
                 # Start a new part
                 elems = elems[[0]]
                 prop += 1
+
+
+    def nodeFront(self,startat=0):
+        """Generator function returning the frontal elements.
+
+        startat is an element number or list of numbers of the starting front.
+        On first call, this function returns the starting front.
+        Each next() call returns the next front.
+        """
+        p = -ones((self.nfaces()),dtype=int)
+        if self.nfaces() <= 0:
+            return
+        # Construct table of elements connected to each element
+        adj = self.nodeAdjacency()
+
+        # Remember nodes left for processing
+        todo = ones((self.npoints(),),dtype=bool)
+        elems = clip(asarray(startat),0,self.nfaces())
+        prop = 0
+        while elems.size > 0:
+            # Store prop value for current elems
+            p[elems] = prop
+            yield p
+
+            prop += 1
+
+            # Determine adjacent elements
+            elems = unique1d(adj[elems])
+            elems = elems[(elems >= 0) * (p[elems] < 0) ]
+            if elems.size > 0:
+                continue
+
+            # No more elements in this part: start a new one
+            elems = where(p<0)[0]
+            if elems.size > 0:
+                # Start a new part
+                elems = elems[[0]]
+                prop += 1
     
 
     def partitionByFront(self,okedges,firstprop=0,startat=0):
@@ -1237,11 +1289,21 @@ Total area: %s; Enclosed volume: %s
         return p
 
 
-    def walkEdgeFront(self,startat=0,okedges=None,nsteps=1):
-        for p in self.edgeFront():
-            nsteps -= 1
-            if nsteps <= 0:
-                break
+    def walkEdgeFront(self,startat=0,okedges=None,nsteps=0):
+        for p in self.edgeFront(startat=0,okedges=None):
+            if nsteps > 0:
+                nsteps -= 1
+                if nsteps <= 0:
+                    break
+        return p
+
+
+    def walkNodeFront(self,startat=0,nsteps=0):
+        for p in self.nodeFront():
+            if nsteps > 0:
+                nsteps -= 1
+                if nsteps <= 0:
+                    break
         return p
 
 
@@ -1452,6 +1514,33 @@ def remove_triangles(elems,remove):
     GD.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
 
     return elems
+
+
+def unitSphere(level=4,verbose=False,filename=None):
+    """Create a spherical surface by caling the gtssphere command.
+
+    If a filename is given, it is stored under that name, else a temporary
+    file is created.
+    Beware: this may take a lot of time if level is 8 or higher.
+    """
+    cmd = 'gtssphere '
+    if verbose:
+        cmd += ' -v'
+    cmd += ' %s' % level
+    if filename is None:
+        tmp = tempfile.mktemp('.gts')
+    else:
+        tmp = filename
+    cmd += ' > %s' % tmp
+    GD.message("Writing file %s" % tmp)
+    sta,out = runCommand(cmd)
+    if sta or verbose:
+        GD.message(out)
+    GD.message("Reading model from %s" % tmp)
+    S = Surface.read(tmp)
+    if filename is None:
+        os.remove(tmp)
+    return S
 
 
 if __name__ == '__main__':

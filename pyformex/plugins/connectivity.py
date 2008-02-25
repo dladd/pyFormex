@@ -56,4 +56,73 @@ def reverseIndex(index,maxcon=3):
     reverse = reverse[:,maxc>=0]
     return reverse
 
+
+def connected(index,i):
+    """Return the list of elements connected to element i.
+
+    index is a (nr,nc) shaped integer array.
+    An element j of index is said to be connected to element i, iff element j
+    has at least one (non-negative) value in common with element i.
+
+    The result is a sorted list of unique element numbers, not containing
+    the element number i itself.
+    """
+    adj = concatenate([ where(ind==j)[0] for j in ind[i] if j >= 0 ])
+    return unique(adj[adj != i])
+
+
+def adjacent(index,rev=None):
+    """Return an index of connected elements.
+
+    index is a (nr,nc) shaped integer array.
+    An element j of index is said to be connected to element i, iff element j
+    has at least one (non-negative) value in common with element i.
+
+    The result is an integer array with shape (nr,mc), where row i holds
+    a sorted list of the elements that are connected to element i, padded with
+    -1 values to created an equal list length for all elements.
+
+    The result of this method provides the same information as repeated calls
+    of connected(index,i), but may be more efficient if nr becomes large.
+
+    The reverse index may be specified, if it was already computed.
+    """
+    n = index.shape[0]
+    if rev is None:
+        rev = reverseIndex(index)
+    adj = rev[index].reshape((n,-1))
+    #print adj
+    k =arange(n)
+    # remove the element itself
+    adj[adj == k.reshape(n,-1)] = -1
+    adj.sort(axis=-1)
+    #print adj
+    ncols = adj.shape[1]
+    pos = (ncols-1) * ones((n,),dtype=int32)
+    #pos = column_stack([arange(n),pos])
+    j = ncols-1
+    while j > 0:
+        j -= 1
+        #print pos
+        #print adj[k,pos]
+        #print adj[:,j]
+        t = adj[:,j] < adj[k,pos]
+        w = where(t)
+        x = where(t == 0)
+        pos[w] -= 1
+        adj[w,pos[w]] = adj[w,j]
+        #print adj
+
+    pmin = pos.min()
+    p = pos.max()
+    while p > pmin:
+        #print pos==p
+        adj[pos==p,p] = -1
+        pos[pos==p] -= 1
+        p = pos.max()
+        #print adj
+    adj = adj[:,pmin+1:]
+    #print adj
+    return adj
+ 
 # End
