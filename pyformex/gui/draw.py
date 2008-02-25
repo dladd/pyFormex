@@ -19,6 +19,7 @@ import numpy
 import utils
 import widgets
 import toolbar
+import drawable
 import actors
 import decors
 import marks
@@ -625,25 +626,6 @@ def _shrink(F,factor):
     return F.shrink(factor)
 
 
-## def drawSelection(shape):
-##     GD.gui.selectionbar = QtGui.QToolBar('Selection ToolBar',GD.gui)
-##     GD.gui.addToolBar(GD.gui.toolbarArea.get('top'),GD.gui.selectionbar)
-##     GD.gui.pushbutton = QtGui.QCheckBox('End selection')
-##     GD.gui.selectionbar.addWidget(GD.gui.pushbutton)
-##     GD.canvas.enableSelect(shape)
-##     while GD.gui.pushbutton.checkState() == False:
-##         selection = GD.canvas.makeSelection()
-##         if GD.gui.pushbutton.checkState() == False:
-##             S = Formex(selection,5)
-##             draw([S,GD.canvas.actors[-1]],linewidth=4,marksize=10,clear=True)
-##             zoomAll()
-##             GD.canvas.update()
-##     GD.gui.removeToolBar(GD.gui.selectionbar)
-##     GD.canvas.disableSelect()
-##     print "SELECTION: %s" % selection
-##     return selection
-
-
 def drawPlane(P,N):
     actor = actors.PlaneActor()
     actor.create_list(GD.canvas.rendermode)
@@ -655,9 +637,17 @@ def drawPlane(P,N):
     return actor
 
 
-def drawNumbers(F,color=colors.black):
-    """Draw numbers on all elements of F."""
-    FC = F.centroids().trl([0.,0.,0.1]) # put labels in front
+def drawNumbers(F,color=colors.black,trl=None):
+    """Draw numbers on all elements of F.
+
+    Normally, the nymbers are drawn at the centroids of the elements.
+    A translation may be given to put the numbers out of the centroids,
+    e.g. to put them in front of the objects to make them visible,
+    or to allow to view a mark at the centroids.
+    """
+    FC = F.centroids()
+    if trl is not None:
+        FC = FC.trl(trl)
     M = marks.MarkList(FC,range(FC.shape[0]),color=color)
     GD.canvas.addAnnotation(M)
     GD.canvas.numbers = M
@@ -1087,6 +1077,23 @@ def highlightElements(K,colormap=highlight_colormap):
     GD.canvas.update()
 
 
+def highlightEdges(K,colormap=highlight_colormap):
+    """Highlight a selection of actor edges on the canvas.
+
+    K is Collection of Surface actor edges as returned by the pick() method.
+    colormap is a list of two colors, for the edges not in, resp. in
+    the Collection K.
+    """
+    for i,A in enumerate(GD.canvas.actors):
+        if i in K.keys() and isinstance(A,surface.Surface):
+            GD.debug("Actor %s: Selection %s" % (i,K[i]))
+            F = Formex(A.coords[A.edges[K[i]]])
+            draw(F,color=highlight_colormap[1],linewidth=3,bbox=None)
+            #drawable.drawLineElems(A.coords,A.edges[K[i]],color=highlight_colormap[1])
+
+    GD.canvas.update()
+
+
 highlight_pts = None
 
 def highlightPoints(K,colormap=highlight_colormap):
@@ -1114,6 +1121,7 @@ def highlightPoints(K,colormap=highlight_colormap):
 highlight_funcs = { 'actor': highlightActors,
                     'element': highlightElements,
                     'point': highlightPoints,
+                    'edge': highlightEdges,
                     }
 
 

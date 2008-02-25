@@ -242,6 +242,9 @@ def pick_elements():
 
 def pick_points():
     set_selection('point')
+
+def pick_edges():
+    set_selection('edge')
                    
 
 def report_selection():
@@ -334,7 +337,7 @@ def queryPoints():
     print reportPoints(K)
 
 
-def queryEdge():
+def queryEdges():
     GD.message("Select edge")
     e = drawSelection('lines')
     while array(e).shape[0] > 1:
@@ -362,6 +365,7 @@ def create_menu():
         ("&Pick Actors",pick_actors),
         ("&Pick Elements",pick_elements),
         ("&Pick Points",pickPoints),
+        ("&Pick Edges",pick_edges),
         ("---",None),
         ('&Selection',
          [('&Create Report',report_selection),
@@ -373,7 +377,7 @@ def create_menu():
          [('&Actors',queryActors),
           ('&Elements',queryElements),
           ('&Points',queryPoints),
-          ('&Edges',queryEdge),
+          ('&Edges',queryEdges),
           ('&Distances',queryDistance),
           ]),
         ("---",None),

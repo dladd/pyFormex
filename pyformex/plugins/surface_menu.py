@@ -332,6 +332,78 @@ def showHistogram(txt,val,cumulative=False):
 
 
 
+
+
+def walkByFront(self,startat=0,okedges=None):
+    """Detects different parts of the surface using a frontal method.
+
+    func is a function that takes the edge connection table as input and
+    produces an array with nedges values flagging with a True/nonzero
+    value all edges where the connected elements should belong to the
+    same part.
+    """
+    p = -ones((self.nfaces()),dtype=int)
+    if self.nfaces() <= 0:
+        return p
+    # Construct table of elements connected to each edge
+    conn = self.connections()
+    # Bail out if some edge has more than two connected faces
+    if conn.shape[1] != 2:
+        GD.warning("Surface is not a manifold")
+        return p
+    # Check size of okedges
+    if okedges is None:
+        okedges = arange(self.nedges())
+    else:
+        if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
+            raise ValueError,"okedges has incorrect shape"
+
+    # Remember edges left for processing
+    todo = ones((self.nedges(),),dtype=bool)
+    elems = clip(asarray(startat),0,self.nfaces())
+    print elems
+    prop = 0
+    while elems.size > 0:
+        # Store prop value for current elems
+        p[elems] = prop
+        prop += 1
+                
+        # Determine border
+        edges = unique(self.faces[elems])
+        edges = edges[todo[edges]]
+        print "EDGES",edges
+        if edges.size > 0:
+            # flag edges as done
+            todo[edges] = 0
+            # take connected elements
+            #elems = conn[edges][okedges[edges]].ravel()
+            elems = conn[edges].ravel()
+            print "NEXT",elems
+            if elems.size > 0:
+                continue
+
+        # No more elements in this part: start a new one
+        elems = where(p<0)[0]
+        if elems.size > 0:
+            # Start a new part
+            elems = elems[[0]]
+            prop += 1
+
+    return p
+
+
+def colorByFront():
+    S = selection.check(single=True)
+    if S:
+        selection.remember()
+        t = timer.Timer()
+        for p in S.front():
+            continue
+        S.setProp(p/2)
+        print "Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+        selection.draw()
+
+
 def partitionByConnection():
     S = selection.check(single=True)
     if S:
@@ -340,32 +412,17 @@ def partitionByConnection():
         S.p = S.partitionByConnection()
         print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
         selection.draw()
- 
 
 
 def partitionByAngle():
     S = selection.check(single=True)
     if S:
-        res  = askItems([('angle',60.),('firstprop',1),('startat',0),('maxruns',-1)])
+        res  = askItems([('angle',60.),('firstprop',1),('startat',0)])
         GD.app.processEvents()
         if res:
             selection.remember()
             t = timer.Timer()
             S.p = S.partitionByAngle(**res)
-            print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
-            selection.draw()
-
-
-
-def partitionByAngle2():
-    S = selection.check(single=True)
-    if S:
-        res  = askItems([('angle',60.),('firstprop',1),('startat',0),('maxruns',-1)])
-        GD.app.processEvents()
-        if res:
-            selection.remember()
-            t = timer.Timer()
-            S.p = S.partitionByAngle2(**res)
             print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
             selection.draw()
          
@@ -852,9 +909,11 @@ def create_menu():
           ]),
         ("&Statistics",showStatistics),
         ("---",None),
-        ("&Partition By Angle",partitionByAngle),
-        ("&Partition By Angle 2",partitionByAngle2),
-        ("&Partition By Connection",partitionByConnection),
+        ("&Frontal Methods",
+         [("&Color By Front",colorByFront),
+          ("&Partition By Connection",partitionByConnection),
+          ("&Partition By Angle",partitionByAngle),
+          ]),
         ("&Border Line",showBorder),
         ("---",None),
         ("&Transform coordinates",

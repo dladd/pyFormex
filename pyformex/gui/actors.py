@@ -640,6 +640,8 @@ class SurfaceActor(Actor,Surface):
             self.refresh()
             #pickPolygons(self.coords[self.elems])
             pickPolygonElems(self.coords,self.elems)
+        elif mode == 'edge':
+            pickPolygonEdges(self.coords,self.edges)
         elif mode == 'point':
             pickPoints(self.coords)
 
