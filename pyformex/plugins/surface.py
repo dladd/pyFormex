@@ -343,8 +343,9 @@ class Surface(object):
         self.elems = None
         self.areas = None
         self.normals = None
-        self.conn = None
-        self.adj = None
+        self.econn = None
+        self.nconn = None
+        self.eadj = None
         if hasattr(self,'edglen'):
             del self.edglen
         self.p = None
@@ -943,39 +944,52 @@ class Surface(object):
         return surface_volume(x).sum()
 
 
-    def connections(self):
+    def edgeConnections(self):
         """Find the elems connected to edges."""
-        if self.conn is None:
-            self.conn = connectivity.reverseIndex(self.faces)
-        return self.conn
+        if self.econn is None:
+            self.econn = connectivity.reverseIndex(self.faces)
+        return self.econn
     
 
-    def nConnected(self):
+    def nodeConnections(self):
+        """Find the elems connected to nodes."""
+        if self.nconn is None:
+            self.refresh()
+            self.nconn = connectivity.reverseIndex(self.elems)
+        return self.nconn
+    
+
+    def nEdgeConnected(self):
         """Find the number of elems connected to edges."""
-        return (self.connections() >=0).sum(axis=-1)
+        return (self.edgeConnections() >=0).sum(axis=-1)
+    
+
+    def nNodeConnected(self):
+        """Find the number of elems connected to nodes."""
+        return (self.nodeConnections() >=0).sum(axis=-1)
 
 
-    def adjacency(self):
+    def edgeAdjacency(self):
         """Find the elems adjacent to elems."""
-        if self.adj is None:
+        if self.eadj is None:
             nfaces = self.nfaces()
             rfaces = connectivity.reverseIndex(self.faces)
             # this gives all adjacent elements including element itself
             adj = rfaces[self.faces].reshape((nfaces,-1))
             fnr = arange(nfaces).reshape((nfaces,-1))
             # remove the element itself
-            self.adj = adj[adj != fnr].reshape((nfaces,-1))
-        return self.adj
+            self.eadj = adj[adj != fnr].reshape((nfaces,-1))
+        return self.eadj
 
 
-    def nAdjacent(self):
+    def nEdgeAdjacent(self):
         """Find the number of adjacent elems."""
-        return (self.adjacency() >=0).sum(axis=-1)
+        return (self.edgeAdjacency() >=0).sum(axis=-1)
 
 
     def surfaceType(self):
-        ncon = self.nConnected()
-        nadj = self.nAdjacent()
+        ncon = self.nEdgeConnected()
+        nadj = self.nEdgeAdjacent()
         maxcon = ncon.max()
         mincon = ncon.min()
         manifold = maxcon == 2
@@ -989,7 +1003,7 @@ class Surface(object):
         The border elements are the edges having less than 2 connected elements.
         Returns a list of edge numbers.
         """
-        return self.nConnected() <= 1
+        return self.nEdgeConnected() <= 1
         
 
     def isManifold(self):
@@ -1016,7 +1030,7 @@ class Surface(object):
         The surface should be a manifold (max. 2 elements per edge).
         Edges with only one element get angles = 1.0.
         """
-        conn = self.connections()
+        conn = self.edgeConnections()
         # Bail out if some edge has more than two connected faces
         if conn.shape[1] != 2:
             raise RuntimeError,"Surface is not a manifold"
@@ -1116,7 +1130,7 @@ Total area: %s; Enclosed volume: %s
 ##################  Partitioning a surface #############################
 
 
-    def front(self,startat=0,okedges=None):
+    def edgeFront(self,startat=0,okedges=None):
         """Generator function returning the frontal elements.
 
         startat is an element number or list of numbers of the starting front.
@@ -1127,7 +1141,7 @@ Total area: %s; Enclosed volume: %s
         if self.nfaces() <= 0:
             return
         # Construct table of elements connected to each edge
-        conn = self.connections()
+        conn = self.edgeConnections()
         # Bail out if some edge has more than two connected faces
         if conn.shape[1] != 2:
             GD.warning("Surface is not a manifold")
@@ -1184,7 +1198,7 @@ Total area: %s; Enclosed volume: %s
         if self.nfaces() <= 0:
             return p
         # Construct table of elements connected to each edge
-        conn = self.connections()
+        conn = self.edgeConnections()
         # Bail out if some edge has more than two connected faces
         if conn.shape[1] != 2:
             GD.warning("Surface is not a manifold")
@@ -1223,10 +1237,12 @@ Total area: %s; Enclosed volume: %s
         return p
 
 
-    def colorByFront(self):
-        for p in self.front():
-            continue
-        self.setProp(p)
+    def walkEdgeFront(self,startat=0,okedges=None,nsteps=1):
+        for p in self.edgeFront():
+            nsteps -= 1
+            if nsteps <= 0:
+                break
+        return p
 
 
     def partitionByConnection(self):
@@ -1235,7 +1251,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def partitionByAngle(self,angle=180.,firstprop=0,startat=0):
-        conn = self.connections()
+        conn = self.edgeConnections()
         # Flag edges that connect two faces
         conn2 = (conn >= 0).sum(axis=-1) == 2
         # compute normals and flag small angles over edges

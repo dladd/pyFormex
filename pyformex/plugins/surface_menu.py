@@ -243,8 +243,8 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 def showBorder():
     S = selection.check(single=True)
     if S:
-        #print S.connections()
-        print S.nConnected()
+        #print S.edgeConnections()
+        print S.nEdgeConnected()
         print S.borderEdges()
         F = S.border()
         if F.nelems() > 0:
@@ -266,9 +266,9 @@ SelectableStatsValues = {
     'Smallest altitude': (Surface.smallestAltitude,False),
     'Longest edge': (Surface.longestEdge,False),
     'Shortest edge': (Surface.shortestEdge,False),
-    'Number of adjacent elements': (Surface.nAdjacent,False),
+    'Number of edge adjacent elements': (Surface.nEdgeAdjacent,False),
     'Edge angle': (Surface.edgeAngles,True),
-    'Number of connected elements': (Surface.nConnected,True),
+    'Number of connected elements': (Surface.nEdgeConnected,True),
     }
 
 
@@ -331,9 +331,6 @@ def showHistogram(txt,val,cumulative=False):
     g.plot(data)
 
 
-
-
-
 def walkByFront(self,startat=0,okedges=None):
     """Detects different parts of the surface using a frontal method.
 
@@ -346,7 +343,7 @@ def walkByFront(self,startat=0,okedges=None):
     if self.nfaces() <= 0:
         return p
     # Construct table of elements connected to each edge
-    conn = self.connections()
+    conn = self.edgeConnections()
     # Bail out if some edge has more than two connected faces
     if conn.shape[1] != 2:
         GD.warning("Surface is not a manifold")
@@ -395,13 +392,19 @@ def walkByFront(self,startat=0,okedges=None):
 def colorByFront():
     S = selection.check(single=True)
     if S:
-        selection.remember()
-        t = timer.Timer()
-        for p in S.front():
-            continue
-        S.setProp(p/2)
-        print "Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
-        selection.draw()
+        res  = askItems([('number of colors',0),('front width',1),('start at',0),('first prop',0)])
+        GD.app.processEvents()
+        if res:
+            selection.remember()
+            t = timer.Timer()
+            nwidth = res['front width']
+            nsteps = nwidth * res['number of colors']
+            startat = res['start at']
+            firstprop = res['first prop']
+            p = S.walkEdgeFront(nsteps=nsteps,startat=startat)
+            S.setProp(p/nwidth + firstprop)
+            print "Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+            selection.draw()
 
 
 def partitionByConnection():
