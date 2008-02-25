@@ -334,64 +334,6 @@ def showHistogram(txt,val,cumulative=False):
     g.plot(data)
 
 
-def walkByFront(self,startat=0,okedges=None):
-    """Detects different parts of the surface using a frontal method.
-
-    func is a function that takes the edge connection table as input and
-    produces an array with nedges values flagging with a True/nonzero
-    value all edges where the connected elements should belong to the
-    same part.
-    """
-    p = -ones((self.nfaces()),dtype=int)
-    if self.nfaces() <= 0:
-        return p
-    # Construct table of elements connected to each edge
-    conn = self.edgeConnections()
-    # Bail out if some edge has more than two connected faces
-    if conn.shape[1] != 2:
-        GD.warning("Surface is not a manifold")
-        return p
-    # Check size of okedges
-    if okedges is None:
-        okedges = arange(self.nedges())
-    else:
-        if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
-            raise ValueError,"okedges has incorrect shape"
-
-    # Remember edges left for processing
-    todo = ones((self.nedges(),),dtype=bool)
-    elems = clip(asarray(startat),0,self.nfaces())
-    print elems
-    prop = 0
-    while elems.size > 0:
-        # Store prop value for current elems
-        p[elems] = prop
-        prop += 1
-                
-        # Determine border
-        edges = unique(self.faces[elems])
-        edges = edges[todo[edges]]
-        print "EDGES",edges
-        if edges.size > 0:
-            # flag edges as done
-            todo[edges] = 0
-            # take connected elements
-            #elems = conn[edges][okedges[edges]].ravel()
-            elems = conn[edges].ravel()
-            print "NEXT",elems
-            if elems.size > 0:
-                continue
-
-        # No more elements in this part: start a new one
-        elems = where(p<0)[0]
-        if elems.size > 0:
-            # Start a new part
-            elems = elems[[0]]
-            prop += 1
-
-    return p
-
-
 def colorByFront():
     S = selection.check(single=True)
     if S:
@@ -893,14 +835,13 @@ def show_volume():
 
 
 def createGrid():
-    res = askItems([('name','__auto__'),('nx',2),('ny',2)])
+    res = askItems([('name','__auto__'),('nx',4),('ny',3)])
     if res:
         name = res['name']
         nx = res['nx']
         ny = res['ny']
-        F = Formex(mpattern('12-34')).replic2(nx,ny,1,1)    
-        M = Surface(F)
-        export({name:M})
+        S = planeSurface(nx,ny)
+        export({name:S})
         selection.set([name])
         selection.draw()
 
@@ -910,8 +851,8 @@ def createSphere():
     if res:
         name = res['name']
         level = res['grade']
-        M = unitSphere(level,verbose=True,filename=name+'.gts')
-        export({name:M})
+        S = unitSphere(level,verbose=True,filename=name+'.gts')
+        export({name:S})
         selection.set([name])
         selection.draw()
 

@@ -1290,7 +1290,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def walkEdgeFront(self,startat=0,okedges=None,nsteps=0):
-        for p in self.edgeFront(startat=0,okedges=None):
+        for p in self.edgeFront(startat=startat,okedges=okedges):
             if nsteps > 0:
                 nsteps -= 1
                 if nsteps <= 0:
@@ -1299,7 +1299,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def walkNodeFront(self,startat=0,nsteps=0):
-        for p in self.nodeFront():
+        for p in self.nodeFront(startat=startat):
             if nsteps > 0:
                 nsteps -= 1
                 if nsteps <= 0:
@@ -1514,6 +1514,12 @@ def remove_triangles(elems,remove):
     GD.message("Actually removed %s triangles, leaving %s" % (nelems-mag1.shape[0],elems.shape[0]))
 
     return elems
+
+
+def planeSurface(nx,ny):
+    """Create a plane surface consisting of a nx,ny grid."""
+    F = Formex(mpattern('12-34')).replic2(nx,ny,1,1)    
+    return Surface(F)
 
 
 def unitSphere(level=4,verbose=False,filename=None):

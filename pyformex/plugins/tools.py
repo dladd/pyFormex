@@ -44,6 +44,7 @@ def report(K):
             return reportPoints(K)
     return ''
 
+
 def reportElements(K):
     s = "Element report\n"
     for k in K.keys():
@@ -115,9 +116,29 @@ def setpropCollection(K,prop):
             if prop is None:
                 o.setProp(prop)
             elif hasattr(o,'setProp'):
-                if not hasattr(o,'p'):
+                if not hasattr(o,'p') or o.p is None:
                     o.setProp(0)
                 o.p[K[k]] = prop
+                print o.p
+                o.setColor(o.p)
+                o.redraw()
+
+   
+def growCollection(K,n=1):
+    """Grow the collection with n frontal rings.
+
+    K should be a collection of elements.
+    This currently only works on surfaces. Objects that do not have a
+    nodeFront() generator function are 
+    """
+    if K.obj_type == 'element':
+        for k in K.keys():
+            o = GD.canvas.actors[k]
+            if hasattr(o,'nodeFront'):
+                p = o.walkNodeFront(nsteps=n+1,startat=K[k])
+                K[k] = where(p>=0)[0]
+                #o.setProp(0)
+                #o.p[K[k]] = 1
 
     
 def exportObjects(obj,name,single=False):

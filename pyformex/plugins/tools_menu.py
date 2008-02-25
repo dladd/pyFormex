@@ -274,6 +274,16 @@ def setprop_selection():
         setpropCollection(selection,prop)
 
 
+def grow_selection():
+    if selection is None:
+        warning("You need to pick something first.")
+        return
+    print selection
+    growCollection(selection,1)
+    print selection
+    highlightElements(selection)
+
+
 def export_selection():
     if selection is None:
         warning("You need to pick something first.")
@@ -370,6 +380,7 @@ def create_menu():
         ('&Selection',
          [('&Create Report',report_selection),
           ('&Set Property',setprop_selection),
+          ('&Grow',grow_selection),
           ('&Export',export_selection),
           ]),
         ("---",None),
