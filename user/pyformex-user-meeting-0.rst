@@ -90,7 +90,7 @@ Agenda and discussion
 
 Date of the next meeting
 ------------------------
-The next meetings will be held Thursday, March 6, 2008 at 10.00h and (tentative) on Tuesday, April 8, 2008 at 14.00h.
+The next meetings will be held Tuesday, March 11, 2008 at 10.00h and (tentative) on Tuesday, April 8, 2008 at 14.00h.
 
 
 .. Here are the targets referenced in the text
