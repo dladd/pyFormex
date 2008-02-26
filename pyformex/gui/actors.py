@@ -634,29 +634,6 @@ class SurfaceActor(Actor,Surface):
             pickPolygonEdges(self.coords,self.edges)
         elif mode == 'point':
             pickPoints(self.coords)
-            
-    def windowCoord1(self,mode):
-        if mode == 'element':
-            self.refresh()
-            x = self.coords
-            e = self.elems
-            wc = zeros((len(e),3,3))
-            for i,ei in enumerate(e):
-                for j,eij in enumerate(ei):
-                    w = GLU.gluProject(x[eij][0],x[eij][1],x[eij][2],GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX),GL.glGetDoublev(GL.GL_PROJECTION_MATRIX), GL.glGetIntegerv(GL.GL_VIEWPORT))
-                    wc[i,j] = w
-            return wc
-            
-    def windowCoord2(self,mode):
-        if mode == 'element':
-            self.refresh()
-            c = self.centroids()
-            wc = zeros((len(c),3))
-            for i,ci in enumerate(c):
-                    w = GLU.gluProject(c[i][0],c[i][1],c[i][2],GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX),GL.glGetDoublev(GL.GL_PROJECTION_MATRIX), GL.glGetIntegerv(GL.GL_VIEWPORT))
-                    wc[i] = w
-            return wc
-
 
 
 # End
