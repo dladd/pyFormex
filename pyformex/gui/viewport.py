@@ -69,7 +69,7 @@ LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
 
-# modifiersdrawSe
+# modifiers
 NONE = QtCore.Qt.NoModifier
 SHIFT = QtCore.Qt.ShiftModifier
 CTRL = QtCore.Qt.ControlModifier

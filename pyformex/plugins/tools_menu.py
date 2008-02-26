@@ -312,24 +312,26 @@ def export_selection():
     
 def queryDistance():
     GD.message("Select first node")
-    p1 = drawSelection('point')
-    while array(p1).shape[0] > 1:
-        GD.message("Please select only one node")
+    K = pickPoints()
+    while len(K.keys())!=1 or len(K.get(0,[]))!=1:
+        GD.message("Please select one node")
         GD.message("Select first node")
-        p1 = drawSelection('point')
-    if array(p1).shape[0]:
-        GD.message("First node: %s" %p1[0,0])
-        GD.message("Select second node")
-        p2 = drawSelection('point')
-        while array(p2).shape[0] > 1:
-            GD.message("Please select only one node")
-            GD.message("Select second node")
-            p2 = drawSelection('point')
-        if array(p2).shape[0]:
-            GD.message("Second node: %s" %p2[0,0])
-            vec = p1-p2
-            dist = sqrt(sum(vec*vec,-1))
-            GD.message("The distance between the two nodes is: %s" %dist[0,0])
+        K = pickPoints()
+    p1 = getCollection(K)
+    p1 = asarray(p1).reshape(3)
+    GD.message("First node: %s" %p1)
+    GD.message("Select second node")
+    K = pickPoints()
+    while len(K.keys())!=1 or len(K.get(0,[]))!=1:
+        GD.message("Please select one node")
+        GD.message("Select first node")
+        K = pickPoints()    
+    p2 = getCollection(K)
+    p2 = asarray(p2).reshape(3)
+    GD.message("Second node: %s" %p2)
+    vec = p1-p2
+    dist = sqrt(sum(vec*vec,-1))
+    GD.message("The distance between the two nodes is: %s" %dist)
 
 
 def queryActors():
@@ -347,14 +349,14 @@ def queryPoints():
     print reportPoints(K)
 
 
-def queryEdges():
-    GD.message("Select edge")
-    e = drawSelection('lines')
-    while array(e).shape[0] > 1:
-        GD.message("Please select only one edge")
-        GD.message("Select edge")
-        e = drawSelection('lines')
-    GD.message("Edge information: %s" %e)
+##def queryEdge():
+##    GD.message("Select edge")
+##    e = drawSelection('lines')
+##    while array(e).shape[0] > 1:
+##        GD.message("Please select only one edge")
+##        GD.message("Select edge")
+##        e = drawSelection('lines')
+##    GD.message("Edge information: %s" %e)
 
 
 ################### menu #################
@@ -374,7 +376,7 @@ def create_menu():
         ("---",None),
         ("&Pick Actors",pick_actors),
         ("&Pick Elements",pick_elements),
-        ("&Pick Points",pickPoints),
+        ("&Pick Points",pick_points),
         ("&Pick Edges",pick_edges),
         ("---",None),
         ('&Selection',

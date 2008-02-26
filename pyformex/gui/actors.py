@@ -527,29 +527,6 @@ class FormexActor(Actor,Formex):
             pickPolygons(self.f)
         elif mode == 'point':
             pickPoints(self.f)
-            
-## drawpick should be removed when new picking funcs are fully operational
-    def drawpick(self,shape):
-        if shape == 'lines':
-            nplex = self.nplex()
-            L = range(nplex)
-            LL = [[L[i],L[i+1]] for i in L[:-1]]
-            LL.append([L[-1],L[0]])
-            C = [connect([Formex(self),Formex(self)],nodid=ax) for ax in LL]
-            C = Formex.concatenate(C)
-            picked = pickLines(C.f)
-            selected = C.f[picked]
-        if len(selected) != 0:
-            flag = ones((selected.shape[0],))
-            for i in range(selected.shape[0]):
-                for j in range(i):
-                    if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
-                        # i is a duplicate node
-                        flag[i] = 0
-                        break
-            selected = selected[flag>0]
-            print "SELECTION: %s" % selected
-        return selected
 
 
 #############################################################################
@@ -657,22 +634,29 @@ class SurfaceActor(Actor,Surface):
             pickPolygonEdges(self.coords,self.edges)
         elif mode == 'point':
             pickPoints(self.coords)
+            
+    def windowCoord1(self,mode):
+        if mode == 'element':
+            self.refresh()
+            x = self.coords
+            e = self.elems
+            wc = zeros((len(e),3,3))
+            for i,ei in enumerate(e):
+                for j,eij in enumerate(ei):
+                    w = GLU.gluProject(x[eij][0],x[eij][1],x[eij][2],GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX),GL.glGetDoublev(GL.GL_PROJECTION_MATRIX), GL.glGetIntegerv(GL.GL_VIEWPORT))
+                    wc[i,j] = w
+            return wc
+            
+    def windowCoord2(self,mode):
+        if mode == 'element':
+            self.refresh()
+            c = self.centroids()
+            wc = zeros((len(c),3))
+            for i,ci in enumerate(c):
+                    w = GLU.gluProject(c[i][0],c[i][1],c[i][2],GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX),GL.glGetDoublev(GL.GL_PROJECTION_MATRIX), GL.glGetIntegerv(GL.GL_VIEWPORT))
+                    wc[i] = w
+            return wc
 
 
-    def drawpick(self,shape):
-        if shape == 'edge':
-            picked = pickLines(self.coords[self.edges])
-            selected = self.coords[self.edges][picked]
-        if len(selected) != 0:
-            flag = ones((selected.shape[0],))
-            for i in range(selected.shape[0]):
-                for j in range(i):
-                    if allclose(selected[i],selected[j],rtol=1.e-4,atol=1.e-6):
-                        # i is a duplicate node
-                        flag[i] = 0
-                        break
-            selected = selected[flag>0]
-            print "SELECTION: %s" % selected
-        return selected
 
 # End

@@ -9,15 +9,17 @@ from coords import *
 
 class Plane(object):
 
-    def __init__(self,point,normal):
+    def __init__(self,point,normal,size=(1.0,1.0)):
         P = Coords(point)
         n = Coords(normal)
+        s = Coords((0.0,size[0],size[1]))
 
         if P.shape != (3,) or n.shape != (3,):
             raise ValueError,"point or normal does not have correct shape"
 
         self.P = P 
         self.n = n
+        self.s = s
 
 
     def point(self):
@@ -25,6 +27,9 @@ class Plane(object):
 
     def normal(self):
         return self.n
+    
+    def size(self):
+        return self.s
     
     def bbox(self):
         return self.P.bbox()
@@ -82,7 +87,7 @@ def getObjectItems(obj,items,mode):
             return obj.select(items)
     elif mode == 'point':
         if hasattr(obj,'vertices'):
-            return obj.vertices[items]
+            return obj.vertices()[items]
     return None
 
 

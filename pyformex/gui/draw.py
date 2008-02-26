@@ -589,7 +589,7 @@ def draw(F, view=None,bbox='auto',
         elif isinstance(F,surface.Surface):
             actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
         elif isinstance(F,tools.Plane):
-            return drawPlane(F.point(),F.normal())
+            return drawPlane(F.point(),F.normal(),F.size())
         GD.canvas.addActor(actor)
         if view is not None or bbox is not None:
             #GD.debug("CHANGING VIEW to %s" % view)
@@ -626,8 +626,8 @@ def _shrink(F,factor):
     return F.shrink(factor)
 
 
-def drawPlane(P,N):
-    actor = actors.PlaneActor()
+def drawPlane(P,N,size):
+    actor = actors.PlaneActor(size=size)
     actor.create_list(GD.canvas.rendermode)
     actor = actors.RotatedActor(actor,N)
     actor.create_list(GD.canvas.rendermode)
