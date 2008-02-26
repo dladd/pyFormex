@@ -252,7 +252,6 @@ def centerline(fn):
     and radii of the voronoi spheres.
     """
     nodesVor,rad= voronoiInner('%s' %fn)
-    print nodesVor.shape
     nodesC,rad=selectMaxVor(nodesVor,rad)
     elemsC = connectVorNodes(nodesC,rad)
     elemsC = removeTriangles(elemsC)

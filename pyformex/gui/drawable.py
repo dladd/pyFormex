@@ -144,6 +144,7 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
     for the lighting are calculated and set
     """
+    x = x.reshape(-1,3,3)
     n = None
     if mode.startswith('smooth'):
         n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])

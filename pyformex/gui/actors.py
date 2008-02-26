@@ -473,6 +473,10 @@ class FormexActor(Actor,Formex):
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
                 drawEdges(coords,color)
+            elif self.eltype == 'wed':
+                edges = [ 0,1, 0,2, 0,3, 1,2, 1,4, 2,5, 3,4, 3,5, 4,5]
+                coords = self.f[:,edges,:]
+                drawEdges(coords,color)
             elif self.eltype == 'hex':
                 edges = [ 0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
                 coords = self.f[:,edges,:]
@@ -495,6 +499,15 @@ class FormexActor(Actor,Formex):
             else: # (possibly non-plane) quadrilateral
                 drawQuadrilaterals(self.f,mode,color)
 
+        elif nnod == 6:
+            if self.eltype=='wed':
+                triFaces = [0,1,2, 3,5,4]
+                triCoords = self.f[:,triFaces,:]
+                drawTriangles(triCoords,mode,color)
+                quadFaces = [ 0,1,4,3, 1,2,5,4, 0,2,5,3]
+                quadCoords = self.f[:,quadFaces,:]
+                drawQuadrilaterals(quadCoords,mode,color)
+                
         elif nnod == 8:
             if self.eltype=='hex':
                 faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]
