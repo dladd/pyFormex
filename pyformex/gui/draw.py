@@ -1151,6 +1151,9 @@ def pickElements(single=False,func=None):
 def pickPoints(single=False,func=None):
     return pick('point',single,func)
 
+def pickEdges(single=False,func=None):
+    return pick('edge',single,func)
+
 
 def highlight(K,mode,colormap=highlight_colormap):
     """Highlight a Collection of actor/elements.

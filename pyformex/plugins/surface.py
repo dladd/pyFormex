@@ -779,136 +779,6 @@ class Surface(object):
         pass
 
 
-########################## Methods using GTS #############################
-
-    def check(self,verbose=False):
-        """Check the surface using gtscheck."""
-        cmd = 'gtscheck'
-        if verbose:
-            cmd += ' -v'
-        tmp = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
-        self.write(tmp,'gts')
-        GD.message("Checking with command\n %s" % cmd)
-        cmd += ' < %s' % tmp
-        sta,out = runCommand(cmd,False)
-        os.remove(tmp)
-        GD.message(out)
-        if sta == 0:
-            GD.message('The surface is a closed, orientable non self-intersecting manifold')
- 
-
-    def split(self,base,verbose=False):
-        """Check the surface using gtscheck."""
-        cmd = 'gtssplit -v %s' % base
-        if verbose:
-            cmd += ' -v'
-        tmp = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
-        self.write(tmp,'gts')
-        GD.message("Splitting with command\n %s" % cmd)
-        cmd += ' < %s' % tmp
-        sta,out = runCommand(cmd)
-        os.remove(tmp)
-        if sta or verbose:
-            GD.message(out)
-   
-
-    def coarsen(self,min_edges=None,max_cost=None,
-                mid_vertex=False, length_cost=False, max_fold = 1.0,
-                volume_weight=0.5, boundary_weight=0.5, shape_weight=0.0,
-                progressive=False, log=False, verbose=False):
-        """Coarsen the surface using gtscoarsen."""
-        if min_edges is None and max_cost is None:
-            min_edges = self.nedges() / 2
-        cmd = 'gtscoarsen'
-        if min_edges:
-            cmd += ' -n %d' % min_edges
-        if max_cost:
-            cmd += ' -c %d' % max_cost
-        if mid_vertex:
-            cmd += ' -m'
-        if length_cost:
-            cmd += ' -l'
-        if max_fold:
-            cmd += ' -f %f' % max_fold
-        cmd += ' -w %f' % volume_weight
-        cmd += ' -b %f' % boundary_weight
-        cmd += ' -s %f' % shape_weight
-        if progressive:
-            cmd += ' -p'
-        if log:
-            cmd += ' -L'
-        if verbose:
-            cmd += ' -v'
-        tmp = tempfile.mktemp('.gts')
-        tmp1 = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
-        self.write(tmp,'gts')
-        GD.message("Coarsening with command\n %s" % cmd)
-        cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out = runCommand(cmd)
-        os.remove(tmp)
-        if sta or verbose:
-            GD.message(out)
-        GD.message("Reading coarsened model from %s" % tmp1)
-        self.__init__(*read_gts(tmp1))        
-        os.remove(tmp1)
-   
-
-    def refine(self,max_edges=None,min_cost=None,
-               log=False, verbose=False):
-        """Refine the surface using gtsrefine."""
-        if max_edges is None and min_cost is None:
-            max_edges = self.nedges() * 2
-        cmd = 'gtsrefine'
-        if max_edges:
-            cmd += ' -n %d' % max_edges
-        if min_cost:
-            cmd += ' -c %d' % min_cost
-        if log:
-            cmd += ' -L'
-        if verbose:
-            cmd += ' -v'
-        tmp = tempfile.mktemp('.gts')
-        tmp1 = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
-        self.write(tmp,'gts')
-        GD.message("Refining with command\n %s" % cmd)
-        cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out = runCommand(cmd)
-        os.remove(tmp)
-        if sta or verbose:
-            GD.message(out)
-        GD.message("Reading refined model from %s" % tmp1)
-        self.__init__(*read_gts(tmp1))        
-        os.remove(tmp1)
-
-
-    def smooth(self,lambda_value=0.5,n_iterations=2,
-               fold_smoothing=None,verbose=False):
-        """Smooth the surface using gtssmooth."""
-        cmd = 'gtssmooth'
-        if fold_smoothing:
-            cmd += ' -f %s' % fold_smoothing
-        cmd += ' %s %s' % (lambda_value,n_iterations)
-        if verbose:
-            cmd += ' -v'
-        tmp = tempfile.mktemp('.gts')
-        tmp1 = tempfile.mktemp('.gts')
-        GD.message("Writing temp file %s" % tmp)
-        self.write(tmp,'gts')
-        GD.message("Smoothing with command\n %s" % cmd)
-        cmd += ' < %s > %s' % (tmp,tmp1)
-        sta,out = runCommand(cmd)
-        os.remove(tmp)
-        if sta or verbose:
-            GD.message(out)
-        GD.message("Reading smoothed model from %s" % tmp1)
-        self.__init__(*read_gts(tmp1))        
-        os.remove(tmp1)
-
-
 ####################### Surface Data ######################
 
     def areaNormals(self):
@@ -1235,6 +1105,41 @@ Total area: %s; Enclosed volume: %s
                 # Start a new part
                 elems = elems[[0]]
                 prop += 1
+
+
+    def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None):
+        for p in self.edgeFront(startat=startat,okedges=okedges):
+            if nsteps > 0:
+                nsteps -= 1
+            elif nsteps == 0:
+                break
+        return p
+
+
+    def walkNodeFront(self,startat=0,nsteps=-1):
+        for p in self.nodeFront(startat=startat):
+            if nsteps > 0:
+                nsteps -= 1
+            elif nsteps == 0:
+                break
+        return p
+
+
+    def growSelection(self,sel,mode='node',nsteps=1):
+        """Grows a selection of a surface.
+
+        p is a single element number or a list of numbers.
+        The return value is a list of element numbers obtained by
+        growing the front nsteps times.
+        The mode argument specifies how a single frontal step is done:
+        'node' : include all elements that have a node in common,
+        'edge' : include all elements that have an edge in common.
+        """
+        if mode == 'node':
+            p = self.walkNodeFront(startat=sel,nsteps=nsteps)
+        elif mode == 'edge':
+            p = self.walkEdgeFront(startat=sel,nsteps=nsteps)
+        return where(p>=0)[0]
     
 
     def partitionByFront(self,okedges,firstprop=0,startat=0):
@@ -1244,67 +1149,62 @@ Total area: %s; Enclosed volume: %s
         in the same part of the surface.
         startat is a list of elements that are in the first part. 
         The partitioning is returned as a property type array having a value
-        corresponding to the part number.
+        corresponding to the part number. The lowest property number will be
+        firstprop
         """
-        p = -ones((self.nfaces()),dtype=int)
-        if self.nfaces() <= 0:
-            return p
-        # Construct table of elements connected to each edge
-        conn = self.edgeConnections()
-        # Bail out if some edge has more than two connected faces
-        if conn.shape[1] != 2:
-            GD.warning("Surface is not a manifold")
-            return p
-        # Check size of okedges
-        if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
-            raise ValueError,"okedges has incorrect shape"
+        return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges)
+    
 
-        # Remember edges left for processing
-        todo = ones((self.nedges(),),dtype=bool)
-        startat = clip(startat,0,self.nfaces())
-        elems = array([startat])
-        prop = 0
-        while elems.size > 0:
-            # Store prop value
-            p[elems] = prop
-            # Determine border
-            edges = unique(self.faces[elems])
-            edges = edges[todo[edges]]
+##     def partitionByFront(self,okedges,firstprop=0,startat=0):
+##         """Detects different parts of the surface using a frontal method.
 
-            if edges.size > 0:
-                # flag edges as done
-                todo[edges] = 0
-                # take elements connected over small angle
-                elems = conn[edges][okedges[edges]].ravel()
-                if elems.size > 0:
-                    continue
+##         okedges flags the edges where the two adjacent triangles are to be
+##         in the same part of the surface.
+##         startat is a list of elements that are in the first part. 
+##         The partitioning is returned as a property type array having a value
+##         corresponding to the part number.
+##         """
+##         p = -ones((self.nfaces()),dtype=int)
+##         if self.nfaces() <= 0:
+##             return p
+##         # Construct table of elements connected to each edge
+##         conn = self.edgeConnections()
+##         # Bail out if some edge has more than two connected faces
+##         if conn.shape[1] != 2:
+##             GD.warning("Surface is not a manifold")
+##             return p
+##         # Check size of okedges
+##         if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
+##             raise ValueError,"okedges has incorrect shape"
 
-            # No more elements in this part: start a new one
-            elems = where(p<0)[0]
-            if elems.size > 0:
-                # Start a new part
-                elems = elems[[0]]
-                prop += 1
+##         # Remember edges left for processing
+##         todo = ones((self.nedges(),),dtype=bool)
+##         startat = clip(startat,0,self.nfaces())
+##         elems = array([startat])
+##         prop = 0
+##         while elems.size > 0:
+##             # Store prop value
+##             p[elems] = prop
+##             # Determine border
+##             edges = unique(self.faces[elems])
+##             edges = edges[todo[edges]]
+
+##             if edges.size > 0:
+##                 # flag edges as done
+##                 todo[edges] = 0
+##                 # take elements connected over small angle
+##                 elems = conn[edges][okedges[edges]].ravel()
+##                 if elems.size > 0:
+##                     continue
+
+##             # No more elements in this part: start a new one
+##             elems = where(p<0)[0]
+##             if elems.size > 0:
+##                 # Start a new part
+##                 elems = elems[[0]]
+##                 prop += 1
                 
-        return p
-
-
-    def walkEdgeFront(self,startat=0,okedges=None,nsteps=0):
-        for p in self.edgeFront(startat=startat,okedges=okedges):
-            if nsteps > 0:
-                nsteps -= 1
-                if nsteps <= 0:
-                    break
-        return p
-
-
-    def walkNodeFront(self,startat=0,nsteps=0):
-        for p in self.nodeFront(startat=startat):
-            if nsteps > 0:
-                nsteps -= 1
-                if nsteps <= 0:
-                    break
-        return p
+##         return p
 
 
     def partitionByConnection(self):
@@ -1329,6 +1229,137 @@ Total area: %s; Enclosed volume: %s
         self.__init__(self.toFormex().cutAtPlane(*args))
 
 
+########################## Methods using GTS #############################
+
+    def check(self,verbose=False):
+        """Check the surface using gtscheck."""
+        cmd = 'gtscheck'
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Checking with command\n %s" % cmd)
+        cmd += ' < %s' % tmp
+        sta,out = runCommand(cmd,False)
+        os.remove(tmp)
+        GD.message(out)
+        if sta == 0:
+            GD.message('The surface is a closed, orientable non self-intersecting manifold')
+ 
+
+    def split(self,base,verbose=False):
+        """Check the surface using gtscheck."""
+        cmd = 'gtssplit -v %s' % base
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Splitting with command\n %s" % cmd)
+        cmd += ' < %s' % tmp
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        if sta or verbose:
+            GD.message(out)
+   
+
+    def coarsen(self,min_edges=None,max_cost=None,
+                mid_vertex=False, length_cost=False, max_fold = 1.0,
+                volume_weight=0.5, boundary_weight=0.5, shape_weight=0.0,
+                progressive=False, log=False, verbose=False):
+        """Coarsen the surface using gtscoarsen."""
+        if min_edges is None and max_cost is None:
+            min_edges = self.nedges() / 2
+        cmd = 'gtscoarsen'
+        if min_edges:
+            cmd += ' -n %d' % min_edges
+        if max_cost:
+            cmd += ' -c %d' % max_cost
+        if mid_vertex:
+            cmd += ' -m'
+        if length_cost:
+            cmd += ' -l'
+        if max_fold:
+            cmd += ' -f %f' % max_fold
+        cmd += ' -w %f' % volume_weight
+        cmd += ' -b %f' % boundary_weight
+        cmd += ' -s %f' % shape_weight
+        if progressive:
+            cmd += ' -p'
+        if log:
+            cmd += ' -L'
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        tmp1 = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Coarsening with command\n %s" % cmd)
+        cmd += ' < %s > %s' % (tmp,tmp1)
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        if sta or verbose:
+            GD.message(out)
+        GD.message("Reading coarsened model from %s" % tmp1)
+        self.__init__(*read_gts(tmp1))        
+        os.remove(tmp1)
+   
+
+    def refine(self,max_edges=None,min_cost=None,
+               log=False, verbose=False):
+        """Refine the surface using gtsrefine."""
+        if max_edges is None and min_cost is None:
+            max_edges = self.nedges() * 2
+        cmd = 'gtsrefine'
+        if max_edges:
+            cmd += ' -n %d' % max_edges
+        if min_cost:
+            cmd += ' -c %d' % min_cost
+        if log:
+            cmd += ' -L'
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        tmp1 = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Refining with command\n %s" % cmd)
+        cmd += ' < %s > %s' % (tmp,tmp1)
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        if sta or verbose:
+            GD.message(out)
+        GD.message("Reading refined model from %s" % tmp1)
+        self.__init__(*read_gts(tmp1))        
+        os.remove(tmp1)
+
+
+    def smooth(self,lambda_value=0.5,n_iterations=2,
+               fold_smoothing=None,verbose=False):
+        """Smooth the surface using gtssmooth."""
+        cmd = 'gtssmooth'
+        if fold_smoothing:
+            cmd += ' -f %s' % fold_smoothing
+        cmd += ' %s %s' % (lambda_value,n_iterations)
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        tmp1 = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Smoothing with command\n %s" % cmd)
+        cmd += ' < %s > %s' % (tmp,tmp1)
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        if sta or verbose:
+            GD.message(out)
+        GD.message("Reading smoothed model from %s" % tmp1)
+        self.__init__(*read_gts(tmp1))        
+        os.remove(tmp1)
+
+
+##########################################################################
 ################# Non-member and obsolete functions ######################
 
 def read_error(cnt,line):

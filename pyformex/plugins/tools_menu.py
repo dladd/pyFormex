@@ -234,17 +234,31 @@ def set_selection(obj_type):
     global selection
     selection = pick(obj_type)
 
+def query(mode):
+    set_selection(mode)
+    print report(selection)
+
 def pick_actors():
     set_selection('actor')
-
 def pick_elements():
     set_selection('element')
-
 def pick_points():
     set_selection('point')
-
 def pick_edges():
     set_selection('edge')
+    
+def query_actors():
+    query('actor')
+def query_elements():
+    query('element')
+def query_points():
+    query('point')
+def query_edges():
+    query('edge')
+
+def query_distances():
+    set_selection('point')
+    print reportDistances(selection)
                    
 
 def report_selection():
@@ -279,7 +293,13 @@ def grow_selection():
         warning("You need to pick something first.")
         return
     print selection
-    growCollection(selection,1)
+    res = askItems([('mode','node','radio',['node','edge']),
+                    ('nsteps',1),
+                    ],
+                   caption = 'Grow method',
+                   )
+    if res:
+        growCollection(selection,**res)
     print selection
     highlightElements(selection)
 
@@ -306,57 +326,6 @@ def export_selection():
             export({name:sel})
         elif res['Export as'] == options[1]:
             export(dict([ ("name-%s"%i,v) for i,v in enumerate(sel)]))
-
-
-################# Query Information ###################
-    
-def queryDistance():
-    GD.message("Select first node")
-    K = pickPoints()
-    while len(K.keys())!=1 or len(K.get(0,[]))!=1:
-        GD.message("Please select one node")
-        GD.message("Select first node")
-        K = pickPoints()
-    p1 = getCollection(K)
-    p1 = asarray(p1).reshape(3)
-    GD.message("First node: %s" %p1)
-    GD.message("Select second node")
-    K = pickPoints()
-    while len(K.keys())!=1 or len(K.get(0,[]))!=1:
-        GD.message("Please select one node")
-        GD.message("Select first node")
-        K = pickPoints()    
-    p2 = getCollection(K)
-    p2 = asarray(p2).reshape(3)
-    GD.message("Second node: %s" %p2)
-    vec = p1-p2
-    dist = sqrt(sum(vec*vec,-1))
-    GD.message("The distance between the two nodes is: %s" %dist)
-
-
-def queryActors():
-    K = pickActors()
-    print reportActors(K)
-
-
-def queryElements():
-    K = pickElements()
-    print reportElements(K)
-
-
-def queryPoints():
-    K = pickPoints()
-    print reportPoints(K)
-
-
-##def queryEdge():
-##    GD.message("Select edge")
-##    e = drawSelection('lines')
-##    while array(e).shape[0] > 1:
-##        GD.message("Please select only one edge")
-##        GD.message("Select edge")
-##        e = drawSelection('lines')
-##    GD.message("Edge information: %s" %e)
 
 
 ################### menu #################
@@ -387,11 +356,11 @@ def create_menu():
           ]),
         ("---",None),
         ('&Query',
-         [('&Actors',queryActors),
-          ('&Elements',queryElements),
-          ('&Points',queryPoints),
-          ('&Edges',queryEdges),
-          ('&Distances',queryDistance),
+         [('&Actors',query_actors),
+          ('&Elements',query_elements),
+          ('&Points',query_points),
+          ('&Edges',query_edges),
+          ('&Distances',query_distances),
           ]),
         ("---",None),
         ("&Close",close_menu),

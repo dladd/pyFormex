@@ -421,7 +421,7 @@ class Coords(ndarray):
     def distanceFromPoint(self,p):
         """Return the distance of points f from the point p.
 
-        p is a point specified by 3 coordinates.
+        p is a single point specified by 3 coordinates.
 
         The return value is a [...] shaped array with the distance of
         each point to point p.
@@ -429,9 +429,7 @@ class Coords(ndarray):
         """
         p = asarray(p).reshape((3))
         d = self-p
-        d = sum(d*d,-1)
-        d = sqrt(d)
-        return d
+        return sqrt(sum(d*d,-1))
 
 
     # Test position

@@ -43,11 +43,26 @@ class Plane(object):
 def report(K):
     if K is not None and hasattr(K,'obj_type'):
         print K.obj_type
-        if K.obj_type == 'element':
+        if K.obj_type == 'actor':
+            return reportElements(K)
+        elif K.obj_type == 'element':
             return reportElements(K)
         elif K.obj_type == 'point':
             return reportPoints(K)
+        elif K.obj_type == 'edge':
+            return reportEdges(K)
     return ''
+
+
+def reportActors(K):
+    s = "Actor report\n"
+    v = K.get(-1,[])
+    s += "Actors %s\n" % v
+    for k in v:
+        A = GD.canvas.actors[k]
+        t = A.atype()
+        s += "  Actor %s (type %s)\n" % (k,t)
+    return s
 
 
 def reportElements(K):
@@ -78,6 +93,30 @@ def reportPoints(K):
     return s
 
 
+def reportEdges(K):
+    s = "Edge report\n"
+    for k in K.keys():
+        v = K[k]
+        A = GD.canvas.actors[k]
+        s += "Actor %s (type %s); Edges %s\n" % (k,A.atype(),v)
+        e = A.edges()
+        for p in v:
+            s += "  Edge %s: %s\n" % (p,e[p]) 
+
+
+def reportDistances(K):
+    if K is None or not hasattr(K,'obj_type') or K.obj_type != 'point':
+        return ''
+    s = "Distance report\n"
+    x = Coords.concatenate(getCollection(K))
+    s += "First point: %s %s\n" % (0,x[0])
+    d = x.distanceFromPoint(x[0])
+    for i,p in enumerate(zip(x,d)):
+        s += "Distance from point: %s %s: %s\n" % (i,p[0],p[1])
+    return s
+
+
+    
 def getObjectItems(obj,items,mode):
     """Get the specified items from object."""
     if mode == 'actor':
@@ -129,7 +168,7 @@ def setpropCollection(K,prop):
                 o.redraw()
 
    
-def growCollection(K,n=1):
+def growCollection(K,**kargs):
     """Grow the collection with n frontal rings.
 
     K should be a collection of elements.
@@ -139,11 +178,8 @@ def growCollection(K,n=1):
     if K.obj_type == 'element':
         for k in K.keys():
             o = GD.canvas.actors[k]
-            if hasattr(o,'nodeFront'):
-                p = o.walkNodeFront(nsteps=n+1,startat=K[k])
-                K[k] = where(p>=0)[0]
-                #o.setProp(0)
-                #o.p[K[k]] = 1
+            if hasattr(o,'growSelection'):
+                K[k] = o.growSelection(K[k],**kargs)
 
     
 def exportObjects(obj,name,single=False):
