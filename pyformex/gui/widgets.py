@@ -134,7 +134,7 @@ class ImageViewerDialog(QtGui.QDialog):
     def __init__(self,path=None):
         QtGui.QDialog.__init__(self)
         box = QtGui.QHBoxLayout()
-        viewer = imageViewer.ImageViewer(path=path)
+        viewer = imageViewer.ImageViewer(parent=self,path=path)
         box.addWidget(viewer)
         self.setLayout(box)
         

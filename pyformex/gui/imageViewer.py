@@ -14,10 +14,11 @@ def tr(s):
 class ImageViewer(QtGui.QMainWindow):
 
 
-    def __init__(self,app=None,path=None):
+    def __init__(self,parent=None,path=None):
         QtGui.QMainWindow.__init__(self)
 
-        self.filename = None
+        self.parent = parent
+        self.filename = path
         self.image = QtGui.QLabel()
         self.image.setBackgroundRole(QtGui.QPalette.Base)
         self.image.setSizePolicy(QtGui.QSizePolicy.Ignored,QtGui.QSizePolicy.Ignored)
@@ -29,7 +30,7 @@ class ImageViewer(QtGui.QMainWindow):
         self.scroll.setWidgetResizable(True)
         self.setCentralWidget(self.scroll)
         
-        self.createActions(app)
+        self.createActions()
         self.createMenus()
         
         self.setWindowTitle(tr(caption))
@@ -122,7 +123,7 @@ shows how to use QPainter to print an image.</p>
 """))
 
 
-    def createActions(self,app):
+    def createActions(self):
         self.openAct = QtGui.QAction(tr("&Open..."),self)
         self.openAct.setShortcut(tr("Ctrl+O"))
         self.connect(self.openAct,QtCore.SIGNAL('triggered()'),self.openfile)
@@ -131,10 +132,7 @@ shows how to use QPainter to print an image.</p>
         self.printAct.setShortcut(tr("Ctrl+P"))
         self.printAct.setEnabled(False)
         self.connect(self.printAct,QtCore.SIGNAL('triggered()'),self.print_)
-        
-        self.exitAct = QtGui.QAction(tr("E&xit"),self)
-        self.exitAct.setShortcut(tr("Ctrl+Q"))
-        self.connect(self.exitAct,QtCore.SIGNAL('triggered()'),self.close)
+
         
         self.zoomInAct = QtGui.QAction(tr("Zoom &In (25%)"),self)
         self.zoomInAct.setShortcut(tr("Ctrl++"))
@@ -166,9 +164,24 @@ shows how to use QPainter to print an image.</p>
         self.aboutAct = QtGui.QAction(tr("&About"),self)
         self.connect(self.aboutAct,QtCore.SIGNAL('triggered()'),self.about)
 
-        if app is not None:
+        if isinstance(self.parent,QtGui.QApplication):
+
+            self.exitAct = QtGui.QAction(tr("E&xit"),self)
+            self.exitAct.setShortcut(tr("Ctrl+Q"))
+            self.connect(self.exitAct,QtCore.SIGNAL('triggered()'),self.close)
+
             self.aboutQtAct = QtGui.QAction(tr("About &Qt"),self)
             self.connect(self.aboutQtAct,QtCore.SIGNAL('triggered()'),app,QtCore.SLOT('aboutQt()'))
+
+        elif isinstance(self.parent,QtGui.QDialog):
+
+            self.acceptAct = QtGui.QAction(tr("&Accept"),self)
+            self.acceptAct.setShortcut(tr("Ctrl+A"))
+            self.connect(self.acceptAct,QtCore.SIGNAL('triggered()'),self.parent,QtCore.SLOT('accept()'))
+
+            self.rejectAct = QtGui.QAction(tr("&Reject"),self)
+            self.rejectAct.setShortcut(tr("Ctrl+Q"))
+            self.connect(self.rejectAct,QtCore.SIGNAL('triggered()'),self.parent,QtCore.SLOT('reject()'))
                      
 
     def createMenus(self):
@@ -176,7 +189,6 @@ shows how to use QPainter to print an image.</p>
         self.fileMenu.addAction(self.openAct)
         self.fileMenu.addAction(self.printAct)
         self.fileMenu.addSeparator()
-        self.fileMenu.addAction(self.exitAct)
         
         self.viewMenu = QtGui.QMenu(tr("&View"),self)
         self.viewMenu.addAction(self.zoomInAct)
@@ -188,13 +200,17 @@ shows how to use QPainter to print an image.</p>
         
         self.helpMenu = QtGui.QMenu(tr("&Help"),self)
         self.helpMenu.addAction(self.aboutAct)
-        try:
-            self.helpMenu.addAction(self.aboutQtAct)
-        except:
-            pass
+
         self.menuBar().addMenu(self.fileMenu)
         self.menuBar().addMenu(self.viewMenu)
         self.menuBar().addMenu(self.helpMenu)
+
+        if isinstance(self.parent,QtGui.QApplication):
+            self.fileMenu.addAction(self.acceptAct)
+            self.fileMenu.addAction(self.rejectAct)
+        elif isinstance(self.parent,QtGui.QDialog):
+            self.fileMenu.addAction(self.exitAct)
+            self.helpMenu.addAction(self.aboutQtAct)
         
 
     def updateActions(self):
