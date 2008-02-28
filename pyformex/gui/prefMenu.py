@@ -14,8 +14,10 @@ import globaldata as GD
 import os
 
 from gettext import gettext as _
+import utils
 import widgets
 import draw
+import imageViewer
 
 
 def askConfigPreferences(items,prefix=None,store=None):
@@ -166,6 +168,19 @@ def setAppearance():
     if font:
         setFont(font)
 
+
+def setSplash():
+    """Open an image file and set it as the splash screen."""
+    cur = GD.cfg['gui/splash']
+    if not cur:
+        cur = GD.cfg.get('icondir','.')
+    w = widgets.ImageViewerDialog(path=cur)
+    fn = w.getFilename()
+    w.close()
+    print "SELECTED FILE = %s" % fn
+    if fn:
+        GD.cfg['gui/splash'] = fn
+      
     
 
 MenuData = [
@@ -184,6 +199,7 @@ MenuData = [
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
+        (_('&Splash Image'),setSplash),
         (_('&Commands'),setCommands),
         (_('&SysPath'),setSysPath),
         (_('&Help'),setHelp),

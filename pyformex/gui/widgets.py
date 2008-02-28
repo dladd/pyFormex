@@ -15,6 +15,7 @@ from PyQt4 import QtCore, QtGui
 import globaldata as GD
 import colors
 import utils
+import imageViewer
 
 class Options:
     pass
@@ -128,6 +129,27 @@ class SaveImageDialog(FileSelection):
         else:
             return None
 
+
+class ImageViewerDialog(QtGui.QDialog):
+    def __init__(self,path=None):
+        QtGui.QDialog.__init__(self)
+        box = QtGui.QHBoxLayout()
+        viewer = imageViewer.ImageViewer(path=path)
+        box.addWidget(viewer)
+        self.setLayout(box)
+        
+    def getFilename(self):
+        """Ask for a filename by user interaction.
+
+        Return the filename selected by the user.
+        If the user hits CANCEL or ESC, None is returned.
+        """
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            return self.filename
+        else:
+            return None
+        
 
 def selectFont():
     """Ask the user to select a font.
@@ -877,7 +899,8 @@ class BaseMenu(object):
         return item
     
     # The need for the following functions demonstrates how much more
-    # defective the C++ language is compared to Python
+    # powerful a dynamically typed language as Python is as compared to
+    # the C++ language used by Qt
     def insert_sep(self,before=None):
         """Create and insert a separator"""
         if before:

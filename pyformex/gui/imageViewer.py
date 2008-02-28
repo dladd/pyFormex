@@ -14,7 +14,7 @@ def tr(s):
 class ImageViewer(QtGui.QMainWindow):
 
 
-    def __init__(self,app=None):
+    def __init__(self,app=None,path=None):
         QtGui.QMainWindow.__init__(self)
 
         self.filename = None
@@ -34,6 +34,9 @@ class ImageViewer(QtGui.QMainWindow):
         self.setWindowTitle(tr(caption))
         self.resize(500,400)
 
+        if path:
+            self.openfile(path)
+            
 
     def openfile(self,filename=None):
         if filename is None:
@@ -89,8 +92,11 @@ class ImageViewer(QtGui.QMainWindow):
         self.scroll.setWidgetResizable(fitToWindow)
         if not fitToWindow:
             self.normalSize()
-
         self.updateActions()
+
+    def fitToImage(self):
+        self.normalSize()
+        self.scroll.resize(self.image.size())
 
 
     def about(self):
@@ -138,11 +144,17 @@ shows how to use QPainter to print an image.</p>
         self.normalSizeAct.setShortcut(tr("Ctrl+S"))
         self.normalSizeAct.setEnabled(False)
         self.connect(self.normalSizeAct,QtCore.SIGNAL('triggered()'),self.normalSize)
+
+        self.fitToImageAct = QtGui.QAction(tr("Fit &Window to Image"),self)
+        self.fitToImageAct.setShortcut(tr("Ctrl+W"))
+        self.fitToImageAct.setEnabled(False)
+        #self.fitToImageAct.setCheckable(True)
+        self.connect(self.fitToImageAct,QtCore.SIGNAL('triggered()'),self.fitToImage)
         
-        self.fitToWindowAct = QtGui.QAction(tr("&Fit to Window"),self)
+        self.fitToWindowAct = QtGui.QAction(tr("&Fit Image to Window"),self)
+        self.fitToWindowAct.setShortcut(tr("Ctrl+F"))
         self.fitToWindowAct.setEnabled(False)
         self.fitToWindowAct.setCheckable(True)
-        self.fitToWindowAct.setShortcut(tr("Ctrl+F"))
         self.connect(self.fitToWindowAct,QtCore.SIGNAL('triggered()'),self.fitToWindow)
         
         self.aboutAct = QtGui.QAction(tr("&About"),self)
@@ -165,6 +177,7 @@ shows how to use QPainter to print an image.</p>
         self.viewMenu.addAction(self.zoomOutAct)
         self.viewMenu.addAction(self.normalSizeAct)
         self.viewMenu.addSeparator()
+        self.viewMenu.addAction(self.fitToImageAct)
         self.viewMenu.addAction(self.fitToWindowAct)
         
         self.helpMenu = QtGui.QMenu(tr("&Help"),self)
@@ -182,6 +195,7 @@ shows how to use QPainter to print an image.</p>
         self.zoomInAct.setEnabled(not self.fitToWindowAct.isChecked())
         self.zoomOutAct.setEnabled(not self.fitToWindowAct.isChecked())
         self.normalSizeAct.setEnabled(not self.fitToWindowAct.isChecked())
+        self.fitToImageAct.setEnabled(not self.fitToWindowAct.isChecked())
 
 
     def scaleImage(self,factor):
@@ -207,6 +221,10 @@ if __name__ == '__main__':
     import sys
     global app
     app = QtGui.QApplication(sys.argv)
-    viewer = ImageViewer(app)
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+    else:
+        path = None
+    viewer = ImageViewer(app,path)
     viewer.show()
     sys.exit(app.exec_())
