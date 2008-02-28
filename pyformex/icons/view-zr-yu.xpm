@@ -1,17 +1,16 @@
 /* XPM */
 static char * view_zr_yu_xpm[] = {
 /* width height ncolors chars_per_pixel */
-"22 22 3 1",
+"22 22 2 1",
 /* colors */
 " 	c None",
 ".	c black",
-"X	c white",
 /* pixels */
 "                      ",
 "                      ",
 "       .  .           ",
-"     X .  .           ",
-"    .X .. .           ",
+"       .  .           ",
+"    .  .. .           ",
 "   ...  ...           ",
 "  .....   .           ",
 "    .     .           ",
