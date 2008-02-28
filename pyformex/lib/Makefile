@@ -9,8 +9,7 @@ SOBJECTS= $(CSOURCE:.c=.so)
 CC= gcc
 
 INC= -I/usr/include -I/usr/include/python2.4 \
-     -I/usr/lib/python2.4/site-packages/numpy/core/include/numpy \
-     -I/usr/include/GL
+     -I/usr/lib/python2.4/site-packages/numpy/core/include
 
 CFLAGS= -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 

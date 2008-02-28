@@ -8,8 +8,8 @@
 */
 
 #include <Python.h>
-#include <arrayobject.h>
-#include <gl.h>
+#include <numpy/arrayobject.h>
+#include <GL/gl.h>
 
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/

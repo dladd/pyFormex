@@ -11,8 +11,8 @@ from distutils.core import setup, Extension
 ##     """Perform some post install actions."""
 ##     os .system('post-install')
 
-module_drawgl = Extension('drawgl',
-                          sources = ['lib/drawglmodule.c'])
+module_drawgl = Extension('drawgl',sources = ['pyformex/lib/drawglmodule.c'])
+module_misc = Extension('misc',sources = ['pyformex/lib/miscmodule.c'])
 
 
 setup(name='pyformex',
@@ -28,7 +28,7 @@ transformations.
       url='http://pyformex.berlios.de/',
       ext_modules = [module_drawgl],
       packages=['pyformex','pyformex.gui','pyformex.plugins','pyformex.examples'],
-      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
+      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','icons/pyformex*.png','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
       scripts=['pyformex/pyformex'],
 #      data_files=[('doc',['manual/html/*'])],
       classifiers=[

@@ -5,7 +5,7 @@
 */
 
 #include <Python.h>
-#include <arrayobject.h>
+#include <numpy/arrayobject.h>
 
 /**************************************************** system ****/
 /* Execute a system command */

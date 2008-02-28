@@ -404,7 +404,6 @@ def windowExists(windowname):
 
 def quit():
     """Quit the GUI"""
-    print "QUITTING"
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
     draw.drawrelease()
