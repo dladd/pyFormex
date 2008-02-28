@@ -209,7 +209,7 @@ def read_gambit_neutral(fn):
     The .neu file nodes are numbered from 1!
     Returns a nodes,elems tuple.
     """
-    runCommand("%s/external/gambit-neu '%s'" % (GD.cfg['pyformexdir'],fn))
+    runCommand("/home/pmortier/pyformex/external/gambit-neu '%s'" % fn)
     nodesf = changeExt(fn,'.nodes')
     elemsf = changeExt(fn,'.elems')
     nodes = fromfile(nodesf,sep=' ',dtype=Float).reshape((-1,3))
@@ -678,6 +678,32 @@ class Surface(object):
         return self.select(t<=0)
 
 
+    # Some functions for offsetting a surface
+    
+    def pointNormals(self):
+        """Compute the normal vectors in each point of a collection of triangles.
+        
+        The normal vector in a point is the average of the normal vectors of the neighbouring triangles.
+        The normal vectors are normalized.
+        """
+        con = connectivity.reverseIndex(self.elems)
+        NP = self.areaNormals()[1][con]
+        w = where(con == -1)
+        NP[w] = 0.
+        NPA = NP.sum(axis=1)
+        NPA /= sqrt((NPA*NPA).sum(axis=-1)).reshape(-1,1)
+        return NPA
+
+    def offset(self,distance=1.):
+        """Offset a surface with a certain distance.
+        
+        All the nodes of the surface are translated over a specified distance along their normal vector.
+        This creates a new congruent surface.
+        """
+        NPA = self.pointNormals()
+        coordsNew = self.coords + NPA*distance
+        return Surface(coordsNew,self.elems)
+    
     # Data conversion
     
     def feModel(self):
