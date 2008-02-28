@@ -26,6 +26,7 @@ class ImageViewer(QtGui.QMainWindow):
         self.scroll = QtGui.QScrollArea()
         self.scroll.setBackgroundRole(QtGui.QPalette.Dark)
         self.scroll.setWidget(self.image)
+        self.scroll.setWidgetResizable(True)
         self.setCentralWidget(self.scroll)
         
         self.createActions(app)
@@ -33,6 +34,7 @@ class ImageViewer(QtGui.QMainWindow):
         
         self.setWindowTitle(tr(caption))
         self.resize(500,400)
+        self.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
 
         if path:
             self.openfile(path)
@@ -46,7 +48,7 @@ class ImageViewer(QtGui.QMainWindow):
         
         image = QtGui.QImage(filename)
         if image.isNull():
-            QtGui.QMessageBox.information(self,tr(caption),tr("Cannot load %1.").arg(fileName))
+            QtGui.QMessageBox.information(self,tr(caption),tr("Cannot load %1.").arg(filename))
             return
 
         self.filename = filename
@@ -101,17 +103,21 @@ class ImageViewer(QtGui.QMainWindow):
 
     def about(self):
         QtGui.QMessageBox.about(self,tr("About Image Viewer"),tr("""
-<p>The <b>Image Viewer</b> example shows how to combine QLabel
+<p>The <b>pyFormex Image Viewer</b> was shaped after the
+<b>Image Viewer</b> from the TrollTech Qt documentation.</p>
+<p>The example shows how to combine QLabel
 and QScrollArea to display an image. QLabel is typically used
 for displaying a text,but it can also display an image. 
 QScrollArea provides a scrolling view around another widget. 
 If the child widget exceeds the size of the frame,QScrollArea 
-automatically provides scroll bars. </p><p>The example 
+automatically provides scroll bars. </p>
+<p>The example 
 demonstrates how QLabel's ability to scale its contents 
 (QLabel.scaledContents),and QScrollArea's ability to 
 automatically resize its contents 
 (QScrollArea.widgetResizable),can be used to implement 
-zooming and scaling features. </p><p>In addition the example 
+zooming and scaling features. </p>
+<p>In addition the example 
 shows how to use QPainter to print an image.</p>
 """))
 

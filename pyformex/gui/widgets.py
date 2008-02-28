@@ -146,9 +146,12 @@ class ImageViewerDialog(QtGui.QDialog):
         """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            return self.filename
+            print "ACCEPTED"
+            return viewer.filename
         else:
+            print "NOT ACCEPTED"
             return None
+        self.close()
         
 
 def selectFont():

@@ -1014,13 +1014,14 @@ Total area: %s; Enclosed volume: %s
 ##################  Partitioning a surface #############################
 
 
-    def edgeFront(self,startat=0,okedges=None):
+    def edgeFront(self,startat=0,okedges=None,front_increment=1):
         """Generator function returning the frontal elements.
 
         startat is an element number or list of numbers of the starting front.
         On first call, this function returns the starting front.
         Each next() call returns the next front.
         """
+        print "FRONT_INCREMENT %s" % front_increment
         p = -ones((self.nfaces()),dtype=int)
         if self.nfaces() <= 0:
             return
@@ -1046,7 +1047,7 @@ Total area: %s; Enclosed volume: %s
             p[elems] = prop
             yield p
 
-            prop += 1
+            prop += front_increment
 
             # Determine border
             edges = unique(self.faces[elems])
@@ -1062,6 +1063,7 @@ Total area: %s; Enclosed volume: %s
                     continue
 
             # No more elements in this part: start a new one
+            print "NO MORE ELEMENTS"
             elems = where(p<0)[0]
             if elems.size > 0:
                 # Start a new part
@@ -1069,7 +1071,7 @@ Total area: %s; Enclosed volume: %s
                 prop += 1
 
 
-    def nodeFront(self,startat=0):
+    def nodeFront(self,startat=0,front_increment=1):
         """Generator function returning the frontal elements.
 
         startat is an element number or list of numbers of the starting front.
@@ -1091,7 +1093,7 @@ Total area: %s; Enclosed volume: %s
             p[elems] = prop
             yield p
 
-            prop += 1
+            prop += front_increment
 
             # Determine adjacent elements
             elems = unique1d(adj[elems])
@@ -1107,8 +1109,8 @@ Total area: %s; Enclosed volume: %s
                 prop += 1
 
 
-    def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None):
-        for p in self.edgeFront(startat=startat,okedges=okedges):
+    def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
+        for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1116,8 +1118,8 @@ Total area: %s; Enclosed volume: %s
         return p
 
 
-    def walkNodeFront(self,startat=0,nsteps=-1):
-        for p in self.nodeFront(startat=startat):
+    def walkNodeFront(self,startat=0,nsteps=-1,front_increment=1):
+        for p in self.nodeFront(startat=startat,front_increment=front_increment):
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1142,7 +1144,7 @@ Total area: %s; Enclosed volume: %s
         return where(p>=0)[0]
     
 
-    def partitionByFront(self,okedges,firstprop=0,startat=0):
+    def partitionByEdgeFront(self,okedges,firstprop=0,startat=0):
         """Detects different parts of the surface using a frontal method.
 
         okedges flags the edges where the two adjacent triangles are to be
@@ -1152,64 +1154,24 @@ Total area: %s; Enclosed volume: %s
         corresponding to the part number. The lowest property number will be
         firstprop
         """
-        return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges)
+        return firstprop + self.walkEdgeFront(startat=startat,okedges=okedges,front_increment=0)
     
 
-##     def partitionByFront(self,okedges,firstprop=0,startat=0):
-##         """Detects different parts of the surface using a frontal method.
+    def partitionByNodeFront(self,firstprop=0,startat=0):
+        """Detects different parts of the surface using a frontal method.
 
-##         okedges flags the edges where the two adjacent triangles are to be
-##         in the same part of the surface.
-##         startat is a list of elements that are in the first part. 
-##         The partitioning is returned as a property type array having a value
-##         corresponding to the part number.
-##         """
-##         p = -ones((self.nfaces()),dtype=int)
-##         if self.nfaces() <= 0:
-##             return p
-##         # Construct table of elements connected to each edge
-##         conn = self.edgeConnections()
-##         # Bail out if some edge has more than two connected faces
-##         if conn.shape[1] != 2:
-##             GD.warning("Surface is not a manifold")
-##             return p
-##         # Check size of okedges
-##         if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
-##             raise ValueError,"okedges has incorrect shape"
-
-##         # Remember edges left for processing
-##         todo = ones((self.nedges(),),dtype=bool)
-##         startat = clip(startat,0,self.nfaces())
-##         elems = array([startat])
-##         prop = 0
-##         while elems.size > 0:
-##             # Store prop value
-##             p[elems] = prop
-##             # Determine border
-##             edges = unique(self.faces[elems])
-##             edges = edges[todo[edges]]
-
-##             if edges.size > 0:
-##                 # flag edges as done
-##                 todo[edges] = 0
-##                 # take elements connected over small angle
-##                 elems = conn[edges][okedges[edges]].ravel()
-##                 if elems.size > 0:
-##                     continue
-
-##             # No more elements in this part: start a new one
-##             elems = where(p<0)[0]
-##             if elems.size > 0:
-##                 # Start a new part
-##                 elems = elems[[0]]
-##                 prop += 1
-                
-##         return p
+        okedges flags the edges where the two adjacent triangles are to be
+        in the same part of the surface.
+        startat is a list of elements that are in the first part. 
+        The partitioning is returned as a property type array having a value
+        corresponding to the part number. The lowest property number will be
+        firstprop
+        """
+        return firstprop + self.walkNodeFront(startat=startat,front_increment=0)
 
 
     def partitionByConnection(self):
-        okedges = ones((self.nedges()),dtype=bool)
-        return self.partitionByFront(okedges)
+        return self.partitionByNodeFront()
 
 
     def partitionByAngle(self,angle=180.,firstprop=0,startat=0):
