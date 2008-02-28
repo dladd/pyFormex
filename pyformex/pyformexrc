@@ -61,7 +61,11 @@ modemenu = True      # add a Mode menu
 modebar = True       # add a Mode toolbar
 viewmenu = True      # add a Views menu
 viewbar = True       # add a Views toolbar
-builtinviews = ['front','back','right','left','top','bottom','iso']
+defviews = [('front','view-xr-yu'),('back','view-xl-yu'),\
+            ('right','view-zl-yu'),('left','view-zr-yu'),\
+            ('top','view-xr-zd'),('bottom','view-xl-zd'),\
+            ('iso','view-iso1'),\
+            ]
 zoomfactor = 1.15    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 0.01     # translation factor for pan buttons

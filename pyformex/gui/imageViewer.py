@@ -209,11 +209,9 @@ shows how to use QPainter to print an image.</p>
         self.menuBar().addMenu(self.helpMenu)
 
         if isinstance(self.parent,QtGui.QApplication):
-            print "AN APPLICATION"
             self.fileMenu.addAction(self.exitAct)
             self.helpMenu.addAction(self.aboutQtAct)
         elif isinstance(self.parent,QtGui.QDialog):
-            print "A DIALOG"
             self.fileMenu.addAction(self.acceptAct)
             self.fileMenu.addAction(self.rejectAct)
         

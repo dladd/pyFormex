@@ -177,7 +177,6 @@ def setSplash():
     w = widgets.ImageViewerDialog(path=cur)
     fn = w.getFilename()
     w.close()
-    print "SELECTED FILE = %s" % fn
     if fn:
         GD.cfg['gui/splash'] = fn
       

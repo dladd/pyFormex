@@ -242,7 +242,9 @@ class GUI(QtGui.QMainWindow):
         self.viewsMenu = None
         if GD.cfg.get('gui/viewmenu',True):
             self.viewsMenu = widgets.Menu('&Views',parent=self.menu,before='help')
-        views = GD.cfg['gui/builtinviews']
+        defviews = GD.cfg['gui/defviews']
+        views = [ v[0] for v in defviews ]
+        viewicons = [ v[1] for v in defviews ]
         area = GD.cfg['gui/viewbar']
         if area:
             area = self.toolbarArea.get(area,None)
@@ -259,7 +261,7 @@ class GUI(QtGui.QMainWindow):
             views,draw.view,
             menu=self.viewsMenu,
             toolbar=self.viewbar,
-            icons=['%sview' % t for t in views]
+            icons = viewicons
             )
        
         # Display the main menubar

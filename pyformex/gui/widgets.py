@@ -146,10 +146,8 @@ class ImageViewerDialog(QtGui.QDialog):
         """
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
-            print "ACCEPTED"
             return str(self.viewer.filename)
         else:
-            print "NOT ACCEPTED"
             return None
         self.close()
         
