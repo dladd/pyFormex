@@ -155,7 +155,7 @@ class GUI(QtGui.QMainWindow):
         self.boxlayout.addWidget(self.splitter)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.show()
-        self.easter = ("\nmotdttm\noa  aeiedttm.oa(\nftdymnh=  n oa.a =1:  soIf(HpyVlnie,'ls')  ", "ipr aeietdy=dttm.aeietdy)i oa.ot =2adtdydy= 4\n  hwno'ap aetn'[Coe]  \n")
+        self.easter_egg = ("\nmotdttm\noa  aeiedttm.oa(\nftdymnh=  n oa.a =1:  soIf(HpyVlnie,'ls')  ", "ipr aeietdy=dttm.aeietdy)i oa.ot =2adtdydy= 4\n  hwno'ap aetn'[Coe]  \n")
         #s.moveSplitter(300,0)
         #s.moveSplitter(300,1)
         #s.setLineWidth(0)
@@ -486,6 +486,18 @@ def runApp(args):
         count += 1
         windowname = '%s (%s)' % (GD.Version,count)
 
+    if count > 0:
+        if draw.ask("""
+Another instance of pyFormex is already running
+on this screen. This may be a leftover from a
+previously crashed program. In that case you should
+bail out now and first kill the crashed program.
+
+On the other hand, if you really want to run another
+pyFormex in parallel, you can just continue now.
+""",['Really Continue','Bail out and fix the problem']) != 'Really Continue':
+            return 1
+
     GD.gui = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
                  GD.cfg.get('gui/pos',(0,0)),
@@ -582,11 +594,9 @@ See Help->License or the file COPYING for details.
         splash.finish(GD.gui)
 
 
-##     # Play the autoscript
-##     draw.playScript(GD.cfg['autoscript'])
-
     # Add the autorun script to the remaining args
-    draw.playScript(utils.mergeme(*GD.gui.easter))
+    if GD.gui.easter_egg:
+        draw.playScript(utils.mergeme(*GD.gui.easter_egg))
     ar = GD.cfg.get('autorun','')
     if ar:
         if type(ar) == str:

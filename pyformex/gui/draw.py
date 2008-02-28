@@ -94,7 +94,8 @@ def ask(question,choices=None,default=None,timeout=None):
         items = [ [question, choices, 'combo', default] ]
 
     res,accept = widgets.InputDialog(items,'Ask Question').getResult(timeout)
-    GD.gui.update()
+    if GD.gui:
+        GD.gui.update()
     if accept:
         return res[question]
     else:
@@ -232,7 +233,6 @@ def playScript(scr,name=None):
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
-    GD.debug(scr)
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True

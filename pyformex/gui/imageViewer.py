@@ -43,7 +43,10 @@ class ImageViewer(QtGui.QMainWindow):
 
     def openfile(self,filename=None):
         if filename is None:
-            filename = QtGui.QFileDialog.getOpenFileName(self,tr("Open File"),QtCore.QDir.currentPath())
+            filename = self.filename
+            if filename is None:
+                filename = QtCore.QDir.currentPath()
+            filename = QtGui.QFileDialog.getOpenFileName(self,tr("Open File"),filename)
             if filename.isEmpty():
                 return
         
@@ -52,7 +55,7 @@ class ImageViewer(QtGui.QMainWindow):
             QtGui.QMessageBox.information(self,tr(caption),tr("Cannot load %1.").arg(filename))
             return
 
-        self.filename = filename
+        self.filename = str(filename)
         self.image.setPixmap(QtGui.QPixmap.fromImage(image))
         self.scaleFactor = 1.0
         
@@ -103,7 +106,7 @@ class ImageViewer(QtGui.QMainWindow):
 
 
     def about(self):
-        QtGui.QMessageBox.about(self,tr("About Image Viewer"),tr("""
+        QtGui.QMessageBox.about(self,tr("About pyFormex Image Viewer"),tr("""
 <p>The <b>pyFormex Image Viewer</b> was shaped after the
 <b>Image Viewer</b> from the TrollTech Qt documentation.</p>
 <p>The example shows how to combine QLabel
@@ -206,11 +209,13 @@ shows how to use QPainter to print an image.</p>
         self.menuBar().addMenu(self.helpMenu)
 
         if isinstance(self.parent,QtGui.QApplication):
-            self.fileMenu.addAction(self.acceptAct)
-            self.fileMenu.addAction(self.rejectAct)
-        elif isinstance(self.parent,QtGui.QDialog):
+            print "AN APPLICATION"
             self.fileMenu.addAction(self.exitAct)
             self.helpMenu.addAction(self.aboutQtAct)
+        elif isinstance(self.parent,QtGui.QDialog):
+            print "A DIALOG"
+            self.fileMenu.addAction(self.acceptAct)
+            self.fileMenu.addAction(self.rejectAct)
         
 
     def updateActions(self):

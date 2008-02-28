@@ -134,8 +134,8 @@ class ImageViewerDialog(QtGui.QDialog):
     def __init__(self,path=None):
         QtGui.QDialog.__init__(self)
         box = QtGui.QHBoxLayout()
-        viewer = imageViewer.ImageViewer(parent=self,path=path)
-        box.addWidget(viewer)
+        self.viewer = imageViewer.ImageViewer(parent=self,path=path)
+        box.addWidget(self.viewer)
         self.setLayout(box)
         
     def getFilename(self):
@@ -147,7 +147,7 @@ class ImageViewerDialog(QtGui.QDialog):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
             print "ACCEPTED"
-            return viewer.filename
+            return str(self.viewer.filename)
         else:
             print "NOT ACCEPTED"
             return None
@@ -816,7 +816,8 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
             raise
             
     w.exec_()
-    GD.gui.update()
+    #if GD.gui:
+    #    GD.gui.update()
     b = w.clickedButton()
     if b:
         return str(b.text())
