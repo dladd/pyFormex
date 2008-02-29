@@ -474,6 +474,8 @@ def runApp(args):
         GD.debug('Loading splash %s' % GD.cfg['gui/splash'])
         splashimage = QtGui.QPixmap(GD.cfg['gui/splash'])
         splash = QtGui.QSplashScreen(splashimage)
+        splash.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        splash.setFont(QtGui.QFont("Helvetica",24))
         splash.showMessage(GD.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
         splash.show()
         

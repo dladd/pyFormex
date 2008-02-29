@@ -14,11 +14,15 @@
 # Set pyformex version
 __version__ = "0.6.1-a2"
 Version = 'pyFormex %s' % __version__
-Copyright = 'Copyright (C) 2007 Benedict Verhegghe'
+Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
 
 # versions of detected modules/external commands
 version = {'pyformex':__version__}
 external = {}
+
+# set start date
+import datetime
+date = datetime.datetime.today()
 
 # initialize some global variables used for communication between modules
 
@@ -101,4 +105,5 @@ def savePreferences():
         res = "Could not save"
     debug("%s preferences to file %s" % (res,f))
 
+    
 # End
