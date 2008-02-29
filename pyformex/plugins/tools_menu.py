@@ -304,11 +304,34 @@ def grow_selection():
     highlightElements(selection)
 
 
+def partition_selection():
+    """Partition the current selection and show the result."""
+    if selection is None:
+        warning("You need to pick something first.")
+        return
+    if not selection.obj_type in ['actor','element']:
+        warning("You need to pick actors or elements.")
+        return
+    for A in GD.canvas.actors:
+        if not A.atype() == 'Surface':
+            warning("Currently I can only partition Surfaces." )
+            return
+    partitionCollection(selection)
+    highlightPartitions(selection)
+    
+
+def get_partition():
+    res = askItems([['property',1]],
+                 caption='Partition property')
+    prop = res['property']
+    sel = getPartition(selection,prop)
+    print sel
+    
+
 def export_selection():
     if selection is None:
         warning("You need to pick something first.")
         return
-    print selection
     sel = getCollection(selection)
     if len(sel) == 0:
         warning("Nothing to export!")
@@ -352,6 +375,8 @@ def create_menu():
          [('&Create Report',report_selection),
           ('&Set Property',setprop_selection),
           ('&Grow',grow_selection),
+          ('&Partition',partition_selection),
+          ('&Get Partition',get_partition),
           ('&Export',export_selection),
           ]),
         ("---",None),

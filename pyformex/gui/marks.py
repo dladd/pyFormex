@@ -50,7 +50,28 @@ class TextMark(Mark):
         GL.glRasterPos3fv(self.pos)
         drawGlutText(self.text,self.font)
 
-        
+
+class AxesMark(Mark):
+    """Two viewport axes drawn at a 3D position."""
+    def __init__(self,pos,color=None):
+        Mark.__init__(self,pos)
+        if color is None:
+            self.color = None
+        else:
+            self.color = colors.GLColor(color)
+
+    def drawGL(self,mode='wireframe',color=None):
+        if self.color:
+            GL.glColor3fv(self.color)
+        GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
+        GL.glRasterPos3fv(self.pos)
+        a =  0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0x80
+        b = 0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x00,0x00
+        bitmap = [b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,a,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]
+        GL.glBitmap(81,81,41,41,0,0,bitmap)
+
+
+
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     

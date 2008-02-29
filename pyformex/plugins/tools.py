@@ -6,6 +6,8 @@ Graphic Tools for pyFormex.
 """
 
 from coords import *
+from numtools import Collection
+from numpy import ones
 
 class Plane(object):
 
@@ -44,7 +46,7 @@ def report(K):
     if K is not None and hasattr(K,'obj_type'):
         print K.obj_type
         if K.obj_type == 'actor':
-            return reportElements(K)
+            return reportActors(K)
         elif K.obj_type == 'element':
             return reportElements(K)
         elif K.obj_type == 'point':
@@ -181,7 +183,46 @@ def growCollection(K,**kargs):
             if hasattr(o,'growSelection'):
                 K[k] = o.growSelection(K[k],**kargs)
 
+
+def partitionCollection(K):
+    """Partition the collection according to node adjacency.
     
+    The actor numbers will be connected to a collection of property numbers,
+    e.g. 0 [1 [4,12] 2 [6,20]], where 0 is the actor number, 1 and 2 are the
+    property numbers and 4, 12, 6 and 20 are the element numbers.
+    """
+    sel = getCollection(K)
+    if len(sel) == 0:
+        print "Nothing to partition!"
+        return
+    if K.obj_type == 'actor':
+        actor_numbers = K.get(-1,[])
+        K.clear()
+        for i in actor_numbers:
+            actor_number = i * ones((sel[i].nelems(),),dtype=int)
+            elem_number = range(sel[i].nelems())
+            K.add(transpose(asarray([actor_number,elem_number])))
+    prop = 1
+    j = 0
+    for i in K.keys():
+        p = sel[j].partitionByConnection() + prop
+        print "Actor %s partitioned in %s parts" % (i,p.max()-p.min()+1)
+        C = Collection()
+        C.set(transpose(asarray([p,K[i]])))
+        K[i] = C
+        prop += p.max()-p.min()+1
+        j += 1
+    K.setType('partition')
+
+
+def getPartition(K,prop):
+    res = []
+    for k in K.keys():
+        if prop in K[k][0].keys():
+            res.append(getObjectItems(GD.canvas.actors[k],K[k][0][prop],K.obj_type))
+    return res
+
+
 def exportObjects(obj,name,single=False):
     """Export a list of objects under the given name.
 

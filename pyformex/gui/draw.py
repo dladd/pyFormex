@@ -628,9 +628,9 @@ def _shrink(F,factor):
 
 def drawPlane(P,N,size):
     actor = actors.PlaneActor(size=size)
-    actor.create_list(GD.canvas.rendermode)
+    actor.create_list(mode=GD.canvas.rendermode)
     actor = actors.RotatedActor(actor,N)
-    actor.create_list(GD.canvas.rendermode)
+    actor.create_list(mode=GD.canvas.rendermode)
     actor = actors.TranslatedActor(actor,P)
     GD.canvas.addActor(actor)
     GD.canvas.update()
@@ -660,6 +660,13 @@ def drawText3D(P,text,color=colors.black,font=None):
     M = marks.TextMark(P,text,color=color,font=font)
     GD.canvas.addAnnotation(M)
     GD.canvas.update()
+    return M
+
+
+def drawViewportAxes3D(pos,color=None):
+    """Draw two viewport axes at a 3D position."""
+    M = marks.AxesMark(pos,color)
+    annotate(M)
     return M
 
 
@@ -1100,8 +1107,7 @@ def highlightPoints(K,colormap=highlight_colormap):
     """Highlight a selection of actor elements on the canvas.
 
     K is Collection of actor elements as returned by the pick() method.
-    colormap is a list of two colors, for the elements not in, resp. in
-    the Collection K.
+    
     """
     global highlight_pts
     if highlight_pts is not None:
@@ -1118,12 +1124,32 @@ def highlightPoints(K,colormap=highlight_colormap):
     return highlight_pts
 
 
+def highlightPartitions(K):
+    """Highlight a selection of partitions on the canvas.
+
+    K is a Collection of actor elements, where each actor element is
+    connected to a collection of property numbers, as returned by the
+    partitionCollection() method.
+    """
+    for i,A in enumerate(GD.canvas.actors):
+        p = numpy.zeros((A.nelems(),),dtype=int)
+        if i in K.keys():
+            GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
+            for j in K[i][0].keys():
+                p[K[i][0][j]] = j
+        if isinstance(A,surface.Surface):
+            undraw(A)
+            draw(A,color=p)
+        else:
+            A.redraw(mode=GD.canvas.rendermode,color=p)
+    GD.canvas.update()
+
+
 highlight_funcs = { 'actor': highlightActors,
                     'element': highlightElements,
                     'point': highlightPoints,
                     'edge': highlightEdges,
                     }
-
 
 
 def pick(mode='actor',single=False,func=None):
