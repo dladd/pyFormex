@@ -58,6 +58,15 @@ def splitKeyValue(s,key_sep):
         return ( s, '' )
 
 
+def ignore_error(dummy):
+    """This function can be used to override the default error handlers.
+
+    The effect will be to ignore the error (duplicate key, invalid record)
+    and to not add the affected data to the database. 
+    """
+    pass
+
+
 # The Flat text file database class
 class FlatDB(dict):
     """A database stored as a dictionary of dictionaries.
@@ -381,9 +390,6 @@ class FlatDB(dict):
 
 if __name__ == '__main__':
 
-    def ignore_error(dummy):
-        pass
-
     db = FlatDB(['aa'])
     db.append({'aa':'bb'})
     db.append({'aa':'cc'})
@@ -412,9 +418,10 @@ if __name__ == '__main__':
     print mat
     mat.key_error_handler = ignore_error
     mat.append({'name':'concrete'})
+    print mat
 
     # Variant without endmarker
-    mat = FlatDB(req_keys=['name'],beginrec='mat',endrec='')
+    mat = FlatDB(req_keys=['name'],beginrec='material',endrec='')
     mat.readFile('examples/materials.db',ignore=True)
     print mat
 
