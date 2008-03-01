@@ -117,11 +117,20 @@ class FlatDB(dict):
     (or an existing one is replaced). Before calling this check_func, the
     system will already have checked that the record is a dictionary and
     that it has all the required keys.
+
+    Two error handlers may be overridden by the user:
+    - record_error_handler(record) is called when the record does not pass the
+    checks;
+    - key_error_handler(key) is called when a dunplicat key is encountered.
+    The default for both is to raise an error.
+    Overriding is done by changing the instance attibute.
     """
 
     def __init__(self, req_keys, comment = '#', key_sep = '=',
-    beginrec = 'beginrec', endrec = 'endrec',
-    strip_blanks = True, strip_quotes = True, check_func = None):
+                 beginrec = 'beginrec', endrec = 'endrec',
+                 strip_blanks = True, strip_quotes = True,
+                 check_func = None,
+                 ):
         """Initialize a new (empty) database.
 
         Make sure that the arguments are legal."""
@@ -142,7 +151,7 @@ class FlatDB(dict):
 
     def newRecord(self):
         """Returns a new (empty) record.
-
+        
         The new record is a temporary storage. It should be added to the
         database by calling append(record).
         This method can be overriden in subclasses.
@@ -162,23 +171,32 @@ class FlatDB(dict):
         record has the required keys, and that check_func(record) returns
         True (if a check_func was specified).
         If the record passes, just return True. If it does not, call the
-        check_error function and return False.
-        This method can be overriden in subclasses.
+        record_error_handler and (if it returns) return False.
+        This method can safely be overriden in subclasses.
         """
         OK = type(record) == dict and self.checkKeys(record) and (
-        self.check_func == None or self.check_func(record) )
+            self.check_func == None or self.check_func(record) )
         if not OK:
-            self.check_error(record)
+            self.record_error_handler(record)
         return OK
     
 
-    def check_error(self,record):
+    def record_error_handler(self,record):
         """Error handler called when a check error on record is discovered.
 
         Default is to raise a runtime error.
-        Can be overriden in subclasses.
+        This method can safely be overriden in subclasses.
         """
         raise ValueError, "FlatDB: invalid record : %s" % record
+    
+
+    def key_error_handler(self,key):
+        """Error handler called when a duplicate key is found.
+
+        Default is to raise a runtime error.
+        This method can safely be overriden in subclasses.
+        """
+        raise ValueError, "FlatDB: duplicate key : '%s'" % key
 
         
     def __setitem__(self, key, record):
@@ -207,11 +225,11 @@ class FlatDB(dict):
         """Add a record to the database.
 
         Since the database is a dictionary, keys are unique and appending a
-        record with an existing is not allowed.
+        record with an existing key is not allowed.
         If you want to overwrite the old record, use insert() instead.
         """
         if self.has_key(record[self.key]):
-            raise RuntimeError, "FlatDB: record with key '%s' already in database" % record[self.key]
+            self.key_error_handler(record[self.key])
         else:
             self.insert(record)
 
@@ -293,6 +311,25 @@ class FlatDB(dict):
         return 0
                 
 
+    def parse(self, lines, ignore=False, filename=None):
+        """Read a database from text.
+
+        lines is an iterater over text lines (e.g. a text file or a
+        multiline string splitted on '\n')
+        Lines starting with a comment string are ignored.
+        Every record is delimited by a (beginrec,endrec) pair.
+        If ignore is True, all lines that are not between a (beginrec,endrec)
+        pair are simply ignored. Default is to raise a RuntimeError.
+        """
+        self.record = None
+        linenr = 0
+        for line in lines:
+            linenr += 1
+            if self.parseLine(line) != 0 and not ignore:
+                raise RuntimeError, "FlatDB: error while reading line %d of database (File: %s)\n%s" % (linenr,filename,self.error_msg)
+                break
+                
+
     def readFile(self, filename, ignore=False):
         """Read a database from file.
         
@@ -309,14 +346,8 @@ class FlatDB(dict):
             if infile:
                 infile.close()
 
-        self.record = None
-        linenr = 0
-        for line in lines:
-            linenr += 1
-            if self.parseLine(line) != 0 and not ignore:
-                raise RuntimeError, "FlatDB: error while reading line %d of database file %s\n%s" % (linenr,filename,self.error_msg)
-                break
-
+        self.parse(lines,ignore,filename)
+        
 
     def writeFile(self,filename,mode='w',header=None):
         """Write the database to a text file.
@@ -350,6 +381,9 @@ class FlatDB(dict):
 
 if __name__ == '__main__':
 
+    def ignore_error(dummy):
+        pass
+
     db = FlatDB(['aa'])
     db.append({'aa':'bb'})
     db.append({'aa':'cc'})
@@ -360,7 +394,7 @@ if __name__ == '__main__':
     print len(db)
     
     mat = FlatDB(['name'],beginrec='material',endrec='endmaterial')
-    mat.readFile('materials.txt')
+    mat.readFile('examples/materials.db')
     mat.append({'name':'concrete', 'junk':''})
     print mat
 
@@ -369,21 +403,24 @@ if __name__ == '__main__':
     for i in mat.match('name','steel'):
         print mat[i]
     mat = FlatDB(req_keys=['name'],beginrec='material',endrec='endmaterial')
-    mat.readFile('materials.txt')
+    mat.readFile('examples/materials.db')
     mat.append({'name':'concrete'})
     try:
         mat.append({'junk':'concrete'})
     except:
         print "Could not append record without 'name' field"
     print mat
+    mat.key_error_handler = ignore_error
+    mat.append({'name':'concrete'})
 
     # Variant without endmarker
-    mat = FlatDB(req_keys=['name'],beginrec='material',endrec='')
-    mat.readFile('materials.sng')
+    mat = FlatDB(req_keys=['name'],beginrec='mat',endrec='')
+    mat.readFile('examples/materials.db',ignore=True)
     print mat
 
     # Variant without begin/endrec markers: records separated by blanks
     mat = FlatDB(req_keys=['name'],beginrec='',endrec='')
-    mat.readFile('materials.alt')
+    mat.readFile('examples/materials.db')
     print mat
 
+# End

@@ -1,19 +1,19 @@
 section
-	name=koker
-	cross_section=500
-	moment_inertia_11=1256
-	moment_inertia_12=695
-	moment_inertia_22=365499
-	torsional_rigidity=635256
+  name=koker
+  cross_section=500
+  moment_inertia_11=1256
+  moment_inertia_12=695
+  moment_inertia_22=365499
+  torsional_rigidity=635256
 endsection
 
 section
-	name=IPEA100
-	cross_section=878
-	moment_inertia_11=1412000
-	moment_inertia_12=1254
-	moment_inertia_22=1140000
-	torsional_rigidity=1542
+  name=IPEA100
+  cross_section=878
+  moment_inertia_11=1412000
+  moment_inertia_12=1254
+  moment_inertia_22=1140000
+  torsional_rigidity=1542
 endsection
 
 # The following style could be used with units
