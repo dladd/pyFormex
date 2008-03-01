@@ -1,0 +1,57 @@
+# $Id: $
+
+release
+  tag = 0.6
+  date = 2007-11-16
+  size = 1798747
+  rev = 460
+
+release
+  tag = 0.5
+  date = 2007-08-10
+  size = 1125063
+  rev = 354
+
+release
+  tag = 0.4.2
+  date = 2007-04-25
+  size = 1426285
+  rev = 240
+
+release
+  tag = 0.4.1
+  date = 2006-12-15
+  size = 1235888
+  rev = 172
+
+release
+  tag = 0.4
+  date = 2006-11-03
+  size = 1139062
+  rev = 155
+
+release
+  tag = 0.3.1
+  date = 2006-09-20
+  size = 535373
+  rev = 136
+
+release
+  tag = 0.3
+  date = 2006-04-15
+  size = 505049
+  rev = 95
+
+release
+  tag = 0.2.2
+  date = 2005-12-09
+  size = 442581
+  rev = 59
+
+release
+  tag = 0.2
+  date = 2005-01-03
+  size = 275463
+  rev = 32
+
+#End

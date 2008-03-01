@@ -13,29 +13,37 @@ enable-auto-props = yes
 [auto-props]
 *.py = svn:eol-style=native;svn:keywords=Id
 
-- Name of .py files should be only lowercase.
+
+- All new source files in the pyFormex repository should be created with the
+  following line on the first OR second line:
+
+- Name of .py files should be only lowercase, except for the approved
+  examples distributed with pyFormex, which should start wih an upper case.
+ 
 - Start text (also .py) files with the following line:
 
 # $Id: $
+
+- A first line different from the above may be used to flag an executable
+  script, as in the examples below.
 
 - Start executable python scripts with the following two lines:
 
 #!/usr/bin/env python
 # $Id: $
 
-- Start pyformex scripts with the following two lines (this will change in
-  future, but for now, it is best to follow this rule):
+- Start pyformex scripts with the following two lines:
 
 #!/usr/bin/env python pyformex
 # $Id: $
 
-- End your file with a line
+- End your text files with a line
 
 # End
 
 - Never directly edit the $Id line: it is automatically handled by subversion
 
-- .py files should end with a section
+- .py files may/should end with a section
 
 if __name__ == "__main__":
 
