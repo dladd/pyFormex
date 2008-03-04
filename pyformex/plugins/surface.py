@@ -686,8 +686,8 @@ class Surface(object):
         The normal vector in a point is the average of the normal vectors of the neighbouring triangles.
         The normal vectors are normalized.
         """
-        con = connectivity.reverseIndex(self.elems)
-        NP = self.areaNormals()[1][con]
+        con = connectivity.reverseIndex(self.getElems())
+        NP = self.areaNormals()[1][con] #self.normal doesn't work here???
         w = where(con == -1)
         NP[w] = 0.
         NPA = NP.sum(axis=1)
@@ -702,7 +702,7 @@ class Surface(object):
         """
         NPA = self.pointNormals()
         coordsNew = self.coords + NPA*distance
-        return Surface(coordsNew,self.elems)
+        return Surface(coordsNew,self.getElems())
     
     # Data conversion
     
