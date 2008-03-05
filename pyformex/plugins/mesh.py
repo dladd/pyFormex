@@ -1,12 +1,50 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env python
 
+"""mesh.py
 
-"""Create a hexahedral mesh by sweeping a quadrilateral mesh along a path"""
+A plugin providing some useful meshing functions.
+"""
 
-from simple import line,circle
 from numpy import *
-from gui import actors
+from coords import *
 from formex import *
+from gui import actors
+from simple import line
+
+def createWedgeElements(S1,S2,div=1):
+    """Create wedge elements between to triangulated surfaces.
+    
+    6-node wedge elements are created between two input surfaces (S1 and S2).
+    The keyword div determines the number of created wedge element layers.
+    Layers with equal thickness are created when an integer value is used for div.
+    div can also be specified using a list, that defines the interpolation between the two surfaces.
+    Consequently, this can be used to create layers with unequal thickness.
+    For example, div=2 gives the same result as [0.,0.5,1.]
+    """
+    #check which surface lays on top
+    n = S1.areaNormals()[1][0]
+    if S2.coords[0].distanceFromPlane(S1.coords[0],n) < 0:
+        S = S2.copy()
+        S2 = S1.copy()
+        S1 = S
+    #determine the number of layers of wedge elements
+    if type(div) == int:
+        nlayers = div
+    else:
+        nlayers = shape(div)[0] - 1
+   #create array containing the nodes of the wedge elements
+    C1 = S1.coords
+    C2 = S2.coords
+    coordsWedge = Coords.interpolate(C1,C2,div).reshape(-1,3)
+    #create array containing wedge connectivity
+    ncoords = C1.shape[0]
+    elems = S1.getElems()
+    elemsWedge = array([]).astype(int)
+    for i in range(nlayers):
+        elemsLayer = append(elems,elems+ncoords,1).reshape(-1)
+        elemsWedge = append(elemsWedge,elemsLayer,0)
+        elems += ncoords
+    return coordsWedge,elemsWedge.reshape(-1,6)
 
 
 def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
