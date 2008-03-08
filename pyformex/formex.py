@@ -259,6 +259,21 @@ def intersectionWithPlane(F,p,n):
     return t
 
 
+def pointsAt(F,t):
+    """Return the points of a plex-2 Formex at times t.
+    
+    F is a plex 2 Formex and t is an array with F.nelems() float values which
+    are interpreted as local parameters along the edges of the Formex, such
+    that the first node has value 0.0 and the last has vaue 1.0.
+    The return value is a Coords array with the points at values t.
+    """
+    f = F.f
+    t = t[:,newaxis]
+    print f.shape
+    print t.shape
+    return Coords((1.-t) * f[:,0,:] + t * f[:,1,:])
+
+
 def intersectionPointsWithPlane(F,p,n):
     """Return the intersection points of a Formex with plane p,n.
 
@@ -281,15 +296,36 @@ def intersectionLinesWithPlane(F,p,n):
     p is a point specified by 3 coordinates.
     n is the normal vector to a plane, specified by 3 components.
     """
-    C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
-    t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
-    T = (t >= 0)*(t <= 1)
-    w = where(T.sum(axis=-1) == 2)
-    P = P[w]
-    T = T[w]
-    Q = P[T].reshape(-1,2,3)
-    return Formex(Q)
+##     T = (t >= 0)*(t <= 1)
+##     print "T",T
+##     w = where(T.sum(axis=-1) == 2)
+##     print "w",w
+##     P = P[w]
+##     print "P",P
+##     T = T[w]
+##     print "T",T
+##     Q = P[T].reshape(-1,2,3)
+##     print "Q",Q
+    n = asarray(n)
+    p = asarray(p)
+    F = F.cclip(F.test('all',n,p)) # remove elements at the negative side
+    if F.nelems() == 0:
+        return Formex()
+    F = F.cclip(F.test('all',-n,p)) # select elements that will be cut by plane
+    if F.nelems() == 0:
+        return Formex()
+    C = Formex.concatenate([ F.selectNodes(e) for e in [[0,1],[1,2],[2,0]] ])
+    print "C",C
+    t = C.intersectionWithPlane(p,n)
+    print "t",t
+    P = pointsAt(C,t)
+    print "P",P
+    print P.shape
+##     T = (t >= 0.)*(t <= 1.)
+##     print "T",T
+##     P = P[T]#.reshape(-1,2,3)
+##     print "P",P
+    return Formex(P)
 
 
 
@@ -917,7 +953,7 @@ class Formex:
         """Return a Formex which holds only some nodes of the parent.
 
         idx is a list of node numbers to select.
-        Thus, if F is a grade 3 Formex representing triangles, the sides of
+        Thus, if F is a plex 3 Formex representing triangles, the sides of
         the triangles are given by
         F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
         The returned Formex inherits the property of its parent.

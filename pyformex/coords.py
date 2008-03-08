@@ -227,10 +227,11 @@ class Coords(ndarray):
 
     Coords is implemented as a Numerical Python array with a length of its
     last axis equal to 3.
+    Each set of 3 values along the last axis represents a single point in 3D.
+
     The datatype should be a float type; default is Float.
     !! These restrictions are currently only check at creation time.
     !! It is the responsibility of the user to keep consistency. 
-    Each set of 3 values along the last axis represents a single point in 3D.
     """
 
 
@@ -242,6 +243,7 @@ class Coords(ndarray):
     def __new__(cls, data=None, dtyp=None, copy=False):
         """Create a new instance of class Coords.
 
+        If no data are given, a single point (0.,0.,0.) will be created.
         If specified, data should evaluate to an (...,3) shaped array of floats.
         If copy==True, the data are copied.
         If no dtype is given that of data are used, or float32 by default.
@@ -485,7 +487,6 @@ class Coords(ndarray):
         return T
 
 
-
     def fprint(self,fmt="%10.3e %10.3e %10.3e"):
         """Formatted printing of a Coords.
 
@@ -494,6 +495,7 @@ class Coords(ndarray):
         """
         for p in self.points():
             print fmt % tuple(p)
+
 
 
 ##############################################################################

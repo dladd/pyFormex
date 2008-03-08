@@ -635,9 +635,9 @@ def cutAtPlane():
     """Cut the selection with a plane."""
     FL = selection.check()
     res = askItems([['Point',(0.0,0.0,0.0)],
-                     ['Normal',(0.0,0.0,1.0)],
-                     ['New props',[1,2,2]],],
-                     caption = 'Define the cutting plane')
+                    ['Normal',(0.0,0.0,1.0)],
+                    ['New props',[1,2,2]],
+                    ],caption = 'Define the cutting plane')
     if res:
         P = res['Point']
         N = res['Normal']
@@ -645,6 +645,22 @@ def cutAtPlane():
         selection.remember(True)
         [F.cutAtPlane(P,N,p) for F in FL]
         selection.drawChanges()
+
+
+def intersectWithPlane():
+    """Intersect the selection with a plane."""
+    FL = selection.check()
+    res = askItems([['Name','__auto__'],
+                    ['Point',(0.0,0.0,0.0)],
+                    ['Normal',(0.0,0.0,1.0)],
+                    ],caption = 'Define the cutting plane')
+    if res:
+        name = res['Name']
+        P = res['Point']
+        N = res['Normal']
+        G = [F.toFormex().intersectionLinesWithPlane(P,N) for F in FL]
+        draw(G,color='red',linewidth=3)
+        export(dict([('%s/%s' % (n,name),g) for n,g in zip(selection,G)])) 
 
 
 def undo_stl():
@@ -902,7 +918,7 @@ def create_menu():
           ]),
         ("&Border Line",showBorder),
         ("---",None),
-        ("&Transform coordinates",
+        ("&Transform",
          [("&Scale",scaleSelection),
           ("&Scale non-uniformly",scale3Selection),
           ("&Translate",translateSelection),
@@ -914,8 +930,11 @@ def create_menu():
             ("&Around General Axis",rotateGeneral),
             ]),
           ("&Roll Axes",rollAxes),
-          ("&Clip Selection",clipSelection),
-          ("&Cut at Plane",cutAtPlane),
+          ]),
+        ("&Cut",
+         [("&Clip",clipSelection),
+          ("&Cut(Trim) at Plane",cutAtPlane),
+          ("&Intersect With Pane",intersectWithPlane),
           ]),
         ("&Undo Last Changes",selection.undoChanges),
         ('&Check surface',check),

@@ -195,13 +195,13 @@ def drawEdges(x,color=None):
 
     If color is given it is an (ntri,3) array of RGB values.
     """
+    x = x.astype(float)
     GL.glBegin(GL.GL_LINES)
     for i in range(x.shape[0]):
-        for j in range(0,x.shape[1],2):
-            if color is not None:
-                GL.glColor3fv(color[i])
-            GL.glVertex3fv(x[i][j])
-            GL.glVertex3fv(x[i][j+1])
+        if color is not None:
+            GL.glColor3fv(color[i])
+        for p in x[i]:
+            GL.glVertex3fv(p)
     GL.glEnd()
 
 

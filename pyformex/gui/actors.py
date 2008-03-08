@@ -469,6 +469,7 @@ class FormexActor(Actor,Formex):
             drawNurbsCurves(self.f,color)
             
         elif mode=='wireframe' :
+            print "DRAWING WITH TYPE %s" % self.eltype
             if self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
@@ -480,6 +481,7 @@ class FormexActor(Actor,Formex):
             elif self.eltype == 'hex':
                 edges = [ 0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
                 coords = self.f[:,edges,:]
+                print coords.dtype
                 drawEdges(coords,color)
             else:
                 drawPolyLines(self.f,color)

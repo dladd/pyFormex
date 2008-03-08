@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # $Id$
 # $URL$
-# $Rev$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra

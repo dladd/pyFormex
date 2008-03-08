@@ -21,6 +21,7 @@ import toolbar
 import help
 import image
 import draw
+import script
 from plugins import surface_menu,formex_menu,tools_menu
 
 
@@ -116,13 +117,13 @@ MenuData = [
         (_('&Continue'),draw.fforward), 
         (_('&Reset GUI'),resetGUI),
         (_('&Force Finish Script'),draw.force_finish),
-        (_('&ListFormices'),draw.printall),
+        (_('&ListFormices'),script.printall),
+        (_('&PrintGlobalNames'),script.printglobalnames),
+        (_('&PrintGlobals'),script.printglobals),
+        (_('&PrintConfig'),script.printconfig),
+        (_('&Print Detected Software'),script.printdetected),
         (_('&PrintBbox'),draw.printbbox),
-        (_('&PrintGlobalNames'),draw.printglobalnames),
-        (_('&PrintGlobals'),draw.printglobals),
-        (_('&PrintConfig'),draw.printconfig),
         (_('&PrintViewportSettings'),draw.printviewportsettings),
-        (_('&Print Detected Software'),draw.printdetected),
         ]),
     (_('&Help'),[
         (_('&pyformex options'),help.cmdline),

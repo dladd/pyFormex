@@ -938,55 +938,14 @@ def exit(all=False):
 
 
 ########################## print information ################################
-    
 
-
-def formatInfo(F):
-    """Return formatted information about a Formex."""
-    bb = F.bbox()
-    return """shape    = %s
-bbox[lo] = %s
-bbox[hi] = %s
-center   = %s
-maxprop  = %s
-""" % (F.shape(),bb[0],bb[1],F.center(),F.maxprop())
-    
-
-def printall():
-    """Print all Formices in globals()"""
-    print "Formices currently in globals():\n%s" % listAll(clas=formex.Formex)
-
-
-def printglobals():
-    print globals()
-
-def printglobalnames():
-    a = globals().keys()
-    a.sort()
-    print a
 
 def printbbox():
     print GD.canvas.bbox
 
-    
-def printconfig():
-    print "Reference Configuration: " + str(GD.refcfg)
-    print "User Configuration: " + str(GD.cfg)
-
-
 def printviewportsettings():
     GD.gui.viewports.printSettings()
-        
 
-def printdetected():
-    print "Detected Python Modules:"
-    for k,v in GD.version.items():
-        if v:
-            print "%s (%s)" % ( k,v)
-    print "\nDetected External Programs:"
-    for k,v in GD.external.items():
-        if v:
-            print "%s (%s)" % ( k,v)
 
 #################### viewports ##################################
 
