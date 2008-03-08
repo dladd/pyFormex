@@ -243,7 +243,6 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 def showBorder():
     S = selection.check(single=True)
     if S:
-        #print S.edgeConnections()
         print S.nEdgeConnected()
         print S.borderEdges()
         F = S.border()
@@ -663,13 +662,29 @@ def intersectWithPlane():
         export(dict([('%s/%s' % (n,name),g) for n,g in zip(selection,G)])) 
 
 
-def undo_stl():
-    """Undo the last transformation."""
-    global F,oldF
-    clear()
-    linewidth(1)
-    F = oldF
-    draw(F,color='green')
+def sliceIt():
+    """Slice the surface to a sequence of cross sections."""
+    S = selection.check(single=True)
+    res = askItems([['Direction',0],
+                    ['# slices',10],
+                   ],caption = 'Define the slicing planes')
+    if res:
+        axis = res['Direction']
+        nslices = res['# slices']
+        bb = S.bbox()
+        xmin,xmax = bb[:,axis]
+        dx =  (xmax-xmin) / nslices
+        print "Distance between slices: %s" % dx
+        x = arange(nslices+1) * dx
+        N = unitVector(axis)
+        P = [ bb[0]+N*s for s in x ]
+        G = [S.toFormex().intersectionLinesWithPlane(Pi,N) for Pi in P]
+        #[ G.setProp(i) for i,G in enumerate(G) ]
+        G = Formex.concatenate(G)
+        draw(G,color='red',linewidth=3)
+        export({'%s/slices%s' % (selection[0],axis):G}) 
+
+
 
 def fill_holes():
     global F,oldF
@@ -934,8 +949,9 @@ def create_menu():
         ("&Cut",
          [("&Clip",clipSelection),
           ("&Cut(Trim) at Plane",cutAtPlane),
-          ("&Intersect With Pane",intersectWithPlane),
-          ]),
+          ("&Intersect With Plane",intersectWithPlane),
+          ("&Slice",sliceIt),
+           ]),
         ("&Undo Last Changes",selection.undoChanges),
         ('&Check surface',check),
         ('&Split surface',split),
@@ -947,13 +963,10 @@ def create_menu():
         #("&Print Nodal Coordinates",show_nodes),
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
-#        ("&Clip model",clip_surface),
 #        ("&Trim border",trim_surface),
-#        ("&Undo LAST STL transformation",undo_stl),
 #        ("&Fill the holes in STL model",fill_holes),
 #        ("&Create tetgen model",create_tetgen),
 #        ("&Read Tetgen Volume",read_tetgen_volume),
-#        ("&Scale Volume model with factor 0.01",scale_volume),
         ("&Export surface to Abaqus",export_surface),
 #        ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),

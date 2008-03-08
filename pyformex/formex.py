@@ -269,8 +269,6 @@ def pointsAt(F,t):
     """
     f = F.f
     t = t[:,newaxis]
-    print f.shape
-    print t.shape
     return Coords((1.-t) * f[:,0,:] + t * f[:,1,:])
 
 
@@ -290,22 +288,12 @@ def intersectionPointsWithPlane(F,p,n):
 
 
 def intersectionLinesWithPlane(F,p,n):
-    """Return the intersection lines of a Formex with plane (p,n).
+    """Return the intersection lines of a plex-3 Formex with plane (p,n).
     
     F is a Formex of plexitude 3.
     p is a point specified by 3 coordinates.
     n is the normal vector to a plane, specified by 3 components.
     """
-##     T = (t >= 0)*(t <= 1)
-##     print "T",T
-##     w = where(T.sum(axis=-1) == 2)
-##     print "w",w
-##     P = P[w]
-##     print "P",P
-##     T = T[w]
-##     print "T",T
-##     Q = P[T].reshape(-1,2,3)
-##     print "Q",Q
     n = asarray(n)
     p = asarray(p)
     F = F.cclip(F.test('all',n,p)) # remove elements at the negative side
@@ -314,18 +302,34 @@ def intersectionLinesWithPlane(F,p,n):
     F = F.cclip(F.test('all',-n,p)) # select elements that will be cut by plane
     if F.nelems() == 0:
         return Formex()
+    # Create a Formex withe the edges
     C = Formex.concatenate([ F.selectNodes(e) for e in [[0,1],[1,2],[2,0]] ])
-    print "C",C
     t = C.intersectionWithPlane(p,n)
-    print "t",t
     P = pointsAt(C,t)
-    print "P",P
-    print P.shape
-##     T = (t >= 0.)*(t <= 1.)
-##     print "T",T
-##     P = P[T]#.reshape(-1,2,3)
-##     print "P",P
-    return Formex(P)
+    t = t.reshape(3,-1).transpose()
+    P = P.reshape(3,-1,3).swapaxes(0,1)
+    T = (t >= 0.)*(t <= 1.)
+    S = T.sum(axis=-1)
+    # Get the triangles with 2 intersections
+    # (remark: this includes the triangles with 1 edge in the plane, because
+    # this edges causes a NaN t-value, thus False
+    w1 = where(S==2)[0]
+    if w1.size > 0:
+        P1 = P[w1][T[w1]].reshape(-1,2,3)
+        F1 = Formex(P1)
+    else:
+        F1 = None
+    # Get the triangles with 3 intersections : the plane goes thru a vertex
+    w2 = where(S==3)[0]
+    if w2.size > 0:
+        P2 = P[w2][T[w2]].reshape(-1,3,3)
+        F = Formex(P2)
+        F2 = Formex.concatenate([ F.selectNodes(e) for e in [[0,1],[1,2],[2,0]] ])
+        if F1 is None:
+            F1 = F2
+        else:
+            F1 += F2
+    return F1
 
 
 
