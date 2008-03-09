@@ -471,7 +471,7 @@ def draw(F, view=None,bbox='auto',
     The first argument is an object to be drawn. All other arguments are
     settings that influence how  the object is being drawn.
 
-    F is either a Formex or a Surface object, or a name of such object
+    F is either a Formex or a TriSurface object, or a name of such object
     (global or exported), or a list thereof.
     If F is a list, the draw() function is called repeatedly with each of
     ithe items of the list as first argument and with the remaining arguments
@@ -544,7 +544,7 @@ def draw(F, view=None,bbox='auto',
             return None
 
     if not (isinstance(F,formex.Formex) or
-            isinstance(F,surface.Surface) or
+            isinstance(F,surface.TriSurface) or
             isinstance(F,tools.Plane)):
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
@@ -586,8 +586,8 @@ def draw(F, view=None,bbox='auto',
                 #GD.debug("DRAWING WITH COLOR1\n%s" % str(color1))
                 canvas.glSmooth()
             actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
-        elif isinstance(F,surface.Surface):
-            actor = actors.SurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
+        elif isinstance(F,surface.TriSurface):
+            actor = actors.TriSurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
         elif isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
         GD.canvas.addActor(actor)
@@ -621,7 +621,7 @@ def _shrink(F,factor):
     A shrinked object is one where each element is shrinked with a factor
     around its own center.
     """
-    if isinstance(F,surface.Surface):
+    if isinstance(F,surface.TriSurface):
         F = F.toFormex()
     return F.shrink(factor)
 
@@ -1015,7 +1015,7 @@ def highlightActors(K,colormap=highlight_colormap):
         # For some reason, redrawing a surface does not work
         # Therefore we undraw it and draw it again
         #
-        if isinstance(A,surface.Surface):
+        if isinstance(A,surface.TriSurface):
             undraw(A)
             draw(A,color=color)
         else:
@@ -1035,7 +1035,7 @@ def highlightElements(K,colormap=highlight_colormap):
         if i in K.keys():
             GD.debug("Actor %s: Selection %s" % (i,K[i]))
             p[K[i]] = 1
-        if isinstance(A,surface.Surface):
+        if isinstance(A,surface.TriSurface):
             undraw(A)
             draw(A,color=p,colormap=colormap)
         else:
@@ -1046,12 +1046,12 @@ def highlightElements(K,colormap=highlight_colormap):
 def highlightEdges(K,colormap=highlight_colormap):
     """Highlight a selection of actor edges on the canvas.
 
-    K is Collection of Surface actor edges as returned by the pick() method.
+    K is Collection of TriSurface actor edges as returned by the pick() method.
     colormap is a list of two colors, for the edges not in, resp. in
     the Collection K.
     """
     for i,A in enumerate(GD.canvas.actors):
-        if i in K.keys() and isinstance(A,surface.Surface):
+        if i in K.keys() and isinstance(A,surface.TriSurface):
             GD.debug("Actor %s: Selection %s" % (i,K[i]))
             F = Formex(A.coords[A.edges[K[i]]])
             draw(F,color=highlight_colormap[1],linewidth=3,bbox=None)
@@ -1096,7 +1096,7 @@ def highlightPartitions(K):
             GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
             for j in K[i][0].keys():
                 p[K[i][0][j]] = j
-        if isinstance(A,surface.Surface):
+        if isinstance(A,surface.TriSurface):
             undraw(A)
             draw(A,color=p)
         else:

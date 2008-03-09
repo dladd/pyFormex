@@ -6,7 +6,7 @@ This script reads horse.formex, transforms it into a surface,
 loads the surface plugin and cuts the horse in a number of surfaces.
 """
 
-from plugins.surface import Surface
+from plugins.surface import TriSurface
 
 reset()
 wireframe()

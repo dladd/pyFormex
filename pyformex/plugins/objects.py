@@ -10,7 +10,7 @@ import globaldata as GD
 
 from coords import bbox
 from formex import Formex
-from plugins.surface import Surface
+from plugins.surface import TriSurface
 from copy import deepcopy
 
 class Objects(object):

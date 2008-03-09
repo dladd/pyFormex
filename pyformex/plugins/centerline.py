@@ -79,7 +79,7 @@ def voronoi(fn):
     The voronoi diagram is determined by Tetgen.
     The output are the voronoi nodes and the corresponding radii of the voronoi spheres.
     """
-    S = surface.Surface.read(fn)
+    S = surface.TriSurface.read(fn)
     fn,ftype = os.path.splitext(fn)
     ftype = ftype.strip('.').lower()
     if ftype != 'smesh':
@@ -102,7 +102,7 @@ def voronoiInner(fn):
     fn is the file name of a surface, including the extension (.off, .stl, .gts, .neu or .smesh)
     The output are the voronoi nodes and the corresponding radii of the voronoi spheres.
     """
-    S = surface.Surface.read(fn)
+    S = surface.TriSurface.read(fn)
     fn,ftype = os.path.splitext(fn)
     ftype = ftype.strip('.').lower()
     if ftype != 'smesh':

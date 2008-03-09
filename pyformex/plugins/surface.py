@@ -304,9 +304,9 @@ def surface_volume(x,pt=None):
 # The Surface class
 
 def coordsmethod(f):
-    """Define a Surface method as the equivalent Coords method.
+    """Define a TriSurface method as the equivalent Coords method.
 
-    This decorator replaces the Surface's vertex coordinates with the
+    This decorator replaces the TriSurface's vertex coordinates with the
     ones resulting from applying the transform f.
     
     The coordinates are changed inplane, so copy them before if you do not
@@ -320,7 +320,7 @@ def coordsmethod(f):
     return newf
 
 
-class Surface(object):
+class TriSurface(object):
     """A class for handling triangulated 3D surfaces."""
 
     def __init__(self,*args):
@@ -447,7 +447,7 @@ class Surface(object):
                                   
 ###########################################################################
     #
-    #   Return information about a Surface
+    #   Return information about a TriSurface
     #
 
     def ncoords(self):
@@ -474,7 +474,7 @@ class Surface(object):
         return self.coords
     
     def shape(self):
-        """Return the number of ;points, edges, faces of the Surface."""
+        """Return the number of ;points, edges, faces of the TriSurface."""
         return self.coords.shape[0],self.edges.shape[0],self.faces.shape[0]
        
     def copy(self):
@@ -483,13 +483,13 @@ class Surface(object):
         If an index is given, only the specified faces are retained.
         """
         self.refresh()
-        S = Surface(self.coords.copy(),self.elems.copy())
+        S = TriSurface(self.coords.copy(),self.elems.copy())
         if self.p is not None:
             S.setProp(self.p)
         return S
     
     def select(self,idx,compress=True):
-        """Return a Surface which holds only elements with numbers in ids.
+        """Return a TriSurface which holds only elements with numbers in ids.
 
         self.coords is not changed
         idx can be a single element number or a list of numbers or
@@ -499,7 +499,7 @@ class Surface(object):
         Setting compress==True will keep all original nodes in the surface.
         """
         self.refresh()
-        S = Surface(self.coords, self.elems[idx])
+        S = TriSurface(self.coords, self.elems[idx])
         if self.p is not None:
             S.setProp(self.p[idx])
         if compress:
@@ -509,15 +509,15 @@ class Surface(object):
 
     # Properties
     def setProp(self,p=None):
-        """Create or delete the property array for the Surface.
+        """Create or delete the property array for the TriSurface.
 
         A property array is a rank-1 integer array with dimension equal
-        to the number of elements in the Surface.
+        to the number of elements in the TriSurface.
         You can specify a single value or a list/array of integer values.
         If the number of passed values is less than the number of elements,
         they wil be repeated. If you give more, they will be ignored.
         
-        If a value None is given, the properties are removed from the Surface.
+        If a value None is given, the properties are removed from the TriSurface.
         """
         if p is None:
             self.p = None
@@ -600,11 +600,11 @@ class Surface(object):
     def test(self,nodes='all',dir=0,min=None,max=None):
         """Flag elements having nodal coordinates between min and max.
 
-        This function is very convenient in clipping a Surface in a specified
+        This function is very convenient in clipping a TriSurface in a specified
         direction. It returns a 1D integer array flagging (with a value 1 or
         True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
-        Or directly use clip() or cclip() to create the clipped Surface
+        Or directly use clip() or cclip() to create the clipped TriSurface
         
         The test plane can be defined in two ways, depending on the value of dir.
         If dir == 0, 1 or 2, it specifies a global axis and min and max are
@@ -663,17 +663,17 @@ class Surface(object):
 
 
     def clip(self,t):
-        """Return a Surface with all the elements where t>0.
+        """Return a TriSurface with all the elements where t>0.
 
         t should be a 1-D integer array with length equal to the number
-        of elements of the Surface.
-        The resulting Surface will contain all elements where t > 0.
+        of elements of the TriSurface.
+        The resulting TriSurface will contain all elements where t > 0.
         """
         return self.select(t>0)
 
 
     def cclip(self,t):
-        """This is the complement of clip, returning a Surface where t<=0.
+        """This is the complement of clip, returning a TriSurface where t<=0.
         """
         return self.select(t<=0)
 
@@ -702,7 +702,7 @@ class Surface(object):
         """
         NPA = self.pointNormals()
         coordsNew = self.coords + NPA*distance
-        return Surface(coordsNew,self.getElems())
+        return TriSurface(coordsNew,self.getElems())
     
     # Data conversion
     
@@ -729,22 +729,22 @@ class Surface(object):
             ftype = os.path.splitext(fn)[1]  # deduce from extension
         ftype = ftype.strip('.').lower()
         if ftype == 'off':
-            return Surface(*read_off(fn))
+            return TriSurface(*read_off(fn))
         elif ftype == 'gts':
             #print "READING GTS"
             ret = read_gts(fn)
             #print ret
-            S = Surface(*ret)
+            S = TriSurface(*ret)
             #print S.shape()
             return S
         elif ftype == 'stl':
-            return Surface(*read_stl(fn))
+            return TriSurface(*read_stl(fn))
         elif ftype == 'neu':
-            return Surface(*read_gambit_neutral(fn))
+            return TriSurface(*read_gambit_neutral(fn))
         elif ftype == 'smesh':
-            return Surface(*tetgen.readSurface(fn))
+            return TriSurface(*tetgen.readTriSurface(fn))
         else:
-            raise "Unknown Surface type, cannot read file %s" % fn
+            raise "Unknown TriSurface type, cannot read file %s" % fn
 
 
     def write(self,fname,ftype=None):
@@ -776,7 +776,7 @@ class Surface(object):
                 write_smesh(fname,self.coords,self.elems)
             GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nfaces()))
         else:
-            print "Cannot save Surface as file %s" % fname
+            print "Cannot save TriSurface as file %s" % fname
 
 
     def toFormex(self):
@@ -805,7 +805,7 @@ class Surface(object):
         pass
 
 
-####################### Surface Data ######################
+####################### TriSurface Data ######################
 
     def areaNormals(self):
         """Compute the area and normal vectors of the surface triangles.
@@ -908,7 +908,7 @@ class Surface(object):
 
 
     def borderEdges(self):
-        """Detect the border elements of Surface.
+        """Detect the border elements of TriSurface.
 
         The border elements are the edges having less than 2 connected elements.
         Returns a list of edge numbers.
@@ -926,7 +926,7 @@ class Surface(object):
     
 
     def border(self):
-        """Return the border of Surface as a Plex-2 Formex.
+        """Return the border of TriSurface as a Plex-2 Formex.
 
         The border elements are the edges having less than 2 connected elements.
         Returns a list of edge numbers.
@@ -943,7 +943,7 @@ class Surface(object):
         conn = self.edgeConnections()
         # Bail out if some edge has more than two connected faces
         if conn.shape[1] != 2:
-            raise RuntimeError,"Surface is not a manifold"
+            raise RuntimeError,"TriSurface is not a manifold"
         angles = ones(self.nedges())
         conn2 = (conn >= 0).sum(axis=-1) == 2
         n = self.areaNormals()[1][conn[conn2]]
@@ -1538,7 +1538,7 @@ def remove_triangles(elems,remove):
 def planeSurface(nx,ny):
     """Create a plane surface consisting of a nx,ny grid."""
     F = Formex(mpattern('12-34')).replic2(nx,ny,1,1)    
-    return Surface(F)
+    return TriSurface(F)
 
 
 def unitSphere(level=4,verbose=False,filename=None):
@@ -1562,7 +1562,7 @@ def unitSphere(level=4,verbose=False,filename=None):
     if sta or verbose:
         GD.message(out)
     GD.message("Reading model from %s" % tmp)
-    S = Surface.read(tmp)
+    S = TriSurface.read(tmp)
     if filename is None:
         os.remove(tmp)
     return S

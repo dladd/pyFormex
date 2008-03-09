@@ -48,7 +48,7 @@ def draw_normals(n):
     F = connect([Formex(C),Formex(D)])
     return draw(F,color='red')
     
-selection = DrawableObjects(clas=Surface)
+selection = DrawableObjects(clas=TriSurface)
 ntoggles = len(selection.annotations)
 def toggleEdgeNumbers():
     selection.toggleAnnotation(0+ntoggles)
@@ -68,7 +68,7 @@ selection.annotations.extend([[draw_edge_numbers,False],
 def read_Surface(fn):
     GD.message("Reading file %s" % fn)
     t = timer.Timer()
-    S = Surface.read(fn)
+    S = TriSurface.read(fn)
     GD.message("Read surface with %d vertices, %d edges, %d triangles in %s seconds" % (S.ncoords(),S.nedges(),S.nelems(),t.seconds()))
     return S
 
@@ -166,9 +166,9 @@ def toFormex(suffix=''):
     
 
 def fromFormex(suffix=''):
-    """Transform the Formex selection to Surfaces.
+    """Transform the Formex selection to TriSurfaces.
 
-    If a suffix is given, the Surfaces are stored with names equal to the
+    If a suffix is given, the TriSurfaces are stored with names equal to the
     Formex names plus the suffix, else, the Formex names will be used
     (and the Formices will thus be cleared from memory).
     """
@@ -184,7 +184,7 @@ def fromFormex(suffix=''):
         names = [ n + suffix for n in names ]
 
     t = timer.Timer()
-    surfaces =  dict([ (n,Surface(F)) for n,F in zip(names,formices) if F.nplex() == 3])
+    surfaces =  dict([ (n,TriSurface(F)) for n,F in zip(names,formices) if F.nplex() == 3])
     print "Converted in %s seconds" % t.seconds()
     print surfaces.keys()
     export(surfaces)
@@ -260,15 +260,15 @@ def showBorder():
 #  - domain to display: True to display on edges, False to display on elements
 
 SelectableStatsValues = {
-    'Facet Area': (Surface.facetArea,False),
-    'Aspect ratio': (Surface.aspectRatio,False),
-    'Smallest altitude': (Surface.smallestAltitude,False),
-    'Longest edge': (Surface.longestEdge,False),
-    'Shortest edge': (Surface.shortestEdge,False),
-    'Number of node adjacent elements': (Surface.nNodeAdjacent,False),
-    'Number of edge adjacent elements': (Surface.nEdgeAdjacent,False),
-    'Edge angle': (Surface.edgeAngles,True),
-    'Number of connected elements': (Surface.nEdgeConnected,True),
+    'Facet Area': (TriSurface.facetArea,False),
+    'Aspect ratio': (TriSurface.aspectRatio,False),
+    'Smallest altitude': (TriSurface.smallestAltitude,False),
+    'Longest edge': (TriSurface.longestEdge,False),
+    'Shortest edge': (TriSurface.shortestEdge,False),
+    'Number of node adjacent elements': (TriSurface.nNodeAdjacent,False),
+    'Number of edge adjacent elements': (TriSurface.nEdgeAdjacent,False),
+    'Edge angle': (TriSurface.edgeAngles,True),
+    'Number of connected elements': (TriSurface.nEdgeConnected,True),
     }
 
 

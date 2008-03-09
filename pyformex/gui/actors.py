@@ -17,7 +17,7 @@ from OpenGL import GL,GLU
 from drawable import *
 from formex import *
 from plugins import elements
-from plugins.surface import Surface
+from plugins.surface import TriSurface
 from plugins.connectivity import reverseIndex
 
 import timer
@@ -534,13 +534,13 @@ class FormexActor(Actor,Formex):
 #############################################################################
 
 
-class SurfaceActor(Actor,Surface):
+class TriSurfaceActor(Actor,TriSurface):
     """Draws a triangulated surface specified by points and connectivity."""
 
     def __init__(self,S,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,alpha=1.0):
         
         Actor.__init__(self)
-        Surface.__init__(self,S.coords,S.edges,S.faces)
+        TriSurface.__init__(self,S.coords,S.edges,S.faces)
         
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)
@@ -550,7 +550,7 @@ class SurfaceActor(Actor,Surface):
         self.list = None
 
     def atype(self):
-        return 'Surface'
+        return 'TriSurface'
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
@@ -567,9 +567,10 @@ class SurfaceActor(Actor,Surface):
         self.trans = self.alpha < 1.0
 
 
-    # override the defaults (unneeded since we commected out the defaults) 
-    #bbox = Surface.bbox
-    #nelems = Surface.nelems
+    # override the defaults
+    # (no longer needed as we removed the defaults from Drawable)
+    #bbox = TriSurface.bbox
+    #nelems = TriSurface.nelems
 
 
     def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):

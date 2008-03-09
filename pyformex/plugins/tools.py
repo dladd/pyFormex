@@ -76,7 +76,7 @@ def reportElements(K):
         s += "Actor %s (type %s); Elements %s\n" % (k,t,v)
         if t == 'Formex':
             e = A
-        elif t == 'Surface':
+        elif t == 'TriSurface':
             e = A.getElems()
         for p in v:
             s += "  Element %s: %s\n" % (p,e[p])
