@@ -80,11 +80,6 @@ def tand(arg):
     """Return the tan of an angle in degrees."""
     return tan(arg*rad)
 
-## def length(arg):
-##     """Return the quadratic norm of a vector with all elements of arg."""
-##     a = asarray(arg).flat
-##     return sqrt(inner(a,a))   # a*a doesn't work here
-
 def dotpr (A,B,axis=-1):
     """Return the dot product of vectors of A and B in the direction of axis.
 
@@ -111,13 +106,6 @@ def normalize(A,axis=-1):
     shape = list(A.shape)
     shape[axis] = 1
     return A / length(A,axis).reshape(shape)
-
-## def normalize(A,axis=-1):
-##     """Normalize the vectors of A in the direction of axis.
-
-##     The default axis is the last.
-##     """
-##     return A / length(A,axis).reshape((-1,1))
 
 def projection(A,B,axis=-1):
     """Return the (signed) length of the projection of vector of A on B.
@@ -214,6 +202,16 @@ def rotationMatrix(angle,axis=None):
               [ t*Z*X + s*Y, t*Z*Y - s*X, t*Z*Z + c   ] ]
         
     return array(f)
+
+
+def bbox(objects):
+    """Compute the bounding box of a list of objects.
+
+    All the objects in list should have
+    This is like the bbox() method of the Coords class, but the resulting
+    box encloses all the Coords in the list.
+    """
+    return Coords(concatenate([ [f.bbox()] for f in objects ])).bbox()
 
 
 ###########################################################################
@@ -450,19 +448,11 @@ class Coords(ndarray):
         the minimum and maximum values for the coordinates along that axis.
         Default is the 0 (or x) direction.
 
-        Else, dir should be compaitble with a (3,) shaped array and specifies
+        Else, dir should be compatible with a (3,) shaped array and specifies
         the direction of the normal on the planes. In this case, min and max
         are points and should also evaluate to (3,) shaped arrays.
-        
-        Nodes specifies which nodes are taken into account in the comparisons.
-        It should be one of the following:
-        - a single (integer) node number (< the number of nodes)
-        - a list of node numbers
-        - one of the special strings: 'all', 'any', 'none'
-        The default ('all') will flag all the elements that have all their
-        nodes between the planes x=min and x=max, i.e. the elements that
-        fall completely between these planes. One of the two clipping planes
-        may be left unspecified.
+
+        One of the two clipping planes may be left unspecified.
         """
         if min is None and max is None:
             raise ValueError,"At least one of min or max have to be specified."
@@ -1086,17 +1076,6 @@ class Coords(ndarray):
     # Convenient shorter notations
     rot = rotate
     trl = translate
-
-
-
-def bbox(objects):
-    """Compute the bounding box of a list of objects.
-
-    All the objects in list should have
-    This is like the bbox() method of the Formex class, but the resulting
-    box encloses all the Formices in the list.
-    """
-    return Coords(concatenate([ [f.bbox()] for f in objects ])).bbox()
 
 
 ##############################################################################

@@ -2,8 +2,14 @@
 % $Id$
 % (C) B.Verhegghe
 
-\section{coords}
+
+\section{\module{coords} --- Structured collections of 3D coordinates}
 \label{sec:coords}
+
+\declaremodule{""}{coords}
+\modulesynopsis{Storing and operating on large structured collections of 3D coordinates.}
+\moduleauthor{'pyFormex project'}{'http://pyformex.berlios.de'}
+
 
 The \module{coords} module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The \class{Coords} class is used by other classes, such as \class{Formex} and \class{Surface}, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the \class{Coords} class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the \class{Coords} class directly as well.
 
@@ -133,127 +139,37 @@ The bounding sphere is the smallest sphere with center in the \function{center()
 \end{methoddesc}
 
 
-    def test(self,dir=0,min=None,max=None):
-        """Flag points having coordinates between min and max.
-
-        This function is very convenient in clipping a Coords in a specified
-        direction. It returns a 1D integer array flagging (with a value 1 or
-        True) the elements having nodal coordinates in the required range.
-        Use where(result) to get a list of element numbers passing the test.
-        Or directly use clip() or cclip() to create the clipped Coords.
-        
-        The test plane can be define in two ways depending on the value of dir.
-        If dir == 0, 1 or 2, it specifies a global axis and min and max are
-        the minimum and maximum values for the coordinates along that axis.
-        Default is the 0 (or x) direction.
-
-        Else, dir should be compaitble with a (3,) shaped array and specifies
-        the direction of the normal on the planes. In this case, min and max
-        are points and should also evaluate to (3,) shaped arrays.
-        
-        Nodes specifies which nodes are taken into account in the comparisons.
-        It should be one of the following:
-        - a single (integer) node number (< the number of nodes)
-        - a list of node numbers
-        - one of the special strings: 'all', 'any', 'none'
-        The default ('all') will flag all the elements that have all their
-        nodes between the planes x=min and x=max, i.e. the elements that
-        fall completely between these planes. One of the two clipping planes
-        may be left unspecified.
-
-
-\begin{methoddesc}{fprint}{fmt="\%10.3e \%10.3e \%10.3e"}
-Prints all the points of the formex with the specified format. The format should hold three formatting codes, for the three coordinates of the point. 
-\end{methoddesc}
-
-
-\begin{methoddesc}{test}{nodes='all',dir=0,min=None,max=None}
-Flag elements having nodal coordinates between min and max.
-
-This function is very convenient in clipping a Formex in one of
-the coordinate directions. It returns a 1D integer array flagging
-(with a value 1 or True) the elements having points with coordinates in the
-specified range.
+\begin{methoddesc}{test}{dir=0,min=None,max=None}
+  Flag points having coordinates between min and max.
+  
+This function is very convenient in clipping a Coords in a specified
+direction. It returns a 1D integer array flagging (with a value 1 or
+True) the elements having nodal coordinates in the required range.
 Use \Code{where(result)} to get a list of element numbers passing the test.
-Or directly use the \Code{clip()} or \Code{cclip()} methods to create the clipped Formex.
-       
+You can also directly use \Code{x[x.test(...)]} to get the clipped Coords.
+  
 The test plane can be defined in two ways, depending on the value of dir.
 If \var{dir} is a single integer (0, 1 or 2), it specifies a global axis
 and \var{min} and \var{max} are the minimum and maximum values for the
 coordinates along that axis.
 Default is the 0 (or x) direction.
+
 Else, \var{dir} should be compatible with a (3,) shaped array and specifies
 the direction of the normal on the planes. In this case, \var{min} and \var{max}
 are points and should also evaluate to (3,) shaped arrays.
 
-xmin,xmax are there minimum and maximum values required for the
-coordinates in direction dir (default is the x or 0 direction).
-
-\var{nodes} specifies which points are taken into account in the comparisons.
-It should be one of the following:
-\begin{itemize}
-\item a single (integer) node number (< the number of points in an element)
-\item a list of point numbers
-\item one of the special strings: 'all', 'any', 'none'
-\end{itemize}
-The default ('all') will flag all the elements that have all their
-points between the planes x=min and x=max, i.e. the elements that
-fall completely between these planes. One of the two clipping planes
-may be left unspecified.
+One of the two clipping planes may be left unspecified.
 \end{methoddesc}
 
 
-\subsection{Clipping methods}
-These methods can be use to make a selection of elements based on their nodal coordinates. The heart is the function
-
-If you want to have a list of the element numbers that satisfy the specified conditions, you can use numpy's where function on the result. Thus \Code{where(F.where(min=1.0))} returns a list with all elements lying right of the plane \Code{x=1.0}.
-
-\begin{methoddesc}{clip}{t}
-Returns a Formex with all the elements where t>0.
-
-t should be a 1-D integer array with length equal to the number
-of elements of the formex.
-The resulting Formex will contain all elements where t > 0.
-This is a convenience function for the user, equivalent to
-\Code{F.select(t>0)}.
+\begin{methoddesc}{fprint}{fmt="\%10.3e \%10.3e \%10.3e"}
+Prints all the points of the formex with the specified format. The format should hold three formatting codes, for the three coordinates of the point. 
 \end{methoddesc}
-
-\begin{methoddesc}{cclip}{t}
-This is the complement of clip, returning a Formex where t<=0.
-\end{methoddesc}
-
-    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
-        """Find (almost) identical nodes and return a compressed set.
-
-        This method finds the points that are very close and replaces them
-        with a single point. The return value is a tuple of two arrays:
-        - the unique points as a Coords object,
-        - an integer (nnod) array holding an index in the unique
-        coordinates array for each of the original nodes. This index will
-        have the same shape as the pshape() of the coords array.
-
-        The procedure works by first dividing the 3D space in a number of
-        equally sized boxes, with a mean population of nodesperbox.
-        The boxes are numbered in the 3 directions and a unique integer scalar
-        is computed, that is then used to sort the nodes.
-        Then only nodes inside the same box are compared on almost equal
-        coordinates, using the numpy allclose() function. Two coordinates are
-        considered close if they are within a relative tolerance rtol or absolute
-        tolerance atol. See numpy for detail. The default atol is set larger than
-        in numpy, because pyformex typically runs with single precision.
-        Close nodes are replaced by a single one.
-
-        Currently the procedure does not guarantee to find all close nodes:
-        two close nodes might be in adjacent boxes. The performance hit for
-        testing adjacent boxes is rather high, and the probability of separating
-        two close nodes with the computed box limits is very small. Nevertheless
-        we intend to access this problem by repeating the procedure with the
-        boxes shifted in space.
  
 
 \subsection{Coordinate transformations}
 
-The following coordinate transorming methods are defined in the Coords class.
+The following coordinate transforming methods are defined in the Coords class.
 They implement the functionality of the \class{Formex} methods with the same name. We refer the reader to section~\ref{sec:formex} for a detailed description of these methods. 
 \begin{methoddesc}{scale}{scale}
 \end{methoddesc}
@@ -320,10 +236,42 @@ They implement the functionality of the \class{Formex} methods with the same nam
 \end{methoddesc}
 
 
-\subsection{Class methods}
 
-The following class methods are defined for the \class{Coords} class.
-These should be called as \Code{Coords.method()}.
+\subsection{Other methods}
+
+
+\begin{methoddesc}{fuse}{nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5)}
+Find (almost) identical nodes and return a compressed set.
+
+This method finds the points that are very close and replaces them
+with a single point. The return value is a tuple of two arrays:
+- the unique points as a Coords object,
+- an integer (nnod) array holding an index in the unique
+coordinates array for each of the original nodes. This index will
+have the same shape as the pshape() of the coords array.
+
+The procedure works by first dividing the 3D space in a number of
+equally sized boxes, with a mean population of nodesperbox.
+The boxes are numbered in the 3 directions and a unique integer scalar
+is computed, that is then used to sort the nodes.
+Then only nodes inside the same box are compared on almost equal
+coordinates, using the numpy allclose() function. Two coordinates are
+considered close if they are within a relative tolerance rtol or absolute
+tolerance atol. See numpy for detail. The default atol is set larger than
+in numpy, because pyformex typically runs with single precision.
+Close nodes are replaced by a single one.
+
+Currently the procedure does not guarantee to find all close nodes:
+two close nodes might be in adjacent boxes. The performance hit for
+testing adjacent boxes is rather high, and the probability of separating
+two close nodes with the computed box limits is very small. Nevertheless
+we intend to access this problem by repeating the procedure with the
+boxes shifted in space.
+\end{methoddesc}
+
+
+The following methods are class methods for the \class{Coords} class.
+They should be called as \Code{Coords.method()}.
 
 \begin{methoddesc}{concatenate}{L}
 Concatenate a list of Coords object.
@@ -352,35 +300,6 @@ Read a Coords from file.
 \begin{methoddesc}{interpolate}{F,G,div}
 Create interpolations between two Coords.
 
-        F and G are two Coords with the same shape.
-        v is a list of floating point values.
-        The result is the concatenation of the interpolations of F and G at all
-        the values in div.
-        An interpolation of F and G at value v is a Coords H where each
-        coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
-        Thus, a Coords interpolate(F,G,[0.,0.5,1.0]) will contain all points of
-        F and G and all points with mean coordinates between those of F and G.
-
-        As a convenience, if an integer is specified for div, it is taken as a
-        number of divisions for the interval [0..1].
-        Thus, interpolate(F,G,n) is equivalent with
-        interpolate(F,G,arange(0,n+1)/float(n))
-
-        The resulting Coords array has an extra axis (the first). Its shape is
-        (n,) + F.shape, where n is the number of divisions.
-
-\classmethod
-\end{methoddesc}
-
-
-
-\subsection{Non-member functions}
-The following functions operate on or return Formex objects, but are not part of the Formex class.\footnote{They might be implemented as class methods in future releases.}
-
-
-\begin{funcdesc}{interpolate}{F,G,div,swap=False}
-Create interpolations between two formices.
-
 \var{F} and \var{G} are two Formices with the same shape.
 \var{v} is a list of floating point values.
 The result is the concatenation of the interpolations of \var{F} and \var{G} at all the values in \var{div}.
@@ -391,15 +310,90 @@ of \var{F} and \var{G} and all elements with mean coordinates between those of \
 
 As a convenience, if an integer is specified for \var{div}, it is taken as a
 number of division for the interval [0..1].
-Thus, \Code{interpolate(F,G,n)} is equivalent with
-\Code{interpolate(F,G,arange(0,n+1)/float(n))}
+Thus, \Code{Coords.interpolate(F,G,n)} is equivalent with
+\Code{Coords.interpolate(F,G,arange(0,n+1)/float(n))}
 
-The swap argument sets the order of the elements in the resulting Formex.
-By default, if $n$ interpolations are created of an $m$-element Formex, the element order is in-Formex first ($n$ sequences of $m$ elements).
-If \Code{swap==True}, the order is swapped and you get $m$ sequences of $n$
-interpolations.
+The resulting \class{Coords} array has an extra axis (the first). Its shape is
+\Code{(n,) + F.shape}, where \Code{n} is the number of divisions.
+
+\classmethod
+\end{methoddesc}
+
+
+
+\subsection{Other definitions in module \module{coords}}
+The following variables and functions are defined in the file coords.py, 
+but are not part of the \class{Coords} class. They are defined here either
+because they are used in this module, or just to make them available to all
+your scripts.
+
+\begin{datadesc}{rad}
+\Code{rad = pi/180}. This convenient definition provides easy conversion of angles from degrees to radians (\Code{*rad}) and back (\Code{/rad}).
+\end{datadesc}
+
+\begin{funcdesc}{sind}{arg}
+    Return the sin of an angle in degrees.
 \end{funcdesc}
 
+\begin{funcdesc}{cosd}{arg}
+    Return the cos of an angle in degrees.
+\end{funcdesc}
+
+\begin{funcdesc}{tand}{arg}
+    Return the tan of an angle in degrees.
+\end{funcdesc}
+
+\begin{funcdesc}{length}{arg}
+    Return the quadratic norm of a vector with all elements of arg.
+\end{funcdesc}
+
+\begin{funcdesc}{inside}{p,mi,ma}
+    Return true if point p is inside bbox defined by points mi and ma
+\end{funcdesc}
+
+\begin{funcdesc}{isClose}{values,target,rtol=1.e-5,atol=1.e-8}
+Return an array flagging the elements in values that are close to target.
+
+\var{values} is a float array, \var{target} is a float value.
+\var{values} and \var{target} should be broadcastable to the same shape.
+    
+The return value is a boolean array with shape of \var{values} flagging
+the values that are close to target.
+Two values \var{a} and \var{b}  are considered close if 
+\Code{abs(a-b) < atol + rtol * abs(b)}
+\end{funcdesc}
+
+
+\begin{funcdesc}{unitVector}{axis}
+Return a unit vector in the direction of a global axis (0,1,2).
+
+Use normalize() to get a unit vector in a general direction.
+\end{funcdesc}
+
+
+\begin{funcdesc}{rotationMatrix}{angle,axis=None}
+Return a rotation matrix over angle, optionally around axis.
+
+The angle is specified in degrees.
+If axis==None (default), a 2x2 rotation matrix is returned.
+Else, axis should specifying the rotation axis in a 3D world. It is either
+one of 0,1,2, specifying a global axis, or a vector with 3 components
+specifying an axis through the origin.
+In either case a 3x3 rotation matrix is returned.
+Note that:
+rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
+rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
+rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
+but the latter functions calls are more efficient.
+The result is returned as an array.
+\end{funcdesc}
+
+   
+\begin{funcdesc}{bbox}{objects}
+Computes the overall bounding box of a list of objects.
+
+The result has the same format as the \class{Coords} class \Code{bbox()} method, but the resulting box encloses all the objects in the list. All objects in the list should have the \var{bbox} method.
+\end{funcdesc}
 
 
 %%% Local Variables: 
