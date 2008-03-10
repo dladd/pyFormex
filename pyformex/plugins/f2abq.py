@@ -23,7 +23,6 @@ from properties import *
 from mydict import *
 import globaldata as GD
 import datetime
-import math
 from numpy import *
 
 
@@ -202,7 +201,7 @@ def writeSection(fil, nr):
         elif el.sectiontype.upper() == 'CIRC':
             fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s
-""" %(Eset(nr),el.material.name, float(el.radius)**2*math.pi))
+""" %(Eset(nr),el.material.name, float(el.radius)**2*pi))
 
     ############
     ##BEAM elements
@@ -328,21 +327,15 @@ def writeCloads(fil, cloadset='ALL', opcl='NEW'):
     cloadset is a list of property numbers of which the cloads should be written.
     The user can set opcl='NEW' to remove the previous cloads, or set opcl='MOD' to modify them.
     """
+    if cloadset == 'ALL':
+        cloadset = nodeproperties.keys()
+        
     fil.write("*CLOAD, OP=%s\n" % opcl)
-    if isinstance(cloadset, list):
-        for i in cloadset:
-            if nodeproperties[i].cload!=None:
-                for cl in range(6):
-                    if nodeproperties[i].cload[cl]!=0:
-                        fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
-    elif cloadset.upper()=='ALL':
-        for i in nodeproperties.iterkeys():
-            if nodeproperties[i].cload!=None:
-                for cl in range(6):
-                    if nodeproperties[i].cload[cl]!=0:
-                        fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
-    else:
-        warning("The loads have to be defined in a list 'cloadset'")
+    for i in cloadset:
+        if nodeproperties[i].cload!=None:
+            for cl in range(6):
+                if nodeproperties[i].cload[cl]!=0:
+                    fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
 
 
 def writeDloads(fil, dloadset='ALL', opdl='NEW'):
