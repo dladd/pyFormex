@@ -16,8 +16,8 @@
 from plugins import calpy_itf
 calpy_itf.check()
 
-from fe_util import *
-from truss3d import *
+from calpy.fe_util import *
+from calpy.truss3d import *
 
 ############################
 import time
@@ -90,12 +90,6 @@ nodeprops[topcorner]=3
 
 from plugins.properties import *
 
-## NP = CascadingDict()
-## setNodePropDB(NP)
-
-
-
-
 Q = 0.5*q*dx*dx
 support = NodeProperty(0, bound = 'pinned')
 edge = NodeProperty(3,cload = [0,0,Q/2,0,0,0])
@@ -124,8 +118,6 @@ props = model.prop()
 propset = model.propSet()
 nelems = elems.shape[0]
 
-#if nelems > 100:
-#    calpy.options.optimize=True
 
 # boundary conditions
 bcon = zeros([nnod,3],dtype=int)
@@ -265,7 +257,6 @@ if GD.options.gui:
     #print optimscale
     deformed_plot(optimscale)
     view('__last__',True)
-    exit()
 
     # Show animated deformation
     scale = optimscale

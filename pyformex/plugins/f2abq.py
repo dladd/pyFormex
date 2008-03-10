@@ -261,7 +261,7 @@ def transform(fil, propnr):
     elif n.coords.lower()=='cylindrical':
         fil.write("""*TRANSFORM, NSET=%s, TYPE=C
 %s,%s,%s,%s,%s,%s
-"""%(Nset(propnr),propnr,n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
+"""%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     else:
         warning('%s is not a valid coordinate system'%nodeproperties[propnr].coords)
 

@@ -32,6 +32,7 @@ def detect(trypaths=None):
     global calpy_path
     
     calpy = utils.hasExternal('calpy')
+    print "AAAA",calpy
     if not calpy:
         return
     
@@ -41,7 +42,7 @@ def detect(trypaths=None):
     if utils.checkVersion('calpy','0.3.4-rev3',external=True) >= 0:
         sta,out = utils.runCommand('calpy --whereami')
         if not sta:
-            path = os.path.dirname(out)
+            path = out
             GD.debug("I found calpy in %s" % path)
     if not path:
         if trypaths is None:
@@ -67,6 +68,8 @@ def check(trypaths=None):
     if calpy_path is None:
         detect(trypaths)
 
+    import calpy
+    
     if not utils.hasModule('calpy',check=True):
         GD.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)
         exit()
@@ -75,7 +78,7 @@ def check(trypaths=None):
 if __name__ == "__main__":
     print __doc__
 else:
-    GD.debug("Loading plugin %s" % __name__)
+    GD.debug("Loading plugin %s" % __file__)
     check()
 
 
