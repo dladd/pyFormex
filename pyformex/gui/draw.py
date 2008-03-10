@@ -1128,16 +1128,16 @@ def pick(mode='actor',single=False,front=False,func=None):
     return sel
     
 def pickActors(single=False,func=None):
-    return pick('actor',single,func)
+    return pick('actor',single,False,func)
 
-def pickElements(single=False,func=None):
-    return pick('element',single,func)
+def pickElements(single=False,front=False,func=None):
+    return pick('element',single,front,func)
 
 def pickPoints(single=False,func=None):
-    return pick('point',single,func)
+    return pick('point',single,False,func)
 
 def pickEdges(single=False,func=None):
-    return pick('edge',single,func)
+    return pick('edge',single,False,func)
 
 
 def highlight(K,mode,colormap=highlight_colormap):
