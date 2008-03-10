@@ -1006,7 +1006,7 @@ def highlightActors(K,colormap=highlight_colormap):
     colormap is a list of two colors, for the actors not in, resp. in
     the Collection K.
     """
-    for i,A in enumerate(GD.canvas.actors):
+    for i,A in enumerate(copy.copy(GD.canvas.actors)):
         if i in K.get(-1,[]):
             color = colormap[1]
         else:
@@ -1030,7 +1030,7 @@ def highlightElements(K,colormap=highlight_colormap):
     colormap is a list of two colors, for the elements not in, resp. in
     the Collection K.
     """
-    for i,A in enumerate(GD.canvas.actors):
+    for i,A in enumerate(copy.copy(GD.canvas.actors)):
         p = numpy.zeros((A.nelems(),),dtype=int)
         if i in K.keys():
             GD.debug("Actor %s: Selection %s" % (i,K[i]))
@@ -1050,7 +1050,7 @@ def highlightEdges(K,colormap=highlight_colormap):
     colormap is a list of two colors, for the edges not in, resp. in
     the Collection K.
     """
-    for i,A in enumerate(GD.canvas.actors):
+    for i,A in enumerate(copy.copy(GD.canvas.actors)):
         if i in K.keys() and isinstance(A,surface.TriSurface):
             GD.debug("Actor %s: Selection %s" % (i,K[i]))
             F = Formex(A.coords[A.edges[K[i]]])
@@ -1073,7 +1073,7 @@ def highlightPoints(K,colormap=highlight_colormap):
         unannotate(highlight_pts)
         highlight_pts = None
     pts = []
-    for i,A in enumerate(GD.canvas.actors):
+    for i,A in enumerate(copy.copy(GD.canvas.actors)):
         if i in K.keys():
             pts.append(A.vertices()[K[i]])
     if pts:
@@ -1090,7 +1090,7 @@ def highlightPartitions(K):
     connected to a collection of property numbers, as returned by the
     partitionCollection() method.
     """
-    for i,A in enumerate(GD.canvas.actors):
+    for i,A in enumerate(copy.copy(GD.canvas.actors)):
         p = numpy.zeros((A.nelems(),),dtype=int)
         if i in K.keys():
             GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
@@ -1111,7 +1111,7 @@ highlight_funcs = { 'actor': highlightActors,
                     }
 
 
-def pick(mode='actor',single=False,func=None):
+def pick(mode='actor',single=False,front=False,func=None):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
@@ -1123,7 +1123,7 @@ def pick(mode='actor',single=False,func=None):
     GD.gui.statusbar.addWidget(selection_buttons)
     if func is None:
         func = highlight_funcs.get(mode,None)
-    sel = GD.canvas.pick(mode,single,func) 
+    sel = GD.canvas.pick(mode,single,front,func) 
     GD.gui.statusbar.removeWidget(selection_buttons)
     return sel
     

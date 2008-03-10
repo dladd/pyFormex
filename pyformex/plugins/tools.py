@@ -19,7 +19,7 @@ class Plane(object):
         if P.shape != (3,) or n.shape != (3,):
             raise ValueError,"point or normal does not have correct shape"
 
-        self.P = P 
+        self.P = P
         self.n = n
         self.s = s
 
@@ -53,6 +53,8 @@ def report(K):
             return reportPoints(K)
         elif K.obj_type == 'edge':
             return reportEdges(K)
+        elif K.obj_type == 'partition':
+            return reportPartitions(K)
     return ''
 
 
@@ -106,6 +108,24 @@ def reportEdges(K):
             s += "  Edge %s: %s\n" % (p,e[p]) 
 
 
+def reportPartitions(K):
+    s = "Partition report\n"
+    for k in K.keys():
+        P = K[k][0]
+        A = GD.canvas.actors[k]
+        t = A.atype()
+        for l in P.keys():
+            v = P[l]
+            s += "Actor %s (type %s); Partition %s; Elements %s\n" % (k,t,l,v)
+            if t == 'Formex':
+                e = A
+            elif t == 'Surface':
+                e = A.getElems()
+            for p in v:
+                s += "  Element %s: %s\n" % (p,e[p])
+    return s
+
+
 def reportDistances(K):
     if K is None or not hasattr(K,'obj_type') or K.obj_type != 'point':
         return ''
@@ -123,7 +143,7 @@ def getObjectItems(obj,items,mode):
     """Get the specified items from object."""
     if mode == 'actor':
         return [ obj[i] for i in items ]
-    elif mode == 'element':
+    elif mode in ['element','partition']:
         if hasattr(obj,'select'):
             return obj.select(items)
     elif mode == 'point':
@@ -138,6 +158,8 @@ def getCollection(K):
         return [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
     elif K.obj_type in ['element','point']:
         return [ getObjectItems(GD.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
+    elif K.obj_type == 'partition':
+        return [[getObjectItems(GD.canvas.actors[k],K[k][0][prop],K.obj_type) for prop in K[k][0].keys()] for k in K.keys()]
     else:
         return None
 
@@ -199,9 +221,7 @@ def partitionCollection(K):
         actor_numbers = K.get(-1,[])
         K.clear()
         for i in actor_numbers:
-            actor_number = i * ones((sel[i].nelems(),),dtype=int)
-            elem_number = range(sel[i].nelems())
-            K.add(transpose(asarray([actor_number,elem_number])))
+            K.add(range(sel[i].nelems()),i)
     prop = 1
     j = 0
     for i in K.keys():
@@ -216,11 +236,11 @@ def partitionCollection(K):
 
 
 def getPartition(K,prop):
-    res = []
+    """ Remove all partitions with property not in prop."""
     for k in K.keys():
-        if prop in K[k][0].keys():
-            res.append(getObjectItems(GD.canvas.actors[k],K[k][0][prop],K.obj_type))
-    return res
+        for p in K[k][0].keys():
+            if not p in prop:
+                K[k][0].remove(K[k][0][p],p)
 
 
 def exportObjects(obj,name,single=False):

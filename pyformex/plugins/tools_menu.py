@@ -321,11 +321,19 @@ def partition_selection():
     
 
 def get_partition():
-    res = askItems([['property',1]],
+    """Select some partitions from the current selection and show the result."""
+    if selection is None:
+        warning("You need to pick something first.")
+        return
+    if not selection.obj_type in ['partition']:
+        warning("You need to partition the selection first.")
+        return
+    res = askItems([['property',[1]]],
                  caption='Partition property')
-    prop = res['property']
-    sel = getPartition(selection,prop)
-    print sel
+    if res:
+        prop = res['property']
+        getPartition(selection,prop)
+        highlightPartitions(selection)
     
 
 def export_selection():

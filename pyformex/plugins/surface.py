@@ -491,12 +491,11 @@ class TriSurface(object):
     def select(self,idx,compress=True):
         """Return a TriSurface which holds only elements with numbers in ids.
 
-        self.coords is not changed
         idx can be a single element number or a list of numbers or
         any other index mechanism accepted by numpy's ndarray
         By default, the vertex list will be compressed to hold only those
         used in the selected elements.
-        Setting compress==True will keep all original nodes in the surface.
+        Setting compress==False will keep all original nodes in the surface.
         """
         self.refresh()
         S = TriSurface(self.coords, self.elems[idx])
@@ -646,7 +645,7 @@ class TriSurface(object):
                 T2 = f.distanceFromPlane(max,dir) < 0
 
         if min is None:
-            T = T2self
+            T = T2
         elif max is None:
             T = T1
         else:
@@ -656,7 +655,7 @@ class TriSurface(object):
         if nodes == 'any':
             T = T.any(1)
         elif nodes == 'none':
-            T = (1-T.all(1)).astype(bool)
+            T = (1-T.any(1)).astype(bool)
         else:
             T = T.all(1)
         return T

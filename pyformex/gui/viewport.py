@@ -31,6 +31,7 @@ import toolbar
 import math
 
 from coords import Coords
+from numpy import asarray,where
 
 # Some 2D vector operations
 # We could do this with the general functions of coords.py,
@@ -200,6 +201,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.connect(self,DONE,self.accept_selection)
             self.connect(self,CANCEL,self.cancel_selection)
             self.selection_mode = mode
+            self.front_selection = None
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
 
     def wait_selection(self):
@@ -238,8 +240,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Cancel an interactive picking mode and clear the selection."""
         self.accept_selection(clear=True)
 
-
-    def pick(self,mode='actor',single=False,func=None):
+    
+    def pick(self,mode='actor',single=False,front=False,func=None):
         """Interactively pick objects from the viewport.
 
         - mode: defines what to pick : one of
@@ -248,6 +250,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         a picking operation. The default is to let the user
         modify his selection and only to return after an explicit
         cancel (ESC or right mouse button).
+        - front: if True, in 'element' mode, only elements connected to the front
+        element are returned. Currently this will only work for TriSurfaceActors.
         - func: if specified, this function will be called after each
         atomic pick operation. The Collection with the currently selected
         objects is passed as an argument.
@@ -268,10 +272,22 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 self.pick_func[self.selection_mode]()
                 if self.mod == NONE:
                     self.selection.set(self.picked)
+                    if front and self.front_picked is not None:
+                        self.front_selection = self.front_picked
                 elif self.mod == SHIFT:
                     self.selection.add(self.picked)
                 elif self.mod == CTRL:
                     self.selection.remove(self.picked)
+            if front and self.front_selection is not None:
+                front_actor = self.front_selection[0]
+                front_elem = self.front_selection[1]
+                if self.selection.has_key(front_actor): # due to CTRL button all elements of front_actor could be removed
+                    front_actor_elems = self.selection[front_actor]
+                    A = self.actors[front_actor].select(front_actor_elems)
+                    p = A.partitionByConnection()
+                    prop = p[front_actor_elems == front_elem]
+                    front_elems = front_actor_elems[p==prop]
+                    self.selection.set(front_elems,front_actor)
             #GD.debug("Selection: %s" % self.selection)
             if func:
                 func(self.selection)
@@ -500,8 +516,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2] for r in buf ]
+        if len(self.picked) != 0 and obj_type == 'element':
+            dmin = asarray([ r[0] for r in buf ])
+            w = where(dmin == dmin.min())[0][0]
+            self.front_picked = self.picked[w]
+        else:
+            self.front_picked = None
 
-        
+
     def pick_elements(self):
         """Set the list of actor elements inside the pick_window."""
         npickable = 0

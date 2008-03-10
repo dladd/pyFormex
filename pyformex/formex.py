@@ -380,7 +380,7 @@ def cut3AtPlane(F,p,n,newprops=None):
     S = F.cclip(c) # select elements that will be cut by plane
     C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])    
     T = (t >= 0.)*(t <= 1.)
     P = P[T].reshape(-1,2,3)
     # split problem in two cases
@@ -411,7 +411,6 @@ def cut3AtPlane(F,p,n,newprops=None):
         if newprops is None:
             newprops = range(3)
         return Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])+G
-        
 
 
 ###########################################################################
@@ -1165,7 +1164,7 @@ class Formex:
         if nodes == 'any':
             T = T.any(1)
         elif nodes == 'none':
-            T = (1-T.all(1)).astype(bool)
+            T = (1-T.any(1)).astype(bool)
         else:
             T = T.all(1)
         return T
