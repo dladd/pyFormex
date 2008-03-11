@@ -480,6 +480,8 @@ def runApp(args):
         splash.show()
         
     # create GUI, show it, run it
+    viewport.setOpenGLFormat()
+    dri = viewport.opengl_format.directRendering()
     windowname = GD.Version
     count = 0
     while windowExists(windowname):
@@ -490,7 +492,7 @@ def runApp(args):
         windowname = '%s (%s)' % (GD.Version,count)
 
     if count > 0:
-        if draw.ask("""
+        warning = """
 Another instance of pyFormex is already running
 on this screen. This may be a leftover from a
 previously crashed program. In that case you should
@@ -498,7 +500,19 @@ bail out now and first kill the crashed program.
 
 On the other hand, if you really want to run another
 pyFormex in parallel, you can just continue now.
-""",['Really Continue','Bail out and fix the problem']) != 'Really Continue':
+"""
+        actions = ['Really Continue','Bail out and fix the problem']
+        if dri:
+            answer = draw.ask(warning,actions)
+        if not dri:
+            warning += """
+I have detected that the Direct Rendering Infrastructure
+is not activated on your system. Continuing with a second
+instance of pyFormex may crash you XWindow system.
+You should seriously consider to bail out now!!!
+"""
+            answer = draw.warning(warning,actions)
+        if answer != 'Really Continue':
             return 1
 
     GD.gui = GUI(windowname,

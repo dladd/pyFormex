@@ -84,6 +84,8 @@ def modifierName(mod):
 
 ############### OpenGL Format #################################
 
+opengl_format = None
+
 def setOpenGLFormat():
     """Set the correct OpenGL format.
 
@@ -92,13 +94,15 @@ def setOpenGLFormat():
     --nodri : do no use the DRI
     --alpha : enable the alpha buffer 
     """
+    global opengl_format
     fmt = QtOpenGL.QGLFormat.defaultFormat()
     fmt.setDirectRendering(GD.options.dri)
     if GD.options.alpha:
         fmt.setAlpha(True)
-    if GD.options.debug:
-        printOpenGLFormat(fmt)
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
+    opengl_format = fmt
+    if GD.options.debug:
+        print OpenGLFormat()
     return fmt
 
 def getOpenGLContext():
@@ -107,22 +111,39 @@ def getOpenGLContext():
         printOpenGLContext(ctxt)
     return ctxt
 
-def printOpenGLFormat(fmt):
-    """Print some information about the OpenGL format."""
-    print "OpenGL: ",fmt.hasOpenGL()
-    print "OpenGL Version: %s" % str(fmt.openGLVersionFlags()) 
-    print "OpenGLOverlays: ",fmt.hasOpenGLOverlays()
-    print "Double Buffer: ",fmt.doubleBuffer()
-    print "Depth Buffer: ",fmt.depth()
-    print "RGBA: ",fmt.rgba()
-    print "Alpha Channel: ",fmt.alpha()
-    print "Accumulation Buffer: ",fmt.accum()
-    print "Stencil Buffer: ",fmt.stencil()
-    print "Stereo: ",fmt.stereo()
-    print "Direct Rendering: ",fmt.directRendering()
-    print "Overlay: ",fmt.hasOverlay()
-    print "Plane: ",fmt.plane()
-    print "Multisample Buffers: ",fmt.sampleBuffers()
+def OpenGLFormat(fmt=None):
+    """Some information about the OpenGL format."""
+    if fmt is None:
+        fmt = opengl_format
+    s = """
+OpenGL: %s
+OpenGL Version: %s
+OpenGLOverlays: %s
+Double Buffer: %s
+Depth Buffer: %s
+RGBA: %s
+Alpha Channel: %s
+Accumulation Buffer: %s
+Stencil Buffer: %s
+Stereo: %s
+Direct Rendering: %s
+Overlay: %s
+Plane: %s
+Multisample Buffers: %s
+""" % (fmt.hasOpenGL(),
+       str(fmt.openGLVersionFlags()),
+       fmt.hasOpenGLOverlays(),
+       fmt.doubleBuffer(),fmt.depth(),
+       fmt.rgba(),fmt.alpha(),
+       fmt.accum(),
+       fmt.stencil(),
+       fmt.stereo(),
+       fmt.directRendering(),
+       fmt.hasOverlay(),
+       fmt.plane(),
+       fmt.sampleBuffers()
+       )
+    return s
 
 
 def printOpenGLContext(ctxt):
@@ -624,12 +645,6 @@ class MultiCanvas(QtGui.QGridLayout):
         self.ncols = 2
         self.rowwise = True
         self.parent = parent
-        # With QtOPenGL, the context should refer to the QGLWidget,
-        # therefore we can not use one single context
-        #self.context = context
-	OGLfmt = setOpenGLFormat()
-	#OGLctxt = getOpenGLContext()
-	#print OGLctxt
 
         
     def setDefaults(self,dict):

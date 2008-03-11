@@ -6,11 +6,11 @@ PDF= pyformex-user-meeting-*.pdf
 RSYNC= rsync -av -e ssh
 ACCOUNT= bverheg@shell.berlios.de
 
-minutes: pyformex-user-meeting-0.tex
-	pdflatex pyformex-user-meeting-0.tex
+minutes: pyformex-user-meeting-1.tex
+	pdflatex pyformex-user-meeting-1.tex
 
-pyformex-user-meeting-0.tex: pyformex-user-meeting-0.rst
-	rst2latex pyformex-user-meeting-0.rst > pyformex-user-meeting-0.tex
+pyformex-user-meeting-1.tex: pyformex-user-meeting-1.rst
+	rst2latex pyformex-user-meeting-1.rst > pyformex-user-meeting-1.tex
 
 
 # Transfers the files to BerliOs
