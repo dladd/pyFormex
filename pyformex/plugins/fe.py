@@ -13,6 +13,7 @@
 
 """
 
+from coords import *
 import numpy
 
 def mergeNodes(nodes):
@@ -23,12 +24,11 @@ def mergeNodes(nodes):
      - the coordinates of all unique nodes,
      - a list of indices translating the old node numbers to the new.
     """
-    coords = numpy.concatenate([x for x in nodes],axis=0)
+    coords = Coords(numpy.concatenate([x for x in nodes],axis=0))
     coords,index = coords.fuse()
-    n = numpy.array([0] + [ x.npoints for x in nodes ])
-    print n
-    print n.cumsum()
-    return coords,index
+    n = numpy.array([0] + [ x.npoints() for x in nodes ]).cumsum()
+    ind = [ index[f:t+1] for f,t in zip(n[:-1],n[1:]) ]
+    return coords,ind
 
 
 def mergeModels(femodels):
@@ -41,9 +41,13 @@ def mergeModels(femodels):
      - a list of elems corresponding to the input list,
        but with numbers referring to the new coordinates.
     """
-    coords = numpy.concatenate([x for x,e in femodels],axis=0)
+    nodes = [ x for x,e in femodels ]
+    coords = Coords(numpy.concatenate(nodes,axis=0))
     coords,index = coords.fuse()
-    return coords,index,[index[e] for x,e in femodels]
+    n = numpy.array([0] + [ x.npoints() for x in nodes ]).cumsum()
+    ind = [ index[f:t+1] for f,t in zip(n[:-1],n[1:]) ]
+    elems = [ e for x,e in femodels ]
+    return coords,[i[e] for i,e in zip(ind,elems)]
               
 
 

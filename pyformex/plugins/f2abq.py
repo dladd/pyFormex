@@ -332,9 +332,9 @@ def writeCloads(fil, cloadset='ALL', opcl='NEW'):
         
     fil.write("*CLOAD, OP=%s\n" % opcl)
     for i in cloadset:
-        if nodeproperties[i].cload!=None:
+        if nodeproperties[i].cload != None:
             for cl in range(6):
-                if nodeproperties[i].cload[cl]!=0:
+                if nodeproperties[i].cload[cl] != 0:
                     fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
 
 
