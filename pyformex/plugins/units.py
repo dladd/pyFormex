@@ -1,4 +1,4 @@
-# units.py
+# $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
 ## pyFormex is a Python implementation of Formex algebra
@@ -20,8 +20,10 @@ implementation based on unum. If you GPL it and send it to me, I might
 include it in this distribution.
 """
 
-import commands,string
+#from pyformex import utils
+#utils.hasExternal('units')
 
+import commands,string
     
 def convertUnits(From,To):
     """Converts between conformable units.
@@ -32,7 +34,7 @@ def convertUnits(From,To):
     convertUnits('3.45 kg','g') will return '3450'.
     This function is merely a wrapper around the GNU 'units' command, which
     should be installed for this function to work.
-    """ 
+    """
     status,output = commands.getstatusoutput('units \"%s\" \"%s\"' % (From,To))
     if status:
         raise RuntimeError, 'Could not convert units from \"%s\" to \"%s\"' % (From,To) 
@@ -145,6 +147,12 @@ class UnitsSystem:
             
 
 if __name__ == '__main__':
-    pass
+
+    test = (('21cm','in'),
+            ('31e6mg','kg'),
+            ('1 lightyear','km'),
+            )
+    for f,t in test:
+        print "%s = %s %s" % (f,convertUnits(f,t),t) 
 
 ### End

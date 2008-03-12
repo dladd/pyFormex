@@ -106,11 +106,12 @@ known_externals = {
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
     'calpy': ('calpy --version','Calpy (\S+)'), 
-    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'), 
+    'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
+    'units': ('units --version','GNU Units version (\S+)'),
     }
 
 
-def checkExternal(name,command=None,answer=None):
+def checkExternal(name=None,command=None,answer=None):
     """Check if the named external command is available on the system.
 
     name is the generic command name,
@@ -127,7 +128,13 @@ def checkExternal(name,command=None,answer=None):
 
     As a convenience, we provide a list of predeclared external commands,
     that can be checked by their name alone.
+    If no name is given, all commands in that list are checked, and no
+    value is returned.
     """
+    if name is None:
+        [ checkExternal(n) for n in known_externals.keys() ]
+        return
+    
     if command is None or answer is None:
         cmd,ans = known_externals.get(name,(name,'(.+)\n'))
         if command is None:
@@ -144,7 +151,7 @@ def checkExternal(name,command=None,answer=None):
     GD.external[name] = version
     return version
 
-    
+
 def hasExternal(name):
     """Test if we have the external command 'name' available.
 

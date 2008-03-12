@@ -582,11 +582,15 @@ def draw(F, view=None,bbox='auto',
         F = _shrink(F,shrink)
     try:
         if isinstance(F,formex.Formex):
+            if F.nelems() == 0:
+                return None
             if color1 is not None:
                 #GD.debug("DRAWING WITH COLOR1\n%s" % str(color1))
                 canvas.glSmooth()
             actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
         elif isinstance(F,surface.TriSurface):
+            if F.nelems() == 0:
+                return None
             actor = actors.TriSurfaceActor(F,color=color,colormap=colormap,linewidth=linewidth,alpha=alpha)
         elif isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())

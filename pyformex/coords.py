@@ -154,12 +154,16 @@ def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     return abs(values - target) < atol + rtol * abs(target) 
 
 
+def origin():
+    """Return a point with coordinates [0.,0.,0.]."""
+    return zeros((3),dtype=Float)
+
 def unitVector(axis):
     """Return a unit vector in the direction of a global axis (0,1,2).
 
     Use normalize() to get a unit vector in a general direction.
     """
-    u = zeros((3),dtype=Float)
+    u = origin()
     u[axis] = 1.0
     return u
 
@@ -210,8 +214,14 @@ def bbox(objects):
     All the objects in list should have
     This is like the bbox() method of the Coords class, but the resulting
     box encloses all the Coords in the list.
+    Objects returning a None bbox are ignored.
     """
-    return Coords(concatenate([ [f.bbox()] for f in objects ])).bbox()
+    bboxes = [f.bbox() for f in objects]
+    bboxes = [bb for bb in bboxes if bb is not None]
+    if len(bboxes) == 0:
+        o = origin()
+        bboxes = [ [o,o] ]
+    return Coords(concatenate(bboxes)).bbox()
 
 
 ###########################################################################
@@ -330,9 +340,11 @@ class Coords(ndarray):
         It is returned as a Coords object with shape (2,3): the first row
         holds the minimal coordinates and the second row the maximal.
         """
-        s = self.points()
-        return row_stack([ s.min(axis=0), s.max(axis=0) ])
-
+        if self.size > 0:
+            s = self.points()
+            return row_stack([ s.min(axis=0), s.max(axis=0) ])
+        else:
+            return None
 
     def center(self):
         """Return the center of the Coords.
