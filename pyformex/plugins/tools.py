@@ -7,18 +7,23 @@ Graphic Tools for pyFormex.
 
 from coords import *
 from numtools import Collection
-from numpy import ones
 
 class Plane(object):
 
-    def __init__(self,point,normal,size=(1.0,1.0)):
-        P = Coords(point)
-        n = Coords(normal)
-        s = Coords((0.0,size[0],size[1]))
-
-        if P.shape != (3,) or n.shape != (3,):
-            raise ValueError,"point or normal does not have correct shape"
-
+    def __init__(self,points,normal=None,size=((1.0,1.0),(1.0,1.0))):
+        pts = Coords(points)
+        if pts.shape == (3,) and normal is not None:
+            P = pts
+            n = Coords(normal)
+            if n.shape != (3,):
+                raise ValueError,"normal does not have correct shape"
+        elif pts.shape == (3,3,):
+            P = pts.centroid()
+            n = cross(pts[1]-pts[0],pts[2]-pts[0])
+        else:
+            raise ValueError,"point(s) does not have correct shape"
+        size = asarray(size)
+        s = Coords([insert(size[0],0,0.,-1),insert(size[1],0,0.,-1)])
         self.P = P
         self.n = n
         self.s = s
@@ -37,7 +42,7 @@ class Plane(object):
         return self.P.bbox()
 
     def __str__(self):
-        return 'P:%s n:%s' % (list(self.P),tuple(self.n)) 
+        return 'P:%s n:%s s:%s' % (list(self.P),list(self.n), (list(self.s[0]),list(self.s[1])))
 
 
 ################# Report information about picked objects ################
@@ -136,7 +141,6 @@ def reportDistances(K):
     for i,p in enumerate(zip(x,d)):
         s += "Distance from point: %s %s: %s\n" % (i,p[0],p[1])
     return s
-
 
     
 def getObjectItems(obj,items,mode):

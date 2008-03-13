@@ -356,61 +356,119 @@ def cutAtPlane(F,p,n):
     F = F.cclip(i0*i1)
     return F
 
-    
-def cut3AtPlane(F,p,n,newprops=None):
-    """Returns all elements of the Formex cut at plane.
+
+def cut3AtPlane(F, p, n,newprops=None, side='positive'):
+    """Returns all elements of the Formex cut at plane(s).
 
     F is a Formex of plexitude 3.
-    p is a point specified by 3 coordinates.
-    n is the normal vector to a plane, specified by 3 components.
-
-    The return value is a Formex of the same plexitude with all elements
-    located completely at the positive side of the plane (p,n) retained,
-    all elements lying completely at the negative side removed and the
-    elements intersecting the plane replaced by new elements filling up
-    the parts at the positive side.
+    p is a point or a list of points.
+    n is the normal vector to a plane or a list of normal vectors.
+    Both p and n have shape (3) or (npoints,3).
+    
+    The return value is:
+    - with side = 'positive'/'negative': a Formex of the same plexitude with all elements
+    located completely at the positive/negative side of the plane(s) (p,n)
+    retained, all elements lying completely at the negative/positive side
+    removed and the elements intersecting the plane replaced by new
+    elements filling up the parts at the positive/negative side.
+    - with side = 'both': two Formices of the same plexitude, one representing
+    the positive side and one representing the negative side.
     """
-    n = asarray(n)
-    p = asarray(p)
-    F = F.clip(F.test('any',n, p)) # remove elements at the negative side
-    if F.nelems() == 0:
-        return F
-    c = F.test('all',n,p)
-    G = F.clip(c)  # save elements completely at positive side
-    S = F.cclip(c) # select elements that will be cut by plane
+    p = asarray(p).reshape(-1,3)
+    n = asarray(n).reshape(-1,3)
+    nplanes = len(p)
+    test = [F.test('any',n[i], p[i]) for i in range(nplanes)] # elements at positive side of plane i
+    Test= asarray(test).prod(0) # elements at positive side of all planes
+    F_pos = F.clip(Test) # save elements at positive side of all planes
+    if side in ['negative', 'both']:
+        F_neg = F.cclip(Test) # save elements completely at negative side of one of the planes
+    if F_pos.nelems() != 0:
+        test = [F_pos.test('all',n[i],p[i]) for i in range(nplanes)] # elements completely at positive side of plane i
+        Test = asarray(test).prod(0) # elements completely at positive side of all planes
+        F_cut = F_pos.cclip(Test) # save elements that will be cut by one of the planes
+        F_pos = F_pos.clip(Test)  # save elements completely at positive side of all planes
+        if F_cut.nelems() != 0:
+            S = F_cut
+            for i in range(nplanes):
+                t = S.test('all',n[i],p[i])
+                R = S.clip(t) # save elements that wil not be cut by plane i
+                S = S.cclip(t) # save elements that will be cut by plane i
+                if side == 'positive':
+                    cut_pos = cutElements3AtPlane(S, p[i], n[i], newprops, side='positive')
+                elif side in ['negative', 'both']:
+                    cut_pos, cut_neg = cutElements3AtPlane(S, p[i], n[i], newprops, side='both')
+                    F_neg += cut_neg
+                S = R + cut_pos
+            F_pos += S
+    if side == 'positive':
+        return F_pos
+    elif side == 'negative':
+        return F_neg
+    elif side == 'both':
+        return F_pos, F_neg
+
+    
+def cutElements3AtPlane(S, p, n, newprops=None, side='positive'):
     C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])    
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
     T = (t >= 0.)*(t <= 1.)
     P = P[T].reshape(-1,2,3)
     # split problem in two cases
     d = S.f.distanceFromPlane(p,n)
-    w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.)
-    w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.)
+    w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.) # case 1: triangle at positive side after cut
+    w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.) # case 2: quadrilateral at positive side after cut
     T1 = T[w1]
     T2 = T[w2]
     P1 = P[w1]
     P2 = P[w2]
     S1 = S[w1]
     S2 = S[w2]
-    # case 1: triangle after cut
-    v0 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
-    K2 = asarray([S1[i,v0[i]] for i in range(shape(S1)[0])]).reshape(-1,1,3)
-    E1 = column_stack([P1,K2])
-    # case 2: quadrilateral after cut
-    v1 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
-    v2 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
-    L2 = asarray([S2[i,v1[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
-    L3 = asarray([S2[i,v2[i]] for i in range(shape(S2)[0])]).reshape(-1,1,3)
-    E2 = column_stack([P2,L2])
-    E3 = column_stack([P2[:,0].reshape(-1,1,3),L2,L3])
-    # join all the pieces
-    if F.p is None:
-        return Formex(E1)+Formex(E2)+Formex(E3)+G
-    else:
-        if newprops is None:
-            newprops = range(3)
-        return Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])+G
+    if side in ['positive', 'both']:
+        # case 1: triangle at positive side after cut
+        v1 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
+        K1 = asarray([S1[j,v1[j]] for j in range(shape(S1)[0])]).reshape(-1,1,3)
+        E1 = column_stack([P1,K1])
+        # case 2: quadrilateral at positive side after cut
+        v2 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
+        v3 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
+        K2 = asarray([S2[j,v2[j]] for j in range(shape(S2)[0])]).reshape(-1,1,3)
+        K3 = asarray([S2[j,v3[j]] for j in range(shape(S2)[0])]).reshape(-1,1,3)
+        E2 = column_stack([P2,K2])
+        E3 = column_stack([P2[:,0].reshape(-1,1,3),K2,K3])
+        # join all the pieces
+        if S.p is None:
+            cut_pos = Formex(E1)+Formex(E2)+Formex(E3)
+        else:
+            if newprops is None:
+                newprops = range(3)
+            cut_pos = Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])
+    if side in ['negative', 'both']:
+        # case 1: quadrilateral at negative side after cut
+        v2 = where(T1[:,0]*T1[:,2] == 1,2,where(T1[:,0]*T1[:,1] == 1,2,0))
+        v3 = where(T1[:,0]*T1[:,2] == 1,1,where(T1[:,0]*T1[:,1] == 1,0,1))
+        K2 = asarray([S1[j,v2[j]] for j in range(shape(S1)[0])]).reshape(-1,1,3)
+        K3 = asarray([S1[j,v3[j]] for j in range(shape(S1)[0])]).reshape(-1,1,3)
+        E2 = column_stack([P1,K2])
+        E3 = column_stack([P1[:,0].reshape(-1,1,3),K2,K3])
+        # case 2: triangle at negative side after cut
+        v1 = where(T2[:,0]*T2[:,2] == 1,0,where(T2[:,0]*T2[:,1] == 1,1,2)) # negative side
+        K1 = asarray([S2[j,v1[j]] for j in range(shape(S2)[0])]).reshape(-1,1,3)
+        E1 = column_stack([P2,K1])
+        # join all the pieces
+        if S.p is None:
+            cut_neg = Formex(E1)+Formex(E2)+Formex(E3)
+        else:
+            if newprops is None:
+                newprops = range(3)
+            cut_neg = Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])
+    if side == 'positive':
+        return cut_pos
+    elif side == 'negative':
+        return cut_neg
+    elif side == 'both':
+        return cut_pos, cut_neg
+
 
 
 ###########################################################################
@@ -1423,7 +1481,7 @@ class Formex:
         return Formex(intersectionLinesWithPlane(self,p,n))
 
     
-    def cutAtPlane(self,p,n,newprops=None):
+    def cutAtPlane(self,p,n,newprops=None, side='positive'):
         """Return all elements of a plex-2 or plex-3 Formex cut at plane.
 
         This is equivalent with the function cutAtPlane(F,p,n) or
@@ -1435,7 +1493,7 @@ class Formex:
         if self.nplex() == 2:
             return cutAtPlane(self,p,n)
         if self.nplex() == 3:
-            return cut3AtPlane(self,p,n,newprops)
+            return cut3AtPlane(self,p,n,newprops, side)
         raise ValueError,"Formex should be plex-2 or plex-3"
 
 

@@ -269,7 +269,7 @@ class CoordPlaneActor(Actor):
 class PlaneActor(Actor):
     """A plane in a 3D scene."""
 
-    def __init__(self,nx=(2,2,2),ox=(0.,0.,0.),size=(0.0,1.0,1.0),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
+    def __init__(self,nx=(2,2,2),ox=(0.,0.,0.),size=((0.0,1.0,1.0),(0.0,1.0,1.0)),linecolor=black,linewidth=None,planecolor=white,alpha=0.5,lines=True,planes=True):
         """A plane perpendicular to the x-axis at the origin."""
         Actor.__init__(self)
         self.linecolor = saneColor(linecolor)
@@ -281,8 +281,9 @@ class PlaneActor(Actor):
         self.planes = planes
         self.nx = asarray(nx)
         ox = asarray(ox)
-        sz = 0.5*asarray(size)
-        self.x0,self.x1 = ox-sz, ox+sz
+        sz = asarray(size)
+        self.x0,self.x1 = ox-sz[0], ox+sz[1]
+        
 
     def bbox(self):
         return array([self.x0,self.x1])

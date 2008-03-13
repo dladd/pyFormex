@@ -54,8 +54,20 @@ def edit():
     if F and hasattr(F,'edit'):
         name = database[0]
         F.edit(name)
-       
 
+def rename():
+    """Rename a global variable."""
+    database.ask(mode='single')
+    F = database.check(single=True)
+    res = askItems([['Name',database.names[0]]],
+                            caption = 'Rename variable')
+    if res:
+        name = res['Name']
+        export({name:F})
+        database.forget()
+        database.set(name)
+
+    
 def editByName(name):
     pass
 
@@ -200,31 +212,68 @@ pname = utils.NameSequence('Plane-0')
 def editPlane(plane,name):
     res = askItems([('Point',list(plane.point())),
                     ('Normal',list(plane.normal())),
-                    ('Name',name)],
+                    ('Size',(list(plane.size()[0]),list(plane.size()[1])))],
                    caption = 'Edit Plane')
     if res:
-        p = res['Point']
-        n = res['Normal']
-        name = res['Name']
-        P = Plane(p,n)
-        export({name:P})
-        
+        plane.P = res['Point']
+        plane.n = res['Normal']
+        plane.s = res['Size']
+
 Plane.edit = editPlane
 
-def createPlane():
-    res = askItems([('Point',(0.,0.,0.)),
+
+def createPlaneCoordsPointNormal():
+    res = askItems([('Name',pname.next()),
+                    ('Point',(0.,0.,0.)),
                     ('Normal',(1.,0.,0.)),
-                    ('Name',pname.next())],
+                    ('Size',((1.,1.),(1.,1.)))],
                    caption = 'Create a new Plane')
     if res:
+        name = res['Name']
         p = res['Point']
         n = res['Normal']
-        name = res['Name']
-        P = Plane(p,n)
+        s = res['Size']
+        P = Plane(p,n,s)
         export({name:P})
-        planes.set([name])
-        planes.draw()
+        draw(P)
+
     
+def createPlaneCoords3Points():
+    res = askItems([('Name',pname.next()),
+                    ('Point 1',(0.,0.,0.)),
+                    ('Point 2', (0., 1., 0.)),
+                    ('Point 3', (0., 0., 1.)),
+                    ('Size',((1.,1.),(1.,1.)))],
+                   caption = 'Create a new Plane')
+    if res:
+        name = res['Name']
+        p1 = res['Point 1']
+        p2 = res['Point 2']
+        p3 = res['Point 3']
+        s = res['Size']
+        pts=[p1, p2, p3]
+        P = Plane(pts,size=s)
+        export({name:P})
+        draw(P)
+    
+
+def createPlaneVisual3Points():
+    res = askItems([('Name',pname.next()),
+                    ('Size',((1.,1.),(1.,1.)))],
+                   caption = 'Create a new Plane')
+    if res:
+        name = res['Name']
+        s = res['Size']
+        picked = pick('point')
+        pts = getCollection(picked)
+        pts = asarray(pts).reshape(-1,3)
+        if len(pts) == 3:
+            P = Plane(pts,size=s)
+            export({name:P})
+            draw(P)
+        else:
+            warning("You have to pick exactly three points.")
+
 
 ################# Create Selection ###################
 
@@ -367,9 +416,18 @@ def create_menu():
         ("&Show Variables",printall),
         ("&Print Variables",printval),
         ("&Edit Variable",edit),
+        ("&Rename Variable",rename),
         ("&Forget Variables",forget),
         ("---",None),
-        ("&Create Plane",createPlane),
+        ("&Create Plane",
+            [("Coordinates", 
+                [("Point and normal", createPlaneCoordsPointNormal),
+                ("Three points", createPlaneCoords3Points),
+                ]), 
+            ("Visually", 
+                [("Three points", createPlaneVisual3Points),
+                ]),
+            ]),
         ("&Select Plane",planes.ask),
         ("&Draw Selection",planes.draw),
         ("&Forget Selection",planes.forget),
