@@ -115,7 +115,7 @@ def main(argv=None):
         make_option("--dri", help="Force the use of Direct Rendering",
                     action="store_true", dest="dri", default=True),
         make_option("--nodri", help="Disables the use of Direct Rendering (overrides the --dri option)",
-                    action="store_false", dest="dri", default=True),
+                    action="store_false", dest="dri", default=False),
         make_option("--uselib", help="Use the pyFormex C-lib where possible.",
                     action="store_true", dest="uselib", default=False),
         make_option("--nouselib", help="Do not use the pyFormex C-lib. This is the default.",
