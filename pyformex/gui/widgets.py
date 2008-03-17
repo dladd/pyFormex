@@ -520,6 +520,14 @@ class InputPush(InputItem):
         self.input.setLayout(self.hbox)
         self.addWidget(self.input)
 
+    def setText(self,text,index=0):
+        """Change the text on button index."""
+        self.rb[index].setText(text)
+
+    def setIcon(self,icon,index=0):
+        """Change the icon on button index."""
+        self.rb[index].setIcon(icon)
+
     def value(self):
         """Return the widget's value."""
         for rb in self.rb:
@@ -835,6 +843,14 @@ class ButtonBox(QtGui.QWidget):
         for r,f in zip(s.rb,funcs):
             self.connect(r,QtCore.SIGNAL("clicked()"),f)
         self.setLayout(s)
+        self.buttons = s
+
+    def setText(self,text,index=0):
+        self.buttons.setText(text,index)
+
+    def setIcon(self,icon,index=0):
+        #print "PASS"
+        self.buttons.setIcon(icon,index)
 
 
 ############################# Menu ##############################

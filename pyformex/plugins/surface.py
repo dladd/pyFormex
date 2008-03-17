@@ -1567,6 +1567,10 @@ def unitSphere(level=4,verbose=False,filename=None):
     return S
 
 
+# For compatibility
+
+#Surface = TriSurface
+
 if __name__ == '__main__':
     f = file('unit_triangle.stl','r')
     a = read_ascii(f)

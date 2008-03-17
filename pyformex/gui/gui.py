@@ -121,20 +121,23 @@ class GUI(QtGui.QMainWindow):
 
         # The status bar
         self.statusbar = self.statusBar()
-        self.curproj = QtGui.QLabel('No Project')
-        self.curproj.setLineWidth(0)
+        #self.curproj = QtGui.QLabel('No Project')
+        #self.curproj.setLineWidth(0)
+        self.curproj = widgets.ButtonBox('Project:',['NONE'],[fileMenu.openProject])
         self.statusbar.addWidget(self.curproj)
-        cf = QtGui.QWidget()
-        hl = QtGui.QHBoxLayout()
-        hl.setSpacing(0)
-        hl.setMargin(0)
-        cf.setLayout(hl) 
-        self.curfile = QtGui.QLabel('No File')
-        self.curfile.setLineWidth(0)
-        self.smiley = QtGui.QLabel()
-        hl.addWidget(self.smiley)
-        hl.addWidget(self.curfile)
-        self.statusbar.addWidget(cf)
+        self.curfile = widgets.ButtonBox('Script:',['NONE'],[fileMenu.openScript])
+        self.statusbar.addWidget(self.curfile)
+        #cf = QtGui.QWidget()
+        #hl = QtGui.QHBoxLayout()
+        #hl.setSpacing(0)
+        #hl.setMargin(0)
+        #cf.setLayout(hl) 
+        #self.curfile = QtGui.QLabel('No File')
+        #self.curfile.setLineWidth(0)
+        #self.smiley = QtGui.QLabel()
+        #hl.addWidget(self.smiley)
+        #hl.addWidget(self.curfile)
+        #self.statusbar.addWidget(cf)
 
         # The menu bar
         self.menu = widgets.MenuBar()
@@ -337,7 +340,7 @@ class GUI(QtGui.QMainWindow):
         self.curproj.setText(project)
 
 
-    def setcurfile(self,filename=None):
+    def setcurfile(self,filename=''):
         """Set the current file and check whether it is a pyFormex script.
 
         The checking is done by the function isPyFormex().
@@ -357,7 +360,7 @@ class GUI(QtGui.QMainWindow):
                 icon = 'ok'
             else:
                 icon = 'notok'
-            self.smiley.setPixmap(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype']))
+            self.curfile.setIcon(QtGui.QIcon(QtGui.QPixmap(os.path.join(GD.cfg['icondir'],icon)+GD.cfg['gui/icontype'])),0)
 
 
     def setViewAngles(self,name,angles):

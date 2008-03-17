@@ -190,6 +190,7 @@ You will need proper permissions to actually delete the files.
     localprefs = os.path.join(os.getcwd(),prefs)
 
     sysprefs = filter(os.path.exists,[defaults,siteprefs])
+    # ?? WE SHOULD ALWAYS CREATE .pyformexrc?
     userprefs = filter(os.path.exists,[homeprefs,localprefs])
     if GD.options.nodefaultconfig:
         sysprefs = sysprefs[0:1]
