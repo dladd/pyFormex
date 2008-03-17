@@ -405,7 +405,7 @@ def export_selection():
         if res['Export as'] == options[0]:
             export({name:sel})
         elif res['Export as'] == options[1]:
-            export(dict([ ("name-%s"%i,v) for i,v in enumerate(sel)]))
+            export(dict([ (name+"-%s"%i,v) for i,v in enumerate(sel)]))
 
 
 ################### menu #################

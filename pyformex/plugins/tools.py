@@ -124,7 +124,7 @@ def reportPartitions(K):
             s += "Actor %s (type %s); Partition %s; Elements %s\n" % (k,t,l,v)
             if t == 'Formex':
                 e = A
-            elif t == 'Surface':
+            elif t == 'TriSurface':
                 e = A.getElems()
             for p in v:
                 s += "  Element %s: %s\n" % (p,e[p])
@@ -163,7 +163,7 @@ def getCollection(K):
     elif K.obj_type in ['element','point']:
         return [ getObjectItems(GD.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
     elif K.obj_type == 'partition':
-        return [[getObjectItems(GD.canvas.actors[k],K[k][0][prop],K.obj_type) for prop in K[k][0].keys()] for k in K.keys()]
+        return [getObjectItems(GD.canvas.actors[k],K[k][0][prop],K.obj_type) for k in K.keys() for prop in K[k][0].keys()]
     else:
         return None
 
