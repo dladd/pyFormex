@@ -144,24 +144,30 @@ class Property(CascadingDict):
 class NodeProperty(Property):
     """Properties related to a single node."""
 
-    def __init__(self, nr, cload = None, bound = None, displacement=None, coords = 'cartesian', coordset=[]):
-        """Create a new node property. Empty by default.
+    def __init__(self,nr,nset=None,cload=None,bound=None,displacement=None,coords='cartesian',coordset=[]):
+        """Create a new node property, empty by default.
         
-        A node property is created and the data is stored in a Dict called 'nodeproperties'. 
-        The key to access the node property is the number.
-        This number should be the same as the node property number of the Formex element.
-        A node property can hold the following sub-properties:
+        Each new node property is stored in the global Dict 'nodeproperties'. 
+        The key to access the node property is the unique number 'nr'.
+
+        The nodes for which this property holds are identified either by
+        an explicit 'nset' node list or by the nodes having a matching global
+        property number set to 'nr'.
+
+        A node property can hold the following fields:
+        - nset : a list of node numbers 
         - cload : a concentrated load
         - bound : a boundary condition
         - displacement: prescribe a displacement
         - coords: the coordinate system which is used for the definition of cload and bound. There are three options:
         cartesian, spherical and cylindrical
-        -coordset: a list of 6 coordinates; the 2 points that specify the transformation 
+        - coordset: a list of 6 coordinates; the 2 points that specify the transformation 
         """
         global nodeproperties
-        if (isinstance(cload,list) and len(cload)==6 or cload==None) and (isinstance(bound,list) and len(bound)==6 or isinstance(bound, str) or bound==None): 
-            CascadingDict.__init__(self, {'cload' : cload, 'bound' : bound, 'displacement':displacement , 'coords' : coords, 'coordset' : coordset})
-            #print nodeproperties
+        if ((cload is None or (isinstance(cload,list) and len(cload)==6)) and
+            (bound is None or (isinstance(bound,list) and len(bound)==6) or
+             isinstance(bound, str))): 
+            CascadingDict.__init__(self, {'nset':nset,'cload':cload,'bound':bound,'displacement':displacement,'coords':coords,'coordset':coordset})
             nodeproperties[nr] = self
         else: 
             warning('A pointload and a boundary condition have to be a list containing 6 items')
@@ -170,18 +176,23 @@ class NodeProperty(Property):
 class ElemProperty(Property):
     """Properties related to a single element."""
     
-    def __init__(self, nr, elemsection = None, elemload = None, elemtype = None): 
-        """Create a new element property. Empty by default.
+    def __init__(self,nr,elemsection=None,elemload=None,elemtype=None,eset=None): 
+        """Create a new element property, empty by default.
         
-        An element property is created and the data is stored in a Dict called 'elemproperties'. 
-        The key to access the element property is the number.
-        This number should be the same as the element property number of the Formex element.
-        An element property can hold the following sub-properties:
+        Each new element property is stored in a global Dict 'elemproperties'. 
+        The key to access the element property is the unique number 'nr'.
+
+        The elements for which this property holds are identified either by
+        an explicit 'eset' node list or by the nodes having a matching global
+        property number set to 'nr'.
+        
+        An element property can hold the following fields:
+        - eset : a list of element numbers 
         - elemsection : the section properties of the element. This is an ElemSection instance.
         - elemload : the loading of the element. This is a list of ElemLoad instances.
         - elemtype: the type of element that is to be used in the analysis. 
         """    
-        CascadingDict.__init__(self, {'elemsection' : elemsection, 'elemload' : elemload, 'elemtype' : elemtype})
+        CascadingDict.__init__(self, {'eset':eset,'elemsection':elemsection,'elemload':elemload,'elemtype':elemtype})
         elemproperties[nr] = self
 
 

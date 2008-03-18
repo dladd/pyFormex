@@ -141,8 +141,10 @@ def askItems(items,caption=None,timeout=None):
     return res
 
 
-def askFilename(cur,filter="All files (*.*)",file=None,exist=False,multi=False):
+def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for a file name or multiple file names."""
+    if cur is None:
+        cur = GD.cfg['workdir']
     w = widgets.FileSelection(cur,filter,exist,multi)
     if file:
         w.selectFile(file)

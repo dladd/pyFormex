@@ -298,71 +298,68 @@ def writeBoundaries(fil, boundset='ALL', opb=None):
             warning("The boundaries have to defined in a list 'boundset'")
 
 
-def writeDisplacements(fil, dispset='ALL', op='MOD'):
-    """Write BOUNDARY, TYPE=DISPLACEMENT boundary conditions.
+def writeDisplacements(fil, recset='ALL', op='MOD'):
+    """Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT
 
-    dispset is a list of the property number of which the displacement should be written.
+    recset is a list of node record numbers that should be scanned for data.
+    By default, all records will be scanned.
+    
     By default, the boundary conditions are applied as a modification of the
     existing boundary conditions, i.e. initial conditions and conditions from
     previous steps remain in effect.
     The user can set op='NEW' to remove the previous conditions.
-    !!!! This means that initial condtions are also removed!
+    This will also remove initial conditions!
     """
+    if recset == 'ALL':
+        recset = nodeproperties.iterkeys()
+        
     fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s\n" % op)
-    if isinstance(dispset, list):
-        for i in dispset:
-            if nodeproperties[i].displacement!=None:
-                for d in range(len(nodeproperties[i].displacement)):
-                    fil.write("%s, %s, %s, %s\n" % (Nset(i),nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
-    elif dispset.upper()=='ALL':
-        for i in nodeproperties.iterkeys():
-            if nodeproperties[i].displacement!=None:
-                for d in range(len(nodeproperties[i].displacement)):
-                    fil.write("%s, %s, %s, %s\n" % (Nset(i),nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
+    for i in recset:
+        if nodeproperties[i].displacement!=None:
+            for d in range(len(nodeproperties[i].displacement)):
+                fil.write("%s, %s, %s, %s\n" % (Nset(i),nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
             
             
-def writeCloads(fil, cloadset='ALL', opcl='NEW'):
+def writeCloads(fil, recset='ALL', op='NEW'):
     """Write cloads.
     
-    cloadset is a list of property numbers of which the cloads should be written.
-    The user can set opcl='NEW' to remove the previous cloads, or set opcl='MOD' to modify them.
+    recset is a list of node record numbers that should be scanned for data.
+    By default, all records will be scanned.
+
+    By default, the loads are applied as new values in the current step.
+    The user can set op='MOD' to add the loads to already existing ones.
     """
-    if cloadset == 'ALL':
-        cloadset = nodeproperties.keys()
-        
-    fil.write("*CLOAD, OP=%s\n" % opcl)
-    for i in cloadset:
+    if recset == 'ALL':
+        recset = nodeproperties.iterkeys()
+       
+    fil.write("*CLOAD, OP=%s\n" % op)
+    for i in recset:
         if nodeproperties[i].cload != None:
             for cl in range(6):
                 if nodeproperties[i].cload[cl] != 0:
                     fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
 
 
-def writeDloads(fil, dloadset='ALL', opdl='NEW'):
+def writeDloads(fil, recset='ALL', op='NEW'):
     """Write Dloads.
     
-    dloadset is a list of property numbers of which the dloads should be written.
-    The user can set opdl='NEW' to remove the previous cloads, or set opdl='MOD' to modify them.
+    recset is a list of node record numbers that should be scanned for data.
+    By default, all records will be scanned.
+
+    By default, the loads are applied as new values in the current step.
+    The user can set op='MOD' to add the loads to already existing ones.
     """
-    fil.write("*DLOAD, OP=%s\n" % opdl)
-    if isinstance(dloadset, list):
-        for i in dloadset:
-            if isinstance(elemproperties[i].elemload, list):
-                for load in range(len(elemproperties[i].elemload)):
-                    if elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
-                        fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
-                    else:
-                        fil.write("%s, %s, %s\n" % (Eset(i),elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
-    elif dloadset.upper()=='ALL':
-        for i in elemproperties.iterkeys():
-            if isinstance(elemproperties[i].elemload, list):
-                for load in range(len(elemproperties[i].elemload)):
-                    if elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
-                        fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
-                    else:
-                        fil.write("%s, %s, %s\n" % (Eset(i),elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
-    else:
-        warning("The loads have to be defined in a list 'dloadset'")
+    if recset == 'ALL':
+        recset = elemproperties.iterkeys()
+       
+    fil.write("*DLOAD, OP=%s\n" % op)
+    for i in recset:
+        if isinstance(elemproperties[i].elemload, list):
+            for load in range(len(elemproperties[i].elemload)):
+                if elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
+                    fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
+                else:
+                    fil.write("%s, %s, %s\n" % (Eset(i),elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
 
 
 def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL', ID=None):
@@ -606,8 +603,11 @@ Script: %s
     #write nodesets and their transformations
     GD.message("Writing node sets")
     nlist = arange(nnod)
-    for i in nodeproperties:
-        nodeset = nlist[array(abqdata.nodeprop) == i]
+    for i,v in nodeproperties.iteritems():
+        if v.has_key('nset'):
+            nodeset = v['nset']
+        else:
+            nodeset = nlist[array(abqdata.nodeprop) == i]
         writeSet(fil, 'NSET', Nset(str(i)), nodeset)
         transform(fil,i)
 

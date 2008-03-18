@@ -990,7 +990,11 @@ class Coords(ndarray):
         nboxes = nnod / nodesperbox # ideal total number of boxes
         boxsz = (vol/nboxes) ** (1./esz.shape[0])
         nx = (sz/boxsz).astype(int32)
+        # avoid error message on the global sz/nx calculation
+        errh = seterr(all='ignore')
         dx = where(nx>0,sz/nx,boxsz)
+        seterr(**errh)
+        #
         nx = array(nx) + 1
         ox = lo - dx*shift # origin :  0 < shift < 1
         # Create box coordinates for all nodes

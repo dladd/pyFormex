@@ -2,15 +2,17 @@
 #
 
 SRC= pyformex-user-meeting-*.rst
-PDF= pyformex-user-meeting-*.pdf
+PDF= ${SRC:.rst=.pdf}
 RSYNC= rsync -av -e ssh
 ACCOUNT= bverheg@shell.berlios.de
 
-minutes: pyformex-user-meeting-1.tex
-	pdflatex pyformex-user-meeting-1.tex
+minutes: ${PDF}
 
-pyformex-user-meeting-1.tex: pyformex-user-meeting-1.rst
-	rst2latex pyformex-user-meeting-1.rst > pyformex-user-meeting-1.tex
+%.pdf: %.tex
+	pdflatex $<
+
+%.tex: %.rst
+	rst2latex $< > $@
 
 
 # Transfers the files to BerliOs

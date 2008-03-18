@@ -10,7 +10,7 @@ These are the minutes of the second pyFormex User Meeting, which took place on T
 
 Participants
 ------------
-The pyFormex developers, users and sympatisants were present.
+The following pyFormex developers, users and enthusiants were present.
 
 - Benedict Verhegghe, project manager and chairman of the meeting,
 - Matthieu De Beule,
@@ -36,8 +36,8 @@ Agenda and discussion
   
   - The `pyFormex project manager`_ presents some recent developments and ideas for future work:
 
-    - Combining different types of grids is now possible and currently available in the fe plugin (seperate node lists are merged into one list).
-    - The current procedure to assign properties will be modified in order to allow assignment of a property to a list of property numbers.
+    - Combining different types of grids is now possible and currently available in the *fe* plugin (seperate node lists are merged into one list).
+    - The current procedure to assign properties will be modified in order to allow assignment of a property to a list of object elements instead of via the object property numbers.
     - The difference between transforming a Formex or a Surface model is explained. The original coordinates remain unchanged when transforming a Formex model, whereas they are lost when transforming a Surface model. This is because the size of a Surface models is usually larger. This may change in future.
     - The intersection of a surface with a plane has been modified as it resulted in an error in some cases (e.g. triangle laying completely in the intersecting plane).
     - The use of a project is illustrated. All the global variables are saved from the moment you start a project until it is closed. The button showing the project name in the left bottom corner should disappear after closing the project.
@@ -46,7 +46,7 @@ Agenda and discussion
 
 * pyFormex User Forum:
 
-  - Pieter reported that creating an Abaqus input file with only one element group gives an error.
+  - Pieter reported that creating an Abaqus input file with only one element group gives an error. This will be fixed.
   - Peter proposed to create a general FE menu to create FE input files using the GUI. A geometry could be imported during a first step. Subsequent steps could involve the assignment of sections, materials, boundary conditions and loads. Matthieu suggested to incorporate export possibilies to different FE solvers. Benedict added that all functionalities should be accessible through scripting. 
   - Matthieu gave an overview of the remarks of the civil engineering students who used pyFormex during a project (some of these suggestions have already been implented):
 
