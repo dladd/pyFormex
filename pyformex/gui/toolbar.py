@@ -123,7 +123,7 @@ def addCameraButtons(toolbar):
 
 transparency_button = None # the toggle transparency button
 
-def toggleTransparency(): # Called by the button
+def toggleTransparency(): # Called by the button, not by user
     mode = not GD.canvas.alphablend
     GD.canvas.setTransparency(mode)
     GD.canvas.update()
@@ -135,7 +135,8 @@ def addTransparencyButton(toolbar):
                                     'transparent',toggleTransparency,
                                     toggle=True)    
 
-def setTransparency(mode):
+def setTransparency(mode=True):
+    """Set the transparency mode on or off."""
     GD.canvas.setTransparency(mode)
     GD.canvas.update()
     if transparency_button:
@@ -147,7 +148,7 @@ def setTransparency(mode):
 
 perspective_button = None # the toggle perspective button
 
-def togglePerspective(): # Called by the button
+def togglePerspective(): # Called by the button, not by user
     mode = not GD.canvas.camera.perspective
     #setPerspective(mode)
     GD.canvas.camera.setPerspective(mode)
@@ -161,6 +162,7 @@ def addPerspectiveButton(toolbar):
                                    'perspect',togglePerspective,
                                    toggle=True,icon0='project',checked=True)    
 def setPerspective(mode=True):
+    """Set the perspective mode on or off."""
     GD.canvas.camera.setPerspective(mode)
     GD.canvas.display()
     GD.canvas.update()

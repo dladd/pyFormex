@@ -32,15 +32,12 @@ from script import *
 from plugins import surface,tools
 from formex import Formex
 
-# import some functions for scripts:
-from toolbar import setPerspective as perspective, setTransparency as transparency, timeout
-
 
 ############################# Globals for scripts ############################
 
 
 def Globals():
-    """Return the globals that are pased to the scripts on execution.
+    """Return the globals that are passed to the scripts on execution.
 
     This basically contains the globals defined in draw.py, colors.py,
     and formex.py, as well as the globals from numpy.
@@ -274,6 +271,7 @@ def playScript(scr,name=None):
     finally:
         scriptRunning = False # release the lock in case of an error
         stepmode = False
+        drawrelease() # release the lock
         elapsed = time.clock() - starttime
         GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if GD.gui:
@@ -806,6 +804,10 @@ def zoomAll():
         GD.canvas.redrawAll()
         GD.canvas.update()
 
+def zoom(f):
+    GD.canvas.zoom(f)
+    GD.canvas.update()
+
 
 def bgcolor(color):
     """Change the background color (and redraw)."""
@@ -820,6 +822,11 @@ def fgcolor(color):
 def opacity(alpha):
     """Set the viewports transparency."""
     GD.canvas.alpha = float(alpha)
+
+transparent = toolbar.setTransparency
+perspective = toolbar.setPerspective
+timeout = toolbar.timeout
+
 
 def linewidth(wid):
     """Set the linewidth to be used in line drawings."""
