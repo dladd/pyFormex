@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pyformex
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
@@ -16,10 +16,9 @@ Properties are identified and connected to a Formex element by the
 prop values that are stored in the Formex.
 """
 
-import globaldata as GD
-
 from flatkeydb import *
 from mydict import *
+from numpy import *
 
 
 class Database(Dict):
@@ -56,7 +55,7 @@ class MaterialDB(Database):
         If data is a string, it specifies a filename where the
         database can be read.
         """
-        Database.__init__(self,data)
+        Database.__init__(self,{})
         if type(data) == str:
             self.readDatabase(data,['name'],beginrec='material',endrec='endmaterial')
         elif type(data) == dict:
@@ -84,11 +83,11 @@ class SectionDB(Database):
             raise ValueError,"Expected a filename or a dict."
 
     
-materials = MaterialDB()
-sections = SectionDB()
-properties = CascadingDict()
-nodeproperties = CascadingDict()
-elemproperties = CascadingDict()
+the_materials = MaterialDB()
+the_sections = SectionDB()
+the_properties = CascadingDict()
+the_nodeproperties = CascadingDict()
+the_elemproperties = CascadingDict()
 
 ## def init_properties():
 ##     global materials, sections, properties, nodeproperties, elemproperties
@@ -107,19 +106,19 @@ elemproperties = CascadingDict()
 
 
 def setMaterialDB(aDict):
-    global materials
+    global the_materials
     if isinstance(aDict,MaterialDB):
-        materials = aDict
+        the_materials = aDict
 
 def setSectionDB(aDict):
-    global sections
+    global the_sections
     if isinstance(aDict,SectionDB):
-        sections = aDict
+        the_sections = aDict
 
 def setNodePropDB(aDict):
-    global nodeproperties
+    global the_nodeproperties
     if isinstance(aDict,CascadingDict):
-        nodeproperties = aDict
+        the_nodeproperties = aDict
 
 
 class Property(CascadingDict):
@@ -129,16 +128,16 @@ class Property(CascadingDict):
     add, change and delete properties, lookup, print, and
     of course, connect properties to Formex elements.
     """
-    global properties
+    global the_properties
     def __init__(self, nr, data = {}):
         """Create a new property. Empty by default.
         
-        A property is created and the data is stored in a Dict called 'properties'. 
+        A property is created and the data is stored in a Dict called 'the_properties'. 
         The key to access the property is the number.
         This number should be the same as the property number of the Formex element.
         """
         CascadingDict.__init__(self, data)
-        properties[nr] = self 
+        the_properties[nr] = self 
 
 
 class NodeProperty(Property):
@@ -147,7 +146,7 @@ class NodeProperty(Property):
     def __init__(self,nr,nset=None,cload=None,bound=None,displacement=None,coords='cartesian',coordset=[]):
         """Create a new node property, empty by default.
         
-        Each new node property is stored in the global Dict 'nodeproperties'. 
+        Each new node property is stored in the global Dict 'the_nodeproperties'. 
         The key to access the node property is the unique number 'nr'.
 
         The nodes for which this property holds are identified either by
@@ -159,18 +158,20 @@ class NodeProperty(Property):
         - cload : a concentrated load
         - bound : a boundary condition
         - displacement: prescribe a displacement
-        - coords: the coordinate system which is used for the definition of cload and bound. There are three options:
-        cartesian, spherical and cylindrical
-        - coordset: a list of 6 coordinates; the 2 points that specify the transformation 
+        - coords: the coordinate system which is used for the definition of
+          cload and bound. There are three options:
+            cartesian, spherical and cylindrical
+        - coordset: a list of 6 coordinates; the two points that specify
+          the transformation 
         """
-        global nodeproperties
+        global the_nodeproperties
         if ((cload is None or (isinstance(cload,list) and len(cload)==6)) and
             (bound is None or (isinstance(bound,list) and len(bound)==6) or
              isinstance(bound, str))): 
             CascadingDict.__init__(self, {'nset':nset,'cload':cload,'bound':bound,'displacement':displacement,'coords':coords,'coordset':coordset})
-            nodeproperties[nr] = self
+            the_nodeproperties[nr] = self
         else: 
-            warning('A pointload and a boundary condition have to be a list containing 6 items')
+            raise ValueError,"cload/bound property requires a list of 6 items"
 
 
 class ElemProperty(Property):
@@ -179,7 +180,7 @@ class ElemProperty(Property):
     def __init__(self,nr,elemsection=None,elemload=None,elemtype=None,eset=None): 
         """Create a new element property, empty by default.
         
-        Each new element property is stored in a global Dict 'elemproperties'. 
+        Each new element property is stored in a global Dict 'the_elemproperties'. 
         The key to access the element property is the unique number 'nr'.
 
         The elements for which this property holds are identified either by
@@ -193,80 +194,113 @@ class ElemProperty(Property):
         - elemtype: the type of element that is to be used in the analysis. 
         """    
         CascadingDict.__init__(self, {'eset':eset,'elemsection':elemsection,'elemload':elemload,'elemtype':elemtype})
-        elemproperties[nr] = self
+        the_elemproperties[nr] = self
 
 
 class ElemSection(Property):
-    """Properties related to the section of a beam."""
+    """Properties related to the section of an element."""
 
-    def __init__(self, section = None, material = None, orientation = None, behavior = None, range = 0.0):
+    def __init__(self,section=None,material=None,orientation=None,behavior=None,range=0.0,sectiontype=None):
 
-        ### sectiontype is now an attribute of section ###
+        ### sectiontype is now preferably an attribute of section ###
         
         """Create a new element section property. Empty by default.
         
         An element section property can hold the following sub-properties:
-        - section: the section properties of the element. This can be a dict
+       - section: the section properties of the element. This can be a dict
           or a string. The required data in this dict depend on the
-          sectiontype. Currently known keys to f2abq.py are:
-            cross_section, moment_inertia_11, moment_inertia_12,
-            moment_inertia_22, torsional_rigidity, radius
-        - material: the element material. This can be a dict or a string.
+          sectiontype. Currently the following keys are used by f2abq.py:
+            - sectiontype: the type of section: one of following:
+              'solid': a solid 2D or 3D section,
+              'circ' : a plain circular section,
+              'rect' : a plain rectangular section,
+              'pipe' : a hollow circular section,
+              'box'  : a hollow rectangular section,
+              'I'    : an I-beam,
+              'general' : anything else (automatically set if not specified).
+              !! Currently only 'solid' and 'general' are allowed.
+            - the cross section characteristics :
+              cross_section, moment_inertia_11, moment_inertia_12,
+              moment_inertia_22, torsional_rigidity
+            - for sectiontype 'circ': radius
+         - material: the element material. This can be a dict or a string.
           Currently known keys to f2abq.py are:
             young_modulus, shear_modulus, density, poisson_ratio
-        - sectiontype: the sectiontype of the element. 
-        - 'orientation' is a list [First direction cosine, second direction cosine, third direction cosine] of the first beam section axis. This allows to change the orientation of the cross-section.
+        - 'orientation' is a list of 3 direction cosines of the first beam
+          section axis.
         - behavior: the behavior of the connector
-        """    
+        """
         CascadingDict.__init__(self,{})
-        #self.sectiontype = sectiontype
+        if sectiontype is not None:
+            self.sectiontype = sectiontype
         self.orientation = orientation
         self.behavior = behavior
         self.range = range
         self.addMaterial(material)
         self.addSection(section)
-        if self.section.sectiontype is None:
-            self.sectiontype = 'general'
+
     
     def addSection(self, section):
         """Create or replace the section properties of the element.
 
-        If 'section' is a dict, it will be added to 'sections'.
+        If 'section' is a dict, it will be added to 'the_sections'.
         If 'section' is a string, this string will be used as a key to
-        search in 'sections'.
+        search in 'the_sections'.
         """
         if isinstance(section, str):
-            if sections.has_key(section):
-                self.section = sections[section]
+            if the_sections.has_key(section):
+                self.section = the_sections[section]
             else:
-                warning("This section is not available in the database")
+                warning("Section '%s' is not in the database" % section)
         elif isinstance(section,dict):
-            sections[section['name']] = CascadingDict(section)
-            self.section = sections[section['name']]
+            # WE COULD ADD AUTOMATIC CALCULATION OF SECTION PROPERTIES
+            #self.computeSection(section)
+            #print section
+            the_sections[section['name']] = CascadingDict(section)
+            self.section = the_sections[section['name']]
         elif section==None:
             self.section = section
         else: 
-            warning("addSection requires a string or dict")
+            raise ValueError,"Expected a string or a dict"
+
+
+    def computeSection(self,section):
+        """Compute the section characteristics of specific sections."""
+        if not section.has_key('sectiontype'):
+            return
+        if section['sectiontype'] == 'circ':
+            r = section['radius']
+            A = pi * r**2
+            I = pi * r**4 / 4
+            section.update({'cross_section':A,
+                            'moment_inertia_11':I,
+                            'moment_inertia_22':I,
+                            'moment_inertia_12':0.0,
+                            'torsional_rigidity':2*I,
+                            })
+        else:
+            raise ValueError,"Invalid sectiontype"
+        
     
     def addMaterial(self, material):
         """Create or replace the material properties of the element.
 
-        If the argument is a dict, it will be added to 'materials'.
+        If the argument is a dict, it will be added to 'the_materials'.
         If the argument is a string, this string will be used as a key to
-        search in 'materials'.
+        search in 'the_materials'.
         """
         if isinstance(material, str) :
-            if materials.has_key(material):
-                self.material = materials[material] 
+            if the_materials.has_key(material):
+                self.material = the_materials[material] 
             else:
-                warning("This material is not available in the database")
+                warning("Material '%s'  is not in the database" % material)
         elif isinstance(material, dict):
-            materials[material['name']] = CascadingDict(material)
-            self.material = materials[material['name']]
+            the_materials[material['name']] = CascadingDict(material)
+            self.material = the_materials[material['name']]
         elif material==None:
             self.material=material
         else:
-            warning("addMaterial requires a string or dict")
+            raise ValueError,"Expected a string or a dict"
 
 
 class ElemLoad(Property):
@@ -291,15 +325,13 @@ class ElemLoad(Property):
 
 # Test
 
-if __name__ == "__main__":
+if __name__ == "script" or  __name__ == "draw":
 
-    import sys,os
-    #print __file__
-    #print os.path.dirname(__file__)
-    #sys.exit()
-    Mat = MaterialDB('examples/materials.db')
+    workHere()
+        
+    Mat = MaterialDB('../examples/materials.db')
     setMaterialDB(Mat)
-    Sec = SectionDB('examples/sections.db')
+    Sec = SectionDB('../examples/sections.db')
     setSectionDB(Sec)
 
     Stick=Property(1, {'colour':'green', 'name':'Stick', 'weight': 25, 'comment':'This could be anything: a gum, a frog, a usb-stick,...'})
@@ -310,12 +342,12 @@ if __name__ == "__main__":
     
     Stick.weight=30
     Stick.length=10
-    print properties[1]
+    print the_properties[1]
     
-#    print properties[5]
-    properties[5].street='Voskenslaan'
+#    print the_properties[5]
+    the_properties[5].street='Voskenslaan'
     print author
-    print properties[5]
+    print the_properties[5]
     print author.street
     print author.Address.street
     
@@ -327,12 +359,17 @@ if __name__ == "__main__":
     print Sec
     vert = ElemSection('IPEA100', 'steel')
     hor = ElemSection({'name':'IPEM800','A':951247,'I':CascadingDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
+    circ = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel')
+
+    print the_sections
+    exit()
+
     q = ElemLoad(magnitude=2.5, loadlabel='PZ')
     top = ElemProperty(1,hor,[q],'B22')
     column = ElemProperty(2,vert, elemtype='B22')
     diagonal = ElemProperty(4,hor,elemtype='B22')
-    print 'elemproperties'
-    for key, item in elemproperties.iteritems():
+    print 'the_elemproperties'
+    for key, item in the_elemproperties.iteritems():
        print key, item	
 
     bottom=ElemProperty(3,hor,[q])
@@ -342,47 +379,49 @@ if __name__ == "__main__":
     foot = NodeProperty(2,bound='pinned')
 
     np = {}
-    np['1'] = NodeProperty(1, P1)
+    np['1'] = NodeProperty(1, cload=P1)
     np['2'] = NodeProperty(2, cload=P2)
     np['3'] = np['2']
     np['3'].bound = B1
     np['1'].cload[1] = 33.0
     np['7'] = NodeProperty(7, bound=B1)
 
-    for key, item in materials.iteritems():
+    for key, item in the_materials.iteritems():
         print key, item
 
-    print 'properties'
-    for key, item in properties.iteritems():
+    print 'the_properties'
+    for key, item in the_properties.iteritems():
         print key, item
 
-    print 'nodeproperties'    
-    for key, item in nodeproperties.iteritems():
+    print 'the_nodeproperties'    
+    for key, item in the_nodeproperties.iteritems():
         print key, item
     
-    print 'elemproperties'
-    for key, item in elemproperties.iteritems():
+    print 'the_elemproperties'
+    for key, item in the_elemproperties.iteritems():
         print key, item
 ##        
-    print elemproperties[3].A
+    print the_elemproperties[3].A
     bottom.A=555
-    print elemproperties[3]
-    print elemproperties[3].A
-    elemproperties[3].A=444
+    print the_elemproperties[3]
+    print the_elemproperties[3].A
+    the_elemproperties[3].A=444
     print bottom.A
-    print elemproperties[3].A
+    print the_elemproperties[3].A
     
     print "beamsection attributes"
-    for key,item in elemproperties.iteritems():
+    for key,item in the_elemproperties.iteritems():
         print key,item.elemload
     
-    for key,item in elemproperties.iteritems():
+    for key,item in the_elemproperties.iteritems():
         print key,item.E
     
     print "cload attributes"
-    for key,item in nodeproperties.iteritems():
+    for key,item in the_nodeproperties.iteritems():
         print key,item.cload
 
     print "cload attributes"
     for key,item in np.iteritems():
         print key,item.cload
+
+# End

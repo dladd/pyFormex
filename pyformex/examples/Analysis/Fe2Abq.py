@@ -67,7 +67,6 @@ ElemProperty(pb,ElemSection(section=thick_plate,material=steel),elemtype='CPE4')
 ElemProperty(pb1,ElemSection(section=thick_plate,material=steel),elemtype='CPE4')
 ElemProperty(pc,ElemSection(section=medium_plate,material=steel),elemtype='CPE3')
 
-
 # Create the finite element model
 femodels = [part.feModel() for part in parts]
 nodes,elems = mergeModels(femodels)

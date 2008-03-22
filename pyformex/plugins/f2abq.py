@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex
+#!/usr/bin/env pyformex
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
@@ -18,12 +18,12 @@ Then there are higher level functions that read data from the property module
 and write them to the Abaqus input file.
 """
 
-import os
-from properties import *
+from plugins.properties import *
 from mydict import *
 import globaldata as GD
+#from numpy import *
 import datetime
-from numpy import *
+import os
 
 
 ##################################################
@@ -72,6 +72,7 @@ def writeNodes(fil, nodes, name='Nall', nofs=1):
 def writeElems(fil, elems, type, name='Eall', eofs=1, nofs=1):
     """Write element group of given type.
 
+    elems is the list with the element node numbers.
     The elements are added to the named element set. 
     If a name different from 'Eall' is specified, the elements will also
     be added to a set named 'Eall'.
@@ -158,7 +159,7 @@ def writeSection(fil, nr):
     
     nr is the property number of the element set.
     """
-    el = elemproperties[nr]
+    el = the_elemproperties[nr]
 
     mat = el.material
     if mat is not None:
@@ -247,7 +248,7 @@ def writeSection(fil, nr):
 
 def transform(fil, propnr):
     """Transform the nodal coordinates of the nodes with a given property number."""
-    n = nodeproperties[propnr]
+    n = the_nodeproperties[propnr]
     if n.coords.lower()=='cartesian':
         if n.coordset!=[]:
             fil.write("""*TRANSFORM, NSET=%s, TYPE=R
@@ -262,7 +263,7 @@ def transform(fil, propnr):
 %s,%s,%s,%s,%s,%s
 """%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
     else:
-        warning('%s is not a valid coordinate system'%nodeproperties[propnr].coords)
+        warning('%s is not a valid coordinate system'%the_nodeproperties[propnr].coords)
 
     
 def writeBoundaries(fil, boundset='ALL', opb=None):
@@ -278,22 +279,22 @@ def writeBoundaries(fil, boundset='ALL', opb=None):
         fil.write('\n')
         if isinstance(boundset, list):
             for i in boundset:
-                if nodeproperties[i].bound!=None:
-                    if isinstance(nodeproperties[i].bound,list):
+                if the_nodeproperties[i].bound!=None:
+                    if isinstance(the_nodeproperties[i].bound,list):
                         for b in range(6):
-                            if nodeproperties[i].bound[b]==1:
+                            if the_nodeproperties[i].bound[b]==1:
                                 fil.write("%s, %s\n" % (Nset(i),b+1))
-                    elif isinstance(nodeproperties[i].bound,str):
-                        fil.write("%s, %s\n" % (Nset(i),nodeproperties[i].bound))
+                    elif isinstance(the_nodeproperties[i].bound,str):
+                        fil.write("%s, %s\n" % (Nset(i),the_nodeproperties[i].bound))
         elif boundset.upper() =='ALL':
-            for i in nodeproperties.iterkeys():
-                if nodeproperties[i].bound!=None:
-                    if isinstance(nodeproperties[i].bound,list):
+            for i in the_nodeproperties.iterkeys():
+                if the_nodeproperties[i].bound!=None:
+                    if isinstance(the_nodeproperties[i].bound,list):
                         for b in range(6):
-                            if nodeproperties[i].bound[b]==1:
+                            if the_nodeproperties[i].bound[b]==1:
                                 fil.write("%s, %s\n" % (Nset(i),b+1))
-                    elif isinstance(nodeproperties[i].bound,str):
-                        fil.write("%s, %s\n" % (Nset(i),nodeproperties[i].bound))
+                    elif isinstance(the_nodeproperties[i].bound,str):
+                        fil.write("%s, %s\n" % (Nset(i),the_nodeproperties[i].bound))
         else:
             warning("The boundaries have to defined in a list 'boundset'")
 
@@ -311,13 +312,13 @@ def writeDisplacements(fil, recset='ALL', op='MOD'):
     This will also remove initial conditions!
     """
     if recset == 'ALL':
-        recset = nodeproperties.iterkeys()
+        recset = the_nodeproperties.iterkeys()
         
     fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s\n" % op)
     for i in recset:
-        if nodeproperties[i].displacement!=None:
-            for d in range(len(nodeproperties[i].displacement)):
-                fil.write("%s, %s, %s, %s\n" % (Nset(i),nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][0],nodeproperties[i].displacement[d][1]))
+        if the_nodeproperties[i].displacement!=None:
+            for d in range(len(the_nodeproperties[i].displacement)):
+                fil.write("%s, %s, %s, %s\n" % (Nset(i),the_nodeproperties[i].displacement[d][0],the_nodeproperties[i].displacement[d][0],the_nodeproperties[i].displacement[d][1]))
             
             
 def writeCloads(fil, recset='ALL', op='NEW'):
@@ -330,14 +331,14 @@ def writeCloads(fil, recset='ALL', op='NEW'):
     The user can set op='MOD' to add the loads to already existing ones.
     """
     if recset == 'ALL':
-        recset = nodeproperties.iterkeys()
+        recset = the_nodeproperties.iterkeys()
        
     fil.write("*CLOAD, OP=%s\n" % op)
     for i in recset:
-        if nodeproperties[i].cload != None:
+        if the_nodeproperties[i].cload != None:
             for cl in range(6):
-                if nodeproperties[i].cload[cl] != 0:
-                    fil.write("%s, %s, %s\n" % (Nset(i),cl+1,nodeproperties[i].cload[cl]))
+                if the_nodeproperties[i].cload[cl] != 0:
+                    fil.write("%s, %s, %s\n" % (Nset(i),cl+1,the_nodeproperties[i].cload[cl]))
 
 
 def writeDloads(fil, recset='ALL', op='NEW'):
@@ -350,16 +351,16 @@ def writeDloads(fil, recset='ALL', op='NEW'):
     The user can set op='MOD' to add the loads to already existing ones.
     """
     if recset == 'ALL':
-        recset = elemproperties.iterkeys()
+        recset = the_elemproperties.iterkeys()
        
     fil.write("*DLOAD, OP=%s\n" % op)
     for i in recset:
-        if isinstance(elemproperties[i].elemload, list):
-            for load in range(len(elemproperties[i].elemload)):
-                if elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
+        if isinstance(the_elemproperties[i].elemload, list):
+            for load in range(len(the_elemproperties[i].elemload)):
+                if the_elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
                     fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
                 else:
-                    fil.write("%s, %s, %s\n" % (Eset(i),elemproperties[i].elemload[load].loadlabel,elemproperties[i].elemload[load].magnitude))
+                    fil.write("%s, %s, %s\n" % (Eset(i),the_elemproperties[i].elemload[load].loadlabel,the_elemproperties[i].elemload[load].magnitude))
 
 
 def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL', ID=None):
@@ -402,38 +403,104 @@ def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL'
             warning("The set should be a list of property numbers.")
 
 
-def writeStepData(fil, kind , set='ALL', ID=None, globalaxes='No'):
-    """ Write the requested output to the .dat-file.
-    
-    kind = 'NODE' or 'ELEMENT'
-    set is a set of property numbers of which the data should be written to the .dat-file
-    ID is a list of output variable identifiers
-    If globalaxes = 'yes', all requested output is returned in the global axis system. Otherwise, if the nodeproperties were definied in a local axis system, the output is returned in this axis system.
+def writeNodeResults(fil,keys,kind,set='Nall',output='FILE',freq=1,
+                     globalaxes=False,
+                     summary=False,total=False):
+    """ Write a request for nodal result output to the .fil or .dat file.
+
+    keys is a list of NODE output identifiers
+    set is single item or a list of items, where each item is either:
+      - a property number
+      - a node set name
+      for which the results should be written
+    output is either 'FILE' (.fil) or 'PRINT' (.dat)(Standard only)
+    freq is the output frequency in increments (0 = no output)
+
+    Extra arguments:
+    globalaxes: If 'YES', the requested output is returned in the global axes.
+      Default is to use the local axes wherever defined.
+
+    Extra arguments for output='PRINT':
+    summary: if True, a summary with minimum and maximum is written
+    total: if True, sums the values for each key
+
+    Remark: the 'kind' argument is not used, but is included so that we can
+    easily call it with a Results dict as arguments
     """
-    if ID!=None:
-        if kind.upper()=='NODE':
-            if isinstance(set, list):
-                for i in set:
-                    fil.write("*NODE PRINT, NSET=%s, GLOBAL=%s\n"%(Nset(str(i)),globalaxes))
-                    for j in range(len(ID)):
-                        fil.write("%s \n"%ID[j])
-            if isinstance(set, str):
-                fil.write("*NODE PRINT, GLOBAL=%s \n"%globalaxes)
-                for j in range(len(ID)):
-                    fil.write("%s \n"%ID[j])
-        if kind.upper()=='ELEMENT':
-            if isinstance(set, list):
-                for i in set:
-                    fil.write("*EL PRINT, ELSET=%s \n" % Eset(str(i)))
-                    for j in range(len(ID)):
-                        fil.write("%s \n"%ID[j])
-            if isinstance(set, str):
-                fil.write("*EL PRINT \n")
-                for j in range(len(ID)):
-                    fil.write("%s \n"%ID[j])
+    if type(set) == str or type(set) == int:
+        set = [ set ]
+    for i in set:
+        if type(i) == int:
+            setname = Nset(str(i))
+        else:
+            setname = i
+        s = "*NODE %s, NSET=%s" % (output,setname)
+        if freq != 1:
+            s += ", FREQUENCY=%s" % freq
+        if globalaxes:
+            s += ", GLOBAL=YES"
+        if output=='PRINT':
+            if summary:
+                s += ", SUMMARY=YES"
+            if total:
+                s += ", TOTAL=YES"
+        fil.write("%s\n" % s)
+        for key in keys:
+            fil.write("%s\n" % key)
 
 
-def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', outp=[], dat=[]):
+def writeElemResults(fil,keys,kind,set='Eall',output='FILE',freq=1,
+                     pos=None,
+                     summary=False,total=False):
+    """ Write a request for nodal result output to the .fil or .dat file.
+
+    keys is a list of ELEMENT output identifiers
+    set is single item or a list of items, where each item is either:
+      - a property number
+      - an element set name
+      for which the results should be written
+    output is either 'FILE' (.fil) or 'PRINT' (.dat)(Standard only)
+    freq is the output frequency in increments (0 = no output)
+
+    Extra arguments:
+    pos: Position of the points in the elements at which the results are
+      written. Should be one of:
+      'INTEGRATION POINTS' (default)
+      'CENTROIDAL'
+      'NODES'
+      'AVERAGED AT NODES'
+      Non-default values are only available for ABAQUS/Standard.
+      
+    Extra arguments for output='PRINT':
+    summary: if True, a summary with minimum and maximum is written
+    total: if True, sums the values for each key
+
+    Remark: the 'kind' argument is not used, but is included so that we can
+    easily call it with a Results dict as arguments
+    """
+    if type(set) == str or type(set) == int:
+        set = [ set ]
+    for i in set:
+        if type(i) == int:
+            setname = Eset(str(i))
+        else:
+            setname = i
+        s = "*EL %s, ELSET=%s" % (output,setname)
+        if freq != 1:
+            s += ", FREQUENCY=%s" % freq
+        if pos:
+            s += ", POSITION=%s" % pos
+        if output=='PRINT':
+            if summary:
+                s += ", SUMMARY=YES"
+            if total:
+                s += ", TOTAL=YES"
+        fil.write("%s\n" % s)
+        for key in keys:
+            fil.write("%s\n" % key)
+
+
+def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', output=[], results=[]):
     """Write a load step.
         
     analysistype is the analysis type. Currently, only STATIC is supported.
@@ -445,8 +512,8 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
     By default, the load is applied as a new load, i.e. loads
     from previous steps are removed. The user can set op='MOD'
     to keep/modify the previous loads.
-    outp is a list of Odb-instances.
-    dat is a list of Dat-instances.
+    output is a list of Odb-instances.
+    results is a list of Result-instances.
     """ 
     if analysis.upper()=='STATIC':
         fil.write("""*STEP, NLGEOM=%s
@@ -457,10 +524,13 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
         writeDisplacements(fil, dispset,op)
         writeCloads(fil, cloadset, opcl)
         writeDloads(fil, dloadset, opdl)
-        for i in range(len(outp)):
-            writeStepOutput(fil, outp[i].type,outp[i].variable,outp[i].kind,outp[i].set,outp[i].ID)
-        for i in range(len(dat)):
-            writeStepData(fil, dat[i].kind, dat[i].set, dat[i].ID, dat[i].globalaxes)
+        for i in output:
+            writeStepOutput(fil, i.type,i.variable,i.kind,i.set,i.ID)
+        for i in results:
+            if i.kind == 'NODE':
+                writeNodeResults(fil,**i)
+            elif i.kind == 'ELEMENT':
+                writeElemResults(fil,**i)
         fil.write("*END STEP\n")
 
 
@@ -472,23 +542,38 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
 class Model(Dict):
     """Contains all model data."""
     
-    def __init__(self, nodes, elems, nodeprop, elemprop, initialboundaries='ALL'):
+    def __init__(self,nodes,elems,nodeprop,elemprop,initialboundaries='ALL'):
         """Create new model data.
-        
-        Nodes and elems are arrays, such as those obtained by 
+
+        nodes is an array with nodal coordinates
+        elems is either a single element connectivity array, or a list of such.
+        In a simple case, nodes and elems can be the arrays obtained by 
             nodes, elems = F.feModel()
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!    
-        !! This limits the model to elements with the same number of nodes
-        !! A solution would be to use a list of elems arrays 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        nodeprop is a list of all the node property numbers.
-        elemprop is a list of all the element property numbers. This list can be obtained by 
-            elemprop = F.p
-        initialboundaries is a list of all the initial boundaries. It can also be the string 'ALL'. This is the default.
+        This is however limited to a model where all elements have the same
+        number of nodes. Then you can use the list of elems arrays. The 'fe'
+        plugin has a helper function to create this list. E.g., if FL is a
+        list of Formices (possibly with different plexitude), then
+          fe.mergeModels([Fi.feModel() for Fi in FL])
+        will return the (nodes,elems) tuple to create the Model.
+
+        nodeprop is a list of global node property numbers.
+        elemprop is a list of global element property numbers.
+
+        The global node and element property numbers are used to identify
+        the nodes/elements in Node/Element property records that do not have
+        the nset/eset argument set
+        
+        initialboundaries is a list of the initial boundaries. The default is
+        to apply ALL boundary conditions initially. Specify a (possibly
+        empty) list to override the default.
         """
-##         if not type(elems) == list:
-##             elems = [ elems ]
-        Dict.__init__(self, {'nodes':nodes, 'elems':elems, 'nodeprop':nodeprop, 'elemprop':elemprop, 'initialboundaries':initialboundaries}) 
+        if not type(elems) == list:
+            elems = [ elems ]
+        Dict.__init__(self, {'nodes':asarray(nodes),
+                             'elems':map(asarray,elems),
+                             'nodeprop':asarray(nodeprop),
+                             'elemprop':asarray(elemprop),
+                             'initialboundaries':initialboundaries}) 
 
 
 class Analysis(Dict):
@@ -525,32 +610,50 @@ class Odb(Dict):
         Dict.__init__(self, {'type':type, 'variable':variable, 'kind':kind, 'set':set, 'ID': ID})
 
 
-class Dat(Dict):
-    """Contains all data about output requests to the .dat-file."""
+class Results(Dict):
+    """A request for output of results on nodes or elements."""
     
-    def __init__(self, kind='NODE', set='ALL', ID=['COORD'], globalaxes = 'No'):
-        """Create new Dat data.
+    def __init__(self,keys,kind,set=None,output='FILE',freq=1,
+                 **kargs):
+        """Create new output request.
         
         kind = 'NODE' or 'ELEMENT'
-        set is a set of property numbers of which the data should be written to the .dat-file.
-        ID is a list of output variable identifiers.
-        If globalaxes = 'yes', all requested output is returned in the global axis system. Otherwise, if the nodeproperties were definied in a local axis system, the output is returned in this axis system.
+
+        keys is a list of output identifiers (compatible with kind type)
+        
+        set is single item or a list of items, where each item is either:
+          - a property number
+          - a node set name
+          for which the results should be written
+        If no set is specified, the default is 'Nall' for kind=='NODE'
+        and 'Eall' for kind='ELEMENT'
+        
+        output is either 'FILE' (.fil) or 'PRINT' (.dat)(Standard only)
+        freq is the output frequency in increments (0 = no output)
+
+        Extra keyword arguments are available: see the writeNodeResults and
+        writeElemResults functions for details.
         """
-        Dict.__init__(self, {'kind':kind, 'set':set, 'ID':ID, 'globalaxes':globalaxes})
+        kind = kind.upper()
+        if set is None:
+            set = "%sall" % kind[0]
+        Dict.__init__(self,{'keys':keys,'kind':kind,'set':set,'output':output,
+                            'freq':freq})
+        self.update(**kargs)
 
 
 class AbqData(CascadingDict):
     """Contains all data required to write the abaqus input file."""
     
-    def __init__(self, model, analysis=[], dat=[], odb=[]):
+    def __init__(self, model, analysis=[], res=[], odb=[]):
         """Create new AbqData. 
         
         model is a Model instance.
         analysis is a list of Analysis instances.
-        dat is a list of Dat instances.
+        res is a list of Results instances.
         odb is a list of Odb instances.
         """
-        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'dat':dat, 'odb':odb})
+        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'res':res, 'odb':odb})
 
     
 ##################################################
@@ -603,13 +706,14 @@ Script: %s
     #write nodesets and their transformations
     GD.message("Writing node sets")
     nlist = arange(nnod)
-    for i,v in nodeproperties.iteritems():
-        if v.has_key('nset'):
+    for i,v in the_nodeproperties.iteritems():
+        if v.has_key('nset') and v['nset'] is not None:
             nodeset = v['nset']
         else:
-            nodeset = nlist[array(abqdata.nodeprop) == i]
-        writeSet(fil, 'NSET', Nset(str(i)), nodeset)
-        transform(fil,i)
+            nodeset = nlist[abqdata.nodeprop == i]
+        if len(nodeset) > 0:
+            writeSet(fil, 'NSET', Nset(str(i)), nodeset)
+            transform(fil,i)
 
     #write elemsets
     GD.message("Writing element sets")
@@ -618,28 +722,34 @@ Script: %s
     GD.message("Number of element groups: %s" % len(abqdata.elems))
     for j,elems in enumerate(abqdata.elems):
         ne = len(elems)
-        eprop = abqdata.elemprop[n:n+ne]
+        nlist = arange(ne)           # The element numbers for this group
+        eprop = abqdata.elemprop[n:n+ne] # The properties in this group
         GD.message("Number of elements in group %s: %s" % (j,ne))
-        for i in elemproperties:
-            elemset = arange(ne)[eprop == i] # The elems with property i
+        for i,v in the_elemproperties.iteritems():
+            if v.has_key('eset') and v['eset'] is not None:
+                elemset = v['eset']
+            else:
+                elemset = nlist[eprop == i] # The elems with property i
             if len(elemset) > 0:
                 print "Elements in group %s with property %s: %s" % (j,i,elemset)
                 subsetname = '%s' % Eset(j,i)
-                writeElems(fil, elems[elemset],elemproperties[i].elemtype, subsetname,eofs=n+1)
+                writeElems(fil, elems[elemset],the_elemproperties[i].elemtype,subsetname,eofs=n+1)
                 n += len(elemset)
                 writeSubset(fil, 'ELSET', Eset(i), subsetname)
+    if sum([len(elems) for elems in abqdata.elems]) != n:
+        GD.message("!!Not all elements have been written out!!")
     GD.message("Total number of elements: %s" % n)
     # Write element sections
     GD.message("Writing element sections")
-    for i in elemproperties:
-        writeSection(fil, i)
+    for i in the_elemproperties:
+        writeSection(fil,i)
 
     #write steps
     GD.message("Writing steps")
     writeBoundaries(fil, abqdata.initialboundaries)
     for i in range(len(abqdata.analysis)):
-        a=abqdata.analysis[i]
-        writeStep(fil, a.analysistype,a.time, a.nlgeom, a.cloadset, a.opcl, a.dloadset, a. opdl, a.boundset, a.opb, a.dispset, a.op, abqdata.odb, abqdata.dat)
+        a = abqdata.analysis[i]
+        writeStep(fil,a.analysistype,a.time,a.nlgeom,a.cloadset,a.opcl,a.dloadset,a.opdl,a.boundset,a.opb,a.dispset,a.op,abqdata.odb,abqdata.res)
 
     GD.message("Done")
 
@@ -648,28 +758,29 @@ Script: %s
 ## Test
 ##################################################
 
-if __name__ == "__main__":
-    from formex import *
+if __name__ == "script" or __name__ == "draw":
+
+    workHere()
     
-    #creating the formex
+    #creating the formex (just 4 points)
     F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
     
     #install example databases
     # either like this
-    Mat = MaterialDB('examples/materials.db')
+    Mat = MaterialDB('../examples/materials.db')
     setMaterialDB(Mat)
     # or like this
-    setSectionDB(SectionDB('examples/sections.db'))
+    setSectionDB(SectionDB('../examples/sections.db'))
     
     # creating properties
     S1=ElemSection('IPEA100', 'steel')
-    S2=ElemSection({'name':'circle','radius':10},'steel','CIRC')
+    S2=ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel','CIRC')
     S3=ElemSection(sectiontype='join')
     BL1=ElemLoad(0.5,loadlabel='PZ')
     BL2=ElemLoad(loadlabel='Grav')
     #S2.density=7850
     S2.cross_section=572
-    np1=NodeProperty(9,[2,6,4,0,0,0], displacement=[[3,5]],coords='cylindrical',coordset=[0,0,0,0,0,1])
+    np1=NodeProperty(9,cload=[2,6,4,0,0,0], displacement=[[3,5]],coords='cylindrical',coordset=[0,0,0,0,0,1])
     np2=NodeProperty(8,cload=[9,2,5,3,0,4], bound='pinned')
     np3=NodeProperty(7,None,[1,1,1,0,0,1], displacement=[[2,6],[4,8]])
     bottom = ElemProperty(12,S2,[BL1],'T2D3')
@@ -677,16 +788,19 @@ if __name__ == "__main__":
     diag = ElemProperty(8,S3,elemtype='conn3d2')
     
     #creating the input file
+    old = seterr(all='ignore')
     nodes,elems = F.feModel()
+    seterr(**old)
     step1=Analysis(nlgeom='yes', cloadset=[], boundset=[8])
     step2=Analysis(cloadset=[9], dloadset=[], dispset=[9])
     outhist = Odb(type='history')
     outfield = Odb(type='field', kind='node', set= [9,8], ID='SF')
-    elemdat = Dat(kind='element',ID=['U','coord'])
-    nodedat = Dat(kind='node',set=[7,9], ID=['U','coord'])
+    elemres = Results(kind='ELEMENT',keys=['S','SP','SINV'])
+    noderes = Results(kind='NODE',set=[7,9], keys=['U','COORD'])
     model = Model(nodes, elems, [9,8,0,7], F.p, initialboundaries=[7])
-    total = AbqData(model, analysis=[step1, step2], dat=[elemdat, nodedat], odb=[outhist, outfield])
+    total = AbqData(model, analysis=[step1, step2], res=[elemres, noderes], odb=[outhist, outfield])
     print model
     writeAbqInput(total, jobname='testing')
     
     
+# End

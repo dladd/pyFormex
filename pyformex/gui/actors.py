@@ -470,7 +470,7 @@ class FormexActor(Actor,Formex):
             drawNurbsCurves(self.f,color)
             
         elif mode=='wireframe' :
-            print "DRAWING WITH TYPE %s" % self.eltype
+            #print "DRAWING WITH TYPE %s" % self.eltype
             if self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
