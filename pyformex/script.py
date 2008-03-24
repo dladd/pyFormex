@@ -317,4 +317,35 @@ def printdetected():
         if v:
             print "%s (%s)" % ( k,v)
 
+### Utilities
+
+def chdir(fn):
+    """Change the current working directory.
+
+    If fn is a directory name, the current directory is set to fn.
+    If fn is a file name, the current directory is set to the directory
+    holding fn.
+    In either case, the current dirctory is stored in GD.cfg['workdir']
+    for persistence between pyFormex invocations.
+    
+    If fn does not exist, nothing is done.
+    """
+    if os.path.exists:
+        if not os.path.isdir(fn):
+            fn = os.path.dirname(fn)
+        os.chdir(fn)
+        GD.cfg['workdir'] = fn
+        GD.message("Your current workdir is %s" % os.getcwd())
+
+
+def workHere():
+    """Change the current working directory to the script's location."""
+    os.chdir(os.path.dirname(GD.cfg['curfile']))
+
+
+def runtime():
+    """Return the time elapsed since start of execution of the script."""
+    return time.clock() - starttime
+
+
 #### End

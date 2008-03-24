@@ -89,7 +89,7 @@ void do_element() {
 void do_node() {
   printf("Node(%d,[",data.i[j++]);
   int j3 = j+3;
-  assert(j3 <= jend);
+  if (j3 > jend) j3 = jend;
   while (j < j3) printf("%e,",data.d[j++]);
   if (j < jend) {
     printf("],normal=[");

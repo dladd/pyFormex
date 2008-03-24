@@ -363,49 +363,47 @@ def writeDloads(fil, recset='ALL', op='NEW'):
                     fil.write("%s, %s, %s\n" % (Eset(i),the_elemproperties[i].elemload[load].loadlabel,the_elemproperties[i].elemload[load].magnitude))
 
 
-def writeStepOutput(fil, type='FIELD', variable='PRESELECT', kind='' , set='ALL', ID=None):
-    """Write the step output requests.
+### Output requests ###################################
+#
+# Output: goes to the .odb file (for postprocessing with Abaqus/CAE)
+# Result: goes to the .fil file (for postprocessing with other means)
+#######################################################
+
+def writeStepOutput(fil,kind,type,variable='PRESELECT'):
+    """Write the global step output requests.
     
-    type =  'FIELD' or 'HISTORY'
+    type = 'FIELD' or 'HISTORY'
     variable = 'ALL' or 'PRESELECT'
-    kind = '', 'NODE', or 'ELEMENT'
-    set is a list of property numbers of which the data should be written to the ODB-file.
-    ID is a list of output variable identifiers. 
     """
     fil.write("*OUTPUT, %s, VARIABLE=%s\n" %(type.upper(),variable.upper()))
-    if kind.upper()=='ELEMENT':
-        if isinstance(set,list):
-            for j in range(len(set)):
-                fil.write("*ELEMENT OUTPUT, ELSET=%s\n" % Eset(str(set[j])))
-                if ID!=None:
-                    for j in range(len(ID)):
-                        fil.write("%s \n"%ID[j])
-        elif set.upper()=='ALL':
-            fil.write("*ELEMENT OUTPUT, ELSET=Eall\n")
-            if ID!=None:
-                for j in range(len(ID)):
-                    fil.write("%s \n"%ID[j])
-        else:
-            warning("The set should be a list")
-    if kind.upper()=='NODE':
-        if isinstance(set,list):
-            for j in range(len(set)):
-                fil.write("*NODE OUTPUT, NSET=%s\n"% Nset(str(set[j])))
-                if ID!=None:
-                    for j in range(len(ID)):
-                        fil.write("%s \n"%ID[j])
-        elif set.upper()=='ALL':
-            fil.write("*NODE OUTPUT, NSET=Nall\n")
-            if ID!=None:
-                for j in range(len(ID)):
-                    fil.write("%s \n"%ID[j])
-        else:
-            warning("The set should be a list of property numbers.")
 
 
-def writeNodeResults(fil,keys,kind,set='Nall',output='FILE',freq=1,
-                     globalaxes=False,
-                     summary=False,total=False):
+def writeNodeOutput(fil,kind,keys,set='Nall'):
+    """ Write a request for nodal result output to the .odb file.
+
+    keys is a list of NODE output identifiers
+    set is single item or a list of items, where each item is either:
+      - a property number
+      - a node set name
+      for which the results should be written
+    """
+    output = 'OUTPUT'
+    if type(set) == str or type(set) == int:
+        set = [ set ]
+    for i in set:
+        if type(i) == int:
+            setname = Nset(str(i))
+        else:
+            setname = i
+        s = "*NODE %s, NSET=%s" % (output,setname)
+        fil.write("%s\n" % s)
+        for key in keys:
+            fil.write("%s\n" % key)
+
+
+def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
+                    globalaxes=False,
+                    summary=False,total=False):
     """ Write a request for nodal result output to the .fil or .dat file.
 
     keys is a list of NODE output identifiers
@@ -449,10 +447,33 @@ def writeNodeResults(fil,keys,kind,set='Nall',output='FILE',freq=1,
             fil.write("%s\n" % key)
 
 
-def writeElemResults(fil,keys,kind,set='Eall',output='FILE',freq=1,
-                     pos=None,
-                     summary=False,total=False):
-    """ Write a request for nodal result output to the .fil or .dat file.
+def writeElemOutput(fil,kind,keys,set='Eall'):
+    """ Write a request for element output to the .odb file.
+
+    keys is a list of ELEMENT output identifiers
+    set is single item or a list of items, where each item is either:
+      - a property number
+      - an element set name
+      for which the results should be written
+    """
+    output = 'OUTPUT'
+    if type(set) == str or type(set) == int:
+        set = [ set ]
+    for i in set:
+        if type(i) == int:
+            setname = Eset(str(i))
+        else:
+            setname = i
+        s = "*ELEMENT %s, ELSET=%s" % (output,setname)
+        fil.write("%s\n" % s)
+        for key in keys:
+            fil.write("%s\n" % key)
+
+
+def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
+                    pos=None,
+                    summary=False,total=False):
+    """ Write a request for element result output to the .fil or .dat file.
 
     keys is a list of ELEMENT output identifiers
     set is single item or a list of items, where each item is either:
@@ -500,7 +521,7 @@ def writeElemResults(fil,keys,kind,set='Eall',output='FILE',freq=1,
             fil.write("%s\n" % key)
 
 
-def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', output=[], results=[]):
+def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', out=[], res=[]):
     """Write a load step.
         
     analysistype is the analysis type. Currently, only STATIC is supported.
@@ -512,8 +533,8 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
     By default, the load is applied as a new load, i.e. loads
     from previous steps are removed. The user can set op='MOD'
     to keep/modify the previous loads.
-    output is a list of Odb-instances.
-    results is a list of Result-instances.
+    out is a list of Output-instances.
+    res is a list of Result-instances.
     """ 
     if analysis.upper()=='STATIC':
         fil.write("""*STEP, NLGEOM=%s
@@ -524,13 +545,19 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
         writeDisplacements(fil, dispset,op)
         writeCloads(fil, cloadset, opcl)
         writeDloads(fil, dloadset, opdl)
-        for i in output:
-            writeStepOutput(fil, i.type,i.variable,i.kind,i.set,i.ID)
-        for i in results:
-            if i.kind == 'NODE':
-                writeNodeResults(fil,**i)
-            elif i.kind == 'ELEMENT':
-                writeElemResults(fil,**i)
+        print out
+        for i in out:
+            if i.kind is None:
+                writeStepOutput(fil,**i)
+            if i.kind == 'N':
+                writeNodeOutput(fil,**i)
+            elif i.kind == 'E':
+                writeElemOutput(fil,**i)
+        for i in res:
+            if i.kind == 'N':
+                writeNodeResult(fil,**i)
+            elif i.kind == 'E':
+                writeElemResult(fil,**i)
         fil.write("*END STEP\n")
 
 
@@ -595,29 +622,50 @@ class Analysis(Dict):
         Dict.__init__(self,{'analysistype':analysistype, 'time':time, 'nlgeom':nlgeom, 'cloadset':cloadset, 'opcl':opcl, 'dloadset':dloadset, 'opdl':opdl, 'boundset':boundset, 'opb': opb, 'dispset' : dispset , 'op': op})
 
     
-class Odb(Dict):
-    """Contains all data about the output requests to the .ODB-file."""
+class Output(Dict):
+    """A request for output to .odb and history."""
     
-    def __init__(self, type='FIELD', variable='PRESELECT', kind = '' , set='all', ID=None):
-        """ Create new ODB data.
+    def __init__(self,kind=None,keys=None,set=None,
+                 type='FIELD',variable='PRESELECT'):
+        """ Create new output request.
         
-        type =  'FIELD' or 'HISTORY'
-        variable = 'ALL' or 'PRESELECT'
-        kind = 'NODE', or 'ELEMENT'
-        set is a list of property numbers of which the data should be written to the ODB-file.
-        ID is a list of output variable identifiers. 
+        kind = None, 'NODE', or 'ELEMENT' (first character suffices)
+
+        For kind=='':
+
+          type =  'FIELD' or 'HISTORY'
+          variable = 'ALL' or 'PRESELECT'
+
+        For kind=='NODE' or 'ELEMENT':
+
+          keys is a list of output identifiers (compatible with kind type)
+        
+          set is single item or a list of items, where each item is either:
+            - a property number
+            - a node set name
+            for which the results should be written
+          If no set is specified, the default is 'Nall' for kind=='NODE'
+          and 'Eall' for kind='ELEMENT'
         """
-        Dict.__init__(self, {'type':type, 'variable':variable, 'kind':kind, 'set':set, 'ID': ID})
+        if kind:
+            kind = kind[0].upper()
+        if set is None:
+            set = "%sall" % kind
+        Dict.__init__(self,{'kind':kind})
+        if kind is not None:
+            self.update({'keys':keys,'set':set})
+        else:
+            self.update({'type':type,'variable':variable})
 
 
-class Results(Dict):
+class Result(Dict):
     """A request for output of results on nodes or elements."""
     
-    def __init__(self,keys,kind,set=None,output='FILE',freq=1,
+    def __init__(self,kind,keys,set=None,output='FILE',freq=1,
                  **kargs):
-        """Create new output request.
+        """Create new result request.
         
-        kind = 'NODE' or 'ELEMENT'
+        kind = 'NODE' or 'ELEMENT' (actually, the first character suffices)
 
         keys is a list of output identifiers (compatible with kind type)
         
@@ -634,9 +682,9 @@ class Results(Dict):
         Extra keyword arguments are available: see the writeNodeResults and
         writeElemResults functions for details.
         """
-        kind = kind.upper()
+        kind = kind[0].upper()
         if set is None:
-            set = "%sall" % kind[0]
+            set = "%sall" % kind
         Dict.__init__(self,{'keys':keys,'kind':kind,'set':set,'output':output,
                             'freq':freq})
         self.update(**kargs)
@@ -645,15 +693,15 @@ class Results(Dict):
 class AbqData(CascadingDict):
     """Contains all data required to write the abaqus input file."""
     
-    def __init__(self, model, analysis=[], res=[], odb=[]):
+    def __init__(self, model, analysis=[], res=[],out=[]):
         """Create new AbqData. 
         
         model is a Model instance.
         analysis is a list of Analysis instances.
-        res is a list of Results instances.
-        odb is a list of Odb instances.
+        res is a list of Result instances.
+        out is a list of Output instances.
         """
-        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'res':res, 'odb':odb})
+        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'res':res, 'out':out})
 
     
 ##################################################
@@ -749,7 +797,7 @@ Script: %s
     writeBoundaries(fil, abqdata.initialboundaries)
     for i in range(len(abqdata.analysis)):
         a = abqdata.analysis[i]
-        writeStep(fil,a.analysistype,a.time,a.nlgeom,a.cloadset,a.opcl,a.dloadset,a.opdl,a.boundset,a.opb,a.dispset,a.op,abqdata.odb,abqdata.res)
+        writeStep(fil,a.analysistype,a.time,a.nlgeom,a.cloadset,a.opcl,a.dloadset,a.opdl,a.boundset,a.opb,a.dispset,a.op,abqdata.out,abqdata.res)
 
     GD.message("Done")
 
@@ -767,10 +815,10 @@ if __name__ == "script" or __name__ == "draw":
     
     #install example databases
     # either like this
-    Mat = MaterialDB('../examples/materials.db')
+    Mat = MaterialDB('../../examples/materials.db')
     setMaterialDB(Mat)
     # or like this
-    setSectionDB(SectionDB('../examples/sections.db'))
+    setSectionDB(SectionDB('../../examples/sections.db'))
     
     # creating properties
     S1=ElemSection('IPEA100', 'steel')
@@ -793,12 +841,12 @@ if __name__ == "script" or __name__ == "draw":
     seterr(**old)
     step1=Analysis(nlgeom='yes', cloadset=[], boundset=[8])
     step2=Analysis(cloadset=[9], dloadset=[], dispset=[9])
-    outhist = Odb(type='history')
-    outfield = Odb(type='field', kind='node', set= [9,8], ID='SF')
-    elemres = Results(kind='ELEMENT',keys=['S','SP','SINV'])
-    noderes = Results(kind='NODE',set=[7,9], keys=['U','COORD'])
+    outhist = Output(type='history')
+    outfield = Output(type='field', kind='node', set= [9,8], keys='SF')
+    elemres = Result(kind='ELEMENT',keys=['S','SP','SINV'])
+    noderes = Result(kind='NODE',set=[7,9], keys=['U','COORD'])
     model = Model(nodes, elems, [9,8,0,7], F.p, initialboundaries=[7])
-    total = AbqData(model, analysis=[step1, step2], res=[elemres, noderes], odb=[outhist, outfield])
+    total = AbqData(model, analysis=[step1, step2], res=[elemres, noderes], out=[outhist, outfield])
     print model
     writeAbqInput(total, jobname='testing')
     

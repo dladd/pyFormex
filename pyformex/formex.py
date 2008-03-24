@@ -1381,7 +1381,7 @@ class Formex:
         ## the replication of the properties is automatic!
         return Formex(f,self.p)
     
-    def replic2(self,n1,n2,t1,t2,d1=0,d2=1,bias=0,taper=0):
+    def replic2(self,n1,n2,t1=1.0,t2=1.0,d1=0,d2=1,bias=0,taper=0):
         """Replicate in two directions.
 
         n1,n2 number of replications with steps t1,t2 in directions d1,d2

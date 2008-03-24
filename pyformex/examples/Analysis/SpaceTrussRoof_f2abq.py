@@ -94,9 +94,9 @@ topbar = ElemProperty(3,elemsection = circ20, elemtype='T3D2')
 ###################
 
 step = Analysis()
-db = Odb(type='field', variable='preselect')
-forcedata = Results(kind='element', keys=['S'])
+odb = Output(type='field', variable='preselect')
+res = Result(kind='element', keys=['S'])
 model = Model(nodes, elems, nodeprops, F.p)
-total = AbqData(model, [step], odb= [db], res=[forcedata])
+total = AbqData(model, [step], out=[out], res=[res])
 message("Writing the Abaqus file")
 writeAbqInput(total,jobname='SpaceTruss')

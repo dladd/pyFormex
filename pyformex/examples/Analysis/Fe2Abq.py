@@ -107,17 +107,38 @@ NodeProperty(pb,nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
 
 
 # Create the Abaqus model
+# A model contains a single set of nodes, one or more sets of elements,
+# a global node property set and a global element property set.
+#
 model = Model(nodes, elems, F.p , elemprops)
 
 
 # ask default output plus output of S in elements of part B
-hist_outp = Odb(type='history')
-field_outp = Odb(type='field', kind='element', set=[pb], ID=['S'])
+out = [ Output(type='history'),
+        Output(type='field'),
+        Output(type='field',kind='element',set=[pb],keys=['S']),
+        ]
+
+# Create output request to the .fil file.
+# In this case we request :
+# - the displacements in all nodes
+# - the stress components in all elements
+# - the principal stresses and stress invariants in the elements of part B.
+# (add output='PRINT' to get the results printed in the .dat file)
+res = [ Result(kind='NODE',keys=['U']),
+        Result(kind='ELEMENT',keys=['S']),
+        Result(kind='ELEMENT',keys=['SP','SINV'],set=[pb]),
+        ]
 
 # Static(default) step
 step1 = Analysis(time=[1., 1., 0.01, 1.])
 
-all = AbqData(model, [step1], odb=[hist_outp, field_outp])
+# collect all data
+#
+# !! currently output/result request are global to all steps
+# !! this will be changed in future
+#
+all = AbqData(model,[step1],out=out,res=res)
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')

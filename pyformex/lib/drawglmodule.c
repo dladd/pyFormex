@@ -11,6 +11,8 @@
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
 
+int debug = 0;
+
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
 
@@ -111,7 +113,7 @@ draw_triangles(PyObject *dummy, PyObject *args)
   float *x, *n=NULL, *c=NULL, alpha;
   int nels,nd=0;
 
-  printf("** draw_triangles\n");
+  if (debug) printf("** draw_triangles\n");
   if (!PyArg_ParseTuple(args, "OOOf", &arg1, &arg2, &arg3, &alpha)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
@@ -129,7 +131,7 @@ draw_triangles(PyObject *dummy, PyObject *args)
     nd = PyArray_NDIM(arr3);
   }
   
-  printf("** nd = %d\n",nd);
+  if (debug) printf("** nd = %d\n",nd);
   glBegin(GL_TRIANGLES);
   int i,j;
   if (nd == 0) {
@@ -199,27 +201,27 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
   float *x,*n=NULL,*c=NULL;
   int *e;
 
-  printf("** draw_triangle_elements\n");
+  if (debug) printf("** draw_triangle_elements\n");
   if (!PyArg_ParseTuple(args, "OOOO", &arg1, &arg2, &arg3, &arg4)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
-  printf("Got arg 1\n");
+  if (debug) printf("Got arg 1\n");
 
   arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
   if (arr2 == NULL) goto fail;
   e = (int *)PyArray_DATA(arr2);
-  printf("Got arg 2\n");
+  if (debug) printf("Got arg 2\n");
 
   arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr3 != NULL) 
     n = (float *)PyArray_DATA(arr3);
-  printf("Got arg 3\n");
+  if (debug) printf("Got arg 3\n");
 
   arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr4 != NULL) 
     c = (float *)PyArray_DATA(arr4);
-  printf("Got arg 4\n");
+  if (debug) printf("Got arg 4\n");
   
   int npts,ntri;
   npy_intp * dims;
@@ -228,7 +230,7 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
   dims = PyArray_DIMS(arr2);
   ntri = dims[0];
 
-  printf("ntri = %d\n",ntri);
+  if (debug) printf("ntri = %d\n",ntri);
   glBegin(GL_TRIANGLES);
   int i,j;
   for (i=0; i<3*ntri; i+=3) {
@@ -245,7 +247,7 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
   Py_INCREF(Py_None);
   return Py_None;
  fail:
-  printf("Error Cleanup\n");
+  if (debug) printf("Error Cleanup\n");
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   return NULL;

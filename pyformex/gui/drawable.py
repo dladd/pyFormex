@@ -20,15 +20,20 @@ from formex import *
 
 import simple
 
-try:
-    import lib.drawgl as LD
-    GD.debug("Succesfully loaded the pyFormex compiled library")
-except ImportError:
-    GD.debug("Error while loading the pyFormex compiled library")
-    GD.debug("Reverting to scripted versions")
-    GD.options.uselib = False
+# Loading the low level drawing library
+if GD.options.uselib:
+    try:
+        import lib.drawgl as D
+        GD.debug("Succesfully loaded the pyFormex compiled library")
+    except ImportError:
+        GD.debug("Error while loading the pyFormex compiled library")
+        GD.debug("Reverting to scripted versions")
+        GD.options.uselib = False
+        GD.options.safelib = False
+        
+if not GD.options.uselib:
+    import drawgl as D
 
-import drawgl as D
 
 
 def rotMatrix(v,n=3):
@@ -108,29 +113,24 @@ def drawAtPoints(x,mark,color=None):
         GL.glPopMatrix()
 
 
-def drawLines(x,color=None,color1=None):
+def drawLines(x,color=None):
     """Draw a collection of lines.
 
     x is a (nlines,2,3) shaped array of coordinates.
 
-    If color is given it is an (nlines,3) array of RGB values.
-    If a second color is given, make sure that smooth shading is on,
-    or the color redering will be flat with the second color.
+    If color is given it is an (nlines,3), (nlines,1,3) or (nlines,2,3)
+    array of RGB values.
+    If two colors are given, make sure that smooth shading is on,
+    or the color rendering will be flat with the second color.
     """
-    if color1 is not None and color is not None:
-        c = concatenate([color,color1]).reshape((-1,2,3))
-    elif color is not None:
-        c = color.reshape((-1,3))
-    else:
-        c = None
-    if GD.options.uselib:
-        if GD.options.safelib:
-            x = x.astype(float32)
-            if c is not None:
-                c = c.astype(float32)
-        LD.drawLines(x,c)
-    else:
-        D.drawLines(x,c)
+    if GD.options.safelib:
+        x = x.astype(float32)
+        if color is not None:
+            color = color.astype(float32)
+            if (color.shape[0] != x.shape[0] or
+                color.shape[-1] != 3):
+                color = None
+    D.drawLines(x,color)
 
 
 def drawTriangles(x,mode,color=None,alpha=1.0):
@@ -148,27 +148,16 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
     n = None
     if mode.startswith('smooth'):
         n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-    if GD.options.uselib:
-        if GD.options.safelib:
-            x = x.astype(float32)
-            if n is not None:
-                n = n.astype(float32)
-            if color is not None:
-                color = color.astype(float32)
-        LD.drawTriangles(x,n,color,alpha)
-    else:
-        D.drawTriangles(x,n,color)
-
-
-def drawArrayElems(x,elems,mode):
-    print x.shape
-    print elems.shape
-    print "x is contiguous: %s" % x.flags['C_CONTIGUOUS']
-    print "elems is contiguous: %s" % elems.flags['C_CONTIGUOUS']
-    GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
-    GL.glVertexPointerf(x)
-    GL.glDrawElementsui(mode,elems)
-    GL.glDisableClientState(GL.GL_VERTEX_ARRAY)
+    if GD.options.safelib:
+        x = x.astype(float32)
+        if n is not None:
+            n = n.astype(float32)
+        if color is not None:
+            color = color.astype(float32)
+            if (color.shape[0] != x.shape[0] or
+                color.shape[-1] != 3):
+                color = None
+    D.drawTriangles(x,n,color,alpha)
 
 
 def drawLineElems(x,elems,color=None):
@@ -182,8 +171,11 @@ def drawLineElems(x,elems,color=None):
     If color is given it is an (nlines,3) array of RGB values.
     """
     drawLines(x[elems],color)
-        
+ 
 
+def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
+    drawTriangles(x[elems],mode,color,alpha)
+       
 
 ## PERHAPS THIS COULD BE REPLACED WITH drawLines by reshaping the x ARRAY
 ## (MIGHT NEED ADJUSTMENT OF color)
@@ -205,77 +197,40 @@ def drawEdges(x,color=None):
     GL.glEnd()
 
 
-def drawPolyLines(x,color=None,close=True):
-    """Draw a collection of polylines.
+def drawPolyLines(x,c=None,close=True):
+    """Draw a collection of polylines, closed or not.
 
-    x is a (npoly,n,3) shaped array of coordinates. Each polyline consists
-    of n or n-1 line segments, depending on whether the polyline is closed
-    or not. The default is to close the polyline (connecting the last node
-    to the first.
-
-    If color is given it is an (npoly,3) array of RGB values.
+    x : float (npoly,n,3) : coordinates.
+    c : float (npoly,3) or (npoly,n,3) : color(s) at vertices
+    If rendering is flat, the last color will  be used for each segment.
     """
-    for i in range(x.shape[0]):
-        if close:
-            GL.glBegin(GL.GL_LINE_LOOP)
-        else:
-            GL.glBegin(GL.GL_LINE_STRIP)
-        if color is not None:
-            GL.glColor3fv(color[i])
-        for j in range(x.shape[1]):
-            GL.glVertex3fv(x[i][j])
-        GL.glEnd()
+    if close:
+        glmode = GL.GL_LINE_LOOP
+    else:
+        glmode = GL.GL_LINE_STRIP
+        
+    if c is None:
+        for i in range(x.shape[0]):
+            GL.glBegin(glmode)
+            for j in range(x.shape[1]):
+                GL.glVertex3fv(x[i][j])
+            GL.glEnd()
 
+    elif c.ndim == 2:
+        for i in range(x.shape[0]):
+            GL.glBegin(glmode)
+            GL.glColor3fv(c[i])
+            for j in range(x.shape[1]):
+                GL.glVertex3fv(x[i][j])
+            GL.glEnd()
 
-def drawQuadraticCurves(x,color=None,n=8):
-    """Draw a collection of curves.
-
-    x is a (nlines,3,3) shaped array of coordinates.
-    For each member a quadratic curve through its points is drawn.
-    The quadratic curve is approximated with 2*n straight segments.
-
-    If color is given it is an (nlines,3) array of RGB values.
-    """
-    H = simple.quadraticCurve(identity(3),n)
-    for i in range(x.shape[0]):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        P = dot(H,x[i])
-        GL.glBegin(GL.GL_LINE_STRIP)
-        for p in P:
-            GL.glVertex3fv(p)
-        GL.glEnd()
-
-
-def drawNurbsCurves(x,color=None):
-    """Draw a collection of curves.
-
-    x is a (nlines,3,3) shaped array of coordinates.
-
-    If color is given it is an (nlines,3) array of RGB values.
-    """
-    nurb = GLU.gluNewNurbsRenderer()
-##    nkots = 7
-##    knots = arange(nkots+1) / float(nkots)
-    if x.shape[1] == 4:
-        knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
-    if x.shape[1] == 3:
-        knots = array([0.,0.,0.,1.0,1.0,1.0])
-    if not nurb:
-        return
-    for i,xi in enumerate(x):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        GLU.gluBeginCurve(nurb)
-        GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
-        GLU.gluEndCurve(nurb)
-
-
-def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
-##     if GD.options.arrays:
-##         drawArrayElems(x,elems,GL.GL_TRIANGLES)
-##     else:
-    drawTriangles(x[elems],mode,color,alpha)
+    elif c.ndim == 3:
+        for i in range(x.shape[0]):
+            GL.glBegin(glmode)
+            for j in range(x.shape[1]):
+                GL.glColor3fv(c[i][j])
+                GL.glVertex3fv(x[i][j])
+            GL.glEnd()
 
     
 def drawPolygons(x,mode,color=None):
@@ -325,6 +280,50 @@ def drawPolygonColor(x,color,alpha=1.0,normals=False):
         GL.glVertex3fv(x[i][j])
     GL.glEnd()
 
+
+def drawQuadraticCurves(x,color=None,n=8):
+    """Draw a collection of curves.
+
+    x is a (nlines,3,3) shaped array of coordinates.
+    For each member a quadratic curve through its points is drawn.
+    The quadratic curve is approximated with 2*n straight segments.
+
+    If color is given it is an (nlines,3) array of RGB values.
+    """
+    H = simple.quadraticCurve(identity(3),n)
+    for i in range(x.shape[0]):
+        if color is not None:
+            GL.glColor3fv(color[i])
+        P = dot(H,x[i])
+        GL.glBegin(GL.GL_LINE_STRIP)
+        for p in P:
+            GL.glVertex3fv(p)
+        GL.glEnd()
+
+
+def drawNurbsCurves(x,color=None):
+    """Draw a collection of curves.
+
+    x is a (nlines,3,3) shaped array of coordinates.
+
+    If color is given it is an (nlines,3) array of RGB values.
+    """
+    nurb = GLU.gluNewNurbsRenderer()
+##    nkots = 7
+##    knots = arange(nkots+1) / float(nkots)
+    if x.shape[1] == 4:
+        knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
+    if x.shape[1] == 3:
+        knots = array([0.,0.,0.,1.0,1.0,1.0])
+    if not nurb:
+        return
+    for i,xi in enumerate(x):
+        if color is not None:
+            GL.glColor3fv(color[i])
+        GLU.gluBeginCurve(nurb)
+        GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
+        GLU.gluEndCurve(nurb)
+
     
 def drawQuadrilaterals(x,mode,color=None):
     """Draw a collection of quadrilaterals.
@@ -341,8 +340,6 @@ def drawQuadrilaterals(x,mode,color=None):
     if mode == 'smooth':
         edge = [ x[:,i,:] - x[:,i-1,:] for i in range(nplex) ]
         normal = [ vectorPairNormals(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
-##        normal = [ cross(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
-##        normal /= column_stack([sqrt(sum(normal*normal,-1))])
     GL.glBegin(GL.GL_QUADS)
     for i in range(x.shape[0]):
         if color is not None:
@@ -531,7 +528,8 @@ def saneColor(color=None):
     [ 0,0,255 ] would be a color index with 3 values. 
     """
     if color is None:
-        return None # use canvas fgcolor
+        # no color: use canvas fgcolor
+        return None
 
     # detect color index
     try:
@@ -555,7 +553,7 @@ def saneColor(color=None):
     # Convert to array
     try:
         color = asarray(color).squeeze()
-        if color.dtype.kind == 'f' and color.ndim <= 2 and color.shape[-1] == 3:
+        if color.dtype.kind == 'f' and color.shape[-1] == 3:
             # Looks like we have a sane color array
             return color.astype(float32)
     except:
@@ -564,19 +562,39 @@ def saneColor(color=None):
     return None
 
 
-def saneColorSet(color=None,colormap=None,ncolors=1):
+def saneColorArray(color,shape):
+    """Makes sure the shape of the color array is compatible with shape.
+
+    A compatible shape is equal to shape or has either or both of its
+    dimensions equal to 1.
+    Compatibility is enforced in the following way:
+    - if shape[1] != np and shape[1] != 1: take out first plane in direction 1
+    - if shape[0] != ne and shape[0] != 1: repeat plane in direction 0 ne times
+    """
+    if color.ndim == 1:
+        return color
+    if color.ndim == 3:
+        if color.shape[1] > 1 and color.shape[1] != shape[1]:
+            color = color[:,0]
+    if color.shape[0] > 1 and color.shape[0] != shape[0]:
+        color = resize(color,(shape[0],color.shape[1]))
+    return color
+
+
+def saneColorSet(color=None,colormap=None,shape=(1,)):
     """Return a sane set of colors.
 
     A sane set of colors is one that guarantees correct use by the
     draw functions. This means either
     - no color (None)
     - a single color
-    - at least as many colors as the value ncolors specifies
+    - at least as many colors as the shape ncolors specifies
     - a color index and a color map with enough colors to satisfy the index.
     The return value is a tuple color,colormap. colormap will return
     unchanged, unless color is an integer array, meaning a color index.
     """
-    #GD.debug("COLOR IN: %s" % str(color))
+    if type(shape) == int:  # make sure we get a tuple
+        shape = (shape,)
     color = saneColor(color)
     if color is not None:
         if color.dtype.kind == 'i':
@@ -584,15 +602,10 @@ def saneColorSet(color=None,colormap=None,ncolors=1):
             if colormap is None:
                 colormap = GD.canvas.settings.propcolors
             colormap = saneColor(colormap)
-            if colormap.shape[0] < ncolors:
-                colormap = resize(colormap,(ncolors,3))
+            colormap = saneColorArray(colormap,shape)
         else:
-            if color.ndim == 2 and color.shape[0] < ncolors:
-                color = resize(color,(ncolors,3))
+            color = saneColorArray(color,shape)
 
-    #GD.debug("COLOR OUT: %s" % str(color))
-    #if colormap is not None:
-        #GD.debug("MAP: %s" % str(colormap))
     return color,colormap
 
 

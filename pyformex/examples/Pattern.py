@@ -11,12 +11,21 @@
 ##
 import simple
 
-def drawPattern(p):
-    clear()
-    F = Formex(pattern(p))
-    draw(F,view='front')
-    draw(F,view='iso')
 
-for n,p in simple.Pattern.items():
-    message("%s = %s" % (n,p))
-    drawPattern(p)
+if __name__ == "draw":
+
+    #grid = simple.regularGrid([-2,-2],[2,2],[4,4])
+    #clear()
+    setDrawOptions(dict(view='front',linewidth=5,fgcolor='red'))
+    grid = actors.GridActor(nx=(4,4,0),ox=(-2.0,-2.0,0.0),dx=(1.0,1.0,1.0),planes=False,linewidth=1)
+    drawActor(grid)
+    linewidth(3)
+    FA = None
+    for n,p in simple.Pattern.items():
+        message("%s = %s" % (n,p))
+        FB = draw(Formex(pattern(p)),bbox=None,color='red')
+        if FA:
+            undraw(FA)
+        FA = FB
+
+# End

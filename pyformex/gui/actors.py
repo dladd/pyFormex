@@ -316,7 +316,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0,color1=None,color2=None):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -345,24 +345,19 @@ class FormexActor(Actor,Formex):
         if self.nplex() == 1:
             self.setMarkSize(marksize)
         self.list = None
-        self.color1 = None
-        self.color2 = None
-        if color1 is not None:
-            self.color1,self.colormap = saneColorSet(color1,None,self.nelems())
-        if color2 is not None:
-            self.color2,self.colormap = saneColorSet(color2,None,self.nelems())
+
 
     def atype(self):
         return 'Formex'
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
-        self.color,self.colormap = saneColorSet(color,colormap,self.nelems())
+        self.color,self.colormap = saneColorSet(color,colormap,self.f.shape[:-1])
 
 
     def setBkColor(self,color=None,colormap=None):
         """Set the backside color of the Actor."""
-        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.nelems())
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,(self.f.shape[:-1]))
 
     def setAlpha(self,alpha):
         """Set the Actors alpha value."""
@@ -426,11 +421,8 @@ class FormexActor(Actor,Formex):
 
         if alpha is None:
             alpha = self.alpha
-            
-        color1 = None
-        color2 = None
         
-        if color is None:  
+        if color is None:
             color,colormap = self.color,self.colormap
         else:
             color,colormap = saneColorSet(color,colormap,self.nelems())
@@ -446,9 +438,8 @@ class FormexActor(Actor,Formex):
             color = colormap[color]
 
         else: # a full color array : use as is
-            color1 = self.color1
-            color2 = self.color2
-
+            pass
+                
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
             
@@ -461,7 +452,7 @@ class FormexActor(Actor,Formex):
                 drawPoints(x,self.marksize,color)
                 
         elif nnod == 2:
-            drawLines(self.f,color,color1)
+            drawLines(self.f,color)
         
         elif nnod == 3 and self.eltype == 'curve':
             drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
@@ -470,7 +461,6 @@ class FormexActor(Actor,Formex):
             drawNurbsCurves(self.f,color)
             
         elif mode=='wireframe' :
-            #print "DRAWING WITH TYPE %s" % self.eltype
             if self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 coords = self.f[:,edges,:]
@@ -482,18 +472,13 @@ class FormexActor(Actor,Formex):
             elif self.eltype == 'hex':
                 edges = [ 0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
                 coords = self.f[:,edges,:]
-                print coords.dtype
                 drawEdges(coords,color)
             else:
                 drawPolyLines(self.f,color)
                 
         elif nnod == 3:
-            if color2 is None:
-                drawTriangles(self.f,mode,color,alpha)
-            else:
-                color = concatenate([color,color1,color2],axis=1)
-                drawPolygonColor(x,color,alpha)
-            
+            drawTriangles(self.f,mode,color,alpha)
+                
         elif nnod == 4:
             if self.eltype=='tet':
                 faces = [ 0,1,2, 0,2,3, 0,3,1, 3,2,1 ]
@@ -555,12 +540,12 @@ class TriSurfaceActor(Actor,TriSurface):
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
-        self.color,self.colormap = saneColorSet(color,colormap,self.nelems()) 
+        self.color,self.colormap = saneColorSet(color,colormap,(self.nelems(),3)) 
 
 
     def setBkColor(self,color=None,colormap=None):
         """Set the backside color of the Actor."""
-        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.nelems())
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,(self.nelems(),3))
 
     def setAlpha(self,alpha):
         """Set the Actors alpha value."""

@@ -13,7 +13,7 @@
 """Global data for pyFormex."""
 
 # Set pyformex version
-__version__ = "0.6.1-a3"
+__version__ = "0.6.1-a4"
 __revision__ = "$Rev$"
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'

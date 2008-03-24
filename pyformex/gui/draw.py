@@ -170,30 +170,6 @@ def askDirname(cur=None):
     return fn
 
 
-def chdir(fn):
-    """Change the current working directory.
-
-    If fn is a directory name, the current directory is set to fn.
-    If fn is a file name, the current directory is set to the directory
-    holding fn.
-    In either case, the current dirctory is stored in GD.cfg['workdir']
-    for persistence between pyFormex invocations.
-    
-    If fn does not exist, nothing is done.
-    """
-    if os.path.exists:
-        if not os.path.isdir(fn):
-            fn = os.path.dirname(fn)
-        os.chdir(fn)
-        GD.cfg['workdir'] = fn
-        GD.message("Your current workdir is %s" % os.getcwd())
-
-
-def workHere():
-    """Change the current working directory to the script's location."""
-    os.chdir(os.path.dirname(GD.cfg['curfile']))
-
-
 def log(s):
     """Display a message in the cmdlog window."""
     GD.gui.board.write(str(s))
@@ -464,7 +440,7 @@ def setView(name,angles=None):
 
 def draw(F, view=None,bbox='auto',
          color='prop',colormap=None,linewidth=None,alpha=0.5,
-         shrink=None,eltype=None,marksize=None,color1=None,
+         shrink=None,eltype=None,marksize=None,
          wait=True,clear=None,allviews=False):
     """Draw object(s) with specified settings and direct camera to it.
 
@@ -497,7 +473,7 @@ def draw(F, view=None,bbox='auto',
     shown object.
     With bbox=None, the camera's target volume remains unchanged.
 
-    color,colormap,linewidth,alpha,eltype,marksize,color1 are passed to the
+    color,colormap,linewidth,alpha,eltype,marksize are passed to the
     creation of the 3D actor.
 
     shrink is a floating point shrink factor that will be applied to object
@@ -531,7 +507,7 @@ def draw(F, view=None,bbox='auto',
                 nowait = wait
             actor.append(draw(Fi,view,bbox,
                               color,colormap,linewidth,alpha,
-                              shrink,eltype,marksize,color1,
+                              shrink,eltype,marksize,
                               wait,clear,allviews))
             if Fi == F[0]:
                 clear = False
@@ -584,10 +560,7 @@ def draw(F, view=None,bbox='auto',
         if isinstance(F,formex.Formex):
             if F.nelems() == 0:
                 return None
-            if color1 is not None:
-                #GD.debug("DRAWING WITH COLOR1\n%s" % str(color1))
-                canvas.glSmooth()
-            actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha,color1=color1)
+            actor = actors.FormexActor(F,color=color,colormap=colormap,linewidth=linewidth,eltype=eltype,marksize=marksize,alpha=alpha)
         elif isinstance(F,surface.TriSurface):
             if F.nelems() == 0:
                 return None
@@ -1172,11 +1145,6 @@ def pickNumbers(marks=None):
 
 ################################ saving images ########################
          
-
-def runtime():
-    """Return the time elapsed since start of execution of the script."""
-    return time.clock() - starttime
-
 
 
 #### Change settings

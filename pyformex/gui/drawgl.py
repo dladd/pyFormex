@@ -29,6 +29,7 @@ def glColor(color,alpha=1.0):
     else:
         GL.glColor4fv(append(color,alpha)) 
 
+
 def drawLines(x,c=None):
     """Draw a collection of lines.
 
