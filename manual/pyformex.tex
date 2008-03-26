@@ -13,26 +13,25 @@
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{makeidx}
-\usepackage{hyperref}
-%\usepackage[latex2html]{hyperref}
-%\usepackage[latex2html,pdftex]{hyperref}
+\usepackage[latex2html,colorlinks,linkcolor=blue]{hyperref}
 \usepackage{html}
 \usepackage{graphicx}
-\usepackage{subfigure}
+%\usepackage{subfigure}
 \usepackage{verbatim}
 \usepackage{units}
+%%%
+%%% !! \xspace in de URLs geeft problemen met nieuwe TeXLive 2007 !
+%%%
+%%% xspace.sty v1.06 werkt goed! v1.12 niet!
+%%%
+\usepackage{xspace}
 
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhead{}
-\fancyfoot{}
-\lhead[\sf\leftmark]{}
-\rhead[]{\sf\rightmark}
-\lfoot[\sf\thepage]{}
-\rfoot[]{\sf\thepage}
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Document identification
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\thetitle}{pyFormex manual}
+\newcommand{\theauthor}{Benedict Verhegghe}
+
 \title{\pyformex manual}
 \author{Benedict Verhegghe}
 %\authoraddress{
@@ -40,8 +39,69 @@
 %	Email: \email{benedict.verhegghe@ugent.be}
 %}
 
-%%% !! put a fixed date on releasing !
+% pyFormex version
+\renewcommand{\releasename}{pyFormex}
+\release{0.6.1-a4}
+\setshortversion{0.6.1}
+\newcommand{\pyfversion}{pyFormex \version}
+%% In the text use \version to refer to the version string only,
+%% or \pyfversion to refer to  pyFormex + version string 
+
+%%% !! We should put a fixed date here on releasing final versions !
 \date{\today{}}
+
+% pyFormex and its websites
+\ifhtml
+\newcommand{\pyformex}{pyFormex~}
+\newcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
+\newcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
+\else
+\newcommand{\pyformex}{pyFormex\xspace}
+\newcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
+\newcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
+\fi
+
+% \newcommand{\pyformex}{pyFormex\xspace}
+% \newcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
+% \newcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
+% \begin{htmlonly}
+% \renewcommand{\pyformex}{pyFormex~}
+% \renewcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
+% \renewcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
+% \end{htmlonly}
+
+
+\newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
+\newcommand{\pydocpages}{http://pyformex.berlios.de/doc/index.html\xspace}
+\newcommand{\pythonURL}{http://www.python.org\xspace}
+\newcommand{\pythonTUT}{http://docs.python.org/tut/\xspace}
+\newcommand{\pythonBEG}{http://wiki.python.org/moin/BeginnersGuide/\xspace}
+\newcommand{\numpyURL}{http://numpy.scipy.org/\xspace}
+\newcommand{\numpyTUT}{http://www.scipy.org/Tentative_NumPy_Tutorial\xspace}
+\newcommand{\latestpyf}{http://prdownload.berlios.de/pyformex/pyformex.tar.gz\xspace}
+\newcommand{\bumpsFTPserver}{ftp://bumps.ugent.be/pub/pyformex\xspace}
+
+\latex{\hypersetup{
+pdfauthor = {\theauthor},
+pdftitle = {\thetitle},
+pdfsubject = {Tutorial, User Guide and Reference Manual
+ for the pyFormex software (\websiteURL)},
+pdfkeywords = {3D geometry, 3D surface, finite elements},
+%pdfcreator = {},
+%pdfproducer = {},
+}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document formatting
+%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage{fancyhdr}
+% \pagestyle{plain}
+% \fancyhead{}
+% \fancyfoot{}
+% \lhead[\sf\leftmark]{}
+% \rhead[]{\sf\rightmark}
+% \lfoot[\sf\thepage]{}
+% \rfoot[]{\sf\thepage}
 
 
 %%% Provide more space for figures
@@ -57,48 +117,6 @@
 \renewcommand{\dblfloatpagefraction}{.9}% BV
 
 
-% pyFormex version
-\renewcommand{\releasename}{pyFormex}
-\release{0.6.1-a4}
-\setshortversion{0.6.1}
-\newcommand{\pyfversion}{pyFormex \version}
-
-%% In the text use \version to refer to the version string only,
-%% or \pyfversion to refer to  pyFormex + version string 
-
-% pyFormex and its websites
-
-%%%
-%%% !! All the following definitions should end with \xspace
-%%% !! \xspace in de URLs geeft problemen met nieuwe TeXLive 2007 !
-%%%
-%%% xspace.sty v1.06 werkt goed! v1.12 niet!
-%%%
-
-\usepackage{xspace}
-
-\newcommand{\pyformex}{pyFormex\xspace}
-\newcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
-\newcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
-\begin{htmlonly}
-\renewcommand{\pyformex}{pyFormex~}
-\renewcommand{\pyFormex}{\pyformex}  % we tend to mistype this one!
-\renewcommand{\pyf}{\pyformex} % saves some typing (and mistyping)
-\end{htmlonly}
-%\let\pyFormex\pyformex  %% These do not work!
-%\let\pyf\pyformex
-
-
-\newcommand{\websiteURL}{http://pyformex.berlios.de\xspace}
-\newcommand{\pydocpages}{http://pyformex.berlios.de/doc/index.html\xspace}
-\newcommand{\pythonURL}{http://www.python.org\xspace}
-\newcommand{\pythonTUT}{http://docs.python.org/tut/\xspace}
-\newcommand{\pythonBEG}{http://wiki.python.org/moin/BeginnersGuide/\xspace}
-\newcommand{\numpyURL}{http://numpy.scipy.org/\xspace}
-\newcommand{\numpyTUT}{http://www.scipy.org/Tentative_NumPy_Tutorial\xspace}
-\newcommand{\latestpyf}{http://prdownload.berlios.de/pyformex/pyformex.tar.gz\xspace}
-\newcommand{\bumpsFTPserver}{ftp://bumps.ugent.be/pub/pyformex\xspace}
-
 % code 
 % The following is just for illustration how to include code.
 % Do not uncomment: it will not work. Directly use the definitions instead.
@@ -110,15 +128,18 @@
 
 
 \newcommand{\classmethod}{\emph{This is a class method, not an instance method.}}
+
+% Create index entries
 \makeindex
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% document start here %%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
 \thispagestyle{empty}
 \begin{latexonly}
   \tableofcontents
 \end{latexonly}
-\upshape    % For some reason, the html text defaults to italic
+%\upshape    % For some reason, the html text defaults to italic
 \input{front}
 \input{intro}
 \input{tutorial}
@@ -132,21 +153,13 @@
 \appendix
 \input{app-gpl}
 
-%\chapter{My INdex}
-%\printindex
-%\begin{theindex}
-%\end{theindex}
-%\chapter*{fake}
-%\label{genindex}
-%\begin{theindex}
-%\end{theindex}
-%\pagebreak
-%\label{genindex}
-%\addcontentsline{toc}{chapter}{Index}
-%\addtocounter{page}{2}
-\input{pyformex.ind}			% Index
-
+% This phantom section is important to get the pdf bookmark right!
+\clearpage\phantomsection
+% The python style already includes the index in the toc
+%\addcontentsline{toc}{chapter}{Index}  
+\printindex
 \end{document}
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: t

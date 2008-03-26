@@ -54,7 +54,7 @@ def drawLines(x,c=None):
     GL.glEnd()
 
 
-def drawTriangles(x,n=None,c=None):
+def drawTriangles(x,n=None,c=None,alpha=1.0):
     """Draw a collection of triangles.
 
     x : float (ntri,3,3) : coordinates.

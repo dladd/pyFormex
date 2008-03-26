@@ -32,6 +32,7 @@ if GD.options.uselib:
         GD.options.safelib = False
         
 if not GD.options.uselib:
+    GD.debug("Using the (slower) Python drawing functions")
     import drawgl as D
 
 

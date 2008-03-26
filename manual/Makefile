@@ -29,7 +29,7 @@ ${TGT}.ps: ${SRC}
 	${MKHOWTO} --a4 --ps $<
 
 ${TGT}.pdf: ${SRC}
-	${MKHOWTO} --a4 --pdf --keep $<
+	${MKHOWTO} --a4 --pdf $<
 
 ${TGT}.ind: ${SRC}
 	makeindex $<
