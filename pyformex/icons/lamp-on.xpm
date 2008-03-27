@@ -1,0 +1,31 @@
+/* XPM */
+static char * lamp_on_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"22 22 3 1",
+/* colors */
+" 	c none",
+".	c black",
+"X	c yellow",
+/* pixels */
+"                      ",
+"       .     .        ",
+"          .           ",
+"   .   ...X...   .    ",
+"    . .XXXXXXX. .     ",
+"     .XXXXXXXXX.      ",
+"     .XXXXXXXXX.      ",
+" ... .XXXXXXXXX. ...  ",
+"    .XXXXXXXXXXX.     ",
+"     .XXXXXXXXX.      ",
+"     .XXXXXXXXX.      ",
+"  .. .XXXXXXXXX. ..   ",
+" .    .XXXXXXX.    .  ",
+"       .XXXXX.        ",
+"     .  .XXX.  .      ",
+"    .   .....   .     ",
+"   .     ..      .    ",
+"        .  ..         ",
+"         ..           ",
+"        .  ..         ",
+"                      ",
+"                      "};
