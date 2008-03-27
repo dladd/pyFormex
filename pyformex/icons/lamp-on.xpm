@@ -20,7 +20,7 @@ static char * lamp_on_xpm[] = {
 "     .XXXXXXXXX.      ",
 "  .. .XXXXXXXXX. ..   ",
 " .    .XXXXXXX.    .  ",
-"       .XXXXX.        ",
+"       ..XXX..        ",
 "     .  .XXX.  .      ",
 "    .   .....   .     ",
 "   .     ..      .    ",
