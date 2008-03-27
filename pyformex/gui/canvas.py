@@ -30,8 +30,13 @@ def glLight(onoff):
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
         GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
         GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-        for l in GD.canvas.lights:
-            l.enable()
+        if GD.canvas:
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glPushMatrix()
+            GL.glLoadIdentity()
+            for l in GD.canvas.lights:
+                l.enable()
+            GL.glPopMatrix()
         GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
         GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
         GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
@@ -204,7 +209,7 @@ class Canvas(object):
         self.settings = CanvasSettings()
         self.rendermode = 'wireframe'
         self.polygonfill = False
-        self.lighting = False
+        self.lighting = True
         self.alphablend = False
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
@@ -249,7 +254,8 @@ class Canvas(object):
     def setLighting(self,mode):
         self.lighting = mode
         GD.debug("SET CURRENT VIEWPORT LIGHTING MODE TO %s" % self.lighting)
-    
+        glLight(self.lighting)
+        
 
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
