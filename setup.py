@@ -11,11 +11,10 @@ from distutils.core import setup, Extension
 ##     """Perform some post install actions."""
 ##     os .system('post-install')
 
-module_drawgl = Extension('pyformex/lib/drawgl',sources = ['pyformex/lib/drawglmodule.c'])
-module_misc = Extension('pyformex/lib/misc',sources = ['pyformex/lib/miscmodule.c'])
+EXT_MODULES = [ 'drawgl', 'misc' ]
 
 DATA_FILES = [
-              ('/usr/share/pixmaps', ['pyformex.png']),
+              ('/usr/share/pixmaps', ['pyformex/icons/pyformex-fav.png']),
               ('/usr/share/applnk', ['pyformex.desktop']),
              ]
 
@@ -31,8 +30,8 @@ transformations.
       author_email='benedict.verhegghe@ugent.be',
       url='http://pyformex.berlios.de/',
       license='GNU General Public License (GPL)',
-      requires = [ 'pplangkous' ],
-      ext_modules = [module_drawgl],
+#      requires = [ 'pplangkous' ],
+      ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
       package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','icons/pyformex*.png','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
       scripts=['pyformex/pyformex'],

@@ -1,4 +1,4 @@
-/* $Id: */
+/* $Id$ */
 
 /*
   Misc methods.
@@ -6,34 +6,6 @@
 
 #include <Python.h>
 #include <numpy/arrayobject.h>
-
-/**************************************************** system ****/
-/* Execute a system command */
-static PyObject *
-drawgl_system(PyObject *dummy, PyObject *args)
-{
-    const char *command;
-    int sts;
-
-    if (!PyArg_ParseTuple(args, "s", &command))
-        return NULL;
-    sts = system(command);
-    return Py_BuildValue("i", sts);
-}
-
-/**************************************************** printf ****/
-/* Print a string */
-static PyObject *
-drawgl_printf(PyObject *dummy, PyObject *args)
-{
-    const char *command;
-
-    if (!PyArg_ParseTuple(args, "s", &command))
-        return NULL;
-    printf("COMMAND %s\n",command);
-    return Py_BuildValue("s", command);
-}
-
 
 
 /**************************************************** isclose ****/
@@ -46,67 +18,6 @@ int isclose(float a, float b, float rtol, float atol)
   printf("  a-b: %e; atol+rtol*b %e\n",fabs(a-b),atol + rtol * fabs(b));
   printf("  ok: %d\n",ok);
   return ok;
-}
-
-/**************************************************** addar ****/
-/* Add two arrays */
-static PyObject *
-drawgl_addar(PyObject *dummy, PyObject *args)
-{
-  PyObject *arg1=NULL, *arg2=NULL;//, *out=NULL;
-  PyObject *arr1=NULL, *arr2=NULL;//, *oarr=NULL;
-  if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2)) return NULL;
-  printf("Parsed the arguments\n");
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr1 == NULL) return NULL;
-  printf("Got argument 1\n");
-  arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_INOUT_ARRAY);
-  if (arr2 == NULL) goto fail;
-  printf("Got argument 2\n");
-/*   oarr = PyArray_FROM_OTF(out, NPY_FLOAT, NPY_INOUT_ARRAY); */
-/*   if (oarr == NULL) goto fail; */
-/*   printf("Got argument 3\n"); */
-  /* code that makes use of arguments */
-  /* We suppose the dimensions are correct*/
-  int nd,i;
-  npy_intp * dims;
-  float *a=NULL, *b=NULL;//, *c=NULL;
-  nd = PyArray_NDIM(arg1);
-  printf("Arrays have %d dimensions\n",nd);
-  dims = PyArray_DIMS(arg1);
-  printf("Arrays have dimension %d x %d\n",(int)(dims[0]),(int)(dims[1]));
-  a = (float *)PyArray_DATA(arr1);
-  b = (float *)PyArray_DATA(arr2);
-  for (i=0; i<dims[0]; i++) printf(" %f",a[i]);
-  printf("\n");
-  for (i=0; i<dims[0]; i++) printf(" %f",b[i]);
-  printf("\n");
-  for (i=0; i<dims[0]; i++) a[i] += b[i];
-  for (i=0; i<dims[0]; i++) printf(" %f",a[i]);
-  printf("\n");
-  float v1=0.01,v2=0.010001,rtol=1.e-3,atol=1.e-5;
-  printf("%f and %f are ",v1,v2);
-  if (!isclose(v1,v2,rtol,atol)) printf(" NOT ");
-  printf("close!\n");
-  v2 = 0.1002;
-  printf("%f and %f are ",v1,v2);
-  if (!isclose(v1,v2,rtol,atol)) printf(" NOT ");
-  printf("close!\n");
-/*   c = (float *)PyArray_DATA(oarr); */
-  
-  /* Clean up and return */
-  printf("Cleaning up\n");
-  Py_DECREF(arr1);
-  Py_DECREF(arr2);
-/*   Py_DECREF(oarr); */
-  Py_INCREF(Py_None);
-  return Py_None;
- fail:
-  printf("Error Cleanup\n");
-  Py_XDECREF(arr1);
-  Py_XDECREF(arr2);
-/*   PyArray_XDECREF_ERR(oarr); */
-  return NULL;
 }
 
 
@@ -198,9 +109,6 @@ coords_fuse(PyObject *dummy, PyObject *args)
 
 /* The methods defined in this module */
 static PyMethodDef Methods[] = {
-    {"system", drawgl_system, METH_VARARGS, "Execute a shell command."},
-    {"printf", drawgl_printf, METH_VARARGS, "Print a string."},
-    {"addar2", drawgl_addar, METH_VARARGS, "Add two arrays."},
     {"fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

@@ -43,9 +43,29 @@ PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
 PyOpenGL: http://pyopengl.sourceforge.net/
 
 
-Howto install/uninstall:
-------------------------
-See file INSTALL
+On Debian (lenny) systems you can install all prerequisites and their 
+dependencies with the command:
+  apt-get install python-qt4-gl python-numpy
+
+
+Howto install pyFormex:
+----------------------
+Unpack the pyFormex source tarball:
+   tar xvzf pyformex-VERSION.tar.gz
+Go to the created pyformex directory:
+   cd pyformex-VERSION
+Do (with root privileges)
+   python setup.py install prefix=/usr/local
+This will install pyFormex under /usr/local/. You can change the prefix
+to install in some other place.
+
+The installation procedure installs everything into a single directory,
+and creates a symlink to the executable in /usr/local/bin.
+You can use the command pyformex -whereami to find out where pyFormex
+is installed.
+
+Finally, a pyFormex installation can usually be removed with the command
+  pyformex -remove
 
 
 Documentation:
@@ -84,6 +104,18 @@ geometry. Look at the examples to get the feeling of how it is working.
 Use the File->Play menu selection to display the structure. 
 
 The examples and the python source are relatively well documented.
+
+
+KNOWN BUGS:
+-----------
+* With the mouse dolly zoom function (vertical mouse movement zooming), you can not move the camera beyond the center of the displayed scene. 
+  You can do it using the toolbar buttons or menus, and you can use mouse lens zooming (horizontal movement) to view further.
+
+* Mouse zooming can make a jump after a flyAlong().
+
+
+If you find any bugs or malfunctions in pyFormex, please submit them to
+http://developer.berlios.de/bugs/?group_id=2717
 
 
 

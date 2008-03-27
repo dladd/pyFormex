@@ -59,7 +59,7 @@ def drawTriangles(x,n=None,c=None,alpha=1.0):
 
     x : float (ntri,3,3) : coordinates.
     n : float (ntri,3) : normals.
-    c : float (nlines,3) or (nlines,3,3) : color(s)
+    c : float (ntri,3) or (ntri,3,3) : color(s)
     If three colors per triangle are given, and rendering mode is flat,
     the last color will be visible.
     """
@@ -90,9 +90,17 @@ def drawTriangles(x,n=None,c=None,alpha=1.0):
             for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):
                 GL.glColor3fv(ci[0])
                 GL.glVertex3fv(xi[0])
-        else:
+        elif n.ndim == 2:
+            for xi,ni,ci in zip(x,n,c):
+                GL.glNormal3fv(ni)
+                for j in range(3):
+                    GL.glColor3fv(ci[j])
+                    GL.glVertex3fv(xi[j])
+        elif n.ndim == 3:
             for xi,ni,ci in zip(x.reshape((-1,3)),n.reshape((-1,3)),c.reshape((-1,3))):
-                GL.glColor3fv(ci[0])
+                GL.glColor3fv(ci)
+                GL.glNormal3fv(ni)
+                GL.glVertex3fv(xi)
     GL.glEnd()
 
     
