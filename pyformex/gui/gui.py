@@ -234,6 +234,9 @@ class GUI(QtGui.QMainWindow):
         # Add the transparency button
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
+        # Add the lights button
+        if self.modebar and GD.cfg.get('gui/lightbutton',False):
+            toolbar.addLightButton(self.modebar)
         # Add the shrink button
         if self.modebar and GD.cfg.get('gui/shrinkbutton',False):
             toolbar.addShrinkButton(self.modebar)
@@ -539,6 +542,7 @@ You should seriously consider to bail out now!!!
         if fontsize:
             GD.gui.setFontSize(fontsize)
     GD.gui.viewports.changeLayout(1)
+    GD.gui.viewports.setCurrent(0)
     GD.board = GD.gui.board
     GD.board.write("""%s  (C) B. Verhegghe
 

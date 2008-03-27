@@ -344,9 +344,6 @@ def smoothwire():
     
 def flatwire():
     renderMode("flatwire")
-    
-def flattrans():
-    renderMode("flattrans")
 
     
 # A timed lock to slow down drawing processes

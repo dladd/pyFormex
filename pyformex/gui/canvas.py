@@ -246,6 +246,11 @@ class Canvas(object):
     def setTransparency(self,mode):
         self.alphablend = mode
 
+    def setLighting(self,mode):
+        self.lighting = mode
+        GD.debug("SET CURRENT VIEWPORT LIGHTING MODE TO %s" % self.lighting)
+    
+
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
         self.settings.linewidth = float(lw)
