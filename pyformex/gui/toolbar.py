@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
@@ -143,6 +142,33 @@ def setTransparency(mode=True):
         transparency_button.setChecked(mode)
     GD.app.processEvents()
   
+
+################# Lights Button ###############
+
+light_button = None
+
+def toggleLight(): 
+    mode = not GD.canvas.lighting
+    GD.canvas.setLighting(mode)
+    GD.canvas.display()
+    GD.canvas.update()
+    GD.app.processEvents()
+
+def addLightButton(toolbar):
+    global light_button
+    lights_button = addButton(toolbar,'Toggle Lights',
+                              'lamp-on',toggleLight,icon0='lamp',
+                              toggle=True,checked=True)    
+
+def setLight(mode=True):
+    """Set the lights mode on or off."""
+    GD.canvas.setLighting(mode)
+    GD.canvas.display()
+    GD.canvas.update()
+    if light_button:
+        light_button.setChecked(mode)
+    GD.app.processEvents()
+
 
 ################# Perspective Button ###############
 
