@@ -48,26 +48,26 @@ def glLight(onoff):
 def glFlat():
     """Disable smooth shading"""
     GL.glShadeModel(GL.GL_FLAT)
-    GD.canvas.glupdate()
+    #GD.canvas.glupdate()
 def glSmooth():
     """Enable smooth shading"""
     GL.glShadeModel(GL.GL_SMOOTH)
-    GD.canvas.glupdate()
+    #GD.canvas.glupdate()
 def glCulling():
     """Enable culling"""
     GL.glEnable(GL.GL_CULL_FACE)
-    GD.canvas.glupdate()
+    #GD.canvas.glupdate()
 def glNoCulling():
     """Disable culling"""
     GL.glDisable(GL.GL_CULL_FACE)
-    GD.canvas.glupdate()
+    #GD.canvas.glupdate()
 def glFill():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
     #GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL)
-    GD.canvas.glupdate()
+    #GD.canvas.glupdate()
 def glLine():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
-    GD.canvas.glupdate()
+    #GD.canvas.glupdate()
 
 
 class ActorList(list):
@@ -305,22 +305,25 @@ class Canvas(object):
         #GL.glEnable(GL.GL_CULL_FACE)
         
 
+        # On initializing a rendering mode, we also set default lighting
         if self.rendermode == 'wireframe':
-            GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
-            GL.glDisable(GL.GL_LIGHTING)
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE) # WIREFRAME!
+            glFlat()
+            glLine()
+            self.lighting = False
+            glLight(False)
+
         elif self.rendermode.startswith('flat'):
-            GL.glShadeModel(GL.GL_FLAT)      # Enables Flat Color Shading
-            GL.glDisable(GL.GL_LIGHTING)
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
+            glFlat()
+            glFill()
+            self.lighting = False
+            glLight(False)
                
         elif self.rendermode.startswith('smooth'):
             glSmooth()
             glFill()
+            self.lighting = True
             glLight(True)
-##             GL.glShadeModel(GL.GL_SMOOTH)    # Enables Smooth Color Shading
-##             GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL) # WIREFRAME!
-##             GL.glEnable(GL.GL_LIGHTING)
+
         else:
             raise RuntimeError,"Unknown rendering mode"
 
@@ -362,6 +365,7 @@ class Canvas(object):
         #GD.debug("REDISPLAY CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
+        glLight(self.lighting)
         # Draw Scene Actors
         # GD.debug("%s / %s" % (len(self.actors),len(self.annotations)))
         self.camera.loadProjection()
