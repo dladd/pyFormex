@@ -311,16 +311,18 @@ def cutAtPlane():
         return
     res = askItems([['Point',(0.0,0.0,0.0)],
                      ['Normal',(0.0,0.0,1.0)],
-                     ['New props',[0,1,1]],
+                     ['Tolerance',0.],
+                     ['New props',[1,2,2,3,4,5,6]],
                      ['Side','positive', 'radio', ['positive','negative','both']]],
                      caption = 'Define the cutting plane')
     if res:
         P = res['Point']
         N = res['Normal']
+        atol = res['Tolerance']
         p = res['New props']
         side = res['Side']
         if side == 'both':
-            G = [F.cutAtPlane(P,N,p,side) for F in FL]
+            G = [F.cutAtPlane(P,N,atol,p,side) for F in FL]
             G_pos = []
             G_neg  =[]
             for F in G:
@@ -331,7 +333,7 @@ def cutAtPlane():
             selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
             selection.draw()
         else:
-            selection.changeValues([ F.cutAtPlane(P,N,p,side) for F in FL ])
+            selection.changeValues([ F.cutAtPlane(P,N,atol,p,side) for F in FL ])
             selection.drawChanges()
 
 

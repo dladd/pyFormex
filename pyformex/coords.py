@@ -446,7 +446,7 @@ class Coords(ndarray):
 
     # Test position
 
-    def test(self,dir=0,min=None,max=None):
+    def test(self,dir=0,min=None,max=None,atol=0.):
         """Flag points having coordinates between min and max.
 
         This function is very convenient in clipping a Coords in a specified
@@ -471,14 +471,14 @@ class Coords(ndarray):
 
         if type(dir) == int:
             if not min is None:
-                T1 = self[...,dir] > min
+                T1 = self[...,dir] > min - atol
             if not max is None:
-                T2 = self[...,dir] < max
+                T2 = self[...,dir] < max + atol
         else:
             if not min is None:
-                T1 = self.distanceFromPlane(min,dir) > 0
+                T1 = self.distanceFromPlane(min,dir) > - atol
             if not max is None:
-                T2 = self.distanceFromPlane(max,dir) < 0
+                T2 = self.distanceFromPlane(max,dir) < atol
 
         if min is None:
             T = T2
