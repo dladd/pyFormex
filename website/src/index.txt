@@ -2,7 +2,7 @@ restindex
     crumb: Site Index
     format: rest
     page-title: pyFormex Site Index
-    section-pages: ,pyformex,documentation,examples/index,screenshots,download,developer,links
+    section-pages: ,pyformex,documentation,examples/index,screenshots,download,developer,usermeeting,links
     encoding: utf-8
     output-encoding: None
 /restindex

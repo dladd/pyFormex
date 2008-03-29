@@ -793,6 +793,10 @@ def opacity(alpha):
     """Set the viewports transparency."""
     GD.canvas.alpha = float(alpha)
 
+def lights(onoff):
+    """Set the lights on or off"""
+    GD.canvas.setLighting(onoff)
+
 transparent = toolbar.setTransparency
 perspective = toolbar.setPerspective
 timeout = toolbar.timeout

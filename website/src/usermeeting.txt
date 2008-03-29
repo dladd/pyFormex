@@ -13,11 +13,11 @@ User Meeting
 .. _`IBiTech`: http://www.ibitech.ugent.be/
 .. _`anonymous FTP`: ftp://ftp.berlios.de/pub/pyformex/
 
-A number of pyFormex users and developers at `IBiTech`_ has taken the initiative to gather at regular intervals to discuss the use and future development of pyFormex. 
+A number of pyFormex users and developers at `IBiTech`_ have taken the initiative to gather at regular intervals to discuss the use and future development of pyFormex. 
 
 These meetings are held approximately monthly at the `IBiTech`_ institute and
-will be announced on the website.
+are announced approximately one week by advance on this website.
 
 All pyFormex users are welcome.
 
-The minutes of the meetings are available from our `anonymous FTP`_ server.
+The minutes of the previous meetings are available from our `anonymous FTP`_ server.

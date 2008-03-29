@@ -1,6 +1,7 @@
 include COPYING
 include ReleaseNotes-0.6.1
 include pyformex.desktop
+include setup.cfg
 include pyformex/pyformex
 include pyformex/pyformexrc
 include pyformex/lib/Makefile

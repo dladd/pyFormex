@@ -12,7 +12,7 @@ Participants
 ------------
 The following pyFormex developers, users and enthusiants were present.
 
-- Benedict Verhegghe, project manager and chairman of the meeting,
+- Benedict Verhegghe, `pyFormex project manager`_ and chairman of the meeting,
 - Matthieu De Beule,
 - Peter Mortier,
 - Sofie Van Cauter,
@@ -34,7 +34,7 @@ Agenda and discussion
 ---------------------
 * pyFormex Developer Forum:
   
-  - The `pyFormex project manager`_ presents some recent developments and ideas for future work:
+  - Benedict presents some recent developments and ideas for future work:
 
     - Combining different types of grids is now possible and currently available in the *fe* plugin (seperate node lists are merged into one list).
     - The current procedure to assign properties will be modified in order to allow assignment of a property to a list of object elements instead of via the object property numbers.
@@ -48,20 +48,20 @@ Agenda and discussion
 
   - Pieter reported that creating an Abaqus input file with only one element group gives an error. This will be fixed.
   - Peter proposed to create a general FE menu to create FE input files using the GUI. A geometry could be imported during a first step. Subsequent steps could involve the assignment of sections, materials, boundary conditions and loads. Matthieu suggested to incorporate export possibilies to different FE solvers. Benedict added that all functionalities should be accessible through scripting. 
-  - Matthieu gave an overview of the remarks of the civil engineering students who used pyFormex during a project (some of these suggestions have already been implented):
+  - Matthieu gave an overview of the remarks of the civil engineering students who used pyFormex during a project (some of these suggestions have already been implemented):
 
     - General:
 
       - Visualize coordinate system
       - Include an option to query coordinates, distances, etc.
-      - Information should be provided on how to connect to the internet from the Linux Live CD
+      - The BuMPix Linux Live CD should include information on how to connect to the internet
    
     - Manual:
 
       - It could be useful to link each definition to an example demonstrating the use of the definition
       - Extend keywords list
 
-    - Introduction:
+    - Tutorial:
 
       - Include a short introduction to Python
       - Extend the introduction to pyFormex with more demo's, explain the structure of a Formex, etc.
@@ -74,7 +74,7 @@ Agenda and discussion
 
     - Postprocessing:
 
-      - Set scale interactively
+      - Change deformation scale interactively
       - Request specific output in specific element (e.g. N in beam element)
 
   - Gianluca has been working on the interface between pyFormex and Fluent. Fluent uses different conventions. Peter suggested to add the conventions used in pyFormex to the manual for different element types.
@@ -82,7 +82,7 @@ Agenda and discussion
 
 * pyFormex contest:
 
-  - There was one splash screen submitted by Peter and this is added to the pyFormex distribution. Benedict also developed a tool so that users can select their favourite splash screen. Users can also see a preview of the splash screen.
+  - There was one splash screen submitted by Peter and this is added to the pyFormex distribution. The splash screen can now be set interactively from the settings menu. It allows previewing the splash screen through a simple image viewer, which can also be used as a standalone program (pyformex-viewer).
 
 
 Date of the next meeting

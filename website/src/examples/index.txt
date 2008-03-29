@@ -15,6 +15,8 @@ Examples
 .. _`Creating Geometry`: geometry.html
 .. _`Operations on surface meshes`: surface.html
 .. _`Illustrations`: illustrations.html
+.. _`Post-processing`: postproc.html
+
 
 - `Creating Geometry`_: This page may give you a nice idea of what you can do with pyFormex. The examples are taken from the extensive set included with the distribution.
 
@@ -22,6 +24,8 @@ Examples
 
 - `Illustrations`_: pyFormex can not only be used to create 3D geometry or operate on surface meshes. This page shows some examples where it was used just to create nice images.
 
+- `Post-processing`_: pyFormex can be used as a postprocessor for numerical simulation codes such as FEA or CFD.
+ 
 
 .. _`pyFormex distribution`: ../download.html
 

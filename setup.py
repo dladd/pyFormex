@@ -3,13 +3,10 @@
 # setup.py for pyFormex
 #
 
+from distutils.command.build_ext import build_ext as _build_ext
 from distutils.core import setup, Extension
 
-## import os
-
-## def post_install():
-##     """Perform some post install actions."""
-##     os .system('post-install')
+import os,sys
 
 EXT_MODULES = [ 'drawgl', 'misc' ]
 
@@ -18,7 +15,22 @@ DATA_FILES = [
               ('/usr/share/applnk', ['pyformex.desktop']),
              ]
 
-setup(name='pyformex',
+
+class build_ext(_build_ext):
+    """Specialized Python source builder."""
+
+    def run (self):
+
+        if not sys.platform.startswith('linux'):
+            print "!! The acceleration library is not available for your p[latform.\n!! You should consider switching to a Linux Platform."
+            return
+
+        # OK, let's compile the library
+        _build_ext.run(self)
+
+
+setup(cmdclass={'build_ext': build_ext},
+      name='pyformex',
       version='0.6.1-a4',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
@@ -54,6 +66,10 @@ transformations.
 #    'Topic :: Scientific/Engineering :: Medical Science Apps.',
     ],
       )
+
+## def post_install():
+##     """Perform some post install actions."""
+##     os .system('post-install')
 
 # post_install()
 

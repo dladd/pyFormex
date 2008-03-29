@@ -16,6 +16,12 @@ minutes: ${PDF}
 
 
 # Transfers the files to BerliOs
-pub: 
-	$(RSYNC) $(PDF) $(ACCOUNT):/home/groups/ftp/pub/pyformex
-#	scp filename.tar.gz yourusername@shell.berlios.de:/home/groups/ftp/pub/yourprojectname
+pub: ${PDF}
+	${RSYNC} ${PDF} ${ACCOUNT}:/home/groups/ftp/pub/pyformex
+
+
+clean:
+	rm -rf *.log *.aux *.out *.tex
+
+distclean: clean
+	rm -rf *.pdf
