@@ -137,7 +137,6 @@ def askItems(items,caption=None,timeout=None):
     res,status = w.getResult(timeout)
     return res
 
-
 def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for a file name or multiple file names."""
     if cur is None:

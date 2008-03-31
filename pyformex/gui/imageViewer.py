@@ -240,9 +240,7 @@ shows how to use QPainter to print an image.</p>
         scrollBar.setValue(int(factor * scrollBar.value() + ((factor - 1) * scrollBar.pageStep()/2)))
 
 
-if __name__ == '__main__':
-
-
+def main():
     import sys
     global app
     app = QtGui.QApplication(sys.argv)
@@ -253,3 +251,8 @@ if __name__ == '__main__':
     viewer = ImageViewer(app,path)
     viewer.show()
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
+

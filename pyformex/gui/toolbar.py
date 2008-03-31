@@ -231,17 +231,13 @@ def setShrink(mode):
 timeout_button = None # the toggle timeout button
 
 def toggleTimeout(onoff=None):
-    #print "TOGGLE TIMEOUT"
-    #print widgets.input_timeout
     if onoff is None:
         onoff = widgets.input_timeout < 0
     if onoff:
         widgets.input_timeout = GD.cfg.get('input/timeout',-1)
     else:
         widgets.input_timeout = -1
-    #print widgets.input_timeout
     onoff = widgets.input_timeout > 0
-    #print "Button should be checked: %s" % onoff 
     return onoff
 
 

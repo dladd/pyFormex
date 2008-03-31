@@ -89,6 +89,10 @@ if __name__ == "draw":
 
     # show an example
 
+    layout(1)
+    wireframe()
+    reset()
+
     D = 10.
     L = 80.
     d = 0.2

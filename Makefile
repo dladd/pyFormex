@@ -76,7 +76,7 @@ lib:
 
 # Set a new version
 
-version: pyformex/globaldata.py manual/pyformex.tex setup.py
+version: pyformex/globaldata.py manual/pyformex.tex setup.py pyformex/lib/configure.ac
 
 pyformex/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
@@ -84,6 +84,8 @@ pyformex/globaldata.py: RELEASE
 manual/pyformex.tex: RELEASE
 	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
 
+pyformex/lib/configure.ac: RELEASE
+	sed -i 's|^AC_INIT.*|AC_INIT(pyformex-lib,${RELEASE})|'  $@
 
 setup.py: RELEASE
 	sed -i "s|version='.*'|version='${RELEASE}'|" $@

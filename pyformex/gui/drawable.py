@@ -21,6 +21,9 @@ from formex import *
 import simple
 
 # Loading the low level drawing library
+if GD.options.uselib is None:
+    GD.options.uselib = True
+
 if GD.options.uselib:
     try:
         import lib.drawgl as D
@@ -603,7 +606,7 @@ def saneColorSet(color=None,colormap=None,shape=(1,)):
             if colormap is None:
                 colormap = GD.canvas.settings.propcolors
             colormap = saneColor(colormap)
-            colormap = saneColorArray(colormap,shape)
+            colormap = saneColorArray(colormap,(ncolors,))
         else:
             color = saneColorArray(color,shape)
 

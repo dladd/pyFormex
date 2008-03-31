@@ -3,9 +3,10 @@
 
 from gui.actors import *
 
-wireframe()
+smooth()
+lights(False)
 
-F = Formex(mpattern('16')).replic2(10,4)
+F = Formex(mpattern('16')).replic2(8,4)
 
 color0 = None  # no color: current fgcolor
 color1 = red   # single color

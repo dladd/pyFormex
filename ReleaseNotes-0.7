@@ -1,0 +1,60 @@
+$Id$
+
+pyFormex 0.7  Releasenotes 
+============
+
+This is a collection of the most prominent changes in pyFormex 0.7
+(compared to the prevous release 0.6)
+
+INSTALLATION
+============
+The prefered installation procedure
+  python setup.py install --prefix=/usr/local
+will now also install 
+ - the acceleration library, if you have the necessary header files and
+   compiler,
+ - the xdg standard desktop and menu starters, if you have xdg-utils available
+
+
+COMMAND LINE
+============
+The --dri/--nodri options should not be used, unless you know that the
+default settings are incorrect.
+
+
+GUI:
+====
+LOTS, LOTS, LOTS of new functions.
+
+Some goodies: 
+  - interactive picking
+  - rendering of values on domains
+  - lighting / smooth rendering is now fixed
+  
+
+CORE:
+=====
+Acceleration library
+--------------------
+Some critical functions have been implemented in C.
+These are mostly some of the low-level drawing routines. 
+The result is a dramatic speedup in drawing large structures.
+The drawback is that these functions need to be compiled at
+installation time, and this requires the existence of the needed
+library headers (and a compiler). 
+Therefore, we have made this acceleration library an optional
+part of pyFormex. All functions in the library have a (slower)
+Python equivalent. If your system does not have all the prerequistes,
+the library will not be installed, but pyFormex will still run with
+all its functionality, though some of them will be slower.
+
+
+PLUGINS:
+========
+
+
+MANUAL:
+=======
+We started to add more thing into the manual. Still need to
+do a lot. Look out for version 0.7.1 to have a more complete
+manual.

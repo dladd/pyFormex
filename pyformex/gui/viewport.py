@@ -89,16 +89,18 @@ opengl_format = None
 def setOpenGLFormat():
     """Set the correct OpenGL format.
 
+    Omn a correctly installed system, the default should do well.
     The default OpenGL format can be changed by command line options.
     --dri   : use the DIrect Rendering Infrastructure
-    --nodri : do no use the DRI
+    --nodri : do not use the DRI
     --alpha : enable the alpha buffer 
     """
     global opengl_format
     fmt = QtOpenGL.QGLFormat.defaultFormat()
-    fmt.setDirectRendering(GD.options.dri)
-    if GD.options.alpha:
-        fmt.setAlpha(True)
+    if GD.options.dri is not None:
+        fmt.setDirectRendering(GD.options.dri)
+##     if GD.options.alpha:
+##         fmt.setAlpha(True)
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
     opengl_format = fmt
     if GD.options.debug:

@@ -18,7 +18,8 @@ res = askItems([('number of modules in axial direction',10),
                 ('barrel radius',10.),
                 ('barrel opening angle',180.),
                 ('barrel length',30.),
-                ])
+                ],
+               )
 if not res:
     exit()
     

@@ -654,11 +654,6 @@ class InputDialog(QtGui.QDialog):
 
         [ 'name', 'red', 'color' ] will present a color selection widget,
         with 'red' as the initial choice.
-
-        Timeout:
-        If a timeout (in seconds) is given, a timer will be started and if no
-        user input is detected during this period, the input dialog returns
-        with the default values set 
         """
         if parent is None:
             parent = GD.gui
@@ -755,20 +750,25 @@ class InputDialog(QtGui.QDialog):
 
         
     def getResult(self,timeout=None):
+        """ Get the results from the input dialog.
+
+        If a timeout (in seconds) is given, a timer will be started and if no
+        user input is detected during this period, the input dialog returns
+        with the default values set.
+        A value 0 will timeout immediately, a negative value will never timeout.
+        The default is to use the global variable input_timeout, which can
+        be changed by a toolbar button.
+        """
         if timeout is None:
             timeout = input_timeout
-            #print "TIMEOUT=%s" % input_timeout
 
-        # Start the timer:
-        if timeout:
+        if timeout >= 0:
+            # Start the timer:
             try:
                 timeout = float(timeout)
-                if timeout > 0.0:
-                    #print "STARTING TIMER"
+                if timeout >= 0.0:
                     timer = QtCore.QTimer()
                     timer.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
-                    ## The following line would return empty values after timeout
-                    ## self.connect(timer,QtCore.SIGNAL("timeout()"),self,QtCore.SLOT("reject()"))
                     timer.setSingleShot(True)
                     timeout = int(1000*timeout)
                     timer.start(timeout)

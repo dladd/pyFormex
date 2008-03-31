@@ -64,8 +64,14 @@ and creates a symlink to the executable in /usr/local/bin.
 You can use the command pyformex -whereami to find out where pyFormex
 is installed.
 
+If you have xdg-utils on your system, the installation procedure will also
+install a menu and desktop starter for pyFormex.
+
 Finally, a pyFormex installation can usually be removed with the command
   pyformex -remove
+
+If you install a new version on a system where pyFormex is already installed,
+you may want to remove the older version before installing the new one.
 
 
 Documentation:

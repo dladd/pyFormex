@@ -13,32 +13,19 @@ Each task can have the following keys:
  rem(arks)
 
 
-* Release 0.6.1 : 
+* Release 0.7.1 : 
+
+ - Include all basic drawing functions in the library.
+
+ - Create new tutorial and explain all basic parts of pyFormex in the manual
+
+
+* Release 0.8 :
 
  - Multiple views:
      dev: bverheg
      sta: PARTIAL
      rem: Need to make more versatile: link contents, position, number
-
- - Rendering of values on the domain:
-     dev: bverheg
-     sta: PARTIAL
-     rem: Basic classes available.
-          Feasability demonstrated through some examples: *_calpy.py
-          Local script hesperia2 shows more features
-          Surface_menu plugin has nice examples.
-
- - Interactive selection/transformation:
-     dev: bverheg
-     sta: PARTIAL
-     rem: partially implemented and in Formex menu and local scripts
-
- - Faster Formex->FeModel transformation (possibly implement in C):
-     dev: bverheg
-     sta: PARTIAL
-     rem: A (moderate) speedup of the default transformation has been
-          achieved. For stl surface, an important speedup is achieved
-          by using the stl->gts transform.
 
  - Faster loading of large STL models (possibly in C):
      dev: bverheg
@@ -71,8 +58,6 @@ Each task can have the following keys:
  - Include installation of python-gl2ps in the pyFormex setup.py
     NO, WE CAN NOT (because of license)
 
-
-* Release 0.7 : 
  - Add an interactive command window to the GUI
 
 

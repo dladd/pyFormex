@@ -1,15 +1,23 @@
 #  -*- Makefile -*- for pyFormex Compiled Modules
-# $Id: $
+# $Id$
 
+SHELL = /bin/sh
 
-CSOURCE= $(wildcard *.c)
+#CSOURCE= $(wildcard *.c)
+### !!!! KEEP THE BLANK LINE AFTER THE NEXT ONE !!!
+CSOURCE= drawglmodule.c	miscmodule.c\
+
+### !!!! KEEP THE BLANK LINE ABOVE THIS ONE !!!
 OBJECTS= $(CSOURCE:.c=.o)
 SOBJECTS= $(CSOURCE:.c=.so)
 
+# To be filled in by ./configure
 CC= gcc
+PY_INCLUDE= /usr/include/python2.4
+NUMPY_INCLUDE= /usr/lib/python2.4/site-packages/numpy/core/include
 
-INC= -I/usr/include -I/usr/include/python2.4 \
-     -I/usr/lib/python2.4/site-packages/numpy/core/include
+
+INCLUDES= -I/usr/include -I$(PY_INCLUDE) -I$(NUMPY_INCLUDE)
 
 CFLAGS= -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 
@@ -18,9 +26,22 @@ CFLAGS= -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=1 -DMINO
 all: $(SOBJECTS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INC) -c $<
+	$(CC) $(CFLAGS) $(INCLUDES) -c $<
 
 %.so: %.o
 	$(CC) -shared $< -L/usr/lib -o $@
+
+
+Makefile: Makefile.in config.status
+	./config.status
+
+config.status: configure
+	./config.status --recheck
+
+clean:
+	rm -rf *.o *~ config.log config.status
+
+distclean: clean
+	rm -rf *.so autom4te.cache Makefile configure
 
 # End
