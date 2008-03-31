@@ -1,0 +1,33 @@
+#!/usr/bin/env python
+#
+
+import os,sys,commands
+
+
+def find_Python_headers():
+    """Find the path to the Python.h header file."""
+    python_include = sys.prefix+'/include/python'+sys.version[:3]
+    if os.path.exists(os.path.join(python_include,'Python.h')):
+        return python_include
+    else:
+        return ''
+
+
+def find_Numpy_headers():
+    """Find the path to the numpy/arrayobject.h header file."""
+    from numpy.distutils.misc_util import get_numpy_include_dirs
+    numpy_include = get_numpy_include_dirs()[0]
+    if os.path.exists(os.path.join(numpy_include,'numpy','arrayobject.h')):
+        return numpy_include
+    else:
+        return ''
+
+
+if __name__ == "__main__":
+
+    for a in sys.argv[1:]:
+
+        if a == '-P':
+            print find_Python_headers()
+        elif a == '-N':
+            print find_Numpy_headers()
