@@ -157,9 +157,6 @@ class TriadeActor(Actor):
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the triade."""
-        #GL.glShadeModel(GL.GL_FLAT)
-        #GL.glPolygonMode(GL.GL_FRONT, GL.GL_FILL)
-        #GL.glPolygonMode(GL.GL_BACK, GL.GL_LINE)
         GL.glBegin(GL.GL_TRIANGLES)
         GL.glColor(*self.color[0])
         GL.glVertex3f(0.0,0.0,0.0)
@@ -566,7 +563,7 @@ class TriSurfaceActor(Actor,TriSurface):
             self.drawGL(mode=mode[:-4],color=color,colormap=None)
             GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
             return
 
         if alpha is None:

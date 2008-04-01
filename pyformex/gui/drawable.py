@@ -39,7 +39,6 @@ if not GD.options.uselib:
     import drawgl as D
 
 
-
 def rotMatrix(v,n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
 

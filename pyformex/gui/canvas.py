@@ -23,6 +23,27 @@ import decors
 import marks
 import utils
 
+
+
+
+fill_modes = [ GL.GL_FRONT_AND_BACK, GL.GL_FRONT, GL.GL_BACK ]
+fill_mode = GL.GL_FRONT_AND_BACK
+
+def glFillMode(mode):
+    global fill_mode
+    if mode in fill_modes:
+        fill_mode = mode
+def glFrontFill():
+    glFillMode(GL.GL_FRONT)
+def glBackFill():
+    glFillMode(GL.GL_BACK)
+def glBothFill():
+    glFillMode(GL.GL_FRONT_AND_BACK)
+def glFill():
+    GL.glPolygonMode(fill_mode,GL.GL_FILL)
+def glLine():
+    GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
+
 def glLight(onoff):
     """Toggle lights on/off."""
     if onoff:
@@ -37,10 +58,10 @@ def glLight(onoff):
             for l in GD.canvas.lights:
                 l.enable()
             GL.glPopMatrix()
-        GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
-        GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
-        GL.glMaterialfv(GL.GL_FRONT_AND_BACK,GL.GL_SHININESS,GD.cfg['render/shininess'])
-        GL.glColorMaterial(GL.GL_FRONT_AND_BACK,GL.GL_AMBIENT_AND_DIFFUSE)
+        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
+        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
+        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,GD.cfg['render/shininess'])
+        GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
         GL.glEnable(GL.GL_COLOR_MATERIAL)
     else:
         GL.glDisable(GL.GL_LIGHTING)
@@ -60,14 +81,6 @@ def glCulling():
 def glNoCulling():
     """Disable culling"""
     GL.glDisable(GL.GL_CULL_FACE)
-    #GD.canvas.glupdate()
-def glFill():
-    GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL)
-    #GL.glPolygonMode(GL.GL_BACK,GL.GL_FILL)
-    #GD.canvas.glupdate()
-def glLine():
-    GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
-    #GD.canvas.glupdate()
 
 
 class ActorList(list):
