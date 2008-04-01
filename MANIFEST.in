@@ -1,5 +1,6 @@
-include COPYING
-include ReleaseNotes-0.6.1
+include pyformex/doc/COPYING
+include pyformex/doc/README
+include pyformex/doc/ReleaseNotes
 include pyformex-pyformex.desktop
 include post-install
 include pyformex/pyformex
@@ -12,5 +13,7 @@ include pyformex/examples/*.formex
 include pyformex/examples/*/*
 include pyformex/icons/*.xpm
 include pyformex/icons/pyformex*.png
+include pyformex/manual/html/*
+include pyformex/manual/images/*.png
 prune *.py~
 prune *.pyc

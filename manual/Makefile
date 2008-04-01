@@ -13,6 +13,8 @@ OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" 
 TESTOPTIONS= --l2h-init=fix.perl --keep
 TESTOPTIONS= --keep
 
+REMOVEFILES= images images.* img*.png index.dat *.pl WARNINGS pyfav.png *.how
+
 # Default target
 .PHONY all: pdf html
 
@@ -39,8 +41,9 @@ html/${TGT}.html: ${SRC}
 	mkdir ${HTMLDIR}
 	ln -s ../images ${HTMLDIR}/images
 	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<
+	cd html; rm -f ${REMOVEFILES}
 
-# Transfers the files to BerliOs
+# Transfers the files to BerliOS
 pub: pdf
 	scp pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 

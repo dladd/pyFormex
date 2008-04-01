@@ -159,7 +159,7 @@ class GUI(QtGui.QMainWindow):
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.show()
         #### Do not touch the next line unless you know what you're doing !!
-        self.easter_egg = ('#/s/i/n yomx-gi#ipr aeietdy=dttm.aeietdy)i o tdymnh=  n oa.a =1:  ei(\nrs=ak""==========pFre oscmeca!==========\nh eeoeso yomxhv pn  o ftm\nnbign o hsnc n oeflsfwr.\nu hyhv omk  iigto\nTeeoe so oa,Arl1t 08 eakyut oaeamds u otedvlpr,s hycncniu hi riflwr.\no uhaeyupeae odnt?\n",\'ohn\'\' UO,10ER\')\nrn e\nfrs= Ntig:  err""A o r o rprdt a,w\naet htdw hspormnw\n")  ei(re\nei e =\' UO:  wrig""Frti ml mut ecnol e\no otnefroedy(pi s.\n")\nlfrs= 10ER\'\n  rn O"  soIf("\nic o rvdt eagnrospro,w illtyuueti otaefra niie eid\nTesatpmsaewl iapa so oorw\n")  soIf("\nn o vnd o aet a h 0 UO\nfe l,tdyi pi s.Tdyi\' re\n")', '!urbnevpfre -u\n\nmotdttm\noa  aeiedttm.oa(\nfnt(oa.ot =4adtdydy= )\n  xt)\ne  s("\n=========\nyomxge omril\n=========\nTedvlpr fpFre aesetalto iei rnigyuti ieadpwru otae\nBtte aet aealvn o!\nhrfr,a ftdy pi s.20,w s o\nodnt  oetsmt h eeoes ote\na otneterfutu ok\nHwmc r o rprdt oae\n""[Ntig,5ER\'\'0 UO]\npitrsi e =\'ohn\'\n  ro("\nsyuaentpeae opy ehv osu onti rga o!""\n  xtTu)\nlfrs= 5ER\'\n  ann("\no hssalaon,w a nyltyucniu o n a Arl1t)""\nei e =\'0 UO:  pit"K\n  hwno""Sneyupoe ob  eeeu esn ewl\ne o s hssfwr o nulmtdpro.\nh tru esg ildspera ftmro.""\n  hwno""Adyuee onthv opyte10ER.Atral oa sArl1t oa tsfe!""\n')
+        self.easter_egg = None
 
         #s.moveSplitter(300,0)
         #s.moveSplitter(300,1)

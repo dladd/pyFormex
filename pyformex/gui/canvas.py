@@ -185,7 +185,7 @@ class Light(object):
 ##         print 'self.position',self.position
 
     def enable(self):
-        GD.debug("  Enable light %s" % (self.light-GL.GL_LIGHT0))
+        #GD.debug("  Enable light %s" % (self.light-GL.GL_LIGHT0))
         GL.glLightfv(self.light,GL.GL_POSITION,self.position)
         GL.glLightfv(self.light,GL.GL_AMBIENT,self.ambient)
         GL.glLightfv(self.light,GL.GL_DIFFUSE,self.diffuse)
@@ -193,7 +193,7 @@ class Light(object):
         GL.glEnable(self.light)
 
     def disable(self):
-        GD.debug("  Disable light %s" % (self.light-GL.GL_LIGHT0))
+        #GD.debug("  Disable light %s" % (self.light-GL.GL_LIGHT0))
         GL.glDisable(self.light)
 
 
@@ -266,7 +266,7 @@ class Canvas(object):
 
     def setLighting(self,mode):
         self.lighting = mode
-        GD.debug("SET CURRENT VIEWPORT LIGHTING MODE TO %s" % self.lighting)
+        #GD.debug("SET CURRENT VIEWPORT LIGHTING MODE TO %s" % self.lighting)
         glLight(self.lighting)
         
 

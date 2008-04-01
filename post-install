@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# This is the pyformex post install script
+#
+
+# install the .desktop file on xdg compliant systems
+
+[ -n "$(type -P xdg-desktop-menu)" ] && {
+    xdg-icon-resource install --size 64 pyformex/icons/pyformex-64x64.png
+    xdg-desktop-icon install pyformex-pyformex.desktop
+    xdg-desktop-menu install pyformex-pyformex.desktop
+}
+
+echo "Post-install done"

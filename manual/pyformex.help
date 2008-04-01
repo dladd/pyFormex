@@ -5,18 +5,17 @@ options:
                      given)
   --nogui            do not load the GUI (default if a scriptfile argument is
                      given)
-  --dri              Force the use of Direct Rendering
-  --nodri            Disables the use of Direct Rendering (overrides the --dri
-                     option)
-  --uselib           Use the pyFormex C-lib where possible.
-  --nouselib         Do not use the pyFormex C-lib. This is the default.
+  --dri              Force use of Direct Rendering
+  --nodri            Disables the Direct Rendering
+  --uselib           Use the pyFormex C lib if available. This is the default.
+  --nouselib         Do not use the pyFormex C-lib.
   --safelib          Convert data types to match C-lib. This is the default.
   --unsafelib        Do not convert data types to match C-lib. BEWARE: this
                      may make the C-lib calls impossible. Use only for
                      debugging purposes.
   --fastencode       Use a fast algorithm to encode edges.
   --fastfuse         Use a fast algorithm to fuse points.
-  --alpha            Enable the Alpha Channel buffer
+  --nofastfuse       Use a slow algorithm to fuse points.
   --arrays           Use vertex arrays for display
   --config=CONFIG    use file CONFIG for settings
   --nodefaultconfig  skip all default locations of config files
