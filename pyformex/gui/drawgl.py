@@ -113,7 +113,20 @@ def drawPolygons(x,n=None,c=None,alpha=1.0):
     If nplex colors per triangle are given, and shading mode is flat,
     the last color will be used.
     """
+    x = x.astype(float32)
     nplex = x.shape[1]
+    #print x.shape
+    #print x.dtype
+    #print x.flags
+    if n is not None:
+        n = n.astype(float32)
+        #print "NORMAL",n.shape
+        #print n.dtype
+        #print n.flags
+    if c is not None:
+        c = c.astype(float32)
+        #print "COLOR",c.shape
+
     if nplex < 3:
         return
     elif nplex == 3:
@@ -122,27 +135,41 @@ def drawPolygons(x,n=None,c=None,alpha=1.0):
         GL.glBegin(GL.GL_QUADS)
     else:
         GL.glBegin(GL.GL_POLYGON)
+
     if c is None:
         if n is None:
             for xi in x.reshape((-1,3)):
                 GL.glVertex3fv(xi)
-        else:
+        elif n.ndim == 2:
             for xi,ni in zip(x,n):
                 GL.glNormal3fv(ni)
                 for j in range(nplex):
                     GL.glVertex3fv(xi[j])
+        elif n.ndim == 3:
+            for i in range(x.shape[0]):
+                for xij,nij in zip(x[i],n[i]):
+                    GL.glNormal3fv(nij)
+                    GL.glVertex3fv(xij)
+                
     elif c.ndim == 2:
         if n is None:
             for xi,ci in zip(x,c):
                 GL.glColor3fv(ci)
                 for j in range(nplex):
                     GL.glVertex3fv(xi[j])
-        else:
+        elif n.ndim == 2:
             for xi,ni,ci in zip(x,n,c):
                 GL.glColor3fv(ci)
                 GL.glNormal3fv(ni)
                 for j in range(nplex):
                     GL.glVertex3fv(xi[j])
+        elif n.ndim == 3:
+            for xi,ni,ci in zip(x,n,c):
+                GL.glColor3fv(ci)
+                for j in range(nplex):
+                    GL.glNormal3fv(ni[j])
+                    GL.glVertex3fv(xi[j])
+                    
     elif c.ndim == 3:
         if n is None:
             for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):

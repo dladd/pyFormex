@@ -313,7 +313,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0,coloradjust=False):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -338,10 +338,15 @@ class FormexActor(Actor,Formex):
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
-        
+        if coloradjust:
+            if colormap is not None:
+                colormap /= colormap.sum(axis=1)
+            if bkcolormap is not None:
+                bkcolormap /= bkcolormap.sum(axis=1).reshape(-1,1)
         if self.nplex() == 1:
             self.setMarkSize(marksize)
         self.list = None
+        
 
 
     def atype(self):
@@ -466,7 +471,7 @@ class FormexActor(Actor,Formex):
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 drawEdges(self.f[:,edges,:],color)
 
-            elif self.eltype == 'wed':
+            elif self.eltype == 'wedge':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,4, 2,5, 3,4, 3,5, 4,5]
                 drawEdges(self.f[:,edges,:],color)
 
@@ -486,13 +491,15 @@ class FormexActor(Actor,Formex):
                 #coords = self.f[:,faces,:]
                 #drawTriangles(coords,mode,color)
  
-        elif self.eltype=='wed':
-                triFaces = [0,1,2, 3,5,4]
-                triCoords = self.f[:,triFaces,:]
-                drawTriangles(triCoords,mode,color)
-                quadFaces = [ 0,1,4,3, 1,2,5,4, 0,2,5,3]
-                quadCoords = self.f[:,quadFaces,:]
-                drawQuadrilaterals(quadCoords,mode,color)
+        elif self.eltype=='wedge':
+                trifaces = [0,1,2, 3,5,4]
+                drawFaces(self.f[:,trifaces,:],3,mode,color,alpha)
+                #triCoords = self.f[:,trifaces,:]
+                #drawTriangles(triCoords,mode,color)
+                quadfaces = [ 0,1,4,3, 1,2,5,4, 0,2,5,3]
+                #quadCoords = self.f[:,quadfaces,:]
+                #drawQuadrilaterals(quadCoords,mode,color)
+                drawFaces(self.f[:,quadfaces,:],4,mode,color,alpha)
                 
         elif self.eltype=='hex':
                 faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]

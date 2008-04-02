@@ -14,7 +14,9 @@ def cube_tri(color=None):
     top = bot.translate(1,1).reverse()
     back = back.reverse()
     cube = front+top+right+back+bot+left
-    if color == 'Single':
+    if color == 'None':
+        color = 'white'
+    elif color == 'Single':
         color = 'blue'
     elif color == 'Face':
         color = arange(1,7).repeat(2)
@@ -43,7 +45,7 @@ def cube_quad(color=None):
     print color
     return faces,color
 
-def showCube(base,color):
+def showCube(base,color,adjust):
     print base,color
     if base == 'Triangle':
         cube = cube_tri
@@ -51,13 +53,15 @@ def showCube(base,color):
         cube = cube_quad
     cube,color = cube(color)
     clear()
-    draw(cube,color=color)
+    draw(cube,color=color,coloradjust=adjust)
     view('iso')
     zoomAll()
     zoom(1.5)
     
         
 if __name__ == "draw":
+
+    from gui import widgets
 
     clear()
     reset()
@@ -68,15 +72,18 @@ if __name__ == "draw":
     all = False
     base = 'Quad'
     color = 'Full'
+    adjust = False
     while True:
         res = askItems([('All',all),
                         ('Base',base,'select',baseshape),
                         ('Color',color,'select',colormode),
+                        ('AdjustColor',adjust),
                         ],caption="Make a selection or check 'All'")
         if not res:
-            exit()
+            break;
 
         all = res['All']
+        adjust = res['AdjustColor']
         if all:
             bases = baseshape
             colors = colormode
@@ -93,20 +100,18 @@ if __name__ == "draw":
             lights(False)
 
             for color in colors:
-                showCube(base,color)
+                showCube(base,color,adjust)
                 if all:
-                    sleep(2)
+                    sleep(1)
+
+        # Break from endless loop if an input timeout is active !
+        if widgets.input_timeout >= 0:
+            break
 
     exit()
     
-##     draw(cube,color='yellow')
 
-##     cutcube = cube.cutAtPlane([0.0,0.0,0.5],[0.0,0.0,1.0])
-
-##     draw(cutcube,color='blue')
-    
-##     clear()
-##     draw(cutcube,color='blue')
+## The following was used to create the rendering icons
     
     draw(cube)
     view('iso')
@@ -132,3 +137,4 @@ if __name__ == "draw":
     #GD.canvas.zoom(1.5)
     image.saveIcon('shrink')
     
+# End

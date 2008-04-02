@@ -21,7 +21,6 @@ F = Formex(mpattern(Shape[shape])).replic2(8,4)
 color0 = None  # no color: current fgcolor
 color1 = red   # single color
 color2 = array([red,green,blue]) # 3 colors: will be repeated
-
 color3 = resize(color2,F.shape()) # full color
 
 
@@ -30,7 +29,7 @@ for c in [color0,color1,color2,color3]:
     FA = FormexActor(F,color=c)
     drawActor(FA)
     zoomAll()
-    sleep(2)
+    sleep(0.5)
 
 
 # End
