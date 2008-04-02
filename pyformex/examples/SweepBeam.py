@@ -47,6 +47,8 @@ Beam = Half.rosette(2,180.,1)
 nodesQuad,elemsQuad = Beam.feModel()
 path = line([0,0,0],[0,0,l],el)
 nodes,elems = mesh.sweepGrid(nodesQuad,elemsQuad,path,a1='last',a2='last')
+
+smoothwire()
 draw(Formex(nodes[elems].reshape(-1,8,3)),eltype='hex',color='red',linewidth=2)
 
 

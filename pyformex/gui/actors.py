@@ -458,36 +458,35 @@ class FormexActor(Actor,Formex):
             drawNurbsCurves(self.f,color)
             
         elif mode=='wireframe' :
-            if self.eltype == 'tet':
+
+            if self.eltype is None:
+                drawPolyLines(self.f,color)
+
+            elif self.eltype == 'tet':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
-                coords = self.f[:,edges,:]
-                drawEdges(coords,color)
+                drawEdges(self.f[:,edges,:],color)
+
             elif self.eltype == 'wed':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,4, 2,5, 3,4, 3,5, 4,5]
-                coords = self.f[:,edges,:]
-                drawEdges(coords,color)
+                drawEdges(self.f[:,edges,:],color)
+
             elif self.eltype == 'hex':
-                edges = [ 0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
-                coords = self.f[:,edges,:]
-                drawEdges(coords,color)
+                edges = [0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
+                drawEdges(self.f[:,edges,:],color)
+
             else:
-                drawPolyLines(self.f,color)
+                raise ValueError,"Invalid eltype %s" % str(self.eltype)
                 
-        elif nnod == 3:
-            #drawTriangles(self.f,mode,color,alpha)
+        elif self.eltype is None:
             drawPolygons(self.f,mode,color,alpha)
                 
-        elif nnod == 4:
-            if self.eltype=='tet':
+        elif self.eltype=='tet':
                 faces = [ 0,1,2, 0,2,3, 0,3,1, 3,2,1 ]
-                coords = self.f[:,faces,:]
-                drawTriangles(coords,mode,color)
-            else: # (possibly non-plane) quadrilateral
-                #drawQuadrilaterals(self.f,mode,color)
-                drawPolygons(self.f,mode,color)
+                drawFaces(self.f[:,faces,:],3,mode,color,alpha)
+                #coords = self.f[:,faces,:]
+                #drawTriangles(coords,mode,color)
  
-        elif nnod == 6:
-            if self.eltype=='wed':
+        elif self.eltype=='wed':
                 triFaces = [0,1,2, 3,5,4]
                 triCoords = self.f[:,triFaces,:]
                 drawTriangles(triCoords,mode,color)
@@ -495,20 +494,12 @@ class FormexActor(Actor,Formex):
                 quadCoords = self.f[:,quadFaces,:]
                 drawQuadrilaterals(quadCoords,mode,color)
                 
-        elif nnod == 8:
-            if self.eltype=='hex':
+        elif self.eltype=='hex':
                 faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]
-                coords = self.f[:,faces,:].reshape(-1,4,3)
-                if color is not None:
-                    s = list(color.shape)
-                    s[1:1] = 1
-                    color = color.reshape(*s).repeat(6,axis=1)
-                    s[1] = 6
-                    color = color.reshape(*s)
-                drawPolygons(coords,mode,color)
-        
+                drawFaces(self.f[:,faces,:],4,mode,color,alpha)
+
         else:
-            drawPolygons(self.f,mode,color=None)
+            raise ValueError,"Invalid eltype %s" % str(self.eltype)
     
 
     def pickGL(self,mode):

@@ -235,6 +235,25 @@ def drawEdges(x,color=None):
     drawLines(x,color)
 
 
+def drawFaces(x,nplex,mode,color=None,alpha=1.0):
+    """Draw a collection of edges.
+
+    x is a (nel,nplex*n,3) shaped array of coordinates. Each set of nplex
+    points define a polygon. 
+
+    If color is given it is an (nel,3) array of RGB values.
+    """
+    n = x.shape[1] / nplex
+    x = x.reshape(-1,nplex,3)
+    if color is not None:
+        s = list(color.shape)
+        s[1:1] = 1
+        color = color.reshape(*s).repeat(n,axis=1)
+        s[1] = n
+        color = color.reshape(*s)
+    drawPolygons(x,mode,color,alpha)
+
+
 def drawPolyLines(x,c=None,close=True):
     """Draw a collection of polylines, closed or not.
 
@@ -571,7 +590,7 @@ def saneColor(color=None):
     # detect color index
     try:
         c = asarray(color)
-        if c.dtype.kind == 'i' and c.ndim == 1:
+        if c.dtype.kind == 'i':
             # We have a color index
             return c
     except:
