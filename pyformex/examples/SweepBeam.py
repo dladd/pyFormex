@@ -1,5 +1,5 @@
-#!/usr/bin/env pyformex
-# $Id: $
+#!/usr/bin/env pyformex --gui
+# $Id$
 
 """I-profile"""
 

@@ -474,7 +474,8 @@ class FormexActor(Actor,Formex):
                 drawPolyLines(self.f,color)
                 
         elif nnod == 3:
-            drawTriangles(self.f,mode,color,alpha)
+            #drawTriangles(self.f,mode,color,alpha)
+            drawPolygons(self.f,mode,color,alpha)
                 
         elif nnod == 4:
             if self.eltype=='tet':
@@ -498,7 +499,12 @@ class FormexActor(Actor,Formex):
             if self.eltype=='hex':
                 faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]
                 coords = self.f[:,faces,:].reshape(-1,4,3)
-                #drawQuadrilaterals(coords,mode,color)
+                if color is not None:
+                    s = list(color.shape)
+                    s[1:1] = 1
+                    color = color.reshape(*s).repeat(6,axis=1)
+                    s[1] = 6
+                    color = color.reshape(*s)
                 drawPolygons(coords,mode,color)
         
         else:

@@ -172,8 +172,8 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
     for the lighting are calculated and set
     """
-    print "DrawPolygons"
-    print "coords: %s" % str(x.shape)
+    #print "DrawPolygons"
+    #print "coords: %s" % str(x.shape)
     if color is not None:
         print "colors: %s" % str(color.shape)
     n = None
@@ -181,15 +181,10 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
         ni = arange(x.shape[1])
         nj = roll(ni,1)
         nk = roll(ni,-1)
-##         print ni
-##         print nj
-##         print nk
         v1 = x-x[:,nj]
         v2 = x[:,nk]-x
         n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
-##         drawPoints(x,size=5,color=array([0.,0.,1.]))
-##         drawPoints(x+n,size=5,color=array([1.,0.,0.]))
-        print "normals: %s" % str(n.shape)
+        #print "normals: %s" % str(n.shape)
 
     if GD.options.safelib:
         x = x.astype(float32)
@@ -200,7 +195,7 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    print n
+    #print n
     D.drawPolygons(x,n,color,alpha)
 
 
@@ -221,24 +216,23 @@ def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
     drawTriangles(x[elems],mode,color,alpha)
        
 
-## PERHAPS THIS COULD BE REPLACED WITH drawLines by reshaping the x ARRAY
-## (MIGHT NEED ADJUSTMENT OF color)
 def drawEdges(x,color=None):
     """Draw a collection of edges.
 
-    x is a (ntri,2*n,3) shaped array of coordinates. Each of the n pairs
+    x is a (nel,2*n,3) shaped array of coordinates. Each of the n pairs
     define a line segment. 
 
-    If color is given it is an (ntri,3) array of RGB values.
+    If color is given it is an (nel,3) array of RGB values.
     """
-    x = x.astype(float)
-    GL.glBegin(GL.GL_LINES)
-    for i in range(x.shape[0]):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        for p in x[i]:
-            GL.glVertex3fv(p)
-    GL.glEnd()
+    n = x.shape[1] / 2
+    x = x.reshape(-1,2,3)
+    if color is not None:
+        s = list(color.shape)
+        s[1:1] = 1
+        color = color.reshape(*s).repeat(n,axis=1)
+        s[1] = n
+        color = color.reshape(*s)
+    drawLines(x,color)
 
 
 def drawPolyLines(x,c=None,close=True):
