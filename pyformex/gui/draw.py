@@ -788,7 +788,6 @@ def zoomAll():
     if GD.canvas.actors:
         GD.canvas.setBbox(coords.bbox(GD.canvas.actors))
         GD.canvas.setCamera()
-        GD.canvas.redrawAll()
         GD.canvas.update()
 
 def zoom(f):

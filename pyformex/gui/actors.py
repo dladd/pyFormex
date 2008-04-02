@@ -601,8 +601,8 @@ class TriSurfaceActor(Actor,TriSurface):
             #drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            #drawTriangles(self.coords[self.elems],mode,color,alpha)
-            drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+            drawTriangles(self.coords[self.elems],mode,color,alpha)
+            #drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
     
 

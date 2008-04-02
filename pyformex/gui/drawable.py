@@ -89,6 +89,9 @@ def drawPoints(x,size=None,color=None):
     If size (float) is given, it specifies the point size.
     If color is given it is an (npoints,3) array of RGB values.
     """
+    x = x.reshape(-1,3)
+    if color is not None:
+        color = resize(color,x.shape)
     if size:
         GL.glPointSize(size)
     GL.glBegin(GL.GL_POINTS)
@@ -170,31 +173,34 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
     for the lighting are calculated and set
     """
     print "DrawPolygons"
-    print x.shape
+    print "coords: %s" % str(x.shape)
     if color is not None:
-        print color.shape
+        print "colors: %s" % str(color.shape)
     n = None
     if mode.startswith('smooth'):
         ni = arange(x.shape[1])
         nj = roll(ni,1)
         nk = roll(ni,-1)
-        print ni
-        print nj
-        print nk
-        v1 = x[:,ni]-x[:,nj]
-        v2 = x[:,nk]-x[:,ni]
+##         print ni
+##         print nj
+##         print nk
+        v1 = x-x[:,nj]
+        v2 = x[:,nk]-x
         n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
-        print n.shape
+##         drawPoints(x,size=5,color=array([0.,0.,1.]))
+##         drawPoints(x+n,size=5,color=array([1.,0.,0.]))
+        print "normals: %s" % str(n.shape)
+
     if GD.options.safelib:
         x = x.astype(float32)
         if n is not None:
             n = n.astype(float32)
         if color is not None:
-            print color.shape
             color = color.astype(float32)
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
+    print n
     D.drawPolygons(x,n,color,alpha)
 
 

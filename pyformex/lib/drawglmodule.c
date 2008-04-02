@@ -188,7 +188,7 @@ draw_triangles(PyObject *dummy, PyObject *args)
 /* Draw polygons */
 /* args:  x
     x : float (nel,nplex,3) : coordinates
-    n : float (nel,3) : normals.
+    n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
     alpha : float
 */  
@@ -238,11 +238,16 @@ draw_polygons(PyObject *dummy, PyObject *args)
       for (i=0; i<nel*nplex*3; i+=3) {
 	glVertex3fv(x+i);
       }
-    } else {
+    } else if (ndn == 2) {
       for (i=0; i<nel; i++) {
 	glNormal3fv(n+3*i);
 	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
       }
+    } else if (ndn == 3) {
+	for (j=0;j<nel*nplex*3;j+=3) {
+	  glNormal3fv(n+j);
+	  glVertex3fv(x+j);
+	}
     }
   } else if (ndc == 2) {
     if (n == NULL) {
@@ -250,24 +255,32 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	gl_color(c+3*i,alpha);
 	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
       }
-    } else {
+    } else if (ndn == 2){
       for (i=0; i<nel; i++) {
 	gl_color(c+3*i,alpha);
 	glNormal3fv(n+3*i);
 	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
       }
+    } else if (ndn == 3) {
+      for (i=0; i<nel; i++) {
+	gl_color(c+3*i,alpha);
+	for (j=0;j<nplex*3;j+=3) {
+	  glNormal3fv(n+nplex*3*i+j);
+	  glVertex3fv(x+nplex*3*i+j);
+	}
+      }
     }
   } else if (ndc == 3) {
     if (n == NULL) {
       for (i=0; i<nel*nplex*3; i+=3) {
-	glColor3fv(c+i);
+	gl_color(c+i,alpha);
 	glVertex3fv(x+i);
       }
     } else if (ndn == 2) {
       for (i=0; i<nel; i++) {
 	glNormal3fv(n+3*i);
 	for (j=0;j<nplex*3;j+=3) {
-	  glColor3fv(c+nplex*3*i+j);
+	  gl_color(c+nplex*3*i+j,alpha);
 	  glVertex3fv(x+nplex*3*i+j);
 	}
       }
@@ -275,7 +288,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
       for (i=0; i<nel; i++) {
 	for (j=0;j<nplex*3;j+=3) {
 	  glNormal3fv(n+nplex*3*i+j);
-	  glColor3fv(c+nplex*3*i+j);
+	  gl_color(c+nplex*3*i+j,alpha);
 	  glVertex3fv(x+nplex*3*i+j);
 	}
       }
