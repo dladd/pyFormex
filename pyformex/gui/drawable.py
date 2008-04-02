@@ -160,7 +160,42 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    D.drawTriangles(x,n,color,alpha)
+    D.drawPolygons(x,n,color,alpha)
+
+
+def drawPolygons(x,mode,color=None,alpha=1.0):
+    """Draw a collection of polygons.
+
+    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+    for the lighting are calculated and set
+    """
+    print "DrawPolygons"
+    print x.shape
+    if color is not None:
+        print color.shape
+    n = None
+    if mode.startswith('smooth'):
+        ni = arange(x.shape[1])
+        nj = roll(ni,1)
+        nk = roll(ni,-1)
+        print ni
+        print nj
+        print nk
+        v1 = x[:,ni]-x[:,nj]
+        v2 = x[:,nk]-x[:,ni]
+        n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
+        print n.shape
+    if GD.options.safelib:
+        x = x.astype(float32)
+        if n is not None:
+            n = n.astype(float32)
+        if color is not None:
+            print color.shape
+            color = color.astype(float32)
+            if (color.shape[0] != x.shape[0] or
+                color.shape[-1] != 3):
+                color = None
+    D.drawPolygons(x,n,color,alpha)
 
 
 def drawLineElems(x,elems,color=None):
@@ -234,54 +269,53 @@ def drawPolyLines(x,c=None,close=True):
                 GL.glColor3fv(c[i][j])
                 GL.glVertex3fv(x[i][j])
             GL.glEnd()
-
     
-def drawPolygons(x,mode,color=None):
-    """Draw a collection of polygones.
+## def drawPolygons(x,mode,color=None):
+##     """Draw a collection of polygones.
 
-    x is a (npoly,n,3) shaped array of coordinates.
-    Each row contains n triangles drawn with the same color.
+##     x is a (npoly,n,3) shaped array of coordinates.
+##     Each row contains n triangles drawn with the same color.
 
-    If color is given it is an (npoly,3) array of RGB values.
+##     If color is given it is an (npoly,3) array of RGB values.
 
-    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set
+##     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+##     for the lighting are calculated and set
 
-    REM: THE SMOOTH MODE HAS NOT BEEN IMPLEMENTED YET!
-    """
-    for i,xi in enumerate(x):
-        if color is not None:
-            GL.glColor3fv(color[i])
-        GL.glBegin(GL.GL_POLYGON)
-        for xij in xi:
-            GL.glVertex3fv(xij)
-        GL.glEnd()
+##     REM: THE SMOOTH MODE HAS NOT BEEN IMPLEMENTED YET!
+##     """
+##     for i,xi in enumerate(x):
+##         if color is not None:
+##             GL.glColor3fv(color[i])
+##         GL.glBegin(GL.GL_POLYGON)
+##         for xij in xi:
+##             GL.glVertex3fv(xij)
+##         GL.glEnd()
 
 
-def drawPolygonColor(x,color,alpha=1.0,normals=False):
-    """Draw a collection of polygones with smooth color shading.
+## def drawPolygonColor(x,mode,color,alpha=1.0,normals=False):
+##     """Draw a collection of polygones with smooth color shading.
 
-    x is a (ntri,nplex,3) shaped array of coordinates of the vertices.
-    nplex should be >= 3.
-    color is a (ntri,nplex,3) shaped array of color values at the vertices.
-    """
-    #if mode == 'smooth':
-    #    normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
-    if x.shape != color.shape:
-        raise RuntimeError,"Shape of x and color should be the same"
-    nplex = x.shape[:2]
-    if nplex == 3:
-        GL.glBegin(GL.GL_TRIANGLES)
-    elif nplex == 4:
-        GL.glBegin(GL.GL_QUAD)
-    else:
-        GL.glBegin(GL.GL_POLYGON)
-    x = x.reshape((-1,3))
-    color = color.reshape((-1,3))
-    for i in range(x.shape[0]):
-        glColor(color[i][j],alpha)
-        GL.glVertex3fv(x[i][j])
-    GL.glEnd()
+##     x is a (ntri,nplex,3) shaped array of coordinates of the vertices.
+##     nplex should be >= 3.
+##     color is a (ntri,nplex,3) shaped array of color values at the vertices.
+##     """
+##     #if mode == 'smooth':
+##     #    normal = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+##     if x.shape != color.shape:
+##         raise RuntimeError,"Shape of x and color should be the same"
+##     nplex = x.shape[:2]
+##     if nplex == 3:
+##         GL.glBegin(GL.GL_TRIANGLES)
+##     elif nplex == 4:
+##         GL.glBegin(GL.GL_QUADS)
+##     else:
+##         GL.glBegin(GL.GL_POLYGON)
+##     x = x.reshape((-1,3))
+##     color = color.reshape((-1,3))
+##     for i in range(x.shape[0]):
+##         glColor(color[i][j],alpha)
+##         GL.glVertex3fv(x[i][j])
+##     GL.glEnd()
 
 
 def drawQuadraticCurves(x,color=None,n=8):

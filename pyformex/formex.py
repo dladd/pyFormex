@@ -1274,13 +1274,15 @@ class Formex:
         return Formex(self.f)
 
 
-    def reverseElements(self):
+    def reverse(self):
         """Return a Formex where all elements have been reversed.
 
         Reversing an element means reversing the order of its points.
         """
         return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p)
 
+
+#############################
 # Test and clipping functions
 
     def test(self,nodes='all',dir=0,min=None,max=None,atol=0.):
@@ -1691,6 +1693,10 @@ class Formex:
     # They may (will) be removed in future.
     from utils import deprecated
 
+    @deprecated(reverse)
+    def reverseElements(self):         # This is the obsolete function
+        pass
+
     @deprecated(diagonal)
     def size(self):
         pass
@@ -2049,7 +2055,7 @@ if __name__ == "__main__":
         print F.bsphere()
         F = Formex([[[0,0],[1,0],[0,1]],[[1,0],[1,1],[0,1]]])
         print F
-        print F.reverseElements()
+        print F.reverse()
         Formex.setPrintFunction(Formex.asArray)
         print F
         F.fprint()

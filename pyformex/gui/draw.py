@@ -613,7 +613,7 @@ def drawPlane(P,N,size):
 def drawNumbers(F,color=colors.black,trl=None):
     """Draw numbers on all elements of F.
 
-    Normally, the nymbers are drawn at the centroids of the elements.
+    Normally, the numbers are drawn at the centroids of the elements.
     A translation may be given to put the numbers out of the centroids,
     e.g. to put them in front of the objects to make them visible,
     or to allow to view a mark at the centroids.
@@ -621,7 +621,25 @@ def drawNumbers(F,color=colors.black,trl=None):
     FC = F.centroids()
     if trl is not None:
         FC = FC.trl(trl)
-    M = marks.MarkList(FC,range(FC.shape[0]),color=color)
+    M = marks.MarkList(FC,numpy.arange(FC.shape[0]),color=color)
+    GD.canvas.addAnnotation(M)
+    GD.canvas.numbers = M
+    GD.canvas.update()
+    return M
+
+
+def drawVertexNumbers(F,color=colors.black,trl=None):
+    """Draw (local) numbers on all vertices of F.
+
+    Normally, the numbers are drawn at the location of the vertices.
+    A translation may be given to put the numbers out of the location,
+    e.g. to put them in front of the objects to make them visible,
+    or to allow to view a mark at the vertices.
+    """
+    FC = F.f.reshape((-1,3))
+    if trl is not None:
+        FC = FC.trl(trl)
+    M = marks.MarkList(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
     GD.canvas.addAnnotation(M)
     GD.canvas.numbers = M
     GD.canvas.update()
@@ -794,7 +812,7 @@ def opacity(alpha):
 
 def lights(onoff):
     """Set the lights on or off"""
-    GD.canvas.setLighting(onoff)
+    toolbar.setLight(onoff)
 
 transparent = toolbar.setTransparency
 perspective = toolbar.setPerspective

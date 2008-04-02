@@ -482,8 +482,9 @@ class FormexActor(Actor,Formex):
                 coords = self.f[:,faces,:]
                 drawTriangles(coords,mode,color)
             else: # (possibly non-plane) quadrilateral
-                drawQuadrilaterals(self.f,mode,color)
-
+                #drawQuadrilaterals(self.f,mode,color)
+                drawPolygons(self.f,mode,color)
+ 
         elif nnod == 6:
             if self.eltype=='wed':
                 triFaces = [0,1,2, 3,5,4]
@@ -496,8 +497,9 @@ class FormexActor(Actor,Formex):
         elif nnod == 8:
             if self.eltype=='hex':
                 faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]
-                coords = self.f[:,faces,:]
-                drawQuadrilaterals(coords,mode,color)
+                coords = self.f[:,faces,:].reshape(-1,4,3)
+                #drawQuadrilaterals(coords,mode,color)
+                drawPolygons(coords,mode,color)
         
         else:
             drawPolygons(self.f,mode,color=None)

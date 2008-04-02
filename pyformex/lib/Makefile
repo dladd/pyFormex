@@ -32,11 +32,8 @@ all: $(SOBJECTS)
 	$(CC) -shared $< -L/usr/lib -o $@
 
 
-Makefile: Makefile.in config.status
-	./config.status
-
-config.status: configure
-	./config.status --recheck
+Makefile: Makefile.in configure
+	./configure
 
 clean:
 	rm -rf *.o *~ config.log config.status

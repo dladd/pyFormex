@@ -156,14 +156,13 @@ def toggleLight():
 
 def addLightButton(toolbar):
     global light_button
-    lights_button = addButton(toolbar,'Toggle Lights',
-                              'lamp-on',toggleLight,icon0='lamp',
-                              toggle=True,checked=True)    
+    light_button = addButton(toolbar,'Toggle Lights',
+                             'lamp-on',toggleLight,icon0='lamp',
+                             toggle=True,checked=True)    
 
 def setLight(mode=True):
     """Set the lights mode on or off."""
     GD.canvas.setLighting(mode)
-    #GD.canvas.display()
     GD.canvas.update()
     if light_button:
         light_button.setChecked(mode)

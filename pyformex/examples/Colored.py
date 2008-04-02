@@ -6,12 +6,23 @@ from gui.actors import *
 smooth()
 lights(False)
 
-F = Formex(mpattern('16')).replic2(8,4)
+Shape = { 'triangle':'16',
+          'quad':'123',
+          }
+res = askItems([('Shape',None,'select',Shape.keys())])
+
+if not res:
+    exit()
+    
+shape = res['Shape']
+
+F = Formex(mpattern(Shape[shape])).replic2(8,4)
 
 color0 = None  # no color: current fgcolor
 color1 = red   # single color
 color2 = array([red,green,blue]) # 3 colors: will be repeated
-color3 = resize(color2,(F.nelems(),)+color2.shape) # nelems * 3 colors
+
+color3 = resize(color2,F.shape()) # full color
 
 
 for c in [color0,color1,color2,color3]:

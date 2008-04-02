@@ -103,5 +103,63 @@ def drawTriangles(x,n=None,c=None,alpha=1.0):
                 GL.glVertex3fv(xi)
     GL.glEnd()
 
+
+def drawPolygons(x,n=None,c=None,alpha=1.0):
+    """Draw a collection of polygons.
+
+    x : float (nel,nplex,3) : coordinates.
+    n : float (nel,3) : normals.
+    c : float (nel,3) or (nel,nplex,3) : color(s)
+    If nplex colors per triangle are given, and shading mode is flat,
+    the last color will be used.
+    """
+    nplex = x.shape[1]
+    if nplex < 3:
+        return
+    elif nplex == 3:
+        GL.glBegin(GL.GL_TRIANGLES)
+    elif nplex == 4:
+        GL.glBegin(GL.GL_QUADS)
+    else:
+        GL.glBegin(GL.GL_POLYGON)
+    if c is None:
+        if n is None:
+            for xi in x.reshape((-1,3)):
+                GL.glVertex3fv(xi)
+        else:
+            for xi,ni in zip(x,n):
+                GL.glNormal3fv(ni)
+                for j in range(nplex):
+                    GL.glVertex3fv(xi[j])
+    elif c.ndim == 2:
+        if n is None:
+            for xi,ci in zip(x,c):
+                GL.glColor3fv(ci)
+                for j in range(nplex):
+                    GL.glVertex3fv(xi[j])
+        else:
+            for xi,ni,ci in zip(x,n,c):
+                GL.glColor3fv(ci)
+                GL.glNormal3fv(ni)
+                for j in range(nplex):
+                    GL.glVertex3fv(xi[j])
+    elif c.ndim == 3:
+        if n is None:
+            for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):
+                GL.glColor3fv(ci[0])
+                GL.glVertex3fv(xi[0])
+        elif n.ndim == 2:
+            for xi,ni,ci in zip(x,n,c):
+                GL.glNormal3fv(ni)
+                for j in range(nplex):
+                    GL.glColor3fv(ci[j])
+                    GL.glVertex3fv(xi[j])
+        elif n.ndim == 3:
+            for xi,ni,ci in zip(x.reshape((-1,3)),n.reshape((-1,3)),c.reshape((-1,3))):
+                GL.glColor3fv(ci)
+                GL.glNormal3fv(ni)
+                GL.glVertex3fv(xi)
+    GL.glEnd()
+
     
 ### End
