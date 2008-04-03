@@ -22,6 +22,7 @@ from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
 from plugins import formex_menu,surface_abq
+from plugins.tools import Plane
 
 import commands, os, timer
 
@@ -662,6 +663,56 @@ def cutAtPlane():
             selection.drawChanges()
 
 
+def cutSelectionByPlanes():
+    """Cut the selection with one or more planes, which are already created."""
+    S = selection.check(single=True)
+    if S:
+        res1 = widgets.Selection(listAll(clas=Plane),
+                                'Known %sobjects' % selection.object_type(),
+                                mode='multi',sort=True).getResult()
+        if res1:
+            res2 = askItems([['Tolerance',0.],
+                    ['Color by', 'side', 'radio', ['side', 'element type']], 
+                    ['Side','both', 'radio', ['positive','negative','both']]],
+                    caption = 'Cutting parameters')
+            if res2:
+                planes = map(named, res1)
+                p = [plane.P for plane in planes]
+                n = [plane.n for plane in planes]
+                atol = res2['Tolerance']
+                color = res2['Color by']
+                side = res2['Side']
+                if color == 'element type':
+                    newprops = [1,2,2,3,4,5,6]
+                else:
+                    newprops = None
+                if side == 'both':
+                    Spos, Sneg = S.toFormex().cutAtPlane(p,n,atol,newprops,side)
+                elif side == 'positive':
+                    Spos = S.toFormex().cutAtPlane(p,n,atol,newprops,side)
+                    Sneg = Formex()
+                elif side == 'negative':
+                    Sneg = S.toFormex().cutAtPlane(p,n,atol,newprops,side)
+                    Spos = Formex()
+                if Spos.nelems() !=0:
+                    Spos = TriSurface(Spos)
+                    if color == 'side':
+                        Spos.setProp(2)
+                else:
+                    Spos = None
+                if Sneg.nelems() != 0:
+                    Sneg = TriSurface(Sneg)
+                    if color == 'side':
+                        Sneg.setProp(3)
+                else:
+                    Sneg = None
+                name = selection.names[0]
+                export({name+"/pos":Spos})
+                export({name+"/neg":Sneg})
+                selection.set([name+"/pos",name+"/neg"]+res1)
+                selection.draw()
+
+
 def intersectWithPlane():
     """Intersect the selection with a plane."""
     FL = selection.check()
@@ -965,6 +1016,7 @@ def create_menu():
         ("&Cut",
          [("&Clip",clipSelection),
           ("&Cut(Trim) at Plane",cutAtPlane),
+          ("&Cut by Planes",cutSelectionByPlanes),
           ("&Intersect With Plane",intersectWithPlane),
           ("&Slice",sliceIt),
            ]),
