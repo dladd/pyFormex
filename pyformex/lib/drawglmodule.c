@@ -97,93 +97,6 @@ draw_lines(PyObject *dummy, PyObject *args)
 }
 
 
-/********************************************** drawgl.draw_triangles ****/
-/* Draw triangles */
-/* args:  x
-    x : float (ntri,3,3) : coordinates
-    n : float (ntri,3) : normals.
-    c : float (ntri,3) or (ntri,3,3) colors
-    alpha : float
-*/  
-static PyObject *
-draw_triangles(PyObject *dummy, PyObject *args)
-{
-  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
-  float *x, *n=NULL, *c=NULL, alpha;
-  int nels,nd=0;
-
-  if (debug) printf("** draw_triangles\n");
-  if (!PyArg_ParseTuple(args, "OOOf", &arg1, &arg2, &arg3, &alpha)) return NULL;
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr1 == NULL) return NULL;
-  x = (float *)PyArray_DATA(arr1);
-  nels = PyArray_DIMS(arr1)[0];
-
-  arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr2 != NULL) { 
-    n = (float *)PyArray_DATA(arr2);
-  }
-
-  arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr3 != NULL) { 
-    c = (float *)PyArray_DATA(arr3);
-    nd = PyArray_NDIM(arr3);
-  }
-  
-  if (debug) printf("** nd = %d\n",nd);
-  glBegin(GL_TRIANGLES);
-  int i,j;
-  if (nd == 0) {
-    if (n == NULL) {
-      for (i=0; i<9*nels; i+=3) {
-	glVertex3fv(x+i);
-      }
-    } else {
-      for (i=0; i<nels; i++) {
-	glNormal3fv(n+3*i);
-	for (j=0;j<9;j+=3) glVertex3fv(x+9*i+j);
-      }
-    }
-  } else if (nd == 2) {
-    if (n == NULL) {
-      for (i=0; i<nels; i++) {
-	gl_color(c+3*i,alpha);
-	for (j=0;j<9;j+=3) glVertex3fv(x+9*i+j);
-      }
-    } else {
-      for (i=0; i<nels; i++) {
-	gl_color(c+3*i,alpha);
-	glNormal3fv(n+3*i);
-	for (j=0;j<9;j+=3) glVertex3fv(x+9*i+j);
-      }
-    }
-  } else if (nd == 3) {
-    if (n == NULL) {
-      for (i=0; i<9*nels; i+=3) {
-	glColor3fv(c+i);
-	glVertex3fv(x+i);
-      }
-    } else {
-      for (i=0; i<nels; i++) {
-	glNormal3fv(n+3*i);
-	for (j=0;j<9;j+=3) {
-	  glColor3fv(c+9*i+j);
-	  glVertex3fv(x+9*i+j);
-	}
-      }
-    }
-  }
-  glEnd();
-
-  /* Cleanup */
-  Py_DECREF(arr1);
-  if (arr2 != NULL)  { Py_DECREF(arr2); }
-  if (arr3 != NULL)  { Py_DECREF(arr3); }
-  Py_INCREF(Py_None);
-  return Py_None;
-}
-
 /********************************************** drawgl.draw_polygons ****/
 /* Draw polygons */
 /* args:  x
@@ -234,7 +147,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 
   int i,j;
   if (ndc == 0) {
-    if (n == NULL) {
+    if (ndn == 0) {
       for (i=0; i<nel*nplex*3; i+=3) {
 	glVertex3fv(x+i);
       }
@@ -250,9 +163,9 @@ draw_polygons(PyObject *dummy, PyObject *args)
 	}
     }
   } else if (ndc == 2) {
-    if (n == NULL) {
+    if (ndn == 0) {
       for (i=0; i<nel; i++) {
-	gl_color(c+3*i,alpha);
+	/*gl_color(c+3*i,alpha);*/
 	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
       }
     } else if (ndn == 2){
@@ -271,7 +184,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
       }
     }
   } else if (ndc == 3) {
-    if (n == NULL) {
+    if (ndn == 0) {
       for (i=0; i<nel*nplex*3; i+=3) {
 	gl_color(c+i,alpha);
 	glVertex3fv(x+i);
@@ -377,7 +290,6 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
     {"drawLines", draw_lines, METH_VARARGS, "Draw lines."},
-    {"drawTriangles", draw_triangles, METH_VARARGS, "Draw triangles."},
     {"drawPolygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"drawTriangleElems", draw_triangle_elements, METH_VARARGS, "Draw triangle elements."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
