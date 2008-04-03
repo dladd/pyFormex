@@ -417,7 +417,7 @@ class FormexActor(Actor,Formex):
         """
 
         if mode.endswith('wire'):
-            self.drawGL(mode=mode[:-4],color=color,colormap=None)
+            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
             return
 
@@ -566,10 +566,8 @@ class TriSurfaceActor(Actor,TriSurface):
         """Draw the surface."""
 
         if mode.endswith('wire'):
-            self.drawGL(mode=mode[:-4],color=color,colormap=None)
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
+            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
             return
 
         if alpha is None:
@@ -605,7 +603,7 @@ class TriSurfaceActor(Actor,TriSurface):
             #drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            drawTriangles(self.coords[self.elems],mode,color,alpha)
+            drawPolygons(self.coords[self.elems],mode,color,alpha)
             #drawTriangleElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
     

@@ -26,7 +26,7 @@ if GD.options.uselib is None:
 
 if GD.options.uselib:
     try:
-        import lib.drawgl as D
+        import lib.drawgl as LD
         GD.debug("Succesfully loaded the pyFormex compiled library")
     except ImportError:
         GD.debug("Error while loading the pyFormex compiled library")
@@ -36,7 +36,7 @@ if GD.options.uselib:
         
 if not GD.options.uselib:
     GD.debug("Using the (slower) Python drawing functions")
-    import drawgl as D
+    import drawgl as LD
 
 
 def rotMatrix(v,n=3):
@@ -136,7 +136,7 @@ def drawLines(x,color=None):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    D.drawLines(x,color)
+    LD.drawLines(x,color)
 
 
 def drawTriangles(x,mode,color=None,alpha=1.0):
@@ -163,8 +163,16 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    D.drawPolygons(x,n,color,alpha)
+    LD.drawPolygons(x,n,color,alpha)
 
+
+def Shape(a):
+    """Return the shape of an array or None"""
+    try:
+        return a.shape
+    except:
+        return None
+    
 
 def drawPolygons(x,mode,color=None,alpha=1.0):
     """Draw a collection of polygons.
@@ -190,7 +198,8 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    D.drawPolygons(x,n,color,alpha)
+    print "DRAWPOLYGONS %s %s %s %s" % (Shape(x),Shape(color),Shape(n),alpha)
+    LD.drawPolygons(x,n,color,alpha)
 
 
 def drawLineElems(x,elems,color=None):
@@ -207,7 +216,7 @@ def drawLineElems(x,elems,color=None):
  
 
 def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
-    drawTriangles(x[elems],mode,color,alpha)
+    drawPolygons(x[elems],mode,color,alpha)
        
 
 def drawEdges(x,color=None):

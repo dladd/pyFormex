@@ -2,6 +2,8 @@
 #
 # This script helps with installing the gts library and utilities from source:
 #
+# Prerequisites: libglib2.0-dev
+#
 # ./install_gts get unpack make
 # sudo ./install_gts install rename
 # ./install_gts clean
@@ -36,9 +38,11 @@ install() {
       return
   }
   cd $NAME
-  DESTDIR=. make install 
+  make install
 }
 
+# !! Only examples delaunay and transform are installed.
+# Better copy from build directory
 rename() {
   [ "$EUID" == "0" ] || {
       echo "install should be done as root!"
