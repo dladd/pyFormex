@@ -198,7 +198,6 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    print "DRAWPOLYGONS %s %s %s %s" % (Shape(x),Shape(color),Shape(n),alpha)
     LD.drawPolygons(x,n,color,alpha)
 
 
