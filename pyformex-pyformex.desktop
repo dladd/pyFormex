@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=pyformex --redirect
+Icon=pyformex-64x64.png
+Name=pyFormex
+GenericName=pyFormex 3D Geometry Designer
+Comment=pyFormex is a program to design, manipulate and operate on 3D geometrical structures.
