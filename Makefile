@@ -117,12 +117,12 @@ ${LATEST}: ${PKGDIR}/${PKG}
 	ln -sfn ${PKG} ${PKGDIR}/${LATEST}
 
 ${PKGDIR}/${PKG}: version MANIFEST.in
-	rm MANIFEST
+	rm -f MANIFEST
 	python setup.py sdist
 
 # Publish the distribution to our ftp server
 pub: 
-	rsync ${PKGDIR}/${PKG} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
+	rsync -l ${PKGDIR}/${PKG} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
 
 
 # Tag the release in the svn repository

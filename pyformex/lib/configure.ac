@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.60)
-AC_INIT(pyformex-lib,0.7)
+AC_INIT(pyformex-lib,0.7.1-a1)
 AC_PROG_CC
 
 AC_CHECK_HEADERS([GL/gl.h], [], [], [])

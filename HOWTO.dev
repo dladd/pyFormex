@@ -48,12 +48,12 @@ Set the version in RELEASE and then
   make version
 Stamp the files with the version
   make stampall
-Create a distribution
-  make dist
 Check in (creating the dist may modify some files)
   svn ci -m "Creating release ..."
 Create a Tag
   make tag
+Create a distribution
+  make dist
 Put the file on berlios ftp server
   ftp ftp.berlios.de
   name: ftp (anoniem)
@@ -73,7 +73,11 @@ Release the file via project administration
     Release Notes
   Release file
 Announce the release on the pyFormex news
-  admin....(todo)
+  news
+  submit
+    >> text: pyFormex Version released....
+Make the release available on our local FTP server
+  make pub
 Bump the RELEASE and VERSION variables in the file RELEASE, then
   make version
   svn ci -m 'Bump version after release'
