@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: TrussFrame.py 151 2006-11-02 18:18:49Z bverheg $
 ##
-## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
+## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 

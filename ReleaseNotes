@@ -1,4 +1,13 @@
-$Id$
+# $Id: $
+##
+## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
 
 pyFormex 0.7  Releasenotes 
 ============
@@ -18,8 +27,8 @@ will now also install
 
 COMMAND LINE
 ============
-The --dri/--nodri options should not be used, unless you know that the
-default settings are incorrect.
+The --dri/--nodri options should not be used, unless you need to change 
+incorrect default settings.
 
 
 GUI:
@@ -51,7 +60,12 @@ all its functionality, though some of them will be slower.
 
 PLUGINS:
 ========
-
+Important enhancements in the interfaces with simulation codes.
+Implemented some automated meshing algorithms.
+Expanded capablities of output in Abaqus and Fluent formats.
+Partly implemented import of results from Abaqus simulations.
+Started work on FEA/CFD postprocessing.
+ 
 
 MANUAL:
 =======

@@ -1,7 +1,7 @@
 #  -*- Makefile -*-  for creating pyFormex releases
 # $Id: Makefile 53 2005-12-05 18:23:28Z bverheg $
 ##
-## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
+## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -24,8 +24,8 @@ HTMLDIR= ${DOCDIR}/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }
 HTMLGUIDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, gui ${addprefix gui.,${PYGUIMODULES}}}}
 HTMLPLUGINDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, plugins ${addprefix plugins.,${PLUGINMODULES}}}}
-STAMPFILES= README History Makefile FAQ
-NONSTAMPFILES= COPYING RELEASE ReleaseNotes-${VERSION} Description 
+STAMPFILES= README History Makefile post-install ReleaseNotes
+NONSTAMPFILES= COPYING RELEASE Description 
 EXAMPLEFILES= ${addprefix pyformex/examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 
@@ -116,7 +116,8 @@ dist: ${LATEST}
 ${LATEST}: ${PKGDIR}/${PKG}
 	ln -sfn ${PKG} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKG}: version #pyformex/doc/pyformex-htmldocs.tar.gz
+${PKGDIR}/${PKG}: version MANIFEST.in
+	rm MANIFEST
 	python setup.py sdist
 
 # Publish the distribution to our ftp server

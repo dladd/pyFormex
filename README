@@ -1,6 +1,6 @@
 # $Id$
 ##
-## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
+## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -43,13 +43,28 @@ PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
 PyOpenGL: http://pyopengl.sourceforge.net/
 
 
+Install prerequisites on Debian GNU/Linux
+-----------------------------------------
 On Debian (lenny) systems you can install all prerequisites and their 
 dependencies with the command:
   apt-get install python-qt4-gl python-numpy
 
+The optimization scripts need scipy:
+  apt-get install python-scipy
+
+If you want to compile the acceleration library (strongly recommended):
+  apt-get install libgl1-mesa-dev
+
 
 Howto install pyFormex:
 ----------------------
+If a previous version of pyFormex was already installed on your system,
+you may want to remove the older version first before installing the new one.
+See further (Howto uninstall pyFormex)
+
+We suppose you have installed all the prerequisites and downloaded the
+pyformex source tarball: pyformex-VERSION.tar.gz
+
 Unpack the pyFormex source tarball:
    tar xvzf pyformex-VERSION.tar.gz
 Go to the created pyformex directory:
@@ -61,17 +76,35 @@ to install in some other place.
 
 The installation procedure installs everything into a single directory,
 and creates a symlink to the executable in /usr/local/bin.
-You can use the command pyformex -whereami to find out where pyFormex
+You can use the command pyformex --whereami to find out where pyFormex
 is installed.
 
 If you have xdg-utils on your system, the installation procedure will also
 install a menu and desktop starter for pyFormex.
 
-Finally, a pyFormex installation can usually be removed with the command
-  pyformex -remove
 
-If you install a new version on a system where pyFormex is already installed,
-you may want to remove the older version before installing the new one.
+Howto uninstall pyFormex:
+----------------------
+A pyFormex installation of version 0.5 or later can be removed with the command
+  pyformex --remove
+and then answering 'yes' to the question.
+
+
+ 
+Howto install the gl2ps option:
+-------------------------------
+gl2ps provides image output in PostScript (EPS) format.
+The easiest way to make gl2ps available from inside pyFormex is to
+install python-gl2ps: it includes the gl2ps library and the Python bindings.
+
+- Make sure you have the libc and (mesa) GL header files installed. (On Debian,
+  you can e.g. apt-get install libc6-dev libgl1-mesa-dev)
+- Download the file python-gl2ps-1.1.2.tar.gz
+- Unpack the archive
+- Go into the created directory python-gl2ps-1.1.2 and execute (as root):
+    python setup.py install
+- If all goes well, you have gl2ps installed.
+
 
 
 Documentation:
@@ -112,17 +145,10 @@ Use the File->Play menu selection to display the structure.
 The examples and the python source are relatively well documented.
 
 
-KNOWN BUGS:
------------
-* With the mouse dolly zoom function (vertical mouse movement zooming), you can not move the camera beyond the center of the displayed scene. 
-  You can do it using the toolbar buttons or menus, and you can use mouse lens zooming (horizontal movement) to view further.
-
-* Mouse zooming can make a jump after a flyAlong().
-
-
+BUGS:
+-----
 If you find any bugs or malfunctions in pyFormex, please submit them to
 http://developer.berlios.de/bugs/?group_id=2717
-
 
 
 Help and Feedback:
