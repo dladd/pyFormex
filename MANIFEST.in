@@ -1,8 +1,8 @@
 include pyformex/doc/COPYING
 include pyformex/doc/README
 include pyformex/doc/ReleaseNotes
-include pyformex-pyformex.desktop
 include post-install
+include pyformex-pyformex.desktop
 include pyformex/pyformex
 include pyformex/pyformexrc
 include pyformex/lib/Makefile.in

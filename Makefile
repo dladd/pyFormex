@@ -36,8 +36,10 @@ VERSIONSTRING= __version__ = .*
 NEWVERSIONSTRING= __version__ = "${RELEASE}"
 PKG= ${PYFORMEXDIR}.tar.gz
 PKGDIR= dist
+LATEST= pyformex-latest.tar.gz
 
-.PHONY: dist pub distclean pydoc manual stamp dist.stamped version tag
+
+.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version tag
 
 ############ Creating Distribution ##################
 
@@ -71,6 +73,15 @@ manual:
 lib:
 	make -C pyformex/lib
 
+# Create the minutes of the user meeting
+minutes: 
+	make -C minutes
+
+# Create the website
+website: 
+	make -C website
+
+
 #pyformex/doc/pyformex-htmldocs.tar.gz: manual
 #	tar czf $@ manual/html manual/images
 
@@ -100,14 +111,17 @@ stampall: stamp
 	${STAMP} -tStamp.stamp -i ${STAMPABLE}
 
 # Create the distribution
-dist: ${PKGDIR}/${PKG}
+dist: ${LATEST}
+
+${LATEST}: ${PKGDIR}/${PKG}
+	ln -sfn ${PKG} ${PKGDIR}/${LATEST}
 
 ${PKGDIR}/${PKG}: version #pyformex/doc/pyformex-htmldocs.tar.gz
 	python setup.py sdist
 
 # Publish the distribution to our ftp server
 pub: 
-	scp ${PKGDIR}/${PKG} bumps:/home/ftp/pub/pyformex
+	rsync ${PKGDIR}/${PKG} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
 
 
 # Tag the release in the svn repository
@@ -115,9 +129,4 @@ pub:
 tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 
-
-minutes: pyformex-user-meeting-0.tex
-	pdflatex pyformex-user-meeting-0.tex
-
-pyformex-user-meeting-0.tex: pyformex-user-meeting-0.rst
-	rst2latex pyformex-user-meeting-0.rst > pyformex-user-meeting-0.tex
+# End
