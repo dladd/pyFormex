@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+# $Id$
+"""A simple image viewer.
+
+This script runs the pyFormex built in image viewer
+as a standalone application. It lets you browse through
+directories and display the images.
+"""
+from pyformex.gui import imageViewer
+imageViewer.main()
+
+# End 
