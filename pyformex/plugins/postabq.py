@@ -1,5 +1,5 @@
 #!/usr/bin/env python pyformex
-# $Id $
+# $Id$
 
 """A postprocessor for ABAQUS output files.
 
