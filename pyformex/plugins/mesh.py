@@ -111,37 +111,15 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
 ### Some useful functions for creating quadrilateral meshes ############################    
 
 def gridRectangle(n1,n2,width,height):
-    """Create a rectangular grid with quadrilaterals
-    
-    Create a rectangular grid with n1 elems along the width
-    and n2 elements along the height of the section.
-    """
-    sp = Formex([[[0,-width/2,-height/2]]])
-    nodes = sp.replic(n1+1,width/n1,1).replic(n2+1,height/n2,2)
-    elems = array([]).astype(int)
-    for i in range(n1):
-        for j in range(n2):
-            elems = append(elems,[i+j*(n1+1),i+1+j*(n1+1),i+n1+2+j*(n1+1),i+n1+1+j*(n1+1)])
-    return nodes[:],elems.reshape(-1,4)
-
+    print """
+Function mesh.gridRectangle has been removed!
+Its functionality can be obtained by simple.rectangle.
+See the SweepBeam example.
+"""
 
 def gridBetween2Curves(curve1,curve2,n):
-    """Create a grid with quadrilaterals defined by two boundary curves
-    
-    The two curves should be (m,2,3) formices with the same number of elements!
-    These curves should lay within the YZ plane if you want to use the sweepGrid definition!
-    n is the number of elements between the two curves.
-    """
-    nc1 = append(curve1[:,0],curve1[-1,-1].reshape(-1,3),0)
-    nc2 = append(curve2[:,0],curve2[-1,-1].reshape(-1,3),0)
-    nodes = array([])
-    elems = array([]).astype(int)
-    for i in range(nc1.shape[0]):
-        L = line(nc1[i],nc2[i],n)
-        nL=append(L[:,0],L[-1,-1].reshape(-1,3),0)
-        for j in nL:
-            nodes = append(nodes,j)
-    for i in range(n):
-        for j in range(nc1.shape[0]-1):   
-            elems = append(elems,[i+j*(n+1),i+1+j*(n+1),i+n+2+j*(n+1),i+n+1+j*(n+1)])
-    return nodes.reshape(-1,3),elems.reshape(-1,4)
+    print """
+Function mesh.gridBetween2Curves has been removed!
+Its functionality can be obtained by simple.rectangle.
+See the SweepBeam example.
+"""

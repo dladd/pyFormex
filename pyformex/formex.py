@@ -1620,15 +1620,19 @@ class Formex:
 
 #################### Misc Operations #########################################
 
-    def split(self):
-        """Split a Formex in its elements.
+    def split(self,n=1):
+        """Split a Formex in subFormices containing n elements.
 
-        Returns a list of Formices each comprising one element.
+        The number of elements in the Formex should be a multiple of n. 
+        Returns a list of Formices each comprising n elements.
         """
+        if self.nelems() % n != 0:
+            raise RuntimeError,"Number of elements should be integer multiple of n"
+        m = self.nelems()/n
         if self.p is None:
-            return [ Formex([f]) for f in self.f ]
+            return [ Formex(self.f[n*i:n*(i+1)]) for i in range(m) ]
         else:
-            return [ Formex([f],p) for f,p in zip(self.f,self.p) ]
+            return [ Formex(self.f[n*i:n*(i+1)],self.p[n*i:n*(i+1)]) for i in range(m) ]
 
 
 #################### Read/Write Formex File ##################################

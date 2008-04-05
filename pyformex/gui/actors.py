@@ -486,24 +486,16 @@ class FormexActor(Actor,Formex):
             drawPolygons(self.f,mode,color,alpha)
                 
         elif self.eltype=='tet':
-                faces = [ 0,1,2, 0,2,3, 0,3,1, 3,2,1 ]
-                drawFaces(self.f[:,faces,:],3,mode,color,alpha)
-                #coords = self.f[:,faces,:]
-                #drawTriangles(coords,mode,color)
+            drawFaceElems(self.f,elements.Tet4.faces,mode,color,alpha)
  
         elif self.eltype=='wedge':
                 trifaces = [0,1,2, 3,5,4]
                 drawFaces(self.f[:,trifaces,:],3,mode,color,alpha)
-                #triCoords = self.f[:,trifaces,:]
-                #drawTriangles(triCoords,mode,color)
                 quadfaces = [ 0,1,4,3, 1,2,5,4, 0,2,5,3]
-                #quadCoords = self.f[:,quadfaces,:]
-                #drawQuadrilaterals(quadCoords,mode,color)
                 drawFaces(self.f[:,quadfaces,:],4,mode,color,alpha)
                 
         elif self.eltype=='hex':
-                faces = [0,1,2,3, 4,5,6,7, 0,3,7,4, 1,2,6,5, 0,1,5,4, 3,2,6,7]
-                drawFaces(self.f[:,faces,:],4,mode,color,alpha)
+            drawFaceElems(self.f,elements.Hex8.faces,mode,color,alpha)
 
         else:
             raise ValueError,"Invalid eltype %s" % str(self.eltype)

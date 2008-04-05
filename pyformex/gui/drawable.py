@@ -139,21 +139,29 @@ def drawLines(x,color=None):
     LD.drawLines(x,color)
 
 
-def drawTriangles(x,mode,color=None,alpha=1.0):
-    """Draw a collection of triangles.
+def Shape(a):
+    """Return the shape of an array or None"""
+    try:
+        return a.shape
+    except:
+        return None
+    
 
-    x is a (ntri,3*n,3) shaped array of coordinates.
-    Each row contains n triangles drawn with the same color.
-
-    If color is given it is an (npoly,3) array of RGB values.
+def drawPolygons(x,mode,color=None,alpha=1.0):
+    """Draw a collection of polygons.
 
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
     for the lighting are calculated and set
     """
-    x = x.reshape(-1,3,3)
     n = None
     if mode.startswith('smooth'):
-        n = vectorPairNormals(x[:,1] - x[:,0], x[:,2] - x[:,1])
+        ni = arange(x.shape[1])
+        nj = roll(ni,1)
+        nk = roll(ni,-1)
+        v1 = x-x[:,nj]
+        v2 = x[:,nk]-x
+        n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
+
     if GD.options.safelib:
         x = x.astype(float32)
         if n is not None:
@@ -164,14 +172,6 @@ def drawTriangles(x,mode,color=None,alpha=1.0):
                 color.shape[-1] != 3):
                 color = None
     LD.drawPolygons(x,n,color,alpha)
-
-
-def Shape(a):
-    """Return the shape of an array or None"""
-    try:
-        return a.shape
-    except:
-        return None
     
 
 def drawPolygons(x,mode,color=None,alpha=1.0):
@@ -238,15 +238,19 @@ def drawEdges(x,color=None):
 
 
 def drawFaces(x,nplex,mode,color=None,alpha=1.0):
-    """Draw a collection of edges.
+    """Draw a collection of faces.
 
-    x is a (nel,nplex*n,3) shaped array of coordinates. Each set of nplex
-    points define a polygon. 
+    x is a nnod(nel,nplex*nfaces,3) shaped array of coordinates.
+    Each of the nfaces sets of nplex points defines a polygon. 
 
-    If color is given it is an (nel,3) array of RGB values.
+    If color is given it is an (nel,3) array of RGB values. This function
+    will multiplex the colors, so that n faces are drawn in the same color.
+    This is e.g. convenient when drawing faces of a solid element.
     """
     n = x.shape[1] / nplex
     x = x.reshape(-1,nplex,3)
+    print n
+    print x.shape
     if color is not None:
         s = list(color.shape)
         s[1:1] = 1
@@ -254,6 +258,20 @@ def drawFaces(x,nplex,mode,color=None,alpha=1.0):
         s[1] = n
         color = color.reshape(*s)
     drawPolygons(x,mode,color,alpha)
+
+
+def drawFaceElems(x,faces,mode,color=None,alpha=1.0):
+    """Draw a collection of faces.
+
+    This function is like drawFaces, but the coordinates of the faces are
+    specified by:
+    x (nel,nplex) : the coordinates of solid elements
+    faces (nfaces,fplex): the definition of nfaces faces of the solid,
+      each with plexitude fplex. Each line of faces defines a single
+      face of the solid, in local vertex numbers (0..nplex-1)
+    """
+    faces = asarray(faces)
+    drawFaces(x[:,faces.ravel(),:],faces.shape[1],mode,color,alpha)
 
 
 def drawPolyLines(x,c=None,close=True):

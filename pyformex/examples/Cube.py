@@ -41,7 +41,7 @@ def cube_quad(color=None):
     elif color == 'Face':
         color = [4,1,5,2,6,3]
     elif color == 'Full':
-        color = arange(8)[f]
+        color = array([7,6,4,5,3,2,0,1])[f]
     print color
     return faces,color
 

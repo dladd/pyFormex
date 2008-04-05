@@ -80,6 +80,15 @@ def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     The line is split up in n segments.
     """
     return Formex([[p1,p2]]).divide(n)
+
+
+def rectangle(nx,ny,b,h):
+    """Return a Formex representing a rectangle of size(b,h) with (nx,ny) cells.
+
+    This is a convenience function to create a rectangle with given size.
+    The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
+    """
+    return Formex(mpattern('123')).replic2(nx,ny).scale([b/nx,h/ny,0.])
    
 
 def circle(a1=2.,a2=0.,a3=360.):
@@ -169,5 +178,19 @@ def sphere3(nx,ny,r=1,bot=-90,top=90):
     s = float(top-bot) / ny
     return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
 
+
+def connectCurves(curve1,curve2,n):
+    """Connect two curves to form a surface.
+    
+    curve1, curve2 are plex-2 Formices with the same number of elements.
+    The two curves are connected by a surface of quadrilaterals, with n
+    elements in the direction between the curves.
+    """
+    if curve1.nelems() != curve2.nelems():
+        raise ValueError,"Both curves should have same number of elements"
+    # Create the interpolations
+    curves = interpolate(curve1,curve2,n).split(curve1.nelems())
+    quads = [ connect([c1,c1,c2,c2],nodid=[0,1,1,0]) for c1,c2 in zip(curves[:-1],curves[1:]) ]
+    return Formex.concatenate(quads)
 
 # End

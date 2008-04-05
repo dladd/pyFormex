@@ -11,10 +11,12 @@
 ##
 """Element local coordinates and numbering.
 
-The elements in this module are defined in a unit cell of their
-local coordinates. See finite_elements.py for a variant using
-natural coordinates familiar in Finite Element simulations.
+This modules allows for a consistent local numbering scheme throughout
+pyFormex. When interfacing with other programs, one should be aware
+that conversions may be necessary. Conversions to/from external programs
+should be done by the interface modules.
 """
+
 import math
 
 golden_ratio = 0.5 * (1.0 + math.sqrt(5))
@@ -28,6 +30,17 @@ class Element(object):
     edges: a list of edges, each defined by a couple of node numbers,
     faces: a list of faces, each defined by a list of minimum 3 node numbers,
     element: a list of all node numbers
+
+    Rectangular cells are defined between coordinates -1 and +1 of the
+    natural cartesian coordinates. Triangular cells are defined between
+    values 0 and +1.
+
+    The elements guarantee a fixed local numbering scheme of the vertices.
+    One should however not rely on a specific numbering scheme of edges, faces
+    or elements.
+    For solid elements, it is guaranteed that the vertices of all faces are
+    numbered in a consecutive order spinning positively around the outward
+    normal on the face.
     """
     
     vertices = []
@@ -108,25 +121,25 @@ class Wedge6(Element):
 class Hex8(Element):
     """An 8-node hexahedron"""
 
-    vertices = [ ( 0.0, 0.0, 0.0 ),
-                 ( 1.0, 0.0, 0.0 ),
-                 ( 0.0, 1.0, 0.0 ),
-                 ( 1.0, 1.0, 0.0 ),
-                 ( 0.0, 0.0, 1.0 ),
-                 ( 1.0, 0.0, 1.0 ),
-                 ( 0.0, 1.0, 1.0 ),
-                 ( 1.0, 1.0, 1.0 ),
+    vertices = [ ( 1.0, 1.0, 1.0 ),
+                 (-1.0, 1.0, 1.0 ),
+                 (-1.0,-1.0, 1.0 ),
+                 ( 1.0,-1.0, 1.0 ),
+                 ( 1.0, 1.0,-1.0 ),
+                 (-1.0, 1.0,-1.0 ),
+                 (-1.0,-1.0,-1.0 ),
+                 ( 1.0,-1.0,-1.0 ),
                  ]
     
-    edges = [ (0,1), (2,3), (4,5), (6,7),
-              (0,2), (1,3), (4,6), (5,7),
+    edges = [ (0,1), (1,2), (2,3), (3,0),
+              (4,5), (5,6), (6,7), (7,4),
               (0,4), (1,5), (2,6), (3,7) ]
     
-    faces = [ (0,2,3,1), (4,5,7,6),
-              (0,1,5,4), (2,6,7,3),
-              (0,4,6,2), (1,3,7,5) ]
+    faces = [ (0,1,2,3), (6,5,4,7),
+              (0,4,5,1), (6,7,3,2),
+              (0,3,7,4), (6,2,1,5) ]
 
-    element = [ 7,6,4,5,3,2,0,1, ]
+    element = [ 0,1,2,3,4,5,6,7 ]
 
 
 class Icosa(Element):
@@ -170,6 +183,8 @@ class Icosa(Element):
               (2,11,5), (3,7,11),
               (2,4,9),  (3,9,6),
               ]
+
+    element = range(12)
 
 
 if __name__ == "__main__":
