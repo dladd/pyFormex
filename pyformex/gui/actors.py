@@ -467,15 +467,15 @@ class FormexActor(Actor,Formex):
             if self.eltype is None:
                 drawPolyLines(self.f,color)
 
-            elif self.eltype == 'tet':
+            elif self.eltype == 'Tet4':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
                 drawEdges(self.f[:,edges,:],color)
 
-            elif self.eltype == 'wedge':
+            elif self.eltype == 'Wedge6':
                 edges = [ 0,1, 0,2, 0,3, 1,2, 1,4, 2,5, 3,4, 3,5, 4,5]
                 drawEdges(self.f[:,edges,:],color)
 
-            elif self.eltype == 'hex':
+            elif self.eltype == 'Hex8':
                 edges = [0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
                 drawEdges(self.f[:,edges,:],color)
 
@@ -485,16 +485,16 @@ class FormexActor(Actor,Formex):
         elif self.eltype is None:
             drawPolygons(self.f,mode,color,alpha)
                 
-        elif self.eltype=='tet':
+        elif self.eltype=='Tet4':
             drawFaceElems(self.f,elements.Tet4.faces,mode,color,alpha)
  
-        elif self.eltype=='wedge':
-                trifaces = [0,1,2, 3,5,4]
-                drawFaces(self.f[:,trifaces,:],3,mode,color,alpha)
-                quadfaces = [ 0,1,4,3, 1,2,5,4, 0,2,5,3]
-                drawFaces(self.f[:,quadfaces,:],4,mode,color,alpha)
+        elif self.eltype=='Wedge6':
+            faces = [ f for f in elements.Wedge6.faces if len(f) == 3 ]
+            drawFaceElems(self.f,faces,mode,color,alpha)
+            faces = [ f for f in elements.Wedge6.faces if len(f) == 4 ]
+            drawFaceElems(self.f,faces,mode,color,alpha)
                 
-        elif self.eltype=='hex':
+        elif self.eltype=='Hex8':
             drawFaceElems(self.f,elements.Hex8.faces,mode,color,alpha)
 
         else:
