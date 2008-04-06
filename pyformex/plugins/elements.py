@@ -18,9 +18,9 @@ should be done by the interface modules.
 """
 
 import math
-
 golden_ratio = 0.5 * (1.0 + math.sqrt(5))
 
+from utils import sortOnLength
 
 class Element(object):
     """Element base class: an empty element.
@@ -54,6 +54,9 @@ class Element(object):
         return len(self.edges)
     def nfaces(self):
         return len(self.faces)
+
+    def getFaces():
+        return sortOnLength(self.faces)
 
 
 
@@ -103,17 +106,17 @@ class Tet4(Element):
 
 class Wedge6(Element):
     """A 6-node wedge element"""
-    vertices = [ ( 0.0, 0.0, 0.0 ),
-                 ( 1.0, 0.0, 0.0 ),
-                 ( 0.0, 1.0, 0.0 ),
-                 ( 0.0, 0.0, 1.0 ),
+    vertices = [ ( 0.0, 0.0, 1.0 ),
                  ( 1.0, 0.0, 1.0 ),
                  ( 0.0, 1.0, 1.0 ),
+                 ( 0.0, 0.0,-1.0 ),
+                 ( 1.0, 0.0,-1.0 ),
+                 ( 0.0, 1.0,-1.0 ),
                  ]
 
     edges = [ (0,1), (1,2), (2,0), (0,3), (1,4), (2,5), (3,4), (4,5), (5,3) ]
 
-    faces = [ (0,2,1), (3,4,5), (0,1,4,3), (1,2,5,4), (0,3,5,2) ]
+    faces = [ (0,1,2), (3,5,4), (0,3,4,1), (1,4,5,2), (2,5,3,0) ]
 
     element = [ 0,1,2,3,4,5 ]
 

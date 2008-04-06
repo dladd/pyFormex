@@ -924,10 +924,10 @@ def show_volume():
     if PF['volume'] is None:
         return
     nodes,elems = PF['volume']
-    F = Formex(nodes[elems])
+    F = Formex(nodes[elems],eltype='tet4')
     GD.message("BBOX = %s" % F.bbox())
     clear()
-    draw(F,color='random',eltype='Tet4')
+    draw(F,color='random')
     PF['vol_model'] = F
 
 

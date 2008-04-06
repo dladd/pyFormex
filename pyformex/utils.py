@@ -292,6 +292,24 @@ def isPyFormex(filename):
     return ok
 
 
+def sortOnLength(items):
+    """Sort a list of lists according to length of the sublists.
+
+    items is a list of items each having the len() method.
+    The items are put in separate lists according to their length.
+
+    The return value is a dict where the keys are item lengths and
+    the values are lists of items with this length.
+    """
+    res = {}
+    for item in items:
+        li = len(item)
+        if li in res.keys():
+            res[li].append(item)
+        else:
+            res[li] = [ item ]
+    return res
+
 
 class NameSequence(object):
     """A class for autogenerating sequences of names.

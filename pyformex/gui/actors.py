@@ -313,7 +313,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,eltype=None,alpha=1.0,coloradjust=False):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,alpha=1.0,coloradjust=False):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -326,13 +326,26 @@ class FormexActor(Actor,Formex):
         The user can specify a linewidth to be used when drawing
         in wireframe mode.
 
-        plex-1: if eltype == 'point3D', a 3D cube with 6 differently colored
-                faces is drawn, else a fixed size dot is drawn.
+        If the Formex has no 'eltype' attribute, or if it is not
+        recognized, Formices are drawn as follows:
+          plex-1: a fixed size dot,
+          plex-2: a line
+          plex-3: a triangle
+          plex 4 and higher: a polygon: if the points are not in a single
+            plane, the polygon consists of a number of flat triangles.
+
+        The following eltypes are recognized (and should match the
+        corresponding plexitude):
+          plex-1: 'point3d' : a 3D cube with 6 differently colored faces is
+                              drawn at each point
+          plex-4: 'tet4'   : a tetrahedron
+          plex-6: 'wedge6' : a wedge (triangular prism)
+          plex-8: 'hex8'   : a hexahedron
         """
         Actor.__init__(self)
         # Initializing with F alone gives problems with self.p !
-        Formex.__init__(self,F.f,F.p)
-        self.eltype = eltype
+        Formex.__init__(self,F.f,F.p,F.eltype)
+        #self.eltype = eltype
         
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)
@@ -456,49 +469,27 @@ class FormexActor(Actor,Formex):
         elif nnod == 2:
             drawLines(self.f,color)
         
-        elif nnod == 3 and self.eltype == 'curve':
+        elif self.eltype == 'curve' and nnod == 3:
             drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
             
-        elif (nnod == 3 or nnod == 4) and self.eltype == 'nurbs':
+        elif self.eltype == 'nurbs' and (nnod == 3 or nnod == 4):
             drawNurbsCurves(self.f,color)
             
-        elif mode=='wireframe' :
-
-            if self.eltype is None:
-                drawPolyLines(self.f,color)
-
-            elif self.eltype == 'Tet4':
-                edges = [ 0,1, 0,2, 0,3, 1,2, 1,3, 2,3 ]
-                drawEdges(self.f[:,edges,:],color)
-
-            elif self.eltype == 'Wedge6':
-                edges = [ 0,1, 0,2, 0,3, 1,2, 1,4, 2,5, 3,4, 3,5, 4,5]
-                drawEdges(self.f[:,edges,:],color)
-
-            elif self.eltype == 'Hex8':
-                edges = [0,1, 1,2, 2,3, 0,3, 0,4, 1,5, 2,6, 3,7, 4,5, 5,6, 6,7, 7,4]
-                drawEdges(self.f[:,edges,:],color)
-
-            else:
-                raise ValueError,"Invalid eltype %s" % str(self.eltype)
-                
         elif self.eltype is None:
-            drawPolygons(self.f,mode,color,alpha)
-                
-        elif self.eltype=='Tet4':
-            drawFaceElems(self.f,elements.Tet4.faces,mode,color,alpha)
- 
-        elif self.eltype=='Wedge6':
-            faces = [ f for f in elements.Wedge6.faces if len(f) == 3 ]
-            drawFaceElems(self.f,faces,mode,color,alpha)
-            faces = [ f for f in elements.Wedge6.faces if len(f) == 4 ]
-            drawFaceElems(self.f,faces,mode,color,alpha)
-                
-        elif self.eltype=='Hex8':
-            drawFaceElems(self.f,elements.Hex8.faces,mode,color,alpha)
+            if mode=='wireframe' :
+                drawPolyLines(self.f,color)
+            else:
+                drawPolygons(self.f,mode,color,alpha)
 
         else:
-            raise ValueError,"Invalid eltype %s" % str(self.eltype)
+            try:
+                el = getattr(elements,self.eltype.capitalize())
+            except:
+                raise ValueError,"Invalid eltype %s" % str(self.eltype)
+            if mode=='wireframe' :
+                drawEdgeElems(self.f,el.edges,color)    
+            else:
+                drawFaceElems(self.f,el.faces,mode,color,alpha)
     
 
     def pickGL(self,mode):

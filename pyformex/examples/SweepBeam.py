@@ -44,6 +44,6 @@ nodes,elems = mesh.sweepGrid(nodesQuad,elemsQuad,path,a1='last',a2='last')
 
 smooth()
 clear()
-draw(Formex(nodes[elems].reshape(-1,8,3)),eltype='Hex8',color='red',linewidth=2)
+draw(Formex(nodes[elems].reshape(-1,8,3),eltype='Hex8'),color='red',linewidth=2)
 
 

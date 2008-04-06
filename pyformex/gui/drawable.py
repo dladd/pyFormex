@@ -19,6 +19,7 @@ from numpy import *
 from formex import *
 
 import simple
+import utils
 
 # Loading the low level drawing library
 if GD.options.uselib is None:
@@ -212,10 +213,6 @@ def drawLineElems(x,elems,color=None):
     If color is given it is an (nlines,3) array of RGB values.
     """
     drawLines(x[elems],color)
- 
-
-def drawTriangleElems(x,elems,mode,color=None,alpha=1.0):
-    drawPolygons(x[elems],mode,color,alpha)
        
 
 def drawEdges(x,color=None):
@@ -237,6 +234,19 @@ def drawEdges(x,color=None):
     drawLines(x,color)
 
 
+def drawEdgeElems(x,edges,color=None):
+    """Draw a collection of edges.
+
+    This function is like drawEdges, but the coordinates of the edges are
+    specified by:
+    x (nel,nplex) : the coordinates of solid elements
+    edges (nedges,2): the definition of nedges edges of the solid,
+      each with plexitude 2. Each line of edges defines a single
+      edge of the solid, in local vertex numbers (0..nplex-1)
+    """
+    drawEdges(x[:,asarray(edges).ravel(),:],color)
+
+
 def drawFaces(x,nplex,mode,color=None,alpha=1.0):
     """Draw a collection of faces.
 
@@ -249,8 +259,6 @@ def drawFaces(x,nplex,mode,color=None,alpha=1.0):
     """
     n = x.shape[1] / nplex
     x = x.reshape(-1,nplex,3)
-    print n
-    print x.shape
     if color is not None:
         s = list(color.shape)
         s[1:1] = 1
@@ -270,8 +278,10 @@ def drawFaceElems(x,faces,mode,color=None,alpha=1.0):
       each with plexitude fplex. Each line of faces defines a single
       face of the solid, in local vertex numbers (0..nplex-1)
     """
-    faces = asarray(faces)
-    drawFaces(x[:,faces.ravel(),:],faces.shape[1],mode,color,alpha)
+    # We may have faces with different plexitudes!
+    for fac in utils.sortOnLength(faces).itervalues():
+        fa = asarray(fac)
+        drawFaces(x[:,fa.ravel(),:],fa.shape[1],mode,color,alpha)
 
 
 def drawPolyLines(x,c=None,close=True):
@@ -324,6 +334,7 @@ def drawQuadraticCurves(x,color=None,n=8):
         if color is not None:
             GL.glColor3fv(color[i])
         P = dot(H,x[i])
+        print "P.shape=%s"%str(P.shape)
         GL.glBegin(GL.GL_LINE_STRIP)
         for p in P:
             GL.glVertex3fv(p)

@@ -671,7 +671,7 @@ class Formex:
 #   Create a new Formex
 #
 
-    def __init__(self,data=[[[]]],prop=None):
+    def __init__(self,data=[[[]]],prop=None,eltype=None):
         """Create a new Formex.
 
         The Formex data can be initialized by another Formex,
@@ -717,7 +717,10 @@ class Formex:
         # data should be OK now
         self.f = Coords(data)    # make sure coordinates are a Coords object 
         self.setProp(prop)
-
+        try:
+            self.eltype = eltype.lower()
+        except:
+            self.eltype = None
 
     def __getitem__(self,i):
         """Return element i of the Formex.
