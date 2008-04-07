@@ -29,7 +29,8 @@ Formex.edit = editFormex
 ##################### database tools ##########################
 
 database = objects.Objects()
-    
+drawable = objects.DrawableObjects()
+
 
 def printall():
     """Print all global variable names."""
@@ -413,6 +414,7 @@ def export_selection():
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
+        ("&Draw Variables",drawable.ask),
         ("&Show Variables",printall),
         ("&Print Variables",printval),
         ("&Edit Variable",edit),
