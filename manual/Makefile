@@ -15,6 +15,10 @@ TESTOPTIONS= --keep
 
 REMOVEFILES= images images.* img*.png index.dat *.pl WARNINGS pyfav.png *.how
 
+MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
+MANIMAGES= ../manual/images/*.png
+RSYNC= rsync -av -e ssh
+
 # Default target
 .PHONY all: pdf html
 
@@ -43,7 +47,9 @@ html/${TGT}.html: ${SRC}
 	${MKHOWTO} --html --dir ${HTMLDIR}  ${TESTOPTIONS} $(OPTIONS)  $<
 	cd html; rm -f ${REMOVEFILES}
 
-# Transfers the files to BerliOS
-pub: pdf
-	scp pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
+# Transfer the files to BerliOS
+pub: #pdf html
+	${RSYNC} pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
+	${RSYNC} ${MANDOCS} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
+	${RSYNC} ${MANIMAGES} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
 

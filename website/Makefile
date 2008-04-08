@@ -46,5 +46,4 @@ pub: $(HOMEPARTS)
 	$(RSYNC) $(IMAGES) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
 	$(RSYNC) $(SCRIPTS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/scripts
 	#$(RSYNC) $(DOCDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/doc
-	#$(RSYNC) $(MANDOCS) bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
 	ssh bverheg@shell.berlios.de ./get_projhtml
