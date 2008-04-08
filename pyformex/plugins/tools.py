@@ -159,7 +159,7 @@ def getObjectItems(obj,items,mode):
 def getCollection(K):
     """Returns a collection."""
     if K.obj_type == 'actor':
-        return [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
+        return [ GD.canvas.actors[int(i)] for i in K.get(-1,[]) ]
     elif K.obj_type in ['element','point']:
         return [ getObjectItems(GD.canvas.actors[k],K[k],K.obj_type) for k in K.keys() ]
     elif K.obj_type == 'partition':
@@ -225,7 +225,7 @@ def partitionCollection(K):
         actor_numbers = K.get(-1,[])
         K.clear()
         for i in actor_numbers:
-            K.add(range(sel[i].nelems()),i)
+            K.add(range(sel[int(i)].nelems()),i)
     prop = 1
     j = 0
     for i in K.keys():

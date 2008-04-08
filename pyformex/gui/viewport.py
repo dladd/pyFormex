@@ -306,10 +306,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 front_elem = self.front_selection[1]
                 if self.selection.has_key(front_actor): # due to CTRL button all elements of front_actor could be removed
                     front_actor_elems = self.selection[front_actor]
-                    A = self.actors[front_actor].select(front_actor_elems)
+                    A = self.actors[int(front_actor)].select(front_actor_elems)
                     p = A.partitionByConnection()
                     prop = p[front_actor_elems == front_elem]
                     front_elems = front_actor_elems[p==prop]
+                    GD.message(p)
+                    GD.message(prop)
+                    GD.message(front_elems)
                     self.selection.set(front_elems,front_actor)
             #GD.debug("Selection: %s" % self.selection)
             if func:
