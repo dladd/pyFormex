@@ -1,7 +1,7 @@
 /*
   $Id$ 
 
-  Scanner for ABAQUS .fil postprcessing files
+  Scanner for ABAQUS .fil results files
   (C) 2008 Benedict Verhegghe
   Distributed under the GNU GPL version 3 or higher
   THIS PROGRAM COMES WITHOUT ANY WARRANTY
@@ -80,14 +80,14 @@ char* str(uint k) {
 }
 
 void do_element() {
-  printf("Element(%d,",data.i[j++]);
+  printf("D.Element(%d,",data.i[j++]);
   printf("'%s',[",str(j++));
   while (j < jend) printf("%d,",data.i[j++]);
   printf("])\n");
 }
 
 void do_node() {
-  printf("Node(%d,[",data.i[j++]);
+  printf("D.Node(%d,[",data.i[j++]);
   int j3 = j+3;
   if (j3 > jend) j3 = jend;
   while (j < j3) printf("%e,",data.d[j++]);
@@ -99,56 +99,56 @@ void do_node() {
 }
 
 void do_dofs() {
-  printf("Dofs([");
+  printf("D.Dofs([");
   while (j < jend) printf("%d,",data.i[j++]);
   printf("])\n");
 }
 
 void do_outreq() {
   int flag = data.i[j++];
-  printf("OutputRequest(flag=%d,set='%s'",str(j++));
+  printf("D.OutputRequest(flag=%d,set='%s'",str(j++));
   if (flag==0) printf(",eltyp='%s',",str(j++));
   printf(")\n");
 }
 
 void do_abqver() {
-  printf("Abqver('%s')\n",str(j++));
+  printf("D.Abqver('%s')\n",str(j++));
   /* BEWARE ! Do not call str() multiple times in the same output instruction */
-  printf("Date('%s',",strn(j,2)); j += 2;
+  printf("D.Date('%s',",strn(j,2)); j += 2;
   printf("'%s')\n",str(j++));
-  printf("Size(nelems=%d,nnodes=%d,length=%f)\n",data.i[j],data.i[j+1],data.d[j+2]);
+  printf("D.Size(nelems=%d,nnodes=%d,length=%f)\n",data.i[j],data.i[j+1],data.d[j+2]);
 } 
 
 void do_heading() {
-  printf("Heading('%s')\n",strn(j,jend-j));
+  printf("D.Heading('%s')\n",strn(j,jend-j));
 }
 
 void do_nodeset() {
-  printf("Nodeset('%s',[",stripn(j++,1,1));
+  printf("D.Nodeset('%s',[",stripn(j++,1,1));
   while (j<jend) printf("%d,",data.i[j++]);
   printf("])\n");
 }
 
 void add_nodeset() {
-  printf("NodesetAdd([");
+  printf("D.NodesetAdd([");
   while (j<jend) printf("%d,",data.i[j++]);
   printf("])\n");
 }
 
 void do_elemset() {
-  printf("Elemset('%s',[",stripn(j++,1,1));
+  printf("D.Elemset('%s',[",stripn(j++,1,1));
   while (j<jend) printf("%d,",data.i[j++]);
   printf("])\n");
 }
 
 void add_elemset() {
-  printf("ElemsetAdd([");
+  printf("D.ElemsetAdd([");
   while (j<jend) printf("%d,",data.i[j++]);
   printf("])\n");
 }
 
 void do_label() {
-  printf("Label(tag='%d',value='",data.i[j++]);
+  printf("D.Label(tag='%d',value='",data.i[j++]);
   printf("%s",strn(j,jend-j));
   printf("')\n");
 }
@@ -158,7 +158,7 @@ void do_increment() {
   double * dp = data.d + j;
   long type = ip[4];
   explicit = (type==17 || type == 74);
-  printf("Increment(");
+  printf("D.Increment(");
   printf("step=%d,",ip[5]);
   printf("inc=%d,",ip[6]);
   printf("tottime=%e,",dp[0]);
@@ -177,7 +177,7 @@ void do_increment() {
 }
 
 void end_increment() {
-  printf("EndIncrement()\n");
+  printf("D.EndIncrement()\n");
 }
 
 char* output_location[] = { "gp", "ec", "en", "rb", "na", "el" };
@@ -185,11 +185,8 @@ char* output_location[] = { "gp", "ec", "en", "rb", "na", "el" };
 void do_elemheader() {
   long * ip = data.i + j;
   int loc = ip[3];
-  printf("ElemHeader(loc='%s',",output_location[loc]);
-  if (loc==4)
-    printf("in=%d,",ip[0]);
-  else
-    printf("ie=%d,",ip[0]);
+  printf("D.ElemHeader(loc='%s',",output_location[loc]);
+  printf("i=%d,",ip[0]);
   if (loc==0)
     printf("gp=%d,",ip[1]);
   else if (loc==2)
@@ -207,20 +204,20 @@ void do_elemheader() {
 }
 
 void do_elemout(char* text) {
-  printf("ElemOutput('%s',[",text);
+  printf("D.ElemOutput('%s',[",text);
   while (j < jend) printf("%e,",data.d[j++]);
   printf("])\n");
 }
 
 void do_nodeout(char* text) {
-  printf("NodeOutput('%s',%d,[",text,data.i[j++]);
+  printf("D.NodeOutput('%s',%d,[",text,data.i[j++]);
   while (j < jend) printf("%e,",data.d[j++]);
   printf("])\n");
 }
 
 void do_total_energies() {
   double * dp = data.d + j;
-  printf("TotalEnergies(");
+  printf("D.TotalEnergies(");
   printf("ALLKE=%f,",dp[0]);
   printf("ALLSE=%f,",dp[1]);
   printf("ALLWK=%f,",dp[2]);
@@ -271,7 +268,7 @@ int process_data() {
   case 107: do_nodeout("COORD"); break;
 
   case 1999: do_total_energies(); break;
-  default: printf("Unknown(%d)\n",key);
+  default: printf("D.Unknown(%d)\n",key);
   }
   return 0;
 }
@@ -316,7 +313,8 @@ int process_file(const char* fn) {
 
   printf("#!/usr/bin/env pyformex\n");
   printf("# Created by %s\n",copyright);
-  printf("from plugins.postabq import *\n");
+  printf("from plugins.fe_post import FeResult\n");
+  printf("D = FeResult()\n");
   j = jmax = 0; /* start with empty buffer */
   while (!feof(fil)) {
     if (read_block()) break;
@@ -345,6 +343,7 @@ int process_file(const char* fn) {
       j = jend; /* in case the process_data did not process everyhing */
     }
   }
+  printf("D.Export()\n");
   printf("# End\n");
   fclose(fil);
   return 0;

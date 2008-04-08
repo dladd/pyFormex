@@ -1,4 +1,4 @@
-
+# $Id$
 
 SRC= postabq.c
 
