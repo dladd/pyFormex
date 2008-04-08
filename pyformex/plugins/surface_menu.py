@@ -24,7 +24,7 @@ from plugins.objects import *
 from plugins import formex_menu,surface_abq
 from plugins.tools import Plane
 
-import commands, os, timer
+import os, timer
 
 ##################### selection and annotations ##########################
 
@@ -758,7 +758,7 @@ def fill_holes():
     fn = project + '.stl'
     fn1 = project + '-closed.stl'
     if os.path.exists(fn):
-        sta,out = commands.getstatusoutput('admesh %s -f -a %s' % (fn,fn1))
+        sta,out = utils.runCommand('admesh %s -f -a %s' % (fn,fn1))
         GD.message(out)
         if sta == 0:
             clear()
@@ -869,7 +869,7 @@ def create_tetgen():
     """Generate a volume tetraeder mesh inside an stl surface."""
     fn = PF['project'] + '.stl'
     if os.path.exists(fn):
-        sta,out = commands.getstatusoutput('tetgen -z %s' % fn)
+        sta,out = utils.runCommand('tetgen -z %s' % fn)
         GD.message(out)
 
 

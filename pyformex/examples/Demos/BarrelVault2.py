@@ -34,6 +34,8 @@ draw(e)
 ea = e.replic2(2,2*n,2*m,1)
 draw(ea)
 
+
+view('iso')
 # Create barrel
 grid = (da+ha+ea).rotate(90,1).translate(0,r)
 draw(grid)

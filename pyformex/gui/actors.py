@@ -313,7 +313,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,marksize=None,alpha=1.0,coloradjust=False):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,coloradjust=False,mode=None,linewidth=None,marksize=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -346,7 +346,8 @@ class FormexActor(Actor,Formex):
         # Initializing with F alone gives problems with self.p !
         Formex.__init__(self,F.f,F.p,F.eltype)
         #self.eltype = eltype
-        
+
+        self.mode = mode
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
@@ -428,6 +429,8 @@ class FormexActor(Actor,Formex):
         operations are done: one with wireframe and color black, and
         one with mode[:-4] and self.color.
         """
+        if self.mode is not None:
+            mode = self.mode
 
         if mode.endswith('wire'):
             self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
@@ -509,7 +512,7 @@ class FormexActor(Actor,Formex):
 class TriSurfaceActor(Actor,TriSurface):
     """Draws a triangulated surface specified by points and connectivity."""
 
-    def __init__(self,S,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,alpha=1.0):
+    def __init__(self,S,color=None,colormap=None,bkcolor=None,bkcolormap=None,linewidth=None,alpha=1.0,mode=None):
         
         Actor.__init__(self)
         TriSurface.__init__(self,S.coords,S.edges,S.faces)
@@ -549,8 +552,8 @@ class TriSurfaceActor(Actor,TriSurface):
         """Draw the surface."""
 
         if mode.endswith('wire'):
-            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
+            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
             return
 
         if alpha is None:
@@ -586,8 +589,7 @@ class TriSurfaceActor(Actor,TriSurface):
             #drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            drawPolygons(self.coords[self.elems],mode,color,alpha)
-            #drawTriangleElems(self.coords,self.elems,mode,color,alpha)
+            drawPolygonElems(self.coords,self.elems,mode,color,alpha)
         GD.message("Drawing time: %s seconds" % t.seconds())
     
 

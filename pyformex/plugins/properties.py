@@ -90,17 +90,18 @@ the_nodeproperties = CascadingDict()
 the_elemproperties = CascadingDict()
 
 ## def init_properties():
-##     global materials, sections, properties, nodeproperties, elemproperties
+##     global the_materials, the_sections, the_properties,\
+##            the_nodeproperties, the_elemproperties
 ##     print "INITIALIZING THE properties MODULE"
-##     if materials is None:
+##     if the_materials is None:
 ##         materials = MaterialDB({})
-##     if sections is None:
+##     if the_sections is None:
 ##         sections = SectionDB()
-##     if properties is None:
+##     if the_properties is None:
 ##         properties = CascadingDict()
-##     if nodeproperties is None:
+##     if the_nodeproperties is None:
 ##         properties = CascadingDict()
-##     if elemproperties is None:
+##     if the_elemproperties is None:
 ##         properties = CascadingDict()
 
 

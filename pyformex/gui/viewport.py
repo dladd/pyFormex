@@ -682,6 +682,7 @@ class MultiCanvas(QtGui.QGridLayout):
             toolbar.setTransparency(self.current.alphablend)
             toolbar.setPerspective(self.current.camera.perspective)
             toolbar.setLight(self.current.lighting)
+            #toolbar.setNormals(self.current.avgnormals)
             self.current.display()
             
 

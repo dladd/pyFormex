@@ -123,9 +123,9 @@ class GUI(QtGui.QMainWindow):
         self.statusbar = self.statusBar()
         #self.curproj = QtGui.QLabel('No Project')
         #self.curproj.setLineWidth(0)
-        self.curproj = widgets.ButtonBox('Project:',['NONE'],[fileMenu.openProject])
+        self.curproj = widgets.ButtonBox('Project:',['None'],[fileMenu.openProject])
         self.statusbar.addWidget(self.curproj)
-        self.curfile = widgets.ButtonBox('Script:',['NONE'],[fileMenu.openScript])
+        self.curfile = widgets.ButtonBox('Script:',['None'],[fileMenu.openScript])
         self.statusbar.addWidget(self.curfile)
         #cf = QtGui.QWidget()
         #hl = QtGui.QHBoxLayout()
@@ -237,6 +237,9 @@ class GUI(QtGui.QMainWindow):
         # Add the lights button
         if self.modebar and GD.cfg.get('gui/lightbutton',False):
             toolbar.addLightButton(self.modebar)
+        # Add the normals button
+        if self.modebar and GD.cfg.get('gui/normalsbutton',False):
+            toolbar.addNormalsButton(self.modebar)
         # Add the shrink button
         if self.modebar and GD.cfg.get('gui/shrinkbutton',False):
             toolbar.addShrinkButton(self.modebar)

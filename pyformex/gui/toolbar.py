@@ -167,6 +167,32 @@ def setLight(mode=True):
     if light_button:
         light_button.setChecked(mode)
     GD.app.processEvents()
+  
+
+################# Normals Button ###############
+
+normals_button = None
+
+def toggleNormals(): 
+    mode = not GD.canvas.avgnormals
+    GD.canvas.setAveragedNormals(mode)
+    #GD.canvas.display()
+    GD.canvas.update()
+    GD.app.processEvents()
+
+def addNormalsButton(toolbar):
+    global normals_button
+    normals_button = addButton(toolbar,'Toggle Normals',
+                               'normals-avg',toggleNormals,icon0='normals-ind',
+                               toggle=True,checked=True)    
+
+def setNormals(mode=True):
+    """Set the normals mode on or off."""
+    GD.canvas.setAveragedNormals(mode)
+    GD.canvas.update()
+    if normals_button:
+        normals_button.setChecked(mode)
+    GD.app.processEvents()
 
 
 ################# Perspective Button ###############

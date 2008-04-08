@@ -107,7 +107,7 @@ topbar = ElemProperty(3,elemsection = circ20, elemtype='T3D2')
 
 def getmat(key):
     """Return the 'truss material' with key (str or int)."""
-    p = elemproperties[key]
+    p = the_elemproperties[key]
     if p:
         return [ p.young_modulus, p.density, p.cross_section ]
     else:

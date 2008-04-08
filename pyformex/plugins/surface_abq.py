@@ -16,8 +16,9 @@ Generates input-surface.inp and input-volume.inp with the
 surface and volume modules in Abaqus(R) input format. 
 """
 
+from utils import runCommand
 from plugins import surface, f2abq, tetgen
-import commands, os
+import os
 
 
 def abq_export(fn,nodes,elems,eltype,header="Exported by stl_examples.py"):
@@ -32,7 +33,7 @@ def abq_export(fn,nodes,elems,eltype,header="Exported by stl_examples.py"):
 
 def stl_tetgen(fn):
     """Generate a volume tetraeder mesh inside an stl surface."""
-    sta,out = commands.getstatusoutput('tetgen %s' % fn)
+    sta,out = runCommand('tetgen %s' % fn)
     message(out)
 
 

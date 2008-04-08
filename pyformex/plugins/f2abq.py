@@ -154,6 +154,16 @@ def writeMaterial(fil, mat):
 ## Some higher level functions, interfacing with the properties module
 ##################################################
 
+plane_stress_elems = [
+    'CPS3','CPS4','CPS4I','CPS4R','CPS6','CPS6M','CPS8','CPS8M']
+plane_strain_elems = [
+    'CPE3','CPE3H','CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH',
+    'CPE6','CPE6H','CPE6M','CPE6MH','CPE8','CPE8H','CPE8R','CPE8RH']
+generalized_plane_strain_elems = [
+    'CPEG3','CPEG3H','CPEG4','CPEG4H','CPEG4I','CPEG4IH','CPEG4R','CPEG4RH',
+    'CPEG6','CPEG6H','CPEG6M','CPEG6MH','CPEG8','CPEG8H','CPEG8R','CPEG8RH']
+solid2d_elems = plane_stress_elems + plane_strain_elems + generalized_plane_strain_elems
+
 def writeSection(fil, nr):
     """Write an element section for the named element set.
     
@@ -233,7 +243,7 @@ def writeSection(fil, nr):
     ############
     ## 2D SOLID elements
     ##########################
-    elif el.elemtype.upper() in ['CPE3','CPE3H','CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH','CPE6','CPE6H','CPE6M','CPE6MH','CPE8','CPE8H','CPE8R','CPE8RH']:
+    elif el.elemtype.upper() in solid2d_elems:
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
                 fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
@@ -687,7 +697,7 @@ class Result(Dict):
             set = "%sall" % kind
         Dict.__init__(self,{'keys':keys,'kind':kind,'set':set,'output':output,
                             'freq':freq})
-        self.update(**kargs)
+        self.update(dict(**kargs))
 
 
 class AbqData(CascadingDict):

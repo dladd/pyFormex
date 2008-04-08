@@ -40,7 +40,7 @@ show(f1+f2.rosette(6,60.))
 # n = number of repetitions of the base module in circumference (this does not
 #     have to be equal to 6: the base module will be compressed/expanded to
 #     generate a full circle
-# f = if 1, the dome will have sharp edges where repeated mdules meet;
+# f = if 1, the dome will have sharp edges where repeated modules meet;
 #     if 2, the dome surface will be smooth over neighbouring modules.
 # c = height of the dome at the center of the dome.
 # r = height of the arcs at the circumference of the dome. 
@@ -61,7 +61,7 @@ show(scallop(6,1,2,0),0,False)
 howmany = ask("How many / Which domes do you want?",
               ['One','Sequence','Custom','None'])
 
-n,f,c,r = [6,1,2,0]
+n,f,c,r = [6,1,2.,0.]
 
 if howmany == 'One':
    # The example from the pyformex homepage

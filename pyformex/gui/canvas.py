@@ -204,7 +204,8 @@ class Light(object):
 class Canvas(object):
     """A canvas for OpenGL rendering."""
 
-    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire']
+    rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
+                   'smooth-avg']
   
 ##     # default light
 ##     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
@@ -223,6 +224,7 @@ class Canvas(object):
         self.rendermode = 'wireframe'
         self.polygonfill = False
         self.lighting = True
+        self.avgnormals = False
         self.alphablend = False
         self.dynamouse = True  # dynamic mouse action works on mouse move
         self.dynamic = None    # what action on mouse move
@@ -266,9 +268,20 @@ class Canvas(object):
 
     def setLighting(self,mode):
         self.lighting = mode
-        #GD.debug("SET CURRENT VIEWPORT LIGHTING MODE TO %s" % self.lighting)
         glLight(self.lighting)
-        
+
+    def setAveragedNormals(self,mode):
+        self.avgNormals = mode
+        change = (self.rendermode == 'smooth' and self.avgNormals) or \
+                 (self.rendermode == 'smooth-avg' and not self.avgNormals)
+        if change:
+            if self.avgNormals:
+                self.rendermode = 'smooth-avg'
+            else:
+                self.rendermode = 'smooth'
+            self.actors.redraw()
+            self.display()
+       
 
     def setLineWidth(self,lw):
         """Set the linewidth for line rendering."""
@@ -375,7 +388,6 @@ class Canvas(object):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position/orientation or lens.
         """
-        #GD.debug("REDISPLAY CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
         glLight(self.lighting)

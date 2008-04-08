@@ -22,7 +22,7 @@ import help
 import image
 import draw
 import script
-from plugins import surface_menu,formex_menu,tools_menu
+from plugins import surface_menu,formex_menu,tools_menu,postproc_menu
 
 
 save = NotImplemented
@@ -72,88 +72,93 @@ def setOptions():
         for o in options:
             setattr(GD.options,o,res[o])
 
-            
-# The menu actions can be simply function names instead of strings, if the
-# functions have already been defined here.
-#
 
 def my_exit():
     GD.canvas.cancel_selection()
     GD.app.processEvents()
     GD.app.exit()
-                          
+            
+# The menu actions can be simply function names instead of strings, if the
+# functions have already been defined here.
+#
 
-MenuData = [
-    (_('&File'),[
-        (_('&Start new project'),fileMenu.createProject),
-        ("&Open existing project",fileMenu.openProject),
-        ("&Save project",fileMenu.saveProject),
-        ("&Save and close project",fileMenu.closeProject),
-        ("---",None),
-        (_('&Create new script'),fileMenu.createScript),
-        (_('&Select existing script'),fileMenu.openScript),
-        (_('&Play script'),draw.play),
-        (_('&Edit script'),fileMenu.edit),
-        (_('&Change workdir'),draw.askDirname),
-        (_('---1'),None),
-        (_('&Save Image'),fileMenu.saveImage),
-        (_('Start &MultiSave'),fileMenu.startMultiSave),
-        (_('Save &Next Image'),image.saveNext),
-        (_('Create &Movie'),image.createMovie),
-        (_('&Stop MultiSave'),fileMenu.stopMultiSave),
-        (_('---2'),None),
-        (_('Load &Plugins'),[
-            (_('Surface menu'),surface_menu.show_menu),
-            (_('Formex menu'),formex_menu.show_menu),
-            (_('Tools menu'),tools_menu.show_menu),
-            ]),
-        (_('&Options'),setOptions),
-        (_('---3'),None),
-#        (_('E&xit'),'GD.app.exit'),
-        (_('E&xit'),my_exit),
+
+FileMenuData = [
+    (_('&Start new project'),fileMenu.createProject),
+    ('&Open existing project',fileMenu.openProject),
+    ('&Save project',fileMenu.saveProject),
+    ('&Save and close project',fileMenu.closeProject),
+    ('---',None),
+    (_('&Create new script'),fileMenu.createScript),
+    (_('&Select existing script'),fileMenu.openScript),
+    (_('&Play script'),draw.play),
+    (_('&Edit script'),fileMenu.edit),
+    (_('&Change workdir'),draw.askDirname),
+    (_('---1'),None),
+    (_('&Save Image'),fileMenu.saveImage),
+    (_('Start &MultiSave'),fileMenu.startMultiSave),
+    (_('Save &Next Image'),image.saveNext),
+    (_('Create &Movie'),image.createMovie),
+    (_('&Stop MultiSave'),fileMenu.stopMultiSave),
+    (_('&Save Icon'),fileMenu.saveIcon),
+    (_('---2'),None),
+    (_('Load &Plugins'),[
+        (_('Surface menu'),surface_menu.show_menu),
+        (_('Formex menu'),formex_menu.show_menu),
+        (_('Tools menu'),tools_menu.show_menu),
+        (_('Postproc menu'),postproc_menu.show_menu),
         ]),
-    (_('&Actions'),[
-        (_('&Step'),draw.step),
-        (_('&Continue'),draw.fforward), 
-        (_('&Reset GUI'),resetGUI),
-        (_('&Force Finish Script'),draw.force_finish),
-        (_('&ListFormices'),script.printall),
-        (_('&PrintGlobalNames'),script.printglobalnames),
-        (_('&PrintGlobals'),script.printglobals),
-        (_('&PrintConfig'),script.printconfig),
-        (_('&Print Detected Software'),script.printdetected),
-        (_('&PrintBbox'),draw.printbbox),
-        (_('&PrintViewportSettings'),draw.printviewportsettings),
-        ]),
-    (_('&Help'),help.MenuData)
+    (_('&Options'),setOptions),
+    (_('---3'),None),
+    #        (_('E&xit'),'GD.app.exit'),
+    (_('E&xit'),my_exit),
+]
+
+ActionMenuData = [
+    (_('&Step'),draw.step),
+    (_('&Continue'),draw.fforward), 
+    (_('&Reset GUI'),resetGUI),
+    (_('&Force Finish Script'),draw.force_finish),
+    (_('&ListFormices'),script.printall),
+    (_('&PrintGlobalNames'),script.printglobalnames),
+    (_('&PrintGlobals'),script.printglobals),
+    (_('&PrintConfig'),script.printconfig),
+    (_('&Print Detected Software'),script.printdetected),
+    (_('&PrintBbox'),draw.printbbox),
+    (_('&PrintViewportSettings'),draw.printviewportsettings),
     ]
 
 CameraMenuData = [
-    (_('&Camera'),[
-        (_('&LocalAxes'),draw.setLocalAxes),
-        (_('&GlobalAxes'),draw.setGlobalAxes),
-        (_('&Projection'),toolbar.setProjection),
-        (_('&Perspective'),toolbar.setPerspective),
-        (_('&Zoom All'),draw.zoomAll), 
-        (_('&Zoom In'),cameraMenu.zoomIn), 
-        (_('&Zoom Out'),cameraMenu.zoomOut), 
-        (_('&Dolly In'),cameraMenu.dollyIn), 
-        (_('&Dolly Out'),cameraMenu.dollyOut), 
-        (_('&Translate'),[
-            (_('Translate &Right'),cameraMenu.transRight), 
-            (_('Translate &Left'),cameraMenu.transLeft), 
-            (_('Translate &Up'),cameraMenu.transUp),
-            (_('Translate &Down'),cameraMenu.transDown),
-            ]),
-        (_('&Rotate'),[
-            (_('Rotate &Right'),cameraMenu.rotRight),
-            (_('Rotate &Left'),cameraMenu.rotLeft),
-            (_('Rotate &Up'),cameraMenu.rotUp),
-            (_('Rotate &Down'),cameraMenu.rotDown), 
-            (_('Rotate &ClockWise'),cameraMenu.twistRight),
-            (_('Rotate &CCW'),cameraMenu.twistLeft),
-            ]),
+    (_('&LocalAxes'),draw.setLocalAxes),
+    (_('&GlobalAxes'),draw.setGlobalAxes),
+    (_('&Projection'),toolbar.setProjection),
+    (_('&Perspective'),toolbar.setPerspective),
+    (_('&Zoom All'),draw.zoomAll), 
+    (_('&Zoom In'),cameraMenu.zoomIn), 
+    (_('&Zoom Out'),cameraMenu.zoomOut), 
+    (_('&Dolly In'),cameraMenu.dollyIn), 
+    (_('&Dolly Out'),cameraMenu.dollyOut), 
+    (_('&Translate'),[
+        (_('Translate &Right'),cameraMenu.transRight), 
+        (_('Translate &Left'),cameraMenu.transLeft), 
+        (_('Translate &Up'),cameraMenu.transUp),
+        (_('Translate &Down'),cameraMenu.transDown),
         ]),
+    (_('&Rotate'),[
+        (_('Rotate &Right'),cameraMenu.rotRight),
+        (_('Rotate &Left'),cameraMenu.rotLeft),
+        (_('Rotate &Up'),cameraMenu.rotUp),
+        (_('Rotate &Down'),cameraMenu.rotDown), 
+        (_('Rotate &ClockWise'),cameraMenu.twistRight),
+        (_('Rotate &CCW'),cameraMenu.twistLeft),
+        ]),
+    ]
+             
+
+MenuData = [
+    (_('&File'),FileMenuData),
+    (_('&Actions'),ActionMenuData),
+    (_('&Help'),help.MenuData)
     ]
 
 
@@ -165,6 +170,6 @@ def createMenuData():
     if GD.cfg.get('gui/viewportmenu','True'):
         MenuData[2:2] = viewportMenu.MenuData
     if GD.cfg.get('gui/cameramenu','True'):
-        MenuData[3:3] = CameraMenuData
+        MenuData[3:3] = [(_('&Camera'),CameraMenuData)]
     
 # End

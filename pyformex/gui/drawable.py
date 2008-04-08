@@ -148,20 +148,66 @@ def Shape(a):
         return None
     
 
-def drawPolygons(x,mode,color=None,alpha=1.0):
+def computeNormals(x):
+    """Compute normals in all points of elements in x.
+
+    x is an (nel,nplex,3) array. Each line of x in an element.
+    The return value is an (nel,nplex,3) array with the unit normals
+    in all points.
+    """
+    ni = arange(x.shape[1])
+    nj = roll(ni,1)
+    nk = roll(ni,-1)
+    v1 = x-x[:,nj]
+    v2 = x[:,nk]-x
+    return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
+
+
+def interpolateNormals(x,els):
+    """Interpolate normals in all points of elements in x.
+
+    x is an (nel,nplex,3) array. Each line of x in an element.
+    The return value is an (nel,nplex,3) array with the unit normals
+    in all points.
+    """
+    # Compute all normals
+    n = computeNormals(x[els])
+#    print x.shape
+#    print els.shape
+#    print n.shape
+    for i in unique1d(els):
+#        print "Averaging normal in point %s" % i
+        wi = where(els==i)
+        ni = n[wi]
+#        print ni
+        ni = ni.sum(axis=0)
+#        print ni
+        ni = normalize(ni)
+#        print ni
+        n[wi] = ni
+    return n
+
+
+def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
     """Draw a collection of polygons.
 
     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set
+    for the lighting are calculated and set, or they can be specified
+    in normals
     """
     n = None
     if mode.startswith('smooth'):
-        ni = arange(x.shape[1])
-        nj = roll(ni,1)
-        nk = roll(ni,-1)
-        v1 = x-x[:,nj]
-        v2 = x[:,nk]-x
-        n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
+        if normals is None:
+            n = computeNormals(x)
+        else:
+            try:
+                n = asarray(normals)
+                if not (n.ndim in [2,3] and n.shape[0] == x.shape[0] and n.shape[-1] == 3):
+                    raise
+                
+            except:
+                raise ValueError,"""Invalid normals specified"""
+
 
     if GD.options.safelib:
         x = x.astype(float32)
@@ -173,33 +219,23 @@ def drawPolygons(x,mode,color=None,alpha=1.0):
                 color.shape[-1] != 3):
                 color = None
     LD.drawPolygons(x,n,color,alpha)
-    
 
-def drawPolygons(x,mode,color=None,alpha=1.0):
+
+def drawPolygonElems(coords,elems,mode,color=None,alpha=1.0):
     """Draw a collection of polygons.
 
-    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set
+    This function is like drawpolygons, but the vertices of the polygons
+    are specified by:
+    coords (npts,3) : the coordinates of the points
+    elems (nels,nplex): the definition of nels polygons, each defined
+      by nplex points.
     """
-    n = None
-    if mode.startswith('smooth'):
-        ni = arange(x.shape[1])
-        nj = roll(ni,1)
-        nk = roll(ni,-1)
-        v1 = x-x[:,nj]
-        v2 = x[:,nk]-x
-        n = vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
-
-    if GD.options.safelib:
-        x = x.astype(float32)
-        if n is not None:
-            n = n.astype(float32)
-        if color is not None:
-            color = color.astype(float32)
-            if (color.shape[0] != x.shape[0] or
-                color.shape[-1] != 3):
-                color = None
-    LD.drawPolygons(x,n,color,alpha)
+    if mode == 'smooth-avg':
+        n = interpolateNormals(coords,elems)
+        mode = 'smooth'
+    else:
+        n = None
+    drawPolygons(coords[elems],mode,color,alpha=1.0,normals=n)
 
 
 def drawLineElems(x,elems,color=None):
@@ -365,32 +401,7 @@ def drawNurbsCurves(x,color=None):
         GLU.gluEndCurve(nurb)
 
     
-## def drawQuadrilaterals(x,mode,color=None):
-##     """Draw a collection of quadrilaterals.
-
-##     x is a (nquad,4*n,3) shaped array of coordinates.
-##     Each row contains n quads drawn with the same color.
-
-##     If color is given it is an (npoly,3) array of RGB values.
-
-##     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-##     for the lighting are calculated and set
-##     """
-##     nplex = x.shape[1]
-##     if mode == 'smooth':
-##         edge = [ x[:,i,:] - x[:,i-1,:] for i in range(nplex) ]
-##         normal = [ vectorPairNormals(edge[i],edge[(i+1) % nplex]) for i in range(nplex) ]
-##     GL.glBegin(GL.GL_QUADS)
-##     for i in range(x.shape[0]):
-##         if color is not None:
-##             GL.glColor3fv(color[i])
-##         for j in range(nplex):
-##             if mode == 'smooth':
-##                 GL.glNormal3fv(normal[j][i])
-##             GL.glVertex3fv(x[i][j])
-##     GL.glEnd()
-
-    
+  
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
 

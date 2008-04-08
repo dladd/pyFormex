@@ -16,14 +16,17 @@ import widgets
 import draw
 import utils
 import image
+#from plugins import surface_menu,formex_menu,tools_menu
 
 from plugins import project
+from gettext import gettext as _
 
 
 
 ##################### handle project files ##########################
 
 the_project = None
+the_project_saved = False
 
 def createProject():
     openProject(False)
@@ -34,32 +37,51 @@ def openProject(exist=True):
     The default only accepts existing project files.
     Use createProject() to accept new file names.
     """
-    global the_project
+    global the_project,the_project_saved
     if the_project is None:
         cur = GD.cfg.get('workdir','.')
     else:
+        if draw.ask("Another project is still open. Shall I close it first?",
+                    ['Close','Cancel']) == 'Cancel':
+            return
         cur = the_project.filename
     typ = [ 'pyFormex projects (*.pyf)', 'All files (*)' ]
     fn = widgets.FileSelection(cur,typ,exist=exist).getFilename()
     if fn:
         if not fn.endswith('.pyf'):
             fn += '.pyf'
+        print GD.PF.keys()
+        if GD.PF:
+            res = draw.ask("pyFormex already contains exported symbols.\nShall I add them to your project?",['Delete','Add','Cancel'])
+            print res
+            if res == 'Cancel':
+                return
+            if res == 'Delete':
+                GD.PF = {}
         GD.message("Opening project %s" % fn)
         the_project = project.Project(fn)
+        the_project_saved = False
+        if GD.PF:
+            the_project.update(GD.PF)
         GD.PF = the_project
         GD.gui.setcurproj(fn)
+        GD .message("Project contents: %s" % the_project.keys())
 
 def saveProject():
+    global the_project,the_project_saved
     if the_project is not None:
         the_project.save()
+        the_project_saved = True
 
 def closeProject():
-    global the_project
-    if the_project is not None:
+    global the_project,the_project_saved
+    if not (the_project_saved or the_project is None):
         GD.message("Closing project %s" % the_project.filename)
+        GD .message("Project contents: %s" % the_project.keys())
         the_project.save()
         GD.PF = {}
         GD.PF.update(the_project)
+        GD.gui.setcurproj('None')
     the_project = None
 
 
@@ -118,6 +140,16 @@ def saveImage(multi=False):
                         border=opt.bo,
                         rootcrop=opt.rc
                         )
+def saveIcon():
+    """Save an image as icon.
+
+    This will show the Save Image dialog, with the multisave mode off and
+    asking for an icon file name. Then save the current rendering to that file.
+    """
+    ## We should create a specialized input dialog, asking also for the size 
+    fn = draw.askFilename(filter=utils.fileDescription('icon'))
+    if fn:
+        image.saveIcon(fn,size=32)
 
     
 def startMultiSave():
@@ -128,5 +160,6 @@ def startMultiSave():
 def stopMultiSave():
     """Stop multisave mode."""
     image.saveImage()
+
 
 # End

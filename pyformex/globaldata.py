@@ -9,16 +9,6 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-# $URL$
-##
-## This file is part of pyFormex 0.6 Release Fri Nov 16 22:39:28 2007
-## pyFormex is a Python implementation of Formex algebra
-## Website: http://pyformex.berlios.de/
-## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
-##
-## This program is distributed under the GNU General Public License
-## version 2 or later (see file COPYING for details)
-##
 """Global data for pyFormex."""
 
 # Set pyformex version
@@ -31,7 +21,7 @@ Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
 version = {'pyformex':__version__}
 external = {}
 
-# set start date
+# set start date/time
 import datetime
 date = datetime.datetime.today()
 

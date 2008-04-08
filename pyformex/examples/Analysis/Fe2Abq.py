@@ -62,10 +62,10 @@ print medium_plate
 print thick_plate
 
 # Attribute the element properties
-ElemProperty(pa,ElemSection(section=thin_plate,material=steel),elemtype='CPE3')
-ElemProperty(pb,ElemSection(section=thick_plate,material=steel),elemtype='CPE4')
-ElemProperty(pb1,ElemSection(section=thick_plate,material=steel),elemtype='CPE4')
-ElemProperty(pc,ElemSection(section=medium_plate,material=steel),elemtype='CPE3')
+ElemProperty(pa,ElemSection(section=thin_plate,material=steel),elemtype='CPS3')
+ElemProperty(pb,ElemSection(section=thick_plate,material=steel),elemtype='CPS4')
+ElemProperty(pb1,ElemSection(section=thick_plate,material=steel),elemtype='CPS4')
+ElemProperty(pc,ElemSection(section=medium_plate,material=steel),elemtype='CPS3')
 
 # Create the finite element model
 femodels = [part.feModel() for part in parts]
@@ -98,13 +98,15 @@ NRN = drawNumbers(F)
 NodeProperty(pl,cload=[-10.,0.,0.,0.,0.,0.])
 NodeProperty(pb,bound=[1,1,0,0,0,0])
 
-# An alternative would be to include the node sets explicitely:
+# An alternative is to include the node sets explicitely:
 # (the record numbers could be set to any unique number here)
 # Remark that the following definitions do not create duplicate properties,
 # but overwrite (destroy) the above definitions
 NodeProperty(pl,nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
 NodeProperty(pb,nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
 
+# Loads in the second step
+NodeProperty(1000,nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
 
 # Create the Abaqus model
 # A model contains a single set of nodes, one or more sets of elements,
@@ -127,18 +129,20 @@ out = [ Output(type='history'),
 # (add output='PRINT' to get the results printed in the .dat file)
 res = [ Result(kind='NODE',keys=['U']),
         Result(kind='ELEMENT',keys=['S']),
+        Result(kind='ELEMENT',keys=['S'],pos='AVERAGED AT NODES'),
         Result(kind='ELEMENT',keys=['SP','SINV'],set=[pb]),
         ]
 
 # Static(default) step
-step1 = Analysis(time=[1., 1., 0.01, 1.])
+step1 = Analysis(time=[1., 1., 0.01, 1.],cloadset=[pl])
+step2 = Analysis(time=[1., 1., 0.01, 1.],cloadset=[1000])
 
 # collect all data
 #
 # !! currently output/result request are global to all steps
 # !! this will be changed in future
 #
-all = AbqData(model,[step1],out=out,res=res)
+all = AbqData(model,[step1,step2],out=out,res=res)
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')
