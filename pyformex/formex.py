@@ -373,33 +373,64 @@ def cut3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
     elements filling up the parts at the positive/negative side.
     - with side = 'both': two Formices of the same plexitude, one representing
     the positive side and one representing the negative side.
+    
+    The elements located completely at the positive/negative side of a plane have three
+    vertices for which distance to the plane > atol / distance < -atol.
+    The elements intersecting a plane can have one or more vertices for which |distance| < atol.
+    These vertices are projected on the plane so that their distance is zero.
+    
+    If the Formex has a property set, the new elements will get the property numbers 
+    defined in newprops. This is a list of 7 numbers for the elements with:
+    1) no vertices with |distance| < atol, triangle after cut
+    2) no vertices with |distance| < atol, triangle 1 created from quadrilateral after cut
+    3) no vertices with |distance| < atol, triangle 2 created from quadrilateral after cut
+    4) one vertex with |distance| < atol and two vertices at positive/negative side
+    5) one vertex with |distance| < atol, one vertex at positive side and one vertex at negative side
+    6) two vertices with |distance| < atol and one vertex at positive/negative
+    7) three vertices with |distance| < atol
     """
     p = asarray(p).reshape(-1,3)
     n = asarray(n).reshape(-1,3)
     nplanes = len(p)
-    test = [F.test('any',n[i], p[i]) for i in range(nplanes)] # elements at positive side of plane i
+    test = [F.test('any',n[i], p[i],atol=atol) for i in range(nplanes)] # elements at positive side of plane i
     Test= asarray(test).prod(0) # elements at positive side of all planes
     F_pos = F.clip(Test) # save elements at positive side of all planes
     if side in ['negative', 'both']:
         F_neg = F.cclip(Test) # save elements completely at negative side of one of the planes
     if F_pos.nelems() != 0:
-        test = [F_pos.test('all',n[i],p[i]) for i in range(nplanes)] # elements completely at positive side of plane i
+        test = [F_pos.test('all',n[i],p[i],atol=-atol) for i in range(nplanes)] # elements completely at positive side of plane i
         Test = asarray(test).prod(0) # elements completely at positive side of all planes
         F_cut = F_pos.cclip(Test) # save elements that will be cut by one of the planes
         F_pos = F_pos.clip(Test)  # save elements completely at positive side of all planes
         if F_cut.nelems() != 0:
-            S = F_cut
-            for i in range(nplanes):
-                t = S.test('all',n[i],p[i])
-                R = S.clip(t) # save elements that wil not be cut by plane i
-                S = S.cclip(t) # save elements that will be cut by plane i
+            if nplanes == 1:
                 if side == 'positive':
-                    cut_pos = cutElements3AtPlane(S, p[i], n[i], newprops, side='positive')
-                elif side in ['negative', 'both']:
-                    cut_pos, cut_neg = cutElements3AtPlane(S, p[i], n[i], newprops, side='both')
+                    F_pos += cutElements3AtPlane(F_cut,p[i],n[i],atol,newprops,'positive')
+                elif side == 'negative':
+                    F_neg += cutElements3AtPlane(F_cut,p[i],n[i],atol,newprops,'negative')
+                elif side == 'both':
+                    cut_pos, cut_neg = cutElements3AtPlane(F_cut,p[i],n[i],atol,newprops,'both')
+                    F_pos += cut_pos
                     F_neg += cut_neg
-                S = R + cut_pos
-            F_pos += S
+            elif nplanes > 1:
+                S = F_cut
+                for i in range(nplanes):
+                    if i > 0:
+                        # due to the projection of vertices with |distance| < atol on plane i-1, some elements can be completely at negative side of plane i instead of cut by plane i
+                        t = S.test('any',n[i],p[i],atol=atol)
+                        if side in ['negative', 'both']:
+                            F_neg += S.cclip(t) # save elements completely at negative side of plane i
+                        S = S.clip(t) # save elements at positive side of plane i
+                    t = S.test('all',n[i],p[i],atol=-atol)
+                    R = S.clip(t) # save elements completely at positive side of plane i
+                    S = S.cclip(t) # save elements that will be cut by plane i
+                    if side == 'positive':
+                        cut_pos = cutElements3AtPlane(S,p[i],n[i],atol,newprops,'positive')
+                    elif side in ['negative', 'both']:
+                        cut_pos, cut_neg = cutElements3AtPlane(S,p[i],n[i],atol,newprops,'both')
+                        F_neg += cut_neg
+                    S = R + cut_pos
+                F_pos += S
     if side == 'positive':
         return F_pos
     elif side == 'negative':
@@ -407,61 +438,150 @@ def cut3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
     elif side == 'both':
         return F_pos, F_neg
 
-    
-def cutElements3AtPlane(S, p, n, newprops=None, side='positive'):
-    C = [connect([S,S],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
+
+def cutElements3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
+    C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])    
     T = (t >= 0.)*(t <= 1.)
-    P = P[T].reshape(-1,2,3)
-    # split problem in two cases
-    d = S.f.distanceFromPlane(p,n)
-    w1 = where(d[:,0]*d[:,1]*d[:,2] > 0.) # case 1: triangle at positive side after cut
-    w2 = where(d[:,0]*d[:,1]*d[:,2] < 0.) # case 2: quadrilateral at positive side after cut
-    T1 = T[w1]
-    T2 = T[w2]
-    P1 = P[w1]
-    P2 = P[w2]
-    S1 = S[w1]
-    S2 = S[w2]
-    if side in ['positive', 'both']:
+    d = F.f.distanceFromPlane(p,n)
+    U = abs(d) < atol
+    V = U.sum(axis=-1) # number of vertices with |distance| < atol
+    E1_pos = E2_pos = E3_pos = E4_pos = E5_pos = E6_pos = E7_pos = E1_neg = E2_neg = E3_neg = E4_neg = E5_neg = E6_neg = E7_neg = empty(shape=(0,3,3),dtype=Float)
+    # No vertices with |distance| < atol => triangles with 2 intersections
+    w1 = where(V==0)[0]
+    if w1.size > 0:
+        T1 = T[w1]
+        P1 = P[w1][T1].reshape(-1,2,3)
+        F1 = F[w1]
+        d1 = d[w1]
+        # split problem in two cases
+        w11 = where(d1[:,0]*d1[:,1]*d1[:,2] > 0.)[0] # case 1: triangle at positive side after cut
+        w12 = where(d1[:,0]*d1[:,1]*d1[:,2] < 0.)[0] # case 2: quadrilateral at positive side after cut
         # case 1: triangle at positive side after cut
-        v1 = where(T1[:,0]*T1[:,2] == 1,0,where(T1[:,0]*T1[:,1] == 1,1,2))
-        K1 = asarray([S1[j,v1[j]] for j in range(shape(S1)[0])]).reshape(-1,1,3)
-        E1 = column_stack([P1,K1])
+        if w11.size > 0:
+            T11 = T1[w11]
+            P11 = P1[w11]
+            F11 = F1[w11]
+            if side in ['positive', 'both']:
+                v1 = where(T11[:,0]*T11[:,2] == 1,0,where(T11[:,0]*T11[:,1] == 1,1,2))
+                K1 = asarray([F11[j,v1[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
+                E1_pos = column_stack([P11,K1])
+            if side in ['negative', 'both']: #quadrilateral at negative side after cut
+                v2 = where(T11[:,0]*T11[:,2] == 1,2,where(T11[:,0]*T11[:,1] == 1,2,0))
+                v3 = where(T11[:,0]*T11[:,2] == 1,1,where(T11[:,0]*T11[:,1] == 1,0,1))
+                K2 = asarray([F11[j,v2[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
+                K3 = asarray([F11[j,v3[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
+                E2_neg = column_stack([P11,K2])
+                E3_neg = column_stack([P11[:,0].reshape(-1,1,3),K2,K3])
         # case 2: quadrilateral at positive side after cut
-        v2 = where(T2[:,0]*T2[:,2] == 1,2,where(T2[:,0]*T2[:,1] == 1,2,0))
-        v3 = where(T2[:,0]*T2[:,2] == 1,1,where(T2[:,0]*T2[:,1] == 1,0,1))
-        K2 = asarray([S2[j,v2[j]] for j in range(shape(S2)[0])]).reshape(-1,1,3)
-        K3 = asarray([S2[j,v3[j]] for j in range(shape(S2)[0])]).reshape(-1,1,3)
-        E2 = column_stack([P2,K2])
-        E3 = column_stack([P2[:,0].reshape(-1,1,3),K2,K3])
-        # join all the pieces
-        if S.p is None:
-            cut_pos = Formex(E1)+Formex(E2)+Formex(E3)
-        else:
-            if newprops is None:
-                newprops = range(3)
-            cut_pos = Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])
-    if side in ['negative', 'both']:
-        # case 1: quadrilateral at negative side after cut
-        v2 = where(T1[:,0]*T1[:,2] == 1,2,where(T1[:,0]*T1[:,1] == 1,2,0))
-        v3 = where(T1[:,0]*T1[:,2] == 1,1,where(T1[:,0]*T1[:,1] == 1,0,1))
-        K2 = asarray([S1[j,v2[j]] for j in range(shape(S1)[0])]).reshape(-1,1,3)
-        K3 = asarray([S1[j,v3[j]] for j in range(shape(S1)[0])]).reshape(-1,1,3)
-        E2 = column_stack([P1,K2])
-        E3 = column_stack([P1[:,0].reshape(-1,1,3),K2,K3])
-        # case 2: triangle at negative side after cut
-        v1 = where(T2[:,0]*T2[:,2] == 1,0,where(T2[:,0]*T2[:,1] == 1,1,2)) # negative side
-        K1 = asarray([S2[j,v1[j]] for j in range(shape(S2)[0])]).reshape(-1,1,3)
-        E1 = column_stack([P2,K1])
-        # join all the pieces
-        if S.p is None:
-            cut_neg = Formex(E1)+Formex(E2)+Formex(E3)
-        else:
-            if newprops is None:
-                newprops = range(3)
-            cut_neg = Formex(E1,newprops[0])+Formex(E2,newprops[1])+Formex(E3,newprops[2])
+        if w12.size > 0:
+            T12 = T1[w12]
+            P12 = P1[w12]
+            F12 = F1[w12]
+            if side in ['positive', 'both']:
+                v2 = where(T12[:,0]*T12[:,2] == 1,2,where(T12[:,0]*T12[:,1] == 1,2,0))
+                v3 = where(T12[:,0]*T12[:,2] == 1,1,where(T12[:,0]*T12[:,1] == 1,0,1))
+                K2 = asarray([F12[j,v2[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
+                K3 = asarray([F12[j,v3[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
+                E2_pos = column_stack([P12,K2])
+                E3_pos = column_stack([P12[:,0].reshape(-1,1,3),K2,K3])
+            if side in ['negative', 'both']: # triangle at negative side after cut
+                v1 = where(T12[:,0]*T12[:,2] == 1,0,where(T12[:,0]*T12[:,1] == 1,1,2))
+                K1 = asarray([F12[j,v1[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
+                E1_neg = column_stack([P12,K1])
+    # One vertex with |distance| < atol
+    w2 = where(V==1)[0]
+    if w2.size > 0:
+        F2 = F[w2]
+        d2 = d[w2]
+        U2 = U[w2]
+        # split problem in three cases
+        W = (d2 > atol).sum(axis=-1)
+        w21 = where(W == 2)[0] # case 1: two vertices at positive side
+        w22 = where(W == 1)[0] # case 2: one vertex at positive side
+        w23 = where(W == 0)[0] # case 3: no vertices at positive side 
+        # case 1: two vertices at positive side
+        if w21.size > 0 and side in ['positive', 'both']:
+            F21 = F2[w21]
+            U21 = U2[w21]
+            K1 = F21[U21] # vertices with |distance| < atol
+            n /= length(n)
+            K1 = (K1 - n*d2[w21][U21].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
+            K2 = F21[d2[w21]>atol].reshape(-1,2,3) # vertices with distance > atol
+            E4_pos = column_stack([K1,K2])
+        # case 2: one vertex at positive side
+        if w22.size > 0:
+            F22 = F2[w22]
+            U22 = U2[w22]
+            K1 = F22[U22] # vertices with |distance| < atol
+            K1 = (K1 - n*d2[w22][U22].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
+            P22 = P[w2][w22][roll(U22,1,axis=-1)].reshape(-1,1,3) # intersection points
+            if side in ['positive', 'both']:
+                K2 = F22[d2[w22]>atol].reshape(-1,1,3) # vertices with distance > atol
+                E5_pos = column_stack([P22,K1,K2])
+            if side in ['negative', 'both']:
+                K3 = F22[d2[w22]<-atol].reshape(-1,1,3) # vertices with distance < - atol
+                E5_neg = column_stack([P22,K1,K3])
+        # case 3: no vertices at positive side
+        if w23.size > 0 and side in ['negative', 'both']:
+            F23 = F2[w23]
+            U23 = U2[w23]
+            K1 = F23[U23] # vertices with |distance| < atol
+            K1 = (K1 - n*d2[w23][U23].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
+            K2 = F23[d2[w23]<-atol].reshape(-1,2,3) # vertices with distance < - atol
+            E4_neg = column_stack([K1,K2])
+    # Two vertices with |distance| < atol
+    w3 = where(V==2)[0]
+    if w3.size > 0:
+        F3 = F[w3]
+        d3 = d[w3]
+        U3 = U[w3]
+        # split problem in two cases
+        W = (d3 > atol).sum(axis=-1)
+        w31 = where(W == 1)[0] # case 1: one vertex at positive side
+        w32 = where(W == 0)[0] # case 2: no vertices at positive side
+        # case 1: one vertex at positive side
+        if w31.size > 0 and side in ['positive', 'both']:
+            F31 = F3[w31]
+            U31 = U3[w31]
+            K1 = F31[U31] # vertices with |distance| < atol
+            K1 = (K1 - n*d3[w31][U31].reshape(-1,1)).reshape(-1,2,3) # project vertices on plane (p,n)
+            K2 = F31[d3[w31]>atol].reshape(-1,1,3) # vertices with distance > atol
+            E6_pos = column_stack([K1,K2])
+        # case 2: no vertices at positive side
+        if w32.size > 0 and side in ['negative', 'both']:
+            F32 = F3[w32]
+            U32 = U3[w32]
+            K1 = F32[U32] # vertices with |distance| < atol
+            K1 = (K1 - n*d3[w32][U32].reshape(-1,1)).reshape(-1,2,3) # project vertices on plane (p,n)
+            K2 = F32[d3[w32]<-atol].reshape(-1,1,3) # vertices with distance < - atol
+            E6_neg = column_stack([K1,K2])
+    # Three vertices with |distance| < atol
+    w4 = where(V==3)[0]
+    if w4.size > 0:
+        F4 = F[w4]
+        d4 = d[w4]
+        U4 = U[w4]
+        if side in ['positive', 'both']:
+            K1 = F4[U4] # vertices with |distance| < atol
+            K1 = (K1 - n*d4[U4].reshape(-1,1)).reshape(-1,3,3) # project vertices on plane (p,n)
+            E7_pos = K1
+        if side in ['negative', 'both']:
+            E7_neg = K1
+    # join all the pieces
+    if F.p is None:
+        if side in ['positive', 'both']:
+            cut_pos = Formex(E1_pos)+Formex(E2_pos)+Formex(E3_pos)+Formex(E4_pos)+Formex(E5_pos)+Formex(E6_pos)+Formex(E7_pos)
+        if side in ['negative', 'both']:
+            cut_neg = Formex(E1_neg)+Formex(E2_neg)+Formex(E3_neg)+Formex(E4_neg)+Formex(E5_neg)+Formex(E6_neg)+Formex(E7_neg)
+    else:
+        if newprops is None:
+            newprops = range(1,8)
+        if side in ['positive', 'both']:
+            cut_pos = Formex(E1_pos,newprops[0])+Formex(E2_pos,newprops[1])+Formex(E3_pos,newprops[2])+Formex(E4_pos,newprops[3])+Formex(E5_pos,newprops[4])+Formex(E6_pos,newprops[5]) + Formex(E7_pos,newprops[6])
+        if side in ['negative', 'both']:
+            cut_neg = Formex(E1_neg,newprops[0])+Formex(E2_neg,newprops[1])+Formex(E3_neg,newprops[2])+Formex(E4_neg,newprops[3])+Formex(E5_neg,newprops[4])+Formex(E6_neg,newprops[5]) + Formex(E7_neg,newprops[6])
     if side == 'positive':
         return cut_pos
     elif side == 'negative':
@@ -573,7 +693,7 @@ class Formex:
             if type(data) == str:
                 data = pattern(data)
             data = asarray(data).astype(Float)
-
+            
             if data.size == 0:
                 if len(data.shape) == 3:
                     nplex = data.shape[1]
