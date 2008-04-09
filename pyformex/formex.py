@@ -332,7 +332,6 @@ def intersectionLinesWithPlane(F,p,n):
     return F1
 
 
-
 # !! This function still needs to be changed to also return all
 # elements completely at positive side
 def cutAtPlane(F,p,n):
@@ -357,7 +356,7 @@ def cutAtPlane(F,p,n):
     return F
 
 
-def cut3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
+def cut3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     """Returns all elements of the Formex cut at plane(s).
 
     F is a Formex of plexitude 3.
@@ -405,11 +404,11 @@ def cut3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
         if F_cut.nelems() != 0:
             if nplanes == 1:
                 if side == 'positive':
-                    F_pos += cutElements3AtPlane(F_cut,p[i],n[i],atol,newprops,'positive')
+                    F_pos += cutElements3AtPlane(F_cut,p[i],n[i],newprops,'positive',atol)
                 elif side == 'negative':
-                    F_neg += cutElements3AtPlane(F_cut,p[i],n[i],atol,newprops,'negative')
+                    F_neg += cutElements3AtPlane(F_cut,p[i],n[i],newprops,'negative',atol)
                 elif side == 'both':
-                    cut_pos, cut_neg = cutElements3AtPlane(F_cut,p[i],n[i],atol,newprops,'both')
+                    cut_pos, cut_neg = cutElements3AtPlane(F_cut,p[i],n[i],newprops,'both',atol)
                     F_pos += cut_pos
                     F_neg += cut_neg
             elif nplanes > 1:
@@ -425,9 +424,9 @@ def cut3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
                     R = S.clip(t) # save elements completely at positive side of plane i
                     S = S.cclip(t) # save elements that will be cut by plane i
                     if side == 'positive':
-                        cut_pos = cutElements3AtPlane(S,p[i],n[i],atol,newprops,'positive')
+                        cut_pos = cutElements3AtPlane(S,p[i],n[i],newprops,'positive',atol)
                     elif side in ['negative', 'both']:
-                        cut_pos, cut_neg = cutElements3AtPlane(S,p[i],n[i],atol,newprops,'both')
+                        cut_pos, cut_neg = cutElements3AtPlane(S,p[i],n[i],newprops,'both',atol)
                         F_neg += cut_neg
                     S = R + cut_pos
                 F_pos += S
@@ -439,7 +438,9 @@ def cut3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
         return F_pos, F_neg
 
 
-def cutElements3AtPlane(F, p, n, newprops=None, side='positive', atol=0.):
+def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
+    """This function needs documentation."""
+
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
     P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])    
