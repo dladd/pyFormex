@@ -442,11 +442,40 @@ def cut3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     elif side == 'negative':
         return F_neg
     elif side == 'both':
-        return F_pos, F_neg
+        return [ F_pos, F_neg ]
 
 
 def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     """This function needs documentation."""
+    def get_new_prop(p,ind,newp):
+        """Determines the value of the new props for a subset.
+
+        p are the original props (possibly None)
+        ind is the list of elements to treat
+        newp is the new property value.
+
+        The return value is determined as follows:
+        - If p is None: return None (not proprty set)
+        - If p is set, but newp is None: return p[ind] : keep original
+        - if p is set, and newp is set: return newp (single value)
+        """
+        if p is None:
+            return None
+        elif newp is None:
+            return p[ind]
+        else:
+            return newp
+
+    # make sure we have save newprops
+    if newprops is None:
+        newprops = (None,)*7
+    else:
+        try:
+            newprops = asarray(newprops)
+            if newprops.dtype.kind != 'i' or newprops.ndim != 1 or newprops.size != 7:
+                raise
+        except:
+            newprops = range(7)
 
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
@@ -456,6 +485,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     U = abs(d) < atol
     V = U.sum(axis=-1) # number of vertices with |distance| < atol
     E1_pos = E2_pos = E3_pos = E4_pos = E5_pos = E6_pos = E7_pos = E1_neg = E2_neg = E3_neg = E4_neg = E5_neg = E6_neg = E7_neg = empty(shape=(0,3,3),dtype=Float)
+    F1_pos = F2_pos = F3_pos = F4_pos = F5_pos = F6_pos = F7_pos = F1_neg = F2_neg = F3_neg = F4_neg = F5_neg = F6_neg = F7_neg = Formex()
     # No vertices with |distance| < atol => triangles with 2 intersections
     w1 = where(V==0)[0]
     if w1.size > 0:
@@ -475,13 +505,17 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
                 v1 = where(T11[:,0]*T11[:,2] == 1,0,where(T11[:,0]*T11[:,1] == 1,1,2))
                 K1 = asarray([F11[j,v1[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 E1_pos = column_stack([P11,K1])
+                F1_pos = Formex(E1_pos,get_new_prop(F.p,w11,newprops[0]))
+                    
             if side in ['negative', 'both']: #quadrilateral at negative side after cut
                 v2 = where(T11[:,0]*T11[:,2] == 1,2,where(T11[:,0]*T11[:,1] == 1,2,0))
                 v3 = where(T11[:,0]*T11[:,2] == 1,1,where(T11[:,0]*T11[:,1] == 1,0,1))
                 K2 = asarray([F11[j,v2[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 K3 = asarray([F11[j,v3[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 E2_neg = column_stack([P11,K2])
+                F2_neg = Formex(E2_neg,get_new_prop(F.p,w11,newprops[1]))
                 E3_neg = column_stack([P11[:,0].reshape(-1,1,3),K2,K3])
+                F3_neg = Formex(E3_neg,get_new_prop(F.p,w11,newprops[2]))
         # case 2: quadrilateral at positive side after cut
         if w12.size > 0:
             T12 = T1[w12]
@@ -493,11 +527,14 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
                 K2 = asarray([F12[j,v2[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
                 K3 = asarray([F12[j,v3[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
                 E2_pos = column_stack([P12,K2])
+                F2_pos = Formex(E2_pos,get_new_prop(F.p,w12,newprops[1]))
                 E3_pos = column_stack([P12[:,0].reshape(-1,1,3),K2,K3])
+                F3_pos = Formex(E3_pos,get_new_prop(F.p,w12,newprops[2]))
             if side in ['negative', 'both']: # triangle at negative side after cut
                 v1 = where(T12[:,0]*T12[:,2] == 1,0,where(T12[:,0]*T12[:,1] == 1,1,2))
                 K1 = asarray([F12[j,v1[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
                 E1_neg = column_stack([P12,K1])
+                F1_neg = Formex(E1_neg,get_new_prop(F.p,w12,newprops[0]))
     # One vertex with |distance| < atol
     w2 = where(V==1)[0]
     if w2.size > 0:
@@ -518,6 +555,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = (K1 - n*d2[w21][U21].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
             K2 = F21[d2[w21]>atol].reshape(-1,2,3) # vertices with distance > atol
             E4_pos = column_stack([K1,K2])
+            F4_pos = Formex(E4_pos,get_new_prop(F.p,w21,newprops[3]))
         # case 2: one vertex at positive side
         if w22.size > 0:
             F22 = F2[w22]
@@ -528,9 +566,11 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             if side in ['positive', 'both']:
                 K2 = F22[d2[w22]>atol].reshape(-1,1,3) # vertices with distance > atol
                 E5_pos = column_stack([P22,K1,K2])
+                F5_pos = Formex(E5_pos,get_new_prop(F.p,w22,newprops[4]))
             if side in ['negative', 'both']:
                 K3 = F22[d2[w22]<-atol].reshape(-1,1,3) # vertices with distance < - atol
                 E5_neg = column_stack([P22,K1,K3])
+                F5_neg = Formex(E5_neg,get_new_prop(F.p,w22,newprops[4]))
         # case 3: no vertices at positive side
         if w23.size > 0 and side in ['negative', 'both']:
             F23 = F2[w23]
@@ -539,6 +579,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = (K1 - n*d2[w23][U23].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
             K2 = F23[d2[w23]<-atol].reshape(-1,2,3) # vertices with distance < - atol
             E4_neg = column_stack([K1,K2])
+            F4_neg = Formex(E4_neg,get_new_prop(F.p,w23,newprops[3]))
     # Two vertices with |distance| < atol
     w3 = where(V==2)[0]
     if w3.size > 0:
@@ -557,6 +598,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = (K1 - n*d3[w31][U31].reshape(-1,1)).reshape(-1,2,3) # project vertices on plane (p,n)
             K2 = F31[d3[w31]>atol].reshape(-1,1,3) # vertices with distance > atol
             E6_pos = column_stack([K1,K2])
+            F6_pos = Formex(E6_pos,get_new_prop(F.p,w31,newprops[5]))
         # case 2: no vertices at positive side
         if w32.size > 0 and side in ['negative', 'both']:
             F32 = F3[w32]
@@ -565,6 +607,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = (K1 - n*d3[w32][U32].reshape(-1,1)).reshape(-1,2,3) # project vertices on plane (p,n)
             K2 = F32[d3[w32]<-atol].reshape(-1,1,3) # vertices with distance < - atol
             E6_neg = column_stack([K1,K2])
+            F6_neg = Formex(E6_neg,get_new_prop(F.p,w32,newprops[5]))
     # Three vertices with |distance| < atol
     w4 = where(V==3)[0]
     if w4.size > 0:
@@ -575,29 +618,32 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = F4[U4] # vertices with |distance| < atol
             K1 = (K1 - n*d4[U4].reshape(-1,1)).reshape(-1,3,3) # project vertices on plane (p,n)
             E7_pos = K1
+            F7_pos = Formex(E7_pos,get_new_prop(F.p,w4,newprops[6]))
         if side in ['negative', 'both']:
             E7_neg = K1
+            F7_neg = Formex(E7_neg,get_new_prop(F.p,w4,newprops[6]))
     # join all the pieces
-    if F.p is None:
-        if side in ['positive', 'both']:
-            cut_pos = Formex(E1_pos)+Formex(E2_pos)+Formex(E3_pos)+Formex(E4_pos)+Formex(E5_pos)+Formex(E6_pos)+Formex(E7_pos)
-        if side in ['negative', 'both']:
-            cut_neg = Formex(E1_neg)+Formex(E2_neg)+Formex(E3_neg)+Formex(E4_neg)+Formex(E5_neg)+Formex(E6_neg)+Formex(E7_neg)
-    else:
-        if newprops is None:
-            newprops = (None,)*7
-        elif len(newprops) < 7:
-            newprops = range(7)
-        if side in ['positive', 'both']:
-            cut_pos = Formex(E1_pos,newprops[0])+Formex(E2_pos,newprops[1])+Formex(E3_pos,newprops[2])+Formex(E4_pos,newprops[3])+Formex(E5_pos,newprops[4])+Formex(E6_pos,newprops[5]) + Formex(E7_pos,newprops[6])
-        if side in ['negative', 'both']:
-            cut_neg = Formex(E1_neg,newprops[0])+Formex(E2_neg,newprops[1])+Formex(E3_neg,newprops[2])+Formex(E4_neg,newprops[3])+Formex(E5_neg,newprops[4])+Formex(E6_neg,newprops[5]) + Formex(E7_neg,newprops[6])
+    if side in ['positive', 'both']:
+        cut_pos = F1_pos+F2_pos+F3_pos+F4_pos+F5_pos+F6_pos+F7_pos
+    if side in ['negative', 'both']:
+        cut_neg = F1_neg+F2_neg+F3_neg+F4_neg+F5_neg+F6_neg+F7_neg
+    # In case we want to restore the old version
+##     if F.p is None:
+##         if side in ['positive', 'both']:
+##             cut_pos = Formex(E1_pos)+Formex(E2_pos)+Formex(E3_pos)+Formex(E4_pos)+Formex(E5_pos)+Formex(E6_pos)+Formex(E7_pos)
+##         if side in ['negative', 'both']:
+##             cut_neg = Formex(E1_neg)+Formex(E2_neg)+Formex(E3_neg)+Formex(E4_neg)+Formex(E5_neg)+Formex(E6_neg)+Formex(E7_neg)
+##     else:
+##         if side in ['positive', 'both']:
+##             cut_pos = Formex(E1_pos,newprops[0])+Formex(E2_pos,newprops[1])+Formex(E3_pos,newprops[2])+Formex(E4_pos,newprops[3])+Formex(E5_pos,newprops[4])+Formex(E6_pos,newprops[5]) + Formex(E7_pos,newprops[6])
+##         if side in ['negative', 'both']:
+##             cut_neg = Formex(E1_neg,newprops[0])+Formex(E2_neg,newprops[1])+Formex(E3_neg,newprops[2])+Formex(E4_neg,newprops[3])+Formex(E5_neg,newprops[4])+Formex(E6_neg,newprops[5]) + Formex(E7_neg,newprops[6])
     if side == 'positive':
         return cut_pos
     elif side == 'negative':
         return cut_neg
     elif side == 'both':
-        return cut_pos, cut_neg
+        return [ cut_pos, cut_neg ]
 
 
 ###########################################################################
@@ -1035,6 +1081,13 @@ class Formex:
         >>> print F
         {[1.0,1.0,1.0], [1.0,1.0,1.0]}
         """
+        if F.f.size == 0:
+            return self
+        if self.f.size == 0:
+            self.f = F.f
+            self.p = p
+            return self
+
         self.f = Coords(concatenate((self.f,F.f)))
         ## What to do if one of the formices has properties, the other one not?
         ## The current policy is to use zero property values for the Formex

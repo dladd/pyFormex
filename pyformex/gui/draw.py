@@ -323,27 +323,6 @@ def play(fn=None,step=False):
 
 ############################## drawing functions ########################
 
-
-def renderMode(mode):
-    GD.canvas.setRenderMode(mode)
-    GD.canvas.update()
-    GD.app.processEvents()
-    
-def wireframe():
-    renderMode("wireframe")
-    
-def flat():
-    renderMode("flat")
-    
-def smooth():
-    renderMode("smooth")
-
-def smoothwire():
-    renderMode("smoothwire")
-    
-def flatwire():
-    renderMode("flatwire")
-
     
 # A timed lock to slow down drawing processes
 
@@ -794,7 +773,6 @@ def zoom(f):
     GD.canvas.zoom(f)
     GD.canvas.update()
 
-
 def bgcolor(color):
     """Change the background color (and redraw)."""
     GD.canvas.setBgColor(color)
@@ -804,6 +782,28 @@ def bgcolor(color):
 def fgcolor(color):
     """Set the default foreground color."""
     GD.canvas.setFgColor(color)
+
+
+def renderMode(mode):
+    GD.canvas.setRenderMode(mode)
+    toolbar.setLight(GD.canvas.lighting)
+    GD.canvas.update()
+    GD.app.processEvents()
+    
+def wireframe():
+    renderMode("wireframe")
+    
+def flat():
+    renderMode("flat")
+    
+def smooth():
+    renderMode("smooth")
+
+def smoothwire():
+    renderMode("smoothwire")
+    
+def flatwire():
+    renderMode("flatwire")
 
 def opacity(alpha):
     """Set the viewports transparency."""
