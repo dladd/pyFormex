@@ -466,7 +466,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
         else:
             return newp
 
-    # make sure we have save newprops
+    # make sure we have sane newprops
     if newprops is None:
         newprops = (None,)*7
     else:
@@ -484,7 +484,6 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     d = F.f.distanceFromPlane(p,n)
     U = abs(d) < atol
     V = U.sum(axis=-1) # number of vertices with |distance| < atol
-    E1_pos = E2_pos = E3_pos = E4_pos = E5_pos = E6_pos = E7_pos = E1_neg = E2_neg = E3_neg = E4_neg = E5_neg = E6_neg = E7_neg = empty(shape=(0,3,3),dtype=Float)
     F1_pos = F2_pos = F3_pos = F4_pos = F5_pos = F6_pos = F7_pos = F1_neg = F2_neg = F3_neg = F4_neg = F5_neg = F6_neg = F7_neg = Formex()
     # No vertices with |distance| < atol => triangles with 2 intersections
     w1 = where(V==0)[0]
@@ -493,6 +492,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
         P1 = P[w1][T1].reshape(-1,2,3)
         F1 = F[w1]
         d1 = d[w1]
+        p1 = F.p[w1]
         # split problem in two cases
         w11 = where(d1[:,0]*d1[:,1]*d1[:,2] > 0.)[0] # case 1: triangle at positive side after cut
         w12 = where(d1[:,0]*d1[:,1]*d1[:,2] < 0.)[0] # case 2: quadrilateral at positive side after cut
@@ -505,7 +505,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
                 v1 = where(T11[:,0]*T11[:,2] == 1,0,where(T11[:,0]*T11[:,1] == 1,1,2))
                 K1 = asarray([F11[j,v1[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 E1_pos = column_stack([P11,K1])
-                F1_pos = Formex(E1_pos,get_new_prop(F.p,w11,newprops[0]))
+                F1_pos = Formex(E1_pos,get_new_prop(p1,w11,newprops[0]))
                     
             if side in ['negative', 'both']: #quadrilateral at negative side after cut
                 v2 = where(T11[:,0]*T11[:,2] == 1,2,where(T11[:,0]*T11[:,1] == 1,2,0))
@@ -513,9 +513,9 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
                 K2 = asarray([F11[j,v2[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 K3 = asarray([F11[j,v3[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 E2_neg = column_stack([P11,K2])
-                F2_neg = Formex(E2_neg,get_new_prop(F.p,w11,newprops[1]))
+                F2_neg = Formex(E2_neg,get_new_prop(p1,w11,newprops[1]))
                 E3_neg = column_stack([P11[:,0].reshape(-1,1,3),K2,K3])
-                F3_neg = Formex(E3_neg,get_new_prop(F.p,w11,newprops[2]))
+                F3_neg = Formex(E3_neg,get_new_prop(p1,w11,newprops[2]))
         # case 2: quadrilateral at positive side after cut
         if w12.size > 0:
             T12 = T1[w12]
@@ -527,20 +527,21 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
                 K2 = asarray([F12[j,v2[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
                 K3 = asarray([F12[j,v3[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
                 E2_pos = column_stack([P12,K2])
-                F2_pos = Formex(E2_pos,get_new_prop(F.p,w12,newprops[1]))
+                F2_pos = Formex(E2_pos,get_new_prop(p1,w12,newprops[1]))
                 E3_pos = column_stack([P12[:,0].reshape(-1,1,3),K2,K3])
-                F3_pos = Formex(E3_pos,get_new_prop(F.p,w12,newprops[2]))
+                F3_pos = Formex(E3_pos,get_new_prop(p1,w12,newprops[2]))
             if side in ['negative', 'both']: # triangle at negative side after cut
                 v1 = where(T12[:,0]*T12[:,2] == 1,0,where(T12[:,0]*T12[:,1] == 1,1,2))
                 K1 = asarray([F12[j,v1[j]] for j in range(shape(F12)[0])]).reshape(-1,1,3)
                 E1_neg = column_stack([P12,K1])
-                F1_neg = Formex(E1_neg,get_new_prop(F.p,w12,newprops[0]))
+                F1_neg = Formex(E1_neg,get_new_prop(p1,w12,newprops[0]))
     # One vertex with |distance| < atol
     w2 = where(V==1)[0]
     if w2.size > 0:
         F2 = F[w2]
         d2 = d[w2]
         U2 = U[w2]
+        p2 =F.p[w2]
         # split problem in three cases
         W = (d2 > atol).sum(axis=-1)
         w21 = where(W == 2)[0] # case 1: two vertices at positive side
@@ -555,7 +556,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = (K1 - n*d2[w21][U21].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
             K2 = F21[d2[w21]>atol].reshape(-1,2,3) # vertices with distance > atol
             E4_pos = column_stack([K1,K2])
-            F4_pos = Formex(E4_pos,get_new_prop(F.p,w21,newprops[3]))
+            F4_pos = Formex(E4_pos,get_new_prop(p2,w21,newprops[3]))
         # case 2: one vertex at positive side
         if w22.size > 0:
             F22 = F2[w22]
@@ -566,11 +567,11 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             if side in ['positive', 'both']:
                 K2 = F22[d2[w22]>atol].reshape(-1,1,3) # vertices with distance > atol
                 E5_pos = column_stack([P22,K1,K2])
-                F5_pos = Formex(E5_pos,get_new_prop(F.p,w22,newprops[4]))
+                F5_pos = Formex(E5_pos,get_new_prop(p2,w22,newprops[4]))
             if side in ['negative', 'both']:
                 K3 = F22[d2[w22]<-atol].reshape(-1,1,3) # vertices with distance < - atol
                 E5_neg = column_stack([P22,K1,K3])
-                F5_neg = Formex(E5_neg,get_new_prop(F.p,w22,newprops[4]))
+                F5_neg = Formex(E5_neg,get_new_prop(p2,w22,newprops[4]))
         # case 3: no vertices at positive side
         if w23.size > 0 and side in ['negative', 'both']:
             F23 = F2[w23]
@@ -579,7 +580,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             K1 = (K1 - n*d2[w23][U23].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
             K2 = F23[d2[w23]<-atol].reshape(-1,2,3) # vertices with distance < - atol
             E4_neg = column_stack([K1,K2])
-            F4_neg = Formex(E4_neg,get_new_prop(F.p,w23,newprops[3]))
+            F4_neg = Formex(E4_neg,get_new_prop(p2,w23,newprops[3]))
     # Two vertices with |distance| < atol
     w3 = where(V==2)[0]
     if w3.size > 0:
