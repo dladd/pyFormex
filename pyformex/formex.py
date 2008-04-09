@@ -365,7 +365,8 @@ def cut3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     Both p and n have shape (3) or (npoints,3).
     
     The return value is:
-    - with side = 'positive'/'negative': a Formex of the same plexitude with all elements
+    - with side = 'positive'/'negative':
+    a Formex of the same plexitude with all elements
     located completely at the positive/negative side of the plane(s) (p,n)
     retained, all elements lying completely at the negative/positive side
     removed and the elements intersecting the plane(s) replaced by new
@@ -373,21 +374,27 @@ def cut3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
     - with side = 'both': two Formices of the same plexitude, one representing
     the positive side and one representing the negative side.
     
-    The elements located completely at the positive/negative side of a plane have three
-    vertices for which distance to the plane > atol / distance < -atol.
-    The elements intersecting a plane can have one or more vertices for which |distance| < atol.
-    These vertices are projected on the plane so that their distance is zero.
+    The elements located completely at the positive/negative side of a plane
+    have three vertices for which the |distance| to the plane > atol.
+    The elements intersecting a plane can have one or more vertices for which
+    |distance| < atol. These vertices are projected on the plane so that their
+    distance is zero.
     
-    If the Formex has a property set, the new elements will get the property numbers 
-    defined in newprops. This is a list of 7 numbers for the elements with:
-    1) no vertices with |distance| < atol, triangle after cut
-    2) no vertices with |distance| < atol, triangle 1 created from quadrilateral after cut
-    3) no vertices with |distance| < atol, triangle 2 created from quadrilateral after cut
-    4) one vertex with |distance| < atol and two vertices at positive/negative side
-    5) one vertex with |distance| < atol, one vertex at positive side and one vertex at negative side
-    6) two vertices with |distance| < atol and one vertex at positive/negative
-    7) three vertices with |distance| < atol
+    If the Formex has a property set, the new elements will get the property
+    numbers defined in newprops. This is a list of 7 property numbers flagging
+    elements with following properties:
+    0) no vertices with |distance| < atol, triangle after cut
+    1) no vertices with |distance| < atol, triangle 1 from quad after cut
+    2) no vertices with |distance| < atol, triangle 2 from quad after cut
+    3) one vertex with |distance| < atol, two vertices at pos. or neg. side
+    4) one vertex with |distance| < atol, one vertex at pos. side, one at neg.
+    5) two vertices with |distance| < atol, one vertex at pos. or neg. side
+    6) three vertices with |distance| < atol
     """
+    if newprops:
+        if len(newprops) < 7:
+            raise ValueError,"newprops should have 7 values."
+        
     p = asarray(p).reshape(-1,3)
     n = asarray(n).reshape(-1,3)
     nplanes = len(p)
@@ -578,7 +585,9 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='positive',atol=0.):
             cut_neg = Formex(E1_neg)+Formex(E2_neg)+Formex(E3_neg)+Formex(E4_neg)+Formex(E5_neg)+Formex(E6_neg)+Formex(E7_neg)
     else:
         if newprops is None:
-            newprops = range(1,8)
+            newprops = (None,)*7
+        elif len(newprops) < 7:
+            newprops = range(7)
         if side in ['positive', 'both']:
             cut_pos = Formex(E1_pos,newprops[0])+Formex(E2_pos,newprops[1])+Formex(E3_pos,newprops[2])+Formex(E4_pos,newprops[3])+Formex(E5_pos,newprops[4])+Formex(E6_pos,newprops[5]) + Formex(E7_pos,newprops[6])
         if side in ['negative', 'both']:
@@ -848,8 +857,8 @@ class Formex:
     def sizes(self):
         return self.f.sizes()
 
-    def diagonal(self):
-        return self.f.diagonal()
+    def dsize(self):
+        return self.f.dsize()
 
     def bsphere(self):
         return self.f.bsphere()
@@ -1701,12 +1710,16 @@ class Formex:
     # They may (will) be removed in future.
     from utils import deprecated
 
-    @deprecated(reverse)
-    def reverseElements(self):         # This is the obsolete function
+    @deprecated(dsize)
+    def diagonal(self):
         pass
 
-    @deprecated(diagonal)
+    @deprecated(dsize)
     def size(self):
+        pass
+
+    @deprecated(reverse)
+    def reverseElements(self):
         pass
 
     @deprecated(view)
@@ -2049,7 +2062,7 @@ if __name__ == "__main__":
         print "unique:",G.unique()
         print "nodes:",G.nodes()
         print "unique nodes:",G.nodes().unique()
-        print "diagonal size:",G.diagonal()
+        print "diagonal size:",G.dsize()
         F = Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]])
         G = connect([F,F],bias=[0,1])
         print G

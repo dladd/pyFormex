@@ -375,10 +375,10 @@ class Coords(ndarray):
         return max-min
 
 
-    def diagonal(self):
-        """Return the size of the Coords.
+    def dsize(self):
+        """Return an estimate of the global size of the Coords.
 
-        The size is the length of the diagonal of the bbox()."""
+        This estimate is the length of the diagonal of the bbox()."""
         min,max = self.bbox()
         return length(max-min)
 
@@ -1093,6 +1093,13 @@ class Coords(ndarray):
     rot = rotate
     trl = translate
 
+    # Deprecated functions
+    from utils import deprecated
+
+    @deprecated(dsize)
+    def diagonal(self):
+        pass
+
 
 ##############################################################################
 #
@@ -1137,7 +1144,7 @@ if __name__ == "__main__":
         prt("center",X.center())
         prt("centroid",X.centroid())
         prt("sizes",X.sizes())
-        prt("diag",X.diagonal())
+        prt("dsize",X.dsize())
         prt("bsphere",X.bsphere())
         prt("distanceFromPlane",X.distanceFromPlane([0.,0.,1.],[0.,0.,1.]))
         prt("distanceFromLine",X.distanceFromLine([0.,0.,1.],[0.,0.,1.]))
