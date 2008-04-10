@@ -90,7 +90,7 @@ def writeElems(fil, elems, type, name='Eall', eofs=1, nofs=1):
 def writeSet(fil, type, name, set, ofs=1):
     """Write a named set of nodes or elements (type=NSET|ELSET)"""
     fil.write("*%s,%s=%s\n" % (type,type,name))
-    for i in set+ofs:
+    for i in asarray(set)+ofs:
         fil.write("%d,\n" % i)
 
 
@@ -148,7 +148,20 @@ def writeMaterial(fil, mat):
 %s
 """%(mat.name, float(mat.young_modulus), float(mat.poisson_ratio), float(mat.density)))
         materialswritten.append(mat.name)
-        
+        if mat.plastic is not None:
+            fil.write('*PLASTIC\n')
+            plastic=eval(mat['plastic'])
+            for i in range(len(plastic)):
+	      fil.write( '%s, %s\n' % (plastic[i][0],plastic[i][1]))
+	if mat.damping == 'Yes':
+		fil.write("*DAMPING")
+		if mat.alpha != 'None':
+			fil.write(", ALPHA = %s" %mat.alpha)
+		if mat.beta != 'None':
+			fil.write(", BETA = %s" %mat.beta)
+		fil.write("\n")
+
+
 
 ##################################################
 ## Some higher level functions, interfacing with the properties module
@@ -163,6 +176,9 @@ generalized_plane_strain_elems = [
     'CPEG3','CPEG3H','CPEG4','CPEG4H','CPEG4I','CPEG4IH','CPEG4R','CPEG4RH',
     'CPEG6','CPEG6H','CPEG6M','CPEG6MH','CPEG8','CPEG8H','CPEG8R','CPEG8RH']
 solid2d_elems = plane_stress_elems + plane_strain_elems + generalized_plane_strain_elems
+
+solid3d_elems = ['C3D4', 'C3D4H','C3D6', 'C3D6H', 'C3D8','C3D8H','C3D8R', 'C3D8RH','C3D10','C3D10H','C3D10M','C3D10MH','C3D15','C3D15H','C3D20','C3D20H','C3D20R','C3D20RH',]
+
 
 def writeSection(fil, nr):
     """Write an element section for the named element set.
@@ -230,6 +246,11 @@ def writeSection(fil, nr):
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
+	if el.sectiontype.upper() == 'RECT':
+            fil.write('*BEAM SECTION, ELSET=%s, material=%s,\n** Section: %s  Profile: %s\ntemperature=GRADIENTS, SECTION=RECT\n %s,%s\n' %(Eset(nr),el.material.name,el.name,el.name,float(el.height),float(el.width)))
+            if el.orientation != None:
+                fil.write("""%s,%s,%s\n"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
+		
 
     ############
     ## SHELL elements
@@ -241,6 +262,25 @@ def writeSection(fil, nr):
 %s \n""" % (Eset(nr),mat.name,float(el.thickness)))
 
     ############
+    ## MEMBRANE elements
+    ##########################
+    elif el.elemtype.upper() in ['M3D3', 'M3D4','M3D4R', 'M3D6', 'M3D8','M3D8R','M3D9', 'M3D9R',]:
+        if el.sectiontype.upper() == 'MEMBRANE':
+            if mat is not None:
+                fil.write("""*MEMBRANE SECTION, ELSET=%s, MATERIAL=%s
+%s \n""" % (Eset(nr),mat.name,float(el.thickness)))
+
+
+    ############
+    ## 3DSOLID elements
+    ##########################
+    elif el.elemtype.upper() in solid3d_elems:
+        if el.sectiontype.upper() == '3DSOLID':
+            if mat is not None:
+                fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
+%s \n""" % (Eset(nr),mat.name,1.))
+
+    ############
     ## 2D SOLID elements
     ##########################
     elif el.elemtype.upper() in solid2d_elems:
@@ -249,6 +289,15 @@ def writeSection(fil, nr):
                 fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s \n""" % (Eset(nr),mat.name,float(el.thickness)))
             
+    ############
+    ## RIGID elements
+    ##########################
+    elif el.elemtype.upper() in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
+        if el.sectiontype.upper() == 'RIGID':
+            fil.write("""*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n""" % (el.nodeset,el.density,Eset(nr)))
+
+
+
     ############
     ## UNSUPPORTED elements
     ##########################
@@ -324,9 +373,12 @@ def writeDisplacements(fil, recset='ALL', op='MOD'):
     if recset == 'ALL':
         recset = the_nodeproperties.iterkeys()
         
-    fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s\n" % op)
     for i in recset:
         if the_nodeproperties[i].displacement!=None:
+            fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
+            if the_nodeproperties[i].amplitude!=None:
+                fil.write(", AMPLITUDE=%s" % the_nodeproperties[i].amplitude)
+            fil.write("\n")
             for d in range(len(the_nodeproperties[i].displacement)):
                 fil.write("%s, %s, %s, %s\n" % (Nset(i),the_nodeproperties[i].displacement[d][0],the_nodeproperties[i].displacement[d][0],the_nodeproperties[i].displacement[d][1]))
             
@@ -363,14 +415,115 @@ def writeDloads(fil, recset='ALL', op='NEW'):
     if recset == 'ALL':
         recset = the_elemproperties.iterkeys()
        
-    fil.write("*DLOAD, OP=%s\n" % op)
     for i in recset:
         if isinstance(the_elemproperties[i].elemload, list):
             for load in range(len(the_elemproperties[i].elemload)):
+                fil.write("*DLOAD, OP=%s" % op)
+                if the_elemproperties[i].elemload[load].amplitude!=None:
+                    fil.write(", AMPLITUDE=%s" % the_elemproperties[i].elemload[load].amplitude)
+                fil.write("\n")
                 if the_elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
                     fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
                 else:
                     fil.write("%s, %s, %s\n" % (Eset(i),the_elemproperties[i].elemload[load].loadlabel,the_elemproperties[i].elemload[load].magnitude))
+
+#######################################################
+# General model data
+#
+def writeAmplitude(fil, name=None):
+    fil.write("*AMPLITUDE, NAME=%s\n" %name)
+    n = len(the_modelproperties[name].amplitude)
+    for i in range(n-1):
+        fil.write("%s, " % the_modelproperties[name].amplitude[i])
+    fil.write("%s\n" % the_modelproperties[name].amplitude[n-1])
+
+    
+def writeInteraction(fil , name=None, op='NEW'):
+    if the_modelproperties[name].interactionname.upper()=='ALLWITHSELF':
+        fil.write('** INTERACTIONS, NAME=%s\n*Contact, op=%s\n*contact inclusions,ALL EXTERIOR\n*Contact property assignment\n ,  ,  %s\n'% (the_modelproperties[name].interactionname,op,the_modelproperties[name].interaction.intprop))
+    else:
+        fil.write('** INTERACTIONS, NAME=%s\n*Contact Pair, interaction=%s\n%s,%s\n'%(the_modelproperties[name].interactionname,the_modelproperties[name].interaction.intprop,the_modelproperties[name].interaction.surface1,the_modelproperties[name].interaction.surface2))
+
+    
+def writeIntprop(fil,name=None):
+    fil.write("*Surface interaction, name=%s\n" %name)
+    fil.write("*%s\n%s,\n" %(the_modelproperties[name].intprop.inttype,the_modelproperties[name].intprop.parameter))
+    
+    
+def writeDamping(fil,name=None):
+    fil.write("*global damping")
+    if the_modelproperties[name].damping.field is not None:
+    	fil.write(", Field = %s"%the_modelproperties[name].damping.field)
+    else:
+	fil.write(", Field = ALL")
+    if the_modelproperties[name].damping.alpha is not None:
+	fil.write(", alpha = %s"%the_modelproperties[name].damping.alpha)
+    if the_modelproperties[name].damping.beta is not None:
+	fil.write(", beta = %s"%the_modelproperties[name].damping.beta)
+    fil.write("\n")
+
+    
+def writeElemSurface(fil,number=None,abqdata=None):
+    if number is not None and abqdata is not None:
+        elemsnumbers=where(abqdata.elemprop==number)[0]
+        fil.write('*ELset,Elset=%s\n'% elemproperties[number].surfaces.setname)
+        for i in elemsnumbers:
+            n=i+1
+            fil.write('%s,\n'%n)
+            fil.write('*Surface, type =Element, name=%s\n%s,%s\n' %(elemproperties[number].surfaces.name,elemproperties[number].surfaces.setname,elemproperties[number].surfaces.arg))
+
+            
+def writeNodeSurface(fil,number=None,abqdata=None):
+    if number is not None and abqdata is not None:
+        nodenumbers=where(abqdata.nodeprop==number)[0]
+        fil.write('*ELset,Elset=%s\n'% nodeproperties[number].surfaces.setname)
+        for i in nodenumbers:
+            n=i+1
+            fil.write('%s,\n'%n)
+            fil.write('*Surface, type =Node, name=%s\n%s,%s\n' %(nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.setname,nodeproperties[number].surfaces.arg))
+
+    
+def writeSurface(fil,name=None,abqdata=None):
+    if name is not None and abqdata is not None:
+        if elemproperties[name].surfaces=='Element':
+            global elemsprops
+            elemssetsurfaces=[]
+            for i in range(len(elemproperties)):
+                if elemproperties[i].surfaces==the_modelproperties[name].setname:
+                    elemssetsurfaces.append(i)
+		elemssur=[]
+		for i in elemssetsurfaces:
+                    elemss=where(abqdata.elemprop[:]==i)[0]
+                    elemssur.extend(elemss)
+                if len(elemssur)>0:
+                    fil.write('*ELset,Elset=%s, internal\n'% the_modelproperties[name].setname)
+                    for i in range(len(elemssur)):
+                        getal=elemssur[i]+1
+                        fil.write('%s,\n'%getal)
+			fil.write('*Surface, type =Element, name=%s, internal\n%s,%s\n' %(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
+
+	elif the_modelproperties[name].surftype=='Node':
+            nodes=[]
+            nFormex=len(abqdata.elems)
+            length=zeros(nFormex)
+            for j in range(nFormex):
+                length[j]=len(abqdata.elems[j])
+            partnumbers=[]
+            for j in range(nFormex):
+                partnumbers=append(partnumbers,ones(length[j])*j)
+            for j in elemssur:
+                partnumber=int(partnumbers[j])
+                part=abqdata.elems[partnumber]
+                elemcount=0
+                for i in range(partnumber):
+                    elemcount+=length[i]
+                    nodes.extend(part[j-elemcount])
+		nodes = unique(nodes)
+		fil.write('*Nset,Nset=%s, internal\n'% the_modelproperties[name].setname)
+		for i in range(len(nodes)):
+                    getal=nodes[i]+1
+                    fil.write('%s,\n'%getal)
+		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
 
 
 ### Output requests ###################################
@@ -531,15 +684,24 @@ def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
             fil.write("%s\n" % key)
 
 
+def writeModelProps():
+    for i in the_modelproperties:
+        if the_modelproperties[i].interaction is not None:
+            writeInteraction(fil, i)
+    for i in the_modelproperties:
+        if the_modelproperties[i].damping is not None:
+            writedamping(fil, i)
+
+
 def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', out=[], res=[]):
     """Write a load step.
         
-    analysistype is the analysis type. Currently, only STATIC is supported.
+    analysis is the analysis type. Currently, only STATIC is supported.
     time is a list which defines the time step.
     If nlgeom='YES', the analysis will be non-linear.
-    Cloadset is a list of property numbers of which the cloads will be used in this analysis.
-    Dloadset is a list of property numbers of which the dloads will be used in this analysis.
-    Boundset is a list of propery numbers of which the bounds will be used in this analysis.
+    cloadset is a list of property numbers of which the cloads will be used in this analysis.
+    dloadset is a list of property numbers of which the dloads will be used in this analysis.
+    boundset is a list of propery numbers of which the bounds will be used in this analysis.
     By default, the load is applied as a new load, i.e. loads
     from previous steps are removed. The user can set op='MOD'
     to keep/modify the previous loads.
@@ -551,24 +713,33 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
 *STATIC
 %s, %s, %s, %s
 """ % (nlgeom, time[0], time[1], time[2], time[3]))
-        writeBoundaries(fil, boundset, opb)
-        writeDisplacements(fil, dispset,op)
-        writeCloads(fil, cloadset, opcl)
-        writeDloads(fil, dloadset, opdl)
-        print out
-        for i in out:
-            if i.kind is None:
-                writeStepOutput(fil,**i)
-            if i.kind == 'N':
-                writeNodeOutput(fil,**i)
-            elif i.kind == 'E':
-                writeElemOutput(fil,**i)
-        for i in res:
-            if i.kind == 'N':
-                writeNodeResult(fil,**i)
-            elif i.kind == 'E':
-                writeElemResult(fil,**i)
-        fil.write("*END STEP\n")
+    elif analysis.upper()=='EXPLICIT':
+        fil.write("""*STEP, NLGEOM=%s
+*DYNAMIC, EXPLICIT
+, %s\n*BULK VISCOSITY\n0.06, 1.2
+""" % (nlgeom, time[0]))
+    else:
+        GD.message('Skipping undefined step %s' % analysis)
+        return
+    
+    writeBoundaries(fil, boundset, opb)
+    writeDisplacements(fil, dispset,op)
+    writeCloads(fil, cloadset, opcl)
+    writeDloads(fil, dloadset, opdl)
+    writeModelProps()
+    for i in out:
+        if i.kind is None:
+            writeStepOutput(fil,**i)
+        if i.kind == 'N':
+            writeNodeOutput(fil,**i)
+        elif i.kind == 'E':
+            writeElemOutput(fil,**i)
+    for i in res:
+        if i.kind == 'N':
+            writeNodeResult(fil,**i)
+        elif i.kind == 'E':
+            writeElemResult(fil,**i)
+    fil.write("*END STEP\n")
 
 
 ##################################################
@@ -613,23 +784,24 @@ class Model(Dict):
                              'initialboundaries':initialboundaries}) 
 
 
-class Analysis(Dict):
-    """Contains all data about the analysis."""
+class Step(Dict):
+    """Contains all data about a step."""
     
-    def __init__(self, analysistype='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD'):
+    def __init__(self, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD'):
         """Create new analysis data.
         
-        analysistype is the analysis type. Currently, only STATIC is supported.
+        analysis is the analysis type. Should be one of:
+          'STATIC', 'EXPLICIT'
         time is a list which defines the time step.
         If nlgeom='YES', the analysis will be non-linear.
-        Cloadset is a list of property numbers of which the cloads will be used in this analysis.
-        Dloadset is a list of property numbers of which the dloads will be used in this analysis.
-        Boundset is a list of property numbers of which the bounds will be used in this analysis. Initial boundaries are defined in a Model instance.
+        cloadset is a list of property numbers of which the cloads will be used in this analysis.
+        dloadset is a list of property numbers of which the dloads will be used in this analysis.
+        boundset is a list of property numbers of which the bounds will be used in this analysis. Initial boundaries are defined in a Model instance.
         By default, the load is applied as a new load, i.e. loads
         from previous steps are removed. The user can set op='MOD'
         to keep/modify the previous loads.
         """
-        Dict.__init__(self,{'analysistype':analysistype, 'time':time, 'nlgeom':nlgeom, 'cloadset':cloadset, 'opcl':opcl, 'dloadset':dloadset, 'opdl':opdl, 'boundset':boundset, 'opb': opb, 'dispset' : dispset , 'op': op})
+        Dict.__init__(self,{'analysis':analysis, 'time':time, 'nlgeom':nlgeom, 'cloadset':cloadset, 'opcl':opcl, 'dloadset':dloadset, 'opdl':opdl, 'boundset':boundset, 'opb': opb, 'dispset' : dispset , 'op': op})
 
     
 class Output(Dict):
@@ -751,17 +923,14 @@ def writeAbqInput(abqdata, jobname=None):
     fil = file(filename,'w')
     GD.message("Writing to file %s" % (filename))
     
-    #write the heading
     writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
 Script: %s 
 """ % (jobname, datetime.date.today(), GD.scriptName))
     
-    #write all nodes
     nnod = abqdata.nodes.shape[0]
     GD.message("Writing %s nodes" % nnod)
     writeNodes(fil, abqdata.nodes)
     
-    #write nodesets and their transformations
     GD.message("Writing node sets")
     nlist = arange(nnod)
     for i,v in the_nodeproperties.iteritems():
@@ -773,7 +942,6 @@ Script: %s
             writeSet(fil, 'NSET', Nset(str(i)), nodeset)
             transform(fil,i)
 
-    #write elemsets
     GD.message("Writing element sets")
     n=0
     # we process the elementgroups one by one
@@ -797,17 +965,33 @@ Script: %s
     if sum([len(elems) for elems in abqdata.elems]) != n:
         GD.message("!!Not all elements have been written out!!")
     GD.message("Total number of elements: %s" % n)
-    # Write element sections
+
     GD.message("Writing element sections")
     for i in the_elemproperties:
         writeSection(fil,i)
 
-    #write steps
+    GD.message("Writing surfaces")
+    for i in the_nodeproperties:
+	if the_nodeproperties[i].surfaces is not None:
+            writeNodeSurface(fil,i,abqdata)
+    for i in the_elemproperties:
+	if the_elemproperties[i].surfaces is not None:
+            writeElemSurface(fil,i,abqdata)
+	
+    GD.message("Writing model properties")
+    for i in the_modelproperties:
+        if the_modelproperties[i].amplitude is not None:
+	    GD.message("Writing amplitude: %s" % i)
+            writeAmplitude(fil, i)
+        if the_modelproperties[i].intprop is not None:
+	    GD.message("Writing interaction property: %s" % i)
+            writeIntprop(fil, i)
+
     GD.message("Writing steps")
     writeBoundaries(fil, abqdata.initialboundaries)
     for i in range(len(abqdata.analysis)):
         a = abqdata.analysis[i]
-        writeStep(fil,a.analysistype,a.time,a.nlgeom,a.cloadset,a.opcl,a.dloadset,a.opdl,a.boundset,a.opb,a.dispset,a.op,abqdata.out,abqdata.res)
+        writeStep(fil,a.analysis,a.time,a.nlgeom,a.cloadset,a.opcl,a.dloadset,a.opdl,a.boundset,a.opb,a.dispset,a.op,abqdata.out,abqdata.res)
 
     GD.message("Done")
 

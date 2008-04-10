@@ -1,6 +1,6 @@
-2007-08-20  Benedict Verhegghe  <bene@bumpy.ugent.be>
+2008-04-10  Benedict Verhegghe
 
-	* simple.py: added regularGrid
+	* formex.py: cut3AtPlane by default returns both sides of the cut.
 
-	* actors.py: added drawGridLines, drawGridPlanes, GridActor, CoordPlaneActor
-	
+	* plugins/f2abq.py: renamed to fe_abq.py
+

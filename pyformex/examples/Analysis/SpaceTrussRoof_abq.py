@@ -1,5 +1,5 @@
 #!/usr/bin/env python pyformex.py
-# $Id: SpaceTrussRoof_f2abq.py 150 2006-11-01 11:13:34Z bverheg $
+# $Id: SpaceTrussRoof_fe_abq.py 150 2006-11-01 11:13:34Z bverheg $
 ##
 ## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
 ## pyFormex is a Python implementation of Formex algebra
@@ -76,7 +76,7 @@ nodeprops[topcorner]=3
 #############################
 
 from plugins.properties import *
-from plugins.f2abq import *
+from plugins.fe_abq import *
 
 Q = 0.5*q*dx*dx
 support = NodeProperty(0, bound = [1,1,1,0,0,0])

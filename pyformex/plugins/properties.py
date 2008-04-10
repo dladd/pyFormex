@@ -88,6 +88,7 @@ the_sections = SectionDB()
 the_properties = CascadingDict()
 the_nodeproperties = CascadingDict()
 the_elemproperties = CascadingDict()
+the_modelproperties = CascadingDict()
 
 ## def init_properties():
 ##     global the_materials, the_sections, the_properties,\
@@ -139,6 +140,19 @@ class Property(CascadingDict):
         """
         CascadingDict.__init__(self, data)
         the_properties[nr] = self 
+
+class ModelProperty(Property):
+    """Properties related to a model."""
+
+    def __init__(self, name, amplitude=None,intprop=None,surface=None,interaction=None,damping=None):
+        """Create a new node property. Empty by default.
+        
+        A model property is created and the data is stored in a Dict called 'modelproperties'. 
+        The key to access the model property is the name.
+        """
+        global the_modelproperties
+        CascadingDict.__init__(self, {'amplitude':amplitude,'intprop':intprop,'surface':surface,'interaction':interaction,'damping':damping})
+        the_modelproperties[name] = self
 
 
 class NodeProperty(Property):
@@ -210,7 +224,7 @@ class ElemSection(Property):
         An element section property can hold the following sub-properties:
        - section: the section properties of the element. This can be a dict
           or a string. The required data in this dict depend on the
-          sectiontype. Currently the following keys are used by f2abq.py:
+          sectiontype. Currently the following keys are used by fe_abq.py:
             - sectiontype: the type of section: one of following:
               'solid': a solid 2D or 3D section,
               'circ' : a plain circular section,
@@ -225,7 +239,7 @@ class ElemSection(Property):
               moment_inertia_22, torsional_rigidity
             - for sectiontype 'circ': radius
          - material: the element material. This can be a dict or a string.
-          Currently known keys to f2abq.py are:
+          Currently known keys to fe_abq.py are:
             young_modulus, shear_modulus, density, poisson_ratio
         - 'orientation' is a list of 3 direction cosines of the first beam
           section axis.

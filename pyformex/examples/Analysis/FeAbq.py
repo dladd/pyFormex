@@ -3,7 +3,7 @@
 
 from plugins.fe import *
 from plugins.properties import *
-from plugins.f2abq import *
+from plugins.fe_abq import *
 
 def quad():
     """Return a unit quadrilateral Formex."""

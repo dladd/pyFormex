@@ -14,9 +14,6 @@ from numpy import *
 from gui.draw import export
 import connectivity
 
-DataSize = { 'U':3,
-             'S':6,
-             }
 
 class FeResult(object):
 
@@ -29,6 +26,8 @@ class FeResult(object):
         self.nelems = 0
         self.nnodes = 0
         self.dofs = None
+        self.ndispl = None
+        self.datasize = {'U':3,'S':6,'COORD':3}
         self.nodid = None
         self.nodes = None
         self.elems = None
@@ -57,6 +56,9 @@ class FeResult(object):
 
     def Dofs(self,data):
         self.dofs = array(data)
+        self.displ = self.dofs[self.dofs[:6] > 0]
+        if self.displ.max() > 3:
+            self.datasize['U'] = 6
         
     def Heading(self,head):
         self.about.update({'heading':head})
@@ -108,8 +110,11 @@ class FeResult(object):
 
     def NodeOutput(self,key,nodid,data):
         if not self.R.has_key(key):
-            self.R[key] = zeros((self.nnodes,DataSize[key]),dtype=float32)
-        self.R[key][nodid-1][:len(data)] = data
+            self.R[key] = zeros((self.nnodes,self.datasize[key]),dtype=float32)
+        if key == 'U':
+            self.R[key][nodid-1][self.displ-1] = data
+        else:
+            self.R[key][nodid-1][:len(data)] = data
 
     def ElemHeader(self,**kargs):
         self.hdr = dict(**kargs)

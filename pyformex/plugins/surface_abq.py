@@ -17,16 +17,16 @@ surface and volume modules in Abaqus(R) input format.
 """
 
 from utils import runCommand
-from plugins import surface, f2abq, tetgen
+from plugins import surface, fe_abq, tetgen
 import os
 
 
 def abq_export(fn,nodes,elems,eltype,header="Exported by stl_examples.py"):
     """Export a finite element model in Abaqus .inp format."""
     fil = file(fn,'w')
-    f2abq.writeHeading(fil,header)
-    f2abq.writeNodes(fil,nodes)
-    f2abq.writeElems(fil,elems,eltype,nofs=1)
+    fe_abq.writeHeading(fil,header)
+    fe_abq.writeNodes(fil,nodes)
+    fe_abq.writeElems(fil,elems,eltype,nofs=1)
     fil.close()
     print "Abaqus file %s written." % fn
 
