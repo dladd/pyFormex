@@ -93,9 +93,10 @@ class FeResult(object):
         self.eset[key] = asarray(data)
 
     def Finalize(self):
-        self.nid = connectivity.reverseIndex(self.nodid.reshape((-1,1))).ravel()
-        for k,v in self.elems.iteritems():
-            self.elems[k] = array(v) - 1
+        self.nid = connectivity.reverseUniqueIndex(self.nodid)
+        for k in self.elems.iterkeys():
+            v = asarray(self.elems[k])
+            self.elems[k] = asarray(self.nid[v])
         self.modeldone = True
         self.res = {}
 
@@ -115,6 +116,8 @@ class FeResult(object):
         self.R = self.res[self.step][self.inc]
         
     def EndIncrement(self):
+        if not self.modeldone:
+            self.Finalize()
         self.step = self.inc = 0
 
     def Label(self,tag,value):

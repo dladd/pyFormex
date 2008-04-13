@@ -8,6 +8,27 @@ A pyFormex plugin for handling connectivity of nodes and elements.
 
 from numpy import *
 
+
+def reverseUniqueIndex(index):
+    """Reverse an index.
+
+    index is a one-dimensional integer array with unique non-negative values.
+
+    The return value is the reverse index: each value shows the position
+    of its index in the index array. The length of the reverse index is
+    equal to maximum value in index plus one. Values not occurring in index
+    get a value -1 in the reverse index.
+
+    Remark that reverseUniqueIndex(index)[index] == arange(1+index.max()).
+    The reverse index thus translates the unique index numbers in a
+    sequential index.
+    """
+    index = asarray(index)
+    rev = zeros(1+index.max(),dtype=index.dtype) - 1
+    rev[index] = arange(index.size,dtype=rev.dtype)
+    return rev
+
+    
 def reverseIndex(index,maxcon=3):
     """Reverse an index.
 
