@@ -47,6 +47,15 @@ class ScriptsMenu(QtGui.QMenu):
         If files is a list, a maximum number of items in the list may be
         specified. If it is > 0, no more than max scripts will be allowed.
         New ones are added on top, while bottom ones will drop off.
+
+        Selecting a menu item will make the corresponding file the current
+        script and, if autoplay was set True, the script is executed.
+        
+        The menu will also contain some extra options:
+        - execute all files
+        - execute current and all following files
+        - close the menu
+        - reload the menu
         """
         QtGui.QMenu.__init__(self,title)
         self.dir = None

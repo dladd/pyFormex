@@ -17,6 +17,8 @@ import connectivity
 
 class FeResult(object):
 
+    data_size = {'U':3,'S':6,'COORD':3}
+
     def __init__(self):
         self.about = {'creator':GD.Version,
                       'created':GD.date,
@@ -26,17 +28,23 @@ class FeResult(object):
         self.nelems = 0
         self.nnodes = 0
         self.dofs = None
-        self.ndispl = None
-        self.datasize = {'U':3,'S':6,'COORD':3}
+        self.displ = None
         self.nodid = None
         self.nodes = None
         self.elems = None
         self.nset = None
+        self.nsetkey = None
         self.eset = None
         self.res = None
         self.hdr = None
         self.nodnr = 0
         self.elnr = 0
+
+    def datasize(self,key,data):
+        if FeResult.data_size.has_key(key):
+            return FeResult.data_size[key]
+        else:
+            return len(data)
 
     def Abqver(self,version):
         self.about.update({'abqver':version})
@@ -58,7 +66,7 @@ class FeResult(object):
         self.dofs = array(data)
         self.displ = self.dofs[self.dofs[:6] > 0]
         if self.displ.max() > 3:
-            self.datasize['U'] = 6
+            self.data_size['U'] = 6
         
     def Heading(self,head):
         self.about.update({'heading':head})
@@ -75,7 +83,11 @@ class FeResult(object):
         self.elems[typ].append(conn)
 
     def Nodeset(self,key,data):
+        self.nsetkey = key
         self.nset[key] = asarray(data)
+
+    def NodesetAdd(self,data):
+        self.nset[self.nsetkey] = union1d(self.nset[self.nsetkey],asarray(data))
 
     def Elemset(self,key,data):
         self.eset[key] = asarray(data)
@@ -110,9 +122,16 @@ class FeResult(object):
 
     def NodeOutput(self,key,nodid,data):
         if not self.R.has_key(key):
-            self.R[key] = zeros((self.nnodes,self.datasize[key]),dtype=float32)
+            self.R[key] = zeros((self.nnodes,self.datasize(key,data)),dtype=float32)
         if key == 'U':
             self.R[key][nodid-1][self.displ-1] = data
+        elif key == 'S':
+            n1 = self.hdr['ndi']
+            n2 = self.hdr['nshr']
+            ind = arange(len(data))
+            ind[n1:] += (3-n1)
+            print ind
+            self.R[key][nodid-1][ind] = data
         else:
             self.R[key][nodid-1][:len(data)] = data
 
@@ -135,7 +154,10 @@ class FeResult(object):
             self.R = None
         export({'DB':self})
         GD.message("Read %d nodes, %d elements" % (self.nnodes,self.nelems))
-        GD.message("Steps: %s" % self.res.keys())
+        if self.res is None:
+            GD.message("No results")
+        else:
+            GD.message("Steps: %s" % self.res.keys())
 
     def do_nothing(*arg,**kargs):
         """A do nothing function to stand in for as yet undefined functions."""
@@ -154,19 +176,22 @@ class FeResult(object):
             self.R = self.res[self.step][self.inc]
         except:
             self.R = {}
-        
+
+
     def getres(self,key,domain='nodes'):
         """Return the results of the current step/inc for given key.
 
         The key may include a component to return only a single column
         of a multicolumn value.
         """
+        print self.dofs
+        print
         comp = '012345'.find(key[-1])
         if comp >= 0:
             key = key[:-1]
         if self.R.has_key(key):
             val = self.R[key]
-            if comp >= 0:
+            if comp in range(val.shape[1]):
                 return val[:,comp]
             else:
                 return val

@@ -264,6 +264,8 @@ int process_data() {
 
   case 1:   do_elemheader(); break;
   case 11:  do_elemout("S"); break;
+  case 12:  do_elemout("SINV"); break;
+  case 13:  do_elemout("SF"); break;
   case 101: do_nodeout("U"); break;
   case 107: do_nodeout("COORD"); break;
 

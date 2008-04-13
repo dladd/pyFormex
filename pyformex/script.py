@@ -12,7 +12,7 @@
 """Functions for executing pyFormex scripts."""
 
 import globaldata as GD
-import threading,os,commands,copy,re
+import threading,os,commands,copy,re,time
 
 import formex
 import utils
@@ -41,10 +41,24 @@ class TimeOut(Exception):
 
 
 def Globals():
+    """Return the globals that are passed to the scripts on execution.
+
+    This basically contains the globals defined in draw.py, colors.py,
+    and formex.py, as well as the globals from numpy.
+    It also contains the definitions put into the globaldata.PF, by
+    preference using the export() function.
+    During execution of the script, the global variable __name__ will be
+    set to either 'draw' or 'script' depending on whether the script
+    was executed in the 'draw' module (--gui option) or the 'script'
+    module (--nogui option).
+    """
     g = copy.copy(GD.PF)
     g.update(globals())
-    g.update(formex.__dict__) 
-    g.update({'__name__':'script'})
+    if GD.gui:
+        from gui import colors,draw
+        g.update(colors.__dict__)
+        g.update(draw.__dict__)
+    g.update(formex.__dict__)
     return g
 
 
@@ -170,6 +184,9 @@ def system(cmdline,result='output'):
 
 scriptDisabled = False
 scriptRunning = False
+exitrequested = False
+starttime = 0.0
+
  
 def playScript(scr,name=None,argv=[]):
     """Play a pyformex script scr. scr should be a valid Python text.
@@ -179,60 +196,78 @@ def playScript(scr,name=None,argv=[]):
     If a name is specified, sets the global variable GD.scriptName if and
     when the script is started.
     """
-    global scriptRunning, scriptDisabled, allowwait
+    global scriptDisabled,scriptRunning,exitrequested
+    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
-    allowwait = True
-    if GD.canvas:
-        GD.canvas.update()
-    if GD.gui:
-        GD.gui.actions['Step'].setEnabled(True)
-        GD.gui.actions['Continue'].setEnabled(True)
-        GD.app.processEvents()
-    # We need to pass formex globals to the script
-    # This would be done automatically if we put this function
-    # in the formex.py file. But then we need to pass other globals
-    # from this file (like draw,...)
-    # We might create a module with all operations accepted in
-    # scripts.
-
-    # Our solution is to take a copy of the globals in this module,
-    # and add the globals from the 'colors' and 'formex' modules
-    # !! Taking a copy is needed to avoid changing this module's globals !!
-    g = copy.copy(globals())
-    if GD.gui:
-        g.update(colors.__dict__)
-    g.update(formex.__dict__) # this also imports everything from numpy
-    # Finally, we set the name to 'script' or 'draw', so that the user can
-    # verify that the script is the main script being excuted (and not merely
-    # an import) and also whether the script is executed under the GUI or not.
+    exitrequested = False
+    
+    # Get the globals
+    g = Globals()
     if GD.gui:
         modname = 'draw'
     else:
         modname = 'script'
     g.update({'__name__':modname})
     g.update({'argv':argv})
-    # Now we can execute the script using these collected globals
 
+    # Now we can execute the script using these collected globals
+    exportNames = []
     GD.scriptName = name
     exitall = False
+
+    starttime = time.clock()
+    GD.debug('STARTING SCRIPT (%s)' % starttime)
     try:
         try:
-            exec scr in g
+            if GD.gui and stepmode:
+                step_script(scr,g,True)
+            else:
+                exec scr in g
+            if GD.cfg['autoglobals']:
+                exportNames.extend(listAll(clas=formex.Formex,dic=g))
+            GD.PF.update([(k,g[k]) for k in exportNames])
         except Exit:
             pass
         except ExitAll:
             exitall = True
+            
     finally:
         scriptRunning = False # release the lock in case of an error
+        elapsed = time.clock() - starttime
+        GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if GD.gui:
-            GD.gui.actions['Step'].setEnabled(False)
+            stepmode = False
+            drawrelease() # release the lock
+            GD.gui.actions['Play'].setEnabled(True)
+            #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
+            GD.gui.actions['Stop'].setEnabled(False)
+
     if exitall:
+        GD.debug("Calling exit() from playscript")
         exit()
+
+
+def breakpt(msg=None):
+    """Set a breakpoint where the script can be halted on pressing a button.
+
+    If an argument is specified, it will be written to the message board.
+    """
+    if exitrequested:
+        if msg is not None:
+            GD.message(msg)
+        raise Exit
+
+
+def stopatbreakpt():
+    """Set the exitrequested flag."""
+    global exitrequested
+    exitrequested = True
+
 
 def play(fn,argv=[]):
     """Play a formex script from file fn.

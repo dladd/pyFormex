@@ -325,37 +325,32 @@ def transform(fil, propnr):
         warning('%s is not a valid coordinate system'%the_nodeproperties[propnr].coords)
 
     
-def writeBoundaries(fil, boundset='ALL', opb=None):
+def writeBoundaries(fil, recset='ALL', op='MOD'):
     """Write nodal boundary conditions.
     
-    boundset is a list of property numbers of which the boundaries should be written.
-    The user can set opb='NEW' to remove the previous boundary conditions, or set opb='MOD' to modify them.
+    recset is a list of node record numbers that should be scanned for data.
+    By default, all records will be scanned.
+
+    By default, the boundary conditions are applied as a modification of the
+    existing boundary conditions, i.e. initial conditions and conditions from
+    previous steps remain in effect.
+    The user can set op='NEW' to remove the previous conditions.
+    This will also remove initial conditions!
     """
-    if boundset!=None:
-        fil.write("*BOUNDARY")
-        if opb!=None:
-            fil.write(", OP=%s" % opb)
-        fil.write('\n')
-        if isinstance(boundset, list):
-            for i in boundset:
-                if the_nodeproperties[i].bound!=None:
-                    if isinstance(the_nodeproperties[i].bound,list):
-                        for b in range(6):
-                            if the_nodeproperties[i].bound[b]==1:
-                                fil.write("%s, %s\n" % (Nset(i),b+1))
-                    elif isinstance(the_nodeproperties[i].bound,str):
-                        fil.write("%s, %s\n" % (Nset(i),the_nodeproperties[i].bound))
-        elif boundset.upper() =='ALL':
-            for i in the_nodeproperties.iterkeys():
-                if the_nodeproperties[i].bound!=None:
-                    if isinstance(the_nodeproperties[i].bound,list):
-                        for b in range(6):
-                            if the_nodeproperties[i].bound[b]==1:
-                                fil.write("%s, %s\n" % (Nset(i),b+1))
-                    elif isinstance(the_nodeproperties[i].bound,str):
-                        fil.write("%s, %s\n" % (Nset(i),the_nodeproperties[i].bound))
-        else:
-            warning("The boundaries have to defined in a list 'boundset'")
+    if recset == 'ALL':
+        recset = the_nodeproperties.iterkeys()
+
+    for i in recset:
+        if the_nodeproperties[i].bound!=None:
+            fil.write("*BOUNDARY, OP=%s\n" % op)
+            if isinstance(the_nodeproperties[i].bound,list):
+                for b in range(6):
+                    if the_nodeproperties[i].bound[b]==1:
+                        fil.write("%s, %s\n" % (Nset(i),b+1))
+            elif isinstance(the_nodeproperties[i].bound,str):
+                fil.write("%s, %s\n" % (Nset(i),the_nodeproperties[i].bound))
+            else:
+                warning("The boundaries have to defined in a list 'boundset'")
 
 
 def writeDisplacements(fil, recset='ALL', op='MOD'):
@@ -701,7 +696,7 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
     If nlgeom='YES', the analysis will be non-linear.
     cloadset is a list of property numbers of which the cloads will be used in this analysis.
     dloadset is a list of property numbers of which the dloads will be used in this analysis.
-    boundset is a list of propery numbers of which the bounds will be used in this analysis.
+    boundset is a list of property numbers of which the bounds will be used in this analysis.
     By default, the load is applied as a new load, i.e. loads
     from previous steps are removed. The user can set op='MOD'
     to keep/modify the previous loads.
@@ -721,8 +716,9 @@ def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL
     else:
         GD.message('Skipping undefined step %s' % analysis)
         return
-    
-    writeBoundaries(fil, boundset, opb)
+
+    if boundset is not None:
+        writeBoundaries(fil, boundset, opb)
     writeDisplacements(fil, dispset,op)
     writeCloads(fil, cloadset, opcl)
     writeDloads(fil, dloadset, opdl)
@@ -875,15 +871,15 @@ class Result(Dict):
 class AbqData(CascadingDict):
     """Contains all data required to write the abaqus input file."""
     
-    def __init__(self, model, analysis=[], res=[],out=[]):
+    def __init__(self, model, steps=[], res=[],out=[]):
         """Create new AbqData. 
         
         model is a Model instance.
-        analysis is a list of Analysis instances.
+        steps is a list of Step instances.
         res is a list of Result instances.
         out is a list of Output instances.
         """
-        CascadingDict.__init__(self, {'model':model, 'analysis':analysis, 'res':res, 'out':out})
+        CascadingDict.__init__(self, {'model':model, 'steps':steps, 'res':res, 'out':out})
 
     
 ##################################################
@@ -1002,17 +998,23 @@ Script: %s
 
 if __name__ == "script" or __name__ == "draw":
 
+    from plugins import properties
+    reload(properties)
+    
     workHere()
     
     #creating the formex (just 4 points)
     F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
+    draw(F)
     
+    # Create p[roperties database
+    P = properties.PropertiesDB()
     #install example databases
     # either like this
     Mat = MaterialDB('../../examples/materials.db')
-    setMaterialDB(Mat)
+    P.setMaterialDB(Mat)
     # or like this
-    setSectionDB(SectionDB('../../examples/sections.db'))
+    P.setSectionDB(SectionDB('../../examples/sections.db'))
     
     # creating properties
     S1=ElemSection('IPEA100', 'steel')
@@ -1033,8 +1035,8 @@ if __name__ == "script" or __name__ == "draw":
     old = seterr(all='ignore')
     nodes,elems = F.feModel()
     seterr(**old)
-    step1=Analysis(nlgeom='yes', cloadset=[], boundset=[8])
-    step2=Analysis(cloadset=[9], dloadset=[], dispset=[9])
+    step1 = Step(nlgeom='yes', cloadset=[], boundset=[8])
+    step2 = Step(cloadset=[9], dloadset=[], dispset=[9])
     outhist = Output(type='history')
     outfield = Output(type='field', kind='node', set= [9,8], keys='SF')
     elemres = Result(kind='ELEMENT',keys=['S','SP','SINV'])

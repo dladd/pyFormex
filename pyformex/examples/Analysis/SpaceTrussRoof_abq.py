@@ -11,6 +11,9 @@
 ##
 """Double Layer Flat Space Truss Roof"""
 
+from plugins.properties import *
+from plugins.fe_abq import *
+
 ####
 #Data
 ###################
@@ -75,9 +78,6 @@ nodeprops[topcorner]=3
 #Defining and assigning the properties
 #############################
 
-from plugins.properties import *
-from plugins.fe_abq import *
-
 Q = 0.5*q*dx*dx
 support = NodeProperty(0, bound = [1,1,1,0,0,0])
 edge = NodeProperty(3,cload = [0,0,Q/2,0,0,0])
@@ -93,7 +93,7 @@ topbar = ElemProperty(3,elemsection = circ20, elemtype='T3D2')
 #Writing the inputfile
 ###################
 
-step = Analysis()
+step = Step()
 odb = Output(type='field', variable='preselect')
 res = Result(kind='element', keys=['S'])
 model = Model(nodes, elems, nodeprops, F.p)

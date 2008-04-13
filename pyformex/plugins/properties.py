@@ -20,6 +20,8 @@ from flatkeydb import *
 from mydict import *
 from numpy import *
 
+#######################################################
+# This should probably be moved to a separate module
 
 class Database(Dict):
     """A class for storing properties in a database."""
@@ -90,37 +92,101 @@ the_nodeproperties = CascadingDict()
 the_elemproperties = CascadingDict()
 the_modelproperties = CascadingDict()
 
-## def init_properties():
-##     global the_materials, the_sections, the_properties,\
-##            the_nodeproperties, the_elemproperties
-##     print "INITIALIZING THE properties MODULE"
-##     if the_materials is None:
-##         materials = MaterialDB({})
-##     if the_sections is None:
-##         sections = SectionDB()
-##     if the_properties is None:
-##         properties = CascadingDict()
-##     if the_nodeproperties is None:
-##         properties = CascadingDict()
-##     if the_elemproperties is None:
-##         properties = CascadingDict()
+
+class CoordSystem(object):
+    """A class for storing coordinate systems."""
+
+    valid_csys = [ 'cartesian', 'spherical', 'cylindrical' ]
+    
+    def __init__(self,csys,cdata):
+        """Create a new coordinate system.
+
+        csys is one of:
+          'cartesian', 'spherical', 'cylindrical'
+        cdata is a list of 6 coordinates specifying the two points that
+          determine the coordinate transformation 
+        """
+        try:
+            csys = csys.lower()
+            if not csys in valid_csys:
+                raise
+            cdata = asarray(cdata).reshape(2,3)
+        except:
+            raise ValueError,"Invalid initialization data for CoordSystem"
+            
+
+
+def checkArray1D(a,size=None,kind=None):
+    try:
+        a = asarray(a).ravel()
+        if (size is not None and a.size != size) or \
+           (kind is not None and a.dtype.kind != kind):
+            raise
+        return a
+    except:
+        return None
 
 
 
-def setMaterialDB(aDict):
-    global the_materials
-    if isinstance(aDict,MaterialDB):
-        the_materials = aDict
+class PropertiesDB(Dict):
+    """A class for all properties"""
 
-def setSectionDB(aDict):
-    global the_sections
-    if isinstance(aDict,SectionDB):
-        the_sections = aDict
+    def init(self):
+        print "Initializing the Properties DB"
+        self.mats = MaterialDB()
+        self.sect = SectionDB()
+        self.nprop = []
+        self.eprop = []
+        self.mprop = []
+        
 
-def setNodePropDB(aDict):
-    global the_nodeproperties
-    if isinstance(aDict,CascadingDict):
-        the_nodeproperties = aDict
+    def setMaterialDB(self,aDict):
+        """Set the materials database to an external source"""
+        if isinstance(aDict,MaterialDB):
+            self.mats = aDict
+
+    def setSectionDB(self,aDict):
+        """Set the sections database to an external source"""
+        if isinstance(aDict,SectionDB):
+            self.sect = aDict
+
+    def nodeProp(self,tag=None,nset=None,cload=None,bound=None,displ=None,csys=None):
+        """Create a new node property, empty by default.
+. 
+        A node property can contain any combination of the following fields:
+        - tag : an identification tag used to group properties (this is e.g.
+                used to flag Step, increment, load case, ...)
+        - nset : a single number or a list of numbers identifying the node(s)
+                 for which this property will be set
+        - cload : a concentrated load
+        - bound : a boundary condition
+        - displ: a prescribed displacement
+        - csys: a coordinate system
+        """
+        try:
+            if tag is not None:
+                tag = str(tag)
+            if nset is not None:
+                if type(nset) is int:
+                    nset = [ int ]
+                nset = unique1d(nset)
+            if cload is not None:
+                cload = checkArray1D(cload,6,'f')
+            if bound is not None:
+                bound = checkArray1D(bound,6,'i')
+            if displ is not None:
+                displ = checkArray1D(displ,6,'f')
+            if csys is not None and not isinstance(csys,CoordSystem):
+                raise
+
+            d = CascadingDict(dict(tag=tag,nset=nset,cload=cload,bound=bound,displ=displ,csys=csys))
+            nr = len(self.nprop) 
+            self.nprop.append(d)
+            return n
+        except:
+            raise ValueError,"Invalid Node Property skipped"
+
+
 
 
 class Property(CascadingDict):
@@ -332,22 +398,22 @@ class ElemLoad(Property):
 
 
 
-## # INITIALIZE
-
-## init_properties()
-
 
 
 # Test
 
 if __name__ == "script" or  __name__ == "draw":
 
+    print os.getcwd()
+    print GD.cfg['curfile']
+    print os.path.dirname(GD.cfg['curfile'])
     workHere()
-        
+    print os.getcwd()
+    P = PropertiesDB()
     Mat = MaterialDB('../examples/materials.db')
-    setMaterialDB(Mat)
+    P.setMaterialDB(Mat)
     Sec = SectionDB('../examples/sections.db')
-    setSectionDB(Sec)
+    P.setSectionDB(Sec)
 
     Stick=Property(1, {'colour':'green', 'name':'Stick', 'weight': 25, 'comment':'This could be anything: a gum, a frog, a usb-stick,...'})
     author=Property(5,{'Name':'Tim Neels', 'Address':CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'})})

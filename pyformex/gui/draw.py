@@ -32,29 +32,6 @@ from script import *
 from plugins import surface,tools
 from formex import Formex
 
-
-############################# Globals for scripts ############################
-
-
-def Globals():
-    """Return the globals that are passed to the scripts on execution.
-
-    This basically contains the globals defined in draw.py, colors.py,
-    and formex.py, as well as the globals from numpy.
-    It also contains the definitions put into the globaldata.PF, by
-    preference using the export() function.
-    During execution of the script, the global variable __name__ will be
-    set to either 'draw' or 'script' depending on whether the script
-    was executed in the 'draw' module (--gui option) or the 'script'
-    module (--nogui option).
-    """
-    g = copy.copy(GD.PF)
-    g.update(colors.__dict__)
-    g.update(globals())
-    g.update(formex.__dict__) 
-    g.update({'__name__':'draw'})
-    return g
-
         
 #################### Interacting with the user ###############################
 
@@ -185,12 +162,12 @@ message = log
 
 scriptDisabled = False
 scriptRunning = False
-stepmode = False
 exitrequested = False
+stepmode = False
 starttime = 0.0
 
 
-def playScript(scr,name=None):
+def playScript(scr,name=None,argv=[]):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
@@ -202,21 +179,21 @@ def playScript(scr,name=None):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    global scriptDisabled,scriptRunning,stepmode,exitrequested, \
-           allowwait,exportNames,starttime
+    global scriptDisabled,scriptRunning,exitrequested
+    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
-    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptRunning, scriptDisabled, stepmode))
     if scriptRunning or scriptDisabled :
         return
     scriptRunning = True
     exitrequested = False
-    allowwait = True
-    if GD.canvas:
-        GD.canvas.update()
+
     if GD.gui:
+        GD.debug('GUI SCRIPT MODE %s'% (stepmode))
+        global allowwait,stepmode,exportNames,starttime
+        allowwait = True
+        GD.canvas.update()
         GD.gui.actions['Play'].setEnabled(False)
-        #GD.gui.actions['Step'].setEnabled(True)
         GD.gui.actions['Continue'].setEnabled(True)
         GD.gui.actions['Stop'].setEnabled(True)
        
@@ -224,6 +201,14 @@ def playScript(scr,name=None):
     
     # Get the globals
     g = Globals()
+    if GD.gui:
+        modname = 'draw'
+    else:
+        modname = 'script'
+    g.update({'__name__':modname})
+    g.update({'argv':argv})
+
+    # Now we can execute the script using these collected globals
     exportNames = []
     GD.scriptName = name
     exitall = False
@@ -245,11 +230,11 @@ def playScript(scr,name=None):
             exitall = True
     finally:
         scriptRunning = False # release the lock in case of an error
-        stepmode = False
-        drawrelease() # release the lock
         elapsed = time.clock() - starttime
         GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if GD.gui:
+            stepmode = False
+            drawrelease() # release the lock
             GD.gui.actions['Play'].setEnabled(True)
             #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
@@ -258,23 +243,6 @@ def playScript(scr,name=None):
     if exitall:
         GD.debug("Calling exit() from playscript")
         exit()
-
-
-def breakpt(msg=None):
-    """Set a breakpoint where the script can be halted on pressing a button.
-
-    If an argument is specified, it will be written to the message board.
-    """
-    if exitrequested:
-        if msg is not None:
-            GD.message(msg)
-        raise Exit
-
-
-def stopatbreakpt():
-    """Set the exitrequested flag."""
-    global exitrequested
-    exitrequested = True
 
 
 def force_finish():
@@ -305,6 +273,7 @@ def play(fn=None,step=False):
     This function does nothing if no file is passed or no current
     file was set.
     """
+    
     global stepmode
     if not fn:
         if GD.canPlay:

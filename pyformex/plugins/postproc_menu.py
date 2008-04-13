@@ -16,6 +16,21 @@ from gui.draw import *
 from gui.colors import *
 
 
+# Functions to calculate a scalar value from a vector
+
+def norm2(A):
+    return sqrt(square(A).sum(axis=-1))
+
+def norm(A,x):
+    return power(power(A,x).sum(axis=-1),1./x)
+
+def max(A):
+    return A.max(axis=1)
+
+def min(A):
+    return A.min(axis=1)
+
+
 DB = None
 R = None
 
@@ -66,7 +81,6 @@ def postABQ():
         name,ext = os.path.splitext(fn)
         post = name+'_post.py'
         cmd = "%s/postabq/postabq %s > %s" % (GD.cfg['pyformexdir'],fn,post)
-        print cmd
         sta,out = utils.runCommand(cmd)
         if sta:
             GD.message(out)
@@ -81,6 +95,15 @@ def importDB():
         if GD.PF.has_key('DB'):
             setDB(GD.PF['DB'])
             GD.message(DB.about['heading'])
+            printDB()
+
+
+def printDB():
+    if DB.res is not None:
+        for i,step in DB.res.iteritems():
+            for j,inc in step.iteritems():
+                for k,v in inc.iteritems():
+                    print "Step %s, Inc %s, Res %s (%s)" % (i,j,k,str(v.shape))
 
 
 def showModel(nodes=True,elems=True):
@@ -154,6 +177,8 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     frames = []   # a place to store the drawn frames
     for dsc in dscale.flat:
 
+        print nodes.shape
+        print displ.shape
         dnodes = nodes + dsc * displ
         deformed = [ Formex(dnodes[el]) for el in elems ]
 
@@ -205,7 +230,7 @@ def postProc():
     
     results = [
         ('','None'),
-        ('U','Displacement'),
+        ('U','[Displacement]'),
         ('U0','X-Displacement'),
         ('U1','Y-Displacement'),
         ('U2','Z-Displacement'),
@@ -215,6 +240,22 @@ def postProc():
         ('S3','XY-Shear Stress'),
         ('S4','XZ-Shear Stress'),
         ('S5','YZ-Shear Stress'),
+        ('SP0','1-Principal Stress'),
+        ('SP1','2-Principal Stress'),
+        ('SP2','3-Principal Stress'),
+        ('SF0','x-Normal Membrane Force'),
+        ('SF1','y-Normal Membrane Force'),
+        ('SF2','xy-Shear Membrane Force'),
+        ('SF3','x-Bending Moment'),
+        ('SF4','y-Bending Moment'),
+        ('SF5','xy-Twisting Moment'),
+        ('SINV0','Mises Stress'),
+        ('SINV1','Tresca Stress'),
+        ('SINV2','Hydrostatic Pressure'),
+        ('SINV6','Third Invariant'),
+        ('COORD0','X-Coordinate'),
+        ('COORD1','Y-Coordinate'),
+        ('COORD2','Z-Coordinate'),
         ('Computed','Distance from a point'),
         ]
     # split in two lists
@@ -282,8 +323,12 @@ def postProc():
                 val = Coords(nodes).distanceFromPoint(point)
         else:
             val = DB.getres(key)
+            if key == 'U':
+                val = norm2(val)
     if val is not None:
         txt = res_desc[resindex]
+    print nodes.shape
+    print displ.shape
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
     return val
 

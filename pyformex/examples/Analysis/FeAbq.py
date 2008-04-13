@@ -134,8 +134,8 @@ res = [ Result(kind='NODE',keys=['U']),
         ]
 
 # Static(default) step
-step1 = Analysis(time=[1., 1., 0.01, 1.],cloadset=[pl])
-step2 = Analysis(time=[1., 1., 0.01, 1.],cloadset=[1000])
+step1 = Step(time=[1., 1., 0.01, 1.],cloadset=[pl])
+step2 = Step(time=[1., 1., 0.01, 1.],cloadset=[1000])
 
 # collect all data
 #
