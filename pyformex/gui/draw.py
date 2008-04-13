@@ -1114,7 +1114,7 @@ highlight_funcs = { 'actor': highlightActors,
                     }
 
 
-def pick(mode='actor',single=False,front=False,func=None):
+def pick(mode='actor',single=False,func=None):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
@@ -1124,23 +1124,26 @@ def pick(mode='actor',single=False,front=False,func=None):
     GD.message("Select %s" % mode)
     selection_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
     GD.gui.statusbar.addWidget(selection_buttons)
+    selectionmethod_buttons = widgets.ButtonBox('Selection method:',['All','Single','Connected'],[GD.canvas.select_all,GD.canvas.select_single,GD.canvas.select_connected])
+    GD.gui.statusbar.addWidget(selectionmethod_buttons)
     if func is None:
         func = highlight_funcs.get(mode,None)
-    sel = GD.canvas.pick(mode,single,front,func) 
+    sel = GD.canvas.pick(mode,single,func)
     GD.gui.statusbar.removeWidget(selection_buttons)
+    GD.gui.statusbar.removeWidget(selectionmethod_buttons)
     return sel
     
 def pickActors(single=False,func=None):
-    return pick('actor',single,False,func)
+    return pick('actor',single,func)
 
-def pickElements(single=False,front=False,func=None):
-    return pick('element',single,front,func)
+def pickElements(single=False,func=None):
+    return pick('element',single,func)
 
 def pickPoints(single=False,func=None):
-    return pick('point',single,False,func)
+    return pick('point',single,func)
 
 def pickEdges(single=False,func=None):
-    return pick('edge',single,False,func)
+    return pick('edge',single,func)
 
 
 def highlight(K,mode,colormap=highlight_colormap):

@@ -224,7 +224,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.connect(self,DONE,self.accept_selection)
             self.connect(self,CANCEL,self.cancel_selection)
             self.selection_mode = mode
-            self.front_selection = None
+            self.selection_method = 'all'
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
 
     def wait_selection(self):
@@ -262,9 +262,18 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def cancel_selection(self):
         """Cancel an interactive picking mode and clear the selection."""
         self.accept_selection(clear=True)
+    
+    def select_all(self):
+        self.selection_method = 'all'
+    
+    def select_single(self):
+        self.selection_method = 'single'
+
+    def select_connected(self):
+        self.selection_method = 'connected'
 
     
-    def pick(self,mode='actor',single=False,front=False,func=None):
+    def pick(self,mode='actor',single=False,func=None):
         """Interactively pick objects from the viewport.
 
         - mode: defines what to pick : one of
@@ -273,14 +282,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         a picking operation. The default is to let the user
         modify his selection and only to return after an explicit
         cancel (ESC or right mouse button).
-        - front: if True, in 'element' mode, only elements connected to the front
-        element are returned. Currently this will only work for TriSurfaceActors.
         - func: if specified, this function will be called after each
         atomic pick operation. The Collection with the currently selected
         objects is passed as an argument.
         This can e.g. be used to highlight the selected objects during picking.
-
-        When the picking operation is finished, the selection is returned.
+        - selection_method: defines how to pick elements: one of
+        ['all','single','connected']. This can be changed interactively during picking.
+        'single' will return the element closest to the user. 'connected' will return
+        elements connected to the most frontal element or connected to the previous
+        selection (shift button). Currently this will only work for TriSurfaceActors.
+        - When the picking operation is finished, the selection is returned.
         The return value is always a Collection object.
         """
         #if not single:
@@ -293,27 +304,44 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.wait_selection()
             if not self.selection_canceled:
                 self.pick_func[self.selection_mode]()
+                if self.selection_method == 'single':
+                    self.picked = [self.front_picked]
                 if self.mod == NONE:
                     self.selection.set(self.picked)
-                    if front and self.front_picked is not None:
-                        self.front_selection = self.front_picked
+                    if self.selection_method == 'connected' and self.front_picked is not None:
+                        front_actor = self.front_picked[0]
+                        front_elem = self.front_picked[1]
+                        front_actor_elems = self.selection[front_actor]
+                        A = self.actors[int(front_actor)].select(front_actor_elems)
+                        p = A.partitionByConnection()
+                        prop = p[front_actor_elems == front_elem]
+                        connected_elems = front_actor_elems[p==prop]
+                        self.selection.set(connected_elems,front_actor)
                 elif self.mod == SHIFT:
+                    if self.selection_method == 'connected':
+                        oldselection = Collection()
+                        for i in self.selection.keys():
+                            oldselection.add(self.selection[i],i)
                     self.selection.add(self.picked)
+                    if self.selection_method == 'connected':
+                        for i in self.selection.keys():
+                            if i in  oldselection.keys():
+                                oldselection_elems = oldselection[i]
+                                selection_elems = self.selection[i]
+                                A = self.actors[i].select(selection_elems)
+                                p = A.partitionByConnection()
+                                props = []
+                                connected_elems = []
+                                for j in range(len(oldselection_elems)):
+                                    prop = p[selection_elems == oldselection_elems[j]]
+                                    if not prop in props:
+                                        props.append(prop)
+                                        connected_elems.extend(selection_elems[p == prop[0]])
+                                self.selection[i] = connected_elems
+                            else:
+                                self.selection.clear(keys=[i])
                 elif self.mod == CTRL:
                     self.selection.remove(self.picked)
-            if front and self.front_selection is not None:
-                front_actor = self.front_selection[0]
-                front_elem = self.front_selection[1]
-                if self.selection.has_key(front_actor): # due to CTRL button all elements of front_actor could be removed
-                    front_actor_elems = self.selection[front_actor]
-                    A = self.actors[int(front_actor)].select(front_actor_elems)
-                    p = A.partitionByConnection()
-                    prop = p[front_actor_elems == front_elem]
-                    front_elems = front_actor_elems[p==prop]
-                    GD.message(p)
-                    GD.message(prop)
-                    GD.message(front_elems)
-                    self.selection.set(front_elems,front_actor)
             #GD.debug("Selection: %s" % self.selection)
             if func:
                 func(self.selection)
