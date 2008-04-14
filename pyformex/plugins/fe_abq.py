@@ -688,7 +688,7 @@ def writeModelProps():
             writedamping(fil, i)
 
 
-def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', out=[], res=[]):
+def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', out=[], res=[], resfreq=1, timemarks=False):
     """Write a load step.
         
     analysis is the analysis type. Currently, only STATIC is supported.
