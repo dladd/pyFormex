@@ -45,7 +45,7 @@ union {
   long   i[BUFSIZE];
   char   c[8*BUFSIZE];
 } data;
-int nw,key;
+long nw,key;
 
 uint j; /* Pointer to current data */
 uint jend; /* Pointer behind currently record */
