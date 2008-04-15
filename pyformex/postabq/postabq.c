@@ -38,28 +38,32 @@ FILE * fil;
   
 int recnr = 0;
 int blknr = 0;
+int err = 0;
 
-int lead,tail;
+int32_t lead,tail;
 union {
   double d[BUFSIZE];
-  long   i[BUFSIZE];
+  int64_t i[BUFSIZE];
   char   c[8*BUFSIZE];
 } data;
-long nw,key;
 
-uint j; /* Pointer to current data */
-uint jend; /* Pointer behind currently record */
-uint jmax; /* Pointer behind currently filled buffer */
+int64_t nw,key;
+
+int64_t
+  j,    /* Pointer to current data */
+  jend, /* Pointer behind currently record */
+  jmax; /* Pointer behind currently filled buffer */
 
 #define STRINGBUFSIZE 256
 char s[STRINGBUFSIZE];
 
 int explicit = 0;  /* assume standard unless specified/detected */
 int verbose = 0; 
+int fake = 0; 
 
-char* stripn(uint k,uint n,int strip) {
+char* stripn(int64_t k,int64_t n,int strip) {
   s[0] = '\0';
-  int m = 8*n;
+  int64_t m = 8*n;
   if (m > STRINGBUFSIZE) m = STRINGBUFSIZE;
   memmove(s,data.c + (8*k),m);
   while (s[--m] == ' ') {}
@@ -71,11 +75,11 @@ char* stripn(uint k,uint n,int strip) {
   return p;
 }
 
-char* strn(uint k,uint n) {
+char* strn(int64_t k,int64_t n) {
   return stripn(k,n,0);
 }
 
-char* str(uint k) {
+char* str(int64_t k) {
   return strn(k,1);
 }
 
@@ -88,7 +92,7 @@ void do_element() {
 
 void do_node() {
   printf("D.Node(%d,[",data.i[j++]);
-  int j3 = j+3;
+  int64_t j3 = j+3;
   if (j3 > jend) j3 = jend;
   while (j < j3) printf("%e,",data.d[j++]);
   if (j < jend) {
@@ -105,8 +109,9 @@ void do_dofs() {
 }
 
 void do_outreq() {
-  int flag = data.i[j++];
-  printf("D.OutputRequest(flag=%d,set='%s'",str(j++));
+  int64_t * ip = data.i + j++;
+  int flag = ip[0];
+  printf("D.OutputRequest(flag=%d,set='%s'",flag,str(j++));
   if (flag==0) printf(",eltyp='%s',",str(j++));
   printf(")\n");
 }
@@ -116,7 +121,7 @@ void do_abqver() {
   /* BEWARE ! Do not call str() multiple times in the same output instruction */
   printf("D.Date('%s',",strn(j,2)); j += 2;
   printf("'%s')\n",str(j++));
-  printf("D.Size(nelems=%d,nnodes=%d,length=%f)\n",data.i[j],data.i[j+1],data.d[j+2]);
+  printf("D.Size(nelems=%lld,nnodes=%lld,length=%f)\n",data.i[j],data.i[j+1],data.d[j+2]);
 } 
 
 void do_heading() {
@@ -154,9 +159,9 @@ void do_label() {
 }
 
 void do_increment() {
-  long * ip = data.i + j;
+  int64_t * ip = data.i + j;
   double * dp = data.d + j;
-  long type = ip[4];
+  int64_t type = ip[4];
   explicit = (type==17 || type == 74);
   printf("D.Increment(");
   printf("step=%d,",ip[5]);
@@ -183,7 +188,7 @@ void end_increment() {
 char* output_location[] = { "gp", "ec", "en", "rb", "na", "el" };
   
 void do_elemheader() {
-  long * ip = data.i + j;
+  int64_t * ip = data.i + j;
   int loc = ip[3];
   printf("D.ElemHeader(loc='%s',",output_location[loc]);
   printf("i=%d,",ip[0]);
@@ -197,9 +202,11 @@ void do_elemheader() {
     printf("sp=%d,",ip[2]);
   if (loc==3)
     printf("rb='%s',",stripn(j+4,1,1));
-  printf("ndi=%d,nshr=%d,nsfc=%d,",ip[5],ip[6],ip[8]);
+  printf("ndi=%d,",ip[5]);
+  printf("nshr=%d,",ip[6]);
+  printf("nsfc=%d,",ip[8]);
   if (explicit)
-    printf("ndir=%d,",ip[7]);
+    printf("ndir=%ld,",ip[7]);
   printf(")\n");
 }
 
@@ -245,8 +252,9 @@ void do_total_energies() {
 
 /* Process the data of a record */ 
 int process_data() {
-  /* nw and key kave been set, j points to data*/
-  if (verbose) fprintf(stderr,"Record %d Offset %d Length %d Type %d End %d max %d\n",recnr,j,nw,key,jend,jmax);
+  /* nw and key have been set, j points to data*/
+  if (verbose) fprintf(stderr,"Record %d Offset %lld Length %lld Type %lld End %lld max %lld\n",recnr,j,nw,key,jend,jmax);
+  if (fake) return 0;
   switch(key) {
   case 1900: do_element(); break;
   case 1901: do_node(); break;
@@ -270,9 +278,9 @@ int process_data() {
   case 107: do_nodeout("COORD"); break;
 
   case 1999: do_total_energies(); break;
-  default: printf("D.Unknown(%d)\n",key);
+  default: printf("D.Unknown(%lld)\n",key);
   }
-  return 0;
+  return err;
 }
 
 
@@ -280,8 +288,8 @@ int process_data() {
 int read_block() {
   if (j < jmax) {
     /* Move the remaining data to the start of the buffer */
-    int nm = jmax-j;
-    if (verbose) fprintf(stderr,"Moving %d words to start of buffer\n",nm);
+    int64_t nm = jmax-j;
+    if (verbose) fprintf(stderr,"Moving %lld words to start of buffer\n",nm);
     memmove(data.d,data.d+j,8*nm);
     j = 0;
     jmax = j+nm;
@@ -302,7 +310,7 @@ int read_block() {
   jmax += RECSIZE;
   if (verbose) {
     fprintf(stderr,"** Block %d size %d lead %d tail %d\n",blknr,8*RECSIZE,lead,tail);
-    fprintf(stderr,"** Buffer Start %d End %d size %d\n",j,jmax,jmax-j);
+    fprintf(stderr,"** Buffer Start %lld End %lld size %lld\n",j,jmax,jmax-j);
   }
   return 0;
 }
@@ -341,8 +349,8 @@ int process_file(const char* fn) {
       key = data.i[j+1];
       recnr++;
       j += 2;
-      process_data();
-      j = jend; /* in case the process_data did not process everyhing */
+      if (process_data()) return 1;
+      j = jend; /* in case the process_data did not process everything */
     }
   }
   printf("D.Export()\n");
@@ -363,6 +371,7 @@ The output goes to stdout.\n\
 Options:\n\
   -v : Be verbose (mostly for debugging)\n\
   -e : Force EXPLICIT from the start (default is to autodetect)\n\
+  -n : Dry run: run through the file but do not produce conversion\n\
   -h : Print this help text\n\
   -V : Print version and exit\n\
 \n");
@@ -382,6 +391,7 @@ int main(int argc, char *argv[]) {
     switch (c) {
     case 'v': verbose=1; break;
     case 'e': explicit=1; break;
+    case 'n': fake=1; break;
     case 'h': print_usage();
     case 'V': return 0;
     default: fprintf(stderr,"Invalid option '%c'; use '-h' for help\n",c);

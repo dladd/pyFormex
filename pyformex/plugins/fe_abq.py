@@ -21,7 +21,6 @@ and write them to the Abaqus input file.
 from plugins.properties import *
 from mydict import *
 import globaldata as GD
-#from numpy import *
 import datetime
 import os
 
@@ -29,6 +28,23 @@ import os
 ##################################################
 ## Some Abaqus .inp format output routines
 ##################################################
+
+def abqInputNames(job):
+    """Returns corresponding Abq jobname and input filename.
+
+    job can be either a jobname or input file name, with or without
+    directory part, with or without extension (.inp)
+    
+    The Abq jobname is the basename without the extension.
+    The abq filename is the abspath of the job with extension '.inp'
+    """
+    jobname = os.path.basename(job)
+    if jobname.endswith('.inp'):
+        jobname = jobname[:-4]
+    filename = os.path.abspath(job)
+    if not filename.endswith('.inp'):
+        filename += '.inp'
+    return jobname,filename
 
 # Create automatic names for node and element sets
 
@@ -688,54 +704,12 @@ def writeModelProps():
             writedamping(fil, i)
 
 
-def writeStep(fil, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD', out=[], res=[], resfreq=1, timemarks=False):
-    """Write a load step.
-        
-    analysis is the analysis type. Currently, only STATIC is supported.
-    time is a list which defines the time step.
-    If nlgeom='YES', the analysis will be non-linear.
-    cloadset is a list of property numbers of which the cloads will be used in this analysis.
-    dloadset is a list of property numbers of which the dloads will be used in this analysis.
-    boundset is a list of property numbers of which the bounds will be used in this analysis.
-    By default, the load is applied as a new load, i.e. loads
-    from previous steps are removed. The user can set op='MOD'
-    to keep/modify the previous loads.
-    out is a list of Output-instances.
-    res is a list of Result-instances.
-    """ 
-    if analysis.upper()=='STATIC':
-        fil.write("""*STEP, NLGEOM=%s
-*STATIC
-%s, %s, %s, %s
-""" % (nlgeom, time[0], time[1], time[2], time[3]))
-    elif analysis.upper()=='EXPLICIT':
-        fil.write("""*STEP, NLGEOM=%s
-*DYNAMIC, EXPLICIT
-, %s\n*BULK VISCOSITY\n0.06, 1.2
-""" % (nlgeom, time[0]))
-    else:
-        GD.message('Skipping undefined step %s' % analysis)
-        return
-
-    if boundset is not None:
-        writeBoundaries(fil, boundset, opb)
-    writeDisplacements(fil, dispset,op)
-    writeCloads(fil, cloadset, opcl)
-    writeDloads(fil, dloadset, opdl)
-    writeModelProps()
-    for i in out:
-        if i.kind is None:
-            writeStepOutput(fil,**i)
-        if i.kind == 'N':
-            writeNodeOutput(fil,**i)
-        elif i.kind == 'E':
-            writeElemOutput(fil,**i)
-    for i in res:
-        if i.kind == 'N':
-            writeNodeResult(fil,**i)
-        elif i.kind == 'E':
-            writeElemResult(fil,**i)
-    fil.write("*END STEP\n")
+def writeFileOutput(fil,resfreq=1,timemarks=False):
+    """Write the FILE OUTPUT command for Abaqus/Explicit"""
+    fil.write("*FILE OUTPUT, NUMBER INTERVAL=%s" % resfreq)
+    if timemarks:
+        fil.write(", TIME MARKS=YES")
+    fil.write("\n")
 
 
 ##################################################
@@ -780,15 +754,23 @@ class Model(Dict):
                              'initialboundaries':initialboundaries}) 
 
 
+############################################################ STEP
+        
 class Step(Dict):
     """Contains all data about a step."""
     
-    def __init__(self, analysis='STATIC', time=[0,0,0,0], nlgeom='NO', cloadset='ALL', opcl='NEW', dloadset='ALL', opdl='NEW', boundset=None, opb=None, dispset='ALL', op='MOD'):
+    def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
+                 cloadset='ALL',opcl='NEW',dloadset='ALL',opdl='NEW',
+                 boundset=None,opb=None,dispset='ALL',op='MOD',
+                 bulkvisc=[]):
         """Create new analysis data.
         
         analysis is the analysis type. Should be one of:
-          'STATIC', 'EXPLICIT'
-        time is a list which defines the time step.
+          'STATIC', 'DYNAMIC', 'EXPLICIT'
+        time is either a single float value specifying the step time,
+        or a list of 4 values:
+          time inc, step time, min. time inc, max. time inc.
+        In most cases, only the step time should be specified.
         If nlgeom='YES', the analysis will be non-linear.
         cloadset is a list of property numbers of which the cloads will be used in this analysis.
         dloadset is a list of property numbers of which the dloads will be used in this analysis.
@@ -796,8 +778,64 @@ class Step(Dict):
         By default, the load is applied as a new load, i.e. loads
         from previous steps are removed. The user can set op='MOD'
         to keep/modify the previous loads.
+
+        bulkvisc is a list of two floats (default: [0.06,1.2])
         """
-        Dict.__init__(self,{'analysis':analysis, 'time':time, 'nlgeom':nlgeom, 'cloadset':cloadset, 'opcl':opcl, 'dloadset':dloadset, 'opdl':opdl, 'boundset':boundset, 'opb': opb, 'dispset' : dispset , 'op': op})
+        if type(time) == float:
+            time = [ 0., time, 0., 0. ]
+        analysis = analysis.upper()
+        Dict.__init__(self,{'analysis':analysis, 'time':time, 'nlgeom':nlgeom, 'cloadset':cloadset, 'opcl':opcl, 'dloadset':dloadset, 'opdl':opdl, 'boundset':boundset, 'opb': opb, 'dispset' : dispset , 'op': op, 'bulkvisc':bulkvisc})
+
+
+    def write(self,fil,out=[],res=[],resfreq=1,timemarks=False):
+        """Write a load step.
+
+        Except for the step data itself, this will also write the passed
+        output and result requests.
+        out is a list of Output-instances.
+        res is a list of Result-instances.
+        resfreq and timemarks are global values only used by Explicit
+        """
+        fil.write("*STEP, NLGEOM=%s\n" % self.nlgeom)
+        
+        if self.analysis in ['STATIC','DYNAMIC']:
+            fil.write("*%s\n" % self.analysis)
+        elif self.analysis == 'EXPLICIT':
+            fil.write("*DYNAMIC, EXPLICIT\n")
+        else:
+            GD.message('Skipping undefined step %s' % self.analysis)
+            return
+
+        fil.write("%s, %s, %s, %s\n" % tuple(self.time))
+
+        if self.analysis == 'EXPLICIT':
+            if self.bulkvisc:
+                fil.write("""*BULK VISCOSITY
+%s, %s
+""" % self.bulkvisc)
+
+
+        if self.boundset is not None:
+            writeBoundaries(fil,self.boundset,self.opb)
+        writeDisplacements(fil,self.dispset,self.op)
+        writeCloads(fil,self.cloadset,self.opcl)
+        writeDloads(fil,self.dloadset,self.opdl)
+        writeModelProps()
+        for i in out:
+            if i.kind is None:
+                writeStepOutput(fil,**i)
+            if i.kind == 'N':
+                writeNodeOutput(fil,**i)
+            elif i.kind == 'E':
+                writeElemOutput(fil,**i)
+        if res and self.analysis == 'EXPLICIT':
+            writeFileOutput(fil,resfreq,timemarks)
+        for i in res:
+            if i.kind == 'N':
+                writeNodeResult(fil,**i)
+            elif i.kind == 'E':
+                writeElemResult(fil,**i)
+        fil.write("*END STEP\n")
 
     
 class Output(Dict):
@@ -838,8 +876,13 @@ class Output(Dict):
 
 class Result(Dict):
     """A request for output of results on nodes or elements."""
+
+    # The following values can be changed to set the output frequency
+    # for Abaqus/Explicit
+    nintervals = 1
+    timemarks = False
     
-    def __init__(self,kind,keys,set=None,output='FILE',freq=1,
+    def __init__(self,kind,keys,set=None,output='FILE',freq=1,time=False,
                  **kargs):
         """Create new result request.
         
@@ -868,8 +911,10 @@ class Result(Dict):
         self.update(dict(**kargs))
 
 
+############################################################ AbqData
+        
 class AbqData(CascadingDict):
-    """Contains all data required to write the abaqus input file."""
+    """Contains all data required to write the Abaqus input file."""
     
     def __init__(self, model, steps=[], res=[],out=[]):
         """Create new AbqData. 
@@ -881,117 +926,103 @@ class AbqData(CascadingDict):
         """
         CascadingDict.__init__(self, {'model':model, 'steps':steps, 'res':res, 'out':out})
 
-    
-##################################################
-## Combine all previous functions to write the Abaqus input file
-##################################################
 
-def abqInputNames(job):
-    """Returns corresponding Abq jobname and input filename.
+    def write(self,jobname=None):
+        """Write an Abaqus input file.
 
-    job can be either a jobname or input file name, with or without
-    directory part, with or without extension (.inp)
-    
-    The Abq jobname is the basename without the extension.
-    The abq filename is the abspath of the job with extension '.inp'
-    """
-    jobname = os.path.basename(job)
-    if jobname.endswith('.inp'):
-        jobname = jobname[:-4]
-    filename = os.path.abspath(job)
-    if not filename.endswith('.inp'):
-        filename += '.inp'
-    return jobname,filename
+        job is the name of the inputfile. If None is specified, it is
+        determined from the current script name.
+        """
+        global materialswritten
+        materialswritten = []
+        # Create the Abaqus input file
+        if jobname is None:
+            jobname = str(GD.scriptName)[:-3]
+        jobname,filename = abqInputNames(jobname)
+        fil = file(filename,'w')
+        GD.message("Writing to file %s" % (filename))
+
+        writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
+    Script: %s 
+    """ % (jobname, datetime.date.today(), GD.scriptName))
+
+        nnod = self.nodes.shape[0]
+        GD.message("Writing %s nodes" % nnod)
+        writeNodes(fil, self.nodes)
+
+        GD.message("Writing node sets")
+        nlist = arange(nnod)
+        for i,v in the_nodeproperties.iteritems():
+            if v.has_key('nset') and v['nset'] is not None:
+                nodeset = v['nset']
+            else:
+                nodeset = nlist[self.nodeprop == i]
+            if len(nodeset) > 0:
+                writeSet(fil, 'NSET', Nset(str(i)), nodeset)
+                transform(fil,i)
+
+        GD.message("Writing element sets")
+        n=0
+        # we process the elementgroups one by one
+        GD.message("Number of element groups: %s" % len(self.elems))
+        for j,elems in enumerate(self.elems):
+            ne = len(elems)
+            nlist = arange(ne)           # The element numbers for this group
+            eprop = self.elemprop[n:n+ne] # The properties in this group
+            GD.message("Number of elements in group %s: %s" % (j,ne))
+            for i,v in the_elemproperties.iteritems():
+                if v.has_key('eset') and v['eset'] is not None:
+                    elemset = v['eset']
+                else:
+                    elemset = nlist[eprop == i] # The elems with property i
+                if len(elemset) > 0:
+                    print "Elements in group %s with property %s: %s" % (j,i,elemset)
+                    subsetname = '%s' % Eset(j,i)
+                    writeElems(fil, elems[elemset],the_elemproperties[i].elemtype,subsetname,eofs=n+1)
+                    n += len(elemset)
+                    writeSubset(fil, 'ELSET', Eset(i), subsetname)
+        if sum([len(elems) for elems in self.elems]) != n:
+            GD.message("!!Not all elements have been written out!!")
+        GD.message("Total number of elements: %s" % n)
+
+        GD.message("Writing element sections")
+        for i in the_elemproperties:
+            writeSection(fil,i)
+
+        GD.message("Writing surfaces")
+        for i in the_nodeproperties:
+            if the_nodeproperties[i].surfaces is not None:
+                writeNodeSurface(fil,i,self)
+        for i in the_elemproperties:
+            if the_elemproperties[i].surfaces is not None:
+                writeElemSurface(fil,i,self)
+
+        GD.message("Writing model properties")
+        for i in the_modelproperties:
+            if the_modelproperties[i].amplitude is not None:
+                GD.message("Writing amplitude: %s" % i)
+                writeAmplitude(fil, i)
+            if the_modelproperties[i].intprop is not None:
+                GD.message("Writing interaction property: %s" % i)
+                writeIntprop(fil, i)
+
+        GD.message("Writing initial boundary conditions")
+        writeBoundaries(fil, self.initialboundaries)
+
+        GD.message("Writing steps")
+        for a in self.steps:
+            a.write(fil,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
+
+        GD.message("Done")
+
 
 
 def writeAbqInput(abqdata, jobname=None):
-    """Write an Abaqus input file.
+    print "This function is deprecated: use the AbqData.write() method instead"
+    abqdata.write(jobname)
     
-    abqdata is an AbqData-instance.
-    job is the name of the inputfile.
-    """
-    global materialswritten
-    materialswritten = []
-    # Create the Abaqus input file
-    if jobname is None:
-        jobname = str(GD.scriptName)[:-3]
-    jobname,filename = abqInputNames(jobname)
-    fil = file(filename,'w')
-    GD.message("Writing to file %s" % (filename))
+
     
-    writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
-Script: %s 
-""" % (jobname, datetime.date.today(), GD.scriptName))
-    
-    nnod = abqdata.nodes.shape[0]
-    GD.message("Writing %s nodes" % nnod)
-    writeNodes(fil, abqdata.nodes)
-    
-    GD.message("Writing node sets")
-    nlist = arange(nnod)
-    for i,v in the_nodeproperties.iteritems():
-        if v.has_key('nset') and v['nset'] is not None:
-            nodeset = v['nset']
-        else:
-            nodeset = nlist[abqdata.nodeprop == i]
-        if len(nodeset) > 0:
-            writeSet(fil, 'NSET', Nset(str(i)), nodeset)
-            transform(fil,i)
-
-    GD.message("Writing element sets")
-    n=0
-    # we process the elementgroups one by one
-    GD.message("Number of element groups: %s" % len(abqdata.elems))
-    for j,elems in enumerate(abqdata.elems):
-        ne = len(elems)
-        nlist = arange(ne)           # The element numbers for this group
-        eprop = abqdata.elemprop[n:n+ne] # The properties in this group
-        GD.message("Number of elements in group %s: %s" % (j,ne))
-        for i,v in the_elemproperties.iteritems():
-            if v.has_key('eset') and v['eset'] is not None:
-                elemset = v['eset']
-            else:
-                elemset = nlist[eprop == i] # The elems with property i
-            if len(elemset) > 0:
-                print "Elements in group %s with property %s: %s" % (j,i,elemset)
-                subsetname = '%s' % Eset(j,i)
-                writeElems(fil, elems[elemset],the_elemproperties[i].elemtype,subsetname,eofs=n+1)
-                n += len(elemset)
-                writeSubset(fil, 'ELSET', Eset(i), subsetname)
-    if sum([len(elems) for elems in abqdata.elems]) != n:
-        GD.message("!!Not all elements have been written out!!")
-    GD.message("Total number of elements: %s" % n)
-
-    GD.message("Writing element sections")
-    for i in the_elemproperties:
-        writeSection(fil,i)
-
-    GD.message("Writing surfaces")
-    for i in the_nodeproperties:
-	if the_nodeproperties[i].surfaces is not None:
-            writeNodeSurface(fil,i,abqdata)
-    for i in the_elemproperties:
-	if the_elemproperties[i].surfaces is not None:
-            writeElemSurface(fil,i,abqdata)
-	
-    GD.message("Writing model properties")
-    for i in the_modelproperties:
-        if the_modelproperties[i].amplitude is not None:
-	    GD.message("Writing amplitude: %s" % i)
-            writeAmplitude(fil, i)
-        if the_modelproperties[i].intprop is not None:
-	    GD.message("Writing interaction property: %s" % i)
-            writeIntprop(fil, i)
-
-    GD.message("Writing steps")
-    writeBoundaries(fil, abqdata.initialboundaries)
-    for i in range(len(abqdata.analysis)):
-        a = abqdata.analysis[i]
-        writeStep(fil,a.analysis,a.time,a.nlgeom,a.cloadset,a.opcl,a.dloadset,a.opdl,a.boundset,a.opb,a.dispset,a.op,abqdata.out,abqdata.res)
-
-    GD.message("Done")
-
-
 ##################################################
 ## Test
 ##################################################
