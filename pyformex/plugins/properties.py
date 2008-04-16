@@ -88,7 +88,6 @@ class SectionDB(Database):
 the_materials = MaterialDB()
 the_sections = SectionDB()
 the_properties = CascadingDict()
-#the_nodeproperties = CascadingDict()
 the_elemproperties = CascadingDict()
 the_modelproperties = CascadingDict()
 
@@ -96,43 +95,87 @@ the_modelproperties = CascadingDict()
 class CoordSystem(object):
     """A class for storing coordinate systems."""
 
-    valid_csys = [ 'cartesian', 'spherical', 'cylindrical' ]
+    valid_csys = 'RSC'
     
     def __init__(self,csys,cdata):
         """Create a new coordinate system.
 
-        csys is one of:
-          'cartesian', 'spherical', 'cylindrical'
+        csys is one of 'Rectangular', 'Spherical', 'Cylindrical'. Case is
+          ignored and the first letter suffices.
         cdata is a list of 6 coordinates specifying the two points that
           determine the coordinate transformation 
         """
         try:
-            csys = csys.lower()
+            csys = csys[0].upper()
             if not csys in valid_csys:
                 raise
             cdata = asarray(cdata).reshape(2,3)
         except:
             raise ValueError,"Invalid initialization data for CoordSystem"
-            
+        self.sys = csys
+        self.data = cdata
 
 
-def checkArray1D(a,size=None,kind=None):
+def checkArray1D(a,size=None,kind=None,allow=None):
+    """Check that an array a has the correct size and type.
+
+    Either size and or kind can be specified.
+    If kind does not match, but is included in allow, conversion to the
+    requested type is attempted.
+    Returns the array if valid.
+    Else, an error is raised.
+    """
     try:
         a = asarray(a).ravel()
-        if (size is not None and a.size != size) or \
-           (kind is not None and a.dtype.kind != kind):
+        if (size is not None and a.size != size):
             raise
+        if kind is not None:
+            if allow is None and a.dtype.kind != kind:
+                raise
+            if kind == 'f':
+                a = a.astype(float32)
         return a
     except:
-        return None
+        print "Expected size %s, kind %s, got: %s" % (size,kind,a)
+    raise ValueError
 
 
+def checkString(a,valid):
+    """Check that a string a has one of the valid values.
 
+    This is case insensitive, and returns the upper case string if valid.
+    Else, an error is raised.
+    """
+    try:
+        a = a.upper()
+        if a in valid:
+            return a
+    except:
+        print "Expected one of %s, got: %s" % (valid,a)
+    raise ValueError
+
+
+##################### Properties Database ###################    
 class PropertiesDB(Dict):
-    """A class for all properties"""
+    """A database class for all properties.
+
+    This class collects all properties that can be set on a
+    geometrical model.
+
+    This should allow for storing:
+       - materials
+       - sections
+       - node properties
+       - elem properties
+       - model properties
+
+    Currently, only the former NodeProperties have been converted.
+    """
+
+    bound_strings = [ 'XSYMM', 'YSYMM', 'ZSYMM', 'ENCASTRE', 'PINNED' ]
 
     def __init__(self):
-        print "Initializing the Properties DB"
+        """Create a new properties database."""
         self.mats = MaterialDB()
         self.sect = SectionDB()
         self.nprop = []
@@ -145,10 +188,12 @@ class PropertiesDB(Dict):
         if isinstance(aDict,MaterialDB):
             self.mats = aDict
 
+
     def setSectionDB(self,aDict):
         """Set the sections database to an external source"""
         if isinstance(aDict,SectionDB):
             self.sect = aDict
+
 
     def nodeProp(self,tag=None,nset=None,cload=None,bound=None,displ=None,csys=None):
         """Create a new node property, empty by default.
@@ -164,27 +209,32 @@ class PropertiesDB(Dict):
         - csys: a coordinate system
         """
         try:
+            d = CascadingDict()
             if tag is not None:
-                tag = str(tag)
+                d.tag = str(tag)
             if nset is not None:
                 if type(nset) is int:
                     nset = [ int ]
-                nset = unique1d(nset)
+                d.nset = unique1d(nset)
             if cload is not None:
-                cload = checkArray1D(cload,6,'f')
+                d.cload = checkArray1D(cload,6,'f','i')
             if bound is not None:
-                bound = checkArray1D(bound,6,'i')
+                if type(bound) == str:
+                    print "A STRING"
+                    d.bound = checkString(bound,self.bound_strings)
+                else:
+                    print "bound"
+                    d.bound = checkArray1D(bound,6,'i')
             if displ is not None:
-                displ = checkArray1D(displ,6,'f')
+                d.displ = checkArray1D(displ,6,'f')
             if csys is not None and not isinstance(csys,CoordSystem):
                 raise
-            d = CascadingDict(dict(tag=tag,nset=nset,cload=cload,bound=bound,displ=displ,csys=csys))
-            nr = len(self.nprop)
+            d.nr = len(self.nprop)
             self.nprop.append(d)
-            print "Created Node Property %s" % nr
-            return nr
+            #print "Created Node Property %s" % d
+            return d
         except:
-            print tag,nset,cload,bound,displ,csys
+            print "tag=%s,nset=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,nset,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property skipped"
 
 
@@ -207,6 +257,7 @@ class PropertiesDB(Dict):
         if tags is not None:
             if type(tags) != list:
                 tags = [ tags ]
+            tags = map(str,tags)   # tags are always converted to strings!
             prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tags ]
         for a in attr:
             prop = [ p for p in prop if p.has_key(a) ]
@@ -222,9 +273,7 @@ def NodeProperty(tag,nset=None,cload=None,bound=None,displacement=None,coords=No
         csys = CoordSystem(coords,coordset)
     else:
         csys = None
-    nr = the_P.nodeProp(tag,nset,cload,bound,displacement,csys)
-    return the_P.nprop[nr]
-
+    return the_P.nodeProp(tag,nset,cload,bound,displacement,csys)
 
 
 class Property(CascadingDict):
@@ -245,6 +294,7 @@ class Property(CascadingDict):
         CascadingDict.__init__(self, data)
         the_properties[nr] = self 
 
+
 class ModelProperty(Property):
     """Properties related to a model."""
 
@@ -257,40 +307,6 @@ class ModelProperty(Property):
         global the_modelproperties
         CascadingDict.__init__(self, {'amplitude':amplitude,'intprop':intprop,'surface':surface,'interaction':interaction,'damping':damping})
         the_modelproperties[name] = self
-
-
-## class NodeProperty(Property):
-##     """Properties related to a single node."""
-
-##     def __init__(self,nr,nset=None,cload=None,bound=None,displacement=None,coords='cartesian',coordset=[]):
-##         """Create a new node property, empty by default.
-        
-##         Each new node property is stored in the global Dict 'the_nodeproperties'. 
-##         The key to access the node property is the unique number 'nr'.
-
-##         The nodes for which this property holds are identified either by
-##         an explicit 'nset' node list or by the nodes having a matching global
-##         property number set to 'nr'.
-
-##         A node property can hold the following fields:
-##         - nset : a list of node numbers 
-##         - cload : a concentrated load
-##         - bound : a boundary condition
-##         - displacement: prescribe a displacement
-##         - coords: the coordinate system which is used for the definition of
-##           cload and bound. There are three options:
-##             cartesian, spherical and cylindrical
-##         - coordset: a list of 6 coordinates; the two points that specify
-##           the transformation 
-##         """
-##         global the_nodeproperties
-##         if ((cload is None or (isinstance(cload,list) and len(cload)==6)) and
-##             (bound is None or (isinstance(bound,list) and len(bound)==6) or
-##              isinstance(bound, str))): 
-##             CascadingDict.__init__(self, {'nset':nset,'cload':cload,'bound':bound,'displacement':displacement,'coords':coords,'coordset':coordset})
-##             the_nodeproperties[nr] = self
-##         else: 
-##             raise ValueError,"cload/bound property requires a list of 6 items"
 
 
 class ElemProperty(Property):
@@ -442,9 +458,6 @@ class ElemLoad(Property):
 
 if __name__ == "script" or  __name__ == "draw":
 
-    print os.getcwd()
-    print GD.cfg['curfile']
-    print os.path.dirname(GD.cfg['curfile'])
     workHere()
     print os.getcwd()
     P = PropertiesDB()
@@ -452,6 +465,36 @@ if __name__ == "script" or  __name__ == "draw":
     P.setMaterialDB(Mat)
     Sec = SectionDB('../examples/sections.db')
     P.setSectionDB(Sec)
+
+    P.nodeProp(1,cload=[5,0,-75,0,0,0])
+    P.nodeProp(2,bound='pinned')
+    
+    P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
+    P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
+    B1 = [ 1 ] + [ 0 ] * 5
+
+    P.nodeProp(1,cload=P1)
+    P.nodeProp(2,cload=P2)
+    P.nodeProp(7,bound=B1)
+
+    print 'nodeproperties'
+    print P.nprop
+
+    print 'all nodeproperties'
+    print P.getProp('n')
+    
+    print "properties 0 and 2"
+    for p in P.getProp('n',recs=[0,2]):
+        print p
+        
+    print "tag 1 and 7"
+    for p in P.getProp('n',tags=[1,7]):
+        print p
+
+    print "cload attributes"
+    for p in P.getProp('n',attr=['cload']):
+        print p
+    exit()
 
     Stick=Property(1, {'colour':'green', 'name':'Stick', 'weight': 25, 'comment':'This could be anything: a gum, a frog, a usb-stick,...'})
     author=Property(5,{'Name':'Tim Neels', 'Address':CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'})})
@@ -469,10 +512,6 @@ if __name__ == "script" or  __name__ == "draw":
     print the_properties[5]
     print author.street
     print author.Address.street
-    
-    P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
-    P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
-    B1 = [ 0.0 ] * 6
 
     print Mat
     print Sec
@@ -481,7 +520,6 @@ if __name__ == "script" or  __name__ == "draw":
     circ = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel')
 
     print the_sections
-    exit()
 
     q = ElemLoad(magnitude=2.5, loadlabel='PZ')
     top = ElemProperty(1,hor,[q],'B22')
@@ -494,26 +532,12 @@ if __name__ == "script" or  __name__ == "draw":
     bottom=ElemProperty(3,hor,[q])
 
 
-    topnode = NodeProperty(1,cload=[5,0,-75,0,0,0])
-    foot = NodeProperty(2,bound='pinned')
-
-    np = {}
-    np['1'] = NodeProperty(1, cload=P1)
-    np['2'] = NodeProperty(2, cload=P2)
-    np['3'] = np['2']
-    np['3'].bound = B1
-    np['1'].cload[1] = 33.0
-    np['7'] = NodeProperty(7, bound=B1)
-
     for key, item in the_materials.iteritems():
         print key, item
 
     print 'the_properties'
     for key, item in the_properties.iteritems():
         print key, item
-
-    print 'nodeproperties'
-    print P.nprop
     
     print 'the_elemproperties'
     for key, item in the_elemproperties.iteritems():
@@ -533,13 +557,5 @@ if __name__ == "script" or  __name__ == "draw":
     
     for key,item in the_elemproperties.iteritems():
         print key,item.E
-    
-    print "cload attributes"
-    for key,item in P.nprop.iteritems():
-        print key,item.cload
-
-    print "cload attributes"
-    for key,item in np.iteritems():
-        print key,item.cload
 
 # End

@@ -321,31 +321,21 @@ def writeSection(fil, nr):
         warning('Sorry, elementtype %s is not yet supported' % el.elemtype)
     
 
-def transform(fil, propnr):
-    """Transform the nodal coordinates of the nodes with a given property number."""
-    n = the_nodeproperties[propnr]
-    if n.coords.lower()=='cartesian':
-        if n.coordset!=[]:
-            fil.write("""*TRANSFORM, NSET=%s, TYPE=R
-%s,%s,%s,%s,%s,%s
-"""%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
-    elif n.coords.lower()=='spherical':
-        fil.write("""*TRANSFORM, NSET=%s, TYPE=S
-%s,%s,%s,%s,%s,%s
-"""%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
-    elif n.coords.lower()=='cylindrical':
-        fil.write("""*TRANSFORM, NSET=%s, TYPE=C
-%s,%s,%s,%s,%s,%s
-"""%(Nset(propnr),n.coordset[0],n.coordset[1],n.coordset[2],n.coordset[3],n.coordset[4],n.coordset[5]))
-    else:
-        warning('%s is not a valid coordinate system'%the_nodeproperties[propnr].coords)
+def writeTransform(fil,setname,csys):
+    """Write transform command for the given set.
+
+    setname is the name of a node set
+    csys is a CoordSystem.
+    """
+    fil.write("*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys))
+    fil.write("%s,%s,%s,%s,%s,%s\n" % csys.data)
 
     
-def writeBoundaries(fil,tags=None,recs=None,op='MOD'):
+def writeBoundaries(fil,prop,op='MOD'):
     """Write nodal boundary conditions.
-    
-    tags is a list of node record numbers that should be scanned for data.
-    By default, all records will be scanned.
+
+    prop is a list of node property records that should be scanned for
+    bound attributes to write.
 
     By default, the boundary conditions are applied as a modification of the
     existing boundary conditions, i.e. initial conditions and conditions from
@@ -353,27 +343,22 @@ def writeBoundaries(fil,tags=None,recs=None,op='MOD'):
     The user can set op='NEW' to remove the previous conditions.
     This will also remove initial conditions!
     """
-    prop = the_P.getProps('n',recs,tags)
-    print "SELECTED PROPS:"
-    print prop
     for p in prop:
         if p.bound is not None:
             fil.write("*BOUNDARY, OP=%s\n" % op)
-            if isinstance(p.bound,list):
+            if isinstance(p.bound,str):
+                fil.write("%s, %s\n" % (Nset(p.nr),p.bound))
+            else:
                 for b in range(6):
                     if p.bound[b]==1:
-                        fil.write("%s, %s\n" % (Nset(i),b+1))
-            elif isinstance(p.bound,str):
-                fil.write("%s, %s\n" % (Nset(i),p.bound))
-            else:
-                warning("Unrecognized boundary value (%s) skipped" % p.bound)
+                        fil.write("%s, %s\n" % (Nset(p.nr),b+1))
 
 
-def writeDisplacements(fil, recset='ALL', op='MOD'):
+def writeDisplacements(fil,prop,op='MOD'):
     """Write boundary conditions of type BOUNDARY, TYPE=DISPLACEMENT
 
-    recset is a list of node record numbers that should be scanned for data.
-    By default, all records will be scanned.
+    prop is a list of node property records that should be scanned for
+    displ attributes to write.
     
     By default, the boundary conditions are applied as a modification of the
     existing boundary conditions, i.e. initial conditions and conditions from
@@ -381,37 +366,31 @@ def writeDisplacements(fil, recset='ALL', op='MOD'):
     The user can set op='NEW' to remove the previous conditions.
     This will also remove initial conditions!
     """
-    if recset == 'ALL':
-        recset = the_nodeproperties.iterkeys()
-        
-    for i in recset:
-        if the_nodeproperties[i].displacement!=None:
+    for p in prop:
+        if p.displ is not None:
             fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
-            if the_nodeproperties[i].amplitude!=None:
-                fil.write(", AMPLITUDE=%s" % the_nodeproperties[i].amplitude)
+            if p.amplitude is not None:
+                fil.write(", AMPLITUDE=%s" % p.amplitude)
             fil.write("\n")
-            for d in range(len(the_nodeproperties[i].displacement)):
-                fil.write("%s, %s, %s, %s\n" % (Nset(i),the_nodeproperties[i].displacement[d][0],the_nodeproperties[i].displacement[d][0],the_nodeproperties[i].displacement[d][1]))
+            for d in range(len(p.displ)):
+                fil.write("%s, %s, %s, %s\n" % (Nset(p.nr),p.displ[d][0],p.displ[d][0],p.displ[d][1]))
             
             
-def writeCloads(fil, recset='ALL', op='NEW'):
+def writeCloads(fil,prop,op='NEW'):
     """Write cloads.
-    
-    recset is a list of node record numbers that should be scanned for data.
-    By default, all records will be scanned.
+
+    prop is a list of node property records that should be scanned for
+    displ attributes to write.
 
     By default, the loads are applied as new values in the current step.
     The user can set op='MOD' to add the loads to already existing ones.
     """
-    if recset == 'ALL':
-        recset = the_nodeproperties.iterkeys()
-       
     fil.write("*CLOAD, OP=%s\n" % op)
-    for i in recset:
-        if the_nodeproperties[i].cload != None:
-            for cl in range(6):
-                if the_nodeproperties[i].cload[cl] != 0:
-                    fil.write("%s, %s, %s\n" % (Nset(i),cl+1,the_nodeproperties[i].cload[cl]))
+    for p in prop:
+        if p.cload is not None:
+            for i,l in enumerate(p.cload):
+                if l != 0.0:
+                    fil.write("%s, %s, %s\n" % (Nset(p.nr),i+1,l))
 
 
 def writeDloads(fil, recset='ALL', op='NEW'):
@@ -535,6 +514,15 @@ def writeSurface(fil,name=None,abqdata=None):
                     getal=nodes[i]+1
                     fil.write('%s,\n'%getal)
 		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
+
+
+def writeModelProps(fil,prop):
+    for i in the_modelproperties:
+        if the_modelproperties[i].interaction is not None:
+            writeInteraction(fil, i)
+    for i in the_modelproperties:
+        if the_modelproperties[i].damping is not None:
+            writedamping(fil, i)
 
 
 ### Output requests ###################################
@@ -695,15 +683,6 @@ def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
             fil.write("%s\n" % key)
 
 
-def writeModelProps():
-    for i in the_modelproperties:
-        if the_modelproperties[i].interaction is not None:
-            writeInteraction(fil, i)
-    for i in the_modelproperties:
-        if the_modelproperties[i].damping is not None:
-            writedamping(fil, i)
-
-
 def writeFileOutput(fil,resfreq=1,timemarks=False):
     """Write the FILE OUTPUT command for Abaqus/Explicit"""
     fil.write("*FILE OUTPUT, NUMBER INTERVAL=%s" % resfreq)
@@ -720,7 +699,7 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
 class Model(Dict):
     """Contains all model data."""
     
-    def __init__(self,nodes,elems,nodeprop,elemprop,initialboundaries=None):
+    def __init__(self,nodes,elems,nodeprop,elemprop,bound=None):
         """Create new model data.
 
         nodes is an array with nodal coordinates
@@ -741,7 +720,7 @@ class Model(Dict):
         the nodes/elements in Node/Element property records that do not have
         the nset/eset argument set
         
-        initialboundaries is tag/list of the initial boundary conditions.
+        bound is tag/list of the initial boundary conditions.
         The default is to apply ALL boundary conditions initially.
         Specify a (possibly non-existing) tag to override the default.
         """
@@ -751,7 +730,7 @@ class Model(Dict):
                              'elems':map(asarray,elems),
                              'nodeprop':asarray(nodeprop),
                              'elemprop':asarray(elemprop),
-                             'initialboundaries':initialboundaries}) 
+                             'bound':bound}) 
 
 
 ############################################################ STEP
@@ -760,9 +739,8 @@ class Step(Dict):
     """Contains all data about a step."""
     
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
-                 cloadset='ALL',opcl='NEW',dloadset='ALL',opdl='NEW',
-                 boundset=None,opb=None,dispset='ALL',op='MOD',
-                 bulkvisc=[]):
+                 tags=None,
+                 bulkvisc=None):
         """Create new analysis data.
         
         analysis is the analysis type. Should be one of:
@@ -772,24 +750,26 @@ class Step(Dict):
           time inc, step time, min. time inc, max. time inc.
         In most cases, only the step time should be specified.
         If nlgeom='YES', the analysis will be non-linear.
-        cloadset is a list of property numbers of which the cloads will be used in this analysis.
-        dloadset is a list of property numbers of which the dloads will be used in this analysis.
-        boundset is a list of property numbers of which the bounds will be used in this analysis. Initial boundaries are defined in a Model instance.
-        By default, the load is applied as a new load, i.e. loads
-        from previous steps are removed. The user can set op='MOD'
-        to keep/modify the previous loads.
 
-        bulkvisc is a list of two floats (default: [0.06,1.2])
+        tags is a list of property tags to include in this step.
+
+        bulkvisc is a list of two floats (default: [0.06,1.2]), only used
+        in Explicit steps.
         """
+        self.analysis = analysis.upper()
         if type(time) == float:
             time = [ 0., time, 0., 0. ]
-        analysis = analysis.upper()
-        Dict.__init__(self,{'analysis':analysis, 'time':time, 'nlgeom':nlgeom, 'cloadset':cloadset, 'opcl':opcl, 'dloadset':dloadset, 'opdl':opdl, 'boundset':boundset, 'opb': opb, 'dispset' : dispset , 'op': op, 'bulkvisc':bulkvisc})
+        self.time = time
+        self.nlgeom = nlgeom
+        self.tags = tags
+        self.bulkvisc = bulkvisc
 
 
-    def write(self,fil,out=[],res=[],resfreq=1,timemarks=False):
+    def write(self,fil,propDB,out=[],res=[],resfreq=1,timemarks=False):
         """Write a load step.
 
+        propDB is the properties database to use.
+        
         Except for the step data itself, this will also write the passed
         output and result requests.
         out is a list of Output-instances.
@@ -809,18 +789,37 @@ class Step(Dict):
         fil.write("%s, %s, %s, %s\n" % tuple(self.time))
 
         if self.analysis == 'EXPLICIT':
-            if self.bulkvisc:
+            if self.bulkvisc is not None:
                 fil.write("""*BULK VISCOSITY
 %s, %s
 """ % self.bulkvisc)
 
 
-        if self.boundset is not None:
-            writeBoundaries(fil,tags=self.boundset,op=self.opb)
-        writeDisplacements(fil,self.dispset,self.op)
-        writeCloads(fil,self.cloadset,self.opcl)
-        writeDloads(fil,self.dloadset,self.opdl)
-        writeModelProps()
+        prop = propDB.getProp('n',tags=self.tags,attr=['bound'])
+        if prop:
+            GD.message("  Writing step boundary conditions")
+            writeBoundaries(fil,prop)
+     
+        prop = propDB.getProp('n',tags=self.tags,attr=['displ'])
+        if prop:
+            GD.message("  Writing step displacements")
+        writeDisplacements(fil,prop)
+        
+        prop = propDB.getProp('n',tags=self.tags,attr=['cload'])
+        if prop:
+            GD.message("  Writing step cloads")
+        writeCloads(fil,prop)
+
+        prop = propDB.getProp('e',tags=self.tags,attr=['dload'])
+        if prop:
+            GD.message("  Writing step dloads")
+        writeDloads(fil,prop)
+        
+        prop = propDB.getProp('m',tags=self.tags)
+        if prop:
+            GD.message("  Writing step model props")
+        writeModelProps(fil,prop)
+        
         for i in out:
             if i.kind is None:
                 writeStepOutput(fil,**i)
@@ -916,7 +915,7 @@ class Result(Dict):
 class AbqData(CascadingDict):
     """Contains all data required to write the Abaqus input file."""
     
-    def __init__(self, model, steps=[], res=[],out=[]):
+    def __init__(self, model,steps=[],res=[],out=[],prop=the_P):
         """Create new AbqData. 
         
         model is a Model instance.
@@ -924,7 +923,12 @@ class AbqData(CascadingDict):
         res is a list of Result instances.
         out is a list of Output instances.
         """
-        CascadingDict.__init__(self, {'model':model, 'steps':steps, 'res':res, 'out':out})
+        #CascadingDict.__init__(self, {'model':model, 'steps':steps, 'res':res, 'out':out})
+        self.model = model
+        self.steps = steps
+        self.res = res
+        self.out = out
+        self.prop = prop
 
 
     def write(self,jobname=None):
@@ -952,7 +956,7 @@ class AbqData(CascadingDict):
 
         GD.message("Writing node sets")
         nlist = arange(nnod)
-        for i,v in enumerate(the_P.nprop):
+        for i,v in enumerate(self.prop.nprop):
             if v.has_key('nset') and v['nset'] is not None:
                 nodeset = v['nset']
             elif type(v.tag) == int:
@@ -960,8 +964,10 @@ class AbqData(CascadingDict):
             else:
                 continue
             if len(nodeset) > 0:
-                writeSet(fil, 'NSET', Nset(str(i)), nodeset)
-                transform(fil,i)
+                setname = Nset(v.nr)
+                writeSet(fil,'NSET',setname,nodeset)
+                if v.has_key('csys') and v.sys is not None:
+                    writeTransform(fil,setname,v.csys)
 
         GD.message("Writing element sets")
         n=0
@@ -991,29 +997,30 @@ class AbqData(CascadingDict):
         for i in the_elemproperties:
             writeSection(fil,i)
 
-        GD.message("Writing surfaces")
-        for i in the_nodeproperties:
-            if the_nodeproperties[i].surfaces is not None:
-                writeNodeSurface(fil,i,self)
-        for i in the_elemproperties:
-            if the_elemproperties[i].surfaces is not None:
-                writeElemSurface(fil,i,self)
+##         GD.message("Writing surfaces")
+##         for i in the_nodeproperties:
+##             if the_nodeproperties[i].surfaces is not None:
+##                 writeNodeSurface(fil,i,self)
+##         for i in the_elemproperties:
+##             if the_elemproperties[i].surfaces is not None:
+##                 writeElemSurface(fil,i,self)
 
-        GD.message("Writing model properties")
-        for i in the_modelproperties:
-            if the_modelproperties[i].amplitude is not None:
-                GD.message("Writing amplitude: %s" % i)
-                writeAmplitude(fil, i)
-            if the_modelproperties[i].intprop is not None:
-                GD.message("Writing interaction property: %s" % i)
-                writeIntprop(fil, i)
+##         GD.message("Writing model properties")
+##         for i in the_modelproperties:
+##             if the_modelproperties[i].amplitude is not None:
+##                 GD.message("Writing amplitude: %s" % i)
+##                 writeAmplitude(fil, i)
+##             if the_modelproperties[i].intprop is not None:
+##                 GD.message("Writing interaction property: %s" % i)
+##                 writeIntprop(fil, i)
 
         GD.message("Writing initial boundary conditions")
-        writeBoundaries(fil,tags=self.initialboundaries)
-
+        prop = self.prop.getProp('n',tags=self.model.bound,attr=['bound'])
+        writeBoundaries(fil,prop)
+    
         GD.message("Writing steps")
         for a in self.steps:
-            a.write(fil,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
+            a.write(fil,self.prop,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
 
         GD.message("Done")
 
@@ -1033,6 +1040,7 @@ if __name__ == "script" or __name__ == "draw":
 
     from plugins import properties
     reload(properties)
+    from script import workHere
     
     workHere()
     

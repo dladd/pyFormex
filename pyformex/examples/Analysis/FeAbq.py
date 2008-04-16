@@ -97,33 +97,40 @@ F.p[lnodes] = pl
 draw(F,marksize=8)
 NRN = drawNumbers(F)
 
-# The load/bc in the nodes
-NodeProperty(pl,cload=[-10.,0.,0.,0.,0.,0.])
-NodeProperty(pb,bound=[1,1,0,0,0,0])
+# OLD
+## # The load/bc in the nodes
+## NodeProperty(pl,cload=[-10.,0.,0.,0.,0.,0.])
+## NodeProperty(pb,bound=[1,1,0,0,0,0])
 
-# An alternative is to include the node sets explicitely:
-# (the record numbers could be set to any unique number here)
-# Remark that the following definitions do not create duplicate properties,
-# but overwrite (destroy) the above definitions
-NodeProperty(pl,nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
-NodeProperty(pb,nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
+## # An alternative is to include the node sets explicitely:
+## # (the record numbers could be set to any unique number here)
+## # Remark that the following definitions do not create duplicate properties,
+## # but overwrite (destroy) the above definitions
+## NodeProperty(pl,nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
+## NodeProperty(pb,nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
 
 
-# Loads in the second step
-NodeProperty(1000,nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
+## # Loads in the second step
+## NodeProperty(1000,nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
 
-#NEW
-P.nodeProp(nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
+#NEW (all arguments are optional!)
+P.nodeProp(tag='init',nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
 P.nodeProp(tag='step1',nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
 P.nodeProp(tag='step2',nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
 
-print P.getProp('n')
+print "Node properties"
+for p in P.getProp('n'):
+    print p
 
 # Create the Abaqus model
 # A model contains a single set of nodes, one or more sets of elements,
-# a global node property set and a global element property set.
+# and optionally:
+#    a global node property set, (obsolete)
+#    a global element property set, (to become obsolete)
+#    an initial boundary conditions tag/list (default is to impose ALL
+#       defined boundary conditions initially.
 #
-model = Model(nodes, elems, F.p , elemprops)
+model = Model(nodes,elems,F.p,elemprops)
 
 
 # ask default output plus output of S in elements of part B
@@ -144,16 +151,18 @@ res = [ Result(kind='NODE',keys=['U']),
         Result(kind='ELEMENT',keys=['SP','SINV'],set=[pb]),
         ]
 
-# Static(default) step
-step1 = Step(time=[1., 1., 0.01, 1.],cloadset=[pl])
-step2 = Step(time=[1., 1., 0.01, 1.],cloadset=[1000])
+# Define steps (default is static)
+step1 = Step(time=[1., 1., 0.01, 1.],tags=['step1'])
+step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 
 # collect all data
 #
 # !! currently output/result request are global to all steps
 # !! this will be changed in future
 #
-all = AbqData(model,[step1,step2],out=out,res=res)
+# NEW: pass the properties database
+#
+all = AbqData(model,[step1,step2],out=out,res=res,prop=P)
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')
