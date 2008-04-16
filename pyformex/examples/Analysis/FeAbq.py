@@ -33,6 +33,9 @@ draw(parts)
 NRS = [ drawNumbers(i) for i in parts ]
 zoomAll()
 
+# NEW: the parts flagged NEW use the new properties DB
+P = PropertiesDB()
+
 steel = {
     'name': 'steel',
     'young_modulus': 207000,
@@ -105,8 +108,16 @@ NodeProperty(pb,bound=[1,1,0,0,0,0])
 NodeProperty(pl,nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
 NodeProperty(pb,nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
 
+
 # Loads in the second step
 NodeProperty(1000,nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
+
+#NEW
+P.nodeProp(nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
+P.nodeProp(tag='step1',nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
+P.nodeProp(tag='step2',nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
+
+print P.getProp('n')
 
 # Create the Abaqus model
 # A model contains a single set of nodes, one or more sets of elements,
@@ -147,6 +158,6 @@ all = AbqData(model,[step1,step2],out=out,res=res)
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')
     if fn:
-        writeAbqInput(all, jobname=fn)
+        all.write(jobname=fn)
 
 # End

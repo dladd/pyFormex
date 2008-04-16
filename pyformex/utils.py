@@ -245,9 +245,10 @@ def runCommand(cmd,RaiseError=True):
     sta,out = commands.getstatusoutput(cmd)
     if GD.gui:
         GD.gui.setBusy(False)
-    if sta != 0 and RaiseError:
-        GD.debug(out)
-        raise RuntimeError, "Error while executing command:\n  %s" % cmd
+    if sta != 0:
+        GD.message(out)
+        if RaiseError:
+            raise RuntimeError, "Error while executing command:\n  %s" % cmd
     return sta,out
 
 

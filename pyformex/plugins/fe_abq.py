@@ -341,10 +341,10 @@ def transform(fil, propnr):
         warning('%s is not a valid coordinate system'%the_nodeproperties[propnr].coords)
 
     
-def writeBoundaries(fil, recset='ALL', op='MOD'):
+def writeBoundaries(fil,tags=None,recs=None,op='MOD'):
     """Write nodal boundary conditions.
     
-    recset is a list of node record numbers that should be scanned for data.
+    tags is a list of node record numbers that should be scanned for data.
     By default, all records will be scanned.
 
     By default, the boundary conditions are applied as a modification of the
@@ -353,20 +353,20 @@ def writeBoundaries(fil, recset='ALL', op='MOD'):
     The user can set op='NEW' to remove the previous conditions.
     This will also remove initial conditions!
     """
-    if recset == 'ALL':
-        recset = the_nodeproperties.iterkeys()
-
-    for i in recset:
-        if the_nodeproperties[i].bound!=None:
+    prop = the_P.getProps('n',recs,tags)
+    print "SELECTED PROPS:"
+    print prop
+    for p in prop:
+        if p.bound is not None:
             fil.write("*BOUNDARY, OP=%s\n" % op)
-            if isinstance(the_nodeproperties[i].bound,list):
+            if isinstance(p.bound,list):
                 for b in range(6):
-                    if the_nodeproperties[i].bound[b]==1:
+                    if p.bound[b]==1:
                         fil.write("%s, %s\n" % (Nset(i),b+1))
-            elif isinstance(the_nodeproperties[i].bound,str):
-                fil.write("%s, %s\n" % (Nset(i),the_nodeproperties[i].bound))
+            elif isinstance(p.bound,str):
+                fil.write("%s, %s\n" % (Nset(i),p.bound))
             else:
-                warning("The boundaries have to defined in a list 'boundset'")
+                warning("Unrecognized boundary value (%s) skipped" % p.bound)
 
 
 def writeDisplacements(fil, recset='ALL', op='MOD'):
@@ -720,7 +720,7 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
 class Model(Dict):
     """Contains all model data."""
     
-    def __init__(self,nodes,elems,nodeprop,elemprop,initialboundaries='ALL'):
+    def __init__(self,nodes,elems,nodeprop,elemprop,initialboundaries=None):
         """Create new model data.
 
         nodes is an array with nodal coordinates
@@ -741,9 +741,9 @@ class Model(Dict):
         the nodes/elements in Node/Element property records that do not have
         the nset/eset argument set
         
-        initialboundaries is a list of the initial boundaries. The default is
-        to apply ALL boundary conditions initially. Specify a (possibly
-        empty) list to override the default.
+        initialboundaries is tag/list of the initial boundary conditions.
+        The default is to apply ALL boundary conditions initially.
+        Specify a (possibly non-existing) tag to override the default.
         """
         if not type(elems) == list:
             elems = [ elems ]
@@ -816,7 +816,7 @@ class Step(Dict):
 
 
         if self.boundset is not None:
-            writeBoundaries(fil,self.boundset,self.opb)
+            writeBoundaries(fil,tags=self.boundset,op=self.opb)
         writeDisplacements(fil,self.dispset,self.op)
         writeCloads(fil,self.cloadset,self.opcl)
         writeDloads(fil,self.dloadset,self.opdl)
@@ -952,11 +952,13 @@ class AbqData(CascadingDict):
 
         GD.message("Writing node sets")
         nlist = arange(nnod)
-        for i,v in the_nodeproperties.iteritems():
+        for i,v in enumerate(the_P.nprop):
             if v.has_key('nset') and v['nset'] is not None:
                 nodeset = v['nset']
+            elif type(v.tag) == int:
+                nodeset = nlist[self.nodeprop == v.tag]
             else:
-                nodeset = nlist[self.nodeprop == i]
+                continue
             if len(nodeset) > 0:
                 writeSet(fil, 'NSET', Nset(str(i)), nodeset)
                 transform(fil,i)
@@ -1007,7 +1009,7 @@ class AbqData(CascadingDict):
                 writeIntprop(fil, i)
 
         GD.message("Writing initial boundary conditions")
-        writeBoundaries(fil, self.initialboundaries)
+        writeBoundaries(fil,tags=self.initialboundaries)
 
         GD.message("Writing steps")
         for a in self.steps:

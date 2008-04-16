@@ -88,7 +88,7 @@ class SectionDB(Database):
 the_materials = MaterialDB()
 the_sections = SectionDB()
 the_properties = CascadingDict()
-the_nodeproperties = CascadingDict()
+#the_nodeproperties = CascadingDict()
 the_elemproperties = CascadingDict()
 the_modelproperties = CascadingDict()
 
@@ -131,7 +131,7 @@ def checkArray1D(a,size=None,kind=None):
 class PropertiesDB(Dict):
     """A class for all properties"""
 
-    def init(self):
+    def __init__(self):
         print "Initializing the Properties DB"
         self.mats = MaterialDB()
         self.sect = SectionDB()
@@ -178,14 +178,52 @@ class PropertiesDB(Dict):
                 displ = checkArray1D(displ,6,'f')
             if csys is not None and not isinstance(csys,CoordSystem):
                 raise
-
             d = CascadingDict(dict(tag=tag,nset=nset,cload=cload,bound=bound,displ=displ,csys=csys))
-            nr = len(self.nprop) 
+            nr = len(self.nprop)
             self.nprop.append(d)
-            return n
+            print "Created Node Property %s" % nr
+            return nr
         except:
+            print tag,nset,cload,bound,displ,csys
             raise ValueError,"Invalid Node Property skipped"
 
+
+    def getProp(self,kind,recs=None,tags=None,attr=[]):
+        """Return all properties of type kind matching tag and having attr.
+
+        kind is either 'n', 'e' or 'm'
+        If recs is given, it is a list of record numbers or a single number.
+        If a tag or a list of tags is given, only the properties having a
+        matching tag attribute are returned.
+        If a list of attibutes is given, only the properties having those
+        attributes are returned.
+        """
+        prop = getattr(self,kind+'prop')
+        if recs is not None:
+            if type(recs) != list:
+                recs = [ recs ]
+            recs = [ i for i in recs if i < len(prop) ]
+            prop = [ prop[i] for i in recs ]
+        if tags is not None:
+            if type(tags) != list:
+                tags = [ tags ]
+            prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tags ]
+        for a in attr:
+            prop = [ p for p in prop if p.has_key(a) ]
+        return prop
+
+
+# Used as a transitional global DB
+the_P = PropertiesDB()
+
+def NodeProperty(tag,nset=None,cload=None,bound=None,displacement=None,coords=None,coordset=None):
+    
+    if coords is not None:
+        csys = CoordSystem(coords,coordset)
+    else:
+        csys = None
+    nr = the_P.nodeProp(tag,nset,cload,bound,displacement,csys)
+    return the_P.nprop[nr]
 
 
 
@@ -221,38 +259,38 @@ class ModelProperty(Property):
         the_modelproperties[name] = self
 
 
-class NodeProperty(Property):
-    """Properties related to a single node."""
+## class NodeProperty(Property):
+##     """Properties related to a single node."""
 
-    def __init__(self,nr,nset=None,cload=None,bound=None,displacement=None,coords='cartesian',coordset=[]):
-        """Create a new node property, empty by default.
+##     def __init__(self,nr,nset=None,cload=None,bound=None,displacement=None,coords='cartesian',coordset=[]):
+##         """Create a new node property, empty by default.
         
-        Each new node property is stored in the global Dict 'the_nodeproperties'. 
-        The key to access the node property is the unique number 'nr'.
+##         Each new node property is stored in the global Dict 'the_nodeproperties'. 
+##         The key to access the node property is the unique number 'nr'.
 
-        The nodes for which this property holds are identified either by
-        an explicit 'nset' node list or by the nodes having a matching global
-        property number set to 'nr'.
+##         The nodes for which this property holds are identified either by
+##         an explicit 'nset' node list or by the nodes having a matching global
+##         property number set to 'nr'.
 
-        A node property can hold the following fields:
-        - nset : a list of node numbers 
-        - cload : a concentrated load
-        - bound : a boundary condition
-        - displacement: prescribe a displacement
-        - coords: the coordinate system which is used for the definition of
-          cload and bound. There are three options:
-            cartesian, spherical and cylindrical
-        - coordset: a list of 6 coordinates; the two points that specify
-          the transformation 
-        """
-        global the_nodeproperties
-        if ((cload is None or (isinstance(cload,list) and len(cload)==6)) and
-            (bound is None or (isinstance(bound,list) and len(bound)==6) or
-             isinstance(bound, str))): 
-            CascadingDict.__init__(self, {'nset':nset,'cload':cload,'bound':bound,'displacement':displacement,'coords':coords,'coordset':coordset})
-            the_nodeproperties[nr] = self
-        else: 
-            raise ValueError,"cload/bound property requires a list of 6 items"
+##         A node property can hold the following fields:
+##         - nset : a list of node numbers 
+##         - cload : a concentrated load
+##         - bound : a boundary condition
+##         - displacement: prescribe a displacement
+##         - coords: the coordinate system which is used for the definition of
+##           cload and bound. There are three options:
+##             cartesian, spherical and cylindrical
+##         - coordset: a list of 6 coordinates; the two points that specify
+##           the transformation 
+##         """
+##         global the_nodeproperties
+##         if ((cload is None or (isinstance(cload,list) and len(cload)==6)) and
+##             (bound is None or (isinstance(bound,list) and len(bound)==6) or
+##              isinstance(bound, str))): 
+##             CascadingDict.__init__(self, {'nset':nset,'cload':cload,'bound':bound,'displacement':displacement,'coords':coords,'coordset':coordset})
+##             the_nodeproperties[nr] = self
+##         else: 
+##             raise ValueError,"cload/bound property requires a list of 6 items"
 
 
 class ElemProperty(Property):
@@ -474,9 +512,8 @@ if __name__ == "script" or  __name__ == "draw":
     for key, item in the_properties.iteritems():
         print key, item
 
-    print 'the_nodeproperties'    
-    for key, item in the_nodeproperties.iteritems():
-        print key, item
+    print 'nodeproperties'
+    print P.nprop
     
     print 'the_elemproperties'
     for key, item in the_elemproperties.iteritems():
@@ -498,7 +535,7 @@ if __name__ == "script" or  __name__ == "draw":
         print key,item.E
     
     print "cload attributes"
-    for key,item in the_nodeproperties.iteritems():
+    for key,item in P.nprop.iteritems():
         print key,item.cload
 
     print "cload attributes"

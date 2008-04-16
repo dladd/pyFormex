@@ -367,7 +367,6 @@ def create_menu():
         ("Select Step/Inc",selectStepInc),
         ("Show Results",postProc),
         ("---",None),
-        ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
         ]
     return widgets.Menu('Postproc',items=MenuData,parent=GD.gui.menu,before='help')
