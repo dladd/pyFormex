@@ -123,7 +123,7 @@ model = Model(nodes,elems)
 # Request default output plus output of S in elements of part B
 out = [ Output(type='history'),
         Output(type='field'),
-        Output(type='field',kind='element',set=[pb],keys=['S']),
+        Output(type='field',kind='element',set=Eset('grp',1),keys=['S']),
         ]
 
 # Create requests for output to the .fil file.
@@ -135,7 +135,7 @@ out = [ Output(type='history'),
 res = [ Result(kind='NODE',keys=['U']),
         Result(kind='ELEMENT',keys=['S']),
         Result(kind='ELEMENT',keys=['S'],pos='AVERAGED AT NODES'),
-        Result(kind='ELEMENT',keys=['SP','SINV'],set=[pb]),
+        Result(kind='ELEMENT',keys=['SP','SINV'],set=Eset('grp',1)),
         ]
 
 # Define steps (default is static)
@@ -149,7 +149,7 @@ step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 #
 # NEW: pass the properties database
 #
-all = AbqData(model,P,[step1,step2],out=out,res=res)
+all = AbqData(model,prop=P,steps=[step1,step2],out=out,res=res)
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')

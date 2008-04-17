@@ -369,8 +369,7 @@ class PropertyDB(Dict):
                 raise
             d.nr = len(self.nprop)
             self.nprop.append(d)
-            #print "Created Node Property %s" % d
-            return d
+            return d.nr
         except:
             print "tag=%s,nset=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,nset,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property skipped"
@@ -405,16 +404,14 @@ class PropertyDB(Dict):
                 d.dload = dload
             d.nr = len(self.eprop)
             self.eprop.append(d)
-            print "Created Elem Property %s" % d
-            return d
+            return d.nr
         except:
             print "tag=%s,eset=%s,eltype=%s,section=%s,dload=%s" % (tag,eset,eltype,section,dload)
             raise ValueError,"Invalid Node Property skipped"
 
 
 # Used as a transitional global DB, will disappear in future
-PropertiesDB = PropertyDB
-the_P = PropertiesDB()
+the_P = PropertyDB()
 
 def NodeProperty(tag,nset=None,cload=None,bound=None,displacement=None,coords=None,coordset=None):
     

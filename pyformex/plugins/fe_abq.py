@@ -837,22 +837,22 @@ class Step(Dict):
         prop = propDB.getProp('n',tags=self.tags,attr=['displ'])
         if prop:
             GD.message("  Writing step displacements")
-        writeDisplacements(fil,prop)
+            writeDisplacements(fil,prop)
         
         prop = propDB.getProp('n',tags=self.tags,attr=['cload'])
         if prop:
             GD.message("  Writing step cloads")
-        writeCloads(fil,prop)
+            writeCloads(fil,prop)
 
         prop = propDB.getProp('e',tags=self.tags,attr=['dload'])
         if prop:
             GD.message("  Writing step dloads")
-        writeDloads(fil,prop)
+            writeDloads(fil,prop)
         
         prop = propDB.getProp('m',tags=self.tags)
         if prop:
             GD.message("  Writing step model props")
-        writeModelProps(fil,prop)
+            writeModelProps(fil,prop)
         
         for i in out:
             if i.kind is None:
@@ -891,7 +891,7 @@ class Output(Dict):
         
           set is single item or a list of items, where each item is either:
             - a property number
-            - a node set name
+            - a node/elem set name
             for which the results should be written
           If no set is specified, the default is 'Nall' for kind=='NODE'
           and 'Eall' for kind='ELEMENT'
@@ -925,7 +925,7 @@ class Result(Dict):
         
         set is single item or a list of items, where each item is either:
           - a property number
-          - a node set name
+          - a node/elem set name
           for which the results should be written
         If no set is specified, the default is 'Nall' for kind=='NODE'
         and 'Eall' for kind='ELEMENT'
@@ -949,17 +949,17 @@ class Result(Dict):
 class AbqData(CascadingDict):
     """Contains all data required to write the Abaqus input file."""
     
-    def __init__(self,model,prop=the_P,bound=None,steps=[],res=[],out=[]):
+    def __init__(self,model,prop=the_P,steps=[],res=[],out=[],bound=None):
         """Create new AbqData. 
         
         model is a Model instance.
         prop is the property database.
-        bound is tag/list of the initial boundary conditions.
-          The default is to apply ALL boundary conditions initially.
-          Specify a (possibly non-existing) tag to override the default.
         steps is a list of Step instances.
         res is a list of Result instances.
         out is a list of Output instances.
+        bound is tag/list of the initial boundary conditions.
+          The default is to apply ALL boundary conditions initially.
+          Specify a (possibly non-existing) tag to override the default.
         """
         self.model = model
         self.prop = prop
