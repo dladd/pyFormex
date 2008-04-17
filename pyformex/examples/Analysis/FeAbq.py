@@ -19,7 +19,7 @@ nb,mb = 3,4  # size of domain B
 # Make sure the property numbers never clash!
 pa,pb,pc = 3,4,5 # Properties corresponding to domains A,B,C
 pb1 = 2 # Property for part of domain B
-pb,pl = 1,6 # Properties corresponding to boundary/loaded nodes
+pbc,pld = 1,6 # Properties corresponding to boundary/loaded nodes
 
 A = triquad().replic2(na,ma,1,1).setProp(pa)
 B = quad().replic2(nb,mb,1,1).translate([na,0,0]).setProp(pb)
@@ -33,9 +33,25 @@ draw(parts)
 NRS = [ drawNumbers(i) for i in parts ]
 zoomAll()
 
-# NEW: the parts flagged NEW use the new properties DB
-P = PropertiesDB()
+# Create the finite element model
+femodels = [part.feModel() for part in parts]
+nodes,elems = mergeModels(femodels)
+print "===================\nMERGED MODEL"
+print "NODES"
+print nodes
+for i,e in enumerate(elems):
+    print "PART %s" %i
+    print e
+print "==================="
 
+# Transfer the properties from the parts in a global set
+elemprops = concatenate([part.p for part in parts])
+
+# Create the property database
+P = PropertyDB()
+
+# In this simple example, we do not use a material/section database,
+# but define the data directly
 steel = {
     'name': 'steel',
     'young_modulus': 207000,
@@ -64,24 +80,19 @@ print thin_plate
 print medium_plate
 print thick_plate
 
-# Attribute the element properties
-ElemProperty(pa,ElemSection(section=thin_plate,material=steel),elemtype='CPS3')
-ElemProperty(pb,ElemSection(section=thick_plate,material=steel),elemtype='CPS4')
-ElemProperty(pb1,ElemSection(section=thick_plate,material=steel),elemtype='CPS4')
-ElemProperty(pc,ElemSection(section=medium_plate,material=steel),elemtype='CPS3')
+# Create element sets according to the properties pa,pb,pb1,pc:
+esets = {}
+esets.update([(v,where(elemprops==v)[0]) for v in [pa,pb,pb1,pc]])
 
-# Create the finite element model
-femodels = [part.feModel() for part in parts]
-nodes,elems = mergeModels(femodels)
-print "===================\nMERGED MODEL"
-print "NODES"
-print nodes
-for i,e in enumerate(elems):
-    print "PART %s" %i
-    print e
-print "==================="
-#nodes,index = mergeNodes([part.feModel()[0] for part in parts])
-elemprops = concatenate([part.p for part in parts])
+# Set the element properties
+P.elemProp(eset=esets[pa],eltype='CPS3',section=ElemSection(section=thin_plate,material=steel))
+P.elemProp(eset=esets[pb],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
+P.elemProp(eset=esets[pb1],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
+P.elemProp(eset=esets[pc],eltype='CPS3',section=ElemSection(section=medium_plate,material=steel))
+
+print "Element properties"
+for p in P.getProp('e'):
+    print p
 
 # Set the nodal properties
 xmin,xmax = nodes.bbox()[:,0]
@@ -92,57 +103,33 @@ print "Boundary nodes: %s" % bnodes
 print "Loaded nodes: %s" % lnodes
 
 F = Formex(nodes).setProp(0) # To visualize the node properties
-F.p[bnodes] = pb
-F.p[lnodes] = pl
+F.p[bnodes] = pbc
+F.p[lnodes] = pld
 draw(F,marksize=8)
 NRN = drawNumbers(F)
 
-# OLD
-## # The load/bc in the nodes
-## NodeProperty(pl,cload=[-10.,0.,0.,0.,0.,0.])
-## NodeProperty(pb,bound=[1,1,0,0,0,0])
-
-## # An alternative is to include the node sets explicitely:
-## # (the record numbers could be set to any unique number here)
-## # Remark that the following definitions do not create duplicate properties,
-## # but overwrite (destroy) the above definitions
-## NodeProperty(pl,nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
-## NodeProperty(pb,nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
-
-
-## # Loads in the second step
-## NodeProperty(1000,nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
-
-#NEW (all arguments are optional!)
-P.nodeProp(tag='init',nset=where(F.p==pb)[0],bound=[1,1,0,0,0,0])
-P.nodeProp(tag='step1',nset=where(F.p==pl)[0],cload=[-10.,0.,0.,0.,0.,0.])
-P.nodeProp(tag='step2',nset=where(F.p==pl)[0],cload=[-10.,10.,0.,0.,0.,0.])
+P.nodeProp(tag='init',nset=where(F.p==pbc)[0],bound=[1,1,0,0,0,0])
+P.nodeProp(tag='step1',nset=where(F.p==pld)[0],cload=[-10.,0.,0.,0.,0.,0.])
+P.nodeProp(tag='step2',nset=where(F.p==pld)[0],cload=[-10.,10.,0.,0.,0.,0.])
 
 print "Node properties"
 for p in P.getProp('n'):
     print p
 
 # Create the Abaqus model
-# A model contains a single set of nodes, one or more sets of elements,
-# and optionally:
-#    a global node property set, (obsolete)
-#    a global element property set, (to become obsolete)
-#    an initial boundary conditions tag/list (default is to impose ALL
-#       defined boundary conditions initially.
-#
-model = Model(nodes,elems,F.p,elemprops)
+# A model contains a single set of nodes, one or more sets of elements
+model = Model(nodes,elems)
 
-
-# ask default output plus output of S in elements of part B
+# Request default output plus output of S in elements of part B
 out = [ Output(type='history'),
         Output(type='field'),
         Output(type='field',kind='element',set=[pb],keys=['S']),
         ]
 
-# Create output request to the .fil file.
-# In this case we request :
+# Create requests for output to the .fil file.
 # - the displacements in all nodes
 # - the stress components in all elements
+# - the stresses averaged at the nodes
 # - the principal stresses and stress invariants in the elements of part B.
 # (add output='PRINT' to get the results printed in the .dat file)
 res = [ Result(kind='NODE',keys=['U']),
@@ -162,11 +149,11 @@ step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 #
 # NEW: pass the properties database
 #
-all = AbqData(model,[step1,step2],out=out,res=res,prop=P)
+all = AbqData(model,P,[step1,step2],out=out,res=res)
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')
     if fn:
-        all.write(jobname=fn)
+        all.write(jobname=fn,group_by_group=True)
 
 # End

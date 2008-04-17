@@ -69,7 +69,7 @@ def writeHeading(fil, text=''):
     fil.write(head)
 
 
-def writeNodes(fil, nodes, name='Nall', nofs=1):
+def writeNodes(fil,nodes,name='Nall',nofs=1):
     """Write nodal coordinates.
 
     The nodes are added to the named node set. 
@@ -85,7 +85,7 @@ def writeNodes(fil, nodes, name='Nall', nofs=1):
         fil.write('*NSET, NSET=Nall\n%s\n' % name)
 
 
-def writeElems(fil, elems, type, name='Eall', eofs=1, nofs=1):
+def writeElems(fil,elems,type,name='Eall',eid=None,eofs=1,nofs=1):
     """Write element group of given type.
 
     elems is the list with the element node numbers.
@@ -93,17 +93,22 @@ def writeElems(fil, elems, type, name='Eall', eofs=1, nofs=1):
     If a name different from 'Eall' is specified, the elements will also
     be added to a set named 'Eall'.
     The eofs and nofs specify offsets for element and node numbers.
-    The default is 1, because Abaqus numbering starts at 1.  
+    The default is 1, because Abaqus numbering starts at 1.
+    If eid is specified, it contains the element numbers increased with eofs.
     """
     fil.write('*ELEMENT, TYPE=%s, ELSET=%s\n' % (type.upper(),name))
     nn = elems.shape[1]
     fmt = '%d' + nn*', %d' + '\n'
-    for i,e in enumerate(elems+nofs):
-        fil.write(fmt % ((i+eofs,)+tuple(e)))
-    writeSubset(fil, 'ELSET', 'Eall', name)
+    if eid is None:
+        eid = arange(elems.shape[0])
+    else:
+        eid = asarray(eid)
+    for i,e in zip(eid+eofs,elems+nofs):
+        fil.write(fmt % ((i,)+tuple(e)))
+    writeSubset(fil,'ELSET','Eall',name)
 
 
-def writeSet(fil, type, name, set, ofs=1):
+def writeSet(fil,type,name,set,ofs=1):
     """Write a named set of nodes or elements (type=NSET|ELSET)"""
     fil.write("*%s,%s=%s\n" % (type,type,name))
     for i in asarray(set)+ofs:
@@ -147,11 +152,11 @@ def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
 
 
 materialswritten=[]
-def writeMaterial(fil, mat):
+def writeMaterial(fil,mat):
     """Write a material section.
     
     mat is the property dict of the material.
-    If the matrial has a name and has already been written, this function
+    If the material has a name and has already been written, this function
     does nothing.
     """
     if mat.name is not None and mat.name not in materialswritten:
@@ -178,6 +183,15 @@ def writeMaterial(fil, mat):
 		fil.write("\n")
 
 
+def writeTransform(fil,setname,csys):
+    """Write transform command for the given set.
+
+    setname is the name of a node set
+    csys is a CoordSystem.
+    """
+    fil.write("*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys))
+    fil.write("%s,%s,%s,%s,%s,%s\n" % csys.data)
+
 
 ##################################################
 ## Some higher level functions, interfacing with the properties module
@@ -196,12 +210,14 @@ solid2d_elems = plane_stress_elems + plane_strain_elems + generalized_plane_stra
 solid3d_elems = ['C3D4', 'C3D4H','C3D6', 'C3D6H', 'C3D8','C3D8H','C3D8R', 'C3D8RH','C3D10','C3D10H','C3D10M','C3D10MH','C3D15','C3D15H','C3D20','C3D20H','C3D20R','C3D20RH',]
 
 
-def writeSection(fil, nr):
+def writeSection(fil,prop):
     """Write an element section for the named element set.
-    
-    nr is the property number of the element set.
+
+    prop is a an element property record with a section and eltype attribute
     """
-    el = the_elemproperties[nr]
+    setname = Eset(prop.nr)
+    el = prop.section
+    eltype = prop.eltype
 
     mat = el.material
     if mat is not None:
@@ -210,16 +226,16 @@ def writeSection(fil, nr):
     ############
     ##FRAME elements
     ##########################
-    if el.elemtype.upper() in ['FRAME3D', 'FRAME2D']:
+    if eltype.upper() in ['FRAME3D', 'FRAME2D']:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*FRAME SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(Eset(nr),float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+%s, %s, %s, %s, %s \n"""%(setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
             fil.write("""*FRAME SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
-%s \n"""%(Eset(nr),float(el.density),float(el.radius)))
+%s \n"""%(setname,float(el.density),float(el.radius)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
@@ -227,43 +243,43 @@ def writeSection(fil, nr):
     ##############
     ##connector elements
     ##########################  
-    elif el.elemtype.upper() in ['CONN3D2', 'CONN2D2']:
+    elif eltype.upper() in ['CONN3D2', 'CONN2D2']:
         if el.sectiontype.upper() != 'GENERAL':
             fil.write("""*CONNECTOR SECTION,ELSET=%s
 %s
-""" %(Eset(nr),el.sectiontype.upper()))
+""" %(setname,el.sectiontype.upper()))
 
     ############
     ##TRUSS elements
     ##########################  
-    elif el.elemtype.upper() in ['T2D2', 'T2D2H' , 'T2D3', 'T2D3H', 'T3D2', 'T3D2H', 'T3D3', 'T3D3H']:
+    elif eltype.upper() in ['T2D2', 'T2D2H' , 'T2D3', 'T2D3H', 'T3D2', 'T3D2H', 'T3D3', 'T3D3H']:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s
-""" %(Eset(nr),el.material.name, float(el.cross_section)))
+""" %(setname,el.material.name, float(el.cross_section)))
         elif el.sectiontype.upper() == 'CIRC':
             fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s
-""" %(Eset(nr),el.material.name, float(el.radius)**2*pi))
+""" %(setname,el.material.name, float(el.radius)**2*pi))
 
     ############
     ##BEAM elements
     ##########################
-    elif el.elemtype.upper() in ['B21', 'B21H','B22', 'B22H', 'B23','B23H','B31', 'B31H','B32','B32H','B33','B33H']:
+    elif eltype.upper() in ['B21', 'B21H','B22', 'B22H', 'B23','B23H','B31', 'B31H','B32','B32H','B33','B33H']:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(Eset(nr),float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+%s, %s, %s, %s, %s \n"""%(setname,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
             if el.orientation != None:
                 fil.write("%s,%s,%s"%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("\n %s, %s \n"%(float(el.young_modulus),float(el.shear_modulus)))
         if el.sectiontype.upper() == 'CIRC':
             fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
-%s \n"""%(Eset(nr),float(el.density),float(el.radius)))
+%s \n"""%(setname,float(el.density),float(el.radius)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
 	if el.sectiontype.upper() == 'RECT':
-            fil.write('*BEAM SECTION, ELSET=%s, material=%s,\n** Section: %s  Profile: %s\ntemperature=GRADIENTS, SECTION=RECT\n %s,%s\n' %(Eset(nr),el.material.name,el.name,el.name,float(el.height),float(el.width)))
+            fil.write('*BEAM SECTION, ELSET=%s, material=%s,\n** Section: %s  Profile: %s\ntemperature=GRADIENTS, SECTION=RECT\n %s,%s\n' %(setname,el.material.name,el.name,el.name,float(el.height),float(el.width)))
             if el.orientation != None:
                 fil.write("""%s,%s,%s\n"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
 		
@@ -271,46 +287,46 @@ def writeSection(fil, nr):
     ############
     ## SHELL elements
     ##########################
-    elif el.elemtype.upper() in ['STRI3', 'S3','S3R', 'S3RS', 'STRI65','S4','S4R', 'S4RS','S4RSW','S4R5','S8R','S8R5', 'S9R5',]:
+    elif eltype.upper() in ['STRI3', 'S3','S3R', 'S3RS', 'STRI65','S4','S4R', 'S4RS','S4RSW','S4R5','S8R','S8R5', 'S9R5',]:
         if el.sectiontype.upper() == 'SHELL':
             if mat is not None:
                 fil.write("""*SHELL SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (Eset(nr),mat.name,float(el.thickness)))
+%s \n""" % (setname,mat.name,float(el.thickness)))
 
     ############
     ## MEMBRANE elements
     ##########################
-    elif el.elemtype.upper() in ['M3D3', 'M3D4','M3D4R', 'M3D6', 'M3D8','M3D8R','M3D9', 'M3D9R',]:
+    elif eltype.upper() in ['M3D3', 'M3D4','M3D4R', 'M3D6', 'M3D8','M3D8R','M3D9', 'M3D9R',]:
         if el.sectiontype.upper() == 'MEMBRANE':
             if mat is not None:
                 fil.write("""*MEMBRANE SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (Eset(nr),mat.name,float(el.thickness)))
+%s \n""" % (setname,mat.name,float(el.thickness)))
 
 
     ############
     ## 3DSOLID elements
     ##########################
-    elif el.elemtype.upper() in solid3d_elems:
+    elif eltype.upper() in solid3d_elems:
         if el.sectiontype.upper() == '3DSOLID':
             if mat is not None:
                 fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (Eset(nr),mat.name,1.))
+%s \n""" % (setname,mat.name,1.))
 
     ############
     ## 2D SOLID elements
     ##########################
-    elif el.elemtype.upper() in solid2d_elems:
+    elif eltype.upper() in solid2d_elems:
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
                 fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (Eset(nr),mat.name,float(el.thickness)))
+%s \n""" % (setname,mat.name,float(el.thickness)))
             
     ############
     ## RIGID elements
     ##########################
-    elif el.elemtype.upper() in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
+    elif eltype.upper() in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
         if el.sectiontype.upper() == 'RIGID':
-            fil.write("""*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n""" % (el.nodeset,el.density,Eset(nr)))
+            fil.write("""*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n""" % (el.nodeset,el.density,setname))
 
 
 
@@ -318,17 +334,7 @@ def writeSection(fil, nr):
     ## UNSUPPORTED elements
     ##########################
     else:
-        warning('Sorry, elementtype %s is not yet supported' % el.elemtype)
-    
-
-def writeTransform(fil,setname,csys):
-    """Write transform command for the given set.
-
-    setname is the name of a node set
-    csys is a CoordSystem.
-    """
-    fil.write("*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys))
-    fil.write("%s,%s,%s,%s,%s,%s\n" % csys.data)
+        warning('Sorry, elementtype %s is not yet supported' % eltype)
 
     
 def writeBoundaries(fil,prop,op='MOD'):
@@ -697,9 +703,9 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
 
 
 class Model(Dict):
-    """Contains all model data."""
+    """Contains all FE model data."""
     
-    def __init__(self,nodes,elems,nodeprop,elemprop,bound=None):
+    def __init__(self,nodes,elems):
         """Create new model data.
 
         nodes is an array with nodal coordinates
@@ -713,27 +719,55 @@ class Model(Dict):
           fe.mergeModels([Fi.feModel() for Fi in FL])
         will return the (nodes,elems) tuple to create the Model.
 
-        nodeprop is a list of global node property numbers.
-        elemprop is a list of global element property numbers.
-
-        The global node and element property numbers are used to identify
-        the nodes/elements in Node/Element property records that do not have
-        the nset/eset argument set
-        
-        bound is tag/list of the initial boundary conditions.
-        The default is to apply ALL boundary conditions initially.
-        Specify a (possibly non-existing) tag to override the default.
         """
         if not type(elems) == list:
             elems = [ elems ]
-        Dict.__init__(self, {'nodes':asarray(nodes),
-                             'elems':map(asarray,elems),
-                             'nodeprop':asarray(nodeprop),
-                             'elemprop':asarray(elemprop),
-                             'bound':bound}) 
+        self.nodes = asarray(nodes)
+        self.elems = map(asarray,elems)
+        nelems = [elems.shape[0] for elems in self.elems]
+        self.celems = cumsum([0]+nelems)
+        GD.message("Number of nodes: %s" % self.nodes.shape[0])
+        GD.message("Number of elements: %s" % self.celems[-1])
+        GD.message("Number of element groups: %s" % len(nelems))
+        GD.message("Number of elements per group: %s" % nelems)
 
 
-############################################################ STEP
+    def splitElems(self,set):
+        """Splits a set of element numbers over the element groups.
+
+        Returns two lists of element sets, the first in global numbering,
+        the second in group numbering.
+        Each item contains the element numbers from the given set that
+        belong to the corresponding group.
+        """
+        set = unique1d(set)
+        split = []
+        n = 0
+        for e in self.celems[1:]:
+            i = set.searchsorted(e)
+            split.append(set[n:i])
+            n = i
+
+        return split,[ asarray(s) - ofs for s,ofs in zip(split,self.celems) ]
+        
+ 
+    def getElems(self,sets):
+        """Return the definitions of the elements in sets.
+
+        sets should be a list of element sets with length equal to the
+        number of element groups. Each set contains element numbers local
+        to that group.
+        
+        As the elements can be grouped according to plexitude,
+        this function returns a list of element arrays matching
+        the element groups in self.elems. Some of these arrays may
+        be empty.
+
+        It also provide the global and group element numbers, since they
+        had to be calculated anyway.
+        """
+        return [ e[s] for e,s in zip(self.elems,sets) ]
+        
         
 class Step(Dict):
     """Contains all data about a step."""
@@ -915,23 +949,27 @@ class Result(Dict):
 class AbqData(CascadingDict):
     """Contains all data required to write the Abaqus input file."""
     
-    def __init__(self, model,steps=[],res=[],out=[],prop=the_P):
+    def __init__(self,model,prop=the_P,bound=None,steps=[],res=[],out=[]):
         """Create new AbqData. 
         
         model is a Model instance.
+        prop is the property database.
+        bound is tag/list of the initial boundary conditions.
+          The default is to apply ALL boundary conditions initially.
+          Specify a (possibly non-existing) tag to override the default.
         steps is a list of Step instances.
         res is a list of Result instances.
         out is a list of Output instances.
         """
-        #CascadingDict.__init__(self, {'model':model, 'steps':steps, 'res':res, 'out':out})
         self.model = model
+        self.prop = prop
+        self.bound = bound
         self.steps = steps
         self.res = res
         self.out = out
-        self.prop = prop
 
 
-    def write(self,jobname=None):
+    def write(self,jobname=None,group_by_eset=True,group_by_group=False):
         """Write an Abaqus input file.
 
         job is the name of the inputfile. If None is specified, it is
@@ -947,8 +985,8 @@ class AbqData(CascadingDict):
         GD.message("Writing to file %s" % (filename))
 
         writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
-    Script: %s 
-    """ % (jobname, datetime.date.today(), GD.scriptName))
+Script: %s 
+""" % (jobname, datetime.date.today(), GD.scriptName))
 
         nnod = self.nodes.shape[0]
         GD.message("Writing %s nodes" % nnod)
@@ -956,47 +994,45 @@ class AbqData(CascadingDict):
 
         GD.message("Writing node sets")
         nlist = arange(nnod)
-        for i,v in enumerate(self.prop.nprop):
-            if v.has_key('nset') and v['nset'] is not None:
-                nodeset = v['nset']
-            elif type(v.tag) == int:
-                nodeset = nlist[self.nodeprop == v.tag]
-            else:
-                continue
-            if len(nodeset) > 0:
-                setname = Nset(v.nr)
-                writeSet(fil,'NSET',setname,nodeset)
-                if v.has_key('csys') and v.sys is not None:
-                    writeTransform(fil,setname,v.csys)
+        for p in self.prop.getProp('n',attr=['nset']):
+            set = p.nset
+            if set is not None and len(set) > 0:
+                setname = Nset(p.nr)
+                writeSet(fil,'NSET',setname,set)
+                if p.has_key('csys') and p.sys is not None:
+                    writeTransform(fil,setname,p.csys)
 
         GD.message("Writing element sets")
-        n=0
-        # we process the elementgroups one by one
-        GD.message("Number of element groups: %s" % len(self.elems))
-        for j,elems in enumerate(self.elems):
-            ne = len(elems)
-            nlist = arange(ne)           # The element numbers for this group
-            eprop = self.elemprop[n:n+ne] # The properties in this group
-            GD.message("Number of elements in group %s: %s" % (j,ne))
-            for i,v in the_elemproperties.iteritems():
-                if v.has_key('eset') and v['eset'] is not None:
-                    elemset = v['eset']
-                else:
-                    elemset = nlist[eprop == i] # The elems with property i
-                if len(elemset) > 0:
-                    print "Elements in group %s with property %s: %s" % (j,i,elemset)
-                    subsetname = '%s' % Eset(j,i)
-                    writeElems(fil, elems[elemset],the_elemproperties[i].elemtype,subsetname,eofs=n+1)
-                    n += len(elemset)
-                    writeSubset(fil, 'ELSET', Eset(i), subsetname)
-        if sum([len(elems) for elems in self.elems]) != n:
-            GD.message("!!Not all elements have been written out!!")
-        GD.message("Total number of elements: %s" % n)
+        nelems = 0
+        for p in self.prop.getProp('e',attr=['eltype','eset']):
+            print 'Elements of type %s: %s' % (p.eltype,p.eset)
+            set = p.eset
+            if set is not None and len(set) > 0:
+                setname = Eset(p.nr)
+                gl,gr = self.model.splitElems(set)
+                elems = self.model.getElems(gr)
+                for i,elnrs,els in zip(range(len(gl)),gl,elems):
+                    grpname = Eset('grp',i)
+                    subsetname = Eset(p.nr,'grp',i,)
+                    nels = len(els)
+                    if nels > 0:
+                        GD.message("Writing %s elements from group %s" % (nels,i))
+                        writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
+                        nelems += nels
+                        if group_by_eset:
+                            writeSubset(fil,'ELSET',setname,subsetname)
+                        if group_by_group:
+                            writeSubset(fil,'ELSET',grpname,subsetname)
+                    
+        telems = self.model.celems[-1]
+        GD.message("Total number of elements: %s" % telems)
+        if nelems != telems:
+            GD.message("!! Number of elements written: %s !!" % nelems)
 
         GD.message("Writing element sections")
-        for i in the_elemproperties:
-            writeSection(fil,i)
-
+        for p in self.prop.getProp('e',attr=['section','eltype']):
+            writeSection(fil,p)
+        
 ##         GD.message("Writing surfaces")
 ##         for i in the_nodeproperties:
 ##             if the_nodeproperties[i].surfaces is not None:
@@ -1015,13 +1051,15 @@ class AbqData(CascadingDict):
 ##                 writeIntprop(fil, i)
 
         GD.message("Writing initial boundary conditions")
-        prop = self.prop.getProp('n',tags=self.model.bound,attr=['bound'])
-        writeBoundaries(fil,prop)
+        prop = self.prop.getProp('n',tags=self.bound,attr=['bound'])
+        if prop:
+            writeBoundaries(fil,prop)
     
         GD.message("Writing steps")
         for a in self.steps:
             a.write(fil,self.prop,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
 
+        fil.close()
         GD.message("Done")
 
 
@@ -1038,6 +1076,9 @@ def writeAbqInput(abqdata, jobname=None):
 
 if __name__ == "script" or __name__ == "draw":
 
+    print "See the FeAbq example for the use of this module."
+    exit()
+
     from plugins import properties
     reload(properties)
     from script import workHere
@@ -1048,8 +1089,8 @@ if __name__ == "script" or __name__ == "draw":
     F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
     draw(F)
     
-    # Create p[roperties database
-    P = properties.PropertiesDB()
+    # Create properties database
+    P = properties.PropertyDB()
     #install example databases
     # either like this
     Mat = MaterialDB('../../examples/materials.db')
@@ -1069,8 +1110,8 @@ if __name__ == "script" or __name__ == "draw":
     np2=NodeProperty(8,cload=[9,2,5,3,0,4], bound='pinned')
     np3=NodeProperty(7,None,[1,1,1,0,0,1], displacement=[[2,6],[4,8]])
     bottom = ElemProperty(12,S2,[BL1],'T2D3')
-    top = ElemProperty(2,S2,[BL2],elemtype='FRAME2D')
-    diag = ElemProperty(8,S3,elemtype='conn3d2')
+    top = ElemProperty(2,S2,[BL2],eltype='FRAME2D')
+    diag = ElemProperty(8,S3,eltype='conn3d2')
     
     #creating the input file
     old = seterr(all='ignore')
