@@ -275,7 +275,15 @@ int process_data() {
   case 12:  do_elemout("SINV"); break;
   case 13:  do_elemout("SF"); break;
   case 101: do_nodeout("U"); break;
+  case 102: do_nodeout("V"); break;
+  case 103: do_nodeout("A"); break;
+  case 104: do_nodeout("RF"); break;
+  case 105: do_nodeout("EPOT"); break;
+  case 106: do_nodeout("CF"); break;
   case 107: do_nodeout("COORD"); break;
+  case 108: do_nodeout("POR"); break;
+  case 109: do_nodeout("RVF"); break;
+  case 110: do_nodeout("RVT"); break;
 
   case 1999: do_total_energies(); break;
   default: printf("D.Unknown(%lld)\n",key);

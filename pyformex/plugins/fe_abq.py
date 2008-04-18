@@ -22,7 +22,7 @@ from plugins.properties import *
 from mydict import *
 import globaldata as GD
 import datetime
-import os
+import os,sys
 
 
 ##################################################
@@ -190,7 +190,7 @@ def writeTransform(fil,setname,csys):
     csys is a CoordSystem.
     """
     fil.write("*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys))
-    fil.write("%s,%s,%s,%s,%s,%s\n" % csys.data)
+    fil.write("%s,%s,%s,%s,%s,%s\n" % tuple(csys.data.ravel()))
 
 
 ##################################################
@@ -350,14 +350,13 @@ def writeBoundaries(fil,prop,op='MOD'):
     This will also remove initial conditions!
     """
     for p in prop:
-        if p.bound is not None:
-            fil.write("*BOUNDARY, OP=%s\n" % op)
-            if isinstance(p.bound,str):
-                fil.write("%s, %s\n" % (Nset(p.nr),p.bound))
-            else:
-                for b in range(6):
-                    if p.bound[b]==1:
-                        fil.write("%s, %s\n" % (Nset(p.nr),b+1))
+        fil.write("*BOUNDARY, OP=%s\n" % op)
+        if isinstance(p.bound,str):
+            fil.write("%s, %s\n" % (Nset(p.nr),p.bound))
+        else:
+            for b in range(6):
+                if p.bound[b]==1:
+                    fil.write("%s, %s\n" % (Nset(p.nr),b+1))
 
 
 def writeDisplacements(fil,prop,op='MOD'):
@@ -373,14 +372,13 @@ def writeDisplacements(fil,prop,op='MOD'):
     This will also remove initial conditions!
     """
     for p in prop:
-        if p.displ is not None:
-            fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
-            if p.amplitude is not None:
-                fil.write(", AMPLITUDE=%s" % p.amplitude)
-            fil.write("\n")
-            for d in range(len(p.displ)):
-                fil.write("%s, %s, %s, %s\n" % (Nset(p.nr),p.displ[d][0],p.displ[d][0],p.displ[d][1]))
-            
+        fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
+        if p.amplitude is not None:
+            fil.write(", AMPLITUDE=%s" % p.amplitude)
+        fil.write("\n")
+        for d in range(len(p.displ)):
+            fil.write("%s, %s, %s, %s\n" % (Nset(p.nr),p.displ[d][0],p.displ[d][0],p.displ[d][1]))
+
             
 def writeCloads(fil,prop,op='NEW'):
     """Write cloads.
@@ -393,142 +391,139 @@ def writeCloads(fil,prop,op='NEW'):
     """
     fil.write("*CLOAD, OP=%s\n" % op)
     for p in prop:
-        if p.cload is not None:
-            for i,l in enumerate(p.cload):
-                if l != 0.0:
-                    fil.write("%s, %s, %s\n" % (Nset(p.nr),i+1,l))
+        for i,l in enumerate(p.cload):
+            if l != 0.0:
+                fil.write("%s, %s, %s\n" % (Nset(p.nr),i+1,l))
 
 
-def writeDloads(fil, recset='ALL', op='NEW'):
-    """Write Dloads.
+## def writeDloads(fil,prop,op='NEW'):
+##     """Write Dloads.
     
-    recset is a list of node record numbers that should be scanned for data.
-    By default, all records will be scanned.
+##     prop is a list property records having an attribute dload
 
-    By default, the loads are applied as new values in the current step.
-    The user can set op='MOD' to add the loads to already existing ones.
-    """
-    if recset == 'ALL':
-        recset = the_elemproperties.iterkeys()
-       
-    for i in recset:
-        if isinstance(the_elemproperties[i].elemload, list):
-            for load in range(len(the_elemproperties[i].elemload)):
-                fil.write("*DLOAD, OP=%s" % op)
-                if the_elemproperties[i].elemload[load].amplitude!=None:
-                    fil.write(", AMPLITUDE=%s" % the_elemproperties[i].elemload[load].amplitude)
-                fil.write("\n")
-                if the_elemproperties[i].elemload[load].loadlabel.upper() == 'GRAV':
-                    fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % (Eset(i)))
-                else:
-                    fil.write("%s, %s, %s\n" % (Eset(i),the_elemproperties[i].elemload[load].loadlabel,the_elemproperties[i].elemload[load].magnitude))
+##     By default, the loads are applied as new values in the current step.
+##     The user can set op='MOD' to add the loads to already existing ones.
+##     """
+##     for p in prop:
+##         setname = Eset(p.nr)
+##         fil.write("*DLOAD, OP=%s" % op)
+##         if p.dload.amplitude is not None:
+##             fil.write(", AMPLITUDE=%s" % p.dload.amplitude)
+##             fil.write("\n")
+##             if p.dload.loadlabel == 'GRAV':
+##                 fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
+##             else:
+##                 fil.write("%s, %s, %s\n" % (setname,p.dload.loadlabel,p.dload.magnitude)
 
 #######################################################
 # General model data
 #
-def writeAmplitude(fil, name=None):
-    fil.write("*AMPLITUDE, NAME=%s\n" %name)
-    n = len(the_modelproperties[name].amplitude)
-    for i in range(n-1):
-        fil.write("%s, " % the_modelproperties[name].amplitude[i])
-    fil.write("%s\n" % the_modelproperties[name].amplitude[n-1])
+
+## def writeAmplitude(fil,prop):
+##     fil.write("*AMPLITUDE, NAME=%s\n" %name)
+##     n = len(the_modelproperties[name].amplitude)
+##     for i in range(n-1):
+##         fil.write("%s, " % the_modelproperties[name].amplitude[i])
+##     fil.write("%s\n" % the_modelproperties[name].amplitude[n-1])
+
+# These are commented out because I do not really understand what
+# the data are. 
+    
+## def writeInteraction(fil , name=None, op='NEW'):
+##     if the_modelproperties[name].interactionname.upper()=='ALLWITHSELF':
+##         fil.write('** INTERACTIONS, NAME=%s\n*Contact, op=%s\n*contact inclusions,ALL EXTERIOR\n*Contact property assignment\n ,  ,  %s\n'% (the_modelproperties[name].interactionname,op,the_modelproperties[name].interaction.intprop))
+##     else:
+##         fil.write('** INTERACTIONS, NAME=%s\n*Contact Pair, interaction=%s\n%s,%s\n'%(the_modelproperties[name].interactionname,the_modelproperties[name].interaction.intprop,the_modelproperties[name].interaction.surface1,the_modelproperties[name].interaction.surface2))
 
     
-def writeInteraction(fil , name=None, op='NEW'):
-    if the_modelproperties[name].interactionname.upper()=='ALLWITHSELF':
-        fil.write('** INTERACTIONS, NAME=%s\n*Contact, op=%s\n*contact inclusions,ALL EXTERIOR\n*Contact property assignment\n ,  ,  %s\n'% (the_modelproperties[name].interactionname,op,the_modelproperties[name].interaction.intprop))
-    else:
-        fil.write('** INTERACTIONS, NAME=%s\n*Contact Pair, interaction=%s\n%s,%s\n'%(the_modelproperties[name].interactionname,the_modelproperties[name].interaction.intprop,the_modelproperties[name].interaction.surface1,the_modelproperties[name].interaction.surface2))
+## def writeIntprop(fil,name=None):
+##     fil.write("*Surface interaction, name=%s\n" %name)
+##     fil.write("*%s\n%s,\n" %(the_modelproperties[name].intprop.inttype,the_modelproperties[name].intprop.parameter))
+    
+    
+## def writeDamping(fil,name=None):
+##     fil.write("*global damping")
+##     if the_modelproperties[name].damping.field is not None:
+##     	fil.write(", Field = %s"%the_modelproperties[name].damping.field)
+##     else:
+## 	fil.write(", Field = ALL")
+##     if the_modelproperties[name].damping.alpha is not None:
+## 	fil.write(", alpha = %s"%the_modelproperties[name].damping.alpha)
+##     if the_modelproperties[name].damping.beta is not None:
+## 	fil.write(", beta = %s"%the_modelproperties[name].damping.beta)
+##     fil.write("\n")
 
     
-def writeIntprop(fil,name=None):
-    fil.write("*Surface interaction, name=%s\n" %name)
-    fil.write("*%s\n%s,\n" %(the_modelproperties[name].intprop.inttype,the_modelproperties[name].intprop.parameter))
-    
-    
-def writeDamping(fil,name=None):
-    fil.write("*global damping")
-    if the_modelproperties[name].damping.field is not None:
-    	fil.write(", Field = %s"%the_modelproperties[name].damping.field)
-    else:
-	fil.write(", Field = ALL")
-    if the_modelproperties[name].damping.alpha is not None:
-	fil.write(", alpha = %s"%the_modelproperties[name].damping.alpha)
-    if the_modelproperties[name].damping.beta is not None:
-	fil.write(", beta = %s"%the_modelproperties[name].damping.beta)
-    fil.write("\n")
-
-    
-def writeElemSurface(fil,number=None,abqdata=None):
-    if number is not None and abqdata is not None:
-        elemsnumbers=where(abqdata.elemprop==number)[0]
-        fil.write('*ELset,Elset=%s\n'% elemproperties[number].surfaces.setname)
-        for i in elemsnumbers:
-            n=i+1
-            fil.write('%s,\n'%n)
-            fil.write('*Surface, type =Element, name=%s\n%s,%s\n' %(elemproperties[number].surfaces.name,elemproperties[number].surfaces.setname,elemproperties[number].surfaces.arg))
+## def writeElemSurface(fil,number=None,abqdata=None):
+##     if number is not None and abqdata is not None:
+##         elemsnumbers=where(abqdata.elemprop==number)[0]
+##         fil.write('*ELset,Elset=%s\n'% elemproperties[number].surfaces.setname)
+##         for i in elemsnumbers:
+##             n=i+1
+##             fil.write('%s,\n'%n)
+##             fil.write('*Surface, type =Element, name=%s\n%s,%s\n' %(elemproperties[number].surfaces.name,elemproperties[number].surfaces.setname,elemproperties[number].surfaces.arg))
 
             
-def writeNodeSurface(fil,number=None,abqdata=None):
-    if number is not None and abqdata is not None:
-        nodenumbers=where(abqdata.nodeprop==number)[0]
-        fil.write('*ELset,Elset=%s\n'% nodeproperties[number].surfaces.setname)
-        for i in nodenumbers:
-            n=i+1
-            fil.write('%s,\n'%n)
-            fil.write('*Surface, type =Node, name=%s\n%s,%s\n' %(nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.setname,nodeproperties[number].surfaces.arg))
+## def writeNodeSurface(fil,number=None,abqdata=None):
+##     if number is not None and abqdata is not None:
+##         nodenumbers=where(abqdata.nodeprop==number)[0]
+##         fil.write('*ELset,Elset=%s\n'% nodeproperties[number].surfaces.setname)
+##         for i in nodenumbers:
+##             n=i+1
+##             fil.write('%s,\n'%n)
+##             fil.write('*Surface, type =Node, name=%s\n%s,%s\n' %(nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.setname,nodeproperties[number].surfaces.arg))
 
     
-def writeSurface(fil,name=None,abqdata=None):
-    if name is not None and abqdata is not None:
-        if elemproperties[name].surfaces=='Element':
-            global elemsprops
-            elemssetsurfaces=[]
-            for i in range(len(elemproperties)):
-                if elemproperties[i].surfaces==the_modelproperties[name].setname:
-                    elemssetsurfaces.append(i)
-		elemssur=[]
-		for i in elemssetsurfaces:
-                    elemss=where(abqdata.elemprop[:]==i)[0]
-                    elemssur.extend(elemss)
-                if len(elemssur)>0:
-                    fil.write('*ELset,Elset=%s, internal\n'% the_modelproperties[name].setname)
-                    for i in range(len(elemssur)):
-                        getal=elemssur[i]+1
-                        fil.write('%s,\n'%getal)
-			fil.write('*Surface, type =Element, name=%s, internal\n%s,%s\n' %(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
+## def writeSurface(fil,name=None,abqdata=None):
+##     if name is not None and abqdata is not None:
+##         if elemproperties[name].surfaces=='Element':
+##             global elemsprops
+##             elemssetsurfaces=[]
+##             for i in range(len(elemproperties)):
+##                 if elemproperties[i].surfaces==the_modelproperties[name].setname:
+##                     elemssetsurfaces.append(i)
+## 		elemssur=[]
+## 		for i in elemssetsurfaces:
+##                     elemss=where(abqdata.elemprop[:]==i)[0]
+##                     elemssur.extend(elemss)
+##                 if len(elemssur)>0:
+##                     fil.write('*ELset,Elset=%s, internal\n'% the_modelproperties[name].setname)
+##                     for i in range(len(elemssur)):
+##                         getal=elemssur[i]+1
+##                         fil.write('%s,\n'%getal)
+## 			fil.write('*Surface, type =Element, name=%s, internal\n%s,%s\n' %(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
 
-	elif the_modelproperties[name].surftype=='Node':
-            nodes=[]
-            nFormex=len(abqdata.elems)
-            length=zeros(nFormex)
-            for j in range(nFormex):
-                length[j]=len(abqdata.elems[j])
-            partnumbers=[]
-            for j in range(nFormex):
-                partnumbers=append(partnumbers,ones(length[j])*j)
-            for j in elemssur:
-                partnumber=int(partnumbers[j])
-                part=abqdata.elems[partnumber]
-                elemcount=0
-                for i in range(partnumber):
-                    elemcount+=length[i]
-                    nodes.extend(part[j-elemcount])
-		nodes = unique(nodes)
-		fil.write('*Nset,Nset=%s, internal\n'% the_modelproperties[name].setname)
-		for i in range(len(nodes)):
-                    getal=nodes[i]+1
-                    fil.write('%s,\n'%getal)
-		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
+## 	elif the_modelproperties[name].surftype=='Node':
+##             nodes=[]
+##             nFormex=len(abqdata.elems)
+##             length=zeros(nFormex)
+##             for j in range(nFormex):
+##                 length[j]=len(abqdata.elems[j])
+##             partnumbers=[]
+##             for j in range(nFormex):
+##                 partnumbers=append(partnumbers,ones(length[j])*j)
+##             for j in elemssur:
+##                 partnumber=int(partnumbers[j])
+##                 part=abqdata.elems[partnumber]
+##                 elemcount=0
+##                 for i in range(partnumber):
+##                     elemcount+=length[i]
+##                     nodes.extend(part[j-elemcount])
+## 		nodes = unique(nodes)
+## 		fil.write('*Nset,Nset=%s, internal\n'% the_modelproperties[name].setname)
+## 		for i in range(len(nodes)):
+##                     getal=nodes[i]+1
+##                     fil.write('%s,\n'%getal)
+## 		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
 
 
-def writeModelProps(fil,prop):
-    for i in the_modelproperties:
-        if the_modelproperties[i].interaction is not None:
-            writeInteraction(fil, i)
-    for i in the_modelproperties:
-        if the_modelproperties[i].damping is not None:
-            writedamping(fil, i)
+## def writeModelProps(fil,prop):
+##     for i in the_modelproperties:
+##         if the_modelproperties[i].interaction is not None:
+##             writeInteraction(fil, i)
+##     for i in the_modelproperties:
+##         if the_modelproperties[i].damping is not None:
+##             writedamping(fil, i)
 
 
 ### Output requests ###################################
@@ -811,7 +806,6 @@ class Step(Dict):
         resfreq and timemarks are global values only used by Explicit
         """
         fil.write("*STEP, NLGEOM=%s\n" % self.nlgeom)
-        
         if self.analysis in ['STATIC','DYNAMIC']:
             fil.write("*%s\n" % self.analysis)
         elif self.analysis == 'EXPLICIT':
@@ -828,31 +822,30 @@ class Step(Dict):
 %s, %s
 """ % self.bulkvisc)
 
-
-        prop = propDB.getProp('n',tags=self.tags,attr=['bound'])
+        prop = propDB.getProp('n',tag=self.tags,attr=['bound'])
         if prop:
             GD.message("  Writing step boundary conditions")
             writeBoundaries(fil,prop)
      
-        prop = propDB.getProp('n',tags=self.tags,attr=['displ'])
+        prop = propDB.getProp('n',tag=self.tags,attr=['displ'])
         if prop:
             GD.message("  Writing step displacements")
             writeDisplacements(fil,prop)
         
-        prop = propDB.getProp('n',tags=self.tags,attr=['cload'])
+        prop = propDB.getProp('n',tag=self.tags,attr=['cload'])
         if prop:
             GD.message("  Writing step cloads")
             writeCloads(fil,prop)
 
-        prop = propDB.getProp('e',tags=self.tags,attr=['dload'])
+        prop = propDB.getProp('e',tag=self.tags,attr=['dload'])
         if prop:
             GD.message("  Writing step dloads")
             writeDloads(fil,prop)
         
-        prop = propDB.getProp('m',tags=self.tags)
-        if prop:
-            GD.message("  Writing step model props")
-            writeModelProps(fil,prop)
+##         prop = propDB.getProp('',tag=self.tags)
+##         if prop:
+##             GD.message("  Writing step model props")
+##             writeModelProps(fil,prop)
         
         for i in out:
             if i.kind is None:
@@ -861,6 +854,7 @@ class Step(Dict):
                 writeNodeOutput(fil,**i)
             elif i.kind == 'E':
                 writeElemOutput(fil,**i)
+                
         if res and self.analysis == 'EXPLICIT':
             writeFileOutput(fil,resfreq,timemarks)
         for i in res:
@@ -949,7 +943,7 @@ class Result(Dict):
 class AbqData(CascadingDict):
     """Contains all data required to write the Abaqus input file."""
     
-    def __init__(self,model,prop=the_P,steps=[],res=[],out=[],bound=None):
+    def __init__(self,model,prop,steps=[],res=[],out=[],bound=None):
         """Create new AbqData. 
         
         model is a Model instance.
@@ -972,18 +966,20 @@ class AbqData(CascadingDict):
     def write(self,jobname=None,group_by_eset=True,group_by_group=False):
         """Write an Abaqus input file.
 
-        job is the name of the inputfile. If None is specified, it is
-        determined from the current script name.
+        jobname is the name of the inputfile, with or without '.inp' extension.
+        If None is specified, output is written to sys.stdout
         """
         global materialswritten
         materialswritten = []
         # Create the Abaqus input file
         if jobname is None:
-            jobname = str(GD.scriptName)[:-3]
-        jobname,filename = abqInputNames(jobname)
-        fil = file(filename,'w')
-        GD.message("Writing to file %s" % (filename))
-
+            jobname,filename = 'Test',None
+            fil = sys.stdout
+        else:
+            jobname,filename = abqInputNames(jobname)
+            fil = file(filename,'w')
+            GD.message("Writing to file %s" % (filename))
+        
         writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
 Script: %s 
 """ % (jobname, datetime.date.today(), GD.scriptName))
@@ -993,20 +989,19 @@ Script: %s
         writeNodes(fil, self.nodes)
 
         GD.message("Writing node sets")
-        nlist = arange(nnod)
-        for p in self.prop.getProp('n',attr=['nset']):
-            set = p.nset
+        for p in self.prop.getProp('n',attr=['set']):
+            set = p.set
             if set is not None and len(set) > 0:
                 setname = Nset(p.nr)
                 writeSet(fil,'NSET',setname,set)
-                if p.has_key('csys') and p.sys is not None:
+                if p.csys is not None:
                     writeTransform(fil,setname,p.csys)
 
         GD.message("Writing element sets")
         nelems = 0
-        for p in self.prop.getProp('e',attr=['eltype','eset']):
-            print 'Elements of type %s: %s' % (p.eltype,p.eset)
-            set = p.eset
+        for p in self.prop.getProp('e',attr=['eltype','set']):
+            print 'Elements of type %s: %s' % (p.eltype,p.set)
+            set = p.set
             if set is not None and len(set) > 0:
                 setname = Eset(p.nr)
                 gl,gr = self.model.splitElems(set)
@@ -1032,7 +1027,7 @@ Script: %s
         GD.message("Writing element sections")
         for p in self.prop.getProp('e',attr=['section','eltype']):
             writeSection(fil,p)
-        
+
 ##         GD.message("Writing surfaces")
 ##         for i in the_nodeproperties:
 ##             if the_nodeproperties[i].surfaces is not None:
@@ -1051,15 +1046,16 @@ Script: %s
 ##                 writeIntprop(fil, i)
 
         GD.message("Writing initial boundary conditions")
-        prop = self.prop.getProp('n',tags=self.bound,attr=['bound'])
+        prop = self.prop.getProp('n',tag=self.bound,attr=['bound'])
         if prop:
             writeBoundaries(fil,prop)
     
         GD.message("Writing steps")
-        for a in self.steps:
-            a.write(fil,self.prop,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
+        for step in self.steps:
+            step.write(fil,self.prop,self.out,self.res,resfreq=Result.nintervals,timemarks=Result.timemarks)
 
-        fil.close()
+        if filename is not None:
+            fil.close()
         GD.message("Done")
 
 
@@ -1076,57 +1072,59 @@ def writeAbqInput(abqdata, jobname=None):
 
 if __name__ == "script" or __name__ == "draw":
 
-    print "See the FeAbq example for the use of this module."
-    exit()
-
-    from plugins import properties
-    reload(properties)
-    from script import workHere
-    
-    workHere()
-    
+    print "See the FeAbq example for a more comprehensive example"
+   
     #creating the formex (just 4 points)
     F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
     draw(F)
     
-    # Create properties database
-    P = properties.PropertyDB()
-    #install example databases
+    # Create property database
+    P = PropertyDB()
+    #install example materials and section databases
     # either like this
-    Mat = MaterialDB('../../examples/materials.db')
+    pyformexdir = GD.cfg['pyformexdir']
+    Mat = MaterialDB(pyformexdir+'/examples/materials.db')
     P.setMaterialDB(Mat)
     # or like this
-    P.setSectionDB(SectionDB('../../examples/sections.db'))
+    P.setSectionDB(SectionDB(pyformexdir+'/examples/sections.db'))
     
-    # creating properties
-    S1=ElemSection('IPEA100', 'steel')
-    S2=ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel','CIRC')
-    S3=ElemSection(sectiontype='join')
-    BL1=ElemLoad(0.5,loadlabel='PZ')
-    BL2=ElemLoad(loadlabel='Grav')
-    #S2.density=7850
+    # creating some property data
+    S1 = ElemSection('IPEA100', 'steel')
+    S2 = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel','CIRC')
+    S3 = ElemSection(sectiontype='join')
+    BL1 = ElemLoad(loadlabel='PZ',magnitude=0.5)
+    BL2 = ElemLoad(loadlabel='Grav')
     S2.cross_section=572
-    np1=NodeProperty(9,cload=[2,6,4,0,0,0], displacement=[[3,5]],coords='cylindrical',coordset=[0,0,0,0,0,1])
-    np2=NodeProperty(8,cload=[9,2,5,3,0,4], bound='pinned')
-    np3=NodeProperty(7,None,[1,1,1,0,0,1], displacement=[[2,6],[4,8]])
-    bottom = ElemProperty(12,S2,[BL1],'T2D3')
-    top = ElemProperty(2,S2,[BL2],eltype='FRAME2D')
-    diag = ElemProperty(8,S3,eltype='conn3d2')
-    
-    #creating the input file
-    old = seterr(all='ignore')
+    CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
+
+    # populate the property database
+    np1 = P.nodeProp('d1',cload=[2,6,4,0,0,0], displ=[(3,5.4)],csys=CYL)
+    np2 = P.nodeProp('b0',cload=[9,2,5,3,0,4], bound='pinned')
+    np3 = P.nodeProp('d2',None,[1,1,1,0,0,1], displ=[(2,6),(4,8.)])
+
+    bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
+    top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')
+    diag = P.elemProp(8,section=S3,eltype='conn3d2')
+        
+    # create the model
     nodes,elems = F.feModel()
-    seterr(**old)
-    step1 = Step(nlgeom='yes', cloadset=[], boundset=[8])
-    step2 = Step(cloadset=[9], dloadset=[], dispset=[9])
-    outhist = Output(type='history')
-    outfield = Output(type='field', kind='node', set= [9,8], keys='SF')
-    elemres = Result(kind='ELEMENT',keys=['S','SP','SINV'])
-    noderes = Result(kind='NODE',set=[7,9], keys=['U','COORD'])
-    model = Model(nodes, elems, [9,8,0,7], F.p, initialboundaries=[7])
-    total = AbqData(model, analysis=[step1, step2], res=[elemres, noderes], out=[outhist, outfield])
-    print model
-    writeAbqInput(total, jobname='testing')
+    model = Model(nodes,elems)
+
+    # create the steps
+    step1 = Step(tags=['d1'])
+    step2 = Step(nlgeom='yes',tags=['d2'])
+
+    #create the output requests
+    out = [ Output(type='history'),
+            Output(type='field'),
+            Output(type='field',kind='element',set=Eset(bottom.nr),keys=['SF']),
+            ]
+    res = [ Result(kind='NODE',keys=['U']),
+            Result(kind='ELEMENT',keys=['SF'],set=Eset(top.nr)),
+            ]
+
+    all = AbqData(model,P,[step1,step2],res,out,bound=['b0'])
+    all.write('testing')
     
     
 # End

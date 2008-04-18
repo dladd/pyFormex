@@ -85,10 +85,6 @@ class SectionDB(Database):
             raise ValueError,"Expected a filename or a dict."
 
 
-## the_materials = MaterialDB()
-## the_sections = SectionDB()
-
-
 class ElemSection(CascadingDict):
     """Properties related to the section of an element."""
 
@@ -199,6 +195,21 @@ class ElemSection(CascadingDict):
             raise ValueError,"Expected a string or a dict"
 
 
+class ElemLoad(CascadingDict):
+    """Distributed loading on an element."""
+
+    def __init__(self,loadlabel=None,magnitude=None,amplitude=None):
+        """Create a new element load. Empty by default.
+        
+        An element load can hold the following sub-properties:
+        - magnitude: the magnitude of the distibuted load.
+        - loadlabel: the distributed load type label.
+        - amplitude: an amplitude instance.
+        """          
+        Dict.__init__(self, {'magnitude' : magnitude, 'loadlabel' : loadlabel, 'amplitude' : amplitude})
+
+############## Basic property data classes ########################
+
 class CoordSystem(object):
     """A class for storing coordinate systems."""
 
@@ -214,7 +225,7 @@ class CoordSystem(object):
         """
         try:
             csys = csys[0].upper()
-            if not csys in valid_csys:
+            if not csys in CoordSystem.valid_csys:
                 raise
             cdata = asarray(cdata).reshape(2,3)
         except:
@@ -222,8 +233,45 @@ class CoordSystem(object):
         self.sys = csys
         self.data = cdata
 
+        
+class Amplitude(object):
+    """A class for storing an amplitude."""
+    
+    def __init__(self,data,definition='TABULAR'):
+        """Create a new amplitude."""
+        if definition == 'TABULAR':
+            self.data = checkArray(data,(-1,2),'f','i')
+            self.type = definition 
+            
 
 ############ Utility routines #####################
+
+def checkArray(a,shape=None,kind=None,allow=None):
+    """Check that an array a has the correct shape and type.
+
+    Either shape and or kind can be specified.
+    The dimensions where shape contains a -1 value are not checked. The
+    number of dimensions should match, though.
+    If kind does not match, but is included in allow, conversion to the
+    requested type is attempted.
+    Returns the array if valid.
+    Else, an error is raised.
+    """
+    try:
+        a = asarray(a)
+        shape = asarray(shape)
+        w = where(shape >= 0)[0]
+        if asarray(a.shape)[w] != shape[w]:
+            raise
+        if kind is not None:
+            if allow is None and a.dtype.kind != kind:
+                raise
+            if kind == 'f':
+                a = a.astype(float32)
+        return a
+    except:
+        print "Expected shape %s, kind %s, got: %s" % (shape,kind,a)
+    raise ValueError
 
 def checkArray1D(a,size=None,kind=None,allow=None):
     """Check that an array a has the correct size and type.
@@ -275,11 +323,10 @@ class PropertyDB(Dict):
     This should allow for storing:
        - materials
        - sections
+       - any properties
        - node properties
        - elem properties
-       - model properties
-
-    Currently, only the former NodeProperties have been converted.
+       - model properties (current unused: use unnamed properties)
     """
 
     bound_strings = [ 'XSYMM', 'YSYMM', 'ZSYMM', 'ENCASTRE', 'PINNED' ]
@@ -288,9 +335,10 @@ class PropertyDB(Dict):
         """Create a new properties database."""
         self.mats = MaterialDB()
         self.sect = SectionDB()
+        self.prop = []
         self.nprop = []
         self.eprop = []
-        self.mprop = []
+        #self.mprop = []
         
 
     def setMaterialDB(self,aDict):
@@ -307,153 +355,122 @@ class PropertyDB(Dict):
             ElemSection.secDB = aDict
 
 
-    def getProp(self,kind,recs=None,tags=None,attr=[]):
+    def getProp(self,kind='',rec=None,tag=None,attr=[]):
         """Return all properties of type kind matching tag and having attr.
 
-        kind is either 'n', 'e' or 'm'
-        If recs is given, it is a list of record numbers or a single number.
+        kind is either '', 'n', 'e' or 'm'
+        If rec is given, it is a list of record numbers or a single number.
         If a tag or a list of tags is given, only the properties having a
         matching tag attribute are returned.
         If a list of attibutes is given, only the properties having those
         attributes are returned.
         """
         prop = getattr(self,kind+'prop')
-        if recs is not None:
-            if type(recs) != list:
-                recs = [ recs ]
-            recs = [ i for i in recs if i < len(prop) ]
-            prop = [ prop[i] for i in recs ]
-        if tags is not None:
-            if type(tags) != list:
-                tags = [ tags ]
-            tags = map(str,tags)   # tags are always converted to strings!
-            prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tags ]
+        if rec is not None:
+            if type(rec) != list:
+                rec = [ rec ]
+            rec = [ i for i in rec if i < len(prop) ]
+            prop = [ prop[i] for i in rec ]
+        if tag is not None:
+            if type(tag) != list:
+                tag = [ tag ]
+            tag = map(str,tag)   # tags are always converted to strings!
+            prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tag ]
         for a in attr:
-            prop = [ p for p in prop if p.has_key(a) ]
+            prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
         return prop
+
+
+    def Prop(self,kind='',tag=None,set=None,**kargs):
+        """Create a new property, empty by default.
+
+        A property can hold almost anything. It has only two predefined fields:
+        - tag: an identification tag used to group properties
+        - set: a single number or a list of numbers identifying the geometrical
+               elements for wich the property is set
+        As all properties, a nr field will be added automatically.
+        Besides these, any other fields may be defined and will be added
+        without check.
+        """
+        d = CascadingDict()
+        # First update with kargs, to make sure tag,set and nr are sane
+        d.update(dict(**kargs))
+        if tag is not None:
+            d.tag = str(tag)
+        if set is not None:
+            if type(set) is str:
+                d.set = set
+            else:
+                if type(set) is int:
+                    set = [ set ]
+                d.set = unique1d(set)
+        prop = getattr(self,kind+'prop')
+        d.nr = len(prop)
+        prop.append(d)
+        return d
 
 
     def nodeProp(self,tag=None,nset=None,cload=None,bound=None,displ=None,csys=None):
         """Create a new node property, empty by default.
-. 
+
         A node property can contain any combination of the following fields:
         - tag: an identification tag used to group properties (this is e.g.
                used to flag Step, increment, load case, ...)
         - nset: a single number or a list of numbers identifying the node(s)
-                for which this property will be set
-        - cload: a concentrated load
-        - bound: a boundary condition
-        - displ: a prescribed displacement
+                for which this property will be set, or a set name
+                If None, the property will hold for all nodes.
+        - cload: a concentrated load: a list of 6 values
+        - bound: a boundary condition: a list of 6 codes (0/1)
+        - displ: a prescribed displacement: a list of tuples (dofid,value)
         - csys: a coordinate system
         """
         try:
-            d = CascadingDict()
-            if tag is not None:
-                d.tag = str(tag)
-            if nset is not None:
-                if type(nset) is int:
-                    nset = [ int ]
-                d.nset = unique1d(nset)
+            d = {}
             if cload is not None:
-                d.cload = checkArray1D(cload,6,'f','i')
+                d['cload'] = checkArray1D(cload,6,'f','i')
             if bound is not None:
                 if type(bound) == str:
-                    print "A STRING"
-                    d.bound = checkString(bound,self.bound_strings)
+                    d['bound'] = checkString(bound,self.bound_strings)
                 else:
-                    print "bound"
-                    d.bound = checkArray1D(bound,6,'i')
+                    d['bound'] = checkArray1D(bound,6,'i')
             if displ is not None:
-                d.displ = checkArray1D(displ,6,'f')
-            if csys is not None and not isinstance(csys,CoordSystem):
-                raise
-            d.nr = len(self.nprop)
-            self.nprop.append(d)
-            return d.nr
+                d['displ'] = displ
+            if csys is not None:
+                if isinstance(csys,CoordSystem):
+                    d['csys'] = csys
+                else:
+                    raise
+            return self.Prop(kind='n',tag=tag,set=nset,**d)
         except:
             print "tag=%s,nset=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,nset,cload,bound,displ,csys)
-            raise ValueError,"Invalid Node Property skipped"
+            raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,tag=None,eset=None,section=None,eltype=None,dload=None,dloadlbl=None): 
+    def elemProp(self,tag=None,eset=None,section=None,eltype=None,dload=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
         - tag: an identification tag used to group properties (this is e.g.
                used to flag Step, increment, load case, ...)
         - eset: a single number or a list of numbers identifying the element(s)
-                for which this property will be set
+                for which this property will be set, or a set name
+                If None, the property will hold for all nodes.
         - eltype: the element type (currently in Abaqus terms). 
         - section: an ElemSection specifying the element section properties.
-        - dload: a distributed load on the element: this is a tuple of dload
-                 label and magnitude
+        - dload: an ElemLoad specifying a distributed load on the element.
         """    
         try:
-            d = CascadingDict()
-            if tag is not None:
-                d.tag = str(tag)
-            if eset is not None:
-                if type(eset) is int:
-                    eset = [ int ]
-                d.eset = unique1d(eset)
+            d = {}
             if eltype is not None:
-                d.eltype = eltype.upper()
+                d['eltype'] = eltype.upper()
             if section is not None:
-                d.section = section
+                d['section'] = section
             if dload is not None:
-                d.dload = dload
-            d.nr = len(self.eprop)
-            self.eprop.append(d)
-            return d.nr
+                d['dload'] = dload
+            return self.Prop(kind='e',tag=tag,set=eset,**d)
         except:
             print "tag=%s,eset=%s,eltype=%s,section=%s,dload=%s" % (tag,eset,eltype,section,dload)
-            raise ValueError,"Invalid Node Property skipped"
-
-
-# Used as a transitional global DB, will disappear in future
-the_P = PropertyDB()
-
-def NodeProperty(tag,nset=None,cload=None,bound=None,displacement=None,coords=None,coordset=None):
-    
-    if coords is not None:
-        csys = CoordSystem(coords,coordset)
-    else:
-        csys = None
-    return the_P.nodeProp(tag,nset,cload,bound,displacement,csys)
-
-
-
-def ElemProperty(tag,eset=None,elemsection=None,elemtype=None,elemload=None): 
-    return the_P.elemProp(tag,eset,elemsection,elemtype,(elemload.loadlabel,elemload.magnitude))
-
-
-class ElemLoad(CascadingDict):
-    """Properties related to the load of a beam."""
-
-    def __init__(self, magnitude = None, loadlabel = None):
-        """Create a new element load. Empty by default.
-        
-        An element load can hold the following sub-properties:
-        - magnitude: the magnitude of the distibuted load.
-        - loadlabel: the distributed load type label.
-        """          
-        Dict.__init__(self, {'magnitude' : magnitude, 'loadlabel' : loadlabel})
-
-
-class ModelProperty(CascadingDict):
-    """Properties related to a model."""
-
-    def __init__(self, name, amplitude=None,intprop=None,surface=None,interaction=None,damping=None):
-        """Create a new node property. Empty by default.
-        
-        A model property is created and the data is stored in a Dict called 'modelproperties'. 
-        The key to access the model property is the name.
-        """
-        global the_modelproperties
-        CascadingDict.__init__(self, {'amplitude':amplitude,'intprop':intprop,'surface':surface,'interaction':interaction,'damping':damping})
-        the_modelproperties[name] = self
-
-
+            raise ValueError,"Invalid Elem Property"
 
 
 
@@ -464,10 +481,25 @@ if __name__ == "script" or  __name__ == "draw":
     workHere()
     print os.getcwd()
     
+    P = PropertyDB()
+
+    Stick = P.Prop(color='green',name='Stick',weight=25,comment='This could be anything: a gum, a frog, a usb-stick,...')
+    author = P.Prop(tag='author',Name='Tim Neels',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+    
+    print Stick
+    print P.getProp(tag='author') 
+    
+    Stick.weight=30
+    Stick.length=10
+    print Stick
+    
+    print author
+    author.street='Voskenslaan'
+    print author.street
+    print author.Address.street
+
     Mat = MaterialDB('../examples/materials.db')
     Sec = SectionDB('../examples/sections.db')
-    P = PropertyDB()
-    
     P.setMaterialDB(Mat)
     P.setSectionDB(Sec)
 
@@ -479,6 +511,7 @@ if __name__ == "script" or  __name__ == "draw":
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
     B1 = [ 1 ] + [ 0 ] * 5
 
+    CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
     P.nodeProp(1,cload=P1)
     P.nodeProp(2,cload=P2)
     P.nodeProp(7,bound=B1)
@@ -490,11 +523,11 @@ if __name__ == "script" or  __name__ == "draw":
     print P.getProp('n')
     
     print "properties 0 and 2"
-    for p in P.getProp('n',recs=[0,2]):
+    for p in P.getProp('n',rec=[0,2]):
         print p
         
     print "tag 1 and 7"
-    for p in P.getProp('n',tags=[1,7]):
+    for p in P.getProp('n',tag=[1,7]):
         print p
 
     print "cload attributes"
@@ -517,12 +550,18 @@ if __name__ == "script" or  __name__ == "draw":
     for s in Sec:
         print Sec[s]
 
-    q = ('PZ',2.5)
 
-    top = P.elemProp(eltype='B22',section=hor,dload=q)
+    times = arange(10)
+    values = square(times)
+    amp = Amplitude(column_stack([times,values]))
+
+    q1 = ElemLoad('PZ',2.5)
+    q2 = ElemLoad('PY',3.14,amplitude=amp)
+
+    top = P.elemProp(eltype='B22',section=hor,dload=q1)
     column = P.elemProp(eltype='B22',section=vert)
     diagonal = P.elemProp(eltype='B22',section=hor)
-    bottom = P.elemProp(section=hor,dload=q)
+    bottom = P.elemProp(section=hor,dload=q2)
 
 
     print 'elemproperties'
@@ -532,5 +571,6 @@ if __name__ == "script" or  __name__ == "draw":
     print "section properties"
     for p in P.getProp('e',attr=['section']):
         print p.nr
+
 
 # End

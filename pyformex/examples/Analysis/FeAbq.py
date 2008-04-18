@@ -29,6 +29,9 @@ C = A.rotate(90).setProp(pc)
 parts = [A,B,C]
 
 
+smoothwire()
+lights(False)
+transparent()
 draw(parts)
 NRS = [ drawNumbers(i) for i in parts ]
 zoomAll()
@@ -120,7 +123,11 @@ for p in P.getProp('n'):
 # A model contains a single set of nodes, one or more sets of elements
 model = Model(nodes,elems)
 
-# Request default output plus output of S in elements of part B
+# Request default output plus output of S in elements of part B.
+# If the abqdata are written with group_by_group==True (see at bottom),
+# all elements of each group in elems will be collected in a set named
+# Eset('grp',index), where index is the index of the group in the elems list.
+# Thus, all elements of part B will end up in Eset('grp',1)
 out = [ Output(type='history'),
         Output(type='field'),
         Output(type='field',kind='element',set=Eset('grp',1),keys=['S']),
@@ -149,6 +156,7 @@ step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 #
 # NEW: pass the properties database
 #
+
 all = AbqData(model,prop=P,steps=[step1,step2],out=out,res=res)
 
 if ack('Export this model in ABAQUS input format?'):

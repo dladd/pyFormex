@@ -90,7 +90,11 @@ class FeResult(object):
         self.nset[self.nsetkey] = union1d(self.nset[self.nsetkey],asarray(data))
 
     def Elemset(self,key,data):
+        self.esetkey = key
         self.eset[key] = asarray(data)
+
+    def ElemsetAdd(self,data):
+        self.eset[self.esetkey] = union1d(self.eset[self.esetkey],asarray(data))
 
     def Finalize(self):
         self.nid = connectivity.reverseUniqueIndex(self.nodid)
@@ -107,7 +111,7 @@ class FeResult(object):
             self.step = step
             if not self.res.has_key(self.step):
                 self.res[self.step] = {}
-            self.inc = 0
+            self.inc = -1
         res = self.res[self.step]
         if inc != self.inc:
             self.inc = inc
@@ -118,7 +122,7 @@ class FeResult(object):
     def EndIncrement(self):
         if not self.modeldone:
             self.Finalize()
-        self.step = self.inc = 0
+        self.step = self.inc = -1
 
     def Label(self,tag,value):
         self.labels[tag] = value

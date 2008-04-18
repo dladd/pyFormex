@@ -961,7 +961,7 @@ class Formex:
         The default settting for atol is rtol * self.diagonal()
         """
         if atol is None:
-            atol = rtol * self.diagonal()
+            atol = rtol * self.dsize()
         f = reshape(self.f,(self.nnodes(),3))
         f,s = f.fuse(nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:

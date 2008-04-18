@@ -91,6 +91,16 @@ def importDB():
     fn = askFilename(GD.cfg['workdir'],types,exist=True)
     if fn:
         chdir(fn)
+        size = os.stat(fn).st_size
+        if size > 1000000 and ask("""
+BEWARE!!!
+
+The size of this file is very large: %s bytes
+It is unlikely that I will be able to process this file.
+I strongly recommend you to cancel the operation now.
+""" % size,["Continue","Cancel"]) != "Continue":
+            return
+        
         play(fn)
         if GD.PF.has_key('DB'):
             setDB(GD.PF['DB'])
