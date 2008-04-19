@@ -46,16 +46,27 @@ def abqInputNames(job):
         filename += '.inp'
     return jobname,filename
 
-# Create automatic names for node and element sets
 
-def autoName(base,*args):
-    return (base + '_%s' * len(args)) % args 
+def nsetName(p):
+    """Determine the setname for writing a node property."""
+    if p.set is None:
+        setname = 'Nall'
+    elif type(p.set) is str:
+        setname = p.set
+    else:
+        setname = Nset(p.nr)
+    return setname
 
-def Nset(*args):
-    return autoName('Nset',*args)
 
-def Eset(*args):
-    return autoName('Eset',*args)
+def esetName(p):
+    """Determine the setname for writing a elem property."""
+    if p.set is None:
+        setname = 'Eall'
+    elif type(p.set) is str:
+        setname = p.set
+    else:
+        setname = Eset(p.nr)
+    return setname
 
 
 def writeHeading(fil, text=''):
@@ -211,11 +222,11 @@ solid3d_elems = ['C3D4', 'C3D4H','C3D6', 'C3D6H', 'C3D8','C3D8H','C3D8R', 'C3D8R
 
 
 def writeSection(fil,prop):
-    """Write an element section for the named element set.
+    """Write an element section.
 
     prop is a an element property record with a section and eltype attribute
     """
-    setname = Eset(prop.nr)
+    setname = esetName(prop)
     el = prop.section
     eltype = prop.eltype
 
@@ -350,13 +361,14 @@ def writeBoundaries(fil,prop,op='MOD'):
     This will also remove initial conditions!
     """
     for p in prop:
+        setname = nsetName(p)
         fil.write("*BOUNDARY, OP=%s\n" % op)
         if isinstance(p.bound,str):
-            fil.write("%s, %s\n" % (Nset(p.nr),p.bound))
+            fil.write("%s, %s\n" % (setname,p.bound))
         else:
             for b in range(6):
                 if p.bound[b]==1:
-                    fil.write("%s, %s\n" % (Nset(p.nr),b+1))
+                    fil.write("%s, %s\n" % (setname,b+1))
 
 
 def writeDisplacements(fil,prop,op='MOD'):
@@ -372,12 +384,13 @@ def writeDisplacements(fil,prop,op='MOD'):
     This will also remove initial conditions!
     """
     for p in prop:
+        setname = nsetName(p)
         fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
         if p.amplitude is not None:
             fil.write(", AMPLITUDE=%s" % p.amplitude)
         fil.write("\n")
         for d in range(len(p.displ)):
-            fil.write("%s, %s, %s, %s\n" % (Nset(p.nr),p.displ[d][0],p.displ[d][0],p.displ[d][1]))
+            fil.write("%s, %s, %s, %s\n" % (setname,p.displ[d][0],p.displ[d][0],p.displ[d][1]))
 
             
 def writeCloads(fil,prop,op='NEW'):
@@ -391,29 +404,31 @@ def writeCloads(fil,prop,op='NEW'):
     """
     fil.write("*CLOAD, OP=%s\n" % op)
     for p in prop:
+        setname = nsetName(p)
         for i,l in enumerate(p.cload):
             if l != 0.0:
-                fil.write("%s, %s, %s\n" % (Nset(p.nr),i+1,l))
+                fil.write("%s, %s, %s\n" % (setname,i+1,l))
 
 
-## def writeDloads(fil,prop,op='NEW'):
-##     """Write Dloads.
+def writeDloads(fil,prop,op='NEW'):
+    """Write Dloads.
     
-##     prop is a list property records having an attribute dload
+    prop is a list property records having an attribute dload
 
-##     By default, the loads are applied as new values in the current step.
-##     The user can set op='MOD' to add the loads to already existing ones.
-##     """
-##     for p in prop:
-##         setname = Eset(p.nr)
-##         fil.write("*DLOAD, OP=%s" % op)
-##         if p.dload.amplitude is not None:
-##             fil.write(", AMPLITUDE=%s" % p.dload.amplitude)
-##             fil.write("\n")
-##             if p.dload.loadlabel == 'GRAV':
-##                 fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
-##             else:
-##                 fil.write("%s, %s, %s\n" % (setname,p.dload.loadlabel,p.dload.magnitude)
+    By default, the loads are applied as new values in the current step.
+    The user can set op='MOD' to add the loads to already existing ones.
+    """
+    for p in prop:
+        setname = esetname(p)
+        fil.write("*DLOAD, OP=%s" % op)
+        if p.dload.amplitude is not None:
+            fil.write(", AMPLITUDE=%s" % p.dload.amplitude)
+            fil.write("\n")
+        if p.dload.label == 'GRAV':
+            fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
+        else:
+            fil.write("%s, %s, %s\n" % (setname,p.dload.label,p.dload.value))
+            
 
 #######################################################
 # General model data
@@ -990,36 +1005,38 @@ Script: %s
 
         GD.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
-            set = p.set
-            if set is not None and len(set) > 0:
+            if type(p.set) is ndarray:
                 setname = Nset(p.nr)
-                writeSet(fil,'NSET',setname,set)
+                writeSet(fil,'NSET',setname,p.set)
                 if p.csys is not None:
                     writeTransform(fil,setname,p.csys)
 
         GD.message("Writing element sets")
+        telems = self.model.celems[-1]
         nelems = 0
         for p in self.prop.getProp('e',attr=['eltype','set']):
-            print 'Elements of type %s: %s' % (p.eltype,p.set)
-            set = p.set
-            if set is not None and len(set) > 0:
-                setname = Eset(p.nr)
-                gl,gr = self.model.splitElems(set)
-                elems = self.model.getElems(gr)
-                for i,elnrs,els in zip(range(len(gl)),gl,elems):
-                    grpname = Eset('grp',i)
-                    subsetname = Eset(p.nr,'grp',i,)
-                    nels = len(els)
-                    if nels > 0:
-                        GD.message("Writing %s elements from group %s" % (nels,i))
-                        writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
-                        nelems += nels
-                        if group_by_eset:
-                            writeSubset(fil,'ELSET',setname,subsetname)
-                        if group_by_group:
-                            writeSubset(fil,'ELSET',grpname,subsetname)
+            if p.set is None:
+                set = arange(telems)
+            else:
+                set = p.set
+            print 'Elements of type %s: %s' % (p.eltype,set)
+                
+            setname = Eset(p.nr)
+            gl,gr = self.model.splitElems(set)
+            elems = self.model.getElems(gr)
+            for i,elnrs,els in zip(range(len(gl)),gl,elems):
+                grpname = Eset('grp',i)
+                subsetname = Eset(p.nr,'grp',i,)
+                nels = len(els)
+                if nels > 0:
+                    GD.message("Writing %s elements from group %s" % (nels,i))
+                    writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
+                    nelems += nels
+                    if group_by_eset:
+                        writeSubset(fil,'ELSET',setname,subsetname)
+                    if group_by_group:
+                        writeSubset(fil,'ELSET',grpname,subsetname)
                     
-        telems = self.model.celems[-1]
         GD.message("Total number of elements: %s" % telems)
         if nelems != telems:
             GD.message("!! Number of elements written: %s !!" % nelems)
@@ -1072,7 +1089,8 @@ def writeAbqInput(abqdata, jobname=None):
 
 if __name__ == "script" or __name__ == "draw":
 
-    print "See the FeAbq example for a more comprehensive example"
+    print "The data hereafter do not form a complete FE model."
+    print "See the FeAbq example for a more comprehensive example."
    
     #creating the formex (just 4 points)
     F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
@@ -1092,15 +1110,15 @@ if __name__ == "script" or __name__ == "draw":
     S1 = ElemSection('IPEA100', 'steel')
     S2 = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel','CIRC')
     S3 = ElemSection(sectiontype='join')
-    BL1 = ElemLoad(loadlabel='PZ',magnitude=0.5)
-    BL2 = ElemLoad(loadlabel='Grav')
+    BL1 = ElemLoad(label='PZ',value=0.5)
+    BL2 = ElemLoad('Grav')
     S2.cross_section=572
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
 
     # populate the property database
-    np1 = P.nodeProp('d1',cload=[2,6,4,0,0,0], displ=[(3,5.4)],csys=CYL)
-    np2 = P.nodeProp('b0',cload=[9,2,5,3,0,4], bound='pinned')
-    np3 = P.nodeProp('d2',None,[1,1,1,0,0,1], displ=[(2,6),(4,8.)])
+    np1 = P.nodeProp('d1',nset=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
+    np2 = P.nodeProp('b0',nset=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
+    np3 = P.nodeProp('d2',nset=Nset(np2.nr),bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
 
     bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
     top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')

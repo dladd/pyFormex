@@ -14,17 +14,6 @@ import gui.decors
 
 import time
 
-############################
-# Load the needed calpy modules    
-from plugins import calpy_itf
-calpy_itf.check()
-import calpy
-calpy.options.optimize=True
-from calpy.fe_util import *
-from calpy.beam3d import *
-############################
-
-
 filename = GD.cfg['curfile']
 dirname,basename = os.path.split(filename)
 project = os.path.splitext(basename)[0]
@@ -320,9 +309,11 @@ def connections(elems):
 def createFrameModel():
     """Create the Finite Element Model.
 
-    It is supposed the the Geometry has been created and is available
+    It is supposed here that the Geometry has been created and is available
     as a global variable F.
     """
+    wireframe()
+    lights(False)
     
     # Turn the Formex structure into a TriSurface
     # This guarantees that element i of the Formex is element i of the TriSurface
@@ -335,7 +326,6 @@ def createFrameModel():
 
     # Create the steel structure
     E = Formex(nodes[S.edges])
-    wireframe()
     clear()
     draw(E)
     
@@ -403,8 +393,8 @@ def createFrameModel():
         }
     print tube
     print steel
+
     tubesection = ElemSection(section=tube,material=steel)
-    beam0 = ElemProperty(1, tubesection, elemtype='FRAME3D')    
 
     # Calculate the nodal loads
 
@@ -419,32 +409,36 @@ def createFrameModel():
 
 
     ### DEFINE LOAD CASE (ask user) ###
-    res = askItems([('JobName','hesperia_frame'),('Steel',True),('Glass',True),('Snow',False)])
-
-    jobname = res['JobName']
-    if not jobname:
-        print "No Job Name: bailing out"
+    res = askItems([('Steel',True),('Glass',True),('Snow',False)])
+    if not res:
         return
 
-    NODLoad = zeros((S.ncoords(),3))
-    
+    nlc = 0
+    for lc in [ 'Steel','Glass','Snow' ]:
+        if res[lc]:
+            nlc += 1 
+    NODLoad = zeros((nlc,S.ncoords(),3))
+
+    nlc = 0
     if res['Steel']:
-        # add the STEEL weight
+        # the STEEL weight
         lwgt = steel['density'] * tube['cross_section'] * 9810  # mm/s**2
         print "Weight per length %s" % lwgt
         # assemble steel weight load
         for e,L in zip(tubes,barL):
-            NODLoad[e] += [ 0., 0., - L * lwgt / 2 ]
-
+            NODLoad[nlc,e] += [ 0., 0., - L * lwgt / 2 ]
+        nlc += 1
+        
     if res['Glass']:
-        # add the GLASS weight
+        # the GLASS weight
         wgt = 450e-6 # N/mm**2
         # assemble uniform glass load
         for e,a in zip(S.elems,area):
-            NODLoad[e] += [ 0., 0., - a * wgt / 3 ]
-
+            NODLoad[nlc,e] += [ 0., 0., - a * wgt / 3 ]
+        nlc += 1
+        
     if res['Snow']:
-        # add NON UNIFORM SNOW
+        # NON UNIFORM SNOW
         fn = 'hesperia-nieve.prop'
         snowp = fromfile(fn,sep=',')
         snow_uniform = 320e-6 # N/mm**2
@@ -452,12 +446,15 @@ def createFrameModel():
 
         # assemble non-uniform snow load
         for e,a,p in zip(S.elems,area,snowp):
-            NODLoad[e] += [ 0., 0., - a * snow_non_uniform[p] / 3]
+            NODLoad[nlc,e] += [ 0., 0., - a * snow_non_uniform[p] / 3]
+        nlc += 1
 
-    # Put the nodal loads in the properties database
-    print NODLoad[e]
-    for i,P in enumerate(NODLoad):
-        NodeProperty(i,cload=[P[0],P[1],P[2],0.,0.,0.])
+    # For Abaqus: put the nodal loads in the properties database
+    print NODLoad
+    PDB = PropertyDB()
+    for lc in range(nlc):
+        for i,P in enumerate(NODLoad[lc]):
+            PDB.nodeProp(tag=lc,nset=i,cload=[P[0],P[1],P[2],0.,0.,0.])
 
     # Get support nodes
     botnodes = where(isClose(nodes[:,2], 0.0))[0]
@@ -465,21 +462,20 @@ def createFrameModel():
     GD.message("There are %s support nodes." % bot.shape[0])
 
     # Upper structure
-    nnod0 = nodes.shape[0]              # node number offset
-    ntub0 = tubes.shape[0]              # element number offset
-    tubeprops = ones((ntub0),dtype=Int) # all elements have same props
+    nnodes = nodes.shape[0]              # node number offset
+    ntubes = tubes.shape[0]              # element number offset
+    
+    PDB.elemProp(eset=arange(ntubes),section=tubesection,eltype='FRAME3D')    
     
     # Create support systems (vertical beams)
     bot2 = bot + [ 0.,0.,-200.]         # new nodes 200mm below bot
-    botnodes2 = arange(botnodes.shape[0]) + nnod0  # node numbers
+    botnodes2 = arange(botnodes.shape[0]) + nnodes  # node numbers
     nodes = concatenate([nodes,bot2])
     supports = column_stack([botnodes,botnodes2])
-    supportprops = 2 * ones((supports.shape[0]),dtype=Int)
-    tubes = concatenate([tubes,supports]) 
-    tubeprops = concatenate([tubeprops,supportprops])
+    elems = concatenate([tubes,supports])
     ## !!!
     ## THIS SHOULD BE FIXED !!!
-    ElemProperty(2, ElemSection(material=steel,section={ 
+    PDB.elemProp(arange(ntubes,elems.shape[0]),ElemSection(material=steel,section={ 
         'name':'support',
         'cross_section': A,
         'moment_inertia_11': I1,
@@ -487,17 +483,10 @@ def createFrameModel():
         'moment_inertia_12': I12,
         'torsional_rigidity': J
         }),
-                 elemtype='FRAME3D')                         
+                 eltype='FRAME3D')                         
 
     # Finally, the botnodes2 get the support conditions
     botnodes = botnodes2
-    
-    # Draw the supports
-    S = connect([Formex(bot),Formex(bot2)])
-    draw(S,color='black')
-
-    nodeprops = arange(nodes.shape[0])   # each node has own property 
-    export({'fe_model':(nodes,tubes,nodeprops,tubeprops,botnodes,jobname)})
 
 ##     # Radial movement only
 ##     np_fixed = NodeProperty(1,bound=[0,1,1,0,0,0],coords='cylindrical',coordset=[0,0,0,0,0,1])
@@ -508,8 +497,21 @@ def createFrameModel():
 
 ##     np_central_loaded = NodeProperty(3, displacement=[[1,radial_displacement]],coords='cylindrical',coordset=[0,0,0,0,0,1])
 ##     #np_transf = NodeProperty(0,coords='cylindrical',coordset=[0,0,0,0,0,1])
+    
+    # Draw the supports
+    S = connect([Formex(bot),Formex(bot2)])
+    draw(S,color='black')
+
+    use_calpy = True
+    if use_calpy:
+        fe_model = Dict(dict(nodes=nodes,elems=elems,ntubes=ntubes,loads=NODload,botnodes=botnodes,nsteps=nlc))
+    else:
+        fe_model = Dict(dict(nodes=nodes,elems=elems,prop=PDB,botnodes=botnodes,nsteps=nlc))
+    export({'fe_model':fe_model})
+    print "FE model created and exported as 'fe_model'"
 
 
+#################### SHELL MODEL ########################################
 def createShellModel():
     """Create the Finite Element Model.
 
@@ -580,7 +582,7 @@ def createShellModel():
         step += 1
         NODLoad = zeros((S.ncoords(),3))
         # add NON UNIFORM SNOW
-        fn = 'hesperia2-nieve.prop'
+        fn = 'hesperia-nieve.prop'
         snowp = fromfile(fn,sep=',')
         snow_uniform = 320e-6 # N/mm**2
         snow_non_uniform = { 1:333e-6, 2:133e-6, 3:133e-6, 4:266e-6, 5:266e-6, 6:667e-6 }
@@ -646,7 +648,7 @@ def createAbaqusInput():
 
     jobname = res['JobName']
     if not jobname:
-        print "No Job Name: writinge to sys.stdout"
+        print "No Job Name: writing to sys.stdout"
         jobname = None
 
     out = [ Output(type='history'),
@@ -681,16 +683,43 @@ def runCalpyAnalysis():
     It is supposed that the Finite Element model has been created and
     exported under the name 'fe_model'.
     """
-    import sys
+
+    ############################
+    # Load the needed calpy modules    
+    from plugins import calpy_itf
+    calpy_itf.check()
+    import calpy
+    calpy.options.optimize=True
+    from calpy.fe_util import *
+    from calpy.beam3d import *
+    ############################
+
     try:
-        nodes,tubes,nodeprops,tubeprops,botnodes,jobname = named('fe_model')
+        FE = named('fe_model')
+        nodes = FE.nodes
+        elems = FE.elems
+        ntubes = FE.ntubes
+        nsupp = elems.shape[0] - ntubes
+        prop = FE.prop
+        loads = FE.loads
+        botnodes = FE.botnodes
+        nsteps = FE.nsteps
     except:
         warning("I could not find the finite element model.\nMaybe you should first try to create it?")
-        #raise
         return
     
+    # ask job name from user
+    res = askItems([('JobName','hesperia_shell')])
+    if not res:
+        return
+
+    jobname = res['JobName']
+    if not jobname:
+        print "No Job Name: bailing out"
+        return
+   
     nnod = nodes.shape[0]
-    nel = tubes.shape[0]
+    nel = elems.shape[0]
     print "Number of nodes: %s" % nnod
     print "Number of elements: %s" % nel
 
@@ -711,19 +740,21 @@ def runCalpyAnalysis():
     # matnr refers to the material/section properties.
     #
     # Also notice that Calpy numbering starts at 1, not at 0 as customary
-    # in pyFormex; therefore we add 1 to tubes.
+    # in pyFormex; therefore we add 1 to elems.
     # The third node for all beams is the last (extra) node, numbered nnod.
     # We need to reshape tubeprops to allow concatenation
     # Thus we get:
 
-    print tubes.shape
-    print tubeprops.shape
-    elements = concatenate([tubes + 1,
+    print elems.shape
+    matnr = asarray([1]*ntubes + [2]*nsupp)
+    print matnr
+    elements = concatenate([elems + 1,
                             nnod * ones(shape=(nel,1),dtype=int),
-                            tubeprops.reshape((-1,1))],
+                            matnr.reshape((-1,1))],
                            axis=1)
     
-    #print elements
+    print elements
+    return
 
     # Beam Properties in Calpy consist of 7 values:
     #   E, G, rho, A, Izz, Iyy, J
@@ -820,35 +851,6 @@ def runCalpyAnalysis():
     export({'calpy_results':(displ[:-1],frc)})
 
 
-def niceNumber(f,approx=floor):
-    """Returns a nice number close to but not smaller than f."""
-    n = int(approx(log10(f)))
-    m = int(str(f)[0])
-    return m*10**n
-
-
-def frameScale(nframes=10,cycle='up',shape='linear'):
-    """Return a sequence of scale values between -1 and +1.
-
-    nframes is the number of steps between 0 and |1| values.
-
-    cycle determines how subsequent cycles occur:
-      'up' : ramping up
-      'updown': ramping up and down
-      'revert': ramping up and down then reverse up and down
-
-    shape determines the shape of the amplitude curve:
-      'linear': linear scaling
-      'sine': sinusoidal scaling
-    """
-    s = arange(nframes+1)
-    if cycle in [ 'updown', 'revert' ]:
-        s = concatenate([s, fliplr(s[:-1].reshape((1,-1)))[0]])
-    if cycle in [ 'revert' ]: 
-        s = concatenate([s, -fliplr(s[:-1].reshape((1,-1)))[0]])
-    return s.astype(float)/nframes
-
-
 def showResults(nodes,elems,displ,text,val,val1=None,showref=False,dscale=100.,
                 count=1,sleeptime=-1.):
     """Display a constant or linear scalar field on 1-dim elements.
@@ -936,8 +938,9 @@ def showResults(nodes,elems,displ,text,val,val1=None,showref=False,dscale=100.,
 
 def postCalpy():
     """Show results from the Calpy analysis."""
+    from plugins.postproc import niceNumber,frameScale
     try:
-        nodes,tubes,nodeprops,tubeprops,botnodes,jobname = named('fe_model')
+        nodes,elems,nodeprops,tubeprops,botnodes,jobname = named('fe_model')
         print "OK"
         displ,frc = named('calpy_results')
         print "OK2"
@@ -1009,7 +1012,7 @@ def postCalpy():
                 # bending moment values at second node
                 val1 = frc[:,frcindex+2,loadcase]
 
-        showResults(nodes,tubes,dis,txt,val,val1,showref,dscale,count,sleeptime)
+        showResults(nodes,elems,dis,txt,val,val1,showref,dscale,count,sleeptime)
 
 
 #############################################################################

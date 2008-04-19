@@ -16,7 +16,7 @@ DB = None
 def setDB(db):
     global DB
     DB = db
-    
+
 
 def niceNumber(f,approx=floor):
     """Returns a nice number close to but not smaller than f."""
@@ -45,6 +45,7 @@ def frameScale(nframes=10,cycle='up',shape='linear'):
     if cycle in [ 'revert' ]: 
         s = concatenate([s, -fliplr(s[:-1].reshape((1,-1)))[0]])
     return s.astype(float)/nframes
+
 
 #############################################################
 # Do something with the data

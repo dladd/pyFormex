@@ -198,15 +198,16 @@ class ElemSection(CascadingDict):
 class ElemLoad(CascadingDict):
     """Distributed loading on an element."""
 
-    def __init__(self,loadlabel=None,magnitude=None,amplitude=None):
+    def __init__(self,label=None,value=None,amplitude=None):
         """Create a new element load. Empty by default.
         
         An element load can hold the following sub-properties:
-        - magnitude: the magnitude of the distibuted load.
-        - loadlabel: the distributed load type label.
+        - label: the distributed load type label.
+        - value: the magnitude of the distibuted load.
         - amplitude: an amplitude instance.
         """          
-        Dict.__init__(self, {'magnitude' : magnitude, 'loadlabel' : loadlabel, 'amplitude' : amplitude})
+        Dict.__init__(self,{'label':label,'value':value,'amplitude':amplitude})
+
 
 ############## Basic property data classes ########################
 
@@ -311,6 +312,17 @@ def checkString(a,valid):
         print "Expected one of %s, got: %s" % (valid,a)
     raise ValueError
 
+
+# Create automatic names for node and element sets
+
+def autoName(base,*args):
+    return (base + '_%s' * len(args)) % args 
+
+def Nset(*args):
+    return autoName('Nset',*args)
+
+def Eset(*args):
+    return autoName('Eset',*args)
 
 ##################### Properties Database ###################
 
@@ -467,10 +479,12 @@ class PropertyDB(Dict):
                 d['section'] = section
             if dload is not None:
                 d['dload'] = dload
-            return self.Prop(kind='e',tag=tag,set=eset,**d)
+            p = self.Prop(kind='e',tag=tag,set=eset,**d)
+            if p.eltype is not None and type(p.set) is str:
+                raise
+            return p
         except:
-            print "tag=%s,eset=%s,eltype=%s,section=%s,dload=%s" % (tag,eset,eltype,section,dload)
-            raise ValueError,"Invalid Elem Property"
+            raise ValueError,"Invalid Elem Property\n  tag=%s,eset=%s,eltype=%s,section=%s,dload=%s" % (tag,eset,eltype,section,dload)
 
 
 
@@ -484,7 +498,7 @@ if __name__ == "script" or  __name__ == "draw":
     P = PropertyDB()
 
     Stick = P.Prop(color='green',name='Stick',weight=25,comment='This could be anything: a gum, a frog, a usb-stick,...')
-    author = P.Prop(tag='author',Name='Tim Neels',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+    author = P.Prop(tag='author',Name='Alfred E Neuman',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
     
     print Stick
     print P.getProp(tag='author') 
@@ -503,18 +517,20 @@ if __name__ == "script" or  __name__ == "draw":
     P.setMaterialDB(Mat)
     P.setSectionDB(Sec)
 
-    # node properties
-    P.nodeProp(1,cload=[5,0,-75,0,0,0])
-    P.nodeProp(2,bound='pinned')
-    
     P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
     B1 = [ 1 ] + [ 0 ] * 5
-
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
-    P.nodeProp(1,cload=P1)
-    P.nodeProp(2,cload=P2)
-    P.nodeProp(7,bound=B1)
+    # node property on single node
+    P.nodeProp(1,nset=1,cload=[5,0,-75,0,0,0])
+    # node property on node set
+    P.nodeProp(nset=[2,3],bound='pinned')
+    # node property on ALL nodes
+    P.nodeProp(cload=P1,bound=B1,csys=CYL)
+    # node property whose set will be reused
+    nset1 = P.nodeProp(tag='step1',nset=[2,3,4],cload=P1).nr
+    # node properties with an already named set
+    P.nodeProp(tag='step2',nset=Nset(nset1),cload=P2)
 
     print 'nodeproperties'
     print P.nprop
@@ -526,8 +542,8 @@ if __name__ == "script" or  __name__ == "draw":
     for p in P.getProp('n',rec=[0,2]):
         print p
         
-    print "tag 1 and 7"
-    for p in P.getProp('n',tag=[1,7]):
+    print "tags 1 and step1"
+    for p in P.getProp('n',tag=[1,'step1']):
         print p
 
     print "cload attributes"
@@ -558,7 +574,8 @@ if __name__ == "script" or  __name__ == "draw":
     q1 = ElemLoad('PZ',2.5)
     q2 = ElemLoad('PY',3.14,amplitude=amp)
 
-    top = P.elemProp(eltype='B22',section=hor,dload=q1)
+
+    top = P.elemProp(eset=[0,1,2],eltype='B22',section=hor,dload=q1)
     column = P.elemProp(eltype='B22',section=vert)
     diagonal = P.elemProp(eltype='B22',section=hor)
     bottom = P.elemProp(section=hor,dload=q2)
