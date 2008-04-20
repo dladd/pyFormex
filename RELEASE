@@ -3,21 +3,8 @@ VERSION=0.7.1
 # Unless you are creating an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
 RELEASE=${VERSION}-a1
+
 PROGRAM= pyformex.py
-PYMODULES= config flatkeydb formex globaldata mydict \
-  script simple timer units utils vector
-PYGUIMODULES = __init__  actors camera cameraMenu canvas \
-  colors colorscale decors draw fileMenu gui help image \
-  marks menu prefMenu scriptsMenu toolbar viewport viewportMenu widgets
-PLUGINMODULES= __init__ calpy_itf elements f2abq formex_menu inertia \
-  lima partition properties sectionize \
-  surface surface_abq surface_menu tetgen turtle
-EXAMPLES= __init__ BarrelVault Baumkuchen Circle Clip Diamatic \
-  DoubleLayer Geodesic Hyparcap KochLine Lamella Lima Mobius Novation\
-  ParabolicTower Pattern ScallopDome Schwedler Sphere Sphere2 Sphere_stl\
-  SpaceTrussRoof SpaceTrussRoof_calpy SpaceTrussRoof_f2abq\
-  Spiral Stars Torus TrussBridge TrussFrame WireStent \
-  WireStent_calpy WireStent_Demo X_truss X_truss_calpy
 EXAMPLEDATA= materials.db
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
   Lima Novation ParabolicTower ScallopDome SpaceTrussRoof Spiral Stars \

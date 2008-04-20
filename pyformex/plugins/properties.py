@@ -422,7 +422,7 @@ class PropertyDB(Dict):
         return d
 
 
-    def nodeProp(self,tag=None,nset=None,cload=None,bound=None,displ=None,csys=None):
+    def nodeProp(self,nset=None,tag=None,cload=None,bound=None,displ=None,csys=None):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -454,11 +454,11 @@ class PropertyDB(Dict):
                     raise
             return self.Prop(kind='n',tag=tag,set=nset,**d)
         except:
-            print "tag=%s,nset=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,nset,cload,bound,displ,csys)
+            print "tag=%s,set=%s,tag=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,nset,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,tag=None,eset=None,section=None,eltype=None,dload=None): 
+    def elemProp(self,eset=None,tag=None,section=None,eltype=None,dload=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -522,15 +522,15 @@ if __name__ == "script" or  __name__ == "draw":
     B1 = [ 1 ] + [ 0 ] * 5
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
     # node property on single node
-    P.nodeProp(1,nset=1,cload=[5,0,-75,0,0,0])
+    P.nodeProp(1,set=1,cload=[5,0,-75,0,0,0])
     # node property on node set
-    P.nodeProp(nset=[2,3],bound='pinned')
+    P.nodeProp(set=[2,3],bound='pinned')
     # node property on ALL nodes
     P.nodeProp(cload=P1,bound=B1,csys=CYL)
     # node property whose set will be reused
-    nset1 = P.nodeProp(tag='step1',nset=[2,3,4],cload=P1).nr
+    nset1 = P.nodeProp(tag='step1',set=[2,3,4],cload=P1).nr
     # node properties with an already named set
-    P.nodeProp(tag='step2',nset=Nset(nset1),cload=P2)
+    P.nodeProp(tag='step2',set=Nset(nset1),cload=P2)
 
     print 'nodeproperties'
     print P.nprop

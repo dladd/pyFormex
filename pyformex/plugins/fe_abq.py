@@ -970,6 +970,9 @@ class AbqData(CascadingDict):
           The default is to apply ALL boundary conditions initially.
           Specify a (possibly non-existing) tag to override the default.
         """
+        if not(type(model) is Model and type(prop) is PropertyDBand):
+            raise ValueError,"Invalid data"
+        
         self.model = model
         self.prop = prop
         self.bound = bound

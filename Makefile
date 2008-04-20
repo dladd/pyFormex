@@ -13,23 +13,28 @@
 
 include RELEASE
 
-PYFORMEXDIR= pyformex-${RELEASE}
-PYSOURCE= ${addprefix pyformex/,${addsuffix .py, ${PYMODULES}}}
-PYGUISOURCE= ${addprefix pyformex/gui/,${addsuffix .py,${PYGUIMODULES}}}
-PLUGINSOURCE= ${addprefix pyformex/plugins/,${addsuffix .py,${PLUGINMODULES}}}
-OTHERSOURCE= pyformex/pyformexrc
-ICONFILES= $(wildcard icons/*.xpm) $(wildcard icons/pyformex_*.png)
+PYFORMEXDIR= pyformex
+PYSOURCE= setup.py pyformex/pyformexrc \
+	$(wildcard pyformex/*.py) \
+	$(wildcard pyformex/gui/*.py) \
+	$(wildcard pyfomrex/plugins/*.py) \
+	$(wildcard pyformex/examples/*.py) \
+	$(wildcard pyformex/examples/Analysis/*.py) \
+	$(wildcard pyformex/examples/Demos/*.py) \
+
+STAMPFILES= README History Makefile post-install ReleaseNotes
+NONSTAMPFILES= COPYING RELEASE Description 
+
+STAMPABLE= ${PYSOURCE} ${STAMPFILES}
+
 DOCDIR= doc
 HTMLDIR= ${DOCDIR}/html
 HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }
 HTMLGUIDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, gui ${addprefix gui.,${PYGUIMODULES}}}}
 HTMLPLUGINDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, plugins ${addprefix plugins.,${PLUGINMODULES}}}}
-STAMPFILES= README History Makefile post-install ReleaseNotes
-NONSTAMPFILES= COPYING RELEASE Description 
 EXAMPLEFILES= ${addprefix pyformex/examples/,${addsuffix .py, ${EXAMPLES} }}
 IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 
-STAMPABLE= pyformex/${PROGRAM} ${PYSOURCE} ${OTHERSOURCE} ${PYGUISOURCE} ${PLUGINSOURCE}  ${EXAMPLEFILES} ${STAMPFILES}
 
 STAMP= stamp 
 VERSIONSTRING= __version__ = .*
@@ -124,9 +129,7 @@ ${PKGDIR}/${PKG}: version MANIFEST.in
 pub: 
 	rsync -l ${PKGDIR}/${PKG} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
 
-
 # Tag the release in the svn repository
-
 tag:
 	svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.berlios.de/svnroot/repos/pyformex/tags/release-${RELEASE} -m "Tagging the ${RELEASE} release of the 'pyFormex' project."
 
