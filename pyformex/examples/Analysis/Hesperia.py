@@ -789,7 +789,7 @@ def runCalpyAnalysis():
 
 def postCalpy():
     """Show results from the Calpy analysis."""
-    from plugins.postproc import niceNumber,frameScale
+    from plugins.postproc import *
     try:
         FE = named('fe_model')
         displ,frc = named('calpy_results')
@@ -861,90 +861,8 @@ def postCalpy():
                 # bending moment values at second node
                 val1 = frc[:,frcindex+2,loadcase]
 
-        showResults(FE.nodes,FE.elems,dis,txt,val,val1,showref,dscale,count,sleeptime)
+        showResults(FE.nodes,FE.elems,dis,txt,val,showref,dscale,count,sleeptime)
 
-
-def showResults(nodes,elems,displ,text,val,val1=None,showref=False,dscale=100.,
-                count=1,sleeptime=-1.):
-    """Display a constant or linear scalar field on 1-dim elements.
-
-    If dscale is a list of values, the results will be drawn with
-    subsequent deformation scales, with a sleeptime intermission,
-    and the whole cycle will be repeated count times.
-    """
-    clear()
-
-    # draw undeformed structure
-    if showref:
-        ref = Formex(nodes[elems])
-        draw(ref,bbox=None,color='green',linewidth=1)
-
-    # compute the colors according to the values
-    if val is None:
-        # only display deformed geometry
-        val = 'blue'
-        val1 = None
-    else:
-        # create a colorscale and draw the colorlegend
-        CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
-        cval = array(map(CS.color,val))
-        cval1 = None
-        if val1 is not None:
-            cval1 = array(map(CS.color,val1))
-            cval = column_stack([cval,cval1])
-            print cval.shape
-        CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,10,30,200) 
-        GD.canvas.addDecoration(CLA)
-
-    # the supplied text
-    if text:
-        drawtext(text,150,30,'tr24')
-
-    # create the frames while displaying them
-    dscale = array(dscale)
-    frames = []   # a place to store the drawn frames
-    for dsc in dscale.flat:
-
-        dnodes = nodes + dsc * displ
-        deformed = Formex(dnodes[elems])
-
-        # We store the changing parts of the display, so that we can
-        # easily remove/redisplay them
-        F = draw(deformed,color=cval,linewidth=3,view='__last__',wait=None)
-        T = drawtext('Deformation scale = %s' % dsc,150,10,'tr18')
-
-        # remove the last frame
-        # This is a clever trick: we remove the old drawings only after
-        # displaying new ones. This makes the animation a lot smoother
-        # (though the code is less clear and compact).
-        if len(frames) > 0:
-            GD.canvas.removeActor(frames[-1][0])
-            GD.canvas.removeDecoration(frames[-1][1])
-        # add the latest frame to the stored list of frames
-        frames.append((F,T))
-        if sleeptime > 0.:
-            sleep(sleeptime)
-
-    # display the remaining cycles
-    count -= 1
-    FA,TA = frames[-1]
-    #print frames
-    #print count
-    while count > 0:
-        count -= 1
-
-        for F,T in frames:
-            #print count,F,T
-            GD.canvas.addActor(F)
-            GD.canvas.addDecoration(T)
-            GD.canvas.removeActor(FA)
-            GD.canvas.removeDecoration(TA)
-            GD.canvas.display()
-            GD.canvas.update()
-            FA,TA = F,T
-            if sleeptime > 0.:
-                sleep(sleeptime)
 
 
 #############################################################################

@@ -9,6 +9,9 @@ from a numerical simulation, and render the values on the domain.
 from numpy import *
 from formex import *
 from gui.draw import *
+from gui.colorscale import ColorScale,ColorLegend
+from gui import decors,canvas,widgets
+from gui.colors import *
 
 
 DB = None
@@ -60,5 +63,105 @@ def showModel(nodes=True,elems=True):
         Fe = [ Formex(DB.nodes[elems],i+1) for i,elems in enumerate(DB.elems.itervalues()) ]
         draw(Fe)
     zoomAll()
+
+
+def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
+                count=1,sleeptime=-1.):
+    """Display a constant or linear field on triangular elements.
+
+    nodes is an array with nodal coordinates
+    elems is a single element group or a list of elem groups
+    displ are the displacements at the nodes
+    val are the scalar values at the nodes
+
+    If dscale is a list of values, the results will be drawn with
+    subsequent deformation scales, with a sleeptime intermission,
+    and the whole cycle will be repeated count times.
+    """
+    clear()
+    
+    if type(elems) != list:
+        elems = [ elems ]
+
+    # draw undeformed structure
+    if showref:
+        ref = [ Formex(nodes[el]) for el in elems ]
+        draw(ref,bbox=None,color='green',linewidth=1,mode='wireframe')
+
+    # compute the colors according to the values
+    if val is not None:
+        # create a colorscale and draw the colorlegend
+        vmin,vmax = val.min(),val.max()
+        if vmin*vmax < 0.0:
+            vmid = 0.0
+        else:
+            vmid = 0.5*(vmin+vmax)
+        CS = ColorScale([blue,green,red],vmin,vmax,vmid,1.,1.)
+##         CS = ColorScale([green,None,magenta],0.,1.,None,0.5,None)
+        cval = array(map(CS.color,val))
+        CL = ColorLegend(CS,100)
+        CLA = decors.ColorLegend(CL,10,20,30,200) 
+        GD.canvas.addDecoration(CLA)
+
+    # the supplied text
+    if text:
+        drawtext(text,150,30,'tr24')
+
+    smooth()
+    lights(False)
+
+    # create the frames while displaying them
+    dscale = array(dscale)
+    frames = []   # a place to store the drawn frames
+    for dsc in dscale.flat:
+
+        print nodes.shape
+        print displ.shape
+        dnodes = nodes + dsc * displ
+        deformed = [ Formex(dnodes[el]) for el in elems ]
+
+        # We store the changing parts of the display, so that we can
+        # easily remove/redisplay them
+        if val is None:
+            F = [ draw(df,color='blue',view='__last__',wait=None) for df in deformed ]
+        else:
+            F = [ draw(df,color=cval[el],view='__last__',wait=None) for df,el in zip(deformed,elems) ]
+        T = drawtext('Deformation scale = %s' % dsc,150,10,'tr18')
+
+        # remove the last frame
+        # This is a clever trick: we remove the old drawings only after
+        # displaying new ones. This makes the animation a lot smoother
+        # (though the code is less clear and compact).
+        if len(frames) > 0:
+            for Fi in frames[-1][0]:
+                GD.canvas.removeActor(Fi)
+            GD.canvas.removeDecoration(frames[-1][1])
+        # add the latest frame to the stored list of frames
+        frames.append((F,T))
+        if sleeptime > 0.:
+            sleep(sleeptime)
+
+    # display the remaining cycles
+    count -= 1
+    FA,TA = frames[-1]
+    while count > 0:
+        count -= 1
+
+        for F,T in frames:
+            # It would be interesting if addactor would add/remove a list
+            # of actors
+            for Fi in F:
+                GD.canvas.addActor(Fi)
+            GD.canvas.addDecoration(T)
+            for Fi in FA:
+                GD.canvas.removeActor(Fi)
+            GD.canvas.removeDecoration(TA)
+            GD.canvas.display()
+            GD.canvas.update()
+            FA,TA = F,T
+            if sleeptime > 0.:
+                sleep(sleeptime)
+
+
 
 # End
