@@ -108,6 +108,7 @@ known_externals = {
     'calpy': ('calpy --version','Calpy (\S+)'), 
     'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
     'units': ('units --version','GNU Units version (\S+)'),
+    'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
     }
 
 

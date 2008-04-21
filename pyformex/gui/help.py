@@ -86,6 +86,7 @@ def opengl():
 
 def detected():
     """Display the detected software components."""
+    utils.checkExternal()
     catchAndDisplay('draw.printdetected()')
 
 def about():
