@@ -573,18 +573,54 @@ drawit(F,'right')
  \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Adding properties}
+\section{Assigning properties to geometry}
 \label{sec:props}
-Each element of a Formex can hold a property number. This number can be used as an entry in a database, which holds some sort of property. The module \module{properties} delivers such databases. The Formex and the database are seperate entities, only linked by the property numbers. 
+\emph{As of version 0.7.1, the way to define properties for elements of the geometry has changed thoroughly. As a result, the proprty system has become much more flexibel and powerful, and can be used for Formex data structures as well as for TriSurfaces and Finite Element models.}
 
-\subsection{The class Property}
-The first kind of database is called \class{Property}. This is the base class, and can hold any kind of property.
+With properties we mean any data connected with some part of the geometry other than the coordinates of its points or the structure of points into elements.
+Also, values that can be calculated purely from the coordinates of the points and the structure of the elements are usually not considerer properties.
+
+Properties can e.g. define material characteristics, external loading and boundary conditions to be used in numerical simulations of the mechanics of a structure. The properties module includes some specific functions to facilitate assigning such properties. But the system is general enough to used it for any properties that you can think of.
+
+Properties are collected in a \class{PropertyDB} object. Before you can store anything in this database, you need to create it. Usually, you will start with an empty database.
 \begin{verbatim}
->>> Stick = Property(1, {'colour':'green', 'name':'Stick', 'weight': 25, 
-'comment':'This could be anything: a gum, a frog, a usb-stick,...'})
->>> author = Property(5,{'Name':'Tim Neels', 'Address': CascadingDict
-{'street':'Krijgslaan','city':'Gent','country':'Belgium'})})
+P = PropertyDB()
 \end{verbatim}
+
+Now you can start entering property records into the database. A property record is a lot like a Python dict object, and thus it can contain nearly anything. It is implemented however as a \class{Dict} object, which means that the key values are strings and can also be used as attributes to address the value. Thus, if \Code{P} is a property record, then a field named \Code{key} can either be addressed as \Code{P['key']} or as \Code{P.key}. This implementation was choosen for the convenience of the user, but has no further advantages over a normal dict object. You should not use any of the methods of Python's dict class as key in a property record: it would override this method for the object.
+
+The property record has four more reserved (forbidden) keys: \Code{kind}, \Code{tag}, \Code{set} and \code{nr}. The \Code{kind} and \Code{nr} should never be set nor changed by the user. \Code{kind} is used internally to distinguish among differnt kind of property records. \Code{nr} will be set automatically to a unique record number. Some application modules use this number for identification and to create automatic names for property sets. 
+
+The \Code{tag} and \Code{set} keys are optional fields and can be set by the user. They should however only be used for the purposes explained hereafter, because they have a special meaning for the database methods and application modules. The \Code{set} can be used to specify a list of integer numbers identifying a collection of elements of the geometry for which the current property is valid. Absence of the \Code{set} means that the property is assigned to all elements. The \Code{tag} field can be used to attach an identification string to the property record. THis string can be as complex as the user wants and its interpretation is completely left to the user. The \class{ProeprtyDB} class just provides an easy way to select the records by their \Code{tag} name or by a set of tag names.  
+So let's create a property record in our database. The \Code{Prop()} method does just that. It also returns the property record, so you can directly use it further in your code.
+\begin{verbatim}
+>>> Stick = P.Prop(colour='green',name='Stick',weight=25, \
+        comment='This could be anything: a gum, a frog, a usb-stick,...'})
+>>> print Stick
+
+  color = green
+  comment = This could be anything: a gum, a frog, a usb-stick,...
+  nr = 0
+  name = Stick
+  weight = 25
+\end{verbatim}
+Notice the auto-generated \Code{nr} field. Here's another example, with a tag:
+\begin{verbatim}
+>>> author = P.Prop(tag='author',Name='Alfred E Neuman',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+>>> print P.getProp(tag='author')[0]
+  nr = 1
+  tag = author
+  Name = Alfred E Neuman
+  Address = 
+    city = Gent
+    street = Krijgslaan
+    country = Belgium
+\end{verbatim}
+The \method{getProp()} method returns a list of records satisfying some properties, in this case all records having their tag set to \Code{'author'}.
+
+
+\emph{The rest of this section is obsolete}
+
 Data can be accessed in two ways: through the Property-instance itself, or through a dict 'properties'. 
 \begin{verbatim}    
 >>> print Stick

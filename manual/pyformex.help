@@ -21,6 +21,7 @@ options:
   --nodefaultconfig  skip all default locations of config files
   --redirect         redirect standard output to the message board (ignored
                      with --nogui)
+  --detect           Detect helper software and print report.
   --debug            display debugging info to sys.stdout
   --test             testing mode: only for developers!
   --whereami         show where the pyformex package is located

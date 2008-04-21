@@ -492,16 +492,18 @@ class PropertyDB(Dict):
 
 if __name__ == "script" or  __name__ == "draw":
 
-    workHere()
+    if GD.gui:
+        workHere()
     print os.getcwd()
     
     P = PropertyDB()
 
     Stick = P.Prop(color='green',name='Stick',weight=25,comment='This could be anything: a gum, a frog, a usb-stick,...')
-    author = P.Prop(tag='author',Name='Alfred E Neuman',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
-    
     print Stick
-    print P.getProp(tag='author') 
+    
+    author = P.Prop(tag='author',Name='Alfred E Neuman',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+
+    print P.getProp(tag='author')[0]
     
     Stick.weight=30
     Stick.length=10
@@ -512,8 +514,8 @@ if __name__ == "script" or  __name__ == "draw":
     print author.street
     print author.Address.street
 
-    Mat = MaterialDB('../examples/materials.db')
-    Sec = SectionDB('../examples/sections.db')
+    Mat = MaterialDB(GD.cfg['pyformexdir']+'/examples/materials.db')
+    Sec = SectionDB(GD.cfg['pyformexdir']+'/examples/sections.db')
     P.setMaterialDB(Mat)
     P.setSectionDB(Sec)
 
