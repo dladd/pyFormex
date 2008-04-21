@@ -79,15 +79,15 @@ def postABQ():
     if fn:
         chdir(fn)
         name,ext = os.path.splitext(fn)
-        post = name+'_post.py'
-        cmd = "%s/postabq/postabq %s > %s" % (GD.cfg['pyformexdir'],fn,post)
+        post = name+'.post'
+        cmd = "%s/lib/postabq %s > %s" % (GD.cfg['pyformexdir'],fn,post)
         sta,out = utils.runCommand(cmd)
         if sta:
             GD.message(out)
         
 
 def importDB():
-    types = [ 'Postproc scripts (*_post.py)' ]
+    types = utils.fileDescription('postproc')
     fn = askFilename(GD.cfg['workdir'],types,exist=True)
     if fn:
         chdir(fn)

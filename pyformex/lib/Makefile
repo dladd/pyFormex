@@ -10,6 +10,7 @@ CSOURCE= drawglmodule.c	miscmodule.c\
 ### !!!! KEEP THE BLANK LINE ABOVE THIS ONE !!!
 OBJECTS= $(CSOURCE:.c=.o)
 SOBJECTS= $(CSOURCE:.c=.so)
+PROGRAMS= postabq
 
 # To be filled in by ./configure
 CC= gcc
@@ -22,8 +23,10 @@ INCLUDES= -I/usr/include -I$(PY_INCLUDE) -I$(NUMPY_INCLUDE)
 CFLAGS= -DNDEBUG -g -O3 -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=1 -DMINOR_VERSION=0
 
 
+all: $(SOBJECTS) $(PROGRAMS)
 
-all: $(SOBJECTS)
+postabq: postabq.c
+	$(CC) -o $@ $<
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<
@@ -32,9 +35,15 @@ all: $(SOBJECTS)
 	$(CC) -shared $< -L/usr/lib -o $@
 
 
-Makefile: Makefile.in configure
-	./configure
+Makefile: Makefile.in config.status
+	./config.status
 
+config.status: configure
+	./config.status --recheck
+
+configure: configure.ac
+	autoconf
+ 
 clean:
 	rm -rf *.o *~ config.log config.status
 

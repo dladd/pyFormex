@@ -22,6 +22,9 @@ PYSOURCE= setup.py pyformex/pyformexrc \
 	$(wildcard pyformex/examples/Analysis/*.py) \
 	$(wildcard pyformex/examples/Demos/*.py) \
 
+OTHERSOURCE= lib/Makefile \
+	$(wildcard pyformex/*.py) \
+
 STAMPFILES= README History Makefile post-install ReleaseNotes
 NONSTAMPFILES= COPYING RELEASE Description 
 

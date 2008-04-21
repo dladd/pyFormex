@@ -184,12 +184,13 @@ file_description = {
     'smesh': 'Tetgen surface mesh files (*.smesh)',
     'neu': 'Gambit Neutral files (*.neu)',
     'surface': 'Any Surface file ( *.gts *.stl *.off *.smesh *.neu)',
+    'postproc': 'Postproc scripts (*_post.py *.post)'
 }
 
 def fileDescription(type):
     """Return a description of the specified file type.
 
-    The description of known types are liste in a dict file_description.
+    The description of known types are listed in a dict file_description.
     If the type is unknown, the returned string has the form
     'TYPE files (*.type)'
     """

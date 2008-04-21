@@ -174,54 +174,6 @@ def createGeometry():
     export({'F':F})
 
 
-
-## def saveGeometry(fn=None):
-##     if fn is None:
-##         fn = formexfile
-##     print "Saving %s triangles" % F.nelems()
-##     fil = file(fn,'w')
-##     F.write(fil)
-##     fil.close()
-
-
-## def readGeometry(fn=None):
-##     global F
-##     if fn is None:
-##         fn = formexfile
-##     fil = file(fn,'r')
-##     F = Formex.read(fil)
-##     fil.close()
-##     print "Read %s triangles" % F.nelems()
-##     print "BBOX: %s" % F.bbox()
-##     draw(F)
-
-
-## def showTransparent():
-##     clear()
-##     draw(F,color='lightgrey',alpha=0.5)
-##     draw(D)
-##     smoothwire()
-##     transparency(True)
-
-
-## def prepareProperties():
-##     global FA
-##     #Create a view for setting props
-##     createView('myview1',(0.,0.,90.))
-##     clear()
-##     FA = draw(F,view='myview1')
-##     drawNumbers(F)
-
-    
-## p=0
-## def setProperty():
-##     global p
-##     p = 0
-##     res = askItems([['Property',p]])
-##     if res:
-##         p = res['Property']
-   
-
 def assignProperties():
     """Assign properties to the structure's facets"""
     # make sure we have only one actor
@@ -279,17 +231,6 @@ def readProperties(fn = None):
         F.setProp(p)
         clear()
         draw(F)
-    
-
-def readOrCreate():
-    """The full action."""
-    if os.path.exists(formexfile):
-        readGeometry()
-        draw(F)
-    else:
-        createGeometry()
-        saveGeometry()
-    
 
 
 def connections(elems):
@@ -504,7 +445,7 @@ def createFrameModel():
 
     use_calpy = True
     if use_calpy:
-        fe_model = Dict(dict(nodes=nodes,elems=elems,ntubes=ntubes,loads=NODload,botnodes=botnodes,nsteps=nlc))
+        fe_model = Dict(dict(nodes=nodes,elems=elems,ntubes=ntubes,loads=NODLoad,botnodes=botnodes,nsteps=nlc))
     else:
         fe_model = Dict(dict(nodes=nodes,elems=elems,prop=PDB,botnodes=botnodes,nsteps=nlc))
     export({'fe_model':fe_model})
@@ -1024,11 +965,6 @@ def create_menu():
         ("&How To Use",howto),
         ("---",None),
         ("&Create Geometry",createGeometry),
-##         ("&Save Geometry",saveGeometry),
-##         ("&Read Geometry",readGeometry),
-##         ("&Show Transparent",showTransparent),
-##         ("&Prepare Properties",prepareProperties),
-##         ("&Set Property",setProperty),
         ("&Assign Properties",assignProperties),
         ("&Export Properties",exportProperties),
         ("&Select Properties",selectProperties),
