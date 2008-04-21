@@ -350,7 +350,11 @@ def createFrameModel():
 
 
     ### DEFINE LOAD CASE (ask user) ###
-    res = askItems([('Steel',True),('Glass',True),('Snow',False)])
+    res = askItems([('Steel',True),
+                    ('Glass',True),
+                    ('Snow',False),
+                    ('Solver',None,'select',['Calpy','Abaqus']),
+                    ])
     if not res:
         return
 
@@ -416,15 +420,15 @@ def createFrameModel():
     elems = concatenate([tubes,supports])
     ## !!!
     ## THIS SHOULD BE FIXED !!!
-    PDB.elemProp(arange(ntubes,elems.shape[0]),ElemSection(material=steel,section={ 
+    supportsection = ElemSection(material=steel,section={ 
         'name':'support',
         'cross_section': A,
         'moment_inertia_11': I1,
         'moment_inertia_22': I2,
         'moment_inertia_12': I12,
         'torsional_rigidity': J
-        }),
-                 eltype='FRAME3D')                         
+        })
+    PDB.elemProp(eset=arange(ntubes,elems.shape[0]),section=supportsection,eltype='FRAME3D')
 
     # Finally, the botnodes2 get the support conditions
     botnodes = botnodes2
@@ -443,11 +447,10 @@ def createFrameModel():
     S = connect([Formex(bot),Formex(bot2)])
     draw(S,color='black')
 
-    use_calpy = True
-    if use_calpy:
-        fe_model = Dict(dict(nodes=nodes,elems=elems,ntubes=ntubes,loads=NODLoad,botnodes=botnodes,nsteps=nlc))
+    if res['Solver'] == 'Calpy':
+        fe_model = Dict(dict(solver='Calpy',nodes=nodes,elems=elems,prop=PDB,loads=NODLoad,botnodes=botnodes,nsteps=nlc))
     else:
-        fe_model = Dict(dict(nodes=nodes,elems=elems,prop=PDB,botnodes=botnodes,nsteps=nlc))
+        fe_model = Dict(dict(solver='Abaqus',nodes=nodes,elems=elems,prop=PDB,botnodes=botnodes,nsteps=nlc))
     export({'fe_model':fe_model})
     print "FE model created and exported as 'fe_model'"
 
@@ -579,7 +582,7 @@ def createAbaqusInput():
         prop = FE.prop
         nsteps = FE.nsteps
     except:
-        warning("I could not find the finite element model.\nMaybe you should first try to create it?")
+        warning("I could not find the finite element model.\nMaybe you should try to create it first?")
         return
     
     # ask job name from user
@@ -637,20 +640,19 @@ def runCalpyAnalysis():
 
     try:
         FE = named('fe_model')
-        nodes = FE.nodes
-        elems = FE.elems
-        ntubes = FE.ntubes
-        nsupp = elems.shape[0] - ntubes
-        prop = FE.prop
-        loads = FE.loads
-        botnodes = FE.botnodes
-        nsteps = FE.nsteps
+##         print FE.keys()
+##         nodes = FE.nodes
+##         elems = FE.elems
+##         prop = FE.prop
+##         nodloads = FE.loads
+##         botnodes = FE.botnodes
+##         nsteps = FE.nsteps
     except:
-        warning("I could not find the finite element model.\nMaybe you should first try to create it?")
+        warning("I could not find the finite element model.\nMaybe you should try to create it first?")
         return
     
     # ask job name from user
-    res = askItems([('JobName','hesperia_shell')])
+    res = askItems([('JobName','hesperia_frame'),('Verbose Mode',False)])
     if not res:
         return
 
@@ -658,9 +660,10 @@ def runCalpyAnalysis():
     if not jobname:
         print "No Job Name: bailing out"
         return
+    verbose = res['Verbose Mode']
    
-    nnod = nodes.shape[0]
-    nel = elems.shape[0]
+    nnod = FE.nodes.shape[0]
+    nel = FE.elems.shape[0]
     print "Number of nodes: %s" % nnod
     print "Number of elements: %s" % nel
 
@@ -669,68 +672,57 @@ def runCalpyAnalysis():
     # !!! This is ok for the support beams, but for the structural beams
     # !!! this should be changed to the center of the sphere !!!
     extra_node = array([[0.0,0.0,0.0]])
-    coords = concatenate([nodes,extra_node])
+    coords = concatenate([FE.nodes,extra_node])
     nnod = coords.shape[0]
     print "Adding a node for orientation: %s" % nnod
 
+    # We extract the materials/sections from the property database
+    matprops = FE.prop.getProp(kind='e',attr=['section'])
+    
+    # Beam Properties in Calpy consist of 7 values:
+    #   E, G, rho, A, Izz, Iyy, J
+    # The beam y-axis lies in the plane of the 3 nodes i,j,k.
+    mats = array([[mat.young_modulus,
+                  mat.shear_modulus,
+                  mat.density,
+                  mat.cross_section,
+                  mat.moment_inertia_11,
+                  mat.moment_inertia_22,
+                  mat.moment_inertia_12,
+                  ] for mat in matprops]) 
+    if verbose:
+        print "Calpy.materials"
+        print mats
+    
     # Create element definitions:
     # In calpy, each beam element is represented by 4 integer numbers:
     #    i j k matnr,
     # where i,j are the node numbers,
     # k is an extra node for specifying orientation of beam (around its axis),
-    # matnr refers to the material/section properties.
-    #
+    # matnr refers to the material/section properties (i.e. the row nr in mats)
     # Also notice that Calpy numbering starts at 1, not at 0 as customary
     # in pyFormex; therefore we add 1 to elems.
     # The third node for all beams is the last (extra) node, numbered nnod.
     # We need to reshape tubeprops to allow concatenation
-    # Thus we get:
-
-    print elems.shape
-    matnr = asarray([1]*ntubes + [2]*nsupp)
-    print matnr
-    elements = concatenate([elems + 1,
-                            nnod * ones(shape=(nel,1),dtype=int),
-                            matnr.reshape((-1,1))],
+    matnr = zeros(nel,dtype=int32)
+    for i,mat in enumerate(matprops):  # proces in same order as above!
+        matnr[mat.set] = i+1
+    elements = concatenate([FE.elems + 1,         # the normal node numbers
+                            nnod * ones(shape=(nel,1),dtype=int), # extra node  
+                            matnr.reshape((-1,1))],  # mat number
                            axis=1)
-    
-    print elements
-    return
+  
+    if verbose:
+        print "Calpy.elements"
+        print elements
 
-    # Beam Properties in Calpy consist of 7 values:
-    #   E, G, rho, A, Izz, Iyy, J
-    # The beam y-axis lies in the plane of the 3 nodes i,j,k.
-    # We initialize the materials to all zeros and then fill in the
-    # values from the properties database created under createFeModel()
-    # (this database is a global variable of the properties module, and
-    #  is thus imported at the top of this file)
-    matnrs = unique(tubeprops) # the used beam prop numbers 
-    nmats = matnrs.shape[0]
-    mats = zeros((nmats,7),dtype=float)
-    print mats.shape
-    for matnr in matnrs:
-        print "Material %s" % matnr
-        mat = the_elemproperties[matnr]
-        print mat
-        mats[matnr-1] = [ mat.young_modulus,
-                          mat.shear_modulus,
-                          mat.density,
-                          mat.cross_section,
-                          mat.moment_inertia_11,
-                          mat.moment_inertia_22,
-                          mat.moment_inertia_12,
-                          ]
-    #print mats
-
-    #print the_nodeproperties
-    
     # Boundary conditions
     # While we could get the boundary conditions from the node properties
     # database, we will formulate them directly from the numbers
     # of the supported nodes (botnodes).
     # Calpy (currently) only accepts boundary conditions in global
     # (cartesian) coordinates. However, as we only use fully fixed
-    # (though hinged) support nodes, the solution is simple here.
+    # (though hinged) support nodes, that presents no problem here.
     # For each supported node, a list of 6 codes can (should)be given,
     # corresponding to the six Degrees Of Freedom (DOFs): ux,uy,uz,rx,ry,rz.
     # The code has value 1 if the DOF is fixed (=0.0) and 0 if it is free.
@@ -738,18 +730,22 @@ def runCalpyAnalysis():
     # is to put these codes in a text field and have them read with
     # ReadBoundary.
     s = ""
-    for n in botnodes + 1:   # NOTICE THE +1 to comply with Calpy numbering!
+    for n in FE.botnodes + 1:   # again, the +1 is to comply with Calpy numbering!
         s += "  %d  1  1  1  1  1  1\n" % n    # a fixed hinge
     # Also clamp the fake extra node
     s += "  %d  1  1  1  1  1  1\n" % nnod
-    print "Specified boundary conditions"
-    print s
+    if verbose:
+        print "Specified boundary conditions"
+        print s
     bcon = ReadBoundary(nnod,6,s)
     NumberEquations(bcon)
-    #print bcon # now all DOFs are numbered from 1 to ndof
+    if verbose:
+        print "Calpy.DOF numbering"
+        print bcon # all DOFs are numbered from 1 to ndof
 
     # The number of free DOFs remaining
     ndof = bcon.max()
+    print "Number of DOF's: %s" % ndof
 
     # Create load vectors
     # Calpy allows for multiple load cases in a single analysis.
@@ -772,12 +768,11 @@ def runCalpyAnalysis():
     print "Assembling Concentrated Loads"
     nlc = 1
     loads = zeros((ndof,nlc),float)
-    for n,p in the_nodeproperties.items():
-        cload = p.cload
-        if cload is not None:
-            #print "Node %s: %s" % (n,cload)
-            loads[:,0] = AssembleVector(loads[:,0],cload,bcon[n,:])
-
+    for p in FE.prop.getProp('n',attr=['cload']):
+        loads[:,0] = AssembleVector(loads[:,0],p.cload,bcon[p.set,:])
+    if verbose:
+        print "Calpy.Loads"
+        print loads
     # Perform analysis
     # OK, that is really everything there is to it. Now just run the
     # analysis, and hope for the best ;)
@@ -792,6 +787,83 @@ def runCalpyAnalysis():
     export({'calpy_results':(displ[:-1],frc)})
 
 
+def postCalpy():
+    """Show results from the Calpy analysis."""
+    from plugins.postproc import niceNumber,frameScale
+    try:
+        FE = named('fe_model')
+        displ,frc = named('calpy_results')
+    except:
+        warning("I could not find the finite element model and/or the calpy results. Maybe you should try to first create them?")
+        raise
+        return
+    
+    # The frc array returns element forces and has shape
+    #  (nelems,nforcevalues,nloadcases)
+    # nforcevalues = 8 (Nx,Vy,Vz,Mx,My1,Mz1,My2,Mz2)
+    # Describe the nforcevalues element results in frc.
+    # For each result we give a short and a long description:
+    frc_contents = [('Nx','Normal force'),
+                    ('Vy','Shear force in local y-direction'),
+                    ('Vz','Shear force in local z-direction'),
+                    ('Mx','Torsional moment'),
+                    ('My','Bending moment around local y-axis'),
+                    ('Mz','Bending moment around local z-axis'),
+                    ('None','No results'),
+                    ]
+    # split in two lists
+    frc_keys = [ c[0] for c in frc_contents ]
+    frc_desc = [ c[1] for c in frc_contents ]
+
+    # Ask the user which results he wants
+    res = askItems([('Type of result',None,'select',frc_desc),
+                    ('Load case',0),
+                    ('Autocalculate deformation scale',True),
+                    ('Deformation scale',100.),
+                    ('Show undeformed configuration',False),
+                    ('Animate results',False),
+                    ('Amplitude shape','linear','select',['linear','sine']),
+                    ('Animation cycle','updown','select',['up','updown','revert']),
+                    ('Number of cycles',5),
+                    ('Number of frames',10),
+                    ('Animation sleeptime',0.1),
+                    ])
+    if res:
+        frcindex = frc_desc.index(res['Type of result'])
+        loadcase = res['Load case']
+        autoscale = res['Autocalculate deformation scale']
+        dscale = res['Deformation scale']
+        showref = res['Show undeformed configuration']
+        animate = res['Animate results']
+        shape = res['Amplitude shape']
+        cycle = res['Animation cycle']
+        count = res['Number of cycles']
+        nframes = res['Number of frames']
+        sleeptime = res['Animation sleeptime']
+
+        dis = displ[:,0:3,loadcase]
+        if autoscale:
+            siz0 = Coords(FE.nodes).sizes()
+            siz1 = Coords(dis).sizes()
+            print siz0
+            print siz1
+            dscale = niceNumber(1./(siz1/siz0).max())
+
+        if animate:
+            dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
+        
+        # Get the scalar element result values from the frc array.
+        val = val1 = txt = None
+        if frcindex <= 5:
+            val = frc[:,frcindex,loadcase]
+            txt = frc_desc[frcindex]
+            if frcindex > 3:
+                # bending moment values at second node
+                val1 = frc[:,frcindex+2,loadcase]
+
+        showResults(FE.nodes,FE.elems,dis,txt,val,val1,showref,dscale,count,sleeptime)
+
+
 def showResults(nodes,elems,displ,text,val,val1=None,showref=False,dscale=100.,
                 count=1,sleeptime=-1.):
     """Display a constant or linear scalar field on 1-dim elements.
@@ -801,8 +873,6 @@ def showResults(nodes,elems,displ,text,val,val1=None,showref=False,dscale=100.,
     and the whole cycle will be repeated count times.
     """
     clear()
-
-    #bbox = ref.bbox()
 
     # draw undeformed structure
     if showref:
@@ -875,85 +945,6 @@ def showResults(nodes,elems,displ,text,val,val1=None,showref=False,dscale=100.,
             FA,TA = F,T
             if sleeptime > 0.:
                 sleep(sleeptime)
-
-
-def postCalpy():
-    """Show results from the Calpy analysis."""
-    from plugins.postproc import niceNumber,frameScale
-    try:
-        nodes,elems,nodeprops,tubeprops,botnodes,jobname = named('fe_model')
-        print "OK"
-        displ,frc = named('calpy_results')
-        print "OK2"
-    except:
-        warning("I could not find the finite element model and/or the calpy results. Maybe you should try to first create them?")
-        raise
-        return
-    
-    # The frc array returns element forces and has shape
-    #  (nelems,nforcevalues,nloadcases)
-    # nforcevalues = 8 (Nx,Vy,Vz,Mx,My1,Mz1,My2,Mz2)
-    # Describe the nforcevalues element results in frc.
-    # For each result we give a short and a long description:
-    frc_contents = [('Nx','Normal force'),
-                    ('Vy','Shear force in local y-direction'),
-                    ('Vz','Shear force in local z-direction'),
-                    ('Mx','Torsional moment'),
-                    ('My','Bending moment around local y-axis'),
-                    ('Mz','Bending moment around local z-axis'),
-                    ('None','No results'),
-                    ]
-    # split in two lists
-    frc_keys = [ c[0] for c in frc_contents ]
-    frc_desc = [ c[1] for c in frc_contents ]
-
-    # Ask the user which results he wants
-    res = askItems([('Type of result',None,'select',frc_desc),
-                    ('Load case',0),
-                    ('Autocalculate deformation scale',True),
-                    ('Deformation scale',100.),
-                    ('Show undeformed configuration',False),
-                    ('Animate results',False),
-                    ('Amplitude shape','linear','select',['linear','sine']),
-                    ('Animation cycle','updown','select',['up','updown','revert']),
-                    ('Number of cycles',5),
-                    ('Number of frames',10),
-                    ('Animation sleeptime',0.1),
-                    ])
-    if res:
-        frcindex = frc_desc.index(res['Type of result'])
-        loadcase = res['Load case']
-        autoscale = res['Autocalculate deformation scale']
-        dscale = res['Deformation scale']
-        showref = res['Show undeformed configuration']
-        animate = res['Animate results']
-        shape = res['Amplitude shape']
-        cycle = res['Animation cycle']
-        count = res['Number of cycles']
-        nframes = res['Number of frames']
-        sleeptime = res['Animation sleeptime']
-
-        dis = displ[:,0:3,loadcase]
-        if autoscale:
-            siz0 = Coords(nodes).sizes()
-            siz1 = Coords(dis).sizes()
-            print siz0
-            print siz1
-            dscale = niceNumber(1./(siz1/siz0).max())
-
-        if animate:
-            dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
-        
-        # Get the scalar element result values from the frc array.
-        val = val1 = txt = None
-        if frcindex <= 5:
-            val = frc[:,frcindex,loadcase]
-            txt = frc_desc[frcindex]
-            if frcindex > 3:
-                # bending moment values at second node
-                val1 = frc[:,frcindex+2,loadcase]
-
-        showResults(nodes,elems,dis,txt,val,val1,showref,dscale,count,sleeptime)
 
 
 #############################################################################
