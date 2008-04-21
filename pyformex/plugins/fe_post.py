@@ -13,7 +13,7 @@ import globaldata as GD
 from numpy import *
 from gui.draw import export
 import connectivity
-
+from odict import ODict
 
 class FeResult(object):
 
@@ -102,21 +102,24 @@ class FeResult(object):
             v = asarray(self.elems[k])
             self.elems[k] = asarray(self.nid[v])
         self.modeldone = True
-        self.res = {}
-
+        # we use lists, to keep the cases in order
+        self.res = ODict()
+        self.step = None
+        self.inc = None
+ 
     def Increment(self,step,inc,**kargs):
         if not self.modeldone:
             self.Finalize()
         if step != self.step:
+            if step not in self.res.keys():
+                self.res[step] = ODict()
             self.step = step
-            if not self.res.has_key(self.step):
-                self.res[self.step] = {}
-            self.inc = -1
+            self.inc = None
         res = self.res[self.step]
         if inc != self.inc:
+            if inc not in res.keys():
+                res[inc] = {}
             self.inc = inc
-            if not res.has_key(self.inc):
-                res[self.inc] = {}
         self.R = self.res[self.step][self.inc]
         
     def EndIncrement(self):
