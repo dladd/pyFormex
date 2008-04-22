@@ -587,9 +587,12 @@ Properties are collected in a \class{PropertyDB} object. Before you can store an
 P = PropertyDB()
 \end{verbatim}
 
-Now you can start entering property records into the database. A property record is a lot like a Python dict object, and thus it can contain nearly anything. It is implemented however as a \class{Dict} object, which means that the key values are strings and can also be used as attributes to address the value. Thus, if \Code{P} is a property record, then a field named \Code{key} can either be addressed as \Code{P['key']} or as \Code{P.key}. This implementation was choosen for the convenience of the user, but has no further advantages over a normal dict object. You should not use any of the methods of Python's dict class as key in a property record: it would override this method for the object.
+\subsection{General properties}
+\label{sec:general-properties}
 
-The property record has four more reserved (forbidden) keys: \Code{kind}, \Code{tag}, \Code{set} and \code{nr}. The \Code{kind} and \Code{nr} should never be set nor changed by the user. \Code{kind} is used internally to distinguish among differnt kind of property records. \Code{nr} will be set automatically to a unique record number. Some application modules use this number for identification and to create automatic names for property sets. 
+Now you can start entering property records into the database. A property record is a lot like a Python dict object, and thus it can contain nearly anything. It is implemented however as a \class{CascadingDict} object, which means that the key values are strings and can also be used as attributes to address the value. Thus, if \Code{P} is a property record, then a field named \Code{key} can either be addressed as \Code{P['key']} or as \Code{P.key}. This implementation was choosen for the convenience of the user, but has no further advantages over a normal dict object. You should not use any of the methods of Python's dict class as key in a property record: it would override this method for the object.
+
+The property record has four more reserved (forbidden) keys: \Code{kind}, \Code{tag}, \Code{set} and \code{nr}. The \Code{kind} and \Code{nr} should never be set nor changed by the user. \Code{kind} is used internally to distinguish among different kind of property records (see \ref{sec:node-properties}). It should only be used to extend the \class{PropertyDB} class with new kinds of properties, e.g. in subclasses. \Code{nr} will be set automatically to a unique record number. Some application modules use this number for identification and to create automatic names for property sets. 
 
 The \Code{tag} and \Code{set} keys are optional fields and can be set by the user. They should however only be used for the purposes explained hereafter, because they have a special meaning for the database methods and application modules. The \Code{set} can be used to specify a list of integer numbers identifying a collection of elements of the geometry for which the current property is valid. Absence of the \Code{set} means that the property is assigned to all elements. The \Code{tag} field can be used to attach an identification string to the property record. THis string can be as complex as the user wants and its interpretation is completely left to the user. The \class{ProeprtyDB} class just provides an easy way to select the records by their \Code{tag} name or by a set of tag names.  
 So let's create a property record in our database. The \Code{Prop()} method does just that. It also returns the property record, so you can directly use it further in your code.
@@ -606,62 +609,86 @@ So let's create a property record in our database. The \Code{Prop()} method does
 \end{verbatim}
 Notice the auto-generated \Code{nr} field. Here's another example, with a tag:
 \begin{verbatim}
->>> author = P.Prop(tag='author',Name='Alfred E Neuman',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
->>> print P.getProp(tag='author')[0]
+>>> author = P.Prop(tag='author',name='Alfred E Neuman',address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+>>> print author
+
   nr = 1
   tag = author
-  Name = Alfred E Neuman
-  Address = 
+  name = Alfred E Neuman
+  address = 
     city = Gent
     street = Krijgslaan
     country = Belgium
 \end{verbatim}
-The \method{getProp()} method returns a list of records satisfying some properties, in this case all records having their tag set to \Code{'author'}.
+This example shows that record values can be complex structured objects.
+Notice how the \class{CascadingDict} object is by default printed in a very readible layout, offsetting each lower level dictionary two more postions to the right. 
 
+The \class{CascadingDict} has yet another fine characteristic: if an attribute is not found in the toplevel, all values that are instances of \class{CascadingDict} or \class{Dict} (but not the normal Python dict) will be searched for the attribute. If needed, this searching is even repeated in the values of the next levels, and further on, thus cascading though all levels of \class{CascadingDict} structures until the attribute can eventually be found. The cascading does not proceed through values in a \class{Dict}.
 
-\emph{The rest of this section is obsolete}
+If you set an attribute of a \class{CascadingDict}, it is always set in the toplevel. If you want to change lower level attributes, you need to use the full path to it.
+\begin{verbatim}
+>>> print author.street
+  Krijgslaan
+>>> author.street = 'Voskenslaan'
+>>> print author.street
+  Voskenslaan
+>>> print author.address.street
+  Krijgslaan
+>>> author.address.street = 'Wiemersdreef'
+>>> print author.address.street
+  Wiemersdreef
+>>> author = P.Prop(tag='author',alias='John Doe',address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
+>>> print author
 
-Data can be accessed in two ways: through the Property-instance itself, or through a dict 'properties'. 
-\begin{verbatim}    
->>> print Stick
->>> print properties[1] 
-
-  comment = This could be anything: a gum, a frog, a usb-stick,...
-  colour = green
-  name = Stick
-  weight = 25
-
-  comment = This could be anything: a gum, a frog, a usb-stick,...
-  colour = green
-  name = Stick
-  weight = 25
-\end{verbatim}
-Adding and changing properties is very easy.
-\begin{verbatim}  
->>> Stick.weight=30
->>> Stick.length=10
->>> print properties[1]
-
-  comment = This could be anything: a gum, a frog, a usb-stick,...
-  length = 10
-  colour = green
-  name = Stick
-  weight = 30
+  nr = 2
+  tag = author
+  alias = John Doe
+  address = {'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'} 
 \end{verbatim}
 
-\subsection{The class NodeProperty}
-The class NodeProperty can hold properties of nodes in finite element processing. The data is stored in a Dict called 'nodeproperties'. A NodeProperty can hold following sub-properties:
- \begin{description}
- \item [cload] A concentrated load. This is a list of 6 items
- \Code{[F_0, F_1, F_2, M_0, M_1, M_2]}. 
- \item [bound] A boundary condition. This can be defined in 2 ways:
+In the examples above, we have given a name to the created property records, so that we could address them in the subsequent print and field assigment statements. In most cases however, it will be impractical and unnecessary to give your records a name. They all are recorded in the \class{PropertyDB} database, and will exist as long as the database variable lives. There should be away though to request selected data from that database. The \method{getProp()} method returns a list of records satisfying some conditions. The examples below show how it can be used.
+
+\begin{verbatim}
+>>> for p in P.getProp(rec=[0,2]):
+        print p.name
+Stick
+John Doe
+>>>  for p in P.getProp(tag=['author']):
+        print p.name
+None
+John Doe
+>>>  for p in P.getProp(attr=['name']):
+        print p.nr
+0
+2
+>>>  for p in P.getProp(tag=['author'],attr=['name']):
+        print p.name
+John Doe
+\end{verbatim}
+The first call selects records by number: either a single record number or a list of numbers can be specified. The second method selects records based on the value of their tag field. Again a single tag value or a list of values can be specified. Only those records having a 'tag' filed matching any of the values in the list will be returned. The third selection method is based on the existence of some attribute names in the record. Here, always a list of attribute names is required. Records are returned that posess all the attributes in the list, independent from the value of those attributes. If needed, the user can add a further filtering based on the attribute values. Finally, as is shown in the last example, all methods of record selection can be combined. Each extra condition will narrow the selection further down.
+
+
+\section{Node properties}
+\label{sec:node-properties}
+
+The property system presented above allows for recording any kind of values. In many situations however we will want to work with a specialised and limited set of attributes. The main developers of \pyf e.g. often use the program to create geometrical models of structures of which they want to analyse the mechanical behavior. These numerical simulations (FEA, CFD) require specific data that support the introduction of specialised property records. Currently there are two such property record types: node properties, which are attributed to a single point in space, and element properties (see section \ref{sec:elem-properties}), which are attributed to a structured collection of points.
+
+Special purpose properties are distincted by their \Code{kind} field. General property records have {\Code{kind=''}, node properties haven {\Code{kind='n'} and 
+ {\Code{kind='e'} is set for element properties. Users can create their own specialised property records by using other value for the \Code{kind} parameter.
+
+Node properties are created with the \method{nodeProp} method, rather than the general \method{Prop}. The \Code{kind} field does not need to be set: it will be done automatically. When selecting records using the \method{getProp} method, add a \Code{kind='n'} argument to select only node properties.
+
+Node properties will recognize some special field names and check the values for consistency. Application plugins such as the Abaqus input file generator depend on these property structure, so the user should not mess with them. Currently, the following attributes are in use:
+\begin{description}
+ \item [cload] A concentrated load at the node. This is a list of 6 items: three force components in axis directions and three force moments around the axes: \Code{[F_0, F_1, F_2, M_0, M_1, M_2]}. 
+ \item [bound] A boundary condition for the nodal displacement components. This can be defined in 2 ways:
      \begin{itemize}
-     \item as a list of 6 items \Code{[ R_0, R_1, R_2, M_0, M_1, M_2 ]}. These items have 2 possible values:
+     \item as a list of 6 items \Code{[ u_0, u_1, u_2, r_0, r_1, r_2 ]}. These items have 2 possible values:
          \begin{description}
          \item [0] The degree of freedom is not restrained.
          \item [1] The degree of freedom is restrained.
          \end{description}
-     \item as a string. This string is a standard boundary type. In Abaqus several types are available:
+     \item as a string. This string is a standard boundary type. Abaqus will recognize the following strings:
          \begin{itemize}
          \item PINNED 
          \item ENCASTRE
@@ -673,33 +700,43 @@ The class NodeProperty can hold properties of nodes in finite element processing
          \item ZASYMM
          \end{itemize} 
      \end{itemize}
- \item [displacement] The prescribed displacement. 
- \item [coords] The coordinate system which is used for the definition of cload and bound. There are three options:
-         cartesian, spherical and cylindrical.
- \item [coordset] A list of 6 coordinates of the 2 points that specify the transformation: \Code{[x_1, y_1, z_1, x_2, y_2, z_2]}.
+ \item [displacement] Prescribed displacements. This is a list of tuples (i,v), where i is a DOF number (1..6) and v is the prescribed value for that DOF. 
+ \item [coords] The coordinate system which is used for the definition of cload, bound and displ fields. It should be a \class{CoordSys} object.
 \end{description}
 
+Some simple examples:
 \begin{verbatim}
->>> top = NodeProperty(1,cload=[5,0,-75,0,0,0])
->>> foot = NodeProperty(2,bound='pinned')
->>> print 'nodeproperties'    
->>> for key, item in nodeproperties.iteritems():
->>>     print key, item
-
-nodeproperties
-1
-  cload = [5, 0, -75, 0, 0, 0]
-  coords = cartesian
-  displacement = None
-  bound = None
-  coordset = []
-2
-  cload = None
-  coords = cartesian
-  displacement = None
-  bound = pinned
-  coordset = []
+    P.nodeProp(cload=[5,0,-75,0,0,0])
+    P.nodeProp(set=[2,3],bound='pinned')
+    P.nodeProp(5,displ=[(1,0.7)])
 \end{verbatim}
+The first line sets a concentrated load all the nodes, the second line sets a boundary condition 'pinned' on nodes 2 and 3. The third line sets a prescribed displacement on node 5 with value 0.7 along the first direction.
+The first positional argument indeed corresponds to the 'set' attribute.
+
+Often the properties are computed and stored in variables rather than entered directly. To facilitate property selection, a tag can be added.
+\begin{verbatim}
+    B1 = [ 1 ] + [ 0 ] * 5
+    CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
+    P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
+    P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
+    P.nodeProp(cload=P1,bound=B1,csys=CYL)
+    nset1 = P.nodeProp(tag='loadcase 1',set=[2,3,4],cload=P1).nr
+    P.nodeProp(tag='loadcase 2',set=Nset(nset1),cload=P2)
+\end{verbatim}
+The last two lines show how you can avoid duplication of sets in mulitple records. The same set of nodes should receive different concentrated load values for different load cases. The load case is stored in a tag, but duplicating the set definition could become wasteful if the sets are large. Instead of specifying the node numbers of the set directly, we can pass a string setting a set name.
+
+Of course, the application will need to know how to interprete the set names.
+Therefore the property module provides a unified way to attach a unique set name to each set defined in a property record. The name of a node property record set can be obtained with the function \Code{Nset(nr)}, where nr is the record number. In the example above, that value is first recorded in \Code{nset1} and then used in the last line to guarantee the use of the same set as in the property above.
+
+
+\section{Element properties}
+\label{sec:elem-properties}
+
+
+
+\emph{The rest of this section is obsolete}
+
+
 
 \subsection{The class ElemProperty}
 The class ElemProperty holds properties related to a single element. The data is stored in a Dict called 'elemproperties'. An element property can hold the following sub-properties:
@@ -723,32 +760,35 @@ An element load can hold the following sub-properties:
 \item [loadlabel] The distributed load type label.
 \end{description}
 
-The general structure of the element properties database looks like this:
+The overview of the current property database structure is:
 \begin{itemize}
-\item[-] Property
-\item[-] NodeProperty
+\item[-] Prop
+    \begin{itemize}
+    \item[-] set
+    \item[-] tag
+    \end{itemize}
+\item[-] nodeProp
     \begin{itemize}
     \item[-] cload
     \item[-] bound
-    \item[-] displacement
-    \item[-] coords
-    \item[-] coordset
+    \item[-] displ
+    \item[-] csys
     \end{itemize}
-\item[-] ElemProperty 
+\item[-] elemProp 
     \begin{itemize}
-    \item[-] elemsection
+    \item[-] eltype
+    \item[-] section
         \begin{itemize}
         \item[-] section
         \item[-] material
         \item[-] sectiontype
         \item[-] orientation
         \end{itemize}
-    \item[-] elemload
+    \item[-] load
         \begin{itemize}
-        \item[-] magnitude
-        \item[-] loadlabel
+        \item[-] label
+        \item[-] value
         \end{itemize}
-    \item[-] elemtype
     \end{itemize}
 \end{itemize}
 

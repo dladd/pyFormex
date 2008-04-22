@@ -1119,9 +1119,9 @@ if __name__ == "script" or __name__ == "draw":
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
 
     # populate the property database
-    np1 = P.nodeProp('d1',nset=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
-    np2 = P.nodeProp('b0',nset=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
-    np3 = P.nodeProp('d2',nset=Nset(np2.nr),bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
+    np1 = P.nodeProp('d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
+    np2 = P.nodeProp('b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
+    np3 = P.nodeProp('d2',set=Nset(np2.nr),bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
 
     bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
     top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')

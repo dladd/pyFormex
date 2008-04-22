@@ -422,13 +422,13 @@ class PropertyDB(Dict):
         return d
 
 
-    def nodeProp(self,nset=None,tag=None,cload=None,bound=None,displ=None,csys=None):
+    def nodeProp(self,set=None,tag=None,cload=None,bound=None,displ=None,csys=None):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
         - tag: an identification tag used to group properties (this is e.g.
                used to flag Step, increment, load case, ...)
-        - nset: a single number or a list of numbers identifying the node(s)
+        - set: a single number or a list of numbers identifying the node(s)
                 for which this property will be set, or a set name
                 If None, the property will hold for all nodes.
         - cload: a concentrated load: a list of 6 values
@@ -452,19 +452,19 @@ class PropertyDB(Dict):
                     d['csys'] = csys
                 else:
                     raise
-            return self.Prop(kind='n',tag=tag,set=nset,**d)
+            return self.Prop(kind='n',tag=tag,set=set,**d)
         except:
-            print "tag=%s,set=%s,tag=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,nset,cload,bound,displ,csys)
+            print "tag=%s,set=%s,tag=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,eset=None,tag=None,section=None,eltype=None,dload=None): 
+    def elemProp(self,set=None,tag=None,section=None,eltype=None,dload=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
         - tag: an identification tag used to group properties (this is e.g.
                used to flag Step, increment, load case, ...)
-        - eset: a single number or a list of numbers identifying the element(s)
+        - set: a single number or a list of numbers identifying the element(s)
                 for which this property will be set, or a set name
                 If None, the property will hold for all nodes.
         - eltype: the element type (currently in Abaqus terms). 
@@ -479,12 +479,12 @@ class PropertyDB(Dict):
                 d['section'] = section
             if dload is not None:
                 d['dload'] = dload
-            p = self.Prop(kind='e',tag=tag,set=eset,**d)
+            p = self.Prop(kind='e',tag=tag,set=set,**d)
             if p.eltype is not None and type(p.set) is str:
                 raise
             return p
         except:
-            raise ValueError,"Invalid Elem Property\n  tag=%s,eset=%s,eltype=%s,section=%s,dload=%s" % (tag,eset,eltype,section,dload)
+            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,eltype=%s,section=%s,dload=%s" % (tag,set,eltype,section,dload)
 
 
 
@@ -501,7 +501,7 @@ if __name__ == "script" or  __name__ == "draw":
     Stick = P.Prop(color='green',name='Stick',weight=25,comment='This could be anything: a gum, a frog, a usb-stick,...')
     print Stick
     
-    author = P.Prop(tag='author',Name='Alfred E Neuman',Address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+    author = P.Prop(tag='author',alias='Alfred E Neuman',address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
 
     print P.getProp(tag='author')[0]
     
@@ -509,11 +509,27 @@ if __name__ == "script" or  __name__ == "draw":
     Stick.length=10
     print Stick
     
-    print author
+    print author.street
     author.street='Voskenslaan'
     print author.street
-    print author.Address.street
+    print author.address.street
+    author.address.street = 'Wiemersdreef'
+    print author.address.street
 
+    author = P.Prop(tag='author',name='John Doe',address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
+    print author
+
+    for p in P.getProp(rec=[0,2]):
+        print p.name
+
+    for p in P.getProp(tag=['author']):
+        print p.name
+
+    for p in P.getProp(attr=['name']):
+        print p.nr
+
+
+    exit()
     Mat = MaterialDB(GD.cfg['pyformexdir']+'/examples/materials.db')
     Sec = SectionDB(GD.cfg['pyformexdir']+'/examples/sections.db')
     P.setMaterialDB(Mat)
@@ -524,8 +540,8 @@ if __name__ == "script" or  __name__ == "draw":
     B1 = [ 1 ] + [ 0 ] * 5
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
     # node property on single node
-    P.nodeProp(1,set=1,cload=[5,0,-75,0,0,0])
-    # node property on node set
+    P.nodeProp(1,cload=[5,0,-75,0,0,0])
+    # node property on nodes 2 and 3
     P.nodeProp(set=[2,3],bound='pinned')
     # node property on ALL nodes
     P.nodeProp(cload=P1,bound=B1,csys=CYL)
@@ -577,7 +593,7 @@ if __name__ == "script" or  __name__ == "draw":
     q2 = ElemLoad('PY',3.14,amplitude=amp)
 
 
-    top = P.elemProp(eset=[0,1,2],eltype='B22',section=hor,dload=q1)
+    top = P.elemProp(set=[0,1,2],eltype='B22',section=hor,dload=q1)
     column = P.elemProp(eltype='B22',section=vert)
     diagonal = P.elemProp(eltype='B22',section=hor)
     bottom = P.elemProp(section=hor,dload=q2)

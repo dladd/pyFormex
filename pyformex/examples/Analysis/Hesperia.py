@@ -399,7 +399,7 @@ def createFrameModel():
     PDB = PropertyDB()
     for lc in range(nlc):
         for i,P in enumerate(NODLoad[lc]):
-            PDB.nodeProp(tag=lc,nset=i,cload=[P[0],P[1],P[2],0.,0.,0.])
+            PDB.nodeProp(tag=lc,set=i,cload=[P[0],P[1],P[2],0.,0.,0.])
 
     # Get support nodes
     botnodes = where(isClose(nodes[:,2], 0.0))[0]
@@ -410,7 +410,7 @@ def createFrameModel():
     nnodes = nodes.shape[0]              # node number offset
     ntubes = tubes.shape[0]              # element number offset
     
-    PDB.elemProp(eset=arange(ntubes),section=tubesection,eltype='FRAME3D')    
+    PDB.elemProp(set=arange(ntubes),section=tubesection,eltype='FRAME3D')    
     
     # Create support systems (vertical beams)
     bot2 = bot + [ 0.,0.,-200.]         # new nodes 200mm below bot
@@ -428,7 +428,7 @@ def createFrameModel():
         'moment_inertia_12': I12,
         'torsional_rigidity': J
         })
-    PDB.elemProp(eset=arange(ntubes,elems.shape[0]),section=supportsection,eltype='FRAME3D')
+    PDB.elemProp(set=arange(ntubes,elems.shape[0]),section=supportsection,eltype='FRAME3D')
 
     # Finally, the botnodes2 get the support conditions
     botnodes = botnodes2
@@ -494,7 +494,7 @@ def createShellModel():
 
     PDB = PropertyDB()
     # All elements have same property:
-    PDB.elemProp(eset=arange(len(elems)),section=glasssection,eltype='STRI3')    
+    PDB.elemProp(set=arange(len(elems)),section=glasssection,eltype='STRI3')    
 
     # Calculate the nodal loads
 
@@ -520,7 +520,7 @@ def createShellModel():
             NODLoad[e] += [ 0., 0., - a * wgt / 3 ]
         # Put the nodal loads in the properties database
         for i,P in enumerate(NODLoad):
-            PDB.nodeProp(tag=step,nset=i,cload=[P[0],P[1],P[2],0.,0.,0.])
+            PDB.nodeProp(tag=step,set=i,cload=[P[0],P[1],P[2],0.,0.,0.])
 
     if res['Snow']:
         step += 1
@@ -535,7 +535,7 @@ def createShellModel():
             NODLoad[e] += [ 0., 0., - a * snow_non_uniform[p] / 3]
         # Put the nodal loads in the properties database
         for i,P in enumerate(NODLoad):
-            PDB.nodeProp(tag=step,nset=[i],cload=[P[0],P[1],P[2],0.,0.,0.])
+            PDB.nodeProp(tag=step,set=[i],cload=[P[0],P[1],P[2],0.,0.,0.])
 
     # Get support nodes
     botnodes = where(isClose(nodes[:,2], 0.0))[0]
@@ -555,7 +555,7 @@ def createShellModel():
 ##     np_fixed = NodeProperty(1,bound=[0,1,1,0,0,0],coords='cylindrical',coordset=[0,0,0,0,0,1])
     
     # Since we left out the ring beam, we enforce no movement at the botnodes
-    bc = PDB.nodeProp(nset=botnodes,bound=[1,1,1,0,0,0],csys=CoordSystem('C',[0,0,0,0,0,1]))
+    bc = PDB.nodeProp(set=botnodes,bound=[1,1,1,0,0,0],csys=CoordSystem('C',[0,0,0,0,0,1]))
 
     # And we record the name of the bottom nodes set
     botnodeset = Nset(bc.nr)

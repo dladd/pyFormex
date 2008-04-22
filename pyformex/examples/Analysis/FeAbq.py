@@ -88,10 +88,10 @@ esets = {}
 esets.update([(v,where(elemprops==v)[0]) for v in [pa,pb,pb1,pc]])
 
 # Set the element properties
-P.elemProp(eset=esets[pa],eltype='CPS3',section=ElemSection(section=thin_plate,material=steel))
-P.elemProp(eset=esets[pb],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
-P.elemProp(eset=esets[pb1],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
-P.elemProp(eset=esets[pc],eltype='CPS3',section=ElemSection(section=medium_plate,material=steel))
+P.elemProp(set=esets[pa],eltype='CPS3',section=ElemSection(section=thin_plate,material=steel))
+P.elemProp(set=esets[pb],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
+P.elemProp(set=esets[pb1],eltype='CPS4',section=ElemSection(section=thick_plate,material=steel))
+P.elemProp(set=esets[pc],eltype='CPS3',section=ElemSection(section=medium_plate,material=steel))
 
 print "Element properties"
 for p in P.getProp('e'):
@@ -111,9 +111,9 @@ F.p[lnodes] = pld
 draw(F,marksize=8)
 NRN = drawNumbers(F)
 
-P.nodeProp(tag='init',nset=where(F.p==pbc)[0],bound=[1,1,0,0,0,0])
-P.nodeProp(tag='step1',nset=where(F.p==pld)[0],cload=[-10.,0.,0.,0.,0.,0.])
-P.nodeProp(tag='step2',nset=where(F.p==pld)[0],cload=[-10.,10.,0.,0.,0.,0.])
+P.nodeProp(tag='init',set=where(F.p==pbc)[0],bound=[1,1,0,0,0,0])
+P.nodeProp(tag='step1',set=where(F.p==pld)[0],cload=[-10.,0.,0.,0.,0.,0.])
+P.nodeProp(tag='step2',set=where(F.p==pld)[0],cload=[-10.,10.,0.,0.,0.,0.])
 
 print "Node properties"
 for p in P.getProp('n'):

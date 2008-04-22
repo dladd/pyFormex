@@ -1,7 +1,7 @@
 # Makefile for the pyformex user meeting
 #
 
-SRC= pyformex-user-meeting-*.rst
+SRC= $(wildcard pyformex-user-meeting-*.rst)
 PDF= ${SRC:.rst=.pdf}
 RSYNC= rsync -av -e ssh
 ACCOUNT= bverheg@shell.berlios.de

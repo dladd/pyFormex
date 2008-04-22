@@ -40,17 +40,18 @@ Agenda and discussion
 
   - Sofie demonstrates some of the tools she has been working on:
 
-    - A new method to pick elements has been implemented. In addition to the standard picking procedure (which picks all elements within a box), it is now also possible to only pick those elements within the box that are connected to the closest element within that box.
+    - A new method to pick elements has been implemented. In addition to the standard picking procedure (which picks all elements within a box), it is now also possible to only pick those elements within the box that are connected to elements in the previous selection.
+
     - Renaming variables can be very useful when dealing with projects because the variables are saved within the project. This is now possible in the tools menu.
-    - Cutting a surface with one or multiple planes is now much easier to do. The user is able to define and visualize a plane (tools menu) which facilitates the cutting (surface menu). Planes can be defined by giving three points or by one point and a normal.
+    - Cutting a surface with one or multiple planes is now much easier to do. The user is able to define and visualize a plane (with the tools menu) which facilitates the cutting (surface menu). Planes can be defined by giving three points or by one point and a normal.
 
 
 * pyFormex User Forum:
 
-  - Pieter extended the interface with abaqus. Rigid and membrane elements have been added, more advanced material definitions are now possible (plastic behaviour, damping, etc.), interaction and interaction properties can be defined and the user is now able to create input files for explicit simulations. Benedict will include these new functionalities in the pyFormex distribution.
+  - Pieter extended the interface with Abaqus(R). Rigid and membrane elements have been added, more advanced material definitions are now possible (plastic behaviour, damping, etc.), interaction and interaction properties can be defined and the user is now able to create input files for explicit simulations. Benedict will include these new functionalities in the pyFormex distribution.
   - Benedict will continue to work on the postprocessing of FEA/CFD results.
-  - Wouter uses pyFormex the create a parametric finite element model of a cylindrical tank. He proposes to add the possibility to visualize boundary conditions and loads. For these simulations, the Abaqus interface should be extended with the option to do buckling analyses.
-  - Gianluca shows some of his results regarding the modelling of restenosis.
+  - Wouter uses pyFormex to create a parametric finite element model of a cylindrical tank. He proposes to add the possibility to visualize boundary conditions and loads. For these simulations, the Abaqus interface should be extended with the option to do buckling analyses.
+  - Gianluca shows some of his results regarding the modelling of restenosis. This includes a closed cycle of creating a model in pyFormex, running a CFD analysis using Fluent(R), read the results back into pyFormex, make changes to the geometry of the model, and start a new cycle, until convergence is obtained.
 
 
 Date of the next meeting

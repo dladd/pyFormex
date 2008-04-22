@@ -83,7 +83,7 @@ lib:
 
 # Create the minutes of the user meeting
 minutes: 
-	make -C minutes
+	make -C user
 
 # Create the website
 website: 
