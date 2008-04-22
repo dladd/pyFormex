@@ -189,8 +189,8 @@ def playScript(scr,name=None,argv=[]):
     exitrequested = False
 
     if GD.gui:
-        GD.debug('GUI SCRIPT MODE %s'% (stepmode))
         global allowwait,stepmode,exportNames,starttime
+        GD.debug('GUI SCRIPT MODE %s'% (stepmode))
         allowwait = True
         GD.canvas.update()
         GD.gui.actions['Play'].setEnabled(False)

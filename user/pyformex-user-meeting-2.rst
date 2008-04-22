@@ -36,7 +36,7 @@ Agenda and discussion
   - Benedict presents some recent developments:
 
     - The postprocessing functionalities have been extended. It is now possible to render values on a mesh (e.g. displacements, stresses, etc.).
-    - The impact of using an average normal on surface rendering is shown. The surfaces seem much smoother by using the average normal. The procedure is currently quite slow, but a significant speed-up can be obtained by implementing this procedure in a c-routine.
+    - The impact of using a averaged normals on surface rendering is shown. The surfaces seem much smoother when using the averaged normals. The calculation of the averaged normals is currently too slow for use with very large structures, but a significant speed-up will be obtained from implementing it in C.
 
   - Sofie demonstrates some of the tools she has been working on:
 

@@ -1045,6 +1045,10 @@ Total area: %s; Enclosed volume: %s
         startat is an element number or list of numbers of the starting front.
         On first call, this function returns the starting front.
         Each next() call returns the next front.
+        front_increment determines haw the property increases at each
+        frontal step. There is an extra increment +1 at each start of
+        a new part. Thus, the start of a new part can always be detected
+        by a front not having the property of the previous plus front_increment.
         """
         print "FRONT_INCREMENT %s" % front_increment
         p = -ones((self.nfaces()),dtype=int)
@@ -1057,9 +1061,7 @@ Total area: %s; Enclosed volume: %s
             GD.warning("Surface is not a manifold")
             return
         # Check size of okedges
-        if okedges is None:
-            okedges = arange(self.nedges())
-        else:
+        if okedges is not None:
             if okedges.ndim != 1 or okedges.shape[0] != self.nedges():
                 raise ValueError,"okedges has incorrect shape"
 
@@ -1081,8 +1083,10 @@ Total area: %s; Enclosed volume: %s
                 # flag edges as done
                 todo[edges] = 0
                 # take connected elements
-                elems = conn[okedges[edges]].ravel()
-                #elems = conn[edges].ravel()
+                if okedges is None:
+                    elems = conn[edges].ravel()
+                else:
+                    elems = conn[edges[okedges[edges]]].ravel()
                 elems = elems[(elems >= 0) * (p[elems] < 0) ]
                 if elems.size > 0:
                     continue
@@ -1136,6 +1140,8 @@ Total area: %s; Enclosed volume: %s
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
         for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
+            print "NSTEPS=%d"%nsteps
+            print p
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1208,7 +1214,8 @@ Total area: %s; Enclosed volume: %s
         n = self.areaNormals()[1][conn[conn2]]
         small_angle = ones(conn2.shape,dtype=bool)
         small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
-        return firstprop + self.partitionByFront(small_angle)
+        print small_angle
+        return firstprop + self.partitionByEdgeFront(small_angle)
 
 
     def cutAtPlane(self,*args):

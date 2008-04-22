@@ -338,7 +338,7 @@ def colorByFront():
     S = selection.check(single=True)
     if S:
         res  = askItems([('front type',None,'select',['node','edge']),
-                         ('number of colors',0),
+                         ('number of colors',-1),
                          ('front width',1),
                          ('start at',0),
                          ('first prop',0),
