@@ -218,7 +218,12 @@ However, as you can see, even in this very small example the number of nodes, el
  
 \subsubsection{Creating a Formex using patterns}
 
-The second way of creating a new Formex, is by defining patterns. In this case, a line segment pattern is created from a string.
+Another way of creating a Formex, is by using the coordinate generating functions \function{pattern} and {mpattern}. These functions create a series of coordinates from a simple string, by interpreting each of the characters of the string as a single unit step in one of the cordinate directions, or as some other simple action. These functions thus are very valuable in creating geometry where the points lie on a regular grid.
+
+ 
+
+
+In this case, a line segment pattern is created from a string.
 
 The function \function{pattern(s)} creates a list of line segments where all nodes lie on the
 gridpoints of a regular grid with unit step.
@@ -265,7 +270,10 @@ Some simple patterns are defined in \module{simple.py} and are ready for use. Th
   \label{fig:cube}
 \end{figure}
 
+
 \subsubsection{Creating a Formex using coordinates from a file}
+\outdated
+
 In some cases, you might want to read coordinates from a file an combine them into a Formex. This is possible with the module \module{file2formex} and it's function \function{fileFormex()}. Each point is connected to the following, forming an element (bar).
 
 The next file ('square.txt') would create the same square as before(figure \ref{fig:square}).
@@ -281,36 +289,10 @@ The next file ('square.txt') would create the same square as before(figure \ref{
 	F=fileFormex('square.text', closed='yes')
 \end{verbatim}
 
-\subsection{Adding property numbers}
-\label{subsec:propnr}
-Besides the coordinates of its points, a Formex object can also hold a set of property numbers. These are a set integers, one for every element of the Formex.
-The property numbers can be set, changed or deleted, and be used for any purpose the user wants. Just remember that a Formex either has no property numbers, or a set of numbers: one for every element.
-
-Property numbers can play an important role in the modelling process, because they present some means of tracking how the resulting Formex was created. Indeed, each transformation of a Formex that preserves its structure, will also preserve the property numbers. Concatenation of Formices with property numbers will also concatenate the property numbers\footnote{If any of the concatenated Formices does not have property numbers, it will receive value 0 for all its elements.}
-On transformation that change the  structure of the Formex, such as replication, each element of the created Formex will get the property number of Formex element it was generated from.
-
-
-
-Each Formex element can have a property number. Each property number is represented by a different color when the Formex is drawn. This is the first reason why you could use property numbers: to make your drawing more transparent or just more beautiful. However, these numbers can also be used as an entry in a dictionary of properties - thus linking the element with a property. This property can be about anything, but in finite element processing this would be the element section, material, loads,... The use of properties in this way will be futher explained in \ref{sec:props}.
-Property numbers can be specified at creation time, and they can be set, modified or deleted at any time.  
-\begin{verbatim}
->>> #!/usr/bin/env pyformex
->>> F=Formex(pattern('1234'),[5])
->>> print F.prop()
->>> G=Formex(pattern('1234'),[6,8,2,4])
->>> print G.prop()
->>> F.setProp([6,7])
->>> print F.prop()
->>> G.setProp([6,7,8,9])
->>> print G.prop()
-
-[5 5 5 5]
-[6 8 2 4]
-[6 7 6 7]
-[6 7 8 9]
-\end{verbatim}
 
 \subsection{Drawing a Formex}
+\outdated
+
 \label{subsec:drawing}
 Of course, you'd want to see what you have created. This is accomplished by the function \function{draw()}. The next example creates figure \ref{fig:pyramid}. 
 \begin{verbatim}
@@ -355,7 +337,55 @@ Now, when you are creating a large geometry, you might be interested in seeing t
 \end{verbatim}
 
 
+\subsection{Adding property numbers}
+\label{subsec:propnr}
+Apart from the coordinates of its points, a Formex object can also store a set of property numbers. This is a set of integers, one for every element of the Formex.
+The property numbers are stored in an attribute \member{p} of the Formex. They can be set, changed or deleted, and be used for any purpose the user wants, e.g. to number the elements in a different order than their appearence in the coordinate array. Or they can be used as pointers into a large database that stores all kind of properties for that element. Just remember that a Formex either has no property numbers, or a complete set of numbers: one for every element.
+
+Property numbers can play an important role in the modelling process, because they present some means of tracking how the resulting Formex was created. Indeed, each transformation of a Formex that preserves its structure, will also preserve the property numbers. Concatenation of Formices with property numbers will also concatenate the property numbers. If any of the concatenated Formices does not have property numbers, it will receive value 0 for all its elements. If all concatenated Formices are without properties, so will be the resulting Formex.
+
+On transformations that change the structure of the Formex, such as replication, each element of the created Formex will get the property number of Formex element it was generated from.
+
+To create a Formex with property numbers, just specify them as a second argument in the constructor. The following example creates a Formex consisting of two triangles, one with property number 1, the second with property 3. The following lines show the creation of the four Formices displayed in figure~\ref{fig:props}, where elements with proprty value 1 are shown in red, those with property value 3 are shown in blue. 
+\begin{verbatim}
+>>> F0 = Formex(mpattern('12-34'),[1,3])
+>>> F1 = F0.replic2(4,2)
+>>> F2 = F1 + F1.mirror(1)
+>>> F3 = F2 + F2.rotate(180.,1)
+\end{verbatim}
+
+\begin{figure}[ht]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
+  \begin{latexonly}
+    \includegraphics[width=10cm]{images/props}
+  \end{latexonly}
+  \begin{htmlonly}
+    \htmladdimg{../images/props.png}
+  \end{htmlonly}  
+  \caption{A Formex with property numbers drawn as colors}
+  \label{fig:props}
+\end{figure}
+
+To create the properties on a Formex without, you should always use the \method{setProp} method. This ensures that the properties array is generated with the correct type and shape. If needed, the supplied values will be repeated to match the number of elements in the Formex. Once the \member{p} attribute is created, you can safely change the value of any of the property numbers.
+\begin{verbatim}
+>>> F = Formex(mpattern('12-34-32-14'))
+>>> F.setProp([1,3])
+>>> print F.p
+    [1 3 1 3]
+>>> F.p[2] = 5
+>>> print F.p
+    [1 3 5 3]   
+\end{verbatim}
+
+When drawing a Formex having property numbers with default draw options (i.e. no color specified), pyFormex will use the property numbers as indices in a color table, so different properties are shown in different colors. The default color table has eight colors: \code{[ black, red, green, blue, cyan, magenta, yellow, white]} and will wrap around if a property value larger than 7 is used. You can however specify any other and larger colorset to be used for drawing the property colors.  
+
+
+
 \subsection{Saving images}
+\outdated
+
 \label{subsec:images}
 After drawing the Formex, you might want to save the image. This is very easy to do:\\
 \menuselection{File \sub Save Image}\\
@@ -373,58 +403,15 @@ It is also possible to save a series of images. This can be especially useful wh
 
 \subsection{Information about a Formex}
 \label{subsec:info}
-There are a number of functions available that return information about a Formex. Especially when using \pyformex as finite element preprocessor, the most useful functions are:
+
+The Formex class has several methods related to abtaining information obout the object. We refer to the reference manual in chapter~\ref{cha:reference} for a full list. Some of the most interesting and often used ones are:
 \begin{tableii}{l|l}{exception}{Function}{Description}
-	\lineii{F.nelems()			}
-		{Return the number of elements in the Formex.}
-	\lineii{F.nnodes() 			}
-		{Return the number of nodes in the Formex.}
-	\lineii{F.prop() 				}
-		{Return the properties as a numpy array.}
-	\lineii{F.bbox()				}
-		{Return the bounding box of the Formex.}
-	\lineii{F.center()			}
-		{Return the center of the Formex.}
-	\lineii{F.feModel()	}
-		{Return a tuple of nodal coordinates and element connectivity.}
+  \lineii{F.nelems()}{Return the number of elements in the Formex.}
+  \lineii{F.nplex()}{Return the plexitude (the number of point in each element) of the Formex.}
+  \lineii{F.prop()}{Return the properties array (same as F.p).}
+  \lineii{F.bbox()}{Return the bounding box of the Formex.}
+  \lineii{F.center()}{Return the center of the Formex.}
 \end{tableii}
-
-\function{feModel()} is very important in finite element processing. It returns all nodes and all elements of the Formex in a format useful for FE processing. A tuple of two arrays is returned. The first is float array with the coordinates of the unique nodes of the Formex. The second is an integer array with the node numbers connected by each element.
-\begin{verbatim}
->>> #!/usr/bin/env pyformex
->>> from simple import *
-
->>> c = Formex(pattern(Pattern['cube']))
->>> draw(c)
->>> nodes,elems = c.feModel()
->>> print 'Nodes'
->>> print nodes
->>> print 'Elements'
->>> print elems
-
-Nodes
-[[ 0.  0. -1.]
- [ 1.  0. -1.]
- [ 0.  1. -1.]
- [ 1.  1. -1.]
- [ 0.  0.  0.]
- [ 1.  0.  0.]
- [ 0.  1.  0.]
- [ 1.  1.  0.]]
-Elements
-[[4 5]
- [5 7]
- [7 6]
- [6 4]
- [4 0]
- [5 1]
- [7 3]
- [6 2]
- [0 1]
- [1 3]
- [3 2]
- [2 0]]
-\end{verbatim}
 
 \subsection{Changing the Formex}
 \label{subsec:changing}
@@ -557,10 +544,11 @@ would be a torus.
 F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
 drawit(F,'right')
 \end{verbatim}
- \begin{figure}[ht]
-   \centering
-   \begin{makeimage}
-   \end{makeimage}
+
+\begin{figure}[ht]
+  \centering
+  \begin{makeimage}
+  \end{makeimage}
    \begin{latexonly}
      \includegraphics[width=5cm]{images/spiral-007}
      \includegraphics[width=5cm]{images/spiral-008}
@@ -571,6 +559,59 @@ drawit(F,'right')
    \end{htmlonly}  
    \caption{The spiral}
  \end{figure}
+
+
+\subsection{Converting a Formex to a Finite Element model}
+\label{subsec:femodel}
+
+The \method{feModel()} method is important in exporting the geometry to finite element (FE) programs. A Formex often contains many points with (nearly) the same coordinates. In a finite element model, theses points have to be merged into a single nod, to express the continuity of the material. This is exactly what\method{feModel()} does. It returns a tuple of two numpy arrays (nodes,elems), where
+\begin{itemize}
+\item nodes is a float array with shape (?,3), containing the coordinates of the merged points (nodes),
+\item elems is an integer array with shape (F.nelems(),F.nplex()), describing each element by a list of node numbers. The elements and their nodes are in the same order as in F.
+\end{itemize}
+
+\begin{verbatim}
+>>> from simple import *
+>>> F = Formex(pattern(Pattern['cube']))
+>>> draw(F)
+>>> nodes,elems = F.feModel()
+>>> print 'Nodes',nodes
+>>> print 'Elements',elems
+
+Nodes
+[[ 0.  0.  0.]
+ [ 1.  0.  0.]
+ [ 0.  1.  0.]
+ [ 1.  1.  0.]
+ [ 0.  0.  1.]
+ [ 1.  0.  1.]
+ [ 0.  1.  1.]
+ [ 1.  1.  1.]]
+Elements
+[[0 1]
+ [1 3]
+ [3 2]
+ [2 0]
+ [0 4]
+ [1 5]
+ [3 7]
+ [2 6]
+ [4 5]
+ [5 7]
+ [7 6]
+ [6 4]]
+\end{verbatim}
+
+The reverse operation of transforming a finite element model back into a Formex is quite simple: \code{Formex(nodes[elems])} will indeed be identical to the original F (within the tolerance used in merging of the nodes).
+
+\begin{verbatim}
+>>> G = Formex(nodes[elems])
+>>> print allclose(F.f,G.f)
+True
+\end{verbatim}
+The \code{allclose} funcion in the second line tests that all coordinates
+in bopth arrays are the same, within a small tolerance.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Assigning properties to geometry}
@@ -668,7 +709,7 @@ John Doe
 The first call selects records by number: either a single record number or a list of numbers can be specified. The second method selects records based on the value of their tag field. Again a single tag value or a list of values can be specified. Only those records having a 'tag' filed matching any of the values in the list will be returned. The third selection method is based on the existence of some attribute names in the record. Here, always a list of attribute names is required. Records are returned that posess all the attributes in the list, independent from the value of those attributes. If needed, the user can add a further filtering based on the attribute values. Finally, as is shown in the last example, all methods of record selection can be combined. Each extra condition will narrow the selection further down.
 
 
-\section{Node properties}
+\subsection{Node properties}
 \label{sec:node-properties}
 
 The property system presented above allows for recording any kind of values. In many situations however we will want to work with a specialised and limited set of attributes. The main developers of \pyf e.g. often use the program to create geometrical models of structures of which they want to analyse the mechanical behavior. These numerical simulations (FEA, CFD) require specific data that support the introduction of specialised property records. Currently there are two such property record types: node properties, which are attributed to a single point in space, and element properties (see section \ref{sec:elem-properties}), which are attributed to a structured collection of points.
@@ -729,7 +770,7 @@ Of course, the application will need to know how to interprete the set names.
 Therefore the property module provides a unified way to attach a unique set name to each set defined in a property record. The name of a node property record set can be obtained with the function \Code{Nset(nr)}, where nr is the record number. In the example above, that value is first recorded in \Code{nset1} and then used in the last line to guarantee the use of the same set as in the property above.
 
 
-\section{Element properties}
+\subsection{Element properties}
 \label{sec:elem-properties}
 
 
@@ -738,7 +779,6 @@ Therefore the property module provides a unified way to attach a unique set name
 
 
 
-\subsection{The class ElemProperty}
 The class ElemProperty holds properties related to a single element. The data is stored in a Dict called 'elemproperties'. An element property can hold the following sub-properties:
 \begin{description}
 \item [elemsection] The section properties of the element. This is an ElemSection instance.

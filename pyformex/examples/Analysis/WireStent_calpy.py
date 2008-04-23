@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex
 # $Id: WireStent_calpy.py 147 2006-10-13 09:30:49Z bverheg $
 ##
 ## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007

@@ -253,13 +253,18 @@ def playScript(scr,name=None,argv=[]):
 
 
 def breakpt(msg=None):
-    """Set a breakpoint where the script can be halted on pressing a button.
+    """Set a breakpoint where the script can be halted on a signal.
 
     If an argument is specified, it will be written to the message board.
+
+    The exitrequested signal is usually emitted by pressing a button in the GUI.
+    In nongui mode the stopatbreakpt function can be called from another thread.
     """
+    global exitrequested
     if exitrequested:
         if msg is not None:
             GD.message(msg)
+        exitrequested = False # reset for next time
         raise Exit
 
 

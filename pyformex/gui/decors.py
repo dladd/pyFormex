@@ -14,13 +14,14 @@ import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
 
+from drawable import *
 from actors import Actor
+
 
 # Needed to initialize the fonts
 GLUT.glutInit([])
 
 import colors
-#import colorscale
 
 ### Some drawing functions ###############################################
 
@@ -167,6 +168,9 @@ def unProject(x,y,win):
 
 ### Decorations ###############################################
 
+
+# !! SHOULDN'T THIS BE A Drawable INSTEAD OF AN Actor ????
+#
 class Decoration(Actor):
     """A decoration is a 2-D drawing at canvas position x,y.
 
@@ -187,17 +191,18 @@ class Decoration(Actor):
 class Text(Decoration):
     """A viewport decoration showing a text."""
 
-    def __init__(self,text,x,y,font='9x15',adjust='left',color=colors.black):
+    def __init__(self,text,x,y,font='9x15',adjust='left',color=None):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
         self.font = font
         self.adjust = adjust
-        self.color = colors.GLColor(color)
+        self.color = saneColor(color)
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the text."""
-        GL.glColor3fv(self.color)
+        if self.color is not None: 
+            GL.glColor3fv(self.color)
         drawText2D(self.text,self.x,self.y,self.font,self.adjust)
 
 

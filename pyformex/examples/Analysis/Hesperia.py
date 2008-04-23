@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex
 # $Id$
 ##  Hesperia Dome
 ##  (C) Benedict Verhegghe

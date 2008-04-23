@@ -1,4 +1,4 @@
-#!/usr/bin/env python pyformex.py
+#!/usr/bin/env pyformex
 # $Id: SpaceTrussRoof_fe_abq.py 150 2006-11-01 11:13:34Z bverheg $
 ##
 ## This file is part of pyFormex 0.5 Release Fri Aug 10 12:04:07 2007
