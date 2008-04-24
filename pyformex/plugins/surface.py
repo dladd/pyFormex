@@ -1214,13 +1214,32 @@ Total area: %s; Enclosed volume: %s
         n = self.areaNormals()[1][conn[conn2]]
         small_angle = ones(conn2.shape,dtype=bool)
         small_angle[conn2] = dotpr(n[:,0],n[:,1]) >= cosangle
-        print small_angle
         return firstprop + self.partitionByEdgeFront(small_angle)
 
 
-    def cutAtPlane(self,*args):
+    def cutAtPlane(self,*args,**kargs):
         """Cut a surface with a plane."""
-        self.__init__(self.toFormex().cutAtPlane(*args))
+        self.__init__(self.toFormex().cutAtPlane(*args,**kargs))
+
+
+########################## Methods using border #############################
+
+    def fill_holes(self,):
+        brd = self.border()
+        fn = project + '.stl'
+        fn1 = project + '-closed.stl'
+        if os.path.exists(fn):
+            sta,out = utils.runCommand('admesh %s -f -a %s' % (fn,fn1))
+            GD.message(out)
+            if sta == 0:
+                clear()
+                linewidth(1)
+                draw(F,color='yellow',view='front')
+                oldF = F
+                linewidth(2)
+                GD.gui.setBusy()
+                surface.readSurface(fn1)
+                GD.gui.setBusy(False)
 
 
 ########################## Methods using GTS #############################
@@ -1351,6 +1370,7 @@ Total area: %s; Enclosed volume: %s
         GD.message("Reading smoothed model from %s" % tmp1)
         self.__init__(*read_gts(tmp1))        
         os.remove(tmp1)
+
 
 
 ##########################################################################

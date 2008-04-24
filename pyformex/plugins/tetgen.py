@@ -149,6 +149,22 @@ def nextFilename(fn):
         return '.1'.join(os.path.splitext(fn))
 
 
+def runTetgen()
+    def split(self,base,verbose=False):
+        """Check the surface using gtscheck."""
+        cmd = 'gtssplit -v %s' % base
+        if verbose:
+            cmd += ' -v'
+        tmp = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Splitting with command\n %s" % cmd)
+        cmd += ' < %s' % tmp
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        if sta or verbose:
+            GD.message(out)
+
 
 if __name__ == "__main__":
     import sys

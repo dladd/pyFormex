@@ -1394,15 +1394,17 @@ class Formex:
             nod = nodes
 
         if type(dir) == int:
-            if not min is None:
+            if min is not None:
                 T1 = f[:,nod,dir] > (min - atol)
-            if not max is None:
+            if max is not None:
                 T2 = f[:,nod,dir] < (max + atol)
         else:
-            if not min is None:
-                T1 = f.distanceFromPlane(min,dir) > -atol
-            if not max is None:
-                T2 = f.distanceFromPlane(max,dir) < atol
+            print f
+            print atol,dir,min,max
+            if min is not None:
+                T1 = f.distanceFromPlane(min,dir) > (-atol)
+            if max is not None:
+                T2 = f.distanceFromPlane(max,dir) < (atol)
 
         if min is None:
             T = T2

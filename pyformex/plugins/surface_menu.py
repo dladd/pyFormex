@@ -635,11 +635,11 @@ def cutAtPlane():
     """Cut the selection with a plane."""
     FL = selection.check()
     res = askItems([['Point',(0.0,0.0,0.0)],
-                    ['Normal',(0.0,0.0,1.0)],
-                    ['Tolerance',0.],
+                    ['Normal',(1.0,0.0,0.0)],
                     ['New props',[1,2,2,3,4,5,6]],
-                    ['Side','positive', 'radio', ['positive','negative','both']]],
-                    caption = 'Define the cutting plane')
+                    ['Side','positive', 'radio', ['positive','negative','both']],
+                    ['Tolerance',0.],
+                    ],caption = 'Define the cutting plane')
     if res:
         P = res['Point']
         N = res['Normal']
@@ -648,7 +648,7 @@ def cutAtPlane():
         side = res['Side']
         selection.remember(True)
         if side == 'both':
-            G = [F.toFormex().cutAtPlane(P,N,atol,p,side) for F in FL]
+            G = [F.toFormex().cutAtPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
             G_pos = []
             G_neg  =[]
             for F in G:
@@ -659,7 +659,7 @@ def cutAtPlane():
             selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
             selection.draw()
         else:
-            [F.cutAtPlane(P,N,atol,p,side) for F in FL]
+            [F.cutAtPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
             selection.drawChanges()
 
 
@@ -687,12 +687,12 @@ def cutSelectionByPlanes():
                 else:
                     newprops = None
                 if side == 'both':
-                    Spos, Sneg = S.toFormex().cutAtPlane(p,n,atol,newprops,side)
+                    Spos, Sneg = S.toFormex().cutAtPlane(p,n,newprops=newprops,side=side,atol=atol)
                 elif side == 'positive':
-                    Spos = S.toFormex().cutAtPlane(p,n,atol,newprops,side)
+                    Spos = S.toFormex().cutAtPlane(p,n,newprops=newprops,side=side,atol=atol)
                     Sneg = Formex()
                 elif side == 'negative':
-                    Sneg = S.toFormex().cutAtPlane(p,n,atol,newprops,side)
+                    Sneg = S.toFormex().cutAtPlane(p,n,newprops=newprops,side=side,atol=atol)
                     Spos = Formex()
                 if Spos.nelems() !=0:
                     Spos = TriSurface(Spos)
@@ -752,23 +752,9 @@ def sliceIt():
         export({'%s/slices%s' % (selection[0],axis):G}) 
 
 
+###################################################################
+########### The following functions are in need of an make-over
 
-def fill_holes():
-    global F,oldF
-    fn = project + '.stl'
-    fn1 = project + '-closed.stl'
-    if os.path.exists(fn):
-        sta,out = utils.runCommand('admesh %s -f -a %s' % (fn,fn1))
-        GD.message(out)
-        if sta == 0:
-            clear()
-            linewidth(1)
-            draw(F,color='yellow',view='front')
-            oldF = F
-            linewidth(2)
-            GD.gui.setBusy()
-            surface.readSurface(fn1)
-            GD.gui.setBusy(False)
 
 
 def flytru_stl():
