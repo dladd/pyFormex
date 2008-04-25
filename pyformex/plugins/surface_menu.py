@@ -248,11 +248,15 @@ def showBorder():
         print S.borderEdges()
         F = S.border()
         if F.nelems() > 0:
-            draw(F,color='red')
+            draw(F,color='red',linewidth=3)
             export({'border':F})
         else:
             warning("The surface %s does not have a border" % selection[0])
 
+def checkBorder():
+    S = selection.check(single=True)
+    if S:
+        S.checkBorder()
 
 # Selectable values for display/histogram
 # Each key is a description of a result
@@ -756,6 +760,14 @@ def sliceIt():
 ########### The following functions are in need of an make-over
 
 
+def create_tetgen_volume():
+    """Generate a volume tetraeder mesh inside an stl surface."""
+    types = [ 'STL/OFF Files (*.stl *.off)', 'All Files (*)' ]
+    fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=False)
+    if os.path.exists(fn):
+        sta,out = utils.runCommand('tetgen -z %s' % fn)
+        GD.message(out)
+
 
 def flytru_stl():
     """Fly through the stl model."""
@@ -848,15 +860,6 @@ def trim_surface():
     for i in range(n):
         elems = trim_border(elems,nodes,nb)
         print "Number of elements after border removal: %s" % elems.shape[0]
-
-    
-
-def create_tetgen():
-    """Generate a volume tetraeder mesh inside an stl surface."""
-    fn = PF['project'] + '.stl'
-    if os.path.exists(fn):
-        sta,out = utils.runCommand('tetgen -z %s' % fn)
-        GD.message(out)
 
 
 def read_tetgen(surface=True, volume=True):
@@ -985,6 +988,7 @@ def create_menu():
           ("&Partition By Angle",partitionByAngle),
           ]),
         ("&Border Line",showBorder),
+        ("&Border Type",checkBorder),
         ("---",None),
         ("&Transform",
          [("&Scale",scaleSelection),
@@ -1007,11 +1011,13 @@ def create_menu():
           ("&Slice",sliceIt),
            ]),
         ("&Undo Last Changes",selection.undoChanges),
-        ('&Check surface',check),
-        ('&Split surface',split),
-        ("&Coarsen surface",coarsen),
-        ("&Refine surface",refine),
-        ("&Smooth surface",smooth),
+        ('&GTS functions',
+         [('&Check surface',check),
+          ('&Split surface',split),
+          ("&Coarsen surface",coarsen),
+          ("&Refine surface",refine),
+          ("&Smooth surface",smooth),
+          ]),
         ("---",None),
 #        ("&Show volume model",show_volume),
         #("&Print Nodal Coordinates",show_nodes),
@@ -1019,7 +1025,7 @@ def create_menu():
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
 #        ("&Trim border",trim_surface),
 #        ("&Fill the holes in STL model",fill_holes),
-#        ("&Create tetgen model",create_tetgen),
+        ("&Create volume mesh",create_tetgen_volume),
 #        ("&Read Tetgen Volume",read_tetgen_volume),
         ("&Export surface to Abaqus",export_surface),
 #        ("&Export volume to Abaqus",export_volume),

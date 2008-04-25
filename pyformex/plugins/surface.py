@@ -301,7 +301,55 @@ def surface_volume(x,pt=None):
 
 
 ############################################################################
-# The Surface class
+      
+def closedLoop(elems):
+    """Check if a set of line elements form a closed curve.
+
+    elems is a connection table of line elements, such as obtained
+    from the feModel() method on a plex-2 Formex.
+
+    The return value is a tuple of:
+    - return code:
+      - 0: the segments form a closed loop
+      - 1: the segments form a single non-closed path
+      - 2: the segments form multiple not connected paths
+    - a new connection table which is equivalent to the input if it forms
+    a closed loop. The new table has the elements in order of the loop.
+    """
+    srt = zeros_like(elems) - 1
+    ie = 0
+    je = 0
+    rev = False
+    k = elems[je][0]
+    while True:
+        if rev:
+            srt[ie] = elems[je][[1,0]]
+        else:
+            srt[ie] = elems[je]
+        elems[je] = [ -1,-1 ] # Done with this one
+        j = srt[ie][1]
+        if j == k:
+            break
+        w = where(elems == j)
+        if w[0].size == 0:
+            print "No match found"
+            break
+        je = w[0][0]
+        ie += 1
+        rev = w[1][0] == 1
+    if any(srt == -1):
+        ret = 2
+    elif srt[-1][1] != srt[0][0]:
+        ret = 1
+    else:
+        ret = 0
+    return ret,srt
+    
+
+
+
+############################################################################
+# The TriSurface class
 
 def coordsmethod(f):
     """Define a TriSurface method as the equivalent Coords method.
@@ -922,14 +970,16 @@ class TriSurface(object):
     def isClosedManifold(self):
         stype = self.surfaceType()
         return stype[0] and stype[1]
-    
+
+    def checkBorder(self):
+        """Return the border of TriSurface as a set of segements."""
+        border = self.edges[self.borderEdges()]
+        closed,loop = closedLoop(border)
+        print "the border is of type %s" % closed
+        print loop
 
     def border(self):
-        """Return the border of TriSurface as a Plex-2 Formex.
-
-        The border elements are the edges having less than 2 connected elements.
-        Returns a list of edge numbers.
-        """
+        """Return the border of TriSurface as a Plex-2 Formex."""
         return Formex(self.coords[self.edges[self.borderEdges()]])
 
 

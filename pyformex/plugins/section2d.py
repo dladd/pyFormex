@@ -68,11 +68,8 @@ def loopCurve(elems):
         else:
             srt[ie] =  elems[je]
         elems[je] = [ -1,-1 ] # Done with this one
-        #print srt
-        #print elems
         j = srt[ie][1]
         if j == k:
-            #print "Finished"
             break
         w = where(elems == j)
         if w[0].size == 0:
