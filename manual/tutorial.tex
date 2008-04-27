@@ -10,29 +10,23 @@
 \section{Introduction}
 \label{sec:intro-tut}
 
-\pyformex is a Python implementation of Formex algebra. Using \pyformex, it is very easy to  generate large geometrical models of 3D structures by a sequence of mathematical transformations. It is especially suited for the automated design of spatial frame structures. But it can also be used for other tasks, like finite element preprocessing, or just for creating some nice pictures.
+\pyformex is a Python implementation of Formex algebra. Using \pyformex, it is very easy to generate large geometrical models of 3D structures by a sequence of mathematical transformations. It is especially suited for the automated design of spatial structures. But it can also be used for other tasks, like operating on 3D geometry obtained from other sources, or for finite element pre- and postprocessing, or just for creating some nice pictures.
 
 By writing a very simple script, a large geometry can be created by copying, translating, rotating,... Formices. \pyformex will interpret this script and draw what you have created. This is clearly very different than the traditional way of creating a model, like CAD. There are two huge advantages about using \pyformex:
 \begin{itemize}
-\item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar,... can be rather difficult to draw with CAD, but when using mathematical transformations, it becomes a piece of cake!
-\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex play it again. For instance, you can easily change an angle, the radius of a dome, the ratio $f/l$ of an arc,... Using CAD, you would have to make an entirely new drawing! This is also illustrated in figure~\ref{fig:scallops}: these domes were all created with the same script, but with other values of the parameters.
+\item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar, \dots, can be rather difficult to draw with CAD, but when using scripted mathematical transformations, it becomes a trivial task.
+\item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex re-execute it. You can easily change any geometrical parameter in any way you want: set directly, interactively ask the user, calculate from some formula, read from a file, \dots.  angle, the radius of a dome, the ratio $f/l$ of an arc. Using CAD, you would have often have to completely redo your drawing work. This idea of scripted geometry building is illustrated in figure~\ref{fig:scallops}: all these domes were created with the same script, but with different values of some parameters.
 \end{itemize}
 \begin{figure}[ht]
   \centering
   \begin{makeimage}
   \end{makeimage}
   \begin{latexonly}
-%     \subfigure[A basic Scallopdome]{\label{scallop}\includegraphics[width=5cm]{images/scallopdome-000}}
-%     \hfill
-%     \subfigure[Another Scallopdome]{\label{scallop2}\includegraphics[width=5cm]{images/scallopdome-001}}
-%     \hfill
-%     \subfigure[Yet another Scallopdome]{\label{scallop3}\includegraphics[width=5cm]{images/scallopdome-002}}
     \includegraphics[width=5cm]{images/scallopdome-000}
     \includegraphics[width=5cm]{images/scallopdome-001}
     \includegraphics[width=5cm]{images/scallopdome-002}
   \end{latexonly}
   \begin{htmlonly}
-%    \htmladdimg[WIDTH="300"]{../images/scallopdome-000.png}
     \htmladdimg{../images/scallopdome-000.png}
     \htmladdimg{../images/scallopdome-001.png}
     \htmladdimg{../images/scallopdome-002.png}
@@ -47,15 +41,19 @@ By writing a very simple script, a large geometry can be created by copying, tra
 \section{Getting started}
 \label{sec:getting-started}
 
+\outdated
+
+\worktodo{This should include a short introduction to Python and Numpy}   
+
 This section holds some basic information on how to use Python and \pyformex. 
 
 \begin{itemize}
-\item Each script should begin with \Code{\#!/usr/bin/env python pyformex.py}
-\item To start the \pyformex GUI, double click on the file \file{pyformex} in the installation directory, or type \emph{pyformex} in the terminal. Using the terminal can be very useful, because errors that are created while running the script will appear in the terminal. This can provide useful information when something goes wrong with your script.
-\item To create a new \pyformex-script, just open a new file with your favorite text editor and save it as \file{myproject.py}.
-\item To edit a script, you can
+\item Start the \pyformex GUI by entering the command \emph{pyformex} in a terminal. Depending on your instalation, there may also be a menu item in the application menu to start \pyf, or even a quickstart button in the panel. Using the terminal however can still be useful, especially in the case of errors, because otherwise the GUI might suppress some of the error messages that normally are sent to the terminal.
+\item To create a new \pyformex-script, just open a new file with your favorite text editor and save it under a name with extension '.py'.
+\item A \pyf script should start with a line \Code{\#!/usr/bin/env pyformex}
+\item To edit the script, you can
 	\begin{itemize}
-	\item Open it with your favorite text editor.
+	\item open it with your favorite text editor.
 	\item \menuselection{File \sub Open}\\
 	At this point, the script will be loaded but nothing will happen. \\
 	\menuselection{File \sub Edit}\\
@@ -93,48 +91,15 @@ All functions from that module are now available.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The geometrical model}
+\section{Creating geometrical models}
 \label{sec:geom}
 
+\subsection{The Formex data model}
 
-\subsection{Creating a Formex}
-\label{subsec:create}
+The most important geometrical object in \pyf is the \class{Formex}\index{Formex} class. A \class{Formex} can describe a variety of geometrical objects: points, lines, surfaces, volumes. The most simple geometrical object is the point, which in three dimensions is only determined by its coordinates \code(x,y,z), which in \pyf will be numbered \code(0,1,2) for convenience. Higher order geometrical objects are defined by a collection of points. In \pyf terms, we call the number of points of an object its \emph{plexitude}\index{plexitude}. 
 
-\subsubsection{What is a Formex?}
-A Formex\index{Formex} is a numarray of order 3 (axes 0,1,2) and type Float.
-A scalar element represents a coordinate (F:uniple).
+A Formex is a collection of geometrical objects of the same plexitude. The objects in the collection are called the \emph{elements}\index{element} of the \class{Formex}. A \class{Formex} whose elements have plexitude $n$ is also called an $n$-plex \class{Formex}. Internally, the coordinates of the points are stored in a numerical array\footnote{\pyf uses the NumPy \class{ndarray} as implementation of fast numerical arrays in Python.} with three dimensions. The coordinates of a single point are stored along the last axis (2) of the \class{Formex}; all the points of an element are stored along the second axis (1); different elements are stored along the first axis (0) of the \class{Formex}. The figure~\ref{fig:formex} schematizes the structure of a \class{Formex}. 
 
-    A row along the axis 2 is a set of coordinates and represents a point
-    (node, vertex, F: signet).
-    For simplicity's sake, the current implementation only deals with points
-    in a 3-dimensional space. This means that the length of axis 2 is always 3.
-    The user can create Formices (plural of Formex) in a 2-D space, but
-    internally these will be stored with 3 coordinates, by adding a third
-    value 0. All operations work with 3-D coordinate sets. However, a method
-    exists to extract only a limited set of coordinates from the results,
-    permitting to return to a 2-D environment.
-
-    A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
-    thought of as a geometrical shape (2 points form a line segment, 3 points
-    make a triangle, ...) or as an element in FE terms. But it really is up to
-    the user as to how this set of points is to be interpreted.
-
-    Finally, the whole Formex represents a set of such elements.
-
-    Additionally, a Formex may have a property set, which is an 1-D array of
-    integers. The length of the array is equal to the length of axis 0 of the
-    Formex data (i.e. the number of elements in the Formex). Thus, a single
-    integer value may be attributed to each element. It is up to the user to
-    define the use of this integer (e.g. it could be an index in a table of
-    element property records).
-    If a property set is defined, it will be copied together with the Formex
-    data whenever copies of the Formex (or parts thereof) are made.
-    Properties can be specified at creation time, and they can be set,
-    modified or deleted at any time. Of course, the properties that are
-    copied in an operation are those that exist at the time of performing
-    the operation.   
-
-Simply put: a Formex is a set of elements, and every element can have a property number.
 \begin{figure}[ht]
   \centering
   \begin{makeimage}
@@ -145,8 +110,42 @@ Simply put: a Formex is a set of elements, and every element can have a property
   \begin{htmlonly}
     \htmladdimg{../images/Formex.png}
   \end{htmlonly}  
-  \caption{The scheme of a Formex}
+  \caption{The structure of a Formex}
+  \label{fig:formex}
 \end{figure}
+
+\warning{The beginning user should be aware not to confuse the three axes of a \class{Formex} with the axes of the 3D space. Both are numbered 0..2. The three coordinate axes form the components of the last axis of a Formex.}
+
+For simplicity of the implemented algorithms, internally \pyf only deals with 3D geometry. This means that the third axis of a \class{Formex} always has length 3. You can however import 2D geometry: all points will be given a third coordinate $z=0.0$. If you restrict your operations to transformations in the $(x,y)$-plane, it suffices to extract just the first two coordinates to get the transformed 2D geometry.
+
+The \class{Formex} object \code{F} can be indexed just like a $NumPy$ numerical array: \code{F[i]} returns the element with index $i$ (counting from $0$). For a \class{Formex} with plexitude $n$, the result will be an array with shape $(n,3)$, conttaining all the points of the element. Then, \code{F[i][j]} will be a $(3,)$-shaped array containing the coordinates of point $j$ of element $i$. Finally, \code{F[i][j][k]} is a floating point value representing a single coordinate of that point. 
+
+
+
+%     A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
+%     thought of as a geometrical shape (2 points form a line segment, 3 points
+%     make a triangle, ...) or as an element in FE terms. But it really is up to
+%     the user as to how this set of points is to be interpreted.
+
+%     Finally, the whole Formex represents a set of such elements.
+
+%     Additionally, a Formex may have a property set, which is an 1-D array of
+%     integers. The length of the array is equal to the length of axis 0 of the
+%     Formex data (i.e. the number of elements in the Formex). Thus, a single
+%     integer value may be attributed to each element. It is up to the user to
+%     define the use of this integer (e.g. it could be an index in a table of
+%     element property records).
+%     If a property set is defined, it will be copied together with the Formex
+%     data whenever copies of the Formex (or parts thereof) are made.
+%     Properties can be specified at creation time, and they can be set,
+%     modified or deleted at any time. Of course, the properties that are
+%     copied in an operation are those that exist at the time of performing
+%     the operation.   
+
+
+\subsection{Creating a Formex}
+\label{subsec:create}
+
 
 \subsubsection{Creating a Formex using coordinates}
 The first and most useful way to create a Formex is by specifying it's nodes and elements in a 3D-list.  
@@ -650,7 +649,8 @@ So let's create a property record in our database. The \Code{Prop()} method does
 \end{verbatim}
 Notice the auto-generated \Code{nr} field. Here's another example, with a tag:
 \begin{verbatim}
->>> author = P.Prop(tag='author',name='Alfred E Neuman',address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+>>> author = P.Prop(tag='author',name='Alfred E Neuman',\
+        address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
 >>> print author
 
   nr = 1
@@ -678,7 +678,8 @@ If you set an attribute of a \class{CascadingDict}, it is always set in the topl
 >>> author.address.street = 'Wiemersdreef'
 >>> print author.address.street
   Wiemersdreef
->>> author = P.Prop(tag='author',alias='John Doe',address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
+>>> author = P.Prop(tag='author',alias='John Doe',\
+        address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
 >>> print author
 
   nr = 2
@@ -709,13 +710,17 @@ John Doe
 The first call selects records by number: either a single record number or a list of numbers can be specified. The second method selects records based on the value of their tag field. Again a single tag value or a list of values can be specified. Only those records having a 'tag' filed matching any of the values in the list will be returned. The third selection method is based on the existence of some attribute names in the record. Here, always a list of attribute names is required. Records are returned that posess all the attributes in the list, independent from the value of those attributes. If needed, the user can add a further filtering based on the attribute values. Finally, as is shown in the last example, all methods of record selection can be combined. Each extra condition will narrow the selection further down.
 
 
-\subsection{Node properties}
-\label{sec:node-properties}
+\subsection{Specialized property records}
+\label{sec:special-properties}
 
-The property system presented above allows for recording any kind of values. In many situations however we will want to work with a specialised and limited set of attributes. The main developers of \pyf e.g. often use the program to create geometrical models of structures of which they want to analyse the mechanical behavior. These numerical simulations (FEA, CFD) require specific data that support the introduction of specialised property records. Currently there are two such property record types: node properties, which are attributed to a single point in space, and element properties (see section \ref{sec:elem-properties}), which are attributed to a structured collection of points.
+The property system presented above allows for recording any kind of values. In many situations however we will want to work with a specialised and limited set of attributes. The main developers of \pyf e.g. often use the program to create geometrical models of structures of which they want to analyse the mechanical behavior. These numerical simulations (FEA, CFD) require specific data that support the introduction of specialised property records. Currently there are two such property record types: node properties (see \ref{sec:node-properties}), which are attributed to a single point in space, and element properties (\ref{sec:elem-properties}), which are attributed to a structured collection of points.
 
 Special purpose properties are distincted by their \Code{kind} field. General property records have {\Code{kind=''}, node properties haven {\Code{kind='n'} and 
  {\Code{kind='e'} is set for element properties. Users can create their own specialised property records by using other value for the \Code{kind} parameter.
+
+
+\subsection{Node properties}
+\label{sec:node-properties}
 
 Node properties are created with the \method{nodeProp} method, rather than the general \method{Prop}. The \Code{kind} field does not need to be set: it will be done automatically. When selecting records using the \method{getProp} method, add a \Code{kind='n'} argument to select only node properties.
 
@@ -774,17 +779,17 @@ Therefore the property module provides a unified way to attach a unique set name
 \label{sec:elem-properties}
 
 
+The \method{elemProp} method creates element properties, which will have their \code{kind} attribute set to 'e'. When selecting records using the \method{getProp} method, add the \Code{kind='e'} argument to get element properties.
+
+Like node properties, element property records have a number of specialize fields. Currently, the following ones are recognized by the Abaqus input file generatr.
+\begin{description}
+ \item [eltype] This is the single most import element property. It sets the element type that will be used during the analysis. Notice that a Formex object also may have an \code{eltype} attribute; that one however is only used to describe the type of the geometric elements involved. The element type discussed here however may also define some other characteristics of the element, like the number and type of degrees of freedom to be used in the analysis or the integration rules to be used. What element types are available is dependent on the analysis package to be used. Currently, \pyf does not do any checks on the element type, so the simulation program's own element designation may be used.
+ \item[section] The section properties of the element. This should be an \class{ElemSection} instance, grouping material properties (like Young's modulus) and geometrical properties (like plate thickness or beam section).
+ \item[dload] A distributed load acting on the element. The value is an \class{ElemLoad} instance. Currently, this can include a label specifying the type of distributed loading, a value for the loading, and an optional amplitude curve for specifying the variation of a time dependent loading.  
+\end{description}
+
 
 \emph{The rest of this section is obsolete}
-
-
-
-The class ElemProperty holds properties related to a single element. The data is stored in a Dict called 'elemproperties'. An element property can hold the following sub-properties:
-\begin{description}
-\item [elemsection] The section properties of the element. This is an ElemSection instance.
-\item [elemload] The loading of the element. This is a list of ElemLoad instances.
-\item [elemtype] The type of element that is to be used in the analysis. 
-\end{description}
 
 An elemsection can hold the following sub-properties:
 \begin{description}

@@ -258,6 +258,13 @@ def checkBorder():
     if S:
         S.checkBorder()
 
+
+def fillBorder():
+    S = selection.check(single=True)
+    if S:
+        S.fillBorder()
+
+
 # Selectable values for display/histogram
 # Each key is a description of a result
 # Each value consist of a tuple
@@ -989,6 +996,7 @@ def create_menu():
           ]),
         ("&Border Line",showBorder),
         ("&Border Type",checkBorder),
+        ("&Fill the holes",fillBorder),
         ("---",None),
         ("&Transform",
          [("&Scale",scaleSelection),
@@ -1024,7 +1032,6 @@ def create_menu():
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
 #        ("&Trim border",trim_surface),
-#        ("&Fill the holes in STL model",fill_holes),
         ("&Create volume mesh",create_tetgen_volume),
 #        ("&Read Tetgen Volume",read_tetgen_volume),
         ("&Export surface to Abaqus",export_surface),

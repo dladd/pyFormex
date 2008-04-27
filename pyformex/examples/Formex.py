@@ -10,9 +10,9 @@ clear()
 def drawAxis(len,dir,text):
     """Draw an axis of given length and direction annotated with text."""
     F = Formex(pattern('1')).scale(len).rotate(dir)
-    T = F[0][1].scale(1.1)
+    #T = F[0][1].scale(1.1)
     draw(F,linewidth=2.0)
-    drawText3D(T,text,font='tr24')
+    drawText3D(F[0][1]+(2.,-0.5,0.),text,font='tr24')
     return F
 
 def drawFrame(P):
@@ -24,11 +24,11 @@ def drawFrame(P):
     frame = (h + v).trl(P)
     draw(frame,linewidth=1.0,bbox=None)
 
-drawAxis(60,0,'axis 0: coordinates')
-drawAxis(40,-90,'axis 1: points')
-F = drawAxis(50,-30,'axis 2: elements').divide(8)
+drawAxis(30,0,'axis 2: coordinates')
+drawAxis(30,-90,'axis 1: points')
+F = drawAxis(50,30,'axis 0: elements').divide(8)
 
-for i in range(3):
+for i in range(1,5,2):
     drawFrame(F[i][1])
 
 zoomAll()

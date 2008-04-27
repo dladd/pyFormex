@@ -347,6 +347,28 @@ def closedLoop(elems):
     
 
 
+def surfaceInsideLoop(coords,elems):
+    """Create a surface inside a closed curve defined by coords and elems.
+
+    coords is a set of coordinates.
+    elems is an (nsegments,2) shaped connectivity array defining a set of line
+    segments forming a closed loop.
+
+    The return value is coords,elems tuple where
+    coords has one more point: the center of th original coords
+    elems is (nsegment,3) and defines triangles describing a surface inside
+    the original curve.
+    """
+    coords = Coords(coords)
+    if coords.ndim != 2 or elems.ndim != 2 or elems.shape[1] != 2 or elems.max() >= coords.shape[0]:
+        raise ValueError,"Invalid argument shape/value"
+    x = coords[unique1d(elems)].center().reshape(-1,3)
+    n = zeros_like(elems[:,:1]) + coords.shape[0]
+    elems = concatenate([elems,n],axis=1)
+    coords = Coords.concatenate([coords,x])
+    return coords,elems
+
+
 
 ############################################################################
 # The TriSurface class
@@ -492,7 +514,22 @@ class TriSurface(object):
         self.edges = reverse[self.edges]
         self.elems = None
 
-                                  
+
+    def append(self,S):
+        """Merge another surface with self.
+
+        This just merges the data sets, and does not check
+        whether the surfaces intersect or are connected!
+        This is intended mostly for use inside higher level functions.
+        """
+        self.refresh()
+        S.refresh()
+        coords = concatenate([self.coords,S.coords])
+        elems = concatenate([self.elems,S.elems])
+        self.__init__(coords,elems)
+
+
+            
 ###########################################################################
     #
     #   Return information about a TriSurface
@@ -978,6 +1015,12 @@ class TriSurface(object):
         print "the border is of type %s" % closed
         print loop
 
+    def fillBorder(self):
+        brd = self.edges[self.borderEdges()]
+        coords,elems = surfaceInsideLoop(self.coords,brd)
+        self.append(TriSurface(coords,elems))
+
+
     def border(self):
         """Return the border of TriSurface as a Plex-2 Formex."""
         return Formex(self.coords[self.edges[self.borderEdges()]])
@@ -1271,25 +1314,6 @@ Total area: %s; Enclosed volume: %s
         """Cut a surface with a plane."""
         self.__init__(self.toFormex().cutAtPlane(*args,**kargs))
 
-
-########################## Methods using border #############################
-
-    def fill_holes(self,):
-        brd = self.border()
-        fn = project + '.stl'
-        fn1 = project + '-closed.stl'
-        if os.path.exists(fn):
-            sta,out = utils.runCommand('admesh %s -f -a %s' % (fn,fn1))
-            GD.message(out)
-            if sta == 0:
-                clear()
-                linewidth(1)
-                draw(F,color='yellow',view='front')
-                oldF = F
-                linewidth(2)
-                GD.gui.setBusy()
-                surface.readSurface(fn1)
-                GD.gui.setBusy(False)
 
 
 ########################## Methods using GTS #############################
