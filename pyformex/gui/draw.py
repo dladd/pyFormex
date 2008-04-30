@@ -92,7 +92,7 @@ def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
 
-def askItems(items,caption=None,timeout=None):
+def askItems(items,caption=None,timeout=None,direction='horizontal'):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -110,7 +110,7 @@ def askItems(items,caption=None,timeout=None):
     """
     if type(items) == dict:
         items = items.items()
-    w = widgets.InputDialog(items,caption)
+    w = widgets.InputDialog(items,caption,direction=direction)
     res,status = w.getResult(timeout)
     return res
 
@@ -988,8 +988,8 @@ def highlightActors(K,colormap=highlight_colormap):
         # Therefore we undraw it and draw it again
         #
         if isinstance(A,surface.TriSurface):
-            undraw(A)
-            draw(A,color=color)
+            undraw(A,)
+            draw(A,color=color,bbox=None)
         else:
             A.redraw(mode=GD.canvas.rendermode,color=color)
     GD.canvas.update()
@@ -1009,7 +1009,7 @@ def highlightElements(K,colormap=highlight_colormap):
             p[K[i]] = 1
         if isinstance(A,surface.TriSurface):
             undraw(A)
-            draw(A,color=p,colormap=colormap)
+            draw(A,color=p,colormap=colormap,bbox=None)
         else:
             A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
     GD.canvas.update()
@@ -1070,7 +1070,7 @@ def highlightPartitions(K):
                 p[K[i][0][j]] = j
         if isinstance(A,surface.TriSurface):
             undraw(A)
-            draw(A,color=p)
+            draw(A,color=p,bbox=None)
         else:
             A.redraw(mode=GD.canvas.rendermode,color=p)
     GD.canvas.update()
@@ -1093,13 +1093,26 @@ def pick(mode='actor',single=False,func=None):
     GD.message("Select %s" % mode)
     selection_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
     GD.gui.statusbar.addWidget(selection_buttons)
-    selectionmethod_buttons = widgets.ButtonBox('Selection method:',['All','Single','Connected'],[GD.canvas.select_all,GD.canvas.select_single,GD.canvas.select_connected])
+    if mode == 'element':
+        selectionmethod_buttons = widgets.ButtonBox('Selection method:',['All','Single','Connected'],[GD.canvas.select_all,GD.canvas.select_single,GD.canvas.select_connected])
+    else:
+        selectionmethod_buttons = widgets.ButtonBox('Selection method:',['All','Single'],[GD.canvas.select_all,GD.canvas.select_single])
     GD.gui.statusbar.addWidget(selectionmethod_buttons)
+    number_buttons = None
+    GD.canvas.numbers_visible = None
+    if mode != 'actor' and len(GD.canvas.actors) == 1:
+        if GD.canvas.actors[0].nelems() < 500:
+            number_buttons = widgets.ButtonBox('Numbers:',['Show','Hide'],[showNumbers,hideNumbers])
+            GD.gui.statusbar.addWidget(number_buttons)
     if func is None:
         func = highlight_funcs.get(mode,None)
     sel = GD.canvas.pick(mode,single,func)
     GD.gui.statusbar.removeWidget(selection_buttons)
     GD.gui.statusbar.removeWidget(selectionmethod_buttons)
+    if number_buttons:
+        GD.gui.statusbar.removeWidget(number_buttons)
+    if GD.canvas.numbers_visible == True:
+        hideNumbers()
     return sel
     
 def pickActors(single=False,func=None):
@@ -1131,6 +1144,44 @@ def pickNumbers(marks=None):
     if marks:
         GD.canvas.numbers = marks
     return GD.canvas.pickNumbers()
+
+
+def showNumbers():
+    """Show a list widget containing the numbers of the elements,
+    points or edges. When part numbers are added to / removed from
+    the selection by mouse_picking, the corresponding list items will be
+    selected / deselected. Part numbers can also be added to / removed
+    from the selection by clicking on a list item.
+    """
+    A = GD.canvas.actors[0]
+    if GD.canvas.selection_mode == 'element':
+        numbers = [str(i) for i in range(A.nelems())]
+        drawNumbers(A,color=colors.blue)
+    elif GD.canvas.selection_mode == 'point':
+        numbers = [str(i) for i in range(A.npoints())]
+        if isinstance(A,surface.TriSurface):
+            F = Formex(A.coords)
+            drawNumbers(F,color=colors.blue)
+        elif isinstance(A,formex.Formex):
+            drawVertexNumbers(A,color=colors.blue)
+    elif GD.canvas.selection_mode == 'edge':
+        numbers = [str(i) for i in range(GD.canvas.actors[0].nedges())]
+        F = Formex(A.coords[A.edges])
+        drawNumbers(F,color=colors.blue)
+    GD.canvas.number_widget = widgets.DockedSelection(numbers,'Numbers',mode='multi',func=GD.canvas.select_numbers)
+    selection = map(str,GD.canvas.selection.get(0))
+    GD.canvas.number_widget.setSelected(selection,True)
+    GD.gui.addDockWidget(QtCore.Qt.LeftDockWidgetArea,GD.canvas.number_widget)
+    GD.canvas.numbers_visible = True
+
+    
+def hideNumbers():
+    """Hide the list widget."""
+    GD.canvas.selection_method = 'all'
+    undraw(GD.canvas.numbers)
+    GD.gui.removeDockWidget(GD.canvas.number_widget)
+    GD.canvas.numbers_visible = False
+
 
 ################################ saving images ########################
          

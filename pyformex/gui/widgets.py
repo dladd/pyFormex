@@ -205,7 +205,6 @@ class AppearenceDialog(QtGui.QDialog):
         grid.addWidget(acceptButton,2,3)
         grid.addWidget(cancelButton,2,4)
         self.setLayout(grid)
-        
 
 
     def setFont(self):
@@ -214,7 +213,7 @@ class AppearenceDialog(QtGui.QDialog):
             self.fontButton.setText(font.toString())
             self.font = font
 
-            
+
     def getResult(self):
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
@@ -223,7 +222,75 @@ class AppearenceDialog(QtGui.QDialog):
         else:
             return None,None
 
-        
+
+class DockedSelection(QtGui.QDockWidget):
+    """A widget that is docked in the main window and contains a modeless
+    dialog for selecting items.
+    """
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
+        QtGui.QDockWidget.__init__(self)
+        self.setWidget(ModelessSelection(slist,title,mode,sort,func))
+    
+    def setSelected(self,selected,bool):
+        self.widget().setSelected(selected,bool)
+    
+    def getResult(self):
+        res = self.widget().getResult()
+        return res
+
+
+class ModelessSelection(QtGui.QDialog):
+    """A modeless dialog for selecting one or more items from a list."""
+    
+    selection_mode = {
+        None: QtGui.QAbstractItemView.NoSelection,
+        'single': QtGui.QAbstractItemView.SingleSelection,
+        'multi': QtGui.QAbstractItemView.MultiSelection,
+        'contiguous': QtGui.QAbstractItemView.ContiguousSelection,
+        'extended': QtGui.QAbstractItemView.ExtendedSelection,
+        }
+    
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
+        """Create the SelectionList dialog.
+        """
+        QtGui.QDialog.__init__(self)
+        self.setWindowTitle(title)
+        # Selection List
+        self.listw = QtGui.QListWidget()
+        self.listw.setMaximumWidth(100)
+        self.listw.addItems(slist)
+        if sort:
+            self.listw.sortItems()
+        self.listw.setSelectionMode(self.selection_mode[mode])
+        grid = QtGui.QGridLayout()
+        grid.addWidget(self.listw,0,0,1,1)
+        self.setLayout(grid)
+        if func:
+            self.connect(self.listw,QtCore.SIGNAL("itemClicked(QListWidgetItem *)"),func)
+    
+
+    def setSelected(self,selected,bool):
+        """Mark the specified items as selected."""
+        for s in selected:
+            for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
+                # OBSOLETE: should be changed with Qt version 4.2 or later
+                self.listw.setItemSelected(i,bool)
+                # SHOULD BECOME:
+                # i.setSelected(True) # requires Qt 4.2
+                # i.setCheckState(QtCore.Qt.Checked)
+
+                
+    def getResult(self):
+        """Return the list of selected values.
+
+        If the user cancels the selection operation, the return value is None.
+        Else, the result is always a list, possibly empty or with a single
+        value.
+        """
+        res = [i.text() for i in self.listw.selectedItems()]
+        return map(str,res)
+
+
 class Selection(QtGui.QDialog):
     """A dialog for selecting one or more items from a list."""
     
@@ -264,6 +331,7 @@ class Selection(QtGui.QDialog):
         grid.addWidget(acceptButton,1,0)
         grid.addWidget(cancelButton,1,1)
         self.setLayout(grid)
+    
 
     def setSelected(self,selected):
         """Mark the specified items as selected."""
@@ -447,7 +515,7 @@ class InputCombo(InputItem):
 class InputRadio(InputItem):
     """A radiobuttons InputItem."""
     
-    def __init__(self,name,choices,default,*args):
+    def __init__(self,name,choices,default,direction='horizontal',*args):
         """Creates radiobuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -464,7 +532,10 @@ class InputRadio(InputItem):
             choices[0:0] = [ default ]
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QGroupBox()
-        self.hbox = QtGui.QHBoxLayout()
+        if direction == 'horizontal':
+            self.hbox = QtGui.QHBoxLayout()
+        elif direction == 'vertical':
+            self.hbox = QtGui.QVBoxLayout()
         self.rb = []
         self.hbox.addStretch(1)
 
@@ -488,7 +559,7 @@ class InputRadio(InputItem):
 class InputPush(InputItem):
     """A pushbuttons InputItem."""
     
-    def __init__(self,name,choices,default=None,*args):
+    def __init__(self,name,choices,default=None,direction='horizontal',*args):
         """Creates pushbuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -506,7 +577,10 @@ class InputPush(InputItem):
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QGroupBox()
         self.input.setFlat(True)
-        self.hbox = QtGui.QHBoxLayout()
+        if direction == 'horizontal':
+            self.hbox = QtGui.QHBoxLayout()
+        elif direction == 'vertical':
+            self.hbox = QtGui.QVBoxLayout()
         self.hbox.setSpacing(0)
         self.hbox.setMargin(0)
 
@@ -608,7 +682,7 @@ class InputDialog(QtGui.QDialog):
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,direction='horizontal'):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -706,14 +780,14 @@ class InputDialog(QtGui.QDialog):
                     choices = item[3]
                 else:
                     choices = []
-                line = InputRadio(name,choices,value)
+                line = InputRadio(name,choices,value,direction=direction)
 
             elif itemtype == 'push' :
                 if len(item) > 3:
                     choices = item[3]
                 else:
                     choices = []
-                line = InputPush(name,choices,value)
+                line = InputPush(name,choices,value,direction=direction)
 
             else: # Anything else is handled as a string
                 #itemtype = str:

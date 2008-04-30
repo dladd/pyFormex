@@ -31,7 +31,8 @@ import toolbar
 import math
 
 from coords import Coords
-from numpy import asarray,where
+from numpy import asarray,where,unique,intersect1d,setdiff1d
+
 
 # Some 2D vector operations
 # We could do this with the general functions of coords.py,
@@ -231,6 +232,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Wait for the user to interactively make a selection."""
         self.selection_timer = QtCore.QThread
         self.selection_busy = True
+        self.number_selection = False
         while self.selection_busy:
             self.selection_timer.msleep(20)
             GD.app.processEvents()
@@ -272,6 +274,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def select_connected(self):
         self.selection_method = 'connected'
 
+    def select_numbers(self):
+        # selection by clicking on a list item
+        selecteditems = self.number_widget.getResult()
+        self.selection.set(map(int,selecteditems),0)
+        self.number_selection = True
+        self.selection_busy = False
+    
     
     def pick(self,mode='actor',single=False,func=None):
         """Interactively pick objects from the viewport.
@@ -302,7 +311,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.start_selection(mode)
         while not self.selection_canceled:
             self.wait_selection()
-            if not self.selection_canceled:
+            if not self.selection_canceled and self.number_selection == False:
+                # selection by mouse_picking
                 self.pick_func[self.selection_mode]()
                 if self.selection_method == 'single':
                     self.picked = [self.front_picked]
@@ -330,19 +340,25 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                                 selection_elems = self.selection[i]
                                 A = self.actors[i].select(selection_elems)
                                 p = A.partitionByConnection()
-                                props = []
-                                connected_elems = []
-                                for j in range(len(oldselection_elems)):
-                                    prop = p[selection_elems == oldselection_elems[j]]
-                                    if not prop in props:
-                                        props.append(prop)
-                                        connected_elems.extend(selection_elems[p == prop[0]])
-                                self.selection[i] = connected_elems
+                                partitions = unique(p)
+                                for part in partitions:
+                                    intersection = intersect1d(oldselection_elems,selection_elems[p == part])
+                                    if intersection.size == 0:
+                                        self.selection.remove(selection_elems[p == part],i)
                             else:
                                 self.selection.clear(keys=[i])
                 elif self.mod == CTRL:
                     self.selection.remove(self.picked)
-            #GD.debug("Selection: %s" % self.selection)
+                if GD.canvas.numbers_visible == True:
+                    # A list widget is visible, so when part numbers are added to /
+                    # removed from the selection by mouse_picking, the corresponding
+                    # list items will be selected / deselected.
+                    selecteditems = map(int,GD.canvas.number_widget.getResult())
+                    selection = self.selection.get(0)
+                    add = map(str,setdiff1d(selection,selecteditems))
+                    remove = map(str,setdiff1d(selecteditems,selection))
+                    GD.canvas.number_widget.setSelected(add,True)
+                    GD.canvas.number_widget.setSelected(remove,False)
             if func:
                 func(self.selection)
             if single:
@@ -550,6 +566,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2][0] for r in buf]
+        if len(self.picked) != 0:
+            dmin = asarray([ r[0] for r in buf ])
+            w = where(dmin == dmin.min())[0][0]
+            self.front_picked = self.picked[w]
+        else:
+            self.front_picked = None
 
 
     def pick_parts(self,obj_type,max_objects):
@@ -570,7 +592,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2] for r in buf ]
-        if len(self.picked) != 0 and obj_type == 'element':
+        if len(self.picked) != 0:
             dmin = asarray([ r[0] for r in buf ])
             w = where(dmin == dmin.min())[0][0]
             self.front_picked = self.picked[w]
