@@ -13,6 +13,8 @@
 
 include RELEASE
 
+PKGNAME= pyformex
+
 PYFORMEXDIR= pyformex
 PYSOURCE= setup.py pyformex/pyformexrc \
 	$(wildcard pyformex/*.py) \
@@ -42,7 +44,8 @@ IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
 STAMP= stamp 
 VERSIONSTRING= __version__ = .*
 NEWVERSIONSTRING= __version__ = "${RELEASE}"
-PKG= ${PYFORMEXDIR}.tar.gz
+
+PKGVER= ${PKGNAME}-${RELEASE}.tar.gz
 PKGDIR= dist
 LATEST= pyformex-latest.tar.gz
 
@@ -121,16 +124,17 @@ stampall: stamp
 # Create the distribution
 dist: ${LATEST}
 
-${LATEST}: ${PKGDIR}/${PKG}
-	ln -sfn ${PKG} ${PKGDIR}/${LATEST}
+${LATEST}: ${PKGDIR}/${PKGVER}
+	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKG}: version MANIFEST.in
+${PKGDIR}/${PKGVER}: version MANIFEST.in
+	@echo "Creating ${PKGDIR}/${PKGVER}"
 	rm -f MANIFEST
 	python setup.py sdist
 
 # Publish the distribution to our ftp server
 pub: 
-	rsync -l ${PKGDIR}/${PKG} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
+	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
 
 # Tag the release in the svn repository
 tag:
