@@ -515,7 +515,7 @@ class InputCombo(InputItem):
 class InputRadio(InputItem):
     """A radiobuttons InputItem."""
     
-    def __init__(self,name,choices,default,direction='horizontal',*args):
+    def __init__(self,name,choices,default,direction='h',*args):
         """Creates radiobuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -525,6 +525,7 @@ class InputRadio(InputItem):
        
         The choices are presented to the user as a hbox with radio buttons,
         of which the default will initially be pressed.
+        If direction == 'v', the options are in a vbox. 
         """
         if default is None:
             default = choices[0]
@@ -532,10 +533,10 @@ class InputRadio(InputItem):
             choices[0:0] = [ default ]
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QGroupBox()
-        if direction == 'horizontal':
-            self.hbox = QtGui.QHBoxLayout()
-        elif direction == 'vertical':
+        if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
+        else:
+            self.hbox = QtGui.QHBoxLayout()
         self.rb = []
         self.hbox.addStretch(1)
 
@@ -559,7 +560,7 @@ class InputRadio(InputItem):
 class InputPush(InputItem):
     """A pushbuttons InputItem."""
     
-    def __init__(self,name,choices,default=None,direction='horizontal',*args):
+    def __init__(self,name,choices,default=None,direction='h',*args):
         """Creates pushbuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -567,8 +568,9 @@ class InputPush(InputItem):
         If default is not in the choices list, it is prepended.
         If default is None, the first item of choices is taken as the default.
        
-        The choices are presented to the user as a hbox with push buttons,
+        The choices are presented to the user as a hbox with radio buttons,
         of which the default will initially be pressed.
+        If direction == 'v', the options are in a vbox. 
         """
         if default is None:
             default = choices[0]
@@ -577,10 +579,10 @@ class InputPush(InputItem):
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QGroupBox()
         self.input.setFlat(True)
-        if direction == 'horizontal':
-            self.hbox = QtGui.QHBoxLayout()
-        elif direction == 'vertical':
+        if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
+        else:
+            self.hbox = QtGui.QHBoxLayout()
         self.hbox.setSpacing(0)
         self.hbox.setMargin(0)
 
@@ -682,7 +684,7 @@ class InputDialog(QtGui.QDialog):
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,direction='horizontal'):
+    def __init__(self,items,caption=None,parent=None,flags=None):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -719,12 +721,16 @@ class InputDialog(QtGui.QDialog):
         [ 'name', 'option1', 'select', ['option0','option1','option2']] will
         present a combobox to select between one of the options.
         The initial and default value is 'option1'.
+
         [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
         present a group of radiobuttons to select between one of the options.
         The initial and default value is 'option1'.
+        A variant 'vradio' aligns the options vertically. 
+        
         [ 'name', 'option1', 'push', ['option0','option1','option2']] will
         present a group of pushbuttons to select between one of the options.
         The initial and default value is 'option1'.
+        A variant 'vpush' aligns the options vertically. 
 
         [ 'name', 'red', 'color' ] will present a color selection widget,
         with 'red' as the initial choice.
@@ -775,19 +781,19 @@ class InputDialog(QtGui.QDialog):
                     choices = []
                 line = InputCombo(name,choices,value)
 
-            elif itemtype == 'radio' :
+            elif itemtype in ['radio','hradio','vradio']:
                 if len(item) > 3:
                     choices = item[3]
                 else:
                     choices = []
-                line = InputRadio(name,choices,value,direction=direction)
+                line = InputRadio(name,choices,value,direction=itemtype[0])
 
-            elif itemtype == 'push' :
+            elif itemtype in ['push','hpush','vpush']:
                 if len(item) > 3:
                     choices = item[3]
                 else:
                     choices = []
-                line = InputPush(name,choices,value,direction=direction)
+                line = InputPush(name,choices,value,direction=itemtype[0])
 
             else: # Anything else is handled as a string
                 #itemtype = str:
@@ -905,8 +911,7 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
         return ''
 
 
-############################# Status Bar button box ###########################
-
+############################# Named button box ###########################
 
 class ButtonBox(QtGui.QWidget):
     def __init__(self,name,choices,funcs,*args):
@@ -923,9 +928,22 @@ class ButtonBox(QtGui.QWidget):
         self.buttons.setText(text,index)
 
     def setIcon(self,icon,index=0):
-        #print "PASS"
         self.buttons.setIcon(icon,index)
 
+
+############################# Named combo box ###########################
+
+class ComboBox(QtGui.QWidget):
+    def __init__(self,name,choices,func,*args):
+        QtGui.QWidget.__init__(self,*args)
+        s = InputCombo(name,choices,None)
+        s.setSpacing(0)
+        s.setMargin(0)
+        if func:
+            self.connect(s.input,QtCore.SIGNAL("activated(int)"),func)
+        self.setLayout(s)
+        self.combo = s
+        
 
 ############################# Menu ##############################
 

@@ -590,7 +590,7 @@ class TriSurfaceActor(Actor,TriSurface):
         else:
             self.refresh()
             drawPolygonElems(self.coords,self.elems,mode,color,alpha)
-        GD.message("Drawing time: %s seconds" % t.seconds())
+        GD.debug("Drawing time: %s seconds" % t.seconds())
     
 
     def pickGL(self,mode):

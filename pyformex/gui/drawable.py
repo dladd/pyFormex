@@ -18,6 +18,7 @@ from colors import *
 from numpy import *
 from formex import *
 
+import misc
 import simple
 import utils
 
@@ -163,29 +164,44 @@ def computeNormals(x):
     return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
 
 
-def interpolateNormals(x,els):
-    """Interpolate normals in all points of elements in x.
+def nodalSum(val,elems,avg=False):
+    """Compute the nodal sum of values defined on elements.
 
-    x is an (nel,nplex,3) array. Each line of x in an element.
-    The return value is an (nel,nplex,3) array with the unit normals
-    in all points.
+    val is a (nelems,nplex,nval) array of values defined at points of elements.
+    elems is a (nelems,nplex) array with nodal ids of all points of elements.
+
+    The return value is a (nelems,nplex,nval) array where each value is
+    replaced with the sum of its value at that node.
+    If avg=True, the values are replaced with the average instead.
     """
-    # Compute all normals
-    n = computeNormals(x[els])
-#    print x.shape
-#    print els.shape
-#    print n.shape
-    for i in unique1d(els):
-#        print "Averaging normal in point %s" % i
-        wi = where(els==i)
-        ni = n[wi]
-#        print ni
-        ni = ni.sum(axis=0)
-#        print ni
-        ni = normalize(ni)
-#        print ni
-        n[wi] = ni
-    return n
+    if val.ndim != 3:
+        val.reshape(val.shape+(1,))
+    if elems.shape != val.shape[:2]:
+        raise RuntimeError,"shape of val and elems does not match"
+    nodes = unique1d(elems)
+    work = zeros((nodes.max()+1,val.shape[2]))
+    if GD.options.safelib:
+        val = val.astype(float32)
+        elems = elems.astype(int32)
+        nodes = nodes.astype(int32)
+        work = work.astype(float32)
+    print "NOW CALLING THE LOW LEVEL"
+    misc.nodalSum(val,elems,nodes,work,avg)
+    return val
+
+
+def interpolateNormals(coords,elems):
+    """Interpolate normals in all points of elems.
+
+    coords is a (ncoords,3) array of nodal coordinates.
+    elems is an (nel,nplex) array of element connectivity.
+    
+    The return value is an (nel,nplex,3) array with the averaged unit normals
+    in all points of all elements.
+    """
+    n = computeNormals(coords[elems])
+    n = nodalSum(n,elems)
+    return normalize(n)
 
 
 def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):

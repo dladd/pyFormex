@@ -92,7 +92,7 @@ def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
 
-def askItems(items,caption=None,timeout=None,direction='horizontal'):
+def askItems(items,caption=None,timeout=None):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -110,7 +110,7 @@ def askItems(items,caption=None,timeout=None,direction='horizontal'):
     """
     if type(items) == dict:
         items = items.items()
-    w = widgets.InputDialog(items,caption,direction=direction)
+    w = widgets.InputDialog(items,caption)
     res,status = w.getResult(timeout)
     return res
 
@@ -988,7 +988,7 @@ def highlightActors(K,colormap=highlight_colormap):
         # Therefore we undraw it and draw it again
         #
         if isinstance(A,surface.TriSurface):
-            undraw(A,)
+            undraw(A)
             draw(A,color=color,bbox=None)
         else:
             A.redraw(mode=GD.canvas.rendermode,color=color)
@@ -1082,50 +1082,69 @@ highlight_funcs = { 'actor': highlightActors,
                     'edge': highlightEdges,
                     }
 
+selection_filters = [ 'none', 'closest', 'connected' ]
 
-def pick(mode='actor',single=False,func=None):
+
+def set_selection_filter(i):
+    """Set the selection filter mode"""
+    if i in range(len(selection_filters)):
+        GD.canvas.start_selection(None,selection_filters[i])
+        
+
+def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
     This function differs in that it provides default highlighting
-    during the picking operation.
+    during the picking operation, a button to stop the selection operation
+
+    If no filter is given, the available filters are presented in a combobox.
+    If numbers=True, numbers are shown?? Sophie: can you explain some more
+    what it is doing?
     """
-    GD.message("Select %s" % mode)
-    selection_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
-    GD.gui.statusbar.addWidget(selection_buttons)
+    if GD.canvas.selection_mode is not None:
+        warning("You need to finish the previous picking operation first!")
+        return
+
+    pick_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
+    GD.gui.statusbar.addWidget(pick_buttons)
+    
     if mode == 'element':
-        selectionmethod_buttons = widgets.ButtonBox('Selection method:',['All','Single','Connected'],[GD.canvas.select_all,GD.canvas.select_single,GD.canvas.select_connected])
+        filters = selection_filters
     else:
-        selectionmethod_buttons = widgets.ButtonBox('Selection method:',['All','Single'],[GD.canvas.select_all,GD.canvas.select_single])
-    GD.gui.statusbar.addWidget(selectionmethod_buttons)
-    number_buttons = None
-    GD.canvas.numbers_visible = None
-    if mode != 'actor' and len(GD.canvas.actors) == 1:
-        if GD.canvas.actors[0].nelems() < 500:
-            number_buttons = widgets.ButtonBox('Numbers:',['Show','Hide'],[showNumbers,hideNumbers])
-            GD.gui.statusbar.addWidget(number_buttons)
+        filters = selection_filters[:2]
+    filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
+    GD.gui.statusbar.addWidget(filter_combo)
+
+    GD.canvas.numbers_visible = False
+    if mode == 'actor':
+        numbers = False
+    if numbers:
+        number_buttons = widgets.ButtonBox('Numbers:',['Show','Hide'],[showNumbers,hideNumbers])
+        GD.gui.statusbar.addWidget(number_buttons)
     if func is None:
         func = highlight_funcs.get(mode,None)
-    sel = GD.canvas.pick(mode,single,func)
-    GD.gui.statusbar.removeWidget(selection_buttons)
-    GD.gui.statusbar.removeWidget(selectionmethod_buttons)
-    if number_buttons:
-        GD.gui.statusbar.removeWidget(number_buttons)
-    if GD.canvas.numbers_visible == True:
+    GD.message("Select %s %s" % (filtr,mode))
+    sel = GD.canvas.pick(mode,single,func,filtr)
+    GD.gui.statusbar.removeWidget(pick_buttons)
+    GD.gui.statusbar.removeWidget(filter_combo)
+    if numbers:
         hideNumbers()
+        GD.gui.statusbar.removeWidget(number_buttons)
     return sel
+
     
-def pickActors(single=False,func=None):
-    return pick('actor',single,func)
+def pickActors(single=False,func=None,filtr=None):
+    return pick('actor',single,func,filtr)
 
-def pickElements(single=False,func=None):
-    return pick('element',single,func)
+def pickElements(single=False,func=None,filtr=None):
+    return pick('element',single,func,filtr)
 
-def pickPoints(single=False,func=None):
-    return pick('point',single,func)
+def pickPoints(single=False,func=None,filtr=None):
+    return pick('point',single,func,filtr)
 
-def pickEdges(single=False,func=None):
-    return pick('edge',single,func)
+def pickEdges(single=False,func=None,filtr=None):
+    return pick('edge',single,func,filtr)
 
 
 def highlight(K,mode,colormap=highlight_colormap):
@@ -1177,9 +1196,9 @@ def showNumbers():
     
 def hideNumbers():
     """Hide the list widget."""
-    GD.canvas.selection_method = 'all'
-    undraw(GD.canvas.numbers)
-    GD.gui.removeDockWidget(GD.canvas.number_widget)
+    if GD.canvas.numbers_visible:
+        undraw(GD.canvas.numbers)
+        GD.gui.removeDockWidget(GD.canvas.number_widget)
     GD.canvas.numbers_visible = False
 
 

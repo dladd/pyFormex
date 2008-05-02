@@ -213,8 +213,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
 
 
-    def start_selection(self,mode):
-        """Start an interactive picking mode."""
+    def start_selection(self,mode,filtr):
+        """Start an interactive picking mode.
+
+        If selection mode was already started, mode is disregarded and
+        this can be used to change the filter method.
+        """
         if self.selection_mode is None:
             GD.debug("START SELECTION MODE: %s" % mode)
             self.setMouse(LEFT,self.mouse_pick)
@@ -224,9 +228,19 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(RIGHT,self.emit_cancel,SHIFT)
             self.connect(self,DONE,self.accept_selection)
             self.connect(self,CANCEL,self.cancel_selection)
-            self.selection_mode = mode
-            self.selection_method = 'all'
             self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.selection_mode = mode
+            self.selection_front = None
+
+        if filtr == 'none':
+            filtr = None
+        GD.debug("SET SELECTION FILTER: %s" % filtr)
+        self.selection_filter = filtr
+        if filtr is None:
+            self.selection_front = None
+        self.selection.clear()
+        self.selection.setType(self.selection_mode)
+            
 
     def wait_selection(self):
         """Wait for the user to interactively make a selection."""
@@ -265,15 +279,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Cancel an interactive picking mode and clear the selection."""
         self.accept_selection(clear=True)
     
-    def select_all(self):
-        self.selection_method = 'all'
-    
-    def select_single(self):
-        self.selection_method = 'single'
-
-    def select_connected(self):
-        self.selection_method = 'connected'
-
     def select_numbers(self):
         # selection by clicking on a list item
         selecteditems = self.number_widget.getResult()
@@ -281,8 +286,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.number_selection = True
         self.selection_busy = False
     
-    
-    def pick(self,mode='actor',single=False,func=None):
+    def pick(self,mode='actor',single=False,func=None,filter=None):
         """Interactively pick objects from the viewport.
 
         - mode: defines what to pick : one of
@@ -293,62 +297,58 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         cancel (ESC or right mouse button).
         - func: if specified, this function will be called after each
         atomic pick operation. The Collection with the currently selected
-        objects is passed as an argument.
-        This can e.g. be used to highlight the selected objects during picking.
-        - selection_method: defines how to pick elements: one of
-        ['all','single','connected']. This can be changed interactively during picking.
-        'single' will return the element closest to the user. 'connected' will return
-        elements connected to the most frontal element or connected to the previous
-        selection (shift button). Currently this will only work for TriSurfaceActors.
-        - When the picking operation is finished, the selection is returned.
+        objects is passed as an argument. This can e.g. be used to highlight
+        the selected objects during picking.
+        - filter: defines what elements to retain from the selection: one of
+        [None,'closest,'connected'].
+        The default (None) will return the complete selection.
+        'closest' will only keep the element closest to the user.
+        'connected' will only keep elements connected to
+          - the closest element (set picked)
+          - what is already in the selection (add picked).
+          Currently this only works when picking mode is 'element' and
+          for Actors having a partitionByConnection method.
+
+        When the picking operation is finished, the selection is returned.
         The return value is always a Collection object.
         """
-        #if not single:
-        #    GD.debug('PICK UNTIL ESC/RIGHT MOUSE')
-        self.selection.clear()
-        self.selection.setType(mode)
         self.selection_canceled = False
-        self.start_selection(mode)
+        self.start_selection(mode,filter)
         while not self.selection_canceled:
             self.wait_selection()
             if not self.selection_canceled and self.number_selection == False:
                 # selection by mouse_picking
                 self.pick_func[self.selection_mode]()
-                if self.selection_method == 'single':
-                    self.picked = [self.front_picked]
-                if self.mod == NONE:
-                    self.selection.set(self.picked)
-                    if self.selection_method == 'connected' and self.front_picked is not None:
-                        front_actor = self.front_picked[0]
-                        front_elem = self.front_picked[1]
-                        front_actor_elems = self.selection[front_actor]
-                        A = self.actors[int(front_actor)].select(front_actor_elems)
-                        p = A.partitionByConnection()
-                        prop = p[front_actor_elems == front_elem]
-                        connected_elems = front_actor_elems[p==prop]
-                        self.selection.set(connected_elems,front_actor)
-                elif self.mod == SHIFT:
-                    if self.selection_method == 'connected':
-                        oldselection = Collection()
-                        for i in self.selection.keys():
-                            oldselection.add(self.selection[i],i)
-                    self.selection.add(self.picked)
-                    if self.selection_method == 'connected':
-                        for i in self.selection.keys():
-                            if i in  oldselection.keys():
-                                oldselection_elems = oldselection[i]
-                                selection_elems = self.selection[i]
-                                A = self.actors[i].select(selection_elems)
-                                p = A.partitionByConnection()
-                                partitions = unique(p)
-                                for part in partitions:
-                                    intersection = intersect1d(oldselection_elems,selection_elems[p == part])
-                                    if intersection.size == 0:
-                                        self.selection.remove(selection_elems[p == part],i)
-                            else:
-                                self.selection.clear(keys=[i])
-                elif self.mod == CTRL:
-                    self.selection.remove(self.picked)
+                if self.selection_filter is None:
+                    if self.mod == NONE:
+                        self.selection.set(self.picked)
+                    elif self.mod == SHIFT:
+                        self.selection.add(self.picked)
+                    elif self.mod == CTRL:
+                        self.selection.remove(self.picked)
+
+                elif self.selection_filter == 'closest':
+                    if self.selection_front is None or self.mod == NONE or \
+                           (self.mod == SHIFT and self.closest_pick[1] < self.selection_front[1]):
+                        self.selection_front = self.closest_pick
+                        self.selection.set([self.closest_pick[0]])
+
+                elif self.selection_filter == 'connected':
+                    if self.mod == NONE:
+                        self.selection_front = self.closest_pick
+                        self.selection.set(self.picked)
+                    elif self.mod == SHIFT:
+                        self.selection.add(self.picked)
+                    elif self.mod == CTRL:
+                        self.selection.remove(self.picked)
+                    if self.selection_front is None:
+                        self.selection_front = self.closest_pick
+                    actor,elem = map(int,self.selection_front[0])
+                    A = self.actors[actor]
+                    elems = self.selection.get(actor)
+                    if elem in elems:
+                        elem = A.connectedElements(elem,elems)
+                    self.selection.set(elem,actor)
                 if GD.canvas.numbers_visible == True:
                     # A list widget is visible, so when part numbers are added to /
                     # removed from the selection by mouse_picking, the corresponding
@@ -550,7 +550,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
 
             
-    def pick_actors(self):
+    def pick_actors(self,store_closest=False):
         """Set the list of actors inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
@@ -566,19 +566,22 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2][0] for r in buf]
-        if len(self.picked) != 0:
-            dmin = asarray([ r[0] for r in buf ])
-            w = where(dmin == dmin.min())[0][0]
-            self.front_picked = self.picked[w]
-        else:
-            self.front_picked = None
+        if store_closest and len(buf) > 0:
+            d = asarray([ r[0] for r in buf ])
+            dmin = d.min()
+            w = where(d == dmin)[0][0]
+            self.closest_pick = (self.picked[w], dmin)
 
 
-    def pick_parts(self,obj_type,max_objects):
+    def pick_parts(self,obj_type,max_objects,store_closest=False):
         """Set the list of actor parts inside the pick_window.
 
         obj_type can be 'element', 'point' or 'edge'(SurfaceActor only)
         max_objects specifies the maximum number of objects
+
+        The picked object numbers are stored in self.picked.
+        If store_closest==True, the closest picked object is stored in as a
+        tuple ( [actor,object] ,distance) in self.picked_closest
         """
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
@@ -592,12 +595,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         self.picked = [ r[2] for r in buf ]
-        if len(self.picked) != 0:
-            dmin = asarray([ r[0] for r in buf ])
-            w = where(dmin == dmin.min())[0][0]
-            self.front_picked = self.picked[w]
-        else:
-            self.front_picked = None
+        if store_closest and len(buf) > 0:
+            d = asarray([ r[0] for r in buf ])
+            dmin = d.min()
+            w = where(d == dmin)[0][0]
+            self.closest_pick = (self.picked[w], dmin)
 
 
     def pick_elements(self):
@@ -605,7 +607,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         npickable = 0
         for a in self.actors:
             npickable += a.nelems()
-        self.pick_parts('element',npickable)
+        self.pick_parts('element',npickable,store_closest=\
+                        self.selection_filter == 'closest' or\
+                        self.selection_filter == 'connected'
+                        )
 
 
     def pick_points(self):
@@ -613,7 +618,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         npickable = 0
         for a in self.actors:
             npickable += a.npoints()
-        self.pick_parts('point',npickable)
+        self.pick_parts('point',npickable,self.selection_filter == 'closest')
 
 
     def pick_edges(self):
@@ -622,7 +627,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         for a in self.actors:
             if hasattr(a,'nedges'):
                 npickable += a.nedges()
-        self.pick_parts('edge',npickable)
+        self.pick_parts('edge',npickable,self.selection_filter == 'closest')
 
 
     def pick_numbers(self):
@@ -690,7 +695,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 class MultiCanvas(QtGui.QGridLayout):
     """A viewport that can be splitted."""
-
+    
     def __init__(self,parent=None):
         """Initialize the multicanvas."""
         QtGui.QGridLayout.__init__(self)

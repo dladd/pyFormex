@@ -7,16 +7,15 @@
 
 
 %%
-\section{Introduction}
+\section{The \pyf philosophy}
 \label{sec:intro-tut}
 
 \pyformex is a Python implementation of Formex algebra. Using \pyformex, it is very easy to generate large geometrical models of 3D structures by a sequence of mathematical transformations. It is especially suited for the automated design of spatial structures. But it can also be used for other tasks, like operating on 3D geometry obtained from other sources, or for finite element pre- and postprocessing, or just for creating some nice pictures.
 
-By writing a very simple script, a large geometry can be created by copying, translating, rotating,... Formices. \pyformex will interpret this script and draw what you have created. This is clearly very different than the traditional way of creating a model, like CAD. There are two huge advantages about using \pyformex:
+By writing a simple script, a large and complex geometry can be created by copying, translating, rotating, or otherwise transforming geometrical entities. \pyformex will interpret the script and draw what you have created. This is clearly very different from the traditional (mostly interactive) way of creating a geometrical model, like is done in most CAD packages. There are some huge advantages in using \pyformex:
 \begin{itemize}
-\item It is especially suited for the automated design of spatial frame structures. A dome, arc, hypar, \dots, can be rather difficult to draw with CAD, but when using scripted mathematical transformations, it becomes a trivial task.
+\item It is especially suited for the automated design of spatial frame structures. A dome, an arc, a hypar shell, \dots, when constructed as a space frame, can be rather difficult and tedious to draw with a general CAD program; using scripted mathematical transformations however, it may become a trivial task.
 \item Using a script makes it very easy to apply changes in the geometry: you simply modify the script and let \pyformex re-execute it. You can easily change any geometrical parameter in any way you want: set directly, interactively ask the user, calculate from some formula, read from a file, \dots.  angle, the radius of a dome, the ratio $f/l$ of an arc. Using CAD, you would have often have to completely redo your drawing work. This idea of scripted geometry building is illustrated in figure~\ref{fig:scallops}: all these domes were created with the same script, but with different values of some parameters.
-\end{itemize}
 \begin{figure}[ht]
   \centering
   \begin{makeimage}
@@ -33,6 +32,8 @@ By writing a very simple script, a large geometry can be created by copying, tra
   \end{htmlonly}
   \caption{Same script, different domes} \label{fig:scallops}
 \end{figure}
+\item At times there will be operations that are easier to perform through an interactive Graphical User Interface (GUI). The \pyf GUI gives access to many of its functions. Especially occasional and untrained users will benefit from it. As everything else in \pyf, the GUI is completely open and can be modified at will by the user's application scripts, to provide an interface with either extended or restructed functionality.
+\end{itemize}
 
 % As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough. 
 
@@ -759,18 +760,24 @@ Some simple examples:
 The first line sets a concentrated load all the nodes, the second line sets a boundary condition 'pinned' on nodes 2 and 3. The third line sets a prescribed displacement on node 5 with value 0.7 along the first direction.
 The first positional argument indeed corresponds to the 'set' attribute.
 
-Often the properties are computed and stored in variables rather than entered directly. To facilitate property selection, a tag can be added.
+Often the properties are computed and stored in variables rather than entered directly.
 \begin{verbatim}
-    B1 = [ 1 ] + [ 0 ] * 5
-    CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
     P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
     P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
-    P.nodeProp(cload=P1,bound=B1,csys=CYL)
+    B1 = [ 1 ] + [ 0 ] * 5
+    CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
+    P.nodeProp(bound=B1,csys=CYL)
+\end{verbatim}
+The first two lines define two concentrated loads: \code{P1} consists of three point loads in each of the coordinate directions; P2 contains three force moments around the axes.
+The third line specifies a boundary condition where the first DOF (usually displacement in $x$-direction) is constrained, while the remaining 5 DOF's are free.
+The next line defines a local coordinate system, in this case a cylindrical coordinate system with axis pointing from point \code{[0.,0.,0.]} to point \code{[0.,0.,1.]}. The last line 
+
+To facilitate property selection, a tag can be added.
+\begin{verbatim}
     nset1 = P.nodeProp(tag='loadcase 1',set=[2,3,4],cload=P1).nr
     P.nodeProp(tag='loadcase 2',set=Nset(nset1),cload=P2)
 \end{verbatim}
 The last two lines show how you can avoid duplication of sets in mulitple records. The same set of nodes should receive different concentrated load values for different load cases. The load case is stored in a tag, but duplicating the set definition could become wasteful if the sets are large. Instead of specifying the node numbers of the set directly, we can pass a string setting a set name.
-
 Of course, the application will need to know how to interprete the set names.
 Therefore the property module provides a unified way to attach a unique set name to each set defined in a property record. The name of a node property record set can be obtained with the function \Code{Nset(nr)}, where nr is the record number. In the example above, that value is first recorded in \Code{nset1} and then used in the last line to guarantee the use of the same set as in the property above.
 

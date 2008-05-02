@@ -86,11 +86,84 @@ coords_fuse(PyObject *dummy, PyObject *args)
     }
   }
   /* Clean up and return */
-/*   for (i=0; i<nnod; i++) { */
-/*     ki = 3*i; */
-/*     printf(" node %d: %12.8f, %12.8f, %12.8f; %ld; %d; %ld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]); */
-/*   } */
-  //printf("Cleaning up\n");
+  Py_DECREF(arr1);
+  Py_DECREF(arr2);
+  Py_DECREF(arr3);
+  Py_DECREF(arr4);
+  Py_INCREF(Py_None);
+  return Py_None;
+ fail:
+  printf("Error Cleanup\n");
+  Py_XDECREF(arr1);
+  Py_XDECREF(arr2);
+  Py_XDECREF(arr3);
+  Py_XDECREF(arr4);
+  return NULL;
+}
+
+
+/**************************************************** nodal_sum ****/
+/* Nodal sum of values defined on elements */
+/* args:  val, elems, nodes, avg
+    val   : (nelems,nplex,nval) values defined at points of elements.
+    elems : (nelems,nplex) nodal ids of points of elements.
+    nodes : (nnod) list of unique nodal ids in elems.
+    work  : (nodes.max()+1,nval) : workspace, should be zero on entry
+    avg   : 0/1 
+    The return value is a (nelems,nplex,nval) array where each value is
+    replaced with the sum of its value at that node.
+    If avg=True, the values are replaced with the average instead.
+    
+    The operations are done in-place. The return value is None.
+*/  
+static PyObject *
+nodal_sum(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
+  float *val,*work;
+  int *elems,*nodes;
+  int avg;
+  if (!PyArg_ParseTuple(args, "OOOOf", &arg1, &arg2, &arg3, &arg4, &avg)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_INOUT_ARRAY);
+  if (arr1 == NULL) return NULL;
+  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
+  if (arr2 == NULL) goto fail;
+  arr3 = PyArray_FROM_OTF(arg3, NPY_INT, NPY_IN_ARRAY);
+  if (arr3 == NULL) goto fail;
+  arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr4 == NULL) goto fail;
+  /* We suppose the dimensions are correct*/
+  npy_intp * dims;
+  dims = PyArray_DIMS(arg1);
+  int nelems,nplex,nval;
+  nelems = dims[0];
+  nplex = dims[1];
+  nval = dims[2];
+  dims = PyArray_DIMS(arg3);
+  int nnod;
+  nnod = dims[0];
+
+  val = (float *)PyArray_DATA(arr1);
+  elems = (int *)PyArray_DATA(arr2);
+  nodes = (int *)PyArray_DATA(arr3);
+  work = (float *)PyArray_DATA(arr4);
+  printf(" nelems=%d, nplex=%d, nnod=%d\n",nelems,nplex,nnod);
+  
+  int i,k,n;
+  /* Loop over the input and sum */
+  for (i=0;i<nelems*nplex;i++) {
+    n = elems[i];
+    for (k=0;k<3;k++) work[3*n+k] += val[3*i+k];
+  }
+  /* Place back results */
+  for (i=0;i<nelems*nplex;i++) {
+    n = elems[i];
+    for (k=0;k<3;k++) val[3*i+k] = work[3*n+k];
+  }
+
+  /* Clean up and return */
+  printf("Cleaning up\n");
   Py_DECREF(arr1);
   Py_DECREF(arr2);
   Py_DECREF(arr3);
@@ -110,6 +183,7 @@ coords_fuse(PyObject *dummy, PyObject *args)
 /* The methods defined in this module */
 static PyMethodDef Methods[] = {
     {"fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
+    {"nodalSum", nodal_sum, METH_VARARGS, "Nodal sum."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

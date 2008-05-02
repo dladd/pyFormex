@@ -214,7 +214,7 @@ class DrawableObjects(Objects):
 
     def draw(self,*args,**kargs):
         clear()
-        print "Drawing SELECTION: %s" % self.names
+        GD.debug("Drawing SELECTION: %s" % self.names)
         self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
         for i,a in enumerate(self.annotations):
             if a[1]:
@@ -234,6 +234,7 @@ class DrawableObjects(Objects):
         old and new can be a either Formex instances or names or lists thereof.
         old are drawn in yellow, new in the current color.
         """
+        print "DRAWCHANGES %s" % type(self)
         self.draw(wait=False)
         draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
 

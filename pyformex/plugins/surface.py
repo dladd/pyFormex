@@ -143,7 +143,7 @@ def read_gts(fn):
 
     Return a coords,edges,faces tuple.
     """
-    print "Reading GTS file %s" % fn
+    GD.message("Reading GTS file %s" % fn)
     fil = file(fn,'r')
     header = fil.readline().split()
     ncoords,nedges,nfaces = map(int,header[:3])
@@ -154,7 +154,7 @@ def read_gts(fn):
     coords = fromfile(file=fil, dtype=Float, count=3*ncoords, sep=sep)
     edges = fromfile(file=fil, dtype=int32, count=2*nedges, sep=' ')
     faces = fromfile(file=fil, dtype=int32, count=3*nfaces, sep=' ')
-    print "Read %d coords, %d edges, %d faces" % (ncoords,nedges,nfaces)
+    GD.message("Read %d coords, %d edges, %d faces" % (ncoords,nedges,nfaces))
     return coords.reshape((-1,3)),\
            edges.reshape((-1,2)) - 1,\
            faces.reshape((-1,3)) - 1
@@ -166,7 +166,7 @@ def read_off(fn):
     The mesh should consist of only triangles!
     Returns a nodes,elems tuple.
     """
-    print "Reading .OFF %s" % fn
+    GD.messae("Reading .OFF %s" % fn)
     fil = file(fn,'r')
     head = fil.readline().strip()
     if head != "OFF":
@@ -176,7 +176,7 @@ def read_off(fn):
     nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=' ')
     # elems have number of vertices + 3 vertex numbers
     elems = fromfile(file=fil, dtype=int32, count=4*nelems, sep=' ')
-    print "Read %d nodes and %d elems" % (nnodes,nelems)
+    GD.message("Read %d nodes and %d elems" % (nnodes,nelems))
     return nodes.reshape((-1,3)),elems.reshape((-1,4))[:,1:]
 
 
@@ -1314,6 +1314,20 @@ Total area: %s; Enclosed volume: %s
         """Cut a surface with a plane."""
         self.__init__(self.toFormex().cutAtPlane(*args,**kargs))
 
+
+    def connectedElements(self,target,elemlist=None):
+        """Return the elements from list connected with target"""
+        if elemlist is None:
+            A = self
+            elemlist = arange(self.nelems())
+        else:
+            A = self.select(elemlist)
+        if target not in elemlist:
+            return []
+        
+        p = A.partitionByConnection()
+        prop = p[elemlist == target]
+        return elemlist[p==prop]
 
 
 ########################## Methods using GTS #############################
