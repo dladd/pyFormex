@@ -934,21 +934,31 @@ def createGrid():
         name = res['name']
         nx = res['nx']
         ny = res['ny']
-        S = planeSurface(nx,ny)
+        S = Plane(nx,ny)
         export({name:S})
         selection.set([name])
         selection.draw()
 
+
+def createCube():
+    res = askItems([('name','__auto__')])
+    if res:
+        name = res['name']
+        S = Cube()
+        export({name:S})
+        selection.set([name])
+        selection.draw()
 
 def createSphere():
     res = askItems([('name','__auto__'),('grade',4),])
     if res:
         name = res['name']
         level = res['grade']
-        S = unitSphere(level,verbose=True,filename=name+'.gts')
+        S = Sphere(level,verbose=True,filename=name+'.gts')
         export({name:S})
         selection.set([name])
         selection.draw()
+
 
     
 ################### menu #################
@@ -966,6 +976,7 @@ def create_menu():
         ("---",None),
         ("&Create surface",
          [('&Plane Grid',createGrid),
+          ('&Cube',createCube),
           ('&Sphere',createSphere),
           ]),
         ("---",None),

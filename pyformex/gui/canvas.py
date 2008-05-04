@@ -271,11 +271,11 @@ class Canvas(object):
         glLight(self.lighting)
 
     def setAveragedNormals(self,mode):
-        self.avgNormals = mode
-        change = (self.rendermode == 'smooth' and self.avgNormals) or \
-                 (self.rendermode == 'smooth-avg' and not self.avgNormals)
+        self.avgnormals = mode
+        change = (self.rendermode == 'smooth' and self.avgnormals) or \
+                 (self.rendermode == 'smooth-avg' and not self.avgnormals)
         if change:
-            if self.avgNormals:
+            if self.avgnormals:
                 self.rendermode = 'smooth-avg'
             else:
                 self.rendermode = 'smooth'

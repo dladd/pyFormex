@@ -6,14 +6,14 @@ from formex import *
 
 def cube_tri(color=None):
     """Create a cube with triangles."""
-    back = Formex([[[0,0,0],[1,0,0],[1,1,0]],[[1,1,0],[0,1,0],[0,0,0]]]) # rev
+    back = Formex(mpattern('12-34'))
     left = back.rotate(-90,1) 
     bot = back.rotate(90,0)
     front = back.translate(2,1)
     right = left.translate(0,1).reverse()
     top = bot.translate(1,1).reverse()
     back = back.reverse()
-    cube = front+top+right+back+bot+left
+    faces = front+top+right+back+bot+left
     if color == 'None':
         color = 'white'
     elif color == 'Single':
@@ -23,19 +23,14 @@ def cube_tri(color=None):
     elif color == 'Full':
         color = array([[4,5,7],[7,6,4],[7,3,2],[2,6,7],[7,5,1],[1,3,7],
                        [3,1,0],[0,2,3],[0,1,5],[5,4,0],[0,4,6],[6,2,0]])
-    return cube,color
+    return faces,color
 
 
 def cube_quad(color=None):
     """Create a cube with quadrilaterals."""
-    vertices = Formex(Hex8.vertices)
-    v=array(Hex8.vertices)
-    e=array(Hex8.edges)
-    f=array(Hex8.faces)
-    c=array(Hex8.element)
-    edges = Formex(v[e])
+    v = array(Hex8.vertices)
+    f = array(Hex8.faces)
     faces = Formex(v[f])
-    cube = Formex(v[c])
     if color == 'Single':
         color = 'red'
     elif color == 'Face':
@@ -45,7 +40,8 @@ def cube_quad(color=None):
     print color
     return faces,color
 
-def showCube(base,color,adjust):
+
+def showCube(base,color):
     print base,color
     if base == 'Triangle':
         cube = cube_tri
@@ -53,7 +49,7 @@ def showCube(base,color,adjust):
         cube = cube_quad
     cube,color = cube(color)
     clear()
-    draw(cube,color=color,coloradjust=adjust)
+    draw(cube,color=color)
     view('iso')
     zoomAll()
     zoom(1.5)
@@ -65,6 +61,7 @@ if __name__ == "draw":
 
     clear()
     reset()
+    smooth()
 
     baseshape = ['Quad','Triangle']
     colormode = ['None','Single','Face','Full']
@@ -72,18 +69,15 @@ if __name__ == "draw":
     all = False
     base = 'Quad'
     color = 'Full'
-    adjust = False
     while True:
         res = askItems([('All',all),
                         ('Base',base,'select',baseshape),
                         ('Color',color,'select',colormode),
-                        ('AdjustColor',adjust),
                         ],caption="Make a selection or check 'All'")
         if not res:
             break;
 
         all = res['All']
-        adjust = res['AdjustColor']
         if all:
             bases = baseshape
             colors = colormode
@@ -93,14 +87,14 @@ if __name__ == "draw":
 
         print bases,colors
         for base in bases:
-            if base == 'Quad':
-                smooth()
-            else:
-                smoothwire()
+##             if base == 'Quad':
+##                 smooth()
+##             else:
+##                 smoothwire()
             lights(False)
 
             for color in colors:
-                showCube(base,color,adjust)
+                showCube(base,color)
                 if all:
                     sleep(1)
 

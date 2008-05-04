@@ -1649,13 +1649,21 @@ def remove_triangles(elems,remove):
     return elems
 
 
-def planeSurface(nx,ny):
-    """Create a plane surface consisting of a nx,ny grid."""
+### Some simple surfaces ###
+
+def Rectangle(nx,ny):
+    """Create a plane rectangular surface consisting of a nx,ny grid."""
     F = Formex(mpattern('12-34')).replic2(nx,ny,1,1)    
     return TriSurface(F)
 
+def Cube():
+    """Create a surface in the form of a cube"""
+    back = Formex(mpattern('12-34'))
+    fb = back.reverse() + back.translate(2,1)
+    faces = fb + fb.rollAxes(1) + fb.rollAxes(2)
+    return TriSurface(faces)
 
-def unitSphere(level=4,verbose=False,filename=None):
+def Sphere(level=4,verbose=False,filename=None):
     """Create a spherical surface by caling the gtssphere command.
 
     If a filename is given, it is stored under that name, else a temporary

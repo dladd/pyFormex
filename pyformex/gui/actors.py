@@ -313,7 +313,7 @@ class FormexActor(Actor,Formex):
     """An OpenGL actor which is a Formex."""
     mark = False
 
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,coloradjust=False,mode=None,linewidth=None,marksize=None):
+    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None):
         """Create a multicolored Formex actor.
 
         The colors argument specifies a list of OpenGL colors for each
@@ -352,11 +352,11 @@ class FormexActor(Actor,Formex):
         self.setColor(color,colormap)
         self.setBkColor(bkcolor,bkcolormap)
         self.setAlpha(alpha)
-        if coloradjust:
-            if colormap is not None:
-                colormap /= colormap.sum(axis=1)
-            if bkcolormap is not None:
-                bkcolormap /= bkcolormap.sum(axis=1).reshape(-1,1)
+##         if coloradjust:
+##             if colormap is not None:
+##                 colormap /= colormap.sum(axis=1)
+##             if bkcolormap is not None:
+##                 bkcolormap /= bkcolormap.sum(axis=1).reshape(-1,1)
         if self.nplex() == 1:
             self.setMarkSize(marksize)
         self.list = None

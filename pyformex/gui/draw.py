@@ -383,7 +383,7 @@ def setView(name,angles=None):
 
 
 def draw(F, view=None,bbox='auto',
-         color='prop',colormap=None,alpha=0.5,coloradjust=False,
+         color='prop',colormap=None,alpha=0.5,
          mode=None,linewidth=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False):
     """Draw object(s) with specified settings and direct camera to it.
@@ -450,7 +450,7 @@ def draw(F, view=None,bbox='auto',
             if Fi == F[-1]:
                 nowait = wait
             actor.append(draw(Fi,view,bbox,
-                              color,colormap,alpha,coloradjust,
+                              color,colormap,alpha,
                               mode,linewidth,shrink,marksize,
                               wait,clear,allviews))
             if Fi == F[0]:
@@ -504,7 +504,7 @@ def draw(F, view=None,bbox='auto',
         if isinstance(F,formex.Formex):
             if F.nelems() == 0:
                 return None
-            actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,coloradjust=coloradjust,mode=mode,linewidth=linewidth,marksize=marksize)
+            actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         elif isinstance(F,surface.TriSurface):
             if F.nelems() == 0:
                 return None

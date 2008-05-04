@@ -185,7 +185,6 @@ def nodalSum(val,elems,avg=False):
         elems = elems.astype(int32)
         nodes = nodes.astype(int32)
         work = work.astype(float32)
-    print "NOW CALLING THE LOW LEVEL"
     misc.nodalSum(val,elems,nodes,work,avg)
     return val
 
