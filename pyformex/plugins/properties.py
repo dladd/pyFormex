@@ -345,6 +345,7 @@ class PropertyDB(Dict):
 
     def __init__(self):
         """Create a new properties database."""
+        Dict.__init__(self)
         self.mats = MaterialDB()
         self.sect = SectionDB()
         self.prop = []
@@ -458,7 +459,7 @@ class PropertyDB(Dict):
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,set=None,tag=None,section=None,eltype=None,dload=None): 
+    def elemProp(self,grp=None,set=None,tag=None,section=None,eltype=None,dload=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -466,7 +467,12 @@ class PropertyDB(Dict):
                used to flag Step, increment, load case, ...)
         - set: a single number or a list of numbers identifying the element(s)
                 for which this property will be set, or a set name
-                If None, the property will hold for all nodes.
+                If None, the property will hold for all elements.
+        - grp: an elements group number (default None). If specified, the
+               element numbers given in set are local to the specified group.
+               If not, element are global and should match the global numbering
+               according to the order in which element groups will be specified
+               in the Model.
         - eltype: the element type (currently in Abaqus terms). 
         - section: an ElemSection specifying the element section properties.
         - dload: an ElemLoad specifying a distributed load on the element.
@@ -487,8 +493,7 @@ class PropertyDB(Dict):
             raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,eltype=%s,section=%s,dload=%s" % (tag,set,eltype,section,dload)
 
 
-
-# Test
+##################################### Test ###########################
 
 if __name__ == "script" or  __name__ == "draw":
 

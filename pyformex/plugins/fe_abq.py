@@ -19,6 +19,7 @@ and write them to the Abaqus input file.
 """
 
 from plugins.properties import *
+from plugins.fe import *
 from mydict import *
 import globaldata as GD
 import datetime
@@ -710,73 +711,6 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
 ##################################################
 ## Some classes to store all the required information
 ################################################## 
-
-
-class Model(Dict):
-    """Contains all FE model data."""
-    
-    def __init__(self,nodes,elems):
-        """Create new model data.
-
-        nodes is an array with nodal coordinates
-        elems is either a single element connectivity array, or a list of such.
-        In a simple case, nodes and elems can be the arrays obtained by 
-            nodes, elems = F.feModel()
-        This is however limited to a model where all elements have the same
-        number of nodes. Then you can use the list of elems arrays. The 'fe'
-        plugin has a helper function to create this list. E.g., if FL is a
-        list of Formices (possibly with different plexitude), then
-          fe.mergeModels([Fi.feModel() for Fi in FL])
-        will return the (nodes,elems) tuple to create the Model.
-
-        """
-        if not type(elems) == list:
-            elems = [ elems ]
-        self.nodes = asarray(nodes)
-        self.elems = map(asarray,elems)
-        nelems = [elems.shape[0] for elems in self.elems]
-        self.celems = cumsum([0]+nelems)
-        GD.message("Number of nodes: %s" % self.nodes.shape[0])
-        GD.message("Number of elements: %s" % self.celems[-1])
-        GD.message("Number of element groups: %s" % len(nelems))
-        GD.message("Number of elements per group: %s" % nelems)
-
-
-    def splitElems(self,set):
-        """Splits a set of element numbers over the element groups.
-
-        Returns two lists of element sets, the first in global numbering,
-        the second in group numbering.
-        Each item contains the element numbers from the given set that
-        belong to the corresponding group.
-        """
-        set = unique1d(set)
-        split = []
-        n = 0
-        for e in self.celems[1:]:
-            i = set.searchsorted(e)
-            split.append(set[n:i])
-            n = i
-
-        return split,[ asarray(s) - ofs for s,ofs in zip(split,self.celems) ]
-        
- 
-    def getElems(self,sets):
-        """Return the definitions of the elements in sets.
-
-        sets should be a list of element sets with length equal to the
-        number of element groups. Each set contains element numbers local
-        to that group.
-        
-        As the elements can be grouped according to plexitude,
-        this function returns a list of element arrays matching
-        the element groups in self.elems. Some of these arrays may
-        be empty.
-
-        It also provide the global and group element numbers, since they
-        had to be calculated anyway.
-        """
-        return [ e[s] for e,s in zip(self.elems,sets) ]
         
         
 class Step(Dict):

@@ -18,7 +18,7 @@ if the key is not found in the CascadingDict itself.
 Distributed under the GNU GPL
 """
 
-__all__ = [ 'Dict', 'CascadingDict', 'cascade' ]
+__all__ = [ 'Dict', 'CascadingDict', 'cascade', 'returnNone', 'raiseKeyError' ]
 
 
 def cascade(dic, key):
@@ -40,6 +40,15 @@ def cascade(dic, key):
         raise KeyError
 
 
+def returnNone(key):
+    """Always returns None."""
+    return None
+
+def raiseKeyError(key):
+    """Raise a KeyError."""
+    raise KeyError
+
+
 class Dict(dict):
     """A Python dictionary with default values and attribute syntax.
 
@@ -51,8 +60,9 @@ class Dict(dict):
       This works as well for accessing values as for setting values.
       In the following, the words key or attribute therefore have the
       same meaning.
-    - Lookup of a nonexisting key/attribute does not raise an error, but
-      returns a default value which can be set by the user (None by default).
+    - Lookup of a nonexisting key/attribute does not automatically raise an
+      error, but calls a _default_ lookup method which can be set by the user.
+      The deafult is to raise a KeyError, but a alternative is to return None.
 
     There are a few caveats though:
     - Keys that are also attributes of the builtin dict type, can not be used
@@ -70,21 +80,20 @@ class Dict(dict):
          print C.get('get')
       will print
          foo
-      
     """
 
 
-    def __init__(self,data={},default=None):
+    def __init__(self,data={},default=raiseKeyError):
         """Create a new Dict instance.
 
         The Dict can be initialized with a Python dict or a Dict.
-        The default value is the value that will be returned on lookups
-        for non-existing keys.
+        If defined, default is a function that is used for alternate key
+        lookup if the key was not found in the dict.
         """
         dict.__init__(self,data.items())
-        # Do not use self.default= here, because the __setattr__
-        # method would put it in the base class dict 
-        self.__dict__['default'] = default
+        if not callable(default):
+            raise ValueError,"'default' should be a callable function" 
+        self.__dict__['_default_'] = default
 
 
     def __repr__(self):
@@ -105,7 +114,7 @@ class Dict(dict):
         try:
             return dict.__getitem__(self, key)
         except KeyError:
-            return self.default
+            return self._default_(key)
 
 
     def __delitem__(self,key):
@@ -114,12 +123,12 @@ class Dict(dict):
         Silently ignore if key is nonexistant.
         """
         try:
-            dict.__delitem__(self, key)
+            dict.__delitem__(self,key)
         except KeyError:
             pass
 
 
-    def __getattr__(self, key):
+    def __getattr__(self,key):
         """Allows items to be addressed as self.key.
 
         This makes self.key equivalent to self['key'], except if key
@@ -132,7 +141,7 @@ class Dict(dict):
             return self.__getitem__(key)
 
 
-    def __setattr__(self, key,value=None):
+    def __setattr__(self,key,value=None):
         """Allows items to be set as self.key=value.
 
         This works even if the key is an existing attribute of the
@@ -160,6 +169,7 @@ class Dict(dict):
         dict.update(self,data)
 
 
+
 _indent = 0  # number of spaces to indent in __str__ formatting
              # incremented by 2 on each level
 
@@ -178,7 +188,7 @@ class CascadingDict(Dict):
     """
 
 
-    def __init__(self,data={},default=None):
+    def __init__(self,data={},default=returnNone):
         Dict.__init__(self,data,default)
 
 
@@ -211,7 +221,7 @@ class CascadingDict(Dict):
         try:
             return cascade(self, key)
         except KeyError:
-            return self.default
+            return self._default_(key)
 
 
 if __name__ == '__main__':
@@ -245,7 +255,8 @@ if __name__ == '__main__':
     show()
     # show some items
     print val("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
-    print val("C['e']")
     print val("C.a,C.b,C.c,C.d,C.x.c")
+    # The cascading dict returns None on
+    print val("C['e']")
     print val("C.e")
     

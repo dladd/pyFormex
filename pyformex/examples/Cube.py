@@ -63,6 +63,12 @@ if __name__ == "draw":
     reset()
     smooth()
 
+    v = array(Hex8.vertices).reshape(1,8,3)
+    F = Formex(v)
+    F.eltype = 'hex8'
+    draw(F)
+    exit()
+
     baseshape = ['Quad','Triangle']
     colormode = ['None','Single','Face','Full']
 

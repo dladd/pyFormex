@@ -633,7 +633,7 @@ P = PropertyDB()
 
 Now you can start entering property records into the database. A property record is a lot like a Python dict object, and thus it can contain nearly anything. It is implemented however as a \class{CascadingDict} object, which means that the key values are strings and can also be used as attributes to address the value. Thus, if \Code{P} is a property record, then a field named \Code{key} can either be addressed as \Code{P['key']} or as \Code{P.key}. This implementation was choosen for the convenience of the user, but has no further advantages over a normal dict object. You should not use any of the methods of Python's dict class as key in a property record: it would override this method for the object.
 
-The property record has four more reserved (forbidden) keys: \Code{kind}, \Code{tag}, \Code{set} and \code{nr}. The \Code{kind} and \Code{nr} should never be set nor changed by the user. \Code{kind} is used internally to distinguish among different kind of property records (see \ref{sec:node-properties}). It should only be used to extend the \class{PropertyDB} class with new kinds of properties, e.g. in subclasses. \Code{nr} will be set automatically to a unique record number. Some application modules use this number for identification and to create automatic names for property sets. 
+The property record has four more reserved (forbidden) keys: \Code{kind}, \Code{tag}, \Code{set} and \Code{nr}. The \Code{kind} and \Code{nr} should never be set nor changed by the user. \Code{kind} is used internally to distinguish among different kind of property records (see \ref{sec:node-properties}). It should only be used to extend the \class{PropertyDB} class with new kinds of properties, e.g. in subclasses. \Code{nr} will be set automatically to a unique record number. Some application modules use this number for identification and to create automatic names for property sets. 
 
 The \Code{tag} and \Code{set} keys are optional fields and can be set by the user. They should however only be used for the purposes explained hereafter, because they have a special meaning for the database methods and application modules. The \Code{set} can be used to specify a list of integer numbers identifying a collection of elements of the geometry for which the current property is valid. Absence of the \Code{set} means that the property is assigned to all elements. The \Code{tag} field can be used to attach an identification string to the property record. THis string can be as complex as the user wants and its interpretation is completely left to the user. The \class{ProeprtyDB} class just provides an easy way to select the records by their \Code{tag} name or by a set of tag names.  
 So let's create a property record in our database. The \Code{Prop()} method does just that. It also returns the property record, so you can directly use it further in your code.
@@ -796,123 +796,53 @@ Like node properties, element property records have a number of specialize field
 \end{description}
 
 
-\emph{The rest of this section is obsolete}
+\subsection{Property data classes}
+The data collected in property records can be very diverse. At times it can become quite difficult to keep these data consistent and compatible with other modules for further processing.
+The property module contains some data classes to help you in constructing appropriate data records for Finite Element models. The FeAbq module can currently interprete the following data types.
 
-An elemsection can hold the following sub-properties:
-\begin{description}
-\item [section] The section properties of the element. This can be a dictionary or a string. The required data in this dict depends on the sectiontype. 
-\item [material] The element material properties. This can be a dictionary which holds these properties or a string which can be used to search a material database. 
-\item [sectiontype] The sectiontype of the element. 
-\item [orientation]  A list [First direction cosine, second direction cosine, third direction cosine] of the first beam section axis. This allows to change the orientation of the cross-section.
-\end{description}
-
-An element load can hold the following sub-properties:
-\begin{description}
-\item [magnitude] The magnitude of the distibuted load.
-\item [loadlabel] The distributed load type label.
-\end{description}
-
-The overview of the current property database structure is:
+\class{CoordSystem} defines a local coordinate system for a node. Its constructor takes two arguments: 
 \begin{itemize}
-\item[-] Prop
-    \begin{itemize}
-    \item[-] set
-    \item[-] tag
-    \end{itemize}
-\item[-] nodeProp
-    \begin{itemize}
-    \item[-] cload
-    \item[-] bound
-    \item[-] displ
-    \item[-] csys
-    \end{itemize}
-\item[-] elemProp 
-    \begin{itemize}
-    \item[-] eltype
-    \item[-] section
-        \begin{itemize}
-        \item[-] section
-        \item[-] material
-        \item[-] sectiontype
-        \item[-] orientation
-        \end{itemize}
-    \item[-] load
-        \begin{itemize}
-        \item[-] label
-        \item[-] value
-        \end{itemize}
-    \end{itemize}
+\item a string defining the type of coordinate system, either 'Rectangular', 'Cylindrical' or 'Spherical' (the first character suffices), and
+\item a list of 6 coordinates, specifying two points A and B. With 'R', A is on the new $x$-axis and B is on the new '$y$ axis. With 'C' and 'S', AB is the axis of the cylindrical/spherical coordinates.
+\end{itemize}
+Thus, \code{CoordSystem('C',[0.,0.,0.,0.,0.,1.])} defines a cylindrical coordinate system with the global $z$ as axis.
+
+\class{ElemLoad} is a distributed load on an element. Its constructor takes two arguments: 
+\begin{itemize}
+\item a label defining the type of loading,
+\item a value for the loading,
+\item optionally, the name of an amplitude curve.
+\end{itemize}
+E.g., \Code{ElemLoad('PZ',2.5)} defines a distributed load of value 2.5 in the direction of the $z$-axis.
+
+\class{ElemSection} can be used to set the material and section properties on the elements. It can hold:
+\begin{itemize}
+\item a section,
+\item a material,
+\item an optional orientation,
+\item an optional connector behavior,
+\item a sectiontype (deprecated). The sectiontype should preferably be set togehter with the other section parameters.
 \end{itemize}
 
+An example:
 \begin{verbatim}
->>> vert = ElemSection('IPEA100', 'steel')
->>> hor = ElemSection({'name':'IPEM800','A':951247,'I':CascadingDict(
-{'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
->>> q = ElemLoad(magnitude=2.5, loadlabel='PZ')
->>> top = ElemProperty(1,hor,[q],'B22')
->>> column = ElemProperty(2,vert, elemtype='B22')
->>> diagonal = ElemProperty(4,hor,elemtype='B22')
-
->>> print 'elemproperties'
->>> for key, item in elemproperties.iteritems():
->>>     print key, item    
-
-elemproperties
-1
-  elemtype = B22
-  elemload = [CascadingDict({'magnitude': 2.5, 'loadlabel': 'PZ'})]
-  elemsection =
-    section =
-      A = 951247
-      I =
-        Iy = 6251
-        Ix = 1542
-        Ixy = 352
-      name = IPEM800
-    material =
-      fy = 400
-      E = 210
-      name = S400
-    orientation = None
-    sectiontype = general
-2
-  elemtype = B22
-  elemload = None
-  elemsection =
-    section =
-      torsional_rigidity = 1542
-      name = IPEA100
-      moment_inertia_22 = 1140000
-      cross_section = 878
-      moment_inertia_11 = 1412000
-      moment_inertia_12 = 1254
-    material =
-      shear_modulus = 25
-      young_modulus = 210
-      name = steel
-    orientation = None
-    sectiontype = general
-4
-  elemtype = B22
-  elemload = None
-  elemsection =
-    section =
-      A = 951247
-      I =
-        Iy = 6251
-        Ix = 1542
-        Ixy = 352
-      name = IPEM800
-    material =
-      fy = 400
-      E = 210
-      name = S400
-    orientation = None
-    sectiontype = general
+>>> steel = {
+    'name': 'steel',
+    'young_modulus': 207000,
+    'poisson_ratio': 0.3,
+    'density': 0.1,
+    }
+>>> thin_plate = { 
+    'name': 'thin_plate',
+    'sectiontype': 'solid',
+    'thickness': 0.01,
+    'material': 'steel',
+    }
+>>> P.elemProp(eltype='CPS3',section=ElemSection(section=thin_plate,material=steel))
 \end{verbatim}
+First, a material is defined. Then a thin plate section is created, referring to that material. The last line creates a property record that will attribute this element section and an element type 'CPS3' to all elements. 
 
 
-%
 \section{Exporting to finite element programs}
 
 
