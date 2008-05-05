@@ -1082,7 +1082,7 @@ highlight_funcs = { 'actor': highlightActors,
                     'edge': highlightEdges,
                     }
 
-selection_filters = [ 'none', 'closest', 'connected' ]
+selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 
 
 def set_selection_filter(i):
@@ -1112,7 +1112,7 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     if mode == 'element':
         filters = selection_filters
     else:
-        filters = selection_filters[:2]
+        filters = selection_filters[:3]
     filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
     GD.gui.statusbar.addWidget(filter_combo)
 

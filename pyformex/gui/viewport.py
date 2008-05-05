@@ -326,6 +326,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                         self.selection.add(self.picked)
                     elif self.mod == CTRL:
                         self.selection.remove(self.picked)
+                
+                elif self.selection_filter == 'single':
+                    if self.mod == NONE:
+                        self.selection.set([self.closest_pick[0]])
+                    elif self.mod == SHIFT:
+                        self.selection.add([self.closest_pick[0]])
+                    elif self.mod == CTRL:
+                        self.selection.remove([self.closest_pick[0]])
 
                 elif self.selection_filter == 'closest':
                     if self.selection_front is None or self.mod == NONE or \
@@ -608,6 +616,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         for a in self.actors:
             npickable += a.nelems()
         self.pick_parts('element',npickable,store_closest=\
+                        self.selection_filter == 'single' or\
                         self.selection_filter == 'closest' or\
                         self.selection_filter == 'connected'
                         )
@@ -618,7 +627,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         npickable = 0
         for a in self.actors:
             npickable += a.npoints()
-        self.pick_parts('point',npickable,self.selection_filter == 'closest')
+        self.pick_parts('point',npickable,store_closest=\
+                        self.selection_filter == 'single' or\
+                        self.selection_filter == 'closest'
+                        )
 
 
     def pick_edges(self):
@@ -627,7 +639,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         for a in self.actors:
             if hasattr(a,'nedges'):
                 npickable += a.nedges()
-        self.pick_parts('edge',npickable,self.selection_filter == 'closest')
+        self.pick_parts('edge',npickable,store_closest=\
+                        self.selection_filter == 'single' or\
+                        self.selection_filter == 'closest'
+                        )
 
 
     def pick_numbers(self):
