@@ -29,10 +29,10 @@ the_project = None
 the_project_saved = False
 
 def createProject():
-    openProject(False)
+    openProject(exist=False)
 
 def openProject(exist=True):
-    """Open a file selection dialog and let the suer select a project.
+    """Open a file selection dialog and let the user select a project.
 
     The default only accepts existing project files.
     Use createProject() to accept new file names.
@@ -50,16 +50,21 @@ def openProject(exist=True):
     if fn:
         if not fn.endswith('.pyf'):
             fn += '.pyf'
-        print GD.PF.keys()
+        if not exist and os.path.exists(fn):
+            res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
+            if res == 'Cancel':
+                return
+            if res == 'Add':
+                exist = True
         if GD.PF:
+            GD.message("Exportd symbols: %s" % GD.PF.keys())
             res = draw.ask("pyFormex already contains exported symbols.\nShall I add them to your project?",['Delete','Add','Cancel'])
-            print res
             if res == 'Cancel':
                 return
             if res == 'Delete':
                 GD.PF = {}
         GD.message("Opening project %s" % fn)
-        the_project = project.Project(fn)
+        the_project = project.Project(fn,create=not exist)
         the_project_saved = False
         if GD.PF:
             the_project.update(GD.PF)

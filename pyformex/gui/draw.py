@@ -114,11 +114,11 @@ def askItems(items,caption=None,timeout=None):
     res,status = w.getResult(timeout)
     return res
 
-def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):
+def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False,addsidebar=[]):
     """Ask for a file name or multiple file names."""
     if cur is None:
         cur = GD.cfg['workdir']
-    w = widgets.FileSelection(cur,filter,exist,multi)
+    w = widgets.FileSelection(cur,filter,exist,multi,sidebar=['/home/bene/prj/pyformex/','/home/bene/prj/pyformex/stl'])
     if file:
         w.selectFile(file)
     fn = w.getFilename()
@@ -558,7 +558,7 @@ def drawPlane(P,N,size):
     return actor
 
 
-def drawNumbers(F,color=colors.black,trl=None):
+def drawNumbers(F,color=colors.black,trl=None,offset=0):
     """Draw numbers on all elements of F.
 
     Normally, the numbers are drawn at the centroids of the elements.
@@ -569,7 +569,7 @@ def drawNumbers(F,color=colors.black,trl=None):
     FC = F.centroids()
     if trl is not None:
         FC = FC.trl(trl)
-    M = marks.MarkList(FC,numpy.arange(FC.shape[0]),color=color)
+    M = marks.MarkList(FC,numpy.arange(FC.shape[0])+offset,color=color)
     GD.canvas.addAnnotation(M)
     GD.canvas.numbers = M
     GD.canvas.update()

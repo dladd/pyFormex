@@ -21,7 +21,8 @@ class Project(dict):
         self.filename = filename
         if create or not os.path.exists(filename):
             self.save(filename)
-        self.load(filename)
+        else:
+            self.load(filename)
 
     def save(self,filename=None):
         """Save the project to file."""

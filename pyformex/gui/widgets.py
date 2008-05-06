@@ -32,6 +32,7 @@ class FileSelection(QtGui.QFileDialog):
     accept multiple files.
     If dir==True, a single existing directory is asked.
     """
+    
     def __init__(self,path,pattern=None,exist=False,multi=False,dir=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
@@ -63,6 +64,13 @@ class FileSelection(QtGui.QFileDialog):
             self.setLabelText(QtGui.QFileDialog.Accept,'Open')
         else:
             self.setLabelText(QtGui.QFileDialog.Accept,'Save')
+##         if self.sidebar:
+##             urls = self.sidebarUrls()
+##             for f in self.sidebar:
+##                 urls.append(QtCore.QUrl.fromLocalFile(f))
+##             self.setSidebarUrls(urls)
+##         for p in self.sidebarUrls():
+##             GD.message(p.toString())
         
     def getFilename(self):
         """Ask for a filename by user interaction.

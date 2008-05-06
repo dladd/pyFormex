@@ -18,6 +18,7 @@ DB = None
 
 def setDB(db):
     global DB
+    print "Setting the database"
     DB = db
 
 

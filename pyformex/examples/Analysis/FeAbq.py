@@ -154,10 +154,7 @@ step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 # !! currently output/result request are global to all steps
 # !! this will be changed in future
 #
-# NEW: pass the properties database
-#
-
-all = AbqData(model,prop=P,steps=[step1,step2],out=out,res=res)
+all = AbqData(model,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')
