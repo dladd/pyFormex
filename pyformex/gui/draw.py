@@ -114,11 +114,11 @@ def askItems(items,caption=None,timeout=None):
     res,status = w.getResult(timeout)
     return res
 
-def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False,addsidebar=[]):
+def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for a file name or multiple file names."""
     if cur is None:
         cur = GD.cfg['workdir']
-    w = widgets.FileSelection(cur,filter,exist,multi,sidebar=['/home/bene/prj/pyformex/','/home/bene/prj/pyformex/stl'])
+    w = widgets.FileSelection(cur,filter,exist,multi)
     if file:
         w.selectFile(file)
     fn = w.getFilename()

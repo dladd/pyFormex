@@ -148,6 +148,11 @@ class Objects(object):
         return res
 
 
+    def ask1(self):
+        """Select a single object from the list."""
+        return self.ask('single')
+    
+
     def forget(self):
         """Remove the selection from the globals."""
         forget(self.names)

@@ -3,6 +3,8 @@
 
 import globaldata as GD
 #from plugins.postproc import *
+from plugins.fe_post import FeResult
+from plugins.objects import Objects
 from gui.colorscale import ColorScale,ColorLegend
 from gui import decors,canvas,widgets
 from gui.draw import *
@@ -14,6 +16,14 @@ from numpy import *
 from formex import *
 from gui.draw import *
 from gui.colors import *
+
+
+DB = None
+
+def setDB(db):
+    global DB
+    DB = db
+
 
 
 # Functions to calculate a scalar value from a vector
@@ -29,15 +39,7 @@ def max(A):
 
 def min(A):
     return A.min(axis=1)
-
-
-DB = None
-R = None
-
-def setDB(db):
-    global DB
-    DB = db
-    
+   
 
 def niceNumber(f,approx=floor):
     """Returns a nice number close to but not smaller than f."""
@@ -91,6 +93,20 @@ def importDB():
     fn = askFilename(GD.cfg['workdir'],types,exist=True)
     if fn:
         chdir(fn)
+        ###
+        ### Warning for obsolete feature
+        ### Will be removed in version 0.8
+        if fn.endswith('_post.py'):
+            ans = ask("The '_post.py' extension for postprocessing databases is obsolete and should be avoided. Use the '.post' extension instead.\n\nDo you want to rename the database now?",['Keep','Rename','Cancel'])
+            if ans == 'Cancel':
+                return
+            elif ans == 'Rename':
+                newfn = fn.replace('_post.py','.post')
+                while os.path.exists(newfn):
+                    newfn = newfn.replace('.post','_1.post')
+                os.rename(fn,newfn)
+                fn = newfn
+            
         size = os.stat(fn).st_size
         if size > 1000000 and ask("""
 BEWARE!!!
@@ -101,12 +117,15 @@ I strongly recommend you to cancel the operation now.
 """ % size,["Continue","Cancel"]) != "Continue":
             return
         
+        project = os.path.basename(os.path.splitext(fn)[0])
         play(fn)
-        if GD.PF.has_key('DB'):
-            setDB(GD.PF['DB'])
-            GD.message(DB.about['heading'])
-            printDB()
-
+        #### The postabq always exports under the name 'DB'
+        export({project:GD.PF['DB']})
+        setDB(GD.PF[project])
+        GD.message(DB.about['heading'])
+        printDB()
+        showModel()
+        
 
 def printDB():
     if DB.res is not None:
@@ -367,11 +386,15 @@ def askPoint():
 
 ################### menu #################
 
+selection = Objects(clas=FeResult)
+
 def create_menu():
     """Create the Postproc menu."""
     MenuData = [
-        ("&Open Postproc Database",importDB),
         ("&Translate Abaqus .fil results file",postABQ),
+        ("&Open Postproc Database",importDB),
+        ("&Select Postproc Database",selection.ask1),
+        ("&Forget Postproc Database",selection.forget),
         ("---",None),
         ("Show Geometry",showModel),
         ("Select Step/Inc",selectStepInc),
