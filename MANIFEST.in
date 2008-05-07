@@ -10,7 +10,11 @@ include pyformex/lib/configure
 include pyformex/lib/configure_py
 include pyformex/examples/*.db
 include pyformex/examples/*.formex
-include pyformex/examples/*/*
+include pyformex/examples/Analysis/[A-Z]*.py
+include pyformex/examples/Analysis/hesperia-nieve.prop
+include pyformex/examples/Analysis/FeAbq.post
+include pyformex/examples/Demo/[A-Z]*.py
+include pyformex/examples/Demo/README
 include pyformex/icons/*.xpm
 include pyformex/icons/pyformex*.png
 include pyformex/manual/html/*
