@@ -8,13 +8,14 @@ include pyformex/pyformexrc
 include pyformex/lib/Makefile.in
 include pyformex/lib/configure
 include pyformex/lib/configure_py
+include pyformex/lib/postabq.c
 include pyformex/examples/*.db
 include pyformex/examples/*.formex
 include pyformex/examples/Analysis/[A-Z]*.py
 include pyformex/examples/Analysis/hesperia-nieve.prop
 include pyformex/examples/Analysis/FeAbq.post
-include pyformex/examples/Demo/[A-Z]*.py
-include pyformex/examples/Demo/README
+include pyformex/examples/Demos/[A-Z]*.py
+include pyformex/examples/Demos/README
 include pyformex/icons/*.xpm
 include pyformex/icons/pyformex*.png
 include pyformex/manual/html/*

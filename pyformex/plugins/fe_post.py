@@ -140,7 +140,7 @@ class FeResult(object):
             n2 = self.hdr['nshr']
             ind = arange(len(data))
             ind[n1:] += (3-n1)
-            print ind
+            #print ind
             self.R[key][nodid-1][ind] = data
         else:
             self.R[key][nodid-1][:len(data)] = data
@@ -194,8 +194,7 @@ class FeResult(object):
         The key may include a component to return only a single column
         of a multicolumn value.
         """
-        print self.dofs
-        print
+        #print self.dofs
         comp = '012345'.find(key[-1])
         if comp >= 0:
             key = key[:-1]
@@ -207,5 +206,15 @@ class FeResult(object):
                 return val
         else:
             return None
+
+        
+    def printSteps(self):
+        """Print the steps/increments/resultcodes for which we have results."""
+        if self.res is not None:
+            for i,step in self.res.iteritems():
+                for j,inc in step.iteritems():
+                    for k,v in inc.iteritems():
+                        print "Step %s, Inc %s, Res %s (%s)" % (i,j,k,str(v.shape))
+
 
 #End

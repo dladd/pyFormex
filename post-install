@@ -12,6 +12,10 @@
 # This is the pyformex post install script
 #
 
+instdir=$(pyformex --whereami | grep '^Script' | sed 's|.* ||')
+echo "Executables installed in $instdir"
+[ -d "$instdir" ] && install -m 0755 pyformex/lib/postabq $instdir
+
 # install the .desktop file on xdg compliant systems
 
 [ -n "$(type -P xdg-desktop-menu)" ] && {

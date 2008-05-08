@@ -60,6 +60,10 @@ class build_ext(_build_ext):
         if self.configure():
             print "Compiling the pyFormex acceleration library"
             _build_ext.run(self)
+            print "Compiling the pyFormex postabq converter"
+            cmd = "cd pyformex/lib;make postabq"
+            sta,out = commands.getstatusoutput(cmd)
+            print out
 
         else:
             print """
@@ -88,7 +92,7 @@ transformations.
       ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
       package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','icons/pyformex*.png','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
-      scripts=['pyformex/pyformex','pyformex-viewer'],
+      scripts=['pyformex/pyformex','pyformex-viewer','pyformex/lib/postabq'],
       data_files=DATA_FILES,
       classifiers=[
     'Development Status :: 3 - Alpha',

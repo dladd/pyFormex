@@ -13,6 +13,9 @@ from formex import Formex
 from plugins.surface import TriSurface
 from copy import deepcopy
 
+#
+#  !!! Do not use the dic= argument !!!
+#
 class Objects(object):
     """A selection of objects from the globals().
 
@@ -21,7 +24,7 @@ class Objects(object):
     objects can be changed and the changes can be undone.
     """
 
-    def __init__(self,dic=None,clas=None,filter=None,namelist=[]):
+    def __init__(self,clas=None,filter=None,namelist=[]):
         """Create a new selection of objects.
 
         If a dict is given, objects will be selected from this dict, else
@@ -32,10 +35,10 @@ class Objects(object):
         If a list of names is given, the current selection will be set to
         those names (provided they are in the dictionary).
         """
-        if dict is None:
-            self.dic = GD.PF
-        else:
-            self.dic = dic
+##         if dic is None:
+##             self.dic = GD.PF
+##         else:
+##             self.dic = dic
         self.clas = clas
         self.filter = filter
         self.names = []
@@ -137,7 +140,7 @@ class Objects(object):
 
         mode can be set to'single' to select a single item.
         This sets the current selection to the selected names.
-        Return the selected names or None.
+        Return a list with the selected names or None.
         """
         res = widgets.Selection(listAll(clas=self.clas),
                                 'Known %sobjects' % self.object_type(),
@@ -149,9 +152,14 @@ class Objects(object):
 
 
     def ask1(self):
-        """Select a single object from the list."""
-        return self.ask('single')
-    
+        """Select a single object from the list.
+
+        Returns the object, not its name!
+        """
+        if self.ask('single'):
+            return named(self.names[0])
+        else:
+            return None
 
     def forget(self):
         """Remove the selection from the globals."""

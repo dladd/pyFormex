@@ -20,8 +20,6 @@ if GD.options.uselib:
         GD.debug("Error while loading the pyFormex compiled library")
         GD.debug("Reverting to scripted versions")
 
-print "SUCCESS = %s" % success
-
 if not success:
     GD.debug("Using the (slower) Python implementations")
     print "OVERRIDING WITH SLOW IMPLEMENTATION"

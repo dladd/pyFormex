@@ -29,6 +29,9 @@ class Project(dict):
         if filename is None:
             filename = self.filename
         f = file(filename,'w')
+        if self.has_key('FeAbqN'):
+            for e in self['FeAbqN'].elems.values():
+                print e.shape
         pickle.dump(self,f)
         f.close()
 
@@ -41,10 +44,13 @@ class Project(dict):
             filename = self.filename
         f = file(filename,'r')
         p = pickle.load(f)
+        if p.has_key('FeAbqN'):
+            for e in p['FeAbqN'].elems.values():
+                print e.shape
         f.close()
         if isinstance(p,dict):
             self.update(p)
-
+ 
     def delete(self):
         """Unrecoverably delete the project file."""
         os.remove(self.filename)
