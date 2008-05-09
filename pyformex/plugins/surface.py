@@ -20,6 +20,7 @@ from plugins import tetgen,connectivity
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
+from numpy import *
 
 hasExternal('admesh')
 hasExternal('tetgen')
@@ -151,13 +152,22 @@ def read_gts(fn):
         sep=''
     else:
         sep=' '
-    coords = fromfile(file=fil, dtype=Float, count=3*ncoords, sep=sep)
-    edges = fromfile(file=fil, dtype=int32, count=2*nedges, sep=' ')
-    faces = fromfile(file=fil, dtype=int32, count=3*nfaces, sep=' ')
+    print "sep = aa%saa" % sep
+    print fromfile.__doc__
+    coords = fromfile(fil,dtype=Float,count=3*ncoords,sep=' ').reshape(-1,3)
+    edges = fromfile(fil,dtype=int32,count=2*nedges,sep=' ').reshape(-1,2) - 1
+    faces = fromfile(fil,dtype=int32,count=3*nfaces,sep=' ').reshape(-1,3) - 1
     GD.message("Read %d coords, %d edges, %d faces" % (ncoords,nedges,nfaces))
-    return coords.reshape((-1,3)),\
-           edges.reshape((-1,2)) - 1,\
-           faces.reshape((-1,3)) - 1
+    if coords.shape[0] != ncoords or \
+       edges.shape[0] != nedges or \
+       faces.shape[0] != nfaces:
+        GD.message("Error while reading GTS file: the file is probably incorrect!")
+    print coords
+    print edges
+    print faces
+    print edges.max()
+    print faces.max()
+    return coords,edges,faces
 
 
 def read_off(fn):

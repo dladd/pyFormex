@@ -41,6 +41,10 @@ from config import Config
 from optparse import OptionParser,make_option
 from utils import isPyFormex
 
+import locale
+locale.setlocale(locale.LC_NUMERIC, 'C')
+
+
 
 ###########################  main  ################################
 
