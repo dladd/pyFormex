@@ -338,6 +338,7 @@ class Canvas(object):
             self.lighting = False
             glLight(False)
 
+                
         elif self.rendermode.startswith('flat'):
             glFlat()
             glFill()
@@ -590,12 +591,12 @@ class Canvas(object):
         col = GD.cfg.get('pick/color','yellow')
         self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
         self.addDecoration(self.cursor)
-        
-    def draw_square(self,x0,y0,x1,y1):
+    
+    def draw_line(self,x,y):
         if self.cursor:
             self.removeDecoration(self.cursor)
         col = GD.cfg.get('pick/color','yellow')
-        self.cursor = decors.Grid(x0,y0,x1,y1,color=col,linewidth=1)
+        self.cursor = decors.Line(self.statex,self.statey,x,y,color=col,linewidth=2)
         self.addDecoration(self.cursor)
 
 ### End

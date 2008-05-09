@@ -22,8 +22,6 @@ from plugins.connectivity import reverseIndex
 
 import timer
 
-
-
 ### Actors ###############################################
 
 class Actor(Drawable):
@@ -127,9 +125,10 @@ class BboxActor(Actor):
         self.color = color
         self.linewidth = linewidth
         self.bb = bbox
-        self.vertices = array(elements.Hex8.vertices) * (bbox[1]-bbox[0]) + bbox[0]
+        self.vertices = array(elements.Hex8.vertices) * (bbox[1]-bbox[0])/2 + (bbox[1]+bbox[0])/2
         #print "VERTICES",self.vertices
         self.edges = array(elements.Hex8.edges)
+        
         self.facets = array(elements.Hex8.faces)
 
     def bbox():
@@ -302,7 +301,7 @@ class PlaneActor(Actor):
             if self.planes:
                 glColor(self.planecolor,self.alpha)
                 drawGridPlanes(self.x0,self.x1,nx)
-        
+
 
 ###########################################################################
 

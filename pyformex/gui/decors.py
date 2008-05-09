@@ -274,14 +274,27 @@ class Grid(Decoration):
 
 class Line(Decoration):
     """A straight line on the canvas."""
-    def __init__(self,x1,y1,x2,y2):
+    def __init__(self,x1,y1,x2,y2,color=None,linewidth=None):
         Decoration.__init__(self,x1,y1)
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
+        if color is None:
+            self.color = None
+        else:
+            self.color = colors.GLColor(color)
+        if linewidth is None:
+            self.linewidth = None
+        else:
+            self.linewidth = float(linewidth)
+        
 
     def drawGL(self,mode='wireframe',color=None):
+        if self.color:
+            GL.glColor3fv(self.color)
+        if self.linewidth:
+            GL.glLineWidth(self.linewidth)
         drawLine(self.x1,self.y1,self.x2,self.y2)
             
 
@@ -307,7 +320,6 @@ class LineDrawing(Decoration):
             GL.glVertex2fv(e[0])
             GL.glVertex2fv(e[1])
         GL.glEnd()
-
 
 
 # End

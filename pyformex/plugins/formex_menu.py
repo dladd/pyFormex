@@ -322,7 +322,7 @@ def cutAtPlane():
         p = res['New props']
         side = res['Side']
         if side == 'both':
-            G = [F.cutAtPlane(P,N,atol,p,side) for F in FL]
+            G = [F.cutAtPlane(P,N,p,side,atol) for F in FL]
             G_pos = []
             G_neg  =[]
             for F in G:
