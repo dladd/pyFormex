@@ -19,7 +19,7 @@ PYFORMEXDIR= pyformex
 PYSOURCE= setup.py pyformex/pyformexrc \
 	$(wildcard pyformex/*.py) \
 	$(wildcard pyformex/gui/*.py) \
-	$(wildcard pyfomrex/plugins/*.py) \
+	$(wildcard pyformex/plugins/*.py) \
 	$(wildcard pyformex/examples/*.py) \
 	$(wildcard pyformex/examples/Analysis/*.py) \
 	$(wildcard pyformex/examples/Demos/*.py) \

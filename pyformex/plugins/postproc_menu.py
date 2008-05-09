@@ -1,5 +1,14 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
+##
+## This file is part of pyFormex 0.7.1 Release Fri May  9 08:39:30 2008
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
 
 import globaldata as GD
 from plugins.postproc import *
@@ -98,15 +107,9 @@ class PostProc(object):
 
     def showModel(self,nodes=True,elems=True):
         if nodes:
-            print "BEFORE",self.DB.nodes.shape
             Fn = Formex(self.DB.nodes)
-            print "AFTER",self.DB.nodes.shape
             draw(Fn)
         if elems:
-            for i,e in enumerate(self.DB.elems.itervalues()):
-                print e.shape
-                print self.DB.nodes.shape
-                print self.DB.nodes[e].shape
             Fe = [ Formex(self.DB.nodes[e],i+1) for i,e in enumerate(self.DB.elems.itervalues()) ]
             draw(Fe)
         zoomAll()

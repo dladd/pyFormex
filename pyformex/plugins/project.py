@@ -1,4 +1,13 @@
 # $Id$
+##
+## This file is part of pyFormex 0.7.1 Release Fri May  9 08:39:30 2008
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
 
 """project.py
 
@@ -29,9 +38,6 @@ class Project(dict):
         if filename is None:
             filename = self.filename
         f = file(filename,'w')
-        if self.has_key('FeAbqN'):
-            for e in self['FeAbqN'].elems.values():
-                print e.shape
         pickle.dump(self,f)
         f.close()
 
@@ -44,9 +50,6 @@ class Project(dict):
             filename = self.filename
         f = file(filename,'r')
         p = pickle.load(f)
-        if p.has_key('FeAbqN'):
-            for e in p['FeAbqN'].elems.values():
-                print e.shape
         f.close()
         if isinstance(p,dict):
             self.update(p)
