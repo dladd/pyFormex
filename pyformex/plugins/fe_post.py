@@ -197,6 +197,16 @@ class FeResult(object):
             self.R = {}
 
 
+    def getSteps(self):
+        """Return all the step keys."""
+        return self.res.keys()
+
+    def getIncs(self,step):
+        """Return all the incs for given step."""
+        if self.res.has_key(step):
+            return self.res[step].keys()
+        
+
     def getres(self,key,domain='nodes'):
         """Return the results of the current step/inc for given key.
 

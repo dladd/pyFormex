@@ -944,13 +944,16 @@ class ButtonBox(QtGui.QWidget):
 class ComboBox(QtGui.QWidget):
     def __init__(self,name,choices,func,*args):
         QtGui.QWidget.__init__(self,*args)
-        s = InputCombo(name,choices,None)
+        s = InputCombo(name,choices,None,*args)
         s.setSpacing(0)
         s.setMargin(0)
         if func:
             self.connect(s.input,QtCore.SIGNAL("activated(int)"),func)
         self.setLayout(s)
         self.combo = s
+
+    def setIndex(self,i):
+        self.input.setCurrentIndex(i)
         
 
 ############################# Menu ##############################

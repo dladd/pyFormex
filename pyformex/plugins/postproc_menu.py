@@ -26,6 +26,7 @@ from gui.draw import *
 from gui.colors import *
 
 
+####################
 
 class PostProc(object):
     """A class to visualize Fe Results."""
@@ -42,12 +43,14 @@ class PostProc(object):
         self._show_elems = True
 
 
-    def setDB(self,DB):
+    def setDB(self,DB,name=None):
+        """Set the current result. DB is an FeResult instance.
+        """
         if isinstance(DB,FeResult):
             self.DB = DB
         else:
             self.DB = None
-
+ 
         
     def postABQ(self,fn=None):
         """Translate an Abaqus .fil file in a postproc script."""
@@ -63,9 +66,10 @@ class PostProc(object):
                 GD.message(out)
 
 
-    def importDB(self):
-        types = utils.fileDescription('postproc')
-        fn = askFilename(GD.cfg['workdir'],types,exist=True)
+    def importDB(self,fn=None):
+        if fn is None:
+            types = utils.fileDescription('postproc')
+            fn = askFilename(GD.cfg['workdir'],types,exist=True)
         if fn:
             chdir(fn)
             ###
@@ -97,9 +101,12 @@ class PostProc(object):
             ##DB = FeResult()
             export({'DB':self.DB})
             play(fn)
-            #### We also export it under the project name
+            #### We export it under the project name
             export({project:GD.PF['DB']})
-            self.setDB(GD.PF[project])
+            #### and delete the 'DB' name
+            del GD.PF['DB']
+            ### now select the DB
+            self.setDB(GD.PF[project],project)
             GD.message(self.DB.about['heading'])
             self.DB.printSteps()
             #self.showModel()
@@ -116,10 +123,10 @@ class PostProc(object):
 
 
     def selectStepInc(self):
-        res = askItems([('Step',DB.step,'select',DB.res.keys())])
+        res = askItems([('Step',self.DB.step,'select',self.DB.res.keys())])
         if res:
             step = int(res['Step'])
-            res = askItems([('Increment',None,'select',DB.res[step].keys())])
+            res = askItems([('Increment',None,'select',self.DB.res[step].keys())])
             if res:
                 inc = int(res['Increment'])
         GD.message("Step %s; Increment %s;" % (step,inc))
@@ -262,9 +269,9 @@ class PostProc(object):
         res_desc = [ c[1] for c in results ]
 
         # Ask the user which results he wants
-        print DB.elems.keys()
+        print self.DB.elems.keys()
         print res_desc
-        res = askItems([('Element Group','All','select',['All',]+DB.elems.keys()),
+        res = askItems([('Element Group','All','select',['All',]+self.DB.elems.keys()),
                         ('Type of result',None,'select',res_desc),
                         ('Load case',0),
                         ('Autocalculate deformation scale',True),
@@ -281,12 +288,12 @@ class PostProc(object):
             return None
 
         # Show results
-        nodes = DB.nodes
+        nodes = self.DB.nodes
         elgrp = res['Element Group']
         if elgrp == 'All':
-            elems = DB.elems.values()
+            elems = self.DB.elems.values()
         else:
-            elems = [ DB.elems[elgrp] ]
+            elems = [ self.DB.elems[elgrp] ]
         resindex = res_desc.index(res['Type of result'])
         loadcase = res['Load case']
         autoscale = res['Autocalculate deformation scale']
@@ -299,7 +306,7 @@ class PostProc(object):
         nframes = res['Number of frames']
         sleeptime = res['Animation sleeptime']
 
-        displ = DB.getres('U')
+        displ = self.DB.getres('U')
         if displ is not None:
             displ = displ[:,0:3]
             if autoscale:
@@ -321,21 +328,21 @@ class PostProc(object):
                 if askPoint():
                     val = Coords(nodes).distanceFromPoint(point)
             else:
-                val = DB.getres(key)
+                val = self.DB.getres(key)
                 if key == 'U':
                     val = norm2(val)
         if val is not None:
             txt = res_desc[resindex]
         print nodes.shape
         print displ.shape
-        showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
+        self.showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
         return val
 
 
 def DistanceFromPoint(nodes,pt):
     """Show distance from origin rendered on the domain of triangles"""
     val = Fn.distanceFromPoint(pt)
-##     nodes = DB.nodes
+##     nodes = self.DB.nodes
 ##     displ = zeros(nodes.shape)
 ##     text = "Distance from point %s" % pt
 ##     showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
@@ -356,13 +363,119 @@ def askPoint():
 
 ################### menu #################
 
-selection = Objects(clas=FeResult)
+
+## class PostProcGui(PostProc):
+
+##     def __init__(self,*args,**kargs):
+##         self.post_button = None
+##         self._step_combo = None
+##         self._inc_combo = None
+##         self.selection = Objects(clas=FeResult)
+##         PostProc.__init__(self,*args,**kargs)
+
+
+##     def setDB(self,DB=None,name=None):
+##         """Set the FeResult database.
+
+##         DB can either be an FeResult instance or the name of an exported
+##         FeResult.
+##         If a name is given, it is displayed on the status bar.
+##         """
+##         if type(DB) == str:
+##             DB = named(DB)
+##         if isinstance(DB,FeResult):
+##             self.DB = DB
+##         else:
+##             self.DB = None
+
+##         if self.DB:
+## #            self.hideStepInc()
+## #            self.hideName()
+##             self.showName(name)
+##             self.showStepInc()
+##         else:
+##             self.hideName()
+##             self.hideStepInc()
+
+
+##     def showName(self,name=None):
+##         """Show a statusbar button with the name of the DB (hide if None)."""
+##         if name is None:
+##             self.hideName()
+##         else:
+##             if self.post_button is None:
+##                 self.post_button = widgets.ButtonBox('PostDB:',['None'],[self.select])
+##                 GD.gui.statusbar.addWidget(self.post_button)
+##             self.post_button.setText(name)
+
+
+##     def hideName(self):
+##         """Hide the statusbar button with the name of the DB."""
+##         if self.post_button:
+##             GD.gui.statusbar.removeWidget(self.post_button)
+
+
+##     def showStepInc(self):
+##         """Show the step/inc combo boxes"""
+##         steps = self.DB.getSteps()
+##         if steps:
+##             self.step_combo = widgets.ComboBox('Step:',steps,self.setStep)
+##             GD.gui.statusbar.addWidget(self.step_combo)
+##             self.showInc(steps[0])
+
+
+##     def showInc(self,step=None):
+##         """Show the inc combo boxes"""
+##         if step:
+##             incs = self.DB.getIncs(step)
+##             self.inc_combo = widgets.ComboBox('Inc:',incs,self.setInc)
+##             GD.gui.statusbar.addWidget(self.inc_combo)
+    
+
+##     def hideStepInc(self):
+##         """Hide the step/inc combo boxes"""
+##         if self._inc_combo:
+##             GD.gui.statusbar.removeWidget(self._inc_combo)
+##         if self._step_combo:
+##             GD.gui.statusbar.removeWidget(self._step_combo)
+             
+
+##     def setStep(self,i):
+##         print  "Current index: %s" % i
+##         step = str(self.step_combo.combo.input.currentText())
+##         if step != self.DB.step:
+##             print "Current step: %s" % step
+##             self.showInc(step)
+##             inc = self.DB.getIncs(step)[0]
+##             self.setInc(-1)
+##             self.DB.setStepInc(step,inc)
+
+
+##     def setInc(self,i):
+##         inc = str(self.inc_combo.combo.input.currentText())
+##         if inc != self.DB.inc:
+##             self.DB.setStepInc(step,inc)
+##         print "Current step/inc: %s/%s" % (self.DB.step,self.DB.inc)
+        
+
+##     def select(self,sel=None):
+##         sel = self.selection.ask1()
+##         if sel:
+##             self.setDB(sel,self.selection[0])
+
+
+
+                   
+
+    
 P = PostProc()
+P.selection = Objects(clas=FeResult)
 
 def select():
-    sel = selection.ask1()
+    sel = P.selection.ask1()
     if sel:
         P.setDB(sel)
+P.select = select
 
 
 def create_menu():
@@ -370,8 +483,8 @@ def create_menu():
     MenuData = [
         ("&Translate Abaqus .fil to FeResult database",P.postABQ),
         ("&Open FeResult Database",P.importDB),
-        ("&Select FeResult Data",select),
-        ("&Forget FeResult Data",selection.forget),
+        ("&Select FeResult Data",P.select),
+        ("&Forget FeResult Data",P.selection.forget),
         ("---",None),
         ("Show Geometry",P.showModel),
         ("Select Step/Inc",P.selectStepInc),
@@ -385,12 +498,13 @@ def show_menu():
     """Show the Postproc menu."""
     if not GD.gui.menu.item('Postproc'):
         create_menu()
-
+        
 def close_menu():
     """Close the Postproc menu."""
     m = GD.gui.menu.item('Postproc')
     if m :
         m.remove()
+        GD.gui.statusbar.removeWidget(GD.gui.postbutton)
 
 def reload_menu():
     """Reload the Postproc menu."""
