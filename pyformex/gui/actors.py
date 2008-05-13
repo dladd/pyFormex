@@ -126,7 +126,6 @@ class BboxActor(Actor):
         self.linewidth = linewidth
         self.bb = bbox
         self.vertices = array(elements.Hex8.vertices) * (bbox[1]-bbox[0])/2 + (bbox[1]+bbox[0])/2
-        #print "VERTICES",self.vertices
         self.edges = array(elements.Hex8.edges)
         
         self.facets = array(elements.Hex8.faces)
@@ -215,7 +214,6 @@ class GridActor(Actor):
     def drawGL(self,mode,color=None):
         """Draw the grid."""
 
-        #print "BBOX %s" % self.bbox()
         if self.lines:
             if self.linewidth:
                 GL.glLineWidth(self.linewidth)

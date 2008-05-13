@@ -65,17 +65,10 @@ def drawPolygons(x,n=None,c=None,alpha=1.0):
     """
     x = x.astype(float32)
     nplex = x.shape[1]
-    #print x.shape
-    #print x.dtype
-    #print x.flags
     if n is not None:
         n = n.astype(float32)
-        #print "NORMAL",n.shape
-        #print n.dtype
-        #print n.flags
     if c is not None:
         c = c.astype(float32)
-        #print "COLOR",c.shape
 
     if nplex < 3:
         return

@@ -215,7 +215,6 @@ def sector(r,t,nr,nt,h=0.,diag=None):
     p = Formex(regularGrid([0.,0.,0.],[r,0.,0.],[nr,0,0]).reshape(-1,3))
     if h != 0.:
         p = p.shear(2,0,h/r)
-    print p
     q = p.rotate(t/nt)
     if diag == 'up':
         F = connect([p,p,q],bias=[0,1,1]) + \
