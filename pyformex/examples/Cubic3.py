@@ -37,11 +37,11 @@ def interpolate2D(nodes,n=5):
     curv=cubicSpline(nodes)       
     #after the first 4 points: two points belong to the same curve
     for index in range(0, nodes.shape[0]-2, 1):#e' l indice del punto che uso anche per vedere a quale curva corrisponde     
-        for j in range(0, n+1):
+        for j in range(0, n):
             absci=nodes[index][0]+j*(nodes[index+1][0]-nodes[index][0])/n
             plist=append(plist,  absci)
             plist=append(plist,  createOrdinate(absci, curv[index]))            
-    for j in range(1, n+1):
+    for j in range(0, n+1):
         absci=nodes[-2][0]+j*(nodes[-1][0]-nodes[-2][0])/n        
         plist=append(plist,  absci)
         plist=append(plist,  createOrdinate(absci, curv[-1]))          
