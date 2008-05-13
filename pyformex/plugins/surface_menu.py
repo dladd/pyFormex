@@ -22,6 +22,7 @@ from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
 from plugins import formex_menu,surface_abq
+import simple
 from plugins.tools import Plane
 
 import os, timer
@@ -953,12 +954,29 @@ def createSphere():
     res = askItems([('name','__auto__'),('grade',4),])
     if res:
         name = res['name']
-        level = res['grade']
+        level = max(1,res['grade'])
         S = Sphere(level,verbose=True,filename=name+'.gts')
         export({name:S})
         selection.set([name])
         selection.draw()
 
+_data = {}
+
+def createCone():
+    res = askItems([('name','__auto__'),
+                    ('radius',1.),
+                    ('height',1.),
+                    ('angle',360.),
+                    ('div_along_radius',6),
+                    ('div_along_circ',12),
+                    ('diagonals','up','select',['up','down']),
+                    ])
+    if res:
+        name = res['name']
+        F = simple.sector(r=res['radius'],t=res['angle'],nr=res['div_along_radius'],nt=res['div_along_circ'],h=res['height'],diag=res['diagonals'])
+        export({name:TriSurface(F)})
+        selection.set([name])
+        selection.draw()
 
     
 ################### menu #################
@@ -978,6 +996,7 @@ def create_menu():
          [('&Plane Grid',createGrid),
           ('&Cube',createCube),
           ('&Sphere',createSphere),
+          ('&Circle, Sector, Cone',createCone),
           ]),
         ("---",None),
         ("Print &Information",

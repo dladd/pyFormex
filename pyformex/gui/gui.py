@@ -464,7 +464,21 @@ def createScriptMenu(scriptdirs,menu,recursive=True):
 
 def runApp(args):
     """Create and run the qt application."""
+    #
+    # FIX FOR A BUG IN NUMPY (It's always sane anyway)
+    #
+    import locale
+    GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
+    #
     GD.app = QtGui.QApplication(args)
+    #
+    GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+    GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
+    #
+    #
+    #
+    
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
         
@@ -646,6 +660,8 @@ See Help->License or the file COPYING for details.
         # Save the current dir as workdir
         GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
+
+    
     GD.app.exec_()
 
     # Cleanup

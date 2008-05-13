@@ -41,10 +41,6 @@ from config import Config
 from optparse import OptionParser,make_option
 from utils import isPyFormex
 
-import locale
-locale.setlocale(locale.LC_NUMERIC, 'C')
-
-
 
 ###########################  main  ################################
 
@@ -249,6 +245,14 @@ You will need proper permissions to actually delete the files.
         from gui.gui import runApp
     else:
         from script import runApp
+
+    #
+    # THIS DOES NOT HELP, BECAUSE WITH GUI, Qt4 sets the locale back
+    # Still, we leave it here, because one day we may load the gui before
+    # starting runapp
+    #
+    import locale
+    locale.setlocale(locale.LC_NUMERIC, 'C')
 
     res = runApp(args)
 

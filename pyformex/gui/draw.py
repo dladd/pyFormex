@@ -738,6 +738,8 @@ def zoomAll():
         GD.canvas.setCamera()
         GD.canvas.update()
 
+zoomall = zoomAll
+
 def zoom(f):
     GD.canvas.zoom(f)
     GD.canvas.update()

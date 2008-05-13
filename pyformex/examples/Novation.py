@@ -13,7 +13,6 @@
 
 reset()
 #GD.cfg['input/timeout'] = 2
-n = 40
 
 
 basechoices = ['Triangles','Quadrilaterals']
@@ -36,6 +35,8 @@ transparent = res['Transparent']
 bottom = res['Add a bottom plate']
 shrink = res['Shrink elements']
 export = res['Export to .stl']
+
+n = 10*nbumps
 
 if baseGeom == 0:
     # The base consists of two triangles

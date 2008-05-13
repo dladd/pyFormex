@@ -152,8 +152,6 @@ def read_gts(fn):
         sep=''
     else:
         sep=' '
-    print "sep = aa%saa" % sep
-    print fromfile.__doc__
     coords = fromfile(fil,dtype=Float,count=3*ncoords,sep=' ').reshape(-1,3)
     edges = fromfile(fil,dtype=int32,count=2*nedges,sep=' ').reshape(-1,2) - 1
     faces = fromfile(fil,dtype=int32,count=3*nfaces,sep=' ').reshape(-1,3) - 1
@@ -162,11 +160,6 @@ def read_gts(fn):
        edges.shape[0] != nedges or \
        faces.shape[0] != nfaces:
         GD.message("Error while reading GTS file: the file is probably incorrect!")
-    print coords
-    print edges
-    print faces
-    print edges.max()
-    print faces.max()
     return coords,edges,faces
 
 

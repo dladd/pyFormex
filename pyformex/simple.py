@@ -193,4 +193,41 @@ def connectCurves(curve1,curve2,n):
     quads = [ connect([c1,c1,c2,c2],nodid=[0,1,1,0]) for c1,c2 in zip(curves[:-1],curves[1:]) ]
     return Formex.concatenate(quads)
 
+
+def sector(r,t,nr,nt,h=0.,diag=None):
+    """Constructs a Formex which is a sector of a circle/cone.
+
+    A sector with radius r and angle t is modeled by dividing the
+    radius in nr parts and the angle in nt parts and then drawing
+    straight line segments.
+    If a nonzero value of h is given, a conical surface results with its
+    top at the origin and the base circle of the cone at z=h.
+    The default is for all points to be in the (x,y) plane.
+
+    
+    By default, a plex-4 Formex results. The central quads will collapse
+    into triangles.
+    If diag='up' or diag = 'down', all quads are divided by an up directed
+    diagonal and a plex-3 Formex results.
+    """
+    r = float(r)
+    t = float(t)
+    p = Formex(regularGrid([0.,0.,0.],[r,0.,0.],[nr,0,0]).reshape(-1,3))
+    if h != 0.:
+        p = p.shear(2,0,h/r)
+    print p
+    q = p.rotate(t/nt)
+    if diag == 'up':
+        F = connect([p,p,q],bias=[0,1,1]) + \
+            connect([p,q,q],bias=[1,2,1])
+    elif diag == 'down':
+        F = connect([q,p,q],bias=[0,1,1]) + \
+            connect([p,p,q],bias=[1,2,1])
+    else:
+        F = connect([p,p,q,q],bias=[0,1,1,0])
+
+    F = Formex.concatenate([F.rotate(i*t/nt) for i in range(nt)])
+    return F
+
+
 # End
