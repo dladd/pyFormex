@@ -38,7 +38,6 @@ for shape in Shape.keys():
             zoomAll()
             for light in Lights:
                 lights(light)
-                sleep(1)
 
 
 # End
