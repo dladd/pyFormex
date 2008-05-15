@@ -1463,6 +1463,42 @@ Total area: %s; Enclosed volume: %s
         os.remove(tmp1)
 
 
+#### THIS FUNCTION RETURNS A NEW SURFACE
+#### WE MIGHT DO THIS IN FUTURE FOR ALL SURFACE PROCESSING
+
+    def boolean(self,surf,op,inter=False,check=False,verbose=False):
+        """Perform a boolean operation with surface surf.
+
+        """
+        ops = {'+':'union', '-':'diff', '*':'inter'}
+        cmd = 'gtsset'
+        if inter:
+            cmd += ' -i'
+        if check:
+            cmd += ' -s'
+        if verbose:
+            cmd += ' -v'
+        cmd += ' '+ops[op]
+        tmp = tempfile.mktemp('.gts')
+        tmp1 = tempfile.mktemp('.gts')
+        tmp2 = tempfile.mktemp('.gts')
+        GD.message("Writing temp file %s" % tmp)
+        self.write(tmp,'gts')
+        GD.message("Writing temp file %s" % tmp1)
+        surf.write(tmp1,'gts')
+        GD.message("Performing boolean operation with command\n %s" % cmd)
+        cmd += ' %s %s > %s' % (tmp,tmp1,tmp2)
+        sta,out = runCommand(cmd)
+        os.remove(tmp)
+        os.remove(tmp1)
+        if sta or verbose:
+            GD.message(out)
+        GD.message("Reading result from %s" % tmp2)
+        S = TriSurface.read(tmp2)        
+        os.remove(tmp2)
+        return S
+
+
 
 ##########################################################################
 ################# Non-member and obsolete functions ######################

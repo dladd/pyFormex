@@ -470,7 +470,36 @@ def smooth():
                 res['fold_smoothing'] = float(res['fold_smoothing'])
             S.smooth(**res)
             selection.draw()
-        
+
+
+def boolean():
+    """Boolean operation on two surfaces.
+
+    op is one of
+    '+' : union,
+    '-' : difference,
+    '*' : interesection
+    """
+    ops = ['+ (Union)','- (Difference)','* (Intersection)']
+    S = selection.check(single=False)
+    if len(selection.names) != 2:
+        warning("You must select exactly two triangulated surfaces!")
+        return
+    if S:
+        res = askItems([('operation',None,'select',ops),
+                        ('output intersection curve',False),
+                        ('check self interesection',False),
+                        ('verbose',False),
+                        ],'Boolean Operation')
+        if res:
+            #selection.remember()
+            newS = S[0].boolean(S[1],op=res['operation'].strip()[0],
+                        inter=res['output intersection curve'],
+                        check=res['check self interesection'],
+                        verbose=res['verbose'])
+            export({'__auto__':newS})
+            #selection.draw()
+ 
 
 #############################################################################
 # Transformation of the vertex coordinates (based on Coords)
@@ -1055,6 +1084,7 @@ def create_menu():
           ("&Coarsen surface",coarsen),
           ("&Refine surface",refine),
           ("&Smooth surface",smooth),
+          ("&Boolean operation on two surfaces",boolean),
           ]),
         ("---",None),
 #        ("&Show volume model",show_volume),
