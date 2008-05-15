@@ -13,7 +13,7 @@
 Demonstrate multiple viewports.
 """
 
-nsl = 2        
+nsl = 0
 F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
 
 layout(1)
@@ -49,7 +49,7 @@ for i,v in enumerate(['front','right','top','iso']):
 
 sleep(nsl)
 viewport(3)
-G = F.cutAtPlane([0.,0.,0.],[-1.,0.,0.])
+G = F.cutAtPlane([0.,0.,0.],[-1.,0.,0.],side='+')
 clear()
 draw(G) # this draws in the 4 viewports !
 GD.gui.viewports.updateAll()
@@ -59,7 +59,7 @@ sleep(nsl)
 smooth()
 GD.gui.viewports.updateAll()
 
-
+exit()
 from gui import canvas
 sleep(nsl)
 canvas.glLine()

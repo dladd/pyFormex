@@ -64,6 +64,7 @@ def addButton(toolbar,text,icon,func,repeat=False,toggle=False,checked=False,ico
 
     if repeat:
         b.setAutoRepeat(True)
+        b.setAutoRepeatDelay(500)
         QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),a,QtCore.SLOT("trigger()"))
 
     if toggle:
@@ -108,7 +109,7 @@ def addCameraButtons(toolbar):
         b = toolbar.children()[-1] # Get the QToolButton for the last action
         if len(but) < 4 or but[3]:
             b.setAutoRepeat(True)
-            b.setAutoRepeatDelay(5000)
+            b.setAutoRepeatDelay(500)
             QtCore.QObject.connect(b,QtCore.SIGNAL("released()"),a,QtCore.SLOT("trigger()"))
         if len(but) >= 5:
             b.setCheckable(but[4])

@@ -391,7 +391,7 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     5) two vertices with |distance| < atol, one vertex at pos. or neg. side
     6) three vertices with |distance| < atol
     """
-    GD.message("Beware! By default cut3AtPlane now returns both sides!")
+    GD.message("Beware: cut3AtPlane now by default returns both sides!")
     
     # make sure we have sane newprops
     if newprops is None:
@@ -480,7 +480,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         newp is the new property value.
 
         The return value is determined as follows:
-        - If p is None: return None (not proprty set)
+        - If p is None: return None (no property set)
         - If p is set, but newp is None: return p[ind] : keep original
         - if p is set, and newp is set: return newp (single value)
         """
@@ -507,7 +507,10 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         P1 = P[w1][T1].reshape(-1,2,3)
         F1 = F[w1]
         d1 = d[w1]
-        p1 = F.p[w1]
+        if F.p is None:
+            p1 = None
+        else:
+            p1 = F.p[w1]
         # split problem in two cases
         w11 = where(d1[:,0]*d1[:,1]*d1[:,2] > 0.)[0] # case 1: triangle at positive side after cut
         w12 = where(d1[:,0]*d1[:,1]*d1[:,2] < 0.)[0] # case 2: quadrilateral at positive side after cut
@@ -556,7 +559,10 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         F2 = F[w2]
         d2 = d[w2]
         U2 = U[w2]
-        p2 =F.p[w2]
+        if F.p is None:
+            p2 = None
+        else:
+            p2 = F.p[w2]
         # split problem in three cases
         W = (d2 > atol).sum(axis=-1)
         w21 = where(W == 2)[0] # case 1: two vertices at positive side
@@ -1399,8 +1405,8 @@ class Formex:
             if max is not None:
                 T2 = f[:,nod,dir] < (max + atol)
         else:
-            print f
-            print atol,dir,min,max
+            #print f
+            #print atol,dir,min,max
             if min is not None:
                 T1 = f.distanceFromPlane(min,dir) > (-atol)
             if max is not None:
