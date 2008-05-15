@@ -862,7 +862,7 @@ wakeupMode=0
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
     global sleeping,wakeupMode,timer
-    if wakeupMode > 0:  # don't bother : sleeps inactivated
+    if wakeupMode > 0 or timeout == 0:  # don't bother
         return
     # prepare for getting wakeup event 
     QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
