@@ -513,15 +513,15 @@ def pickPoints(x):
         GL.glPopName()
 
 
-def pickLines(x):
-    """Basic element picking function."""
-    for i,xi in enumerate(x): 
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_LINE)
-        for xij in xi:
-            GL.glVertex3fv(xij)
-        GL.glEnd()
-        GL.glPopName()
+## def pickLines(x):
+##     """Basic element picking function."""
+##     for i,xi in enumerate(x): 
+##         GL.glPushName(i)
+##         GL.glBegin(GL.GL_LINE)
+##         for xij in xi:
+##             GL.glVertex3fv(xij)
+##         GL.glEnd()
+##         GL.glPopName()
 
 
 def pickPolygons(x):
@@ -545,13 +545,14 @@ def pickPolygonElems(x,e):
 
 def pickPolygonEdges(x,e):
     """Basic element picking function."""
-    for i,ei in enumerate(e): 
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_LINES)
-        for eij in ei:
-            GL.glVertex3fv(x[eij])
-        GL.glEnd()
-        GL.glPopName()
+##     for i,ei in enumerate(e): 
+##         GL.glPushName(i)
+##         GL.glBegin(GL.GL_LINES)
+##         for eij in ei:
+##             GL.glVertex3fv(x[eij])
+##         GL.glEnd()
+##         GL.glPopName()
+    pickPolygons(x[e])
 
 
 ### Settings ###############################################

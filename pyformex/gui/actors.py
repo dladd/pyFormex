@@ -497,9 +497,7 @@ class FormexActor(Actor,Formex):
 
         mode can be 'element' or 'point'
         """
-        if mode == 'element' and self.nplex() == 2:
-            pickLines(self.f)
-        elif mode == 'element' and self.nplex() > 2:
+        if mode == 'element':
             pickPolygons(self.f)
         elif mode == 'point':
             pickPoints(self.f)
