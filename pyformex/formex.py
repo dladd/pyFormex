@@ -9,7 +9,7 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Formex algebra in python"""
+"""Formex algebra in Python"""
 
 from coords import *
 
@@ -660,26 +660,9 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 
 ###########################################################################
 ##
-##   class Formex
+##   Formex class
 ##
 #########################
-#
-# About Formex/Formian newspeak:
-# The author of formex/formian had an incredible preference for newspeak:
-# for every concept or function, a new name was invented. While this may
-# give formex/formian the aspect of a sophisticated scientific background,
-# it works rather distracting and ennoying for people that are already
-# familiar with the basic ideas of 3D geometry, and are used to using the
-# standardized terms.
-# In our pyFormex we will try to use as much as possible the normal
-# terminology, while referring to the formian newspeak in parentheses
-# and preceded by a 'F:'. Similar concepts in Finite Element terminology
-# are marked with 'FE:'.
-
-# PITFALLS:
-# Python by default uses integer math on integer arguments!
-# Therefore: always create the array data with a float type!
-# (this will be mostly in functions array() and zeros()
 #
 
 def coordsmethod(f):
@@ -698,7 +681,7 @@ def coordsmethod(f):
     return newf
 
 
-class Formex:
+class Formex(object):
     """A Formex is a numpy array of order 3 (axes 0,1,2) and type Float.
     A scalar element represents a coordinate (F:uniple).
 
@@ -1818,6 +1801,14 @@ class Formex:
     # Formian compatibility functions
     # These will be moved to a separate file in future.
     #
+    # About Formian newspeak:
+    # The author of formex/formian had an incredible preference for newspeak:
+    # for every concept or function, a new name was invented. While this may
+    # give formian the aspect of a sophisticated scientific background,
+    # it works rather distracting and ennoying for people that are already
+    # familiar with the basic ideas of 3D geometry, and are used to using the
+    # standardized terms.
+
     order = nelems
     plexitude = nplex
     grade = ndim

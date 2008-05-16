@@ -131,5 +131,31 @@ def drawPolygons(x,n=None,c=None,alpha=1.0):
                 GL.glVertex3fv(xi)
     GL.glEnd()
 
+
+def pickPolygons(x):
+    """Mimics drawPolygons for picking purposes.
+
+    x : float (nel,nplex,3) : coordinates.
+    """
+    nplex = x.shape[1]
+
+    if nplex == 1:
+        objtype = GL.GL_POINTS
+    elif nplex == 2:
+        objtype = GL.GL_LINES
+    elif nplex == 3:
+        objtype = GL.GL_TRIANGLES
+    elif nplex == 4:
+        objtype = GL.GL_QUADS
+    else:
+        objtype = GL.GL_POLYGON
+
+    for i,xi in enumerate(x): 
+        GL.glPushName(i)
+        GL.glBegin(objtype)
+        for xij in xi:
+            GL.glVertex3fv(xij)
+        GL.glEnd()
+        GL.glPopName()
     
 ### End

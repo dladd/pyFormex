@@ -11,7 +11,7 @@
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
 
-int debug = 0;
+int debug = 1;
 
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
@@ -122,7 +122,6 @@ draw_polygons(PyObject *dummy, PyObject *args)
   nplex = PyArray_DIMS(arr1)[1];
   if (debug) printf("** nel = %d\n",nel);
   if (debug) printf("** nplex = %d\n",nplex);
-  if (nplex < 3) goto cleanup;
 
   arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr2 != NULL) { 
@@ -138,7 +137,11 @@ draw_polygons(PyObject *dummy, PyObject *args)
   
   if (debug) printf("** ndn = %d\n",ndn);
   if (debug) printf("** ndc = %d\n",ndc);
-  if (nplex == 3)
+  if (nplex == 1)
+    glBegin(GL_POINTS);
+  else if (nplex == 2)
+    glBegin(GL_LINES);
+  else if (nplex == 3)
     glBegin(GL_TRIANGLES);
   else if (nplex == 4)
     glBegin(GL_QUADS);
@@ -209,10 +212,61 @@ draw_polygons(PyObject *dummy, PyObject *args)
   }
   glEnd();
 
- cleanup:
+  /* Cleanup */
   Py_DECREF(arr1);
   if (arr2 != NULL)  { Py_DECREF(arr2); }
   if (arr3 != NULL)  { Py_DECREF(arr3); }
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
+/********************************************** drawgl.pick_polygons ****/
+/* Pick polygons */
+/* args:  x
+    x : float (nel,nplex,3) : coordinates
+*/  
+static PyObject *
+pick_polygons(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL;
+  PyObject *arr1=NULL;
+  float *x;
+  int nel,nplex;
+  int objtype;
+
+  if (debug) printf("** pick_polygons\n");
+  if (!PyArg_ParseTuple(args, "O", &arg1)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  x = (float *)PyArray_DATA(arr1);
+  nel = PyArray_DIMS(arr1)[0];
+  nplex = PyArray_DIMS(arr1)[1];
+  if (debug) printf("** nel = %d\n",nel);
+  if (debug) printf("** nplex = %d\n",nplex);
+
+  if (nplex == 1)
+    objtype = GL_POINTS;
+  else if (nplex == 2)
+    objtype = GL_LINES;
+  else if (nplex == 3)
+    objtype = GL_TRIANGLES;
+  else if (nplex == 4)
+    objtype = GL_QUADS;
+  else
+    objtype = GL_POLYGON;
+
+  int i,j;
+  for (i=0; i<nel; i++) {
+    glPushName(i);
+    glBegin(objtype);
+    for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+    glEnd();
+    glPopName();
+  }
+
+  /* Cleanup */
+  Py_DECREF(arr1);
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -291,6 +345,7 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
 static PyMethodDef Methods[] = {
     {"drawLines", draw_lines, METH_VARARGS, "Draw lines."},
     {"drawPolygons", draw_polygons, METH_VARARGS, "Draw polygons."},
+    {"pickPolygons", pick_polygons, METH_VARARGS, "Pick polygons."},
     {"drawTriangleElems", draw_triangle_elements, METH_VARARGS, "Draw triangle elements."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

@@ -525,25 +525,22 @@ def pickLines(x):
 
 
 def pickPolygons(x):
-    """Basic element picking function."""
-    for i,xi in enumerate(x): 
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_POLYGON)
-        for xij in xi:
-            GL.glVertex3fv(xij)
-        GL.glEnd()
-        GL.glPopName()
+    """Mimics drowing polygons for picking purposes."""
+    if GD.options.safelib:
+        x = x.astype(float32)
+    LD.pickPolygons(x)
 
 
 def pickPolygonElems(x,e):
-    """Basic element picking function."""
-    for i,ei in enumerate(e): 
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_POLYGON)
-        for eij in ei:
-            GL.glVertex3fv(x[eij])
-        GL.glEnd()
-        GL.glPopName()
+##     """Basic element picking function."""
+##     for i,ei in enumerate(e): 
+##         GL.glPushName(i)
+##         GL.glBegin(GL.GL_POLYGON)
+##         for eij in ei:
+##             GL.glVertex3fv(x[eij])
+##         GL.glEnd()
+##         GL.glPopName()
+    pickPolygons(x[e])
 
 
 def pickPolygonEdges(x,e):
