@@ -35,6 +35,58 @@ void gl_color(float *color, float alpha)
 
 /****** EXTERNAL FUNCTIONS (callable from Python ********/
 
+/********************************************** drawgl.draw_points ****/
+/* Draw a collection of points. */
+/* args:  x,c
+    x : float (nels,3) : coordinates.
+    c : float (nels,3) : color(s)
+*/  
+static PyObject *
+draw_points(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL;
+  PyObject *arr1=NULL, *arr2=NULL;
+  float *x, *c=NULL;
+  int nels,nd=0;
+
+  if (debug) printf("** draw_points\n");
+  if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2)) return NULL;
+
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  x = (float *)PyArray_DATA(arr1);
+  nels = PyArray_DIMS(arr1)[0];
+
+  arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr2 != NULL) {
+    c = (float *)PyArray_DATA(arr2);
+    nd = PyArray_NDIM(arr2);
+  }
+
+  glBegin(GL_POINTS);
+  int i;
+  if (nd == 0) {
+    if (debug) printf("** Draw without color\n");
+    for (i=0; i<3*nels; i+=3) {
+      glVertex3fv(x+i);
+    }
+  } else {
+    if (debug) printf("** Draw with color\n");
+    for (i=0; i<3*nels; i+=3) {
+      glColor3fv(c+i);
+      glVertex3fv(x+i);
+    }
+  }
+  glEnd();
+
+  /* Cleanup */
+  if (debug) printf("** Cleanup\n");
+  Py_DECREF(arr1);
+  if (arr2 != NULL) { Py_DECREF(arr2); }
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
 /********************************************** drawgl.draw_lines ****/
 /* Draw a collection of lines. */
 /* args:  x,c
@@ -49,8 +101,7 @@ draw_lines(PyObject *dummy, PyObject *args)
   float *x, *c=NULL;
   int nels,nd=0;
 
-  //printf("** draw_lines\n");
-
+  if (debug) printf("** draw_lines\n");
   if (!PyArg_ParseTuple(args, "OO", &arg1, &arg2)) return NULL;
 
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
@@ -67,20 +118,19 @@ draw_lines(PyObject *dummy, PyObject *args)
   glBegin(GL_LINES);
   int i;
   if (nd == 0) {
-    //printf("** Draw without color\n");
+    if (debug) printf("** Draw without color\n");
     for (i=0; i<2*3*nels; i+=3) {
-      //printf("coordinate %d\n",i);
       glVertex3fv(x+i);
     }
   } else if (nd == 2) {
-    //printf("** Draw with 1 color\n");
+    if (debug) printf("** Draw with 1 color\n");
     for (i=0; i<3*nels; i+=3) {
       glColor3fv(c+i);
       glVertex3fv(x+2*i);
       glVertex3fv(x+2*i+3);
     }
   } else if (nd == 3) {
-    //printf("** Draw with 2 colors\n");
+    if (debug) printf("** Draw with 2 colors\n");
     for (i=0; i<2*3*nels; i+=3) {
       glColor3fv(c+i);
       glVertex3fv(x+i);
@@ -89,7 +139,7 @@ draw_lines(PyObject *dummy, PyObject *args)
   glEnd();
 
   /* Cleanup */
-  //printf("** Cleanup\n");
+  if (debug) printf("** Cleanup\n");
   Py_DECREF(arr1);
   if (arr2 != NULL) { Py_DECREF(arr2); }
   Py_INCREF(Py_None);
@@ -343,6 +393,7 @@ draw_triangle_elements(PyObject *dummy, PyObject *args)
 
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
+    {"drawPoints", draw_points, METH_VARARGS, "Draw points."},
     {"drawLines", draw_lines, METH_VARARGS, "Draw lines."},
     {"drawPolygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pickPolygons", pick_polygons, METH_VARARGS, "Pick polygons."},

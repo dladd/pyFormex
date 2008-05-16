@@ -34,7 +34,7 @@ if GD.options.uselib:
         GD.debug("Error while loading the pyFormex compiled library")
         GD.debug("Reverting to scripted versions")
         GD.options.uselib = False
-        GD.options.safelib = False
+        #GD.options.safelib = False
         
 if not GD.options.uselib:
     GD.debug("Using the (slower) Python drawing functions")
@@ -91,17 +91,33 @@ def drawPoints(x,size=None,color=None):
     If size (float) is given, it specifies the point size.
     If color is given it is an (npoints,3) array of RGB values.
     """
-    x = x.reshape(-1,3)
-    if color is not None:
-        color = resize(color,x.shape)
+    if GD.options.safelib:
+        x = x.astype(float32).reshape(-1,3)
+        if color is not None:
+            color = color.astype(float32).resize(x.shape)
     if size:
         GL.glPointSize(size)
-    GL.glBegin(GL.GL_POINTS)
-    for i,xi in enumerate(x):
+    LD.drawPoints(x,color)
+    
+
+def drawLines(x,color=None):
+    """Draw a collection of lines.
+
+    x is a (nlines,2,3) shaped array of coordinates.
+
+    If color is given it is an (nlines,3), (nlines,1,3) or (nlines,2,3)
+    array of RGB values.
+    If two colors are given, make sure that smooth shading is on,
+    or the color rendering will be flat with the second color.
+    """
+    if GD.options.safelib:
+        x = x.astype(float32)
         if color is not None:
-            GL.glColor3fv(color[i])
-        GL.glVertex3fv(xi)
-    GL.glEnd()
+            color = color.astype(float32)
+            if (color.shape[0] != x.shape[0] or
+                color.shape[-1] != 3):
+                color = None
+    LD.drawLines(x,color)
 
 
 def drawAtPoints(x,mark,color=None):

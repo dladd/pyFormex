@@ -30,6 +30,23 @@ def glColor(color,alpha=1.0):
         GL.glColor4fv(append(color,alpha)) 
 
 
+def drawPoints(x,c=None):
+    """Draw a collection of points.
+
+    x : float (npoints,3) : coordinates.
+    c : float (npoints,3) or (nlines,2,3) : color(s)
+    """
+    GL.glBegin(GL.GL_POINTS)
+    if c is None:
+        for xi in x:
+            GL.glVertex3fv(xi)
+    else:
+        for xi,ci in zip(x,c):
+            GL.glColor3fv(ci)
+            GL.glVertex3fv(xi)
+    GL.glEnd()
+
+
 def drawLines(x,c=None):
     """Draw a collection of lines.
 
