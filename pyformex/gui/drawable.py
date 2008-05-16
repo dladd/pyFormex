@@ -504,13 +504,14 @@ def drawGridPlanes(x0,x1,nx):
 
 
 def pickPoints(x):
-    x = x.reshape((-1,3))
-    for i,xi in enumerate(x):
-        GL.glPushName(i)
-        GL.glBegin(GL.GL_POINTS)
-        GL.glVertex3fv(xi)
-        GL.glEnd()
-        GL.glPopName()
+    x = x.reshape((-1,1,3))
+    pickPolygons(x)
+##     for i,xi in enumerate(x):
+##         GL.glPushName(i)
+##         GL.glBegin(GL.GL_POINTS)
+##         GL.glVertex3fv(xi)
+##         GL.glEnd()
+##         GL.glPopName()
 
 
 ## def pickLines(x):
