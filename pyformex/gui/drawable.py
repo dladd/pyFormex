@@ -94,7 +94,7 @@ def drawPoints(x,size=None,color=None):
     if GD.options.safelib:
         x = x.astype(float32).reshape(-1,3)
         if color is not None:
-            color = color.astype(float32).resize(x.shape)
+            color = resize(color.astype(float32),x.shape)
     if size:
         GL.glPointSize(size)
     LD.drawPoints(x,color)

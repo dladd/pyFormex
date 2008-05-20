@@ -20,7 +20,7 @@ and write them to the Abaqus input file.
 
 from plugins.properties import *
 from plugins.fe import *
-from mydict import *
+from pyformex.mydict import Dict,CDict
 import globaldata as GD
 import datetime
 import os,sys
@@ -889,7 +889,7 @@ class Result(Dict):
 
 ############################################################ AbqData
         
-class AbqData(CascadingDict):
+class AbqData(CDict):
     """Contains all data required to write the Abaqus input file."""
     
     def __init__(self,model,prop,steps=[],res=[],out=[],bound=None):
@@ -1026,13 +1026,20 @@ def writeAbqInput(abqdata, jobname=None):
 
 if __name__ == "script" or __name__ == "draw":
 
-    print "The data hereafter do not form a complete FE model."
+    print "The data hereafter do not form a consistent FE model."
     print "See the FeAbq example for a more comprehensive example."
    
-    #creating the formex (just 4 points)
-    F=Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]],[12,8,2])
-    draw(F)
-    
+    # Create the geometry (4 quads)
+    F = Formex(mpattern('123')).replic2(2,2)
+
+    # Create Finite Element model
+    nodes,elems = F.feModel()
+
+    if GD.gui:
+        draw(F)
+        drawNumbers(F)
+        drawNumbers(Formex(nodes),color=red)
+
     # Create property database
     P = PropertyDB()
     #install example materials and section databases
@@ -1043,6 +1050,7 @@ if __name__ == "script" or __name__ == "draw":
     # or like this
     P.setSectionDB(SectionDB(pyformexdir+'/examples/sections.db'))
     
+    exit()
     # creating some property data
     S1 = ElemSection('IPEA100', 'steel')
     S2 = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel','CIRC')
@@ -1053,9 +1061,9 @@ if __name__ == "script" or __name__ == "draw":
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
 
     # populate the property database
-    np1 = P.nodeProp('d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
-    np2 = P.nodeProp('b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
-    np3 = P.nodeProp('d2',set=Nset(np2.nr),bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
+    np1 = P.nodeProp(tag='d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
+    np2 = P.nodeProp(tag='b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
+    np3 = P.nodeProp(tag='d2',set=Nset(np2.nr),bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
 
     bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
     top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')

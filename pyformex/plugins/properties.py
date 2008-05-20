@@ -16,8 +16,8 @@ Properties are identified and connected to a Formex element by the
 prop values that are stored in the Formex.
 """
 
-from flatkeydb import *
-from mydict import *
+from pyformex.flatkeydb import FlatDB
+from pyformex.mydict import Dict,CDict
 from numpy import *
 
 #######################################################
@@ -85,7 +85,7 @@ class SectionDB(Database):
             raise ValueError,"Expected a filename or a dict."
 
 
-class ElemSection(CascadingDict):
+class ElemSection(CDict):
     """Properties related to the section of an element."""
 
     matDB = MaterialDB()
@@ -122,7 +122,7 @@ class ElemSection(CascadingDict):
           section axis.
         - behavior: the behavior of the connector
         """
-        CascadingDict.__init__(self,{})
+        CDict.__init__(self,{})
         if sectiontype is not None:
             self.sectiontype = sectiontype
         self.orientation = orientation
@@ -148,7 +148,7 @@ class ElemSection(CascadingDict):
             # WE COULD ADD AUTOMATIC CALCULATION OF SECTION PROPERTIES
             #self.computeSection(section)
             #print section
-            self.secDB[section['name']] = CascadingDict(section)
+            self.secDB[section['name']] = CDict(section)
             self.section = self.secDB[section['name']]
         elif section==None:
             self.section = section
@@ -187,7 +187,7 @@ class ElemSection(CascadingDict):
             else:
                 warning("Material '%s'  is not in the database" % material)
         elif isinstance(material, dict):
-            self.matDB[material['name']] = CascadingDict(material)
+            self.matDB[material['name']] = CDict(material)
             self.material = self.matDB[material['name']]
         elif material==None:
             self.material=material
@@ -195,7 +195,7 @@ class ElemSection(CascadingDict):
             raise ValueError,"Expected a string or a dict"
 
 
-class ElemLoad(CascadingDict):
+class ElemLoad(CDict):
     """Distributed loading on an element."""
 
     def __init__(self,label=None,value=None,amplitude=None):
@@ -394,22 +394,32 @@ class PropertyDB(Dict):
         return prop
 
 
-    def Prop(self,kind='',tag=None,set=None,**kargs):
+    def Prop(self,kind='',tag=None,set=None,setname=None,**kargs):
         """Create a new property, empty by default.
 
         A property can hold almost anything. It has only two predefined fields:
         - tag: an identification tag used to group properties
         - set: a single number or a list of numbers identifying the geometrical
-               elements for wich the property is set
+               elements for wich the property is set, or the name of a
+               previously defined set.
+        - setname: the name to be used for this set. Default is to use an
+               automatically generated name. If setname is specified without
+               a set, this is interpreted as a set= field.
         As all properties, a nr field will be added automatically.
         Besides these, any other fields may be defined and will be added
         without check.
         """
-        d = CascadingDict()
-        # First update with kargs, to make sure tag,set and nr are sane
+        d = CDict()
+        # update with kargs first, to make sure tag,set and nr are sane
         d.update(dict(**kargs))
         if tag is not None:
             d.tag = str(tag)
+##         if d.has_key('setname'):
+##             del d['setname']
+        if setname is not None and type(setname) is not str:
+            raise ValueError,"setname should be a string"
+        if set is None and setname:
+            set = setname
         if set is not None:
             if type(set) is str:
                 d.set = set
@@ -417,6 +427,8 @@ class PropertyDB(Dict):
                 if type(set) is int:
                     set = [ set ]
                 d.set = unique1d(set)
+                if setname:
+                    d.setname = setname
         prop = getattr(self,kind+'prop')
         d.nr = len(prop)
         prop.append(d)
@@ -506,7 +518,7 @@ if __name__ == "script" or  __name__ == "draw":
     Stick = P.Prop(color='green',name='Stick',weight=25,comment='This could be anything: a gum, a frog, a usb-stick,...')
     print Stick
     
-    author = P.Prop(tag='author',alias='Alfred E Neuman',address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+    author = P.Prop(tag='author',alias='Alfred E Neuman',address=CDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
 
     print P.getProp(tag='author')[0]
     
@@ -578,7 +590,7 @@ if __name__ == "script" or  __name__ == "draw":
     ElemSection.secDB = Sec
     
     vert = ElemSection('IPEA100', 'steel')
-    hor = ElemSection({'name':'IPEM800','A':951247,'I':CascadingDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
+    hor = ElemSection({'name':'IPEM800','A':951247,'I':CDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
     circ = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel')
 
     print "Materials"

@@ -66,23 +66,22 @@ def glLight(onoff):
     else:
         GL.glDisable(GL.GL_LIGHTING)
 
-def glFlat():
-    """Disable smooth shading"""
-    GL.glShadeModel(GL.GL_FLAT)
-    #GD.canvas.glupdate()
 def glSmooth():
     """Enable smooth shading"""
     GL.glShadeModel(GL.GL_SMOOTH)
-    #GD.canvas.glupdate()
+def glFlat():
+    """Disable smooth shading"""
+    GL.glShadeModel(GL.GL_FLAT)
+
 def glCulling():
     """Enable culling"""
     GL.glEnable(GL.GL_CULL_FACE)
-    #GD.canvas.glupdate()
 def glNoCulling():
     """Disable culling"""
     GL.glDisable(GL.GL_CULL_FACE)
 
 
+    
 class ActorList(list):
 
     def __init__(self,canvas):
@@ -303,9 +302,11 @@ class Canvas(object):
     def setLight(self,nr,ambient,diffuse,specular,position):
         """(Re)Define a light on the scene."""
         self.lights[nr].set(ambient,diffuse,specular,position)
+
     def enableLight(self,nr):
         """Enable an existing light."""
         self.lights[nr].enable()
+
     def disableLight(self,nr):
         """Disable an existing light."""
         self.lights[nr].disable()

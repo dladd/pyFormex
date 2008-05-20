@@ -18,7 +18,7 @@ if the key is not found in the CascadingDict itself.
 Distributed under the GNU GPL
 """
 
-__all__ = [ 'Dict', 'CascadingDict', 'cascade', 'returnNone', 'raiseKeyError' ]
+__all__ = [ 'Dict', 'CDict', 'returnNone', 'raiseKeyError' ]
 
 
 def cascade(dic, key):
@@ -236,6 +236,11 @@ class CascadingDict(Dict):
     def __setstate__(self,dict):
         self.update(dict)
     
+
+# A shorter alias
+
+CDict = CascadingDict
+
 
 if __name__ == '__main__':
 

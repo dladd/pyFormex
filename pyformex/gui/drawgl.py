@@ -36,6 +36,7 @@ def drawPoints(x,c=None):
     x : float (npoints,3) : coordinates.
     c : float (npoints,3) or (nlines,2,3) : color(s)
     """
+    print c
     GL.glBegin(GL.GL_POINTS)
     if c is None:
         for xi in x:
