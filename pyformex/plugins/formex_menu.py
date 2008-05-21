@@ -486,6 +486,7 @@ def create_menu():
         ("---",None),
         ("&Fly",flyThru),
         ("---",None),
+        ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
     return widgets.Menu('Formex',items=MenuData,parent=GD.gui.menu,before='help')
@@ -504,10 +505,14 @@ def close_menu():
         m.remove()
       
 
-if __name__ == "draw":
-    # If executed as a pyformex script
+def reload_menu():
+    """Reload the Postproc menu."""
     close_menu()
     show_menu()
+
+
+if __name__ == "draw":
+    reload_menu()
     
 elif __name__ == "__main__":
     print __doc__

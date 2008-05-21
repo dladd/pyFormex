@@ -1,3 +1,4 @@
+# $Id$
 
 from numpy import *
 from gui.draw import *
@@ -39,3 +40,8 @@ def IndexedLineSet(coords,lines):
     export({_name_:G})
     draw(G)
    
+
+
+
+
+# End
