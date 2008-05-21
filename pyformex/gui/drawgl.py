@@ -76,20 +76,23 @@ def drawPolygons(x,n=None,c=None,alpha=1.0):
     """Draw a collection of polygons.
 
     x : float (nel,nplex,3) : coordinates.
-    n : float (nel,3) : normals.
+    n : float (nel,3) or (nel,nplex,3) : normals.
     c : float (nel,3) or (nel,nplex,3) : color(s)
-    If nplex colors per triangle are given, and shading mode is flat,
+    If nplex colors per element are given, and shading mode is flat,
     the last color will be used.
     """
     x = x.astype(float32)
     nplex = x.shape[1]
+    print "DRAWPOLYGONS nplex=%d" % nplex
     if n is not None:
         n = n.astype(float32)
     if c is not None:
         c = c.astype(float32)
 
-    if nplex < 3:
-        return
+    if nplex == 1:
+        objtype = GL.GL_POINTS
+    elif nplex == 2:
+        objtype = GL.GL_LINES
     elif nplex == 3:
         GL.glBegin(GL.GL_TRIANGLES)
     elif nplex == 4:
