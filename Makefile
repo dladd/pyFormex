@@ -1,5 +1,5 @@
 #  -*- Makefile -*-  for creating pyFormex releases
-# $Id: Makefile 53 2005-12-05 18:23:28Z bverheg $
+# $Id$
 ##
 ## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
 ## pyFormex is a Python implementation of Formex algebra

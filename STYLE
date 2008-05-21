@@ -22,7 +22,7 @@ enable-auto-props = yes
  
 - Start text (also .py) files with the following line:
 
-# $Id: $
+# $Id$
 
 - A first line different from the above may be used to flag an executable
   script, as in the examples below.
@@ -30,12 +30,12 @@ enable-auto-props = yes
 - Start executable python scripts with the following two lines:
 
 #!/usr/bin/env python
-# $Id: $
+# $Id$
 
 - Start pyformex scripts with the following two lines:
 
 #!/usr/bin/env python pyformex
-# $Id: $
+# $Id$
 
 - End your text files with a line
 
