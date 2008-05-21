@@ -78,7 +78,7 @@ files.
 
 setup(cmdclass={'build_ext': build_ext,'install':install},
       name='pyformex',
-      version='0.7.1-a2',
+      version='0.7.1-a3',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 

@@ -2,11 +2,19 @@
 #
 
 SRC= $(wildcard pyformex-user-meeting-*.rst)
-PDF= ${SRC:.rst=.pdf}
+ALLPDF= ${SRC:.rst=.pdf}
+PDF= $(wildcard pyformex-user-meeting-*.pdf)
 RSYNC= rsync -av -e ssh
 ACCOUNT= bverheg@shell.berlios.de
 
-minutes: ${PDF}
+default:
+	@echo "You should use an explicit target, e.g. make #"
+
+all: ${ALLPDF}
+
+
+%: pyformex-user-meeting-%.pdf
+	@echo "Done"
 
 %.pdf: %.tex
 	pdflatex $<
@@ -16,7 +24,7 @@ minutes: ${PDF}
 
 
 # Transfers the files to BerliOs
-pub: ${PDF}
+pub: 
 	${RSYNC} ${PDF} ${ACCOUNT}:/home/groups/ftp/pub/pyformex
 
 

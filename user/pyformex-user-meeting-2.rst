@@ -1,7 +1,7 @@
 .. This may look like plain text, but really is -*- rst -*-
 
 ====================================
-pyFormex User Meeting 1 (2008-04-08)
+pyFormex User Meeting 2 (2008-04-08)
 ====================================
 
 Place and Date
@@ -27,7 +27,7 @@ Apologies
 
 Minutes of the previous meeting
 -------------------------------
-No remarks. The minutes are available on the `pyformex website`_.
+No remarks. The minutes are available from the `pyFormex user meeting page`_.
 
 Agenda and discussion
 ---------------------
@@ -56,13 +56,14 @@ Agenda and discussion
 
 Date of the next meeting
 ------------------------
-The next meeting will be held Tuesday, May 6, 2008 at 10.00h.
+The next meeting will be held on Tuesday, May 6, 2008 at 10.00h.
 
 
 .. Here are the targets referenced in the text
 
 .. _`pyFormex website`: http://pyformex.berlios.de/
 .. _`pyFormex home page`: http://pyformex.berlios.de/
+.. _`pyFormex user meeting page`: http://pyformex.berlios.de/usermeeting.html
 .. _`pyFormex developer site`: http://developer.berlios.de/projects/pyformex/
 .. _`pyFormex forums`: http://developer.berlios.de/forum/?group_id=2717
 .. _`pyFormex developer forum`: https://developer.berlios.de/forum/forum.php?forum_id=8349
