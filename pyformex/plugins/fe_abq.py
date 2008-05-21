@@ -20,7 +20,7 @@ and write them to the Abaqus input file.
 
 from plugins.properties import *
 from plugins.fe import *
-from pyformex.mydict import Dict,CDict
+from mydict import Dict,CDict
 import globaldata as GD
 import datetime
 import os,sys

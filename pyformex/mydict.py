@@ -18,7 +18,7 @@ if the key is not found in the CascadingDict itself.
 Distributed under the GNU GPL
 """
 
-__all__ = [ 'Dict', 'CDict', 'returnNone', 'raiseKeyError' ]
+__all__ = [ 'Dict', 'CDict', 'CascadingDict', 'returnNone', 'raiseKeyError' ]
 
 
 def cascade(dic, key):
@@ -282,6 +282,7 @@ if __name__ == '__main__':
     pickle.dump(C,f)
     f.close()
 
+    print "Test unpickle"
     f = file('test.pickle','r')
     C = pickle.load(f)
     f.close()

@@ -32,7 +32,7 @@ def detect(trypaths=None):
     global calpy_path
     
     calpy = utils.hasExternal('calpy')
-cd    if not calpy:
+    if not calpy:
         return
     
     GD.message("You have calpy version %s" % calpy)

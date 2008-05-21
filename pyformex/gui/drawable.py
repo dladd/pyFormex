@@ -84,7 +84,14 @@ def glColor(color,alpha=1.0):
         GL.glColor4fv(append(color,alpha)) 
 
 
-def drawPoints(x,size=None,color=None):
+#
+# Though all three functions drawPoints, drawLines and drawPolygons
+# call the same low level LD.drawPolygons function, we keep 3 separate
+# functions on the higher level, because of special characteristics
+# of nplex < 3:   no computation of normals, marksize (nplex=1)
+#
+
+def drawPoints(x,color=None,alpha=1.0,size=None):
     """Draw a collection of points with default or given size and color.
 
     x is a (npoints,3) shaped array of coordinates.
@@ -97,10 +104,11 @@ def drawPoints(x,size=None,color=None):
             color = resize(color.astype(float32),x.shape)
     if size:
         GL.glPointSize(size)
-    LD.drawPoints(x,color)
+    x = x.reshape(-1,1,3)
+    LD.drawPolygons(x,None,color,alpha)
     
 
-def drawLines(x,color=None):
+def drawLines(x,color=None,alpha=1.0):
     """Draw a collection of lines.
 
     x is a (nlines,2,3) shaped array of coordinates.
@@ -117,7 +125,40 @@ def drawLines(x,color=None):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    LD.drawLines(x,color)
+    LD.drawPolygons(x,None,color,alpha)
+
+
+def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
+    """Draw a collection of polygons.
+
+    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+    for the lighting are calculated and set, or they can be specified
+    in normals
+    """
+    n = None
+    if mode.startswith('smooth'):
+        if normals is None:
+            n = computeNormals(x)
+        else:
+            try:
+                n = asarray(normals)
+                if not (n.ndim in [2,3] and n.shape[0] == x.shape[0] and n.shape[-1] == 3):
+                    raise
+                
+            except:
+                raise ValueError,"""Invalid normals specified"""
+
+
+    if GD.options.safelib:
+        x = x.astype(float32)
+        if n is not None:
+            n = n.astype(float32)
+        if color is not None:
+            color = color.astype(float32)
+            if (color.shape[0] != x.shape[0] or
+                color.shape[-1] != 3):
+                color = None
+    LD.drawPolygons(x,n,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -135,26 +176,6 @@ def drawAtPoints(x,mark,color=None):
         GL.glTranslatef(*xi)
         GL.glCallList(mark)
         GL.glPopMatrix()
-
-
-def drawLines(x,color=None):
-    """Draw a collection of lines.
-
-    x is a (nlines,2,3) shaped array of coordinates.
-
-    If color is given it is an (nlines,3), (nlines,1,3) or (nlines,2,3)
-    array of RGB values.
-    If two colors are given, make sure that smooth shading is on,
-    or the color rendering will be flat with the second color.
-    """
-    if GD.options.safelib:
-        x = x.astype(float32)
-        if color is not None:
-            color = color.astype(float32)
-            if (color.shape[0] != x.shape[0] or
-                color.shape[-1] != 3):
-                color = None
-    LD.drawLines(x,color)
 
 
 def Shape(a):
@@ -217,39 +238,6 @@ def interpolateNormals(coords,elems):
     n = computeNormals(coords[elems])
     n = nodalSum(n,elems)
     return normalize(n)
-
-
-def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
-    """Draw a collection of polygons.
-
-    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set, or they can be specified
-    in normals
-    """
-    n = None
-    if mode.startswith('smooth'):
-        if normals is None:
-            n = computeNormals(x)
-        else:
-            try:
-                n = asarray(normals)
-                if not (n.ndim in [2,3] and n.shape[0] == x.shape[0] and n.shape[-1] == 3):
-                    raise
-                
-            except:
-                raise ValueError,"""Invalid normals specified"""
-
-
-    if GD.options.safelib:
-        x = x.astype(float32)
-        if n is not None:
-            n = n.astype(float32)
-        if color is not None:
-            color = color.astype(float32)
-            if (color.shape[0] != x.shape[0] or
-                color.shape[-1] != 3):
-                color = None
-    LD.drawPolygons(x,n,color,alpha)
 
 
 def drawPolygonElems(coords,elems,mode,color=None,alpha=1.0):
@@ -519,56 +507,25 @@ def drawGridPlanes(x0,x1,nx):
 ######################## Draw mimicking for picking ########################
 
 
-def pickPoints(x):
-    x = x.reshape((-1,1,3))
-    pickPolygons(x)
-##     for i,xi in enumerate(x):
-##         GL.glPushName(i)
-##         GL.glBegin(GL.GL_POINTS)
-##         GL.glVertex3fv(xi)
-##         GL.glEnd()
-##         GL.glPopName()
-
-
-## def pickLines(x):
-##     """Basic element picking function."""
-##     for i,xi in enumerate(x): 
-##         GL.glPushName(i)
-##         GL.glBegin(GL.GL_LINE)
-##         for xij in xi:
-##             GL.glVertex3fv(xij)
-##         GL.glEnd()
-##         GL.glPopName()
-
 
 def pickPolygons(x):
-    """Mimics drowing polygons for picking purposes."""
+    """Mimics drawing polygons for picking purposes."""
     if GD.options.safelib:
         x = x.astype(float32)
     LD.pickPolygons(x)
 
 
+def pickPoints(x):
+    x = x.reshape((-1,1,3))
+    pickPolygons(x)
+
+
 def pickPolygonElems(x,e):
-##     """Basic element picking function."""
-##     for i,ei in enumerate(e): 
-##         GL.glPushName(i)
-##         GL.glBegin(GL.GL_POLYGON)
-##         for eij in ei:
-##             GL.glVertex3fv(x[eij])
-##         GL.glEnd()
-##         GL.glPopName()
     pickPolygons(x[e])
 
 
 def pickPolygonEdges(x,e):
     """Basic element picking function."""
-##     for i,ei in enumerate(e): 
-##         GL.glPushName(i)
-##         GL.glBegin(GL.GL_LINES)
-##         for eij in ei:
-##             GL.glVertex3fv(x[eij])
-##         GL.glEnd()
-##         GL.glPopName()
     pickPolygons(x[e])
 
 

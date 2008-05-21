@@ -11,7 +11,7 @@
 """Basic OpenGL drawing functions.
 
 The functions in this module should be exact emulations of the
-functions in the compiled library.
+external functions in the compiled library.
 """
 
 from OpenGL import GL,GLU
@@ -30,49 +30,21 @@ def glColor(color,alpha=1.0):
         GL.glColor4fv(append(color,alpha)) 
 
 
-def drawPoints(x,c=None):
-    """Draw a collection of points.
-
-    x : float (npoints,3) : coordinates.
-    c : float (npoints,3) or (nlines,2,3) : color(s)
-    """
-    print c
-    GL.glBegin(GL.GL_POINTS)
-    if c is None:
-        for xi in x:
-            GL.glVertex3fv(xi)
+def glObjType(nplex):
+    if nplex == 1:
+        objtype = GL.GL_POINTS
+    elif nplex == 2:
+        objtype = GL.GL_LINES
+    elif nplex == 3:
+        objtype = GL.GL_TRIANGLES
+    elif nplex == 4:
+        objtype = GL.GL_QUADS
     else:
-        for xi,ci in zip(x,c):
-            GL.glColor3fv(ci)
-            GL.glVertex3fv(xi)
-    GL.glEnd()
+        objtype = GL.GL_POLYGON
+    return objtype
 
 
-def drawLines(x,c=None):
-    """Draw a collection of lines.
-
-    x : float (nlines,2,3) : coordinates.
-    c : float (nlines,3) or (nlines,2,3) : color(s)
-    If two colors per line are given, and rendering mode is flat,
-    the second color will be used.
-    """
-    GL.glBegin(GL.GL_LINES)
-    if c is None:
-        for xi in x.reshape((-1,3)):
-            GL.glVertex3fv(xi)
-    elif c.ndim == 2:
-        for xi,ci in zip(x,c):
-            GL.glColor3fv(ci)
-            GL.glVertex3fv(xi[0])
-            GL.glVertex3fv(xi[1])
-    elif c.ndim == 3:
-        for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):
-            GL.glColor3fv(ci[0])
-            GL.glVertex3fv(xi[0])
-    GL.glEnd()
-
-
-def drawPolygons(x,n=None,c=None,alpha=1.0):
+def drawPolygons(x,n,c,alpha):
     """Draw a collection of polygons.
 
     x : float (nel,nplex,3) : coordinates.
@@ -83,23 +55,13 @@ def drawPolygons(x,n=None,c=None,alpha=1.0):
     """
     x = x.astype(float32)
     nplex = x.shape[1]
-    print "DRAWPOLYGONS nplex=%d" % nplex
     if n is not None:
         n = n.astype(float32)
     if c is not None:
         c = c.astype(float32)
 
-    if nplex == 1:
-        objtype = GL.GL_POINTS
-    elif nplex == 2:
-        objtype = GL.GL_LINES
-    elif nplex == 3:
-        GL.glBegin(GL.GL_TRIANGLES)
-    elif nplex == 4:
-        GL.glBegin(GL.GL_QUADS)
-    else:
-        GL.glBegin(GL.GL_POLYGON)
-
+    objtype = glObjType(nplex)
+    GL.glBegin(objtype)
     if c is None:
         if n is None:
             for xi in x.reshape((-1,3)):
@@ -159,17 +121,7 @@ def pickPolygons(x):
     x : float (nel,nplex,3) : coordinates.
     """
     nplex = x.shape[1]
-
-    if nplex == 1:
-        objtype = GL.GL_POINTS
-    elif nplex == 2:
-        objtype = GL.GL_LINES
-    elif nplex == 3:
-        objtype = GL.GL_TRIANGLES
-    elif nplex == 4:
-        objtype = GL.GL_QUADS
-    else:
-        objtype = GL.GL_POLYGON
+    objtype = glObjType(nplex)
 
     for i,xi in enumerate(x): 
         GL.glPushName(i)

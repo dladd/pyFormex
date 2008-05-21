@@ -1250,6 +1250,23 @@ class Formex(object):
         return Formex(self.f[flag>0],p)
 
     
+    def whereProp(self,val):
+        """Return the numbers of the elements with property val.
+
+        val is either a single integer, or a list/array of integers.
+        The return value is an array holding all the numbers of all the
+        elements that have the property val, resp. one of the values in val.
+        
+        If the Formex has no properties, a empty array is returned.
+        """
+        if self.p is not None:
+            if type(val) == int:
+                return where(self.p==val)[0]
+            else:
+                return unique1d(concatenate([where(self.p==v)[0] for v in val]))
+        return array([],dtype=Int)
+
+    
     def withProp(self,val):
         """Return a Formex which holds only the elements with property val.
 

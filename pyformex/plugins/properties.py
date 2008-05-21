@@ -9,19 +9,19 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""General framework for attributing properties to Formex elements.
+"""General framework for attributing properties to geometrical elements.
 
 Properties can really be just about any Python object.
-Properties are identified and connected to a Formex element by the
-prop values that are stored in the Formex.
+Properties can be attributed to a set of geometrical elements.
 """
 
 from pyformex.flatkeydb import FlatDB
 from pyformex.mydict import Dict,CDict
 from numpy import *
 
-#######################################################
-# This should probably be moved to a separate module
+#################################################################
+# This first part still needs to be changed.
+# It should probably be moved to a separate module
 
 class Database(Dict):
     """A class for storing properties in a database."""
@@ -244,7 +244,7 @@ class Amplitude(object):
             self.data = checkArray(data,(-1,2),'f','i')
             self.type = definition 
             
-
+###################################################
 ############ Utility routines #####################
 
 def checkArray(a,shape=None,kind=None,allow=None):
@@ -324,7 +324,10 @@ def Nset(*args):
 def Eset(*args):
     return autoName('Eset',*args)
 
+#############################################################
 ##################### Properties Database ###################
+
+     
 
 class PropertyDB(Dict):
     """A database class for all properties.

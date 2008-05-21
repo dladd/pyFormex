@@ -460,14 +460,14 @@ class FormexActor(Actor,Formex):
             
         nnod = self.nplex()
         if nnod == 1:
-            x = self.f.reshape((-1,3))
             if self.eltype == 'point3d':
+                x = self.f.reshape((-1,3))
                 drawAtPoints(x,self.mark,color)
             else:
-                drawPoints(x,self.marksize,color)
+                drawPoints(self.f,color,alpha,self.marksize)
                 
         elif nnod == 2:
-            drawLines(self.f,color)
+            drawLines(self.f,color,alpha)
         
         elif self.eltype == 'curve' and nnod == 3:
             drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
@@ -582,8 +582,7 @@ class TriSurfaceActor(Actor,TriSurface):
             rev = reverseIndex(self.faces)
             if color is not None:
                 color = color[rev[:,-1]]
-            drawLines(self.coords[self.edges],color)
-            #drawLineElems(self.coords,self.edges,color)
+            drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
             drawPolygonElems(self.coords,self.elems,mode,color,alpha)
@@ -595,12 +594,8 @@ class TriSurfaceActor(Actor,TriSurface):
 
         mode can be 'element' or 'point'
         """
-##         if mode == 'actor':
-##             self.use_list()
-##         el
         if mode == 'element':
             self.refresh()
-            #pickPolygons(self.coords[self.elems])
             pickPolygonElems(self.coords,self.elems)
         elif mode == 'edge':
             pickPolygonEdges(self.coords,self.edges)
