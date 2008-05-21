@@ -936,11 +936,10 @@ Script: %s
 
         GD.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
-            if type(p.set) is ndarray:
-                setname = Nset(p.nr)
-                writeSet(fil,'NSET',setname,p.set)
-                if p.csys is not None:
-                    writeTransform(fil,setname,p.csys)
+            setname = nsetName(p)
+            writeSet(fil,'NSET',setname,p.set)
+            if p.csys is not None:
+                writeTransform(fil,setname,p.csys)
 
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
@@ -1055,9 +1054,9 @@ if __name__ == "script" or __name__ == "draw":
     CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
 
     # populate the property database
-    np1 = P.nodeProp(tag='d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
-    np2 = P.nodeProp(tag='b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
-    np3 = P.nodeProp(tag='d2',set=Nset(np2.nr),bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
+    P.nodeProp(tag='d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
+    p = P.nodeProp(tag='b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
+    P.nodeProp(tag='d2',setname=p.setname,bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
 
     bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
     top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')
