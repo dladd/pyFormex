@@ -50,24 +50,18 @@ def abqInputNames(job):
 
 def nsetName(p):
     """Determine the setname for writing a node property."""
-    if p.set is None:
-        setname = 'Nall'
-    elif type(p.set) is str:
-        setname = p.set
+    if p.setname is None:
+        return 'Nall'
     else:
-        setname = Nset(p.nr)
-    return setname
+        return p.setname
 
 
 def esetName(p):
     """Determine the setname for writing a elem property."""
     if p.set is None:
-        setname = 'Eall'
-    elif type(p.set) is str:
-        setname = p.set
+        return 'Eall'
     else:
-        setname = Eset(p.nr)
-    return setname
+        return p.setname
 
 
 def writeHeading(fil, text=''):
@@ -1026,8 +1020,8 @@ def writeAbqInput(abqdata, jobname=None):
 
 if __name__ == "script" or __name__ == "draw":
 
-    print "The data hereafter do not form a consistent FE model."
-    print "See the FeAbq example for a more comprehensive example."
+    print "The data hereafter are incorrect and inconsistent."
+    print "See the FeAbq example for a comprehensive example."
    
     # Create the geometry (4 quads)
     F = Formex(mpattern('123')).replic2(2,2)

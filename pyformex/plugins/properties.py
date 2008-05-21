@@ -318,6 +318,9 @@ def checkString(a,valid):
 def autoName(base,*args):
     return (base + '_%s' * len(args)) % args 
 
+# The following are not used by the PropertyDB class,
+# but may be convenient for the user in applications
+
 def Nset(*args):
     return autoName('Nset',*args)
 
@@ -356,6 +359,11 @@ class PropertyDB(Dict):
         self.eprop = []
         #self.mprop = []
         
+
+    @classmethod
+    def autoName(clas,kind,*args):
+        return autoName((kind+'set').capitalize(),*args)
+
 
     def setMaterialDB(self,aDict):
         """Set the materials database to an external source"""
@@ -415,30 +423,31 @@ class PropertyDB(Dict):
         d = CDict()
         # update with kargs first, to make sure tag,set and nr are sane
         d.update(dict(**kargs))
+
+        prop = getattr(self,kind+'prop')
+        d.nr = len(prop)
         if tag is not None:
             d.tag = str(tag)
-##         if d.has_key('setname'):
-##             del d['setname']
-        if setname is not None and type(setname) is not str:
-            raise ValueError,"setname should be a string"
-        if set is None and setname:
-            set = setname
         if set is not None:
-            if type(set) is str:
-                d.set = set
+            if type(set) is str and setname is None:
+                ### convenience to allow set='name' as alias for setname='name'
+                ### to reuse already defined set
+                set,setname = setname,set
             else:
                 if type(set) is int:
                     set = [ set ]
                 d.set = unique1d(set)
-                if setname:
-                    d.setname = setname
-        prop = getattr(self,kind+'prop')
-        d.nr = len(prop)
+                if setname is None:
+                    setname = self.autoName(kind,d.nr)
+        if setname is not None and type(setname) is not str:
+            raise ValueError,"setname should be a string"
+        d.setname = setname
+        
         prop.append(d)
         return d
 
 
-    def nodeProp(self,set=None,tag=None,cload=None,bound=None,displ=None,csys=None):
+    def nodeProp(self,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -468,13 +477,13 @@ class PropertyDB(Dict):
                     d['csys'] = csys
                 else:
                     raise
-            return self.Prop(kind='n',tag=tag,set=set,**d)
+            return self.Prop(kind='n',tag=tag,set=set,setname=setname,**d)
         except:
             print "tag=%s,set=%s,tag=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,grp=None,set=None,tag=None,section=None,eltype=None,dload=None): 
+    def elemProp(self,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -500,12 +509,9 @@ class PropertyDB(Dict):
                 d['section'] = section
             if dload is not None:
                 d['dload'] = dload
-            p = self.Prop(kind='e',tag=tag,set=set,**d)
-            if p.eltype is not None and type(p.set) is str:
-                raise
-            return p
+            return self.Prop(kind='e',tag=tag,set=set,setname=setname,**d)
         except:
-            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,eltype=%s,section=%s,dload=%s" % (tag,set,eltype,section,dload)
+            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,setname=%s,eltype=%s,section=%s,dload=%s" % (tag,set,setname,eltype,section,dload)
 
 
 ##################################### Test ###########################

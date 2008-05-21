@@ -112,7 +112,7 @@ draw(F,marksize=8)
 NRN = drawNumbers(F)
 
 print F.whereProp(pbc)
-exit()
+
 P.nodeProp(tag='init',set=where(F.p==pbc)[0],bound=[1,1,0,0,0,0])
 P.nodeProp(tag='step1',set=where(F.p==pld)[0],setname='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
 P.nodeProp(tag='step2',set='Loaded',cload=[-10.,10.,0.,0.,0.,0.])
