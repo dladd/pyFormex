@@ -555,6 +555,20 @@ if __name__ == "script" or  __name__ == "draw":
         print p.nr
 
 
+    P.Prop(set=[0,1,3],setname='green_elements',color='green')
+    P.Prop(setname='green_elements',transparent=True)
+    a = P.Prop(set=[0,2,4,6],thickness=3.2)
+    P.Prop(setname=a.setname,material='steel')
+
+    for p in P.getProp(attr=['setname']):
+        print p
+
+    P.Prop(set='green_elements',transparent=False)
+    for p in P.getProp(attr=['setname']):
+        if p.setname == 'green_elements':
+            print p.nr,p.transparent
+
+
     exit()
     Mat = MaterialDB(GD.cfg['pyformexdir']+'/examples/materials.db')
     Sec = SectionDB(GD.cfg['pyformexdir']+'/examples/sections.db')

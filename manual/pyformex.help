@@ -5,8 +5,8 @@ options:
                      given)
   --nogui            do not load the GUI (default if a scriptfile argument is
                      given)
-  --dri              Force use of Direct Rendering
-  --nodri            Disables the Direct Rendering
+  --force-dri        Force use of Direct Rendering
+  --force-nodri      Disables the Direct Rendering
   --uselib           Use the pyFormex C lib if available. This is the default.
   --nouselib         Do not use the pyFormex C-lib.
   --safelib          Convert data types to match C-lib. This is the default.

@@ -20,8 +20,9 @@ def IndexedFaceSet(coords,faces=None):
     global p
     p += 1
     coords = asarray(coords).reshape(-1,3)
-    print coords.shape
+    print coords.shape,p
     F = Formex(coords,p)
+    print F.p
     draw(F)
     export({"%s-%s" % (_name_,'coords'):F})
     if faces is None:
