@@ -634,8 +634,7 @@ def runCalpyAnalysis():
     calpy_itf.check()
     import calpy
     calpy.options.optimize=True
-    from calpy.fe_util import *
-    from calpy.beam3d import *
+    from calpy import fe_util,beam3d
     ############################
 
     try:
@@ -737,8 +736,8 @@ def runCalpyAnalysis():
     if verbose:
         print "Specified boundary conditions"
         print s
-    bcon = ReadBoundary(nnod,6,s)
-    NumberEquations(bcon)
+    bcon = fe_util.ReadBoundary(nnod,6,s)
+    fe_util.NumberEquations(bcon)
     if verbose:
         print "Calpy.DOF numbering"
         print bcon # all DOFs are numbered from 1 to ndof
@@ -769,7 +768,7 @@ def runCalpyAnalysis():
     nlc = 1
     loads = zeros((ndof,nlc),float)
     for p in FE.prop.getProp('n',attr=['cload']):
-        loads[:,0] = AssembleVector(loads[:,0],p.cload,bcon[p.set,:])
+        loads[:,0] = fe_util.AssembleVector(loads[:,0],p.cload,bcon[p.set,:])
     if verbose:
         print "Calpy.Loads"
         print loads
@@ -781,7 +780,7 @@ def runCalpyAnalysis():
     print "Starting the Calpy analysis module --- this might take some time"
     GD.app.processEvents()
     starttime = time.clock()
-    displ,frc = static(coords,bcon,mats,elements,loads,Echo=True)
+    displ,frc = beam3d.static(coords,bcon,mats,elements,loads,Echo=True)
     print "Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime)
     # Export the results, but throw way these for the extra (last) node
     export({'calpy_results':(displ[:-1],frc)})
@@ -790,6 +789,7 @@ def runCalpyAnalysis():
 def postCalpy():
     """Show results from the Calpy analysis."""
     from plugins.postproc import *
+    from plugins.postproc_menu import showResults
     try:
         FE = named('fe_model')
         displ,frc = named('calpy_results')

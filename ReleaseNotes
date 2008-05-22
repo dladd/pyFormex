@@ -1,4 +1,4 @@
-# $Id$
+# $Id$ 
 ##
 ## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
 ## pyFormex is a Python implementation of Formex algebra
@@ -9,27 +9,21 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-pyFormex 0.7  Releasenotes 
-============
+pyFormex 0.7.1  Releasenotes 
+============================
 
-This is a collection of the most prominent changes in pyFormex 0.7
-(compared to the prevous release 0.6)
+This is a collection of the most prominent changes in pyFormex 0.7.1
+compared to the previous release 0.7.
 
 INSTALLATION
 ============
-The prefered installation procedure
-  python setup.py install --prefix=/usr/local
-will now also install 
- - the acceleration library, if you have the necessary header files and
-   compiler,
- - the xdg standard desktop and menu starters, if you have xdg-utils available
 
 
 COMMAND LINE
 ============
-The --dri/--nodri options should not be used, unless you need to change 
-incorrect default settings.
+The --dri/--nodri options are renamed to --force-dri and --force-nodri to hint that the user forces abnormal behavior when using them.
 
+pyformex --detect shows the list of detected software without having to start the GUI. Convenient when reporting bugs.
 
 GUI:
 ====
@@ -45,30 +39,27 @@ CORE:
 =====
 Acceleration library
 --------------------
-Some critical functions have been implemented in C.
-These are mostly some of the low-level drawing routines. 
-The result is a dramatic speedup in drawing large structures.
-The drawback is that these functions need to be compiled at
-installation time, and this requires the existence of the needed
-library headers (and a compiler). 
-Therefore, we have made this acceleration library an optional
-part of pyFormex. All functions in the library have a (slower)
-Python equivalent. If your system does not have all the prerequistes,
-the library will not be installed, but pyFormex will still run with
-all its functionality, though some of them will be slower.
+Most drawing functions and all picking functions are now accelerated.
+
 
 
 PLUGINS:
 ========
-Important enhancements in the interfaces with simulation codes.
-Implemented some automated meshing algorithms.
-Expanded capablities of output in Abaqus and Fluent formats.
-Partly implemented import of results from Abaqus simulations.
-Started work on FEA/CFD postprocessing.
+Properties 
+----------
+The property plugin has undergone major changes. The work on the plugin is not
+finished yet, but the PropertyDB class has become consistent, powerful and fairly stable. Users can already safely build applications on it. Most prominent features are:
+ - a single database class collecting all property data,
+ - specified and named sets to attribute properties to specific elements of a geometrical object.
+
+The fe_abq interface has been adapted to use the new property system.
+   
+Postproc
+--------
+The postproc plugin is developing into a powerful postprocessing engine.
+Already some nice examples.
  
 
 MANUAL:
 =======
-We started to add more thing into the manual. Still need to
-do a lot. Look out for version 0.7.1 to have a more complete
-manual.
+Added desription of the Property plugin.
