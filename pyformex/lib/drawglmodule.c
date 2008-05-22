@@ -97,72 +97,162 @@ draw_polygons(PyObject *dummy, PyObject *args)
   
   if (debug) printf("** ndn = %d\n",ndn);
   if (debug) printf("** ndc = %d\n",ndc);
+  int i,j,objtype;
   
-  glBegin(gl_objtype(nplex));
+  objtype = gl_objtype(nplex);
 
-  int i,j;
-  if (ndc == 0) {
-    if (ndn == 0) {
-      for (i=0; i<nel*nplex*3; i+=3) {
-	glVertex3fv(x+i);
-      }
-    } else if (ndn == 2) {
-      for (i=0; i<nel; i++) {
-	glNormal3fv(n+3*i);
-	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
-      }
-    } else if (ndn == 3) {
+  if (nplex <= 4) { 
+    glBegin(objtype);
+
+    if (ndc == 0) {
+      if (ndn == 0) {
+	for (i=0; i<nel*nplex*3; i+=3) {
+	  glVertex3fv(x+i);
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	}
+      } else if (ndn == 3) {
 	for (j=0;j<nel*nplex*3;j+=3) {
 	  glNormal3fv(n+j);
 	  glVertex3fv(x+j);
 	}
-    }
-  } else if (ndc == 2) {
-    if (ndn == 0) {
-      for (i=0; i<nel; i++) {
-	gl_color(c+3*i,alpha);
-	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
       }
-    } else if (ndn == 2){
-      for (i=0; i<nel; i++) {
-	gl_color(c+3*i,alpha);
-	glNormal3fv(n+3*i);
-	for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+    } else if (ndc == 2) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	}
+      } else if (ndn == 2){
+	for (i=0; i<nel; i++) {
+	  gl_color(c+3*i,alpha);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	}
       }
-    } else if (ndn == 3) {
-      for (i=0; i<nel; i++) {
-	gl_color(c+3*i,alpha);
-	for (j=0;j<nplex*3;j+=3) {
-	  glNormal3fv(n+nplex*3*i+j);
-	  glVertex3fv(x+nplex*3*i+j);
+    } else if (ndc == 3) {
+      if (ndn == 0) {
+	for (i=0; i<nel*nplex*3; i+=3) {
+	  gl_color(c+i,alpha);
+	  glVertex3fv(x+i);
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) {
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
 	}
       }
     }
-  } else if (ndc == 3) {
-    if (ndn == 0) {
-      for (i=0; i<nel*nplex*3; i+=3) {
-	gl_color(c+i,alpha);
-	glVertex3fv(x+i);
-      }
-    } else if (ndn == 2) {
-      for (i=0; i<nel; i++) {
-	glNormal3fv(n+3*i);
-	for (j=0;j<nplex*3;j+=3) {
-	  gl_color(c+nplex*3*i+j,alpha);
-	  glVertex3fv(x+nplex*3*i+j);
+    glEnd();
+
+  } else {
+
+    if (ndc == 0) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
 	}
       }
-    } else if (ndn == 3) {
-      for (i=0; i<nel; i++) {
-	for (j=0;j<nplex*3;j+=3) {
-	  glNormal3fv(n+nplex*3*i+j);
-	  gl_color(c+nplex*3*i+j,alpha);
-	  glVertex3fv(x+nplex*3*i+j);
+    } else if (ndc == 2) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 2){
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  gl_color(c+3*i,alpha);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      }
+    } else if (ndc == 3) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) {
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) {
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
 	}
       }
     }
   }
-  glEnd();
 
   /* Cleanup */
   Py_DECREF(arr1);

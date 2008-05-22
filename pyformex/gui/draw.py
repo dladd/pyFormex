@@ -957,7 +957,16 @@ def updateGUI():
     GD.app.processEvents()
 
 
-def flyAlong(path,upvector=[0.,1.,0.],sleeptime=None):
+def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
+    """Fly through the scene along the flypath."""
+    if type(path) is str:
+        path = named(path)
+    if not path:
+        warning("You have to define a flypath first!")
+        return
+    if path.nplex() != 2:
+        warning("The flypath should be a plex-2 Formex!")
+        
     for seg in path:
         GD.debug("Eye: %s; Center: %s" % (seg[0],seg[1]))
         GD.canvas.camera.lookAt(seg[0],seg[1],upvector)

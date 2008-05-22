@@ -425,15 +425,6 @@ def sectionizeSelection():
     selection.draw()
 
 
-def flyThru():
-    """Fly through the structure along the flypath."""
-    path = named('flypath')
-    if path:
-        flyAlong(path)
-    else:
-        warning("You have to define a flypath first!")
-   
-
 
 ################### menu #################
 
@@ -484,7 +475,7 @@ def create_menu():
         ("&Create Parts",createParts),
         ("&Sectionize Selection",sectionizeSelection),
         ("---",None),
-        ("&Fly",flyThru),
+        ("&Fly",flyAlong),
         ("---",None),
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),

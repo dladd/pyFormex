@@ -63,21 +63,31 @@ def Globals():
 
 
 def export(dic):
+    """Export the variables in the given dictionary."""
     GD.PF.update(dic)
 
 
-def export2(names,values=None):
-    if values is None:
-        values = [ Globals().get(n,None) for n in names ]
+def export2(names,values):
+    """Export a list of names and values."""
     export(dict(zip(names,values)))
 
 
 def forget(names):
+    """Remove the global variables specified in list."""
     g = GD.PF
     for name in names:
         if g.has_key(name):
             del g[name]
         
+
+def rename(oldnames,newnames):
+    """Rename the global variables in oldnames to newnames."""
+    g = GD.PF
+    for oldname,newname in zip(oldnames,newnames):
+        if g.has_key(oldname):
+            g[newname] = g[oldname]
+            del g[oldname]
+
 
 def listAll(clas=None,dic=None):
     """Return a list of all objects in dic that are of given clas.

@@ -38,11 +38,11 @@ postabq: postabq.c
 Makefile: Makefile.in
 	./configure
 
-Makefile: Makefile.in config.status
-	./config.status
+#Makefile: Makefile.in config.status
+#	./config.status
 
-config.status: configure
-	./config.status --recheck
+#config.status: configure
+#	./config.status --recheck
 
 #configure: configure.ac
 #	autoconf

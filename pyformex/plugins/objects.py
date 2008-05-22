@@ -22,9 +22,7 @@ from formex import Formex
 from plugins.surface import TriSurface
 from copy import deepcopy
 
-#
-#  !!! Do not use the dic= argument !!!
-#
+
 class Objects(object):
     """A selection of objects from the globals().
 
@@ -44,10 +42,6 @@ class Objects(object):
         If a list of names is given, the current selection will be set to
         those names (provided they are in the dictionary).
         """
-##         if dic is None:
-##             self.dic = GD.PF
-##         else:
-##             self.dic = dic
         self.clas = clas
         self.filter = filter
         self.names = []
@@ -100,8 +94,6 @@ class Objects(object):
         self.values = map(named,self.names)
         if copy:
             self.values = map(deepcopy,self.values) 
-        #print 'REMEMBER'
-        #print self.values
         
 
     def changeValues(self,newvalues):
