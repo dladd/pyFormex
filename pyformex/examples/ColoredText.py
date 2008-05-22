@@ -13,10 +13,14 @@ t = (random.random((n,)) * len(T)).astype(int)
 clear()
 
 bgcolor(white)
+lights(False)
+TA = None
 for i in range(n):
-    TA = drawtext(T[t[i]],a[i][0],a[i][1],'hv18',color=list(colors[i]))
+    fgcolor(red)
+    TB = drawtext(T[t[i]],a[i][0],a[i][1],'tr24',color=list(colors[i]))
     sleep(0.2)
     breakpt()
     undecorate(TA)
+    TA = TB
 
 # End

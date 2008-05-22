@@ -782,7 +782,6 @@ def sliceIt():
         bb = S.bbox()
         xmin,xmax = bb[:,axis]
         dx =  (xmax-xmin) / nslices
-        print "Distance between slices: %s" % dx
         x = arange(nslices+1) * dx
         N = unitVector(axis)
         P = [ bb[0]+N*s for s in x ]

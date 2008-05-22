@@ -16,10 +16,11 @@ zoom(1.5)
 
 
 ans = ask('How many balls do you want?',['3','2','1','0'])
+
 try:
     nb = int(ans)
 except:
-    nb = 0
+    nb = 3
     
 if nb > 0:
     B = simple.sphere3(n,n,r=0.9*r,bot=-90,top=90)

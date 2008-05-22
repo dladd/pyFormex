@@ -44,7 +44,7 @@ def showPrincipal1(F):
     GD.debug("Principal Values: %s" % Iprin)
     GD.debug("Principal Directions:\n%s" % Iaxes)
 
-    siz = F.size()
+    siz = F.dsize()
     H = Axes.scale(siz).affine(Iaxes.transpose(),C)
     Ax,Ay,Az = Iaxes[:,0],Iaxes[:,1],Iaxes[:,2]
     G = Formex([[C,C+Ax],[C,C+Ay],[C,C+Az]],3)

@@ -251,5 +251,5 @@ if __name__ == "draw":
         print S
         G = Formex([[[S['xG'],S['yG']]]])
         draw(G,bbox=None)
-        showaxes([S['xG'],S['yG'],0.],S['alpha'],F.size(),'red')
+        showaxes([S['xG'],S['yG'],0.],S['alpha'],F.dsize(),'red')
  

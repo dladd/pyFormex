@@ -17,8 +17,8 @@
 from plugins import calpy_itf
 calpy_itf.check()
 
-from fe_util import *
-from truss3d import *
+from calpy.fe_util import *
+from calpy.truss3d import *
 ############################
 
 import time

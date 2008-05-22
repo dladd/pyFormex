@@ -11,13 +11,13 @@
 ##
 """Menu with pyFormex scripts."""
 
-import os
 import globaldata as GD
 
 from PyQt4 import QtCore, QtGui
 
 import utils
 import draw
+import os,random
     
 
 class ScriptsMenu(QtGui.QMenu):
@@ -75,7 +75,6 @@ class ScriptsMenu(QtGui.QMenu):
         filter2 = lambda s:os.path.isdir(os.path.join(self.dir,s))
         dirs = filter(filter2,dirs)
         dirs.sort()
-        #print dirs
         for d in dirs:
             m = ScriptsMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
             self.addMenu(m)
@@ -92,7 +91,6 @@ class ScriptsMenu(QtGui.QMenu):
         
         filter1 = lambda s: s[-3:]==".py"
         if self.dir:
-            #print "DIR %s" % self.dir
             if self.recursive:
                 self.loadSubmenus(files)
             filter2 = lambda s:utils.isPyFormex(os.path.join(self.dir,s))
@@ -117,6 +115,8 @@ class ScriptsMenu(QtGui.QMenu):
             self.addAction('Run next script',self.runNext)
             self.addAction('Run all following scripts',self.runAllNext)
             self.addAction('Run all scripts',self.runAll)
+            self.addAction('Run a random script',self.runRandom)
+            self.addAction('Run all in random order',self.runAllRandom)
             self.addAction('Reload scripts',self.reLoad)
         self.current = ""
         
@@ -139,15 +139,10 @@ class ScriptsMenu(QtGui.QMenu):
         GD.gui.setcurfile(selected)
         if self.autoplay:
             draw.play()
-        
-
-    def runAll(self):
-        """Run all scripts."""
-        self.current = ""
-        self.runAllNext()
 
 
     def runNext(self):
+        """Run the next script."""
         try:
             i = self.files.index(self.current) + 1
         except ValueError:
@@ -158,20 +153,50 @@ class ScriptsMenu(QtGui.QMenu):
 
 
     def runAllNext(self):
+        """Run the current and all following scripts."""
         try:
             i = self.files.index(self.current)
         except ValueError:
             i = 0
         GD.debug("Running scripts %s-%s" % (i,len(self.files)))
+        self.runAllFiles(self.files[i:])
+        GD.debug("Exiting runAllNext")
+        
+
+    def runAll(self):
+        """Run all scripts."""
+        GD.debug("Playing all scripts in order")
+        self.runAllFile(self.files)
+        GD.debug("Finished playing all scripts")
+
+
+    ### THIS should be moved to a playAll function in draw/script module
+    def runAllFiles(self,files,randomize=False):
+        """Run all the scripts in given list."""
         GD.gui.actions['Stop'].setEnabled(True)
-        for f in self.files[i:]:
+        if randomize:
+            random.shuffle(files)
+        for f in files:
+            draw.layout(1)
             self.runScript(f)
-            GD.debug("draw.exitrequested == %s" % draw.exitrequested)
+            #GD.debug("draw.exitrequested == %s" % draw.exitrequested)
             if draw.exitrequested:
                 break
         GD.gui.actions['Stop'].setEnabled(False)
-        GD.debug("Exiting runAllNext")
 
+
+    def runRandom(self):
+        """Run a random script."""
+        i = random.randint(0,len(self.files)-1)
+        self.runScript(self.files[i])
+
+
+    def runAllRandom(self):
+        """Run all scripts in a random order."""
+        GD.debug("Playing all scripts in random order")
+        self.runAllFiles(self.files,randomize=True)
+        GD.debug("Finished playing all scripts")
+                       
 
     def reLoad(self):
         """Reload the scripts from dir."""
@@ -192,3 +217,6 @@ class ScriptsMenu(QtGui.QMenu):
             self.actions.append(self.addAction(filename))
         for a,f in zip(self.actions,self.files):
             a.setText(f)
+
+
+# End

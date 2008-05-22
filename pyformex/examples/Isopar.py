@@ -30,7 +30,8 @@ def build_matrix(atoms,x,y=0,z=0):
 
 def isopar(F,type,coords,oldcoords):
     """Apply isoparametric transform.
-    
+
+    coords and oldcoords can be either arrays, Coords or Formex instances
     """
     isodata = {
         'tri3'  : (2, ('1','x','y')),
@@ -40,11 +41,8 @@ def isopar(F,type,coords,oldcoords):
         'quad9' : (3, ('1','x','y','x*y','x*x','y*y','x*x*y','x*y*y','x*x*y*y'))
         }
     ndim,atoms = isodata[type]
-    if isinstance(coords,Formex):
-        coords = reshape(coords.nodes().data(),(-1,3))
-    if isinstance(oldcoords,Formex):
-        oldcoords = reshape(oldcoords.nodes().data(),(-1,3))
-    #print oldcoords
+    coords = coords.view().reshape(-1,3)
+    oldcoords = oldcoords.view().reshape(-1,3)
     x = oldcoords[:,0]
     if ndim > 1:
         y = oldcoords[:,1]
@@ -54,12 +52,8 @@ def isopar(F,type,coords,oldcoords):
         z = oldcoords[:,2]
     else:
         z = 0
-    #print "new=",coords
-    #print "old=",oldcoords
     aa = build_matrix(atoms,x,y,z)
-    #print "aa=", aa
     ab = linalg.solve(aa,coords)
-    #print "ab=",ab
     x = F.x().ravel()
     if ndim > 1:
         y = F.y().ravel()
@@ -70,7 +64,6 @@ def isopar(F,type,coords,oldcoords):
     else:
         z = 0
     aa = build_matrix(atoms,x,y,z)
-    #print "aa=", aa
     xx = dot(aa,ab)
     return Formex(reshape(xx,F.shape()))
 
@@ -78,7 +71,7 @@ def isopar(F,type,coords,oldcoords):
 def base(type,m,n=None):
     """A regular pattern for type.
 
-    type = 'tri' or 'quad'(default) or 'triline' or 'quadline'
+    type = 'tri' or 'quad' or 'triline' or 'quadline'
     m = number of cells in direction 0
     n = number of cells in direction 1
     """
@@ -90,9 +83,11 @@ def base(type,m,n=None):
                Formex(pattern('1')).replic2(m,n+1,1,1)
     elif type == 'tri':
         return Formex(mpattern('12-34')).replic2(m,n)
-    else:
+    elif type == 'quad':
         return Formex(mpattern('123')).replic2(m,n)
-
+    else:
+        raise ValueError,"Unknown type '%s'" % str(type)
+    
 
 F = base('quad',10,10)
 clear()

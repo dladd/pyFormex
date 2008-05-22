@@ -17,11 +17,9 @@
 from plugins import calpy_itf
 calpy_itf.check()
 
-import calpy
-import calpy.fe_util
 from calpy.fe_util import *
 from calpy.beam3d import *
-exit()
+
 ############################
 
 ############################################

@@ -788,7 +788,7 @@ def runCalpyAnalysis():
 
 def postCalpy():
     """Show results from the Calpy analysis."""
-    from plugins.postproc import *
+    from plugins.postproc import niceNumber,frameScale
     from plugins.postproc_menu import showResults
     try:
         FE = named('fe_model')
