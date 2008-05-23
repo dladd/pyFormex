@@ -54,9 +54,10 @@ LATEST= pyformex-latest.tar.gz
 
 ############ Creating Distribution ##################
 
+default:
+	@echo Please specify a target
 
 distclean:
-	rm -rf ${PYFORMEXDIR}
 	alldirs . "rm -f *~"
 
 # Create the pydoc html files
