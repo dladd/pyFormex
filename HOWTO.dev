@@ -80,7 +80,7 @@ Announce the release on the pyFormex news
   submit
     >> text: pyFormex Version released....
 Make the release available on our local FTP server
-  make pub
+  make publocal
 Bump the RELEASE and VERSION variables in the file RELEASE, then
   make version
   svn ci -m 'Bump version after release'

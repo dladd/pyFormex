@@ -1,8 +1,8 @@
 # pyFormex version
-VERSION=0.7.1
+VERSION=0.7.2
 # Unless you are creating an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
-RELEASE=${VERSION}
+RELEASE=${VERSION}-a1
 
 PROGRAM= pyformex.py
 IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
