@@ -83,7 +83,7 @@ ${HTMLDIR}/plugins.%.html: plugins/%.py
 
 # Create the manual
 manual:
-	make -C manual
+	make -C pyformex/manual
 
 # Create the C library
 lib:
@@ -98,17 +98,14 @@ website:
 	make -C website
 
 
-#pyformex/doc/pyformex-htmldocs.tar.gz: manual
-#	tar czf $@ manual/html manual/images
-
 # Set a new version
 
-version: pyformex/globaldata.py manual/pyformex.tex setup.py pyformex/lib/configure.ac
+version: pyformex/globaldata.py pyformex/manual/pyformex.tex setup.py pyformex/lib/configure.ac
 
 pyformex/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 
-manual/pyformex.tex: RELEASE
+pyformex/manual/pyformex.tex: RELEASE
 	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
 
 pyformex/lib/configure.ac: RELEASE
@@ -138,8 +135,10 @@ ${PKGDIR}/${PKGVER}: version MANIFEST.in
 	python setup.py sdist
 
 # Publish the distribution to our ftp server and berlios
-pub: 
-	#rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
+publocal: 
+	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
+
+pub:
 	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPPYFORMEX}
 
 # Tag the release in the svn repository
