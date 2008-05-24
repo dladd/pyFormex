@@ -44,6 +44,9 @@ svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
 
 
 ** Release a distribution to the general public
+
+!! First test that make manual, make dist, and install work fine !! 
+
 Set the version in RELEASE and then
   make version
 Stamp the files with the version
