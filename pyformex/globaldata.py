@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.7 Release Fri Apr  4 18:41:11 2008
+## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -12,7 +12,7 @@
 """Global data for pyFormex."""
 
 # Set pyformex version
-__version__ = "0.7.1-a3"
+__version__ = "0.7.1-a4"
 __revision__ = "$Rev$"
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'

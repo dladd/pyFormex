@@ -1,0 +1,161 @@
+# $Id$
+##
+## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
+## pyFormex is a Python implementation of Formex algebra
+## Website: http://pyformex.berlios.de/
+## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##
+## This program is distributed under the GNU General Public License
+## version 2 or later (see file COPYING for details)
+##
+#
+# pyFormex is a program for generating, manipulating and operating on
+# large geometrical models of 3D structures by subsequent mathematical
+# transformations.
+# It aims primarily at spatial frame structures, but can handle surface and
+# volume models as well.
+# Through its powerful scripting language, it is especially useful
+# for automated and parametric design.
+#
+# If you find it useful for something else, please go ahead.
+# Feel free to contact the author if you have any questions or remarks.
+# 
+# More information on the website: http://pyformex.berlios.de
+# or contact benedict.verhegghe@ugent.be
+#
+# BEWARE: this is alpha software undergoing frequent changes!
+# AND: pyFormex comes with absolutely no Warranty 
+#
+
+Prerequisites:
+-------------- 
+For scripting and mathematical transformations (without GUI):
+
+python: http://www.python.org  
+	(version 2.4 or higher; 2.3 can work with some minor changes)
+numpy: /http://numpy.scipy.org/
+	(version 1.0-rc1 or higher.)
+
+For the GUI:
+
+Qt4: http://www.trolltech.com/products/qt
+PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
+PyOpenGL: http://pyopengl.sourceforge.net/
+
+
+Install prerequisites on Debian GNU/Linux
+-----------------------------------------
+On Debian (lenny) systems you can install all prerequisites and their 
+dependencies with the command:
+  apt-get install python-qt4-gl python-numpy
+
+The optimization scripts need scipy:
+  apt-get install python-scipy
+
+If you want to compile the acceleration library (strongly recommended):
+  apt-get install libgl1-mesa-dev
+
+
+Howto install pyFormex:
+----------------------
+If a previous version of pyFormex was already installed on your system,
+you may want to remove the older version first before installing the new one.
+See further (Howto uninstall pyFormex)
+
+We suppose you have installed all the prerequisites and downloaded the
+pyformex source tarball: pyformex-VERSION.tar.gz
+
+Unpack the pyFormex source tarball:
+   tar xvzf pyformex-VERSION.tar.gz
+Go to the created pyformex directory:
+   cd pyformex-VERSION
+Do (with root privileges)
+   python setup.py install prefix=/usr/local
+This will install pyFormex under /usr/local/. You can change the prefix
+to install in some other place.
+
+The installation procedure installs everything into a single directory,
+and creates a symlink to the executable in /usr/local/bin.
+You can use the command pyformex --whereami to find out where pyFormex
+is installed.
+
+If you have xdg-utils on your system, the installation procedure will also
+install a menu and desktop starter for pyFormex.
+
+
+Howto uninstall pyFormex:
+----------------------
+A pyFormex installation of version 0.5 or later can be removed with the command
+  pyformex --remove
+and then answering 'yes' to the question.
+
+
+ 
+Howto install the gl2ps option:
+-------------------------------
+gl2ps provides image output in PostScript (EPS) format.
+The easiest way to make gl2ps available from inside pyFormex is to
+install python-gl2ps: it includes the gl2ps library and the Python bindings.
+
+- Make sure you have the libc and (mesa) GL header files installed. (On Debian,
+  you can e.g. apt-get install libc6-dev libgl1-mesa-dev)
+- Download the file python-gl2ps-1.1.2.tar.gz
+- Unpack the archive
+- Go into the created directory python-gl2ps-1.1.2 and execute (as root):
+    python setup.py install
+- If all goes well, you have gl2ps installed.
+
+
+
+Documentation:
+--------------
+
+The manual is included with the pyFormex distribution. Execute the command
+pyformex --whereami to find out where the pyformex files are installed.
+When working with the pyFormex gui, you can load the manual in your browser
+through the help menu, or view the online manual at
+http://pyformex.berlios.de/manual    
+
+The rest of this documentation has become superfluous and will probably be
+removed in a next release. 
+
+Because it is not obvious from the GUI:
+
+The canvas showing the Formex has dynamic zoom/pan/rotate functionality.
+Moving the mouse with one of the buttons depressed will activate this:
+  LEFT mouse button : rotate :
+	* moving radially w.r.t the center of the screen rotates around an
+	axis in the screen, perpendicular to the direction of the movement
+	* moving tangentially rotates around the axis perpendicular to the 
+	screen (the screen z-axis), but only it the click was not to close
+	to the center of the screen. Just try it out and you will see what
+	I mean 
+  MIDDLE mouse button : pan
+  RIGHT mouse button : zoom : horizontal movement zooms by camera lens angle,
+        vertical movement zooms by changing camera distance. The first mode 
+	keeps the perspective, the second one changes it.
+	Moving right and up zooms in, left and down zooms out. Moving 
+	diagonally from upper left to lower right more or less keeps the
+	image size, while changing the perspective.
+
+To use pyFormex, you create a script that builds a structure layout and 
+geometry. Look at the examples to get the feeling of how it is working. 
+Use the File->Play menu selection to display the structure. 
+
+The examples and the python source are relatively well documented.
+
+
+BUGS:
+-----
+If you find any bugs or malfunctions in pyFormex, please submit them to
+http://developer.berlios.de/bugs/?group_id=2717
+
+
+Help and Feedback:
+-----------------
+
+For any questions or feedback, please go to the pyformex website at
+http://pyformex.berlios.de
+
+
+

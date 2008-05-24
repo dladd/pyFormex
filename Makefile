@@ -16,29 +16,33 @@ include RELEASE
 PKGNAME= pyformex
 
 PYFORMEXDIR= pyformex
-PYSOURCE= setup.py pyformex/pyformexrc \
-	$(wildcard pyformex/*.py) \
-	$(wildcard pyformex/gui/*.py) \
-	$(wildcard pyformex/plugins/*.py) \
-	$(wildcard pyformex/examples/*.py) \
-	$(wildcard pyformex/examples/Analysis/*.py) \
-	$(wildcard pyformex/examples/Demos/*.py) \
 
-OTHERSOURCE= lib/Makefile \
-	$(wildcard pyformex/*.py) \
+MANDIR= ${PYFORMEXDIR}/manual
+LIBDIR= ${PYFORMEXDIR}/lib
+DOCDIR= ${PYFORMEXDIR}/doc
 
-STAMPFILES= README History Makefile post-install ReleaseNotes
-NONSTAMPFILES= COPYING RELEASE Description 
+SOURCE= \
+	$(wildcard ${PYFORMEXDIR}/*.py) \
+	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
+	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
 
-STAMPABLE= ${PYSOURCE} ${STAMPFILES}
+EXAMPLES= \
+	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
+	$(wildcard ${PYFORMEXDIR}/examples/Analysis/*.py) \
+	$(wildcard ${PYFORMEXDIR}/examples/Demos/*.py) \
 
-DOCDIR= doc
-HTMLDIR= ${DOCDIR}/html
-HTMLDOCS= ${addprefix ${HTMLDIR}/,${PYSOURCE:.py=.html} }
-HTMLGUIDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, gui ${addprefix gui.,${PYGUIMODULES}}}}
-HTMLPLUGINDOCS= ${addprefix ${HTMLDIR}/, ${addsuffix .html, plugins ${addprefix plugins.,${PLUGINMODULES}}}}
-EXAMPLEFILES= ${addprefix pyformex/examples/,${addsuffix .py, ${EXAMPLES} }}
-IMAGEFILES=  ${addprefix screenshots/,${addsuffix .png,${IMAGES}}}
+EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/examples/*.db)
+
+
+OTHERSTAMPABLE= setup.py \
+	${PYFORMEXDIR}/pyformexrc \
+	${EXAMPLEDATA} \
+	${LIBDIR}/Makefile \
+	${addprefix ${DOCDIR}/, README ReleaseNotes}
+
+NONSTAMPABLE= ${DOC}/COPYING 
+
+STAMPABLE= ${SOURCE} ${EXAMPLES} ${OTHERSTAMPABLE}
 
 
 STAMP= stamp 
@@ -64,30 +68,17 @@ default:
 distclean:
 	alldirs . "rm -f *~"
 
-# Create the pydoc html files
-
-pydoc: ${HTMLDIR}/index.html
-
-${HTMLDIR}/index.html: ${HTMLDOCS} ${HTMLGUIDOCS} ${HTMLPLUGINDOCS} ${DOCDIR}/htmlindex.header ${DOCDIR}/htmlindex.footer
-	./make_doc_index
-
-${HTMLDIR}/%.html: %.py
-	pydoc_gen.py $ -d ${HTMLDIR} $<
-
-${HTMLDIR}/gui.%.html: gui/%.py
-	pydoc_gen.py $ -d ${HTMLDIR} gui.$*
-
-${HTMLDIR}/plugins.%.html: plugins/%.py
-	pydoc_gen.py $ -d ${HTMLDIR} plugins.$*
-
-
 # Create the manual
 manual:
-	make -C pyformex/manual
+	make -C ${MANDIR}
 
 # Create the C library
 lib:
-	make -C pyformex/lib
+	make -C ${LIBDIR}
+
+# Create the pydoc html files
+pydoc:
+	make -C ${DOCDIR}
 
 # Create the minutes of the user meeting
 minutes: 
@@ -100,20 +91,19 @@ website:
 
 # Set a new version
 
-version: pyformex/globaldata.py pyformex/manual/pyformex.tex setup.py pyformex/lib/configure.ac
+version: ${PYFORMEXDIR}/globaldata.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac
 
-pyformex/globaldata.py: RELEASE
+${PYFORMEXDIR}/globaldata.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 
-pyformex/manual/pyformex.tex: RELEASE
+${MANDIR}/pyformex.tex: RELEASE
 	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
 
-pyformex/lib/configure.ac: RELEASE
+${LIBDIR}/configure.ac: RELEASE
 	sed -i 's|^AC_INIT.*|AC_INIT(pyformex-lib,${RELEASE})|'  $@
 
 setup.py: RELEASE
 	sed -i "s|version='.*'|version='${RELEASE}'|" $@
-
 
 # Stamp files with the version/release date
 
@@ -122,6 +112,9 @@ stamp: Stamp.template RELEASE
 
 stampall: stamp
 	${STAMP} -tStamp.stamp -i ${STAMPABLE}
+
+printstampable:
+	@for f in ${STAMPABLE}; do echo $$f; done
 
 # Create the distribution
 dist: ${LATEST}

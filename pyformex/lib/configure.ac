@@ -73,7 +73,7 @@ AC_DEFUN([AX_C_SOURCE],
 
 
 AC_PREREQ(2.60)
-AC_INIT(pyformex-lib,0.7.1-a3)
+AC_INIT(pyformex-lib,0.7.1-a4)
 AC_PROG_CC
 
 AC_CHECK_HEADERS([GL/gl.h], [], [], [])
