@@ -28,8 +28,8 @@ RSYNC= rsync -av -e ssh
 
 .PHONY html: html/${TGT}.html
 
-pyformex.help: ../pyformex/pyformex
-	../pyformex/pyformex --help > $@
+pyformex.help: ../pyformex
+	../pyformex --help > $@
 
 ${TGT}.ps: ${SRC}
 	${MKHOWTO} --a4 --ps $<
@@ -53,3 +53,5 @@ pub: #pdf html
 	${RSYNC} ${MANDOCS} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
 	${RSYNC} ${MANIMAGES} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
 
+clean:
+	rm *~ *.mpx

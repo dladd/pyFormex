@@ -49,6 +49,10 @@ PKGVER= ${PKGNAME}-${RELEASE}.tar.gz
 PKGDIR= dist
 LATEST= pyformex-latest.tar.gz
 
+# outr local ftp server
+FTPLOCAL=bumps:/home/ftp/pub/pyformex
+# ftp server on pyformex website
+FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
 .PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version tag
 
@@ -133,9 +137,10 @@ ${PKGDIR}/${PKGVER}: version MANIFEST.in
 	rm -f MANIFEST
 	python setup.py sdist
 
-# Publish the distribution to our ftp server
+# Publish the distribution to our ftp server and berlios
 pub: 
-	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} bumps:/home/ftp/pub/pyformex
+	#rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
+	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPPYFORMEX}
 
 # Tag the release in the svn repository
 tag:
