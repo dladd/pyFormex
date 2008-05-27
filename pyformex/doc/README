@@ -43,8 +43,8 @@ PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
 PyOpenGL: http://pyopengl.sourceforge.net/
 
 
-Install prerequisites on Debian GNU/Linux
------------------------------------------
+Easy way to install prerequisites on Debian GNU/Linux
+-----------------------------------------------------
 On Debian (lenny) systems you can install all prerequisites and their 
 dependencies with the command:
   apt-get install python-qt4-gl python-numpy
@@ -52,12 +52,12 @@ dependencies with the command:
 The optimization scripts need scipy:
   apt-get install python-scipy
 
-If you want to compile the acceleration library (strongly recommended):
-  apt-get install libgl1-mesa-dev
+If you want to compile the acceleration library (which is recommended):
+  apt-get install gcc python-dev libgl1-mesa-dev
 
 
 Howto install pyFormex:
-----------------------
+-----------------------
 If a previous version of pyFormex was already installed on your system,
 you may want to remove the older version first before installing the new one.
 See further (Howto uninstall pyFormex)
@@ -74,6 +74,8 @@ Do (with root privileges)
 This will install pyFormex under /usr/local/. You can change the prefix
 to install in some other place.
 
+After installation you can remove the directory where you unpacked the tarball.
+
 The installation procedure installs everything into a single directory,
 and creates a symlink to the executable in /usr/local/bin.
 You can use the command pyformex --whereami to find out where pyFormex
@@ -84,7 +86,7 @@ install a menu and desktop starter for pyFormex.
 
 
 Howto uninstall pyFormex:
-----------------------
+-------------------------
 A pyFormex installation of version 0.5 or later can be removed with the command
   pyformex --remove
 and then answering 'yes' to the question.
@@ -121,7 +123,7 @@ removed in a next release.
 
 Because it is not obvious from the GUI:
 
-The canvas showing the Formex has dynamic zoom/pan/rotate functionality.
+The canvas has dynamic rotate/pan/zoom functionalities.
 Moving the mouse with one of the buttons depressed will activate this:
   LEFT mouse button : rotate :
 	* moving radially w.r.t the center of the screen rotates around an
@@ -137,6 +139,17 @@ Moving the mouse with one of the buttons depressed will activate this:
 	Moving right and up zooms in, left and down zooms out. Moving 
 	diagonally from upper left to lower right more or less keeps the
 	image size, while changing the perspective.
+
+During picking operations, the mouse button functionality is changed:
+  - LEFT mouse button picks a screen region and
+    - sets selection if no key is pressed
+    - adds to selection if SHIFT key was pressed
+    - removes from selection if CTRL key was pressed
+  - RIGHT mouse button cancels selection mode.
+
+Using the mouse buttons in combination with the ALT key will always activate
+the default mouse functions (rotate/pan/zoom). 
+
 
 To use pyFormex, you create a script that builds a structure layout and 
 geometry. Look at the examples to get the feeling of how it is working. 
