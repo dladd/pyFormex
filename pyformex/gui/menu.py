@@ -90,7 +90,7 @@ FileMenuData = [
     ('&Save and close project',fileMenu.closeProject),
     ('---',None),
     (_('&Create new script'),fileMenu.createScript),
-    (_('&Select existing script'),fileMenu.openScript),
+    (_('&Open existing script'),fileMenu.openScript),
     (_('&Play script'),draw.play),
     (_('&Edit script'),fileMenu.edit),
     (_('&Change workdir'),draw.askDirname),

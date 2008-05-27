@@ -23,7 +23,8 @@ class Project(dict):
     def __init__(self,filename,create=False):
         """Create a new project with the given filename.
 
-        If the filename exists, it is opened and the contents is read.
+        If the filename exists and create is False, the file is opened and
+        the contents is read into the project dictionary.
         If not, a new empty file and project are created.
         """
         dict.__init__(self)
