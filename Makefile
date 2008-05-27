@@ -129,10 +129,10 @@ ${PKGDIR}/${PKGVER}: version MANIFEST.in
 
 # Publish the distribution to our ftp server and berlios
 publocal: 
-	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
+	rsync -lt ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPLOCAL}
 
 pub:
-	rsync -l ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPPYFORMEX}
+	rsync -lt ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPPYFORMEX}
 
 # Tag the release in the svn repository
 tag:
