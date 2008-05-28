@@ -10,7 +10,7 @@
 ##
 """A collection of misc. utility functions."""
 
-import globaldata as GD
+import pyformex as GD
 import os,commands,re,sys
 from config import formatDict
 from numpy import unique1d,union1d,setdiff1d
@@ -19,14 +19,16 @@ import distutils.version
 Version = distutils.version.LooseVersion
 
 
-def congratulations(name,version,typ='module'):
+def congratulations(name,version,typ='module',fatal=False):
     """Report a detected module/program."""
-    if GD.options.debug:
-        if version:
-            GD.message("Congratulations! You have %s (%s)" % (name,version))
-        else:
+    if version and GD.options.debug:
+        GD.message("Congratulations! You have %s (%s)" % (name,version))
+    if not version:
+        if GD.options.debug or fatal:
             GD.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
-
+        if fatal:
+            GD.message("Sorry, I'm out of here....")
+            sys.exit()
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
@@ -58,17 +60,22 @@ def checkModule(name):
     The (name,version) pair is also inserted into the GD.version dict.
     """
     version = ''
+    fatal = False
     try:
         if name == 'numpy':
+            fatal = True
             import numpy
             version =  numpy.__version__
         elif name == 'pyopengl':
+            fatal = GD.options.gui
             import OpenGL
             version =  OpenGL.__version__
         elif name == 'pyqt4':
+            fatal = GD.options.gui
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
         elif name == 'pyqt4gl':
+            fatal = GD.options.gui
             import PyQt4.QtOpenGL
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
@@ -80,7 +87,7 @@ def checkModule(name):
             version = gl2ps.GL2PS_VERSION
     except:
         pass
-    congratulations(name,version,'module')
+    congratulations(name,version,'module',fatal)
     GD.version[name] = version
     return version
 
@@ -168,6 +175,18 @@ def hasExternal(name):
         return checkExternal(name)
 
 
+def printDetected():
+    print "%s (%s)\n" % (GD.Version,GD.__revision__)
+    print "Detected Python Modules:"
+    for k,v in GD.version.items():
+        if v:
+            print "%s (%s)" % ( k,v)
+    print "\nDetected External Programs:"
+    for k,v in GD.external.items():
+        if v:
+            print "%s (%s)" % ( k,v)
+
+###################### image and file formats ###################
 def all_image_extensions():
     """Return a list with all known image extensions."""
     imgfmt = []

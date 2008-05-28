@@ -11,7 +11,7 @@
 ##
 """Menu with pyFormex scripts."""
 
-import globaldata as GD
+import pyformex as GD
 
 from PyQt4 import QtCore, QtGui
 

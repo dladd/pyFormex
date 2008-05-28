@@ -18,7 +18,7 @@ script with the 'postabq' command. Use it as follows:
 Then execute the created script from inside pyFormex.
 """
 
-import globaldata as GD
+import pyformex as GD
 from numpy import *
 from gui.draw import export
 import connectivity

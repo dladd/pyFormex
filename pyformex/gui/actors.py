@@ -10,7 +10,7 @@
 ##
 """OpenGL actors for populating the 3D scene."""
 
-import globaldata as GD
+import pyformex as GD
 
 from OpenGL import GL,GLU
 

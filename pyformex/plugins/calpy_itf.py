@@ -19,7 +19,7 @@ Importing this module will automatically check the availabilty of calpy
 and set the sys.path accordingly.
 """
 
-import globaldata as GD
+import pyformex as GD
 
 import utils
 import sys,os

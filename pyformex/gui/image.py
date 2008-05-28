@@ -13,7 +13,7 @@
 
 __all__ = [ 'saveImage', 'saveNext' ]
 
-import globaldata as GD
+import pyformex as GD
 
 from OpenGL import GL
 from PyQt4 import QtCore

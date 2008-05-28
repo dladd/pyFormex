@@ -10,7 +10,7 @@
 ##
 """Functions for drawing and for executing pyFormex scripts."""
 
-import globaldata as GD
+import pyformex as GD
 import threading,os,sys,types,copy,commands,time
 
 from PyQt4 import QtCore, QtGui  # needed for events, signals

@@ -11,7 +11,7 @@
 #
 """Python equivalents of the functions in lib.misc"""
 
-import globaldata as GD
+import pyformex as GD
 from numpy import *
 
 # Default is to try using the compiled library

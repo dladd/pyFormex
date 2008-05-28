@@ -11,7 +11,7 @@
 ##
 """Display help"""
 
-import globaldata as GD
+import pyformex as GD
 
 import os,sys
 import draw
@@ -87,7 +87,7 @@ def opengl():
 def detected():
     """Display the detected software components."""
     utils.checkExternal()
-    catchAndDisplay('draw.printdetected()')
+    catchAndDisplay('draw.printDetected()')
 
 def about():
     """Display short information about pyFormex."""

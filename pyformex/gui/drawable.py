@@ -10,7 +10,7 @@
 ##
 """OpenGL drawing functions and base class for all drawable objects."""
 
-import globaldata as GD
+import pyformex as GD
 
 from OpenGL import GL,GLU
 

@@ -15,7 +15,7 @@
 STL plugin menu for pyFormex.
 """
 
-import globaldata as GD
+import pyformex as GD
 from gui import actors,colors,decors,widgets
 from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *

@@ -10,7 +10,7 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-import globaldata as GD
+import pyformex as GD
 from gui import decors,colors
 from gui.camera import inverse
 from gui.draw import *

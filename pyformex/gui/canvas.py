@@ -10,7 +10,7 @@
 ##
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 
-import globaldata as GD
+import pyformex as GD
 
 from numpy import *
 from OpenGL import GL,GLU

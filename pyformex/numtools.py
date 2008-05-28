@@ -14,7 +14,7 @@
 This is a collection of definitions that depend on the numpy module.
 """
 
-import globaldata as GD
+import pyformex as GD
 from numpy import *
 
 ################# Collection of Actors or Actor Elements ###############

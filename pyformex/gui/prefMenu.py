@@ -10,7 +10,7 @@
 ##
 """Functions for the Pref menu."""
 
-import globaldata as GD
+import pyformex as GD
 import os
 
 from gettext import gettext as _

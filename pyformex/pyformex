@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.5
+#!/usr/bin/env python
 # $Id$
 ##
 ## This file is part of pyFormex 0.5 Release Mon Jul 30 13:38:48 2007
@@ -35,7 +35,7 @@ pyformexdir = pyformex.__path__[0]
 sys.path[:0] = [ pyformexdir ]
 
 
-import globaldata as GD
+import pyformex as GD
 
 from config import Config
 from optparse import OptionParser,make_option
@@ -110,7 +110,7 @@ def main(argv=None):
     # Process options
     parser = OptionParser(
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]",
-        version = GD.Version,
+        version = pyformex.Version,
         option_list=[
         make_option("--gui", help="start the GUI (default if no scriptfile argument is given)",
                     action="store_true", dest="gui", default=None),
@@ -189,10 +189,10 @@ You will need proper permissions to actually delete the files.
         sys.exit()
 
     if GD.options.detect:
-        import utils,script
+        import utils
         print "Detecting all installed helper software"
         utils.checkExternal()
-        script.printdetected()
+        utils.printDetected()
         sys.exit()
 
     GD.debug("Options: %s" % GD.options)
@@ -267,5 +267,13 @@ You will need proper permissions to actually delete the files.
 
 if __name__ == "__main__":
     sys.exit(main())
+
+# The following lines make Emacs recognize this as Python source,
+# even though the filename has no .py extension
+
+# Local Variables #
+# mode:Python #
+# End #
+
 
 #### End

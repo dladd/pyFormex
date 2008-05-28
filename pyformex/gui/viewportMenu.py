@@ -10,7 +10,7 @@
 ##
 """Viewport Menu."""
 
-import globaldata as GD
+import pyformex as GD
 import canvas
 import widgets
 import draw

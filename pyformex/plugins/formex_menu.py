@@ -15,7 +15,7 @@ This is a pyFormex plugin. It is not intended to be executed as a script,
 but to be loaded as a plugin.
 """
 
-import globaldata as GD
+import pyformex as GD
 from gui import actors
 from gui.draw import *
 from formex import *

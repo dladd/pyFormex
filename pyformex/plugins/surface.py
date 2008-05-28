@@ -15,7 +15,7 @@ This is compatible with the pyFormex data model.
 """
 
 import os
-import globaldata as GD
+import pyformex as GD
 from plugins import tetgen,connectivity
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *

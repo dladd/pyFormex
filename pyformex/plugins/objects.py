@@ -15,7 +15,7 @@
 This is a support module for other pyFormex plugins.
 """
 
-import globaldata as GD
+import pyformex as GD
 
 from coords import bbox
 from formex import Formex

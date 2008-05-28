@@ -10,7 +10,7 @@
 ##
 """Menus for the pyFormex GUI."""
 
-import globaldata as GD
+import pyformex as GD
 
 from gettext import gettext as _
 import fileMenu
@@ -123,7 +123,7 @@ ActionMenuData = [
     (_('&PrintGlobalNames'),script.printglobalnames),
     (_('&PrintGlobals'),script.printglobals),
     (_('&PrintConfig'),script.printconfig),
-    (_('&Print Detected Software'),script.printdetected),
+    (_('&Print Detected Software'),script.printDetected),
     (_('&PrintBbox'),draw.printbbox),
     (_('&PrintViewportSettings'),draw.printviewportsettings),
     ]

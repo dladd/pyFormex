@@ -11,7 +11,7 @@
 ##
 """Functions from the Camera menu."""
 
-import globaldata as GD
+import pyformex as GD
 
          
 def zoomIn():

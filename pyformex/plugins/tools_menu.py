@@ -15,7 +15,7 @@
 Graphic Tools plugin menu for pyFormex.
 """
 
-import globaldata as GD
+import pyformex as GD
 
 from gui import actors,colors
 from formex import *

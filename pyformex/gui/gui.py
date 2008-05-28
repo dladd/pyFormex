@@ -10,7 +10,7 @@
 ##
 """Graphical User Interface for pyFormex."""
 
-import globaldata as GD
+import pyformex as GD
 import sys,utils
 if not ( utils.hasModule('numpy') and
          utils.hasModule('pyopengl') and

@@ -10,7 +10,7 @@
 ##
 """Toolbars for pyformex GUI."""
 
-import globaldata as GD
+import pyformex as GD
 import os
 from PyQt4 import QtCore, QtGui
 

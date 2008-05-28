@@ -17,7 +17,7 @@ implements a dynamic array of multiple canvases.
 The basic OpenGL drawing functionality is implemented in the canvas module.
 """
 
-import globaldata as GD
+import pyformex as GD
 
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from OpenGL import GL

@@ -11,11 +11,12 @@
 ##
 """Functions for executing pyFormex scripts."""
 
-import globaldata as GD
+import pyformex as GD
 import threading,os,commands,copy,re,time
 
 import formex
 import utils
+from utils import printDetected
     
 
 ######################### Exceptions #########################################
@@ -45,7 +46,7 @@ def Globals():
 
     This basically contains the globals defined in draw.py, colors.py,
     and formex.py, as well as the globals from numpy.
-    It also contains the definitions put into the globaldata.PF, by
+    It also contains the definitions put into the pyformex.PF, by
     preference using the export() function.
     During execution of the script, the global variable __name__ will be
     set to either 'draw' or 'script' depending on whether the script
@@ -356,16 +357,6 @@ def printconfig():
     print "User Configuration: " + str(GD.cfg)
         
 
-def printdetected():
-    print "%s (%s)\n" % (GD.Version,GD.__revision__)
-    print "Detected Python Modules:"
-    for k,v in GD.version.items():
-        if v:
-            print "%s (%s)" % ( k,v)
-    print "\nDetected External Programs:"
-    for k,v in GD.external.items():
-        if v:
-            print "%s (%s)" % ( k,v)
 
 ### Utilities
 

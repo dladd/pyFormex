@@ -11,7 +11,7 @@
 """Functions from the File menu."""
 
 import os
-import globaldata as GD
+import pyformex as GD
 import widgets
 import draw
 import utils

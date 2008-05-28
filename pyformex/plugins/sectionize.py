@@ -14,7 +14,7 @@
 Create, measure and approximate cross section of a Formex.
 """
 
-import globaldata as GD
+import pyformex as GD
 import simple
 from formex import *
 from gui.draw import *

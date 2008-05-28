@@ -13,7 +13,7 @@
 
 from numpy import *
 
-import globaldata as GD
+import pyformex as GD
 
 try:
     from lib.misc import fuse

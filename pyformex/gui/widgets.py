@@ -12,7 +12,7 @@
 
 import os,types
 from PyQt4 import QtCore, QtGui
-import globaldata as GD
+import pyformex as GD
 import colors
 import utils
 import imageViewer

@@ -10,7 +10,7 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-import globaldata as GD
+import pyformex as GD
 from plugins.postproc import *
 from plugins.fe_post import FeResult
 from plugins.objects import Objects
