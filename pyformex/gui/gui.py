@@ -11,6 +11,8 @@
 """Graphical User Interface for pyFormex."""
 
 import pyformex as GD
+from pyformex.gui import *
+
 import sys,utils
 if not ( utils.hasModule('numpy') and
          utils.hasModule('pyopengl') and
@@ -49,6 +51,8 @@ def Pos(widget):
     p = widget.pos()
     return p.x(),p.y()
 
+def printpos(w,t=None):
+    print "%s %s x %s" % (t,w.x(),w.y())
 def printsize(w,t=None):
     print "%s %s x %s" % (t,w.width(),w.height())
 
@@ -80,19 +84,6 @@ class Board(QtGui.QTextEdit):
             self.append(s)
             self.cursor.movePosition(QtGui.QTextCursor.End)
             self.setTextCursor(self.cursor)
-
-
-## # WHERE SHOULD THIS GO?
-## def initViewActions(parent,viewlist):
-##     """Create the initial set of view actions."""
-##     global views
-##     views = []
-##     for name in viewlist:
-##         icon = name+"view"+GD.cfg['gui/icontype']
-##         Name = string.capitalize(name)
-##         tooltip = Name+" View"
-##         menutext = "&"+Name
-##         createViewAction(parent,name,icon,tooltip,menutext)
 
 
 #####################################
@@ -274,12 +265,12 @@ class GUI(QtGui.QMainWindow):
             toolbar=self.viewbar,
             icons = viewicons
             )
-       
-        # Display the main menubar
-        #self.menu.show()
+
+        # Restore previous pos/size
         self.resize(*size)
         self.move(*pos)
         self.board.resize(*bdsize)
+        
         self.setcurfile()
         if GD.options.redirect:
             sys.stderr = self.board
@@ -326,6 +317,7 @@ class GUI(QtGui.QMainWindow):
         self.central.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
         self.adjustSize()
+        print "RESIZED",Pos(self)
     
     def showEditor(self):
         """Start the editor."""
@@ -394,7 +386,7 @@ class GUI(QtGui.QMainWindow):
         GD.app.processEvents()
 
 
-    def keyPressEvent (self,e):
+    def keyPressEvent(self,e):
         """Top level key press event handler.
 
         Events get here if they are not handled by a lower level handler.
@@ -405,11 +397,95 @@ class GUI(QtGui.QMainWindow):
             self.emit(QtCore.SIGNAL("Save"),())
         e.ignore()
 
+##     def writeSettings(self):
+##         settings = QtCore.QSettings("pyFormex", "pyFormex")
+##         settings.setValue("pos", 30)
+##         settings.sync()
+
+##     def readSettings(self):
+##         settings = QtCore.QSettings("pyFormex", "pyFormex")
+##         pos = settings.value(QtCore.QString("pos"),QtCore.QPoint(200, 200)).toPoint()
+##         size = settings.value("size", QtCore.QSize(400, 400)).toSize()
+##         self.resize(size)
+##         self.move(pos)
+
+    def XPos(self):
+        """Get the main window position from the xwininfo command.
+
+        The (Py)Qt4 position does not get updated when
+        changing the window size from the left.
+        This substitute function will find the correct position from
+        the xwininfo command output.
+        """
+        res = xwininfo(self.winId())
+        ax,ay,rx,ry = [ int(res[key]) for key in [
+            'Absolute upper-left X','Absolute upper-left Y',
+            'Relative upper-left X','Relative upper-left Y',
+            ]]
+        return ax-rx,ay-ry
+
+
+    def writeSettings(self):
+        """Store th GUI settings"""
+        # FIX QT4 BUG
+        # Make sure QT4 has position right
+        self.move(*self.XPos())
+
+        # store the history and main window size/pos
+        GD.cfg['history'] = GD.gui.history.files
+
+        GD.cfg.update({'size':Size(GD.gui),
+                       'pos':Pos(GD.gui),
+                       'bdsize':Size(GD.gui.board),
+                       },name='gui')
+
+
+    def cleanup(self):
+        """Cleanup the GUI (restore default state)."""
+        draw.drawrelease()
+        GD.canvas.cancel_selection()
+        self.setBusy(False)
+
+
+    def closeEvent(self,event):
+        """Close Main Window Event Handler"""
+##         if draw.ack("Do you really want to quit?"):
+##             print "YES:EXIT"
+        self.cleanup()
+        self.writeSettings()
+        event.accept()
+##         else:
+##             print "NO:STAY"
+##             event.ignore()
+
+
+
+def xwininfo(windowid):
+    """Returns the X window info parsed as a dict.
+
+    windowid is the unique integer window identifier
+    """
+    sta,out = utils.runCommand('xwininfo -id %d' % windowid,quiet=True)
+    res = {}
+    for line in out.split('\n'):
+        s = line.split(':')
+        if len(s) < 2:
+            s = s[0].strip().split(' ')
+        if len(s) < 2:
+            continue
+        elif len(s) > 2:
+            if s[0] == 'xwininfo':
+                s = s [-2:]
+        if s[0][0] == '-':
+            s[0] = s[0][1:]
+        res[s[0].strip()] = s[1].strip()
+    return res
+
 
 def windowExists(windowname):
     """Check if a GUI window with the given name exists.
 
-    On X-Window systems, we can use the xwininfo cammand to find out whether
+    On X-Window systems, we can use the xwininfo command to find out whether
     a window with the specified name exists.
     """
     return not os.system('xwininfo -name "%s" > /dev/null 2>&1' % windowname)
@@ -446,17 +522,7 @@ def runApp(args):
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("lastWindowClosed()"),GD.app,QtCore.SLOT("quit()"))
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
         
-     # Set some globals
-    GD.image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
-    GD.image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
-    if GD.cfg.get('imagesfromeps',False):
-        GD.image_formats_qt = []
-    if GD.options.debug:
-        print "Qt image types for saving: ",GD.image_formats_qt
-        print "Qt image types for input: ",GD.image_formats_qtr
-        print "gl2ps image types:",GD.image_formats_gl2ps
-        print "image types converted from EPS:",GD.image_formats_fromeps
-        
+       
     # Load the splash image
     splash = None
     if os.path.exists(GD.cfg['gui/splash']):
@@ -628,26 +694,10 @@ See Help->License or the file COPYING for details.
         GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
 
-    
+    GD.debug("Start main loop")
     GD.app.exec_()
+    GD.debug("Exit main loop")
 
-    # Cleanup
-    draw.drawrelease()
-    GD.gui.setBusy(False)
-
-    # store the history and main window size/pos
-    GD.cfg['history'] = GD.gui.history.files
-
-    # Sometimes, a negative value is stored, making restart partially obscured
-    x,y = Pos(GD.gui)
-    if x < 0:
-        x = 0
-    if y < 0:
-        y = 0
-    GD.cfg.update({'size':Size(GD.gui),
-                   'pos':(x,y),
-                   'bdsize':Size(GD.gui.board),
-                   },name='gui')
     return 0
 
 #### End

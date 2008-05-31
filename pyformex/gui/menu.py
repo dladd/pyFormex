@@ -10,7 +10,8 @@
 ##
 """Menus for the pyFormex GUI."""
 
-import pyformex as GD
+import pyformex
+from pyformex.gui import *
 
 from gettext import gettext as _
 import fileMenu
@@ -29,34 +30,34 @@ save = NotImplemented
 saveAs = NotImplemented
 
 def editor():
-    if GD.gui.editor:
+    if pyformex.gui.editor:
         print "Close editor"
-        GD.gui.closeEditor()
+        pyformex.gui.closeEditor()
     else:
         print "Open editor"
-        GD.gui.showEditor()
+        pyformex.gui.showEditor()
 
  
 def resetGUI():
-    GD.gui.setBusy(False)
-    GD.gui.actions['Play'].setEnabled(True)
-    GD.gui.actions['Step'].setEnabled(True)
-    GD.gui.actions['Continue'].setEnabled(False)
-    GD.gui.actions['Stop'].setEnabled(False)
+    pyformex.gui.setBusy(False)
+    pyformex.gui.actions['Play'].setEnabled(True)
+    pyformex.gui.actions['Step'].setEnabled(True)
+    pyformex.gui.actions['Continue'].setEnabled(False)
+    pyformex.gui.actions['Stop'].setEnabled(False)
 
   
 
 def addViewport():
     """Add a new viewport."""
-    n = len(GD.gui.viewports.all)
+    n = len(pyformex.gui.viewports.all)
     if n < 4:
-        GD.gui.viewports.addView(n/2,n%2)
+        pyformex.gui.viewports.addView(n/2,n%2)
 
 def removeViewport():
     """Remove a new viewport."""
-    n = len(GD.gui.viewports.all)
+    n = len(pyformex.gui.viewports.all)
     if n > 1:
-        GD.gui.viewports.removeView()
+        pyformex.gui.viewports.removeView()
 
 
 def viewportSettings():
@@ -66,17 +67,11 @@ def viewportSettings():
 
 def setOptions():
     options = ['test','debug','uselib','safelib','fastencode','fastfuse']
-    items = [ (o,getattr(GD.options,o)) for o in options ]
+    items = [ (o,getattr(pyformex.options,o)) for o in options ]
     res = draw.askItems(items)
     if res:
         for o in options:
-            setattr(GD.options,o,res[o])
-
-
-def my_exit():
-    GD.canvas.cancel_selection()
-    GD.app.processEvents()
-    GD.app.exit()
+            setattr(pyformex.options,o,res[o])
             
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
@@ -110,9 +105,29 @@ FileMenuData = [
         ]),
     (_('&Options'),setOptions),
     (_('---3'),None),
-    #        (_('E&xit'),'GD.app.exit'),
-    (_('E&xit'),my_exit),
+    (_('E&xit'),draw.closeGui),
 ]
+
+def printwindow():
+    pyformex.app.syncX()
+    r = pyformex.gui.frameGeometry()
+    print "Qt4 geom(w,h,x,y): %s,%s,%s,%s" % (r.width(),r.height(),r.x(),r.y())
+    print "According to xwininfo, (x,y) is %s,%s" % pyformex.gui.XPos()
+
+
+_geometry=None
+
+def saveGeometry():
+    global _geometry
+    _geometry = pyformex.gui.saveGeometry()
+
+def restoreGeometry():
+    pyformex.gui.restoreGeometry(_geometry)
+
+
+def moveCorrect():
+    pyformex.gui.move(*pyformex.gui.XPos())
+
 
 ActionMenuData = [
     (_('&Step'),draw.step),
@@ -125,7 +140,11 @@ ActionMenuData = [
     (_('&PrintConfig'),script.printconfig),
     (_('&Print Detected Software'),script.printDetected),
     (_('&PrintBbox'),draw.printbbox),
-    (_('&PrintViewportSettings'),draw.printviewportsettings),
+    (_('&Print Viewport Settings'),draw.printviewportsettings),
+    (_('&Print Window Geometry'),printwindow),
+    (_('&Correct the Qt4 Geometry'),moveCorrect),
+    (_('&Save Geometry'),saveGeometry),
+    (_('&Restore Geometry'),restoreGeometry),
     ]
 
 CameraMenuData = [
@@ -165,11 +184,11 @@ MenuData = [
 def createMenuData():
     """Returns the full data menu."""
     # Insert configurable menus
-    if GD.cfg.get('gui/prefsmenu','True'):
+    if pyformex.cfg.get('gui/prefsmenu','True'):
         MenuData[1:1] = prefMenu.MenuData
-    if GD.cfg.get('gui/viewportmenu','True'):
+    if pyformex.cfg.get('gui/viewportmenu','True'):
         MenuData[2:2] = viewportMenu.MenuData
-    if GD.cfg.get('gui/cameramenu','True'):
+    if pyformex.cfg.get('gui/cameramenu','True'):
         MenuData[3:3] = [(_('&Camera'),CameraMenuData)]
     
 # End

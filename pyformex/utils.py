@@ -10,24 +10,27 @@
 ##
 """A collection of misc. utility functions."""
 
-import pyformex as GD
+import pyformex
+
 import os,commands,re,sys
 from config import formatDict
 from numpy import unique1d,union1d,setdiff1d
+from distutils.version import LooseVersion as SaneVersion
 
-import distutils.version
-Version = distutils.version.LooseVersion
 
+# versions of detected modules/external commands
+the_version = {'pyformex':pyformex._version_}
+the_external = {}
 
 def congratulations(name,version,typ='module',fatal=False):
     """Report a detected module/program."""
-    if version and GD.options.debug:
-        GD.message("Congratulations! You have %s (%s)" % (name,version))
+    if version and pyformex.options.debug:
+        pyformex.message("Congratulations! You have %s (%s)" % (name,version))
     if not version:
-        if GD.options.debug or fatal:
-            GD.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
+        if pyformex.options.debug or fatal:
+            pyformex.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
         if fatal:
-            GD.message("Sorry, I'm out of here....")
+            pyformex.message("Sorry, I'm out of here....")
             sys.exit()
 
 def checkVersion(name,version,external=False):
@@ -42,12 +45,12 @@ def checkVersion(name,version,external=False):
     This should normally understand version numbers in the format 2.10.1
     """
     if external:
-        ver = GD.external.get(name,'0')
+        ver = the_external.get(name,'0')
     else:
-        ver = GD.version.get(name,'0')
-    if Version(ver) > Version(version):
+        ver = the_version.get(name,'0')
+    if SaneVersion(ver) > SaneVersion(version):
         return 1
-    elif Version(ver) == Version(version):
+    elif SaneVersion(ver) == SaneVersion(version):
         return 0
     else:
         return -1
@@ -57,7 +60,7 @@ def checkModule(name):
     """Check if the named Python module is available, and record its version.
 
     The version string is returned, empty if the module could not be loaded.
-    The (name,version) pair is also inserted into the GD.version dict.
+    The (name,version) pair is also inserted into the the_version dict.
     """
     version = ''
     fatal = False
@@ -67,15 +70,15 @@ def checkModule(name):
             import numpy
             version =  numpy.__version__
         elif name == 'pyopengl':
-            fatal = GD.options.gui
+            fatal = pyformex.options.gui
             import OpenGL
             version =  OpenGL.__version__
         elif name == 'pyqt4':
-            fatal = GD.options.gui
+            fatal = pyformex.options.gui
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
         elif name == 'pyqt4gl':
-            fatal = GD.options.gui
+            fatal = pyformex.options.gui
             import PyQt4.QtOpenGL
             import PyQt4.QtCore
             version = PyQt4.QtCore.QT_VERSION_STR
@@ -88,7 +91,7 @@ def checkModule(name):
     except:
         pass
     congratulations(name,version,'module',fatal)
-    GD.version[name] = version
+    the_version[name] = version
     return version
 
     
@@ -99,11 +102,11 @@ def hasModule(name,check=False):
     or an empty string if it is not.
 
     By default, the module is only checked on the first call. 
-    The result is remembered in the GD.version dict.
+    The result is remembered in the the_version dict.
     The optional argument check==True forces a new detection.
     """
-    if GD.version.has_key(name) and not check:
-        return GD.version[name]
+    if the_version.has_key(name) and not check:
+        return the_version[name]
     else:
         return checkModule(name)
 
@@ -126,7 +129,7 @@ def checkExternal(name=None,command=None,answer=None):
     command is the command as it will be executed to check its operation,
     answer is a regular expression to match positive answers from the command.
     answer should contain at least one group. In case of a match, the
-    contents of the match will be stored in the GD.external dict
+    contents of the match will be stored in the the_external dict
     with name as the key. If the result does not match the specified answer,
     an empty value is inserted.
 
@@ -156,7 +159,7 @@ def checkExternal(name=None,command=None,answer=None):
     else:
         version = ''
     congratulations(name,version,'program')
-    GD.external[name] = version
+    the_external[name] = version
     return version
 
 
@@ -167,26 +170,39 @@ def hasExternal(name):
     or an empty string if it is not.
 
     The external command is only checked on the first call.
-    The result is remembered in the GD.external dict.
+    The result is remembered in the the_external dict.
     """
-    if GD.external.has_key(name):
-        return GD.external[name]
+    if the_external.has_key(name):
+        return the_external[name]
     else:
         return checkExternal(name)
 
 
 def printDetected():
-    print "%s (%s)\n" % (GD.Version,GD.__revision__)
+    print "%s (%s)\n" % (pyformex.Version,pyformex._revision_)
     print "Detected Python Modules:"
-    for k,v in GD.version.items():
+    for k,v in the_version.items():
         if v:
             print "%s (%s)" % ( k,v)
     print "\nDetected External Programs:"
-    for k,v in GD.external.items():
+    for k,v in the_external.items():
         if v:
             print "%s (%s)" % ( k,v)
 
+
+def removeTree(path,top=True):
+    """Remove all files below path. If top==True, also path is removed."""
+    for root, dirs, files in os.walk(path, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+    if top:
+        os.rmdir(path)
+
+
 ###################### image and file formats ###################
+
 def all_image_extensions():
     """Return a list with all known image extensions."""
     imgfmt = []
@@ -222,10 +238,10 @@ def findIcon(name):
 
     If no icon file is found, returns the question mark icon.
     """
-    fname = os.path.join(GD.cfg['icondir'],name) + GD.cfg['gui/icontype']
+    fname = os.path.join(pyformex.cfg['icondir'],name) + pyformex.cfg['gui/icontype']
     if os.path.exists(fname):
         return fname
-    return os.path.join(GD.cfg['icondir'],'question') + GD.cfg['gui/icontype']
+    return os.path.join(pyformex.cfg['icondir'],'question') + pyformex.cfg['gui/icontype']
                                                                
 
 def projectName(fn):
@@ -258,16 +274,17 @@ def countLines(fn):
         return 0
 
 
-def runCommand(cmd,RaiseError=True):
+def runCommand(cmd,RaiseError=True,quiet=False):
     """Run a command and raise error if exited with error."""
-    GD.message("Running command: %s" % cmd)
-    if GD.gui:
-        GD.gui.setBusy(True)
+    if not quiet:
+        pyformex.message("Running command: %s" % cmd)
+#    if GD.gui:
+#        GD.gui.setBusy(True)
     sta,out = commands.getstatusoutput(cmd)
-    if GD.gui:
-        GD.gui.setBusy(False)
+#    if GD.gui:
+#        GD.gui.setBusy(False)
     if sta != 0:
-        GD.message(out)
+        pyformex.message(out)
         if RaiseError:
             raise RuntimeError, "Error while executing command:\n  %s" % cmd
     return sta,out
@@ -277,7 +294,7 @@ def spawn(cmd):
     """Spawn a child process."""
     cmd = cmd.split()
     pid = os.spawnvp(os.P_NOWAIT,cmd[0],cmd)
-    GD.debug("Spawned child process %s for command '%s'" % (pid,cmd))
+    pyformex.debug("Spawned child process %s for command '%s'" % (pid,cmd))
     return pid
 
 
@@ -429,6 +446,7 @@ def stuur(x,xval,yval,exp=2.5):
         return ymax
 
 
+
 def interrogate(item):
     """Print useful information about item."""
     if hasattr(item, '__name__'):
@@ -452,9 +470,9 @@ def interrogate(item):
 
 def deprecated(replacement):
     def decorator(func):
-        def wrapper(*__args,**__kw):
+        def wrapper(*_args,**_kargs):
             print "Function %s is deprecated: use %s instead" % (func.func_name,replacement.func_name)
-            return replacement(*__args,**__kw)
+            return replacement(*_args,**_kargs)
         return wrapper
     decorator.__doc__ = replacement.__doc__
     return decorator

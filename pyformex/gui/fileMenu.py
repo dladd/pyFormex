@@ -137,14 +137,14 @@ def saveImage(multi=False):
     opt = dia.getResult()
     if opt:
         GD.cfg['workdir'] = os.path.dirname(opt.fn)
-        image.saveImage(filename=opt.fn,
-                        window=opt.wi,
-                        multi=opt.mu,
-                        hotkey=opt.hk,
-                        autosave=opt.as,
-                        border=opt.bo,
-                        rootcrop=opt.rc
-                        )
+        image.save(filename=opt.fn,
+                   window=opt.wi,
+                   multi=opt.mu,
+                   hotkey=opt.hk,
+                   autosave=opt.as,
+                   border=opt.bo,
+                   rootcrop=opt.rc
+                   )
 def saveIcon():
     """Save an image as icon.
 
@@ -164,7 +164,7 @@ def startMultiSave():
 
 def stopMultiSave():
     """Stop multisave mode."""
-    image.saveImage()
+    image.save()
 
 
 # End

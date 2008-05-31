@@ -135,7 +135,7 @@ class FlatDB(dict):
     Overriding is done by changing the instance attibute.
     """
 
-    def __init__(self, req_keys, comment = '#', key_sep = '=',
+    def __init__(self, req_keys=[], comment = '#', key_sep = '=',
                  beginrec = 'beginrec', endrec = 'endrec',
                  strip_blanks = True, strip_quotes = True,
                  check_func = None,

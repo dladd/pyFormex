@@ -11,6 +11,7 @@
 """Functions for drawing and for executing pyFormex scripts."""
 
 import pyformex as GD
+
 import threading,os,sys,types,copy,commands,time
 
 from PyQt4 import QtCore, QtGui  # needed for events, signals
@@ -35,6 +36,15 @@ from formex import Formex
         
 #################### Interacting with the user ###############################
 
+def startGui():
+    """Start the gui"""
+    print "Currently, the GUI can only be started by the pyformex command"
+
+
+def closeGui():
+    print "Closing the GUI: currently, this will also terminate pyformex."
+    GD.gui.close()
+    
 
 def textView(text):
     """Display a text file and wait for user response."""

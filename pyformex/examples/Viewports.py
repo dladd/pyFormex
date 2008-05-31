@@ -18,16 +18,17 @@ F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
 
 layout(1)
 FA = draw(F,view='front')
-sleep(nsl)
+#sleep(nsl)
 
 layout(3)
 draw(F,color='green')
-sleep(nsl)
-
+#sleep(nsl)
+exit(0)
 
 viewport(1)
 linkViewport(1,0)
-sleep(nsl)
+#sleep(nsl)
+layout(1)
 
 layout(4,2)
 viewport(0)

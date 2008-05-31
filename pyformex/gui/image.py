@@ -11,12 +11,12 @@
 ##
 """Functions for saving renderings to image files."""
 
-__all__ = [ 'saveImage', 'saveNext' ]
+__all__ = [ 'save', 'saveNext', 'saveIcon' ]
 
 import pyformex as GD
 
 from OpenGL import GL
-from PyQt4 import QtCore
+from PyQt4 import QtCore,QtGui
 import utils
 import os
 
@@ -24,19 +24,36 @@ import os
 utils.hasExternal('ImageMagick')
 
 
+# The image formats recognized by pyFormex
+image_formats_qt = []
+image_formats_qtr = []
+image_formats_gl2ps = []
+image_formats_fromeps = []
+
 # global parameters for multisave mode
 multisave = None 
 
-
+# Set some globals
+print "LOADING IMAGE FORMATS"
+image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
+image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
+if GD.cfg.get('imagesfromeps',False):
+    GD.image_formats_qt = []
+if GD.options.debug:
+    print "Qt image types for saving: ",image_formats_qt
+    print "Qt image types for input: ",image_formats_qtr
+    print "gl2ps image types:",image_formats_gl2ps
+    print "image types converted from EPS:",image_formats_fromeps
+ 
 def imageFormats():
     """Return a list of the valid image formats.
 
     image formats are lower case strings as 'png', 'gif', 'ppm', 'eps', etc.
     The available image formats are derived from the installed software.
     """
-    return GD.image_formats_qt + \
-           GD.image_formats_gl2ps + \
-           GD.image_formats_fromeps
+    return image_formats_qt + \
+           image_formats_gl2ps + \
+           image_formats_fromeps
 
 
 def checkImageFormat(fmt,verbose=False):
@@ -75,7 +92,7 @@ def imageFormatFromExt(ext):
 
 ##### LOW LEVEL FUNCTIONS ##########
 
-def save(canvas,fn,fmt='png',options=None):
+def save_canvas(canvas,fn,fmt='png',options=None):
     """Save the rendering on canvas as an image file.
 
     canvas specifies the qtcanvas rendering window.
@@ -92,10 +109,8 @@ def save(canvas,fn,fmt='png',options=None):
     h = int(size.height())
     GD.debug("Saving image with current size %sx%s" % (w,h))
     
-    if fmt in GD.image_formats_qt:
-        # format can be saved by Qt
-        # depending on version, this night include
-        # 'bmp', 'jpeg', 'jpg', 'png', 'ppm', 'xbm', 'xpm' 
+    if fmt in image_formats_qt:
+        GD.debug("Image format can be saved by Qt")
         GL.glFlush()
         qim = canvas.grabFrameBuffer()
         if qim.save(fn,fmt):
@@ -103,15 +118,15 @@ def save(canvas,fn,fmt='png',options=None):
         else:
             sta = 1
 
-    elif fmt in GD.image_formats_gl2ps:
-        # format can be saved by savePS
-        sta = savePS(canvas,fn,fmt)
+    elif fmt in image_formats_gl2ps:
+        GD.debug("Image format can be saved by gl2ps")
+        sta = save_PS(canvas,fn,fmt)
 
-    elif fmt in GD.image_formats_fromeps:
-        # format can be converted from eps
+    elif fmt in image_formats_fromeps:
+        GD.debug("Image format can be converted from eps")
         fneps = os.path.splitext(fn)[0] + '.eps'
         delete = not os.path.exists(fneps)
-        savePS(canvas,fneps,'eps')
+        save_PS(canvas,fneps,'eps')
         if os.path.exists(fneps):
             cmd = 'pstopnm -portrait -stdout %s' % fneps
             if fmt != 'ppm':
@@ -123,8 +138,6 @@ def save(canvas,fn,fmt='png',options=None):
     return sta
 
 
-#### ONLY LOADED IF GL2PS FOUND ########################
-
 if utils.hasModule('gl2ps'):
 
     import gl2ps
@@ -132,11 +145,11 @@ if utils.hasModule('gl2ps'):
     _producer = GD.Version + ' (http://pyformex.berlios.de)'
     _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
                      'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
-    GD.image_formats_gl2ps = _gl2ps_types.keys()
-    GD.image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
+    image_formats_gl2ps = _gl2ps_types.keys()
+    image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
                                  'xwd', 'y4m' ]
 
-    def savePS(canvas,filename,filetype=None,title='',producer='',
+    def save_PS(canvas,filename,filetype=None,title='',producer='',
                viewport=None):
         """ Export OpenGL rendering to PostScript/PDF/TeX format.
 
@@ -237,7 +250,7 @@ def save_rect(x,y,w,h,filename,format):
 
 #### USER FUNCTIONS ################
 
-def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,verbose=False):
+def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,verbose=False):
     """Saves an image to file or Starts/stops multisave maode.
 
     With a filename and multi==False (default), the current viewport rendering
@@ -313,12 +326,16 @@ def saveImage(filename=None,window=False,multi=False,hotkey=True,autosave=False,
             else:
                 sta = save_window(filename,format)
         else:
-            sta = save(GD.canvas,filename,format)
+            sta = save_canvas(GD.canvas,filename,format)
         if sta:
             GD.debug("Error while saving image %s" % filename)
         else:
             GD.message("Image file %s written" % filename)
         return
+
+
+# Keep the old name for compatibility
+saveImage = save
 
     
 def saveNext():
@@ -332,7 +349,7 @@ def saveNext():
     if multisave:
         names,format,window,border,hotkey,autosave,rootcrop = multisave
         name = names.next()
-        saveImage(name,window,False,hotkey,autosave,border,rootcrop,format,False)
+        save(name,window,False,hotkey,autosave,border,rootcrop,format,False)
 
 
 def saveIcon(fn,size=32):
@@ -341,7 +358,7 @@ def saveIcon(fn,size=32):
     GD.canvas.resize(size,size)
     if not fn.endswith('.xpm'):
         fn += '.xpm'
-    saveImage(fn)
+    save(fn)
     GD.canvas.resize(savew,saveh)
 
 

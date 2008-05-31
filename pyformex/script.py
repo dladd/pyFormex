@@ -16,6 +16,8 @@ import threading,os,commands,copy,re,time
 
 import formex
 import utils
+
+# Things from other modules we want to export to user scripts
 from utils import printDetected
     
 
@@ -305,24 +307,6 @@ def exit(all=False):
             raise Exit # exit from script only
     else:
         sys.exit(0) # exit from pyformex
-
-###########################  app  ################################
-
-
-def runApp(args):
-    """Run the application without gui."""
-    # remaining args are interpreted as scripts, possibly interspersed
-    # with arguments for the scripts.
-    # each script should pop the required arguments from the list,
-    # and return the remainder
-##    GD.message = message
-
-    while len(args) > 0:
-        scr = args.pop(0) 
-        if os.path.exists(scr) and utils.isPyFormex(scr):
-            play(scr,args)
-        else:
-            raise RuntimeError,"No such pyFormex script found: %s" % scr
 
 
 ########################## print information ################################

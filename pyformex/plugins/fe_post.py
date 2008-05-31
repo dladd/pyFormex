@@ -30,7 +30,7 @@ class FeResult(object):
 
     def __init__(self):
         self.about = {'creator':GD.Version,
-                      'created':GD.date,
+                      'created':GD.StartTime,
                       }
         self.modeldone = False
         self.labels = {}

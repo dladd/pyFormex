@@ -183,4 +183,4 @@ if __name__ == "draw":
     # and save it in a lot of graphics formats
 ##    if ack("Do you want to save this image (in lots of formats) ?"):
 ##        for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
-##           saveImage('WireStent.'+ext)
+##           image.save('WireStent.'+ext)

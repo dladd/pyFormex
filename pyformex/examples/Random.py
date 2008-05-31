@@ -13,7 +13,6 @@
 
 Creates random points, bars, triangles, quads, ...
 """
-layout(1)
 setDrawOptions(dict(clear=True))
 npoints = 30
 p = arange(120)

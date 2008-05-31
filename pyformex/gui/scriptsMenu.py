@@ -166,7 +166,7 @@ class ScriptsMenu(QtGui.QMenu):
     def runAll(self):
         """Run all scripts."""
         GD.debug("Playing all scripts in order")
-        self.runAllFile(self.files)
+        self.runAllFiles(self.files)
         GD.debug("Finished playing all scripts")
 
 

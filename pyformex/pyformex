@@ -35,12 +35,10 @@ pyformexdir = pyformex.__path__[0]
 sys.path[:0] = [ pyformexdir ]
 
 
-import pyformex as GD
-
+GD = pyformex
+import utils
 from config import Config
 from optparse import OptionParser,make_option
-from utils import isPyFormex
-
 
 ###########################  main  ################################
 
@@ -57,17 +55,24 @@ def printcfg(key):
         pass
     print "!! cfg[%s] = %s" % (key,GD.cfg[key])
 
-
-def removeTree(path,top=True):
-    """Remove all files below path. If top==True, also path is removed."""
-    for root, dirs, files in os.walk(path, topdown=False):
-        for name in files:
-            os.remove(os.path.join(root, name))
-        for name in dirs:
-            os.rmdir(os.path.join(root, name))
-    if top:
-        os.rmdir(path)
         
+
+###########################  app  ################################
+
+def runApp(args):
+    """Run the application without gui."""
+    # remaining args are interpreted as scripts, possibly interspersed
+    # with arguments for the scripts.
+    # each script should pop the required arguments from the list,
+    # and return the remainder
+##    GD.message = message
+
+    while len(args) > 0:
+        scr = args.pop(0) 
+        if os.path.exists(scr) and utils.isPyFormex(scr):
+            play(scr,args)
+        else:
+            raise RuntimeError,"No such pyFormex script found: %s" % scr
 
     
 def main(argv=None):
@@ -174,7 +179,7 @@ You will need proper permissions to actually delete the files.
         s = raw_input("Are you sure you want to remove pyFormex? yes/NO: ")
         if s == 'yes':
             print "Removing %s" % pyformexdir
-            removeTree(pyformexdir)
+            utils.removeTree(pyformexdir)
             script = os.path.join(scriptdir,'pyformex')
             egginfo = "%s-%s.egg-info" % (pyformexdir,GD.__version__.replace('-','_'))
             for f in [ script,egginfo ]:
@@ -189,7 +194,6 @@ You will need proper permissions to actually delete the files.
         sys.exit()
 
     if GD.options.detect:
-        import utils
         print "Detecting all installed helper software"
         utils.checkExternal()
         utils.printDetected()
@@ -237,17 +241,14 @@ You will need proper permissions to actually delete the files.
 
     # Set default --nogui if first remaining argument is a pyformex script.
     if GD.options.gui is None:
-        GD.options.gui = not (len(args) > 0 and isPyFormex(args[0]))
+        GD.options.gui = not (len(args) > 0 and utils.isPyFormex(args[0]))
 
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
         from gui.gui import runApp
-    else:
-        from script import runApp
-
     #
-    # THIS DOES NOT HELP, BECAUSE WITH GUI, Qt4 sets the locale back
+    # THE FOLLOWING DOES NOT HELP, BECAUSE WITH GUI, Qt4 sets the locale back
     # Still, we leave it here, because one day we may load the gui before
     # starting runapp
     #

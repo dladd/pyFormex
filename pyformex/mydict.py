@@ -40,14 +40,6 @@ def cascade(dic, key):
         raise KeyError
 
 
-def returnNone(key):
-    """Always returns None."""
-    return None
-
-def raiseKeyError(key):
-    """Raise a KeyError."""
-    raise KeyError
-
 
 class Dict(dict):
     """A Python dictionary with default values and attribute syntax.
@@ -82,8 +74,17 @@ class Dict(dict):
          foo
     """
 
+    @staticmethod
+    def returnNone(key):
+        """Always returns None."""
+        return None
 
-    def __init__(self,data={},default=raiseKeyError):
+    @staticmethod
+    def raiseKeyError(key):
+        """Raise a KeyError."""
+        raise KeyError
+
+    def __init__(self,data={},default=None):
         """Create a new Dict instance.
 
         The Dict can be initialized with a Python dict or a Dict.
@@ -91,6 +92,8 @@ class Dict(dict):
         lookup if the key was not found in the dict.
         """
         dict.__init__(self,data.items())
+        if default is None:
+            default = Dict.raiseKeyError
         if not callable(default):
             raise ValueError,"'default' should be a callable function" 
         self.__dict__['_default_'] = default
@@ -138,7 +141,10 @@ class Dict(dict):
         try:
             return dict.__getattribute__(self,key)
         except AttributeError:
-            return self.__getitem__(key)
+            if key == '_default_':
+                return self.__dict__['_default_']
+            else:
+                return self.__getitem__(key)
 
 
     def __setattr__(self,key,value=None):
@@ -169,8 +175,47 @@ class Dict(dict):
         dict.update(self,data)
 
 
+    def get(self, key, default):
+        """Return the value for key or a default.
+
+        This is the equivalent of the dict get method, except that it
+        returns only the default value if the key was not found in self,
+        and there is no _default_ method or it raised a KeyError.
+        """
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+
+    def setdefault(self, key, default):
+        """Replaces the setdefault function of a normal dictionary.
+
+        This is the same as the get method, except that it also sets the
+        default value if get found a KeyError.
+        """
+        try:
+            return self[key]
+        except KeyError:
+            self[key] = default
+            return default
+
+
+    def __deepcopy__(self,memo):
+        """Create a deep copy of ourself."""
+        newdict = Dict(default=self._default_)
+        for k,v in self.items():
+            newdict[k] = copy.deepcopy(v,memo)
+        return newdict
+
+
     def __getstate__(self):
+        print self.items()
         return self.items()
+
+    def __setstate__(self,dict):
+        dict.__init__(dict)
+
 
     def __setstate__(self,dict):
         self.update(dict)
@@ -194,7 +239,7 @@ class CascadingDict(Dict):
     """
 
 
-    def __init__(self,data={},default=returnNone):
+    def __init__(self,data={},default=Dict.returnNone):
         Dict.__init__(self,data,default)
 
 
@@ -244,6 +289,7 @@ CDict = CascadingDict
 
 if __name__ == '__main__':
 
+    import cPickle as pickle
     global C,Cr,Cs
 
     def val(s,typ='s'):
@@ -260,33 +306,41 @@ if __name__ == '__main__':
         Cs = val('C','s')
         print Cr
         print Cs
+        print C.get('y','yorro')
+        print C.get('z','zorro')
+        print C.setdefault('w','worro')
+        print "%s = %s" % (C['y']['c'],C.y.c)
+
+
+    def testpickle():
+        global C
+        print "Test (un)pickle"
+        f = file('test.pickle','w')
+        pickle.dump(C,f)
+        f.close()
+        f = file('test.pickle','r')
+        C = pickle.load(f)
+        f.close()
+        show()
         
 
     C = Dict({'x':Dict({'a':1,'y':Dict({'b':5,'c':6})}),'y':Dict({'c':3,'d':4}),'d':0})
     show()
+    testpickle()
+    
     # now exec this to check if we get the same
     exec(Cr)
     show()
+
     # now replace Dict with CascadingDict
     Cr = Cr.replace('Dict','CascadingDict')
     exec(Cr)
     show()
+    testpickle()
+
     # show some items
     print val("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
     print val("C['e']")
     print val("C.a,C.b,C.c,C.d,C.x.c")
     print val("C.e")
-
-    import cPickle as pickle
-    f = file('test.pickle','w')
-    pickle.dump(C,f)
-    f.close()
-
-    print "Test unpickle"
-    f = file('test.pickle','r')
-    C = pickle.load(f)
-    f.close()
-
-    show()
-    
     

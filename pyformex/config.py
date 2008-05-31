@@ -52,141 +52,7 @@ def formatDict(dic):
     return s
 
 
-_indent = 0  # number of spaces to indent in __str__ formatting
-             # incremented by 2 on each level
-
-
-def returnNone(key):
-    """Always returns None."""
-    return None
-
-def raiseKeyError(key):
-    """Raise a KeyError."""
-    #print "Unsuccesful"
-    raise KeyError
-
-
-class Dict(dict):
-    """A Python dictionary with default values and attribute syntax.
-
-    Dict is functionally nearly equivalent with the builtin Python dict,
-    but provides the following extras:
-    - Items can be accessed with attribute syntax as well as dictionary
-      syntax. Thus, if C is a Dict, the following are equivalent:
-          C['foo']   or   C.foo
-      This works as well for accessing values as for setting values.
-      In the following, the words key or attribute therefore have the
-      same meaning.
-    - Lookup of a nonexisting key/attribute does not raise an error, but
-      returns a default value which can be set by the user (None by default).
-
-    There are a few caveats though:
-    - Keys that are also attributes of the builtin dict type, can not be used
-      with the attribute syntax to get values from the Dict. You should use
-      the dictionary syntax to access these items. It is possible to set
-      such keys as attributes. Thus the following will work:
-         C['get'] = 'foo'
-         C.get = 'foo'
-         print C['get']
-      but not
-         print C.get
-
-      This is done so because we want all the dict attributes to be available
-      with their normal binding. Thus,
-         print C.get('get')
-      will print
-         foo
-    """
-
-
-    def __init__(self,data={},default=raiseKeyError):
-        """Create a new Dict instance.
-
-        The Dict can be initialized with a Python dict or a Dict.
-        If defined, default is a function that is used for alternate key
-        lookup if the key was not found in the dict.
-        """
-        dict.__init__(self,data.items())
-        self._default_ = default
-
-
-    def __repr__(self):
-        """Format the Dict as a string.
-
-        We use the format Dict({}), so that the string is a valid Python
-        representation of the Dict.
-        """
-        return "Dict(%s)" % dict.__repr__(self)
-
-
-    def __getitem__(self, key):
-        """Allows items to be addressed as self[key].
-
-        This is equivalent to the dict lookup, except that we
-        provide a default value if the key does not exist.
-        """
-        try:
-            return dict.__getitem__(self, key)
-        except KeyError:
-            if self._default_:
-                return self._default_(key)
-            else:
-                raise KeyError
-
-
-    def get(self, key, default):
-        """Return the value for key or a default.
-
-        This is the equivalent of the dict get method, except that it
-        returns only the default value if the key was not found in self,
-        and there is no _default_ method or it raised a KeyError.
-        """
-        try:
-            return self[key]
-        except KeyError:
-            return default
-
-
-    def setdefault(self, key, default):
-        """Replaces the setdefault function of a normal dictionary.
-
-        This is the same as the get method, except that it also sets the
-        default value if get found a KeyError.
-        """
-        try:
-            return self[key]
-        except KeyError:
-            self[key] = default
-            return default
-
-
-    def __delitem__(self,key):
-        """Allow items to be deleted using del self[key].
-
-        Silently ignore if key is nonexistant.
-        """
-        try:
-            dict.__delitem__(self, key)
-        except KeyError:
-            pass
-
-
-    def update(self,data={}):
-        """Add a dictionary to the Dict object.
-
-        The data can be a dict or Dict type object. 
-        """
-        dict.update(self,data)
-
-
-    def __deepcopy__(self,memo):
-        """Create a deep copy of ourself."""
-        newdict = Dict(default=self.default)
-        for k,v in self.items():
-            newdict[k] = copy.deepcopy(v,memo)
-        return newdict
-
-
+from mydict import Dict
 
 class Config(Dict):
     """A configuration class allowing Python expressions in the input.
@@ -250,7 +116,7 @@ class Config(Dict):
     """
 
 
-    def __init__(self,data={},default=raiseKeyError):
+    def __init__(self,data={},default=None):
         """Creates a new Config instance.
 
         The configuration can be initialized with a dictionary, or
@@ -403,19 +269,6 @@ class Config(Dict):
                 return self[key[:i]][key[i+1:]]
             except KeyError:
                 return self._default_(key)
-
-
-    def setdefault(self, key, default):
-        """Replaces the setdefault function of a normal dictionary.
-
-        This is the same as the get method, except that it also sets the
-        default value if get found a KeyError.
-        """
-        try:
-            return self[key]
-        except KeyError:
-            self[key] = default
-            return default
 
 
     def __str__(self):

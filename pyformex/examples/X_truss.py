@@ -114,7 +114,6 @@ class X_truss:
 if __name__ == 'draw':
     # This is executed when the example is launched from the GUI
 
-    layout(1)
     wireframe()
     reset()
     def example(diag=True,vert=True):
