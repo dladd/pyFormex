@@ -84,6 +84,9 @@ class Model(Dict):
         GD.message("Number of elements per group: %s" % nelems)
 
 
+    def nnodes(self):
+        return self.nodes.shape[0]
+
     def splitElems(self,set):
         """Splits a set of element numbers over the element groups.
 
@@ -119,7 +122,47 @@ class Model(Dict):
         had to be calculated anyway.
         """
         return [ e[s] for e,s in zip(self.elems,sets) ]
+        
+ 
+    def renumber(self,old=None,new=None):
+        """Renumber a set of nodes.
 
+        old and new are equally sized lists with unique node numbers, each
+        smaller that the number of nodes in the model.
+        The old numbers will be renumbered to the new numbers.
+        If either of the lists is None, a range with the length of the
+        other is used.
+        If the lists are shorter than the number of nodes, the remaining
+        nodes will be numbered in an unspecified order.
+        """
+        if old is None and new is None:
+            return
+        nnodes = self.nnodes()
+        if old is None:
+            new = unique1d(new)
+            if new.min() < 0 or new.max() >= nnodes:
+                raise ValueError,"Values in new should be in range(%s)" % nnodes
+            old = arange(len(new))
+        elif new is None:
+            old = unique1d(old)
+            if old.min() < 0 or old.max() >= nnodes:
+                raise ValueError,"Values in old should be in range(%s)" % nnodes
+            new = arange(len(old))
+
+        all = arange(nnodes)
+        old = concatenate([old,setdiff1d(all,old)])
+        new = concatenate([new,setdiff1d(all,new)])
+        print "old:\n",old
+        print "new:\n",new
+        oldnew = old[new]
+        newold = argsort(oldnew)
+        print "oldnew:\n",oldnew
+        print "newold:\n",newold
+        self.nodes = self.nodes[oldnew]
+        self.elems = [ newold[e] for e in self.elems ]
+        
+        
+        
 
 
 if __name__ == "__main__":

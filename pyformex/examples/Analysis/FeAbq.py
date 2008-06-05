@@ -56,6 +56,7 @@ for i,e in enumerate(elems):
     print e
 print "==================="
 
+
 # Transfer the properties from the parts in a global set
 elemprops = concatenate([part.p for part in parts])
 
@@ -133,6 +134,23 @@ for p in P.getProp('n'):
 # Create the Abaqus model
 # A model contains a single set of nodes, one or more sets of elements
 model = Model(nodes,elems)
+
+while ack("Renumber nodes randomly?"):
+    # randomly renumber half of the nodes
+    M = model
+    rnd = random.randint(0,M.nnodes()-1,M.nnodes()/2)
+    print rnd
+    M.renumber(old=rnd)
+    newnodes = Formex(M.nodes)
+    newparts = [Formex(M.nodes[e],i+1) for i,e in enumerate(M.elems)]
+    clear()
+    draw(newparts)
+    [ drawNumbers(i) for i in newparts ]
+    draw(newnodes)
+    drawNumbers(newnodes)
+    zoomAll()
+    model = M
+
 
 # Request default output plus output of S in elements of part B.
 # If the abqdata are written with group_by_group==True (see at bottom),
