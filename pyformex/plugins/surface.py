@@ -169,7 +169,7 @@ def read_off(fn):
     The mesh should consist of only triangles!
     Returns a nodes,elems tuple.
     """
-    GD.messae("Reading .OFF %s" % fn)
+    GD.message("Reading .OFF %s" % fn)
     fil = file(fn,'r')
     head = fil.readline().strip()
     if head != "OFF":

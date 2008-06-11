@@ -425,9 +425,11 @@ class Canvas(object):
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
         GLU.gluOrtho2D(0,self.width(),0,self.height())
+        GL.glDisable(GL.GL_DEPTH_TEST)
         for actor in self.decorations:
             self.setDefaults()
             actor.draw(mode=self.rendermode)
+        GL.glEnable(GL.GL_DEPTH_TEST)    
         # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
