@@ -21,6 +21,7 @@ from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
 from numpy import *
+from gui.drawable import interpolateNormals
 
 hasExternal('admesh')
 hasExternal('tetgen')
@@ -893,6 +894,13 @@ class TriSurface(object):
 
 
 ####################### TriSurface Data ######################
+
+
+    def avgVertexNormals(self):
+        """Compute the average normals at the vertices."""
+        self.refresh()
+        return interpolateNormals(self.coords,self.elems,atNodes=True)
+
 
     def areaNormals(self):
         """Compute the area and normal vectors of the surface triangles.

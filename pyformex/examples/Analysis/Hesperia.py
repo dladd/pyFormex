@@ -152,7 +152,7 @@ def createGeometry():
 
     newprops = [ 5,6,6,None,4,None,None ]
     F = F.cutAtPlane(P,N,newprops=newprops,side='+',atol=0.0001)
-    clear()
+    #clear()
     draw(F)
 
     # Finally, create a rosette to make the circle complete

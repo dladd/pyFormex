@@ -201,7 +201,7 @@ def computeNormals(x):
     return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
 
 
-def nodalSum(val,elems,avg=False):
+def nodalSum(val,elems,avg=False,return_all=True):
     """Compute the nodal sum of values defined on elements.
 
     val is a (nelems,nplex,nval) array of values defined at points of elements.
@@ -210,6 +210,10 @@ def nodalSum(val,elems,avg=False):
     The return value is a (nelems,nplex,nval) array where each value is
     replaced with the sum of its value at that node.
     If avg=True, the values are replaced with the average instead.
+    (DOES NOT WORK YET)
+    If return_all==True(default), returns an array with shape (nelems,nplex,3),
+    else, returns an array with shape (maxnodenr+1,3). In the latter case,
+    nodes not occurring in elems will have all zero values.
     """
     if val.ndim != 3:
         val.reshape(val.shape+(1,))
@@ -223,20 +227,25 @@ def nodalSum(val,elems,avg=False):
         nodes = nodes.astype(int32)
         work = work.astype(float32)
     misc.nodalSum(val,elems,nodes,work,avg)
-    return val
+    if return_all:
+        return val
+    else:
+        return work
 
 
-def interpolateNormals(coords,elems):
+def interpolateNormals(coords,elems,atNodes=False):
     """Interpolate normals in all points of elems.
 
     coords is a (ncoords,3) array of nodal coordinates.
     elems is an (nel,nplex) array of element connectivity.
     
-    The return value is an (nel,nplex,3) array with the averaged unit normals
-    in all points of all elements.
+    The default return value is an (nel,nplex,3) array with the averaged
+    unit normals in all points of all elements.
+    If atNodes == True, a more compact array with the unique averages
+    at the nodes is returned.
     """
     n = computeNormals(coords[elems])
-    n = nodalSum(n,elems)
+    n = nodalSum(n,elems,return_all=not atNodes)
     return normalize(n)
 
 

@@ -755,9 +755,11 @@ class Formex(object):
                 data = data.reshape(0,nplex,3) # An empty Formex
             else:
                 # check dimensions of data
-                if not len(data.shape) in [2,3]:
-                    raise RuntimeError,"Formex init: needs a rank-2 or rank-3 data array, got shape %s" % str(data.shape)
-                if len(data.shape) == 2:
+                if not len(data.shape) in [1,2,3]:
+                    raise RuntimeError,"Formex init: needs a 1-, 2- or 3-dim. data array, got shape %s" % str(data.shape)
+                if len(data.shape) == 1:
+                    data = data.reshape(1,1,data.shape[0])
+                elif len(data.shape) == 2:
                     data = data.reshape(data.shape[0],1,data.shape[1])
                 if not data.shape[-1] in [2,3]:
                     raise RuntimeError,"Formex init: last axis dimension of data array should be 2 or 3, got shape %s" % str(data.shape)

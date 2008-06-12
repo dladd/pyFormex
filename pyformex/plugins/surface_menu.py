@@ -49,6 +49,18 @@ def draw_normals(n):
     D = C + sqrt(A).reshape((-1,1))*N
     F = connect([Formex(C),Formex(D)])
     return draw(F,color='red')
+
+def draw_avg_normals(n):
+    S = named(n)
+    C = S.coords
+    N = S.avgVertexNormals()
+    try:
+        siz = float(GD.cfg['mark/avgnormalsize'])
+    except:
+        siz = 0.05 * C.dsize()
+    D = C + siz * N
+    F = connect([Formex(C),Formex(D)])
+    return draw(F,color='orange')
     
 selection = DrawableObjects(clas=TriSurface)
 ntoggles = len(selection.annotations)
@@ -58,11 +70,14 @@ def toggleNodeNumbers():
     selection.toggleAnnotation(1+ntoggles)
 def toggleNormals():
     selection.toggleAnnotation(2+ntoggles)
+def toggleAvgNormals():
+    selection.toggleAnnotation(3+ntoggles)
 
 
 selection.annotations.extend([[draw_edge_numbers,False],
                               [draw_node_numbers,False],
                               [draw_normals,False],
+                              [draw_avg_normals,False],
                               ])
 
 ##################### select, read and write ##########################
@@ -1043,6 +1058,7 @@ def create_menu():
           ("&Edge Numbers",toggleEdgeNumbers,dict(checkable=True)),
           ("&Node Numbers",toggleNodeNumbers,dict(checkable=True)),
           ("&Normals",toggleNormals,dict(checkable=True)),
+          ("&AvgNormals",toggleAvgNormals,dict(checkable=True)),
           ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
           ]),
         ("&Statistics",showStatistics),

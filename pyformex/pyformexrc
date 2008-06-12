@@ -80,6 +80,10 @@ linewidth = 1
 propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 
                  # a default color set for properties
 
+[mark]
+avgnormalsize = '_auto_'
+
+
 [draw]
 wait = 0  # time(sec.) to wait between draw operations (None is indefinitely)
 flywait = 0.3  # time(sec.) to wait between subsequent views in auto flying

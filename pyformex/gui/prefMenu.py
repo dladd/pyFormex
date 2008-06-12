@@ -110,6 +110,9 @@ def setBGcolor():
 def setLinewidth():
     askConfigPreferences(['draw/linewidth'])
 
+def setAvgNormalSize():
+    askConfigPreferences(['mark/avgnormalsize'])
+
 def setSize():
     GD.gui.resize(800,600)
 
@@ -190,7 +193,7 @@ MenuData = [
         (_('&Input Timeout'),setInputTimeout), 
         (_('&Draw Wait Time'),setDrawWait), 
 #        (_('&Background Color'),setBGcolor), 
-#        (_('Line&Width'),setLinewidth), 
+        (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
         (_('&RotFactor'),setRotFactor),
         (_('&PanFactor'),setPanFactor),
