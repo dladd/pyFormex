@@ -1488,6 +1488,9 @@ class Formex(object):
     def spherical(self,*args,**kargs):
         pass
     @coordsmethod
+    def superSpherical(self,*args,**kargs):
+        pass
+    @coordsmethod
     def toSpherical(self,*args,**kargs):
         pass
     @coordsmethod

@@ -1,5 +1,5 @@
 .. This may look like ASCII text, but really is  -*- rst -*- 
-.. $Id: $
+.. $Id$
 
 Overzicht van de pyFormex software
 ==================================

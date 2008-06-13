@@ -1,4 +1,4 @@
-# $Id$ 
+# $Id$    -*- rst -*-
 ##
 ## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
 ## pyFormex is a Python implementation of Formex algebra
@@ -9,57 +9,48 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-pyFormex 0.7.1  Releasenotes 
+pyFormex 0.7.2  Releasenotes 
 ============================
 
-This is a collection of the most prominent changes in pyFormex 0.7.1
-compared to the previous release 0.7.
+This is a collection of the most prominent changes in pyFormex 0.7.2
+compared to the previous release 0.7.1
 
-INSTALLATION
-============
+Installation
+------------
 
+Command line
+------------
 
-COMMAND LINE
-============
-The --dri/--nodri options are renamed to --force-dri and --force-nodri to hint that the user forces abnormal behavior when using them.
-
-pyformex --detect shows the list of detected software without having to start the GUI. Convenient when reporting bugs.
-
-GUI:
-====
-LOTS, LOTS, LOTS of new functions.
-
-Some goodies: 
-  - interactive picking
-  - rendering of values on domains
-  - lighting / smooth rendering is now fixed
+Gui
+---
   
 
-CORE:
-=====
-Acceleration library
---------------------
-Most drawing functions and all picking functions are now accelerated.
+Core
+----
+
+- Coords:
+  
+  . added superSpherical transformation
+
+- Formex:
+  
+  . added superSpherical transformation
+  . accept a single point as Formex initialisation data
+
+- simple.py
+  
+  . rectangle has an optional 'diag' argument to create triangles
 
 
-
-PLUGINS:
-========
-Properties 
-----------
-The property plugin has undergone major changes. The work on the plugin is not
-finished yet, but the PropertyDB class has become consistent, powerful and fairly stable. Users can already safely build applications on it. Most prominent features are:
- - a single database class collecting all property data,
- - specified and named sets to attribute properties to specific elements of a geometrical object.
-
-The fe_abq interface has been adapted to use the new property system.
-   
-Postproc
---------
-The postproc plugin is developing into a powerful postprocessing engine.
-Already some nice examples.
+Plugins
+-------
  
 
-MANUAL:
-=======
-Added desription of the Property plugin.
+Examples
+--------
+
+- Added the SuperEgg example
+
+
+Manual
+------

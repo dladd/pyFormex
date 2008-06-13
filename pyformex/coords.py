@@ -711,6 +711,35 @@ class Coords(ndarray):
         return f.reshape(self.shape)
 
 
+    def superSpherical(self,n=1.0,e=1.0,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
+        """Converts superspherical to cartesian after scaling.
+
+        <dir> specifies which coordinates are interpreted as resp.
+        longitude(theta), latitude(phi) and distance(r).
+        <scale> will scale the coordinate values prior to the transformation.
+        Angles are then interpreted in degrees.
+        Latitude, i.e. the elevation angle, is measured from equator in
+        direction of north pole(90). South pole is -90.
+        If colat=True, the third coordinate is the colatitude (90-lat) instead.
+        """
+        def c(o,m):
+            c = cos(o)
+            return sign(c)*abs(c)**m
+        def s(o,m):
+            c = sin(o)
+            return sign(c)*abs(c)**m
+
+        f = self.reshape((-1,3))
+        theta = (scale[0]*rad) * f[:,dir[0]]
+        phi = (scale[1]*rad) * f[:,dir[1]]
+        r = scale[2] * f[:,dir[2]]
+        if colat:
+            phi = 90.0*rad - phi
+        rc = r*c(phi,n)
+        f = column_stack([rc*c(theta,e),rc*s(theta,e),r*s(phi,n)])
+        return f.reshape(self.shape)
+
+
     def toSpherical(self,dir=[0,1,2]):
         """Converts from cartesian to spherical coordinates.
 
