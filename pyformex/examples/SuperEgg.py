@@ -37,6 +37,15 @@ def superEgg(size,n,e,u,v):
 def rng(o,r,n):
     return arange(n+1) * r/n + o
 
+
+def showSuperEgg(size,n,e,u,v):
+    x = superEgg(size,n,e,u,v)
+    F = [ i.points() for i in Formex(x).split() ]
+    H = Formex.concatenate([connect([i,i,j,j],bias=[0,1,1,0]) for i,j in zip(F[1:],F[:-1])])
+    
+    clear()
+    draw(H,color='gold',view=None,bbox=None)
+
         
 if __name__ == "draw":
 
@@ -47,14 +56,14 @@ if __name__ == "draw":
     view('iso')
 
     size = [1.,1.,1.]
-    north_south = 1.
+    north_west = 1.
     east_west = 1.
     grid = [24,16]
     half = False
 
     while True:
         res = askItems([('size',size),
-                        ('north_south',north_south),
+                        ('north_west',north_west),
                         ('east_west',east_west),
                         ('grid',grid),
                         ('half',half),
@@ -70,16 +79,10 @@ if __name__ == "draw":
         else:
             v = rng(-pi/2,pi,grid[1])
 
-        x = superEgg(size,north_south,east_west,u,v)
-        F = Formex(x)
-
-        FS = [ i.points() for i in F.split() ]
-        H = Formex.concatenate([connect([i,i,j,j],bias=[0,1,1,0]) for i,j in zip(FS[1:],FS[:-1])])
-
-        clear()
-        draw(H,color='gold',view=None,bbox=None)
-#        zoomAll()
-          
+        for n in [0.25, 0.5, 0.75, 1.0, 1.5, 2., 3., 5.]:
+            showSuperEgg(size,n,east_west,u,v)
+            #pause()
+            
         # Break from endless loop if an input timeout is active !
         if widgets.input_timeout >= 0:
             break

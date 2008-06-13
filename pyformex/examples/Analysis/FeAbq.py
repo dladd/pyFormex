@@ -37,25 +37,44 @@ B.p[arange(B.p.size) % 2 == 1] = pb1
 C = A.rotate(90).setProp(pc)
 parts = [A,B,C]
 
-
-smoothwire()
-lights(False)
-transparent()
-draw(parts)
-NRS = [ drawNumbers(i) for i in parts ]
-zoomAll()
-
 # Create the finite element model
-femodels = [part.feModel() for part in parts]
-nodes,elems = mergeModels(femodels)
-print "===================\nMERGED MODEL"
-print "NODES"
-print nodes
-for i,e in enumerate(elems):
-    print "PART %s" %i
-    print e
-print "==================="
+# A model contains a single set of nodes and one or more sets of elements
+M = mergedModel(*[p.feModel() for p in parts])
 
+# Create a Formex with the nodes, mostly for drawing
+F = Formex(M.nodes)
+
+def printModel(M):
+    """print the model M"""
+    print "===================\nMERGED MODEL"
+    print "NODES"
+    print M.nodes
+    for i,e in enumerate(M.elems):
+        print "PART %s" %i
+        print e
+    print "==================="
+
+def drawModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
+    """draw the model M"""
+    smoothwire()
+    lights(False)
+    transparent()
+    clear()
+    print F.p
+    if nodes or nodenrs:
+##         F = Formex(M.nodes)
+        if nodes:
+            draw(F)
+        if nodenrs:
+            drawNumbers(F)
+    if elems or elemnrs:
+##         G = [Formex(M.nodes[e],i+1) for i,e in enumerate(M.elems)]
+        G = parts
+        if elems:
+            draw(G)
+        if elemnrs:
+            [ drawNumbers(i) for i in G ]
+    zoomAll()
 
 # Transfer the properties from the parts in a global set
 elemprops = concatenate([part.p for part in parts])
@@ -108,49 +127,35 @@ for p in P.getProp('e'):
     print p
 
 # Set the nodal properties
-xmin,xmax = nodes.bbox()[:,0]
-bnodes = where(nodes.test(min=xmax-0.01))[0] # Right end nodes
-lnodes = where(nodes.test(max=xmin+0.01))[0] # Left end nodes
+xmin,xmax = M.nodes.bbox()[:,0]
+bnodes = where(M.nodes.test(min=xmax-0.01))[0] # Right end nodes
+lnodes = where(M.nodes.test(max=xmin+0.01))[0] # Left end nodes
 
 print "Boundary nodes: %s" % bnodes
 print "Loaded nodes: %s" % lnodes
 
-F = Formex(nodes).setProp(0) # To visualize the node properties
+P.nodeProp(tag='init',set=bnodes,bound=[1,1,0,0,0,0])
+P.nodeProp(tag='step1',set=lnodes,setname='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
+P.nodeProp(tag='step2',set='Loaded',cload=[-10.,10.,0.,0.,0.,0.])
+
+F.setProp(0)
 F.p[bnodes] = pbc
 F.p[lnodes] = pld
-draw(F,marksize=8)
-NRN = drawNumbers(F)
-
-print F.whereProp(pbc)
-
-P.nodeProp(tag='init',set=where(F.p==pbc)[0],bound=[1,1,0,0,0,0])
-P.nodeProp(tag='step1',set=where(F.p==pld)[0],setname='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
-P.nodeProp(tag='step2',set='Loaded',cload=[-10.,10.,0.,0.,0.,0.])
 
 print "Node properties"
 for p in P.getProp('n'):
     print p
 
-# Create the Abaqus model
-# A model contains a single set of nodes, one or more sets of elements
-model = Model(nodes,elems)
 
-while ack("Renumber nodes randomly?"):
-    # randomly renumber half of the nodes
-    M = model
-    rnd = random.randint(0,M.nnodes()-1,M.nnodes()/2)
-    print rnd
-    M.renumber(old=rnd)
-    newnodes = Formex(M.nodes)
-    newparts = [Formex(M.nodes[e],i+1) for i,e in enumerate(M.elems)]
-    clear()
-    draw(newparts)
-    [ drawNumbers(i) for i in newparts ]
-    draw(newnodes)
-    drawNumbers(newnodes)
-    zoomAll()
-    model = M
+drawModel(M,elems=False)
+exit()
 
+while ack("Renumber nodes?"):
+    # renumber the nodes randomly
+    old,new = M.renumber()
+    drawModel(M)
+    
+exit()
 
 # Request default output plus output of S in elements of part B.
 # If the abqdata are written with group_by_group==True (see at bottom),
@@ -183,7 +188,7 @@ step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 # !! currently output/result request are global to all steps
 # !! this will be changed in future
 #
-all = AbqData(model,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
+all = AbqData(M,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
 
 if ack('Export this model in ABAQUS input format?'):
     fn = askFilename(filter='*.inp')

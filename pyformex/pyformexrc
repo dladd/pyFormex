@@ -62,7 +62,7 @@ viewmenu = True      # add a Views menu
 viewbar = True       # add a Views toolbar
 defviews = [('front','view-xr-yu'),('back','view-xl-yu'),\
             ('right','view-zl-yu'),('left','view-zr-yu'),\
-            ('top','view-xr-zd'),('bottom','view-xl-zd'),\
+            ('top','view-xr-zd'),('bottom','view-xr-zu'),\
             ('iso','view-iso1'),\
             ]
 zoomfactor = 1.15    # zooming factor for zoom buttons

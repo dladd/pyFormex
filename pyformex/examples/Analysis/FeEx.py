@@ -10,6 +10,7 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+from simple import rectangle
 from plugins.fe import *
 from plugins.properties import *
 from plugins.fe_abq import *
@@ -33,28 +34,6 @@ def deleteAll():
     model = None
     clear()
 
-def quad():
-    """Return a unit quadrilateral Formex."""
-    return Formex(mpattern('123'))
-
-def triquad():
-    """Return a triangularized unit quadrilateral Formex."""
-    return Formex(mpattern('12-34'))
-
-def rectangularMesh(b,h,nx,ny,triangles=False):
-    """Create a rectangular mesh of size (b,h) with (nx,ny) divisions.
-
-    The mesh will always comprise the domain (0,0,0)..(b,h,0).
-    Default is to create a quad mesh. Set triangles True to create
-    a triangular mesh.
-    """
-    sx,sy = float(b)/nx,float(h)/ny
-    if triangles:
-        base = triquad()
-    else:
-        base = quad()
-    return base.replic2(nx,ny,1,1).scale([sx,sy,0.])
-
 
 x0,y0 = 0.,0.
 x1,y1 = 1.,1.
@@ -73,7 +52,7 @@ def createPart(res=None):
         res = askItems([('x0',x0),('y0',y0),
                         ('x1',x1),('y1',y1),
                         ('nx',nx),('ny',ny),
-                        ('eltype',eltype,'select',['quad','tri']),
+                        ('eltype',eltype,'select',['quad','tri-u','tri-d']),
                         ])
     if res:
         globals().update(res)
@@ -81,9 +60,11 @@ def createPart(res=None):
             x0,x1 = x1,x0
         if y0 > y1:
             y0,y1 = y1,y0
-        F = rectangularMesh(x1-x0,y1-y0,nx,ny,eltype=='tri').trl([x0,y0,0])
+        diag = {'quad':'', 'tri-u':'u', 'tri-d':'d'}[eltype]
+        F = rectangle(nx,ny,x1-x0,y1-y0,diag).trl([x0,y0,0])
         addPart(F)
         drawParts()
+
 
 def addPart(F):
     """Add a Formex to the parts list."""
@@ -505,16 +486,11 @@ def reload_menu():
 
 if __name__ == "draw":
 
-    # The sole intent of running this script is to create a top level
-    # menu 'Hesperia'. The typical action then might be 'show_menu()'.
-    # However, during development, you might want to change the menu's
-    # actions will pyFormex is running, so a 'reload' action seems
-    # more appropriate.
-    
     reload_menu()
     deleteAll()
     smoothwire()
     transparent()
+    lights(False)
     
 # End
 

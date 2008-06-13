@@ -9,13 +9,15 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Finite Element Methods.
+"""Finite Element Models in pyFormex.
 
+Finite element models are geometrical models that consist of a unique
+set of nodal coordinates and one of more sets of elements.
 """
 
 from coords import *
 from mydict import Dict
-import numpy
+from numpy import *
 
 def mergeNodes(nodes):
     """Merge all the nodes of a list of node sets.
@@ -25,9 +27,9 @@ def mergeNodes(nodes):
      - the coordinates of all unique nodes,
      - a list of indices translating the old node numbers to the new.
     """
-    coords = Coords(numpy.concatenate([x for x in nodes],axis=0))
+    coords = Coords(concatenate([x for x in nodes],axis=0))
     coords,index = coords.fuse()
-    n = numpy.array([0] + [ x.npoints() for x in nodes ]).cumsum()
+    n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
     ind = [ index[f:t+1] for f,t in zip(n[:-1],n[1:]) ]
     return coords,ind
 
@@ -43,13 +45,37 @@ def mergeModels(femodels):
        but with numbers referring to the new coordinates.
     """
     nodes = [ x for x,e in femodels ]
-    coords = Coords(numpy.concatenate(nodes,axis=0))
+    coords = Coords(concatenate(nodes,axis=0))
     coords,index = coords.fuse()
-    n = numpy.array([0] + [ x.npoints() for x in nodes ]).cumsum()
+    n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
     ind = [ index[f:t+1] for f,t in zip(n[:-1],n[1:]) ]
     elems = [ e for x,e in femodels ]
     return coords,[i[e] for i,e in zip(ind,elems)]
               
+
+def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
+    """Check that an array contains a set of uniqe integers in range.
+
+    nrs is an integer array with any shape.
+    All integers should be unique and in the range(nmin,nmax).
+    Beware: this means that    nmin <= i < nmax  !
+    Default nmax is unlimited. Set nmin to None to
+    error is the value to return if the tests are not passed.
+    By default, a ValueError is raised.
+    On success, None is returned
+    """
+    nrs = asarray(nrs)
+    new = unique1d(nrs)
+    if new.size != nrs.size or \
+           (nmin is not None and new.min() < nmin) or \
+           (nmax is not None and new.max() > nmax):
+        if error is None:
+            raise ValueError,"Values not unique or not in range"
+        else:
+            return error
+    return None
+    
+    
 
 
 ######################## Finite Element Model ##########################
@@ -71,10 +97,11 @@ class Model(Dict):
           fe.mergeModels([Fi.feModel() for Fi in FL])
         will return the (nodes,elems) tuple to create the Model.
 
+        The model can have node and element property numbers.
         """
         if not type(elems) == list:
             elems = [ elems ]
-        self.nodes = asarray(nodes)
+        self.nodes = Coords(nodes)
         self.elems = map(asarray,elems)
         nelems = [elems.shape[0] for elems in self.elems]
         self.celems = cumsum([0]+nelems)
@@ -104,7 +131,10 @@ class Model(Dict):
             n = i
 
         return split,[ asarray(s) - ofs for s,ofs in zip(split,self.celems) ]
-        
+
+    def elemNrs(group,set):
+        """Return the global element numbers for elements set in group"""
+        return self.celems[group] + set
  
     def getElems(self,sets):
         """Return the definitions of the elements in sets.
@@ -130,24 +160,32 @@ class Model(Dict):
         old and new are equally sized lists with unique node numbers, each
         smaller that the number of nodes in the model.
         The old numbers will be renumbered to the new numbers.
-        If either of the lists is None, a range with the length of the
+        If one of the lists is None, a range with the length of the
         other is used.
         If the lists are shorter than the number of nodes, the remaining
         nodes will be numbered in an unspecified order.
+        If both lists are None, the nodes are renumbered randomly.
+
+        This function returns a tuple (old,new) with the full renumbering
+        vectors used. The first gives the old node numbers of the current
+        numbers, the second gives the new numbers cooresponding with the
+        old ones.
         """
-        if old is None and new is None:
-            return
         nnodes = self.nnodes()
-        if old is None:
-            new = unique1d(new)
-            if new.min() < 0 or new.max() >= nnodes:
-                raise ValueError,"Values in new should be in range(%s)" % nnodes
-            old = arange(len(new))
+        if old is None and new is None:
+            old = unique1d(random.randint(0,nnodes-1,nnodes))
+            new = unique1d(random.randint(0,nnodes-1,nnodes))
+            nn = max(old.size,new.size)
+            old = old[:nn]
+            new = new[:nn]
+        elif old is None:
+            new = asarray(new).reshape(-1)
+            checkUniqueNumbers(new,0,nnodes)
+            old = arange(new.size)
         elif new is None:
-            old = unique1d(old)
-            if old.min() < 0 or old.max() >= nnodes:
-                raise ValueError,"Values in old should be in range(%s)" % nnodes
-            new = arange(len(old))
+            old = asarray(old).reshape(-1)
+            checkUniqueNumbers(old,0,nnodes)
+            new = arange(old.size)
 
         all = arange(nnodes)
         old = concatenate([old,setdiff1d(all,old)])
@@ -160,14 +198,20 @@ class Model(Dict):
         print "newold:\n",newold
         self.nodes = self.nodes[oldnew]
         self.elems = [ newold[e] for e in self.elems ]
+        return oldnew,newold
+
         
-        
-        
+def mergedModel(*args):
+    """Returns the fe Model obtained from merging individual models.
+
+    The input arguments are (nodes,elems) tuples.
+    The return value is a merged fe Model.
+    """
+    return Model(*mergeModels(args))
 
 
 if __name__ == "__main__":
 
     print __doc__
-
 
 # End
