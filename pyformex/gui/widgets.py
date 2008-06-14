@@ -543,11 +543,13 @@ class InputRadio(InputItem):
         self.input = QtGui.QGroupBox()
         if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
+            self.hbox.setContentsMargins(0,10,0,10)
         else:
             self.hbox = QtGui.QHBoxLayout()
+            self.hbox.setContentsMargins(10,0,10,0)
         self.rb = []
         self.hbox.addStretch(1)
-
+        
         for v in choices:
             rb = QtGui.QRadioButton(v)
             self.hbox.addWidget(rb)
@@ -589,8 +591,10 @@ class InputPush(InputItem):
         self.input.setFlat(True)
         if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
+            self.hbox.setContentsMargins(0,10,0,10)
         else:
             self.hbox = QtGui.QHBoxLayout()
+            self.hbox.setContentsMargins(10,0,10,0)
         self.hbox.setSpacing(0)
         self.hbox.setMargin(0)
 
@@ -692,7 +696,7 @@ class InputDialog(QtGui.QDialog):
     This feature is still experimental (though already used in a few places.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -746,7 +750,6 @@ class InputDialog(QtGui.QDialog):
         if parent is None:
             parent = GD.gui
         QtGui.QDialog.__init__(self,parent)
-        self.resize(400,200)
         if caption is None:
             caption = 'pyFormex-dialog'
         self.setWindowTitle(str(caption))
@@ -759,7 +762,6 @@ class InputDialog(QtGui.QDialog):
                 itemtype = item[2]
             else:
                 itemtype = type(value)
-            #GD.debug("INPUT ITEM %s TYPE %s" % (name,itemtype))
             if itemtype == bool:
                 line = InputBool(name,value)
 
@@ -810,31 +812,48 @@ class InputDialog(QtGui.QDialog):
             form.addLayout(line)
             self.fields.append(line)
 
-        # add OK and Cancel buttons
-        but = QtGui.QHBoxLayout()
-        spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
-        but.addItem(spacer)
-        ok = QtGui.QPushButton("OK",self)
-        ok.setDefault(True)
-        cancel = QtGui.QPushButton("CANCEL",self)
-        #cancel.setAccel(QtGui.QKeyEvent.Key_Escape)
-        #cancel.setDefault(True)
-        but.addWidget(cancel)
-        but.addWidget(ok)
+        # add the action buttons
+        if actions is None:
+            actions = [('CANCEL',),('OK',)]
+            default = 'OK'
+        but = self.addButtons(actions,default)
+        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
         form.addLayout(but)
-        self.connect(cancel,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
-        self.connect(ok,QtCore.SIGNAL("clicked()"),self.acceptdata)
         self.setLayout(form)
         # Set the keyboard focus to the first input field
         self.fields[0].input.setFocus()
         self.show()
 
+
+    def addButtons(self,actions,default):
+        """Add action buttons to the dialog"""
+        but = QtGui.QHBoxLayout()
+        spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
+        but.addItem(spacer)
+        for a in actions:
+            name = a[0]
+            b = QtGui.QPushButton(name,self)
+            n = name.lower()
+            if len(a) > 1:
+                slot = (a[1],)
+            elif n == 'ok':
+                slot = (self,QtCore.SLOT("accept()"))
+            elif n == 'cancel':
+                slot = (self,QtCore.SLOT("reject()"))
+            else:
+                slot = (self,QtCore.SLOT("reject()"))
+            self.connect(b,QtCore.SIGNAL("clicked()"),*slot)
+            if default is not None and n == default.lower():
+                b.setDefault(True)
+            but.addWidget(b)
+        return but
+           
         
-    def acceptdata(self):
+    def acceptData(self):
         """This function is called when the user clicks 'ok'"""
+        print "ACCEPT DATA"
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
-        self.accept()
 
         
     def getResult(self,timeout=None):
@@ -868,6 +887,7 @@ class InputDialog(QtGui.QDialog):
         self.raise_()
         GD.app.processEvents()
         return (self.result, accept)
+
 
     
 def messageBox(message,level='info',choices=['OK'],timeout=None):

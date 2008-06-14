@@ -11,6 +11,8 @@
 ##
 
 from simple import rectangle
+from gui.widgets import *
+
 
 def showSuperEgg():
     """Draw a super Egg from set global parameters"""
@@ -20,16 +22,56 @@ def showSuperEgg():
     F = B.superSpherical(n=north_south,e=east_west).scale(scale)
     clear()
     draw(F,color=color)
+    export({'Egg':F})
     return
 
-        
+savefile = None
+
+def show():
+    w.acceptData()
+    globals().update(w.result)
+    showSuperEgg()
+
+def close():
+    w.close()
+    if savefile:
+        savefile.close()
+
+def reset():
+    print "RESET"
+
+def save():
+    global savefile
+    show()
+    if savefile is None:
+        filename = askFilename(filter="Text files (*.txt)")
+        if filename:
+            savefile = file(filename,'a')
+    if savefile:
+        savefile.write('%s\n' % str(w.result))
+
+def play():
+    global savefile
+    if savefile:
+        filename = savefile.name
+        savefile.close()
+    else:
+        filename = askFilename(filter="Text files (*.txt)",exist=True)
+    if filename:
+        savefile = file(filename,'r')
+        for line in savefile:
+            globals().update(eval(line))
+            showSuperEgg()
+        savefile = file(filename,'a')
+
+    
 if __name__ == "draw":
 
     reset()
     smoothwire()
     lights(True)
     transparent(False)
-    setView('eggview',(0.,-45.,0.))
+    setView('eggview',(0.,-30.,0.))
     view('eggview')
 
     # Initial values for global parameters
@@ -43,26 +85,18 @@ if __name__ == "draw":
     scale = [1.,1.,1.]
     color = 'red'
 
-    while True:
-        items = [ [n,globals()[n]] for n in [
-            'north_south','east_west','lat_range','long_range',
-            'grid','diag','scale','color'] ]
-        # turn 'diag' into a complex input widget
-        items[5].extend(['radio',['','u','d']])
-        res = askItems(items,caption="SuperEgg parameters")
-        if not res:
-            break;
+    items = [ [n,globals()[n]] for n in [
+        'north_south','east_west','lat_range','long_range',
+        'grid','diag','scale','color'] ]
+    # turn 'diag' into a complex input widget
+    items[5].extend(['radio',['','u','d']])
 
-        globals().update(res)
+    actions = [('Close',close),('Reset',reset),('Replay',play),('Save',save),('Show',show)]
+    
+    w = InputDialog(items,caption='SuperEgg parameters',actions=actions,default='Show')
 
-        clear()
-        showSuperEgg()
-            
-        # Break from endless loop if an input timeout is active !
-        if widgets.input_timeout >= 0:
-            break
-
-    exit()
-
+    w.show()
+    
+        
 
 # End
