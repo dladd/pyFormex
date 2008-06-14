@@ -453,9 +453,6 @@ def draw(F, view=None,bbox='auto',
 
     global allowwait
 
-    if allowwait:
-        drawwait()
-
     if type(F) == list:
         actor = []
         nowait = False
@@ -465,7 +462,7 @@ def draw(F, view=None,bbox='auto',
             actor.append(draw(Fi,view,bbox,
                               color,colormap,alpha,
                               mode,linewidth,shrink,marksize,
-                              wait,clear,allviews))
+                              wait=nowait,clear=clear,allviews=allviews))
             if Fi == F[0]:
                 clear = False
                 view = None
@@ -480,6 +477,9 @@ def draw(F, view=None,bbox='auto',
             isinstance(F,surface.TriSurface) or
             isinstance(F,tools.Plane)):
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
+
+    if allowwait:
+        drawwait()
 
     if clear is None:
         clear = DrawOptions.get('clear',False)

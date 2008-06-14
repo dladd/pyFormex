@@ -21,9 +21,6 @@ Installation
 Command line
 ------------
 
-Gui
----
-  
 
 Core
 ----
@@ -40,6 +37,15 @@ Core
 - simple.py
   
   . rectangle has an optional 'diag' argument to create triangles
+
+
+Gui
+---
+
+- Input Dialogs now have customizable action buttons
+
+Drawing
+-------
 
 
 Plugins
