@@ -851,7 +851,6 @@ class InputDialog(QtGui.QDialog):
         
     def acceptData(self):
         """This function is called when the user clicks 'ok'"""
-        print "ACCEPT DATA"
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
 

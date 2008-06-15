@@ -711,7 +711,7 @@ class Coords(ndarray):
         return f.reshape(self.shape)
 
 
-    def superSpherical(self,n=1.0,e=1.0,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
+    def superSpherical(self,n=1.0,e=1.0,k=0.0, dir=[0,1,2],scale=[1.,1.,1.],colat=False):
         """Converts superspherical to cartesian after scaling.
 
         <dir> specifies which coordinates are interpreted as resp.
@@ -736,6 +736,9 @@ class Coords(ndarray):
         if colat:
             phi = 90.0*rad - phi
         rc = r*c(phi,n)
+        if k != 0:   # k should be > -1.0 !!!!
+            x = sin(phi)
+            rc *= (1-k*x)/(1+k*x)
         f = column_stack([rc*c(theta,e),rc*s(theta,e),r*s(phi,n)])
         return f.reshape(self.shape)
 

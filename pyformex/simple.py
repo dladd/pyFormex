@@ -82,7 +82,7 @@ def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     return Formex([[p1,p2]]).divide(n)
 
 
-def rectangle(nx,ny,b,h,diag=None):
+def rectangle(nx,ny,b,h,bias=0.,diag=None):
     """Return a Formex representing a rectangle of size(b,h) with (nx,ny) cells.
 
     This is a convenience function to create a rectangle with given size.
@@ -93,7 +93,7 @@ def rectangle(nx,ny,b,h,diag=None):
     Base = { 'u': '12-34', 'd': '16-14' }
     base = Base.get(diag,'123')
     sc = [ float(b)/nx, float(h)/ny, 0. ]
-    return Formex(mpattern(base)).replic2(nx,ny).scale(sc)
+    return Formex(mpattern(base)).replic2(nx,ny,bias=bias).scale(sc)
    
 
 def circle(a1=2.,a2=0.,a3=360.):
