@@ -91,7 +91,7 @@ class Collection(object):
                     del self.d[key]
             else:
                 GD.debug("Not removing from non-existing selection for actor %s" % key)
-
+    
     def has_key(self,key):
         """Check whether the collection has an entry for the key."""
         return self.d.has_key(key)
