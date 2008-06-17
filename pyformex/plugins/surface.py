@@ -347,8 +347,7 @@ def closedLoop(elems):
         ret = 1
     else:
         ret = 0
-    return ret,srt
-    
+    return ret,srt,elems
 
 
 def surfaceInsideLoop(coords,elems):
@@ -372,6 +371,80 @@ def surfaceInsideLoop(coords,elems):
     coords = Coords.concatenate([coords,x])
     return coords,elems
 
+
+def partitionBorder(elems):
+    """Partition the border of a surface.
+    
+    The argument is a (nelems,2) shaped array of integers
+    representing the border element numbers.
+    A list of borders which are not connected to each other
+    is returned.
+    Each border is a (nelems,2) shaped array of integers in
+    which the element numbers are ordered.
+    """
+    borders = []
+    while elems.size != 0:
+        closed,loop,elems = closedLoop(elems)
+        borders.append(loop[loop!=-1].reshape(-1,2))
+        elems = elems[elems!=-1].reshape(-1,2)
+    return borders
+
+
+def fillHole(coords,elems):
+    """Fill a hole surrounded by the border which is defined
+    
+    by coords and elems.
+    Coords is a (npoints,3) shaped array of floats.
+    Elems is a (nelems,2) shaped array of integers representing
+    the border element numbers and must be ordered.
+    """
+    triangles = empty((0,3,),dtype=int)
+    while shape(elems)[0] != 3:
+        elems,triangle = createTriangleFromBorder(coords,elems)
+        triangles = row_stack([triangles,triangle])
+    # remaining border
+    triangles = row_stack([triangles,elems[:,0]])
+    return triangles
+
+
+def createTriangleFromBorder(coords,elems):
+    """Create a triangle within a border.
+    
+    The triangle is created from the two border elements with
+    the sharpest angle.
+    Coords is a (npoints,3) shaped array of floats.
+    Elems is a (nelems,2) shaped array of integers representing
+    the border element numbers and must be ordered.
+    A list of two objects is returned: the new border elements and the triangle.
+    """
+    border = coords[elems]
+    # calculate angles between edges of border
+    edges1 = border[:,1]-border[:,0]
+    edges2 = border[:,0]-border[:,1]
+    # roll axes so that edge i of edges1 and edges2 are neighbours
+    edges2 = roll(edges2,-1,0)
+    len1 = length(edges1)
+    len2 = length(edges2)
+    inpr = diagonal(inner(edges1,edges2))
+    cos = inpr/(len1*len2)
+    # angle between 0 and 180 degrees
+    angle = arccos(cos)/(pi/180.)
+    # determine sharpest angle
+    i = where(angle == angle.min())[0][0]
+    # create triangle and new border elements
+    j = i + 1
+    n = shape(elems)[0]
+    if j == n:
+        j -= n
+    old_edges = take(elems,[i,j],0)
+    elems = delete(elems,[i,j],0)
+    new_edge = asarray([old_edges[0,0],old_edges[-1,1]])
+    if j == 0:
+        elems = insert(elems,0,new_edge,0)
+    else:
+        elems = insert(elems,i,new_edge,0)
+    triangle = append(old_edges[:,0],old_edges[-1,1].reshape(1),0)
+    return elems,triangle
 
 
 ############################################################################
@@ -1020,11 +1093,12 @@ class TriSurface(object):
         return stype[0] and stype[1]
 
     def checkBorder(self):
-        """Return the border of TriSurface as a set of segements."""
+        """Return the border of TriSurface as a set of segments."""
         border = self.edges[self.borderEdges()]
-        closed,loop = closedLoop(border)
+        closed,loop,elems = closedLoop(border)
         print "the border is of type %s" % closed
         print loop
+
 
     def fillBorder(self):
         brd = self.edges[self.borderEdges()]

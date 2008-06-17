@@ -281,6 +281,42 @@ def fillBorder():
         S.fillBorder()
 
 
+def fillHoles():
+    """Fill the holes in the selected surface."""
+    S = selection.check(single=True)
+    if S:
+        border_elems = S.edges[S.borderEdges()]
+        if border_elems.size != 0:
+            # partition borders
+            border_elems = partitionBorder(border_elems)
+            # draw borders in new viewport
+            R = GD.canvas.camera.getRot()
+            P = GD.canvas.camera.perspective
+            layout(2)
+            viewport(1)
+            GD.canvas.camera.rot = R
+            toolbar.setPerspective(P)
+            for i,elems in enumerate(border_elems):
+                draw(Formex(S.coords[elems]))
+            zoomAll()
+            # pick borders for which the hole must be filled
+            print "PICK HOLES WHICH HAVE TO BE FILLED."
+            picked = pick(mode='actor')
+            layout(1)
+            # fill the holes
+            triangles = empty((0,3,),dtype=int)
+            if picked.has_key(-1):
+                for i in picked[-1]:
+                    triangles = row_stack([triangles,fillHole(S.coords,border_elems[int(i)])])
+                T = TriSurface(S.coords,triangles)
+                S.append(T)
+                draw(T,color='red',bbox=None)
+            else:
+                warning("No borders were picked.")
+        else:
+            warning("The surface %s does not have a border." % selection[0])
+
+
 # Selectable values for display/histogram
 # Each key is a description of a result
 # Each value consist of a tuple
@@ -699,9 +735,9 @@ def cutAtPlane():
     if res:
         P = res['Point']
         N = res['Normal']
-        atol = res['Tolerance']
         p = res['New props']
         side = res['Side']
+        atol = res['Tolerance']
         selection.remember(True)
         if side == 'both':
             G = [F.toFormex().cutAtPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
@@ -799,6 +835,7 @@ def sliceIt():
         dx =  (xmax-xmin) / nslices
         x = arange(nslices+1) * dx
         N = unitVector(axis)
+        print N
         P = [ bb[0]+N*s for s in x ]
         G = [S.toFormex().intersectionLinesWithPlane(Pi,N) for Pi in P]
         #[ G.setProp(i) for i,G in enumerate(G) ]
@@ -1070,7 +1107,8 @@ def create_menu():
           ]),
         ("&Border Line",showBorder),
         ("&Border Type",checkBorder),
-        ("&Fill the holes",fillBorder),
+        ("&Fill Border",fillBorder),
+        ("&Fill Holes",fillHoles),
         ("---",None),
         ("&Transform",
          [("&Scale",scaleSelection),
