@@ -183,6 +183,39 @@ def setSplash():
     if fn:
         GD.cfg['gui/splash'] = fn
       
+
+## def editConfig():
+##     error('You can not edit the config file while pyFormex is running!') 
+    
+
+def savePreferences():
+    """Save the preferences.
+
+    The name of the preferences file was set in GD.preffile.
+    If a local preferences file was read, it will be saved there.
+    Otherwise, it will be saved as the user preferences, possibly
+    creating that file.
+    If GD.preffile is None, preferences are not saved.
+    """
+    f = GD.preffile
+    if not f:
+        return
+    
+    del GD.cfg['__ref__']
+
+    # Dangerous to set permanently!
+    del GD.cfg['input/timeout']
+    
+    GD.debug("!!!Saving config:\n%s" % GD.cfg)
+
+    try:
+        fil = file(f,'w')
+        fil.write("%s" % GD.cfg)
+        fil.close()
+        res = "Saved"
+    except:
+        res = "Could not save"
+    GD.debug("%s preferences to file %s" % (res,f))
     
 
 MenuData = [
@@ -206,7 +239,8 @@ MenuData = [
         (_('&SysPath'),setSysPath),
         (_('&Help'),setHelp),
         ('---',None),
-        (_('&Save Preferences'),GD.savePreferences),
+##         (_('&Edit Preferences'),editPreferences),
+        (_('&Save Preferences'),savePreferences),
         (_('Toggle Timeout'),draw.timeout),
         ]),
     ]

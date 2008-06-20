@@ -110,12 +110,13 @@ def openScript(exist=True):
         GD.gui.history.add(fn)
       
         
-def edit():
+def edit(f=None):
     """Load the current file in the editor.
 
     This only works if the editor was set in the configuration.
-    The author uses 'gnuclient' to load the files in a running copy
-    of (X)Emacs.
+    The author uses 'emacsclient' to load the files in a running copy
+    of Emacs.
+    If a filename is specified, that file is loaded instead.
     """
     if GD.cfg['editor']:
         pid = utils.spawn('%s %s' % (GD.cfg['editor'],GD.cfg['curfile']))
