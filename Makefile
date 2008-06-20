@@ -91,9 +91,9 @@ website:
 
 # Set a new version
 
-version: ${PYFORMEXDIR}/globaldata.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac
+version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac
 
-${PYFORMEXDIR}/globaldata.py: RELEASE
+${PYFORMEXDIR}/__init__.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
 
 ${MANDIR}/pyformex.tex: RELEASE

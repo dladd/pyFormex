@@ -958,7 +958,7 @@ class Coords(ndarray):
 
     def egg(self,k):
         """Maps the coordinates to an egg-shape"""
-        return (1-k*self)/1+k*self)
+        return (1-k*self)/(1+k*self)
     
 
 

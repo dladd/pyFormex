@@ -400,7 +400,7 @@ def fillHole(coords,elems):
     """
     triangles = empty((0,3,),dtype=int)
     while shape(elems)[0] != 3:
-        elems,triangle = createTriangleFromBorder(coords,elems)
+        elems,triangle = create_border_triangle(coords,elems)
         triangles = row_stack([triangles,triangle])
     # remaining border
     triangles = row_stack([triangles,elems[:,0]])
