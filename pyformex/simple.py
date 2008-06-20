@@ -82,18 +82,26 @@ def line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1):
     return Formex([[p1,p2]]).divide(n)
 
 
-def rectangle(nx,ny,b,h,bias=0.,diag=None):
+def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
     """Return a Formex representing a rectangle of size(b,h) with (nx,ny) cells.
 
     This is a convenience function to create a rectangle with given size.
+    The default b/h values are equal to nx/ny, resulting in a modular grid.
     The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
     By default, the elements are quads. By setting diag='u' or 'd',
     diagonals are added in /, resp. \ direction, to form triangles.
     """
     Base = { 'u': '12-34', 'd': '16-14' }
     base = Base.get(diag,'123')
-    sc = [ float(b)/nx, float(h)/ny, 0. ]
-    return Formex(mpattern(base)).replic2(nx,ny,bias=bias).scale(sc)
+    if b is None:
+        sx = 1.
+    else:
+        sx = float(b)/nx
+    if h is None:
+        sy = 1.
+    else:
+        sy = float(h)/ny
+    return Formex(mpattern(base)).replic2(nx,ny,bias=bias).scale([sx,sy,0.])
    
 
 def circle(a1=2.,a2=0.,a3=360.):

@@ -525,16 +525,23 @@ class Coords(ndarray):
     #  is set True, however, the coordinates are changed inplace. 
 
    
-    def scale(self,scale,inplace=False):
+    def scale(self,scale,dir=None,inplace=False):
         """Return a copy scaled with scale[i] in direction i.
 
-        The scale should be a list of 3 numbers, or a single number.
-        In the latter case, the scaling is homothetic."""
+        The scale should be a list of 3 scaling factors for the 3 axis
+        directions, or a single scaling factor.
+        In the latter case, dir (a single axis number or a list) may be given
+        to specify the direction(s) to scale. The default is to produce a
+        homothetic scaling.
+        """
         if inplace:
             out = self
         else:
             out = self.copy()
-        out *= scale
+        if dir is None:
+            out *= scale
+        else:
+            out[...,dir] *= scale
         return out
     
 
@@ -947,6 +954,12 @@ class Coords(ndarray):
             d = sqrt(d)
         f[...,dir] = func(d)
         return f
+
+
+    def egg(self,k):
+        """Maps the coordinates to an egg-shape"""
+        return (1-k*self)/1+k*self)
+    
 
 
     def replace(self,i,j,other=None):
