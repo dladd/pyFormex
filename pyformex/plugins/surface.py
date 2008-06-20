@@ -350,6 +350,24 @@ def closedLoop(elems):
     return ret,srt,elems
 
 
+def partitionBorder(elems):
+    """Partition the border of a surface.
+    
+    The argument is a (nelems,2) shaped array of integers
+    representing the border element numbers.
+    A list of borders which are not connected to each other
+    is returned.
+    Each border is a (nelems,2) shaped array of integers in
+    which the element numbers are ordered.
+    """
+    borders = []
+    while elems.size != 0:
+        closed,loop,elems = closedLoop(elems)
+        borders.append(loop[loop!=-1].reshape(-1,2))
+        elems = elems[elems!=-1].reshape(-1,2)
+    return borders
+
+
 def surfaceInsideLoop(coords,elems):
     """Create a surface inside a closed curve defined by coords and elems.
 
@@ -372,24 +390,6 @@ def surfaceInsideLoop(coords,elems):
     return coords,elems
 
 
-def partitionBorder(elems):
-    """Partition the border of a surface.
-    
-    The argument is a (nelems,2) shaped array of integers
-    representing the border element numbers.
-    A list of borders which are not connected to each other
-    is returned.
-    Each border is a (nelems,2) shaped array of integers in
-    which the element numbers are ordered.
-    """
-    borders = []
-    while elems.size != 0:
-        closed,loop,elems = closedLoop(elems)
-        borders.append(loop[loop!=-1].reshape(-1,2))
-        elems = elems[elems!=-1].reshape(-1,2)
-    return borders
-
-
 def fillHole(coords,elems):
     """Fill a hole surrounded by the border which is defined
     
@@ -407,7 +407,7 @@ def fillHole(coords,elems):
     return triangles
 
 
-def createTriangleFromBorder(coords,elems):
+def create_border_triangle(coords,elems):
     """Create a triangle within a border.
     
     The triangle is created from the two border elements with
