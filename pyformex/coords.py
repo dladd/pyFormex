@@ -712,15 +712,28 @@ class Coords(ndarray):
 
 
     def superSpherical(self,n=1.0,e=1.0,k=0.0, dir=[0,1,2],scale=[1.,1.,1.],colat=False):
-        """Converts superspherical to cartesian after scaling.
+        """Performs a superspherical transformation.
 
+        superSpherical is much like spherical, but adds some extra
+        parameters to enable the creation of virtually any surface.
+
+        Just like with spherical(), the input coordinates are interpreted as
+        the longitude, latitude and distance in a spherical coordinate system.
         <dir> specifies which coordinates are interpreted as resp.
         longitude(theta), latitude(phi) and distance(r).
-        <scale> will scale the coordinate values prior to the transformation.
         Angles are then interpreted in degrees.
         Latitude, i.e. the elevation angle, is measured from equator in
         direction of north pole(90). South pole is -90.
         If colat=True, the third coordinate is the colatitude (90-lat) instead.
+        <scale> will scale the coordinate values prior to the transformation.
+
+        The n and e parameters define exponential transformations of the
+        north_south (latitude), resp. the east_west (longitude) coordinates.
+        Default values of 1 result in a circle.
+
+        k adds 'eggness' to the shape: a difference between the northern and
+        southern hemisphere. Values > 0 enlarge the southern hemishpere and
+        shrink the northern.
         """
         def c(o,m):
             c = cos(o)

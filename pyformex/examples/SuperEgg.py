@@ -22,10 +22,10 @@ def showSuperEgg():
     """Draw a super Egg from set global parameters"""
     nx,ny = grid
     b,h = long_range[1]-long_range[0], lat_range[1]-lat_range[0]
-    if grid_base == 'quad':
-        diag = ''
+    if grid_base.startswith('tri'):
+        diag = grid_base[-1]
     else:
-        diag = 'u'
+        diag = ''
     B = rectangle(nx,ny,b,h,diag=diag,bias=grid_bias).translate([long_range[0],lat_range[0],1.])
     if grid_skewness != 0.0:
         B = B.shear(0,1,grid_skewness)
@@ -103,7 +103,7 @@ def createSuperEgg():
         'grid','grid_base','grid_bias','grid_skewness','scale',
         'name','color'] ]
     # turn 'diag' into a complex input widget
-    items[6].extend(['radio',['quad','tri']])
+    items[6].extend(['radio',['quad','tri-u','tri-d']])
 
     actions = [('Close',close),('Reset',reset),('Replay',play),('Save',save),('Show',show)]
     

@@ -722,7 +722,7 @@ class Formex(object):
 #   Create a new Formex
 #
 
-    def __init__(self,data=[[[]]],prop=None,eltype=None):
+    def __init__(self,data=[],prop=None,eltype=None):
         """Create a new Formex.
 
         The Formex data can be initialized by another Formex,
@@ -745,7 +745,7 @@ class Formex(object):
                 data = pattern(data)
             data = asarray(data).astype(Float)
             
-            if data.size == 0:
+            if data.size == 0:   ### MAYBE THIS SHOULD BE CHANGED ?????
                 if len(data.shape) == 3:
                     nplex = data.shape[1]
                 elif len(data.shape) == 2:

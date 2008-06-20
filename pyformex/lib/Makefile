@@ -19,8 +19,8 @@ PROGRAMS= postabq
 
 # To be filled in by ./configure
 CC= gcc
-PY_INCLUDE= /usr/include/python2.4
-NUMPY_INCLUDE= /usr/lib/python2.4/site-packages/numpy/core/include
+PY_INCLUDE= /usr/include/python2.5
+NUMPY_INCLUDE= /usr/lib/python2.5/site-packages/numpy/core/include
 
 
 INCLUDES= -I/usr/include -I$(PY_INCLUDE) -I$(NUMPY_INCLUDE)
