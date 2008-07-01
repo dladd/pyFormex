@@ -270,8 +270,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         If clear == True, the current selection is cleared.
         """
         GD.debug("CANCEL SELECTION MODE")
+        self.selection_accepted = True
         if clear:
             self.selection.clear()
+            self.selection_accepted = False
         self.selection_canceled = True
         self.selection_busy = False
 
@@ -367,10 +369,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                     remove = map(str,setdiff1d(selecteditems,selection))
                     GD.canvas.number_widget.setSelected(add,True)
                     GD.canvas.number_widget.setSelected(remove,False)
-            if func:
-                func(self.selection)
+                if func:
+                    func(self.selection)
             if single:
                 self.selection_canceled = True
+        if func and not self.selection_accepted:
+            func(self.selection)
         self.finish_selection()
         return self.selection
     

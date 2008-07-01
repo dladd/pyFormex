@@ -728,7 +728,7 @@ class TriSurface(object):
         return self.coords.sizes()
 
     def diagonal(self):
-        return self.coords.diagonal()
+        return self.coords.dsize()
 
     def bsphere(self):
         return self.coords.bsphere()
