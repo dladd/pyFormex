@@ -547,6 +547,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             
         elif action == MOVE:
             self.draw_rectangle(x,y)
+            GD.debugt("UPDATE")
             self.update()
 
         elif action == RELEASE:
@@ -595,23 +596,29 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         If store_closest==True, the closest picked object is stored in as a
         tuple ( [actor,object] ,distance) in self.picked_closest
         """
+        GD.debugt("PICKPARTS")
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
         stackdepth = 2
         GL.glSelectBuffer(max_objects*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
+        GD.debugt("pickGL from %s" % len(self.actors))
         for i,a in enumerate(self.actors):
             GL.glPushName(i)
             a.pickGL(obj_type)
             GL.glPopName()
+        GD.debugt("getpickbuf")
         buf = GL.glRenderMode(GL.GL_RENDER)
+        GD.debugt("translate getpickbuf")
         self.picked = [ r[2] for r in buf ]
+        GD.debugt("store closest")
         if store_closest and len(buf) > 0:
             d = asarray([ r[0] for r in buf ])
             dmin = d.min()
             w = where(d == dmin)[0][0]
             self.closest_pick = (self.picked[w], dmin)
+        GD.debugt("PICKPARTS DONE")
 
 
     def pick_elements(self):

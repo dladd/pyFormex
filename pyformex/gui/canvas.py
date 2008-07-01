@@ -25,6 +25,12 @@ import utils
 
 
 
+def gl_pickbuffer():
+    "Return a list of the 2nd numbers in the openGL pick buffer."
+    buf = GL.glRenderMode(GL.GL_RENDER)
+    GD.debugt("translate getpickbuf")
+    return asarray([ r[2] for r in buf ])
+
 
 fill_modes = [ GL.GL_FRONT_AND_BACK, GL.GL_FRONT, GL.GL_BACK ]
 fill_mode = GL.GL_FRONT_AND_BACK
@@ -358,7 +364,7 @@ class Canvas(object):
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
-        #GD.debug("UPDATING CURRENT OPENGL CANVAS")
+        GD.debugt("UPDATING CURRENT OPENGL CANVAS")
         GL.glFlush()
         
 
@@ -390,6 +396,7 @@ class Canvas(object):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position/orientation or lens.
         """
+        GD.debugt("UPDATING CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
         glLight(self.lighting)
@@ -589,6 +596,7 @@ class Canvas(object):
         self.addDecoration(self.cursor)
 
     def draw_rectangle(self,x,y):
+        GD.debugt("DRAWRECTANGLE")
         if self.cursor:
             self.removeDecoration(self.cursor)
         col = GD.cfg.get('pick/color','yellow')

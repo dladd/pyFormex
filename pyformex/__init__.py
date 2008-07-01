@@ -30,7 +30,7 @@ board = None       # the message board
 _gui_ = None
 
 # set start date/time
-import datetime
+import time,datetime
 StartTime = datetime.datetime.today()
 
 # initialize some global variables used for communication between modules
@@ -60,10 +60,13 @@ warning = message
 ##         script.warning(s)
 
 def debug(s):
-    #if hasattr(options,'debug'):
     if options.debug:
         print "DEBUG: %s" % str(s)
 
+def debugt(s):
+    if options.debug:
+        print "%.3f: %s" % (time.time(),str(s))
+    
 
 # we couldn't put these in gui.py because we can't import gui in other modules
 
