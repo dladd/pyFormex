@@ -110,6 +110,9 @@ def setBGcolor():
 def setLinewidth():
     askConfigPreferences(['draw/linewidth'])
 
+
+def setAvgNormalTreshold():
+    askConfigPreferences(['render/avgnormaltreshold'])
 def setAvgNormalSize():
     askConfigPreferences(['mark/avgnormalsize'])
 
@@ -226,6 +229,7 @@ MenuData = [
         (_('&Input Timeout'),setInputTimeout), 
         (_('&Draw Wait Time'),setDrawWait), 
 #        (_('&Background Color'),setBGcolor), 
+        (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
         (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
         (_('&RotFactor'),setRotFactor),

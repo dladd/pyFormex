@@ -57,7 +57,7 @@ if not success:
 
 
 
-    def average_close(a,mode='direction',tol=0.001):
+    def average_close(a,tol=0.5):
         """Average values from an array according to some specification.
 
         The default is to have a direction that is nearly the same.
@@ -65,35 +65,17 @@ if not success:
         """
         if a.ndim != 2:
             raise ValueError,"array should be 2-dimensional!"
-        print a
-        tol = 1.0 - tol
         n = normalize(a)
-        print n
         nrow = a.shape[0]
         cnt = zeros(nrow,dtype=int32)
-        print cnt
         while cnt.min() == 0:
             w = where(cnt==0)
             nw = n[w]
-            #print "w=%s" % w
-            #print "nw=%s"%nw
-            d = dotpr(nw[0],nw)
-            #print "dotpr=%s" % d
-            #print tol
-            wok = where(d >= tol)
-            #print "wok=%s"%wok
+            wok = where(dotpr(nw[0],nw) >= tol)
             wi = w[0][wok[0]]
-            #print "wi=%s"%wi
-            nwi = len(wi)
-            #print nwi,wi
-            cnt[wi] = nwi
+            cnt[wi] = len(wi)
             a[wi] = a[wi].sum(axis=0)
-            #print cnt
-            #print a
-            #print "DONE"
-            #return
-        print a
-        print cnt
+        return a,cnt
 
     def nodalSum2(val,elems):
         """Compute the nodal sum of values defined on elements.
@@ -107,17 +89,15 @@ if not success:
         cnt
         On return each value is replaced with the sum of values at that node.
         """
-        res = zeros(val.shape,dtype=val.dtype)
-        cnt = zeros(val.shape,dtype=int32)
         nodes = unique1d(elems)
+        tol = GD.cfg['render/avgnormaltreshold']
         for i in nodes:
             wi = where(elems==i)
-            print wi
+            #print i
             vi = val[wi]
-            print vi.shape
-            average_close(vi)
-            ri = res[wi]
-            ni = cnt[wi]
-            vi = vi.sum(axis=0)
-            val[wi] = vi
-        return res,cnt
+            #print vi.shape
+            ai,ni = average_close(vi,tol=tol)
+            #print ai.shape,ni.shape
+            ai /= ni.reshape(ai.shape[0],-1)
+            #vi = vi.sum(axis=0)
+            val[wi] = ai
