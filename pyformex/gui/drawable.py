@@ -219,14 +219,18 @@ def nodalSum(val,elems,avg=False,return_all=True):
         val.reshape(val.shape+(1,))
     if elems.shape != val.shape[:2]:
         raise RuntimeError,"shape of val and elems does not match"
-    nodes = unique1d(elems)
-    work = zeros((nodes.max()+1,val.shape[2]))
+    #nodes = unique1d(elems)
+    #work = zeros((nodes.max()+1,val.shape[2]))
+    work = zeros((elems.max()+1,val.shape[2]))
     if GD.options.safelib:
         val = val.astype(float32)
         elems = elems.astype(int32)
-        nodes = nodes.astype(int32)
+        #nodes = nodes.astype(int32)
         work = work.astype(float32)
-    misc.nodalSum(val,elems,nodes,work,avg)
+    if GD.options.experimental:
+        misc.nodalSum2(val,elems)
+    else:
+        misc.nodalSum(val,elems,work,avg)
     if return_all:
         return val
     else:

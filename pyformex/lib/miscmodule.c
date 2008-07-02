@@ -104,11 +104,10 @@ coords_fuse(PyObject *dummy, PyObject *args)
 
 /**************************************************** nodal_sum ****/
 /* Nodal sum of values defined on elements */
-/* args:  val, elems, nodes, avg
+/* args:  val, elems, avg
     val   : (nelems,nplex,nval) values defined at points of elements.
     elems : (nelems,nplex) nodal ids of points of elements.
-    nodes : (nnod) list of unique nodal ids in elems.
-    work  : (nodes.max()+1,nval) : workspace, should be zero on entry
+    work  : (elems.max()+1,nval) : workspace, should be zero on entry
     avg   : 0/1 
     The return value is a (nelems,nplex,nval) array where each value is
     replaced with the sum of its value at that node.
@@ -119,20 +118,18 @@ coords_fuse(PyObject *dummy, PyObject *args)
 static PyObject *
 nodal_sum(PyObject *dummy, PyObject *args)
 {
-  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
-  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
   float *val,*work;
-  int *elems,*nodes;
+  int *elems;
   int avg;
-  if (!PyArg_ParseTuple(args, "OOOOf", &arg1, &arg2, &arg3, &arg4, &avg)) return NULL;
+  if (!PyArg_ParseTuple(args, "OOOf", &arg1, &arg2, &arg3, &avg)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_INOUT_ARRAY);
   if (arr1 == NULL) return NULL;
   arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
   if (arr2 == NULL) goto fail;
-  arr3 = PyArray_FROM_OTF(arg3, NPY_INT, NPY_IN_ARRAY);
+  arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_INOUT_ARRAY);
   if (arr3 == NULL) goto fail;
-  arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_INOUT_ARRAY);
-  if (arr4 == NULL) goto fail;
   /* We suppose the dimensions are correct*/
   npy_intp * dims;
   dims = PyArray_DIMS(arg1);
@@ -140,15 +137,11 @@ nodal_sum(PyObject *dummy, PyObject *args)
   nelems = dims[0];
   nplex = dims[1];
   nval = dims[2];
-  dims = PyArray_DIMS(arg3);
-  int nnod;
-  nnod = dims[0];
 
   val = (float *)PyArray_DATA(arr1);
   elems = (int *)PyArray_DATA(arr2);
-  nodes = (int *)PyArray_DATA(arr3);
-  work = (float *)PyArray_DATA(arr4);
-  printf(" nelems=%d, nplex=%d, nnod=%d\n",nelems,nplex,nnod);
+  work = (float *)PyArray_DATA(arr3);
+  printf(" nelems=%d, nplex=%d, nval=%d\n",nelems,nplex,nval);
   
   int i,k,n;
   /* Loop over the input and sum */
@@ -167,7 +160,6 @@ nodal_sum(PyObject *dummy, PyObject *args)
   Py_DECREF(arr1);
   Py_DECREF(arr2);
   Py_DECREF(arr3);
-  Py_DECREF(arr4);
   Py_INCREF(Py_None);
   return Py_None;
  fail:
@@ -175,7 +167,6 @@ nodal_sum(PyObject *dummy, PyObject *args)
   Py_XDECREF(arr1);
   Py_XDECREF(arr2);
   Py_XDECREF(arr3);
-  Py_XDECREF(arr4);
   return NULL;
 }
 

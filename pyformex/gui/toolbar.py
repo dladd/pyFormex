@@ -177,8 +177,6 @@ normals_button = None
 def toggleNormals(): 
     mode = not GD.canvas.avgnormals
     GD.canvas.setAveragedNormals(mode)
-    print "Set avg normals %s" % mode
-    #GD.canvas.display()
     GD.canvas.update()
     GD.app.processEvents()
 
