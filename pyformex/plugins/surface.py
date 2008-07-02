@@ -347,7 +347,7 @@ def closedLoop(elems):
         ret = 1
     else:
         ret = 0
-    return ret,srt,elems
+    return ret,srt#,elems
 
 
 def partitionBorder(elems):

@@ -24,6 +24,7 @@ clear()
 bgcolor(white)
 lights(False)
 TA = None
+
 for i in range(n):
     fgcolor(red)
     TB = drawtext(T[t[i]],a[i][0],a[i][1],'tr24',color=list(colors[i]))
@@ -31,5 +32,7 @@ for i in range(n):
     breakpt()
     undecorate(TA)
     TA = TB
+    #drawTextQt(T[t[i]],a[i][0],a[i][1])
+    #GD.canvas.update()
 
 # End

@@ -226,6 +226,7 @@ class Canvas(object):
         #print "ALL LIGHTS:",self.lights
         self.setBbox()
         self.settings = CanvasSettings()
+        self.mode2D = False
         self.rendermode = 'wireframe'
         self.polygonfill = False
         self.lighting = True
@@ -400,8 +401,8 @@ class Canvas(object):
         self.makeCurrent()
         self.clear()
         glLight(self.lighting)
+
         # Draw Scene Actors
-        # GD.debug("%s / %s" % (len(self.actors),len(self.annotations)))
         self.camera.loadProjection()
         self.camera.loadMatrix()
         if self.alphablend:
@@ -421,30 +422,48 @@ class Canvas(object):
                 self.setDefaults()
                 actor.draw(mode=self.rendermode)
 
+        # annotations are drawn in 3D space
         for actor in self.annotations:
             self.setDefaults()
             actor.draw(mode=self.rendermode)
 
+        # decorations are drawn in 2D mode
+        self.begin_2D_drawing()
+        for actor in self.decorations:
+            self.setDefaults()
+            actor.draw(mode=self.rendermode)
+        self.end_2D_drawing()
+
+        # make sure canvas is updated
+        GL.glFlush()
+
+
+    def begin_2D_drawing(self):
+        """Set up the canvas for 2D drawing on top of 3D canvas.
+
+        The 2D drawing operation should be ended by calling end_2D_drawing. 
+        It is assumed that you will not try to change/refresh the normal
+        3D drawing cycle during this operation.
+        """
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
-        # Plot viewport decorations
         GL.glLoadIdentity()
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glLoadIdentity()
         GLU.gluOrtho2D(0,self.width(),0,self.height())
         GL.glDisable(GL.GL_DEPTH_TEST)
-        for actor in self.decorations:
-            self.setDefaults()
-            actor.draw(mode=self.rendermode)
+        glLight(False)
+        self.mode2D = True
+
+ 
+    def end_2D_drawing(self):
+        """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
         GL.glEnable(GL.GL_DEPTH_TEST)    
-        # end plot viewport decorations
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
-##         # Display angles
-##         self.camera.getCurrentAngles()
-        # make sure canvas is updated
-        GL.glFlush()
-
+        glLight(self.lighting)
+        self.mode2D = False
+       
         
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
@@ -587,7 +606,43 @@ class Canvas(object):
         self.camera.setDist(f*self.camera.getDist())
 
 
+##     def draw_cursor(self,x,y):
+##         if self.cursor:
+##             self.removeDecoration(self.cursor)
+##         w,h = GD.cfg.get('pick/size',(20,20))
+##         col = GD.cfg.get('pick/color','yellow')
+##         self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color=col,linewidth=1)
+##         self.addDecoration(self.cursor)
+
+##     def draw_rectangle(self,x,y):
+##         GD.debugt("DRAWRECTANGLE")
+##         if self.cursor:
+##             self.removeDecoration(self.cursor)
+##         col = GD.cfg.get('pick/color','yellow')
+##         self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
+##         self.addDecoration(self.cursor)
+
+
+##     # Do we need/use this????
+##     def draw_line(self,x,y):
+##         if self.cursor:
+##             self.removeDecoration(self.cursor)
+##         col = GD.cfg.get('pick/color','yellow')
+##         self.cursor = decors.Line(self.statex,self.statey,x,y,color=col,linewidth=2)
+##         self.addDecoration(self.cursor)
+
+
+    def saveBuffer(self):
+        """Save the current OpenGL buffer"""
+        GD.debugt("saveBuffer")
+        self.save_buffer = GL.glGetIntegerv(GL.GL_DRAW_BUFFER)
+
+    def showBuffer(self):
+        """Show the saved buffer"""
+        pass
+
     def draw_cursor(self,x,y):
+        """draw the cursor"""
         if self.cursor:
             self.removeDecoration(self.cursor)
         w,h = GD.cfg.get('pick/size',(20,20))
@@ -602,12 +657,28 @@ class Canvas(object):
         col = GD.cfg.get('pick/color','yellow')
         self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
         self.addDecoration(self.cursor)
-    
-    def draw_line(self,x,y):
-        if self.cursor:
-            self.removeDecoration(self.cursor)
-        col = GD.cfg.get('pick/color','yellow')
-        self.cursor = decors.Line(self.statex,self.statey,x,y,color=col,linewidth=2)
-        self.addDecoration(self.cursor)
+
+## NSRect rectView = [self bounds]; //Get the bounds of the OpenGL view
+
+## w = rectView.size.width;
+## h = rectView.size.height;
+## [[self openGLContext] makeCurrentContext];
+## glViewport(0, 0, w, h);
+## glMatrixMode (GL_PROJECTION);
+## glLoadIdentity();
+## glOrtho(0, w, 0, h, 1, -1);
+## glMatrixMode (GL_MODELVIEW);
+## glLoadIdentity();
+
+## glDisable(GL_LIGHTING); //turn off lighting effects
+## glEnable(GL_COLOR_LOGIC_OP);
+## glLogicOp(GL_XOR);
+## glDisable(GL_DEPTH_TEST);
+## glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+## glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+## //Save the current buffer target
+## glDrawBuffer(GL_FRONT); //set the drawbuffer to the front readbuffer.
+## }
 
 ### End

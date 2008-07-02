@@ -18,7 +18,7 @@ if the key is not found in the CascadingDict itself.
 Distributed under the GNU GPL
 """
 
-__all__ = [ 'Dict', 'CDict', 'CascadingDict', 'returnNone', 'raiseKeyError' ]
+__all__ = [ 'Dict', 'CDict', 'CascadingDict' ]
 
 
 def cascade(dic, key):

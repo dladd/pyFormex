@@ -447,7 +447,7 @@ class PropertyDB(Dict):
         return d
 
 
-    def nodeProp(self,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None):
+    def nodeProp(self,prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -477,13 +477,13 @@ class PropertyDB(Dict):
                     d['csys'] = csys
                 else:
                     raise
-            return self.Prop(kind='n',tag=tag,set=set,setname=setname,**d)
+            return self.Prop(kind='n',prop=prop,tag=tag,set=set,setname=setname,**d)
         except:
             print "tag=%s,set=%s,tag=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None): 
+    def elemProp(self,prop=None,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -494,7 +494,7 @@ class PropertyDB(Dict):
                 If None, the property will hold for all elements.
         - grp: an elements group number (default None). If specified, the
                element numbers given in set are local to the specified group.
-               If not, element are global and should match the global numbering
+               If not, elements are global and should match the global numbering
                according to the order in which element groups will be specified
                in the Model.
         - eltype: the element type (currently in Abaqus terms). 
@@ -509,7 +509,7 @@ class PropertyDB(Dict):
                 d['section'] = section
             if dload is not None:
                 d['dload'] = dload
-            return self.Prop(kind='e',tag=tag,set=set,setname=setname,**d)
+            return self.Prop(kind='e',prop=prop,tag=tag,set=set,setname=setname,**d)
         except:
             raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,setname=%s,eltype=%s,section=%s,dload=%s" % (tag,set,setname,eltype,section,dload)
 

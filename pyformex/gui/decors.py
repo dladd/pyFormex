@@ -109,8 +109,8 @@ def drawGrid(x1,y1,x2,y2,nx,ny):
     GL.glEnd()
 
 
-##def drawRect(x1,y1,x2,y2):
-##    drawGrid(x1,y1,x2,y2,1,1)
+def drawRect(x1,y1,x2,y2):
+    drawGrid(x1,y1,x2,y2,1,1)
 
 
 def myBitmapLength(font, text):

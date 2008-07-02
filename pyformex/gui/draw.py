@@ -690,6 +690,13 @@ def setTriade(on=None):
     GD.app.processEvents()
 
 
+# DOES NOT WORK ??
+## def drawTextQt(text,x,y,font=None):
+##     """Show a text at position x,y using font."""
+##     print x,y,text
+##     GD.canvas.renderText(x,y,'hallo')
+
+
 def drawtext(text,x,y,font='9x15',adjust='left',color=None):
     """Show a text at position x,y using font."""
     TA = decors.Text(text,x,y,font,adjust,color)

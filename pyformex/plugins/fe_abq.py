@@ -174,7 +174,11 @@ def writeMaterial(fil,mat):
 *DENSITY
 %s
 """%(mat.name, float(mat.young_modulus), float(mat.poisson_ratio), float(mat.density)))
-        materialswritten.append(mat.name)
+        ### The following fields neeed unification !!!
+        if mat.yield_stress is not None and mat.plastic_strain is not None:
+            fil.write("""*PLASTIC
+%s,%s
+"""%(float(mat.yield_stress), float(mat.plastic_strain)))
         if mat.plastic is not None:
             fil.write('*PLASTIC\n')
             plastic=eval(mat['plastic'])
@@ -187,6 +191,7 @@ def writeMaterial(fil,mat):
 		if mat.beta != 'None':
 			fil.write(", BETA = %s" %mat.beta)
 		fil.write("\n")
+        materialswritten.append(mat.name)
 
 
 def writeTransform(fil,setname,csys):
@@ -575,7 +580,7 @@ def writeNodeOutput(fil,kind,keys,set='Nall'):
 
 
 def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
-                    globalaxes=False,
+                    globalaxes=False,lastmode=None,
                     summary=False,total=False):
     """ Write a request for nodal result output to the .fil or .dat file.
 
@@ -610,6 +615,8 @@ def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
             s += ", FREQUENCY=%s" % freq
         if globalaxes:
             s += ", GLOBAL=YES"
+        if lastmode is not None:
+            s += ", LAST MODE=%s" % lastmode
         if output=='PRINT':
             if summary:
                 s += ", SUMMARY=YES"
@@ -709,32 +716,55 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
         
 class Step(Dict):
     """Contains all data about a step."""
+
+    analysis_types = [ 'STATIC', 'DYNAMIC', 'EXPLICIT', \
+                       'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
-                 tags=None,
-                 bulkvisc=None):
+                 tags=None, buckle='SUBSPACE', incr=0.1,
+                 bulkvisc=None,out=None,res=None):
         """Create new analysis data.
         
         analysis is the analysis type. Should be one of:
-          'STATIC', 'DYNAMIC', 'EXPLICIT'
+          'STATIC', 'DYNAMIC', 'EXPLICIT',
+          'PERTURBATION', 'BUCKLE', 'RIKS' 
         time is either a single float value specifying the step time,
         or a list of 4 values:
-          time inc, step time, min. time inc, max. time inc.
+          time inc, step time, min. time inc, max. time inc
+        or, for LANCZOS: a list of 5 values
+        or, for RIKS: a list of 8 values
         In most cases, only the step time should be specified.
         If nlgeom='YES', the analysis will be non-linear.
+        'RIKS' always sets nlgeom='YES', 'BUCKLE' sets it to 'NO',
+        'PERTURBATION' ignores nlgeom
 
         tags is a list of property tags to include in this step.
 
+        buckle specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
+        incr is the increment in 'RIKS' type
         bulkvisc is a list of two floats (default: [0.06,1.2]), only used
         in Explicit steps.
+        out and res are specific output/result records for this step. They
+        come in addition to the global ones.
         """
         self.analysis = analysis.upper()
+        if not self.analysis in Step.analysis_types:
+            raise ValueError,'analysis should be one of %s' % analysis_types
         if type(time) == float:
             time = [ 0., time, 0., 0. ]
         self.time = time
-        self.nlgeom = nlgeom
+        if self.analysis == 'RIKS':
+            #self.nlgeom = 'YES'
+            self.incr = incr
+        elif self.analysis == 'BUCKLE':
+            self.nlgeom = 'NO'
+            self.buckle = buckle
+        else:
+            self.nlgeom = nlgeom
         self.tags = tags
         self.bulkvisc = bulkvisc
+        self.out = out
+        self.res = res
 
 
     def write(self,fil,propDB,out=[],res=[],resfreq=1,timemarks=False):
@@ -748,15 +778,25 @@ class Step(Dict):
         res is a list of Result-instances.
         resfreq and timemarks are global values only used by Explicit
         """
-        fil.write("*STEP, NLGEOM=%s\n" % self.nlgeom)
+        if self.analysis == 'PERTURBATION':
+            step_params = 'PERTURBATION'
+        else:
+            step_params = 'NLGEOM=%s' % self.nlgeom
+            if self.analysis == 'RIKS':
+                step_params += ', INCR=%s' % self.incr
+        fil.write("*STEP, %s\n" % step_params)
         if self.analysis in ['STATIC','DYNAMIC']:
             fil.write("*%s\n" % self.analysis)
         elif self.analysis == 'EXPLICIT':
             fil.write("*DYNAMIC, EXPLICIT\n")
-        else:
-            GD.message('Skipping undefined step %s' % self.analysis)
-            return
-
+        elif self.analysis == 'BUCKLE':
+            fil.write("*BUCKLE, EIGENSOLVER=%s\n" % self.buckle)
+        elif self.analysis == 'PERTURBATION':
+            fil.write("*STATIC")
+        elif self.analysis == 'RIKS':
+            fil.write("*STATIC, RIKS")
+            
+                      
         fil.write("%s, %s, %s, %s\n" % tuple(self.time))
 
         if self.analysis == 'EXPLICIT':
@@ -789,7 +829,9 @@ class Step(Dict):
 ##         if prop:
 ##             GD.message("  Writing step model props")
 ##             writeModelProps(fil,prop)
-        
+
+        if self.out:
+            out += self.out
         for i in out:
             if i.kind is None:
                 writeStepOutput(fil,**i)
@@ -798,6 +840,8 @@ class Step(Dict):
             elif i.kind == 'E':
                 writeElemOutput(fil,**i)
                 
+        if self.res:
+            res += self.res
         if res and self.analysis == 'EXPLICIT':
             writeFileOutput(fil,resfreq,timemarks)
         for i in res:
@@ -882,11 +926,14 @@ class Result(Dict):
 
 
 ############################################################ AbqData
+
+## ?? Why is this a CDict ?
+## !! THIS COULD BE A SIMPLE object?
         
 class AbqData(CDict):
     """Contains all data required to write the Abaqus input file."""
     
-    def __init__(self,model,prop,steps=[],res=[],out=[],bound=None):
+    def __init__(self,model,prop,nprop=None,eprop=None,steps=[],res=[],out=[],bound=None):
         """Create new AbqData. 
         
         model is a Model instance.
@@ -903,17 +950,20 @@ class AbqData(CDict):
         
         self.model = model
         self.prop = prop
+        self.nprop = nprop
+        self.eprop = eprop
         self.bound = bound
         self.steps = steps
         self.res = res
         self.out = out
 
 
-    def write(self,jobname=None,group_by_eset=True,group_by_group=False):
+    def write(self,jobname=None,group_by_eset=True,group_by_group=False,header=''):
         """Write an Abaqus input file.
 
         jobname is the name of the inputfile, with or without '.inp' extension.
         If None is specified, output is written to sys.stdout
+        An extra header text may be specified.
         """
         global materialswritten
         materialswritten = []
@@ -928,16 +978,29 @@ class AbqData(CDict):
         
         writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
 Script: %s 
-""" % (jobname, datetime.date.today(), GD.scriptName))
-
+%s
+""" % (jobname, datetime.date.today(), GD.scriptName, header))
+        
         nnod = self.nodes.shape[0]
         GD.message("Writing %s nodes" % nnod)
         writeNodes(fil, self.nodes)
 
         GD.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
+            if p.set is not None:
+                # set is directly specified
+                set = p.set
+            elif p.prop is not None:
+                # set is specified by nprop nrs
+                if self.nprop is None:
+                    raise ValueError,"nodeProp has a 'prop' field but no 'nprop'was specified"
+                set = where(self.nprop == p.prop)[0]
+            else:
+                # default is all nodes
+                set = range(self.model.nnodes())
+                
             setname = nsetName(p)
-            writeSet(fil,'NSET',setname,p.set)
+            writeSet(fil,'NSET',setname,set)
             if p.csys is not None:
                 writeTransform(fil,setname,p.csys)
 
@@ -945,10 +1008,17 @@ Script: %s
         telems = self.model.celems[-1]
         nelems = 0
         for p in self.prop.getProp('e',attr=['eltype','set']):
-            if p.set is None:
-                set = arange(telems)
-            else:
+            if p.set is not None:
+                # element set is directly specified
                 set = p.set
+            elif p.prop is not None:
+                # element set is specified by eprop nrs
+                if self.eprop is None:
+                    raise ValueError,"elemProp has a 'prop' field but no 'eprop'was specified"
+                set = where(self.eprop == p.prop)[0]
+            else:
+                # default is all elements
+                set = range(telems)
             print 'Elements of type %s: %s' % (p.eltype,set)
                 
             setname = Eset(p.nr)

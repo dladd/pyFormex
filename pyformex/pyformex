@@ -139,6 +139,8 @@ def main(argv=None):
                     action="store_true", dest="fastfuse", default=True),
         make_option("--nofastfuse", help="Use a slow algorithm to fuse points.",
                     action="store_true", dest="fastfuse", default=True),
+        make_option("--fastpick", help="Use an experimental fast picking method.",
+                    action="store_true", dest="fastpick", default=False),
 ##         make_option("--alpha", help="Enable the Alpha Channel buffer",
 ##                     action="store_true", dest="alpha", default=False),
         make_option("--arrays", help="Use vertex arrays for display",
