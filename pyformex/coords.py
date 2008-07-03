@@ -261,8 +261,6 @@ class Coords(ndarray):
 
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
-        print ar
-        print ar.shape
         if ar.shape[-1] == 3:
             pass
         elif ar.shape[-1] in [1,2]:
