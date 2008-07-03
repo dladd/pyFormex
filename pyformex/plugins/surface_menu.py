@@ -1010,12 +1010,14 @@ def show_volume():
 
 
 def createGrid():
-    res = askItems([('name','__auto__'),('nx',4),('ny',3)])
+    res = askItems([('name','__auto__'),('nx',3),('ny',3),('b',1),('h',1)])
     if res:
-        name = res['name']
-        nx = res['nx']
-        ny = res['ny']
-        S = Plane(nx,ny)
+        globals().update(res)
+        #name = res['name']
+        #nx = res['nx']
+        #ny = res['ny']
+        #b = 
+        S = TriSurface(simple.rectangle(nx,ny,b,h,diag='d'))
         export({name:S})
         selection.set([name])
         selection.draw()
