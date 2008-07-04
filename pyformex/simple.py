@@ -91,7 +91,7 @@ def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
     By default, the elements are quads. By setting diag='u' or 'd',
     diagonals are added in /, resp. \ direction, to form triangles.
     """
-    Base = { 'u': '12-34', 'd': '16-14' }
+    Base = { 'u': '12-34', 'd': '16-82' }
     base = Base.get(diag,'123')
     if b is None:
         sx = 1.

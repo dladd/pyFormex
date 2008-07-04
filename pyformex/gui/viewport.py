@@ -402,7 +402,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def	paintGL(self):
         if not self.mode2D:
-            GD.debugt("CANVAS DISPLAY")
+            #GD.debugt("CANVAS DISPLAY")
             self.display()
 
     def getSize(self):
@@ -806,13 +806,20 @@ class MultiCanvas(QtGui.QGridLayout):
     def setCurrent(self,canv):
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
+        # TEST SKIP IF ALREADY CURRENT
+        if self.current == canv:
+            return
         if canv in self.all:
             GD.canvas = self.current = canv
             toolbar.setTransparency(self.current.alphablend)
             toolbar.setPerspective(self.current.camera.perspective)
             toolbar.setLight(self.current.lighting)
             #toolbar.setNormals(self.current.avgnormals)
-            self.current.display()
+            #
+            # TEST WITHOUT DISPLAY
+            GL.glFlush()
+            # TEST WITH DISPLAY
+            #self.current.display()
             
 
     def currentView(self):

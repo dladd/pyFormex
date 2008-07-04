@@ -365,7 +365,7 @@ class Canvas(object):
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
-        GD.debugt("UPDATING CURRENT OPENGL CANVAS")
+        #GD.debugt("UPDATING CURRENT OPENGL CANVAS")
         GL.glFlush()
         
 
