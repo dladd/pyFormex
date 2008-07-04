@@ -397,7 +397,7 @@ class Canvas(object):
         This should e.g. be used when actors are added to the scene,
         or after changing  camera position/orientation or lens.
         """
-        GD.debugt("UPDATING CURRENT OPENGL CANVAS")
+        #GD.debugt("UPDATING CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
         glLight(self.lighting)

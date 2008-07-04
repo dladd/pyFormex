@@ -537,6 +537,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.emit(CANCEL,())
 
 
+    def draw_state_rect(self,x,y):
+        """Store the pos and draw a rectangle to it"""
+        self.state = x,y
+        GD.debug("Rect (%s,%s) - (%s,%s)" % (self.statex,self.statey,x,y))
+        decors.drawRect(self.statex,self.statey,x,y)
+
+
+
     def mouse_pick(self,x,y,action):
         """Process mouse events during intractive picking.
 
@@ -545,70 +553,37 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         On RELEASE, pick the objects inside the rectangle.
         """
         if action == PRESS:
-            self.draw_cursor(self.statex,self.statey)
+            self.makeCurrent()
             self.update()
-            
+            self.begin_2D_drawing()
+            self.swapBuffers()
+            GL.glEnable(GL.GL_COLOR_LOGIC_OP)
+            # An alternative is GL_XOR #
+            GL.glLogicOp(GL.GL_INVERT)        
+            # Draw rectangle
+            self.draw_state_rect(x,y)
+            self.swapBuffers()
+
         elif action == MOVE:
-            self.draw_rectangle(x,y)
-            GD.debugt("UPDATE")
-            self.update()
+            # Remove old rectangle
+            self.swapBuffers()
+            self.draw_state_rect(*self.state)
+            # Draw new rectangle
+            self.draw_state_rect(x,y)
+            self.swapBuffers()
 
         elif action == RELEASE:
+            GL.glDisable(GL.GL_COLOR_LOGIC_OP)
+            #self.swapBuffers()
+            self.end_2D_drawing()
+
             x,y = (x+self.statex)/2., (y+self.statey)/2.
             w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
             if w <= 0 or h <= 0:
                w,h = GD.cfg.get('pick/size',(20,20))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
             self.pick_window = (x,y,w,h,vp)
-            if self.cursor:
-                self.removeDecoration(self.cursor)
             self.selection_busy = False
-            self.update()
-
-    if GD.options.fastpick:
-        # New picking mode keeps the 3D buffer
-        def mouse_pick(self,x,y,action):
-            """Process mouse events during intractive picking.
-
-            On PRESS, record the mouse position.
-            On MOVE, create a rectangular picking window.
-            On RELEASE, pick the objects inside the rectangle.
-            """
-            if action == PRESS:
-                self.makeCurrent()
-                self.update()
-                self.begin_2D_drawing()
-                self.swapBuffers()
-                GL.glEnable(GL.GL_COLOR_LOGIC_OP)
-                #GL.glLogicOp(GL.GL_XOR)
-                canvas.glLine()
-                GL.glColor3f(1.0,1.0,1.0)
-                GD.debug("Statex = %s; Statey = %s" % (self.statex,self.statey))
-                GL.glFlush()
-                self.swapBuffers()
-
-            elif action == MOVE:
-                GD.debug("Rect %s" % str((self.statex,self.statey,x,y)))
-                decors.drawRect(self.statex,self.statey,x,y)
-                #GL.glRecti(self.statex,self.statey,x,y)
-                GL.glFlush()
-                self.swapBuffers()
-
-            elif action == RELEASE:
-                canvas.glFill()
-                GL.glDisable(GL.GL_COLOR_LOGIC_OP)
-                #GL.glRecti(self.statex,self.statey,x,y) # Erase rectangle
-                GL.glFlush()
-                self.swapBuffers()
-                self.end_2D_drawing()
-
-                x,y = (x+self.statex)/2., (y+self.statey)/2.
-                w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
-                if w <= 0 or h <= 0:
-                   w,h = GD.cfg.get('pick/size',(20,20))
-                vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
-                self.pick_window = (x,y,w,h,vp)
-                self.selection_busy = False
 
             
     def pick_actors(self,store_closest=False):
