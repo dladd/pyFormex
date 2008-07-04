@@ -540,7 +540,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def draw_state_rect(self,x,y):
         """Store the pos and draw a rectangle to it"""
         self.state = x,y
-        GD.debug("Rect (%s,%s) - (%s,%s)" % (self.statex,self.statey,x,y))
+        #GD.debug("Rect (%s,%s) - (%s,%s)" % (self.statex,self.statey,x,y))
         decors.drawRect(self.statex,self.statey,x,y)
 
 

@@ -25,7 +25,7 @@ from gui.drawable import interpolateNormals
 
 hasExternal('admesh')
 hasExternal('tetgen')
-#hasExternal('gts')
+hasExternal('gts')
 
 
 # Conversion of surface data models
@@ -347,22 +347,24 @@ def closedLoop(elems):
         ret = 1
     else:
         ret = 0
-    return ret,srt#,elems
+    return ret,srt
 
 
-def partitionBorder(elems):
-    """Partition the border of a surface.
+def partitionSegmentedCurve(elems):
+    """Partition a segmented curve into connected segments.
     
-    The argument is a (nelems,2) shaped array of integers
-    representing the border element numbers.
-    A list of borders which are not connected to each other
+    The input argument is a (nelems,2) shaped array of integers.
+    Each row holds the two vertex numbers of a single line segment.
+
+    The return value ia a list of (nsegi,2) shaped array of integers. 
+    
     is returned.
     Each border is a (nelems,2) shaped array of integers in
     which the element numbers are ordered.
     """
     borders = []
     while elems.size != 0:
-        closed,loop,elems = closedLoop(elems)
+        closed,loop = closedLoop(elems)
         borders.append(loop[loop!=-1].reshape(-1,2))
         elems = elems[elems!=-1].reshape(-1,2)
     return borders
@@ -391,12 +393,11 @@ def surfaceInsideLoop(coords,elems):
 
 
 def fillHole(coords,elems):
-    """Fill a hole surrounded by the border which is defined
+    """Fill a hole surrounded by the border defined by coords and elems.
     
-    by coords and elems.
     Coords is a (npoints,3) shaped array of floats.
-    Elems is a (nelems,2) shaped array of integers representing
-    the border element numbers and must be ordered.
+    Elems is a (nelems,2) shaped array of integers representing the border
+    element numbers and must be ordered.
     """
     triangles = empty((0,3,),dtype=int)
     while shape(elems)[0] != 3:
@@ -602,7 +603,7 @@ class TriSurface(object):
         self.refresh()
         S.refresh()
         coords = concatenate([self.coords,S.coords])
-        elems = concatenate([self.elems,S.elems])
+        elems = concatenate([self.elems,S.elems+self.ncoords()])
         self.__init__(coords,elems)
 
 
@@ -1095,15 +1096,28 @@ class TriSurface(object):
     def checkBorder(self):
         """Return the border of TriSurface as a set of segments."""
         border = self.edges[self.borderEdges()]
-        closed,loop,elems = closedLoop(border)
+        closed,loop = closedLoop(border)
         print "the border is of type %s" % closed
         print loop
 
 
-    def fillBorder(self):
-        brd = self.edges[self.borderEdges()]
-        coords,elems = surfaceInsideLoop(self.coords,brd)
-        self.append(TriSurface(coords,elems))
+    def fillBorder(self,method=0):
+        """If the surface has a single closed border, fill it.
+
+        Filling the border is done by adding a single point inside
+        the border and connectin it with all border segments.
+        This works well if the border is smooth and nearly planar.
+        """
+        border = self.edges[self.borderEdges()]
+        closed,loop = closedLoop(border)
+        if closed == 0:
+            if method == 0:
+                coords,elems = surfaceInsideLoop(self.coords,loop)
+                newS = TriSurface(coords,elems)
+            else:
+                elems = fillHole(self.coords,loop)
+                newS = TriSurface(self.coords,elems)
+            self.append(newS)
 
 
     def border(self):

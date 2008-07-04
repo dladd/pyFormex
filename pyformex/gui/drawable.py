@@ -201,7 +201,7 @@ def computeNormals(x):
     return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
 
 
-def nodalSum(val,elems,avg=False,return_all=True):
+def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
     """Compute the nodal sum of values defined on elements.
 
     val is a (nelems,nplex,nval) array of values defined at points of elements.
@@ -214,6 +214,10 @@ def nodalSum(val,elems,avg=False,return_all=True):
     If return_all==True(default), returns an array with shape (nelems,nplex,3),
     else, returns an array with shape (maxnodenr+1,3). In the latter case,
     nodes not occurring in elems will have all zero values.
+
+    If a direction_tolerance is specified and nval > 1, values will only be
+    summed if their direction is close (projection of one onto the other is
+    higher than the specified tolerance).
     """
     if val.ndim != 3:
         val.reshape(val.shape+(1,))
@@ -227,8 +231,8 @@ def nodalSum(val,elems,avg=False,return_all=True):
         elems = elems.astype(int32)
         #nodes = nodes.astype(int32)
         work = work.astype(float32)
-    if GD.options.experimental:
-        misc.nodalSum2(val,elems)
+    if val.shape[2] > 1 and direction_treshold is not None:
+        misc.nodalSum2(val,elems,direction_treshold)
     else:
         misc.nodalSum(val,elems,work,avg)
     if return_all:
@@ -237,7 +241,7 @@ def nodalSum(val,elems,avg=False,return_all=True):
         return work
 
 
-def interpolateNormals(coords,elems,atNodes=False):
+def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     """Interpolate normals in all points of elems.
 
     coords is a (ncoords,3) array of nodal coordinates.
@@ -249,7 +253,7 @@ def interpolateNormals(coords,elems,atNodes=False):
     at the nodes is returned.
     """
     n = computeNormals(coords[elems])
-    n = nodalSum(n,elems,return_all=not atNodes)
+    n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
     return normalize(n)
 
 
@@ -263,7 +267,7 @@ def drawPolygonElems(coords,elems,mode,color=None,alpha=1.0):
       by nplex points.
     """
     if mode == 'smooth-avg':
-        n = interpolateNormals(coords,elems)
+        n = interpolateNormals(coords,elems,treshold=GD.cfg['render/avgnormaltreshold'])
         mode = 'smooth'
     else:
         n = None

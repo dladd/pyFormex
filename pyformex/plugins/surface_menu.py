@@ -278,7 +278,12 @@ def checkBorder():
 def fillBorder():
     S = selection.check(single=True)
     if S:
-        S.fillBorder()
+        options = ["Cancel","Existing points","New points"]
+        res = ask("Which method ?",options)
+        if res == options[1]: 
+            S.fillBorder(0)
+        elif res == options[2]: 
+            S.fillBorder(1)
 
 
 def fillHoles():
@@ -288,7 +293,10 @@ def fillHoles():
         border_elems = S.edges[S.borderEdges()]
         if border_elems.size != 0:
             # partition borders
-            border_elems = partitionBorder(border_elems)
+            print border_elems
+            border_elems = partitionSegmentedCurve(border_elems)
+            print border_elems
+            
             # draw borders in new viewport
             R = GD.canvas.camera.getRot()
             P = GD.canvas.camera.perspective
@@ -300,7 +308,7 @@ def fillHoles():
                 draw(Formex(S.coords[elems]))
             zoomAll()
             # pick borders for which the hole must be filled
-            print "PICK HOLES WHICH HAVE TO BE FILLED."
+            info("PICK HOLES WHICH HAVE TO BE FILLED.")
             picked = pick(mode='actor')
             layout(1)
             # fill the holes
