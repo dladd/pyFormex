@@ -224,7 +224,7 @@ class GridActor(Actor):
             glColor(self.planecolor,self.alpha)
             drawGridPlanes(self.x0,self.x1,self.nx)
 
-            
+
 class CoordPlaneActor(Actor):
     """Draws a set of 3 coordinate planes."""
 
@@ -252,6 +252,8 @@ class CoordPlaneActor(Actor):
             nx[i] = 0
             
             if self.lines:
+                if self.linewidth:
+                    GL.glLineWidth(self.linewidth)
                 glColor(self.linecolor)
                 drawGridLines(self.x0,self.x1,nx)
 
@@ -259,7 +261,7 @@ class CoordPlaneActor(Actor):
                 glColor(self.planecolor,self.alpha)
                 drawGridPlanes(self.x0,self.x1,nx)
 
-            
+
 class PlaneActor(Actor):
     """A plane in a 3D scene."""
 
@@ -290,12 +292,14 @@ class PlaneActor(Actor):
             nx[i] = 0
             
             if self.lines:
+                if self.linewidth:
+                    GL.glLineWidth(self.linewidth)
                 if color is None:
                     glColor(self.linecolor)
                 else:
                     glColor(color)
                 drawGridLines(self.x0,self.x1,nx)
-
+            
             if self.planes:
                 glColor(self.planecolor,self.alpha)
                 drawGridPlanes(self.x0,self.x1,nx)
