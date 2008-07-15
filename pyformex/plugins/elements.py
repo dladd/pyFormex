@@ -31,9 +31,9 @@ class Element(object):
     faces: a list of faces, each defined by a list of minimum 3 node numbers,
     element: a list of all node numbers
 
-    Rectangular cells are defined between coordinates -1 and +1 of the
-    natural cartesian coordinates. Triangular cells are defined between
-    values 0 and +1.
+    Rectangular cells ending with a C are defined between coordinates
+    -1 and +1 of the natural cartesian coordinates. Triangular cells and
+    rectangular cells without C are defined between values 0 and +1.
 
     The elements guarantee a fixed local numbering scheme of the vertices.
     One should however not rely on a specific numbering scheme of edges, faces
@@ -122,6 +122,30 @@ class Wedge6(Element):
 
 
 class Hex8(Element):
+    """An 8-node hexahedron"""
+
+    vertices = [ ( 0.0, 0.0, 0.0 ),  
+                 ( 1.0, 0.0, 0.0 ),
+                 ( 0.0, 1.0, 0.0 ),
+                 ( 1.0, 1.0, 0.0 ),
+                 ( 0.0, 0.0, 1.0 ),
+                 ( 1.0, 0.0, 1.0 ),
+                 ( 0.0, 1.0, 1.0 ),
+                 ( 1.0, 1.0, 1.0 ),
+                 ]
+  		 
+    edges = [ (0,1), (2,3), (4,5), (6,7),
+              (0,2), (1,3), (4,6), (5,7),
+              (0,4), (1,5), (2,6), (3,7) ]
+  		 
+    faces = [ (0,2,3,1), (4,5,7,6),
+              (0,1,5,4), (2,6,7,3),
+              (0,4,6,2), (1,3,7,5) ]
+  		 
+    element = [ 7,6,4,5,3,2,0,1, ]
+ 
+
+class Hex8C(Element):
     """An 8-node hexahedron"""
 
     vertices = [ ( 1.0, 1.0, 1.0 ),

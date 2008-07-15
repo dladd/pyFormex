@@ -11,6 +11,7 @@
 ##
 
 from numpy import *
+from plugins.elements import Hex8
 
 
 def build_matrix(atoms,x,y=0,z=0):
@@ -35,10 +36,19 @@ def isopar(F,type,coords,oldcoords):
     """
     isodata = {
         'tri3'  : (2, ('1','x','y')),
+        'tri6'  : (2, ('1','x','y','x*x','y*y','x*y')),
         'quad4' : (2, ('1','x','y','x*y')),
-        'tri6'  : (2, ('1','x','y','x*y','x*x','y*y')),
-        'quad8' : (2, ('1','x','y','x*y','x*x','y*y','x*x*y','x*y*y')),
-        'quad9' : (3, ('1','x','y','x*y','x*x','y*y','x*x*y','x*y*y','x*x*y*y'))
+        'quad8' : (2, ('1','x','y','x*x','y*y','x*y','x*x*y','x*y*y')),
+        'quad9' : (2, ('1','x','y','x*x','y*y','x*y','x*x*y','x*y*y','x*x*y*y')),
+        'tet4'  : (3, ('1','x','y','z')),
+        'tet10' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z')),
+        'hex8'  : (3, ('1','x','y','z','x*y','x*z','y*z','x*y*z')),
+        'hex27' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
+                       'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
+                       'x*x*y*y','x*x*z*z','y*y*z*z','x*x*y*z','x*y*y*z',
+                       'x*y*z*z',
+                       'x*x*y*y*z','x*x*y*z*z','x*y*y*z*z',
+                       'x*x*y*y*z*z')),
         }
     ndim,atoms = isodata[type]
     coords = coords.view().reshape(-1,3)
@@ -55,17 +65,26 @@ def isopar(F,type,coords,oldcoords):
     aa = build_matrix(atoms,x,y,z)
     ab = linalg.solve(aa,coords)
     x = F.x().ravel()
-    if ndim > 1:
-        y = F.y().ravel()
-    else:
-        y = 0
-    if ndim > 2:
-        z = F.z().ravel()
-    else:
-        z = 0
+    y = F.y().ravel()
+    z = F.z().ravel()
     aa = build_matrix(atoms,x,y,z)
     xx = dot(aa,ab)
-    return Formex(reshape(xx,F.shape()))
+    xx = reshape(xx,F.shape())
+    if ndim < 3:
+        xx[...,ndim:] += F.f[...,ndim:]
+    return Formex(xx)
+##     x = F.x().ravel()
+##     if ndim > 1:
+##         y = F.y().ravel()
+##     else:
+##         y = 0
+##     if ndim > 2:
+##         z = F.z().ravel()
+##     else:
+##         z = 0
+##     aa = build_matrix(atoms,x,y,z)
+##     xx = dot(aa,ab)
+##     return Formex(reshape(xx,F.shape()))
 
 
 def base(type,m,n=None):
@@ -89,29 +108,38 @@ def base(type,m,n=None):
         raise ValueError,"Unknown type '%s'" % str(type)
     
 
-F = base('quad',10,10)
+#F = base('quad',10,10)
+v = array(Hex8.vertices)
+f = array(Hex8.faces)
+F = Formex(v[f]).replic(4,1.,dir=0).replic(3,1.,dir=1).replic(2,1.,dir=2)
 clear()
 message('This is the base pattern in natural coordinates')
 draw(F)
+pause()
+
 ll,ur = F.bbox()
 sc = array(ur)-array(ll)
 sc[2] = 10.
 x1 = Formex([[[0,0,0]]]).replic2(3,3,.5,.5)
 x2 = x1.copy()
-for i in [4]:
-    x2[i] += [[0.2,0,0.2]]
+for i in [0,1,2]:
+    x2[i] += [[0.1,0,0.1]]
 x1 = x1.scale(sc)
 x2 = x2.scale(sc)
 clear()
+message('This is the set of nodes in natural coordinates')
+draw(x1,color=black)
 message('This is the set of nodes in cartesian coordinates')
-draw(x2)
+draw(x2,color=red)
+pause()
 
-G = isopar(F,'quad9',x2.nodes(),x1.nodes())
+G = isopar(F,'quad9',x2.points(),x1.points())
 G.setProp(1)
 
 clear()
 draw(F)
 draw(G)
+pause()
 
 
 clear()
