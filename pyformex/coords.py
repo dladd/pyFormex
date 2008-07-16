@@ -1007,10 +1007,30 @@ class Coords(ndarray):
         d = self.distanceFromPoint(center)
         s = radius / d
         f = self - center
-        f[...,0] *= s
-        f[...,1] *= s
-        f[...,2] *= s
+        for i in range(3):
+            f[...,i] *= s
         f += center
+        return f
+
+
+    def projectOnCylinder(self,radius=1.,dir=0,center=[0.,0.,0.]):
+        """Project Coords on a cylinder with axis parallel to a global axis.
+
+        The default cylinder has its axis along the x-axis and a unit radius.
+        No points of the Coords should belong to the axis..
+        """
+        d = self.distanceFromLine(center,unitVector(dir))
+        s = radius / d
+        c = resize(asarray(center),self.shape)
+        print c
+        print c.shape
+        c[...,dir] = self[...,dir]
+        f = self - c
+        axes = range(3)
+        del axes[dir]
+        for i in axes:
+            f[...,i] *= s
+        f += c
         return f
 
 

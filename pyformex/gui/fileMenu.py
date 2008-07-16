@@ -94,7 +94,12 @@ def closeProject():
 
 
 def createScript():
-    openScript(False)
+    fn = openScript(False)
+    if fn and not os.path.exists(fn):
+        fil = file(fn,'w')
+        fil.write("#!/usr/bin/env pyformex --gui\n\n\n#End")
+        fil.close()
+
 
 def openScript(exist=True):
     """Open a file selection dialog and set the selection as the current file.
@@ -108,6 +113,7 @@ def openScript(exist=True):
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD.gui.setcurfile(fn)
         GD.gui.history.add(fn)
+    return fn
       
         
 def edit(f=None):
