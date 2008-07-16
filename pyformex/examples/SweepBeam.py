@@ -47,9 +47,22 @@ Half = Quarter + Quarter.mirror(1).reverse()
 
 Full = Half + Half.mirror(0).reverse()
 
-nodesQuad,elemsQuad = Full.rollAxes(1).feModel()
-path = simple.line([0,0,0],[0,0,l],el)
-nodes,elems = mesh.sweepGrid(nodesQuad,elemsQuad,path,a1='last',a2='last')
+draw(Full,color=red)
+
+method = ask("Choose extrude method:",['Cancel','Sweep','Connect'])
+if method == 'Cancel':
+    exit()
+
+nodesF,elemsF = Full.feModel()
+
+if method == 'Sweep':
+    path = simple.line([0,0,0],[0,0,l],el)
+    nodesF = nodesF.rollAxes(1)
+    nodes,elems = mesh.sweepGrid(nodesF,elemsF,path,a1='last',a2='last')
+
+else:
+    nodesF1 = nodesF.trl([0,0,l])#.scale(2)
+    nodes,elems = mesh.connectMesh(nodesF,nodesF1,elemsF,el)
 
 smooth()
 clear()

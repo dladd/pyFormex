@@ -19,6 +19,7 @@ from coords import *
 from formex import *
 from gui import actors
 from simple import line
+from plugins.connectivity import reverseUniqueIndex
 
 def createWedgeElements(S1,S2,div=1):
     """Create wedge elements between to triangulated surfaces.
@@ -117,6 +118,39 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
     
     return nodes1[:].reshape(-1,3),elems
 
+
+def connectMesh(c1,c2,e,n=1,n1=None,n2=None):
+    """Connect two meshes to form a hypermesh.
+    
+    c1,e and c2,e are 2 meshes with same topology.
+    The coordinates are given in cooresponding order.
+    The two meshes are connected by a higher order mesh with n
+    elements in the direction between the two meshes.
+    """
+    if c1.shape != c2.shape:
+        raise ValueError,"Meshes are not compatible"
+
+    # compact the element numbering scheme
+    ne = unique1d(e)
+    if ne[-1] >= ne.size:
+        c1 = c1[ne]
+        c2 = c2[ne]
+        e = reverseUniqueIndex(ne)[e]
+
+    # Create the interpolations of the coordinates
+    x = Coords.interpolate(c1,c2,n).reshape(-1,3)
+
+    nnod = c1.shape[0]
+    nplex = e.shape[1]
+    if n1 is None:
+        n1 = range(nplex)
+    if n2 is None:
+        n2 = range(nplex)
+    e1 = e[:,n1]
+    e2 = e[:,n2] + nnod
+    et = concatenate([e1,e2],axis=-1)
+    e = concatenate([et+i*nnod for i in range(n)])
+    return x,e
 
 
 # End
