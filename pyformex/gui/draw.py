@@ -839,6 +839,7 @@ def pause():
         drawblock()    # will need external event to release it
         while (drawlocked):
             sleep(0.5)
+            GD.app.processEvents()
 
 
 def step():

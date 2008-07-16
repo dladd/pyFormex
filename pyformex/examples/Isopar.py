@@ -108,11 +108,21 @@ def base(type,m,n=None):
     else:
         raise ValueError,"Unknown type '%s'" % str(type)
     
+# Processing starts here
+n = 8
+stype = ask("Select type of structure",['2D','3D'])
+if stype == '2D':
+    F = simple.rectangle(1,1,1.,1.)
+elif stype == '3D':
+    v = array(elements.Hex8.vertices)
+    f = array(elements.Hex8.faces)
+    F = Formex(v[f])
+else:
+    exit()
 
-#F = base('quad',10,10)
-v = array(elements.Hex8.vertices)
-f = array(elements.Hex8.faces)
-F = Formex(v[f]).replic(8,1.,dir=0).replic(8,1.,dir=1).replic(8,1.,dir=2)
+sdim = int(stype[0])
+for i in range(sdim):
+    F = F.replic(n,1.,dir=i)
 clear()
 message('This is the base pattern in natural coordinates')
 draw(F)
