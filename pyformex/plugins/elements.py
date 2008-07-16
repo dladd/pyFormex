@@ -87,7 +87,7 @@ class Quad4(Element):
     faces = [ (0,1,2,3), ]
 
     element = faces[0]
-    
+
 
 class Tet4(Element):
     """A 4-node tetrahedron"""
