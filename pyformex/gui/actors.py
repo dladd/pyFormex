@@ -16,7 +16,8 @@ from OpenGL import GL,GLU
 
 from drawable import *
 from formex import *
-from plugins import elements
+import elements
+
 from plugins.surface import TriSurface
 from plugins.connectivity import reverseIndex
 

@@ -9,8 +9,9 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-    
-from plugins import formex_menu,elements
+
+import elements
+from plugins import formex_menu
 from examples import WireStent
 
 from plugins.inertia import *

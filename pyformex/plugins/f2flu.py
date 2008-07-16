@@ -20,7 +20,7 @@ This script should be executed with the command
 
 import sys
 from plugins import tetgen
-from plugins.elements import Tet4 
+from elements import Tet4 
 from time import strftime, gmtime
 from numpy import *
 

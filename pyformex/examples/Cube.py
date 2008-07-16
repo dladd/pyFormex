@@ -10,7 +10,7 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-from plugins.elements import Hex8
+from elements import Hex8
 from formex import *
 
 def cube_tri(color=None):

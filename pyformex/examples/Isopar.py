@@ -10,9 +10,9 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-from numpy import *
-from plugins import elements
+import elements
 import simple
+from numpy import *
 
 
 def build_matrix(atoms,x,y=0,z=0):

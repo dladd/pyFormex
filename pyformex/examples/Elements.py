@@ -10,7 +10,7 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-from plugins import elements
+import elements
 from formex import *
 import utils
 
