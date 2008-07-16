@@ -45,15 +45,16 @@ Quarter = Body + Filled + Flange1 + Flange2 + Flange3
 
 Half = Quarter + Quarter.mirror(1).reverse()
 
-Beam = Half + Half.mirror(0).reverse()
+Full = Half + Half.mirror(0).reverse()
 
-nodesQuad,elemsQuad = Beam.rollAxes(1).feModel()
+nodesQuad,elemsQuad = Full.rollAxes(1).feModel()
 path = simple.line([0,0,0],[0,0,l],el)
 nodes,elems = mesh.sweepGrid(nodesQuad,elemsQuad,path,a1='last',a2='last')
 
 smooth()
 clear()
-draw(Formex(nodes[elems].reshape(-1,8,3),eltype='Hex8'),color='red',linewidth=2)
+Beam = Formex(nodes[elems].reshape(-1,8,3),eltype='Hex8')
+draw(Beam,color='red',linewidth=2)
 
 
 # End

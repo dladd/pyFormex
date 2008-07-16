@@ -76,6 +76,9 @@ if __name__ == "draw":
     F = Formex(v)
     F.eltype = 'hex8'
     draw(F)
+    drawNumbers(F)
+    drawNumbers(F.points())
+    export({'cube':F})
     exit()
 
     baseshape = ['Quad','Triangle']
