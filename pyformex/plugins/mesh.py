@@ -117,18 +117,6 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
     
     return nodes1[:].reshape(-1,3),elems
 
-### Some useful functions for creating quadrilateral meshes ############################    
 
-def gridRectangle(n1,n2,width,height):
-    print """
-Function mesh.gridRectangle has been removed!
-Its functionality can be obtained by simple.rectangle.
-See the SweepBeam example.
-"""
 
-def gridBetween2Curves(curve1,curve2,n):
-    print """
-Function mesh.gridBetween2Curves has been removed!
-Its functionality can be obtained by simple.rectangle.
-See the SweepBeam example.
-"""
+# End

@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --hui
+#!/usr/bin/env pyformex --gui
 # $Id$
 ##
 ## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
@@ -44,6 +44,9 @@ def isopar(F,type,coords,oldcoords):
         'tet4'  : (3, ('1','x','y','z')),
         'tet10' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z')),
         'hex8'  : (3, ('1','x','y','z','x*y','x*z','y*z','x*y*z')),
+        'hex20' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
+                       'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
+                       'x*x*y*z','x*y*y*z','x*y*z*z')),
         'hex27' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
                        'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
                        'x*x*y*y','x*x*z*z','y*y*z*z','x*x*y*z','x*y*y*z',
@@ -64,6 +67,8 @@ def isopar(F,type,coords,oldcoords):
     else:
         z = 0
     aa = build_matrix(atoms,x,y,z)
+    print coords.shape
+    print aa.shape
     ab = linalg.solve(aa,coords)
     x = F.x().ravel()
     y = F.y().ravel()
@@ -109,46 +114,71 @@ def base(type,m,n=None):
         raise ValueError,"Unknown type '%s'" % str(type)
     
 # Processing starts here
-n = 8
-stype = ask("Select type of structure",['2D','3D'])
-if stype == '2D':
-    F = simple.rectangle(1,1,1.,1.)
-elif stype == '3D':
-    v = array(elements.Hex8.vertices)
-    f = array(elements.Hex8.faces)
-    F = Formex(v[f])
+
+ttype = ask("Select type of transformation",['Cancel','2D','3D'])
+if ttype ==  'Cancel':
+    exit()
+
+tdim = int(ttype[0])
+
+# create a unit quadratic grid in tdim dimensions
+x1 = Formex(simple.regularGrid([0.]*tdim, [1.]*tdim, [2]*tdim).reshape(-1,tdim))
+x2 = x1.copy()
+
+# move a few points
+if tdim == 2:
+    eltype = 'quad9'
+    x2[5] = x2[2].rot(-22.5)
+    x2[8] = x2[2].rot(-45.)
+    x2[7] = x2[2].rot(-67.5)
+    x2[4] = x2[8] * 0.6
 else:
+    eltype = 'hex27'
+    tol = 0.01
+    d = x2.distanceFromPoint(x2[0])
+    w = where((d > 0.5+tol) * (d < 1.0 - tol))[0]
+    print w
+    x2[w] = x2.projectOnSphere(0.5)[w]
+    w = where(d > 1.+tol)[0]
+    print w
+    x2[w] = x2.projectOnSphere(1.)[w]
+
+clear()
+message('This is the set of nodes in natural coordinates')
+draw(x1,color=blue)
+message('This is the set of nodes in cartesian coordinates')
+draw(x2,color=red)
+drawNumbers(x1)
+
+
+n = 8
+stype = ask("Select type of structure",['Cancel','2D','3D'])
+if stype == 'Cancel':
     exit()
 
 sdim = int(stype[0])
+if sdim == 2:
+    F = simple.rectangle(1,1,1.,1.)
+else:
+    v = array(elements.Hex8.vertices)
+    f = array(elements.Hex8.faces)
+    F = Formex(v[f])
+
 for i in range(sdim):
     F = F.replic(n,1.,dir=i)
 clear()
 message('This is the base pattern in natural coordinates')
 draw(F)
+sz = F.sizes()
 pause()
 
-ll,ur = F.bbox()
-sc = array(ur)-array(ll)
-sc[2] = 1.
-x1 = Formex(simple.regularGrid([0.,0.,0.],[1.,1.,0.],[2,2,0]).reshape(-1,3))
-x2 = x1.copy()
-x2[5] = x2[2].rot(-22.5)
-x2[8] = x2[2].rot(-45.)
-x2[7] = x2[2].rot(-67.5)
-x2[4] = x2[8] * 0.6
 
-x1 = x1.scale(sc)
-x2 = x2.scale(sc)
+if sdim < tdim:
+    sz[sdim:tdim] = 2.
+x1 = x1.scale(sz)
+x2 = x2.scale(sz)
 
-clear()
-message('This is the set of nodes in natural coordinates')
-draw(x1,color=black)
-message('This is the set of nodes in cartesian coordinates')
-draw(x2,color=red)
-pause()
-
-G = isopar(F,'quad9',x2.points(),x1.points())
+G = isopar(F,eltype,x2.points(),x1.points())
 G.setProp(1)
 
 clear()

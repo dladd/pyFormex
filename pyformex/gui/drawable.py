@@ -299,10 +299,10 @@ def drawEdges(x,color=None):
     x = x.reshape(-1,2,3)
     if color is not None:
         s = list(color.shape)
-        s[1:1] = 1
+        s[1:1] = [1]
         color = color.reshape(*s).repeat(n,axis=1)
         s[1] = n
-        color = color.reshape(*s)
+        color = color.reshape(-1,3)
     drawLines(x,color)
 
 
@@ -333,10 +333,10 @@ def drawFaces(x,nplex,mode,color=None,alpha=1.0):
     x = x.reshape(-1,nplex,3)
     if color is not None:
         s = list(color.shape)
-        s[1:1] = 1
+        s[1:1] = [1]
         color = color.reshape(*s).repeat(n,axis=1)
         s[1] = n
-        color = color.reshape(*s)
+        color = color.reshape(-1,3)
     drawPolygons(x,mode,color,alpha)
 
 

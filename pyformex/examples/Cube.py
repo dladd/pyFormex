@@ -79,6 +79,7 @@ if __name__ == "draw":
     drawNumbers(F)
     drawNumbers(F.points())
     export({'cube':F})
+    print F
     exit()
 
     baseshape = ['Quad','Triangle']

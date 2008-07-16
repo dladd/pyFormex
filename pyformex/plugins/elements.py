@@ -91,6 +91,26 @@ class Quad4(Element):
     element = faces[0]
 
 
+class Quad9(Element):
+    """A 4-node quadrilateral"""
+    vertices = [ (  0.0,  0.0, 0.0 ),
+                 (  0.0,  1.0, 0.0 ),
+                 (  1.0,  1.0, 0.0 ),
+                 (  1.0,  0.0, 0.0 ),
+                 (  0.5,  0.0, 0.0 ),
+                 (  1.0,  0.5, 0.0 ),
+                 (  0.5,  1.0, 0.0 ),
+                 (  0.0,  0.5, 0.0 ),
+                 (  0.5,  0.5, 0.0 ),
+                 ]
+
+    edges = [ (0,1), (1,2), (2,3), (3,0) ]
+
+    faces = [ (0,1,2,3,4,5,6,7,8), ]
+
+    element = faces[0]
+
+
 class Tet4(Element):
     """A 4-node tetrahedron"""
     vertices = [ ( 0.0, 0.0, 0.0 ),

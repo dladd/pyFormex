@@ -834,7 +834,9 @@ def redraw():
     GD.canvas.update()
 
 
-def pause():
+def pause(msg="Use the Step/Continue buttons to proceed"):
+    if msg:
+        GD.message(msg)
     if allowwait:
         drawblock()    # will need external event to release it
         while (drawlocked):

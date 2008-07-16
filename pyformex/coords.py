@@ -905,18 +905,21 @@ class Coords(ndarray):
         return f
 
 
-    def map1(self,dir,func):
+    def map1(self,dir,func,x=None):
         """Return a Coords where coordinate i is mapped by a 1-D function.
 
         <func> is a numerical function which takes one argument and produces
-        one result. The coordinate dir will be replaced by func(coord[dir]).
+        one result. The coordinate dir will be replaced by func(coord[x]).
+        If no x is specified, x is taken equal to dir. 
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
         numpy module.
         This method is one of several mapping methods. See also map and mapd.
         """
+        if x is None:
+            x = dir
         f = self.copy()
-        f[...,dir] = func(self[...,dir])
+        f[...,dir] = func(self[...,x])
         return f
 
 
@@ -995,8 +998,12 @@ class Coords(ndarray):
         return roll(self, int(n) % 3,axis=-1)
 
 
-    def projectOnSphere(self,radius,center=[0.,0.,0.]):
-        """Project Coords on a sphere."""
+    def projectOnSphere(self,radius=1.,center=[0.,0.,0.]):
+        """Project Coords on a sphere.
+
+        The default sphere is a unit sphere at the origin.
+        The center of the sphere should not be part of the Coords.
+        """
         d = self.distanceFromPoint(center)
         s = radius / d
         f = self - center
@@ -1006,6 +1013,17 @@ class Coords(ndarray):
         f += center
         return f
 
+
+    def split(self):
+        """Split the coordinate array in blocks along first axis.
+
+        The result is a sequence of arrays with shape self.shape[1:].
+        Raises an error if self.ndim < 2.
+        """
+        if self.ndim < 2:
+            raise ValueError,"Can only split arrays with dim >= 2"
+        return [ self[i] for i in range(self.shape[0]) ]
+        
 
 ##############################################################################
 
