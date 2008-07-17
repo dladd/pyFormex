@@ -34,7 +34,7 @@ image_formats_fromeps = []
 multisave = None 
 
 # Set some globals
-print "LOADING IMAGE FORMATS"
+GD.debug("LOADING IMAGE FORMATS")
 image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
 image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
 if GD.cfg.get('imagesfromeps',False):

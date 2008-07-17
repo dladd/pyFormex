@@ -1022,8 +1022,6 @@ class Coords(ndarray):
         d = self.distanceFromLine(center,unitVector(dir))
         s = radius / d
         c = resize(asarray(center),self.shape)
-        print c
-        print c.shape
         c[...,dir] = self[...,dir]
         f = self - c
         axes = range(3)

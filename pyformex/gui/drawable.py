@@ -406,7 +406,7 @@ def drawQuadraticCurves(x,color=None,n=8):
         if color is not None:
             GL.glColor3fv(color[i])
         P = dot(H,x[i])
-        print "P.shape=%s"%str(P.shape)
+        GD,debug("P.shape=%s"%str(P.shape))
         GL.glBegin(GL.GL_LINE_STRIP)
         for p in P:
             GL.glVertex3fv(p)

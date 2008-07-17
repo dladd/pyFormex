@@ -170,13 +170,18 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     functions in a separate class makes it esier to use the Canvas class
     in non-interactive situations or combining it with other GUI toolsets.
     """
-
     ##
     ##
     ##  IMPORTANT : The mouse functionality should (and will) be moved
     ##              to the MultiCanvas class!
     ##
+    ##  The cursor shape can/should stay here 
 
+    # Cursor shapes used on canvas.
+    cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
+                     'pick'   : QtCore.Qt.CrossCursor, 
+                     'busy'   : QtCore.Qt.BusyCursor,
+                     }
     
     def __init__(self,*args):
         """Initialize an empty canvas with default settings."""
@@ -185,6 +190,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         canvas.Canvas.__init__(self)
+        self.cursor = None
+        self.setCursorShape('default')
         self.button = None
         self.mod = NONE
         self.mousefnc = { NONE:{}, SHIFT:{}, CTRL:{}, ALT:{} }
@@ -204,6 +211,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             'number' : self.pick_numbers,
             }
        
+
+    def setCursorShape(self,t):
+        if t not in QtCanvas.cursor_shape.keys():
+            t = 'default'
+        self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[t]))
+
 
     def setMouse(self,button,func,mod=NONE):
         self.mousefnc[mod][button] = func
@@ -229,7 +242,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(RIGHT,self.emit_cancel,SHIFT)
             self.connect(self,DONE,self.accept_selection)
             self.connect(self,CANCEL,self.cancel_selection)
-            self.setCursor(QtGui.QCursor(QtCore.Qt.CrossCursor))
+            self.setCursorShape('pick')
             self.selection_mode = mode
             self.selection_front = None
 
@@ -255,7 +268,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def finish_selection(self):
         """End an interactive picking mode."""
         GD.debug("END SELECTION MODE")
-        self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.setCursorShape('default')
         self.setMouse(LEFT,self.dynarot)
         self.setMouse(LEFT,None,SHIFT)
         self.setMouse(LEFT,None,CTRL)

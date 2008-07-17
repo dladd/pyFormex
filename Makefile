@@ -46,8 +46,8 @@ STAMPABLE= ${SOURCE} ${EXAMPLES} ${OTHERSTAMPABLE}
 
 
 STAMP= stamp 
-VERSIONSTRING= __version__ = .*
-NEWVERSIONSTRING= __version__ = "${RELEASE}"
+VERSIONSTRING= _version_ = .*
+NEWVERSIONSTRING= _version_ = "${RELEASE}"
 
 PKGVER= ${PKGNAME}-${RELEASE}.tar.gz
 PKGDIR= dist

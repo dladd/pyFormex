@@ -50,27 +50,12 @@ def glFill():
 def glLine():
     GL.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_LINE)
 
-def glLight(onoff):
-    """Toggle lights on/off."""
-    if onoff:
-        GL.glEnable(GL.GL_LIGHTING)
-        GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(GD.cfg['render/ambient']))
-        GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
-        GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
-        if GD.canvas:
-            GL.glMatrixMode(GL.GL_MODELVIEW)
-            GL.glPushMatrix()
-            GL.glLoadIdentity()
-            for l in GD.canvas.lights:
-                l.enable()
-            GL.glPopMatrix()
-        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(GD.cfg['render/specular']))
-        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(GD.cfg['render/emission']))
-        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,GD.cfg['render/shininess'])
-        GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
-        GL.glEnable(GL.GL_COLOR_MATERIAL)
-    else:
-        GL.glDisable(GL.GL_LIGHTING)
+## def glLight(onoff):
+##     """Toggle lights on/off."""
+##     if onoff:
+##         GL.glEnable(GL.GL_LIGHTING)
+##     else:
+##         GL.glDisable(GL.GL_LIGHTING)
 
 def glSmooth():
     """Enable smooth shading"""
@@ -176,21 +161,12 @@ class Light(object):
         self.set(**kargs)
 
     def set(self,ambient=0.5,diffuse=0.5,specular=0.5,position=(0.,0.,1.,0.)):
-##         print 'ambient',ambient
-##         print 'diffuse',diffuse
-##         print 'specular',specular
-##         print 'position',position
         self.ambient = colors.GREY(ambient)
         self.diffuse = colors.GREY(diffuse)
         self.specular = colors.GREY(specular)
         self.position = position
-##         print 'self.ambient',self.ambient
-##         print 'self.diffuse',self.diffuse
-##         print 'self.specular',self.specular
-##         print 'self.position',self.position
 
     def enable(self):
-        #GD.debug("  Enable light %s" % (self.light-GL.GL_LIGHT0))
         GL.glLightfv(self.light,GL.GL_POSITION,self.position)
         GL.glLightfv(self.light,GL.GL_AMBIENT,self.ambient)
         GL.glLightfv(self.light,GL.GL_DIFFUSE,self.diffuse)
@@ -198,7 +174,6 @@ class Light(object):
         GL.glEnable(self.light)
 
     def disable(self):
-        #GD.debug("  Disable light %s" % (self.light-GL.GL_LIGHT0))
         GL.glDisable(self.light)
 
 
@@ -211,10 +186,6 @@ class Canvas(object):
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
                    'smooth-avg']
-  
-##     # default light
-##     default_light = { 'ambient':0.5, 'diffuse': 1.0, 'specular':0.5, 'position':(0.,0.,1.,0.)}
-    
 
     def __init__(self):
         """Initialize an empty canvas with default settings."""
@@ -222,8 +193,8 @@ class Canvas(object):
         self.annotations = ActorList(self)  # without annotations
         self.decorations = ActorList(self)  # and no decorations either
         self.triade = None
+        self.resetLighting()
         self.resetLights()
-        #print "ALL LIGHTS:",self.lights
         self.setBbox()
         self.settings = CanvasSettings()
         self.mode2D = False
@@ -239,18 +210,51 @@ class Canvas(object):
         GD.debug("Canvas Setting:\n%s"% self.settings)
 
 
+    def glMatSpec(self):
+        #print self.ambient,self.specular,self.emission,self.shininess
+        GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
+        GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
+        GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
+        GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
+        GL.glEnable(GL.GL_COLOR_MATERIAL)
+
+    def glLightSpec(self):
+        GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
+        GL.glLightModeli(GL.GL_LIGHT_MODEL_LOCAL_VIEWER, 0)
+        if GD.canvas:
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glPushMatrix()
+            GL.glLoadIdentity()
+            for l in GD.canvas.lights:
+                l.enable()
+            GL.glPopMatrix()
+        self.glMatSpec()
+
+    def glLight(self,onoff):
+        """Toggle lights on/off."""
+        if onoff:
+            self.glLightSpec()
+            GL.glEnable(GL.GL_LIGHTING)
+        else:
+            GL.glDisable(GL.GL_LIGHTING)
+
     def resetDefaults(self,dict={}):
         """Return all the settings to their default values."""
         self.settings.reset(dict)
         self.resetLights()
 
-
+    def resetLighting(self):
+        self.ambient = GD.cfg['render/ambient']
+        self.specular = GD.cfg['render/specular']
+        self.emission = GD.cfg['render/emission']
+        self.shininess = GD.cfg['render/shininess']
+        
     def resetLights(self):
         self.lights = []
         for i in range(8):
             light = GD.cfg.get('render/light%d' % i, None)
             if light is not None:
-                #GD.debug("  Add light %s: %s: " % (i,light))
                 self.lights.append(Light(i,light))
 
 
@@ -274,7 +278,7 @@ class Canvas(object):
 
     def setLighting(self,mode):
         self.lighting = mode
-        glLight(self.lighting)
+        self.glLight(self.lighting)
 
     def setAveragedNormals(self,mode):
         self.avgnormals = mode
@@ -344,21 +348,21 @@ class Canvas(object):
             glFlat()
             glLine()
             self.lighting = False
-            glLight(False)
+            self.glLight(False)
 
                 
         elif self.rendermode.startswith('flat'):
             glFlat()
             glFill()
             self.lighting = False
-            glLight(False)
+            self.glLight(False)
                
         elif self.rendermode.startswith('smooth'):
             glSmooth()
             glFill()
             self.lighting = True
-            glLight(True)
-
+            self.glLight(True)
+            
         else:
             raise RuntimeError,"Unknown rendering mode"
 
@@ -400,7 +404,7 @@ class Canvas(object):
         #GD.debugt("UPDATING CURRENT OPENGL CANVAS")
         self.makeCurrent()
         self.clear()
-        glLight(self.lighting)
+        self.glLight(self.lighting)
 
         # Draw Scene Actors
         self.camera.loadProjection()
@@ -452,7 +456,7 @@ class Canvas(object):
         GL.glLoadIdentity()
         GLU.gluOrtho2D(0,self.width(),0,self.height())
         GL.glDisable(GL.GL_DEPTH_TEST)
-        glLight(False)
+        self.glLight(False)
         self.mode2D = True
 
  
@@ -461,7 +465,7 @@ class Canvas(object):
         GL.glEnable(GL.GL_DEPTH_TEST)    
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
-        glLight(self.lighting)
+        self.glLight(self.lighting)
         self.mode2D = False
        
         

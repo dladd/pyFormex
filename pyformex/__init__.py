@@ -15,7 +15,7 @@ Currently, this does nothing. The file should be kept though, because it is
 needed to flag this directory as a Python package.
 """
 
-_version_ = "0.7.2-a1"
+_version_ = "0.7.2-a2"
 _revision_ = "$Rev: 709 $"
 Version = 'pyFormex %s' % _version_
 Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
