@@ -10,9 +10,9 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-import elements
+#from plugins.isopar import *
 import simple
-from numpy import *
+import elements
 
 
 def build_matrix(atoms,x,y=0,z=0):
@@ -24,6 +24,8 @@ def build_matrix(atoms,x,y=0,z=0):
     Each line of the returned matrix contains the atoms evaluated at a
     node.
     """
+    print len(atoms)
+    print len(x)
     aa = zeros((len(x),len(atoms)),Float)
     for k,a in enumerate(atoms):
         aa[:,k] = eval(a)
@@ -67,7 +69,6 @@ def isopar(F,type,coords,oldcoords):
     else:
         z = 0
     aa = build_matrix(atoms,x,y,z)
-    print coords.shape
     print aa.shape
     ab = linalg.solve(aa,coords)
     x = F.x().ravel()
@@ -79,19 +80,6 @@ def isopar(F,type,coords,oldcoords):
     if ndim < 3:
         xx[...,ndim:] += F.f[...,ndim:]
     return Formex(xx)
-##     x = F.x().ravel()
-##     if ndim > 1:
-##         y = F.y().ravel()
-##     else:
-##         y = 0
-##     if ndim > 2:
-##         z = F.z().ravel()
-##     else:
-##         z = 0
-##     aa = build_matrix(atoms,x,y,z)
-##     xx = dot(aa,ab)
-##     return Formex(reshape(xx,F.shape()))
-
 
 def base(type,m,n=None):
     """A regular pattern for type.
@@ -137,11 +125,12 @@ else:
     tol = 0.01
     d = x2.distanceFromPoint(x2[0])
     w = where((d > 0.5+tol) * (d < 1.0 - tol))[0]
-    print w
+    # avoid error messages during projection 
+    errh = seterr(all='ignore')
     x2[w] = x2.projectOnSphere(0.5)[w]
     w = where(d > 1.+tol)[0]
-    print w
     x2[w] = x2.projectOnSphere(1.)[w]
+    seterr(**errh)
 
 clear()
 message('This is the set of nodes in natural coordinates')
@@ -170,7 +159,7 @@ clear()
 message('This is the base pattern in natural coordinates')
 draw(F)
 sz = F.sizes()
-pause()
+#pause()
 
 
 if sdim < tdim:
@@ -184,7 +173,7 @@ G.setProp(1)
 clear()
 draw(F)
 draw(G)
-pause()
+#pause()
 
 
 clear()
