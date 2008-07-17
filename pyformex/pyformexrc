@@ -41,9 +41,14 @@ editor = os.environ.get('VISUAL','')
 viewer = 'firefox'   # html viewer
 browser = 'firefox'    # web browser
 # the %s in the above commands will be replaced with the filename/URL
+scripttemplate = "#!/usr/bin/env pyformex --gui\n# $Id$\n\n\n#End\n"
+
 
 autoglobals = True
 uselib = True
+
+
+
 
 [gui]
 splash = os.path.join(icondir,'pyformex-splash.png')

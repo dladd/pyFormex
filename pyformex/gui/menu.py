@@ -87,7 +87,7 @@ FileMenuData = [
     (_('&Create new script'),fileMenu.createScript),
     (_('&Open existing script'),fileMenu.openScript),
     (_('&Play script'),draw.play),
-    (_('&Edit script'),fileMenu.edit),
+    (_('&Edit script'),fileMenu.editScript),
     (_('&Change workdir'),draw.askDirname),
     (_('---1'),None),
     (_('&Save Image'),fileMenu.saveImage),

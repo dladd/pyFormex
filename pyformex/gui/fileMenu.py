@@ -92,31 +92,45 @@ def closeProject():
 
 ##################### handle script files ##########################
 
+def openScript(fn=None,exist=True,create=False):
+    """Open a pyFormex script and set it as the current script.
 
-def createScript():
-    fn = openScript(False)
-    if fn and not os.path.exists(fn):
-        fil = file(fn,'w')
-        fil.write("#!/usr/bin/env pyformex --gui\n\n\n#End")
-        fil.close()
+    If no filename is specified, a file selection dialog is started to select
+    an existing script, or allow to create a new file if exist is False.
 
+    If the file exists and is a pyFormex script, it is set ready to execute.
 
-def openScript(exist=True):
-    """Open a file selection dialog and set the selection as the current file.
+    If create is True, a default pyFormex script template will be written
+    to the file, overwriting the contents if the file existed. Then, the
+    script is loaded into the editor.
 
-    The default only accepts existing files. Use newFile() to accept new files.
+    We encourage the use of createScript() to create new scripts and leave
+    openScript() to open existing scripts.
     """
-    cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
-    typ = "pyFormex scripts (*.py)"
-    fn = widgets.FileSelection(cur,typ,exist=exist).getFilename()
+    if fn is None:
+        cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
+        typ = "pyFormex scripts (*.py)"
+        fn = widgets.FileSelection(cur,typ,exist=exist).getFilename()
     if fn:
+        if create:
+            if not exist and os.path.exists(fn) and not draw.ack("The file %s already exists.\n Are you sure you want to overwrite it?" % fn):
+                return None
+            fil = file(fn,'w')
+            fil.write(GD.cfg['scripttemplate'])
+            fil.close()
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD.gui.setcurfile(fn)
         GD.gui.history.add(fn)
+        if create:
+            editScript(fn)
     return fn
+
       
-        
-def edit(f=None):
+def createScript(fn=None):
+    return openScript(fn,exist=False,create=True)
+
+    
+def editScript(fn=None):
     """Load the current file in the editor.
 
     This only works if the editor was set in the configuration.
@@ -125,7 +139,9 @@ def edit(f=None):
     If a filename is specified, that file is loaded instead.
     """
     if GD.cfg['editor']:
-        pid = utils.spawn('%s %s' % (GD.cfg['editor'],GD.cfg['curfile']))
+        if fn is None:
+            fn = GD.cfg['curfile']
+        pid = utils.spawn('%s %s' % (GD.cfg['editor'],fn))
     else:
         draw.warning('No known editor was found or configured')
 
