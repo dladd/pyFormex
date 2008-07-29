@@ -17,7 +17,8 @@ Properties can be attributed to a set of geometrical elements.
 
 from pyformex.flatkeydb import FlatDB
 from pyformex.mydict import Dict,CDict
-from numpy import *
+from pyformex.array import *
+#from numpy import *
 
 #################################################################
 # This first part still needs to be changed.
@@ -247,55 +248,55 @@ class Amplitude(object):
 ###################################################
 ############ Utility routines #####################
 
-def checkArray(a,shape=None,kind=None,allow=None):
-    """Check that an array a has the correct shape and type.
+## def checkArray(a,shape=None,kind=None,allow=None):
+##     """Check that an array a has the correct shape and type.
 
-    Either shape and or kind can be specified.
-    The dimensions where shape contains a -1 value are not checked. The
-    number of dimensions should match, though.
-    If kind does not match, but is included in allow, conversion to the
-    requested type is attempted.
-    Returns the array if valid.
-    Else, an error is raised.
-    """
-    try:
-        a = asarray(a)
-        shape = asarray(shape)
-        w = where(shape >= 0)[0]
-        if asarray(a.shape)[w] != shape[w]:
-            raise
-        if kind is not None:
-            if allow is None and a.dtype.kind != kind:
-                raise
-            if kind == 'f':
-                a = a.astype(float32)
-        return a
-    except:
-        print "Expected shape %s, kind %s, got: %s" % (shape,kind,a)
-    raise ValueError
+##     Either shape and or kind can be specified.
+##     The dimensions where shape contains a -1 value are not checked. The
+##     number of dimensions should match, though.
+##     If kind does not match, but is included in allow, conversion to the
+##     requested type is attempted.
+##     Returns the array if valid.
+##     Else, an error is raised.
+##     """
+##     try:
+##         a = asarray(a)
+##         shape = asarray(shape)
+##         w = where(shape >= 0)[0]
+##         if asarray(a.shape)[w] != shape[w]:
+##             raise
+##         if kind is not None:
+##             if allow is None and a.dtype.kind != kind:
+##                 raise
+##             if kind == 'f':
+##                 a = a.astype(float32)
+##         return a
+##     except:
+##         print "Expected shape %s, kind %s, got: %s" % (shape,kind,a)
+##     raise ValueError
 
-def checkArray1D(a,size=None,kind=None,allow=None):
-    """Check that an array a has the correct size and type.
+## def checkArray1D(a,size=None,kind=None,allow=None):
+##     """Check that an array a has the correct size and type.
 
-    Either size and or kind can be specified.
-    If kind does not match, but is included in allow, conversion to the
-    requested type is attempted.
-    Returns the array if valid.
-    Else, an error is raised.
-    """
-    try:
-        a = asarray(a).ravel()
-        if (size is not None and a.size != size):
-            raise
-        if kind is not None:
-            if allow is None and a.dtype.kind != kind:
-                raise
-            if kind == 'f':
-                a = a.astype(float32)
-        return a
-    except:
-        print "Expected size %s, kind %s, got: %s" % (size,kind,a)
-    raise ValueError
+##     Either size and or kind can be specified.
+##     If kind does not match, but is included in allow, conversion to the
+##     requested type is attempted.
+##     Returns the array if valid.
+##     Else, an error is raised.
+##     """
+##     try:
+##         a = asarray(a).ravel()
+##         if (size is not None and a.size != size):
+##             raise
+##         if kind is not None:
+##             if allow is None and a.dtype.kind != kind:
+##                 raise
+##             if kind == 'f':
+##                 a = a.astype(float32)
+##         return a
+##     except:
+##         print "Expected size %s, kind %s, got: %s" % (size,kind,a)
+##     raise ValueError
 
 
 def checkString(a,valid):

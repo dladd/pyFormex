@@ -11,9 +11,9 @@
 ##
 """Coordinates of points in 3D space"""
 
-from numpy import *
 
 import pyformex as GD
+from pyformex.array import *
 
 try:
     from lib.misc import fuse
@@ -22,37 +22,36 @@ except:
     have_fast_fuse = False
 
 
-# default float and int types
-Float = float32
-Int = int32
 
-def istype(a,c):
-    return asarray(a).dtype.kind == c
+# OBSOLETE : REMOVE
+
+## def istype(a,c):
+##     return asarray(a).dtype.kind == c
 
 
 # Implement 'roll' for older versions of numpy
 
-if 'roll' not in dir():
-    def roll(a, shift, axis=None): 
-        """Roll the elements in the array by 'shift' positions along 
-        the given axis.
+## if 'roll' not in dir():
+##     def roll(a, shift, axis=None): 
+##         """Roll the elements in the array by 'shift' positions along 
+##         the given axis.
 
-        A positive shift moves elements to the 'right' in a 1D array.
-        """ 
-        a = asarray(a) 
-        if axis is None: 
-            n = a.size 
-            reshape=1 
-        else: 
-            n = a.shape[axis] 
-            reshape=0 
-        shift %= n 
-        indexes = concatenate((arange(n-shift,n),arange(n-shift))) 
-        res = a.take(indexes, axis) 
-        if reshape: 
-            return res.reshape(a.shape) 
-        else: 
-            return res
+##         A positive shift moves elements to the 'right' in a 1D array.
+##         """ 
+##         a = asarray(a) 
+##         if axis is None: 
+##             n = a.size 
+##             reshape=1 
+##         else: 
+##             n = a.shape[axis] 
+##             reshape=0 
+##         shift %= n 
+##         indexes = concatenate((arange(n-shift,n),arange(n-shift))) 
+##         res = a.take(indexes, axis) 
+##         if reshape: 
+##             return res.reshape(a.shape) 
+##         else: 
+##             return res
 
 
 ###########################################################################

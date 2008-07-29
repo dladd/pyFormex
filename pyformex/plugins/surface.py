@@ -64,7 +64,7 @@ def expandElems(elems):
         codes = edg[:,0] * magic + edg[:,1]
     # keep the unique edge numbers
     uniqid,uniq = unique1d(codes,True)
-    # we suppose uniq is sorted 
+    # uniq is sorted 
     uedges = uniq.searchsorted(codes)
     edges = column_stack([uniq/magic,uniq%magic])
     faces = uedges.reshape((nelems,nplex))
@@ -72,7 +72,7 @@ def expandElems(elems):
 
 
 def compactElems(edges,faces):
-    """Return compacted elems form edges and faces.
+    """Return compacted elems from edges and faces.
 
     This is the inverse operation of expandElems.
     """
