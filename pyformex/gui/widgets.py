@@ -874,7 +874,7 @@ class InputDialog(QtGui.QDialog):
                 timeout = float(timeout)
                 if timeout >= 0.0:
                     timer = QtCore.QTimer()
-                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptdata)
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptData)
                     timer.setSingleShot(True)
                     timeout = int(1000*timeout)
                     timer.start(timeout)

@@ -101,8 +101,8 @@ def drawPolygons(x,n,c,alpha):
         elif c.ndim == 3:
             if n is None:
                 for xi,ci in zip(x.reshape((-1,3)),c.reshape((-1,3))):
-                    GL.glColor3fv(ci[0])
-                    GL.glVertex3fv(xi[0])
+                    GL.glColor3fv(ci)
+                    GL.glVertex3fv(xi)
             elif n.ndim == 2:
                 for xi,ni,ci in zip(x,n,c):
                     GL.glNormal3fv(ni)

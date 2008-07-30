@@ -104,7 +104,7 @@ def base(type,m,n=None):
 # Processing starts here
 
 ttype = ask("Select type of transformation",['Cancel','2D','3D'])
-if ttype ==  'Cancel':
+if not ttype or ttype ==  'Cancel':
     exit()
 
 tdim = int(ttype[0])
