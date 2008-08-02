@@ -394,7 +394,7 @@ def getColor(col=None,caption=None):
 class InputItem(QtGui.QHBoxLayout):
     """A single input item, usually with a label in front.
 
-    The widget is a QHBoxLayout which can be embedded in the vertical
+    The created widget is a QHBoxLayout which can be embedded in the vertical
     layout of a dialog.
     
     This is a super class, which just creates the label. The input
@@ -665,6 +665,29 @@ class InputFloat(InputItem):
         """Return the widget's value."""
         return float(self.input.text())
 
+   
+class InputSlider(InputInteger):
+    """An integer input item using a slider."""
+    
+    def __init__(self,name,value,*args,**kargs):
+        """Creates a new integer input slider."""
+        InputInteger.__init__(self,name,value,*args)
+        self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
+        self.slider.setTickInterval(2)
+        self.slider.setTracking(1)
+        print kargs
+        self.slider.setMinimum(kargs['min'])
+        self.slider.setMaximum(kargs['max'])
+        self.slider.setValue(value)
+        self.slider.setSingleStep(1)
+        #self.slider.setPageStep(5)
+        self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
+        self.addWidget(self.slider)
+
+    def set_value(self,val):
+        self.input.setText(str(val))
+
 
 class InputColor(InputItem):
     """A color input item."""
@@ -758,6 +781,7 @@ class InputDialog(QtGui.QDialog):
         form = QtGui.QVBoxLayout()
         for item in items:
             name,value = item[:2]
+            options = {}
             if len(item) > 2:
                 itemtype = item[2]
             else:
@@ -781,6 +805,13 @@ class InputDialog(QtGui.QDialog):
                 if len(item) > 5:
                     line.validator.setDecimals(int(item[5]))
 
+            elif itemtype == 'slider':
+                if len(item) > 3:
+                    options['min'] = int(item[3])
+                if len(item) > 4:
+                    options['max'] = int(item[4])
+                line = InputSlider(name,value,**options)
+ 
             elif itemtype == 'color':
                 line = InputColor(name,value)
 
