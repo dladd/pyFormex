@@ -110,16 +110,16 @@ In order to run \pyformex, you need to have the following installed (and working
 \item \htmladdnormallinkfoot{Python}{\pythonURL}: Version 2.4 or higher is recommended. Versions 2.3 and 2.2 might work with only a few minor changes.
 Nearly all Linux distributions come with Python installed, so this should not be no major obstacle.
 \item \htmladdnormallinkfoot{NumPy}{\numpyURL}: Version 1.0-rc1 or higher. Earlier versions can be made to work, but will require some changes to be made. NumPy is the package used for fast numerical array operations in Python and is essential for \pyformex.\footnote{The \texttt{Numarray} package, which was used up until \pyformex 0.3, is no longer supported }
-On Linux systems, installing NumPy from source is usually straightforward. Debian users can install the packages python-numpy, python-numpy-dev and python-numpy-ext. There are binary packages for Windows on the \htmladdnormallinkfoot{Sourceforge download page}{http://www.numpy.org/}.
+On Linux systems, installing NumPy from source is usually straightforward. Debian users can install the package python-numpy.The extra packages python-numpy-ext and python-scipy give saom added functionality, but are not required for the basic operation of \pyf. For Windows, binary packages are available on the \htmladdnormallinkfoot{Sourceforge download page}{http://www.numpy.org/}.
 \end{itemize}
-If you only want to use the Formex data model and transformation methods, the above will suffice. But most probably you will also want to run the \pyformex Graphical User Interface (GUI) for visualizing your structures. Then you also need the following. 
+If you only want to use the Formex data model and transformation methods, the above will suffice. But most probably you will also want to run the \pyformex Graphical User Interface (GUI) for visualizing your structures. Then you also need the following:
 \begin{itemize}
-\item \htmladdnormallinkfoot{Qt4}{http://www.trolltech.com/products/qt}: The widget toolkit on which the GUI was built. For Debian users this  comes in the packages python-qt4 and python-qt4-dev.
-\item \htmladdnormallinkfoot{PyQt4}{http://www.riverbankcomputing.co.uk/pyqt/index.php}: The Python bindings for Qt4. Debian users should install the packages python-qt4, python-qt4-dev and python-qt4-gl.
+\item \htmladdnormallinkfoot{Qt4}{http://www.trolltech.com/products/qt}: The widget toolkit on which the GUI was built. For Debian users this  comes in the packages python-qt4.
+\item \htmladdnormallinkfoot{PyQt4}{http://www.riverbankcomputing.co.uk/pyqt/index.php}: The Python bindings for Qt4. Debian users should install the packages python-qt4 and python-qt4-gl.
 \item \htmladdnormallinkfoot{PyOpenGL}{http://pyopengl.sourceforge.net/}: Python bindings for OpenGL, used for drawing and manipulating the 3D-structures. For debian users this is in the package python-opengl.
 \end{itemize}
 
-
+Since version 0.7, \pyf includes an acceleration library that can increase the speed of some low level operations (e.g. drawing), especially when working on very large structures. If you want to compile and use this library, you also need to have a working C compiler and the Python and OpenGL header files. On a Debian based system, you should install tha packages python-dev, python-qt4-dev and libgl1-mesa-dev.
 
 \subsection{Downloading}
 \label{sec:downloading}

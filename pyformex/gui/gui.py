@@ -90,6 +90,7 @@ class Board(QtGui.QTextEdit):
 ################# GUI ###############
 #####################################
 
+
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
 
@@ -112,17 +113,9 @@ class GUI(QtGui.QMainWindow):
 
         # The status bar
         self.statusbar = self.statusBar()
-        #self.curproj = QtGui.QLabel('No Project')
-        #self.curproj.setLineWidth(0)
-        if GD.options.debug:
-            self.curproj = widgets.ButtonBox('Project:',['None','NONO'],[fileMenu.openProject,fileMenu.openProject,])
-            self.curfile = widgets.ButtonBox('Script:',['None','NONO'],[fileMenu.openScript,fileMenu.openProject])
-        else:
-            self.curproj = widgets.ButtonBox('Project:',['None'],[fileMenu.openProject])
-            self.curfile = widgets.ButtonBox('Script:',['None'],[fileMenu.openScript])
+        self.curproj = widgets.ButtonBox('Project:',['None'],[fileMenu.openProject])
+        self.curfile = widgets.ButtonBox('Script:',['None'],[fileMenu.openScript])
             
-        self.statusbar.addWidget(self.curproj)
-        self.statusbar.addWidget(self.curfile)
         #cf = QtGui.QWidget()
         #hl = QtGui.QHBoxLayout()
         #hl.setSpacing(0)
@@ -284,6 +277,16 @@ class GUI(QtGui.QMainWindow):
             printsize(self,'DEBUG: Main:')
             printsize(self.central,'DEBUG: Canvas:')
             printsize(self.board,'DEBUG: Board:')
+
+
+
+    def addStatusBarButtons(self):
+        sbh = self.statusbar.height()
+        print "Status bar height = %s" % sbh
+        self.curproj.setFixedHeight(32)
+        self.curfile.setFixedHeight(32)
+        GD.gui.statusbar.addWidget(self.curproj)
+        GD.gui.statusbar.addWidget(self.curfile)
 
 
     def setStyle(self,style):
@@ -506,7 +509,6 @@ def quit():
         GD.app.exit()
 
 
-
 def runApp(args):
     """Create and run the qt application."""
     #
@@ -669,6 +671,7 @@ See Help->License or the file COPYING for details.
             GD.debug('ERROR while loading plugin %s' % p)
     GD.gui.setBusy(False)
     GD.gui.update()
+    GD.gui.addStatusBarButtons()
 
     # remove the splash window
     if splash is not None:
@@ -691,6 +694,7 @@ See Help->License or the file COPYING for details.
 
     GD.gui.setBusy(False)
     GD.gui.update()
+    
     if os.path.isdir(GD.cfg['workdir']):
         # Make the workdir the current dir
         os.chdir(GD.cfg['workdir'])

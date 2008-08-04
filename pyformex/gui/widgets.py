@@ -1076,6 +1076,12 @@ class ButtonBox(QtGui.QWidget):
     def setIcon(self,icon,index=0):
         self.buttons.setIcon(icon,index)
 
+    def __str__(self):
+        s = ''
+        for a in ['rect','minimumHeight']:
+            s += "%s = %s\n" % (a,getattr(self,a)())
+        return s
+
 
 ############################# Named combo box ###########################
 

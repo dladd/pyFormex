@@ -1121,8 +1121,8 @@ def set_selection_filter(i):
     """Set the selection filter mode"""
     if i in range(len(selection_filters)):
         GD.canvas.start_selection(None,selection_filters[i])
-        
 
+    
 def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     """Enter interactive picking mode and return selection.
 
@@ -1146,7 +1146,7 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     else:
         filters = selection_filters[:3]
     filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
-    GD.gui.statusbar.addWidget(filter_combo)
+    #GD.gui.statusbar.addWidget(filter_combo)
 
     GD.canvas.numbers_visible = False
     if mode == 'actor':

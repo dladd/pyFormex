@@ -145,6 +145,7 @@ ActionMenuData = [
     (_('&Correct the Qt4 Geometry'),moveCorrect),
     (_('&Save Geometry'),saveGeometry),
     (_('&Restore Geometry'),restoreGeometry),
+#    (_('&Add Project to Status Bar'),gui.addProject),
     ]
 
 CameraMenuData = [
