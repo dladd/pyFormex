@@ -594,7 +594,7 @@ class InputPush(InputItem):
             self.hbox.setContentsMargins(0,10,0,10)
         else:
             self.hbox = QtGui.QHBoxLayout()
-            self.hbox.setContentsMargins(10,0,10,0)
+            self.hbox.setContentsMargins(10,5,10,5)
         self.hbox.setSpacing(0)
         self.hbox.setMargin(0)
 

@@ -697,6 +697,7 @@ def setTriade(on=None):
 ##     GD.canvas.renderText(x,y,'hallo')
 
 
+
 def drawtext(text,x,y,font='9x15',adjust='left',color=None):
     """Show a text at position x,y using font."""
     TA = decors.Text(text,x,y,font,adjust,color)

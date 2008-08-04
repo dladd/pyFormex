@@ -211,7 +211,6 @@ class Canvas(object):
 
 
     def glMatSpec(self):
-        #print self.ambient,self.specular,self.emission,self.shininess
         GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
         GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)

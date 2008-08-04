@@ -70,7 +70,7 @@ Unpack the pyFormex source tarball:
 Go to the created pyformex directory:
    cd pyformex-VERSION
 Do (with root privileges)
-   python setup.py install prefix=/usr/local
+   python setup.py install --prefix=/usr/local
 This will install pyFormex under /usr/local/. You can change the prefix
 to install in some other place.
 
