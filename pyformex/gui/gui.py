@@ -114,9 +114,14 @@ class GUI(QtGui.QMainWindow):
         self.statusbar = self.statusBar()
         #self.curproj = QtGui.QLabel('No Project')
         #self.curproj.setLineWidth(0)
-        self.curproj = widgets.ButtonBox('Project:',['None','NONO'],[fileMenu.openProject])
+        if GD.options.debug:
+            self.curproj = widgets.ButtonBox('Project:',['None','NONO'],[fileMenu.openProject,fileMenu.openProject,])
+            self.curfile = widgets.ButtonBox('Script:',['None','NONO'],[fileMenu.openScript,fileMenu.openProject])
+        else:
+            self.curproj = widgets.ButtonBox('Project:',['None'],[fileMenu.openProject])
+            self.curfile = widgets.ButtonBox('Script:',['None'],[fileMenu.openScript])
+            
         self.statusbar.addWidget(self.curproj)
-        self.curfile = widgets.ButtonBox('Script:',['None','NONO'],[fileMenu.openScript])
         self.statusbar.addWidget(self.curfile)
         #cf = QtGui.QWidget()
         #hl = QtGui.QHBoxLayout()

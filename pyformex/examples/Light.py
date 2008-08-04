@@ -39,22 +39,57 @@ FA = FormexActor(F,color=c)
 drawActor(FA)
 zoomAll()
 
-TA=None
-for i in range(11):
-    v = i*0.1
-    if TA:
-        undecorate(TA)
-    TA = drawtext('specular = %s'%v,100,100)
-    GD.canvas.specular =  v
+def show_changes():
     GD.canvas.setLighting(True)
     GD.canvas.update()
     GD.app.processEvents()
-    sleep(1)
+    
+text_pos = {'ambient':(None,100),
+            'specular':(None,80),
+            'emission':(None,60),
+            'shininess':(None,40),
+            }
+
+def set_light_value(typ,val):
+    text,pos = text_pos[typ]
+    if text:
+        undecorate(text)
+    text_pos[typ] = (drawtext('%s = %s'%(typ,val),100,pos),pos)
+    setattr(GD.canvas,typ,val)
+    show_changes()
 
 
+def set_ambient(i):
+    set_light_value('ambient',i*0.1)
 
-#    GD.canvas.setLighting(mode)
-#    GD.canvas.update()
-#    GD.app.processEvents()
+def set_specular(i):
+    set_light_value('specular',i*0.1)
+
+def set_emission(i):
+    set_light_value('emission',i*0.1)
+
+def set_shininess(i):
+    set_light_value('shininess',i*0.1)
+
+nv = 10
+vmin = 0.0
+vmax = 1.0
+dv = (vmax-vmin) / nv
+ambi = 10*GD.canvas.ambient
+spec = 10*GD.canvas.specular
+emis = 10*GD.canvas.emission
+shin = 10*GD.canvas.shininess
+res = askItems([
+    ('ambient',ambi,'slider',{'min':0,'max':10,'func':set_ambient}),
+    ('specular',spec,'slider',{'min':0,'max':10,'func':set_specular}),
+    ('emission',emis,'slider',{'min':0,'max':10,'func':set_emission}),
+    ('shininess',shin,'slider',{'min':0,'max':10,'func':set_shininess}),
+    ])
+
+print res
+print GD.canvas.ambient
+print GD.canvas.specular
+print GD.canvas.emission
+print GD.canvas.shininess
 
 # End

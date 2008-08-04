@@ -346,10 +346,10 @@ class Selection(QtGui.QDialog):
         for s in selected:
             for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
                 # OBSOLETE: should be changed with Qt version 4.2 or later
-                self.listw.setItemSelected(i,True)
+                # self.listw.setItemSelected(i,True)
                 # SHOULD BECOME:
-                # i.setSelected(True) # requires Qt 4.2
-                # i.setCheckState(QtCore.Qt.Checked)
+                i.setSelected(True) # requires Qt 4.2
+                i.setCheckState(QtCore.Qt.Checked)
 
                 
     def getResult(self):
@@ -506,7 +506,6 @@ class InputCombo(InputItem):
         if default is None:
             default = choices[0]
         elif default not in choices:
-            #print "Adding default to choices"
             choices[0:0] = [ default ]
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QComboBox()
@@ -625,13 +624,21 @@ class InputPush(InputItem):
 
 
 class InputInteger(InputItem):
-    """An integer input item."""
+    """An integer input item.
+
+    Options:
+    'min', 'max': range of the scale (integer)
+    """
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input field with a label in front."""
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QLineEdit(str(value))
         self.validator = QtGui.QIntValidator(self)
+        if kargs.has_key('min'):
+            line.validator.setBottom(int(kargs['min']))
+        if kargs.has_key('max'):
+            line.validator.setTop(int(kargs['max']))
         self.input.setValidator(self.validator)
         self.addWidget(self.input)
 
@@ -643,6 +650,37 @@ class InputInteger(InputItem):
     def value(self):
         """Return the widget's value."""
         return int(self.input.text())
+
+
+## class InputNumeric(InputItem):
+##     """An numeric input item. The type is derived from the default value.
+
+##     Options:
+##     'min', 'max': range of the scale (integer/float)
+##     'dec': number of decimals (float only)
+##     """
+    
+##     def __init__(self,name,value,*args,**kargs):
+##         """Creates a new numeric input field with a label in front."""
+##         InputItem.__init__(self,name,*args)
+##         self.input = QtGui.QLineEdit(str(value))
+##         if type(value) == int:
+##         self.validator = QtGui.QIntValidator(self)
+##         if kargs.has_key('min'):
+##             line.validator.setBottom(int(kargs['min']))
+##         if kargs.has_key('max'):
+##             line.validator.setTop(int(kargs['max']))
+##         self.input.setValidator(self.validator)
+##         self.addWidget(self.input)
+
+##     def show(self):
+##         """Select all text on first display.""" 
+##         InputItem.show(self,*args)
+##         self.input.selectAll()
+
+##     def value(self):
+##         """Return the widget's value."""
+##         return int(self.input.text())
 
 
 class InputFloat(InputItem):
@@ -667,22 +705,68 @@ class InputFloat(InputItem):
 
    
 class InputSlider(InputInteger):
-    """An integer input item using a slider."""
+    """An integer input item using a slider.
+
+    Options:
+      'min', 'max': range of the scale (integer)
+      'ticks'     : step for the tick marks (default range length / 10)
+      'func'      : an optional function to be called whenever the value is
+                    changed. The function takes a float/integer argument.
+    """
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input slider."""
         InputInteger.__init__(self,name,value,*args)
         self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
-        self.slider.setTickInterval(2)
-        self.slider.setTracking(1)
-        print kargs
-        self.slider.setMinimum(kargs['min'])
-        self.slider.setMaximum(kargs['max'])
+        vmin = kargs.get('min',0)
+        vmax = kargs.get('max',100)
+        
+        ticks = kargs.get('ticks',(vmax-vmin)/10)
+        self.slider.setTickInterval(ticks)
+        self.slider.setMinimum(vmin)
+        self.slider.setMaximum(vmax)
         self.slider.setValue(value)
         self.slider.setSingleStep(1)
         #self.slider.setPageStep(5)
+        self.slider.setTracking(1)
         self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
+        if kargs.has_key('func'):
+            self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),kargs['func'])            
+        self.addWidget(self.slider)
+
+    def set_value(self,val):
+        self.input.setText(str(val))
+   
+class InputFSlider(InputInteger):
+    """An integer input item using a slider.
+
+    Options:
+      'min', 'max': range of the scale (integer)
+      'ticks'     : step for the tick marks (default range length / 10)
+      'func'      : an optional function to be called whenever the value is
+                    changed. The function takes a float/integer argument.
+    """
+    
+    def __init__(self,name,value,*args,**kargs):
+        """Creates a new integer input slider."""
+        InputInteger.__init__(self,name,value,*args)
+        self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
+        vmin = kargs.get('min',0)
+        vmax = kargs.get('max',100)
+        
+        ticks = kargs.get('ticks',(vmax-vmin)/10)
+        self.slider.setTickInterval(ticks)
+        self.slider.setMinimum(vmin)
+        self.slider.setMaximum(vmax)
+        self.slider.setValue(value)
+        self.slider.setSingleStep(1)
+        #self.slider.setPageStep(5)
+        self.slider.setTracking(1)
+        self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
+        if kargs.has_key('func'):
+            self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),kargs['func'])            
         self.addWidget(self.slider)
 
     def set_value(self,val):
@@ -781,20 +865,25 @@ class InputDialog(QtGui.QDialog):
         form = QtGui.QVBoxLayout()
         for item in items:
             name,value = item[:2]
-            options = {}
             if len(item) > 2:
                 itemtype = item[2]
             else:
                 itemtype = type(value)
+            options = {}
+            if len(item) > 3 and type(item[3] == dict):
+                options = item[3]
+                
             if itemtype == bool:
                 line = InputBool(name,value)
 
             elif itemtype == int:
                 line = InputInteger(name,value)
-                if len(item) > 3:
-                    line.validator.setBottom(int(item[3]))
+                if len(item) > 3 and type(item[3] != dict):
+                    options['min'] = int(item[3])
+##                     line.validator.setBottom(int(item[3]))
                 if len(item) > 4:
-                    line.validator.setTop(int(item[4]))
+                    options['max'] = int(item[4])
+##                     line.validator.setTop(int(item[4]))
 
             elif itemtype == float:
                 line = InputFloat(name,value)
@@ -806,11 +895,10 @@ class InputDialog(QtGui.QDialog):
                     line.validator.setDecimals(int(item[5]))
 
             elif itemtype == 'slider':
-                if len(item) > 3:
-                    options['min'] = int(item[3])
-                if len(item) > 4:
-                    options['max'] = int(item[4])
-                line = InputSlider(name,value,**options)
+                if type(value) == int:
+                    line = InputSlider(name,value,**options)
+                elif type(value) == float:
+                    line = InputFSlider(name,value,**options)
  
             elif itemtype == 'color':
                 line = InputColor(name,value)
