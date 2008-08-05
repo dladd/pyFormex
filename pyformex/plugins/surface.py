@@ -604,10 +604,22 @@ class TriSurface(object):
         S.refresh()
         coords = concatenate([self.coords,S.coords])
         elems = concatenate([self.elems,S.elems+self.ncoords()])
+        ## What to do if one of the surfaces has properties, the other one not?
+        ## The current policy is to use zero property values for the Surface
+        ## without props
+        prop = None
+        if self.p is not None or S.p is not None:
+            if self.p is None:
+                self.p = zeros(shape=self.nelems(),dtype=Int)
+            if S.p is None:
+                p = zeros(shape=S.nelems(),dtype=Int)
+            else:
+                p = S.p
+            prop = concatenate((self.p,p))
         self.__init__(coords,elems)
+        self.setProp(prop)
 
 
-            
 ###########################################################################
     #
     #   Return information about a TriSurface
