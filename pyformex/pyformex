@@ -210,10 +210,12 @@ You will need proper permissions to actually delete the files.
         siteprefs = None  # Where does Windoze put site prefs?
         prefs = 'pyformex.cfg'
     homeprefs = os.path.join(homedir,prefs)
+    if not os.path.exists(homeprefs):
+        # WE SHOULD ALWAYS HAVE .pyformexrc
+        file(homeprefs,'w').close()
     localprefs = os.path.join(os.getcwd(),prefs)
 
     sysprefs = filter(os.path.exists,[defaults,siteprefs])
-    # ?? WE SHOULD ALWAYS CREATE .pyformexrc?
     userprefs = filter(os.path.exists,[homeprefs,localprefs])
     if GD.options.nodefaultconfig:
         sysprefs = sysprefs[0:1]
