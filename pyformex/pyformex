@@ -210,28 +210,31 @@ You will need proper permissions to actually delete the files.
         siteprefs = None  # Where does Windoze put site prefs?
         prefs = 'pyformex.cfg'
     homeprefs = os.path.join(homedir,prefs)
-    if not os.path.exists(homeprefs):
-        # WE SHOULD ALWAYS HAVE .pyformexrc
-        file(homeprefs,'w').close()
     localprefs = os.path.join(os.getcwd(),prefs)
 
-    sysprefs = filter(os.path.exists,[defaults,siteprefs])
-    userprefs = filter(os.path.exists,[homeprefs,localprefs])
+    sysprefs = [defaults,siteprefs]
+    userprefs = [homeprefs,localprefs]
     if GD.options.nodefaultconfig:
-        sysprefs = sysprefs[0:1]
+        sysprefs = [defaults]
         userprefs = []
     if GD.options.config:
         userprefs.append(GD.options.config)
-    refprefs = sysprefs + userprefs[:-1]
-    for f in refprefs:
+
+    if len(userprefs) == 0:
+        # We should always have a place to store the user preferences
+        userprefs = [ homeprefs ]
+    GD.preffile = userprefs[-1] # Settings will be saved here
+
+    # Read all but the last as reference
+    for f in filter(os.path.exists,sysprefs + userprefs[:-1]):
         GD.debug("Reading config file %s" % f)
-        GD.cfg.read(f) 
-    # Save this config as a reference, then load last user config file
+        GD.cfg.read(f)
     GD.refcfg = GD.cfg
     GD.debug("RefConfig: %s" % GD.refcfg)
+
+    # Use  the last as place to save preferences
     GD.cfg = Config(default=refLookup)
-    if len(userprefs) > 0:
-        GD.preffile = userprefs[-1] # Settings will be saved here
+    if os.path.exists(GD.preffile):
         GD.debug("Reading config file %s" % GD.preffile)
         GD.cfg.read(GD.preffile)
     GD.debug("Config: %s" % GD.cfg)
