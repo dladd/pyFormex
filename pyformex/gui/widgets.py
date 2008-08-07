@@ -1007,7 +1007,9 @@ class InputDialog(QtGui.QDialog):
         return (self.result, accept)
 
 
-    
+#####################################################################
+# Some static functions for displaying text widgets
+
 def messageBox(message,level='info',choices=['OK'],timeout=None):
     """Display a message box and wait for user response.
 
@@ -1048,13 +1050,43 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
             raise
             
     w.exec_()
-    #if GD.gui:
-    #    GD.gui.update()
     b = w.clickedButton()
     if b:
         return str(b.text())
     else:
         return ''
+
+
+def textBox(text,choices=['OK']):
+    """Display a text and wait for user response.
+
+    Possible choices are 'OK' and 'CANCEL'.
+    The function returns True if the OK button was clicked or 'ENTER'
+    was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
+    """
+    w = QtGui.QDialog()
+    t = QtGui.QTextEdit()
+    t.setReadOnly(True)
+    t.setPlainText(text)
+    bl = QtGui.QHBoxLayout()
+    bl.addStretch()
+    if 'OK' in choices:
+        b = QtGui.QPushButton('OK')
+        QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("accept()"))
+        bl.addWidget(b)
+    if 'CANCEL' in choices:
+        b = QtGui.QPushButton('CANCEL')
+        QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("reject()"))
+        bl.addWidget(b)
+    bl.addStretch()
+    h = QtGui.QWidget()
+    h.setLayout(bl)
+    l = QtGui.QVBoxLayout()
+    l.addWidget(t)
+    l.addWidget(h)
+    w.setLayout(l)
+    w.resize(800,400)
+    return w.exec_() == QtGui.QDialog.Accepted
 
 
 ############################# Named button box ###########################

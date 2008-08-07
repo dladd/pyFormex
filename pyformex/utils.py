@@ -155,6 +155,7 @@ def checkExternal(name=None,command=None,answer=None):
 
     m = re.match(answer,commands.getoutput(command))
     if m:
+        print "MATCH for %s" % name
         version = m.group(1)
     else:
         version = ''

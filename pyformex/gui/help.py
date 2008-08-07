@@ -47,7 +47,7 @@ def catchAndDisplay(cmd):
         sys.stdout = f
         eval(cmd)
         f.seek(0)
-        draw.textView(f.read())
+        draw.showText(f.read())
     finally:
         sys.stdout = save
         
@@ -74,20 +74,20 @@ def webman():
 
 def readme():
     """Display the pyFormex description."""
-    draw.textView(file(GD.cfg['help/readme']).read())
+    draw.showText(file(GD.cfg['help/readme']).read())
 
 def license():
     """Display the pyFormex description."""
-    draw.textView(file(GD.cfg['help/license']).read())
+    draw.showText(file(GD.cfg['help/license']).read())
 
 def opengl():
     """Display the OpenGL format description."""
-    draw.textView(viewport.OpenGLFormat())
+    draw.showText(viewport.OpenGLFormat())
 
 def detected():
     """Display the detected software components."""
     utils.checkExternal()
-    catchAndDisplay('draw.printDetected()')
+    catchAndDisplay('utils.printDetected()')
 
 def about():
     """Display short information about pyFormex."""
