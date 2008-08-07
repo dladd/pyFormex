@@ -36,3 +36,4 @@
 {'long_range': (0.0, 180.0), 'scale': [1.0, 1.0, 1.0], 'lat_range': (-90.0, 90.0), 'color': 'brown', 'diag': 'u', 'north_south': 1.0, 'east_west': 1.0, 'grid': [24, 16]}
 {'long_range': (0.0, 180.0), 'scale': [1.0, 1.0, 1.0], 'lat_range': (-90.0, 90.0), 'color': 'red', 'diag': '', 'north_south': 1.0, 'east_west': 0.5, 'grid': [24, 16]}
 {'eggness': 0.20000000000000001, 'long_range': (0.0, 180.0), 'scale': [1.0, 1.0, 1.5], 'lat_range': (-60.0, 60.0), 'name': 'Egg-2', 'color': 'red', 'grid_base': 'tri', 'north_south': 1.0, 'grid_skewness': -0.5, 'east_west': 1.0, 'grid': [24, 32], 'grid_bias': 0.0}
+{'eggness': 0.20000000000000001, 'scale': [1.0, 1.0, 1.0], 'name': 'Shape-0', 'color': 'red', 'north_south': 1.2, 'east_west': 1.2, 'grid': 'Grid-0', 'post': ''}
