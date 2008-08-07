@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex
+#!/usr/bin/env pyformex      -*- coding: utf-8 -*-
 # $Id: $
 ##
 ## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
