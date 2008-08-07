@@ -1,5 +1,5 @@
 #!/usr/bin/env pyformex      -*- coding: utf-8 -*-
-# $Id: $
+# $Id$
 ##
 ## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
 ## pyFormex is a Python implementation of Formex algebra
@@ -9,12 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Wire Stent Demo"""
-##
-##This Demo is intended for educational purposes by rewriting the WireStent.py 
-##example and adding lots of drawing instructions and comments. More details
-##regarding the used definitions can be found in the Pyformex reference manual.
-###
+"""Wire Stent Demo
+
+This demo is intended for educational purposes. It is a rewrite of the
+WireStent.py example, adding lots of drawing instructions and comments.
+More details regarding the used definitions can be found in the pyFormex
+reference manual.
+"""
 
 # needed if we import this from another script
 from formex import *
