@@ -626,15 +626,6 @@ class Canvas(object):
 ##         self.addDecoration(self.cursor)
 
 
-##     # Do we need/use this????
-##     def draw_line(self,x,y):
-##         if self.cursor:
-##             self.removeDecoration(self.cursor)
-##         col = GD.cfg.get('pick/color','yellow')
-##         self.cursor = decors.Line(self.statex,self.statey,x,y,color=col,linewidth=2)
-##         self.addDecoration(self.cursor)
-
-
     def saveBuffer(self):
         """Save the current OpenGL buffer"""
         GD.debugt("saveBuffer")

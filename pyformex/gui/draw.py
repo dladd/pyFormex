@@ -45,6 +45,21 @@ def closeGui():
     print "Closing the GUI: currently, this will also terminate pyformex."
     GD.gui.close()
     
+
+def textView(text):
+    """Display a text file and wait for user response."""
+    w = QtGui.QDialog()
+    t = QtGui.QTextEdit()
+    t.setReadOnly(True)
+    t.setPlainText(text)
+    b = QtGui.QPushButton('Close')
+    QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("accept()"))
+    l = QtGui.QVBoxLayout()
+    l.addWidget(t)
+    l.addWidget(b)
+    w.setLayout(l)
+    w.resize(800,400)
+    return w.exec_()
    
 
 def ask(question,choices=None,default=None,timeout=None):
@@ -86,14 +101,6 @@ def warning(message,actions=['OK']):
 def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
-
-def showText(text,actions=['OK']):
-    """Display a text and wait for user response.
-
-    This can display a large text and will add scrollbars when needed.
-    """
-    return widgets.textBox(text,actions)
-
 
 def askItems(items,caption=None,timeout=None):
     """Ask the value of some items to the user.
@@ -1139,7 +1146,7 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     else:
         filters = selection_filters[:3]
     filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
-    #GD.gui.statusbar.addWidget(filter_combo)
+    GD.gui.statusbar.addWidget(filter_combo)
 
     GD.canvas.numbers_visible = False
     if mode == 'actor':
@@ -1225,6 +1232,54 @@ def hideNumbers():
         undraw(GD.canvas.numbers)
         GD.gui.removeDockWidget(GD.canvas.number_widget)
     GD.canvas.numbers_visible = False
+
+
+edit_modes = ['undo', 'clear']
+
+def set_edit_mode(i):
+    """Set the drawing edit mode."""
+    if i in range(len(edit_modes)):
+        GD.canvas.edit_drawing(edit_modes[i])
+
+
+def drawLinesInter(single=False,func=None):
+    """Enter interactive drawing mode and return the line drawing.
+
+    See viewport.py for more details.
+    This function differs in that it provides default displaying
+    during the drawing operation and a button to stop the drawing operation.
+
+    The drawing can be edited using the methods 'undo' and 'clear', which
+    are presented in a combobox.
+    """
+    global LineDrawing
+    LineDrawing = None
+    if func == None:
+        func = showLineDrawing
+    drawing_buttons = widgets.ButtonBox('Drawing:',['Cancel','OK'],[GD.canvas.cancel_drawing,GD.canvas.accept_drawing])
+    GD.gui.statusbar.addWidget(drawing_buttons)
+    edit_combo = widgets.ComboBox('Edit:',edit_modes,set_edit_mode)
+    GD.gui.statusbar.addWidget(edit_combo)
+    lines = GD.canvas.drawLinesInter(single,func)
+    GD.gui.statusbar.removeWidget(drawing_buttons)
+    GD.gui.statusbar.removeWidget(edit_combo)
+    return lines
+
+
+def showLineDrawing(L):
+    """Show a line drawing.
+
+    L is usually the return value of an interactive draw operation, but
+    might also be set by the user.
+    """
+    global LineDrawing
+    if LineDrawing:
+        undecorate(LineDrawing)
+    if L.size == 0:
+        LineDrawing = None
+    else:
+        LineDrawing = decors.LineDrawing(L,color='yellow',linewidth=3)
+        decorate(LineDrawing)
 
 
 ################################ saving images ########################

@@ -134,6 +134,7 @@ def drawText2D(text, x,y, font='9x15', adjust='left'):
     Any other setting will align the text left.
     Default is to center.
     """
+    height = glutFontHeight(font)
     if type(font) == str:
         font = glutFont(font)
     #print "font = ",font
@@ -146,7 +147,13 @@ def drawText2D(text, x,y, font='9x15', adjust='left'):
         if adjust == 'center':
             x -= len1/2
         elif adjust == 'right':
-            x -= len1 
+            x -= len1
+        elif adjust == 'under':
+            x -= len1/2
+            y -= 2* height
+        elif adjust == 'above':
+            x -= len1/2
+            y += height
     GL.glRasterPos2f(float(x),float(y));
     drawGlutText(text,font)
 
@@ -243,7 +250,7 @@ class ColorLegend(Decoration):
             if y2 >= y1 or i == 0:
                 drawText2D(("%%.%df" % self.dec) % v,x1,y2)   
                 y1 = y2 + dh
-            
+
 
 class Grid(Decoration):
     """A 2D-grid on the canvas."""
@@ -270,7 +277,7 @@ class Grid(Decoration):
         if self.linewidth:
             GL.glLineWidth(self.linewidth)
         drawGrid(self.x1,self.y1,self.x2,self.y2,self.nx,self.ny)
-            
+
 
 class Line(Decoration):
     """A straight line on the canvas."""
@@ -288,7 +295,7 @@ class Line(Decoration):
             self.linewidth = None
         else:
             self.linewidth = float(linewidth)
-        
+
 
     def drawGL(self,mode='wireframe',color=None):
         if self.color:
@@ -296,25 +303,38 @@ class Line(Decoration):
         if self.linewidth:
             GL.glLineWidth(self.linewidth)
         drawLine(self.x1,self.y1,self.x2,self.y2)
-            
+
 
 class LineDrawing(Decoration):
     """A collection of straight lines on the canvas."""
-    def __init__(self,data):
+    def __init__(self,data,color=None,linewidth=None):
         """Initially a Line Drawing.
 
         data can be a 2-plex Formex or equivalent coordinate data.
         The z-coordinates of the Formex are unused.
-        A (n,2) shaped array will do as well.
+        A (n,2,2) shaped array will do as well.
         """
-        Decoration.__init__(self,x1,y1)
         data = data.view()
-        data = data.reshape((-1,data.shape[-1]))
-        data = data[:,:2]
+        data = data.reshape((-1,2,data.shape[-1]))
+        data = data[:,:,:2]
         self.data = data.astype(Float)
-        
+        x1,y1 = self.data[0,0]
+        Decoration.__init__(self,x1,y1)
+        if color is None:
+            self.color = None
+        else:
+            self.color = colors.GLColor(color)
+        if linewidth is None:
+            self.linewidth = None
+        else:
+            self.linewidth = float(linewidth)
+    
 
     def drawGL(self,mode=None,color=None):
+        if self.color:
+            GL.glColor3fv(self.color)
+        if self.linewidth:
+            GL.glLineWidth(self.linewidth)
         GL.glBegin(GL.GL_LINES)
         for e in self.data:
             GL.glVertex2fv(e[0])

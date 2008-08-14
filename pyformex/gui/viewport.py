@@ -32,7 +32,7 @@ import toolbar
 import math
 
 from coords import Coords
-from numpy import asarray,where,unique,intersect1d,setdiff1d
+from numpy import asarray,where,unique,intersect1d,setdiff1d,empty,append,delete
 
 
 # Some 2D vector operations
@@ -386,7 +386,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 if func:
                     func(self.selection)
             if single:
-                self.selection_canceled = True
+                self.accept_selection()
         if func and not self.selection_accepted:
             func(self.selection)
         self.finish_selection()
@@ -397,6 +397,93 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Go into number picking mode and return the selection."""
         return self.pick('numbers',*args,**kargs)
 
+
+    def start_drawing(self):
+        """Start an interactive drawing mode."""
+        GD.debug("START DRAWING MODE")
+        self.setMouse(LEFT,self.mouse_draw)
+        self.setMouse(RIGHT,self.emit_done)
+        self.setMouse(RIGHT,self.emit_cancel,SHIFT)
+        self.connect(self,DONE,self.accept_drawing)
+        self.connect(self,CANCEL,self.cancel_drawing)
+        self.setCursorShape('pick')
+        self.edit_mode = None
+        self.drawing = empty((0,2,2),dtype=int)
+
+    def wait_drawing(self):
+        """Wait for the user to interactively draw a line."""
+        self.drawing_timer = QtCore.QThread
+        self.drawing_busy = True
+        while self.drawing_busy:
+            self.drawing_timer.msleep(20)
+            GD.app.processEvents()
+
+    def finish_drawing(self):
+        """End an interactive drawing mode."""
+        GD.debug("END DRAWING MODE")
+        self.setCursorShape('default')
+        self.setMouse(LEFT,self.dynarot)
+        self.setMouse(RIGHT,self.dynazoom)
+        self.setMouse(RIGHT,None,SHIFT)
+        self.disconnect(self,DONE,self.accept_selection)
+        self.disconnect(self,CANCEL,self.cancel_selection)
+
+    def accept_drawing(self,clear=False):
+        """Cancel an interactive drawing mode.
+
+        If clear == True, the current drawing is cleared.
+        """
+        GD.debug("CANCEL DRAWING MODE")
+        self.drawing_accepted = True
+        if clear:
+            self.drawing = empty((0,2,2),dtype=int)
+            self.drawing_accepted = False
+        self.drawing_canceled = True
+        self.drawing_busy = False
+
+    def cancel_drawing(self):
+        """Cancel an interactive drawing mode and clear the drawing."""
+        self.accept_drawing(clear=True)
+    
+    def edit_drawing(self,mode):
+        """Edit an interactive drawing."""
+        self.edit_mode = mode
+        self.drawing_busy = False     
+
+    def drawLinesInter(self,single=False,func=None):
+        """Interactively draw lines on the canvas.
+
+        - single: if True, the function returns as soon as the user ends
+        a drawing operation. The default is to let the user
+        draw multiple lines and only to return after an explicit
+        cancel (ESC or right mouse button).
+        - func: if specified, this function will be called after each
+        atomic drawing operation. The current drawing is passed as
+        an argument. This can e.g. be used to show the drawing.
+        When the drawing operation is finished, the drawing is returned.
+        The return value is a (n,2,2) shaped array.
+        """
+        self.drawing_canceled = False
+        self.start_drawing()
+        while not self.drawing_canceled:
+            self.wait_drawing()
+            if not self.drawing_canceled:
+                if self.edit_mode: # an edit mode from the edit combo was clicked
+                    if self.edit_mode == 'undo' and self.drawing.size != 0:
+                        self.drawing = delete(self.drawing,-1,0)
+                    elif self.edit_mode == 'clear':
+                        self.drawing = empty((0,2,2),dtype=int)
+                    self.edit_mode = None
+                else: # a line was drawn interactively
+                    self.drawing = append(self.drawing,self.drawn.reshape(-1,2,2),0)
+                if func:
+                    func(self.drawing)
+            if single:
+                self.accept_drawing()                
+        if func and not self.drawing_accepted:
+            func(self.drawing)
+        self.finish_drawing()
+        return self.drawing
 
 
 ######## QtOpenGL interface ##############################
@@ -551,15 +638,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def draw_state_rect(self,x,y):
-        """Store the pos and draw a rectangle to it"""
+        """Store the pos and draw a rectangle to it."""
         self.state = x,y
         #GD.debug("Rect (%s,%s) - (%s,%s)" % (self.statex,self.statey,x,y))
         decors.drawRect(self.statex,self.statey,x,y)
 
 
-
     def mouse_pick(self,x,y,action):
-        """Process mouse events during intractive picking.
+        """Process mouse events during interactive picking.
 
         On PRESS, record the mouse position.
         On MOVE, create a rectangular picking window.
@@ -598,7 +684,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.pick_window = (x,y,w,h,vp)
             self.selection_busy = False
 
-            
+
     def pick_actors(self,store_closest=False):
         """Set the list of actors inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
@@ -700,6 +786,50 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if self.numbers:
             self.picked = self.numbers.drawpick()
 
+
+    def draw_state_line(self,x,y):
+        """Store the pos and draw a line to it."""
+        self.state = x,y
+        #GD.debug("Rect (%s,%s) - (%s,%s)" % (self.statex,self.statey,x,y))
+        decors.drawLine(self.statex,self.statey,x,y)
+
+
+    def mouse_draw(self,x,y,action):
+        """Process mouse events during interactive drawing.
+
+        On PRESS, record the mouse position.
+        On MOVE, draw a line.
+        On RELEASE, add the line to the drawing.
+        """
+        if action == PRESS:
+            self.makeCurrent()
+            self.update()
+            self.begin_2D_drawing()
+            self.swapBuffers()
+            GL.glEnable(GL.GL_COLOR_LOGIC_OP)
+            # An alternative is GL_XOR #
+            GL.glLogicOp(GL.GL_INVERT)        
+            # Draw rectangle
+            if self.drawing.size != 0:
+                self.statex,self.statey = self.drawing[-1,-1]
+            self.draw_state_line(x,y)
+            self.swapBuffers()
+
+        elif action == MOVE:
+            # Remove old rectangle
+            self.swapBuffers()
+            self.draw_state_line(*self.state)
+            # Draw new rectangle
+            self.draw_state_line(x,y)
+            self.swapBuffers()
+
+        elif action == RELEASE:
+            GL.glDisable(GL.GL_COLOR_LOGIC_OP)
+            #self.swapBuffers()
+            self.end_2D_drawing()
+
+            self.drawn = asarray([[self.statex,self.statey],[x,y]])
+            self.drawing_busy = False
 
 
     @classmethod
