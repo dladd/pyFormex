@@ -321,11 +321,11 @@ class Selection(QtGui.QDialog):
         # Selection List
         self.listw = QtGui.QListWidget()
         self.listw.addItems(slist)
+        self.listw.setSelectionMode(self.selection_mode[mode])
         if sort:
             self.listw.sortItems()
         if selected:
             self.setSelected(selected)
-        self.listw.setSelectionMode(self.selection_mode[mode])
         # Accept/Cancel Buttons
         acceptButton = QtGui.QPushButton('OK')
         self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
@@ -800,7 +800,7 @@ input_timeout = -1
 class InputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
-    This feature is still experimental (though already used in a few places.
+    This feature is still experimental (though already used in a few places).
     """
     
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):
@@ -1007,6 +1007,77 @@ class InputDialog(QtGui.QDialog):
         return (self.result, accept)
 
 
+############################# Table model ###########################
+
+class TableModel(QtCore.QAbstractTableModel):
+    """A table model that represent data as a two-dimensional array of items."""
+    def __init__(self,datain,headerdata,parent=None,*args): 
+        QtCore.QAbstractTableModel.__init__(self,parent,*args) 
+        self.arraydata = datain
+        self.headerdata = headerdata
+ 
+    def rowCount(self,parent): 
+        return len(self.arraydata) 
+ 
+    def columnCount(self,parent): 
+        return len(self.arraydata[0]) 
+ 
+    def data(self,index,role): 
+        if not index.isValid(): 
+            return QtCore.QVariant() 
+        elif role != QtCore.Qt.DisplayRole: 
+            return QtCore.QVariant() 
+        return QtCore.QVariant(self.arraydata[index.row()][index.column()]) 
+
+    def headerData(self,col,orientation,role):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.headerdata[col])
+        return QtCore.QVariant()
+
+
+############################# Table Dialog ###########################
+
+class TableDialog(QtGui.QDialog):
+    """A dialog widget to show two-dimensional arrays of items."""
+    def __init__(self,items,caption=None,parent=None,tab=False):
+        """Create the Table dialog.
+        
+        If tab = False, a dialog with one table is created and items
+        should be a list [table_header,table_data].
+        If tab = True, a dialog with multiple pages is created and items
+        should be a list of pages [page_header,table_header,table_data].
+        """
+        if parent is None:
+            parent = GD.gui
+        QtGui.QDialog.__init__(self,parent)
+        if caption is None:
+            caption = 'pyFormex-dialog'
+        self.setWindowTitle(str(caption))
+        form = QtGui.QVBoxLayout()
+        if tab:
+            tables = QtGui.QTabWidget()
+            for item in items:
+                page = QtGui.QTableView()
+                page_header,table_header,table_data = item
+                tm = TableModel(table_data,table_header,self)
+                page.setModel(tm)
+                page.verticalHeader().setVisible(False)
+                page.resizeColumnsToContents()
+                tables.addTab(page,page_header)
+            form.addWidget(tables)
+        else:
+            table = QtGui.QTableView()
+            table_header,table_data = items
+            tm = TableModel(table_data,table_header,self)
+            table.setModel(tm)
+            table.verticalHeader().setVisible(False)
+            table.resizeColumnsToContents()
+            form.addWidget(table)
+        self.setLayout(form)
+        self.setMinimumSize(1000,400)
+        self.show()
+
+
 #####################################################################
 # Some static functions for displaying text widgets
 
@@ -1130,7 +1201,7 @@ class ComboBox(QtGui.QWidget):
 
     def setIndex(self,i):
         self.input.setCurrentIndex(i)
-        
+
 
 ############################# Menu ##############################
 
