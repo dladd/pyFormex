@@ -10,6 +10,11 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+_level_ = 'advanced'
+_topic_ = ['geometry']
+_techniques_ = ['dialog','persistence'] 
+
+
 from simple import rectangle
 from utils import NameSequence
 from gui.widgets import *
