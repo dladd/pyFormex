@@ -761,9 +761,11 @@ class Formex(object):
                     data = data.reshape(1,1,data.shape[0])
                 elif len(data.shape) == 2:
                     data = data.reshape(data.shape[0],1,data.shape[1])
-                if not data.shape[-1] in [2,3]:
-                    raise RuntimeError,"Formex init: last axis dimension of data array should be 2 or 3, got shape %s" % str(data.shape)
-                # add 3-rd dimension if data are 2-d
+                if not data.shape[-1] in [1,2,3]:
+                    raise RuntimeError,"Formex init: last axis dimension of data array should be 1, 2 or 3, got shape %s" % str(data.shape)
+                # add 3-rd dimension if data are 1-d or 2-d
+                # this will be done by Coords
+                pass
                 if data.shape[-1] == 2:
                     z = zeros((data.shape[0],data.shape[1],1),dtype=Float)
                     data = concatenate([data,z],axis=-1)
