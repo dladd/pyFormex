@@ -70,20 +70,24 @@ class TranslatedActor(Actor):
         GL.glPopMatrix()
 
 
-     
 class RotatedActor(Actor):
     """An Actor rotated to another position."""
 
-    def __init__(self,A,normal=(1.,0.,0.),twist=0.0):
+    def __init__(self,A,rot=(1.,0.,0.),twist=0.0):
         """Created a new rotated actor.
 
-        The rotation is specified by the direction of the local 0 axis
-        of the actor.
+        If rot is an array with shape (3), the rotation is specified
+        by the direction of the local 0 axis of the actor.
+        If rot is an array with shape (4,4), the rotation is specified
+        by the direction of the local 0, 1 and 2 axes of the actor.
         """
         Actor.__init__(self)
         self.actor = A
         self.trans = A.trans
-        self.rot = rotMatrix(normal,4)
+        if shape(rot)[0] == 3:
+            self.rot = rotMatrix(rot,4)
+        else:
+            self.rot = rot
 
     def bbox(self):
         return self.actor.bbox() # TODO : rotate the bbox !
