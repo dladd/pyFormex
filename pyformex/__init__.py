@@ -24,7 +24,7 @@ Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
 # The GUI parts
 app_started = False
 app = None         # the Qapplication 
-gui = None       # the QMainWindow
+gui = None         # the QMainWindow
 canvas = None      # the OpenGL Drawing widget
 board = None       # the message board
 _gui_ = None
