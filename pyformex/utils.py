@@ -19,7 +19,7 @@ from distutils.version import LooseVersion as SaneVersion
 
 
 # versions of detected modules/external commands
-the_version = {'pyformex':pyformex._version_}
+the_version = {'pyformex':pyformex.__version__}
 the_external = {}
 
 def congratulations(name,version,typ='module',fatal=False):
@@ -180,7 +180,7 @@ def hasExternal(name):
 
 
 def printDetected():
-    print "%s (%s)\n" % (pyformex.Version,pyformex._revision_)
+    print "%s (%s)\n" % (pyformex.Version,pyformex.__revision__)
     print "Detected Python Modules:"
     for k,v in the_version.items():
         if v:

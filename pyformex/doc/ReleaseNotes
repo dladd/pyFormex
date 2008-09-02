@@ -15,8 +15,12 @@ pyFormex 0.7.2  Releasenotes
 This is a collection of the most prominent changes in pyFormex 0.7.2
 compared to the previous release 0.7.1
 
+
 Installation
 ------------
+Installation now also works with Python 2.5 (previously only 2.4).
+This has been tested on Debian(Lenny) and Ubuntu.
+
 
 Command line
 ------------
@@ -25,37 +29,81 @@ Command line
 Core
 ----
 
+- globaldata.py has been removed. The global data are now in the __init__.py
+  and are initilized when module pyformex is imported
+
 - Coords:
   
-  . added superSpherical transformation
+  . scale() now supports a single scale value and axis numbers
+  . map1 now supports mixing axes, e.g. y = func(x)
+  . superSpherical() is a new and powerful transformation
+  . projectOnCylinder() does what it says
+  . split() splits up a Coords array
 
 - Formex:
   
   . added superSpherical transformation
   . accept a single point as Formex initialisation data
+  . acccept one-dimensional coordinate data as Formex initialisation
 
 - simple.py
   
   . rectangle has an optional 'diag' argument to create triangles
+  . rectangle has an optional 'bias' argument to create skewed rectangles
 
+  
 
 Gui
 ---
 
+- Many optimizations in the picking functions
 - Input Dialogs now have customizable action buttons
+- Help/Detected Software now displays correct Revision number
+- File/Create New Script loads a script template into the editor
+
+- widgets.py
+
+  . added Slider widgets
+  . textbox() function
+
+
 
 Drawing
 -------
 
+- When renderinging TriSurfaces with lighting, there is on option to use
+  averaged normals at the vertices of the triangles, providing a much smoother
+  look of the surface. An optional toolbar button toggles between triangle
+  based and averaged normals.
+
+
+Scripting
+---------
+
+- showText() displays a text and waits for user action
+- closeGui() starts the GUI
+
 
 Plugins
 -------
- 
+
+Most of the plugins have changed substantially, and until they stabilized
+somewhat, we do not give details on the numerous changes.
+
+- isopar.py: a new plugin providing a framework for isoparametric 
+  transformations of coordinate sets
+
 
 Examples
 --------
 
 - Added the SuperEgg example
+- Added the Cones example
+- Added the ConnectMesh example
+- Added the Light example
+- Added the Projection example
+- Added the Tori example
+- Added the SuperShape example
 
 
 Manual
