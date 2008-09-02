@@ -12,6 +12,28 @@
 """Grid"""
 import gui.actors
 
+
+def base(type,m,n=None):
+    """A regular pattern for type.
+
+    type = 'tri' or 'quad' or 'triline' or 'quadline'
+    m = number of cells in direction 0
+    n = number of cells in direction 1
+    """
+    n = n or m
+    if type == 'triline':
+        return Formex(pattern('164')).replic2(m,n,1,1,0,1,0,-1)
+    elif type == 'quadline':
+        return Formex(pattern('2')).replic2(m+1,n,1,1) + \
+               Formex(pattern('1')).replic2(m,n+1,1,1)
+    elif type == 'tri':
+        return Formex(mpattern('12-34')).replic2(m,n)
+    elif type == 'quad':
+        return Formex(mpattern('123')).replic2(m,n)
+    else:
+        raise ValueError,"Unknown type '%s'" % str(type)
+
+ 
 res = askItems([('nx',4),('ny',3),('nz',2),('Grid type','','select',['Box','Plane']),('alpha',0.3)])
 
 if not res:

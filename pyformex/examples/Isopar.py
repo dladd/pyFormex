@@ -10,120 +10,10 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-#from plugins.isopar import *
+from plugins.isopar import *
 import simple
 import elements
 
-
-def build_matrix(atoms,x,y=0,z=0):
-    """Build a matrix of functions of coords.
-
-    Atoms is a list of text strings representing some function of
-    x(,y)(,z). x is a list of x-coordinats of the nodes, y and z can be set
-    to lists of y,z coordinates of the nodes.
-    Each line of the returned matrix contains the atoms evaluated at a
-    node.
-    """
-    print len(atoms)
-    print len(x)
-    aa = zeros((len(x),len(atoms)),Float)
-    for k,a in enumerate(atoms):
-        aa[:,k] = eval(a)
-    return aa   
-
-isodata = {
-    'line2' : (1, ('1','x')),
-    'line3' : (1, ('1','x','x*x')),
-    'line4' : (1, ('1','x','x**2','x**3')),
-    'tri3'  : (2, ('1','x','y')),
-    'tri3'  : (2, ('1','x','y')),
-    'tri6'  : (2, ('1','x','y','x*x','y*y','x*y')),
-    'quad4' : (2, ('1','x','y','x*y')),
-    'quad8' : (2, ('1','x','y','x*x','y*y','x*y','x*x*y','x*y*y')),
-    'quad9' : (2, ('1','x','y','x*x','y*y','x*y','x*x*y','x*y*y','x*x*y*y')),
-    'tet4'  : (3, ('1','x','y','z')),
-    'tet10' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z')),
-    'hex8'  : (3, ('1','x','y','z','x*y','x*z','y*z','x*y*z')),
-    'hex20' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
-                   'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
-                   'x*x*y*z','x*y*y*z','x*y*z*z')),
-    'hex27' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
-                   'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
-                   'x*x*y*y','x*x*z*z','y*y*z*z','x*x*y*z','x*y*y*z',
-                   'x*y*z*z',
-                   'x*x*y*y*z','x*x*y*z*z','x*y*y*z*z',
-                   'x*x*y*y*z*z')),
-    }
-
-
-def isoparTrf(type,coords,oldcoords):
-    """Compute an isoparametric transformation parameter set.
-
-    coords and oldcoords can be either arrays, Coords or Formex instances,
-    but should be of equal shape, and match the number of atoms in the
-    specified transformation type
-    """
-    ndim,atoms = isodata[type]
-    coords = coords.view().reshape(-1,3)
-    oldcoords = oldcoords.view().reshape(-1,3)
-    x = oldcoords[:,0]
-    if ndim > 1:
-        y = oldcoords[:,1]
-    else:
-        y = 0
-    if ndim > 2:
-        z = oldcoords[:,2]
-    else:
-        z = 0
-    print atoms
-    print coords
-    print oldcoords
-    aa = build_matrix(atoms,x,y,z)
-    ab = linalg.solve(aa,coords)
-    print "SOLVED",ab
-    return ab
-
-
-def isopar(F,type,trf):
-    """Apply isoparametric transform.
-
-    trf is a result from isoparTrf()
-    type should match the type specified to compute the transformation trf
-    """
-    ndim,atoms = isodata[type]
-    x = F.x().ravel()
-    y = F.y().ravel()
-    z = F.z().ravel()
-    aa = build_matrix(atoms,x,y,z)
-    xx = dot(aa,trf)
-    xx = reshape(xx,F.shape())
-    if ndim < 3:
-        xx[...,ndim:] += F.f[...,ndim:]
-    return Formex(xx)
-
-
-
-def base(type,m,n=None):
-    """A regular pattern for type.
-
-    type = 'tri' or 'quad' or 'triline' or 'quadline'
-    m = number of cells in direction 0
-    n = number of cells in direction 1
-    """
-    n = n or m
-    if type == 'triline':
-        return Formex(pattern('164')).replic2(m,n,1,1,0,1,0,-1)
-    elif type == 'quadline':
-        return Formex(pattern('2')).replic2(m+1,n,1,1) + \
-               Formex(pattern('1')).replic2(m,n+1,1,1)
-    elif type == 'tri':
-        return Formex(mpattern('12-34')).replic2(m,n)
-    elif type == 'quad':
-        return Formex(mpattern('123')).replic2(m,n)
-    else:
-        raise ValueError,"Unknown type '%s'" % str(type)
-    
-# Processing starts here
 
 ttype = ask("Select type of transformation",['Cancel','1D','2D','3D'])
 if not ttype or ttype ==  'Cancel':
@@ -140,6 +30,7 @@ x2 = x1.copy()
 if tdim == 1:
     eltype = 'line3'
     x2[1] = x2[1].rot(-22.5)
+    x2[2] = x2[2].rot(22.5)
 elif tdim == 2:
     eltype = 'quad9'
     x2[5] = x2[2].rot(-22.5)
@@ -163,29 +54,34 @@ message('This is the set of nodes in natural coordinates')
 draw(x1,color=blue)
 message('This is the set of nodes in cartesian coordinates')
 draw(x2,color=red)
-drawNumbers(x1)
 drawNumbers(x2,color=red)
+drawNumbers(x1)
 
 n = 8
-stype = ask("Select type of structure",['Cancel','2D','3D'])
+stype = ask("Select type of structure",['Cancel','1D','2D','3D'])
 if stype == 'Cancel':
     exit()
 
 sdim = int(stype[0])
-if sdim == 2:
+if sdim == 1:
+    F = simple.line([0.,0.,0.],[1.,1.,0.],10)
+elif sdim == 2:
     F = simple.rectangle(1,1,1.,1.)
 else:
     v = array(elements.Hex8.vertices)
     f = array(elements.Hex8.faces)
     F = Formex(v[f])
 
-for i in range(sdim):
-    F = F.replic(n,1.,dir=i)
+if sdim > 1:
+    for i in range(sdim):
+        F = F.replic(n,1.,dir=i)
+
+if sdim < tdim:
+    F = F.trl(2,0.5)
 clear()
-message('This is the base pattern in natural coordinates')
-draw(F)
+message('This is the initial Formex')
+FA=draw(F)
 sz = F.sizes()
-#pause()
 
 
 if sdim < tdim:
@@ -194,18 +90,15 @@ x1 = x1.scale(sz)
 x2 = x2.scale(sz)
 
 
-trf = isoparTrf(eltype,x2.points(),x1.points())
-G = isopar(F,eltype,trf)
+trf = Isopar(eltype,x2.points(),x1.points())
+#G = trf.transformFormex(F)
+G = F.isopar(trf)
 G.setProp(1)
 
-clear()
-draw(F)
+message('This is the transformed Formex')
 draw(G)
-#pause()
 
-
-clear()
-#draw(F)
-draw(G)
+sleep(0.8)
+undraw(FA)
 
 # End
