@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # $Id$
-_revision_ = "$Rev$"
 ##
 ## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
 ## pyFormex is a Python implementation of Formex algebra
@@ -17,6 +16,7 @@ needed to flag this directory as a Python package.
 """
 
 _version_ = "0.7.2-a2"
+_revision_ = "$Rev$"
 Version = 'pyFormex %s' % _version_
 Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
 
