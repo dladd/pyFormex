@@ -97,8 +97,8 @@ def isopar(F,type,trf):
     aa = build_matrix(atoms,x,y,z)
     xx = dot(aa,trf)
     xx = reshape(xx,F.shape())
-    #if ndim < 3:
-    #    xx[...,ndim:] += F.f[...,ndim:]
+    if ndim < 3:
+        xx[...,ndim:] += F.f[...,ndim:]
     return Formex(xx)
 
 
