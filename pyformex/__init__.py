@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # $Id$
-_revision_ = "$Rev: 709 $"
+_revision_ = "$Rev$"
 ##
 ## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
 ## pyFormex is a Python implementation of Formex algebra
