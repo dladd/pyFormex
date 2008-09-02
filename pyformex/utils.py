@@ -20,6 +20,7 @@ from distutils.version import LooseVersion as SaneVersion
 
 # versions of detected modules/external commands
 the_version = {'pyformex':pyformex._version_}
+print the_version
 the_external = {}
 
 def congratulations(name,version,typ='module',fatal=False):
