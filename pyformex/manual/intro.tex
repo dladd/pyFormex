@@ -73,10 +73,12 @@ matrix calculation package or a solid modeler/renderer %genre Blender
 or a finite element pre- and postprocessor%(such as GiD)
 . Each of these is very well suited for the task it was designed for, but none provides all the features of \pyformex in a single consistent environment, and certainly not as free software. 
 
-Perhaps the most important feature of \pyformex is that it was primarily intended to be an easy scripting language for creating geometrical models of 3D-structures. The Graphical User Interface was only added as a convenient means to visualize the designed structure. \pyformex can still run without user interface, and this makes it ideal for use in a batch toolchain.
+
+Perhaps the most important feature of \pyformex is that it was primarily intended to be an easy scripting language for creating geometrical models of 3D-structures. The Graphical User Interface was only added as a convenient means to visualize the designed structure. \pyformex can still run without user interface, and this makes it ideal for use in a batch toolchain. Anybody involved in the simulation of the mechanical behaviour of materials and structures will testify that most of the work (often 80-90\%) goes into the building of the model, not into the simulations itself. Repeatedly building a model for optimization of your structure then quickly becomes cumbersome, unless you use a tool like \pyf, allowing for automated and unattended building of model variants. 
+
 
 The author of \pyformex, professor in structural engineering and heavy computer user since mainframe times, deeply regrets that computing skills of nowadays engineering students are often limited to using graphical interfaces of mostly commercial packages. This greatly limits their skills, because in their way of thinking: 'If there is no menu item to do some task, then it can not be done!'
-The hope to get some of them back into coding has been a stimulus in continuing our work on \pyformex. 
+The hope to get some of them back into coding has been a stimulus in continuing our work on \pyformex. The strength of the \pyformex scripting language and the elegance of Python have already attracted many on this path.
  
 Finally, \pyformex is, and will always be, free software in both meanings of free: guaranteeing your freedom (see \ref{sec:license}) and without charging a fee for it. 
 
@@ -149,7 +151,7 @@ This will install \pyformex under \Code{/usr/local/}. You can change the prefix 
 The installation procedure installs everything into a single directory, and creates a symlink to the executable in \Code{/usr/local/bin}.
 You can use the command \Code{pyformex --whereami} to find out where \pyformex is installed. 
 
-Finally, a \pyformex installation can usually be removed by giving the command \Code{pyformex --remove} and answering 'yes' to the question.
+Finally, a \pyformex installation can usually be removed by giving the command \Code{pyformex --remove} and answering 'yes' to the question. You may want to do this before installing a new version, especially if you install a new release of an already existing version.
 
 
 \subsection{Installation on Windows platforms}
