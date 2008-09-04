@@ -20,6 +20,24 @@ import draw
 import imageViewer
 
 
+def updateSettings(res,store):
+    """Update the current settings (store) with the values in res.
+
+    store and res are both dictionaries
+    This asks the users to confirm that he wants to update the settings.
+    """
+    GD.debug(res)
+    if draw.ack("Update the settings?"):
+        # The following does not work for our Config class!
+        # store.update(res)
+        # Therefore, set individually
+        for k,v in res.items():
+            store[k] = v
+        GD.debug(store)
+        return True
+    return False
+
+
 def askConfigPreferences(items,prefix=None,store=None):
     """Ask preferences stored in config variables.
 
@@ -39,20 +57,21 @@ def askConfigPreferences(items,prefix=None,store=None):
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
     res,accept = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
     if accept:
-        GD.debug(res)
-        if draw.ack("Update the settings?"):
-            # This does not work for our Config class!
-            # store.update(res)
-            # Therefore, set individually
-            for k,v in res.items():
-                store[k] = v
-##        for i,r in zip(itemlist,res):
-##            GD.debug("IN : %s\nOUT: %s" % (i,r))
-##            if type(i[1]) == str:
-##                store[r[0]] = r[1]
-##            else:
-##                store[r[0]] = eval(r[1])
-        GD.debug(GD.cfg)
+        updateSettings(res,store)
+##         GD.debug(res)
+##         if draw.ack("Update the settings?"):
+##             # This does not work for our Config class!
+##             # store.update(res)
+##             # Therefore, set individually
+##             for k,v in res.items():
+##                 store[k] = v
+## ##        for i,r in zip(itemlist,res):
+## ##            GD.debug("IN : %s\nOUT: %s" % (i,r))
+## ##            if type(i[1]) == str:
+## ##                store[r[0]] = r[1]
+## ##            else:
+## ##                store[r[0]] = eval(r[1])
+##         GD.debug(GD.cfg)
     return accept
 
 
@@ -126,8 +145,13 @@ def setPickSize():
         
     
 def setRender():
-    if askConfigPreferences(['ambient', 'specular', 'emission', 'shininess'],'render'):
-        draw.smooth()
+    items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
+    print items
+    res = draw.askItems(items)
+    if res:
+        print res
+        updateSettings(res,GD.cfg)
+
 
 def setLight(light=0):
     keys = [ 'ambient', 'diffuse', 'specular', 'position' ]

@@ -802,6 +802,30 @@ def lights(onoff):
     """Set the lights on or off"""
     toolbar.setLight(onoff)
 
+
+def set_light_value(typ,val):
+    """Set the value of one of the lighting parameters for the currrent view
+
+    typ is one of 'ambient','specular','emission','shininess'
+    val is a value between 0.0 and 1.0
+    """
+    setattr(GD.canvas,typ,val)
+    GD.canvas.setLighting(True)
+    GD.canvas.update()
+    GD.app.processEvents()
+
+def set_ambient(i):
+    set_light_value('ambient',i)
+
+def set_specular(i):
+    set_light_value('specular',i)
+
+def set_emission(i):
+    set_light_value('emission',i)
+
+def set_shininess(i):
+    set_light_value('shininess',i)
+
 transparent = toolbar.setTransparency
 perspective = toolbar.setPerspective
 timeout = toolbar.timeout

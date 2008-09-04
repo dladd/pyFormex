@@ -737,9 +737,10 @@ class InputSlider(InputInteger):
 
     def set_value(self,val):
         self.input.setText(str(val))
+
    
-class InputFSlider(InputInteger):
-    """An integer input item using a slider.
+class InputFSlider(InputFloat):
+    """A float input item using a slider.
 
     Options:
       'min', 'max': range of the scale (integer)
@@ -750,27 +751,30 @@ class InputFSlider(InputInteger):
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input slider."""
-        InputInteger.__init__(self,name,value,*args)
+        InputFloat.__init__(self,name,value,*args)
         self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
+        self.scale = kargs.get('scale',1.0)
+        self.func = kargs.get('func',None)
+
         vmin = kargs.get('min',0)
         vmax = kargs.get('max',100)
-        
         ticks = kargs.get('ticks',(vmax-vmin)/10)
         self.slider.setTickInterval(ticks)
         self.slider.setMinimum(vmin)
         self.slider.setMaximum(vmax)
-        self.slider.setValue(value)
+        self.slider.setValue(value/self.scale)
         self.slider.setSingleStep(1)
         #self.slider.setPageStep(5)
         self.slider.setTracking(1)
         self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),self.set_value)
-        if kargs.has_key('func'):
-            self.connect(self.slider,QtCore.SIGNAL("valueChanged(int)"),kargs['func'])            
         self.addWidget(self.slider)
 
     def set_value(self,val):
-        self.input.setText(str(val))
+        value = val*self.scale
+        self.input.setText(str(value))
+        if self.func:
+            self.func(value)
 
 
 class InputColor(InputItem):
