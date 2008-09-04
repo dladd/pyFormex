@@ -9,10 +9,12 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+"""Super Shape
 
-_level_ = 'advanced'
-_topic_ = ['geometry']
-_techniques_ = ['dialog','persistence'] 
+level = 'advanced'
+topic = ['geometry']
+techniques = ['dialog','persistence'] 
+"""
 
 
 from simple import rectangle
