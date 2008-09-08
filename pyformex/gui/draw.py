@@ -46,22 +46,6 @@ def closeGui():
     GD.gui.close()
     
 
-def textView(text):
-    """Display a text file and wait for user response."""
-    w = QtGui.QDialog()
-    t = QtGui.QTextEdit()
-    t.setReadOnly(True)
-    t.setPlainText(text)
-    b = QtGui.QPushButton('Close')
-    QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("accept()"))
-    l = QtGui.QVBoxLayout()
-    l.addWidget(t)
-    l.addWidget(b)
-    w.setLayout(l)
-    w.resize(800,400)
-    return w.exec_()
-   
-
 def ask(question,choices=None,default=None,timeout=None):
     """Ask a question and present possible answers.
 
@@ -101,6 +85,14 @@ def warning(message,actions=['OK']):
 def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
+
+def showText(text,actions=['OK']):
+    """Display a text and wait for user response.
+
+    This can display a large text and will add scrollbars when needed.
+    """
+    return widgets.textBox(text,actions)
+
 
 def askItems(items,caption=None,timeout=None):
     """Ask the value of some items to the user.

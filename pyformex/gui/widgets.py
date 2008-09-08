@@ -432,6 +432,10 @@ class InputItem(QtGui.QHBoxLayout):
         """Return the widget's value."""
         return str(self.input.text())
 
+    def setValue(self):
+        """Change the widget's value."""
+        pass
+
 
 class InputString(InputItem):
     """A string input item."""
@@ -459,6 +463,10 @@ class InputString(InputItem):
             return s
         else:
             return eval(s)
+
+    def setValue(self,value):
+        """Change the widget's value."""
+        self.input.setText(str(value))
 
 
 class InputBool(InputItem):
@@ -970,7 +978,16 @@ class InputDialog(QtGui.QDialog):
                 b.setDefault(True)
             but.addWidget(b)
         return but
-           
+
+
+    def __getitem__(self,name):
+        """Return the input item with specified name."""
+        items = [ f for f in self.fields if f.name() == name ]
+        if len(items) > 0:
+            return items[0]
+        else:
+            return None
+        
         
     def acceptData(self):
         """This function is called when the user clicks 'ok'"""
