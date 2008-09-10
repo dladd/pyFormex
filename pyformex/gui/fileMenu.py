@@ -10,7 +10,7 @@
 ##
 """Functions from the File menu."""
 
-import os
+import os,shutil
 import pyformex as GD
 import widgets
 import draw
@@ -115,9 +115,9 @@ def openScript(fn=None,exist=True,create=False):
         if create:
             if not exist and os.path.exists(fn) and not draw.ack("The file %s already exists.\n Are you sure you want to overwrite it?" % fn):
                 return None
-            fil = file(fn,'w')
-            fil.write(GD.cfg['scripttemplate'])
-            fil.close()
+            template = GD.cfg['scripttemplate']
+            if (os.path.exists(template)):
+                shutil.copyfile(template,fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD.gui.setcurfile(fn)
         GD.gui.history.add(fn)
