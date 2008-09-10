@@ -61,7 +61,7 @@ def createPart(res=None):
         if y0 > y1:
             y0,y1 = y1,y0
         diag = {'quad':'', 'tri-u':'u', 'tri-d':'d'}[eltype]
-        F = rectangle(nx,ny,x1-x0,y1-y0,diag).trl([x0,y0,0])
+        F = rectangle(nx,ny,x1-x0,y1-y0,diag=diag).trl([x0,y0,0])
         addPart(F)
         drawParts()
 

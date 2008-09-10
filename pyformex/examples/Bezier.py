@@ -53,8 +53,8 @@ def drawNumberedPoints(x,color):
     drawNumbers(x,color=color)
     
 
-t = arange(11)*0.1
-print t
+n = 100
+t = arange(n+1)/float(n)
 
 clear()
 
@@ -65,15 +65,15 @@ for d in arange(4) * 0.2:
 
     drawNumberedPoints(x,red)
 
+    H = Formex(x.reshape(2,2,3))
+    draw(H,color=red)
+
     curve = Bezier(x)
     F = Formex(curve.at(t))
-    draw(F)
+    #draw(F)
 
     G = connect([F,F],bias=[0,1])
     draw(G)
-
-    H = Formex(x.reshape(2,2,3))
-    draw(H,color=red)
     
     #zoomAll()
 

@@ -2,6 +2,7 @@
 # $Id$
 
 import simple
+from gui import widgets
 
 def cone(r0,r1,h,t=360.,nr=1,nt=24,diag=None):
     """Constructs a Formex which is (a sector of) a
@@ -85,11 +86,14 @@ nr=2    # number of elements along height
 nt=12   # number of elements along circumference
 diag=''
 
+items = [ [n,globals()[n]] for n in ['r0','r1','h','t', 'nr','nt','diag'] ]
+items[-1].extend(['radio',['','u','d']])
+dialog = widgets.InputDialog(items)
+
 while True:
-    items = [ [n,globals()[n]] for n in ['r0','r1','h','t', 'nr','nt','diag'] ]
-    items[-1].extend(['radio',['','u','d']])
-    res = askItems(items)
-    if not res:
+    res,status = dialog.getResult()
+    print status
+    if not status:
         exit()
 
     print res

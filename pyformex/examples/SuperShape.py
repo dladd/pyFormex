@@ -27,6 +27,9 @@ dialog = None
 savefile = None
 tol = 1.e-4
 
+gname = NameSequence('Grid-0')
+sname = NameSequence('Shape-0')
+
 
 def reset_data(initialize=False):
     """Reset the data to defaults"""
@@ -39,7 +42,7 @@ def reset_data(initialize=False):
         grid_skewness = 0.0,
         x_clip = (-180.,180.),
         y_clip = (-90.,90.),
-        grid_name = 'Grid-0',
+        grid_name = gname.peek(),
         grid_color = 'blue',
         )
     shape_data = dict(
@@ -48,7 +51,7 @@ def reset_data(initialize=False):
         eggness = 0.0,
         scale = [1.,1.,1.],
         post = '',
-        name = 'Shape-0',
+        name = sname.peek(),
         color = 'red',
         )
     GD.PF['__SuperShape__grid_data'] = grid_data
@@ -142,7 +145,13 @@ def save():
         if filename:
             savefile = file(filename,'a')
     if savefile:
+        print "Saving to file"
         savefile.write('%s\n' % str(dialog.result))
+        savefile.flush()
+        globals().update({'grid_name':gname.next(),'name':sname.next(),})
+        if dialog:
+           dialog['grid_name'].setValue(grid_name)
+           dialog['name'].setValue(name)            
 
 def play():
     global savefile
@@ -155,8 +164,9 @@ def play():
         savefile = file(filename,'r')
         for line in savefile:
             globals().update(eval(line))
-            showSuperEgg()
+            show()
         savefile = file(filename,'a')
+
 
 ################# Dialog
         
