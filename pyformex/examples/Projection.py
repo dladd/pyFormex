@@ -1,6 +1,14 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 
+"""Projection
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['colors']
+
+"""
+
 import simple
 from gui.canvas import *
 

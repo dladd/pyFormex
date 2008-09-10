@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Sphere2"""
+"""Sphere2
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['colors']
+
+"""
 
 from simple import sphere2,sphere3
 

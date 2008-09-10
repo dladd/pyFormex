@@ -9,7 +9,12 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Wire Stent"""
+"""Wire Stent
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['dialog', 'persistence', 'colors']
+"""
 
 # needed if we import this from another script
 from formex import *

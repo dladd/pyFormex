@@ -10,7 +10,13 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-"""H-beam"""
+"""H-beam
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['colors']
+
+"""
 
 from plugins import mesh
 import simple

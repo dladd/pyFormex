@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"ColoredText"
+""""ColoredText
+
+level = 'beginner'
+topics = []
+techniques = ['colors']
+
+"""
 
 n = 40
 T = ['Python','NumPy','OpenGL','QT4','pyFormex']

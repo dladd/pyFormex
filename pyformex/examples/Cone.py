@@ -10,6 +10,14 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+"""Cone
+
+level = 'beginner'
+topics = ['geometry','surface']
+techniques = ['dialog', 'colors']
+
+"""
+
 import simple
 
 smooth()

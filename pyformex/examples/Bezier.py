@@ -1,5 +1,13 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
+ 
+"""Bezier
+
+level = 'beginner'
+topic = ['geometry','curves']
+techniques = ['colors','solve']
+
+"""
 
 def build_matrix(atoms,vars):
     """Build a matrix of functions of coords.

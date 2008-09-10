@@ -9,6 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+"""Colored
+
+level = 'beginner'
+topics = ['surface']
+techniques = ['colors']
+
+"""
 
 from gui.actors import *
 

@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Barrel Vault"""
+"""Barrel Vault
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['dialog']
+
+"""
 
 reset()
 

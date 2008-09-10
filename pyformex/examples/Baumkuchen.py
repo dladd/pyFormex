@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Baumkuchen Vault"""
+"""Baumkuchen Vault
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
+
 clear()
 m = 12 # number of cells in direction 0
 n = 36 # number of cells in direction 1

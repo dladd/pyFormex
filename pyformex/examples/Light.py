@@ -1,6 +1,14 @@
 #!/usr/bin/env pyformex
 # $Id$
 
+"""Light
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['dialog', 'colors', 'persistence']
+
+"""
+
 from gui.prefMenu import setRender
 
 smooth()

@@ -1,6 +1,6 @@
-usage: pyformex [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]
+Usage: pyformex [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]
 
-options:
+Options:
   --gui              start the GUI (default if no scriptfile argument is
                      given)
   --nogui            do not load the GUI (default if a scriptfile argument is

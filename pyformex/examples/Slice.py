@@ -10,6 +10,14 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+"""Slice
+
+level = 'advanced'
+topics = ['surface']
+techniques = ['colors','widgets']
+
+"""
+
 from plugins.surface import TriSurface
 
 

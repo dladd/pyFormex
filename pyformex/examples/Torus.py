@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Torus"""
+"""Torus
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
 m = 36 # number of cells along torus big circle
 n = 10 # number of cells along torus small circle
 message("Create a triangle with three colored members")

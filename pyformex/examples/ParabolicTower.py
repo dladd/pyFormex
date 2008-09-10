@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Parabolic Tower"""
+"""Parabolic Tower
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
+
 clear()
 global a,b,c,d  # constants in lambda need to be made global
 h = 25.   # height of tower

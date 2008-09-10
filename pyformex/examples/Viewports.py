@@ -10,6 +10,10 @@
 ##
 """Viewports.py
 
+level = 'advanced'
+topics = ['surface']
+techniques = ['viewports', 'colors']
+
 Demonstrate multiple viewports.
 """
 

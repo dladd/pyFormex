@@ -1,7 +1,14 @@
 #!/usr/bin/env python pyformex.py
 # $Id$
 #
-"""Torus variants"""
+"""Torus variants
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['programming','widgets','globals']
+
+"""
+
 def torus(m,n,surface=True):
     """Create a torus with m cells along big circle and n cells along small."""
     if surface:

@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Novation"""
+"""Novation
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['dialog', 'persistence', 'colors']
+
+"""
 
 reset()
 #GD.cfg['input/timeout'] = 2

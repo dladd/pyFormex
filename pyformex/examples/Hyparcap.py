@@ -11,7 +11,14 @@
 ##
 # This example created (C) by Bart Desloovere (bart.desloovere@telenet.be)
 #
-"""Hyparcap"""
+"""Hyparcap
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
+
 clear()
 from math import *
 a = 5 # verdeelparameter

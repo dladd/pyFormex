@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""DoubleLayer"""
+"""DoubleLayer
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
 
 clear()
 n=10; a=2./3.; d=1./n;

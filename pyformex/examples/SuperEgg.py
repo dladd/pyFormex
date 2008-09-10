@@ -10,6 +10,14 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+"""SuperEgg
+
+level = 'advanced'
+topics = ['geometry']
+techniques = ['programming','modal dialog','persistence']
+
+"""
+
 from simple import rectangle
 from gui.widgets import *
 from gui.draw import *

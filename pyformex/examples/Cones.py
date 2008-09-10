@@ -1,5 +1,11 @@
 #!/usr/bin/env python pyformex.py
 # $Id$
+"""Cones
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['dialog']
+"""
 
 import simple
 from gui import widgets

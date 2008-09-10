@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Scallop Dome"""
+"""Scallop Dome
+
+level = 'normal'
+topics = ['geometry','domes']
+techniques = ['dialog', 'colors']
+
+"""
+
 # This example is fully annotated with comments in the statusbar
 # First we define a function to display a Formex and then wait for the user
 # to click the Step button

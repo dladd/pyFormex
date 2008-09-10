@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Double Layer Flat Space Truss Roof"""
+"""Double Layer Flat Space Truss Roof
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['dialog', 'animation', 'colors']
+
+"""
+
 dx = 180 # Modular size (cm)
 ht = 150 # Deck height
 nx = 14  # number of bottom deck modules in x direction (should be even)

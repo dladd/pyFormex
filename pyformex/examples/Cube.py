@@ -9,6 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+"""Cube
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['colors']
+
+"""
 
 from elements import Hex8
 from formex import *

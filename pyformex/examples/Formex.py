@@ -11,7 +11,11 @@
 ##
 """Formex Structure
 
-This script an image of how coordinates are structures in a Formex.
+level = 'beginner'
+topics = ['manual']
+techniques = ['draw']
+
+This script creates an image of how coordinates are structures in a Formex.
 It was intended mainly for the manual.
 """
 clear()

@@ -9,6 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+"""TrussBridge
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
+
 L = 12000 # Nominal length of the bridge
 N = 12    # Number of modules (should be even)
 Lo = 300  # Overshoot at the end of the bridge

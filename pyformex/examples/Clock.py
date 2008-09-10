@@ -10,6 +10,14 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+"""Clock
+
+level = 'advanced'
+topics = []
+techniques = []
+
+"""
+
 from formex import *  # Needed if we want to use this example as a module
 from gui.draw import *  # Needed if we want to use this example as a module
 import simple

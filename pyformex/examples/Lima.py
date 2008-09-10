@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Lima examples"""
+"""Lima examples
+
+level = 'normal'
+topics = ['illustrations']
+techniques = ['dialog','lima']
+
+"""
 
 # We use the lima module
 from plugins import lima,turtle

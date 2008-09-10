@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Diamatic dome"""
+"""Diamatic dome
+
+level = 'beginner'
+topics = ['geometry','domes']
+techniques = ['colors']
+
+"""
+
 u = 3.     # modular length
 n = 6      # number of modules in one sector
 r = 36.    # radius of the dome

@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Mobius Ring"""
+"""Mobius Ring
+
+level = 'advanced'
+topics = ['geometry','surface']
+techniques = ['dialog', 'animation', 'colors']
+
+"""
 
 reset()
 smoothwire()

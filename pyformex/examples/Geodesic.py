@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Geodesic Dome"""
+"""Geodesic Dome
+
+level = 'normal'
+topics = ['geometry','surface','domes']
+techniques = ['dialog', 'colors']
+
+"""
+
 clear()
 wireframe()
 

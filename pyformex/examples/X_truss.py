@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""X-shaped truss"""
+"""X-shaped truss
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
 
 # This is needed if we want to import this module in another script
 from formex import *

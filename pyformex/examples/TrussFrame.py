@@ -9,7 +9,13 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""TrussFrame"""
+"""TrussFrame
+
+level = 'normal'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
 clear()
 yf = [ 0.0, 0.2, 1.2, 2.2, 3.2, 4.2, 4.5 ] # y of nodes in frame columns
 a = Formex([[[0.0,y]] for y in yf ])

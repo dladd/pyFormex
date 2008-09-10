@@ -1,6 +1,14 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 
+"""ConnectMesh
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['colors']
+
+"""
+
 import simple
 from plugins.connectivity import reverseUniqueIndex
 from plugins.mesh import connectMesh

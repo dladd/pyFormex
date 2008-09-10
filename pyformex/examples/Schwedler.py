@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Schwedler Dome"""
+"""Schwedler Dome
+
+level = 'normal'
+topics = ['geometry','domes']
+techniques = ['colors']
+
+"""
+
 clear()
 nx=16   # number of modules in circumferential direction
 ny=8    # number of modules in meridional direction

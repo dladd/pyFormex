@@ -9,12 +9,15 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+"""Inertia
 
-import elements
-from plugins import formex_menu
-from examples import WireStent
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors','axes']
 
-from plugins.inertia import *
+"""
+
+from plugins import inertia
 
 reset()
 wireframe()
@@ -38,10 +41,10 @@ Axes = unitAxes()
 def showPrincipal1(F):
     """Show the principal axes."""
     clear()
-    C,I = inertia(F.f)
+    C,I = inertia.inertia(F.f)
     GD.message("Center: %s" % C)
     GD.message("Inertia tensor: %s" % I)
-    Iprin,Iaxes = principal(I)
+    Iprin,Iaxes = inertia.principal(I)
     GD.debug("Principal Values: %s" % Iprin)
     GD.debug("Principal Directions:\n%s" % Iaxes)
 

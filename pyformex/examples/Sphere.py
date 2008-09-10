@@ -9,7 +9,14 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Sphere"""
+"""Sphere
+
+level = 'normal'
+topics = ['geometry','surface']
+techniques = ['dialog', 'colors']
+
+"""
+
 clear()
 wireframe()
 nx=32   # number of modules in circumferential direction

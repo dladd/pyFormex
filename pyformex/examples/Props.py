@@ -11,6 +11,10 @@
 ##
 """Props
 
+level = 'beginner'
+topics = ['geometry']
+techniques = ['viewports', 'colors']
+
 A demonstration of propagating property numbers.
 Also shows the use of multiple viewports.
 """

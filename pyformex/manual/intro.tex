@@ -145,7 +145,7 @@ Once you have downloaded the \pyformex tarball, unpack it with
 Then go to the created pyformex directory:
 \CodeLine{cd pyformex-version}
 and do (with root privileges) 
-\CodeLine{python setup.py install prefix=/usr/local}
+\CodeLine{python setup.py install --prefix=/usr/local}
 This will install \pyformex under \Code{/usr/local/}. You can change the prefix to install in some other place.
 
 The installation procedure installs everything into a single directory, and creates a symlink to the executable in \Code{/usr/local/bin}.
@@ -163,24 +163,17 @@ Still, any feedback on (successful or not successful) installation attempts on W
 
 \section{Running \pyf}
 \label{sec:running}
-To start \pyf, enter the command \Code{pyformex {-}{-}gui}. This will start the \pyf Graphical User Interface (GUI), from where you can launch examples or load, edit and run your own \pyf scripts.
+To run \pyf, simply enter the command \Code{pyformex} in a terminal window. This will start the \pyf Graphical User Interface (GUI), from where you can launch examples or load, edit and run your own \pyf scripts. 
 
-The installation procedure may have installed \pyf into your desktop menu or even have created a start button in the desktop panel. These provide convenient shortcuts to start the \pyf GUI.
+The installation procedure may have installed \pyf into your desktop menu or even have created a start button in the desktop panel. These provide convenient shortcuts to start the \pyf GUI by clicking of a mouse button.
 
-The \pyf program takes some optional command line arguments, that modify the behaviour of the program.
+The \pyf program takes some optional command line arguments, that modify the behaviour of the program. Appendix~\ref{cha:commandline} gives a full list of all options. For normal use however you will seldom need to use any of them.
+Therefore, we will only explain here the more commonly used ones.
 
-\subsection{Command line options}
-The whole list of possible command line options can be seen by executing the command \Code{pyformex {-}{-}help}. This will produce the following output.
-\verbatiminput{pyformex.help}
+By default, \pyf sends diagnostical and informational messages to the terminal from which the program was started. Sometimes this may be inconvenient, e.g. because the user has no access to the starting terminal. You can redirect these messages to the message window of the \pyf GUI by starting pyformex with the command\Code{pyformex --redirect}. The desktop starters installed by the \pyf installation procedure use this option.
 
-\emph{As of version 0.4.2, the\Code{{-}{-}nogui} option has become the default. This is because the command line will mostly be used to start non-interactive execution of \pyf, while the GUI will often be launched from a start button or menu, which can easily incorporate the \Code{{-}{-}gui} option. 
-}
-\subsection{Running \pyFormex without the GUI}
-If you start \pyf \emph{without} the \Code{{-}{-}gui} option, no Graphical User Interface is created. This is extremely useful to run automated scripts in batch mode. In this operating mode, \pyf will interprete all arguments remaining after interpreting the options, as filenames of scripts to be run (and possibly arguments to be interpreted by these scripts).
-Thus, if you want to run a \pyf script \Code{myscript.py} in batch mode, just give the command \Code{pyformex myscript.py}.
+In some cases the user may want to use the mathematical power of \pyf without the GUI. This is e.g. useful to run complex automated procedures from a script file. For convenience, \pyf will automatically enter this batch mode (without GUI) if the name of a script file was specified on the command line; when a script file name is absent, \pyf start in GUI mode. Even when specifying a script file, You can still force the GUI mode by adding the option \Code{--gui} to the command line.
 
-The running script has access to the remaining arguments in the global list variable \var{argv}. The script can use any arguments of it and pop them of the list. Any arguments remaining in the \var{argv} list when the script finishes, will be used for another \pyf execution cycle. This means that the first remaining argument should again be a \pyf script.
- 
 
 \section{Quick tutorial for the \pyformex GUI}
 \label{sec:gui-tutorial}

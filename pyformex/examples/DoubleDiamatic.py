@@ -10,7 +10,14 @@
 ## version 2 or later (see file COPYING for details)
 ##
 #
-"""Double layer diamatic dome"""
+"""Double layer diamatic dome ** It works ok? **
+
+level = 'beginner'
+topics = ['geometry','domes']
+techniques = ['']
+
+"""
+
 clear()
 u = 3.     # modular length
 rt = 36.   # radius of top circumsphere

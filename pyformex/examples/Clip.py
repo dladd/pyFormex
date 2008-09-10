@@ -9,6 +9,15 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+
+"""Clip
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['colors']
+
+"""
+
 resetAll()
 setDrawOptions({'clear':True})
 

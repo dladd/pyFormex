@@ -31,7 +31,7 @@ def detect(trypaths=None):
 
     global calpy_path
     
-    calpy = utils.hasExternal('calpy')
+    calpy = utils.checkExternal('calpy')
     if not calpy:
         return
     
@@ -67,7 +67,10 @@ def check(trypaths=None):
     if calpy_path is None:
         detect(trypaths)
 
-    import calpy
+    try:
+        import calpy
+    except ImportError:
+        pass
     
     if not utils.hasModule('calpy',check=True):
         GD.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)

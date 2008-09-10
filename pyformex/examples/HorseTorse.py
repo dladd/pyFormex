@@ -11,6 +11,10 @@
 ##
 """HorseTorse
 
+level = 'advanced'
+topics = ['geometry','surface']
+techniques = ['animation', 'colors']
+
 Torsing a horse is like horsing a torse.
 """
 from plugins.surface import TriSurface

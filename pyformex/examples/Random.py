@@ -11,8 +11,13 @@
 ##
 """Random
 
+level = 'beginner'
+topics = ['surface']
+techniques = ['colors']
+
 Creates random points, bars, triangles, quads, ...
 """
+
 setDrawOptions(dict(clear=True))
 npoints = 30
 p = arange(120)
