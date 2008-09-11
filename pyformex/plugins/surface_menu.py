@@ -689,8 +689,8 @@ def clip_surface():
     if not check_surface():
         return
     itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
-    res,accept = widgets.InputDialog(itemlist,'Clipping Parameters').getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Clipping Parameters').getResult()
+    if res:
         updateGUI()
         nodes,elems = PF['old_surface'] = PF['surface']
         F = Formex(nodes[elems])

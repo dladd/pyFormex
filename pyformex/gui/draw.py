@@ -46,10 +46,11 @@ def closeGui():
     GD.gui.close()
     
 
-def ask(question,choices=None,default=None,timeout=None):
+def ask(question,choices=None,default=None,**kargs):
     """Ask a question and present possible answers.
 
-    Return answer.
+    Return answer if accepted or default if rejected.
+    The remaining arguments are passed to the InputDialog getResult method.
     """
     if choices:
         return widgets.messageBox(question,'question',choices)
@@ -61,10 +62,10 @@ def ask(question,choices=None,default=None,timeout=None):
     else:
         items = [ [question, choices, 'combo', default] ]
 
-    res,accept = widgets.InputDialog(items,'Ask Question').getResult(timeout)
+    res = widgets.InputDialog(items,'Ask Question').getResult(**kargs)
     if GD.gui:
         GD.gui.update()
-    if accept:
+    if res:
         return res[question]
     else:
         return default
@@ -94,7 +95,7 @@ def showText(text,actions=['OK']):
     return widgets.textBox(text,actions)
 
 
-def askItems(items,caption=None,timeout=None):
+def askItems(items,caption=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -106,15 +107,15 @@ def askItems(items,caption=None,timeout=None):
 
     Return a dictionary with the results: for each input item there is a
     (key,value) pair.
-    
-    If the user exited with a cancel or a timeout has occurred, the output
-    values will be equal to the input.
+
+    The remaining arguments are keyword arguments that are passed to the
+    InputDialog.getResult method.
     """
     if type(items) == dict:
         items = items.items()
     w = widgets.InputDialog(items,caption)
-    res,status = w.getResult(timeout)
-    return res
+    return w.getResult(**kargs)
+
 
 def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):
     """Ask for a file name or multiple file names."""

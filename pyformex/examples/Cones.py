@@ -96,13 +96,17 @@ items = [ [n,globals()[n]] for n in ['r0','r1','h','t', 'nr','nt','diag'] ]
 items[-1].extend(['radio',['','u','d']])
 dialog = widgets.InputDialog(items)
 
-while True:
-    res,status = dialog.getResult()
-    print status
-    if not status:
+
+ok = True # Enable single run on timeout
+
+while ok:
+    res = dialog.getResult()
+    if not res:
         exit()
 
-    print res
+    ok = not dialog.timedOut # Prevent endless loop on timeout
+    
+    print ok,res
     globals().update(res)
     F = cone(r0,r1,h,t,nr,nt,diag)
     G = cone1(r0,r1,h,t,nr,nt,diag).swapAxes(1,2).trl(0,2*max(r0,r1))

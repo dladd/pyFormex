@@ -9,6 +9,7 @@ ACCOUNT= bverheg@shell.berlios.de
 
 default:
 	@echo "You should use an explicit target, e.g. make #"
+	@echo "ehre # is the number of the meeting."
 
 all: ${ALLPDF}
 
@@ -31,5 +32,5 @@ pub:
 clean:
 	rm -rf *.log *.aux *.out *.tex
 
-distclean: clean
+mrproper: clean
 	rm -rf *.pdf

@@ -92,8 +92,6 @@ def createSuperShape():
     if post:
         print "Post transformation"
         F = eval(post)
-    clear()
-    draw(F,color=color)
     export({name:F})
 
 
@@ -107,7 +105,6 @@ def showGrid():
 def showSuperShape():
     """Show the last created super shape"""
     clear()
-    smoothwire()
     draw(F,color=color)
 
 
@@ -118,9 +115,17 @@ def show_grid():
     createGrid()
     showGrid()
 
-def show():
+def show_shape():
     dialog.acceptData()
     globals().update(dialog.result)
+    createGrid()
+    createSuperShape()
+    showSuperShape()
+
+def create_and_show(data={}):
+    # Currently, this does not update the input dialog
+    if (data):
+        globals().update(data)
     createGrid()
     createSuperShape()
     showSuperShape()
@@ -139,7 +144,7 @@ def reset():
 
 def save():
     global savefile
-    show()
+    show_shape()
     if savefile is None:
         filename = askFilename(filter="Text files (*.txt)")
         if filename:
@@ -163,8 +168,9 @@ def play():
     if filename:
         savefile = file(filename,'r')
         for line in savefile:
+            print line
             globals().update(eval(line))
-            show()
+            create_and_show()
         savefile = file(filename,'a')
 
 
@@ -193,7 +199,7 @@ def openSuperShapeDialogs():
         'name','color'] ]
 
     # Action buttons
-    actions = [('Close',close),('Reset',reset),('Replay',play),('Save',save),('Show Grid',show_grid),('Show Shape',show)]
+    actions = [('Close',close),('Reset',reset),('Replay',play),('Save',save),('Show Grid',show_grid),('Show',show_shape)]
 
     # The dialog
     dialog = InputDialog(grid_items+items,caption='SuperShape parameters',actions=actions,default='Show')
@@ -213,6 +219,7 @@ if __name__ == "draw":
 
     close()
     openSuperShapeDialogs()
+    smoothwire()
 
 
 # End

@@ -990,21 +990,49 @@ class InputDialog(QtGui.QDialog):
         
         
     def acceptData(self):
-        """This function is called when the user clicks 'ok'"""
+        """Update the dialog's return value from the field values.
+
+        This function is connected to the 'accepted()' signal.
+        Modal dialogs should normally not need to call it.
+        In non-modal dialogs however, you can call it to update the
+        results without having to raise the accepted() signal (which
+        would close the dialog).
+        """
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
-
+        self.accepted = True
         
-    def getResult(self,timeout=None):
+
+    def timeout(self):
+        self.timedOut = True
+        
+        
+    def getResult(self,timeout=None,timeoutAccept=True):
         """ Get the results from the input dialog.
 
+        This fuction is used to present a modal dialog to the user (i.e. a
+        dialog that must be ended before the user can continue with the
+        program. The dialog is shown and user interaction is processed.
+        The user ends the interaction either by accepting the data (e.g. by
+        pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+        button or ESC key).
+        On accept, a dictionary with all the fields and their values is
+        returned. On reject, an empty dictionary is returned.
+        
         If a timeout (in seconds) is given, a timer will be started and if no
         user input is detected during this period, the input dialog returns
         with the default values set.
         A value 0 will timeout immediately, a negative value will never timeout.
         The default is to use the global variable input_timeout, which can
         be changed by a toolbar button.
+
+        This function also sets the exit mode, so that the caller can test how
+        the dialog was ended.
+        self.accepted == TRUE/FALSE
+        self.timedOut == TRUE/FALSE
         """
+        self.timedOut = False
+        self.accepted = False
         if timeout is None:
             timeout = input_timeout
 
@@ -1014,18 +1042,23 @@ class InputDialog(QtGui.QDialog):
                 timeout = float(timeout)
                 if timeout >= 0.0:
                     timer = QtCore.QTimer()
-                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.acceptData)
+                    if timeoutAccept == True:
+                        timeoutFunc = self.accept
+                    else:
+                        timeoutFunc = self.reject
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutFunc)
                     timer.setSingleShot(True)
                     timeout = int(1000*timeout)
                     timer.start(timeout)
             except:
                 raise
             
-        accept = self.exec_() == QtGui.QDialog.Accepted
+        self.exec_()
         self.activateWindow()
         self.raise_()
         GD.app.processEvents()
-        return (self.result, accept)
+        return self.result
 
 
 ############################# Table model ###########################

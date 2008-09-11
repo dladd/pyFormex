@@ -63,7 +63,6 @@ m2 = Mesh(c2,e1)
 clear()
 m1.draw()
 m2.draw()
-pause()
 
 x,e = connectMesh(c1,c2,e1,nz)
 

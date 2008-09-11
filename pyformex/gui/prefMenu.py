@@ -55,24 +55,10 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res,accept = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
+    if res:
         updateSettings(res,store)
-##         GD.debug(res)
-##         if draw.ack("Update the settings?"):
-##             # This does not work for our Config class!
-##             # store.update(res)
-##             # Therefore, set individually
-##             for k,v in res.items():
-##                 store[k] = v
-## ##        for i,r in zip(itemlist,res):
-## ##            GD.debug("IN : %s\nOUT: %s" % (i,r))
-## ##            if type(i[1]) == str:
-## ##                store[r[0]] = r[1]
-## ##            else:
-## ##                store[r[0]] = eval(r[1])
-##         GD.debug(GD.cfg)
-    return accept
+    return res
 
 
 def setToolbarPlacement(store=None):
@@ -89,8 +75,8 @@ def setToolbarPlacement(store=None):
     current = [ store[s] for s in setting ]
     itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
     itemlist.append(('Store these settings as defaults', False))
-    res,accept = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
+    if res:
         GD.debug(res)
         if res['Store these settings as defaults']:
             # The following  does not work for our Config class!
@@ -102,7 +88,6 @@ def setToolbarPlacement(store=None):
                     val = None
                 store[s] = val
         GD.debug(store)
-    return accept
 
 
 def setHelp():

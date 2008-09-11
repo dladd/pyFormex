@@ -65,13 +65,19 @@ Gui
 
   . added Slider widgets
   . textbox() function
+  . InputDialog.getResults() returns a single value: a dictionary with the
+    values in the dialog if accepted, an empty dictionary if rejected.
+  . The timeout of the InputDialog.getResults() function can result in
+    either an accept or a reject signal.
+  . The accept and timeout status of an InputDialog can be consulted after
+    the widget was closed.
 
 
 
 Drawing
 -------
 
-- When renderinging TriSurfaces with lighting, there is on option to use
+- When rendering TriSurfaces with lighting, there is on option to use
   averaged normals at the vertices of the triangles, providing a much smoother
   look of the surface. An optional toolbar button toggles between triangle
   based and averaged normals.
@@ -104,6 +110,7 @@ Examples
 - Added the Projection example
 - Added the Tori example
 - Added the SuperShape example
+- Added the Bezier example
 
 
 Manual

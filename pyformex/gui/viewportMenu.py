@@ -22,8 +22,8 @@ def setRenderMode():
     mode = GD.canvas.rendermode
     modes = canvas.Canvas.rendermodes
     itemlist = [('Render Mode', mode, 'select', modes)]
-    res,accept = widgets.InputDialog(itemlist,'Select Render Mode').getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Select Render Mode').getResult()
+    if res:
         GD.canvas.setRenderMode(res['Render Mode'])
         
 def setBgColor():
@@ -44,15 +44,15 @@ def setLineWidth():
     """Change the default line width."""
     lw = GD.canvas.settings.linewidth
     itemlist = [('Line Width', lw, 'float')]
-    res,accept = widgets.InputDialog(itemlist,'Choose default line width').getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Choose default line width').getResult()
+    if res:
         GD.canvas.setLineWidth(res['Line Width'])
     
 def setCanvasSize():
     """Save the current viewport size"""
     itemlist = [('w',GD.canvas.width()),('h',GD.canvas.height())]
-    res,accept = widgets.InputDialog(itemlist,'Set Canvas Size').getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Set Canvas Size').getResult()
+    if res:
         GD.canvas.resize(int(res['w']),int(res['h']))
 
 
@@ -72,8 +72,8 @@ def viewportSettings():
                 ('linewidth', s.linewidth, 'float'),
                 ('Store these settings as defaults', False),
                 ]
-    res,accept = widgets.InputDialog(itemlist,'Config Dialog').getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
+    if res:
         GD.debug(res)
         s.reset(res)
         GD.canvas.setRenderMode(res['rendermode'])
@@ -93,8 +93,8 @@ def viewportLayout():
                 ('Viewport layout direction',current,'select',directions),
                 ('Number of viewports per row/column',GD.gui.viewports.ncols),
                 ]
-    res,accept = widgets.InputDialog(itemlist,'Config Dialog').getResult()
-    if accept:
+    res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
+    if res:
         GD.debug(res)
         nvps = res['Number of viewports']
         rowwise = res['Viewport layout direction'] == 'rowwise'
