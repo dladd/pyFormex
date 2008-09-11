@@ -385,26 +385,6 @@ def showSurfaceValue(S,txt,val,onEdges):
     drawtext(txt,10,230,'hv18')
 
 
-def showHistogram(txt,val,cumulative=False):
-    try:
-        import Gnuplot
-    except:
-        warning("I could not create the plot.\nMaybe you do not have gnuplot or the Python interface.")
-        return
-
-    y,x = histogram(val)
-    #hist = column_stack([hist[1],hist[0]])
-    if cumulative:
-        y = y.cumsum()
-    data = Gnuplot.Data(x,y,
-                        title=txt,
-                        with='histeps')  # boxes?
-    g = Gnuplot.Gnuplot(persist=1)
-    g.title('Histogram of %s' % txt)
-    #g('set boxwidth 1')
-    g.plot(data)
-
-
 def colorByFront():
     S = selection.check(single=True)
     if S:
@@ -454,110 +434,6 @@ def partitionByAngle():
             print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
             selection.draw()
          
-
-#
-# Operations using gts library
-#
-
-
-def check():
-    S = selection.check(single=True)
-    if S:
-        GD.message(S.check(verbose=True))
-
-
-def split():
-    S = selection.check(single=True)
-    if S:
-        GD.message(S.split(base=selection[0],verbose=True))
-
-
-def coarsen():
-    S = selection.check(single=True)
-    if S:
-        res = askItems([('min_edges',-1),
-                        ('max_cost',-1),
-                        ('mid_vertex',False),
-                        ('length_cost',False),
-                        ('max_fold',1.0),
-                        ('volume_weight',0.5),
-                        ('boundary_weight',0.5),
-                        ('shape_weight',0.0),
-                        ('progressive',False),
-                        ('log',False),
-                        ('verbose',False),
-                        ])
-        if res:
-            selection.remember()
-            if res['min_edges'] <= 0:
-                res['min_edges'] = None
-            if res['max_cost'] <= 0:
-                res['max_cost'] = None
-            S.coarsen(**res)
-            selection.draw()
-
-
-def refine():
-    S = selection.check(single=True)
-    if S:
-        res = askItems([('max_edges',-1),
-                        ('min_cost',-1),
-                        ('log',False),
-                        ('verbose',False),
-                        ])
-        if res:
-            selection.remember()
-            if res['max_edges'] <= 0:
-                res['max_edges'] = None
-            if res['min_cost'] <= 0:
-                res['min_cost'] = None
-            S.refine(**res)
-            selection.draw()
-
-
-def smooth():
-    S = selection.check(single=True)
-    if S:
-        res = askItems([('lambda_value',0.5),
-                        ('n_iterations',2),
-                        ('fold_smoothing',None),
-                        ('verbose',False),
-                        ],'Laplacian Smoothing')
-        if res:
-            selection.remember()
-            if res['fold_smoothing'] is not None:
-                res['fold_smoothing'] = float(res['fold_smoothing'])
-            S.smooth(**res)
-            selection.draw()
-
-
-def boolean():
-    """Boolean operation on two surfaces.
-
-    op is one of
-    '+' : union,
-    '-' : difference,
-    '*' : interesection
-    """
-    ops = ['+ (Union)','- (Difference)','* (Intersection)']
-    S = selection.check(single=False)
-    if len(selection.names) != 2:
-        warning("You must select exactly two triangulated surfaces!")
-        return
-    if S:
-        res = askItems([('operation',None,'select',ops),
-                        ('output intersection curve',False),
-                        ('check self interesection',False),
-                        ('verbose',False),
-                        ],'Boolean Operation')
-        if res:
-            #selection.remember()
-            newS = S[0].boolean(S[1],op=res['operation'].strip()[0],
-                        inter=res['output intersection curve'],
-                        check=res['check self interesection'],
-                        verbose=res['verbose'])
-            export({'__auto__':newS})
-            #selection.draw()
  
 
 #############################################################################
@@ -853,7 +729,7 @@ def sliceIt():
 
 
 ###################################################################
-########### The following functions are in need of an make-over
+########### The following functions are in need of a make-over
 
 
 def create_tetgen_volume():
@@ -1067,6 +943,134 @@ def createCone():
         export({name:TriSurface(F)})
         selection.set([name])
         selection.draw()
+
+
+###################  Operations using gts library  ########################
+
+
+def check():
+    S = selection.check(single=True)
+    if S:
+        GD.message(S.check(verbose=True))
+
+
+def split():
+    S = selection.check(single=True)
+    if S:
+        GD.message(S.split(base=selection[0],verbose=True))
+
+
+def coarsen():
+    S = selection.check(single=True)
+    if S:
+        res = askItems([('min_edges',-1),
+                        ('max_cost',-1),
+                        ('mid_vertex',False),
+                        ('length_cost',False),
+                        ('max_fold',1.0),
+                        ('volume_weight',0.5),
+                        ('boundary_weight',0.5),
+                        ('shape_weight',0.0),
+                        ('progressive',False),
+                        ('log',False),
+                        ('verbose',False),
+                        ])
+        if res:
+            selection.remember()
+            if res['min_edges'] <= 0:
+                res['min_edges'] = None
+            if res['max_cost'] <= 0:
+                res['max_cost'] = None
+            S.coarsen(**res)
+            selection.draw()
+
+
+def refine():
+    S = selection.check(single=True)
+    if S:
+        res = askItems([('max_edges',-1),
+                        ('min_cost',-1),
+                        ('log',False),
+                        ('verbose',False),
+                        ])
+        if res:
+            selection.remember()
+            if res['max_edges'] <= 0:
+                res['max_edges'] = None
+            if res['min_cost'] <= 0:
+                res['min_cost'] = None
+            S.refine(**res)
+            selection.draw()
+
+
+def smooth():
+    S = selection.check(single=True)
+    if S:
+        res = askItems([('lambda_value',0.5),
+                        ('n_iterations',2),
+                        ('fold_smoothing',None),
+                        ('verbose',False),
+                        ],'Laplacian Smoothing')
+        if res:
+            selection.remember()
+            if res['fold_smoothing'] is not None:
+                res['fold_smoothing'] = float(res['fold_smoothing'])
+            S.smooth(**res)
+            selection.draw()
+
+
+def boolean():
+    """Boolean operation on two surfaces.
+
+    op is one of
+    '+' : union,
+    '-' : difference,
+    '*' : interesection
+    """
+    ops = ['+ (Union)','- (Difference)','* (Intersection)']
+    S = selection.check(single=False)
+    if len(selection.names) != 2:
+        warning("You must select exactly two triangulated surfaces!")
+        return
+    if S:
+        res = askItems([('operation',None,'select',ops),
+                        ('output intersection curve',False),
+                        ('check self interesection',False),
+                        ('verbose',False),
+                        ],'Boolean Operation')
+        if res:
+            #selection.remember()
+            newS = S[0].boolean(S[1],op=res['operation'].strip()[0],
+                        inter=res['output intersection curve'],
+                        check=res['check self interesection'],
+                        verbose=res['verbose'])
+            export({'__auto__':newS})
+            #selection.draw()
+
+
+################### dependent on gnuplot ####################
+
+
+
+def showHistogram(txt,val,cumulative=False):
+    if not utils.hasModule('gnuplot'):
+        error("You do not have the Python Gnuplot module installed.\nI can not draw the requested plot.")
+        return
+        
+    import Gnuplot
+
+    y,x = histogram(val)
+    #hist = column_stack([hist[1],hist[0]])
+    if cumulative:
+        y = y.cumsum()
+    data = Gnuplot.Data(x,y,
+                        title=txt,
+                        with='histeps')  # boxes?
+    g = Gnuplot.Gnuplot(persist=1)
+    g.title('Histogram of %s' % txt)
+    #g('set boxwidth 1')
+    g.plot(data)
+
 
     
 ################### menu #################

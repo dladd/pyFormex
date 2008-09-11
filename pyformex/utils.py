@@ -85,6 +85,9 @@ def checkModule(name):
         elif name == 'calpy':
             import calpy
             version = calpy.__version__
+        elif name == 'gnuplot':
+            import Gnuplot
+            version = Gnuplot.__version__
         elif name == 'gl2ps':
             import gl2ps
             version = gl2ps.GL2PS_VERSION
