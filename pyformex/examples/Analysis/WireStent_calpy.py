@@ -9,7 +9,12 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Wire stent analysis"""
+"""Wire stent analysis
+
+level = 'advanced'
+topics = ['FEA']
+techniques = ['colors'] 
+"""
 
 ############################
 # Load the needed calpy modules    

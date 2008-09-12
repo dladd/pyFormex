@@ -9,7 +9,12 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
-"""Double Layer Flat Space Truss Roof"""
+"""Double Layer Flat Space Truss Roof
+
+level = 'advanced'
+topics = ['FEA']
+techniques = ['dialog', 'animation', 'persistence', 'colors'] 
+"""
 
 from plugins.properties import *
 ############################

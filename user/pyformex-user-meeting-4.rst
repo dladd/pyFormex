@@ -50,6 +50,10 @@ Agenda and discussion
 * Discussion: Should pyFormex become a 'managed' project?
 
 
+pyFormex contest
+----------------
+Create a pyFormex model as closely as possible representing the famous 'Klokke Roeland' in Ghent (http://www.portalviajar.com/europa/belgica/gante/gante%2044%20-%20klokke%20roeland.JPG).
+
 
 Date of the next meeting
 ------------------------

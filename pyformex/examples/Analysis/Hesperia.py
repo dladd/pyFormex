@@ -13,6 +13,14 @@
 ##
 ##  All physical quantities are N,mm
 ##
+
+"""Hesperia
+
+level = 'advanced'
+topics = ['geometry', 'FEA', 'domes', 'surface']
+techniques = ['menu', 'dialog', 'persistence', 'colors'] 
+"""
+
 import simple,utils
 from plugins.surface import TriSurface, compactElems
 from plugins.properties import *

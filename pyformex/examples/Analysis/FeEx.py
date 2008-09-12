@@ -9,6 +9,12 @@
 ## This program is distributed under the GNU General Public License
 ## version 2 or later (see file COPYING for details)
 ##
+"""FeEx
+
+level = 'advanced'
+topics = ['FEA']
+techniques = ['menu', 'dialog', persistence', 'colors'] 
+"""
 
 from simple import rectangle
 from plugins.fe import *

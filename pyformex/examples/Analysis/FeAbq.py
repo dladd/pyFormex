@@ -10,6 +10,13 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
+"""FeAbq
+
+level = 'advanced'
+topics = ['FEA']
+techniques = ['persistence', 'dialog', 'colors'] 
+"""
+
 from plugins.fe import *
 from plugins.properties import *
 from plugins.fe_abq import *

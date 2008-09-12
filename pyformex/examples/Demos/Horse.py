@@ -11,6 +11,10 @@
 ##
 """Horse
 
+level = 'normal'
+topics = ['surface']
+techniques = ['animation','colors'] 
+
 This script reads horse.formex, transforms it into a surface,
 loads the surface plugin and cuts the horse in a number of surfaces.
 """

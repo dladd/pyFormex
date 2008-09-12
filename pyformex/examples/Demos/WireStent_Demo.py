@@ -11,6 +11,10 @@
 ##
 """Wire Stent Demo
 
+level = 'advanced'
+topics = ['geometry']
+techniques = ['dialog','colors'] 
+
 This demo is intended for educational purposes. It is a rewrite of the
 WireStent.py example, adding lots of drawing instructions and comments.
 More details regarding the used definitions can be found in the pyFormex

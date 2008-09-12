@@ -10,7 +10,13 @@
 ## version 2 or later (see file COPYING for details)
 ##
 #
-"""Barrel Vault"""
+"""Barrel Vault
+
+level = 'advanced'
+topics = ['FEA']
+techniques = ['colors'] 
+"""
+
 clear()
 m=10 # number of modules in axial direction
 n=8 # number of modules in tangential direction
