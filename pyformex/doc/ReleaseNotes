@@ -72,7 +72,20 @@ Gui
   . The accept and timeout status of an InputDialog can be consulted after
     the widget was closed.
 
+- ScriptsMenu:
 
+  . The scripts loading procedure in the ScriptsMenu widget has been changed
+    to account for future enhancements, but is largely compatible with the old
+    use in the GUI:
+
+    + ScriptsMenu(files=somepath) should be replaced with ScriptsMenu(dir=somepath)
+    + ScriptsMenu(files=[list of files]) remains
+  
+  . The ScriptsMenu now has an option to classify all the scripts in a
+    directory according to some keywords contained in the script's docstring.
+    The classification can then be stored in appropriate symlinks and on reload
+    the classified scripts will be presented in the menu.
+ 
 
 Drawing
 -------
@@ -111,6 +124,7 @@ Examples
 - Added the Tori example
 - Added the SuperShape example
 - Added the Bezier example
+- Removed the (unfinished) DoubleDiamatic example
 
 
 Manual

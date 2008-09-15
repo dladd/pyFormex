@@ -19,6 +19,7 @@ import utils
 import draw
 import os,random
     
+catname = 'scripts.cat'
 
 def extractKeyword(s):
     """Extract a keyword =value pair from a string.
@@ -73,7 +74,7 @@ def scriptKeywords(fn,keyw=None):
 class ScriptsMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list."""
     
-    def __init__(self,title,dir=None,files=None,ext=None,recursive=None,toplevel=True,max=0,autoplay=False):
+    def __init__(self,title,dir=None,files=None,ext=None,recursive=None,toplevel=True,catalog=False,max=0,autoplay=False):
         """Create a menu with pyFormex scripts to play.
 
         dir, files, ext determine the list of script names and files in the
@@ -164,13 +165,63 @@ class ScriptsMenu(QtGui.QMenu):
             self.menus.append(m)
             
 
+    def loadFiles(self,files):
+        """Load the script files in this menu"""
+        self.files = files
+        if GD.options.debug:
+            print "Found Scripts in %s" % self.dir
+            print self.files
+        self.actions = [ self.addAction(f) for f in self.files ]           
+        self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
+        if self.dir:
+            self.addSeparator()
+            self.addAction('Run next script',self.runNext)
+            self.addAction('Run all following scripts',self.runAllNext)
+            self.addAction('Run all scripts',self.runAll)
+            self.addAction('Run a random script',self.runRandom)
+            self.addAction('Run all in random order',self.runAllRandom)
+            if str(self.title()).lower() in GD.cfg.get('gui/classify_scripts',[]):
+                self.addAction('Classify scripts',self._classify)
+            self.addAction('Reload scripts',self.reload)
+        self.current = ""
+
+
+    def loadCatalog(self):
+        catfile = os.path.join(self.dir,catname)
+        if os.path.exists(catfile):
+            print "TRying to load catalog %s" % catfile
+            execfile(catfile,globals())
+            print kat
+            print cat
+            print col
+            for k in kat:
+                mk = QtGui.QMenu(k.capitalize())
+                for i in cat[k]:
+                    ki = '%s/%s' % (k,i)
+                    print ki
+                    mi = ScriptsMenu(i,dir=self.dir,files=col[ki],recursive=False)
+                    mk.addMenu(mi)
+                    self.menus.append(ki)
+                self.addMenu(mk)
+                self.menus.append(mk)
+            return True
+        return False
+
+
     def load(self):
+        dirs = []
         if self.files is None:
+            if self.loadCatalog():
+                print "CATALOG LOADED!"
+                return
+            
             files = os.listdir(self.dir)
             filtr = lambda s:os.path.isdir(os.path.join(self.dir,s))
-            dirs = filter(filtr,files)
+            if self.recursive:
+                dirs = filter(filtr,files)
             filtr = lambda s: s[0]!='.' and s[0]!='_'
-            dirs = filter(filtr,dirs)
+            if self.recursive:
+                dirs = filter(filtr,dirs)
             files = filter(filtr,files)
             if self.ext:
                 filtr = lambda s: s.endswith(self.ext)
@@ -187,26 +238,15 @@ class ScriptsMenu(QtGui.QMenu):
         if self.max > 0 and len(files) > self.max:
             files = files[:self.max]
 
-        if self.dir and self.recursive:
-                self.loadSubmenus(dirs)
+        if dirs:
+            self.loadSubmenus(dirs)
 
-        self.files = files
-
-        if GD.options.debug:
-            print "Found Scripts in %s" % self.dir
-            print self.files
-        self.actions = [ self.addAction(f) for f in self.files ]           
-        self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
-        if self.dir:
-            self.addSeparator()
-            self.addAction('Run next script',self.runNext)
-            self.addAction('Run all following scripts',self.runAllNext)
-            self.addAction('Run all scripts',self.runAll)
-            self.addAction('Run a random script',self.runRandom)
-            self.addAction('Run all in random order',self.runAllRandom)
-            self.addAction('Classify scripts',self._classify)
-            self.addAction('Reload scripts',self.reload)
-        self.current = ""
+        if self.toplevel:
+            self.loadFiles(files)
+        else:
+            m = ScriptsMenu('All',dir=self.dir,files=files,autoplay=self.autoplay,recursive=False)
+            self.addMenu(m)
+            self.menus.append(m)
 
 
     def run(self,action):
@@ -343,9 +383,11 @@ class ScriptsMenu(QtGui.QMenu):
 
     def _classify(self):
         """Classify, symlink and reload the scripts"""
-        self.classify(True)
-        self.reload()
-        
+        if self.dir:
+            f = os.path.join(self.dir,catname)
+            s = "kat = %r\ncat = %r\ncol = %r\n" % self.classify(False)
+            file(f,'w').writelines(s)
+
 
 def symlink_scripts(dir,kat,cat,col):
     """Symlink the scripts according to category."""
