@@ -282,7 +282,6 @@ class GUI(QtGui.QMainWindow):
 
     def addStatusBarButtons(self):
         sbh = self.statusbar.height()
-        print "Status bar height = %s" % sbh
         self.curproj.setFixedHeight(32)
         self.curfile.setFixedHeight(32)
         GD.gui.statusbar.addWidget(self.curproj)
@@ -635,7 +634,7 @@ See Help->License or the file COPYING for details.
             scriptdirs[i] = (item[0],knownscriptdirs[item[0].lower()])
 
     if GD.cfg.get('gui/separate_script_dirs',False):
-        # This will create separate menus for all scriptdirs
+        # This should create separate menus for all scriptdirs
         pass
     else:
         # The default is to collect all scriptdirs in a single main menu
@@ -653,8 +652,11 @@ See Help->License or the file COPYING for details.
             if os.path.exists(dirname):
                 m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
                 scriptsmenu.insert_menu(m,before)
-                menus.append(m)   # Needed to keep m linked to a name,
-                                  # else the menu is destroyed!
+                menus.append(m)   # Needed to keep m linked to a name !
+
+            # THIS IS EXPERIMENTAL
+            if title.lower() in GD.cfg.get('gui/classify_scripts',[]):
+                m.classify()
 
     # Set interaction functions
     GD.message = draw.message

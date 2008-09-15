@@ -20,6 +20,56 @@ import draw
 import os,random
     
 
+def extractKeyword(s):
+    """Extract a keyword =value pair from a string.
+
+    If the string s is of the form
+      keyword = value
+    a tuple (keyword,value) is returned; else None.
+    """
+    i = s.find('=')
+    if i >= 0:
+        key = s[:i].strip()
+        if len(key) > 0:
+            return key, eval(s[i+1:].strip())
+    return None
+
+    
+def scriptKeywords(fn,keyw=None):
+    """Read the script keywords from a script file.
+
+    fn is the full path name of a pyFormex script file.
+    keyw is an optional list of keywords.
+    
+    Script keywords are written in the form
+      key = value
+    in the docstring of the script.
+    The docstring is the first non-indented multiline string of the file.
+    A multiline string is a string delimited by triple double-quotes.
+    Matching lines are placed in a dictionary which becomes the return value.
+    
+    If a list of keywords is given, the return dictionary will only contain
+    the matching values.
+    """
+    fil = file(fn,'r')
+    keys = {}
+    ok = False
+    for line in fil:
+        if not ok and line.startswith('"""'):
+            ok = True
+            line = line[3:]
+        if ok:
+            i = line.find('"""')
+            if i >= 0:
+                line = line[:i]
+            pair = extractKeyword(line)
+            if pair:
+                keys.update((pair,))
+            if i >= 0:
+                return keys
+    return keys
+
+
 class ScriptsMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list."""
     
@@ -121,6 +171,14 @@ class ScriptsMenu(QtGui.QMenu):
         self.current = ""
         
 
+    def fileName(self,scriptname):
+        """Return the full filename for a scriptname."""
+        if self.dir:
+            return os.path.join(self.dir,scriptname+'.py')
+        else:
+            return scriptname
+
+
     def run(self,action):
         """Run the selected script."""
         script = str(action.text())
@@ -131,10 +189,7 @@ class ScriptsMenu(QtGui.QMenu):
     def runScript(self,filename):
         """Run the specified script."""
         self.current = filename
-        if self.dir:
-            selected = os.path.join(self.dir,filename+'.py')
-        else:
-            selected = filename
+        selected = self.fileName(filename)
         GD.debug("Playing script %s" % selected)
         GD.gui.setcurfile(selected)
         if self.autoplay:
@@ -218,5 +273,29 @@ class ScriptsMenu(QtGui.QMenu):
         for a,f in zip(self.actions,self.files):
             a.setText(f)
 
+
+    def classify(self):
+        """Classify the files in submenus according to keywords."""
+        kat = ['level','topics','techniques']
+        cat = dict([ (k,set()) for k in kat])
+        col = {}
+        for f in self.files:
+            fn = self.fileName(f)
+            d = scriptKeywords(fn)
+            #print "\nKeywords in %s:  %s" % (f,d)
+            for k,v in d.items():
+                if k == kat[0]:
+                    v = [v]
+                if not k in kat:
+                    GD.debug("Skipping unknown keyword %s in script %s" % (k,fn))
+                    continue
+                cat[k].update(v)
+                for i in v:
+                    if not i in col.keys():
+                        col[i] = set()
+                    col[i].update([f])
+                    
+        print cat,col
+                
 
 # End
