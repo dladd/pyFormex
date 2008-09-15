@@ -650,13 +650,10 @@ See Help->License or the file COPYING for details.
         for title,dirname in scriptdirs:
             GD.debug("Loading script dir %s" % dirname)
             if os.path.exists(dirname):
-                m = scriptsMenu.ScriptsMenu(title,dirname,autoplay=True)
+                m = scriptsMenu.ScriptsMenu(title,dir=dirname,autoplay=True)
                 scriptsmenu.insert_menu(m,before)
                 menus.append(m)   # Needed to keep m linked to a name !
 
-            # THIS IS EXPERIMENTAL
-            if title.lower() in GD.cfg.get('gui/classify_scripts',[]):
-                m.classify()
 
     # Set interaction functions
     GD.message = draw.message

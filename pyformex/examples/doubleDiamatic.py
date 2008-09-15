@@ -14,7 +14,7 @@
 
 level = 'beginner'
 topics = ['geometry','domes']
-techniques = ['']
+techniques = []
 
 """
 
