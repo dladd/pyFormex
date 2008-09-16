@@ -20,17 +20,18 @@ The following pyFormex developers, users and enthusiants were present.
 
 Apologies
 ---------
+- Wesley
 
 
 Minutes of the previous meeting
 -------------------------------
+- No remarks
 
 
 Agenda and discussion
 ---------------------
 * pyFormex Developer Forum:
 
-  - Copyright of the Open Source Project  
   - Demonstration of the new SuperShape transformation
   - Running pyFormex from a BuMPix Live Linux USB key
   - Setting keywords on example scripts
@@ -43,8 +44,9 @@ Agenda and discussion
 
 * pyFormex User Forum:
 
-   - Gianluca: Importing Philips Medical Systems wrl files into pyFormex
-   - Victor: Using Bezier curves to create geometry of a patch
+  - Sofie: Table display widget
+  - Gianluca: Importing Philips Medical Systems wrl files into pyFormex
+  - Victor: Using Bezier curves to create geometry of a patch
 
 
 * Discussion: Should pyFormex become a 'managed' project?

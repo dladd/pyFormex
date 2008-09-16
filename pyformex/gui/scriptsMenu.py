@@ -71,10 +71,19 @@ def scriptKeywords(fn,keyw=None):
     return keys
 
 
+def sortSets(d):
+    """Turn the set values in d into sorted lists."""
+    d = dict((k,list(d[k])) for k in d)
+    for k in d:
+        d[k].sort()
+    return d
+    
+
+
 class ScriptsMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list."""
     
-    def __init__(self,title,dir=None,files=None,ext=None,recursive=None,toplevel=True,catalog=False,max=0,autoplay=False):
+    def __init__(self,title,dir=None,files=None,ext=None,recursive=None,max=0,autoplay=False,toplevel=True):
         """Create a menu with pyFormex scripts to play.
 
         dir, files, ext determine the list of script names and files in the
@@ -101,8 +110,7 @@ class ScriptsMenu(QtGui.QMenu):
     
         If recursive is True (default if dir is specified), a cascading menu
         of all pyFormex scripts in that directory and subdirectories will be
-        created. If toplevel is False, scripts in the toplevel directory will
-        not be included.
+        created.
 
         By default, files are only included if:
         - the name ends with '.py'
@@ -121,6 +129,9 @@ class ScriptsMenu(QtGui.QMenu):
         in the menu:
         - execute all files
         - execute current and all following files
+        - execute a random script
+        - execute all files in random order
+        If the menu is a toplevel, it will furthermore have the extra options
         - close the menu
         - reload the menu
         - classify the scripts according to keywords
@@ -155,9 +166,13 @@ class ScriptsMenu(QtGui.QMenu):
             return fn
 
 
-    def loadSubmenus(self,dirs):
-        filter2 = lambda s:os.path.isdir(os.path.join(self.dir,s))
-        dirs = filter(filter2,dirs)
+    def loadSubmenus(self,dirs=[]):
+        if not dirs:
+            dirs = os.listdir(self.dir)
+        filtr = lambda s:os.path.isdir(os.path.join(self.dir,s))
+        dirs = filter(filtr,dirs)
+        filtr = lambda s: s[0]!='.' and s[0]!='_'
+        dirs = filter(filtr,dirs)
         dirs.sort()
         for d in dirs:
             m = ScriptsMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
@@ -180,28 +195,24 @@ class ScriptsMenu(QtGui.QMenu):
             self.addAction('Run all scripts',self.runAll)
             self.addAction('Run a random script',self.runRandom)
             self.addAction('Run all in random order',self.runAllRandom)
-            if str(self.title()).lower() in GD.cfg.get('gui/classify_scripts',[]):
-                self.addAction('Classify scripts',self._classify)
-            self.addAction('Reload scripts',self.reload)
         self.current = ""
 
 
     def loadCatalog(self):
         catfile = os.path.join(self.dir,catname)
         if os.path.exists(catfile):
-            print "TRying to load catalog %s" % catfile
             execfile(catfile,globals())
-            print kat
-            print cat
-            print col
             for k in kat:
-                mk = QtGui.QMenu(k.capitalize())
+                if k == 'all':
+                    files = col[k]
+                else:
+                    files = []
+                mk = ScriptsMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     ki = '%s/%s' % (k,i)
-                    print ki
-                    mi = ScriptsMenu(i,dir=self.dir,files=col[ki],recursive=False)
+                    mi = ScriptsMenu(i,dir=self.dir,files=list(col[ki]),recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
-                    self.menus.append(ki)
+                    mk.menus.append(mi)
                 self.addMenu(mk)
                 self.menus.append(mk)
             return True
@@ -209,19 +220,14 @@ class ScriptsMenu(QtGui.QMenu):
 
 
     def load(self):
-        dirs = []
         if self.files is None:
             if self.loadCatalog():
-                print "CATALOG LOADED!"
+                self.addAction('Classify scripts',self._classify)
+                self.addAction('Reload scripts',self.reload)
                 return
             
             files = os.listdir(self.dir)
-            filtr = lambda s:os.path.isdir(os.path.join(self.dir,s))
-            if self.recursive:
-                dirs = filter(filtr,files)
             filtr = lambda s: s[0]!='.' and s[0]!='_'
-            if self.recursive:
-                dirs = filter(filtr,dirs)
             files = filter(filtr,files)
             if self.ext:
                 filtr = lambda s: s.endswith(self.ext)
@@ -238,15 +244,15 @@ class ScriptsMenu(QtGui.QMenu):
         if self.max > 0 and len(files) > self.max:
             files = files[:self.max]
 
-        if dirs:
-            self.loadSubmenus(dirs)
+        if self.recursive:
+            self.loadSubmenus()
+
+        if files:
+            self.loadFiles(files)
 
         if self.toplevel:
-            self.loadFiles(files)
-        else:
-            m = ScriptsMenu('All',dir=self.dir,files=files,autoplay=self.autoplay,recursive=False)
-            self.addMenu(m)
-            self.menus.append(m)
+            self.addAction('Classify scripts',self._classify)
+            self.addAction('Reload scripts',self.reload)
 
 
     def run(self,action):
@@ -351,15 +357,15 @@ class ScriptsMenu(QtGui.QMenu):
 
     def classify(self,symlink=False):
         """Classify the files in submenus according to keywords."""
-        kat = ['level','topics','techniques']
+        kat = ['all','level','topics','techniques']
         cat = dict([ (k,set()) for k in kat])
-        col = {}
+        col = {'all':set()}
         for f in self.files:
+            col['all'].update([f])
             fn = self.fileName(f)
             d = scriptKeywords(fn)
-            #print "\nKeywords in %s:  %s" % (f,d)
             for k,v in d.items():
-                if k == kat[0]:
+                if k == 'level':
                     v = [v]
                 if not k in kat:
                     GD.debug("Skipping unknown keyword %s in script %s" % (k,fn))
@@ -371,12 +377,14 @@ class ScriptsMenu(QtGui.QMenu):
                         col[ki] = set()
                     col[ki].update([f])
 
-        cat = dict((k,list(cat[k])) for k in kat)
-        for k in cat:
-            cat[k].sort()
+##         cat = dict((k,list(cat[k])) for k in kat)
+##         for k in cat:
+##             cat[k].sort()
 
-        if symlink:
-            symlink_scripts(self.dir,kat,cat,col)
+        cat = sortSets(cat)
+        col = sortSets(col)
+##         if symlink:
+##             symlink_scripts(self.dir,kat,cat,col)
             
         return kat,cat,col
 
@@ -389,24 +397,24 @@ class ScriptsMenu(QtGui.QMenu):
             file(f,'w').writelines(s)
 
 
-def symlink_scripts(dir,kat,cat,col):
-    """Symlink the scripts according to category."""
-    for k in cat:
-        for i in cat[k]:
-            d = os.path.join(dir,k.capitalize(),i.capitalize())
-            if not os.path.exists(d):
-                os.makedirs(d)
-            ki = '%s/%s' % (k,i)
-            for f in col[ki]:
-                fn = f+'.py'
-                src = "../../%s" % fn
-                dst = os.path.join(d,fn)
-                if os.path.exists(dst):
-                    GD.debug("Path %s already exists -- skipping" % dst)
-                else:
-                    try:
-                        os.symlink(src,dst)
-                    except:
-                        pass
+## def symlink_scripts(dir,kat,cat,col):
+##     """Symlink the scripts according to category."""
+##     for k in cat:
+##         for i in cat[k]:
+##             d = os.path.join(dir,k.capitalize(),i.capitalize())
+##             if not os.path.exists(d):
+##                 os.makedirs(d)
+##             ki = '%s/%s' % (k,i)
+##             for f in col[ki]:
+##                 fn = f+'.py'
+##                 src = "../../%s" % fn
+##                 dst = os.path.join(d,fn)
+##                 if os.path.exists(dst):
+##                     GD.debug("Path %s already exists -- skipping" % dst)
+##                 else:
+##                     try:
+##                         os.symlink(src,dst)
+##                     except:
+##                         pass
                 
 # End

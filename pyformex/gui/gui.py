@@ -650,9 +650,8 @@ See Help->License or the file COPYING for details.
         for title,dirname in scriptdirs:
             GD.debug("Loading script dir %s" % dirname)
             if os.path.exists(dirname):
-                catalog = title.lower() in GD.cfg.get('gui/classify_scripts',[])
-                print "%s: catalog %s" % (title,catalog)
-                m = scriptsMenu.ScriptsMenu(title,dir=dirname,catalog=catalog,autoplay=True)
+                #top = title.lower() in GD.cfg.get('gui/classify_scripts',[])
+                m = scriptsMenu.ScriptsMenu(title,dir=dirname,autoplay=True)
                 scriptsmenu.insert_menu(m,before)
                 menus.append(m)   # Needed to keep m linked to a name !
 
