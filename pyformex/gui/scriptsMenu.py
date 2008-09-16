@@ -180,14 +180,51 @@ class ScriptsMenu(QtGui.QMenu):
             self.menus.append(m)
             
 
-    def loadFiles(self,files):
+    def getFiles(self):
+        """Get a list of scripts in self.dir"""
+        files = os.listdir(self.dir)
+        filtr = lambda s: s[0]!='.' and s[0]!='_'
+        files = filter(filtr,files)
+        if self.ext:
+            filtr = lambda s: s.endswith(self.ext)
+            files = filter(filtr,files)
+            n = len(self.ext)
+            files = [ f[:-n] for f in files ]
+
+        filtr = lambda s:utils.isPyFormex(self.fileName(s))
+        files = filter(filtr,files)
+
+        if self.max > 0 and len(files) > self.max:
+            files = files[:self.max]
+
+        files.sort()
+        return files
+
+ 
+    def filterFiles(self,files):
+        """Filter a list of scripts"""
+        filtr = lambda s:utils.isPyFormex(self.fileName(s))
+        files = filter(filtr,files)
+
+        if self.max > 0 and len(files) > self.max:
+            files = files[:self.max]
+
+        return files
+      
+
+    def loadFiles(self,files=None):
         """Load the script files in this menu"""
-        self.files = files
+        if files is None:
+            files = self.getFiles()
+
+        self.files = self.filterFiles(files)
+        
         if GD.options.debug:
             print "Found Scripts in %s" % self.dir
             print self.files
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
+        
         if self.dir:
             self.addSeparator()
             self.addAction('Run next script',self.runNext)
@@ -210,49 +247,34 @@ class ScriptsMenu(QtGui.QMenu):
                 mk = ScriptsMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     ki = '%s/%s' % (k,i)
-                    mi = ScriptsMenu(i,dir=self.dir,files=list(col[ki]),recursive=False,toplevel=False,autoplay=self.autoplay)
+                    mi = ScriptsMenu(i,dir=self.dir,files=col[ki],recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
                     mk.menus.append(mi)
                 self.addMenu(mk)
                 self.menus.append(mk)
+            self.files = []
             return True
         return False
 
 
     def load(self):
-        if self.files is None:
-            if self.loadCatalog():
+        if self.dir is None:
+            self.loadFiles(self.files)
+
+        else:
+            if self.files is None:
+                self.loadCatalog()
+
+            if self.recursive:
+                self.loadSubmenus()
+
+            if self.files or self.files is None:
+                self.loadFiles(self.files)
+
+            if self.toplevel:
                 self.addAction('Classify scripts',self._classify)
                 self.addAction('Reload scripts',self.reload)
-                return
-            
-            files = os.listdir(self.dir)
-            filtr = lambda s: s[0]!='.' and s[0]!='_'
-            files = filter(filtr,files)
-            if self.ext:
-                filtr = lambda s: s.endswith(self.ext)
-                files = filter(filtr,files)
-                n = len(self.ext)
-                files = [ f[:-n] for f in files ]
-            files.sort()
-        else:
-            files = self.files
 
-        filtr = lambda s:utils.isPyFormex(self.fileName(s))
-        files = filter(filtr,files)
-       
-        if self.max > 0 and len(files) > self.max:
-            files = files[:self.max]
-
-        if self.recursive:
-            self.loadSubmenus()
-
-        if files:
-            self.loadFiles(files)
-
-        if self.toplevel:
-            self.addAction('Classify scripts',self._classify)
-            self.addAction('Reload scripts',self.reload)
 
 
     def run(self,action):
@@ -335,8 +357,10 @@ class ScriptsMenu(QtGui.QMenu):
         This is only available if a directory path was specified and
         no files.
         """
+        GD.debug("RELOADING THIS MENU")
         if self.dir:
             self.clear()
+            self.menus = []
             self.files = None
             self.load()
 
@@ -355,12 +379,12 @@ class ScriptsMenu(QtGui.QMenu):
             a.setText(f)
 
 
-    def classify(self,symlink=False):
+    def classify(self):
         """Classify the files in submenus according to keywords."""
         kat = ['all','level','topics','techniques']
         cat = dict([ (k,set()) for k in kat])
         col = {'all':set()}
-        for f in self.files:
+        for f in self.filterFiles(self.getFiles()):
             col['all'].update([f])
             fn = self.fileName(f)
             d = scriptKeywords(fn)
@@ -377,14 +401,8 @@ class ScriptsMenu(QtGui.QMenu):
                         col[ki] = set()
                     col[ki].update([f])
 
-##         cat = dict((k,list(cat[k])) for k in kat)
-##         for k in cat:
-##             cat[k].sort()
-
         cat = sortSets(cat)
         col = sortSets(col)
-##         if symlink:
-##             symlink_scripts(self.dir,kat,cat,col)
             
         return kat,cat,col
 
@@ -393,28 +411,8 @@ class ScriptsMenu(QtGui.QMenu):
         """Classify, symlink and reload the scripts"""
         if self.dir:
             f = os.path.join(self.dir,catname)
-            s = "kat = %r\ncat = %r\ncol = %r\n" % self.classify(False)
+            s = "kat = %r\ncat = %r\ncol = %r\n" % self.classify()
             file(f,'w').writelines(s)
-
-
-## def symlink_scripts(dir,kat,cat,col):
-##     """Symlink the scripts according to category."""
-##     for k in cat:
-##         for i in cat[k]:
-##             d = os.path.join(dir,k.capitalize(),i.capitalize())
-##             if not os.path.exists(d):
-##                 os.makedirs(d)
-##             ki = '%s/%s' % (k,i)
-##             for f in col[ki]:
-##                 fn = f+'.py'
-##                 src = "../../%s" % fn
-##                 dst = os.path.join(d,fn)
-##                 if os.path.exists(dst):
-##                     GD.debug("Path %s already exists -- skipping" % dst)
-##                 else:
-##                     try:
-##                         os.symlink(src,dst)
-##                     except:
-##                         pass
+            self.reload()
                 
 # End

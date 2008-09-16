@@ -12,7 +12,7 @@
 """Lima examples
 
 level = 'normal'
-topics = ['illustrations']
+topics = ['illustration']
 techniques = ['dialog','lima']
 
 """

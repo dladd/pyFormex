@@ -13,7 +13,7 @@
 
 level = 'advanced'
 topics = ['geometry','surface']
-techniques = ['dialog', 'persistance', 'colors']
+techniques = ['dialog', 'persistence', 'colors']
 
 """
 

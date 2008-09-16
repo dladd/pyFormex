@@ -467,6 +467,7 @@ class GUI(QtGui.QMainWindow):
 
 
 
+
 def xwininfo(windowid):
     """Returns the X window info parsed as a dict.
 
@@ -650,10 +651,14 @@ See Help->License or the file COPYING for details.
         for title,dirname in scriptdirs:
             GD.debug("Loading script dir %s" % dirname)
             if os.path.exists(dirname):
-                #top = title.lower() in GD.cfg.get('gui/classify_scripts',[])
                 m = scriptsMenu.ScriptsMenu(title,dir=dirname,autoplay=True)
                 scriptsmenu.insert_menu(m,before)
                 menus.append(m)   # Needed to keep m linked to a name !
+
+                # This is not good, because normal users do not have
+                # write access to the installed examples
+##                 if title.lower() in GD.cfg.get('gui/classify_scripts',[]):
+##                     m._classify()
 
 
     # Set interaction functions
@@ -708,5 +713,14 @@ See Help->License or the file COPYING for details.
     GD.debug("Exit main loop")
 
     return 0
+
+
+def classify_examples():
+    m = GD.gui.menu.item('Examples')
+    print m
+    print str(m.title())
+    
+        
+
 
 #### End
