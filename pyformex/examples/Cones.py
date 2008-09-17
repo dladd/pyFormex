@@ -102,6 +102,8 @@ ok = True # Enable single run on timeout
 while ok:
     res = dialog.getResult()
     if not res:
+        print "BAILING OUT"
+        print res
         exit()
 
     ok = not dialog.timedOut # Prevent endless loop on timeout
@@ -118,6 +120,7 @@ while ok:
     print H.p.shape
     clear()
     draw(H)
+    exit()
 
 exit()
 

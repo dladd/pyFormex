@@ -13,7 +13,7 @@
 
 level = 'advanced'
 topics = ['FEA']
-techniques = ['menu', 'dialog', persistence', 'colors'] 
+techniques = ['menu', 'dialog', 'persistence', 'colors'] 
 """
 
 from simple import rectangle

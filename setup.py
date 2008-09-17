@@ -87,7 +87,7 @@ files.
 
 setup(cmdclass={'build_ext': build_ext,'install':install},
       name='pyformex',
-      version='0.7.2-a3',
+      version='0.7.2-a4',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 
@@ -100,7 +100,7 @@ transformations.
       license='GNU General Public License (GPL)',
       ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
-      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','icons/pyformex*.png','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
+      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','icons/pyformex*.png','examples/scripts.cat','examples/*.db','examples/*.formex','examples/*/*','doc/*', 'manual/html/*', 'manual/images/*']},
       scripts=['pyformex/pyformex','pyformex-viewer','pyformex/lib/postabq'],
       data_files=DATA_FILES,
       classifiers=[

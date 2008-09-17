@@ -28,11 +28,16 @@ def extractKeyword(s):
       keyword = value
     a tuple (keyword,value) is returned; else None.
     """
+    print "LINE***%s***" % s
     i = s.find('=')
     if i >= 0:
-        key = s[:i].strip()
-        if len(key) > 0:
-            return key, eval(s[i+1:].strip())
+        try:
+            key = s[:i].strip()
+            if len(key) > 0:
+                return key, eval(s[i+1:].strip())
+        except:
+            GD.debug("Error processing keywords %s" % s.strip('\n'))
+            pass
     return None
 
     

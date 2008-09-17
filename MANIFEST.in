@@ -9,6 +9,7 @@ include pyformex/lib/Makefile.in
 include pyformex/lib/configure
 include pyformex/lib/configure_py
 include pyformex/lib/postabq.c
+include pyformex/examples/scripts.cat
 include pyformex/examples/*.db
 include pyformex/examples/*.formex
 include pyformex/examples/Analysis/[A-Z]*.py

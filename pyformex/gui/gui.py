@@ -509,6 +509,54 @@ def quit():
         GD.app.exit()
 
 
+def createScriptMenu():
+    """Create the menu(s) with pyFormex scripts
+
+    The default is to create an entry in the toplevel menu with
+    all the examples distributed with pyFormex. The user can add his
+    own script directories through the configuration settings.
+    """
+    menus = []
+    # Create a copy to leave the cfg unchanged!
+    scriptdirs = [] + GD.cfg['scriptdirs']
+    # Fill in missing default locations : this enables the user
+    # to keep the pyFormex installed examples in his config
+    knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
+    for i,item in enumerate(scriptdirs):
+        if not item[1] and item[0].lower() in knownscriptdirs:
+            scriptdirs[i] = (item[0],knownscriptdirs[item[0].lower()])
+
+    if GD.cfg.get('gui/separate_script_dirs',False):
+        # This should create separate menus for all scriptdirs
+        # But has not been implemented yet
+        pass
+    else:
+        # The default is to collect all scriptdirs in a single main menu
+        if len(scriptdirs) > 1:
+            scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
+            before = GD.gui.menu.item('help').menuAction()
+            GD.gui.menu.insertMenu(before,scriptsmenu)
+            before = None
+        else:
+            scriptsmenu = GD.gui.menu
+            before = scriptsmenu.itemAction('help')
+
+        for title,dirname in scriptdirs:
+            GD.debug("Loading script dir %s" % dirname)
+            if os.path.exists(dirname):
+                m = scriptsMenu.ScriptsMenu(title,dir=dirname,autoplay=True)
+                scriptsmenu.insert_menu(m,before)
+                menus.append(m)   # Needed to keep m linked to a name !
+
+                # This is not good, because normal users do not have
+                # write access to the installed examples
+##                 if title.lower() in GD.cfg.get('gui/classify_scripts',[]):
+##                     m._classify()
+
+
+    return menus
+
+
 def runApp(args):
     """Create and run the qt application."""
     #
@@ -623,42 +671,8 @@ See Help->License or the file COPYING for details.
         filemenu.insertMenu(before,GD.gui.history)
 
 
-    # Create the menu(s) with pyFormex examples
-    menus = []
-    scriptdirs = GD.cfg['scriptdirs']
-
-    # Fill in missing default locations : this enables the user
-    # to keep the pyFormex installed examples in his config
-    knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
-    for i,item in enumerate(scriptdirs):
-        if not item[1] and item[0].lower() in knownscriptdirs:
-            scriptdirs[i] = (item[0],knownscriptdirs[item[0].lower()])
-
-    if GD.cfg.get('gui/separate_script_dirs',False):
-        # This should create separate menus for all scriptdirs
-        pass
-    else:
-        # The default is to collect all scriptdirs in a single main menu
-        if len(scriptdirs) > 1:
-            scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
-            before = GD.gui.menu.item('help').menuAction()
-            GD.gui.menu.insertMenu(before,scriptsmenu)
-            before = None
-        else:
-            scriptsmenu = GD.gui.menu
-            before = scriptsmenu.itemAction('help')
-
-        for title,dirname in scriptdirs:
-            GD.debug("Loading script dir %s" % dirname)
-            if os.path.exists(dirname):
-                m = scriptsMenu.ScriptsMenu(title,dir=dirname,autoplay=True)
-                scriptsmenu.insert_menu(m,before)
-                menus.append(m)   # Needed to keep m linked to a name !
-
-                # This is not good, because normal users do not have
-                # write access to the installed examples
-##                 if title.lower() in GD.cfg.get('gui/classify_scripts',[]):
-##                     m._classify()
+    # Script menu
+    scriptmenu = createScriptMenu()
 
 
     # Set interaction functions
