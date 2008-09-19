@@ -1,19 +1,26 @@
-# 	-*- html -*-
 restindex	
     crumb: Developer
-    format: html
+    format: rest
     page-title: pyFormex Developer
     encoding: utf-8
     output-encoding: None
+    initialheaderlevel: 2
 /restindex
   
   
-  <h2>Developer</h2>
+Developer
+---------
   
-  <ul>
-    <li><a href="http://developer.berlios.de/projects/pyformex/">Summary</a></li>
-    <li><a href="http://developer.berlios.de/svn/?group_id=2717">SVN</a></li>
-    <li><a href="http://developer.berlios.de/project/showfiles.php?group_id=2717">Releases</a></li>
-    <li><a href="http://developer.berlios.de/forum/?group_id=2717">Forums</a></li>
-    <li><a href="http://developer.berlios.de/bugs/?group_id=2717">Report bugs</a></li>
-  </ul>
+.. _`Summary`: http://developer.berlios.de/projects/pyformex/
+.. _`SVN`: http://developer.berlios.de/svn/?group_id=2717
+.. _`Releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
+.. _`Forums`: http://developer.berlios.de/forum/?group_id=2717
+.. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
+
+
+- `Summary`_
+- `SVN`_
+- `Releases`_
+- `Forums`_
+- `Bug tracker`_
+

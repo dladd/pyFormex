@@ -1,0 +1,22 @@
+restindex	
+    crumb: Support
+    format: rest
+    page-title: pyFormex Support
+    encoding: utf-8
+    output-encoding: None
+    initialheaderlevel: 2
+/restindex
+  
+  
+Support
+-------
+
+If you need help with the installation or use of pyFormex, or if you want to
+discuss existing features or request new ones, the best way is to use the
+pyFormex `Forums`_.
+
+If you have a problem that looks like a malfunction or a bug in pyFormex, you can report it on the `Bug tracker`_.
+
+.. _`Forums`: http://developer.berlios.de/forum/?group_id=2717
+.. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
+
