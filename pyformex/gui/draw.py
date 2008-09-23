@@ -102,19 +102,23 @@ def askItems(items,caption=None,**kargs):
     Input is a list of input items (basically [key,value] pairs).
     See the widgets.InputDialog class for complete description of the
     available input items.
+
+    The remaining arguments are keyword arguments that are passed to the
+    InputDialog.getResult method.
     A timeout (in seconds) can be specified to have the input dialog
     interrupted automatically.
 
     Return a dictionary with the results: for each input item there is a
-    (key,value) pair.
-
-    The remaining arguments are keyword arguments that are passed to the
-    InputDialog.getResult method.
+    (key,value) pair. Returns an empty dictionary if the dialog was canceled.
+    Sets the dialog timeout and accepted status in global variables.
     """
     if type(items) == dict:
         items = items.items()
     w = widgets.InputDialog(items,caption)
-    return w.getResult(**kargs)
+    res = w.getResult(**kargs)
+    GD.dialog_timeout = w.timedOut
+    GD.dialog_accepted = w.accepted
+    return res
 
 
 def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):

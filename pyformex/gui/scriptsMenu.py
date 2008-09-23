@@ -78,11 +78,11 @@ def scriptKeywords(fn,keyw=None):
 
 def sortSets(d):
     """Turn the set values in d into sorted lists."""
-    d = dict((k,list(d[k])) for k in d)
     for k in d:
-        d[k].sort()
-    return d
-    
+        if type(d[k]) == set:
+            d[k] = list(d[k])
+            d[k].sort()
+  
 
 
 class ScriptsMenu(QtGui.QMenu):
@@ -252,7 +252,7 @@ class ScriptsMenu(QtGui.QMenu):
                 mk = ScriptsMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     ki = '%s/%s' % (k,i)
-                    mi = ScriptsMenu(i,dir=self.dir,files=col[ki],recursive=False,toplevel=False,autoplay=self.autoplay)
+                    mi = ScriptsMenu(i.capitalize(),dir=self.dir,files=col[ki],recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
                     mk.menus.append(mi)
                 self.addMenu(mk)
@@ -278,6 +278,7 @@ class ScriptsMenu(QtGui.QMenu):
 
             if self.toplevel:
                 self.addAction('Classify scripts',self._classify)
+                self.addAction('Remove catalog',self._unclassify)
                 self.addAction('Reload scripts',self.reload)
 
 
@@ -388,26 +389,28 @@ class ScriptsMenu(QtGui.QMenu):
         """Classify the files in submenus according to keywords."""
         kat = ['all','level','topics','techniques']
         cat = dict([ (k,set()) for k in kat])
+        cat['level'] = [ 'beginner', 'normal', 'advanced' ]
         col = {'all':set()}
         for f in self.filterFiles(self.getFiles()):
             col['all'].update([f])
             fn = self.fileName(f)
             d = scriptKeywords(fn)
             for k,v in d.items():
-                if k == 'level':
-                    v = [v]
                 if not k in kat:
                     GD.debug("Skipping unknown keyword %s in script %s" % (k,fn))
                     continue
-                cat[k].update(v)
+                if k == 'level':
+                    v = [v]
+                else:
+                    cat[k].update(v)
                 for i in v:
                     ki = '%s/%s' % (k,i)
                     if not ki in col.keys():
                         col[ki] = set()
                     col[ki].update([f])
 
-        cat = sortSets(cat)
-        col = sortSets(col)
+        sortSets(cat)
+        sortSets(col)
             
         return kat,cat,col
 
@@ -419,5 +422,14 @@ class ScriptsMenu(QtGui.QMenu):
             s = "kat = %r\ncat = %r\ncol = %r\n" % self.classify()
             file(f,'w').writelines(s)
             self.reload()
-                
+
+
+    def _unclassify(self):
+        """Remove the catalog and reload the scripts unclassified"""
+        if self.dir:
+            f = os.path.join(self.dir,catname)
+            if os.path.exists(f):
+                os.remove(f)
+                self.reload()
+            
 # End

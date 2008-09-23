@@ -39,7 +39,7 @@ def nice():
 
 m = 20
 n = 10
-while True:
+while not GD.dialog_timeout:
     res = askItems([('m',m,'slider',{'min':3,'max':72}),
                     ('n',n,'slider',{'min':3,'max':36})
                     ])

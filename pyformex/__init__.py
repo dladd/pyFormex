@@ -73,6 +73,11 @@ def debugt(s):
 canPlay = False
 scriptName = None
 
+# Output status of the draw.askItems() function
+dialog_timeout = False
+dialog_accepted = False
+
+
 def savePreferences():
     """Save the preferences.
 
