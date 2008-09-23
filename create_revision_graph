@@ -2,11 +2,12 @@
 #
 # Create a pyFormex revision graph
 #
-URL=$(svn info | grep 'URL:' | sed 's|.*//||')
+URL=$(svn info | grep 'URL:' | sed 's|.*//||;s|.*@||')
 
 [ "$URL" = "svn.berlios.de/svnroot/repos/pyformex/trunk" ] || {
-  echo "This script should be executed in the pyformex checkout directory"
-  exit
+    echo "URL: $URL"
+    echo "This script should be executed in the pyformex checkout directory"
+    exit
 }
 
 REV=$(svn info | gawk '/Revision:/{print $2}')

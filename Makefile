@@ -58,7 +58,7 @@ FTPLOCAL=bumps:/home/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
-.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version revision tag
+.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version revision tag register
 
 ############ Creating Distribution ##################
 
@@ -136,6 +136,10 @@ publocal:
 
 pub:
 	rsync -lt ${PKGDIR}/${PKGVER} ${PKGDIR}/${LATEST} ${FTPPYFORMEX}
+
+# Register with the python package index
+register:
+	python setup.py register
 
 # Tag the release in the svn repository
 tag:

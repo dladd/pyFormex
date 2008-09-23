@@ -63,7 +63,7 @@ Create a distribution
   svn up
   make dist
 Put the file on berlios ftp server
-  ftp ftp.berlios.de
+  ftp -p ftp.berlios.de
   name: ftp (anoniem)
   cd incoming
   lcd dist
@@ -88,6 +88,8 @@ Make the release available on Berlios FTP server
   make pub
 Make the release available on our local FTP server
   make publocal
+Register with the python package index
+  make register
 Bump the RELEASE and VERSION variables in the file RELEASE, then
   make version
   svn ci -m 'Bump version after release'

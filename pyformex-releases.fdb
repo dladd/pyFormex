@@ -1,4 +1,10 @@
-# $Id: $
+# $Id$
+
+release
+  tag = 0.7.2
+  date = 2008-09-23
+  size = 1222304
+  rev = 805
 
 release
   tag = 0.7.1
