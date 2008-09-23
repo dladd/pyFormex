@@ -115,7 +115,8 @@ class GUI(QtGui.QMainWindow):
         self.statusbar = self.statusBar()
         self.curproj = widgets.ButtonBox('Project:',['None'],[fileMenu.openProject])
         self.curfile = widgets.ButtonBox('Script:',['None'],[fileMenu.openScript])
-            
+        self.canPlay = False
+        
         #cf = QtGui.QWidget()
         #hl = QtGui.QHBoxLayout()
         #hl.setSpacing(0)
@@ -359,11 +360,11 @@ class GUI(QtGui.QMainWindow):
         else:
             filename = GD.cfg.get('curfile','')
         if filename:
-            GD.canPlay = utils.isPyFormex(filename)
+            self.canPlay = utils.isPyFormex(filename)
             self.curfile.setText(os.path.basename(filename))
-            self.actions['Play'].setEnabled(GD.canPlay)
-            self.actions['Step'].setEnabled(GD.canPlay)
-            if GD.canPlay:
+            self.actions['Play'].setEnabled(self.canPlay)
+            self.actions['Step'].setEnabled(self.canPlay)
+            if self.canPlay:
                 icon = 'ok'
             else:
                 icon = 'notok'

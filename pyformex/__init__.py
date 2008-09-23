@@ -27,7 +27,6 @@ app = None         # the Qapplication
 gui = None         # the QMainWindow
 canvas = None      # the OpenGL Drawing widget
 board = None       # the message board
-_gui_ = None
 
 # set start date/time
 import time,datetime
@@ -43,6 +42,12 @@ refcfg = None      # the reference configuration
 preffile = None    # the file where current configuration will be saved
 
 PF = {}            # globals that will be offered to scripts
+    
+scriptName = None
+
+# Output status of the draw.askItems() function
+dialog_timeout = False
+dialog_accepted = False
 
 
 # define last rescue versions of message, warning and debug
@@ -66,16 +71,6 @@ def debug(s):
 def debugt(s):
     if options.debug:
         print "%.3f: %s" % (time.time(),str(s))
-    
-
-# we couldn't put these in gui.py because we can't import gui in other modules
-
-canPlay = False
-scriptName = None
-
-# Output status of the draw.askItems() function
-dialog_timeout = False
-dialog_accepted = False
 
 
 def savePreferences():

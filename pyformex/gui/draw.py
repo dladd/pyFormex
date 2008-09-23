@@ -280,10 +280,9 @@ def play(fn=None,step=False):
     This function does nothing if no file is passed or no current
     file was set.
     """
-    
     global stepmode
     if not fn:
-        if GD.canPlay:
+        if GD.gui.canPlay:
             fn = GD.cfg['curfile']
         else:
             return

@@ -58,7 +58,7 @@ FTPLOCAL=bumps:/home/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
-.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version tag
+.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version revision tag
 
 ############ Creating Distribution ##################
 
@@ -91,6 +91,9 @@ website:
 
 # Set a new version
 
+revision:
+	sed -i "s|Rev:.*|Rev: $$(svnversion) $$\"|" pyformex/__init__.py
+
 version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac
 
 ${PYFORMEXDIR}/__init__.py: RELEASE
@@ -122,7 +125,7 @@ dist: ${LATEST}
 ${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKGVER}: version MANIFEST.in
+${PKGDIR}/${PKGVER}: revision version MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	rm -f MANIFEST
 	python setup.py sdist

@@ -109,6 +109,8 @@ Scripting
 
 - showText() displays a text and waits for user action
 - closeGui() starts the GUI
+- the output status of the askItem() dialog can be checked via
+  GD.accepted and GD.timeout
 
 
 Plugins
