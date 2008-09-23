@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
+## This file is part of pyFormex 0.7.2 Release Tue Sep 23 16:18:43 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -28,7 +28,6 @@ def extractKeyword(s):
       keyword = value
     a tuple (keyword,value) is returned; else None.
     """
-    print "LINE***%s***" % s
     i = s.find('=')
     if i >= 0:
         try:

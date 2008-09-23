@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: Sphere_surface.py 154 2006-11-03 19:08:25Z bverheg $
 ##
-## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
+## This file is part of pyFormex 0.7.2 Release Tue Sep 23 16:18:43 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 

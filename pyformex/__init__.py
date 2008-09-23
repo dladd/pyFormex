@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-## This file is part of pyFormex 0.7.1 Release Sat May 24 13:26:21 2008
+## This file is part of pyFormex 0.7.2 Release Tue Sep 23 16:18:43 2008
 ## pyFormex is a Python implementation of Formex algebra
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
@@ -15,7 +15,7 @@ Currently, this does nothing. The file should be kept though, because it is
 needed to flag this directory as a Python package.
 """
 
-__version__ = "0.7.2-a4"
+__version__ = "0.7.2"
 __revision__ = "$Rev$"
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
