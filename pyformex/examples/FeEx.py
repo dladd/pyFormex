@@ -38,7 +38,13 @@ def deleteAll():
     parts = []
     femodels = []
     model = None
+    reset()
+
+def reset():
     clear()
+    smoothwire()
+    transparent()
+    lights(False)
 
 
 x0,y0 = 0.,0.
@@ -157,6 +163,9 @@ def setMaterial():
                 print k,e
                 PDB.elemProp(set=e,eltype='CPS4',section=ElemSection(section=section))
 
+def deleteAllMats():
+    PDB.delProp(attr='eltype')
+
 
 xcon = True
 ycon = True
@@ -181,6 +190,10 @@ def setBoundary():
                 print nodeset
                 print [xcon,ycon,0,0,0,0]
                 PDB.nodeProp(set=nodeset,bound=[xcon,ycon,0,0,0,0])
+
+def deleteAllBcons():
+    PDB.delProp(attr='bound')
+
         
 xload = 0.0
 yload = 0.0
@@ -201,12 +214,20 @@ def setLoad():
             if len(nodeset) > 0:
                 PDB.nodeProp(set=nodeset,cload=[xload,yload,0.,0.,0.,0.])
 
+def deleteAllLoads():
+    PDB.getProp(attr='cload')
+        
+
 def printModel():
     print "model:",model
 
 def printDB():
-    print PDB.nprop
-    print PDB.eprop
+    print "\n*** Node properties:"
+    for p in PDB.nprop:
+        print p
+    print "\n*** Element properties:"
+    for p in PDB.eprop:
+        print p
 
 
 ############################# Abaqus ##############################
@@ -453,12 +474,15 @@ def create_menu():
         ("&Show Calpy Numbers",drawCalpy),
         ("&Print model",printModel),
         ("---",None),
-        ("&Set material properties",setMaterial),
-        ("&Set boundary conditions",setBoundary),
-        ("&Set loading conditions",setLoad),
+        ("&Add material properties",setMaterial),
+        ("&Add boundary conditions",setBoundary),
+        ("&Add loading conditions",setLoad),
         ("&Print property database",printDB),
+        ("&Delete all material properties",deleteAllMats),
+        ("&Delete all boundary conditions",deleteAllBcons),
+        ("&Delete all loading conditions",deleteAllLoads),
         ("---",None),
-        ("&Create ABaqus input file",createAbaqusInput),
+        ("&Create Abaqus input file",createAbaqusInput),
         ("&Run Calpy analysis",runCalpyAnalysis),
         ("---",None),
         ("&Import all",importAll),
@@ -494,9 +518,6 @@ if __name__ == "draw":
 
     reload_menu()
     deleteAll()
-    smoothwire()
-    transparent()
-    lights(False)
     
 # End
 
