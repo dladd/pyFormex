@@ -9,17 +9,15 @@
 ## version 2 or later (see file COPYING for details)
 ##
 
-pyFormex 0.7.2  Releasenotes 
-============================
+pyFormex 0.8  Releasenotes
+==========================
 
-This is a collection of the most prominent changes in pyFormex 0.7.2
-compared to the previous release 0.7.1
+This is a collection of the most prominent changes in pyFormex 0.8
+compared to the previous release 0.7.2
 
 
 Installation
 ------------
-Installation now also works with Python 2.5 (previously only 2.4).
-This has been tested on Debian(Lenny) and Ubuntu.
 
 
 Command line
@@ -29,70 +27,18 @@ Command line
 Configuration
 -------------
 
-- A default user configuration file is created if it is missing.
-- The 'scriptdirs' configuration item is no longer overwritten.
 
 
 Core
 ----
 
-- globaldata.py has been removed. The global data are now in the __init__.py
-  and are initilized when module pyformex is imported
-
-- Coords:
-  
-  . scale() now supports a single scale value and axis numbers
-  . map1 now supports mixing axes, e.g. y = func(x)
-  . superSpherical() is a new and powerful transformation
-  . projectOnCylinder() does what it says
-  . split() splits up a Coords array
-
-- Formex:
-  
-  . added superSpherical transformation
-  . accept a single point as Formex initialisation data
-  . acccept one-dimensional coordinate data as Formex initialisation
-
-- simple.py
-  
-  . rectangle has an optional 'diag' argument to create triangles
-  . rectangle has an optional 'bias' argument to create skewed rectangles
+- CascadingDict has been renemaed to CDict
 
   
 
 Gui
 ---
 
-- Many optimizations in the picking functions
-- Input Dialogs now have customizable action buttons
-- Help/Detected Software now displays correct Revision number
-- File/Create New Script loads a script template into the editor
-
-- widgets.py
-
-  . added Slider widgets
-  . added Table widgets
-  . textbox() function
-  . InputDialog.getResults() returns a single value: a dictionary with the
-    values in the dialog if accepted, an empty dictionary if rejected.
-  . The timeout of the InputDialog.getResults() function can result in
-    either an accept or a reject signal.
-  . The accept and timeout status of an InputDialog can be consulted after
-    the widget was closed.
-
-- ScriptsMenu:
-
-  . The scripts loading procedure in the ScriptsMenu widget has been changed
-    to account for future enhancements, but is largely compatible with the old
-    use in the GUI:
-
-    + ScriptsMenu(files=somepath) should be replaced with ScriptsMenu(dir=somepath)
-    + ScriptsMenu(files=[list of files]) remains
-  
-  . The ScriptsMenu now has an option to classify all the scripts in a
-    directory according to some keywords contained in the script's docstring.
-    The classification can then be stored in appropriate symlinks and on reload
-    the classified scripts will be presented in the menu.
  
 
 Drawing
@@ -107,36 +53,18 @@ Drawing
 Scripting
 ---------
 
-- showText() displays a text and waits for user action
-- closeGui() starts the GUI
-- the output status of the askItem() dialog can be checked via
-  GD.accepted and GD.timeout
 
 
 Plugins
 -------
 
-Most of the plugins have changed substantially, and until they stabilized
-somewhat, we do not give details on the numerous changes.
-
-- isopar.py: a new plugin providing a framework for isoparametric 
-  transformations of coordinate sets
 
 
 Examples
 --------
 
-Examples are now classified in the menu, according to level, topics and techniques.
-
-- Added the SuperEgg example
-- Added the Cones example
-- Added the ConnectMesh example
-- Added the Light example
-- Added the Projection example
-- Added the Tori example
-- Added the SuperShape example
-- Added the Bezier example
-- Removed the (unfinished) DoubleDiamatic example
+- Analysis examples have been moved into the global example directory and are
+  classified by the keywords.
 
 
 Manual

@@ -378,33 +378,7 @@ class PropertyDB(Dict):
         if isinstance(aDict,SectionDB):
             self.sect = aDict
             ElemSection.secDB = aDict
-
-
-    def getProp(self,kind='',rec=None,tag=None,attr=[]):
-        """Return all properties of type kind matching tag and having attr.
-
-        kind is either '', 'n', 'e' or 'm'
-        If rec is given, it is a list of record numbers or a single number.
-        If a tag or a list of tags is given, only the properties having a
-        matching tag attribute are returned.
-        If a list of attibutes is given, only the properties having those
-        attributes are returned.
-        """
-        prop = getattr(self,kind+'prop')
-        if rec is not None:
-            if type(rec) != list:
-                rec = [ rec ]
-            rec = [ i for i in rec if i < len(prop) ]
-            prop = [ prop[i] for i in rec ]
-        if tag is not None:
-            if type(tag) != list:
-                tag = [ tag ]
-            tag = map(str,tag)   # tags are always converted to strings!
-            prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tag ]
-        for a in attr:
-            prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
-        return prop
-
+        
 
     def Prop(self,kind='',tag=None,set=None,setname=None,**kargs):
         """Create a new property, empty by default.
@@ -446,6 +420,69 @@ class PropertyDB(Dict):
         
         prop.append(d)
         return d
+
+
+    # THIs should maybe change to operate on the property keys
+    # and finally return the selected keys or proiperties?
+
+    def getProp(self,kind='',rec=None,tag=None,attr=[],delete=False):
+        """Return all properties of type kind matching tag and having attr.
+
+        kind is either '', 'n', 'e' or 'm'
+        If rec is given, it is a list of record numbers or a single number.
+        If a tag or a list of tags is given, only the properties having a
+        matching tag attribute are returned.
+        If a list of attibutes is given, only the properties having those
+        attributes are returned.
+
+        If delete==True, the returned properties are removed from the database.
+        """
+        prop = getattr(self,kind+'prop')
+        if rec is not None:
+            if type(rec) != list:
+                rec = [ rec ]
+            rec = [ i for i in rec if i < len(prop) ]
+            prop = [ prop[i] for i in rec ]
+        if tag is not None:
+            if type(tag) != list:
+                tag = [ tag ]
+            tag = map(str,tag)   # tags are always converted to strings!
+            prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tag ]
+        for a in attr:
+            prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
+        if delete:
+            self.delete(prop,kind=kind)
+        return prop
+
+
+    def delete(self,plist,kind=''):
+        """Delete properties in list pdel from list plist."""
+        prop = getattr(self,kind+'prop')
+        if not type(plist) == list:
+            pdel = [ plist ]
+        for p in plist:
+            try:
+                prop.remove(p)
+            except:
+                print "Property: %s" % p
+                raise
+        self.sanitize(kind)
+        
+
+    def sanitize(self,kind):
+        """Sanitize the record numbers after deletion"""
+        prop = getattr(self,kind+'prop')
+        for i,p in enumerate(prop):
+            p.nr = i
+
+
+    def delProp(self,kind='',rec=None,tag=None,attr=[]):
+        """Delete properties.
+
+        This is equivalent to getProp() but the returned properties
+        are removed from the database.
+        """
+        return self.getProp(kind=kind,rec=rec,tag=tag,attr=attr,delete=True)
 
 
     def nodeProp(self,prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None):
@@ -569,8 +606,22 @@ if __name__ == "script" or  __name__ == "draw":
         if p.setname == 'green_elements':
             print p.nr,p.transparent
 
+    print "before"
+    for p in P.getProp():
+        print p
+
+    P.getProp(attr=['transparent'],delete=True)
+    P.delProp(attr=['color'])
+    pl = P.getProp(rec=[5,6])
+    print pl
+    P.delete(pl)
+
+    print "after"
+    for p in P.getProp():
+        print p
 
     exit()
+    
     Mat = MaterialDB(GD.cfg['pyformexdir']+'/examples/materials.db')
     Sec = SectionDB(GD.cfg['pyformexdir']+'/examples/sections.db')
     P.setMaterialDB(Mat)

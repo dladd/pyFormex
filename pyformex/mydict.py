@@ -224,15 +224,15 @@ class Dict(dict):
 _indent = 0  # number of spaces to indent in __str__ formatting
              # incremented by 2 on each level
 
-class CascadingDict(Dict):
+class CDict(Dict):
     """A cascading Dict: properties not in Dict are searched in all Dicts.
 
     This is equivalent to the Dict class, except that if a key is not found
-    and the CascadingDict has items with values that are themselves instances
-    of Dict or CascadingDict, the key will be looked up in those Dicts as well.
+    and the CDict has items with values that are themselves instances
+    of Dict or CDict, the key will be looked up in those Dicts as well.
 
     As you expect, this will make the lookup cascade into all lower levels
-    of CascadingDict's. The cascade will stop if you use a Dict.
+    of CDict's. The cascade will stop if you use a Dict.
     There is no way to guarantee in which order the (Cascading)Dict's are
     visited, so if multiple Dicts on the same level hold the same key,
     you should know yourself what you are doing.
@@ -244,16 +244,16 @@ class CascadingDict(Dict):
 
 
     def __repr__(self):
-        """Format the CascadingDict as a string.
+        """Format the CDict as a string.
 
         We use the format Dict({}), so that the string is a valid Python
         representation of the Dict.
         """
-        return "CascadingDict(%s)" % dict.__repr__(self)
+        return "CDict(%s)" % dict.__repr__(self)
 
     
     def __str__(self):
-        """Format a CascadingDict into a string."""
+        """Format a CDict into a string."""
         global _indent
         s = ""
         _indent += 2
@@ -281,11 +281,6 @@ class CascadingDict(Dict):
     def __setstate__(self,dict):
         self.update(dict)
     
-
-# A shorter alias
-
-CDict = CascadingDict
-
 
 if __name__ == '__main__':
 
@@ -332,8 +327,8 @@ if __name__ == '__main__':
     exec(Cr)
     show()
 
-    # now replace Dict with CascadingDict
-    Cr = Cr.replace('Dict','CascadingDict')
+    # now replace Dict with CDict
+    Cr = Cr.replace('Dict','CDict')
     exec(Cr)
     show()
     testpickle()

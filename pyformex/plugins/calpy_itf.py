@@ -72,9 +72,12 @@ def check(trypaths=None):
     except ImportError:
         pass
     
-    if not utils.hasModule('calpy',check=True):
+    if utils.hasModule('calpy',check=True):
+        return True
+    else:
         GD.warning("sys.path=%s\nSorry, I can not run this example, because you do not have calpy installed (at least not in a place where I can find it)." % sys.path)
-        exit()
+        return False
+ 
 
 
 if __name__ == "__main__":

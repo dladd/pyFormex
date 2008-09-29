@@ -23,23 +23,23 @@ from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
 
-myglobals = dict(
-    PDB = None,
-    parts = None,
-    femodels = None,
+
+# global data
+
+defaults = dict(
+    parts = [],
+    femodels = [],
     model = None,
-)
+    PDB = None,
+    )
+globals().update(defaults)
 
-globals().update(myglobals)
 
-def deleteAll():
-    global PDB,parts,femodels,model
-    PDB = PropertyDB()
-    parts = []
-    femodels = []
-    model = None
-    reset()
+def resetData():
+    data = defaults
+    globals().update(data)
 
+    
 def reset():
     clear()
     smoothwire()
@@ -47,6 +47,12 @@ def reset():
     lights(False)
 
 
+def deleteAll():
+    resetData()
+    reset()
+
+######################## parts ####################
+    
 x0,y0 = 0.,0.
 x1,y1 = 1.,1.
 nx,ny = 4,4
@@ -96,12 +102,15 @@ def drawParts():
     zoomAll()
 
 
+######################## de model ####################
+
 def createModel():
     """Merge all the parts into a Finite Element model."""
-    global model
+    global model,PDB
     model = Model(*mergeModels(femodels))
+    PDB = PropertyDB()
     drawModel()
-    export({'model':model})
+
 
 def drawModel(offset=0):
     """Draw the merged parts"""
@@ -114,6 +123,7 @@ def drawModel(offset=0):
     drawNumbers(Formex(model.nodes),color=red,offset=offset)
     [ drawNumbers(p) for p in parts ]
     zoomAll()
+
 
 def drawCalpy():
     """This should draw node numbers +1"""
@@ -131,9 +141,17 @@ def getPickedElems(K,p):
     if p in K.keys():
         return K[p]
     return []
+        
+
+def printModel():
+    print "model:",model
 
 
-################# Functions After merging ######################
+################# Add properties ######################
+
+
+def warn():
+   warning("You should first merge the parts!")
 
 
 section = {
@@ -164,14 +182,21 @@ def setMaterial():
                 PDB.elemProp(set=e,eltype='CPS4',section=ElemSection(section=section))
 
 def deleteAllMats():
-    PDB.delProp(attr='eltype')
+    PDB.delProp(kind='e',attr=['eltype'])
 
 
 xcon = True
 ycon = True
 
-def warn():
-    warning("You should first merge the parts!")
+
+## def merged():
+##     ok = model is not None
+##     if not ok:
+##         ok = ack("The parts should be merged first!\nShall I do this now for you?")
+##         if ok:
+            
+##     return notok
+
 
 def setBoundary():
     """Pick the points with boundary condition."""
@@ -192,7 +217,7 @@ def setBoundary():
                 PDB.nodeProp(set=nodeset,bound=[xcon,ycon,0,0,0,0])
 
 def deleteAllBcons():
-    PDB.delProp(attr='bound')
+    PDB.delProp(kind='n',attr=['bound'])
 
         
 xload = 0.0
@@ -215,11 +240,8 @@ def setLoad():
                 PDB.nodeProp(set=nodeset,cload=[xload,yload,0.,0.,0.,0.])
 
 def deleteAllLoads():
-    PDB.getProp(attr='cload')
-        
+    PDB.delProp(kind='n',attr=['cload'])
 
-def printModel():
-    print "model:",model
 
 def printDB():
     print "\n*** Node properties:"
@@ -262,7 +284,7 @@ def createAbaqusInput():
 
 ##############################################################################
 
-def runCalpyAnalysis(jobname=None,verbose=False):
+def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     """Create data for Calpy analysis module and run Calpy on the data.
 
     While we could write an analysis file in the Calpy format and then
@@ -281,6 +303,7 @@ def runCalpyAnalysis(jobname=None,verbose=False):
     import calpy
     calpy.options.optimize=True
     from calpy import femodel,fe_util,plane
+    from calpy.arrayprint import aprint
     ############################
 
     if model is None:
@@ -418,11 +441,56 @@ def runCalpyAnalysis(jobname=None,verbose=False):
     #print s
     print f
     v = Model.SolveSystem(s,f)
-    print "Displacements",v
+    if verbose:
+        print "Displacements",v
     print "Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime)
     displ = fe_util.selectDisplacements (v,bcon)
     print displ.shape
-    print displ
+    if verbose:
+        print displ
+
+    if flavia:
+        flavia.WriteMeshFile(jobname,"Quadrilateral",model.nnodel,coord,nodes,matnr)
+        res=flavia.ResultsFile(jobname)
+        
+    # compute stresses
+    for l in range(Model.nloads):
+        
+        print "Results for load case %d" %(l+1)
+        print "Displacements"
+        aprint(displ[:,:,l],header=['x','y'],numbering=True)
+
+        if flavia:
+            flavia.WriteResultsHeader(res,'"Displacement" "Elastic Analysis"',l+1,'Vector OnNodes')
+            flavia.WriteResults(res,displ[:,:,l])
+            
+        stresn = count = None
+        for i,e in enumerate(model.elems):
+            print "elem group %d" % i
+            print e.shape
+            stresg = Plane.StressGP (v[:,l],mats)
+            print stresg.shape
+            if verbose:
+                print "GP Stress\n", stresg
+            
+            strese = Plane.GP2Nodes(stresg)
+            print strese.shape
+            if verbose:
+                print "Nodal Element Stress\n", strese
+
+            stresn,count = Plane.NodalAcc(e,strese,stresn,count,Model.nnodes)
+
+        print stresn.shape
+        print count.shape
+        
+        if verbose:
+            print "Averaged Nodal Stress\n"
+            aprint(stresn,header=['sxx','syy','sxy'],numbering=True)
+                
+        if flavia:
+            flavia.WriteResultsHeader(res,'"Stress" "Elastic Analysis"',l+1,'Matrix OnNodes')
+            flavia.WriteResults(res,stresn)
+
     
     DB = FeResult()
     DB.nodes = model.nodes
@@ -437,6 +505,7 @@ def runCalpyAnalysis(jobname=None,verbose=False):
         d = zeros((Model.nnodes,3))
         d[:,:2] = displ[:,:,lc]
         DB.R['U'] = d
+        DB.R['S'] = stresn
     postproc_menu.setDB(DB)
     info("You can now use the postproc menu to display results")
     export({'FeResult':DB})
@@ -516,8 +585,9 @@ def reload_menu():
 
 if __name__ == "draw":
 
+    resetData()
+    reset()
     reload_menu()
-    deleteAll()
     
 # End
 
