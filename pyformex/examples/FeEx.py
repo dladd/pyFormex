@@ -26,26 +26,24 @@ from plugins import postproc_menu
 
 # global data
 
-defaults = dict(
-    parts = [],
-    femodels = [],
-    model = None,
-    PDB = None,
-    )
-globals().update(defaults)
+parts = None,
+femodels = None,
+model = None,
+PDB = None,
 
 
 def resetData():
-    data = defaults
-    globals().update(data)
-
+    global parts,femodels,model,PDB
+    parts = []
+    femodels = []
+    model = None
+    PDB = None
     
 def reset():
     clear()
     smoothwire()
     transparent()
     lights(False)
-
 
 def deleteAll():
     resetData()
@@ -465,24 +463,31 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             flavia.WriteResults(res,displ[:,:,l])
             
         stresn = count = None
-        for i,e in enumerate(model.elems):
+        i = 0
+        for e,P in zip(model.elems,PlaneGrp):
+            i += 1
+            P.debug = 1
             print "elem group %d" % i
             print e.shape
-            stresg = Plane.StressGP (v[:,l],mats)
+            stresg = P.StressGP (v[:,l],mats)
             print stresg.shape
             if verbose:
                 print "GP Stress\n", stresg
             
-            strese = Plane.GP2Nodes(stresg)
+            strese = P.GP2Nodes(stresg)
             print strese.shape
             if verbose:
                 print "Nodal Element Stress\n", strese
 
-            stresn,count = Plane.NodalAcc(e,strese,stresn,count,Model.nnodes)
-
+            print "Nodes",e+1
+            stresn,count = P.NodalAcc(e+1,strese,stresn,count,Model.nnodes)
+            print stresn,count
+            
         print stresn.shape
         print count.shape
-        
+        print "TOTAL",stresn,count
+        stresn /= count.reshape(-1,1)
+        print "AVG",stresn
         if verbose:
             print "Averaged Nodal Stress\n"
             aprint(stresn,header=['sxx','syy','sxy'],numbering=True)
@@ -499,7 +504,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     DB.elems = dict(enumerate(model.elems))
     DB.nelems = model.celems[-1]
     DB.Finalize()
-    print DB.elems
+    #print DB.elems
     for lc in range(Model.nloads):
         DB.Increment(lc,0)
         d = zeros((Model.nnodes,3))
@@ -517,8 +522,8 @@ def autoRun():
     createModel()
     nodenrs = arange(model.nodes.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
-    PDB.nodeProp(set=nodenrs[:5],bound=[1,1,0,0,0,0])
-    PDB.nodeProp(set=nodenrs[-5:],cload=[10.,0.,0.,0.,0.,0.])
+    PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
+    PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])
     runCalpyAnalysis('FeEx',verbose=True)
 
 
