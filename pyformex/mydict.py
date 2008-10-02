@@ -19,10 +19,10 @@ if the key is not found in the CascadingDict itself.
 Distributed under the GNU GPL
 """
 
-__all__ = [ 'Dict', 'CDict', 'CascadingDict' ]
+import copy
 
 
-def cascade(dic, key):
+def cascade(d, key):
     """Cascading lookup in a dictionary.
 
     This is equivalent to the dict lookup, except that when the key is
@@ -30,9 +30,9 @@ def cascade(dic, key):
     and the first matching key found is returned.
     """
     try:
-        return dict.__getitem__(dic,key)
+        return dict.__getitem__(d,key)
     except KeyError:
-        for v in dic.itervalues():
+        for v in d.itervalues():
             if isinstance(v,dict):
                 try:
                     return cascade(v,key)
@@ -40,6 +40,15 @@ def cascade(dic, key):
                     pass
         raise KeyError
 
+
+
+def returnNone(key):
+    """Always returns None."""
+    return None
+
+def raiseKeyError(key):
+    """Raise a KeyError."""
+    raise KeyError
 
 
 class Dict(dict):
@@ -55,7 +64,8 @@ class Dict(dict):
       same meaning.
     - Lookup of a nonexisting key/attribute does not automatically raise an
       error, but calls a _default_ lookup method which can be set by the user.
-      The deafult is to raise a KeyError, but a alternative is to return None.
+      The default is to raise a KeyError, but an alternative is to return
+      None or some other default value.
 
     There are a few caveats though:
     - Keys that are also attributes of the builtin dict type, can not be used
@@ -75,15 +85,15 @@ class Dict(dict):
          foo
     """
 
-    @staticmethod
-    def returnNone(key):
-        """Always returns None."""
-        return None
+##     @staticmethod
+##     def returnNone(key):
+##         """Always returns None."""
+##         return None
 
-    @staticmethod
-    def raiseKeyError(key):
-        """Raise a KeyError."""
-        raise KeyError
+##     @staticmethod
+##     def raiseKeyError(key):
+##         """Raise a KeyError."""
+##         raise KeyError
 
     def __init__(self,data={},default=None):
         """Create a new Dict instance.
@@ -94,7 +104,7 @@ class Dict(dict):
         """
         dict.__init__(self,data.items())
         if default is None:
-            default = Dict.raiseKeyError
+            default = raiseKeyError
         if not callable(default):
             raise ValueError,"'default' should be a callable function" 
         self.__dict__['_default_'] = default
@@ -204,22 +214,33 @@ class Dict(dict):
 
     def __deepcopy__(self,memo):
         """Create a deep copy of ourself."""
-        newdict = Dict(default=self._default_)
+        newdict = self.__class__(default=self._default_)
         for k,v in self.items():
             newdict[k] = copy.deepcopy(v,memo)
         return newdict
 
 
+##     def __getstate__(self):
+##         print self.items()
+##         return self.items()
+
+##     def __setstate__(self,dict):
+##         dict.__init__(dict)
+
+
+##     def __setstate__(self,dict):
+##         self.update(dict)
+
+
     def __getstate__(self):
-        print self.items()
-        return self.items()
-
-    def __setstate__(self,dict):
-        dict.__init__(dict)
+        d = copy.copy(self.__dict__)
+        d.update(self)
+        return d
 
 
-    def __setstate__(self,dict):
-        self.update(dict)
+    def __setstate__(self,d):
+        self.__dict__['_default_'] = d.pop('_default_')
+        self.update(d)
 
 
 _indent = 0  # number of spaces to indent in __str__ formatting
@@ -240,7 +261,7 @@ class CDict(Dict):
     """
 
 
-    def __init__(self,data={},default=Dict.returnNone):
+    def __init__(self,data={},default=returnNone):
         Dict.__init__(self,data,default)
 
 
@@ -276,11 +297,23 @@ class CDict(Dict):
             return self._default_(key)
 
 
-    def __getstate__(self):
-       return self.items()
 
-    def __setstate__(self,dict):
-        self.update(dict)
+##     def __getstate__(self):
+##        return self.items()
+
+##     def __setstate__(self,dict):
+##         self.update(dict)
+
+
+##     def __getstate__(self):
+##         d = copy.copy(self.__dict__)
+##         d.update(self)
+##         return d
+
+
+##     def __setstate__(self,d):
+##         self.__dict__['_default_'] = d.pop('_default_')
+##         self.update(d)
     
 
 if __name__ == '__main__':
@@ -312,17 +345,21 @@ if __name__ == '__main__':
         global C
         print "Test (un)pickle"
         f = file('test.pickle','w')
+        print type(C)
+        print C._default_
         pickle.dump(C,f)
         f.close()
         f = file('test.pickle','r')
         C = pickle.load(f)
+        print type(C)
+        print C._default_
         f.close()
-        show()
         
 
     C = Dict({'x':Dict({'a':1,'y':Dict({'b':5,'c':6})}),'y':Dict({'c':3,'d':4}),'d':0})
     show()
     testpickle()
+    show()
     
     # now exec this to check if we get the same
     exec(Cr)
@@ -333,6 +370,7 @@ if __name__ == '__main__':
     exec(Cr)
     show()
     testpickle()
+    show()
 
     # show some items
     print val("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
@@ -340,3 +378,31 @@ if __name__ == '__main__':
     print val("C.a,C.b,C.c,C.d,C.x.c")
     print val("C.e")
     
+
+    C = CDict({'a':'aa','d':{'a':'aaa','b':'bbb'}})
+    print C
+    print C['a']
+    print C['d']
+    print C['b']
+
+    D = copy.deepcopy(C)
+    print D
+    print D.__dict__
+    print "%s == %s" % (C['b'],D['b']) 
+
+    C = Dict({'a':'aa','d':{'a':'aaa','b':'bbb'}})
+    print C
+    print C['a']
+    print C['d']
+    try:
+        print C['b']
+        print "This should provoke a KeyError, so you should not see this text"
+    except:
+        print "Correctly received the intended KeyError"
+
+    D = copy.deepcopy(C)
+    print D
+    print D.__dict__
+
+# End
+
