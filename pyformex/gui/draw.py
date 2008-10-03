@@ -1254,7 +1254,9 @@ def hideNumbers():
     GD.canvas.numbers_visible = False
 
 
-edit_modes = ['undo', 'clear']
+LineDrawing = None
+edit_modes = ['undo', 'clear','close']
+
 
 def set_edit_mode(i):
     """Set the drawing edit mode."""
@@ -1262,25 +1264,26 @@ def set_edit_mode(i):
         GD.canvas.edit_drawing(edit_modes[i])
 
 
-def drawLinesInter(single=False,func=None):
+def drawLinesInter(mode ='line',single=False,func=None):
     """Enter interactive drawing mode and return the line drawing.
 
     See viewport.py for more details.
     This function differs in that it provides default displaying
     during the drawing operation and a button to stop the drawing operation.
 
-    The drawing can be edited using the methods 'undo' and 'clear', which
+    The drawing can be edited using the methods 'undo', 'clear' and 'close', which
     are presented in a combobox.
     """
-    global LineDrawing
-    LineDrawing = None
+    if GD.canvas.drawing_mode is not None:
+        warning("You need to finish the previous drawing operation first!")
+        return
     if func == None:
         func = showLineDrawing
     drawing_buttons = widgets.ButtonBox('Drawing:',['Cancel','OK'],[GD.canvas.cancel_drawing,GD.canvas.accept_drawing])
     GD.gui.statusbar.addWidget(drawing_buttons)
     edit_combo = widgets.ComboBox('Edit:',edit_modes,set_edit_mode)
     GD.gui.statusbar.addWidget(edit_combo)
-    lines = GD.canvas.drawLinesInter(single,func)
+    lines = GD.canvas.drawLinesInter(mode,single,func)
     GD.gui.statusbar.removeWidget(drawing_buttons)
     GD.gui.statusbar.removeWidget(edit_combo)
     return lines
@@ -1295,9 +1298,8 @@ def showLineDrawing(L):
     global LineDrawing
     if LineDrawing:
         undecorate(LineDrawing)
-    if L.size == 0:
         LineDrawing = None
-    else:
+    if L.size != 0:
         LineDrawing = decors.LineDrawing(L,color='yellow',linewidth=3)
         decorate(LineDrawing)
 

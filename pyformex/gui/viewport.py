@@ -210,6 +210,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             'edge'   : self.pick_edges,
             'number' : self.pick_numbers,
             }
+        self.drawing_mode = None
        
 
     def setCursorShape(self,t):
@@ -254,7 +255,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.selection_front = None
         self.selection.clear()
         self.selection.setType(self.selection_mode)
-            
+
 
     def wait_selection(self):
         """Wait for the user to interactively make a selection."""
@@ -398,7 +399,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return self.pick('numbers',*args,**kargs)
 
 
-    def start_drawing(self):
+    def start_drawing(self,mode):
         """Start an interactive drawing mode."""
         GD.debug("START DRAWING MODE")
         self.setMouse(LEFT,self.mouse_draw)
@@ -407,6 +408,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.connect(self,DONE,self.accept_drawing)
         self.connect(self,CANCEL,self.cancel_drawing)
         self.setCursorShape('pick')
+        self.drawing_mode = mode
         self.edit_mode = None
         self.drawing = empty((0,2,2),dtype=int)
 
@@ -427,6 +429,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setMouse(RIGHT,None,SHIFT)
         self.disconnect(self,DONE,self.accept_selection)
         self.disconnect(self,CANCEL,self.cancel_selection)
+        self.drawing_mode = None
 
     def accept_drawing(self,clear=False):
         """Cancel an interactive drawing mode.
@@ -450,7 +453,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.edit_mode = mode
         self.drawing_busy = False     
 
-    def drawLinesInter(self,single=False,func=None):
+    def drawLinesInter(self,mode='line',single=False,func=None):
         """Interactively draw lines on the canvas.
 
         - single: if True, the function returns as soon as the user ends
@@ -464,7 +467,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         The return value is a (n,2,2) shaped array.
         """
         self.drawing_canceled = False
-        self.start_drawing()
+        self.start_drawing(mode)
         while not self.drawing_canceled:
             self.wait_drawing()
             if not self.drawing_canceled:
@@ -473,6 +476,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                         self.drawing = delete(self.drawing,-1,0)
                     elif self.edit_mode == 'clear':
                         self.drawing = empty((0,2,2),dtype=int)
+                    elif self.edit_mode == 'close' and self.drawing.size != 0:
+                        line = asarray([self.drawing[-1,-1],self.drawing[0,0]])
+                        self.drawing = append(self.drawing,line.reshape(-1,2,2),0)
                     self.edit_mode = None
                 else: # a line was drawn interactively
                     self.drawing = append(self.drawing,self.drawn.reshape(-1,2,2),0)
