@@ -32,8 +32,8 @@ class ODict(dict):
     """An ordered dictionary.
 
     This is a dictionary that keeps the keys in order.
-    The default order is the insertion order, but it can be set to any
-    order.
+    The default order is the insertion order. The current order can be
+    changed at any time.
     """
 
     def __init__(self,data={}):
@@ -45,6 +45,8 @@ class ODict(dict):
         dict.__init__(self,data)
         if type(data) is ODict:
             self._order = data._order
+        elif type(data) is list or type(data) is tuple:
+            self._order = [ i[0] for i in data ]
         else:
             self._order = dict.keys(self)
 
@@ -59,7 +61,7 @@ class ODict(dict):
 
 
     def __setitem__(self,key,value):
-        """Allows items ot be set using self[key] = value."""
+        """Allows items to be set using self[key] = value."""
         dict.__setitem__(self,key,value)
         if key in self._order:
             self._order.remove(key)
@@ -95,7 +97,7 @@ class ODict(dict):
 
         keys should be a list containing exactly all the keys from self.
         """
-        if listDifference(self._order,dict.keys(self)) != []:
+        if listDifference(keys,dict.keys(self)) != []:
             raise ValueError,"List of keys does not match current object's keys"
         self._order = keys
 
@@ -103,6 +105,17 @@ class ODict(dict):
     def keys(self):
         """Return the keys in order."""
         return self._order
+
+
+    def values(self):
+        """Return the values in order of the keys."""
+        return [self[k] for k in self._order]
+    
+
+    def items(self):
+        """Return the values in order of the keys."""
+        return [(k,self[k]) for k in self._order]
+    
 
 if __name__ == "__main__":
 
@@ -133,4 +146,28 @@ if __name__ == "__main__":
     D['d'] = 26
     print D
     print D['b']
+    D = ODict(zip(range(5),range(6,10)))
+    print D
+    print D.keys()
+    print D.values()
+    print D.items()
+    del D[1]
+    del D[2]
+    D[4] = 4
+    D[3] = 3
+    D[2] = 2
+    D[1] = 1
+    print D
+    print D.keys()
+    print D.values()
+    print D.items()
+    k = D.keys()
+    k.sort()
+    D.sort(k)
+    print D
+    print D.keys()
+    print D.values()
+    print D.items()
     
+    
+# End

@@ -437,6 +437,29 @@ class InputItem(QtGui.QHBoxLayout):
         pass
 
 
+class InputLabel(InputItem):
+    """An unchangeable input item.
+    """
+    def __init__(self,name,value,*args):
+        """Creates a new label input field with a label in front.
+
+        The label input filed is an unchangeable field.
+        """
+        InputItem.__init__(self,name,*args)
+        self.input = QtGui.QLabel(str(value))
+        self.addWidget(self.input)
+        self.value = value
+
+    def show(self):
+        """Select all text on first display.""" 
+        InputItem.show(self,*args)
+        self.input.selectAll()
+
+    def value(self):
+        """Return the widget's value."""
+        return self.value
+
+
 class InputString(InputItem):
     """A string input item."""
     
@@ -912,6 +935,9 @@ class InputDialog(QtGui.QDialog):
                 elif type(value) == float:
                     line = InputFSlider(name,value,**options)
  
+            elif itemtype == 'label':
+                line = InputLabel(name,value)
+
             elif itemtype == 'color':
                 line = InputColor(name,value)
 

@@ -12,10 +12,10 @@
 """
 Extensions to Pythons built-in dictionary class:
 Dict is a dictionary with default values and alternate attribute syntax.
-CascadingDict is a Dict with lookup cascading into the next level Dict's
-if the key is not found in the CascadingDict itself.
+CDict is a Dict with lookup cascading into the next level Dict's
+if the key is not found in the CDict itself.
 
-(C) 2005 Benedict Verhegghe
+(C) 2005,2008 Benedict Verhegghe
 Distributed under the GNU GPL
 """
 
