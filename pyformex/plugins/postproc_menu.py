@@ -432,7 +432,7 @@ res_types = [
 res_dict = ODict(res_types)
 
 dia_full = [
-    ['feresult','FE Result DB','','label'],
+    ['feresult','FE Result DB','','info'],
     ['elgroup','Element Group',None,'select',['--ALL--',]],
     ['resindex','Type of result',None,'select',res_dict.values()],
     ['loadcase','Load case',0],
@@ -447,27 +447,50 @@ dia_full = [
     ['sleeptime','Animation sleeptime',0.1], 
     ]
 
+
+new_vals = dict(
+    feresult = 'some result DB',
+#    elgroup = '',
+    resindex = 'Y-Displacement',
+    loadcase = 1,
+    autoscale = False,
+    dscale = 35.5,
+    showref = True,
+    animate = True,
+    shape = 'sine',
+    cycle = 'revert',
+    count = 3,
+    nframes = 999,
+    sleeptime = 1,
+    )
+
 dia_dict = ODict([ (c[0],c[1:]) for c in dia_full ])
 dia_defaults = dict([ (c[0],c[2]) for c in dia_full ])
 
-pdata = GD.PF.get('__PostProcMenu_data__',dia_defaults)
 dialog = GD.PF.get('__PostProcMenu_dialog__',None)
 DB =  GD.PF.get('__PostProcMenu_result__',None)
 
 
+def newvals():
+    reset(new_vals)
+
+    
+def dialog_update(data):
+    # data is a dict with short keys/data
+    vals = {}
+    for v in data:
+        d = dia_dict[v]
+        vals[d[0]] = data[v]
+    print vals
+    dialog.updateData(vals)
+
 
 def reset(data=None):
-    """Reset all values to those given or to udefault."""
-    global pdata
+    # data is a dict with short keys/data
     if data is None:
-        pdata = dia_defaults
-    else:
-        pdata.update(data)
-    GD.PF['__PostProcMenu_data__'] = pdata
-    # Until we can update the widget, we just close() and reopen it
-    #dialog.update(data)
-    close()
-    open_results_dialog()
+        data = dia_defaults
+    GD.PF['__PostProcMenu_data__'] = data
+    dialog_update(data)
 
 
 def setDB(db):
@@ -491,12 +514,14 @@ def selectDB(db=None):
         print selection.names
     if db:
         setDB(db)
-
+    
 
 def open_results_dialog():
     global dialog
-    for k,i in dia_dict.items():
-        i[1] = pdata[k]
+    data = GD.PF.get('__PostProcMenu_data__',dia_defaults)
+    print "SAVED DATA",data
+    for k,v in data.items():
+        dia_dict[k][1] = v
     if selection.check(single=True):
         dia_dict['feresult'][1] = selection.names[0]
     if DB:
@@ -505,6 +530,7 @@ def open_results_dialog():
                ('Reset',reset),
                ('Select DB',selectDB),
                ('Show',show),
+               ('NewVals',newvals),
                ]
     dialog = widgets.InputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
     dialog.show()
@@ -523,20 +549,8 @@ def show():
     dialog.acceptData()
     data = dialog.result
     print data
+    print dia_defaults
 
-
-
-def DistanceFromPoint(nodes,pt):
-    """Show distance from origin rendered on the domain of triangles"""
-    val = Fn.distanceFromPoint(pt)
-##     nodes = self.DB.nodes
-##     displ = zeros(nodes.shape)
-##     text = "Distance from point %s" % pt
-##     showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
-##                 count=1,sleeptime=-1.)
-
-        
-point = [3.,2.,0.]
 
 def askPoint():
     global point
@@ -585,7 +599,9 @@ def reload_menu():
 
 
 if __name__ == "draw":
-    reload_menu()
+    #reload_menu()
+    close()
+    open_results_dialog()
     
 elif __name__ == "__main__":
     print __doc__

@@ -17,6 +17,13 @@ import colors
 import utils
 import imageViewer
 
+
+# timeout value for all widgets providing timeout feature
+#  (currently: InputDialog, MessageBox)
+
+input_timeout = -1
+
+
 class Options:
     pass
 
@@ -407,6 +414,7 @@ class InputItem(QtGui.QHBoxLayout):
     - name(): if they called the superclass __init__() method without a name;
     - value(): if they did not create a self.input widget who's text() is
       the return value of the item.
+    - setValue(): always, unless the field is readonly.
 
     Subclases can set validators on the input, like
       input.setValidator(QtGui.QIntValidator(input))
@@ -432,32 +440,32 @@ class InputItem(QtGui.QHBoxLayout):
         """Return the widget's value."""
         return str(self.input.text())
 
-    def setValue(self):
+    def setValue(self,val):
         """Change the widget's value."""
         pass
 
 
-class InputLabel(InputItem):
+class InputInfo(InputItem):
     """An unchangeable input item.
     """
     def __init__(self,name,value,*args):
-        """Creates a new label input field with a label in front.
+        """Creates a new info field with a label in front.
 
-        The label input filed is an unchangeable field.
+        The info input field is an unchangeable text field.
         """
         InputItem.__init__(self,name,*args)
-        self.input = QtGui.QLabel(str(value))
+        self.input = QtGui.QLineEdit(str(value))
+        self.input.setReadOnly(True)
+        self._value_ = value
         self.addWidget(self.input)
-        self.value = value
-
-    def show(self):
-        """Select all text on first display.""" 
-        InputItem.show(self,*args)
-        self.input.selectAll()
 
     def value(self):
         """Return the widget's value."""
-        return self.value
+        return self._value_
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        self.input.setText(str(val))
 
 
 class InputString(InputItem):
@@ -471,8 +479,8 @@ class InputString(InputItem):
         """
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QLineEdit(str(value))
+        self._is_string_ = type(value) == str
         self.addWidget(self.input)
-        self.str = type(value) == str
 
     def show(self):
         """Select all text on first display.""" 
@@ -482,14 +490,14 @@ class InputString(InputItem):
     def value(self):
         """Return the widget's value."""
         s = str(self.input.text())
-        if self.str:
+        if self._is_string_:
             return s
         else:
             return eval(s)
 
-    def setValue(self,value):
+    def setValue(self,val):
         """Change the widget's value."""
-        self.input.setText(str(value))
+        self.input.setText(str(val))
 
 
 class InputBool(InputItem):
@@ -505,10 +513,7 @@ class InputBool(InputItem):
         """
         InputItem.__init__(self,None,*args)
         self.input = QtGui.QCheckBox(name)
-        if value:
-            self.input.setCheckState(QtCore.Qt.Checked)
-        else:
-            self.input.setCheckState(QtCore.Qt.Unchecked)
+        self.setValue(value)
         self.addWidget(self.input)
 
     def name(self):
@@ -518,6 +523,13 @@ class InputBool(InputItem):
     def value(self):
         """Return the widget's value."""
         return self.input.checkState() == QtCore.Qt.Checked
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        if val:
+            self.input.setCheckState(QtCore.Qt.Checked)
+        else:
+            self.input.setCheckState(QtCore.Qt.Unchecked)
 
     
 class InputCombo(InputItem):
@@ -538,16 +550,22 @@ class InputCombo(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
+        self._choices_ = [ str(s) for s in choices ]
         InputItem.__init__(self,name,*args)
         self.input = QtGui.QComboBox()
-        for v in choices:
-            self.input.addItem(str(v))
-        self.input.setCurrentIndex(choices.index(default))
+        self.input.addItems(self._choices_)
+        self.setValue(default)
         self.addWidget(self.input)
 
     def value(self):
         """Return the widget's value."""
         return str(self.input.currentText())
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = str(val)
+        if val in self._choices_:
+            self.input.setCurrentIndex(self._choices_.index(val))
 
     
 class InputRadio(InputItem):
@@ -595,6 +613,14 @@ class InputRadio(InputItem):
             if rb.isChecked():
                 return str(rb.text())
         return ''
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = str(val)
+        for rb in self.rb:
+            if rb.text() == val:
+                rb.setChecked(True)
+                break
 
     
 class InputPush(InputItem):
@@ -653,6 +679,14 @@ class InputPush(InputItem):
                 return str(rb.text())
         return ''
 
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = str(val)
+        for rb in self.rb:
+            if rb.text() == val:
+                rb.setChecked(True)
+                break
+
 
 class InputInteger(InputItem):
     """An integer input item.
@@ -682,36 +716,10 @@ class InputInteger(InputItem):
         """Return the widget's value."""
         return int(self.input.text())
 
-
-## class InputNumeric(InputItem):
-##     """An numeric input item. The type is derived from the default value.
-
-##     Options:
-##     'min', 'max': range of the scale (integer/float)
-##     'dec': number of decimals (float only)
-##     """
-    
-##     def __init__(self,name,value,*args,**kargs):
-##         """Creates a new numeric input field with a label in front."""
-##         InputItem.__init__(self,name,*args)
-##         self.input = QtGui.QLineEdit(str(value))
-##         if type(value) == int:
-##         self.validator = QtGui.QIntValidator(self)
-##         if kargs.has_key('min'):
-##             line.validator.setBottom(int(kargs['min']))
-##         if kargs.has_key('max'):
-##             line.validator.setTop(int(kargs['max']))
-##         self.input.setValidator(self.validator)
-##         self.addWidget(self.input)
-
-##     def show(self):
-##         """Select all text on first display.""" 
-##         InputItem.show(self,*args)
-##         self.input.selectAll()
-
-##     def value(self):
-##         """Return the widget's value."""
-##         return int(self.input.text())
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = int(val)
+        self.input.setText(str(val))
 
 
 class InputFloat(InputItem):
@@ -733,6 +741,11 @@ class InputFloat(InputItem):
     def value(self):
         """Return the widget's value."""
         return float(self.input.text())
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = float(val)
+        self.input.setText(str(val))
 
    
 class InputSlider(InputInteger):
@@ -767,6 +780,7 @@ class InputSlider(InputInteger):
         self.addWidget(self.slider)
 
     def set_value(self,val):
+        val = int(val)
         self.input.setText(str(val))
 
    
@@ -802,6 +816,7 @@ class InputFSlider(InputFloat):
         self.addWidget(self.slider)
 
     def set_value(self,val):
+        val = float(val)
         value = val*self.scale
         self.input.setText(str(value))
         if self.func:
@@ -828,14 +843,18 @@ class InputColor(InputItem):
         if color:
             self.input.setText(str(color))
 
+    def setValue(self,value):
+        """Change the widget's value."""
+        pass
 
 
-input_timeout = -1
 
 class InputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
-    This feature is still experimental (though already used in a few places).
+    While general input dialogs can be constructed from all the underlying
+    Qt classes, this widget provides a way to construct fairly complex
+    input dialogs with a minimum of effort.
     """
     
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):
@@ -904,6 +923,7 @@ class InputDialog(QtGui.QDialog):
                 itemtype = item[2]
             else:
                 itemtype = type(value)
+            print itemtype
             options = {}
             if len(item) > 3 and type(item[3] == dict):
                 options = item[3]
@@ -935,8 +955,8 @@ class InputDialog(QtGui.QDialog):
                 elif type(value) == float:
                     line = InputFSlider(name,value,**options)
  
-            elif itemtype == 'label':
-                line = InputLabel(name,value)
+            elif itemtype == 'info':
+                line = InputInfo(name,value)
 
             elif itemtype == 'color':
                 line = InputColor(name,value)
@@ -1029,6 +1049,17 @@ class InputDialog(QtGui.QDialog):
         self.accepted = True
         
 
+    def updateData(self,d):
+        """Update a dialog from the data in given dictionary.
+
+        d is a dictionary where the keys are field names in t the dialog.
+        The values will be set in the corresponding input items.
+        """
+        for f in self.fields:
+            n = f.name()
+            if n in d:
+                f.setValue(d[n])
+
     def timeout(self):
         self.timedOut = True
         
@@ -1049,8 +1080,7 @@ class InputDialog(QtGui.QDialog):
         user input is detected during this period, the input dialog returns
         with the default values set.
         A value 0 will timeout immediately, a negative value will never timeout.
-        The default is to use the global variable input_timeout, which can
-        be changed by a toolbar button.
+        The default is to use the global variable input_timeout.
 
         This function also sets the exit mode, so that the caller can test how
         the dialog was ended.
