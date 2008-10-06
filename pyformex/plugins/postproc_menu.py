@@ -429,6 +429,29 @@ res_types = [
     ('Computed','Distance from a point'),
     ]
 
+def showfields():
+    """Show the table of field acronyms."""
+    tbl = widgets.Table(res_types,['acronym','description'],)
+    tbl.show()
+    
+
+tbl = None
+
+def tblIndex():
+    print tbl.cursor()
+    #currentIndex()
+
+def showattr(obj=None):
+    """Show the table of field acronyms."""
+    global tbl
+    if obj:
+        d = obj.__dict__
+    else:
+        d = GD.PF.items()
+    tbl = widgets.Table(d,actions=[('Cancel',),('Ok',),('Print',tblIndex)])
+    tbl.show()
+
+
 res_dict = ODict(res_types)
 
 dia_full = [
@@ -530,7 +553,9 @@ def open_results_dialog():
                ('Reset',reset),
                ('Select DB',selectDB),
                ('Show',show),
-               ('NewVals',newvals),
+#               ('NewVals',newvals),
+               ('Show Fields',showfields),
+               ('Show Attr',showattr),
                ]
     dialog = widgets.InputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
     dialog.show()

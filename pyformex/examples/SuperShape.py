@@ -58,6 +58,9 @@ def reset_data(initialize=False):
     GD.PF['__SuperShape__shape_data'] = shape_data
     globals().update(grid_data)
     globals().update(shape_data)
+    if dialog:
+        dialog.updateData(grid_data)
+        dialog.updateData(shape_data)
 
 
 def createGrid():
@@ -139,7 +142,6 @@ def close():
 
 def reset():
     reset_data()
-    info("The data have been reset, but the change of the data in the display has not been implementd yet.\n\nPleas close the dialog and reopen it.")
 
 
 def save():

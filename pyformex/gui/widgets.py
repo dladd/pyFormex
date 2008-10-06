@@ -923,7 +923,7 @@ class InputDialog(QtGui.QDialog):
                 itemtype = item[2]
             else:
                 itemtype = type(value)
-            print itemtype
+            #print itemtype
             options = {}
             if len(item) > 3 and type(item[3] == dict):
                 options = item[3]
@@ -993,37 +993,13 @@ class InputDialog(QtGui.QDialog):
         if actions is None:
             actions = [('CANCEL',),('OK',)]
             default = 'OK'
-        but = self.addButtons(actions,default)
+        but = dialogButtons(self,actions,default)
         self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
         form.addLayout(but)
         self.setLayout(form)
         # Set the keyboard focus to the first input field
         self.fields[0].input.setFocus()
         self.show()
-
-
-    def addButtons(self,actions,default):
-        """Add action buttons to the dialog"""
-        but = QtGui.QHBoxLayout()
-        spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
-        but.addItem(spacer)
-        for a in actions:
-            name = a[0]
-            b = QtGui.QPushButton(name,self)
-            n = name.lower()
-            if len(a) > 1:
-                slot = (a[1],)
-            elif n == 'ok':
-                slot = (self,QtCore.SLOT("accept()"))
-            elif n == 'cancel':
-                slot = (self,QtCore.SLOT("reject()"))
-            else:
-                slot = (self,QtCore.SLOT("reject()"))
-            self.connect(b,QtCore.SIGNAL("clicked()"),*slot)
-            if default is not None and n == default.lower():
-                b.setDefault(True)
-            but.addWidget(b)
-        return but
 
 
     def __getitem__(self,name):
@@ -1117,14 +1093,53 @@ class InputDialog(QtGui.QDialog):
         return self.result
 
 
-############################# Table model ###########################
+def dialogButtons(dialog,actions,default):
+    """Create a set of dialog buttons
+
+    dia is a dialog widget
+    actions is a list of tuples (name,) or (name,function).
+    If a function is specified, it will be executed on pressing the button.
+    If no function is specified, and name is one of 'ok' or 'cancel' (case
+    does not matter), the button will be bound to the dialog's 'accept'
+    or 'reject' slot.
+    default is the name of the action to set as the default.
+    """
+    but = QtGui.QHBoxLayout()
+    spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
+    but.addItem(spacer)
+    for a in actions:
+        name = a[0]
+        b = QtGui.QPushButton(name,dialog)
+        n = name.lower()
+        if len(a) > 1:
+            slot = (a[1],)
+        elif n == 'ok':
+            slot = (dialog,QtCore.SLOT("accept()"))
+        elif n == 'cancel':
+            slot = (dialog,QtCore.SLOT("reject()"))
+        else:
+            slot = (dialog,QtCore.SLOT("reject()"))
+        dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
+        if default is not None and n == default.lower():
+            b.setDefault(True)
+        but.addWidget(b)
+    return but
+
+
+########################### Table widget ###########################
 
 class TableModel(QtCore.QAbstractTableModel):
-    """A table model that represent data as a two-dimensional array of items."""
-    def __init__(self,datain,headerdata,parent=None,*args): 
+    """A table model that represent data as a two-dimensional array of items.
+
+    data is any tabular data organized in a fixed number of rows and colums.
+    This means that an item at row i and column j can be addressed as
+    data[i][j].
+    Optional lists of column and row headers can be specified.
+    """
+    def __init__(self,data,chead=None,rhead=None,parent=None,*args): 
         QtCore.QAbstractTableModel.__init__(self,parent,*args) 
-        self.arraydata = datain
-        self.headerdata = headerdata
+        self.arraydata = data
+        self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
  
     def rowCount(self,parent): 
         return len(self.arraydata) 
@@ -1133,19 +1148,49 @@ class TableModel(QtCore.QAbstractTableModel):
         return len(self.arraydata[0]) 
  
     def data(self,index,role): 
-        if not index.isValid(): 
-            return QtCore.QVariant() 
-        elif role != QtCore.Qt.DisplayRole: 
-            return QtCore.QVariant() 
-        return QtCore.QVariant(self.arraydata[index.row()][index.column()]) 
+        if index.isValid() and role == QtCore.Qt.DisplayRole: 
+            return QtCore.QVariant(self.arraydata[index.row()][index.column()]) 
+        return QtCore.QVariant() 
 
     def headerData(self,col,orientation,role):
-        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
-            return QtCore.QVariant(self.headerdata[col])
+        if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.headerdata[orientation][col])
         return QtCore.QVariant()
 
 
-############################# Table Dialog ###########################
+class Table(QtGui.QDialog):
+    """A dialog widget to show two-dimensional arrays of items."""
+    
+    def __init__(self,data,chead=None,rhead=None,caption=None,parent=None,actions=[('OK',)],default='OK'):
+        """Create the Table dialog.
+        
+        data is a 2-D array of items, mith nrow rows and ncol columns.
+        chead is an optional list of ncol column headers.
+        rhead is an optional list of nrow row headers.
+        """
+        if parent is None:
+            parent = GD.gui
+        QtGui.QDialog.__init__(self,parent)
+        if caption is None:
+            caption = 'pyFormex-dialog'
+        self.setWindowTitle(str(caption))
+        
+        form = QtGui.QVBoxLayout()
+        table = QtGui.QTableView()
+        tm = TableModel(data,chead,rhead,self)
+        table.setModel(tm)
+        table.horizontalHeader().setVisible(chead is not None)
+        table.verticalHeader().setVisible(rhead is not None)
+        table.resizeColumnsToContents()
+        form.addWidget(table)
+
+        but = dialogButtons(self,actions,default)
+        form.addLayout(but)
+        
+        self.setLayout(form)
+        #self.setMinimumSize(1000,400)
+        self.show()
+
 
 class TableDialog(QtGui.QDialog):
     """A dialog widget to show two-dimensional arrays of items."""
@@ -1169,7 +1214,7 @@ class TableDialog(QtGui.QDialog):
             for item in items:
                 page = QtGui.QTableView()
                 page_header,table_header,table_data = item
-                tm = TableModel(table_data,table_header,self)
+                tm = TableModel(table_data,table_header,parent=self)
                 page.setModel(tm)
                 page.verticalHeader().setVisible(False)
                 page.resizeColumnsToContents()
@@ -1178,7 +1223,7 @@ class TableDialog(QtGui.QDialog):
         else:
             table = QtGui.QTableView()
             table_header,table_data = items
-            tm = TableModel(table_data,table_header,self)
+            tm = TableModel(table_data,table_header,parent=self)
             table.setModel(tm)
             table.verticalHeader().setVisible(False)
             table.resizeColumnsToContents()
