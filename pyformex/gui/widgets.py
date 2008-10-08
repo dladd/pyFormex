@@ -1189,6 +1189,7 @@ class Table(QtGui.QDialog):
         
         self.setLayout(form)
         #self.setMinimumSize(1000,400)
+        self.table = table
         self.show()
 
 

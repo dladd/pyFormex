@@ -429,27 +429,159 @@ res_types = [
     ('Computed','Distance from a point'),
     ]
 
-def showfields():
-    """Show the table of field acronyms."""
-    tbl = widgets.Table(res_types,['acronym','description'],)
-    tbl.show()
-    
+class AttributeModel(QtCore.QAbstractTableModel):
+    """A model representing the attributes of an object.
 
+    """
+    header = [ 'attribute', 'value', 'is a dict', 'has __dict__', '__class__' ]
+    def __init__(self,name,dic=None,parent=None,*args): 
+        QtCore.QAbstractItemModel.__init__(self,parent,*args) 
+        if dic is None:
+            dic = gobals()
+        self.dic = dic
+        self.name = name
+        self.obj = dic.get(name,None)
+        keys = dir(self.obj)
+        vals = [ str(getattr(self.obj,k)) for k in keys ]
+        isdict = [ isinstance(self.obj,dict) for k in keys ]
+        has_dict = [ hasattr(self.obj,'__dict__') for k in keys ]
+        has_class = [ getattr(self.obj,'__class__') for k in keys ]
+        self.items = zip(keys,vals,isdict,has_dict,has_class)
+                
+                 
+    def rowCount(self,parent): 
+        return len(self.items) 
+ 
+    def columnCount(self,parent): 
+        return len(self.header) 
+ 
+    def data(self,index,role=QtCore.Qt.DisplayRole): 
+        if index.isValid() and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.items[index.row()][index.column()]) 
+        return QtCore.QVariant() 
+
+    def headerData(self,col,orientation=QtCore.Qt.Horizontal,role=QtCore.Qt.DisplayRole):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(AttributeModel.header[col])
+        return QtCore.QVariant()
+
+
+class DictModel(QtCore.QAbstractTableModel):
+    """A model representing a dictionary."""
+    
+    header = [ 'key', 'type', 'value' ]
+    
+    def __init__(self,dic,name,parent=None,*args):
+        
+        QtCore.QAbstractItemModel.__init__(self,parent,*args) 
+        self.dic = dic
+        self.name = name
+        keys = dic.keys()
+        vals = dic.values()
+        typs = [ str(type(v)) for v in vals ]
+        self.items = zip(keys,typs,vals)
+        print self.items
+                
+    def rowCount(self,parent): 
+        return len(self.items) 
+ 
+    def columnCount(self,parent): 
+        return len(self.header) 
+ 
+    def data(self,index,role=QtCore.Qt.DisplayRole): 
+        if index.isValid() and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(self.items[index.row()][index.column()]) 
+ 
+        return QtCore.QVariant() 
+
+    def headerData(self,col,orientation=QtCore.Qt.Horizontal,role=QtCore.Qt.DisplayRole):
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return QtCore.QVariant(DictModel.header[col])
+        return QtCore.QVariant()
+
+
+class Table(QtGui.QDialog):
+    """A dialog widget to show two-dimensional arrays of items."""
+    
+    def __init__(self,datamodel,caption="pyFormex - Table",parent=None,actions=[('OK',)],default='OK'):
+        """Create the Table dialog.
+        
+        data is a 2-D array of items, mith nrow rows and ncol columns.
+        chead is an optional list of ncol column headers.
+        rhead is an optional list of nrow row headers.
+        """
+        if parent is None:
+            parent = GD.gui
+        
+        QtGui.QDialog.__init__(self,parent)
+        self.setWindowTitle(str(caption))
+        
+        form = QtGui.QVBoxLayout()
+        table = QtGui.QTableView()
+        table.setModel(datamodel)
+        table.horizontalHeader().setVisible(True)
+        table.verticalHeader().setVisible(False)
+        table.resizeColumnsToContents()
+        print table.size()
+        form.addWidget(table)
+
+        but = widgets.dialogButtons(self,actions,default)
+        form.addLayout(but)
+        self.setLayout(form)
+        print table.size()
+        #print form.size()
+        #self.resize(table.size())
+        self.table = table
+        self.show()
+        self.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        #form.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+        table.setSizePolicy(QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Minimum)
+
+
+
+
+if globals().has_key('tbl'):
+    tbl.close()
 tbl = None
 
-def tblIndex():
-    print tbl.cursor()
-    #currentIndex()
-
-def showattr(obj=None):
+def showfields():
     """Show the table of field acronyms."""
     global tbl
-    if obj:
-        d = obj.__dict__
-    else:
-        d = GD.PF.items()
-    tbl = widgets.Table(d,actions=[('Cancel',),('Ok',),('Print',tblIndex)])
+    tbl = widgets.Table(res_types,['acronym','description'],actions=[('Cancel',),('Ok',),('Print',tblIndex)])
     tbl.show()
+   
+
+
+def tblIndex():
+    print tbl.table.currentIndex()
+    r = tbl.table.currentIndex().row()
+    c = tbl.table.currentIndex().column()
+    print "(%s,%s)" % (r,c)
+    m = tbl.table.model()
+    p = m.data(m.index(r,c))
+    print p,p.toString(),p.toBool()
+
+def showattr(name=None,dic=None):
+    """Show the table of field acronyms."""
+    global tbl
+    if dic is None:
+        dic = globals()
+    k = dic.keys()
+    sort(k)
+    print k
+    if name is None:
+        name = 'dia_full'
+    tbl = AttributeTable(name,dic,actions=[('Cancel',),('Ok',),('Print',tblIndex)])
+    tbl.show()
+
+def showdict(dic,name=None):
+    global tbl
+    model = DictModel(dic,name)
+    tbl = Table(model,caption="Dict '%s'" % name,actions=[('Cancel',),('Ok',),('Print',tblIndex)])
+    tbl.show()
+    tbl.table.resizeColumnsToContents()
+    tbl.table.updateGeometry()
+    tbl.updateGeometry()
 
 
 res_dict = ODict(res_types)
@@ -567,6 +699,8 @@ def close():
     if dialog:
         dialog.close()
         dialog = None
+    if tbl:
+        tbl.close()
 
 
 def show():
@@ -624,8 +758,10 @@ def reload_menu():
 
 
 if __name__ == "draw":
-    #reload_menu()
     close()
+    showdict(GD.PF)
+    exit()
+    #reload_menu()
     open_results_dialog()
     
 elif __name__ == "__main__":
