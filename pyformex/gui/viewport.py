@@ -360,20 +360,22 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
                 elif self.selection_filter == 'connected':
                     if self.mod == NONE:
-                        self.selection_front = self.closest_pick
+                        if len(self.picked) != 0:
+                            self.selection_front = self.closest_pick
                         self.selection.set(self.picked)
                     elif self.mod == SHIFT:
                         self.selection.add(self.picked)
                     elif self.mod == CTRL:
                         self.selection.remove(self.picked)
-                    if self.selection_front is None:
+                    if self.selection_front is None and len(self.picked) != 0:
                         self.selection_front = self.closest_pick
-                    actor,elem = map(int,self.selection_front[0])
-                    A = self.actors[actor]
-                    elems = self.selection.get(actor)
-                    if elem in elems:
-                        elem = A.connectedElements(elem,elems)
-                    self.selection.set(elem,actor)
+                    if len(self.picked) != 0:
+                        actor,elem = map(int,self.selection_front[0])
+                        A = self.actors[actor]
+                        elems = self.selection.get(actor)
+                        if elem in elems:
+                            elem = A.connectedElements(elem,elems)
+                        self.selection.set(elem,actor)
                 if GD.canvas.numbers_visible == True:
                     # A list widget is visible, so when part numbers are added to /
                     # removed from the selection by mouse_picking, the corresponding
