@@ -111,8 +111,6 @@ ok = True # Enable single run on timeout
 while ok:
     res = dialog.getResult()
     if not res:
-        print "BAILING OUT"
-        print res
         exit()
 
     ok = not dialog.timedOut # Prevent endless loop on timeout
@@ -133,8 +131,4 @@ while ok:
 
 exit()
 
-
-
-F = sector(r0,r1,h,t,nr,nt,diag=None)
-#F.setProp(0)
-draw(F,view='bottom')
+# End

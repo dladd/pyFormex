@@ -196,6 +196,29 @@ def setSplash():
         GD.cfg['gui/splash'] = fn
       
 
+w=None
+
+def setScriptDirs():
+    global w
+    scr = GD.cfg['scriptdirs']
+    w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Delete',removeRow),('OK',)])
+    w.show()
+    
+
+def insertRow():
+    ww = widgets.FileSelection(GD.cfg['workdir'],'*',exist=True,dir=True)
+    fn = ww.getFilename()
+    if fn:
+        scr = GD.cfg['scriptdirs']
+        w.table.model().insertRows()
+        scr[-1] = ['New',fn]
+    
+
+def removeRow():
+    row = w.table.currentIndex().row()
+    w.table.model().removeRows(row,1)
+
+
 ## def editConfig():
 ##     error('You can not edit the config file while pyFormex is running!') 
     
@@ -248,6 +271,7 @@ MenuData = [
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
         (_('&Splash Image'),setSplash),
+        (_('&Script Paths'),setScriptDirs),
         (_('&Commands'),setCommands),
         (_('&SysPath'),setSysPath),
         (_('&Help'),setHelp),

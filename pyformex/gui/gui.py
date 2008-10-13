@@ -524,7 +524,7 @@ def createScriptMenu():
     # to keep the pyFormex installed examples in his config
     knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
     for i,item in enumerate(scriptdirs):
-        if not item[1] and item[0].lower() in knownscriptdirs:
+        if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
             scriptdirs[i] = (item[0],knownscriptdirs[item[0].lower()])
 
     if GD.cfg.get('gui/separate_script_dirs',False):

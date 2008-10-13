@@ -26,7 +26,7 @@ class DoubleHelixStent:
     blood vessels. This stent is made frome sets of wires spiraling
     in two directions.
     The geometry is defined by the following parameters:
-      L  : length of the stent
+      L  : approximate length of the stent
       De : external diameter of the stent 
       D  : average stent diameter
       d  : wire diameter
@@ -54,8 +54,6 @@ class DoubleHelixStent:
         p = math.pi*D*tand(be)
         nx = int(nx)
         ny = int(round(nx*L/p))  # The actual length may differ a bit from L
-        #print "pitch",p
-        #print "ny",ny
         # a single bumped strut, oriented along the x-axis
         bump_z=lambda x: 1.-(x/nb)**2
         base = Formex(pattern('1')).replic(nb,1.0).bump1(2,[0.,0.,dz],bump_z,0)
@@ -71,16 +69,14 @@ class DoubleHelixStent:
         # add a connector between first points of NE and SE
         if connectors:
             cell1 += Formex([[NE[0][0],SE[0][0]]],2)
-        # and create its mirror
-        cell2 = cell1.reflect(2)
-        # and move both to appropriate place
-        self.cell1 = cell1.translate([1.,1.,0.])
-        self.cell2 = cell2.translate([-1.,-1.,0.])
-        # the base pattern cell1+cell2 now has size [-2,-2]..[2,2]
+        # create its mirror
+        cell2 = cell1.reflect(2).translate([2.,2.,0.])
+        base = cell1 + cell2
+        # reposition to base to origin [0,0]
+        base = base.translate(-base.bbox()[0])
         # Create the full pattern by replication
-        dx = 4.
-        dy = 4.
-        F = (self.cell1+self.cell2).replic2(nx,ny,dx,dy)
+        dx,dy = base.bbox()[1][:2]
+        F = base.replic2(nx,ny,dx,dy)
         # fold it into a cylinder
         self.F = F.translate([0.,0.,r]).cylindrical(dir=[2,0,1],scale=[1.,360./(nx*dx),p/nx/dy])
         self.ny = ny
@@ -102,7 +98,10 @@ if __name__ == "draw":
     d = 0.2
     n = 12
     b = 30.
-    res = askItems([['Diameter',D],['Length',L],['WireDiam',d],['NWires',n],
+    res = askItems([['Diameter',D],
+                    ['Length',L],
+                    ['WireDiam',d],
+                    ['NWires',n],
                     ['Pitch',b]])
     D = float(res['Diameter'])
     L = float(res['Length'])
@@ -117,7 +116,9 @@ if __name__ == "draw":
     clear()
     draw(H,view='iso')
     
-    # and save it in a lot of graphics formats
-    if ack("Do you want to save this image (in lots of formats) ?"):
-        for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
-            image.save('WireStent.'+ext)
+##     # and save it in a lot of graphics formats
+##     if ack("Do you want to save this image (in lots of formats) ?"):
+##         for ext in [ 'bmp', 'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf', 'tex' ]: 
+##             image.save('WireStent.'+ext)
+
+#End

@@ -1126,7 +1126,8 @@ def dialogButtons(dialog,actions,default):
     return but
 
 
-########################### Table widget ###########################
+########################### Table widgets ###########################
+
 
 class TableModel(QtCore.QAbstractTableModel):
     """A table model that represent data as a two-dimensional array of items.
@@ -1141,10 +1142,10 @@ class TableModel(QtCore.QAbstractTableModel):
         self.arraydata = data
         self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
  
-    def rowCount(self,parent): 
+    def rowCount(self,parent=None): 
         return len(self.arraydata) 
  
-    def columnCount(self,parent): 
+    def columnCount(self,parent=None): 
         return len(self.arraydata[0]) 
  
     def data(self,index,role): 
@@ -1156,6 +1157,29 @@ class TableModel(QtCore.QAbstractTableModel):
         if orientation in self.headerdata and self.headerdata[orientation] and role == QtCore.Qt.DisplayRole:
             return QtCore.QVariant(self.headerdata[orientation][col])
         return QtCore.QVariant()
+
+    def insertRows(self,row=None,count=None):
+        if row is None:
+            row = self.rowCount()
+        if count is None:
+            count = 1
+        last = row+count-1
+        newdata = [ [ None ] * self.columnCount() ] * count
+        self.beginInsertRows(QtCore.QModelIndex(),row,last)
+        self.arraydata[row:row] = newdata
+        self.endInsertRows()
+        return True
+
+    def removeRows(self,row=None,count=None):
+        if row is None:
+            row = self.rowCount()
+        if count is None:
+            count = 1
+        last = row+count-1
+        self.beginRemoveRows(QtCore.QModelIndex(),row,last)
+        self.arraydata[row:row+count] = []
+        self.endRemoveRows()
+        return True
 
 
 class Table(QtGui.QDialog):
@@ -1177,7 +1201,7 @@ class Table(QtGui.QDialog):
         
         form = QtGui.QVBoxLayout()
         table = QtGui.QTableView()
-        tm = TableModel(data,chead,rhead,self)
+        tm = TableModel(data,chead,rhead,None)
         table.setModel(tm)
         table.horizontalHeader().setVisible(chead is not None)
         table.verticalHeader().setVisible(rhead is not None)
