@@ -746,12 +746,19 @@ def createView(name,angles):
     GD.gui.setViewAngles(name,angles)   
     
 
-def zoomAll():
-    if GD.canvas.actors:
-        GD.canvas.setBbox(coords.bbox(GD.canvas.actors))
-        GD.canvas.setCamera()
-        GD.canvas.update()
+def zoomBbox(bb):
+    """Zoom thus that the specified bbox becomes visible."""
+    GD.canvas.setBbox(bb)
+    GD.canvas.setCamera()
+    GD.canvas.update()
 
+
+def zoomAll():
+    """Zoom thus that all actors become visible."""
+    if GD.canvas.actors:
+        zoomBbox(coords.bbox(GD.canvas.actors))
+
+# An alias, currently not deprecated
 zoomall = zoomAll
 
 def zoom(f):
