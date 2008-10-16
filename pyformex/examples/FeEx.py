@@ -157,7 +157,7 @@ section = {
     'sectiontype': 'solid',
     'young_modulus': 207000,
     'poisson_ratio': 0.3,
-    'thickness': 0.01,
+    'thickness': 1.0,
     }
 
 

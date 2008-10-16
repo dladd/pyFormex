@@ -70,6 +70,7 @@ def openProject(exist=True):
             the_project.update(GD.PF)
         GD.PF = the_project
         GD.gui.setcurproj(fn)
+        GD.cfg['workdir'] = os.path.dirname(fn)
         GD .message("Project contents: %s" % the_project.keys())
 
 def saveProject():

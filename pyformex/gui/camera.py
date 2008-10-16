@@ -339,19 +339,7 @@ class Camera:
         v = multiply(array(v),a)
         return v[0:3] / v[3]
 
-
-##     def getCurrentAngles(self):
-##         print self.rot
-##         P = self.toWorld([1.,0.,0.])
-##         Q = self.toWorld([0.,1.,0.])
-##         R = self.toWorld([0.,0.,1.])
-##         print "TOWORLD %s" % P
-##         F = Formex([[P,Q,R]])
-##         print "F %s" % F
-##         G = F.toSpherical()
-##         print "SPHERICAL %s" % G
-        
-        
+       
     
     # Camera Lens Setting.
     #

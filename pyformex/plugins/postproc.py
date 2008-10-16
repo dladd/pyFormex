@@ -22,16 +22,16 @@ from numpy import *
 # Some functions to calculate a scalar value from a vector
 
 def norm2(A):
-    return sqrt(square(A).sum(axis=-1))
+    return sqrt(square(asarray(A)).sum(axis=-1))
 
 def norm(A,x):
-    return power(power(A,x).sum(axis=-1),1./x)
+    return power(power(asarray(A),x).sum(axis=-1),1./x)
 
 def max(A):
-    return A.max(axis=1)
+    return asarray(A).max(axis=-1)
 
 def min(A):
-    return A.min(axis=1)
+    return asarray(A).min(axis=-1)
    
 
 def niceNumber(f,approx=floor):

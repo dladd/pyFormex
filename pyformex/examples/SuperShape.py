@@ -40,7 +40,7 @@ def reset_data(initialize=False):
         grid_base = 'quad',
         grid_bias = 0.0,
         grid_skewness = 0.0,
-        x_clip = (-180.,180.),
+        x_clip = (-360.,360.),
         y_clip = (-90.,90.),
         grid_name = gname.peek(),
         grid_color = 'blue',
@@ -102,12 +102,14 @@ def showGrid():
     """Show the last created grid"""
     clear()
     wireframe()
+    view('front')
     draw(B,color=grid_color)
     
 
 def showSuperShape():
     """Show the last created super shape"""
     clear()
+    smoothwire()
     draw(F,color=color)
 
 

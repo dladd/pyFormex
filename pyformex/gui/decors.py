@@ -215,7 +215,7 @@ class Text(Decoration):
 
 class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorlegend,x,y,w,h,font='9x15',dec=2):
+    def __init__(self,colorlegend,x,y,w,h,font='9x15',dec=2,scale=0):
         Decoration.__init__(self,x,y)
         self.cl = colorlegend
         self.w = int(w)
@@ -224,6 +224,7 @@ class ColorLegend(Decoration):
         self.ygap = 4  # vert. gap between labels
         self.font = font
         self.dec = dec   # number of decimals
+        self.scale = 10 ** scale # scale all numbers with 10**scale
 
     def drawGL(self,mode='wireframe',color=None):
         n = len(self.cl.colors)
@@ -248,7 +249,7 @@ class ColorLegend(Decoration):
         for i,v in enumerate(self.cl.limits):
             y2 = y0 + i*dy
             if y2 >= y1 or i == 0:
-                drawText2D(("%%.%df" % self.dec) % v,x1,y2)   
+                drawText2D(("%%.%df" % self.dec) % (v*self.scale),x1,y2)   
                 y1 = y2 + dh
 
 

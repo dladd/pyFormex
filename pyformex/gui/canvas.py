@@ -561,16 +561,6 @@ class Canvas(object):
         self.display()
 
         
-##     def setView(self,bbox=None,side=None):
-##         """Sets the camera looking from one of the named views."""
-## ##         # select view angles: if undefined use (0,0,0)
-## ##         if side:
-## ##             angles = self.camera.getAngles(side)
-## ##         else:
-## ##             angles = None
-##         self.setCamera(bbox,angles)
-
-        
     def setCamera(self,bbox=None,angles=None):
         """Sets the camera looking under angles at bbox.
 
@@ -609,23 +599,6 @@ class Canvas(object):
         self.camera.setDist(f*self.camera.getDist())
 
 
-##     def draw_cursor(self,x,y):
-##         if self.cursor:
-##             self.removeDecoration(self.cursor)
-##         w,h = GD.cfg.get('pick/size',(20,20))
-##         col = GD.cfg.get('pick/color','yellow')
-##         self.cursor = decors.Grid(x-w/2,y-h/2,x+w/2,y+h/2,color=col,linewidth=1)
-##         self.addDecoration(self.cursor)
-
-##     def draw_rectangle(self,x,y):
-##         GD.debugt("DRAWRECTANGLE")
-##         if self.cursor:
-##             self.removeDecoration(self.cursor)
-##         col = GD.cfg.get('pick/color','yellow')
-##         self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
-##         self.addDecoration(self.cursor)
-
-
     def saveBuffer(self):
         """Save the current OpenGL buffer"""
         GD.debugt("saveBuffer")
@@ -652,27 +625,5 @@ class Canvas(object):
         self.cursor = decors.Grid(self.statex,self.statey,x,y,color=col,linewidth=1)
         self.addDecoration(self.cursor)
 
-## NSRect rectView = [self bounds]; //Get the bounds of the OpenGL view
-
-## w = rectView.size.width;
-## h = rectView.size.height;
-## [[self openGLContext] makeCurrentContext];
-## glViewport(0, 0, w, h);
-## glMatrixMode (GL_PROJECTION);
-## glLoadIdentity();
-## glOrtho(0, w, 0, h, 1, -1);
-## glMatrixMode (GL_MODELVIEW);
-## glLoadIdentity();
-
-## glDisable(GL_LIGHTING); //turn off lighting effects
-## glEnable(GL_COLOR_LOGIC_OP);
-## glLogicOp(GL_XOR);
-## glDisable(GL_DEPTH_TEST);
-## glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-## glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-## //Save the current buffer target
-## glDrawBuffer(GL_FRONT); //set the drawbuffer to the front readbuffer.
-## }
 
 ### End

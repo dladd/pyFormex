@@ -239,16 +239,29 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             vmid = 0.0
         else:
             vmid = 0.5*(vmin+vmax)
+
+        scalev = [vmin,vmid,vmax]
+        logv = [ a for a in scalev if a != 0.0 ]
+        logs = log10(logv)
+        logma = int(logs.max())
+
+
+        multiplier = 0
+        if logma < 0:
+            multiplier = 3 * ((2 - logma) / 3 )
+            print "MULTIPLIER %s" % multiplier
+            
         CS = ColorScale([blue,green,red],vmin,vmax,vmid,1.,1.)
-##         CS = ColorScale([green,None,magenta],0.,1.,None,0.5,None)
         cval = array(map(CS.color,val))
         CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,20,30,200) 
+        CLA = decors.ColorLegend(CL,10,20,30,200,scale=multiplier) 
         GD.canvas.addDecoration(CLA)
 
     # the supplied text
     if text:
-        drawtext(text,150,30,'tr24')
+        if multiplier:
+            text += ' (* 10**%s)' % -multiplier
+        drawtext(text,150,30,'tr18')
 
     smooth()
     lights(False)
@@ -269,6 +282,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         bbox.append(Formex(bboxes).bbox())
         # We store the changing parts of the display, so that we can
         # easily remove/redisplay them
+        print val
         if val is None:
             F = [ draw(df,color='blue',view='__last__',bbox=None,wait=None) for df in deformed ]
         else:
@@ -547,7 +561,7 @@ dia_full = [
     ['loadcase','Load case',0],
     ['autoscale','Autocalculate deformation scale',True],
     ['dscale','Deformation scale',100.],
-    ['showref','Show undeformed configuration',False],
+    ['showref','Show undeformed configuration',True],
     ['animate','Animate results',False],
     ['shape','Amplitude shape','linear','radio',['linear','sine']],
     ['cycle','Animation cycle','updown','radio',['up','updown','revert']],
@@ -576,10 +590,9 @@ new_vals = dict(
 dia_dict = ODict([ (c[0],c[1:]) for c in dia_full ])
 dia_defaults = dict([ (c[0],c[2]) for c in dia_full ])
 
-dialog = GD.PF.get('__PostProcMenu_dialog__',None)
-DB =  GD.PF.get('__PostProcMenu_result__',None)
 selection = Objects(clas=FeResult)
-
+dialog = None
+DB = None
 
 
 def show():
@@ -602,7 +615,7 @@ def show():
             siz0 = Coords(nodes).sizes()
             siz1 = Coords(displ).sizes()
             w = where(siz0 > 0.0)[0]
-            dscale = niceNumber(1./(siz1[w]/siz0[w]).max())
+            dscale = niceNumber(0.5/(siz1[w]/siz0[w]).max())
 
     if animate:
         dscale = dscale * frameScale(nframes,cycle=cycle,shape=shape) 
@@ -689,6 +702,7 @@ def checkDB():
     If no results database was already selected, asks the user to do so.
     Returns True if a databases is selected.
     """
+    print DB
     if not isinstance(DB,FeResult):
         selectDB()
     return isinstance(DB,FeResult)
@@ -707,20 +721,20 @@ def open_results_dialog():
         dia_dict['feresult'][1] = selection.names[0]
     if DB:
         dia_dict['elgroup'][3] = ['--ALL--',] + DB.elems.keys()
-    actions = [('Close',close),
+    actions = [('Close',close_dialog),
                ('Reset',reset),
 #               ('Select DB',selectDB),
                ('Show',show),
 #               ('NewVals',newvals),
-               ('Show Fields',showfields),
-               ('Show Attr',showattr),
+#               ('Show Fields',showfields),
+#               ('Show Attr',showattr),
                ]
     dialog = widgets.InputDialog(dia_dict.values(),caption='Results Dialog',actions=actions,default='Show')
     dialog.show()
     GD.PF['__PostProcMenu_dialog__'] = dialog
 
 
-def close():
+def close_dialog():
     global dialog
     if dialog:
         dialog.close()
@@ -750,7 +764,7 @@ def create_menu():
         ("Show Geometry",showModel),
 #        ("Select Step/Inc",P.selectStepInc),
 #        ("Show Results",P.postProc),
-        ("Open Results Dialog (NEW)",open_results_dialog),
+        ("Results Dialog",open_results_dialog),
         ("---",None),
         ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
@@ -771,7 +785,10 @@ def close_menu():
 
 def reload_menu():
     """Reload the Postproc menu."""
+    global DB
     close_menu()
+    DB =  GD.PF.get('__PostProcMenu_result__',None)
+    print "Current database %s" % DB
     show_menu()
 
 
