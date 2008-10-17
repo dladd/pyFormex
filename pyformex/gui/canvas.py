@@ -601,7 +601,7 @@ class Canvas(object):
 
     def saveBuffer(self):
         """Save the current OpenGL buffer"""
-        GD.debugt("saveBuffer")
+        #GD.debugt("saveBuffer")
         self.save_buffer = GL.glGetIntegerv(GL.GL_DRAW_BUFFER)
 
     def showBuffer(self):
@@ -618,7 +618,7 @@ class Canvas(object):
         self.addDecoration(self.cursor)
 
     def draw_rectangle(self,x,y):
-        GD.debugt("DRAWRECTANGLE")
+        #GD.debugt("DRAWRECTANGLE")
         if self.cursor:
             self.removeDecoration(self.cursor)
         col = GD.cfg.get('pick/color','yellow')

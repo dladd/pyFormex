@@ -228,6 +228,74 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
 
 
+    def start_rectangle_zoom(self):
+        GD.debug("START RECTANGLE ZOOM")
+        self.setMouse(LEFT,self.mouse_rectangle_zoom)
+        self.setCursorShape('pick')
+
+    def finish_rectangle_zoom(self):
+        GD.debug("END RECTANGLE ZOOM")
+        self.setCursorShape('default')
+        self.setMouse(LEFT,self.dynarot)
+
+    def mouse_rectangle_zoom(self,x,y,action):
+        """Process mouse events during interactive picking.
+
+        On PRESS, record the mouse position.
+        On MOVE, create a rectangular picking window.
+        On RELEASE, pick the objects inside the rectangle.
+        """
+        if action == PRESS:
+            self.makeCurrent()
+            self.update()
+            self.begin_2D_drawing()
+            self.swapBuffers()
+            GL.glEnable(GL.GL_COLOR_LOGIC_OP)
+            # An alternative is GL_XOR #
+            GL.glLogicOp(GL.GL_INVERT)        
+            # Draw rectangle
+            self.draw_state_rect(x,y)
+            self.swapBuffers()
+
+        elif action == MOVE:
+            # Remove old rectangle
+            self.swapBuffers()
+            self.draw_state_rect(*self.state)
+            # Draw new rectangle
+            self.draw_state_rect(x,y)
+            self.swapBuffers()
+
+        elif action == RELEASE:
+            GL.glDisable(GL.GL_COLOR_LOGIC_OP)
+            #self.swapBuffers()
+            self.end_2D_drawing()
+
+            x,y = (x+self.statex)/2., (y+self.statey)/2.
+            w,h = abs(x-self.statex)*2., abs(y-self.statey)*2.
+            if w <= 0 or h <= 0:
+               w,h = GD.cfg.get('pick/size',(20,20))
+            vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
+            self.pick_window = (x,y,w,h,vp)
+
+
+    def accept_selection(self,clear=False):
+        """Cancel an interactive picking mode.
+
+        If clear == True, the current selection is cleared.
+        """
+        GD.debug("CANCEL SELECTION MODE")
+        self.selection_accepted = True
+        if clear:
+            self.selection.clear()
+            self.selection_accepted = False
+        self.selection_canceled = True
+        self.selection_busy = False
+
+    def cancel_selection(self):
+        """Cancel an interactive picking mode and clear the selection."""
+        self.accept_selection(clear=True)
+
+
     def start_selection(self,mode,filtr):
         """Start an interactive picking mode.
 
@@ -280,7 +348,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.selection_mode = None
 
     def accept_selection(self,clear=False):
-        """Cancel an interactive picking mode.
+        """Accept or cancel an interactive picking mode.
 
         If clear == True, the current selection is cleared.
         """
