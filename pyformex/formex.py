@@ -1739,7 +1739,7 @@ class Formex(object):
         fil.write("# Formex File Format 1.0 (http://pyformex.berlios.de)\n")
         nelems,nplex = self.f.shape[:2]
         hasp = self.p is not None
-        fil.write("# nelems=%d; nplex=%d; props=%d\n" % (nelems,nplex,hasp))
+        fil.write("# nelems=%r; nplex=%r; props=%r; eltype=%r\n" % (nelems,nplex,hasp,self.eltype))
         self.f.tofile(fil,sep)
         fil.write('\n')
         if hasp:
@@ -1772,7 +1772,7 @@ class Formex(object):
             p = None
         if isname:
             fil.close()
-        return Formex(f,p)
+        return Formex(f,p,eltype)
 
 
 #########################################################################
