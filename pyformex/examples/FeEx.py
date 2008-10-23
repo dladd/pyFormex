@@ -217,11 +217,14 @@ def setBoundary():
 def deleteAllBcons():
     PDB.delProp(kind='n',attr=['bound'])
 
-        
+
+
+# Concentrated loads
+
 xload = 0.0
 yload = 0.0
 
-def setLoad():
+def setCLoad():
     """Pick the points with load condition."""
     global xload,yload
     if model is None:
@@ -237,8 +240,35 @@ def setLoad():
             if len(nodeset) > 0:
                 PDB.nodeProp(set=nodeset,cload=[xload,yload,0.,0.,0.,0.])
 
-def deleteAllLoads():
+
+def deleteAllCLoads():
     PDB.delProp(kind='n',attr=['cload'])
+
+
+# Line loads
+
+xlload = 0.0
+ylload = 0.0
+
+
+def setLLoad():
+    """Pick the lines with load condition."""
+    global xdload,ydload
+    if model is None:
+        warn()
+        return
+    res = askItems([('x-load',xdload),('y-load',ydload)])
+    if res:
+        xdload = res['x-load']
+        ydload = res['y-load']
+        K = pickLines()
+        if K:
+            nodeset = getPickedNodes(K)
+            if len(nodeset) > 0:
+                PDB.nodeProp(set=nodeset,lload=[xlload,ylload,0.])
+
+def deleteAllLLoads():
+    PDB.delProp(kind='n',attr=['lload'])
 
 
 def printDB():
@@ -319,6 +349,11 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         print "No Job Name: bailing out"
         return
    
+    # OK, start calpy
+    print "Starting the Calpy analysis module --- this might take some time"
+    GD.app.processEvents()
+    starttime = time.clock()
+
     Model = femodel.FeModel(2,"elast","Plane_Stress")
     Model.nnodes = model.nodes.shape[0]
     Model.nelems = model.celems[-1]
@@ -389,6 +424,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         fe_util.PrintElements(e+1,matnr[j:k])
         Plane.AddElements(e+1,matnr[j:k],mats,coords,bcon)
         PlaneGrp.append(Plane)
+
     # Create load vectors
     # Calpy allows for multiple load cases in a single analysis.
     # However, our script currently puts all loads together in a single
@@ -420,17 +456,20 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             print p.cload[:2]
             print
             f[:,0] = fe_util.AssembleVector(f[:,0],p.cload[:2],bcon[n])
+
+    print "Assembling distributed loads"
+    # This is a bit more complex. See Calpy for details
+    # We first generate the input data, then read them with the
+    # calpy femodel.ReadBoundaryLoads function and finally
+    # assemble them with plane.addBoundaryLoads.
+    for p in PDB.getProp('n',attr=['cload']):
+        print p
+    #idloads,dloads = plane.ReadBoundaryLoads(*nb,model.ndim)
+    
     if verbose:
         print "Calpy.Loads"
         print f
-    # Perform analysis
-    # OK, that is really everything there is to it. Now just run the
-    # analysis, and hope for the best ;)
-    # Enabling the Echo will print out the data.
-    # The result consists of nodal displacements and stress resultants.
-    print "Starting the Calpy analysis module --- this might take some time"
-    GD.app.processEvents()
-    starttime = time.clock()
+
     ############ Create global stiffness matrix ##########
     s = Model.ZeroStiffnessMatrix(0)
     for elgrp in PlaneGrp:
@@ -550,11 +589,13 @@ def create_menu():
         ("---",None),
         ("&Add material properties",setMaterial),
         ("&Add boundary conditions",setBoundary),
-        ("&Add loading conditions",setLoad),
+        ("&Add concentrated loads",setCLoad),
+        ("&Add line loads",setLLoad),
         ("&Print property database",printDB),
         ("&Delete all material properties",deleteAllMats),
         ("&Delete all boundary conditions",deleteAllBcons),
-        ("&Delete all loading conditions",deleteAllLoads),
+        ("&Delete all concentrated loads",deleteAllCLoads),
+        ("&Delete all line loads",deleteAllLLoads),
         ("---",None),
         ("&Create Abaqus input file",createAbaqusInput),
         ("&Run Calpy analysis",runCalpyAnalysis),

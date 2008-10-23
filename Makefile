@@ -51,9 +51,9 @@ NEWVERSIONSTRING= __version__ = "${RELEASE}"
 
 PKGVER= ${PKGNAME}-${RELEASE}.tar.gz
 PKGDIR= dist
-LATEST= pyformex-latest.tar.gz
+LATEST= ${PKGNAME}-latest.tar.gz
 
-# outr local ftp server
+# our local ftp server
 FTPLOCAL=bumps:/home/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
