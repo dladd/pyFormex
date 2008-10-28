@@ -505,28 +505,25 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         i = 0
         for e,P in zip(model.elems,PlaneGrp):
             i += 1
-            P.debug = 1
-            print "elem group %d" % i
-            print e.shape
+            #P.debug = 1
             stresg = P.StressGP (v[:,l],mats)
-            print stresg.shape
             if verbose:
+                print "elem group %d" % i
                 print "GP Stress\n", stresg
             
             strese = P.GP2Nodes(stresg)
-            print strese.shape
             if verbose:
                 print "Nodal Element Stress\n", strese
 
-            print "Nodes",e+1
-            stresn,count = P.NodalAcc(e+1,strese,stresn,count,Model.nnodes)
-            print stresn,count
+            #print "Nodes",e+1
+            stresn,count = P.NodalAcc(e+1,strese,nnod=Model.nnodes,nodata=stresn,nodn=count)
+            #print stresn,count
             
-        print stresn.shape
-        print count.shape
-        print "TOTAL",stresn,count
+        #print stresn.shape
+        #print count.shape
+        #print "TOTAL",stresn,count
         stresn /= count.reshape(-1,1)
-        print "AVG",stresn
+        #print "AVG",stresn
         if verbose:
             print "Averaged Nodal Stress\n"
             aprint(stresn,header=['sxx','syy','sxy'],numbering=True)
@@ -543,6 +540,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     DB.elems = dict(enumerate(model.elems))
     DB.nelems = model.celems[-1]
     DB.Finalize()
+    DB.data_size['S'] = 3
     #print DB.elems
     for lc in range(Model.nloads):
         DB.Increment(lc,0)

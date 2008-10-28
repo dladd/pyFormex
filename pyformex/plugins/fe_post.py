@@ -24,9 +24,12 @@ from gui.draw import export
 import connectivity
 from odict import ODict
 
+import re
+
 class FeResult(object):
 
     data_size = {'U':3,'S':6,'COORD':3}
+    re_Skey = re.compile("S[0-5]")
 
     def __init__(self):
         self.about = {'creator':GD.Version,
@@ -214,7 +217,11 @@ class FeResult(object):
         of a multicolumn value.
         """
         #print self.dofs
-        comp = '012345'.find(key[-1])
+        if self.re_Skey.match(key) and self.data_size['S']==3:
+            components = '013'
+        else:
+            components = '012345'
+        comp = components.find(key[-1])
         if comp >= 0:
             key = key[:-1]
         if self.R.has_key(key):

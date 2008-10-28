@@ -232,6 +232,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         draw(ref,bbox=None,color='green',linewidth=1,mode='wireframe')
 
     # compute the colors according to the values
+    multiplier = 0
     if val is not None:
         # create a colorscale and draw the colorlegend
         vmin,vmax = val.min(),val.max()
@@ -246,7 +247,6 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         logma = int(logs.max())
 
 
-        multiplier = 0
         if logma < 0:
             multiplier = 3 * ((2 - logma) / 3 )
             print "MULTIPLIER %s" % multiplier
@@ -259,7 +259,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
     # the supplied text
     if text:
-        if multiplier:
+        if multiplier != 0:
             text += ' (* 10**%s)' % -multiplier
         drawtext(text,150,30,'tr18')
 
@@ -694,6 +694,7 @@ def selectDB():
     if db:
         setDB(db)
         showModel()
+        print 'Stress tensor has %s components' % DB.data_size['S']
     
     
 def checkDB():
