@@ -1758,6 +1758,7 @@ class Formex(object):
         s = fil.readline()
         if not s.startswith('# Formex'):
             return None
+        eltype = None # for compatibility with older .formex files
         while s.startswith('#'):
             s = fil.readline()
             if s.startswith('# nelems'):
