@@ -32,6 +32,7 @@ def build_matrix(atoms,x,y=0,z=0):
 class Isopar(object):
     """A class representing an isoparametric transformation"""
 
+    # REM: we should create a function to produce these data
     isodata = {
         'line2' : (1, ('1','x')),
         'line3' : (1, ('1','x','x*x')),
@@ -54,6 +55,15 @@ class Isopar(object):
                        'x*y*z*z',
                        'x*x*y*y*z','x*x*y*z*z','x*y*y*z*z',
                        'x*x*y*y*z*z')),
+        'hex36' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
+                       'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
+                       'x*x*y*y','x*x*z*z','y*y*z*z','x*x*y*z','x*y*y*z',
+                       'x*y*z*z',
+                       'x*x*y*y*z','x*x*y*z*z','x*y*y*z*z',
+                       'x*x*y*y*z*z',
+                       'z*z*z','x*z*z*z','y*z*z*z',
+                       'x*x*z*z*z','y*y*z*z*z','x*y*z*z*z',
+                       'x*x*y*z*z*z','x*y*y*z*z*z','x*x*y*y*z*z*z')),
         }
 
 
@@ -109,5 +119,21 @@ def transformFormex(F,trf):
     return trf.transformFormex(F)
     
 Formex.isopar = transformFormex
+
+
+def isopar(F,eltype,coords,oldcoords):
+    return Isopar(eltype,coords,oldcoords).transformFormex(F)
+
+
+# the following formulations are equivalent
+# 1.
+#   trf = Isopar(eltype,coorsd,oldcoords)
+#   G = F.isopar(trf)
+# 2.
+#   trf = Isopar(eltype,coorsd,oldcoords)
+#   G = trf.transformFormex(F)
+# 3.
+#   G = isopar(F,eltype,,coorsd,oldcoords)
+#
 
 # End

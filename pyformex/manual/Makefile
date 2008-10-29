@@ -1,5 +1,6 @@
 # Makefile for the pyFormex manual
 #
+PKGNAME=pyformex
 
 PYTHONDIR=/usr/lib/python2.4
 MKHOWTO=mkhowto 
@@ -18,6 +19,9 @@ REMOVEFILES= images images.* img*.png index.dat *.pl WARNINGS pyfav.png *.how
 MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png
 RSYNC= rsync -av -e ssh
+
+# our local ftp server
+FTPLOCAL=bumps:/home/ftp/pub/${PKGNAME}
 
 # Default target
 .PHONY all: pdf html
@@ -52,6 +56,10 @@ pub: #pdf html
 	${RSYNC} pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 	${RSYNC} ${MANDOCS} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
 	${RSYNC} ${MANIMAGES} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
+
+# and to our ftp server
+publocal:
+	rsync -lt pyformex.pdf ${FTPLOCAL}
 
 clean:
 	rm *~ *.mpx

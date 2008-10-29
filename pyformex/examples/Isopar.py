@@ -96,10 +96,7 @@ if sdim < tdim:
 x1 = x1.scale(sz)
 x2 = x2.scale(sz)
 
-
-trf = Isopar(eltype,x2.points(),x1.points())
-#G = trf.transformFormex(F)
-G = F.isopar(trf)
+G=isopar(F,eltype,x2.points(),x1.points())
 G.setProp(1)
 
 message('This is the transformed Formex')
