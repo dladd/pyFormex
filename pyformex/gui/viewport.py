@@ -211,6 +211,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             'number' : self.pick_numbers,
             }
         self.drawing_mode = None
+        # Drawing options
+        self.resetOptions()
+
+    def resetOptions(self):
+        self.options = dict(
+            view = None,       # Keep the current camera angles
+            bbox = 'auto',     # Automatically zoom on the drawed object
+            clear = False,
+            shrink = None,
+            )
        
 
     def setCursorShape(self,t):

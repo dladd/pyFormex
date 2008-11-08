@@ -24,6 +24,7 @@ Options:
   --detect           Detect helper software and print report.
   --debug            display debugging info to sys.stdout
   --test             testing mode: only for developers!
+  --classify         classify the examples in categories
   --whereami         show where the pyformex package is located
   --remove           remove the pyformex installation
   --version          show program's version number and exit

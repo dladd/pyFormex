@@ -288,7 +288,7 @@ def play(fn=None,step=False):
             return
     stepmode = step
     reset()
-    GD.debug("Current Drawing Options: %s" % DrawOptions)
+    GD.debug("Current Drawing Options: %s" % GD.canvas.options)
     message("Running script (%s)" % fn)
     GD.gui.history.add(fn)
     stepmode = step
@@ -304,89 +304,6 @@ def play(fn=None,step=False):
 allowwait = True
 drawlocked = False
 drawtimer = None
-
-def drawwait():
-    """Wait for the drawing lock to be released.
-
-    While we are waiting, events are processed.
-    """
-    global drawlocked
-    while drawlocked:
-        GD.app.processEvents()
-        GD.canvas.update()
-
-
-def drawlock():
-    """Lock the drawing function for the next drawdelay seconds."""
-    global drawlocked, drawtimer
-    drawtimeout = DrawOptions['wait']
-    if not drawlocked and drawtimeout > 0:
-        drawlocked = True
-        drawtimer = threading.Timer(drawtimeout,drawrelease)
-        drawtimer.start()
-
-def drawblock():
-    """Lock the drawing function indefinitely."""
-    global drawlocked, drawtimer
-    if drawtimer:
-        drawtimer.cancel()
-    if not drawlocked:
-        drawlocked = True
-
-def drawrelease():
-    """Release the drawing function.
-
-    If a timer is running, cancel it.
-    """
-    global drawlocked, drawtimer
-    drawlocked = False
-    if drawtimer:
-        drawtimer.cancel()
-
-
-def reset():
-    global DrawOptions
-    DrawOptions = dict(
-        view = None,       # Keep the current camera angles
-        bbox = 'auto',     # Automatically zoom on the drawed object
-        clear = False,
-        shrink = None,
-        wait = GD.cfg['draw/wait']
-        )
-    GD.canvas.resetDefaults(GD.cfg['canvas'])
-    clear()
-    view('front')
-
-def resetAll():
-    wireframe()
-    reset()
-    
-def setDrawOptions(d):
-    global DrawOptions
-    DrawOptions.update(d)
-    
-def showDrawOptions():
-    global DrawOptions
-    GD.message("Current Drawing Options: %s" % DrawOptions)
-
-
-def shrink(v):
-    setDrawOptions({'shrink':v})
-    
-
-def setView(name,angles=None):
-    """Set the default view for future drawing operations.
-
-    If no angles are specified, the name should be an existing view, or
-    the predefined value '__last__'.
-    If angles are specified, this is equivalent to createView(name,angles)
-    followed by setView(name).
-    """
-    global DrawOptions
-    if name != '__last__' and angles:
-        createView(name,angles)
-    DrawOptions['view'] = name
-
 
 def draw(F, view=None,bbox='auto',
          color='prop',colormap=None,alpha=0.5,
@@ -478,7 +395,7 @@ def draw(F, view=None,bbox='auto',
         drawwait()
 
     if clear is None:
-        clear = DrawOptions.get('clear',False)
+        clear = GD.canvas.options.get('clear',False)
     if clear:
         clear_canvas()
 
@@ -487,10 +404,10 @@ def draw(F, view=None,bbox='auto',
         setView(view)
 
     if shrink is None:
-        shrink = DrawOptions.get('shrink',None)
+        shrink = GD.canvas.options.get('shrink',None)
  
     if marksize is None:
-        marksize = DrawOptions.get('marksize',GD.cfg.get('marksize',5.0))
+        marksize = GD.canvas.options.get('marksize',GD.cfg.get('marksize',5.0))
        
     # Create the colors
     if color == 'prop':
@@ -521,7 +438,7 @@ def draw(F, view=None,bbox='auto',
         if view is not None or bbox is not None:
             #GD.debug("CHANGING VIEW to %s" % view)
             if view == 'last':
-                view = DrawOptions['view']
+                view = GD.canvas.options['view']
             if bbox == 'auto':
                 bbox = F.bbox()
             #GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
@@ -540,6 +457,82 @@ def draw(F, view=None,bbox='auto',
     finally:
         GD.gui.setBusy(False)
     return actor
+
+
+
+
+def drawwait():
+    """Wait for the drawing lock to be released.
+
+    While we are waiting, events are processed.
+    """
+    global drawlocked
+    while drawlocked:
+        GD.app.processEvents()
+        GD.canvas.update()
+
+
+def drawlock():
+    """Lock the drawing function for the next drawdelay seconds."""
+    global drawlocked, drawtimer, draw_wait
+    if not drawlocked and draw_wait > 0:
+        drawlocked = True
+        drawtimer = threading.Timer(draw_wait,drawrelease)
+        drawtimer.start()
+
+def drawblock():
+    """Lock the drawing function indefinitely."""
+    global drawlocked, drawtimer
+    if drawtimer:
+        drawtimer.cancel()
+    if not drawlocked:
+        drawlocked = True
+
+def drawrelease():
+    """Release the drawing function.
+
+    If a timer is running, cancel it.
+    """
+    global drawlocked, drawtimer
+    drawlocked = False
+    if drawtimer:
+        drawtimer.cancel()
+
+
+def reset():
+    global draw_wait
+    GD.canvas.resetOptions()
+    draw_wait = GD.cfg['draw/wait']
+    GD.canvas.resetDefaults(GD.cfg['canvas'])
+    clear()
+    view('front')
+
+def resetAll():
+    wireframe()
+    reset()
+    
+def setDrawOptions(d):
+    GD.canvas.options.update(d)
+    
+def showDrawOptions():
+    GD.message("Current Drawing Options: %s" % GD.canvas.options)
+
+
+def shrink(v):
+    setDrawOptions({'shrink':v})
+    
+
+def setView(name,angles=None):
+    """Set the default view for future drawing operations.
+
+    If no angles are specified, the name should be an existing view, or
+    the predefined value '__last__'.
+    If angles are specified, this is equivalent to createView(name,angles)
+    followed by setView(name).
+    """
+    if name != '__last__' and angles:
+        createView(name,angles)
+    setDrawOptions({'view':name})
 
 
 def _shrink(F,factor):
