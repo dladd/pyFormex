@@ -53,9 +53,9 @@ html/${TGT}.html: ${SRC}
 
 # Transfer the files to BerliOS
 pub: #pdf html
-	${RSYNC} pyformex.pdf bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
-	${RSYNC} ${MANDOCS} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/manual
-	${RSYNC} ${MANIMAGES} bverheg@shell.berlios.de:/home/groups/pyformex/htdocs/images
+	${RSYNC} pyformex.pdf shell.berlios.de:/home/groups/ftp/pub/pyformex
+	${RSYNC} ${MANDOCS} shell.berlios.de:/home/groups/pyformex/htdocs/manual
+	${RSYNC} ${MANIMAGES} shell.berlios.de:/home/groups/pyformex/htdocs/images
 
 # and to our ftp server
 publocal:

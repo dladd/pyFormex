@@ -21,7 +21,7 @@ MANDIR= ${PYFORMEXDIR}/manual
 LIBDIR= ${PYFORMEXDIR}/lib
 DOCDIR= ${PYFORMEXDIR}/doc
 
-SOURCE= \
+SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
@@ -34,7 +34,7 @@ EXAMPLES= \
 EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/examples/*.db)
 
 
-OTHERSTAMPABLE= setup.py \
+OTHERSTAMPABLE= setup.py Makefile\
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
 	${LIBDIR}/Makefile \

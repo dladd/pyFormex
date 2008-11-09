@@ -373,4 +373,21 @@ def runtime():
     return time.clock() - starttime
 
 
+def runApp(args):
+    """Run the application without gui."""
+    # remaining args are interpreted as scripts, possibly interspersed
+    # with arguments for the scripts.
+    # each script should pop the required arguments from the list,
+    # and return the remainder
+##    GD.message = message
+
+    while len(args) > 0:
+        scr = args.pop(0) 
+        if os.path.exists(scr) and utils.isPyFormex(scr):
+            play(scr,args)
+        else:
+            raise RuntimeError,"No such pyFormex script found: %s" % scr
+
+    return 0
+
 #### End

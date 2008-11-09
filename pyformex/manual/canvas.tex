@@ -66,13 +66,13 @@ Draw object(s) with specified settings and direct camera to it.
 
  
 \section{Viewing the scene}
-Once the Formex is drawn, you can manipulate it interactively using the mouse: you can rotate, translate and zoom with any of the methods decribed in \ref{cha:gui}. You should understand though that these methods do not change your Formex, but only how it is viewed by the observer. 
+Once the Formex is drawn, you can manipulate it interactively using the mouse: you can rotate, translate and zoom with any of the methods decribed in \ref{sec:mouse-interactions}. You should understand though that these methods do not change your Formex, but only how it is viewed by the observer. 
 
 Our drawing board is based on OpenGL. The whole OpenGL drawing/viewing process can best be understood by making the comparison with the set of a movie, in which actors appear in a 3D scene, and a camera that creates a 2D image by looking at the scene with a certain lens from some angle and distance. Drawing a Formex then is nothing more than making an actor appear on the scene. The OpenGL machine will render it according to the current camera settings. 
 
-Viewing transformations using the mouse will only affect the camera, but not the scene. Thus, if you move the Formex by sliding your mouse with button 3 depressed to the right, the Formex will \emph{look like it is moving to the right,} though it is actually not: we simply move the camera in the opposite direction. Therefore, you will notice that moving the scene will not just translation the picture: its shape will change too, because of changing perspective.
+Viewing transformations using the mouse will only affect the camera, but not the scene. Thus, if you move the Formex by sliding your mouse with button 3 depressed to the right, the Formex will \emph{look like it is moving to the right,} though it is actually not: we simply move the camera in the opposite direction. Therefore in perspective mode, you will notice that moving the scene will not just translate the picture: its shape will change too, because of the changing perspective.
 
-This also explains why there are two ways of zooming: either by changing the focal length of the lens (lens zooming) or by moving the camera towards or away from the scene (dolly zooming). The first one will change the perspective view of the scene, while the second one will not. 
+Using a camera, there are two ways of zooming: either by changing the focal length of the lens (lens zooming) or by moving the camera towards or away from the scene (dolly zooming). The first one will change the perspective view of the scene, while the second one will not. 
 
 The easiest way to set all camera parameters for properly viewing a scene is by justing telling the direction from which you want to look, and let the program determine the rest of the settings itself. \pyformex even goes a step further and has a number of built in directions readily available: 'top', 'bottom', 'left', 'right', 'front', 'back' will set up the camera looking from that direction.
 

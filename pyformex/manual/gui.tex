@@ -65,6 +65,64 @@ The \pyf main window can be resized in the usual ways.
 
 
 
+\section{Mouse interactions on the canvas}
+\label{sec:mouse-interactions}
+A number of actions can be performed by interacting with the mouse on the canvas. 
+The default initial bindings of the mouse buttons are shown in the following table. 
+\begin{tabular}{r|ccc}
+       &  LEFT  &   MIDDLE  &  RIGHT  \\
+\hline\\
+NONE   & rotate &    pan    &   zoom  \\
+SHIFT  &        &           &         \\       
+CTRL   &        &           &         \\
+ALT    & rotate &    pan    &   zoom  \\
+\end{tabular}
+During picking operations, the mouse bindings are changed as follows:
+\begin{tabular}{r|ccc}
+       &  LEFT  &   MIDDLE  &  RIGHT  \\
+\hline\\
+NONE   &   set  &           &   done  \\
+SHIFT  &   add  &           &         \\       
+CTRL   & remove &           &         \\
+ALT    & rotate &    pan    &   zoom  \\
+\end{tabular}
+
+ 
+\subsection{Rotate, pan and zoom}
+
+You can use the mouse to dynamically rotate, pan and zoom the scene displayed on the canvas. These actions are bound to the left, middle and right mouse buttons by default. Pressing the corresponding mouse button starts the action; moving the mouse with depressed button continuously performs the actions, until the button is released. During picking operations, the mouse bindings are changed. You can however still start the interactive rotate, pan and zoom, by holding down the ALT key modifier when pressing the mouse button.
+
+\begin{description}
+\item[rotate] Press the left mouse button, and while holding it down, move the mouse ove the canvas: the scene will rotate. Rotating in 3D by a 2D translation of the mouse is a fairly complex operation:
+\begin{itemize}
+\item Moving the mouse radially with respect to the center of the screen rotates around an axis lying in the screen and perpendicular to the direction of the movement.
+\item Moving tangentially rotates around an axis perpendicular to the screen (the screen z-axis), but only if the mouse was not too close to the center of the screen when the button was pressed.
+\end{itemize}
+Try it out on some examples to get a feeling of the workinhg of mouse rotation.
+
+\item[pan] Pressing the middle (or simultanuous left+right) mouse button and holding it down, will move the scene in the direction of the mouse movement. Because this is implemented as a movement of the camera in the opposite direction, the perspective of the scene may change during this operation.
+\item[zoom] Interactive zooming is performed by pressing the right mouse button and move the mouse while keeping the button depressed. The type of zoom action depends on the direction of the movement:
+\begin{itemize}
+\item horizontal movement zooms by camera lens angle,
+\item vertical movement zooms by changing camera distance.
+\end{itemize}
+The first mode keeps the perspective, the second changes it. Moving right and upzooms in, left and down zooms out. Moving diagonally from upper left to lower right more or less keeps the image size, while changing the perspective.
+
+\end{description}
+
+\subsection{Interactive selection}
+During picking operations, the mouse button functionality is changed. Click and drag the left mouse button to create a rectangular selection region on the canvas. Depending on the modifier key that was used when pressing the button, the selected items will be:
+\begin{description}
+\item[NONE] set as the current selection;
+\item[SHIFT] added to the currentselection;
+\item[CTRL] removed from the current selection.
+\end{description}
+Clicking the right mouse button finishes the interactive selection mode.
+
+During selection mode, using the mouse buttons in combination with the ALT modifier key will still activate the default mouse functions (rotate/pan/zoom). 
+
+
+
 
 \section{Customizing the GUI}
 \label{sec:customize-gui}

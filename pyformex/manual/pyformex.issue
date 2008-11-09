@@ -1,7 +1,21 @@
-pyFormex is a Free (GPL) program for generating and operating upon large structured sets of 3D-coordinates by means of mathematical transformations. Thanks to a powerful (Python based) scripting language, pyFormex is very well suited for the automated design of spatial frame structures. It provides a wide range of operations on triangulated surfaces. pyFormex is also used as Finite Element pre- and post-processor. Finally, you may want to use it just for creating some nice graphics.
 
-Using pyFormex, the topology of the elements and the final geometrical form can be decoupled, as in the example shown. Often, topology is created first and then mapped onto the geometry. But the scripting language of course lets the user define any sequence of transformations, provided or user defined. 
-Building parametric models becomes a natural thing.
 
-While pyFormex is still under development (http://pyformex.berlios.de), it already provides a fairly stable scripting language and an OpenGL GUI environment for displaying and manipulating the generated structures. 
+pyFormex is a tool for generating, manipulating and transforming large
+geometrical models of 3D structures by sequences of mathematical 
+transformations. Thanks to a powerful (Python based) scripting language,
+pyFormex is very well suited for the automated design of spatial frame
+structures. It provides a wide range of operations on surface meshes, 
+like STL type triangulated surfaces. There are provisions to import medical 
+scan images. pyFormex can also be used as a pre- and post-processor for 
+Finite Element analysis programs. Finally, it might be used just for 
+creating some nice graphics.
 
+Using pyFormex, the topology of the elements and the final geometrical form
+can be decoupled. Often, topology is created first and then mapped onto the
+geometry. Through the scripting language, the user can define any sequence
+of transformations, built from provided or user defined functions. 
+This way, building parametric models becomes a natural thing.
+
+While pyFormex is still under development (http://pyformex.berlios.de), 
+it already provides a fairly stable scripting language and an OpenGL GUI
+environment for displaying and manipulating the generated structures. 

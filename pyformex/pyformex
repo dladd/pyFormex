@@ -59,24 +59,6 @@ def printcfg(key):
 
 ###########################  app  ################################
 
-def runApp(args):
-    """Run the application without gui."""
-    # remaining args are interpreted as scripts, possibly interspersed
-    # with arguments for the scripts.
-    # each script should pop the required arguments from the list,
-    # and return the remainder
-##    GD.message = message
-
-    while len(args) > 0:
-        scr = args.pop(0) 
-        if os.path.exists(scr) and utils.isPyFormex(scr):
-            play(scr,args)
-        else:
-            raise RuntimeError,"No such pyFormex script found: %s" % scr
-
-    #for line in sys.stdin:
-    #    print "||%s" % line
-
     
 def main(argv=None):
     """This is a fairly generic main() function.
@@ -256,7 +238,11 @@ You will need proper permissions to actually delete the files.
     # Run the application with the remaining arguments
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
+        GD.debug("GUI version")
         from gui.gui import runApp
+    else:
+        GD.debug("NONGUI version")
+        from script import runApp
     #
     # THE FOLLOWING DOES NOT HELP, BECAUSE WITH GUI, Qt4 sets the locale back
     # Still, we leave it here, because one day we may load the gui before
@@ -274,17 +260,9 @@ You will need proper permissions to actually delete the files.
     return res
 
 
-#### Go
+# Go
 
 if __name__ == "__main__":
     sys.exit(main())
 
-# The following lines make Emacs recognize this as Python source,
-# even though the filename has no .py extension
-
-# Local Variables #
-# mode:Python #
-# End #
-
-
-#### End
+# End
