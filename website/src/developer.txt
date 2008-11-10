@@ -8,20 +8,15 @@ restindex
     initialheaderlevel: 2
 /restindex
   
+.. include:: links.inc
   
 Developer
 ---------
-  
-.. _`Summary`: http://developer.berlios.de/projects/pyformex/
-.. _`SVN`: http://developer.berlios.de/svn/?group_id=2717
-.. _`Releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
-.. _`Forums`: http://developer.berlios.de/forum/?group_id=2717
-.. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
-
 
 - `Summary`_
-- `SVN`_
-- `Releases`_
+- `SVN repository`_
+- `Official releases`_
 - `Forums`_
 - `Bug tracker`_
 
+.. End

@@ -1,3 +1,4 @@
+.. This may look like plain text, but is really -*- rst -*-
 restindex	
     crumb: Postprocessing
     format: rest
@@ -20,3 +21,5 @@ This image renders the distance of all points of the geometry to a single fixed 
 .. image:: ../images/postproc.png
    :align: center
 
+
+.. End

@@ -8,14 +8,13 @@ restindex
     initialheaderlevel: 2
 /restindex
 
+.. include:: links.inc
 
 Links
 -----
-  
-.. _`stent research group`: http://www.stent-ibitech.ugent.be/
-.. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be/
-.. _`BuMPer cluster`: http://bumps.ugent.be/bumper/
 
 - The `stent research group`_ at IBiTech hosts several developers and users of pyFormex.
 - `IBiTech - Ghent University`_.
 - The `BuMPer cluster`_.
+
+.. End

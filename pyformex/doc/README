@@ -118,6 +118,17 @@ install python-gl2ps: it includes the gl2ps library and the Python bindings.
 
 
 
+Running pyFormex from SVN sources
+---------------------------------
+The `SVN repository`_ on the developer site is accessible by anonymous SVN.
+The command ``svn checkout svn://svn.berlios.de/pyformex/trunk`` will checkout
+the source to a local directory ``trunk``. Provided you have all the 
+prerequisites installed, pyFormex can then be run directly from the checked out
+source: ``trunk/pyformex/pyformex``. 
+If you want to use the compiled accelerator library however, you will have to
+create it first: ``cd trunk/pyformex/lib; ./configure; make`` should do it.
+ 
+
 Documentation
 =============
 
@@ -144,4 +155,8 @@ If you find any bugs or malfunctions in pyFormex, please submit them to
 http://developer.berlios.de/bugs/?group_id=2717
 
 
-# End
+Links
+=====
+.. _`SVN repository`: http://developer.berlios.de/svn/?group_id=2717
+
+.. End

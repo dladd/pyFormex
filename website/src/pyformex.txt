@@ -1,51 +1,69 @@
+.. This may look like plain text, but is really -*- rst -*-
 restindex	
     crumb: Home
-    format: html
+    format: rest
     page-title: pyFormex Home
     encoding: utf-8
     output-encoding: None
+    initialheaderlevel: 2
 /restindex
 uservalues
   anchors: About,News,Prerequisites,Platform,Options,License
 /uservalues 
+  
+.. include:: links.inc
 
-  <a name="About" />
-  <h2>About</h2>
+About
+-----
+pyFormex is a tool for generating, manipulating and transforming large
+geometrical models of 3D structures by sequences of mathematical 
+transformations. Thanks to a powerful (Python based) scripting language,
+pyFormex is very well suited for the automated design of spatial frame
+structures. It provides a wide range of operations on surface meshes, 
+like STL type triangulated surfaces. There are provisions to import medical 
+scan images. pyFormex can also be used as a pre- and post-processor for 
+Finite Element analysis programs. Finally, it might be used just for 
+creating some nice graphics.
+
+Using pyFormex, the topology of the elements and the final geometrical form
+can be decoupled. Often, topology is created first and then mapped onto the
+geometry. Through the scripting language, the user can define any sequence
+of transformations, built from provided or user defined functions. 
+This way, building parametric models becomes a natural thing.
+
+While pyFormex is still under `development`_, it already provides a fairly stable scripting language and an OpenGL GUI environment for displaying and manipulating the generated structures. 
+
   
-  <p>A Python implementation of Formex algebra.</p>
-  <p>pyFormex is a tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical 	transformations.</p>
-  <p>It is especially suited for the automated design of spatial frame structures. But as the examples show,
-  it can also be used for other tasks, like finite element preprocessing, or just for creating some nice pictures.
-  pyFormex also offers interesting possibilities for executing specialized operations on surface meshes, usually STL type triangulated meshes 	originating from CT or MRI images.</p>
-  
-  
-  <a name="News"/>
-  <h2>News</h2>
+News
+----
 News will get inserted here
   
-  <a name="Prerequisites"/>
-  <h2>Prerequisites</h2>
-  <p>If you only want to use the Formex class, its mathematical transformation methods and scripting, without a Graphical User Interface(GUI), all you 	need is recent versions of <a href="http://www.python.org">Python</a> and <a href="http://numpy.scipy.org//" target="blank">NumPy</a>	</p>
-  <p>If you want to use the Graphical User Interface to run scripts and to render the created structures either to screen or to image files, you also 	need <a href="http://pyopengl.sourceforge.net/">PyOpenGL</a>, <a href="http://trolltech.com/products/qt" target="blank">Qt4</a> and <a 	href="http://www.riverbankcomputing.co.uk/pyqt/" target="blank">PyQt4</a></p>
-  <p>Full details are in the documentation.</p>
+             
+Prerequisites
+-------------
+If you only want to use the Formex class, its mathematical transformation methods and scripting, without a Graphical User Interface(GUI), all you need is recent versions of `Python`_ and `NumPy`_. 
+
+If you want to use the Graphical User Interface to run scripts and to render the created structures either to screen or to image files, you also need `PyOpenGL`_, `Qt4`_ and `PyQt4`_.
+  
+Full details are in the documentation.
   
   
-  <a name="Platform"/>
-  <h2>Platform</h2>
-  <p>pyFormex is written completely in Python. While it is developed on Linux platforms, it can be made to work on other platforms too, provided you 	have installed the required packages.</p>
+Platform
+--------
+pyFormex is written completely in Python. While it is developed on Linux platforms, it can be made to work on other platforms too, provided that you have installed the required packages.
   
   
-  <a name="Options"/>
-  <h2>Optional packages</h2>
-  <ul>
-    <li>If you want to save the images in .PS, .EPS or .PDF format (as shown in the WireStent example), you need the gl2ps OpenGL to PostScript 	printing library.</li>
-    <li>If you want to perform the structural analysis of the truss in the X_truss_analysis example, you need the <a 	href="ftp://bumps.ugent.be/pub/calpy/">calpy</a> analysis package version 0.3.4 or higher. Install by preference from the source; 	compiling should work without problems if you have a full NumPy installation.</li>
-  </ul>
+Options
+-------
+There are some optional packages you can install to enhance some of the functionality of pyFormex.
+
+- If you want to save the images in .PS, .EPS or .PDF format (as shown in the WireStent example), you need the gl2ps OpenGL to PostScript 	printing library.
+- If you want to perform the structural analysis of the truss in the X_truss_analysis example, you need the `Calpy`_ analysis package. Install by preference from the source; compiling should work without problems if you have a full NumPy installation.
+
   
   
-  <a name="License"/>
-  <h2>License</h2>
-  <p>This program is free software; you can redistribute it and/or modify
-  it under the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.</p>
+License
+-------
+This program is free software; you can redistribute it and/or modify it under the terms of the `GNU General Public License`_ as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+
+.. End

@@ -1,3 +1,4 @@
+.. This may look like plain text, but is really -*- rst -*-
 restindex	
     crumb: Illustrations
     format: rest
@@ -33,3 +34,5 @@ The following images were created using the *lima* plugin of pyFormex.
 
 .. image:: ../images/lima.png
 .. image:: ../images/KochLine.png
+
+.. End

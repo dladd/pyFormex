@@ -7,14 +7,14 @@ restindex
     output-encoding: None
     initialheaderlevel: 2
 /restindex
-  
+   
+.. include:: links.inc
+
 Documentation
 -------------  
 
-.. _`Online manual`: http://pyformex.berlios.de/manual/index.html
-.. _`pydoc`: http://pyformex.berlios.de/doc/index.html
-.. _`PDF-version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
-
-- `Online manual`_.
+- `Online manual`_ (also accessible from inside the pyFormex GUI).
 - Download `PDF-version`_ of the manual.
 - Automatically generated `pydoc`_ documentation (mostly useful for developers).
+
+.. End

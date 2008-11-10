@@ -1,3 +1,4 @@
+.. This may look like plain text, but is really -*- rst -*-
 restindex	
     crumb: Support
     format: rest
@@ -6,7 +7,8 @@ restindex
     output-encoding: None
     initialheaderlevel: 2
 /restindex
-  
+
+.. include:: links.inc
   
 Support
 -------
@@ -17,6 +19,4 @@ pyFormex `Forums`_.
 
 If you have a problem that looks like a malfunction or a bug in pyFormex, you can report it on the `Bug tracker`_.
 
-.. _`Forums`: http://developer.berlios.de/forum/?group_id=2717
-.. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
-
+.. End

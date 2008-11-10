@@ -8,22 +8,19 @@ restindex
     initialheaderlevel: 2
 /restindex
   
+.. include:: links.inc
 
 Download pyFormex
------------------  
+-----------------
 You can get pyFormex from one of the following sources:
-  
-.. _`Official releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
-.. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex
-.. _`the project's FTP site`: ftp://ftp.berlios.de/pub/pyformex
-.. _`SVN repository`: http://developer.berlios.de/svn/?group_id=2717
-.. _`BuMPix Linux Live CD`: ftp://bumps.ugent.be/pub/bumpix
+
+- `Official releases`_ are distributed from the developer site. For most users this is the prefered way to get pyFormex.
+
+- If you need (or want to test) new features that are not yet in the official release, you may try one of the pre-releases of the upcoming next release. The `latest`_ is usually available from the project's `FTP site`_, while our `local FTP server`_ contains a collection of both newer and older releases.
+
+- If the packed releases do not work for you, or you need the latest features not yet available in a release, you can always install the pyFormex source file repository. The `SVN repository`_ on the developer site is accessible by anonymous SVN. The command ``svn checkout svn://svn.berlios.de/pyformex/trunk`` will checkout the source to a local directory ``trunk``. Provided you have all the prerequisites installed, pyFormex can then be run directly from the checked out source: ``trunk/pyformex/pyformex``. If you want to use the compiled accelerator library however, you will have to create it first: ``cd trunk/pyformex/lib; ./configure; make`` should do it.
 
 
-- `Official releases`_ are distributed from the developer site. For most users this is the prefered way get pyFormex.
+- Finally, if you can not install all the prerequisites but still would like to try out the program, you can run pyFormex directly from the `BuMPix Linux Live`_. This is a full Linux distribution that you can run directly from CD or USB media, without the need to install anything. Just carry your USB-stick with you, and you can run pyFormex anywhere you find an available computer. 
 
-- If you need (or want to test) new features that are not yet in the official release, you may try one of the pre-releases of the upcoming next release. The latest is usually available from `the project's FTP site`_, while our `local FTP server`_ contains a collection of latest and older releases.
-
-- If the packed releases do not work for you, or you need the latest features not yet available in a release, you can always install the pyFormex source files. The `SVN repository`_ on the developer site is accessible by anonymous SVN.
-
-- Finally, if you can not install all the prerequisites but still would like to try out the program, you can run pyFormex directly from the `BuMPix Linux Live CD`_.
+.. End

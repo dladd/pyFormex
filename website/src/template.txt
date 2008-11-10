@@ -38,7 +38,7 @@
       if page['uservalues'].has_key('anchors'):
         print '<ul>'
         for a in anchors.split(','):
-          print '<li><a href="#%s">%s</a></li>' % (a,a)
+          print '<li><a href="#%s">%s</a></li>' % (a.lower(),a)
         print '</ul>'
 #>
 <br/><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a>

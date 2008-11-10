@@ -8,13 +8,13 @@ restindex
     initialheaderlevel: 2
 /restindex
 
+.. include:: links.inc
 
 pyFormex in use
 ---------------
 Though still under development, pyFormex is already being used as a valuable and indispensable tool in several research projects. To give you an idea of what it can be used for, here are some links to past research using pyFormex.
-  
-.. _`Bifurcation stenting`: http://www.stent-ibitech.ugent.be/downloads/Peter_Mortier_posterEBR2008.pdf
-.. _`FE modeling of stents`: http://www.stent-ibitech.ugent.be/downloads/Poster_Peter_Mortier_NationalDay2007.pdf
 
 - `Bifurcation stenting`_: Analysis of side branch access during bifurcation stenting.
 - `FE modeling of stents`_: Finite element analysis of bifurcation stenting.
+
+.. End
