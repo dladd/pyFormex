@@ -46,9 +46,9 @@ def readSelection(select=True,draw=True,multi=True):
     """
     types = [ 'Formex Files (*.formex)', 'All Files (*)' ]
     fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=multi)
-    if not multi:
-        fn = [ fn ]
     if fn:
+        if not multi:
+            fn = [ fn ]
         chdir(fn[0])
         names = map(utils.projectName,fn)
         GD.gui.setBusy()
@@ -74,7 +74,7 @@ def writeSelection():
     F = selection.check(single=True)
     if F:
         name = selection.names[0]
-        fn = askFilename(GD.cfg['workdir'],file="%s.formex" % name,
+        fn = askFilename(os.path.join(GD.cfg['workdir'],"%s.formex" % name),
                          filter=['(*.formex)','*'],exist=False)
         if fn:
             GD.message("Writing Formex '%s' to file '%s'" % (name,fn))
@@ -82,23 +82,7 @@ def writeSelection():
             F.write(fn)
 
 
-## def writeSelectionSTL():
-##     """Writes the currently selected Formices to .stl files."""
-##     F = selection.check(single=True)
-##     if F:
-##         name = selection.names[0]
-##         fn = askFilename(GD.cfg['workdir'],file="%s.stl" % name,
-##                          filter=['(*.stl)','*'],exist=False)
-##         if fn:
-##             print "Writing Formex '%s' to file '%s'" % (name,fn)
-##             print named(name).bbox()
-##             chdir(fn)
-##             surface.write_stla(fn,named(name).f)
-
-
-
 ################### Change attributes of Formex #######################
-
 
 
 def shrink():
@@ -108,7 +92,6 @@ def shrink():
     else:
         selection.shrink = None
     selection.draw()
-    
 
 
 #################### CoordPlanes ####################################

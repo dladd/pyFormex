@@ -121,13 +121,20 @@ def askItems(items,caption=None,**kargs):
     return res
 
 
-def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=False):
-    """Ask for a file name or multiple file names."""
+def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
+    """Ask for a file name or multiple file names using a file dialog.
+
+    cur is a directory or filename. All the files matching the filter in that
+    directory (or that file's directory) will be shown.
+    If cur is a file, it will be selected as the current filename.
+    """
     if cur is None:
         cur = GD.cfg['workdir']
+    fn = os.path.basename(cur)
+    cur = os.path.dirname(cur)
     w = widgets.FileSelection(cur,filter,exist,multi)
-    if file:
-        w.selectFile(file)
+    if fn:
+        w.selectFile(fn)
     fn = w.getFilename()
     if fn:
         if multi:
@@ -141,9 +148,14 @@ def askFilename(cur=None,filter="All files (*.*)",file=None,exist=False,multi=Fa
 
 
 def askDirname(cur=None):
-    """Ask for an existing directory name."""
+    """Ask for an existing directory name.
+
+    cur is a directory. All the directories in that directory will
+    initially be shown.
+    """
     if cur is None:
         cur = GD.cfg['workdir']
+    cur = os.path.dirname(cur)
     fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
     if fn:
         chdir(fn)

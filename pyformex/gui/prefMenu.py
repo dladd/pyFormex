@@ -194,7 +194,9 @@ def setSplash():
     w.close()
     if fn:
         GD.cfg['gui/splash'] = fn
-      
+
+def setAutoRun():
+    askConfigPreferences(['autorun'])
 
 w=None
 
@@ -203,7 +205,6 @@ def setScriptDirs():
     scr = GD.cfg['scriptdirs']
     w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Delete',removeRow),('OK',)])
     w.show()
-    
 
 def insertRow():
     ww = widgets.FileSelection(GD.cfg['workdir'],'*',exist=True,dir=True)
@@ -271,6 +272,7 @@ MenuData = [
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
         (_('&Splash Image'),setSplash),
+        (_('&Startup Scripts'),setAutoRun),
         (_('&Script Paths'),setScriptDirs),
         (_('&Commands'),setCommands),
         (_('&SysPath'),setSysPath),

@@ -4,9 +4,9 @@
 #
 # Prerequisites: libglib2.0-dev
 #
-# ./install_gts get unpack make
-# sudo ./install_gts install rename
-# ./install_gts clean
+# ./gts_install get unpack patch make
+# sudo ./gts_install install rename
+# ./gts_install clean
 #
 # Use at your own risk if you do not understand what is happening!
 #
@@ -41,6 +41,11 @@ install() {
   make install
 }
 
+Patch() {
+    cd $NAME
+    patch -p0 < ../gts-0.7.6-bv.patch
+}
+
 # !! Only examples delaunay and transform are installed.
 # Better copy from build directory
 rename() {
@@ -52,19 +57,22 @@ rename() {
       gtsname=gts${name#gts}
       src=/usr/local/bin/$name
       tgt=/usr/local/bin/$gtsname
-      mv $src $tgt
+      [ -f "$src" -a "$src" != "$tgt" ] && mv $src $tgt
   done
 }
 
 clean() {
     rm -rf $NAME
+    rm -f $ARCHIVE
 }
 
 for cmd in "$@"; do
 
     case $cmd in 
 	get | unpack | install | rename | clean ) $cmd;;
+	patch ) Patch;;
 	make ) Make;;
+	all ) get;unpack;Patch;Make;install;rename;clean;;
         * ) echo "UNKNOWN command $cmd";;
     esac
 
