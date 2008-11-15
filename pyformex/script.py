@@ -198,6 +198,7 @@ def system(cmdline,result='output'):
 scriptDisabled = False
 scriptRunning = False
 exitrequested = False
+stepmode = False
 starttime = 0.0
 
  
@@ -208,6 +209,10 @@ def playScript(scr,name=None,argv=[]):
     same time.
     If a name is specified, sets the global variable GD.scriptName if and
     when the script is started.
+    
+    If step==True, an indefinite pause will be started after each line of
+    the script that starts with 'draw'. Also (in this case), each line
+    (including comments) is echoed to the message board.
     """
     global scriptDisabled,scriptRunning,exitrequested
     GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
@@ -217,6 +222,17 @@ def playScript(scr,name=None,argv=[]):
         return
     scriptRunning = True
     exitrequested = False
+
+    if GD.gui:
+        global stepmode,exportNames,starttime
+        GD.debug('GUI SCRIPT MODE %s'% (stepmode))
+        GD.gui.drawlock.allow()
+        GD.canvas.update()
+        GD.gui.actions['Play'].setEnabled(False)
+        GD.gui.actions['Continue'].setEnabled(True)
+        GD.gui.actions['Stop'].setEnabled(True)
+       
+        GD.app.processEvents()
     
     # Get the globals
     g = Globals()
@@ -254,7 +270,7 @@ def playScript(scr,name=None,argv=[]):
         GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
         if GD.gui:
             stepmode = False
-            drawrelease() # release the lock
+            GD.gui.drawlock.release() # release the lock
             GD.gui.actions['Play'].setEnabled(True)
             #GD.gui.actions['Step'].setEnabled(False)
             GD.gui.actions['Continue'].setEnabled(False)
@@ -263,6 +279,28 @@ def playScript(scr,name=None,argv=[]):
     if exitall:
         GD.debug("Calling exit() from playscript")
         exit()
+
+
+def force_finish():
+    global scriptRunning,stepmode
+    scriptRunning = False # release the lock in case of an error
+    stepmode = False
+
+
+def step_script(s,glob,paus=True):
+    buf = ''
+    for line in s:
+        if buf.endswith('\\'):
+            buf[-1:] = line
+            break
+        else:
+            buf += line
+        if paus and (line.strip().startswith('draw') or
+                     line.find('draw(') >= 0 ):
+            drawblock()
+            message(buf)
+            exec(buf) in glob
+    showInfo("Finished stepping through script!")
 
 
 def breakpt(msg=None):
@@ -287,16 +325,35 @@ def stopatbreakpt():
     exitrequested = True
 
 
-def play(fn,argv=[]):
+def playFile(fn,argv=[]):
     """Play a formex script from file fn.
 
-    A list of arguments can be passed. They will be available
-    under the name argv.
+    fn is the name of a file holding a pyFormex script.
+    A list of arguments can be passed. They will be available under the name
+    argv. This variable can be changed by the script and the resulting argv
+    is returned to the caller.
     """
     message("Running script (%s)" % fn)
     playScript(file(fn,'r'),fn,argv)
     message("Finished script %s" % fn)
     return argv
+
+
+def play(fn=None,argv=[],step=False):
+    """Play a formex script from file fn or from the current file.
+
+    This function does nothing if no file is passed or no current
+    file was set.
+    """
+    global stepmode
+    if not fn and GD.gui.canPlay:
+        fn = GD.cfg['curfile']
+    else:
+        return
+    stepmode = step
+    GD.gui.history.add(fn)
+    stepmode = step
+    return playFile(fn,argv)
 
 
 def exit(all=False):
@@ -382,11 +439,11 @@ def runApp(args):
 ##    GD.message = message
 
     while len(args) > 0:
-        scr = args.pop(0) 
-        if os.path.exists(scr) and utils.isPyFormex(scr):
-            play(scr,args)
+        fn = args.pop(0) 
+        if os.path.exists(fn) and utils.isPyFormex(fn):
+            playFile(fn,args)
         else:
-            raise RuntimeError,"No such pyFormex script found: %s" % scr
+            raise RuntimeError,"No such pyFormex script found: %s" % fn
 
     return 0
 

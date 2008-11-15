@@ -42,7 +42,7 @@ def startGui():
 
 
 def closeGui():
-    print "Closing the GUI: currently, this will also terminate pyformex."
+    GD.debug("Closing the GUI: currently, this will also terminate pyformex.")
     GD.gui.close()
     
 
@@ -177,145 +177,7 @@ def log(s):
 message = log
 
 
-########################### PLAYING SCRIPTS ##############################
-
-scriptDisabled = False
-scriptRunning = False
-exitrequested = False
-stepmode = False
-starttime = 0.0
-
-
-def playScript(scr,name=None,argv=[]):
-    """Play a pyformex script scr. scr should be a valid Python text.
-
-    There is a lock to prevent multiple scripts from being executed at the
-    same time.
-    If a name is specified, sets the global variable GD.scriptName if and
-    when the script is started.
-    
-    If step==True, an indefinite pause will be started after each line of
-    the script that starts with 'draw'. Also (in this case), each line
-    (including comments) is echoed to the message board.
-    """
-    global scriptDisabled,scriptRunning,exitrequested
-    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
-    # (We only allow one script executing at a time!)
-    # and scripts are non-reentrant
-    if scriptRunning or scriptDisabled :
-        return
-    scriptRunning = True
-    exitrequested = False
-
-    if GD.gui:
-        global allowwait,stepmode,exportNames,starttime
-        GD.debug('GUI SCRIPT MODE %s'% (stepmode))
-        allowwait = True
-        GD.canvas.update()
-        GD.gui.actions['Play'].setEnabled(False)
-        GD.gui.actions['Continue'].setEnabled(True)
-        GD.gui.actions['Stop'].setEnabled(True)
-       
-        GD.app.processEvents()
-    
-    # Get the globals
-    g = Globals()
-    if GD.gui:
-        modname = 'draw'
-    else:
-        modname = 'script'
-    g.update({'__name__':modname})
-    g.update({'argv':argv})
-
-    # Now we can execute the script using these collected globals
-    exportNames = []
-    GD.scriptName = name
-    exitall = False
-
-    starttime = time.clock()
-    GD.debug('STARTING SCRIPT (%s)' % starttime)
-    try:
-        try:
-            if stepmode:
-                step_script(scr,g,True)
-            else:
-                exec scr in g
-            if GD.cfg['autoglobals']:
-                exportNames.extend(listAll(clas=formex.Formex,dic=g))
-            GD.PF.update([(k,g[k]) for k in exportNames])
-        except Exit:
-            pass
-        except ExitAll:
-            exitall = True
-    finally:
-        scriptRunning = False # release the lock in case of an error
-        elapsed = time.clock() - starttime
-        GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
-        if GD.gui:
-            stepmode = False
-            drawrelease() # release the lock
-            GD.gui.actions['Play'].setEnabled(True)
-            #GD.gui.actions['Step'].setEnabled(False)
-            GD.gui.actions['Continue'].setEnabled(False)
-            GD.gui.actions['Stop'].setEnabled(False)
-
-    if exitall:
-        GD.debug("Calling exit() from playscript")
-        exit()
-
-
-def force_finish():
-    global scriptRunning,stepmode
-    scriptRunning = False # release the lock in case of an error
-    stepmode = False
-
-
-def step_script(s,glob,paus=True):
-    buf = ''
-    for line in s:
-        if buf.endswith('\\'):
-            buf[-1:] = line
-            break
-        else:
-            buf += line
-        if paus and (line.strip().startswith('draw') or
-                     line.find('draw(') >= 0 ):
-            drawblock()
-            message(buf)
-            exec(buf) in glob
-    showInfo("Finished stepping through script!")
-
-
-def play(fn=None,step=False):
-    """Play a formex script from file fn or from the current file.
-
-    This function does nothing if no file is passed or no current
-    file was set.
-    """
-    global stepmode
-    if not fn:
-        if GD.gui.canPlay:
-            fn = GD.cfg['curfile']
-        else:
-            return
-    stepmode = step
-    reset()
-    GD.debug("Current Drawing Options: %s" % GD.canvas.options)
-    message("Running script (%s)" % fn)
-    GD.gui.history.add(fn)
-    stepmode = step
-    playScript(file(fn,'r'),fn)
-    message("Script finished")
-
-
 ############################## drawing functions ########################
-
-    
-# A timed lock to slow down drawing processes
-
-allowwait = True
-drawlocked = False
-drawtimer = None
 
 def draw(F, view=None,bbox='auto',
          color='prop',colormap=None,alpha=0.5,
@@ -375,9 +237,6 @@ def draw(F, view=None,bbox='auto',
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-
-    global allowwait
-
     if type(F) == list:
         actor = []
         nowait = False
@@ -403,8 +262,7 @@ def draw(F, view=None,bbox='auto',
             isinstance(F,tools.Plane)):
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
-    if allowwait:
-        drawwait()
+    GD.gui.drawlock.wait()
 
     if clear is None:
         clear = GD.canvas.options.get('clear',False)
@@ -461,60 +319,17 @@ def draw(F, view=None,bbox='auto',
         #GD.debug("AUTOSAVE %s" % image.autoSaveOn())
         if image.autoSaveOn():
             image.saveNext()
-        if allowwait and wait:
-    ##        if stepmode:
-    ##            drawblock()
-    ##        else:
-            drawlock()
+        if wait: # make sure next drawing operation is retarded
+            GD.gui.drawlock.lock()
     finally:
         GD.gui.setBusy(False)
     return actor
 
 
 
-
-def drawwait():
-    """Wait for the drawing lock to be released.
-
-    While we are waiting, events are processed.
-    """
-    global drawlocked
-    while drawlocked:
-        GD.app.processEvents()
-        GD.canvas.update()
-
-
-def drawlock():
-    """Lock the drawing function for the next drawdelay seconds."""
-    global drawlocked, drawtimer, draw_wait
-    if not drawlocked and draw_wait > 0:
-        drawlocked = True
-        drawtimer = threading.Timer(draw_wait,drawrelease)
-        drawtimer.start()
-
-def drawblock():
-    """Lock the drawing function indefinitely."""
-    global drawlocked, drawtimer
-    if drawtimer:
-        drawtimer.cancel()
-    if not drawlocked:
-        drawlocked = True
-
-def drawrelease():
-    """Release the drawing function.
-
-    If a timer is running, cancel it.
-    """
-    global drawlocked, drawtimer
-    drawlocked = False
-    if drawtimer:
-        drawtimer.cancel()
-
-
 def reset():
-    global draw_wait
     GD.canvas.resetOptions()
-    draw_wait = GD.cfg['draw/wait']
+    GD.gui.drawwait = GD.cfg['draw/wait']
     GD.canvas.resetDefaults(GD.cfg['canvas'])
     clear()
     view('front')
@@ -659,9 +474,7 @@ def focus(object):
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
-    global allowwait
-    if allowwait and wait:
-        drawwait()
+    GD.gui.drawlock.wait()
     if v != '__last__':
         angles = GD.canvas.view_angles.get(v)
         if not angles:
@@ -670,8 +483,9 @@ def view(v,wait=False):
         GD.canvas.setCamera(None,angles)
     setView(v)
     GD.canvas.update()
-    if allowwait and wait:
-        drawlock()
+    if wait:
+        GD.gui.drawlock.lock()
+
 
 def setTriade(on=None):
     """Toggle the display of the global axes on or off.
@@ -855,9 +669,7 @@ def clear_canvas():
 
 def clear():
     """Clear the canvas"""
-    global allowwait
-    if allowwait:
-        drawwait()
+    GD.gui.drawlock.wait()
     clear_canvas()
     GD.canvas.update()
 
@@ -870,9 +682,9 @@ def redraw():
 def pause(msg="Use the Step/Continue buttons to proceed"):
     if msg:
         GD.message(msg)
-    if allowwait:
-        drawblock()    # will need external event to release it
-        while (drawlocked):
+    if GD.gui.drawlock.allowed:
+        GD.gui.drawlock.lock()    # will need external event to release it
+        while (GD.gui.drawlock.locked):
             sleep(0.5)
             GD.app.processEvents()
 
@@ -885,7 +697,7 @@ def step():
     Else, it starts the script in step mode.
     """
     if scriptRunning:
-        drawrelease()
+        GD.gui.drawlock.release()
     else:
         if ack("""
 STEP MODE is currently only possible with specially designed,
@@ -898,9 +710,7 @@ Are you REALLY SURE you want to run this script in step mode?
         
 
 def fforward():
-    global allowwait
-    allowwait = False
-    drawrelease()
+    GD.gui.drawlock.free()
 
 
 def delay(i):

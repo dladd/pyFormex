@@ -34,6 +34,7 @@ import viewport
 import script
 import draw
 import widgets
+import drawlock
 
 
 ############### General Qt utility functions #######
@@ -280,6 +281,11 @@ class GUI(QtGui.QMainWindow):
             printsize(self.board,'DEBUG: Board:')
 
 
+        # Drawing lock
+        self.drawwait = GD.cfg['draw/wait']
+        self.drawlock = drawlock.DrawLock()
+ 
+
 
     def addStatusBarButtons(self):
         sbh = self.statusbar.height()
@@ -450,7 +456,8 @@ class GUI(QtGui.QMainWindow):
 
     def cleanup(self):
         """Cleanup the GUI (restore default state)."""
-        draw.drawrelease()
+        GD.debug('GUI cleanup')
+        self.drawlock.release()
         GD.canvas.cancel_selection()
         self.setBusy(False)
 
@@ -504,9 +511,7 @@ def quit():
     """Quit the GUI"""
     sys.stderr = sys.__stderr__
     sys.stdout = sys.__stdout__
-    draw.drawrelease()
     if GD.app:
-        GD.canvas.cancel_selection()
         GD.app.exit()
 
 

@@ -296,6 +296,8 @@ class ScriptsMenu(QtGui.QMenu):
         GD.debug("Playing script %s" % selected)
         GD.gui.setcurfile(selected)
         if self.autoplay:
+            GD.debug("Drawing Options: %s" % GD.canvas.options)
+            draw.reset()
             draw.play()
 
 
