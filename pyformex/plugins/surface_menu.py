@@ -728,6 +728,32 @@ def sliceIt():
         export({'%s/slices%s' % (selection[0],axis):G}) 
 
 
+##################  Smooth the selected surface #############################
+
+def smoothLowPass():
+    """Smooth the selected surface using a low-pass filter."""
+    S = selection.check(single=True)
+    if S:
+        res = askItems([('lambda_value',0.5),
+                ('n_iterations',2)],'Low-pass filter')
+        if res:
+            selection.remember(True)
+            S.smoothLowPass(res['n_iterations'],res['lambda_value'])
+            selection.drawChanges()
+
+
+def smoothLaplaceHC():
+    """Smooth the selected surface using a Laplace filter and HC algorithm."""
+    S = selection.check(single=True)
+    if S:
+        res = askItems([('lambda_value',0.5),
+                ('n_iterations',2),('alpha',0.),('beta',0.2)],'Laplace filter and HC algorithm')
+        if res:
+            selection.remember(True)
+            S.smoothLaplaceHC(res['n_iterations'],res['lambda_value'],res['alpha'],res['beta'])
+            selection.drawChanges()
+
+
 ###################################################################
 ########### The following functions are in need of a make-over
 
@@ -1143,6 +1169,10 @@ def create_menu():
           ("&Cut by Planes",cutSelectionByPlanes),
           ("&Intersect With Plane",intersectWithPlane),
           ("&Slice",sliceIt),
+           ]),
+        ("&Smooth",
+         [("&Low-pass filter",smoothLowPass),
+         ("&Laplace and HC algorithm",smoothLaplaceHC),
            ]),
         ("&Undo Last Changes",selection.undoChanges),
         ('&GTS functions',

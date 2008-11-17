@@ -448,6 +448,15 @@ def create_border_triangle(coords,elems):
     return elems,triangle
 
 
+def adjacencyList(elems):
+    """Create adjacency lists for 2-node elements."""
+    if len(elems.shape) != 2 or elems.shape[1] != 2:
+        raise ValueError,"""Expected a set of 2-node elements."""
+    elems = elems.astype(int)
+    ok = [ where(elems==i) for i in range(elems.max()+1) ]
+    return [ list(elems[w[0],1-w[1]]) for w in ok ]
+
+
 ############################################################################
 # The TriSurface class
 
@@ -1439,6 +1448,37 @@ Total area: %s; Enclosed volume: %s
         p = A.partitionByConnection()
         prop = p[elemlist == target]
         return elemlist[p==prop]
+
+
+##################  Smooth a surface #############################
+
+    def smoothLowPass(self,n_iterations=2,lambda_value=0.5):
+        """Smooth the surface using a low-pass filter."""
+        mu_value = -1.02*lambda_value
+        adj = adjacencyList(self.edges)
+        bound_edges = where(self.borderEdges())[0]
+        inter_vertex = resize(True,self.ncoords())
+        inter_vertex[unique1d(self.edges[bound_edges])] = False
+        inter_vertices = where(inter_vertex)[0]
+        p = self.coords
+        for step in range(n_iterations):
+            p[inter_vertex] = asarray([p[i] + lambda_value*(p[adj[i]]-p[i]).mean(0) for i in inter_vertices])
+            p[inter_vertex] = asarray([p[i] + mu_value*(p[adj[i]]-p[i]).mean(0) for i in inter_vertices])
+    
+    
+    def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
+        """Smooth the surface using a Laplace filter and HC algorithm."""
+        adj = adjacencyList(self.edges)
+        bound_edges = where(self.borderEdges())[0]
+        inter_vertex = resize(True,self.ncoords())
+        inter_vertex[unique1d(self.edges[bound_edges])] = False
+        inter_vertices = where(inter_vertex)[0]    
+        o = self.coords.copy()
+        p = self.coords
+        for step in range(n_iterations):
+            pn = [ p[i] + lambda_value*(p[adj[i]]-p[i]).mean(0) for i in range(len(adj)) ]
+            b = pn - (alpha*o + (1-alpha)*p)
+            p[inter_vertex] = asarray([pn[i] - (beta*b[i] + (1-beta)*b[adj[i]].mean(0)) for i in inter_vertices])
 
 
 ########################## Methods using GTS #############################
