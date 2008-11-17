@@ -346,10 +346,11 @@ def play(fn=None,argv=[],step=False):
     file was set.
     """
     global stepmode
-    if not fn and GD.gui.canPlay:
-        fn = GD.cfg['curfile']
-    else:
-        return
+    if not fn:
+        if GD.gui.canPlay:
+            fn = GD.cfg['curfile']
+        else:
+            return
     stepmode = step
     GD.gui.history.add(fn)
     stepmode = step
