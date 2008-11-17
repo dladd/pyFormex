@@ -9,7 +9,7 @@ ACCOUNT= bverheg@shell.berlios.de
 
 default:
 	@echo "You should use an explicit target, e.g. make #"
-	@echo "ehre # is the number of the meeting."
+	@echo "where # is the number of the meeting."
 
 all: ${ALLPDF}
 

@@ -726,7 +726,6 @@ See Help->License or the file COPYING for details.
     # remaining args are interpreted as scripts and their parameters
     for arg in args:
         if os.path.exists(arg):
-            print "AUTORUNNING %s" % arg
             script.play(arg)
 
     # Go into interactive mode

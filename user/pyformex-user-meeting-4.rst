@@ -6,14 +6,14 @@ pyFormex User Meeting 4 (2008-09-12)
 
 Place and Date
 --------------
-These are the minutes of the pyFormex User Meeting of Friday September 12, 2008, at the Institute Biomedical Technology (IBiTech) of Ghent University, Belgium.
+These are the minutes of the pyFormex User Meeting of Friday September 12, 2008, at the Institute Biomedical Technology (IBiTech), Ghent University, Belgium.
 
 Participants
 ------------
 The following pyFormex developers, users and enthusiants were present.
 
-- Benedict Verhegghe, chairman,
-- Matthieu De Beule, secretary,
+- Benedict Verhegghe, chairman
+- Matthieu De Beule, secretary
 - Peter Mortier,
 - Sofie Van Cauter,
 - Gianluca De Santis,

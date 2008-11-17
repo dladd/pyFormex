@@ -30,6 +30,7 @@ import colors
 import coords
 import formex
 from script import *
+
 from plugins import surface,tools
 from formex import Formex
 
@@ -1123,16 +1124,6 @@ def setLocalAxes(mode=True):
 
 def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
-
-
-######### DEPRECATED ############################
-    
-from utils import deprecated
-
-
-@deprecated(export)
-def Export(dict):
-    pass
 
 
 

@@ -41,7 +41,7 @@ class DrawLock(object):
 
         If a no time is specified, a global value is used.
         """
-        GD.debug("LOCKING: %s" % time)
+        #GD.debug("LOCKING: %s" % time)
         if self.allowed and not self.locked:
             if time is None:
                 time = GD.gui.drawwait
