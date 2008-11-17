@@ -47,8 +47,8 @@ On the other hand, Python provides numerous interfaces with established compiled
 \section{TRICKS}
 \label{sec:tricks}
 
-\begin{enumerate}
-\item Set the directory where a script is found as the current working directory:
+\begin{description}
+\item[Set the directory where a script is found as the current working directory]
 Start your script with the following code snippet:
 \begin{verbatim}
 import os
@@ -57,6 +57,15 @@ os.chdir(os.path.dirname(GD.cfg['curfile']))
 or the equivalent shortcut:
 \begin{verbatim}
 workHere()
+\end{verbatim}
+
+\item[Import modules from your own script directories]
+In order for Python to find the modules in non-standard locations, you should add the directory path of the module to the \verb|sys.path| variable. 
+
+A common example is a script that wants to import modules from the same directory where it is located. In that case you can just add the following two lines to the start of your script.
+\begin{verbatim}
+import sys
+sys.path.insert(0'.')
 \end{verbatim}
 
 \item Automatically load plugin menus on startup:
@@ -115,7 +124,7 @@ python setup.py install
 \end{verbatim}
 
 \end{itemize}
-\end{enumerate}
+\end{description}
 
 
 %%% Local Variables: 

@@ -760,20 +760,6 @@ def wakeup(mode=0):
     wakeupMode = mode
 
 
-def exit(all=False):
-    """Exit from the current script or from pyformex if no script running."""
-    if scriptRunning:
-        if all:
-            raise ExitAll # exit from pyformex
-        else:
-            raise Exit # exit from script only
-    if GD.app and GD.app_started: # exit from GUI
-        GD.debug("draw.exit called while no script running")
-        GD.app.quit() 
-    else: # the gui didn't even start
-        sys.exit(0)
-
-
 ########################## print information ################################
 
 

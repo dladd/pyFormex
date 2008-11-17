@@ -357,12 +357,16 @@ def play(fn=None,argv=[],step=False):
 
 
 def exit(all=False):
+    """Exit from the current script or from pyformex if no script running."""
     if scriptRunning:
         if all:
             raise ExitAll # exit from pyformex
         else:
             raise Exit # exit from script only
-    else:
+    if GD.app and GD.app_started: # exit from GUI
+        GD.debug("draw.exit called while no script running")
+        GD.app.quit() # close GUI and exit pyformex
+    else: # the gui didn't even start
         sys.exit(0) # exit from pyformex
 
 
