@@ -88,11 +88,14 @@ def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
     This is a convenience function to create a rectangle with given size.
     The default b/h values are equal to nx/ny, resulting in a modular grid.
     The rectangle lies in the (x,y) plane, with one corner at [0,0,0].
-    By default, the elements are quads. By setting diag='u' or 'd',
-    diagonals are added in /, resp. \ direction, to form triangles.
+    By default, the elements are quads. By setting diag='u','d' of 'x',
+    diagonals are added in /, resp. \ and both directions, to form triangles.
     """
-    Base = { 'u': '12-34', 'd': '16-82' }
-    base = Base.get(diag,'123')
+    if diag == 'x':
+        base = Formex([[[0.0,0.0,0.0],[1.0,-1.0,0.0],[1.0,1.0,0.0]]]).rosette(4,90.).translate([-1.0,-1.0,0.0]).scale(0.5)
+    else:
+        pat = { 'u': '12-34', 'd': '16-82' }.get(diag,'123')
+        base = Formex(mpattern(pat))
     if b is None:
         sx = 1.
     else:
@@ -101,7 +104,7 @@ def rectangle(nx,ny,b=None,h=None,bias=0.,diag=None):
         sy = 1.
     else:
         sy = float(h)/ny
-    return Formex(mpattern(base)).replic2(nx,ny,bias=bias).scale([sx,sy,0.])
+    return base.replic2(nx,ny,bias=bias).scale([sx,sy,0.])
    
 
 def circle(a1=2.,a2=0.,a3=360.):

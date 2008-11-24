@@ -386,11 +386,12 @@ def writeDisplacements(fil,prop,op='MOD'):
     for p in prop:
         setname = nsetName(p)
         fil.write("*BOUNDARY, TYPE=DISPLACEMENT, OP=%s" % op)
-        if p.amplitude is not None:
-            fil.write(", AMPLITUDE=%s" % p.amplitude)
+        if p.ampl is not None:
+            fil.write(", AMPLITUDE=%s" % p.ampl)
         fil.write("\n")
-        for d in range(len(p.displ)):
-            fil.write("%s, %s, %s, %s\n" % (setname,p.displ[d][0],p.displ[d][0],p.displ[d][1]))
+        for v in p.displ:
+            dof = v[0]+1
+            fil.write("%s, %s, %s, %s\n" % (setname,dof,dof,v[1]))
 
             
 def writeCloads(fil,prop,op='NEW'):
@@ -402,12 +403,15 @@ def writeCloads(fil,prop,op='NEW'):
     By default, the loads are applied as new values in the current step.
     The user can set op='MOD' to add the loads to already existing ones.
     """
-    fil.write("*CLOAD, OP=%s\n" % op)
     for p in prop:
         setname = nsetName(p)
-        for i,l in enumerate(p.cload):
-            if l != 0.0:
-                fil.write("%s, %s, %s\n" % (setname,i+1,l))
+        fil.write("*CLOAD, OP=%s" % op)
+        if p.ampl is not None:
+            fil.write(", AMPLITUDE=%s" % p.ampl)
+        fil.write("\n")
+        for v in p.cload:
+            dof = v[0]+1
+            fil.write("%s, %s, %s\n" % (setname,dof,v[1]))
 
 
 def writeDloads(fil,prop,op='NEW'):
@@ -421,8 +425,8 @@ def writeDloads(fil,prop,op='NEW'):
     for p in prop:
         setname = esetname(p)
         fil.write("*DLOAD, OP=%s" % op)
-        if p.dload.amplitude is not None:
-            fil.write(", AMPLITUDE=%s" % p.dload.amplitude)
+        if p.ampl is not None:
+            fil.write(", AMPLITUDE=%s" % p.ampl)
             fil.write("\n")
         if p.dload.label == 'GRAV':
             fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
@@ -434,12 +438,16 @@ def writeDloads(fil,prop,op='NEW'):
 # General model data
 #
 
-## def writeAmplitude(fil,prop):
-##     fil.write("*AMPLITUDE, NAME=%s\n" %name)
-##     n = len(the_modelproperties[name].amplitude)
-##     for i in range(n-1):
-##         fil.write("%s, " % the_modelproperties[name].amplitude[i])
-##     fil.write("%s\n" % the_modelproperties[name].amplitude[n-1])
+def writeAmplitude(fil,prop):
+    for p in prop:
+        fil.write("*AMPLITUDE, NAME=%s, DEFINITION=%s\n" % (p.name,p.amplitude.type))
+        for i,v in enumerate(p.amplitude.data):
+            fil.write("%s, %s," % tuple(v))
+            if i % 4 == 3:
+                fil.write("\n")
+        if i % 4 != 3:
+            fil.write("\n")
+        
 
 # These are commented out because I do not really understand what
 # the data are. 
@@ -1053,11 +1061,12 @@ Script: %s
 ##             if the_elemproperties[i].surfaces is not None:
 ##                 writeElemSurface(fil,i,self)
 
-##         GD.message("Writing model properties")
+        GD.message("Writing global model properties")
+        GD.message("Writing amplitudes")
+        prop = self.prop.getProp('',attr=['amplitude'])
+        if prop:
+            writeAmplitude(fil,prop)
 ##         for i in the_modelproperties:
-##             if the_modelproperties[i].amplitude is not None:
-##                 GD.message("Writing amplitude: %s" % i)
-##                 writeAmplitude(fil, i)
 ##             if the_modelproperties[i].intprop is not None:
 ##                 GD.message("Writing interaction property: %s" % i)
 ##                 writeIntprop(fil, i)

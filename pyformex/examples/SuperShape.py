@@ -63,6 +63,11 @@ def reset_data(initialize=False):
         dialog.updateData(shape_data)
 
 
+def refresh(tgt,src):
+    """Refresh tgt dict with values from src dict"""
+    tgt.update([ (k,src[k]) for k in tgt if k in src ])
+
+
 def createGrid():
     """Create the grid from global parameters"""
     global B
@@ -76,9 +81,9 @@ def createGrid():
     if grid_skewness != 0.0:
         B = B.shear(0,1,grid_skewness*b*ny/(h*nx))
     if x_clip:
-        B = B.clip(B.test('any',dir=0,min=x_clip[0]-tol*b,max=x_clip[1]+tol*b))
+        B = B.clip(B.test('any',dir=0,min=x_clip[0]+tol*b,max=x_clip[1]-tol*b))
     if y_clip:
-        B = B.clip(B.test('any',dir=1,min=y_clip[0]-tol*h,max=y_clip[1]+tol*h))
+        B = B.clip(B.test('any',dir=1,min=y_clip[0]+tol*h,max=y_clip[1]-tol*h))
     export({grid_name:B})
     
 
@@ -116,6 +121,8 @@ def showSuperShape():
 # Button Functions
 def show_grid():
     dialog.acceptData()
+    refresh(GD.PF['__SuperShape__grid_data'],dialog.result)
+    refresh(GD.PF['__SuperShape__shape_data'],dialog.result)
     globals().update(dialog.result)
     createGrid()
     showGrid()
@@ -194,7 +201,7 @@ def openSuperShapeDialogs():
         'x_range','y_range','grid_size','grid_base','grid_bias','grid_skewness',
         'x_clip','y_clip','grid_name','grid_color'] ]
     # turn 'diag' into a complex input widget
-    grid_items[3].extend(['radio',['quad','tri-u','tri-d']])
+    grid_items[3].extend(['radio',['quad','tri-u','tri-d','tri-x']])
 
     print grid_items
     
@@ -218,12 +225,14 @@ if __name__ == "draw":
         reset_data()
     else:
         print "set globals from GD.PF"
+        print GD.PF['__SuperShape__grid_data']
         globals().update(GD.PF['__SuperShape__grid_data'])
         globals().update(GD.PF['__SuperShape__shape_data'])
+        print globals()
 
     close()
     openSuperShapeDialogs()
-    smoothwire()
+    #smoothwire()
 
 
 # End

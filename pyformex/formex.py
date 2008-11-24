@@ -108,7 +108,7 @@ def pattern(s):
                   |                    |                   |     
              G    D    H          7    4    8         g    d    h
              
-    The special character '\' can be put before any character to make the
+    The special character '/' can be put before any character to make the
     move without making a connection.
     The effect of any other character is undefined.
     
@@ -1751,7 +1751,13 @@ class Formex(object):
 
     @classmethod
     def read(clas,fil):
-        """Read a Formex from file."""
+        """Read a Formex from file.
+
+        fil is a filename or a file object.
+        If the file is in a valid Formex file format, the Formex is read and
+        returned. Otherwise, None is returned.
+        Valid Formex file formats are described in the manual.
+        """
         isname = type(fil) == str
         if isname:
             fil = file(fil,'r')
@@ -1759,14 +1765,14 @@ class Formex(object):
         if not s.startswith('# Formex'):
             return None
         eltype = None # for compatibility with older .formex files
+        ndim = 3
         while s.startswith('#'):
             s = fil.readline()
             if s.startswith('# nelems'):
-                #print s[1:].strip()
                 exec(s[1:].strip())
                 break
-        #print "Read %d elems of plexitude %d" % (nelems,nplex)
-        f = fromfile(file=fil, dtype=Float, count=3*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
+        # read the coordinates
+        f = fromfile(file=fil, dtype=Float, count=ndim*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
         if props:
             p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
         else:

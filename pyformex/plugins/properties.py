@@ -199,15 +199,14 @@ class ElemSection(CDict):
 class ElemLoad(CDict):
     """Distributed loading on an element."""
 
-    def __init__(self,label=None,value=None,amplitude=None):
+    def __init__(self,label=None,value=None):
         """Create a new element load. Empty by default.
         
         An element load can hold the following sub-properties:
         - label: the distributed load type label.
         - value: the magnitude of the distibuted load.
-        - amplitude: an amplitude instance.
         """          
-        Dict.__init__(self,{'label':label,'value':value,'amplitude':amplitude})
+        Dict.__init__(self,{'label':label,'value':value})
 
 
 ############## Basic property data classes ########################
@@ -237,7 +236,10 @@ class CoordSystem(object):
 
         
 class Amplitude(object):
-    """A class for storing an amplitude."""
+    """A class for storing an amplitude.
+
+    The amplitude is a list of tuples (time,value).
+    """
     
     def __init__(self,data,definition='TABULAR'):
         """Create a new amplitude."""
@@ -248,55 +250,28 @@ class Amplitude(object):
 ###################################################
 ############ Utility routines #####################
 
-## def checkArray(a,shape=None,kind=None,allow=None):
-##     """Check that an array a has the correct shape and type.
 
-##     Either shape and or kind can be specified.
-##     The dimensions where shape contains a -1 value are not checked. The
-##     number of dimensions should match, though.
-##     If kind does not match, but is included in allow, conversion to the
-##     requested type is attempted.
-##     Returns the array if valid.
-##     Else, an error is raised.
-##     """
-##     try:
-##         a = asarray(a)
-##         shape = asarray(shape)
-##         w = where(shape >= 0)[0]
-##         if asarray(a.shape)[w] != shape[w]:
-##             raise
-##         if kind is not None:
-##             if allow is None and a.dtype.kind != kind:
-##                 raise
-##             if kind == 'f':
-##                 a = a.astype(float32)
-##         return a
-##     except:
-##         print "Expected shape %s, kind %s, got: %s" % (shape,kind,a)
-##     raise ValueError
+def checkIdValue(values):
+    """Check that a variable is a list of values or (id,value) tuples
 
-## def checkArray1D(a,size=None,kind=None,allow=None):
-##     """Check that an array a has the correct size and type.
-
-##     Either size and or kind can be specified.
-##     If kind does not match, but is included in allow, conversion to the
-##     requested type is attempted.
-##     Returns the array if valid.
-##     Else, an error is raised.
-##     """
-##     try:
-##         a = asarray(a).ravel()
-##         if (size is not None and a.size != size):
-##             raise
-##         if kind is not None:
-##             if allow is None and a.dtype.kind != kind:
-##                 raise
-##             if kind == 'f':
-##                 a = a.astype(float32)
-##         return a
-##     except:
-##         print "Expected size %s, kind %s, got: %s" % (size,kind,a)
-##     raise ValueError
+    If ok, return the values as a list of tuples.
+    """
+    print "CHECK"
+    print values
+    try:
+        l = [ len(v) for v in values ]
+        print l
+        if min(l) < 2 or max(l) > 2:
+            raise
+        values = [ (int(i),float(v)) for i,v in values ]
+        print values
+    except:
+        print "!!"
+        values = [ float(v) for v in values ]
+        print values
+        values = [ (i,v) for i,v in enumerate(values) if v != 0.0 ]
+        print values
+    return values
 
 
 def checkString(a,valid):
@@ -422,7 +397,7 @@ class PropertyDB(Dict):
         return d
 
 
-    # THIs should maybe change to operate on the property keys
+    # This should maybe change to operate on the property keys
     # and finally return the selected keys or proiperties?
 
     def getProp(self,kind='',rec=None,tag=None,attr=[],delete=False):
@@ -485,7 +460,7 @@ class PropertyDB(Dict):
         return self.getProp(kind=kind,rec=rec,tag=tag,attr=attr,delete=True)
 
 
-    def nodeProp(self,prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None):
+    def nodeProp(self,prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -497,31 +472,39 @@ class PropertyDB(Dict):
         - cload: a concentrated load: a list of 6 values
         - bound: a boundary condition: a list of 6 codes (0/1)
         - displ: a prescribed displacement: a list of tuples (dofid,value)
-        - csys: a coordinate system
+        - csys: a CoordSystem
+        - ampl: the name of an Amplitude
         """
         try:
             d = {}
+            print "CLOAD"
+            print cload
             if cload is not None:
-                d['cload'] = checkArray1D(cload,6,'f','i')
+                print "CHECKING"
+                d['cload'] = checkIdValue(cload)
+#                d['cload'] = checkArray1D(cload,6,'f','i')
             if bound is not None:
                 if type(bound) == str:
                     d['bound'] = checkString(bound,self.bound_strings)
                 else:
                     d['bound'] = checkArray1D(bound,6,'i')
             if displ is not None:
-                d['displ'] = displ
+                d['displ'] = checkIdValues(displ)
             if csys is not None:
                 if isinstance(csys,CoordSystem):
                     d['csys'] = csys
                 else:
                     raise
+            # Currently unchecked!
+            d['ampl'] = ampl
+            
             return self.Prop(kind='n',prop=prop,tag=tag,set=set,setname=setname,**d)
         except:
-            print "tag=%s,set=%s,tag=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
+            print "tag=%s,set=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,prop=None,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None): 
+    def elemProp(self,prop=None,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None,ampl=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -538,6 +521,7 @@ class PropertyDB(Dict):
         - eltype: the element type (currently in Abaqus terms). 
         - section: an ElemSection specifying the element section properties.
         - dload: an ElemLoad specifying a distributed load on the element.
+        - ampl: the name of an Amplitude
         """    
         try:
             d = {}
@@ -547,6 +531,9 @@ class PropertyDB(Dict):
                 d['section'] = section
             if dload is not None:
                 d['dload'] = dload
+            # Currently unchecked!
+            d['ampl'] = ampl
+
             return self.Prop(kind='e',prop=prop,tag=tag,set=set,setname=setname,**d)
         except:
             raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,setname=%s,eltype=%s,section=%s,dload=%s" % (tag,set,setname,eltype,section,dload)
@@ -620,7 +607,12 @@ if __name__ == "script" or  __name__ == "draw":
     for p in P.getProp():
         print p
 
-    exit()
+    #exit()
+
+    times = arange(10)
+    values = square(times)
+    amp = Amplitude(column_stack([times,values]))
+    P.Prop(amplitude=amp,name='amp1')
     
     Mat = MaterialDB(GD.cfg['pyformexdir']+'/examples/materials.db')
     Sec = SectionDB(GD.cfg['pyformexdir']+'/examples/sections.db')
@@ -636,7 +628,7 @@ if __name__ == "script" or  __name__ == "draw":
     # node property on nodes 2 and 3
     P.nodeProp(set=[2,3],bound='pinned')
     # node property on ALL nodes
-    P.nodeProp(cload=P1,bound=B1,csys=CYL)
+    P.nodeProp(cload=P1,bound=B1,csys=CYL,ampl='amp1')
     # node property whose set will be reused
     nset1 = P.nodeProp(tag='step1',set=[2,3,4],cload=P1).nr
     # node properties with an already named set
@@ -677,18 +669,14 @@ if __name__ == "script" or  __name__ == "draw":
         print Sec[s]
 
 
-    times = arange(10)
-    values = square(times)
-    amp = Amplitude(column_stack([times,values]))
-
     q1 = ElemLoad('PZ',2.5)
-    q2 = ElemLoad('PY',3.14,amplitude=amp)
+    q2 = ElemLoad('PY',3.14)
 
 
     top = P.elemProp(set=[0,1,2],eltype='B22',section=hor,dload=q1)
     column = P.elemProp(eltype='B22',section=vert)
     diagonal = P.elemProp(eltype='B22',section=hor)
-    bottom = P.elemProp(section=hor,dload=q2)
+    bottom = P.elemProp(section=hor,dload=q2,ampl='amp1')
 
 
     print 'elemproperties'
