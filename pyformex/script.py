@@ -231,7 +231,6 @@ def playScript(scr,name=None,argv=[]):
         GD.gui.actions['Play'].setEnabled(False)
         GD.gui.actions['Continue'].setEnabled(True)
         GD.gui.actions['Stop'].setEnabled(True)
-       
         GD.app.processEvents()
     
     # Get the globals
@@ -317,6 +316,10 @@ def breakpt(msg=None):
             GD.message(msg)
         exitrequested = False # reset for next time
         raise Exit
+
+
+def enableBreak(mode=True):
+    GD.gui.actions['Stop'].setEnabled(mode)
 
 
 def stopatbreakpt():

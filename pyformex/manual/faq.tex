@@ -4,14 +4,17 @@
 
 \chapter{pyFormex FAQ 'n TRICKS}
 \label{cha:faq}
+\def\faq#1{\item\textbf{#1}\par}
+\def\trick#1{\item\textbf{#1}\par}
 
 This chapter answers some frequently asked questions about \pyformex and present some nice tips to solve common problems. If you have some question that you want answered, or want to present a original solution to some problem, feel free to communicate it to us\footnote{By preference via the forums on the \pyformex web site}, and we'll probably include it in the next version.  
 
 \section{FAQ}
 \label{Sec:faq}
 \begin{enumerate}
-\item \emph{How was the pyFormex logo created?}
 
+\faq{How was the pyFormex logo created?}
+%---------------------------------------
 With the Gimp, using the following command sequence: 
 \begin{verbatim}
 Xtra -> Script-Fu -> Logos -> Alien-neon
@@ -29,8 +32,8 @@ Export the image with 'Save Background Color' switched off!
 
 
 
-\item \emph{Why is pyFormex written in Python? Isn't it slow?}
-
+\faq{Why is pyFormex written in Python?}
+%---------------------------------------
 Because
 \begin{itemize}
 \item it is very easy to learn (See www.python.org)
@@ -41,14 +44,20 @@ Being a scripting language without the need for variable declaration, it allows 
 On the other hand, Python provides numerous interfaces with established compiled libraries, so it can be surprisingly fast.
 
 
+\faq{Is an interpreted language like Python fast enough with large data models?}
+%-----------------------------------------------------------------------------
+See the question above
+
+
 \end{enumerate}
 
 
 \section{TRICKS}
 \label{sec:tricks}
 
-\begin{description}
-\item[Set the directory where a script is found as the current working directory]
+\begin{enumerate}
+\trick{Set the directory where a script is found as the current working directory}
+%----------------------------------------------------------------------
 Start your script with the following code snippet:
 \begin{verbatim}
 import os
@@ -59,23 +68,26 @@ or the equivalent shortcut:
 workHere()
 \end{verbatim}
 
-\item[Import modules from your own script directories]
+\trick{Import modules from your own script directories}
+%------------------------------------------------------
 In order for Python to find the modules in non-standard locations, you should add the directory path of the module to the \verb|sys.path| variable. 
 
 A common example is a script that wants to import modules from the same directory where it is located. In that case you can just add the following two lines to the start of your script.
 \begin{verbatim}
-import sys
-sys.path.insert(0'.')
+import os,sys
+sys.path.insert(os.dirname(GD.cfg['curfile']))
 \end{verbatim}
 
-\item Automatically load plugin menus on startup:
+\trick{Automatically load plugin menus on startup}
+%--------------------------------------------------------
 Plugin menus can be loaded automatically on \pyformex startup, by adding a line to the \code{gui} section of your configuration file (\verb|~/.pyformexrc|).
 \begin{verbatim}
 [gui]
 plugins = ['surface_menu', 'formex_menu']
 \end{verbatim}
 
-\item Automatically execute your own scripts on startup:
+\trick{Automatically execute your own scripts on startup}
+%-------------------------------------------------
 If you create your own pugin menus for \pyformex, you cannot autoload them like the regular plugin menus from the distribution, because they are not in the plugin directory of the installation.\footnote{Do not be tempted to put your own files under the installation directory (even if you can acquire the permissions to do so), because on removal or reinstall your files might be deleted!}
 You can however automatically execute your own scripts by adding their full path names in the \code{autorun} variable of your configuration file.
 \begin{verbatim}
@@ -84,7 +96,8 @@ autorun = '/home/user/myscripts/startup/'
 This script will then be run when the \pyformex GUI starts up. You can even specify a list of scripts, which will be executed in order.
 The autorun scripts are executed as any other \pyformex script, before any scripts specified on the command line, and before giving the input focus to the user.
 
-\item Create a movie from a sequence of recorded images.
+\trick{Create a movie from a sequence of recorded images}
+%--------------------------------------------------
 The multisave option allows you to easily record a series of images while working with \pyformex. You may want to turn this sequence into a movie afterwards. THis can be done with the \Code{mencoder} and/or \Code{ffmpeg} programs. The internet provides comprehensive information on how to use these video encoders. 
 
 If you are looking for a quick answer, however, here are some of the commands we have often used to create movies.
@@ -111,7 +124,8 @@ Because the compressed format saves a lot of space, this will be the prefered fo
 \end{verbatim}
 
 
-\item Install the gl2ps extension
+\trick{Install the gl2ps extension}
+%------------------------------------
 Saving images in EPS format is done through the gl2ps library, which can be accessed from Python using the wrappers from python-gl2ps-1.1.2.tar.gz.
 
 You need to have the OpenGL header files installed in order to do this. (On Debian: apt-get install libgl1-mesa-dev.)
@@ -124,7 +138,7 @@ python setup.py install
 \end{verbatim}
 
 \end{itemize}
-\end{description}
+\end{enumerate}
 
 
 %%% Local Variables: 

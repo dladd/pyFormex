@@ -130,7 +130,9 @@ def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
     If cur is a file, it will be selected as the current filename.
     """
     if cur is None:
-        cur = GD.cfg['workdir']+'/'
+        cur = GD.cfg['workdir']
+    if os.path.isdir(cur):
+        cur += '/'
     fn = os.path.basename(cur)
     cur = os.path.dirname(cur)
     w = widgets.FileSelection(cur,filter,exist,multi)
