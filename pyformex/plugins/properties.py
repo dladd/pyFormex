@@ -489,7 +489,7 @@ class PropertyDB(Dict):
                 else:
                     d['bound'] = checkArray1D(bound,6,'i')
             if displ is not None:
-                d['displ'] = checkIdValues(displ)
+                d['displ'] = checkIdValue(displ)
             if csys is not None:
                 if isinstance(csys,CoordSystem):
                     d['csys'] = csys
