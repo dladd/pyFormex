@@ -12,7 +12,7 @@
 """read/write tetgen format files."""
 
 import os
-from utils import changeExt
+import utils
 from formex import *
 
 def invalid(line,fn):
@@ -50,6 +50,21 @@ def readElems(fn):
     return elems[:,1:nplex+1],elems[:,0],elems[:,nplex+1:]
 
 
+def readFaces(fn):
+    """Read a tetgen .face file.
+
+    Returns an array of triangle elements.
+    """
+    fil = file(fn,'r')
+    line = fil.readline()
+    s = line.strip('\n').split()
+    nelems,bmark = map(int,s[:2])
+    ncols = 4 + bmark
+    elems = fromfile(fil,sep=' ',dtype=int32, count=ncols*nelems)
+    elems = elems.reshape((-1,ncols))
+    return elems[:,1:4]
+
+
 def readSmesh(fn):
     """Read a tetgen .smesh file.
 
@@ -70,17 +85,17 @@ def readSmesh(fn):
 
 
 def readSurface(fn):
-    """Read a tetgen surface from a .node/.smesh file pair.
+    """Read a tetgen surface from a .node/.face file pair.
 
-    The given filename is either the .node or .smesh file.
+    The given filename is either the .node or .face file.
     Returns a tuple of (nodes,elems).
     """
-    nodes,numbers = readNodes(changeExt(fn,'.node'))
+    nodes,numbers = readNodes(utils.changeExt(fn,'.node'))
     print "Read %s nodes" % nodes.shape[0]
-    elems = readSmesh(changeExt(fn,'.smesh'))
+    elems = readFaces(utils.changeExt(fn,'.face'))
     print "Read %s elems" % elems.shape[0]
-    if numbers[0] == 1:
-        elems -= 1 
+    #if numbers[0] == 1:
+    #    elems -= 1 
     return nodes,elems
 
 
@@ -96,8 +111,10 @@ def readNeigh(fn):
     elems = fromfile(fil,sep=' ',dtype=int32).reshape((nelems,nneigh+1))
     return elems[:,1:]
 
+
 def writeNodes(fn,nodes):
     """Write a tetgen .node file."""
+    nodes = asarray(nodes).reshape((-1,3))
     fil = file(fn,'w')
     fil.write("%d %d 0 0\n" % nodes.shape)
     for i,n in enumerate(nodes):
@@ -135,8 +152,8 @@ def writeSurface(fn,nodes,elems):
 
     The provided file name is the .node or the .smesh filename.
     """
-    writeNodes(changeExt(fn,'.node'),nodes)
-    writeSmesh(changeExt(fn,'.smesh'),elems)
+    writeNodes(utils.changeExt(fn,'.node'),nodes)
+    writeSmesh(utils.changeExt(fn,'.smesh'),elems)
 
 
 
@@ -154,6 +171,7 @@ def runTetgen(fn):
     if os.path.exists(fn):
         sta,out = utils.runCommand('tetgen -z %s' % fn)
         GD.message(out)
+
 
 
 if __name__ == "__main__":
