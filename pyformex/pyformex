@@ -168,7 +168,7 @@ You will need proper permissions to actually delete the files.
             print "Removing %s" % pyformexdir
             utils.removeTree(pyformexdir)
             script = os.path.join(scriptdir,'pyformex')
-            egginfo = "%s-%s.egg-info" % (pyformexdir,GD._version_.replace('-','_'))
+            egginfo = "%s-%s.egg-info" % (pyformexdir,GD.__version__.replace('-','_'))
             for f in [ script,egginfo ]:
                 if os.path.exists(f):
                     print "Removing %s" % f

@@ -962,7 +962,7 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     during the picking operation, a button to stop the selection operation
 
     If no filter is given, the available filters are presented in a combobox.
-    If numbers=True, numbers are shown?? Sophie: can you explain some more
+    If numbers=True, numbers are shown?? Sofie: can you explain some more
     what it is doing?
     """
     if GD.canvas.selection_mode is not None:

@@ -29,6 +29,10 @@ import commands, os, timer
 selection = objects.DrawableObjects(clas=Formex)
 
 
+setSelection = selection.set
+drawSelection = selection.draw
+
+
 def read_Formex(fn):
     GD.message("Reading file %s" % fn)
     t = timer.Timer()

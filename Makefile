@@ -25,6 +25,7 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
+	$(wildcard ${LIBDIR}/*.c) \
 
 EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
@@ -73,8 +74,11 @@ manual:
 	make -C ${MANDIR}
 
 # Create the C library
-lib:
+lib: ${LIBDIR}/Makefile
 	make -C ${LIBDIR}
+
+${LIBDIR}/Makefile: ${LIBDIR}/configure
+	cd ${LIBDIR} && ./configure
 
 # Create the pydoc html files
 pydoc:

@@ -38,7 +38,7 @@ if not success:
 
         val   : (nelems,nplex,nval) values at points of elements.
         elems : (nelems,nplex) nodal ids of points of elements.
-        work  : a work space (unused) 
+        work  : (nnod,nval)  returns the summed values at the nodes 
 
         On return each value is replaced with the sum of values at that node.
         If avg=True, the values are replaced with the average instead.
@@ -50,9 +50,11 @@ if not success:
             wi = where(elems==i)
             vi = val[wi]
             if avg:
+                raise RuntimeError,"THIS DOES NOT WORK!!!!"
                 vi = vi.sum(axis=0)/vi.shape[0]
             else:
                 vi = vi.sum(axis=0)
+            work[i] = vi
             val[wi] = vi
 
 

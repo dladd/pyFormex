@@ -448,14 +448,6 @@ def create_border_triangle(coords,elems):
     return elems,triangle
 
 
-def adjacencyList(elems):
-    """Create adjacency lists for 2-node elements."""
-    if len(elems.shape) != 2 or elems.shape[1] != 2:
-        raise ValueError,"""Expected a set of 2-node elements."""
-    elems = elems.astype(int)
-    ok = [ where(elems==i) for i in range(elems.max()+1) ]
-    return [ list(elems[w[0],1-w[1]]) for w in ok ]
-
 
 ############################################################################
 # The TriSurface class
@@ -1101,9 +1093,24 @@ class TriSurface(object):
         """Detect the border elements of TriSurface.
 
         The border elements are the edges having less than 2 connected elements.
-        Returns a list of edge numbers.
+        Returns True where edge is on the border.
         """
         return self.nEdgeConnected() <= 1
+
+
+    def borderEdgeNrs(self):
+        """Returns the numbers of the border edeges."""
+        return where(self.nEdgeConnected() <= 1)[0]
+
+
+    def borderNodeNrs(self):
+        """Detect the border nodes of TriSurface.
+
+        The border nodes are the vertices belonging to the border edges.
+        Returns a list of vertex numbers.
+        """
+        border = self.edges[self.borderEdgeNrs()]
+        return unique1d(border)
         
 
     def isManifold(self):
@@ -1353,8 +1360,8 @@ Total area: %s; Enclosed volume: %s
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
         for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
-            print "NSTEPS=%d"%nsteps
-            print p
+            #print "NSTEPS=%d"%nsteps
+            #print p
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1455,8 +1462,8 @@ Total area: %s; Enclosed volume: %s
     def smoothLowPass(self,n_iterations=2,lambda_value=0.5):
         """Smooth the surface using a low-pass filter."""
         mu_value = -1.02*lambda_value
-        adj = adjacencyList(self.edges)
-        bound_edges = where(self.borderEdges())[0]
+        adj = connectivity.adjacencyList(self.edges)
+        bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
         inter_vertex[unique1d(self.edges[bound_edges])] = False
         inter_vertices = where(inter_vertex)[0]
@@ -1468,8 +1475,8 @@ Total area: %s; Enclosed volume: %s
     
     def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
         """Smooth the surface using a Laplace filter and HC algorithm."""
-        adj = adjacencyList(self.edges)
-        bound_edges = where(self.borderEdges())[0]
+        adj = connectivity.adjacencyList(self.edges)
+        bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
         inter_vertex[unique1d(self.edges[bound_edges])] = False
         inter_vertices = where(inter_vertex)[0]    

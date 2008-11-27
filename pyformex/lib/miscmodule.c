@@ -174,12 +174,11 @@ nodal_sum(PyObject *dummy, PyObject *args)
 /**************************************************** nodal_sum_1 ****/
 /* Nodal sum of values defined on elements */
 /* args:  val, elems, nodes, avg
-    val   : (nelems,nplex,nval) values defined at points of elements.
+    val   : (nnod,nval) values defined at points of elements.
     elems : (nelems,nplex) nodal ids of points of elements.
-    nodes : (nnod) list of unique nodal ids in elems.
-    work  : (nodes.max()+1,nval) : workspace, should be zero on entry
+    work  : (nnod,nval) : workspace, should be zero on entry
     avg   : 0/1 
-    The return value is a (nodes.max()+1,nval) with the sum of its value
+    The return value is a (nnod,nval) with the sum of its value
     at that node.
     
     The operations are done in-place. The return value is None.

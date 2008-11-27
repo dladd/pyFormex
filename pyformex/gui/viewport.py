@@ -780,7 +780,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
         for i,a in enumerate(self.actors):
-            GD.debug("PICK actor %s = %s" % (i,a.list))
+            #GD.debug("PICK actor %s = %s" % (i,a.list))
             GL.glPushName(i)
             GL.glCallList(a.list)
             GL.glPopName()
