@@ -30,7 +30,7 @@ board = None       # the message board
 
 # set start date/time
 import time,datetime
-StartTime = datetime.datetime.today()
+StartTime = datetime.datetime.now()
 
 # initialize some global variables used for communication between modules
 

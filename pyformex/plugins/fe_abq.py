@@ -987,7 +987,7 @@ class AbqData(CDict):
         writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
 Script: %s 
 %s
-""" % (jobname, datetime.date.today(), GD.scriptName, header))
+""" % (jobname, datetime.date.now(), GD.scriptName, header))
         
         nnod = self.nodes.shape[0]
         GD.message("Writing %s nodes" % nnod)

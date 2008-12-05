@@ -56,7 +56,7 @@ def rotMatrix(v,n=3):
     w = cross([0.,0.,1.],v)
     wl = length(w)
     if wl == 0.0:
-        w = cross(v,[0,1,0])
+        w = cross(v,[0.,1.,0.])
         wl = length(w)
     w /= wl
     x = cross(v,w)

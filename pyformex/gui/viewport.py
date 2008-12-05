@@ -28,6 +28,7 @@ import decors
 import image
 import utils
 import toolbar
+import lib.drawgl as LD
 
 import math
 
@@ -816,9 +817,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             a.pickGL(obj_type)
             GL.glPopName()
         GD.debugt("getpickbuf")
-        buf = GL.glRenderMode(GL.GL_RENDER)
+        if GD.options.testpick:
+            LD.glRenderMode()
+            buf = []
+        else:
+            buf = GL.glRenderMode(GL.GL_RENDER)
         GD.debugt("translate getpickbuf")
         self.picked = [ r[2] for r in buf ]
+        print 'PICK DISABLED'
         GD.debugt("store closest")
         if store_closest and len(buf) > 0:
             d = asarray([ r[0] for r in buf ])

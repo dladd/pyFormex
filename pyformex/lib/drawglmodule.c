@@ -57,6 +57,20 @@ int gl_objtype(int nplex)
 /****** EXTERNAL FUNCTIONS (callable from Python ********/
 
 
+
+
+
+/********************************************** drawgl.gl_rendermode ****/
+/* gl_rendermode */
+/* args:  None
+*/  
+static PyObject * gl_rendermode()
+{
+  glRenderMode(GL_RENDER);
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
 /********************************************** drawgl.draw_polygons ****/
 /* Draw polygons */
 /* args:  x
@@ -375,6 +389,7 @@ pick_polygons(PyObject *dummy, PyObject *args)
 
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
+    {"glRenderMode", gl_rendermode, METH_VARARGS, "Set render mode."},
     {"drawPolygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pickPolygons", pick_polygons, METH_VARARGS, "Pick polygons."},
     {NULL, NULL, 0, NULL}        /* Sentinel */

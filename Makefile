@@ -59,7 +59,7 @@ FTPLOCAL=bumps:/home/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
-.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version revision tag register
+.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version revision tag register bumprelease bumpversion
 
 ############ Creating Distribution ##################
 
@@ -93,10 +93,19 @@ website:
 	make -C website
 
 
-# Set a new version
-
+# Set the revision number in the source
 revision:
 	sed -i "s|Rev:.*|Rev: $$(svnversion) $$\"|" pyformex/__init__.py
+
+
+# Bump the version/release
+bumpversion:
+	OLD=$$(expr "${VERSION}" : '.*\([0-9])*\)$$');NEW=$$(expr $$OLD + 1);sed -i "/^VERSION=/s|$$OLD$$|$$NEW|" RELEASE
+	sed -i '/^RELEASE=/s|}.*|}-a1|' RELEASE
+
+bumprelease:
+	OLD=$$(expr "${RELEASE}" : '.*\([0-9])*\)$$');NEW=$$(expr $$OLD + 1);sed -i "/^RELEASE=/s|$$OLD$$|$$NEW|" RELEASE
+
 
 version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac
 
@@ -129,7 +138,7 @@ dist: ${LATEST}
 ${LATEST}: ${PKGDIR}/${PKGVER}
 	ln -sfn ${PKGVER} ${PKGDIR}/${LATEST}
 
-${PKGDIR}/${PKGVER}: revision version MANIFEST.in
+${PKGDIR}/${PKGVER}: version revision MANIFEST.in
 	@echo "Creating ${PKGDIR}/${PKGVER}"
 	rm -f MANIFEST
 	python setup.py sdist

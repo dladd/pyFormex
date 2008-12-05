@@ -13,14 +13,16 @@ Each task can have the following keys:
  rem(arks)
 
 
-* Release 0.7.1 : 
+* Release 0.7.3: 
 
- - Include all basic drawing functions in the library.
+ - Make the GUI loadable from a function
 
- - Create new tutorial and explain all basic parts of pyFormex in the manual
+ - Add install scripts for GTS, tetgen, gl2ps
+
+ - Upgrade the license to GPL v3
 
 
-* Release 0.8 :
+* Release 0.8:
 
  - Multiple views:
      dev: bverheg
@@ -53,10 +55,7 @@ Each task can have the following keys:
 
  - Add a CoordPlaneActor to the formex_menu
 
- - Create PATH and PLANE objects
-
- - Include installation of python-gl2ps in the pyFormex setup.py
-    NO, WE CAN NOT (because of license)
+ - Create CURVE and PLANE objects
 
  - Add an interactive command window to the GUI
 
