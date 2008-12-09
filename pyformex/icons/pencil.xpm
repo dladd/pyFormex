@@ -1,0 +1,33 @@
+/* XPM */
+static char * pencil_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"22 22 5 1",
+/* colors */
+" 	c None",
+".	c red",
+"X	c black",
+"o	c yellow",
+"O	c brown",
+/* pixels */
+"                      ",
+"                ...   ",
+"               Xo...  ",
+"              Xooo... ",
+"             Xooooo.. ",
+"            Xooooooo. ",
+"           XoooooooX  ",
+"          XoooooooX   ",
+"         XoooooooX    ",
+"        XoooooooX     ",
+"       XoooooooX      ",
+"      XoooooooX       ",
+"      oooooooX        ",
+"     OOoooooX         ",
+"     OOOoooX          ",
+"    OOOOOoX           ",
+"    OOOOO             ",
+"   XXOO               ",
+"   XX                 ",
+"  X                   ",
+"                      ",
+"                      "};

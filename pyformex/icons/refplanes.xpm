@@ -1,0 +1,32 @@
+/* XPM */
+static char * refplanes_xpm[] = {
+/* width height ncolors chars_per_pixel */
+"22 22 4 1",
+/* colors */
+" 	c None",
+".	c green",
+"X	c blue",
+"o	c red",
+/* pixels */
+"       .              ",
+"       ..             ",
+"       ...            ",
+"   XXXXXXX.XXXXXXXX   ",
+"   XXXXXXX..XXXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"oooXXXXXXX...XXXXXX   ",
+" ooXXXXXXX...XXXXXX   ",
+"  oXXXXXXX...XXXXXX   ",
+"   ooooooooooooooooo  ",
+"   Xooooooooooooooooo ",
+"   XXooooooooooooooooo",
+"   XXXXXXX...XXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"   XXXXXXX...XXXXXX   ",
+"          ...         ",
+"           ..         ",
+"            .         "};
