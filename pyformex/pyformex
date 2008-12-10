@@ -34,7 +34,6 @@ except:
 pyformexdir = pyformex.__path__[0]
 sys.path[:0] = [ pyformexdir ]
 
-
 GD = pyformex
 import utils
 from config import Config
