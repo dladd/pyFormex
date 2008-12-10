@@ -13,14 +13,19 @@
 """A dictionary that keeps the keys in order of insertion."""
 
 
-def listUnion (a,b):
+def listUnion(a,b):
     """Return a list with all items in a or in b, in the order of a,b."""
     return a + [ i for i in b if i not in a ]
 
 
-def listDifference (a,b):
+def listDifference(a,b):
     """Return a list with all items in a but not in b, in the order of a."""
     return [ i for i in a if i not in b ]
+
+
+def listSymDifference(a,b):
+    """Return a list with all items in a or b but not in both."""
+    return listDifference(a,b) + listDifference(b,a)
 
 
 def listIntersection (a,b):

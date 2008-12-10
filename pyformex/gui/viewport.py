@@ -805,10 +805,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         tuple ( [actor,object] ,distance) in self.picked_closest
         """
         GD.debugt("PICKPARTS")
+        self.picked = []
+        if max_objects <= 0:
+            GD.message("No such objects to be picked!")
+            return
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
         stackdepth = 2
-        GL.glSelectBuffer(max_objects*(3+stackdepth))
+        selbuf = GL.glSelectBuffer(max_objects*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
         GD.debugt("pickGL from %s" % len(self.actors))
@@ -817,20 +821,29 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             a.pickGL(obj_type)
             GL.glPopName()
         GD.debugt("getpickbuf")
-        if GD.options.testpick:
-            LD.glRenderMode()
-            buf = []
-        else:
-            buf = GL.glRenderMode(GL.GL_RENDER)
-        GD.debugt("translate getpickbuf")
-        self.picked = [ r[2] for r in buf ]
-        print 'PICK DISABLED'
-        GD.debugt("store closest")
-        if store_closest and len(buf) > 0:
-            d = asarray([ r[0] for r in buf ])
-            dmin = d.min()
-            w = where(d == dmin)[0][0]
-            self.closest_pick = (self.picked[w], dmin)
+        self.picked = []
+        if len(selbuf) > 0:
+            if GD.options.testpick:
+                LD.glRenderMode()
+                GD.debugt("translate getpickbuf")
+                buf = asarray(selbuf).reshape(-1,3+selbuf[0])
+                buf = buf[buf[:,0] > 0]
+                self.picked = buf[:,3:]
+                GD.debugt("store closest")
+                if store_closest and len(buf) > 0:
+                    w = buf[:,1].argmin()
+                    self.closest_pick = (self.picked[w], buf[w,1])
+            else:
+                buf = GL.glRenderMode(GL.GL_RENDER)
+                GD.debugt("translate getpickbuf")
+                self.picked = [ r[2] for r in buf ]
+                print 'PICK DISABLED'
+                GD.debugt("store closest")
+                if store_closest and len(buf) > 0:
+                    d = asarray([ r[0] for r in buf ])
+                    dmin = d.min()
+                    w = where(d == dmin)[0][0]
+                    self.closest_pick = (self.picked[w], dmin)
         GD.debugt("PICKPARTS DONE")
 
 

@@ -52,6 +52,8 @@ class Collection(object):
         of values. In the latter case, the key has to be specified
         separately, or a default value will be used.
         """
+        if len(data) == 0:
+            return
         data = asarray(data)
         if data.ndim == 2:
             for key in unique1d(data[:,0]):
