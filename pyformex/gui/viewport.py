@@ -779,21 +779,30 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.camera.loadMatrix()
         stackdepth = 1
         npickable = len(self.actors)
-        GL.glSelectBuffer(npickable*(3+stackdepth))
+        selbuf = GL.glSelectBuffer(npickable*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
         for i,a in enumerate(self.actors):
-            #GD.debug("PICK actor %s = %s" % (i,a.list))
             GL.glPushName(i)
             GL.glCallList(a.list)
             GL.glPopName()
-        buf = GL.glRenderMode(GL.GL_RENDER)
-        self.picked = [ r[2][0] for r in buf]
-        if store_closest and len(buf) > 0:
-            d = asarray([ r[0] for r in buf ])
-            dmin = d.min()
-            w = where(d == dmin)[0][0]
-            self.closest_pick = (self.picked[w], dmin)
+##         buf = GL.glRenderMode(GL.GL_RENDER)
+##         self.picked = [ r[2][0] for r in buf]
+##         if store_closest and len(buf) > 0:
+##             d = asarray([ r[0] for r in buf ])
+##             dmin = d.min()
+##             w = where(d == dmin)[0][0]
+##             self.closest_pick = (self.picked[w], dmin)
+        libGL.glRenderMode(GL.GL_RENDER)
+        # Read the selection buffer
+        self.picked = []
+        if selbuf[0] > 0:
+            buf = asarray(selbuf).reshape(-1,3+selbuf[0])
+            buf = buf[buf[:,0] > 0]
+            self.picked = buf[:,3]
+            if store_closest and len(buf) > 0:
+                w = buf[:,1].argmin()
+                self.closest_pick = (self.picked[w], buf[w,1])
 
 
     def pick_parts(self,obj_type,max_objects,store_closest=False):
@@ -806,7 +815,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         If store_closest==True, the closest picked object is stored in as a
         tuple ( [actor,object] ,distance) in self.picked_closest
         """
-        GD.debugt("PICKPARTS")
         self.picked = []
         if max_objects <= 0:
             GD.message("No such objects to be picked!")
@@ -817,24 +825,19 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         selbuf = GL.glSelectBuffer(max_objects*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
-        GD.debugt("pickGL from %s" % len(self.actors))
         for i,a in enumerate(self.actors):
             GL.glPushName(i)
-            a.pickGL(obj_type)
+            a.pickGL(obj_type)  # this will push the number of the part
             GL.glPopName()
-        GD.debugt("getpickbuf")
         self.picked = []
         libGL.glRenderMode(GL.GL_RENDER)
         if selbuf[0] > 0:
-            GD.debugt("translate getpickbuf")
             buf = asarray(selbuf).reshape(-1,3+selbuf[0])
             buf = buf[buf[:,0] > 0]
             self.picked = buf[:,3:]
-            GD.debugt("store closest")
             if store_closest and len(buf) > 0:
                 w = buf[:,1].argmin()
                 self.closest_pick = (self.picked[w], buf[w,1])
-        GD.debugt("PICKPARTS DONE")
 
 
     def pick_elements(self):

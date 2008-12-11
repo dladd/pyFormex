@@ -858,6 +858,24 @@ def highlightActors(K,colormap=highlight_colormap):
     GD.canvas.update()
 
 
+def newhighlightActors(K,colormap=highlight_colormap,highlight=True):
+    """Highlight a selection of actors on the canvas.
+
+    K is Collection of actors as returned by the pick() method.
+    colormap is a list of two colors, for the actors not in, resp. in
+    the Collection K.
+    """
+    color = colormap[1]
+    for i,A in enumerate(copy.copy(GD.canvas.actors)):
+        if i in K.get(-1,[]):
+            GD.debug("HIGHLIGHTING actor %s" % i)
+            A.redraw(mode='wireframe',color=color)
+        else:
+            GD.debug("DEHIGHLIGHTING actor %s" % i)
+            A.redraw(mode=GD.canvas.rendermode)
+    GD.canvas.update()
+
+
 def highlightElements(K,colormap=highlight_colormap):
     """Highlight a selection of actor elements on the canvas.
 
