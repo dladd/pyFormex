@@ -29,6 +29,8 @@ import image
 import utils
 import toolbar
 import lib.drawgl as LD
+from ctypes import cdll
+libGL = cdll.LoadLibrary("libGL.so.1")
 
 import math
 
@@ -822,28 +824,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPopName()
         GD.debugt("getpickbuf")
         self.picked = []
-        if GD.options.testpick:
-            LD.glRenderMode()
-            if selbuf[0] > 0:
-                GD.debugt("translate getpickbuf")
-                buf = asarray(selbuf).reshape(-1,3+selbuf[0])
-                buf = buf[buf[:,0] > 0]
-                self.picked = buf[:,3:]
-                GD.debugt("store closest")
-                if store_closest and len(buf) > 0:
-                    w = buf[:,1].argmin()
-                    self.closest_pick = (self.picked[w], buf[w,1])
-        else:
-            buf = GL.glRenderMode(GL.GL_RENDER)
+        libGL.glRenderMode(GL.GL_RENDER)
+        if selbuf[0] > 0:
             GD.debugt("translate getpickbuf")
-            self.picked = [ r[2] for r in buf ]
-            print 'PICK DISABLED'
+            buf = asarray(selbuf).reshape(-1,3+selbuf[0])
+            buf = buf[buf[:,0] > 0]
+            self.picked = buf[:,3:]
             GD.debugt("store closest")
             if store_closest and len(buf) > 0:
-                d = asarray([ r[0] for r in buf ])
-                dmin = d.min()
-                w = where(d == dmin)[0][0]
-                self.closest_pick = (self.picked[w], dmin)
+                w = buf[:,1].argmin()
+                self.closest_pick = (self.picked[w], buf[w,1])
         GD.debugt("PICKPARTS DONE")
 
 
