@@ -350,7 +350,6 @@ class FormexActor(Actor,Formex):
         Actor.__init__(self)
         # Initializing with F alone gives problems with self.p !
         Formex.__init__(self,F.f,F.p,F.eltype)
-        #self.eltype = eltype
 
         self.mode = mode
         self.setLineWidth(linewidth)

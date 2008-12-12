@@ -743,7 +743,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             self.begin_2D_drawing()
-            self.swapBuffers()
+            #self.swapBuffers()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
             GL.glLogicOp(GL.GL_INVERT)        
@@ -761,7 +761,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             GL.glDisable(GL.GL_COLOR_LOGIC_OP)
-            #self.swapBuffers()
+            self.swapBuffers()
             self.end_2D_drawing()
 
             x,y = (x+self.statex)/2., (y+self.statey)/2.

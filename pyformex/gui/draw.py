@@ -858,21 +858,32 @@ def highlightActors(K,colormap=highlight_colormap):
     GD.canvas.update()
 
 
-def newhighlightActors(K,colormap=highlight_colormap,highlight=True):
+def newhighlightActors(K):
     """Highlight a selection of actors on the canvas.
 
     K is Collection of actors as returned by the pick() method.
     colormap is a list of two colors, for the actors not in, resp. in
     the Collection K.
     """
-    color = colormap[1]
-    for i,A in enumerate(copy.copy(GD.canvas.actors)):
-        if i in K.get(-1,[]):
-            GD.debug("HIGHLIGHTING actor %s" % i)
-            A.redraw(mode='wireframe',color=color)
-        else:
-            GD.debug("DEHIGHLIGHTING actor %s" % i)
-            A.redraw(mode=GD.canvas.rendermode)
+    for i in K.get(-1,[]):
+        print "%s/%s" % (i,len(GD.canvas.actors))
+        GD.canvas.addHighlight(GD.canvas.actors[i])
+    GD.canvas.update()
+
+
+def newhighlightElements(K):
+    """Highlight a selection of actor elements on the canvas.
+
+    K is Collection of actor elements as returned by the pick() method.
+    colormap is a list of two colors, for the elements not in, resp. in
+    the Collection K.
+    """
+    for i in K.keys():
+        GD.debug("Actor %s: Selection %s" % (i,K[i]))
+        actor = GD.canvas.actors[i]
+        if isinstance(actor,actors.FormexActor):
+            FA = actors.FormexActor(actor.f[K[i]])
+            GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
 
@@ -963,6 +974,9 @@ highlight_funcs = { 'actor': highlightActors,
                     'edge': highlightEdges,
                     }
 
+if GD.options.testhighlight:
+    highlight_funcs['actor'] = newhighlightActors
+
 selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 
 
@@ -1007,6 +1021,7 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
         func = highlight_funcs.get(mode,None)
     GD.message("Select %s %s" % (filtr,mode))
     sel = GD.canvas.pick(mode,single,func,filtr)
+    GD.canvas.removeHighlights()
     GD.gui.statusbar.removeWidget(pick_buttons)
     GD.gui.statusbar.removeWidget(filter_combo)
     if numbers:

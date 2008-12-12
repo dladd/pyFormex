@@ -190,6 +190,7 @@ class Canvas(object):
     def __init__(self):
         """Initialize an empty canvas with default settings."""
         self.actors = ActorList(self)       # start with an empty scene
+        self.highlights = ActorList(self)   # highlights
         self.annotations = ActorList(self)  # without annotations
         self.decorations = ActorList(self)  # and no decorations either
         self.triade = None
@@ -425,6 +426,17 @@ class Canvas(object):
                 self.setDefaults()
                 actor.draw(mode=self.rendermode)
 
+        # draw the highlighted actors
+        if self.highlights:
+            print "highlighting actors"
+            GL.glDepthMask (GL.GL_FALSE)
+            GL.glEnable(GL.GL_COLOR_LOGIC_OP)
+            GL.glLogicOp(GL.GL_INVERT)
+            for actor in self.highlights:
+                actor.draw(mode=self.rendermode)
+            GL.glDisable(GL.GL_COLOR_LOGIC_OP)
+            GL.glDepthMask (GL.GL_TRUE)
+
         # annotations are drawn in 3D space
         for actor in self.annotations:
             self.setDefaults()
@@ -486,6 +498,15 @@ class Canvas(object):
     def removeActor(self,actor):
         """Remove a 3D actor from the 3D scene."""
         self.actors.delete(actor)
+        #self.highlights.delete(actor)
+
+    def addHighlight(self,actor):
+        """Add a 3D actor highlight to the 3D scene."""
+        self.highlights.add(actor)
+
+    def removeHighlight(self,actor):
+        """Remove a 3D actor highlight from the 3D scene."""
+        self.highlights.delete(actor)
          
     def addAnnotation(self,actor):
         """Add an annotation to the 3D scene."""
@@ -528,6 +549,14 @@ class Canvas(object):
         for actor in actorlist:
             self.removeActor(actor)
         self.setBbox()
+        
+
+    def removeHighlights(self,actorlist=None):
+        """Remove all highlights in actorlist (default = all) from the scene."""
+        if actorlist == None:
+            actorlist = self.highlights[:]
+        for actor in actorlist:
+            self.removeHighlight(actor)
 
 
     def removeAnnotations(self,actorlist=None):

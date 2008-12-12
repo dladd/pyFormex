@@ -23,37 +23,6 @@ except:
 
 
 
-# OBSOLETE : REMOVE
-
-## def istype(a,c):
-##     return asarray(a).dtype.kind == c
-
-
-# Implement 'roll' for older versions of numpy
-
-## if 'roll' not in dir():
-##     def roll(a, shift, axis=None): 
-##         """Roll the elements in the array by 'shift' positions along 
-##         the given axis.
-
-##         A positive shift moves elements to the 'right' in a 1D array.
-##         """ 
-##         a = asarray(a) 
-##         if axis is None: 
-##             n = a.size 
-##             reshape=1 
-##         else: 
-##             n = a.shape[axis] 
-##             reshape=0 
-##         shift %= n 
-##         indexes = concatenate((arange(n-shift,n),arange(n-shift))) 
-##         res = a.take(indexes, axis) 
-##         if reshape: 
-##             return res.reshape(a.shape) 
-##         else: 
-##             return res
-
-
 ###########################################################################
 ##
 ##   some math functions
