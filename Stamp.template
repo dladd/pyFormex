@@ -1,9 +1,10 @@
 ##
 ## This file is part of pyFormex %version% Release %datetime%
-## pyFormex is a Python implementation of Formex algebra
+## pyFormex is a tool for generating, manipulating and transforming 3D
+## geometrical models by sequences of mathematical operations.
 ## Website: http://pyformex.berlios.de/
 ## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##
 ## This program is distributed under the GNU General Public License
-## version 2 or later (see file COPYING for details)
+## version 3 or later (see file COPYING for details)
 ##

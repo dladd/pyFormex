@@ -12,11 +12,61 @@
 """connectivity.py
 
 A pyFormex plugin for handling connectivity of nodes and elements.
-
 """
 
 from numpy import *
 
+############################################################################
+##
+##   class Connectivity
+##
+#########################
+#
+
+class Connectivity(ndarray):
+    """A class for handling element/node connectivity.
+
+    A connectivity object is an 2-dimensional integer array with all
+    non-negative values.
+    In this implementation, al values should be lower than 2**31.
+    """
+
+    def __new__(self,data,dtyp=None,copy=False):
+        """Create a new Connectivity object.
+
+        data should be integer type and evaluate to an 2-dim array.
+        If copy==True, the data are copied.
+        If no dtype is given, that of data are used, or int32 by default.
+        """
+        # Turn the data into an array, and copy if requested
+        ar = array(data, dtype=dtyp, copy=copy, ndmin=2)
+        if len(ar.shape) != 2:
+            raise ValueError,"Expected 2-dim data"
+
+        # Make sure dtype is an int type
+        if ar.dtype.kind != 'i':
+            ar = ar.astype(Int)
+ 
+        # Check values
+        self.magic = ar.max() + 1
+        if self.magic > 2**31 or ar.min() < 0:
+            raise ValueError,"Negative or too large positive value in data"
+            
+        # Transform 'subarr' from an ndarray to our new subclass.
+        ar = ar.view(self)
+
+        return ar
+
+
+    def nelems(self):
+        return self.shape[0]
+    
+    def nplex(self):
+        return self.shape[-1]
+    
+
+
+############################################################################
 
 def reverseUniqueIndex(index):
     """Reverse an index.
@@ -163,5 +213,19 @@ def adjacent(index,rev=None):
     adj = adj[:,pmin+1:]
     #print adj
     return adj
+
+
+############################################################################
+#
+# Testing
+#
+
+if __name__ == "__main__":
+
+    c = Connectivity([[0,2,3],[2,4,5]])
+    print c
+    print c.magic
+    print c.nelems()
+    print c.nplex()
  
 # End

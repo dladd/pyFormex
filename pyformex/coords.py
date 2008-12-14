@@ -209,12 +209,6 @@ class Coords(ndarray):
     !! These restrictions are currently only check at creation time.
     !! It is the responsibility of the user to keep consistency. 
     """
-
-
-    # !! DO WE NEED AN EMPTY Coords  OBJECT?
-    # I guess not, so we made the default constructor generate a single
-    # point [0.,0.,0.]
-
             
     def __new__(cls, data=None, dtyp=None, copy=False):
         """Create a new instance of class Coords.
@@ -245,19 +239,6 @@ class Coords(ndarray):
         ar = ar.view(cls)
 
         return ar
-
-
-##    def __array_finalize__(self,obj):
-##         #Make sure array shape is (n,3) float
-##         print "SHAPE = %s" % str(self.shape)
-##         print "DTYPE = %s" % str(self.dtype)
-##        if self.shape[-1] != 3:
-##            print 'Expected shape (n,3)'
-##         if self.dtype.kind != 'f':
-##             raise ValueError,"Expected a floating point type."
-##         if len(self.shape) != 2:
-##             print self.size
-##             self.shape = (self.size // 3,3)
 
         
 ###########################################################################
