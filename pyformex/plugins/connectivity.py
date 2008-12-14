@@ -55,6 +55,9 @@ class Connectivity(ndarray):
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(self)
 
+        # Other data
+        self.rev = None
+
         return ar
 
 
@@ -63,7 +66,16 @@ class Connectivity(ndarray):
     
     def nplex(self):
         return self.shape[-1]
-    
+
+    def Max(self):
+        if self.magic is None:
+            self.magic = self.max() + 1
+        return self.magic - 1
+            
+    def revIndex(self):
+        if self.rev is None:
+            self.rev = reverseIndex(self)
+        return self.rev
 
 
 ############################################################################
@@ -227,5 +239,6 @@ if __name__ == "__main__":
     print c.magic
     print c.nelems()
     print c.nplex()
+    print c.revIndex()
  
 # End

@@ -16,7 +16,8 @@ This is compatible with the pyFormex data model.
 
 import os
 import pyformex as GD
-from plugins import tetgen,connectivity
+from plugins import tetgen
+from connectivity import *
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
 import tempfile
@@ -861,7 +862,7 @@ class TriSurface(object):
         The normal vector in a point is the average of the normal vectors of the neighbouring triangles.
         The normal vectors are normalized.
         """
-        con = connectivity.reverseIndex(self.getElems())
+        con = reverseIndex(self.getElems())
         NP = self.areaNormals()[1][con] #self.normal doesn't work here???
         w = where(con == -1)
         NP[w] = 0.
@@ -1026,7 +1027,7 @@ class TriSurface(object):
     def edgeConnections(self):
         """Find the elems connected to edges."""
         if self.econn is None:
-            self.econn = connectivity.reverseIndex(self.faces)
+            self.econn = reverseIndex(self.faces)
         return self.econn
     
 
@@ -1034,7 +1035,7 @@ class TriSurface(object):
         """Find the elems connected to nodes."""
         if self.conn is None:
             self.refresh()
-            self.conn = connectivity.reverseIndex(self.elems)
+            self.conn = reverseIndex(self.elems)
         return self.conn
     
 
@@ -1054,9 +1055,13 @@ class TriSurface(object):
             nfaces = self.nfaces()
             rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
-            adj = rfaces[self.faces].reshape((nfaces,-1))
-            fnr = arange(nfaces).reshape((nfaces,-1))
+            adj = rfaces[self.faces].reshape(nfaces,-1)
+            print adj.shape
+            fnr = arange(nfaces).reshape(nfaces,-1)
+            print fnr.shape
             # remove the element itself
+            print adj != fnr
+            print (adj != fnr).shape
             self.eadj = adj[adj != fnr].reshape((nfaces,-1))
         return self.eadj
 
@@ -1070,7 +1075,7 @@ class TriSurface(object):
         """Find the elems adjacent to elems via one or two nodes."""
         if self.adj is None:
             self.refresh()
-            self.adj = connectivity.adjacent(self.elems,self.nodeConnections())
+            self.adj = adjacent(self.elems,self.nodeConnections())
         return self.adj
 
 
@@ -1462,7 +1467,7 @@ Total area: %s; Enclosed volume: %s
     def smoothLowPass(self,n_iterations=2,lambda_value=0.5):
         """Smooth the surface using a low-pass filter."""
         mu_value = -1.02*lambda_value
-        adj = connectivity.adjacencyList(self.edges)
+        adj = adjacencyList(self.edges)
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
         inter_vertex[unique1d(self.edges[bound_edges])] = False
@@ -1475,7 +1480,7 @@ Total area: %s; Enclosed volume: %s
     
     def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
         """Smooth the surface using a Laplace filter and HC algorithm."""
-        adj = connectivity.adjacencyList(self.edges)
+        adj = adjacencyList(self.edges)
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
         inter_vertex[unique1d(self.edges[bound_edges])] = False
