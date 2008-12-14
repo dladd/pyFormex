@@ -16,8 +16,10 @@ set of nodal coordinates and one of more sets of elements.
 """
 
 from coords import *
+from plugins.connectivity import *
 from mydict import Dict
 from numpy import *
+
 
 def mergeNodes(nodes):
     """Merge all the nodes of a list of node sets.
@@ -54,7 +56,7 @@ def mergeModels(femodels):
               
 
 def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
-    """Check that an array contains a set of uniqe integers in range.
+    """Check that an array contains a set of unique integers in range.
 
     nrs is an integer array with any shape.
     All integers should be unique and in the range(nmin,nmax).
@@ -102,8 +104,8 @@ class Model(Dict):
         if not type(elems) == list:
             elems = [ elems ]
         self.nodes = Coords(nodes)
-        self.elems = map(asarray,elems)
-        nelems = [elems.shape[0] for elems in self.elems]
+        self.elems = [ Connectivity(e) for e in elems ]
+        nelems = [ e.nelems() for e in self.elems ]
         self.celems = cumsum([0]+nelems)
         GD.message("Number of nodes: %s" % self.nodes.shape[0])
         GD.message("Number of elements: %s" % self.celems[-1])
@@ -132,9 +134,11 @@ class Model(Dict):
 
         return split,[ asarray(s) - ofs for s,ofs in zip(split,self.celems) ]
 
+
     def elemNrs(group,set):
         """Return the global element numbers for elements set in group"""
         return self.celems[group] + set
+
  
     def getElems(self,sets):
         """Return the definitions of the elements in sets.
@@ -151,7 +155,7 @@ class Model(Dict):
         It also provide the global and group element numbers, since they
         had to be calculated anyway.
         """
-        return [ e[s] for e,s in zip(self.elems,sets) ]
+        return [ Connectivity(e[s]) for e,s in zip(self.elems,sets) ]
         
  
     def renumber(self,old=None,new=None):
@@ -190,14 +194,14 @@ class Model(Dict):
         all = arange(nnodes)
         old = concatenate([old,setdiff1d(all,old)])
         new = concatenate([new,setdiff1d(all,new)])
-        print "old:\n",old
-        print "new:\n",new
+        #print "old:\n",old
+        #print "new:\n",new
         oldnew = old[new]
         newold = argsort(oldnew)
-        print "oldnew:\n",oldnew
-        print "newold:\n",newold
+        #print "oldnew:\n",oldnew
+        #print "newold:\n",newold
         self.nodes = self.nodes[oldnew]
-        self.elems = [ newold[e] for e in self.elems ]
+        self.elems = [ Connectivity(newold[e]) for e in self.elems ]
         return oldnew,newold
 
         
