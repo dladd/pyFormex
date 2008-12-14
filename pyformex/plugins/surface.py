@@ -509,9 +509,9 @@ class TriSurface(object):
                 a = Formex(a)
             if a.nplex() != 3:
                 raise ValueError,"Expected a plex-3 Formex"
-            self.coords,self.elems = a.feModel()
+            self.coords,elems = a.feModel()
+            self.setElems(elems)
             self.p = a.p
-            self.refresh()
 
         else:
             a = Coords(args[0])
@@ -525,8 +525,7 @@ class TriSurface(object):
             if a.max() >= self.coords.shape[0]:
                 raise ValueError,"Some vertex number is too high"
             if len(args) == 2:
-                self.elems = a
-                self.refresh()
+                self.setElems(a)
             elif len(args) == 3:
                 self.edges = a
 
@@ -561,7 +560,7 @@ class TriSurface(object):
     def setElems(self,elems):
         """Change the elems data."""
         self.edges = self.faces = None
-        self.elems = elems
+        self.elems = Connectivity(elems)
         self.refresh()
 
     def refresh(self):
@@ -577,7 +576,7 @@ class TriSurface(object):
         if self.edges is None or self.faces is None:
             self.edges,self.faces = expandElems(self.elems)
         if self.elems is None:
-            self.elems = compactElems(self.edges,self.faces)
+            self.elems = Connectivity(compactElems(self.edges,self.faces))
 
     def compress(self):
         """Remove all nodes which are not used.
