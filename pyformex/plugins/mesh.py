@@ -19,7 +19,7 @@ from coords import *
 from formex import *
 from gui import actors
 from simple import line
-from plugins.connectivity import reverseUniqueIndex
+from connectivity import reverseUniqueIndex
 
 def createWedgeElements(S1,S2,div=1):
     """Create wedge elements between to triangulated surfaces.

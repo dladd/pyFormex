@@ -18,8 +18,8 @@ from drawable import *
 from formex import *
 import elements
 
+from connectivity import reverseIndex
 from plugins.surface import TriSurface
-from plugins.connectivity import reverseIndex
 
 import timer
 

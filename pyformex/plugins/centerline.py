@@ -19,9 +19,9 @@ Determine approximation for the centerline.
 import pyformex as GD
 import os
 from numpy import *
-from plugins import surface,tetgen,connectivity
+from plugins import surface,tetgen
 from utils import runCommand
-import coords
+import coords,connectivity
 
 
 def det3(f):

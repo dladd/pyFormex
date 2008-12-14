@@ -19,7 +19,7 @@ techniques = ['colors']
 """
 
 import simple
-from plugins.connectivity import reverseUniqueIndex
+from connectivity import reverseUniqueIndex
 from plugins.mesh import connectMesh
 
 class Mesh(object):

@@ -16,7 +16,7 @@ set of nodal coordinates and one of more sets of elements.
 """
 
 from coords import *
-from plugins.connectivity import *
+from connectivity import *
 from mydict import Dict
 from numpy import *
 
