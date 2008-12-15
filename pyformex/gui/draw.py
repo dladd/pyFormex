@@ -182,7 +182,7 @@ message = log
 
 ############################## drawing functions ########################
 
-def draw(F, view=None,bbox='auto',
+def draw(F, view=None,bbox=None,
          color='prop',colormap=None,alpha=0.5,
          mode=None,linewidth=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False):
@@ -197,6 +197,9 @@ def draw(F, view=None,bbox='auto',
     ithe items of the list as first argument and with the remaining arguments
     unchanged.
 
+    The remaining arguments are drawing options. If None, they are filled in
+    from the current viewport drawing options.
+    
     view is either the name of a defined view or 'last' or None.
     Predefined views are 'front','back','top','bottom','left','right','iso'.
     With view=None the camera settings remain unchanged (but might be changed
@@ -212,10 +215,12 @@ def draw(F, view=None,bbox='auto',
     bbox is a list of two points or compatible (array with shape (2,3)).
     Setting the bbox to a volume not enclosing the object may make the object
     invisible on the canvas.
-    The default bbox='auto' will use the bounding box of the objects getting
-    drawn (object.bbox()), thus ensuring that the camera will focus on the
-    shown object.
-    With bbox=None, the camera's target volume remains unchanged.
+    The special value bbox='auto' will use the bounding box of the objects
+    getting drawn (object.bbox()), thus ensuring that the camera will focus
+    on these objects.
+    The special value bbox=None will use the bounding box of the previous
+    drawing operation, thus ensuring that the camera's target volume remains
+    unchanged.
 
     color,colormap,linewidth,alpha,marksize are passed to the
     creation of the 3D actor.
@@ -272,6 +277,9 @@ def draw(F, view=None,bbox='auto',
     if clear:
         clear_canvas()
 
+    if bbox is None:
+        bbox = GD.canvas.options.get('bbox','auto')
+
     if view is not None and view != 'last':
         GD.debug("SETTING VIEW to %s" % view)
         setView(view)
@@ -308,13 +316,13 @@ def draw(F, view=None,bbox='auto',
         elif isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
         GD.canvas.addActor(actor)
-        if view is not None or bbox is not None:
+        if view is not None or bbox not in [None,'last']:
             #GD.debug("CHANGING VIEW to %s" % view)
             if view == 'last':
                 view = GD.canvas.options['view']
             if bbox == 'auto':
                 bbox = F.bbox()
-            #GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+            GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
             GD.canvas.setCamera(bbox,view)
             #setView(view)
         GD.canvas.update()

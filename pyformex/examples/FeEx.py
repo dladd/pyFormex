@@ -117,8 +117,8 @@ def drawModel(offset=0):
         return
     clear()
     draw(parts)
-    draw(Formex(model.nodes))
-    drawNumbers(Formex(model.nodes),color=red,offset=offset)
+    draw(Formex(model.coords))
+    drawNumbers(Formex(model.coords),color=red,offset=offset)
     [ drawNumbers(p) for p in parts ]
     zoomAll()
 
@@ -355,12 +355,12 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     starttime = time.clock()
 
     Model = femodel.FeModel(2,"elast","Plane_Stress")
-    Model.nnodes = model.nodes.shape[0]
+    Model.nnodes = model.coords.shape[0]
     Model.nelems = model.celems[-1]
     Model.nnodel = 4
 
     # 2D model in calpy needs 2D coordinates
-    coords = model.nodes[:,:2]
+    coords = model.coords[:,:2]
     if verbose:
         fe_util.PrintNodes(coords)
 
@@ -534,8 +534,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
     
     DB = FeResult()
-    DB.nodes = model.nodes
-    DB.nnodes = model.nodes.shape[0]
+    DB.nodes = model.coords
+    DB.nnodes = model.coords.shape[0]
     DB.nodid = arange(DB.nnodes)
     DB.elems = dict(enumerate(model.elems))
     DB.nelems = model.celems[-1]
@@ -557,7 +557,7 @@ def autoRun():
     createPart({'x1':1.})
     createPart({'x1':-1.})
     createModel()
-    nodenrs = arange(model.nodes.shape[0])
+    nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
     PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
     PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])

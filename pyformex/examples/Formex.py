@@ -19,18 +19,12 @@ This script creates an image of how coordinates are structures in a Formex.
 It was intended mainly for the manual.
 """
 clear()
+reset()
 
 def tmbbox(a):
     return [[0.0,0.0,0.0],[1.0,1.0,1.0]]
 
 marks.TextMark.bbox = tmbbox
-
-def drawText3D(P,text,color=colors.black,font=None):
-    """Draw a text at a 3D point."""
-    M = marks.TextMark(P,text,color=color,font=font)
-    GD.canvas.addActor(M)
-    GD.canvas.update()
-    return M
 
 
 def drawAxis(len,dir,text):

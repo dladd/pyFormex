@@ -42,7 +42,6 @@ def mergeModels(femodels):
     Each item in femodels is a (coords,elems) tuple.
     The return value is a tuple with:
      - the coordinates of all unique nodes,
-     - the index translating old node numbers to new,
      - a list of elems corresponding to the input list,
        but with numbers referring to the new coordinates.
     """
@@ -76,8 +75,6 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
         else:
             return error
     return None
-    
-    
 
 
 ######################## Finite Element Model ##########################
@@ -85,36 +82,36 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
 class Model(Dict):
     """Contains all FE model data."""
     
-    def __init__(self,nodes,elems):
+    def __init__(self,coords,elems):
         """Create new model data.
 
-        nodes is an array with nodal coordinates
+        coords is an array with nodal coordinates
         elems is either a single element connectivity array, or a list of such.
-        In a simple case, nodes and elems can be the arrays obtained by 
-            nodes, elems = F.feModel()
+        In a simple case, coords and elems can be the arrays obtained by 
+            coords, elems = F.feModel()
         This is however limited to a model where all elements have the same
         number of nodes. Then you can use the list of elems arrays. The 'fe'
         plugin has a helper function to create this list. E.g., if FL is a
         list of Formices (possibly with different plexitude), then
           fe.mergeModels([Fi.feModel() for Fi in FL])
-        will return the (nodes,elems) tuple to create the Model.
+        will return the (coords,elems) tuple to create the Model.
 
         The model can have node and element property numbers.
         """
         if not type(elems) == list:
             elems = [ elems ]
-        self.nodes = Coords(nodes)
+        self.coords = Coords(coords)
         self.elems = [ Connectivity(e) for e in elems ]
         nelems = [ e.nelems() for e in self.elems ]
         self.celems = cumsum([0]+nelems)
-        GD.message("Number of nodes: %s" % self.nodes.shape[0])
+        GD.message("Number of nodes: %s" % self.coords.shape[0])
         GD.message("Number of elements: %s" % self.celems[-1])
         GD.message("Number of element groups: %s" % len(nelems))
         GD.message("Number of elements per group: %s" % nelems)
 
 
     def nnodes(self):
-        return self.nodes.shape[0]
+        return self.coords.shape[0]
 
     def splitElems(self,set):
         """Splits a set of element numbers over the element groups.
@@ -200,15 +197,17 @@ class Model(Dict):
         newold = argsort(oldnew)
         #print "oldnew:\n",oldnew
         #print "newold:\n",newold
-        self.nodes = self.nodes[oldnew]
+        self.coords = self.coords[oldnew]
         self.elems = [ Connectivity(newold[e]) for e in self.elems ]
         return oldnew,newold
+
+
 
         
 def mergedModel(*args):
     """Returns the fe Model obtained from merging individual models.
 
-    The input arguments are (nodes,elems) tuples.
+    The input arguments are (coords,elems) tuples.
     The return value is a merged fe Model.
     """
     return Model(*mergeModels(args))

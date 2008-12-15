@@ -211,6 +211,10 @@ class Canvas(object):
         GD.debug("Canvas Setting:\n%s"% self.settings)
 
 
+    def Size(self):
+        return self.width(),self.height()
+    
+
     def glMatSpec(self):
         GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))

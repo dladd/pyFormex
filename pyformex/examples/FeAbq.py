@@ -49,13 +49,13 @@ parts = [A,B,C]
 M = mergedModel(*[p.feModel() for p in parts])
 
 # Create a Formex with the nodes, mostly for drawing
-F = Formex(M.nodes)
+F = Formex(M.coords)
 
 def printModel(M):
     """print the model M"""
     print "===================\nMERGED MODEL"
     print "NODES"
-    print M.nodes
+    print M.coords
     for i,e in enumerate(M.elems):
         print "PART %s" %i
         print e
@@ -69,13 +69,13 @@ def drawModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
     clear()
     print F.p
     if nodes or nodenrs:
-##         F = Formex(M.nodes)
+##         F = Formex(M.coords)
         if nodes:
             draw(F)
         if nodenrs:
             drawNumbers(F)
     if elems or elemnrs:
-##         G = [Formex(M.nodes[e],i+1) for i,e in enumerate(M.elems)]
+##         G = [Formex(M.coords[e],i+1) for i,e in enumerate(M.elems)]
         G = parts
         if elems:
             draw(G)
@@ -134,9 +134,9 @@ for p in P.getProp('e'):
     print p
 
 # Set the nodal properties
-xmin,xmax = M.nodes.bbox()[:,0]
-bnodes = where(M.nodes.test(min=xmax-0.01))[0] # Right end nodes
-lnodes = where(M.nodes.test(max=xmin+0.01))[0] # Left end nodes
+xmin,xmax = M.coords.bbox()[:,0]
+bnodes = where(M.coords.test(min=xmax-0.01))[0] # Right end nodes
+lnodes = where(M.coords.test(max=xmin+0.01))[0] # Left end nodes
 
 print "Boundary nodes: %s" % bnodes
 print "Loaded nodes: %s" % lnodes

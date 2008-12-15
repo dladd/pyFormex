@@ -32,6 +32,19 @@ def listIntersection (a,b):
     """Return a list with all items in a and  in b, in the order of a."""
     return [ i for i in a if i in b ]
 
+    
+def listSelect(a,b):
+    """Return a subset of items from a list.
+
+    Returns a list with the items of a for which the index is in b.
+    """
+    return [ a[i] for i in b ]
+
+
+def listConcatenate(a):
+    """Concatenate a list of lists"""
+    return reduce(list.__add__,a)
+
 
 class ODict(dict):
     """An ordered dictionary.

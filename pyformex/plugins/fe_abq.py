@@ -989,9 +989,9 @@ Script: %s
 %s
 """ % (jobname, datetime.date.now(), GD.scriptName, header))
         
-        nnod = self.nodes.shape[0]
+        nnod = self.model.nnodes()
         GD.message("Writing %s nodes" % nnod)
-        writeNodes(fil, self.nodes)
+        writeNodes(fil, self.model.coords)
 
         GD.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
