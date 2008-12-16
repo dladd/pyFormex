@@ -322,7 +322,7 @@ def draw(F, view=None,bbox=None,
                 view = GD.canvas.options['view']
             if bbox == 'auto':
                 bbox = F.bbox()
-            GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+            #GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
             GD.canvas.setCamera(bbox,view)
             #setView(view)
         GD.canvas.update()

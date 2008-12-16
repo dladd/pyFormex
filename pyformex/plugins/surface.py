@@ -1015,12 +1015,12 @@ class TriSurface(object):
             rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
             adj = rfaces[self.faces].reshape(nfaces,-1)
-            print adj.shape
+            #print adj.shape
             fnr = arange(nfaces).reshape(nfaces,-1)
-            print fnr.shape
+            #print fnr.shape
             # remove the element itself
-            print adj != fnr
-            print (adj != fnr).shape
+            #print adj != fnr
+            #print (adj != fnr).shape
             self.eadj = adj[adj != fnr].reshape((nfaces,-1))
         return self.eadj
 
