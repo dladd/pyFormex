@@ -113,6 +113,14 @@ class Model(Dict):
     def nnodes(self):
         return self.coords.shape[0]
 
+    def nelems(self):
+        return self.celems[-1]
+
+    def mplex(self):
+        """Return the maximum plexitude of the model."""
+        return max([e.nplex() for e in self.elems])
+
+
     def splitElems(self,set):
         """Splits a set of element numbers over the element groups.
 
