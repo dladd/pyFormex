@@ -49,9 +49,12 @@ class Connectivity(ndarray):
             ar = ar.astype(Int)
  
         # Check values
-        self.magic = ar.max() + 1
-        if self.magic > 2**31 or ar.min() < 0:
-            raise ValueError,"Negative or too large positive value in data"
+        if ar.size > 0:
+            self.magic = ar.max() + 1
+            if self.magic > 2**31 or ar.min() < 0:
+                raise ValueError,"Negative or too large positive value in data"
+        else:
+            self.magic = 0
             
         # Transform 'subarr' from an ndarray to our new subclass.
         ar = ar.view(self)

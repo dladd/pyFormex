@@ -160,7 +160,7 @@ class Model(Dict):
         It also provide the global and group element numbers, since they
         had to be calculated anyway.
         """
-        return [ Connectivity(e[s]) for e,s in zip(self.elems,sets) ]
+        return [ e[s] for e,s in zip(self.elems,sets) ]
         
  
     def renumber(self,old=None,new=None):
