@@ -104,10 +104,16 @@ class ODict(dict):
         """
         dict.update(self,data)
         if type(data) is ODict:
-            for k in data.order:
+            for k in data._order:
                 if k in self._order:
                     self._order.remove(k)
-            self._order += data.order
+            self._order += data._order
+
+
+    def __add__(self,data):
+        """Add two ODicts's together, returning the result."""
+        self.update(data)
+        return self
 
 
     def sort(self,keys):
