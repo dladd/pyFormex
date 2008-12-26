@@ -13,7 +13,7 @@
 """Bezier
 
 level = 'beginner'
-topic = ['geometry','curves']
+topics = ['geometry','curves']
 techniques = ['colors','solve']
 
 """

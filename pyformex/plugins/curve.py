@@ -19,8 +19,75 @@ from formex import *
 
 
 ##############################################################################
+# THIS IS A PROPOSAL !
 #
-class PolyLine(Coords):
+# Common interface for curves:
+# attributes:
+#    coords: coordinates of points defining the curve
+#    parts:  number of parts (e.g. straight segments of a polyline)
+#    closed: is the curve closed or not
+# methods:
+#    subPoints(t,j): returns points with parameter values t of part j
+#    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
+#           part in ndiv sections at equal parameter distance.             
+
+
+class Curve(object):
+    """Base class for curve type classes.
+
+    This is a virtual class intended to be subclassed.
+    It defines the common definitions for all curve types.
+    The subclasses should at least define the following:
+      subPoints(t,j)
+    """
+    def points(self,ndiv=10,extend=[0., 0.]):
+        """Return a series of points on the PolyLine.
+
+        The parameter space of each segment is divided into ndiv parts.
+        The coordinates of the points at these parameter values are returned
+        as a Coords object.
+        The extend parameter allows to extend the curve beyond the endpoints.
+        The normal parameter space of each part is [0.0 .. 1.0]. The extend
+        parameter will add a curve with parameter space [-extend[0] .. 0.0]
+        for the first part, and a curve with parameter space
+        [1.0 .. 1 + extend[0]] for the last part.
+        The parameter step in the extensions will be adjusted slightly so
+        that the specified extension is a multiple of the step size.
+        If the curve is closed, the extend parameter is disregarded. 
+        """
+        # Subspline parts do not include closing point
+        u = arange(ndiv) / float(ndiv)
+        parts = [ self.subPoints(u,j) for j in range(self.nparts) ]
+
+        if not self.closed:
+            nstart,nend = ceil(asarray(extend)*ndiv).astype(Int)
+
+            # Extend at start
+            if nstart > 0:
+                u = arange(-nstart, 0) * extend[0] / nstart
+                parts.insert(0,self.subPoints(u,0))
+
+            # Extend at start
+            if nend > 0:
+                u = 1. + arange(0, nend+1) * extend[1] / nend
+            else:
+                # Always extend at end to have last point
+                u = array([1.])
+            parts.append(self.subPoints(u,self.nparts-1))
+
+        X = concatenate(parts,axis=0)
+        return Coords(X) 
+
+
+    def length(self):
+        """Return the total length of the curve."""
+        return self.lengths().sum()
+    
+    
+
+##############################################################################
+#
+class PolyLine(Curve):
     """A class representing a series of straight line segments."""
 
     def __init__(self,coords=[],closed=False):
@@ -35,16 +102,11 @@ class PolyLine(Coords):
         if coords.ndim != 2 or coords.shape[1] != 3:
             raise ValueError,"Expected an (npoints,3) coordinate array"
         self.coords = coords
+        self.nparts = self.coords.shape[0]
+        if not closed:
+            self.nparts -= 1
         self.closed = closed
-        print "Polyline has %s segments" % self.nlines()
-
-
-    def nlines(self):
-        """Return the number of straight segments in the polyline."""
-        n = self.coords.shape[0]
-        if not self.closed:
-            n -= 1
-        return n
+        print self.nparts
     
 
     def asFormex(self):
@@ -53,22 +115,31 @@ class PolyLine(Coords):
         return connect([x,x],bias=[0,1],loop=self.closed)
 
 
-    def length(self):
+    def subPoints(self,t,j):
+        """Compute the points at values t in part j"""
+        n = self.coords.shape[0]
+        X0 = self.coords[j % n]
+        X1 = self.coords[(j+1) % n]
+        t = t.reshape(-1,1)
+        X = (1.-t) * X0 + t * X1
+        return X
 
-        """Return the total length of the polyline."""
+
+    def lengths(self):
+        """Return the length of the parts of the curve."""
         x = self.coords
         y = roll(x,-1,axis=0)
         if not self.closed:
             n = self.coords.shape[0] - 1
             x = x[:n]
             y = y[:n]
-        return length(y-x)#.sum()
+        return length(y-x)
 
 
 
 ##############################################################################
 #
-class NaturalSpline(object):
+class NaturalSpline(Curve):
     """A class representing a natural spline."""
 
     def __init__(self,pts,endcond=['notaknot','notaknot'],closed=False):
@@ -87,7 +158,7 @@ class NaturalSpline(object):
         if closed:
             pts = Coords.concatenate([pts,pts[:1]])
         self.coords = pts
-        self.nsplines = self.coords.shape[0] - 1
+        self.nparts = self.coords.shape[0] - 1
         self.closed = closed
         self.endcond = endcond
         self.compute_coefficients()
@@ -95,7 +166,7 @@ class NaturalSpline(object):
 
     def compute_coefficients(self):
         x, y, z = self.coords.x(),self.coords.y(),self.coords.z()
-        n = self.nsplines
+        n = self.nparts
         M = zeros([4*n, 4*n])
         
         # constant submatrix
@@ -163,45 +234,6 @@ class NaturalSpline(object):
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
         return X
-
-
-    def points(self,ndiv=10,extend=[0., 0.]):
-        """Return a series of points on the spline.
-
-        The parameter space of each subspline is divided into ndiv parts.
-        The coordinates of the points at these parameter values are returned
-        as a Coords object.
-        The extend parameter allows to extend the curve beyond the endpoints.
-        The normal parameter space of each part is [0.0 .. 1.0]. The extend
-        parameter will add a curve with parameter space [-extend[0] .. 0.0]
-        for the first spline, and a curve with parameter space
-        [1.0 .. 1 + extend[0]] for the last spline.
-        Currently, the values are not exact, but rounded to a multiple of
-        the normal parameter step (1./ndiv).
-        If the NaturalSpline is closed, extend is disregarded. 
-        """
-        # Subspline parts do not include closing point
-        u = arange(ndiv) / float(ndiv)
-        parts = [ self.subPoints(u,j) for j in range(self.nsplines) ]
-
-        if not self.closed:
-            nstart,nend = ceil(asarray(extend)*ndiv).astype(Int)
-
-            # Extend at start
-            if nstart > 0:
-                u = arange(-nstart, 0) * extend[0] / nstart
-                parts.insert(0,self.subPoints(u,0))
-
-            # Extend at start
-            if nend > 0:
-                u = 1. + arange(0, nend+1) * extend[1] / nend
-            else:
-                # Always extend at end to have last point
-                u = array([1.])
-            parts.append(self.subPoints(u,self.nsplines-1))
-
-        X = concatenate(parts,axis=0)
-        return Coords(X) 
 
 
 # End
