@@ -40,6 +40,9 @@ class Curve(object):
     The subclasses should at least define the following:
       subPoints(t,j)
     """
+    def subPoints(self,t,j):
+        raise NotImplementedError
+    
     def points(self,ndiv=10,extend=[0., 0.]):
         """Return a series of points on the PolyLine.
 
@@ -136,6 +139,50 @@ class PolyLine(Curve):
         return length(y-x)
 
 
+##############################################################################
+#
+class CardinalSpline(Curve):
+    """A class representing a cardinal spline."""
+
+    def __init__(self,pts,tension=0.0,closed=False):
+        """Create a natural spline through the given points.
+
+        pts specifies the coordinates of a set of points. A natural spline
+        is constructed through this points.
+        endcond specifies the end conditions in the first, resp. last point.
+        It can be 'notaknot' or 'secder'.
+        With 'notaknot', maximal continuity (up to the third derivative)
+        is obtained between the first two splines.
+        With 'secder', the spline ends with a zero second derivative.
+        If closed is True, the spline is closed, and endcond is ignored.
+        """
+        pts = Coords(pts)
+        self.coords = pts
+        self.nparts = self.coords.shape[0]
+        if not closed:
+            self.nparts -= 3
+        self.closed = closed
+        self.tension = float(tension)
+        self.compute_coefficients()
+
+
+    def compute_coefficients(self):
+        s = (1.-self.tension)/2.
+        M = matrix([[-s, 2-s, s-2., s], [2*s, s-3., 3.-2*s, -s], [-s, 0., s, 0.], [0., 1., 0., 0.]])#pag.429 of open GL
+        self.coeffs = M
+        print M.shape
+
+
+    def subPoints(self,t,j):
+        """Compute the points at values t in subspline j"""
+        n = self.coords.shape[0]
+        i = (j + arange(4)) % n
+        P = self.coords[i]
+        C = self.coeffs * P
+        U = column_stack([t**3., t**2., t, ones_like(t)])
+        X = dot(U,C)
+        return X
+
 
 ##############################################################################
 #
@@ -163,7 +210,9 @@ class NaturalSpline(Curve):
         self.endcond = endcond
         self.compute_coefficients()
 
-
+    #
+    # THIS SHOULD STILL BE OPTIMIZED
+    #
     def compute_coefficients(self):
         x, y, z = self.coords.x(),self.coords.y(),self.coords.z()
         n = self.nparts
