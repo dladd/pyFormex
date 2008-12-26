@@ -1139,9 +1139,10 @@ class Coords(ndarray):
     # Deprecated functions
     from utils import deprecated
 
-    @deprecated(dsize)
-    def diagonal(self):
-        pass
+## removed in 0.7.3
+##     @deprecated(dsize)
+##     def diagonal(self):
+##         pass
 
 
 ##############################################################################

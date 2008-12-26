@@ -478,11 +478,30 @@ def interrogate(item):
 def deprecated(replacement):
     def decorator(func):
         def wrapper(*_args,**_kargs):
-            print "Function %s is deprecated: use %s instead" % (func.func_name,replacement.func_name)
+            print "! Function '%s' is deprecated: use '%s' instead" % (func.func_name,replacement.func_name)
             return replacement(*_args,**_kargs)
         return wrapper
     decorator.__doc__ = replacement.__doc__
     return decorator
 
+
+def functionWasRenamed(replacement,text=None):
+    def decorator(func):
+        def wrapper(*_args,**_kargs):
+            print "! Function '%s' is deprecated: use '%s' instead" % (func.func_name,replacement.func_name)
+            return replacement(*_args,**_kargs)
+        return wrapper
+    decorator.__doc__ = replacement.__doc__
+    return decorator
+
+
+def functionBecameMethod(replacement):
+    def decorator(func):
+        def wrapper(object,*args,**kargs):
+            print "! Function %s is deprecated: use method %s instead" % (func.func_name,replacement)
+            repfunc = getattr(object,replacement)
+            return repfunc(*args,**kargs)
+        return wrapper
+    return decorator
 
 ### End

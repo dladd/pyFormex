@@ -202,13 +202,15 @@ stepmode = False
 starttime = 0.0
 
  
-def playScript(scr,name=None,argv=[]):
+def playScript(scr,name=None,filename=None,argv=[]):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
-    same time.
-    If a name is specified, sets the global variable GD.scriptName if and
+    same time. This implies that pyFormex scripts can currently not be
+    recurrent.
+    If a name is specified, set the global variable GD.scriptName to it
     when the script is started.
+    If a filename is specified, set the global variable __file__ to it.
     
     If step==True, an indefinite pause will be started after each line of
     the script that starts with 'draw'. Also (in this case), each line
@@ -240,6 +242,8 @@ def playScript(scr,name=None,argv=[]):
     else:
         modname = 'script'
     g.update({'__name__':modname})
+    if filename:
+        g.update({'__file__':filename})
     g.update({'argv':argv})
 
     # Now we can execute the script using these collected globals
@@ -337,7 +341,7 @@ def playFile(fn,argv=[]):
     is returned to the caller.
     """
     message("Running script (%s)" % fn)
-    playScript(file(fn,'r'),fn,argv)
+    playScript(file(fn,'r'),fn,fn,argv)
     message("Finished script %s" % fn)
     return argv
 

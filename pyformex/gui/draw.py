@@ -265,9 +265,20 @@ def draw(F, view=None,bbox=None,
         if F is None:
             return None
 
-    if not (isinstance(F,formex.Formex) or
-            isinstance(F,surface.TriSurface) or
-            isinstance(F,tools.Plane)):
+
+    if isinstance(F,formex.Formex):
+        pass
+    elif isinstance(F,surface.TriSurface):
+        pass
+    elif isinstance(F,tools.Plane):
+        pass
+    elif hasattr(F,'asFormex'):
+        F = F.asFormex()
+    # keep this after trying the 'asFormex'
+    elif isinstance(F,coords.Coords):
+        F = Formex(F)
+    else:
+        # Don't know how to draw this object
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
     GD.gui.drawlock.wait()

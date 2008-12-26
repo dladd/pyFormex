@@ -12,6 +12,7 @@
 """Formex algebra in Python"""
 
 from coords import *
+from utils import deprecated,functionWasRenamed,functionBecameMethod
 
 
 def vectorNormalize(vec):
@@ -1789,17 +1790,17 @@ class Formex(object):
     # These functions are retained mainly for compatibility reasons.
     # New users should avoid these functions!
     # They may (will) be removed in future.
-    from utils import deprecated
 
-    @deprecated(dsize)
-    def diagonal(self):
-        pass
+## removed in 0.7.3
+##     @deprecated(dsize)
+##     def diagonal(self):
+##         pass
 
     @deprecated(dsize)
     def size(self):
         pass
 
-    @deprecated(reverse)
+    @functionWasRenamed(reverse)
     def reverseElements(self):
         pass
 
@@ -1826,6 +1827,7 @@ class Formex(object):
     def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
         return self.spherical([dir[1],dir[2],dir[0]],[scale[1],scale[2],scale[0]],colat=True)
+    
     nnodel = nplex
     nnodes = npoints
     
@@ -2074,15 +2076,6 @@ def readfile(file,sep=',',plexitude=1,dimension=3):
 
 
 ############### DEPRECATED FUNCTIONS ##################
-
-def functionBecameMethod(replacement):
-    def decorator(func):
-        def wrapper(object,*args,**kargs):
-            print "Function %s is deprecated: use method %s instead" % (func.func_name,replacement)
-            repfunc = getattr(object,replacement)
-            return repfunc(*args,**kargs)
-        return wrapper
-    return decorator
 
 @functionBecameMethod('divide')
 def divide(F,div):
