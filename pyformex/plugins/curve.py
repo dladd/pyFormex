@@ -16,6 +16,7 @@ but special cases may be created for handling plane curves.
 
 
 from formex import *
+from gui.draw import draw
 
 
 ##############################################################################
@@ -58,6 +59,7 @@ class Curve(object):
         that the specified extension is a multiple of the step size.
         If the curve is closed, the extend parameter is disregarded. 
         """
+        print "Number of parts: %s" % self.nparts
         # Subspline parts do not include closing point
         u = arange(ndiv) / float(ndiv)
         parts = [ self.subPoints(u,j) for j in range(self.nparts) ]
@@ -85,7 +87,13 @@ class Curve(object):
     def length(self):
         """Return the total length of the curve."""
         return self.lengths().sum()
+
     
+def drawVectors(P,v,d=1.0,color='red'):
+    v = normalize(v)
+    Q = P+v
+    F = connect([Formex(P),Formex(Q)])
+    return draw(F,color=color,linewidth=3)
     
 
 ##############################################################################
@@ -128,15 +136,53 @@ class PolyLine(Curve):
         return X
 
 
-    def lengths(self):
-        """Return the length of the parts of the curve."""
+    def vectors(self):
+        """Return the vectors of the points to the next one.
+
+        The vectors are returned as a Coords object.
+        If not closed, this returns one less vectors than the number of points.
+        """
         x = self.coords
         y = roll(x,-1,axis=0)
         if not self.closed:
             n = self.coords.shape[0] - 1
             x = x[:n]
             y = y[:n]
-        return length(y-x)
+        return y-x
+
+
+    def directions(self):
+        """Returns unit vectors in the direction of the next point."""
+        return normalize(self.vectors())
+
+
+    def avgDirections(self):
+        """Returns average directions at the inner nodes.
+
+        If open, the number of directions returned is 2 less than the
+        number of points.
+        """
+        d = self.directions()
+        if self.closed:
+            d1 = d
+            d2 = roll(d,1,axis=1)
+        else:
+            d1 = d[:-1]
+            d2 = d[1:]
+        d = 0.5*(d1+d2)
+##         if self.closed:
+##             P = self.coords
+##         else:
+##             P = self.coords[1:-1]
+##         drawVectors(P,d1,1.0,'red')
+##         drawVectors(P,d2,1.0,'green')
+##         drawVectors(P,d,1.0,'cyan')
+        return d
+    
+
+    def lengths(self):
+        """Return the length of the parts of the curve."""
+        return length(self.vectors())
 
 
 ##############################################################################
@@ -178,6 +224,57 @@ class CardinalSpline(Curve):
         n = self.coords.shape[0]
         i = (j + arange(4)) % n
         P = self.coords[i]
+        C = self.coeffs * P
+        U = column_stack([t**3., t**2., t, ones_like(t)])
+        X = dot(U,C)
+        return X  
+
+
+##############################################################################
+#
+class BezierCurve(Curve):
+    """A class representing a Bezier curve."""
+
+    def __init__(self,pts,deriv=None,curl=0.5,closed=False):
+        """Create a Bezier curve through the given points.
+
+        The curve is defined by the points and the directions at these points.
+        If no directions are specified, the average of the segments ending
+        in that point is used, and in the end points of an open curve, the
+        direction of the end segment.
+        The curl parameter can be set to influence the curliness of the curve.
+        curl=0.0 results in straight segment.
+        """
+        pts = Coords(pts)
+        self.coords = pts
+        P = PolyLine(pts,closed=closed)
+        if deriv is None:
+            deriv = P.avgDirections()
+            if not closed:
+                atends = P.directions()
+                deriv = Coords.concatenate([atends[:1],deriv,atends[-1:]])
+            self.deriv = deriv
+        self.curl = curl * P.lengths()
+        if not closed:
+            self.curl = concatenate([self.curl,self.curl[-1:]])
+        self.nparts = self.coords.shape[0]
+        if not closed:
+            self.nparts -= 1
+        self.closed = closed
+        self.coeffs = matrix([[-1.,  3., -3., 1.],
+                              [ 3., -6.,  3., 0.],
+                              [-3.,  3.,  0., 0.],
+                              [ 1.,  0.,  0., 0.]]
+                             )#pag.440 of open GL
+
+
+    def subPoints(self,t,j):
+        """Compute the points at values t in subspline j"""
+        n = self.coords.shape[0]
+        ind = [j,(j+1)%n]
+        P = self.coords[ind]
+        D = P + (self.curl[ind]*array([1.,-1.])).reshape(-1,1)*self.deriv[ind]
+        P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
