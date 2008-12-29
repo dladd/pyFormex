@@ -1,18 +1,31 @@
 # $Id$    -*- rst -*-
 ##
-## This file is part of pyFormex 0.7.2 Release Tue Sep 23 16:18:43 2008
-## pyFormex is a Python implementation of Formex algebra
-## Website: http://pyformex.berlios.de/
-## Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
+##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  pyFormex is a tool for generating, manipulating and transforming 3D
+##  geometrical models by sequences of mathematical operations.
+##  Website: http://pyformex.berlios.de/
+##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Distributed under the GNU General Public License version 3 or later.
 ##
-## This program is distributed under the GNU General Public License
-## version 2 or later (see file COPYING for details)
+##
+##  This program is free software: you can redistribute it and/or modify
+##  it under the terms of the GNU General Public License as published by
+##  the Free Software Foundation, either version 3 of the License, or
+##  (at your option) any later version.
+##
+##  This program is distributed in the hope that it will be useful,
+##  but WITHOUT ANY WARRANTY; without even the implied warranty of
+##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+##  GNU General Public License for more details.
+##
+##  You should have received a copy of the GNU General Public License
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-pyFormex 0.8  Releasenotes
-==========================
+pyFormex 0.7.3  Releasenotes
+============================
 
-This is a collection of the most prominent changes in pyFormex 0.8
+This is a collection of the most prominent changes in pyFormex 0.7.3
 compared to the previous release 0.7.2
 
 
@@ -32,8 +45,8 @@ Configuration
 Core
 ----
 
-- CascadingDict has been renemaed to CDict
-
+- CascadingDict has been renamed to CDict
+- connectivity module has been moved from plugins into the core, as more and more modules get dependent on it (surface, centerline, fe, mesh)
   
 
 Gui
@@ -43,22 +56,37 @@ Gui
 
 Drawing
 -------
+- An important change in the 'bbox' and 'view' parameters of the draw() function: they now have None as default value, which is then set from the canvas drawing options, to be set with 'setDrawingOptions'.
 
-- When rendering TriSurfaces with lighting, there is on option to use
+- When rendering TriSurfaces with lighting, there is an option to use
   averaged normals at the vertices of the triangles, providing a much smoother
   look of the surface. An optional toolbar button toggles between triangle
   based and averaged normals.
 
+- In view of future changes, the drawing lock mechanism was moved to a separate module: drawlock.
 
 Scripting
 ---------
-
+- playing scripts nder the GUI was moved from module 'gui.draw' to 'script' 
+- askFilename: the 'cur' and 'file' parameters were merged
 
 
 Plugins
 -------
+- surface, surface_menu:
+  + TriSurface: new methods: borderEdgeNrs, borderNodeNrs, smoothLowPass, smoothLaplaceHC 
 
+- curve: A new plugin for handling continuous curves in 3D space. Currently implemented are PolyLine, Bezier, CardinalSPline and NaturalSpline. Full NURBS curve support is scheduled for release 0.8
 
+- isopar: added 'hex36' isoparametric transformation
+
+- properties: got more facilities (e.g. amplitude)
+
+- fe_abq: output of amplitude
+
+- postproc, fe_post, postproc_menu: some enhancements, but this is still work in progress 
+
+- tetgen: added a function ReadFaces to read a Tetgen .faces file
 
 Examples
 --------
@@ -69,3 +97,8 @@ Examples
 
 Manual
 ------
+
+
+License
+-------
+We have upgraded the license to GPL v3 or higher!
