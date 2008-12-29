@@ -273,6 +273,70 @@ def adjacent(index,rev=None):
     return adj
 
 
+def closedLoop(elems):
+    """Check if a set of line elements form a closed curve.
+
+    elems is a connection table of line elements, such as obtained
+    from the feModel() method on a plex-2 Formex.
+
+    The return value is a tuple of:
+    - return code:
+      - 0: the segments form a closed loop
+      - 1: the segments form a single non-closed path
+      - 2: the segments form multiple not connected paths
+    - a new connection table which is equivalent to the input if it forms
+    a closed loop. The new table has the elements in order of the loop.
+    """
+    srt = zeros_like(elems) - 1
+    ie = 0
+    je = 0
+    rev = False
+    k = elems[je][0]
+    while True:
+        if rev:
+            srt[ie] = elems[je][[1,0]]
+        else:
+            srt[ie] = elems[je]
+        elems[je] = [ -1,-1 ] # Done with this one
+        j = srt[ie][1]
+        if j == k:
+            break
+        w = where(elems == j)
+        if w[0].size == 0:
+            print "No match found"
+            break
+        je = w[0][0]
+        ie += 1
+        rev = w[1][0] == 1
+    if any(srt == -1):
+        ret = 2
+    elif srt[-1][1] != srt[0][0]:
+        ret = 1
+    else:
+        ret = 0
+    return ret,srt
+
+
+def partitionSegmentedCurve(elems):
+    """Partition a segmented curve into connected segments.
+    
+    The input argument is a (nelems,2) shaped array of integers.
+    Each row holds the two vertex numbers of a single line segment.
+
+    The return value ia a list of (nsegi,2) shaped array of integers. 
+    
+    is returned.
+    Each border is a (nelems,2) shaped array of integers in
+    which the element numbers are ordered.
+    """
+    borders = []
+    while elems.size != 0:
+        closed,loop = closedLoop(elems)
+        borders.append(loop[loop!=-1].reshape(-1,2))
+        elems = elems[elems!=-1].reshape(-1,2)
+    return borders
+
+
 ############################################################################
 #
 # Testing

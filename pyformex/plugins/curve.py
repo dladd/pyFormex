@@ -43,6 +43,18 @@ class Curve(object):
     """
     def subPoints(self,t,j):
         raise NotImplementedError
+
+    def lengths(self):
+        raise NotImplementedError
+
+
+    def pointsAt(self,t):
+        """Returns the points at parameter values t.
+
+        Parameter values are floating point values. Their integer part
+        is interpreted as the curve segment number, and the """
+
+        
     
     def points(self,ndiv=10,extend=[0., 0.]):
         """Return a series of points on the PolyLine.
@@ -59,8 +71,7 @@ class Curve(object):
         that the specified extension is a multiple of the step size.
         If the curve is closed, the extend parameter is disregarded. 
         """
-        print "Number of parts: %s" % self.nparts
-        # Subspline parts do not include closing point
+        # Subspline parts (without end point)
         u = arange(ndiv) / float(ndiv)
         parts = [ self.subPoints(u,j) for j in range(self.nparts) ]
 
@@ -183,6 +194,16 @@ class PolyLine(Curve):
     def lengths(self):
         """Return the length of the parts of the curve."""
         return length(self.vectors())
+
+
+##############################################################################
+#
+class Polygon(PolyLine):
+    """A Polygon is a closed PolyLine."""
+
+    def __init__(self,coords=[]):
+        PolyLine.__init__(self,coords,closed=True)
+        
 
 
 ##############################################################################
