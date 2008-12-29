@@ -52,7 +52,10 @@ def askSlices(bb):
     else:
         return [],[]
 
+reset()
 smooth()
+lights(True)
+transparent(False)
 setView('horse',[20,20,0])
 chdir('/home/bene/prj/pyformex/stl')
 S = TriSurface.read('horse-upright.gts')
@@ -68,6 +71,7 @@ a = t/len(P)
 F = S.toFormex()
 G = []
 old = seterr(all='ignore')
+setDrawOptions({'bbox':None})
 for i,p in enumerate(P):
     F1 = F.cutAtPlane(p,-n)
     F1.setProp(i)
@@ -75,8 +79,8 @@ for i,p in enumerate(P):
     G.append(F1)
     F = F.cutAtPlane(p,n)
     clear()
-    draw(F,bbox=None)
-    draw(G,bbox=None)
+    draw(F)
+    draw(G)
 
 seterr(**old)
     

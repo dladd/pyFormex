@@ -31,6 +31,7 @@ techniques = ['colors']
 Creates random points, bars, triangles, quads, ...
 """
 
+reset()
 setDrawOptions(dict(clear=True))
 npoints = 30
 p = arange(120)

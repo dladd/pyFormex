@@ -39,6 +39,8 @@ def drawSurf(F,surface=False,**kargs):
     return draw(F,**kargs)
 
 reset()
+smooth()
+lights(True)
 chdir(GD.cfg['curfile'])
 
 surf=True

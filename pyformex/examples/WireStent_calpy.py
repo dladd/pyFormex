@@ -33,12 +33,11 @@ techniques = ['colors']
 # Load the needed calpy modules    
 
 from plugins import calpy_itf
-calpy_itf.check()
-
 from calpy.fe_util import *
 from calpy.beam3d import *
 
 ############################
+
 
 ############################################
 # Create geometry
@@ -59,8 +58,10 @@ stent = DoubleHelixStent(stent_diameter,stent_length,
 
 if GD.options.gui:
     # draw it
+    reset()
     clear()
     draw(stent,view='iso')
+
 
     
 ############################################
@@ -76,7 +77,7 @@ nnod = nodes.shape[0]
 print "Compressed number of nodes: %s" % nnod
 
 # Create an extra node on the axis for beam orientations
-extra_node = array([[-10.0,0.0,0.0]])
+extra_node = array([[0.0,0.0,-10.0]])
 coords = concatenate([nodes,extra_node])
 nnod = coords.shape[0]
 print "After adding a node for orientation: %s" % nnod
@@ -161,6 +162,7 @@ import calpy
 calpy.options.optimize=True
 print elements
 displ,frc = static(coords,bcon,mats,elements,loads,Echo=True)
+print "Analysis done"
 
 
 ################################

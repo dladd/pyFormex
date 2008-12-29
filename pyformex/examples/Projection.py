@@ -27,12 +27,16 @@
 
 level = 'normal'
 topics = ['geometry','surface']
-techniques = ['colors']
+techniques = ['projection']
 
 """
 
 import simple
-from gui.canvas import *
+
+reset()
+smoothwire()
+transparent()
+lights(True)
 
 nx,ny = 20,10
 
@@ -47,20 +51,5 @@ draw(G,color=red)
 x = F.f.rotate(30).projectOnCylinder(ny)
 H = Formex(x)
 draw(H,color=blue)
-
-smooth()
-n=200
-for i in range (n):
-    v = float(i)/(2*n)
-    #print "\n\nNEW %s" % v
-    #GD.canvas.ambient = v
-    GD.canvas.specular = v
-    #GD.canvas.emission = v
-    #GD.canvas.shininess = v
-    GD.canvas.update()
-    GD.app.processEvents()
-    #sleep(1)
-
-GD.canvas.resetLighting()
 
 #End

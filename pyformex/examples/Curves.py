@@ -64,7 +64,7 @@ def drawCurve(ctype,dset,closed,tension,curl,ndiv,extend):
     S = method[ctype](P,**kargs)
     X = S.points(ndiv,extend)
     draw(X, color='red',marksize=3)
-    draw(PolyLine(X,closed=closed), color='green', linewidth=1)
+    draw(PolyLine(X,closed=closed), color='blue', linewidth=1)
 
 
 dataset = [
@@ -80,8 +80,8 @@ dataset = [
     ]
 
 data_items = [
-    ['DataSet','0','select',map(str,range(len(dataset)))], 
-    ['CurveType','Natural Spline','select',method.keys()],
+    ['DataSet','3','select',map(str,range(len(dataset)))], 
+    ['CurveType',None,'select',method.keys()],
     ['Closed',True],
     ['Nintervals',10],
     ['ExtendAtStart',0.0],
@@ -95,7 +95,7 @@ globals().update([i[:2] for i in data_items])
 
 clear()
 setDrawOptions({'bbox':'auto','view':'front'})
-while True:
+while not GD.dialog_timeout:
     for i,it in enumerate(data_items):
         data_items[i][1] = globals()[it[0]]
     res = askItems(data_items)

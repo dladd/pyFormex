@@ -35,7 +35,7 @@ from plugins.properties import *
 from plugins.fe import *
 from mydict import Dict,CDict
 import pyformex as GD
-import datetime
+from datetime import datetime
 import os,sys
 
 
@@ -1000,7 +1000,7 @@ class AbqData(CDict):
         writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
 Script: %s 
 %s
-""" % (jobname, datetime.date.now(), GD.scriptName, header))
+""" % (jobname, datetime.now(), GD.scriptName, header))
         
         nnod = self.model.nnodes()
         GD.message("Writing %s nodes" % nnod)

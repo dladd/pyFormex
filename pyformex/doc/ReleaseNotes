@@ -31,31 +31,45 @@ compared to the previous release 0.7.2
 
 Installation
 ------------
+pyFormex should now use whatever is the default Python interpreter for the user running the pyformex command. This facilitates non-standard installations (e.g. in user space).
+Of course, packagers for distributions may still replace the current script executer (/usr/bin/env python) by any particular Python version. We recommend Python 2.5 or higher. 
 
 
 Command line
 ------------
 
+- When running pyformex with the --gui option, remaining command line parameters are now intrepreted just as with the --nogui option: i.e. as pyformex scripts to be executed (and possibly their parameters).
+
 
 Configuration
 -------------
-
+- The default startup script is now '~/.pyformex.startup'
 
 
 Core
 ----
 
 - CascadingDict has been renamed to CDict
-- connectivity module has been moved from plugins into the core, as more and more modules get dependent on it (surface, centerline, fe, mesh)
-  
+- connectivity module has been moved from plugins into the core, as more and more modules get dependent on the Connectivity class. (surface, centerline, fe, mesh)
+- mydict.py: made ReturnNone and RaiseError functions in place of static methods
+- odict.py: 
+  + added listSymDifference, listSelect and listConcatenate functions
+  + ODict: implemented update(), values() and items() methods
 
 Gui
 ---
 
- 
+- widgets.py: 
+  + added unchangeable info field to input items.
+  + contents of input widgets can be changed by script 
+  + input dialogs have customizable buttons
+  + added some Table widgets
+
+- startup scripts and script directories can be configured from the GUI perference settings menu.
 
 Drawing
 -------
+- Accelerated picking function available from the pyFormex compiled library.
 - An important change in the 'bbox' and 'view' parameters of the draw() function: they now have None as default value, which is then set from the canvas drawing options, to be set with 'setDrawingOptions'.
 
 - When rendering TriSurfaces with lighting, there is an option to use
@@ -65,9 +79,10 @@ Drawing
 
 - In view of future changes, the drawing lock mechanism was moved to a separate module: drawlock.
 
+
 Scripting
 ---------
-- playing scripts nder the GUI was moved from module 'gui.draw' to 'script' 
+- playing scripts under the GUI was moved from module 'gui.draw' to 'script' 
 - askFilename: the 'cur' and 'file' parameters were merged
 
 
@@ -93,6 +108,7 @@ Examples
 
 - Analysis examples have been moved into the global example directory and are
   classified by the keywords.
+- Curves: illustrates the use of the new curve plugin.
 
 
 Manual

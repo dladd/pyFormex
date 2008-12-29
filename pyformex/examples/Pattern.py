@@ -35,13 +35,13 @@ import simple
 
 if __name__ == "draw":
 
-    #grid = simple.regularGrid([-2,-2],[2,2],[4,4])
-    #clear()
+    reset()
     setDrawOptions(dict(view='front',linewidth=5,fgcolor='red'))
     grid = actors.GridActor(nx=(4,4,0),ox=(-2.0,-2.0,0.0),dx=(1.0,1.0,1.0),planes=False,linewidth=1)
     drawActor(grid)
     linewidth(3)
     FA = None
+    setDrawOptions({'bbox':None})
     for n,p in simple.Pattern.items():
         message("%s = %s" % (n,p))
         FB = draw(Formex(pattern(p)),bbox=None,color='red')

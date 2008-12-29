@@ -46,7 +46,7 @@ history = []
 # extra paths to append tot sys.path
 syspath = []
 
-autorun = '~/.pyformex.startup'
+autorun = os.environ['HOME']+'/pyformex_startup.py'
 
 # commands
 ### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE

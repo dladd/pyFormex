@@ -13,16 +13,24 @@ Each task can have the following keys:
  rem(arks)
 
 
-* Release 0.7.3: 
+* Release 0.7.4:
 
- - Make the GUI loadable from a function
-
- - Add install scripts for GTS, tetgen, gl2ps
-
- - Upgrade the license to GPL v3
+ - There probably will be no 0.7.4
 
 
 * Release 0.8:
+
+ - Move the project to Beta status
+
+ - Make the GUI loadable from a function
+     dev: bverheg
+     sta: PARTIAL
+     rem: Need a branch for experimenting
+
+ - Add install scripts for GTS, tetgen, gl2ps
+     dev: bverheg
+     sta: PARTIAL
+     rem: Scripts working locally, need to be made more generic
 
  - Multiple views:
      dev: bverheg
@@ -61,7 +69,7 @@ Each task can have the following keys:
 
 
 * Release 0.9 :
- - Setup procedures to follow up submitted bugs/questions
+ - Set up procedures to follow up submitted bugs/questions
 
 * Release 1.0:
  - Conquer the world ;)

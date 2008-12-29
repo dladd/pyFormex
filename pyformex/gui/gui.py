@@ -726,21 +726,12 @@ See Help->License or the file COPYING for details.
         GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
 
-
-    # Execute the autorun script
     if GD.gui.easter_egg:
         draw.playScript(utils.mergeme(*GD.gui.easter_egg))
-    ar = GD.cfg.get('autorun','')
-    if ar :
-        if type(ar) is str:
-            ar = [ ar ]
-        args[0:0] = ar
 
     # remaining args are interpreted as scripts and their parameters
-    for arg in args:
-        if os.path.exists(arg):
-            script.play(arg)
-
+    script.runApp(args)
+    
     # Go into interactive mode
     GD.debug("Start main loop")
     GD.app.exec_()

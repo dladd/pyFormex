@@ -33,7 +33,7 @@ techniques = ['colors','persistence']
 # Load the needed calpy modules    
 
 from plugins import calpy_itf
-calpy_itf.check()
+#calpy_itf.check()
 
 from calpy.fe_util import *
 from calpy.truss3d import *
@@ -43,7 +43,7 @@ import time
 
 ###########################
 
-linewidth(1.0)
+reset()
 clear()
 from examples.X_truss import X_truss
 bgcolor(lightgrey)

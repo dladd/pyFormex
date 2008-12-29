@@ -31,7 +31,7 @@ needed to flag this directory as a Python package.
 __version__ = "0.7.3-a7"
 __revision__ = "$Rev$"
 Version = 'pyFormex %s' % __version__
-Copyright = 'Copyright (C) 2004-2007 Benedict Verhegghe'
+Copyright = 'Copyright (C) 2004-2008 Benedict Verhegghe'
 
 
 # The GUI parts

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # $Id$
 ##
 ##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
@@ -265,6 +265,16 @@ You will need proper permissions to actually delete the files.
     import locale
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
+    # Prepend the autorun scripts
+    ar = GD.cfg.get('autorun','')
+    if ar :
+        if type(ar) is str:
+            ar = [ ar ]
+        # expand tilde, as would bash
+        ar = map(utils.tildeExpand,ar)
+        args[0:0] = [ fn for fn in ar if os.path.exists(fn) ]
+
+    GD.debug("Remaining args: %s" % args)
     res = runApp(args)
 
     #Save the preferences that have changed

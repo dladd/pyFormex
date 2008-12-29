@@ -12,9 +12,8 @@ include pyformex/lib/postabq.c
 include pyformex/examples/scripts.cat
 include pyformex/examples/*.db
 include pyformex/examples/*.formex
-include pyformex/examples/Analysis/[A-Z]*.py
-include pyformex/examples/Analysis/hesperia-nieve.prop
-include pyformex/examples/Analysis/FeAbq.post
+include pyformex/examples/hesperia-nieve.prop
+include pyformex/examples/FeAbq.post
 include pyformex/examples/Demos/[A-Z]*.py
 include pyformex/examples/Demos/README
 include pyformex/icons/*.xpm

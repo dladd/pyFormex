@@ -108,9 +108,10 @@ class AnalogClock(object):
 
             
 if __name__ == "draw":
+    reset()
     C = AnalogClock()
     C.draw()
-    zoomAll()
+    setDrawOptions({'bbox':None})
     C.drawNow()
 
     if ack("Shall I start the clock?"):

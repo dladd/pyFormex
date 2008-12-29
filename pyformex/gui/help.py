@@ -115,8 +115,8 @@ Distributed under the GNU GPL v3 or higher.
 def developers():
     """Display the list of developers."""
     draw.showInfo("""
-This is an alphabetic list of the
-major contributors to pyFormex:
+This is an alphabetic list of all
+the contributors to pyFormex:
 
 Matthieu De Beule
 Gianluca De Santis

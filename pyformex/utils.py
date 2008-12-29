@@ -129,6 +129,7 @@ def hasModule(name,check=False):
             
 # tetgen -v no longer works in 1.4.2: use -h !!
 known_externals = {
+    'Python': ('python --version','Python (\\S+)'),
     'ImageMagick': ('import -version','Version: ImageMagick (\S+)'),
     'admesh': ('admesh --version', 'ADMesh - version (\S+)'),
     'calpy': ('calpy --version','Calpy (\S+)'), 
@@ -202,12 +203,14 @@ def printDetected():
     print "%s (%s)\n" % (pyformex.Version,pyformex.__revision__)
     print "Detected Python Modules:"
     for k,v in the_version.items():
-        if v:
-            print "%s (%s)" % ( k,v)
+        if not v:
+            v = 'Not Found'
+        print "%s (%s)" % ( k,v)
     print "\nDetected External Programs:"
     for k,v in the_external.items():
-        if v:
-            print "%s (%s)" % ( k,v)
+        #if not v:
+        #    v = 'Not Found'
+        print "%s (%s)" % ( k,v)
 
 
 def removeTree(path,top=True):
@@ -328,6 +331,18 @@ def changeExt(fn,ext):
     if not ext.startswith('.'):
         ext = ".%s" % ext
     return os.path.splitext(fn)[0] + ext
+
+
+def tildeExpand(fn):
+    """Perform tilde expansion on a filename.
+
+    Bash, the most used command shell in Linux, expands a '~' in arguments
+    to the users home direction.
+    This function can be used to do the same for strings that did not receive
+    the bash tilde expansion, such as strings in the configuration file.
+    """
+    return fn.replace('~',os.environ['HOME'])
+    
 
       
 def isPyFormex(filename):
