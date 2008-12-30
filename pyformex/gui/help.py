@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -109,7 +109,7 @@ def about():
 A tool for generating, manipulating and transforming 3D geometrical models by sequences of mathematical operations.
 
 Copyright 2004-2008 Benedict Verhegghe.
-Distributed under the GNU GPL v3 or higher.
+Distributed under the GNU GPL version 3 or later.
 """ % GD.Version)
 
 def developers():

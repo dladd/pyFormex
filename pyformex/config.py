@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -25,7 +25,7 @@
 A general yet simple configuration class.
 
 (C) 2005 Benedict Verhegghe
-Distributed under the GNU GPL
+Distributed under the GNU GPL version 3 or later
 
 Why:
 I wrote this simple class because I wanted to use Python expressions in my

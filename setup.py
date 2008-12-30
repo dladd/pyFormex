@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -100,7 +100,7 @@ files.
 
 setup(cmdclass={'build_ext': build_ext,'install':install},
       name='pyformex',
-      version='0.7.3-a7',
+      version='0.7.3',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 

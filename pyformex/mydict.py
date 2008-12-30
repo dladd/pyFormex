@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -29,7 +29,7 @@ CDict is a Dict with lookup cascading into the next level Dict's
 if the key is not found in the CDict itself.
 
 (C) 2005,2008 Benedict Verhegghe
-Distributed under the GNU GPL
+Distributed under the GNU GPL version 3 or later
 """
 
 import copy

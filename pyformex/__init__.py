@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -28,7 +28,7 @@ Currently, this does nothing. The file should be kept though, because it is
 needed to flag this directory as a Python package.
 """
 
-__version__ = "0.7.3-a7"
+__version__ = "0.7.3"
 __revision__ = "$Rev$"
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2008 Benedict Verhegghe'

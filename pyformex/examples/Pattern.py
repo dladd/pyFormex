@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: Pattern.py 85 2006-04-02 12:36:40Z bverheg $
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/

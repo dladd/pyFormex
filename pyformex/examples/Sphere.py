@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: Sphere.py 154 2006-11-03 19:08:25Z bverheg $
 ##
-##  This file is part of pyFormex 0.7.3 Release Mon Dec 29 15:32:01 2008
+##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
