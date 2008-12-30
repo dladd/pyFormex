@@ -15,21 +15,24 @@
 The following functions provide access to the OpenGL 3D drawing capabilities of \pyformex.
 
 
-\begin{funcdesc}{draw}{F, view=None,bbox='auto',
-         color='prop',colormap=None,alpha=0.5,
-         mode=None,linewidth=None,shrink=None,marksize=None,
-         wait=True,clear=None,allviews=False)}
+\begin{funcdesc}{draw}{F, 
+    view=None,bbox=None,clear=None,shrink=None,
+    color='prop',colormap=None,alpha=0.5,
+    mode=None,linewidth=None,marksize=None,
+    wait=True,allviews=False)}
+  
+Draw object(s) with specified settings.
 
-Draw object(s) with specified settings and direct camera to it.
+The first argument is an object (or list of objects) to be drawn. 
+All other arguments are settings that influence how the object is being drawn
+or how the display is changed.
 
-The first argument is an object to be drawn. All other arguments are
-settings that influence how  the object is being drawn.
-
-F is either a Formex or a TriSurface object, or a name of such object
-(global or exported), or a list thereof.
+F is either a drawable object (such as a Formex or a TriSurface), or a name of such object (global or exported), or a list of such object.
 If F is a list, the draw() function is called repeatedly with each of
-ithe items of the list as first argument and with the remaining arguments
+the items in the list as first argument and with the remaining arguments
 unchanged.
+
+The remaining arguments are options. Most of them have None as a default value and will then be set from the default 
 
 view is either the name of a defined view or 'last' or None.
 Predefined views are 'front','back','top','bottom','left','right','iso'.
@@ -73,28 +76,6 @@ The value of drawdelay is set in the config, or 2 seconds by default.
 The user can disable the wait cycle for the next draw operation by
 specifying wait=False. Setting drawdelay=0 will disable the waiting
 mechanism for all subsequent draw statements (until set >0 again).
-
-\end{funcdesc}
-
-\begin{funcdesc}{drawwait}{}
-Wait for the drawing lock to be released.
-
-While we are waiting, events are processed.
-
-\end{funcdesc}
-
-\begin{funcdesc}{drawlock}{}
-Lock the drawing function for the next drawdelay seconds.
-\end{funcdesc}
-
-\begin{funcdesc}{drawblock}{}
-Lock the drawing function indefinitely.
-\end{funcdesc}
-
-\begin{funcdesc}{drawrelease}{}
-Release the drawing function.
-
-If a timer is running, cancel it.
 
 \end{funcdesc}
 

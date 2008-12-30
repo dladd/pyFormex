@@ -25,7 +25,9 @@
 """Some functions operating on 2D structures.
 
 This is a plugin for pyFormex.
-(C) 2002 B. Verhegghe
+(C) 2002 Benedict Verhegghe
+
+See the Section2D example for an example of its use.
 """
 
 from plugins import sectionize
@@ -67,44 +69,6 @@ class planeSection(object):
 
     def sectionChar(self):
         return sectionChar(self.F)
-
-        
-def loopCurve(elems):
-    """Check if a set of line elements form a closed curve.
-
-    elems is a connection table of line elements, such as obtained
-    from the feModel() method on a plex-2 Formex.
-
-    A new connection table is returned which is equivalent to the input
-    if it forms a closed loop, but has the elements in order and sense
-    along the curve.
-    """
-    srt = zeros_like(elems) - 1
-    ie = 0
-    je = 0
-    rev = False
-    k = elems[je][0]
-    while True:
-        if rev:
-            srt[ie] =  elems[je][[1,0]]
-        else:
-            srt[ie] =  elems[je]
-        elems[je] = [ -1,-1 ] # Done with this one
-        j = srt[ie][1]
-        if j == k:
-            break
-        w = where(elems == j)
-        if w[0].size == 0:
-            print "No match found"
-            break
-        je = w[0][0]
-        ie += 1
-        rev = w[1][0] == 1
-    if any(srt == -1):
-        print "The curve consists of multiple segments"
-    if srt[-1][1] != srt[0][0]:
-        print "The curve is not closed"
-    return srt
 
 
 def sectionChar(F):
@@ -198,71 +162,4 @@ def princTensor2D(Ixx,Iyy,Ixy):
     return alpha,IXX,IYY
     
 
-    
-if __name__ == "draw":
-
-    import simple
-
-    
-    def showaxes(C,angle,size,color):
-        H = Formex(simple.Pattern['plus']).scale(0.6*size).rot(angle/rad).trl(C)
-        draw(H,color=color)
-
-
-    def square_example(scale=[1.,1.,1.]):
-        P = Formex([[[1,1]]]).rosette(4,90).scale(scale)
-        F = sectionize.connectPoints(P,close=True)
-        draw(F)
-        return sectionChar(F)
-
-    def rectangle_example():
-        return square_example(scale=[2.,1.,1.])
-
-    def circle_example():
-        H = simple.circle(5.,5.)
-        draw(H)
-        return sectionChar(H)
-   
-    
-    def close_loop_example():
-        # one more example, originally not a closed loop curve
-        F = Formex(pattern('11')).replic(2,1,1) + Formex(pattern('2')).replic(2,2,0)
-        nodes,elems = F.feModel()
-
-        FN = Formex(nodes)
-        drawNumbers(FN,color=blue)
-
-        F = Formex(nodes[elems])
-        draw(F)
-        drawNumbers(F,color=red)
-
-        print nodes
-        print elems
-
-        sorted = loopCurve(elems)
-
-        print sorted
-
-        info('Click to continue')
-        clear()
-        F = Formex(nodes[sorted])
-        draw(F,color=blue)
-        print F.f
-        return sectionChar(F)
-    
-
-    examples = { 'Square'    : square_example,
-                 'Rectangle' : rectangle_example,
-                 'Circle'    : circle_example,
-                 'CloseLoop' : close_loop_example,
-                 }
-    
-    res = askItems([('Select an example','','select',examples.keys())])
-    if res:
-        S = examples[res['Select an example']]()
-        S.update(extendedSectionChar(S))
-        print S
-        G = Formex([[[S['xG'],S['yG']]]])
-        draw(G,bbox=None)
-        showaxes([S['xG'],S['yG'],0.],S['alpha'],F.dsize(),'red')
- 
+# End

@@ -16,16 +16,16 @@ Options:
   --fastencode       Use a fast algorithm to encode edges.
   --fastfuse         Use a fast algorithm to fuse points.
   --nofastfuse       Use a slow algorithm to fuse points.
-  --arrays           Use vertex arrays for display
   --config=CONFIG    use file CONFIG for settings
   --nodefaultconfig  skip all default locations of config files
   --redirect         redirect standard output to the message board (ignored
                      with --nogui)
   --detect           Detect helper software and print report.
   --debug            display debugging info to sys.stdout
-  --test             testing mode: only for developers!
   --classify         classify the examples in categories
   --whereami         show where the pyformex package is located
   --remove           remove the pyformex installation
+  --test             testing mode: only for developers!
+  --testhighlight    highlight testing mode: only for developers!
   --version          show program's version number and exit
   -h, --help         show this help message and exit

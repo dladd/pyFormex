@@ -665,7 +665,7 @@ You should seriously consider to bail out now!!!
     GD.gui.viewports.changeLayout(1)
     GD.gui.viewports.setCurrent(0)
     GD.board = GD.gui.board
-    GD.board.write("""%s  (C) B. Verhegghe
+    GD.board.write("""%s  (C) Benedict Verhegghe
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software,
 and you are welcome to redistribute it under certain conditions.

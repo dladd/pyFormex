@@ -95,5 +95,4 @@ newpoints= interpolate3D(nod3D, 3)
 NEW=Formex(newpoints.reshape(1, -1, 3))
 draw(NEW)
 
-
-
+# End

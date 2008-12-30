@@ -75,7 +75,7 @@ In order for Python to find the modules in non-standard locations, you should ad
 A common example is a script that wants to import modules from the same directory where it is located. In that case you can just add the following two lines to the start of your script.
 \begin{verbatim}
 import os,sys
-sys.path.insert(os.dirname(GD.cfg['curfile']))
+sys.path.insert(0,os.dirname(__file__))
 \end{verbatim}
 
 \trick{Automatically load plugin menus on startup}
