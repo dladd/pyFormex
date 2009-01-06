@@ -92,6 +92,23 @@ def vectorTripleProduct(vec1,vec2,vec3):
     the 3 vectors.
     """
     return dot(vec1,cross(vec2,vec3))
+    
+
+def polygonNormals(x):
+    """Compute normals in all points of polygons in x.
+
+    x is an (nel,nplex,3) coordinate array representing a (possibly not plane)
+    polygon.
+    
+    The return value is an (nel,nplex,3) array with the unit normals on the
+    two edges ending in each point.
+    """
+    ni = arange(x.shape[1])
+    nj = roll(ni,1)
+    nk = roll(ni,-1)
+    v1 = x-x[:,nj]
+    v2 = x[:,nk]-x
+    return vectorPairNormals(v1.reshape(-1,3),v2.reshape(-1,3)).reshape(x.shape)
 
 
 def pattern(s):

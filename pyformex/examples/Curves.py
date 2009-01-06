@@ -50,7 +50,7 @@ open_or_closed = { True:'A closed', False:'An open' }
 
 TA = None
 
-def drawCurve(ctype,dset,closed,tension,curl,interpoints,ndiv,extend):
+def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -60,6 +60,8 @@ def drawCurve(ctype,dset,closed,tension,curl,interpoints,ndiv,extend):
     draw(P, color='black',marksize=3)
     drawNumbers(Formex(P))
     kargs = {'closed':closed}
+    if ctype in ['Natural Spline']:
+        kargs['endcond'] = [endcond,endcond]
     if ctype in ['Cardinal Spline']:
         kargs['tension'] = tension
     if ctype in ['Bezier']:
@@ -93,6 +95,7 @@ data_items = [
     ['DataSet','3','select',map(str,range(len(dataset)))], 
     ['CurveType',None,'select',method.keys()],
     ['Closed',False],
+    ['EndCondition',None,'select',['notaknot','secder']],
     ['Tension',0.0],
     ['Curl',0.5],
     ['InterPoints',None,'select',['points','pointsAt']],
@@ -115,8 +118,7 @@ while not GD.dialog_timeout:
     globals().update(res)
     if Clear:
         clear()
-    drawCurve(CurveType,int(DataSet),Closed,Tension,Curl,InterPoints,Nintervals,
-              [ExtendAtStart,ExtendAtEnd])
+    drawCurve(CurveType,int(DataSet),Closed,EndCondition,Tension,Curl,InterPoints,Nintervals,[ExtendAtStart,ExtendAtEnd])
 
 
 # End

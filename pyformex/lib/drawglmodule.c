@@ -11,7 +11,7 @@
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
 
-int debug = 0;
+int debug = 1;
 
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
@@ -56,22 +56,7 @@ int gl_objtype(int nplex)
 
 /****** EXTERNAL FUNCTIONS (callable from Python ********/
 
-
-
-
-
-/* /\********************************************** drawgl.gl_rendermode ****\/ */
-/* /\* gl_rendermode *\/ */
-/* /\* args:  None */
-/* *\/   */
-/* static PyObject * gl_rendermode() */
-/* { */
-/*   glRenderMode(GL_RENDER); */
-/*   Py_INCREF(Py_None); */
-/*   return Py_None; */
-/* } */
-
-/********************************************** drawgl.draw_polygons ****/
+/********************************************** draw_polygons ****/
 /* Draw polygons */
 /* args:  x
     x : float (nel,nplex,3) : coordinates
@@ -277,7 +262,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 }
 
 
-/********************************************** drawgl.pick_polygons ****/
+/********************************************** pick_polygons ****/
 /* Pick polygons */
 /* args:  x
     x : float (nel,nplex,3) : coordinates
@@ -318,79 +303,228 @@ pick_polygons(PyObject *dummy, PyObject *args)
 }
 
 
-/***************************************** drawgl.draw_triangle_elements ****/
-/* Draw triangle elements */
-/* args:  x, n, c
-     x  : float32 (npts,3) coordinates
-     e  : int32 (ntri,3) elements
-     n  : float32 (ntri,3) normals
-     c  : float32 (3) or (ntri,3) or (ntri,3,3) colors
+/********************************************** draw_polygon_elements ****/
+/* Draw polygon elements */
+/* args:  x
+    x : float (npts,3) : coordinates
+    e : int32 (nel,nplex) : element connectivity
+    n : float (nel,3) or (nel,nplex,3) normals.
+    c : float (nel,3) or (nel,nplex,3) colors
+    alpha : float
 */  
-/* static PyObject * */
-/* draw_triangle_elements(PyObject *dummy, PyObject *args) */
-/* { */
-/*   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL; */
-/*   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL; */
-/*   float *x,*n=NULL,*c=NULL; */
-/*   int *e; */
+static PyObject *
+draw_polygon_elements(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
+  PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
+  float *x, *n=NULL, *c=NULL, alpha;
+  int *e;
+  int npts,nel,nplex,ndc=0,ndn=0;
 
-/*   if (debug) printf("** draw_triangle_elements\n"); */
-/*   if (!PyArg_ParseTuple(args, "OOOO", &arg1, &arg2, &arg3, &arg4)) return NULL; */
-/*   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY); */
-/*   if (arr1 == NULL) return NULL; */
-/*   x = (float *)PyArray_DATA(arr1); */
-/*   if (debug) printf("Got arg 1\n"); */
+  if (debug) printf("** draw_polygon_elements\n");
+  if (!PyArg_ParseTuple(args, "OOOOf", &arg1, &arg2, &arg3, &arg4, &alpha)) return NULL;
 
-/*   arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY); */
-/*   if (arr2 == NULL) goto fail; */
-/*   e = (int *)PyArray_DATA(arr2); */
-/*   if (debug) printf("Got arg 2\n"); */
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr1 == NULL) goto cleanup;
+  x = (float *)PyArray_DATA(arr1);
+  npts = PyArray_DIMS(arr1)[0];
+  if (debug) printf("** npts = %d\n",npts);
 
-/*   arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY); */
-/*   if (arr3 != NULL)  */
-/*     n = (float *)PyArray_DATA(arr3); */
-/*   if (debug) printf("Got arg 3\n"); */
+  arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
+  if (arr2 == NULL) goto cleanup;
+  e = (int *)PyArray_DATA(arr2);
+  nel = PyArray_DIMS(arr2)[0];
+  nplex = PyArray_DIMS(arr2)[1];
+  if (debug) printf("** nel = %d\n",nel);
+  if (debug) printf("** nplex = %d\n",nplex);
 
-/*   arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY); */
-/*   if (arr4 != NULL)  */
-/*     c = (float *)PyArray_DATA(arr4); */
-/*   if (debug) printf("Got arg 4\n"); */
+
+  arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr3 != NULL) { 
+    n = (float *)PyArray_DATA(arr3);
+    ndn = PyArray_NDIM(arr3);
+  }
+
+  arr4 = PyArray_FROM_OTF(arg4, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr4 != NULL) { 
+    c = (float *)PyArray_DATA(arr4);
+    ndc = PyArray_NDIM(arr4);
+  }
   
-/*   int npts,ntri; */
-/*   npy_intp * dims; */
-/*   dims = PyArray_DIMS(arr1); */
-/*   npts = dims[0]; */
-/*   dims = PyArray_DIMS(arr2); */
-/*   ntri = dims[0]; */
+  if (debug) printf("** ndn = %d\n",ndn);
+  if (debug) printf("** ndc = %d\n",ndc);
+  int i,j,objtype;
+  
+  objtype = gl_objtype(nplex);
 
-/*   if (debug) printf("ntri = %d\n",ntri); */
-/*   glBegin(GL_TRIANGLES); */
-/*   int i,j; */
-/*   for (i=0; i<3*ntri; i+=3) { */
-/*     for (j=0; j<3; j+=3) */
-/*       glVertex3fv(x+3*e[i+j]); */
-/*   } */
-/*   glEnd(); */
+  if (nplex <= 4) { 
+    glBegin(objtype);
 
-/*   /\* Cleanup *\/ */
-/*   Py_DECREF(arr1); */
-/*   Py_DECREF(arr2); */
-/*   if (arr3 != NULL)  { Py_DECREF(arr3); } */
-/*   if (arr4 != NULL)  { Py_DECREF(arr4); } */
-/*   Py_INCREF(Py_None); */
-/*   return Py_None; */
-/*  fail: */
-/*   if (debug) printf("Error Cleanup\n"); */
-/*   Py_XDECREF(arr1); */
-/*   Py_XDECREF(arr2); */
-/*   return NULL; */
-/* } */
+    if (ndc == 0) {
+      if (ndn == 0) {
+	for (i=0; i<nel*nplex; ++i) {
+	  glVertex3fv(x+3*e[i]);
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex; ++j) glVertex3fv(x+3*e[nplex*i+j]);
+	}
+      } else if (ndn == 3) {
+	for (j=0;j<nel*nplex;++j) {
+	  glNormal3fv(n+3*j);
+	  glVertex3fv(x+3*e[j]);
+	}
+      }
+    } else if (ndc == 2) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
+	}
+      } else if (ndn == 2){
+	for (i=0; i<nel; i++) {
+	  gl_color(c+3*i,alpha);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex;++j) {
+	    glNormal3fv(n+3*(nplex*i+j));
+	    glVertex3fv(x+3*e[nplex*i+j]);
+	  }
+	}
+      }
+    } else if (ndc == 3) {   // TODO
+      if (ndn == 0) {
+	for (i=0; i<nel*nplex*3; i+=3) {
+	  gl_color(c+i,alpha);
+	  glVertex3fv(x+i);
+	}
+      } else if (ndn == 2) {   // TODO
+	for (i=0; i<nel; i++) {
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) {
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	}
+      } else if (ndn == 3) {   // TODO
+	for (i=0; i<nel; i++) {
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	}
+      }
+    }
+    glEnd();
+
+  } else {   // TODO
+
+    if (ndc == 0) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      }
+    } else if (ndc == 2) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 2){
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  gl_color(c+3*i,alpha);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  glEnd();
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  gl_color(c+3*i,alpha);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      }
+    } else if (ndc == 3) {
+      if (ndn == 0) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) {
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      } else if (ndn == 2) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  glNormal3fv(n+3*i);
+	  for (j=0;j<nplex*3;j+=3) {
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      } else if (ndn == 3) {
+	for (i=0; i<nel; i++) {
+	  glBegin(objtype);
+	  for (j=0;j<nplex*3;j+=3) {
+	    glNormal3fv(n+nplex*3*i+j);
+	    gl_color(c+nplex*3*i+j,alpha);
+	    glVertex3fv(x+nplex*3*i+j);
+	  }
+	  glEnd();
+	}
+      }
+    }
+  }
+  
+ cleanup:
+  if (arr1 != NULL) { Py_DECREF(arr1); }
+  if (arr2 != NULL) { Py_DECREF(arr2); }
+  if (arr3 != NULL) {Py_DECREF(arr3); }
+  if (arr4 != NULL) {Py_DECREF(arr4); }
+  Py_INCREF(Py_None);
+  return Py_None;
+}
 
 
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
     {"drawPolygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pickPolygons", pick_polygons, METH_VARARGS, "Pick polygons."},
+    {"drawPolygonElems", draw_polygon_elements, METH_VARARGS, "Draw polygon elements."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

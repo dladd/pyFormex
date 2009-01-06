@@ -812,6 +812,17 @@ With \Code{normalized=False}, returns unnormalized normal vectors. This does not
 \end{funcdesc}
 
 
+\begin{funcdesc}{def polygonNormals}{x}
+    Compute normals in all points of polygons in \var{x}.
+
+    \var{x} is an \Code{(nel,nplex,3)} coordinate array representing a (possibly not plane)
+    polygon.
+    
+    The return value is an \Code{(nel,nplex,3)} array with the unit normals on the
+    two edges ending in each point.
+\end{funcdesc}
+
+
 \begin{funcdesc}{pattern}{s}
 Return a line segment pattern created from a string.
 

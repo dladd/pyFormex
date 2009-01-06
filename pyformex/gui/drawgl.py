@@ -221,5 +221,20 @@ def pickPolygons(x):
             GL.glVertex3fv(xij)
         GL.glEnd()
         GL.glPopName()
+
+        
+def drawPolygonElems(x,e,n,c,alpha):
+    """Draw a collection of polygon elements.
+
+    This function is like drawPolygons, but the vertices of the polygons
+    are specified by a (coords,elems) tuple.
+    x : float (npts,3) : coordinates
+    e : int32 (nel,nplex) : element connectivity
+    n : float (nel,3) or (nel,nplex,3) normals.
+    c : float (nel,3) or (nel,nplex,3) colors
+    alpha : float
+    """
+    drawPolygons(x[e],n,c,alpha)
+    
     
 ### End

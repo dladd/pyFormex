@@ -392,13 +392,12 @@ class NaturalSpline(Curve):
         self.endcond = endcond
         self.compute_coefficients()
 
-    #
-    # THIS SHOULD STILL BE OPTIMIZED
-    #
+
     def compute_coefficients(self):
         x, y, z = self.coords.x(),self.coords.y(),self.coords.z()
         n = self.nparts
         M = zeros([4*n, 4*n])
+        B = zeros([4*n, 3])
         
         # constant submatrix
         m = array([[0., 0., 0., 1., 0., 0., 0., 0.],
@@ -406,33 +405,24 @@ class NaturalSpline(Curve):
                    [3., 2., 1., 0., 0., 0.,-1., 0.],
                    [6., 2., 0., 0., 0.,-2., 0., 0.]])
 
-        bx, by, bz=zeros([4*n, 1]), zeros([4*n, 1]), zeros([4*n, 1])
         for i in range(n-1):
-            f=4*i
-            M[f,  [f ,f+1, f+2, f+3, f+4, f+5, f+6, f+7]]=m[0]
-            M[f+1,  [f ,f+1, f+2, f+3, f+4, f+5, f+6, f+7]]=m[1]
-            M[f+2, [f ,f+1, f+2, f+3, f+4, f+5, f+6, f+7]]=m[2]           
-            M[f+3, [f ,f+1, f+2, f+3, f+4, f+5, f+6, f+7]]=m[3]          
-            bx[f], bx[f+1], bx[f+2], bx[f+3]=x[i], x[i+1], 0., 0.
-            by[f], by[f+1], by[f+2], by[f+3]=y[i], y[i+1], 0., 0.
-            bz[f], bz[f+1], bz[f+2], bz[f+3]=z[i], z[i+1], 0., 0.
+            f = 4*i
+            M[f:f+4,f:f+8] = m
+            B[f:f+2] = self.coords[i:i+2]
 
-        #the last spline passes trough the last 2 points
-        f=4*(n-1)
-        M[f,  [f ,f+1, f+2, f+3]]= m[0, :4]
-        M[f+1,  [f ,f+1, f+2, f+3]]=m[1, :4]
-        bx[f] , bx[f+1] =x[-2] , x[-1]
-        by[f] , by[f+1] =y[-2] , y[-1]
-        bz[f] , bz[f+1] =z[-2] , z[-1]
+        # the last spline passes through the last 2 points
+        f = 4*(n-1)
+        M[f:f+2, f:f+4] = m[:2,:4]
+        B[f:f+2] = self.coords[-2:]
 
         #add the appropriate end constrains
         if self.closed:
-            #first and second derivatives at starting and last point
+            # first and second derivatives at starting and last point
             # (that are actually the same point) are the same
-            M[f+2, [f+0 ,f+1,f+ 2, f+3]] = m[2, :4]
-            M[f+2, [0 ,1, 2, 3]] = m[2, 4:]    
-            M[f+3, [f+0 ,f+1,f+ 2,f+ 3]] = m[3, :4]
-            M[f+3, [0 ,1, 2, 3]] = m[3, 4:]
+            M[f+2, f:f+4] = m[2, :4]
+            M[f+2, 0:4] = m[2, 4:]    
+            M[f+3, f:f+4] = m[3, :4]
+            M[f+3, 0:4] = m[3, 4:]
 
         else:
             if self.endcond[0] =='notaknot':
@@ -440,21 +430,19 @@ class NaturalSpline(Curve):
                 M[f+2,  [0, 4]] = array([6.,-6.])
             else:
                 # second derivatives at start is zero
-                M[f+2,  [0 ,1, 2, 3]] = m[3, :4]
+                M[f+2, 0:4] = m[3, :4]
 
             if self.endcond[1] =='notaknot':
                 # third derivative is the same between the last 2 splines
-                M[f+3,  [f-4, f]] = array([6.,-6.])
+                M[f+3, [f-4, f]] = array([6.,-6.])
             else:
                 # second derivatives at end is zero
-                M[f+3,  [f ,f+1, f+2, f+3]] = m[3, :4]
+                M[f+3, f:f+4] = m[3, :4]
 
         
-        bx[f+2] , bx[f+3] ,  by[f+2],  by[f+3], bz[f+2],  bz[f+3] =0. ,  0., 0., 0., 0., 0.
-        M , bx , by, bz  =asmatrix(M) ,  asmatrix(bx) ,  asmatrix(by) , asmatrix(bz)
+##         bx[f+2] , bx[f+3] ,  by[f+2],  by[f+3], bz[f+2],  bz[f+3] =0. ,  0., 0., 0., 0., 0.
 
         #calculate the coefficients
-        B = column_stack([bx,by,bz])
         C = linalg.solve(M,B)
         self.coeffs = array(C).reshape(-1,4,3)
 

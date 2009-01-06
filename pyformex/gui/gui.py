@@ -472,6 +472,7 @@ class GUI(QtGui.QMainWindow):
         GD.debug('GUI cleanup')
         self.drawlock.release()
         GD.canvas.cancel_selection()
+        draw.clear_canvas()
         self.setBusy(False)
 
 
