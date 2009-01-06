@@ -24,6 +24,7 @@
 ##
 """Functions for executing pyFormex scripts."""
 
+
 import pyformex as GD
 import threading,os,commands,copy,re,time
 
@@ -271,7 +272,24 @@ def playScript(scr,name=None,filename=None,argv=[]):
             if GD.gui and stepmode:
                 step_script(scr,g,True)
             else:
-                exec scr in g
+                if GD.options.executor:
+                    import sys
+                    print name,filename
+                    n = os.path.split(name)
+                    m = os.path.basename(name)
+                    m = os.path.basename(name)
+                    print n
+                    o = os.path.split(n[0])
+                    print o
+                    sys.path.insert(0,n[0])
+                    print sys.path
+                    print m
+                    s = m.replace('.py','')
+                    print s
+                    __import__(s,g)
+                else:
+                    exec scr in g
+
             if GD.cfg['autoglobals']:
                 exportNames.extend(listAll(clas=formex.Formex,dic=g))
             GD.PF.update([(k,g[k]) for k in exportNames])

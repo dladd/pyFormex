@@ -52,6 +52,7 @@ This will create a pyformex-${VERSION}.tar.gz in dist/
 !! First create the distribution and test it out locally !! 
 
 Set the final version in RELEASE (RELEASE==VERSION)
+  touch RELEASE
   make version
 Stamp the files with the version
   make stampall
@@ -68,6 +69,8 @@ Put the file on berlios ftp server
   cd incoming
   lcd dist
   put fullfilename
+...
+  quit 
 Release the file via project administration
   inloggen
   project
@@ -84,6 +87,8 @@ Announce the release on the pyFormex news
   news
   submit
     >> text: pyFormex Version released....
+Send a mail to pyformex-announce@lists.berlios.de
+  (possibly same text as news)
 Make the release available on Berlios FTP server
   make pub
 Make the release available on our local FTP server

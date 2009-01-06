@@ -36,18 +36,21 @@ techniques = ['spline','solve']
 """
 
 
-method = {
-    'Natural Spline': NaturalSpline,
-    'Cardinal Spline': CardinalSpline,
-    'Bezier': BezierCurve,
-    'Polyline': PolyLine
-}
+method = ODict([
+    ('Natural Spline', NaturalSpline),
+    ('Cardinal Spline', CardinalSpline),
+    ('Bezier', BezierCurve),
+    ('Polyline', PolyLine),
+])
+
+method_color = [ 'red','green','blue','cyan' ] 
+point_color = [ 'black','white' ] 
         
 open_or_closed = { True:'A closed', False:'An open' }
 
 TA = None
 
-def drawCurve(ctype,dset,closed,tension,curl,ndiv,extend):
+def drawCurve(ctype,dset,closed,tension,curl,interpoints,ndiv,extend):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -62,9 +65,16 @@ def drawCurve(ctype,dset,closed,tension,curl,ndiv,extend):
     if ctype in ['Bezier']:
         kargs['curl'] = curl
     S = method[ctype](P,**kargs)
-    X = S.points(ndiv,extend)
-    draw(X, color='red',marksize=3)
-    draw(PolyLine(X,closed=closed), color='blue', linewidth=1)
+    if interpoints == 'points':
+        X = S.points(ndiv,extend)
+        point_color = 'back'
+    else:
+        npts = ndiv*S.nparts + (extend[1]-extend[0]) * ndiv + 1
+        X = S.pointsAt(extend[0] + arange(npts)/ndiv)
+        point_color = 'white'
+    draw(X, color=point_color,marksize=3)
+    im = method.keys().index(ctype)
+    draw(PolyLine(X,closed=closed), color=method_color[im], linewidth=1)
 
 
 dataset = [
@@ -82,12 +92,13 @@ dataset = [
 data_items = [
     ['DataSet','3','select',map(str,range(len(dataset)))], 
     ['CurveType',None,'select',method.keys()],
-    ['Closed',True],
+    ['Closed',False],
+    ['Tension',0.0],
+    ['Curl',0.5],
+    ['InterPoints',None,'select',['points','pointsAt']],
     ['Nintervals',10],
     ['ExtendAtStart',0.0],
     ['ExtendAtEnd',0.0],
-    ['Tension',0.0],
-    ['Curl',0.5],
     ['Clear',True],
     ]
 globals().update([i[:2] for i in data_items])
@@ -104,7 +115,7 @@ while not GD.dialog_timeout:
     globals().update(res)
     if Clear:
         clear()
-    drawCurve(CurveType,int(DataSet),Closed,Tension,Curl,Nintervals,
+    drawCurve(CurveType,int(DataSet),Closed,Tension,Curl,InterPoints,Nintervals,
               [ExtendAtStart,ExtendAtEnd])
 
 

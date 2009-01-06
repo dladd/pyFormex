@@ -36,7 +36,7 @@ higher order curves and collections thereof. In general, the curves are 3D,
 but special cases may be created for handling plane curves.
 """
 
-
+from numpy import *
 from formex import *
 from gui.draw import draw
 
@@ -64,6 +64,17 @@ class Curve(object):
       subPoints(t,j)
     """
     def subPoints(self,t,j):
+        """Return the points at values t in part j
+
+        t can be an array of paramter values, j is a single segment number.
+        """
+        raise NotImplementedError
+
+    def subPoints2(self,t,j):
+        """Return the points at values,parts t,j
+
+        t and j can both be arrays, but should be compatibls.
+        """
         raise NotImplementedError
 
     def lengths(self):
@@ -74,8 +85,19 @@ class Curve(object):
         """Returns the points at parameter values t.
 
         Parameter values are floating point values. Their integer part
-        is interpreted as the curve segment number, and the """
-
+        is interpreted as the curve segment number, and the decimal part
+        goes from 0 to 1 over the segment.
+        """
+        t = asarray(t).ravel()
+        ti = floor(t).clip(min=0,max=self.nparts-1)
+        t -= ti
+        i = ti.astype(Int)
+        try:
+            allX = self.subPoints2(t,i)
+        except:
+            allX = concatenate([ self.subPoints(tj,ij) for tj,ij in zip(t,i)])
+        print allX.shape
+        return Coords(allX)
         
     
     def points(self,ndiv=10,extend=[0., 0.]):
@@ -159,12 +181,16 @@ class PolyLine(Curve):
         return connect([x,x],bias=[0,1],loop=self.closed)
 
 
-    def subPoints(self,t,j):
-        """Compute the points at values t in part j"""
+    def subPoints2(self,t,j):
+        """Return the points at values t in part j
+
+        t and j can both be arrays of value, but should be compatible.
+        """
+        j = asarray(j).ravel()
+        t = asarray(t).reshape(-1,1)
         n = self.coords.shape[0]
         X0 = self.coords[j % n]
         X1 = self.coords[(j+1) % n]
-        t = t.reshape(-1,1)
         X = (1.-t) * X0 + t * X1
         return X
 
@@ -259,11 +285,28 @@ class CardinalSpline(Curve):
         s = (1.-self.tension)/2.
         M = matrix([[-s, 2-s, s-2., s], [2*s, s-3., 3.-2*s, -s], [-s, 0., s, 0.], [0., 1., 0., 0.]])#pag.429 of open GL
         self.coeffs = M
-        print M.shape
+
+
+    def subPoints2(self,t,j):
+        # NOT WORKING YET
+        j = asarray(j).ravel()
+        t = asarray(t).reshape(-1,1)
+        n = self.coords.shape[0]
+        i = (j + arange(4).reshape(-1,1)) % n
+        P = self.coords[i]
+        print P.shape
+        print self.coeffs.shape
+        C = inner(self.coeffs,P)
+        print C.shape
+        U = column_stack([t**3., t**2., t, ones_like(t)])
+        print "U",U.shape
+        X = dot(U,C)
+        print X.shape
+        raise
+        return X  
 
 
     def subPoints(self,t,j):
-        """Compute the points at values t in subspline j"""
         n = self.coords.shape[0]
         i = (j + arange(4)) % n
         P = self.coords[i]
@@ -312,7 +355,6 @@ class BezierCurve(Curve):
 
 
     def subPoints(self,t,j):
-        """Compute the points at values t in subspline j"""
         n = self.coords.shape[0]
         ind = [j,(j+1)%n]
         P = self.coords[ind]
@@ -418,7 +460,6 @@ class NaturalSpline(Curve):
 
 
     def subPoints(self,t,j):
-        """Compute the points at values t in subspline j"""
         C = self.coeffs[j]
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
