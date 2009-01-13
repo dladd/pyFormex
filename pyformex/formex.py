@@ -318,12 +318,13 @@ def intersectionPointsWithPlane(F,p,n):
     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
 
 
-def intersectionLinesWithPlane(F,p,n):
+def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
     """Return the intersection lines of a plex-3 Formex with plane (p,n).
     
     F is a Formex of plexitude 3.
     p is a point specified by 3 coordinates.
     n is the normal vector to a plane, specified by 3 components.
+    atol is a tolerance factor defining whether an edge is intersected by the plane.
     """
     n = asarray(n)
     p = asarray(p)
@@ -333,34 +334,90 @@ def intersectionLinesWithPlane(F,p,n):
     F = F.cclip(F.test('all',-n,p)) # select elements that will be cut by plane
     if F.nelems() == 0:
         return Formex()
+    F1 = F21 = F22 = F31 = F32 = F41 = F42= F43 = Formex(empty((0,2,3,),dtype=float))    
     # Create a Formex with the edges
     C = Formex.concatenate([ F.selectNodes(e) for e in [[0,1],[1,2],[2,0]] ])
     t = C.intersectionWithPlane(p,n)
     P = pointsAt(C,t)
     t = t.reshape(3,-1).transpose()
-    P = P.reshape(3,-1,3).swapaxes(0,1)
-    T = (t >= 0.)*(t <= 1.)
-    S = T.sum(axis=-1)
-    # Get the triangles with 2 intersections
-    # (remark: this includes the triangles with 1 edge in the plane, because
-    # this edges causes a NaN t-value, thus False
-    w1 = where(S==2)[0]
+    Pb = P.reshape(3,-1,3).swapaxes(0,1)
+    Pf = F.f
+    Ps = roll(F.f,-1,axis=1)
+    t1 = t >= 0.+atol
+    t2 = t <= 1.-atol
+    t3 = t >= 0.-atol
+    t4 = t <= 1.+atol
+    Tb = t1 * t2
+    Tf = (1-t1).astype(bool)*t3
+    Ts = (1-t2).astype(bool)*t4
+    Nb = Tb.sum(axis=-1)
+    Nf = Tf.sum(axis=-1)
+    Ns = Ts.sum(axis=-1)
+    # Get the triangles with 2 edge intersections
+    w1 = where(Nb==2)[0]
     if w1.size > 0:
-        P1 = P[w1][T[w1]].reshape(-1,2,3)
-        F1 = Formex(P1)
-    else:
-        F1 = None
-    # Get the triangles with 3 intersections : the plane goes thru a vertex
-    w2 = where(S==3)[0]
-    if w2.size > 0:
-        P2 = P[w2][T[w2]].reshape(-1,3,3)
-        F = Formex(P2)
-        F2 = Formex.concatenate([ F.selectNodes(e) for e in [[0,1],[1,2],[2,0]] ])
-        if F1 is None:
-            F1 = F2
-        else:
-            F1 += F2
-    return F1
+        P = Pb[w1][Tb[w1]].reshape(-1,2,3)
+        F1 = Formex(P)
+    # Get the triangles with 1 edge intersection and 1 vertex intersection
+    w21 = where( (Nb==1) * (Nf==1) * (Ns==0) )[0]
+    if w21.size > 0:
+        P1 = Pb[w21][Tb[w21]].reshape(-1,1,3)
+        P2 = Pf[w21][Tf[w21]].reshape(-1,1,3)
+        P = column_stack([P1,P2])
+        F21 = Formex(P)
+    w22 = where( (Nb==1) * (Nf==0) * (Ns==1) )[0]
+    if w22.size > 0:
+        P1 = Pb[w22][Tb[w22]].reshape(-1,1,3)
+        P2 = Ps[w22][Ts[w22]].reshape(-1,1,3)
+        P = column_stack([P1,P2])
+        F22 = Formex(P)
+    # Get the triangles with 1 edge intersection and 2 vertex intersections
+    w3 = where( (Nb==1) * (Nf==1) * (Ns==1) )[0]
+    if w3.size > 0:
+        Tb3 = Tb[w3]
+        Tf3 = Tf[w3]
+        Ts3 = Ts[w3]        
+        Pb3 = Pb[w3]
+        Pf3 = Pf[w3]
+        Ps3 = Ps[w3]
+        i = where(Ts3)[1] - where(Tf3)[1]
+        w31 = where((i == 1)+(i==-2))[0] # different vertices
+        if w31.size > 0:
+            P1 = Pf3[w31][Tf3[w31]].reshape(-1,1,3)
+            P2 = Ps3[w31][Ts3[w31]].reshape(-1,1,3)            
+            P = column_stack([P1,P2])
+            F32 = Formex(P)
+        w32 = where((i == -1)+(i==2))[0] # equal vertices
+        if w32.size > 0:   
+            P1 = Pb3[w32][Tb3[w32]].reshape(-1,1,3)
+            P2 = Pf3[w32][Tf3[w32]].reshape(-1,1,3)
+            P = column_stack([P1,P2])
+            F31 = Formex(P)
+    # Get the triangles with 0 edge intersections and 2 or 3 vertex intersections
+    w41 = where( (Nb==0) * (Nf==2) )[0]
+    if w41.size > 0:
+        P = Pf[w41][Tf[w41]].reshape(-1,2,3)
+        F41 = Formex(P)
+    w42 = where( (Nb==0) * (Ns==2) )[0]
+    if w42.size > 0:
+        P = Ps[w42][Ts[w42]].reshape(-1,2,3)
+        F42 = Formex(P)
+    w43 = where( (Nb==0) * (Nf==1) * (Ns==1) )[0]
+    if w43.size > 0:
+        Tf43 = Tf[w43]
+        Ts43= Ts[w43]
+        Pf43 = Pf[w43]
+        Ps43 = Ps[w43]
+        i = where(Ts43)[1] - where(Tf43)[1]
+        w43 = where((i == 1)+(i==-2))[0] # different vertices
+        if w43.size > 0:
+            P1 = Pf43[w43][Tf43[w43]].reshape(-1,1,3)
+            P2 = Ps43[w43][Ts43[w43]].reshape(-1,1,3)            
+            P = column_stack([P1,P2])
+            F43 = Formex(P)
+    # join all the pieces
+    Ft = F1 + F21 + F22 + F31 + F32 + F41 + F42+ F43
+    return Ft
 
 
 # !! This function still needs to be changed to also return all
@@ -555,7 +612,6 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
                 K1 = asarray([F11[j,v1[j]] for j in range(shape(F11)[0])]).reshape(-1,1,3)
                 E1_pos = column_stack([P11,K1])
                 F1_pos = Formex(E1_pos,get_new_prop(p1,w11,newprops[0]))
-                    
             if side in '-': #quadrilateral at negative side after cut
                 v2 = where(T11[:,0]*T11[:,2] == 1,2,where(T11[:,0]*T11[:,1] == 1,2,0))
                 v3 = where(T11[:,0]*T11[:,2] == 1,1,where(T11[:,0]*T11[:,1] == 1,0,1))
@@ -1115,7 +1171,7 @@ class Formex(object):
             return self
         if self.f.size == 0:
             self.f = F.f
-            self.p = p
+            self.p = F.p
             return self
 
         self.f = Coords(concatenate((self.f,F.f)))
