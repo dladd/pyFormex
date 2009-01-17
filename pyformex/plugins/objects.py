@@ -256,12 +256,12 @@ class DrawableObjects(Objects):
 
 
     def drawChanges(self):
-        """Draws old and new version of a Formex with differrent colors.
+        """Draws old and new version of a Formex with different colors.
 
         old and new can be a either Formex instances or names or lists thereof.
         old are drawn in yellow, new in the current color.
         """
-        print "DRAWCHANGES %s" % type(self)
+        #print "DRAWCHANGES %s" % type(self)
         self.draw(wait=False)
         draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
 
@@ -306,7 +306,8 @@ class DrawableObjects(Objects):
     def removeAnnotation(self,i=0):
         """Remove the annotation i."""
         #print "REMOVE %s" % i
-        map(undraw,self._annotations[i])
+        GD.canvas.removeAnnotations(self._annotations[i])
+        GD.canvas.update()
         del self._annotations[i]
 
 
