@@ -124,14 +124,14 @@ def showBboxB():
         GD.message("Bbox of selection: %s" % bb)
         nx = array([4,4,4])
         bboxB = actors.CoordPlaneActor(nx=nx,ox=bb[0],dx=(bb[1]-bb[0])/nx)
-        GD.canvas.addActor(bboxB)
+        GD.canvas.addAnnotation(bboxB)
         GD.canvas.update()
 
 def removeBboxB():
     """Remove the bbox of the current selection."""
     global bboxB
     if bboxB:
-        undraw(bboxB)
+        GD.canvas.removeAnnotation(bboxB)
         bboxB = None
 
 
@@ -162,7 +162,7 @@ def showPrincipal():
     GD.message("Principal Directions: %s" % Iaxes)
     data = (C,I,Iprin,Iaxes)
     # now display the axes
-    siz = F.diagonal()
+    siz = F.dsize()
     H = unitAxes().scale(1.1*siz).affine(Iaxes.transpose(),C)
     A = 0.1*siz * Iaxes.transpose()
     G = Formex([[C,C+Ax] for Ax in A],3)
