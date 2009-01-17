@@ -20,14 +20,13 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program. If not, see <http://www.gnu.org/licenses/>.
 ##
 """camera 0.1 (C) Benedict Verhegghe"""
 
 import sys
 
 from coords import tand
-#from formex import Formex
 
 import numpy
 import distutils.version
@@ -195,7 +194,10 @@ class Camera:
   Center: %s
   Rotation Matrix: %s
   Distance: %s
-""" % (self.ctr,self.rot,self.dist)
+  Field of View y: %s
+  Aspect Ratio: %s
+""" % (self.ctr,self.rot,self.dist,self.fovy,self.aspect)
+
         
     def dolly(self,val):
         """Move the camera eye towards/away from the scene center.
@@ -431,18 +433,16 @@ class Camera:
             GL.glMatrixMode(GL.GL_PROJECTION)
             GL.glLoadIdentity()
             if pick:
-                #print 'PICK: %s' % str(pick)
                 GLU.gluPickMatrix(*pick)
             if self.perspective:
-                GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
+##                 GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
+                fv = tand(self.fovy*0.5) * self.near
+                fh = fv * self.aspect
+                GL.glFrustum(-fh,fh,-fv,fv,self.near,self.far)
             else:
-                #print "FOVY: %s" % self.fovy
-                top = tand(self.fovy*0.5) * self.dist
-                bottom = -top
-                right = top * self.aspect
-                left = bottom * self.aspect
-                #print "Ortho %s" % [left,right,bottom,top,self.near,self.far]
-                GL.glOrtho(left,right,bottom,top,self.near,self.far)
+                fv = tand(self.fovy*0.5) * self.dist
+                fh = fv * self.aspect
+                GL.glOrtho(-fh,fh,-fv,fv,self.near,self.far)
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 
 

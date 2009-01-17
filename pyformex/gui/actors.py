@@ -147,7 +147,7 @@ class BboxActor(Actor):
         self.edges = array(elements.Hex8.edges)
         self.facets = array(elements.Hex8.faces)
 
-    def bbox():
+    def bbox(self):
         return self.bb
 
     def drawGL(self,mode,color=None):
@@ -412,7 +412,7 @@ class FormexActor(Actor,Formex):
         if self.eltype == 'point3d':
             # ! THIS SHOULD BE SET FROM THE SCENE SIZE
             #   RATHER THAN FORMEX SIZE 
-            marksize = self.diagonal() * marksize
+            marksize = self.dsize() * marksize
             if marksize <= 0.0:
                 marksize = 1.0
             self.setMark(marksize,"cube")

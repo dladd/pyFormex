@@ -71,7 +71,7 @@ def cube_quad(color=None):
 
 
 def showCube(base,color):
-    print base,color
+    #print base,color
     if base == 'Triangle':
         cube = cube_tri
     else:
@@ -79,9 +79,8 @@ def showCube(base,color):
     cube,color = cube(color)
     clear()
     draw(cube,color=color)
-    view('iso')
-    zoomAll()
-    zoom(1.5)
+    export({'cube':cube})
+#    zoomAll()
     
         
 if __name__ == "draw":
@@ -91,16 +90,7 @@ if __name__ == "draw":
     clear()
     reset()
     smooth()
-
-    v = array(Hex8.vertices).reshape(1,8,3)
-    F = Formex(v)
-    F.eltype = 'hex8'
-    draw(F)
-    drawNumbers(F)
-    drawNumbers(F.points())
-    export({'cube':F})
-    print F
-    exit()
+    view('iso')
 
     baseshape = ['Quad','Triangle']
     colormode = ['None','Single','Face','Full']
@@ -126,10 +116,6 @@ if __name__ == "draw":
 
         print bases,colors
         for base in bases:
-##             if base == 'Quad':
-##                 smooth()
-##             else:
-##                 smoothwire()
             lights(False)
 
             for color in colors:

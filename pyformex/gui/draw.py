@@ -473,7 +473,7 @@ def drawViewportAxes3D(pos,color=None):
 def drawBbox(A):
     """Draw the bbox of the actor A."""
     B = actors.BboxActor(A.bbox())
-    drawActor(B)
+    annotate(B)
     return B
 
 
@@ -541,10 +541,10 @@ def setTriade(on=None):
 
 
 # DOES NOT WORK ??
-## def drawTextQt(text,x,y,font=None):
-##     """Show a text at position x,y using font."""
-##     print x,y,text
-##     GD.canvas.renderText(x,y,'hallo')
+def drawTextQt(text,x,y,font=None):
+    """Show a text at position x,y using font."""
+    print x,y,text
+    GD.canvas.renderText(x,y,'hallo')
 
 
 

@@ -191,7 +191,7 @@ def unProject(x,y,win):
 
 # !! SHOULDN'T THIS BE A Drawable INSTEAD OF AN Actor ????
 #
-class Decoration(Actor):
+class Decoration(Drawable):
     """A decoration is a 2-D drawing at canvas position x,y.
 
     All decoration have at least the following attributes:
@@ -205,7 +205,7 @@ class Decoration(Actor):
         """Create a decoration at acnvas coordinates x,y"""
         self.x = int(x)
         self.y = int(y)
-        Actor.__init__(self)
+        Drawable.__init__(self)
 
         
 class Text(Decoration):

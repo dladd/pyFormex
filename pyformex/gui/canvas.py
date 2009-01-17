@@ -24,6 +24,7 @@
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 
 import pyformex as GD
+from coords import tand
 
 from numpy import *
 from OpenGL import GL,GLU
@@ -88,8 +89,9 @@ def glNoCulling():
     
 class ActorList(list):
 
-    def __init__(self,canvas):
+    def __init__(self,canvas,atype):
         self.canvas = canvas
+        self.atype = atype
         list.__init__(self)
         
     def add(self,actor):
@@ -98,8 +100,16 @@ class ActorList(list):
 
     def delete(self,actor):
         """Remove an actor from an actorlist."""
+##         if self.atype == 'annotation':
+##             print "DELETE"
+##             print self
+##             print actor
         if actor in self:
+##             if self.atype == 'annotation':
+##                 print "REMOVE %s" % actor
             self.remove(actor)
+##             if self.atype == 'annotation':
+##                 print self
 
     def redraw(self):
         """Redraw (some) actors in the scene.
@@ -202,10 +212,10 @@ class Canvas(object):
 
     def __init__(self):
         """Initialize an empty canvas with default settings."""
-        self.actors = ActorList(self)       # start with an empty scene
-        self.highlights = ActorList(self)   # highlights
-        self.annotations = ActorList(self)  # without annotations
-        self.decorations = ActorList(self)  # and no decorations either
+        self.actors = ActorList(self,'actor')
+        self.highlights = ActorList(self,'highlight')
+        self.annotations = ActorList(self,'annotation')
+        self.decorations = ActorList(self,'decoration')
         self.triade = None
         self.resetLighting()
         self.resetLights()
@@ -445,7 +455,7 @@ class Canvas(object):
 
         # draw the highlighted actors
         if self.highlights:
-            print "highlighting actors"
+            GD.debug("highlighting actors")
             GL.glDepthMask (GL.GL_FALSE)
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             GL.glLogicOp(GL.GL_INVERT)
@@ -544,19 +554,22 @@ class Canvas(object):
         self.decorations.delete(actor)
 
     def remove(self,itemlist):
-        """Remove a list of any actor/annotation/decoration items.
+        """Remove a list of any actor/highlights/annotation/decoration items.
 
+        This will remove the items from any of the canvas lists in which the
+        item appears.
         itemlist can also be a single item instead of a list.
         """
+        #print "removing %s" % itemlist
+        #print self.actors,self.annotations
         if not type(itemlist) == list:
             itemlist = [ itemlist ]
         for item in itemlist:
-            if isinstance(item,actors.Actor):
-                self.actors.delete(item)
-            elif isinstance(item,marks.Mark):
-                self.annotations.delete(item)
-            elif isinstance(item,decors.Decoration):
-                self.decorations.delete(item)
+            self.actors.delete(itemlist)
+            self.highlights.delete(itemlist)
+            self.annotations.delete(itemlist)
+            self.decorations.delete(itemlist)
+        #print self.actors,self.annotations
         
 
     def removeActors(self,actorlist=None):
@@ -625,18 +638,23 @@ class Canvas(object):
         # go to a distance to have a good view with a 45 degree angle lens
         if not bbox is None:
             self.setBbox(bbox)
-        bbox = self.bbox
-        center = 0.5 * (bbox[0]+bbox[1])
+        X0,X1 = self.bbox
+        center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
-        dist = length(bbox[1] - bbox[0])
-        if dist <= 0.0:
-            dist = 1.0
+        dsize = length(X1-X0)
+        if dsize <= 0.0:
+            dsize = 1.0
         self.camera.setCenter(*center)
         if angles:
             self.camera.setAngles(angles)
-#            self.camera.setRotation(*angles)
+        # Currently, we keep the default fovy/aspect
+        # and change the camer distance to focus
+        fovy = self.camera.fovy
+        self.camera.setLens(fovy,self.aspect)
+        tf = tand(fovy/2)
+        dist = dsize/tf - 0.5*dsize
+        #print "dsize = %s; tg fovy/2 = %s; dist = %s" % (dsize,tf,dist)
         self.camera.setDist(dist)
-        self.camera.setLens(45.,self.aspect)
         self.camera.setClip(0.01*dist,100.*dist)
 
 
@@ -664,7 +682,6 @@ class Canvas(object):
         self.addDecoration(self.cursor)
 
     def draw_rectangle(self,x,y):
-        #GD.debugt("DRAWRECTANGLE")
         if self.cursor:
             self.removeDecoration(self.cursor)
         col = GD.cfg.get('pick/color','yellow')
