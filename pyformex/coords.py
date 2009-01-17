@@ -197,6 +197,7 @@ def bbox(objects):
     box encloses all the Coords in the list.
     Objects returning a None bbox are ignored.
     """
+    print [ type(f) for f in objects ]
     bboxes = [f.bbox() for f in objects]
     bboxes = [bb for bb in bboxes if bb is not None]
     if len(bboxes) == 0:
@@ -314,8 +315,8 @@ class Coords(ndarray):
         The center of a Coords is the center of its bbox().
         The return value is a (3,) shaped Coords object.
         """
-        min,max = self.bbox()
-        return 0.5 * (max+min)
+        X0,X1 = self.bbox()
+        return 0.5 * (X0+X1)
 
 
     def centroid(self):
@@ -333,16 +334,16 @@ class Coords(ndarray):
 
         Return an array with the length of the bbox along the 3 axes.
         """
-        min,max = self.bbox()
-        return max-min
+        X0,X1 = self.bbox()
+        return X1-X0
 
 
     def dsize(self):
         """Return an estimate of the global size of the Coords.
 
         This estimate is the length of the diagonal of the bbox()."""
-        min,max = self.bbox()
-        return length(max-min)
+        X0,X1 = self.bbox()
+        return length(X1-X0)
 
     
     def bsphere(self):
@@ -1150,12 +1151,7 @@ class Coords(ndarray):
     trl = translate
 
     # Deprecated functions
-    from utils import deprecated
-
-## removed in 0.7.3
-##     @deprecated(dsize)
-##     def diagonal(self):
-##         pass
+    # from utils import deprecated
 
 
 ##############################################################################

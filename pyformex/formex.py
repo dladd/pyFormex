@@ -1038,7 +1038,7 @@ class Formex(object):
         different parameters to check.
         You can also set the rtol /atol parameters to influence the
         equivalence checking of two points.
-        The default settting for atol is rtol * self.diagonal()
+        The default settting for atol is rtol * self.dsize()
         """
         if atol is None:
             atol = rtol * self.dsize()
@@ -1877,14 +1877,10 @@ class Formex(object):
     # New users should avoid these functions!
     # They may (will) be removed in future.
 
-## removed in 0.7.3
+# removed in 0.7.4
 ##     @deprecated(dsize)
-##     def diagonal(self):
+##     def size(self):
 ##         pass
-
-    @deprecated(dsize)
-    def size(self):
-        pass
 
     @functionWasRenamed(reverse)
     def reverseElements(self):
