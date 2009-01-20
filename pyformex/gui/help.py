@@ -115,8 +115,8 @@ Distributed under the GNU GPL version 3 or later.
 def developers():
     """Display the list of developers."""
     draw.showInfo("""
-This is an alphabetic list of all
-the contributors to pyFormex:
+This is an alphabetic list of the peaople
+that have contributed to pyFormex:
 
 Matthieu De Beule
 Gianluca De Santis
@@ -137,6 +137,7 @@ cookies = [
     "Coincidence does not exist. Perfection does.",
     "It's all in the code.",
     "Python is the universal glue.",
+    "Intellectual Property Is A Mental Illness.",
     ]    
 
 random.shuffle(cookies)

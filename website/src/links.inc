@@ -36,4 +36,5 @@
 .. _`Bifurcation stenting`: http://www.stent-ibitech.ugent.be/downloads/Peter_Mortier_posterEBR2008.pdf
 .. _`FE modeling of stents`: http://www.stent-ibitech.ugent.be/downloads/Poster_Peter_Mortier_NationalDay2007.pdf
 
+.. _`Vascular Modeling Toolkit`: http://www.vmtk.org
 .. End

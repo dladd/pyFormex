@@ -435,10 +435,10 @@ class Camera:
             if pick:
                 GLU.gluPickMatrix(*pick)
             if self.perspective:
-##                 GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
-                fv = tand(self.fovy*0.5) * self.near
-                fh = fv * self.aspect
-                GL.glFrustum(-fh,fh,-fv,fv,self.near,self.far)
+                GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
+##                 fv = tand(self.fovy*0.5) * self.near
+##                 fh = fv * self.aspect
+##                 GL.glFrustum(-fh,fh,-fv,fv,self.near,self.far)
             else:
                 fv = tand(self.fovy*0.5) * self.dist
                 fh = fv * self.aspect
