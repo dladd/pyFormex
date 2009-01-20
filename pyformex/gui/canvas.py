@@ -565,10 +565,10 @@ class Canvas(object):
         if not type(itemlist) == list:
             itemlist = [ itemlist ]
         for item in itemlist:
-            self.actors.delete(itemlist)
-            self.highlights.delete(itemlist)
-            self.annotations.delete(itemlist)
-            self.decorations.delete(itemlist)
+            self.actors.delete(item)
+            self.highlights.delete(item)
+            self.annotations.delete(item)
+            self.decorations.delete(item)
         #print self.actors,self.annotations
         
 
