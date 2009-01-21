@@ -11,7 +11,7 @@
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
 
-int debug = 1;
+int debug = 0;
 
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/

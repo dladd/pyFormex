@@ -27,9 +27,6 @@ import pyformex as GD
 import os
 from PyQt4 import QtCore, QtGui
 
-import fileMenu
-import scriptsMenu
-import cameraMenu
 import widgets
 import draw
 import utils
@@ -102,6 +99,7 @@ def addCameraButtons(toolbar):
     #  2 : function
     # optional:
     #  3 : REPEAT  (default True)
+    import cameraMenu
     buttons = [ [ "Rotate left", "rotleft", cameraMenu.rotLeft ],
                 [ "Rotate right", "rotright", cameraMenu.rotRight ],
                 [ "Rotate up", "rotup", cameraMenu.rotUp ],
@@ -129,6 +127,7 @@ def addCameraButtons(toolbar):
             b.connect(b,QtCore.SIGNAL("released()"),QtCore.SLOT("toggle()"))
             
         b.setToolTip(but[0])
+
 
 # We should probably make a general framework for toggle buttons ?
 
@@ -286,6 +285,7 @@ def addTimeoutButton(toolbar):
 
 def timeout(onoff=None):
     timeout_button.setChecked( toggleTimeout(onoff) )
+
 
 
 # End

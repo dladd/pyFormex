@@ -46,7 +46,7 @@ from script import *
 
 from plugins import surface,tools
 from formex import Formex
-
+#from cameraMenu import setLocalAxes,setGlobalAxes 
         
 #################### Interacting with the user ###############################
 
@@ -1181,17 +1181,13 @@ def showLineDrawing(L):
         decorate(LineDrawing)
 
 
-################################ saving images ########################
-         
-
-
-#### Change settings
+################################
 
 def setLocalAxes(mode=True):
     GD.cfg['draw/localaxes'] = mode 
-
 def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
+         
 
 
 

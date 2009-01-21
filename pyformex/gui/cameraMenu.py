@@ -22,9 +22,13 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Functions from the Camera menu."""
+"""Camera handling menu"""
 
 import pyformex as GD
+import draw
+import toolbar
+from gettext import gettext as _
+
 
          
 def zoomIn():
@@ -85,3 +89,34 @@ def dollyIn():
 def dollyOut():
     GD.canvas.camera.dolly(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()   
+
+
+
+MenuData = [
+    (_('&LocalAxes'),draw.setLocalAxes),
+    (_('&GlobalAxes'),draw.setGlobalAxes),
+    (_('&Projection'),toolbar.setProjection),
+    (_('&Perspective'),toolbar.setPerspective),
+    (_('&Zoom All'),draw.zoomAll), 
+    (_('&Zoom In'),zoomIn), 
+    (_('&Zoom Out'),zoomOut), 
+    (_('&Dolly In'),dollyIn), 
+    (_('&Dolly Out'),dollyOut), 
+    (_('&Translate'),[
+        (_('Translate &Right'),transRight), 
+        (_('Translate &Left'),transLeft), 
+        (_('Translate &Up'),transUp),
+        (_('Translate &Down'),transDown),
+        ]),
+    (_('&Rotate'),[
+        (_('Rotate &Right'),rotRight),
+        (_('Rotate &Left'),rotLeft),
+        (_('Rotate &Up'),rotUp),
+        (_('Rotate &Down'),rotDown), 
+        (_('Rotate &ClockWise'),twistRight),
+        (_('Rotate &CCW'),twistLeft),
+        ]),
+    ]
+
+
+# End

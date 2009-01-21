@@ -119,32 +119,6 @@ ActionMenuData = [
     (_('&Restore Geometry'),restoreGeometry),
 #    (_('&Add Project to Status Bar'),gui.addProject),
     ]
-
-CameraMenuData = [
-    (_('&LocalAxes'),draw.setLocalAxes),
-    (_('&GlobalAxes'),draw.setGlobalAxes),
-    (_('&Projection'),toolbar.setProjection),
-    (_('&Perspective'),toolbar.setPerspective),
-    (_('&Zoom All'),draw.zoomAll), 
-    (_('&Zoom In'),cameraMenu.zoomIn), 
-    (_('&Zoom Out'),cameraMenu.zoomOut), 
-    (_('&Dolly In'),cameraMenu.dollyIn), 
-    (_('&Dolly Out'),cameraMenu.dollyOut), 
-    (_('&Translate'),[
-        (_('Translate &Right'),cameraMenu.transRight), 
-        (_('Translate &Left'),cameraMenu.transLeft), 
-        (_('Translate &Up'),cameraMenu.transUp),
-        (_('Translate &Down'),cameraMenu.transDown),
-        ]),
-    (_('&Rotate'),[
-        (_('Rotate &Right'),cameraMenu.rotRight),
-        (_('Rotate &Left'),cameraMenu.rotLeft),
-        (_('Rotate &Up'),cameraMenu.rotUp),
-        (_('Rotate &Down'),cameraMenu.rotDown), 
-        (_('Rotate &ClockWise'),cameraMenu.twistRight),
-        (_('Rotate &CCW'),cameraMenu.twistLeft),
-        ]),
-    ]
              
 
 MenuData = [
@@ -162,6 +136,6 @@ def createMenuData():
     if pyformex.cfg.get('gui/viewportmenu','True'):
         MenuData[2:2] = viewportMenu.MenuData
     if pyformex.cfg.get('gui/cameramenu','True'):
-        MenuData[3:3] = [(_('&Camera'),CameraMenuData)]
+        MenuData[3:3] = [(_('&Camera'),cameraMenu.MenuData)]
     
 # End
