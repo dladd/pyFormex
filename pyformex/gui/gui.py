@@ -700,6 +700,7 @@ See Help->License or the file COPYING for details.
     GD.message = draw.message
     GD.warning = draw.warning
     draw.reset()
+    
     # Load plugins, ignore if not found
     import plugins
     for p in GD.cfg.get('gui/plugins',[]):

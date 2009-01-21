@@ -24,9 +24,10 @@
 """Basic OpenGL drawing functions.
 
 The functions in this module should be exact emulations of the
-external functions in the compiled library.
+external functions in the compiled library lib.drawgl.
 """
 
+# There should be no other imports here than OpenGL and numpy
 from OpenGL import GL,GLU
 from numpy import *
 

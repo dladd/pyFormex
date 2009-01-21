@@ -28,12 +28,7 @@
 import pyformex as GD
 from pyformex.array import *
 
-try:
-    from lib.misc import fuse
-    have_fast_fuse = True
-except:
-    have_fast_fuse = False
-
+from lib import *
 
 
 ###########################################################################
@@ -1075,8 +1070,8 @@ class Coords(ndarray):
         flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
         sel = arange(nnod).astype(int32)   # replacement unique node nr
         tol = max(abs(rtol*self.sizes()).max(),atol)
-        if have_fast_fuse and GD.options.fastfuse:
-            fuse(x,val,flag,sel,tol)
+        if has_misc: # and GD.options.fastfuse:
+            misc.fuse(x,val,flag,sel,tol)
         else:
             for i in range(nnod):
                 j = i-1

@@ -41,7 +41,7 @@ import decors
 import image
 import utils
 import toolbar
-import lib.drawgl as LD
+
 from ctypes import cdll
 libGL = cdll.LoadLibrary("libGL.so.1")
 

@@ -31,27 +31,10 @@ from colors import *
 from numpy import *
 from formex import *
 
-import misc
 import simple
 import utils
 
-# Loading the low level drawing library
-if GD.options.uselib is None:
-    GD.options.uselib = True
-
-if GD.options.uselib:
-    try:
-        import lib.drawgl as LD
-        GD.debug("Succesfully loaded the pyFormex compiled library")
-    except ImportError:
-        GD.debug("Error while loading the pyFormex compiled library")
-        GD.debug("Reverting to scripted versions")
-        GD.options.uselib = False
-        #GD.options.safelib = False
-        
-if not GD.options.uselib:
-    GD.debug("Using the (slower) Python drawing functions")
-    import drawgl as LD
+from lib import *
 
 
 def rotMatrix(v,n=3):
@@ -99,7 +82,7 @@ def glColor(color,alpha=1.0):
 
 #
 # Though all three functions drawPoints, drawLines and drawPolygons
-# call the same low level LD.drawPolygons function, we keep 3 separate
+# call the same low level drawgl.drawPolygons function, we keep 3 separate
 # functions on the higher level, because of special characteristics
 # of nplex < 3:   no computation of normals, marksize (nplex=1)
 #
@@ -118,7 +101,7 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     if size:
         GL.glPointSize(size)
     x = x.reshape(-1,1,3)
-    LD.drawPolygons(x,None,color,alpha)
+    drawgl.drawPolygons(x,None,color,alpha)
     
 
 def drawLines(x,color=None,alpha=1.0):
@@ -138,7 +121,7 @@ def drawLines(x,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    LD.drawPolygons(x,None,color,alpha)
+    drawgl.drawPolygons(x,None,color,alpha)
 
 
 def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
@@ -171,7 +154,7 @@ def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    LD.drawPolygons(x,n,color,alpha)
+    drawgl.drawPolygons(x,n,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -198,6 +181,49 @@ def Shape(a):
     except:
         return None
 
+
+# CANDIDATE FOR C LIBRARY
+def average_close(a,tol=0.5):
+    """Average values from an array according to some specification.
+
+    The default is to have a direction that is nearly the same.
+    a is a 2-dim array
+    """
+    if a.ndim != 2:
+        raise ValueError,"array should be 2-dimensional!"
+    n = normalize(a)
+    nrow = a.shape[0]
+    cnt = zeros(nrow,dtype=int32)
+    while cnt.min() == 0:
+        w = where(cnt==0)
+        nw = n[w]
+        wok = where(dotpr(nw[0],nw) >= tol)
+        wi = w[0][wok[0]]
+        cnt[wi] = len(wi)
+        a[wi] = a[wi].sum(axis=0)
+    return a,cnt
+
+
+# CANDIDATE FOR C LIBRARY
+def nodalSum2(val,elems,tol):
+    """Compute the nodal sum of values defined on elements.
+
+    val   : (nelems,nplex,nval) values at points of elements.
+    elems : (nelems,nplex) nodal ids of points of elements.
+    work  : a work space (unused) 
+
+    The return value is a tuple of two arrays:
+    res:
+    cnt
+    On return each value is replaced with the sum of values at that node.
+    """
+    nodes = unique1d(elems)
+    for i in nodes:
+        wi = where(elems==i)
+        vi = val[wi]
+        ai,ni = average_close(vi,tol=tol)
+        ai /= ni.reshape(ai.shape[0],-1)
+        val[wi] = ai
 
 def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
     """Compute the nodal sum of values defined on elements.
@@ -227,7 +253,7 @@ def nodalSum(val,elems,avg=False,return_all=True,direction_treshold=None):
         elems = elems.astype(int32)
         work = work.astype(float32)
     if val.shape[2] > 1 and direction_treshold is not None:
-        misc.nodalSum2(val,elems,direction_treshold)
+        nodalSum2(val,elems,direction_treshold)
     else:
         misc.nodalSum(val,elems,work,avg)
     if return_all:
@@ -290,7 +316,7 @@ def drawPolygonElems(x,elems,mode,color=None,alpha=1.0,normals=None):
             
     if GD.options.testdraw:
         GD.debug("TEST NEW DRAWING ROUTINES")
-        LD.drawPolygonElems(x,elems,n,color,alpha)
+        drawgl.drawPolygonElems(x,elems,n,color,alpha)
     else:
         GD.debug("CONVERTING TO FULL SET OF COORDS")
         drawPolygons(x[elems],mode,color,alpha=1.0,normals=n)
@@ -551,7 +577,7 @@ def pickPolygons(x):
     """Mimics drawing polygons for picking purposes."""
     if GD.options.safelib:
         x = x.astype(float32)
-    LD.pickPolygons(x)
+    drawgl.pickPolygons(x)
 
 
 def pickPoints(x):

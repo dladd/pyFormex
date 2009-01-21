@@ -11,10 +11,44 @@
 ##
 """pyFormex C library module initialisation.
 
-Currently, this does nothing. The file should be kept though, because it is
-needed to flag this directory as a Python package.
+This tries to load the compiled libraries, and replaces those that failed
+to load with the (slower) Python versions.
 """
 
-__all__ = [ 'drawgl' ]
+__all__ = [ 'drawgl', 'misc', 'has_drawgl', 'has_misc' ]
+
+import pyformex as GD
+
+if GD.options.uselib is None:
+    GD.options.uselib = True
+
+has_misc = has_drawgl = GD.options.uselib
+
+if has_drawgl:
+    try:
+        import pyformex.lib.drawgl
+        GD.debug("Succesfully loaded the pyFormex compiled draw library")
+    except ImportError:
+        GD.debug("Error while loading the pyFormex compiled draw library")
+        GD.debug("Reverting to scripted versions")
+        has_drawgl = False
+
+if has_misc:
+    try:
+        import pyformex.lib.drawgl
+        GD.debug("Succesfully loaded the pyFormex compiled misc library")
+    except ImportError:
+        GD.debug("Error while loading the pyFormex compiled misc library")
+        GD.debug("Reverting to scripted versions")
+        has_misc = False
+
+        
+if not has_drawgl:
+    GD.debug("Using the (slower) Python draw functions")
+    import pyformex.gui.drawgl
+
+if not has_misc:
+    GD.debug("Using the (slower) Python misc functions")
+    import pyformex.misc
 
 # End
