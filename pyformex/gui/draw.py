@@ -932,8 +932,9 @@ def highlightElements(K,colormap=highlight_colormap):
             GD.debug("Actor %s: Selection %s" % (i,K[i]))
             p[K[i]] = 1
         if isinstance(A,surface.TriSurface):
-            undraw(A)
-            draw(A,color=p,colormap=colormap,bbox=None)
+            A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
+##            undraw(A)
+##            draw(A,color=p,colormap=colormap,bbox=None)
         else:
             A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
     GD.canvas.update()
