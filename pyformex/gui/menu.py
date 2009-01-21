@@ -36,7 +36,6 @@ import help
 import image
 import draw
 import script
-from plugins import surface_menu,formex_menu,tools_menu,postproc_menu
 
 
 save = NotImplemented
@@ -77,49 +76,9 @@ def viewportSettings():
     """Interactively set the viewport settings."""
     pass
 
-
-def setOptions():
-    options = ['test','debug','uselib','safelib','fastencode','fastfuse']
-    items = [ (o,getattr(pyformex.options,o)) for o in options ]
-    res = draw.askItems(items)
-    if res:
-        for o in options:
-            setattr(pyformex.options,o,res[o])
             
 # The menu actions can be simply function names instead of strings, if the
 # functions have already been defined here.
-#
-
-
-FileMenuData = [
-    (_('&Start new project'),fileMenu.createProject),
-    ('&Open existing project',fileMenu.openProject),
-    ('&Save project',fileMenu.saveProject),
-    ('&Save and close project',fileMenu.closeProject),
-    ('---',None),
-    (_('&Create new script'),fileMenu.createScript),
-    (_('&Open existing script'),fileMenu.openScript),
-    (_('&Play script'),draw.play),
-    (_('&Edit script'),fileMenu.editScript),
-    (_('&Change workdir'),draw.askDirname),
-    (_('---1'),None),
-    (_('&Save Image'),fileMenu.saveImage),
-    (_('Start &MultiSave'),fileMenu.startMultiSave),
-    (_('Save &Next Image'),image.saveNext),
-    (_('Create &Movie'),image.createMovie),
-    (_('&Stop MultiSave'),fileMenu.stopMultiSave),
-    (_('&Save Icon'),fileMenu.saveIcon),
-    (_('---2'),None),
-    (_('Load &Plugins'),[
-        (_('Surface menu'),surface_menu.show_menu),
-        (_('Formex menu'),formex_menu.show_menu),
-        (_('Tools menu'),tools_menu.show_menu),
-        (_('Postproc menu'),postproc_menu.show_menu),
-        ]),
-    (_('&Options'),setOptions),
-    (_('---3'),None),
-    (_('E&xit'),draw.closeGui),
-]
 
 def printwindow():
     pyformex.app.syncX()
@@ -189,7 +148,7 @@ CameraMenuData = [
              
 
 MenuData = [
-    (_('&File'),FileMenuData),
+    (_('&File'),fileMenu.MenuData),
     (_('&Actions'),ActionMenuData),
     (_('&Help'),help.MenuData)
     ]

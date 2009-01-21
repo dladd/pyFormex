@@ -26,10 +26,10 @@
 import os,shutil
 import pyformex as GD
 import widgets
-import draw
 import utils
-import image
-#from plugins import surface_menu,formex_menu,tools_menu
+
+import draw,image
+from plugins import surface_menu,formex_menu,tools_menu,postproc_menu
 
 from plugins import project
 from gettext import gettext as _
@@ -203,5 +203,44 @@ def stopMultiSave():
     """Stop multisave mode."""
     image.save()
 
+
+def setOptions():
+    options = ['test','debug','uselib','safelib','fastencode','fastfuse']
+    items = [ (o,getattr(GD.options,o)) for o in options ]
+    res = draw.askItems(items)
+    if res:
+        for o in options:
+            setattr(GD.options,o,res[o])
+
+
+MenuData = [
+    (_('&Start new project'),createProject),
+    ('&Open existing project',openProject),
+    ('&Save project',saveProject),
+    ('&Save and close project',closeProject),
+    ('---',None),
+    (_('&Create new script'),createScript),
+    (_('&Open existing script'),openScript),
+    (_('&Play script'),draw.play),
+    (_('&Edit script'),editScript),
+    (_('&Change workdir'),draw.askDirname),
+    (_('---1'),None),
+    (_('&Save Image'),saveImage),
+    (_('Start &MultiSave'),startMultiSave),
+    (_('Save &Next Image'),image.saveNext),
+    (_('Create &Movie'),image.createMovie),
+    (_('&Stop MultiSave'),stopMultiSave),
+    (_('&Save Icon'),saveIcon),
+    (_('---2'),None),
+    (_('Load &Plugins'),[
+        (_('Surface menu'),surface_menu.show_menu),
+        (_('Formex menu'),formex_menu.show_menu),
+        (_('Tools menu'),tools_menu.show_menu),
+        (_('Postproc menu'),postproc_menu.show_menu),
+        ]),
+    (_('&Options'),setOptions),
+    (_('---3'),None),
+    (_('E&xit'),draw.closeGui),
+]
 
 # End

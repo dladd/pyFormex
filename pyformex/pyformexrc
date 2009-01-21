@@ -66,6 +66,7 @@ uselib = True
 
 [gui]
 splash = os.path.join(icondir,'pyformex-splash.png')
+plugins = ['formex_menu']
 style = "Plastique"
 size=(800,600)
 pos=(0,0)

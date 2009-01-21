@@ -174,6 +174,8 @@ def setZoomFactor():
     askConfigPreferences(['gui/zoomfactor'])
 def setAutoZoomFactor():
     askConfigPreferences(['gui/autozoomfactor'])
+def setPlugins():
+    askConfigPreferences(['gui/plugins'])
 
 
 def setFont(font=None):
@@ -288,6 +290,7 @@ MenuData = [
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
         (_('&Splash Image'),setSplash),
+        (_('&Autoloaded Plugins'),setPlugins),
         (_('&Startup Scripts'),setAutoRun),
         (_('&Script Paths'),setScriptDirs),
         (_('&Commands'),setCommands),
