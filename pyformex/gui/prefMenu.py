@@ -172,6 +172,8 @@ def setPanFactor():
     askConfigPreferences(['gui/panfactor'])
 def setZoomFactor():
     askConfigPreferences(['gui/zoomfactor'])
+def setAutoZoomFactor():
+    askConfigPreferences(['gui/autozoomfactor'])
 
 
 def setFont(font=None):
@@ -281,6 +283,7 @@ MenuData = [
         (_('&RotFactor'),setRotFactor),
         (_('&PanFactor'),setPanFactor),
         (_('&ZoomFactor'),setZoomFactor),
+        (_('&AutoZoomFactor'),setAutoZoomFactor),
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),

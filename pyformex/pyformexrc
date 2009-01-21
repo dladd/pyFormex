@@ -87,6 +87,7 @@ defviews = [('front','view-xr-yu'),('back','view-xl-yu'),\
 zoomfactor = 1.15    # zooming factor for zoom buttons
 rotfactor = 5.       # rotation angle for rotation buttons
 panfactor = 0.01     # translation factor for pan buttons
+autozoomfactor = 1.5 # enlargement factor for the default autozoom
 
 [input]
 timeout = -1         # never timeout

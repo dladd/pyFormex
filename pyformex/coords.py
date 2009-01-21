@@ -560,12 +560,15 @@ class Coords(ndarray):
             out = self
         else:
             out = self.copy()
-        if not isinstance(angle,ndarray):
-            angle = rotationMatrix(angle,axis)
+        mat = asarray(angle)
+        if mat.size == 1:
+            mat = rotationMatrix(angle,axis)
+        if mat.shape != (3,3):
+            raise ValueError,"Rotation matrix should be 3x3"
         if around is not None:
             around = asarray(around)
             out = out.translate(-around,inplace=inplace)
-        out = out.affine(angle,around,inplace=inplace)
+        out = out.affine(mat,around,inplace=inplace)
         return out
     
 
