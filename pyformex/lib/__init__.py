@@ -19,28 +19,23 @@ __all__ = [ 'drawgl', 'misc', 'has_drawgl', 'has_misc' ]
 
 import pyformex as GD
 
-if GD.options.uselib is None:
-    GD.options.uselib = True
+has_drawgl = has_misc = False
 
-has_misc = has_drawgl = GD.options.uselib
+if GD.options.uselib is None or GD.options.uselib == True:
 
-if has_drawgl:
     try:
-        import pyformex.lib.drawgl
+        import drawgl
         GD.debug("Succesfully loaded the pyFormex compiled draw library")
+        has_drawgl = True
     except ImportError:
         GD.debug("Error while loading the pyFormex compiled draw library")
-        GD.debug("Reverting to scripted versions")
-        has_drawgl = False
 
-if has_misc:
     try:
-        import pyformex.lib.drawgl
+        import misc
         GD.debug("Succesfully loaded the pyFormex compiled misc library")
+        has_misc = True
     except ImportError:
         GD.debug("Error while loading the pyFormex compiled misc library")
-        GD.debug("Reverting to scripted versions")
-        has_misc = False
 
         
 if not has_drawgl:
