@@ -651,9 +651,9 @@ class Canvas(object):
         # and change the camer distance to focus
         fovy = self.camera.fovy
         self.camera.setLens(fovy,self.aspect)
-        tf = tand(fovy/2)
+        tf = tand(fovy/2.)
         correction = float(GD.cfg.get('gui/autozoomfactor',1.5))
-        dist = (dsize/tf - 0.5*dsize) / correction
+        dist = dsize/tf / correction
         #print "dsize = %s; tg fovy/2 = %s; dist = %s" % (dsize,tf,dist)
         self.camera.setDist(dist)
         self.camera.setClip(0.01*dist,100.*dist)

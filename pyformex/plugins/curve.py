@@ -339,7 +339,7 @@ class BezierCurve(Curve):
             if not closed:
                 atends = P.directions()
                 deriv = Coords.concatenate([atends[:1],deriv,atends[-1:]])
-            self.deriv = deriv
+        self.deriv = deriv
         self.curl = curl * P.lengths()
         if not closed:
             self.curl = concatenate([self.curl,self.curl[-1:]])
