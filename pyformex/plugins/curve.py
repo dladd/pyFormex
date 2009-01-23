@@ -66,14 +66,14 @@ class Curve(object):
     def subPoints(self,t,j):
         """Return the points at values t in part j
 
-        t can be an array of paramter values, j is a single segment number.
+        t can be an array of parameter values, j is a single segment number.
         """
         raise NotImplementedError
 
     def subPoints2(self,t,j):
-        """Return the points at values,parts t,j
+        """Return the points at values,parts given by zip(t,j)
 
-        t and j can both be arrays, but should be compatibls.
+        t and j can both be arrays, but should have the same length.
         """
         raise NotImplementedError
 
@@ -127,11 +127,11 @@ class Curve(object):
                 u = arange(-nstart, 0) * extend[0] / nstart
                 parts.insert(0,self.subPoints(u,0))
 
-            # Extend at start
+            # Extend at end
             if nend > 0:
                 u = 1. + arange(0, nend+1) * extend[1] / nend
             else:
-                # Always extend at end to have last point
+                # Always extend at end to include last point
                 u = array([1.])
             parts.append(self.subPoints(u,self.nparts-1))
 
@@ -181,13 +181,19 @@ class PolyLine(Curve):
         return connect([x,x],bias=[0,1],loop=self.closed)
 
 
-    def subPoints2(self,t,j):
-        """Return the points at values t in part j
-
-        t and j can both be arrays of value, but should be compatible.
-        """
-        j = asarray(j).ravel()
+    def subPoints(self,t,j):
+        """Return the points at values t in part j"""
+        j = int(j)
         t = asarray(t).reshape(-1,1)
+        n = self.coords.shape[0]
+        X0 = self.coords[j % n]
+        X1 = self.coords[(j+1) % n]
+        X = (1.-t) * X0 + t * X1
+        return X
+
+
+    def subPoints2(self,t,j):
+        """Return the points at value,part pairs (t,j)"""
         n = self.coords.shape[0]
         X0 = self.coords[j % n]
         X1 = self.coords[(j+1) % n]
