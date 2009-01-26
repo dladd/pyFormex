@@ -136,7 +136,7 @@ def connectMesh(c1,c2,e,n=1,n1=None,n2=None):
     """Connect two meshes to form a hypermesh.
     
     c1,e and c2,e are 2 meshes with same topology.
-    The coordinates are given in cooresponding order.
+    The coordinates are given in corresponding order.
     The two meshes are connected by a higher order mesh with n
     elements in the direction between the two meshes.
     """

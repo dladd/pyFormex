@@ -106,7 +106,7 @@ class ElemSection(CDict):
     secDB = SectionDB()
 
 
-    def __init__(self,section=None,material=None,orientation=None,behavior=None,range=0.0,sectiontype=None):
+    def __init__(self,section=None,material=None,orientation=None,behavior=None,**kargs):
 
         ### sectiontype is now preferably an attribute of section ###
         
@@ -136,14 +136,13 @@ class ElemSection(CDict):
           section axis.
         - behavior: the behavior of the connector
         """
-        CDict.__init__(self,{})
-        if sectiontype is not None:
-            self.sectiontype = sectiontype
-        self.orientation = orientation
-        self.behavior = behavior
-        self.range = range
+        CDict.__init__(self,kargs)
         self.addMaterial(material)
         self.addSection(section)
+##         if sectiontype is not None:
+##             self.sectiontype = sectiontype
+##         self.orientation = orientation
+##         self.behavior = behavior
 
     
     def addSection(self, section):
@@ -371,7 +370,10 @@ class PropertyDB(Dict):
     def Prop(self,kind='',tag=None,set=None,setname=None,**kargs):
         """Create a new property, empty by default.
 
-        A property can hold almost anything. It has only two predefined fields:
+        A property can hold almost anything, just like any Dict type.
+        It has however four predefined keys that should not be used for
+        anything else than explained hereafter:
+        - nr: a unique id, that never should be set/changed by the user.
         - tag: an identification tag used to group properties
         - set: a single number or a list of numbers identifying the geometrical
                elements for wich the property is set, or the name of a
@@ -379,9 +381,8 @@ class PropertyDB(Dict):
         - setname: the name to be used for this set. Default is to use an
                automatically generated name. If setname is specified without
                a set, this is interpreted as a set= field.
-        As all properties, a nr field will be added automatically.
         Besides these, any other fields may be defined and will be added
-        without check.
+        without checking.
         """
         d = CDict()
         # update with kargs first, to make sure tag,set and nr are sane
@@ -402,16 +403,17 @@ class PropertyDB(Dict):
                 d.set = unique1d(set)
                 if setname is None:
                     setname = self.autoName(kind,d.nr)
-        if setname is not None and type(setname) is not str:
-            raise ValueError,"setname should be a string"
-        d.setname = setname
+        if setname is not None:
+            if type(setname) is not str:
+                raise ValueError,"setname should be a string"
+            d.setname = setname
         
         prop.append(d)
         return d
 
 
     # This should maybe change to operate on the property keys
-    # and finally return the selected keys or proiperties?
+    # and finally return the selected keys or properties?
 
     def getProp(self,kind='',rec=None,tag=None,attr=[],delete=False):
         """Return all properties of type kind matching tag and having attr.
@@ -555,6 +557,7 @@ class PropertyDB(Dict):
 ##################################### Test ###########################
 
 if __name__ == "script" or  __name__ == "draw":
+
 
     if GD.gui:
         workHere()

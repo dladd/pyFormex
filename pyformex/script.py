@@ -482,7 +482,8 @@ def runApp(args):
 ##    GD.message = message
 
     while len(args) > 0:
-        fn = args.pop(0) 
+        fn = args.pop(0)
+        print os.getcwd()
         if os.path.exists(fn) and utils.isPyFormex(fn):
             playFile(fn,args)
         else:

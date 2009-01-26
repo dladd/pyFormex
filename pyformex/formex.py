@@ -1217,7 +1217,7 @@ class Formex(object):
         f = self.f[sel]
         if self.p:
             p = self.p[sel]
-        return Formex(f,p)
+        return Formex(f,p,self.eltype)
        
     def copy(self):
         """Return a deep copy of itself."""
@@ -1265,20 +1265,20 @@ class Formex(object):
                     if plist[i] is None:
                         plist[i] = zeros(shape=(Flist[i].nelems(),),dtype=Int)
             p = concatenate(plist)
-        return Formex(f,p)
+        return Formex(f,p,self.eltype)
 
       
     def select(self,idx):
-        """Return a Formex which holds only elements with numbers in ids.
+        """Return a Formex which holds only element with numbers in ids.
 
         idx can be a single element number or a list of numbers or
         any other index mechanism accepted by numpy's ndarray
         """
         if self.p is None:
-            return Formex(self.f[idx])
+            return Formex(self.f[idx],eltype=self.eltype)
         else:
             idx = asarray(idx)
-            return Formex(self.f[idx],self.p[idx])
+            return Formex(self.f[idx],self.p[idx],self.eltype)
 
       
     def selectNodes(self,idx):
@@ -1290,7 +1290,7 @@ class Formex(object):
         F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
         The returned Formex inherits the property of its parent.
         """
-        return Formex(self.f[:,idx,:],self.p)
+        return Formex(self.f[:,idx,:],self.p,self.eltype)
 
 
     def points(self):
@@ -1338,7 +1338,7 @@ class Formex(object):
             p = None
         else:
             p = self.p[flag>0]
-        return Formex(self.f[flag>0],p)
+        return Formex(self.f[flag>0],p,self.eltype)
 
     
     def whereProp(self,val):
@@ -1369,14 +1369,14 @@ class Formex(object):
         If the Formex has no properties, a copy with all elements is returned.
         """
         if self.p is None:
-            return Formex(self.f)
+            return Formex(self.f,eltype=self.eltype)
         elif type(val) == int:
-            return Formex(self.f[self.p==val],val)
+            return Formex(self.f[self.p==val],val,self.eltype)
         else:
             t = zeros(self.p.shape,dtype=bool)
             for v in asarray(val).flat:
                 t += (self.p == v)
-            return Formex(self.f[t],self.p[t])
+            return Formex(self.f[t],self.p[t],self.eltype)
             
 
     def splitProp(self):
@@ -1432,7 +1432,7 @@ class Formex(object):
             p = None
         else:
             p = self.p[flag>0]
-        return Formex(self.f[flag>0],p)
+        return Formex(self.f[flag>0],p,self.eltype)
 
       
     def nonzero(self):
@@ -1440,7 +1440,7 @@ class Formex(object):
 
         A zero element is an element where all nodes are equal."""
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f)
+        return Formex(self.f,self.p,self.eltype)
 
 
     def reverse(self):
@@ -1448,7 +1448,7 @@ class Formex(object):
 
         Reversing an element means reversing the order of its points.
         """
-        return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p)
+        return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p,self.eltype)
 
 
 #############################
@@ -1656,7 +1656,7 @@ class Formex(object):
         1.0 will grow the elements.
         """
         c = self.f.mean(1).reshape((self.f.shape[0],1,self.f.shape[2]))
-        return Formex(factor*(self.f-c)+c,self.p)
+        return Formex(factor*(self.f-c)+c,self.p,self.eltype)
 
 
 ##############################################################################
@@ -1674,7 +1674,7 @@ class Formex(object):
             f[i,:,:,dir] += i*step
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         ## the replication of the properties is automatic!
-        return Formex(f,self.p)
+        return Formex(f,self.p,self.eltype)
     
     def replic2(self,n1,n2,t1=1.0,t2=1.0,d1=0,d2=1,bias=0,taper=0):
         """Replicate in two directions.
@@ -1703,7 +1703,7 @@ class Formex(object):
             m = array(rotationMatrix(i*angle,axis))
             f[i] = dot(f[i],m)
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
-        return Formex(f + point,self.p)
+        return Formex(f + point,self.p,self.eltype)
 
     ## A formian compatibility function that we may keep
         
@@ -1804,9 +1804,9 @@ class Formex(object):
             raise RuntimeError,"Number of elements should be integer multiple of n"
         m = self.nelems()/n
         if self.p is None:
-            return [ Formex(self.f[n*i:n*(i+1)]) for i in range(m) ]
+            return [ Formex(self.f[n*i:n*(i+1)],self.eltype) for i in range(m) ]
         else:
-            return [ Formex(self.f[n*i:n*(i+1)],self.p[n*i:n*(i+1)]) for i in range(m) ]
+            return [ Formex(self.f[n*i:n*(i+1)],self.p[n*i:n*(i+1)],self.eltype) for i in range(m) ]
 
 
 #################### Read/Write Formex File ##################################
@@ -2136,6 +2136,7 @@ def interpolate(F,G,div,swap=False):
     return Formex(r.reshape((-1,) + r.shape[-2:]))
     
 
+# THe following function should be removed
 def readfile(file,sep=',',plexitude=1,dimension=3):
     """Read a Formex from file.
 
@@ -2154,6 +2155,7 @@ def readfile(file,sep=',',plexitude=1,dimension=3):
     The total number of coordinates on the file should be a multiple of
     dimension * plexitude.
     """
+    print "DEPRECATED!: use Formex.read() instead"
     return Formex(fromfile(file,sep=sep).reshape((-1,plexitude,dimension)))
 
 

@@ -1028,7 +1028,7 @@ Script: %s
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
         nelems = 0
-        for p in self.prop.getProp('e',attr=['eltype','set']):
+        for p in self.prop.getProp('e',attr=['eltype']):
             if p.set is not None:
                 # element set is directly specified
                 set = p.set
