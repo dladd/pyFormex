@@ -762,7 +762,7 @@ def coordsmethod(f):
     """
     def newf(self,*args,**kargs):
         repl = getattr(Coords,f.__name__)
-        return Formex(repl(self.f,*args,**kargs),self.p)
+        return Formex(repl(self.f,*args,**kargs),self.p,self.eltype)
         newf.__name__ = f.__name__
         newf.__doc__ = repl.__doc__
     return newf
@@ -1221,7 +1221,7 @@ class Formex(object):
        
     def copy(self):
         """Return a deep copy of itself."""
-        return Formex(self.f,self.p)
+        return Formex(self.f,self.p,self.eltype)
         ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
         ## In all examples it works, I think because the operations on
         ## the array data cause a copy to be made. Need to explore this.
@@ -1496,8 +1496,6 @@ class Formex(object):
             if max is not None:
                 T2 = f[:,nod,dir] < (max + atol)
         else:
-            #print f
-            #print atol,dir,min,max
             if min is not None:
                 T1 = f.distanceFromPlane(min,dir) > (-atol)
             if max is not None:
