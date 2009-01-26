@@ -96,7 +96,6 @@ class Curve(object):
             allX = self.subPoints2(t,i)
         except:
             allX = concatenate([ self.subPoints(tj,ij) for tj,ij in zip(t,i)])
-        print allX.shape
         return Coords(allX)
         
     
@@ -194,6 +193,8 @@ class PolyLine(Curve):
 
     def subPoints2(self,t,j):
         """Return the points at value,part pairs (t,j)"""
+        j = int(j)
+        t = asarray(t).reshape(-1,1)
         n = self.coords.shape[0]
         X0 = self.coords[j % n]
         X1 = self.coords[(j+1) % n]
@@ -364,7 +365,8 @@ class BezierCurve(Curve):
         n = self.coords.shape[0]
         ind = [j,(j+1)%n]
         P = self.coords[ind]
-        D = P + (self.curl[ind]*array([1.,-1.])).reshape(-1,1)*self.deriv[ind]
+        #D = P + (self.curl[ind]*array([1.,-1.])).reshape(-1,1)*self.deriv[ind]#if deriv==None, so it is independent of curl...maybe we just need a 4 points Bezier
+        D = P + self.deriv[ind]#if deriv!=None
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
