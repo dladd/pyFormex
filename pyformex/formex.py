@@ -1265,7 +1265,7 @@ class Formex(object):
                     if plist[i] is None:
                         plist[i] = zeros(shape=(Flist[i].nelems(),),dtype=Int)
             p = concatenate(plist)
-        return Formex(f,p,self.eltype)
+        return Formex(f,p,Flist[0].eltype)
 
       
     def select(self,idx):
