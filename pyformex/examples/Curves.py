@@ -38,18 +38,12 @@ techniques = ['spline','solve','widgets', 'persistence']
 
 def BezierCurve(X,curl=None,closed=False):
     """Create a Bezier curve between 4 points"""
-    #draw(PolyLine(X))
     ns = (X.shape[0]-1) / 3
     ip = 3*arange(ns+1)
-    print ip
     P = X[ip]
-    print "P",P
     ip = 3*arange(ns)
-    print ip
     ic = column_stack([ip+1,ip+2]).ravel()
-    print ic
     C = X[ic].reshape(-1,2,3)
-    print "C",C
     return BezierSpline(P,control=C)
     
 
@@ -70,7 +64,8 @@ open_or_closed = { True:'A closed', False:'An open' }
 TA = None
 
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend):
+
+def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spread):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -91,13 +86,29 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend):
     if interpoints == 'subPoints':
         X = S.subPoints(ndiv,extend)
         point_color = 'black'
-    else:
+        msize = 3
+    elif interpoints == 'pointsAt':
         npts = ndiv*S.nparts + (extend[1]-extend[0]) * ndiv + 1
         X = S.pointsAt(extend[0] + arange(npts)/ndiv)
         point_color = 'white'
-    draw(X, color=point_color,marksize=3)
+        msize = 4
+    else: #if interpoints == 'random':
+        at = sort(random.rand(ndiv*S.nparts))*S.nparts
+        print at
+        X = S.pointsAt(at)
+        point_color = 'blue'
+        msize = 5
+    
+    PL = PolyLine(X,closed=closed)
+
+    if spread:
+        at = PL.atLength(PL.nparts)
+        X = PL.pointsAt(at)
+        PL = PolyLine(X,closed=closed)
+        
+    draw(X, color=point_color,marksize=msize)
     im = method.keys().index(ctype)
-    draw(PolyLine(X,closed=closed), color=method_color[im])
+    draw(PL, color=method_color[im])
 
 
 dataset = [
@@ -120,10 +131,12 @@ data_items = [
     ['EndCondition',None,'select',['notaknot','secder']],
     ['Tension',0.0],
     ['Curl',0.5],
-    ['InterPoints',None,'select',['subPoints','pointsAt']],
+    ['InterPoints',None,'select',['subPoints','pointsAt','random']],
     ['Nintervals',10],
+    ['SpreadEqually',False],
     ['ExtendAtStart',0.0],
     ['ExtendAtEnd',0.0],
+#    ['FreeSpaced',[-0.1,0.0,0.1,0.25,1.5,2.75]],
     ['Clear',True],
     ]
 globals().update([i[:2] for i in data_items])
@@ -152,16 +165,25 @@ def close():
         dialog.close()
     save()
 
-def show():
+def show(all=False):
     dialog.acceptData()
     globals().update(dialog.result)
     if Clear:
         clear()
-    drawCurve(CurveType,int(DataSet),Closed,EndCondition,Tension,Curl,InterPoints,Nintervals,[ExtendAtStart,ExtendAtEnd])
-    
+    if all:
+        Types = method.keys()
+    else:
+        Types = [CurveType]
+    setDrawOptions({'bbox':'auto'})
+    for Type in Types:
+        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,InterPoints,Nintervals,[ExtendAtStart,ExtendAtEnd],SpreadEqually)
+        setDrawOptions({'bbox':None})
+
+def showAll():
+    show(all=True)
 
     
-dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show All',showAll),('Show',show)],default='Show')
 dialog.show()
 
 #while not GD.dialog_timeout:

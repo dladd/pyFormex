@@ -36,7 +36,11 @@ Minutes of the previous meeting
 Agenda and discussion
 ---------------------
 - draw() parameters (Benedict)
+- default draw settings should migrate to all new created viewports
+- non-modal widgets and persistence
+- persistence over pyFormex sessions
 - Curves (Benedict, Gianluca)
+  BezierCurve returns a BezierSpline
 - widgets can retain position
 - Surface smoothing (Thomas, Sofie)
  
@@ -45,7 +49,6 @@ Agenda and discussion
 
 Varia
 -----
-
 
 
 Date of the next meeting

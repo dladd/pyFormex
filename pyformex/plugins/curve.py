@@ -247,6 +247,33 @@ class PolyLine(Curve):
         return length(self.vectors())
 
 
+    def atLength(self, div):
+        """Returns the parameter values for relative curve lengths div.
+        
+        'div' is a list of relative curve lengths (from 0.0 to 1.0).
+        As a convenience, an single integer value may be specified,
+        in which case the relative curve lengths are found by dividing
+        the interval [0.0,1.0] in the specified number of subintervals.
+
+        The function returns a list with the parameter values for the points
+        at the specified relative lengths.
+        """
+        lens = self.lengths().cumsum()
+        rlen = concatenate([[0.], lens/lens[-1]]) # relative length
+        if type(div) == int:
+            div = arange(div+1) / float(div)
+        z = rlen.searchsorted(div)
+        # we need interpolation
+        wi = where(z>0)[0]
+        zw = z[wi]
+        L0 = rlen[zw-1]
+        L1 = rlen[zw]
+        ai = zw + (div[wi] - L1) / (L1-L0)
+        at = zeros(len(div))
+        at[wi] = ai
+        return at
+
+
 ##############################################################################
 #
 class Polygon(PolyLine):
