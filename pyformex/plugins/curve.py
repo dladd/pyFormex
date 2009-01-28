@@ -234,7 +234,7 @@ class PolyLine(Curve):
         d = self.directions()
         if self.closed:
             d1 = d
-            d2 = roll(d,1,axis=1)
+            d2 = roll(d,1,axis=0)
         else:
             d1 = d[:-1]
             d2 = d[1:]
@@ -257,81 +257,20 @@ class Polygon(PolyLine):
         
 
 
-##############################################################################
-#
-class CardinalSpline(Curve):
-    """A class representing a cardinal spline."""
-
-    def __init__(self,pts,tension=0.0,closed=False):
-        """Create a natural spline through the given points.
-
-        pts specifies the coordinates of a set of points. A natural spline
-        is constructed through this points.
-        endcond specifies the end conditions in the first, resp. last point.
-        It can be 'notaknot' or 'secder'.
-        With 'notaknot', maximal continuity (up to the third derivative)
-        is obtained between the first two splines.
-        With 'secder', the spline ends with a zero second derivative.
-        If closed is True, the spline is closed, and endcond is ignored.
-        """
-        pts = Coords(pts)
-        self.coords = pts
-        self.nparts = self.coords.shape[0]
-        if not closed:
-            self.nparts -= 3
-        self.closed = closed
-        self.tension = float(tension)
-        self.compute_coefficients()
-
-
-    def compute_coefficients(self):
-        s = (1.-self.tension)/2.
-        M = matrix([[-s, 2-s, s-2., s], [2*s, s-3., 3.-2*s, -s], [-s, 0., s, 0.], [0., 1., 0., 0.]])#pag.429 of open GL
-        self.coeffs = M
-
-
-    def sub_points2(self,t,j):
-        # NOT WORKING YET
-        raise
-        j = asarray(j).ravel()
-        t = asarray(t).reshape(-1,1)
-        n = self.coords.shape[0]
-        i = (j + arange(4).reshape(-1,1)) % n
-        P = self.coords[i]
-        print P.shape
-        print self.coeffs.shape
-        C = inner(self.coeffs,P)
-        print C.shape
-        U = column_stack([t**3., t**2., t, ones_like(t)])
-        print "U",U.shape
-        X = dot(U,C)
-        print X.shape
-        raise
-        return X  
-
-
-    def sub_points(self,t,j):
-        n = self.coords.shape[0]
-        i = (j + arange(4)) % n
-        P = self.coords[i]
-        C = self.coeffs * P
-        U = column_stack([t**3., t**2., t, ones_like(t)])
-        X = dot(U,C)
-        return X  
-
 
 ##############################################################################
 #
-class BezierCurve(Curve):
-    """A class representing a Bezier curve."""
+
+class BezierSpline(Curve):
+    """A class representing a Bezier spline curve."""
     coeffs = matrix([[-1.,  3., -3., 1.],
                      [ 3., -6.,  3., 0.],
                      [-3.,  3.,  0., 0.],
                      [ 1.,  0.,  0., 0.]]
-                    )#pag.440 of open GL
+                    )
 
     def __init__(self,pts,deriv=None,curl=0.5,control=None,closed=False):
-        """Create a Bezier curve through the given points.
+        """Create a cubic spline curve through the given points.
 
         The curve is defined by the points and the directions at these points.
         If no directions are specified, the average of the segments ending
@@ -350,34 +289,97 @@ class BezierCurve(Curve):
             P = PolyLine(pts,closed=closed)
             if deriv is None:
                 deriv = P.avgDirections()
+                ampl = P.lengths()
                 if not closed:
-                    atends = P.directions()
-                    deriv = Coords.concatenate([atends[:1],deriv,atends[-1:]])
-                curl = curl * P.lengths()
+                    ampl = ampl[:-1]
+                    pts = pts[1:-1]
+                curl = curl * ampl
+                curl = curl.reshape(-1,1)
+##                 print deriv.shape
+##                 print curl.shape
+                deriv *= curl
+                p1 = pts + deriv
+                p2 = pts - deriv
                 if not closed:
-                    curl = concatenate([curl,curl[-1:]])
-                control = (curl*array([1.,-1.])).reshape(-1,1)*deriv
-                print self.control
+                    p1 = concatenate([p2[:1],p1],axis=0)
+                    p2 = concatenate([p2,p1[-1:]],axis=0)
+                else:
+                    p2 = roll(p2,-1,axis=0)
+                control = concatenate([p1,p2],axis=1).reshape(-1,2,3)
         self.control = Coords(control)
         self.closed = closed
+##         print self.coords.shape
+##         print self.coords
+##         print self.control.shape
+##         print self.control
 
 
     def sub_points(self,t,j):
-        n = self.coords.shape[0]
-        ind = [j,(j+1)%n]
-        P = self.coords[ind]
-        D = self.control[ind]
-##         if self.curl is None:
-##             D = P + self.deriv[ind]
-##         else:
-##             print self.curl,type(self.curl)
-##             print self.deriv,type(self.deriv)
-##             D = P + (self.curl[ind]*array([1.,-1.])).reshape(-1,1)*self.deriv[ind]
+        j1 = (j+1) % self.coords.shape[0]
+        P = self.coords[[j,j1]]
+        D = self.control[j]
+##         draw(P,color='red')
+##         draw(D,color='green')
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
         return X
+
+##############################################################################
+#
+
+class CardinalSpline(BezierSpline):
+    """A class representing a cardinal spline."""
+
+    def __init__(self,pts,tension=0.0,closed=False):
+        """Create a natural spline through the given points.
+
+        The Cardinal Spline with given tension is a Bezier Spline with curl:
+            curl = ( 1 - tension) / 3
+        The separate class name is retained for compatibility and convenience. 
+        See CardinalSpline2 for a direct implementation (it misses the end
+        intervals of the point set).
+        """
+        BezierSpline.__init__(self,pts,curl=(1.-tension)/3.,closed=closed)
+
+
+class CardinalSpline2(BezierSpline):
+    """A class representing a cardinal spline."""
+
+    def __init__(self,pts,tension=0.0,closed=False):
+        """Create a natural spline through the given points.
+
+        This is a direct implementation of the Cardinal Spline.
+        For open curves, it misses the interpolation in the two end
+        intervals of the point set.
+        It is retained here because the implementation may some day
+        replace the BezierSpline implementation.
+        """
+        pts = Coords(pts)
+        self.coords = pts
+        self.nparts = self.coords.shape[0]
+        if not closed:
+            self.nparts -= 3
+        self.closed = closed
+        self.tension = float(tension)
+        self.compute_coefficients()
+
+
+    def compute_coefficients(self):
+        s = (1.-self.tension)/2.
+        M = matrix([[-s, 2-s, s-2., s], [2*s, s-3., 3.-2*s, -s], [-s, 0., s, 0.], [0., 1., 0., 0.]])#pag.429 of open GL
+        self.coeffs = M
+
+
+    def sub_points(self,t,j):
+        n = self.coords.shape[0]
+        i = (j + arange(4)) % n
+        P = self.coords[i]
+        C = self.coeffs * P
+        U = column_stack([t**3., t**2., t, ones_like(t)])
+        X = dot(U,C)
+        return X  
 
 
 ##############################################################################
@@ -452,9 +454,6 @@ class NaturalSpline(Curve):
             else:
                 # second derivatives at end is zero
                 M[f+3, f:f+4] = m[3, :4]
-
-        
-##         bx[f+2] , bx[f+3] ,  by[f+2],  by[f+3], bz[f+2],  bz[f+3] =0. ,  0., 0., 0., 0., 0.
 
         #calculate the coefficients
         C = linalg.solve(M,B)
