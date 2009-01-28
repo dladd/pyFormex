@@ -217,6 +217,7 @@ class Canvas(object):
         self.annotations = ActorList(self,'annotation')
         self.decorations = ActorList(self,'decoration')
         self.triade = None
+        self.bbox = None
         self.resetLighting()
         self.resetLights()
         self.setBbox()
@@ -510,12 +511,18 @@ class Canvas(object):
     def setBbox(self,bbox=None):
         """Set the bounding box of the scene you want to be visible."""
         # TEST: use last actor
+        #GD.debug("BBOX WAS: %s" % self.bbox)
         if bbox is None:
             if len(self.actors) > 0:
                 bbox = self.actors[-1].bbox()
             else:
                 bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
-        self.bbox = asarray(bbox)
+        bbox = asarray(bbox)
+        if bbox.any() == nan:
+            GD.message("Invalid Bbox: %s" % bbox)
+            return
+        self.bbox = nan_to_num(bbox)
+        #GD.debug("BBOX BECOMES: %s" % self.bbox)
 
          
     def addActor(self,actor):
@@ -636,25 +643,32 @@ class Canvas(object):
         """
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens
-        if not bbox is None:
+        if bbox is not None:
             self.setBbox(bbox)
+        #GD.debug("USING BBOX: %s" % self.bbox)
         X0,X1 = self.bbox
         center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
         dsize = length(X1-X0)
         if dsize <= 0.0:
             dsize = 1.0
+        #GD.debug("CENTER: %s" % center)
         self.camera.setCenter(*center)
         if angles:
             self.camera.setAngles(angles)
         # Currently, we keep the default fovy/aspect
         # and change the camer distance to focus
         fovy = self.camera.fovy
+        #GD.debug("FOVY: %s" % fovy)
         self.camera.setLens(fovy,self.aspect)
         tf = tand(fovy/2.)
-        correction = float(GD.cfg.get('gui/autozoomfactor',1.5))
+        # Default correction is sqrt(3)
+        correction = float(GD.cfg.get('gui/autozoomfactor',1.732))
         dist = dsize/tf / correction
         #print "dsize = %s; tg fovy/2 = %s; dist = %s" % (dsize,tf,dist)
+        if dist == nan or dist == inf:
+            GD.debug("DIST: %s" % dist)
+            return 
         self.camera.setDist(dist)
         self.camera.setClip(0.01*dist,100.*dist)
 

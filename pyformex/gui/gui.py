@@ -59,7 +59,6 @@ def Size(widget):
     s = widget.size()
     return s.width(),s.height()
 
-
 def Pos(widget):
     """Return the position of a widget as a tuple."""
     p = widget.pos()

@@ -870,7 +870,7 @@ class InputDialog(QtGui.QDialog):
     input dialogs with a minimum of effort.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -929,6 +929,7 @@ class InputDialog(QtGui.QDialog):
         self.setWindowTitle(str(caption))
         self.fields = []
         self.result = {}
+        self.report_pos = report_pos
         form = QtGui.QVBoxLayout()
         for item in items:
             name,value = item[:2]
@@ -1035,6 +1036,8 @@ class InputDialog(QtGui.QDialog):
         """
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
+        if self.report_pos:
+            self.result.update({'__pos__':self.pos()})
         self.accepted = True
         
 
@@ -1048,6 +1051,7 @@ class InputDialog(QtGui.QDialog):
             n = f.name()
             if n in d:
                 f.setValue(d[n])
+            
 
     def timeout(self):
         self.timedOut = True

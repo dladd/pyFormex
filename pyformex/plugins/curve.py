@@ -61,16 +61,16 @@ class Curve(object):
     This is a virtual class intended to be subclassed.
     It defines the common definitions for all curve types.
     The subclasses should at least define the following:
-      subPoints(t,j)
+      sub_points(t,j)
     """
-    def subPoints(self,t,j):
+    def sub_points(self,t,j):
         """Return the points at values t in part j
 
         t can be an array of parameter values, j is a single segment number.
         """
         raise NotImplementedError
 
-    def subPoints2(self,t,j):
+    def sub_points_2(self,t,j):
         """Return the points at values,parts given by zip(t,j)
 
         t and j can both be arrays, but should have the same length.
@@ -93,13 +93,13 @@ class Curve(object):
         t -= ti
         i = ti.astype(Int)
         try:
-            allX = self.subPoints2(t,i)
+            allX = self.sub_points_2(t,i)
         except:
-            allX = concatenate([ self.subPoints(tj,ij) for tj,ij in zip(t,i)])
+            allX = concatenate([ self.sub_points(tj,ij) for tj,ij in zip(t,i)])
         return Coords(allX)
         
     
-    def points(self,ndiv=10,extend=[0., 0.]):
+    def subPoints(self,div=10,extend=[0., 0.]):
         """Return a series of points on the PolyLine.
 
         The parameter space of each segment is divided into ndiv parts.
@@ -115,16 +115,20 @@ class Curve(object):
         If the curve is closed, the extend parameter is disregarded. 
         """
         # Subspline parts (without end point)
-        u = arange(ndiv) / float(ndiv)
-        parts = [ self.subPoints(u,j) for j in range(self.nparts) ]
+        if type(div) == int:
+            u = arange(div+1) / float(div)
+        else:
+            u = array(div).ravel()
+            div = len(u) - 1
+        parts = [ self.sub_points(u,j) for j in range(self.nparts) ]
 
         if not self.closed:
-            nstart,nend = ceil(asarray(extend)*ndiv).astype(Int)
+            nstart,nend = ceil(asarray(extend)*div).astype(Int)
 
             # Extend at start
             if nstart > 0:
                 u = arange(-nstart, 0) * extend[0] / nstart
-                parts.insert(0,self.subPoints(u,0))
+                parts.insert(0,self.sub_points(u,0))
 
             # Extend at end
             if nend > 0:
@@ -132,7 +136,7 @@ class Curve(object):
             else:
                 # Always extend at end to include last point
                 u = array([1.])
-            parts.append(self.subPoints(u,self.nparts-1))
+            parts.append(self.sub_points(u,self.nparts-1))
 
         X = concatenate(parts,axis=0)
         return Coords(X) 
@@ -171,7 +175,6 @@ class PolyLine(Curve):
         if not closed:
             self.nparts -= 1
         self.closed = closed
-        print self.nparts
     
 
     def asFormex(self):
@@ -180,7 +183,7 @@ class PolyLine(Curve):
         return connect([x,x],bias=[0,1],loop=self.closed)
 
 
-    def subPoints(self,t,j):
+    def sub_points(self,t,j):
         """Return the points at values t in part j"""
         j = int(j)
         t = asarray(t).reshape(-1,1)
@@ -191,7 +194,7 @@ class PolyLine(Curve):
         return X
 
 
-    def subPoints2(self,t,j):
+    def sub_points2(self,t,j):
         """Return the points at value,part pairs (t,j)"""
         j = int(j)
         t = asarray(t).reshape(-1,1)
@@ -222,7 +225,7 @@ class PolyLine(Curve):
         return normalize(self.vectors())
 
 
-    def avgDirections(self):
+    def avgDirections(self,normalized=True):
         """Returns average directions at the inner nodes.
 
         If open, the number of directions returned is 2 less than the
@@ -236,13 +239,6 @@ class PolyLine(Curve):
             d1 = d[:-1]
             d2 = d[1:]
         d = 0.5*(d1+d2)
-##         if self.closed:
-##             P = self.coords
-##         else:
-##             P = self.coords[1:-1]
-##         drawVectors(P,d1,1.0,'red')
-##         drawVectors(P,d2,1.0,'green')
-##         drawVectors(P,d,1.0,'cyan')
         return d
     
 
@@ -294,8 +290,9 @@ class CardinalSpline(Curve):
         self.coeffs = M
 
 
-    def subPoints2(self,t,j):
+    def sub_points2(self,t,j):
         # NOT WORKING YET
+        raise
         j = asarray(j).ravel()
         t = asarray(t).reshape(-1,1)
         n = self.coords.shape[0]
@@ -313,7 +310,7 @@ class CardinalSpline(Curve):
         return X  
 
 
-    def subPoints(self,t,j):
+    def sub_points(self,t,j):
         n = self.coords.shape[0]
         i = (j + arange(4)) % n
         P = self.coords[i]
@@ -327,8 +324,13 @@ class CardinalSpline(Curve):
 #
 class BezierCurve(Curve):
     """A class representing a Bezier curve."""
+    coeffs = matrix([[-1.,  3., -3., 1.],
+                     [ 3., -6.,  3., 0.],
+                     [-3.,  3.,  0., 0.],
+                     [ 1.,  0.,  0., 0.]]
+                    )#pag.440 of open GL
 
-    def __init__(self,pts,deriv=None,curl=0.5,closed=False):
+    def __init__(self,pts,deriv=None,curl=0.5,control=None,closed=False):
         """Create a Bezier curve through the given points.
 
         The curve is defined by the points and the directions at these points.
@@ -340,33 +342,37 @@ class BezierCurve(Curve):
         """
         pts = Coords(pts)
         self.coords = pts
-        P = PolyLine(pts,closed=closed)
-        if deriv is None:
-            deriv = P.avgDirections()
-            if not closed:
-                atends = P.directions()
-                deriv = Coords.concatenate([atends[:1],deriv,atends[-1:]])
-        self.deriv = deriv
-        self.curl = curl * P.lengths()
-        if not closed:
-            self.curl = concatenate([self.curl,self.curl[-1:]])
         self.nparts = self.coords.shape[0]
         if not closed:
             self.nparts -= 1
+            
+        if control is None:
+            P = PolyLine(pts,closed=closed)
+            if deriv is None:
+                deriv = P.avgDirections()
+                if not closed:
+                    atends = P.directions()
+                    deriv = Coords.concatenate([atends[:1],deriv,atends[-1:]])
+                curl = curl * P.lengths()
+                if not closed:
+                    curl = concatenate([curl,curl[-1:]])
+                control = (curl*array([1.,-1.])).reshape(-1,1)*deriv
+                print self.control
+        self.control = Coords(control)
         self.closed = closed
-        self.coeffs = matrix([[-1.,  3., -3., 1.],
-                              [ 3., -6.,  3., 0.],
-                              [-3.,  3.,  0., 0.],
-                              [ 1.,  0.,  0., 0.]]
-                             )#pag.440 of open GL
 
 
-    def subPoints(self,t,j):
+    def sub_points(self,t,j):
         n = self.coords.shape[0]
         ind = [j,(j+1)%n]
         P = self.coords[ind]
-        #D = P + (self.curl[ind]*array([1.,-1.])).reshape(-1,1)*self.deriv[ind]#if deriv==None, so it is independent of curl...maybe we just need a 4 points Bezier
-        D = P + self.deriv[ind]#if deriv!=None
+        D = self.control[ind]
+##         if self.curl is None:
+##             D = P + self.deriv[ind]
+##         else:
+##             print self.curl,type(self.curl)
+##             print self.deriv,type(self.deriv)
+##             D = P + (self.curl[ind]*array([1.,-1.])).reshape(-1,1)*self.deriv[ind]
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
@@ -455,7 +461,7 @@ class NaturalSpline(Curve):
         self.coeffs = array(C).reshape(-1,4,3)
 
 
-    def subPoints(self,t,j):
+    def sub_points(self,t,j):
         C = self.coeffs[j]
         U = column_stack([t**3., t**2., t, ones_like(t)])
         X = dot(U,C)
