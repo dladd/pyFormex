@@ -84,6 +84,20 @@ class Objects(object):
         self.values = map(named,self.names)
 
 
+    def append(self,name,value=None):
+        """Add a name,value to a selection.
+
+        If no value is given, its current value is used.
+        If a value is given, it is exported.
+        """
+        self.names.append(name)
+        if value is None:
+            value = named(name)
+        else:
+            export({name:value})
+        self.values.append(value)
+
+
     def clear(self):
         """Clear the selection."""
         self.set([])

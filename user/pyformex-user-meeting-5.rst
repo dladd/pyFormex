@@ -35,20 +35,23 @@ Minutes of the previous meeting
 
 Agenda and discussion
 ---------------------
-There's basically only one item on the agenda, being the demonstration on how to run pyFormex on a Windows computer by means of booting from a BuMPix Live Linux USB stick. This system was especially developed for the students, who for the most part use windows computers.
+The only item on the agenda is the demonstration of how to run pyFormex on any  computer (even Windows) by means of booting it from a BuMPix Live Linux USB stick. This system was especially developed for the students who have only access to Windows computers.
 
 * Starting pyFormex from a USB stick:
 
   - Benedict starts by giving a spectacular demonstration of the system, which goes as follows:
 
     + Restart your system with the USB stick inserted.
-    + During the booting of the computer, call the boot screen, in this case by pressing F12. Other computers might require pressing the Esc key.
-    + Select the USB stick as drive to boot from.
-    + Another boot screen will appear on which you can choose to press either F1 (which allows you to set the parameters for the boot) or ENTER (which will launch the Linux system under which pyFormex runs).
+    + Make sure your computer is set to boot from the USB stick. In most cases, pressing F12 during booting will take you into a boot selection menu. In some cases you may have to go into to BIOS (often by pressing F2 or DEL during boot) to change the boot settings. 
+    + Select the USB stick as boot medium. If the USB stick does not show up in your F12 boot menu, you need to set it in the BIOS. The USB stick is recognized as a hard disk. Make sure it is on the top of the list of bootable disks. Some laptops automatically change the BIOS and remove the USB entry when you boot without the USB key plugged in. In that case you will have to re-adjust the setting on each boot of BuMPix.
+    + Continue the boot process and you will receive the BuMPix boot propmt screen. Depending on the version, some boot parameters may be choosen now. Generally, just hit enter to boot. Most likely everything will startup fine.
+    + If you encounter any problems with booting, and you do not know how to fix it: ask for help.
 
-  - The computer should automatically connect to the network if it is connected by ethernet cable and if it is a DHCP network. Whether a wireless connection can be started automatically remains uncertain.
+  - The computer should automatically connects to the network if it is wired to a network with DHCP. Setting up a wireless connection depends on your hardware and wifi parameters, and requires more skills and Linux knowledge.
 
-  - By default the operating system will be in Dutch. For now it is only possible to change the language to English, other languages will be added later on. It is noted that there is special interest for Italian and Danish versions. Also, there are two keyboard configurations implemented: `be' and `us'. Benedict unintentionally demonstrates that those two settings are not enough to cover all commonly used keyboards.
+  - By default the operating system will be in Dutch. For now it is only possible to change the language to English, other languages will be added later on. Currently it is planned to include Italian and Danish versions. 
+
+  - The default desktop started is KDE, with a choice between 'us' and 'be' keyboards. Benedict only ever uses Qwerty keyboards, and there is no good reason to use any other keyboard for language with latin based characters. But since we live in Belgium, and computers come by default with a 'Belgian Azerty' (even different from the French!) keyboarde, we had to include the 'be' option. Other keyboards can be choosen from KDE's keyboard configurator.
 
   - Some programs are readily installed, though less than on the CD's that were previously used. Some of those programs are already in the user panel, being a terminal, Firefox, GID (which is an evaluation version of a handy program for post processing) and off course a recent version of pyFormex.
 
