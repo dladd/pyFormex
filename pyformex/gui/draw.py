@@ -195,7 +195,8 @@ message = log
 
 ############################## drawing functions ########################
 
-def draw(F, view=None,bbox=None,
+def draw(F,
+         view=None,bbox=None,
          color='prop',colormap=None,alpha=0.5,
          mode=None,linewidth=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False):
@@ -361,6 +362,14 @@ def draw(F, view=None,bbox=None,
     return actor
 
 
+    
+def setDrawOptions(d):
+    GD.canvas.options.update(d)
+
+    
+def showDrawOptions():
+    GD.message("Current Drawing Options: %s" % GD.canvas.options)
+
 
 def reset():
     GD.canvas.resetOptions()
@@ -369,15 +378,10 @@ def reset():
     clear()
     view('front')
 
+
 def resetAll():
     wireframe()
     reset()
-    
-def setDrawOptions(d):
-    GD.canvas.options.update(d)
-    
-def showDrawOptions():
-    GD.message("Current Drawing Options: %s" % GD.canvas.options)
 
 
 def shrink(v):

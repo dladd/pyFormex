@@ -44,7 +44,7 @@ F.setProp(0)
 draw(F,view='bottom')
 setDrawOptions({'bbox':None})
 zoomall()
-#zoom(1.5)
+zoom(1.5)
 
 
 ans = ask('How many balls do you want?',['3','2','1','0'])

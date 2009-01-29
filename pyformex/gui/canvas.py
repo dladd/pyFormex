@@ -664,7 +664,8 @@ class Canvas(object):
         tf = tand(fovy/2.)
         # Default correction is sqrt(3)
         correction = float(GD.cfg.get('gui/autozoomfactor',1.732))
-        dist = dsize/tf / correction
+        dist = (dsize/tf - 0.5*dsize) / correction
+        #dist = dsize/tf / correction
         #print "dsize = %s; tg fovy/2 = %s; dist = %s" % (dsize,tf,dist)
         if dist == nan or dist == inf:
             GD.debug("DIST: %s" % dist)
