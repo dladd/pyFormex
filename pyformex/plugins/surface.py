@@ -45,19 +45,19 @@ hasExternal('gts')
 # Conversion of surface data models
 
 
-def compactElems(edges,faces):
-    """Return compacted elems from edges and faces.
+## def compactElems(edges,faces):
+##     """Return compacted elems from edges and faces.
 
-    This is the inverse operation of expandElems.
-    """
-    elems = edges[faces]
-    flag1 = (elems[:,0,0]==elems[:,1,0]) + (elems[:,0,0]==elems[:,1,1])
-    flag2 = (elems[:,2,0]==elems[:,1,0]) + (elems[:,2,0]==elems[:,1,1])
-    nod0 = where(flag1,elems[:,0,1],elems[:,0,0])
-    nod1 = where(flag1,elems[:,0,0],elems[:,0,1])
-    nod2 = where(flag2,elems[:,2,0],elems[:,2,1])
-    elems = column_stack([nod0,nod1,nod2])
-    return elems
+##     This is the inverse operation of expandElems.
+##     """
+##     elems = edges[faces]
+##     flag1 = (elems[:,0,0]==elems[:,1,0]) + (elems[:,0,0]==elems[:,1,1])
+##     flag2 = (elems[:,2,0]==elems[:,1,0]) + (elems[:,2,0]==elems[:,1,1])
+##     nod0 = where(flag1,elems[:,0,1],elems[:,0,0])
+##     nod1 = where(flag1,elems[:,0,0],elems[:,0,1])
+##     nod2 = where(flag2,elems[:,2,0],elems[:,2,1])
+##     elems = column_stack([nod0,nod1,nod2])
+##     return elems
 
 
 def areaNormals(x):
@@ -484,7 +484,7 @@ class TriSurface(object):
         if type(self.coords) != Coords:
             self.coords = Coords(self.coords)
         if self.edges is None or self.faces is None:
-            self.edges,self.faces = expandElems(self.elems)
+            self.edges,self.faces = self.expandElems()
         if self.elems is None:
             self.elems = Connectivity(compactElems(self.edges,self.faces))
 

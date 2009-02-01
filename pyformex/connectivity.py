@@ -111,54 +111,73 @@ class Connectivity(ndarray):
         return self.checkUnique(self).all()
     
             
-    def revIndex(self):
+    def reverseIndex(self):
+        """Return a reverse index for the connectivity table.
+
+        This is equivalent to the function reverseIndex()
+        """
         if self.rev is None:
             self.rev = reverseIndex(self)
         return self.rev
+
+
+    def expandElems(self):
+        """Transform elems to edges and faces.
+
+        Return a tuple edges,faces where
+        - edges is an (nedges,2) int array of edges connecting two node numbers.
+        - faces is an (nelems,nplex) int array with the edge numbers connecting
+          each pair os subsequent nodes in the elements of elems.
+
+        The order of the edges respects the node order, and starts with
+        nodes 0-1.
+        The node numbering in the edges is always lowest node number first.
+
+        The inverse operation is compactElems.
+        """
+        nelems,nplex = self.shape
+        n = arange(nplex)
+        edg = column_stack([n,roll(n,-1)])
+        alledges = self[:,edg].astype(int32)
+        # sort edge nodes with lowest number first
+        alledges.sort()
+        if GD.options.fastencode:
+            edg = alledges.reshape((-1,2))
+            codes = edg.view(int64)
+        else:
+            edg = alledges.astype(int64).reshape((-1,2))
+            codes = edg[:,0] * self.magic + edg[:,1]
+        # keep the unique edge numbers
+        uniqid,uniq = unique1d(codes,True)
+        # uniq is sorted 
+        uedges = uniq.searchsorted(codes)
+        edges = column_stack([uniq/self.magic,uniq%magic])
+        faces = uedges.reshape((nelems,nplex))
+        return edges,faces
 
 
 ############################################################################
 
 
 def expandElems(elems):
-    """Transform elems to edges and faces.
+    print "This function is deprecated: use Connectivity.expand() instead."
+    return Connectivity(elems).expand()
+    
 
-    elems is an (nelems,nplex) integer array of element node numbers.
-    The maximum node number should be less than 2**31 or approx. 2 * 10**9 !!
+def compactElems(edges,faces):
+    """Return compacted elems from edges and faces.
 
-    Return a tuple edges,faces where
-    - edges is an (nedges,2) int32 array of edges connecting two node numbers.
-    - faces is an (nelems,nplex) int32 array with the edge numbers connecting
-      each pair os subsequent nodes in the elements of elems.
-
-    The order of the edges respects the node order, and starts with nodes 0-1.
-    The node numbering in the edges is always lowest node number first.
-
-    The inverse operation is compactElems.
+    This is the inverse operation of expandElems.
+    The algorithm only works if all vertex numbers of an element are
+    unique.
     """
-    elems = asarray(elems)
-    nelems,nplex = elems.shape
-    magic = elems.max() + 1
-    if magic > 2**31:
-        raise RuntimeError,"Cannot compact edges for more than 2**31 nodes"
-    n = arange(nplex)
-    edg = column_stack([n,roll(n,-1)])
-    alledges = elems[:,edg]
-    # sort edge nodes with lowest number first
-    alledges.sort()
-    if GD.options.fastencode:
-        edg = alledges.reshape((-1,2))
-        codes = edg.view(int64)
-    else:
-        edg = alledges.astype(int64).reshape((-1,2))
-        codes = edg[:,0] * magic + edg[:,1]
-    # keep the unique edge numbers
-    uniqid,uniq = unique1d(codes,True)
-    # uniq is sorted 
-    uedges = uniq.searchsorted(codes)
-    edges = column_stack([uniq/magic,uniq%magic])
-    faces = uedges.reshape((nelems,nplex))
-    return edges,faces
+    elems = edges[faces]
+    elems1 = roll(elems,-1,axis=1)
+    for i in range(elems.shape[1]):
+        flags = (elems[:,i,1] != elems1[:,i,0]) * (elems[:,i,1] != elems1[:,i,1])
+        elems[flags,i] = roll(elems[flags,i],1,axis=1)
+    return elems[:,:,0]
+
 
 
 def reverseUniqueIndex(index):

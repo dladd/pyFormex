@@ -31,7 +31,8 @@ techniques = ['menu', 'dialog', 'persistence', 'colors']
 """
 
 import simple,utils
-from plugins.surface import TriSurface, compactElems
+from connectivity import compactElems
+from plugins.surface import TriSurface
 from plugins.properties import *
 from plugins.fe_abq import *
 from gui.colorscale import ColorScale,ColorLegend
