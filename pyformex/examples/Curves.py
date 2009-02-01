@@ -33,7 +33,7 @@ Examples showing the use of the 'curve' plugin
 
 level = 'normal'
 topics = ['geometry','curves']
-techniques = ['spline','solve','widgets', 'persistence']
+techniques = ['spline','solve','widgets','persistence']
 """
 
 def BezierCurve(X,curl=None,closed=False):
@@ -44,7 +44,7 @@ def BezierCurve(X,curl=None,closed=False):
     ip = 3*arange(ns)
     ic = column_stack([ip+1,ip+2]).ravel()
     C = X[ic].reshape(-1,2,3)
-    return BezierSpline(P,control=C)
+    return BezierSpline(P,control=C,closed=closed)
     
 
 method = ODict([
@@ -125,7 +125,7 @@ dataset = [
     ]
 
 data_items = [
-    ['DataSet',0,'select',map(str,range(len(dataset)))], 
+    ['DataSet','0','select',map(str,range(len(dataset)))], 
     ['CurveType',None,'select',method.keys()],
     ['Closed',False],
     ['EndCondition',None,'select',['notaknot','secder']],

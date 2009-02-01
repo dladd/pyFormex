@@ -752,8 +752,8 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 #########################
 #
 
-def coordsmethod(f):
-    """Define a Formex method as the equivalent Coords method.
+def coords_transformation(f):
+    """Define a Formex transformation as the equivalent Coords transformation.
 
     This decorator replaces a Formex method with the equally named
     Coords method applied on the Formex coordinates attribute (.f).
@@ -1541,80 +1541,80 @@ class Formex(object):
 #   Transformations that preserve the topology (but change coordinates)
 #
 #   These functions are the equivalents of the corresponding Coords methods.
-#   However, they do not change the original Formex, but create a copy!
-#
-
+#   They do not change the original Formex, but create a copy! If you want to
+#   change the coordinates of a Formex inplace, directly operate on the
+#   coords attribute.
 
  
-    @coordsmethod
+    @coords_transformation
     def scale(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def translate(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def rotate(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def shear(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def reflect(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def affine(self,*args,**kargs):
         pass
 
-    @coordsmethod
+    @coords_transformation
     def cylindrical(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def toCylindrical(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def spherical(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def superSpherical(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def toSpherical(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
 
     def bump(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def bump1(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def bump2(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
 
     def map(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def map1(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def mapd(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def newmap(self,*args,**kargs):
         pass
 
-    @coordsmethod
+    @coords_transformation
     def replace(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def swapAxes(self,*args,**kargs):
         pass
-    @coordsmethod
+    @coords_transformation
     def rollAxes(self,*args,**kargs):
         pass
 
-    @coordsmethod
+    @coords_transformation
     def projectOnSphere(self,*args,**kargs):
         pass
 
@@ -1703,7 +1703,7 @@ class Formex(object):
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.p,self.eltype)
 
-    ## A formian compatibility function that we may keep
+    ## A formian compatibility function that we may retain
         
     def translatem(self,*args,**kargs):
         """Multiple subsequent translations in axis directions.

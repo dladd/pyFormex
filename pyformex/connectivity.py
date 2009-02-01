@@ -40,9 +40,12 @@ from numpy import *
 class Connectivity(ndarray):
     """A class for handling element/node connectivity.
 
-    A connectivity object is an 2-dimensional integer array with all
+    A connectivity object is a 2-dimensional integer array with all
     non-negative values.
-    In this implementation, al values should be lower than 2**31.
+    In this implementation, all values should be lower than 2**31.
+    
+    Furthermore, all values in a row should be unique. This is not enforced
+    at creation time, but a method is provided to check the uniqueness.
     """
 
     def __new__(self,data,dtyp=None,copy=False):
@@ -88,6 +91,25 @@ class Connectivity(ndarray):
         if self.magic is None:
             self.magic = self.max() + 1
         return self.magic - 1
+
+
+    def unique(self):
+        """Return a list of arrays with the unique values for each row."""
+        return [ unique1d(el) for el in self ]
+
+
+    def checkUnique(self):
+        """Flag the rows which have all unique entries.
+
+        Returns an array with the value True or Falsefor each row.
+        """
+        return array([ unique1d(el).size == self.shape[1] for el in self ])
+    
+
+    def check(self):
+        """Returns True if all rows have unique entries."""
+        return self.checkUnique(self).all()
+    
             
     def revIndex(self):
         if self.rev is None:

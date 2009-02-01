@@ -94,6 +94,8 @@ def writeSelection():
         fn = askFilename(os.path.join(GD.cfg['workdir'],"%s.formex" % name),
                          filter=['(*.formex)','*'],exist=False)
         if fn:
+            if not fn.endswith('.formex'):
+                fn += '.formex'
             GD.message("Writing Formex '%s' to file '%s'" % (name,fn))
             chdir(fn)
             F.write(fn)
