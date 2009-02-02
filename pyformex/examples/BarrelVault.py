@@ -30,7 +30,7 @@ techniques = ['dialog']
 
 """
 
-#reset()
+reset()
 
 res = askItems([('number of modules in axial direction',10),
                 ('number of modules in tangential direction',8),

@@ -369,6 +369,7 @@ def setDrawOptions(d):
     
 def showDrawOptions():
     GD.message("Current Drawing Options: %s" % GD.canvas.options)
+    GD.message("Current Viewport Options: %s" % GD.canvas.settings)
 
 
 def reset():

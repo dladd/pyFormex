@@ -656,14 +656,28 @@ class Canvas(object):
         self.camera.setCenter(*center)
         if angles:
             self.camera.setAngles(angles)
+
+        size_0 = self.bbox[1] - self.bbox[0]
+        size_1 = dot(size_0,self.camera.rot[:3,:3])
+        
         # Currently, we keep the default fovy/aspect
-        # and change the camer distance to focus
+        # and change the camera distance to focus
         fovy = self.camera.fovy
         #GD.debug("FOVY: %s" % fovy)
         self.camera.setLens(fovy,self.aspect)
-        tf = tand(fovy/2.)
+        hsize = max(abs(size_1[0]),abs(size_1[1])/self.aspect)
         # Default correction is sqrt(3)
         correction = float(GD.cfg.get('gui/autozoomfactor',1.732))
+
+        if GD.options.testautozoom:
+            print "SIZE_0 %s" % size_0
+            print "SIZE_1 %s" % size_1
+            print "HSIZE %s" % hsize 
+            print "DSIZE %s" % dsize
+            dsize = hsize
+            correction = 1.
+        
+        tf = tand(fovy/2.)
         #dist = (dsize/tf - 0.5*dsize) / correction
         dist = dsize/tf / correction
         #print "dsize = %s; tg fovy/2 = %s; dist = %s" % (dsize,tf,dist)
@@ -676,7 +690,11 @@ class Canvas(object):
 
     def zoom(self,f):
         """Dolly zooming."""
-        self.camera.setDist(f*self.camera.getDist())
+        dist = f*self.camera.getDist()
+        if dist == nan or dist == inf:
+            GD.debug("DIST: %s" % dist)
+            return 
+        self.camera.setDist(dist)
 
 
     def saveBuffer(self):
