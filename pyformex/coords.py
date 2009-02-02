@@ -201,6 +201,33 @@ def bbox(objects):
     return Coords(concatenate(bboxes)).bbox()
 
 
+def coordsmethod(f):
+    """Decorator to apply a Coords method to a 'coords' attribute.
+
+    Many classes that model geometry use a 'coords' attribute to store
+    the coordinates. This decorator can be used to apply the Coords method
+    to that attribute, thus making the Coords transformations available
+    to other classes.
+
+    The following lines show how to use the decorator.
+    These lines make the 'scale' method of the Coords class available in
+    your class, with the same arguments.
+    
+    @coordsmethod
+    def scale(self,*args,**kargs):
+        pass
+    
+    The coordinates are changed inplane, so if you want to save the original
+    ones, you need to copy them before you use the transformation.
+    """
+    def newf(self,*args,**kargs):
+        repl = getattr(Coords,f.__name__)
+        self.coords = repl(self.coords,*args,**kargs)
+        newf.__name__ = f.__name__
+        newf.__doc__ = repl.__doc__
+    return newf
+
+
 ###########################################################################
 ##
 ##   class Coords

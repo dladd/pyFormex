@@ -484,7 +484,7 @@ class TriSurface(object):
         if type(self.coords) != Coords:
             self.coords = Coords(self.coords)
         if self.edges is None or self.faces is None:
-            self.edges,self.faces = self.expandElems()
+            self.edges,self.faces = self.elems.expandElems()
         if self.elems is None:
             self.elems = Connectivity(compactElems(self.edges,self.faces))
 
@@ -1656,19 +1656,6 @@ def off_to_tet(fn):
     GD.message("Transforming .OFF model %s to tetgen .smesh" % fn)
     nodes,elems = read_off(fn)
     write_node_smesh(changeExt(fn,'.smesh'),nodes,elems)
-
-
-def magic_numbers(elems,magic):
-    elems = elems.astype(int64)
-    elems.sort(axis=1)
-    mag = ( elems[:,0] * magic + elems[:,1] ) * magic + elems[:,2]
-    return mag
-
-
-def demagic(mag,magic):
-    first2,third = mag / magic, mag % magic
-    first,second = first2 / magic, first2 % magic
-    return column_stack([first,second,third]).astype(int32)
 
 
 def find_row(mat,row,nmatch=None):

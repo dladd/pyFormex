@@ -30,6 +30,21 @@ A pyFormex plugin for handling connectivity of nodes and elements.
 import pyformex as GD
 from numpy import *
 
+
+# magic numbers for edges
+
+def magic_numbers(elems,magic):
+    elems = elems.astype(int64)
+    elems.sort(axis=1)
+    mag = ( elems[:,0] * magic + elems[:,1] ) * magic + elems[:,2]
+    return mag
+
+
+def demagic(mag,magic):
+    first2,third = mag / magic, mag % magic
+    first,second = first2 / magic, first2 % magic
+    return column_stack([first,second,third]).astype(int32)
+
 ############################################################################
 ##
 ##   class Connectivity
@@ -151,13 +166,12 @@ class Connectivity(ndarray):
         uniqid,uniq = unique1d(codes,True)
         # uniq is sorted 
         uedges = uniq.searchsorted(codes)
-        edges = column_stack([uniq/self.magic,uniq%magic])
+        edges = column_stack([uniq/self.magic,uniq%self.magic])
         faces = uedges.reshape((nelems,nplex))
         return edges,faces
 
 
 ############################################################################
-
 
 def expandElems(elems):
     print "This function is deprecated: use Connectivity.expand() instead."
