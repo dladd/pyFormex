@@ -430,46 +430,44 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             if not self.selection_canceled and self.number_selection == False:
                 # selection by mouse_picking
                 self.pick_func[self.selection_mode]()
-                if self.selection_filter is None:
-                    if self.mod == NONE:
-                        self.selection.set(self.picked)
-                    elif self.mod == SHIFT:
-                        self.selection.add(self.picked)
-                    elif self.mod == CTRL:
-                        self.selection.remove(self.picked)
-                
-                elif self.selection_filter == 'single':
-                    if self.mod == NONE:
-                        self.selection.set([self.closest_pick[0]])
-                    elif self.mod == SHIFT:
-                        self.selection.add([self.closest_pick[0]])
-                    elif self.mod == CTRL:
-                        self.selection.remove([self.closest_pick[0]])
-
-                elif self.selection_filter == 'closest':
-                    if self.selection_front is None or self.mod == NONE or \
-                           (self.mod == SHIFT and self.closest_pick[1] < self.selection_front[1]):
-                        self.selection_front = self.closest_pick
-                        self.selection.set([self.closest_pick[0]])
-
-                elif self.selection_filter == 'connected':
-                    if self.mod == NONE:
-                        if len(self.picked) != 0:
+                if len(self.picked) != 0:
+                    
+                    if self.selection_filter is None:
+                        if self.mod == NONE:
+                            self.selection.set(self.picked)
+                        elif self.mod == SHIFT:
+                            self.selection.add(self.picked)
+                        elif self.mod == CTRL:
+                            self.selection.remove(self.picked)
+                    
+                    elif self.selection_filter == 'single':
+                        if self.mod == NONE:
+                            self.selection.set([self.closest_pick[0]])
+                        elif self.mod == SHIFT:
+                            self.selection.add([self.closest_pick[0]])
+                        elif self.mod == CTRL:
+                            self.selection.remove([self.closest_pick[0]])
+        
+                    elif self.selection_filter == 'closest':
+                        if self.selection_front is None or self.mod == NONE or \
+                               (self.mod == SHIFT and self.closest_pick[1] < self.selection_front[1]):
                             self.selection_front = self.closest_pick
-                        self.selection.set(self.picked)
-                    elif self.mod == SHIFT:
-                        self.selection.add(self.picked)
-                    elif self.mod == CTRL:
-                        self.selection.remove(self.picked)
-                    if self.selection_front is None and len(self.picked) != 0:
-                        self.selection_front = self.closest_pick
-                    if len(self.picked) != 0:
-                        actor,elem = map(int,self.selection_front[0])
-                        A = self.actors[actor]
-                        elems = self.selection.get(actor)
-                        if elem in elems:
-                            elem = A.connectedElements(elem,elems)
-                        self.selection.set(elem,actor)
+                            self.selection.set([self.closest_pick[0]])
+        
+                    elif self.selection_filter == 'connected':
+                        if self.selection_front is None or self.mod == NONE:
+                            self.selection_front = self.closest_pick                            
+                            closest_actor,closest_elem = map(int,self.selection_front[0])
+                        if self.mod == NONE:
+                            self.selection.set(self.picked)
+                        elif self.mod == SHIFT:
+                            self.selection.add(self.picked)
+                        elif self.mod == CTRL:
+                            self.selection.remove(self.picked)
+                        if self.mod == NONE or self.mod == SHIFT:
+                            conn_elems = self.actors[closest_actor].connectedElements(closest_elem,self.selection.get(closest_actor))
+                            self.selection.set(conn_elems,closest_actor)
+
                 if GD.canvas.numbers_visible == True:
                     # A list widget is visible, so when part numbers are added to /
                     # removed from the selection by mouse_picking, the corresponding
