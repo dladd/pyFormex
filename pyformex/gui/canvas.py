@@ -433,10 +433,15 @@ class Canvas(object):
         self.makeCurrent()
         self.clear()
         self.glLight(self.lighting)
-
-        # Draw Scene Actors
+        
+        # draw the highlighted actors
         self.camera.loadProjection()
         self.camera.loadMatrix()
+        if self.highlights:
+            for actor in self.highlights:
+                actor.draw(mode=self.rendermode)
+
+        # draw the scene actors
         if self.alphablend:
             opaque = [ a for a in self.actors if not a.trans ]
             transp = [ a for a in self.actors if a.trans ]
@@ -453,17 +458,6 @@ class Canvas(object):
             for actor in self.actors:
                 self.setDefaults()
                 actor.draw(mode=self.rendermode)
-
-        # draw the highlighted actors
-        if self.highlights:
-            GD.debug("highlighting actors")
-            GL.glDepthMask (GL.GL_FALSE)
-            GL.glEnable(GL.GL_COLOR_LOGIC_OP)
-            GL.glLogicOp(GL.GL_INVERT)
-            for actor in self.highlights:
-                actor.draw(mode=self.rendermode)
-            GL.glDisable(GL.GL_COLOR_LOGIC_OP)
-            GL.glDepthMask (GL.GL_TRUE)
 
         # annotations are drawn in 3D space
         for actor in self.annotations:
@@ -615,6 +609,7 @@ class Canvas(object):
     def removeAll(self):
         """Remove all actors and decorations"""
         self.removeActors()
+        self.removeHighlights()
         self.removeAnnotations()
         self.removeDecorations()
 
@@ -622,6 +617,7 @@ class Canvas(object):
     def redrawAll(self):
         """Redraw all actors in the scene."""
         self.actors.redraw()
+        self.highlights.redraw()
         self.annotations.redraw()
         self.decorations.redraw()
         self.display()

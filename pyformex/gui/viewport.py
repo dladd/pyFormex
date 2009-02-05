@@ -304,24 +304,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.pick_window = (x,y,w,h,vp)
 
 
-    def accept_selection(self,clear=False):
-        """Cancel an interactive picking mode.
-
-        If clear == True, the current selection is cleared.
-        """
-        GD.debug("CANCEL SELECTION MODE")
-        self.selection_accepted = True
-        if clear:
-            self.selection.clear()
-            self.selection_accepted = False
-        self.selection_canceled = True
-        self.selection_busy = False
-
-    def cancel_selection(self):
-        """Cancel an interactive picking mode and clear the selection."""
-        self.accept_selection(clear=True)
-
-
     def start_selection(self,mode,filtr):
         """Start an interactive picking mode.
 
@@ -355,7 +337,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Wait for the user to interactively make a selection."""
         self.selection_timer = QtCore.QThread
         self.selection_busy = True
-        self.number_selection = False
         while self.selection_busy:
             self.selection_timer.msleep(20)
             GD.app.processEvents()
@@ -389,13 +370,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def cancel_selection(self):
         """Cancel an interactive picking mode and clear the selection."""
         self.accept_selection(clear=True)
-    
-    def select_numbers(self):
-        # selection by clicking on a list item
-        selecteditems = self.number_widget.getResult()
-        self.selection.set(map(int,selecteditems),0)
-        self.number_selection = True
-        self.selection_busy = False
+
     
     def pick(self,mode='actor',single=False,func=None,filter=None):
         """Interactively pick objects from the viewport.
@@ -427,11 +402,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.start_selection(mode,filter)
         while not self.selection_canceled:
             self.wait_selection()
-            if not self.selection_canceled and self.number_selection == False:
+            if not self.selection_canceled:
                 # selection by mouse_picking
                 self.pick_func[self.selection_mode]()
                 if len(self.picked) != 0:
-                    
                     if self.selection_filter is None:
                         if self.mod == NONE:
                             self.selection.set(self.picked)
@@ -439,7 +413,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                             self.selection.add(self.picked)
                         elif self.mod == CTRL:
                             self.selection.remove(self.picked)
-                    
                     elif self.selection_filter == 'single':
                         if self.mod == NONE:
                             self.selection.set([self.closest_pick[0]])
@@ -447,13 +420,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                             self.selection.add([self.closest_pick[0]])
                         elif self.mod == CTRL:
                             self.selection.remove([self.closest_pick[0]])
-        
                     elif self.selection_filter == 'closest':
                         if self.selection_front is None or self.mod == NONE or \
                                (self.mod == SHIFT and self.closest_pick[1] < self.selection_front[1]):
                             self.selection_front = self.closest_pick
                             self.selection.set([self.closest_pick[0]])
-        
                     elif self.selection_filter == 'connected':
                         if self.selection_front is None or self.mod == NONE:
                             self.selection_front = self.closest_pick                            
@@ -467,19 +438,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                         if self.mod == NONE or self.mod == SHIFT:
                             conn_elems = self.actors[closest_actor].connectedElements(closest_elem,self.selection.get(closest_actor))
                             self.selection.set(conn_elems,closest_actor)
-
-                if GD.canvas.numbers_visible == True:
-                    # A list widget is visible, so when part numbers are added to /
-                    # removed from the selection by mouse_picking, the corresponding
-                    # list items will be selected / deselected.
-                    selecteditems = map(int,GD.canvas.number_widget.getResult())
-                    selection = self.selection.get(0)
-                    add = map(str,setdiff1d(selection,selecteditems))
-                    remove = map(str,setdiff1d(selecteditems,selection))
-                    GD.canvas.number_widget.setSelected(add,True)
-                    GD.canvas.number_widget.setSelected(remove,False)
-                if func:
-                    func(self.selection)
+                    if func:
+                        func(self.selection)
+                self.update()
             if single:
                 self.accept_selection()
         if func and not self.selection_accepted:

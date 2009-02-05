@@ -868,121 +868,76 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
         if sleeptime > 0.0:
             sleep(sleeptime)
 
-    
-highlight_colormap = ['black','red']
 
-def highlightActors(K,colormap=highlight_colormap):
+def highlightActors(K):
     """Highlight a selection of actors on the canvas.
 
     K is Collection of actors as returned by the pick() method.
     colormap is a list of two colors, for the actors not in, resp. in
     the Collection K.
     """
-    for i,A in enumerate(copy.copy(GD.canvas.actors)):
-        if i in K.get(-1,[]):
-            color = colormap[1]
-        else:
-            color = colormap[0]
-        #
-        # For some reason, redrawing a surface does not work
-        # Therefore we undraw it and draw it again
-        #
-        if isinstance(A,surface.TriSurface):
-            undraw(A)
-            draw(A,color=color,bbox=None)
-        else:
-            A.redraw(mode=GD.canvas.rendermode,color=color)
-    GD.canvas.update()
-
-
-def newhighlightActors(K):
-    """Highlight a selection of actors on the canvas.
-
-    K is Collection of actors as returned by the pick() method.
-    colormap is a list of two colors, for the actors not in, resp. in
-    the Collection K.
-    """
+    GD.canvas.removeHighlights()
     for i in K.get(-1,[]):
         print "%s/%s" % (i,len(GD.canvas.actors))
-        GD.canvas.addHighlight(GD.canvas.actors[i])
+        actor = GD.canvas.actors[i]
+        if isinstance(actor,actors.FormexActor):
+            FA = actors.FormexActor(actor,color='red')
+            GD.canvas.addHighlight(FA)
+        elif isinstance(actor,actors.TriSurfaceActor):
+            SA = actors.TriSurfaceActor(actor,color='red')
+            GD.canvas.addHighlight(SA)
     GD.canvas.update()
 
 
-def newhighlightElements(K):
+def highlightElements(K):
     """Highlight a selection of actor elements on the canvas.
 
     K is Collection of actor elements as returned by the pick() method.
     colormap is a list of two colors, for the elements not in, resp. in
     the Collection K.
     """
+    GD.canvas.removeHighlights()
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.FormexActor):
-            FA = actors.FormexActor(actor.f[K[i]])
+            FA = actors.FormexActor(actor.select(K[i]),color='red')
             GD.canvas.addHighlight(FA)
+        elif isinstance(actor,actors.TriSurfaceActor):
+            SA = actors.TriSurfaceActor(actor.select(K[i]),color='red')
+            GD.canvas.addHighlight(SA)
     GD.canvas.update()
 
 
-def highlightElements(K,colormap=highlight_colormap):
-    """Highlight a selection of actor elements on the canvas.
-
-    K is Collection of actor elements as returned by the pick() method.
-    colormap is a list of two colors, for the elements not in, resp. in
-    the Collection K.
-    """
-    for i,A in enumerate(copy.copy(GD.canvas.actors)):
-        p = numpy.zeros((A.nelems(),),dtype=int)
-        if i in K.keys():
-            GD.debug("Actor %s: Selection %s" % (i,K[i]))
-            p[K[i]] = 1
-        if isinstance(A,surface.TriSurface):
-            A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
-##            undraw(A)
-##            draw(A,color=p,colormap=colormap,bbox=None)
-        else:
-            A.redraw(mode=GD.canvas.rendermode,color=p,colormap=colormap)
-    GD.canvas.update()
-
-
-def highlightEdges(K,colormap=highlight_colormap):
+def highlightEdges(K):
     """Highlight a selection of actor edges on the canvas.
 
     K is Collection of TriSurface actor edges as returned by the pick() method.
     colormap is a list of two colors, for the edges not in, resp. in
     the Collection K.
     """
-    for i,A in enumerate(copy.copy(GD.canvas.actors)):
-        if i in K.keys() and isinstance(A,surface.TriSurface):
-            GD.debug("Actor %s: Selection %s" % (i,K[i]))
-            F = Formex(A.coords[A.edges[K[i]]])
-            draw(F,color=highlight_colormap[1],linewidth=3,bbox=None)
-            #drawable.drawLineElems(A.coords,A.edges[K[i]],color=highlight_colormap[1])
-
+    GD.canvas.removeHighlights()
+    for i in K.keys():
+        GD.debug("Actor %s: Selection %s" % (i,K[i]))
+        actor = GD.canvas.actors[i]
+        if isinstance(actor,actors.TriSurfaceActor):
+            FA = actors.FormexActor(Formex(actor.coords[actor.edges[K[i]]]),color='red',linewidth=3)
+            GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
 
-highlight_pts = None
-
-def highlightPoints(K,colormap=highlight_colormap):
+def highlightPoints(K):
     """Highlight a selection of actor elements on the canvas.
 
     K is Collection of actor elements as returned by the pick() method.
-    
     """
-    global highlight_pts
-    if highlight_pts is not None:
-        unannotate(highlight_pts)
-        highlight_pts = None
-    pts = []
-    for i,A in enumerate(copy.copy(GD.canvas.actors)):
-        if i in K.keys():
-            pts.append(A.vertices()[K[i]])
-    if pts:
-        pts = Formex(numpy.concatenate(pts,axis=0))
-        highlight_pts = actors.FormexActor(pts,marksize=10,color=highlight_colormap[1])
-        annotate(highlight_pts)
-    return highlight_pts
+    GD.canvas.removeHighlights()
+    for i in K.keys():
+        GD.debug("Actor %s: Selection %s" % (i,K[i]))
+        actor = GD.canvas.actors[i]
+        FA = actors.FormexActor(Formex(actor.vertices()[K[i]]),color='red',marksize=10)
+        GD.canvas.addHighlight(FA)
+    GD.canvas.update()
 
 
 def highlightPartitions(K):
@@ -992,17 +947,18 @@ def highlightPartitions(K):
     connected to a collection of property numbers, as returned by the
     partitionCollection() method.
     """
-    for i,A in enumerate(copy.copy(GD.canvas.actors)):
-        p = numpy.zeros((A.nelems(),),dtype=int)
-        if i in K.keys():
-            GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
+    GD.canvas.removeHighlights()
+    for i in K.keys():
+        GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
+        actor = GD.canvas.actors[i]
+        if isinstance(actor,actors.FormexActor):
+            for j in K[i][0].keys():           
+                FA = actors.FormexActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
+                GD.canvas.addHighlight(FA)
+        elif isinstance(actor,actors.TriSurfaceActor):
             for j in K[i][0].keys():
-                p[K[i][0][j]] = j
-        if isinstance(A,surface.TriSurface):
-            undraw(A)
-            draw(A,color=p,bbox=None)
-        else:
-            A.redraw(mode=GD.canvas.rendermode,color=p)
+                SA = actors.TriSurfaceActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
+                GD.canvas.addHighlight(SA)
     GD.canvas.update()
 
 
@@ -1011,9 +967,6 @@ highlight_funcs = { 'actor': highlightActors,
                     'point': highlightPoints,
                     'edge': highlightEdges,
                     }
-
-if GD.options.testhighlight:
-    highlight_funcs['actor'] = newhighlightActors
 
 selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 
@@ -1024,7 +977,7 @@ def set_selection_filter(i):
         GD.canvas.start_selection(None,selection_filters[i])
 
     
-def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
+def pick(mode='actor',single=False,func=None,filtr=None):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
@@ -1032,8 +985,6 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
     during the picking operation, a button to stop the selection operation
 
     If no filter is given, the available filters are presented in a combobox.
-    If numbers=True, numbers are shown?? Sofie: can you explain some more
-    what it is doing?
     """
     if GD.canvas.selection_mode is not None:
         warning("You need to finish the previous picking operation first!")
@@ -1048,23 +999,13 @@ def pick(mode='actor',single=False,func=None,filtr=None,numbers=False):
         filters = selection_filters[:3]
     filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
     GD.gui.statusbar.addWidget(filter_combo)
-
-    GD.canvas.numbers_visible = False
-    if mode == 'actor':
-        numbers = False
-    if numbers:
-        number_buttons = widgets.ButtonBox('Numbers:',['Show','Hide'],[showNumbers,hideNumbers])
-        GD.gui.statusbar.addWidget(number_buttons)
+    
     if func is None:
         func = highlight_funcs.get(mode,None)
     GD.message("Select %s %s" % (filtr,mode))
     sel = GD.canvas.pick(mode,single,func,filtr)
-    GD.canvas.removeHighlights()
     GD.gui.statusbar.removeWidget(pick_buttons)
     GD.gui.statusbar.removeWidget(filter_combo)
-    if numbers:
-        hideNumbers()
-        GD.gui.statusbar.removeWidget(number_buttons)
     return sel
 
     
@@ -1081,7 +1022,7 @@ def pickEdges(single=False,func=None,filtr=None):
     return pick('edge',single,func,filtr)
 
 
-def highlight(K,mode,colormap=highlight_colormap):
+def highlight(K,mode):
     """Highlight a Collection of actor/elements.
 
     K is usually the return value of a pick operation, but might also
@@ -1090,50 +1031,13 @@ def highlight(K,mode,colormap=highlight_colormap):
     """
     func = highlight_funcs.get(mode,None)
     if func:
-        func(K,colormap)
+        func(K)
 
 
 def pickNumbers(marks=None):
     if marks:
         GD.canvas.numbers = marks
     return GD.canvas.pickNumbers()
-
-
-def showNumbers():
-    """Show a list widget containing the numbers of the elements,
-    points or edges. When part numbers are added to / removed from
-    the selection by mouse_picking, the corresponding list items will be
-    selected / deselected. Part numbers can also be added to / removed
-    from the selection by clicking on a list item.
-    """
-    A = GD.canvas.actors[0]
-    if GD.canvas.selection_mode == 'element':
-        numbers = [str(i) for i in range(A.nelems())]
-        drawNumbers(A,color=colors.blue)
-    elif GD.canvas.selection_mode == 'point':
-        numbers = [str(i) for i in range(A.npoints())]
-        if isinstance(A,surface.TriSurface):
-            F = Formex(A.coords)
-            drawNumbers(F,color=colors.blue)
-        elif isinstance(A,formex.Formex):
-            drawVertexNumbers(A,color=colors.blue)
-    elif GD.canvas.selection_mode == 'edge':
-        numbers = [str(i) for i in range(GD.canvas.actors[0].nedges())]
-        F = Formex(A.coords[A.edges])
-        drawNumbers(F,color=colors.blue)
-    GD.canvas.number_widget = widgets.DockedSelection(numbers,'Numbers',mode='multi',func=GD.canvas.select_numbers)
-    selection = map(str,GD.canvas.selection.get(0))
-    GD.canvas.number_widget.setSelected(selection,True)
-    GD.gui.addDockWidget(QtCore.Qt.LeftDockWidgetArea,GD.canvas.number_widget)
-    GD.canvas.numbers_visible = True
-
-    
-def hideNumbers():
-    """Hide the list widget."""
-    if GD.canvas.numbers_visible:
-        undraw(GD.canvas.numbers)
-        GD.gui.removeDockWidget(GD.canvas.number_widget)
-    GD.canvas.numbers_visible = False
 
 
 LineDrawing = None
