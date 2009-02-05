@@ -51,8 +51,8 @@ class Project(dict):
         """Save the project to file."""
         if filename is None:
             filename = self.filename
-        f = file(filename,'w')
-        pickle.dump(self,f)
+        f = file(filename,'wb')
+        pickle.dump(self,f,pickle.HIGHEST_PROTOCOL)
         f.close()
 
     def load(self,filename=None):
@@ -62,7 +62,7 @@ class Project(dict):
         """
         if filename is None:
             filename = self.filename
-        f = file(filename,'r')
+        f = file(filename,'rb')
         p = pickle.load(f)
         f.close()
         if isinstance(p,dict):

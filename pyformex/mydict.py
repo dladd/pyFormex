@@ -233,27 +233,33 @@ class Dict(dict):
         return newdict
 
 
-##     def __getstate__(self):
-##         print self.items()
-##         return self.items()
-
-##     def __setstate__(self,dict):
-##         dict.__init__(dict)
+##    def __getstate__(self):
+##        d = copy.copy(self.__dict__)
+##        d.update(self)
+##        return d
 
 
-##     def __setstate__(self,dict):
-##         self.update(dict)
+##    def __setstate__(self,d):
+##        self.__dict__['_default_'] = d.pop('_default_')
+##        self.update(d)
 
 
-    def __getstate__(self):
-        d = copy.copy(self.__dict__)
-        d.update(self)
-        return d
+    def __reduce__(self):
+        state = (dict(self), self.__dict__)
+        return (__newobj__, (self.__class__,), state)
 
 
-    def __setstate__(self,d):
-        self.__dict__['_default_'] = d.pop('_default_')
-        self.update(d)
+    def __setstate__(self,state):
+        if type(state) == tuple:
+            self.update(state[0])
+            self.__dict__.update(state[1])
+        elif type(state) == dict:
+            self.__dict__['_default_'] = state.pop('_default_')
+            self.update(state)
+
+
+def __newobj__(cls, *args):
+    return cls.__new__(cls, *args)
 
 
 _indent = 0  # number of spaces to indent in __str__ formatting
