@@ -50,7 +50,6 @@ l = res['barrel length']
 
 # Diagonals
 d = Formex(pattern("5"),1).rosette(4,90).translate([1,1,0]).replic2(m,n,2,2)
-
 # Longitudinals
 h = Formex(pattern("1"),3).replic2(2*m,2*n+1,1,1)
 
