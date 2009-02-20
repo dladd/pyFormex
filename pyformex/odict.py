@@ -150,9 +150,35 @@ class ODict(dict):
     
 
     def items(self):
-        """Return the values in order of the keys."""
+        """Return the key,value pairs in order of the keys."""
         return [(k,self[k]) for k in self._order]
     
+
+
+class KeyList(ODict):
+    """A named item list"""
+    
+    def __init__(self,alist=[]):
+        """Create a new KeyList, possibly filling it with data.
+
+        data should be a list of tuples/lists each having at
+        least 2 elements.
+        The (string value of the) first is used as the key.
+        """
+        L = map(len,alist)
+        if min(L) < 2:
+            raise ValueEror,"All items in the data should have length >= 2"
+        ODict.__init__(self,[[i[0],i[1:]] for i in alist])
+    
+
+    def items(self):
+        """Return the key+value lists in order of the keys."""
+        return [(k,)+self[k] for k in self._order]
+
+    
+        
+
+        
 
 if __name__ == "__main__":
 
