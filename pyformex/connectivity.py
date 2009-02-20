@@ -136,7 +136,7 @@ class Connectivity(ndarray):
         return self.rev
 
 
-    def expandElems(self):
+    def expand(self):
         """Transform elems to edges and faces.
 
         Return a tuple edges,faces where
@@ -169,6 +169,12 @@ class Connectivity(ndarray):
         edges = column_stack([uniq/self.magic,uniq%self.magic])
         faces = uedges.reshape((nelems,nplex))
         return edges,faces
+
+
+    from utils import deprecated
+    @deprecated(expand)
+    def expandElems(self):
+        pass
 
 
 ############################################################################
