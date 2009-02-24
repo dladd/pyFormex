@@ -465,7 +465,7 @@ def chdir(fn):
 
 def workHere():
     """Change the current working directory to the script's location."""
-    os.chdir(os.path.dirname(GD.cfg['curfile']))
+    chdir(__file__)
 
 
 def runtime():

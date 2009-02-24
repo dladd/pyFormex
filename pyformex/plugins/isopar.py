@@ -62,7 +62,7 @@ class Isopar(object):
                        'x*x*x*y','x*x*y*y','x*y*y*y')),
         'quad16': (2, ('1','x','y','x*x','x*y','y*y',
                        'x*x*x','x*x*y','x*y*y','y*y*y',
-                       'x*x*x*y','x*x*y*y','x*y*y*y')),
+                       'x*x*x*y','x*x*y*y','x*y*y*y',
                        'x*x*x*y*y','x*x*y*y*y','x*x*x*y*y*y')),
         'tet4'  : (3, ('1','x','y','z')),
         'tet10' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z')),

@@ -1565,6 +1565,22 @@ class Formex(object):
     def affine(self,*args,**kargs):
         pass
 
+
+    def centered(self):
+        """Return a centered copy of the Formex."""
+        return self.trl(-self.center())
+
+    def resized(self,size=1.,tol=1.e-5):
+        """Return a scaled copy of the Formex with given size in all directions.
+
+        If a direction has zero size, it is not rescaled.
+        """
+        s = self.sizes()
+        s[s<tol*s.max()] = size
+        GD.debug("SIZE:%s" % s)
+        return self.scale(size/s)
+
+
     @coords_transformation
     def cylindrical(self,*args,**kargs):
         pass
