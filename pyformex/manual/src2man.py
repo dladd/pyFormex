@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 #
 # Transform a source snippet to manual
 #
@@ -13,9 +13,15 @@ def dodoc(f):
     found = False
     for line in f:
         s = line.strip()
-        if not found and s.startswith('"""'):
-            s = s[3:]
-            found = True
+##         if not found and s.startswith('"""'):
+##             s = s[3:]
+##             found = True
+        if not found:
+            if s.startswith('"""'):
+                s = s[3:]
+                found = True
+            else:
+                continue
         iend = s.find('"""')
         if iend < 0:
             print s
@@ -40,9 +46,20 @@ def convert(fname):
         if m is not None:
             f = dofunc(f,m.group('name'),m.group('args'))
         
+          
+def get_docs(fileName):
+    import os
+    import parser
+    
+    source = open(fileName).read()
+    basename = os.path.basename(os.path.splitext(fileName)[0])
+    ast = parser.suite(source)
+    return ModuleInfo(ast.totuple(), basename)
+
+     
 
 if __name__ == "__main__":
     import sys
     for a in sys.argv[1:]:
-        convert(a)
-        
+        #convert(a)
+        print get_docs(a)

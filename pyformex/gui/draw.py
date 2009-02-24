@@ -57,7 +57,7 @@ def startGui():
 
 def closeGui():
     GD.debug("Closing the GUI: currently, this will also terminate pyformex.")
-    GD.gui.close()
+    GD.GUI.close()
     
 
 def ask(question,choices=None,default=None,**kargs):
@@ -77,8 +77,8 @@ def ask(question,choices=None,default=None,**kargs):
         items = [ [question, choices, 'combo', default] ]
 
     res = widgets.InputDialog(items,'Ask Question').getResult(**kargs)
-    if GD.gui:
-        GD.gui.update()
+    if GD.GUI:
+        GD.GUI.update()
     if res:
         return res[question]
     else:
@@ -157,7 +157,7 @@ def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
             chdir(fn[0])
         else:
             chdir(fn)
-    GD.gui.update()
+    GD.GUI.update()
     GD.canvas.update()
     GD.app.processEvents()
     return fn
@@ -175,7 +175,7 @@ def askDirname(cur=None):
     fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
     if fn:
         chdir(fn)
-    GD.gui.update()
+    GD.GUI.update()
     GD.canvas.update()
     GD.app.processEvents()
     return fn
@@ -183,8 +183,8 @@ def askDirname(cur=None):
 
 def log(s):
     """Display a message in the cmdlog window."""
-    GD.gui.board.write(str(s))
-    GD.gui.update()
+    GD.GUI.board.write(str(s))
+    GD.GUI.update()
     GD.app.processEvents()
 
 # message is the preferred function to send text info to the user.
@@ -295,7 +295,7 @@ def draw(F,
         # Don't know how to draw this object
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
-    GD.gui.drawlock.wait()
+    GD.GUI.drawlock.wait()
 
     if clear is None:
         clear = GD.canvas.options.get('clear',False)
@@ -325,7 +325,7 @@ def draw(F,
         # create random colors
         color = numpy.random.random((F.nelems(),3),dtype=float32)
 
-    GD.gui.setBusy()
+    GD.GUI.setBusy()
     if shrink is not None:
         #GD.debug("DRAWING WITH SHRINK = %s" % shrink)
         F = _shrink(F,shrink)
@@ -356,9 +356,9 @@ def draw(F,
         if image.autoSaveOn():
             image.saveNext()
         if wait: # make sure next drawing operation is retarded
-            GD.gui.drawlock.lock()
+            GD.GUI.drawlock.lock()
     finally:
-        GD.gui.setBusy(False)
+        GD.GUI.setBusy(False)
     return actor
 
 
@@ -374,7 +374,7 @@ def showDrawOptions():
 
 def reset():
     GD.canvas.resetOptions()
-    GD.gui.drawwait = GD.cfg['draw/wait']
+    GD.GUI.drawwait = GD.cfg['draw/wait']
     GD.canvas.resetDefaults(GD.cfg['canvas'])
     clear()
     view('front')
@@ -514,7 +514,7 @@ def focus(object):
 
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
-    GD.gui.drawlock.wait()
+    GD.GUI.drawlock.wait()
     if v != '__last__':
         angles = GD.canvas.view_angles.get(v)
         if not angles:
@@ -524,7 +524,7 @@ def view(v,wait=False):
     setView(v)
     GD.canvas.update()
     if wait:
-        GD.gui.drawlock.lock()
+        GD.GUI.drawlock.lock()
 
 
 def setTriade(on=None):
@@ -602,7 +602,7 @@ def createView(name,angles):
     If the view name is new, and there is a views toolbar,
     a view button will be added to it.
     """
-    GD.gui.setViewAngles(name,angles)   
+    GD.GUI.setViewAngles(name,angles)   
     
 
 def zoomBbox(bb):
@@ -709,7 +709,7 @@ def clear_canvas():
 
 def clear():
     """Clear the canvas"""
-    GD.gui.drawlock.wait()
+    GD.GUI.drawlock.wait()
     clear_canvas()
     GD.canvas.update()
 
@@ -722,9 +722,9 @@ def redraw():
 def pause(msg="Use the Step/Continue buttons to proceed"):
     if msg:
         GD.message(msg)
-    if GD.gui.drawlock.allowed:
-        GD.gui.drawlock.lock()    # will need external event to release it
-        while (GD.gui.drawlock.locked):
+    if GD.GUI.drawlock.allowed:
+        GD.GUI.drawlock.lock()    # will need external event to release it
+        while (GD.GUI.drawlock.locked):
             sleep(0.5)
             GD.app.processEvents()
 
@@ -737,7 +737,7 @@ def step():
     Else, it starts the script in step mode.
     """
     if scriptRunning:
-        GD.gui.drawlock.release()
+        GD.GUI.drawlock.release()
     else:
         if ack("""
 STEP MODE is currently only possible with specially designed,
@@ -750,7 +750,7 @@ Are you REALLY SURE you want to run this script in step mode?
         
 
 def fforward():
-    GD.gui.drawlock.free()
+    GD.GUI.drawlock.free()
 
 
 def delay(i):
@@ -807,41 +807,41 @@ def printbbox():
     print GD.canvas.bbox
 
 def printviewportsettings():
-    GD.gui.viewports.printSettings()
+    GD.GUI.viewports.printSettings()
 
 
 #################### viewports ##################################
 
 def layout(nvps=None,ncols=None,nrows=None):
     """Set the viewports layout."""
-    GD.gui.viewports.changeLayout(nvps,ncols,nrows)
+    GD.GUI.viewports.changeLayout(nvps,ncols,nrows)
 
 def addViewport():
     """Add a new viewport."""
-    GD.gui.viewports.addView()
+    GD.GUI.viewports.addView()
 
 def removeViewport():
     """Remove a new viewport."""
-    n = len(GD.gui.viewports.all)
+    n = len(GD.GUI.viewports.all)
     if n > 1:
-        GD.gui.viewports.removeView()
+        GD.GUI.viewports.removeView()
 
 def linkViewport(vp,tovp):
     """Link viewport vp to viewport tovp.
 
     Both vp and tovp should be numbers of viewports. 
     """
-    GD.gui.viewports.link(vp,tovp)
+    GD.GUI.viewports.link(vp,tovp)
 
 def viewport(n):
     """Select the current viewport"""
-    GD.gui.viewports.setCurrent(n)
+    GD.GUI.viewports.setCurrent(n)
 
 ####################
 
 def updateGUI():
     """Update the GUI."""
-    GD.gui.update()
+    GD.GUI.update()
     GD.canvas.update()
     GD.app.processEvents()
 
@@ -991,21 +991,21 @@ def pick(mode='actor',single=False,func=None,filtr=None):
         return
 
     pick_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
-    GD.gui.statusbar.addWidget(pick_buttons)
+    GD.GUI.statusbar.addWidget(pick_buttons)
     
     if mode == 'element':
         filters = selection_filters
     else:
         filters = selection_filters[:3]
     filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
-    GD.gui.statusbar.addWidget(filter_combo)
+    GD.GUI.statusbar.addWidget(filter_combo)
     
     if func is None:
         func = highlight_funcs.get(mode,None)
     GD.message("Select %s %s" % (filtr,mode))
     sel = GD.canvas.pick(mode,single,func,filtr)
-    GD.gui.statusbar.removeWidget(pick_buttons)
-    GD.gui.statusbar.removeWidget(filter_combo)
+    GD.GUI.statusbar.removeWidget(pick_buttons)
+    GD.GUI.statusbar.removeWidget(filter_combo)
     return sel
 
     
@@ -1066,12 +1066,12 @@ def drawLinesInter(mode ='line',single=False,func=None):
     if func == None:
         func = showLineDrawing
     drawing_buttons = widgets.ButtonBox('Drawing:',['Cancel','OK'],[GD.canvas.cancel_drawing,GD.canvas.accept_drawing])
-    GD.gui.statusbar.addWidget(drawing_buttons)
+    GD.GUI.statusbar.addWidget(drawing_buttons)
     edit_combo = widgets.ComboBox('Edit:',edit_modes,set_edit_mode)
-    GD.gui.statusbar.addWidget(edit_combo)
+    GD.GUI.statusbar.addWidget(edit_combo)
     lines = GD.canvas.drawLinesInter(mode,single,func)
-    GD.gui.statusbar.removeWidget(drawing_buttons)
-    GD.gui.statusbar.removeWidget(edit_combo)
+    GD.GUI.statusbar.removeWidget(drawing_buttons)
+    GD.GUI.statusbar.removeWidget(edit_combo)
     return lines
 
 

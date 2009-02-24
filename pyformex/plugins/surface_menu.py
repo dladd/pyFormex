@@ -116,11 +116,11 @@ def readSelection(select=True,draw=True,multi=True):
     if fn:
         chdir(fn[0])
         names = map(utils.projectName,fn)
-        GD.gui.setBusy()
+        GD.GUI.setBusy()
         surfaces = map(read_Surface,fn)
         for i,S in enumerate(surfaces):
             S.setProp(i)
-        GD.gui.setBusy(False)
+        GD.GUI.setBusy(False)
         export(dict(zip(names,surfaces)))
         if select:
             GD.message("Set selection to %s" % str(names))
@@ -263,9 +263,9 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
         fn = askFilename(GD.cfg['workdir'],types,exist=False)
         if fn:
             GD.message("Exporting surface model to %s" % fn)
-            GD.gui.setBusy()
+            GD.GUI.setBusy()
             F.write(fn)   
-            GD.gui.setBusy(False)
+            GD.GUI.setBusy(False)
 
 #
 # Operations with surface type, border, ...
@@ -864,7 +864,7 @@ def trim_surface():
     check_surface()
     data = GD.cfg.get('stl/border',{'Number of trim rounds':1, 'Minimum number of border edges':1})
     GD.cfg['stl/border'] = askItems(data)
-    GD.gui.update()
+    GD.GUI.update()
     n = int(data['Number of trim rounds'])
     nb = int(data['Minimum number of border edges'])
     print "Initial number of elements: %s" % elems.shape[0]
@@ -1208,18 +1208,18 @@ def create_menu():
 #        ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('Surface',items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='help')
 
     
 def show_menu():
     """Show the Tools menu."""
-    if not GD.gui.menu.item('Surface'):
+    if not GD.GUI.menu.item('Surface'):
         create_menu()
 
 
 def close_menu():
     """Close the Tools menu."""
-    m = GD.gui.menu.item('Surface')
+    m = GD.GUI.menu.item('Surface')
     if m :
         m.remove()
     

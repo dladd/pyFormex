@@ -22,10 +22,8 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""pyFormex GUI module initialisation.
+"""pyformex.gui module initialisation.
 
-Currently, this does nothing. The file should be kept though, because it is
-needed to flag this directory as a Python package.
 """
 
 __version__ = "0.7.4-a1"
@@ -37,7 +35,7 @@ Copyright = 'Copyright (C) 2004-2008 Benedict Verhegghe'
 # The GUI parts
 app_started = False
 app = None         # the Qapplication 
-gui = None         # the QMainWindow
+GUI = None         # the QMainWindow
 canvas = None      # the OpenGL Drawing widget
 board = None       # the message board
 

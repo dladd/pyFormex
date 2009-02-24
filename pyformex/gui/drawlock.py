@@ -57,7 +57,7 @@ class DrawLock(object):
         #GD.debug("LOCKING: %s" % time)
         if self.allowed and not self.locked:
             if time is None:
-                time = GD.gui.drawwait
+                time = GD.GUI.drawwait
             if time > 0:
                 self.locked = True
                 self.timer = threading.Timer(time,self.release)

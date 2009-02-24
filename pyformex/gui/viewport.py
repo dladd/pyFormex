@@ -907,7 +907,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         
     def mousePressEvent(self,e):
         """Process a mouse press event."""
-        GD.gui.viewports.setCurrent(self)
+        GD.GUI.viewports.setCurrent(self)
         # on PRESS, always remember mouse position and button
         self.statex,self.statey = e.x(), self.height()-e.y()
         self.button = e.button()

@@ -1120,7 +1120,7 @@ if __name__ == "script" or __name__ == "draw":
     # Create Finite Element model
     nodes,elems = F.feModel()
 
-    if GD.gui:
+    if GD.GUI:
         draw(F)
         drawNumbers(F)
         drawNumbers(Formex(nodes),color=red)

@@ -70,19 +70,19 @@ viewport(3)
 G = F.cutAtPlane([0.,0.,0.],[-1.,0.,0.],side='+')
 clear()
 draw(G) # this draws in the 4 viewports !
-GD.gui.viewports.updateAll()
+GD.GUI.viewports.updateAll()
 
 
 sleep(nsl)
 smooth()
-GD.gui.viewports.updateAll()
+GD.GUI.viewports.updateAll()
 
 exit()
 from gui import canvas
 sleep(nsl)
 canvas.glLine()
 canvas.glFlat()
-GD.gui.viewports.updateAll()
+GD.GUI.viewports.updateAll()
 
 
 

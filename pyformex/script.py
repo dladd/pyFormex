@@ -22,7 +22,13 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Functions for executing pyFormex scripts."""
+"""Basic pyFormex script functions
+
+The \Code{pyformex.script} module provides the basic functions available
+in all \pyformex scripts. These functions are available in GUI and NONGUI
+applications, without the need to explicitely importing the \module{script}
+module.
+"""
 
 
 import pyformex as GD
@@ -71,7 +77,7 @@ def Globals():
     """
     g = copy.copy(GD.PF)
     g.update(globals())
-    if GD.gui:
+    if GD.GUI:
         from gui import colors,draw
         g.update(colors.__dict__)
         g.update(draw.__dict__)
@@ -171,6 +177,7 @@ def ack(question):
 
 
 def error(message):
+    """Show an error message and wait for user acknowlegement."""
     print "pyFormex Error: "+message
     if not ack("Do you want to continue?"):
         exit()
@@ -239,19 +246,20 @@ def playScript(scr,name=None,filename=None,argv=[]):
     scriptRunning = True
     exitrequested = False
 
-    if GD.gui:
+    print GD.GUI
+    if GD.GUI:
         global stepmode,exportNames,starttime
         GD.debug('GUI SCRIPT MODE %s'% (stepmode))
-        GD.gui.drawlock.allow()
+        GD.GUI.drawlock.allow()
         GD.canvas.update()
-        GD.gui.actions['Play'].setEnabled(False)
-        GD.gui.actions['Continue'].setEnabled(True)
-        GD.gui.actions['Stop'].setEnabled(True)
+        GD.GUI.actions['Play'].setEnabled(False)
+        GD.GUI.actions['Continue'].setEnabled(True)
+        GD.GUI.actions['Stop'].setEnabled(True)
         GD.app.processEvents()
     
     # Get the globals
     g = Globals()
-    if GD.gui:
+    if GD.GUI:
         modname = 'draw'
     else:
         modname = 'script'
@@ -269,7 +277,7 @@ def playScript(scr,name=None,filename=None,argv=[]):
     GD.debug('STARTING SCRIPT (%s)' % starttime)
     try:
         try:
-            if GD.gui and stepmode:
+            if GD.GUI and stepmode:
                 step_script(scr,g,True)
             else:
                 if GD.options.executor:
@@ -302,13 +310,13 @@ def playScript(scr,name=None,filename=None,argv=[]):
         scriptRunning = False # release the lock in case of an error
         elapsed = time.clock() - starttime
         GD.debug('SCRIPT RUNTIME : %s seconds' % elapsed)
-        if GD.gui:
+        if GD.GUI:
             stepmode = False
-            GD.gui.drawlock.release() # release the lock
-            GD.gui.actions['Play'].setEnabled(True)
-            #GD.gui.actions['Step'].setEnabled(False)
-            GD.gui.actions['Continue'].setEnabled(False)
-            GD.gui.actions['Stop'].setEnabled(False)
+            GD.GUI.drawlock.release() # release the lock
+            GD.GUI.actions['Play'].setEnabled(True)
+            #GD.GUI.actions['Step'].setEnabled(False)
+            GD.GUI.actions['Continue'].setEnabled(False)
+            GD.GUI.actions['Stop'].setEnabled(False)
 
     if exitall:
         GD.debug("Calling exit() from playscript")
@@ -354,7 +362,7 @@ def breakpt(msg=None):
 
 
 def enableBreak(mode=True):
-    GD.gui.actions['Stop'].setEnabled(mode)
+    GD.GUI.actions['Stop'].setEnabled(mode)
 
 
 def stopatbreakpt():
@@ -385,12 +393,12 @@ def play(fn=None,argv=[],step=False):
     """
     global stepmode
     if not fn:
-        if GD.gui.canPlay:
+        if GD.GUI.canPlay:
             fn = GD.cfg['curfile']
         else:
             return
     stepmode = step
-    GD.gui.history.add(fn)
+    GD.GUI.history.add(fn)
     stepmode = step
     return playFile(fn,argv)
 

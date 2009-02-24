@@ -922,7 +922,7 @@ class InputDialog(QtGui.QDialog):
         with 'red' as the initial choice.
         """
         if parent is None:
-            parent = GD.gui
+            parent = GD.GUI
         QtGui.QDialog.__init__(self,parent)
         if caption is None:
             caption = 'pyFormex-dialog'
@@ -1210,7 +1210,7 @@ class Table(QtGui.QDialog):
         rhead is an optional list of nrow row headers.
         """
         if parent is None:
-            parent = GD.gui
+            parent = GD.GUI
         QtGui.QDialog.__init__(self,parent)
         if caption is None:
             caption = 'pyFormex-dialog'
@@ -1245,7 +1245,7 @@ class TableDialog(QtGui.QDialog):
         should be a list of pages [page_header,table_header,table_data].
         """
         if parent is None:
-            parent = GD.gui
+            parent = GD.GUI
         QtGui.QDialog.__init__(self,parent)
         if caption is None:
             caption = 'pyFormex-dialog'
@@ -1560,7 +1560,7 @@ class Menu(BaseMenu,QtGui.QMenu):
 
         If parent==None, the menu is a standalone popup menu.
         If parent is given, the menu will be inserted in the parent menu.
-        If parent==GD.gui, the menu is inserted in the main menu bar.
+        If parent==GD.GUI, the menu is inserted in the main menu bar.
         
         If insert == True, the menu will be inserted in the main menubar
         before the item specified by before.

@@ -480,18 +480,18 @@ def create_menu():
         ("---",None),
         ("&Close",close_menu),
         ]
-    return widgets.Menu('Tools',items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu('Tools',items=MenuData,parent=GD.GUI.menu,before='help')
 
     
 def show_menu():
     """Show the Tools menu."""
-    if not GD.gui.menu.item('Tools'):
+    if not GD.GUI.menu.item('Tools'):
         create_menu()
 
 
 def close_menu():
     """Close the Tools menu."""
-    m = GD.gui.menu.item('Tools')
+    m = GD.GUI.menu.item('Tools')
     if m :
         m.remove()
     

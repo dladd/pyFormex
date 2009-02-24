@@ -68,9 +68,9 @@ def readSelection(select=True,draw=True,multi=True):
             fn = [ fn ]
         chdir(fn[0])
         names = map(utils.projectName,fn)
-        GD.gui.setBusy()
+        GD.GUI.setBusy()
         F = map(read_Formex,fn)
-        GD.gui.setBusy(False)
+        GD.GUI.setBusy(False)
         export(dict(zip(names,F)))
         if select:
             GD.message("Set selection to %s" % str(names))
@@ -482,18 +482,18 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
-    return widgets.Menu('Formex',items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu('Formex',items=MenuData,parent=GD.GUI.menu,before='help')
 
     
 def show_menu():
     """Show the Tools menu."""
-    if not GD.gui.menu.item('Formex'):
+    if not GD.GUI.menu.item('Formex'):
         create_menu()
 
 
 def close_menu():
     """Close the Tools menu."""
-    m = GD.gui.menu.item('Formex')
+    m = GD.GUI.menu.item('Formex')
     if m :
         m.remove()
       

@@ -915,17 +915,17 @@ def create_menu():
         ("---",None),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('Hesperia',items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu('Hesperia',items=MenuData,parent=GD.GUI.menu,before='help')
 
  
 def show_menu():
     """Show the menu."""
-    if not GD.gui.menu.item('Hesperia'):
+    if not GD.GUI.menu.item('Hesperia'):
         create_menu()
 
 def close_menu():
     """Close the menu."""
-    m = GD.gui.menu.item('Hesperia')
+    m = GD.GUI.menu.item('Hesperia')
     if m :
         m.remove()
 

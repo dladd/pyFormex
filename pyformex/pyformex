@@ -82,10 +82,10 @@ def main(argv=None):
     You can copy this file to another location if you want to make changes.
     By default, pyformex will try to read the following extra configuration
     files (in this order:
-       default settings:     <pyformexdir>/pyformexrc
-       system-wide settings: /etc/pyformexrc
-       user settings:        $HOME/.pyformexrc
-       local settings        $PWD/.pyformexrc
+        default settings:     <pyformexdir>/pyformexrc
+        system-wide settings: /etc/pyformexrc
+        user settings:        $HOME/.pyformexrc
+        local settings        $PWD/.pyformexrc
     Also, an extra config file can be specified in the command line.
     Config file settings always override previous ones.
     On exit, the preferences that were changed are written to the last

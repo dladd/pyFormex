@@ -68,7 +68,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog',GD.GUI).getResult()
     if res:
         updateSettings(res,store)
     return res
@@ -81,14 +81,14 @@ def setToolbarPlacement(store=None):
     """
     if store is None:
         store = GD.cfg
-    toolbar = [ GD.gui.modebar, GD.gui.viewbar ]
+    toolbar = [ GD.GUI.modebar, GD.GUI.viewbar ]
     setting = ['gui/modebar', 'gui/viewbar' ]
     options = [ None, 'default', 'left', 'right', 'top', 'bottom' ]
     label = [ str(tb.windowTitle()) for tb in toolbar ]
     current = [ store[s] for s in setting ]
     itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
     itemlist.append(('Store these settings as defaults', False))
-    res = widgets.InputDialog(itemlist,'Config Dialog',GD.gui).getResult()
+    res = widgets.InputDialog(itemlist,'Config Dialog',GD.GUI).getResult()
     if res:
         GD.debug(res)
         if res['Store these settings as defaults']:
@@ -134,7 +134,7 @@ def setAvgNormalSize():
     askConfigPreferences(['mark/avgnormalsize'])
 
 def setSize():
-    GD.gui.resize(800,600)
+    GD.GUI.resize(800,600)
 
 def setPickSize():
     w,h = GD.cfg['pick/size']
@@ -186,7 +186,7 @@ def setFont(font=None):
         GD.cfg['gui/font'] = str(font.toString())
         GD.cfg['gui/fontfamily'] = str(font.family())
         GD.cfg['gui/fontsize'] = font.pointSize()
-        GD.gui.setFont(font)
+        GD.GUI.setFont(font)
 
 
 def setAppearance():
@@ -196,7 +196,7 @@ def setAppearance():
         # Get style name, strip off the leading 'Q' and trailing 'Style'
         stylename = style.metaObject().className()[1:-5]
         GD.cfg['gui/style'] = stylename
-        GD.gui.setStyle(stylename)
+        GD.GUI.setStyle(stylename)
     if font:
         setFont(font)
 

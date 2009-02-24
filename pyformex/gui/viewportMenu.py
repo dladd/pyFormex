@@ -98,13 +98,13 @@ def viewportSettings():
 def viewportLayout():
     """Set the viewport layout."""
     directions = [ 'rowwise','columnwise' ]
-    if GD.gui.viewports.rowwise:
+    if GD.GUI.viewports.rowwise:
         current = directions[0]
     else:
         current = directions[1]
-    itemlist = [('Number of viewports',len(GD.gui.viewports.all)),
+    itemlist = [('Number of viewports',len(GD.GUI.viewports.all)),
                 ('Viewport layout direction',current,'select',directions),
-                ('Number of viewports per row/column',GD.gui.viewports.ncols),
+                ('Number of viewports per row/column',GD.GUI.viewports.ncols),
                 ]
     res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if res:
@@ -117,7 +117,7 @@ def viewportLayout():
         else:
             nrows = ncols
             ncols = None
-        GD.gui.viewports.changeLayout(nvps,ncols,nrows)
+        GD.GUI.viewports.changeLayout(nvps,ncols,nrows)
 #        if res['Store these settings as defaults']:
 #            GD.cfg.update()
 

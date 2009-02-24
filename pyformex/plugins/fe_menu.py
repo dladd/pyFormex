@@ -83,16 +83,16 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu(_menu,items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
 
 def show_menu():
     """Show the menu."""
-    if not GD.gui.menu.item(_menu):
+    if not GD.GUI.menu.item(_menu):
         create_menu()
 
 def close_menu():
     """Close the menu."""
-    m = GD.gui.menu.item(_menu)
+    m = GD.GUI.menu.item(_menu)
     if m :
         m.remove()
 
@@ -110,7 +110,7 @@ if __name__ == "draw":
     clear()
     reset()
     smooth()
-##     if GD.gui:
+##     if GD.GUI:
 ##         workHere()
 ##         print os.getcwd()
         

@@ -303,8 +303,8 @@ class GUI(QtGui.QMainWindow):
         sbh = self.statusbar.height()
         self.curproj.setFixedHeight(32)
         self.curfile.setFixedHeight(32)
-        GD.gui.statusbar.addWidget(self.curproj)
-        GD.gui.statusbar.addWidget(self.curfile)
+        GD.GUI.statusbar.addWidget(self.curproj)
+        GD.GUI.statusbar.addWidget(self.curfile)
 
 
     def setStyle(self,style):
@@ -458,11 +458,11 @@ class GUI(QtGui.QMainWindow):
         self.move(*self.XPos())
 
         # store the history and main window size/pos
-        GD.cfg['history'] = GD.gui.history.files
+        GD.cfg['history'] = GD.GUI.history.files
 
-        GD.cfg.update({'size':Size(GD.gui),
-                       'pos':Pos(GD.gui),
-                       'bdsize':Size(GD.gui.board),
+        GD.cfg.update({'size':Size(GD.GUI),
+                       'pos':Pos(GD.GUI),
+                       'bdsize':Size(GD.GUI.board),
                        },name='gui')
 
 
@@ -552,12 +552,12 @@ def createScriptMenu():
     else:
         # The default is to collect all scriptdirs in a single main menu
         if len(scriptdirs) > 1:
-            scriptsmenu = widgets.Menu('Scripts',GD.gui.menu)
-            before = GD.gui.menu.item('help').menuAction()
-            GD.gui.menu.insertMenu(before,scriptsmenu)
+            scriptsmenu = widgets.Menu('Scripts',GD.GUI.menu)
+            before = GD.GUI.menu.item('help').menuAction()
+            GD.GUI.menu.insertMenu(before,scriptsmenu)
             before = None
         else:
-            scriptsmenu = GD.gui.menu
+            scriptsmenu = GD.GUI.menu
             before = scriptsmenu.itemAction('help')
 
         for title,dirname in scriptdirs:
@@ -644,27 +644,27 @@ You should seriously consider to bail out now!!!
         if answer != 'Really Continue':
             return 1
 
-    GD.gui = GUI(windowname,
+    GD.GUI = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
                  GD.cfg.get('gui/pos',(0,0)),
                  GD.cfg.get('gui/bdsize',(800,600))
                  )
 
     # set the appearence
-    GD.gui.setStyle(GD.cfg.get('gui/style','Plastique'))
+    GD.GUI.setStyle(GD.cfg.get('gui/style','Plastique'))
     font = GD.cfg.get('gui/font',None)
     if font:
-        GD.gui.setFont(font)
+        GD.GUI.setFont(font)
     else:
         fontfamily = GD.cfg.get('gui/fontfamily',None)
         if fontfamily:
-            GD.gui.setFontFamily(fontfamily)
+            GD.GUI.setFontFamily(fontfamily)
         fontsize =  GD.cfg.get('gui/fontsize',None)
         if fontsize:
-            GD.gui.setFontSize(fontsize)
-    GD.gui.viewports.changeLayout(1)
-    GD.gui.viewports.setCurrent(0)
-    GD.board = GD.gui.board
+            GD.GUI.setFontSize(fontsize)
+    GD.GUI.viewports.changeLayout(1)
+    GD.GUI.viewports.setCurrent(0)
+    GD.board = GD.GUI.board
     GD.board.write("""%s  (C) Benedict Verhegghe
 
 pyFormex comes with ABSOLUTELY NO WARRANTY. This is free software,
@@ -672,23 +672,23 @@ and you are welcome to redistribute it under the conditions of the
 GNU General Public License, version 3 or later.
 See Help->License or the file COPYING for details.
 """ % GD.Version)
-    GD.gui.show()
-    GD.debug("Using window name %s" % GD.gui.windowTitle())
+    GD.GUI.show()
+    GD.debug("Using window name %s" % GD.GUI.windowTitle())
     
     # Create additional menus (put them in a list to save)
     
     # History Menu
     history = GD.cfg.get('history',None)
     if type(history) == list:
-        GD.gui.history = scriptsMenu.ScriptsMenu('History',files=history,max=20)
+        GD.GUI.history = scriptsMenu.ScriptsMenu('History',files=history,max=20)
 
     if GD.cfg.get('gui/history_in_main_menu',False):
-        before = GD.gui.menu.item('help').menuAction()
-        GD.gui.menu.insertMenu(before,GD.gui.history)
+        before = GD.GUI.menu.item('help').menuAction()
+        GD.GUI.menu.insertMenu(before,GD.GUI.history)
     else:
-        filemenu = GD.gui.menu.item('file')
+        filemenu = GD.GUI.menu.item('file')
         before = filemenu.item('---1')
-        filemenu.insertMenu(before,GD.gui.history)
+        filemenu.insertMenu(before,GD.GUI.history)
 
 
     # Script menu
@@ -709,16 +709,16 @@ See Help->License or the file COPYING for details.
                 m.show_menu()
         except:
             GD.debug('ERROR while loading plugin %s' % p)
-    GD.gui.setBusy(False)
-    GD.gui.update()
-    GD.gui.addStatusBarButtons()
+    GD.GUI.setBusy(False)
+    GD.GUI.update()
+    GD.GUI.addStatusBarButtons()
 
     # remove the splash window
     if splash is not None:
-        splash.finish(GD.gui)
+        splash.finish(GD.GUI)
 
-    GD.gui.setBusy(False)
-    GD.gui.update()
+    GD.GUI.setBusy(False)
+    GD.GUI.update()
     
     if os.path.isdir(GD.cfg['workdir']):
         # Make the workdir the current dir
@@ -728,8 +728,8 @@ See Help->License or the file COPYING for details.
         GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
 
-    if GD.gui.easter_egg:
-        draw.playScript(utils.mergeme(*GD.gui.easter_egg))
+    if GD.GUI.easter_egg:
+        draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
 
     # remaining args are interpreted as scripts and their parameters
     script.runApp(args)
@@ -743,7 +743,7 @@ See Help->License or the file COPYING for details.
 
 
 def classify_examples():
-    m = GD.gui.menu.item('Examples')
+    m = GD.GUI.menu.item('Examples')
     print m
     print str(m.title())
     

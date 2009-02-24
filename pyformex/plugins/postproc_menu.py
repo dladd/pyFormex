@@ -122,7 +122,7 @@ class Table(QtGui.QDialog):
         rhead is an optional list of nrow row headers.
         """
         if parent is None:
-            parent = GD.gui
+            parent = GD.GUI
         
         QtGui.QDialog.__init__(self,parent)
         self.setWindowTitle(str(caption))
@@ -473,14 +473,14 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         else:
 ##             if self.post_button is None:
 ##                 self.post_button = widgets.ButtonBox('PostDB:',['None'],[self.select])
-##                 GD.gui.statusbar.addWidget(self.post_button)
+##                 GD.GUI.statusbar.addWidget(self.post_button)
 ##             self.post_button.setText(name)
 
 
 ##     def hideName(self):
 ##         """Hide the statusbar button with the name of the DB."""
 ##         if self.post_button:
-##             GD.gui.statusbar.removeWidget(self.post_button)
+##             GD.GUI.statusbar.removeWidget(self.post_button)
 
 
 ##     def showStepInc(self):
@@ -488,7 +488,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         steps = self.DB.getSteps()
 ##         if steps:
 ##             self.step_combo = widgets.ComboBox('Step:',steps,self.setStep)
-##             GD.gui.statusbar.addWidget(self.step_combo)
+##             GD.GUI.statusbar.addWidget(self.step_combo)
 ##             self.showInc(steps[0])
 
 
@@ -497,15 +497,15 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         if step:
 ##             incs = self.DB.getIncs(step)
 ##             self.inc_combo = widgets.ComboBox('Inc:',incs,self.setInc)
-##             GD.gui.statusbar.addWidget(self.inc_combo)
+##             GD.GUI.statusbar.addWidget(self.inc_combo)
     
 
 ##     def hideStepInc(self):
 ##         """Hide the step/inc combo boxes"""
 ##         if self._inc_combo:
-##             GD.gui.statusbar.removeWidget(self._inc_combo)
+##             GD.GUI.statusbar.removeWidget(self._inc_combo)
 ##         if self._step_combo:
-##             GD.gui.statusbar.removeWidget(self._step_combo)
+##             GD.GUI.statusbar.removeWidget(self._step_combo)
              
 
 ##     def setStep(self,i):
@@ -783,19 +783,19 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
         ]
-    return widgets.Menu('Postproc',items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu('Postproc',items=MenuData,parent=GD.GUI.menu,before='help')
   
 def show_menu():
     """Show the Postproc menu."""
-    if not GD.gui.menu.item('Postproc'):
+    if not GD.GUI.menu.item('Postproc'):
         create_menu()
         
 def close_menu():
     """Close the Postproc menu."""
-    m = GD.gui.menu.item('Postproc')
+    m = GD.GUI.menu.item('Postproc')
     if m :
         m.remove()
-        #GD.gui.statusbar.removeWidget(GD.gui.postbutton)
+        #GD.GUI.statusbar.removeWidget(GD.GUI.postbutton)
 
 def reload_menu():
     """Reload the Postproc menu."""

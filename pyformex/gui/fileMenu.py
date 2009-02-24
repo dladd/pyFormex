@@ -82,7 +82,7 @@ def openProject(exist=True):
         if GD.PF:
             the_project.update(GD.PF)
         GD.PF = the_project
-        GD.gui.setcurproj(fn)
+        GD.GUI.setcurproj(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD .message("Project contents: %s" % the_project.keys())
 
@@ -100,7 +100,7 @@ def closeProject():
         the_project.save()
         GD.PF = {}
         GD.PF.update(the_project)
-        GD.gui.setcurproj('None')
+        GD.GUI.setcurproj('None')
     the_project = None
 
 
@@ -133,8 +133,8 @@ def openScript(fn=None,exist=True,create=False):
             if (os.path.exists(template)):
                 shutil.copyfile(template,fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
-        GD.gui.setcurfile(fn)
-        GD.gui.history.add(fn)
+        GD.GUI.setcurfile(fn)
+        GD.GUI.history.add(fn)
         if create:
             editScript(fn)
     return fn

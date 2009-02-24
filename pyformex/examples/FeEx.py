@@ -617,17 +617,17 @@ def create_menu():
         ("---",None),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('FeEx',items=MenuData,parent=GD.gui.menu,before='help')
+    return widgets.Menu('FeEx',items=MenuData,parent=GD.GUI.menu,before='help')
 
  
 def show_menu():
     """Show the menu."""
-    if not GD.gui.menu.item('FeEx'):
+    if not GD.GUI.menu.item('FeEx'):
         create_menu()
 
 def close_menu():
     """Close the menu."""
-    m = GD.gui.menu.item('FeEx')
+    m = GD.GUI.menu.item('FeEx')
     if m :
         m.remove()
 

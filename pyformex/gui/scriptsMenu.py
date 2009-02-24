@@ -307,7 +307,7 @@ class ScriptsMenu(QtGui.QMenu):
         self.current = filename
         selected = self.fileName(filename)
         GD.debug("Playing script %s" % selected)
-        GD.gui.setcurfile(selected)
+        GD.GUI.setcurfile(selected)
         if self.autoplay:
             GD.debug("Drawing Options: %s" % GD.canvas.options)
             draw.reset()
@@ -346,7 +346,7 @@ class ScriptsMenu(QtGui.QMenu):
     ### THIS should be moved to a playAll function in draw/script module
     def runAllFiles(self,files,randomize=False):
         """Run all the scripts in given list."""
-        GD.gui.actions['Stop'].setEnabled(True)
+        GD.GUI.actions['Stop'].setEnabled(True)
         if randomize:
             random.shuffle(files)
         for f in files:
@@ -355,7 +355,7 @@ class ScriptsMenu(QtGui.QMenu):
             #GD.debug("draw.exitrequested == %s" % draw.exitrequested)
             if draw.exitrequested:
                 break
-        GD.gui.actions['Stop'].setEnabled(False)
+        GD.GUI.actions['Stop'].setEnabled(False)
 
 
     def runRandom(self):

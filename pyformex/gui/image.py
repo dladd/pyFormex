@@ -219,11 +219,11 @@ def save_window(filename,format,windowname=None):
     Else, the main pyFormex window is saved.
     """
     if windowname is None:
-        windowname = GD.gui.windowTitle()
-    GD.gui.raise_()
-    GD.gui.repaint()
-    GD.gui.toolbar.repaint()
-    GD.gui.update()
+        windowname = GD.GUI.windowTitle()
+    GD.GUI.raise_()
+    GD.GUI.repaint()
+    GD.GUI.toolbar.repaint()
+    GD.GUI.update()
     GD.canvas.makeCurrent()
     GD.canvas.raise_()
     GD.canvas.update()
@@ -241,15 +241,15 @@ def save_main_window(filename,format,border=False):
     window, using save_rect.
     This allows us to grab the border as well.
     """
-    GD.gui.repaint()
-    GD.gui.toolbar.repaint()
-    GD.gui.update()
+    GD.GUI.repaint()
+    GD.GUI.toolbar.repaint()
+    GD.GUI.update()
     GD.canvas.update()
     GD.app.processEvents()
     if border:
-        geom = GD.gui.frameGeometry()
+        geom = GD.GUI.frameGeometry()
     else:
-        geom = GD.gui.geometry()
+        geom = GD.GUI.geometry()
     x,y,w,h = geom.getRect()
     return save_rect(x,y,w,h,filename,format)
 
@@ -304,7 +304,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
     # Leave multisave mode if no filename or starting new multisave mode
     if multisave and (filename is None or multi):
         GD.message("Leave multisave mode")
-        QtCore.QObject.disconnect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
+        QtCore.QObject.disconnect(GD.GUI,QtCore.SIGNAL("Save"),saveNext)
         multisave = None
 
     if filename is None:
@@ -325,7 +325,7 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
         GD.message("Start multisave mode to files: %s (%s)" % (names.name,format))
         #print hotkey
         if hotkey:
-             QtCore.QObject.connect(GD.gui,QtCore.SIGNAL("Save"),saveNext)
+             QtCore.QObject.connect(GD.GUI,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
                  GD.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
         multisave = (names,format,window,border,hotkey,autosave,rootcrop)
@@ -404,11 +404,11 @@ def createMovie():
 def saveMovie(filename,format,windowname=None):
     """Create a movie from the pyFormex window."""
     if windowname is None:
-        windowname = GD.gui.windowTitle()
-    GD.gui.raise_()
-    GD.gui.repaint()
-    GD.gui.toolbar.repaint()
-    GD.gui.update()
+        windowname = GD.GUI.windowTitle()
+    GD.GUI.raise_()
+    GD.GUI.repaint()
+    GD.GUI.toolbar.repaint()
+    GD.GUI.update()
     GD.canvas.makeCurrent()
     GD.canvas.raise_()
     GD.canvas.update()
