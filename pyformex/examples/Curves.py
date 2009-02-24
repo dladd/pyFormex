@@ -32,8 +32,8 @@ from gui import widgets
 Examples showing the use of the 'curve' plugin
 
 level = 'normal'
-topics = ['geometry','curves']
-techniques = ['spline','solve','widgets','persistence']
+topics = ['geometry','curves','spline',]
+techniques = ['solve','widgets','persistence']
 """
 
 def BezierCurve(X,curl=None,closed=False):

@@ -25,7 +25,7 @@
 """Isopar
 
 level = 'normal'
-topics = ['geometry']
+topics = ['geometry','isopar']
 techniques = ['dialog', 'colors']
 
 """
