@@ -58,15 +58,12 @@ See the question above
 \begin{enumerate}
 \trick{Set the directory where a script is found as the current working directory}
 %----------------------------------------------------------------------
-Start your script with the following code snippet:
+Start your script with the following:
 \begin{verbatim}
-import os
-os.chdir(os.path.dirname(GD.cfg['curfile']))
+chdir(__file__)
 \end{verbatim}
-or the equivalent shortcut:
-\begin{verbatim}
-workHere()
-\end{verbatim}
+When executing a script, \pyf sets the name of the script file in a variable \var{__file__} passed with the global variables to the execution environment of the script.
+
 
 \trick{Import modules from your own script directories}
 %------------------------------------------------------

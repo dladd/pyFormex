@@ -455,7 +455,7 @@ def chdir(fn):
     
     If fn does not exist, nothing is done.
     """
-    if os.path.exists:
+    if os.path.exists(fn):
         if not os.path.isdir(fn):
             fn = os.path.dirname(fn)
         os.chdir(fn)
@@ -465,7 +465,8 @@ def chdir(fn):
 
 def workHere():
     """Change the current working directory to the script's location."""
-    chdir(__file__)
+    GD.message("workHere is deprecated: use chdir(_file__) instead")
+    chdir(GD.PF.get('curfile',''))
 
 
 def runtime():
