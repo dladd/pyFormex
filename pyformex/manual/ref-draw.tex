@@ -526,7 +526,19 @@ The \pyformex drawing engine has multiple rendering modes. Depending on the task
 The different rendering modes in \pyformex are:
 \begin{description}
   \item[wireframe] All objects are displayed only with lines marking its edges. A line element is drawn as a line; a triangle element is drawn as three lines along its border. The wireframe mode permits transparency through the model and is computationally efficient. It is the default mode and mostly used during model construction.
-  \item[smooth] Smooth rendering will try to display the objects in a very realisitc way. 
+
+  \item[smooth] Smooth rendering will show the objects in a more realistic way. Objects are rendered in a lighted scenery. The optical characteristics of the global scene and of the individual object surfaces can be changed. Individual elements of an object can have more than one color. 
+
+Lighting is on by default in this mode, but can be switched off to provide a higher color saturation.
+
+\item[flat] In flat rendering, each individual element of an object can only have one color. Drawing with multiple colors per element will result in the element being drawn in the last specified color for the element. 
+
+Lighting is off by default in this mode, but can be switched on.
+
+\item[smoothwire] This mode is much like smooth mode, but all objects are drawn twice: once in smooth mode, and once in wireframe mode.
+
+\item[flatwire]  THis mode combines the flat and wireframe modes.
+
 \end{description}
 
 
@@ -538,80 +550,17 @@ The following convenience functions provide an easy alternative for switching to
     
 \begin{funcdesc}{wireframe}{}
 \end{funcdesc}
-\begin{funcdesc}{flat}{}
-\end{funcdesc}
-\begin{funcdesc}{flatwire}{}
-\end{funcdesc}
 \begin{funcdesc}{smooth}{}
 \end{funcdesc}
 \begin{funcdesc}{smoothwire}{}
 \end{funcdesc}
+\begin{funcdesc}{flat}{}
+\end{funcdesc}
+\begin{funcdesc}{flatwire}{}
+\end{funcdesc}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section{Utilities}
-\label{sec:utilities}
-
-The \Code{pyformex.utils} module provides general functions and classes that are used in different places of \pyformex. Some of these functions may be very useful to the user and are described below.
-
-\begin{classdesc}{NameSequence}{}
-A class for autogenerating sequences of names.
-
-The name includes a numeric part, whose number is incremented
-at each call of the 'next()' method.
-
-This class is often used for automatically generating filename families.
-    
-\begin{memberdesc}{__init__}{name,ext=''}
-Create a new NameSequence from name,ext.
-
-If the name starts with a non-numeric part, it is taken as a constant part.
-If the name ends with a numeric part, the next generated names will
-be obtained by incrementing this part.
-If not, a string '-000' will be appended and names will be generated
-by incrementing this part.
-
-If an extension is given, it will be appended as is to the names.
-This makes it possible to put the numeric part anywhere inside the
-names.
-
-Examples:
-\Code{NameSequence('hallo.98')} will generate names hallo.98, hallo.99, hallo.100, ...
-\Code{NameSequence('hallo','.png')} will generate names hallo-000.png, hallo-001.png, ...
-\Code{NameSequence('/home/user/hallo23','5.png')} will generate names
-/home/user/hallo235.png, /home/user/hallo245.png, ...
-"""
-\end{memberdesc}
-
-\begin{memberdesc}{next}
-Returns the next name in the sequence.
-\end{memberdesc}
-
-\begin{memberdesc}{peek}
-Returns the next name in the sequence without actually incrementing the counter.
-The next call to peek() or next() will return the same name.
-\end{memberdesc}
-
-\begin{memberdesc}{glob}
-Returns a UNIX-style glob pattern for the generated names.
-
-A NameSequence is often used as a generator for file names.
-The glob() method returns a pattern that can be used in a
-UNIX-like shell command to select all the generated file names.
-\end{memberdesc}
-\end{classdesc}
-
-
-\begin{funcdesc}{splitEndDigits}{s}
-    Split a string in any prefix and a numerical end sequence.
-
-    A string like 'abc-0123' will be split in 'abc-' and '0123'.
-    Any of both can be empty.
-\end{funcdesc} 
-
-
-
 
 %%% Local Variables: 
 %%% mode: latex
