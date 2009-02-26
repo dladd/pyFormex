@@ -111,6 +111,7 @@ class Model(Dict):
 
         The model can have node and element property numbers.
         """
+        Dict.__init__(self)
         if not type(elems) == list:
             elems = [ elems ]
         self.coords = Coords(coords)
@@ -221,8 +222,6 @@ class Model(Dict):
         self.coords = self.coords[oldnew]
         self.elems = [ Connectivity(newold[e]) for e in self.elems ]
         return oldnew,newold
-
-
 
         
 def mergedModel(*args):

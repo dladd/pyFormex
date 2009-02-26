@@ -148,7 +148,7 @@ class Connectivity(ndarray):
         nodes 0-1.
         The node numbering in the edges is always lowest node number first.
 
-        The inverse operation is compactElems.
+        The inverse operation can be obtained from function compactElems.
         """
         nelems,nplex = self.shape
         n = arange(nplex)

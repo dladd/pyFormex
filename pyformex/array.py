@@ -35,6 +35,18 @@ Float = float32
 Int = int32
 
 
+def growAxis(a,size,fill=0,axis=0):
+    """Grow a single array axis to the given size and fill with given value."""
+    if axis >= len(a.shape):
+        raise ValueError,"No such axis number!"
+    if size <= a.shape[axis]:
+        return a
+    else:
+        missing = list(a.shape)
+        missing[axis] = size-missing[axis]
+        return concatenate([a,fill * ones(missing,dtype=a.dtype)],axis=axis)
+
+
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
 
