@@ -100,7 +100,7 @@ class Connectivity(ndarray):
         return self.shape[0]
     
     def nplex(self):
-        return self.shape[-1]
+        return self.shape[1]
 
     def Max(self):
         if self.magic is None:
