@@ -38,7 +38,6 @@ import marks
 import utils
 
 
-
 def gl_pickbuffer():
     "Return a list of the 2nd numbers in the openGL pick buffer."
     buf = GL.glRenderMode(GL.GL_RENDER)
@@ -397,7 +396,6 @@ class Canvas(object):
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
-        #GD.debugt("UPDATING CURRENT OPENGL CANVAS")
         GL.glFlush()
         
 
@@ -435,7 +433,7 @@ class Canvas(object):
         self.glLight(self.lighting)
         
         # draw the highlighted actors
-        self.camera.loadProjection()
+        self.camera.loadProjection(oldmode=GD.options.oldzoom)
         self.camera.loadMatrix()
         if self.highlights:
             for actor in self.highlights:
@@ -645,41 +643,39 @@ class Canvas(object):
         X0,X1 = self.bbox
         center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
-        dsize = length(X1-X0)
-        if dsize <= 0.0:
-            dsize = 1.0
-        #GD.debug("CENTER: %s" % center)
         self.camera.setCenter(*center)
         if angles:
             self.camera.setAngles(angles)
-
-        size_0 = self.bbox[1] - self.bbox[0]
-        size_1 = dot(size_0,self.camera.rot[:3,:3])
         
         # Currently, we keep the default fovy/aspect
         # and change the camera distance to focus
         fovy = self.camera.fovy
         #GD.debug("FOVY: %s" % fovy)
         self.camera.setLens(fovy,self.aspect)
-        hsize = max(abs(size_1[0]),abs(size_1[1])/self.aspect)
         # Default correction is sqrt(3)
         correction = float(GD.cfg.get('gui/autozoomfactor',1.732))
-
-        if GD.options.testautozoom:
-            print "SIZE_0 %s" % size_0
-            print "SIZE_1 %s" % size_1
-            print "HSIZE %s" % hsize 
-            print "DSIZE %s" % dsize
-            dsize = hsize
-            correction = 1.
-        
         tf = tand(fovy/2.)
-        #dist = (dsize/tf - 0.5*dsize) / correction
-        dist = dsize/tf / correction
-        #print "dsize = %s; tg fovy/2 = %s; dist = %s" % (dsize,tf,dist)
+        if GD.options.oldzoom:
+            dsize = length(X1-X0)
+            dist = dsize/tf / correction
+
+        else:
+            import simple,coords
+            bbix = simple.regularGrid(X0,X1,[1,1,1])
+            bbix = dot(bbix,self.camera.rot[:3,:3])
+            bbox = coords.Coords(bbix).bbox()
+            dx,dy = bbox[1][:2] - bbox[0][:2]
+            hsize = max(dx,dy/self.aspect)
+            offset = abs(bbox[1][2]+bbox[0][2])
+            #print "hsize,offset = %s,%s" % (hsize,offset)
+            dist = (hsize/tf + offset) / correction
+            #print "new dist = %s" % (dist)
+        
         if dist == nan or dist == inf:
             GD.debug("DIST: %s" % dist)
-            return 
+            return
+        if dist <= 0.0:
+            dist = 1.0
         self.camera.setDist(dist)
         self.camera.setClip(0.01*dist,100.*dist)
 
@@ -691,6 +687,69 @@ class Canvas(object):
             GD.debug("DIST: %s" % dist)
             return 
         self.camera.setDist(dist)
+
+
+
+    def unProject(self,x,y,z):
+        "Map the window coordinates (x,y,z) to object coordinates."""
+        self.makeCurrent()
+        #y = vp.h-y
+        model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+        proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
+        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        print "Modelview matrix:",model
+        print "Projection matrix:",proj
+        print "Viewport:",view
+        print "Point:",str((x,y,z)) 
+        objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
+        print "Coordinates: ",x,y," map to ",objx,objy
+        return (objx,objy,objz)
+
+
+    def unProject2(self,x,y,z):
+        "Map the window coordinates (x,y,z) to object coordinates."""
+        model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+        proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
+        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        print "Modelview matrix:",model
+        print "Projection matrix:",proj
+        print "Viewport:",view
+        print "Point:",str((x,y,z)) 
+        objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
+        print "Coordinates: ",x,y," map to ",objx,objy
+        return (objx,objy,objz)
+
+
+    def zoomRectangle(self,x,y,rw,rh,vp):
+        """Rectangle zooming
+
+        x,y, is the new center (in the z-plane of the current camera center
+        """
+        w,h = (self.width(),self.height())
+        print "x,y,w,h",x,y,w,h
+        x,y = x-w/2, h/2-y
+        ctr = self.camera.getCenter()
+        wctr = GLU.gluProject(*ctr)
+        yctr = GLU.gluUnProject(*wctr)
+        tf = tand(self.camera.fovy/2)
+        dist = self.camera.getDist()
+        xmax = dist * tf
+        ymax = xmax * self.camera.aspect
+        print "xmax,ymax = %s,%s" % (xmax,ymax)
+        print "Old center: %s = %s" % (ctr,wctr)
+        print "Bactrf = %s" % str(yctr)
+        pt = [x,y,wctr[2]]
+        print "Point %s" % str(pt)
+        newctr = self.unProject(*pt)
+        print "New center: %s" % str(newctr)
+        newctr = GLU.gluUnProject(*pt)
+        print "New center: %s" % str(newctr)
+        self.camera.setCenter(*newctr)
+        rw = max(rw,1)
+        rh = max(rh,1)
+        factor = min(rw/w,rh/h) 
+        print "Zoom factor %s" % factor
+        self.zoom(factor)
 
 
     def saveBuffer(self):

@@ -258,9 +258,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         GD.debug("START RECTANGLE ZOOM")
         self.setMouse(LEFT,self.mouse_rectangle_zoom)
         self.setCursorShape('pick')
+        print GD.canvas.camera.report()
 
     def finish_rectangle_zoom(self):
         GD.debug("END RECTANGLE ZOOM")
+        self.update()
+        print GD.canvas.camera.report()
         self.setCursorShape('default')
         self.setMouse(LEFT,self.dynarot)
 
@@ -275,7 +278,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             self.begin_2D_drawing()
-            self.swapBuffers()
+            #self.swapBuffers()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
             GL.glLogicOp(GL.GL_INVERT)        
@@ -302,6 +305,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                w,h = GD.cfg.get('pick/size',(20,20))
             vp = GL.glGetIntegerv(GL.GL_VIEWPORT)
             self.pick_window = (x,y,w,h,vp)
+            self.zoomRectangle(x,y,w,h,vp)
+            self.finish_rectangle_zoom()
 
 
     def start_selection(self,mode,filtr):

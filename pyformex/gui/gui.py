@@ -732,7 +732,10 @@ See Help->License or the file COPYING for details.
         draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
 
     # remaining args are interpreted as scripts and their parameters
-    script.runApp(args)
+    try:
+        script.runApp(args)
+    except:
+        GD.message("There was an error while executing one of the scripts")
     
     # Go into interactive mode
     GD.debug("Start main loop")

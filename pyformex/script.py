@@ -246,7 +246,6 @@ def playScript(scr,name=None,filename=None,argv=[]):
     scriptRunning = True
     exitrequested = False
 
-    print GD.GUI
     if GD.GUI:
         global stepmode,exportNames,starttime
         GD.debug('GUI SCRIPT MODE %s'% (stepmode))
@@ -471,6 +470,7 @@ def chdir(fn):
         GD.message("Your current workdir is %s" % os.getcwd())
 
 
+# Deprecated: this should be removed
 def workHere():
     """Change the current working directory to the script's location."""
     GD.message("workHere is deprecated: use chdir(_file__) instead")
@@ -492,11 +492,14 @@ def runApp(args):
 
     while len(args) > 0:
         fn = args.pop(0)
-        print os.getcwd()
-        if os.path.exists(fn) and utils.isPyFormex(fn):
+        if not os.path.exists(fn) or not utils.isPyFormex(fn):
+            GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
+            continue
+        try:
             playFile(fn,args)
-        else:
-            raise RuntimeError,"No such pyFormex script found: %s" % fn
+        except:
+            GD.message("Error during execution of script %s" % fn)
+        
 
     return 0
 

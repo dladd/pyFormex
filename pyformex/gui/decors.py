@@ -171,21 +171,6 @@ def drawText2D(text, x,y, font='9x15', adjust='left'):
     drawGlutText(text,font)
 
 
-def unProject(x,y,win):
-    "Map the window coordinates (x,y) to object coordinates."""
-    win.makeCurrent()
-    y = win.h-y
-    model = GL.glGetFloatv(GL_MODELVIEW_MATRIX)
-    proj = GL.glGetFloatv(GL_PROJECTION_MATRIX)
-    view = GL.glGetIntegerv(GL_VIEWPORT)
-    # print "Modelview matrix:",model
-    # print "Projection matrix:",proj
-    # print "Viewport:",view
-    objx, objy, objz = GLU.gluUnProject(x,y,0.0,model,proj,view)
-    print "Coordinates: ",x,y," map to ",objx,objy
-    return (objx,objy)
-
-
 ### Decorations ###############################################
 
 

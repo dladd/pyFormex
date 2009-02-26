@@ -192,11 +192,12 @@ class Camera:
         """Return a report of the current camera settings."""
         return """Camera Settings:
   Center: %s
-  Rotation Matrix: %s
   Distance: %s
+  Rotation Matrix:
+  %s
   Field of View y: %s
   Aspect Ratio: %s
-""" % (self.ctr,self.rot,self.dist,self.fovy,self.aspect)
+""" % (self.ctr,self.dist,self.rot,self.fovy,self.aspect)
 
         
     def dolly(self,val):
@@ -414,7 +415,7 @@ class Camera:
             self.fovy *= val
         self.lensChanged = True
 
-    def loadProjection(self,force=False,pick=None):
+    def loadProjection(self,force=False,pick=None,oldmode=False):
         """Load the projection/perspective matrix.
 
         The caller will have to setup the correct GL environment beforehand.
@@ -435,10 +436,12 @@ class Camera:
             if pick:
                 GLU.gluPickMatrix(*pick)
             if self.perspective:
-                GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
-##                 fv = tand(self.fovy*0.5) * self.near
-##                 fh = fv * self.aspect
-##                 GL.glFrustum(-fh,fh,-fv,fv,self.near,self.far)
+                if oldmode:
+                    GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
+                else:
+                    fv = tand(self.fovy*0.5) * self.near
+                    fh = fv * self.aspect
+                    GL.glFrustum(-fh,fh,-fv,fv,self.near,self.far)
             else:
                 fv = tand(self.fovy*0.5) * self.dist
                 fh = fv * self.aspect
