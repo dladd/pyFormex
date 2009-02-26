@@ -426,6 +426,21 @@ def drawPlane(P,N,size):
     return actor
 
 
+def drawMarks(X,M,color=colors.black):
+    """Draw a list of marks at pioints X.
+
+    X is an Coords array.
+    M is a list with the same length as X.
+    The string representation of the marks are drawn at the corresponding
+    3D coordinate.
+    """
+    M = marks.MarkList(X,M,color=color)
+    GD.canvas.addAnnotation(M)
+    GD.canvas.numbers = M
+    GD.canvas.update()
+    return M
+
+
 def drawNumbers(F,color=colors.black,trl=None,offset=0):
     """Draw numbers on all elements of F.
 
@@ -437,11 +452,7 @@ def drawNumbers(F,color=colors.black,trl=None,offset=0):
     FC = F.centroids()
     if trl is not None:
         FC = FC.trl(trl)
-    M = marks.MarkList(FC,numpy.arange(FC.shape[0])+offset,color=color)
-    GD.canvas.addAnnotation(M)
-    GD.canvas.numbers = M
-    GD.canvas.update()
-    return M
+    return drawMarks(FC,numpy.arange(FC.shape[0])+offset,color=color)
 
 
 def drawVertexNumbers(F,color=colors.black,trl=None):
@@ -455,11 +466,7 @@ def drawVertexNumbers(F,color=colors.black,trl=None):
     FC = F.f.reshape((-1,3))
     if trl is not None:
         FC = FC.trl(trl)
-    M = marks.MarkList(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
-    GD.canvas.addAnnotation(M)
-    GD.canvas.numbers = M
-    GD.canvas.update()
-    return M
+    return drawMarks(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
 
 
 def drawText3D(P,text,color=colors.black,font=None):
