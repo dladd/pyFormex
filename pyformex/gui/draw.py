@@ -145,9 +145,11 @@ def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
     if cur is None:
         cur = GD.cfg['workdir']
     if os.path.isdir(cur):
-        cur += '/'
-    fn = os.path.basename(cur)
-    cur = os.path.dirname(cur)
+        fn = ''
+    else:
+        fn = os.path.basename(cur)
+        cur = os.path.dirname(cur)
+    #GD.debug("cur,fn: %s,%s" % (cur,fn))
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
         w.selectFile(fn)

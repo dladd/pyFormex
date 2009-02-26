@@ -56,10 +56,13 @@ class FileSelection(QtGui.QFileDialog):
     def __init__(self,path,pattern=None,exist=False,multi=False,dir=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
+        #print path
         if os.path.isfile(path):
+            #print "path is a file"
             self.setDirectory(os.path.dirname(path))
             self.selectFile(path)
         else:
+            #print "path is a dir"
             self.setDirectory(path)
         if type(pattern) == str:
             self.setFilter(pattern)

@@ -94,9 +94,13 @@ class ODict(dict):
     def __setitem__(self,key,value):
         """Allows items to be set using self[key] = value."""
         dict.__setitem__(self,key,value)
-        if key in self._order:
-            self._order.remove(key)
-        self._order.append(key)
+# setting an item should not change the order!
+# If you want to change the order, first remove the item
+##         if key in self._order:
+##             self._order.remove(key)
+##         self._order.append(key)
+        if key not in self._order:
+            self._order.append(key)
 
 
     def __delitem__(self,key):
@@ -156,7 +160,13 @@ class ODict(dict):
 
 
 class KeyList(ODict):
-    """A named item list"""
+    """A named item list.
+
+    A KeyList is a list of lists or tuples. Each item (sublist or tuple)
+    should at least have 2 elements: the first one is used as a key to
+    identify the item, but is also part of the information (value) of the
+    item.
+    """
     
     def __init__(self,alist=[]):
         """Create a new KeyList, possibly filling it with data.
@@ -169,6 +179,7 @@ class KeyList(ODict):
         if min(L) < 2:
             raise ValueEror,"All items in the data should have length >= 2"
         ODict.__init__(self,[[i[0],i[1:]] for i in alist])
+        print self
     
 
     def items(self):
@@ -231,6 +242,12 @@ if __name__ == "__main__":
     print D.keys()
     print D.values()
     print D.items()
+
+    D[1] += 7
+    D[3] += 8
+
+    print D.items()
+
     
     
 # End
