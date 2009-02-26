@@ -1013,7 +1013,7 @@ class TriSurface(object):
 
 
     def borderEdgeNrs(self):
-        """Returns the numbers of the border edeges."""
+        """Returns the numbers of the border edges."""
         return where(self.nEdgeConnected() <= 1)[0]
 
 
@@ -1375,31 +1375,48 @@ Total area: %s; Enclosed volume: %s
 
     def smoothLowPass(self,n_iterations=2,lambda_value=0.5):
         """Smooth the surface using a low-pass filter."""
-        mu_value = -1.02*lambda_value
-        adj = adjacencyList(self.edges)
+        k = 0.1
+        mu_value = -lambda_value/(1-k*lambda_value)
+        # find adjacency
+        adj = adjacencyArray(self.edges)
+        # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
         inter_vertex[unique1d(self.edges[bound_edges])] = False
-        inter_vertices = where(inter_vertex)[0]
+        # calculate weights
+        w = ones(adj.shape,dtype=float)
+        w[adj<0] = 0.
+        val = (adj>=0).sum(-1).reshape(-1,1)
+        w /= val
+        w = w.reshape(adj.shape[0],adj.shape[1],1)
+        # recalculate vertices
         p = self.coords
-        for step in range(n_iterations):
-            p[inter_vertex] = asarray([p[i] + lambda_value*(p[adj[i]]-p[i]).mean(0) for i in inter_vertices])
-            p[inter_vertex] = asarray([p[i] + mu_value*(p[adj[i]]-p[i]).mean(0) for i in inter_vertices])
-    
-    
+        for step in range(n_iterations/2):
+            p[inter_vertex] = p[inter_vertex] + lambda_value*(w[inter_vertex]*(p[adj[inter_vertex]]-p[inter_vertex].reshape(-1,1,3))).sum(1)
+            p[inter_vertex] = p[inter_vertex] + mu_value*(w[inter_vertex]*(p[adj[inter_vertex]]-p[inter_vertex].reshape(-1,1,3))).sum(1)
+
+
     def smoothLaplaceHC(self,n_iterations=2,lambda_value=0.5,alpha=0.,beta=0.2):
         """Smooth the surface using a Laplace filter and HC algorithm."""
-        adj = adjacencyList(self.edges)
+        # find adjacency
+        adj = adjacencyArray(self.edges)        
+        # find interior vertices
         bound_edges = self.borderEdgeNrs()
         inter_vertex = resize(True,self.ncoords())
         inter_vertex[unique1d(self.edges[bound_edges])] = False
-        inter_vertices = where(inter_vertex)[0]    
+        # calculate weights
+        w = ones(adj.shape,dtype=float)
+        w[adj<0] = 0.
+        val = (adj>=0).sum(-1).reshape(-1,1)
+        w /= val
+        w = w.reshape(adj.shape[0],adj.shape[1],1)
+        # recalculate vertices
         o = self.coords.copy()
         p = self.coords
         for step in range(n_iterations):
-            pn = [ p[i] + lambda_value*(p[adj[i]]-p[i]).mean(0) for i in range(len(adj)) ]
+            pn = p + lambda_value*(w*(p[adj]-p.reshape(-1,1,3))).sum(1)
             b = pn - (alpha*o + (1-alpha)*p)
-            p[inter_vertex] = asarray([pn[i] - (beta*b[i] + (1-beta)*b[adj[i]].mean(0)) for i in inter_vertices])
+            p[inter_vertex] = pn[inter_vertex] - (beta*b[inter_vertex] + (1-beta)*(w[inter_vertex]*b[adj[inter_vertex]]).sum(1))
 
 
 ########################## Methods using GTS #############################

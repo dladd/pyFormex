@@ -278,6 +278,37 @@ def adjacencyList(elems):
     return [ list(elems[w[0],1-w[1]]) for w in ok ]
 
 
+def adjacencyArray(elems,maxcon=3):
+    """Create adjacency array for 2-node elements."""
+    if len(elems.shape) != 2 or elems.shape[1] != 2:
+        raise ValueError,"""Expected a set of 2-node elements."""
+    nr,nc = elems.shape
+    mr = elems.max() + 1
+    mc = maxcon*nc
+    # start with all -1 flags, maxcon*nc columns (because in each column
+    # of elems, some number might appear with multiplicity maxcon)
+    adj = zeros((mr,mc),dtype=elems.dtype) - 1
+    i = 0 # column in adj where we will store next result
+    for c in range(nc):
+        col = elems[:,c].copy()  # make a copy, because we will change it
+        while(col.max() >= 0):
+            # we still have values to process in this column
+            pos,uniq = unique1d(col,True)
+            #put the unique values at a unique position in reverse index
+            ok = uniq >= 0
+            if i >= adj.shape[1]:
+                # no more columns available, expand it
+                adj = concatenate([adj,zeros_like(adj)-1],axis=-1)
+            adj[uniq[ok],i] = elems[:,1-c][pos[ok]]
+            i += 1
+            # remove the stored values from elems
+            col[pos[ok]] = -1
+    adj.sort(axis=-1)
+    maxc = adj.max(axis=0)
+    adj = adj[:,maxc>=0]
+    return adj
+
+
 def connected(index,i):
     """Return the list of elements connected to element i.
 

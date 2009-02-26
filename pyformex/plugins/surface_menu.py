@@ -750,6 +750,12 @@ def smoothLowPass():
         res = askItems([('lambda_value',0.5),
                 ('n_iterations',2)],'Low-pass filter')
         if res:
+            if not 0.0 <= res['lambda_value'] <= 1.0:
+                warning("Lambda should be between 0 and 1.")
+                return
+            if not mod(res['n_iterations'],2) == 0:
+                warning("An even number of iterations is required.")
+                return
             selection.remember(True)
             S.smoothLowPass(res['n_iterations'],res['lambda_value'])
             selection.drawChanges()
@@ -762,6 +768,15 @@ def smoothLaplaceHC():
         res = askItems([('lambda_value',0.5),
                 ('n_iterations',2),('alpha',0.),('beta',0.2)],'Laplace filter and HC algorithm')
         if res:
+            if not 0.0 <= res['lambda_value'] <= 1.0:
+                warning("Lambda should be between 0 and 1.")
+                return
+            if not 0.0 <= res['alpha'] <= 1.0:
+                warning("Alpha should be between 0 and 1.")
+                return
+            if not 0.0 <= res['beta'] <= 1.0:
+                warning("Beta should be between 0 and 1.")
+                return            
             selection.remember(True)
             S.smoothLaplaceHC(res['n_iterations'],res['lambda_value'],res['alpha'],res['beta'])
             selection.drawChanges()
@@ -1051,6 +1066,9 @@ def smooth():
                         ('verbose',False),
                         ],'Laplacian Smoothing')
         if res:
+            if not 0.0 <= res['lambda_value'] <= 1.0:
+                warning("Lambda should be between 0 and 1.")
+                return
             selection.remember()
             if res['fold_smoothing'] is not None:
                 res['fold_smoothing'] = float(res['fold_smoothing'])
