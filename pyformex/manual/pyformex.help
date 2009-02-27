@@ -23,9 +23,9 @@ Options:
   --classify         classify the examples in categories
   --whereami         show where the pyformex package is located
   --remove           remove the pyformex installation
+  --oldzoom          revert to old zooming mode
   --test             testing mode: only for developers!
   --testdraw         draw testing mode: only for developers!
-  --testautozoomt    autozoom testing mode: only for developers!
   --testhighlight    highlight testing mode: only for developers!
   --executor         test alternate executor: only for developers!
   --version          show program's version number and exit

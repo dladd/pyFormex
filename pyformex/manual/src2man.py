@@ -61,5 +61,5 @@ def get_docs(fileName):
 if __name__ == "__main__":
     import sys
     for a in sys.argv[1:]:
-        #convert(a)
-        print get_docs(a)
+        convert(a)
+        #print get_docs(a)
