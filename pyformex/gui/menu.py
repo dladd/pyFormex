@@ -42,34 +42,34 @@ save = NotImplemented
 saveAs = NotImplemented
 
 def editor():
-    if pyformex.gui.editor:
+    if pyformex.GUI.editor:
         print "Close editor"
-        pyformex.gui.closeEditor()
+        pyformex.GUI.closeEditor()
     else:
         print "Open editor"
-        pyformex.gui.showEditor()
+        pyformex.GUI.showEditor()
 
  
 def resetGUI():
-    pyformex.gui.setBusy(False)
-    pyformex.gui.actions['Play'].setEnabled(True)
-    pyformex.gui.actions['Step'].setEnabled(True)
-    pyformex.gui.actions['Continue'].setEnabled(False)
-    pyformex.gui.actions['Stop'].setEnabled(False)
+    pyformex.GUI.setBusy(False)
+    pyformex.GUI.actions['Play'].setEnabled(True)
+    pyformex.GUI.actions['Step'].setEnabled(True)
+    pyformex.GUI.actions['Continue'].setEnabled(False)
+    pyformex.GUI.actions['Stop'].setEnabled(False)
 
   
 
 def addViewport():
     """Add a new viewport."""
-    n = len(pyformex.gui.viewports.all)
+    n = len(pyformex.GUI.viewports.all)
     if n < 4:
-        pyformex.gui.viewports.addView(n/2,n%2)
+        pyformex.GUI.viewports.addView(n/2,n%2)
 
 def removeViewport():
     """Remove a new viewport."""
-    n = len(pyformex.gui.viewports.all)
+    n = len(pyformex.GUI.viewports.all)
     if n > 1:
-        pyformex.gui.viewports.removeView()
+        pyformex.GUI.viewports.removeView()
 
 
 def viewportSettings():
@@ -82,23 +82,23 @@ def viewportSettings():
 
 def printwindow():
     pyformex.app.syncX()
-    r = pyformex.gui.frameGeometry()
+    r = pyformex.GUI.frameGeometry()
     print "Qt4 geom(w,h,x,y): %s,%s,%s,%s" % (r.width(),r.height(),r.x(),r.y())
-    print "According to xwininfo, (x,y) is %s,%s" % pyformex.gui.XPos()
+    print "According to xwininfo, (x,y) is %s,%s" % pyformex.GUI.XPos()
 
 
 _geometry=None
 
 def saveGeometry():
     global _geometry
-    _geometry = pyformex.gui.saveGeometry()
+    _geometry = pyformex.GUI.saveGeometry()
 
 def restoreGeometry():
-    pyformex.gui.restoreGeometry(_geometry)
+    pyformex.GUI.restoreGeometry(_geometry)
 
 
 def moveCorrect():
-    pyformex.gui.move(*pyformex.gui.XPos())
+    pyformex.GUI.move(*pyformex.GUI.XPos())
 
 
 ActionMenuData = [
