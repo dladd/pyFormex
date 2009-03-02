@@ -28,6 +28,7 @@ These are general utility functions that depend on the numpy array model.
 """
 
 from numpy import *
+from pyformex import odict
 
 
 # default float and int types
@@ -122,6 +123,26 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
             return error
     return uniq
     
+
+def collectOnLength(items):
+    """Collect items with same length.
+
+    a is a list of items of any type for which the function len()
+    returns an integer value.
+    The items are sorted in a number of bins, each containing the
+    items with the same length.
+    The return value is a tuple of:
+    - a list of bins with the sorted items,
+    - a list of indices of these items in the input list,
+    - a list of lengths of the bins,
+    - a list of the item length in each bin.
+    """
+    np = array([ len(e) for e in items ])
+    itemlen = unique1d(np)
+    itemnrs = [ where(np==p)[0] for p in itemlen ]
+    itemgrps = [ odict.listSelect(items,i) for i in itemnrs ]
+    itemcnt = [ len(i) for i in itemnrs ]
+    return itemgrps,itemnrs,itemcnt,itemlen
     
 
 # End
