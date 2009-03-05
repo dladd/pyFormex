@@ -16,79 +16,105 @@ module.
 
 
 
-\begin{funcdesc}{rename}{}
-Rename the global variables in oldnames to newnames.
+\begin{funcdesc}{Globals}{}
+Return the globals that are passed to the scripts on execution.
+
+    This basically contains the globals defined in draw.py, colors.py,
+    and formex.py, as well as the globals from numpy.
+    It also contains the definitions put into the pyformex.PF, by
+    preference using the export() function.
+    During execution of the script, the global variable __name__ will be
+    set to either 'draw' or 'script' depending on whether the script
+    was executed in the 'draw' module (--gui option) or the 'script'
+    module (--nogui option).
+    
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{named}{}
-Returns the global object named name.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{export2}{}
-Export a list of names and values.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{forget}{}
-Remove the global variables specified in list.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{formatInfo}{}
-Return formatted information about a Formex.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{workHere}{}
-Change the current working directory to the script's location.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{force_finish}{}
-
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{warning}{}
-
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{export}{}
+\begin{funcdesc}{export}{dic}
 Export the variables in the given dictionary.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{runtime}{}
-Return the time elapsed since start of execution of the script.
+\begin{funcdesc}{export2}{names,values}
+Export a list of names and values.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{stopatbreakpt}{}
-Set the exitrequested flag.
+\begin{funcdesc}{forget}{names}
+Remove the global variables specified in list.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{printconfig}{}
+\begin{funcdesc}{rename}{oldnames,newnames}
+Rename the global variables in oldnames to newnames.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{listAll}{clas=None,dic=None}
+Return a list of all objects in dic that are of given clas.
+
+    If no class is given, Formex objects are sought.
+    If no dict is given, the objects from both GD.PF and locals()
+    are returned.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{named}{name}
+Returns the global object named name.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{ask}{question,choices=None,default=???}
+Ask a question and present possible answers.
+
+    If no choices are presented, anything will be accepted.
+    Else, the question is repeated until one of the choices is selected.
+    If a default is given and the value entered is empty, the default is
+    substituted.
+    Case is not significant, but choices are presented unchanged.
+    If no choices are presented, the string typed by the user is returned.
+    Else the return value is the lowest matching index of the users answer
+    in the choices list. Thus, ask('Do you agree',['Y','n']) will return
+    0 on either 'y' or 'Y' and 1 on either 'n' or 'N'.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{ack}{question}
+Show a Yes/No question and return True/False depending on answer.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{error}{message}
+Show an error message and wait for user acknowlegement.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{warning}{message}
 
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{system}{}
+\begin{funcdesc}{showInfo}{message}
+
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{system}{cmdline,result=???}
 Run a command and return its output.
 
     If result == 'status', the exit status of the command is returned.
@@ -99,13 +125,7 @@ Run a command and return its output.
 \end{funcdesc}
 
 
-\begin{funcdesc}{exit}{}
-Exit from the current script or from pyformex if no script running.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{playScript}{}
+\begin{funcdesc}{playScript}{scr,name=None,filename=None,argv=???}
 Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
@@ -123,58 +143,19 @@ Play a pyformex script scr. scr should be a valid Python text.
 \end{funcdesc}
 
 
-\begin{funcdesc}{play}{}
-Play a formex script from file fn or from the current file.
-
-    This function does nothing if no file is passed or no current
-    file was set.
-    
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{runApp}{}
-Run the application without gui.
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{printglobals}{}
+\begin{funcdesc}{force_finish}{}
 
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{playFile}{}
-Play a formex script from file fn.
+\begin{funcdesc}{step_script}{s,glob,paus=True}
 
-    fn is the name of a file holding a pyFormex script.
-    A list of arguments can be passed. They will be available under the name
-    argv. This variable can be changed by the script and the resulting argv
-    is returned to the caller.
-    
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{ask}{}
-Ask a question and present possible answers.
-
-    If no choices are presented, anything will be accepted.
-    Else, the question is repeated until one of the choices is selected.
-    If a default is given and the value entered is empty, the default is
-    substituted.
-    Case is not significant, but choices are presented unchanged.
-    If no choices are presented, the string typed by the user is returned.
-    Else the return value is the lowest matching index of the users answer
-    in the choices list. Thus, ask('Do you agree',['Y','n']) will return
-    0 on either 'y' or 'Y' and 1 on either 'n' or 'N'.
-    
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{breakpt}{}
+\begin{funcdesc}{breakpt}{msg=None}
 Set a breakpoint where the script can be halted on a signal.
 
     If an argument is specified, it will be written to the message board.
@@ -186,7 +167,59 @@ Set a breakpoint where the script can be halted on a signal.
 \end{funcdesc}
 
 
-\begin{funcdesc}{showInfo}{}
+\begin{funcdesc}{enableBreak}{mode=True}
+
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{stopatbreakpt}{}
+Set the exitrequested flag.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{playFile}{fn,argv=???}
+Play a formex script from file fn.
+
+    fn is the name of a file holding a pyFormex script.
+    A list of arguments can be passed. They will be available under the name
+    argv. This variable can be changed by the script and the resulting argv
+    is returned to the caller.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{play}{fn=None,argv=???,step=False}
+Play a formex script from file fn or from the current file.
+
+    This function does nothing if no file is passed or no current
+    file was set.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{exit}{all=False}
+Exit from the current script or from pyformex if no script running.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{formatInfo}{F}
+Return formatted information about a Formex.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{printall}{}
+Print all Formices in globals()
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{printglobals}{}
 
 
 \end{funcdesc}
@@ -198,13 +231,13 @@ Set a breakpoint where the script can be halted on a signal.
 \end{funcdesc}
 
 
-\begin{funcdesc}{ack}{}
-Show a Yes/No question and return True/False depending on answer.
+\begin{funcdesc}{printconfig}{}
+
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{chdir}{}
+\begin{funcdesc}{chdir}{fn}
 Change the current working directory.
 
     If fn is a directory name, the current directory is set to fn.
@@ -219,53 +252,23 @@ Change the current working directory.
 \end{funcdesc}
 
 
-\begin{funcdesc}{enableBreak}{}
+\begin{funcdesc}{workHere}{}
+Change the current working directory to the script's location.
 
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{printall}{}
-Print all Formices in globals()
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{Globals}{}
-Return the globals that are passed to the scripts on execution.
-
-    This basically contains the globals defined in draw.py, colors.py,
-    and formex.py, as well as the globals from numpy.
-    It also contains the definitions put into the pyformex.PF, by
-    preference using the export() function.
-    During execution of the script, the global variable __name__ will be
-    set to either 'draw' or 'script' depending on whether the script
-    was executed in the 'draw' module (--gui option) or the 'script'
-    module (--nogui option).
+    This function is deprecated: use chdir(_file__) instead.
     
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{error}{}
-Show an error message and wait for user acknowlegement.
+\begin{funcdesc}{runtime}{}
+Return the time elapsed since start of execution of the script.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{step_script}{}
-
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{listAll}{}
-Return a list of all objects in dic that are of given clas.
-
-    If no class is given, Formex objects are sought.
-    If no dict is given, the objects from both GD.PF and locals()
-    are returned.
-    
+\begin{funcdesc}{runApp}{args}
+Run the application without gui.
 
 \end{funcdesc}
 

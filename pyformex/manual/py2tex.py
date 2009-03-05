@@ -297,7 +297,7 @@ def ship_function(name,args,docstring):
 def ship_module(name,docstring):
     shortdoc,longdoc = split_doc(docstring)
     print """%% pyformex manual --- %s
-%% $Id$
+%% $%s$
 %% (C) B.Verhegghe
 
 \\section{\\module{%s} --- %s}
@@ -308,7 +308,7 @@ def ship_module(name,docstring):
 \\moduleauthor{'pyFormex project'}{'http://pyformex.berlios.de'}
 
 %s
-""" % (name,name,shortdoc,name,name,shortdoc,longdoc)
+""" % (name,'Id',name,shortdoc,name,name,shortdoc,longdoc)
     
 
 def ship_end():

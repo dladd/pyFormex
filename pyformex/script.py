@@ -472,7 +472,10 @@ def chdir(fn):
 
 # Deprecated: this should be removed
 def workHere():
-    """Change the current working directory to the script's location."""
+    """Change the current working directory to the script's location.
+
+    This function is deprecated: use chdir(_file__) instead.
+    """
     GD.message("workHere is deprecated: use chdir(_file__) instead")
     chdir(GD.PF.get('curfile',''))
 
