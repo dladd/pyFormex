@@ -1,9 +1,18 @@
 #!/usr/bin/env python
-"""Simple code to extract class & function docstrings from a module.
+"""Extract info from a Python file and shipout in TeX format.
 
-This code is used as an example in the library reference manual in the
-section on using the parser module.  Refer to the manual for a thorough
+This script automatically extracts class & function docstrings and argument
+list from a module and ships out the information in LaTeX format.
+
+(C) 2009 Benedict Verhegghe (benedict.verhegghe@ugent.be)
+I wrote this software in my free time, for my joy, not as a commissioned task.
+Any copyright claims made by my employer should therefore be considered void.
+
+It includes parts from the examples in the Python library reference manual
+in the section on using the parser module. Refer to the manual for a thorough
 discussion of the operation of this code.
+
+Usage:  py2tex.py PYTHONFILE [> outputfile.tex]
 """
 
 import os
@@ -13,6 +22,7 @@ import token
 import types
 
 from types import ListType, TupleType
+from pyformex.odict import ODict
 
 
 def get_docs(fileName,dummy=None):
@@ -33,8 +43,8 @@ class SuiteInfoBase:
     _arglist = ''
 
     def __init__(self, tree = None):
-        self._class_info = {}
-        self._function_info = {}
+        self._class_info = ODict()
+        self._function_info = ODict()
         self.arglist = None
         if tree:
             self._extract_info(tree)
@@ -143,7 +153,7 @@ def match(pattern, data, vars=None):
     values.
     """
     if vars is None:
-        vars = {}
+        vars = ODict()
     if type(pattern) is ListType:       # 'variables' are ['varname']
         vars[pattern[0]] = data
         return 1, vars
@@ -197,6 +207,25 @@ DOCSTRING_STMT_PATTERN = (
      ))
 
 
+PARAMETER_VALUE_PATTERN = (
+    symbol.test,
+    (symbol.or_test,
+     (symbol.and_test,
+      (symbol.not_test,
+       (symbol.comparison,
+        (symbol.expr,
+         (symbol.xor_expr,
+          (symbol.and_expr,
+           (symbol.shift_expr,
+            (symbol.arith_expr,
+             (symbol.term,
+              (symbol.factor,
+               (symbol.power,
+                (symbol.atom,
+                 (token.NAME, ['parvalue'])
+                 ))))))))))))))
+
+
 PARAMETERS_PATTERN = (
     symbol.parameters,
     (token.LPAR, '('),
@@ -207,19 +236,27 @@ PARAMETERS_PATTERN = (
 
 def ParameterInfo(node):
     #found, vars = match(PARAMETERS_PATTERN, node)
-    print node
-    args = {}
+    #print node
+    args = []
     name = None
     value = None
     for i in node[1:]:
-        print i
+        #print i
         if i[0] == symbol.fpdef:
             name = i[1][1]
             value = None
         elif i[0] == 12:
-            args[name] = value
-
-    print args
+            args.append((name,value))
+            name = None
+        elif i[0] == 22:
+            value = '???'
+        elif i[0] == 303:
+            found,vars = match(PARAMETER_VALUE_PATTERN, i)
+            if found:
+                value = vars['parvalue']
+    if name is not None:
+        args.append((name,value))
+    #print "ARGS=%s" % args
     return args
         
 
@@ -236,12 +273,19 @@ def split_doc(docstring):
     return shortdoc.strip('"'),longdoc.strip('"')
 
 
-def ship_args(arglist):
-    return ','.join(arglist)
+def argformat(a):
+    if a[1] is None:
+        return str(a[0])
+    else:
+        return '%s=%s' % a
+
+def ship_args(args):
+    args = map(argformat,args)
+    #args = [ a for a in args if a[0] is not None ]
+    return ','.join(args)
 
 
 def ship_function(name,args,docstring):
-                           
     print """
 \\begin{funcdesc}{%s}{%s}
 %s
@@ -257,14 +301,14 @@ def ship_module(name,docstring):
 %% (C) B.Verhegghe
 
 \\section{\\module{%s} --- %s}
-\\label{sec:script}
+\\label{sec:%s}
 
 \\declaremodule{""}{%s}
 \\modulesynopsis{%s}
 \\moduleauthor{'pyFormex project'}{'http://pyformex.berlios.de'}
 
 %s
-""" % (name,name,shortdoc,name,shortdoc,longdoc)
+""" % (name,name,shortdoc,name,name,shortdoc,longdoc)
     
 
 def ship_end():
@@ -279,15 +323,6 @@ def ship_end():
 
 if __name__ == "__main__":
 
-##     import pprint
-##     ast = parser.suite(open('docstring.py').read())
-##     tup = ast.totuple()
-##     pprint.pprint(tup)
-##     pprint.pprint(DOCSTRING_STMT_PATTERN)
-
-##     found, vars = match(DOCSTRING_STMT_PATTERN, tup[1])
-##     print found,vars     
-
     import sys
     
     for a in sys.argv[1:]:
@@ -296,20 +331,8 @@ if __name__ == "__main__":
 
         for k in info.get_function_names():
             i = info[k]
-            ship_function(i._name,'',i._docstring)
-            print i._arglist
+            ship_function(i._name,i._arglist,i._docstring)
 
         ship_end()
 
-
-##     import imp,inspect
-##     from pyformex.utils import projectName
-##     for a in sys.argv[1:]:
-##         name = projectName(a)
-##         print name,a
-##         module = imp.load_source(name,a)
-##         classes = instpect.getmembers(module,inspect.isclass)
-##         functions = instpect.getmembers(module,inspect.isfunction)
-##         print "Classes: %s" % classes
-##         print "Functions: %s" % functions
-
+# End

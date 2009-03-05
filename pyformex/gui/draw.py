@@ -21,7 +21,15 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Functions for drawing and for executing pyFormex scripts."""
+"""Create 3D graphical representations.
+
+The draw module provides the basic user interface to the OpenGL
+rendering capabilities of pyFOrmex.
+
+\emph{Warning: the \texttt{draw} module is still subject to regular changes.
+Therefore, the information given below may not be fully accurate.
+}
+"""
 
 import pyformex as GD
 
@@ -633,11 +641,13 @@ def zoom(f):
     GD.canvas.zoom(f)
     GD.canvas.update()
 
+
 def bgcolor(color):
     """Change the background color (and redraw)."""
     GD.canvas.setBgColor(color)
     GD.canvas.display()
     GD.canvas.update()
+
 
 def fgcolor(color):
     """Set the default foreground color."""

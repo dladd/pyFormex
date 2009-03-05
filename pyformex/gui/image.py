@@ -195,14 +195,17 @@ if utils.hasModule('gl2ps'):
             viewport = GL.glGetIntegerv(GL.GL_VIEWPORT)
         bufsize = 0
         state = gl2ps.GL2PS_OVERFLOW
-        opts = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET
+        opts = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET | gl2ps.GL2PS_USE_CURRENT_VIEWPORT
         ##| gl2ps.GL2PS_NO_BLENDING | gl2ps.GL2PS_OCCLUSION_CULL | gl2ps.GL2PS_BEST_ROOT
         ##color = GL[[0.,0.,0.,0.]]
+        print "VIEWPORT %s" % str(viewport)
+        print fp
+        viewport=None
         while state == gl2ps.GL2PS_OVERFLOW:
             bufsize += 1024*1024
-            gl2ps.gl2psBeginPage(title, _producer, tuple(viewport), filetype,
+            gl2ps.gl2psBeginPage(title, _producer, viewport, filetype,
                                  gl2ps.GL2PS_BSP_SORT, opts, GL.GL_RGBA,
-                                 0, None, 0, 0, 0, bufsize, fp, filename)
+                                 0, None, 0, 0, 0, bufsize, fp, '')
             canvas.display()
             GL.glFinish()
             state = gl2ps.gl2psEndPage()
