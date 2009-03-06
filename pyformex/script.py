@@ -382,10 +382,10 @@ def playFile(fn,argv=[]):
     """
     message("Running script (%s)" % fn)
     GD.debug("  Executing with arguments: %s" % argv)
-    playScript(file(fn,'r'),fn,fn,argv)
+    res = playScript(file(fn,'r'),fn,fn,argv)
     GD.debug("  Arguments left after executione: %s" % argv)
     message("Finished script %s" % fn)
-    #return argv
+    return res
 
 
 def play(fn=None,argv=[],step=False):
@@ -403,7 +403,7 @@ def play(fn=None,argv=[],step=False):
     stepmode = step
     GD.GUI.history.add(fn)
     stepmode = step
-    playFile(fn,argv)
+    return playFile(fn,argv)
 
 
 def exit(all=False):
