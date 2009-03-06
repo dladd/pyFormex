@@ -69,9 +69,7 @@ def projection(v,w):
 
 
 # signals
-CANCEL = QtCore.SIGNAL("Cancel")
-DONE   = QtCore.SIGNAL("Done")
-WAKEUP = QtCore.SIGNAL("Wakeup")
+from signals import *
 
 # keys
 ESC = QtCore.Qt.Key_Escape

@@ -304,13 +304,14 @@ def main(argv=None):
         from gui.gui import startGUI
         startGUI(args)
     #
-    # THE FOLLOWING DOES NOT HELP, BECAUSE WITH GUI, Qt4 sets the locale back
-    # Still, we leave it here, because one day we may load the gui before
-    # starting runapp
+    # Qt4 may have changed the locale.
+    # Since a LC_NUMERIC setting other than C may cause lots of troubles
+    # with reading and writing files (formats become incompatible!)
+    # we put it back to a sane setting
     #
-    import locale
-    locale.setlocale(locale.LC_NUMERIC, 'C')
+    utils.setSaneLocale()
 
+    
     # Prepend the autorun scripts
     ar = GD.cfg.get('autorun','')
     if ar :

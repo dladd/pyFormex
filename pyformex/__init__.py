@@ -56,24 +56,12 @@ PF = {}            # globals that will be offered to scripts
     
 scriptName = None
 
-# Output status of the draw.askItems() function
-dialog_timeout = False
-dialog_accepted = False
-
 
 # define last rescue versions of message, warning and debug
 def message(s):
     print s
 
 warning = message
-
-## def warning(s):
-##     if gui:
-##         from gui import draw
-##         draw.warning(s)
-##     else:
-##         import script
-##         script.warning(s)
 
 def debug(s):
     if options.debug:

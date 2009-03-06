@@ -224,6 +224,23 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
+def setSaneLocale():
+    """Set a sane local configuration for LC_NUMERIC.
+
+    Some local settings change the LC_NUMERIC setting, so that floating
+    point values are read or written with a comma instead of a the decimal
+    point. Of course this makes your files completely incompatible.
+    You will often not be able to process these files any further and
+    create a lot of troubels for yourself and other people if you do so.
+    The idiots that thought changing the LC_NUMERIC locale was a good thing
+    should be hung.
+
+    Anyway, here's a function to set it back to a sane value.
+    It is always called when pyFormex starts.
+    """
+    import locale
+    locale.setlocale(locale.LC_NUMERIC, 'C')
+
 
 ###################### image and file formats ###################
 

@@ -22,8 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""pyFormex GUI module initialisation.
+"""pyFormex GUI module initialization.
 
-Currently, this does nothing. The file should be kept though, because it is
-needed to flag this directory as a Python package.
+This file is mainly here to flag the gui directory as a Python package.
+Global variables for the gui package may be defined here.
 """
+
+# End

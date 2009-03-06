@@ -186,8 +186,4 @@ def showAll():
 dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show All',showAll),('Show',show)],default='Show')
 dialog.show()
 
-#while not GD.dialog_timeout:
-#    sleep(5)
-#    GD.app.processEvents()
-
 # End

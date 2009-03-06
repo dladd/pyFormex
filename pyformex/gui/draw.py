@@ -35,8 +35,6 @@ import pyformex as GD
 
 import threading,os,sys,types,copy,commands,time
 
-from PyQt4 import QtCore, QtGui  # needed for events, signals
-
 import numpy
 import utils
 import widgets
@@ -51,6 +49,7 @@ import colors
 import coords
 import formex
 from script import *
+from signals import *
 
 from plugins import surface,tools
 from formex import Formex
@@ -117,6 +116,10 @@ def showText(text,actions=['OK']):
     return widgets.textBox(text,actions)
 
 
+# Output status of the askItems() function
+_dialog_timeout = False
+_dialog_accepted = False
+
 def askItems(items,caption=None,**kargs):
     """Ask the value of some items to the user.
 
@@ -134,13 +137,23 @@ def askItems(items,caption=None,**kargs):
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
     Sets the dialog timeout and accepted status in global variables.
     """
+    global _dialog_timeout,_dialog_accepted
     if type(items) == dict:
         items = items.items()
     w = widgets.InputDialog(items,caption)
     res = w.getResult(**kargs)
-    GD.dialog_timeout = w.timedOut
-    GD.dialog_accepted = w.accepted
+    _dialog_timeout = w.timedOut
+    _dialog_accepted = w.accepted
     return res
+
+
+def dialogTimedOut():
+    """Returns True if the last askItems() dialog timed out."""
+    return _dialog_timeout
+
+def dialogAccepted():
+    """Returns True if the last askItems() dialog was accepted."""
+    return _dialog_accepted
 
 
 def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
@@ -780,14 +793,14 @@ def delay(i):
     
 
         
-wakeupMode=0
+_wakeup_mode=0
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
-    global sleeping,wakeupMode,timer
-    if wakeupMode > 0 or timeout == 0:  # don't bother
+    global sleeping,_wakeup_mode,timer
+    if _wakeup_mode > 0 or timeout == 0:  # don't bother
         return
     # prepare for getting wakeup event 
-    QtCore.QObject.connect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+    onSignal(WAKEUP,wakeup)
     # create a Timer to wakeup after timeout
     if timeout and timeout > 0:
         timer = threading.Timer(timeout,wakeup)
@@ -802,7 +815,7 @@ def sleep(timeout=None):
         GD.app.processEvents()
         #time.sleep(0.1)
     # ignore further wakeup events
-    QtCore.QObject.disconnect(GD.canvas,QtCore.SIGNAL("Wakeup"),wakeup)
+    offSignal(WAKEUP,wakeup)
 
         
 def wakeup(mode=0):
@@ -812,11 +825,11 @@ def wakeup(mode=0):
     Default is to wake up from the current sleep. A mode > 0
     forces wakeup for longer period.
     """
-    global timer,sleeping,wakeupMode
+    global timer,sleeping,_wakeup_mode
     if timer:
         timer.cancel()
     sleeping = False
-    wakeupMode = mode
+    _wakeup_mode = mode
 
 
 ########################## print information ################################
