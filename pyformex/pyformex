@@ -22,8 +22,20 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""pyFormex is a program for the design and manipulation of 3D geometry.
+"""pyFormex, a free program for creating and manipulating 3D geometry.
 
+pyFormex is a powerful tool for generating, manipulating, transforming and
+displaying large structural models of 3D geometry.
+Based on a powerful scripting language, pyFormex is exceptionally suited for
+generating parametric models and for the automization of tedious and recurring
+tasks in the handling of geometrical models.
+Built around a fully open architecture pyFormex allows the user to combine the
+program with nearly any other software and to extend the program to suit his
+own needs.
+
+pyFormex is being developed at the IBiTech, Ghent University, and can be
+distributed under the GNU General Public License, version 3 or later.
+(C) 2004-2009 Benedict Verhegghe (benedict.verhegghe@ugent.be)) 
 """
 
 # Get the pyformex dir and put it on the head of sys.path
@@ -67,7 +79,54 @@ def printcfg(key):
         pass
     print "!! cfg[%s] = %s" % (key,GD.cfg[key])
 
+
+def remove_pyFormex(pyformexdir,scriptdir):
+    """Remove the pyFormex installation."""
+    print """
+BEWARE!
+This procedure will remove the complete pyFormex installation!
+If you continue, pyFormex will exit and you will not be able to run it again.
+The pyFormex installation is in: %s
+The pyFormex executable script is in: %s
+You will need proper permissions to actually delete the files.
+""" % (pyformexdir,scriptdir)
+    s = raw_input("Are you sure you want to remove pyFormex? yes/NO: ")
+    if s == 'yes':
+        print "Removing %s" % pyformexdir
+        utils.removeTree(pyformexdir)
+        script = os.path.join(scriptdir,'pyformex')
+        egginfo = "%s-%s.egg-info" % (pyformexdir,GD.__version__.replace('-','_'))
+        for f in [ script,egginfo ]:
+            if os.path.exists(f):
+                print "Removing %s" % f
+                os.remove(f)
+        print "\nBye, bye! I won't be back until you reinstall me!"
+    elif s.startswith('y') or s.startswith('Y'):
+        print "You need to type exactly 'yes' to remove me."
+    else:
+        print "Thanks for letting me stay this time."
+    sys.exit()
         
+
+def processArgs(args):
+    """Run the application without gui.
+
+    Arguments are interpreted as names of script files, possibly interspersed
+    with arguments for the scripts.
+    Each running script should pop the required arguments from the list.
+    """
+    from script import playFile
+    while len(args) > 0:
+        fn = args.pop(0)
+        if not os.path.exists(fn) or not utils.isPyFormex(fn):
+            GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
+            continue
+        try:
+            playFile(fn,args)
+        except:
+            GD.message("Error during execution of script %s" % fn)
+        
+    return 0
 
 ###########################  app  ################################
 
@@ -118,6 +177,8 @@ def main(argv=None):
                     action="store_true", dest="gui", default=None),
         make_option("--nogui", help="do not load the GUI (default if a scriptfile argument is given)",
                     action="store_false", dest="gui", default=None),
+        make_option("--interactive",'-i', help="go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
+                    action="store_true", dest="interactive", default=False),
         make_option("--force-dri", help="Force use of Direct Rendering",
                     action="store_true", dest="dri", default=None),
         make_option("--force-nodri", help="Disables the Direct Rendering",
@@ -176,36 +237,14 @@ def main(argv=None):
         sys.exit()
         
     if GD.options.remove:
-        print """
-BEWARE!
-This procedure will remove the complete pyformex installation!
-The pyformex installation is in: %s
-The pyformex executable script is in: %s
-You will need proper permissions to actually delete the files.
-""" % (pyformexdir,scriptdir)
-        s = raw_input("Are you sure you want to remove pyFormex? yes/NO: ")
-        if s == 'yes':
-            print "Removing %s" % pyformexdir
-            utils.removeTree(pyformexdir)
-            script = os.path.join(scriptdir,'pyformex')
-            egginfo = "%s-%s.egg-info" % (pyformexdir,GD.__version__.replace('-','_'))
-            for f in [ script,egginfo ]:
-                if os.path.exists(f):
-                    print "Removing %s" % f
-                    os.remove(f)
-            print "\nBye, bye! I won't be back until you reinstall me!"
-        elif s.startswith('y') or s.startswith('Y'):
-            print "You need to type exactly 'yes' to remove me."
-        else:
-            print "Thanks for letting me stay this time."
-        sys.exit()
-
+        remove_pyFormex(pyformexdir,scriptdir)
+        
     if GD.options.detect:
         print "Detecting all installed helper software"
         utils.checkExternal()
         utils.printDetected()
         sys.exit()
-
+        
     GD.debug("Options: %s" % GD.options)
 
     # Read the config files
@@ -255,14 +294,15 @@ You will need proper permissions to actually delete the files.
     if GD.options.gui is None:
         GD.options.gui = not (len(args) > 0 and utils.isPyFormex(args[0]))
 
-    # Run the application with the remaining arguments
+    if GD.options.gui:
+        GD.options.interactive = True
+
+    # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
         GD.debug("GUI version")
-        from gui.gui import runApp
-    else:
-        GD.debug("NONGUI version")
-        from script import runApp
+        from gui.gui import startGUI
+        startGUI(args)
     #
     # THE FOLLOWING DOES NOT HELP, BECAUSE WITH GUI, Qt4 sets the locale back
     # Still, we leave it here, because one day we may load the gui before
@@ -280,9 +320,26 @@ You will need proper permissions to actually delete the files.
         ar = map(utils.tildeExpand,ar)
         args[0:0] = [ fn for fn in ar if os.path.exists(fn) ]
 
-    GD.debug("Remaining args: %s" % args)
-    res = runApp(args)
+    # remaining args are interpreted as scripts and their parameters
+    res = 0
+    try:
+        GD.debug("Remaining args: %s" % args)
+        res = processArgs(args)
+    except:
+        GD.message("There was an error while executing one of the scripts")
+        res = 1
 
+    # after processing all args, go into interactive mode
+    if GD.options.gui:
+        GD.debug("GUI version")
+        from gui.gui import runGUI
+        res = runGUI()
+
+    elif GD.options.interactive:
+        print "Enter your script and end with CTRL-D"
+        from script import playScript
+        playScript(sys.stdin)
+        
     #Save the preferences that have changed
     GD.savePreferences()
 

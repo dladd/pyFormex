@@ -543,7 +543,7 @@ def createScriptMenu():
     knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
     for i,item in enumerate(scriptdirs):
         if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
-            scriptdirs[i] = (item[0],knownscriptdirs[item[0].lower()])
+            scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
 
     if GD.cfg.get('gui/separate_script_dirs',False):
         # This should create separate menus for all scriptdirs
@@ -576,8 +576,13 @@ def createScriptMenu():
     return menus
 
 
-def runApp(args):
-    """Create and run the qt application."""
+def startGUI(args):
+    """Create the QT4 application and GUI.
+
+    A (possibly empty) list of command line options should be provided.
+    QT4 wil remove the recognized QT4 and X11 options.
+    """
+    
     #
     # FIX FOR A BUG IN NUMPY (It's always sane anyway)
     #
@@ -692,7 +697,7 @@ See Help->License or the file COPYING for details.
 
 
     # Script menu
-    scriptmenu = createScriptMenu()
+    GD.GUI.scriptmenu = createScriptMenu()
 
 
     # Set interaction functions
@@ -731,18 +736,14 @@ See Help->License or the file COPYING for details.
     if GD.GUI.easter_egg:
         draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
 
-    # remaining args are interpreted as scripts and their parameters
-    try:
-        script.runApp(args)
-    except:
-        GD.message("There was an error while executing one of the scripts")
-    
-    # Go into interactive mode
-    GD.debug("Start main loop")
-    GD.app.exec_()
-    GD.debug("Exit main loop")
 
-    return 0
+def runGUI():
+    """Go into interactive mode"""
+    
+    GD.debug("Start main loop")
+    res = GD.app.exec_()
+    GD.debug("Exit main loop")
+    return res
 
 
 def classify_examples():

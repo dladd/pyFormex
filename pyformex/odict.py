@@ -59,6 +59,24 @@ def listConcatenate(a):
     return reduce(list.__add__,a)
 
 
+def listFlatten(l,recurse=True):
+    """Flatten a nested list.
+
+    By default, flattens lists one leel deep.
+    If recurse=True, flattens all sublevels of lists.
+    """
+    r = []
+    for i in l:
+        if type(i) == list:
+            if recurse:
+                r.extend(flatten(i))
+            else:
+                r.extend(i)
+        else:
+            r.append(i)
+    return r
+
+
 class ODict(dict):
     """An ordered dictionary.
 

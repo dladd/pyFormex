@@ -224,6 +224,7 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
+
 ###################### image and file formats ###################
 
 def all_image_extensions():

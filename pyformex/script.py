@@ -242,7 +242,9 @@ def playScript(scr,name=None,filename=None,argv=[]):
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     if scriptRunning or scriptDisabled :
+        GD.message("Not executing this script because another one is already running")     
         return
+    
     scriptRunning = True
     exitrequested = False
 
@@ -379,9 +381,11 @@ def playFile(fn,argv=[]):
     is returned to the caller.
     """
     message("Running script (%s)" % fn)
+    GD.debug("  Executing with arguments: %s" % argv)
     playScript(file(fn,'r'),fn,fn,argv)
+    GD.debug("  Arguments left after executione: %s" % argv)
     message("Finished script %s" % fn)
-    return argv
+    #return argv
 
 
 def play(fn=None,argv=[],step=False):
@@ -399,7 +403,7 @@ def play(fn=None,argv=[],step=False):
     stepmode = step
     GD.GUI.history.add(fn)
     stepmode = step
-    return playFile(fn,argv)
+    playFile(fn,argv)
 
 
 def exit(all=False):
@@ -484,26 +488,5 @@ def runtime():
     """Return the time elapsed since start of execution of the script."""
     return time.clock() - starttime
 
-
-def runApp(args):
-    """Run the application without gui."""
-    # remaining args are interpreted as scripts, possibly interspersed
-    # with arguments for the scripts.
-    # each script should pop the required arguments from the list,
-    # and return the remainder
-##    GD.message = message
-
-    while len(args) > 0:
-        fn = args.pop(0)
-        if not os.path.exists(fn) or not utils.isPyFormex(fn):
-            GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
-            continue
-        try:
-            playFile(fn,args)
-        except:
-            GD.message("Error during execution of script %s" % fn)
-        
-
-    return 0
 
 #### End
