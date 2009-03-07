@@ -524,7 +524,7 @@ def interrogate(item):
 def deprecated(replacement):
     def decorator(func):
         def wrapper(*_args,**_kargs):
-            print "! Function '%s' is deprecated: use '%s' instead" % (func.func_name,replacement.func_name)
+            print "! Function '%s' is deprecated: use '%s.%s' instead" % (func.func_name,replacement.__module__,replacement.func_name)
             return replacement(*_args,**_kargs)
         return wrapper
     decorator.__doc__ = replacement.__doc__

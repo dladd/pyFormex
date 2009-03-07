@@ -25,56 +25,7 @@
 
 """A dictionary that keeps the keys in order of insertion."""
 
-
-def listUnion(a,b):
-    """Return a list with all items in a or in b, in the order of a,b."""
-    return a + [ i for i in b if i not in a ]
-
-
-def listDifference(a,b):
-    """Return a list with all items in a but not in b, in the order of a."""
-    return [ i for i in a if i not in b ]
-
-
-def listSymDifference(a,b):
-    """Return a list with all items in a or b but not in both."""
-    return listDifference(a,b) + listDifference(b,a)
-
-
-def listIntersection (a,b):
-    """Return a list with all items in a and  in b, in the order of a."""
-    return [ i for i in a if i in b ]
-
-    
-def listSelect(a,b):
-    """Return a subset of items from a list.
-
-    Returns a list with the items of a for which the index is in b.
-    """
-    return [ a[i] for i in b ]
-
-
-def listConcatenate(a):
-    """Concatenate a list of lists"""
-    return reduce(list.__add__,a)
-
-
-def listFlatten(l,recurse=True):
-    """Flatten a nested list.
-
-    By default, flattens lists one leel deep.
-    If recurse=True, flattens all sublevels of lists.
-    """
-    r = []
-    for i in l:
-        if type(i) == list:
-            if recurse:
-                r.extend(flatten(i))
-            else:
-                r.extend(i)
-        else:
-            r.append(i)
-    return r
+import olist
 
 
 class ODict(dict):
@@ -156,7 +107,7 @@ class ODict(dict):
 
         keys should be a list containing exactly all the keys from self.
         """
-        if listDifference(keys,dict.keys(self)) != []:
+        if olist.difference(keys,dict.keys(self)) != []:
             raise ValueError,"List of keys does not match current object's keys"
         self._order = keys
 
@@ -205,23 +156,34 @@ class KeyList(ODict):
         return [(k,)+self[k] for k in self._order]
 
     
-        
+### deprecated function, now in olist ############
+from utils import deprecated
+import olist
 
+@deprecated(olist.union)
+def listUnion(a,b):
+    pass
+@deprecated(olist.difference)
+def listDifference(a,b):
+    pass
+@deprecated(olist.symdifference)
+def listSymDifference(a,b):
+    pass
+@deprecated(olist.intersection)
+def listIntersection (a,b):
+    pass
+@deprecated(olist.select)
+def listSelect(a,b):
+    pass
+@deprecated(olist.concatenate)
+def listConcatenate(a):
+    pass
+@deprecated(olist.flatten)
+def listFlatten(a):
+    pass
         
 
 if __name__ == "__main__":
-
-    a = [1,2,3,5,6,7]
-    b = [2,3,4,7,8,9]
-    print a
-    print b
-    print listUnion(a,b)
-    print listDifference(a,b)
-    print listDifference(b,a)
-    print listIntersection(a,b)
-    print a
-    
-    
 
     d = ODict({'a':1,'b':2,'c':3})
     print d
@@ -266,6 +228,6 @@ if __name__ == "__main__":
 
     print D.items()
 
-    
+    print "DONE"
     
 # End

@@ -28,7 +28,7 @@ These are general utility functions that depend on the numpy array model.
 """
 
 from numpy import *
-from pyformex import odict
+from pyformex import olist
 
 
 # default float and int types
@@ -140,7 +140,7 @@ def collectOnLength(items):
     np = array([ len(e) for e in items ])
     itemlen = unique1d(np)
     itemnrs = [ where(np==p)[0] for p in itemlen ]
-    itemgrps = [ odict.listSelect(items,i) for i in itemnrs ]
+    itemgrps = [ olist.select(items,i) for i in itemnrs ]
     itemcnt = [ len(i) for i in itemnrs ]
     return itemgrps,itemnrs,itemcnt,itemlen
     

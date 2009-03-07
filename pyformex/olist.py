@@ -33,6 +33,24 @@ def concatenate(a):
     """Concatenate a list of lists"""
     return reduce(list.__add__,a)
 
+
+def flatten(a,recurse=False):
+    """Flatten a nested list.
+
+    By default, lists are flattened one level deep.
+    If recurse=True, flattening recurses through all sublists.
+    """
+    r = []
+    for i in a:
+        if type(i) == list:
+            if recurse:
+                r.extend(flatten(i))
+            else:
+                r.extend(i)
+        else:
+            r.append(i)
+    return r
+
     
 def select(a,b):
     """Return a subset of items from a list.
@@ -55,6 +73,8 @@ if __name__ == "__main__":
     print intersection(a,b)
     print select(a,[1,3])
     print concatenate([a,b,a])
+    print flatten([1,2,a,[a]])
+    print flatten([1,2,a,[a]],recurse=True)
       
     
 # End
