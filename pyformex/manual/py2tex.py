@@ -26,11 +26,11 @@ from pyformex.odict import ODict
 
 
 def get_docs(fileName,dummy=None):
-    """Retrieve information from the parse tree of a source file.
+    '''Retrieve information from the parse tree of a source file.
 
     fileName
         Name of the file to read Python source code from.
-    """
+    '''
     source = open(fileName).read()
     basename = os.path.basename(os.path.splitext(fileName)[0])
     ast = parser.suite(source)
