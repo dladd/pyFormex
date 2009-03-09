@@ -27,8 +27,8 @@ import os,types
 from PyQt4 import QtCore, QtGui
 import pyformex as GD
 import colors
-import utils
 import imageViewer
+import utils
 
 
 # timeout value for all widgets providing timeout feature
@@ -333,8 +333,7 @@ class Selection(QtGui.QDialog):
         'extended': QtGui.QAbstractItemView.ExtendedSelection,
         }
     
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,\
-                 selected=[]):
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]):
         """Create the SelectionList dialog.
 
         selected is a list of items that are initially selected.

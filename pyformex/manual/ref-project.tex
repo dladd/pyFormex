@@ -1,0 +1,49 @@
+% pyformex manual --- project
+% $Id$
+% (C) B.Verhegghe
+
+
+\section{\module{project} --- project.py}
+\label{sec:project}
+
+\declaremodule{""}{pyformex/plugins/project}
+\modulesynopsis{pyformex/plugins/project}
+\moduleauthor{'pyFormex project'}{'http://pyformex.org'}
+
+Functions for managing a project in pyFormex.
+
+
+\subsection{Project --- A pyFormex project is a persistent storage of pyFormex objects.}
+
+
+\begin{classdesc}{Project}{filename,create=False}
+Create a new project with the given filename.
+
+        If the filename exists and create is False, the file is opened and
+        the contents is read into the project dictionary.
+        If not, a new empty file and project are created.
+        
+\end{classdesc}
+
+Project instances have the following methods:
+
+\begin{funcdesc}{save}{filename=None}
+Save the project to file.
+\end{funcdesc}
+
+\begin{funcdesc}{load}{filename=None}
+Load a project from file.
+        
+        The loaded definition will update the current project.
+        
+\end{funcdesc}
+
+\begin{funcdesc}{delete}{}
+Unrecoverably delete the project file.
+\end{funcdesc}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "pyformex"
+%%% End:
+
