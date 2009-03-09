@@ -221,6 +221,8 @@ PARAMETER_VALUE_PATTERN = (
              (symbol.term,
               (symbol.factor,
                (symbol.power,
+#                (symbol.atom,['parvalue'])
+#                 )))))))))))))
                 (symbol.atom,
                  (token.NAME, ['parvalue'])
                  ))))))))))))))
@@ -254,6 +256,10 @@ def ParameterInfo(node):
             found,vars = match(PARAMETER_VALUE_PATTERN, i)
             if found:
                 value = vars['parvalue']
+            else:
+                pass#print i
+        else:
+            pass#print i[0]
     if name is not None:
         args.append((name,value))
     #print "ARGS=%s" % args
@@ -294,6 +300,38 @@ def ship_function(name,args,docstring):
 """ % (name,ship_args(args),docstring)
 
 
+def ship_method(name,args,docstring):
+    print """
+\\begin{funcdesc}{%s}{%s}
+%s
+
+\\end{funcdesc}
+""" % (name,ship_args(args),docstring)
+
+
+def ship_classinit(name,args,docstring):
+    print """
+\\begin{classdesc}{%s}{%s}
+%s
+
+\\end{classdesc}
+""" % (name,ship_args(args),docstring)
+
+    
+def ship_class(name,docstring):
+    print """
+\\subsection{%s class}
+
+%s
+""" % (name,docstring)
+
+def ship_function_section(name):
+    print """
+\\subsection{Functions defined in the %s module}
+
+""" % (name)
+    
+
 def ship_module(name,docstring):
     shortdoc,longdoc = split_doc(docstring)
     print """%% pyformex manual --- %s
@@ -321,18 +359,56 @@ def ship_end():
 # set the mode indirectly to avoid this file being recognized as latex
 
 
+def sanitize(s):
+    """Sanitize a string for LaTeX."""
+    s = s.replace('\#','#')
+    s = s.replace('#','\#')
+    s = s.replace('\&','&')
+    s = s.replace('&','\&')
+    return s
+
+
+def do_function(info):
+    ship_function(info._name,info._arglist,sanitize(info._docstring))
+
+
+def do_method(info):
+    ship_method(info._name,info._arglist,sanitize(info._docstring))
+
+
+def do_class(info):
+    ship_class(info._name,sanitize(info._docstring))
+    names = info.get_method_names()
+    if '__init__' in names:
+        i = info['__init__']
+        ship_classinit(info._name,i._arglist,sanitize(i._docstring))
+    for k in names:
+        if k == '__init__':
+            continue
+        do_method(info[k])
+
+
+def do_module(info):
+    ship_module(info._name,sanitize(info._docstring))
+    for k in info.get_class_names():
+        do_class(info[k])
+
+    if len(info.get_class_names()) > 0 and len(info.get_function_names()) > 0:
+        ship_function_section(info._name)
+    
+    for k in info.get_function_names():
+        do_function(info[k])
+        
+    ship_end()
+
+
 if __name__ == "__main__":
 
     import sys
     
     for a in sys.argv[1:]:
         info = get_docs(a)
-        ship_module(info._name,info._docstring)
-
-        for k in info.get_function_names():
-            i = info[k]
-            ship_function(i._name,i._arglist,i._docstring)
-
-        ship_end()
+        do_module(info)
+        
 
 # End

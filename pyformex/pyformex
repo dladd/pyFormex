@@ -62,7 +62,6 @@ sys.path[:0] = [ pyformexdir ]
 GD = pyformex
 import utils
 from config import Config
-from optparse import OptionParser,make_option
 
 ###########################  main  ################################
 
@@ -169,6 +168,7 @@ def main(argv=None):
     GD.cfg.read("homedir = '%s'\n" % homedir)
 
     # Process options
+    from optparse import OptionParser,make_option
     parser = OptionParser(
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]",
         version = pyformex.Version,

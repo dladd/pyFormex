@@ -5,6 +5,8 @@ Options:
                      given)
   --nogui            do not load the GUI (default if a scriptfile argument is
                      given)
+  -i, --interactive  go into interactive mode after processing the command
+                     line parameters. This is implied by the --gui option.
   --force-dri        Force use of Direct Rendering
   --force-nodri      Disables the Direct Rendering
   --uselib           Use the pyFormex C lib if available. This is the default.

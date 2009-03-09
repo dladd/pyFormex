@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 # $Id$
 
-"""olist.py: Some convenient shortcuts for common list operations.
+"""Some convenient shortcuts for common list operations.
 
 While most of these functions look (and work) like set operations, their
 result differs from using Python builtin Sets in that they preserve the
