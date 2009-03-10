@@ -7,8 +7,8 @@
 \section{\module{lima} --- Lindenmayer Systems}
 \label{sec:lima}
 
-\declaremodule{""}{pyformex/plugins/lima}
-\modulesynopsis{pyformex/plugins/lima}
+\declaremodule{extension}{pyformex.plugins.lima}
+\modulesynopsis{Lindenmayer Systems}
 \moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 
@@ -22,26 +22,26 @@
 
 Lima instances have the following methods:
 
-\begin{funcdesc}{status}{}
+\begin{methoddesc}{status}{}
 Print the status of the Lima
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{addRule}{atom,product}
+\begin{methoddesc}{addRule}{atom,product}
 Add a new rule (or overwrite an existing)
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{translate}{rule,keep=False}
+\begin{methoddesc}{translate}{rule,keep=False}
 Translate the product by the specified rule set.
 
         If keep=True is specified, atoms that do not have a translation
         in the rule set, will be kept unchanged.
         The default (keep=False) is to remove those atoms.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{grow}{ngen=1}
+\begin{methoddesc}{grow}{ngen=1}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Functions defined in module \module{lima}}
 

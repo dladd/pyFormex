@@ -302,12 +302,12 @@ class LaTeXFormatter(Formatter):
 \\section{\\module{%s} --- %s}
 \\label{sec:%s}
 
-\\declaremodule{""}{%s}
+\\declaremodule{extension}{%s}
 \\modulesynopsis{%s}
 \\moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 %s
-""" % (name,shortdoc,name,fullname,shortdoc,longdoc)
+""" % (name,shortdoc,name,fullname.replace('/','.'),shortdoc,longdoc)
 
     @staticmethod
     def classes_header(name):
@@ -351,7 +351,15 @@ class LaTeXFormatter(Formatter):
 \\end{funcdesc}
 """ % (name,args,doc)
 
-    method_doc = function_doc
+
+    @staticmethod
+    def method_doc(name,args,doc):
+        return """
+\\begin{methoddesc}{%s}{%s}
+%s
+\\end{methoddesc}
+""" % (name,args,doc)
+
 
     
 

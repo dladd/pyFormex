@@ -7,8 +7,8 @@
 \section{\module{utils} --- A collection of miscellaneous utility functions.}
 \label{sec:utils}
 
-\declaremodule{""}{pyformex/utils}
-\modulesynopsis{pyformex/utils}
+\declaremodule{extension}{pyformex.utils}
+\modulesynopsis{A collection of miscellaneous utility functions.}
 \moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 
@@ -44,22 +44,22 @@ Create a new NameSequence from name,ext.
 
 NameSequence instances have the following methods:
 
-\begin{funcdesc}{next}{}
+\begin{methoddesc}{next}{}
 Return the next name in the sequence
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{peek}{}
+\begin{methoddesc}{peek}{}
 Return the next name in the sequence without incrementing.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{glob}{}
+\begin{methoddesc}{glob}{}
 Return a UNIX glob pattern for the generated names.
 
         A NameSequence is often used as a generator for file names.
         The glob() method returns a pattern that can be used in a
         UNIX-like shell command to select all the generated file names.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Functions defined in module \module{utils}}
 

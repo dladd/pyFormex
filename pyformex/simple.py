@@ -136,10 +136,10 @@ def circle(a1=2.,a2=0.,a3=360.):
     the origin in the x-y-plane.
 
     \\var{a1} (the dash angle) is the angle enclosed between the start and
-    end points of each line segment.\\
+    end points of each line segment.\\\\
     \\var{a2} (the module angle) is the angle enclosed between the start
     points of two subsequent line segments. 
-    If \\Code{a2==0.0} is given, it will be taken equal to a1.\\
+    If \\Code{a2==0.0} is given, it will be taken equal to a1.\\\\
     \\var{a3} (the arc angle) is the total angle enclosed between the first
     point of the first segment and the end point of the last segment.
 
@@ -148,7 +148,7 @@ def circle(a1=2.,a2=0.,a3=360.):
 
     The default values produce a full circle (approximately).
     If $\\var{a3} < 360$, the result is an arc.
-    Large values of \\var{a1} and \var{a2} result in polygones. Thus
+    Large values of \\var{a1} and \\var{a2} result in polygones. Thus
     circle(120.) is an equilateral triangle and circle(60.) is regular hexagone.
 
     Remark that the default \\Code{a2 == a1} produces a continuous line,

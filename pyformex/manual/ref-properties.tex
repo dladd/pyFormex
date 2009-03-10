@@ -7,8 +7,8 @@
 \section{\module{properties} --- General framework for attributing properties to geometrical elements.}
 \label{sec:properties}
 
-\declaremodule{""}{pyformex/plugins/properties}
-\modulesynopsis{pyformex/plugins/properties}
+\declaremodule{extension}{pyformex.plugins.properties}
+\modulesynopsis{General framework for attributing properties to geometrical elements.}
 \moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 Properties can really be just about any Python object.
@@ -27,14 +27,14 @@ Initialize a database.
 
 Database instances have the following methods:
 
-\begin{funcdesc}{readDatabase}{filename,*args,**kargs}
+\begin{methoddesc}{readDatabase}{filename,*args,**kargs}
 Import all records from a database file.
 
         For now, it can only read databases using flatkeydb.
         args and kargs can be used to specify arguments for the
         FlatDB constructor.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{MaterialDB --- A class for storing material properties.}
 
@@ -94,27 +94,27 @@ Create a new element section property. Empty by default.
 
 ElemSection instances have the following methods:
 
-\begin{funcdesc}{addSection}{section}
+\begin{methoddesc}{addSection}{section}
 Create or replace the section properties of the element.
 
         If 'section' is a dict, it will be added to 'self.secDB'.
         If 'section' is a string, this string will be used as a key to
         search in 'self.secDB'.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{computeSection}{section}
+\begin{methoddesc}{computeSection}{section}
 Compute the section characteristics of specific sections.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{addMaterial}{material}
+\begin{methoddesc}{addMaterial}{material}
 Create or replace the material properties of the element.
 
         If the argument is a dict, it will be added to 'self.matDB'.
         If the argument is a string, this string will be used as a key to
         search in 'self.matDB'.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{ElemLoad --- Distributed loading on an element.}
 
@@ -168,7 +168,7 @@ Create a new properties database.
 
 PropertyDB instances have the following methods:
 
-\begin{funcdesc}{autoName}{clas,kind,*args}
+\begin{methoddesc}{autoName}{clas,kind,*args}
 classmethod(function) -> method
 
 Convert a function to be a class method.
@@ -188,17 +188,17 @@ object is passed as the implied first argument.
 
 Class methods are different than C++ or Java static methods.
 If you want those, see the staticmethod builtin.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setMaterialDB}{aDict}
+\begin{methoddesc}{setMaterialDB}{aDict}
 Set the materials database to an external source
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setSectionDB}{aDict}
+\begin{methoddesc}{setSectionDB}{aDict}
 Set the sections database to an external source
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{Prop}{kind='',tag=None,set=None,setname=None,**kargs}
+\begin{methoddesc}{Prop}{kind='',tag=None,set=None,setname=None,**kargs}
 Create a new property, empty by default.
 
         A property can hold almost anything, just like any Dict type.
@@ -215,9 +215,9 @@ Create a new property, empty by default.
         Besides these, any other fields may be defined and will be added
         without checking.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{getProp}{kind='',rec=None,tag=None,attr=[],delete=False}
+\begin{methoddesc}{getProp}{kind='',rec=None,tag=None,attr=[],delete=False}
 Return all properties of type kind matching tag and having attr.
 
         kind is either '', 'n', 'e' or 'm'
@@ -229,25 +229,25 @@ Return all properties of type kind matching tag and having attr.
 
         If delete==True, the returned properties are removed from the database.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{delete}{plist,kind=''}
+\begin{methoddesc}{delete}{plist,kind=''}
 Delete properties in list pdel from list plist.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{sanitize}{kind}
+\begin{methoddesc}{sanitize}{kind}
 Sanitize the record numbers after deletion
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{delProp}{kind='',rec=None,tag=None,attr=[]}
+\begin{methoddesc}{delProp}{kind='',rec=None,tag=None,attr=[]}
 Delete properties.
 
         This is equivalent to getProp() but the returned properties
         are removed from the database.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{nodeProp}{prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None}
+\begin{methoddesc}{nodeProp}{prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None}
 Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -262,9 +262,9 @@ Create a new node property, empty by default.
         - csys: a CoordSystem
         - ampl: the name of an Amplitude
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{elemProp}{prop=None,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None,ampl=None}
+\begin{methoddesc}{elemProp}{prop=None,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None,ampl=None}
 Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -283,7 +283,7 @@ Create a new element property, empty by default.
         - dload: an ElemLoad specifying a distributed load on the element.
         - ampl: the name of an Amplitude
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Functions defined in module \module{properties}}
 

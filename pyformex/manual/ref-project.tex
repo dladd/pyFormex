@@ -7,8 +7,8 @@
 \section{\module{project} --- project.py}
 \label{sec:project}
 
-\declaremodule{""}{pyformex/plugins/project}
-\modulesynopsis{pyformex/plugins/project}
+\declaremodule{extension}{pyformex.plugins.project}
+\modulesynopsis{project.py}
 \moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 Functions for managing a project in pyFormex.
@@ -28,20 +28,20 @@ Create a new project with the given filename.
 
 Project instances have the following methods:
 
-\begin{funcdesc}{save}{filename=None}
+\begin{methoddesc}{save}{filename=None}
 Save the project to file.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{load}{filename=None}
+\begin{methoddesc}{load}{filename=None}
 Load a project from file.
         
         The loaded definition will update the current project.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{delete}{}
+\begin{methoddesc}{delete}{}
 Unrecoverably delete the project file.
-\end{funcdesc}
+\end{methoddesc}
 
 %%% Local Variables: 
 %%% mode: latex

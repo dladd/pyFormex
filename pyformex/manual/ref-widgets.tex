@@ -7,8 +7,8 @@
 \section{\module{widgets} --- A collection of custom widgets used in the pyFormex GUI}
 \label{sec:widgets}
 
-\declaremodule{""}{pyformex/gui/widgets}
-\modulesynopsis{pyformex/gui/widgets}
+\declaremodule{extension}{pyformex.gui.widgets}
+\modulesynopsis{A collection of custom widgets used in the pyFormex GUI}
 \moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 
@@ -37,13 +37,13 @@ The constructor shows the widget.
 
 FileSelection instances have the following methods:
 
-\begin{funcdesc}{getFilename}{}
+\begin{methoddesc}{getFilename}{}
 Ask for a filename by user interaction.
 
         Return the filename selected by the user.
         If the user hits CANCEL or ESC, None is returned.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{SaveImageDialog --- A file selection dialog with extra fields.}
 
@@ -54,9 +54,9 @@ Create the dialog.
 
 SaveImageDialog instances have the following methods:
 
-\begin{funcdesc}{getResult}{}
+\begin{methoddesc}{getResult}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{ImageViewerDialog --- }
 
@@ -67,13 +67,13 @@ SaveImageDialog instances have the following methods:
 
 ImageViewerDialog instances have the following methods:
 
-\begin{funcdesc}{getFilename}{}
+\begin{methoddesc}{getFilename}{}
 Ask for a filename by user interaction.
 
         Return the filename selected by the user.
         If the user hits CANCEL or ESC, None is returned.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{AppearenceDialog --- A dialog for setting the GUI appearance.}
 
@@ -84,13 +84,13 @@ Create the Appearance dialog.
 
 AppearenceDialog instances have the following methods:
 
-\begin{funcdesc}{setFont}{}
+\begin{methoddesc}{setFont}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{getResult}{}
+\begin{methoddesc}{getResult}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{DockedSelection --- A widget that is docked in the main window and contains a modeless}
     
@@ -101,13 +101,13 @@ AppearenceDialog instances have the following methods:
 
 DockedSelection instances have the following methods:
 
-\begin{funcdesc}{setSelected}{selected,bool}
+\begin{methoddesc}{setSelected}{selected,bool}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{getResult}{}
+\begin{methoddesc}{getResult}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{ModelessSelection --- A modeless dialog for selecting one or more items from a list.}
 
@@ -119,18 +119,18 @@ Create the SelectionList dialog.
 
 ModelessSelection instances have the following methods:
 
-\begin{funcdesc}{setSelected}{selected,bool}
+\begin{methoddesc}{setSelected}{selected,bool}
 Mark the specified items as selected.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{getResult}{}
+\begin{methoddesc}{getResult}{}
 Return the list of selected values.
 
         If the user cancels the selection operation, the return value is None.
         Else, the result is always a list, possibly empty or with a single
         value.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Selection --- A dialog for selecting one or more items from a list.}
 
@@ -144,18 +144,18 @@ Create the SelectionList dialog.
 
 Selection instances have the following methods:
 
-\begin{funcdesc}{setSelected}{selected}
+\begin{methoddesc}{setSelected}{selected}
 Mark the specified items as selected.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{getResult}{}
+\begin{methoddesc}{getResult}{}
 Return the list of selected values.
 
         If the user cancels the selection operation, the return value is None.
         Else, the result is always a list, possibly empty or with a single
         value.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputItem --- A single input item, usually with a label in front.}
     The created widget is a QHBoxLayout which can be embedded in the vertical
@@ -188,17 +188,17 @@ Creates a new inputitem with a name label in front.
 
 InputItem instances have the following methods:
 
-\begin{funcdesc}{name}{}
+\begin{methoddesc}{name}{}
 Return the widget's name.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputInfo --- An unchangeable input item.}
 
@@ -212,13 +212,13 @@ Creates a new info field with a label in front.
 
 InputInfo instances have the following methods:
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputString --- A string input item.}
 
@@ -233,17 +233,17 @@ Creates a new string input field with a label in front.
 
 InputString instances have the following methods:
 
-\begin{funcdesc}{show}{}
+\begin{methoddesc}{show}{}
 Select all text on first display.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputBool --- A boolean input item.}
 
@@ -260,17 +260,17 @@ Creates a new checkbox for the input of a boolean value.
 
 InputBool instances have the following methods:
 
-\begin{funcdesc}{name}{}
+\begin{methoddesc}{name}{}
 Return the widget's name.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputCombo --- A combobox InputItem.}
 
@@ -290,13 +290,13 @@ Creates a new combobox for the selection of a value from a list.
 
 InputCombo instances have the following methods:
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputRadio --- A radiobuttons InputItem.}
 
@@ -317,13 +317,13 @@ Creates radiobuttons for the selection of a value from a list.
 
 InputRadio instances have the following methods:
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputPush --- A pushbuttons InputItem.}
 
@@ -344,21 +344,21 @@ Creates pushbuttons for the selection of a value from a list.
 
 InputPush instances have the following methods:
 
-\begin{funcdesc}{setText}{text,index=0}
+\begin{methoddesc}{setText}{text,index=0}
 Change the text on button index.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setIcon}{icon,index=0}
+\begin{methoddesc}{setIcon}{icon,index=0}
 Change the icon on button index.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputInteger --- An integer input item.}
     Options:
@@ -371,17 +371,17 @@ Creates a new integer input field with a label in front.
 
 InputInteger instances have the following methods:
 
-\begin{funcdesc}{show}{}
+\begin{methoddesc}{show}{}
 Select all text on first display.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputFloat --- An float input item.}
 
@@ -392,17 +392,17 @@ Creates a new float input field with a label in front.
 
 InputFloat instances have the following methods:
 
-\begin{funcdesc}{show}{}
+\begin{methoddesc}{show}{}
 Select all text on first display.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{value}{}
+\begin{methoddesc}{value}{}
 Return the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{val}
+\begin{methoddesc}{setValue}{val}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputSlider --- An integer input item using a slider.}
     Options:
@@ -418,9 +418,9 @@ Creates a new integer input slider.
 
 InputSlider instances have the following methods:
 
-\begin{funcdesc}{set_value}{val}
+\begin{methoddesc}{set_value}{val}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputFSlider --- A float input item using a slider.}
     Options:
@@ -436,9 +436,9 @@ Creates a new integer input slider.
 
 InputFSlider instances have the following methods:
 
-\begin{funcdesc}{set_value}{val}
+\begin{methoddesc}{set_value}{val}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputColor --- A color input item.}
 
@@ -454,13 +454,13 @@ Creates a new color input field with a label in front.
 
 InputColor instances have the following methods:
 
-\begin{funcdesc}{setColor}{}
+\begin{methoddesc}{setColor}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setValue}{value}
+\begin{methoddesc}{setValue}{value}
 Change the widget's value.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{InputDialog --- A dialog widget to set the value of one or more items.}
     While general input dialogs can be constructed from all the underlying
@@ -523,11 +523,11 @@ Creates a dialog which asks the user for the value of items.
 
 InputDialog instances have the following methods:
 
-\begin{funcdesc}{__getitem__}{name}
+\begin{methoddesc}{__getitem__}{name}
 Return the input item with specified name.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{acceptData}{}
+\begin{methoddesc}{acceptData}{}
 Update the dialog's return value from the field values.
 
         This function is connected to the 'accepted()' signal.
@@ -536,21 +536,21 @@ Update the dialog's return value from the field values.
         results without having to raise the accepted() signal (which
         would close the dialog).
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{updateData}{d}
+\begin{methoddesc}{updateData}{d}
 Update a dialog from the data in given dictionary.
 
         d is a dictionary where the keys are field names in t the dialog.
         The values will be set in the corresponding input items.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{timeout}{}
+\begin{methoddesc}{timeout}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{getResult}{timeout=None,timeoutAccept=True}
+\begin{methoddesc}{getResult}{timeout=None,timeoutAccept=True}
  Get the results from the input dialog.
 
         This fuction is used to present a modal dialog to the user (i.e. a
@@ -573,7 +573,7 @@ Update a dialog from the data in given dictionary.
         self.accepted == TRUE/FALSE
         self.timedOut == TRUE/FALSE
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{TableModel --- A table model that represent data as a two-dimensional array of items.}
     data is any tabular data organized in a fixed number of rows and colums.
@@ -588,29 +588,29 @@ Update a dialog from the data in given dictionary.
 
 TableModel instances have the following methods:
 
-\begin{funcdesc}{rowCount}{parent=None}
+\begin{methoddesc}{rowCount}{parent=None}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{columnCount}{parent=None}
+\begin{methoddesc}{columnCount}{parent=None}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{data}{index,role}
+\begin{methoddesc}{data}{index,role}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{headerData}{col,orientation,role}
+\begin{methoddesc}{headerData}{col,orientation,role}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{insertRows}{row=None,count=None}
+\begin{methoddesc}{insertRows}{row=None,count=None}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{removeRows}{row=None,count=None}
+\begin{methoddesc}{removeRows}{row=None,count=None}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Table --- A dialog widget to show two-dimensional arrays of items.}
 
@@ -646,17 +646,17 @@ Create the Table dialog.
 
 ButtonBox instances have the following methods:
 
-\begin{funcdesc}{setText}{text,index=0}
+\begin{methoddesc}{setText}{text,index=0}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{setIcon}{icon,index=0}
+\begin{methoddesc}{setIcon}{icon,index=0}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{__str__}{}
+\begin{methoddesc}{__str__}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{ComboBox --- }
 
@@ -667,9 +667,9 @@ ButtonBox instances have the following methods:
 
 ComboBox instances have the following methods:
 
-\begin{funcdesc}{setIndex}{i}
+\begin{methoddesc}{setIndex}{i}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{BaseMenu --- A general menu class.}
     This class is not intended for direct use, but through subclasses.
@@ -691,40 +691,40 @@ Create a menu.
 
 BaseMenu instances have the following methods:
 
-\begin{funcdesc}{item}{text}
+\begin{methoddesc}{item}{text}
 Get the menu item with given normalized text.
 
         Text normalization removes all '\&' characters and
         converts to lower case.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{itemAction}{item}
+\begin{methoddesc}{itemAction}{item}
 Return the action corresponding to item.
 
         item is either one of the menu's item texts, or one of its
         values. This method guarantees that the return value is either the
         corresponding Action, or None.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{insert_sep}{before=None}
+\begin{methoddesc}{insert_sep}{before=None}
 Create and insert a separator
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{insert_menu}{menu,before=None}
+\begin{methoddesc}{insert_menu}{menu,before=None}
 Insert an existing menu.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{insert_action}{action,before=None}
+\begin{methoddesc}{insert_action}{action,before=None}
 Insert an action.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{create_insert_action}{str,val,before=None}
+\begin{methoddesc}{create_insert_action}{str,val,before=None}
 Create and insert an action.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{insertItems}{items,before=None}
+\begin{methoddesc}{insertItems}{items,before=None}
 Insert a list of items in the menu.
         
         Each item is a tuple of two to five elements:
@@ -749,7 +749,7 @@ Insert a list of items in the menu.
         If before is given, it specifies the text OR the action of one of the
         items in the menu: the new items will be inserted before that one.
         
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Menu --- A popup/pulldown menu.}
 
@@ -775,13 +775,13 @@ Create a popup/pulldown menu.
 
 Menu instances have the following methods:
 
-\begin{funcdesc}{process}{}
+\begin{methoddesc}{process}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{remove}{}
+\begin{methoddesc}{remove}{}
 Remove this menu from its parent.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{MenuBar --- A menu bar allowing easy menu creation.}
 
@@ -811,9 +811,9 @@ Create a new DAction with name, icon and string data.
 
 DAction instances have the following methods:
 
-\begin{funcdesc}{activated}{}
+\begin{methoddesc}{activated}{}
 
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{ActionList --- Menu and toolbar with named actions.}
     An action list is a list of strings, each connected to some action.
@@ -840,7 +840,7 @@ Create an new action list, empty by default.
 
 ActionList instances have the following methods:
 
-\begin{funcdesc}{add}{name,icon=None}
+\begin{methoddesc}{add}{name,icon=None}
 Add a new name to the actions list and create a matching DAction.
 
         If the actions list has an associated menu or toolbar,
@@ -848,11 +848,11 @@ Add a new name to the actions list and create a matching DAction.
         If an icon is specified, it will be used on the menu and toolbar.
         The icon is either a filename or a QIcon object. 
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{names}{}
+\begin{methoddesc}{names}{}
 Return an ordered list of names of the action items.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Functions defined in module \module{widgets}}
 

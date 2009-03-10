@@ -7,8 +7,8 @@
 \section{\module{odict} --- A dictionary that keeps the keys in order of insertion.}
 \label{sec:odict}
 
-\declaremodule{""}{pyformex/odict}
-\modulesynopsis{pyformex/odict}
+\declaremodule{extension}{pyformex.odict}
+\modulesynopsis{A dictionary that keeps the keys in order of insertion.}
 \moduleauthor{'pyFormex project'}{'http://pyformex.org'}
 
 
@@ -29,56 +29,56 @@ Create a new ODict instance.
 
 ODict instances have the following methods:
 
-\begin{funcdesc}{__repr__}{}
+\begin{methoddesc}{__repr__}{}
 Format the Dict as a string.
 
         We use the format Dict({}), so that the string is a valid Python
         representation of the Dict.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{__setitem__}{key,value}
+\begin{methoddesc}{__setitem__}{key,value}
 Allows items to be set using self[key] = value.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{__delitem__}{key}
+\begin{methoddesc}{__delitem__}{key}
 Allow items to be deleted using del self[key].
 
         Raises an error if key does not exist.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{update}{data={}}
+\begin{methoddesc}{update}{data={}}
 Add a dictionary to the ODict object.
 
         The new keys will be appended to the existing, but the order of the
         added keys is undetemined if data is a dict object. If data is an ODict
         its order will be respected.. 
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{__add__}{data}
+\begin{methoddesc}{__add__}{data}
 Add two ODicts's together, returning the result.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{sort}{keys}
+\begin{methoddesc}{sort}{keys}
 Set the order of the keys.
 
         keys should be a list containing exactly all the keys from self.
         
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{keys}{}
+\begin{methoddesc}{keys}{}
 Return the keys in order.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{values}{}
+\begin{methoddesc}{values}{}
 Return the values in order of the keys.
-\end{funcdesc}
+\end{methoddesc}
 
-\begin{funcdesc}{items}{}
+\begin{methoddesc}{items}{}
 Return the key,value pairs in order of the keys.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{KeyList --- A named item list.}
     A KeyList is a list of lists or tuples. Each item (sublist or tuple)
@@ -98,9 +98,9 @@ Create a new KeyList, possibly filling it with data.
 
 KeyList instances have the following methods:
 
-\begin{funcdesc}{items}{}
+\begin{methoddesc}{items}{}
 Return the key+value lists in order of the keys.
-\end{funcdesc}
+\end{methoddesc}
 
 \subsection{Functions defined in module \module{odict}}
 
