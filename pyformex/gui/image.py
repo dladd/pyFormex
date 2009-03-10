@@ -22,9 +22,14 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Functions for saving renderings to image files."""
+"""Saving OpenGL renderings to image files.
 
-__all__ = [ 'save', 'saveNext', 'saveIcon' ]
+This module defines some functions that can be used to save the
+OpenGL rendering and the pyFormex GUI to image files. There are even
+provisions for automatic saving to a series of files and creating
+a movie from these images.
+"""
+
 
 import pyformex as GD
 
@@ -32,9 +37,6 @@ from OpenGL import GL
 from PyQt4 import QtCore,QtGui
 import utils
 import os
-
-# Find interesting supporting software
-utils.hasExternal('ImageMagick')
 
 
 # The image formats recognized by pyFormex
@@ -44,19 +46,40 @@ image_formats_gl2ps = []
 image_formats_fromeps = []
 
 # global parameters for multisave mode
-multisave = None 
+multisave = None
 
-# Set some globals
-GD.debug("LOADING IMAGE FORMATS")
-image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
-image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
-if GD.cfg.get('imagesfromeps',False):
-    GD.image_formats_qt = []
-if GD.options.debug:
-    print "Qt image types for saving: ",image_formats_qt
-    print "Qt image types for input: ",image_formats_qtr
-    print "gl2ps image types:",image_formats_gl2ps
-    print "image types converted from EPS:",image_formats_fromeps
+# imported module
+gl2ps = None
+
+def initialize():
+    """Initialize the image module."""
+    global image_formats_qt,image_formats_qtr,image_formats_gl2ps,image_formats_fromeps,gl2ps,_producer,_gl2ps_types
+    
+    # Find interesting supporting software
+    utils.hasExternal('ImageMagick')
+    # Set some globals
+    GD.debug("LOADING IMAGE FORMATS")
+    image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
+    image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
+    if GD.cfg.get('imagesfromeps',False):
+        GD.image_formats_qt = []
+
+    if utils.hasModule('gl2ps'):
+
+        import gl2ps
+
+        _producer = GD.Version + ' (http://pyformex.berlios.de)'
+        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
+                         'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
+        image_formats_gl2ps = _gl2ps_types.keys()
+        image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
+                                     'xwd', 'y4m' ]
+    if GD.options.debug:
+        print "Qt image types for saving: ",image_formats_qt
+        print "Qt image types for input: ",image_formats_qtr
+        print "gl2ps image types:",image_formats_gl2ps
+        print "image types converted from EPS:",image_formats_fromeps
+
  
 def imageFormats():
     """Return a list of the valid image formats.
@@ -151,19 +174,11 @@ def save_canvas(canvas,fn,fmt='png',options=None):
     return sta
 
 
-if utils.hasModule('gl2ps'):
+initialize()
 
-    import gl2ps
-
-    _producer = GD.Version + ' (http://pyformex.berlios.de)'
-    _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
-                     'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
-    image_formats_gl2ps = _gl2ps_types.keys()
-    image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
-                                 'xwd', 'y4m' ]
-
-    def save_PS(canvas,filename,filetype=None,title='',producer='',
-               viewport=None):
+if gl2ps:
+    
+    def save_PS(canvas,filename,filetype=None,title='',producer='',viewport=None):
         """ Export OpenGL rendering to PostScript/PDF/TeX format.
 
         Exporting OpenGL renderings to PostScript is based on the PS2GL
@@ -421,6 +436,9 @@ def saveMovie(filename,format,windowname=None):
     GD.debug(cmd)
     #sta,out = utils.runCommand(cmd)
     return sta
+
+
+initialize()
 
 
 ### End
