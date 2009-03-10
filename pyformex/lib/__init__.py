@@ -15,43 +15,46 @@ This tries to load the compiled libraries, and replaces those that failed
 to load with the (slower) Python versions.
 """
 
-__all__ = [ 'drawgl', 'misc', 'has_drawgl', 'has_misc' ]
+__all__ = [ 'drawgl', 'misc', 'accelerated' ]
 
 drawgl = misc = None
-has_drawgl = has_misc = False
+accelerated = []
 
 
-def init_lib():
-    global drawgl,misc,has_drawgl,has_misc
+def init_libs():
+    global drawgl,misc
     
     import pyformex as GD
 
-    if GD.options.uselib is None or GD.options.uselib == True:
-
-        try:
-            import drawgl
-            GD.debug("Succesfully loaded the pyFormex compiled draw library")
-            has_drawgl = True
-        except ImportError:
-            GD.debug("Error while loading the pyFormex compiled draw library")
+    # testing for not False makes other values than T/F (like None) pass
+    if GD.options.uselib is not False:
 
         try:
             import misc
+            accelerated .append(misc)
             GD.debug("Succesfully loaded the pyFormex compiled misc library")
             has_misc = True
         except ImportError:
             GD.debug("Error while loading the pyFormex compiled misc library")
 
+        if GD.options.gui: 
+            try:
+                import drawgl
+                accelerated .append(drawgl)
+                GD.debug("Succesfully loaded the pyFormex compiled draw library")
+                has_drawgl = True
+            except ImportError:
+                GD.debug("Error while loading the pyFormex compiled draw library")
 
-    if not has_drawgl:
-        GD.debug("Using the (slower) Python draw functions")
-        import pyformex.gui.drawgl
-
-    if not has_misc:
+    if misc is None:
         GD.debug("Using the (slower) Python misc functions")
-        import pyformex.misc
+        import pyformex.misc as misc
+
+    if drawgl is None:
+        GD.debug("Using the (slower) Python draw functions")
+        import pyformex.gui.drawgl as drawgl
 
 
-init_lib()
+init_libs()
 
 # End

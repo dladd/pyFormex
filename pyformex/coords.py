@@ -1097,9 +1097,11 @@ class Coords(ndarray):
         flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
         sel = arange(nnod).astype(int32)   # replacement unique node nr
         tol = max(abs(rtol*self.sizes()).max(),atol)
-        if has_misc: # and GD.options.fastfuse:
+        if hasattr(misc,'fuse'):
+            # use the lib
             misc.fuse(x,val,flag,sel,tol)
         else:
+            # !!!! this code should be moved to the emulated lib !
             for i in range(nnod):
                 j = i-1
                 while j>=0 and val[i]==val[j]:
