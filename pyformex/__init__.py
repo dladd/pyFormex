@@ -63,9 +63,13 @@ def message(s):
 
 warning = message
 
-def debug(s):
-    if options.debug:
-        print "DEBUG: %s" % str(s)
+debug = message
+
+def debug_true(s):
+    print "DEBUG: %s" % str(s)
+
+def debug_false(s):
+    pass
 
 def debugt(s):
     if options.debug:

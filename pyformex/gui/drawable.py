@@ -34,7 +34,7 @@ from formex import *
 import simple
 import utils
 
-from lib import *
+from pyformex.lib import drawgl
 
 
 def rotMatrix(v,n=3):

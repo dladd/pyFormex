@@ -383,7 +383,7 @@ def playFile(fn,argv=[]):
     message("Running script (%s)" % fn)
     GD.debug("  Executing with arguments: %s" % argv)
     res = playScript(file(fn,'r'),fn,fn,argv)
-    GD.debug("  Arguments left after executione: %s" % argv)
+    GD.debug("  Arguments left after execution: %s" % argv)
     message("Finished script %s" % fn)
     return res
 

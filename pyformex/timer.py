@@ -40,8 +40,8 @@ class Timer(object):
     def read(self):
         """Read the timer.
 
-        This returns the elapsed time since the last reset or then creation
-        of the timer as a datetime.timedelta object.
+        This returns the elapsed time since the last reset (or the creation
+        of the timer) as a datetime.timedelta object.
         """
         now = datetime.now()
         return now - self.start

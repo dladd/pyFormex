@@ -37,7 +37,6 @@ import image
 import draw
 import script
 
-
 save = NotImplemented
 saveAs = NotImplemented
 

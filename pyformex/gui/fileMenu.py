@@ -28,7 +28,8 @@ import pyformex as GD
 import widgets
 import utils
 
-import draw,image
+import draw
+import image
 from plugins import surface_menu,formex_menu,tools_menu,postproc_menu
 
 from plugins import project

@@ -1,25 +1,13 @@
-% pyformex manual --- widgets
-% $Id$
-% (C) B.Verhegghe
+============= widgets ============
+MODULE: widgets
+CLASSES:
+
+Options: 
+
+Options ()
 
 
-\section{\module{widgets} --- A collection of custom widgets used in the pyFormex GUI}
-\label{sec:widgets}
-
-\declaremodule{""}{pyformex/gui/widgets}
-\modulesynopsis{pyformex/gui/widgets}
-\moduleauthor{'pyFormex project'}{'http://pyformex.org'}
-
-
-
-\subsection{Options --- }
-
-
-\begin{classdesc}{Options}{}
-
-\end{classdesc}
-
-\subsection{FileSelection --- A file selection dialog widget.}
+FileSelection: A file selection dialog widget.
     You can specify a default path/filename that will be suggested initially.
     If a pattern is specified, only matching files will be shown.
     A pattern can be something like 'Images (*.png *.jpg)' or a list
@@ -29,134 +17,95 @@
     accept multiple files.
     If dir==True, a single existing directory is asked.
     
-
-\begin{classdesc}{FileSelection}{path,pattern=None,exist=False,multi=False,dir=False}
+FileSelection (path,pattern=None,exist=False,multi=False,dir=False)
 The constructor shows the widget.
-\end{classdesc}
 
-FileSelection instances have the following methods:
-
-\begin{funcdesc}{getFilename}{}
+getFilename ()
 Ask for a filename by user interaction.
 
         Return the filename selected by the user.
         If the user hits CANCEL or ESC, None is returned.
         
-\end{funcdesc}
 
-\subsection{SaveImageDialog --- A file selection dialog with extra fields.}
+SaveImageDialog: A file selection dialog with extra fields.
 
-
-\begin{classdesc}{SaveImageDialog}{path=None,pattern=None,exist=False,multi=False}
+SaveImageDialog (path=None,pattern=None,exist=False,multi=False)
 Create the dialog.
-\end{classdesc}
 
-SaveImageDialog instances have the following methods:
-
-\begin{funcdesc}{getResult}{}
-
-\end{funcdesc}
-
-\subsection{ImageViewerDialog --- }
+getResult ()
 
 
-\begin{classdesc}{ImageViewerDialog}{path=None}
+ImageViewerDialog: 
 
-\end{classdesc}
+ImageViewerDialog (path=None)
 
-ImageViewerDialog instances have the following methods:
 
-\begin{funcdesc}{getFilename}{}
+getFilename ()
 Ask for a filename by user interaction.
 
         Return the filename selected by the user.
         If the user hits CANCEL or ESC, None is returned.
         
-\end{funcdesc}
 
-\subsection{AppearenceDialog --- A dialog for setting the GUI appearance.}
+AppearenceDialog: A dialog for setting the GUI appearance.
 
-
-\begin{classdesc}{AppearenceDialog}{}
+AppearenceDialog ()
 Create the Appearance dialog.
-\end{classdesc}
 
-AppearenceDialog instances have the following methods:
+setFont ()
 
-\begin{funcdesc}{setFont}{}
 
-\end{funcdesc}
+getResult ()
 
-\begin{funcdesc}{getResult}{}
 
-\end{funcdesc}
-
-\subsection{DockedSelection --- A widget that is docked in the main window and contains a modeless}
+DockedSelection: A widget that is docked in the main window and contains a modeless
     
-
-\begin{classdesc}{DockedSelection}{slist=[],title='Selection Dialog',mode=None,sort=False,func=None}
-
-\end{classdesc}
-
-DockedSelection instances have the following methods:
-
-\begin{funcdesc}{setSelected}{selected,bool}
-
-\end{funcdesc}
-
-\begin{funcdesc}{getResult}{}
-
-\end{funcdesc}
-
-\subsection{ModelessSelection --- A modeless dialog for selecting one or more items from a list.}
+DockedSelection (slist=[],title='Selection Dialog',mode=None,sort=False,func=None)
 
 
-\begin{classdesc}{ModelessSelection}{slist=[],title='Selection Dialog',mode=None,sort=False,func=None}
+setSelected (selected,bool)
+
+
+getResult ()
+
+
+ModelessSelection: A modeless dialog for selecting one or more items from a list.
+
+ModelessSelection (slist=[],title='Selection Dialog',mode=None,sort=False,func=None)
 Create the SelectionList dialog.
         
-\end{classdesc}
 
-ModelessSelection instances have the following methods:
-
-\begin{funcdesc}{setSelected}{selected,bool}
+setSelected (selected,bool)
 Mark the specified items as selected.
-\end{funcdesc}
 
-\begin{funcdesc}{getResult}{}
+getResult ()
 Return the list of selected values.
 
         If the user cancels the selection operation, the return value is None.
         Else, the result is always a list, possibly empty or with a single
         value.
         
-\end{funcdesc}
 
-\subsection{Selection --- A dialog for selecting one or more items from a list.}
+Selection: A dialog for selecting one or more items from a list.
 
-
-\begin{classdesc}{Selection}{slist=[],title='Selection Dialog',mode=None,sort=False,selected=[]}
+Selection (slist=[],title='Selection Dialog',mode=None,sort=False,selected=[])
 Create the SelectionList dialog.
 
         selected is a list of items that are initially selected.
         
-\end{classdesc}
 
-Selection instances have the following methods:
-
-\begin{funcdesc}{setSelected}{selected}
+setSelected (selected)
 Mark the specified items as selected.
-\end{funcdesc}
 
-\begin{funcdesc}{getResult}{}
+getResult ()
 Return the list of selected values.
 
         If the user cancels the selection operation, the return value is None.
         Else, the result is always a list, possibly empty or with a single
         value.
         
-\end{funcdesc}
 
-\subsection{InputItem --- A single input item, usually with a label in front.}
+InputItem: A single input item, usually with a label in front.
     The created widget is a QHBoxLayout which can be embedded in the vertical
     layout of a dialog.
     
@@ -177,77 +126,56 @@ Return the list of selected values.
     Subclasses can define a show() method e.g. to select the data in the
     input field on display of the dialog.
     
-
-\begin{classdesc}{InputItem}{name=None,*args}
+InputItem (name=None,*args)
 Creates a new inputitem with a name label in front.
         
         If a name is given, a label is created and added to the layout.
         
-\end{classdesc}
 
-InputItem instances have the following methods:
-
-\begin{funcdesc}{name}{}
+name ()
 Return the widget's name.
-\end{funcdesc}
 
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputInfo --- An unchangeable input item.}
+InputInfo: An unchangeable input item.
 
-
-\begin{classdesc}{InputInfo}{name,value,*args}
+InputInfo (name,value,*args)
 Creates a new info field with a label in front.
 
         The info input field is an unchangeable text field.
         
-\end{classdesc}
 
-InputInfo instances have the following methods:
-
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputString --- A string input item.}
+InputString: A string input item.
 
-
-\begin{classdesc}{InputString}{name,value,*args}
+InputString (name,value,*args)
 Creates a new string input field with a label in front.
 
         If the type of value is not a string, the input string
         will be eval'ed before returning.
         
-\end{classdesc}
 
-InputString instances have the following methods:
-
-\begin{funcdesc}{show}{}
+show ()
 Select all text on first display.
-\end{funcdesc}
 
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputBool --- A boolean input item.}
+InputBool: A boolean input item.
 
-
-\begin{classdesc}{InputBool}{name,value,*args}
+InputBool (name,value,*args)
 Creates a new checkbox for the input of a boolean value.
         
         Displays the name next to a checkbox, which will initially be set
@@ -255,26 +183,19 @@ Creates a new checkbox for the input of a boolean value.
         The value is either True or False,depending on the setting
         of the checkbox.
         
-\end{classdesc}
 
-InputBool instances have the following methods:
-
-\begin{funcdesc}{name}{}
+name ()
 Return the widget's name.
-\end{funcdesc}
 
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputCombo --- A combobox InputItem.}
+InputCombo: A combobox InputItem.
 
-
-\begin{classdesc}{InputCombo}{name,choices,default,*args}
+InputCombo (name,choices,default,*args)
 Creates a new combobox for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -285,22 +206,16 @@ Creates a new combobox for the selection of a value from a list.
         The choices are presented to the user as a combobox, which will
         initially be set to the default value.
         
-\end{classdesc}
 
-InputCombo instances have the following methods:
-
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputRadio --- A radiobuttons InputItem.}
+InputRadio: A radiobuttons InputItem.
 
-
-\begin{classdesc}{InputRadio}{name,choices,default,direction='h',*args}
+InputRadio (name,choices,default,direction='h',*args)
 Creates radiobuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -312,22 +227,16 @@ Creates radiobuttons for the selection of a value from a list.
         of which the default will initially be pressed.
         If direction == 'v', the options are in a vbox. 
         
-\end{classdesc}
 
-InputRadio instances have the following methods:
-
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputPush --- A pushbuttons InputItem.}
+InputPush: A pushbuttons InputItem.
 
-
-\begin{classdesc}{InputPush}{name,choices,default=None,direction='h',*args}
+InputPush (name,choices,default=None,direction='h',*args)
 Creates pushbuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -339,135 +248,97 @@ Creates pushbuttons for the selection of a value from a list.
         of which the default will initially be pressed.
         If direction == 'v', the options are in a vbox. 
         
-\end{classdesc}
 
-InputPush instances have the following methods:
-
-\begin{funcdesc}{setText}{text,index=0}
+setText (text,index=0)
 Change the text on button index.
-\end{funcdesc}
 
-\begin{funcdesc}{setIcon}{icon,index=0}
+setIcon (icon,index=0)
 Change the icon on button index.
-\end{funcdesc}
 
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputInteger --- An integer input item.}
+InputInteger: An integer input item.
     Options:
     'min', 'max': range of the scale (integer)
     
-
-\begin{classdesc}{InputInteger}{name,value,*args,**kargs}
+InputInteger (name,value,*args,**kargs)
 Creates a new integer input field with a label in front.
-\end{classdesc}
 
-InputInteger instances have the following methods:
-
-\begin{funcdesc}{show}{}
+show ()
 Select all text on first display.
-\end{funcdesc}
 
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputFloat --- An float input item.}
+InputFloat: An float input item.
 
-
-\begin{classdesc}{InputFloat}{name,value,*args}
+InputFloat (name,value,*args)
 Creates a new float input field with a label in front.
-\end{classdesc}
 
-InputFloat instances have the following methods:
-
-\begin{funcdesc}{show}{}
+show ()
 Select all text on first display.
-\end{funcdesc}
 
-\begin{funcdesc}{value}{}
+value ()
 Return the widget's value.
-\end{funcdesc}
 
-\begin{funcdesc}{setValue}{val}
+setValue (val)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputSlider --- An integer input item using a slider.}
+InputSlider: An integer input item using a slider.
     Options:
       'min', 'max': range of the scale (integer)
       'ticks'     : step for the tick marks (default range length / 10)
       'func'      : an optional function to be called whenever the value is
                     changed. The function takes a float/integer argument.
     
-
-\begin{classdesc}{InputSlider}{name,value,*args,**kargs}
+InputSlider (name,value,*args,**kargs)
 Creates a new integer input slider.
-\end{classdesc}
 
-InputSlider instances have the following methods:
+set_value (val)
 
-\begin{funcdesc}{set_value}{val}
 
-\end{funcdesc}
-
-\subsection{InputFSlider --- A float input item using a slider.}
+InputFSlider: A float input item using a slider.
     Options:
       'min', 'max': range of the scale (integer)
       'ticks'     : step for the tick marks (default range length / 10)
       'func'      : an optional function to be called whenever the value is
                     changed. The function takes a float/integer argument.
     
-
-\begin{classdesc}{InputFSlider}{name,value,*args,**kargs}
+InputFSlider (name,value,*args,**kargs)
 Creates a new integer input slider.
-\end{classdesc}
 
-InputFSlider instances have the following methods:
-
-\begin{funcdesc}{set_value}{val}
-
-\end{funcdesc}
-
-\subsection{InputColor --- A color input item.}
+set_value (val)
 
 
-\begin{classdesc}{InputColor}{name,value,*args}
+InputColor: A color input item.
+
+InputColor (name,value,*args)
 Creates a new color input field with a label in front.
 
         The color input field is a button displaying the current color.
         Clicking on the button opens a color dialog, and the returned
         value is set in the button.
         
-\end{classdesc}
 
-InputColor instances have the following methods:
+setColor ()
 
-\begin{funcdesc}{setColor}{}
 
-\end{funcdesc}
-
-\begin{funcdesc}{setValue}{value}
+setValue (value)
 Change the widget's value.
-\end{funcdesc}
 
-\subsection{InputDialog --- A dialog widget to set the value of one or more items.}
+InputDialog: A dialog widget to set the value of one or more items.
     While general input dialogs can be constructed from all the underlying
     Qt classes, this widget provides a way to construct fairly complex
     input dialogs with a minimum of effort.
     
-
-\begin{classdesc}{InputDialog}{items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False}
+InputDialog (items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False)
 Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -518,15 +389,11 @@ Creates a dialog which asks the user for the value of items.
         [ 'name', 'red', 'color' ] will present a color selection widget,
         with 'red' as the initial choice.
         
-\end{classdesc}
 
-InputDialog instances have the following methods:
-
-\begin{funcdesc}{__getitem__}{name}
+__getitem__ (name)
 Return the input item with specified name.
-\end{funcdesc}
 
-\begin{funcdesc}{acceptData}{}
+acceptData ()
 Update the dialog's return value from the field values.
 
         This function is connected to the 'accepted()' signal.
@@ -535,21 +402,18 @@ Update the dialog's return value from the field values.
         results without having to raise the accepted() signal (which
         would close the dialog).
         
-\end{funcdesc}
 
-\begin{funcdesc}{updateData}{d}
+updateData (d)
 Update a dialog from the data in given dictionary.
 
         d is a dictionary where the keys are field names in t the dialog.
         The values will be set in the corresponding input items.
         
-\end{funcdesc}
 
-\begin{funcdesc}{timeout}{}
+timeout ()
 
-\end{funcdesc}
 
-\begin{funcdesc}{getResult}{timeout=None,timeoutAccept=True}
+getResult (timeout=None,timeoutAccept=True)
  Get the results from the input dialog.
 
         This fuction is used to present a modal dialog to the user (i.e. a
@@ -572,61 +436,47 @@ Update a dialog from the data in given dictionary.
         self.accepted == TRUE/FALSE
         self.timedOut == TRUE/FALSE
         
-\end{funcdesc}
 
-\subsection{TableModel --- A table model that represent data as a two-dimensional array of items.}
+TableModel: A table model that represent data as a two-dimensional array of items.
     data is any tabular data organized in a fixed number of rows and colums.
     This means that an item at row i and column j can be addressed as
     data[i][j].
     Optional lists of column and row headers can be specified.
     
-
-\begin{classdesc}{TableModel}{data,chead=None,rhead=None,parent=None,*args}
-
-\end{classdesc}
-
-TableModel instances have the following methods:
-
-\begin{funcdesc}{rowCount}{parent=None}
-
-\end{funcdesc}
-
-\begin{funcdesc}{columnCount}{parent=None}
-
-\end{funcdesc}
-
-\begin{funcdesc}{data}{index,role}
-
-\end{funcdesc}
-
-\begin{funcdesc}{headerData}{col,orientation,role}
-
-\end{funcdesc}
-
-\begin{funcdesc}{insertRows}{row=None,count=None}
-
-\end{funcdesc}
-
-\begin{funcdesc}{removeRows}{row=None,count=None}
-
-\end{funcdesc}
-
-\subsection{Table --- A dialog widget to show two-dimensional arrays of items.}
+TableModel (data,chead=None,rhead=None,parent=None,*args)
 
 
-\begin{classdesc}{Table}{data,chead=None,rhead=None,caption=None,parent=None,actions=[('OK',)],default='OK'}
+rowCount (parent=None)
+
+
+columnCount (parent=None)
+
+
+data (index,role)
+
+
+headerData (col,orientation,role)
+
+
+insertRows (row=None,count=None)
+
+
+removeRows (row=None,count=None)
+
+
+Table: A dialog widget to show two-dimensional arrays of items.
+
+Table (data,chead=None,rhead=None,caption=None,parent=None,actions=[('OK',)],default='OK')
 Create the Table dialog.
         
         data is a 2-D array of items, mith nrow rows and ncol columns.
         chead is an optional list of ncol column headers.
         rhead is an optional list of nrow row headers.
         
-\end{classdesc}
 
-\subsection{TableDialog --- A dialog widget to show two-dimensional arrays of items.}
+TableDialog: A dialog widget to show two-dimensional arrays of items.
 
-
-\begin{classdesc}{TableDialog}{items,caption=None,parent=None,tab=False}
+TableDialog (items,caption=None,parent=None,tab=False)
 Create the Table dialog.
         
         If tab = False, a dialog with one table is created and items
@@ -634,43 +484,30 @@ Create the Table dialog.
         If tab = True, a dialog with multiple pages is created and items
         should be a list of pages [page_header,table_header,table_data].
         
-\end{classdesc}
 
-\subsection{ButtonBox --- }
+ButtonBox: 
 
-
-\begin{classdesc}{ButtonBox}{name,choices,funcs,*args}
-
-\end{classdesc}
-
-ButtonBox instances have the following methods:
-
-\begin{funcdesc}{setText}{text,index=0}
-
-\end{funcdesc}
-
-\begin{funcdesc}{setIcon}{icon,index=0}
-
-\end{funcdesc}
-
-\begin{funcdesc}{__str__}{}
-
-\end{funcdesc}
-
-\subsection{ComboBox --- }
+ButtonBox (name,choices,funcs,*args)
 
 
-\begin{classdesc}{ComboBox}{name,choices,func,*args}
+setText (text,index=0)
 
-\end{classdesc}
 
-ComboBox instances have the following methods:
+setIcon (icon,index=0)
 
-\begin{funcdesc}{setIndex}{i}
 
-\end{funcdesc}
+__str__ ()
 
-\subsection{BaseMenu --- A general menu class.}
+
+ComboBox: 
+
+ComboBox (name,choices,func,*args)
+
+
+setIndex (i)
+
+
+BaseMenu: A general menu class.
     This class is not intended for direct use, but through subclasses.
     Subclasses should implement at least the following methods:
       addSeparator()              insertSeperator(before)
@@ -679,51 +516,41 @@ ComboBox instances have the following methods:
       
     QtGui.Menu and QtGui.MenuBar provide these methods.
     
-
-\begin{classdesc}{BaseMenu}{title='AMenu',parent=None,before=None,items=None}
+BaseMenu (title='AMenu',parent=None,before=None,items=None)
 Create a menu.
 
         This is a hierarchical menu that keeps a list of its item
         names and actions.
         
-\end{classdesc}
 
-BaseMenu instances have the following methods:
-
-\begin{funcdesc}{item}{text}
+item (text)
 Get the menu item with given normalized text.
 
         Text normalization removes all '\&' characters and
         converts to lower case.
         
-\end{funcdesc}
 
-\begin{funcdesc}{itemAction}{item}
+itemAction (item)
 Return the action corresponding to item.
 
         item is either one of the menu's item texts, or one of its
         values. This method guarantees that the return value is either the
         corresponding Action, or None.
         
-\end{funcdesc}
 
-\begin{funcdesc}{insert_sep}{before=None}
+insert_sep (before=None)
 Create and insert a separator
-\end{funcdesc}
 
-\begin{funcdesc}{insert_menu}{menu,before=None}
+insert_menu (menu,before=None)
 Insert an existing menu.
-\end{funcdesc}
 
-\begin{funcdesc}{insert_action}{action,before=None}
+insert_action (action,before=None)
 Insert an action.
-\end{funcdesc}
 
-\begin{funcdesc}{create_insert_action}{str,val,before=None}
+create_insert_action (str,val,before=None)
 Create and insert an action.
-\end{funcdesc}
 
-\begin{funcdesc}{insertItems}{items,before=None}
+insertItems (items,before=None)
 Insert a list of items in the menu.
         
         Each item is a tuple of two to five elements:
@@ -748,12 +575,10 @@ Insert a list of items in the menu.
         If before is given, it specifies the text OR the action of one of the
         items in the menu: the new items will be inserted before that one.
         
-\end{funcdesc}
 
-\subsection{Menu --- A popup/pulldown menu.}
+Menu: A popup/pulldown menu.
 
-
-\begin{classdesc}{Menu}{title='UserMenu',parent=None,before=None,items=None}
+Menu (title='UserMenu',parent=None,before=None,items=None)
 Create a popup/pulldown menu.
 
         If parent==None, the menu is a standalone popup menu.
@@ -770,32 +595,24 @@ Create a popup/pulldown menu.
         If insert == False, the created menu will be an independent dialog
         and the user will have to process it explicitely.
         
-\end{classdesc}
 
-Menu instances have the following methods:
+process ()
 
-\begin{funcdesc}{process}{}
 
-\end{funcdesc}
-
-\begin{funcdesc}{remove}{}
+remove ()
 Remove this menu from its parent.
-\end{funcdesc}
 
-\subsection{MenuBar --- A menu bar allowing easy menu creation.}
+MenuBar: A menu bar allowing easy menu creation.
 
-
-\begin{classdesc}{MenuBar}{}
+MenuBar ()
 Create the menubar.
-\end{classdesc}
 
-\subsection{DAction --- A DAction is a QAction that emits a signal with a string parameter.}
+DAction: A DAction is a QAction that emits a signal with a string parameter.
     When triggered, this action sends a signal (default 'Clicked') with a
     custom string as parameter. The connected slot can then act depending
     on this parameter.
     
-
-\begin{classdesc}{DAction}{name,icon=None,data=None,signal=None}
+DAction (name,icon=None,data=None,signal=None)
 Create a new DAction with name, icon and string data.
 
         If the DAction is used in a menu, a name is sufficient. For use
@@ -806,23 +623,18 @@ Create a new DAction with name, icon and string data.
         
         See the views.py module for an example.
         
-\end{classdesc}
 
-DAction instances have the following methods:
+activated ()
 
-\begin{funcdesc}{activated}{}
 
-\end{funcdesc}
-
-\subsection{ActionList --- Menu and toolbar with named actions.}
+ActionList: Menu and toolbar with named actions.
     An action list is a list of strings, each connected to some action.
     The actions can be presented in a menu and/or a toolbar.
     On activating one of the menu or toolbar buttons, a given signal is
     emitted with the button string as parameter. A fixed function can be
     connected to this signal to act dependent on the string value.
     
-
-\begin{classdesc}{ActionList}{actions=[],function=None,menu=None,toolbar=None,icons=None}
+ActionList (actions=[],function=None,menu=None,toolbar=None,icons=None)
 Create an new action list, empty by default.
 
         A list of strings can be passed to initialize the actions.
@@ -835,11 +647,8 @@ Create an new action list, empty by default.
         action names. Icons will be taken from the installed icon directory.
         If you want to specify other icons, use the add() method.
         
-\end{classdesc}
 
-ActionList instances have the following methods:
-
-\begin{funcdesc}{add}{name,icon=None}
+add (name,icon=None)
 Add a new name to the actions list and create a matching DAction.
 
         If the actions list has an associated menu or toolbar,
@@ -847,15 +656,12 @@ Add a new name to the actions list and create a matching DAction.
         If an icon is specified, it will be used on the menu and toolbar.
         The icon is either a filename or a QIcon object. 
         
-\end{funcdesc}
 
-\begin{funcdesc}{names}{}
+names ()
 Return an ordered list of names of the action items.
-\end{funcdesc}
+FUNCTIONS:
 
-\subsection{Functions defined in module \module{widgets}}
-
-\begin{funcdesc}{selectFont}{}
+selectFont ()
 Ask the user to select a font.
 
     A font selection dialog widget is displayed and the user is requested
@@ -863,18 +669,16 @@ Ask the user to select a font.
     Returns a font if the user exited the dialog with the OK button.
     Returns None if the user clicked CANCEL.
     
-\end{funcdesc}
 
-\begin{funcdesc}{getColor}{col=None,caption=None}
+getColor (col=None,caption=None)
 Create a color selection dialog and return the selected color.
 
     col is the initial selection.
     If a valid color is selected, its string name is returned, usually as
     a hex \#RRGGBB string. If the dialog is canceled, None is returned.
     
-\end{funcdesc}
 
-\begin{funcdesc}{dialogButtons}{dialog,actions,default}
+dialogButtons (dialog,actions,default)
 Create a set of dialog buttons
 
     dia is a dialog widget
@@ -885,9 +689,8 @@ Create a set of dialog buttons
     or 'reject' slot.
     default is the name of the action to set as the default.
     
-\end{funcdesc}
 
-\begin{funcdesc}{messageBox}{message,level='info',choices=['OK'],timeout=None}
+messageBox (message,level='info',choices=['OK'],timeout=None)
 Display a message box and wait for user response.
 
     The message box displays a text, an icon depending on the level
@@ -897,26 +700,19 @@ Display a message box and wait for user response.
     The function returns the text of the button that was clicked or
     an empty string is ESC was hit.
     
-\end{funcdesc}
 
-\begin{funcdesc}{textBox}{text,choices=['OK']}
+textBox (text,choices=['OK'])
 Display a text and wait for user response.
 
     Possible choices are 'OK' and 'CANCEL'.
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     
-\end{funcdesc}
 
-\begin{funcdesc}{normalize}{s}
+normalize (s)
 Normalize a string.
 
     Text normalization removes all '\&' characters and converts to lower case.
     
-\end{funcdesc}
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "pyformex"
-%%% End:
+========================================
 

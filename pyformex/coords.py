@@ -24,11 +24,8 @@
 ##
 """Coordinates of points in 3D space"""
 
-
-import pyformex as GD
 from pyformex.array import *
-
-from lib import *
+from pyformex.lib import misc
 
 
 ###########################################################################

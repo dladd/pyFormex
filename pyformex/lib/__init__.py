@@ -20,41 +20,41 @@ __all__ = [ 'drawgl', 'misc', 'accelerated' ]
 drawgl = misc = None
 accelerated = []
 
-
-def init_libs():
-    global drawgl,misc
     
-    import pyformex as GD
+#print "INITIALIZING LIBRARY"
+import pyformex as GD
+#print GD.options
 
+accelerate = gui = False
+if GD.options:
     # testing for not False makes other values than T/F (like None) pass
-    if GD.options.uselib is not False:
+    accelerate = GD.options.uselib is not False
+    gui = GD.options.gui
 
+if accelerate:
+
+    try:
+        import misc
+        GD.debug("Succesfully loaded the pyFormex compiled misc library")
+        accelerated.append(misc)
+    except ImportError:
+        GD.debug("Error while loading the pyFormex compiled misc library")
+
+    if gui: 
         try:
-            import misc
-            accelerated .append(misc)
-            GD.debug("Succesfully loaded the pyFormex compiled misc library")
-            has_misc = True
+            import drawgl
+            GD.debug("Succesfully loaded the pyFormex compiled draw library")
+            accelerated.append(drawgl)
         except ImportError:
-            GD.debug("Error while loading the pyFormex compiled misc library")
+            GD.debug("Error while loading the pyFormex compiled draw library")
 
-        if GD.options.gui: 
-            try:
-                import drawgl
-                accelerated .append(drawgl)
-                GD.debug("Succesfully loaded the pyFormex compiled draw library")
-                has_drawgl = True
-            except ImportError:
-                GD.debug("Error while loading the pyFormex compiled draw library")
+if misc is None:
+    GD.debug("Using the (slower) Python misc functions")
+    import pyformex.misc as misc
 
-    if misc is None:
-        GD.debug("Using the (slower) Python misc functions")
-        import pyformex.misc as misc
+if gui and drawgl is None:
+    GD.debug("Using the (slower) Python draw functions")
+    import pyformex.gui.drawgl as drawgl
 
-    if drawgl is None:
-        GD.debug("Using the (slower) Python draw functions")
-        import pyformex.gui.drawgl as drawgl
-
-
-init_libs()
 
 # End
