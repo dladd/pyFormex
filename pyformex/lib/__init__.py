@@ -21,9 +21,7 @@ drawgl = misc = None
 accelerated = []
 
     
-#print "INITIALIZING LIBRARY"
 import pyformex as GD
-#print GD.options
 
 accelerate = gui = False
 if GD.options:

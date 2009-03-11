@@ -27,36 +27,37 @@
 # If your are missing these files, you can safely copy (parts of) this file
 # as a start. 
 # Config settings are read in order from this file, then /etc/pyformexrc,
-# ~/.pyformexrc. The last settings will override previous ones.
+# ~/.pyformex/pyformexrc. The last settings will override previous ones.
 #
 # The config is now read by the config.Config class
 # Two variables are set on entry: pyformexdir, homedir
 #
 import os
 
-# directories
-workdir="."
+
+# files and directories
+workdir = "."
 icondir = os.path.join(pyformexdir,'icons')
 examplesdir = os.path.join(pyformexdir,'examples')
+userconfdir = os.path.join(homedir,'.pyformex')
+siteprefs = '/etc/pyformexrc'
+localprefs = '.pyformexrc'
+scripttemplate = os.path.join(pyformexdir,'template.py')
+
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
 scriptdirs = [ ('examples','') ]
-#imagesfromeps = True
 history = []
+
 # extra paths to append tot sys.path
 syspath = []
 
-autorun = os.environ['HOME']+'/pyformex_startup.py'
 
 # commands
-### THIS COULD BE CHANGED BY THE INSTALLATION PROCEDURE
+### THESE MAY BE CHANGED BY THE INSTALLATION PROCEDURE
 editor = os.environ.get('VISUAL','')
-#viewer = 'assistant %s'   # html viewer (assistant is part of QT4 docs)
 viewer = 'firefox'   # html viewer
-browser = 'firefox'    # web browser
-# the %s in the above commands will be replaced with the filename/URL
-scripttemplate = os.path.join(pyformexdir,'template.py')
-
+browser = 'firefox'  # web browser
 
 autoglobals = True
 uselib = True
@@ -65,6 +66,8 @@ uselib = True
 
 
 [gui]
+#imagesfromeps = True
+
 splash = os.path.join(icondir,'pyformex-splash.png')
 plugins = ['formex_menu']
 style = "Plastique"

@@ -183,7 +183,7 @@ def runTetgen(fn):
     """Run tetgen mesher on the specified file."""
     if os.path.exists(fn):
         sta,out = utils.runCommand('tetgen -z %s' % fn)
-        GD.message(out)
+        #GD.message(out)
 
 
 

@@ -85,8 +85,7 @@ def savePreferences():
     creating that file.
     If GD.preffile is None, preferences are not saved.
     """
-    f = preffile
-    if not f:
+    if preffile is None:
         return
     
     del cfg['__ref__']
@@ -97,13 +96,13 @@ def savePreferences():
     debug("!!!Saving config:\n%s" % cfg)
 
     try:
-        fil = file(f,'w')
+        fil = file(preffile,'w')
         fil.write("%s" % cfg)
         fil.close()
         res = "Saved"
     except:
         res = "Could not save"
-    debug("%s preferences to file %s" % (res,f))
+    debug("%s preferences to file %s" % (res,preffile))
 
 
 ### End

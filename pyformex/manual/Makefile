@@ -14,7 +14,7 @@ OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" 
 TESTOPTIONS= --l2h-init=fix.perl --keep
 TESTOPTIONS= --keep
 
-REMOVEFILES= images images.* img*.png index.dat *.pl WARNINGS pyfav.png *.how
+REMOVEFILES= images images.* index.dat *.pl WARNINGS pyfav.png *.how
 
 MANDOCS= ../manual/html/*.html ../manual/html/*.css ../manual/html/*.png
 MANIMAGES= ../manual/images/*.png

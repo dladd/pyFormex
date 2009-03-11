@@ -63,7 +63,14 @@ Each task can have the following keys:
 
  - Add a CoordPlaneActor to the formex_menu
 
- - Create CURVE and PLANE objects
+ - Create CURVE objects
+     dev: bverheg
+     sta: PARTIAL
+     rem: See the Curves example. 
+
+ - Create PLANE objects
+     dev: bverheg
+     sta: PARTIAL
 
  - Add an interactive command window to the GUI
 
