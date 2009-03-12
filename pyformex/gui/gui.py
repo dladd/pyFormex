@@ -732,6 +732,7 @@ See Help->License or the file COPYING for details.
         # Save the current dir as workdir
         GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
+    GD.app.processEvents()
 
     if GD.GUI.easter_egg:
         draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
@@ -748,8 +749,8 @@ def runGUI():
 
 def classify_examples():
     m = GD.GUI.menu.item('Examples')
-    print m
-    print str(m.title())
+    #print m
+    #print str(m.title())
     
         
 

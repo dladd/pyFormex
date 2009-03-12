@@ -38,7 +38,6 @@ but special cases may be created for handling plane curves.
 
 from numpy import *
 from formex import *
-from gui.draw import draw
 
 
 ##############################################################################
@@ -147,12 +146,7 @@ class Curve(object):
         return self.lengths().sum()
 
     
-def drawVectors(P,v,d=1.0,color='red'):
-    v = normalize(v)
-    Q = P+v
-    F = connect([Formex(P),Formex(Q)])
-    return draw(F,color=color,linewidth=3)
-    
+  
 
 ##############################################################################
 #

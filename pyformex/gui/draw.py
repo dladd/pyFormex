@@ -57,11 +57,6 @@ from formex import Formex
         
 #################### Interacting with the user ###############################
 
-def startGui():
-    """Start the gui"""
-    print "Currently, the GUI can only be started by the pyformex command"
-
-
 def closeGui():
     GD.debug("Closing the GUI: currently, this will also terminate pyformex.")
     GD.GUI.close()
@@ -91,6 +86,9 @@ def ask(question,choices=None,default=None,**kargs):
     else:
         return default
 
+
+def hello():
+    print 'hello'
 
 def ack(question):
     """Show a Yes/No question and return True/False depending on answer."""
@@ -434,6 +432,13 @@ def _shrink(F,factor):
     if isinstance(F,surface.TriSurface):
         F = F.toFormex()
     return F.shrink(factor)
+
+
+def drawVectors(P,v,d=1.0,color='red'):
+    v = normalize(v)
+    Q = P+v
+    F = connect([Formex(P),Formex(Q)])
+    return draw(F,color=color,linewidth=3)
 
 
 def drawPlane(P,N,size):

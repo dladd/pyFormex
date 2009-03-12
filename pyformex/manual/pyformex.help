@@ -16,9 +16,10 @@ Options:
                      may make the C-lib calls impossible. Use only for
                      debugging purposes.
   --fastencode       Use a fast algorithm to encode edges.
-  --config=CONFIG    use file CONFIG for settings
-  --nodefaultconfig  skip all default locations of config files
-  --redirect         redirect standard output to the message board (ignored
+  --config=CONFIG    Use file CONFIG for settings
+  --nodefaultconfig  Skip the default site and user config files. This option
+                     can only be used in conjunction with the --config option.
+  --redirect         Redirect standard output to the message board (ignored
                      with --nogui)
   --detect           Detect helper software and print report.
   --debug            display debugging info to sys.stdout

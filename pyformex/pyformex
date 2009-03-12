@@ -319,8 +319,8 @@ def main(argv=None):
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:
         GD.debug("GUI version")
-        from gui.gui import startGUI
-        startGUI(args)
+        from gui import gui
+        gui.startGUI(args)
     #
     # Qt4 may have changed the locale.
     # Since a LC_NUMERIC setting other than C may cause lots of troubles
@@ -355,9 +355,7 @@ def main(argv=None):
 
     # after processing all args, go into interactive mode
     if GD.options.gui:
-        GD.debug("GUI version")
-        from gui.gui import runGUI
-        res = runGUI()
+        res = gui.runGUI()
 
     elif GD.options.interactive:
         print "Enter your script and end with CTRL-D"

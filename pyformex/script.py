@@ -489,4 +489,13 @@ def runtime():
     return time.clock() - starttime
 
 
+def startGui(args=[]):
+    """Start the gui"""
+    if GD.GUI is None:
+        GD.debug("Starting the pyFormex GUI")
+        from gui import gui
+        gui.startGUI(args)
+        gui.runGUI()
+
+
 #### End
