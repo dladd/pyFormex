@@ -348,6 +348,23 @@ class Canvas(object):
     def disableLight(self,nr):
         """Disable an existing light."""
         self.lights[nr].disable()
+
+
+    def setTriade(self,on=None,size=1.0,pos=[0.0,0.0,0.0]):
+        """Toggle the display of the global axes on or off.
+
+        If on is True, a triade of global axes is displayed, if False it is
+        removed. The default (None) toggles between on and off.
+        """
+        if on is None:
+            on = self.triade is None
+        if self.triade:
+            self.removeAnnotation(self.triade)
+        if on:
+            self.triade = actors.TriadeActor(size,pos)
+            self.addAnnotation(self.triade)
+        else:
+            self.triade = None
     
 
     def initCamera(self):
@@ -540,8 +557,8 @@ class Canvas(object):
 
     def removeAnnotation(self,actor):
         """Remove an annotation from the 3D scene."""
-        if actor == self.triade:
-            self.triade = None
+##         if actor == self.triade:
+##             self.triade = None
         self.annotations.delete(actor)
          
     def addDecoration(self,actor):

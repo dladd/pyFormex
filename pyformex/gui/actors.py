@@ -162,51 +162,60 @@ class BboxActor(Actor):
 class TriadeActor(Actor):
     """An OpenGL actor representing a triade of global axes."""
 
-    def __init__(self,size,color=[red,green,blue,cyan,magenta,yellow]):
+    def __init__(self,size=1.0,pos=[0.,0.,0.],color=[red,green,blue,cyan,magenta,yellow]):
         Actor.__init__(self)
-        self.size = size
         self.color = color
+        self.setPos(pos)
+        self.setSize(size)
 
     def bbox(self):
-        return (0.5 * self.size) * array([[0.,0.,0.],[1.,1.,1.]])
+        return self.size * array([[0.,0.,0.],[1.,1.,1.]])
+
+    def setPos(self,pos):
+        pos = Coords(pos)
+        if pos.shape == (3,):
+            self.pos = pos
+        self.delete_list()
+
+    def setSize(self,size):
+        size = float(size)
+        if size > 0.0:
+            self.size = size
+        self.delete_list()
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the triade."""
+        # When entering here, the modelview matrix has been set
+        # We should make sure it is unchanged on exit
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPushMatrix()
+        GL.glTranslatef (*self.pos) 
+        GL.glScalef (self.size,self.size,self.size) 
         GL.glBegin(GL.GL_TRIANGLES)
         GL.glColor(*self.color[0])
         GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(1.0,0.0,0.0)
-        GL.glVertex3f(0.0,1.0,0.0)
+        GL.glVertex3f(0.5,0.0,0.0)
+        GL.glVertex3f(0.0,0.5,0.0)
         GL.glColor(*self.color[1])
         GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,1.0,0.0)
-        GL.glVertex3f(0.0,0.0,1.0)
+        GL.glVertex3f(0.0,0.5,0.0)
+        GL.glVertex3f(0.0,0.0,0.5)
         GL.glColor(*self.color[2])
         GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,0.0,1.0)
-        GL.glVertex3f(1.0,0.0,0.0)
-##        GL.glColor(*self.color[3])
-##        GL.glVertex3f(0.0,0.0,0.0)
-##        GL.glVertex3f(0.0,1.0,0.0)
-##        GL.glVertex3f(1.0,0.0,0.0)
-##        GL.glColor(*self.color[4])
-##        GL.glVertex3f(0.0,0.0,0.0)
-##        GL.glVertex3f(0.0,0.0,1.0)
-##        GL.glVertex3f(0.0,1.0,0.0)
-##        GL.glColor(*self.color[5])
-##        GL.glVertex3f(0.0,0.0,0.0)
-##        GL.glVertex3f(1.0,0.0,0.0)
-##        GL.glVertex3f(0.0,0.0,1.0)
+        GL.glVertex3f(0.0,0.0,0.5)
+        GL.glVertex3f(0.5,0.0,0.0)
         GL.glEnd()
         GL.glBegin(GL.GL_LINES)
         GL.glColor3f(*black)
         GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(2.0,0.0,0.0)
+        GL.glVertex3f(1.0,0.0,0.0)
         GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,2.0,0.0)
+        GL.glVertex3f(0.0,1.0,0.0)
         GL.glVertex3f(0.0,0.0,0.0)
-        GL.glVertex3f(0.0,0.0,2.0)
+        GL.glVertex3f(0.0,0.0,1.0)
         GL.glEnd()
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glPopMatrix()
 
   
 class GridActor(Actor):

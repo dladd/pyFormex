@@ -30,6 +30,18 @@ import draw
 from gettext import gettext as _
 
 
+def setTriadeParams():
+    try:
+        size = GD.canvas.triade.size
+        pos = GD.canvas.triade.pos.tolist()
+    except:
+        size = 1.0
+        pos = [0.,0.,0.]
+    res = draw.askItems([('size',size),('pos',pos)])
+    if res:
+        draw.setTriade(True,res['size'],res['pos'])
+        
+
 def setRenderMode():
     """Change the rendering mode."""
     mode = GD.canvas.rendermode
@@ -124,7 +136,8 @@ def viewportLayout():
 MenuData = [
     (_('&Viewport'),[
         (_('&Clear'),draw.clear),
-        (_('Toggle &Triade'),draw.setTriade), 
+        (_('Toggle &Axes Triade'),draw.setTriade), 
+        (_('Set &Axes Triade Properties'),setTriadeParams), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
         (_('&Foreground Color'),setFgColor), 
