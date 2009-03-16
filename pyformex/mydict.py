@@ -96,6 +96,14 @@ class Dict(dict):
          print C.get('get')
       will print
          foo
+
+    To avoid name clashes with user defines, many Python internal names start
+    and end with '__'. The user should avoid such names.
+    The Python dict has the following attributes not enclosed between '__',
+    so these are the one to watch out for:
+    'clear', 'copy', 'fromkeys', 'get', 'has_key', 'items', 'iteritems',
+    'iterkeys', 'itervalues', 'keys', 'pop', 'popitem', 'setdefault',
+    'update', 'values'.
     """
 
 ##     @staticmethod

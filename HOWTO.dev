@@ -46,6 +46,15 @@ This will create a pyformex-${VERSION}.tar.gz in dist/
 
 ** Make a distribution available on Berlios FTP server
   make pub
+  
+** Create an interim release (needs to be automated)
+  make dist
+  ---test install---
+  make publocal
+  ---verhoog release in RELEASE---
+  make version
+  (make pub : if you want to make it available globally)
+
 
 ** Release a distribution to the general public
 

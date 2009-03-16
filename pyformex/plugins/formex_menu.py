@@ -312,7 +312,7 @@ def cutAtPlane():
         warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
         return
     res = askItems([['Point',(0.0,0.0,0.0)],
-                     ['Normal',(0.0,0.0,1.0)],
+                     ['Normal',(1.0,0.0,0.0)],
                      ['Tolerance',0.],
                      ['New props',[1,2,2,3,4,5,6]],
                      ['Side','positive', 'radio', ['positive','negative','both']]],
@@ -325,17 +325,16 @@ def cutAtPlane():
         side = res['Side']
         if side == 'both':
             G = [F.cutAtPlane(P,N,p,side,atol) for F in FL]
-            G_pos = []
-            G_neg  =[]
-            for F in G:
-                G_pos.append(F[0])
-                G_neg.append(F[1])
+            print G[0][0].p
+            draw(G[0])
+            G_pos = [ g[0] for g in G ]
+            G_neg = [ g[1] for g in G ]
             export(dict([('%s/pos' % n,g) for n,g in zip(selection,G_pos)]))
             export(dict([('%s/neg' % n,g) for n,g in zip(selection,G_neg)]))
             selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
             selection.draw()
         else:
-            selection.changeValues([ F.cutAtPlane(P,N,atol,p,side) for F in FL ])
+            selection.changeValues([ F.cutAtPlane(P,N,p,side,atol) for F in FL ])
             selection.drawChanges()
 
 

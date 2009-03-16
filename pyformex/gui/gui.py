@@ -24,7 +24,7 @@
 """Graphical User Interface for pyFormex."""
 
 import pyformex as GD
-from pyformex.gui import *
+from pyformex.gui import signals
 
 import sys,utils
 if not ( utils.hasModule('numpy') and
@@ -417,10 +417,10 @@ class GUI(QtGui.QMainWindow):
 
         Events get here if they are not handled by a lower level handler.
         """
-        self.emit(WAKEUP,())
+        self.emit(signals.WAKEUP,())
         if e.key() == QtCore.Qt.Key_F2:
             GD.debug('F2 pressed!')
-            self.emit(SAVE,())
+            self.emit(signals.SAVE,())
         e.ignore()
 
 ##     def writeSettings(self):

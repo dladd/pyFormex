@@ -707,7 +707,7 @@ def intersectWithPlane():
     FL = selection.check()
     res = askItems([['Name','__auto__'],
                     ['Point',(0.0,0.0,0.0)],
-                    ['Normal',(0.0,0.0,1.0)],
+                    ['Normal',(1.0,0.0,0.0)],
                     ],caption = 'Define the cutting plane')
     if res:
         name = res['Name']

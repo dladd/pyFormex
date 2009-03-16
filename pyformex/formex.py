@@ -22,7 +22,12 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Formex algebra in Python"""
+"""Formex algebra in Python
+
+This module is a Python implementation of most functions of Formex algebra.
+It forms the basis of pyFormex, but predates it and is fairly independent.
+Therefore, it can also be used as a standalone extension module in Python.
+"""
 
 from coords import *
 from utils import deprecated,functionWasRenamed,functionBecameMethod
@@ -422,7 +427,7 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
 
 # !! This function still needs to be changed to also return all
 # elements completely at positive side
-def cutAtPlane(F,p,n):
+def cut2AtPlane(F,p,n):
     """Returns all elements of the Formex cut at plane.
 
     F is a Formex of plexitude 2 and all its segments should cut the
@@ -442,7 +447,6 @@ def cutAtPlane(F,p,n):
     F[i1,1,:] = g[i1].reshape(-1,3)
     F = F.cclip(i0*i1)
     return F
-
 
 def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     """Returns all elements of the Formex cut at plane(s).
@@ -479,8 +483,6 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     5) two vertices with |distance| < atol, one vertex at pos. or neg. side
     6) three vertices with |distance| < atol
     """
-    GD.message("Beware: cut3AtPlane now by default returns both sides!")
-    
     # make sure we have sane newprops
     if newprops is None:
         newprops = [None,]*7
@@ -543,11 +545,12 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
                         F_neg += cut_neg
                     S = R + cut_pos
                 F_pos += S
+                
     if side == '+':
         return F_pos
     elif side == '-':
         return F_neg
-    elif side == '':
+    else:
         return [ F_pos, F_neg ]
 
 
@@ -1577,7 +1580,6 @@ class Formex(object):
         """
         s = self.sizes()
         s[s<tol*s.max()] = size
-        GD.debug("SIZE:%s" % s)
         return self.scale(size/s)
 
 
@@ -1800,7 +1802,7 @@ class Formex(object):
             # THIS NEEDS TO BE IMPLEMENTED
             return F
         if self.nplex() == 2:
-            return cutAtPlane(self,p,n)
+            return cut2AtPlane(self,p,n)
         if self.nplex() == 3:
             return cut3AtPlane(self,p,n,newprops,side,atol)
         raise ValueError,"Formex should be plex-2 or plex-3"
@@ -2215,6 +2217,7 @@ def _test():
     return doctest.testmod(formex)
 
 if __name__ == "__main__":
+    
     def test():
         """Run some additional examples.
 
