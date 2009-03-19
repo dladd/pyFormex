@@ -106,12 +106,20 @@ def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
     widgets.messageBox(message,'info',actions)
 
-def showText(text,actions=['OK']):
+def showText(text,type=None,actions=['OK']):
     """Display a text and wait for user response.
 
     This can display a large text and will add scrollbars when needed.
     """
-    return widgets.textBox(text,actions)
+    return widgets.textBox(text,type,actions)
+
+def showFile(filename):
+    try:
+        f = file(filename,'r')
+    except IOError:
+        return
+    showText(f.read())
+    f.close()
 
 
 # Output status of the askItems() function

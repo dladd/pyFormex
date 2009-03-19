@@ -1327,7 +1327,7 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
         return ''
 
 
-def textBox(text,choices=['OK']):
+def textBox(text,type=None,choices=['OK']):
     """Display a text and wait for user response.
 
     Possible choices are 'OK' and 'CANCEL'.
@@ -1335,9 +1335,16 @@ def textBox(text,choices=['OK']):
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
     w = QtGui.QDialog()
+    w.setWindowTitle('pyFormex Text Display')
     t = QtGui.QTextEdit()
     t.setReadOnly(True)
-    t.setPlainText(text)
+    if type == 'plain':
+        t.setPlainText(text)
+    elif type == 'html':
+        w.setWindowTitle('pyFormex Html Display')
+        t.setHtml(text)
+    else:
+        t.setText(text)
     bl = QtGui.QHBoxLayout()
     bl.addStretch()
     if 'OK' in choices:
