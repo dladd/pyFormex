@@ -113,30 +113,37 @@ def about():
 
 A tool for generating, manipulating and transforming 3D geometrical models by sequences of mathematical operations.
 
-Copyright 2004-2008 Benedict Verhegghe.
+Copyright 2004-2009 Benedict Verhegghe.
 Distributed under the GNU GPL version 3 or later.
 """ % GD.Version)
 
+_developers = [
+    'Matthieu De Beule',
+    'Gianluca De Santis',
+    'Bart Desloovere',
+    'Peter Mortier',
+    'Tim Neels',
+    'Sofie Van Cauter',
+    'Benedict Verhegghe',
+    ]
+
 def developers():
     """Display the list of developers."""
+    random.shuffle(_developers)
     draw.showInfo("""
-This is an alphabetic list of the peaople
-that have contributed to pyFormex:
+The following people have
+contributed to pyFormex.
+They are listed in random order.
 
-Matthieu De Beule
-Gianluca De Santis
-Bart Desloovere
-Peter Mortier
-Tim Neels
-Sofie Van Cauter
-Benedict Verhegghe
+%s
 
-If you feel that your name was
-left out in error, please contact us.
-""")
+If you feel that your name was left
+out in error, please write to
+benedict.verhegghe@ugent.be.
+""" % '\n'.join(_developers))
 
                   
-cookies = [
+_cookies = [
     "Smoking may be hazardous to your health.",
     "Windows is a virus.",
     "Coincidence does not exist. Perfection does.",
@@ -144,15 +151,14 @@ cookies = [
     "Python is the universal glue.",
     "Intellectual Property Is A Mental Illness.",
     ]    
-
-random.shuffle(cookies)
+random.shuffle(_cookies)
 
 def roll(l):
     l.append(l.pop(0))
 
 def cookie():
-    draw.showInfo(cookies[0],["OK"])
-    roll(cookies)
+    draw.showInfo(_cookies[0],["OK"])
+    roll(_cookies)
 
 
 
