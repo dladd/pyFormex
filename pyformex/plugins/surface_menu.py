@@ -37,6 +37,7 @@ from plugins.objects import *
 from plugins import formex_menu,surface_abq
 import simple
 from plugins.tools import Plane
+from array import niceLogSize
 
 import os, timer
 
@@ -95,11 +96,15 @@ selection.annotations.extend([[draw_edge_numbers,False],
 
 ##################### select, read and write ##########################
 
-def read_Surface(fn):
+def read_Surface(fn,exportName=True):
     GD.message("Reading file %s" % fn)
     t = timer.Timer()
     S = TriSurface.read(fn)
     GD.message("Read surface with %d vertices, %d edges, %d triangles in %s seconds" % (S.ncoords(),S.nedges(),S.nelems(),t.seconds()))
+    if exportName:
+        name = utils.projectName(fn)
+        export({name:S})
+        selection.set([name])
     return S
 
 
@@ -117,7 +122,7 @@ def readSelection(select=True,draw=True,multi=True):
         chdir(fn[0])
         names = map(utils.projectName,fn)
         GD.GUI.setBusy()
-        surfaces = map(read_Surface,fn)
+        surfaces = [ read_Surface(f,False) for f in fn ]
         for i,S in enumerate(surfaces):
             S.setProp(i)
         GD.GUI.setBusy(False)
@@ -285,7 +290,13 @@ def showBorder():
 def checkBorder():
     S = selection.check(single=True)
     if S:
-        S.checkBorder()
+        border = S.checkBorder()
+        if border is None:
+            print "The surface has no border."
+        else:
+            closed,loop = border
+            print "The border is of type %s" % closed
+            print "The sorted border edges are: %s" % loop
 
 
 def fillBorder():
@@ -297,7 +308,8 @@ def fillBorder():
             S.fillBorder(0)
         elif res == options[2]: 
             S.fillBorder(1)
-
+        selection.draw()
+        
 
 def fillHoles():
     """Fill the holes in the selected surface."""
@@ -623,11 +635,17 @@ def clipSelection():
 def cutAtPlane():
     """Cut the selection with a plane."""
     FL = selection.check()
+    if not FL:
+        return
+    
+    dsize = bbox(FL).dsize()
+    esize = 10 ** (niceLogSize(dsize)-5)
+
     res = askItems([['Point',(0.0,0.0,0.0)],
                     ['Normal',(1.0,0.0,0.0)],
                     ['New props',[1,2,2,3,4,5,6]],
                     ['Side','positive', 'radio', ['positive','negative','both']],
-                    ['Tolerance',0.],
+                    ['Tolerance',esize],
                     ],caption = 'Define the cutting plane')
     if res:
         P = res['Point']
@@ -1194,14 +1212,14 @@ def create_menu():
             ]),
           ("&Roll Axes",rollAxes),
           ]),
-        ("&Cut",
+        ("&Clip/Cut",
          [("&Clip",clipSelection),
-          ("&Cut(Trim) at Plane",cutAtPlane),
-          ("&Cut by Planes",cutSelectionByPlanes),
-          ("&Intersect With Plane",intersectWithPlane),
-          ("&Slice",sliceIt),
+          ("&Cut At Plane",cutAtPlane),
+          ("&Multiple Cut",cutSelectionByPlanes),
+          ("&Slicer",sliceIt),
+          ("&Intersection With Plane",intersectWithPlane),
            ]),
-        ("&Smooth",
+        ("&Smoothing",
          [("&Low-pass filter",smoothLowPass),
          ("&Laplace and HC algorithm",smoothLaplaceHC),
            ]),

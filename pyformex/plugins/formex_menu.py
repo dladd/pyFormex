@@ -319,11 +319,11 @@ def cutAtPlane():
     esize = 10 ** (niceLogSize(dsize)-5)
     
     res = askItems([['Point',(0.0,0.0,0.0)],
-                     ['Normal',(1.0,0.0,0.0)],
-                     ['Tolerance',esize],
-                     ['New props',[1,2,2,3,4,5,6]],
-                     ['Side','positive', 'radio', ['positive','negative','both']]],
-                     caption = 'Define the cutting plane')
+                    ['Normal',(1.0,0.0,0.0)],
+                    ['New props',[1,2,2,3,4,5,6]],
+                    ['Side','positive', 'radio', ['positive','negative','both']],
+                    ['Tolerance',esize],
+                    ],caption = 'Define the cutting plane')
     if res:
         P = res['Point']
         N = res['Normal']
@@ -463,15 +463,15 @@ def create_menu():
           ]),
         ("&Transform",
          [("&Scale Selection",scaleSelection),
-          ("&Non-uniformly Scale Selection",scale3Selection),
-          ("&Translate Selection",translateSelection),
-          ("&Center Selection",centerSelection),
-          ("&Rotate Selection",rotateSelection),
-          ("&Rotate Selection Around",rotateAround),
+          ("&Scale non-uniformly",scale3Selection),
+          ("&Translate",translateSelection),
+          ("&Center",centerSelection),
+          ("&Rotate",rotateSelection),
+          ("&Rotate Around",rotateAround),
           ("&Roll Axes",rollAxes),
           ]),
         ("&Clip/Cut",
-         [("&Clip Selection",clipSelection),
+         [("&Clip",clipSelection),
           ("&Cut at Plane",cutAtPlane),
           ]),
         ("&Undo Last Changes",selection.undoChanges),

@@ -1035,12 +1035,14 @@ class TriSurface(object):
         stype = self.surfaceType()
         return stype[0] and stype[1]
 
+
     def checkBorder(self):
         """Return the border of TriSurface as a set of segments."""
         border = self.edges[self.borderEdges()]
-        closed,loop = closedLoop(border)
-        print "the border is of type %s" % closed
-        print loop
+        if len(border) > 0:
+            return closedLoop(border)
+        else:
+            return None
 
 
     def fillBorder(self,method=0):
