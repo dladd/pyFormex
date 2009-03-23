@@ -755,19 +755,24 @@ class Canvas(object):
         print "xmax,ymax = %s,%s" % (xmax,ymax)
         print "Old center: %s = %s" % (ctr,wctr)
         print "Bactrf = %s" % str(yctr)
-        pt = [x,y,wctr[2]]
+        #pt = [x,y,wctr[2]]
+        pt = [x,y,-dist]
         print "Point %s" % str(pt)
-        newctr = self.unProject(*pt)
-        print "New center: %s" % str(newctr)
+        #newctr = self.unProject(*pt)
+        #print "New center: %s" % str(newctr)
         newctr = GLU.gluUnProject(*pt)
         print "New center: %s" % str(newctr)
         self.camera.setCenter(*newctr)
         rw = max(rw,1)
         rh = max(rh,1)
         factor = min(rw/w,rh/h) 
+        factor = min(w/rw,h/rh) 
         print "Zoom factor %s" % factor
         self.zoom(factor)
 
+
+    def set_zoomRectangle(self,func):
+        Canvas.zoomRectangle = func
 
     def saveBuffer(self):
         """Save the current OpenGL buffer"""

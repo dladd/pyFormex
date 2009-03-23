@@ -251,6 +251,7 @@ def setCLoad():
         if K:
             nodeset = getPickedNodes(K)
             if len(nodeset) > 0:
+                print "SETTING CLOAD",[xload,yload,0.,0.,0.,0.]
                 PDB.nodeProp(set=nodeset,cload=[xload,yload,0.,0.,0.,0.])
 
 
@@ -459,23 +460,26 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     print "Assembling Concentrated Loads"
     Model.nloads = 1
     f = zeros((Model.ndof,Model.nloads),float)
-    print f.shape
     for p in PDB.getProp('n',attr=['cload']):
         if p.set is None:
             nodeset = range(Model.nnodes)
         else:
             nodeset = p.set
+        F = [0.0,0.0]
+        for i,v in p.cload:
+            if i in [0,1]:
+                F[i] = v
         for n in nodeset:
-            print p.cload[:2]
-            print
-            f[:,0] = fe_util.AssembleVector(f[:,0],p.cload[:2],bcon[n])
+            print F
+            print "HALLO"
+            f[:,0] = fe_util.AssembleVector(f[:,0],F,bcon[n])
 
     print "Assembling distributed loads"
     # This is a bit more complex. See Calpy for details
     # We first generate the input data, then read them with the
     # calpy femodel.ReadBoundaryLoads function and finally
     # assemble them with plane.addBoundaryLoads.
-    for p in PDB.getProp('n',attr=['cload']):
+    for p in PDB.getProp('n',attr=['dload']):
         print p
     #idloads,dloads = plane.ReadBoundaryLoads(*nb,model.ndim)
     

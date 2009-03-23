@@ -27,7 +27,6 @@ import pyformex
 
 import os,commands,re,sys
 from config import formatDict
-#from numpy import unique1d,union1d,setdiff1d
 from distutils.version import LooseVersion as SaneVersion
 
 

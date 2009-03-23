@@ -30,8 +30,18 @@ A pyFormex plugin for handling connectivity of nodes and elements.
 import pyformex as GD
 from numpy import *
 
+# Define a wrapper function for old versions
+#
+if unique1d([1],True)[0][0] == 0:
+    # We have the old numy version
+    def unique1d(a,return_indices):
+        import numpy
+        if return_indices:
+            indices,uniq = numpy.unique1d(a,True)
+            return uniq,indices
+        else:
+            return numpy.unique1d(a)
 
-# magic numbers for edges
 
 def magic_numbers(elems,magic):
     elems = elems.astype(int64)
@@ -163,7 +173,7 @@ class Connectivity(ndarray):
             edg = alledges.astype(int64).reshape((-1,2))
             codes = edg[:,0] * self.magic + edg[:,1]
         # keep the unique edge numbers
-        uniqid,uniq = unique1d(codes,True)
+        uniq,uniqid = unique1d(codes,True)
         # uniq is sorted 
         uedges = uniq.searchsorted(codes)
         edges = column_stack([uniq/self.magic,uniq%self.magic])
@@ -252,7 +262,7 @@ def reverseIndex(index,maxcon=3):
         col = index[:,c].copy()  # make a copy, because we will change it
         while(col.max() >= 0):
             # we still have values to process in this column
-            pos,uniq = unique1d(col,True)
+            uniq,pos = unique1d(col,True)
             #put the unique values at a unique position in reverse index
             ok = uniq >= 0
             if i >= reverse.shape[1]:
@@ -293,7 +303,7 @@ def adjacencyArray(elems,maxcon=3):
         col = elems[:,c].copy()  # make a copy, because we will change it
         while(col.max() >= 0):
             # we still have values to process in this column
-            pos,uniq = unique1d(col,True)
+            uniq,pos = unique1d(col,True)
             #put the unique values at a unique position in reverse index
             ok = uniq >= 0
             if i >= adj.shape[1]:

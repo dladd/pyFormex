@@ -484,7 +484,7 @@ class TriSurface(object):
         if type(self.coords) != Coords:
             self.coords = Coords(self.coords)
         if self.edges is None or self.faces is None:
-            self.edges,self.faces = self.elems.expandElems()
+            self.edges,self.faces = self.elems.expand()
         if self.elems is None:
             self.elems = Connectivity(compactElems(self.edges,self.faces))
 
