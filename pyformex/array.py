@@ -42,6 +42,18 @@ Int = int32
 ##   some math functions
 ##
 #########################
+   
+
+def niceLogSize(f):
+    """Return the smallest integer e such that 10**e > abs(f)."""
+    return int(ceil(log10(abs(f))))
+   
+
+def niceNumber(f,approx=floor):
+    """Return a nice number close to but not smaller than f."""
+    n = int(approx(log10(f)))
+    m = int(str(f)[0])
+    return m*10**n
 
 # pi is defined in numpy
 # rad is a multiplier to transform degrees to radians

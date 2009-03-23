@@ -32,7 +32,10 @@ import pyformex as GD
 from gui import actors
 from gui.draw import *
 from formex import *
+
+
 from plugins import objects,surface,inertia,partition,sectionize
+from array import niceLogSize
 
 import commands, os, timer
 
@@ -115,26 +118,26 @@ def shrink():
 
 #################### CoordPlanes ####################################
 
-bboxB = None
+_bbox = None
 
-def showBboxB():
+def showBbox():
     """Draw the bbox on the current selection."""
-    global bboxB
+    global _bbox
     FL = selection.check()
     if FL:
         bb = bbox(FL)
         GD.message("Bbox of selection: %s" % bb)
         nx = array([4,4,4])
-        bboxB = actors.CoordPlaneActor(nx=nx,ox=bb[0],dx=(bb[1]-bb[0])/nx)
-        GD.canvas.addAnnotation(bboxB)
+        _bbox = actors.CoordPlaneActor(nx=nx,ox=bb[0],dx=(bb[1]-bb[0])/nx)
+        GD.canvas.addAnnotation(_bbox)
         GD.canvas.update()
 
-def removeBboxB():
+def removeBbox():
     """Remove the bbox of the current selection."""
-    global bboxB
-    if bboxB:
-        GD.canvas.removeAnnotation(bboxB)
-        bboxB = None
+    global _bbox
+    if _bbox:
+        GD.canvas.removeAnnotation(_bbox)
+        _bbox = None
 
 
 #################### Axes ####################################
@@ -311,9 +314,13 @@ def cutAtPlane():
     if FLnot:
         warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
         return
+    
+    dsize = bbox(FL).dsize()
+    esize = 10 ** (niceLogSize(dsize)-5)
+    
     res = askItems([['Point',(0.0,0.0,0.0)],
                      ['Normal',(1.0,0.0,0.0)],
-                     ['Tolerance',0.],
+                     ['Tolerance',esize],
                      ['New props',[1,2,2,3,4,5,6]],
                      ['Side','positive', 'radio', ['positive','negative','both']]],
                      caption = 'Define the cutting plane')
@@ -325,7 +332,7 @@ def cutAtPlane():
         side = res['Side']
         if side == 'both':
             G = [F.cutAtPlane(P,N,p,side,atol) for F in FL]
-            print G[0][0].p
+            #print G[0][0].p
             draw(G[0])
             G_pos = [ g[0] for g in G ]
             G_neg = [ g[1] for g in G ]
@@ -451,8 +458,8 @@ def create_menu():
           ]),
         ("---",None),
         ("&Bbox",
-         [('&Show Bbox Planes',showBboxB),
-          ('&Remove Bbox Planes',removeBboxB),
+         [('&Show Bbox Planes',showBbox),
+          ('&Remove Bbox Planes',removeBbox),
           ]),
         ("&Transform",
          [("&Scale Selection",scaleSelection),
@@ -462,7 +469,9 @@ def create_menu():
           ("&Rotate Selection",rotateSelection),
           ("&Rotate Selection Around",rotateAround),
           ("&Roll Axes",rollAxes),
-          ("&Clip Selection",clipSelection),
+          ]),
+        ("&Clip/Cut",
+         [("&Clip Selection",clipSelection),
           ("&Cut at Plane",cutAtPlane),
           ]),
         ("&Undo Last Changes",selection.undoChanges),
@@ -500,6 +509,7 @@ def close_menu():
 def reload_menu():
     """Reload the Postproc menu."""
     close_menu()
+#    reload(plugins.formex_menu)
     show_menu()
 
 

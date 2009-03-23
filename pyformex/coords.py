@@ -42,7 +42,6 @@ def bbox(objects):
     box encloses all the Coords in the list.
     Objects returning a None bbox are ignored.
     """
-    #print [ type(f) for f in objects ]
     bboxes = [f.bbox() for f in objects]
     bboxes = [bb for bb in bboxes if bb is not None]
     if len(bboxes) == 0:
@@ -179,7 +178,7 @@ in pyFormex to store coordinates of points in a 3D space.
         """
         if self.size > 0:
             s = self.points()
-            return row_stack([ s.min(axis=0), s.max(axis=0) ])
+            return Coords(row_stack([ s.min(axis=0), s.max(axis=0) ]))
         else:
             return None
 
