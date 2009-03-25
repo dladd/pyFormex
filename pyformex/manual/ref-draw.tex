@@ -5,7 +5,7 @@
 \section{\module{draw} --- Create 3D graphical representations.}
 \label{sec:draw}
 
-\declaremodule{}{draw}
+\declaremodule{""}{draw}
 \modulesynopsis{Create 3D graphical representations.}
 \moduleauthor{'pyFormex project'}{'http://pyformex.berlios.de'}
 
@@ -16,12 +16,6 @@ rendering capabilities of pyFOrmex.
 Therefore, the information given below may not be fully accurate.
 }
 
-
-
-\begin{funcdesc}{startGui}{}
-Start the gui
-
-\end{funcdesc}
 
 
 \begin{funcdesc}{closeGui}{}
@@ -64,11 +58,17 @@ Show a neutral message and wait for user acknowledgement.
 \end{funcdesc}
 
 
-\begin{funcdesc}{showText}{text,actions=???}
+\begin{funcdesc}{showText}{text,type=None,actions=???}
 Display a text and wait for user response.
 
     This can display a large text and will add scrollbars when needed.
     
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{showFile}{filename}
+
 
 \end{funcdesc}
 
@@ -90,6 +90,18 @@ Ask the value of some items to the user.
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
     Sets the dialog timeout and accepted status in global variables.
     
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{dialogTimedOut}{}
+Returns True if the last askItems() dialog timed out.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{dialogAccepted}{}
+Returns True if the last askItems() dialog was accepted.
 
 \end{funcdesc}
 
@@ -237,6 +249,12 @@ Return a shrinked object.
 \end{funcdesc}
 
 
+\begin{funcdesc}{drawVectors}{P,v,d=???,color=???}
+
+
+\end{funcdesc}
+
+
 \begin{funcdesc}{drawPlane}{P,N,size}
 
 
@@ -333,7 +351,7 @@ Show a named view, either a builtin or a user defined.
 \end{funcdesc}
 
 
-\begin{funcdesc}{setTriade}{on=None}
+\begin{funcdesc}{setTriade}{on=None,size=???,pos=???}
 Toggle the display of the global axes on or off.
 
     If on is True, the axes triade is displayed, if False it is
@@ -571,8 +589,13 @@ Clear the canvas
 \end{funcdesc}
 
 
-\begin{funcdesc}{pause}{msg=???}
+\begin{funcdesc}{pause}{msg="Use the Step or Continue button to proceed"}
+Pause the execution until an external event occurs.
 
+    When the pause statement is executed, execution of the pyformex script
+    is suspended until some external event forces it to proceed again.
+    Clicking the STEP or CONTINUE button will produce such an event.
+    
 
 \end{funcdesc}
 
