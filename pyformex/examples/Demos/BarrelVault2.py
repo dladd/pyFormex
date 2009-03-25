@@ -45,9 +45,11 @@ d += d.reflect(0,1) # reflect in x-direction
 d += d.reflect(1,1) # reflect in y-direction
 draw(d)
 
-print m
-print n
-da = d.replic2(m,n,2,2)
+# Replicate in x-direction
+da = d.replic(m,2,0)
+draw(da)
+# Replicate in y-direction
+da = da.replic(n,2,1)
 draw(da)
 
 # Longitudinals

@@ -758,10 +758,12 @@ def redraw():
 
 
 def pause(msg="Use the Step/Continue buttons to proceed"):
+    GD.debug("PAUSE ACTIVATED!")
     if msg:
         GD.message(msg)
+    GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
     if GD.GUI.drawlock.allowed:
-        GD.GUI.drawlock.lock()    # will need external event to release it
+        GD.GUI.drawlock.block()    # will need external event to release it
         while (GD.GUI.drawlock.locked):
             sleep(0.5)
             GD.app.processEvents()
@@ -774,7 +776,8 @@ def step():
     If a script is running, this just releases the draw lock.
     Else, it starts the script in step mode.
     """
-    if scriptRunning:
+    import script
+    if script.scriptRunning:
         GD.GUI.drawlock.release()
     else:
         if ack("""

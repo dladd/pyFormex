@@ -49,10 +49,10 @@ B = Formex([[[1-a,-1,0],[3-a,-1,0]],[[1-a,-1,0],[2-a,2,0]],[[2-a,2,0],[3-a,-1,0]
 W1 = Formex([[[2-a,2,0],[1-a,3,d]],[[2-a,2,0],[3-a,3,d]],[[2-a,2,0],[2-a,0,d]]])
 W2 = Formex([[[1-a,-1,0],[-a,0,d]],[[1-a,-1,0],[2-a,0,d]],[[1-a,-1,0],[1-a,-3,d]]])
 W3 = Formex([[[0,3*a,d],[0,3*(a-1)-1,0]]])
-top = T.genid(a,a,2,3,1,-1).lam(2,0).unique()
-bot = B.genid(a-1,a-1,2,3,1,-1).lam(2,-1).unique()
-web = W1.genid(a-1,a-1,2,3,1,-1) + W2.genid(a,a,2,-3,1,-1) + W3
-blad = (top+bot+web).scale([1.,1./3,1.]).tranid(0,a)
+top = T.replic2(a,a,2,3,bias=1,taper=-1).mirror(1,0,True).unique()
+bot = B.replic2(a-1,a-1,2,3,bias=1,taper=-1).mirror(1,-1,True).unique()
+web = W1.replic2(a-1,a-1,2,3,bias=1,taper=-1) + W2.replic2(a,a,2,-3,bias=1,taper=-1) + W3
+blad = (top+bot+web).scale([1.,1./3,1.]).translate([0,a,0])
 # herschalen
 vlakblad = blad.scale([s*sin(radians(b/2))/a,s*cos(radians(b/2))/a,1.]).rotate(-45.)
 # transleren en mappen op hyperbolische paraboloide (z=k1*x*y)

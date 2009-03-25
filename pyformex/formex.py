@@ -1568,6 +1568,11 @@ class Formex(object):
     def affine(self,*args,**kargs):
         pass
 
+    def mirror(self,dir=2,pos=0,keep_orig=False):
+        if keep_orig:
+            return self+self.reflect(dir,pos)
+        else:
+            return self.reflect(dir,pos)
 
     def centered(self):
         """Return a centered copy of the Formex."""
@@ -1966,6 +1971,8 @@ class Formex(object):
     def rin(self,dir,n,dist):
         return self.rindle(n,dir-1,dist)
 
+    
+
     def lam(self,dir,dist):
         return self+self.reflect(dir-1,dist)
 
@@ -2062,7 +2069,6 @@ class Formex(object):
     ros = rosette
     rot = rotate
     trl = translate
-    mirror = reflect
     
 
 

@@ -279,6 +279,7 @@ def playScript(scr,name=None,filename=None,argv=[]):
     try:
         try:
             if GD.GUI and stepmode:
+                GD.debug("STEPPING THROUGH SCRIPT")
                 step_script(scr,g,True)
             else:
                 if GD.options.executor:
@@ -340,9 +341,11 @@ def step_script(s,glob,paus=True):
             buf += line
         if paus and (line.strip().startswith('draw') or
                      line.find('draw(') >= 0 ):
-            drawblock()
+            GD.GUI.drawlock.block()
             message(buf)
             exec(buf) in glob
+            buf = ''
+
     showInfo("Finished stepping through script!")
 
 
