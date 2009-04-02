@@ -117,6 +117,7 @@ def setInputTimeout():
 
 def setDrawWait():
     askConfigPreferences(['draw/wait'])
+    GD.GUI.drawwait = GD.cfg['draw/wait']
 
 def setBGcolor():
     col = GD.cfg['draw/bgcolor']

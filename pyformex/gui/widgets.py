@@ -27,6 +27,7 @@ import os,types
 from PyQt4 import QtCore, QtGui
 import pyformex as GD
 import colors
+import odict
 import imageViewer
 import utils
 
@@ -865,6 +866,256 @@ class InputColor(InputItem):
 
 
 class InputDialog(QtGui.QDialog):
+    """A dialog widget to set the value of one or more items.
+
+    While general input dialogs can be constructed from all the underlying
+    Qt classes, this widget provides a way to construct fairly complex
+    input dialogs with a minimum of effort.
+    """
+    
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False):
+        """Creates a dialog which asks the user for the value of items.
+
+        Each item in the 'items' list is a tuple holding at least the name
+        of the item, and optionally some more elements that limit the type
+        of data that can be entered. The general format of an item is:
+          name,value,type,range
+        It should fit one of the following schemes:
+        ('name',str) : type string, any string input allowed
+        ('name',int) : type int, any integer value allowed
+        ('name',int,'min','max') : type int, only min <= value <= max allowed
+        For each item a label with the name and a LineEdit widget are created,
+        with a validator function where appropriate.
+
+        Input items are defined by a list with the following structure:
+        [ name, value, type, range... ]
+        The fields have the following meaning:
+          name:  the name of the field,
+          value: the initial or default value of the field,
+          type:  the type of values the field can accept,
+          range: the range of values the field can accept,
+        The first two fields are mandatory. In many cases the type can be
+        determined from the value and no other fields are required. Thus:
+        [ 'name', 'value' ] will accept any string (initial string = 'value'),
+        [ 'name', True ] will show a checkbox with the item checked,
+        [ 'name', 10 ] will accept any integer,
+        [ 'name', 1.5 ] will accept any float.
+
+        Range settings for int and float types:
+        [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive;
+        [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
+           from 0.0 to 1.0 with a maximum of two decimals.
+
+        Composed types:
+        [ 'name', 'option1', 'select', ['option0','option1','option2']] will
+        present a combobox to select between one of the options.
+        The initial and default value is 'option1'.
+
+        [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
+        present a group of radiobuttons to select between one of the options.
+        The initial and default value is 'option1'.
+        A variant 'vradio' aligns the options vertically. 
+        
+        [ 'name', 'option1', 'push', ['option0','option1','option2']] will
+        present a group of pushbuttons to select between one of the options.
+        The initial and default value is 'option1'.
+        A variant 'vpush' aligns the options vertically. 
+
+        [ 'name', 'red', 'color' ] will present a color selection widget,
+        with 'red' as the initial choice.
+        """
+        if parent is None:
+            parent = GD.GUI
+        QtGui.QDialog.__init__(self,parent)
+        if caption is None:
+            caption = 'pyFormex-dialog'
+        self.setWindowTitle(str(caption))
+        self.fields = []
+        self.result = {}
+        self.report_pos = report_pos
+        form = QtGui.QVBoxLayout()
+        for item in items:
+            name,value = item[:2]
+            if len(item) > 2:
+                itemtype = item[2]
+            else:
+                itemtype = type(value)
+            #print itemtype
+            options = {}
+            if len(item) > 3 and type(item[3] == dict):
+                options = item[3]
+                
+            if itemtype == bool:
+                line = InputBool(name,value)
+
+            elif itemtype == int:
+                line = InputInteger(name,value)
+                if len(item) > 3 and type(item[3] != dict):
+                    options['min'] = int(item[3])
+##                     line.validator.setBottom(int(item[3]))
+                if len(item) > 4:
+                    options['max'] = int(item[4])
+##                     line.validator.setTop(int(item[4]))
+
+            elif itemtype == float:
+                line = InputFloat(name,value)
+                if len(item) > 3:
+                    line.validator.setBottom(float(item[3]))
+                if len(item) > 4:
+                    line.validator.setTop(float(item[4]))
+                if len(item) > 5:
+                    line.validator.setDecimals(int(item[5]))
+
+            elif itemtype == 'slider':
+                if type(value) == int:
+                    line = InputSlider(name,value,**options)
+                elif type(value) == float:
+                    line = InputFSlider(name,value,**options)
+ 
+            elif itemtype == 'info':
+                line = InputInfo(name,value)
+
+            elif itemtype == 'color':
+                line = InputColor(name,value)
+
+            elif itemtype == 'select' :
+                if len(item) > 3:
+                    choices = item[3]
+                else:
+                    choices = []
+                line = InputCombo(name,choices,value)
+
+            elif itemtype in ['radio','hradio','vradio']:
+                if len(item) > 3:
+                    choices = item[3]
+                else:
+                    choices = []
+                line = InputRadio(name,choices,value,direction=itemtype[0])
+
+            elif itemtype in ['push','hpush','vpush']:
+                if len(item) > 3:
+                    choices = item[3]
+                else:
+                    choices = []
+                line = InputPush(name,choices,value,direction=itemtype[0])
+
+            else: # Anything else is handled as a string
+                #itemtype = str:
+                line = InputString(name,value)
+                
+            form.addLayout(line)
+            self.fields.append(line)
+
+        # add the action buttons
+        if actions is None:
+            actions = [('CANCEL',),('OK',)]
+            default = 'OK'
+        but = dialogButtons(self,actions,default)
+        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
+        form.addLayout(but)
+        self.setLayout(form)
+        # Set the keyboard focus to the first input field
+        self.fields[0].input.setFocus()
+        self.show()
+
+
+    def __getitem__(self,name):
+        """Return the input item with specified name."""
+        items = [ f for f in self.fields if f.name() == name ]
+        if len(items) > 0:
+            return items[0]
+        else:
+            return None
+        
+        
+    def acceptData(self):
+        """Update the dialog's return value from the field values.
+
+        This function is connected to the 'accepted()' signal.
+        Modal dialogs should normally not need to call it.
+        In non-modal dialogs however, you can call it to update the
+        results without having to raise the accepted() signal (which
+        would close the dialog).
+        """
+        self.result = {}
+        self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
+        if self.report_pos:
+            self.result.update({'__pos__':self.pos()})
+        self.accepted = True
+        
+
+    def updateData(self,d):
+        """Update a dialog from the data in given dictionary.
+
+        d is a dictionary where the keys are field names in t the dialog.
+        The values will be set in the corresponding input items.
+        """
+        for f in self.fields:
+            n = f.name()
+            if n in d:
+                f.setValue(d[n])
+            
+
+    def timeout(self):
+        self.timedOut = True
+        
+        
+    def getResult(self,timeout=None,timeoutAccept=True):
+        """ Get the results from the input dialog.
+
+        This fuction is used to present a modal dialog to the user (i.e. a
+        dialog that must be ended before the user can continue with the
+        program. The dialog is shown and user interaction is processed.
+        The user ends the interaction either by accepting the data (e.g. by
+        pressing the OK button or the ENTER key) or by rejecting them (CANCEL
+        button or ESC key).
+        On accept, a dictionary with all the fields and their values is
+        returned. On reject, an empty dictionary is returned.
+        
+        If a timeout (in seconds) is given, a timer will be started and if no
+        user input is detected during this period, the input dialog returns
+        with the default values set.
+        A value 0 will timeout immediately, a negative value will never timeout.
+        The default is to use the global variable input_timeout.
+
+        This function also sets the exit mode, so that the caller can test how
+        the dialog was ended.
+        self.accepted == TRUE/FALSE
+        self.timedOut == TRUE/FALSE
+        """
+        self.timedOut = False
+        self.accepted = False
+        if timeout is None:
+            timeout = input_timeout
+
+        if timeout >= 0:
+            # Start the timer:
+            try:
+                timeout = float(timeout)
+                if timeout >= 0.0:
+                    timer = QtCore.QTimer()
+                    if timeoutAccept == True:
+                        timeoutFunc = self.accept
+                    else:
+                        timeoutFunc = self.reject
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutFunc)
+                    timer.setSingleShot(True)
+                    timeout = int(1000*timeout)
+                    timer.start(timeout)
+            except:
+                raise
+            
+        self.exec_()
+        self.activateWindow()
+        self.raise_()
+        GD.app.processEvents()
+        return self.result
+
+
+
+
+class NewInputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
     While general input dialogs can be constructed from all the underlying

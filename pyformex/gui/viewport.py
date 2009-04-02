@@ -651,7 +651,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             dx,dy = (x-self.statex,y-self.statey)
             panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
             pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
-            GD.debug("PAN: %s, %s, %s, %s, %s" % (dist,dx,dy,panx,pany))
+            #GD.debug("PAN: %s, %s, %s, %s, %s" % (dist,dx,dy,panx,pany))
             self.camera.translate(panx,pany,0)
             self.statex,self.statey = (x,y)
             self.update()
