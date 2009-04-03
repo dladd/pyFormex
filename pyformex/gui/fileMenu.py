@@ -204,6 +204,18 @@ def stopMultiSave():
     """Stop multisave mode."""
     image.save()
 
+from imageViewer import ImageViewer
+viewer = None
+def showImage():
+    """Display an image file."""
+    global viewer
+    fn = draw.askFilename(filter=utils.fileDescription('img'),multi=False,exist=True)
+    if fn:
+        viewer = ImageViewer(GD.app,fn)
+        viewer.show()
+        
+    
+
 
 def setOptions():
     options = ['test','debug','uselib','safelib','fastencode']
@@ -232,7 +244,8 @@ MenuData = [
     (_('Save &Next Image'),image.saveNext),
     (_('Create &Movie'),image.createMovie),
     (_('&Stop MultiSave'),stopMultiSave),
-    (_('&Save Icon'),saveIcon),
+    (_('&Save as Icon'),saveIcon),
+    (_('&Show Image'),showImage),
     (_('---2'),None),
     (_('Load &Plugins'),[
         (_('Surface menu'),surface_menu.show_menu),

@@ -196,7 +196,7 @@ shows how to use QPainter to print an image.</p>
             self.connect(self.exitAct,QtCore.SIGNAL('triggered()'),self.close)
 
             self.aboutQtAct = QtGui.QAction(tr("About &Qt"),self)
-            self.connect(self.aboutQtAct,QtCore.SIGNAL('triggered()'),app,QtCore.SLOT('aboutQt()'))
+            self.connect(self.aboutQtAct,QtCore.SIGNAL('triggered()'),self.parent,QtCore.SLOT('aboutQt()'))
 
         elif isinstance(self.parent,QtGui.QDialog):
 
