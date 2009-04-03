@@ -399,7 +399,7 @@ def drawFaceElems(x,faces,mode,color=None,alpha=1.0):
       face of the solid, in local vertex numbers (0..nplex-1)
     """
     # We may have faces with different plexitudes!
-    for fac in utils.sortOnLength(faces).itervalues():
+    for fac in olist.collectOnLength(faces).itervalues():
         fa = asarray(fac)
         drawFaces(x[:,fa.ravel(),:],fa.shape[1],mode,color,alpha)
 

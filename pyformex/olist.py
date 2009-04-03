@@ -59,6 +59,41 @@ def select(a,b):
     return [ a[i] for i in b ]
         
 
+
+def collectOnLength(items,return_indices=False):
+    """Collect items of a list in separate bins according to the item length.
+
+    items is a list of items of any type having the len() method.
+    The items are put in separate lists according to their length.
+
+    The return value is a dict where the keys are item lengths and
+    the values are lists of items with this length.
+
+    If return_indices is True, a second dict is returned, with the same
+    keys, holding the original indices of the items in the lists.
+    """
+    if return_indices:
+        res,ind = {},{}
+        for i,item in enumerate(items):
+            li = len(item)
+            if li in res.keys():
+                res[li].append(item)
+                ind[li].append(i)
+            else:
+                res[li] = [ item ]
+                ind[li] = [ i ]
+        return res,ind
+    else:
+        res = {}
+        for item in items:
+            li = len(item)
+            if li in res.keys():
+                res[li].append(item)
+            else:
+                res[li] = [ item ]
+        return res
+
+
 if __name__ == "__main__":
 
     a = [1,2,3,5,6,7]

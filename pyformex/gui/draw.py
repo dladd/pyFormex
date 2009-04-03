@@ -87,9 +87,6 @@ def ask(question,choices=None,default=None,**kargs):
         return default
 
 
-def hello():
-    print 'hello'
-
 def ack(question):
     """Show a Yes/No question and return True/False depending on answer."""
     return ask(question,['No','Yes']) == 'Yes'
@@ -757,11 +754,17 @@ def redraw():
     GD.canvas.update()
 
 
-def pause(msg="Use the Step/Continue buttons to proceed"):
-    GD.debug("PAUSE ACTIVATED!")
+def pause(msg="Use the Step or Continue button to proceed"):
+    """Pause the execution until an external event occurs.
+
+    When the pause statement is executed, execution of the pyformex script
+    is suspended until some external event forces it to proceed again.
+    Clicking the STEP or CONTINUE button will produce such an event.
+    """
+    #GD.debug("PAUSE ACTIVATED!")
     if msg:
         GD.message(msg)
-    GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
+    #GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
     if GD.GUI.drawlock.allowed:
         GD.GUI.drawlock.block()    # will need external event to release it
         while (GD.GUI.drawlock.locked):

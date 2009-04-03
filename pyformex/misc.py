@@ -28,8 +28,8 @@ The functions in this module should be exact emulations of the
 external functions in the compiled library.
 """
 
-# There should be no other imports here than numpy
-from numpy import *
+# There should be no other imports here than array
+from array import *
 
 def nodalSum(val,elems,work,avg):
     """Compute the nodal sum of values defined on elements.

@@ -28,7 +28,7 @@ Graphic Tools for pyFormex.
 """
 
 from coords import *
-from numtools import Collection
+from collection import Collection
 
 class Plane(object):
 

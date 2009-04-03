@@ -22,13 +22,13 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""numtools.py: Our additions to the numpy classes.
+"""Tools for handling collections of elements belonging to multiple parts.
 
-This is a collection of definitions that depend on the numpy module.
+This module defines the Collection class.
 """
 
 import pyformex as GD
-from numpy import *
+from array import *
 
 ################# Collection of Actors or Actor Elements ###############
 

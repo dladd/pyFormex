@@ -28,19 +28,7 @@ A pyFormex plugin for handling connectivity of nodes and elements.
 """
 
 import pyformex as GD
-from numpy import *
-
-# Define a wrapper function for old versions
-#
-if unique1d([1],True)[0][0] == 0:
-    # We have the old numy version
-    def unique1d(a,return_indices):
-        import numpy
-        if return_indices:
-            indices,uniq = numpy.unique1d(a,True)
-            return uniq,indices
-        else:
-            return numpy.unique1d(a)
+from array import *
 
 
 def magic_numbers(elems,magic):

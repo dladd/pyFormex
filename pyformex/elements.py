@@ -33,7 +33,8 @@ should be done by the interface modules.
 import math
 golden_ratio = 0.5 * (1.0 + math.sqrt(5))
 
-from utils import sortOnLength
+import olist
+
 
 class Element(object):
     """Element base class: an empty element.
@@ -71,7 +72,7 @@ class Element(object):
         return len(self.faces)
 
     def getFaces():
-        return sortOnLength(self.faces)
+        return olist.collectOnLength(self.faces)
 
 
 

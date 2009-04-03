@@ -24,12 +24,33 @@
 
 """A collection of numerical array utilities.
 
-These are general utility functions that depend only on the
-numpy array model.
+These are general utility functions that depend only on the numpy array model.
+All pyformex modules needing numpy should import everything from this module.
 """
 
 from numpy import *
-from pyformex import olist
+
+
+###########################################################################
+##
+##   some math functions
+##
+#########################
+
+# Define a wrapper function for old versions
+#
+
+if unique1d([1],True)[0][0] == 0:
+    # We have the old numy version
+    print "BEWARE: OLD VERSION OF NUMPY!!!!"
+    def unique1d(a,return_indices=False):
+        """Replacement for numpy's unique1d"""
+        import numpy
+        if return_indices:
+            indices,uniq = numpy.unique1d(a,True)
+            return uniq,indices
+        else:
+            return numpy.unique1d(a)
 
 
 # default float and int types
@@ -297,27 +318,6 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
         else:
             return error
     return uniq
-    
-
-def collectOnLength(items):
-    """Collect items with same length.
-
-    a is a list of items of any type for which the function len()
-    returns an integer value.
-    The items are sorted in a number of bins, each containing the
-    items with the same length.
-    The return value is a tuple of:
-    - a list of bins with the sorted items,
-    - a list of indices of these items in the input list,
-    - a list of lengths of the bins,
-    - a list of the item length in each bin.
-    """
-    np = array([ len(e) for e in items ])
-    itemlen = unique1d(np)
-    itemnrs = [ where(np==p)[0] for p in itemlen ]
-    itemgrps = [ olist.select(items,i) for i in itemnrs ]
-    itemcnt = [ len(i) for i in itemnrs ]
-    return itemgrps,itemnrs,itemcnt,itemlen
     
 
 # End

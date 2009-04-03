@@ -35,7 +35,7 @@ import pyformex as GD
 from PyQt4 import QtCore, QtGui, QtOpenGL
 from OpenGL import GL
 
-from numtools import Collection
+from collection import Collection
 import canvas
 import decors
 import image
