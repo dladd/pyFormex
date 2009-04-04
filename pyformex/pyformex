@@ -38,6 +38,10 @@ distributed under the GNU General Public License, version 3 or later.
 (C) 2004-2009 Benedict Verhegghe (benedict.verhegghe@ugent.be)) 
 """
 
+import warnings
+warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
+
+
 # Get the pyformex dir and put it on the head of sys.path
 import sys,os
 scriptdir = sys.path[0]

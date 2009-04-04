@@ -105,7 +105,7 @@ opengl_format = None
 def setOpenGLFormat():
     """Set the correct OpenGL format.
 
-    Omn a correctly installed system, the default should do well.
+    On a correctly installed system, the default should do well.
     The default OpenGL format can be changed by command line options.
     --dri   : use the DIrect Rendering Infrastructure
     --nodri : do not use the DRI
@@ -149,7 +149,7 @@ Overlay: %s
 Plane: %s
 Multisample Buffers: %s
 """ % (fmt.hasOpenGL(),
-       str(fmt.openGLVersionFlags()),
+       int(fmt.openGLVersionFlags()),
        fmt.hasOpenGLOverlays(),
        fmt.doubleBuffer(),fmt.depth(),
        fmt.rgba(),fmt.alpha(),
