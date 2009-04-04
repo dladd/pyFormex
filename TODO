@@ -21,11 +21,10 @@ Each task can have the following keys:
 * Release 0.8:
 
  - Move the project to Beta status
+     sta: DONE
 
  - Make the GUI loadable from a function
-     dev: bverheg
-     sta: PARTIAL
-     rem: Need a branch for experimenting
+     sta: DONE
 
  - Add install scripts for GTS, tetgen, gl2ps
      dev: bverheg
