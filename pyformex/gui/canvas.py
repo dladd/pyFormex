@@ -695,6 +695,7 @@ class Canvas(object):
             dist = 1.0
         self.camera.setDist(dist)
         self.camera.setClip(0.01*dist,100.*dist)
+        self.camera.setArea(0.,0.,1.,1.)
 
 
     def zoom(self,f):
@@ -707,72 +708,54 @@ class Canvas(object):
 
 
 
-    def unProject(self,x,y,z):
-        "Map the window coordinates (x,y,z) to object coordinates."""
-        self.makeCurrent()
-        #y = vp.h-y
-        model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-        proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
-        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-        print "Modelview matrix:",model
-        print "Projection matrix:",proj
-        print "Viewport:",view
-        print "Point:",str((x,y,z)) 
-        objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-        print "Coordinates: ",x,y," map to ",objx,objy
-        return (objx,objy,objz)
+    ## def unProject(self,x,y,z):
+    ##     "Map the window coordinates (x,y,z) to object coordinates."""
+    ##     self.makeCurrent()
+    ##     #y = vp.h-y
+    ##     model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+    ##     proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
+    ##     view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+    ##     print "Modelview matrix:",model
+    ##     print "Projection matrix:",proj
+    ##     print "Viewport:",view
+    ##     print "Point:",str((x,y,z)) 
+    ##     objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
+    ##     print "Coordinates: ",x,y," map to ",objx,objy
+    ##     return (objx,objy,objz)
 
 
-    def unProject2(self,x,y,z):
-        "Map the window coordinates (x,y,z) to object coordinates."""
-        model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-        proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
-        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-        print "Modelview matrix:",model
-        print "Projection matrix:",proj
-        print "Viewport:",view
-        print "Point:",str((x,y,z)) 
-        objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-        print "Coordinates: ",x,y," map to ",objx,objy
-        return (objx,objy,objz)
+    ## def unProject2(self,x,y,z):
+    ##     "Map the window coordinates (x,y,z) to object coordinates."""
+    ##     model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+    ##     proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
+    ##     view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+    ##     print "Modelview matrix:",model
+    ##     print "Projection matrix:",proj
+    ##     print "Viewport:",view
+    ##     print "Point:",str((x,y,z)) 
+    ##     objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
+    ##     print "Coordinates: ",x,y," map to ",objx,objy
+    ##     return (objx,objy,objz)
 
 
-    def zoomRectangle(self,x,y,rw,rh,vp):
+    def zoomRectangle(self,x0,y0,x1,y1):
         """Rectangle zooming
 
-        x,y, is the new center (in the z-plane of the current camera center
+        x0,y0,x1,y1 are pixel coordinates of the lower left and upper right
+        corners of the area to zoom to the full window
         """
-        w,h = (self.width(),self.height())
-        print "x,y,w,h",x,y,w,h
-        x,y = x-w/2, h/2-y
-        ctr = self.camera.getCenter()
-        wctr = GLU.gluProject(*ctr)
-        yctr = GLU.gluUnProject(*wctr)
-        tf = tand(self.camera.fovy/2)
-        dist = self.camera.getDist()
-        xmax = dist * tf
-        ymax = xmax * self.camera.aspect
-        print "xmax,ymax = %s,%s" % (xmax,ymax)
-        print "Old center: %s = %s" % (ctr,wctr)
-        print "Bactrf = %s" % str(yctr)
-        #pt = [x,y,wctr[2]]
-        pt = [x,y,-dist]
-        print "Point %s" % str(pt)
-        #newctr = self.unProject(*pt)
-        #print "New center: %s" % str(newctr)
-        newctr = GLU.gluUnProject(*pt)
-        print "New center: %s" % str(newctr)
-        self.camera.setCenter(*newctr)
-        rw = max(rw,1)
-        rh = max(rh,1)
-        factor = min(rw/w,rh/h) 
-        factor = min(w/rw,h/rh) 
-        print "Zoom factor %s" % factor
-        self.zoom(factor)
+        ## WE SHOULD ADD FACILITIES TO KEEP THE ASPECT RATIO
+        w,h = float(self.width()),float(self.height())
+        self.camera.setArea(x0/w,y0/h,x1/w,y1/h,True)
 
 
-    def set_zoomRectangle(self,func):
-        Canvas.zoomRectangle = func
+    def zoomAll(self):
+        """Rectangle zooming
+
+        x0,y0,x1,y1 are relative corners in (0,0)..(1,1) space
+        """
+        self.camera.setArea(0.,0.,1.,1.)
+
 
     def saveBuffer(self):
         """Save the current OpenGL buffer"""

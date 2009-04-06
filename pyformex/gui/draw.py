@@ -645,6 +645,13 @@ def zoomBbox(bb):
     GD.canvas.update()
 
 
+def zoomRectangle():
+    """Zoom a rectangle selected by the user."""
+    GD.canvas.start_rectangle_zoom()
+    GD.canvas.update()
+    
+
+
 def zoomAll():
     """Zoom thus that all actors become visible."""
     if GD.canvas.actors:

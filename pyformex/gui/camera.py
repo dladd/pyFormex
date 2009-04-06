@@ -136,6 +136,8 @@ class Camera:
         self.setDist(dist)
         self.setLens(45.,4./3.)
         self.setClip(0.1,10.)
+        self.area = None
+        self.setArea(0.,0.,1.,1.)
         self.setPerspective(True)
         self.viewChanged = True
 
@@ -188,6 +190,7 @@ class Camera:
         self.dist = dist
         self.viewChanged = True
 
+
     def report(self):
         """Return a report of the current camera settings."""
         return """Camera Settings:
@@ -197,7 +200,8 @@ class Camera:
   %s
   Field of View y: %s
   Aspect Ratio: %s
-""" % (self.ctr,self.dist,self.rot,self.fovy,self.aspect)
+  Near/Far Clip: %s, %s
+""" % (self.ctr,self.dist,self.rot,self.fovy,self.aspect,self.near,self.far)
 
         
     def dolly(self,val):
@@ -382,6 +386,21 @@ class Camera:
         if fovy: self.fovy = min(abs(fovy),180)
         if aspect: self.aspect = abs(aspect)
         self.lensChanged = True
+
+
+    def setArea(self,hmin,vmin,hmax,vmax,relative=False):
+        """Set the viewable area of the camera."""
+        area = array([hmin,vmin,hmax,vmax]).clip(0.,1.)
+        if area[0] < area[2] and area[1] < area[3]:
+            area = area.reshape(2,2)
+            if relative:
+                #print "RELATIVE ZOOM %s" % area
+                area = (1.-area) * self.area[0] + area * self.area[1]
+            #print "OLD ZOOM AREA %s" % self.area
+            #print "NEW ZOOM AREA %s" % area
+            self.area = area
+            self.lensChanged = True
+
         
     def setClip(self,near,far):
         """Set the near and far clipping planes"""
@@ -389,16 +408,16 @@ class Camera:
             self.near,self.far = near,far
             self.lensChanged = True
         else:
-            print "Error: Invalid Near/Far clipping values""" 
-        self.lensChanged = True
+            print "Error: Invalid Near/Far clipping values"""
+
         
-    def setClipRel(self,near,far):
-        """Set the near and far clipping planes"""
-        if near > 0 and near < far:
-            self.near,self.far = near,far
-            self.lensChanged = True
-        else:
-            print "Error: Invalid Near/Far clipping values""" 
+    ## def setClipRel(self,near,far):
+    ##     """Set the near and far clipping planes"""
+    ##     if near > 0 and near < far:
+    ##         self.near,self.far = near,far
+    ##         self.lensChanged = True
+    ##     else:
+    ##         print "Error: Invalid Near/Far clipping values""" 
 
     def setPerspective(self,on=True):
         """Set perspective on or off"""
@@ -414,6 +433,7 @@ class Camera:
         if val>0:
             self.fovy *= val
         self.lensChanged = True
+
 
     def loadProjection(self,force=False,pick=None,oldmode=False):
         """Load the projection/perspective matrix.
@@ -436,12 +456,14 @@ class Camera:
             if pick:
                 GLU.gluPickMatrix(*pick)
             if self.perspective:
-                if oldmode:
-                    GLU.gluPerspective(self.fovy,self.aspect,self.near,self.far)
-                else:
-                    fv = tand(self.fovy*0.5) * self.near
-                    fh = fv * self.aspect
-                    GL.glFrustum(-fh,fh,-fv,fv,self.near,self.far)
+                fv = tand(self.fovy*0.5) * self.near
+                fh = fv * self.aspect
+                x0,x1 = 2*self.area - 1.0
+                #print "REL FRUST %s, %s" % (x0,x1)
+                frustum = (fh*x0[0],fh*x1[0],fv*x0[1],fv*x1[1],self.near,self.far)
+                #print("Area: %s" % self.area)
+                #print("Frustum: %s,%s; %s,%s; %s,%s" % frustum)
+                GL.glFrustum(*frustum)
             else:
                 fv = tand(self.fovy*0.5) * self.dist
                 fh = fv * self.aspect
@@ -468,7 +490,7 @@ if __name__ == "__main__":
 
     def reshape (w, h):
         GL.glViewport (0, 0, w, h)
-        GL.glMatrixMode (GL.GL_PROJECTION)
+        GL.glMatrixMode (GL.GL_PJECTION)
         GL.glLoadIdentity ()
         GL.glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0)
         GL.glMatrixMode (GL.GL_MODELVIEW)
