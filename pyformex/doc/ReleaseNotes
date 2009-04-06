@@ -22,99 +22,66 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-pyFormex 0.7.3  Releasenotes
-============================
+pyFormex 0.8  Releasenotes
+==========================
 
-This is a collection of the most prominent changes in pyFormex 0.7.3
-compared to the previous release 0.7.2
+This is a collection of the most prominent changes in pyFormex 0.8
+compared to the previous release 0.7.3
 
 
 Installation
 ------------
-pyFormex should now use whatever is the default Python interpreter for the user running the pyformex command. This facilitates non-standard installations (e.g. in user space).
-Of course, packagers for distributions may still replace the current script executer (/usr/bin/env python) by any particular Python version. We recommend Python 2.5 or higher. 
 
 
 Command line
 ------------
 
-- When running pyformex with the --gui option, remaining command line parameters are now intrepreted just as with the --nogui option: i.e. as pyformex scripts to be executed (and possibly their parameters).
-
+- In GUI mode, pyFormex scripts passed on the command line will now also be processed.
 
 Configuration
 -------------
-- The default startup script is now '~/.pyformex.startup'
+- The pyFormex user configuration files have been moved to a directory ~/.pyformex
 
 
 Core
 ----
+- Formex:
+  + Formex transformation preserve the 'eltype' attribute
+  + New transformations: mirror, centered, resized
+  + Deprecated 'readfile'
 
-- CascadingDict has been renamed to CDict
-- connectivity module has been moved from plugins into the core, as more and more modules get dependent on the Connectivity class. (surface, centerline, fe, mesh)
-- mydict.py: made ReturnNone and RaiseError functions in place of static methods
-- odict.py: 
-  + added listSymDifference, listSelect and listConcatenate functions
-  + ODict: implemented update(), values() and items() methods
+- All script executing functionality is moved to script.py
+- The GUI can now be started from a nongui script
+- mydict.py: changed the pickling to allow non-ascii pickling of projects
+- olist.py: new module gathering list functions
+- odict.py: new class KeyList
+
 
 Gui
 ---
 
-- widgets.py: 
-  + added unchangeable info field to input items.
-  + contents of input widgets can be changed by script 
-  + input dialogs have customizable buttons
-  + added some Table widgets
-
-- startup scripts and script directories can be configured from the GUI perference settings menu.
 
 Drawing
 -------
-- Accelerated picking function available from the pyFormex compiled library.
-- An important change in the 'bbox' and 'view' parameters of the draw() function: they now have None as default value, which is then set from the canvas drawing options, to be set with 'setDrawingOptions'.
-
-- When rendering TriSurfaces with lighting, there is an option to use
-  averaged normals at the vertices of the triangles, providing a much smoother
-  look of the surface. An optional toolbar button toggles between triangle
-  based and averaged normals.
-
-- In view of future changes, the drawing lock mechanism was moved to a separate module: drawlock.
 
 
 Scripting
 ---------
-- playing scripts under the GUI was moved from module 'gui.draw' to 'script' 
-- askFilename: the 'cur' and 'file' parameters were merged
 
 
 Plugins
 -------
-- surface, surface_menu:
-  + TriSurface: new methods: borderEdgeNrs, borderNodeNrs, smoothLowPass, smoothLaplaceHC 
-
-- curve: A new plugin for handling continuous curves in 3D space. Currently implemented are PolyLine, Bezier, CardinalSPline and NaturalSpline. Full NURBS curve support is scheduled for release 0.8
-
-- isopar: added 'hex36' isoparametric transformation
-
-- properties: got more facilities (e.g. amplitude)
-
-- fe_abq: output of amplitude
-
-- postproc, fe_post, postproc_menu: some enhancements, but this is still work in progress 
-
-- tetgen: added a function ReadFaces to read a Tetgen .faces file
 
 Examples
 --------
 
-- Analysis examples have been moved into the global example directory and are
-  classified by the keywords.
-- Curves: illustrates the use of the new curve plugin.
-
 
 Manual
 ------
+- The reference manual has been expanded largely with automatically generated documentation from the Python source docstrings. 
 
 
-License
--------
-We have upgraded the license to GPL v3 or higher!
+Project Status
+--------------
+We have upgraded the project status to Beta. This is a clear sign to the user that we have reached a status where the program has become largely usable, despite some still missing or unfinished functions.
+
