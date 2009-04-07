@@ -253,13 +253,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def start_rectangle_zoom(self):
-        GD.debug("START RECTANGLE ZOOM")
+        #GD.debug("START RECTANGLE ZOOM")
         self.setMouse(LEFT,self.mouse_rectangle_zoom)
         self.setCursorShape('pick')
 
  
     def finish_rectangle_zoom(self):
-        GD.debug("END RECTANGLE ZOOM")
+        #GD.debug("END RECTANGLE ZOOM")
         self.update()
         self.setCursorShape('default')
         self.setMouse(LEFT,self.dynarot)

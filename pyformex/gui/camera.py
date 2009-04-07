@@ -388,16 +388,31 @@ class Camera:
         self.lensChanged = True
 
 
-    def setArea(self,hmin,vmin,hmax,vmax,relative=False):
+    def setArea(self,hmin,vmin,hmax,vmax,relative=False,keep_aspect=True):
         """Set the viewable area of the camera."""
         area = array([hmin,vmin,hmax,vmax]).clip(0.,1.)
         if area[0] < area[2] and area[1] < area[3]:
             area = area.reshape(2,2)
+            mean = (area[1]+area[0]) / 2
+            diff = (area[1]-area[0]) / 2
+            
             if relative:
-                #print "RELATIVE ZOOM %s" % area
+                #print "RELATIVE AREA BEFORE SETTING ASPECT %s" % (area)
+                if keep_aspect:
+                    aspect = diff[0] / diff[1]
+                    if aspect > 1.0:
+                        diff[1] = diff[0] #/ self.aspect
+                        # no aspect factor: this is relative!!!
+                    else:
+                        diff[0] = diff[1] #* self.aspect
+                    area[0] = mean-diff
+                    area[1] = mean+diff
+                #print "RELATIVE AREA %s" % (area)
                 area = (1.-area) * self.area[0] + area * self.area[1]
-            #print "OLD ZOOM AREA %s" % self.area
-            #print "NEW ZOOM AREA %s" % area
+
+            #print "OLD ZOOM AREA %s (aspect %s)" % (self.area,self.aspect)
+            #print "NEW ZOOM AREA %s" % (area)
+                                                       
             self.area = area
             self.lensChanged = True
 
