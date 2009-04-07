@@ -695,7 +695,7 @@ class Canvas(object):
             dist = 1.0
         self.camera.setDist(dist)
         self.camera.setClip(0.01*dist,100.*dist)
-        self.camera.setArea(0.,0.,1.,1.)
+        self.camera.resetArea()
 
 
     def zoom(self,f):
@@ -746,7 +746,7 @@ class Canvas(object):
         """
         ## WE SHOULD ADD FACILITIES TO KEEP THE ASPECT RATIO
         w,h = float(self.width()),float(self.height())
-        self.camera.setArea(x0/w,y0/h,x1/w,y1/h,True)
+        self.camera.setArea(x0/w,y0/h,x1/w,y1/h)
 
 
     def zoomAll(self):
@@ -754,7 +754,7 @@ class Canvas(object):
 
         x0,y0,x1,y1 are relative corners in (0,0)..(1,1) space
         """
-        self.camera.setArea(0.,0.,1.,1.)
+        self.camera.resetArea()
 
 
     def saveBuffer(self):

@@ -137,7 +137,8 @@ class Camera:
         self.setLens(45.,4./3.)
         self.setClip(0.1,10.)
         self.area = None
-        self.setArea(0.,0.,1.,1.)
+        self.resetArea()
+        self.keep_aspect = True
         self.setPerspective(True)
         self.viewChanged = True
 
@@ -388,17 +389,27 @@ class Camera:
         self.lensChanged = True
 
 
-    def setArea(self,hmin,vmin,hmax,vmax,relative=False,keep_aspect=True):
+    def resetArea(self):
+        """Set maximal camera area.
+
+        Resets the camera window area to its maximum values corresponding
+        to the fovy setting, symmetrical about the camera axes. 
+        """
+        self.setArea(0.,0.,1.,1.,False)
+
+
+    def setArea(self,hmin,vmin,hmax,vmax,relative=True,clip=True):
         """Set the viewable area of the camera."""
-        area = array([hmin,vmin,hmax,vmax]).clip(0.,1.)
+        area = array([hmin,vmin,hmax,vmax])
+        if clip:
+            area = area.clip(-1.,1.)
         if area[0] < area[2] and area[1] < area[3]:
             area = area.reshape(2,2)
-            mean = (area[1]+area[0]) / 2
-            diff = (area[1]-area[0]) / 2
+            mean = (area[1]+area[0]) * 0.5
+            diff = (area[1]-area[0]) * 0.5
             
             if relative:
-                #print "RELATIVE AREA BEFORE SETTING ASPECT %s" % (area)
-                if keep_aspect:
+                if self.keep_aspect:
                     aspect = diff[0] / diff[1]
                     if aspect > 1.0:
                         diff[1] = diff[0] #/ self.aspect
@@ -415,6 +426,17 @@ class Camera:
                                                        
             self.area = area
             self.lensChanged = True
+
+
+    def zoom(self,val=0.5):
+        """Zoom in/out by shrinking/enlarging the camera view area.
+
+        The zoom factor is relative to the current setting.
+        Values smaller than 1.0 zoom in, larger values zoom out.
+        """
+        if val>0:
+            val = (1.-val) * 0.5
+            self.setArea(val,val,1.-val,1.-val)
 
         
     def setClip(self,near,far):
@@ -439,15 +461,16 @@ class Camera:
         self.perspective = on
         self.lensChanged = True
 
-    def zoom(self,val=0.5):
-        """Zoom in/out by shrinking/enlarging the camera view angle.
 
-        The zoom factor is relative to the current setting.
-        Use setFovy() to specify an absolute setting.
-        """
-        if val>0:
-            self.fovy *= val
-        self.lensChanged = True
+    ## def zoom(self,val=0.5):
+    ##     """Zoom in/out by shrinking/enlarging the camera view angle.
+
+    ##     The zoom factor is relative to the current setting.
+    ##     Use setFovy() to specify an absolute setting.
+    ##     """
+    ##     if val>0:
+    ##         self.fovy *= val
+    ##     self.lensChanged = True
 
 
     def loadProjection(self,force=False,pick=None,oldmode=False):
