@@ -501,6 +501,7 @@ class Canvas(object):
         GL.glPushMatrix()
         GL.glLoadIdentity()
         GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glPushMatrix()
         GL.glLoadIdentity()
         GLU.gluOrtho2D(0,self.width(),0,self.height())
         GL.glDisable(GL.GL_DEPTH_TEST)
@@ -511,6 +512,8 @@ class Canvas(object):
     def end_2D_drawing(self):
         """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
         GL.glEnable(GL.GL_DEPTH_TEST)    
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glPopMatrix()
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPopMatrix()
         self.glLight(self.lighting)
@@ -694,13 +697,10 @@ class Canvas(object):
         self.camera.resetArea()
 
 
-    def zoom(self,f):
+    def zoom(self,f,dolly=True):
         """Dolly zooming."""
-        dist = f*self.camera.getDist()
-        if dist == nan or dist == inf:
-            GD.debug("DIST: %s" % dist)
-            return 
-        self.camera.setDist(dist)
+        if dolly:
+            self.camera.dolly(f)
 
 
 

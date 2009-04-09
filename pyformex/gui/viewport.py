@@ -664,17 +664,22 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         zoom operation. The action is one of PRESS, MOVE or RELEASE.
         """
         if action == PRESS:
-            self.state = [self.camera.getDist(),self.camera.fovy]
+            self.state = [self.camera.getDist(),self.camera.area.tolist()]
+            #self.state = [self.camera.getDist(),self.camera.fovy]
 
         elif action == MOVE:
             w,h = self.getSize()
             # hor movement is lens zooming
-            f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
+            f = utils.stuur(x,[0,self.statex,w],[10.,1.,0.01],0.5)
+            print "Area Zooming: %s,%s,%s" % (self.state[1],self.statex,f)
+            self.camera.zoom(f,area=asarray(self.state[1]).reshape(2,2))
+            #f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
             #print "Lens Zooming: %s" % f
-            self.camera.setLens(f)
+            #self.camera.setLens(f)
             # vert movement is dolly zooming
-            d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
-            self.camera.setDist(d*self.state[0])
+            #if GD.options.dollyzoom:
+            #    d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
+            #    self.camera.setDist(d*self.state[0])
             self.update()
 
         elif action == RELEASE:

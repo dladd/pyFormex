@@ -32,10 +32,10 @@ from gettext import gettext as _
 
          
 def zoomIn():
-    GD.canvas.zoom(1./float(GD.cfg['gui/zoomfactor']))
+    GD.canvas.camera.zoom(1./float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()
 def zoomOut():
-    GD.canvas.zoom(float(GD.cfg['gui/zoomfactor']))
+    GD.canvas.camera.zoom(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()
 ##def panRight():
 ##    canvas.camera.pan(+5)
@@ -89,7 +89,8 @@ def dollyIn():
 def dollyOut():
     GD.canvas.camera.dolly(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()   
-
+def report():
+    print GD.canvas.camera.report()
 
 
 MenuData = [
@@ -116,6 +117,8 @@ MenuData = [
         (_('Rotate &ClockWise'),twistRight),
         (_('Rotate &CCW'),twistLeft),
         ]),
+    ('---',None),
+    (_('&Report'),report), 
     ]
 
 

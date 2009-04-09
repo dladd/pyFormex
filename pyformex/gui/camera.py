@@ -24,13 +24,14 @@
 ##
 """camera 0.1 (C) Benedict Verhegghe"""
 
-import numpy
-inverse = numpy.linalg.linalg.inv
-multiply = numpy.dot
-array = numpy.array
+from numpy import *
+
+inverse = linalg.linalg.inv
+multiply = dot
+
 def tand(arg):
     """Return the tan of an angle in degrees."""
-    return numpy.tan(arg*numpy.pi/180.)
+    return tan(arg*pi/180.)
 
 import copy
 
@@ -126,7 +127,7 @@ class Camera:
     to MODELVIEW.
     """
 
-    def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=0.):
+    def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=1.):
         """Create a new camera at position (0,0,0) looking along the -z axis"""
         self.setCenter(*center)
         self.setRotation(long,lat,twist)
@@ -185,8 +186,9 @@ class Camera:
 
     def setDist(self,dist):
         """Set the distance."""
-        self.dist = dist
-        self.viewChanged = True
+        if dist > 0.0 and dist != inf:
+            self.dist = dist
+            self.viewChanged = True
 
 
     def report(self):
@@ -198,8 +200,9 @@ class Camera:
   %s
   Field of View y: %s
   Aspect Ratio: %s
+  Area: %s, %s
   Near/Far Clip: %s, %s
-""" % (self.ctr,self.dist,self.rot,self.fovy,self.aspect,self.near,self.far)
+""" % (self.ctr,self.dist,self.rot,self.fovy,self.aspect,self.area[0],self.area[1],self.near,self.far)
 
         
     def dolly(self,val):
@@ -300,7 +303,7 @@ class Camera:
     def lookAt(self,eye,center,up):
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glLoadIdentity()
-        GLU.gluLookAt(*numpy.concatenate([eye,center,up]))
+        GLU.gluLookAt(*concatenate([eye,center,up]))
         self.saveMatrix()
 
     def rotate(self,val,vx,vy,vz):
@@ -395,17 +398,19 @@ class Camera:
         self.setArea(0.,0.,1.,1.,False)
 
 
-    def setArea(self,hmin,vmin,hmax,vmax,relative=True,clip=True):
+    def setArea(self,hmin,vmin,hmax,vmax,relative=True,center=False,clip=True):
         """Set the viewable area of the camera."""
         area = array([hmin,vmin,hmax,vmax])
         if clip:
-            area = area.clip(-1.,1.)
+            area = area.clip(0.,1.)
         if area[0] < area[2] and area[1] < area[3]:
             area = area.reshape(2,2)
             mean = (area[1]+area[0]) * 0.5
             diff = (area[1]-area[0]) * 0.5
             
             if relative:
+                if center:
+                    mean = zeros(2)
                 if self.keep_aspect:
                     aspect = diff[0] / diff[1]
                     if aspect > 1.0:
@@ -415,7 +420,7 @@ class Camera:
                         diff[0] = diff[1] #* self.aspect
                     area[0] = mean-diff
                     area[1] = mean+diff
-                #print "RELATIVE AREA %s" % (area)
+                print "RELATIVE AREA %s" % (area)
                 area = (1.-area) * self.area[0] + area * self.area[1]
 
             #print "OLD ZOOM AREA %s (aspect %s)" % (self.area,self.aspect)
@@ -425,15 +430,27 @@ class Camera:
             self.lensChanged = True
 
 
-    def zoom(self,val=0.5):
+
+    def zoom(self,val=0.5,area=None,center=True):
         """Zoom in/out by shrinking/enlarging the camera view area.
 
         The zoom factor is relative to the current setting.
         Values smaller than 1.0 zoom in, larger values zoom out.
         """
         if val>0:
-            val = (1.-val) * 0.5
-            self.setArea(val,val,1.-val,1.-val)
+            #val = (1.-val) * 0.5
+            #self.setArea(val,val,1.-val,1.-val,center=center)
+            if area is None:
+                area = self.area
+            #print "ZOOM AREA %s (%s)" % (area.tolist(),val)
+            mean = (area[1]+area[0]) * 0.5
+            diff = (area[1]-area[0]) * 0.5 * val
+            area[0] = mean-diff
+            area[1] = mean+diff
+            self.area = area
+            #print "CAMERA AREA %s" % self.area.tolist()
+            self.lensChanged = True
+            
 
         
     def setClip(self,near,far):
@@ -522,6 +539,7 @@ if __name__ == "__main__":
         GL.glClear (GL.GL_COLOR_BUFFER_BIT)
         GL.glColor3f (1.0, 1.0, 1.0)
         GL.glLoadIdentity ()             # clear the matrix
+        cam.loadProjection()
         cam.loadMatrix()
         glutWireCube (1.0)
         GL.glFlush ()
@@ -587,7 +605,6 @@ if __name__ == "__main__":
 ##             cam.truck([0.,0.,-0.5])
         elif key == 'o':
             cam.setPerspective(not cam.perspective)
-            cam.loadProjection()
         else:
             print key
         display()
