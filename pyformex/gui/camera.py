@@ -505,7 +505,10 @@ class Camera:
             else:
                 fv = tand(self.fovy*0.5) * self.dist
                 fh = fv * self.aspect
-                GL.glOrtho(-fh,fh,-fv,fv,self.near,self.far)
+                x0,x1 = 2*self.area - 1.0
+                frustum = (fh*x0[0],fh*x1[0],fv*x0[1],fv*x1[1],self.near,self.far)
+                GL.glOrtho(*frustum)
+##                 GL.glOrtho(-fh,fh,-fv,fv,self.near,self.far)
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 
 

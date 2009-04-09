@@ -27,6 +27,7 @@
 Graphic Tools for pyFormex.
 """
 
+import pyformex as GD
 from coords import *
 from collection import Collection
 
