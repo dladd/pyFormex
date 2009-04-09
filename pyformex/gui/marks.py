@@ -23,10 +23,10 @@
 ##
 """OpenGL marks for annotating 3D actors."""
 
-from OpenGL import GL,GLU,GLUT
+from OpenGL import GL,GLU
 from colors import *
 from formex import *
-from decors import glutFont,drawGlutText
+from gluttext import glutFont,drawGlutText
 from drawable import Drawable
 
  

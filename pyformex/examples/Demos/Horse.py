@@ -43,7 +43,7 @@ y = GD.canvas.height()-20
 
 def say(text):
     global y
-    drawtext(text,x,y)
+    drawText(text,x,y)
     y -=20
 
 GD.message('Click Step to continue')

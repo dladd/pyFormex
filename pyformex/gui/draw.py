@@ -578,17 +578,9 @@ def setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0]):
     GD.app.processEvents()
 
 
-# DOES NOT WORK ??
-def drawTextQt(text,x,y,font=None):
+def drawText(text,x,y,adjust='left',font='helvetica',size=10,color=None):
     """Show a text at position x,y using font."""
-    print x,y,text
-    GD.canvas.renderText(x,y,'hallo')
-
-
-
-def drawtext(text,x,y,font='9x15',adjust='left',color=None):
-    """Show a text at position x,y using font."""
-    TA = decors.Text(text,x,y,font,adjust,color)
+    TA = decors.Text(text,x,y,adjust,font,size,color)
     decorate(TA)
     return TA
 
@@ -656,9 +648,6 @@ def zoomAll():
     """Zoom thus that all actors become visible."""
     if GD.canvas.actors:
         zoomBbox(coords.bbox(GD.canvas.actors))
-
-# An alias, currently not deprecated
-zoomall = zoomAll
 
 def zoom(f):
     GD.canvas.zoom(f)
@@ -1149,6 +1138,10 @@ def setGlobalAxes(mode=True):
     setLocalAxes(not mode)
          
 
+
+#  deprecated alternative spellings
+zoomall = zoomAll
+drawtext = drawText
 
 
 #### End

@@ -49,7 +49,9 @@ if __name__ == "draw":
     for i,F in enumerate([F0,F1,F2,F3]):
         vp(i)
         draw(F)
-        drawtext("F%s"%i,10,10,'hv18')
+        #drawText("F%s"%i,10,10,size=18)
+        GD.canvas.update()
+        sleep(2)
     
     
 # End

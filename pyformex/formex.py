@@ -29,8 +29,8 @@ It forms the basis of pyFormex, but predates it and is fairly independent.
 Therefore, it can also be used as a standalone extension module in Python.
 """
 
-from pyformex.coords import *
-from pyformex.utils import deprecated,functionWasRenamed,functionBecameMethod
+from coords import *
+from utils import deprecated,functionWasRenamed,functionBecameMethod
 
 
 def vectorNormalize(vec):

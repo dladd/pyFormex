@@ -97,7 +97,7 @@ def show(i,L,turtle_cmds,clear=True):
         if clear:
             undraw(FA)
         FA = FB
-        TB = drawtext("Generation %d"%i,20,20)
+        TB = drawText("Generation %d"%i,20,20)
         undecorate(TA)
         TA = TB
         
@@ -109,7 +109,7 @@ def grow(rule,clearing):
     TA = None
     clear()
     #GD.message(rule)
-    drawtext(rule,20,40)
+    drawText(rule,20,40)
     a,r,g,t = limas[rule]
     L = lima.Lima(a,r)
     show(0,L,t,clearing)

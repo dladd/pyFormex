@@ -85,7 +85,7 @@ for i,p in enumerate(P):
 seterr(**old)
     
 x = GD.canvas.width()/2
-y = GD.canvas.height() - 30
-drawtext("No animals got hurt during the making of this movie!",x,y,font='tr24',adjust='center')
+y = GD.canvas.height() - 40
+drawText("No animals got hurt during the making of this movie!",x,y,size=18,adjust='center')
 
 # End
