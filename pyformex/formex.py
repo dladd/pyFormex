@@ -1696,6 +1696,7 @@ class Formex(object):
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         ## the replication of the properties is automatic!
         return Formex(f,self.p,self.eltype)
+
     
     def replic2(self,n1,n2,t1=1.0,t2=1.0,d1=0,d2=1,bias=0,taper=0):
         """Replicate in two directions.
@@ -1710,6 +1711,7 @@ class Formex(object):
         ## separate data and prop concatenations, because we are
         ## guaranteed that either none or all formices in P have props.
         return Formex.concatenate(P)
+
  
     def rosette(self,n,angle,axis=2,point=[0.,0.,0.]):
         """Return a Formex with n rotational replications with angular
@@ -1726,8 +1728,7 @@ class Formex(object):
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
         return Formex(f + point,self.p,self.eltype)
 
-    ## A formian compatibility function that we may retain
-        
+
     def translatem(self,*args,**kargs):
         """Multiple subsequent translations in axis directions.
 
@@ -1740,6 +1741,35 @@ class Formex(object):
         for d,t in args:
             tr[d] += t
         return self.translate(tr)
+
+
+##############################################################################
+#
+#   Transformations that change the plexitude
+#        
+
+    def extrude(self,n,step=1.,dir=0,autofix=True):
+        """Extrude a Formex in one of the axis directions.
+
+        Returns a Formex with doubled plexitude.
+
+        First the original Formex is translated over n steps of length step in
+        direction dir. Then each pair of subsequent Formices is connected to
+        form a higher plexitude structure.
+
+        Currently, this function correctly transforms: point1 to line2,
+        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+
+        See the 'connect' function for a more versatile tool.
+        """
+        from plugins.mesh import extrudeMesh
+        c,e = self.feModel()
+        xc,xe = extrudeMesh(c,e,n,step,dir)
+        if autofix:
+            eltype = { 6:'wedge6', 8:'hex8' }.get(xe.shape[1],None)
+        else:
+            eltype=None
+        return Formex(xc[xe],eltype=eltype)
 
 
 ##############################################################################
@@ -2096,14 +2126,18 @@ def connect(Flist,nodid=None,bias=None,loop=False):
     loop=True however, each Formex will loop around if its end is
     encountered, and the order of the result is the maximum order in Flist.
     """
-    m = len(Flist)
-    for i in range(m):
-        if isinstance(Flist[i],Formex):
-            pass
-        elif isinstance(Flist[i],ndarray):
-            Flist[i] = Formex(Flist[i])
-        else:
-            raise RuntimeError,'connect(): first argument should be a list of formices'
+    try:
+        m = len(Flist)
+        for i in range(m):
+            if isinstance(Flist[i],Formex):
+                pass
+            elif isinstance(Flist[i],ndarray):
+                Flist[i] = Formex(Flist[i])
+            else:
+                raise TypeError
+    except TypeError:
+        raise TypeError,'connect(): first argument should be a list of formices'
+    
     if not nodid:
         nodid = [ 0 for i in range(m) ]
     if not bias:

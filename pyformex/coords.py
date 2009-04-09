@@ -919,6 +919,12 @@ in pyFormex to store coordinates of points in a 3D space.
         hi = array([ x[:,i].max() for i in range(3) ])
         sz = hi-lo
         esz = sz[sz > 0.0]  # only keep the nonzero dimensions
+        if esz.size == 0:
+            # All points are coincident
+            x = x[:1]
+            e = zeros(nnod,dtype=int32)
+            return x,e
+            
         vol = esz.prod()
         nboxes = nnod / nodesperbox # ideal total number of boxes
         boxsz = (vol/nboxes) ** (1./esz.shape[0])

@@ -450,7 +450,7 @@ class Canvas(object):
         self.glLight(self.lighting)
         
         # draw the highlighted actors
-        self.camera.loadProjection(oldmode=GD.options.oldzoom)
+        self.camera.loadProjection()
         self.camera.loadMatrix()
         if self.highlights:
             for actor in self.highlights:
@@ -672,21 +672,17 @@ class Canvas(object):
         # Default correction is sqrt(3)
         correction = float(GD.cfg.get('gui/autozoomfactor',1.732))
         tf = tand(fovy/2.)
-        if GD.options.oldzoom:
-            dsize = length(X1-X0)
-            dist = dsize/tf / correction
 
-        else:
-            import simple,coords
-            bbix = simple.regularGrid(X0,X1,[1,1,1])
-            bbix = dot(bbix,self.camera.rot[:3,:3])
-            bbox = coords.Coords(bbix).bbox()
-            dx,dy = bbox[1][:2] - bbox[0][:2]
-            hsize = max(dx,dy/self.aspect)
-            offset = abs(bbox[1][2]+bbox[0][2])
-            #print "hsize,offset = %s,%s" % (hsize,offset)
-            dist = (hsize/tf + offset) / correction
-            #print "new dist = %s" % (dist)
+        import simple,coords
+        bbix = simple.regularGrid(X0,X1,[1,1,1])
+        bbix = dot(bbix,self.camera.rot[:3,:3])
+        bbox = coords.Coords(bbix).bbox()
+        dx,dy = bbox[1][:2] - bbox[0][:2]
+        hsize = max(dx,dy/self.aspect)
+        offset = abs(bbox[1][2]+bbox[0][2])
+        #print "hsize,offset = %s,%s" % (hsize,offset)
+        dist = (hsize/tf + offset) / correction
+        #print "new dist = %s" % (dist)
         
         if dist == nan or dist == inf:
             GD.debug("DIST: %s" % dist)

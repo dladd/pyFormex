@@ -33,6 +33,7 @@ from formex import *
 
 import simple
 import utils
+import olist
 
 from pyformex.lib import drawgl
 

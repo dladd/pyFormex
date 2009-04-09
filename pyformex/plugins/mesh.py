@@ -132,37 +132,63 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
     return nodes1[:].reshape(-1,3),elems
 
 
-def connectMesh(c1,c2,e,n=1,n1=None,n2=None):
+def connectMesh(coords1,coords2,elems,n=1,n1=None,n2=None):
     """Connect two meshes to form a hypermesh.
     
-    c1,e and c2,e are 2 meshes with same topology.
+    coords1,elems and coords2,elems are 2 meshes with same topology.
     The coordinates are given in corresponding order.
     The two meshes are connected by a higher order mesh with n
     elements in the direction between the two meshes.
     """
-    if c1.shape != c2.shape:
+    if coords1.shape != coords2.shape:
         raise ValueError,"Meshes are not compatible"
 
     # compact the element numbering scheme
-    ne = unique1d(e)
+    ne = unique1d(elems)
     if ne[-1] >= ne.size:
-        c1 = c1[ne]
-        c2 = c2[ne]
-        e = reverseUniqueIndex(ne)[e]
+        coords1 = coords1[ne]
+        coords2 = coords2[ne]
+        elems = reverseUniqueIndex(ne)[elems]
 
     # Create the interpolations of the coordinates
-    x = Coords.interpolate(c1,c2,n).reshape(-1,3)
+    x = Coords.interpolate(coords1,coords2,n).reshape(-1,3)
 
-    nnod = c1.shape[0]
-    nplex = e.shape[1]
+    nnod = coords1.shape[0]
+    nplex = elems.shape[1]
     if n1 is None:
         n1 = range(nplex)
     if n2 is None:
         n2 = range(nplex)
-    e1 = e[:,n1]
-    e2 = e[:,n2] + nnod
+    e1 = elems[:,n1]
+    e2 = elems[:,n2] + nnod
     et = concatenate([e1,e2],axis=-1)
     e = concatenate([et+i*nnod for i in range(n)])
+    return x,e
+
+
+def extrudeMesh(coords,elems,n,step=1.,dir=0,autofix=True):
+    """Extrude a mesh in one of the axes directions.
+
+    Returns a hypermesh obtained by extruding the given mesh (coords,elems)
+    over n steps of length step in direction of axis dir.
+    The returned mesh has double plexitude of the original.
+
+    This function is usually used to points into lines, lines into surfaces
+    and surfaces into volumes. By default it will try to fix the connectivity
+    ordering where appropriate. It autofix is switched off, the connectivities
+    are merely stacked, and the user may have to fix it himself.
+
+    Currently, this function correctly transforms: point1 to line2,
+    line2 to quad4, tri3 to wedge6, quad4 to hex8.
+    """
+    nplex = elems.shape[1]
+    coord2 = coords.translate(dir,n*step)
+    x,e = connectMesh(coords,coord2,elems,n)
+    
+    if autofix and nplex == 2:
+        # fix node ordering for line2 to quad4 extrusions
+        e[:,-nplex:] = e[:,-1:-(nplex+1):-1].copy()
+
     return x,e
 
 

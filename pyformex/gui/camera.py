@@ -24,24 +24,21 @@
 ##
 """camera 0.1 (C) Benedict Verhegghe"""
 
-import sys
-
-from coords import tand
-
 import numpy
-import distutils.version
-Version=distutils.version.LooseVersion
-if Version(numpy.__version__) < Version('0.9.8'):
-    inverse = numpy.linalg.inverse
-else:
-    inverse = numpy.linalg.linalg.inv
+inverse = numpy.linalg.linalg.inv
 multiply = numpy.dot
 array = numpy.array
+def tand(arg):
+    """Return the tan of an angle in degrees."""
+    return numpy.tan(arg*numpy.pi/180.)
 
 import copy
 
 import OpenGL.GL as GL
 import OpenGL.GLU as GLU
+
+
+
 
 def printModelviewMatrix(s="%s"):
     print s % GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
@@ -473,13 +470,14 @@ class Camera:
     ##     self.lensChanged = True
 
 
-    def loadProjection(self,force=False,pick=None,oldmode=False):
+    def loadProjection(self,force=False,pick=None,keepmode=False):
         """Load the projection/perspective matrix.
 
         The caller will have to setup the correct GL environment beforehand.
         No need to set matrix mode though. This function will switch to
-        GL_PROJECTION mode before loading the matrix, and go back to
-        GL_MODELVIEW mode on exit.
+        GL_PROJECTION mode before loading the matrix
+
+        !! CHANGED: does not switch back to GL_MODELVIEW mode!
 
         A pick region can be defined to use the camera in picking mode.
         pick defines the picking region center and size (x,y,w,h).
@@ -488,33 +486,32 @@ class Camera:
         settings, and will only reload the matrix if such changes are
         detected. You can optionally force loading the matrix.
         """
+        GL.glMatrixMode(GL.GL_PROJECTION)
         if self.lensChanged or force:
-            GL.glMatrixMode(GL.GL_PROJECTION)
             GL.glLoadIdentity()
             if pick:
                 GLU.gluPickMatrix(*pick)
+                
+            fv = tand(self.fovy*0.5)
             if self.perspective:
-                fv = tand(self.fovy*0.5) * self.near
-                fh = fv * self.aspect
-                x0,x1 = 2*self.area - 1.0
-                #print "REL FRUST %s, %s" % (x0,x1)
-                frustum = (fh*x0[0],fh*x1[0],fv*x0[1],fv*x1[1],self.near,self.far)
-                #print("Area: %s" % self.area)
-                #print("Frustum: %s,%s; %s,%s; %s,%s" % frustum)
+                fv *= self.near
+            else:
+                fv *= self.dist
+            fh = fv * self.aspect
+            x0,x1 = 2*self.area - 1.0
+            frustum = (fh*x0[0],fh*x1[0],fv*x0[1],fv*x1[1],self.near,self.far)
+            if self.perspective:
                 GL.glFrustum(*frustum)
             else:
-                fv = tand(self.fovy*0.5) * self.dist
-                fh = fv * self.aspect
-                x0,x1 = 2*self.area - 1.0
-                frustum = (fh*x0[0],fh*x1[0],fv*x0[1],fv*x1[1],self.near,self.far)
                 GL.glOrtho(*frustum)
-##                 GL.glOrtho(-fh,fh,-fv,fv,self.near,self.far)
+        if not keepmode:
             GL.glMatrixMode(GL.GL_MODELVIEW)     
 
 
 if __name__ == "__main__":
     
     from OpenGL.GLUT import *
+    import sys
    
     def init():
         GL.glClearColor (0.0, 0.0, 0.0, 0.0)
@@ -531,7 +528,7 @@ if __name__ == "__main__":
 
     def reshape (w, h):
         GL.glViewport (0, 0, w, h)
-        GL.glMatrixMode (GL.GL_PJECTION)
+        GL.glMatrixMode (GL.GL_PROJECTION)
         GL.glLoadIdentity ()
         GL.glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0)
         GL.glMatrixMode (GL.GL_MODELVIEW)
@@ -590,7 +587,7 @@ if __name__ == "__main__":
 ##             cam.truck([0.,0.,-0.5])
         elif key == 'o':
             cam.setPerspective(not cam.perspective)
-            cam.loadProjection
+            cam.loadProjection()
         else:
             print key
         display()
@@ -605,7 +602,7 @@ if __name__ == "__main__":
         glutCreateWindow (sys.argv[0])
         init ()
         
-        cam = Camera(center=[0.,0.,0.],position=[0.,0.,5.])
+        cam = Camera(center=[0.,0.,0.],dist=5.)
         cam.setLens(45.,1.)
 
         glutDisplayFunc(display) 
