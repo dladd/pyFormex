@@ -32,23 +32,23 @@ from gettext import gettext as _
 
          
 def zoomIn():
-    GD.canvas.camera.zoom(1./float(GD.cfg['gui/zoomfactor']))
+    GD.canvas.camera.zoomArea(1./float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()
 def zoomOut():
-    GD.canvas.camera.zoom(float(GD.cfg['gui/zoomfactor']))
+    GD.canvas.camera.zoomArea(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()
-##def panRight():
-##    canvas.camera.pan(+5)
-##    canvas.update()   
-##def panLeft():
-##    canvas.camera.pan(-5)
-##    canvas.update()   
-##def panUp():
-##    canvas.camera.pan(+5,0)
-##    canvas.update()   
-##def panDown():
-##    canvas.camera.pan(-5,0)
-##    canvas.update()   
+def panRight():
+    GD.canvas.camera.transArea(-float(GD.cfg['gui/panfactor']),0.)
+    GD.canvas.update()   
+def panLeft():
+    GD.canvas.camera.transArea(float(GD.cfg['gui/panfactor']),0.)
+    GD.canvas.update()   
+def panUp():
+    GD.canvas.camera.transArea(0.,-float(GD.cfg['gui/panfactor']))
+    GD.canvas.update()   
+def panDown():
+    GD.canvas.camera.transArea(0.,float(GD.cfg['gui/panfactor']))
+    GD.canvas.update()   
 def rotRight():
     GD.canvas.camera.rotate(+float(GD.cfg['gui/rotfactor']),0,1,0)
     GD.canvas.update()   
@@ -103,17 +103,21 @@ MenuData = [
     (_('&Zoom Out'),zoomOut), 
     (_('&Dolly In'),dollyIn), 
     (_('&Dolly Out'),dollyOut), 
+    (_('&Pan Left'),panLeft), 
+    (_('&Pan Right'),panRight), 
+    (_('&Pan Down'),panDown), 
+    (_('&Pan Up'),panUp), 
     (_('&Translate'),[
-        (_('Translate &Right'),transRight), 
         (_('Translate &Left'),transLeft), 
-        (_('Translate &Up'),transUp),
+        (_('Translate &Right'),transRight), 
         (_('Translate &Down'),transDown),
+        (_('Translate &Up'),transUp),
         ]),
     (_('&Rotate'),[
-        (_('Rotate &Right'),rotRight),
         (_('Rotate &Left'),rotLeft),
-        (_('Rotate &Up'),rotUp),
+        (_('Rotate &Right'),rotRight),
         (_('Rotate &Down'),rotDown), 
+        (_('Rotate &Up'),rotUp),
         (_('Rotate &ClockWise'),twistRight),
         (_('Rotate &CCW'),twistLeft),
         ]),

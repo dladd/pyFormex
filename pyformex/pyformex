@@ -199,8 +199,6 @@ def main(argv=None):
                     action="store_false", dest="safelib", default=True),
         make_option("--fastencode", help="Use a fast algorithm to encode edges.",
                     action="store_true", dest="fastencode", default=False),
-        make_option("--nodollyzoom", help="Do not use dolly zooming.",
-                    action="store_false", dest="dollyzoom", default=True),
         make_option("--config", help="Use file CONFIG for settings",
                     action="store", dest="config", default=None),
         make_option("--nodefaultconfig", help="Skip the default site and user config files. This option can only be used in conjunction with the --config option.",

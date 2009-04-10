@@ -218,7 +218,7 @@ def showImage():
 
 
 def setOptions():
-    options = ['test','debug','uselib','safelib','fastencode','dollyzoom']
+    options = ['test','debug','uselib','safelib','fastencode']
     options = [ o for o in options if hasattr(GD.options,o) ]
     items = [ (o,getattr(GD.options,o)) for o in options ]
     res = draw.askItems(items)

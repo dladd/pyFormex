@@ -48,7 +48,8 @@ libGL = cdll.LoadLibrary("libGL.so.1")
 import math
 
 from coords import Coords
-from numpy import asarray,where,unique,intersect1d,setdiff1d,empty,append,delete
+from numpy import *
+#asarray,where,unique,intersect1d,setdiff1d,empty,append,delete
 
 
 # Some 2D vector operations
@@ -642,13 +643,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == MOVE:
             w,h = self.getSize()
-            dist = self.camera.getDist() * 0.5
-            # get distance from where button was pressed
-            dx,dy = (x-self.statex,y-self.statey)
-            panx = utils.stuur(dx,[-w,0,w],[-dist,0.,+dist],1.0)
-            pany = utils.stuur(dy,[-h,0,h],[-dist,0.,+dist],1.0)
-            #GD.debug("PAN: %s, %s, %s, %s, %s" % (dist,dx,dy,panx,pany))
-            self.camera.translate(panx,pany,0)
+            dx,dy = float(self.statex-x)/w, float(self.statey-y)/h
+            self.camera.transArea(dx,dy)
             self.statex,self.statey = (x,y)
             self.update()
 
@@ -664,22 +660,20 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         zoom operation. The action is one of PRESS, MOVE or RELEASE.
         """
         if action == PRESS:
-            self.state = [self.camera.getDist(),self.camera.area.tolist()]
-            #self.state = [self.camera.getDist(),self.camera.fovy]
+            self.state = [self.camera.getDist(),self.camera.area.tolist(),GD.cfg['gui/dynazoom']]
 
         elif action == MOVE:
             w,h = self.getSize()
-            # hor movement is lens zooming
-            f = utils.stuur(x,[0,self.statex,w],[10.,1.,0.01],0.5)
-            print "Area Zooming: %s,%s,%s" % (self.state[1],self.statex,f)
-            self.camera.zoom(f,area=asarray(self.state[1]).reshape(2,2))
-            #f = utils.stuur(x,[0,self.statex,w],[180,self.state[1],0],1.2)
-            #print "Lens Zooming: %s" % f
-            #self.camera.setLens(f)
+            dx,dy = float(self.statex-x)/w, float(self.statey-y)/h
+            if self.state[1] == 'area':
+                dx = sqrt(dx*dx+dy*dy)
+            if not self.state[1] == 'dolly':
+                f = exp(4*dx)
+                self.camera.zoomArea(f,area=asarray(self.state[1]).reshape(2,2))
             # vert movement is dolly zooming
-            #if GD.options.dollyzoom:
-            #    d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
-            #    self.camera.setDist(d*self.state[0])
+            if not self.state[1] == 'area':
+                d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
+                self.camera.setDist(d*self.state[0])
             self.update()
 
         elif action == RELEASE:

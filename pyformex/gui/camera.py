@@ -420,7 +420,7 @@ class Camera:
                         diff[0] = diff[1] #* self.aspect
                     area[0] = mean-diff
                     area[1] = mean+diff
-                print "RELATIVE AREA %s" % (area)
+                #print "RELATIVE AREA %s" % (area)
                 area = (1.-area) * self.area[0] + area * self.area[1]
 
             #print "OLD ZOOM AREA %s (aspect %s)" % (self.area,self.aspect)
@@ -431,7 +431,7 @@ class Camera:
 
 
 
-    def zoom(self,val=0.5,area=None,center=True):
+    def zoomArea(self,val=0.5,area=None):
         """Zoom in/out by shrinking/enlarging the camera view area.
 
         The zoom factor is relative to the current setting.
@@ -450,6 +450,20 @@ class Camera:
             self.area = area
             #print "CAMERA AREA %s" % self.area.tolist()
             self.lensChanged = True
+
+            
+    def transArea(self,dx,dy):
+        """Pan by moving the vamera area.
+
+        dx and dy are relative movements in fractions of the
+        current area size.
+        """
+        #print "TRANSAREA %s,%s" % (dx,dy)
+        area = self.area
+        diff = (area[1]-area[0]) * array([dx,dy])
+        area += diff
+        self.area = area
+        self.lensChanged = True
             
 
         
