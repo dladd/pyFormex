@@ -63,10 +63,19 @@ class SuiteInfoBase:
             if found:
                 cstmt = vars['compound']
                 if cstmt[0] == symbol.funcdef:
-                    name = cstmt[2][1]
-                    args = cstmt[3][2]
+                    i = 1
+                    class_method = False
+                    while cstmt[i][1] != 'def':
+                        if cstmt[i] == CLASS_METHOD_PATTERN:
+                            class_method = True
+                        else:
+                            print "%% POPPING %s" % str(cstmt[i])
+                            raise
+                        i += 1
+                    name = cstmt[i+1][1]
                     self._function_info[name] = FunctionInfo(cstmt)
                     found, vars = match(DOCSTRING_STMT_PATTERN, tree[1])
+                    args = cstmt[i+2][2]
                     self._function_info[name]._arglist = ParameterInfo(args)
                 elif cstmt[0] == symbol.classdef:
                     name = cstmt[2][1]
@@ -103,7 +112,17 @@ class SuiteFuncInfo:
 
 class FunctionInfo(SuiteInfoBase, SuiteFuncInfo):
     def __init__(self, tree = None):
-        self._name = tree[2][1]
+        self.class_method = False
+        i = 1
+        while tree[i][1] != 'def':
+            if tree[i] == CLASS_METHOD_PATTERN:
+                self.class_method = True
+            else:
+                print "%% POPPING %s" % str(cstmt[i])
+                raise
+            i += 1
+            #print i,tree[i+1][1]
+        self._name = tree[i+1][1]
         SuiteInfoBase.__init__(self, tree and tree[-1] or None)
 
 
@@ -228,6 +247,9 @@ PARAMETER_VALUE_PATTERN = (
                  ))))))))))))))
 
 
+CLASS_METHOD_PATTERN = (260, (259, (50, '@'), (287, (1, 'classmethod')), (4, '')))
+
+
 PARAMETERS_PATTERN = (
     symbol.parameters,
     (token.LPAR, '('),
@@ -300,13 +322,12 @@ def ship_function(name,args,docstring):
 """ % (name,ship_args(args),docstring)
 
 
-def ship_method(name,args,docstring):
-    print """
-\\begin{funcdesc}{%s}{%s}
-%s
-
-\\end{funcdesc}
-""" % (name,ship_args(args),docstring)
+def ship_method(name,args,docstring,class_method):
+    print "\\begin{funcdesc}{%s}{%s}" % (name,ship_args(args))
+    print docstring
+    if class_method:
+        print "\\classmethod"
+    print "\\end{funcdesc}\n"
 
 
 def ship_classinit(name,args,docstring):
@@ -373,7 +394,7 @@ def do_function(info):
 
 
 def do_method(info):
-    ship_method(info._name,info._arglist,sanitize(info._docstring))
+    ship_method(info._name,info._arglist,sanitize(info._docstring),info.class_method)
 
 
 def do_class(info):

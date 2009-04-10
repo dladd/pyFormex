@@ -86,15 +86,24 @@ def coordsmethod(f):
 class Coords(ndarray):
     """A structured collection of 3D coordinates.
     
-    The Coords class is the basic data structure
-in pyFormex to store coordinates of points in a 3D space.
-    Coords is implemented as a Numerical Python array with a length of its
-    last axis equal to 3.
-    Each set of 3 values along the last axis represents a single point in 3D.
+    The Coords class is the basic data structure used throughout pyFormex
+    to store coordinates of points in a 3D space.
 
-    The datatype should be a float type; default is Float.
-    !! These restrictions are currently only check at creation time.
-    !! It is the responsibility of the user to keep consistency. 
+    The \class{Coords} class is used by other classes, such as \class{Formex}
+    and \class{Surface}, which thus inherit the same transformation
+    capabilities. Applications will mostly use the higher level
+    classes, which usually have more elaborated consistency checking
+    and error handling.
+    
+    Coords is implemented as a floating point numpy (Numerical Python) array
+    whose last axis has a length equal to 3.
+    Each set of 3 values along the last axis thus represents a single point
+    in 3D cartesian space.
+
+    The datatype should be a float type; the default is Float, which is
+    equivalent to numpy's float32.
+    These restrictions are currently only checked at creation time.
+    It is the responsibility of the user to keep consistency. 
     """
             
     def __new__(cls, data=None, dtyp=None, copy=False):
@@ -145,9 +154,11 @@ in pyFormex to store coordinates of points in a 3D space.
         return self.reshape((-1,3))
     
     def pshape(self):
-        """Return shape of the points array.
+        """Return the shape of the points array.
 
         This is the shape of the Coords array with last axis removed.
+        The full shape of the \\class{Coords} array can be obtained from
+        its \\var{shape} attribute.
         """
         return self.shape[:-1]
 
