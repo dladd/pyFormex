@@ -86,10 +86,9 @@ def rename():
                             caption = 'Rename variable')
     if res:
         name = res['Name']
-        export({name:F})
         database.forget()
+        export({name:F})
         database.set(name)
-
     
 def editByName(name):
     pass

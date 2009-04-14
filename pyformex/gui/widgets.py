@@ -1657,7 +1657,7 @@ class ComboBox(QtGui.QWidget):
         self.combo = s
 
     def setIndex(self,i):
-        self.input.setCurrentIndex(i)
+        self.combo.input.setCurrentIndex(i)
 
 
 ############################# Menu ##############################

@@ -1038,6 +1038,9 @@ def pick(mode='actor',single=False,func=None,filtr=None):
     else:
         filters = selection_filters[:3]
     filter_combo = widgets.ComboBox('Filter:',filters,set_selection_filter)
+    if filtr is not None and filtr in selection_filters:
+        i = selection_filters.index(filtr)
+        filter_combo.setIndex(i)
     GD.GUI.statusbar.addWidget(filter_combo)
     
     if func is None:
