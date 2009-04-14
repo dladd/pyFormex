@@ -31,6 +31,7 @@ import widgets
 import draw
 import utils
 
+
 ################### Script action toolbar ###########
 def addActionButtons(toolbar):
     """Add the script action buttons to the toolbar."""

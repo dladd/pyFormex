@@ -164,10 +164,6 @@ class GUI(QtGui.QMainWindow):
         #### Do not touch the next line unless you know what you're doing !!
         self.easter_egg = None
 
-        #s.moveSplitter(300,0)
-        #s.moveSplitter(300,1)
-        #s.setLineWidth(0)
-
         # self.central is the complete central widget of the main window
         self.central = QtGui.QWidget()
         self.central.autoFillBackground()
@@ -199,51 +195,37 @@ class GUI(QtGui.QMainWindow):
         if GD.cfg.get('gui/timeoutbutton',False):
             toolbar.addTimeoutButton(self.toolbar)
 
-    
-        # camera buttons
-        if GD.cfg.get('gui/camerabuttons',True):
-            self.toolbar.addSeparator()
-            toolbar.addCameraButtons(self.toolbar)
         self.menu.show()
 
-        ##  RENDER MODE menu and toolbar ##
+        # Define Toolbars
+        self.toolbardefs = [ ('Camera ToolBar','camerabar'),
+                             ('RenderMode ToolBar','modebar'),
+                             ('Views ToolBar','viewbar'),
+                             ]
+        ###############  CAMERA menu and toolbar #############
+        self.camerabar = self.activateToolBar('Camera ToolBar','camerabar')
+        if self.camerabar:
+            toolbar.addCameraButtons(self.camerabar)
+            toolbar.addPerspectiveButton(self.camerabar)
+
+        ###############  RENDERMODE menu and toolbar #############
         modes = [ 'wireframe', 'smooth', 'smoothwire', 'flat', 'flatwire' ]
         if GD.cfg['gui/modemenu']:
             mmenu = QtGui.QMenu('Render Mode')
         else:
             mmenu = None
-        # we add a modebar depending on the config:
-        # modebar = None: forget it
-        # modebar = 'left', 'right', 'top' or 'bottom' : separate toolbar
-        # modebar = 'default' (or anything else): in the default top toolbar
-        area = GD.cfg['gui/modebar']
-        if area:
-            area = self.toolbarArea.get(area,None)
-            if area:
-                self.modebar = QtGui.QToolBar('Render Mode ToolBar',self)
-                self.addToolBar(area,self.modebar)
-            else: # default
-                self.modebar = self.toolbar
-                self.toolbar.addSeparator()
-        else:
-            self.modebar = None
+        self.modebar = self.activateToolBar('RenderMode ToolBar','modebar')
             
-        # OK, we know where the actions will go, so create them
-        # Add the perspective button
-        if self.modebar:
-            toolbar.addPerspectiveButton(self.modebar)
         self.modebtns = widgets.ActionList(
             modes,draw.renderMode,menu=mmenu,toolbar=self.modebar)
-        # Add the transparency button
+        
+        # Add the toggle type buttons
         if self.modebar:
             toolbar.addTransparencyButton(self.modebar)
-        # Add the lights button
         if self.modebar and GD.cfg.get('gui/lightbutton',False):
             toolbar.addLightButton(self.modebar)
-        # Add the normals button
         if self.modebar and GD.cfg.get('gui/normalsbutton',False):
             toolbar.addNormalsButton(self.modebar)
-        # Add the shrink button
         if self.modebar and GD.cfg.get('gui/shrinkbutton',False):
             toolbar.addShrinkButton(self.modebar)
          
@@ -252,24 +234,15 @@ class GUI(QtGui.QMainWindow):
             pmenu = self.menu.item('viewport')
             pmenu.insertMenu(pmenu.item('background color'),mmenu)
 
-        ##  VIEWS menu and toolbar
+        ###############  VIEWS menu and toolbar ################
         self.viewsMenu = None
         if GD.cfg.get('gui/viewmenu',True):
             self.viewsMenu = widgets.Menu('&Views',parent=self.menu,before='help')
+        self.viewbar = self.activateToolBar('Views ToolBar','viewbar')
+
         defviews = GD.cfg['gui/defviews']
         views = [ v[0] for v in defviews ]
         viewicons = [ v[1] for v in defviews ]
-        area = GD.cfg['gui/viewbar']
-        if area:
-            area = self.toolbarArea.get(area,None)
-            if area:
-                self.viewbar = QtGui.QToolBar('Views ToolBar',self)
-                self.addToolBar(area,self.viewbar)
-            else: # default
-                self.viewbar = self.toolbar
-                self.toolbar.addSeparator()
-        else:
-            self.viewbar = None
 
         self.viewbtns = widgets.ActionList(
             views,draw.view,
@@ -297,6 +270,31 @@ class GUI(QtGui.QMainWindow):
         self.drawwait = GD.cfg['draw/wait']
         self.drawlock = drawlock.DrawLock()
  
+
+
+    def activateToolBar(self,fullname,shortname):
+        """Add a new toolbar to the GUI main window.
+
+        The full name is the name as displayed to the user.
+        The short name is the name as used in the config settings.
+
+        The config setting for the toolbar determines its placement:
+        - None: the toolbar is not created
+        - 'left', 'right', 'top' or 'bottom': a separate toolbar is created
+        - 'default': the default top toolbar is used and a separator is added.
+        """
+        area = GD.cfg['gui/%s' % shortname]
+        if area:
+            area = self.toolbarArea.get(area,None)
+            if area:
+                toolbar = QtGui.QToolBar(fullname,self)
+                self.addToolBar(area,toolbar)
+            else: # default
+                toolbar = self.toolbar
+                self.toolbar.addSeparator()
+        else:
+            toolbar = None
+        return toolbar
 
 
     def addStatusBarButtons(self):
@@ -612,7 +610,7 @@ def startGUI(args):
         splash.setFont(QtGui.QFont("Helvetica",24))
         splash.showMessage(GD.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
         splash.show()
-        
+
     # create GUI, show it, run it
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()

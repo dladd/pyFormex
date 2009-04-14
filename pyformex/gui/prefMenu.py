@@ -81,10 +81,10 @@ def setToolbarPlacement(store=None):
     """
     if store is None:
         store = GD.cfg
-    toolbar = [ GD.GUI.modebar, GD.GUI.viewbar ]
-    setting = ['gui/modebar', 'gui/viewbar' ]
+    toolbar = GD.GUI.toolbardefs
+    label = [ i[0] for i in toolbar ]
+    setting = [ 'gui/%s' % i[1] for i in toolbar ]
     options = [ None, 'default', 'left', 'right', 'top', 'bottom' ]
-    label = [ str(tb.windowTitle()) for tb in toolbar ]
     current = [ store[s] for s in setting ]
     itemlist = [(l, options[1], 'select', options) for (l,c) in zip(label,setting)]
     itemlist.append(('Store these settings as defaults', False))

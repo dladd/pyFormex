@@ -76,13 +76,13 @@ pos=(0,0)
 fullscreen = False
 icontype = '.xpm'
 cameramenu = True    # add camera menu
-camerabuttons = True # add camera buttons to toolbar
-lightbutton = True   # ad the light button to toolbar
-examplesmenu = True  # add examples menu
+camerabar = True     # add a Camera toolbar
 modemenu = True      # add a Mode menu
 modebar = True       # add a Mode toolbar
 viewmenu = True      # add a Views menu
 viewbar = True       # add a Views toolbar
+lightbutton = True   # ad the light button to toolbar
+examplesmenu = True  # add examples menu
 defviews = [('front','view-xr-yu'),('back','view-xl-yu'),\
             ('right','view-zl-yu'),('left','view-zr-yu'),\
             ('top','view-xr-zd'),('bottom','view-xr-zu'),\
