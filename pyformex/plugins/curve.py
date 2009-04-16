@@ -310,17 +310,17 @@ class BezierSpline(Curve):
             P = PolyLine(pts,closed=closed)
             if deriv is None:
                 deriv = P.avgDirections()
-                ampl = P.lengths()
+                ampl = P.lengths().reshape(-1,1)
                 if not closed:
-                    ampl = ampl[:-1]
                     pts = pts[1:-1]
-                curl = curl * ampl
-                curl = curl.reshape(-1,1)
 ##                 print deriv.shape
 ##                 print curl.shape
-                deriv *= curl
-                p1 = pts + deriv
-                p2 = pts - deriv
+                if not closed:
+                    p1 = pts + deriv*curl*ampl[1:]
+                    p2 = pts - deriv*curl*ampl[:-1]
+                else:
+                    p1 = pts + deriv*curl*ampl
+                    p2 = pts - deriv*curl*roll(ampl,1,axis=0)
                 if not closed:
                     p1 = concatenate([p2[:1],p1],axis=0)
                     p2 = concatenate([p2,p1[-1:]],axis=0)
