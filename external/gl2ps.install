@@ -1,0 +1,67 @@
+#/bin/bash
+#
+# $Id$
+#
+# (C) 2008 Benedict Verhegghe
+#
+VERSION=1.3.2
+GL2PS=gl2ps-${VERSION}
+TARBALL=${GL2PS}.tgz
+URL=http://geuz.org/gl2ps/src/${TARBALL}
+
+PREFIX=/usr/local
+LIBDIR=${PREFIX}/lib
+LIBNAME=libgl2ps.so
+LIBVER=${LIBNAME}.${VERSION}
+FULLNAME=${LIBDIR}/${LIBVER}
+SHORTNAME=${LIBDIR}/${LIBNAME}
+
+BUILDDIR=${GL2PS}
+
+_all() {
+	$ECHO _get; _unpack; _build; _install
+}
+
+_get() {
+	$ECHO wget ${URL} 
+}
+
+_unpack() {
+	$ECHO _mrproper
+	$ECHO tar xvzf ${TARBALL}
+}
+
+_build() {
+	$ECHO cd ${BUILDDIR} 
+	$ECHO gcc -fPIC -g -c -Wall -O3 gl2ps.c
+	$ECHO gcc -shared -Wl,-soname,${LIBNAME} -o ${LIBVER}
+	$ECHO cd ..
+}
+
+_install() {
+	$ECHO make -C ${BUILDDIR} install $@
+}
+
+_clean() {
+	$ECHO make -C ${BUILDDIR} clean $@
+}
+
+_mrproper() {
+	$ECHO rm -rf ${BUILDDIR}
+}
+
+
+ECHO=
+[ "$1" = "-n" ] && {
+	shift
+	ECHO=echo
+}
+
+[ -z "$1" ] && {
+	set all
+}
+
+for key in "$@"; do
+	echo "$key"
+	_$key
+done
