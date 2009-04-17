@@ -1,6 +1,6 @@
 from distutils.core import setup, Extension
 setup(name="pygl2ps",
-      version="1.3.2",
+      version="1.3.3",
       description="Wrapper for GL2PS, an OpenGL to PostScript Printing Library",
       author="Benedict Verhegghe",
       author_email="benedict.verhegghe@ugent.be",

@@ -2992,6 +2992,28 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_gl2psGetOptions(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLint *arg1 = (GLint *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  GLint result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:gl2psGetOptions",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_int, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gl2psGetOptions" "', argument " "1"" of type '" "GLint *""'"); 
+  }
+  arg1 = (GLint *)(argp1);
+  result = (GLint)gl2psGetOptions(arg1);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 SWIGINTERN PyObject *_wrap_gl2psBeginViewport(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   GLint *arg1 ;
@@ -3357,10 +3379,54 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_gl2psBlendFunc(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  GLenum arg1 ;
+  GLenum arg2 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  GLint result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:gl2psBlendFunc",&obj0,&obj1)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_GLenum,  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gl2psBlendFunc" "', argument " "1"" of type '" "GLenum""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gl2psBlendFunc" "', argument " "1"" of type '" "GLenum""'");
+    } else {
+      arg1 = *((GLenum *)(argp1));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_GLenum,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gl2psBlendFunc" "', argument " "2"" of type '" "GLenum""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gl2psBlendFunc" "', argument " "2"" of type '" "GLenum""'");
+    } else {
+      arg2 = *((GLenum *)(argp2));
+    }
+  }
+  result = (GLint)gl2psBlendFunc(arg1,arg2);
+  resultobj = SWIG_From_int((int)(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"gl2psBeginPage", _wrap_gl2psBeginPage, METH_VARARGS, NULL},
 	 { (char *)"gl2psEndPage", _wrap_gl2psEndPage, METH_VARARGS, NULL},
 	 { (char *)"gl2psSetOptions", _wrap_gl2psSetOptions, METH_VARARGS, NULL},
+	 { (char *)"gl2psGetOptions", _wrap_gl2psGetOptions, METH_VARARGS, NULL},
 	 { (char *)"gl2psBeginViewport", _wrap_gl2psBeginViewport, METH_VARARGS, NULL},
 	 { (char *)"gl2psEndViewport", _wrap_gl2psEndViewport, METH_VARARGS, NULL},
 	 { (char *)"gl2psText", _wrap_gl2psText, METH_VARARGS, NULL},
@@ -3371,6 +3437,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"gl2psDisable", _wrap_gl2psDisable, METH_VARARGS, NULL},
 	 { (char *)"gl2psPointSize", _wrap_gl2psPointSize, METH_VARARGS, NULL},
 	 { (char *)"gl2psLineWidth", _wrap_gl2psLineWidth, METH_VARARGS, NULL},
+	 { (char *)"gl2psBlendFunc", _wrap_gl2psBlendFunc, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -3946,10 +4013,10 @@ SWIGEXPORT void SWIG_init(void) {
   
   SWIG_Python_SetConstant(d, "GL2PS_MAJOR_VERSION",SWIG_From_int((int)(1)));
   SWIG_Python_SetConstant(d, "GL2PS_MINOR_VERSION",SWIG_From_int((int)(3)));
-  SWIG_Python_SetConstant(d, "GL2PS_PATCH_VERSION",SWIG_From_int((int)(2)));
+  SWIG_Python_SetConstant(d, "GL2PS_PATCH_VERSION",SWIG_From_int((int)(3)));
   SWIG_Python_SetConstant(d, "GL2PS_EXTRA_VERSION",SWIG_FromCharPtr(""));
-  SWIG_Python_SetConstant(d, "GL2PS_VERSION",SWIG_From_double((double)((1+0.01*3+0.0001*2))));
-  SWIG_Python_SetConstant(d, "GL2PS_COPYRIGHT",SWIG_FromCharPtr("(C) 1999-2006 Christophe Geuzaine (geuz@geuz.org)"));
+  SWIG_Python_SetConstant(d, "GL2PS_VERSION",SWIG_From_double((double)((1+0.01*3+0.0001*3))));
+  SWIG_Python_SetConstant(d, "GL2PS_COPYRIGHT",SWIG_FromCharPtr("(C) 1999-2009 C. Geuzaine"));
   SWIG_Python_SetConstant(d, "GL2PS_PS",SWIG_From_int((int)(0)));
   SWIG_Python_SetConstant(d, "GL2PS_EPS",SWIG_From_int((int)(1)));
   SWIG_Python_SetConstant(d, "GL2PS_TEX",SWIG_From_int((int)(2)));

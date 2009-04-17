@@ -100,6 +100,7 @@ GL2PS_TEXT_TR = _gl2ps.GL2PS_TEXT_TR
 gl2psBeginPage = _gl2ps.gl2psBeginPage
 gl2psEndPage = _gl2ps.gl2psEndPage
 gl2psSetOptions = _gl2ps.gl2psSetOptions
+gl2psGetOptions = _gl2ps.gl2psGetOptions
 gl2psBeginViewport = _gl2ps.gl2psBeginViewport
 gl2psEndViewport = _gl2ps.gl2psEndViewport
 gl2psText = _gl2ps.gl2psText
@@ -110,5 +111,6 @@ gl2psEnable = _gl2ps.gl2psEnable
 gl2psDisable = _gl2ps.gl2psDisable
 gl2psPointSize = _gl2ps.gl2psPointSize
 gl2psLineWidth = _gl2ps.gl2psLineWidth
+gl2psBlendFunc = _gl2ps.gl2psBlendFunc
 
 

@@ -18,58 +18,19 @@ typedef GLfloat GL2PSrgba[4];
   printf("BV: Received a file\n");
 }
 
-/* %typemap(in) FILE *stream  */
-/* { */
-/*   $1 = PyFile_AsFile($input); */
-/*   printf("Received a file\n"); */
-/*   if (!PyFile_Check($input)) { */
-/*       PyErr_SetString(PyExc_TypeError, "Need a file!"); */
-/*       return NULL; */
-/*   } */
-/* } */
-
-/* %typemap(in) GLfloat[4] (float temp[4]) */
-/* { */
-/*     if (PyTuple_Check($input)) { */
-/*     	if (!PyArg_ParseTuple($input, "ffff", */
-/* 	   temp, temp+1, temp+2, temp+3)) { */
-/* 	   PyErr_SetString(PyExc_TypeError, "tuple must have 4 elements"); */
-/* 	       return NULL; */
-/* 	} */
-/* 	$1 = &temp[0]; */
-/*     } else { */
-/*     	PyErr_SetString(PyExc_TypeError, "expected a tuple"); */
-/*     	  return NULL; */
-/*     } */
-/* } */
-
-/* %typemap(in) GLint[4] (int temp[4]){ */
-/*     if (PyTuple_Check($input)) { */
-/*     	if (!PyArg_ParseTuple($input, "iiii", */
-/* 	   temp, temp+1, temp+2, temp+3)) { */
-/* 	   PyErr_SetString(PyExc_TypeError, "tuple must have 4 elements"); */
-/* 	       return NULL; */
-/*         } */
-/* 	$1 = &temp[0]; */
-/*     } else { */
-/*     	PyErr_SetString(PyExc_TypeError, "expected a tuple");	 */
-/*     	  return NULL; */
-/*     }   */
-/* } */
-/* #endif */
 
 /* Version number */
 
 #define GL2PS_MAJOR_VERSION 1
 #define GL2PS_MINOR_VERSION 3
-#define GL2PS_PATCH_VERSION 2
+#define GL2PS_PATCH_VERSION 3
 #define GL2PS_EXTRA_VERSION ""
 
 #define GL2PS_VERSION (GL2PS_MAJOR_VERSION + \
                        0.01 * GL2PS_MINOR_VERSION + \
                        0.0001 * GL2PS_PATCH_VERSION)
 
-#define GL2PS_COPYRIGHT "(C) 1999-2006 Christophe Geuzaine (geuz@geuz.org)"
+#define GL2PS_COPYRIGHT "(C) 1999-2009 C. Geuzaine"
 
 /* Output file formats (the values and the ordering are important!) */
 
@@ -120,7 +81,11 @@ typedef GLfloat GL2PSrgba[4];
 #define GL2PS_LINE_STIPPLE        3
 #define GL2PS_BLEND               4
 
-/* Text alignment */
+/* Text alignment (o=raster position; default mode is BL):
+   +---+ +---+ +---+ +---+ +---+ +---+ +-o-+ o---+ +---o 
+   | o | o   | |   o |   | |   | |   | |   | |   | |   | 
+   +---+ +---+ +---+ +-o-+ o---+ +---o +---+ +---+ +---+ 
+    C     CL    CR    B     BL    BR    T     TL    TR */
 
 #define GL2PS_TEXT_C  1
 #define GL2PS_TEXT_CL 2
@@ -141,6 +106,7 @@ GLint gl2psBeginPage(const char *title, const char *producer,
 
 GLint gl2psEndPage(void);
 GLint gl2psSetOptions(GLint options);
+GLint gl2psGetOptions(GLint *options);
 GLint gl2psBeginViewport(GLint viewport[4]);
 GLint gl2psEndViewport(void);
 GLint gl2psText(const char *str, const char *fontname, GLshort fontsize);
@@ -154,3 +120,4 @@ GLint gl2psEnable(GLint mode);
 GLint gl2psDisable(GLint mode);
 GLint gl2psPointSize(GLfloat value);
 GLint gl2psLineWidth(GLfloat value);
+GLint gl2psBlendFunc(GLenum sfactor, GLenum dfactor);
