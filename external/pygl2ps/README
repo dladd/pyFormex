@@ -1,0 +1,33 @@
+Python wrapper for gl2ps
+========================
+
+This is a Python wrapper for  GL2PS, an OpenGL to PostScript Printing Library
+by Christophe Geuz <geuz@geuz.org>. See http://www.geuz.org/gl2ps/.
+
+The wrapper was created by Benedict Verhegghe, and any questions about it
+should be addressed to Benedict.Verhegghe@ugent.be
+
+
+Standalone installation
+-----------------------
+
+- download gl2ps
+- unpack it
+- copy the files gl2ps.i and setup.py to the created gl2ps directory
+
+
+swig -python gl2ps.i
+python setup.py build
+sudo python setup.py install
+
+
+
+Installation in a pyFormex SVN tree
+-----------------------------------
+- Go to the external/pygl2ps folder and enter the commands
+
+python setup.py build
+(as root) python setup.py install
+
+
+
