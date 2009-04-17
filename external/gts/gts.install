@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # This script helps with installing the gts library and utilities from source:
 #
@@ -18,51 +18,55 @@ URI=http://prdownloads.sourceforge.net/gts/$ARCHIVE
 
 examples="cartesian cleanup coarsen delaunay gtstoc iso merge oocs optimize partition refine set smooth sphere split stripe transform traverse volume"
 
-get() {
-  wget $URI
+_get() {
+    [ -f $ARCHIVE ] || wget $URI
 }
 
-unpack() {
-  tar xvzf $ARCHIVE
+_unpack() {
+    rm -rf $NAME
+    tar xvzf $ARCHIVE
 }
 
-Make() {
-  cd $NAME
-  ./configure
-  make
+_make() {
+    pushd $NAME
+    ./configure
+    make
+    popd
 }
 
-install() {
-  [ "$EUID" == "0" ] || {
-      echo "install should be done as root!"
-      return
-  }
-  cd $NAME
-  make install
-  ldconfig
+_install() {
+    [ "$EUID" == "0" ] || {
+	echo "install should be done as root!"
+	return
+    }
+    pushd $NAME
+    make install
+    ldconfig
+    popd
 }
 
-Patch() {
-    cd $NAME
+_patch() {
+    pushd $NAME
     patch -p0 < ../gts-0.7.6-bv.patch
+    popd
 }
 
 # !! Only examples delaunay and transform are installed.
 # Better copy from build directory
-rename() {
-  [ "$EUID" == "0" ] || {
-      echo "install should be done as root!"
-      return
-  }
-  for name in $examples; do
-      gtsname=gts${name#gts}
-      src=/usr/local/bin/$name
-      tgt=/usr/local/bin/$gtsname
-      [ -f "$src" -a "$src" != "$tgt" ] && mv $src $tgt
-  done
+_rename() {
+    [ "$EUID" == "0" ] || {
+	echo "install should be done as root!"
+	return
+    }
+    for name in $examples; do
+	gtsname=gts${name#gts}
+	src=/usr/local/bin/$name
+	tgt=/usr/local/bin/$gtsname
+	[ -f "$src" -a "$src" != "$tgt" ] && mv $src $tgt
+    done
 }
 
-clean() {
+_clean() {
     rm -rf $NAME
     rm -f $ARCHIVE
 }
@@ -70,10 +74,8 @@ clean() {
 for cmd in "$@"; do
 
     case $cmd in 
-	get | unpack | install | rename | clean ) $cmd;;
-	patch ) Patch;;
-	make ) Make;;
-	all ) get;unpack;Patch;Make;install;rename;clean;;
+	get | unpack | patch | make | install | rename | clean ) _$cmd;;
+	all ) _get;_unpack;_patch;_make;_install;_rename;_clean;;
         * ) echo "UNKNOWN command $cmd";;
     esac
 
