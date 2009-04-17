@@ -1,8 +1,8 @@
 Python wrapper for gl2ps
 ========================
 
-This is a Python wrapper for  GL2PS, an OpenGL to PostScript Printing Library
-by Christophe Geuz <geuz@geuz.org>. See http://www.geuz.org/gl2ps/.
+This is a Python wrapper for GL2PS, an OpenGL to PostScript Printing Library
+by Christophe Geuzaine. See http://www.geuz.org/gl2ps/.
 
 The wrapper was created by Benedict Verhegghe, and any questions about it
 should be addressed to Benedict.Verhegghe@ugent.be

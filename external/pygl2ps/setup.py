@@ -6,8 +6,7 @@ setup(name="pygl2ps",
       author_email="benedict.verhegghe@ugent.be",
       url="http://pyformex.org",
       long_description="""
-Python wrapper for GL2PS library.
-GL2PS is by Christophe Geuz <geuz@geuz.org>.
+Python wrapper for GL2PS library by Christophe Geuzaine.
 See http://www.geuz.org/gl2ps/
 """,
       license="GNU LGPL (Library General Public License)",

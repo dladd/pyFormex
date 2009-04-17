@@ -69,8 +69,13 @@ def initialize():
         import gl2ps
 
         _producer = GD.Version + ' (http://pyformex.berlios.de)'
-        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS, 'eps':gl2ps.GL2PS_EPS,
-                         'pdf':gl2ps.GL2PS_PDF, 'tex':gl2ps.GL2PS_TEX }
+        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS,
+                         'eps':gl2ps.GL2PS_EPS,
+                         'tex':gl2ps.GL2PS_TEX,
+                         'pdf':gl2ps.GL2PS_PDF,
+                         'svg':gl2ps.GL2PS_SVG,
+                         'pgf':gl2ps.GL2PS_PGF,
+                         }
         image_formats_gl2ps = _gl2ps_types.keys()
         image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
                                      'xwd', 'y4m' ]
@@ -213,8 +218,8 @@ if gl2ps:
         opts = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET | gl2ps.GL2PS_USE_CURRENT_VIEWPORT
         ##| gl2ps.GL2PS_NO_BLENDING | gl2ps.GL2PS_OCCLUSION_CULL | gl2ps.GL2PS_BEST_ROOT
         ##color = GL[[0.,0.,0.,0.]]
-        print "VIEWPORT %s" % str(viewport)
-        print fp
+        #print "VIEWPORT %s" % str(viewport)
+        #print fp
         viewport=None
         while state == gl2ps.GL2PS_OVERFLOW:
             bufsize += 1024*1024
