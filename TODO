@@ -13,24 +13,7 @@ Each task can have the following keys:
  rem(arks)
 
 
-* Release 0.7.4:
-
- - There probably will be no 0.7.4
-
-
-* Release 0.8:
-
- - Move the project to Beta status
-     sta: DONE
-
- - Make the GUI loadable from a function
-     sta: DONE
-
- - Add install scripts for GTS, tetgen, gl2ps
-     dev: bverheg
-     sta: PARTIAL
-     rem: Scripts working locally, need to be made more generic
-
+* Release 0.8.1:
  - Multiple views:
      dev: bverheg
      sta: PARTIAL
@@ -41,6 +24,8 @@ Each task can have the following keys:
      sta: PARTIAL
      rem: Done via external 'gts': transform to GTS format
           Should be implemented as C function 
+
+ - Expand the Abaqus exporter:
 
  - Export FEA models in Fluent format: 
      dev: pmortier?
@@ -76,6 +61,8 @@ Each task can have the following keys:
 
 * Release 0.9 :
  - Set up procedures to follow up submitted bugs/questions
+
+ - Created Debian packages
 
 * Release 1.0:
  - Conquer the world ;)

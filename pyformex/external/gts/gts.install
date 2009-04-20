@@ -1,4 +1,5 @@
 #!/bin/bash
+# $Id$
 #
 # This script helps with installing the gts library and utilities from source:
 #

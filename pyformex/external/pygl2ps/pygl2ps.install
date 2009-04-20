@@ -5,6 +5,8 @@
 # If you change version, you need to adapt this file, gl2ps.i, setup.py
 # and remove the gl2ps_wrap.c and gl2ps.py
 #
+[ "$1" = "all" ] || exit
+
 GL2PS=gl2ps-1.3.3
 GL2PS_TGZ=$GL2PS.tgz
 GL2PS_URL=http://geuz.org/gl2ps/src/$GL2PS_TGZ

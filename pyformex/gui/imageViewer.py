@@ -44,7 +44,7 @@ class ImageViewer(QtGui.QMainWindow):
         self.image = QtGui.QLabel()
         self.image.setBackgroundRole(QtGui.QPalette.Base)
         self.image.setSizePolicy(QtGui.QSizePolicy.Ignored,QtGui.QSizePolicy.Ignored)
-        self.image.setScaledContents(True)
+        #self.image.setScaledContents(True)
 
         self.scroll = QtGui.QScrollArea()
         self.scroll.setBackgroundRole(QtGui.QPalette.Dark)
@@ -77,6 +77,7 @@ class ImageViewer(QtGui.QMainWindow):
             QtGui.QMessageBox.information(self,tr(caption),tr("Cannot load %1.").arg(filename))
             return
 
+        print "Size %sx%s" % (image.width(),image.height()) 
         self.filename = str(filename)
         self.image.setPixmap(QtGui.QPixmap.fromImage(image))
         self.scaleFactor = 1.0
@@ -85,8 +86,9 @@ class ImageViewer(QtGui.QMainWindow):
         self.fitToWindowAct.setEnabled(True)
         self.updateActions()
         
-        if not self.fitToWindowAct.isChecked():
-            self.image.adjustSize()
+        ## if not self.fitToWindowAct.isChecked():
+        self.image.adjustSize()
+        self.normalSize()
             
 
     def print_(self):
@@ -112,7 +114,8 @@ class ImageViewer(QtGui.QMainWindow):
         self.scaleImage(0.8)
 
     def normalSize(self):
-        self.image.adjustSize()
+        self.image.resize(self.image.pixmap().size())
+        #self.image.adjustSize()
         self.scaleFactor = 1.0
 
     def fitToWindow(self):

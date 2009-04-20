@@ -35,7 +35,7 @@ Minutes of the previous meeting
 
 Agenda and discussion
 ---------------------
-The only item on the agenda is the demonstration of how to run pyFormex on any  computer (even Windows) by means of booting it from a BuMPix Live Linux USB stick. This system was especially developed for the students who have only access to Windows computers.
+The only item on the agenda is the demonstration of how to run pyFormex on any  computer (even Windows) by means of booting it from a BuMPix Live Linux USB stick. This system was especially developed for students who have only access to Windows computers.
 
 * Starting pyFormex from a USB stick:
 
@@ -44,53 +44,51 @@ The only item on the agenda is the demonstration of how to run pyFormex on any  
     + Restart your system with the USB stick inserted.
     + Make sure your computer is set to boot from the USB stick. In most cases, pressing F12 during booting will take you into a boot selection menu. In some cases you may have to go into to BIOS (often by pressing F2 or DEL during boot) to change the boot settings. 
     + Select the USB stick as boot medium. If the USB stick does not show up in your F12 boot menu, you need to set it in the BIOS. The USB stick is recognized as a hard disk. Make sure it is on the top of the list of bootable disks. Some laptops automatically change the BIOS and remove the USB entry when you boot without the USB key plugged in. In that case you will have to re-adjust the setting on each boot of BuMPix.
-    + Continue the boot process and you will receive the BuMPix boot propmt screen. Depending on the version, some boot parameters may be choosen now. Generally, just hit enter to boot. Most likely everything will startup fine.
-    + If you encounter any problems with booting, and you do not know how to fix it: ask for help.
+    + Continue the boot process and you will receive the BuMPix boot prompt screen. Depending on the version, some boot parameters may be added. Generally, just hit enter to boot. Most likely everything will startup fine.
+    + If you encounter any problems with booting, and you do not know how to fix it: ask a wizzard for help.
 
-  - The computer should automatically connects to the network if it is wired to a network with DHCP. Setting up a wireless connection depends on your hardware and wifi parameters, and requires more skills and Linux knowledge.
+  - The computer should automatically connect to the network if it is wired to a network with DHCP. Setting up a wireless connection depends on your hardware and wifi parameters, and requires more skills and Linux knowledge.
 
   - By default the operating system will be in Dutch. For now it is only possible to change the language to English, other languages will be added later on. Currently it is planned to include Italian and Danish versions. 
 
-  - The default desktop started is KDE, with a choice between 'us' and 'be' keyboards. Benedict only ever uses Qwerty keyboards, and there is no good reason to use any other keyboard for language with latin based characters. But since we live in Belgium, and computers come by default with a 'Belgian Azerty' (even different from the French!) keyboarde, we had to include the 'be' option. Other keyboards can be choosen from KDE's keyboard configurator.
+  - The default desktop started is KDE, with a choice between 'us' and 'be' keyboards. Benedict only ever uses Qwerty keyboards, and there is no good reason to use any other keyboard for language with latin based characters. But since we live in Belgium, and computers come by default with a 'Belgian Azerty' (even different from the French!) keyboard, we had to include the 'be' option. Other keyboards can be choosen from KDE's keyboard configurator.
 
-  - Some programs are readily installed, though less than on the CD's that were previously used. Some of those programs are already in the user panel, being a terminal, Firefox, GID (which is an evaluation version of a handy program for post processing) and off course a recent version of pyFormex.
+  - Some programs are readily installed, though less than on the CD's that were previously used. Some of those programs are already in the user panel, being a terminal, Firefox, GID (which is an evaluation version of a handy program for Finite Element pre- and postprocessing) and off course a recent version of pyFormex.
 
 * How to get the BuMPix system on the USB stick:
 
-  - The image file can freely be downloaded from `BuMPix`_. Currently, the most recent image file is bumpix-0.4-a7.img, which is also the one that is enthusiastically demonstrated by Benedict. The total file size is about 800 MB, so it can conveniently be installed on a USB stick of 1 GB. Remarkably, writing the system on a stick of 1 GB seems to leave around 400 MB of free space, which clearly both startled and intrigued the demonstrator.
+  - The image file can freely be downloaded from the `BuMPix`_ FTP archive. Currently, the most recent image file is bumpix-0.4-a7.img, which is also the one that is enthusiastically demonstrated by Benedict. The total file size is about 800 MB, so it can conveniently be installed on a USB stick of 1 GB.
 
-  - Simply copying the image to your memory stick does not suffice to run the program. It should in fact be copied by a low level program that can write the image byte by byte to the USB stick. This in turn creates a certain risk, because such programs do not care for the data that are already present on the place you are writing to, it simply overwrites them without any warning at all. Accidently choosing the wrong the destination for the image can even render your hard drive useless. Also, any data present on the memory stick will be deleted upon installing the system. It is suggested that a procedure could be written that checks the size of the station where the image is written to, this for example could only allow installation on disks with a volume between 800 MB and 4 GB, thus effectively preventing accidental overwrite of any hard disk.
+  - Do not simply copy the downloaded image onto your memory stick: it will not run. The image should be written using a low level data copying program. On Linux system this can be done with the command 'dd if=IMAGE of=USBDEV', where IMAGE is the path of the downloaded image file and USBDEV is the designation of the USB device corresponding to your stick. The device name should likely be something like '/dev/sda' or '/dev/sdb', .... CHECK VERY CAREFULLY THAT YOU HAVE THE DRIVE LETTER CORRECT! Or you could end up with wiping your whole hard disk!
+The correct drive letter can be found by issuing the command 'dmesg' after plugging in your stick. (Wait a few seconds to have the harware recognized.) The 'dmesg' log will end with some lines looking like this:
+"... sd 4:0:0:0: [sdb] Blah blah...". In this case, '[sdb]' provides the needed information and you should use '/dev/sdb' in the above 'dd' command. 
 
-  - On Linux system the copying can be carried out by the command line "dd if=bumpix-version.img of=USB DEV". Special attention should be paid to whether you are writing to the correct drive. One can check the location of the USB stick with the command dmsg. It is good practice to always check the USB stick's location this way, as the drive name of the USB stick can potentially change, even if you use the same computer.
+Writing the image on the stick should only take about six to seven minutes, although the oldest sticks might need up to twenty minutes to do this task. Be aware that during the linux 'dd' copying process, no feedback is given to the user, which might trick someone into believing that nothing is happening.
 
-  - The system was developed based on technicalities that can be found on the `Debian Live Project`_. Information on how to write the USB stick with windows is provided there, though some students reported that the suggested program *WinRaWrite* didn't do the job, possibly because they used incorrect options.
+  - The system was developed using th tools of the `Debian Live Project`_. Their website provides a lot more information on how to write the USB stick, even on Windows systems. Many of our users have reported success by using the *dd for Windows*. Some users reported failure with *WinRaWrite*.
 
-  - Writing the image on the stick should only take about six to seven minutes, although the oldest sticks might need up to twenty minutes to do this task. It is important to notice that during the entire writing sequence there is no feed back at all on the screen, which might trick someone into believing that nothing is happening. Because of this it was stated that students should be clearly instructed not to turn off or restart their computer until the whole process is finished. Not doing so can ruin the memory stick.
 
-* Working with the Linux system:
+* Working with the BuMPix Linux Live system:
 
-  - Only one user is installed, named *User*. By default the root permissions are disabled, so that the user can't access the hard disk. This serves as a protection against accidental changing of data on the hard disk. Root permissions can be acquired by the command line *rude --i*. In this way the user can do more than just the ´normal tasks´.
+  - Only one user is installed, named *user*, with password 'live'. At boot, the system autologins as this user. The hard disk partations are not mounted by default, to avoi accidentely changing anything. There is no root password and logging in as root has been disabled. The user can get root privileges by using the command *sudo --i*. Only use this if you know what you are doing, and use *exit* to leave the privileged mode as soon as possible.
 
-  - Some programs are readily installed on the system, including several basic text editors like KWrite. Benedict also points out that the education programs can be very interesting for the students. A statement that was supported by a fascinating demonstration on the table of Mendeljev.
+  - When working with the Live system, all storage is done in RAM memory, and this will be cleared when halting the system. It can therefore be useful to create a second partition on the memory stick, that can be used for persistent storage. How to do this should be explained in the manual.
 
-  - It can be useful to create a partition on the memory stick. This way, data can be made available for use on other systems. How to do this should be explained in the manual.
 
 * Included programs:
 
-The participants were given the opportunity to compose a wish list for preinstalled programs and features. The suggestions included:
+- Of course there is pyFormex, but the system includes many other valuable programs, making BuMPix a full computing environment for most anyone.
+
+- Some suggestions where made of other porograms to be included in future versions of the BuMPix Live system:
   - Open Office
   - GTS (for surface transformations)
   - A media player
   - A separate *Dutch* directory (to be used for specific Dutch documents, like the Abaqus summer course files)
 
-* Using pyFormex
+* Using pyFormex:
+ - The use of keywords in the pyFormex examples was mentioned at the previous meeting, but not demonstrated. Classification of the examples based on these keywords is now demonstrated. It is pointed out that a normal user cannot change the examples in an installed pyFormex. So in order to change the parameters of an example, one has to copy the example first to another location. This evenly holds for users of the BuMPix Live system.
 
-It is noted that the use of keywords in the pyFormex examples was mentioned but not demonstrated during the last meeting. Classification of the examples based on these keywords is demonstrated. It is pointed out that one cannot change the examples that are provided in pyFormex. So in order of playing with the parameters of an example, one has to copy the example first to another location, this is also demonstrated by Benedict. The map *My Scripts* can for example be used for copying the examples to. Add-ons to pyFormex and installation of additional programs can be done by downloading directly in the operating system onto the memory stick.
-
-
-Varia
------
-  - The participants are asked for their opinion regarding additional language support. More in particular, it is suggested that the menus of the GUI could be made available in other languages. The participants agreed on not doing so. People who use pyFormex should preferably understand English anyway, as the scripting is always done in English.
+ -I18n: The question is raised whether pyFormex menus and documentation should be translated into other languages. The meeting decides not to do so, as users of pyFormex should preferably understand English anyway, since the scripting language contains mostly English terms.
 
 
 Date of the next meeting
