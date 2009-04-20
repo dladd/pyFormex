@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# This script helps with installing tetgen from source:
+#
+# ./tetgen_install get unpack patch make
+# sudo ./tetgen_install install rename
+# ./tetgen_install clean
+#
+# Use at your own risk if you do not understand what is happening!
+#
+
+VERSION=1.4.2
+NAME=tetgen$VERSION
+ARCHIVE=$NAME.tar.gz
+URI=http://www.wias-berlin.de/people/si/$ARCHIVE
+PATCH=tetgen-$VERSION.patch
+
+_get() {
+    [ -f $ARCHIVE ] || wget $URI
+}
+
+_unpack() {
+    rm -rf $NAME
+    tar xvzf $ARCHIVE
+}
+
+_patch() {
+    pushd $NAME
+    patch -p0 < ../$PATCH
+    popd
+}
+
+_make() {
+    pushd $NAME
+    ./configure
+    make
+    popd
+}
+
+_install() {
+    [ "$EUID" == "0" ] || {
+	echo "install should be done as root!"
+	return
+    }
+    pushd $NAME
+    /usr/bin/install -m0755 tetgen /usr/local/bin
+    popd
+}
+
+
+_clean() {
+    rm -rf $NAME
+    rm -f $ARCHIVE
+}
+
+for cmd in "$@"; do
+
+    case $cmd in 
+	get | unpack | patch | make | install | rename | clean ) _$cmd;;
+	all ) _get;_unpack;_patch;_make;_install;_clean;;
+        * ) echo "UNKNOWN command $cmd";;
+    esac
+
+done

@@ -1,0 +1,21 @@
+Installation procedure for tetgen
+=================================
+
+Tetgen is a quality tetrahedral mesh generator and three-dimensional Delaunay 
+triangulator.
+Website: http://tetgen.berlios.de/
+
+pyFormex has a number of functions that interface with tetgen.
+To help our users with installing the tetgen program, we provide the 
+'tetgen.install' procedure in this directory.
+
+tetgen.install will download, compile and install tetgen and all that is
+needed to let it cooperate with pyFormex.
+
+By default the installation is done under /usr/local and you will need root
+privileges to do so.
+
+The full installation can be done with a single command (as root):
+./tetgen.install all
+
+
