@@ -1795,12 +1795,13 @@ class BaseMenu(object):
                     val = eval(val)
                 if len(item) > 2 and item[2].has_key('data'):
                     a = DAction(txt,data=item[2]['data'])
+                    QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
                 else:
                     a = self.create_insert_action(txt,val,before)
                 if len(item) > 2:
                     #print 'item = %s' % str(item)
-                    for k,v in item[2].items():
+                    for k,v in item[2].items():                        
                         if k == 'icon':
                             a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
                         elif k == 'shortcut':
