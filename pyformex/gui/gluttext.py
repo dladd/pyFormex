@@ -1,4 +1,4 @@
-# $Id $
+# $Id$
 
 """2D text decorations using GLUT fonts"""
 
@@ -86,7 +86,7 @@ def drawText2D(text, x,y, font='9x15', adjust='left'):
     #print "font = ",font
     if adjust != 'left':
         len1 = myBitmapLength(font, text)
-##  UNCOMMENT THESE LINES TO SEE WHEN gluBitmapLength GOES WRONG !
+##  UNCOMMENT THESE LINES TO SEE WHEN glutBitmapLength GOES WRONG !
 ##        len2 = GLUT.glutBitmapLength(font, text)
 ##        if len1 != len2:
 ##            print "incorrect glutBitmapLength",len1,len2

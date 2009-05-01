@@ -420,7 +420,7 @@ def closedLoop(elems):
     return ret,srt
 
 
-def partitionSegmentedCurve(elems):
+def connectedLineElems(elems):
     """Partition a segmented curve into connected segments.
     
     The input argument is a (nelems,2) shaped array of integers.
@@ -429,16 +429,17 @@ def partitionSegmentedCurve(elems):
     The return value ia a list of (nsegi,2) shaped array of integers. 
     
     is returned.
-    Each border is a (nelems,2) shaped array of integers in
+    Each part is a (nelems,2) shaped array of integers in
     which the element numbers are ordered.
     """
-    borders = []
+    parts = []
     while elems.size != 0:
         closed,loop = closedLoop(elems)
-        borders.append(loop[loop!=-1].reshape(-1,2))
+        parts.append(loop[loop!=-1].reshape(-1,2))
         elems = elems[elems!=-1].reshape(-1,2)
-    return borders
+    return parts
 
+partitionSegmentedCurve = connectedLineElems
 
 ############################################################################
 #

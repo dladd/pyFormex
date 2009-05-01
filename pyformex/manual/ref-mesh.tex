@@ -1,0 +1,86 @@
+% pyformex manual --- mesh --- CREATED WITH py2ptex.py: DO NOT EDIT
+% $Id$
+% (C) B.Verhegghe
+
+\section{\module{mesh} --- mesh.py}
+\label{sec:mesh}
+
+\declaremodule{""}{mesh}
+\modulesynopsis{mesh.py}
+\moduleauthor{'pyFormex project'}{'http://pyformex.berlios.de'}
+
+A plugin providing some useful meshing functions.
+
+
+
+\begin{funcdesc}{createWedgeElements}{S1,S2,div=1}
+Create wedge elements between to triangulated surfaces.
+    
+    6-node wedge elements are created between two input surfaces (S1 and S2).
+    The keyword div determines the number of created wedge element layers.
+    Layers with equal thickness are created when an integer value is used for div.
+    div can also be specified using a list, that defines the interpolation between the two surfaces.
+    Consequently, this can be used to create layers with unequal thickness.
+    For example, div=2 gives the same result as [0.,0.5,1.]
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{sweepGrid}{nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None}
+ Sweep a quadrilateral mesh along a path
+    
+    The path should be specified as a (n,2,3) Formex.
+    The input grid (quadrilaterals) has to be specified with the nodes and elems and 
+    can for example be created with the functions gridRectangle or gridBetween2Curves.
+    This quadrilateral grid should be within the YZ-plane.
+    The quadrilateral grid can be scaled and/or rotated along the path.
+    
+    There are three options for the first (a1) / last (a2) element of the path:
+    1) None: No corresponding hexahedral elements
+    2) 'last': The direction of the first/last element of the path is used to 
+    direct the input grid at the start/end of the path
+    3) specify a vector: This vector is used to direct the input grid at the start/end of the path
+    
+    The resulting hexahedral mesh is returned in terms of nodes and elems.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{connectMesh}{coords1,coords2,elems,n=1,n1=None,n2=None}
+Connect two meshes to form a hypermesh.
+    
+    coords1,elems and coords2,elems are 2 meshes with same topology.
+    The coordinates are given in corresponding order.
+    The two meshes are connected by a higher order mesh with n
+    elements in the direction between the two meshes.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{extrudeMesh}{coords,elems,n,step=1.,dir=0,autofix=True}
+Extrude a mesh in one of the axes directions.
+
+    Returns a hypermesh obtained by extruding the given mesh (coords,elems)
+    over n steps of length step in direction of axis dir.
+    The returned mesh has double plexitude of the original.
+
+    This function is usually used to points into lines, lines into surfaces
+    and surfaces into volumes. By default it will try to fix the connectivity
+    ordering where appropriate. It autofix is switched off, the connectivities
+    are merely stacked, and the user may have to fix it himself.
+
+    Currently, this function correctly transforms: point1 to line2,
+    line2 to quad4, tri3 to wedge6, quad4 to hex8.
+    
+
+\end{funcdesc}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "pyformex"
+%%% End:
+

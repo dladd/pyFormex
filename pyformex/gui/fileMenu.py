@@ -179,7 +179,7 @@ def saveImage(multi=False):
                    window=opt.wi,
                    multi=opt.mu,
                    hotkey=opt.hk,
-                   autosave=opt.as,
+                   autosave=opt.au,
                    border=opt.bo,
                    rootcrop=opt.rc
                    )

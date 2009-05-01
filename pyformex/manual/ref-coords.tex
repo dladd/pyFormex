@@ -1,4 +1,4 @@
-% pyformex manual --- coords
+% pyformex manual --- coords --- CREATED WITH py2ptex.py: DO NOT EDIT
 % $Id$
 % (C) B.Verhegghe
 
@@ -12,19 +12,17 @@
 This module defines the Coords class, which is the basic data structure
 in pyFormex to store coordinates of points in a 3D space.
 
-The \module{coords} module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The \class{Coords} class is used by other classes, such as \class{Formex} and \class{Surface}, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the \class{Coords} class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the \class{Coords} class directly as well.
+The \module\{coords\} module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The \class\{Coords\} class is used by other classes, such as \class\{Formex\} and \class\{Surface\}, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the \class\{Coords\} class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the \class\{Coords\} class directly as well.
 
 
 
-\subsection{Coords class}
+\subsection{Coords class: A structured collection of 3D coordinates.}
 
-A structured collection of 3D coordinates.
-    
     The Coords class is the basic data structure used throughout pyFormex
     to store coordinates of points in a 3D space.
 
-    The \class{Coords} class is used by other classes, such as \class{Formex}
-    and \class{Surface}, which thus inherit the same transformation
+    The \class\{Coords\} class is used by other classes, such as \class\{Formex\}
+    and \class\{Surface\}, which thus inherit the same transformation
     capabilities. Applications will mostly use the higher level
     classes, which usually have more elaborated consistency checking
     and error handling.
@@ -40,7 +38,10 @@ A structured collection of 3D coordinates.
     It is the responsibility of the user to keep consistency. 
     
 
-\begin{funcdesc}{__new__}{cls,data=None,dtyp=None,copy=False}
+
+The Coords class has this constructor: 
+
+\begin{classdesc}{Coords}{cls,data=None,dtyp=None,copy=False}
 Create a new instance of class Coords.
 
         If no data are given, a single point (0.,0.,0.) will be created.
@@ -48,9 +49,12 @@ Create a new instance of class Coords.
         If copy==True, the data are copied.
         If no dtype is given that of data are used, or float32 by default.
         
-\end{funcdesc}
 
-\begin{funcdesc}{points}{self}
+\end{classdesc}
+
+Coords objects have the following methods:
+
+\begin{funcdesc}{points}{}
 Return the data as a simple set of points.
 
         This reshapes the array to a 2-dimensional array, flattening
@@ -58,32 +62,32 @@ Return the data as a simple set of points.
         
 \end{funcdesc}
 
-\begin{funcdesc}{pshape}{self}
+\begin{funcdesc}{pshape}{}
 Return the shape of the points array.
 
         This is the shape of the Coords array with last axis removed.
-        The full shape of the \class{Coords} array can be obtained from
-        its \var{shape} attribute.
+        The full shape of the \class\{Coords\} array can be obtained from
+        its \var\{shape\} attribute.
         
 \end{funcdesc}
 
-\begin{funcdesc}{npoints}{self}
+\begin{funcdesc}{npoints}{}
 Return the total number of points.
 \end{funcdesc}
 
-\begin{funcdesc}{x}{self}
+\begin{funcdesc}{x}{}
 Return the x-plane
 \end{funcdesc}
 
-\begin{funcdesc}{y}{self}
+\begin{funcdesc}{y}{}
 Return the y-plane
 \end{funcdesc}
 
-\begin{funcdesc}{z}{self}
+\begin{funcdesc}{z}{}
 Return the z-plane
 \end{funcdesc}
 
-\begin{funcdesc}{bbox}{self}
+\begin{funcdesc}{bbox}{}
 Return the bounding box of a set of points.
 
         The bounding box is the smallest rectangular volume in global
@@ -93,7 +97,7 @@ Return the bounding box of a set of points.
         
 \end{funcdesc}
 
-\begin{funcdesc}{center}{self}
+\begin{funcdesc}{center}{}
 Return the center of the Coords.
 
         The center of a Coords is the center of its bbox().
@@ -101,7 +105,7 @@ Return the center of the Coords.
         
 \end{funcdesc}
 
-\begin{funcdesc}{centroid}{self}
+\begin{funcdesc}{centroid}{}
 Return the centroid of the Coords.
 
         The centroid of a Coords is the point whose coordinates
@@ -110,20 +114,20 @@ Return the centroid of the Coords.
         
 \end{funcdesc}
 
-\begin{funcdesc}{sizes}{self}
+\begin{funcdesc}{sizes}{}
 Return the sizes of the Coords.
 
         Return an array with the length of the bbox along the 3 axes.
         
 \end{funcdesc}
 
-\begin{funcdesc}{dsize}{self}
+\begin{funcdesc}{dsize}{}
 Return an estimate of the global size of the Coords.
 
         This estimate is the length of the diagonal of the bbox().
 \end{funcdesc}
 
-\begin{funcdesc}{bsphere}{self}
+\begin{funcdesc}{bsphere}{}
 Return the diameter of the bounding sphere of the Coords.
 
         The bounding sphere is the smallest sphere with center in the
@@ -132,7 +136,7 @@ Return the diameter of the bounding sphere of the Coords.
         
 \end{funcdesc}
 
-\begin{funcdesc}{distanceFromPlane}{self,p,n}
+\begin{funcdesc}{distanceFromPlane}{p,n}
 Return the distance of points f from the plane (p,n).
 
         p is a point specified by 3 coordinates.
@@ -145,7 +149,7 @@ Return the distance of points f from the plane (p,n).
         
 \end{funcdesc}
 
-\begin{funcdesc}{distanceFromLine}{self,p,n}
+\begin{funcdesc}{distanceFromLine}{p,n}
 Return the distance of points f from the line (p,n).
 
         p is a point on the line specified by 3 coordinates.
@@ -157,7 +161,7 @@ Return the distance of points f from the line (p,n).
         
 \end{funcdesc}
 
-\begin{funcdesc}{distanceFromPoint}{self,p}
+\begin{funcdesc}{distanceFromPoint}{p}
 Return the distance of points f from the point p.
 
         p is a single point specified by 3 coordinates.
@@ -168,7 +172,7 @@ Return the distance of points f from the point p.
         
 \end{funcdesc}
 
-\begin{funcdesc}{test}{self,dir=???,min=None,max=None,atol=???}
+\begin{funcdesc}{test}{dir=0,min=None,max=None,atol=0.}
 Flag points having coordinates between min and max.
 
         This function is very convenient in clipping a Coords in a specified
@@ -190,7 +194,7 @@ Flag points having coordinates between min and max.
         
 \end{funcdesc}
 
-\begin{funcdesc}{fprint}{self,fmt=???}
+\begin{funcdesc}{fprint}{fmt="\%10.3e \%10.3e \%10.3e"}
 Formatted printing of a Coords.
 
         The supplied format should contain 3 formatting sequences for the
@@ -198,11 +202,11 @@ Formatted printing of a Coords.
         
 \end{funcdesc}
 
-\begin{funcdesc}{set}{self,f}
+\begin{funcdesc}{set}{f}
 Set the coordinates from those in the given array.
 \end{funcdesc}
 
-\begin{funcdesc}{scale}{self,scale,dir=None,inplace=False}
+\begin{funcdesc}{scale}{scale,dir=None,inplace=False}
 Return a copy scaled with scale[i] in direction i.
 
         The scale should be a list of 3 scaling factors for the 3 axis
@@ -213,7 +217,7 @@ Return a copy scaled with scale[i] in direction i.
         
 \end{funcdesc}
 
-\begin{funcdesc}{translate}{self,vector,distance=None,inplace=False}
+\begin{funcdesc}{translate}{vector,distance=None,inplace=False}
 Translate a Coords object.
 
         The translation vector can be specified in one of the following ways:
@@ -235,7 +239,7 @@ Translate a Coords object.
         
 \end{funcdesc}
 
-\begin{funcdesc}{rotate}{self,angle,axis=???,around=None,inplace=False}
+\begin{funcdesc}{rotate}{angle,axis=2,around=None,inplace=False}
 Return a copy rotated over angle around axis.
 
         The angle is specified in degrees.
@@ -252,14 +256,14 @@ Return a copy rotated over angle around axis.
         
 \end{funcdesc}
 
-\begin{funcdesc}{shear}{self,dir,dir1,skew,inplace=False}
+\begin{funcdesc}{shear}{dir,dir1,skew,inplace=False}
 Return a copy skewed in the direction dir of plane (dir,dir1).
 
         The coordinate dir is replaced with (dir + skew * dir1).
         
 \end{funcdesc}
 
-\begin{funcdesc}{reflect}{self,dir=???,pos=???,inplace=False}
+\begin{funcdesc}{reflect}{dir=2,pos=0,inplace=False}
 Mirror the coordinates in direction dir against plane at pos.
 
         Default position of the plane is through the origin.
@@ -267,7 +271,7 @@ Mirror the coordinates in direction dir against plane at pos.
         
 \end{funcdesc}
 
-\begin{funcdesc}{affine}{self,mat,vec=None,inplace=False}
+\begin{funcdesc}{affine}{mat,vec=None,inplace=False}
 Return a general affine transform of the Coords.
 
         The returned Coords has coordinates given by xorig * mat + vec,
@@ -275,7 +279,7 @@ Return a general affine transform of the Coords.
         
 \end{funcdesc}
 
-\begin{funcdesc}{cylindrical}{self,dir=???,scale=???}
+\begin{funcdesc}{cylindrical}{dir=[[0,,,1,,,2,]],scale=[[1.,,,1.,,,1.,]]}
 Converts from cylindrical to cartesian after scaling.
 
         dir specifies which coordinates are interpreted as resp.
@@ -286,7 +290,7 @@ Converts from cylindrical to cartesian after scaling.
         
 \end{funcdesc}
 
-\begin{funcdesc}{toCylindrical}{self,dir=???}
+\begin{funcdesc}{toCylindrical}{dir=[[0,,,1,,,2,]]}
 Converts from cartesian to cylindrical coordinates.
 
         dir specifies which coordinates axes are parallel to respectively the
@@ -296,7 +300,7 @@ Converts from cartesian to cylindrical coordinates.
         
 \end{funcdesc}
 
-\begin{funcdesc}{spherical}{self,dir=???,scale=???,colat=False}
+\begin{funcdesc}{spherical}{dir=[[0,,,1,,,2,]],scale=[[1.,,,1.,,,1.,]],colat=False}
 Converts from spherical to cartesian after scaling.
 
         <dir> specifies which coordinates are interpreted as resp.
@@ -309,7 +313,7 @@ Converts from spherical to cartesian after scaling.
         
 \end{funcdesc}
 
-\begin{funcdesc}{superSpherical}{self,n=???,e=???,k=???,dir=???,scale=???,colat=False}
+\begin{funcdesc}{superSpherical}{n=1.0,e=1.0,k=0.0,dir=[[0,,,1,,,2,]],scale=[[1.,,,1.,,,1.,]],colat=False}
 Performs a superspherical transformation.
 
         superSpherical is much like spherical, but adds some extra
@@ -335,7 +339,7 @@ Performs a superspherical transformation.
         
 \end{funcdesc}
 
-\begin{funcdesc}{toSpherical}{self,dir=???}
+\begin{funcdesc}{toSpherical}{dir=[[0,,,1,,,2,]]}
 Converts from cartesian to spherical coordinates.
 
         dir specifies which coordinates axes are parallel to respectively
@@ -347,7 +351,7 @@ Converts from cartesian to spherical coordinates.
         
 \end{funcdesc}
 
-\begin{funcdesc}{bump1}{self,dir,a,func,dist}
+\begin{funcdesc}{bump1}{dir,a,func,dist}
 Return a Coords with a one-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
@@ -358,7 +362,7 @@ Return a Coords with a one-dimensional bump.
         
 \end{funcdesc}
 
-\begin{funcdesc}{bump2}{self,dir,a,func}
+\begin{funcdesc}{bump2}{dir,a,func}
 Return a Coords with a two-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
@@ -368,7 +372,7 @@ Return a Coords with a two-dimensional bump.
         
 \end{funcdesc}
 
-\begin{funcdesc}{bump}{self,dir,a,func,dist=None}
+\begin{funcdesc}{bump}{dir,a,func,dist=None}
 Return a Coords with a bump.
 
         A bump is a modification of a set of coordinates by a non-matching
@@ -389,7 +393,7 @@ Return a Coords with a bump.
         
 \end{funcdesc}
 
-\begin{funcdesc}{newmap}{self,func}
+\begin{funcdesc}{newmap}{func}
 Return a Coords mapped by a 3-D function.
 
         This is one of the versatile mapping functions.
@@ -405,7 +409,7 @@ Return a Coords mapped by a 3-D function.
         
 \end{funcdesc}
 
-\begin{funcdesc}{map}{self,func}
+\begin{funcdesc}{map}{func}
 Return a Coords mapped by a 3-D function.
 
         This is one of the versatile mapping functions.
@@ -421,7 +425,7 @@ Return a Coords mapped by a 3-D function.
         
 \end{funcdesc}
 
-\begin{funcdesc}{map1}{self,dir,func,x=None}
+\begin{funcdesc}{map1}{dir,func,x=None}
 Return a Coords where coordinate i is mapped by a 1-D function.
 
         <func> is a numerical function which takes one argument and produces
@@ -434,7 +438,7 @@ Return a Coords where coordinate i is mapped by a 1-D function.
         
 \end{funcdesc}
 
-\begin{funcdesc}{mapd}{self,dir,func,point,dist=None}
+\begin{funcdesc}{mapd}{dir,func,point,dist=None}
 Maps one coordinate by a function of the distance to a point.
 
         <func> is a numerical function which takes one argument and produces
@@ -451,11 +455,11 @@ Maps one coordinate by a function of the distance to a point.
         
 \end{funcdesc}
 
-\begin{funcdesc}{egg}{self,k}
+\begin{funcdesc}{egg}{k}
 Maps the coordinates to an egg-shape
 \end{funcdesc}
 
-\begin{funcdesc}{replace}{self,i,j,other=None}
+\begin{funcdesc}{replace}{i,j,other=None}
 Replace the coordinates along the axes i by those along j.
 
         i and j are lists of axis numbers or single axis numbers.
@@ -466,14 +470,14 @@ Replace the coordinates along the axes i by those along j.
         
 \end{funcdesc}
 
-\begin{funcdesc}{swapAxes}{self,i,j}
+\begin{funcdesc}{swapAxes}{i,j}
 Swap coordinate axes i and j.
 
         Beware! This is different from numpy's swapaxes() method !
         
 \end{funcdesc}
 
-\begin{funcdesc}{rollAxes}{self,n=???}
+\begin{funcdesc}{rollAxes}{n=1}
 Roll the axes over the given amount.
 
         Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
@@ -481,7 +485,7 @@ Roll the axes over the given amount.
         
 \end{funcdesc}
 
-\begin{funcdesc}{projectOnSphere}{self,radius=???,center=???}
+\begin{funcdesc}{projectOnSphere}{radius=1.,center=[[0.,,,0.,,,0.,]]}
 Project Coords on a sphere.
 
         The default sphere is a unit sphere at the origin.
@@ -489,7 +493,7 @@ Project Coords on a sphere.
         
 \end{funcdesc}
 
-\begin{funcdesc}{projectOnCylinder}{self,radius=???,dir=???,center=???}
+\begin{funcdesc}{projectOnCylinder}{radius=1.,dir=0,center=[[0.,,,0.,,,0.,]]}
 Project Coords on a cylinder with axis parallel to a global axis.
 
         The default cylinder has its axis along the x-axis and a unit radius.
@@ -497,7 +501,7 @@ Project Coords on a cylinder with axis parallel to a global axis.
         
 \end{funcdesc}
 
-\begin{funcdesc}{split}{self}
+\begin{funcdesc}{split}{}
 Split the coordinate array in blocks along first axis.
 
         The result is a sequence of arrays with shape self.shape[1:].
@@ -505,7 +509,7 @@ Split the coordinate array in blocks along first axis.
         
 \end{funcdesc}
 
-\begin{funcdesc}{fuse}{self,nodesperbox=???,shift=???,rtol=???,atol=???}
+\begin{funcdesc}{fuse}{nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5}
 Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them

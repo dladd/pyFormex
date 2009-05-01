@@ -36,7 +36,6 @@ from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
 
-
 # global data
 
 parts = None,

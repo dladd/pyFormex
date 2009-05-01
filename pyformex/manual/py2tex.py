@@ -65,18 +65,32 @@ class SuiteInfoBase:
                 if cstmt[0] == symbol.funcdef:
                     i = 1
                     class_method = False
-                    while cstmt[i][1] != 'def':
-                        if cstmt[i] == CLASS_METHOD_PATTERN:
+                    coords_method = False
+                    deprecated = False
+                    while i < len(cstmt) and cstmt[i][1] != 'def':
+                        if cstmt[i][1][:3] == CLASS_METHOD_PATTERN:
                             class_method = True
+                        elif cstmt[i][1][:3] == COORDS_METHOD_PATTERN:
+                            coords_method = True
+                        elif cstmt[i][1][:3] == DEPRECATED_PATTERN:
+                            deprecated = True
+                            # LEAVE DEPRECATED FUNCTIONS OUT OF MANUAL
+                            break
                         else:
+                            #print cstmt[i][1][:3]
                             print "%% POPPING %s" % str(cstmt[i])
-                            raise
+                            print "%% MATCHING %s" % str(cstmt[i][1][:3])
+                            #raise
                         i += 1
-                    name = cstmt[i+1][1]
-                    self._function_info[name] = FunctionInfo(cstmt)
-                    found, vars = match(DOCSTRING_STMT_PATTERN, tree[1])
-                    args = cstmt[i+2][2]
-                    self._function_info[name]._arglist = ParameterInfo(args)
+                    # LEAVE DEPRECATED FUNCTIONS OUT OF MANUAL
+                    if deprecated:
+                        continue
+                    if cstmt[i][1] == 'def':
+                        name = cstmt[i+1][1]
+                        self._function_info[name] = FunctionInfo(cstmt)
+                        found, vars = match(DOCSTRING_STMT_PATTERN, tree[1])
+                        args = cstmt[i+2][2]
+                        self._function_info[name]._arglist = ParameterInfo(args)
                 elif cstmt[0] == symbol.classdef:
                     name = cstmt[2][1]
                     self._class_info[name] = ClassInfo(cstmt)
@@ -113,13 +127,15 @@ class SuiteFuncInfo:
 class FunctionInfo(SuiteInfoBase, SuiteFuncInfo):
     def __init__(self, tree = None):
         self.class_method = False
+        self.coords_method = False
         i = 1
-        while tree[i][1] != 'def':
-            if tree[i] == CLASS_METHOD_PATTERN:
+        while i < len(tree) and tree[i][1] != 'def':
+            if tree[i][1][:3] == CLASS_METHOD_PATTERN:
                 self.class_method = True
+            elif tree[i][1][:3] == COORDS_METHOD_PATTERN:
+                self.coords_method = True
             else:
-                print "%% POPPING %s" % str(cstmt[i])
-                raise
+                print "%% POPPING %s" % str(tree[i])
             i += 1
             #print i,tree[i+1][1]
         self._name = tree[i+1][1]
@@ -239,16 +255,18 @@ PARAMETER_VALUE_PATTERN = (
             (symbol.arith_expr,
              (symbol.term,
               (symbol.factor,
-               (symbol.power,
+               (symbol.power,['parvalue']
+                 )))))))))))))
 #                (symbol.atom,['parvalue'])
 #                 )))))))))))))
-                (symbol.atom,
-                 (token.NAME, ['parvalue'])
-                 ))))))))))))))
+#                (symbol.atom,
+#                 (token.NAME, ['parvalue'])
+#                 ))))))))))))))
 
 
-CLASS_METHOD_PATTERN = (260, (259, (50, '@'), (287, (1, 'classmethod')), (4, '')))
-
+CLASS_METHOD_PATTERN = (259, (50, '@'), (287, (1, 'classmethod')), )
+COORDS_METHOD_PATTERN = (259, (50, '@'), (287, (1, 'coordsmethod')), )
+DEPRECATED_PATTERN = (259, (50, '@'), (287, (1, 'deprecated')), )
 
 PARAMETERS_PATTERN = (
     symbol.parameters,
@@ -258,6 +276,34 @@ PARAMETERS_PATTERN = (
     )
 
 
+def rebuildAtom(node):
+    if type(node) is TupleType and node[0] == symbol.atom:
+        s = ''
+        for i in node[1:]:
+            if len(i) == 2:
+                s += str(i[1])
+            elif i[0] == symbol.listmaker:
+                s += '['
+                for k in i[1:]:
+                    s += rebuildAtom(k)
+                    s += ','
+                s += ']'
+            else:
+                s += "!!%s!!" % str(i)
+        return s
+
+    elif node[0] == 12:
+        return ','
+
+    elif node[0] == 303:
+        found,vars = match(PARAMETER_VALUE_PATTERN, node)
+        if found:
+            return rebuildAtom(vars['parvalue'])
+
+    print '%HELP',node
+    return str(node)
+       
+
 def ParameterInfo(node):
     #found, vars = match(PARAMETERS_PATTERN, node)
     #print node
@@ -265,7 +311,6 @@ def ParameterInfo(node):
     name = None
     value = None
     for i in node[1:]:
-        #print i
         if i[0] == symbol.fpdef:
             name = i[1][1]
             value = None
@@ -275,11 +320,15 @@ def ParameterInfo(node):
         elif i[0] == 22:
             value = '???'
         elif i[0] == 303:
+            #print i
             found,vars = match(PARAMETER_VALUE_PATTERN, i)
+            #print found,vars
             if found:
-                value = vars['parvalue']
+                value = rebuildAtom(vars['parvalue'])
             else:
-                pass#print i
+                #raise
+                print '%HELP',i
+                #print i
         else:
             pass#print i[0]
     if name is not None:
@@ -308,9 +357,11 @@ def argformat(a):
         return '%s=%s' % a
 
 def ship_args(args):
+    if len(args) > 0 and args[0][0] == 'self':
+        args = args[1:]
     args = map(argformat,args)
     #args = [ a for a in args if a[0] is not None ]
-    return ','.join(args)
+    return sanitize(','.join(args))
 
 
 def ship_function(name,args,docstring):
@@ -322,29 +373,39 @@ def ship_function(name,args,docstring):
 """ % (name,ship_args(args),docstring)
 
 
-def ship_method(name,args,docstring,class_method):
+def ship_method(name,args,docstring,class_method=False,coords_method=False):
     print "\\begin{funcdesc}{%s}{%s}" % (name,ship_args(args))
     print docstring
+    if coords_method:
+        print "\\coordsmethod"
     if class_method:
         print "\\classmethod"
     print "\\end{funcdesc}\n"
 
 
+def ship_class(name,docstring):
+    shortdoc,longdoc = split_doc(docstring)
+    print """
+\\subsection{%s class: %s}
+
+%s
+""" % (name,shortdoc,longdoc)
+
+
 def ship_classinit(name,args,docstring):
     print """
+The %s class has this constructor: 
+
 \\begin{classdesc}{%s}{%s}
 %s
 
 \\end{classdesc}
-""" % (name,ship_args(args),docstring)
+""" % (name,name,ship_args(args),docstring)
 
+
+def ship_classmethods(name):
+    print "%s objects have the following methods:\n" % name 
     
-def ship_class(name,docstring):
-    print """
-\\subsection{%s class}
-
-%s
-""" % (name,docstring)
 
 def ship_function_section(name):
     print """
@@ -355,7 +416,7 @@ def ship_function_section(name):
 
 def ship_module(name,docstring):
     shortdoc,longdoc = split_doc(docstring)
-    print """%% pyformex manual --- %s
+    print """%% pyformex manual --- %s --- CREATED WITH py2ptex.py: DO NOT EDIT
 %% $%s$
 %% (C) B.Verhegghe
 
@@ -382,10 +443,9 @@ def ship_end():
 
 def sanitize(s):
     """Sanitize a string for LaTeX."""
-    s = s.replace('\#','#')
-    s = s.replace('#','\#')
-    s = s.replace('\&','&')
-    s = s.replace('&','\&')
+    for c in '{}#&%':
+        s = s.replace('\\'+c,c)
+        s = s.replace(c,'\\'+c)
     return s
 
 
@@ -394,17 +454,23 @@ def do_function(info):
 
 
 def do_method(info):
-    ship_method(info._name,info._arglist,sanitize(info._docstring),info.class_method)
+    ship_method(info._name,info._arglist,sanitize(info._docstring),info.class_method,info.coords_method)
 
 
 def do_class(info):
     ship_class(info._name,sanitize(info._docstring))
     names = info.get_method_names()
-    if '__init__' in names:
+    i = None
+    if '__new__' in names:
+        i = info['__new__']
+    elif '__init__' in names:
         i = info['__init__']
+    if i:
         ship_classinit(info._name,i._arglist,sanitize(i._docstring))
+
+    ship_classmethods(info._name)
     for k in names:
-        if k == '__init__':
+        if k == '__init__' or k == '__new__':
             continue
         do_method(info[k])
 

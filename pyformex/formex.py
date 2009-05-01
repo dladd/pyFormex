@@ -1830,7 +1830,7 @@ class Formex(object):
     def cutAtPlane(self,p,n,newprops=None,side='+',atol=0.):
         """Return all elements of a plex-2 or plex-3 Formex cut at plane.
 
-        This is equivalent with the function cutAtPlane(F,p,n) or
+        This is equivalent with the function cut2AtPlane(F,p,n) or
         cut3AtPlane(F,p,n).
         """
         if self.nplex == 1:

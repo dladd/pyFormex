@@ -69,13 +69,17 @@ def initialize():
         import gl2ps
 
         _producer = GD.Version + ' (http://pyformex.berlios.de)'
-        _gl2ps_types = { 'ps':gl2ps.GL2PS_PS,
-                         'eps':gl2ps.GL2PS_EPS,
-                         'tex':gl2ps.GL2PS_TEX,
-                         'pdf':gl2ps.GL2PS_PDF,
-                         'svg':gl2ps.GL2PS_SVG,
-                         'pgf':gl2ps.GL2PS_PGF,
-                         }
+        _gl2ps_types = {
+            'ps':gl2ps.GL2PS_PS,
+            'eps':gl2ps.GL2PS_EPS,
+            'tex':gl2ps.GL2PS_TEX,
+            'pdf':gl2ps.GL2PS_PDF,
+            }
+        if utils.checkVersion('gl2ps','1.03') >= 0:
+            _gl2ps_types.update({
+                'svg':gl2ps.GL2PS_SVG,
+                'pgf':gl2ps.GL2PS_PGF,
+                })
         image_formats_gl2ps = _gl2ps_types.keys()
         image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
                                      'xwd', 'y4m' ]

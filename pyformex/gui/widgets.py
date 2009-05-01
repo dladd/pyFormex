@@ -156,7 +156,7 @@ class SaveImageDialog(FileSelection):
             opt.bo = self.bor.isChecked()
             opt.mu = self.mul.isChecked()
             opt.hk = self.hot.isChecked()
-            opt.as = self.aut.isChecked()
+            opt.au = self.aut.isChecked()
             return opt
         else:
             return None

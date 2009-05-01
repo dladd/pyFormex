@@ -116,9 +116,9 @@ def readSelection(select=True,draw=True,multi=True):
     """
     types = [ 'Surface Files (*.gts *.stl *.off *.neu *.smesh)', 'All Files (*)' ]
     fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=multi)
-    if not multi:
-        fn = [ fn ]
     if fn:
+        if not multi:
+            fn = [ fn ]
         chdir(fn[0])
         names = map(utils.projectName,fn)
         GD.GUI.setBusy()

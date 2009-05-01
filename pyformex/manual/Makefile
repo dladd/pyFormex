@@ -1,13 +1,21 @@
 # Makefile for the pyFormex manual
 #
 PKGNAME=pyformex
-
-PYTHONDIR=/usr/lib/python2.4
-MKHOWTO=mkhowto 
-#${PYTHONDIR}/doc/tools/mkhowto
-TEXINPUTS=${PYTHONDIR}/doc/texinputs
 TGT=pyformex
-SRC=${TGT}.tex pyformex.help 
+
+MANSRC= pyformex.tex refman.tex pyformex.help
+AUTOREF= array coords connectivity mydict odict olist script simple utils \
+  colors draw image widgets \
+  curve fe inertia isopar lima mesh \
+  project properties section2d surface turtle units
+  
+AUTOSRC= $(addprefix ref-, $(addsuffix .tex, ${AUTOREF}))
+SRC= ${MANSRC} ${AUTOSRC}
+
+PYTHONDIR=/usr/lib/python2.5
+MKHOWTO=mkhowto 
+TEXINPUTS=${PYTHONDIR}/doc/texinputs
+
 HTMLDIR=html
 FAVICON=../favicon.ico
 OPTIONS= --up-title "pyFormex Home Page" --up-link "http://pyformex.berlios.de" --image-type png --favicon ${FAVICON} 
@@ -23,6 +31,13 @@ RSYNC= rsync -av -e ssh
 # our local ftp server
 FTPLOCAL=bumps:/home/ftp/pub/${PKGNAME}
 
+
+# recognized suffixes
+.SUFFIXES: .tex .py .pdf
+
+# where to search for source files
+vpath %.py ../ ../gui/ ../plugins/
+
 # Default target
 .PHONY all: pdf html
 
@@ -32,19 +47,27 @@ FTPLOCAL=bumps:/home/ftp/pub/${PKGNAME}
 
 .PHONY html: html/${TGT}.html
 
+.PHONY: autosrc
+autosrc: ${AUTOSRC}
+
+# Create input
 pyformex.help: ../pyformex
 	../pyformex --help > $@
 
-${TGT}.ps: ${SRC}
+ref-%.tex: %.py py2tex.py
+	py2tex.py $< > $@
+
+# Create output
+${TGT}.ps: ${MANSRC}
 	${MKHOWTO} --a4 --ps $<
 
 ${TGT}.pdf: ${SRC}
 	${MKHOWTO} --a4 --pdf $<
 
-${TGT}.ind: ${SRC}
+${TGT}.ind: ${MANSRC}
 	makeindex $<
 
-html/${TGT}.html: ${SRC}
+html/${TGT}.html: ${MANSRC}
 	rm -rf ${HTMLDIR}
 	mkdir ${HTMLDIR}
 	ln -s ../images ${HTMLDIR}/images

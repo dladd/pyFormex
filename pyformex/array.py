@@ -260,7 +260,7 @@ def checkArray(a,shape=None,kind=None,allow=None):
         a = asarray(a)
         shape = asarray(shape)
         w = where(shape >= 0)[0]
-        if asarray(a.shape)[w] != shape[w]:
+        if (asarray(a.shape)[w] != shape[w]).any():
             raise
         if kind is not None:
             if allow is None and a.dtype.kind != kind:

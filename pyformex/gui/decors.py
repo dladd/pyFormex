@@ -28,6 +28,7 @@ from PyQt4 import QtGui,QtOpenGL
 
 from drawable import *
 from actors import Actor
+#from gluttext import glutFontHeight
 
 import colors
 

@@ -42,7 +42,17 @@ Palette = {
 }
 
 class ColorScale:
-    """A colorscale maps a range of values into colors."""
+    """Mapping floating point values into colors.
+
+    A colorscale maps floating point values within a certain range
+    into colors and can be used to provide visual representation
+    of numerical values.
+    This is e.g. quite useful in Finite Element postprocessing (see the
+    postproc plugin).
+
+    The ColorLegend class provides a way to make the ColorScale visible
+    on the canvas.
+    """
     
     def __init__(self,palet,minval=0.,maxval=1.,midval=None,exp=1.0,exp2=None):
         """Create a colorscale to map a range of values into colors.
@@ -59,16 +69,16 @@ class ColorScale:
         as None, in which case it will be set to the middle color
         between the first and last.
 
-        Some useful palets are predefined in Palette.
+        The Palette variable provides some useful predefined palets.
+        You will hardly ever need to define your own palets.
 
-        Mapping values to colors is linear by default. Nonlinear
-        mappings can be obtained by specifying an exponent. Mapping
-        is done with the stuur function from utils.py.
-        If 2 exponents are given, mapping is done independently in the
-        minval..midval range with exp and in the midval..maxval range
-        with exp2.
+        The mapping function between numerical and color values is by
+        default linear. Nonlinear mappings can be obtained by specifying
+        an exponent 'exp' different from 1.0. Mapping is done with the
+        'stuur' function from the 'utils' module. 
+        If 2 exponents are given, mapping is done independently e with exp
+        in the range minval..midval and with exp2 in the range midval..maxval.
         """
-        #print palet,minval,maxval,midval
         if type(palet) == str:
             self.palet = Palette.get(palet.upper(),Palette['RGB'])
         else:
@@ -84,18 +94,20 @@ class ColorScale:
         self.exp = exp
         self.exp2 = exp2
 
+
     def scale(self,val):
-        """Scale a value to the range -1...1."""
-        if self.exp2 == None:
-            return stuur(val,[self.xmin,self.x0,self.xmax],[-1.,0.,1.],self.exp)
-        return self.scale2(val)
-    
-    def scale2(self,val):
         """Scale a value to the range -1...1.
 
-        This scales indepently in one of the intervals
-        xmin..x0 or x0..xmax.
+        If the ColorScale has only one exponent, values in the range
+        mival..maxval are scaled to the range -1..+1.
+
+        If two exponents wer specified, scaling is done independently in
+        one of the intervals minval..midval or midval..maxval resulting into
+        resp. the interval -1..0 or 0..1.
         """
+        if self.exp2 == None:
+            return stuur(val,[self.xmin,self.x0,self.xmax],[-1.,0.,1.],self.exp)
+
         if val < self.x0:
             return stuur(val,[self.xmin,(self.x0+self.xmin)/2,self.x0],[-1.,-0.5,0.],self.exp)
         else:
@@ -106,6 +118,10 @@ class ColorScale:
         """Return the color representing a value val.
 
         The returned color is a tuple of three RGB values in the range 0-1.
+        The color is obtained by first scaling the value to the -1..1 range
+        using the 'scale' method, and then using that result to pick a color
+        value from the palet. A palet specifies the three colors corresponding
+        to the -1, 0 and 1 values.
         """
         x = self.scale(val)
         c0 = self.palet[1]

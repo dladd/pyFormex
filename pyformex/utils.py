@@ -102,9 +102,11 @@ def checkModule(name):
             version = Gnuplot.__version__
         elif name == 'gl2ps':
             import gl2ps
-            version = gl2ps.GL2PS_VERSION
+            version = str(gl2ps.GL2PS_VERSION)
     except:
         pass
+    # make sure version is a string (e.g. gl2ps uses a float!)
+    version = str(version)
     congratulations(name,version,'module',fatal)
     the_version[name] = version
     return version
