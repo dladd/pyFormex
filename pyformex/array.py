@@ -232,7 +232,7 @@ def rotationMatrix(angle,axis=None):
     return array(f)
 
 
-def growAxis(a,size,fill=0,axis=0):
+def growAxis(a,size,axis=-1,fill=0):
     """Grow a single array axis to the given size and fill with given value."""
     if axis >= len(a.shape):
         raise ValueError,"No such axis number!"
@@ -242,6 +242,16 @@ def growAxis(a,size,fill=0,axis=0):
         missing = list(a.shape)
         missing[axis] = size-missing[axis]
         return concatenate([a,fill * ones(missing,dtype=a.dtype)],axis=axis)
+
+
+def reverseAxis(a,axis=-1):
+    """Reverse the elements along axis."""
+    a = asarray(a)
+    try:
+        n = a.shape[axis]
+    except:
+        raise ValueError,"Invalid axis %s for array shape %s" % (axis,a.shape)
+    return a.take(arange(n-1,-1,-1),axis)
 
 
 def checkArray(a,shape=None,kind=None,allow=None):

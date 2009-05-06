@@ -163,7 +163,7 @@ class GUI(QtGui.QMainWindow):
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.show()
         #### Do not touch the next line unless you know what you're doing !!
-        self.easter_egg = None
+        self.easter_egg = ("#/s/i/n yomx\n  0T=[10'\not='ie'fmnfmx=1,6\n  admrno(n7)wh=G.avswdh) Dcna.egt)a=r::]*ary[,].syeit\nie=(ti  [,]*(ta-ti).syeit\noos=r:36\n  r:6  e().syeit\nla(\nbclrwie\nihsFle\nA=Nn\nfrii ag()\n  B=daTx([[],[]0,[]1,otfn,iesz[]clrls(oosi)\n  le(.)  bekt)  i   /:    udcrt(A\n  A=T\n#Ed", "!urbnevpfre\nn=4\n  '00]fn  tms\nti,ta  23\nr=rno.adm(,)\n,  Dcna.it(,G.avshih(\n  [,2  ra(wh)atp(n)sz  fmn+r:2  fmxfmn)atp(n)clr  [,:]t=([,]*lnT)atp(n)cer)\ngoo(ht)lgt(as)T  oe\no  nrnen:  T  rwetTti]ai[]ai[]fn=otsz=iei,oo=itclr[])  sep02\n  rap(\n  fi<n2\n    neoaeT)  T  B\n n\n")
 
         # self.central is the complete central widget of the main window
         self.central = QtGui.QWidget()

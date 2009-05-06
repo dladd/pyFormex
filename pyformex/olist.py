@@ -7,6 +7,9 @@ result differs from using Python builtin Sets in that they preserve the
 order of the items in the lists.
 """
 
+def roll(a,n=1):
+    """Roll the elements of a list n positions forward (backward if n < 0)"""
+    return a[n:] + a[:n]
 
 def union(a,b):
     """Return a list with all items in a or in b, in the order of a,b."""

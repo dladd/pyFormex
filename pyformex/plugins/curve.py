@@ -270,7 +270,7 @@ class PolyLine(Curve):
         return at
 
     def reverse(self):
-        return PolyLine(self.coords[arange(self.coords.shape[0]-1,-1,-1)],closed=self.closed)
+        return PolyLine(reverseAxis(self.coords,axis=0),closed=self.closed)
         
 
 ##############################################################################
