@@ -119,6 +119,7 @@ class GUI(QtGui.QMainWindow):
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
+        self.on_exit = [fileMenu.askCloseProject] 
         QtGui.QMainWindow.__init__(self)
         self.setWindowTitle(windowname)
         # add widgets to the main window
@@ -478,13 +479,19 @@ class GUI(QtGui.QMainWindow):
 ##         if draw.ack("Do you really want to quit?"):
 ##             print "YES:EXIT"
         self.cleanup()
+        GD.debug("Executing registered exit functions")
+        for f in self.on_exit:
+            GD.debug(f)
+            f()
         self.writeSettings()
         event.accept()
 ##         else:
 ##             print "NO:STAY"
 ##             event.ignore()
 
-
+    def onExit(self,func):
+        """Register a function for execution on exit"""
+        self.on_exit.append(func)
 
 
 def xwininfo(windowid):

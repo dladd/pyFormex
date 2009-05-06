@@ -95,7 +95,7 @@ def saveProject():
 
 def closeProject():
     global the_project,the_project_saved
-    if not (the_project_saved or the_project is None):
+    if (the_project is not None) and not the_project_saved:
         GD.message("Closing project %s" % the_project.filename)
         GD .message("Project contents: %s" % the_project.keys())
         the_project.save()
@@ -103,6 +103,17 @@ def closeProject():
         GD.PF.update(the_project)
         GD.GUI.setcurproj('None')
     the_project = None
+
+def askCloseProject():
+    #global the_project,the_project_saved
+    #print  the_project,the_project_saved
+    if the_project is None or the_project_saved:
+        return
+    
+    choices = ['Exit without saving','Save and Exit']
+    res = draw.ask("You have an unsaved open project: %s\nWhat do you want me to do?"%the_project.filename,choices,default=2)
+    if res in choices[1:]:
+        closeProject()
 
 
 ##################### handle script files ##########################
@@ -257,5 +268,7 @@ MenuData = [
     (_('---3'),None),
     (_('E&xit'),draw.closeGui),
 ]
+
+#onExit(closeProject)
 
 # End

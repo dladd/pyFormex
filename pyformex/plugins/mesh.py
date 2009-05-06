@@ -139,6 +139,9 @@ def connectMesh(coords1,coords2,elems,n=1,n1=None,n2=None):
     The coordinates are given in corresponding order.
     The two meshes are connected by a higher order mesh with n
     elements in the direction between the two meshes.
+    n1 and n2 are node selection indices permitting a permutation of the
+    nodes of the base sets in their appearance in the hypermesh.
+    This can e.g. be used to achieve circular numbering of the hypermesh.
     """
     if coords1.shape != coords2.shape:
         raise ValueError,"Meshes are not compatible"

@@ -142,10 +142,12 @@ class Curve(object):
 
 
     def length(self):
-        """Return the total length of the curve."""
-        return self.lengths().sum()
+        """Return the total length of the curve.
 
-    
+        This is only available for curves that implement the 'lengths'
+        method.
+        """
+        return self.lengths().sum()
   
 
 ##############################################################################
@@ -267,6 +269,9 @@ class PolyLine(Curve):
         at[wi] = ai
         return at
 
+    def reverse(self):
+        return PolyLine(self.coords[arange(self.coords.shape[0]-1,-1,-1)],closed=self.closed)
+        
 
 ##############################################################################
 #
