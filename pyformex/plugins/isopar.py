@@ -76,6 +76,7 @@ class Isopar(object):
                        'x*y*z*z',
                        'x*x*y*y*z','x*x*y*z*z','x*y*y*z*z',
                        'x*x*y*y*z*z')),
+        # quadratic in x,y, cubic in z
         'hex36' : (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
                        'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
                        'x*x*y*y','x*x*z*z','y*y*z*z','x*x*y*z','x*y*y*z',
@@ -85,6 +86,23 @@ class Isopar(object):
                        'z*z*z','x*z*z*z','y*z*z*z',
                        'x*x*z*z*z','y*y*z*z*z','x*y*z*z*z',
                        'x*x*y*z*z*z','x*y*y*z*z*z','x*x*y*y*z*z*z')),
+        'hex64': (3, ('1','x','y','z','x*x','y*y','z*z','x*y','x*z','y*z',
+                      'x*x*y','x*x*z','x*y*y','y*y*z','x*z*z','y*z*z','x*y*z',
+                      'x*x*x','y*y*y','z*z*z',
+                      'x*x*y*y','x*x*z*z','y*y*z*z','x*x*y*z','x*y*y*z',
+                      'x*y*z*z','x*x*x*y','x*x*x*z','x*y*y*y','y*y*y*z',
+                      'x*z*z*z','y*z*z*z',
+                      'x*x*x*y*y','x*x*x*z*z','x*x*y*y*y','y*y*y*z*z',
+                      'z*z*z*x*x','z*z*z*y*y',
+                      'x*x*x*y*z','x*y*y*y*z','z*z*z*x*y',
+                      'x*x*y*y*z','x*x*y*z*z','x*y*y*z*z',
+                      'x*x*x*y*y*y','x*x*x*z*z*z','y*y*y*z*z*z',
+                      'x*x*x*y*y*z','x*x*x*y*z*z','y*y*y*x*x*z','y*y*y*x*z*z',
+                      'z*z*z*x*x*y','z*z*z*x*y*y','x*x*y*y*z*z',
+                      'x*x*x*y*y*y*z','x*x*x*y*z*z*z','y*y*y*x*z*z*z',
+                      'x*x*x*y*y*z*z','y*y*y*x*x*z*z','z*z*z*x*x*y*y',
+                      'x*x*x*y*y*y*z*z','x*x*x*z*z*z*y*y','y*y*y*z*z*z*x*x',
+                      'x*x*x*y*y*y*z*z*z')),
         }
 
 

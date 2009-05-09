@@ -37,35 +37,6 @@ import olist
 
 from pyformex.lib import drawgl
 
-
-def rotMatrix(v,n=3):
-    """Create a rotation matrix that rotates axis 0 to the given vector.
-
-    Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
-    """
-    if n != 4:
-        n = 3
-    #v = array(v,dtype=float64)
-    vl = length(v)
-    if vl == 0.0:
-        return identity(n)
-    v /= vl
-    w = cross([0.,0.,1.],v)
-    wl = length(w)
-    if wl == 0.0:
-        w = cross(v,[0.,1.,0.])
-        wl = length(w)
-    w /= wl
-    x = cross(v,w)
-    x /= length(x)
-    m = row_stack([v,w,x])
-    if n == 3:
-        return m
-    else:
-        a = identity(4)
-        a[0:3,0:3] = m
-        return a
-
 ### Some drawing functions ###############################################
 
 def glColor(color,alpha=1.0):

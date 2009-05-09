@@ -421,6 +421,26 @@ def exit(all=False):
         GD.app.quit() # close GUI and exit pyformex
     else: # the gui didn't even start
         sys.exit(0) # exit from pyformex
+        
+
+def processArgs(args):
+    """Run the application without gui.
+
+    Arguments are interpreted as names of script files, possibly interspersed
+    with arguments for the scripts.
+    Each running script should pop the required arguments from the list.
+    """
+    while len(args) > 0:
+        fn = args.pop(0)
+        if not os.path.exists(fn) or not utils.isPyFormex(fn):
+            GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
+            continue
+        try:
+            playFile(fn,args)
+        except:
+            GD.message("Error during execution of script %s" % fn)
+        
+    return 0
 
 
 ########################## print information ################################

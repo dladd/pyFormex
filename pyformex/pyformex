@@ -109,27 +109,6 @@ You will need proper permissions to actually delete the files.
     else:
         print "Thanks for letting me stay this time."
     sys.exit()
-        
-
-def processArgs(args):
-    """Run the application without gui.
-
-    Arguments are interpreted as names of script files, possibly interspersed
-    with arguments for the scripts.
-    Each running script should pop the required arguments from the list.
-    """
-    from script import playFile
-    while len(args) > 0:
-        fn = args.pop(0)
-        if not os.path.exists(fn) or not utils.isPyFormex(fn):
-            GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
-            continue
-        try:
-            playFile(fn,args)
-        except:
-            GD.message("Error during execution of script %s" % fn)
-        
-    return 0
 
 ###########################  app  ################################
 
@@ -348,12 +327,14 @@ def main(argv=None):
 
     # remaining args are interpreted as scripts and their parameters
     res = 0
-    try:
-        GD.debug("Remaining args: %s" % args)
-        res = processArgs(args)
-    except:
-        GD.message("There was an error while executing one of the scripts")
-        res = 1
+    if args:
+        try:
+            GD.debug("Remaining args: %s" % args)
+            from script import processArgs
+            res = processArgs(args)
+        except:
+            GD.message("There was an error while executing one of the scripts")
+            res = 1
 
     # after processing all args, go into interactive mode
     if GD.options.gui:

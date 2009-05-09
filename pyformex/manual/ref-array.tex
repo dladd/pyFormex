@@ -2,6 +2,8 @@
 %HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '1'))))))))))))))))
 %HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '1'))))))))))))))))
 %HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '1'))))))))))))))))
+%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '1'))))))))))))))))
+%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '1'))))))))))))))))
 % pyformex manual --- array --- CREATED WITH py2ptex.py: DO NOT EDIT
 % $Id$
 % (C) B.Verhegghe
@@ -151,8 +153,14 @@ Return a rotation matrix over angle, optionally around axis.
 \end{funcdesc}
 
 
-\begin{funcdesc}{growAxis}{a,size,fill=0,axis=0}
+\begin{funcdesc}{growAxis}{a,size,axis=???,fill=0}
 Grow a single array axis to the given size and fill with given value.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{reverseAxis}{a,axis=???}
+Reverse the elements along axis.
 
 \end{funcdesc}
 

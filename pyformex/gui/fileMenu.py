@@ -29,6 +29,7 @@ import widgets
 import utils
 
 import draw
+from script import processArgs
 import image
 from plugins import surface_menu,formex_menu,tools_menu,postproc_menu
 
@@ -41,6 +42,7 @@ from gettext import gettext as _
 
 the_project = None
 the_project_saved = False
+AUTOFILE = '__auto_script_file__'
 
 def createProject():
     openProject(exist=False)
@@ -71,7 +73,7 @@ def openProject(exist=True):
             if res == 'Add':
                 exist = True
         if GD.PF:
-            GD.message("Exportd symbols: %s" % GD.PF.keys())
+            GD.message("Exported symbols: %s" % GD.PF.keys())
             res = draw.ask("pyFormex already contains exported symbols.\nShall I add them to your project?",['Delete','Add','Cancel'])
             if res == 'Cancel':
                 return
@@ -86,6 +88,17 @@ def openProject(exist=True):
         GD.GUI.setcurproj(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD .message("Project contents: %s" % the_project.keys())
+        if (AUTOFILE in the_project.keys()) and draw.ack("The project contains an '%s' item: %s\nShall I execute it?" % (AUTOFILE,the_project[AUTOFILE])):
+            processArgs([the_project[AUTOFILE]])
+
+
+def setAutoFile():
+    global the_project,the_project_saved
+    """Set the current script as autoScriptFile in the project"""
+    if the_project is not None and GD.cfg['curfile'] and GD.GUI.canPlay:
+        the_project[AUTOFILE] = GD.cfg['curfile']
+        the_project_saved = False
+            
 
 def saveProject():
     global the_project,the_project_saved
@@ -93,16 +106,18 @@ def saveProject():
         the_project.save()
         the_project_saved = True
 
+
 def closeProject():
     global the_project,the_project_saved
     if (the_project is not None) and not the_project_saved:
         GD.message("Closing project %s" % the_project.filename)
-        GD .message("Project contents: %s" % the_project.keys())
+        GD.message("Project contents: %s" % the_project.keys())
         the_project.save()
         GD.PF = {}
         GD.PF.update(the_project)
         GD.GUI.setcurproj('None')
     the_project = None
+
 
 def askCloseProject():
     #global the_project,the_project_saved
@@ -242,6 +257,7 @@ MenuData = [
     (_('&Start new project'),createProject),
     ('&Open existing project',openProject),
     ('&Save project',saveProject),
+    ('&Set current script as AutoFile',setAutoFile),
     ('&Save and close project',closeProject),
     ('---',None),
     (_('&Create new script'),createScript),

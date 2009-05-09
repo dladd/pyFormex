@@ -780,8 +780,8 @@ Record 3 does not have the transparent attribute, so a value None is printed.
 
 The property system presented above allows for recording any kind of values. In many situations however we will want to work with a specialised and limited set of attributes. The main developers of \pyf e.g. often use the program to create geometrical models of structures of which they want to analyse the mechanical behavior. These numerical simulations (FEA, CFD) require specific data that support the introduction of specialised property records. Currently there are two such property record types: node properties (see \ref{sec:node-properties}), which are attributed to a single point in space, and element properties (\ref{sec:elem-properties}), which are attributed to a structured collection of points.
 
-Special purpose properties are distincted by their \Code{kind} field. General property records have {\Code{kind=''}, node properties haven {\Code{kind='n'} and 
- {\Code{kind='e'} is set for element properties. Users can create their own specialised property records by using other value for the \Code{kind} parameter.
+Special purpose properties are distincted by their \Code{kind} field. General property records have \Code{kind=''}, node properties haven \Code{kind='n'} and 
+ \Code{kind='e'} is set for element properties. Users can create their own specialised property records by using other value for the \Code{kind} parameter.
 
 
 \subsection{Node properties}
