@@ -29,44 +29,96 @@ Functions for managing a project in pyFormex.
 
 import os
 import cPickle as pickle
+import gzip
+
+_signature_ = 'project'
 
 class Project(dict):
     """A pyFormex project is a persistent storage of pyFormex objects."""
 
-    def __init__(self,filename,create=False):
+    def __init__(self,filename,create=False,compressed=False,signature=_signature_,legacy=False):
         """Create a new project with the given filename.
 
         If the filename exists and create is False, the file is opened and
         the contents is read into the project dictionary.
         If not, a new empty file and project are created.
+
+        If legacy = True, the Project is allowed to read unsigned file formats.
+        Writing is always done with signature though.
         """
         dict.__init__(self)
         self.filename = filename
+        self.compressed = compressed
+        self.signature = signature
+        self.legacy = legacy
         if create or not os.path.exists(filename):
-            self.save(filename)
+            self.save()
         else:
-            self.load(filename)
+            self.load()
 
-    def save(self,filename=None):
+
+    def save(self,filename=None,compressed=None,signature=None):
         """Save the project to file."""
         if filename is None:
             filename = self.filename
+        if compressed is None:
+            compressed = self.compressed
+        if signature is None:
+            signature = self.signature
+
+        print self.compressed,compressed
         f = file(filename,'wb')
-        pickle.dump(self,f,pickle.HIGHEST_PROTOCOL)
+        if compressed:
+            if not type(compressed) is int and compressed in range(1,10):
+                compressed = 5
+            f.write('%s gzip %s\n'%(self.signature,compressed))
+            pyf = gzip.GzipFile(filename,'wb',compressed,f)
+        else:
+            if not self.legacy:
+                f.write('%s\n'%(self.signature))
+            pyf = f
+        self.compressed = compressed
+        pickle.dump(self,pyf,pickle.HIGHEST_PROTOCOL)
+        if compressed:
+            pyf.close()
         f.close()
 
-    def load(self,filename=None):
+
+    def load(self,filename=None,compressed=None,signature=None):
         """Load a project from file.
         
         The loaded definition will update the current project.
         """
         if filename is None:
             filename = self.filename
+        if compressed is None:
+            compressed = self.compressed
+        if signature is None:
+            signature = self.signature
+
         f = file(filename,'rb')
-        p = pickle.load(f)
+        s = f.readline()
+        if s.startswith(self.signature):
+            s = s.split()
+            if s[-2] == 'gzip':
+                compressed = int(s[-1])
+        else:
+            if self.legacy:
+                f.seek(0)
+                compressed = False
+            else:
+                raise ValueError,"File %s does not have a matching signature" % filename
+        
+        if compressed:
+            pyf = gzip.GzipFile(filename,'rb',compressed,f)
+        else:
+            pyf = f
+        p = pickle.load(pyf)
+        if compressed:
+            pyf.close()
         f.close()
-        if isinstance(p,dict):
-            self.update(p)
+        self.update(p)
+
  
     def delete(self):
         """Unrecoverably delete the project file."""
@@ -78,15 +130,25 @@ class Project(dict):
 if __name__ == '__main__':
 
     d = dict(a=1,b=2,c=3,d=[1,2,3],e={'f':4,'g':5})
-    print d
-    P = Project('d.test',create=True)
+    print 'DATA',d
+    P = Project('test.pyf',create=True,signature='Test project')
     P.update(d)
-    print P
+    print 'SAVE',P
     P.save()
     P.clear()
-    print P
+    print 'CLEAR',P
     P.load()
-    print P
+    print 'LOAD',P
     
+    P = Project('testc.pyf',create=True,signature='Test project',compressed=True)
+    P.update(d)
+    print 'SAVE',P
+    P.save(compressed=True)
+    P.clear()
+    print 'CLEAR',P
+    P.load(compressed=True)
+    print 'LOAD',P
+
+    #
 
 # End

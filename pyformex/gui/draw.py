@@ -479,11 +479,13 @@ def drawNumbers(F,color=colors.black,trl=None,offset=0):
     A translation may be given to put the numbers out of the centroids,
     e.g. to put them in front of the objects to make them visible,
     or to allow to view a mark at the centroids.
+    If an offset is specified, it is added to the shown numbers.
     """
-    FC = F.centroids()
+    if not isinstance(F,coords.Coords):
+        F = F.centroids()
     if trl is not None:
-        FC = FC.trl(trl)
-    return drawMarks(FC,numpy.arange(FC.shape[0])+offset,color=color)
+        F = F.trl(trl)
+    return drawMarks(F,numpy.arange(F.shape[0])+offset,color=color)
 
 
 def drawVertexNumbers(F,color=colors.black,trl=None):

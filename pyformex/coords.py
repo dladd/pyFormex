@@ -106,13 +106,13 @@ class Coords(ndarray):
     It is the responsibility of the user to keep consistency. 
     """
             
-    def __new__(cls, data=None, dtyp=None, copy=False):
+    def __new__(cls, data=None, dtyp=Float, copy=False):
         """Create a new instance of class Coords.
 
         If no data are given, a single point (0.,0.,0.) will be created.
         If specified, data should evaluate to an (...,3) shaped array of floats.
         If copy==True, the data are copied.
-        If no dtype is given that of data are used, or float32 by default.
+        If no dtyp is given that of data are used, or float32 by default.
         """
         if data is None:
             data = zeros((3,),dtype=Float)

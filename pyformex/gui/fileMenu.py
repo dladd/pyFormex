@@ -37,7 +37,6 @@ from plugins import project
 from gettext import gettext as _
 
 
-
 ##################### handle project files ##########################
 
 the_project = None
@@ -47,7 +46,11 @@ AUTOFILE = '__auto_script_file__'
 def createProject():
     openProject(exist=False)
 
-def openProject(exist=True):
+def createLegacyProject():
+    openProject(exist=False,compressed=False,legacy=True)
+
+
+def openProject(exist=True,compressed=True,legacy=False):
     """Open a file selection dialog and let the user select a project.
 
     The default only accepts existing project files.
@@ -80,7 +83,7 @@ def openProject(exist=True):
             if res == 'Delete':
                 GD.PF = {}
         GD.message("Opening project %s" % fn)
-        the_project = project.Project(fn,create=not exist)
+        the_project = project.Project(fn,create=not exist,signature = GD.Version,legacy=legacy,compressed=compressed)
         the_project_saved = False
         if GD.PF:
             the_project.update(GD.PF)
@@ -88,7 +91,7 @@ def openProject(exist=True):
         GD.GUI.setcurproj(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD .message("Project contents: %s" % the_project.keys())
-        if (AUTOFILE in the_project.keys()) and draw.ack("The project contains an '%s' item: %s\nShall I execute it?" % (AUTOFILE,the_project[AUTOFILE])):
+        if exist and (AUTOFILE in the_project.keys()) and draw.ack("The project contains an '%s' item: %s\nShall I execute it?" % (AUTOFILE,the_project[AUTOFILE])):
             processArgs([the_project[AUTOFILE]])
 
 
@@ -255,10 +258,11 @@ def setOptions():
 
 MenuData = [
     (_('&Start new project'),createProject),
-    ('&Open existing project',openProject),
-    ('&Save project',saveProject),
-    ('&Set current script as AutoFile',setAutoFile),
-    ('&Save and close project',closeProject),
+    (_('&Start legacy project'),createLegacyProject),
+    (_('&Open existing project'),openProject),
+    (_('&Save project'),saveProject),
+    (_('&Set current script as AutoFile'),setAutoFile),
+    (_('&Save and close project'),closeProject),
     ('---',None),
     (_('&Create new script'),createScript),
     (_('&Open existing script'),openScript),
