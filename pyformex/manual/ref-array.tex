@@ -153,6 +153,15 @@ Return a rotation matrix over angle, optionally around axis.
 \end{funcdesc}
 
 
+\begin{funcdesc}{rotMatrix}{v,n=3}
+Create a rotation matrix that rotates axis 0 to the given vector.
+
+    Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
+    
+
+\end{funcdesc}
+
+
 \begin{funcdesc}{growAxis}{a,size,axis=???,fill=0}
 Grow a single array axis to the given size and fill with given value.
 

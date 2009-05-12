@@ -140,6 +140,7 @@ outfile.close()
 ################################
 
 from gui.colorscale import *
+from gui.gluttext import *
 import gui.decors
 
 # Creating a formex for displaying results is fairly easy
@@ -161,10 +162,10 @@ draw(results,color=cval)
 
 bgcolor('lightgreen')
 linewidth(3)
-drawtext('Normal force in the truss members',400,100,'tr24')
+drawtext('Normal force in the truss members',400,100,size=12)
 CL = ColorLegend(CS,100)
-CLA = decors.ColorLegend(CL,10,10,30,200) 
-GD.canvas.addDecoration(CLA)
+#CLA = decors.ColorLegend(CL,10,10,30,200) 
+#GD.canvas.addDecoration(CLA)
 GD.canvas.update()
 
 # and a deformed plot
@@ -173,13 +174,13 @@ dcoords = coords + dscale * displ[:,:,0]
 # first load case
 deformed = Formex(dcoords[elems],range(nelems))
 clear()
-GD.canvas.addDecoration(CLA)
+#GD.canvas.addDecoration(CLA)
 linewidth(1)
 draw(results,color='darkgreen')
 linewidth(3)
 draw(deformed,color=cval)
-drawtext('Normal force in the truss members',400,100,'tr24')
-drawtext('Deformed geometry (scale %.2f)' % dscale,400,130,'tr24')
+drawtext('Normal force in the truss members',400,100,size=14)
+drawtext('Deformed geometry (scale %.2f)' % dscale,400,130,size=12)
 
 
 # End

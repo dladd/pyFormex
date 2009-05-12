@@ -318,8 +318,6 @@ class BezierSpline(Curve):
                 ampl = P.lengths().reshape(-1,1)
                 if not closed:
                     pts = pts[1:-1]
-##                 print deriv.shape
-##                 print curl.shape
                 if not closed:
                     p1 = pts + deriv*curl*ampl[1:]
                     p2 = pts - deriv*curl*ampl[:-1]
@@ -334,18 +332,12 @@ class BezierSpline(Curve):
                 control = concatenate([p1,p2],axis=1).reshape(-1,2,3)
         self.control = Coords(control)
         self.closed = closed
-##         print self.coords.shape
-##         print self.coords
-##         print self.control.shape
-##         print self.control
 
 
     def sub_points(self,t,j):
         j1 = (j+1) % self.coords.shape[0]
         P = self.coords[[j,j1]]
         D = self.control[j]
-##         draw(P,color='red')
-##         draw(D,color='green')
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])

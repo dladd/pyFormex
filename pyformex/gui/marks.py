@@ -27,7 +27,7 @@ from OpenGL import GL,GLU
 from colors import *
 from formex import *
 from gluttext import glutFont,drawGlutText
-from drawable import Drawable
+from drawable import *
 
  
 ### Marks ###############################################
@@ -61,7 +61,9 @@ class TextMark(Mark):
     def drawGL(self,mode=None,color=None):
         GL.glColor3fv(self.color)
         GL.glRasterPos3fv(self.pos)
-        drawGlutText(self.text,self.font)
+        #drawGlutText(self.text,self.font)
+        x,y,z = self.pos
+        GD.canvas.renderText(x,y,z,self.text)
 
 
 class AxesMark(Mark):

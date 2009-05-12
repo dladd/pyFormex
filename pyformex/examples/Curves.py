@@ -37,7 +37,7 @@ techniques = ['solve','widgets','persistence']
 """
 
 def BezierCurve(X,curl=None,closed=False):
-    """Create a Bezier curve between 4 points"""
+    """Create a Bezier curve give 4 points"""
     ns = (X.shape[0]-1) / 3
     ip = 3*arange(ns+1)
     P = X[ip]
@@ -122,6 +122,7 @@ dataset = [
             [2., 4., -1.],[1.,3., 1.], [0., 0., 0.], [0., -3., 0.],
             [2., -1.5, -2.], [1.5, -1.5, 2.], [0., -8., 0.], [-1., -8., -1.],
             [3., -3., 1.]]),
+    Coords([[0., 1., 0.],[0., 0.1, 0.],[0.1, 0., 0.],  [1., 0., 0.]]),
     ]
 
 data_items = [
