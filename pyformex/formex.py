@@ -30,7 +30,7 @@ Therefore, it can also be used as a standalone extension module in Python.
 """
 
 from coords import *
-from utils import deprecated,functionWasRenamed,functionBecameMethod
+from utils import deprecation,deprecated,functionWasRenamed,functionBecameMethod
 
 
 def vectorNormalize(vec):
@@ -425,30 +425,80 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
     return Ft
 
 
-# !! This function still needs to be changed to also return all
-# elements completely at positive side
-def cut2AtPlane(F,p,n):
+def _sane_side(side):
+    # allow some old variants of arguments
+    if type(side) == str:
+        if side.startswith('pos'):
+            side = '+'
+        if side.startswith('neg'):
+            side = '-'
+    if not (side == '+' or side == '-'):
+        side = ''
+    return side
+
+def _select_side(side,alist):
+    # return selected parts dependent on side
+    if side == '+':
+        return alist[0]
+    elif side == '-':
+        return alist[1]
+    else:
+        return alist
+
+
+def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     """Returns all elements of the Formex cut at plane.
 
-    F is a Formex of plexitude 2 and all its segments should cut the
-    plane.
+    F is a Formex of plexitude 2.
     p is a point specified by 3 coordinates.
     n is the normal vector to a plane, specified by 3 components.
 
-    The return value is a Formex with the shape of F where each segment
-    has been replaced by the part of the segment at the positive side of
-    the plane (p,n).
-    """
-    d = F.distanceFromPlane(p,n)
-    g = intersectionPointsWithPlane(F,p,n)
-    i0 = d[:,0] < 0.
-    i1 = d[:,1] < 0.
-    F[i0,0,:] = g[i0].reshape(-1,3)
-    F[i1,1,:] = g[i1].reshape(-1,3)
-    F = F.cclip(i0*i1)
-    return F
+    The return value is:
+    - with side = '+' or '-' or 'positive'or 'negative' :
+    a Formex of the same plexitude with all elements
+    located completely at the positive/negative side of the plane(s) (p,n)
+    retained, all elements lying completely at the negative/positive side
+    removed and the elements intersecting the plane(s) replaced by new
+    elements filling up the parts at the positive/negative side.
+    - with side = '': two Formices of the same plexitude, one representing
+    the positive side and one representing the negative side.
 
-def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
+    To avoid roundoff errors and creation of very small elements,
+    a tolerance can be specified. Points lying within the tolerance
+    distance will be considered lying in the plane, and no cutting near
+    these points.
+    """
+    side = _sane_side(side)
+    dist = F.distanceFromPlane(p,n)
+    if atol is None:
+        atol = 1.e-5*dist.max()
+    above = sum(dist>atol,-1)
+    A = F.clip(above==F.nplex())
+    B = F.clip(above==0)
+    if newprops:
+       A.setProp(newprops[0]) 
+       B.setProp(newprops[1])
+
+    cutting = (above > 0) * (above < F.nplex())
+    if cutting.any():
+        G = F.clip(cutting)
+        H = G.copy()
+        g = intersectionPointsWithPlane(G,p,n)
+        dist = dist[cutting]
+        i0 = dist[:,0] < 0.
+        i1 = dist[:,1] < 0.
+        G[i0,0,:] = H[i0,1,:] = g[i0].reshape(-1,3)
+        G[i1,1,:] = H[i1,0,:] = g[i1].reshape(-1,3)
+        if newprops:
+           G.setProp(newprops[2])
+           H.setProp(newprops[3])
+        A += G
+        B += H
+
+    return _select_side(side,[ A,B ])
+
+
+def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
     """Returns all elements of the Formex cut at plane(s).
 
     F is a Formex of plexitude 3.
@@ -483,6 +533,8 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     5) two vertices with |distance| < atol, one vertex at pos. or neg. side
     6) three vertices with |distance| < atol
     """
+    if atol is None:
+        atol = 1.e-5*F.dsize()
     # make sure we have sane newprops
     if newprops is None:
         newprops = [None,]*7
@@ -494,15 +546,8 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
                     raise
         except:
             newprops = range(7)
-    # allow some old variants of arguments
-    if type(side) == str:
-        if side.startswith('pos'):
-            side = '+'
-        if side.startswith('neg'):
-            side = '-'
-    if not (side == '+' or side == '-'):
-        side = ''
-        
+    side = _sane_side(side)
+       
     p = asarray(p).reshape(-1,3)
     n = asarray(n).reshape(-1,3)
     nplanes = len(p)
@@ -511,6 +556,8 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     F_pos = F.clip(Test) # save elements at positive side of all planes
     if side in '-': # Dirty trick: this also includes side='' !
         F_neg = F.cclip(Test) # save elements completely at negative side of one of the planes
+    else:
+        F_neg = None
     if F_pos.nelems() != 0:
         test = [F_pos.test('all',n[i],p[i],atol=-atol) for i in range(nplanes)] # elements completely at positive side of plane i
         Test = asarray(test).prod(0) # elements completely at positive side of all planes
@@ -546,12 +593,7 @@ def cut3AtPlane(F,p,n,newprops=None,side='',atol=0.):
                     S = R + cut_pos
                 F_pos += S
                 
-    if side == '+':
-        return F_pos
-    elif side == '-':
-        return F_neg
-    else:
-        return [ F_pos, F_neg ]
+    return _select_side(side,[ F_pos, F_neg ])
 
 
 def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
@@ -563,6 +605,9 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
     newprops should be a list of 7 values: each an integer or None
     side is either '+', '-' or ''
     """
+    if atol is None:
+        atol = 1.e-5*F.dsize()
+        
     def get_new_prop(p,ind,newp):
         """Determines the value of the new props for a subset.
 
@@ -1640,6 +1685,9 @@ class Formex(object):
     @coords_transformation
     def projectOnSphere(self,*args,**kargs):
         pass
+    @coords_transformation
+    def projectOnCylinder(self,*args,**kargs):
+        pass
 
     def circulize(self,angle):
         """Transform a linear sector into a circular one.
@@ -1826,21 +1874,46 @@ class Formex(object):
         """
         return Formex(intersectionLinesWithPlane(self,p,n))
 
-    
-    def cutAtPlane(self,p,n,newprops=None,side='+',atol=0.):
-        """Return all elements of a plex-2 or plex-3 Formex cut at plane.
 
-        This is equivalent with the function cut2AtPlane(F,p,n) or
-        cut3AtPlane(F,p,n).
+    def cutWithPlane(self,p,n,side='',atol=None,newprops=None):
+        """Returns all elements of the Formex cut at plane(s).
+
+        This method currently only works for plexitude 2 or 3!
+        
+        F is a Formex of plexitude 2 or 3.
+        p,n are a point and normal vector defining the cutting plane.
+        In case of plexitude 3, p and n can be sequences of points and vector,
+        allowing to cut with multiple planes.
+        Both p and n have shape (3) or (npoints,3).
+
+        The default return value is a tuple of two Formices of the same
+        plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
+        Formex at the positive side of the plane (as defined by the normal
+        vector), and Fneg is the part at the negative side.
+        Elements of the input Formex that are lying completely on one side
+        of the plane will return unaltered. Elements that are crossing the
+        plane will be cut and split up into multiple parts.
+        
+        When with side = '+' or '-' (or 'positive'or 'negative'), only one
+        of the sides is returned.
+
+        The other arguments (atol,newprops) are currently specific for the
+        plexitude. See the cut2AtPlane and cut3AtPlane, which hold the
+        actual implementation of this method.
         """
-        if self.nplex == 1:
-            # THIS NEEDS TO BE IMPLEMENTED
-            return F
+        if atol is None:
+            atol = 1.e-5*self.dsize()
         if self.nplex() == 2:
-            return cut2AtPlane(self,p,n)
+            return cut2AtPlane(self,p,n,side,atol,newprops)
         if self.nplex() == 3:
-            return cut3AtPlane(self,p,n,newprops,side,atol)
+            return cut3AtPlane(self,p,n,side,atol,newprops)
+        # OTHER PLEXITUDES NEED TO BE IMPLEMENTED
         raise ValueError,"Formex should be plex-2 or plex-3"
+
+
+    @deprecation("\nUse cutWithPlane() instead. Check arguments ")
+    def cutAtPlane(self,p,n,newprops=None,side='+',atol=0.):
+        return self.cutWithPlane(p,n,side=side,atol=atol,newprops=newprops)
 
 
 #################### Misc Operations #########################################

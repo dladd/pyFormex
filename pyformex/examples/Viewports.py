@@ -67,7 +67,7 @@ for i,v in enumerate(['front','right','top','iso']):
 
 sleep(nsl)
 viewport(3)
-G = F.cutAtPlane([0.,0.,0.],[-1.,0.,0.],side='+')
+G = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],side='+')
 clear()
 draw(G) # this draws in the 4 viewports !
 GD.GUI.viewports.updateAll()

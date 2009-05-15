@@ -827,7 +827,7 @@ class TriSurface(object):
         elif ftype == 'neu':
             return TriSurface(*read_gambit_neutral(fn))
         elif ftype == 'smesh':
-            return TriSurface(*tetgen.readTriSurface(fn))
+            return TriSurface(*tetgen.readSurface(fn))
         else:
             raise "Unknown TriSurface type, cannot read file %s" % fn
 
@@ -1353,10 +1353,11 @@ Total area: %s; Enclosed volume: %s
         return firstprop + self.partitionByEdgeFront(small_angle)
 
 
-    def cutAtPlane(self,*args,**kargs):
+    def cutWithPlane(self,*args,**kargs):
         """Cut a surface with a plane."""
-        self.__init__(self.toFormex().cutAtPlane(*args,**kargs))
+        self.__init__(self.toFormex().cutWithPlane(*args,**kargs))
 
+    cutAtPlane = cutWithPlane  # DEPRECATED
 
     def connectedElements(self,target,elemlist=None):
         """Return the elements from list connected with target"""

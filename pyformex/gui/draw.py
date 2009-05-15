@@ -312,9 +312,9 @@ def draw(F,
         pass
     elif isinstance(F,tools.Plane):
         pass
-    elif hasattr(F,'asFormex'):
-        F = F.asFormex()
-    # keep this after trying the 'asFormex'
+    elif hasattr(F,'toFormex'):
+        F = F.toFormex()
+    # keep this below trying the 'toFormex' !!!
     elif isinstance(F,coords.Coords):
         F = Formex(F)
     else:

@@ -86,6 +86,7 @@ RELEASE = 2
 LEFT = QtCore.Qt.LeftButton
 MIDDLE = QtCore.Qt.MidButton
 RIGHT = QtCore.Qt.RightButton
+_buttons = [LEFT,MIDDLE,RIGHT]
 
 # modifiers
 NONE = QtCore.Qt.NoModifier
@@ -93,12 +94,16 @@ SHIFT = QtCore.Qt.ShiftModifier
 CTRL = QtCore.Qt.ControlModifier
 ALT = QtCore.Qt.AltModifier
 ALLMODS = SHIFT | CTRL | ALT
-
+_modifiers = [NONE,SHIFT,CTRL,ALT]
+_modifiername = ['NONE','SHIFT','CTRL','ALT'] 
 
 def modifierName(mod):
-    return {NONE:'NONE',SHIFT:'SHIFT',CTRL:'CTRL',ALT:'ALT'}.get(mod,'UNKNOWN')
+    try:
+        return _modifiername[_modifiers.index(mod)]
+    except:
+        return 'UNKNOWN'
 
-
+    
 ############### OpenGL Format #################################
 
 opengl_format = None
@@ -209,7 +214,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setCursorShape('default')
         self.button = None
         self.mod = NONE
-        self.mousefnc = { NONE:{}, SHIFT:{}, CTRL:{}, ALT:{} }
+        self.mousefnc = {}
+        self.mousefncsaved = {}
+        for mod in _modifiers:
+            self.mousefnc[mod] = {}
+            self.mousefncsaved[mod] = {}
+            for button in _buttons:
+                self.mousefnc[mod][button] = None
+                self.mousefncsaved[mod][button] = []
         # Initial mouse funcs are dynamic handling
         # ALT is initially same as NONE and should never be changed
         for mod in (NONE,ALT):
@@ -238,15 +250,43 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             )
        
 
-    def setCursorShape(self,t):
-        if t not in QtCanvas.cursor_shape.keys():
-            t = 'default'
-        self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[t]))
+    def setCursorShape(self,shape):
+        """Set the cursor shape to shape"""
+        if shape not in QtCanvas.cursor_shape.keys():
+            shape = 'default'
+        self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[shape]))
+
+
+    def setCursorShapeFromFunc(self,func):
+        """Set the cursor shape to shape"""
+        if func in [ self.mouse_rectangle_zoom,self.mouse_pick ]:
+            shape = 'pick'
+        else:
+            shape = 'default'
+        self.setCursorShape(shape)
 
 
     def setMouse(self,button,func,mod=NONE):
+        #print button,mod
+        self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
+        self.setCursorShapeFromFunc(func)
+        #print "MOUSE %s" % func
+        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
 
+
+    def resetMouse(self,button,mod=NONE):
+        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+        try:
+            func = self.mousefncsaved[mod][button].pop()
+        except:
+            #print "AAAAAHHH, COULD NOT POP"
+            func = None
+        self.mousefnc[mod][button] = func
+        self.setCursorShapeFromFunc(func)
+        #print "RESETMOUSE %s" % func
+        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+            
 
     def getMouseFunc(self):
         """Return the mouse function bound to self.button and self.mod"""
@@ -254,16 +294,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def start_rectangle_zoom(self):
-        #GD.debug("START RECTANGLE ZOOM")
         self.setMouse(LEFT,self.mouse_rectangle_zoom)
-        self.setCursorShape('pick')
 
  
     def finish_rectangle_zoom(self):
-        #GD.debug("END RECTANGLE ZOOM")
         self.update()
-        self.setCursorShape('default')
-        self.setMouse(LEFT,self.dynarot)
+        self.resetMouse(LEFT)
+
 
     def mouse_rectangle_zoom(self,x,y,action):
         """Process mouse events during interactive picking.
@@ -319,7 +356,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(RIGHT,self.emit_cancel,SHIFT)
             self.connect(self,DONE,self.accept_selection)
             self.connect(self,CANCEL,self.cancel_selection)
-            self.setCursorShape('pick')
+            #self.setCursorShape('pick')
             self.selection_mode = mode
             self.selection_front = None
 
@@ -344,12 +381,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def finish_selection(self):
         """End an interactive picking mode."""
         GD.debug("END SELECTION MODE")
-        self.setCursorShape('default')
-        self.setMouse(LEFT,self.dynarot)
-        self.setMouse(LEFT,None,SHIFT)
-        self.setMouse(LEFT,None,CTRL)
-        self.setMouse(RIGHT,self.dynazoom)
-        self.setMouse(RIGHT,None,SHIFT)
+        #self.setCursorShape('default')
+        self.resetMouse(LEFT)
+        self.resetMouse(LEFT,SHIFT)
+        self.resetMouse(LEFT,CTRL)
+        self.resetMouse(RIGHT)
+        self.resetMouse(RIGHT,SHIFT)
         self.disconnect(self,DONE,self.accept_selection)
         self.disconnect(self,CANCEL,self.cancel_selection)
         self.selection_mode = None
@@ -462,7 +499,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setMouse(RIGHT,self.emit_cancel,SHIFT)
         self.connect(self,DONE,self.accept_drawing)
         self.connect(self,CANCEL,self.cancel_drawing)
-        self.setCursorShape('pick')
+        #self.setCursorShape('pick')
         self.drawing_mode = mode
         self.edit_mode = None
         self.drawing = empty((0,2,2),dtype=int)
@@ -478,10 +515,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def finish_drawing(self):
         """End an interactive drawing mode."""
         GD.debug("END DRAWING MODE")
-        self.setCursorShape('default')
-        self.setMouse(LEFT,self.dynarot)
-        self.setMouse(RIGHT,self.dynazoom)
-        self.setMouse(RIGHT,None,SHIFT)
+        #self.setCursorShape('default')
+        self.resetMouse(LEFT)
+        self.resetMouse(RIGHT)
+        self.resetMouse(RIGHT,SHIFT)
         self.disconnect(self,DONE,self.accept_selection)
         self.disconnect(self,CANCEL,self.cancel_selection)
         self.drawing_mode = None
@@ -665,13 +702,13 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         elif action == MOVE:
             w,h = self.getSize()
             dx,dy = float(self.statex-x)/w, float(self.statey-y)/h
-            if self.state[1] == 'area':
-                dx = sqrt(dx*dx+dy*dy)
-            if not self.state[1] == 'dolly':
+            #if self.state[2] == 'area':
+            #    dx = sqrt(dx*dx+dy*dy)
+            if not self.state[2] == 'dolly':
                 f = exp(4*dx)
                 self.camera.zoomArea(f,area=asarray(self.state[1]).reshape(2,2))
             # vert movement is dolly zooming
-            if not self.state[1] == 'area':
+            if not self.state[2] == 'area':
                 d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
                 self.camera.setDist(d*self.state[0])
             self.update()

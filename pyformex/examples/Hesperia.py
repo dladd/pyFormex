@@ -169,7 +169,7 @@ def createGeometry():
     N = [0.,0.,1.]
 
     newprops = [ 5,6,6,None,4,None,None ]
-    F = F.cutAtPlane(P,N,newprops=newprops,side='+',atol=0.0001)
+    F = F.cutWithPlane(P,N,side='+',newprops=newprops)#,atol=0.0001)
     #clear()
     draw(F)
 

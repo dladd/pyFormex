@@ -73,11 +73,10 @@ G = []
 old = seterr(all='ignore')
 setDrawOptions({'bbox':None})
 for i,p in enumerate(P):
-    F1 = F.cutAtPlane(p,-n)
+    F1,F = F.cutWithPlane(p,-n)
     F1.setProp(i)
     G = [ g.rot(a,around=p) for g in G ] 
     G.append(F1)
-    F = F.cutAtPlane(p,n)
     clear()
     draw(F)
     draw(G)

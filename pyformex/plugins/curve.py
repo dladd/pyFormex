@@ -173,7 +173,7 @@ class PolyLine(Curve):
         self.closed = closed
     
 
-    def asFormex(self):
+    def toFormex(self):
         """Return the polyline as a Formex."""
         x = self.coords
         return connect([x,x],bias=[0,1],loop=self.closed)

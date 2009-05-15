@@ -427,10 +427,6 @@ def connectedLineElems(elems):
     Each row holds the two vertex numbers of a single line segment.
 
     The return value ia a list of (nsegi,2) shaped array of integers. 
-    
-    is returned.
-    Each part is a (nelems,2) shaped array of integers in
-    which the element numbers are ordered.
     """
     parts = []
     while elems.size != 0:

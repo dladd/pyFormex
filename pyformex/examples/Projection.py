@@ -44,12 +44,10 @@ F = simple.rectangle(nx,ny)
 F = F.trl(-F.center()+[0.,0.,nx/2])
 draw(F)
 
-x = F.f.projectOnSphere(ny)
-G = Formex(x)
+G = F.projectOnSphere(ny)
 draw(G,color=red)
 
-x = F.f.rotate(30).projectOnCylinder(ny)
-H = Formex(x)
+H = F.rotate(30).projectOnCylinder(ny)
 draw(H,color=blue)
 
 #End

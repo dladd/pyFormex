@@ -307,16 +307,19 @@ def clipSelection():
             selection.drawChanges()
         
 
-def cutAtPlane():
+def cutSelection():
     """Cut the selection with a plane."""
     FL = selection.check()
-    FLnot = [ F for F in FL if F.nplex() > 3 ]
+    FLnot = [ F for F in FL if F.nplex() not in [2,3] ]
     if FLnot:
-        warning("Currently I can only cut Formices with plexitude <= 3.\nPlease change your selection.")
+        warning("Currently I can only cut Formices with plexitude 2 or 3.\nPlease change your selection.")
         return
     
     dsize = bbox(FL).dsize()
-    esize = 10 ** (niceLogSize(dsize)-5)
+    if dsize > 0.:
+        esize = 10 ** (niceLogSize(dsize)-5)
+    else:
+        esize = 1.e-5
     
     res = askItems([['Point',(0.0,0.0,0.0)],
                     ['Normal',(1.0,0.0,0.0)],
@@ -331,7 +334,7 @@ def cutAtPlane():
         p = res['New props']
         side = res['Side']
         if side == 'both':
-            G = [F.cutAtPlane(P,N,p,side,atol) for F in FL]
+            G = [F.cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL]
             #print G[0][0].p
             draw(G[0])
             G_pos = [ g[0] for g in G ]
@@ -341,7 +344,7 @@ def cutAtPlane():
             selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
             selection.draw()
         else:
-            selection.changeValues([ F.cutAtPlane(P,N,p,side,atol) for F in FL ])
+            selection.changeValues([ F.cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL ])
             selection.drawChanges()
 
 
@@ -472,7 +475,7 @@ def create_menu():
           ]),
         ("&Clip/Cut",
          [("&Clip",clipSelection),
-          ("&Cut at Plane",cutAtPlane),
+          ("&Cut With Plane",cutSelection),
           ]),
         ("&Undo Last Changes",selection.undoChanges),
         ("---",None),

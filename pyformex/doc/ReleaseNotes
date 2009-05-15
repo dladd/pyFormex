@@ -50,6 +50,8 @@ Core
   + Formex transformation preserve the 'eltype' attribute
   + New transformations: mirror, centered, resized
   + Deprecated 'readfile'
+  + cutAtPlane is deprecated in favor of cutWithPlane
+ 
 
 - All script executing functionality is moved to script.py
 - The GUI can now be started from a nongui script

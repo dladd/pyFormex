@@ -527,6 +527,16 @@ def interrogate(item):
         print "DOC:     ", firstline
 
 
+def deprecation(message):
+    def decorator(func):
+        def wrapper(*_args,**_kargs):
+            import warnings
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            return func(*_args,**_kargs)
+        return wrapper
+    return decorator
+    
+
 def deprecated(replacement):
     def decorator(func):
         def wrapper(*_args,**_kargs):

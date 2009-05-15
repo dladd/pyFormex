@@ -60,7 +60,7 @@ pause()
 
 
 say('the horse was badly cut;')
-T = F.cutAtPlane([0.,0.,0.],[-1.,0.,0.])
+T = F.cutWithPlane([0.,0.,0.],[-1.,0.,0.],'+')
 undraw(A)
 A = draw(T)
 pause()

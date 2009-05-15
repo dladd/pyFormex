@@ -655,7 +655,7 @@ def cutAtPlane():
         atol = res['Tolerance']
         selection.remember(True)
         if side == 'both':
-            G = [F.toFormex().cutAtPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
+            G = [F.toFormex().cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL]
             G_pos = []
             G_neg  =[]
             for F in G:
@@ -666,7 +666,7 @@ def cutAtPlane():
             selection.set(['%s/pos' % n for n in selection] + ['%s/neg' % n for n in selection])
             selection.draw()
         else:
-            [F.cutAtPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
+            [F.cutWithPlane(P,N,newprops=p,side=side,atol=atol) for F in FL]
             selection.drawChanges()
 
 
