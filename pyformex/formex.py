@@ -1088,6 +1088,7 @@ class Formex(object):
         equivalence checking of two points.
         The default settting for atol is rtol * self.dsize()
         """
+        from plugins.mesh import Mesh
         if atol is None:
             atol = rtol * self.dsize()
         f = reshape(self.f,(self.nnodes(),3))
@@ -1096,10 +1097,13 @@ class Formex(object):
             f,t = f.fuse(nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
         e = reshape(s,self.f.shape[:2])
-        return f,e
+        return Mesh((f,e))
+
 
     # retained for compatibility
-    feModel = toMesh
+    def feModel(self):
+        m = self.toMesh()
+        return m.coords,m.elems
 
 
 ##############################################################################
@@ -1813,14 +1817,7 @@ class Formex(object):
 
         See the 'connect' function for a more versatile tool.
         """
-        from plugins.mesh import extrudeMesh
-        c,e = self.feModel()
-        xc,xe = extrudeMesh(c,e,n,step,dir)
-        if autofix:
-            eltype = { 6:'wedge6', 8:'hex8' }.get(xe.shape[1],None)
-        else:
-            eltype=None
-        return Formex(xc[xe],eltype=eltype)
+        return self.toMesh().extrude(n,step,dir,autofix=autofix).toFormex()
 
 
 ##############################################################################

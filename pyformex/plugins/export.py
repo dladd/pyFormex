@@ -6,19 +6,6 @@
 """
 
 import pyformex
-
-class Mesh(object):
-    def __init__(self,obj=None):
-        self.coords = None
-        self.elems = None
-        if obj is not None:
-            if hasattr(obj,'toMesh'):
-                self.coords,self.elems = obj.toMesh()
-            else:
-                try:
-                    self.coords,self.elems = obj
-                except:
-                    raise ValueError,"Invalid initialization data"
     
 
 class ObjFile(object):
@@ -27,7 +14,11 @@ class ObjFile(object):
         self.file.write("# .obj file written by %s\n" % pyformex.Version)
 
     def write(self,mesh,name=None):
+        """Write a mesh to file in .obj format.
 
+        mesh is a Mesh instance or another object having compatible
+        coords and elems attributes.
+        """
         if name is not None:
             self.file.write("o %s\n" % str(name))
 

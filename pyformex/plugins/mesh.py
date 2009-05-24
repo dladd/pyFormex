@@ -1,4 +1,4 @@
-# $ Id$
+# $Id$
 ##
 ##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -24,15 +24,115 @@
 
 """mesh.py
 
-A plugin providing some useful meshing functions.
+Definition of the Mesh class for describing discrete geometrical models.
+And some useful meshing functions to create such models.
 """
 
 from numpy import *
 from coords import *
 from formex import *
-from gui import actors
 from simple import line
 from connectivity import reverseUniqueIndex
+
+
+class Mesh(object):
+    """A mesh is a discrete geometrical model consisting of nodes and elements.
+
+    In the Mesh geometrical data model, coordinates of all points are gathered
+    in a single twodimensional array 'coords' with shape (ncoords,3) and the
+    individual geometrical elements are described by indices into the 'coords'
+    array.
+    This model has some advantages over the Formex data model, where all
+    points of all element are stored by their coordinates:
+    - compacter storage, because coordinates of coinciding points do not
+    need to be repeated,
+    - faster connectivity related algorithms.
+    The downside is that geometry generating algorithms are far more complex
+    and possibly slower.
+    
+    In pyFormex we therefore mostly use the Formex data model when creating
+    geometry, but when we come to the point of exporting the geometry to
+    file (and to other programs), a Mesh data model may be more adequate.
+
+    The Mesh data model has at least the following attributes:
+    coords: (ncoords,3) shaped Coords array,
+    elems:  (nelems,nplex) shaped array of int32 indices into coords. All
+                values should be in the range 0 <= value < ncoords.
+    prop: array of element property numbers, default None.
+    nprop: array of node property numbers, default None.
+    eltype: string designing the element type, default None.
+    """
+    
+    def __init__(self,data=None,prop=None,nprop=None,eltype=None):
+        """Create a new Mesh from the specified data.
+
+        data is either a tuple of (coords,elems) arrays, or an object having
+        a 'toMesh()' method, which should return such a tuple.
+        """
+        self.coords = None
+        self.elems = None
+        if data is not None:
+            if hasattr(data,'toMesh'):
+                self.coords,self.elems = data.toMesh()
+            else:
+                try:
+                    self.coords,self.elems = data
+                except:
+                    raise ValueError,"Invalid initialization data"
+        self.prop = prop
+        self.nprop = nprop
+        self.eltype = eltype
+
+
+    def toFormex(self):
+        """Convert a Mesh to a Formex.
+
+        The Formex inherits the element property numbers and eltype from
+        the Mesh. Node property numbers howevere can not be translated to
+        the Formex data model.
+        """
+        return Formex(self.coords[self.elems],prop=self.prop,eltype=self.eltype)
+
+
+    def nelems(self):
+        return self.elems.shape[0]
+    def nplex(self):
+        return self.elems.shape[1]
+    def ncoords(self):
+        return self.coords.shape[0]
+    
+
+    def extrude(self,n,step=1.,dir=0,autofix=True):
+        """Extrude a Mesh in one of the axes directions.
+
+        Returns a new Mesh obtained by extruding the given Mesh
+        over n steps of length step in direction of axis dir.
+        The returned Mesh has double plexitude of the original.
+
+        This function is usually used to extrude points into lines,
+        lines into surfaces and surfaces into volumes.
+        By default it will try to fix the connectivity ordering where
+        appropriate. If autofix is switched off, the connectivities
+        are merely stacked, and the user may have to fix it himself.
+
+        Currently, this function correctly transforms: point1 to line2,
+        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+        """
+        nplex = self.nplex()
+        coord2 = self.coords.translate(dir,n*step)
+        x,e = connectMesh(self.coords,coord2,self.elems,n)
+
+        if autofix and nplex == 2:
+            # fix node ordering for line2 to quad4 extrusions
+            e[:,-nplex:] = e[:,-1:-(nplex+1):-1].copy()
+
+        if autofix:
+            eltype = { 6:'wedge6', 8:'hex8' }.get(e.shape[1],None)
+        else:
+            eltype = None
+
+        return Mesh((x,e),eltype=eltype)
+
 
 def createWedgeElements(S1,S2,div=1):
     """Create wedge elements between to triangulated surfaces.
@@ -95,9 +195,9 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
     
     if a1 != None:
         if a1 == 'last':
-            nodes1 = nodes.rotate(actors.rotMatrix(path[0,1]-path[0,0])).translate(path[0,0])
+            nodes1 = nodes.rotate(rotMatrix(path[0,1]-path[0,0])).translate(path[0,0])
         else:
-            nodes1 = nodes.rotate(actors.rotMatrix(a1)).translate(path[0,0])
+            nodes1 = nodes.rotate(rotMatrix(a1)).translate(path[0,0])
     else:
         nodes1 = Formex([[[0.,0.,0.]]])
     
@@ -105,15 +205,15 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
         r1 = vectorNormalize(path[i+1,1]-path[i+1,0])[1][0]
         r2 = vectorNormalize(path[i,1]-path[i,0])[1][0]
         r = r1+r2
-        nodes1 += nodes.rotate(angle,0).scale(scale).rotate(actors.rotMatrix(r)).translate(path[i+1,0])
+        nodes1 += nodes.rotate(angle,0).scale(scale).rotate(rotMatrix(r)).translate(path[i+1,0])
         scale = scale+sc
         angle = angle+a
 
     if a2 != None:    
         if a2 == 'last':
-            nodes1 += nodes.rotate(angle,0).scale(scale).rotate(actors.rotMatrix(path[s-1,1]-path[s-1,0])).translate(path[s-1,1])
+            nodes1 += nodes.rotate(angle,0).scale(scale).rotate(rotMatrix(path[s-1,1]-path[s-1,0])).translate(path[s-1,1])
         else:
-            nodes1 += nodes.rotate(angle,0).scale(scale).rotate(actors.rotMatrix(a2)).translate(path[s-1,1])
+            nodes1 += nodes.rotate(angle,0).scale(scale).rotate(rotMatrix(a2)).translate(path[s-1,1])
     
     if a1 == None:
         nodes1 = nodes1[1:]
@@ -166,32 +266,6 @@ def connectMesh(coords1,coords2,elems,n=1,n1=None,n2=None):
     e2 = elems[:,n2] + nnod
     et = concatenate([e1,e2],axis=-1)
     e = concatenate([et+i*nnod for i in range(n)])
-    return x,e
-
-
-def extrudeMesh(coords,elems,n,step=1.,dir=0,autofix=True):
-    """Extrude a mesh in one of the axes directions.
-
-    Returns a hypermesh obtained by extruding the given mesh (coords,elems)
-    over n steps of length step in direction of axis dir.
-    The returned mesh has double plexitude of the original.
-
-    This function is usually used to points into lines, lines into surfaces
-    and surfaces into volumes. By default it will try to fix the connectivity
-    ordering where appropriate. It autofix is switched off, the connectivities
-    are merely stacked, and the user may have to fix it himself.
-
-    Currently, this function correctly transforms: point1 to line2,
-    line2 to quad4, tri3 to wedge6, quad4 to hex8.
-    """
-    nplex = elems.shape[1]
-    coord2 = coords.translate(dir,n*step)
-    x,e = connectMesh(coords,coord2,elems,n)
-    
-    if autofix and nplex == 2:
-        # fix node ordering for line2 to quad4 extrusions
-        e[:,-nplex:] = e[:,-1:-(nplex+1):-1].copy()
-
     return x,e
 
 
