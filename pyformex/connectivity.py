@@ -238,6 +238,8 @@ def reverseIndex(index,maxcon=3):
     mult is the highest possible multiplicity of any number in a single
     column of index.
     """
+    if len(index.shape) != 2:
+        raise ValueError,"Index should be an integer array with dimension 2"
     nr,nc = index.shape
     mr = index.max() + 1
     mc = maxcon*nc

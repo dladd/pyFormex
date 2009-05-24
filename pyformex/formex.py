@@ -1068,7 +1068,7 @@ class Formex(object):
 
     # Data conversion
     
-    def feModel(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
+    def toMesh(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -1097,6 +1097,9 @@ class Formex(object):
             s = t[s]
         e = reshape(s,self.f.shape[:2])
         return f,e
+
+    # retained for compatibility
+    feModel = toMesh
 
 
 ##############################################################################
@@ -1947,7 +1950,7 @@ class Formex(object):
         isname = type(fil) == str
         if isname:
             fil = file(fil,'w')
-        fil.write("# Formex File Format 1.0 (http://pyformex.berlios.de)\n")
+        fil.write("# Formex File Format 1.0 (http://pyformex.org)\n")
         nelems,nplex = self.f.shape[:2]
         hasp = self.p is not None
         fil.write("# nelems=%r; nplex=%r; props=%r; eltype=%r\n" % (nelems,nplex,hasp,self.eltype))

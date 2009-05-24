@@ -791,11 +791,13 @@ class TriSurface(object):
     
     # Data conversion
     
-    def feModel(self):
+    def toMesh(self):
         """Return a tuple of nodal coordinates and element connectivity."""
         self.refresh()
         return self.coords,self.elems
 
+    # retained for compatibility
+    feModel = toMesh
 
     @classmethod
     def read(clas,fn,ftype=None):

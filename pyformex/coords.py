@@ -961,10 +961,11 @@ class Coords(ndarray):
         # make sure we use int32 (for the fast fuse function)
         # Using int32 limits this procedure to 10**9 points, which is more
         # than enough for all practical purposes
+        x = x.astype(float32)
         val = val.astype(int32)
         flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
         sel = arange(nnod).astype(int32)   # replacement unique node nr
-        tol = max(abs(rtol*self.sizes()).max(),atol)
+        tol = float32(max(abs(rtol*self.sizes()).max(),atol))
         if hasattr(misc,'fuse'):
             # use the lib
             misc.fuse(x,val,flag,sel,tol)
@@ -987,15 +988,15 @@ class Coords(ndarray):
 
 
     @classmethod
-    def concatenate(cls,L):
+    def concatenate(cls,L,**kargs):
         """Concatenate a list of Coords object.
 
         All Coords object in the list L should have the same shape
         except for the length of the first axis.
         This function is equivalent to the numpy concatenate, but makes
-        sure the result is a Cooords object.
+        sure the result is a Coords object.
         """
-        return Coords(concatenate(L))
+        return Coords(concatenate(L,axis=0,**kargs))
 
 
     @classmethod
