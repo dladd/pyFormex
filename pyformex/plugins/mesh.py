@@ -100,6 +100,9 @@ class Mesh(object):
         return self.elems.shape[1]
     def ncoords(self):
         return self.coords.shape[0]
+    npoints = ncoords
+    def shape():
+        return self.elems.shape
     
 
     def extrude(self,n,step=1.,dir=0,autofix=True):
