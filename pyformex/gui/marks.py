@@ -106,12 +106,15 @@ class MarkList(Mark):
         self.color = color
         self.font = getFont(font,size)
 
-    def drawGL(self,mode=None,color=None):
+
+    def draw(self,mode=None,color=None):
         if self.color:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
             GL.glRasterPos3fv(p)
-            drawGlutText(str(v),self.font)
+            #drawGlutText(str(v),self.font)
+            x,y,z = p
+            GD.canvas.renderText(x,y,z,str(v))
 
 
     def drawpick(self):
@@ -122,7 +125,7 @@ class MarkList(Mark):
         for p,v in zip(self.pos,self.val):
             GL.glPushName(v)
             GL.glRasterPos3fv(p)
-            drawGlutText(str(v),self.font)
+            #drawGlutText(str(v),self.font)
             GL.glPopName()
         buf = GL.glRenderMode(GL.GL_RENDER)
         numbers =[]

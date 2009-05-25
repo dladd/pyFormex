@@ -86,6 +86,7 @@ class AnalogClock(object):
         """Draw the hands showing the current time."""
         now = datetime.now()
         self.drawTime(now.hour,now.minute,now.second)
+        breakpt("The clock has been stopped!")
 
 
     def run(self,granularity=1,runtime=100):
@@ -103,6 +104,7 @@ class AnalogClock(object):
         
     def stop(self):
         """Stop a running clock."""
+        print "STOP"
         if self.timer:
             self.timer.stop()
 
@@ -114,8 +116,15 @@ if __name__ == "draw":
     setDrawOptions({'bbox':None})
     C.drawNow()
 
+    def stopClock():
+        C.stop()
+        
     if ack("Shall I start the clock?"):
         C.run()
-        warning("Please wait until the clock stops running")
+        ## res = askItems([('Runtime (in seconds)',100)])
+        ## if res:
+        ##     time = res['Runtime (in seconds)']
+        ##     C.run(runtime=time)
+        ##     warning("Please wait until the clock stops running.")
 
 

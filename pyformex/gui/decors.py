@@ -114,7 +114,6 @@ class QText(Decoration):
     # therefore we redefine draw(), not drawGL()
     def draw(self,mode='wireframe',color=None):
         """Draw the text."""
-        print "DRAWING TEXT %s" % self.text
         if self.color is not None:
             GL.glColor3fv(self.color)
         GD.canvas.renderText(self.x,GD.canvas.height()-self.y,self.text,self.font)

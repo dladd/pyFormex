@@ -1101,8 +1101,8 @@ class Formex(object):
 
 
     # retained for compatibility
-    def feModel(self):
-        m = self.toMesh()
+    def feModel(self,**kargs):
+        m = self.toMesh(**kargs)
         return m.coords,m.elems
 
 

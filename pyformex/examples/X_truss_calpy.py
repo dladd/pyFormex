@@ -140,7 +140,6 @@ outfile.close()
 ################################
 
 from gui.colorscale import *
-from gui.gluttext import *
 import gui.decors
 
 # Creating a formex for displaying results is fairly easy
