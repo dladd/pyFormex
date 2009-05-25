@@ -177,40 +177,29 @@ if GD.options.gui:
     from gui.colorscale import *
     import gui.decors
 
-    # Creating a formex for displaying results is fairly easy
-    results = Formex(nodes[elems],range(nelems))
-    # Now give the formex some meaningful colors.
-    # The frc array returns element forces and has shape
-    #  (nelems,nforcevalues,nloadcases)
-    # In this case there is only one resultant force per element (the
-    # normal force), and only load case; we still need to select the
-    # scalar element result values from the array into a onedimensional
-    # vector val. 
-    val = frc[:,0,0]
-    # create a colorscale
-    CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
-    cval = array(map(CS.color,val))
-    #aprint(cval,header=['Red','Green','Blue'])
-    clear()
-    linewidth(3)
-    draw(results,color=cval)
-    drawtext('Normal force in the truss members',150,20,'tr24')
-    CL = ColorLegend(CS,100)
-    CLA = decors.ColorLegend(CL,10,10,30,200) 
-    GD.canvas.addDecoration(CLA)
-    GD.canvas.update()
-
-
-    clear()
-    linewidth(1)
-    draw(F,color=black)
-    linewidth(3)
-
-    siz0 = F.sizes()
-    dF = Formex(displ[:,:,0][elems])
-    #clear(); draw(dF,color=black)
-    siz1 = dF.sizes()
-    optimscale = niceNumber(1./(siz1/siz0).max())
+    def showForces():
+        # Creating a formex for displaying results is fairly easy
+        results = Formex(nodes[elems],range(nelems))
+        # Now give the formex some meaningful colors.
+        # The frc array returns element forces and has shape
+        #  (nelems,nforcevalues,nloadcases)
+        # In this case there is only one resultant force per element (the
+        # normal force), and only load case; we still need to select the
+        # scalar element result values from the array into a onedimensional
+        # vector val. 
+        val = frc[:,0,0]
+        # create a colorscale
+        CS = ColorScale([blue,yellow,red],val.min(),val.max(),0.,2.,2.)
+        cval = array(map(CS.color,val))
+        #aprint(cval,header=['Red','Green','Blue'])
+        clear()
+        linewidth(3)
+        draw(results,color=cval)
+        drawtext('Normal force in the truss members',150,20,'tr24')
+        CL = ColorLegend(CS,100)
+        CLA = decors.ColorLegend(CL,10,10,30,200) 
+        GD.canvas.addDecoration(CLA)
+        GD.canvas.update()
 
 
     # Show a deformed plot
@@ -239,31 +228,55 @@ if GD.options.gui:
                 TA,FA = T,F
                 sleep(sleeptime)
 
+    def getOptimscale():
+        """Determine an optimal scale for displaying the deformation"""
+        siz0 = F.sizes()
+        dF = Formex(displ[:,:,0][elems])
+        #clear(); draw(dF,color=black)
+        siz1 = dF.sizes()
+        return niceNumber(1./(siz1/siz0).max())
 
-    # Show a deformed plot
-    linewidth(2)
-    #print optimscale
-    deformed_plot(optimscale)
-    view('__last__',True)
 
-    # Show animated deformation
-    scale = optimscale
-    nframes = 10
-    form = 'revert'
-    duration = 5./nframes
-    ncycles = 2
-    while ack('Show an animated deformation plot?'):
+    def showDeformation():
+        clear()
+        linewidth(1)
+        draw(F,color=black)
+        linewidth(3)
+        deformed_plot(optimscale)
+        view('__last__',True)
+
+
+    def showAnimatedDeformation():
+
+        # Show animated deformation
+        scale = optimscale
+        nframes = 10
+        form = 'revert'
+        duration = 5./nframes
+        ncycles = 2
         items = [ ['scale',scale], ['nframes',nframes],
                   ['form',form],
                   ['duration',duration], ['ncycles',ncycles] ]
         res = askItems(items,'Animation Parameters')
-        scale = float(res['scale'])
-        nframes = int(res['nframes'])
-        duration = float(res['duration'])
-        ncycles = int(res['ncycles'])
-        form = res['form']
-        if form in [ 'up', 'updown', 'revert' ]:
-            amp = scale * frameScale(nframes,form)
-            animate_deformed_plot(amp,duration,ncycles)
-            
+        if res:
+            scale = float(res['scale'])
+            nframes = int(res['nframes'])
+            duration = float(res['duration'])
+            ncycles = int(res['ncycles'])
+            form = res['form']
+            if form in [ 'up', 'updown', 'revert' ]:
+                amp = scale * frameScale(nframes,form)
+                animate_deformed_plot(amp,duration,ncycles)
+
+
+    optimscale = getOptimscale()
+    options = ['Cancel','Member forces','Deformation','Animated deformation']
+    functions = [None,showForces,showDeformation,showAnimatedDeformation]
+    while True:
+        ans = ask("Which results do you want to see?",options)
+        ind = options.index(ans)
+        if ind == 0:
+            break
+        functions[ind]()
+        
 # End

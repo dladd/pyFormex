@@ -26,9 +26,8 @@
 from OpenGL import GL,GLU
 from colors import *
 from formex import *
-from gluttext import glutFont,drawGlutText
 from drawable import *
-
+from text import *
  
 ### Marks ###############################################
 
@@ -48,20 +47,20 @@ class Mark(Drawable):
 class TextMark(Mark):
     """A text drawn at a 3D position."""
     
-    def __init__(self,pos,text,color=None,font=None):
+    def __init__(self,pos,text,color=None,font=None,size=None):
         Mark.__init__(self,pos)
         self.text = text
         if color is None:
             color = black
         self.color = color
-        if font is None:
-            font = '9x15'
-        self.font = glutFont(font)
+        self.font = getFont(font,size)
 
     def drawGL(self,mode=None,color=None):
         GL.glColor3fv(self.color)
         GL.glRasterPos3fv(self.pos)
-        #drawGlutText(self.text,self.font)
+
+    def use_list(self):
+        Mark.use_list(self)
         x,y,z = self.pos
         GD.canvas.renderText(x,y,z,self.text)
 
@@ -90,7 +89,7 @@ class AxesMark(Mark):
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
-    def __init__(self,pos,val,color=black,font='9x15'):
+    def __init__(self,pos,val,color=black,font=None,size=None):
         """Create a number list.
 
         pos is an (N,3) array of positions.
@@ -105,7 +104,7 @@ class MarkList(Mark):
         Mark.__init__(self,pos)
         self.val = val
         self.color = color
-        self.font = glutFont(font)
+        self.font = getFont(font,size)
 
     def drawGL(self,mode=None,color=None):
         if self.color:

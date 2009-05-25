@@ -202,6 +202,7 @@ if GD.options.gui:
     CLA = decors.ColorLegend(CL,10,10,30,200) 
     GD.canvas.addDecoration(CLA)
     GD.canvas.update()
+    pause()
 
     # and a deformed plot on multiple scales
     dscales = arange(1,6) * 1.0

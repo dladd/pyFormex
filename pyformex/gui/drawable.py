@@ -743,7 +743,7 @@ class Drawable(object):
     def draw(self,**kargs):
         if self.list is None:
             self.create_list(**kargs)
-        GL.glCallList(self.list)
+        self.use_list()
 
     def redraw(self,**kargs):
         self.delete_list()

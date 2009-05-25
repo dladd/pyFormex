@@ -24,11 +24,11 @@
 """2D decorations for the OpenGL canvas."""
 
 from OpenGL import GL
-from PyQt4 import QtGui,QtOpenGL
+from PyQt4 import QtOpenGL
 
 from drawable import *
+from text import *
 from actors import Actor
-#from gluttext import glutFontHeight
 
 import colors
 
@@ -106,40 +106,37 @@ class QText(Decoration):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
-        if font is None:
-            font = GD.GUI.font()
-        else:
-            font = QtGui.QFont(font)
-        if size is not None:
-            font.setPointSize(size)
-        self.font = font
         self.adjust = adjust
+        self.font = getFont(font,size)
         self.color = saneColor(color)
 
-    # QT text color does nmot seem to work good with
-    # display lists, therefore we redefine draw(), not drawGL()
+    # QT text color does not seem to work good with display lists,
+    # therefore we redefine draw(), not drawGL()
     def draw(self,mode='wireframe',color=None):
         """Draw the text."""
+        print "DRAWING TEXT %s" % self.text
         if self.color is not None:
             GL.glColor3fv(self.color)
         GD.canvas.renderText(self.x,GD.canvas.height()-self.y,self.text,self.font)
 
 Text = QText
 
+
 class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorlegend,x,y,w,h,font='9x15',dec=2,scale=0):
+    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0):
         Decoration.__init__(self,x,y)
         self.cl = colorlegend
         self.w = int(w)
         self.h = int(h)
         self.xgap = 4  # hor. gap between colors and labels 
         self.ygap = 4  # vert. gap between labels
-        self.font = font
+        self.font = getFont(font,size)
         self.dec = dec   # number of decimals
         self.scale = 10 ** scale # scale all numbers with 10**scale
 
     def drawGL(self,mode='wireframe',color=None):
+        from draw import drawText
         n = len(self.cl.colors)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
@@ -147,23 +144,36 @@ class ColorLegend(Decoration):
         dy = float(self.h)/n
         # colors
         y1 = y0
+        GD.debug("START COLORS AT %s" % y0)
+        GL.glLineWidth(1.5)
         for i,c in enumerate(self.cl.colors):
-            #print c
             y2 = y0 + (i+1)*dy
             GL.glColor3f(*c)
             GL.glRectf(x1,y1,x2,y2)   
             y1 = y2
         # values
         x1 = x2 + self.xgap
-        fh = glutFontHeight(self.font)
+        fh = fontHeight(self.font)
+        GD.debug("FONT HEIGHT %s" % fh)
         dh = fh + self.ygap # vert. distance between successive labels
-        y0 -= dh/2
+        y0 -= 0.25*fh  # 0.5*fh seems more logic, but character pos is biased
+        GD.debug("FIRST TEXT AT %s" % y0)
         GL.glColor3f(*colors.black)
+        self.decorations = []
         for i,v in enumerate(self.cl.limits):
             y2 = y0 + i*dy
+            GD.debug("next y = %s" % y2)
             if y2 >= y1 or i == 0:
-                drawText2D(("%%.%df" % self.dec) % (v*self.scale),x1,y2)   
+                GD.debug("drawing at %s" % y2)
+                t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2)
+                self.decorations.append(t)
                 y1 = y2 + dh
+
+    def use_list(self):
+        Decoration.use_list(self)
+        for TA in self.decorations:
+            if TA not in GD.canvas.decorations:
+                GD.canvas.addDecoration(TA)
 
 
 class Grid(Decoration):

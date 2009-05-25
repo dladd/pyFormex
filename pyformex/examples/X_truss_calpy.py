@@ -164,8 +164,8 @@ bgcolor('lightgreen')
 linewidth(3)
 drawtext('Normal force in the truss members',400,100,size=12)
 CL = ColorLegend(CS,100)
-#CLA = decors.ColorLegend(CL,10,10,30,200) 
-#GD.canvas.addDecoration(CLA)
+CLA = decors.ColorLegend(CL,10,10,30,200) 
+GD.canvas.addDecoration(CLA)
 GD.canvas.update()
 
 # and a deformed plot
@@ -174,7 +174,7 @@ dcoords = coords + dscale * displ[:,:,0]
 # first load case
 deformed = Formex(dcoords[elems],range(nelems))
 clear()
-#GD.canvas.addDecoration(CLA)
+GD.canvas.addDecoration(CLA)
 linewidth(1)
 draw(results,color='darkgreen')
 linewidth(3)

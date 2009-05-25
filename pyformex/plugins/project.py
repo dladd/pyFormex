@@ -36,7 +36,7 @@ _signature_ = 'project'
 class Project(dict):
     """A pyFormex project is a persistent storage of pyFormex objects."""
 
-    def __init__(self,filename,create=False,compressed=False,signature=_signature_,legacy=False):
+    def __init__(self,filename,create=False,compressed=False,signature=_signature_,binary=False,legacy=False):
         """Create a new project with the given filename.
 
         If the filename exists and create is False, the file is opened and
@@ -50,6 +50,7 @@ class Project(dict):
         self.filename = filename
         self.compressed = compressed
         self.signature = signature
+        self.binary = binary
         self.legacy = legacy
         if create or not os.path.exists(filename):
             self.save()
@@ -57,7 +58,7 @@ class Project(dict):
             self.load()
 
 
-    def save(self,filename=None,compressed=None,signature=None):
+    def save(self,filename=None,compressed=None,signature=None,binary=None):
         """Save the project to file."""
         if filename is None:
             filename = self.filename
@@ -65,8 +66,9 @@ class Project(dict):
             compressed = self.compressed
         if signature is None:
             signature = self.signature
+        if binary is None:
+            binary = self.binary
 
-        print self.compressed,compressed
         f = file(filename,'wb')
         if compressed:
             if not type(compressed) is int and compressed in range(1,10):
@@ -84,7 +86,7 @@ class Project(dict):
         f.close()
 
 
-    def load(self,filename=None,compressed=None,signature=None):
+    def load(self,filename=None,compressed=None,signature=None,binary=None):
         """Load a project from file.
         
         The loaded definition will update the current project.
@@ -95,6 +97,8 @@ class Project(dict):
             compressed = self.compressed
         if signature is None:
             signature = self.signature
+        if binary is None:
+            binary = self.binary
 
         f = file(filename,'rb')
         s = f.readline()
