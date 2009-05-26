@@ -1068,7 +1068,7 @@ class Formex(object):
 
     # Data conversion
     
-    def toMesh(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
+    def fuse(self,nodesperbox=1,repeat=True,rtol=1.e-5,atol=None):
         """Return a tuple of nodal coordinates and element connectivity.
 
         A tuple of two arrays is returned. The first is float array with
@@ -1088,7 +1088,6 @@ class Formex(object):
         equivalence checking of two points.
         The default settting for atol is rtol * self.dsize()
         """
-        from plugins.mesh import Mesh
         if atol is None:
             atol = rtol * self.dsize()
         f = reshape(self.f,(self.nnodes(),3))
@@ -1097,13 +1096,16 @@ class Formex(object):
             f,t = f.fuse(nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
         e = reshape(s,self.f.shape[:2])
-        return Mesh((f,e))
+        return f,e
 
+
+    def toMesh(self):
+        from plugins.mesh import Mesh
+        x,e = self.fuse()
+        return Mesh(x,e,eltype=self.eltype)
 
     # retained for compatibility
-    def feModel(self,**kargs):
-        m = self.toMesh(**kargs)
-        return m.coords,m.elems
+    feModel = fuse
 
 
 ##############################################################################
@@ -2001,10 +2003,6 @@ class Formex(object):
     # New users should avoid these functions!
     # They may (will) be removed in future.
 
-# removed in 0.7.4
-##     @deprecated(dsize)
-##     def size(self):
-##         pass
 
     @functionWasRenamed(reverse)
     def reverseElements(self):
@@ -2014,22 +2012,11 @@ class Formex(object):
     def data(self):
         pass
 
-    @deprecated(points)
-    def nodes(self):
-        pass
-
     @deprecated(test)
     def where(self,*args,**kargs):
         pass
 
-    @deprecated(feModel)
-    def nodesAndElements(self):
-        pass
-
-    @deprecated(setProp)
-    def removeProp(self):
-        pass
-    
+    @deprecated("Use Formex.spherical instead")
     def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
         """Same as spherical, but using colatitude."""
         return self.spherical([dir[1],dir[2],dir[0]],[scale[1],scale[2],scale[0]],colat=True)
@@ -2254,57 +2241,10 @@ def interpolate(F,G,div,swap=False):
     r = Coords.interpolate(F.f,G.f,div)
     # r is a 4-dim array
     if swap:
-##         r = r.reshape((len(div),) + F.f.shape)
-##         print r.shape
         r = r.swapaxes(0,1)
-##         print "SWAP"
-##         print r.shape
-##     else:
-##         #r = r.reshape((-1,)+shape)
-##         print r.shape
     return Formex(r.reshape((-1,) + r.shape[-2:]))
     
 
-# THe following function should be removed
-def readfile(file,sep=',',plexitude=1,dimension=3):
-    """Read a Formex from file.
-
-    This convenience function uses the numpy fromfile function to read
-    the coordinates of a Formex from file. 
-    Args:
-      file: either an open file object or a string with the file name.
-      sep: the separator string between subsequent coordinates.
-           There can be extra blanks around the separator, and the separator
-           may be omitted at the end of line.
-           If an empty string is specified, the file is read in binary mode.
-      dimension: the number of coordinates that make up a point (1,2 or 3).
-      plexitude: the number of points that make up an element of the Formex.
-                 The default is to return a plex-1 Formex (unconnected points).
-      closed: If True, an extra point will be added to the
-    The total number of coordinates on the file should be a multiple of
-    dimension * plexitude.
-    """
-    print "DEPRECATED!: use Formex.read() instead"
-    return Formex(fromfile(file,sep=sep).reshape((-1,plexitude,dimension)))
-
-
-############### DEPRECATED FUNCTIONS ##################
-
-@functionBecameMethod('divide')
-def divide(F,div):
-    pass
-
-@functionBecameMethod('distanceFromPlane')
-def distanceFromPlane(F,p,n):
-    pass
-
-@functionBecameMethod('distanceFromLine')
-def distanceFromLine(F,p,n):
-    pass
-
-@functionBecameMethod('distanceFromPoint')
-def distanceFromPoint(F,p):
-    pass
 
 ##############################################################################
 #

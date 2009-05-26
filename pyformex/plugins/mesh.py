@@ -31,8 +31,63 @@ And some useful meshing functions to create such models.
 from numpy import *
 from coords import *
 from formex import *
+from connectivity import *
 from simple import line
-from connectivity import reverseUniqueIndex
+from plugins.fe import mergeModels
+from utils import deprecation
+
+# Should be made a Coords method
+def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,avgdir=False,enddir=None):
+    """ Sweep a Coords object along a path, returning a series of copies.
+
+    origin and normal define the local path position and direction on the mesh.
+    
+    At each point of the curve, a copy of the Coords object is created, with
+    its origin in the curve's point, and its normal along the curve's direction.
+    In case of a PolyLine, directions are pointing to the next point by default.
+    If avgdir==True, average directions are taken at the intermediate points.
+    Missing end directions can explicitely be set by enddir, and are by default
+    taken along the last segment.
+    If the curve is closed, endpoints are treated as any intermediate point,
+    and the user should normally not specify enddir. 
+
+    The return value is a sequence of the transformed Coords objects.
+    """
+    points = path.coords
+    if avgdir:
+        directions = path.avgDirections()
+    else:
+         directions = path.directions()
+
+    missing = points.shape[0] - directions.shape[0]
+    if missing == 1:
+        lastdir = (points[-1] - points[-2]).reshape(1,3)
+        directions = concatenate([directions,lastdir],axis=0)
+    elif missing == 2:
+        lastdir = (points[-1] - points[-2]).reshape(1,3)
+        firstdir = (points[1] - points[0]).reshape(1,3)
+        directions = concatenate([firstdir,directions,lastdir],axis=0)
+
+    if enddir:
+        for i,j in enumerate([0,-1]):
+            if enddir[i]:
+                directions[j] = Coords(enddir[i])
+
+    directions = normalize(directions)
+
+    if type(normal) is int:
+        normal = unitVector(normal)
+    normal = Coords(resize(normal,directions.shape))
+    normal = normalize(normal)
+    angles,normals = vectorPairAreaNormals(directions,normal)
+    w = where(angles==0.0)[0]
+    normals[w] = [0.,0.,1.]
+    angles = arcsin(angles)/rad
+    
+    base = self.translate(-Coords(origin))
+    sequence = [ base.rotate(a,v).translate(p) for a,v,p in zip(angles,normals,points) ]
+
+    return sequence
 
 
 class Mesh(object):
@@ -63,7 +118,7 @@ class Mesh(object):
     eltype: string designing the element type, default None.
     """
     
-    def __init__(self,data=None,prop=None,nprop=None,eltype=None):
+    def __init__(self,coords=None,elems=None,prop=None,nprop=None,eltype=None):
         """Create a new Mesh from the specified data.
 
         data is either a tuple of (coords,elems) arrays, or an object having
@@ -71,28 +126,46 @@ class Mesh(object):
         """
         self.coords = None
         self.elems = None
-        if data is not None:
-            if hasattr(data,'toMesh'):
-                self.coords,self.elems = data.toMesh()
-            else:
-                try:
-                    self.coords,self.elems = data
-                except:
-                    raise ValueError,"Invalid initialization data"
         self.prop = prop
         self.nprop = nprop
         self.eltype = eltype
+
+        if elems is None:
+            if hasattr(coords,'toMesh'):
+                # initialize from a single object
+                coords,elems = coords.toMesh()
+            elif type(coords) is tuple:
+                coords,elems = coords
+
+        try:
+            self.coords = Coords(coords)
+            self.elems = Connectivity(elems)
+            if coords.ndim != 2 or coords.shape[-1] != 3 or elems.ndim != 2 or \
+                   elems.max() >= coords.shape[0] or elems.min() < 0:
+                raise ValueError,"Invalid mesh data"
+
+        except:
+            raise ValueError,"Invalid initialization data"
+
+
+    def copy(self):
+        """Return a copy using the same data arrays"""
+        return Mesh(self.coords,self.elems,self.prop,self.nprop,self.eltype)
 
 
     def toFormex(self):
         """Convert a Mesh to a Formex.
 
         The Formex inherits the element property numbers and eltype from
-        the Mesh. Node property numbers howevere can not be translated to
+        the Mesh. Node property numbers however can not be translated to
         the Formex data model.
         """
-        return Formex(self.coords[self.elems],prop=self.prop,eltype=self.eltype)
+        return Formex(self.coords[self.elems],self.prop,eltype=self.eltype)
 
+
+    def data(self):
+        """Return the mesh data as a tuple (coords,elems)"""
+        return self.coords,self.elems
 
     def nelems(self):
         return self.elems.shape[0]
@@ -101,9 +174,20 @@ class Mesh(object):
     def ncoords(self):
         return self.coords.shape[0]
     npoints = ncoords
-    def shape():
+    def shape(self):
         return self.elems.shape
-    
+
+
+    def compact(self):
+        """Renumber the mesh and remove unconnected nodes."""
+        nodes = unique1d(self.elems)
+        if nodes[-1] >= nodes.size:
+            coords = self.coords[nodes]
+            elems = reverseUniqueIndex(nodes)[self.elems]
+            return Mesh(coords,elems,eltype=self.eltype)
+        else:
+            return self
+
 
     def extrude(self,n,step=1.,dir=0,autofix=True):
         """Extrude a Mesh in one of the axes directions.
@@ -123,20 +207,86 @@ class Mesh(object):
         """
         nplex = self.nplex()
         coord2 = self.coords.translate(dir,n*step)
-        x,e = connectMesh(self.coords,coord2,self.elems,n)
+        M = connectMesh(self,Mesh(coord2,self.elems),n)
 
         if autofix and nplex == 2:
             # fix node ordering for line2 to quad4 extrusions
-            e[:,-nplex:] = e[:,-1:-(nplex+1):-1].copy()
+            M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
 
         if autofix:
-            eltype = { 6:'wedge6', 8:'hex8' }.get(e.shape[1],None)
+            M.eltype = { 6:'wedge6', 8:'hex8' }.get(M.nplex(),None)
         else:
-            eltype = None
+            M.eltype = None
 
-        return Mesh((x,e),eltype=eltype)
+        return M
 
 
+    def sweep(self,path,eltype=None,**kargs):
+        """Sweep a mesh along a path, creating an extrusion"""
+        seq = sweepCoords(self.coords,path,**kargs)
+        ML = [ Mesh(x,self.elems) for x in seq ]
+        return connectMeshSequence(ML,eltype=eltype)
+
+
+    @classmethod
+    def concatenate(clas,ML):
+        """Concatenate a list of meshes of the same plexitude and eltype"""
+        if len(set([ m.nplex() for m in ML ])) > 1 or len(set([ m.eltype for m in ML ])) > 1:
+            raise ValueError,"Meshes are not of same type/plexitude"
+
+        coords,elems = mergeModels([(m.coords,m.elems) for m in ML])
+        elems = concatenate(elems,axis=0)
+        return Mesh(coords,elems,eltype=ML[0].eltype)
+        
+
+def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
+    """Connect two meshes to form a hypermesh.
+    
+    mesh1 and mesh2 are two meshes with same topology (shape). 
+    The two meshes are connected by a higher order mesh with n
+    elements in the direction between the two meshes.
+    n1 and n2 are node selection indices permitting a permutation of the
+    nodes of the base sets in their appearance in the hypermesh.
+    This can e.g. be used to achieve circular numbering of the hypermesh.
+    """
+    if mesh1.shape() != mesh2.shape():
+        raise ValueError,"Meshes are not compatible"
+
+    # compact the node numbering schemes
+    mesh1 = mesh1.copy().compact()
+    mesh2 = mesh2.copy().compact()
+
+    # Create the interpolations of the coordinates
+    x = Coords.interpolate(mesh1.coords,mesh2.coords,n).reshape(-1,3)
+
+    nnod = mesh1.ncoords()
+    nplex = mesh1.nplex()
+    if n1 is None:
+        n1 = range(nplex)
+    if n2 is None:
+        n2 = range(nplex)
+    e1 = mesh1.elems[:,n1]
+    e2 = mesh2.elems[:,n2] + nnod
+    et = concatenate([e1,e2],axis=-1)
+    e = concatenate([et+i*nnod for i in range(n)])
+    return Mesh(x,e,eltype=eltype)
+
+
+def connectMeshSequence(ML,loop=False,**kargs):
+    MR = ML[1:]
+    if loop:
+        MR.append(ML[0])
+    else:
+        ML = ML[:-1]
+    print [ type(Mi) for Mi in ML ]
+    HM = [ connectMesh(Mi,Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
+    print [Mi.eltype for Mi in HM]
+    return Mesh.concatenate(HM)
+
+
+########### Deprecated #####################
+
+@deprecation("\nUse mesh.connectMesh instead.")
 def createWedgeElements(S1,S2,div=1):
     """Create wedge elements between to triangulated surfaces.
     
@@ -173,6 +323,7 @@ def createWedgeElements(S1,S2,div=1):
     return coordsWedge,elemsWedge.reshape(-1,6)
 
 
+@deprecation("\nUse mesh.sweepMesh instead.")
 def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
     """ Sweep a quadrilateral mesh along a path
     
@@ -233,43 +384,6 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
         elems = array([])
     
     return nodes1[:].reshape(-1,3),elems
-
-
-def connectMesh(coords1,coords2,elems,n=1,n1=None,n2=None):
-    """Connect two meshes to form a hypermesh.
-    
-    coords1,elems and coords2,elems are 2 meshes with same topology.
-    The coordinates are given in corresponding order.
-    The two meshes are connected by a higher order mesh with n
-    elements in the direction between the two meshes.
-    n1 and n2 are node selection indices permitting a permutation of the
-    nodes of the base sets in their appearance in the hypermesh.
-    This can e.g. be used to achieve circular numbering of the hypermesh.
-    """
-    if coords1.shape != coords2.shape:
-        raise ValueError,"Meshes are not compatible"
-
-    # compact the element numbering scheme
-    ne = unique1d(elems)
-    if ne[-1] >= ne.size:
-        coords1 = coords1[ne]
-        coords2 = coords2[ne]
-        elems = reverseUniqueIndex(ne)[elems]
-
-    # Create the interpolations of the coordinates
-    x = Coords.interpolate(coords1,coords2,n).reshape(-1,3)
-
-    nnod = coords1.shape[0]
-    nplex = elems.shape[1]
-    if n1 is None:
-        n1 = range(nplex)
-    if n2 is None:
-        n2 = range(nplex)
-    e1 = elems[:,n1]
-    e2 = elems[:,n2] + nnod
-    et = concatenate([e1,e2],axis=-1)
-    e = concatenate([et+i*nnod for i in range(n)])
-    return x,e
 
 
 # End

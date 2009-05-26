@@ -31,8 +31,11 @@ techniques = ['colors']
 
 """
 
-from plugins import mesh
+from plugins import curve
+from plugins.mesh import Mesh,connectMesh
 import simple
+
+
 
 # GEOMETRICAL PARAMETERS FOR HE200B wide flange beam
 h = 200. #beam height
@@ -59,33 +62,37 @@ c1b = simple.line([0,h/2-tf+tw/2,0],[tw/2+r,h/2-tf+tw/2,0],er/2)
 c1 = c1a + c1b
 c2 = simple.circle(90./er,0.,90.).mirror(0).scale(r).translate([tw/2+r,h/2-tf-r,0])
 Filled = simple.connectCurves(c2,c1,etb)
-
 Quarter = Body + Filled + Flange1 + Flange2 + Flange3
-
 Half = Quarter + Quarter.mirror(1).reverse()
-
 Full = Half + Half.mirror(0).reverse()
-
+clear()
+view('front')
 draw(Full,color=red)
 
-method = ask("Choose extrude method:",['Cancel','Sweep','Connect'])
-if method == 'Cancel':
-    exit()
+method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude'])
 
-nodesF,elemsF = Full.feModel()
+M = Full.toMesh()
 
 if method == 'Sweep':
-    path = simple.line([0,0,0],[0,0,l],el)
-    nodesF = nodesF.rollAxes(1)
-    nodes,elems = mesh.sweepGrid(nodesF,elemsF,path,a1='last',a2='last')
+    L = simple.line([0,0,0],[0,0,l],el)
+    x = concatenate([L.f[:,0],L.f[-1:,1]])
+    path = curve.PolyLine(x)
+    Beam = M.sweep(path,normal=[0.,0.,1.])
+
+elif method == 'Connect':
+    M1 = M.copy()
+    M1.coords = M1.coords.trl([0,0,l])
+    Beam = connectMesh(M,M1,el)
+
+elif method == 'Extrude':
+    Beam = M.extrude(el,step=l/el,dir=2)
 
 else:
-    nodesF1 = nodesF.trl([0,0,l])#.scale(2)
-    nodes,elems = mesh.connectMesh(nodesF,nodesF1,elemsF,el)
-
+    exit()
+    
 smooth()
 clear()
-Beam = Formex(nodes[elems].reshape(-1,8,3),eltype='Hex8')
+Beam.eltype = 'hex8'
 draw(Beam,color='red',linewidth=2)
 
 
