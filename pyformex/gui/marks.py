@@ -62,7 +62,7 @@ class TextMark(Mark):
     def use_list(self):
         Mark.use_list(self)
         x,y,z = self.pos
-        GD.canvas.renderText(x,y,z,self.text)
+        GD.canvas.renderText(x,y,z,self.text,self.font)
 
 
 class AxesMark(Mark):

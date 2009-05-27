@@ -458,7 +458,7 @@ def drawPlane(P,N,size):
 
 
 def drawMarks(X,M,color=colors.black):
-    """Draw a list of marks at pioints X.
+    """Draw a list of marks at points X.
 
     X is an Coords array.
     M is a list with the same length as X.
@@ -502,9 +502,9 @@ def drawVertexNumbers(F,color=colors.black,trl=None):
     return drawMarks(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
 
 
-def drawText3D(P,text,color=colors.black,font=None):
-    """Draw a text at a 3D point."""
-    M = marks.TextMark(P,text,color=color,font=font)
+def drawText3D(P,text,color=colors.black,font=None,size=None):
+    """Draw a text at a 3D point P."""
+    M = marks.TextMark(P,text,color=color,font=font,size=size)
     GD.canvas.addAnnotation(M)
     GD.canvas.update()
     return M
