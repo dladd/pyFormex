@@ -50,8 +50,12 @@ scriptdir = sys.path[0]
 # pyformex package dir: add the parent to the front of sys.path
 # to pick up this package by preference
 
+svnversion = False
 if scriptdir.endswith('pyformex'):
+    parent = os.path.dirname(scriptdir)
     sys.path[:0] = [ os.path.dirname(scriptdir) ]
+    if os.path.exists(os.path.join(parent,'.svn')):
+        svnversion = True
 
 try:
     import pyformex
@@ -81,6 +85,13 @@ def printcfg(key):
     except KeyError:
         pass
     print "!! cfg[%s] = %s" % (key,GD.cfg[key])
+
+
+def setRevision():
+    sta,out = utils.runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
+    if sta == 0 and not out.startswith('exported'):
+        pyformex.__revision__ = "$Rev: %s $" % out.strip()
+
 
 
 def remove_pyFormex(pyformexdir,scriptdir):
@@ -296,6 +307,12 @@ def main(argv=None):
     if GD.options.gui:
         GD.options.interactive = True
 
+    # Set Revision if we run from an SVN version
+    if svnversion:
+        setRevision()
+
+    utils.printDetected()
+    #sys.exit()
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:

@@ -20,5 +20,6 @@ include pyformex/icons/*.xpm
 include pyformex/icons/pyformex*.png
 include pyformex/manual/html/*
 include pyformex/manual/images/*.png
+include pyformex/external/*/*
 prune *.py~
 prune *.pyc

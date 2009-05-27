@@ -198,9 +198,6 @@ def hasExternal(name):
 
 def printDetected():
     #detectAll()
-    sta,out = runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
-    if sta == 0 and not out.startswith('exported'):
-        pyformex.__revision__ = "$Rev: %s $" % out.strip()
     print "%s (%s)\n" % (pyformex.Version,pyformex.__revision__)
     print "Detected Python Modules:"
     for k,v in the_version.items():
