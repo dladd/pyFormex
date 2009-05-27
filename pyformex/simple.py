@@ -242,6 +242,8 @@ def sphere3(nx,ny,r=1,bot=-90,top=90):
     return grid.translate([0,bot/s,1]).spherical(scale=[360./nx,s,r])
 
 
+# TODO: This should be renamed and probably use mesh.connectMesh
+# TODO: or polylines
 def connectCurves(curve1,curve2,n):
     """Connect two curves to form a surface.
     
@@ -255,6 +257,8 @@ def connectCurves(curve1,curve2,n):
     curves = interpolate(curve1,curve2,n).split(curve1.nelems())
     quads = [ connect([c1,c1,c2,c2],nodid=[0,1,1,0]) for c1,c2 in zip(curves[:-1],curves[1:]) ]
     return Formex.concatenate(quads)
+
+
 
 
 def sector(r,t,nr,nt,h=0.,diag=None):

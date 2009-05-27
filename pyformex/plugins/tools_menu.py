@@ -74,7 +74,7 @@ def edit():
     """Edit a global variable."""
     database.ask(mode='single')
     F = database.check(single=True)
-    if F and hasattr(F,'edit'):
+    if F is not None and hasattr(F,'edit'):
         name = database[0]
         F.edit(name)
 
@@ -82,13 +82,14 @@ def rename():
     """Rename a global variable."""
     database.ask(mode='single')
     F = database.check(single=True)
-    res = askItems([['Name',database.names[0]]],
-                            caption = 'Rename variable')
-    if res:
-        name = res['Name']
-        database.forget()
-        export({name:F})
-        database.set(name)
+    if F is not None:
+        oldname = database.names[0]
+        res = askItems([('Name',oldname)],caption = 'Rename variable')
+        if res:
+            name = res['Name']
+            export({name:F})
+            database.forget()
+            database.set(name)
     
 def editByName(name):
     pass

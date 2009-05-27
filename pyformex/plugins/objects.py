@@ -147,16 +147,16 @@ class Objects(object):
         If single==True, the selection should hold exactly one Object name and
         a single Object instance is returned.
         If there is no selection, or more than one in case of single==True,
-        an error message is displayed and an empty list is returned.
+        an error message is displayed and None is returned
         """
         if len(self.names) == 0:
             if warn:
                 warning("No %sobjects were selected" % self.object_type())
-            return []
+            return None
         if single and len(self.names) > 1:
             if warn:
                 warning("You should select exactly one %sobject" %  self.object_type())
-            return []
+            return None
         if single:
             return named(self.names[0])
         else:

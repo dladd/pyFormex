@@ -114,11 +114,10 @@ class Mesh(object):
     elems:  (nelems,nplex) shaped array of int32 indices into coords. All
                 values should be in the range 0 <= value < ncoords.
     prop: array of element property numbers, default None.
-    nprop: array of node property numbers, default None.
     eltype: string designing the element type, default None.
     """
     
-    def __init__(self,coords=None,elems=None,prop=None,nprop=None,eltype=None):
+    def __init__(self,coords=None,elems=None,prop=None,eltype=None):
         """Create a new Mesh from the specified data.
 
         data is either a tuple of (coords,elems) arrays, or an object having
@@ -127,7 +126,6 @@ class Mesh(object):
         self.coords = None
         self.elems = None
         self.prop = prop
-        self.nprop = nprop
         self.eltype = eltype
 
         if elems is None:
@@ -150,7 +148,7 @@ class Mesh(object):
 
     def copy(self):
         """Return a copy using the same data arrays"""
-        return Mesh(self.coords,self.elems,self.prop,self.nprop,self.eltype)
+        return Mesh(self.coords,self.elems,self.prop,self.eltype)
 
 
     def toFormex(self):
@@ -177,6 +175,13 @@ class Mesh(object):
     def shape(self):
         return self.elems.shape
 
+    def report(self):
+        bb = self.coords.bbox()
+        return """
+Shape: %s nodes, %s elems, plexitude %s
+BBox: %s, %s
+Size: %s
+""" % (self.ncoords(),self.nelems(),self.nplex(),bb[1],bb[0],bb[1]-bb[0])
 
     def compact(self):
         """Renumber the mesh and remove unconnected nodes."""
@@ -249,6 +254,12 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
     nodes of the base sets in their appearance in the hypermesh.
     This can e.g. be used to achieve circular numbering of the hypermesh.
     """
+    # For compatibility, allow meshes to be specified as tuples
+    if type(mesh1) is tuple:
+        mesh1 = Mesh(mesh1)
+    if type(mesh2) is tuple:
+        mesh2 = Mesh(mesh2)
+
     if mesh1.shape() != mesh2.shape():
         raise ValueError,"Meshes are not compatible"
 
