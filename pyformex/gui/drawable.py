@@ -258,7 +258,8 @@ def drawPolygonElems(x,elems,mode,color=None,alpha=1.0,normals=None):
     coords (npts,3) : the coordinates of the points
     elems (nels,nplex): the connectivity of nels polygons of plexitude nplex
     """
-    GD.debug("drawPolygonElems")
+    #GD.debug("drawPolygonElems")
+    n = None
     if normals is None:
         if mode == 'smooth-avg':
             n = interpolateNormals(x,elems,treshold=GD.cfg['render/avgnormaltreshold'])
