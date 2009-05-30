@@ -473,13 +473,17 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     if atol is None:
         atol = 1.e-5*dist.max()
     above = sum(dist>atol,-1)
-    A = F.clip(above==F.nplex())
+    below = sum(dist<-atol,-1)
+    A = F.clip(below==0)
     B = F.clip(above==0)
+    cutting = (above>0)*(below>0)
     if newprops:
        A.setProp(newprops[0]) 
        B.setProp(newprops[1])
+    ## print "Elements in F: %s" % F.nelems()
+    ## print "Elements in A: %s" % A.nelems()
+    ## print "Elements in B: %s" % B.nelems()
 
-    cutting = (above > 0) * (above < F.nplex())
     if cutting.any():
         G = F.clip(cutting)
         H = G.copy()
@@ -495,6 +499,9 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
         A += G
         B += H
 
+        ## print "Elements in G: %s" % G.nelems()
+        ## print "Elements in A: %s" % A.nelems()
+        ## print "Elements in B: %s" % B.nelems()
     return _select_side(side,[ A,B ])
 
 
