@@ -109,7 +109,7 @@ ActionMenuData = [
     (_('&PrintGlobalNames'),script.printglobalnames),
     (_('&PrintGlobals'),script.printglobals),
     (_('&PrintConfig'),script.printconfig),
-    (_('&Print Detected Software'),script.printDetected),
+    (_('&Print Detected Software'),script.printdetected),
     (_('&PrintBbox'),draw.printbbox),
     (_('&Print Viewport Settings'),draw.printviewportsettings),
     (_('&Print Window Geometry'),printwindow),

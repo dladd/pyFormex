@@ -239,7 +239,7 @@ def main(argv=None):
     if GD.options.detect:
         print "Detecting all installed helper software"
         utils.checkExternal()
-        utils.printDetected()
+        print utils.reportDetected()
         sys.exit()
         
     GD.debug("Options: %s" % GD.options)
@@ -311,8 +311,8 @@ def main(argv=None):
     if svnversion:
         setRevision()
 
-    utils.printDetected()
-    #sys.exit()
+    GD.debug(utils.reportDetected())
+    
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if GD.options.gui:

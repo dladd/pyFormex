@@ -32,7 +32,7 @@ from numpy import *
 from coords import *
 from formex import *
 from connectivity import *
-from simple import line
+import elements
 from plugins.fe import mergeModels
 from utils import deprecation
 
@@ -231,6 +231,24 @@ Size: %s
         seq = sweepCoords(self.coords,path,**kargs)
         ML = [ Mesh(x,self.elems) for x in seq ]
         return connectMeshSequence(ML,eltype=eltype)
+
+
+    def convert(self,fromtype,totype):
+        """Convert a mesh from element type fromtype to type totype.
+
+        Currently defined conversions:
+        'quad4' -> 'tri3'
+        """
+        fromtype = fromtype.capitalize()
+        totype = totype.capitalize()
+        try:
+            conv = getattr(elements,fromtype).conversion[totype]
+        except:
+            raise ValueError,"Don't know how to convert from '%s' to '%s'" % (fromtype,totype)
+
+        elems = self.elems[:,conv].reshape(-1,len(conv[0]))
+        print elems.shape
+        return Mesh(self.coords,elems)
 
 
     @classmethod

@@ -12,9 +12,7 @@ should be addressed to Benedict.Verhegghe@ugent.be
 Installation in a pyFormex SVN tree
 -----------------------------------
 - Go to the external/pygl2ps folder and enter the command (as root)
-./gl2ps.install
-
-
+./pygl2ps.install all
 
 
 Standalone installation

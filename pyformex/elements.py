@@ -63,6 +63,7 @@ class Element(object):
     edges = []
     faces = []
     element = []
+    conversion = {}
 
     def nvertices(self):
         return len(self.vertices)
@@ -73,6 +74,7 @@ class Element(object):
 
     def getFaces():
         return olist.collectOnLength(self.faces)
+
 
 
 
@@ -103,6 +105,10 @@ class Quad4(Element):
     faces = [ (0,1,2,3), ]
 
     element = faces[0]
+
+    conversion = {
+        'Tri3' : [ (0,1,2), (2,3,0) ],
+        }
 
 
 class Quad9(Element):
@@ -224,6 +230,8 @@ class Icosa(Element):
               ]
 
     element = range(12)
+
+
 
 
 if __name__ == "__main__":

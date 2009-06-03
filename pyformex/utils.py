@@ -196,19 +196,19 @@ def hasExternal(name):
         return checkExternal(name)
 
 
-def printDetected():
-    #detectAll()
-    print "%s (%s)\n" % (pyformex.Version,pyformex.__revision__)
-    print "Detected Python Modules:"
+def reportDetected():
+    s = "%s (%s)\n\n" % (pyformex.Version,pyformex.__revision__)
+    s += "Detected Python Modules:\n"
     for k,v in the_version.items():
         if not v:
             v = 'Not Found'
-        print "%s (%s)" % ( k,v)
-    print "\nDetected External Programs:"
+        s += "%s (%s)\n" % ( k,v)
+    s += "\nDetected External Programs:\n"
     for k,v in the_external.items():
         #if not v:
         #    v = 'Not Found'
-        print "%s (%s)" % ( k,v)
+        s += "%s (%s)\n" % ( k,v)
+    return s
 
 
 def removeTree(path,top=True):

@@ -363,22 +363,6 @@ def create_border_triangle(coords,elems):
 ############################################################################
 # The TriSurface class
 
-def coordsmethod(f):
-    """Define a TriSurface method as the equivalent Coords method.
-
-    This decorator replaces the TriSurface's vertex coordinates with the
-    ones resulting from applying the transform f.
-    
-    The coordinates are changed inplane, so copy them before if you do not
-    want them to be lost.
-    """
-    def newf(self,*args,**kargs):
-        repl = getattr(Coords,f.__name__)
-        self.coords = repl(self.coords,*args,**kargs)
-        newf.__name__ = f.__name__
-        newf.__doc__ = repl.__doc__
-    return newf
-
 
 class TriSurface(object):
     """A class for handling triangulated 3D surfaces."""

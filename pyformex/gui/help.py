@@ -105,7 +105,7 @@ def opengl():
 def detected():
     """Display the detected software components."""
     utils.checkExternal()
-    catchAndDisplay('utils.printDetected()')
+    draw.showText(utils.reportDetected())
 
 def about():
     """Display short information about pyFormex."""

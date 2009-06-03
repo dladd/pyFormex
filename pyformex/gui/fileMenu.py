@@ -40,82 +40,123 @@ from gettext import gettext as _
 ##################### handle project files ##########################
 
 the_project = None
-the_project_saved = False
-AUTOFILE = '__auto_script_file__'
-
-def createProject():
-    openProject(exist=False)
-
-def createLegacyProject():
-    openProject(exist=False,compressed=False,legacy=True)
 
 
-def openProject(exist=True,compressed=True,legacy=False):
+def createProject(create=True,compression=0,legacy=False,addGlobals=None):
     """Open a file selection dialog and let the user select a project.
 
-    The default only accepts existing project files.
-    Use createProject() to accept new file names.
+    The default will let the user create new project files as well as open
+    existing ones.
+    Use create=False or the convenience function openProject to only accept
+    existing project files.
+
+    If a compression level (1..9) is given, the contents will be compressed,
+    resulting in much smaller project files at the cost of  
+
+    Only one pyFormex project can be open at any time. The open project
+    owns all the global data created and exported by any script.
+    If addGlobals is None, the user is asked whether the current globals
+    should be added to the project. Set True or False to force or reject
+    the adding without asking.
     """
-    global the_project,the_project_saved
+    global the_project
+    
     if the_project is None:
         cur = GD.cfg.get('workdir','.')
     else:
-        if draw.ask("Another project is still open. Shall I close it first?",
-                    ['Close','Cancel']) == 'Cancel':
+        options = ['Cancel','Close without saving','Save and Close']
+        ans = draw.ask("Another project is still open. Shall I close it first?",
+                    options)
+        if ans == 'Cancel':
             return
+        if ans == options[2]:
+            the_project.save()
         cur = the_project.filename
     typ = [ 'pyFormex projects (*.pyf)', 'All files (*)' ]
-    fn = widgets.FileSelection(cur,typ,exist=exist).getFilename()
+    fn = widgets.FileSelection(cur,typ,exist=not create).getFilename()
     if fn:
         if not fn.endswith('.pyf'):
             fn += '.pyf'
-        if not exist and os.path.exists(fn):
+        if create and os.path.exists(fn):
             res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
             if res == 'Cancel':
                 return
             if res == 'Add':
-                exist = True
+                create = False
+        GD.message("Opening project %s" % fn)
         if GD.PF:
             GD.message("Exported symbols: %s" % GD.PF.keys())
-            res = draw.ask("pyFormex already contains exported symbols.\nShall I add them to your project?",['Delete','Add','Cancel'])
-            if res == 'Cancel':
-                return
-            if res == 'Delete':
-                GD.PF = {}
-        GD.message("Opening project %s" % fn)
-        the_project = project.Project(fn,create=not exist,signature = GD.Version,legacy=legacy,compressed=compressed)
-        the_project_saved = False
-        if GD.PF:
+            if addGlobals is None:
+                res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
+                if res == 'Cancel':
+                    # ESCAPE FROM CREATING THE PROJECT
+                    return
+                
+                addGlobals = res == 'Add'
+                
+        the_project = project.Project(fn,create=create,signature = GD.Version,compression=compression,legacy=legacy)
+        if GD.PF and addGlobals:
             the_project.update(GD.PF)
         GD.PF = the_project
         GD.GUI.setcurproj(fn)
         GD.cfg['workdir'] = os.path.dirname(fn)
         GD .message("Project contents: %s" % the_project.keys())
-        if exist and (AUTOFILE in the_project.keys()) and draw.ack("The project contains an '%s' item: %s\nShall I execute it?" % (AUTOFILE,the_project[AUTOFILE])):
-            processArgs([the_project[AUTOFILE]])
+        if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
+            processArgs([the_project.autofile])
 
+
+@utils.deprecation("\nThe use of this function is highly deprecated!\n - If you just want to avoid compression: use createProject with compression level 0.\n - If instead you want to create a project for a user of an old version of pyFormex: make him upgrade.")
+def createLegacyProject():
+    """Create a legacy project file, which is missing a header."""
+    createProject(legacy=True)
+
+
+def openProject():
+    """Create a new project file, uncompressed by default.
+
+    If a compression level (1..9) is specified, the stored data will be
+    gzipped. This may substantially reduce the size of large databases.
+
+    This internal compression is easier to the user than externally
+    compressing the resulting files.
+    """
+    createProject(create=False)
+ 
 
 def setAutoFile():
-    global the_project,the_project_saved
     """Set the current script as autoScriptFile in the project"""
+    global the_project
     if the_project is not None and GD.cfg['curfile'] and GD.GUI.canPlay:
-        the_project[AUTOFILE] = GD.cfg['curfile']
-        the_project_saved = False
+        the_project.autofile = GD.cfg['curfile']
             
 
 def saveProject():
-    global the_project,the_project_saved
     if the_project is not None:
-        the_project.save()
-        the_project_saved = True
-
-
-def closeProject():
-    global the_project,the_project_saved
-    if (the_project is not None) and not the_project_saved:
-        GD.message("Closing project %s" % the_project.filename)
         GD.message("Project contents: %s" % the_project.keys())
         the_project.save()
+
+
+def saveAsProject():
+    if the_project is not None:
+        closeProjectWithoutSaving()
+        createProject(addGlobals=True)
+        saveProject()
+
+
+def closeProjectWithoutSaving():
+    """Close the current project without saving it."""
+    closeProject(False)
+    
+
+def closeProject(save=True):
+    """Close the current project, saving it by default."""
+    global the_project
+    if the_project is not None:
+        GD.message("Closing project %s" % the_project.filename)
+        if save:
+            saveProject()
+        # The following is needed to copy the globals to a new dictionary
+        # before destroying the project
         GD.PF = {}
         GD.PF.update(the_project)
         GD.GUI.setcurproj('None')
@@ -123,15 +164,14 @@ def closeProject():
 
 
 def askCloseProject():
-    #global the_project,the_project_saved
-    #print  the_project,the_project_saved
-    if the_project is None or the_project_saved:
-        return
-    
-    choices = ['Exit without saving','Save and Exit']
-    res = draw.ask("You have an unsaved open project: %s\nWhat do you want me to do?"%the_project.filename,choices,default=2)
-    if res in choices[1:]:
-        closeProject()
+    if the_project is not None:
+        choices = ['Exit without saving','SaveAs and Exit','Save and Exit']
+        res = draw.ask("You have an unsaved open project: %s\nWhat do you want me to do?"%the_project.filename,choices,default=2)
+        res = choices.index(res)
+        if res == 1:
+            saveAsProject()
+        elif res == 2:
+            saveProject()
 
 
 ##################### handle script files ##########################
@@ -260,9 +300,11 @@ MenuData = [
     (_('&Start new project'),createProject),
     (_('&Start legacy project'),createLegacyProject),
     (_('&Open existing project'),openProject),
-    (_('&Save project'),saveProject),
     (_('&Set current script as AutoFile'),setAutoFile),
-    (_('&Save and close project'),closeProject),
+    (_('&Save project'),saveProject),
+    (_('&Save project As'),saveAsProject),
+    (_('&Close project without saving'),closeProjectWithoutSaving),
+    (_('&Save and Close project'),closeProject),
     ('---',None),
     (_('&Create new script'),createScript),
     (_('&Open existing script'),openScript),

@@ -742,6 +742,8 @@ See Help->License or the file COPYING for details.
     if GD.GUI.easter_egg:
         draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
 
+    GD.warning("The project menu functions have been changed completely. Please use carefully during the test period (and make a copy of your existing project files for safety),") 
+
 
 def runGUI():
     """Go into interactive mode"""

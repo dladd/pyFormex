@@ -68,6 +68,7 @@ Full = Half + Half.mirror(0).reverse()
 clear()
 view('front')
 draw(Full,color=red)
+pause()
 
 method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude'])
 

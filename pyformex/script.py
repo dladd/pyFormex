@@ -37,9 +37,6 @@ import threading,os,commands,copy,re,time
 import formex
 import utils
 
-# Things from other modules we want to export to user scripts
-from utils import printDetected
-    
 
 ######################### Exceptions #########################################
 
@@ -475,6 +472,8 @@ def printconfig():
     print "User Configuration: " + str(GD.cfg)
         
 
+def printdetected():
+    print utils.reportDetected()
 
 ### Utilities
 

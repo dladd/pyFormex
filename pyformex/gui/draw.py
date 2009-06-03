@@ -419,11 +419,11 @@ def setView(name,angles=None):
     """Set the default view for future drawing operations.
 
     If no angles are specified, the name should be an existing view, or
-    the predefined value '__last__'.
+    the predefined value 'last'.
     If angles are specified, this is equivalent to createView(name,angles)
     followed by setView(name).
     """
-    if name != '__last__' and angles:
+    if name != 'last' and angles:
         createView(name,angles)
     setDrawOptions({'view':name})
 
@@ -557,7 +557,7 @@ def focus(object):
 def view(v,wait=False):
     """Show a named view, either a builtin or a user defined."""
     GD.GUI.drawlock.wait()
-    if v != '__last__':
+    if v != 'last':
         angles = GD.canvas.view_angles.get(v)
         if not angles:
             warning("A view named '%s' has not been created yet" % v)
@@ -759,15 +759,17 @@ def pause(msg="Use the Step or Continue button to proceed"):
     is suspended until some external event forces it to proceed again.
     Clicking the STEP or CONTINUE button will produce such an event.
     """
-    #GD.debug("PAUSE ACTIVATED!")
+    GD.debug("PAUSE ACTIVATED!")
     if msg:
         GD.message(msg)
-    #GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
+    GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
     if GD.GUI.drawlock.allowed:
         GD.GUI.drawlock.block()    # will need external event to release it
         while (GD.GUI.drawlock.locked):
+            print "Processing events"
             sleep(0.5)
             GD.app.processEvents()
+            GD.canvas.update()
 
 
 def step():

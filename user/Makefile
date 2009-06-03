@@ -17,12 +17,8 @@ all: ${ALLPDF}
 %: pyformex-user-meeting-%.pdf
 	@echo "Done"
 
-%.pdf: %.tex
-	pdflatex $<
-
-%.tex: %.rst
-	rst2latex $< > $@
-
+%.pdf: %.rst
+	rst2pdf $<
 
 # Transfers the files to BerliOs
 pub: 
@@ -30,7 +26,6 @@ pub:
 
 
 clean:
-	rm -rf *.log *.aux *.out *.tex
 
 mrproper: clean
 	rm -rf *.pdf
