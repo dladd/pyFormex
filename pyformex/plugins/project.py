@@ -56,11 +56,11 @@ class Project(dict):
             self.mode = 'b'
         else:
             self.mode = ''
+        self.legacy=legacy        
         if create or not os.path.exists(filename):
             self.save()
         else:
             self.load()
-        self.legacy=legacy
 
 
     def header_data(self):
