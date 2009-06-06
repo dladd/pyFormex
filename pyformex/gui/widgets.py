@@ -516,6 +516,39 @@ class InputString(InputItem):
         self.input.setText(str(val))
 
 
+class InputText(InputItem):
+    """A scrollable text input item."""
+    
+    def __init__(self,name,value,*args):
+        """Creates a new text input field with a label in front.
+
+        If the type of value is not a string, the input text
+        will be eval'ed before returning.
+        """
+        InputItem.__init__(self,name,*args)
+        self._is_string_ = type(value) == str
+        self.input =  QtGui.QTextEdit()
+        self.setValue(value)
+        self.addWidget(self.input)
+
+    def show(self):
+        """Select all text on first display.""" 
+        InputItem.show(self,*args)
+        self.input.selectAll()
+
+    def value(self):
+        """Return the widget's value."""
+        s = str(self.input.toPlainText())
+        if self._is_string_:
+            return s
+        else:
+            return eval(s)
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        self.input.setPlainText(str(val))
+
+
 class InputBool(InputItem):
     """A boolean input item."""
     
@@ -974,6 +1007,9 @@ class InputDialog(QtGui.QDialog):
  
             elif itemtype == 'info':
                 line = InputInfo(name,value)
+
+            elif itemtype == 'text':
+                line = InputText(name,value)
 
             elif itemtype == 'color':
                 line = InputColor(name,value)
@@ -1810,6 +1846,8 @@ class BaseMenu(object):
                             a.setToolTip(v)
                         elif k == 'checkable':
                             a.setCheckable(v)
+                        elif k == 'disabled':
+                            a.setDisabled(True)
             self.menuitems.append((normalize(txt),a))
 
 

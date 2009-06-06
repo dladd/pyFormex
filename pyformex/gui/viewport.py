@@ -1026,6 +1026,8 @@ class MultiCanvas(QtGui.QGridLayout):
 
 
     def setCurrent(self,canv):
+        GL.glFlush()
+        GD.canvas.updateGL()
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
         # TEST SKIP IF ALREADY CURRENT
@@ -1037,11 +1039,7 @@ class MultiCanvas(QtGui.QGridLayout):
             toolbar.setPerspective(self.current.camera.perspective)
             toolbar.setLight(self.current.lighting)
             #toolbar.setNormals(self.current.avgnormals)
-            #
-            # TEST WITHOUT DISPLAY
             GL.glFlush()
-            # TEST WITH DISPLAY
-            #self.current.display()
             
 
     def currentView(self):

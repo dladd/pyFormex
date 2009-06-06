@@ -87,13 +87,13 @@ class Decoration(Drawable):
 
     All decoration have at least the following attributes:
       x,y : (int) window coordinates of the insertion point
-      draw() : function that draws the decoration at (x,y).
+      drawGL() : function that draws the decoration at (x,y).
                This should only use openGL function that are
                allowed in a display list.
     """
 
     def __init__(self,x,y):
-        """Create a decoration at acnvas coordinates x,y"""
+        """Create a decoration at canvas coordinates x,y"""
         self.x = int(x)
         self.y = int(y)
         Drawable.__init__(self)
@@ -110,15 +110,21 @@ class QText(Decoration):
         self.font = getFont(font,size)
         self.color = saneColor(color)
 
+    count = 0
     # QT text color does not seem to work good with display lists,
     # therefore we redefine draw(), not drawGL()
     def draw(self,mode='wireframe',color=None):
         """Draw the text."""
+        self.count += 1
+#        GD.canvas.makeCurrent()
         if self.color is not None:
             GL.glColor3fv(self.color)
         GD.canvas.renderText(self.x,GD.canvas.height()-self.y,self.text,self.font)
+#        GD.canvas.swapBuffers() 
+#        GD.canvas.updateGL() 
 
-Text = QText
+import gluttext
+Text = gluttext.GlutText
 
 
 class ColorLegend(Decoration):

@@ -291,7 +291,7 @@ def save_rect(x,y,w,h,filename,format):
 #### USER FUNCTIONS ################
 
 def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,border=False,rootcrop=False,format=None,verbose=False):
-    """Saves an image to file or Starts/stops multisave maode.
+    """Saves an image to file or Starts/stops multisave mode.
 
     With a filename and multi==False (default), the current viewport rendering
     is saved to the named file.

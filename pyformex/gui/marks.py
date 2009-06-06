@@ -85,7 +85,7 @@ class AxesMark(Mark):
         GL.glBitmap(81,81,41,41,0,0,bitmap)
 
 
-
+import gluttext
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
@@ -104,7 +104,8 @@ class MarkList(Mark):
         Mark.__init__(self,pos)
         self.val = val
         self.color = color
-        self.font = getFont(font,size)
+        self.font = gluttext.getFont(font,size)
+        #self.font = getFont(font,size)
 
 
     def draw(self,mode=None,color=None):
@@ -112,9 +113,9 @@ class MarkList(Mark):
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
             GL.glRasterPos3fv(p)
-            #drawGlutText(str(v),self.font)
-            x,y,z = p
-            GD.canvas.renderText(x,y,z,str(v))
+            gluttext.glutRenderText(str(v),self.font)
+            #x,y,z = p
+            #GD.canvas.renderText(x,y,z,str(v))
 
 
     def drawpick(self):
@@ -130,7 +131,6 @@ class MarkList(Mark):
         buf = GL.glRenderMode(GL.GL_RENDER)
         numbers =[]
         for r in buf:
-            #print r[2]
             numbers += map(int,r[2])
         return numbers
 

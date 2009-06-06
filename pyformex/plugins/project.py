@@ -74,7 +74,6 @@ class Project(dict):
         """Set the project data from the header."""
         d = eval(data)
         self.__dict__.update(d)
-        
 
 
     def save(self):
@@ -98,19 +97,21 @@ class Project(dict):
         """
         f = file(self.filename,'rb')
         s = f.readline()
-        if not s.startswith(self.signature):
+        if s.startswith(self.signature):
+            # This is the new format: the first pickle contains attributes
+            p = pickle.load(f)
+            self.__dict__.update(p)
+        elif 'gzip' in s:
+            # Enables readback of transitionary format
+            self.gzip = 5
+        else:
+            # Enable readback of legacy format
             if self.legacy:
                 f.seek(0)
                 self.gzip = 0
             else:
+                # Incompatible format
                 raise ValueError,"File %s does not have a matching signature" % filename
-        elif 'gzip' in s:
-            self.gzip = 5
-        else:  # This is the new way
-            p = pickle.load(f)
-            self.__dict__.update(p)
-            print self.gzip
-            print self.mode
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
             p = pickle.load(pyf)

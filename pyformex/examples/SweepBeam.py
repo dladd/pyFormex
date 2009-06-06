@@ -36,6 +36,10 @@ from plugins.mesh import Mesh,connectMesh
 import simple
 
 
+res = askItems([('label','label'),('text','text','text')])
+print res
+exit()
+
 
 # GEOMETRICAL PARAMETERS FOR HE200B wide flange beam
 h = 200. #beam height
@@ -68,7 +72,7 @@ Full = Half + Half.mirror(0).reverse()
 clear()
 view('front')
 draw(Full,color=red)
-pause()
+#pause()
 
 method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude'])
 
@@ -95,6 +99,7 @@ smooth()
 clear()
 Beam.eltype = 'hex8'
 draw(Beam,color='red',linewidth=2)
+export({'Beam':Beam})
 
 
 # End

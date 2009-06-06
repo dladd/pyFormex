@@ -198,17 +198,19 @@ class Objects(object):
     def printval(self):
         """Print the selection."""
         objects = self.check()
-        for n,o in zip(self.names,objects):
-            print "%s = %s" % (n,str(o))
+        if objects:
+            for n,o in zip(self.names,objects):
+                print "%s = %s" % (n,str(o))
 
 
-    def printBbox(self):
+    def printbbox(self):
         """Print the bbox of the current selection."""
         objects = self.check()
-        for n,o in zip(self.names,objects):
-            GD.message("Object %s has bbox %s" % (n,o.bbox()))
-        if len(self.names) > 1:
-            GD.message("Overal bbox is %s" % bbox(objects))
+        if objects:
+            for n,o in zip(self.names,objects):
+                GD.message("Object %s has bbox %s" % (n,o.bbox()))
+            if len(self.names) > 1:
+                GD.message("Overal bbox is %s" % bbox(objects))
 
 
 

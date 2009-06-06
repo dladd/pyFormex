@@ -60,7 +60,8 @@ def createProject(create=True,compression=0,legacy=False,addGlobals=None):
     the adding without asking.
     """
     global the_project
-    
+
+    # ask filename from user
     if the_project is None:
         cur = GD.cfg.get('workdir','.')
     else:
@@ -74,35 +75,47 @@ def createProject(create=True,compression=0,legacy=False,addGlobals=None):
         cur = the_project.filename
     typ = [ 'pyFormex projects (*.pyf)', 'All files (*)' ]
     fn = widgets.FileSelection(cur,typ,exist=not create).getFilename()
-    if fn:
-        if not fn.endswith('.pyf'):
-            fn += '.pyf'
-        if create and os.path.exists(fn):
-            res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
+    if fn is None:
+        # user canceled
+        return
+    
+    if not fn.endswith('.pyf'):
+        fn += '.pyf'
+    if create and os.path.exists(fn):
+        res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
+        if res == 'Cancel':
+            return
+        if res == 'Add':
+            create = False
+    GD.message("Opening project %s" % fn)
+    
+    if GD.PF:
+        GD.message("Exported symbols: %s" % GD.PF.keys())
+        if addGlobals is None:
+            res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
             if res == 'Cancel':
+                # ESCAPE FROM CREATING THE PROJECT
                 return
-            if res == 'Add':
-                create = False
-        GD.message("Opening project %s" % fn)
-        if GD.PF:
-            GD.message("Exported symbols: %s" % GD.PF.keys())
-            if addGlobals is None:
-                res = draw.ask("pyFormex already contains exported symbols.\nShall I delete them or add them to your project?",['Delete','Add','Cancel'])
-                if res == 'Cancel':
-                    # ESCAPE FROM CREATING THE PROJECT
-                    return
-                
-                addGlobals = res == 'Add'
-                
-        the_project = project.Project(fn,create=create,signature = GD.Version,compression=compression,legacy=legacy)
-        if GD.PF and addGlobals:
-            the_project.update(GD.PF)
-        GD.PF = the_project
-        GD.GUI.setcurproj(fn)
-        GD.cfg['workdir'] = os.path.dirname(fn)
-        GD .message("Project contents: %s" % the_project.keys())
-        if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
-            processArgs([the_project.autofile])
+
+            addGlobals = res == 'Add'
+
+    if create and not legacy:
+        res = draw.askItems([('Compression level',compression,'slider',{'min':0,'max':9})])
+        if res:
+            compression = res['Compression level']
+
+    # OK, we have all data, now create/open the project
+    GD.GUI.setBusy()
+    the_project = project.Project(fn,create=create,signature = GD.Version,compression=compression,legacy=legacy)
+    GD.GUI.setBusy(False)
+    if GD.PF and addGlobals:
+        the_project.update(GD.PF)
+    GD.PF = the_project
+    GD.GUI.setcurproj(fn)
+    GD.cfg['workdir'] = os.path.dirname(fn)
+    GD .message("Project contents: %s" % the_project.keys())
+    if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
+        processArgs([the_project.autofile])
 
 
 @utils.deprecation("\nThe use of this function is highly deprecated!\n - If you just want to avoid compression: use createProject with compression level 0.\n - If instead you want to create a project for a user of an old version of pyFormex: make him upgrade.")
@@ -133,7 +146,9 @@ def setAutoFile():
 def saveProject():
     if the_project is not None:
         GD.message("Project contents: %s" % the_project.keys())
+        GD.GUI.setBusy()
         the_project.save()
+        GD.GUI.setBusy(False)
 
 
 def saveAsProject():

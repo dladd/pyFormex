@@ -243,7 +243,7 @@ if GD.options.gui:
         draw(F,color=black)
         linewidth(3)
         deformed_plot(optimscale)
-        view('__last__',True)
+        view('last',True)
 
 
     def showAnimatedDeformation():

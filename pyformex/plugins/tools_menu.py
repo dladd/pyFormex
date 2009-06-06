@@ -35,16 +35,15 @@ from formex import *
 from gui.draw import *
 from plugins import objects
 from plugins.tools import *
-#from numpy import *
 
 
-def editFormex(F):
-    """Edit a Formex"""
-    print "I want to edit a Formex"
-    print "%s" % F.__class__
+## def editFormex(F):
+##     """Edit a Formex"""
+##     print "I want to edit a Formex"
+##     print "%s" % F.__class__
 
 
-Formex.edit = editFormex
+## Formex.edit = editFormex
 
 
 
@@ -63,6 +62,12 @@ def printval():
     """Print selected global variables."""
     database.ask()
     database.printval()
+
+
+def printbbox():
+    """Print selected global variables."""
+    database.ask()
+    database.printbbox()
     
 
 def forget():
@@ -70,13 +75,21 @@ def forget():
     database.ask()
     database.forget()
 
+
 def edit():
     """Edit a global variable."""
     database.ask(mode='single')
     F = database.check(single=True)
-    if F is not None and hasattr(F,'edit'):
-        name = database[0]
-        F.edit(name)
+    if F is not None:
+        if hasattr(F,'edit'):
+            # Call specialized editor
+            F.edit()
+        else:
+            # Use general editor
+            name = database.names[0]
+            res = askItems([(name,repr(F),'text')])
+            print res
+
 
 def rename():
     """Rename a global variable."""
@@ -90,10 +103,16 @@ def rename():
             export({name:F})
             database.forget()
             database.set(name)
+
     
 def editByName(name):
     pass
 
+
+def deleteAll():
+    printall()
+    if ack("Are you sure you want to unrecoverably delete all global variables?"):
+        print "OK,DELETE"
 
 ###################### Drawn Objects #############################
 
@@ -436,12 +455,15 @@ def export_selection():
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
-        ("&Draw Variables",drawable.ask),
-        ("&Show Variables",printall),
-        ("&Print Variables",printval),
-        ("&Edit Variable",edit),
-        ("&Rename Variable",rename),
-        ("&Forget Variables",forget),
+        ('-- Global Variables --',printall,dict(disabled=True)),
+        ('  &List All',printall),
+        ('  &Print Value',printval),
+        ('  &Print BBox',printbbox),
+        ('  &Draw',drawable.ask),
+        ('  &Change Value',edit),
+        ('  &Rename',rename),
+        ('  &Delete',forget),
+        ('  &Delete All',deleteAll),
         ("---",None),
         ("&Create Plane",
             [("Coordinates", 
@@ -456,10 +478,12 @@ def create_menu():
         ("&Draw Selection",planes.draw),
         ("&Forget Selection",planes.forget),
         ("---",None),
-        ("&Pick Actors",pick_actors),
-        ("&Pick Elements",pick_elements),
-        ("&Pick Points",pick_points),
-        ("&Pick Edges",pick_edges),
+        ('&Pick',
+         [("&Actors",pick_actors),
+          ("&Elements",pick_elements),
+          ("&Points",pick_points),
+          ("&Edges",pick_edges),
+          ]),
         ("---",None),
         ('&Selection',
          [('&Create Report',report_selection),
@@ -478,6 +502,7 @@ def create_menu():
           ('&Distances',query_distances),
           ]),
         ("---",None),
+#        ('&Reload',reload_menu),
         ("&Close",close_menu),
         ]
     return widgets.Menu('Tools',items=MenuData,parent=GD.GUI.menu,before='help')
@@ -494,8 +519,14 @@ def close_menu():
     m = GD.GUI.menu.item('Tools')
     if m :
         m.remove()
-    
 
+
+def reload_menu():
+    close_menu()
+    reload(tools_menu)
+    show_menu()
+    
+    
 if __name__ == "draw":
     # If executed as a pyformex script
     close_menu()

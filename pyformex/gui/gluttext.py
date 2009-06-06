@@ -17,6 +17,7 @@ import colors
 
 ### Some drawing functions ###############################################
 
+# These are the available GLUT fonts.
 GLUTFONTS = {
     '9x15' : GLUT.GLUT_BITMAP_9_BY_15,
     '8x13' : GLUT.GLUT_BITMAP_8_BY_13,
@@ -26,6 +27,46 @@ GLUTFONTS = {
     'hv12' : GLUT.GLUT_BITMAP_HELVETICA_12,
     'hv18' : GLUT.GLUT_BITMAP_HELVETICA_18,
 }
+
+GLUTFONTALIAS = {
+    'fixed' : ('9x15','8x13'),
+    'serif' : ('times','tr10','tr24'),
+    'sans'  : ('helvetica','hv10','hv12','hv18'),
+    }
+
+def glutFontSelect(font=None,size=None):
+    """Select one of the glut fonts using a font + size description.
+
+    font is one of: 'fixed', 'serif', 'sans'
+    size is an int that will be rounded to the nearest available size.
+    """
+    if size is None and font in GLUTFONTS:
+        return font
+    if font is None:
+        font = 'fixed'
+    for k in GLUTFONTALIAS:
+        if font in GLUTFONTALIAS[k]:
+            font = k
+            break
+    if size is None or not size > 0:
+        size = 14
+    if font == 'fixed':
+        selector = [ (0,'8x13'), (14,'9x15') ]
+    elif font == 'serif':
+        selector = [ (0,'tr10'), (16,'tr24') ]
+    else:
+        selector = [ (0,'hv10'), (12,'hv12'), (16,'hv18') ]
+    sel = selector[0]
+    for s in selector[1:]:
+        if s[0] <= size:
+            sel = s
+
+    return sel[1]
+
+
+def getFont(font,size):
+    return glutFont(glutFontSelect(font,size))
+
 
 def glutFont(font):
     """Return GLUT font designation for the named font.
@@ -38,6 +79,8 @@ def glutFont(font):
     """
     return GLUTFONTS.get(font,GLUTFONTS['9x15'])
 
+
+
 def glutFontHeight(font):
     """Return the height of the named glut font.
 
@@ -47,7 +90,7 @@ def glutFontHeight(font):
     return int(font[-2:])
 
 
-def drawGlutText(text,font):
+def glutRenderText(text,font):
     """Draw a text in given font at the current rasterpoint.
 
     font should be one  of the legal fonts returned by glutFont().
@@ -59,7 +102,7 @@ def drawGlutText(text,font):
         GLUT.glutBitmapCharacter(font, ord(character))
 
 
-def myBitmapLength(font, text):
+def glutBitmapLength(font, text):
     """ Compute the length in pixels of a text string in given font.
 
     We use our own fucntion to calculate the length because the builtin
@@ -71,7 +114,7 @@ def myBitmapLength(font, text):
     return len
 
 
-def drawText2D(text, x,y, font='9x15', adjust='left'):
+def glutDrawText(text, x,y, font='9x15', adjust='left'):
     """Draw the given text at given 2D position in window.
 
     If adjust == 'center', the text will be horizontally centered on
@@ -80,12 +123,13 @@ def drawText2D(text, x,y, font='9x15', adjust='left'):
     Any other setting will align the text left.
     Default is to center.
     """
+    font = '9x15'
     height = glutFontHeight(font)
     if type(font) == str:
         font = glutFont(font)
     #print "font = ",font
     if adjust != 'left':
-        len1 = myBitmapLength(font, text)
+        len1 = glutBitmapLength(font, text)
 ##  UNCOMMENT THESE LINES TO SEE WHEN glutBitmapLength GOES WRONG !
 ##        len2 = GLUT.glutBitmapLength(font, text)
 ##        if len1 != len2:
@@ -101,25 +145,27 @@ def drawText2D(text, x,y, font='9x15', adjust='left'):
             x -= len1/2
             y += height
     GL.glRasterPos2f(float(x),float(y));
-    drawGlutText(text,font)
+    glutRenderText(text,font)
 
-        
+
 class GlutText(Decoration):
     """A viewport decoration showing a text."""
 
-    def __init__(self,text,x,y,font='9x15',adjust='left',color=None):
+    def __init__(self,text,x,y,font='9x15',size=None,adjust='left',color=None):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
-        self.font = font
+        self.font = glutFontSelect(font,size)
+        #print "SELECTED GLUT TEXT FONT %s" % self.font 
         self.adjust = adjust
         self.color = saneColor(color)
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the text."""
+        #print 'DRAWING THE TEXT'
         if self.color is not None: 
             GL.glColor3fv(self.color)
-        drawText2D(self.text,self.x,self.y,self.font,self.adjust)
+        glutDrawText(self.text,self.x,self.y,self.font,self.adjust)
 
 
 # End

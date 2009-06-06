@@ -480,11 +480,13 @@ class Canvas(object):
             actor.draw(mode=self.rendermode)
 
         # decorations are drawn in 2D mode
-        self.begin_2D_drawing()
-        for actor in self.decorations:
-            self.setDefaults()
-            actor.draw(mode=self.rendermode)
-        self.end_2D_drawing()
+        if len(self.decorations) > 0:
+            self.begin_2D_drawing()
+            for actor in self.decorations:
+                self.setDefaults()
+                #GD.debug("DRAWING %s on %s" % (actor,self))
+                actor.draw(mode=self.rendermode)
+            self.end_2D_drawing()
 
         # make sure canvas is updated
         GL.glFlush()
@@ -497,6 +499,10 @@ class Canvas(object):
         It is assumed that you will not try to change/refresh the normal
         3D drawing cycle during this operation.
         """
+        GD.debug("Start 2D drawing")
+        if self.mode2D:
+            GD.debug("WARNING: ALREADY IN 2D MODE")
+            return
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
         GL.glLoadIdentity()
@@ -511,13 +517,15 @@ class Canvas(object):
  
     def end_2D_drawing(self):
         """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
-        GL.glEnable(GL.GL_DEPTH_TEST)    
-        GL.glMatrixMode(GL.GL_PROJECTION)
-        GL.glPopMatrix()
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glPopMatrix()
-        self.glLight(self.lighting)
-        self.mode2D = False
+        GD.debug("End 2D drawing")
+        if self.mode2D:
+            GL.glEnable(GL.GL_DEPTH_TEST)    
+            GL.glMatrixMode(GL.GL_PROJECTION)
+            GL.glPopMatrix()
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glPopMatrix()
+            self.glLight(self.lighting)
+            self.mode2D = False
        
         
     def setBbox(self,bbox=None):
