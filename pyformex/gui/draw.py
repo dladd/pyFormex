@@ -580,9 +580,9 @@ def setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0]):
     GD.app.processEvents()
 
 
-def drawText(text,x,y,adjust='left',font='helvetica',size=10,color=None):
+def drawText(text,x,y,adjust='left',font='helvetica',size=14,color=None):
     """Show a text at position x,y using font."""
-    TA = decors.Text(text,x,y,adjust,font,size,color)
+    TA = decors.Text(text,x,y,adjust=adjust,font=font,size=size,color=color)
     decorate(TA)
     return TA
 

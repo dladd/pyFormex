@@ -71,7 +71,7 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spr
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
     if TA is not None:
         undecorate(TA)
-    TA = drawText(text,10,10)
+    TA = drawText(text,10,10,font='sans',size=20)
     draw(P, color='black',marksize=3)
     drawNumbers(Formex(P))
     kargs = {'closed':closed}

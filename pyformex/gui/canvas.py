@@ -499,9 +499,9 @@ class Canvas(object):
         It is assumed that you will not try to change/refresh the normal
         3D drawing cycle during this operation.
         """
-        GD.debug("Start 2D drawing")
+        #GD.debug("Start 2D drawing")
         if self.mode2D:
-            GD.debug("WARNING: ALREADY IN 2D MODE")
+            #GD.debug("WARNING: ALREADY IN 2D MODE")
             return
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glPushMatrix()
@@ -517,7 +517,7 @@ class Canvas(object):
  
     def end_2D_drawing(self):
         """Cancel the 2D drawing mode initiated by begin_2D_drawing."""
-        GD.debug("End 2D drawing")
+        #GD.debug("End 2D drawing")
         if self.mode2D:
             GL.glEnable(GL.GL_DEPTH_TEST)    
             GL.glMatrixMode(GL.GL_PROJECTION)

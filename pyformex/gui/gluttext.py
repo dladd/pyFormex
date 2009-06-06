@@ -34,16 +34,17 @@ GLUTFONTALIAS = {
     'sans'  : ('helvetica','hv10','hv12','hv18'),
     }
 
-def glutFontSelect(font=None,size=None):
+def glutSelectFont(font=None,size=None):
     """Select one of the glut fonts using a font + size description.
 
     font is one of: 'fixed', 'serif', 'sans'
     size is an int that will be rounded to the nearest available size.
     """
+    GD.debug("INPUT %s,%s" % (font,size))
     if size is None and font in GLUTFONTS:
         return font
     if font is None:
-        font = 'fixed'
+        font = 'sans'
     for k in GLUTFONTALIAS:
         if font in GLUTFONTALIAS[k]:
             font = k
@@ -61,11 +62,12 @@ def glutFontSelect(font=None,size=None):
         if s[0] <= size:
             sel = s
 
+    GD.debug("OUTPUT %s" % (font))
     return sel[1]
 
 
 def getFont(font,size):
-    return glutFont(glutFontSelect(font,size))
+    return glutFont(glutSelectFont(font,size))
 
 
 def glutFont(font):
@@ -75,9 +77,9 @@ def glutFont(font):
       fixed: '9x15', '8x13',
       times-roman: 'tr10', 'tr24'
       helvetica:   'hv10', 'hv12',  'hv18'
-    If an unrecognized string is  given, the default is 9x15.
+    If an unrecognized string is  given, the default is hv18.
     """
-    return GLUTFONTS.get(font,GLUTFONTS['9x15'])
+    return GLUTFONTS.get(font,GLUTFONTS['hv18'])
 
 
 
@@ -98,6 +100,8 @@ def glutRenderText(text,font):
     before drawing.
     After drawing, the rasterpos will have been updated!
     """
+    if type(font) == str:
+        font = glutFont(font)
     for character in str(text):
         GLUT.glutBitmapCharacter(font, ord(character))
 
@@ -114,7 +118,7 @@ def glutBitmapLength(font, text):
     return len
 
 
-def glutDrawText(text, x,y, font='9x15', adjust='left'):
+def glutDrawText(text, x,y, font='hv18', adjust='left'):
     """Draw the given text at given 2D position in window.
 
     If adjust == 'center', the text will be horizontally centered on
@@ -123,11 +127,7 @@ def glutDrawText(text, x,y, font='9x15', adjust='left'):
     Any other setting will align the text left.
     Default is to center.
     """
-    font = '9x15'
     height = glutFontHeight(font)
-    if type(font) == str:
-        font = glutFont(font)
-    #print "font = ",font
     if adjust != 'left':
         len1 = glutBitmapLength(font, text)
 ##  UNCOMMENT THESE LINES TO SEE WHEN glutBitmapLength GOES WRONG !
@@ -145,6 +145,7 @@ def glutDrawText(text, x,y, font='9x15', adjust='left'):
             x -= len1/2
             y += height
     GL.glRasterPos2f(float(x),float(y));
+    GD.debug("RENDERING WITH FONT %s" % font) 
     glutRenderText(text,font)
 
 
@@ -155,14 +156,12 @@ class GlutText(Decoration):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
-        self.font = glutFontSelect(font,size)
-        #print "SELECTED GLUT TEXT FONT %s" % self.font 
+        self.font = glutSelectFont(font,size)
         self.adjust = adjust
         self.color = saneColor(color)
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the text."""
-        #print 'DRAWING THE TEXT'
         if self.color is not None: 
             GL.glColor3fv(self.color)
         glutDrawText(self.text,self.x,self.y,self.font,self.adjust)

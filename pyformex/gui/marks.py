@@ -61,8 +61,9 @@ class TextMark(Mark):
 
     def use_list(self):
         Mark.use_list(self)
-        x,y,z = self.pos
-        GD.canvas.renderText(x,y,z,self.text,self.font)
+        gluttext.glutRenderText(self.text,self.font)
+        #x,y,z = self.pos
+        #GD.canvas.renderText(x,y,z,self.text,self.font)
 
 
 class AxesMark(Mark):
@@ -89,7 +90,7 @@ import gluttext
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
-    def __init__(self,pos,val,color=black,font=None,size=None):
+    def __init__(self,pos,val,color=black,font='sans',size=18):
         """Create a number list.
 
         pos is an (N,3) array of positions.
@@ -104,7 +105,7 @@ class MarkList(Mark):
         Mark.__init__(self,pos)
         self.val = val
         self.color = color
-        self.font = gluttext.getFont(font,size)
+        self.font = gluttext.glutSelectFont(font,size)
         #self.font = getFont(font,size)
 
 
