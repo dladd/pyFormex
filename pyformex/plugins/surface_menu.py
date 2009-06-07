@@ -1170,7 +1170,7 @@ def create_menu():
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),
-          ('&Bounding Box',selection.printBbox),
+          ('&Bounding Box',selection.printbbox),
           ('&Surface Type',printType),
           ('&Total Area',printArea),
           ('&Enclosed Volume',printVolume),

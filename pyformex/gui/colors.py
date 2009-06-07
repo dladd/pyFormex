@@ -25,6 +25,8 @@
 
 from PyQt4 import QtGui
 
+QtGui.QColor.setAllowX11ColorNames(True) 
+
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.
 
@@ -99,6 +101,7 @@ cyan    = (0.0, 1.0, 1.0)
 magenta = (1.0, 0.0, 1.0)
 yellow  = (1.0, 1.0, 0.0)
 white   = (1.0, 1.0, 1.0)
+pyformex_pink = (1.0,0.2,0.4)
 
 
 def GREY(val,alpha=1.0):
@@ -114,6 +117,7 @@ darkgrey = grey(0.5)
 
 if __name__ == "__main__":
     print GLColor(QtGui.QColor('red'))
+    print GLColor(QtGui.QColor('indianred'))
     print GLColor('red')
     print GLColor(red)
     print GLColor([200,200,255])

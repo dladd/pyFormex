@@ -450,7 +450,7 @@ def create_menu():
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),
-          ('&Bounding Box',selection.printBbox),
+          ('&Bounding Box',selection.printbbox),
           ]),
         ("&Set Property",selection.setProperty),
         ("&Shrink",shrink),

@@ -178,7 +178,72 @@ def printOpenGLContext(ctxt):
         print "No OpenGL context yet!"
 
 
+################# Canvas Mouse Event Handler #########################
+
+class CursorShapeHandler(object):
+    """A class for handling the mouse cursor shape on the Canvas.
+
+    """
+    cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
+                     'pick'   : QtCore.Qt.CrossCursor, 
+                     'busy'   : QtCore.Qt.BusyCursor,
+                     }
+
+    def __init__(self,widget):
+        """Create a CursorHandler for the specified widget.""" 
+        self.widget = widget
+
+    def setCursorShape(self,shape):
+        """Set the cursor shape to shape"""
+        if shape not in QtCanvas.cursor_shape.keys():
+            shape = 'default'
+        self.setCursor(QtGui.QCursor(QtCanvas.cursor_shape[shape]))
+
+
+    def setCursorShapeFromFunc(self,func):
+        """Set the cursor shape to shape"""
+        if func in [ self.mouse_rectangle_zoom,self.mouse_pick ]:
+            shape = 'pick'
+        else:
+            shape = 'default'
+        self.setCursorShape(shape)
+
+    
+class CanvasMouseHandler(object):
+    """A class for handling the mouse events on the Canvas.
+
+    """
+    def setMouse(self,button,func,mod=NONE):
+        #print button,mod
+        self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
+        self.mousefnc[mod][button] = func
+        self.setCursorShapeFromFunc(func)
+        #print "MOUSE %s" % func
+        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+
+
+    def resetMouse(self,button,mod=NONE):
+        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+        try:
+            func = self.mousefncsaved[mod][button].pop()
+        except:
+            #print "AAAAAHHH, COULD NOT POP"
+            func = None
+        self.mousefnc[mod][button] = func
+        self.setCursorShapeFromFunc(func)
+        #print "RESETMOUSE %s" % func
+        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+            
+
+    def getMouseFunc(self):
+        """Return the mouse function bound to self.button and self.mod"""
+        return self.mousefnc.get(int(self.mod),{}).get(self.button,None)
+
+
+
+
 ################# Single Interactive OpenGL Canvas ###############
+
 
 class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     """A canvas for OpenGL rendering.
@@ -190,14 +255,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     functions in a separate class makes it esier to use the Canvas class
     in non-interactive situations or combining it with other GUI toolsets.
     """
-    ##
-    ##
-    ##  IMPORTANT : The mouse functionality should (and will) be moved
-    ##              to the MultiCanvas class!
-    ##
-    ##  The cursor shape can/should stay here 
-
-    # Cursor shapes used on canvas.
     cursor_shape = { 'default': QtCore.Qt.ArrowCursor,
                      'pick'   : QtCore.Qt.CrossCursor, 
                      'busy'   : QtCore.Qt.BusyCursor,
@@ -210,7 +267,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
         canvas.Canvas.__init__(self)
-        self.cursor = None
         self.setCursorShape('default')
         self.button = None
         self.mod = NONE
@@ -985,16 +1041,56 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         else:
             e.ignore()
 
-
 ################# Multiple Viewports ###############
 
 
-class MultiCanvas(QtGui.QGridLayout):
-    """A viewport that can be splitted."""
-    
+class FramedGridLayout(QtGui.QGridLayout):
+    """A QtGui.QGridLayout where each added widget is framed."""
+
     def __init__(self,parent=None):
         """Initialize the multicanvas."""
         QtGui.QGridLayout.__init__(self)
+ #       self.frames = []
+
+        
+    def addWidget(self,w,row,col):
+#        f = QtGui.QFrame(w)
+#        self.frames.append(f)
+        QtGui.QGridLayout.addWidget(self,w,row,col)
+
+    
+    def removeWidget(self,w):
+        QtGui.QGridLayout.removeWidget(self,w)
+
+
+
+## class FramedGridLayout(QtGui.QSplitter):
+##     """A QtGui.QGridLayout where each added widget is framed."""
+
+##     def __init__(self,parent=None):
+##         """Initialize the multicanvas."""
+##         QtGui.QSplitter.__init__(self)
+        
+##     def addWidget(self,w,row,col):
+##         QtGui.QSplitter.addWidget(self,w,row,col)
+    
+##     def removeWidget(self,w):
+##         QtGui.QSplitter.removeWidget(self,w)
+
+    
+
+
+#class MultiCanvas(QtGui.QGridLayout):
+class MultiCanvas(FramedGridLayout):
+    """An OpenGL canvas with multiple viewports and QT interaction.
+
+    The MultiCanvas implements a central QT widget containing one or more
+    QtCanvas widgets.
+    """
+    def __init__(self,parent=None):
+        """Initialize the multicanvas."""
+        FramedGridLayout.__init__(self)
+#        QtGui.QGridLayout.__init__(self)
         self.all = []
         self.active = []
         self.current = None
@@ -1002,7 +1098,7 @@ class MultiCanvas(QtGui.QGridLayout):
         self.rowwise = True
         self.parent = parent
 
-        
+
     def setDefaults(self,dict):
         """Update the default settings of the canvas class."""
         GD.debug("Setting canvas defaults:\n%s" % dict)
@@ -1026,15 +1122,21 @@ class MultiCanvas(QtGui.QGridLayout):
 
 
     def setCurrent(self,canv):
+        """Make the specified viewport the current  one.
+
+        canv can be either a viewport or viewport number.
+        """
         GL.glFlush()
         GD.canvas.updateGL()
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
-        # TEST SKIP IF ALREADY CURRENT
         if self.current == canv:
+            # alreay current
             return
         if canv in self.all:
+            self.current.focus = False
             GD.canvas = self.current = canv
+            self.current.focus = True
             toolbar.setTransparency(self.current.alphablend)
             toolbar.setPerspective(self.current.camera.perspective)
             toolbar.setLight(self.current.lighting)

@@ -231,6 +231,8 @@ class Canvas(object):
         self.dynamic = None    # what action on mouse move
         self.camera = None
         self.view_angles = camera.view_angles
+        self.cursor = None
+        self.focus = False
         GD.debug("Canvas Setting:\n%s"% self.settings)
 
 
@@ -480,13 +482,19 @@ class Canvas(object):
             actor.draw(mode=self.rendermode)
 
         # decorations are drawn in 2D mode
+        self.begin_2D_drawing()
+        
         if len(self.decorations) > 0:
-            self.begin_2D_drawing()
             for actor in self.decorations:
                 self.setDefaults()
                 #GD.debug("DRAWING %s on %s" % (actor,self))
                 actor.draw(mode=self.rendermode)
-            self.end_2D_drawing()
+
+        # draw the focus rectangle
+        if self.hasFocus():
+            self.draw_focus_rectangle()
+            
+        self.end_2D_drawing()
 
         # make sure canvas is updated
         GL.glFlush()
@@ -769,6 +777,14 @@ class Canvas(object):
     def showBuffer(self):
         """Show the saved buffer"""
         pass
+
+    def draw_focus_rectangle(self):
+        """Draw the focus rectangle"""
+        print "DRAWING THE FOCUS RECTANGLE"
+        lw=2
+        w,h = self.width(),self.height()
+        self._focus = decors.Grid(lw,lw,w-lw,h-lw,color=colors.pyformex_pink,linewidth=2*lw)
+        self._focus.draw()
 
     def draw_cursor(self,x,y):
         """draw the cursor"""

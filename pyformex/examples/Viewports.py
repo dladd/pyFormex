@@ -33,31 +33,33 @@ Demonstrate multiple viewports.
 nsl = 0
 F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
 
+## layout(2)
+## viewport(0)
+## draw(F)
+## drawNumbers(F)
+## drawText('Viewport 0',10,10)
+## viewport(1)
+## draw(F)
+## drawNumbers(F)
+## drawText('Viewport 1',10,10)
+## viewport(0)
+## viewport(1)
+## exit()
+
+
 layout(1)
-layout(2)
-viewport(0)
-draw(F)
-drawNumbers(F)
-drawText('Viewport 0',10,10)
-viewport(1)
-draw(F)
-drawNumbers(F)
-drawText('Viewport 1',10,10)
-viewport(0)
-viewport(1)
-exit()
 FA = draw(F,view='front')
-sleep(1)
+## sleep(1)
 
 layout(2)
 drawText('Viewport 2',10,10)
 GD.GUI.viewports.updateAll()
-exit()
+
 
 layout(3)
 draw(F,color='green')
 #sleep(nsl)
-exit(0)
+
 
 viewport(1)
 linkViewport(1,0)
