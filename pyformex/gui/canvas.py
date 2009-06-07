@@ -487,12 +487,13 @@ class Canvas(object):
         if len(self.decorations) > 0:
             for actor in self.decorations:
                 self.setDefaults()
-                #GD.debug("DRAWING %s on %s" % (actor,self))
                 actor.draw(mode=self.rendermode)
 
         # draw the focus rectangle
         if self.hasFocus():
-            self.draw_focus_rectangle()
+            self.draw_focus_rectangle(2)
+        elif self.focus:
+            self.draw_focus_rectangle(1)
             
         self.end_2D_drawing()
 
@@ -778,10 +779,11 @@ class Canvas(object):
         """Show the saved buffer"""
         pass
 
-    def draw_focus_rectangle(self):
-        """Draw the focus rectangle"""
-        print "DRAWING THE FOCUS RECTANGLE"
-        lw=2
+    def draw_focus_rectangle(self,width=2):
+        """Draw the focus rectangle.
+
+        The specified width is HALF of the line width"""
+        lw = width
         w,h = self.width(),self.height()
         self._focus = decors.Grid(lw,lw,w-lw,h-lw,color=colors.pyformex_pink,linewidth=2*lw)
         self._focus.draw()

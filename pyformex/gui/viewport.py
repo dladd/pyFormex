@@ -1118,30 +1118,34 @@ class MultiCanvas(FramedGridLayout):
         self.showWidget(canv)
         canv.initializeGL()   # Initialize OpenGL context and camera
         # DO NOT USE self.setCurrent(canv) HERE, because no camera yet
-        GD.canvas = self.current = canv
-
+        #GD.canvas = self.current = canv
+        self.setCurrent(canv)
+        
 
     def setCurrent(self,canv):
         """Make the specified viewport the current  one.
 
         canv can be either a viewport or viewport number.
         """
-        GL.glFlush()
-        GD.canvas.updateGL()
+        GD.debug("SETCURRENT %s" % canv)
+#        GL.glFlush()
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
-        if self.current == canv:
-            # alreay current
-            return
+        ## if self.current == canv:
+        ##     # alreay current
+        ##     return
+        if GD.canvas:
+            GD.canvas.focus = False
+            GD.canvas.updateGL()
         if canv in self.all:
-            self.current.focus = False
             GD.canvas = self.current = canv
-            self.current.focus = True
+            GD.canvas.focus = True
             toolbar.setTransparency(self.current.alphablend)
             toolbar.setPerspective(self.current.camera.perspective)
             toolbar.setLight(self.current.lighting)
             #toolbar.setNormals(self.current.avgnormals)
-            GL.glFlush()
+#            GL.glFlush()
+            GD.canvas.updateGL()
             
 
     def currentView(self):
