@@ -93,6 +93,7 @@ zoomfactor = 1.15      # zooming factor for zoom buttons
 rotfactor = 5.         # rotation angle for rotation buttons
 panfactor = 0.05       # translation factor for pan buttons
 autozoomfactor = 1.732 # enlargement factor for the autozoom (sqrt(3))
+wheelzoomfactor = 0.5  # enlargement factor for the wheelzoom
 
 [input]
 timeout = -1         # never timeout

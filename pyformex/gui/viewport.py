@@ -773,6 +773,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
             self.camera.saveMatrix()
 
+    def wheel_zoom(self,delta):
+        """Zoom by rotating a wheel over an angle delta"""
+        f = 2**(delta/120.*GD.cfg['gui/wheelzoomfactor'])
+        self.camera.zoomArea(f)
+        self.update()
 
     def emit_done(self,x,y,action):
         """Emit a DONE event by clicking the mouse.
@@ -1025,6 +1030,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             func(e.x(),self.height()-e.y(),RELEASE)
         e.accept()
 
+    def wheelEvent(self,e):
+        """Process a wheel event."""
+        func = self.wheel_zoom
+        if func:
+            func(e.delta())
+        e.accept()
+        
+
 
     # Any keypress with focus in the canvas generates a 'wakeup' signal.
     # This is used to break out of a wait status.
@@ -1127,7 +1140,6 @@ class MultiCanvas(FramedGridLayout):
 
         canv can be either a viewport or viewport number.
         """
-        GD.debug("SETCURRENT %s" % canv)
 #        GL.glFlush()
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
