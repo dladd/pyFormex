@@ -1,26 +1,4 @@
-# $Id$    -*- rst -*-
-##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
-##  pyFormex is a tool for generating, manipulating and transforming 3D
-##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
-##  Distributed under the GNU General Public License version 3 or later.
-##
-##
-##  This program is free software: you can redistribute it and/or modify
-##  it under the terms of the GNU General Public License as published by
-##  the Free Software Foundation, either version 3 of the License, or
-##  (at your option) any later version.
-##
-##  This program is distributed in the hope that it will be useful,
-##  but WITHOUT ANY WARRANTY; without even the implied warranty of
-##  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##  GNU General Public License for more details.
-##
-##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-##
+.. $Id$    -*- rst -*-
 
 pyFormex 0.8  Releasenotes
 ==========================
@@ -31,13 +9,18 @@ compared to the previous release 0.7.3
 
 Installation
 ------------
-
+pyFormex now includes install scripts for:
+ - gl2ps
+ - gts
+ - tetgen
+ - calpy  
 
 
 Command line
 ------------
+- In GUI mode, pyFormex script filenames passed on the command line will now
+be processed just like in NONGUI mode, before entering the GUI.
 
-- In GUI mode, pyFormex scripts passed on the command line will now also be processed.
 
 Configuration
 -------------
@@ -48,11 +31,11 @@ Core
 ----
 - Formex:
   + Formex transformation preserve the 'eltype' attribute
-  + New transformations: mirror, centered, resized
+  + New transformations: mirror (now different from reflect!), centered, resized
   + Deprecated 'readfile'
   + cutAtPlane is deprecated in favor of cutWithPlane
+  + A number of deprecated functions were removed
  
-
 - All script executing functionality is moved to script.py
 - The GUI can now be started from a nongui script
 - mydict.py: changed the pickling to allow non-ascii pickling of projects
@@ -62,10 +45,19 @@ Core
 
 Gui
 ---
+- GUI can be started from the nongui mode by calling a function
+- Focus rectangle identifies the current viewport
+- Rectangle zooming implemented
+- Revised Project File menu
+- Project files can be compressed
 
 
 Drawing
 -------
+- Defaults for draw() have changed. Use view='last' and bbox='last' to keep
+  camera settings unchanged.
+- New drawing functions drawMarks en drawVectors
+- All colors named in X11/rgb.txt file are usable.
 
 
 Scripting
@@ -74,6 +66,16 @@ Scripting
 
 Plugins
 -------
+- mesh: new class Mesh to represent geometry in (coords,connectivity) format,
+  functions/methods to sweep, extrude and connect meshes.
+- isopar: added more transformations('quad13','quad16','hex64'
+- fe_menu: start of a Finite Element Preprocessor plugin
+- export: start of a generalized exporting framework
+- dxf: start of an exporter to DXF format
+- curve: added PolyLine.atLength() method
+- tools_menu: added general variable editor, delete all variables
+- project: moved to pyFormex core 
+
 
 Examples
 --------

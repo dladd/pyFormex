@@ -113,6 +113,43 @@ class FileSelection(QtGui.QFileDialog):
             return None
 
 
+class ProjectSelection(FileSelection):
+    """A file selection dialog specialized for opnening projects."""
+    def __init__(self,path=None,pattern=None,exist=False,compression=0):
+        """Create the dialog."""
+        if path is None:
+            path = GD.cfg['workdir']
+        if pattern is None:
+            pattern = map(utils.fileDescription, ['pyf'])  
+        FileSelection.__init__(self,path,pattern,exist)
+        grid = self.layout()
+        nr,nc = grid.rowCount(),grid.columnCount()
+
+        if not exist:
+            self.cpr = InputSlider("Compression level (0-9)",compression,min=0,max=9)
+            self.cpw = QtGui.QWidget()
+            self.cpw.setLayout(self.cpr)
+            self.cpw.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
+            grid.addWidget(self.cpw,nr,0,1,-1)
+            nr += 1
+               
+        self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
+        self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
+        grid.addWidget(self.leg,nr,0,1,-1)
+
+
+    def getResult(self):
+        self.exec_()
+        if self.result() == QtGui.QDialog.Accepted:
+            opt = odict.ODict()
+            opt.fn = str(self.selectedFiles()[0])
+            opt.leg = self.leg.isChecked()
+            opt.cpr = self.cpr.value()
+            return opt
+        else:
+            return None
+
+
 class SaveImageDialog(FileSelection):
     """A file selection dialog with extra fields."""
     def __init__(self,path=None,pattern=None,exist=False,multi=False):

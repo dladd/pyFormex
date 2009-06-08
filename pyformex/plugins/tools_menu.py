@@ -88,7 +88,9 @@ def edit():
             # Use general editor
             name = database.names[0]
             res = askItems([(name,repr(F),'text')])
-            print res
+            if res:
+                print res
+                GD.PF.update(res)
 
 
 def rename():
@@ -104,15 +106,12 @@ def rename():
             database.forget()
             database.set(name)
 
-    
-def editByName(name):
-    pass
-
 
 def deleteAll():
     printall()
     if ack("Are you sure you want to unrecoverably delete all global variables?"):
-        print "OK,DELETE"
+        GD.PF = {}
+        
 
 ###################### Drawn Objects #############################
 

@@ -41,7 +41,7 @@ from gettext import gettext as _
 the_project = None
 
 
-def createProject(create=True,compression=0,legacy=False,addGlobals=None):
+def createProject(create=True,compression=0,addGlobals=None):
     """Open a file selection dialog and let the user select a project.
 
     The default will let the user create new project files as well as open
@@ -73,13 +73,18 @@ def createProject(create=True,compression=0,legacy=False,addGlobals=None):
             the_project.save()
         cur = the_project.filename
     typ = [ 'pyFormex projects (*.pyf)', 'All files (*)' ]
-    fn = widgets.FileSelection(cur,typ,exist=not create).getFilename()
-    if fn is None:
+    res = widgets.ProjectSelection(cur,typ,exist=not create).getResult()
+    if res is None:
         # user canceled
         return
-    
+
+    fn = res.fn
     if not fn.endswith('.pyf'):
         fn += '.pyf'
+    legacy = res.leg
+    compression = res.cpr
+    print fn,legacy,compression
+
     if create and os.path.exists(fn):
         res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
         if res == 'Cancel':
@@ -98,11 +103,6 @@ def createProject(create=True,compression=0,legacy=False,addGlobals=None):
 
             addGlobals = res == 'Add'
 
-    if create and not legacy:
-        res = draw.askItems([('Compression level',compression,'slider',{'min':0,'max':9})])
-        if res:
-            compression = res['Compression level']
-
     # OK, we have all data, now create/open the project
     GD.GUI.setBusy()
     the_project = project.Project(fn,create=create,signature = GD.Version,compression=compression,legacy=legacy)
@@ -115,12 +115,6 @@ def createProject(create=True,compression=0,legacy=False,addGlobals=None):
     GD .message("Project contents: %s" % the_project.keys())
     if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
         processArgs([the_project.autofile])
-
-
-@utils.deprecation("\nThe use of this function is highly deprecated!\n - If you just want to avoid compression: use createProject with compression level 0.\n - If instead you want to create a project for a user of an old version of pyFormex: make him upgrade.")
-def createLegacyProject():
-    """Create a legacy project file, which is missing a header."""
-    createProject(legacy=True)
 
 
 def openProject():
@@ -312,7 +306,6 @@ def setOptions():
 
 MenuData = [
     (_('&Start new project'),createProject),
-    (_('&Start legacy project'),createLegacyProject),
     (_('&Open existing project'),openProject),
     (_('&Set current script as AutoFile'),setAutoFile),
     (_('&Save project'),saveProject),

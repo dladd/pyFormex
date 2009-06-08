@@ -56,7 +56,7 @@ class Project(dict):
             self.mode = 'b'
         else:
             self.mode = ''
-        self.legacy=legacy        
+        self.legacy=legacy
         if create or not os.path.exists(filename):
             self.save()
         else:
@@ -81,6 +81,7 @@ class Project(dict):
         f = file(self.filename,'w'+self.mode)
         f.write("%s\n" % self.signature)
         pickle.dump(self.header_data(),f,pickle.HIGHEST_PROTOCOL)
+        #print self.keys()
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'w'+self.mode,self.gzip,f)
             pickle.dump(self,pyf,pickle.HIGHEST_PROTOCOL)
