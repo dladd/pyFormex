@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -489,11 +489,12 @@ class Canvas(object):
                 self.setDefaults()
                 actor.draw(mode=self.rendermode)
 
-        # draw the focus rectangle
-        if self.hasFocus():
-            self.draw_focus_rectangle(2)
-        elif self.focus:
-            self.draw_focus_rectangle(1)
+        # draw the focus rectangle if more than one viewport
+        if len(GD.GUI.viewports.all) > 1:
+            if self.hasFocus():
+                self.draw_focus_rectangle(2)
+            elif self.focus:
+                self.draw_focus_rectangle(1)
             
         self.end_2D_drawing()
 

@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -742,7 +742,7 @@ See Help->License or the file COPYING for details.
     if GD.GUI.easter_egg:
         draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
 
-    GD.warning("The project menu functions have been changed completely. Please use carefully during the test period (and make a copy of your existing project files for safety),") 
+    ## GD.warning("The project menu functions have been changed completely. Please use carefully during the test period (and make a copy of your existing project files for safety),") 
 
 
 def runGUI():

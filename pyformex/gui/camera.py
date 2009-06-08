@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -20,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program. If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 """camera 0.1 (C) Benedict Verhegghe"""
 

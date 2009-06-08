@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.7.3 Release Tue Dec 30 20:45:35 2008
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -1066,10 +1066,10 @@ class FramedGridLayout(QtGui.QGridLayout):
  #       self.frames = []
 
         
-    def addWidget(self,w,row,col):
+    def addWidget(*args):
 #        f = QtGui.QFrame(w)
 #        self.frames.append(f)
-        QtGui.QGridLayout.addWidget(self,w,row,col)
+        QtGui.QGridLayout.addWidget(*args)
 
     
     def removeWidget(self,w):
@@ -1166,11 +1166,22 @@ class MultiCanvas(FramedGridLayout):
 
     def showWidget(self,w):
         """Show the view w"""
-        row,col = divmod(self.all.index(w),self.ncols)
-        if self.rowwise:
-            self.addWidget(w,row,col)
-        else:
-            self.addWidget(w,col,row)
+        ind = self.all.index(w)
+        row,col = divmod(ind,self.ncols)
+
+        ## print "Viewport %s %s,%s,%s" % (self.rowwise,row,col,self.ncols)
+
+        ## if row > 0 and col < self.ncols and ind == len(self.all)-1:
+        ##     print "SPANMULTIPLE"
+        ##     rspan,cspan = 1,2
+        ##     if not self.rowwise:
+        ##         row,col = col,row
+        ##         rspan,cspan = cspan,rspan
+        ##     self.addWidget(w,row,col,rspan,cspan)
+        ## else:
+        if not self.rowwise:
+            row,col = col,row
+        self.addWidget(w,row,col)
         w.raise_()
 
 
