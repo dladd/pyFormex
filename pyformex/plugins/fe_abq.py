@@ -1014,6 +1014,7 @@ Script: %s
             elif p.prop is not None:
                 # set is specified by nprop nrs
                 if self.nprop is None:
+                    print self
                     raise ValueError,"nodeProp has a 'prop' field but no 'nprop'was specified"
                 set = where(self.nprop == p.prop)[0]
             else:
@@ -1035,6 +1036,7 @@ Script: %s
             elif p.prop is not None:
                 # element set is specified by eprop nrs
                 if self.eprop is None:
+                    print p
                     raise ValueError,"elemProp has a 'prop' field but no 'eprop'was specified"
                 set = where(self.eprop == p.prop)[0]
             else:

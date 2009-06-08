@@ -50,7 +50,7 @@ def askSlices(bb):
         P = [ bb[0]+N*s for s in x ]
         return P,N,totalrot
     else:
-        return [],[]
+        return None
 
 reset()
 smooth()
@@ -65,7 +65,11 @@ t = -0.3
 bb[0] = (1.0-t)*bb[0] + t*bb[1]
 draw(S,bbox=bb,view='front')
 
-P,n,t = askSlices(S.bbox())
+try:
+    P,n,t = askSlices(S.bbox())
+except:
+    exit()
+
 a = t/len(P)
 
 F = S.toFormex()
@@ -82,7 +86,7 @@ for i,p in enumerate(P):
     draw(G)
 
 seterr(**old)
-    
+
 x = GD.canvas.width()/2
 y = GD.canvas.height() - 40
 drawText("No animals got hurt during the making of this movie!",x,y,size=18,adjust='center')

@@ -235,7 +235,7 @@ def playScript(scr,name=None,filename=None,argv=[]):
     (including comments) is echoed to the message board.
     """
     global scriptDisabled,scriptRunning,exitrequested
-    GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
+    #GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
     if scriptRunning or scriptDisabled :
@@ -247,7 +247,7 @@ def playScript(scr,name=None,filename=None,argv=[]):
 
     if GD.GUI:
         global stepmode,exportNames,starttime
-        GD.debug('GUI SCRIPT MODE %s'% (stepmode))
+        #GD.debug('GUI SCRIPT MODE %s'% (stepmode))
         GD.GUI.drawlock.allow()
         GD.canvas.update()
         GD.GUI.actions['Play'].setEnabled(False)
@@ -276,7 +276,7 @@ def playScript(scr,name=None,filename=None,argv=[]):
     try:
         try:
             if GD.GUI and stepmode:
-                GD.debug("STEPPING THROUGH SCRIPT")
+                #GD.debug("STEPPING THROUGH SCRIPT")
                 step_script(scr,g,True)
             else:
                 if GD.options.executor:

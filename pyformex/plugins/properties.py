@@ -492,10 +492,10 @@ class PropertyDB(Dict):
         """
         try:
             d = {}
-            print "CLOAD"
-            print cload
+            #print "CLOAD"
+            #print cload
             if cload is not None:
-                print "CHECKING"
+                #print "CHECKING"
                 d['cload'] = checkIdValue(cload)
 #                d['cload'] = checkArray1D(cload,6,'f','i')
             if bound is not None:

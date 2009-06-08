@@ -61,7 +61,7 @@ m2 = Mesh(c2,e1)
 clear()
 drawMesh(m1)
 drawMesh(m2)
-pause()
+sleep(1)
 
 m = connectMesh(m1,m2,nz)
 

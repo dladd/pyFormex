@@ -45,7 +45,7 @@ def drawAxis(len,dir,text):
     F = Formex(pattern('1')).scale(len).rotate(dir)
     #T = F[0][1].scale(1.1)
     draw(F,linewidth=2.0)
-    drawText3D(F[0][1]+(2.,-0.5,0.),text)
+    drawText3D(F[0][1]+(2.,-0.5,0.),text,size=18)
     return F
 
 def drawFrame(P):

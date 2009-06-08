@@ -79,7 +79,10 @@ Plugins
 
 Examples
 --------
-
+- new examples: Extrude, 
+- Connectmesh: Mesh class moved into mesh plugin
+- SweepBeam: expanded with extrude method
+- Curves: expanded with more curve types and data sets
 
 Manual
 ------

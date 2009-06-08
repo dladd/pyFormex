@@ -102,14 +102,20 @@ edge =  concatenate([topedge,topcorner])
 Q = 0.5*q*dx*dx
 
 P = PropertyDB()
-P.nodeProp(field,cload = [0,0,Q,0,0,0])
-P.nodeProp(edge,cload = [0,0,Q/2,0,0,0])
-P.nodeProp(support, bound = [1,1,1,0,0,0])
+P.nodeProp(set=field,cload = [0,0,Q,0,0,0])
+P.nodeProp(set=edge,cload = [0,0,Q/2,0,0,0])
+P.nodeProp(set=support,bound = [1,1,1,0,0,0])
 
 circ20 = ElemSection(section={'name':'circ20','sectiontype':'Circ','radius':10, 'cross_section':314.159}, material={'name':'S500', 'young_modulus':210000, 'shear_modulus':81000, 'poisson_ratio':0.3, 'yield_stress' : 500,'density':0.000007850})
-P.elemProp(topbar,section=circ20,eltype='T3D2')
-P.elemProp(bottombar,section=circ20,eltype='T3D2')
-P.elemProp(diabar,section=circ20,eltype='T3D2')
+P.elemProp(set=topbar,section=circ20,eltype='T3D2')
+P.elemProp(prop=0,section=circ20,eltype='T3D2')
+P.elemProp(prop=1,section=circ20,eltype='T3D2')
+
+for p in P.nprop:
+    print p
+for p in P.eprop:
+    print p
+    
 
 # Since all elems have same characteristics, we could just have used:
 #   P.elemProp(section=circ20,elemtype='T3D2')
@@ -126,4 +132,4 @@ res = [ Result(kind='element',keys=['S']),
 	]
 model = Model(nodes,elems)
 message("Writing the Abaqus file")
-AbqData(model,P,[step],out=[out],res=res).write('SpaceTruss')
+AbqData(model,P,[step],eprop=F.p,out=[out],res=res).write('SpaceTruss')

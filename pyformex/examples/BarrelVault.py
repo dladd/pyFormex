@@ -60,4 +60,5 @@ e = Formex(pattern("2"),0).replic2(2,2*n,2*m,1)
 barrel = (d+h+e).rotate(90,1).translate(0,r).scale([1.,a/(2*n),l/(2*m)]).cylindrical()
 
 draw(barrel)
-print globals()
+
+# End

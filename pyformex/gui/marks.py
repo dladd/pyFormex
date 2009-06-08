@@ -53,7 +53,7 @@ class TextMark(Mark):
         if color is None:
             color = black
         self.color = color
-        self.font = getFont(font,size)
+        self.font = gluttext.getFont(font,size)
 
     def drawGL(self,mode=None,color=None):
         GL.glColor3fv(self.color)

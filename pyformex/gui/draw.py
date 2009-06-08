@@ -766,8 +766,8 @@ def pause(msg="Use the Step or Continue button to proceed"):
     if GD.GUI.drawlock.allowed:
         GD.GUI.drawlock.block()    # will need external event to release it
         while (GD.GUI.drawlock.locked):
-            print "Processing events"
-            sleep(0.5)
+            GD.debug("PAUSE: Processing events")
+            sleep(1)
             GD.app.processEvents()
             GD.canvas.update()
 

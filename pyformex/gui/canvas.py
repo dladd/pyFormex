@@ -41,7 +41,7 @@ import utils
 def gl_pickbuffer():
     "Return a list of the 2nd numbers in the openGL pick buffer."
     buf = GL.glRenderMode(GL.GL_RENDER)
-    GD.debugt("translate getpickbuf")
+    #GD.debugt("translate getpickbuf")
     return asarray([ r[2] for r in buf ])
 
 
@@ -292,12 +292,12 @@ class Canvas(object):
 
         This changes the rendermode and redraws everything with the new mode.
         """
-        GD.debug("Changing Render Mode to %s" % rm)
+        #GD.debug("Changing Render Mode to %s" % rm)
         if rm != self.rendermode:
             if rm not in Canvas.rendermodes:
                 rm = Canvas.rendermodes[0]
             self.rendermode = rm
-            GD.debug("Redrawing with mode %s" % self.rendermode)
+            #GD.debug("Redrawing with mode %s" % self.rendermode)
             self.glinit(self.rendermode)
             self.redrawAll()
 
@@ -373,8 +373,8 @@ class Canvas(object):
         #if GD.options.makecurrent:
         self.makeCurrent()  # we need correct OpenGL context for camera
         self.camera = camera.Camera()
-        GD.debug("camera.rot = %s" % self.camera.rot)
-        GD.debug("view angles: %s" % self.view_angles)
+        #GD.debug("camera.rot = %s" % self.camera.rot)
+        #GD.debug("view angles: %s" % self.view_angles)
 
 
     def glinit(self,mode=None):

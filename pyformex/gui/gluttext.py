@@ -62,7 +62,7 @@ def glutSelectFont(font=None,size=None):
     font is one of: 'fixed', 'serif', 'sans'
     size is an int that will be rounded to the nearest available size.
     """
-    GD.debug("INPUT %s,%s" % (font,size))
+    #GD.debug("INPUT %s,%s" % (font,size))
     if size is None and font in GLUTFONTS:
         return font
     if font is None:
@@ -84,7 +84,7 @@ def glutSelectFont(font=None,size=None):
         if s[0] <= size:
             sel = s
 
-    GD.debug("OUTPUT %s" % (font))
+    #GD.debug("OUTPUT %s" % (font))
     return sel[1]
 
 
@@ -134,6 +134,8 @@ def glutBitmapLength(font, text):
     We use our own fucntion to calculate the length because the builtin
     has a bug.
     """
+    if type(font) == str:
+        font = glutFont(font)
     len = 0
     for c in text:
         len += GLUT.glutBitmapWidth(font, ord(c))
@@ -167,7 +169,7 @@ def glutDrawText(text, x,y, font='hv18', adjust='left'):
             x -= len1/2
             y += height
     GL.glRasterPos2f(float(x),float(y));
-    GD.debug("RENDERING WITH FONT %s" % font) 
+    #GD.debug("RENDERING WITH FONT %s" % font) 
     glutRenderText(text,font)
 
 
