@@ -199,6 +199,8 @@ def match(pattern, data, vars=None):
     for pattern, data in map(None, pattern, data):
         same, vars = match(pattern, data, vars)
         if not same:
+#            print "BREAK AT PATTERN "+str(pattern)
+#            print "BREAK WITH DATA  "+str(data)
             break
     return same, vars
 
@@ -255,13 +257,31 @@ PARAMETER_VALUE_PATTERN = (
             (symbol.arith_expr,
              (symbol.term,
               (symbol.factor,
-               (symbol.power,['parvalue']
-                 )))))))))))))
+               (symbol.power,['parvalue'])
+                 ))))))))))))
 #                (symbol.atom,['parvalue'])
 #                 )))))))))))))
 #                (symbol.atom,
 #                 (token.NAME, ['parvalue'])
 #                 ))))))))))))))
+
+PARAMETER_VALUE_PATTERN2 = (
+    symbol.test,
+    (symbol.or_test,
+     (symbol.and_test,
+      (symbol.not_test,
+       (symbol.comparison,
+        (symbol.expr,
+         (symbol.xor_expr,
+          (symbol.and_expr,
+           (symbol.shift_expr,
+            (symbol.arith_expr,
+             (symbol.term,
+              (symbol.factor,
+               (token.MINUS,'-'),
+              (symbol.factor,
+               (symbol.power,['parvalue']),
+                 )))))))))))))
 
 
 CLASS_METHOD_PATTERN = (259, (50, '@'), (287, (1, 'classmethod')), )
@@ -297,10 +317,11 @@ def rebuildAtom(node):
 
     elif node[0] == 303:
         found,vars = match(PARAMETER_VALUE_PATTERN, node)
+            
         if found:
             return rebuildAtom(vars['parvalue'])
 
-    print '%HELP',node
+    print '%HELP ATOM',node
     return str(node)
        
 
@@ -322,6 +343,13 @@ def ParameterInfo(node):
         elif i[0] == 303:
             #print i
             found,vars = match(PARAMETER_VALUE_PATTERN, i)
+            if not found:
+#                print "TRYING PATTERN2 %s" % str(PARAMETER_VALUE_PATTERN2)
+#                print "VALUE TO MATCH  %s" % str(i)
+                found,vars = match(PARAMETER_VALUE_PATTERN2, i)
+                if not found:
+                    raise RuntimeError,"ALAS!"
+
             #print found,vars
             if found:
                 value = rebuildAtom(vars['parvalue'])
@@ -443,9 +471,12 @@ def ship_end():
 
 def sanitize(s):
     """Sanitize a string for LaTeX."""
-    for c in '{}#&%':
+    for c in '#&%':
         s = s.replace('\\'+c,c)
         s = s.replace(c,'\\'+c)
+    ## for c in '{}':
+    ##     s = s.replace('\\'+c,c)
+    ##     s = s.replace(c,'\\'+c)
     return s
 
 

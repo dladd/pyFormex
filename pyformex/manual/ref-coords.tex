@@ -12,7 +12,7 @@
 This module defines the Coords class, which is the basic data structure
 in pyFormex to store coordinates of points in a 3D space.
 
-The \module\{coords\} module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The \class\{Coords\} class is used by other classes, such as \class\{Formex\} and \class\{Surface\}, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the \class\{Coords\} class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the \class\{Coords\} class directly as well.
+The \module{coords} module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The \class{Coords} class is used by other classes, such as \class{Formex} and \class{Surface}, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the \class{Coords} class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the \class{Coords} class directly as well.
 
 
 
@@ -21,8 +21,8 @@ The \module\{coords\} module implements a data class for storing large sets of 3
     The Coords class is the basic data structure used throughout pyFormex
     to store coordinates of points in a 3D space.
 
-    The \class\{Coords\} class is used by other classes, such as \class\{Formex\}
-    and \class\{Surface\}, which thus inherit the same transformation
+    The \class{Coords} class is used by other classes, such as \class{Formex}
+    and \class{Surface}, which thus inherit the same transformation
     capabilities. Applications will mostly use the higher level
     classes, which usually have more elaborated consistency checking
     and error handling.
@@ -41,13 +41,13 @@ The \module\{coords\} module implements a data class for storing large sets of 3
 
 The Coords class has this constructor: 
 
-\begin{classdesc}{Coords}{cls,data=None,dtyp=None,copy=False}
+\begin{classdesc}{Coords}{cls,data=None,dtyp=Float,copy=False}
 Create a new instance of class Coords.
 
         If no data are given, a single point (0.,0.,0.) will be created.
         If specified, data should evaluate to an (...,3) shaped array of floats.
         If copy==True, the data are copied.
-        If no dtype is given that of data are used, or float32 by default.
+        If no dtyp is given that of data are used, or float32 by default.
         
 
 \end{classdesc}
@@ -66,8 +66,8 @@ Return the data as a simple set of points.
 Return the shape of the points array.
 
         This is the shape of the Coords array with last axis removed.
-        The full shape of the \class\{Coords\} array can be obtained from
-        its \var\{shape\} attribute.
+        The full shape of the \class{Coords} array can be obtained from
+        its \var{shape} attribute.
         
 \end{funcdesc}
 
@@ -545,7 +545,7 @@ Concatenate a list of Coords object.
         All Coords object in the list L should have the same shape
         except for the length of the first axis.
         This function is equivalent to the numpy concatenate, but makes
-        sure the result is a Cooords object.
+        sure the result is a Coords object.
         
 \classmethod
 \end{funcdesc}

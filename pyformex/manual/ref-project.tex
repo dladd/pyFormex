@@ -13,33 +13,44 @@ Functions for managing a project in pyFormex.
 
 
 
-\subsection{Project class: A pyFormex project is a persistent storage of pyFormex objects.}
+\subsection{Project class: A project is a persistent storage of a Python dictionary.}
 
 
 
 
 The Project class has this constructor: 
 
-\begin{classdesc}{Project}{filename,create=False}
+\begin{classdesc}{Project}{filename,create=False,signature=_signature_,compression=0,binary=False,legacy=True}
 Create a new project with the given filename.
 
         If the filename exists and create is False, the file is opened and
         the contents is read into the project dictionary.
         If not, a new empty file and project are created.
+
+        If legacy = True, the Project is allowed to read unsigned file formats.
+        Writing is always done with signature though.
         
 
 \end{classdesc}
 
 Project objects have the following methods:
 
-\begin{funcdesc}{save}{filename=None}
+\begin{funcdesc}{header_data}{}
+Construct the data to be saved in the header.
+\end{funcdesc}
+
+\begin{funcdesc}{set_data_from_header}{data}
+Set the project data from the header.
+\end{funcdesc}
+
+\begin{funcdesc}{save}{}
 Save the project to file.
 \end{funcdesc}
 
-\begin{funcdesc}{load}{filename=None}
+\begin{funcdesc}{load}{}
 Load a project from file.
         
-        The loaded definition will update the current project.
+        The loaded definitions will update the current project.
         
 \end{funcdesc}
 

@@ -267,7 +267,7 @@ Offset a surface with a certain distance.
         
 \end{funcdesc}
 
-\begin{funcdesc}{feModel}{}
+\begin{funcdesc}{toMesh}{}
 Return a tuple of nodal coordinates and element connectivity.
 \end{funcdesc}
 
@@ -548,7 +548,7 @@ Detects different parts of the surface using a frontal method.
 
 \end{funcdesc}
 
-\begin{funcdesc}{cutAtPlane}{None}
+\begin{funcdesc}{cutWithPlane}{None}
 Cut a surface with a plane.
 \end{funcdesc}
 
@@ -757,19 +757,6 @@ Create a triangle within a border.
     Elems is a (nelems,2) shaped array of integers representing
     the border element numbers and must be ordered.
     A list of two objects is returned: the new border elements and the triangle.
-    
-
-\end{funcdesc}
-
-
-\begin{funcdesc}{coordsmethod}{f}
-Define a TriSurface method as the equivalent Coords method.
-
-    This decorator replaces the TriSurface's vertex coordinates with the
-    ones resulting from applying the transform f.
-    
-    The coordinates are changed inplane, so copy them before if you do not
-    want them to be lost.
     
 
 \end{funcdesc}

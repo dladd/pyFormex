@@ -50,6 +50,25 @@ Ask for a filename by user interaction.
 \end{funcdesc}
 
 
+\subsection{ProjectSelection class: A file selection dialog specialized for opnening projects.}
+
+
+
+
+The ProjectSelection class has this constructor: 
+
+\begin{classdesc}{ProjectSelection}{path=None,pattern=None,exist=False,compression=0}
+Create the dialog.
+
+\end{classdesc}
+
+ProjectSelection objects have the following methods:
+
+\begin{funcdesc}{getResult}{}
+
+\end{funcdesc}
+
+
 \subsection{SaveImageDialog class: A file selection dialog with extra fields.}
 
 
@@ -290,6 +309,37 @@ Creates a new string input field with a label in front.
 \end{classdesc}
 
 InputString objects have the following methods:
+
+\begin{funcdesc}{show}{}
+Select all text on first display.
+\end{funcdesc}
+
+\begin{funcdesc}{value}{}
+Return the widget's value.
+\end{funcdesc}
+
+\begin{funcdesc}{setValue}{val}
+Change the widget's value.
+\end{funcdesc}
+
+
+\subsection{InputText class: A scrollable text input item.}
+
+
+
+
+The InputText class has this constructor: 
+
+\begin{classdesc}{InputText}{name,value}
+Creates a new text input field with a label in front.
+
+        If the type of value is not a string, the input text
+        will be eval'ed before returning.
+        
+
+\end{classdesc}
+
+InputText objects have the following methods:
 
 \begin{funcdesc}{show}{}
 Select all text on first display.

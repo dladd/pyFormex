@@ -62,7 +62,7 @@ Distributed under the GNU GPL version 3 or later
 
 The Dict class has this constructor: 
 
-\begin{classdesc}{Dict}{data=\{\},default=None}
+\begin{classdesc}{Dict}{data={},default=None}
 Create a new Dict instance.
 
         The Dict can be initialized with a Python dict or a Dict.
@@ -77,7 +77,7 @@ Dict objects have the following methods:
 \begin{funcdesc}{__repr__}{}
 Format the Dict as a string.
 
-        We use the format Dict(\{\}), so that the string is a valid Python
+        We use the format Dict({}), so that the string is a valid Python
         representation of the Dict.
         
 \end{funcdesc}
@@ -124,7 +124,7 @@ Allow items to be deleted using del self.key.
         
 \end{funcdesc}
 
-\begin{funcdesc}{update}{data=\{\}}
+\begin{funcdesc}{update}{data={}}
 Add a dictionary to the Dict object.
 
         The data can be a dict or Dict type object. 
@@ -177,7 +177,7 @@ Create a deep copy of ourself.
 
 The CDict class has this constructor: 
 
-\begin{classdesc}{CDict}{data=\{\},default=returnNone}
+\begin{classdesc}{CDict}{data={},default=returnNone}
 
 
 \end{classdesc}
@@ -187,7 +187,7 @@ CDict objects have the following methods:
 \begin{funcdesc}{__repr__}{}
 Format the CDict as a string.
 
-        We use the format Dict(\{\}), so that the string is a valid Python
+        We use the format Dict({}), so that the string is a valid Python
         representation of the Dict.
         
 \end{funcdesc}

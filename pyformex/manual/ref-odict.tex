@@ -22,7 +22,7 @@
 
 The ODict class has this constructor: 
 
-\begin{classdesc}{ODict}{data=\{\}}
+\begin{classdesc}{ODict}{data={}}
 Create a new ODict instance.
 
         The ODict can be initialized with a Python dict or an ODict.
@@ -36,7 +36,7 @@ ODict objects have the following methods:
 \begin{funcdesc}{__repr__}{}
 Format the Dict as a string.
 
-        We use the format Dict(\{\}), so that the string is a valid Python
+        We use the format Dict({}), so that the string is a valid Python
         representation of the Dict.
         
 \end{funcdesc}
@@ -52,7 +52,7 @@ Allow items to be deleted using del self[key].
         
 \end{funcdesc}
 
-\begin{funcdesc}{update}{data=\{\}}
+\begin{funcdesc}{update}{data={}}
 Add a dictionary to the ODict object.
 
         The new keys will be appended to the existing, but the order of the

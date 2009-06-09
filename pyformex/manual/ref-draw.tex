@@ -16,9 +16,9 @@
 The draw module provides the basic user interface to the OpenGL
 rendering capabilities of pyFOrmex.
 
-\emph\{Warning: the \texttt\{draw\} module is still subject to regular changes.
+\emph{Warning: the \texttt{draw} module is still subject to regular changes.
 Therefore, the information given below may not be fully accurate.
-\}
+}
 
 
 
@@ -235,7 +235,7 @@ Draw object(s) with specified settings and direct camera to it.
 Set the default view for future drawing operations.
 
     If no angles are specified, the name should be an existing view, or
-    the predefined value '__last__'.
+    the predefined value 'last'.
     If angles are specified, this is equivalent to createView(name,angles)
     followed by setView(name).
     
@@ -266,7 +266,7 @@ Return a shrinked object.
 
 
 \begin{funcdesc}{drawMarks}{X,M,color=???}
-Draw a list of marks at pioints X.
+Draw a list of marks at points X.
 
     X is an Coords array.
     M is a list with the same length as X.
@@ -284,6 +284,7 @@ Draw numbers on all elements of F.
     A translation may be given to put the numbers out of the centroids,
     e.g. to put them in front of the objects to make them visible,
     or to allow to view a mark at the centroids.
+    If an offset is specified, it is added to the shown numbers.
     
 
 \end{funcdesc}
@@ -301,8 +302,8 @@ Draw (local) numbers on all vertices of F.
 \end{funcdesc}
 
 
-\begin{funcdesc}{drawText3D}{P,text,color=???,font=None}
-Draw a text at a 3D point.
+\begin{funcdesc}{drawText3D}{P,text,color=???,font=None,size=None}
+Draw a text at a 3D point P.
 
 \end{funcdesc}
 
@@ -365,7 +366,7 @@ Toggle the display of the global axes on or off.
 \end{funcdesc}
 
 
-\begin{funcdesc}{drawText}{text,x,y,adjust='left',font='helvetica',size=10,color=None}
+\begin{funcdesc}{drawText}{text,x,y,adjust='left',font='helvetica',size=14,color=None}
 Show a text at position x,y using font.
 
 \end{funcdesc}

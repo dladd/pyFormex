@@ -4,10 +4,11 @@ PKGNAME=pyformex
 TGT=pyformex
 
 MANSRC= pyformex.tex refman.tex pyformex.help
-AUTOREF= array coords connectivity mydict odict olist script simple utils \
+AUTOREF= \
+  array coords connectivity mydict odict olist project script simple utils \
   colors draw image widgets \
   curve fe inertia isopar lima mesh \
-  project properties section2d surface turtle units
+  properties section2d surface turtle units
   
 AUTOSRC= $(addprefix ref-, $(addsuffix .tex, ${AUTOREF}))
 SRC= ${MANSRC} ${AUTOSRC}
