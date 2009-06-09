@@ -24,6 +24,10 @@ import types
 from types import ListType, TupleType
 from pyformex.odict import ODict
 
+def debug(s):
+    if options.debug:
+        print '%DEBUG:'+str(s)
+        
 
 def get_docs(fileName,dummy=None):
     '''Retrieve information from the parse tree of a source file.
@@ -300,30 +304,56 @@ def rebuildAtom(node):
     if type(node) is TupleType and node[0] == symbol.atom:
         s = ''
         for i in node[1:]:
-            if len(i) == 2:
+            debug("S (0) is '%s'" % s) 
+            if len(i) == 2 and i[0] < 256:
+                # This is a token: just add it
                 s += str(i[1])
+                debug("S (1) is '%s'" % s)
             elif i[0] == symbol.listmaker:
-                s += '['
+#                s += '['
+#                debug("LIST"+str(i[1:]))
+                debug("S (3) is '%s'" % s) 
                 for k in i[1:]:
                     s += rebuildAtom(k)
-                    s += ','
-                s += ']'
+                    debug("S (4) '%s'" % s) 
+#                    s += ','
+#                    debug("S (5) '%s'" % s) 
+#                s += ']'
+                debug("S (6) is '%s'" % s) 
             else:
                 s += "!!%s!!" % str(i)
+                debug("S (7) is '%s'" % s) 
+        debug("S (8) is '%s'" % s) 
         return s
 
     elif node[0] == 12:
         return ','
 
     elif node[0] == 303:
-        found,vars = match(PARAMETER_VALUE_PATTERN, node)
-            
-        if found:
-            return rebuildAtom(vars['parvalue'])
+        return findParameterValue(node)
 
-    print '%HELP ATOM',node
-    return str(node)
+    if options.error:
+        print node
+        raise RuntimeError,"ALAS, NOTHING!"
+    return ''
        
+
+def findParameterValue(data):
+    debug("VALUE TO MATCH " + str(data))
+    s = ''
+    found,vars = match(PARAMETER_VALUE_PATTERN, data)    
+    if not found:
+        debug("TRYING PATTERN2" + str(PARAMETER_VALUE_PATTERN2))
+        found,vars = match(PARAMETER_VALUE_PATTERN2, data)
+        if not found:
+            if options.error:
+                raise RuntimeError,"ALAS, CAN NOT CONTINUE!"
+            else:
+                print "%HELP "+str(data)
+        s += '-'
+
+    return s+rebuildAtom(vars['parvalue'])
+    
 
 def ParameterInfo(node):
     #found, vars = match(PARAMETERS_PATTERN, node)
@@ -341,22 +371,7 @@ def ParameterInfo(node):
         elif i[0] == 22:
             value = '???'
         elif i[0] == 303:
-            #print i
-            found,vars = match(PARAMETER_VALUE_PATTERN, i)
-            if not found:
-#                print "TRYING PATTERN2 %s" % str(PARAMETER_VALUE_PATTERN2)
-#                print "VALUE TO MATCH  %s" % str(i)
-                found,vars = match(PARAMETER_VALUE_PATTERN2, i)
-                if not found:
-                    raise RuntimeError,"ALAS!"
-
-            #print found,vars
-            if found:
-                value = rebuildAtom(vars['parvalue'])
-            else:
-                #raise
-                print '%HELP',i
-                #print i
+            value = findParameterValue(i)
         else:
             pass#print i[0]
     if name is not None:
@@ -520,13 +535,31 @@ def do_module(info):
     ship_end()
 
 
+def main(argv):
+    global options
+    from optparse import OptionParser,make_option
+    parser = OptionParser(
+        usage = """usage: %prog [Options] PYTHONFILE
+Creates a reference manual in TeX format for the functions and classes
+defined in PYTHONFILE.""",
+        version = "py2tex.py (C) 2009 Benedict Verhegghe",
+        option_list=[
+        make_option('-d',"--debug", help="print debug info",
+                    action="store_true", dest="debug", default=False),
+        make_option('-c',"--continue", help="continue on errors",
+                    action="store_false", dest="error", default=True),
+        ])
+    options, args = parser.parse_args(argv)
+    
+    for a in args:
+        info = get_docs(a)
+        do_module(info)
+
+
 if __name__ == "__main__":
 
     import sys
     
-    for a in sys.argv[1:]:
-        info = get_docs(a)
-        do_module(info)
-        
+    main(sys.argv[1:])
 
 # End

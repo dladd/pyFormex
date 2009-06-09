@@ -1,5 +1,3 @@
-%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '90'))))))))))))))))
-%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (15, '-'), (315, (316, (317, (2, '90'))))))))))))))))
 % pyformex manual --- simple --- CREATED WITH py2ptex.py: DO NOT EDIT
 % $Id$
 % (C) B.Verhegghe
@@ -54,7 +52,7 @@ Return a Formex which is a point, by default at the origin.
 \end{funcdesc}
 
 
-\begin{funcdesc}{line}{p1=[[0.,,,0.,,,0.,]],p2=[[1.,,,0.,,,0.,]],n=1}
+\begin{funcdesc}{line}{p1=[0.,0.,0.],p2=[1.,0.,0.],n=1}
 Return a Formex which is a line between two specified points.
     
     p1: first point, p2: second point
@@ -143,7 +141,7 @@ CreateDraw a collection of curves.
 \end{funcdesc}
 
 
-\begin{funcdesc}{sphere2}{nx,ny,r=1,bot=???,top=90}
+\begin{funcdesc}{sphere2}{nx,ny,r=1,bot=-90,top=90}
 Return a sphere consisting of line elements.
 
     A sphere with radius r is modeled by a regular grid of nx
@@ -159,7 +157,7 @@ Return a sphere consisting of line elements.
 \end{funcdesc}
 
 
-\begin{funcdesc}{sphere3}{nx,ny,r=1,bot=???,top=90}
+\begin{funcdesc}{sphere3}{nx,ny,r=1,bot=-90,top=90}
 Return a sphere consisting of surface triangles
 
     A sphere with radius r is modeled by the triangles fromed by a regular

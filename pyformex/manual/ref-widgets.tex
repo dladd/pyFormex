@@ -913,7 +913,7 @@ TableModel objects have the following methods:
 
 The Table class has this constructor: 
 
-\begin{classdesc}{Table}{data,chead=None,rhead=None,caption=None,parent=None,actions=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (7, '('), (319, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'"))))))))))))))), (12, ',')), (8, ')')))))))))))))))],default='OK'}
+\begin{classdesc}{Table}{data,chead=None,rhead=None,caption=None,parent=None,actions=[(!!(319, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'"))))))))))))))), (12, ','))!!)],default='OK'}
 Create the Table dialog.
         
         data is a 2-D array of items, mith nrow rows and ncol columns.
@@ -1250,7 +1250,7 @@ Create a set of dialog buttons
 \end{funcdesc}
 
 
-\begin{funcdesc}{messageBox}{message,level='info',choices=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'")))))))))))))))],timeout=None}
+\begin{funcdesc}{messageBox}{message,level='info',choices=['OK'],timeout=None}
 Display a message box and wait for user response.
 
     The message box displays a text, an icon depending on the level
@@ -1264,7 +1264,7 @@ Display a message box and wait for user response.
 \end{funcdesc}
 
 
-\begin{funcdesc}{textBox}{text,type=None,choices=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'")))))))))))))))]}
+\begin{funcdesc}{textBox}{text,type=None,choices=['OK']}
 Display a text and wait for user response.
 
     Possible choices are 'OK' and 'CANCEL'.

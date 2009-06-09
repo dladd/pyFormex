@@ -1,7 +1,3 @@
-%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (1, 'colors')), (321, (23, '.'), (1, 'black')))))))))))))))
-%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (1, 'colors')), (321, (23, '.'), (1, 'black')))))))))))))))
-%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (1, 'colors')), (321, (23, '.'), (1, 'black')))))))))))))))
-%HELP (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (1, 'colors')), (321, (23, '.'), (1, 'black')))))))))))))))
 % pyformex manual --- draw --- CREATED WITH py2ptex.py: DO NOT EDIT
 % $Id$
 % (C) B.Verhegghe
@@ -44,25 +40,25 @@ Show a Yes/No question and return True/False depending on answer.
 \end{funcdesc}
 
 
-\begin{funcdesc}{error}{message,actions=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'")))))))))))))))]}
+\begin{funcdesc}{error}{message,actions=['OK']}
 Show an error message and wait for user acknowledgement.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{warning}{message,actions=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'")))))))))))))))]}
+\begin{funcdesc}{warning}{message,actions=['OK']}
 Show a warning message and wait for user acknowledgement.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{showInfo}{message,actions=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'")))))))))))))))]}
+\begin{funcdesc}{showInfo}{message,actions=['OK']}
 Show a neutral message and wait for user acknowledgement.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{showText}{text,type=None,actions=[(303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, "'OK'")))))))))))))))]}
+\begin{funcdesc}{showText}{text,type=None,actions=['OK']}
 Display a text and wait for user response.
 
     This can display a large text and will add scrollbars when needed.
@@ -265,7 +261,7 @@ Return a shrinked object.
 \end{funcdesc}
 
 
-\begin{funcdesc}{drawMarks}{X,M,color=???}
+\begin{funcdesc}{drawMarks}{X,M,color='black'}
 Draw a list of marks at points X.
 
     X is an Coords array.
@@ -277,7 +273,7 @@ Draw a list of marks at points X.
 \end{funcdesc}
 
 
-\begin{funcdesc}{drawNumbers}{F,color=???,trl=None,offset=0}
+\begin{funcdesc}{drawNumbers}{F,color='black',trl=None,offset=0}
 Draw numbers on all elements of F.
 
     Normally, the numbers are drawn at the centroids of the elements.
@@ -290,7 +286,7 @@ Draw numbers on all elements of F.
 \end{funcdesc}
 
 
-\begin{funcdesc}{drawVertexNumbers}{F,color=???,trl=None}
+\begin{funcdesc}{drawVertexNumbers}{F,color='black',trl=None}
 Draw (local) numbers on all vertices of F.
 
     Normally, the numbers are drawn at the location of the vertices.
@@ -302,7 +298,7 @@ Draw (local) numbers on all vertices of F.
 \end{funcdesc}
 
 
-\begin{funcdesc}{drawText3D}{P,text,color=???,font=None,size=None}
+\begin{funcdesc}{drawText3D}{P,text,color='black',font=None,size=None}
 Draw a text at a 3D point P.
 
 \end{funcdesc}
@@ -356,7 +352,7 @@ Show a named view, either a builtin or a user defined.
 \end{funcdesc}
 
 
-\begin{funcdesc}{setTriade}{on=None,size=1.0,pos=[[0.0,,,0.0,,,0.0,]]}
+\begin{funcdesc}{setTriade}{on=None,size=1.0,pos=[0.0,0.0,0.0]}
 Toggle the display of the global axes on or off.
 
     If on is True, the axes triade is displayed, if False it is
@@ -696,7 +692,7 @@ Update the GUI.
 \end{funcdesc}
 
 
-\begin{funcdesc}{flyAlong}{path='flypath',upvector=[[0.,,,1.,,,0.,]],sleeptime=None}
+\begin{funcdesc}{flyAlong}{path='flypath',upvector=[0.,1.,0.],sleeptime=None}
 Fly through the scene along the flypath.
 
 \end{funcdesc}

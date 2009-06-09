@@ -58,7 +58,7 @@ Returns the points at parameter values t.
         
 \end{funcdesc}
 
-\begin{funcdesc}{subPoints}{div=10,extend=[[0.,,,0.,]]}
+\begin{funcdesc}{subPoints}{div=10,extend=[0.,0.]}
 Return a series of points on the PolyLine.
 
         The parameter space of each segment is divided into ndiv parts.
@@ -259,7 +259,7 @@ CardinalSpline2 objects have the following methods:
 
 The NaturalSpline class has this constructor: 
 
-\begin{classdesc}{NaturalSpline}{pts,endcond=[['notaknot',,,'notaknot',]],closed=False}
+\begin{classdesc}{NaturalSpline}{pts,endcond=['notaknot','notaknot'],closed=False}
 Create a natural spline through the given points.
 
         pts specifies the coordinates of a set of points. A natural spline
