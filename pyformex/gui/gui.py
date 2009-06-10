@@ -103,6 +103,11 @@ class Board(QtGui.QTextEdit):
 ################# GUI ###############
 #####################################
 
+def set_view(view):
+    """Change the view angles of the current camera, keeping the bbox."""
+    GD.canvas.setCamera(angles=view)
+    GD.canvas.update()
+    
 
 class GUI(QtGui.QMainWindow):
     """Implements a GUI for pyformex."""
@@ -246,7 +251,7 @@ class GUI(QtGui.QMainWindow):
         viewicons = [ v[1] for v in defviews ]
 
         self.viewbtns = widgets.ActionList(
-            views,draw.view,
+            views,set_view,
             menu=self.viewsMenu,
             toolbar=self.viewbar,
             icons = viewicons

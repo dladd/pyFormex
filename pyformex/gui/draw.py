@@ -457,7 +457,7 @@ def drawPlane(P,N,size):
     return actor
 
 
-def drawMarks(X,M,color=colors.black):
+def drawMarks(X,M,color='black'):
     """Draw a list of marks at points X.
 
     X is an Coords array.
@@ -472,7 +472,7 @@ def drawMarks(X,M,color=colors.black):
     return M
 
 
-def drawNumbers(F,color=colors.black,trl=None,offset=0):
+def drawNumbers(F,color='black',trl=None,offset=0):
     """Draw numbers on all elements of F.
 
     Normally, the numbers are drawn at the centroids of the elements.
@@ -488,7 +488,7 @@ def drawNumbers(F,color=colors.black,trl=None,offset=0):
     return drawMarks(F,numpy.arange(F.shape[0])+offset,color=color)
 
 
-def drawVertexNumbers(F,color=colors.black,trl=None):
+def drawVertexNumbers(F,color='black',trl=None):
     """Draw (local) numbers on all vertices of F.
 
     Normally, the numbers are drawn at the location of the vertices.
@@ -502,7 +502,7 @@ def drawVertexNumbers(F,color=colors.black,trl=None):
     return drawMarks(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
 
 
-def drawText3D(P,text,color=colors.black,font=None,size=None):
+def drawText3D(P,text,color='black',font=None,size=None):
     """Draw a text at a 3D point P."""
     M = marks.TextMark(P,text,color=color,font=font,size=size)
     GD.canvas.addAnnotation(M)
@@ -762,11 +762,11 @@ def pause(msg="Use the Step or Continue button to proceed"):
     GD.debug("PAUSE ACTIVATED!")
     if msg:
         GD.message(msg)
-    GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
+    #GD.debug("PAUSE ALLOWED: %s"%GD.GUI.drawlock.allowed)
     if GD.GUI.drawlock.allowed:
         GD.GUI.drawlock.block()    # will need external event to release it
         while (GD.GUI.drawlock.locked):
-            GD.debug("PAUSE: Processing events")
+            #GD.debug("PAUSE: Processing events")
             sleep(1)
             GD.app.processEvents()
             GD.canvas.update()

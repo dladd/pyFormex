@@ -46,8 +46,9 @@ Core
 Gui
 ---
 - GUI can be started from the nongui mode by calling a function
-- Focus rectangle identifies the current viewport
-- Rectangle zooming implemented
+- Current viewport identified by a focus rectangle
+- Rectangle zooming
+- Mouse wheel zooming
 - Revised Project File menu
 - Project files can be compressed
 

@@ -107,19 +107,27 @@ P.nodeProp(set=edge,cload = [0,0,Q/2,0,0,0])
 P.nodeProp(set=support,bound = [1,1,1,0,0,0])
 
 circ20 = ElemSection(section={'name':'circ20','sectiontype':'Circ','radius':10, 'cross_section':314.159}, material={'name':'S500', 'young_modulus':210000, 'shear_modulus':81000, 'poisson_ratio':0.3, 'yield_stress' : 500,'density':0.000007850})
+
+# example of how to set the element type by set
 P.elemProp(set=topbar,section=circ20,eltype='T3D2')
-P.elemProp(prop=0,section=circ20,eltype='T3D2')
+P.elemProp(set=bottombar,section=circ20,eltype='T3D2')
+
+# alternatively, we can specify the elements by an index value
+# in an array that we will pass in the Abqdata 'eprop' argument
 P.elemProp(prop=1,section=circ20,eltype='T3D2')
 
+# Since all elements have same characteristics, we could just have used:
+#   P.elemProp(section=circ20,elemtype='T3D2')
+# But putting the elems in three sets allows for separate postprocessing 
+
+
+# Print node and element property databases
 for p in P.nprop:
     print p
 for p in P.eprop:
     print p
     
 
-# Since all elems have same characteristics, we could just have used:
-#   P.elemProp(section=circ20,elemtype='T3D2')
-# But putting the elems in three sets allows for separate postprocessing 
 
 #############
 #Writing the inputfile

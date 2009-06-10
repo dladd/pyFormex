@@ -162,6 +162,15 @@ def cookie():
 
 
 
+def links(link):
+    help('http://'+link)
+    
+try:
+    LinksMenuData = [ (k,links,{'data':v}) for k,v in GD.cfg['help/links'].items() ]
+except:
+    LinksMenuData = []
+
+
 MenuData = [
     (_('&Manual (local)'),manual),
     (_('&Manual (online)'),webman),
@@ -174,6 +183,7 @@ MenuData = [
     (_('&Detected Software'),detected), 
     (_('&OpenGL Format'),opengl), 
     (_('&Fortune Cookie'),cookie),
+    (_('&Favourite Links'),LinksMenuData),
     (_('&Developers'),developers), 
     (_('&About'),about), 
     ]

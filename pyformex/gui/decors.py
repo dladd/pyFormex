@@ -191,19 +191,13 @@ class Grid(Decoration):
         self.y2 = y2
         self.nx = nx
         self.ny = ny
-        if color is None:
-            self.color = None
-        else:
-            self.color = colors.GLColor(color)
-        if linewidth is None:
-            self.linewidth = None
-        else:
-            self.linewidth = float(linewidth)
+        self.color = saneColor(color)
+        self.linewidth = saneLineWidth(linewidth)
 
     def drawGL(self,mode='wireframe',color=None):
-        if self.color:
+        if self.color is not None:
             GL.glColor3fv(self.color)
-        if self.linewidth:
+        if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
         drawGrid(self.x1,self.y1,self.x2,self.y2,self.nx,self.ny)
 
@@ -216,20 +210,14 @@ class Line(Decoration):
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        if color is None:
-            self.color = None
-        else:
-            self.color = colors.GLColor(color)
-        if linewidth is None:
-            self.linewidth = None
-        else:
-            self.linewidth = float(linewidth)
+        self.color = saneColor(color)
+        self.linewidth = saneLineWidth(linewidth)
 
 
     def drawGL(self,mode='wireframe',color=None):
-        if self.color:
+        if self.color is not None:
             GL.glColor3fv(self.color)
-        if self.linewidth:
+        if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
         drawLine(self.x1,self.y1,self.x2,self.y2)
 
@@ -249,20 +237,14 @@ class LineDrawing(Decoration):
         self.data = data.astype(Float)
         x1,y1 = self.data[0,0]
         Decoration.__init__(self,x1,y1)
-        if color is None:
-            self.color = None
-        else:
-            self.color = colors.GLColor(color)
-        if linewidth is None:
-            self.linewidth = None
-        else:
-            self.linewidth = float(linewidth)
+        self.color = saneColor(color)
+        self.linewidth = saneLineWidth(linewidth)
     
 
     def drawGL(self,mode=None,color=None):
-        if self.color:
+        if self.color is not None:
             GL.glColor3fv(self.color)
-        if self.linewidth:
+        if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
         GL.glBegin(GL.GL_LINES)
         for e in self.data:

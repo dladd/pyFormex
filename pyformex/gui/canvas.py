@@ -672,6 +672,7 @@ class Canvas(object):
         bbox of the whole scene.
 
         If no camera angles are given, the camera orientation is kept.
+        angles can be a set of 3 angles, or a string
         """
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens
@@ -682,7 +683,9 @@ class Canvas(object):
         center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
         self.camera.setCenter(*center)
-        if angles:
+        if type(angles) is str:
+            angles = self.view_angles.get(angles)
+        if angles is not None:
             self.camera.setAngles(angles)
         
         # Currently, we keep the default fovy/aspect
@@ -719,7 +722,6 @@ class Canvas(object):
         """Dolly zooming."""
         if dolly:
             self.camera.dolly(f)
-
 
 
     ## def unProject(self,x,y,z):

@@ -44,39 +44,14 @@ class Mark(Drawable):
         Drawable.__init__(self)
 
 
-class TextMark(Mark):
-    """A text drawn at a 3D position."""
-    
-    def __init__(self,pos,text,color=None,font=None,size=None):
-        Mark.__init__(self,pos)
-        self.text = text
-        if color is None:
-            color = black
-        self.color = color
-        self.font = gluttext.getFont(font,size)
-
-    def drawGL(self,mode=None,color=None):
-        GL.glColor3fv(self.color)
-        GL.glRasterPos3fv(self.pos)
-
-    def use_list(self):
-        Mark.use_list(self)
-        gluttext.glutRenderText(self.text,self.font)
-        #x,y,z = self.pos
-        #GD.canvas.renderText(x,y,z,self.text,self.font)
-
-
 class AxesMark(Mark):
     """Two viewport axes drawn at a 3D position."""
     def __init__(self,pos,color=None):
         Mark.__init__(self,pos)
-        if color is None:
-            self.color = None
-        else:
-            self.color = colors.GLColor(color)
+        self.color = saneColor(color)
 
     def drawGL(self,mode='wireframe',color=None):
-        if self.color:
+        if self.color is not None:
             GL.glColor3fv(self.color)
         GL.glPixelStorei(GL.GL_UNPACK_ALIGNMENT,1)
         GL.glRasterPos3fv(self.pos)
@@ -84,6 +59,27 @@ class AxesMark(Mark):
         b = 0x00,0x00,0x00,0x00,0x00,0x80,0x00,0x00,0x00,0x00,0x00
         bitmap = [b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,a,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]
         GL.glBitmap(81,81,41,41,0,0,bitmap)
+
+
+class TextMark(Mark):
+    """A text drawn at a 3D position."""
+    
+    def __init__(self,pos,text,color=None,font=None,size=None):
+        Mark.__init__(self,pos)
+        self.text = text
+        self.color = saneColor(color)
+        self.font = gluttext.getFont(font,size)
+
+    def drawGL(self,mode=None,color=None):
+        if self.color is not None:
+            GL.glColor3fv(self.color)
+        GL.glRasterPos3fv(self.pos)
+
+    def use_list(self):
+        Mark.use_list(self)
+        gluttext.glutRenderText(self.text,self.font)
+        #x,y,z = self.pos
+        #GD.canvas.renderText(x,y,z,self.text,self.font)
 
 
 import gluttext
@@ -104,13 +100,13 @@ class MarkList(Mark):
             raise ValueError,"Not enough values for positions"
         Mark.__init__(self,pos)
         self.val = val
-        self.color = color
+        self.color = saneColor(color)
         self.font = gluttext.glutSelectFont(font,size)
         #self.font = getFont(font,size)
 
 
     def draw(self,mode=None,color=None):
-        if self.color:
+        if self.color is not None:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
             GL.glRasterPos3fv(p)
