@@ -71,6 +71,7 @@ def ask(question,choices=None,default=None,**kargs):
     if choices:
         return widgets.messageBox(question,'question',choices)
 
+    raise ValueError,"Unspecified choices"
     if choices is None:
         if default is None:
             default = choices[0]

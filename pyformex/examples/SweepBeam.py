@@ -36,11 +36,6 @@ from plugins.mesh import Mesh,connectMesh
 import simple
 
 
-res = askItems([('label','label'),('text','text','text')])
-print res
-exit()
-
-
 # GEOMETRICAL PARAMETERS FOR HE200B wide flange beam
 h = 200. #beam height
 b = 200. #flange width 

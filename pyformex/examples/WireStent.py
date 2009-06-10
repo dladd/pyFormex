@@ -116,6 +116,10 @@ if __name__ == "draw":
                     ['WireDiam',d],
                     ['NWires',n],
                     ['Pitch',b]])
+
+    if not res:
+        exit()
+        
     D = float(res['Diameter'])
     L = float(res['Length'])
     d = float(res['WireDiam'])

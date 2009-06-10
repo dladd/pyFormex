@@ -162,8 +162,10 @@ def save():
 
 
 def close():
+    global dialog
     if dialog:
         dialog.close()
+        dialog = None
     save()
 
 def show(all=False):
@@ -186,5 +188,8 @@ def showAll():
     
 dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show All',showAll),('Show',show)],default='Show')
 dialog.show()
+
+while dialog is not None:
+    GD.app.processEvents()
 
 # End

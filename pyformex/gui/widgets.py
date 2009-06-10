@@ -1604,7 +1604,7 @@ class TableDialog(QtGui.QDialog):
 #####################################################################
 # Some static functions for displaying text widgets
 
-def messageBox(message,level='info',choices=['OK'],timeout=None):
+def messageBox(message,level='info',choices=['OK'],default=None,timeout=None):
     """Display a message box and wait for user response.
 
     The message box displays a text, an icon depending on the level
@@ -1614,6 +1614,8 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
     The function returns the text of the button that was clicked or
     an empty string is ESC was hit.
     """
+    if default is None:
+        default = choices[-1]
     w = QtGui.QMessageBox()
     w.setText(message)
     if level == 'error':
@@ -1625,16 +1627,19 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
     elif level == 'question':
         w.setIcon(QtGui.QMessageBox.Question)
     for a in choices:
-        w.addButton(a,QtGui.QMessageBox.AcceptRole)
-        
+        b = w.addButton(a,QtGui.QMessageBox.AcceptRole)
+        if a == default:
+            w.setDefaultButton(b)
+            
     if timeout is None:
         timeout = input_timeout
 
     # Start the timer:
-    if timeout:
+    if timeout >= 0:
+        GD.debug("STARTING TIIMEOUT TIMER %s" % input_timeout)
         try:
             timeout = float(timeout)
-            if timeout > 0.0:
+            if timeout >= 0.0:
                 timer = QtCore.QTimer()
                 timer.connect(timer,QtCore.SIGNAL("timeout()"),w,QtCore.SLOT("accept()"))
                 timer.setSingleShot(True)
@@ -1645,6 +1650,8 @@ def messageBox(message,level='info',choices=['OK'],timeout=None):
             
     w.exec_()
     b = w.clickedButton()
+    if b == 0:
+        b = w.defaultButton()
     if b:
         return str(b.text())
     else:

@@ -686,8 +686,10 @@ class Canvas(object):
         if type(angles) is str:
             angles = self.view_angles.get(angles)
         if angles is not None:
-            self.camera.setAngles(angles)
-        
+            try:
+                self.camera.setAngles(angles)
+            except:
+                raise ValueError,'Invalid view angles specified'
         # Currently, we keep the default fovy/aspect
         # and change the camera distance to focus
         fovy = self.camera.fovy

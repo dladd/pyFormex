@@ -36,7 +36,7 @@ techniques = ['dialog', 'colors']
 def show(F,view='front',clearscr=True):
     if clearscr:
         clear()
-    draw(F,view)
+    draw(F,view=view)
     GD.canvas.update()
     
 # Here we go
@@ -75,7 +75,7 @@ def scallop(n,f,c,r):
 message("Create a dome from the circular layout")
 f2.setProp(3)
 GD.canvas.camera.setRotation(0,-45)
-show(scallop(6,1,2,0),0,False)
+show(scallop(6,1,2,0),None,False)
 
 
 howmany = ask("How many / Which domes do you want?",
@@ -85,7 +85,7 @@ n,f,c,r = [6,1,2.,0.]
 
 if howmany == 'One':
    # The example from the pyformex homepage
-   show(scallop(6,1,4,4),0)
+   show(scallop(6,1,4,4),None)
         
 elif howmany == 'Sequence':
    # Present some nice examples
@@ -102,7 +102,7 @@ elif howmany == 'Sequence':
         [6,2,2,8],
         [12,1,2,-2],
         [12,1,2,2] ]:
-        show(scallop(n,f,c,r),0)
+        show(scallop(n,f,c,r),None)
 
 elif howmany == 'Custom':
    # Customized version
@@ -112,7 +112,7 @@ elif howmany == 'Custom':
        f = int(res['f'])
        c = float(res['c'])
        r = float(res['r'])
-       show(scallop(n,f,c,r),0)
+       show(scallop(n,f,c,r),None)
        if not ack("Want to try another one?"):
            exit()
 

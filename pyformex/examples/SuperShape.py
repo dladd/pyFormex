@@ -156,10 +156,13 @@ def create_and_show(data={}):
     showSuperShape()
 
 def close():
+    global dialog,savefile
     if dialog:
         dialog.close()
+        dialog = None
     if savefile:
         savefile.close()
+        savefile = None
 
 
 def reset():
@@ -246,6 +249,9 @@ if __name__ == "draw":
     close()
     openSuperShapeDialogs()
     #smoothwire()
+
+    while dialog:
+        GD.app.processEvents()
 
 
 # End
