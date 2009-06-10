@@ -216,6 +216,7 @@ class Camera:
         a dolly operation.
         """
         self.setDist(self.getDist() * val)
+        #print "DIST %s" % self.dist
         self.viewChanged = True
         
     def pan(self,val,axis=0):

@@ -111,8 +111,8 @@ def addCameraButtons(toolbar):
                 [ "Translate right", "right", cameraMenu.panRight ],
                 [ "Translate down", "down", cameraMenu.panDown ],
                 [ "Translate up", "up", cameraMenu.panUp ],
-                [ "Zoom Out", "zoomout", cameraMenu.zoomOut ],
-                [ "Zoom In", "zoomin", cameraMenu.zoomIn ],
+                [ "Zoom Out", "zoomout", cameraMenu.dollyOut ],
+                [ "Zoom In", "zoomin", cameraMenu.dollyIn ],
                 [ "Zoom Rectangle", "zoomrect", draw.zoomRectangle, False ],
                 [ "Zoom All", "zoomall", draw.zoomAll, False ],
                 ]

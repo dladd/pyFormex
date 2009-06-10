@@ -758,15 +758,17 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         elif action == MOVE:
             w,h = self.getSize()
             dx,dy = float(self.statex-x)/w, float(self.statey-y)/h
-            #if self.state[2] == 'area':
-            #    dx = sqrt(dx*dx+dy*dy)
-            if not self.state[2] == 'dolly':
-                f = exp(4*dx)
-                self.camera.zoomArea(f,area=asarray(self.state[1]).reshape(2,2))
-            # vert movement is dolly zooming
-            if not self.state[2] == 'area':
-                d = utils.stuur(y,[0,self.statey,h],[5,1,0.2],1.2)
-                self.camera.setDist(d*self.state[0])
+            for method,state,value,size in zip(self.state[2],[self.statex,self.statey],[x,y],[w,h]):
+                #GD.debug("%s %s %s %s" % (method,state,value,size))
+                if method == 'area':
+                    d = float(state-value)/size
+                    f = exp(4*d)
+                    self.camera.zoomArea(f,area=asarray(self.state[1]).reshape(2,2))
+                elif method == 'dolly':
+                    d = utils.stuur(value,[0,state,size],[5,1,0.2],1.2)
+                    #GD.debug(d)
+                    self.camera.setDist(d*self.state[0])
+                    
             self.update()
 
         elif action == RELEASE:
@@ -776,7 +778,12 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def wheel_zoom(self,delta):
         """Zoom by rotating a wheel over an angle delta"""
         f = 2**(delta/120.*GD.cfg['gui/wheelzoomfactor'])
-        self.camera.zoomArea(f)
+        if GD.cfg['gui/wheelzoom'] == 'area':
+            self.camera.zoomArea(f)
+        elif GD.cfg['gui/wheelzoom'] == 'lens':
+            self.camera.zoom(f)
+        else:
+            self.camera.dolly(f)
         self.update()
 
     def emit_done(self,x,y,action):

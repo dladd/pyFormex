@@ -900,9 +900,9 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
     if path.nplex() != 2:
         warning("The flypath should be a plex-2 Formex!")
         
-    for seg in path:
-        GD.debug("Eye: %s; Center: %s" % (seg[0],seg[1]))
-        GD.canvas.camera.lookAt(seg[0],seg[1],upvector)
+    for eye,center in path:
+        GD.debug("Eye: %s; Center: %s" % (eye,center))
+        GD.canvas.camera.lookAt(eye,center,upvector)
         GD.canvas.display()
         GD.canvas.update()
         image.saveNext()
@@ -911,6 +911,10 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
         sleeptime = float(sleeptime)
         if sleeptime > 0.0:
             sleep(sleeptime)
+
+    GD.canvas.camera.setCenter(*center)
+    GD.canvas.camera.setDist(coords.length(center-eye))
+    GD.canvas.update()
 
 
 def highlightActors(K):

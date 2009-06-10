@@ -40,7 +40,7 @@ def updateSettings(res,store):
     This asks the users to confirm that he wants to update the settings.
     """
     GD.debug(res)
-    if draw.ack("Update the settings?"):
+    if res.get('Update the settings',False) or draw.ack("Update the settings?"):
         # The following does not work for our Config class!
         # store.update(res)
         # Therefore, set individually
@@ -68,7 +68,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res = widgets.InputDialog(itemlist,'Config Dialog',GD.GUI).getResult()
+    res = widgets.InputDialog(itemlist+[('Update the settings',True)],'Config Dialog',GD.GUI).getResult()
     if res:
         updateSettings(res,store)
     return res
@@ -145,10 +145,8 @@ def setPickSize():
     
 def setRender():
     items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
-    print items
     res = draw.askItems(items)
     if res:
-        print res
         updateSettings(res,GD.cfg)
 
 
@@ -175,6 +173,9 @@ def setZoomFactor():
     askConfigPreferences(['gui/zoomfactor'])
 def setAutoZoomFactor():
     askConfigPreferences(['gui/autozoomfactor'])
+def setZoomActions():
+    askConfigPreferences(['gui/dynazoom','gui/wheelzoom'])
+
 def setPlugins():
     askConfigPreferences(['gui/plugins'])
 
@@ -287,6 +288,7 @@ MenuData = [
         (_('&PanFactor'),setPanFactor),
         (_('&ZoomFactor'),setZoomFactor),
         (_('&AutoZoomFactor'),setAutoZoomFactor),
+        (_('&ZoomActions'),setZoomActions),
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),

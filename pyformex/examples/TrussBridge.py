@@ -74,7 +74,7 @@ nodes2 = nodes.select([2*i+1 for i in range(n/2)]).translate([0,0,-Bi]).reflect(
 draw(nodes1+nodes2)
 wind_bracing = connect([nodes1,nodes2]) + connect([nodes2,nodes1],bias=[0,1])
 wind_bracing.setProp(5)
-pause()
+
 
 # Assemble half bridge
 central = central_vertical + central_vertical.reflect(2)
@@ -82,7 +82,7 @@ half_truss = bot_gird + top_gird + verticals + diagonals
 quarter = half_truss + braces
 half_bridge = quarter + quarter.reflect(2) + deck_girders + wind_bracing
 draw(half_bridge+central)
-pause()
+
 
 # And a full bridge
 bridge = half_bridge + half_bridge.reflect(0) + central

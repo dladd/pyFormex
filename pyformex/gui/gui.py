@@ -124,6 +124,13 @@ class GUI(QtGui.QMainWindow):
         The GUI has a central canvas for drawing, a menubar and a toolbar
         on top, and a statusbar at the bottom.
         """
+
+        # Fix GUI configuration on incompatible changes
+
+        if type(GD.cfg['gui/dynazoom']) is str:
+            GD.cfg['gui/dynazoom'] = [ GD.cfg['gui/dynazoom'], '' ]
+
+        
         self.on_exit = [fileMenu.askCloseProject] 
         QtGui.QMainWindow.__init__(self)
         self.setWindowTitle(windowname)
