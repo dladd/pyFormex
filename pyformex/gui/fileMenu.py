@@ -114,7 +114,7 @@ def createProject(create=True,compression=0,addGlobals=None):
             the_project.update(GD.PF)
         GD.PF = the_project
         GD.GUI.setcurproj(fn)
-        GD .message("Project contents: %s" % the_project.keys())
+        GD.message("Project contents: %s" % the_project.keys())
         if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
             processArgs([the_project.autofile])
     finally:
