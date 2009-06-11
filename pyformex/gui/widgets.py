@@ -144,7 +144,10 @@ class ProjectSelection(FileSelection):
             opt = odict.ODict()
             opt.fn = str(self.selectedFiles()[0])
             opt.leg = self.leg.isChecked()
-            opt.cpr = self.cpr.value()
+            if hasattr(self,'cpr'):
+                opt.cpr = self.cpr.value()
+            else:
+                opt.cpr = 0
             return opt
         else:
             return None
