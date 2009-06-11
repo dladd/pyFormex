@@ -105,7 +105,7 @@ def createProject(create=True,compression=0,addGlobals=None):
 
     # OK, we have all data, now create/open the project
     GD.GUI.setBusy()
-    the_project = project.Project(fn,create=create,signature = GD.Version,compression=compression,legacy=legacy)
+    the_project = project.Project(fn,create=create,signature=GD.Version[:-2],compression=compression,legacy=legacy)
     GD.GUI.setBusy(False)
     if GD.PF and addGlobals:
         the_project.update(GD.PF)
