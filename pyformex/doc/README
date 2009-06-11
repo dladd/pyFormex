@@ -48,36 +48,53 @@ environment for displaying and manipulating the generated structures.
 Installation
 ============
 
+We detail here only the installation on Linux platforms.
+
+
 Prerequisites
 ------------- 
-For scripting and mathematical transformations (without GUI):
-
-- Python: http://www.python.org  
-  (version 2.4 or higher; 2.3 can work with some minor changes)
-- numpy: /http://numpy.scipy.org/
-  (version 1.0-rc1 or higher.)
-
-For the GUI:
-
+Essential:
+- python: http://www.python.org  (version 2.4 or higher; 2.5 recommended)
+- numpy: /http://numpy.scipy.org/ (version 1.0 or higher; 1.1 recommended)
 - Qt4: http://www.trolltech.com/products/qt
 - PyQt4: http://www.riverbankcomputing.co.uk/pyqt/index.php
 - PyOpenGL: http://pyopengl.sourceforge.net/
 
+To compile the acceleration library (highly recommended!), you will also
+need the appropriate header Python and OpenGL header files.
 
-Easy way to install prerequisites on Debian GNU/Linux
------------------------------------------------------
-On Debian (lenny) systems you can install all prerequisites and their 
-dependencies with the command:
+Further, we recommend to install the following for extended functionality:
+- python-gnuplot
+- python-doc
+- python-scipy
+- units
+- imagemagick
+- admesh
+
+For the following extensions, which are not easily packaged format,
+an install script is provided in this distribution.
+- calpy
+- pygl2ps
+- gts
+- tetgen
+
+
+Easy way to install prerequisites on Debian GNU/Linux or Ubuntu
+---------------------------------------------------------------
+On Debian (lenny) systems (and Debian-derivatives like Ubuntu) you can install
+all basic prerequisites and their dependencies with the command:
 ``apt-get install python-qt4-gl python-numpy``
-If you want to compile the acceleration library (highly recommended) also
-install the compiler and header files:
-``apt-get install gcc python-dev libgl1-mesa-dev``
 
+If you want to compile the acceleration library (which is highly recommended) you also need the header files:
+``apt-get install python-dev libgl1-mesa-dev``
+
+Install the extras:
+``apt-get install python-gnuplot python-doc python-scipy units imagemagick admesh``
 
 Howto install pyFormex:
 -----------------------
-If a version of pyFormex was already installed on your system,
-you may first want to remove it before installing the new version.
+If a previous version of pyFormex was already installed on your system,
+you may want to remove the older version first before installing the new one.
 See further (Howto uninstall pyFormex)
 
 We suppose you have installed all the prerequisites and downloaded the
