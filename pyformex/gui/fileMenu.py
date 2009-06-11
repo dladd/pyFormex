@@ -104,17 +104,21 @@ def createProject(create=True,compression=0,addGlobals=None):
             addGlobals = res == 'Add'
 
     # OK, we have all data, now create/open the project
-    GD.GUI.setBusy()
-    the_project = project.Project(fn,create=create,signature=GD.Version[:-2],compression=compression,legacy=legacy)
-    GD.GUI.setBusy(False)
-    if GD.PF and addGlobals:
-        the_project.update(GD.PF)
-    GD.PF = the_project
-    GD.GUI.setcurproj(fn)
+        
     GD.cfg['workdir'] = os.path.dirname(fn)
-    GD .message("Project contents: %s" % the_project.keys())
-    if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
-        processArgs([the_project.autofile])
+    GD.GUI.setBusy()
+    try:
+        sig = GD.Version[:GD.Version.rfind('-')]
+        the_project = project.Project(fn,create=create,signature=sig,compression=compression,legacy=legacy)
+        if GD.PF and addGlobals:
+            the_project.update(GD.PF)
+        GD.PF = the_project
+        GD.GUI.setcurproj(fn)
+        GD .message("Project contents: %s" % the_project.keys())
+        if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
+            processArgs([the_project.autofile])
+    finally:
+        GD.GUI.setBusy(False)
 
 
 def openProject():
