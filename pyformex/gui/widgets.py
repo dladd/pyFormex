@@ -1005,6 +1005,7 @@ class InputDialog(QtGui.QDialog):
         self.setWindowTitle(str(caption))
         self.fields = []
         self.result = {}
+        self.timedOut = False
         self.report_pos = report_pos
         form = QtGui.QVBoxLayout()
         for item in items:
@@ -1159,13 +1160,15 @@ class InputDialog(QtGui.QDialog):
         self.accepted == TRUE/FALSE
         self.timedOut == TRUE/FALSE
         """
-        self.timedOut = False
         self.accepted = False
+        GD.debug("TIMEOUT %s" % timeout)
         if timeout is None:
             timeout = input_timeout
 
+        GD.debug("TIMEOUT %s" % timeout)
         if timeout >= 0:
             # Start the timer:
+            GD.debug("START TIMEOUT %s" % timeout)
             try:
                 timeout = float(timeout)
                 if timeout >= 0.0:

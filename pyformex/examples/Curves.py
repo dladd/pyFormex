@@ -190,6 +190,8 @@ dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('
 dialog.show()
 
 while dialog is not None:
+    if dialog.timedOut:
+        close()
     GD.app.processEvents()
 
 # End

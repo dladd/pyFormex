@@ -33,6 +33,9 @@ import draw
 import imageViewer
 
 
+def nextOnly():
+    draw.warning("Changes to this setting will only become effective after restarting the program.")
+
 def updateSettings(res,store):
     """Update the current settings (store) with the values in res.
 
@@ -40,10 +43,9 @@ def updateSettings(res,store):
     This asks the users to confirm that he wants to update the settings.
     """
     GD.debug(res)
-    if res.get('Update the settings',False) or draw.ack("Update the settings?"):
-        # The following does not work for our Config class!
-        # store.update(res)
-        # Therefore, set individually
+    if res.get('Save changes',None) or draw.ack("Save the changes to your configuration file?\n\nCurrently, the changes will be rejected if you do not save them!\n"):
+        # Do not use 'store.update(res)' here!
+        # It will not work with our Config class!
         for k,v in res.items():
             store[k] = v
         GD.debug(store)
@@ -68,7 +70,7 @@ def askConfigPreferences(items,prefix=None,store=None):
     if prefix:
         items = [ '%s/%s' % (prefix,i) for i in items ]
     itemlist = [ [ i,store.setdefault(i,'') ] for i in items ]
-    res = widgets.InputDialog(itemlist+[('Update the settings',True)],'Config Dialog',GD.GUI).getResult()
+    res = widgets.InputDialog(itemlist+[('Save changes',True)],'Config Dialog',GD.GUI).getResult()
     if res:
         updateSettings(res,store)
     return res
@@ -102,6 +104,11 @@ def setToolbarPlacement(store=None):
                 store[s] = val
         GD.debug(store)
 
+def setTimeoutButton():
+    askConfigPreferences(['gui/timeoutbutton'])
+    nextOnly()
+    
+    
 
 def setHelp():
     askConfigPreferences(['viewer','help/manual','help/pydocs'])
@@ -278,6 +285,7 @@ MenuData = [
         (_('&Appearance'),setAppearance), 
         (_('&Font'),setFont), 
         (_('&Toolbar Placement'),setToolbarPlacement), 
+        (_('&Show Timeout Button'),setTimeoutButton),
         (_('&Input Timeout'),setInputTimeout), 
         (_('&Draw Wait Time'),setDrawWait), 
 #        (_('&Background Color'),setBGcolor), 

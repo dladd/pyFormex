@@ -250,7 +250,9 @@ if __name__ == "draw":
     openSuperShapeDialogs()
     #smoothwire()
 
-    while dialog:
+    while dialog is not None:
+        if dialog.timedOut:
+            close()
         GD.app.processEvents()
 
 
