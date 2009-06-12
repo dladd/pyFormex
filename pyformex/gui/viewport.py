@@ -315,10 +315,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def setCursorShapeFromFunc(self,func):
         """Set the cursor shape to shape"""
-        if func in [ self.mouse_rectangle_zoom,self.mouse_pick ]:
+        if func in [ self.mouse_rectangle_zoom,self.mouse_pick,self.mouse_draw ]:
             shape = 'pick'
         else:
             shape = 'default'
+        #GD.debug("SET CURSOR SHAPE TO %s" % shape)
         self.setCursorShape(shape)
 
 
@@ -326,7 +327,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         #print button,mod
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
-        self.setCursorShapeFromFunc(func)
+        if button == LEFT and mod == NONE:
+            self.setCursorShapeFromFunc(func)
         #print "MOUSE %s" % func
         #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
 
@@ -339,7 +341,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             #print "AAAAAHHH, COULD NOT POP"
             func = None
         self.mousefnc[mod][button] = func
-        self.setCursorShapeFromFunc(func)
+        if button == LEFT and mod == NONE:
+            self.setCursorShapeFromFunc(func)
         #print "RESETMOUSE %s" % func
         #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
             
