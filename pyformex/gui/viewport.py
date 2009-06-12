@@ -522,9 +522,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                             self.selection_front = self.closest_pick
                             self.selection.set([self.closest_pick[0]])
                     elif self.selection_filter == 'connected':
-                        if self.selection_front is None or self.mod == NONE:
-                            self.selection_front = self.closest_pick                            
+                        if self.selection_front is None or self.mod == NONE or len(self.selection.keys()) == 0:
+                            self.selection_front = self.closest_pick
                             closest_actor,closest_elem = map(int,self.selection_front[0])
+                        elif self.mod == SHIFT:
+                            closest_elem = self.selection.get(closest_actor)[0]
                         if self.mod == NONE:
                             self.selection.set(self.picked)
                         elif self.mod == SHIFT:
