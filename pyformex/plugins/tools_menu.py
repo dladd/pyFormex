@@ -37,13 +37,26 @@ from plugins import objects
 from plugins.tools import *
 
 
-## def editFormex(F):
-##     """Edit a Formex"""
-##     print "I want to edit a Formex"
-##     print "%s" % F.__class__
+def editFormex(F,name):
+    """Edit a Formex"""
+    items = [('coords',repr(array(F.f)),'text')]
+    if F.p is not None:
+        items.append(('prop',repr(array(F.p)),'text'))
+    items.append(('eltype',F.eltype))
+    res = askItems(items)
+    if res:
+        x = eval(res['coords'])
+        p = res.get('eltype',None)
+        if type(p) is str:
+            p = eval(p)
+        e = res['eltype']
+        
+        print x
+        print p
+        print e
+        F.__init__(x,F.p,e)
 
-
-## Formex.edit = editFormex
+Formex.edit = editFormex
 
 
 
@@ -81,12 +94,12 @@ def edit():
     database.ask(mode='single')
     F = database.check(single=True)
     if F is not None:
+        name = database.names[0]
         if hasattr(F,'edit'):
             # Call specialized editor
-            F.edit()
+            F.edit(name)
         else:
             # Use general editor
-            name = database.names[0]
             res = askItems([(name,repr(F),'text')])
             if res:
                 print res

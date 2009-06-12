@@ -1294,22 +1294,5 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
             #vp.updateGL()
             GD.app.processEvents()
 
-
-if __name__ == "__main__":
-    print "Testing the Collection object"
-    a = Collection()
-    a.add(range(7),3)
-    a.add(range(4))
-    a.remove([2,4],3)
-    print a
-    a.add([[2,0],[2,3],[-1,7],[3,88]])
-    print a
-    a[2] = [1,2,3]
-    print a
-    a[2] = []
-    print a
-    a.set([[2,0],[2,3],[-1,7],[3,88]])
-    print a
-
                     
 # End

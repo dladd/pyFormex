@@ -580,6 +580,7 @@ class InputText(InputItem):
         """Return the widget's value."""
         s = str(self.input.toPlainText())
         if self._is_string_:
+            print "VALUE",s
             return s
         else:
             return eval(s)
@@ -1116,6 +1117,7 @@ class InputDialog(QtGui.QDialog):
         """
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
+        print "RESULT",self.result
         if self.report_pos:
             self.result.update({'__pos__':self.pos()})
         self.accepted = True
