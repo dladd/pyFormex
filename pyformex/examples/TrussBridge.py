@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: TrussBridge.py 151 2006-11-02 18:18:49Z bverheg $
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/

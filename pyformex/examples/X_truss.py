@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: X_truss.py 131 2006-09-19 17:57:54Z bverheg $
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/

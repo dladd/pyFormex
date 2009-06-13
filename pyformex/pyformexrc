@@ -1,6 +1,6 @@
 # This is the default pyFormex config file. DO NOT CHANGE IT!  -*- PYTHON -*-
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -69,7 +69,7 @@ uselib = True
 #imagesfromeps = True
 
 splash = os.path.join(icondir,'pyformex-splash.png')
-plugins = ['formex_menu']
+plugins = ['formex_menu','tools_menu']
 style = "Plastique"
 size=(800,600)
 pos=(0,0)
