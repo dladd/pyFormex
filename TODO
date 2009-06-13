@@ -58,11 +58,18 @@ Each task can have the following keys:
 
  - Add an interactive command window to the GUI
 
+ - Generalize the timeout to all dialogs
+      A 'timeout' branch was created for experiments
+      Need work for: non-modal dialogs, pause()
+
+ - Copy viewport defaults to newly added viewports
+     sta: TODO
+
 
 * Release 0.9 :
  - Set up procedures to follow up submitted bugs/questions
 
- - Created Debian packages
+ - Create Debian packages
 
 * Release 1.0:
  - Conquer the world ;)

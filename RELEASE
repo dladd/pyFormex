@@ -2,14 +2,8 @@
 VERSION=0.8
 # Unless you are creating an official release, a tail should be added
 # to the ${VERSION} to set a release tag. e.g. -alpha, -rc1
-RELEASE=${VERSION}-a2
+RELEASE=${VERSION}
 
 PROGRAM= pyformex.py
-IMAGES= BarrelVault Baumkuchen DoubleLayer Geodesic Hyparcap KochLine \
-  Lima Novation ParabolicTower ScallopDome SpaceTrussRoof Spiral Stars \
-  Torus WireStent
-MANUALHTML= manual/html/*.html manual/html/*.png manual/html/manual.css
-MANUALIMAGES= manual/images/*.png
-MANUAL= manual/manual.pdf 
 VENDOR= pyformex
 DESKTOPFILE= pyformex.desktop
