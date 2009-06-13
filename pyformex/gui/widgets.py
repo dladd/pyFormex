@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -580,7 +580,7 @@ class InputText(InputItem):
         """Return the widget's value."""
         s = str(self.input.toPlainText())
         if self._is_string_:
-            print "VALUE",s
+            #print "VALUE",s
             return s
         else:
             return eval(s)
@@ -1117,7 +1117,7 @@ class InputDialog(QtGui.QDialog):
         """
         self.result = {}
         self.result.update([ (fld.name(),fld.value()) for fld in self.fields ])
-        print "RESULT",self.result
+        #print "RESULT",self.result
         if self.report_pos:
             self.result.update({'__pos__':self.pos()})
         self.accepted = True
@@ -1882,7 +1882,7 @@ class BaseMenu(object):
                 if type(val) == str:
                     val = eval(val)
                 if len(item) > 2 and item[2].has_key('data'):
-                    print "INSERT A DACTION", item
+                    #print "INSERT A DACTION", item
                     a = DAction(txt,data=item[2]['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)

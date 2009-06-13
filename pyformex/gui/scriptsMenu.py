@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -305,7 +305,7 @@ class ScriptsMenu(QtGui.QMenu):
     def runScript(self,filename):
         """Run the specified script."""
         self.current = filename
-        print "CURRENT=%s" % self.current
+        #print "CURRENT=%s" % self.current
         selected = self.fileName(filename)
         GD.debug("Playing script %s" % selected)
         GD.GUI.setcurfile(selected)
@@ -318,8 +318,8 @@ class ScriptsMenu(QtGui.QMenu):
     def runNext(self):
         """Run the next script."""
         try:
-            print "CURRENT FOUND=%s" % self.current
-            print self.files
+            #print "CURRENT FOUND=%s" % self.current
+            #print self.files
             i = self.files.index(self.current) + 1
         except ValueError:
             i = 0
@@ -331,8 +331,8 @@ class ScriptsMenu(QtGui.QMenu):
     def runAllNext(self):
         """Run the current and all following scripts."""
         try:
-            print "CURRENT FOUND=%s" % self.current
-            print self.files
+            #print "CURRENT FOUND=%s" % self.current
+            #print self.files
             i = self.files.index(self.current)
         except ValueError:
             i = 0

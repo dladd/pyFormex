@@ -1,3 +1,4 @@
+#!/usr/bin/env pyformex --gui
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
@@ -21,13 +22,37 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-# Sample materials database
-# Units are N and mm
-material
-	name=steel
-	young_modulus=210000
-	shear_modulus=85000
-	density = 7.85e-9
-	poisson_ratio = 0.3
-endmaterial
+"""Edit Global Variables
 
+level = 'advanced'
+topics = ['editing']
+techniques = ['persistence','interactive']
+"""
+clear()
+alfabet = {
+    'A': '22144/61'
+    }
+
+ 
+def plotChar(char):
+    try:
+        draw(Formex(pattern(alfabet[char])))
+    except:
+        raise ValueError,"Can not plot character %s" % char
+
+
+plotChar('A')
+
+data = dict(
+    a = 1,
+    b = 1.5,
+    c = [0.,0.,0.],
+    d = 'red',
+    f = Formex(pattern('121212'))
+    )
+export(data)
+globals().update(data)
+draw(f)
+               
+
+# End

@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -268,8 +268,6 @@ def checkIdValue(values):
 
     If ok, return the values as a list of tuples.
     """
-    print "CHECK"
-    print values
     try:
         l = [ len(v) for v in values ]
         print l
@@ -492,10 +490,7 @@ class PropertyDB(Dict):
         """
         try:
             d = {}
-            #print "CLOAD"
-            #print cload
             if cload is not None:
-                #print "CHECKING"
                 d['cload'] = checkIdValue(cload)
 #                d['cload'] = checkArray1D(cload,6,'f','i')
             if bound is not None:

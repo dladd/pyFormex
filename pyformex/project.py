@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -81,7 +81,6 @@ class Project(dict):
         f = file(self.filename,'w'+self.mode)
         f.write("%s\n" % self.signature)
         pickle.dump(self.header_data(),f,pickle.HIGHEST_PROTOCOL)
-        #print self.keys()
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'w'+self.mode,self.gzip,f)
             pickle.dump(self,pyf,pickle.HIGHEST_PROTOCOL)

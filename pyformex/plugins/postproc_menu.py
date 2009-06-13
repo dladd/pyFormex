@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -91,7 +91,7 @@ class DictModel(QtCore.QAbstractTableModel):
         vals = dic.values()
         typs = [ str(type(v)) for v in vals ]
         self.items = zip(keys,typs,vals)
-        print self.items
+        #print self.items
                 
     def rowCount(self,parent): 
         return len(self.items) 
@@ -133,13 +133,13 @@ class Table(QtGui.QDialog):
         table.horizontalHeader().setVisible(True)
         table.verticalHeader().setVisible(False)
         table.resizeColumnsToContents()
-        print table.size()
+        #print table.size()
         form.addWidget(table)
 
         but = widgets.dialogButtons(self,actions,default)
         form.addLayout(but)
         self.setLayout(form)
-        print table.size()
+        #print table.size()
         #print form.size()
         #self.resize(table.size())
         self.table = table

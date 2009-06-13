@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: SpaceTrussRoof.py 66 2006-02-20 20:08:47Z bverheg $
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8 Release Sat Jun 13 09:32:38 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
