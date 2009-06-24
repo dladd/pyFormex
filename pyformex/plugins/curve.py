@@ -148,6 +148,12 @@ class Curve(object):
         method.
         """
         return self.lengths().sum()
+
+
+    def approx(self,ndiv=10):
+        """Return an approximate PolyLine"""
+        return PolyLine(self.subPoints(ndiv))
+        
   
 
 ##############################################################################
