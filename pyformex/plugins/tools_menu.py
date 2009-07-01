@@ -1,4 +1,3 @@
-#!/usr/bin/env python pyformex
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
@@ -416,7 +415,7 @@ def partition_selection():
         warning("You need to pick actors or elements.")
         return
     for A in GD.canvas.actors:
-        if not A.atype() == 'TriSurface':
+        if not A.atype == 'TriSurface':
             warning("Currently I can only partition TriSurfaces." )
             return
     partitionCollection(selection)
