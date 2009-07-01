@@ -36,6 +36,7 @@ import threading,os,commands,copy,re,time
 
 import formex
 import utils
+from utils import deprecation
 
 
 ######################### Exceptions #########################################
@@ -496,16 +497,6 @@ def chdir(fn):
         GD.message("Your current workdir is %s" % os.getcwd())
 
 
-# Deprecated: this should be removed
-def workHere():
-    """Change the current working directory to the script's location.
-
-    This function is deprecated: use chdir(_file__) instead.
-    """
-    GD.message("workHere is deprecated: use chdir(_file__) instead")
-    chdir(GD.PF.get('curfile',''))
-
-
 def runtime():
     """Return the time elapsed since start of execution of the script."""
     return time.clock() - starttime
@@ -519,5 +510,10 @@ def startGui(args=[]):
         gui.startGUI(args)
         gui.runGUI()
 
+
+@deprecation("Use chdir(__file__) instead")
+def workHere():
+    """Change the current working directory to the script's location."""
+    chdir(GD.PF.get('curfile',''))
 
 #### End

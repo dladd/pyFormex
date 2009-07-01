@@ -1,7 +1,7 @@
 #!/usr/bin/env python pyformex.py
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -44,10 +44,10 @@ F.setProp(0)
 draw(F,view='bottom')
 setDrawOptions({'bbox':None})
 zoomall()
-zoom(1.5)
+zoom(3)
 
-
-ans = ask('How many balls do you want?',['3','2','1','0'])
+print map(str,range(4))
+ans = ask('How many balls do you want?',['0','1','2','3'])
 
 try:
     nb = int(ans)
@@ -59,19 +59,16 @@ if nb > 0:
     B1 = B.translate([0.,0.,0.95*h])
     B1.setProp(1)
     draw(B1)
-    #zoomall()
-    #zoom(1.5)
 
 if nb > 1:
     B2 = B.translate([0.2*r,0.,1.15*h])
     B2.setProp(2)
     draw(B2)
-    #zoomall()
-    #zoom(1.5)
 
 if nb > 2:
     B3 = B.translate([-0.2*r,0.1*r,1.25*h])
     B3.setProp(6)
     draw(B3)
-    #zoomall()
-    #zoom(1.5)
+
+zoomall()
+zoom(3)

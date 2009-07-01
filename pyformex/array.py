@@ -182,13 +182,21 @@ def origin():
     return zeros((3),dtype=Float)
 
 
-def unitVector(axis):
-    """Return a unit vector in the direction of a global axis (0,1,2).
+def unitVector(v):
+    """Return a unit vector in the direction of v.
 
-    Use normalize() to get a unit vector in a general direction.
+    v is either an integer specifying one of the global axes (0,1,2),
+    or a 3-element array or compatible.
     """
-    u = origin()
-    u[axis] = 1.0
+    if type(v) is int:
+        u = origin()
+        u[axis] = 1.0
+    else:
+        u = asarray(v,dtype=Float)
+        ul = length(u)
+        if ul <= 0.0:
+            raise ValueError,"Zero length vector %s" % v
+        u /= ul
     return u
 
 
@@ -232,28 +240,53 @@ def rotationMatrix(angle,axis=None):
     return array(f)
 
 
-def rotMatrix(v,n=3):
+## def rotMatrix(u,n=3):
+##     """Create a rotation matrix that rotates axis 0 to the given vector.
+
+##     u is a vector representing the 
+##     Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
+##     """
+##     u = unitVector(u)
+
+##     v = cross([0.,0.,1.],u)
+##     vl = length(v)
+##     if vl == 0.0:
+##         v = cross(u,[0.,1.,0.])
+##         vl = length(v)
+##     v /= vl
+##     w = cross(u,v)
+##     w /= length(w)
+##     m = row_stack([u,v,w])
+    
+##     if n != 4:
+##         return m
+##     else:
+##         a = identity(4)
+##         a[0:3,0:3] = m
+##         return a
+
+def rotMatrix(u,w=[0.,0.,1.],n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.
 
+    u is a vector representing the 
     Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
     """
+    u = unitVector(u)
+
+    try:
+        v = unitVector(cross(w,u))
+    except:
+        if w == [0.,0.,1.]:
+            w = [0.,1.,0.]
+            v = unitVector(cross(w,u))
+        else:
+            raise
+        
+    w = unitVector(cross(u,v))
+
+    m = row_stack([u,v,w])
+    
     if n != 4:
-        n = 3
-    #v = array(v,dtype=float64)
-    vl = length(v)
-    if vl == 0.0:
-        return identity(n)
-    v /= vl
-    w = cross([0.,0.,1.],v)
-    wl = length(w)
-    if wl == 0.0:
-        w = cross(v,[0.,1.,0.])
-        wl = length(w)
-    w /= wl
-    x = cross(v,w)
-    x /= length(x)
-    m = row_stack([v,w,x])
-    if n == 3:
         return m
     else:
         a = identity(4)
@@ -308,8 +341,8 @@ def checkArray(a,shape=None,kind=None,allow=None):
                 a = a.astype(Float)
         return a
     except:
-        print "Expected shape %s, kind %s, got: %s" % (shape,kind,a)
-    raise ValueError
+        raise ValueError,"Expected shape %s, kind %s, got: %s" % (shape,kind,a)
+    
 
 
 def checkArray1D(a,size=None,kind=None,allow=None):

@@ -1,6 +1,6 @@
 ## $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -120,9 +120,9 @@ def showFile(filename):
     f.close()
 
 
-# Output status of the askItems() function
-_dialog_timeout = False
-_dialog_accepted = False
+# result status of the widget in askItems() function
+_dialog_result = None
+
 
 def askItems(items,caption=None,**kargs):
     """Ask the value of some items to the user.
@@ -141,23 +141,26 @@ def askItems(items,caption=None,**kargs):
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
     Sets the dialog timeout and accepted status in global variables.
     """
-    global _dialog_timeout,_dialog_accepted
+    global _dialog_result
     if type(items) == dict:
         items = items.items()
     w = widgets.InputDialog(items,caption)
     res = w.getResult(**kargs)
-    _dialog_timeout = w.timedOut
-    _dialog_accepted = w.accepted
+    _dialog_result = w.result()
     return res
 
 
-def dialogTimedOut():
-    """Returns True if the last askItems() dialog timed out."""
-    return _dialog_timeout
-
 def dialogAccepted():
     """Returns True if the last askItems() dialog was accepted."""
-    return _dialog_accepted
+    return _dialog_result == widgets.ACCEPTED
+
+def dialogRejected():
+    """Returns True if the last askItems() dialog was rejected."""
+    return _dialog_result == widgets.REJECTED
+
+def dialogTimedOut():
+    """Returns True if the last askItems() dialog timed out."""
+    return _dialog_result == widgets.TIMEOUT
 
 
 def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python pyformex.py
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -119,16 +119,15 @@ items[-1].extend(['radio',['','u','d']])
 dialog = widgets.InputDialog(items)
 
 
-ok = True # Enable single run on timeout
-
-while ok:
-    res = dialog.getResult()
+while not dialog.result() == widgets.TIMEOUT:
+    dialog.show()
+    sleep(2)
+    dialog.timeout()
+    res = dialog.results
+    #res = dialog.getResult()
     if not res:
-        exit()
-
-    ok = not dialog.timedOut # Prevent endless loop on timeout
+        break
     
-    print ok,res
     globals().update(res)
     F = cone(r0,r1,h,t,nr,nt,diag)
     G = cone1(r0,r1,h,t,nr,nt,diag).swapAxes(1,2).trl(0,2*max(r0,r1))
@@ -141,7 +140,7 @@ while ok:
     clear()
     draw(H)
     exit()
-
+    
 exit()
 
 # End

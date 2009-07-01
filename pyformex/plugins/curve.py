@@ -62,6 +62,9 @@ class Curve(object):
     The subclasses should at least define the following:
       sub_points(t,j)
     """
+
+    N_approx = 10
+    
     def sub_points(self,t,j):
         """Return the points at values t in part j
 
@@ -150,9 +153,15 @@ class Curve(object):
         return self.lengths().sum()
 
 
-    def approx(self,ndiv=10):
+    def approx(self,ndiv=N_approx):
         """Return an approximate PolyLine"""
         return PolyLine(self.subPoints(ndiv))
+
+
+    # This allows us to draw approximations of curves that do not specify
+    # their own (hopefully better) Formex representation
+    def toFormex(self):
+        return self.approx().toFormex()
         
   
 
@@ -407,7 +416,7 @@ class CardinalSpline2(BezierSpline):
 
 
 ##############################################################################
-#
+
 class NaturalSpline(Curve):
     """A class representing a natural spline."""
 
@@ -490,5 +499,74 @@ class NaturalSpline(Curve):
         X = dot(U,C)
         return X
 
+##############################################################################
 
+from geometry import triangleCircumCircle
+
+def vectorPairAngle(v1,v2):
+    """Return the angle between the vectors v1 and v2."""
+    v1 = asarray(v1)
+    v2 = asarray(v2)
+    cosangle = dotpr(v1,v2) / sqrt(dotpr(v1,v1)*dotpr(v2,v2))
+    return arccos(cosangle)
+
+
+class Arc3(Curve):
+    """A class representing a circular arc."""
+
+    def __init__(self,pts):
+        """Create a circular arc.
+
+        The arc is specified by 3 non-colinear points.
+        """
+        self.coords = Coords(pts)
+        self.nparts = 1
+        self.closed = False
+        if self.coords.shape != (3,3):
+            raise ValueError,"Expected 3 points"
+        
+        r,C,n = triangleCircumCircle(self.coords.reshape(-1,3,3))
+        self.radius,self.center,self.normal = r[0],C[0],n[0]
+        self.angles = vectorPairAngle(Coords([1.,0.,0.]),self.coords-self.center)
+        print "Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal)
+        print "ANGLES=%s" % (self.angles)
+
+    def sub_points(self,t,j):
+        a = t*(self.angles[-1]-self.angles[0])
+        X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
+        X = X.scale(self.radius).rotate(self.angles[0]/rad).translate(self.center)
+        return X
+
+
+class Arc(Curve):
+    """A class representing a circular arc."""
+
+    def __init__(self,pts):
+        """Create a circular arc.
+
+        The arc is specified by the center and begin and end-point.
+        """
+        self.coords = Coords(pts)
+        self.nparts = 1
+        self.closed = False
+        if self.coords.shape != (3,3):
+            raise ValueError,"Expected 3 points"
+
+        self.center = self.coords[1]
+        v = self.coords-self.center
+        self.radius = length(v[0])
+        self.normal = unitVector(cross(v[0],v[2]))
+        self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,-1]] ]
+        print self.coords
+        print "Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal)
+        print "ANGLES=%s" % (self.angles)
+
+    def sub_points(self,t,j):
+        a = t*(self.angles[-1]-self.angles[0])
+        X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
+        X = X.scale(self.radius).rotate(self.angles[0]/rad).translate(self.center)
+        return X
+
+
+    
 # End

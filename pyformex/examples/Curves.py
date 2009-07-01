@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Website: http://pyformex.berlios.de/
@@ -170,7 +170,7 @@ def close():
 
 def show(all=False):
     dialog.acceptData()
-    globals().update(dialog.result)
+    globals().update(dialog.results)
     if Clear:
         clear()
     if all:
@@ -189,9 +189,10 @@ def showAll():
 dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show All',showAll),('Show',show)],default='Show')
 dialog.show()
 
-while dialog is not None:
-    if dialog.timedOut:
-        close()
+while dialog.result() != widgets.REJECTED:
     GD.app.processEvents()
+    if dialog.result() == timedOut:
+        close()
+        break
 
 # End

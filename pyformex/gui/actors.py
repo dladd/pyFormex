@@ -89,7 +89,7 @@ class RotatedActor(Actor):
     def __init__(self,A,rot=(1.,0.,0.),twist=0.0):
         """Created a new rotated actor.
 
-        If rot is an array with shape (3), the rotation is specified
+        If rot is an array with shape (3,), the rotation is specified
         by the direction of the local 0 axis of the actor.
         If rot is an array with shape (4,4), the rotation is specified
         by the direction of the local 0, 1 and 2 axes of the actor.
@@ -97,8 +97,8 @@ class RotatedActor(Actor):
         Actor.__init__(self)
         self.actor = A
         self.trans = A.trans
-        if shape(rot)[0] == 3:
-            self.rot = rotMatrix(rot,4)
+        if shape(rot) == (3,):
+            self.rot = rotMatrix(rot,n=4)
         else:
             self.rot = rot
 

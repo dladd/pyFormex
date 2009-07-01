@@ -391,10 +391,16 @@ def showStatistics():
 
                                               
 def showSurfaceValue(S,txt,val,onEdges):
+    val = nan_to_num(val)
     mi,ma = val.min(),val.max()
+    print mi,ma
+    # Test: replace min with max
     dec = min(abs(mi),abs(ma))
-    dec = int(log10(dec))
-    dec = max(0,3-dec)
+    print dec
+    if dec > 0.0:
+        dec = max(0,3-int(log10(dec)))
+    else:
+        dec = 2
     # create a colorscale and draw the colorlegend
     CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
     cval = array(map(CS.color,val))
