@@ -393,14 +393,26 @@ class GeomActor(Actor):
         self.list = None
 
 
+    def nplex(self):
+        return self.shape()[1]
+
+    def nelems(self):
+        return self.shape()[0]
+
+    def shape(self):
+        if self.elems is None:
+            return self.coords.shape[:-1]
+        else:
+            return self.elems.shape
+
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
-        self.color,self.colormap = saneColorSet(color,colormap,self.f.shape[:-1])
+        self.color,self.colormap = saneColorSet(color,colormap,self.shape())
 
 
     def setBkColor(self,color=None,colormap=None):
         """Set the backside color of the Actor."""
-        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,(self.f.shape[:-1]))
+        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,self.shape())
 
     def setAlpha(self,alpha):
         """Set the Actors alpha value."""
@@ -422,7 +434,7 @@ class GeomActor(Actor):
         if self.eltype == 'point3d':
             # ! THIS SHOULD BE SET FROM THE SCENE SIZE
             #   RATHER THAN FORMEX SIZE 
-            marksize = self.dsize() * marksize
+            marksize = self.coords.dsize() * marksize
             if marksize <= 0.0:
                 marksize = 1.0
             self.setMark(marksize,"cube")
@@ -440,7 +452,8 @@ class GeomActor(Actor):
         GL.glEndList()
         
 
-    #bbox = Formex.bbox
+    def bbox(self):
+        return self.coords.bbox()
 
 
     def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):
@@ -487,39 +500,49 @@ class GeomActor(Actor):
                 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
-            
-        nnod = self.nplex()
-        if nnod == 1:
+
+        nplex = self.nplex()
+        if nplex == 1:
             if self.eltype == 'point3d':
-                x = self.f.reshape((-1,3))
+                x = self.coords.reshape((-1,3))
                 drawAtPoints(x,self.mark,color)
             else:
-                drawPoints(self.f,color,alpha,self.marksize)
+                drawPoints(self.coords,color,alpha,self.marksize)
                 
-        elif nnod == 2:
-            drawLines(self.f,color,alpha)
+        elif nplex == 2:
+            if self.elems is None:
+                drawLines(self.coords,color,alpha)
+            else:
+                drawLineElems(self.coords,self.elems,color,alpha)
         
-        elif self.eltype == 'curve' and nnod == 3:
-            drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
+        elif self.eltype == 'curve' and nplex == 3:
+            drawQuadraticCurves(self.coords,color,n=quadratic_curve_ndiv)
             
-        elif self.eltype == 'nurbs' and (nnod == 3 or nnod == 4):
-            drawNurbsCurves(self.f,color)
+        elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
+            drawNurbsCurves(self.coords,color)
             
         elif self.eltype is None:
             if mode=='wireframe' :
-                drawPolyLines(self.f,color)
+                if self.elems is None:
+                    drawPolyLines(self.coords,color)
+                else:
+                    print "Cannot correctly draw PolyLine Elems yet"
+                    drawPolyLineElems(self.coords,self.elems,color)
             else:
-                drawPolygons(self.f,mode,color,alpha)
-
+                if self.elems is None:
+                    drawPolygons(self.coords,mode,color,alpha)
+                else:
+                    drawPolygonElems(self.coords,self.elems,mode,color,alpha)
+                    
         else:
             try:
                 el = getattr(elements,self.eltype.capitalize())
             except:
                 raise ValueError,"Invalid eltype %s" % str(self.eltype)
             if mode=='wireframe' :
-                drawEdgeElems(self.f,el.edges,color)    
+                drawEdgeElems(self.coords,el.edges,color)    
             else:
-                drawFaceElems(self.f,el.faces,mode,color,alpha)
+                drawFaceElems(self.coords,el.faces,mode,color,alpha)
     
 
     def pickGL(self,mode):
@@ -528,9 +551,9 @@ class GeomActor(Actor):
         mode can be 'element' or 'point'
         """
         if mode == 'element':
-            pickPolygons(self.f)
+            pickPolygons(self.coords)
         elif mode == 'point':
-            pickPoints(self.f)
+            pickPoints(self.coords)
 
 
 #############################################################################
@@ -684,21 +707,21 @@ class FormexActor(Actor,Formex):
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
             
-        nnod = self.nplex()
-        if nnod == 1:
+        nplex = self.nplex()
+        if nplex == 1:
             if self.eltype == 'point3d':
                 x = self.f.reshape((-1,3))
                 drawAtPoints(x,self.mark,color)
             else:
                 drawPoints(self.f,color,alpha,self.marksize)
                 
-        elif nnod == 2:
+        elif nplex == 2:
             drawLines(self.f,color,alpha)
         
-        elif self.eltype == 'curve' and nnod == 3:
+        elif self.eltype == 'curve' and nplex == 3:
             drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
             
-        elif self.eltype == 'nurbs' and (nnod == 3 or nnod == 4):
+        elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
             drawNurbsCurves(self.f,color)
             
         elif self.eltype is None:

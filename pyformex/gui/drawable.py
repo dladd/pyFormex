@@ -287,15 +287,21 @@ def drawPolygonElems(x,elems,mode,color=None,alpha=1.0,normals=None):
                 color = None
             GD.debug(color.shape)
             
-    if GD.options.testdraw:
-        GD.debug("TEST NEW DRAWING ROUTINES")
-        drawgl.drawPolygonElems(x,elems,n,color,alpha)
-    else:
-        GD.debug("CONVERTING TO FULL SET OF COORDS")
-        drawPolygons(x[elems],mode,color,alpha=1.0,normals=n)
+    drawgl.drawPolygonElems(x,elems,n,color,alpha)
 
 
-def drawLineElems(x,elems,color=None):
+def drawPolyLineElems(x,elems,color=None,alpha=1.0):
+    print elems.shape
+    nplex = elems.shape[1]
+    verts = range(nplex)
+    lines = column_stack([verts,roll(verts,-1)])
+    print lines
+    els = elems[:,lines].reshape(-1,2)
+    print els.shape
+    drawgl.drawPolygonElems(x,els,None,None,alpha)
+    
+
+def drawLineElems(x,elems,color=None,alpha=1.0):
     """Draw a collection of lines.
 
     This is the same as drawLines, except that the lines are defined
@@ -305,10 +311,10 @@ def drawLineElems(x,elems,color=None):
 
     If color is given it is an (nlines,3) array of RGB values.
     """
-    drawLines(x[elems],color)
+    drawLines(x[elems],color,alpha)
        
 
-def drawEdges(x,color=None):
+def drawEdges(x,color=None,alpha=1.0):
     """Draw a collection of edges.
 
     x is a (nel,2*n,3) shaped array of coordinates. Each of the n pairs
@@ -324,7 +330,7 @@ def drawEdges(x,color=None):
         color = color.reshape(*s).repeat(n,axis=1)
         s[1] = n
         color = color.reshape(-1,3)
-    drawLines(x,color)
+    drawLines(x,color,alpha)
 
 
 def drawEdgeElems(x,edges,color=None):
