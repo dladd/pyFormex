@@ -59,6 +59,15 @@ Formex.edit = editFormex
 
 
 
+def command():
+    """Execute an interactive command."""
+    res = askItems([('command','','text')])
+    if res:
+        cmd = res['command']
+        print "Command: %s" % cmd
+        exec(cmd)
+
+
 ##################### database tools ##########################
 
 database = objects.Objects()
@@ -86,6 +95,32 @@ def forget():
     """Forget global variables."""
     database.ask()
     database.forget()
+
+
+def create():
+    """Create a global variable."""
+    ## name = ''
+    ## value = ''
+    ## while True:
+    ##     res = askItems([('name',name),('value',value,'text')])
+    ##     if res:
+    ##         name = res['name']
+    ##         value = res['value']
+    ##         if name in database:
+    ##             ans = ask("The named variable already exists! How should I proceed?",["Cancel","Rename New","Rename Old","Overwrite Old"])
+    ##             if ans == "Cancel":
+    ##                 return
+    ##             elif ans == "Rename New":
+    ##                 continue
+    ##             elif ans == "Rename old":
+
+    res = askItems([('name','')])
+    if res:
+        name = res['name']
+        if name in database:
+            warning("The variable named '%s' already exists!")
+        else:
+            export({name:'__initial__'})
 
 
 def edit():
@@ -466,11 +501,13 @@ def export_selection():
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
+        ('Execute pyFormex command',command),
         ('-- Global Variables --',printall,dict(disabled=True)),
         ('  &List All',printall),
         ('  &Print Value',printval),
         ('  &Print BBox',printbbox),
         ('  &Draw',drawable.ask),
+        ('  &Create',create),
         ('  &Change Value',edit),
         ('  &Rename',rename),
         ('  &Delete',forget),

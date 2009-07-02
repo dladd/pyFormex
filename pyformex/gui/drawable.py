@@ -291,13 +291,10 @@ def drawPolygonElems(x,elems,mode,color=None,alpha=1.0,normals=None):
 
 
 def drawPolyLineElems(x,elems,color=None,alpha=1.0):
-    print elems.shape
     nplex = elems.shape[1]
     verts = range(nplex)
     lines = column_stack([verts,roll(verts,-1)])
-    print lines
     els = elems[:,lines].reshape(-1,2)
-    print els.shape
     drawgl.drawPolygonElems(x,els,None,None,alpha)
     
 

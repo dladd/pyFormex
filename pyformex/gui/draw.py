@@ -51,7 +51,7 @@ import formex
 from script import *
 from signals import *
 
-from plugins import surface,tools
+from plugins import surface,tools,mesh
 from formex import Formex
 #from cameraMenu import setLocalAxes,setGlobalAxes 
         
@@ -312,6 +312,8 @@ def draw(F,
 
     if isinstance(F,formex.Formex):
         pass
+    elif isinstance(F,mesh.Mesh):
+        pass
     elif isinstance(F,surface.TriSurface):
         pass
     elif isinstance(F,tools.Plane):
@@ -364,6 +366,10 @@ def draw(F,
             if F.nelems() == 0:
                 return None
             actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+        elif isinstance(F,mesh.Mesh):
+            if F.nelems() == 0:
+                return None
+            actor = actors.GeomActor(F.coords,F.elems,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
         elif isinstance(F,surface.TriSurface):
             if F.nelems() == 0:
                 return None

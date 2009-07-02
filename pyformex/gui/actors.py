@@ -405,6 +405,13 @@ class GeomActor(Actor):
         else:
             return self.elems.shape
 
+    def npoints(self):
+        return self.coords.shape[0]
+
+    def vertices(self):
+        return self.coords
+    
+
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
         self.color,self.colormap = saneColorSet(color,colormap,self.shape())
@@ -524,10 +531,9 @@ class GeomActor(Actor):
         elif self.eltype is None:
             if mode=='wireframe' :
                 if self.elems is None:
-                    drawPolyLines(self.coords,color)
+                    drawPolyLines(self.coords,color,alpha=1.0)
                 else:
-                    print "Cannot correctly draw PolyLine Elems yet"
-                    drawPolyLineElems(self.coords,self.elems,color)
+                    drawPolyLineElems(self.coords,self.elems,color,alpha=1.0)
             else:
                 if self.elems is None:
                     drawPolygons(self.coords,mode,color,alpha)

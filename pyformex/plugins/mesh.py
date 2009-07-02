@@ -174,9 +174,12 @@ class Mesh(object):
     npoints = ncoords
     def shape(self):
         return self.elems.shape
+    def bbox(self):
+        return self.coords.bbox()
+
 
     def report(self):
-        bb = self.coords.bbox()
+        bb = self.bbox()
         return """
 Shape: %s nodes, %s elems, plexitude %s
 BBox: %s, %s
