@@ -118,14 +118,15 @@ class Curve(object):
         """
         # Subspline parts (without end point)
         if type(div) == int:
-            u = arange(div+1) / float(div)
+            u = arange(div) / float(div)
+
         else:
             u = array(div).ravel()
-            div = len(u) - 1
+            div = len(u)
         parts = [ self.sub_points(u,j) for j in range(self.nparts) ]
 
         if not self.closed:
-            nstart,nend = ceil(asarray(extend)*div).astype(Int)
+            nstart,nend = round_(asarray(extend)*div,0).astype(Int)
 
             # Extend at start
             if nstart > 0:
@@ -469,7 +470,7 @@ class NaturalSpline(Curve):
             # first and second derivatives at starting and last point
             # (that are actually the same point) are the same
             M[f+2, f:f+4] = m[2, :4]
-            M[f+2, 0:4] = m[2, 4:]    
+            M[f+2, 0:4] = m[2, 4:]
             M[f+3, f:f+4] = m[3, :4]
             M[f+3, 0:4] = m[3, 4:]
 
@@ -479,7 +480,7 @@ class NaturalSpline(Curve):
                 M[f+2,  [0, 4]] = array([6.,-6.])
             else:
                 # second derivatives at start is zero
-                M[f+2, 0:4] = m[3, :4]
+                M[f+2, 0:4] = m[3, 4:]
 
             if self.endcond[1] =='notaknot':
                 # third derivative is the same between the last 2 splines
