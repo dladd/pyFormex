@@ -130,6 +130,8 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
 
     if GD.options.safelib:
         x = x.astype(float32)
+        if e is not None:
+            e = e.astype(int32)
         if n is not None:
             n = n.astype(float32)
         if color is not None:
