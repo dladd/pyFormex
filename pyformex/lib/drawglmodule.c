@@ -12,6 +12,7 @@
 #include <GL/gl.h>
 
 int debug = 0;
+int version = 1;
 
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
@@ -522,9 +523,9 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
 
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
-    {"drawPolygons", draw_polygons, METH_VARARGS, "Draw polygons."},
-    {"pickPolygons", pick_polygons, METH_VARARGS, "Pick polygons."},
-    {"drawPolygonElems", draw_polygon_elements, METH_VARARGS, "Draw polygon elements."},
+    {"draw_polygons", draw_polygons, METH_VARARGS, "Draw polygons."},
+    {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
+    {"draw_polygon_elems", draw_polygon_elements, METH_VARARGS, "Draw polygon elements."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 

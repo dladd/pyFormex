@@ -25,6 +25,9 @@
 
 The functions in this module should be exact emulations of the
 external functions in the compiled library lib.drawgl.
+
+These are low level functions that should normally not be used by
+the user.
 """
 
 # There should be no other imports here than OpenGL and numpy
@@ -58,7 +61,7 @@ def glObjType(nplex):
     return objtype
 
 
-def drawPolygons(x,n,c,alpha):
+def draw_polygons(x,n,c,alpha):
     """Draw a collection of polygons.
 
     x : float (nel,nplex,3) : coordinates.
@@ -207,7 +210,7 @@ def drawPolygons(x,n,c,alpha):
 
         
 
-def pickPolygons(x):
+def pick_polygons(x):
     """Mimics drawPolygons for picking purposes.
 
     x : float (nel,nplex,3) : coordinates.
@@ -224,7 +227,7 @@ def pickPolygons(x):
         GL.glPopName()
 
         
-def drawPolygonElems(x,e,n,c,alpha):
+def draw_polygon_elems(x,e,n,c,alpha):
     """Draw a collection of polygon elements.
 
     This function is like drawPolygons, but the vertices of the polygons

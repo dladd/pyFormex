@@ -54,7 +54,7 @@ def glColor(color,alpha=1.0):
 
 #
 # Though all three functions drawPoints, drawLines and drawPolygons
-# call the same low level drawgl.drawPolygons function, we keep 3 separate
+# call the same low level drawgl.draw_polygons function, we keep 3 separate
 # functions on the higher level, because of special characteristics
 # of nplex < 3:   no computation of normals, marksize (nplex=1)
 #
@@ -73,7 +73,7 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     if size:
         GL.glPointSize(size)
     x = x.reshape(-1,1,3)
-    drawgl.drawPolygons(x,None,color,alpha)
+    drawgl.draw_polygons(x,None,color,alpha)
     
 
 def drawLines(x,color=None,alpha=1.0):
@@ -93,40 +93,7 @@ def drawLines(x,color=None,alpha=1.0):
             if (color.shape[0] != x.shape[0] or
                 color.shape[-1] != 3):
                 color = None
-    drawgl.drawPolygons(x,None,color,alpha)
-
-
-## def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
-##     """Draw a collection of polygons.
-
-##     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-##     for the lighting are calculated and set, or they can be specified
-##     in normals
-##     """
-##     n = None
-##     if mode.startswith('smooth'):
-##         if normals is None:
-##             n = polygonNormals(x)
-##         else:
-##             try:
-##                 n = asarray(normals)
-##                 if not (n.ndim in [2,3] and n.shape[0] == x.shape[0] and n.shape[-1] == 3):
-##                     raise
-                
-##             except:
-##                 raise ValueError,"""Invalid normals specified"""
-
-
-##     if GD.options.safelib:
-##         x = x.astype(float32)
-##         if n is not None:
-##             n = n.astype(float32)
-##         if color is not None:
-##             color = color.astype(float32)
-##             if (color.shape[0] != x.shape[0] or
-##                 color.shape[-1] != 3):
-##                 color = None
-##     drawgl.drawPolygons(x,n,color,alpha)
+    drawgl.draw_polygons(x,None,color,alpha)
 
 
 def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
@@ -167,16 +134,16 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
             n = n.astype(float32)
         if color is not None:
             color = color.astype(float32)
-            GD.debug(color.shape)
+            #GD.debug(color.shape)
             if (color.shape[0] != nelems or
                 color.shape[-1] != 3):
                 color = None
             GD.debug("COLORS:%s" % str(color.shape))
 
     if e is None:
-        drawgl.drawPolygons(x,n,color,alpha)
+        drawgl.draw_polygons(x,n,color,alpha)
     else:
-        drawgl.drawPolygonElems(x,e,n,color,alpha)
+        drawgl.draw_polygon_elems(x,e,n,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -298,14 +265,6 @@ def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     n = polygonNormals(coords[elems])
     n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
     return normalize(n)
-
-
-def drawPolyLineElems(x,elems,color=None,alpha=1.0):
-    nplex = elems.shape[1]
-    verts = range(nplex)
-    lines = column_stack([verts,roll(verts,-1)])
-    els = elems[:,lines].reshape(-1,2)
-    drawgl.drawPolygonElems(x,els,None,None,alpha)
     
 
 def drawLineElems(x,elems,color=None,alpha=1.0):
@@ -319,6 +278,14 @@ def drawLineElems(x,elems,color=None,alpha=1.0):
     If color is given it is an (nlines,3) array of RGB values.
     """
     drawLines(x[elems],color,alpha)
+
+
+def drawPolyLineElems(x,elems,color=None,alpha=1.0):
+    nplex = elems.shape[1]
+    verts = range(nplex)
+    lines = column_stack([verts,roll(verts,-1)])
+    els = elems[:,lines].reshape(-1,2)
+    drawgl.draw_polygon_elems(x,els,None,None,alpha)
        
 
 def drawEdges(x,color=None,alpha=1.0):
@@ -353,31 +320,44 @@ def drawEdgeElems(x,edges,color=None):
     drawEdges(x[:,asarray(edges).ravel(),:],color)
 
 
-def drawFaces(x,nplex,mode,color=None,alpha=1.0):
+def draw_faces(x,e,nplex,mode,color=None,alpha=1.0):
     """Draw a collection of faces.
 
-    x is a nnod(nel,nplex*nfaces,3) shaped array of coordinates.
+    (x,e) are one of:
+       x is a (nelems,nplex*nfaces,3) shaped coordinates and e is None,
+       x is a (ncoords,3) shaped coordinates and e is a (nelems,nplex*nfaces)
+       connectivity
+       
     Each of the nfaces sets of nplex points defines a polygon. 
 
     If color is given it is an (nel,3) array of RGB values. This function
     will multiplex the colors, so that n faces are drawn in the same color.
     This is e.g. convenient when drawing faces of a solid element.
     """
-    n = x.shape[1] / nplex
-    x = x.reshape(-1,nplex,3)
+    if e is None:
+        nelpts = x.shape[1]
+    else:
+        nelpts = e.shape[1]
+    nfaces = nelpts / nplex
+    if e is None:
+        x = x.reshape(-1,nplex,3)
+    else:
+        e = e.reshape(-1,nplex)
+        
     if color is not None:
+        # multiply element color
         s = list(color.shape)
         s[1:1] = [1]
-        color = color.reshape(*s).repeat(n,axis=1)
-        s[1] = n
+        color = color.reshape(*s).repeat(nfaces,axis=1)
+        s[1] = nfaces
         color = color.reshape(-1,3)
-    drawPolygons(x,mode,color,alpha)
+    drawPolygons(x,e,mode,color,alpha)
 
 
-def drawFaceElems(x,faces,mode,color=None,alpha=1.0):
+def drawFaces(x,faces,mode,color=None,alpha=1.0):
     """Draw a collection of faces.
 
-    This function is like drawFaces, but the coordinates of the faces are
+    This function is like draw_faces, but the coordinates of the faces are
     specified by:
     x (nel,nplex) : the coordinates of solid elements
     faces (nfaces,fplex): the definition of nfaces faces of the solid,
@@ -387,7 +367,7 @@ def drawFaceElems(x,faces,mode,color=None,alpha=1.0):
     # We may have faces with different plexitudes!
     for fac in olist.collectOnLength(faces).itervalues():
         fa = asarray(fac)
-        drawFaces(x[:,fa.ravel(),:],fa.shape[1],mode,color,alpha)
+        draw_faces(x[:,fa.ravel(),:],None,fa.shape[1],mode,color,alpha)
 
 
 def drawPolyLines(x,c=None,close=True):
@@ -563,7 +543,7 @@ def pickPolygons(x):
     """Mimics drawing polygons for picking purposes."""
     if GD.options.safelib:
         x = x.astype(float32)
-    drawgl.pickPolygons(x)
+    drawgl.pick_polygons(x)
 
 
 def pickPoints(x):

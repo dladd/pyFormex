@@ -190,7 +190,7 @@ def unitVector(v):
     """
     if type(v) is int:
         u = origin()
-        u[axis] = 1.0
+        u[v] = 1.0
     else:
         u = asarray(v,dtype=Float)
         ul = length(u)

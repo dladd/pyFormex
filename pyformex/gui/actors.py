@@ -741,7 +741,7 @@ class FormexActor(Actor,Formex):
             if mode=='wireframe' :
                 drawEdgeElems(self.f,el.edges,color)    
             else:
-                drawFaceElems(self.f,el.faces,mode,color,alpha)
+                drawFaces(self.f,el.faces,mode,color,alpha)
     
 
     def pickGL(self,mode):
