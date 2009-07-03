@@ -535,10 +535,7 @@ class GeomActor(Actor):
                 else:
                     drawPolyLineElems(self.coords,self.elems,color,alpha=1.0)
             else:
-                if self.elems is None:
-                    drawPolygons(self.coords,mode,color,alpha)
-                else:
-                    drawPolygonElems(self.coords,self.elems,mode,color,alpha)
+                drawPolygons(self.coords,self.elems,mode,color,alpha)
                     
         else:
             try:
@@ -734,7 +731,7 @@ class FormexActor(Actor,Formex):
             if mode=='wireframe' :
                 drawPolyLines(self.f,color)
             else:
-                drawPolygons(self.f,mode,color,alpha)
+                drawPolygons(self.f,None,mode,color,alpha)
 
         else:
             try:
@@ -839,7 +836,7 @@ class TriSurfaceActor(Actor,TriSurface):
             drawLineElems(self.coords,self.edges,color)
         else:
             self.refresh()
-            drawPolygonElems(self.coords,self.elems,mode,color,alpha)
+            drawPolygons(self.coords,self.elems,mode,color,alpha)
         GD.debug("Drawing time: %s seconds" % t.seconds())
     
 

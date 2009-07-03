@@ -96,26 +96,70 @@ def drawLines(x,color=None,alpha=1.0):
     drawgl.drawPolygons(x,None,color,alpha)
 
 
-def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
-    """Draw a collection of polygons.
+## def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
+##     """Draw a collection of polygons.
 
-    mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
-    for the lighting are calculated and set, or they can be specified
-    in normals
+##     mode is either 'flat' or 'smooth' : in 'smooth' mode the normals
+##     for the lighting are calculated and set, or they can be specified
+##     in normals
+##     """
+##     n = None
+##     if mode.startswith('smooth'):
+##         if normals is None:
+##             n = polygonNormals(x)
+##         else:
+##             try:
+##                 n = asarray(normals)
+##                 if not (n.ndim in [2,3] and n.shape[0] == x.shape[0] and n.shape[-1] == 3):
+##                     raise
+                
+##             except:
+##                 raise ValueError,"""Invalid normals specified"""
+
+
+##     if GD.options.safelib:
+##         x = x.astype(float32)
+##         if n is not None:
+##             n = n.astype(float32)
+##         if color is not None:
+##             color = color.astype(float32)
+##             if (color.shape[0] != x.shape[0] or
+##                 color.shape[-1] != 3):
+##                 color = None
+##     drawgl.drawPolygons(x,n,color,alpha)
+
+
+def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
+    """Draw a collection of polygon elements.
+
+    This function is like drawPolygons, but the vertices of the polygons
+    are specified by:
+    coords (npts,3) : the coordinates of the points
+    elems (nels,nplex): the connectivity of nels polygons of plexitude nplex
     """
+    if e is None:
+        nelems = x.shape[0]
+    else:
+        nelems = e.shape[0]
     n = None
     if mode.startswith('smooth'):
         if normals is None:
-            n = polygonNormals(x)
+            if mode == 'smooth-avg' and e is not None:
+                n = interpolateNormals(x,e,treshold=GD.cfg['render/avgnormaltreshold'])
+                mode = 'smooth'
+            else:
+                if e is None:
+                    n = polygonNormals(x)
+                else:
+                    n = polygonNormals(x[e])
+                GD.debug("NORMALS:%s" % str(n.shape))
         else:
             try:
                 n = asarray(normals)
-                if not (n.ndim in [2,3] and n.shape[0] == x.shape[0] and n.shape[-1] == 3):
+                if not (n.ndim in [2,3] and n.shape[0] == nelems and n.shape[-1] == 3):
                     raise
-                
             except:
                 raise ValueError,"""Invalid normals specified"""
-
 
     if GD.options.safelib:
         x = x.astype(float32)
@@ -123,10 +167,16 @@ def drawPolygons(x,mode,color=None,alpha=1.0,normals=None):
             n = n.astype(float32)
         if color is not None:
             color = color.astype(float32)
-            if (color.shape[0] != x.shape[0] or
+            GD.debug(color.shape)
+            if (color.shape[0] != nelems or
                 color.shape[-1] != 3):
                 color = None
-    drawgl.drawPolygons(x,n,color,alpha)
+            GD.debug("COLORS:%s" % str(color.shape))
+
+    if e is None:
+        drawgl.drawPolygons(x,n,color,alpha)
+    else:
+        drawgl.drawPolygonElems(x,e,n,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -248,46 +298,6 @@ def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     n = polygonNormals(coords[elems])
     n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
     return normalize(n)
-
-
-def drawPolygonElems(x,elems,mode,color=None,alpha=1.0,normals=None):
-    """Draw a collection of polygon elements.
-
-    This function is like drawPolygons, but the vertices of the polygons
-    are specified by:
-    coords (npts,3) : the coordinates of the points
-    elems (nels,nplex): the connectivity of nels polygons of plexitude nplex
-    """
-    #GD.debug("drawPolygonElems")
-    n = None
-    if normals is None:
-        if mode == 'smooth-avg':
-            n = interpolateNormals(x,elems,treshold=GD.cfg['render/avgnormaltreshold'])
-            mode = 'smooth'
-        elif mode.startswith('smooth'):
-            n = polygonNormals(x[elems])
-            GD.debug("NORMALS:%s" % str(n.shape))
-    else:
-        try:
-            n = asarray(normals)
-            if not (n.ndim in [2,3] and n.shape[0] == elems.shape[0] and n.shape[-1] == 3):
-                raise
-        except:
-            raise ValueError,"""Invalid normals specified"""
-
-    if GD.options.safelib:
-        x = x.astype(float32)
-        if n is not None:
-            n = n.astype(float32)
-        if color is not None:
-            color = color.astype(float32)
-            GD.debug(color.shape)
-            if (color.shape[0] != elems.shape[0] or
-                color.shape[-1] != 3):
-                color = None
-            GD.debug(color.shape)
-            
-    drawgl.drawPolygonElems(x,elems,n,color,alpha)
 
 
 def drawPolyLineElems(x,elems,color=None,alpha=1.0):

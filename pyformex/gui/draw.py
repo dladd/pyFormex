@@ -369,7 +369,7 @@ def draw(F,
         elif isinstance(F,mesh.Mesh):
             if F.nelems() == 0:
                 return None
-            actor = actors.GeomActor(F.coords,F.elems,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
+            actor = actors.GeomActor(F.coords,F.elems,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
         elif isinstance(F,surface.TriSurface):
             if F.nelems() == 0:
                 return None
