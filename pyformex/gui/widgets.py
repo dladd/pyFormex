@@ -944,10 +944,6 @@ class InputColor(InputItem):
         pass
 
 
-
-def checktimeout():
-    GD.debug("WE DO INDEED TIMEOUT")
-
 class InputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
@@ -1119,7 +1115,12 @@ class InputDialog(QtGui.QDialog):
         self.acceptData(TIMEOUT)
 
 
-    def show(self,timeout=None):
+    def timedOut(self):
+        """Returns True if the result code was set to TIMEOUT"""
+        return self.result() == TIMEOUT
+
+
+    def show(self,timeout=None,timeoutfunc=None):
         """Show the dialog.
 
         For a non-modal dialog, the user has to call this function to
@@ -1135,24 +1136,29 @@ class InputDialog(QtGui.QDialog):
         QtGui.QDialog.show(self)
 
         if timeout is None:
-            # override the GUI timeout value
+            # use the GUI timeout value
             timeout = input_timeout
+        if timeoutfunc is None:
+            # use the default timeout function
+            timeoutfunc = self.timeout
 
-        GD.debug("TIMEOUT %s" % timeout)
+        #GD.debug("TIMEOUT %s" % timeout)
         if timeout >= 0:
             # Start the timer:
-            GD.debug("START TIMEOUT %s" % timeout)
+            #GD.debug("START TIMEOUT %s" % timeout)
             try:
                 timeout = float(timeout)
                 if timeout >= 0.0:
-                    print "TIMER"
+                    #GD.debug("NOW REALLY STARTING TIMEOUT %s" % timeout)
                     timer = QtCore.QTimer()
-                    timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
-                    timer.connect(timer,QtCore.SIGNAL("timeout()"),checktimeout)
-                    #timer.setSingleShot(True)
+                    #timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
+                    timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutfunc)
+                    timer.setSingleShot(True)
                     timeout = int(1000*timeout)
-                    print "START TIMER"
                     timer.start(timeout)
+                    # make sure this timer stays alive
+                    self.timer = timer
+                    #GD.debug("TIMER STARTED")
             except:
                 raise ValueError,"Could not start the timeout timer"
         
@@ -1166,18 +1172,21 @@ class InputDialog(QtGui.QDialog):
         results without having to raise the accepted() signal (which
         would close the dialog).
         """
-        GD.debug("ACCEPTING DATA WITH RESULT %s"%result)
+        #GD.debug("ACCEPTING DATA WITH RESULT %s"%result)
         self.results = {}
         self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
         if self.report_pos:
             self.results.update({'__pos__':self.pos()})
-        self.setResult(ACCEPTED)
+        if result == TIMEOUT:
+            self.done(result)
+        else:
+            self.setResult(result)
         
 
     def updateData(self,d):
         """Update a dialog from the data in given dictionary.
 
-        d is a dictionary where the keys are field names in t the dialog.
+        d is a dictionary where the keys are field names in the dialog.
         The values will be set in the corresponding input items.
         """
         for f in self.fields:
@@ -1208,9 +1217,9 @@ class InputDialog(QtGui.QDialog):
         Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.
         """
         self.show(timeout)
-        GD.debug("WAITING FOR EVENTS")
+        #GD.debug("WAITING FOR EVENTS")
         self.exec_()
-        GD.debug("GOT A RESULT")
+        #GD.debug("GOT A RESULT")
         self.activateWindow()
         self.raise_()
         GD.app.processEvents()

@@ -185,14 +185,13 @@ def show(all=False):
 def showAll():
     show(all=True)
 
+def timeOut():
+    showAll()
+    close()
     
 dialog = widgets.InputDialog(data_items,caption='Curve parameters',actions = [('Close',close),('Show All',showAll),('Show',show)],default='Show')
+dialog.timeout = timeOut
 dialog.show()
-
-while dialog.result() != widgets.REJECTED:
-    GD.app.processEvents()
-    if dialog.result() == timedOut:
-        close()
-        break
+       
 
 # End

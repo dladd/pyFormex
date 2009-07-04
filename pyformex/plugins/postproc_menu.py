@@ -661,7 +661,7 @@ def newvals():
 def dialog_getdata():
     """Return the dialog data with short keys."""
     dialog.acceptData()
-    data = dialog.result
+    data = dialog.results
     data = dict([ (c[0],data[c[1]]) for c in dia_full ])
     data['resindex'] = res_dict.values().index(data['resindex'])
     return data

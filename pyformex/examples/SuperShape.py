@@ -134,15 +134,15 @@ def showSuperShape():
 # Button Functions
 def show_grid():
     dialog.acceptData()
-    refresh(GD.PF['__SuperShape__grid_data'],dialog.result)
-    refresh(GD.PF['__SuperShape__shape_data'],dialog.result)
-    globals().update(dialog.result)
+    refresh(GD.PF['__SuperShape__grid_data'],dialog.results)
+    refresh(GD.PF['__SuperShape__shape_data'],dialog.results)
+    globals().update(dialog.results)
     createGrid()
     showGrid()
 
 def show_shape():
     dialog.acceptData()
-    globals().update(dialog.result)
+    globals().update(dialog.results)
     createGrid()
     createSuperShape()
     showSuperShape()
@@ -178,7 +178,7 @@ def save():
             savefile = file(filename,'a')
     if savefile:
         print "Saving to file"
-        savefile.write('%s\n' % str(dialog.result))
+        savefile.write('%s\n' % str(dialog.results))
         savefile.flush()
         globals().update({'grid_name':gname.next(),'name':sname.next(),})
         if dialog:
@@ -202,6 +202,12 @@ def play():
 
 
 ################# Dialog
+
+
+def dialog_timeout():
+    #print "DIALOG TIMED OUT!"
+    show_shape()
+    close()
         
 def openSuperShapeDialogs():
     global dialog
@@ -231,6 +237,8 @@ def openSuperShapeDialogs():
     # The dialog
     dialog = InputDialog(grid_items+items,caption='SuperShape parameters',actions=actions,default='Show')
 
+    dialog.timeout = dialog_timeout
+
     dialog.show()
 
     
@@ -249,10 +257,11 @@ if __name__ == "draw":
     openSuperShapeDialogs()
     #smoothwire()
 
-    while dialog is not None:
-        if dialog.timedOut:
-            close()
-        GD.app.processEvents()
+    ## while dialog is not None:
+    ##     if dialog.timedOut():
+    ##         show_shape()
+    ##     GD.app.processEvents()
+    ##     sleep(1)
 
 
 # End
