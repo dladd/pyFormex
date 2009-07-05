@@ -37,6 +37,20 @@ import olist
 
 from pyformex.lib import drawgl
 
+def glObjType(nplex):
+    if nplex == 1:
+        objtype = GL.GL_POINTS
+    elif nplex == 2:
+        objtype = GL.GL_LINES
+    elif nplex == 3:
+        objtype = GL.GL_TRIANGLES
+    elif nplex == 4:
+        objtype = GL.GL_QUADS
+    else:
+        objtype = GL.GL_POLYGON
+    return objtype
+
+
 ### Some drawing functions ###############################################
 
 def glColor(color,alpha=1.0):
@@ -73,27 +87,40 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     if size:
         GL.glPointSize(size)
     x = x.reshape(-1,1,3)
-    drawgl.draw_polygons(x,None,color,alpha)
+    drawgl.draw_polygons(x,None,color,alpha,-1)
     
 
-def drawLines(x,color=None,alpha=1.0):
-    """Draw a collection of lines.
+## def drawLines(x,elems,color=None,alpha=1.0):
+##     """Draw a collection of lines.
 
-    x is a (nlines,2,3) shaped array of coordinates.
+##     x is a (nlines,2,3) shaped array of coordinates.
 
-    If color is given it is an (nlines,3), (nlines,1,3) or (nlines,2,3)
-    array of RGB values.
-    If two colors are given, make sure that smooth shading is on,
-    or the color rendering will be flat with the second color.
-    """
-    if GD.options.safelib:
-        x = x.astype(float32)
-        if color is not None:
-            color = color.astype(float32)
-            if (color.shape[0] != x.shape[0] or
-                color.shape[-1] != 3):
-                color = None
-    drawgl.draw_polygons(x,None,color,alpha)
+##     If color is given it is an (nlines,3), (nlines,1,3) or (nlines,2,3)
+##     array of RGB values.
+##     If two colors are given, make sure that smooth shading is on,
+##     or the color rendering will be flat with the second color.
+##     """
+##     if GD.options.safelib:
+##         x = x.astype(float32)
+##         if color is not None:
+##             color = color.astype(float32)
+##             if (color.shape[0] != x.shape[0] or
+##                 color.shape[-1] != 3):
+##                 color = None
+##     drawgl.draw_polygons(x,None,color,alpha)
+    
+
+## def drawLineElems(x,elems,color=None,alpha=1.0):
+##     """Draw a collection of lines.
+
+##     This is the same as drawLines, except that the lines are defined
+##     by an array of points and a connection table.
+##     x is a (ncoords,3) coordinate array.
+##     elems is a (nlines,2) integer array of connected node numbers.
+
+##     If color is given it is an (nlines,3) array of RGB values.
+##     """
+##     drawLines(x[elems],color,alpha)
 
 
 def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
@@ -143,9 +170,118 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
             GD.debug("COLORS:%s" % str(color.shape))
 
     if e is None:
-        drawgl.draw_polygons(x,n,color,alpha)
+        drawgl.draw_polygons(x,n,color,alpha,-1)
     else:
-        drawgl.draw_polygon_elems(x,e,n,color,alpha)
+        drawgl.draw_polygon_elems(x,e,n,color,alpha,-1)
+
+
+def drawLines(x,e,color):
+    drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
+
+
+def drawPolyLines(x,e,color=None,alpha=1.0):
+    if e is None:
+        nplex = x.shape[1]
+        nelems = x.shape[0]
+        e = arange(nplex*nelems).reshape(nelems,nplex).astype(int32)
+        x = x.reshape(-1,3).astype(float32)
+    else:
+        nplex = e.shape[1]
+    verts = range(nplex)
+    lines = column_stack([verts,roll(verts,-1)])
+    els = e[:,lines]#.reshape(-1,2)
+    # WE SHOULD ADD COLOR EXPANSION HERE, AS IN DRAWEDGES
+    drawgl.draw_polygon_elems(x,e,None,None,alpha,GL.GL_LINE_LOOP)
+       
+
+def draw_edges(x,e,color=None):
+    """Draw a collection of edges.
+
+    x is a (nel,2*n,3) shaped array of coordinates. Each of the n pairs
+    define a line segment. 
+
+    If color is given it is an (nel,3) array of RGB values.
+    """
+    n = x.shape[1] / 2
+    x = x.reshape(-1,2,3)
+    if color is not None:
+        s = list(color.shape)
+        s[1:1] = [1]
+        color = color.reshape(*s).repeat(n,axis=1)
+        s[1] = n
+        color = color.reshape(-1,3)
+    drawLines(x,e,color)
+
+
+def drawEdges(x,e,edges,color=None):
+    """Draw a collection of edges.
+
+    This function is like draw_edges, but the coordinates of the edges are
+    specified by:
+    x (nel,nplex) : the coordinates of solid elements
+    edges (nedges,2): the definition of nedges edges of the solid,
+      each with plexitude 2. Each line of edges defines a single
+      edge of the solid, in local vertex numbers (0..nplex-1)
+    """
+    draw_edges(x[:,asarray(edges).ravel(),:],e,color)
+
+
+def draw_faces(x,e,nplex,mode,color=None,alpha=1.0):
+    """Draw a collection of faces.
+
+    (x,e) are one of:
+       x is a (nelems,nplex*nfaces,3) shaped coordinates and e is None,
+       x is a (ncoords,3) shaped coordinates and e is a (nelems,nplex*nfaces)
+       connectivity
+       
+    Each of the nfaces sets of nplex points defines a polygon. 
+
+    If color is given it is an (nel,3) array of RGB values. This function
+    will multiplex the colors, so that n faces are drawn in the same color.
+    This is e.g. convenient when drawing faces of a solid element.
+    """
+    if e is None:
+        nelpts = x.shape[1]
+    else:
+        nelpts = e.shape[1]
+    nfaces = nelpts / nplex
+    if e is None:
+        x = x.reshape(-1,nplex,3)
+    else:
+        e = e.reshape(-1,nplex)
+        
+    if color is not None:
+        # multiply element color
+        s = list(color.shape)
+        s[1:1] = [1]
+        color = color.reshape(*s).repeat(nfaces,axis=1)
+        s[1] = nfaces
+        color = color.reshape(-1,3)
+    drawPolygons(x,e,mode,color,alpha)
+
+
+def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
+    """Draw a collection of faces.
+
+    This function is like draw_faces, but the coordinates of the faces are
+    specified by:
+    x (nel,nplex) : the coordinates of solid elements
+    e
+    faces (nfaces,fplex): the definition of nfaces faces of the solid,
+      each with plexitude fplex. Each line of faces defines a single
+      face of the solid, in local vertex numbers (0..nplex-1)
+    """
+    # We may have faces with different plexitudes!
+    for fac in olist.collectOnLength(faces).itervalues():
+        fa = asarray(fac)
+        nplex = fa.shape[1]
+        if e is None:
+            coords = x[:,fa,:]
+            elems = None
+        else:
+            coords = x
+            elems = e[:,fa]
+        draw_faces(coords,elems,nplex,mode,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):
@@ -267,145 +403,7 @@ def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     n = polygonNormals(coords[elems])
     n = nodalSum(n,elems,return_all=not atNodes,direction_treshold=treshold)
     return normalize(n)
-    
 
-def drawLineElems(x,elems,color=None,alpha=1.0):
-    """Draw a collection of lines.
-
-    This is the same as drawLines, except that the lines are defined
-    by an array of points and a connection table.
-    x is a (ncoords,3) coordinate array.
-    elems is a (nlines,2) integer array of connected node numbers.
-
-    If color is given it is an (nlines,3) array of RGB values.
-    """
-    drawLines(x[elems],color,alpha)
-
-
-def drawPolyLineElems(x,elems,color=None,alpha=1.0):
-    nplex = elems.shape[1]
-    verts = range(nplex)
-    lines = column_stack([verts,roll(verts,-1)])
-    els = elems[:,lines].reshape(-1,2)
-    drawgl.draw_polygon_elems(x,els,None,None,alpha)
-       
-
-def drawEdges(x,color=None,alpha=1.0):
-    """Draw a collection of edges.
-
-    x is a (nel,2*n,3) shaped array of coordinates. Each of the n pairs
-    define a line segment. 
-
-    If color is given it is an (nel,3) array of RGB values.
-    """
-    n = x.shape[1] / 2
-    x = x.reshape(-1,2,3)
-    if color is not None:
-        s = list(color.shape)
-        s[1:1] = [1]
-        color = color.reshape(*s).repeat(n,axis=1)
-        s[1] = n
-        color = color.reshape(-1,3)
-    drawLines(x,color,alpha)
-
-
-def drawEdgeElems(x,edges,color=None):
-    """Draw a collection of edges.
-
-    This function is like drawEdges, but the coordinates of the edges are
-    specified by:
-    x (nel,nplex) : the coordinates of solid elements
-    edges (nedges,2): the definition of nedges edges of the solid,
-      each with plexitude 2. Each line of edges defines a single
-      edge of the solid, in local vertex numbers (0..nplex-1)
-    """
-    drawEdges(x[:,asarray(edges).ravel(),:],color)
-
-
-def draw_faces(x,e,nplex,mode,color=None,alpha=1.0):
-    """Draw a collection of faces.
-
-    (x,e) are one of:
-       x is a (nelems,nplex*nfaces,3) shaped coordinates and e is None,
-       x is a (ncoords,3) shaped coordinates and e is a (nelems,nplex*nfaces)
-       connectivity
-       
-    Each of the nfaces sets of nplex points defines a polygon. 
-
-    If color is given it is an (nel,3) array of RGB values. This function
-    will multiplex the colors, so that n faces are drawn in the same color.
-    This is e.g. convenient when drawing faces of a solid element.
-    """
-    if e is None:
-        nelpts = x.shape[1]
-    else:
-        nelpts = e.shape[1]
-    nfaces = nelpts / nplex
-    if e is None:
-        x = x.reshape(-1,nplex,3)
-    else:
-        e = e.reshape(-1,nplex)
-        
-    if color is not None:
-        # multiply element color
-        s = list(color.shape)
-        s[1:1] = [1]
-        color = color.reshape(*s).repeat(nfaces,axis=1)
-        s[1] = nfaces
-        color = color.reshape(-1,3)
-    drawPolygons(x,e,mode,color,alpha)
-
-
-def drawFaces(x,faces,mode,color=None,alpha=1.0):
-    """Draw a collection of faces.
-
-    This function is like draw_faces, but the coordinates of the faces are
-    specified by:
-    x (nel,nplex) : the coordinates of solid elements
-    faces (nfaces,fplex): the definition of nfaces faces of the solid,
-      each with plexitude fplex. Each line of faces defines a single
-      face of the solid, in local vertex numbers (0..nplex-1)
-    """
-    # We may have faces with different plexitudes!
-    for fac in olist.collectOnLength(faces).itervalues():
-        fa = asarray(fac)
-        draw_faces(x[:,fa.ravel(),:],None,fa.shape[1],mode,color,alpha)
-
-
-def drawPolyLines(x,c=None,close=True):
-    """Draw a collection of polylines, closed or not.
-
-    x : float (npoly,n,3) : coordinates.
-    c : float (npoly,3) or (npoly,n,3) : color(s) at vertices
-    If rendering is flat, the last color will  be used for each segment.
-    """
-    if close:
-        glmode = GL.GL_LINE_LOOP
-    else:
-        glmode = GL.GL_LINE_STRIP
-        
-    if c is None:
-        for i in range(x.shape[0]):
-            GL.glBegin(glmode)
-            for j in range(x.shape[1]):
-                GL.glVertex3fv(x[i][j])
-            GL.glEnd()
-
-    elif c.ndim == 2:
-        for i in range(x.shape[0]):
-            GL.glBegin(glmode)
-            GL.glColor3fv(c[i])
-            for j in range(x.shape[1]):
-                GL.glVertex3fv(x[i][j])
-            GL.glEnd()
-
-    elif c.ndim == 3:
-        for i in range(x.shape[0]):
-            GL.glBegin(glmode)
-            for j in range(x.shape[1]):
-                GL.glColor3fv(c[i][j])
-                GL.glVertex3fv(x[i][j])
-            GL.glEnd()
 
 
 def drawQuadraticCurves(x,color=None,n=8):

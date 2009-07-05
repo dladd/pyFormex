@@ -365,7 +365,7 @@ def draw(F,
         if isinstance(F,formex.Formex):
             if F.nelems() == 0:
                 return None
-            actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+            actor = actors.GeomActor(F.f,None,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         elif isinstance(F,mesh.Mesh):
             if F.nelems() == 0:
                 return None
@@ -938,8 +938,8 @@ def highlightActors(K):
     for i in K.get(-1,[]):
         print "%s/%s" % (i,len(GD.canvas.actors))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.FormexActor):
-            FA = actors.FormexActor(actor,color='red')
+        if isinstance(actor,actors.GeomActor):
+            FA = actors.GeomActor(actor,color='red')
             GD.canvas.addHighlight(FA)
         elif isinstance(actor,actors.TriSurfaceActor):
             SA = actors.TriSurfaceActor(actor,color='red')
@@ -958,8 +958,8 @@ def highlightElements(K):
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.FormexActor):
-            FA = actors.FormexActor(actor.select(K[i]),color='red')
+        if isinstance(actor,actors.GeomActor):
+            FA = actors.GeomActor(actor.select(K[i]),color='red')
             GD.canvas.addHighlight(FA)
         elif isinstance(actor,actors.TriSurfaceActor):
             SA = actors.TriSurfaceActor(actor.select(K[i]),color='red')
@@ -979,7 +979,7 @@ def highlightEdges(K):
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.TriSurfaceActor):
-            FA = actors.FormexActor(Formex(actor.coords[actor.edges[K[i]]]),color='red',linewidth=3)
+            FA = actors.GeomActor(Formex(actor.coords[actor.edges[K[i]]]),color='red',linewidth=3)
             GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
@@ -993,7 +993,7 @@ def highlightPoints(K):
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
-        FA = actors.FormexActor(Formex(actor.vertices()[K[i]]),color='red',marksize=10)
+        FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color='red',marksize=10)
         GD.canvas.addHighlight(FA)
     GD.canvas.update()
 
@@ -1009,9 +1009,9 @@ def highlightPartitions(K):
     for i in K.keys():
         GD.debug("Actor %s: Partitions %s" % (i,K[i][0]))
         actor = GD.canvas.actors[i]
-        if isinstance(actor,actors.FormexActor):
+        if isinstance(actor,actors.GeomActor):
             for j in K[i][0].keys():           
-                FA = actors.FormexActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
+                FA = actors.GeomActor(actor.select(K[i][0][j]),color=j*numpy.ones(len(K[i][0][j]),dtype=int))
                 GD.canvas.addHighlight(FA)
         elif isinstance(actor,actors.TriSurfaceActor):
             for j in K[i][0].keys():

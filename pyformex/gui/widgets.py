@@ -1664,7 +1664,7 @@ class BaseMenu(object):
                 if type(val) == str:
                     val = eval(val)
                 if len(item) > 2 and item[2].has_key('data'):
-                    print "INSERT A DACTION", item
+                    #print "INSERT A DACTION", item
                     a = DAction(txt,data=item[2]['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)

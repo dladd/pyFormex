@@ -53,11 +53,12 @@ for shape in Shape.keys():
         renderMode(mode)
         for c in [ color0,color1,color2,color3]:
             clear()
-            FA = FormexActor(F,color=c)
+            FA = GeomActor(F,color=c)
             drawActor(FA)
             zoomAll()
             for light in Lights:
                 lights(light)
+                sleep(2)
 
 
 # End

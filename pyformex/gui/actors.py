@@ -156,7 +156,7 @@ class BboxActor(Actor):
             color = self.color
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
-        drawLineElems(self.vertices,self.edges,color)
+        drawLines(self.vertices,self.edges,color)
             
 
 class TriadeActor(Actor):
@@ -339,7 +339,7 @@ class GeomActor(Actor):
     """
     mark = False
 
-    def __init__(self,coords,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None):
+    def __init__(self,data,elems=None,eltype=None,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
@@ -371,13 +371,22 @@ class GeomActor(Actor):
         """
         Actor.__init__(self)
 
-        self.coords = coords
-        self.elems = elems
+        if isinstance(data,GeomActor):
+            self.coords,self.elems,self.eltype = data.coords,data.elems,data.eltype
+        elif isinstance(data,Formex):
+            self.coords = data.f
+            self.elems = None
+            self.eltype = data.eltype
+        else:
+            self.coords = data
+            self.elems = elems
+            self.eltype = eltype
+            
         if self.elems is None:
             self.atype = 'Formex'
         else:
             self.atype = 'Mesh'
-        self.eltype = eltype
+            
         self.mode = mode
         self.setLineWidth(linewidth)
         self.setColor(color,colormap)
@@ -517,10 +526,7 @@ class GeomActor(Actor):
                 drawPoints(self.coords,color,alpha,self.marksize)
                 
         elif nplex == 2:
-            if self.elems is None:
-                drawLines(self.coords,color,alpha)
-            else:
-                drawLineElems(self.coords,self.elems,color,alpha)
+            drawLines(self.coords,self.elems,color)
         
         elif self.eltype == 'curve' and nplex == 3:
             drawQuadraticCurves(self.coords,color,n=quadratic_curve_ndiv)
@@ -530,10 +536,7 @@ class GeomActor(Actor):
             
         elif self.eltype is None:
             if mode=='wireframe' :
-                if self.elems is None:
-                    drawPolyLines(self.coords,color,alpha=1.0)
-                else:
-                    drawPolyLineElems(self.coords,self.elems,color,alpha=1.0)
+                drawPolyLines(self.coords,self.elems,color)
             else:
                 drawPolygons(self.coords,self.elems,mode,color,alpha)
                     
@@ -543,9 +546,9 @@ class GeomActor(Actor):
             except:
                 raise ValueError,"Invalid eltype %s" % str(self.eltype)
             if mode=='wireframe' :
-                drawEdgeElems(self.coords,el.edges,color)    
+                drawEdges(self.coords,self.elems,el.edges,color)    
             else:
-                drawFaceElems(self.coords,el.faces,mode,color,alpha)
+                drawFaces(self.coords,self.elems,el.faces,mode,color,alpha)
     
 
     def pickGL(self,mode):
@@ -554,205 +557,22 @@ class GeomActor(Actor):
         mode can be 'element' or 'point'
         """
         if mode == 'element':
-            pickPolygons(self.coords)
+            if self.elems is None:
+                pickPolygons(self.coords)
+            else:
+                pickPolygonElems(self.coords,self.elems)
+
+        elif mode == 'edge':
+            try:
+                el = getattr(elements,self.eltype.capitalize())
+                ### TODO !!!!!
+                pickPolygonEdges(self.coords,self.elems,el.edges)
+            except:
+                raise ValueError,"Invalid eltype %s" % str(self.eltype)
+                
         elif mode == 'point':
             pickPoints(self.coords)
 
-
-#############################################################################
-
-
-class FormexActor(Actor,Formex):
-    """An OpenGL actor which is a Formex."""
-    mark = False
-
-    def __init__(self,F,color=None,colormap=None,bkcolor=None,bkcolormap=None,alpha=1.0,mode=None,linewidth=None,marksize=None):
-        """Create a multicolored Formex actor.
-
-        The colors argument specifies a list of OpenGL colors for each
-        of the property values in the Formex. If the list has less
-        values than the PropSet, it is wrapped around. It can also be
-        a single OpenGL color, which will be used for all elements.
-        For surface type elements, a bkcolor color can be given for
-        the backside (inside) of the surface. Default will be the same
-        as the front color.
-        The user can specify a linewidth to be used when drawing
-        in wireframe mode.
-
-        If the Formex has no 'eltype' attribute, or if it is not
-        recognized, Formices are drawn as follows:
-          plex-1: a fixed size dot,
-          plex-2: a line
-          plex-3: a triangle
-          plex 4 and higher: a polygon: if the points are not in a single
-            plane, the polygon consists of a number of flat triangles.
-
-        The following eltypes are recognized (and should match the
-        corresponding plexitude):
-          plex-1: 'point3d' : a 3D cube with 6 differently colored faces is
-                              drawn at each point
-          plex-4: 'tet4'   : a tetrahedron
-          plex-6: 'wedge6' : a wedge (triangular prism)
-          plex-8: 'hex8'   : a hexahedron
-        """
-        Actor.__init__(self)
-        # Initializing with F alone gives problems with self.p !
-        Formex.__init__(self,F.f,F.p,F.eltype)
-
-        self.atype = 'Formex'
-        self.mode = mode
-        self.setLineWidth(linewidth)
-        self.setColor(color,colormap)
-        self.setBkColor(bkcolor,bkcolormap)
-        self.setAlpha(alpha)
-##         if coloradjust:
-##             if colormap is not None:
-##                 colormap /= colormap.sum(axis=1)
-##             if bkcolormap is not None:
-##                 bkcolormap /= bkcolormap.sum(axis=1).reshape(-1,1)
-        if self.nplex() == 1:
-            self.setMarkSize(marksize)
-        self.list = None
-        
-
-    def setColor(self,color=None,colormap=None):
-        """Set the color of the Actor."""
-        self.color,self.colormap = saneColorSet(color,colormap,self.f.shape[:-1])
-
-
-    def setBkColor(self,color=None,colormap=None):
-        """Set the backside color of the Actor."""
-        self.bkcolor,self.bkcolormap = saneColorSet(color,colormap,(self.f.shape[:-1]))
-
-    def setAlpha(self,alpha):
-        """Set the Actors alpha value."""
-        self.alpha = float(alpha)
-        self.trans = self.alpha < 1.0
-        #if self.trans:
-        #    GD.debug("Setting Actor's ALPHA value to %f" % alpha)
-
-
-    def setMarkSize(self,marksize):
-        """Set the mark size.
-
-        The mark size is currently only used with plex-1 Formices.
-        """
-#### DEFAULT MARK SIZE SHOULD BECOME A CANVAS SETTING!!
-        
-        if marksize is None:
-            marksize = 4.0 # default size 
-        if self.eltype == 'point3d':
-            # ! THIS SHOULD BE SET FROM THE SCENE SIZE
-            #   RATHER THAN FORMEX SIZE 
-            marksize = self.dsize() * marksize
-            if marksize <= 0.0:
-                marksize = 1.0
-            self.setMark(marksize,"cube")
-        self.marksize = marksize
-
-
-    def setMark(self,size,type):
-        """Create a symbol for drawing 3D points."""
-        self.mark = GL.glGenLists(1)
-        GL.glNewList(self.mark,GL.GL_COMPILE)
-        if type == "sphere":
-            drawSphere(size)
-        else:
-            drawCube(size)
-        GL.glEndList()
-        
-
-    #bbox = Formex.bbox
-
-
-    def drawGL(self,mode='wireframe',color=None,colormap=None,alpha=None):
-        """Draw the formex.
-
-        if color is None, it is drawn with the color specified on creation.
-        if color == 'prop' and a colormap was installed, props define color.
-        else, color should be an array of RGB values, either with shape
-        (3,) for a single color, or (nelems,3) for differently colored
-        elements 
-
-        if mode ends with wire (smoothwire or flatwire), two drawing
-        operations are done: one with wireframe and color black, and
-        one with mode[:-4] and self.color.
-        """
-        if self.mode is not None:
-            mode = self.mode
-
-        if mode.endswith('wire'):
-            self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
-            self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
-            return
-
-        if alpha is None:
-            alpha = self.alpha
-        
-        if color is None:
-            color,colormap = self.color,self.colormap
-        else:
-            color,colormap = saneColorSet(color,colormap,self.nelems())
-        
-        if color is None:  # no color
-            pass
-        
-        elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
-            GL.glColor(append(color,alpha))
-            color = None
-
-        elif color.dtype.kind == 'i': # color index
-            color = colormap[color]
-
-        else: # a full color array : use as is
-            pass
-                
-        if self.linewidth is not None:
-            GL.glLineWidth(self.linewidth)
-            
-        nplex = self.nplex()
-        if nplex == 1:
-            if self.eltype == 'point3d':
-                x = self.f.reshape((-1,3))
-                drawAtPoints(x,self.mark,color)
-            else:
-                drawPoints(self.f,color,alpha,self.marksize)
-                
-        elif nplex == 2:
-            drawLines(self.f,color,alpha)
-        
-        elif self.eltype == 'curve' and nplex == 3:
-            drawQuadraticCurves(self.f,color,n=quadratic_curve_ndiv)
-            
-        elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
-            drawNurbsCurves(self.f,color)
-            
-        elif self.eltype is None:
-            if mode=='wireframe' :
-                drawPolyLines(self.f,color)
-            else:
-                drawPolygons(self.f,None,mode,color,alpha)
-
-        else:
-            try:
-                el = getattr(elements,self.eltype.capitalize())
-            except:
-                raise ValueError,"Invalid eltype %s" % str(self.eltype)
-            if mode=='wireframe' :
-                drawEdgeElems(self.f,el.edges,color)    
-            else:
-                drawFaces(self.f,el.faces,mode,color,alpha)
-    
-
-    def pickGL(self,mode):
-        """ Allow picking of parts of the actor.
-
-        mode can be 'element' or 'point'
-        """
-        if mode == 'element':
-            pickPolygons(self.f)
-        elif mode == 'point':
-            pickPoints(self.f)
 
 
 #############################################################################
@@ -833,7 +653,7 @@ class TriSurfaceActor(Actor,TriSurface):
             rev = reverseIndex(self.faces)
             if color is not None:
                 color = color[rev[:,-1]]
-            drawLineElems(self.coords,self.edges,color)
+            drawLines(self.coords,self.edges,color)
         else:
             self.refresh()
             drawPolygons(self.coords,self.elems,mode,color,alpha)

@@ -64,28 +64,29 @@ Filled = simple.connectCurves(c2,c1,etb)
 Quarter = Body + Filled + Flange1 + Flange2 + Flange3
 Half = Quarter + Quarter.mirror(1).reverse()
 Full = Half + Half.mirror(0).reverse()
+Section = Full.toMesh()
+
 clear()
-view('front')
-draw(Full,color=red)
+draw(Section,color=red)
+
 #pause()
 
 method = ask("Choose extrude method:",['Cancel','Sweep','Connect','Extrude'])
 
-M = Full.toMesh()
 
 if method == 'Sweep':
     L = simple.line([0,0,0],[0,0,l],el)
     x = concatenate([L.f[:,0],L.f[-1:,1]])
     path = curve.PolyLine(x)
-    Beam = M.sweep(path,normal=[0.,0.,1.])
+    Beam = Section.sweep(path,normal=[0.,0.,1.])
 
 elif method == 'Connect':
-    M1 = M.copy()
-    M1.coords = M1.coords.trl([0,0,l])
-    Beam = connectMesh(M,M1,el)
+    Section1 = Section.copy()
+    Section1.coords = Section1.coords.trl([0,0,l])
+    Beam = connectMesh(Section,Section1,el)
 
 elif method == 'Extrude':
-    Beam = M.extrude(el,step=l/el,dir=2)
+    Beam = Section.extrude(el,step=l/el,dir=2)
 
 else:
     exit()

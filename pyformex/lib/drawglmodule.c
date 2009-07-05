@@ -10,7 +10,6 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
-
 int debug = 0;
 int version = 1;
 
@@ -64,6 +63,7 @@ int gl_objtype(int nplex)
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
     alpha : float
+    objtype : GL Object type 
 */  
 static PyObject *
 draw_polygons(PyObject *dummy, PyObject *args)
@@ -71,10 +71,10 @@ draw_polygons(PyObject *dummy, PyObject *args)
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL;
   float *x, *n=NULL, *c=NULL, alpha;
-  int nel,nplex,ndc=0,ndn=0;
+  int objtype,nel,nplex,ndc=0,ndn=0,i,j;
 
   if (debug) printf("** draw_polygons\n");
-  if (!PyArg_ParseTuple(args, "OOOf", &arg1, &arg2, &arg3, &alpha)) return NULL;
+  if (!PyArg_ParseTuple(args, "OOOfi", &arg1, &arg2, &arg3, &alpha, &objtype)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
@@ -97,11 +97,10 @@ draw_polygons(PyObject *dummy, PyObject *args)
   
   if (debug) printf("** ndn = %d\n",ndn);
   if (debug) printf("** ndc = %d\n",ndc);
-  int i,j,objtype;
   
-  objtype = gl_objtype(nplex);
+  if (objtype < 0) objtype = gl_objtype(nplex);
 
-  if (nplex <= 4) { 
+  if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
     glBegin(objtype);
 
     if (ndc == 0) {
@@ -312,6 +311,7 @@ pick_polygons(PyObject *dummy, PyObject *args)
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
     alpha : float
+    objtype : GL Object type 
 */  
 static PyObject *
 draw_polygon_elements(PyObject *dummy, PyObject *args)
@@ -319,11 +319,11 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
   float *x, *n=NULL, *c=NULL, alpha;
-  int *e;
-  int npts,nel,nplex,ndc=0,ndn=0;
+  int *e, objtype;
+  int npts,nel,nplex,ndc=0,ndn=0,i,j;
 
   if (debug) printf("** draw_polygon_elements\n");
-  if (!PyArg_ParseTuple(args, "OOOOf", &arg1, &arg2, &arg3, &arg4, &alpha)) return NULL;
+  if (!PyArg_ParseTuple(args, "OOOOfi", &arg1, &arg2, &arg3, &arg4, &alpha, &objtype)) return NULL;
 
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) goto cleanup;
@@ -354,11 +354,10 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
   
   if (debug) printf("** ndn = %d\n",ndn);
   if (debug) printf("** ndc = %d\n",ndc);
-  int i,j,objtype;
   
-  objtype = gl_objtype(nplex);
+  if (objtype < 0) objtype = gl_objtype(nplex);
 
-  if (nplex <= 4) { 
+  if (nplex <= 4 && objtype == gl_objtype(nplex)) { 
     glBegin(objtype);
 
     if (ndc == 0) {
@@ -398,87 +397,98 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
 	  }
 	}
       }
-    } else if (ndc == 3) {   // TODO
-      if (ndn == 0) {
-	for (i=0; i<nel*nplex*3; i+=3) {
-	  gl_color(c+i,alpha);
-	  glVertex3fv(x+i);
+    } else if (ndc == 3) {
+      if (ndn == 0) {  // DONE
+	if (debug) printf("** check 1\n");
+	for (i=0; i<nel*nplex; i++) {
+	  gl_color(c+3*i,alpha);
+	  glVertex3fv(x+3*e[i]);
 	}
-      } else if (ndn == 2) {   // TODO
+      } else if (ndn == 2) {   // DONE
+	if (debug) printf("** check 2\n");
 	for (i=0; i<nel; i++) {
 	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) {
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    gl_color(c+3*(nplex*i+j),alpha);
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	}
-      } else if (ndn == 3) {   // TODO
+      } else if (ndn == 3) {   // DONE
+	if (debug) printf("** check 3\n");
 	for (i=0; i<nel; i++) {
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    glNormal3fv(n+3*(nplex*i+j));
+	    gl_color(c+3*(nplex*i+j),alpha);
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	}
       }
     }
     glEnd();
 
-  } else {   // TODO
+  } else {
 
+    if (debug) printf("** objtype = %d\n",objtype);
     if (ndc == 0) {
-      if (ndn == 0) {
+      if (ndn == 0) {   // DONE & CHECKED
+	//if (debug) printf("** check 4\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
-      } else if (ndn == 2) {
+      } else if (ndn == 2) {   // DONE
+	if (debug) printf("** check 5\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
-      } else if (ndn == 3) {
+      } else if (ndn == 3) {   // DONE
+	if (debug) printf("** check 6\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    glNormal3fv(n+3*(nplex*i+j));
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	  glEnd();
 	}
       }
-    } else if (ndc == 2) {
+    } else if (ndc == 2) {   // DONE
       if (ndn == 0) {
+	if (debug) printf("** check 7\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
-      } else if (ndn == 2){
+      } else if (ndn == 2){   // DONE
+	if (debug) printf("** check 8\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
 	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
-      } else if (ndn == 3) {
+      } else if (ndn == 3) {   // DONE
+	if (debug) printf("** check 9\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    glNormal3fv(n+3*(nplex*i+j));
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	  glEnd();
 	}
       }
-    } else if (ndc == 3) {
+    } else if (ndc == 3) {   // TODO
       if (ndn == 0) {
+	if (debug) printf("** todo 1\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  for (j=0;j<nplex*3;j+=3) {
@@ -487,7 +497,8 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
 	  }
 	  glEnd();
 	}
-      } else if (ndn == 2) {
+      } else if (ndn == 2) {   // TODO
+	if (debug) printf("** todo 2\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  glNormal3fv(n+3*i);
@@ -497,7 +508,8 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
 	  }
 	  glEnd();
 	}
-      } else if (ndn == 3) {
+      } else if (ndn == 3) {   // TODO
+	if (debug) printf("** todo 3\n");
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  for (j=0;j<nplex*3;j+=3) {
