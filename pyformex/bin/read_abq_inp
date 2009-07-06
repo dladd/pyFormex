@@ -40,6 +40,13 @@ BEGIN { mode=0; start_part("DEFAULT_PART"); }
 
 }
 
+# start an elset block
+/^\*Elset, elset=.*, generate/ { 
+    start_mode(3)
+    sub(".*elset=","");sub(",.*",""); setname=$0;
+    getline;
+}
+
 # skip other commands
 /^\*/ { print "Unknown command: "$0;  end_mode(); next;}
 
@@ -47,9 +54,10 @@ BEGIN { mode=0; start_part("DEFAULT_PART"); }
 { 
     if (mode==1) print_node();
     else if (mode==2) print_elem();    
+    else if (mode==3) print_elset();    
 }
 
-END { end_mode(); }
+END { end_mode(); fflush("") }
 
 ######## functions #####################
 
@@ -60,6 +68,7 @@ function start_part(pname) {
     printf("") > meshfile
     nodesblk = -1
     elemsblk = -1
+    esetsblk = -1
 }
 
 
@@ -69,28 +78,42 @@ function start_mode(mod) {
 
     mode = mod
     if (mode==1) {
-	type = "nodes"
-	nodesblk += 1
-	blk = nodesblk
+	nodesblk = start_blocked_file("nodes",nodesblk)
     }
     else if (mode==2) {
-	type = "elems"
-	elemsblk += 1
-	blk = elemsblk
+	elemsblk = start_blocked_file("elems",elemsblk)
     }
-    outfile = partname"."type
-    if (blk > 0) outfile = outfile""blk 
+    else if (mode==3) {
+	esetsblk = start_unique_file("esets",esetsblk)
+    }
     print "Starting mode "mode" to file "outfile 
-    printf("") > outfile
     count = 0
+}
+
+
+# Start a file for a blocked type
+function start_blocked_file(type,blk) {
+    outfile = partname"."type
+    blk += 1
+    if (blk > 0) outfile = outfile""blk
+    printf("") > outfile
+    return (blk)
+}
+
+# Start a file for a unique type
+function start_unique_file(type,blk) {
+    outfile = partname"."type
+    if (blk < 0) print "# "type" "outfile >> meshfile 
+    printf("") > outfile
+    return 0
 }
 
 # stop writing to the current file
 function end_mode() {
     if (mode>0) {
 	print "Ending mode "mode
-	print header" count "count >> meshfile
 	mode = 0
+	if (count > 0) print header" count "count >> meshfile
     }
 }
 
@@ -104,6 +127,13 @@ function print_node() {
 function print_elem() {
     gsub(",",""); print $2" "$3" "$4" "$5" "$6" "$7" "$8" "$9 >> outfile;
     count += 1;
+}
+
+# print an elset
+function print_elset() {
+    print setname
+    print $0
+    gsub(",",""); print setname" "$1" "$2" "$3 >> outfile;
 }
 
 # End

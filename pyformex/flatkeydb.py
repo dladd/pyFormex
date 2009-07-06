@@ -109,8 +109,8 @@ class FlatDB(dict):
     as record delimiter if endrec is empty)
 
     Thus, with the initialization:
-      FlatDB(req_keys=['key1'], comment = 'com', key_sep = 'sep',
-      begin_rec = 'rec', end_rec = '')
+      FlatDB(req_keys=['key1'], comment = 'com', key_sep = '=',
+      beginrec = 'rec', endrec = '')
     the following is a legal database:
       com This is a comment
       com

@@ -63,7 +63,7 @@ int gl_objtype(int nplex)
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
     alpha : float
-    objtype : GL Object type 
+    objtype : GL Object type (-1 = auto)
 */  
 static PyObject *
 draw_polygons(PyObject *dummy, PyObject *args)
@@ -74,8 +74,8 @@ draw_polygons(PyObject *dummy, PyObject *args)
   int objtype,nel,nplex,ndc=0,ndn=0,i,j;
 
   if (debug) printf("** draw_polygons\n");
-  if (!PyArg_ParseTuple(args, "OOOfi", &arg1, &arg2, &arg3, &alpha, &objtype)) return NULL;
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (!PyArg_ParseTuple(args,"OOOfi",&arg1,&arg2,&arg3,&alpha,&objtype)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
   nel = PyArray_DIMS(arr1)[0];
@@ -266,6 +266,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 /* Pick polygons */
 /* args:  x
     x : float (nel,nplex,3) : coordinates
+    objtype : GL Object type (-1 = auto)
 */  
 static PyObject *
 pick_polygons(PyObject *dummy, PyObject *args)
@@ -273,12 +274,11 @@ pick_polygons(PyObject *dummy, PyObject *args)
   PyObject *arg1=NULL;
   PyObject *arr1=NULL;
   float *x;
-  int nel,nplex;
-  int objtype;
+  int objtype,nel,nplex,i,j;
 
   if (debug) printf("** pick_polygons\n");
-  if (!PyArg_ParseTuple(args, "O", &arg1)) return NULL;
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (!PyArg_ParseTuple(args,"Oi",&arg1,&objtype)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
   nel = PyArray_DIMS(arr1)[0];
@@ -286,8 +286,7 @@ pick_polygons(PyObject *dummy, PyObject *args)
   if (debug) printf("** nel = %d\n",nel);
   if (debug) printf("** nplex = %d\n",nplex);
 
-  objtype = gl_objtype(nplex);
-  int i,j;
+  if (objtype < 0) objtype = gl_objtype(nplex);
   for (i=0; i<nel; i++) {
     glPushName(i);
     glBegin(objtype);
@@ -311,10 +310,10 @@ pick_polygons(PyObject *dummy, PyObject *args)
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
     alpha : float
-    objtype : GL Object type 
+    objtype : GL Object type (-1 = auto)
 */  
 static PyObject *
-draw_polygon_elements(PyObject *dummy, PyObject *args)
+draw_polygon_elems(PyObject *dummy, PyObject *args)
 {
   PyObject *arg1=NULL, *arg2=NULL, *arg3=NULL, *arg4=NULL;
   PyObject *arr1=NULL, *arr2=NULL, *arr3=NULL, *arr4=NULL;
@@ -323,7 +322,7 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
   int npts,nel,nplex,ndc=0,ndn=0,i,j;
 
   if (debug) printf("** draw_polygon_elements\n");
-  if (!PyArg_ParseTuple(args, "OOOOfi", &arg1, &arg2, &arg3, &arg4, &alpha, &objtype)) return NULL;
+  if (!PyArg_ParseTuple(args,"OOOOfi",&arg1,&arg2,&arg3,&arg4,&alpha,&objtype)) return NULL;
 
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) goto cleanup;
@@ -533,11 +532,53 @@ draw_polygon_elements(PyObject *dummy, PyObject *args)
 }
 
 
+/********************************************** pick_polygon_elems ****/
+/* Pick polygon elements */
+/* args:  x
+    x : float (nel,nplex,3) : coordinates
+    e : int32 (nel,nplex) : element connectivity
+    objtype : GL Object type (-1 = auto)
+*/  
+static PyObject *
+pick_polygon_elems(PyObject *dummy, PyObject *args)
+{
+  PyObject *arg1=NULL, *arg2=NULL;
+  PyObject *arr1=NULL, *arr2=NULL;
+  float *x;
+  int *e,objtype,nel,nplex,i,j;
+
+  if (debug) printf("** pick_polygon_elems\n");
+  if (!PyArg_ParseTuple(args,"OOi",&arg1,&arg2,&objtype)) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
+  if (arr1 == NULL) return NULL;
+  x = (float *)PyArray_DATA(arr1);
+  nel = PyArray_DIMS(arr1)[0];
+  nplex = PyArray_DIMS(arr1)[1];
+  if (debug) printf("** nel = %d\n",nel);
+  if (debug) printf("** nplex = %d\n",nplex);
+
+  if (objtype < 0) objtype = gl_objtype(nplex);
+  for (i=0; i<nel; i++) {
+    glPushName(i);
+    glBegin(objtype);
+    for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+    glEnd();
+    glPopName();
+  }
+
+  /* Cleanup */
+  Py_DECREF(arr1);
+  Py_INCREF(Py_None);
+  return Py_None;
+}
+
+
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
     {"draw_polygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
-    {"draw_polygon_elems", draw_polygon_elements, METH_VARARGS, "Draw polygon elements."},
+    {"draw_polygon_elems", draw_polygon_elems, METH_VARARGS, "Draw polygon elements."},
+    {"pick_polygon_elems", pick_polygon_elems, METH_VARARGS, "Pick polygon elements."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
