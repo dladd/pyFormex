@@ -58,7 +58,6 @@ def editFormex(F,name):
 Formex.edit = editFormex
 
 
-
 def command():
     """Execute an interactive command."""
     res = askItems([('command','','text')])
@@ -498,12 +497,15 @@ def export_selection():
 
 ################### menu #################
 
+_menu = 'Tools'
+
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
         ('Execute pyFormex command',command),
         ('-- Global Variables --',printall,dict(disabled=True)),
         ('  &List All',printall),
+        ('  &Select',database.ask),
         ('  &Print Value',printval),
         ('  &Print BBox',printbbox),
         ('  &Draw',drawable.ask),
@@ -550,23 +552,28 @@ def create_menu():
           ('&Distances',query_distances),
           ]),
         ("---",None),
-#        ('&Reload',reload_menu),
+        ('&Reload',reload_menu),
         ("&Close",close_menu),
         ]
-    return widgets.Menu('Tools',items=MenuData,parent=GD.GUI.menu,before='help')
+    return widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
 
-    
+
 def show_menu():
-    """Show the Tools menu."""
-    if not GD.GUI.menu.item('Tools'):
+    """Show the menu."""
+    if not GD.GUI.menu.item(_menu):
         create_menu()
 
-
 def close_menu():
-    """Close the Tools menu."""
-    m = GD.GUI.menu.item('Tools')
+    """Close the menu."""
+    m = GD.GUI.menu.item(_menu)
     if m :
         m.remove()
+
+def reload_menu():
+    """Reload the menu."""
+    close_menu()
+    reload(tools_menu)
+    show_menu()
 
 
 def reload_menu():
@@ -574,14 +581,5 @@ def reload_menu():
     reload(tools_menu)
     show_menu()
     
-    
-if __name__ == "draw":
-    # If executed as a pyformex script
-    close_menu()
-    show_menu()
-    
-elif __name__ == "__main__":
-    print __doc__
-
 
 # End

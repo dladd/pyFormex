@@ -31,7 +31,7 @@ import project
 import draw
 from script import processArgs
 import image
-from plugins import surface_menu,formex_menu,tools_menu,postproc_menu
+from plugins import surface_menu,formex_menu,mesh_menu,tools_menu,postproc_menu
 
 from gettext import gettext as _
 
@@ -334,6 +334,7 @@ MenuData = [
     (_('Load &Plugins'),[
         (_('Surface menu'),surface_menu.show_menu),
         (_('Formex menu'),formex_menu.show_menu),
+        (_('Mesh menu'),mesh_menu.show_menu),
         (_('Tools menu'),tools_menu.show_menu),
         (_('Postproc menu'),postproc_menu.show_menu),
         ]),

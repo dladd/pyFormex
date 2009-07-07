@@ -34,7 +34,6 @@
 #
 import os
 
-
 # files and directories
 workdir = "."
 icondir = os.path.join(pyformexdir,'icons')

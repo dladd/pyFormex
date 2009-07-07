@@ -351,6 +351,8 @@ def draw(F,
     if color == 'prop':
         if hasattr(F,'p'):
             color = F.p
+        elif hasattr(F,'prop'):
+            color = F.prop
         else:
             color = colors.black
     elif color == 'random':
