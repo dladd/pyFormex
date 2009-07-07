@@ -1,4 +1,26 @@
 /* $Id$ */
+//
+//  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+//  pyFormex is a tool for generating, manipulating and transforming 3D
+//  geometrical models by sequences of mathematical operations.
+//  Website: http://pyformex.berlios.de/
+//  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+//  Distributed under the GNU General Public License version 3 or later.
+//
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 /*
   Low level drawing functions to speed up OpenGL calls on large arrays.
@@ -10,8 +32,23 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 #include <GL/gl.h>
-int debug = 0;
+
+
+/************************ LIBRARY VERSION *******************/
+/*
+  Whenever a change is made to this library that causes pyFormex
+  to be incompatible with the previous version, the version number
+  should be bumped, and the new version number should also be set
+  in the lib module initialization file __init__.py
+*/
+
 int version = 1;
+
+static PyObject *
+get_version(PyObject *dummy, PyObject *args) 
+{
+  return Py_BuildValue("i", version);
+}
 
 
 /****** INTERNAL FUNCTIONS (not callable from Python ********/
@@ -73,16 +110,20 @@ draw_polygons(PyObject *dummy, PyObject *args)
   float *x, *n=NULL, *c=NULL, alpha;
   int objtype,nel,nplex,ndc=0,ndn=0,i,j;
 
-  if (debug) printf("** draw_polygons\n");
+#ifdef DEBUG
+  printf("** draw_polygons\n");
+#endif
+
   if (!PyArg_ParseTuple(args,"OOOfi",&arg1,&arg2,&arg3,&alpha,&objtype)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
   if (arr1 == NULL) return NULL;
   x = (float *)PyArray_DATA(arr1);
   nel = PyArray_DIMS(arr1)[0];
   nplex = PyArray_DIMS(arr1)[1];
-  if (debug) printf("** nel = %d\n",nel);
-  if (debug) printf("** nplex = %d\n",nplex);
-
+#ifdef DEBUG
+  printf("** nel = %d\n",nel);
+  printf("** nplex = %d\n",nplex);
+#endif
   arr2 = PyArray_FROM_OTF(arg2, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr2 != NULL) { 
     n = (float *)PyArray_DATA(arr2);
@@ -95,8 +136,10 @@ draw_polygons(PyObject *dummy, PyObject *args)
     ndc = PyArray_NDIM(arr3);
   }
   
-  if (debug) printf("** ndn = %d\n",ndn);
-  if (debug) printf("** ndc = %d\n",ndc);
+#ifdef DEBUG
+  printf("** ndn = %d\n",ndn);
+  printf("** ndc = %d\n",ndc);
+#endif
   
   if (objtype < 0) objtype = gl_objtype(nplex);
 
@@ -264,7 +307,7 @@ draw_polygons(PyObject *dummy, PyObject *args)
 
 /********************************************** pick_polygons ****/
 /* Pick polygons */
-/* args:  x
+/* args: 
     x : float (nel,nplex,3) : coordinates
     objtype : GL Object type (-1 = auto)
 */  
@@ -276,15 +319,19 @@ pick_polygons(PyObject *dummy, PyObject *args)
   float *x;
   int objtype,nel,nplex,i,j;
 
-  if (debug) printf("** pick_polygons\n");
+#ifdef DEBUG
+  printf("** pick_polygons\n");
+#endif
   if (!PyArg_ParseTuple(args,"Oi",&arg1,&objtype)) return NULL;
   arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
-  if (arr1 == NULL) return NULL;
+  if (arr1 == NULL) goto cleanup;
   x = (float *)PyArray_DATA(arr1);
   nel = PyArray_DIMS(arr1)[0];
   nplex = PyArray_DIMS(arr1)[1];
-  if (debug) printf("** nel = %d\n",nel);
-  if (debug) printf("** nplex = %d\n",nplex);
+#ifdef DEBUG
+  printf("** nel = %d\n",nel);
+  printf("** nplex = %d\n",nplex);
+#endif
 
   if (objtype < 0) objtype = gl_objtype(nplex);
   for (i=0; i<nel; i++) {
@@ -295,8 +342,8 @@ pick_polygons(PyObject *dummy, PyObject *args)
     glPopName();
   }
 
-  /* Cleanup */
-  Py_DECREF(arr1);
+ cleanup:
+  if (arr1 != NULL) { Py_DECREF(arr1); }
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -321,23 +368,29 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
   int *e, objtype;
   int npts,nel,nplex,ndc=0,ndn=0,i,j;
 
-  if (debug) printf("** draw_polygon_elements\n");
+#ifdef DEBUG
+  printf("** draw_polygon_elements\n");
+#endif
+
   if (!PyArg_ParseTuple(args,"OOOOfi",&arg1,&arg2,&arg3,&arg4,&alpha,&objtype)) return NULL;
 
   arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr1 == NULL) goto cleanup;
   x = (float *)PyArray_DATA(arr1);
   npts = PyArray_DIMS(arr1)[0];
-  if (debug) printf("** npts = %d\n",npts);
+#ifdef DEBUG
+  printf("** npts = %d\n",npts);
+#endif
 
   arr2 = PyArray_FROM_OTF(arg2, NPY_INT, NPY_IN_ARRAY);
   if (arr2 == NULL) goto cleanup;
   e = (int *)PyArray_DATA(arr2);
   nel = PyArray_DIMS(arr2)[0];
   nplex = PyArray_DIMS(arr2)[1];
-  if (debug) printf("** nel = %d\n",nel);
-  if (debug) printf("** nplex = %d\n",nplex);
-
+#ifdef DEBUG
+  printf("** nel = %d\n",nel);
+  printf("** nplex = %d\n",nplex);
+#endif
 
   arr3 = PyArray_FROM_OTF(arg3, NPY_FLOAT, NPY_IN_ARRAY);
   if (arr3 != NULL) { 
@@ -351,8 +404,10 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
     ndc = PyArray_NDIM(arr4);
   }
   
-  if (debug) printf("** ndn = %d\n",ndn);
-  if (debug) printf("** ndc = %d\n",ndc);
+#ifdef DEBUG
+  printf("** ndn = %d\n",ndn);
+  printf("** ndc = %d\n",ndc);
+#endif
   
   if (objtype < 0) objtype = gl_objtype(nplex);
 
@@ -398,13 +453,17 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
       }
     } else if (ndc == 3) {
       if (ndn == 0) {  // DONE
-	if (debug) printf("** check 1\n");
+#ifdef DEBUG
+	printf("** check 1\n");
+#endif
 	for (i=0; i<nel*nplex; i++) {
 	  gl_color(c+3*i,alpha);
 	  glVertex3fv(x+3*e[i]);
 	}
       } else if (ndn == 2) {   // DONE
-	if (debug) printf("** check 2\n");
+#ifdef DEBUG
+	printf("** check 2\n");
+#endif
 	for (i=0; i<nel; i++) {
 	  glNormal3fv(n+3*i);
 	  for (j=0;j<nplex;++j) {
@@ -412,8 +471,7 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	}
-      } else if (ndn == 3) {   // DONE
-	if (debug) printf("** check 3\n");
+      } else if (ndn == 3) {
 	for (i=0; i<nel; i++) {
 	  for (j=0;j<nplex;++j) {
 	    glNormal3fv(n+3*(nplex*i+j));
@@ -427,25 +485,27 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 
   } else {
 
-    if (debug) printf("** objtype = %d\n",objtype);
+#ifdef DEBUG
+    printf("** objtype = %d\n",objtype);
+#endif
     if (ndc == 0) {
-      if (ndn == 0) {   // DONE & CHECKED
-	//if (debug) printf("** check 4\n");
+      if (ndn == 0) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
       } else if (ndn == 2) {   // DONE
-	if (debug) printf("** check 5\n");
+#ifdef DEBUG
+	printf("** check 5\n");
+#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  glNormal3fv(n+3*i);
 	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
-      } else if (ndn == 3) {   // DONE
-	if (debug) printf("** check 6\n");
+      } else if (ndn == 3) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  for (j=0;j<nplex;++j) {
@@ -457,7 +517,9 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
       }
     } else if (ndc == 2) {   // DONE
       if (ndn == 0) {
-	if (debug) printf("** check 7\n");
+#ifdef DEBUG
+	printf("** check 7\n");
+#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
@@ -465,7 +527,9 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       } else if (ndn == 2){   // DONE
-	if (debug) printf("** check 8\n");
+#ifdef DEBUG
+	printf("** check 8\n");
+#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
@@ -473,8 +537,7 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	  for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
 	  glEnd();
 	}
-      } else if (ndn == 3) {   // DONE
-	if (debug) printf("** check 9\n");
+      } else if (ndn == 3) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  gl_color(c+3*i,alpha);
@@ -485,36 +548,39 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 	  glEnd();
 	}
       }
-    } else if (ndc == 3) {   // TODO
+    } else if (ndc == 3) {   // DONE
       if (ndn == 0) {
-	if (debug) printf("** todo 1\n");
+#ifdef DEBUG
+	printf("** check 10 1\n");
+#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) {
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    gl_color(c+3*(nplex*i+j),alpha);
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	  glEnd();
 	}
-      } else if (ndn == 2) {   // TODO
-	if (debug) printf("** todo 2\n");
+      } else if (ndn == 2) {   // DONE
+#ifdef DEBUG
+	printf("** check 11 2\n");
+#endif
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
 	  glNormal3fv(n+3*i);
-	  for (j=0;j<nplex*3;j+=3) {
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    gl_color(c+3*(nplex*i+j),alpha);
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	  glEnd();
 	}
-      } else if (ndn == 3) {   // TODO
-	if (debug) printf("** todo 3\n");
+      } else if (ndn == 3) {
 	for (i=0; i<nel; i++) {
 	  glBegin(objtype);
-	  for (j=0;j<nplex*3;j+=3) {
-	    glNormal3fv(n+nplex*3*i+j);
-	    gl_color(c+nplex*3*i+j,alpha);
-	    glVertex3fv(x+nplex*3*i+j);
+	  for (j=0;j<nplex;++j) {
+	    glNormal3fv(n+3*(nplex*i+j));
+	    gl_color(c+3*(nplex*i+j),alpha);
+	    glVertex3fv(x+3*e[nplex*i+j]);
 	  }
 	  glEnd();
 	}
@@ -525,8 +591,8 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
  cleanup:
   if (arr1 != NULL) { Py_DECREF(arr1); }
   if (arr2 != NULL) { Py_DECREF(arr2); }
-  if (arr3 != NULL) {Py_DECREF(arr3); }
-  if (arr4 != NULL) {Py_DECREF(arr4); }
+  if (arr3 != NULL) { Py_DECREF(arr3); }
+  if (arr4 != NULL) { Py_DECREF(arr4); }
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -534,8 +600,8 @@ draw_polygon_elems(PyObject *dummy, PyObject *args)
 
 /********************************************** pick_polygon_elems ****/
 /* Pick polygon elements */
-/* args:  x
-    x : float (nel,nplex,3) : coordinates
+/* args: 
+    x : float (npts,3) : coordinates
     e : int32 (nel,nplex) : element connectivity
     objtype : GL Object type (-1 = auto)
 */  
@@ -545,29 +611,40 @@ pick_polygon_elems(PyObject *dummy, PyObject *args)
   PyObject *arg1=NULL, *arg2=NULL;
   PyObject *arr1=NULL, *arr2=NULL;
   float *x;
-  int *e,objtype,nel,nplex,i,j;
+  int *e,objtype,npts,nel,nplex,i,j;
 
-  if (debug) printf("** pick_polygon_elems\n");
+#ifdef DEBUG
+  printf("** pick_polygon_elems\n");
+#endif
   if (!PyArg_ParseTuple(args,"OOi",&arg1,&arg2,&objtype)) return NULL;
-  arr1 = PyArray_FROM_OTF(arg1, NPY_FLOAT, NPY_IN_ARRAY);
-  if (arr1 == NULL) return NULL;
+  arr1 = PyArray_FROM_OTF(arg1,NPY_FLOAT,NPY_IN_ARRAY);
+  if (arr1 == NULL) goto cleanup;
   x = (float *)PyArray_DATA(arr1);
-  nel = PyArray_DIMS(arr1)[0];
-  nplex = PyArray_DIMS(arr1)[1];
-  if (debug) printf("** nel = %d\n",nel);
-  if (debug) printf("** nplex = %d\n",nplex);
+  npts = PyArray_DIMS(arr1)[0];
+  printf("** npts = %d\n",npts);
+
+  arr2 = PyArray_FROM_OTF(arg2,NPY_INT,NPY_IN_ARRAY);
+  if (arr2 == NULL) goto cleanup;
+  e = (int *)PyArray_DATA(arr2);
+  nel = PyArray_DIMS(arr2)[0];
+  nplex = PyArray_DIMS(arr2)[1];
+#ifdef DEBUG
+  printf("** nel = %d\n",nel);
+  printf("** nplex = %d\n",nplex);
+#endif
 
   if (objtype < 0) objtype = gl_objtype(nplex);
   for (i=0; i<nel; i++) {
     glPushName(i);
     glBegin(objtype);
-    for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+    for (j=0;j<nplex;++j) glVertex3fv(x+3*e[nplex*i+j]);
     glEnd();
     glPopName();
   }
 
-  /* Cleanup */
-  Py_DECREF(arr1);
+ cleanup:
+  if (arr1 != NULL) { Py_DECREF(arr1); }
+  if (arr2 != NULL) { Py_DECREF(arr2); }
   Py_INCREF(Py_None);
   return Py_None;
 }
@@ -575,6 +652,7 @@ pick_polygon_elems(PyObject *dummy, PyObject *args)
 
 /***************** The methods defined in this module **************/
 static PyMethodDef Methods[] = {
+    {"get_version", get_version, METH_VARARGS, "Return library version."},
     {"draw_polygons", draw_polygons, METH_VARARGS, "Draw polygons."},
     {"pick_polygons", pick_polygons, METH_VARARGS, "Pick polygons."},
     {"draw_polygon_elems", draw_polygon_elems, METH_VARARGS, "Draw polygon elements."},

@@ -1,6 +1,6 @@
-/*
-  $Id$ 
+/* $Id$ */
 
+/*
   Scanner for ABAQUS .fil results files
   (C) 2008 Benedict Verhegghe
   Distributed under the GNU GPL version 3 or higher

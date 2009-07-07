@@ -90,6 +90,14 @@ manual:
 lib: ${LIBDIR}/Makefile
 	make -C ${LIBDIR}
 
+# Create the C library with debug option
+libdebug: ${LIBDIR}/Makefile
+	make -C ${LIBDIR} debug
+
+# Clean C library
+libreset: ${LIBDIR}/Makefile
+	make -C ${LIBDIR} reset
+
 ${LIBDIR}/Makefile: ${LIBDIR}/configure
 	cd ${LIBDIR} && ./configure
 

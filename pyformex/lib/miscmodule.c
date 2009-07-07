@@ -1,7 +1,29 @@
 /* $Id$ */
+//
+//  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+//  pyFormex is a tool for generating, manipulating and transforming 3D
+//  geometrical models by sequences of mathematical operations.
+//  Website: http://pyformex.berlios.de/
+//  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+//  Distributed under the GNU General Public License version 3 or later.
+//
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
 
 /*
-  Misc methods.
+  A collection of accelerated pyFormex functions.
 */
 
 #include <Python.h>
@@ -10,15 +32,15 @@
 
 /**************************************************** isclose ****/
 /* Check if two floats are equal within a given tolerance */
-int isclose(float a, float b, float rtol, float atol)
-{
-  printf("Compare %e %e %e %e\n",a,b,rtol,atol); 
-  int ok;
-  ok = fabs(a-b) < atol + rtol * fabs(b);
-  printf("  a-b: %e; atol+rtol*b %e\n",fabs(a-b),atol + rtol * fabs(b));
-  printf("  ok: %d\n",ok);
-  return ok;
-}
+/* int isclose(float a, float b, float rtol, float atol) */
+/* { */
+/*   printf("Compare %e %e %e %e\n",a,b,rtol,atol);  */
+/*   int ok; */
+/*   ok = fabs(a-b) < atol + rtol * fabs(b); */
+/*   printf("  a-b: %e; atol+rtol*b %e\n",fabs(a-b),atol + rtol * fabs(b)); */
+/*   printf("  ok: %d\n",ok); */
+/*   return ok; */
+/* } */
 
 
 /**************************************************** coords.fuse ****/

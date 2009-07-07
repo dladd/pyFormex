@@ -253,7 +253,10 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
         e = e.reshape(-1,nplex)
 
     if color is not None:
+        #print "COLOR SHAPE BEFORE %s" % str(color.shape)
+        #if color.ndim < 3:
         color = color_multiplex(color,nfaces)
+        #print "COLOR SHAPE AFTER  %s" % str(color.shape)
 
     drawPolygons(x,e,mode,color,alpha)
 
@@ -301,6 +304,9 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
         else:
             coords = x
             elems = e[:,fa]
+            ## if color is not None and color.ndim==3:
+            ##     # select the colors of the matching points
+            ##     color = color[:,fa,:]
         draw_faces(coords,elems,mode,color,alpha)
 
 

@@ -19,6 +19,7 @@ __all__ = [ 'drawgl', 'misc', 'accelerated' ]
 
 drawgl = misc = None
 accelerated = []
+required_drawgl_version = 1
 
     
 import pyformex as GD
@@ -42,6 +43,10 @@ if accelerate:
         try:
             import drawgl
             GD.debug("Succesfully loaded the pyFormex compiled draw library")
+            drawgl_version = drawgl.get_version()
+            GD.debug("Drawing library version %s" % drawgl_version)
+            if not drawgl_version == required_drawgl_version:
+                raise RuntimeError,"Incorrect acceleration library version (have %s, required %s)\nIf you are running pyFormex directly from sources, this might mean you have to run 'make lib' in the top directory of your pyFormex source tree.\nElse, this probably means pyFormex was not correctly installed."
             accelerated.append(drawgl)
         except ImportError:
             GD.debug("Error while loading the pyFormex compiled draw library")

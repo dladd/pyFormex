@@ -15,6 +15,14 @@ svn copy svn+ssh://svn.berlios.de/svnroot/repos/pyformex/trunk svn+ssh://svn.ber
 *** change your local directory to another branch:
 svn switch svn+ssh://svn.berlios.de/svnroot/repos/pyformex/branches/mybranch
 
+*** update your local version
+svn up
+
+*** create the acceleration library in the svn tree
+make lib
+or
+make libdebug
+(DO make libreset to reset between versions)
 
 ** Create the manual
 
