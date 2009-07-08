@@ -222,9 +222,9 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
 
     if color is not None:
         if color.ndim < 3:
-            print "COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape)
+            GD.debug("COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape))
             color = color_multiplex(color,nfaces)
-            print "COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape)
+            GD.debug("COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape))
 
     drawPolygons(x,e,mode,color,alpha)
 
@@ -240,6 +240,7 @@ def drawEdges(x,e,edges,color=None):
     The edges are specified by a list of lists. Each list defines a single
     edge of the solid, in local vertex numbers (0..nplex-1). 
     """
+    GD.debug("drawEdges")
     fa = asarray(edges)
     if e is None:
         coords = x[:,fa,:]
@@ -262,6 +263,7 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
     face of the solid, in local vertex numbers (0..nplex-1). The faces are
     sorted and collected according to their plexitude before drawing them. 
     """
+    GD.debug("drawFaces")
     # We may have faces with different plexitudes!
     for fac in olist.collectOnLength(faces).itervalues():
         fa = asarray(fac)
@@ -269,19 +271,18 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
         if e is None:
             coords = x[:,fa,:]
             elems = None
-            print "SHAPES"
-            print coords.shape
+
+            GD.debug("COORDS SHAPE: %s" % str(coords.shape))
         else:
             coords = x
             elems = e[:,fa]
-            print "SHAPES"
-            print coords.shape
-            print elems.shape
+            GD.debug("COORDS SHAPE: %s" % str(coords.shape))
+            GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
             if color is not None and color.ndim==3:
-                print "COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape)
+                GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
                 # select the colors of the matching points
                 color = color[:,fa,:]
-                print "COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape)
+                GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
         draw_faces(coords,elems,mode,color,alpha)
 
 
