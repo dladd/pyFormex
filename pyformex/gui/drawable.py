@@ -91,20 +91,27 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     
 
 
-def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
+def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     """Draw a collection of polygon elements.
 
     This function is like drawPolygons, but the vertices of the polygons
     are specified by:
     coords (npts,3) : the coordinates of the points
     elems (nels,nplex): the connectivity of nels polygons of plexitude nplex
+
+    objtype sets the OpenGL drawing mode. The default (-1) will select the
+    appropriate value depending on the plexitude of the elements:
+    1: point, 2: line, 3: triangle, 4: quad, >4: polygon.
+    The value can be set to GL.GL_LINE_LOOP to draw the element's circumference
+    independent from the drawing mode.
     """
+    GD.debug("drawPolygons")
     if e is None:
         nelems = x.shape[0]
     else:
         nelems = e.shape[0]
     n = None
-    if mode.startswith('smooth'):
+    if mode.startswith('smooth') and objtype==-1:
         if normals is None:
             if mode == 'smooth-avg' and e is not None:
                 n = interpolateNormals(x,e,treshold=GD.cfg['render/avgnormaltreshold'])
@@ -136,28 +143,36 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
                 color.shape[-1] != 3):
                 color = None
     if e is None:
-        drawgl.draw_polygons(x,n,color,alpha,-1)
+        drawgl.draw_polygons(x,n,color,alpha,objtype)
     else:
-        drawgl.draw_polygon_elems(x,e,n,color,alpha,-1)
+        drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
+
+
+def drawPolyLines(x,e,color=None,alpha=1.0):
+    """Draws the lines of the polygon circumference."""
+    drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0,objtype=GL.GL_LINE_LOOP)
+
+    ## While this might be done with drawEdges, drawPolygonLines is more
+    ## efficient because it uses the GL_LINE_LOOP OpenGL drawing mode,
+    ## thus using each vertex only once.
+    ## """
+    ## GD.debug("drawPolygonLines")
+    ## if e is None:
+    ##     nplex = x.shape[1]
+    ##     nelems = x.shape[0]
+    ##     e = arange(nplex*nelems).reshape(nelems,nplex).astype(int32)
+    ##     x = x.reshape(-1,3).astype(float32)
+    ## else:
+    ##     nplex = e.shape[1]
+    ## verts = range(nplex)
+    ## lines = column_stack([verts,roll(verts,-1)])
+    ## els = e[:,lines]#.reshape(-1,2)
+    ## WE SHOULD ADD COLOR EXPANSION HERE, AS IN DRAWEDGES
+    ## drawgl.draw_polygon_elems(x,e,None,None,alpha,GL.GL_LINE_LOOP)
 
 
 def drawLines(x,e,color):
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
-
-
-def drawPolyLines(x,e,color=None,alpha=1.0):
-    if e is None:
-        nplex = x.shape[1]
-        nelems = x.shape[0]
-        e = arange(nplex*nelems).reshape(nelems,nplex).astype(int32)
-        x = x.reshape(-1,3).astype(float32)
-    else:
-        nplex = e.shape[1]
-    verts = range(nplex)
-    lines = column_stack([verts,roll(verts,-1)])
-    els = e[:,lines]#.reshape(-1,2)
-    # WE SHOULD ADD COLOR EXPANSION HERE, AS IN DRAWEDGES
-    drawgl.draw_polygon_elems(x,e,None,None,alpha,GL.GL_LINE_LOOP)
 
 
 def color_multiplex(color,nparts):

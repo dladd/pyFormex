@@ -77,6 +77,7 @@ items = [('Geometry Model',geom,'radio',geom_mode),
 
 dialog = None
 
+
 def show():
     """Accept the data and draw according to them"""
     dialog.acceptData()
