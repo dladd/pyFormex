@@ -954,7 +954,7 @@ class InputDialog(QtGui.QDialog):
     The input dialog can be modal or non-modal dialog.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):#,report_pos=False,pos=None):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -1013,7 +1013,8 @@ class InputDialog(QtGui.QDialog):
         self.setWindowTitle(str(caption))
         self.fields = []
         self.results = {}
-        self.report_pos = report_pos
+        ## self.report_pos = report_pos
+        self._pos = None
         form = QtGui.QVBoxLayout()
         for item in items:
             name,value = item[:2]
@@ -1175,8 +1176,8 @@ class InputDialog(QtGui.QDialog):
         #GD.debug("ACCEPTING DATA WITH RESULT %s"%result)
         self.results = {}
         self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
-        if self.report_pos:
-            self.results.update({'__pos__':self.pos()})
+        ## if self.report_pos:
+        ##     self.results.update({'__pos__':self.pos()})
         if result == TIMEOUT:
             self.done(result)
         else:
@@ -1216,6 +1217,11 @@ class InputDialog(QtGui.QDialog):
         The result() method can be used to find out how the dialog was ended.
         Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.
         """
+        self.results = {}
+        self.setResult(0)
+        if self._pos is not None:
+            self.restoreGeometry(self._pos)
+            
         self.show(timeout)
         #GD.debug("WAITING FOR EVENTS")
         self.exec_()
@@ -1223,6 +1229,7 @@ class InputDialog(QtGui.QDialog):
         self.activateWindow()
         self.raise_()
         GD.app.processEvents()
+        self._pos = self.saveGeometry()
         return self.results
 
 

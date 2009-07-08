@@ -124,7 +124,7 @@ def showFile(filename):
 _dialog_result = None
 
 
-def askItems(items,caption=None,**kargs):
+def askItems(items,caption=None,timeout=None,**kargs):
     """Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -144,8 +144,8 @@ def askItems(items,caption=None,**kargs):
     global _dialog_result
     if type(items) == dict:
         items = items.items()
-    w = widgets.InputDialog(items,caption)
-    res = w.getResult(**kargs)
+    w = widgets.InputDialog(items,caption,**kargs)
+    res = w.getResult(timeout)
     _dialog_result = w.result()
     return res
 

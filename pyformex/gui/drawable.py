@@ -90,38 +90,6 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     drawgl.draw_polygons(x,None,color,alpha,-1)
     
 
-## def drawLines(x,elems,color=None,alpha=1.0):
-##     """Draw a collection of lines.
-
-##     x is a (nlines,2,3) shaped array of coordinates.
-
-##     If color is given it is an (nlines,3), (nlines,1,3) or (nlines,2,3)
-##     array of RGB values.
-##     If two colors are given, make sure that smooth shading is on,
-##     or the color rendering will be flat with the second color.
-##     """
-##     if GD.options.safelib:
-##         x = x.astype(float32)
-##         if color is not None:
-##             color = color.astype(float32)
-##             if (color.shape[0] != x.shape[0] or
-##                 color.shape[-1] != 3):
-##                 color = None
-##     drawgl.draw_polygons(x,None,color,alpha)
-    
-
-## def drawLineElems(x,elems,color=None,alpha=1.0):
-##     """Draw a collection of lines.
-
-##     This is the same as drawLines, except that the lines are defined
-##     by an array of points and a connection table.
-##     x is a (ncoords,3) coordinate array.
-##     elems is a (nlines,2) integer array of connected node numbers.
-
-##     If color is given it is an (nlines,3) array of RGB values.
-##     """
-##     drawLines(x[elems],color,alpha)
-
 
 def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None):
     """Draw a collection of polygon elements.
@@ -253,10 +221,10 @@ def draw_faces(x,e,mode,color=None,alpha=1.0):
         e = e.reshape(-1,nplex)
 
     if color is not None:
-        #print "COLOR SHAPE BEFORE %s" % str(color.shape)
-        #if color.ndim < 3:
-        color = color_multiplex(color,nfaces)
-        #print "COLOR SHAPE AFTER  %s" % str(color.shape)
+        if color.ndim < 3:
+            print "COLOR SHAPE BEFORE MULTIPLEXING %s" % str(color.shape)
+            color = color_multiplex(color,nfaces)
+            print "COLOR SHAPE AFTER  MULTIPLEXING %s" % str(color.shape)
 
     drawPolygons(x,e,mode,color,alpha)
 
@@ -301,12 +269,19 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
         if e is None:
             coords = x[:,fa,:]
             elems = None
+            print "SHAPES"
+            print coords.shape
         else:
             coords = x
             elems = e[:,fa]
-            ## if color is not None and color.ndim==3:
-            ##     # select the colors of the matching points
-            ##     color = color[:,fa,:]
+            print "SHAPES"
+            print coords.shape
+            print elems.shape
+            if color is not None and color.ndim==3:
+                print "COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape)
+                # select the colors of the matching points
+                color = color[:,fa,:]
+                print "COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape)
         draw_faces(coords,elems,mode,color,alpha)
 
 
