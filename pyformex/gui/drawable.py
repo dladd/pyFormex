@@ -171,35 +171,9 @@ def color_multiplex(color,nparts):
     color = color.reshape(*s).repeat(nparts,axis=1)
     s[1] = nparts # THIS APPEARS NOT TO BE DOING ANYTHING ?
     return color.reshape(-1,3)
-    
-
-def draw_edges(x,e,color=None):
-    """Draw a collection of edges.
-
-    (x,e) are one of:
-    - x is a (nelems,nedges,2,3) shaped coordinates and e is None,
-    - x is a (ncoords,3) shaped coordinates and e is a (nelems,nedges,2)
-    connectivity array.
-       
-    Each of the nfaces sets of nplex points defines a line segment. 
-
-    If color is given it is an (nel,3) array of RGB values. This function
-    will multiplex the colors, so that n edges are drawn in the same color.
-    This is e.g. convenient when drawing edges of a surface or solid element.
-    """
-    if e is None:
-        nedges,nplex = x.shape[1:3]
-        x = x.reshape(-1,nplex,3)
-    else:
-        nedges,nplex = e.shape[1:3]
-        e = e.reshape(-1,nplex)
-
-    if color is not None:
-        color = color_multiplex(color,nedges)
-    drawLines(x,e,color)
 
 
-def draw_faces(x,e,mode,color=None,alpha=1.0):
+def draw_parts(x,e,mode,color=None,alpha=1.0):
     """Draw a collection of faces.
 
     (x,e) are one of:
@@ -248,7 +222,18 @@ def drawEdges(x,e,edges,color=None):
     else:
         coords = x
         elems = e[:,fa]
-    draw_edges(coords,elems,color)
+    GD.debug("COORDS SHAPE: %s" % str(coords.shape))
+    if elems:
+        GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
+    if color is not None and color.ndim==3:
+        GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
+        # select the colors of the matching points
+        color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
+        print color.shape[-2:]
+        print (-1,)+color.shape[-2:]
+        color = color.reshape((-1,)+color.shape[-2:])
+        GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+    draw_parts(coords,elems,'wireframe',color,1.0)
 
 
 def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
@@ -271,12 +256,11 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
         if e is None:
             coords = x[:,fa,:]
             elems = None
-
-            GD.debug("COORDS SHAPE: %s" % str(coords.shape))
         else:
             coords = x
             elems = e[:,fa]
-            GD.debug("COORDS SHAPE: %s" % str(coords.shape))
+        GD.debug("COORDS SHAPE: %s" % str(coords.shape))
+        if elems:
             GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
         if color is not None and color.ndim==3:
             GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
@@ -286,7 +270,7 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             print (-1,)+color.shape[-2:]
             color = color.reshape((-1,)+color.shape[-2:])
             GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
-        draw_faces(coords,elems,mode,color,alpha)
+        draw_parts(coords,elems,mode,color,alpha)
 
 
 def drawAtPoints(x,mark,color=None):

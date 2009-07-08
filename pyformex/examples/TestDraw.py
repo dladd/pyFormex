@@ -92,7 +92,8 @@ def show():
     G = select_geom(geom,nplex,eltype)
     print "GEOM: nelems=%s, nplex=%s" % (G.nelems(),G.nplex())
     C = select_color(G,color)
-    print "COLORS: shape=%s" % str(C.shape)
+    if C is not None:
+        print "COLORS: shape=%s" % str(C.shape)
     draw(G,color=C,clear=True)
 
 
