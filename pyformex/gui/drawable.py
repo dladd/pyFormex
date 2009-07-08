@@ -73,6 +73,9 @@ def glColor(color,alpha=1.0):
 # of nplex < 3:   no computation of normals, marksize (nplex=1)
 #
 
+
+# DRAWPOINTS should also be modified to accept an (x,e) model
+# (Yes, it makes sense to create a Point mesh
 def drawPoints(x,color=None,alpha=1.0,size=None):
     """Draw a collection of points with default or given size and color.
 
@@ -89,7 +92,6 @@ def drawPoints(x,color=None,alpha=1.0,size=None):
     x = x.reshape(-1,1,3)
     drawgl.draw_polygons(x,None,color,alpha,-1)
     
-
 
 def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     """Draw a collection of polygon elements.
@@ -148,30 +150,13 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
         drawgl.draw_polygon_elems(x,e,n,color,alpha,objtype)
 
 
-def drawPolyLines(x,e,color=None,alpha=1.0):
-    """Draws the lines of the polygon circumference."""
+def drawPolyLines(x,e,color):
+    """Draw the circumference of polygons."""
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0,objtype=GL.GL_LINE_LOOP)
-
-    ## While this might be done with drawEdges, drawPolygonLines is more
-    ## efficient because it uses the GL_LINE_LOOP OpenGL drawing mode,
-    ## thus using each vertex only once.
-    ## """
-    ## GD.debug("drawPolygonLines")
-    ## if e is None:
-    ##     nplex = x.shape[1]
-    ##     nelems = x.shape[0]
-    ##     e = arange(nplex*nelems).reshape(nelems,nplex).astype(int32)
-    ##     x = x.reshape(-1,3).astype(float32)
-    ## else:
-    ##     nplex = e.shape[1]
-    ## verts = range(nplex)
-    ## lines = column_stack([verts,roll(verts,-1)])
-    ## els = e[:,lines]#.reshape(-1,2)
-    ## WE SHOULD ADD COLOR EXPANSION HERE, AS IN DRAWEDGES
-    ## drawgl.draw_polygon_elems(x,e,None,None,alpha,GL.GL_LINE_LOOP)
 
 
 def drawLines(x,e,color):
+    """Draw straight line segments."""
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
 
 
@@ -293,11 +278,14 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             elems = e[:,fa]
             GD.debug("COORDS SHAPE: %s" % str(coords.shape))
             GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
-            if color is not None and color.ndim==3:
-                GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
-                # select the colors of the matching points
-                color = color[:,fa,:]
-                GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
+        if color is not None and color.ndim==3:
+            GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
+            # select the colors of the matching points
+            color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
+            print color.shape[-2:]
+            print (-1,)+color.shape[-2:]
+            color = color.reshape((-1,)+color.shape[-2:])
+            GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
         draw_faces(coords,elems,mode,color,alpha)
 
 
