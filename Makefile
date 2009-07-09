@@ -33,12 +33,15 @@ PYFORMEXDIR= pyformex
 MANDIR= ${PYFORMEXDIR}/manual
 LIBDIR= ${PYFORMEXDIR}/lib
 DOCDIR= ${PYFORMEXDIR}/doc
+BINDIR= ${PYFORMEXDIR}/bin
 
 SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
 	$(wildcard ${LIBDIR}/*.c) \
+	$(addprefix ${BINDIR}/, read_abq_inp) \
+
 
 EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/*.py) \
