@@ -6,10 +6,18 @@
 # input file and write it in a format that can be loaded easily into
 # pyFormex.
 #
-# Usage:    gawk -f read_abq.awk ABAQUS_INPUT_FILE
+# Usage: gawk -f read_abq.awk ABAQUS_INPUT_FILE
 #
-# Currently it reads nodes and elements and stores them in files
-#   partname_nodes.txt and partname_elems.txt
+# In most cases however, the user will call this command from the pyFormex
+# GUI, using the Mesh plugin menu ("Convert Abaqus .inp file"), after which
+# the model can be imported with the "Import converted model" menu item.
+#
+# Currently it reads nodes, elements and elsets and stores them in files
+# partname.nodes, partname.elems and partname.esets
+# There may be multiple nodes and elems files.
+# An index file partname.mesh keeps record of the created files.
+# nodes/elems defined before the first part get a default part name.
+#  
 # The nodes should be numbered consecutively in each of the parts,
 # but not necessarily over the different parts.
 #
