@@ -534,6 +534,7 @@ def create_menu():
           ("&Points",pick_points),
           ("&Edges",pick_edges),
           ]),
+        ("&Remove Highlights",removeHighlights),
         ("---",None),
         ('&Selection',
          [('&Create Report',report_selection),

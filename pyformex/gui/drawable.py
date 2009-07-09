@@ -223,7 +223,7 @@ def drawEdges(x,e,edges,color=None):
         coords = x
         elems = e[:,fa]
     GD.debug("COORDS SHAPE: %s" % str(coords.shape))
-    if elems:
+    if elems is not None:
         GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
     if color is not None and color.ndim==3:
         GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
@@ -260,7 +260,7 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
             coords = x
             elems = e[:,fa]
         GD.debug("COORDS SHAPE: %s" % str(coords.shape))
-        if elems:
+        if elems is not None:
             GD.debug("ELEMS SHAPE: %s" % str(elems.shape))
         if color is not None and color.ndim==3:
             GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))

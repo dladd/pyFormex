@@ -961,7 +961,7 @@ def highlightElements(K):
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.GeomActor):
-            FA = actors.GeomActor(actor.select(K[i]),color='red')
+            FA = actors.GeomActor(actor.select(K[i]),color='red',linewidth=3)
             GD.canvas.addHighlight(FA)
         elif isinstance(actor,actors.TriSurfaceActor):
             SA = actors.TriSurfaceActor(actor.select(K[i]),color='red')
@@ -1027,6 +1027,14 @@ highlight_funcs = { 'actor': highlightActors,
                     'point': highlightPoints,
                     'edge': highlightEdges,
                     }
+
+
+def removeHighlights():
+    """Remove the highlights from the current viewport"""
+    GD.canvas.removeHighlights()
+    GD.canvas.update()
+    
+
 
 selection_filters = [ 'none', 'single', 'closest', 'connected' ]
 

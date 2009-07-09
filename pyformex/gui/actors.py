@@ -573,6 +573,21 @@ class GeomActor(Actor):
             pickPoints(self.coords)
 
 
+    def select(self,sel):
+        """Return a GeomActor with a selection of this actor's elements
+
+        Currently, the resulting Actor will not inherit the properties
+        of its parent, but the eltype will be retained.
+        """
+        # This selection should be reworked to allow edge and point selections
+        if self.elems is None:
+            x = self.coords[sel]
+            e = self.elems
+        else:
+            x = self.coords
+            e = self.elems[sel]
+        return GeomActor(x,e,eltype=self.eltype)
+
 
 #############################################################################
 
