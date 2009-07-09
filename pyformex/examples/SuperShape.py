@@ -34,7 +34,7 @@ from simple import rectangle
 from utils import NameSequence
 from gui.widgets import *
 from gui.draw import *
-
+from gui.imageColor import *
 
 dialog = None
 savefile = None
@@ -126,8 +126,16 @@ def showGrid():
 
 def showSuperShape():
     """Show the last created super shape"""
+    global color
     clear()
     smoothwire()
+    print color
+    if type(color) == str and color.startswith('file:'):
+        print "trying to convert color"
+        im = QtGui.QImage('butterfly.ppm')
+        nx,ny = grid_size
+        color=image2glcolor(im.scaled(nx,ny))
+
     draw(F,color=color)
 
 
