@@ -1059,7 +1059,6 @@ def pick(mode='actor',single=False,func=None,filtr=None):
         return
 
     pick_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
-    GD.GUI.statusbar.addWidget(pick_buttons)
     
     if mode == 'element':
         filters = selection_filters
@@ -1069,16 +1068,23 @@ def pick(mode='actor',single=False,func=None,filtr=None):
     if filtr is not None and filtr in selection_filters:
         i = selection_filters.index(filtr)
         filter_combo.setIndex(i)
-    GD.GUI.statusbar.addWidget(filter_combo)
     
     if func is None:
         func = highlight_funcs.get(mode,None)
     GD.message("Select %s %s" % (filtr,mode))
-    sel = GD.canvas.pick(mode,single,func,filtr)
-    GD.GUI.statusbar.removeWidget(pick_buttons)
-    GD.GUI.statusbar.removeWidget(filter_combo)
-    return sel
 
+    GD.GUI.statusbar.addWidget(pick_buttons)
+    GD.GUI.statusbar.addWidget(filter_combo)
+    try:
+        sel = GD.canvas.pick(mode,single,func,filtr)
+    finally:
+        # cleanup
+        if GD.canvas.selection_mode is not None:
+            GD.canvas.finish_selection()
+        GD.GUI.statusbar.removeWidget(pick_buttons)
+        GD.GUI.statusbar.removeWidget(filter_combo)
+    return sel
+ 
     
 def pickActors(single=False,func=None,filtr=None):
     return pick('actor',single,func,filtr)

@@ -22,7 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""An image viewer, borrowing from the TrollTech Qt examples."""
+"""A general image viewer
+
+Part of this code was borrowed from the TrollTech Qt examples.
+"""
 
 caption = "pyFormex Image Viewer"
 

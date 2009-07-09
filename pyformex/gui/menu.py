@@ -50,11 +50,31 @@ def editor():
 
  
 def resetGUI():
+    """Reset the GUI to its default operating mode.
+
+    When an exception is raised during the execution of a script, the GUI
+    may be left in a non-consistent state.
+    This function may be called to reset most of the GUI components
+    to their default operating mode. 
+    """
+    ## resetPick()
     pyformex.GUI.setBusy(False)
     pyformex.GUI.actions['Play'].setEnabled(True)
     pyformex.GUI.actions['Step'].setEnabled(True)
     pyformex.GUI.actions['Continue'].setEnabled(False)
     pyformex.GUI.actions['Stop'].setEnabled(False)
+
+
+## def resetPick():
+##     """This function can be called to reset the GUI picking state.
+
+##     It might be useful if an exception was raised during a picking operation.
+##     Calling this function will restore the GUI components to non-picking mode.
+##     """
+##     if pyformex.canvas.selection_mode is not None:
+##         pyformex.canvas.finish_selection()
+##     pyformex.GUI.statusbar.removeWidget(pyformex.GUI.pick_buttons)
+##     pyformex.GUI.statusbar.removeWidget(pyformex.GUI.filter_combo)
 
   
 
@@ -103,6 +123,7 @@ def moveCorrect():
 ActionMenuData = [
     (_('&Step'),draw.step),
     (_('&Continue'),draw.fforward), 
+    ## (_('&Reset Picking Mode'),resetPick),
     (_('&Reset GUI'),resetGUI),
     (_('&Force Finish Script'),draw.force_finish),
     (_('&ListFormices'),script.printall),

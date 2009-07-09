@@ -319,32 +319,24 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             shape = 'pick'
         else:
             shape = 'default'
-        #GD.debug("SET CURSOR SHAPE TO %s" % shape)
         self.setCursorShape(shape)
 
 
     def setMouse(self,button,func,mod=NONE):
-        #print button,mod
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
         if button == LEFT and mod == NONE:
             self.setCursorShapeFromFunc(func)
-        #print "MOUSE %s" % func
-        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
 
 
     def resetMouse(self,button,mod=NONE):
-        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
         try:
             func = self.mousefncsaved[mod][button].pop()
         except:
-            #print "AAAAAHHH, COULD NOT POP"
             func = None
         self.mousefnc[mod][button] = func
         if button == LEFT and mod == NONE:
             self.setCursorShapeFromFunc(func)
-        #print "RESETMOUSE %s" % func
-        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
             
 
     def getMouseFunc(self):
@@ -440,7 +432,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def finish_selection(self):
         """End an interactive picking mode."""
         GD.debug("END SELECTION MODE")
-        #self.setCursorShape('default')
         self.resetMouse(LEFT)
         self.resetMouse(LEFT,SHIFT)
         self.resetMouse(LEFT,CTRL)

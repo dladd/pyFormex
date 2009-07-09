@@ -22,42 +22,31 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Colored
+"""imageColor
 
-level = 'beginner'
-topics = ['surface']
-techniques = ['colors']
-
+This module contains functions to use bitmap images as colors on a
+pyFormex geometry.
 """
 
-from gui.actors import *
+from pyformex.array import *
+from PyQt4.QtGui import QImage
+from image_numpy import qimage2numpy
 
-smooth()
-lights(False)
+def image2glcolor(im,flip=True):
+    """Convert a bitmap image to corresponding OpenGL colors.
 
-Rendermode = [ 'smooth','flat' ]
-Lights = [ False, True ]
-Shape = { 'triangle':'16',
-          'quad':'123',
-          }
-
-
-color0 = None  # no color: current fgcolor
-color1 = red   # single color
-color2 = array([red,green,blue]) # 3 colors: will be repeated
-
-for shape in Shape.keys():
-    F = Formex(mpattern(Shape[shape])).replic2(8,4)
-    color3 = resize(color2,F.shape()) # full color
-    for mode in Rendermode:
-        renderMode(mode)
-        for c in [ color0,color1,color2,color3]:
-            clear()
-            FA = GeomActor(F,color=c)
-            drawActor(FA)
-            zoomAll()
-            for light in Lights:
-                lights(light)
-
+    im is a QImage or any data from which a QImage can be initialized.
+    The image RGB colors are converted to OpenGL colors.
+    The return value is a (w,h,3) shaped array of values in the range
+    0.0 to 1.0.
+    By default the image is flipped upside-down because the vertical
+    OpenGL axis points upwards, while bitmap images are stored downwards.
+    """
+    im = QImage(im)
+    c = qimage2numpy(im)
+    color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
+    if flip:
+        color = flipud(color)
+    return color.astype(Float)/255.
 
 # End

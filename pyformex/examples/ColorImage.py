@@ -22,42 +22,37 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Colored
+"""ColorImage
 
-level = 'beginner'
-topics = ['surface']
+level = 'normal'
+topics = ['image']
 techniques = ['colors']
 
 """
 
-from gui.actors import *
+from gui.imageColor import *
 
 smooth()
 lights(False)
 
-Rendermode = [ 'smooth','flat' ]
-Lights = [ False, True ]
-Shape = { 'triangle':'16',
-          'quad':'123',
-          }
+filename = 'butterfly.ppm'  
 
+chdir(__file__)
+im = QtGui.QImage(filename)
+if im.isNull():
+    warning("Could not load image '%s'" % filename)
+    exit()
 
-color0 = None  # no color: current fgcolor
-color1 = red   # single color
-color2 = array([red,green,blue]) # 3 colors: will be repeated
+res = askItems([('Width',40),('Height',32)])
+if not res:
+    exit()
 
-for shape in Shape.keys():
-    F = Formex(mpattern(Shape[shape])).replic2(8,4)
-    color3 = resize(color2,F.shape()) # full color
-    for mode in Rendermode:
-        renderMode(mode)
-        for c in [ color0,color1,color2,color3]:
-            clear()
-            FA = GeomActor(F,color=c)
-            drawActor(FA)
-            zoomAll()
-            for light in Lights:
-                lights(light)
+nx = res['Width']
+ny = res['Height']
 
+F = Formex(mpattern('123')).replic2(nx,ny)
+
+clear()
+draw(F,color=image2glcolor(im.scaled(nx,ny)))
 
 # End
