@@ -565,7 +565,6 @@ class GeomActor(Actor):
         elif mode == 'edge':
             try:
                 el = getattr(elements,self.eltype.capitalize())
-                ### TODO !!!!!
                 pickPolygonEdges(self.coords,self.elems,el.edges)
             except:
                 raise ValueError,"Invalid eltype %s" % str(self.eltype)
@@ -663,13 +662,13 @@ class TriSurfaceActor(Actor,TriSurface):
     def pickGL(self,mode):
         """ Allow picking of parts of the actor.
 
-        mode can be 'element' or 'point'
+        mode can be 'element', 'edge' or 'point'
         """
         if mode == 'element':
             self.refresh()
             pickPolygonElems(self.coords,self.elems)
         elif mode == 'edge':
-            pickPolygonEdges(self.coords,self.edges)
+            pickPolygonElems(self.coords,self.edges)
         elif mode == 'point':
             pickPoints(self.coords)
 

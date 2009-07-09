@@ -265,9 +265,7 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
         if color is not None and color.ndim==3:
             GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
             # select the colors of the matching points
-            color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
-            print color.shape[-2:]
-            print (-1,)+color.shape[-2:]
+            color = color[:,fa,:]
             color = color.reshape((-1,)+color.shape[-2:])
             GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
         draw_parts(coords,elems,mode,color,alpha)
@@ -528,11 +526,11 @@ def drawGridPlanes(x0,x1,nx):
 
 
 
-def pickPolygons(x):
+def pickPolygons(x,objtype=-1):
     """Mimics drawing polygons for picking purposes."""
     if GD.options.safelib:
         x = x.astype(float32)
-    drawgl.pick_polygons(x)
+    drawgl.pick_polygons(x,objtype)
 
 
 def pickPoints(x):
@@ -544,9 +542,9 @@ def pickPolygonElems(x,e):
     pickPolygons(x[e])
 
 
-def pickPolygonEdges(x,e):
-    """Basic element picking function."""
-    pickPolygons(x[e])
+def pickPolygonEdges(x,e,edg):
+    warning("THIS IS NOT OPERATIONAL YET!")
+    #pickPolygons(x[e])
 
 
 ### Settings ###############################################
