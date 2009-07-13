@@ -132,9 +132,13 @@ def showSuperShape():
     print color
     if type(color) == str and color.startswith('file:'):
         print "trying to convert color"
-        im = QtGui.QImage('butterfly.ppm')
+        chdir(__file__)
+        im = QtGui.QImage('Elevation-800.jpg')
+        print im
+        print im.isNull()
         nx,ny = grid_size
         color=image2glcolor(im.scaled(nx,ny))
+        print color.shape
 
     draw(F,color=color)
 

@@ -44,9 +44,15 @@ def image2glcolor(im,flip=True):
     """
     im = QImage(im)
     c = qimage2numpy(im)
-    color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
+    print c.shape
     if flip:
-        color = flipud(color)
+        c = flipud(c)
+    ## r,g,b = c['r'],c['g'],c['b']
+    ## if flip:
+    ##     r,g,b = map(flipud,[r,g,b])
+    color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
+    print color.shape
+    
     return color.astype(Float)/255.
 
 # End

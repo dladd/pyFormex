@@ -906,6 +906,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             buf = asarray(selbuf).reshape(-1,3+selbuf[0])
             buf = buf[buf[:,0] > 0]
             self.picked = buf[:,3:]
+            #GD.debug("PICKBUFFER: %s" % self.picked)
             if store_closest and len(buf) > 0:
                 w = buf[:,1].argmin()
                 self.closest_pick = (self.picked[w], buf[w,1])
@@ -927,6 +928,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Set the list of actor points inside the pick_window."""
         npickable = 0
         for a in self.actors:
+            #GD.debug("ADDING %s pickable points"%a.npoints())
             npickable += a.npoints()
         self.pick_parts('point',npickable,store_closest=\
                         self.selection_filter == 'single' or\

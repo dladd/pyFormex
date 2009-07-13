@@ -36,6 +36,7 @@ smooth()
 lights(False)
 
 filename = 'butterfly.ppm'  
+filename = 'butterfly2.png'  
 
 chdir(__file__)
 im = QtGui.QImage(filename)
@@ -53,6 +54,9 @@ ny = res['Height']
 F = Formex(mpattern('123')).replic2(nx,ny)
 
 clear()
-draw(F,color=image2glcolor(im.scaled(nx,ny)))
+R = max(nx,ny)
+draw(F.translate(2,R/2).projectOnCylinder(R,1,center=[nx/2,ny/2,0.]),color=image2glcolor(im.scaled(nx,ny)))
 
+
+drawtext('Created with pyFormex',10,10)
 # End

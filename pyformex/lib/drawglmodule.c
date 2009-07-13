@@ -338,6 +338,12 @@ pick_polygons(PyObject *dummy, PyObject *args)
     glPushName(i);
     glBegin(objtype);
     for (j=0;j<nplex*3;j+=3) glVertex3fv(x+nplex*3*i+j);
+#ifdef DEBUG
+  printf("** point %d: ",i);
+  int k;
+  for (j=0;j<nplex*3;j+=3) for (k=j;k<j+3;++k) printf(" %10.3e,",x[nplex*3*i+k]);
+  printf("\n");
+#endif
     glEnd();
     glPopName();
   }

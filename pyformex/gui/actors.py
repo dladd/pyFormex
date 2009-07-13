@@ -415,10 +415,11 @@ class GeomActor(Actor):
             return self.elems.shape
 
     def npoints(self):
-        return self.coords.shape[0]
+        return self.vertices().shape[0]
 
     def vertices(self):
-        return self.coords
+        """Return the vertives as a 2-dim array."""
+        return self.coords.reshape(-1,3)
     
 
     def setColor(self,color=None,colormap=None):
