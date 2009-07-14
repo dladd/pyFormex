@@ -115,7 +115,7 @@ def readSelection(select=True,draw=True,multi=True):
     If select and draw are True (default), the selection is drawn.
     """
     types = [ 'Surface Files (*.gts *.stl *.off *.neu *.smesh)', 'All Files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=multi)
+    fn = askFilename(GD.cfg['workdir'],types,multi=multi)
     if fn:
         if not multi:
             fn = [ fn ]
@@ -245,14 +245,14 @@ def toggle_auto_draw():
 
 ## def convert_stl_to_off():
 ##     """Converts an stl to off format without reading it into pyFormex."""
-##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
+##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
 ##     if fn:     
 ##         return surface.stl_to_off(fn,sanitize=False)
 
 
 ## def sanitize_stl_to_off():
 ##     """Sanitizes an stl to off format without reading it into pyFormex."""
-##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)",exist=True)
+##     fn = askFilename(GD.cfg['workdir'],"STL files (*.stl)")
 ##     if fn:     
 ##         return surface.stl_to_off(fn,sanitize=True)
 
@@ -265,7 +265,7 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
         if type(types) == str:
             types = [ types ]
         types = map(utils.fileDescription,types)
-        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        fn = askNeFilename(GD.cfg['workdir'],types)
         if fn:
             GD.message("Exporting surface model to %s" % fn)
             GD.GUI.setBusy()
@@ -813,7 +813,7 @@ def smoothLaplaceHC():
 def create_tetgen_volume():
     """Generate a volume tetraeder mesh inside an stl surface."""
     types = [ 'STL/OFF Files (*.stl *.off)', 'All Files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=False)
+    fn = askFilename(GD.cfg['workdir'],types)
     if os.path.exists(fn):
         sta,out = utils.runCommand('tetgen -z %s' % fn)
         GD.message(out)
@@ -843,7 +843,7 @@ def export_surface():
     S = selection.check(single=True)
     if S:
         types = [ "Abaqus INP files (*.inp)" ]
-        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        fn = askNewFilename(GD.cfg['workdir'],types)
         if fn:
             print "Exporting surface model to %s" % fn
             updateGUI()
@@ -857,7 +857,7 @@ def export_volume():
     if PF['volume'] is None:
         return
     types = [ "Abaqus INP files (*.inp)" ]
-    fn = askFilename(GD.cfg['workdir'],types,exist=False)
+    fn = askNewFilename(GD.cfg['workdir'],types)
     if fn:
         print "Exporting volume model to %s" % fn
         updateGUI()
@@ -919,7 +919,7 @@ def read_tetgen(surface=True, volume=True):
         ftype += ' *.smesh'
     if volume:
         ftype += ' *.ele'
-    fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype,exist=True)
+    fn = askFilename(GD.cfg['workdir'],"Tetgen files (%s)" % ftype)
     nodes = elems =surf = None
     if fn:
         chdir(fn)

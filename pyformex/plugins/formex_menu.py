@@ -65,7 +65,7 @@ def readSelection(select=True,draw=True,multi=True):
     If select and draw are True (default), the selection is drawn.
     """
     types = [ 'Formex Files (*.formex)', 'All Files (*)' ]
-    fn = askFilename(GD.cfg['workdir'],types,exist=True,multi=multi)
+    fn = askFilename(GD.cfg['workdir'],types,multi=multi)
     if fn:
         if not multi:
             fn = [ fn ]
@@ -94,8 +94,8 @@ def writeSelection():
     F = selection.check(single=True)
     if F:
         name = selection.names[0]
-        fn = askFilename(os.path.join(GD.cfg['workdir'],"%s.formex" % name),
-                         filter=['(*.formex)','*'],exist=False)
+        fn = askNewFilename(os.path.join(GD.cfg['workdir'],"%s.formex" % name),
+                         filter=['(*.formex)','*'])
         if fn:
             if not fn.endswith('.formex'):
                 fn += '.formex'
@@ -376,7 +376,7 @@ def partitionSelection():
     GD.message("Subsequent cutting planes: %s" % cuts)
     if ack('Save cutting plane data?'):
         types = [ 'Text Files (*.txt)', 'All Files (*)' ]
-        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        fn = askNewFilename(GD.cfg['workdir'],types)
         if fn:
             chdir(fn)
             fil = file(fn,'w')
@@ -411,7 +411,7 @@ def sectionizeSelection():
     #GD.message("Diameters: %s" % diam)
     if ack('Save section data?'):
         types = [ 'Text Files (*.txt)', 'All Files (*)' ]
-        fn = askFilename(GD.cfg['workdir'],types,exist=False)
+        fn = askNewFilename(GD.cfg['workdir'],types)
         if fn:
             chdir(fn)
             fil = file(fn,'w')

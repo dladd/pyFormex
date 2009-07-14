@@ -360,7 +360,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##     def postABQ(self,fn=None):
 ##         """Translate an Abaqus .fil file in a postproc script."""
 ##         types = [ 'Abaqus results file (*.fil)' ]
-##         fn = askFilename(GD.cfg['workdir'],types,exist=True)
+##         fn = askFilename(GD.cfg['workdir'],types)
 ##         if fn:
 ##             chdir(fn)
 ##             name,ext = os.path.splitext(fn)
@@ -374,7 +374,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##     def importDB(self,fn=None):
 ##         if fn is None:
 ##             types = utils.fileDescription('postproc')
-##             fn = askFilename(GD.cfg['workdir'],types,exist=True)
+##             fn = askFilename(GD.cfg['workdir'],types)
 ##         if fn:
 ##             chdir(fn)
 ##             ###

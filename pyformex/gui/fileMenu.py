@@ -271,7 +271,7 @@ def saveIcon():
     asking for an icon file name. Then save the current rendering to that file.
     """
     ## We should create a specialized input dialog, asking also for the size 
-    fn = draw.askFilename(filter=utils.fileDescription('icon'))
+    fn = draw.askNewFilename(filter=utils.fileDescription('icon'))
     if fn:
         image.saveIcon(fn,size=32)
 
@@ -290,7 +290,7 @@ viewer = None
 def showImage():
     """Display an image file."""
     global viewer
-    fn = draw.askFilename(filter=utils.fileDescription('img'),multi=False,exist=True)
+    fn = draw.askFilename(filter=utils.fileDescription('img'))
     if fn:
         viewer = ImageViewer(GD.app,fn)
         viewer.show()

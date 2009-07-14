@@ -102,7 +102,7 @@ def importModel(fn=None):
     """
 
     if fn is None:
-        fn = askFilename(".","*.mesh",exist=True,multi=True)
+        fn = askFilename(".","*.mesh",multi=True)
         if not fn:
             return
     if type(fn) == str:
@@ -124,7 +124,7 @@ def convert_inp(fn=None):
 
     """
     if fn is None:
-        fn = askFilename(".","*.inp",exist=True)
+        fn = askFilename(".","*.inp")
         if not fn:
             return
 

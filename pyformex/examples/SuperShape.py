@@ -185,7 +185,7 @@ def save():
     global savefile
     show_shape()
     if savefile is None:
-        filename = askFilename(filter="Text files (*.txt)")
+        filename = askNewFilename(filter="Text files (*.txt)")
         if filename:
             savefile = file(filename,'a')
     if savefile:
@@ -203,7 +203,7 @@ def play():
         filename = savefile.name
         savefile.close()
     else:
-        filename = askFilename(filter="Text files (*.txt)",exist=True)
+        filename = askFilename(filter="Text files (*.txt)")
     if filename:
         savefile = file(filename,'r')
         for line in savefile:

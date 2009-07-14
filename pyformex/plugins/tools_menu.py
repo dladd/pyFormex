@@ -29,6 +29,7 @@ Graphic Tools plugin menu for pyFormex.
 
 import pyformex as GD
 
+import utils
 from gui import actors,colors
 from formex import *
 from gui.draw import *
@@ -495,6 +496,20 @@ def export_selection():
             export(dict([ (name+"-%s"%i,v) for i,v in enumerate(sel)]))
 
 
+def dos2unix():
+    fn = askFilename(multi=True)
+    print "selected %s" % fn
+    if fn:
+        for f in fn:
+            utils.dos2unix(f)
+
+def unix2dos():
+    fn = askFilename(multi=True)
+    if fn:
+        for f in fn:
+            utils.unix2dos(f)
+     
+        
 ################### menu #################
 
 _menu = 'Tools'
@@ -552,6 +567,9 @@ def create_menu():
           ('&Edges',query_edges),
           ('&Distances',query_distances),
           ]),
+        ("---",None),
+        ("&DOS to Unix",dos2unix),
+        ("&Unix to DOS",unix2dos),
         ("---",None),
         ('&Reload',reload_menu),
         ("&Close",close_menu),

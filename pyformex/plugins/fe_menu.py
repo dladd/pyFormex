@@ -69,7 +69,7 @@ def readModel(fn):
 def importModel(fn=None):
 
     if fn is None:
-        fn = askFilename(".","*nodes.txt",exist=True,multi=True)
+        fn = askFilename(".","*nodes.txt",multi=True)
         if not fn:
             return
     if type(fn) == str:

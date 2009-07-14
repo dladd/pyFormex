@@ -91,7 +91,7 @@ if ack("Create Surface model?"):
     draw(T)
 
     if ack('Export this model in STL format?'):
-        fn = askFilename(GD.cfg['workdir'],"Stl files (*.stl)",exist=False)
+        fn = askNewFilename(GD.cfg['workdir'],"Stl files (*.stl)")
         if fn:
             from plugins import surface
             f = file(fn,'w')

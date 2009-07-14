@@ -239,6 +239,25 @@ def setSaneLocale():
     import locale
     locale.setlocale(locale.LC_NUMERIC, 'C')
 
+###################### dos to unix conversion ###################
+
+def dos2unix(infile,outfile=None):
+    if outfile is None:
+        cmd = "sed -i 's|\\r||' %s" % infile
+    else:
+        cmd = "sed -i 's|\\r||' %s > %s" % (infile,outfile)
+    print cmd
+    return runCommand(cmd)
+
+def unix2dos(infile,outfile=None):
+    if outfile is None:
+        cmd = "sed -i 's|$|\r/'|' %s" % infile
+    else:
+        cmd = "sed -i 's|$|\r/'|' %s > %s" % (infile,outfile)
+    return runCommand(cmd)
+
+        
+
 
 ###################### image and file formats ###################
 

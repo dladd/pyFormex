@@ -243,7 +243,7 @@ def selectProperties():
 def saveProperties(fn = None):
     """Save the current properties."""
     if not fn:
-        fn = askFilename(dirname,filter="Property files (*.prop)")
+        fn = askNewFilename(dirname,filter="Property files (*.prop)")
     if fn:
         F.p.tofile(fn,sep=',')
 
@@ -251,7 +251,7 @@ def saveProperties(fn = None):
 def readProperties(fn = None):
     """Read properties from file."""
     if not fn:
-        fn = askFilename(dirname,filter="Property files (*.prop)",exist=True)
+        fn = askFilename(dirname,filter="Property files (*.prop)")
     if fn:
         p = fromfile(fn,sep=',')
         F.setProp(p)

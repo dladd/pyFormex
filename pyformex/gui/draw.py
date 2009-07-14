@@ -163,7 +163,7 @@ def dialogTimedOut():
     return _dialog_result == widgets.TIMEOUT
 
 
-def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
+def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False):
     """Ask for a file name or multiple file names using a file dialog.
 
     cur is a directory or filename. All the files matching the filter in that
@@ -178,10 +178,12 @@ def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
         fn = os.path.basename(cur)
         cur = os.path.dirname(cur)
     #GD.debug("cur,fn: %s,%s" % (cur,fn))
+    #print "MULTI=%s" % multi
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
         w.selectFile(fn)
     fn = w.getFilename()
+    #print "SELECTED=%s" % fn
     if fn:
         if multi:
             chdir(fn[0])
@@ -191,6 +193,15 @@ def askFilename(cur=None,filter="All files (*.*)",exist=False,multi=False):
     GD.canvas.update()
     GD.app.processEvents()
     return fn
+
+
+def askNewFilename(cur=None,filter="All files (*.*)"):
+    """Ask a single new filename.
+
+    This is a convenience function for calling askFilename with the
+    arguments exist=False.
+    """
+    return askFilename(cur=cur,filter=filter,exist=False,multi=False)
 
 
 def askDirname(cur=None):
