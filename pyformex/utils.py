@@ -251,9 +251,9 @@ def dos2unix(infile,outfile=None):
 
 def unix2dos(infile,outfile=None):
     if outfile is None:
-        cmd = "sed -i 's|$|\r/'|' %s" % infile
+        cmd = "sed -i 's|$|\\r|' %s" % infile
     else:
-        cmd = "sed -i 's|$|\r/'|' %s > %s" % (infile,outfile)
+        cmd = "sed -i 's|$|\\r|' %s > %s" % (infile,outfile)
     return runCommand(cmd)
 
         

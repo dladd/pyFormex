@@ -7,7 +7,7 @@ files="pyformex/pyformex pyformex/*.py pyformex/gui/*.py pyformex/plugins/*.py p
 
 if [ "$1" = "-a" ]; then
     shift
-    for d in local local/* stent faceting; do
+    for d in local local/* stent faceting osteo; do
 	[ -d "$d" ] && files="$files $d/*.py"
     done
 fi
