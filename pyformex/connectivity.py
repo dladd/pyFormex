@@ -178,7 +178,7 @@ class Connectivity(ndarray):
 ############################################################################
 
 def expandElems(elems):
-    print "This function is deprecated: use Connectivity.expand() instead."
+##    print "This function is deprecated: use Connectivity.expand() instead."
     return Connectivity(elems).expand()
     
 
@@ -278,10 +278,16 @@ def adjacencyList(elems):
     return [ list(elems[w[0],1-w[1]]) for w in ok ]
 
 
-def adjacencyArray(elems,maxcon=3):
-    """Create adjacency array for 2-node elements."""
+def adjacencyArray(elems,maxcon=3,neighbours=1):
+    """Create adjacency array for 2-node elements.
+    
+    The n-ring neighbourhood of the nodes is calculated (n=neighbours).
+    These are the nodes connected through maximum n elements.
+    """
     if len(elems.shape) != 2 or elems.shape[1] != 2:
         raise ValueError,"""Expected a set of 2-node elements."""
+    # STEP 1: calculate the one-ring neighbourhood (nodes connected
+    # through one element)
     nr,nc = elems.shape
     mr = elems.max() + 1
     mc = maxcon*nc
@@ -306,6 +312,39 @@ def adjacencyArray(elems,maxcon=3):
     adj.sort(axis=-1)
     maxc = adj.max(axis=0)
     adj = adj[:,maxc>=0]
+    # STEP 2: extend with nodes connected through 2, ... , 'neighbours' elements
+    if neighbours > 1:
+        adj0 = adj # one-ring neighbourhood
+        adj1 = adj # last added neighbours
+        n = len(adj)
+        for i in range(neighbours-1):
+            t = adj1<0
+            adj1 = adj0[adj1]
+            adj1[t] = -1
+            adj1 = adj1.reshape(n,-1)
+            adj = column_stack([adj,adj1])
+        # remove the element itself
+        k =arange(n)
+        adj[adj == k.reshape(n,-1)] = -1
+        # remove duplicate elements
+        adj.sort(axis=-1)
+        ncols = adj.shape[1]
+        pos = (ncols-1) * ones((n,),dtype=int32)
+        j = ncols-1
+        while j > 0:
+            j -= 1
+            t = adj[:,j] < adj[k,pos]
+            w = where(t)
+            x = where(t == 0)
+            pos[w] -= 1
+            adj[w,pos[w]] = adj[w,j]
+        pmin = pos.min()
+        p = pos.max()
+        while p > pmin:
+            adj[pos==p,p] = -1
+            pos[pos==p] -= 1
+            p = pos.max()
+        adj = adj[:,pmin+1:]
     return adj
 
 
@@ -351,7 +390,7 @@ def adjacent(index,rev=None):
     #print adj
     ncols = adj.shape[1]
     pos = (ncols-1) * ones((n,),dtype=int32)
-    #pos = column_stack([arange(n),pos])
+    #pos = column_stack([arange(n),pos])    
     j = ncols-1
     while j > 0:
         j -= 1

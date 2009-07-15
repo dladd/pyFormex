@@ -278,6 +278,76 @@ def surface_volume(x,pt=None):
     return v
 
 
+def curvature(coords,elems,edges,neighbours=1):
+    """Calculate curvature parameters (according to Dong et al. 2005).
+    
+    The n-ring neighbourhood of the nodes is used (n=neighbours).
+    Six values are returned: the Gaussian and mean curvature, the
+    principal curvatures and the principal directions at the nodes.
+    """
+    # calculate n-ring neighbourhood of the nodes (n=neighbours)
+    adj = adjacencyArray(edges,neighbours=neighbours)
+    # calculate unit length average normals at the nodes p
+    # a weight 1/|gi-p| could be used (gi=center of the face fi)
+    p = coords
+    n = interpolateNormals(coords,elems,atNodes=True)
+    # double-precision: this will allow us to check the sign of the angles    
+    p = p.astype(float64)
+    n = n.astype(float64)
+    vp = p[adj] - p[:,newaxis,:]
+    vn = n[adj] - n[:,newaxis,:]
+    # calculate unit length projection of vp onto the tangent plane
+    t = cross(n,cross(vp,n[:,newaxis,:]))
+    t = normalize(t)
+    # calculate normal curvature
+    k = dotpr(vp,vn)/dotpr(vp,vp)
+    # calculate maximum normal curvature and corresponding coordinate system
+    # where adj = -1, set curvature very low    
+    k[adj<0] = -10000.
+    imax = k.argmax(-1)
+    kmax =  k[range(len(k)),imax]
+    tmax = t[range(len(k)),imax]
+    e1 = tmax
+    e2 = cross(e1,n)
+    e2 = normalize(e2)
+    # calculate angles (e1,t), where adj = -1, set angle = 0
+    c = dotpr(e1[:,newaxis,:],t)
+    c = c.clip(min=-1.,max=1.)
+    theta = arccos(c)
+    theta[adj<0] = 0.
+    # check the sign of the angles
+    n_c = normalize(cross(e1[:,newaxis,:],t))
+    w = [ apply_along_axis(allclose,1,n1,-n2,0.,1.e-5) for n1,n2 in zip(n_c,n) ]
+    w = asarray(w)
+    theta[w] = -theta[w]
+    # calculate coefficients
+    a = kmax
+    a11 = (cos(theta)**2*sin(theta)**2).sum(-1)
+    a12 = (cos(theta)*sin(theta)**3).sum(-1)
+    a21 = a12
+    a22 = (sin(theta)**4).sum(-1)
+    a13 = ((k-a[:,newaxis]*cos(theta)**2)*cos(theta)*sin(theta)).sum(-1)
+    a23 = ((k-a[:,newaxis]*cos(theta)**2)*sin(theta)**2).sum(-1)
+    b = (a13*a22-a23*a12)/(a11*a22-a12**2)
+    c = (a11*a23-a12*a13)/(a11*a22-a12**2)
+    # calculate the Gaussian and mean curvature
+    Kg = a*c-b**2/4
+    H = (a+c)/2
+    # calculate the principal curvatures and principal directions
+    k1 = H+sqrt(H**2-Kg)
+    k2 = H-sqrt(H**2-Kg)
+    theta0 = 0.5*arcsin(b/(k2-k1))
+    w = apply_along_axis(isClose,0,-b,2*(k2-k1)*cos(theta0)*sin(theta0))
+    theta0[w] = pi-theta0[w]
+    e1 = cos(theta0)[:,newaxis]*e1+sin(theta0)[:,newaxis]*e2
+    e2 = cos(theta0)[:,newaxis]*e2-sin(theta0)[:,newaxis]*e1
+    # for nodes that have only two adjacent nodes, (a11*a22-a12**2) = 0
+    # the curvature of these nodes is zero
+    plane = (adj>=0).sum(-1) <= 2
+    Kg[plane] = H[plane] = k1[plane] = k2[plane] = e1[plane] = e2[plane] = 0.
+    return Kg,H,k1,k2,e1,e2
+
+
 ############################################################################
 
 
@@ -917,6 +987,18 @@ class TriSurface(object):
         self.refresh()
         x = self.coords[self.elems]
         return surface_volume(x).sum()
+
+
+    def curvature(self,neighbours=1):
+        """Return the curvature parameters at the nodes.
+        
+        The n-ring neighbourhood of the nodes is used (n=neighbours).
+        Six values are returned: the Gaussian and mean curvature, the
+        principal curvatures and the principal directions.      
+        """
+        self.refresh()
+        curv = curvature(self.coords,self.elems,self.edges,neighbours=neighbours)
+        return curv
 
 
     def edgeConnections(self):

@@ -389,7 +389,7 @@ def showStatistics():
             else: 
                 showHistogram(key,val,cumulative= mode.startswith('Cumul'))
 
-                                              
+
 def showSurfaceValue(S,txt,val,onEdges):
     val = nan_to_num(val)
     mi,ma = val.min(),val.max()
@@ -403,7 +403,8 @@ def showSurfaceValue(S,txt,val,onEdges):
         dec = 2
     # create a colorscale and draw the colorlegend
     CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
-    cval = array(map(CS.color,val))
+    cval = array(map(CS.color,ravel(val)))
+    cval = cval.reshape(append(val.shape,cval.shape[-1]))
     clear()
     if onEdges:
         F = Formex(S.coords[S.edges])
@@ -414,6 +415,29 @@ def showSurfaceValue(S,txt,val,onEdges):
     CLA = decors.ColorLegend(CL,10,10,30,200,dec=dec) 
     GD.canvas.addDecoration(CLA)
     drawtext(txt,10,230,'hv18')
+
+
+def showCurvature():
+    S = selection.check(single=True)
+    if S:
+        dispmodes = ['On Domain','Histogram','Cumulative Histogram']
+        res  = askItems([('Neighbourhood',1),
+                         ('Select Value',None,'select',['Gaussian curvature','Mean curvature']),
+                         ('Display Mode',None,'select',dispmodes)
+                         ])        
+        if res:
+            key = res['Select Value']
+            curv = S.curvature(neighbours=res['Neighbourhood'])
+            val = {'Gaussian curvature':0,'Mean curvature':1}
+            val = curv[val[key]]
+            mode = res['Display Mode']
+            if mode == 'On Domain':
+                val = val[S.elems]
+                showSurfaceValue(S,key,val,False)
+                smoothwire()
+                lights(False)
+            else: 
+                showHistogram(key,val,cumulative= mode.startswith('Cumul'))
 
 
 def colorByFront():
@@ -1194,6 +1218,7 @@ def create_menu():
           ('&Toggle Bbox',selection.toggleBbox,dict(checkable=True)),
           ]),
         ("&Statistics",showStatistics),
+        ("&Show Curvature",showCurvature),
         ("---",None),
         ("&Frontal Methods",
          [("&Color By Front",colorByFront),
