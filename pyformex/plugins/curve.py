@@ -319,7 +319,10 @@ class BezierSpline(Curve):
         in that point is used, and in the end points of an open curve, the
         direction of the end segment.
         The curl parameter can be set to influence the curliness of the curve.
-        curl=0.0 results in straight segment.
+        curl=0.0 results in straight segments.
+        The control points can also be specified directly. If they are, they
+        override the deriv and curl parameters. Since each segment of the curve
+        needs two control points, the control array has shape (npts-1, 2, 3).
         """
         pts = Coords(pts)
         self.coords = pts
@@ -328,9 +331,12 @@ class BezierSpline(Curve):
             self.nparts -= 1
             
         if control is None:
-            P = PolyLine(pts,closed=closed)
-            if deriv is None:
-                deriv = P.avgDirections()
+            if self.nparts < 2:
+                control = self.coords
+            else:
+                P = PolyLine(pts,closed=closed)
+                if deriv is None:
+                    deriv = P.avgDirections()
                 ampl = P.lengths().reshape(-1,1)
                 if not closed:
                     pts = pts[1:-1]
@@ -345,8 +351,13 @@ class BezierSpline(Curve):
                     p2 = concatenate([p2,p1[-1:]],axis=0)
                 else:
                     p2 = roll(p2,-1,axis=0)
-                control = concatenate([p1,p2],axis=1).reshape(-1,2,3)
+                control = concatenate([p1,p2],axis=1)
+        control = asarray(control).reshape(-1,2,3)
         self.control = Coords(control)
+        if self.control.shape != (self.nparts,2,3):
+            print "coords array has shape %s" % str(self.coords.shape)
+            print "control array has shape %s" % str(self.control.shape)
+            raise ValueError,"Invalid control points for Bezier Spline"
         self.closed = closed
 
 
