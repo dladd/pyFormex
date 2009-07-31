@@ -35,8 +35,7 @@ from gui.imageColor import *
 smooth()
 lights(False)
 
-filename = 'butterfly.ppm'  
-filename = 'butterfly2.png'  
+filename = 'butterfly.png'  
 
 chdir(__file__)
 im = QtGui.QImage(filename)
@@ -44,19 +43,37 @@ if im.isNull():
     warning("Could not load image '%s'" % filename)
     exit()
 
-res = askItems([('Width',40),('Height',32)])
+res = askItems([('Width',200),('Height',160)])
 if not res:
     exit()
 
 nx = res['Width']
 ny = res['Height']
 
-F = Formex(mpattern('123')).replic2(nx,ny)
+# Create a 2D grid of nx*ny elements
+F = Formex(mpattern('123')).replic2(nx,ny).centered()
 
-clear()
-R = max(nx,ny)
-draw(F.translate(2,R/2).projectOnCylinder(R,1,center=[nx/2,ny/2,0.]),color=image2glcolor(im.scaled(nx,ny)))
+# Create some transformex grids
+R = float(nx)/pi
+L = float(ny)
+print R,L
+F1 = F.translate(2,R)
+F2 = F1.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1).setProp(1)
+F3 = F1.projectOnCylinder(2*R,1).setProp(2)
+F4 = F1.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1).setProp(3)
 
+G = [F1,F2,F3,F4]
+for F in G:
+    print F.center(),F.bbox()
 
-drawtext('Created with pyFormex',10,10)
+# Create the colors
+color=image2glcolor(im.scaled(nx*1.01,ny))
+
+nvp = len(G)
+layout(nvp)
+for i,F in enumerate(G):
+    viewport(i)
+    clear()
+    draw(F,color=color)
+    drawtext('Created with pyFormex',10,10)
 # End

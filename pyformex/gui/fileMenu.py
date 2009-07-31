@@ -82,8 +82,9 @@ def createProject(create=True,compression=0,addGlobals=None):
     if not fn.endswith('.pyf'):
         fn += '.pyf'
     legacy = res.leg
+    ignoresig = res.sig
     compression = res.cpr
-    print fn,legacy,compression
+    #print fn,legacy,compression
 
     if create and os.path.exists(fn):
         res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
@@ -106,19 +107,24 @@ def createProject(create=True,compression=0,addGlobals=None):
     # OK, we have all data, now create/open the project
         
     GD.cfg['workdir'] = os.path.dirname(fn)
+    sig = GD.Version[:GD.Version.rfind('-')]
+    if ignoresig:
+        sig = ''
+
+    # Loading the project make take a long while; attent user
     GD.GUI.setBusy()
     try:
-        sig = GD.Version[:GD.Version.rfind('-')]
         the_project = project.Project(fn,create=create,signature=sig,compression=compression,legacy=legacy)
         if GD.PF and addGlobals:
             the_project.update(GD.PF)
-        GD.PF = the_project
-        GD.GUI.setcurproj(fn)
-        GD.message("Project contents: %s" % the_project.keys())
-        if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
-            processArgs([the_project.autofile])
     finally:
         GD.GUI.setBusy(False)
+        
+    GD.PF = the_project
+    GD.GUI.setcurproj(fn)
+    GD.message("Project contents: %s" % the_project.keys())
+    if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
+        processArgs([the_project.autofile])
 
 
 def openProject():

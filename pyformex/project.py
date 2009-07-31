@@ -111,6 +111,8 @@ class Project(dict):
                 self.gzip = 0
             else:
                 # Incompatible format
+                print "HEADER IS %s" % s
+                print "EXPECTED %s" % self.signature
                 raise ValueError,"File %s does not have a matching signature\nIf it is an old project file, try opening it with the 'legacy' option checked." % self.filename
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)

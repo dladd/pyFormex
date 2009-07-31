@@ -139,9 +139,15 @@ class ProjectSelection(FileSelection):
             grid.addWidget(self.cpw,nr,0,1,-1)
             nr += 1
                
+        self.sig = QtGui.QCheckBox("Ignore Signature Version")
+        self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
+        grid.addWidget(self.sig,nr,0,1,-1)
+        nr += 1
+               
         self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
         self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
         grid.addWidget(self.leg,nr,0,1,-1)
+        nr += 1
 
 
     def getResult(self):
@@ -150,6 +156,7 @@ class ProjectSelection(FileSelection):
             opt = odict.ODict()
             opt.fn = str(self.selectedFiles()[0])
             opt.leg = self.leg.isChecked()
+            opt.sig = self.sig.isChecked()
             if hasattr(self,'cpr'):
                 opt.cpr = self.cpr.value()
             else:

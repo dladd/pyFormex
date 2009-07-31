@@ -355,6 +355,15 @@ Return the enclosed volume of the surface.
         
 \end{funcdesc}
 
+\begin{funcdesc}{curvature}{neighbours=1}
+Return the curvature parameters at the nodes.
+        
+        The n-ring neighbourhood of the nodes is used (n=neighbours).
+        Six values are returned: the Gaussian and mean curvature, the
+        principal curvatures and the principal directions.      
+        
+\end{funcdesc}
+
 \begin{funcdesc}{edgeConnections}{}
 Find the elems connected to edges.
 \end{funcdesc}
@@ -714,6 +723,17 @@ Return the volume inside a 3-plex Formex.
     For each element of Formex, return the volume of the tetrahedron
     formed by the point pt (default the center of x) and the 3 points
     of the element.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{curvature}{coords,elems,edges,neighbours=1}
+Calculate curvature parameters (according to Dong et al. 2005).
+    
+    The n-ring neighbourhood of the nodes is used (n=neighbours).
+    Six values are returned: the Gaussian and mean curvature, the
+    principal curvatures and the principal directions at the nodes.
     
 
 \end{funcdesc}

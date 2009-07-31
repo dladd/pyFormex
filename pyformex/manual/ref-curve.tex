@@ -83,6 +83,14 @@ Return the total length of the curve.
         
 \end{funcdesc}
 
+\begin{funcdesc}{approx}{ndiv=N_approx}
+Return an approximate PolyLine
+\end{funcdesc}
+
+\begin{funcdesc}{toFormex}{}
+
+\end{funcdesc}
+
 
 \subsection{PolyLine class: A class representing a series of straight line segments.}
 
@@ -281,6 +289,60 @@ NaturalSpline objects have the following methods:
 \end{funcdesc}
 
 \begin{funcdesc}{sub_points}{t,j}
+
+\end{funcdesc}
+
+
+\subsection{Arc3 class: A class representing a circular arc.}
+
+
+
+
+The Arc3 class has this constructor: 
+
+\begin{classdesc}{Arc3}{pts}
+Create a circular arc.
+
+        The arc is specified by 3 non-colinear points.
+        
+
+\end{classdesc}
+
+Arc3 objects have the following methods:
+
+\begin{funcdesc}{sub_points}{t,j}
+
+\end{funcdesc}
+
+
+\subsection{Arc class: A class representing a circular arc.}
+
+
+
+
+The Arc class has this constructor: 
+
+\begin{classdesc}{Arc}{pts}
+Create a circular arc.
+
+        The arc is specified by the center and begin and end-point.
+        
+
+\end{classdesc}
+
+Arc objects have the following methods:
+
+\begin{funcdesc}{sub_points}{t,j}
+
+\end{funcdesc}
+
+
+\subsection{Functions defined in the curve module}
+
+
+
+\begin{funcdesc}{vectorPairAngle}{v1,v2}
+Return the angle between the vectors v1 and v2.
 
 \end{funcdesc}
 

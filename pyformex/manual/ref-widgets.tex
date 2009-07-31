@@ -630,12 +630,14 @@ Change the widget's value.
     While general input dialogs can be constructed from all the underlying
     Qt classes, this widget provides a way to construct fairly complex
     input dialogs with a minimum of effort.
+
+    The input dialog can be modal or non-modal dialog.
     
 
 
 The InputDialog class has this constructor: 
 
-\begin{classdesc}{InputDialog}{items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False}
+\begin{classdesc}{InputDialog}{items,caption=None,parent=None,flags=None,actions=None,default=None}
 Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -695,7 +697,26 @@ InputDialog objects have the following methods:
 Return the input item with specified name.
 \end{funcdesc}
 
-\begin{funcdesc}{acceptData}{}
+\begin{funcdesc}{timeout}{}
+Hide the dialog and set the result code to TIMEOUT
+\end{funcdesc}
+
+\begin{funcdesc}{timedOut}{}
+Returns True if the result code was set to TIMEOUT
+\end{funcdesc}
+
+\begin{funcdesc}{show}{timeout=None,timeoutfunc=None}
+Show the dialog.
+
+        For a non-modal dialog, the user has to call this function to
+        display the dialog. 
+        For a modal dialog, this is implicitely executed by getResult().
+
+        If a timeout, start the timeout timer if needed.
+        
+\end{funcdesc}
+
+\begin{funcdesc}{acceptData}{result=ACCEPTED}
 Update the dialog's return value from the field values.
 
         This function is connected to the 'accepted()' signal.
@@ -709,16 +730,12 @@ Update the dialog's return value from the field values.
 \begin{funcdesc}{updateData}{d}
 Update a dialog from the data in given dictionary.
 
-        d is a dictionary where the keys are field names in t the dialog.
+        d is a dictionary where the keys are field names in the dialog.
         The values will be set in the corresponding input items.
         
 \end{funcdesc}
 
-\begin{funcdesc}{timeout}{}
-
-\end{funcdesc}
-
-\begin{funcdesc}{getResult}{timeout=None,timeoutAccept=True}
+\begin{funcdesc}{getResult}{timeout=None}
  Get the results from the input dialog.
 
         This fuction is used to present a modal dialog to the user (i.e. a
@@ -736,129 +753,8 @@ Update a dialog from the data in given dictionary.
         A value 0 will timeout immediately, a negative value will never timeout.
         The default is to use the global variable input_timeout.
 
-        This function also sets the exit mode, so that the caller can test how
-        the dialog was ended.
-        self.accepted == TRUE/FALSE
-        self.timedOut == TRUE/FALSE
-        
-\end{funcdesc}
-
-
-\subsection{NewInputDialog class: A dialog widget to set the value of one or more items.}
-
-    While general input dialogs can be constructed from all the underlying
-    Qt classes, this widget provides a way to construct fairly complex
-    input dialogs with a minimum of effort.
-    
-
-
-The NewInputDialog class has this constructor: 
-
-\begin{classdesc}{NewInputDialog}{items,caption=None,parent=None,flags=None,actions=None,default=None,report_pos=False}
-Creates a dialog which asks the user for the value of items.
-
-        Each item in the 'items' list is a tuple holding at least the name
-        of the item, and optionally some more elements that limit the type
-        of data that can be entered. The general format of an item is:
-          name,value,type,range
-        It should fit one of the following schemes:
-        ('name',str) : type string, any string input allowed
-        ('name',int) : type int, any integer value allowed
-        ('name',int,'min','max') : type int, only min <= value <= max allowed
-        For each item a label with the name and a LineEdit widget are created,
-        with a validator function where appropriate.
-
-        Input items are defined by a list with the following structure:
-        [ name, value, type, range... ]
-        The fields have the following meaning:
-          name:  the name of the field,
-          value: the initial or default value of the field,
-          type:  the type of values the field can accept,
-          range: the range of values the field can accept,
-        The first two fields are mandatory. In many cases the type can be
-        determined from the value and no other fields are required. Thus:
-        [ 'name', 'value' ] will accept any string (initial string = 'value'),
-        [ 'name', True ] will show a checkbox with the item checked,
-        [ 'name', 10 ] will accept any integer,
-        [ 'name', 1.5 ] will accept any float.
-
-        Range settings for int and float types:
-        [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive;
-        [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
-           from 0.0 to 1.0 with a maximum of two decimals.
-
-        Composed types:
-        [ 'name', 'option1', 'select', ['option0','option1','option2']] will
-        present a combobox to select between one of the options.
-        The initial and default value is 'option1'.
-
-        [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
-        present a group of radiobuttons to select between one of the options.
-        The initial and default value is 'option1'.
-        A variant 'vradio' aligns the options vertically. 
-        
-        [ 'name', 'option1', 'push', ['option0','option1','option2']] will
-        present a group of pushbuttons to select between one of the options.
-        The initial and default value is 'option1'.
-        A variant 'vpush' aligns the options vertically. 
-
-        [ 'name', 'red', 'color' ] will present a color selection widget,
-        with 'red' as the initial choice.
-        
-
-\end{classdesc}
-
-NewInputDialog objects have the following methods:
-
-\begin{funcdesc}{__getitem__}{name}
-Return the input item with specified name.
-\end{funcdesc}
-
-\begin{funcdesc}{acceptData}{}
-Update the dialog's return value from the field values.
-
-        This function is connected to the 'accepted()' signal.
-        Modal dialogs should normally not need to call it.
-        In non-modal dialogs however, you can call it to update the
-        results without having to raise the accepted() signal (which
-        would close the dialog).
-        
-\end{funcdesc}
-
-\begin{funcdesc}{updateData}{d}
-Update a dialog from the data in given dictionary.
-
-        d is a dictionary where the keys are field names in t the dialog.
-        The values will be set in the corresponding input items.
-        
-\end{funcdesc}
-
-\begin{funcdesc}{timeout}{}
-
-\end{funcdesc}
-
-\begin{funcdesc}{getResult}{timeout=None,timeoutAccept=True}
- Get the results from the input dialog.
-
-        This fuction is used to present a modal dialog to the user (i.e. a
-        dialog that must be ended before the user can continue with the
-        program. The dialog is shown and user interaction is processed.
-        The user ends the interaction either by accepting the data (e.g. by
-        pressing the OK button or the ENTER key) or by rejecting them (CANCEL
-        button or ESC key).
-        On accept, a dictionary with all the fields and their values is
-        returned. On reject, an empty dictionary is returned.
-        
-        If a timeout (in seconds) is given, a timer will be started and if no
-        user input is detected during this period, the input dialog returns
-        with the default values set.
-        A value 0 will timeout immediately, a negative value will never timeout.
-        The default is to use the global variable input_timeout.
-
-        This function also sets the exit mode, so that the caller can test how
-        the dialog was ended.
-        self.accepted == TRUE/FALSE
-        self.timedOut == TRUE/FALSE
+        The result() method can be used to find out how the dialog was ended.
+        Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.
         
 \end{funcdesc}
 
@@ -1250,7 +1146,7 @@ Create a set of dialog buttons
 \end{funcdesc}
 
 
-\begin{funcdesc}{messageBox}{message,level='info',choices=['OK'],timeout=None}
+\begin{funcdesc}{messageBox}{message,level='info',choices=['OK'],default=None,timeout=None}
 Display a message box and wait for user response.
 
     The message box displays a text, an icon depending on the level

@@ -73,7 +73,7 @@ Display a text and wait for user response.
 \end{funcdesc}
 
 
-\begin{funcdesc}{askItems}{items,caption=None}
+\begin{funcdesc}{askItems}{items,caption=None,timeout=None}
 Ask the value of some items to the user.
 
     Create an interactive widget to let the user set the value of some items.
@@ -94,24 +94,40 @@ Ask the value of some items to the user.
 \end{funcdesc}
 
 
-\begin{funcdesc}{dialogTimedOut}{}
-Returns True if the last askItems() dialog timed out.
-
-\end{funcdesc}
-
-
 \begin{funcdesc}{dialogAccepted}{}
 Returns True if the last askItems() dialog was accepted.
 
 \end{funcdesc}
 
 
-\begin{funcdesc}{askFilename}{cur=None,filter="All files (*.*)",exist=False,multi=False}
+\begin{funcdesc}{dialogRejected}{}
+Returns True if the last askItems() dialog was rejected.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{dialogTimedOut}{}
+Returns True if the last askItems() dialog timed out.
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{askFilename}{cur=None,filter="All files (*.*)",exist=True,multi=False}
 Ask for a file name or multiple file names using a file dialog.
 
     cur is a directory or filename. All the files matching the filter in that
     directory (or that file's directory) will be shown.
     If cur is a file, it will be selected as the current filename.
+    
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{askNewFilename}{cur=None,filter="All files (*.*)"}
+Ask a single new filename.
+
+    This is a convenience function for calling askFilename with the
+    arguments exist=False.
     
 
 \end{funcdesc}
@@ -747,6 +763,12 @@ Highlight a selection of partitions on the canvas.
     connected to a collection of property numbers, as returned by the
     partitionCollection() method.
     
+
+\end{funcdesc}
+
+
+\begin{funcdesc}{removeHighlights}{}
+Remove the highlights from the current viewport
 
 \end{funcdesc}
 

@@ -118,10 +118,11 @@ Return a point with coordinates [0.,0.,0.].
 \end{funcdesc}
 
 
-\begin{funcdesc}{unitVector}{axis}
-Return a unit vector in the direction of a global axis (0,1,2).
+\begin{funcdesc}{unitVector}{v}
+Return a unit vector in the direction of v.
 
-    Use normalize() to get a unit vector in a general direction.
+    v is either an integer specifying one of the global axes (0,1,2),
+    or a 3-element array or compatible.
     
 
 \end{funcdesc}
@@ -147,9 +148,10 @@ Return a rotation matrix over angle, optionally around axis.
 \end{funcdesc}
 
 
-\begin{funcdesc}{rotMatrix}{v,n=3}
+\begin{funcdesc}{rotMatrix}{u,w=[0.,0.,1.],n=3}
 Create a rotation matrix that rotates axis 0 to the given vector.
 
+    u is a vector representing the 
     Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
     
 

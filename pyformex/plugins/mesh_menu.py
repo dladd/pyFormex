@@ -7,6 +7,7 @@ Interactive menu for Mesh type objects
 (C) 2009 Benedict Verhegghe.
 """
 
+import pyformex
 import os,sys
 sys.path[:0] = ['.', os.path.dirname(__file__)]
 
@@ -124,17 +125,19 @@ def convert_inp(fn=None):
 
     """
     if fn is None:
-        fn = askFilename(".","*.inp")
-        if not fn:
-            return
+        fn = askFilename(".","*.inp",multi=True)
+        for f in fn:
+            convert_inp(f)
+        return
 
     converter = os.path.join(GD.cfg['pyformexdir'],'bin','read_abq_inp')
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
     print cmd
+    pyformex.GUI.setBusy()
     print utils.runCommand(cmd)
-
+    pyformex.GUI.setBusy(False)
 
 
 def toFormex(suffix=''):

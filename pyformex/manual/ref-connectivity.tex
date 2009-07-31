@@ -170,8 +170,12 @@ Create adjacency lists for 2-node elements.
 \end{funcdesc}
 
 
-\begin{funcdesc}{adjacencyArray}{elems,maxcon=3}
+\begin{funcdesc}{adjacencyArray}{elems,maxcon=3,neighbours=1}
 Create adjacency array for 2-node elements.
+    
+    The n-ring neighbourhood of the nodes is calculated (n=neighbours).
+    These are the nodes connected through maximum n elements.
+    
 
 \end{funcdesc}
 

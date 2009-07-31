@@ -702,12 +702,14 @@ class Canvas(object):
         import simple,coords
         bbix = simple.regularGrid(X0,X1,[1,1,1])
         bbix = dot(bbix,self.camera.rot[:3,:3])
+        #print bbix
         bbox = coords.Coords(bbix).bbox()
-        dx,dy = bbox[1][:2] - bbox[0][:2]
-        hsize = max(dx,dy/self.aspect)
-        offset = abs(bbox[1][2]+bbox[0][2])
-        #print "hsize,offset = %s,%s" % (hsize,offset)
-        dist = (hsize/tf + offset) / correction
+        dx,dy,dz = bbox[1] - bbox[0]
+        #print  "dx,dx/asp,dy = %s, %s, %s" % (dx,dx/self.aspect,dy)
+        vsize = max(dx/self.aspect,dy)
+        offset = dz
+        #print "vsize,offset = %s, %s" % (vsize,offset)
+        dist = (vsize/tf + offset) / correction
         #print "new dist = %s" % (dist)
         
         if dist == nan or dist == inf:
