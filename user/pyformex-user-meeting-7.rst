@@ -61,7 +61,7 @@ Varia
 
 Date of the next meeting
 ------------------------
-The next meeting will be held at IBiTech in March 2009.
+The next meeting will be held at IBiTech in June 2009.
 
 
 .. Here are the targets referenced in the text

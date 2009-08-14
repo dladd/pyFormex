@@ -1,0 +1,363 @@
+#!/usr/bin/env pyformex
+## $Id$
+
+"""Optical Illusions
+
+level = 'beginner'
+topics = ['geometry']
+techniques = ['dialog', 'draw', 'persistence','random']
+
+"""
+
+from numpy import *
+from formex import *
+from simple import *
+from gui import widgets
+from odict import ODict
+from numpy.random import rand
+
+# Illusion definitions______________________________________________________________________
+
+def illusion1(): #Disappearing magenta circles create a green rotating circle
+	resetview([0.8,0.8,0.8])
+	if Explanation: message('When staring at the cross in the middle,\nthe disappaering magenta circle will create the illusion of a green rotating circle.\nIf you keep concentrating your gaze on the centre, the green circle wil seem to devour the magenta cricle,\nup to a point where you no longer see the magenta circles.\nBlinking or changing your focus will immediately undo the effect.')
+	ask = askItems([('Number of circles',12),('Radius of circles',1.2),('Radius of the figure',12),('Number of rotations',16),('color of circles',[1.0,0.40,1.0]),('Sleep time',0.03),('Zoom',14.)])
+	if not ask: return
+	N = ask['Number of circles']
+	r = ask['Radius of circles']
+	R = ask['Radius of the figure']
+	n = ask['Number of rotations']
+	col = ask['color of circles']
+	sl = ask['Sleep time']
+	sc = ask['Zoom']
+	box=[[-sc,-sc,-sc],[sc,sc,sc]]
+	draw(shape('plus'),bbox=box)
+	C = circle(a1=20).scale([r,r,0]).points()
+	O = [0,0,0]
+	F = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]).translate([R,0,0]).rosette(N-1,360./N)
+	for i in range(n*N):
+		F = F.rotate(-360./N)
+		dr = draw(F,color=col,bbox=box)
+		if i>0: undraw(DR)
+		DR=dr
+		sleep(sl)
+
+def illusion2(): #Parallel lines
+	resetview([0.8,0.8,0.8])
+	if Explanation: message('This illustration consists only of equally sized squares.\nThough the thus formed horizontal lines seem to converge, they are completely parallel.')
+	lines = Formex([[[0,0,0],[14,0,0]]]).replic(13,1,dir=1)
+	draw(lines,color=[0.8,0.8,0.8],linewidth=1.0)
+	F = Formex(mpattern('1234')).replic(13,1)
+	F.setProp([0,7])
+	F += F.translate([0.2,1,0]) + F.translate([0.4,2,0]) + F.translate([0.2,3,0])
+	F = F.replic(3,4,dir=1)
+	draw(F)
+
+def illusion3(): #Squares and circles
+	resetview([0.6,0.6,0.6])
+	if Explanation: message('When you look at one of the white circles, the other circles seem to change colour.\nIn fact, the colour the appear to have is the same as the colour of the squares.\nThis colour is generated randomly.\npress \'show\' multiple times to see the effect of the colour of the squares.\nYou may need to zoom to get an optimal effect.')
+	B,H = 16,16
+	F = Formex(mpattern('1234')).replic2(B,H,1.2,1.2)
+	R = 0.2/sqrt(2.)
+	C = circle(a1=20).scale(R).points()
+	O = [0,0,0]
+	G = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]).translate([1.1,1.1,0]).replic2(B-1,H-1,1.2,1.2)
+	G.setProp(7)
+	draw(F,color=rand(3)/2)
+	draw(G)
+
+def illusion4(): #Shades of grey
+	resetview([0.8,0.8,0.8])
+	if Explanation: message('Our perception of brightness is relative.\nTherefor, the figure on the left looks a little darker than the one right.\nThe effect can be somewhat subtle though.')
+	sc = 2
+	box = [[-2,0,-2],[2,8,2]]
+	back = Formex(mpattern('1234')).scale([8,8,1])
+	back += back.translate([-8,0,0])
+	back.setProp([0,7])
+	C = circle(a1=11.25).rotate(-90,2).points()
+	F = Formex([[C[i,0],C[i+1,0],2*C[i+1,0],2*C[i,0]] for i in range(0,32,2)]).translate([2,4,0])
+	n = 40
+	for i in range(n):
+		F = F.translate([-2./n,0,0])
+		G = F.reflect(0)
+		dr1 = draw(F+G,color=[0.6,0.6,0.6],bbox=box)
+		dr2 = draw(back,bbox=box)
+		if i>0:
+			undraw(DR2)
+			undraw(DR1)
+		else: sleep(2)
+		DR1 = dr1
+		DR2 = dr2
+
+def illusion5(): #Running in circles
+	resetview()
+	if Explanation: message('If yoy don\'t look directly at the rectangles,\nboth rectangles will appear to \'overtake\'  each other constantly,\nalthough their moving speed is equal and constant.')
+	box= [[-8,-8,-8],[8,8,8]]
+	N = 72
+	R = 10
+	C = circle(a1=360./N).points()
+	O =[0,0,0]
+	F = Formex([[C[i,0],C[i+1,0],O] for i in arange(0,2*N,2)]).scale([R,R,0])
+	F.setProp([0,7])
+	p = circle(a1=360./N).vertices()
+	centre = Formex([add(p[0:len(p):2],p[-1])]).translate([-1,0,0])
+	centre.setProp(1)
+	draw(centre,bbox=box)
+	draw(F,bbox=box)
+	b1 = Formex(mpattern('1234')).scale([1.5,0.8,0]).translate([0,8.5,0.1])
+	b1.setProp(3)
+	b2 = Formex(mpattern('1234')).scale([1.5,0.8,0]).translate([0,7,0.1])
+	b2.setProp(6)
+	b = b1+b2
+	col = [rand(3)/3,[1,1,1]-rand(3)/8]
+	for i in range(4*N):
+		b = b.rotate(360./N/4)
+		dr = draw(b,bbox=box,color=col)
+		if i>0:
+			undraw(DR)
+		DR = dr
+
+def illusion6(): #How many colours do you see?
+	resetview()
+	if Explanation: message('How many colours are there in this image?\nIt looks like there are 4 colours (pink, orange, light green and cyan),\nbut in fact, there are only 3.\nThe blueish and greenish colours are exactly the same.\nLots of zooming might convince you that this is the case.')
+	magenta,orange,cyan = array([1.,0.,1.]),array([1.,0.6,0.]),array([0.,1.,0.6])
+	b,h,B,H = 10,0.5,11,99
+	F = Formex(mpattern('1234')).scale([b,h,1]).replic2(B,H,b,h)
+	col = resize(magenta,(H,B,3))
+	for i in range(H):
+		for j in range(B):
+			if i%2==0:
+				if j%4==1: col[i,j]=cyan
+			else:
+				if j%4==3: col[i,j]=cyan
+				else: col[i,j]=orange
+	draw(F,color=col.reshape(-1,3))
+
+def illusion7(): #Alligned lines behind bars
+	resetview()
+	if Explanation: message('This is a classic optical illusion.\nStraight lines can appear to be shifted when only a tilted part is visible.')
+	a = 60.
+	lines = Formex(pattern('1')).scale([20,1,0]).rotate(a).translate([-20.*cos(a*pi/180.),0,0]).replic(32,1)
+	lines = cut2AtPlane(cut2AtPlane(lines,[-1,0,0],[1,0,0],side='+'),[22,0,0],[1,0,0],side='-')
+	mask = Formex(mpattern('1234')).scale([1,20.*sin(a*pi/180.),1]).replic(11,2)
+	mask.setProp(6)
+	draw(mask,color=rand(3))
+	draw(lines,linewidth=2)
+	for i in range(3):
+		sleep(2)
+		renderMode('wireframe')
+		sleep(1)
+		renderMode('flat')
+
+def illusion8(): #Parallel lines over wheel
+	resetview()
+	if Explanation: message('Another commonly seen illusion.\nThe lines in the back tend to give the illusion of curved lined,\nalthough they are completely straight.\nSome zooming can help to optimize the effect.')
+	C,O = circle(a1=20).scale(2).points(),[0,0,0]
+	draw(Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]))
+	line = Formex([[[-20,0,0],[20,0,0]]])
+	lines = line
+	hor = line.translate([0,-4,0]) + line.translate([0,4,0])
+	draw(hor,color=red,linewidth=4)
+	for i in range(0,180,5):
+		lines += line.rotate(i)
+	draw(lines,linewidth=1)
+
+def illusion9(): #Motion induced blindness
+	resetview('black')
+	if Explanation: message('This is a very nice illusion.\nLook at the centre of the image.\nThe moving background will give the illusion that the other static points disappear.\nBlinking or changing your focus will immediately undo the effect.\nCool huh?')
+	res = askItems([('Number of static points',10),('Background',None,'radio',['Tiles','Structured points','Random points']),('Rotations',2),('Rotation angle',2),('Number of random points',300)])
+	if not res: return
+	nr,a,rot,back,n = res['Number of random points'],res['Rotation angle'],res['Rotations'],res['Background'],res['Number of static points']
+	draw(shape('star').scale(0.4),color=red,linewidth=2)
+	points = Formex([[0,-10,0]]).rosette(n,360./n)
+	draw(points,color=rand(3),marksize=10)
+	col=rand(3)
+	if back=='Tiles': F = shape('plus').replic2(11,11,3,3).translate([-15,-15,0])
+	elif back=='Structured points': F = Formex([[0,0,0]]).replic2(30,30,1).translate([-15,-15,0])
+	else: F = Formex(random.random((nr,3))).scale([30,30,0]).translate([-15,-15,0])
+	for i in range(rot*360/a):
+		F = F.rotate(a)
+		dr = draw(F,color=col,linewidth=2,bbox=[[-10,-10,0],[10,10,0]])
+		if i>0: undraw(DR)
+		DR = dr
+
+def illusion10(): #Flicker induced blindness... STILL UNDER DEVELOPMENT... (pyFormex might lack the possibility to reach the correct frequencies)
+	resetview('black')
+	n,freq,d = 4,2.,0.17
+	sl = 1/2/freq
+	centre = shape('plus').scale(0.4)
+	centre.setProp(7)
+	draw(centre)
+	points = Formex([[0,-5,0]]).rosette(n,360./n)
+	points.setProp(6)
+	draw(points,color=[0.2,0.5,0.3],marksize=4)
+	F1 = Formex(mpattern('1234')).scale([1,2,1]).translate([d,-6,0])
+	F2 = F1.translate([-1-2*d,0,0])
+	F1 = F1.rosette(n,360./n)
+	F2 = F2.rosette(n,360./n)
+	for i in range(200):
+		dr1 = draw(F1,color=[0.4,0.,0.])
+		if i>0: undraw(dr2)
+		sleep(sl)
+		dr2 = draw(F2,color=[0.4,0.,0.])
+		undraw(dr1)
+		sleep(sl)
+
+def illusion11(): #Sine wave
+	resetview()
+	if Explanation: message('A simple yet powerful illusion:\nThe vertical lines seem larger at places where the sine wave is more horizontal,\nand smaller where the sine wave is more vertical.\nPlay with the parameters to get a more obvious result.\nAmplitude 0 shows that all lines are equally large.')
+	res = askItems([('Amplitude',3.5),('Periods',3),('Spacing between lines',0.1)])
+	if not res: return
+	shift,per,amp = res['Spacing between lines'],res['Periods'],res['Amplitude']
+	n = int(2*pi/shift*per)
+	F = Formex(mpattern('2')).replic(n,shift)
+	for i in F:
+		i[0,1] = amp*sin(i[0,0])
+		i[1,1] = i[0,1] + 1
+	draw(F)
+
+def illusion12(): #Circles and lines
+	resetview()
+	if Explanation: message('Another classic.\nAll lines are completely straight, though the circles in the background give you the illusion that they aren\'t.\nThe colours are generated randomly; some combination might not work as well as others.')
+	n,m,nc = 5,5,8
+	size = nc*sqrt(2)
+	lines = Formex(pattern('1234')).translate([-0.5,-0.5,0]).rotate(45).scale(size)
+	c = circle(a1=5)
+	C = c
+	for i in range(2,nc+1): C += c.scale(i)
+	C = C.replic2(n,m,2*nc,2*nc)
+	lines = lines.replic2(n,m,2*nc,2*nc)
+	draw(C,linewidth=2,color=rand(3))
+	draw(lines,linewidth=3,color=rand(3))
+
+def illusion13(): #Crater
+	resetview()
+	if Explanation: message('Though this image is 2D, you might get a 3D illusion.\nLook carefully and you\'ll see the whirlabout of a crater shaped object.')
+	deg,rot,col = 5,3,rand(2,3)
+	r1,r2,r3,r4,r5,r6,r7,r8 = 1,1.9,2.9,4,5.1,6.1,7,7.8
+	p = circle(a1=5).vertices()
+	C = Formex([p[0:len(p):2]])
+	C1 = C.scale(r1).translate([0,r1,0])
+	C2 = C.scale(r2).translate([0,r2,0])
+	C3 = C.scale(r3).translate([0,r3,0])
+	C4 = C.scale(r4).translate([0,r4,0])
+	C5 = C.scale(r5).translate([0,2*r4-r5,0])
+	C6 = C.scale(r6).translate([0,2*r4-r6,0])
+	C7 = C.scale(r7).translate([0,2*r4-r7,0])
+	C8 = C.scale(r8).translate([0,2*r4-r8,0])
+	fig = C1+C2+C3+C4+C5+C6+C7+C8
+	for i in range(rot*360/deg):
+		fig = fig.rotate(deg)
+		dr = draw(fig,color=col)
+		#dr = draw(fig,color=[[0.8,0.8,0.8],[0.2,0.2,0.2]])
+		if i>0: undraw(DR)
+		DR = dr
+
+def illusion14(): #Cussion
+	resetview()
+	if Explanation: message('This is a powerful illusion, though again some colour combinations might not work as well as others.\nThe smaller squares on this \'chessboard\' tend to give a distortion.\nAgain, all horizontal and vertical lines are perfectly parallel and straight!')
+	b,h = 17,17
+	if b%2==0: b+=1
+	if h%2==0: h+=1
+	chess = Formex(mpattern('1234')).replic2(b,h,1,1).translate([-b/2+0.5,-h/2+0.5,0])
+	col=[rand(3),rand(3)]
+	sq1 = Formex(mpattern('1234')).scale([0.25,0.25,1]).translate([-0.45,0.2,0])
+	sq2 = Formex(mpattern('1234')).scale([0.25,0.25,1]).translate([0.2,-0.45,0])
+	F = sq1.translate([1,0,0]).replic(int(b/2)-1,1)+sq2.translate([0,1,0]).replic(int(h/2)-1,1,dir=1)
+	sq = sq1+sq2
+	for i in range(int(b/2)):
+		for j in range(int(h/2)):
+			if i+j < (int(b/2)+int(b/2))/2-1: F += sq.translate([i+1,j+1,0])
+	colors=ndarray([0,0])
+	for i in F:
+		if (int(i[0,0])+int(i[0,1])-1)%2 == 0: colors=append(colors,col[1])
+		else: colors=append(colors,col[0])
+	colors= colors.reshape(-1,3)
+	F = F.rosette(4,90)
+	draw(F,color=colors.reshape(-1,3))
+	draw(chess,color=col)
+
+def illusion15(): #Delirium
+	resetview()
+	if Explanation: message('You\'ve undoubtably seen some variation of this illusion before.\nLooking at different spots of the image will give the illusion of motion.\nThe secret is all in the combination of colours.\nZooming might increase the effect.\nSwitching to wireframe removes the effect and proves that this is merely an illusion.')
+	n = 5*6
+	col = [[1.,1.,1.],[0.12,0.556,1.],[0.,0.,1.],[0.,0.,0.],[0.7,0.9,0.2],[1.,1.,0.]]
+	p = circle(a1=10).rotate(5).vertices()
+	f = Formex([p[0:len(p):2]])
+	F = f.copy()
+	for i in range(1,n):
+		F += f.scale([1+i*0.5,1+i*0.5,1])
+	F1 = F.replic2(5,5,n+1,n+1)
+	F2 = F.replic2(4,4,n+1,n+1).translate([(n+1)/2,(n+1)/2,0])
+	draw(F1+F2,color=col)
+
+# Other definitions____________________________________________________________________________________________________________________
+
+def resetview(bgcol='white'):
+	clear()
+	reset()
+	layout(nvps=1)
+	bgcolor(bgcol)
+	renderMode('flat')
+	toolbar.setProjection()
+	frontView()
+
+def showtext(txt=''): #Currently not used
+	line = 0
+	for i in txt:
+		drawText(i,40,400-line,color=blue,size=16)
+		line += 25
+
+# Persistent dialog settings__________________________________________________________________________________________________________
+
+
+method = ODict([
+	('Rotating circles',illusion1),
+	('Parallel lines',illusion2),
+	('Squares and circles',illusion3),
+	('Shades of grey',illusion4),
+	('Running in circles',illusion5),
+	('How many colours',illusion6),
+	('Alligned lines',illusion7),
+	('Parallel?',illusion8),
+	('Motion induced blindness',illusion9),
+	('Sine wave',illusion11),
+	('Circles and lines',illusion12),
+	('Craters',illusion13),
+	('Cussion',illusion14),
+	('Crazy circles',illusion15),
+	])
+
+data_items = [
+	['Illusion',None,'select',method.keys()],
+	['Explanation',False],
+	]
+
+globals().update([i[:2] for i in data_items])
+
+for i,it in enumerate(data_items):
+	data_items[i][1] = globals()[it[0]]
+
+def close():
+	global dialog
+	if dialog:
+		dialog.close()
+		dialog = None
+
+def timeOut():
+	showAll()
+	close()
+
+# Actions__________________________________________________________________________________
+
+def show():
+	dialog.acceptData()
+	globals().update(dialog.results)
+	if Explanation: message('_________________________________________')
+	method[Illusion]()
+
+# Display the dialog_______________________________________________________________________
+
+dialog = widgets.InputDialog(data_items,caption='Optical illusions',actions = [('Close',close),('Show',show)],default='Show')
+dialog.timeout = timeOut
+dialog.show()

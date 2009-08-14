@@ -55,6 +55,7 @@ for shape in Shape.keys():
             clear()
             FA = GeomActor(F,color=c)
             drawActor(FA)
+	    print c
             zoomAll()
             for light in Lights:
                 lights(light)
