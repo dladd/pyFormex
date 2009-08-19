@@ -265,7 +265,7 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
         if type(types) == str:
             types = [ types ]
         types = map(utils.fileDescription,types)
-        fn = askNeFilename(GD.cfg['workdir'],types)
+        fn = askNewFilename(GD.cfg['workdir'],types)
         if fn:
             GD.message("Exporting surface model to %s" % fn)
             GD.GUI.setBusy()
