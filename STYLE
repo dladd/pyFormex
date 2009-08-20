@@ -1,4 +1,9 @@
-# STYLE
+# $Id$    -*- rst -*-
+
+
+Style for source and text files used by the pyFormex project
+============================================================
+
 #
 # This file holds some recommendations about the style to be used for
 # pyFormex development and the use of the subversion repository.
@@ -16,13 +21,12 @@ enable-auto-props = yes
 
 - All new source files in the pyFormex repository should be created with the
   following line on the first OR second line:
+# $Id$
 
 - Name of .py files should be only lowercase, except for the approved
   examples distributed with pyFormex, which should start wih an upper case.
  
 - Start text (also .py) files with the following line:
-
-# $Id$
 
 - A first line different from the above may be used to flag an executable
   script, as in the examples below.
@@ -41,6 +45,8 @@ enable-auto-props = yes
 
 # End
 
+- In Python files, use 4 blanks for indenting, not TABs.  
+
 - Never directly edit the $Id line: it is automatically handled by subversion
 
 - .py files may/should end with a section
@@ -54,7 +60,7 @@ if __name__ == "__main__":
   - lowerUpperUpper for function names
   - UpperUpperUpper for class names
 
-=======================
+
 - Some numpy specifics:
 =======================
 

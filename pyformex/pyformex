@@ -121,6 +121,7 @@ You will need proper permissions to actually delete the files.
         print "Thanks for letting me stay this time."
     sys.exit()
 
+
 ###########################  app  ################################
 
     
@@ -221,14 +222,11 @@ def main(argv=None):
         print "\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n"
         sys.exit()
 
-    if GD.options.debug:
-        GD.debug = GD.debug_true
-    else:
-        GD.debug = GD.debug_false
 
     if GD.options.whereami:
         print "Script started from %s" % scriptdir
         print "I found pyFormex in %s " %  pyformexdir
+        print "Current Python sys.path: %s" % sys.path
         sys.exit()
         
     if GD.options.remove:

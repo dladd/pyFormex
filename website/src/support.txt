@@ -17,6 +17,9 @@ If you need help with the installation or use of pyFormex, or if you want to
 discuss existing features or request new ones, the best way is to use the
 pyFormex `Forums`_.
 
-If you have a problem that looks like a malfunction or a bug in pyFormex, you can report it on the `Bug tracker`_.
+If you run into a problem that looks like a malfunction or a bug in pyFormex, you can report it on the `Bug tracker`_.
+
+
+Or you can hire professional support from a young startup company: `FEops`_. They provide professional engineering services using pyFormex (e.g. creating customized pyFormex scripts and/or models) and also offer training and support for pyFormex. 
 
 .. End

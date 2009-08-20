@@ -32,7 +32,8 @@
 .. _`stent research group`: http://www.stent-ibitech.ugent.be
 .. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be
 .. _`BuMPer cluster`: http://bumps.ugent.be/bumper
-  
+.. _`FEops`: http://www.feops.com  
+
 .. _`Bifurcation stenting`: http://www.stent-ibitech.ugent.be/downloads/Peter_Mortier_posterEBR2008.pdf
 .. _`FE modeling of stents`: http://www.stent-ibitech.ugent.be/downloads/Poster_Peter_Mortier_NationalDay2007.pdf
 

@@ -63,18 +63,19 @@ def message(s):
 
 warning = message
 
-debug = message
+def debug(s,lead="DEBUG"):
+    """Print a debug message"""
+    try: # to make sure that debug() can be used before options are set
+        if options.debug:
+            raise
+        pass
+    except:
+        print "%s: %s" % (lead,str(s))
 
-def debug_true(s):
-    print "DEBUG: %s" % str(s)
-
-def debug_false(s):
-    pass
 
 def debugt(s):
-    if options.debug:
-        print "%.3f: %s" % (time.time(),str(s))
-
+    """Print a debug message with timer"""
+    debug(s,time.time())
 
 def savePreferences():
     """Save the preferences.

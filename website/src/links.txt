@@ -16,6 +16,7 @@ Links
 - The `stent research group`_ at IBiTech hosts several developers and users of pyFormex.
 - `IBiTech - Ghent University`_.
 - The `BuMPer cluster`_.
-- The `Vascular Modeling Toolkit`_ (vmtk).
+- The `Vascular Modeling Toolkit`_ (vmtk) provides complimentary tools.
+- `FEops`_, a young company providing professional services with pyFormex, also offers training and support for pyFormex.  
 
 .. End

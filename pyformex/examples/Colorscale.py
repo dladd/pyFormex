@@ -1,9 +1,9 @@
 #!/usr/bin/env pyformex
-## $Id$
+# $Id$
 
 """Colorscale
 
-level = 'beginner'
+level = 'advanced'
 topics = ['FEA']
 techniques = ['dialog', 'colors']
 

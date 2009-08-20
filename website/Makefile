@@ -2,7 +2,7 @@
 #
 
 HOMEPARTS= home_header.inc home_footer.inc
-HTDOCS= developer.html documentation.html download.html links.html screenshots.html usermeeting.html support.html pyformexinuse.html $(HOMEPARTS) pyformex.css favicon.ico
+HTDOCS= developer.html documentation.html install.html links.html screenshots.html usermeeting.html support.html pyformexinuse.html $(HOMEPARTS) pyformex.css favicon.ico
 EXAMPLES= examples/*.html
 IMAGES= images/*.png images/*.gif images/*.jpg
 SCRIPTS= scripts/*.py

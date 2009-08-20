@@ -1,8 +1,8 @@
 .. This may look like plain text, but is really -*- rst -*-
 restindex	
-    crumb: Download
+    crumb: Install
     format: rest
-    page-title: pyFormex Download
+    page-title: Install pyFormex
     encoding: utf-8
     output-encoding: None
     initialheaderlevel: 2
@@ -10,8 +10,8 @@ restindex
   
 .. include:: links.inc
 
-Download pyFormex
------------------
+How to install pyFormex?
+------------------------
 You can get pyFormex from one of the following sources:
 
 - `Official releases`_ are distributed from the developer site. For most users this is the prefered way to get pyFormex.

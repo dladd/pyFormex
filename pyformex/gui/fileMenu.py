@@ -312,6 +312,9 @@ def setOptions():
     if res:
         for o in options:
             setattr(GD.options,o,res[o])
+            print GD.options
+            ## if o == 'debug':
+            ##     GD.setDebugFunc()
 
 
 MenuData = [

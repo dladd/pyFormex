@@ -28,7 +28,7 @@ A pyFormex plugin for handling connectivity of nodes and elements.
 """
 
 import pyformex as GD
-from array import *
+from pyformex.array import *
 
 
 def magic_numbers(elems,magic):
