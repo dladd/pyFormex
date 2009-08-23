@@ -1,4 +1,5 @@
-.. This may look like plain text, but is really -*- rst -*-
+.. $Id$  -*- rst -*-
+
 restindex	
     crumb: Install
     format: rest

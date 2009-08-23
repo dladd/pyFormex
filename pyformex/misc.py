@@ -29,7 +29,7 @@ external functions in the compiled library.
 """
 
 # There should be no other imports here than array
-from array import *
+from pyformex.arraytools import *
 
 def nodalSum(val,elems,work,avg):
     """Compute the nodal sum of values defined on elements.

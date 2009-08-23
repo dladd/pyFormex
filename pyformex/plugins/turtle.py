@@ -22,6 +22,11 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
+"""Turtle graphics for pyFormex
+
+This module was mainly aimed at the drawing of Lindenmayer products
+(see :mod:`plugins.lima` and the Lima example).
+"""
 import math
 rad = math.pi/180.
 def sind(arg):
@@ -31,21 +36,18 @@ def cosd(arg):
     """Return the sin of an angle in degrees."""
     return math.cos(arg*rad)
 
-global pos,step,angle,list
-pos = [0,0]
-step = 1
-angle = 0
-list=[]
-save=[]
 
 def reset():
-    global pos,step,angle,list
-    pos = [0,0]
-    step = 1
-    angle = 0
+    """Reset the turtle graphics engine to start conditions.
+
+    """
+    global pos,step,angle,list,save
+    pos = [0.,0.]
+    step = 1.
+    angle = 0.
     list=[]
     save=[]
-    #print "reset",pos,list
+
 
 def push():
     global save
@@ -63,16 +65,16 @@ def fd(d=None,connect=True):
     if connect:
         list.append([pos,p])
     pos = p
-    #print "fd",pos,len(list)
+
 
 def mv(d=None):
     fd(d,False)
-    #print "mv",pos,len(list)
+
 
 def ro(a):
     global pos,step,angle,list
     angle += a
-    #print "ro",pos,len(list)
+
 
 def go(p):
     global pos,step,angle,list
@@ -96,13 +98,15 @@ def play(scr,glob=None):
             else:
                 eval(line)
     return list
-    
+
+reset()
 
 if __name__ == "__main__":
     def test(txt):
         l = play(txt)
-        print len(l)," lines"
+        print len(l)," line segments"
+        print l
         
     test("fd();ro(90);fd();ro(90);fd();ro(90);fd()")
     test("fd();ro(90);fd();ro(90);fd();ro(90);fd()")
-    test("rs();fd();ro(90);fd();ro(90);fd();ro(90);fd()")
+    test("reset();fd();ro(90);fd();ro(90);fd();ro(90);fd()")

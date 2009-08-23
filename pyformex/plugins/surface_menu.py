@@ -37,7 +37,7 @@ from plugins.objects import *
 from plugins import formex_menu,surface_abq
 import simple
 from plugins.tools import Plane
-from array import niceLogSize
+from pyformex.arraytools import niceLogSize
 
 import os, timer
 

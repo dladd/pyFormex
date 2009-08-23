@@ -22,13 +22,18 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-"""connectivity.py
+"""A class and functions for handling nodal connectivity.
 
-A pyFormex plugin for handling connectivity of nodes and elements.
+This module defines a specialized array class for representing nodal
+connectivity. This is e.g. used in mesh models, where geometry is
+represented by a set of numbered points (nodes) and the geometric elements
+are described by refering to the node numbers.
+In a mesh model, points common to adjacent elements are unique, and
+adjacency of elements can easily be detected from common node numbers. 
 """
 
 import pyformex as GD
-from pyformex.array import *
+from arraytools import *
 
 
 def magic_numbers(elems,magic):
@@ -425,10 +430,13 @@ def closedLoop(elems):
 
     The return value is a tuple of:
     - return code:
+    
       - 0: the segments form a closed loop
       - 1: the segments form a single non-closed path
       - 2: the segments form multiple not connected paths
+      
     - a new connection table which is equivalent to the input if it forms
+    
     a closed loop. The new table has the elements in order of the loop.
     """
     srt = zeros_like(elems) - 1

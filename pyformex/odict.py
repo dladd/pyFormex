@@ -23,13 +23,13 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-"""A dictionary that keeps the keys in order of insertion."""
+"""Specialized dictionary type structures."""
 
 import olist
 
 
 class ODict(dict):
-    """An ordered dictionary.
+    """**An ordered dictionary.**
 
     This is a dictionary that keeps the keys in order.
     The default order is the insertion order. The current order can be
@@ -128,17 +128,17 @@ class ODict(dict):
     
 
 
-class KeyList(ODict):
+class KeyedList(ODict):
     """A named item list.
 
-    A KeyList is a list of lists or tuples. Each item (sublist or tuple)
+    A KeyedList is a list of lists or tuples. Each item (sublist or tuple)
     should at least have 2 elements: the first one is used as a key to
     identify the item, but is also part of the information (value) of the
     item.
     """
     
     def __init__(self,alist=[]):
-        """Create a new KeyList, possibly filling it with data.
+        """Create a new KeyedList, possibly filling it with data.
 
         data should be a list of tuples/lists each having at
         least 2 elements.
@@ -156,32 +156,6 @@ class KeyList(ODict):
         return [(k,)+self[k] for k in self._order]
 
     
-### deprecated function, now in olist ############
-from utils import deprecated
-import olist
-
-@deprecated(olist.union)
-def listUnion(a,b):
-    pass
-@deprecated(olist.difference)
-def listDifference(a,b):
-    pass
-@deprecated(olist.symdifference)
-def listSymDifference(a,b):
-    pass
-@deprecated(olist.intersection)
-def listIntersection (a,b):
-    pass
-@deprecated(olist.select)
-def listSelect(a,b):
-    pass
-@deprecated(olist.concatenate)
-def listConcatenate(a):
-    pass
-@deprecated(olist.flatten)
-def listFlatten(a):
-    pass
-        
 
 if __name__ == "__main__":
 

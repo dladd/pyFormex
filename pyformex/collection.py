@@ -28,7 +28,7 @@ This module defines the Collection class.
 """
 
 import pyformex as GD
-from array import *
+from arraytools import *
 
 ################# Collection of Actors or Actor Elements ###############
 

@@ -34,16 +34,18 @@ from distutils.version import LooseVersion as SaneVersion
 the_version = {'pyformex':pyformex.__version__}
 the_external = {}
 
-def congratulations(name,version,typ='module',fatal=False):
+
+def _congratulations(name,version,typ='module',fatal=False,quiet=False):
     """Report a detected module/program."""
-    if version and pyformex.options.debug:
+    if version and not quiet:
         pyformex.message("Congratulations! You have %s (%s)" % (name,version))
     if not version:
-        if pyformex.options.debug or fatal:
+        if not quiet or fatal:
             pyformex.message("ALAS! I could not find %s '%s' on your system" % (typ,name))
         if fatal:
             pyformex.message("Sorry, I'm out of here....")
             sys.exit()
+
 
 def checkVersion(name,version,external=False):
     """Checks a version of a program/module.
@@ -107,7 +109,7 @@ def checkModule(name):
         pass
     # make sure version is a string (e.g. gl2ps uses a float!)
     version = str(version)
-    congratulations(name,version,'module',fatal)
+    _congratulations(name,version,'module',fatal,quiet=True)
     the_version[name] = version
     return version
 
@@ -176,7 +178,7 @@ def checkExternal(name=None,command=None,answer=None):
         version = m.group(1)
     else:
         version = ''
-    congratulations(name,version,'program')
+    _congratulations(name,version,'program')
     the_external[name] = version
     return version
 

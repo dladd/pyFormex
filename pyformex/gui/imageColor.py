@@ -28,7 +28,7 @@ This module contains functions to use bitmap images as colors on a
 pyFormex geometry.
 """
 
-from pyformex.array import *
+from pyformex.arraytools import *
 from PyQt4.QtGui import QImage
 from image_numpy import qimage2numpy
 

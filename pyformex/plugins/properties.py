@@ -28,9 +28,9 @@ Properties can really be just about any Python object.
 Properties can be attributed to a set of geometrical elements.
 """
 
-from pyformex.flatkeydb import FlatDB
-from pyformex.mydict import Dict,CDict
-from pyformex.array import *
+from flatkeydb import FlatDB
+from mydict import Dict,CDict
+from arraytools import *
 #from numpy import *
 
 #################################################################

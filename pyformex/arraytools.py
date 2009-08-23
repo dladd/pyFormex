@@ -213,6 +213,7 @@ def rotationMatrix(angle,axis=None):
       rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
       rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
       rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
+      
     but the latter functions calls are more efficient.
     The result is returned as an array.
     """

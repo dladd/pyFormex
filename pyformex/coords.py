@@ -27,11 +27,11 @@
 This module defines the Coords class, which is the basic data structure
 in pyFormex to store coordinates of points in a 3D space.
 
-The \module{coords} module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The \class{Coords} class is used by other classes, such as \class{Formex} and \class{Surface}, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the \class{Coords} class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the \class{Coords} class directly as well.
+The :mod:`coords` module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The :class:`Coords` class is used by other classes, such as Formex and Surface, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the Coords class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the Coords class directly as well.
 """
 
-from pyformex.array import *
-from pyformex.lib import misc
+from arraytools import *
+from lib import misc
 
 
 def bbox(objects):
@@ -89,8 +89,8 @@ class Coords(ndarray):
     The Coords class is the basic data structure used throughout pyFormex
     to store coordinates of points in a 3D space.
 
-    The \class{Coords} class is used by other classes, such as \class{Formex}
-    and \class{Surface}, which thus inherit the same transformation
+    The Coords class is used by other classes, such as Formex
+    and Surface, which thus inherit the same transformation
     capabilities. Applications will mostly use the higher level
     classes, which usually have more elaborated consistency checking
     and error handling.
@@ -157,8 +157,8 @@ class Coords(ndarray):
         """Return the shape of the points array.
 
         This is the shape of the Coords array with last axis removed.
-        The full shape of the \\class{Coords} array can be obtained from
-        its \\var{shape} attribute.
+        The full shape of the Coords array can be obtained from
+        its shape attribute.
         """
         return self.shape[:-1]
 

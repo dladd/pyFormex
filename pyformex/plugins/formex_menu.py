@@ -35,7 +35,7 @@ from formex import *
 
 
 from plugins import objects,surface,inertia,partition,sectionize
-from array import niceLogSize
+from pyformex.arraytools import niceLogSize
 
 import commands, os, timer
 

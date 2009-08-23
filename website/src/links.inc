@@ -1,6 +1,7 @@
 .. Links (URLs) for inclusion on the website pages   -*- rst -*-
   
 
+.. _`pyFormex website`: http://pyformex.org
 .. _`development`: http://pyformex.berlios.de
 .. _`Official releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
 .. _`SVN repository`: http://developer.berlios.de/svn/?group_id=2717

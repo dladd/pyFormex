@@ -61,8 +61,8 @@ def initialize():
     GD.debug("LOADING IMAGE FORMATS")
     image_formats_qt = map(str,QtGui.QImageWriter.supportedImageFormats())
     image_formats_qtr = map(str,QtGui.QImageReader.supportedImageFormats())
-    if GD.cfg.get('imagesfromeps',False):
-        GD.image_formats_qt = []
+    ## if GD.cfg.get('imagesfromeps',False):
+    ##     GD.image_formats_qt = []
 
     if utils.hasModule('gl2ps'):
 
@@ -83,12 +83,12 @@ def initialize():
         image_formats_gl2ps = _gl2ps_types.keys()
         image_formats_fromeps = [ 'ppm', 'png', 'jpeg', 'rast', 'tiff',
                                      'xwd', 'y4m' ]
-    if GD.options.debug:
-        print "Qt image types for saving: ",image_formats_qt
-        print "Qt image types for input: ",image_formats_qtr
-        print "gl2ps image types:",image_formats_gl2ps
-        print "image types converted from EPS:",image_formats_fromeps
-
+    GD.debug("""
+Qt image types for saving: %s
+Qt image types for input: %s
+gl2ps image types: %s
+image types converted from EPS: %s""" % (image_formats_qt,image_formats_qtr,image_formats_gl2ps,image_formats_fromeps))
+             
  
 def imageFormats():
     """Return a list of the valid image formats.
