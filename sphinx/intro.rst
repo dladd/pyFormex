@@ -4,16 +4,16 @@
 .. include:: defines.inc
 .. include:: ../website/src/links.inc
 
-.. _part:introduction:
+.. _cha:introduction:
 
-############
+************
 Introduction
-############
+************
 
 
 .. topic:: Abstract
 
-   This section explains shortly what |pyformex| is and what it is not.
+   This part explains shortly what |pyformex| is and what it is not.
    It sets the conditions under which you are allowed to use, modify and
    distribute the program. 
    Next is a list of prerequisite software parts that you need to have
@@ -23,11 +23,10 @@ Introduction
    to understand the tutorial and succesfully use |pyformex|.
 
 
-.. _cha:what-is-pyformex:
+.. _sec:what-is-pyformex:
 
-*******************
 What is |pyformex|?
-*******************
+===================
 
 You probably expect to find here a short definition of what |pyformex| is and
 what it can do for you. I may have to disappoint you: describing the essence
@@ -46,26 +45,35 @@ You will then probably have a better idea of what |pyformex| is.
 The initial intent of |pyformex| was the rapid design of three-dimensional
 structures with a geometry that can easier be obtained through mathematical
 description than through interactive generation of its subparts and
-assemblage thereof. Though surface and solid elements have been part of 
-|pyformex| right from the beginning, during the initial development of the program work was concentrated mostly on wireframe type structures. Still many of the examples included with the |pyformex| distribution are of frame type and most
-of the practical use of the program is in this area. There is also an extensive
-plugin for working with triangulated surfaces.
+assemblage thereof. Although the initial development of the program
+concentrated mostly on wireframe type structures, surface and solid elements
+have been part of |pyformex| right from the beginning.
+There is already an extensive plugin for working with triangulated surfaces, 
+and |pyformex| is increasingly being used to generate solid meshes of
+structures. 
+Still, many of the examples included with the |pyformex| distribution are of
+wireframe type, and so are most of the examples in the :doc:`tutorial`.
 
-The stent [#]_ structure in the figure :ref:`fig:wirestent-example` is a good
-illustration of what can do and what it was intended for. It is one of the many
-examples provided with .
+A good illustration of what |pyformex| can do and what it was intended for is 
+the stent [#]_ structure in the figure :ref:`fig:wirestent-example`. 
+It is one of the many examples provided with |pyformex|.
+
+.. _`fig:wirestent-example`:
+
+.. figure:: _static/images/wirestent.png
+   :align: center
+   :alt: A wire stent
+
+   WireStent example
 
 The structure is composed of 22032 line segments, each defined by 2 points.
 Nobody in his right mind would ever even try to input all the 132192 coordinates
-of all the points describing that structure.  With , one could define the
-structure by the following sequence of operations, illustrated in the figure
-:ref:`fig:wirestent-steps`:
+of all the points describing that structure.  
+With |pyformex|, one could define the structure by the following sequence of
+operations, illustrated in the figure :ref:`fig:wirestent-steps`:
 
-.. % figure{images/wirestent}
-.. % caption{WireStent example.}
-
-* Create a nearly planar base module of two crossing wires. (The wires have a
-  slight out-of-plane bend, to enable the crossing.)
+* Create a nearly planar base module of two crossing wires. The wires have a
+  slight out-of-plane bend, to enable the crossing.
 
 * Extend the base module with a mirrored and translated copy.
 
@@ -73,22 +81,31 @@ structure by the following sequence of operations, illustrated in the figure
 
 * Roll the planar grid into a cylinder.
 
-provides all the needed operations to define the geometry in this way.
+|pyformex| provides all the operations needed to define the geometry in this
+way.
+
+.. _`fig:wirestent-steps`:
+
+.. figure:: _static/images/wirestent.png
+   :align: center
+   :alt: A wire stent
+
+   Steps in building the WireStent example
 
 .. % figure{images/wirestent-1}
 .. % figure{images/wirestent-2}
 .. % figure{images/wirestent-3}
-.. % caption{Steps in building the WireStent example.}
 
-does not fit into a single category of traditional (mostly commercial) software
-packages, because it is not being developed as a program with a specific
-purpose, but rather as a collection of tools and scripts which we needed at some
-point in our research projects. Many of the tasks for which we now use could be
+|pyformex| does not fit into a single category of traditional (mostly 
+commercial) software packages, because it is not being developed as a 
+program with a specific purpose, but rather as a collection of tools 
+and scripts which we needed at some point in our research projects.
+Many of the tasks for which we now use |pyformex| could be
 done also with some other software package, like a CAD program or a matrix
 calculation package or a solid modeler/renderer or a finite element pre- and
-postprocessor. Each of these is very well suited for the task it was designed
-for, but none provides all the features of in a single consistent environment,
-and certainly not as free software.
+postprocessor. Each of these is probably very well suited for the task
+it was designed for, but none provides all the features of |pyformex|
+in a single consistent environment, and certainly not as free software.
 
 .. % \section{Rationale}
 .. % \label{sec:rationale}
@@ -97,29 +114,31 @@ and certainly not as free software.
 .. % genre Blender
 .. % (such as GiD)
 
-Perhaps the most important feature of is that it was primarily intended to be an
-easy scripting language for creating geometrical models of 3D-structures. The
-Graphical User Interface was only added as a convenient means to visualize the
-designed structure. can still run without user interface, and this makes it
-ideal for use in a batch toolchain. Anybody involved in the simulation of the
+Perhaps the most important feature of |pyformex| is that it was primarily
+intended to be an easy scripting language for creating geometrical models
+of 3D-structures. The Graphical User Interface was only added as a convenient
+means to visualize the designed structure.
+|pyformex| can still run without user interface, and this makes it ideal
+for use in a batch toolchain. Anybody involved in the simulation of the
 mechanical behaviour of materials and structures will testify that most of the
 work (often 80-90%) goes into the building of the model, not into the
 simulations itself. Repeatedly building a model for optimization of your
-structure then quickly becomes cumbersome, unless you use a tool like , allowing
-for automated and unattended building of model variants.
+structure quickly becomes cumbersome, unless you use a tool like |pyformex|,
+allowing for automated and unattended building of model variants.
 
-The author of , professor in structural engineering and heavy computer user
-since mainframe times, deeply regrets that computing skills of nowadays
-engineering students are often limited to using graphical interfaces of mostly
-commercial packages. This greatly limits their skills, because in their way of
-thinking: 'If there is no menu item to do some task, then it can not be done!'
-The hope to get some of them back into coding has been a stimulus in continuing
-our work on . The strength of the scripting language and the elegance of Python
-have already attracted many on this path.
+The author of  |pyformex|, professor in structural engineering and heavy
+computer user since mainframe times, deeply regrets that computing skills
+of nowadays engineering students are often limited to using graphical
+interfaces of mostly commercial packages.
+This greatly limits their skills, because in their way of thinking: 
+'If there is no menu item to do some task, then it can not be done!'
+The hope to get some of them back into coding has been a stimulus in
+continuing our work on |pyformex|. The strength of the scripting language
+and the elegance of Python have already attracted many users on this path.
 
-Finally, is, and will always be, free software in both meanings of free:
-guaranteeing your freedom (see :ref:`sec:license`) and without charging a fee
-for it.
+Finally, |pyformex| is, and will always be, free software in both meanings
+of free: guaranteeing your freedom (see :ref:`sec:license`) and without
+charging a fee for it.
 
 .. % \section{History}
 .. % \label{sec:history}
@@ -130,14 +149,14 @@ for it.
 License and Disclaimer
 ======================
 
-is ©2004-2008 Benedict Verhegghe
+|pyformex| is ©2004-2008 Benedict Verhegghe
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public Licensehttp://www.gnu.org/licenses/gpl.html
 as published by the Free Software Foundation; either version 3 of the License,
 or (at your option) any later version.
 
-Full details of the license are available in appendix :ref:`cha:license`, in the
+Full details of the license are available in appendix :ref:`sec:license`, in the
 file COPYING included with the distribution and under the Help->License item of
 the Graphical User Interface.
 
@@ -150,7 +169,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 Installation
 ============
-
 
 .. _sec:prerequisites:
 
@@ -259,7 +277,7 @@ future, but it certainly is not our primary concern. Still, any feedback on
 .. _sec:running:
 
 Running
-=======
+-------
 
 To run , simply enter the command pyformex in a terminal window. This will start
 the Graphical User Interface (GUI), from where you can launch examples or load,
@@ -277,8 +295,9 @@ Therefore, we will only explain here the more commonly used ones.
 By default, sends diagnostical and informational messages to the terminal from
 which the program was started. Sometimes this may be inconvenient, e.g. because
 the user has no access to the starting terminal. You can redirect these messages
-to the message window of the GUI by starting pyformex with the commandpyformex
---redirect. The desktop starters installed by the installation procedure use
+to the message window of the GUI by starting pyformex with the command 
+``pyformex --redirect``. 
+The desktop starters installed by the installation procedure use
 this option.
 
 In some cases the user may want to use the mathematical power of without the
@@ -398,9 +417,10 @@ continue by studying the tutorial in chapter :ref:`cha:tutorial`.
 
 .. rubric:: Footnotes
 
-.. [#] A stent is a tube-shaped structure that is e.g. used to reopen (and keep open)
-   obstructed blood vessels.
+.. [#] A stent is a tube-shaped structure that is e.g. used to reopen
+   (and keep open) obstructed blood vessels.
 
-.. [#] The ``Numarray`` package, which was used up until 0.3, is no longer supported
+.. [#] The ``Numarray`` package, which was used up until 0.3, is no longer
+   supported.
 
 .. End

@@ -24,8 +24,8 @@ Parts of the documentation:
 
    front
    intro
-   .. tutorial
-   canvas
+   tutorial
+   .. canvas
    .. gui
    .. config
    .. examples

@@ -1,0 +1,1308 @@
+.. $Id$  -*- rst -*-
+.. pyformex documentation --- tutorial
+
+.. include:: defines.inc
+.. include:: ../website/src/links.inc
+
+.. _cha:tutorial:
+
+*****************
+pyFormex tutorial
+*****************
+
+.. _sec:intro-tut:
+
+The philosophy
+==============
+
+is a Python implementation of Formex algebra. Using , it is very easy to
+generate large geometrical models of 3D structures by a sequence of mathematical
+transformations. It is especially suited for the automated design of spatial
+structures. But it can also be used for other tasks, like operating on 3D
+geometry obtained from other sources, or for finite element pre- and
+postprocessing, or just for creating some nice pictures.
+
+By writing a simple script, a large and complex geometry can be created by
+copying, translating, rotating, or otherwise transforming geometrical entities.
+will interpret the script and draw what you have created. This is clearly very
+different from the traditional (mostly interactive) way of creating a
+geometrical model, like is done in most CAD packages. There are some huge
+advantages in using :
+
+* It is especially suited for the automated design of spatial frame structures.
+  A dome, an arc, a hypar shell, , when constructed as a space frame, can be
+  rather difficult and tedious to draw with a general CAD program; using scripted
+  mathematical transformations however, it may become a trivial task.
+
+* Using a script makes it very easy to apply changes in the geometry: you simply
+  modify the script and let re-execute it. You can easily change any geometrical
+  parameter in any way you want: set directly, interactively ask the user,
+  calculate from some formula, read from a file, .  angle, the radius of a dome,
+  the ratio :math:`f/l` of an arc. Using CAD, you would have often have to
+  completely redo your drawing work. This idea of scripted geometry building is
+  illustrated in figure :ref:`fig:scallops`: all these domes were created with the
+  same script, but with different values of some parameters.
+
+  .. % \begin{figure}[ht]
+  .. % \centering
+  .. % \begin{makeimage}
+  .. % \end{makeimage}
+  .. % \begin{latexonly}
+  .. % \includegraphics[width=5cm]{images/scallopdome-000}
+  .. % \includegraphics[width=5cm]{images/scallopdome-001}
+  .. % \includegraphics[width=5cm]{images/scallopdome-002}
+  .. % \end{latexonly}
+  .. % \begin{htmlonly}
+  .. % \htmladdimg{../images/scallopdome-000.png}
+  .. % \htmladdimg{../images/scallopdome-001.png}
+  .. % \htmladdimg{../images/scallopdome-002.png}
+  .. % \end{htmlonly}
+  .. % \caption{Same script, different domes} \label{fig:scallops}
+  .. % \end{figure}
+
+* At times there will be operations that are easier to perform through an
+  interactive Graphical User Interface (GUI). The GUI gives access to many of its
+  functions. Especially occasional and untrained users will benefit from it. As
+  everything else in , the GUI is completely open and can be modified at will by
+  the user's application scripts, to provide an interface with either extended or
+  restructed functionality.
+
+.. % As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough.
+
+.. % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+.. _sec:getting-started:
+
+Getting started
+===============
+
+This should include a short introduction to Python and Numpy
+
+This section holds some basic information on how to use Python and .
+
+* Start the GUI by entering the command *pyformex* in a terminal. Depending on
+  your instalation, there may also be a menu item in the application menu to start
+  , or even a quickstart button in the panel. Using the terminal however can still
+  be useful, especially in the case of errors, because otherwise the GUI might
+  suppress some of the error messages that normally are sent to the terminal.
+
+* To create a new -script, just open a new file with your favorite text editor
+  and save it under a name with extension '.py'.
+
+* A script should start with a line #!/usr/bin/env pyformex
+
+* To edit the script, you can
+
+* open it with your favorite text editor.
+
+* :menuselection:`File --> Open` ---  At this point, the script will be loaded
+    but nothing will happen.  ---  :menuselection:`File --> Edit` ---  The script
+    will now open in the default text editor. This default editor can be changed in
+    the user configuration file (:file:`/.pyformexrc`) or using the
+    :menuselection:`Settings --> Commands` menu option.
+
+* To play a script, you can
+
+* :menuselection:`File --> Open` ---  :menuselection:`File --> Play`
+
+* Type *pyformex myproject.py* in the terminal. This will start the GUI and load
+    your script at the same time.  ---  :menuselection:`File --> Play`
+
+* To play a script without using the GUI (for example in finite element
+    preprocessing, if you only want to write an             output file, without
+    drawing the structure), type *pyformex --nogui myproject.py*
+
+* When writing a script in Python, there are some things you should keep in
+  mind:
+
+* When using a function that requires arguments, an argument list must have any
+    positional arguments followed by any keyword arguments, where the keywords must
+    be chosen from the formal parameter names. It's not important whether a formal
+    parameter has a default value or not. No argument may receive a value more than
+    once -- formal parameter names corresponding to positional arguments cannot be
+    used as keywords in the same calls.
+
+    Simply put: you can either set the arguments in the right order and only give
+    their value, or you can give arguments by their name and value. This last option
+    holds some advantages: not only is it easier to check what you did, but
+    sometimes a function has many arguments with default values and you only want to
+    change a few. If this isn't entirely clear yet, just look at the examples later
+    in this tutorial or check the Python tutorial.
+
+* Indentation is essential in Python. Indentation is Python's way of grouping
+    statements. In straight-forward scripts, indentation is not needed (and
+    forbidden!), but when using a for-statement for example, the body of the
+    statement has to be indented. A small example might make this clear. Also notice
+    the ':'   ::
+
+       print 'properties'
+       for key, item in properties.iteritems():
+           print key, item
+
+* If you want to use functions from a seperate module (like :mod:`properties`),
+    you add a line on top of the script  ::
+
+       from properties import *
+
+    All functions from that module are now available.
+
+* The hash character, "#", is used to start a comment in Python.
+
+* Python is case sensative.
+
+* Python by default uses integer math on integer arguments!
+
+  .. % Therefore: always create the array data with a float type!
+  .. % (this will be mostly in functions array() and zeros()
+
+.. % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+.. _sec:geom:
+
+Creating geometrical models
+===========================
+
+
+The Formex data model
+---------------------
+
+.. index::
+   single: Formex
+   single: plexitude
+
+The most important geometrical object in is the :class:`Formex` class. A
+:class:`Formex` can describe a variety of geometrical objects: points, lines,
+surfaces, volumes. The most simple geometrical object is the point, which in
+three dimensions is only determined by its coordinates ``(``\ x,y,z), which in
+will be numbered ``(``\ 0,1,2) for convenience. Higher order geometrical objects
+are defined by a collection of points. In terms, we call the number of points of
+an object its *plexitude*.
+
+.. index:: single: element
+
+A Formex is a collection of geometrical objects of the same plexitude. The
+objects in the collection are called the *elements* of the :class:`Formex`. A
+:class:`Formex` whose elements have plexitude :math:`n` is also called an
+:math:`n`\ -plex :class:`Formex`. Internally, the coordinates of the points are
+stored in a numerical array [#]_ with three dimensions. The coordinates of a
+single point are stored along the last axis (2) of the :class:`Formex`; all the
+points of an element are stored along the second axis (1); different elements
+are stored along the first axis (0) of the :class:`Formex`. The figure
+:ref:`fig:formex` schematizes the structure of a :class:`Formex`.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics{images/Formex}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/Formex.png}
+.. % \end{htmlonly}
+.. % \caption{The structure of a Formex}
+.. % \label{fig:formex}
+.. % \end{figure}
+
+.. warning::
+
+   The beginning user should be aware not to confuse the three axes of a
+   :class:`Formex` with the axes of the 3D space. Both are numbered 0..2. The three
+   coordinate axes form the components of the last axis of a Formex.
+
+For simplicity of the implemented algorithms, internally only deals with 3D
+geometry. This means that the third axis of a :class:`Formex` always has length
+3. You can however import 2D geometry: all points will be given a third
+coordinate :math:`z=0.0`. If you restrict your operations to transformations in
+the :math:`(x,y)`\ -plane, it suffices to extract just the first two coordinates
+to get the transformed 2D geometry.
+
+The :class:`Formex` object ``F`` can be indexed just like a :math:`NumPy`
+numerical array: ``F[i]`` returns the element with index :math:`i` (counting
+from :math:`0`). For a :class:`Formex` with plexitude :math:`n`, the result will
+be an array with shape :math:`(n,3)`, conttaining all the points of the element.
+Then, ``F[i][j]`` will be a :math:`(3,)`\ -shaped array containing the
+coordinates of point :math:`j` of element :math:`i`. Finally, ``F[i][j][k]`` is
+a floating point value representing a single coordinate of that point.
+
+.. % A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
+.. % thought of as a geometrical shape (2 points form a line segment, 3 points
+.. % make a triangle, ...) or as an element in FE terms. But it really is up to
+.. % the user as to how this set of points is to be interpreted.
+.. % Finally, the whole Formex represents a set of such elements.
+.. % Additionally, a Formex may have a property set, which is an 1-D array of
+.. % integers. The length of the array is equal to the length of axis 0 of the
+.. % Formex data (i.e. the number of elements in the Formex). Thus, a single
+.. % integer value may be attributed to each element. It is up to the user to
+.. % define the use of this integer (e.g. it could be an index in a table of
+.. % element property records).
+.. % If a property set is defined, it will be copied together with the Formex
+.. % data whenever copies of the Formex (or parts thereof) are made.
+.. % Properties can be specified at creation time, and they can be set,
+.. % modified or deleted at any time. Of course, the properties that are
+.. % copied in an operation are those that exist at the time of performing
+.. % the operation.
+
+
+.. _subsec:create:
+
+Creating a Formex
+-----------------
+
+
+Creating a Formex using coordinates
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The first and most useful way to create a Formex is by specifying it's nodes and
+elements in a 3D-list.   ::
+
+   F=Formex([[[0,0],[1,0],[1,1],[0,1]]])
+
+This creates a Formex F, which has the nodes (0,0), (1,0), (1,1) and (0,1).
+These nodes are all part of a single element, thus creating a square plane. This
+element is also the entire Formex. On the other hand, if you would change the
+position of the square brackets like in the following example, then you'd create
+a Formex F which is different from the previous. The nodes are the same, but the
+connection is different. The nodes (0,0) and (1,0) are linked together by an
+element, and so are the nodes (1,1) and (0,1). The Formex is now a set of 2
+parallel bars, instead of a single square plane.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=4cm]{images/square}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/square.png}
+.. % \end{htmlonly}
+.. % \caption{A very simple Formex}
+.. % \label{fig:square}
+.. % \end{figure}
+
+::
+
+   F=Formex([[[0,0],[1,0]],[[1,1],[0,1]]])
+
+If we want to define a Formex, similar to the square plane, but consisting of
+the 4 edges instead of the actual plane, we have to define four elements and
+combine them in a Formex. This is *not* the same Formex as fig
+:ref:`fig:square`, although it looks exactly the same.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=4cm]{images/parallel}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/parallel.png}
+.. % \end{htmlonly}
+.. % \caption{Same nodes, different Formex}
+.. % \end{figure}
+
+::
+
+   F=Formex([[[0,0],[0,1]], [[0,1],[1,1]], [[1,1],[1,0]], [[1,0],[0,0]]])
+
+The previous examples were limited to a 2-D environment for simplicity's sake.
+Of course, we could add a third dimension. For instance, it's no problem
+defining a pyramid consisting of 8 elements ('bars').  ::
+
+   F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0], 
+   	[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
+   	[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+
+However, as you can see, even in this very small example the number of nodes,
+elements and coordinates you have to declare becomes rather large. Defining
+large Formices using this method would not be practical. This problem is easily
+overcome by copying, translating, rotating,... a smaller Formex --- as will be
+explained in :ref:`subsec:changing` --- or by using patterns.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=6cm]{images/pyramide}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/pyramide.png}
+.. % \end{htmlonly}
+.. % \caption{A pyramid}
+.. % \label{fig:pyramid}
+.. % \end{figure}
+
+
+Creating a Formex using patterns
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Another way of creating a Formex, is by using the coordinate generating
+functions :func:`pattern` and mpattern. These functions create a series of
+coordinates from a simple string, by interpreting each of the characters of the
+string as a single unit step in one of the cordinate directions, or as some
+other simple action. These functions thus are very valuable in creating geometry
+where the points lie on a regular grid.
+
+In this case, a line segment pattern is created from a string.
+
+The function :func:`pattern(s)` creates a list of line segments where all nodes
+lie on the gridpoints of a regular grid with unit step. The first point of the
+list is [0,0,0]. Each character from the given string *s* is interpreted as a
+code specifying how to move to the next node. Currently defined are the
+following codes: ---  0 = goto origin [0,0,0] ---  1..8 move in the x,y plane
+---  9 remains at the same place ---  When looking at the plane with the x-axis
+to the right, ---  1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 =
+SW, 8 = SE. ---  Adding 16 to the ordinal of the character causes an extra move
+of +1 in the z-direction. Adding 48 causes an extra move of -1. This means that
+'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra z +/-=
+1.               The special character '``\``' can be put before any character
+to make the move without making a connection. The effect of any other character
+is undefined.
+
+This method has important restrictions, since it can only create lines on a
+regular grid. However, it can be a much easier and shorter way to define a
+simple Formex. This is illustrated by the difference in length between the
+previous creation of a square and the next one, although they define the same
+Formex (figure :ref:`fig:square`).  ::
+
+   F=Formex(pattern('1234'))
+
+Some simple patterns are defined in :mod:`simple.py` and are ready for use.
+These patterns are stacked in a dictionary called 'Patterns'. Items of this
+dictionary can be accessed like Patterns['cube'].  ::
+
+   #!/usr/bin/env pyformex
+   from simple import *
+   c=Formex(pattern(Pattern['cube']))
+   clear();draw(c)
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=6cm]{images/cube}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/cube.png}
+.. % \end{htmlonly}
+.. % \caption{A cube}
+.. % \label{fig:cube}
+.. % \end{figure}
+
+
+Creating a Formex using coordinates from a file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In some cases, you might want to read coordinates from a file an combine them
+into a Formex. This is possible with the module :mod:`file2formex` and it's
+function :func:`fileFormex`. Each point is connected to the following, forming
+an element (bar).
+
+The next file ('square.txt') would create the same square as before(figure
+:ref:`fig:square`).  ::
+
+   0,0,0
+   0,1,0
+   1,1,0
+   1,0,0
+
+::
+
+   #!/usr/bin/env pyformex
+   from file2formex import *
+   F=fileFormex('square.text', closed='yes')
+
+
+Drawing a Formex
+----------------
+
+.. _subsec:drawing:
+
+Of course, you'd want to see what you have created. This is accomplished by the
+function :func:`draw`. The next example creates figure :ref:`fig:pyramid`.   ::
+
+   F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0], 
+   	[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
+   	[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+   draw(F)
+
+It also possible to draw multiple Formices at the same time.  ::
+
+   from simple import *
+   F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0],
+   	[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
+   	[[1,1,0],[0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]]).setProp(1)	
+   G=Formex(pattern(Pattern['cube'])).setProp(3)
+   draw(F+G)
+
+It might be important to realize that even if you don't draw a particular
+Formex, that doesn't mean you didn't create it!
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=6cm]{images/house}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/house.png}
+.. % \end{htmlonly}
+.. % \caption{Drawing multiple Formices}
+.. % \label{fig:multiple}
+.. % \end{figure}
+
+Now, when you are creating a large geometry, you might be interested in seeing
+the different steps in the creation. To remove all previously drawn Formices,
+you can use :func:`clear`  what sweepes the screen clean. If you want to see a
+certain step in the creation longer than the default time, use :func:`sleep(t)`,
+with *t* the delay (in seconds) before executing the next command.  ::
+
+   F=Formex(pattern('164'))
+   draw(F)
+   G=F.replic(5,1,0)
+   clear()
+   draw(G)
+
+
+.. _subsec:propnr:
+
+Adding property numbers
+-----------------------
+
+Apart from the coordinates of its points, a Formex object can also store a set
+of property numbers. This is a set of integers, one for every element of the
+Formex. The property numbers are stored in an attribute :attr:`p` of the Formex.
+They can be set, changed or deleted, and be used for any purpose the user wants,
+e.g. to number the elements in a different order than their appearence in the
+coordinate array. Or they can be used as pointers into a large database that
+stores all kind of properties for that element. Just remember that a Formex
+either has no property numbers, or a complete set of numbers: one for every
+element.
+
+Property numbers can play an important role in the modelling process, because
+they present some means of tracking how the resulting Formex was created.
+Indeed, each transformation of a Formex that preserves its structure, will also
+preserve the property numbers. Concatenation of Formices with property numbers
+will also concatenate the property numbers. If any of the concatenated Formices
+does not have property numbers, it will receive value 0 for all its elements. If
+all concatenated Formices are without properties, so will be the resulting
+Formex.
+
+On transformations that change the structure of the Formex, such as replication,
+each element of the created Formex will get the property number of Formex
+element it was generated from.
+
+To create a Formex with property numbers, just specify them as a second argument
+in the constructor. The following example creates a Formex consisting of two
+triangles, one with property number 1, the second with property 3. The following
+lines show the creation of the four Formices displayed in figure
+:ref:`fig:props`, where elements with proprty value 1 are shown in red, those
+with property value 3 are shown in blue.   ::
+
+   >>> F0 = Formex(mpattern('12-34'),[1,3])
+   >>> F1 = F0.replic2(4,2)
+   >>> F2 = F1 + F1.mirror(1)
+   >>> F3 = F2 + F2.rotate(180.,1)
+
+To create the properties on a Formex without, you should always use the
+:meth:`setProp` method. This ensures that the properties array is generated with
+the correct type and shape. If needed, the supplied values will be repeated to
+match the number of elements in the Formex. Once the :attr:`p` attribute is
+created, you can safely change the value of any of the property numbers.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=10cm]{images/props}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/props.png}
+.. % \end{htmlonly}
+.. % \caption{A Formex with property numbers drawn as colors}
+.. % \label{fig:props}
+.. % \end{figure}
+
+::
+
+   >>> F = Formex(mpattern('12-34-32-14'))
+   >>> F.setProp([1,3])
+   >>> print F.p
+       [1 3 1 3]
+   >>> F.p[2] = 5
+   >>> print F.p
+       [1 3 5 3]   
+
+When drawing a Formex having property numbers with default draw options (i.e. no
+color specified), pyFormex will use the property numbers as indices in a color
+table, so different properties are shown in different colors. The default color
+table has eight colors: ``[ black, red, green, blue, cyan, magenta, yellow,
+white]`` and will wrap around if a property value larger than 7 is used. You can
+however specify any other and larger colorset to be used for drawing the
+property colors.
+
+
+Saving images
+-------------
+
+.. _subsec:images:
+
+After drawing the Formex, you might want to save the image. This is very easy to
+do: ---  :menuselection:`File --> Save Image` ---  The filetype should be 'bmp',
+'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf' or 'tex'.  ---  To
+create a better looking picture, several settings can be changed:
+
+* Change the background color :menuselection:`Settings --> Background Color`
+
+* Use a different (bigger) linewidth :menuselection:`Settings --> Linewidth`
+
+* Change the canvas size. This prevents having to cut and rescale the figure
+  with an image manipulation program (and loosing quality by doing so).
+  :menuselection:`Settings --> Canvas Size`
+
+It is also possible to save a series of images. This can be especially useful
+when playing a script which creates several images, and you would like to save
+them all.  For example, figure :ref:`fig:wirestent-steps`, which shows the
+different steps in the creation of the WireStent model, was created this way.
+---  :menuselection:`File --> Toggle MultiSave` ---
+
+
+.. _subsec:info:
+
+Information about a Formex
+--------------------------
+
+The Formex class has several methods related to abtaining information obout the
+object. We refer to the reference manual in chapter :ref:`cha:reference` for a
+full list. Some of the most interesting and often used ones are:
+
++-------------------+----------------------------------------------+
+| Function          | Description                                  |
++===================+==============================================+
+| :exc:`F.nelems()` | Return the number of elements in the Formex. |
++-------------------+----------------------------------------------+
+| :exc:`F.nplex()`  | Return the plexitude (the number of point in |
+|                   | each element) of the Formex.                 |
++-------------------+----------------------------------------------+
+| :exc:`F.prop()`   | Return the properties array (same as F.p).   |
++-------------------+----------------------------------------------+
+| :exc:`F.bbox()`   | Return the bounding box of the Formex.       |
++-------------------+----------------------------------------------+
+| :exc:`F.center()` | Return the center of the Formex.             |
++-------------------+----------------------------------------------+
+
+
+.. _subsec:changing:
+
+Changing the Formex
+-------------------
+
+Until now, we've only created simple Formices. The strength of however is that
+it is very easy to generate large geometrical models by a sequence of
+mathematical transformations. After initiating a basic Formex, it's possible to
+transform it by using copies, translations, rotations, projections,...
+
+There are many transformations available, but this is not the right place to
+describe them all. This is what the reference manual in chapter
+:ref:`cha:reference` is for. A summary of all possible transformations and
+functions can be found there.
+
+To illustrate some of these transformations and the recommended way of writing a
+script, we will analyse some of the examples. More of these interesting examples
+are found in :file:`installdir/examples`. Let's begin with the example
+:file:`Spiral.py`.
+
+
+.. include:: _static/scripts/Spiral.py
+   :literal:
+
+During this first read-through, you will have noticed that every step is drawn.
+Of course, this is not necessary, but it can be useful. And above all, it is
+very educational for use in a tutorial...
+
+The next important thing is that parameters were used. It's recommended to
+always do this, especially when you want to do a parametric study of course, but
+it can also be very convenient if at some point you want to change the geometry
+(for example when you want to re-use the script for another application).
+
+A simple function :func:`drawit` is defined for use in this script only. This
+function only provides a shorter way of drawing Formices, since it combines
+:func:`clear` and :func:`draw`.
+
+Now, let's dissect the script. ::
+
+   def drawit(F,view='front'):
+       clear()
+       draw(F,view)
+
+This is a small function that is only defined in this script. It clears the
+screen and draws the Formex at the same time.  ::
+
+   m = 36 # number of cells along torus big circle
+   n = 10 # number of cells along torus small circle
+
+These are the parameters. They can easily be changed, and a whole new spiral
+will be created without any extra effort. The first step is to create a basic
+Formex. In this case, it's a triangle which has a different property number for
+every edge.  ::
+
+   F = Formex(pattern("164"),[1,2,3]); drawit(F)  
+
+.. _`fig:basic-formex`:
+
+.. figure:: _static/images/spiral-000.png
+   :align: center
+   :alt: The basic Formex
+
+   The basic Formex
+
+This basic Formex is copied 'm' times in the 0-direction with a translation
+step of '1' (the length of an edge of the triangle). After that, the new  Formex
+is copied 'n' times in the 1-direction with a translation step of '1'.  Because
+of the recursive definition (F=F.replic), the original Formex F is  overwritten
+by the transformed one.  ::
+   F = F.replic(m,1,0); drawit(F)
+   F = F.replic(n,1,1); drawit(F)
+
+Now a copy of this last Formex is translated in direction '2' with a
+translation step of '1'. This necessary for the transformation into a cilinder.
+The result of all previous steps is a rectangular pattern with the desired
+dimensions, in a plane z=1.  ::
+
+   F = F.translate(2,1); drawit(F,'iso')
+
+This pattern is rolled up into a cilinder around the 2-axis.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=6cm]{images/spiral-003}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/spiral-003.png}
+.. % \end{htmlonly}
+.. % \caption{The rectangular pattern}
+.. % \end{figure}
+
+::
+
+   F = F.cylindrical([2,1,0],[1.,360./n,1.]); drawit(F,'iso')
+
+This cilinder is copied 5 times in the 2-direction with a translation step of
+'m' (the lenght of the cilinder).
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=6cm]{images/spiral-004}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/spiral-004.png}
+.. % \end{htmlonly}
+.. % \caption{The cylinder}
+.. % \end{figure}
+
+::
+
+   F = F.replic(5,m,2); drawit(F,'iso')
+
+The next step is to rotate this cilinder -10 degrees around the 0-axis.  This
+will determine the pitch angle of the spiral.  ::
+
+   F = F.rotate(-10,0); drawit(F,'iso')
+
+This last Formex is now translated in direction '0' with a translation step of
+'5'.
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=6cm]{images/spiral-006}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/spiral-006.png}
+.. % \end{htmlonly}
+.. % \caption{The new cylinder}
+.. % \end{figure}
+
+::
+
+   F = F.translate(0,5); drawit(F,'iso')
+
+Finally, the Formex is rolled up, but around a different axis then before.  Due
+to the pitch angle, a spiral is created. If the pitch angle would be 0  (no
+rotation of -10 degrees around the 0-axis), the resulting Formex  would be a
+torus.   ::
+
+   F = F.cylindrical([0,2,1],[1.,360./m,1.]); drawit(F,'iso')
+   drawit(F,'right')
+
+.. % \begin{figure}[ht]
+.. % \centering
+.. % \begin{makeimage}
+.. % \end{makeimage}
+.. % \begin{latexonly}
+.. % \includegraphics[width=5cm]{images/spiral-007}
+.. % \includegraphics[width=5cm]{images/spiral-008}
+.. % \end{latexonly}
+.. % \begin{htmlonly}
+.. % \htmladdimg{../images/spiral-007.png}
+.. % \htmladdimg{../images/spiral-008.png}
+.. % \end{htmlonly}
+.. % \caption{The spiral}
+.. % \end{figure}
+
+
+.. _subsec:femodel:
+
+Converting a Formex to a Finite Element model
+---------------------------------------------
+
+The :meth:`feModel` method is important in exporting the geometry to finite
+element (FE) programs. A Formex often contains many points with (nearly) the
+same coordinates. In a finite element model, theses points have to be merged
+into a single nod, to express the continuity of the material. This is exactly
+what\ :meth:`feModel` does. It returns a tuple of two numpy arrays
+(nodes,elems), where
+
+* nodes is a float array with shape (?,3), containing the coordinates of the
+  merged points (nodes),
+
+* elems is an integer array with shape (F.nelems(),F.nplex()), describing each
+  element by a list of node numbers. The elements and their nodes are in the same
+  order as in F.
+
+::
+
+   >>> from simple import *
+   >>> F = Formex(pattern(Pattern['cube']))
+   >>> draw(F)
+   >>> nodes,elems = F.feModel()
+   >>> print 'Nodes',nodes
+   >>> print 'Elements',elems
+
+   Nodes
+   [[ 0.  0.  0.]
+    [ 1.  0.  0.]
+    [ 0.  1.  0.]
+    [ 1.  1.  0.]
+    [ 0.  0.  1.]
+    [ 1.  0.  1.]
+    [ 0.  1.  1.]
+    [ 1.  1.  1.]]
+   Elements
+   [[0 1]
+    [1 3]
+    [3 2]
+    [2 0]
+    [0 4]
+    [1 5]
+    [3 7]
+    [2 6]
+    [4 5]
+    [5 7]
+    [7 6]
+    [6 4]]
+
+The reverse operation of transforming a finite element model back into a Formex
+is quite simple: ``Formex(nodes[elems])`` will indeed be identical to the
+original F (within the tolerance used in merging of the nodes). ::
+
+   >>> G = Formex(nodes[elems])
+   >>> print allclose(F.f,G.f)
+   True
+
+The ``allclose`` funcion in the second line tests that all coordinates in bopth
+arrays are the same, within a small tolerance.
+
+.. % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+.. _sec:props:
+
+Assigning properties to geometry
+================================
+
+*As of version 0.7.1, the way to define properties for elements of the geometry
+has changed thoroughly. As a result, the proprty system has become much more
+flexibel and powerful, and can be used for Formex data structures as well as for
+TriSurfaces and Finite Element models.*
+
+With properties we mean any data connected with some part of the geometry other
+than the coordinates of its points or the structure of points into elements.
+Also, values that can be calculated purely from the coordinates of the points
+and the structure of the elements are usually not considerer properties.
+
+Properties can e.g. define material characteristics, external loading and
+boundary conditions to be used in numerical simulations of the mechanics of a
+structure. The properties module includes some specific functions to facilitate
+assigning such properties. But the system is general enough to used it for any
+properties that you can think of.
+
+Properties are collected in a :class:`PropertyDB` object. Before you can store
+anything in this database, you need to create it. Usually, you will start with
+an empty database.  ::
+
+   P = PropertyDB()
+
+
+.. _sec:general-properties:
+
+General properties
+------------------
+
+Now you can start entering property records into the database. A property record
+is a lot like a Python dict object, and thus it can contain nearly anything. It
+is implemented however as a :class:`CascadingDict` object, which means that the
+key values are strings and can also be used as attributes to address the value.
+Thus, if P is a property record, then a field named key can either be addressed
+as P['key'] or as P.key. This implementation was choosen for the convenience of
+the user, but has no further advantages over a normal dict object. You should
+not use any of the methods of Python's dict class as key in a property record:
+it would override this method for the object.
+
+The property record has four more reserved (forbidden) keys: kind, tag, set,
+setname and nr. The kind and nr should never be set nor changed by the user.
+kind is used internally to distinguish among different kind of property records
+(see :ref:`sec:node-properties`). It should only be used to extend the
+:class:`PropertyDB` class with new kinds of properties, e.g. in subclasses. nr
+will be set automatically to a unique record number. Some application modules
+use this number for identification and to create automatic names for property
+sets.
+
+The tag, set and setname keys are optional fields and can be set by the user.
+They should however only be used for the intended purposes explained hereafter,
+because they have a special meaning for the database methods and application
+modules.
+
+The tag field can be used to attach an identification string to the property
+record. This string can be as complex as the user wants and its interpretation
+is completely left to the user. The :class:`ProeprtyDB` class just provides an
+easy way to select the records by their tag name or by a set of tag names. The
+set and setname fields are treated further in :ref:`sec:set-and-setname`.
+
+So let's create a property record in our database. The Prop() method does just
+that. It also returns the property record, so you can directly use it further in
+your code.  ::
+
+   >>> Stick = P.Prop(color='green',name='Stick',weight=25, \
+           comment='This could be anything: a gum, a frog, a usb-stick,...'})
+   >>> print Stick
+
+     color = green
+     comment = This could be anything: a gum, a frog, a usb-stick,...
+     nr = 0
+     name = Stick
+     weight = 25
+
+Notice the auto-generated nr field. Here's another example, with a tag::
+
+   >>> author = P.Prop(tag='author',name='Alfred E Neuman',\
+           address=CascadingDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
+   >>> print author
+
+     nr = 1
+     tag = author
+     name = Alfred E Neuman
+     address = 
+       city = Gent
+       street = Krijgslaan
+       country = Belgium
+
+This example shows that record values can be complex structured objects. Notice
+how the :class:`CascadingDict` object is by default printed in a very readible
+layout, offsetting each lower level dictionary two more postions to the right.
+
+The :class:`CascadingDict` has yet another fine characteristic: if an attribute
+is not found in the toplevel, all values that are instances of
+:class:`CascadingDict` or :class:`Dict` (but not the normal Python dict) will be
+searched for the attribute. If needed, this searching is even repeated in the
+values of the next levels, and further on, thus cascading though all levels of
+:class:`CascadingDict` structures until the attribute can eventually be found.
+The cascading does not proceed through values in a :class:`Dict`. An attribute
+that is not found in any of the lower level dictionaries, will return a None
+value.
+
+If you set an attribute of a :class:`CascadingDict`, it is always set in the
+toplevel. If you want to change lower level attributes, you need to use the full
+path to it.  ::
+
+   >>> print author.street
+     Krijgslaan
+   >>> author.street = 'Voskenslaan'
+   >>> print author.street
+     Voskenslaan
+   >>> print author.address.street
+     Krijgslaan
+   >>> author.address.street = 'Wiemersdreef'
+   >>> print author.address.street
+     Wiemersdreef
+   >>> author = P.Prop(tag='author',alias='John Doe',\
+           address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
+   >>> print author
+
+     nr = 2
+     tag = author
+     alias = John Doe
+     address = {'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'} 
+
+In the examples above, we have given a name to the created property records, so
+that we could address them in the subsequent print and field assigment
+statements. In most cases however, it will be impractical and unnecessary to
+give your records a name. They all are recorded in the :class:`PropertyDB`
+database, and will exist as long as the database variable lives. There should be
+away though to request selected data from that database. The :meth:`getProp`
+method returns a list of records satisfying some conditions. The examples below
+show how it can be used. ::
+
+   >>> for p in P.getProp(rec=[0,2]):
+           print p.name
+   Stick
+   John Doe
+   >>>  for p in P.getProp(tag=['author']):
+           print p.name
+   None
+   John Doe
+   >>>  for p in P.getProp(attr=['name']):
+           print p.nr
+   0
+   2
+   >>>  for p in P.getProp(tag=['author'],attr=['name']):
+           print p.name
+   John Doe
+
+The first call selects records by number: either a single record number or a
+list of numbers can be specified. The second method selects records based on the
+value of their tag field. Again a single tag value or a list of values can be
+specified. Only those records having a 'tag' filed matching any of the values in
+the list will be returned. The third selection method is based on the existence
+of some attribute names in the record. Here, always a list of attribute names is
+required. Records are returned that posess all the attributes in the list,
+independent from the value of those attributes. If needed, the user can add a
+further filtering based on the attribute values. Finally, as is shown in the
+last example, all methods of record selection can be combined. Each extra
+condition will narrow the selection further down.
+
+
+.. _sec:set-and-setname:
+
+Using the  set and  setname fields
+----------------------------------
+
+In the examples above, the property records contained general data, not related
+to any geometrical object. When working with large geometrical objects (whether
+:class:`Formex` or other type), one often needs to specify properties that only
+hold for some of the elements of the object.
+
+The set can be used to specify a list of integer numbers identifying a
+collection of elements of the geometrical object for which the current property
+is valid. Absence of the set usually means that the property is assigned to all
+elements; however, the property module itself does not enforce this behavior: it
+is up to the application to implement it.
+
+Any record that has a set field, will also have a setname field, whose value is
+a string. If the user did not specify one, a set name will be auto-generated by
+the system. The setname field can be used in other records to refer to the same
+set of elements without having to specify them again. The following examples
+will make this clear. ::
+
+   >>> P.Prop(set=[0,1,3],setname='green_elements',color='green')
+       P.Prop(setname='green_elements',transparent=True)
+
+   >>> a = P.Prop(set=[0,2,4,6],thickness=3.2)
+       P.Prop(setname=a.setname,material='steel')
+
+   >>> for p in P.getProp(attr=['setname']):
+           print p
+
+   color = green
+   nr = 3
+   set = [0 1 3]
+   setname = green_elements
+
+   nr = 4
+   transparent = True
+   setname = green_elements
+
+   nr = 5
+   set = [0 2 4 6]
+   setname = Set_5
+   thickness = 3.2
+
+   nr = 6
+   material = steel
+   setname = Set_5
+
+In the first case, the user specifies a setname himself. In the second case, the
+auto-generated name is used. As a convenience, the user is allowed to write
+set=name instead of setname=name when referring to an already defined set.   ::
+
+   >>> P.Prop(set='green_elements',transparent=False)
+       for p in P.getProp(attr=['setname']):
+           if p.setname == 'green_elements':
+               print p.nr,p.transparent
+
+   3 None
+   4 True
+   7 False
+
+Record 3 does not have the transparent attribute, so a value None is printed.
+
+
+.. _sec:special-properties:
+
+Specialized property records
+----------------------------
+
+The property system presented above allows for recording any kind of values. In
+many situations however we will want to work with a specialised and limited set
+of attributes. The main developers of e.g. often use the program to create
+geometrical models of structures of which they want to analyse the mechanical
+behavior. These numerical simulations (FEA, CFD) require specific data that
+support the introduction of specialised property records. Currently there are
+two such property record types: node properties (see
+:ref:`sec:node-properties`), which are attributed to a single point in space,
+and element properties (:ref:`sec:elem-properties`), which are attributed to a
+structured collection of points.
+
+Special purpose properties are distincted by their kind field. General property
+records have kind=", node properties haven kind='n' and  kind='e' is set for
+element properties. Users can create their own specialised property records by
+using other value for the kind parameter.
+
+
+.. _sec:node-properties:
+
+Node properties
+---------------
+
+Node properties are created with the :meth:`nodeProp` method, rather than the
+general :meth:`Prop`. The kind field does not need to be set: it will be done
+automatically. When selecting records using the :meth:`getProp` method, add a
+kind='n' argument to select only node properties.
+
+Node properties will recognize some special field names and check the values for
+consistency. Application plugins such as the Abaqus input file generator depend
+on these property structure, so the user should not mess with them. Currently,
+the following attributes are in use:
+
+cload
+   A concentrated load at the node. This is a list of 6 items: three force
+   components in axis directions and three force moments around the axes: [F_0,
+   F_1, F_2, M_0, M_1, M_2].
+
+bound
+   A boundary condition for the nodal displacement components. This can be defined
+   in 2 ways:
+
+* as a list of 6 items [ u_0, u_1, u_2, r_0, r_1, r_2 ]. These items have 2
+     possible values:
+
+     0
+        The degree of freedom is not restrained.
+
+     1
+        The degree of freedom is restrained.
+
+* as a string. This string is a standard boundary type. Abaqus will recognize
+     the following strings:
+
+* PINNED
+
+* ENCASTRE
+
+* XSYMM
+
+* YSYMM
+
+* ZSYMM
+
+* XASYMM
+
+* YASYMM
+
+* ZASYMM
+
+displacement
+   Prescribed displacements. This is a list of tuples (i,v), where i is a DOF
+   number (1..6) and v is the prescribed value for that DOF.
+
+coords
+   The coordinate system which is used for the definition of cload, bound and displ
+   fields. It should be a :class:`CoordSys` object.
+
+Some simple examples::
+
+   P.nodeProp(cload=[5,0,-75,0,0,0])
+   P.nodeProp(set=[2,3],bound='pinned')
+   P.nodeProp(5,displ=[(1,0.7)])
+
+The first line sets a concentrated load all the nodes, the second line sets a
+boundary condition 'pinned' on nodes 2 and 3. The third line sets a prescribed
+displacement on node 5 with value 0.7 along the first direction. The first
+positional argument indeed corresponds to the 'set' attribute.
+
+Often the properties are computed and stored in variables rather than entered
+directly.  ::
+
+   P1 = [ 1.0,1.0,1.0, 0.0,0.0,0.0 ]
+   P2 = [ 0.0 ] * 3 + [ 1.0 ] * 3 
+   B1 = [ 1 ] + [ 0 ] * 5
+   CYL = CoordSystem('cylindrical',[0,0,0,0,0,1])
+   P.nodeProp(bound=B1,csys=CYL)
+
+The first two lines define two concentrated loads: ``P1`` consists of three
+point loads in each of the coordinate directions; P2 contains three force
+moments around the axes. The third line specifies a boundary condition where the
+first DOF (usually displacement in :math:`x`\ -direction) is constrained, while
+the remaining 5 DOF's are free. The next line defines a local coordinate system,
+in this case a cylindrical coordinate system with axis pointing from point
+``[0.,0.,0.]`` to point ``[0.,0.,1.]``. The last line
+
+To facilitate property selection, a tag can be added.  ::
+
+   nset1 = P.nodeProp(tag='loadcase 1',set=[2,3,4],cload=P1).nr
+   P.nodeProp(tag='loadcase 2',set=Nset(nset1),cload=P2)
+
+The last two lines show how you can avoid duplication of sets in mulitple
+records. The same set of nodes should receive different concentrated load values
+for different load cases. The load case is stored in a tag, but duplicating the
+set definition could become wasteful if the sets are large. Instead of
+specifying the node numbers of the set directly, we can pass a string setting a
+set name. Of course, the application will need to know how to interprete the set
+names. Therefore the property module provides a unified way to attach a unique
+set name to each set defined in a property record. The name of a node property
+record set can be obtained with the function Nset(nr), where nr is the record
+number. In the example above, that value is first recorded in nset1 and then
+used in the last line to guarantee the use of the same set as in the property
+above.
+
+
+.. _sec:elem-properties:
+
+Element properties
+------------------
+
+The :meth:`elemProp` method creates element properties, which will have their
+``kind`` attribute set to 'e'. When selecting records using the :meth:`getProp`
+method, add the kind='e' argument to get element properties.
+
+Like node properties, element property records have a number of specialize
+fields. Currently, the following ones are recognized by the Abaqus input file
+generatr.
+
+eltype
+   This is the single most import element property. It sets the element type that
+   will be used during the analysis. Notice that a Formex object also may have an
+   ``eltype`` attribute; that one however is only used to describe the type of the
+   geometric elements involved. The element type discussed here however may also
+   define some other characteristics of the element, like the number and type of
+   degrees of freedom to be used in the analysis or the integration rules to be
+   used. What element types are available is dependent on the analysis package to
+   be used. Currently, does not do any checks on the element type, so the
+   simulation program's own element designation may be used.
+
+section
+   The section properties of the element. This should be an :class:`ElemSection`
+   instance, grouping material properties (like Young's modulus) and geometrical
+   properties (like plate thickness or beam section).
+
+dload
+   A distributed load acting on the element. The value is an :class:`ElemLoad`
+   instance. Currently, this can include a label specifying the type of distributed
+   loading, a value for the loading, and an optional amplitude curve for specifying
+   the variation of a time dependent loading.
+
+
+Property data classes
+---------------------
+
+The data collected in property records can be very diverse. At times it can
+become quite difficult to keep these data consistent and compatible with other
+modules for further processing. The property module contains some data classes
+to help you in constructing appropriate data records for Finite Element models.
+The FeAbq module can currently interprete the following data types.
+
+:class:`CoordSystem` defines a local coordinate system for a node. Its
+constructor takes two arguments:
+
+* a string defining the type of coordinate system, either 'Rectangular',
+  'Cylindrical' or 'Spherical' (the first character suffices), and
+
+* a list of 6 coordinates, specifying two points A and B. With 'R', A is on the
+  new :math:`x`\ -axis and B is on the new ':math:`y` axis. With 'C' and 'S', AB
+  is the axis of the cylindrical/spherical coordinates.
+
+Thus, ``CoordSystem('C',[0.,0.,0.,0.,0.,1.])`` defines a cylindrical coordinate
+system with the global :math:`z` as axis.
+
+:class:`ElemLoad` is a distributed load on an element. Its constructor takes two
+arguments:
+
+* a label defining the type of loading,
+
+* a value for the loading,
+
+* optionally, the name of an amplitude curve.
+
+E.g., ElemLoad('PZ',2.5) defines a distributed load of value 2.5 in the
+direction of the :math:`z`\ -axis.
+
+:class:`ElemSection` can be used to set the material and section properties on
+the elements. It can hold:
+
+* a section,
+
+* a material,
+
+* an optional orientation,
+
+* an optional connector behavior,
+
+* a sectiontype (deprecated). The sectiontype should preferably be set togehter
+  with the other section parameters.
+
+An example::
+
+   >>> steel = {
+       'name': 'steel',
+       'young_modulus': 207000,
+       'poisson_ratio': 0.3,
+       'density': 0.1,
+       }
+   >>> thin_plate = { 
+       'name': 'thin_plate',
+       'sectiontype': 'solid',
+       'thickness': 0.01,
+       'material': 'steel',
+       }
+   >>> P.elemProp(eltype='CPS3',section=ElemSection(section=thin_plate,material=steel))
+
+First, a material is defined. Then a thin plate section is created, referring to
+that material. The last line creates a property record that will attribute this
+element section and an element type 'CPS3' to all elements.
+
+
+Exporting to finite element programs
+====================================
+
+.. rubric:: Footnotes
+
+.. [#] uses the NumPy :class:`ndarray` as implementation of fast numerical arrays in
+   Python.
+
+.. End

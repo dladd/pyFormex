@@ -1,0 +1,30 @@
+.. HOWTO write documentation for pyFormex    -*- rst -*-
+
+==============================================
+Guidelines for creating pyFormex documentation
+==============================================
+
+- Documentation is written in ReST (ReStructuredText)
+
+- Start the .rst file with the following header::
+
+  .. $Id$
+  .. pyformex documentation --- partname
+  ..
+  .. include:: defines.inc
+  .. include:: ../website/src/links.inc
+  ..
+  .. _part:partname:
+
+
+- Replace in this header partname with the documentation part or chapter name.
+- Replace _part with _cha if you are writing a chapter instead of a part.
+
+- See also the following links for more information:
+
+  - guidelines for documenting Python: http://docs.python.org/documenting/index.html
+  - Sphinx documentation: http://sphinx.pocoo.org/
+  - ReStructuredText page of the docutils project: http://docutils.sourceforge.net/rst.html
+
+- When refering to pyFormex (the name of the program and project), always write:
+  ``|pyformex|``.

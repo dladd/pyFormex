@@ -104,7 +104,7 @@ doctest:
 	      "results in _build/doctest/output.txt."
 
 
-pdf:
+pdf:	latex
 	make -C _build/latex all-pdf
 
 ref:
