@@ -86,13 +86,12 @@ way.
 
 .. _`fig:wirestent-steps`:
 
-.. figure:: _static/images/wirestent.png
+.. figure:: _static/images/wirestent-1.png _static/images/wirestent-2.png
    :align: center
    :alt: A wire stent
 
    Steps in building the WireStent example
 
-.. % figure{images/wirestent-1}
 .. % figure{images/wirestent-2}
 .. % figure{images/wirestent-3}
 
