@@ -2,13 +2,13 @@
 .. pyformex documentation --- introduction
 
 .. include:: defines.inc
-.. include:: ../website/src/links.inc
+.. include:: links.inc
 
 .. _cha:introduction:
 
-************
-Introduction
-************
+**************************
+Introduction to |pyformex|
+**************************
 
 
 .. topic:: Abstract
@@ -72,28 +72,22 @@ of all the points describing that structure.
 With |pyformex|, one could define the structure by the following sequence of
 operations, illustrated in the figure :ref:`fig:wirestent-steps`:
 
-* Create a nearly planar base module of two crossing wires. The wires have a
-  slight out-of-plane bend, to enable the crossing.
-
-* Extend the base module with a mirrored and translated copy.
-
-* Replicate the base module in both directions of the base plane.
-
-* Roll the planar grid into a cylinder.
+#. Create a nearly planar base module of two crossing wires. The wires have a
+   slight out-of-plane bend, to enable the crossing.
+#. Extend the base module with a mirrored and translated copy.
+#. Replicate the base module in both directions of the base plane.
+#. Roll the planar grid into a cylinder.
 
 |pyformex| provides all the operations needed to define the geometry in this
 way.
 
 .. _`fig:wirestent-steps`:
 
-.. figure:: _static/images/wirestent-1.png _static/images/wirestent-2.png
+.. figure:: _static/images/wirestent-steps.png
    :align: center
    :alt: A wire stent
 
-   Steps in building the WireStent example
-
-.. % figure{images/wirestent-2}
-.. % figure{images/wirestent-3}
+   First three steps in building the WireStent example
 
 |pyformex| does not fit into a single category of traditional (mostly 
 commercial) software packages, because it is not being developed as a 
@@ -136,8 +130,8 @@ continuing our work on |pyformex|. The strength of the scripting language
 and the elegance of Python have already attracted many users on this path.
 
 Finally, |pyformex| is, and will always be, free software in both meanings
-of free: guaranteeing your freedom (see :ref:`sec:license`) and without
-charging a fee for it.
+of free: guaranteeing the freedom of the user (see :ref:`sec:license`) and
+without charging a fee for it. [#]_
 
 .. % \section{History}
 .. % \label{sec:history}
@@ -148,135 +142,30 @@ charging a fee for it.
 License and Disclaimer
 ======================
 
-|pyformex| is ©2004-2008 Benedict Verhegghe
+|pyformex| is ©2004-|year| Benedict Verhegghe
 
 This program is free software; you can redistribute it and/or modify it under
-the terms of the GNU General Public Licensehttp://www.gnu.org/licenses/gpl.html
-as published by the Free Software Foundation; either version 3 of the License,
+the terms of the `GNU General Public License`_ (GNU GPL), as published by the `Free Software Foundation`_; either version 3 of the License,
 or (at your option) any later version.
 
-Full details of the license are available in appendix :ref:`sec:license`, in the
-file COPYING included with the distribution and under the Help->License item of
-the Graphical User Interface.
+The full details of the `GNU GPL`_ are available in the :doc:`license` part of the documentation, in the file COPYING included with the distribution, under the Help->License item of the |pyformex| Graphical User Interface or from http://www.gnu.org/copyleft/gpl.html.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
 
 .. _sec:installation:
 
 Installation
 ============
 
-.. _sec:prerequisites:
-
-Prerequisites
--------------
-
-In order to run , you need to have the following installed (and working) on your
-computer.
-
-* Python: Version 2.4 or higher is recommended. Versions 2.3 and 2.2 might work
-  with only a few minor changes. Nearly all Linux distributions come with Python
-  installed, so this should not be no major obstacle.
-
-* NumPy: Version 1.0-rc1 or higher. Earlier versions can be made to work, but
-  will require some changes to be made. NumPy is the package used for fast
-  numerical array operations in Python and is essential for . [#]_ On Linux
-  systems, installing NumPy from source is usually straightforward. Debian users
-  can install the package python-numpy.The extra packages python-numpy-ext and
-  python-scipy give saom added functionality, but are not required for the basic
-  operation of . For Windows, binary packages are available on the Sourceforge
-  download pagehttp://www.numpy.org/.
-
-If you only want to use the Formex data model and transformation methods, the
-above will suffice. But most probably you will also want to run the Graphical
-User Interface (GUI) for visualizing your structures. Then you also need the
-following:
-
-* Qt4http://www.trolltech.com/products/qt: The widget toolkit on which the GUI
-  was built. For Debian users this  comes in the packages python-qt4.
-
-* PyQt4http://www.riverbankcomputing.co.uk/pyqt/index.php: The Python bindings
-  for Qt4. Debian users should install the packages python-qt4 and python-qt4-gl.
-
-* PyOpenGLhttp://pyopengl.sourceforge.net/: Python bindings for OpenGL, used for
-  drawing and manipulating the 3D-structures. For debian users this is in the
-  package python-opengl.
-
-Since version 0.7, includes an acceleration library that can increase the speed
-of some low level operations (e.g. drawing), especially when working on very
-large structures. If you want to compile and use this library, you also need to
-have a working C compiler and the Python and OpenGL header files. On a Debian
-based system, you should install tha packages python-dev, python-qt4-dev and
-libgl1-mesa-dev.
-
-
-.. _sec:downloading:
-
-Downloading
------------
-
-The official releases of can be downloaded from the  website. As of the writing
-of this manual, the latest release is .  is currently distributed in the form of
-a .tar.gz (tarball) archive. See :ref:`sec:installation-linux` for how to
-proceed further.
-
-Alternatively you can download the tarball releases from our local FTP server.
-The server may be slower, but occasionally you can find there an interim release
-or release candidate not (yet) available on the official server.
-
-Finally, you can also get the latest development code from the SVN repository on
-the website. If you have Subversionhttp://subversion.tigris.org/ installed on
-your system, you can just dosvn checkout svn://svn.berlios.de/pyformex/trunk
-pyformex and the whole current tree will be copied to a subdirectory
-``pyformex`` on your current path.
-
-*Unless you want to help with the development or you absolutely need some of the
-latest features or bugfixes, the tarball releases are what you want to go for.
-*
-
-
-.. _sec:installation-linux:
-
-Installation on Linux platforms
--------------------------------
-
-Once you have downloaded the tarball, unpack it with tar xvzf pyformex-
-version.tar.gz Then go to the created pyformex directory: cd pyformex-version
-and do (with root privileges)  python setup.py install --prefix=/usr/local This
-will install under /usr/local/. You can change the prefix to install in some
-other place.
-
-The installation procedure installs everything into a single directory, and
-creates a symlink to the executable in /usr/local/bin. You can use the command
-pyformex --whereami to find out where is installed.
-
-Finally, a installation can usually be removed by giving the command pyformex
---remove and answering 'yes' to the question. You may want to do this before
-installing a new version, especially if you install a new release of an already
-existing version.
-
-
-.. _sec:installation-windows:
-
-Installation on Windows platforms
----------------------------------
-
-There is no installation procedure yet. All the pre-requisite packages are
-available for Windows, so in theory it is possible to run on Windows. We know of
-some users who are running succesfully using the --nogui option, i.e. without
-the Graphical User Interface (GUI).   A few things may need to be changed for
-running the GUI on Windows. We might eventually have a look at this in the
-future, but it certainly is not our primary concern. Still, any feedback on
-(successful or not successful) installation attempts on Windows is welcome.
+Information on how to obtain and install |pyformex| can be found in the :doc:`install` document.
 
 
 .. _sec:running:
 
-Running
--------
+Running |pyformex|
+==================
 
 To run , simply enter the command pyformex in a terminal window. This will start
 the Graphical User Interface (GUI), from where you can launch examples or load,
@@ -411,7 +300,7 @@ How to proceed from here
 ========================
 
 By now, you should have enough basic knowledge about Python and NumPy to
-continue by studying the tutorial in chapter :ref:`cha:tutorial`.
+continue by studying the tutorial in chapter :doc:`tutorial`.
 
 
 .. rubric:: Footnotes
@@ -419,7 +308,6 @@ continue by studying the tutorial in chapter :ref:`cha:tutorial`.
 .. [#] A stent is a tube-shaped structure that is e.g. used to reopen
    (and keep open) obstructed blood vessels.
 
-.. [#] The ``Numarray`` package, which was used up until 0.3, is no longer
-   supported.
+.. [#] Third parties may offer |pyformex| extensions and/or professional support that are fee-based.
 
 .. End

@@ -9,16 +9,15 @@ Guidelines for creating pyFormex documentation
 - Start the .rst file with the following header::
 
   .. $Id$
-  .. pyformex documentation --- partname
+  .. pyformex documentation --- chaptername
   ..
   .. include:: defines.inc
   .. include:: ../website/src/links.inc
   ..
-  .. _part:partname:
+  .. _cha:partname:
 
 
-- Replace in this header partname with the documentation part or chapter name.
-- Replace _part with _cha if you are writing a chapter instead of a part.
+- Replace in this header chaptername with the documentation chapter name.
 
 - See also the following links for more information:
 

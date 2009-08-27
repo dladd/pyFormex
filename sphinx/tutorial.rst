@@ -40,25 +40,16 @@ advantages in using :
   calculate from some formula, read from a file, .  angle, the radius of a dome,
   the ratio :math:`f/l` of an arc. Using CAD, you would have often have to
   completely redo your drawing work. This idea of scripted geometry building is
-  illustrated in figure :ref:`fig:scallops`: all these domes were created with the
+  illustrated in figure :ref:`fig:scallopdomes`: all these domes were created with the
   same script, but with different values of some parameters.
 
-  .. % \begin{figure}[ht]
-  .. % \centering
-  .. % \begin{makeimage}
-  .. % \end{makeimage}
-  .. % \begin{latexonly}
-  .. % \includegraphics[width=5cm]{images/scallopdome-000}
-  .. % \includegraphics[width=5cm]{images/scallopdome-001}
-  .. % \includegraphics[width=5cm]{images/scallopdome-002}
-  .. % \end{latexonly}
-  .. % \begin{htmlonly}
-  .. % \htmladdimg{../images/scallopdome-000.png}
-  .. % \htmladdimg{../images/scallopdome-001.png}
-  .. % \htmladdimg{../images/scallopdome-002.png}
-  .. % \end{htmlonly}
-  .. % \caption{Same script, different domes} \label{fig:scallops}
-  .. % \end{figure}
+.. _`fig:scallopdomes`:
+
+.. figure:: _static/images/scallopdomes.png
+   :align: center
+   :alt: Three scallop domes
+
+   Same script, different domes
 
 * At times there will be operations that are easier to perform through an
   interactive Graphical User Interface (GUI). The GUI gives access to many of its
@@ -669,6 +660,7 @@ step of '1' (the length of an edge of the triangle). After that, the new  Formex
 is copied 'n' times in the 1-direction with a translation step of '1'.  Because
 of the recursive definition (F=F.replic), the original Formex F is  overwritten
 by the transformed one.  ::
+
    F = F.replic(m,1,0); drawit(F)
    F = F.replic(n,1,1); drawit(F)
 

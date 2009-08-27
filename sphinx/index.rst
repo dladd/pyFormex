@@ -24,17 +24,18 @@ Parts of the documentation:
 
    front
    intro
+   install
    tutorial
    .. canvas
    .. gui
    .. config
-   .. examples
+   examples
    .. plugins
    refman
    .. faq
    .. appendix
    .. app-cmdline
-   .. app-gpl
+   license
 
 
 Indices and tables
