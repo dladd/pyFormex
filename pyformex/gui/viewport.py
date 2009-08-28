@@ -1,4 +1,4 @@
-# $Id$
+8# $Id$
 ##
 ##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -817,7 +817,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             #self.swapBuffers()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
-            GL.glLogicOp(GL.GL_INVERT)        
+            GL.glLogicOp(GL.GL_INVERT)
             # Draw rectangle
             self.draw_state_rect(x,y)
             self.swapBuffers()
@@ -1148,9 +1148,9 @@ class MultiCanvas(FramedGridLayout):
 #        GL.glFlush()
         if type(canv) == int and canv in range(len(self.all)):
             canv = self.all[canv]
-        ## if self.current == canv:
-        ##     # alreay current
-        ##     return
+        if self.current == canv:
+            # alreay current
+            return
         if GD.canvas:
             GD.canvas.focus = False
             GD.canvas.updateGL()
@@ -1163,7 +1163,7 @@ class MultiCanvas(FramedGridLayout):
             #toolbar.setNormals(self.current.avgnormals)
 #            GL.glFlush()
             GD.canvas.updateGL()
-            
+
 
     def currentView(self):
         return self.all.index(GD.canvas)
