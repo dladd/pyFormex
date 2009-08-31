@@ -107,5 +107,14 @@ doctest:
 pdf:	latex
 	make -C _build/latex all-pdf
 
+
+# Automatically created input files
+
 ref:
 	quickref.py ${AUTOREF}
+
+pyformex.help: ../pyformex/pyformex
+	../pyformex/pyformex --help > $@
+
+
+# End

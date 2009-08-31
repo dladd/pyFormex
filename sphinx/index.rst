@@ -26,15 +26,9 @@ Parts of the documentation:
    intro
    install
    tutorial
-   .. canvas
-   .. gui
-   .. config
+   user-guide
    examples
-   .. plugins
    refman
-   .. faq
-   .. appendix
-   .. app-cmdline
    license
 
 
