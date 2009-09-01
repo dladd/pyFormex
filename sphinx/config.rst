@@ -1,13 +1,14 @@
-.. % pyformex manual --- configure
-.. % $Id$
-.. % (C) B.Verhegghe
+.. $Id$
+.. pyformex documentation --- config
 
+.. include:: defines.inc
+.. include:: ../website/src/links.inc
 
 .. _cha:config:
 
-***********
-Configuring
-***********
+**********************
+Configuring |pyformex|
+**********************
 
 Many aspects of can be configured to better suit the user's needs and likings.
 These can range from merely cosmetic changes to important extensions of the
@@ -36,7 +37,7 @@ occur.
 
 .. _sec:pyf-conf-files:
 
-configuration files
+Configuration files
 ===================
 
 On startup, reads its configurable data from a number of files. Often there are
@@ -53,7 +54,7 @@ following files will be read in sequence:
   system-wide changes to the installation. This could e.g. be used to give all
   users at a site access to a common set of scripts or extensions.
 
-*  /.pyformexrc: this is where the user normally stores his own default
+* /.pyformexrc: this is where the user normally stores his own default
   settings.
 
 * CURRENT-DIR/.pyformex: if the current working directory from which is started
@@ -71,12 +72,13 @@ was read. The first two files mentioned above are system configuration files and
 will never be changed by the program. A user configuration file will be
 generated if none existed.
 
-*Currently, when exits, it will just dump all the changed configuration
-(key,value) pairs on the last configuration file, together with the values it
-read from that file. will not detect if any changes were made to that file
-between reading it and writing back. Therefore, the user should never edit the
-configuration files directly while is still running. Always close the program
-first!*
+.. warning:: Currently, when |pyformex| exits, it will just dump all
+  the changed configuration (key,value) pairs on the last
+  configuration file, together with the values it read from that
+  file. |pyformex| will not detect if any changes were made to that
+  file between reading it and writing back. Therefore, the user should
+  never edit the configuration files directly while |pyformex| is still
+  running. Always close the program first!
 
 
 .. _sec:syntax-conf-files:
@@ -119,61 +121,64 @@ th GUI. And real programmers may prefer to do it with an editor anyway. So here
 are some guidelines for setting some interesting variables. The user may take a
 look at the installed default configuration file for more examples.
 
-* General section
+General section
+"""""""""""""""
 
-* syspath = []: Value is a list of path names that will be appended to the
-    Python's sys.path variable on startup. This enables your scripts to import
-    modules from other than default Python paths.
+* ``syspath = []``: Value is a list of path names that will be appended to
+  the Python's sys.path variable on startup. This enables your scripts
+  to import modules from other than default Python paths.
 
-* scriptdirs = [ ('Examples',examplesdir), ('MyScripts',myscriptsdir) ]: a list
-    of tuples (name,path). On startup, all these paths will be scanned for scripts
-    and these will be added in the menu under an item named name.
+* ``scriptdirs = [ ('Examples',examplesdir),
+  ('MyScripts',myscriptsdir)]``: a list of tuples (name,path). On
+  startup, all these paths will be scanned for scripts and these will
+  be added in the menu under an item named name.
 
-    .. index:: single: autorun
+.. index:: single: autorun
 
-* autorun = '.pyformex.startup': name of a script that will be executed on
-    startup, before any other script (specified on the command line or started from
-    the GUI).
+* ``autorun = '.pyformex.startup'``: name of a script that will be
+  executed on startup, before any other script (specified on the
+  command line or started from the GUI).
 
-* editor = 'kedit': sets the name of the editor that will be used for editing
-    pyformex scripts.
+* ``editor = 'kedit'``: sets the name of the editor that will be used
+  for editing pyformex scripts.
 
-* viewer = 'firefox': sets the name of the html viewer to be used to display the
-    html help screens.
+* ``viewer = 'firefox'``: sets the name of the html viewer to be used to
+  display the html help screens.
 
-* browser = 'firefox': sets the name of the browser to be used to access the
-    website.
+* ``browser = 'firefox'``: sets the name of the browser to be used to access the
+  website.
 
-* uselib = False: do not use the acceleration library. The default (True) is to
-    use it when it is available.
+* ``uselib = False``: do not use the acceleration library. The default (True) is to
+  use it when it is available.
 
-* Section [gui]
 
-    .. index:: single: splash image
+Section ``[gui]``
+"""""""""""""""""
 
-* splash = 'path-to-splash-image.png'): full path name of the image to be used
-    as splash image on startup.
+.. index:: single: splash image
 
-* modebar = True: adds a toolbar with the render mode buttons. Besides True or
-    False, the value can also be one of 'top', 'bottom', 'left' or 'right',
-    specifying the placement of the render mode toolbar at the specified window
-    border. Any other value that evaluates True will make the buttons get included
-    in the top toolbar.
+* ``splash = 'path-to-splash-image.png'``: full path name of the image to be used
+  as splash image on startup.
 
-* viewbar = True: adds a toolbar with different view buttons. Possioble values
-    as explained above for modebar.
+* ``modebar = True``: adds a toolbar with the render mode buttons. Besides
+  True or False, the value can also be one of 'top', 'bottom', 'left'
+  or 'right', specifying the placement of the render mode toolbar at
+  the specified window border. Any other value that evaluates True
+  will make the buttons get included in the top toolbar.
 
-* timeoutbutton = True: include the timeout button in the toolbar. The timeout
-    button, when depressed, will cause input widgets to time out after a
-    prespecified delay time. This feature is still experimental.
+* ``viewbar = True``: adds a toolbar with different view
+  buttons. Possioble values as explained above for modebar.
 
-    .. index:: single: autorun
+* ``timeoutbutton = True``: include the timeout button in the toolbar. The
+  timeout button, when depressed, will cause input widgets to time out
+  after a prespecified delay time. This feature is still experimental.
 
-* plugins = ['surface_menu', 'formex_menu', 'tools_menu']: a list of plugins to
-    load on startup. This is mainly used to load extra (non-default) menus in the
-    GUI to provide extended functionality. The named plugins should be available in
-    the 'plugins' subdirectory of the installation. To autoload user extensions from
-    a different place, the autorun script can be used.
+* ``plugins = ['surface_menu', 'formex_menu', 'tools_menu']``: a list of
+  plugins to load on startup. This is mainly used to load extra
+  (non-default) menus in the GUI to provide extended
+  functionality. The named plugins should be available in the
+  'plugins' subdirectory of the installation. To autoload user
+  extensions from a different place, the autorun script can be used.
 
 .. End
 

@@ -1,6 +1,8 @@
-.. % pyformex manual --- gui
-.. % $Id$
-.. % (C) B.Verhegghe
+.. $Id$
+.. pyformex documentation --- gui
+
+.. include:: defines.inc
+.. include:: ../website/src/links.inc
 
 
 .. _cha:gui:
@@ -13,29 +15,25 @@ The Graphical User Interface
 Starting the GUI
 ================
 
-You start the GUI by entering the command pyformex --gui. Depending on your
-installation, you may also have a panel or menu button on your desktop from
-which you can start the graphical interface by a simple mouse click.   When the
-main window appears, it will look like the one shown in the figure
-:ref:`fig:gui`. Your window manager will most likely have put some decorations
-around it, but these are very much OS and window manager dependent and are
-therefore not shown in the figure.
+You start the |pyformex| GUI by entering the command ``pyformex`` in a
+terminal window. Depending on your installation, you may also have a
+panel or menu button on your desktop from which you can start the
+graphical interface by a simple mouse click.  When the main window
+appears, it will look like the one shown in the figure
+:ref:`fig:gui`. Your window manager will most likely have put some
+decorations around it, but these are very much OS and window manager
+dependent and are therefore not shown in the figure.
 
-.. % Finally, you can start the GUI with the command \Code{startGUI()} in a \pyf script.
+Finally, you can also start the GUI with the instruction
+ ``startGUI()`` from a |pyformex| script executed in non-GUI mode.
 
-.. % \begin{figure}[ht]
-.. % \centering
-.. % \begin{makeimage}
-.. % \end{makeimage}
-.. % \begin{latexonly}
-.. % \includegraphics[width=10cm]{images/gui}
-.. % \end{latexonly}
-.. % \begin{htmlonly}
-.. % \htmladdimg{../images/gui.png}
-.. % \end{htmlonly}
-.. % \caption{The pyFormex main window}
-.. % \label{fig:gui}
-.. % \end{figure}
+.. _`fig:gui`:
+
+.. figure:: _static/images/gui.png
+   :align: center
+   :alt: pyFormex GUI
+
+   The pyFormex main window
 
 
 Basic use of the GUI
@@ -91,10 +89,35 @@ your likings.
 The main window can be resized in the usual ways.
 
 
-.. _sec:file-menu:
+.. _sec:menu-file:
 
-The file menu
-=============
+The :menuselection:`File` menu
+==============================
+
+
+.. _sec:menu-settings:
+
+The :menuselection:`Settings` menu
+==================================
+
+Many aspects of the |pyformex| GUI are configurable to suit better to
+the user's likings. This customization can be made persistent by
+storing it in a configuration file. This is explained in
+:doc:`config`.
+
+Many of the configuration variables however can be changed interactively from
+the GUI itself. 
+
+
+.. _settings-commands:
+
+* :menuselection:`Settings --> Commands`: Lets you change the external
+  command name used for the editor, the HTML/text file viewer and the HTML
+  browser. Each of these values should be an executable command
+  accepting a file name as parameter.
+ 
+ 
+
 
 
 .. _sec:viewport-menu:

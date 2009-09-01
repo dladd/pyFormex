@@ -14,8 +14,8 @@
 
 .. topic:: Abstract
 
-The user guide explains in depth the most important components of |pyformex|.
-It shows you how to run |pyformex|, 
+  The user guide explains in depth the most important components of |pyformex|.
+  It shows you how to run |pyformex|, 
 
 
 Sections of the user guide:
@@ -33,7 +33,7 @@ Sections of the user guide:
    widgets
    plugins
    config
-   tips
+   faq
 
 .. End
 

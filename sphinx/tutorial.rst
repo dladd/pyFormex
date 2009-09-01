@@ -15,33 +15,37 @@ pyFormex tutorial
 The philosophy
 ==============
 
-is a Python implementation of Formex algebra. Using , it is very easy to
-generate large geometrical models of 3D structures by a sequence of mathematical
-transformations. It is especially suited for the automated design of spatial
+is a Python implementation of Formex algebra. Using |pyformex|, it is very 
+easy to generate large geometrical models of 3D structures by a sequence of 
+mathematical transformations. 
+It is especially suited for the automated design of spatial
 structures. But it can also be used for other tasks, like operating on 3D
 geometry obtained from other sources, or for finite element pre- and
 postprocessing, or just for creating some nice pictures.
 
 By writing a simple script, a large and complex geometry can be created by
 copying, translating, rotating, or otherwise transforming geometrical entities.
-will interpret the script and draw what you have created. This is clearly very
-different from the traditional (mostly interactive) way of creating a
-geometrical model, like is done in most CAD packages. There are some huge
-advantages in using :
+|pyformex| will interpret the script and draw what you have created. 
+This is clearly very different from the traditional (mostly interactive) way
+of creating a geometrical model, like is done in most CAD packages.
+There are some huge advantages in using |pyformex|:
 
 * It is especially suited for the automated design of spatial frame structures.
-  A dome, an arc, a hypar shell, , when constructed as a space frame, can be
-  rather difficult and tedious to draw with a general CAD program; using scripted
-  mathematical transformations however, it may become a trivial task.
+  A dome, an arc, a hypar shell, ..., when constructed as a space frame, can be
+  rather difficult and tedious to draw with a general CAD program; 
+  using scripted mathematical transformations however, it may become a
+  trivial task.
 
-* Using a script makes it very easy to apply changes in the geometry: you simply
-  modify the script and let re-execute it. You can easily change any geometrical
-  parameter in any way you want: set directly, interactively ask the user,
-  calculate from some formula, read from a file, .  angle, the radius of a dome,
-  the ratio :math:`f/l` of an arc. Using CAD, you would have often have to
-  completely redo your drawing work. This idea of scripted geometry building is
-  illustrated in figure :ref:`fig:scallopdomes`: all these domes were created with the
-  same script, but with different values of some parameters.
+* Using a script makes it very easy to apply changes in the geometry:
+  you simply modify the script and re-execute it. You can easily
+  change the value of a geometrical parameter in any way you want:
+  set it directly, interactively ask it from the user, calculate it from some
+  formula, read it from a file, etcetera. 
+  Using CAD, you would have often have to
+  completely redo your drawing work. The power of scripted geometry
+  building is illustrated in figure :ref:`fig:scallopdomes`: all these
+  domes were created with the same script, but with different values
+  of some parameters.
 
 .. _`fig:scallopdomes`:
 
@@ -51,16 +55,21 @@ advantages in using :
 
    Same script, different domes
 
-* At times there will be operations that are easier to perform through an
-  interactive Graphical User Interface (GUI). The GUI gives access to many of its
-  functions. Especially occasional and untrained users will benefit from it. As
-  everything else in , the GUI is completely open and can be modified at will by
-  the user's application scripts, to provide an interface with either extended or
-  restructed functionality.
+* At times there will be operations that are easier to perform through
+  an interactive Graphical User Interface (GUI). The GUI gives access
+  to many such functions. Especially occasional and untrained users
+  will benefit from it. As everything else in |pyformex|, the GUI is completely
+  open and can be modified at will by the user's application scripts,
+  to provide an interface with either extended or restricted
+  functionality. 
 
-.. % As mentioned, \pyformex is based on the programming language Python \footnote{\url{http://www.python.org}}. This implies that the scripts are also Python-based. It's a very easy language, but if you're interested in reading more, there is a very good tutorial available on \url{http://docs.python.org/tut/}. However, if you're only using Python to write \pyformex-scripts, the tutorial you're reading right now should be enough.
-
-.. % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+* \pyformex scripts are written in the `Python`_ programming language.
+  This implies that the scripts are also Python-based. It is a very
+  easy language to learn, and if you are interested in reading more
+  about it, there are good tutorials and beginner's guides available
+  on the Python website (http://www.python.org/doc). However, if
+  you're only using Python to write |pyformex| scripts, the tutorial
+  you're reading right now should be enough.
 
 
 .. _sec:getting-started:
@@ -70,22 +79,31 @@ Getting started
 
 This should include a short introduction to Python and Numpy
 
-This section holds some basic information on how to use Python and .
+This section holds some basic information on how to use Python and |pyformex|.
 
-* Start the GUI by entering the command *pyformex* in a terminal. Depending on
-  your instalation, there may also be a menu item in the application menu to start
-  , or even a quickstart button in the panel. Using the terminal however can still
-  be useful, especially in the case of errors, because otherwise the GUI might
-  suppress some of the error messages that normally are sent to the terminal.
+* Start the GUI by entering the command ``pyformex`` in a
+  terminal. Depending on your instalation, there may also be a menu
+  item in the application menu to start |pyformex|, or even a quickstart button
+  in the panel. Using the terminal however can still be useful,
+  especially in the case of errors, because otherwise the GUI might
+  suppress some of the error messages that normally are sent to the
+  terminal.
 
-* To create a new -script, just open a new file with your favorite text editor
-  and save it under a name with extension '.py'.
+* Create a new |pyformex| script using the
+  :menuselection:`File-->Create new script` option, and enter a filename
+  with extension ``.py``. This will open up your favorite editor with
+  a |pyformex| script template like the one below.
+
+  .. literalinclude:: _static/scripts/template.py
+   :language: python
+   :linenos:
 
 * A script should start with a line #!/usr/bin/env pyformex
 
-* To edit the script, you can
+* To edit the script, you can open it with your favorite text editor.
 
-* open it with your favorite text editor.
+* I it does not work, see :ref: `Settings --> Commands <settings-commands>`
+
 
 * :menuselection:`File --> Open` ---  At this point, the script will be loaded
     but nothing will happen.  ---  :menuselection:`File --> Edit` ---  The script
