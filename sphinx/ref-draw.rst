@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- gui.draw
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:gui.draw:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-gui.draw:
 
 :mod:`gui.draw` --- Create 3D graphical representations.
 ========================================================

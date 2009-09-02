@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.turtle
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.turtle:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.turtle:
 
 :mod:`plugins.turtle` --- Turtle graphics for pyFormex
 ======================================================

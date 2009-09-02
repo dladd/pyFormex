@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.surface
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.surface:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.surface:
 
 :mod:`plugins.surface` --- Import/Export Formex structures to/from stl format.
 ==============================================================================

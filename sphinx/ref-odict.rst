@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- odict
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:odict:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-odict:
 
 :mod:`odict` --- Specialized dictionary type structures.
 ========================================================

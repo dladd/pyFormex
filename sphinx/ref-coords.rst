@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- coords
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:coords:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-coords:
 
 :mod:`coords` --- A structured collection of 3D coordinates.
 ============================================================

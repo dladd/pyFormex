@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.fe
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.fe:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.fe:
 
 :mod:`plugins.fe` --- Finite Element Models in pyFormex.
 ========================================================

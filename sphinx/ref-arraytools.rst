@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- arraytools
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:arraytools:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-arraytools:
 
 :mod:`arraytools` --- A collection of numerical array utilities.
 ================================================================

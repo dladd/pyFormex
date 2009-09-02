@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- mydict
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:mydict:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-mydict:
 
 :mod:`mydict` --- 
 ==================

@@ -77,11 +77,7 @@ There are some huge advantages in using |pyformex|:
 Getting started
 ===============
 
-This should include a short introduction to Python and Numpy
-
-This section holds some basic information on how to use Python and |pyformex|.
-
-* Start the GUI by entering the command ``pyformex`` in a
+* Start the |pyformex| GUI by entering the command ``pyformex`` in a
   terminal. Depending on your instalation, there may also be a menu
   item in the application menu to start |pyformex|, or even a quickstart button
   in the panel. Using the terminal however can still be useful,
@@ -98,29 +94,79 @@ This section holds some basic information on how to use Python and |pyformex|.
    :language: python
    :linenos:
 
-* A script should start with a line #!/usr/bin/env pyformex
+.. warning:: If the editor does not open, you may need to configure
+   the editor command:  see :ref: `Settings --> Commands <settings-commands>`.
 
-* To edit the script, you can open it with your favorite text editor.
+* The template script shows the typical layout of a |pyformex| script:
 
-* I it does not work, see :ref: `Settings --> Commands <settings-commands>`
+  - The script starts with a line ``#!/usr/bin/env pyformex``.
+  - Then comes a multiline documentation string, contained between two ``"""`` 
+    delimiters. Read it: it repeats this instructions on how a legal
+    |pyformex| script should be structured.
+  - Next are the |pyformex| instructions: in this case there's only one line.
+  - The script ends with a comment line ``# End``. We recommend you to do this
+    also. It serves as a warning for inadvertent truncation of your file.
+
+* In the status bar at the bottom of the |pyformex| GUI, you will now
+  see the name of the script, together with a green dot. This tells
+  you that the script has been recognized by the system as a
+  |pyformex| script, and is ready to run.
+
+* Execute the script by selecting the :menuselection:`File --> Play`
+  menu option, or by just pushing the |button-play| button in the
+  toolbar. In the message area just above the status bar, a line is
+  printed announcing the start and end of execution. Any output created
+  by the script during execution will be displayed in between this two
+  lines. As expected, the template script just prints the text from line 16
+  of the script.
+
+* Now change the text of the string in line 16, but do not save your changes.
+  Execute the script again, and notice that the printed text has not changed!
+  This is because the editor is an external program to |pyformex|, and *the 
+  executed script is always the text as read from file*, not necessarily equal
+  to what is displayed in your editor.
+
+  Save the script, run it again, and you will see the output has changed.
+
+* Next, change the text of the script to look like the one below, and save it as
+  ``example1.py``. Again, note that the editor and |pyformex| are separate 
+  programs, and saving the script does not change the name of the current
+  script in |pyformex|.
+
+  Selecting an existing script file for execution in |pyformex| is done with
+  the :menuselection:`File --> Open` option. Open the ``example1.py`` file
+  you just saved and check that its name is indeed displayed in the status bar.
+  You can now execute the script if you want, but it will not produce anything
+  visible. 
+
+  .. literalinclude:: _static/scripts/example1.py
+   :language: python
+   :linenos:
+
+* Exit |pyFormex| (using the :menuselection:`File --> Exit`) and then restart
+  it. You should again see the ``example1.py`` displayed as the current script.
+  On exit, |pyformex| stores your last script name, and on restart it prepares
+  to run it again. You can also easily select one the most recent scripts you
+  used from the :menuselection:`File --> History` option. Select the oldest
+  (bottom) one. Then close all your editor windows.
+
+* Open the ``example1.py`` again, either using :menuselection:`File --> Open`
+  or :menuselection:`File --> History`. The script will not be loaded into your
+  editor. That is becaused often you will just want to *run* the script, not
+  *change* it. Use the :menuselection:`File --> Edit` option to load the
+  current script into the editor.
+
+Now that you know how to load, change and execute scripts in |pyformex|, we're
+all set for exploring its power. But first, let's introduce you to Python and NumPy.
 
 
-* :menuselection:`File --> Open` ---  At this point, the script will be loaded
-    but nothing will happen.  ---  :menuselection:`File --> Edit` ---  The script
-    will now open in the default text editor. This default editor can be changed in
-    the user configuration file (:file:`/.pyformexrc`) or using the
-    :menuselection:`Settings --> Commands` menu option.
+.. _sec:intro-python:
 
-* To play a script, you can
+Short introduction to Python
+============================
 
-* :menuselection:`File --> Open` ---  :menuselection:`File --> Play`
+.. warning:: This section is to be rewritten!
 
-* Type *pyformex myproject.py* in the terminal. This will start the GUI and load
-    your script at the same time.  ---  :menuselection:`File --> Play`
-
-* To play a script without using the GUI (for example in finite element
-    preprocessing, if you only want to write an             output file, without
-    drawing the structure), type *pyformex --nogui myproject.py*
 
 * When writing a script in Python, there are some things you should keep in
   mind:
@@ -162,10 +208,13 @@ This section holds some basic information on how to use Python and |pyformex|.
 
 * Python by default uses integer math on integer arguments!
 
-  .. % Therefore: always create the array data with a float type!
-  .. % (this will be mostly in functions array() and zeros()
 
-.. % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+.. _sec:intro-numpy:
+
+Short introduction to NumPy
+===========================
+
+.. warning:: This section is still to be written!
 
 
 .. _sec:geom:
@@ -173,6 +222,7 @@ This section holds some basic information on how to use Python and |pyformex|.
 Creating geometrical models
 ===========================
 
+.. _sec:formex:
 
 The Formex data model
 ---------------------

@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- script
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:script:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-script:
 
 :mod:`script` --- Basic pyFormex script functions
 =================================================

@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- gui.widgets
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:gui.widgets:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-gui.widgets:
 
 :mod:`gui.widgets` --- A collection of custom widgets used in the pyFormex GUI
 ==============================================================================

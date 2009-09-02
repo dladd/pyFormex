@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.isopar
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.isopar:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.isopar:
 
 :mod:`plugins.isopar` --- Isoparametric transformations
 =======================================================

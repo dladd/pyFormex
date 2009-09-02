@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- simple
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:simple:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-simple:
 
 :mod:`simple` --- Predefined geometries with a simple shape.
 ============================================================

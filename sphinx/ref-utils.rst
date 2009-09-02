@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- utils
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:utils:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-utils:
 
 :mod:`utils` --- A collection of miscellaneous utility functions.
 =================================================================

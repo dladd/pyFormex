@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- olist
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:olist:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-olist:
 
 :mod:`olist` --- Some convenient shortcuts for common list operations.
 ======================================================================

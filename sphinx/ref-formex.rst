@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- formex
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:formex:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-formex:
 
 :mod:`formex` --- Formex algebra in Python
 ==========================================

@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.curve
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.curve:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.curve:
 
 :mod:`plugins.curve` --- Definition of curves in pyFormex.
 ==========================================================

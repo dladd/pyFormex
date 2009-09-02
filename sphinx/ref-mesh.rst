@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.mesh
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.mesh:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.mesh:
 
 :mod:`plugins.mesh` --- mesh.py
 ===============================

@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- gui.colorscale
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:gui.colorscale:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-gui.colorscale:
 
 :mod:`gui.colorscale` --- Color mapping of a range of values.
 =============================================================

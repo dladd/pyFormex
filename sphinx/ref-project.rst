@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- project
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:project:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-project:
 
 :mod:`project` --- project.py
 =============================

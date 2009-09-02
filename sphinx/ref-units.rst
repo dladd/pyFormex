@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.units
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.units:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.units:
 
 :mod:`plugins.units` --- A Python wrapper for unit conversion of physical quantities.
 =====================================================================================

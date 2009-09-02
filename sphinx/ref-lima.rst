@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.lima
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.lima:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.lima:
 
 :mod:`plugins.lima` --- Lindenmayer Systems
 ===========================================

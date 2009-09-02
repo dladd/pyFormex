@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- gui.image
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:gui.image:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-gui.image:
 
 :mod:`gui.image` --- Saving OpenGL renderings to image files.
 =============================================================

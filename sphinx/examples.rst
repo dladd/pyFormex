@@ -147,14 +147,12 @@ property :math:`2` connects the first points of the ``NE`` and ``SE`` Formices.
 
 .. figure:: _static/images/WireStentDemot2Step02.*
    :align: center
-
    :alt: line segment with replications
 
    The line segment with replications
 
 .. figure:: _static/images/WireStentDemot2Step03.*
    :align: center
-
    :alt: bumped line segment
 
    A bumped line segment

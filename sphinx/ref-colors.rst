@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- gui.colors
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:gui.colors:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-gui.colors:
 
 :mod:`gui.colors` --- Definition of some RGB colors and color conversion functions
 ==================================================================================

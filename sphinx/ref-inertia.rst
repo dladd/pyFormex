@@ -1,7 +1,11 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- plugins.inertia
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:plugins.inertia:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-plugins.inertia:
 
 :mod:`plugins.inertia` --- inertia.py
 =====================================

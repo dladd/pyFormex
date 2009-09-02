@@ -55,7 +55,11 @@ def ship_module(fil,name,shortdoc,longdoc):
     fil.write (""".. $%s$  -*- rst -*-
 .. pyformex reference manual --- %s
 .. CREATED WITH quickref.py: DO NOT EDIT
-.. _sec:%s:
+
+.. include:: defines.inc
+.. include:: links.inc
+
+.. _sec:ref-%s:
 
 %s
 
