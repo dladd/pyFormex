@@ -30,6 +30,7 @@ Sections of the user guide:
    drawing
    imaging
    projects
+   properties
    widgets
    plugins
    config
