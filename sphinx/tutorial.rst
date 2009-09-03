@@ -10,6 +10,8 @@
 pyFormex tutorial
 *****************
 
+.. warning:: This document is currently under revision! 
+
 .. _sec:intro-tut:
 
 The philosophy

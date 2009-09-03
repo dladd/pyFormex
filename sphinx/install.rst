@@ -10,6 +10,8 @@
 Installing |pyformex|
 *********************
 
+.. warning:: This document is still under construction! 
+
 .. topic:: Abstract
 
    This document explains the different ways for obtaining a running 

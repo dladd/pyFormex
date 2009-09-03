@@ -10,6 +10,8 @@
 pyFormex example scripts
 ************************
 
+.. warning:: This document is currently under revision! 
+
 Sometimes you learn quicker from studying an example than from reading a 
 tutorial or user guide. To help you we have created this collection of 
 annotated examples. Beware that the script texts presented in this document
