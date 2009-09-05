@@ -2,8 +2,8 @@
 .. pyformex reference manual --- gui.widgets
 .. CREATED WITH quickref.py: DO NOT EDIT
 
-.. include:: defines.inc
-.. include:: links.inc
+.. include:: ../defines.inc
+.. include:: ../links.inc
 
 .. _sec:ref-gui.widgets:
 

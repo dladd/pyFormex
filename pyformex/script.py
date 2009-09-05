@@ -26,7 +26,7 @@
 
 The :mod:`script` module provides the basic functions available
 in all |pyformex| scripts. These functions are available in GUI and NONGUI
-applications, without the need to explicitely importing the \module{script}
+applications, without the need to explicitely importing the :mod:`script`
 module.
 """
 

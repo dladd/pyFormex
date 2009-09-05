@@ -56,8 +56,8 @@ def ship_module(fil,name,shortdoc,longdoc):
 .. pyformex reference manual --- %s
 .. CREATED WITH quickref.py: DO NOT EDIT
 
-.. include:: defines.inc
-.. include:: links.inc
+.. include:: ../defines.inc
+.. include:: ../links.inc
 
 .. _sec:ref-%s:
 
@@ -86,7 +86,7 @@ def main(args):
             module = getattr(module,mdl)
         doc = module.__doc__
         shortdoc,longdoc = split_doc(doc)
-        outfile = "ref-%s.rst" % mdl
+        outfile = "ref/%s.rst" % mdl
         print "%s -> %s" % (name,outfile)
         fil = file(outfile,'w')
         ship_module(fil,name,shortdoc,longdoc)

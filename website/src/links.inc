@@ -23,12 +23,17 @@
 
   
 .. _`Python`: http://www.python.org
+.. _`Python documentation`: http://www.python.org/doc
+.. _`Python tutorial`: http://docs.python.org/tutorial
 .. _`NumPy`: http://numpy.scipy.org
 .. _`PyOpenGL`: http://pyopengl.sourceforge.net
 .. _`Qt4`: http://trolltech.com/products/qt
 .. _`PyQt4`: http://www.riverbankcomputing.co.uk/pyqt
-.. _`GNU General Public License`: http://www.gnu.org/licenses/gpl.html
 
+.. _`GNU GPL`: http://www.gnu.org/licenses/gpl.html
+.. _`GNU General Public License`: http://www.gnu.org/licenses/gpl.html
+.. _`Free Software Foundation`: http://fsf.org
+.. _`Debian GNU/Linux`: http://www.debian.org
 
 .. _`stent research group`: http://www.stent-ibitech.ugent.be
 .. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be

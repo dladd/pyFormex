@@ -413,12 +413,22 @@ def draw(F,
 
     
 def setDrawOptions(d):
-    GD.canvas.options.update(d)
+    GD.canvas.setOptions(d)
 
     
 def showDrawOptions():
     GD.message("Current Drawing Options: %s" % GD.canvas.options)
     GD.message("Current Viewport Options: %s" % GD.canvas.settings)
+
+
+def askDrawOptions(d={}):
+    """Interactively ask the Drawing options from the user.
+    
+    A dictionary may be specified to override the current defaults.
+    """
+    setDrawOptions(d)
+    res = askItems(GD.canvas.options.items())
+    print res
 
 
 def reset():

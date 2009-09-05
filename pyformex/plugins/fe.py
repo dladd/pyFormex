@@ -38,8 +38,9 @@ def mergeNodes(nodes):
 
     Each item in nodes is a Coords array.
     The return value is a tuple with:
-     - the coordinates of all unique nodes,
-     - a list of indices translating the old node numbers to the new.
+    
+    - the coordinates of all unique nodes,
+    - a list of indices translating the old node numbers to the new.
     """
     coords = Coords(concatenate([x for x in nodes],axis=0))
     coords,index = coords.fuse()
@@ -53,9 +54,10 @@ def mergeModels(femodels):
 
     Each item in femodels is a (coords,elems) tuple.
     The return value is a tuple with:
-     - the coordinates of all unique nodes,
-     - a list of elems corresponding to the input list,
-       but with numbers referring to the new coordinates.
+
+    - the coordinates of all unique nodes,
+    - a list of elems corresponding to the input list,
+      but with numbers referring to the new coordinates.
     """
     nodes = [ x for x,e in femodels ]
     coords = Coords(concatenate(nodes,axis=0))
@@ -100,12 +102,12 @@ class Model(Dict):
         coords is an array with nodal coordinates
         elems is either a single element connectivity array, or a list of such.
         In a simple case, coords and elems can be the arrays obtained by 
-            coords, elems = F.feModel()
+        ``coords, elems = F.feModel()``.
         This is however limited to a model where all elements have the same
         number of nodes. Then you can use the list of elems arrays. The 'fe'
-        plugin has a helper function to create this list. E.g., if FL is a
+        plugin has a helper function to create this list. E.g., if ``FL`` is a
         list of Formices (possibly with different plexitude), then
-          fe.mergeModels([Fi.feModel() for Fi in FL])
+        ``fe.mergeModels([Fi.feModel() for Fi in FL])``
         will return the (coords,elems) tuple to create the Model.
 
         The model can have node and element property numbers.

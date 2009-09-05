@@ -140,7 +140,7 @@ def writeSubset(fil, type, name, subname):
 
 
 def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
-                      rho=None,orient=None):
+                      rho=None,orient=None,yield_stress=None):
     """Write a general frame section for the named element set.
 
     The specified values are:
@@ -153,11 +153,14 @@ def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
       G: Shear modulus of the material
     Optional data:
       rho: density of the material
+      yield_stress: yield stress of the material
       orient: a vector specifying the direction cosines of the 1 axis
     """
     extra = orientation = ''
     if rho:
-        extra = ',DENSITY=%s' % rho
+        extra += ',DENSITY=%s' % float(rho)
+    if yield_stress:
+        extra += ',PLASTIC DEFAULTS, YIELD STRESS=%s' % float(yield_stress)
     if orient:
         orientation = '%s %s %s' % (orient[0], orient[1], orient[2])
     fil.write("""*FRAME SECTION,ELSET=%s,SECTION=general%s

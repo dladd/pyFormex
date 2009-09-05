@@ -10,7 +10,6 @@
 Introduction to |pyformex|
 **************************
 
-
 .. topic:: Abstract
 
    This part explains shortly what |pyformex| is and what it is not.
@@ -39,7 +38,7 @@ The short answer is that |pyformex| is a program to
 mathematical transformations gathered in a script.* 
 If you find this definition too dull, incomprehensible or just not
 descriptive enough, read on through this section and look at some of the
-examples in this documentation and on the website. 
+examples in this documentation and on the `pyFormex website`_. 
 You will then probably have a better idea of what |pyformex| is.
 
 The initial intent of |pyformex| was the rapid design of three-dimensional
@@ -120,7 +119,8 @@ structure quickly becomes cumbersome, unless you use a tool like |pyformex|,
 allowing for automated and unattended building of model variants.
 
 The author of  |pyformex|, professor in structural engineering and heavy
-computer user since mainframe times, deeply regrets that computing skills
+computer user and programmer since mainframe times, deeply regrets that
+computing skills
 of nowadays engineering students are often limited to using graphical
 interfaces of mostly commercial packages.
 This greatly limits their skills, because in their way of thinking: 
@@ -154,6 +154,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
+
 .. _sec:installation:
 
 Installation
@@ -162,145 +163,40 @@ Installation
 Information on how to obtain and install |pyformex| can be found in the :doc:`install` document.
 
 
-.. _sec:running:
+.. _sec:using:
 
-Running |pyformex|
-==================
+Using |pyformex|
+================
 
-To run , simply enter the command pyformex in a terminal window. This will start
-the Graphical User Interface (GUI), from where you can launch examples or load,
-edit and run your own scripts.
+Once you have installed and want to start using |pyformex|, you will probably
+be looking for help on how to do it.
 
-The installation procedure may have installed into your desktop menu or even
-have created a start button in the desktop panel. These provide convenient
-shortcuts to start the GUI by the click of a mouse button.
+If you are new to |pyformex|, you should start with the :doc:`tutorial`, which
+will guide you step by step, using short examples, through the basic concepts
+of Python, NumPy and |pyFormex|. You have to understand there is a lot to learn
+at first, but afterwards the rewards will prove to be huge. You can skip the
+sections on Python and NumPy if you already have some experience with it.
 
-The program takes some optional command line arguments, that modify the
-behaviour of the program. Appendix :ref:`cha:commandline` gives a full list of
-all options. For normal use however you will seldom need to use any of them.
-Therefore, we will only explain here the more commonly used ones.
-
-By default, sends diagnostical and informational messages to the terminal from
-which the program was started. Sometimes this may be inconvenient, e.g. because
-the user has no access to the starting terminal. You can redirect these messages
-to the message window of the GUI by starting pyformex with the command 
-``pyformex --redirect``. 
-The desktop starters installed by the installation procedure use
-this option.
-
-In some cases the user may want to use the mathematical power of without the
-GUI. This is e.g. useful to run complex automated procedures from a script file.
-For convenience, will automatically enter this batch mode (without GUI) if the
-name of a script file was specified on the command line; when a script file name
-is absent, start in GUI mode. Even when specifying a script file, You can still
-force the GUI mode by adding the option --gui to the command line.
+If you have used |pyformex| before or you are of the adventurous type that does
+not want to be told where to go and how to do it, skip the tutorial and go 
+directly to the :doc:`user-guide`. It provide the most thorough information
+of all aspects of |pyformex|
 
 
-.. _sec:gui-tutorial:
+Getting Help
+============
 
-Getting started with the GUI
-============================
+If you get stuck somewhere with using (or installing) |pyformex| and you
+need help, the best way is to go to the `pyFormex website`_ and ask for help
+on one of the `Forums`_. There's a good change you will get helped quickly
+there. Remember though that |pyformex| is a free and open source software
+project and its developers are not paid to develop or maintain |pyformex|, 
+they just do this because they find |pyformex| very helpful in their normal
+daily activities. 
 
-While the GUI has become much more elaborate in recent versions, its intention
-will never be to provide a fully interactive environment to operate on
-geometrical data. The first purpose of will always remain to provide an
-framework for easily creating scripts to operate on geometries. Automization of
-otherwise tedious tasks is our main focus.
-
-The GUI mainly serves the following purposes:
-
-* Display a structure in 3D. This includes changing the viewpoint, orientation
-  and viewing distance. Thus you can interactively rotate, translate, zoom.
-
-* Save a view in one of the supported image formats. Most of the images in this
-  manual and on the  website were created that way.
-
-* Changing settings (though not everything can be changed through the GUI yet).
-
-* Running scripts, possibly starting other programs and display their results.
-
-* Interactively construct, select, change, import or export geometrical
-  structures.
-
-Unlike with most other geometrical modelers, in you usually design a geometrical
-model by writing a small script with the mathematical expressions needed to
-generate it. Any text editor will be suitable for this purpose. The main author
-of uses GNU Emacs, but this is just a personal preference. Any modern text
-editor will be fine, and the one you are accustomed with, will probably be the
-best choice. Since Python is the language used in scripts, a Python aware editor
-is highly preferable. It will highlight the syntax and help you with proper
-alignment (which is very important in Python). The default editors of KDE and
-Gnome and most other modern editors will certainly do well.  A special purpose
-editor integrated into the GUI is on our TODO list, but it certainly is not our
-top priority, because general purpose editors are already adequate for our
-purposes.
-
-Learning how to use is best done by studying and changing some of the examples.
-We suggest that you first take a look at the examples included in the GUI and
-select those that display geometrical structures and/or use features that look
-interesting to you. Then you can study the source code of those examples and see
-how the structures got built and how the features were obtained. Depending on
-your installation and configuration, the examples can be found under the
-:menuselection:`Examples` or :menuselection:`Scripts` main menu item. The
-examples may appear classified according to themes or keywords, which can help
-you in selecting appropriate examples.
-
-Selecting an example from the menu will normally execute the script, possibly
-ask for some interactive input and display the resulting geometrical structure.
-To see the source of the script, choose the :menuselection:`File --> Edit
-Script` menu item.
-
-Before starting to write your own scripts, you should probably get acquainted
-with the basic data structures and instructions of Python, NumPy and .
-
-
-.. _sec:python-tutorial:
-
-Quick Python tutorial
-=====================
-
-is written in the Python language, and Python is also the scripting language of
-. Since the intent of is to design structures by using scripts, you will at
-least need to have some basic knowledge of Python before you can use for your
-own projects.
-
-There is ample documentation about Python freely available on the web.  If you
-are new to Python, but have already some programming experience, the Python
-tutorial may be a good starting point. Or else, you can take a look at one of
-the beginners' guides.
-
-Do not be be afraid of having to learn a new programming language: Python is
-known as own of the easiest languages to get started with: just a few basic
-concepts suffice to produce quite powerful scripts. Most developers and users of
-have started without any knowledge of Python.
-
-To do: Introduce the (for users) most important Python concepts.
-
-
-.. _sec:numpy-tutorial:
-
-Quick NumPy tutorial
-====================
-
-Numerical Python (or NumPy for short) is an extension to the Python language
-providing efficient operations on large (numerical) arrays. relies heavily on
-NumPy, and most likely you will need to use some NumPy functions in your
-scripts. As NumPy is still quite young, the available documentation is not so
-extensive yet. Still, the tentative NumPy
-tutorialhttp://www.scipy.org/Tentative_NumPy_Tutorial already provides the
-basics.
-
-If you have ever used some other matrix language, you will find a lot of similar
-concepts in NumPy.
-
-To do: Introduce the (for users) most important NumPy concepts.
-
-
-How to proceed from here
-========================
-
-By now, you should have enough basic knowledge about Python and NumPy to
-continue by studying the tutorial in chapter :doc:`tutorial`.
+If you are a professional |pyformex| user and required guaranteed support,
+you can check with `FEops`_, a young company providing services with and
+support for |pyformex|.
 
 
 .. rubric:: Footnotes

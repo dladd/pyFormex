@@ -11,6 +11,60 @@
 The Graphical User Interface
 ****************************
 
+While the GUI has become much more elaborate in recent versions, its
+intention will never be to provide a fully interactive environment to
+operate on geometrical data. The main purpose of |pyformex| will
+always remain to provide a framework for easily creating scripts to
+operate on geometries. Automization of otherwise tedious tasks is our
+primary focus.
+
+The GUI mainly serves the following purposes:
+
+* Display a structure in 3D. This includes changing the viewpoint, orientation
+  and viewing distance. Thus you can interactively rotate, translate, zoom.
+
+* Save a view in one of the supported image formats. Most of the images in this
+  manual and on the  website were created that way.
+
+* Changing settings (though not everything can be changed through the GUI yet).
+
+* Running scripts, possibly starting other programs and display their results.
+
+* Interactively construct, select, change, import or export geometrical
+  structures.
+
+Unlike with most other geometrical modelers, in you usually design a geometrical
+model by writing a small script with the mathematical expressions needed to
+generate it. Any text editor will be suitable for this purpose. The main author
+of uses GNU Emacs, but this is just a personal preference. Any modern text
+editor will be fine, and the one you are accustomed with, will probably be the
+best choice. Since Python is the language used in scripts, a Python aware editor
+is highly preferable. It will highlight the syntax and help you with proper
+alignment (which is very important in Python). The default editors of KDE and
+Gnome and most other modern editors will certainly do well.  A special purpose
+editor integrated into the GUI is on our TODO list, but it certainly is not our
+top priority, because general purpose editors are already adequate for our
+purposes.
+
+Learning how to use is best done by studying and changing some of the examples.
+We suggest that you first take a look at the examples included in the GUI and
+select those that display geometrical structures and/or use features that look
+interesting to you. Then you can study the source code of those examples and see
+how the structures got built and how the features were obtained. Depending on
+your installation and configuration, the examples can be found under the
+:menuselection:`Examples` or :menuselection:`Scripts` main menu item. The
+examples may appear classified according to themes or keywords, which can help
+you in selecting appropriate examples.
+
+Selecting an example from the menu will normally execute the script, possibly
+ask for some interactive input and display the resulting geometrical structure.
+To see the source of the script, choose the :menuselection:`File --> Edit
+Script` menu item.
+
+Before starting to write your own scripts, you should probably get acquainted
+with the basic data structures and instructions of Python, NumPy and |pyformex|.
+You can do this by reading the :doc:`tutorial`.
+
 
 Starting the GUI
 ================

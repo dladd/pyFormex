@@ -288,7 +288,7 @@ def fileDescription(type):
 
     The description of known types are listed in a dict file_description.
     If the type is unknown, the returned string has the form
-    'TYPE files (*.type)'
+    ``TYPE files (*.type)``
     """
     return file_description.get(type,"%s files (*.%s)" % (type.upper(),type))
 
@@ -449,12 +449,13 @@ class NameSequence(object):
         names.
 
         Examples:
-            NameSequence('hallo.98') will generate names
-                hallo.98, hallo.99, hallo.100, ...
-            NameSequence('hallo','.png') will generate names
-                hallo-000.png, hallo-001.png, ...
-            NameSequence('/home/user/hallo23','5.png') will generate names
-                /home/user/hallo235.png, /home/user/hallo245.png, ...
+        
+        - NameSequence('hallo.98') will generate names
+          hallo.98, hallo.99, hallo.100, ...
+        - NameSequence('hallo','.png') will generate names
+          hallo-000.png, hallo-001.png, ...
+        - NameSequence('/home/user/hallo23','5.png') will generate names
+          /home/user/hallo235.png, /home/user/hallo245.png, ...
         """
         base,number = splitEndDigits(name)
         if len(number) > 0:
@@ -502,7 +503,7 @@ def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.
 
     xval and yval should be lists of 3 values:
-      [xmin,x0,xmax], [ymin,y0,ymax].
+    ``[xmin,x0,xmax], [ymin,y0,ymax]``.
     Together with the exponent exp, they define the response curve
     as function of x. With an exponent > 0, the variation will be
     slow in the neighbourhood of (x0,y0).

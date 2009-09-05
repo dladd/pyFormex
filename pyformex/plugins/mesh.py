@@ -99,9 +99,11 @@ class Mesh(object):
     array.
     This model has some advantages over the Formex data model, where all
     points of all element are stored by their coordinates:
+    
     - compacter storage, because coordinates of coinciding points do not
-    need to be repeated,
+      need to be repeated,
     - faster connectivity related algorithms.
+    
     The downside is that geometry generating algorithms are far more complex
     and possibly slower.
     
@@ -110,11 +112,12 @@ class Mesh(object):
     file (and to other programs), a Mesh data model may be more adequate.
 
     The Mesh data model has at least the following attributes:
-    coords: (ncoords,3) shaped Coords array,
-    elems:  (nelems,nplex) shaped array of int32 indices into coords. All
-                values should be in the range 0 <= value < ncoords.
-    prop: array of element property numbers, default None.
-    eltype: string designing the element type, default None.
+    
+    - coords: (ncoords,3) shaped Coords array,
+    - elems: (nelems,nplex) shaped array of int32 indices into coords. All
+      values should be in the range 0 <= value < ncoords.
+    - prop: array of element property numbers, default None.
+    - eltype: string designing the element type, default None.
     """
     
     def __init__(self,coords=None,elems=None,prop=None,eltype=None):
@@ -360,16 +363,19 @@ def sweepGrid(nodes,elems,path,scale=1.,angle=0.,a1=None,a2=None):
     """ Sweep a quadrilateral mesh along a path
     
     The path should be specified as a (n,2,3) Formex.
-    The input grid (quadrilaterals) has to be specified with the nodes and elems and 
-    can for example be created with the functions gridRectangle or gridBetween2Curves.
+    The input grid (quadrilaterals) has to be specified with the nodes and
+    elems and can for example be created with the functions gridRectangle or
+    gridBetween2Curves.
     This quadrilateral grid should be within the YZ-plane.
     The quadrilateral grid can be scaled and/or rotated along the path.
     
     There are three options for the first (a1) / last (a2) element of the path:
+    
     1) None: No corresponding hexahedral elements
     2) 'last': The direction of the first/last element of the path is used to 
-    direct the input grid at the start/end of the path
-    3) specify a vector: This vector is used to direct the input grid at the start/end of the path
+       direct the input grid at the start/end of the path
+    3) specify a vector: This vector is used to direct the input grid at the
+       start/end of the path
     
     The resulting hexahedral mesh is returned in terms of nodes and elems.
     """

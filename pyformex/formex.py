@@ -38,8 +38,9 @@ def vectorNormalize(vec):
 
     vec is a (n,3) shaped arrays holding a collection of vectors.
     The result is a tuple of two arrays:
-      length (n) : the length of the vectors vec.
-      normal (n,3) : unit-length vectors along vec.
+
+    - length (n): the length of the vectors vec
+    - normal (n,3): unit-length vectors along vec.
     """
     length = sqrt((vec*vec).sum(axis=-1))
     normal = vec / length.reshape((-1,1))
@@ -51,8 +52,8 @@ def vectorPairAreaNormals(vec1,vec2):
 
     vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
     The result is a tuple of two arrays:
-      area (n) : the area of the parallellogram formed by vec1 and vec2.
-      normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
+    - area (n) : the area of the parallellogram formed by vec1 and vec2.
+    - normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
     These are calculated from the cross product of vec1 and vec, which indeed
     gives area * normal.
     """
@@ -132,7 +133,7 @@ def pattern(s):
     Adding 16 to the ordinal of the character causes an extra move of +1 in
     the z-direction. Adding 48 causes an extra move of -1. This means that
     'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra
-    z +/-= 1. This gives the following schema:
+    z +/-= 1. This gives the following schema::
 
                  z+=1             z unchanged            z -= 1
             
@@ -454,14 +455,15 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     n is the normal vector to a plane, specified by 3 components.
 
     The return value is:
+    
     - with side = '+' or '-' or 'positive'or 'negative' :
-    a Formex of the same plexitude with all elements
-    located completely at the positive/negative side of the plane(s) (p,n)
-    retained, all elements lying completely at the negative/positive side
-    removed and the elements intersecting the plane(s) replaced by new
-    elements filling up the parts at the positive/negative side.
+      a Formex of the same plexitude with all elements
+      located completely at the positive/negative side of the plane(s) (p,n)
+      retained, all elements lying completely at the negative/positive side
+      removed and the elements intersecting the plane(s) replaced by new
+      elements filling up the parts at the positive/negative side.
     - with side = '': two Formices of the same plexitude, one representing
-    the positive side and one representing the negative side.
+      the positive side and one representing the negative side.
 
     To avoid roundoff errors and creation of very small elements,
     a tolerance can be specified. Points lying within the tolerance
@@ -514,31 +516,34 @@ def cut3AtPlane(F,p,n,side='',atol=None,newprops=None):
     Both p and n have shape (3) or (npoints,3).
     
     The return value is:
-    - with side = '+' or '-' or 'positive'or 'negative' :
-    a Formex of the same plexitude with all elements
-    located completely at the positive/negative side of the plane(s) (p,n)
-    retained, all elements lying completely at the negative/positive side
-    removed and the elements intersecting the plane(s) replaced by new
-    elements filling up the parts at the positive/negative side.
-    - with side = '': two Formices of the same plexitude, one representing
-    the positive side and one representing the negative side.
     
-    The elements located completely at the positive/negative side of a plane
-    have three vertices for which the |distance| to the plane > atol.
+    - with side = '+' or '-' or 'positive'or 'negative' :
+      a Formex of the same plexitude with all elements
+      located completely at the positive/negative side of the plane(s) (p,n)
+      retained, all elements lying completely at the negative/positive side
+      removed and the elements intersecting the plane(s) replaced by new
+      elements filling up the parts at the positive/negative side.
+    - with side = '': two Formices of the same plexitude, one representing
+      the positive side and one representing the negative side.
+
+    Let :math:`dist` be the signed distance of the vertices to a plane.
+    The elements located completely at the positive or negative side of
+    a plane have three vertices for which :math:`|dist| > atol`.
     The elements intersecting a plane can have one or more vertices for which
-    |distance| < atol. These vertices are projected on the plane so that their
-    distance is zero.
+    :math:`|dist| < atol`.
+    These vertices are projected on the plane so that their distance is zero.
     
     If the Formex has a property set, the new elements will get the property
     numbers defined in newprops. This is a list of 7 property numbers flagging
     elements with following properties:
-    0) no vertices with |distance| < atol, triangle after cut
-    1) no vertices with |distance| < atol, triangle 1 from quad after cut
-    2) no vertices with |distance| < atol, triangle 2 from quad after cut
-    3) one vertex with |distance| < atol, two vertices at pos. or neg. side
-    4) one vertex with |distance| < atol, one vertex at pos. side, one at neg.
-    5) two vertices with |distance| < atol, one vertex at pos. or neg. side
-    6) three vertices with |distance| < atol
+    
+    0) no vertices with :math:`|dist| < atol`, triangle after cut
+    1) no vertices with :math:`|dist| < atol`, triangle 1 from quad after cut
+    2) no vertices with :math:`|dist| < atol`, triangle 2 from quad after cut
+    3) one vertex with :math:`|dist| < atol`, two vertices at pos. or neg. side
+    4) one vertex with :math:`|dist| < atol`, one vertex at pos. side, one at neg.
+    5) two vertices with :math:`|dist| < atol`, one vertex at pos. or neg. side
+    6) three vertices with :math:`|dist| < atol`
     """
     if atol is None:
         atol = 1.e-5*F.dsize()
@@ -623,6 +628,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
         newp is the new property value.
 
         The return value is determined as follows:
+        
         - If p is None: return None (no property set)
         - If p is set, but newp is None: return p[ind] : keep original
         - if p is set, and newp is set: return newp (single value)
@@ -872,10 +878,8 @@ class Formex(object):
         pattern function to create a coordinate list.
         If 2D coordinates are given, a 3-rd coordinate 0.0 is added.
         Internally, Formices always work with 3D coordinates.
-        Thus
-          F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-        Creates a Formex with two elements, each having 2 points in the
-        global z-plane.
+        Thus: ``F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])`` creates a
+        Formex with two elements, each having 2 points in the global z-plane.
 
         If a prop argument is specified, the setProp() function will be
         called to assign the properties.
@@ -958,6 +962,7 @@ class Formex(object):
         """Return the number of points per element.
 
         Examples:
+        
         1: unconnected points,
         2: straight line elements,
         3: triangles or quadratic line elements,
@@ -1083,10 +1088,8 @@ class Formex(object):
         an integer array with the node numbers connected by each element.
         The elements come in the same order as they are in the Formex, but
         the order of the nodes is unspecified.
-        By the way, the reverse operation of
-           coords,elems = feModel(F)
-        is accomplished by
-           F = Formex(coords[elems])
+        By the way, the reverse operation of ``coords,elems = feModel(F)``
+        is accomplished by ``F = Formex(coords[elems])``
 
         There is a (very small) probability that two very close nodes are
         not equivalenced  by this procedure. Use it multiple times with
@@ -1146,10 +1149,11 @@ class Formex(object):
 
         Coordinates are separated by commas, points are separated
         by semicolons and grouped between brackets, elements are
-        separated by commas and grouped between braces.
-        >>> F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-        >>> print F
-        {[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}
+        separated by commas and grouped between braces::
+        
+           >>> F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
+           >>> print F
+           {[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}
         """
         s = "{"
         if len(self.f) > 0:

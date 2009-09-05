@@ -8,8 +8,37 @@
 
 .. _sec:running:
 
-Running pyFormex
-================
+Running |pyformex|
+==================
+
+To run |pyformex|, simply enter the command ``pyformex`` in a terminal
+window. This will start the Graphical User Interface (GUI), from where
+you can launch examples or load, edit and run your own scripts.
+
+The installation procedure may have installed into your desktop menu or even
+have created a start button in the desktop panel. These provide convenient
+shortcuts to start the GUI by the click of a mouse button.
+
+The program takes some optional command line arguments, that modify the
+behaviour of the program. Appendix :ref:`cha:commandline` gives a full list of
+all options. For normal use however you will seldom need to use any of them.
+Therefore, we will only explain here the more commonly used ones.
+
+By default, sends diagnostical and informational messages to the terminal from
+which the program was started. Sometimes this may be inconvenient, e.g. because
+the user has no access to the starting terminal. You can redirect these messages
+to the message window of the GUI by starting pyformex with the command 
+``pyformex --redirect``. 
+The desktop starters installed by the installation procedure use
+this option.
+
+In some cases the user may want to use the mathematical power of without the
+GUI. This is e.g. useful to run complex automated procedures from a script file.
+For convenience, will automatically enter this batch mode (without GUI) if the
+name of a script file was specified on the command line; when a script file name
+is absent, start in GUI mode. Even when specifying a script file, You can still
+force the GUI mode by adding the option --gui to the command line.
+
 
 .. _sec:options:
 

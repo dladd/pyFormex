@@ -145,10 +145,12 @@ class UnitsSystem:
         If ent is a single entity, returns the corresponding unit if an entry
         ent exists in the current system or else returns ent unchanged.
         If ent is a list of entities, returns a list of corresponding units.
-        Example: with the default units system:
+        Example: with the default units system::
+        
           Un = UnitsSystem()
           Un.Get(['length','mass','float'])
-        returns: ['m', 'kg', 'float']
+
+        returns: ``['m', 'kg', 'float']``
         """
         if isinstance(ent,list):
             return [ self.Get(e) for e in ent ]

@@ -1,6 +1,6 @@
-.. $Id$  -*- rst -*-
+.. $Id$
 .. pyformex documentation --- license
-.. This ReST version of the GNU General Public License was converted from
+.. This ReST version of the GNU General Public License has been converted from
 .. the LaTeX version at http://www.gnu.org/licenses/gpl-3.0.tex
 
 .. include:: defines.inc
@@ -222,6 +222,7 @@ from the Program, in the form of source code under the terms of section 4,
 provided that you also meet all of these conditions:
 
 .. we need to use a bulleted list, because the alphabetic numbering is broken 
+
 -  a) The work must carry prominent notices stating that you modified it, and
    giving a relevant date.
 

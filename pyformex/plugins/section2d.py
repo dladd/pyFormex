@@ -49,16 +49,16 @@ class planeSection(object):
         Initialization can be done either by a list of points or a set of line
         segments.
 
-        1. By Points
-        Each point is connected to the following one, and (unless they are
-        very close) the last one back to the first. Traversing the resulting
-        path should rotate positively around the z axis to yield a positive
-        surface.
+        By Points
+          Each point is connected to the following one, and (unless they are
+          very close) the last one back to the first. Traversing the resulting
+          path should rotate positively around the z axis to yield a positive
+          surface.
 
-        2. By Segments
-        It is the responsibilty of the user to ensure that the segments
-        form a closed curve. If not, the calculated section data will be
-        rather meaningless.
+        By Segments
+          It is the responsibilty of the user to ensure that the segments
+          form a closed curve. If not, the calculated section data will be
+          rather meaningless.
         """
         if F.nplex() == 1:
             self.F = sectionize.connectPoints(F,close=True)
@@ -118,14 +118,15 @@ def extendedSectionChar(S):
 
     S is a dict with section basic section characteristics as returned by
     sectionChar().
-    This function computes and reutrns a dict with the following:
-    'xG', 'yG' : coordinates of the center of gravity G of the plane section
-    'IGxx', 'IGyy', 'IGxy' : second area moments and product around axes
-       through G and  parallel with the global x,y-axes
-    'alpha' : angle(in radians) between the glabla x,y axes and the principal
-       axes (X,Y) of the section (X and Y always pass through G)
-    'IXX','IYY': principal second area moments around X,Y respectively. (The
-       second area product is always zero.)
+    This function computes and returns a dict with the following:
+
+    - 'xG', 'yG' : coordinates of the center of gravity G of the plane section
+    - 'IGxx', 'IGyy', 'IGxy' : second area moments and product around axes
+      through G and  parallel with the global x,y-axes
+    - 'alpha' : angle(in radians) between the glabla x,y axes and the principal
+      axes (X,Y) of the section (X and Y always pass through G)
+    - 'IXX','IYY': principal second area moments around X,Y respectively. (The
+      second area product is always zero.)
     """
     xG =  S['Sy']/S['A']
     yG =  S['Sx']/S['A']
@@ -149,6 +150,7 @@ def princTensor2D(Ixx,Iyy,Ixy):
     """Compute the principal values and directions of a 2D tensor.
 
     Returns a tuple with three values:
+    
     - alpha: angle (in radians) from x-axis to principal X-axis
     - IXX,IYY: principal values of the tensor
     """

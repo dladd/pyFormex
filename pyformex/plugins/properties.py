@@ -325,12 +325,13 @@ class PropertyDB(Dict):
     geometrical model.
 
     This should allow for storing:
-       - materials
-       - sections
-       - any properties
-       - node properties
-       - elem properties
-       - model properties (current unused: use unnamed properties)
+    
+    - materials
+    - sections
+    - any properties
+    - node properties
+    - elem properties
+    - model properties (current unused: use unnamed properties)
     """
 
     bound_strings = [ 'XSYMM', 'YSYMM', 'ZSYMM', 'ENCASTRE', 'PINNED' ]
@@ -371,14 +372,16 @@ class PropertyDB(Dict):
         A property can hold almost anything, just like any Dict type.
         It has however four predefined keys that should not be used for
         anything else than explained hereafter:
+        
         - nr: a unique id, that never should be set/changed by the user.
         - tag: an identification tag used to group properties
         - set: a single number or a list of numbers identifying the geometrical
-               elements for wich the property is set, or the name of a
-               previously defined set.
+          elements for wich the property is set, or the name of a
+          previously defined set.
         - setname: the name to be used for this set. Default is to use an
-               automatically generated name. If setname is specified without
-               a set, this is interpreted as a set= field.
+          automatically generated name. If setname is specified without
+          a set, this is interpreted as a set= field.
+
         Besides these, any other fields may be defined and will be added
         without checking.
         """
@@ -477,11 +480,12 @@ class PropertyDB(Dict):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
+        
         - tag: an identification tag used to group properties (this is e.g.
-               used to flag Step, increment, load case, ...)
+          used to flag Step, increment, load case, ...)
         - set: a single number or a list of numbers identifying the node(s)
-                for which this property will be set, or a set name
-                If None, the property will hold for all nodes.
+          for which this property will be set, or a set name
+          If None, the property will hold for all nodes.
         - cload: a concentrated load: a list of 6 values
         - bound: a boundary condition: a list of 6 codes (0/1)
         - displ: a prescribed displacement: a list of tuples (dofid,value)
@@ -518,16 +522,17 @@ class PropertyDB(Dict):
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
+
         - tag: an identification tag used to group properties (this is e.g.
-               used to flag Step, increment, load case, ...)
+          used to flag Step, increment, load case, ...)
         - set: a single number or a list of numbers identifying the element(s)
-                for which this property will be set, or a set name
-                If None, the property will hold for all elements.
+          for which this property will be set, or a set name
+          If None, the property will hold for all elements.
         - grp: an elements group number (default None). If specified, the
-               element numbers given in set are local to the specified group.
-               If not, elements are global and should match the global numbering
-               according to the order in which element groups will be specified
-               in the Model.
+          element numbers given in set are local to the specified group.
+          If not, elements are global and should match the global numbering
+          according to the order in which element groups will be specified
+          in the Model.
         - eltype: the element type (currently in Abaqus terms). 
         - section: an ElemSection specifying the element section properties.
         - dload: an ElemLoad specifying a distributed load on the element.

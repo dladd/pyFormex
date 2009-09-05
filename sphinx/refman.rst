@@ -3,6 +3,7 @@
 .. pyFormex documentation reference manual master file
 
 .. include:: defines.inc
+.. include:: links.inc
 
 
 .. _cha:reference:
@@ -31,12 +32,12 @@ the need to explicitely import them.
 .. toctree::
    :maxdepth: 1
 
-   ref-coords
-   ref-formex
-   ref-arraytools
-   ref-script
-   ref-draw
-   ref-colors
+   ref/coords
+   ref/formex
+   ref/arraytools
+   ref/script
+   ref/draw
+   ref/colors
 
 
 Other |pyFormex| core modules
@@ -47,10 +48,10 @@ main pyformex path are considered to belong to the pyformex core functionality.
 .. toctree::
    :maxdepth: 1
 
-   ref-connectivity
-   ref-simple
-   ref-project
-   ref-utils
+   ref/connectivity
+   ref/simple
+   ref/project
+   ref/utils
 
 
 |pyFormex| GUI modules
@@ -60,9 +61,9 @@ These modules are located under pyformex/gui.
 .. toctree::
    :maxdepth: 1
 
-   ref-colorscale
-   ref-image
-   ref-widgets
+   ref/colorscale
+   ref/image
+   ref/widgets
 
 
 |pyFormex| plugins
@@ -74,17 +75,17 @@ path, these modules are in no way different from other |pyformex| modules.
 .. toctree::
    :maxdepth: 1
 
-   ref-curve
-   ref-fe
-   ref-inertia
-   ref-isopar
-   ref-lima
-   ref-mesh
-   ref-properties
-   ref-section2d
-   ref-surface
-   ref-turtle
-   ref-units
+   ref/curve
+   ref/fe
+   ref/inertia
+   ref/isopar
+   ref/lima
+   ref/mesh
+   ref/properties
+   ref/section2d
+   ref/surface
+   ref/turtle
+   ref/units
 
    
 |pyFormex| tools
@@ -97,9 +98,9 @@ elsewhere.
 .. toctree::
    :maxdepth: 1
 
-   ref-olist
-   ref-mydict
-   ref-odict
+   ref/olist
+   ref/mydict
+   ref/odict
 
 .. End
 

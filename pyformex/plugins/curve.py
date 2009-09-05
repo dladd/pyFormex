@@ -59,7 +59,8 @@ class Curve(object):
 
     This is a virtual class intended to be subclassed.
     It defines the common definitions for all curve types.
-    The subclasses should at least define the following:
+    The subclasses should at least define the following::
+    
       sub_points(t,j)
     """
 
@@ -380,8 +381,8 @@ class CardinalSpline(BezierSpline):
     def __init__(self,pts,tension=0.0,closed=False):
         """Create a natural spline through the given points.
 
-        The Cardinal Spline with given tension is a Bezier Spline with curl:
-            curl = ( 1 - tension) / 3
+        The Cardinal Spline with given tension is a Bezier Spline with curl
+        :math: `curl = ( 1 - tension) / 3`
         The separate class name is retained for compatibility and convenience. 
         See CardinalSpline2 for a direct implementation (it misses the end
         intervals of the point set).

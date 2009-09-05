@@ -143,6 +143,7 @@ class Connectivity(ndarray):
         """Transform elems to edges and faces.
 
         Return a tuple edges,faces where
+        
         - edges is an (nedges,2) int array of edges connecting two node numbers.
         - faces is an (nelems,nplex) int array with the edge numbers connecting
           each pair os subsequent nodes in the elements of elems.
@@ -429,6 +430,7 @@ def closedLoop(elems):
     from the feModel() method on a plex-2 Formex.
 
     The return value is a tuple of:
+    
     - return code:
     
       - 0: the segments form a closed loop

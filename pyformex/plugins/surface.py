@@ -21,10 +21,11 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Import/Export Formex structures to/from stl format.
+"""Operations on triangulated surfaces.
 
-An stl is stored as a numerical array with shape [n,3,3].
-This is compatible with the pyFormex data model.
+A triangulated surface is a surface consisting solely of triangles.
+Any surface in space, no matter how complex, can be approximated with
+a triangulated surface.
 """
 
 import os

@@ -24,6 +24,10 @@ PLUGINMODULES= curve fe inertia isopar lima mesh \
   properties section2d surface turtle units
 AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 
+MANDOCS= ../_build/html/*
+MANIMAGES= ../_build/images/*.png
+MANSTATIC= ../_build/images/*.png
+RSYNC= rsync -av -e ssh
 
 .PHONY: help clean ref html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
 
@@ -116,5 +120,14 @@ ref:
 pyformex.help: ../pyformex/pyformex
 	../pyformex/pyformex --help > $@
 
+# Transfer the files to BerliOS
+pub: 
+#	${RSYNC} pyformex.pdf shell.berlios.de:/home/groups/ftp/pub/pyformex
+	${RSYNC} ${MANDOCS} shell.berlios.de:/home/groups/pyformex/htdocs/manual
+	${RSYNC} ${MANIMAGES} shell.berlios.de:/home/groups/pyformex/htdocs/images
+
+# and to our ftp server
+publocal:
+	rsync -lt pyformex.pdf ${FTPLOCAL}
 
 # End

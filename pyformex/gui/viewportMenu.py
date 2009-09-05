@@ -155,6 +155,7 @@ MenuData = [
           ('&Polygon Back Fill',canvas.glBackFill),
           ('&Polygon Front and Back Fill',canvas.glBothFill),
           ]),
+        (_('&Draw Options'),draw.askDrawOptions),
         (_('&Redraw'),draw.redraw),
         (_('&Reset'),draw.reset),
         (_('&Change viewport layout'),viewportLayout), 

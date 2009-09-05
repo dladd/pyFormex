@@ -21,7 +21,13 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""A collection of custom widgets used in the pyFormex GUI"""
+"""A collection of custom widgets used in the pyFormex GUI
+
+The widgets in this module were primarily created in function of the
+|pyformex| GUI. The user can apply them to change the GUI or to add
+interactive widgets to his scripts. He can of course also use all the
+Qt widgets directly.
+"""
 
 import os,types
 from PyQt4 import QtCore, QtGui
@@ -52,7 +58,7 @@ class FileSelection(QtGui.QFileDialog):
 
     You can specify a default path/filename that will be suggested initially.
     If a pattern is specified, only matching files will be shown.
-    A pattern can be something like 'Images (*.png *.jpg)' or a list
+    A pattern can be something like ``Images (*.png *.jpg)`` or a list
     of such strings.
     Default mode is to accept any filename. You can specify exist=True
     to accept only existing files. Or set exist=True and multi=True to
@@ -480,13 +486,14 @@ class InputItem(QtGui.QHBoxLayout):
     methods.
 
     Subclasses should override:
+    
     - name(): if they called the superclass __init__() method without a name;
     - value(): if they did not create a self.input widget who's text() is
       the return value of the item.
     - setValue(): always, unless the field is readonly.
 
     Subclases can set validators on the input, like
-      input.setValidator(QtGui.QIntValidator(input))
+    ``input.setValidator(QtGui.QIntValidator(input))``
     Subclasses can define a show() method e.g. to select the data in the
     input field on display of the dialog.
     """
@@ -855,10 +862,11 @@ class InputSlider(InputInteger):
     """An integer input item using a slider.
 
     Options:
-      'min', 'max': range of the scale (integer)
-      'ticks'     : step for the tick marks (default range length / 10)
-      'func'      : an optional function to be called whenever the value is
-                    changed. The function takes a float/integer argument.
+    
+    - 'min', 'max': range of the scale (integer)
+    - 'ticks' : step for the tick marks (default range length / 10)
+    - 'func' : an optional function to be called whenever the value is
+      changed. The function takes a float/integer argument.
     """
     
     def __init__(self,name,value,*args,**kargs):
@@ -891,10 +899,10 @@ class InputFSlider(InputFloat):
     """A float input item using a slider.
 
     Options:
-      'min', 'max': range of the scale (integer)
-      'ticks'     : step for the tick marks (default range length / 10)
-      'func'      : an optional function to be called whenever the value is
-                    changed. The function takes a float/integer argument.
+    - 'min', 'max': range of the scale (integer)
+    - 'ticks' : step for the tick marks (default range length / 10)
+    - 'func' : an optional function to be called whenever the value is
+      changed. The function takes a float/integer argument.
     """
     
     def __init__(self,name,value,*args,**kargs):
@@ -967,7 +975,7 @@ class InputDialog(QtGui.QDialog):
         Each item in the 'items' list is a tuple holding at least the name
         of the item, and optionally some more elements that limit the type
         of data that can be entered. The general format of an item is:
-          name,value,type,range
+          ``name,value,type,range``
         It should fit one of the following schemes:
         ('name',str) : type string, any string input allowed
         ('name',int) : type int, any integer value allowed
@@ -978,39 +986,41 @@ class InputDialog(QtGui.QDialog):
         Input items are defined by a list with the following structure:
         [ name, value, type, range... ]
         The fields have the following meaning:
-          name:  the name of the field,
-          value: the initial or default value of the field,
-          type:  the type of values the field can accept,
-          range: the range of values the field can accept,
+
+        - name:  the name of the field,
+        - value: the initial or default value of the field,
+        - type:  the type of values the field can accept,
+        - range: the range of values the field can accept,
+
         The first two fields are mandatory. In many cases the type can be
         determined from the value and no other fields are required. Thus:
-        [ 'name', 'value' ] will accept any string (initial string = 'value'),
-        [ 'name', True ] will show a checkbox with the item checked,
-        [ 'name', 10 ] will accept any integer,
-        [ 'name', 1.5 ] will accept any float.
+
+        - [ 'name', 'value' ] will accept any string (initial string = 'value'),
+        - [ 'name', True ] will show a checkbox with the item checked,
+        - [ 'name', 10 ] will accept any integer,
+        - [ 'name', 1.5 ] will accept any float.
 
         Range settings for int and float types:
-        [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive;
-        [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
-           from 0.0 to 1.0 with a maximum of two decimals.
+
+        - [ 'name', 1, int, 0, 4 ] will accept an integer from 0 to 4, inclusive
+        - [ 'name', 1, float, 0.0, 1.0, 2 ] will accept a float in the range
+          from 0.0 to 1.0 with a maximum of two decimals.
 
         Composed types:
-        [ 'name', 'option1', 'select', ['option0','option1','option2']] will
-        present a combobox to select between one of the options.
-        The initial and default value is 'option1'.
 
-        [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
-        present a group of radiobuttons to select between one of the options.
-        The initial and default value is 'option1'.
-        A variant 'vradio' aligns the options vertically. 
-        
-        [ 'name', 'option1', 'push', ['option0','option1','option2']] will
-        present a group of pushbuttons to select between one of the options.
-        The initial and default value is 'option1'.
-        A variant 'vpush' aligns the options vertically. 
-
-        [ 'name', 'red', 'color' ] will present a color selection widget,
-        with 'red' as the initial choice.
+        - [ 'name', 'option1', 'select', ['option0','option1','option2']] will
+          present a combobox to select between one of the options.
+          The initial and default value is 'option1'.
+        - [ 'name', 'option1', 'radio', ['option0','option1','option2']] will
+          present a group of radiobuttons to select between one of the options.
+          The initial and default value is 'option1'.
+          A variant 'vradio' aligns the options vertically. 
+        - [ 'name', 'option1', 'push', ['option0','option1','option2']] will
+          present a group of pushbuttons to select between one of the options.
+          The initial and default value is 'option1'.
+          A variant 'vpush' aligns the options vertically. 
+        - [ 'name', 'red', 'color' ] will present a color selection widget,
+          with 'red' as the initial choice.
         """
         if parent is None:
             parent = GD.GUI
@@ -1560,9 +1570,12 @@ class BaseMenu(object):
 
     This class is not intended for direct use, but through subclasses.
     Subclasses should implement at least the following methods:
-      addSeparator()              insertSeperator(before)
-      addAction(text,action)      insertAction(before,text,action)
-      addMenu(text,menu)          insertMenu(before,text,menu)
+    - addSeparator()
+    - insertSeperator(before)
+    - addAction(text,action)
+    - insertAction(before,text,action)
+    - addMenu(text,menu)
+    - insertMenu(before,text,menu)
       
     QtGui.Menu and QtGui.MenuBar provide these methods.
     """
@@ -1643,19 +1656,20 @@ class BaseMenu(object):
         """Insert a list of items in the menu.
         
         Each item is a tuple of two to five elements:
-           Text, Action, [ Icon,  ShortCut, ToolTip ].
+        Text, Action, [ Icon,  ShortCut, ToolTip ].
 
         Item text is the text that will be displayed in the menu.
         It will be stored in a normalized way: all lower case and with
         '&' removed.
 
         Action can be any of the following:
-          - a Python function or instance method : it will be called when the
-            item is selected,
-          - a string with the name of a function/method,
-          - a list of Menu Items: a popup Menu will be created that will appear
-            when the item is selected,
-          - None : this will create a separator item with no action.
+        
+        - a Python function or instance method : it will be called when the
+          item is selected,
+        - a string with the name of a function/method,
+        - a list of Menu Items: a popup Menu will be created that will appear
+          when the item is selected,
+        - None : this will create a separator item with no action.
 
         Icon is the name of one of the icons in the installed icondir.
         ShortCut is an optional key combination to select the item.

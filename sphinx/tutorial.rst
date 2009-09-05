@@ -2,7 +2,8 @@
 .. pyformex documentation --- tutorial
 
 .. include:: defines.inc
-.. include:: ../website/src/links.inc
+.. include:: gui.inc
+.. include:: links.inc
 
 .. _cha:tutorial:
 
@@ -12,17 +13,25 @@ pyFormex tutorial
 
 .. warning:: This document is currently under revision! 
 
+.. topic:: Abstract
+
+   This tutorial will guide you step by step through the most important
+   concepts of the |pyformex| scripting language and the |pyformex| Graphical
+   User Interface (GUI). It is set up for first time users, giving explicit
+   details of what to do and what to expect as result.
+   
+
 .. _sec:intro-tut:
 
 The philosophy
 ==============
 
-is a Python implementation of Formex algebra. Using |pyformex|, it is very 
-easy to generate large geometrical models of 3D structures by a sequence of 
-mathematical transformations. 
-It is especially suited for the automated design of spatial
-structures. But it can also be used for other tasks, like operating on 3D
-geometry obtained from other sources, or for finite element pre- and
+|pyformex| is a Python implementation of Formex algebra. Using
+|pyformex|, it is very easy to generate large geometrical models of 3D
+structures by a sequence of mathematical transformations.  It is
+especially suited for the automated design of spatial structures. But
+it can also be used for other tasks, like operating on 3D geometry
+obtained from other sources, or for finite element pre- and
 postprocessing, or just for creating some nice pictures.
 
 By writing a simple script, a large and complex geometry can be created by
@@ -93,8 +102,7 @@ Getting started
   a |pyformex| script template like the one below.
 
   .. literalinclude:: _static/scripts/template.py
-   :language: python
-   :linenos:
+     :linenos:
 
 .. warning:: If the editor does not open, you may need to configure
    the editor command:  see :ref: `Settings --> Commands <settings-commands>`.
@@ -139,11 +147,10 @@ Getting started
   the :menuselection:`File --> Open` option. Open the ``example1.py`` file
   you just saved and check that its name is indeed displayed in the status bar.
   You can now execute the script if you want, but it will not produce anything
-  visible. 
+  visible. We'll learn you how to visualize geometry later on.
 
   .. literalinclude:: _static/scripts/example1.py
-   :language: python
-   :linenos:
+     :linenos:
 
 * Exit |pyFormex| (using the :menuselection:`File --> Exit`) and then restart
   it. You should again see the ``example1.py`` displayed as the current script.
@@ -159,7 +166,7 @@ Getting started
   current script into the editor.
 
 Now that you know how to load, change and execute scripts in |pyformex|, we're
-all set for exploring its power. But first, let's introduce you to Python and NumPy.
+all set for exploring its power. But first, let's introduce you to Python and NumPy. 
 
 
 .. _sec:intro-python:
@@ -167,48 +174,73 @@ all set for exploring its power. But first, let's introduce you to Python and Nu
 Short introduction to Python
 ============================
 
-.. warning:: This section is to be rewritten!
+|pyformex| is written in the Python language, and Python is also the
+scripting language used by |pyformex|. Since the whole intent of |pyformex|
+is to generate geometrical structures from scripts, you will at least
+need to have some basic knowledge of Python before you can use it for
+your own projects.
 
+The `Python documentation`_ website contains a variety of good
+documents to introduce you. If you are new to Python, but have already
+some programming experience, the `Python tutorial`_ may be a good
+starting point. Or else, you can take a look at one of the other beginners'
+guides. Stick with the Python 2.x documentation for now. Though
+|pyformex| might one day use Python 3.x, we are still far off that
+day, because all the underlying packages need to be converted to
+Python 3 first.
 
-* When writing a script in Python, there are some things you should keep in
-  mind:
+Do not be afraid of having to learn a new programming language. Python is
+known as own of the easiest languages to get started with: just a few basic
+concepts suffice to produce quite powerful scripts. Most developers and users of
+|pyformex| have started without any knowledge of Python.
 
-* When using a function that requires arguments, an argument list must have any
-    positional arguments followed by any keyword arguments, where the keywords must
-    be chosen from the formal parameter names. It's not important whether a formal
-    parameter has a default value or not. No argument may receive a value more than
-    once -- formal parameter names corresponding to positional arguments cannot be
-    used as keywords in the same calls.
+For the really impatient who do not want to go through the `Python
+tutorial`_
+before diving into |pyformex|, we have gathered hereafter some of the
+most important Python concepts, hopefully enabling you to continue
+with this tutorial.
 
-    Simply put: you can either set the arguments in the right order and only give
-    their value, or you can give arguments by their name and value. This last option
-    holds some advantages: not only is it easier to check what you did, but
-    sometimes a function has many arguments with default values and you only want to
-    change a few. If this isn't entirely clear yet, just look at the examples later
-    in this tutorial or check the Python tutorial.
+* In Python, indentation is essential. Indentation is Python's way of
+  grouping statements. In small, sequential |pyformex| scripts,
+  indentation is not needed and you should make sure that you start
+  each new line in the first column.
+  An ``if`` test or a ``for`` loop will however need indentation to
+  mark the statement(s) inside the condition or loop. A small
+  example:
+    
+  .. literalinclude:: _static/scripts/python-intro.py
 
-* Indentation is essential in Python. Indentation is Python's way of grouping
-    statements. In straight-forward scripts, indentation is not needed (and
-    forbidden!), but when using a for-statement for example, the body of the
-    statement has to be indented. A small example might make this clear. Also notice
-    the ':'   ::
+  We advice you not to use tabs for indenting. A good practice
+  commonly followed by most Python programmers is to indent with 4
+  spaces. Also notice that the conditions end with a ':'.
+  
+* A '#' starts a comment: the '#', and anything following it, is
+  disregarded.
 
-       print 'properties'
-       for key, item in properties.iteritems():
-           print key, item
+* 
 
-* If you want to use functions from a seperate module (like :mod:`properties`),
+* When using a function that requires arguments, an argument list must
+  have any positional arguments followed by any keyword arguments,
+  where the keywords must be chosen from the formal parameter
+  names. It's not important whether a formal parameter has a default
+  value or not. No argument may receive a value more than once --
+  formal parameter names corresponding to positional arguments cannot
+  be used as keywords in the same calls.
+
+  Simply put: you can either set the arguments in the right order and
+  only give their value, or you can give arguments by their name and
+  value. This last option holds some advantages: not only is it easier
+  to check what you did, but sometimes a function has many arguments
+  with default values and you only want to change a few. If this isn't
+  entirely clear yet, just look at the examples later in this tutorial
+  or check the Python tutorial.
+
+* If you want to use functions from a separate module (like :mod:`properties`),
     you add a line on top of the script  ::
 
        from properties import *
 
     All functions from that module are now available.
-
-* The hash character, "#", is used to start a comment in Python.
-
-* Python is case sensative.
-
-* Python by default uses integer math on integer arguments!
 
 
 .. _sec:intro-numpy:
@@ -217,6 +249,19 @@ Short introduction to NumPy
 ===========================
 
 .. warning:: This section is still to be written!
+
+Numerical Python (or NumPy for short) is an extension to the Python language
+providing efficient operations on large (numerical) arrays. relies heavily on
+NumPy, and most likely you will need to use some NumPy functions in your
+scripts. As NumPy is still quite young, the available documentation is not so
+extensive yet. Still, the tentative NumPy
+tutorialhttp://www.scipy.org/Tentative_NumPy_Tutorial already provides the
+basics.
+
+If you have ever used some other matrix language, you will find a lot of similar
+concepts in NumPy.
+
+To do: Introduce the (for users) most important NumPy concepts.
 
 .. index:: single: ndarray
 
@@ -291,24 +336,6 @@ Further, ``F[i][j]`` will be a :math:`(3,)`\ -shaped array containing the
 coordinates of point :math:`j` of element :math:`i`. Finally, ``F[i][j][k]`` is
 a single floating point value representing one coordinate of that point.
 
-.. % A plane along the axes 2 and 1 is a set of points (F: cantle). This can be
-.. % thought of as a geometrical shape (2 points form a line segment, 3 points
-.. % make a triangle, ...) or as an element in FE terms. But it really is up to
-.. % the user as to how this set of points is to be interpreted.
-.. % Finally, the whole Formex represents a set of such elements.
-.. % Additionally, a Formex may have a property set, which is an 1-D array of
-.. % integers. The length of the array is equal to the length of axis 0 of the
-.. % Formex data (i.e. the number of elements in the Formex). Thus, a single
-.. % integer value may be attributed to each element. It is up to the user to
-.. % define the use of this integer (e.g. it could be an index in a table of
-.. % element property records).
-.. % If a property set is defined, it will be copied together with the Formex
-.. % data whenever copies of the Formex (or parts thereof) are made.
-.. % Properties can be specified at creation time, and they can be set,
-.. % modified or deleted at any time. Of course, the properties that are
-.. % copied in an operation are those that exist at the time of performing
-.. % the operation.
-
 
 .. _subsec:create:
 
@@ -322,9 +349,12 @@ a new geometric structure from simple coordinate data? Well, there are
 several ways to do that too, and we'll introduce them one by one.
 
 
-Creating a Formex from structured coordinate data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The most straightforward way to create a Formex is by specifying the coordinates of the points of all its elements in a way compatible to creating a 3D :class:`ndarray`::
+Direct input of structured coordinate data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+
+The most straightforward way to create a Formex is by directly
+specifying the coordinates of the points of all its elements in a way
+compatible to creating a 3D :class:`ndarray`::
 
    F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
 
@@ -332,67 +362,95 @@ The data form a nested list of three levels deep. Each innermost level list
 holds the coordinates of a single point. There are four of them: [0.,0.], [1.,0.], [1.,1.] and [0.,1.]. Remark that we left out the third (z) coordinate and it will be set equal to zero. Also, though the values are integer, we added a dot
 to force floating point values.
 
-.. note::
+.. warning:: Python by default uses integer math on integer arguments!
    We advice you to always write the decimal point in values that initialize
    variables that can have floating point values, such as lengths, angles,
    thicknesses. Use integer values only to initialize variables that can
    only have an integer value, such as the number of elements.
 
-The second list level groups the points into elements. In this case there are
-two elements, each containing two points. The outermost list level then is the :class:`Formex`: it has plexitude 2 and contains 2 elements. 
-But what geometrical entities does this represent?
+The second list level groups the points into elements. In this case
+there are two elements, each containing two points. The outermost list
+level then is the :class:`Formex`: it has plexitude 2 and contains 2
+elements.  But what geometrical entities does this represent? The
+plexitude alone does not specify what kind of geometric objects we are
+dealing about. A 2-plex element would presumably represent a straight
+line segment between two points in space, but it could just as well be
+used to represent a sphere (by its center and a point on the surface)
+or a plane (by a point in the plane and the direction of the normal).
 
+By default, |pyformex| will interprete the plexitude as follows:
 
+============== ===============================
+Plexitude      Geometrical interpretation
+============== ===============================
+1              Points
+2              Straight line segments
+3              Triangles 
+4 or higher    Polygones (possibbly nonplanar) 
+============== ===============================
 
-.. _`fig:square`:
+  
+We will see later how to override this default. For now, let's draw Formices
+with the default. Go back to the ``example1.py`` script in you editor, containing the line above, and add the ``draw(F)`` instruction to make it look like::
+
+   F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
+   draw(F)
+
+Save the script and execute it in pyFormex. You will see the following picture
+appear in the canvas.
+
+.. _`fig:parallel`:
 
 .. figure:: _static/images/parallel.png
    :align: center
-   :alt: A very simple Formex
+   :alt: Two parallel lines
 
-   A very simple  Formex
+   Two parallel lines
 
 
-On the other hand, if you change the
-position of the square brackets like in the following example, then you'd create
-a Formex F which is different from the previous. The nodes are the same, but the
-connection is different. The nodes (0,0) and (1,0) are linked together by an
-element, and so are the nodes (1,1) and (0,1). The Formex is now a set of 2
-parallel bars, instead of a single square plane.
+Now let's remove the two central ']' and '[' brackets in the first line::
 
-::
+   F = Formex([[[0.,0.],[1.,0.],[1.,1.],[0.,1.]]])
+   draw(F)
 
-   F=Formex([[[0,0],[1,0],[1,1],[0,1]]])
-
-If we want to define a Formex, similar to the square plane, but consisting of
-the 4 edges instead of the actual plane, we have to define four elements and
-combine them in a Formex. This is *not* the same Formex as fig
-:ref:`fig:square`, although it looks exactly the same.
+With the same data we have now created a 4-plex Formex with only one element.
+Execute the script again (do not forget to save it first) and you will see
+a square.  
 
 .. _`fig:square`:
 
 .. figure:: _static/images/square.png
    :align: center
-   :alt: A very simple Formex
+   :alt: A square
 
-   A very simple  Formex
+   A square with the same four points.
 
-.. % \begin{figure}[ht]
-.. % \centering
-.. % \begin{makeimage}
-.. % \end{makeimage}
-.. % \begin{latexonly}
-.. % \includegraphics[width=4cm]{images/parallel}
-.. % \end{latexonly}
-.. % \begin{htmlonly}
-.. % \htmladdimg{../images/parallel.png}
-.. % \end{htmlonly}
-.. % \caption{Same nodes, different Formex}
-.. % \end{figure}
+But wait a minute! Is this a square surface, or is it just four lines constituting the circumference of a square? Actually, it is a square surface, but since the pyFormex GUI by default displays in wireframe mode, unless you have changed it, you will only see the border of the square. You can make surfaces and solids get fully rendered by selecting the :menuselection:`Viewport --> Render Mode --> Smooth` option or using the shortcut |button-smooth| button in the toolbar.
+You will then see 
 
-::
+.. _`fig:square-filled`:
 
-   F=Formex([[[0,0],[0,1]], [[0,1],[1,1]], [[1,1],[1,0]], [[1,0],[0,0]]])
+.. figure:: _static/images/square_filled.png
+   :align: center
+   :alt: A filled square
+
+   The same square in smooth rendering.
+
+
+If you want to define a Formex representing the four border lines of the square,
+you need a 4 element 2-plex structure like this::
+
+   F = Formex([[[0.,0.],[0.,1.]], [[0.,1.],[1.,1.]], [[1.,1.],[1.,0.]], [[1.,0.],[0.,0.]]])
+   draw(F,clear=True)
+
+Try this, and you will see an image identical to :ref:`fig:square-filled`.
+(If you still see a filled square, you should set
+, similar to the square plane, but
+consisting of the 4 edges instead of the actual plane, we have to
+define four elements and combine them in a Formex. This is *not* the
+same Formex as fig :ref:`fig:square`, although it looks exactly the
+same.
+
 
 The previous examples were limited to a 2-D environment for simplicity's sake.
 Of course, we could add a third dimension. For instance, it's no problem
@@ -706,8 +764,7 @@ are found in :file:`installdir/examples`. Let's begin with the example
 :file:`Spiral.py`.
 
 
-.. include:: _static/scripts/Spiral.py
-   :literal:
+.. literalinclude:: _static/scripts/Spiral.py
 
 During this first read-through, you will have noticed that every step is drawn.
 Of course, this is not necessary, but it can be useful. And above all, it is

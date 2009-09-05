@@ -2,8 +2,8 @@
 .. pyformex reference manual --- project
 .. CREATED WITH quickref.py: DO NOT EDIT
 
-.. include:: defines.inc
-.. include:: links.inc
+.. include:: ../defines.inc
+.. include:: ../links.inc
 
 .. _sec:ref-project:
 
