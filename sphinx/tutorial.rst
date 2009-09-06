@@ -217,30 +217,35 @@ with this tutorial.
 * A '#' starts a comment: the '#', and anything following it, is
   disregarded.
 
-* 
+* Variables in Python do not need to be declared before using them. In
+  fact, Python has no variables, only typed objects. An assignment is
+  just the binding of a name to an object. That binding can be changed
+  at each moment by a new assignment to the same name.
 
-* When using a function that requires arguments, an argument list must
-  have any positional arguments followed by any keyword arguments,
-  where the keywords must be chosen from the formal parameter
-  names. It's not important whether a formal parameter has a default
-  value or not. No argument may receive a value more than once --
-  formal parameter names corresponding to positional arguments cannot
-  be used as keywords in the same calls.
+* You can used names defines in other modules, but you need to import
+  those first. This can be done by importing the whole module and then
+  using a name relative to that module::
 
-  Simply put: you can either set the arguments in the right order and
-  only give their value, or you can give arguments by their name and
-  value. This last option holds some advantages: not only is it easier
-  to check what you did, but sometimes a function has many arguments
-  with default values and you only want to change a few. If this isn't
-  entirely clear yet, just look at the examples later in this tutorial
-  or check the Python tutorial.
+   import mymodule
+   print mymodule.some_variable
 
-* If you want to use functions from a separate module (like :mod:`properties`),
-    you add a line on top of the script  ::
+  or you can import specific names from a module::
 
-       from properties import *
+   from mymodule import some_variable
+   print some_variable
 
-    All functions from that module are now available.
+  or you can import everything from a module (not recommended, because
+  you can easily clutter your name space)::
+
+   from mymodule *
+   print some_variable
+   
+* Sequences of objects can be grouped in tuples or lists, and
+  individual items of them are accessed by an index starting from 0.
+
+* Function definitions can use both positional arguments and keyword arguments,
+  but the keyword arguments mus follow the positional arguments.
+  The order in which keyword arguments are specified is not important.
 
 
 .. _sec:intro-numpy:
@@ -423,7 +428,7 @@ a square.
    :align: center
    :alt: A square
 
-   A square with the same four points.
+   A square.
 
 But wait a minute! Is this a square surface, or is it just four lines constituting the circumference of a square? Actually, it is a square surface, but since the pyFormex GUI by default displays in wireframe mode, unless you have changed it, you will only see the border of the square. You can make surfaces and solids get fully rendered by selecting the :menuselection:`Viewport --> Render Mode --> Smooth` option or using the shortcut |button-smooth| button in the toolbar.
 You will then see 
@@ -434,62 +439,113 @@ You will then see
    :align: center
    :alt: A filled square
 
-   The same square in smooth rendering.
+   The square in smooth rendering.
 
+|pyformex| by default uses wireframe rendering, because in a fully
+rendered mode many details are obscured. Switch back to wireframe
+mode using the :menuselection:`Viewport --> Render Mode -->
+Wireframe` menu option or |button-wireframe| toolbar button.
 
-If you want to define a Formex representing the four border lines of the square,
-you need a 4 element 2-plex structure like this::
+Now suppose you want to define a Formex representing the four border
+lines of the square, and not the surface inside that
+border. Obviously, you need a 4 element 2-plex Formex, using data
+structured like this::
 
    F = Formex([[[0.,0.],[0.,1.]], [[0.,1.],[1.,1.]], [[1.,1.],[1.,0.]], [[1.,0.],[0.,0.]]])
    draw(F,clear=True)
 
-Try this, and you will see an image identical to :ref:`fig:square-filled`.
-(If you still see a filled square, you should set
-, similar to the square plane, but
-consisting of the 4 edges instead of the actual plane, we have to
-define four elements and combine them in a Formex. This is *not* the
-same Formex as fig :ref:`fig:square`, although it looks exactly the
-same.
+Try it, and you will see an image identical to :ref:`fig:square`. 
+But the geometry it represents is quite different:
+now it is just four straight lines while it was a square plane surface in the former case.
+
+.. warning:: When modeling geometry, always be aware that what you
+   think you see is not necessarily what it really is!
+
+We added a ``clear=True`` option to the draw statement, to clear the
+screen before drawing. Indeed, by default the |pyformex| draw
+statement does not clear the screen but just adds to what was already
+drawn. You can make the ``clear=True`` option the default from the
+:menuselection:`Viewport --> Drawing Options` menu.  Make
+``clear=True`` a default drawing option before continuing.
+
+Changing the rendering mode, the perspective and the viewpoint can
+often help you to find out what the image is really representing.
+But interrogating the Formex data itself is the definite way to make sure::
+
+   F = Formex([[[0.,0.],[1.,0.],[1.,1.],[0.,1.]]])
+   print F.shape()
+   F = Formex([[[0.,0.],[1.,0.]],[[1.,1.],[0.,1.]]])
+   print F.shape()
+
+This will print the length of the three axes of the coordinate array. In
+the first case you get ``(1, 4, 3)`` (1 element of plexitude 4),
+while the second one gives ``(2, 2, 3)`` (2 elements of plexitude 2).
+
+You can also print the whole Formex, using ``print F``, giving you the
+coordinate data in a more readable fashion than the list input. The
+last example above will yield:
+``{[0.0,0.0,0.0; 1.0,0.0,0.0], [1.0,1.0,0.0; 0.0,1.0,0.0]}``.
+In the output, coordinates are separated by commas and points by
+semicolons. Elements are contained between brackets and the full
+Formex is placed inside braces.
 
 
-The previous examples were limited to a 2-D environment for simplicity's sake.
-Of course, we could add a third dimension. For instance, it's no problem
-defining a pyramid consisting of 8 elements ('bars').  ::
+Until now we have only dealt with plane structures, but 3D structures
+are as easy to create from the coordinate data. The following Formex
+represents a pyramid defined by four points (a tetraeder)::
 
-   F=Formex([[[0,0,0],[0,1,0]], [[0,1,0],[1,1,0]], [[1,1,0],[1,0,0]], [[1,0,0], 
-   	[0,0,0]], [[0,0,0],[0,1,0]], [[0,0,0],[0.5,0.5,1]], [[1,0,0],[0.5,0.5,1]], 
-   	[[1,1,0], [0.5,0.5,1]], [[0,1,0],[0.5,0.5,1]]])
+   F = Formex([[[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]]],eltype='tet4')
+   draw(F)
 
-However, as you can see, even in this very small example the number of nodes,
-elements and coordinates you have to declare becomes rather large. Defining
-large Formices using this method would not be practical. This problem is easily
-overcome by copying, translating, rotating,... a smaller Formex --- as will be
-explained in :ref:`subsec:changing` --- or by using patterns.
+Depending on your current rendering mode, this will produce an image
+like one of the following:
 
-.. % \begin{figure}[ht]
-.. % \centering
-.. % \begin{makeimage}
-.. % \end{makeimage}
-.. % \begin{latexonly}
-.. % \includegraphics[width=6cm]{images/pyramide}
-.. % \end{latexonly}
-.. % \begin{htmlonly}
-.. % \htmladdimg{../images/pyramide.png}
-.. % \end{htmlonly}
-.. % \caption{A pyramid}
-.. % \label{fig:pyramid}
-.. % \end{figure}
+.. _`fig:pyramid`:
+
+.. figure:: _static/images/pyramid.png
+   :align: center
+   :alt: The pyramid in wireframe and smoothwire rendering 
+
+   The pyramid in wireframe and smoothwire rendering
+
+Hold down the left mouse button and move the mouse: the pyramid will
+rotate. In the same way, holding down the rigth button will zoomin and
+out. Holding down the middle button (possibly the mouse wheel, or the
+left and right button together) will move the pyramid over the canvas.
+Practice a bit with this mouse manipulations, to get a feeling of what
+they do.
+All these mouse operations do not change the coordinates of the
+structure: they just change the way you're looking at it.
+
+We explicitely added the element type ``tet4`` when creating the
+pyramid. Without it, pyFormex would have interpreted the 4-plex Formex
+as a quadrilateral (though in this case a non-planar one).
 
 
-Creating a Formex using patterns
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Using the :func:`pattern` or :func:`mpattern` functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In the previous examples the Formices were created by directly
+specifying the coordinate data. That is fine for small structures, but
+quickly becomes cumbersome when the structures get larger.
+The :func:`pattern` and :func:`mpattern` functions reduce the number of
+input needed to create a Formex from scratch.
 
-Another way of creating a Formex, is by using the coordinate generating
-functions :func:`pattern` and mpattern. These functions create a series of
-coordinates from a simple string, by interpreting each of the characters of the
-string as a single unit step in one of the cordinate directions, or as some
-other simple action. These functions thus are very valuable in creating geometry
+Both functions create a series of coordinates from a simple
+string. Each characters of the string is interpreted either as a unit
+step in one of the cordinate directions, or as some other simple
+action. These functions are thus very valuable in creating geometry
 where the points lie on a regular grid.
+
+The :func:`pattern` function creates a straight line segment between
+each pair of subsequent points, and thus results in a 2-plex Formex.
+The :func:`mpattern` function is more general in that it allows the
+creation of Formices of any plexitude.
+
+Let's look at an example::
+
+   F = Formex(pattern('11722'))
+   draw(F)
+
 
 In this case, a line segment pattern is created from a string.
 
