@@ -60,7 +60,7 @@ There are some huge advantages in using |pyformex|:
 
 .. _`fig:scallopdomes`:
 
-.. figure:: _static/images/scallopdomes.png
+.. figure:: images/scallopdomes.png
    :align: center
    :alt: Three scallop domes
 
@@ -312,7 +312,7 @@ are stored along the first axis (0) of the :class:`Formex`. The figure
 
 .. _`fig:formex`:
 
-.. figure:: _static/images/Formex.png
+.. figure:: images/Formex.png
    :align: center
    :alt: The structure of a Formex
 
@@ -406,7 +406,7 @@ appear in the canvas.
 
 .. _`fig:parallel`:
 
-.. figure:: _static/images/parallel.png
+.. figure:: images/parallel.png
    :align: center
    :alt: Two parallel lines
 
@@ -424,7 +424,7 @@ a square.
 
 .. _`fig:square`:
 
-.. figure:: _static/images/square.png
+.. figure:: images/square.png
    :align: center
    :alt: A square
 
@@ -435,7 +435,7 @@ You will then see
 
 .. _`fig:square-filled`:
 
-.. figure:: _static/images/square_filled.png
+.. figure:: images/square_filled.png
    :align: center
    :alt: A filled square
 
@@ -502,7 +502,7 @@ like one of the following:
 
 .. _`fig:pyramid`:
 
-.. figure:: _static/images/pyramid.png
+.. figure:: images/pyramid.png
    :align: center
    :alt: The pyramid in wireframe and smoothwire rendering 
 
@@ -527,49 +527,58 @@ Using the :func:`pattern` or :func:`mpattern` functions
 In the previous examples the Formices were created by directly
 specifying the coordinate data. That is fine for small structures, but
 quickly becomes cumbersome when the structures get larger.
-The :func:`pattern` and :func:`mpattern` functions reduce the number of
+The :func:`pattern` and :func:`mpattern` functions reduce the amount of
 input needed to create a Formex from scratch.
 
-Both functions create a series of coordinates from a simple
-string. Each characters of the string is interpreted either as a unit
-step in one of the cordinate directions, or as some other simple
+Both functions create a series of points from a simple
+string. Each character of the string is interpreted either as a unit
+step in one of the coordinate directions, or as some other simple
 action. These functions are thus very valuable in creating geometry
 where the points lie on a regular grid.
+
+The first point of the list is [0,0,0]. Each character from the input
+string is interpreted as a code specifying how to move to the next
+point.  Currently defined are the following codes: 0 = goto origin
+[0,0,0], 1..8 move in the x,y plane, 9 remains at the same place.
+When looking at the plane with the x-axis to the right and the y-axis
+up, 1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 = SW,
+8 = SE.
+Adding 16 to the ordinal of the character causes an extra move of +1 in the
+z-direction. Adding 48 causes an extra move of -1. This means that
+'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an
+extra z = +/- 1. This gives the following schema::
+
+                 z+=1             z unchanged            z -= 1
+            
+             F    B    E          6    2    5         f    b    e 
+                  |                    |                   |     
+                  |                    |                   |     
+             C----I----A          3----9----1         c----i----a  
+                  |                    |                   |     
+                  |                    |                   |     
+             G    D    H          7    4    8         g    d    h
+             
+The special character '/' can be put before any character to make the
+move without making a connection.  The effect of any other character
+is undefined.
 
 The :func:`pattern` function creates a straight line segment between
 each pair of subsequent points, and thus results in a 2-plex Formex.
 The :func:`mpattern` function is more general in that it allows the
-creation of Formices of any plexitude.
+creation of Formices of any plexitude. Each subsequent point is added
+to the same element, until a '-' character is met.
 
 Let's look at an example::
 
-   F = Formex(pattern('11722'))
+   F = Formex(pattern('1234'))
    draw(F)
 
+This example creates the circumference of a unit square (figure :ref:`fig:square`), and is much simpler
+than the explicit specification of the coordinates we did earlier.
+Some more examples:
+'11722', 
 
-In this case, a line segment pattern is created from a string.
 
-The function :func:`pattern(s)` creates a list of line segments where all nodes
-lie on the gridpoints of a regular grid with unit step. The first point of the
-list is [0,0,0]. Each character from the given string *s* is interpreted as a
-code specifying how to move to the next node. Currently defined are the
-following codes: ---  0 = goto origin [0,0,0] ---  1..8 move in the x,y plane
----  9 remains at the same place ---  When looking at the plane with the x-axis
-to the right, ---  1 = East, 2 = North, 3 = West, 4 = South, 5 = NE, 6 = NW, 7 =
-SW, 8 = SE. ---  Adding 16 to the ordinal of the character causes an extra move
-of +1 in the z-direction. Adding 48 causes an extra move of -1. This means that
-'ABCDEFGHI', resp. 'abcdefghi', correspond with '123456789' with an extra z +/-=
-1.               The special character '``\``' can be put before any character
-to make the move without making a connection. The effect of any other character
-is undefined.
-
-This method has important restrictions, since it can only create lines on a
-regular grid. However, it can be a much easier and shorter way to define a
-simple Formex. This is illustrated by the difference in length between the
-previous creation of a square and the next one, although they define the same
-Formex (figure :ref:`fig:square`).  ::
-
-   F=Formex(pattern('1234'))
 
 Some simple patterns are defined in :mod:`simple.py` and are ready for use.
 These patterns are stacked in a dictionary called 'Patterns'. Items of this
@@ -577,22 +586,26 @@ dictionary can be accessed like Patterns['cube'].  ::
 
    #!/usr/bin/env pyformex
    from simple import *
-   c=Formex(pattern(Pattern['cube']))
-   clear();draw(c)
+   F = Formex(pattern(Pattern['cube']))
+   clear()
+   draw(F)
 
-.. % \begin{figure}[ht]
-.. % \centering
-.. % \begin{makeimage}
-.. % \end{makeimage}
-.. % \begin{latexonly}
-.. % \includegraphics[width=6cm]{images/cube}
-.. % \end{latexonly}
-.. % \begin{htmlonly}
-.. % \htmladdimg{../images/cube.png}
-.. % \end{htmlonly}
-.. % \caption{A cube}
-.. % \label{fig:cube}
-.. % \end{figure}
+.. _`fig:cube`:
+
+.. figure:: images/cube.png
+   :align: center
+   :alt: A wireframe cube 
+
+   A wireframe cube
+
+While the pattern :func:`pattern` and :func:`mpattern` functions can
+only generate points on a regular cartesian grid, |pyformex| provides
+a lot of transformation functions to move the points to other
+locations after they were created. 
+Also, the :mod:`Turtle` plugin module provides a more general mechanism to
+create planar wireframe structures.
+  
+
 
 
 Creating a Formex using coordinates from a file
@@ -856,7 +869,7 @@ every edge.  ::
 
 .. _`fig:basic-formex`:
 
-.. figure:: _static/images/spiral-000.png
+.. figure:: images/spiral-000.png
    :align: center
    :alt: The basic Formex
 

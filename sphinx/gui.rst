@@ -83,7 +83,7 @@ Finally, you can also start the GUI with the instruction
 
 .. _`fig:gui`:
 
-.. figure:: _static/images/gui.png
+.. figure:: images/gui.png
    :align: center
    :alt: pyFormex GUI
 

@@ -59,7 +59,7 @@ It is one of the many examples provided with |pyformex|.
 
 .. _`fig:wirestent-example`:
 
-.. figure:: _static/images/wirestent.png
+.. figure:: images/wirestent.png
    :align: center
    :alt: A wire stent
 
@@ -82,7 +82,7 @@ way.
 
 .. _`fig:wirestent-steps`:
 
-.. figure:: _static/images/wirestent-steps.png
+.. figure:: images/wirestent-steps.png
    :align: center
    :alt: A wire stent
 

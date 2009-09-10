@@ -141,19 +141,19 @@ of crossing struts by :math:`2` rotational replications with an angular step of
 :math:`2` replicas). If specified in the constructor, an additional Formex with
 property :math:`2` connects the first points of the ``NE`` and ``SE`` Formices.
 
-.. figure:: _static/images/WireStentDemot2Step01.*
+.. figure:: images/WireStentDemot2Step01.*
    :align: center
    :alt: straight line segment
 
    A straight line segment
 
-.. figure:: _static/images/WireStentDemot2Step02.*
+.. figure:: images/WireStentDemot2Step02.*
    :align: center
    :alt: line segment with replications
 
    The line segment with replications
 
-.. figure:: _static/images/WireStentDemot2Step03.*
+.. figure:: images/WireStentDemot2Step03.*
    :align: center
    :alt: bumped line segment
 
