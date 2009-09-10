@@ -575,8 +575,16 @@ Let's look at an example::
 
 This example creates the circumference of a unit square (figure :ref:`fig:square`), and is much simpler
 than the explicit specification of the coordinates we did earlier.
-Some more examples:
-'11722', 
+Figure :ref:`fig:patterns` shows some more examples: images of the
+structures generated from the patterns '126', '11722' and '22584433553388'. 
+
+.. _`fig:patterns`:
+
+.. figure:: images/patterns.png
+   :align: center
+   :alt: Images generated from patterns
+
+   Images generated from the patterns '126', '11722' and '22584433553388'
 
 
 

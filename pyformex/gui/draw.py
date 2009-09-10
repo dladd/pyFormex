@@ -764,6 +764,11 @@ def linewidth(wid):
     GD.canvas.setLineWidth(wid)
 
 
+def canvasSize(width,height):
+    """Resize the canvas to (width x height)."""
+    GD.canvas.resize(width,height)
+
+
 def clear_canvas():
     """Clear the canvas.
 

@@ -120,10 +120,10 @@ def polygonNormals(x):
 def pattern(s):
     """Return a line segment pattern created from a string.
 
-    This function creates a list of line segments where all nodes lie on the
-    gridpoints of a regular grid with unit step.
-    The first point of the list is [0,0,0]. Each character from the given
-    string is interpreted as a code specifying how to move to the next node.
+    This function creates a list of line segments where all points lie on
+    a regular grid with unit step.
+    The first point of the list is [0,0,0]. Each character from the input
+    string is interpreted as a code specifying how to move to the next point.
     Currently defined are the following codes:
     0 = goto origin [0,0,0]
     1..8 move in the x,y plane
