@@ -13,7 +13,7 @@
 .. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
 
 .. _`Online manual`: http://pyformex.berlios.de/manual/index.html
-.. _`pydoc`: http://pyformex.berlios.de/doc/index.html
+.. _`pyFormex documentation`: http://pyformex.berlios.de/doc/index.html
 .. _`PDF-version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
 
 

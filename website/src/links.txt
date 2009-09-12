@@ -1,4 +1,6 @@
 .. This may look like plain text, but is really -*- rst -*-
+.. $Id$
+
 restindex	
     crumb: Links
     format: rest

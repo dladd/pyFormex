@@ -1,4 +1,6 @@
 .. This may look like plain text, but is really -*- rst -*-
+.. $Id$
+
 restindex	
     crumb: Documentation
     format: rest
@@ -13,8 +15,15 @@ restindex
 Documentation
 -------------  
 
-- `Online manual`_ (also accessible from inside the pyFormex GUI).
-- Download `PDF-version`_ of the manual.
-- Automatically generated `pydoc`_ documentation (mostly useful for developers).
+*The pyFormex documentation is currently being restructured, rewritten
+and expanded. At this moment however you might
+still be better of with the older pyFormex manual.*
+
+- pyFormex manual (version 0.8):
+
+  - Browse the `Online manual`_ (also accessible from inside the pyFormex GUI).
+  - Download `PDF-version`_ of the manual.
+
+- Preview of the new `pyFormex documentation`_ under development.
 
 .. End

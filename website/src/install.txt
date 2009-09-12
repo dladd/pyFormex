@@ -24,4 +24,6 @@ You can get pyFormex from one of the following sources:
 
 - Finally, if you can not install all the prerequisites but still would like to try out the program, you can run pyFormex directly from the `BuMPix Linux Live`_. This is a full Linux distribution that you can run directly from CD or USB media, without the need to install anything. Just carry your USB-stick with you, and you can run pyFormex anywhere you find an available computer. 
 
+See the `pyFormex documentation`_ for installation instructions. 
+
 .. End
