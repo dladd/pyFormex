@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-sys.path[0:0] = ['/home/bene/prj/doctools']
+sys.path[0:0] = ['../converter']
 #print sys.path
 from converter import restwriter, convert_file
      
