@@ -32,3 +32,22 @@ Guidelines for creating pyFormex documentation
 - Install required packages:: ``apt-get install sphinx dvipng``
 
 - To create the html documentation, do ``make html`` in the ``sphinx`` directory.
+
+- To convert LaTeX source to ReST, you can use the converter from the Python 
+  doctools. Best is to install the doctools from Subversion sources, in your
+  top level pyformex directory, using the command::
+
+   svn co http://svn.python.org/projects/doctools/converter 
+
+  Do not use the ``convert.py`` script in the created ``coverter`` directory.
+  Use the script in the ``sphinx`` directory, as follows::
+
+   ./convert.py latexsource.tex
+
+  This will ``create latexsource.rst``.
+
+  If you have defined new LaTeX commands, the converter may not be able to
+  convert them: either change, remove or uncomment them. Uncommenting will
+  copy the commands to the output, so that you can fix them afterwards in the
+  ``.rst`` file.
+

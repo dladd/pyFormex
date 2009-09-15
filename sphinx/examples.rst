@@ -12,7 +12,7 @@
 pyFormex example scripts
 ************************
 
-.. warning:: This document is currently under revision! 
+.. warning:: This document still needs some cleanup! 
 
 Sometimes you learn quicker from studying an example than from reading a 
 tutorial or user guide. To help you we have created this collection of 
@@ -443,7 +443,7 @@ triangles.
    :align: center
    :alt: Cypher stent 
 
-   Triangulated mesh of a Cypher|reg| stent
+   Triangulated mesh of a Cypher\ |reg| stent
 
 The structure of such a device can be quite complex and difficult to analyse.
 The same functions offers for creating geometries can also be employed to

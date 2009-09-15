@@ -5,7 +5,7 @@
 <title><% title %></title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="description" content="pyFormex - A tool for generating, manipulating and operating on large geometrical models of 3D structures by sequences of mathematical transformations" />
-<meta name="keywords" content="3D geometry surface mesh" />
+<meta name="keywords" content="3D modeling geometry surface mesh STL finite element stent" />
 <link rel="stylesheet" href="<% path_to_root %>pyformex.css" type="text/css" />
 </head>
 
@@ -20,8 +20,9 @@
 
 
 <div id="nav">
+<ul>
 <#
-  for page in sidebar(indextree):
+  for page in sidebar(indextree,'<div class="menu">'):
     val = page['crumb']
     if 'Index' in val:
       continue
@@ -33,7 +34,7 @@
     if thispage['crumb'] == val:
       clas = 'this'+clas
     clas = 'class="%s"' % clas
-    print '<br/><a %s href="%s">%s</a>' % (clas,link,val)
+    print '<li><a %s href="%s">%s</a></li>' % (clas,link,val)
     if thispage['crumb'] == val:
       if page['uservalues'].has_key('anchors'):
         print '<ul>'
@@ -41,8 +42,10 @@
           print '<li><a href="#%s">%s</a></li>' % (a.lower(),a)
         print '</ul>'
 #>
-<br/>
-<a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a>
+<div class="menu">
+<li><a class="main" href="http://developer.berlios.de/projects/pyformex/">Project Page at Berlios</a></li>
+</div>
+</ul>
 </div>
 
 

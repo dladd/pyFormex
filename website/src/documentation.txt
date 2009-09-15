@@ -16,14 +16,15 @@ Documentation
 -------------  
 
 *The pyFormex documentation is currently being restructured, rewritten
-and expanded. At this moment however you might
-still be better of with the older pyFormex manual.*
+and expanded. While we already provide a preview of the upcoming new
+documentation, you might still be better off with the old manual.*
 
-- pyFormex manual (version 0.8):
+- Preview of the new `pyFormex documentation`_ under development. 
 
-  - Browse the `Online manual`_ (also accessible from inside the pyFormex GUI).
+
+- The older pyFormex manual (version 0.8):
+
+  - Browse the `Online manual`_ (a local version is accessible from inside the pyFormex GUI).
   - Download `PDF-version`_ of the manual.
-
-- Preview of the new `pyFormex documentation`_ under development.
 
 .. End

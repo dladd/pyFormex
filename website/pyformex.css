@@ -41,42 +41,46 @@ body {
 }
 
 #nav {
-    left: 55px;
     position: absolute;
+    left: 50px;
     display: block;
-    width: 165px;
-    padding-left: 15px;
-    padding-right: 0px;
-    padding-top: 30px;
+    width: 180px;
     background-color: white;
     font-size: small;
 }
 
 #nav ul {
     margin: 0;
-    padding-left: 5px;
+    padding-left: 10px;
+    padding-bottom: 10px;
 }
 
-#nav ul ul {
-    list-style-type: none;
-    padding-left: 20px;
+#nav div.menu {
+    margin: 10px;
 }
 
 #nav ul li {
     list-style-type: none;
+    padding-top: 5px;
+}
 
+
+#nav ul ul {
+    list-style-type: none;
+    padding-left: 10px;
 }
 
 #nav ul ul li {
-
+    list-style-type: none;
+    padding-left: 10px;
+    padding-top: 0px;
 }
 
 
 #nav a {
     text-decoration: none;
-    padding-left: 0.3em;
-    padding-right: 0.3em;
     color: 	#000099;
+    margin: 0px 0px 0px 0px;
 }
 
 #nav a.page {
