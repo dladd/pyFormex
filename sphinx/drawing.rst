@@ -65,7 +65,7 @@ Drawing a Formex
 
 The most important action performed on the canvas is the drawing of a Formex.
 This is accomplished with the draw() function. If you look at the reference page
-of this function :ref:`sec:drawing`, the number of arguments looks frightening.
+of the :func:`draw` function, the number of arguments looks frightening.
 However, most of these arguments have sensible default values, making the access
 to drawing functionality easy even for beginners. To display your created Formex
 F on the screen, a simple draw(F) will suffice in many cases.

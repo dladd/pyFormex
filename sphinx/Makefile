@@ -114,6 +114,8 @@ pdf:	latex
 
 # Automatically created input files
 
+prereq: ref pyformex.help
+
 ref:
 	quickref.py ${AUTOREF}
 

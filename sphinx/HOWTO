@@ -27,3 +27,8 @@ Guidelines for creating pyFormex documentation
 
 - When refering to pyFormex (the name of the program and project), always write:
   ``|pyformex|``.
+
+
+- Install required packages:: ``apt-get install sphinx dvipng``
+
+- To create the html documentation, do ``make html`` in the ``sphinx`` directory.
