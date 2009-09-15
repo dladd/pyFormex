@@ -564,19 +564,16 @@ is undefined.
 
 The :func:`pattern` function creates a straight line segment between
 each pair of subsequent points, and thus results in a 2-plex Formex.
-The :func:`mpattern` function is more general in that it allows the
-creation of Formices of any plexitude. Each subsequent point is added
-to the same element, until a '-' character is met.
-
-Let's look at an example::
+Here's an example::
 
    F = Formex(pattern('1234'))
    draw(F)
 
-This example creates the circumference of a unit square (figure :ref:`fig:square`), and is much simpler
-than the explicit specification of the coordinates we did earlier.
-Figure :ref:`fig:patterns` shows some more examples: images of the
-structures generated from the patterns '126', '11722' and '22584433553388'. 
+It creates the same circumference of a unit square as above (see
+figure :ref:`fig:square`), but is much simpler than the explicit 
+specification of the coordinates we used before.
+Figure :ref:`fig:patterns` shows some more examples: these wireframe 
+structures were generated using the patterns '126', '11722' and '22584433553388'. 
 
 .. _`fig:patterns`:
 
@@ -586,17 +583,27 @@ structures generated from the patterns '126', '11722' and '22584433553388'.
 
    Images generated from the patterns '126', '11722' and '22584433553388'
 
+The :func:`mpattern` function is more general than :func:`pattern` in that it allows the
+creation of Formices of any plexitude. Each subsequent point is added
+to the same element, until a '-' character or the end of the string is
+found. The following example creates a square::
+
+   F = Formex(pattern('123'))
+   draw(F)
+
+It may come as a surprise that there are only 3 characters, 
+
 
 
 Some simple patterns are defined in :mod:`simple.py` and are ready for use.
 These patterns are stacked in a dictionary called 'Patterns'. Items of this
-dictionary can be accessed like Patterns['cube'].  ::
+dictionary can be accessed like ``Patterns['cube']``.  ::
 
    #!/usr/bin/env pyformex
    from simple import *
    F = Formex(pattern(Pattern['cube']))
    clear()
-   draw(F)
+   draw(F,view='iso')
 
 .. _`fig:cube`:
 

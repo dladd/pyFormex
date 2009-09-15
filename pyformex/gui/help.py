@@ -69,10 +69,6 @@ def cmdline():
     """Display the pyFormex command line help."""
     catchAndDisplay('GD.print_help()')
 
-def manual():
-    """Display the pyFormex manual."""
-    help(GD.cfg['help/manual'])
-
 def showpydoc(item=None):
     """Display the pydoc information about topic."""
     if item is None:
@@ -81,14 +77,6 @@ def showpydoc(item=None):
             item = res['Item:']
     if item:
         catchAndDisplay("pydoc.help('%s')" % item)
-
-def website():
-    """Display the pyFormex website."""
-    help(GD.cfg['help/website'])
-
-def webman():
-    """Display the pyFormex website."""
-    help(GD.cfg['help/webmanual'])
 
 def readme():
     """Display the pyFormex description."""
@@ -172,9 +160,10 @@ except:
 
 
 MenuData = [
-    (_('&Manual (local)'),manual),
-    (_('&Manual (online)'),webman),
-    (_('pyFormex &Website'),website),
+    (_('&Manual (local)'),help,{'data':GD.cfg['help/manual']}),
+    (_('&Manual (online)'),help,{'data':GD.cfg['help/webmanual']}),
+    (_('&Online pyFormex documentation'),help,{'data':GD.cfg['help/webdoc']}),
+    (_('pyFormex &Website'),help,{'data':GD.cfg['help/website']}),
     (_('&Help (pydoc) about item'),showpydoc),
     ('---',None),
     (_('&Command line options'),cmdline),
@@ -187,5 +176,12 @@ MenuData = [
     (_('&Developers'),developers), 
     (_('&About'),about), 
     ]
+
+sphinx = GD.cfg.get('help/sphinx','')
+if sphinx and os.path.exists(sphinx):
+    print "GREAT! FOUND SPHINX @ %s" % sphinx
+
+    MenuData[1:1] =  [(_('&Sphinx (experimental pyFormex documentation)'),help,{'data':sphinx})]
+    print MenuData
 
 # End

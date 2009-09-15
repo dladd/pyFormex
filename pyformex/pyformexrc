@@ -142,6 +142,7 @@ pydocs = os.path.join(pyformexdir,"doc","html","index.html")
 readme = os.path.join(pyformexdir,"doc","README")
 license = os.path.join(pyformexdir,"doc","COPYING")
 website = "http://pyformex.berlios.de" 
+webdoc = website+"/doc" 
 webmanual = website+"/manual"
 links = {'pyformex':'pyformex.org','ibitech':'www.ibitech.ugent.be','python':'www.python.org','pyformex-dev':'developer.berlios.de/projects/pyformex','stent-boys':'www.stent-ibitech.ugent.be'}
 

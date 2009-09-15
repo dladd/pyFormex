@@ -4,7 +4,7 @@
 usage() {
   echo "$(basename $0) files..."
   echo "Adds the svn:keywords Id property to the specified files"
-  echo "This will make subversion expand the $Id$ keyword on checkin" 
+  echo "This will make subversion expand the \$Id\$ keyword on checkin."
   echo "Contributors should set this property to all newly added source files."
   echo "If you have properly set your subversion configuration, you will not"
   echo "have to do this explicitely for .py or .c files"
