@@ -11,9 +11,10 @@
 This is the |pyformex| |release| documentation, last updated on |today|.
 
 .. warning:: We have moved to a new documentation management
-   system and are currently in the process of rewriting the
+   system (sphinx) and are currently in the process of rewriting the
    documentation. This means that some of these documents are in a rather
-   unstable condition and may evolve quickly. 
+   unstable condition and may evolve quickly. Most of the documents (except
+   the :doc:`user-guide`) are already fairly useable.
 
 These documents are to become a full documentation set for the installation and use of the |pyformex| software. However, as |pyformex| is still under active
 development, so is this documentation: it therefore is by no means final and
@@ -41,6 +42,7 @@ Parts of the documentation
    user-guide
    examples
    refman
+   faq
    license
 
 

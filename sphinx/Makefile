@@ -23,7 +23,7 @@ PLUGINMODULES= curve fe inertia isopar lima mesh \
   properties section2d surface turtle units
 AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 
-MANDOCS= cd _build/html/*
+MANDOCS= _build/html/*
 RSYNC= rsync -av -e ssh
 
 UPLOAD= shell.berlios.de:/home/groups/pyformex/

@@ -17,10 +17,10 @@ Documentation
 
 *The pyFormex documentation is currently being restructured, rewritten
 and expanded. While we already provide a preview of the upcoming new
-documentation, you might still be better off with the old manual.*
+documentation, we will also offer the old manual until the transformation
+has been finalized.*
 
 - Preview of the new `pyFormex documentation`_ under development. 
-
 
 - The older pyFormex manual (version 0.8):
 
