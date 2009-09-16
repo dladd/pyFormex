@@ -16,9 +16,10 @@ for light in [ 'green','yellow','red','black',None]:
 
 
 
-speed_appreciation = { 30:'slow', 60:'normal', 75:'ticket', 90:'dangerous',
-                       120:'suicide'}
+appreciation = { 0: 'not driving', 30:'slow', 60:'normal', 90:'dangerous', 120:'suicidal'}
 
-for speed in 10*range(15):
-    
+for i in range(5):
+    speed = 30*i
+    print "%s. Driving at speed %s is %s" % (i,speed,appreciation[speed])
+
 

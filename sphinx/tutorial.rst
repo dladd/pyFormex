@@ -104,8 +104,11 @@ Getting started
   .. literalinclude:: _static/scripts/template.py
      :linenos:
 
-.. warning:: If the editor does not open, you may need to configure
+.. note:: If the editor does not open, you may need to configure
    the editor command:  see :ref: `Settings --> Commands <settings-commands>`.
+
+   Make sure you are using an editor that understands Python code. Most modern
+   editors will give you syntax highlighting and help with indentation.
 
 * The template script shows the typical layout of a |pyformex| script:
 
@@ -195,32 +198,56 @@ concepts suffice to produce quite powerful scripts. Most developers and users of
 |pyformex| have started without any knowledge of Python.
 
 For the really impatient who do not want to go through the `Python
-tutorial`_
-before diving into |pyformex|, we have gathered hereafter some of the
-most important Python concepts, hopefully enabling you to continue
-with this tutorial.
+tutorial`_ before diving into |pyformex|, we have gathered hereafter
+some of the most important Python concepts, hopefully enabling you to
+continue with this tutorial.
 
-* In Python, indentation is essential. Indentation is Python's way of
-  grouping statements. In small, sequential |pyformex| scripts,
+Here is a small example Python script.
+    
+.. literalinclude:: _static/scripts/python_intro.py
+   :linenos:
+
+
+* A '#' starts a comment: the '#', and anything following it on the same line,
+  is disregarded. A Python script typically starts with a comment line like
+  line 1 of the above script.
+
+* Strings in Python can be delimited either by single quotes ('),
+  double quotes (") or by triple double quotes ("""). The starting and
+  ending delimiters have to be equal though. Strings in triple quotes
+  can span several lines, like the string on lines 2-5.
+
+* Indentation is essential. Indentation is Python's way of
+  grouping statements. In small, sequential scripts,
   indentation is not needed and you should make sure that you start
   each new line in the first column.
   An ``if`` test or a ``for`` loop will however need indentation to
-  mark the statement(s) inside the condition or loop. A small
-  example:
-    
-  .. literalinclude:: _static/scripts/python-intro.py
+  mark the statement(s) inside the condition or loop.
+  Thus, in the example, lines 8-15 are the block of statements that are
+  executed repeatedly under the ``for`` loop construct in line 7.
+  Notice that the condition and loop statements end with a ':'.
 
+  You should make sure that statements belonging to the same block are
+  indented consistently.
   We advice you not to use tabs for indenting. A good practice
   commonly followed by most Python programmers is to indent with 4
-  spaces. Also notice that the conditions end with a ':'.
-  
-* A '#' starts a comment: the '#', and anything following it, is
-  disregarded.
+  spaces. 
+
+  The indentation makes Python code easy to read for humans. Most modern
+  editors will recognize Python code and help you with the indentation.
+
 
 * Variables in Python do not need to be declared before using them. In
   fact, Python has no variables, only typed objects. An assignment is
   just the binding of a name to an object. That binding can be changed
   at each moment by a new assignment to the same name.
+   
+* Sequences of objects can be grouped in tuples or lists, and
+  individual items of them are accessed by an index starting from 0.
+
+* Function definitions can use both positional arguments and keyword arguments,
+  but the keyword arguments mus follow the positional arguments.
+  The order in which keyword arguments are specified is not important.
 
 * You can used names defines in other modules, but you need to import
   those first. This can be done by importing the whole module and then
@@ -237,16 +264,8 @@ with this tutorial.
   or you can import everything from a module (not recommended, because
   you can easily clutter your name space)::
 
-   from mymodule *
+   from mymodule import *
    print some_variable
-   
-* Sequences of objects can be grouped in tuples or lists, and
-  individual items of them are accessed by an index starting from 0.
-
-* Function definitions can use both positional arguments and keyword arguments,
-  but the keyword arguments mus follow the positional arguments.
-  The order in which keyword arguments are specified is not important.
-
 
 .. _sec:intro-numpy:
 
@@ -260,7 +279,7 @@ providing efficient operations on large (numerical) arrays. relies heavily on
 NumPy, and most likely you will need to use some NumPy functions in your
 scripts. As NumPy is still quite young, the available documentation is not so
 extensive yet. Still, the tentative NumPy
-tutorialhttp://www.scipy.org/Tentative_NumPy_Tutorial already provides the
+tutorial http://www.scipy.org/Tentative_NumPy_Tutorial already provides the
 basics.
 
 If you have ever used some other matrix language, you will find a lot of similar
