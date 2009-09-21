@@ -30,6 +30,8 @@ Graphic Tools for pyFormex.
 import pyformex as GD
 from coords import *
 from collection import Collection
+from gui.actors import GeomActor
+
 
 class Plane(object):
 
@@ -163,6 +165,25 @@ def reportDistances(K):
     d = x.distanceFromPoint(x[0])
     for i,p in enumerate(zip(x,d)):
         s += "Distance from point: %s %s: %s\n" % (i,p[0],p[1])
+    return s
+
+
+def reportAngles(K):
+    if K is None or not hasattr(K,'obj_type') or K.obj_type != 'element':
+        return ''
+    s = "Angle report:\n"
+    for F in getCollection(K):
+        if isinstance(F,GeomActor):
+            x = F.coords
+            print x
+            if F.elems is None:
+                print x.shape
+                v = x[:,1,:] - x[:,0,:]
+                v = normalize(v)
+            cosa = dotpr(v[0],v[1])
+            print cosa
+            a = arccos(cosa) * 180. / pi
+            s += "  a = %s" % a
     return s
 
     

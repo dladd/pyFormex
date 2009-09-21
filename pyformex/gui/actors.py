@@ -57,6 +57,14 @@ class Actor(Drawable):
     def __init__(self):
         Drawable.__init__(self)
 
+    # we need nelems() and pickGL for the picking functions
+    def npoints(self):
+        return 0
+    def nelems(self):
+        return 0
+    def pickGL(self,mode):
+        pass
+
 
 class TranslatedActor(Actor):
     """An Actor translated to another position."""
@@ -343,7 +351,7 @@ class GeomActor(Actor):
         """Create a geometry actor.
 
         The geometry is either in Formex model: a coordinate block with
-        shape (nelems,nplex,3), or in Mesh forma: a coordinate block
+        shape (nelems,nplex,3), or in Mesh format: a coordinate block
         with shape (npoints,3) and an elems block with shape (nelems,nplex).
 
         In both cases, an eltype may be specified if the default is not

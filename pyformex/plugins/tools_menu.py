@@ -396,6 +396,11 @@ def query_edges():
 def query_distances():
     set_selection('point')
     print reportDistances(selection)
+
+def query_angle():
+    showInfo("Select two line elements.")
+    set_selection('element')
+    print reportAngles(selection)
                    
 
 def report_selection():
@@ -566,6 +571,7 @@ def create_menu():
           ('&Points',query_points),
           ('&Edges',query_edges),
           ('&Distances',query_distances),
+          ('&Angle',query_angle),
           ]),
         ("---",None),
         ("&DOS to Unix",dos2unix),
