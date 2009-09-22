@@ -163,12 +163,16 @@ def dialogTimedOut():
     return _dialog_result == widgets.TIMEOUT
 
 
-def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False):
+def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=True):
     """Ask for a file name or multiple file names using a file dialog.
 
     cur is a directory or filename. All the files matching the filter in that
     directory (or that file's directory) will be shown.
     If cur is a file, it will be selected as the current filename.
+
+    Unless the user cancels the operation, or the change parameter was set to
+    False, the parent directory of the selected file will become the new
+    working directory.
     """
     if cur is None:
         cur = GD.cfg['workdir']
@@ -184,7 +188,7 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False):
         w.selectFile(fn)
     fn = w.getFilename()
     #print "SELECTED=%s" % fn
-    if fn:
+    if fn and change:
         if multi:
             chdir(fn[0])
         else:
@@ -204,23 +208,41 @@ def askNewFilename(cur=None,filter="All files (*.*)"):
     return askFilename(cur=cur,filter=filter,exist=False,multi=False)
 
 
-def askDirname(cur=None):
+def askDirname(cur=None,change=True):
     """Ask for an existing directory name.
 
-    cur is a directory. All the directories in that directory will
-    initially be shown.
+    The dialog pops up where the user can interactively select a directory.
+    Initially, the dialog will show all the subdirectories in the specified
+    path, or by default in the current workdir.
+    
+    Unless the user cancels the operation, or the change parameter was set to
+    False, the selected directory will become the new  working directory.
     """
     if cur is None:
         cur = GD.cfg['workdir']
     cur = os.path.dirname(cur)
     fn = widgets.FileSelection(cur,'*',dir=True).getFilename()
-    if fn:
+    if fn and change:
         chdir(fn)
     GD.GUI.update()
     GD.canvas.update()
     GD.app.processEvents()
     return fn
 
+
+def checkWorkdir():
+    """Ask the user to change the current workdir if it is not writable.
+
+    Returns True if the new workdir is writable.
+    """
+    workdir = os.getcwd()
+    ok = os.access(workdir,os.W_OK)
+    if not ok:
+        warning("Your current working directory (%s) is not writable. Change your working directory to a path where you have write permission." % workdir)
+        askDirname()
+        ok = os.access(os.getcwd(),os.W_OK)
+    return ok
+    
 
 def log(s):
     """Display a message in the cmdlog window."""

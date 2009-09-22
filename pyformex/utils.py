@@ -139,6 +139,7 @@ known_externals = {
     'tetgen': ('tetgen -h |fgrep Version','Version (\S+)'),
     'units': ('units --version','GNU Units version (\S+)'),
     'ffmpeg': ('ffmpeg -version','FFmpeg version (\\S+)'),
+    'gts': ('gtsset -h','Usage(:) set'),
     }
 
 

@@ -39,6 +39,9 @@ from calpy.fe_util import *
 from calpy.truss3d import *
 ############################
 
+if not checkWorkdir():
+    exit()
+
 import time
 
 ###########################
@@ -162,10 +165,9 @@ draw(results,color=cval)
 bgcolor('lightgreen')
 linewidth(3)
 drawtext('Normal force in the truss members',400,100,size=12)
-CL = ColorLegend(CS,100)
+CL = ColorLegend(CS,256)
 CLA = decors.ColorLegend(CL,10,10,30,200) 
-GD.canvas.addDecoration(CLA)
-GD.canvas.update()
+decorate(CLA)
 
 # and a deformed plot
 dscale = 10000.

@@ -630,8 +630,8 @@ if __name__ == "script" or  __name__ == "draw":
     amp = Amplitude(column_stack([times,values]))
     P.Prop(amplitude=amp,name='amp1')
     
-    Mat = MaterialDB(GD.cfg['pyformexdir']+'/examples/materials.db')
-    Sec = SectionDB(GD.cfg['pyformexdir']+'/examples/sections.db')
+    Mat = MaterialDB(getcfg('datadir')+'/materials.db')
+    Sec = SectionDB(getcfg('datadir')+'/sections.db')
     P.setMaterialDB(Mat)
     P.setSectionDB(Sec)
 

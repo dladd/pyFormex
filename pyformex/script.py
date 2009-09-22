@@ -140,6 +140,11 @@ def named(name):
     return dic[name]
 
 
+def getcfg(name):
+    """Return a value from the configuration."""
+    return GD.cfg.get(name,None)
+
+
 #################### Interacting with the user ###############################
 
 def ask(question,choices=None,default=''):
@@ -477,6 +482,10 @@ def printdetected():
     print utils.reportDetected()
 
 ### Utilities
+
+def writable(path):
+    """Returns True if the specified path is writeable"""
+    return os.access(path,os.W_OK)
 
 def chdir(fn):
     """Change the current working directory.

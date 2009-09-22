@@ -140,8 +140,7 @@ if __name__ == "draw":
     export({'cube':cube})
     exit()
 
-    import os
-    os.chdir(os.path.dirname(GD.cfg['curfile']))
+    chdir(__file__)
     from gui import draw as _draw
 
     for mode in [ 'wireframe', 'smooth', 'smoothwire', 'flat', 'flatwire' ]:

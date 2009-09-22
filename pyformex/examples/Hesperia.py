@@ -40,12 +40,6 @@ import gui.decors
 
 import time
 
-filename = GD.cfg['curfile']
-dirname,basename = os.path.split(filename)
-project = os.path.splitext(basename)[0]
-formexfile = '%s.formex' % project
-os.chdir(dirname)
-
 smooth()
 lights(False)
 
@@ -180,7 +174,7 @@ def createGeometry():
 
     def cutOut(F,c,r):
         """Remove all elements of F contained in a sphere (c,r)"""
-        d = distanceFromPoint(F.f,c)
+        d = F.distanceFromPoint(c)
         return F.select((d < r).any(axis=-1) == False)
 
     # Cut out the door: remove all members having a point less than
@@ -251,7 +245,7 @@ def saveProperties(fn = None):
 def readProperties(fn = None):
     """Read properties from file."""
     if not fn:
-        fn = askFilename(dirname,filter="Property files (*.prop)")
+        fn = askFilename(filter="Property files (*.prop)")
     if fn:
         p = fromfile(fn,sep=',')
         F.setProp(p)

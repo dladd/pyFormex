@@ -414,7 +414,7 @@ if __name__ == '__main__':
     print len(db)
     
     mat = FlatDB(['name'],beginrec='material',endrec='endmaterial')
-    mat.readFile('examples/materials.db')
+    mat.readFile('data/materials.db')
     mat.append({'name':'concrete', 'junk':''})
     print mat
 
@@ -423,7 +423,7 @@ if __name__ == '__main__':
     for i in mat.match('name','steel'):
         print mat[i]
     mat = FlatDB(req_keys=['name'],beginrec='material',endrec='endmaterial')
-    mat.readFile('examples/materials.db')
+    mat.readFile('data/materials.db')
     mat.append({'name':'concrete'})
     try:
         mat.append({'junk':'concrete'})
@@ -436,12 +436,12 @@ if __name__ == '__main__':
 
     # Variant without endmarker
     mat = FlatDB(req_keys=['name'],beginrec='material',endrec='')
-    mat.readFile('examples/materials.db',ignore=True)
+    mat.readFile('data/materials.db',ignore=True)
     print mat
 
     # Variant without begin/endrec markers: records separated by blanks
     mat = FlatDB(req_keys=['name'],beginrec='',endrec='')
-    mat.readFile('examples/materials.db')
+    mat.readFile('data/materials.db')
     print mat
 
 # End

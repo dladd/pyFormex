@@ -41,10 +41,9 @@ def drawSurf(F,surface=False,**kargs):
 reset()
 smooth()
 lights(True)
-chdir(GD.cfg['curfile'])
 
 surf=True
-F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
+F = Formex.read(getcfg('datadir')+'/horse.formex')
 F = F.translate(-F.center())
 xmin,xmax = F.bbox()
 

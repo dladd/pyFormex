@@ -35,9 +35,7 @@ from gui.imageColor import *
 smooth()
 lights(False)
 
-filename = 'butterfly.png'  
-
-chdir(__file__)
+filename = getcfg('datadir')+'/butterfly.png'  
 im = QtGui.QImage(filename)
 if im.isNull():
     warning("Could not load image '%s'" % filename)

@@ -31,7 +31,7 @@ Demonstrate multiple viewports.
 """
 
 nsl = 0
-F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
+F = Formex.read(getcfg('datadir')+'/horse.formex')
 
 ## layout(2)
 ## viewport(0)

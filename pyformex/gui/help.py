@@ -82,6 +82,10 @@ def readme():
     """Display the pyFormex description."""
     draw.showText(file(GD.cfg['help/readme']).read())
 
+def releasenotes():
+    """Display the pyFormex release notes."""
+    draw.showText(file(GD.cfg['help/notes']).read())
+
 def license():
     """Display the pyFormex description."""
     draw.showText(file(GD.cfg['help/license']).read())
@@ -168,6 +172,7 @@ MenuData = [
     ('---',None),
     (_('&Command line options'),cmdline),
     (_('&Readme'),readme), 
+    (_('&ReleaseNotes'),releasenotes), 
     (_('&License'),license), 
     (_('&Detected Software'),detected), 
     (_('&OpenGL Format'),opengl), 
@@ -182,6 +187,5 @@ if sphinx and os.path.exists(sphinx):
     print "GREAT! FOUND SPHINX @ %s" % sphinx
 
     MenuData[1:1] =  [(_('&Sphinx (experimental pyFormex documentation)'),help,{'data':sphinx})]
-    print MenuData
 
 # End

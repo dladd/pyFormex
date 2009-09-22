@@ -487,7 +487,7 @@ def close():
         dialog = None
 
 def timeOut():
-    showAll()
+    show()
     close()
 
 # Actions

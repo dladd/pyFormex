@@ -30,7 +30,6 @@ topics = ['surface']
 techniques = ['colors','widgets']
 
 """
-
 from plugins.surface import TriSurface
 
 
@@ -57,8 +56,7 @@ smooth()
 lights(True)
 transparent(False)
 setView('horse',[20,20,0])
-chdir('/home/bene/prj/pyformex/stl')
-S = TriSurface.read('horse-upright.gts')
+S = TriSurface.read(getcfg('datadir')+'/horse.gts')
 bb = S.bbox()
 
 t = -0.3

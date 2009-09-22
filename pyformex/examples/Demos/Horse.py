@@ -36,7 +36,6 @@ from plugins.surface import TriSurface
 
 reset()
 wireframe()
-chdir(GD.cfg['curfile'])
 
 x = 20
 y = GD.canvas.height()-20
@@ -50,7 +49,7 @@ GD.message('Click Step to continue')
 
 say('A Horse Story...')
 y -= 10
-F = Formex.read(GD.cfg['pyformexdir']+'/examples/horse.formex')
+F = Formex.read(getcfg('datadir')+'/horse.formex')
 A = draw(F)
 pause()
 

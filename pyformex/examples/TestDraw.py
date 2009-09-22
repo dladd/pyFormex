@@ -111,7 +111,7 @@ def timeOut():
     dialog timeout.
     Most users can simply ignore this.
     """
-    showAll()
+    show()
     close()
 
 # Create the non-modal dialog widget and show it

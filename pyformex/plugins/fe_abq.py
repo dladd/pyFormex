@@ -1134,11 +1134,10 @@ if __name__ == "script" or __name__ == "draw":
     P = PropertyDB()
     #install example materials and section databases
     # either like this
-    pyformexdir = GD.cfg['pyformexdir']
-    Mat = MaterialDB(pyformexdir+'/examples/materials.db')
+    Mat = MaterialDB(getcfg('datadir')+'/materials.db')
     P.setMaterialDB(Mat)
     # or like this
-    P.setSectionDB(SectionDB(pyformexdir+'/examples/sections.db'))
+    P.setSectionDB(SectionDB(getcfg('datadir')+'/sections.db'))
     
     exit()
     # creating some property data

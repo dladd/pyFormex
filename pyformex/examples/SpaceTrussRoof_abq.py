@@ -139,8 +139,11 @@ res = [ Result(kind='element',keys=['S']),
 	Result(kind='node',keys=['U'])
 	]
 model = Model(nodes,elems)
+
+if not checkWorkdir():
+    exit()
+
 message("Writing the Abaqus file")
-import os
-print os.getcwd()
-exit()
 AbqData(model,P,[step],eprop=F.p,out=[out],res=res).write('SpaceTruss')
+
+# End
