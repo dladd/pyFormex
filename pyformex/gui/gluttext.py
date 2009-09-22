@@ -28,8 +28,7 @@ import OpenGL.GL as GL
 import OpenGL.GLU as GLU
 import OpenGL.GLUT as GLUT
 
-from drawable import *
-from decors import Decoration
+#from drawable import *
 
 
 # Needed to initialize the fonts
@@ -61,6 +60,9 @@ def glutSelectFont(font=None,size=None):
 
     font is one of: 'fixed', 'serif', 'sans'
     size is an int that will be rounded to the nearest available size.
+
+    The return value is a 4-character string representing one of the
+    GLUT fonts.
     """
     #GD.debug("INPUT %s,%s" % (font,size))
     if size is None and font in GLUTFONTS:
@@ -80,11 +82,13 @@ def glutSelectFont(font=None,size=None):
     else:
         selector = [ (0,'hv10'), (12,'hv12'), (16,'hv18') ]
     sel = selector[0]
+    #print sel
     for s in selector[1:]:
         if s[0] <= size:
             sel = s
+        #print sel
 
-    #GD.debug("OUTPUT %s" % (font))
+    #print("OUTPUT %s" % (sel[1]))
     return sel[1]
 
 
@@ -111,6 +115,7 @@ def glutFontHeight(font):
     This supposes that the last two characters of the name
     hold the font height.
     """
+    #print font
     return int(font[-2:])
 
 
@@ -171,24 +176,6 @@ def glutDrawText(text, x,y, font='hv18', adjust='left'):
     GL.glRasterPos2f(float(x),float(y));
     #GD.debug("RENDERING WITH FONT %s" % font) 
     glutRenderText(text,font)
-
-
-class GlutText(Decoration):
-    """A viewport decoration showing a text."""
-
-    def __init__(self,text,x,y,font='9x15',size=None,adjust='left',color=None):
-        """Create a text actor"""
-        Decoration.__init__(self,x,y)
-        self.text = str(text)
-        self.font = glutSelectFont(font,size)
-        self.adjust = adjust
-        self.color = saneColor(color)
-
-    def drawGL(self,mode='wireframe',color=None):
-        """Draw the text."""
-        if self.color is not None: 
-            GL.glColor3fv(self.color)
-        glutDrawText(self.text,self.x,self.y,self.font,self.adjust)
 
 
 # End

@@ -29,6 +29,8 @@ from utils import stuur
 
 # predefined color palettes
 Palette = {
+    'RAINBOW' : [[-2.,0.,2.],[0.,2.,0.],[2.,0.,-2.]],
+    'IRAINBOW' : [[2.,0.,-2.],[0.,2.,0.],[-2.,0.,2.]],
     'RGB' : [ red,green,blue ],
     'BGR' : [ blue,green,red ],
     'RWB' : [ red,white,blue ],
@@ -101,7 +103,7 @@ class ColorScale:
         If the ColorScale has only one exponent, values in the range
         mival..maxval are scaled to the range -1..+1.
 
-        If two exponents wer specified, scaling is done independently in
+        If two exponents were specified, scaling is done independently in
         one of the intervals minval..midval or midval..maxval resulting into
         resp. the interval -1..0 or 0..1.
         """

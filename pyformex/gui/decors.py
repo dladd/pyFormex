@@ -31,6 +31,7 @@ from text import *
 from actors import Actor
 
 import colors
+import gluttext
 
 ### Some drawing functions ###############################################
 
@@ -123,25 +124,45 @@ class QText(Decoration):
 #        GD.canvas.swapBuffers() 
 #        GD.canvas.updateGL() 
 
-import gluttext
-Text = gluttext.GlutText
+
+class GlutText(Decoration):
+    """A viewport decoration showing a text."""
+
+    def __init__(self,text,x,y,font='9x15',size=None,adjust='left',color=None):
+        """Create a text actor"""
+        Decoration.__init__(self,x,y)
+        self.text = str(text)
+        self.font = gluttext.glutSelectFont(font,size)
+        self.adjust = adjust
+        self.color = saneColor(color)
+
+    def drawGL(self,mode='wireframe',color=None):
+        """Draw the text."""
+        if self.color is not None: 
+            GL.glColor3fv(self.color)
+        gluttext.glutDrawText(self.text,self.x,self.y,self.font,self.adjust)
+
+Text = GlutText
 
 
 class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0):
+    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None):
         Decoration.__init__(self,x,y)
         self.cl = colorlegend
         self.w = int(w)
         self.h = int(h)
         self.xgap = 4  # hor. gap between colors and labels 
         self.ygap = 4  # vert. gap between labels
-        self.font = getFont(font,size)
+        #self.font = getFont(font,size)
+        self.font = gluttext.glutSelectFont(font,size)
         self.dec = dec   # number of decimals
         self.scale = 10 ** scale # scale all numbers with 10**scale
+        self.grid = abs(int(grid))
+        self.linewidth = saneLineWidth(linewidth)
 
     def drawGL(self,mode='wireframe',color=None):
-        from draw import drawText
+        #from draw import drawText
         n = len(self.cl.colors)
         x1 = float(self.x)
         x2 = float(self.x+self.w)
@@ -158,7 +179,7 @@ class ColorLegend(Decoration):
             y1 = y2
         # values
         x1 = x2 + self.xgap
-        fh = fontHeight(self.font)
+        fh = gluttext.glutFontHeight(self.font)
         GD.debug("FONT HEIGHT %s" % fh)
         dh = fh + self.ygap # vert. distance between successive labels
         y0 -= 0.25*fh  # 0.5*fh seems more logic, but character pos is biased
@@ -170,9 +191,14 @@ class ColorLegend(Decoration):
             GD.debug("next y = %s" % y2)
             if y2 >= y1 or i == 0:
                 GD.debug("drawing at %s" % y2)
-                t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2)
+                t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2,font=self.font)
                 self.decorations.append(t)
                 y1 = y2 + dh
+        # grid: after values, to be on top
+        if self.linewidth is not None:
+            GL.glLineWidth(self.linewidth)
+        if self.grid:
+            drawGrid(self.x,self.y,self.x+self.w,self.y+self.h,1,self.grid)
 
     def use_list(self):
         Decoration.use_list(self)

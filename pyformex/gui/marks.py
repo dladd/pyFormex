@@ -28,6 +28,7 @@ from colors import *
 from formex import *
 from drawable import *
 from text import *
+import gluttext
  
 ### Marks ###############################################
 
@@ -82,7 +83,6 @@ class TextMark(Mark):
         #GD.canvas.renderText(x,y,z,self.text,self.font)
 
 
-import gluttext
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
