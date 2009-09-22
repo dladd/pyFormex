@@ -228,7 +228,9 @@ class Dict(dict):
 
     # Added this to keep pydoc happy. Probably we should redefine
     # this one instead of get?
-    __get__ = get
+    #__get__ = get
+    ###   !!!!!!!!  We had to remove it to keep the functionality
+    ###   of the module!!!!!
 
     def setdefault(self, key, default):
         """Replaces the setdefault function of a normal dictionary.

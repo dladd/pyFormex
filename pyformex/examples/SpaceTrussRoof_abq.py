@@ -140,4 +140,7 @@ res = [ Result(kind='element',keys=['S']),
 	]
 model = Model(nodes,elems)
 message("Writing the Abaqus file")
+import os
+print os.getcwd()
+exit()
 AbqData(model,P,[step],eprop=F.p,out=[out],res=res).write('SpaceTruss')
