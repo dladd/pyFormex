@@ -35,11 +35,19 @@ import gluttext
 
 ### Some drawing functions ###############################################
 
+
+def drawDot(x,y):
+    """Draw a dot at canvas coordinates (x,y)."""
+    GL.glBegin(GL.GL_POINTS)
+    GL.glVertex2f(x,y)
+    GL.glEnd()
+
+
 def drawLine(x1,y1,x2,y2):
     """Draw a straight line from (x1,y1) to (x2,y2) in canvas coordinates."""
     GL.glBegin(GL.GL_LINES)
-    GL.glVertex2f(x1, y1)
-    GL.glVertex2f(x2, y2)
+    GL.glVertex2f(x1,y1)
+    GL.glVertex2f(x2,y2)
     GL.glEnd()
 
 
@@ -100,54 +108,67 @@ class Decoration(Drawable):
         Drawable.__init__(self)
 
         
-class QText(Decoration):
-    """A viewport decoration showing a text."""
+## class QText(Decoration):
+##     """A viewport decoration showing a text."""
 
-    def __init__(self,text,x,y,adjust='left',font=None,size=None,color=None):
-        """Create a text actor"""
-        Decoration.__init__(self,x,y)
-        self.text = str(text)
-        self.adjust = adjust
-        self.font = getFont(font,size)
-        self.color = saneColor(color)
+##     def __init__(self,text,x,y,adjust='left',font=None,size=None,color=None):
+##         """Create a text actor"""
+##         Decoration.__init__(self,x,y)
+##         self.text = str(text)
+##         self.adjust = adjust
+##         self.font = getFont(font,size)
+##         self.color = saneColor(color)
 
-    count = 0
-    # QT text color does not seem to work good with display lists,
-    # therefore we redefine draw(), not drawGL()
-    def draw(self,mode='wireframe',color=None):
-        """Draw the text."""
-        self.count += 1
-#        GD.canvas.makeCurrent()
-        if self.color is not None:
-            GL.glColor3fv(self.color)
-        GD.canvas.renderText(self.x,GD.canvas.height()-self.y,self.text,self.font)
-#        GD.canvas.swapBuffers() 
-#        GD.canvas.updateGL() 
+##     count = 0
+##     # QT text color does not seem to work good with display lists,
+##     # therefore we redefine draw(), not drawGL()
+##     def draw(self,mode='wireframe',color=None):
+##         """Draw the text."""
+##         self.count += 1
+## #        GD.canvas.makeCurrent()
+##         if self.color is not None:
+##             GL.glColor3fv(self.color)
+##         GD.canvas.renderText(self.x,GD.canvas.height()-self.y,self.text,self.font)
+## #        GD.canvas.swapBuffers() 
+## #        GD.canvas.updateGL() 
 
 
 class GlutText(Decoration):
     """A viewport decoration showing a text."""
 
-    def __init__(self,text,x,y,font='9x15',size=None,adjust='left',color=None):
+    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,adjust=None,color=None):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
         self.font = gluttext.glutSelectFont(font,size)
-        self.adjust = adjust
+        if adjust is not None:
+            import warnings
+            warnings.warn("The 'adjust' parameter should no longer be used. Use 'gravity' intead.", DeprecationWarning)
+
+            gravity = { 'left':'W',
+                        'right':'E',
+                        'center':'C',
+                        'under':'N',
+                        'above':'S',
+                        }[adjust]
+
+        if gravity is None:
+            gravity = 'E'
+        self.gravity = gravity
         self.color = saneColor(color)
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the text."""
         if self.color is not None: 
             GL.glColor3fv(self.color)
-        gluttext.glutDrawText(self.text,self.x,self.y,self.font,self.adjust)
+        gluttext.glutDrawText(self.text,self.x,self.y,self.font,gravity=self.gravity)
 
 Text = GlutText
 
 
 class ColorLegend(Decoration):
     """A viewport decoration showing a colorscale legend."""
-    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None):
+    def __init__(self,colorlegend,x,y,w,h,font=None,size=None,dec=2,scale=0,grid=0,linewidth=None,lefttext=False):
         Decoration.__init__(self,x,y)
         self.cl = colorlegend
         self.w = int(w)
@@ -160,6 +181,7 @@ class ColorLegend(Decoration):
         self.scale = 10 ** scale # scale all numbers with 10**scale
         self.grid = abs(int(grid))
         self.linewidth = saneLineWidth(linewidth)
+        self.lefttext = lefttext
 
     def drawGL(self,mode='wireframe',color=None):
         #from draw import drawText
@@ -178,11 +200,16 @@ class ColorLegend(Decoration):
             GL.glRectf(x1,y1,x2,y2)   
             y1 = y2
         # values
-        x1 = x2 + self.xgap
+        if self.lefttext:
+            x1 = x1 - self.xgap
+            gravity = 'W'
+        else:
+            x1 = x2 + self.xgap
+            gravity = 'E'
         fh = gluttext.glutFontHeight(self.font)
         GD.debug("FONT HEIGHT %s" % fh)
         dh = fh + self.ygap # vert. distance between successive labels
-        y0 -= 0.25*fh  # 0.5*fh seems more logic, but character pos is biased
+        #y0 -= 0.25*fh  # 0.5*fh seems more logic, but character pos is biased
         GD.debug("FIRST TEXT AT %s" % y0)
         GL.glColor3f(*colors.black)
         self.decorations = []
@@ -191,7 +218,7 @@ class ColorLegend(Decoration):
             GD.debug("next y = %s" % y2)
             if y2 >= y1 or i == 0:
                 GD.debug("drawing at %s" % y2)
-                t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2,font=self.font)
+                t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2,font=self.font,gravity=gravity)
                 self.decorations.append(t)
                 y1 = y2 + dh
         # grid: after values, to be on top

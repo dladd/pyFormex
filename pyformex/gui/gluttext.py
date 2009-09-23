@@ -82,13 +82,10 @@ def glutSelectFont(font=None,size=None):
     else:
         selector = [ (0,'hv10'), (12,'hv12'), (16,'hv18') ]
     sel = selector[0]
-    #print sel
     for s in selector[1:]:
         if s[0] <= size:
             sel = s
-        #print sel
 
-    #print("OUTPUT %s" % (sel[1]))
     return sel[1]
 
 
@@ -115,7 +112,6 @@ def glutFontHeight(font):
     This supposes that the last two characters of the name
     hold the font height.
     """
-    #print font
     return int(font[-2:])
 
 
@@ -136,7 +132,7 @@ def glutRenderText(text,font):
 def glutBitmapLength(font, text):
     """ Compute the length in pixels of a text string in given font.
 
-    We use our own fucntion to calculate the length because the builtin
+    We use our own function to calculate the length because the builtin
     has a bug.
     """
     if type(font) == str:
@@ -147,7 +143,7 @@ def glutBitmapLength(font, text):
     return len
 
 
-def glutDrawText(text, x,y, font='hv18', adjust='left'):
+def glutDrawText(text,x,y,font='hv18',gravity='E'):
     """Draw the given text at given 2D position in window.
 
     If adjust == 'center', the text will be horizontally centered on
@@ -156,23 +152,20 @@ def glutDrawText(text, x,y, font='hv18', adjust='left'):
     Any other setting will align the text left.
     Default is to center.
     """
+    # !!! Do not use GLUT.glutBitmapLength(font, text)
+    width = glutBitmapLength(font, text)
     height = glutFontHeight(font)
-    if adjust != 'left':
-        len1 = glutBitmapLength(font, text)
-##  UNCOMMENT THESE LINES TO SEE WHEN glutBitmapLength GOES WRONG !
-##        len2 = GLUT.glutBitmapLength(font, text)
-##        if len1 != len2:
-##            print "incorrect glutBitmapLength",len1,len2
-        if adjust == 'center':
-            x -= len1/2
-        elif adjust == 'right':
-            x -= len1
-        elif adjust == 'under':
-            x -= len1/2
-            y -= 2* height
-        elif adjust == 'above':
-            x -= len1/2
-            y += height
+    w2,h2 = width/2,height/2
+    x -= w2
+    y -= h2
+    if 'E' in gravity:
+        x += w2
+    elif 'W' in gravity:
+        x -= w2
+    if 'N' in gravity:
+        y += h2
+    elif 'S' in gravity:
+        y -= h2
     GL.glRasterPos2f(float(x),float(y));
     #GD.debug("RENDERING WITH FONT %s" % font) 
     glutRenderText(text,font)

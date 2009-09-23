@@ -56,7 +56,7 @@ class ColorScale:
     on the canvas.
     """
     
-    def __init__(self,palet,minval=0.,maxval=1.,midval=None,exp=1.0,exp2=None):
+    def __init__(self,palet='RAINBOW',minval=0.,maxval=1.,midval=None,exp=1.0,exp2=None):
         """Create a colorscale to map a range of values into colors.
 
         The values range from minval to maxval (default 0.0..1.0).

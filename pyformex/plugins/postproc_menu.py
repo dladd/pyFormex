@@ -264,10 +264,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
             multiplier = 3 * ((2 - logma) / 3 )
             print "MULTIPLIER %s" % multiplier
             
-        CS = ColorScale([blue,green,red],vmin,vmax,vmid,1.,1.)
+        CS = ColorScale('RAINBOW',vmin,vmax,vmid,1.,1.)
         cval = array(map(CS.color,val))
         CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,20,30,200,scale=multiplier) 
+        CLA = decors.ColorLegend(CL,20,20,30,200,scale=multiplier) 
         GD.canvas.addDecoration(CLA)
 
     # the supplied text
@@ -278,7 +278,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
     smooth()
     lights(False)
-    transparent(True)
+    transparent(False)
 
     # create the frames while displaying them
     dscale = array(dscale)

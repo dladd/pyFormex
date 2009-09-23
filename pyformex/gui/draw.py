@@ -25,10 +25,6 @@
 
 The draw module provides the basic user interface to the OpenGL
 rendering capabilities of pyFOrmex.
-
-\emph{Warning: the \texttt{draw} module is still subject to regular changes.
-Therefore, the information given below may not be fully accurate.
-}
 """
 
 import pyformex as GD
@@ -515,7 +511,7 @@ def drawPlane(P,N,size):
 def drawMarks(X,M,color='black'):
     """Draw a list of marks at points X.
 
-    X is an Coords array.
+    X is a Coords array.
     M is a list with the same length as X.
     The string representation of the marks are drawn at the corresponding
     3D coordinate.
@@ -635,9 +631,9 @@ def setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0]):
     GD.app.processEvents()
 
 
-def drawText(text,x,y,adjust='left',font='helvetica',size=14,color=None):
+def drawText(text,x,y,gravity=None,font='helvetica',size=14,color=None,adjust=None):
     """Show a text at position x,y using font."""
-    TA = decors.Text(text,x,y,adjust=adjust,font=font,size=size,color=color)
+    TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,adjust=adjust)
     decorate(TA)
     return TA
 

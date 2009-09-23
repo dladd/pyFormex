@@ -26,13 +26,14 @@ def getData():
         ('Maximum color',[1.,0.,0.]),
         ('Medium color',[1.,1.,0.]),
         ('Minimum color',[1.,1.,1.]),
-        ('High exponent',0.5),
-        ('Low exponent',0.5),
+        ('High exponent',1.0),
+        ('Low exponent',1.0),
         ('Number of colors',12),
         ('Decimals',2),
         ('Scaling exponent',0),
         ('Show grid',True),
         ('Line width',1.5),
+        ('Text left of colorscale',True),
         ('Font','hv18','select',GLUTFONTS.keys()),
         ('Position',[400,50]),
         ('Size',(100,600)),
@@ -80,19 +81,20 @@ def getData():
     else:
         grid = 0
     linewidth = res['Line width']
+    lefttext = res['Text left of colorscale']
     font = res['Font']
     print res['Position']
-    x,y = 50,50
+    x,y = 200,50
     w,h = 50,400
     # ok, now draw it
-    drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,font,x,y,w,h)     
+    drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h)     
 
 
-def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,font,x,y,w,h):
+def drawColorScale(palet,minval,maxval,medval,maxexp,minexp,ncolors,dec,scale,grid,linewidth,lefttext,font,x,y,w,h):
     """Draw a color scale with the specified parameters"""
     CS = ColorScale(palet,minval,maxval,midval=medval,exp=maxexp,exp2=minexp)
     CL = ColorLegend(CS,ncolors)
-    CLA = decors.ColorLegend(CL,x,y,w,h,grid=grid,font=font,dec=dec,scale=scale,linewidth=linewidth) 
+    CLA = decors.ColorLegend(CL,x,y,w,h,grid=grid,font=font,dec=dec,scale=scale,linewidth=linewidth,lefttext=lefttext) 
     decorate(CLA)
     
 
