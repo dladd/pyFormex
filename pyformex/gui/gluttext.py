@@ -155,7 +155,7 @@ def glutDrawText(text,x,y,font='hv18',gravity='E'):
     # !!! Do not use GLUT.glutBitmapLength(font, text)
     width = glutBitmapLength(font, text)
     height = glutFontHeight(font)
-    w2,h2 = width/2,height/2
+    w2,h2 = 0.5*width,0.4*height
     x -= w2
     y -= h2
     if 'E' in gravity:

@@ -498,19 +498,33 @@ class InputItem(QtGui.QHBoxLayout):
     input field on display of the dialog.
     """
     
-    def __init__(self,name=None,*args):
+    def __init__(self,name=None,*args,**kargs):
         """Creates a new inputitem with a name label in front.
         
         If a name is given, a label is created and added to the layout.
         """
         QtGui.QHBoxLayout.__init__(self,*args)
-        if name:
-            self.label = QtGui.QLabel(name)
+        if name is None:
+            raise ValueError,"Can not create an unnamed InputItem"
+        self.key = str(name)
+        if 'text' in kargs:
+            text = kargs['text']
+        else:
+            text = self.key
+        if text:
+            self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
 
     def name(self):
-        """Return the widget's name."""
-        return str(self.label.text())
+        """Return the name of the InputItem."""
+        return self.key
+
+    def text(self):
+        """Return the displayed text of the InputItem."""
+        if has_attr(self,'label'):
+            return str(self.label.text())
+        else:
+            return self.key
 
     def value(self):
         """Return the widget's value."""
@@ -621,7 +635,7 @@ class InputBool(InputItem):
         The value is either True or False,depending on the setting
         of the checkbox.
         """
-        InputItem.__init__(self,None,*args)
+        InputItem.__init__(self,name,*args)
         self.input = QtGui.QCheckBox(name)
         self.setValue(value)
         self.addWidget(self.input)
@@ -807,13 +821,13 @@ class InputInteger(InputItem):
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input field with a label in front."""
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self.validator = QtGui.QIntValidator(self)
         if kargs.has_key('min'):
-            line.validator.setBottom(int(kargs['min']))
+            self.validator.setBottom(int(kargs['min']))
         if kargs.has_key('max'):
-            line.validator.setTop(int(kargs['max']))
+            self.validator.setTop(int(kargs['max']))
         self.input.setValidator(self.validator)
         self.addWidget(self.input)
 
@@ -863,15 +877,15 @@ class InputSlider(InputInteger):
 
     Options:
     
-    - 'min', 'max': range of the scale (integer)
-    - 'ticks' : step for the tick marks (default range length / 10)
-    - 'func' : an optional function to be called whenever the value is
+    - ``min``, ``max``: range of the scale (integer)
+    - ``ticks`` : step for the tick marks (default range length / 10)
+    - ``func`` : an optional function to be called whenever the value is
       changed. The function takes a float/integer argument.
     """
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input slider."""
-        InputInteger.__init__(self,name,value,*args)
+        InputInteger.__init__(self,name,value,*args,**kargs)
         self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
         vmin = kargs.get('min',0)

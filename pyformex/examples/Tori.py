@@ -62,11 +62,12 @@ def nice():
 m = 20
 n = 10
 while not dialogTimedOut():
-    res = askItems([('m',m,'slider',{'min':3,'max':72}),
-                    ('n',n,'slider',{'min':3,'max':36})
+    res = askItems([('m',m,'slider',{'text':'Number of elements along large circle','min':3,'max':72}),
+                    ('n',n,'slider',{'text':'Number of elements along small circle','min':3,'max':36})
                     ])
     if not res:
         break
+    
     globals().update(res)
     drawTorus(m,n)
 
