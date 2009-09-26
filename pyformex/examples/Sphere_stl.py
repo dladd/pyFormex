@@ -81,7 +81,7 @@ if ack("Create Surface model?"):
     draw(G)
 
     smoothwire()
-    GD.canvas.update()
+    #GD.canvas.update()
     T = G.translate([0,bot,r]).spherical()
     clear()
     draw(T)
@@ -95,6 +95,6 @@ if ack("Create Surface model?"):
         if fn:
             from plugins import surface
             f = file(fn,'w')
-            surface.write_ascii(f,T.f)
+            surface.write_stla(f,T.f)
             f.close()
 

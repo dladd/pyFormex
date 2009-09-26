@@ -627,7 +627,7 @@ class InputText(InputItem):
 class InputBool(InputItem):
     """A boolean input item."""
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new checkbox for the input of a boolean value.
         
         Displays the name next to a checkbox, which will initially be set
@@ -635,13 +635,18 @@ class InputBool(InputItem):
         The value is either True or False,depending on the setting
         of the checkbox.
         """
-        InputItem.__init__(self,name,*args)
-        self.input = QtGui.QCheckBox(name)
+        if 'text' in kargs:
+            text = kargs['text']
+        else:
+            text = str(name)
+        kargs['text'] = '' # Force no label
+        InputItem.__init__(self,name,*args,**kargs)
+        self.input = QtGui.QCheckBox(text)
         self.setValue(value)
         self.addWidget(self.input)
 
-    def name(self):
-        """Return the widget's name."""
+    def text(self):
+        """Return the displayed text."""
         return str(self.input.text())
 
     def value(self):
