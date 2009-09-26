@@ -89,7 +89,7 @@ txt = [ 'First node has x between 1.5 and 3.5',
         '3 nodes close to line through [0.0,0.0,0.0] and [1.0,1.0,1.0]',
         ]
 
-color = GD.cfg['canvas/propcolors'][1:] # omit the black
+color = getcfg('canvas/propcolors')[1:] # omit the black
 while len(color) < len(sel):
     color.extend(color)
 color[0:0] = ['black'] # restore the black

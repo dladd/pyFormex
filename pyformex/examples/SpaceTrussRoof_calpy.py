@@ -195,11 +195,10 @@ if GD.options.gui:
         clear()
         linewidth(3)
         draw(results,color=cval)
-        drawtext('Normal force in the truss members',150,20,'tr24')
+        drawtext('Normal force in the truss members',300,50,size=24)
         CL = ColorLegend(CS,100)
-        CLA = decors.ColorLegend(CL,10,10,30,200) 
-        GD.canvas.addDecoration(CLA)
-        GD.canvas.update()
+        CLA = decors.ColorLegend(CL,10,10,30,200,size=24)
+        decorate(CLA)
 
 
     # Show a deformed plot
@@ -209,8 +208,7 @@ if GD.options.gui:
         deformed = Formex(dnodes[elems],F.p)
         # deformed structure
         FA = draw(deformed,bbox=None,wait=False)
-        TA = decors.Text('Deformed geometry (scale %.2f)' % dscale,400,100,'tr24')
-        decorate(TA)
+        TA = drawtext('Deformed geometry (scale %.2f)' % dscale,300,50,size=24)
         return FA,TA
 
     def animate_deformed_plot(amplitude,sleeptime=1,count=1):

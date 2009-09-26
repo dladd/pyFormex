@@ -316,7 +316,37 @@ def Eset(*args):
 #############################################################
 ##################### Properties Database ###################
 
-     
+
+
+def FindListItem(l,p):
+    """Find the item p in the list l.
+
+    If p is an item in the list (not a copy of it!), this returns
+    its position. Else, -1 is returned.
+
+    Matches are found with a 'is' function, not an '=='.
+    Only the first match will be reported.
+    """
+    for i,j in enumerate(l):
+        if j is p:
+            return i
+    return -1
+
+
+def RemoveListItem(l,p):
+    """Remove the item p from the list l.
+
+    If p is an item in the list (not a copy of it!), it is removed from
+    the list.
+    Matches are found with a 'is' comparison. This is different from the
+    normal Python list.remove() method, which uses '=='.
+    As a result, we can find complex objects which do not allow '==',
+    such as ndarrays.
+    """
+    i = FindListItem(l,p)
+    if i >= 0:
+        del l[i]
+    
 
 class PropertyDB(Dict):
     """A database class for all properties.
@@ -442,25 +472,26 @@ class PropertyDB(Dict):
         for a in attr:
             prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
         if delete:
-            self.delete(prop,kind=kind)
+            self._delete(prop,kind=kind)
         return prop
 
 
-    def delete(self,plist,kind=''):
-        """Delete properties in list pdel from list plist."""
+    def _delete(self,plist,kind=''):
+        """Delete the specified properties from the database.
+
+        plist is a list of property records (not copies of them!),
+        such as returned by getProp.
+        The kind parameter can specify a specific property database.
+        """
         prop = getattr(self,kind+'prop')
         if not type(plist) == list:
             pdel = [ plist ]
         for p in plist:
-            try:
-                prop.remove(p)
-            except:
-                print "Property: %s" % p
-                raise
-        self.sanitize(kind)
+            RemoveListItem(prop,p)
+        self._sanitize(kind)
         
 
-    def sanitize(self,kind):
+    def _sanitize(self,kind):
         """Sanitize the record numbers after deletion"""
         prop = getattr(self,kind+'prop')
         for i,p in enumerate(prop):

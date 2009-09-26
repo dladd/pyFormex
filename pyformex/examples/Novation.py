@@ -31,7 +31,6 @@ techniques = ['dialog', 'persistence', 'colors']
 """
 
 reset()
-#GD.cfg['input/timeout'] = 2
 
 
 basechoices = ['Triangles','Quadrilaterals']
@@ -92,7 +91,7 @@ if bottom:
 
 draw(e,alpha=0.8)
 
-if export:
+if export and checkWorkdir():
     from plugins import surface
     f = file('novation.stl','w')
     F = e # + b

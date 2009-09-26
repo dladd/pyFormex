@@ -262,7 +262,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
         if logma < 0:
             multiplier = 3 * ((2 - logma) / 3 )
-            print "MULTIPLIER %s" % multiplier
+            #print "MULTIPLIER %s" % multiplier
             
         CS = ColorScale('RAINBOW',vmin,vmax,vmid,1.,1.)
         cval = array(map(CS.color,val))
@@ -274,7 +274,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     if text:
         if multiplier != 0:
             text += ' (* 10**%s)' % -multiplier
-        drawtext(text,150,30,'tr18')
+        drawtext(text,200,30)
 
     smooth()
     lights(False)
@@ -286,7 +286,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     bbox = []
     for dsc in dscale.flat:
 
-        print dsc
+        #print dsc
         #print nodes.shape
         #print displ.shape
         dnodes = nodes + dsc * displ
@@ -295,12 +295,12 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         bbox.append(Formex(bboxes).bbox())
         # We store the changing parts of the display, so that we can
         # easily remove/redisplay them
-        print val
+        #print val
         if val is None:
             F = [ draw(df,color='blue',view='__last__',bbox=None,wait=None) for df in deformed ]
         else:
             F = [ draw(df,color=cval[el],view='__last__',bbox=None,wait=None) for df,el in zip(deformed,elems) ]
-        T = drawtext('Deformation scale = %s' % dsc,150,10,'tr18')
+        T = drawtext('Deformation scale = %s' % dsc,200,10)
 
         # remove the last frame
         # This is a clever trick: we remove the old drawings only after
@@ -611,7 +611,7 @@ DB = None
 def show():
     """Show the results"""
     data = dialog_getdata()
-    print data
+    #print data
     globals().update(data)
     nodes = DB.nodes
     if elgroup == '--ALL--':
@@ -648,8 +648,8 @@ def show():
                 val = norm2(val)
     if val is not None:
         txt = res_dict.values()[resindex]
-    print nodes.shape
-    print displ.shape
+    #print nodes.shape
+    #print displ.shape
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
     return val
 
