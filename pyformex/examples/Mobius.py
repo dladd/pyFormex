@@ -33,16 +33,15 @@ techniques = ['dialog', 'animation', 'colors']
 reset()
 smoothwire()
 
-res = askItems([('width',2),
-                ('length',30),
-                ('number of turns',1),
-                ])
+res = askItems([
+    ('w',2,{'text':'width'}),
+    ('l',30,{'text':'length'}),
+    ('n',1,{'text':'number of turns'}),
+    ])
 if not res:
     exit()
-    
-w = res['width']
-l = res['length']
-n = res['number of turns']
+
+globals().update(res)
 
 C = Formex(pattern('1234'))
 cell = connect([C,C,C,C],bias=[0,1,2,3])
@@ -79,9 +78,5 @@ for i in arange(1,nsteps+1):
     undraw(TA)
     TA = TB
 
-## path = ring.select(range(30)).selectNodes([2,3])
 
-## flyAlong(path.scale(0.8))
-## export({'flypath':path})
-
-
+# End

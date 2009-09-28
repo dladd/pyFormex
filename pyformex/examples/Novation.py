@@ -35,28 +35,23 @@ reset()
 
 basechoices = ['Triangles','Quadrilaterals']
 renderchoices = ['wireframe','flat','flatwire','smooth','smoothwire']
-res = askItems([['Type of surface element','Triangles','radio',basechoices],
-                ['Number of bumps',3],
-                ['Render mode',None,'select',renderchoices],
-                ['Transparent',False],
-                ['Add a bottom plate',False],
-                ['Shrink elements',False],
-                ['Export to .stl',False],
-                ])
+res = askItems([
+    ('baseGeom',None,'radio',basechoices,{'text':'Type of surface element'}),
+    ('nbumps',3,{'text':'Number of bumps'}),
+    ('rendermode',None,'select',renderchoices,{'text':'Render mode'}),
+    ('transparent',False,{'text':'Transparent'}),
+    ('bottom',False,{'text':'Add a bottom plate'}),
+    ('shrink',False,{'text':'Shrink elements'}),
+    ('export',False,{'text':'Export to .stl'}),
+    ])
 if not res:
     exit()
 
-baseGeom = basechoices.index(res['Type of surface element'])
-rendermode = res['Render mode']
-nbumps = int(res['Number of bumps'])
-transparent = res['Transparent']
-bottom = res['Add a bottom plate']
-shrink = res['Shrink elements']
-export = res['Export to .stl']
+globals().update(res)
 
 n = 10*nbumps
 
-if baseGeom == 0:
+if baseGeom == 'Triangles':
     # The base consists of two triangles
     e = Formex([[[0,0,0],[1,0,0],[0,1,0]],[[1,0,0],[1,1,0],[0,1,0]]],1).replic2(n,n,1,1)
 else:
@@ -74,7 +69,7 @@ a = [ [r*i,r*j,h]  for j in range(1,s) for i in range(1,s) ]
 
 if bottom:
     # create a bottom
-    b = e.reverseElements()
+    b = e.reverse()
     #b.setProp(2)
     
 # create the bumps
@@ -104,3 +99,5 @@ if export and checkWorkdir():
     draw(G)
     surface.write_stla(f,G.f)
     f.close()
+
+# End

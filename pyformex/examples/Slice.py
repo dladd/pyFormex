@@ -87,6 +87,6 @@ seterr(**old)
 
 x = GD.canvas.width()/2
 y = GD.canvas.height() - 40
-drawText("No animals got hurt during the making of this movie!",x,y,size=18,adjust='center')
+drawText("No animals got hurt during the making of this movie!",x,y,size=18,gravity='C')
 
 # End

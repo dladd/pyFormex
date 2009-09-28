@@ -479,33 +479,48 @@ class InputItem(QtGui.QHBoxLayout):
     The created widget is a QHBoxLayout which can be embedded in the vertical
     layout of a dialog.
     
-    This is a super class, which just creates the label. The input
-    field(s) should be added by a dedicated subclass.
+    This is a super class for all input items. It just creates a label.
+    The input field(s) should be added by the dedicated subclass.
 
-    This class also defines default values for the name() and value()
-    methods.
+    The constructor has one required argument: ``name``. It is the name used
+    to identify the item and should be unique for all InputItems in the same
+    dialog. 
+    Other (optional) positional parameters are passed to the QHBoxLayout
+    constructor.
+
+    By default the constructor adds a label to the QHBoxLayout, with text set
+    by the ``text`` keyword argument or (by default) by the name of the item.
+    Use the ``text`` argument if you want the displayed text to be different
+    from the items name.
+    A ``text=''`` parameter will suppress the label. This is e.g. used in the
+    InputBoolean constructor, where the text is displayed by the input field.
+
+    The superclass also defines default values for the text(), value() and
+    setValue() methods.
+
+    Subclasses should initialize the superclass as follows:
+        ``InputItem.__init__(self,name,*args,**kargs)``
 
     Subclasses should override:
     
-    - name(): if they called the superclass __init__() method without a name;
+    - text(): if they called the superclass __init__() method with ``text=''``;
     - value(): if they did not create a self.input widget who's text() is
       the return value of the item.
     - setValue(): always, unless the field is readonly.
 
-    Subclases can set validators on the input, like
+    Subclasses can set validators on the input, like
     ``input.setValidator(QtGui.QIntValidator(input))``
+    
     Subclasses can define a show() method e.g. to select the data in the
     input field on display of the dialog.
     """
     
-    def __init__(self,name=None,*args,**kargs):
+    def __init__(self,name,*args,**kargs):
         """Creates a new inputitem with a name label in front.
         
         If a name is given, a label is created and added to the layout.
         """
         QtGui.QHBoxLayout.__init__(self,*args)
-        if name is None:
-            raise ValueError,"Can not create an unnamed InputItem"
         self.key = str(name)
         if 'text' in kargs:
             text = kargs['text']
@@ -514,6 +529,7 @@ class InputItem(QtGui.QHBoxLayout):
         if text:
             self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
+        print 'item %s: %s' % (self.key,text)
 
     def name(self):
         """Return the name of the InputItem."""
@@ -521,7 +537,7 @@ class InputItem(QtGui.QHBoxLayout):
 
     def text(self):
         """Return the displayed text of the InputItem."""
-        if has_attr(self,'label'):
+        if hasattr(self,'label'):
             return str(self.label.text())
         else:
             return self.key
@@ -538,12 +554,12 @@ class InputItem(QtGui.QHBoxLayout):
 class InputInfo(InputItem):
     """An unchangeable input item.
     """
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new info field with a label in front.
 
         The info input field is an unchangeable text field.
         """
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self.input.setReadOnly(True)
         self._value_ = value
@@ -561,13 +577,13 @@ class InputInfo(InputItem):
 class InputString(InputItem):
     """A string input item."""
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new string input field with a label in front.
 
         If the type of value is not a string, the input string
         will be eval'ed before returning.
         """
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self._is_string_ = type(value) == str
         self.addWidget(self.input)
@@ -593,13 +609,13 @@ class InputString(InputItem):
 class InputText(InputItem):
     """A scrollable text input item."""
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new text input field with a label in front.
 
         If the type of value is not a string, the input text
         will be eval'ed before returning.
         """
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self._is_string_ = type(value) == str
         self.input =  QtGui.QTextEdit()
         self.setValue(value)
@@ -664,7 +680,7 @@ class InputBool(InputItem):
 class InputCombo(InputItem):
     """A combobox InputItem."""
     
-    def __init__(self,name,choices,default,*args):
+    def __init__(self,name,choices,default,*args,**kargs):
         """Creates a new combobox for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -680,7 +696,7 @@ class InputCombo(InputItem):
         elif default not in choices:
             choices[0:0] = [ default ]
         self._choices_ = [ str(s) for s in choices ]
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QComboBox()
         self.input.addItems(self._choices_)
         self.setValue(default)
@@ -700,7 +716,7 @@ class InputCombo(InputItem):
 class InputRadio(InputItem):
     """A radiobuttons InputItem."""
     
-    def __init__(self,name,choices,default,direction='h',*args):
+    def __init__(self,name,choices,default,direction='h',*args,**kargs):
         """Creates radiobuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -716,7 +732,7 @@ class InputRadio(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QGroupBox()
         if direction == 'v':
             self.hbox = QtGui.QVBoxLayout()
@@ -755,7 +771,7 @@ class InputRadio(InputItem):
 class InputPush(InputItem):
     """A pushbuttons InputItem."""
     
-    def __init__(self,name,choices,default=None,direction='h',*args):
+    def __init__(self,name,choices,default=None,direction='h',*args,**kargs):
         """Creates pushbuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -771,7 +787,7 @@ class InputPush(InputItem):
             default = choices[0]
         elif default not in choices:
             choices[0:0] = [ default ]
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QGroupBox()
         self.input.setFlat(True)
         if direction == 'v':
@@ -838,7 +854,7 @@ class InputInteger(InputItem):
 
     def show(self):
         """Select all text on first display.""" 
-        InputItem.show(self,*args)
+        InputItem.show(self)
         self.input.selectAll()
 
     def value(self):
@@ -854,9 +870,9 @@ class InputInteger(InputItem):
 class InputFloat(InputItem):
     """An float input item."""
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new float input field with a label in front."""
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self.validator = QtGui.QDoubleValidator(self)
         self.input.setValidator(self.validator)
@@ -864,7 +880,7 @@ class InputFloat(InputItem):
 
     def show(self):
         """Select all text on first display.""" 
-        InputItem.show(self,*args)
+        InputItem.show(self)
         self.input.selectAll()
 
     def value(self):
@@ -926,7 +942,7 @@ class InputFSlider(InputFloat):
     
     def __init__(self,name,value,*args,**kargs):
         """Creates a new integer input slider."""
-        InputFloat.__init__(self,name,value,*args)
+        InputFloat.__init__(self,name,value,*args,**kargs)
         self.slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         self.slider.setTickPosition(QtGui.QSlider.TicksBelow)
         self.scale = kargs.get('scale',1.0)
@@ -956,14 +972,14 @@ class InputFSlider(InputFloat):
 class InputColor(InputItem):
     """A color input item."""
     
-    def __init__(self,name,value,*args):
+    def __init__(self,name,value,*args,**kargs):
         """Creates a new color input field with a label in front.
 
         The color input field is a button displaying the current color.
         Clicking on the button opens a color dialog, and the returned
         value is set in the button.
         """
-        InputItem.__init__(self,name,*args)
+        InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QPushButton(colors.colorName(value))
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
         self.addWidget(self.input)
@@ -1054,20 +1070,20 @@ class InputDialog(QtGui.QDialog):
         form = QtGui.QVBoxLayout()
         for item in items:
             name,value = item[:2]
-            if len(item) > 2:
+            if len(item) > 2 and type(item[2]) == str:
                 itemtype = item[2]
             else:
                 itemtype = type(value)
             #print itemtype
             options = {}
-            if len(item) > 3 and type(item[3] == dict):
-                options = item[3]
+            if type(item[-1]) == dict:
+                options = item[-1]
                 
             if itemtype == bool:
-                line = InputBool(name,value)
+                line = InputBool(name,value,**options)
 
             elif itemtype == int:
-                line = InputInteger(name,value)
+                line = InputInteger(name,value,**options)
                 if len(item) > 3 and type(item[3] != dict):
                     options['min'] = int(item[3])
 ##                     line.validator.setBottom(int(item[3]))
@@ -1076,7 +1092,7 @@ class InputDialog(QtGui.QDialog):
 ##                     line.validator.setTop(int(item[4]))
 
             elif itemtype == float:
-                line = InputFloat(name,value)
+                line = InputFloat(name,value,**options)
                 if len(item) > 3:
                     line.validator.setBottom(float(item[3]))
                 if len(item) > 4:
@@ -1091,38 +1107,40 @@ class InputDialog(QtGui.QDialog):
                     line = InputFSlider(name,value,**options)
  
             elif itemtype == 'info':
-                line = InputInfo(name,value)
+                line = InputInfo(name,value,**options)
 
             elif itemtype == 'text':
-                line = InputText(name,value)
+                line = InputText(name,value,**options)
 
             elif itemtype == 'color':
-                line = InputColor(name,value)
+                line = InputColor(name,value,**options)
 
             elif itemtype == 'select' :
                 if len(item) > 3:
                     choices = item[3]
                 else:
                     choices = []
-                line = InputCombo(name,choices,value)
+                line = InputCombo(name,choices,value,**options)
 
             elif itemtype in ['radio','hradio','vradio']:
                 if len(item) > 3:
                     choices = item[3]
                 else:
                     choices = []
-                line = InputRadio(name,choices,value,direction=itemtype[0])
+                options['direction'] = itemtype[0]
+                line = InputRadio(name,choices,value,**options)
 
             elif itemtype in ['push','hpush','vpush']:
                 if len(item) > 3:
                     choices = item[3]
                 else:
                     choices = []
-                line = InputPush(name,choices,value,direction=itemtype[0])
+                options['direction'] = itemtype[0]
+                line = InputPush(name,choices,value,**options)
 
             else: # Anything else is handled as a string
                 #itemtype = str:
-                line = InputString(name,value)
+                line = InputString(name,value,**options)
                 
             form.addLayout(line)
             self.fields.append(line)

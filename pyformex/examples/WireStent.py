@@ -106,28 +106,21 @@ if __name__ == "draw":
     wireframe()
     reset()
 
-    D = 10.
-    L = 80.
-    d = 0.2
-    n = 12
-    b = 30.
-    res = askItems([['Diameter',D],
-                    ['Length',L],
-                    ['WireDiam',d],
-                    ['NWires',n],
-                    ['Pitch',b]])
+    res = askItems([
+        ('L',80.,'',{'text':'Length of the stent'}),
+        ('D',10.,'',{'text':'Diameter of the stent'}),
+        ('n',12 ,'',{'text':'Total number of wires'}),
+        ('b',30.,'',{'text':'Pitch angle of the wires'}),
+        ('d',0.2,'',{'text':'Diameter of the wires'}),
+        ])
 
     if not res:
         exit()
-        
-    D = float(res['Diameter'])
-    L = float(res['Length'])
-    d = float(res['WireDiam'])
-    n = int(res['NWires'])
+
+    globals().update(res)
     if (n % 2) != 0:
         warning('Number of wires must be even!')
         exit()
-    b = float(res['Pitch'])
 
     H = DoubleHelixStent(D,L,d,n,b).all()
     clear()

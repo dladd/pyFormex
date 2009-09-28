@@ -32,21 +32,17 @@ techniques = ['dialog']
 
 reset()
 
-res = askItems([('number of modules in axial direction',10),
-                ('number of modules in tangential direction',8),
-                ('barrel radius',10.),
-                ('barrel opening angle',180.),
-                ('barrel length',30.),
-                ],
-               )
+res = askItems([
+    ('m',10,{'text':'number of modules in axial direction'}),
+    ('n',8,{'text':'number of modules in tangential direction'}),
+    ('r',10.,{'text':'barrel radius'}),
+    ('a',180.,{'text':'barrel opening angle'}),
+    ('l',30.,{'text':'barrel length'}),
+    ])
 if not res:
     exit()
-    
-m = res['number of modules in axial direction']
-n = res['number of modules in tangential direction']
-r = res['barrel radius']
-a = res['barrel opening angle']
-l = res['barrel length']
+
+globals().update(res)
 
 # Diagonals
 d = Formex(pattern("5"),1).rosette(4,90).translate([1,1,0]).replic2(m,n,2,2)
