@@ -37,9 +37,8 @@ from lib import misc
 def bbox(objects):
     """Compute the bounding box of a list of objects.
 
-    All the objects in list should have
-    This is like the bbox() method of the Coords class, but the resulting
-    box encloses all the Coords in the list.
+    All the objects in list should have the :method:`bbox` method.
+    The result is the eclosing bbox of all the objects in the list.
     Objects returning a None bbox are ignored.
     """
     bboxes = [f.bbox() for f in objects]
@@ -60,11 +59,11 @@ def coordsmethod(f):
 
     The following lines show how to use the decorator.
     These lines make the 'scale' method of the Coords class available in
-    your class, with the same arguments.
+    your class, with the same arguments::
     
-    @coordsmethod
-    def scale(self,*args,**kargs):
-        pass
+       @coordsmethod
+       def scale(self,*args,**kargs):
+           pass
     
     The coordinates are changed inplane, so if you want to save the original
     ones, you need to copy them before you use the transformation.
@@ -86,33 +85,33 @@ def coordsmethod(f):
 class Coords(ndarray):
     """A structured collection of 3D coordinates.
     
-    The Coords class is the basic data structure used throughout pyFormex
+    The :class:`Coords` class is the basic data structure used throughout pyFormex
     to store coordinates of points in a 3D space.
 
-    The Coords class is used by other classes, such as Formex
-    and Surface, which thus inherit the same transformation
+    The :class:`Coords` class is used by other classes, such as :class:`Formex`
+    and :class:`Surface`, which thus inherit the same transformation
     capabilities. Applications will mostly use the higher level
     classes, which usually have more elaborated consistency checking
     and error handling.
     
-    Coords is implemented as a floating point numpy (Numerical Python) array
+    :class:`Coords` is implemented as a floating point numpy (Numerical Python) array
     whose last axis has a length equal to 3.
     Each set of 3 values along the last axis thus represents a single point
     in 3D cartesian space.
 
-    The datatype should be a float type; the default is Float, which is
-    equivalent to numpy's float32.
+    The datatype should be a float type; the default is :data:`Float`, which is
+    equivalent to :data:`numpy.float32`.
     These restrictions are currently only checked at creation time.
     It is the responsibility of the user to keep consistency. 
     """
             
     def __new__(cls, data=None, dtyp=Float, copy=False):
-        """Create a new instance of class Coords.
+        """Create a new :class:`Coords` instance.
 
         If no data are given, a single point (0.,0.,0.) will be created.
         If specified, data should evaluate to an (...,3) shaped array of floats.
-        If copy==True, the data are copied.
-        If no dtyp is given that of data are used, or float32 by default.
+        If ``copy==True``, the data are copied.
+        If no dtyp is given that of data are used, or :data:`Float` by default.
         """
         if data is None:
             data = zeros((3,),dtype=Float)
@@ -709,6 +708,34 @@ class Coords(ndarray):
             d = sqrt(d)
         f[...,dir] += func(d)*a[dir]/func(0)
         return f
+
+
+    def flare (self,xf,f,dir=[0,2],end=0,exp=1.):
+        """Create a flare at the end of a Coords block.
+
+        The flare extends over a distance ``xf`` at the start (``end=0``) or end (``end=1``)
+        in direction ``dir[0]`` of the coords block, and has a maximum amplitude of ``f``
+        in the ``dir[1]`` direction.
+        """
+        ix,iz = dir
+        bb = self.bbox()
+        #print "BBOX before:%s" % bb
+        if end == 0:
+            xmin = bb[0][ix]
+            endx = self.test(dir=ix,max=xmin+xf)
+            func = lambda x: (1.-(x-xmin)/xf) ** exp
+        else:
+            xmax = bb[1][ix]
+            endx = self.test(dir=ix,min=xmax-xf)
+            func = lambda x: (1.-(xmax-x)/xf) ** exp
+        #print x.shape
+        #print endx.shape
+        #print x[endx,ix].shape
+        #print "max func val: %s " % func(x[endx,ix]).max()
+        x = self.copy()
+        x[endx,iz] += f * func(x[endx,ix])
+        return x
+        #print "BBOX after:%s" % x.bbox()
 
 
     # NEW implementation flattens coordinate sets to ease use of

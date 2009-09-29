@@ -71,7 +71,7 @@ def nsetName(p):
 
 def esetName(p):
     """Determine the setname for writing a elem property."""
-    if p.set is None:
+    if p.setname is None:
         return 'Eall'
     else:
         return p.setname
@@ -139,40 +139,6 @@ def writeSubset(fil, type, name, subname):
     fil.write('*%s, %s=%s\n%s\n' % (type,type,name,subname))
 
 
-def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
-                      rho=None,orient=None,yield_stress=None):
-    """Write a general frame section for the named element set.
-
-    The specified values are:
-      A: cross section
-      I11: moment of inertia around the 1 axis
-      I22: moment of inertia around the 2 axis
-      I12: inertia product around the 1-2 axes
-      J: Torsional constant
-      E: Young's modulus of the material
-      G: Shear modulus of the material
-    Optional data:
-      rho: density of the material
-      yield_stress: yield stress of the material
-      orient: a vector specifying the direction cosines of the 1 axis
-    """
-    extra = orientation = ''
-    if rho:
-        extra += ',DENSITY=%s' % float(rho)
-    if yield_stress:
-        extra += ',PLASTIC DEFAULTS, YIELD STRESS=%s' % float(yield_stress)
-    if orient:
-        orientation = '%s %s %s' % (orient[0], orient[1], orient[2])
-    fil.write("""*FRAME SECTION,ELSET=%s,SECTION=general%s
-%s, %s, %s, %s, %s
-%s
-%s, %s
-""" %(elset,extra,
-      A,I11,I12,I22,J,
-      orientation,
-      E,G))
-
-
 materialswritten=[]
 def writeMaterial(fil,mat):
     """Write a material section.
@@ -220,22 +186,145 @@ def writeTransform(fil,setname,csys):
     fil.write("%s,%s,%s,%s,%s,%s\n" % tuple(csys.data.ravel()))
 
 
+####################################
+# Formatting of the SECTION keywords
+########################################################################
+
+# These function return a string with the formaated output
+
+def outFrameSection(el,setname):
+    out = ""
+    if el.sectiontype.upper() == 'GENERAL':
+        out += """*FRAME SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
+%s, %s, %s, %s, %s \n""" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity))
+        if el.orientation != None:
+            out += """%s,%s,%s""" % (el.orientation[0],el.orientation[1],el.orientation[2])
+            out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
+    elif el.sectiontype.upper() == 'CIRC':
+        out += """*FRAME SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
+%s \n""" % (setname,float(el.density),float(el.radius)))
+        if el.orientation != None:
+            out += """%s,%s,%s""" % (el.orientation[0],el.orientation[1],el.orientation[2])
+        out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
+
+
+def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
+                      rho=None,orient=None,yield_stress=None):
+    """Write a general frame section for the named element set.
+
+    The specified values are:
+      A: cross section
+      I11: moment of inertia around the 1 axis
+      I22: moment of inertia around the 2 axis
+      I12: inertia product around the 1-2 axes
+      J: Torsional constant
+      E: Young's modulus of the material
+      G: Shear modulus of the material
+    Optional data:
+      rho: density of the material
+      yield_stress: yield stress of the material
+      orient: a vector specifying the direction cosines of the 1 axis
+    """
+    extra = ''
+    if rho:
+        extra += ',DENSITY=%s' % float(rho)
+    if yield_stress:
+        extra += ',PLASTIC DEFAULTS, YIELD STRESS=%s' % float(yield_stress)
+    if orient:
+        orientation = '%s %s %s' % (orient[0], orient[1], orient[2])
+    else:
+        orientation = ''
+    fil.write("""*FRAME SECTION,ELSET=%s,SECTION=general%s
+%s, %s, %s, %s, %s
+%s
+%s, %s
+""" %(elset,extra,
+      A,I11,I12,I22,J,
+      orientation,
+      E,G))
+
+
+def outConnectorSection(el,setname):
+    """Write a connector section.
+
+    Optional data:
+    - behavior = connector behavior name,
+    - orient = connector orientation
+    """
+    out = ""
+    if el.sectiontype.upper() != 'GENERAL':
+        out += '*CONNECTOR SECTION, ELSET=%s' % setname
+        if el.behavior:
+            out += ', BEHAVIOR=%s' % el.behavior
+        out += '\n%s\n' % el.sectiontype.upper()
+        if el.orient:
+            out += '%s\n' % el.orient
+    return out
+
+
+def writeConnectorBehavior(fil,name):
+    fil.write('*CONNECTOR BEHAVIOR, NAME=%s\n' % name)
+
+
+def outShellSection(el,setname,matname):
+    out = ''
+    if el.sectiontype.upper() == 'SHELL':
+        if matname is not None:
+            out += """*SHELL SECTION, ELSET=%s, MATERIAL=%s
+%s \n""" % (setname,matname,float(el.thickness))
+    return out
+
+
 ##################################################
 ## Some higher level functions, interfacing with the properties module
 ##################################################
 
+connector_elems = ['CONN3D2','CONN2D2']
+frame_elems = ['FRAME3D','FRAME2D']
+truss_elems = [
+    'T2D2','T2D2H','T2D3','T2D3H',
+    'T3D2','T3D2H','T3D3','T3D3H']
+beam_elems = [
+    'B21', 'B21H','B22','B22H','B23','B23H',
+    'B31', 'B31H','B32','B32H','B33','B33H']
+membrane_elems = [
+    'M3D3',
+    'M3D4','M3D4R',
+    'M3D6','M3D8',
+    'M3D8R',
+    'M3D9','M3D9R']
 plane_stress_elems = [
-    'CPS3','CPS4','CPS4I','CPS4R','CPS6','CPS6M','CPS8','CPS8M']
+    'CPS3',
+    'CPS4','CPS4I','CPS4R',
+    'CPS6','CPS6M',
+    'CPS8','CPS8M']
 plane_strain_elems = [
-    'CPE3','CPE3H','CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH',
-    'CPE6','CPE6H','CPE6M','CPE6MH','CPE8','CPE8H','CPE8R','CPE8RH']
+    'CPE3','CPE3H',
+    'CPE4','CPE4H','CPE4I','CPE4IH','CPE4R','CPE4RH',
+    'CPE6','CPE6H','CPE6M','CPE6MH',
+    'CPE8','CPE8H','CPE8R','CPE8RH']
 generalized_plane_strain_elems = [
-    'CPEG3','CPEG3H','CPEG4','CPEG4H','CPEG4I','CPEG4IH','CPEG4R','CPEG4RH',
-    'CPEG6','CPEG6H','CPEG6M','CPEG6MH','CPEG8','CPEG8H','CPEG8R','CPEG8RH']
-solid2d_elems = plane_stress_elems + plane_strain_elems + generalized_plane_strain_elems
-
-solid3d_elems = ['C3D4', 'C3D4H','C3D6', 'C3D6H', 'C3D8','C3D8H','C3D8R', 'C3D8RH','C3D10','C3D10H','C3D10M','C3D10MH','C3D15','C3D15H','C3D20','C3D20H','C3D20R','C3D20RH',]
-
+    'CPEG3','CPEG3H',
+    'CPEG4','CPEG4H','CPEG4I','CPEG4IH','CPEG4R','CPEG4RH',
+    'CPEG6','CPEG6H','CPEG6M','CPEG6MH',
+    'CPEG8','CPEG8H','CPEG8R','CPEG8RH']
+solid2d_elems = plane_stress_elems + \
+                plane_strain_elems + \
+                generalized_plane_strain_elems
+shell_elems = [
+    'S3','S3R', 'S3RS',
+    'S4','S4R', 'S4RS','S4RSW','S4R5',
+    'S8R','S8R5',
+    'S9R5',
+    'STRI3',
+    'STRI65']
+solid3d_elems = [
+    'C3D4','C3D4H',
+    'C3D6','C3D6H',
+    'C3D8','C3D8H','C3D8R','C3D8RH','C3D10',
+    'C3D10H','C3D10M','C3D10MH',
+    'C3D15','C3D15H',
+    'C3D20','C3D20H','C3D20R','C3D20RH',]
 
 def writeSection(fil,prop):
     """Write an element section.
@@ -244,42 +333,19 @@ def writeSection(fil,prop):
     """
     setname = esetName(prop)
     el = prop.section
-    eltype = prop.eltype
+    eltype = prop.eltype.upper()
 
     mat = el.material
     if mat is not None:
         writeMaterial(fil,mat)
+            
+    if eltype in connector_elems:
+        fil.write(outConnectorSection(el,setname))
 
-    ############
-    ##FRAME elements
-    ##########################
-    if eltype.upper() in ['FRAME3D', 'FRAME2D']:
-        if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*FRAME SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
-            if el.orientation != None:
-                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
-        if el.sectiontype.upper() == 'CIRC':
-            fil.write("""*FRAME SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
-%s \n"""%(setname,float(el.density),float(el.radius)))
-            if el.orientation != None:
-                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
-
-    ##############
-    ##connector elements
-    ##########################  
-    elif eltype.upper() in ['CONN3D2', 'CONN2D2']:
-        if el.sectiontype.upper() != 'GENERAL':
-            fil.write("""*CONNECTOR SECTION,ELSET=%s
-%s
-""" %(setname,el.sectiontype.upper()))
-
-    ############
-    ##TRUSS elements
-    ##########################  
-    elif eltype.upper() in ['T2D2', 'T2D2H' , 'T2D3', 'T2D3H', 'T3D2', 'T3D2H', 'T3D3', 'T3D3H']:
+    elif eltype in frame_elems:
+        fil.write(outFrameSection(el,setname))
+            
+    elif eltype in truss_elem:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s
@@ -292,7 +358,7 @@ def writeSection(fil,prop):
     ############
     ##BEAM elements
     ##########################
-    elif eltype.upper() in ['B21', 'B21H','B22', 'B22H', 'B23','B23H','B31', 'B31H','B32','B32H','B33','B33H']:
+    elif eltype in beam_elems:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
 %s, %s, %s, %s, %s \n"""%(setname,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
@@ -314,16 +380,13 @@ def writeSection(fil,prop):
     ############
     ## SHELL elements
     ##########################
-    elif eltype.upper() in ['STRI3', 'S3','S3R', 'S3RS', 'STRI65','S4','S4R', 'S4RS','S4RSW','S4R5','S8R','S8R5', 'S9R5',]:
-        if el.sectiontype.upper() == 'SHELL':
-            if mat is not None:
-                fil.write("""*SHELL SECTION, ELSET=%s, MATERIAL=%s
-%s \n""" % (setname,mat.name,float(el.thickness)))
-
+    elif eltype in shell_elems:
+        fil.write(outShellSection(el,setname,mat.name)
+                  
     ############
     ## MEMBRANE elements
     ##########################
-    elif eltype.upper() in ['M3D3', 'M3D4','M3D4R', 'M3D6', 'M3D8','M3D8R','M3D9', 'M3D9R',]:
+    elif eltype in membrane_elems:
         if el.sectiontype.upper() == 'MEMBRANE':
             if mat is not None:
                 fil.write("""*MEMBRANE SECTION, ELSET=%s, MATERIAL=%s
@@ -333,7 +396,7 @@ def writeSection(fil,prop):
     ############
     ## 3DSOLID elements
     ##########################
-    elif eltype.upper() in solid3d_elems:
+    elif eltype in solid3d_elems:
         if el.sectiontype.upper() == '3DSOLID':
             if mat is not None:
                 fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
@@ -342,7 +405,7 @@ def writeSection(fil,prop):
     ############
     ## 2D SOLID elements
     ##########################
-    elif eltype.upper() in solid2d_elems:
+    elif eltype in solid2d_elems:
         if el.sectiontype.upper() == 'SOLID':
             if mat is not None:
                 fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
@@ -351,7 +414,7 @@ def writeSection(fil,prop):
     ############
     ## RIGID elements
     ##########################
-    elif eltype.upper() in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
+    elif eltype in ['R2D2','RB2D2','RB3D2','RAX2','R3D3','R3D4']:
         if el.sectiontype.upper() == 'RIGID':
             fil.write("""*RIGID BODY,REFNODE=%s,density=%s, ELSET=%s\n""" % (el.nodeset,el.density,setname))
 
@@ -1047,7 +1110,8 @@ Script: %s
                 set = range(telems)
             print 'Elements of type %s: %s' % (p.eltype,set)
                 
-            setname = Eset(p.nr)
+            setname = esetName(p)
+            print setname,p.setname
             gl,gr = self.model.splitElems(set)
             elems = self.model.getElems(gr)
             for i,elnrs,els in zip(range(len(gl)),gl,elems):
