@@ -207,6 +207,8 @@ def outFrameSection(el,setname):
             out += """%s,%s,%s""" % (el.orientation[0],el.orientation[1],el.orientation[2])
         out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
 
+    return out
+
 
 def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
                       rho=None,orient=None,yield_stress=None):
@@ -259,6 +261,7 @@ def outConnectorSection(el,setname):
         out += '\n%s\n' % el.sectiontype.upper()
         if el.orient:
             out += '%s\n' % el.orient
+
     return out
 
 
