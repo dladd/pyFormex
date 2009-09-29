@@ -127,7 +127,7 @@ class ElemSection(CDict):
               !! Currently only 'solid' and 'general' are allowed.
             - the cross section characteristics :
               cross_section, moment_inertia_11, moment_inertia_12,
-              moment_inertia_22, torsional_rigidity
+              moment_inertia_22, torsional_constant
             - for sectiontype 'circ': radius
          - material: the element material. This can be a dict or a string.
           Currently known keys to fe_abq.py are:
@@ -181,7 +181,7 @@ class ElemSection(CDict):
                             'moment_inertia_11':I,
                             'moment_inertia_22':I,
                             'moment_inertia_12':0.0,
-                            'torsional_rigidity':2*I,
+                            'torsional_constant':2*I,
                             })
         else:
             raise ValueError,"Invalid sectiontype"

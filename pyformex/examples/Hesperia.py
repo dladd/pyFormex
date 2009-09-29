@@ -344,7 +344,7 @@ def createFrameModel():
         'moment_inertia_11': I1,
         'moment_inertia_22': I2,
         'moment_inertia_12': I12,
-        'torsional_rigidity': J
+        'torsional_constant': J
         }
     steel = {
         'name':'steel',
@@ -446,7 +446,7 @@ def createFrameModel():
         'moment_inertia_11': I1,
         'moment_inertia_22': I2,
         'moment_inertia_12': I12,
-        'torsional_rigidity': J
+        'torsional_constant': J
         })
     PDB.elemProp(set=arange(ntubes,elems.shape[0]),section=supportsection,eltype='FRAME3D')
 

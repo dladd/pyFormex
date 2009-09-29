@@ -193,57 +193,55 @@ def writeTransform(fil,setname,csys):
 # These function return a string with the formaated output
 
 def outFrameSection(el,setname):
+    """Write a frame section for the named element set.
+
+    Recognized data fields in the property record:
+    
+    - sectiontype GENERAL:
+
+      - cross_section 
+      - moment_inertia_11
+      - moment_inertia_12
+      - moment_inertia_22
+      - torsional_constant
+
+    - sectiontype CIRC:
+
+      - radius
+
+    - all sectiontypes:
+
+      - young_modulus
+      - shear_modulus
+      
+    - optional:
+
+      - density: density of the material
+      - yield_stress: yield stress of the material
+      - orientation: a vector specifying the direction cosines of the 1 axis
+    """
     out = ""
-    if el.sectiontype.upper() == 'GENERAL':
-        out += """*FRAME SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n""" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity))
-        if el.orientation != None:
-            out += """%s,%s,%s""" % (el.orientation[0],el.orientation[1],el.orientation[2])
-            out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
-    elif el.sectiontype.upper() == 'CIRC':
-        out += """*FRAME SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
-%s \n""" % (setname,float(el.density),float(el.radius))
-        if el.orientation != None:
-            out += """%s,%s,%s""" % (el.orientation[0],el.orientation[1],el.orientation[2])
-        out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
+    extra = ''
+    if el.density:
+        extra += ', DENSITY=%s' % float(el.density)
+    if el.yield_stress:
+            extra += ', PLASTIC DEFAULTS, YIELD STRESS=%s' % float(el.yield_stress)
+
+    sectiontype = el.sectiontype.upper()
+    out += "*FRAME SECTION, ELSET=%s, SECTION=%s%s" % (setname,sectiontype,extra)
+    if sectiontype == 'GENERAL':
+        out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
+    elif sectiontype == 'CIRC':
+        out += "%s \n" % float(el.radius)
+
+    if el.orientation != None:
+        out += "%s,%s,%s\n" % tuple(el.orientation)
+    else:
+        out += '\n'
+     
+    out += "%s, %s \n" % (float(el.young_modulus),float(el.shear_modulus))
 
     return out
-
-
-def writeFrameSection(fil,elset,A,I11,I12,I22,J,E,G,
-                      rho=None,orient=None,yield_stress=None):
-    """Write a general frame section for the named element set.
-
-    The specified values are:
-      A: cross section
-      I11: moment of inertia around the 1 axis
-      I22: moment of inertia around the 2 axis
-      I12: inertia product around the 1-2 axes
-      J: Torsional constant
-      E: Young's modulus of the material
-      G: Shear modulus of the material
-    Optional data:
-      rho: density of the material
-      yield_stress: yield stress of the material
-      orient: a vector specifying the direction cosines of the 1 axis
-    """
-    extra = ''
-    if rho:
-        extra += ',DENSITY=%s' % float(rho)
-    if yield_stress:
-        extra += ',PLASTIC DEFAULTS, YIELD STRESS=%s' % float(yield_stress)
-    if orient:
-        orientation = '%s %s %s' % (orient[0], orient[1], orient[2])
-    else:
-        orientation = ''
-    fil.write("""*FRAME SECTION,ELSET=%s,SECTION=general%s
-%s, %s, %s, %s, %s
-%s
-%s, %s
-""" %(elset,extra,
-      A,I11,I12,I22,J,
-      orientation,
-      E,G))
 
 
 def outConnectorSection(el,setname):
@@ -364,7 +362,7 @@ def writeSection(fil,prop):
     elif eltype in beam_elems:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(setname,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_rigidity)))
+%s, %s, %s, %s, %s \n"""%(setname,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant)))
             if el.orientation != None:
                 fil.write("%s,%s,%s"%(el.orientation[0],el.orientation[1],el.orientation[2]))
             fil.write("\n %s, %s \n"%(float(el.young_modulus),float(el.shear_modulus)))
