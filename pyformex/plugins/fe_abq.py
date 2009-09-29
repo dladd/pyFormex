@@ -202,7 +202,7 @@ def outFrameSection(el,setname):
             out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
     elif el.sectiontype.upper() == 'CIRC':
         out += """*FRAME SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
-%s \n""" % (setname,float(el.density),float(el.radius)))
+%s \n""" % (setname,float(el.density),float(el.radius))
         if el.orientation != None:
             out += """%s,%s,%s""" % (el.orientation[0],el.orientation[1],el.orientation[2])
         out += """\n %s, %s \n""" % (float(el.young_modulus),float(el.shear_modulus))
@@ -381,7 +381,7 @@ def writeSection(fil,prop):
     ## SHELL elements
     ##########################
     elif eltype in shell_elems:
-        fil.write(outShellSection(el,setname,mat.name)
+        fil.write(outShellSection(el,setname,mat.name))
                   
     ############
     ## MEMBRANE elements
