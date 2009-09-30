@@ -100,42 +100,53 @@ class SectionDB(Database):
 
 
 class ElemSection(CDict):
-    """Properties related to the section of an element."""
+    """Properties related to the section of an element.
 
-    matDB = MaterialDB()
-    secDB = SectionDB()
+    An element section property can hold the following sub-properties:
 
+    section
+      the geometric properties of the section. This can be a dict
+      or a string. If it is a string, its value is looked up in the global
+      section database. The required data in the dict depend on the
+      sectiontype. Currently the following keys are used by fe_abq.py:
+
+      sectiontype
+        the type of section: should be one of following:
+
+        - 'solid': a solid 2D or 3D section,
+        - 'circ' : a plain circular section,
+        - 'rect' : a plain rectangular section,
+        - 'pipe' : a hollow circular section,
+        - 'box'  : a hollow rectangular section,
+        - 'I'    : an I-beam,
+        - 'general' : anything else (automatically set if not specified).
+        !! Currently only 'solid' and 'general' are allowed.
+      - the cross section characteristics :
+        cross_section, moment_inertia_11, moment_inertia_12,
+        moment_inertia_22, torsional_constant
+      - for sectiontype 'circ': radius
+
+    material
+      the element material. This can be a dict or a string.
+      Currently known keys to fe_abq.py are:
+       young_modulus, shear_modulus, density, poisson_ratio
+
+    orientation
+      is a list of 3 direction cosines of the first beam
+      section axis.
+
+    behavior
+      the behavior of a connector
+    """
+
+    # All the instances use the same databases
+    matDB = None #MaterialDB()
+    secDB = None #SectionDB()
 
     def __init__(self,section=None,material=None,orientation=None,behavior=None,**kargs):
-
         ### sectiontype is now preferably an attribute of section ###
-        
-        """Create a new element section property. Empty by default.
-        
-        An element section property can hold the following sub-properties:
-       - section: the section properties of the element. This can be a dict
-          or a string. The required data in this dict depend on the
-          sectiontype. Currently the following keys are used by fe_abq.py:
-            - sectiontype: the type of section: one of following:
-              'solid': a solid 2D or 3D section,
-              'circ' : a plain circular section,
-              'rect' : a plain rectangular section,
-              'pipe' : a hollow circular section,
-              'box'  : a hollow rectangular section,
-              'I'    : an I-beam,
-              'general' : anything else (automatically set if not specified).
-              !! Currently only 'solid' and 'general' are allowed.
-            - the cross section characteristics :
-              cross_section, moment_inertia_11, moment_inertia_12,
-              moment_inertia_22, torsional_constant
-            - for sectiontype 'circ': radius
-         - material: the element material. This can be a dict or a string.
-          Currently known keys to fe_abq.py are:
-            young_modulus, shear_modulus, density, poisson_ratio
-        - 'orientation' is a list of 3 direction cosines of the first beam
-          section axis.
-        - behavior: the behavior of the connector
-        """
+        """Create a new element section property. Empty by default."""
+        self._class_init()
         CDict.__init__(self,kargs)
         self.addMaterial(material)
         self.addSection(section)
@@ -143,6 +154,14 @@ class ElemSection(CDict):
 ##             self.sectiontype = sectiontype
 ##         self.orientation = orientation
 ##         self.behavior = behavior
+
+
+    @classmethod
+    def _class_init(clas):
+        if clas.matDB is None:
+            clas.matDB = MaterialDB()
+        if clas.secDB is None:
+            clas.secDB = SectionDB()
 
     
     def addSection(self, section):

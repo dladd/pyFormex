@@ -38,59 +38,51 @@ this document, and advice you on which method might be the best in your case.
 Let's first give you an overview of the most important pros and cons of the 
 different install methods. 
 
-:ref:`sec:official-release`
----------------------------
-
-+-------------------------------+---------------------------------------------+
-| PROS                          |   CONS                                      |
-+===============================+=============================================+
-|  - Stable                     |  - Linux required                           |
-|  - Well supported             |  - Root access required                     |
-|  - Easy install procedure     |  - Installation of prerequisites required   |
-|  - Site-wide install          |  - May be missing latest features           |
-+-------------------------------+---------------------------------------------+
+:ref:`sec:official-release`:
+  +-------------------------------+-------------------------------------------+
+  | PROS                          |   CONS                                    |
+  +===============================+===========================================+
+  |  - Stable                     |  - Linux required                         |
+  |  - Well supported             |  - Root access required                   |
+  |  - Easy install procedure     |  - Installation of prerequisites required |
+  |  - Site-wide install          |  - May be missing latest features         |
+  +-------------------------------+-------------------------------------------+
 
 
-:ref:`sec:alpha-release`
-------------------------
-
-+-------------------------------+---------------------------------------------+
-| PROS                          |   CONS                                      |
-+===============================+=============================================+
-|  - Easy install               |  - Linux required                           |
-|    procedure                  |  - Root access required                     |
-|  - Site-wide                  |  - Installation of prerequisites required   |
-|    install                    |  - Latests features                         |
-+-------------------------------+---------------------------------------------+
+:ref:`sec:alpha-release`:
+  +------------------------------+--------------------------------------------+
+  | PROS                         |   CONS                                     |
+  +==============================+============================================+
+  |  - Easy install              |  - Linux required                          |
+  |    procedure                 |  - Root access required                    |
+  |  - Site-wide                 |  - Installation of prerequisites required  |
+  |    install                   |  - Latests features                        |
+  +------------------------------+--------------------------------------------+
 
 
-:ref:`sec:development-version`
-------------------------------
-
-+---------------------+--------------------------------------------+
-| PROS                |   CONS                                     |
-+=====================+============================================+
-| - Latest features   | - Linux required                           |
-| - No                | - No install procedure                     |
-|   root              | - (Usually) single user install            |
-|   access            | - Manual installation of prerequisites     |
-|   required          |   (and root access) may be required        |
-|                     | - Less stable                              |
-+---------------------+--------------------------------------------+
+:ref:`sec:development-version`:
+  +---------------------+--------------------------------------------+
+  | PROS                |   CONS                                     |
+  +=====================+============================================+
+  | - Latest features   | - Linux required                           |
+  | - No                | - No install procedure                     |
+  |   root              | - (Usually) single user install            |
+  |   access            | - Manual installation of prerequisites     |
+  |   required          |   (and root access) may be required        |
+  |                     | - Less stable                              |
+  +---------------------+--------------------------------------------+
  
 
-:ref:`sec:bumpix-live-linux`
-----------------------------
-
-+--------------------------------------+-----------------------------------+
-| PROS                                 |                            CONS   |
-+======================================+===================================+
-| - No Linux required                  | - Missing latest features         |
-| - No root access required            | - Difficult to upgrade            |
-| - No installation required           | - Somewhat slower loading         |
-| - Stable version                     |                                   |
-| - Easily portable                    |                                   |
-+--------------------------------------+-----------------------------------+
+:ref:`sec:bumpix-live-linux`:
+  +-------------------------------------+----------------------------------+
+  | PROS                                |                            CONS  |
+  +=====================================+==================================+
+  | - No Linux required                 | - Missing latest features        |
+  | - No root access required           | - Difficult to upgrade           |
+  | - No installation required          | - Somewhat slower loading        |
+  | - Stable version                    |                                  |
+  | - Easily portable                   |                                  |
+  +-------------------------------------+----------------------------------+
 
 
 To sum it up:
@@ -111,7 +103,8 @@ To sum it up:
 
 - Finally, if you do not have enough permissions to install the prerequisites,
   or if you do not have a Linux system in the first place, or if you just want
-  to try out pyFormex, or if you want a portable system that can you take
+  to try out pyFormex without having to install anything,
+  or if you want a portable system that can you take
   with you and run anywhere, choose for the :ref:`sec:bumpix-live-linux` on
   USB stick.
 
@@ -248,10 +241,10 @@ may just work well for you.
 
 These alpha releases can be downloaded from the developer `FTP site`_
 or from our `local FTP server`_. The latter may be slower, but
-occasionally you may find there old releases or release candidates not
+you may find there some old releases or release candidates that are not
 available on the official server.
 
-They install just like the :ref:`sec:official-release`s. 
+They install just like the :ref:`sec:official-release`. 
 
 
 .. _sec:development-version:
@@ -259,11 +252,48 @@ They install just like the :ref:`sec:official-release`s.
 Development version
 ===================
 
-Finally, you can also get the latest development code from the SVN repository on
-the website. If you have Subversionhttp://subversion.tigris.org/ installed on
-your system, you can just dosvn checkout svn://svn.berlios.de/pyformex/trunk
-pyformex and the whole current tree will be copied to a subdirectory
-``pyformex`` on your current path.
+If the install procedures for the packaged releases do not work for
+you, or if you want to have the absolutely latest features and bug fixes, 
+.. or if you want to help with the development of pyFormex (See :ref:`sec:become-involved`)
+then you can run pyFormex directly from the development sources.
+Obviously, the pyFormex developers use this method, but there are also
+several normal users who prefer this, because it allows for easy
+updating to the latest version.
+
+To run pyFormex from the development sources you need to have the same
+prerequisites installed as for the
+:ref:`sec:official-release`. Furthermore, you need the
+`Subversion`_ revision control system. You can check whether you have it
+by trying the command ``svn help``. If you do not have the command,
+you should install Subversion first. Debian and Ubuntu users can just
+do ``apt-get install subversion``.
+
+Now you can anonymously check out the latest pyFormex source
+from the `SVN repository`_ at the `development`_ site. You can do this
+with the command ``svn checkout svn://svn.berlios.de/pyformex/trunk/pyformex
+MYDIR/pyformex``, where ``MYDIR`` should be replaced with a path name of your
+choice, where you have write permission. 
+Most users choose ``pyformex`` as base directory, but this is not
+required. You can even check out different versions under
+different path names.
+
+Now change into the created ``MYDIR/pyformex`` directory and execute
+the command ``./pyformex``. The latest pyFormex version should
+startup. The acceleration library will however not be available yet.
+To create the library, goto to the ``lib`` subdirectory and execute
+the command ``./configure;make``. 
+
+You can make the ``pyformex`` command in your checked out tree
+executable from anywhere by creating a symlink under one of the
+directories in you ``PATH`` setting. An example command to achieve
+this: ``ln -sfn MYDIR/pyformex/pyformex /home/user/bin``
+
+You can update this pyFormex installation at any time to the latest
+version by issuing the command ``svn update`` in your ``MYDIR/pyformex``
+directory. You can even roll back to any older revision of
+pyFormex. Just remember that after updating your sources, the compiled
+library could be out of sync with your new sources. Rebuild the
+library just like specified above.
 
 
 
