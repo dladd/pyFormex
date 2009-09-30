@@ -228,7 +228,7 @@ def outFrameSection(el,setname):
             extra += ', PLASTIC DEFAULTS, YIELD STRESS=%s' % float(el.yield_stress)
 
     sectiontype = el.sectiontype.upper()
-    out += "*FRAME SECTION, ELSET=%s, SECTION=%s%s" % (setname,sectiontype,extra)
+    out += "*FRAME SECTION, ELSET=%s, SECTION=%s%s\n" % (setname,sectiontype,extra)
     if sectiontype == 'GENERAL':
         out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
     elif sectiontype == 'CIRC':
@@ -346,7 +346,7 @@ def writeSection(fil,prop):
     elif eltype in frame_elems:
         fil.write(outFrameSection(el,setname))
             
-    elif eltype in truss_elem:
+    elif eltype in truss_elems:
         if el.sectiontype.upper() == 'GENERAL':
             fil.write("""*SOLID SECTION, ELSET=%s, MATERIAL=%s
 %s

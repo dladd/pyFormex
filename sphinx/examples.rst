@@ -17,7 +17,7 @@ pyFormex example scripts
 Sometimes you learn quicker from studying an example than from reading a 
 tutorial or user guide. To help you we have created this collection of 
 annotated examples. Beware that the script texts presented in this document
-may differ slightly from the corresponding example coming with the |pyformex| 
+may differ slightly from the corresponding example coming with the pyFormex 
 distribution.
 
 .. _sec:creating-geometry:
@@ -25,7 +25,7 @@ distribution.
 Creating geometry
 =================
 
-To get acquainted with the modus operandi of |pyformex|, 
+To get acquainted with the modus operandi of pyFormex, 
 the :file:`WireStent.py` script is studied step by step. The lines are numbered
 for easy referencing, but are not part of the script itself.
 
@@ -34,7 +34,7 @@ for easy referencing, but are not part of the script itself.
    :language: python
    :linenos:
 
-As all |pyformex| scripts, it starts with a comments line holding the word
+As all pyFormex scripts, it starts with a comments line holding the word
 ``pyformex``. 
 
 To start, all required modules to run the :file:`WireStent.py`

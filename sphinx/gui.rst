@@ -13,7 +13,7 @@ The Graphical User Interface
 
 While the GUI has become much more elaborate in recent versions, its
 intention will never be to provide a fully interactive environment to
-operate on geometrical data. The main purpose of |pyformex| will
+operate on geometrical data. The main purpose of pyFormex will
 always remain to provide a framework for easily creating scripts to
 operate on geometries. Automization of otherwise tedious tasks is our
 primary focus.
@@ -62,14 +62,14 @@ To see the source of the script, choose the :menuselection:`File --> Edit
 Script` menu item.
 
 Before starting to write your own scripts, you should probably get acquainted
-with the basic data structures and instructions of Python, NumPy and |pyformex|.
+with the basic data structures and instructions of Python, NumPy and pyFormex.
 You can do this by reading the :doc:`tutorial`.
 
 
 Starting the GUI
 ================
 
-You start the |pyformex| GUI by entering the command ``pyformex`` in a
+You start the pyFormex GUI by entering the command ``pyformex`` in a
 terminal window. Depending on your installation, you may also have a
 panel or menu button on your desktop from which you can start the
 graphical interface by a simple mouse click.  When the main window
@@ -79,7 +79,7 @@ decorations around it, but these are very much OS and window manager
 dependent and are therefore not shown in the figure.
 
 Finally, you can also start the GUI with the instruction
- ``startGUI()`` from a |pyformex| script executed in non-GUI mode.
+ ``startGUI()`` from a pyFormex script executed in non-GUI mode.
 
 .. _`fig:gui`:
 
@@ -154,7 +154,7 @@ The :menuselection:`File` menu
 The :menuselection:`Settings` menu
 ==================================
 
-Many aspects of the |pyformex| GUI are configurable to suit better to
+Many aspects of the pyFormex GUI are configurable to suit better to
 the user's likings. This customization can be made persistent by
 storing it in a configuration file. This is explained in
 :doc:`config`.

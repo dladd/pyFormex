@@ -5,10 +5,10 @@
 .. include:: ../website/src/links.inc
 
 ========================
-|pyformex| documentation
+pyFormex documentation
 ========================
 
-This is the |pyformex| |release| documentation, last updated on |today|.
+This is the pyFormex |release| documentation, last updated on |today|.
 
 .. warning:: We have moved to a new documentation management
    system (sphinx) and are currently in the process of rewriting the
@@ -16,18 +16,18 @@ This is the |pyformex| |release| documentation, last updated on |today|.
    unstable condition and may evolve quickly. Most of the documents (except
    the :doc:`user-guide`) are already fairly useable.
 
-These documents are to become a full documentation set for the installation and use of the |pyformex| software. However, as |pyformex| is still under active
+These documents are to become a full documentation set for the installation and use of the pyFormex software. However, as pyFormex is still under active
 development, so is this documentation: it therefore is by no means final and
-complete; it does not even pretend to be accurate for any version of |pyformex|.
+complete; it does not even pretend to be accurate for any version of pyFormex.
 
 However, since partial documentation is better than none, we decided to make 
 this preliminary version available to the general public, to ease the use
-of |pyformex|. The :doc:`refman` is automatically generated from the docstrings
+of pyFormex. The :doc:`refman` is automatically generated from the docstrings
 in the Python source, so this might best reflect the latest development version of the software.
 
 Some older versions of the documentation may be available in PDF format from
 the `pyFormex website`_. You should also find a version in your local
-|pyformex| installation. 
+pyFormex installation. 
 
 
 Parts of the documentation

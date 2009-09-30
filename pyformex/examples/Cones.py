@@ -121,10 +121,10 @@ dialog = widgets.InputDialog(items)
 
 while not dialog.result() == widgets.TIMEOUT:
     dialog.show()
-    sleep(2)
-    dialog.timeout()
-    res = dialog.results
-    #res = dialog.getResult()
+    ## sleep(2)
+    ## dialog.timeout()
+    ## res = dialog.results
+    res = dialog.getResult()
     if not res:
         break
     

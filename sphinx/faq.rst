@@ -9,7 +9,7 @@
 .. sectionauthor:: Benedict Verhegghe <benedict.verhegghe@ugent.be>
 
 ************************
-|pyformex| FAQ 'n TRICKS
+pyFormex FAQ 'n TRICKS
 ************************
 
 :Date: |today|
@@ -20,10 +20,10 @@
 .. topic:: Abstract
 
    This chapter answers some frequently asked questions about
-   |pyformex| and present some nice tips to solve common problems. If
+   pyFormex and present some nice tips to solve common problems. If
    you have some question that you want answered, or want to present a
    original solution to some problem, feel free to communicate it to
-   us (by preference via the |pyformex| `Forums`_) and we'll probably
+   us (by preference via the pyFormex `Forums`_) and we'll probably
    include it in the next version of this FAQ.
 
 .. _sec:faq:
@@ -87,7 +87,7 @@ TRICKS
 
       chdir(__file__)
 
-   When executing a script, |pyformex| sets the name of the script
+   When executing a script, pyFormex sets the name of the script
    file in a variable ``__file__`` passed with the global variables to
    the execution environment of the script.
 
@@ -108,7 +108,7 @@ TRICKS
 
 #. **Automatically load plugin menus on startup**
 
-   Plugin menus can be loaded automatically on |pyformex| startup, by
+   Plugin menus can be loaded automatically on pyFormex startup, by
    adding a line to the ``[gui]`` section of your configuration file
    (``~/.pyformexrc``)::
 
@@ -118,7 +118,7 @@ TRICKS
 
 #. **Automatically execute your own scripts on startup**
 
-   If you create your own pugin menus for |pyformex|, you cannot
+   If you create your own pugin menus for pyFormex, you cannot
    autoload them like the regular plugin menus from the distribution,
    because they are not in the plugin directory of the
    installation. Do not be tempted to put your own files under the
@@ -130,16 +130,16 @@ TRICKS
 
       autorun = '/home/user/myscripts/startup/'
 
-   This script will then be run when the |pyformex| GUI starts up. You
+   This script will then be run when the pyFormex GUI starts up. You
    can even specify a list of scripts, which will be executed in
-   order. The autorun scripts are executed as any other |pyformex|
+   order. The autorun scripts are executed as any other pyFormex
    script, before any scripts specified on the command line, and
    before giving the input focus to the user.
 
 #. **Create a movie from a sequence of recorded images**
 
    The multisave option allows you to easily record a series of images
-   while working with |pyformex|. You may want to turn this sequence
+   while working with pyFormex. You may want to turn this sequence
    into a movie afterwards. This can be done with the ``mencoder``
    and/or ``ffmpeg`` programs. The internet provides comprehensive
    information on how to use these video encoders.
@@ -182,7 +182,7 @@ TRICKS
 
    Saving images in EPS format is done through the gl2ps library,
    which can be accessed from Python using wrapper functions.
-   Recent versions of |pyformex| come with an installation script
+   Recent versions of pyFormex come with an installation script
    that will also generate the required Python interface module.
    
    .. warning::

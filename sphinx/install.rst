@@ -7,7 +7,7 @@
 .. _cha:install:
 
 *********************
-Installing |pyformex|
+Installing pyFormex
 *********************
 
 .. warning:: This document is still under construction! 
@@ -15,7 +15,7 @@ Installing |pyformex|
 .. topic:: Abstract
 
    This document explains the different ways for obtaining a running 
-   |pyformex| installation. You will learn how to obtain |pyformex|, how
+   pyFormex installation. You will learn how to obtain pyFormex, how
    to install it, and how to get it running.
 
 
@@ -24,14 +24,14 @@ Installing |pyformex|
 Introduction
 ============
 
-There are several ways to get a running installation of |pyformex|, and you may
+There are several ways to get a running installation of pyFormex, and you may
 choose the most appropriate for you, depending on your needs, your current 
 infrastructure and your computer knowledge. We will describe them in detail in
 this document, and advice you on which method might be the best in your case. 
 
 .. note:: **pyFormex on non-Linux systems**
 
-  |pyformex| is being developed on Linux systems, and most users run it on a
+  pyFormex is being developed on Linux systems, and most users run it on a
   Linux platform. The :ref:`sec:pyformex-nonlinux` section holds information
   on how pyFormex can be run on other platforms.
 
@@ -102,16 +102,16 @@ To sum it up:
   stability and support and comes packed in an archive, with an install
   procedure included.
 
-- If you need some recent feature of |pyformex| that is not yet in an official
+- If you need some recent feature of pyFormex that is not yet in an official
   release, you may be lucky to find it in the latest :ref:`sec:alpha-release`.
 
 - If the install procedures do not work for you, or you need the
-  absolutely latest development code, you can run |pyformex| directly
+  absolutely latest development code, you can run pyFormex directly
   from the anonymously checked out :ref:`sec:development-version`.
 
 - Finally, if you do not have enough permissions to install the prerequisites,
   or if you do not have a Linux system in the first place, or if you just want
-  to try out |pyformex|, or if you want a portable system that can you take
+  to try out pyFormex, or if you want a portable system that can you take
   with you and run anywhere, choose for the :ref:`sec:bumpix-live-linux` on
   USB stick.
 
@@ -120,17 +120,17 @@ To sum it up:
 Official release
 ================
 
-|pyformex| is software under development, and many users run it directly from
+pyFormex is software under development, and many users run it directly from
 the latest development sources. This holds a certain risk however, because the development version may at times become unstable or incompatible with previous versions and thus break your applications.
 At regular times we therefore create official releases, which provide a more stable and better documented and supported version, together with an easy install procedure. 
 
-If you can meet the requirements for using an officially packed release, this is the recommended way to install |pyformex|. All the software packages needed to run |pyformex| can be obtained for free.
+If you can meet the requirements for using an officially packed release, this is the recommended way to install pyFormex. All the software packages needed to run pyFormex can be obtained for free.
 
-To install an official |pyformex| release, you need a working Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system. 
+To install an official pyFormex release, you need a working Linux system, root (administrator) privileges to the system, and you need to make sure that the prerequisite packages are installed on the system. 
 
 If you need to install a new Linux system from scratch, and have the choice to
 pick any distribution, we highly recommend `Debian GNU/Linux`_ or derivatives.
-This is because most of the |pyformex| development is done on Debian systems, 
+This is because most of the pyFormex development is done on Debian systems, 
 and we will give you `precise install instructions`_ for this system.
 Also, the Debian software repositories are amongst the most comprehensive to be found on the Internet. 
 
@@ -144,7 +144,7 @@ you can find the source packages.
 Prerequisites
 -------------
 
-In order to install an official release package of |pyformex|, you need to have the following installed (and working) on your computer:
+In order to install an official release package of pyFormex, you need to have the following installed (and working) on your computer:
 
 **Python** (http://www.python.org)
    Version 2.4 or higher (2.5 is recommended). Nearly all Linux distributions
@@ -152,10 +152,10 @@ In order to install an official release package of |pyformex|, you need to have 
 
 **NumPy** (http://www.numpy.org)
    Version 1.0-rc1 or higher. NumPy is the package used for efficient
-   numerical array operations in Python and is essential for |pyformex|.
+   numerical array operations in Python and is essential for pyFormex.
 
 **Qt4** (http://www.trolltech.com/products/qt)
-   The widget toolkit on which the |pyformex| Graphical User Interface (GUI) was built.
+   The widget toolkit on which the pyFormex Graphical User Interface (GUI) was built.
 
 **PyQt4** (http://www.riverbankcomputing.co.uk/pyqt/index.php) 
    The Python bindings for Qt4. 
@@ -172,7 +172,7 @@ install by hand.
 Currently we recommend to install the whole package including the GUI.
 Most probably you will want to visualize your structures and for that you need the GUI anyway.
 
-Additionally, we recommend you to also install **the GNU C-compiler and the Python and OpenGL header files**. The install procedure needs these to compile the |pyformex| acceleration library. While |pyformex| can run without the library (Python versions will be substituted
+Additionally, we recommend you to also install **the GNU C-compiler and the Python and OpenGL header files**. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted
 for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures . 
 
 
@@ -192,11 +192,11 @@ Other optional packages that might be useful are ``admesh``, ``python-scipy``,
 Download pyFormex
 -----------------
 
-Official |pyformex| releases can be downloaded from this website:
+Official pyFormex releases can be downloaded from this website:
 `Official releases`_. As of the writing of this manual, the latest
 release is 0.8. 
 
-|pyformex| is currently distributed in the form of a .tar.gz (tarball) archive. See :ref:`sec:installation-linux` for how to proceed further with the downloaded file.
+pyFormex is currently distributed in the form of a .tar.gz (tarball) archive. See :ref:`sec:installation-linux` for how to proceed further with the downloaded file.
 
 .. _sec:installation-linux:
 
@@ -226,7 +226,7 @@ functionality. Some of these packages are so essential, that they were listed as
 The user has the choice to install these extras or not.
 
 Some external packages however do not come in an easy to install package, ot
-the available packaged formats do not collaborate well with |pyformex|.
+the available packaged formats do not collaborate well with pyFormex.
 Therefore, we have created a set of dedicated install script to ease the
 installation of these external packages.
 
@@ -237,7 +237,7 @@ Alpha release
 =============
 
 Official release are only created a couple of times per year, because
-they require a lot of testing.  |pyformex| is however developing fast,
+they require a lot of testing.  pyFormex is however developing fast,
 and as soon as an official release has been made, new features are
 already being included in the source repository. Sometimes, you may be
 in need of such a feature, that will only become officially available
@@ -274,9 +274,9 @@ BuMPix Live Linux system
 
 If you do not have access to a running Linux system, or if the above 
 installation methods fail for some unknown reason (you can ask for help on the 
-|pyformex| `Forums`_), you can still run |pyformex| by using a 
+pyFormex `Forums`_), you can still run pyFormex by using a 
 `Bumpix Live Linux` system. `Bumpix Live` is a full featured Linux system 
-including |pyformex| that can be run from a single removable medium 
+including pyFormex that can be run from a single removable medium 
 such as a CD or a USB key.
 
 All you need in this case is some proper hardware: the system boots and runs 
@@ -284,11 +284,11 @@ from the removable medium and leaves any software installed on the hard disk
 of the computer untouched.
 
 You can also easily take this media with you wherever you go, plug it in an
-available computer, and start or continue your |pyformex| work. Some users
-even prefer this way to run |pyformex| for that single reason.
+available computer, and start or continue your pyFormex work. Some users
+even prefer this way to run pyFormex for that single reason.
 
-The Live system is also an excellent way to test and see what |pyformex| can
-do for you, without having to install it. Or to demonstrate |pyformex| to
+The Live system is also an excellent way to test and see what pyFormex can
+do for you, without having to install it. Or to demonstrate pyFormex to
 your friends or colleagues. 
 
 
@@ -298,7 +298,7 @@ your friends or colleagues.
 
 .. _sec:pyformex-nonlinux:
 
-Running |pyformex| on non-Linux systems
+Running pyFormex on non-Linux systems
 =======================================
 
 pyFormex is being developed on Linux platforms, and most of its users run

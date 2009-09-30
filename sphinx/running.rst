@@ -8,10 +8,10 @@
 
 .. _sec:running:
 
-Running |pyformex|
+Running pyFormex
 ==================
 
-To run |pyformex|, simply enter the command ``pyformex`` in a terminal
+To run pyFormex, simply enter the command ``pyformex`` in a terminal
 window. This will start the Graphical User Interface (GUI), from where
 you can launch examples or load, edit and run your own scripts.
 

@@ -7,7 +7,7 @@
 .. _cha:config:
 
 **********************
-Configuring |pyformex|
+Configuring pyFormex
 **********************
 
 Many aspects of can be configured to better suit the user's needs and likings.
@@ -72,12 +72,12 @@ was read. The first two files mentioned above are system configuration files and
 will never be changed by the program. A user configuration file will be
 generated if none existed.
 
-.. warning:: Currently, when |pyformex| exits, it will just dump all
+.. warning:: Currently, when pyFormex exits, it will just dump all
   the changed configuration (key,value) pairs on the last
   configuration file, together with the values it read from that
-  file. |pyformex| will not detect if any changes were made to that
+  file. pyFormex will not detect if any changes were made to that
   file between reading it and writing back. Therefore, the user should
-  never edit the configuration files directly while |pyformex| is still
+  never edit the configuration files directly while pyFormex is still
   running. Always close the program first!
 
 

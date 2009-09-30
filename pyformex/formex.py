@@ -1679,7 +1679,9 @@ class Formex(object):
     def bump2(self,*args,**kargs):
         pass
     @coords_transformation
-
+    def flare(self,*args,**kargs):
+        pass
+    @coords_transformation
     def map(self,*args,**kargs):
         pass
     @coords_transformation

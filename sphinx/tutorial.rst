@@ -16,7 +16,7 @@ pyFormex tutorial
 .. topic:: Abstract
 
    This tutorial will guide you step by step through the most important
-   concepts of the |pyformex| scripting language and the |pyformex| Graphical
+   concepts of the pyFormex scripting language and the pyFormex Graphical
    User Interface (GUI). It is set up for first time users, giving explicit
    details of what to do and what to expect as result.
    
@@ -26,8 +26,8 @@ pyFormex tutorial
 The philosophy
 ==============
 
-|pyformex| is a Python implementation of Formex algebra. Using
-|pyformex|, it is very easy to generate large geometrical models of 3D
+pyFormex is a Python implementation of Formex algebra. Using
+pyFormex, it is very easy to generate large geometrical models of 3D
 structures by a sequence of mathematical transformations.  It is
 especially suited for the automated design of spatial structures. But
 it can also be used for other tasks, like operating on 3D geometry
@@ -36,10 +36,10 @@ postprocessing, or just for creating some nice pictures.
 
 By writing a simple script, a large and complex geometry can be created by
 copying, translating, rotating, or otherwise transforming geometrical entities.
-|pyformex| will interpret the script and draw what you have created. 
+pyFormex will interpret the script and draw what you have created. 
 This is clearly very different from the traditional (mostly interactive) way
 of creating a geometrical model, like is done in most CAD packages.
-There are some huge advantages in using |pyformex|:
+There are some huge advantages in using pyFormex:
 
 * It is especially suited for the automated design of spatial frame structures.
   A dome, an arc, a hypar shell, ..., when constructed as a space frame, can be
@@ -69,7 +69,7 @@ There are some huge advantages in using |pyformex|:
 * At times there will be operations that are easier to perform through
   an interactive Graphical User Interface (GUI). The GUI gives access
   to many such functions. Especially occasional and untrained users
-  will benefit from it. As everything else in |pyformex|, the GUI is completely
+  will benefit from it. As everything else in pyFormex, the GUI is completely
   open and can be modified at will by the user's application scripts,
   to provide an interface with either extended or restricted
   functionality. 
@@ -79,7 +79,7 @@ There are some huge advantages in using |pyformex|:
   easy language to learn, and if you are interested in reading more
   about it, there are good tutorials and beginner's guides available
   on the Python website (http://www.python.org/doc). However, if
-  you're only using Python to write |pyformex| scripts, the tutorial
+  you're only using Python to write pyFormex scripts, the tutorial
   you're reading right now should be enough.
 
 
@@ -88,18 +88,18 @@ There are some huge advantages in using |pyformex|:
 Getting started
 ===============
 
-* Start the |pyformex| GUI by entering the command ``pyformex`` in a
+* Start the pyFormex GUI by entering the command ``pyformex`` in a
   terminal. Depending on your instalation, there may also be a menu
-  item in the application menu to start |pyformex|, or even a quickstart button
+  item in the application menu to start pyFormex, or even a quickstart button
   in the panel. Using the terminal however can still be useful,
   especially in the case of errors, because otherwise the GUI might
   suppress some of the error messages that normally are sent to the
   terminal.
 
-* Create a new |pyformex| script using the
+* Create a new pyFormex script using the
   :menuselection:`File-->Create new script` option, and enter a filename
   with extension ``.py``. This will open up your favorite editor with
-  a |pyformex| script template like the one below.
+  a pyFormex script template like the one below.
 
   .. literalinclude:: _static/scripts/template.py
      :linenos:
@@ -110,20 +110,20 @@ Getting started
    Make sure you are using an editor that understands Python code. Most modern
    editors will give you syntax highlighting and help with indentation.
 
-* The template script shows the typical layout of a |pyformex| script:
+* The template script shows the typical layout of a pyFormex script:
 
   - The script starts with a line ``#!/usr/bin/env pyformex``.
   - Then comes a multiline documentation string, contained between two ``"""`` 
     delimiters. Read it: it repeats this instructions on how a legal
-    |pyformex| script should be structured.
-  - Next are the |pyformex| instructions: in this case there's only one line.
+    pyFormex script should be structured.
+  - Next are the pyFormex instructions: in this case there's only one line.
   - The script ends with a comment line ``# End``. We recommend you to do this
     also. It serves as a warning for inadvertent truncation of your file.
 
-* In the status bar at the bottom of the |pyformex| GUI, you will now
+* In the status bar at the bottom of the pyFormex GUI, you will now
   see the name of the script, together with a green dot. This tells
   you that the script has been recognized by the system as a
-  |pyformex| script, and is ready to run.
+  pyFormex script, and is ready to run.
 
 * Execute the script by selecting the :menuselection:`File --> Play`
   menu option, or by just pushing the |button-play| button in the
@@ -135,18 +135,18 @@ Getting started
 
 * Now change the text of the string in line 16, but do not save your changes.
   Execute the script again, and notice that the printed text has not changed!
-  This is because the editor is an external program to |pyformex|, and *the 
+  This is because the editor is an external program to pyFormex, and *the 
   executed script is always the text as read from file*, not necessarily equal
   to what is displayed in your editor.
 
   Save the script, run it again, and you will see the output has changed.
 
 * Next, change the text of the script to look like the one below, and save it as
-  ``example1.py``. Again, note that the editor and |pyformex| are separate 
+  ``example1.py``. Again, note that the editor and pyFormex are separate 
   programs, and saving the script does not change the name of the current
-  script in |pyformex|.
+  script in pyFormex.
 
-  Selecting an existing script file for execution in |pyformex| is done with
+  Selecting an existing script file for execution in pyFormex is done with
   the :menuselection:`File --> Open` option. Open the ``example1.py`` file
   you just saved and check that its name is indeed displayed in the status bar.
   You can now execute the script if you want, but it will not produce anything
@@ -157,7 +157,7 @@ Getting started
 
 * Exit |pyFormex| (using the :menuselection:`File --> Exit`) and then restart
   it. You should again see the ``example1.py`` displayed as the current script.
-  On exit, |pyformex| stores your last script name, and on restart it prepares
+  On exit, pyFormex stores your last script name, and on restart it prepares
   to run it again. You can also easily select one the most recent scripts you
   used from the :menuselection:`File --> History` option. Select the oldest
   (bottom) one. Then close all your editor windows.
@@ -168,7 +168,7 @@ Getting started
   *change* it. Use the :menuselection:`File --> Edit` option to load the
   current script into the editor.
 
-Now that you know how to load, change and execute scripts in |pyformex|, we're
+Now that you know how to load, change and execute scripts in pyFormex, we're
 all set for exploring its power. But first, let's introduce you to Python and NumPy. 
 
 
@@ -177,8 +177,8 @@ all set for exploring its power. But first, let's introduce you to Python and Nu
 Short introduction to Python
 ============================
 
-|pyformex| is written in the Python language, and Python is also the
-scripting language used by |pyformex|. Since the whole intent of |pyformex|
+pyFormex is written in the Python language, and Python is also the
+scripting language used by pyFormex. Since the whole intent of pyFormex
 is to generate geometrical structures from scripts, you will at least
 need to have some basic knowledge of Python before you can use it for
 your own projects.
@@ -188,17 +188,17 @@ documents to introduce you. If you are new to Python, but have already
 some programming experience, the `Python tutorial`_ may be a good
 starting point. Or else, you can take a look at one of the other beginners'
 guides. Stick with the Python 2.x documentation for now. Though
-|pyformex| might one day use Python 3.x, we are still far off that
+pyFormex might one day use Python 3.x, we are still far off that
 day, because all the underlying packages need to be converted to
 Python 3 first.
 
 Do not be afraid of having to learn a new programming language. Python is
 known as own of the easiest languages to get started with: just a few basic
 concepts suffice to produce quite powerful scripts. Most developers and users of
-|pyformex| have started without any knowledge of Python.
+pyFormex have started without any knowledge of Python.
 
 For the really impatient who do not want to go through the `Python
-tutorial`_ before diving into |pyformex|, we have gathered hereafter
+tutorial`_ before diving into pyFormex, we have gathered hereafter
 some of the most important Python concepts, hopefully enabling you to
 continue with this tutorial.
 
@@ -289,7 +289,7 @@ To do: Introduce the (for users) most important NumPy concepts.
 
 .. index:: single: ndarray
 
-|pyformex| uses the NumPy :class:`ndarray` as implementation of fast 
+pyFormex uses the NumPy :class:`ndarray` as implementation of fast 
 numerical arrays in Python.
 
 
@@ -307,12 +307,12 @@ The Formex data model
    single: Formex
    single: plexitude
 
-The most important geometrical object in |pyformex| is the
+The most important geometrical object in pyFormex is the
 :class:`Formex` class. A :class:`Formex` (plural:Formices) can
 describe a variety of geometrical objects: points, lines, surfaces,
 volumes. The most simple geometrical object is the point, which in
 three dimensions is only determined by its coordinates ``(x,y,z)``,
-which are numbered ``(0,1,2)`` in |pyformex| to be consistent with
+which are numbered ``(0,1,2)`` in pyFormex to be consistent with
 Python and NumPy indexing.  Higher order geometrical objects are
 defined as a collection of points.  The number of points of an object
 is called the *plexitude* of the object.
@@ -344,7 +344,7 @@ are stored along the first axis (0) of the :class:`Formex`. The figure
    0..2. The three coordinate axes form the components of the last
    axis of a Formex.
 
-For simplicity of the implemented algorithms, internally |pyformex|
+For simplicity of the implemented algorithms, internally pyFormex
 only deals with 3D geometry. This means that the third axis of a
 :class:`Formex` always has length 3. You can however import 2D
 geometry: all points will be given a third coordinate
@@ -368,7 +368,7 @@ Creating a Formex
 
 There are many, many ways to create :class:`Formex` instances in your
 scripts.  Most of the geometrical operations and transformations in
-|pyformex| return geometry as a :class:`Formex`. But how do you create
+pyFormex return geometry as a :class:`Formex`. But how do you create
 a new geometric structure from simple coordinate data? Well, there are
 several ways to do that too, and we'll introduce them one by one.
 
@@ -402,7 +402,7 @@ line segment between two points in space, but it could just as well be
 used to represent a sphere (by its center and a point on the surface)
 or a plane (by a point in the plane and the direction of the normal).
 
-By default, |pyformex| will interprete the plexitude as follows:
+By default, pyFormex will interprete the plexitude as follows:
 
 ============== ===============================
 Plexitude      Geometrical interpretation
@@ -460,7 +460,7 @@ You will then see
 
    The square in smooth rendering.
 
-|pyformex| by default uses wireframe rendering, because in a fully
+pyFormex by default uses wireframe rendering, because in a fully
 rendered mode many details are obscured. Switch back to wireframe
 mode using the :menuselection:`Viewport --> Render Mode -->
 Wireframe` menu option or |button-wireframe| toolbar button.
@@ -481,7 +481,7 @@ now it is just four straight lines while it was a square plane surface in the fo
    think you see is not necessarily what it really is!
 
 We added a ``clear=True`` option to the draw statement, to clear the
-screen before drawing. Indeed, by default the |pyformex| draw
+screen before drawing. Indeed, by default the pyFormex draw
 statement does not clear the screen but just adds to what was already
 drawn. You can make the ``clear=True`` option the default from the
 :menuselection:`Viewport --> Drawing Options` menu.  Make
@@ -633,7 +633,7 @@ dictionary can be accessed like ``Patterns['cube']``.  ::
    A wireframe cube
 
 While the pattern :func:`pattern` and :func:`mpattern` functions can
-only generate points on a regular cartesian grid, |pyformex| provides
+only generate points on a regular cartesian grid, pyFormex provides
 a lot of transformation functions to move the points to other
 locations after they were created. 
 Also, the :mod:`Turtle` plugin module provides a more general mechanism to

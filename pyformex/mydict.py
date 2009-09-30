@@ -72,7 +72,7 @@ class Dict(dict):
     
     - Items can be accessed with attribute syntax as well as dictionary
       syntax. Thus, if C is a Dict, the following are equivalent:
-          C['foo']   or   C.foo
+      ```C['foo']``   or   ``C.foo``
       This works as well for accessing values as for setting values.
       In the following, the words key or attribute therefore have the
       same meaning.
@@ -353,6 +353,11 @@ class CDict(Dict):
 ##     def __setstate__(self,d):
 ##         self.__dict__['_default_'] = d.pop('_default_')
 ##         self.update(d)
+
+
+## if not hasattr(Dict,'__get__'):
+##     print "Apparently, Dict has no '__get__' attribute, so I added one!"
+##     Dict.__get__ = None
     
 
 if __name__ == '__main__':

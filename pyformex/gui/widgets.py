@@ -529,7 +529,7 @@ class InputItem(QtGui.QHBoxLayout):
         if text:
             self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
-        print 'item %s: %s' % (self.key,text)
+        #print 'item %s: %s' % (self.key,text)
 
     def name(self):
         """Return the name of the InputItem."""
@@ -630,7 +630,7 @@ class InputText(InputItem):
         """Return the widget's value."""
         s = str(self.input.toPlainText())
         if self._is_string_:
-            print "VALUE",s
+            #print "VALUE",s
             return s
         else:
             return eval(s)

@@ -12,7 +12,7 @@ Guidelines for creating pyFormex documentation
   .. pyformex documentation --- chaptername
   ..
   .. include:: defines.inc
-  .. include:: ../website/src/links.inc
+  .. include:: links.inc
   ..
   .. _cha:partname:
 
@@ -25,8 +25,9 @@ Guidelines for creating pyFormex documentation
   - Sphinx documentation: http://sphinx.pocoo.org/
   - ReStructuredText page of the docutils project: http://docutils.sourceforge.net/rst.html
 
-- When refering to pyFormex (the name of the program and project), always write:
-  ``|pyformex|``.
+- When refering to pyFormex as the name of the software or project,
+  always use the upper case 'F'. When referring to the command to run
+  the program, or a directory path name, use all lower case: ``pyformex``.
 
 
 - Install required packages:: ``apt-get install sphinx dvipng``
