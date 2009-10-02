@@ -1106,8 +1106,10 @@ Script: %s
                 
             setname = nsetName(p)
             writeSet(fil,'NSET',setname,set)
-            if p.csys is not None:
-                writeTransform(fil,setname,p.csys)
+
+        GD.message("Writing coordinate transforms")
+        for p in self.prop.getProp('n',attr=['csys']):
+            writeTransform(fil,p.setname,p.csys)
 
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
