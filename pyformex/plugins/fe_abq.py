@@ -821,7 +821,7 @@ class Step(Dict):
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
-                 tags=None, buckle='SUBSPACE', incr=0.1,
+                 tags=None, buckle='SUBSPACE', incr=0.1,name=None,
                  bulkvisc=None,out=None,res=None):
         """Create new analysis data.
         
@@ -848,6 +848,7 @@ class Step(Dict):
         come in addition to the global ones.
         """
         self.analysis = analysis.upper()
+        self.name = name
         if not self.analysis in Step.analysis_types:
             raise ValueError,'analysis should be one of %s' % analysis_types
         if type(time) == float:
@@ -878,13 +879,16 @@ class Step(Dict):
         res is a list of Result-instances.
         resfreq and timemarks are global values only used by Explicit
         """
+        cmd = '*STEP'
+        if self.name:
+            cmd += ', %s' % self.name
         if self.analysis == 'PERTURBATION':
-            step_params = 'PERTURBATION'
+            cmd += ', PERTURBATION'
         else:
-            step_params = 'NLGEOM=%s' % self.nlgeom
+            cmd += ', NLGEOM=%s' % self.nlgeom
             if self.analysis == 'RIKS':
-                step_params += ', INCR=%s' % self.incr
-        fil.write("*STEP, %s\n" % step_params)
+                cmd += ', INCR=%s' % self.incr
+        fil.write("%s\n" % cmd)
         if self.analysis in ['STATIC','DYNAMIC']:
             fil.write("*%s\n" % self.analysis)
         elif self.analysis == 'EXPLICIT':
