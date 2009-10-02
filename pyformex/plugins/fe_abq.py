@@ -209,6 +209,10 @@ def outFrameSection(el,setname):
 
       - radius
 
+    - sectiontype RECT:
+
+      - width, height
+
     - all sectiontypes:
 
       - young_modulus
@@ -233,6 +237,8 @@ def outFrameSection(el,setname):
         out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
     elif sectiontype == 'CIRC':
         out += "%s \n" % float(el.radius)
+    elif sectiontype == 'RECT':
+        out += "%s, %s\n" % float(el.width,el.height)
 
     if el.orientation != None:
         out += "%s,%s,%s\n" % tuple(el.orientation)
