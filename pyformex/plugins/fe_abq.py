@@ -238,7 +238,7 @@ def outFrameSection(el,setname):
     elif sectiontype == 'CIRC':
         out += "%s \n" % float(el.radius)
     elif sectiontype == 'RECT':
-        out += "%s, %s\n" % float(el.width,el.height)
+        out += "%s, %s\n" % (float(el.width),float(el.height))
 
     if el.orientation != None:
         out += "%s,%s,%s\n" % tuple(el.orientation)

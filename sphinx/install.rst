@@ -302,26 +302,29 @@ library just like specified above.
 BuMPix Live Linux system
 ========================
 
-If you do not have access to a running Linux system, or if the above 
-installation methods fail for some unknown reason (you can ask for help on the 
-pyFormex `Forums`_), you can still run pyFormex by using a 
-`Bumpix Live Linux` system. `Bumpix Live` is a full featured Linux system 
-including pyFormex that can be run from a single removable medium 
-such as a CD or a USB key.
+If you do not have access to a running Linux system, or if the above
+installation methods fail for some unknown reason (remember, you can
+ask for help on the pyFormex `Forums`_), you can still run pyFormex by
+using a `Bumpix Live Linux` system. `Bumpix Live` is a full featured
+Linux system including pyFormex that can be run from a single
+removable medium such as a CD or a USB key.
 
-All you need in this case is some proper hardware: the system boots and runs 
-from the removable medium and leaves any software installed on the hard disk
+All you need in this case is some proper PC hardware: the system boots and runs 
+from the removable medium and leaves everything installed on the hard disk
 of the computer untouched.
 
-You can also easily take this media with you wherever you go, plug it in an
-available computer, and start or continue your pyFormex work. Some users
-even prefer this way to run pyFormex for that single reason.
+You can also easily take this media with you wherever you go, plug it into any
+available computer, and start or continue your previous pyFormex work.
+Some users even prefer this way to run pyFormex for that single reason.
 
 The Live system is also an excellent way to test and see what pyFormex can
 do for you, without having to install it. Or to demonstrate pyFormex to
 your friends or colleagues. 
 
-
+The BuMPix system is still an experimental project, but at regular
+intervals we produce new versions. While these are primarily intended
+for our students, we put the images on our FTP server so that anyone
+can use them.  
 
 
   
