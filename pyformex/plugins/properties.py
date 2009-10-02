@@ -289,12 +289,11 @@ def checkIdValue(values):
     """
     try:
         l = [ len(v) for v in values ]
-        print l
         if min(l) < 2 or max(l) > 2:
             raise
         values = [ (int(i),float(v)) for i,v in values ]
-        print values
     except:
+        print values
         print "!! Probably invalid value"
         values = [ float(v) for v in values ]
         print values
@@ -425,12 +424,11 @@ class PropertyDB(Dict):
         - nr: a unique id, that never should be set/changed by the user.
         - tag: an identification tag used to group properties
         - set: a single number or a list of numbers identifying the geometrical
-          elements for wich the property is set, or the name of a
-          previously defined set.
+          elements for wich the property is set or a list of setnames that
+          have been defined earlier.
         - setname: the name to be used for this set. Default is to use an
-          automatically generated name. If setname is specified without
-          a set, this is interpreted as a set= field.
-
+          automatically generated name.
+          
         Besides these, any other fields may be defined and will be added
         without checking.
         """
@@ -465,19 +463,24 @@ class PropertyDB(Dict):
     # This should maybe change to operate on the property keys
     # and finally return the selected keys or properties?
 
-    def getProp(self,kind='',rec=None,tag=None,attr=[],delete=False):
+    def getProp(self,kind='',rec=None,tag=None,attr=[],noattr=[],delete=False):
         """Return all properties of type kind matching tag and having attr.
 
         kind is either '', 'n', 'e' or 'm'
         If rec is given, it is a list of record numbers or a single number.
         If a tag or a list of tags is given, only the properties having a
         matching tag attribute are returned.
-        If a list of attibutes is given, only the properties having those
-        attributes are returned.
+
+        attr and noattr are lists of attributes. Only the properties having
+        all the attributes in attr and none of the properties in noattr are
+        returned.
+        Attributes whose value is None are treated as non-existing.
 
         If delete==True, the returned properties are removed from the database.
         """
         prop = getattr(self,kind+'prop')
+        #print "%s props found" % len(prop)
+        #print prop
         if rec is not None:
             if type(rec) != list:
                 rec = [ rec ]
@@ -490,6 +493,12 @@ class PropertyDB(Dict):
             prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tag ]
         for a in attr:
             prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
+        #print "%s props retained after attr" % len(prop)
+        #print prop
+        for a in noattr:
+            prop = [ p for p in prop if not p.has_key(a) or p[a] is None ]
+        #print "%s props retained after noattr" % len(prop)
+        #print prop
         if delete:
             self._delete(prop,kind=kind)
         return prop
@@ -561,7 +570,7 @@ class PropertyDB(Dict):
                     raise
             # Currently unchecked!
             d['ampl'] = ampl
-            
+
             return self.Prop(kind='n',prop=prop,tag=tag,set=set,setname=setname,**d)
         except:
             print "tag=%s,set=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)

@@ -124,19 +124,25 @@ def writeElems(fil,elems,type,name='Eall',eid=None,eofs=1,nofs=1):
         eid = asarray(eid)
     for i,e in zip(eid+eofs,elems+nofs):
         fil.write(fmt % ((i,)+tuple(e)))
-    writeSubset(fil,'ELSET','Eall',name)
+    writeSet(fil,'ELSET','Eall',[name])
 
 
 def writeSet(fil,type,name,set,ofs=1):
-    """Write a named set of nodes or elements (type=NSET|ELSET)"""
+    """Write a named set of nodes or elements (type=NSET|ELSET)
+
+    set is an ndarray 
+    set can be a list of node/element numbers, in which case the ofs
+    value will be added to them, or a list of names the name of another already defined set.
+    """
     fil.write("*%s,%s=%s\n" % (type,type,name))
-    for i in asarray(set)+ofs:
-        fil.write("%d,\n" % i)
-
-
-def writeSubset(fil, type, name, subname):
-    """Make a named set a subset of another one (type=NSET|ELSET)"""
-    fil.write('*%s, %s=%s\n%s\n' % (type,type,name,subname))
+    set = asarray(set)
+    if set.dtype.kind == 'S':
+        # we have set names
+        for i in set:
+            fil.write('%s\n' % i)
+    else:
+        for i in set+ofs:
+            fil.write("%d,\n" % i)
 
 
 materialswritten=[]
@@ -1087,7 +1093,7 @@ Script: %s
             elif p.prop is not None:
                 # set is specified by nprop nrs
                 if self.nprop is None:
-                    print self
+                    print p
                     raise ValueError,"nodeProp has a 'prop' field but no 'nprop'was specified"
                 set = where(self.nprop == p.prop)[0]
             else:
@@ -1102,7 +1108,7 @@ Script: %s
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
         nelems = 0
-        for p in self.prop.getProp('e',attr=['eltype']):
+        for p in self.prop.getProp('e'):
             if p.set is not None:
                 # element set is directly specified
                 set = p.set
@@ -1115,28 +1121,37 @@ Script: %s
             else:
                 # default is all elements
                 set = range(telems)
-            print 'Elements of type %s: %s' % (p.eltype,set)
-                
-            setname = esetName(p)
-            print setname,p.setname
-            gl,gr = self.model.splitElems(set)
-            elems = self.model.getElems(gr)
-            for i,elnrs,els in zip(range(len(gl)),gl,elems):
-                grpname = Eset('grp',i)
-                subsetname = Eset(p.nr,'grp',i,)
-                nels = len(els)
-                if nels > 0:
-                    GD.message("Writing %s elements from group %s" % (nels,i))
-                    writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
-                    nelems += nels
-                    if group_by_eset:
-                        writeSubset(fil,'ELSET',setname,subsetname)
-                    if group_by_group:
-                        writeSubset(fil,'ELSET',grpname,subsetname)
+
+            if p.has_key('eltype'):
+                print 'Elements of type %s: %s' % (p.eltype,set)
+
+                setname = esetName(p)
+                #print setname,p.setname
+                gl,gr = self.model.splitElems(set)
+                elems = self.model.getElems(gr)
+                for i,elnrs,els in zip(range(len(gl)),gl,elems):
+                    grpname = Eset('grp',i)
+                    subsetname = Eset(p.nr,'grp',i,)
+                    nels = len(els)
+                    if nels > 0:
+                        GD.message("Writing %s elements from group %s" % (nels,i))
+                        writeElems(fil,els,p.eltype,name=subsetname,eid=elnrs)
+                        nelems += nels
+                        if group_by_eset:
+                            writeSet(fil,'ELSET',setname,[subsetname])
+                        if group_by_group:
+                            writeSet(fil,'ELSET',grpname,[subsetname])
+            else:
+                writeSet(fil,'ELSET',p.setname,p.set)
                     
         GD.message("Total number of elements: %s" % telems)
         if nelems != telems:
             GD.message("!! Number of elements written: %s !!" % nelems)
+
+        ## # Now process the sets without eltype
+        ## for p in self.prop.getProp('e',noattr=['eltype']):
+        ##     setname = esetName(p)
+        ##     writeSet(fil,'ELSET',setname,p.set)
 
         GD.message("Writing element sections")
         for p in self.prop.getProp('e',attr=['section','eltype']):
