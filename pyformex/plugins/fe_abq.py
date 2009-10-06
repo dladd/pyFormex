@@ -255,6 +255,104 @@ def outFrameSection(el,setname):
 
     return out
 
+def outGeneralBeamSection(el,setname):
+    """Write a general beam section for the named element set.
+
+    To specify a beam section when numerical integration over the section is not required.
+
+    Recognized data fields in the property record:
+    
+    - sectiontype GENERAL:
+
+      - cross_section 
+      - moment_inertia_11
+      - moment_inertia_12
+      - moment_inertia_22
+      - torsional_constant
+
+    - sectiontype CIRC:
+
+      - radius
+
+    - sectiontype RECT:
+
+      - width, height
+
+    - all sectiontypes:
+
+      - young_modulus
+      - shear_modulus
+      
+    - optional:
+
+      - density: density of the material (required in Abaqus/Explicit)
+    """
+    out = ""
+    extra = ''
+    if el.density:
+        extra += ', DENSITY=%s' % float(el.density)
+
+    sectiontype = el.sectiontype.upper()
+    out += "*BEAM GENERAL SECTION, ELSET=%s, SECTION=%s%s\n" % (setname,sectiontype,extra)
+    if sectiontype == 'GENERAL':
+        out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
+    elif sectiontype == 'CIRC':
+        out += "%s \n" % float(el.radius)
+    elif sectiontype == 'RECT':
+        out += "%s, %s\n" % (float(el.width),float(el.height))
+
+    if el.orientation != None:
+        out += "%s,%s,%s\n" % tuple(el.orientation)
+    else:
+        out += '\n'
+     
+    out += "%s, %s \n" % (float(el.young_modulus),float(el.shear_modulus))
+
+    return out
+
+def outBeamSection(el,setname):
+    """Write a beam section for the named element set.
+
+    To specify a beam section when numerical integration over the section is required.
+
+    Recognized data fields in the property record:
+    
+    - all sectiontypes: material
+    
+    - sectiontype GENERAL:
+
+      - cross_section 
+      - moment_inertia_11
+      - moment_inertia_12
+      - moment_inertia_22
+      - torsional_constant
+
+    - sectiontype CIRC:
+
+      - radius
+
+    - sectiontype RECT:
+
+      - width, height
+      
+    """
+    out = ""
+
+    sectiontype = el.sectiontype.upper()
+    out += "*BEAM SECTION, ELSET=%s, MATERIAL=%s, SECTION=%s\n" % (setname,el.material.name,sectiontype)
+    if sectiontype == 'GENERAL':
+        out += "%s, %s, %s, %s, %s \n" % (setname,float(el.density),float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant))
+    elif sectiontype == 'CIRC':
+        out += "%s \n" % float(el.radius)
+    elif sectiontype == 'RECT':
+        out += "%s, %s\n" % (float(el.width),float(el.height))
+
+    if el.orientation != None:
+        out += "%s,%s,%s\n" % tuple(el.orientation)
+    else:
+        out += '\n'
+
+    return out
 
 def outConnectorSection(el,setname):
     """Write a connector section.
@@ -331,6 +429,11 @@ shell_elems = [
     'S9R5',
     'STRI3',
     'STRI65']
+surface_elems = [
+    'SFM3D3',
+    'SFM3D4','SFM3D4R',
+    'SFM3D6',
+    'SFM3D8','SFM3D8R']
 solid3d_elems = [
     'C3D4','C3D4H',
     'C3D6','C3D6H',
@@ -372,30 +475,24 @@ def writeSection(fil,prop):
     ##BEAM elements
     ##########################
     elif eltype in beam_elems:
-        if el.sectiontype.upper() == 'GENERAL':
-            fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=GENERAL, DENSITY=%s
-%s, %s, %s, %s, %s \n"""%(setname,float(el.density), float(el.cross_section),float(el.moment_inertia_11),float(el.moment_inertia_12),float(el.moment_inertia_22),float(el.torsional_constant)))
-            if el.orientation != None:
-                fil.write("%s,%s,%s"%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("\n %s, %s \n"%(float(el.young_modulus),float(el.shear_modulus)))
-        if el.sectiontype.upper() == 'CIRC':
-            fil.write("""*BEAM GENERAL SECTION, ELSET=%s, SECTION=CIRC, DENSITY=%s
-%s \n"""%(setname,float(el.density),float(el.radius)))
-            if el.orientation != None:
-                fil.write("""%s,%s,%s"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-            fil.write("""\n %s, %s \n"""%(float(el.young_modulus),float(el.shear_modulus)))
-	if el.sectiontype.upper() == 'RECT':
-            fil.write('*BEAM SECTION, ELSET=%s, material=%s,\n** Section: %s  Profile: %s\ntemperature=GRADIENTS, SECTION=RECT\n %s,%s\n' %(setname,el.material.name,el.name,el.name,float(el.height),float(el.width)))
-            if el.orientation != None:
-                fil.write("""%s,%s,%s\n"""%(el.orientation[0],el.orientation[1],el.orientation[2]))
-		
+        if el.integrate:
+            fil.write(outBeamSection(el,setname))
+        else:
+            fil.write(outGeneralBeamSection(el,setname))
 
     ############
     ## SHELL elements
     ##########################
     elif eltype in shell_elems:
         fil.write(outShellSection(el,setname,mat.name))
-                  
+    
+    ############
+    ## SURFACE elements
+    ##########################
+    elif eltype in surface_elems:
+        if el.sectiontype.upper() == 'SURFACE':
+            fil.write("""*SURFACE SECTION, ELSET=%s \n""" % setname)
+    
     ############
     ## MEMBRANE elements
     ##########################
