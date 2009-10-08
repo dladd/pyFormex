@@ -994,6 +994,175 @@ class InputColor(InputItem):
         pass
 
 
+def inputAnyOld(item):
+    """Create an InputItem of any type, depending on the arguments.
+
+    This function accepts the arguments in the old format of a single
+    item list.
+    """
+    name,value = item[:2]
+    if len(item) > 2 and type(item[2]) == str:
+        itemtype = item[2]
+    else:
+        itemtype = type(value)
+    #print itemtype
+    options = {}
+    if type(item[-1]) == dict:
+        options = item[-1]
+
+    if itemtype == bool:
+        line = InputBool(name,value,**options)
+
+    elif itemtype == int:
+        line = InputInteger(name,value,**options)
+        if len(item) > 3 and type(item[3] != dict):
+            options['min'] = int(item[3])
+##                     line.validator.setBottom(int(item[3]))
+        if len(item) > 4:
+            options['max'] = int(item[4])
+##                     line.validator.setTop(int(item[4]))
+
+    elif itemtype == float:
+        line = InputFloat(name,value,**options)
+        if len(item) > 3:
+            line.validator.setBottom(float(item[3]))
+        if len(item) > 4:
+            line.validator.setTop(float(item[4]))
+        if len(item) > 5:
+            line.validator.setDecimals(int(item[5]))
+
+    elif itemtype == 'slider':
+        if type(value) == int:
+            line = InputSlider(name,value,**options)
+        elif type(value) == float:
+            line = InputFSlider(name,value,**options)
+
+    elif itemtype == 'info':
+        line = InputInfo(name,value,**options)
+
+    elif itemtype == 'text':
+        line = InputText(name,value,**options)
+
+    elif itemtype == 'color':
+        line = InputColor(name,value,**options)
+
+    elif itemtype == 'select' :
+        if len(item) > 3:
+            choices = item[3]
+        else:
+            choices = []
+        line = InputCombo(name,choices,value,**options)
+
+    elif itemtype in ['radio','hradio','vradio']:
+        if len(item) > 3:
+            choices = item[3]
+        else:
+            choices = []
+        options['direction'] = itemtype[0]
+        line = InputRadio(name,choices,value,**options)
+
+    elif itemtype in ['push','hpush','vpush']:
+        if len(item) > 3:
+            choices = item[3]
+        else:
+            choices = []
+        options['direction'] = itemtype[0]
+        line = InputPush(name,choices,value,**options)
+
+    else: # Anything else is handled as a string
+        #itemtype = str:
+        line = InputString(name,value,**options)
+    return line
+
+
+def inputAny(name,value,itype=str,**kargs):
+    """Create an InputItem of any type, depending on the arguments.
+
+    Arguments: only name and value are required
+
+    - name: name of the item, also the key for the return value
+    - value: initial value,
+    - itype: one of the available itemtypes, default derived from value or
+      str if value is not recognized.
+    - text: descriptive text displayed on the input dialog, default equal to
+      name
+    - 
+    """
+    if len(item) > 2 and type(item[2]) == str:
+        itemtype = item[2]
+    else:
+        itemtype = type(value)
+    #print itemtype
+    options = {}
+    if type(item[-1]) == dict:
+        options = item[-1]
+
+    if itemtype == bool:
+        line = InputBool(name,value,**options)
+
+    elif itemtype == int:
+        line = InputInteger(name,value,**options)
+        if len(item) > 3 and type(item[3] != dict):
+            options['min'] = int(item[3])
+##                     line.validator.setBottom(int(item[3]))
+        if len(item) > 4:
+            options['max'] = int(item[4])
+##                     line.validator.setTop(int(item[4]))
+
+    elif itemtype == float:
+        line = InputFloat(name,value,**options)
+        if len(item) > 3:
+            line.validator.setBottom(float(item[3]))
+        if len(item) > 4:
+            line.validator.setTop(float(item[4]))
+        if len(item) > 5:
+            line.validator.setDecimals(int(item[5]))
+
+    elif itemtype == 'slider':
+        if type(value) == int:
+            line = InputSlider(name,value,**options)
+        elif type(value) == float:
+            line = InputFSlider(name,value,**options)
+
+    elif itemtype == 'info':
+        line = InputInfo(name,value,**options)
+
+    elif itemtype == 'text':
+        line = InputText(name,value,**options)
+
+    elif itemtype == 'color':
+        line = InputColor(name,value,**options)
+
+    elif itemtype == 'select' :
+        if len(item) > 3:
+            choices = item[3]
+        else:
+            choices = []
+        line = InputCombo(name,choices,value,**options)
+
+    elif itemtype in ['radio','hradio','vradio']:
+        if len(item) > 3:
+            choices = item[3]
+        else:
+            choices = []
+        options['direction'] = itemtype[0]
+        line = InputRadio(name,choices,value,**options)
+
+    elif itemtype in ['push','hpush','vpush']:
+        if len(item) > 3:
+            choices = item[3]
+        else:
+            choices = []
+        options['direction'] = itemtype[0]
+        line = InputPush(name,choices,value,**options)
+
+    else: # Anything else is handled as a string
+        #itemtype = str:
+        line = InputString(name,value,**options)
+    return line
+                
+
+
 class InputDialog(QtGui.QDialog):
     """A dialog widget to set the value of one or more items.
 
@@ -1004,7 +1173,7 @@ class InputDialog(QtGui.QDialog):
     The input dialog can be modal or non-modal dialog.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):#,report_pos=False,pos=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -1069,78 +1238,79 @@ class InputDialog(QtGui.QDialog):
         self._pos = None
         form = QtGui.QVBoxLayout()
         for item in items:
-            name,value = item[:2]
-            if len(item) > 2 and type(item[2]) == str:
-                itemtype = item[2]
-            else:
-                itemtype = type(value)
-            #print itemtype
-            options = {}
-            if type(item[-1]) == dict:
-                options = item[-1]
+            line = inputAnyOld(item)
+##             name,value = item[:2]
+##             if len(item) > 2 and type(item[2]) == str:
+##                 itemtype = item[2]
+##             else:
+##                 itemtype = type(value)
+##             #print itemtype
+##             options = {}
+##             if type(item[-1]) == dict:
+##                 options = item[-1]
                 
-            if itemtype == bool:
-                line = InputBool(name,value,**options)
+##             if itemtype == bool:
+##                 line = InputBool(name,value,**options)
 
-            elif itemtype == int:
-                line = InputInteger(name,value,**options)
-                if len(item) > 3 and type(item[3] != dict):
-                    options['min'] = int(item[3])
-##                     line.validator.setBottom(int(item[3]))
-                if len(item) > 4:
-                    options['max'] = int(item[4])
-##                     line.validator.setTop(int(item[4]))
+##             elif itemtype == int:
+##                 line = InputInteger(name,value,**options)
+##                 if len(item) > 3 and type(item[3] != dict):
+##                     options['min'] = int(item[3])
+## ##                     line.validator.setBottom(int(item[3]))
+##                 if len(item) > 4:
+##                     options['max'] = int(item[4])
+## ##                     line.validator.setTop(int(item[4]))
 
-            elif itemtype == float:
-                line = InputFloat(name,value,**options)
-                if len(item) > 3:
-                    line.validator.setBottom(float(item[3]))
-                if len(item) > 4:
-                    line.validator.setTop(float(item[4]))
-                if len(item) > 5:
-                    line.validator.setDecimals(int(item[5]))
+##             elif itemtype == float:
+##                 line = InputFloat(name,value,**options)
+##                 if len(item) > 3:
+##                     line.validator.setBottom(float(item[3]))
+##                 if len(item) > 4:
+##                     line.validator.setTop(float(item[4]))
+##                 if len(item) > 5:
+##                     line.validator.setDecimals(int(item[5]))
 
-            elif itemtype == 'slider':
-                if type(value) == int:
-                    line = InputSlider(name,value,**options)
-                elif type(value) == float:
-                    line = InputFSlider(name,value,**options)
+##             elif itemtype == 'slider':
+##                 if type(value) == int:
+##                     line = InputSlider(name,value,**options)
+##                 elif type(value) == float:
+##                     line = InputFSlider(name,value,**options)
  
-            elif itemtype == 'info':
-                line = InputInfo(name,value,**options)
+##             elif itemtype == 'info':
+##                 line = InputInfo(name,value,**options)
 
-            elif itemtype == 'text':
-                line = InputText(name,value,**options)
+##             elif itemtype == 'text':
+##                 line = InputText(name,value,**options)
 
-            elif itemtype == 'color':
-                line = InputColor(name,value,**options)
+##             elif itemtype == 'color':
+##                 line = InputColor(name,value,**options)
 
-            elif itemtype == 'select' :
-                if len(item) > 3:
-                    choices = item[3]
-                else:
-                    choices = []
-                line = InputCombo(name,choices,value,**options)
+##             elif itemtype == 'select' :
+##                 if len(item) > 3:
+##                     choices = item[3]
+##                 else:
+##                     choices = []
+##                 line = InputCombo(name,choices,value,**options)
 
-            elif itemtype in ['radio','hradio','vradio']:
-                if len(item) > 3:
-                    choices = item[3]
-                else:
-                    choices = []
-                options['direction'] = itemtype[0]
-                line = InputRadio(name,choices,value,**options)
+##             elif itemtype in ['radio','hradio','vradio']:
+##                 if len(item) > 3:
+##                     choices = item[3]
+##                 else:
+##                     choices = []
+##                 options['direction'] = itemtype[0]
+##                 line = InputRadio(name,choices,value,**options)
 
-            elif itemtype in ['push','hpush','vpush']:
-                if len(item) > 3:
-                    choices = item[3]
-                else:
-                    choices = []
-                options['direction'] = itemtype[0]
-                line = InputPush(name,choices,value,**options)
+##             elif itemtype in ['push','hpush','vpush']:
+##                 if len(item) > 3:
+##                     choices = item[3]
+##                 else:
+##                     choices = []
+##                 options['direction'] = itemtype[0]
+##                 line = InputPush(name,choices,value,**options)
 
-            else: # Anything else is handled as a string
-                #itemtype = str:
-                line = InputString(name,value,**options)
+##             else: # Anything else is handled as a string
+##                 #itemtype = str:
+##                 line = InputString(name,value,**options)
                 
             form.addLayout(line)
             self.fields.append(line)
