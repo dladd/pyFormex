@@ -862,6 +862,8 @@ def delay(i):
 
         
 _wakeup_mode=0
+sleeping = False
+timer = None
 def sleep(timeout=None):
     """Sleep until key/mouse press in the canvas or until timeout"""
     global sleeping,_wakeup_mode,timer

@@ -28,24 +28,31 @@ anywhere, causing attached functions to be executed.
 """
 import pyformex as GD
 
-from PyQt4 import QtCore
+from PyQt4.QtCore import Qt,QObject,SIGNAL
 
 # signals
-CANCEL = QtCore.SIGNAL("Cancel")   # cancel the operation, undoing it
-DONE   = QtCore.SIGNAL("Done")     # accept and finish te operation
-WAKEUP = QtCore.SIGNAL("Wakeup")   # wake up from a sleep state
-TIMEOUT = QtCore.SIGNAL("Timeout") # terminate what was going on
-SAVE = QtCore.SIGNAL("Save")       # 
+CANCEL = SIGNAL("Cancel")   # cancel the operation, undoing it
+DONE   = SIGNAL("Done")     # accept and finish the operation
+WAKEUP = SIGNAL("Wakeup")   # wake up from a sleep state
+TIMEOUT = SIGNAL("Timeout") # terminate what was going on
+SAVE = SIGNAL("Save")       # 
+
+keypress_signal = {
+    Qt.Key_F2: SAVE,
+    }
+
 
 def onSignal(signal,function,widget=None):
+    """Connect a function to a signal"""
     if widget is None:
         widget = GD.GUI
-    QtCore.QObject.connect(widget,signal,function)
+    QObject.connect(widget,signal,function)
 
 def offSignal(signal,function,widget=None):
+    """Disconnect a function from a signal"""
     if widget is None:
         widget = GD.GUI
-    QtCore.QObject.disconnect(widget,signal,function)
+    QObject.disconnect(widget,signal,function)
 
 
     

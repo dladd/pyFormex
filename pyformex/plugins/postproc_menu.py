@@ -39,6 +39,8 @@ from formex import *
 from gui.draw import *
 from gui.colors import *
 
+from PyQt4 import QtCore
+
 
 class AttributeModel(QtCore.QAbstractTableModel):
     """A model representing the attributes of an object.

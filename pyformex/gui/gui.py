@@ -427,24 +427,19 @@ class GUI(QtGui.QMainWindow):
         """Top level key press event handler.
 
         Events get here if they are not handled by a lower level handler.
+        Every key press arriving here generates a WAKEUP signal, and if a
+        dedicated signal for the key was installed in the keypress table,
+        that signal is emitted too.
+        Finally, the event is removed.
         """
+        key = e.key()
+        GD.debug('Key %s pressed' % key)
         self.emit(signals.WAKEUP,())
-        if e.key() == QtCore.Qt.Key_F2:
-            GD.debug('F2 pressed!')
-            self.emit(signals.SAVE,())
+        signal = signals.keypress_signal.get(key,None)
+        if signal:
+            self.emit(signal,())
         e.ignore()
 
-##     def writeSettings(self):
-##         settings = QtCore.QSettings("pyFormex", "pyFormex")
-##         settings.setValue("pos", 30)
-##         settings.sync()
-
-##     def readSettings(self):
-##         settings = QtCore.QSettings("pyFormex", "pyFormex")
-##         pos = settings.value(QtCore.QString("pos"),QtCore.QPoint(200, 200)).toPoint()
-##         size = settings.value("size", QtCore.QSize(400, 400)).toSize()
-##         self.resize(size)
-##         self.move(pos)
 
     def XPos(self):
         """Get the main window position from the xwininfo command.

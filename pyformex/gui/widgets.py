@@ -516,10 +516,7 @@ class InputItem(QtGui.QHBoxLayout):
     """
     
     def __init__(self,name,*args,**kargs):
-        """Creates a new inputitem with a name label in front.
-        
-        If a name is given, a label is created and added to the layout.
-        """
+        """Creates a horizontal box layout and puts the label in it."""
         QtGui.QHBoxLayout.__init__(self,*args)
         self.key = str(name)
         if 'text' in kargs:
@@ -529,7 +526,6 @@ class InputItem(QtGui.QHBoxLayout):
         if text:
             self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
-        #print 'item %s: %s' % (self.key,text)
 
     def name(self):
         """Return the name of the InputItem."""
@@ -552,13 +548,14 @@ class InputItem(QtGui.QHBoxLayout):
 
 
 class InputInfo(InputItem):
-    """An unchangeable input item.
+    """An unchangeable input field with a label in front.
+
+    It is just like an InputString, but the text can not be edited.
+    
+    There are no specific options.
     """
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new info field with a label in front.
-
-        The info input field is an unchangeable text field.
-        """
+        """Creates the input item."""
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self.input.setReadOnly(True)
@@ -575,14 +572,15 @@ class InputInfo(InputItem):
 
 
 class InputString(InputItem):
-    """A string input item."""
-    
-    def __init__(self,name,value,*args,**kargs):
-        """Creates a new string input field with a label in front.
+    """A string input field with a label in front.
 
-        If the type of value is not a string, the input string
-        will be eval'ed before returning.
-        """
+    If the type of value is not a string, the input string
+    will be eval'ed before returning.
+    
+    There are no specific op[tions.
+    """
+    def __init__(self,name,value,*args,**kargs):
+        """Creates the input item."""
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self._is_string_ = type(value) == str
@@ -607,14 +605,15 @@ class InputString(InputItem):
 
 
 class InputText(InputItem):
-    """A scrollable text input item."""
+    """A scrollable text input field with a label in front.
     
+    If the type of value is not a string, the input text
+    will be eval'ed before returning.
+    
+    There are no specific op[tions.
+    """
     def __init__(self,name,value,*args,**kargs):
-        """Creates a new text input field with a label in front.
-
-        If the type of value is not a string, the input text
-        will be eval'ed before returning.
-        """
+        """Creates the input item."""
         InputItem.__init__(self,name,*args,**kargs)
         self._is_string_ = type(value) == str
         self.input =  QtGui.QTextEdit()
@@ -680,7 +679,7 @@ class InputBool(InputItem):
 class InputCombo(InputItem):
     """A combobox InputItem."""
     
-    def __init__(self,name,choices,default,*args,**kargs):
+    def __init__(self,name,default,choices=[],*args,**kargs):
         """Creates a new combobox for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -716,7 +715,7 @@ class InputCombo(InputItem):
 class InputRadio(InputItem):
     """A radiobuttons InputItem."""
     
-    def __init__(self,name,choices,default,direction='h',*args,**kargs):
+    def __init__(self,name,default,choices=[],direction='h',*args,**kargs):
         """Creates radiobuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -771,7 +770,7 @@ class InputRadio(InputItem):
 class InputPush(InputItem):
     """A pushbuttons InputItem."""
     
-    def __init__(self,name,choices,default=None,direction='h',*args,**kargs):
+    def __init__(self,name,default=None,choices=[],direction='h',*args,**kargs):
         """Creates pushbuttons for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -875,6 +874,12 @@ class InputFloat(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self.validator = QtGui.QDoubleValidator(self)
+        if kargs.has_key('min'):
+            self.validator.setBottom(float(kargs['min']))
+        if kargs.has_key('max'):
+            self.validator.setTop(float(kargs['max']))
+        if kargs.has_key('dec'):
+            self.validator.setDecimals(int(kargs['dec']))
         self.input.setValidator(self.validator)
         self.addWidget(self.input)
 
@@ -994,133 +999,34 @@ class InputColor(InputItem):
         pass
 
 
-def inputAnyOld(item):
-    """Create an InputItem of any type, depending on the arguments.
-
-    This function accepts the arguments in the old format of a single
-    item list.
-    """
-    name,value = item[:2]
-    if len(item) > 2 and type(item[2]) == str:
-        itemtype = item[2]
-    else:
-        itemtype = type(value)
-    #print itemtype
-    options = {}
-    if type(item[-1]) == dict:
-        options = item[-1]
-
-    if itemtype == bool:
-        line = InputBool(name,value,**options)
-
-    elif itemtype == int:
-        line = InputInteger(name,value,**options)
-        if len(item) > 3 and type(item[3] != dict):
-            options['min'] = int(item[3])
-##                     line.validator.setBottom(int(item[3]))
-        if len(item) > 4:
-            options['max'] = int(item[4])
-##                     line.validator.setTop(int(item[4]))
-
-    elif itemtype == float:
-        line = InputFloat(name,value,**options)
-        if len(item) > 3:
-            line.validator.setBottom(float(item[3]))
-        if len(item) > 4:
-            line.validator.setTop(float(item[4]))
-        if len(item) > 5:
-            line.validator.setDecimals(int(item[5]))
-
-    elif itemtype == 'slider':
-        if type(value) == int:
-            line = InputSlider(name,value,**options)
-        elif type(value) == float:
-            line = InputFSlider(name,value,**options)
-
-    elif itemtype == 'info':
-        line = InputInfo(name,value,**options)
-
-    elif itemtype == 'text':
-        line = InputText(name,value,**options)
-
-    elif itemtype == 'color':
-        line = InputColor(name,value,**options)
-
-    elif itemtype == 'select' :
-        if len(item) > 3:
-            choices = item[3]
-        else:
-            choices = []
-        line = InputCombo(name,choices,value,**options)
-
-    elif itemtype in ['radio','hradio','vradio']:
-        if len(item) > 3:
-            choices = item[3]
-        else:
-            choices = []
-        options['direction'] = itemtype[0]
-        line = InputRadio(name,choices,value,**options)
-
-    elif itemtype in ['push','hpush','vpush']:
-        if len(item) > 3:
-            choices = item[3]
-        else:
-            choices = []
-        options['direction'] = itemtype[0]
-        line = InputPush(name,choices,value,**options)
-
-    else: # Anything else is handled as a string
-        #itemtype = str:
-        line = InputString(name,value,**options)
-    return line
-
-
-def inputAny(name,value,itype=str,**kargs):
+def inputAny(name,value,itemtype=str,**options):
     """Create an InputItem of any type, depending on the arguments.
 
     Arguments: only name and value are required
 
     - name: name of the item, also the key for the return value
     - value: initial value,
-    - itype: one of the available itemtypes, default derived from value or
+    - itemtype: one of the available itemtypes, default derived from value or
       str if value is not recognized.
     - text: descriptive text displayed on the input dialog, default equal to
       name
-    - 
+    - choices: a list of posible values (for selection types)
+    - min,max: limits for range types
+    - validator: customized validation function
     """
-    if len(item) > 2 and type(item[2]) == str:
-        itemtype = item[2]
-    else:
-        itemtype = type(value)
-    #print itemtype
-    options = {}
-    if type(item[-1]) == dict:
-        options = item[-1]
-
     if itemtype == bool:
         line = InputBool(name,value,**options)
 
     elif itemtype == int:
         line = InputInteger(name,value,**options)
-        if len(item) > 3 and type(item[3] != dict):
-            options['min'] = int(item[3])
-##                     line.validator.setBottom(int(item[3]))
-        if len(item) > 4:
-            options['max'] = int(item[4])
-##                     line.validator.setTop(int(item[4]))
 
     elif itemtype == float:
         line = InputFloat(name,value,**options)
-        if len(item) > 3:
-            line.validator.setBottom(float(item[3]))
-        if len(item) > 4:
-            line.validator.setTop(float(item[4]))
-        if len(item) > 5:
-            line.validator.setDecimals(int(item[5]))
 
     elif itemtype == 'slider':
         if type(value) == int:
             line = InputSlider(name,value,**options)
+            
         elif type(value) == float:
             line = InputFSlider(name,value,**options)
 
@@ -1134,33 +1040,67 @@ def inputAny(name,value,itype=str,**kargs):
         line = InputColor(name,value,**options)
 
     elif itemtype == 'select' :
-        if len(item) > 3:
-            choices = item[3]
-        else:
-            choices = []
-        line = InputCombo(name,choices,value,**options)
+        line = InputCombo(name,value,**options)
 
     elif itemtype in ['radio','hradio','vradio']:
-        if len(item) > 3:
-            choices = item[3]
-        else:
-            choices = []
         options['direction'] = itemtype[0]
-        line = InputRadio(name,choices,value,**options)
+        line = InputRadio(name,value,**options)
 
     elif itemtype in ['push','hpush','vpush']:
-        if len(item) > 3:
-            choices = item[3]
-        else:
-            choices = []
         options['direction'] = itemtype[0]
-        line = InputPush(name,choices,value,**options)
+        line = InputPush(name,value,**options)
 
     else: # Anything else is handled as a string
         #itemtype = str:
         line = InputString(name,value,**options)
     return line
                 
+
+def inputAnyNew(item):
+    """This translates the old item input to the inputAny arguments."""
+    name,value = item[:2]
+    
+    if type(item[-1]) == dict:
+        # we have options
+        options = item[-1]
+        item = item[:-1]
+    else:
+        options = {}
+
+    if len(item) > 2 and type(item[2]) == str:
+        itemtype = item[2]
+    else:
+        itemtype = type(value)
+
+    if itemtype == int:
+        if len(item) > 3 and type(item[3] != dict):
+            options['min'] = int(item[3])
+        if len(item) > 4:
+            options['max'] = int(item[4])
+
+    elif itemtype == float:
+        if len(item) > 3 and type(item[3] != dict):
+            options['min'] = int(item[3])
+        if len(item) > 4:
+            options['max'] = int(item[4])
+        if len(item) > 5:
+            options['dec'] = int(item[5])
+
+    elif itemtype == 'select' :
+        if len(item) > 3:
+            options['choices'] = item[3]
+
+    elif itemtype in ['radio','hradio','vradio']:
+        if len(item) > 3:
+            options['choices'] = item[3]
+        options['direction'] = itemtype[0]
+
+    elif itemtype in ['push','hpush','vpush']:
+        if len(item) > 3:
+            options['choices'] = item[3]
+        options['direction'] = itemtype[0]
+
+    return inputAny(name,value,itemtype,**options)
 
 
 class InputDialog(QtGui.QDialog):
@@ -1234,84 +1174,10 @@ class InputDialog(QtGui.QDialog):
         self.setWindowTitle(str(caption))
         self.fields = []
         self.results = {}
-        ## self.report_pos = report_pos
         self._pos = None
         form = QtGui.QVBoxLayout()
         for item in items:
-            line = inputAnyOld(item)
-##             name,value = item[:2]
-##             if len(item) > 2 and type(item[2]) == str:
-##                 itemtype = item[2]
-##             else:
-##                 itemtype = type(value)
-##             #print itemtype
-##             options = {}
-##             if type(item[-1]) == dict:
-##                 options = item[-1]
-                
-##             if itemtype == bool:
-##                 line = InputBool(name,value,**options)
-
-##             elif itemtype == int:
-##                 line = InputInteger(name,value,**options)
-##                 if len(item) > 3 and type(item[3] != dict):
-##                     options['min'] = int(item[3])
-## ##                     line.validator.setBottom(int(item[3]))
-##                 if len(item) > 4:
-##                     options['max'] = int(item[4])
-## ##                     line.validator.setTop(int(item[4]))
-
-##             elif itemtype == float:
-##                 line = InputFloat(name,value,**options)
-##                 if len(item) > 3:
-##                     line.validator.setBottom(float(item[3]))
-##                 if len(item) > 4:
-##                     line.validator.setTop(float(item[4]))
-##                 if len(item) > 5:
-##                     line.validator.setDecimals(int(item[5]))
-
-##             elif itemtype == 'slider':
-##                 if type(value) == int:
-##                     line = InputSlider(name,value,**options)
-##                 elif type(value) == float:
-##                     line = InputFSlider(name,value,**options)
- 
-##             elif itemtype == 'info':
-##                 line = InputInfo(name,value,**options)
-
-##             elif itemtype == 'text':
-##                 line = InputText(name,value,**options)
-
-##             elif itemtype == 'color':
-##                 line = InputColor(name,value,**options)
-
-##             elif itemtype == 'select' :
-##                 if len(item) > 3:
-##                     choices = item[3]
-##                 else:
-##                     choices = []
-##                 line = InputCombo(name,choices,value,**options)
-
-##             elif itemtype in ['radio','hradio','vradio']:
-##                 if len(item) > 3:
-##                     choices = item[3]
-##                 else:
-##                     choices = []
-##                 options['direction'] = itemtype[0]
-##                 line = InputRadio(name,choices,value,**options)
-
-##             elif itemtype in ['push','hpush','vpush']:
-##                 if len(item) > 3:
-##                     choices = item[3]
-##                 else:
-##                     choices = []
-##                 options['direction'] = itemtype[0]
-##                 line = InputPush(name,choices,value,**options)
-
-##             else: # Anything else is handled as a string
-##                 #itemtype = str:
-##                 line = InputString(name,value,**options)
-                
+            line = inputAnyNew(item)
             form.addLayout(line)
             self.fields.append(line)
 
@@ -1723,7 +1589,7 @@ def textBox(text,type=None,choices=['OK']):
 class ButtonBox(QtGui.QWidget):
     def __init__(self,name,choices,funcs,*args):
         QtGui.QWidget.__init__(self,*args)
-        s = InputPush(name,choices)
+        s = InputPush(name,None,choices)
         s.setSpacing(0)
         s.setMargin(0)
         for r,f in zip(s.rb,funcs):
@@ -1749,7 +1615,7 @@ class ButtonBox(QtGui.QWidget):
 class ComboBox(QtGui.QWidget):
     def __init__(self,name,choices,func,*args):
         QtGui.QWidget.__init__(self,*args)
-        s = InputCombo(name,choices,None,*args)
+        s = InputCombo(name,None,choices=choices,*args)
         s.setSpacing(0)
         s.setMargin(0)
         if func:
