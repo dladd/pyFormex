@@ -144,7 +144,7 @@ class ElemSection(CDict):
     secDB = None #SectionDB()
 
     def __init__(self,section=None,material=None,orientation=None,behavior=None,**kargs):
-        ### sectiontype is now preferably an attribute of section ###
+        ### sectiontype is now an attribute of section ###
         """Create a new element section property. Empty by default."""
         self._class_init()
         CDict.__init__(self,kargs)
@@ -152,7 +152,8 @@ class ElemSection(CDict):
         self.addSection(section)
 ##         if sectiontype is not None:
 ##             self.sectiontype = sectiontype
-##         self.orientation = orientation
+        if orientation is not None:
+            self.orientation = orientation
 ##         self.behavior = behavior
 
 
