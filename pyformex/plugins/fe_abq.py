@@ -156,29 +156,36 @@ def writeMaterial(fil,mat):
     if mat.name is not None and mat.name not in materialswritten:
         if mat.poisson_ratio is None and mat.shear_modulus is not None:
             mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
+            
         fil.write("""*MATERIAL, NAME=%s
 *ELASTIC
 %s,%s
-*DENSITY
-%s
-"""%(mat.name, float(mat.young_modulus), float(mat.poisson_ratio), float(mat.density)))
-        ### The following fields neeed unification !!!
-        if mat.yield_stress is not None and mat.plastic_strain is not None:
-            fil.write("""*PLASTIC
-%s,%s
-"""%(float(mat.yield_stress), float(mat.plastic_strain)))
+""" % (mat.name, float(mat.young_modulus), float(mat.poisson_ratio)))
+
+        if mat.density is not None:
+            fil.write("*DENSITY\n%s\n" % float(mat.density))
+            
         if mat.plastic is not None:
-            fil.write('*PLASTIC\n')
-            plastic=eval(mat['plastic'])
-            for i in range(len(plastic)):
-	      fil.write( '%s, %s\n' % (plastic[i][0],plastic[i][1]))
+            print mat.plastic
+            mat.plastic = asarray(mat.plastic)
+            if mat.plastic.ndim != 2:
+                raise ValueError,"Plastic data should be 2-dim array"
+            if mat.plastic.shape[1] > 8:
+                raise ValueError,"Plastic data array should have max. 8 columns"
+
+            fil.write("*PLASTIC\n")
+            fmt = ', '.join(['%s']*mat.plastic.shape[1]) + '\n'
+            for p in mat.plastic:
+                print p
+                fil.write(fmt % tuple(p))
+              
 	if mat.damping == 'Yes':
-		fil.write("*DAMPING")
-		if mat.alpha != 'None':
-			fil.write(", ALPHA = %s" %mat.alpha)
-		if mat.beta != 'None':
-			fil.write(", BETA = %s" %mat.beta)
-		fil.write("\n")
+            fil.write("*DAMPING")
+            if mat.alpha != 'None':
+                fil.write(", ALPHA = %s" %mat.alpha)
+            if mat.beta != 'None':
+                fil.write(", BETA = %s" %mat.beta)
+            fil.write("\n")
         materialswritten.append(mat.name)
 
 

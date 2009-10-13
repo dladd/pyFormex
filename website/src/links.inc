@@ -1,6 +1,7 @@
 .. Links (URLs) for inclusion on the website pages   -*- rst -*-
   
 
+.. _`email us`: mailto:benedict.verhegghe@ugent.be
 .. _`pyFormex website`: http://pyformex.org
 .. _`development`: http://pyformex.berlios.de
 .. _`Official releases`: http://developer.berlios.de/project/showfiles.php?group_id=2717
@@ -10,6 +11,7 @@
   
 .. _`Summary`: http://developer.berlios.de/projects/pyformex/
 .. _`Forums`: http://developer.berlios.de/forum/?group_id=2717
+.. _`Help Forum`: http://developer.berlios.de/forum/forum.php?forum_id=8348
 .. _`Bug tracker`: http://developer.berlios.de/bugs/?group_id=2717
 
 .. _`Online manual`: http://pyformex.berlios.de/manual/index.html
