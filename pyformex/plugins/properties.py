@@ -415,7 +415,7 @@ class PropertyDB(Dict):
             ElemSection.secDB = aDict
         
 
-    def Prop(self,kind='',tag=None,set=None,setname=None,**kargs):
+    def Prop(self,kind='',tag=None,set=None,name=None,**kargs):
         """Create a new property, empty by default.
 
         A property can hold almost anything, just like any Dict type.
@@ -424,12 +424,16 @@ class PropertyDB(Dict):
         
         - nr: a unique id, that never should be set/changed by the user.
         - tag: an identification tag used to group properties
-        - set: a single number or a list of numbers identifying the geometrical
-          elements for wich the property is set or a list of setnames that
-          have been defined earlier.
-        - setname: the name to be used for this set. Default is to use an
+        - name: the name to be used for this set. Default is to use an
           automatically generated name.
-          
+        - set: identifies the geometrical elements for which the defined
+          properties will hold. This can be either:
+
+          - a single number,
+          - a list of numbers,
+          - the name of an already defined set,
+          - a list of such names.
+
         Besides these, any other fields may be defined and will be added
         without checking.
         """
@@ -442,20 +446,20 @@ class PropertyDB(Dict):
         if tag is not None:
             d.tag = str(tag)
         if set is not None:
-            if type(set) is str and setname is None:
-                ### convenience to allow set='name' as alias for setname='name'
+            if type(set) is str and name is None:
+                ### convenience to allow set='name' as alias for name='name'
                 ### to reuse already defined set
-                set,setname = setname,set
+                set,name = name,set
             else:
                 if type(set) is int:
                     set = [ set ]
                 d.set = unique1d(set)
-                if setname is None:
-                    setname = self.autoName(kind,d.nr)
-        if setname is not None:
-            if type(setname) is not str:
-                raise ValueError,"setname should be a string"
-            d.setname = setname
+                if name is None:
+                    name = self.autoName(kind,d.nr)
+        if name is not None:
+            if type(name) is not str:
+                raise ValueError,"Property name should be a string"
+            d.name = name
         
         prop.append(d)
         return d
@@ -536,7 +540,7 @@ class PropertyDB(Dict):
         return self.getProp(kind=kind,rec=rec,tag=tag,attr=attr,delete=True)
 
 
-    def nodeProp(self,prop=None,set=None,setname=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None):
+    def nodeProp(self,prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -572,13 +576,13 @@ class PropertyDB(Dict):
             # Currently unchecked!
             d['ampl'] = ampl
 
-            return self.Prop(kind='n',prop=prop,tag=tag,set=set,setname=setname,**d)
+            return self.Prop(kind='n',prop=prop,tag=tag,set=set,name=name,**d)
         except:
             print "tag=%s,set=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,prop=None,grp=None,set=None,setname=None,tag=None,section=None,eltype=None,dload=None,ampl=None): 
+    def elemProp(self,prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,ampl=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -609,9 +613,9 @@ class PropertyDB(Dict):
             # Currently unchecked!
             d['ampl'] = ampl
 
-            return self.Prop(kind='e',prop=prop,tag=tag,set=set,setname=setname,**d)
+            return self.Prop(kind='e',prop=prop,tag=tag,set=set,name=name,**d)
         except:
-            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,setname=%s,eltype=%s,section=%s,dload=%s" % (tag,set,setname,eltype,section,dload)
+            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,name=%s,eltype=%s,section=%s,dload=%s" % (tag,set,name,eltype,section,dload)
 
 
 ##################################### Test ###########################
@@ -656,17 +660,17 @@ if __name__ == "script" or  __name__ == "draw":
         print p.nr
 
 
-    P.Prop(set=[0,1,3],setname='green_elements',color='green')
-    P.Prop(setname='green_elements',transparent=True)
+    P.Prop(set=[0,1,3],name='green_elements',color='green')
+    P.Prop(name='green_elements',transparent=True)
     a = P.Prop(set=[0,2,4,6],thickness=3.2)
-    P.Prop(setname=a.setname,material='steel')
+    P.Prop(name=a.name,material='steel')
 
-    for p in P.getProp(attr=['setname']):
+    for p in P.getProp(attr=['name']):
         print p
 
     P.Prop(set='green_elements',transparent=False)
-    for p in P.getProp(attr=['setname']):
-        if p.setname == 'green_elements':
+    for p in P.getProp(attr=['name']):
+        if p.name == 'green_elements':
             print p.nr,p.transparent
 
     print "before"
@@ -677,7 +681,7 @@ if __name__ == "script" or  __name__ == "draw":
     P.delProp(attr=['color'])
     pl = P.getProp(rec=[5,6])
     print pl
-    P.delete(pl)
+    P._delete(pl)
 
     print "after"
     for p in P.getProp():
@@ -763,5 +767,6 @@ if __name__ == "script" or  __name__ == "draw":
     for p in P.getProp('e',attr=['section']):
         print p.nr
 
+    P.Prop(set='cylinder',name='cylsurf',surftype='element',label='SNEG')
 
 # End

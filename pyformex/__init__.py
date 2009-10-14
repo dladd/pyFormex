@@ -29,8 +29,8 @@
 __version__ = "0.8.1-a3"
 __revision__ = ""
 Version = 'pyFormex %s' % __version__
-Copyright = 'Copyright (C) 2004-2008 Benedict Verhegghe'
-
+Copyright = 'Copyright (C) 2004-2009 Benedict Verhegghe'
+Url = 'http://pyformex.org'
 
 # The GUI parts
 app_started = False
