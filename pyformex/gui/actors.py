@@ -618,6 +618,7 @@ class TriSurfaceActor(Actor,TriSurface):
         self.list = None
 
     nelems = TriSurface.nelems
+    npoints = TriSurface.npoints
 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
