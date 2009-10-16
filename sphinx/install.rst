@@ -165,7 +165,7 @@ install by hand.
 Currently we recommend to install the whole package including the GUI.
 Most probably you will want to visualize your structures and for that you need the GUI anyway.
 
-Additionally, we recommend you to also install **the GNU C-compiler and the Python and OpenGL header files**. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted
+Additionally, we recommend you to also install the GNU C-compiler and the Python and OpenGL header files. The install procedure needs these to compile the pyFormex acceleration library. While pyFormex can run without the library (Python versions will be substituted
 for all functions in the library), using the library will dramatically speed up some low level operations such as drawing, especially when working with large structures . 
 
 

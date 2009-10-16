@@ -32,16 +32,29 @@ techniques = ['colors']
 
 from gui.imageColor import *
 
-smooth()
 lights(False)
 
-filename = getcfg('datadir')+'/butterfly.png'  
+filename = getcfg('datadir')+'/butterfly.png'
+
+filename = askFilename(filename,filter=utils.fileDescription('img'),multi=False,exist=True)
+if not filename:
+    exit()
+
 im = QtGui.QImage(filename)
 if im.isNull():
     warning("Could not load image '%s'" % filename)
     exit()
 
-res = askItems([('Width',200),('Height',160)])
+w,h = im.width(),im.height()
+print "size = %sx%s" % (w,h)
+
+maxsiz = 40000.
+if w*h > maxsiz:
+    scale = sqrt(maxsiz/w/h)
+    w = int(w*scale)
+    h = int(h*scale)
+    
+res = askItems([('Width',w),('Height',h)])
 if not res:
     exit()
 
@@ -65,13 +78,14 @@ for F in G:
     print F.center(),F.bbox()
 
 # Create the colors
-color=image2glcolor(im.scaled(nx*1.01,ny))
+color,colortable = image2glcolor(im.scaled(nx,ny))
 
 nvp = len(G)
 layout(nvp)
 for i,F in enumerate(G):
     viewport(i)
+    flat()
     clear()
-    draw(F,color=color)
+    draw(F,color=color,colormap=colortable)
     drawtext('Created with pyFormex',10,10)
 # End

@@ -43,16 +43,14 @@ def image2glcolor(im,flip=True):
     OpenGL axis points upwards, while bitmap images are stored downwards.
     """
     im = QImage(im)
-    c = qimage2numpy(im)
-    print c.shape
+    c,t = qimage2numpy(im)
     if flip:
         c = flipud(c)
-    ## r,g,b = c['r'],c['g'],c['b']
-    ## if flip:
-    ##     r,g,b = map(flipud,[r,g,b])
-    color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
-    print color.shape
-    
-    return color.astype(Float)/255.
+    if t is None:
+        color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
+        # print color.shape
+        return color.astype(Float)/255.,t
+    else:
+        return c,t
 
 # End
