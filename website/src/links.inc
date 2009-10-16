@@ -20,7 +20,8 @@
 
 
 .. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex
-.. _`BuMPix Linux Live`: ftp://bumps.ugent.be/pub/bumpix
+.. _`latest BuMPix image`: ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img
+.. _`BuMPix Live Linux`: ftp://bumps.ugent.be/pub/bumpix
 .. _`Calpy`: ftp://bumps.ugent.be/pub/calpy
 
   
@@ -37,6 +38,8 @@
 .. _`GNU General Public License`: http://www.gnu.org/licenses/gpl.html
 .. _`Free Software Foundation`: http://fsf.org
 .. _`Debian GNU/Linux`: http://www.debian.org
+.. _`Debian Live Wiki`: http://wiki.debian.org/DebianLive/Howto/USB
+
 
 .. _`stent research group`: http://www.stent-ibitech.ugent.be
 .. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be

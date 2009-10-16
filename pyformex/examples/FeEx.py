@@ -35,6 +35,7 @@ from plugins.properties import *
 from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
+import utils
 
 # global data
 
@@ -42,6 +43,24 @@ parts = None,
 femodels = None,
 model = None,
 PDB = None,
+
+# check for existing results
+feresult_base = 'FeResult'
+def numericEnd(s):
+    i = utils.splitEndDigits(s)
+    if len(i[1]) > 0:
+        return int(i[1])
+    else:
+        return -1
+    
+feresults = [ k for k in GD.PF.keys() if k.startswith(feresult_base)]
+if feresults:
+    feresults.sort(lambda a,b:a-b, numericEnd)
+    name = feresults[-1]
+else:
+    name = feresult_base
+    
+feresult_name = utils.NameSequence(name)
 
 
 def resetData():
@@ -565,11 +584,13 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         DB.R['U'] = d
         DB.R['S'] = stresn
     postproc_menu.setDB(DB)
-    info("You can now use the postproc menu to display results")
-    export({'FeResult':DB})
+    name = feresult_name.next()
+    export({name:DB})
+    showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name)
     
 
 def autoRun():
+    clear()
     createPart({'x1':1.})
     createPart({'x1':-1.})
     createModel()
@@ -577,6 +598,18 @@ def autoRun():
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
     PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
     PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[10.,0.,0.,0.,0.,0.])
+    runCalpyAnalysis('FeEx',verbose=True)
+
+def autoConv():
+    clear()
+    res = askItems([('n',1)])
+    n = res['n']
+    createPart({'x1':10.,'nx':n,'ny':1})
+    createModel()
+    nodenrs = arange(model.coords.shape[0])
+    PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
+    PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
+    PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[0.,1.,0.,0.,0.,0.])
     runCalpyAnalysis('FeEx',verbose=True)
 
 
@@ -617,6 +650,7 @@ def create_menu():
         ("&Import all",importAll),
         ("&Export all",exportAll),
         ("&Autorun example",autoRun),
+        ("&Autoconv example",autoConv),
         ("---",None),
         ("&Close Menu",close_menu),
         ]

@@ -220,6 +220,7 @@ class ColorLegend(Decoration):
                 GD.debug("drawing at %s" % y2)
                 t = Text(("%%.%df" % self.dec) % (v*self.scale),x1,y2,font=self.font,gravity=gravity)
                 self.decorations.append(t)
+                t.drawGL(mode,color)
                 y1 = y2 + dh
         # grid: after values, to be on top
         if self.linewidth is not None:
@@ -229,9 +230,10 @@ class ColorLegend(Decoration):
 
     def use_list(self):
         Decoration.use_list(self)
-        for TA in self.decorations:
-            if TA not in GD.canvas.decorations:
-                GD.canvas.addDecoration(TA)
+        for t in self.decorations:
+            t.use_list()
+            ## if TA not in GD.canvas.decorations:
+            ##     GD.canvas.addDecoration(TA)
 
 
 class Grid(Decoration):

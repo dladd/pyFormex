@@ -254,7 +254,6 @@ Development version
 
 If the install procedures for the packaged releases do not work for
 you, or if you want to have the absolutely latest features and bug fixes, 
-.. or if you want to help with the development of pyFormex (See :ref:`sec:become-involved`)
 then you can run pyFormex directly from the development sources.
 Obviously, the pyFormex developers use this method, but there are also
 several normal users who prefer this, because it allows for easy
@@ -307,27 +306,73 @@ installation methods fail for some unknown reason (remember, you can
 ask for help on the pyFormex `Forums`_), you can still run pyFormex by
 using a `Bumpix Live Linux` system. `Bumpix Live` is a full featured
 Linux system including pyFormex that can be run from a single
-removable medium such as a CD or a USB key.
+removable medium such as a CD or a USB key.  BuMPix is still an
+experimental project, but new versions are already produced at regular
+intervals. While these are primarily intended for our students, the
+install images are made available for download on the `Bumpix Live Linux`_ FTP
+server, so that anyone can use them.  
 
-All you need in this case is some proper PC hardware: the system boots and runs 
-from the removable medium and leaves everything installed on the hard disk
-of the computer untouched.
 
-You can also easily take this media with you wherever you go, plug it into any
+All you need to use the `Bumpix Live Linux`_ is some proper PC
+hardware: the system boots and runs from the removable medium and
+leaves everything that is installed on the hard disk of the computer
+untouched.
+
+
+Because the size of the image (since version 0.4) exceeds that of a CD, 
+we no longer produce CD-images (.*iso) by default, but some older
+images remain avaliable on the server. New (reduced) CD
+images will only be created on request.
+On the other hand, USB-sticks of 2GB and larger have become very
+affordable and most computers nowadays can boot from a USB stick.
+USB sticks are also far more easy to work with than CD's: you can
+create a persistent partition where you can save your changes, while a CD can not be changed.
+
+You can easily take your USB stick with you wherever you go, plug it into any
 available computer, and start or continue your previous pyFormex work.
 Some users even prefer this way to run pyFormex for that single reason.
-
 The Live system is also an excellent way to test and see what pyFormex can
 do for you, without having to install it. Or to demonstrate pyFormex to
 your friends or colleagues. 
 
-The BuMPix system is still an experimental project, but at regular
-intervals we produce new versions. While these are primarily intended
-for our students, we put the images on our FTP server so that anyone
-can use them.  
+The numbering scheme of the
+BuMPix images is independent from the pyFormex numbering. Just pick
+the `latest BuMPix image`_ to get the most recent pyFormex available
+on USB stick. After you downloaded the *.img file, write it to a USB stick as an image, not as file! 
+On a linux machine you can do that with the command::
 
+  dd if=bumpix-VERSION.img of=USBDEV
 
-  
+where ``bumpix-VERSION.img`` is the downloaded file and ``USBDEV`` is the device
+corresponding to your USB key. This is dependent on your hardware, but
+will probably be something like ``/dev/sda`` or 
+``/dev/sdb``. You can find out the correct value by giving the command ``dmesg``
+after you plug in the USB key. 
+The ``dd`` command above will overwrite everything on the specified device,
+so copy your files off it before you start.   
+And make sure you got the device designation right, or
+you might end up overwriting your whole SATA hard disk! 
+Also, be aware that the
+USB stick will no longer be usable to store your files under Windows.
+
+Once the image has been written, reboot your computer from the USB
+stick. You may have to change your BIOS settings or use the boot menu
+to do that. On success, you will have a full Linux system running,
+containing pyFormex ready to use. There is even a start button in the 
+toolbar at the bottom.
+
+If you have no Linux machine available to create the USB key, there
+are ways to do this under Windows as well. See the `Debian Live Wiki`_
+for more information. We recommend to use the program ``dd for Windows``.
+
+Finally, if you do not succeed in properly writing the image to a USB
+key, we provide ready-made BuMPix USB sticks with the ``pyformex.org`` logo at the cost of production
+and distribution. Just `email us` for a quotation.
+
+.. image:: ../website/images/pyformex_ufd.jpg
+   :align: center
+   :alt: pyFormex USB stick with BuMPix Live Linux
+
 
 .. _sec:pyformex-nonlinux:
 
@@ -359,7 +404,7 @@ There may be a few things that have to be changed to successfully run
 pyFormex on other platforms (especially on Windows), but it should all
 be rather obvious.  If you have some programming experience on your
 platform, and you want to give it a try, please do so. We certainly
-are willing to help where we can.  for running the GUI on Windows. And
+are willing to help where we can. And
 we are certainly interested in feedback about your attempt, whether
 successful or not.
 

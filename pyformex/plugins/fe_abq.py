@@ -62,29 +62,29 @@ def abqInputNames(job):
 
 
 def nsetName(p):
-    """Determine the name for writing a node set property."""
-    if p.name is None:
+    """Determine the setname for writing a node property."""
+    if p.setname is None:
         return 'Nall'
     else:
-        return p.name
+        return p.setname
 
 
 def esetName(p):
-    """Determine the name for writing an element set property."""
-    if p.name is None:
+    """Determine the setname for writing a elem property."""
+    if p.setname is None:
         return 'Eall'
     else:
-        return p.name
+        return p.setname
 
 
 def writeHeading(fil, text=''):
     """Write the heading of the Abaqus input file."""
-    head = """**  Abaqus input file created by %s
-**  %s (%s)
+    head = """**  Abaqus input file created by pyFormex (c) B.Verhegghe
+**  (see http://pyformex.berlios.de)
 **
 *HEADING
 %s
-""" % (GD.Version,GD.Copyright,GD.Url,text)
+""" % text
     fil.write(head)
 
 
@@ -147,7 +147,7 @@ def writeSet(fil,type,name,set,ofs=1):
 
 materialswritten=[]
 def writeMaterial(fil,mat):
-    """Write a material section.
+    """Write a material.
     
     mat is the property dict of the material.
     If the material has a name and has already been written, this function
@@ -156,36 +156,29 @@ def writeMaterial(fil,mat):
     if mat.name is not None and mat.name not in materialswritten:
         if mat.poisson_ratio is None and mat.shear_modulus is not None:
             mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
-            
         fil.write("""*MATERIAL, NAME=%s
 *ELASTIC
 %s,%s
-""" % (mat.name, float(mat.young_modulus), float(mat.poisson_ratio)))
-
-        if mat.density is not None:
-            fil.write("*DENSITY\n%s\n" % float(mat.density))
-            
+*DENSITY
+%s
+"""%(mat.name, float(mat.young_modulus), float(mat.poisson_ratio), float(mat.density)))
+        ### The following fields neeed unification !!!
+        if mat.yield_stress is not None and mat.plastic_strain is not None:
+            fil.write("""*PLASTIC
+%s,%s
+"""%(float(mat.yield_stress), float(mat.plastic_strain)))
         if mat.plastic is not None:
-            print mat.plastic
-            mat.plastic = asarray(mat.plastic)
-            if mat.plastic.ndim != 2:
-                raise ValueError,"Plastic data should be 2-dim array"
-            if mat.plastic.shape[1] > 8:
-                raise ValueError,"Plastic data array should have max. 8 columns"
-
-            fil.write("*PLASTIC\n")
-            fmt = ', '.join(['%s']*mat.plastic.shape[1]) + '\n'
-            for p in mat.plastic:
-                print p
-                fil.write(fmt % tuple(p))
-              
+            fil.write('*PLASTIC\n')
+            plastic=eval(mat['plastic'])
+            for i in range(len(plastic)):
+	      fil.write( '%s, %s\n' % (plastic[i][0],plastic[i][1]))
 	if mat.damping == 'Yes':
-            fil.write("*DAMPING")
-            if mat.alpha != 'None':
-                fil.write(", ALPHA = %s" %mat.alpha)
-            if mat.beta != 'None':
-                fil.write(", BETA = %s" %mat.beta)
-            fil.write("\n")
+		fil.write("*DAMPING")
+		if mat.alpha != 'None':
+			fil.write(", ALPHA = %s" %mat.alpha)
+		if mat.beta != 'None':
+			fil.write(", BETA = %s" %mat.beta)
+		fil.write("\n")
         materialswritten.append(mat.name)
 
 
@@ -203,7 +196,7 @@ def writeTransform(fil,setname,csys):
 # Formatting of the SECTION keywords
 ########################################################################
 
-# These function return a string with the formatted output
+# These function return a string with the formaated output
 
 def outFrameSection(el,setname):
     """Write a frame section for the named element set.
@@ -288,7 +281,7 @@ def outGeneralBeamSection(el,setname):
     - all sectiontypes:
 
       - young_modulus
-      - shear_modulus or poisson_ration
+      - shear_modulus
       
     - optional:
 
@@ -298,9 +291,6 @@ def outGeneralBeamSection(el,setname):
     extra = ''
     if el.density:
         extra += ', DENSITY=%s' % float(el.density)
-
-    if el.shear_modulus is None and el.poisson_ratio is not None:
-        el.shear_modulus = el.young_modulus / 2. / (1.+float(el.poisson_ratio))
 
     sectiontype = el.sectiontype.upper()
     out += "*BEAM GENERAL SECTION, ELSET=%s, SECTION=%s%s\n" % (setname,sectiontype,extra)
@@ -383,7 +373,7 @@ def outConnectorSection(el,setname):
     return out
 
 
-def writeConnectorBehavior(name):
+def writeConnectorBehavior(fil,name):
     fil.write('*CONNECTOR BEHAVIOR, NAME=%s\n' % name)
 
 
@@ -393,67 +383,6 @@ def outShellSection(el,setname,matname):
         if matname is not None:
             out += """*SHELL SECTION, ELSET=%s, MATERIAL=%s
 %s \n""" % (setname,matname,float(el.thickness))
-    return out
-
- 
-def outSurface(prop):
-    """Format the surface definitions.
-
-    Required:
-
-    - set: the elements/nodes in the surface, either numbers or a set name.
-    - name: the surface name
-    - surftype: 'ELEMENT' or 'NODE'
-    - label: face or edge identifier (only required for surftype = 'NODE'
-    """
-    out = ''
-    for p in prop:
-        out += "*Surface, name=%s, type=%s\n" % (p.name,p.surftype)
-        for e in p.set:
-            if p.label is None:
-                out += "%s\n" % e
-            else:
-                out += "%s, %s\n" % (e,p.label)
-    return out
-
- 
-def outSurfaceInteraction(prop):
-    """Format the interactions.
-
-    Optional:
-
-    - cross_section (for node based interaction)
-    - friction : friction coeff
-    """
-    out = ''
-    for p in prop:
-        out += "*Surface Interaction, name=%s\n" % (p.name)
-        if p.cross_section is not None:
-            out += "%s\n" % p.cross_section
-        if p.friction is not None:
-            out += "*FRICTION\n%s\n" % float(p.friction)
-    return out
-
- 
-def outContactPair(prop):
-    """Format the contact pair.
-
-    Required:
-
-    - master: master surface
-    - slave: slave surface
-    - interaction: interaction properties : name or Dict
-    """
-    out = ''
-    for p in prop:
-        if type(p.interaction) is str:
-            intername = p.interaction
-        else:
-            intername = p.interaction.name
-            out += outSurfaceInteraction([p.interaction])
-            
-        out += "*Contact Pair, interaction=%s\n" % intername
-        out += "%s, %s\n" % (p.slave,p.master)
     return out
 
 
@@ -607,7 +536,7 @@ def writeSection(fil,prop):
     else:
         warning('Sorry, elementtype %s is not yet supported' % eltype)
 
-
+    
 def writeBoundaries(fil,prop,op='MOD'):
     """Write nodal boundary conditions.
 
@@ -736,6 +665,68 @@ def writeAmplitude(fil,prop):
 ## 	fil.write(", beta = %s"%the_modelproperties[name].damping.beta)
 ##     fil.write("\n")
 
+    
+## def writeElemSurface(fil,number=None,abqdata=None):
+##     if number is not None and abqdata is not None:
+##         elemsnumbers=where(abqdata.elemprop==number)[0]
+##         fil.write('*ELset,Elset=%s\n'% elemproperties[number].surfaces.setname)
+##         for i in elemsnumbers:
+##             n=i+1
+##             fil.write('%s,\n'%n)
+##             fil.write('*Surface, type =Element, name=%s\n%s,%s\n' %(elemproperties[number].surfaces.name,elemproperties[number].surfaces.setname,elemproperties[number].surfaces.arg))
+
+            
+## def writeNodeSurface(fil,number=None,abqdata=None):
+##     if number is not None and abqdata is not None:
+##         nodenumbers=where(abqdata.nodeprop==number)[0]
+##         fil.write('*ELset,Elset=%s\n'% nodeproperties[number].surfaces.setname)
+##         for i in nodenumbers:
+##             n=i+1
+##             fil.write('%s,\n'%n)
+##             fil.write('*Surface, type =Node, name=%s\n%s,%s\n' %(nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.setname,nodeproperties[number].surfaces.arg))
+
+    
+## def writeSurface(fil,name=None,abqdata=None):
+##     if name is not None and abqdata is not None:
+##         if elemproperties[name].surfaces=='Element':
+##             global elemsprops
+##             elemssetsurfaces=[]
+##             for i in range(len(elemproperties)):
+##                 if elemproperties[i].surfaces==the_modelproperties[name].setname:
+##                     elemssetsurfaces.append(i)
+## 		elemssur=[]
+## 		for i in elemssetsurfaces:
+##                     elemss=where(abqdata.elemprop[:]==i)[0]
+##                     elemssur.extend(elemss)
+##                 if len(elemssur)>0:
+##                     fil.write('*ELset,Elset=%s, internal\n'% the_modelproperties[name].setname)
+##                     for i in range(len(elemssur)):
+##                         getal=elemssur[i]+1
+##                         fil.write('%s,\n'%getal)
+## 			fil.write('*Surface, type =Element, name=%s, internal\n%s,%s\n' %(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
+
+## 	elif the_modelproperties[name].surftype=='Node':
+##             nodes=[]
+##             nFormex=len(abqdata.elems)
+##             length=zeros(nFormex)
+##             for j in range(nFormex):
+##                 length[j]=len(abqdata.elems[j])
+##             partnumbers=[]
+##             for j in range(nFormex):
+##                 partnumbers=append(partnumbers,ones(length[j])*j)
+##             for j in elemssur:
+##                 partnumber=int(partnumbers[j])
+##                 part=abqdata.elems[partnumber]
+##                 elemcount=0
+##                 for i in range(partnumber):
+##                     elemcount+=length[i]
+##                     nodes.extend(part[j-elemcount])
+## 		nodes = unique(nodes)
+## 		fil.write('*Nset,Nset=%s, internal\n'% the_modelproperties[name].setname)
+## 		for i in range(len(nodes)):
+##                     getal=nodes[i]+1
+##                     fil.write('%s,\n'%getal)
+## 		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
 
 
 ## def writeModelProps(fil,prop):
@@ -1215,7 +1206,7 @@ Script: %s
 
         GD.message("Writing coordinate transforms")
         for p in self.prop.getProp('n',attr=['csys']):
-            writeTransform(fil,p.name,p.csys)
+            writeTransform(fil,p.setname,p.csys)
 
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
@@ -1238,6 +1229,7 @@ Script: %s
                 print 'Elements of type %s: %s' % (p.eltype,set)
 
                 setname = esetName(p)
+                #print setname,p.setname
                 gl,gr = self.model.splitElems(set)
                 elems = self.model.getElems(gr)
                 for i,elnrs,els in zip(range(len(gl)),gl,elems):
@@ -1253,7 +1245,7 @@ Script: %s
                         if group_by_group:
                             writeSet(fil,'ELSET',grpname,[subsetname])
             else:
-                writeSet(fil,'ELSET',p.name,p.set)
+                writeSet(fil,'ELSET',p.setname,p.set)
                     
         GD.message("Total number of elements: %s" % telems)
         if nelems != telems:
@@ -1268,26 +1260,27 @@ Script: %s
         for p in self.prop.getProp('e',attr=['section','eltype']):
             writeSection(fil,p)
 
+##         GD.message("Writing surfaces")
+##         for i in the_nodeproperties:
+##             if the_nodeproperties[i].surfaces is not None:
+##                 writeNodeSurface(fil,i,self)
+##         for i in the_elemproperties:
+##             if the_elemproperties[i].surfaces is not None:
+##                 writeElemSurface(fil,i,self)
+
         GD.message("Writing global model properties")
-        
+        GD.message("Writing amplitudes")
         prop = self.prop.getProp('',attr=['amplitude'])
         if prop:
-            GD.message("Writing amplitudes")
             writeAmplitude(fil,prop)
+##         for i in the_modelproperties:
+##             if the_modelproperties[i].intprop is not None:
+##                 GD.message("Writing interaction property: %s" % i)
+##                 writeIntprop(fil, i)
 
-        prop = self.prop.getProp('',attr=['surftype'])
-        if prop:
-            GD.message("Writing surfacces")
-            fil.write(outSurface(prop))
-
-        prop = self.prop.getProp('',attr=['interaction'])
-        if prop:
-            GD.message("Writing contact pairs")
-            fil.write(outContactPair(prop))
-
+        GD.message("Writing initial boundary conditions")
         prop = self.prop.getProp('n',tag=self.bound,attr=['bound'])
         if prop:
-            GD.message("Writing initial boundary conditions")
             writeBoundaries(fil,prop)
     
         GD.message("Writing steps")
@@ -1348,7 +1341,7 @@ if __name__ == "script" or __name__ == "draw":
     # populate the property database
     P.nodeProp(tag='d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
     p = P.nodeProp(tag='b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
-    P.nodeProp(tag='d2',setname=p.name,bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
+    P.nodeProp(tag='d2',setname=p.setname,bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
 
     bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
     top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')
