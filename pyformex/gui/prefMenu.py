@@ -126,12 +126,6 @@ def setDrawWait():
     askConfigPreferences(['draw/wait'])
     GD.GUI.drawwait = GD.cfg['draw/wait']
 
-def setBGcolor():
-    col = GD.cfg['draw/bgcolor']
-    col = widgets.getColor(col)
-    if col:
-        GD.cfg['draw/bgcolor'] = col
-
 def setLinewidth():
     askConfigPreferences(['draw/linewidth'])
 
@@ -288,7 +282,6 @@ MenuData = [
         (_('&Show Timeout Button'),setTimeoutButton),
         (_('&Input Timeout'),setInputTimeout), 
         (_('&Draw Wait Time'),setDrawWait), 
-#        (_('&Background Color'),setBGcolor), 
         (_('Avg&Normal Treshold'),setAvgNormalTreshold), 
         (_('Avg&Normal Size'),setAvgNormalSize), 
         (_('&Pick Size'),setPickSize), 
