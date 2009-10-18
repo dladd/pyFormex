@@ -241,6 +241,20 @@ class ElemLoad(CDict):
         Dict.__init__(self,{'label':label,'value':value})
 
 
+class EdgeLoad(CDict):
+    """Distributed loading on an element edge."""
+
+    def __init__(self,edge=-1,label=None,value=None):
+        """Create a new element edge load. Empty by default.
+        
+        An element edgeload can hold the following sub-properties:
+        - edge: the element edge number
+        - label: the distributed load type label ('x','y','z').
+        - value: the magnitude of the distibuted load.
+        """          
+        Dict.__init__(self,{'edge':edge,'label':label,'value':value})
+
+
 ############## Basic property data classes ########################
 
 class CoordSystem(object):
@@ -582,7 +596,7 @@ class PropertyDB(Dict):
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,ampl=None): 
+    def elemProp(self,prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,eload=None,ampl=None): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -610,12 +624,14 @@ class PropertyDB(Dict):
                 d['section'] = section
             if dload is not None:
                 d['dload'] = dload
+            if eload is not None:
+                d['eload'] = eload
             # Currently unchecked!
             d['ampl'] = ampl
 
             return self.Prop(kind='e',prop=prop,tag=tag,set=set,name=name,**d)
         except:
-            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,name=%s,eltype=%s,section=%s,dload=%s" % (tag,set,name,eltype,section,dload)
+            raise ValueError,"Invalid Elem Property\n  tag=%s,set=%s,name=%s,eltype=%s,section=%s,dload=%s,eload=%s" % (tag,set,name,eltype,section,dload,eload)
 
 
 ##################################### Test ###########################

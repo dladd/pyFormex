@@ -136,8 +136,10 @@ class CanvasSettings(object):
         slcolor = colors.red,     # color for selected items
         transparency = 1.0,       # opaque
         # colormap for mapping property values
-        propcolors = [ colors.black, colors.red, colors.green, colors.blue,
-                       colors.cyan, colors.magenta, colors.yellow, colors.white ],
+        propcolors = [
+            colors.black, colors.red, colors.green, colors.blue,
+            colors.cyan, colors.magenta, colors.yellow, colors.white
+            ],
         )
 
     @classmethod
@@ -327,16 +329,21 @@ class Canvas(object):
         self.settings.linewidth = float(lw)
 
 
-    def setBgColor(self,bg):
+    def setBgColor(self,color):
         """Set the background color."""
-        self.settings.bgcolor = colors.GLColor(bg)
+        self.settings.bgcolor = colors.GLColor(color)
         self.clear()
         self.redrawAll()
         
 
-    def setFgColor(self,fg):
+    def setFgColor(self,color):
         """Set the default foreground color."""
-        self.settings.fgcolor = colors.GLColor(fg)
+        self.settings.fgcolor = colors.GLColor(color)
+        
+
+    def setSlColor(self,color):
+        """Set the highlight color."""
+        self.settings.slcolor = colors.GLColor(color)
 
     
     def setLight(self,nr,ambient,diffuse,specular,position):

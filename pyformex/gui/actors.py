@@ -428,8 +428,25 @@ class GeomActor(Actor):
     def vertices(self):
         """Return the vertives as a 2-dim array."""
         return self.coords.reshape(-1,3)
-    
 
+    # This should probably go th Mesh
+    def nedges(self):
+        try:
+            el = getattr(elements,self.eltype.capitalize())
+            return self.nelems() * len(el.edges)
+        except:
+            return 0
+
+    def edges(self):
+        try:
+            el = getattr(elements,self.eltype.capitalize())
+            edg = asarray(el.edges)
+            edges = self.elems[:,edg]
+            return edges.reshape(-1,2)
+        except:
+            return None
+
+ 
     def setColor(self,color=None,colormap=None):
         """Set the color of the Actor."""
         self.color,self.colormap = saneColorSet(color,colormap,self.shape())
@@ -502,6 +519,7 @@ class GeomActor(Actor):
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
             return
 
+        ############# set drawing attributes #########
         if alpha is None:
             alpha = self.alpha
         
@@ -526,6 +544,7 @@ class GeomActor(Actor):
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
 
+        ################## draw the geometry #################
         nplex = self.nplex()
         if nplex == 1:
             if self.eltype == 'point3d':
@@ -563,7 +582,7 @@ class GeomActor(Actor):
     def pickGL(self,mode):
         """ Allow picking of parts of the actor.
 
-        mode can be 'element' or 'point'
+        mode can be 'element', 'edge' or 'point'
         """
         if mode == 'element':
             if self.elems is None:
@@ -572,11 +591,9 @@ class GeomActor(Actor):
                 pickPolygonElems(self.coords,self.elems)
 
         elif mode == 'edge':
-            try:
-                el = getattr(elements,self.eltype.capitalize())
-                pickPolygonEdges(self.coords,self.elems,el.edges)
-            except:
-                raise ValueError,"Invalid eltype %s" % str(self.eltype)
+            edges = self.edges()
+            if edges is not None:
+                pickPolygonElems(self.coords,edges)
                 
         elif mode == 'point':
             pickPoints(self.coords)

@@ -128,10 +128,16 @@ class Model(Dict):
 
 
     def nnodes(self):
+        """Return the number of nodes in the model."""
         return self.coords.shape[0]
 
     def nelems(self):
+        """Return the number of elements in the model."""
         return self.celems[-1]
+
+    def ngroups(self):
+        """Return the number of element groups in the model."""
+        return len(self.elems)
 
     def mplex(self):
         """Return the maximum plexitude of the model."""

@@ -884,7 +884,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def pick_parts(self,obj_type,max_objects,store_closest=False):
         """Set the list of actor parts inside the pick_window.
 
-        obj_type can be 'element', 'point' or 'edge'(SurfaceActor only)
+        obj_type can be 'element', 'edge' or 'point'
+        'edge' is only available for mesh type geometry
         max_objects specifies the maximum number of objects
 
         The picked object numbers are stored in self.picked.

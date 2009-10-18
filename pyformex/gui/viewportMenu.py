@@ -64,6 +64,16 @@ def setFgColor():
     color = widgets.getColor(color)
     if color:
         GD.canvas.setFgColor(color)
+
+        
+def setSlColor():
+    """Change the highlighting color."""
+    color = GD.canvas.settings.slcolor
+    color = widgets.getColor(color)
+    if color:
+        GD.canvas.setSlColor(color)
+
+
         
 def setLineWidth():
     """Change the default line width."""
@@ -141,6 +151,7 @@ MenuData = [
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
         (_('&Foreground Color'),setFgColor), 
+        (_('&Highlight Color'),setSlColor), 
         (_('Line&Width'),setLineWidth), 
         (_('&Canvas Size'),setCanvasSize), 
         (_('&All Viewport Settings'),viewportSettings),

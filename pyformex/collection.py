@@ -135,7 +135,10 @@ class Collection(object):
         k = asarray(self.d.keys())
         k.sort()
         return k
-        
+
+    def items(self):
+        """Return a zipped list of keys and values."""
+        return self.d.items()
         
     def __str__(self):
         s = ''

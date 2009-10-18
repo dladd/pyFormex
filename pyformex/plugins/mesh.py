@@ -180,6 +180,26 @@ class Mesh(object):
     def bbox(self):
         return self.coords.bbox()
 
+    def nedges(self):
+        """Return the number of edges.
+
+        Currently, the edges are not fused!
+        """
+        try:
+            el = getattr(elements,self.eltype.capitalize())
+            return self.nelems() * len(el.edges)
+        except:
+            return 0
+
+    def centroids(self):
+        """Return the centroids of all elements of the Formex.
+
+        The centroid of an element is the point whose coordinates
+        are the mean values of all points of the element.
+        The return value is a Coords object with nelems points.
+        """
+        return self.coords[self.elems].mean(axis=1)
+        
 
     def report(self):
         bb = self.bbox()

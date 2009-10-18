@@ -146,23 +146,33 @@ def drawModel(offset=0):
     if model is None:
         warning("You should first merge the parts!")
         return
+    flatwire()
+    transparent(True)
     clear()
-    draw(parts)
-    draw(Formex(model.coords))
+    from plugins import mesh
+    meshes =  [ mesh.Mesh(model.coords,e,eltype='quad4') for e in model.elems ]
+    draw(meshes,color='yellow')
     drawNumbers(Formex(model.coords),color=red,offset=offset)
-    [ drawNumbers(p) for p in parts ]
+    [ drawNumbers(m,leader='%s-'%i) for i,m in enumerate(meshes) ]
     zoomAll()
 
 
 def drawCalpy():
     """This should draw node numbers +1"""
     drawModel(offset=1)
-    
 
-def getPickedNodes(K):
-    """Get the list of picked nodes."""
-    # This relies on drawing all parts first, then drawing the nodes
-    return getPickedElems(K,len(parts))
+
+def pickNodes():
+    """Let user pick nodes and return node numbers.
+
+    This relies on the model being merged and drawn, resulting in a
+    single actor having point geometry.
+    """
+    K = pickPoints()
+    for k,v in K.items():
+        if len(v) > 0:
+            return k,v
+    return None
 
 
 def getPickedElems(K,p):
@@ -198,6 +208,7 @@ def setMaterial():
     if model is None:
         warn()
         return
+    removeHighlights()
     keys = ['name','sectiontype','young_modulus','poisson_ratio','thickness']
     items = [ (k,section[k]) for k in keys ]
     res = askItems(items)
@@ -214,18 +225,10 @@ def deleteAllMats():
     PDB.delProp(kind='e',attr=['eltype'])
 
 
+# Boundary conditions
+
 xcon = True
 ycon = True
-
-
-## def merged():
-##     ok = model is not None
-##     if not ok:
-##         ok = ack("The parts should be merged first!\nShall I do this now for you?")
-##         if ok:
-            
-##     return notok
-
 
 def setBoundary():
     """Pick the points with boundary condition."""
@@ -233,17 +236,17 @@ def setBoundary():
     if model is None:
         warn()
         return
+    removeHighlights()
     res = askItems([('x-constraint',xcon),('y-constraint',ycon)])
     if res:
         xcon = res['x-constraint']
         ycon = res['y-constraint']
-        K = pickPoints()
-        if K:
-            nodeset = getPickedNodes(K)
-            if len(nodeset) > 0:
-                print nodeset
-                print [xcon,ycon,0,0,0,0]
-                PDB.nodeProp(set=nodeset,bound=[xcon,ycon,0,0,0,0])
+        nodeset = pickNodes()
+        if len(nodeset) > 0:
+            print nodeset
+            bcon = [int(xcon),int(ycon),0,0,0,0]
+            print "SETTING BCON %s" % bcon
+            PDB.nodeProp(set=nodeset,bound=bcon)
 
 def deleteAllBcons():
     PDB.delProp(kind='n',attr=['bound'])
@@ -261,15 +264,16 @@ def setCLoad():
     if model is None:
         warn()
         return
+    removeHighlights()
     res = askItems([('x-load',xload),('y-load',yload)])
     if res:
         xload = res['x-load']
         yload = res['y-load']
-        K = pickPoints()
-        if K:
-            nodeset = getPickedNodes(K)
+        nodeset = pickNodes()
+        if len(nodeset) > 0:
+            print nodeset
             if len(nodeset) > 0:
-                print "SETTING CLOAD",[xload,yload,0.,0.,0.,0.]
+                print "SETTING CLOAD %s" % [xload,yload,0.,0.,0.,0.]
                 PDB.nodeProp(set=nodeset,cload=[xload,yload,0.,0.,0.,0.])
 
 
@@ -277,30 +281,34 @@ def deleteAllCLoads():
     PDB.delProp(kind='n',attr=['cload'])
 
 
-# Line loads
+# Edge loads
 
-xlload = 0.0
-ylload = 0.0
+edge_load = {'x':0., 'y':0.}
 
-
-def setLLoad():
-    """Pick the lines with load condition."""
-    global xdload,ydload
+def setELoad():
+    """Pick the edges with load condition."""
+    global edge_load
     if model is None:
         warn()
         return
-    res = askItems([('x-load',xdload),('y-load',ydload)])
-    if res:
-        xdload = res['x-load']
-        ydload = res['y-load']
-        K = pickLines()
-        if K:
-            nodeset = getPickedNodes(K)
-            if len(nodeset) > 0:
-                PDB.nodeProp(set=nodeset,lload=[xlload,ylload,0.])
+    removeHighlights()
+    edge_load = askItems([
+        ('x',edge_load['x'],{'text':'x-load'}),
+        ('y',edge_load['y'],{'text':'y-load'}),
+        ])
+    if edge_load:
+        K = pickEdges()
+        for k in K.keys():
+            v = K[k]
+            elems,edges = v // 4, v % 4
+            print k,elems,edges
+            for el,edg in zip(elems,edges):
+                for label in 'xy':
+                    if edge_load[label] != 0.:
+                        PDB.elemProp(set=el,eload=EdgeLoad(edge=edg,label=label,value=edge_load[label]))
 
-def deleteAllLLoads():
-    PDB.delProp(kind='n',attr=['lload'])
+def deleteAllELoads():
+    PDB.delProp(kind='n',attr=['eload'])
 
 
 def printDB():
@@ -317,7 +325,7 @@ def createAbaqusInput():
     """Write the Abaqus input file."""
     
     # ask job name from user
-    res = askItems([('JobName','FeEx')])
+    res = askItems([('JobName',feresult_name.next())])
     if not res:
         return
 
@@ -372,7 +380,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
     if jobname is None:
         # ask job name from user
-        res = askItems([('JobName','FeEx'),('Verbose Mode',False)])
+        res = askItems([('JobName',feresult_name.peek()),('Verbose Mode',False)])
         if res:
             jobname = res['JobName']
             verbose = res['Verbose Mode']
@@ -386,10 +394,10 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     GD.app.processEvents()
     starttime = time.clock()
 
-    Model = femodel.FeModel(2,"elast","Plane_Stress")
-    Model.nnodes = model.coords.shape[0]
-    Model.nelems = model.celems[-1]
-    Model.nnodel = 4
+    calpyModel = femodel.FeModel(2,"elast","Plane_Stress")
+    calpyModel.nnodes = model.coords.shape[0]
+    calpyModel.nelems = model.celems[-1]
+    calpyModel.nnodel = 4
 
     # 2D model in calpy needs 2D coordinates
     coords = model.coords[:,:2]
@@ -397,12 +405,12 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         fe_util.PrintNodes(coords)
 
     # Boundary conditions
-    bcon = zeros((Model.nnodes,2),dtype=int32)
+    bcon = zeros((calpyModel.nnodes,2),dtype=int32)
     bcon[:,2:6] = 1 # leave only ux and uy
     for p in PDB.getProp(kind='n',attr=['bound']):
         bnd = where(p.bound)[0]
         if p.set is None:
-            nod = arange(Model.nnodes)
+            nod = arange(calpyModel.nnodes)
         else:
             nod = array(p.set)
         for i in bnd:
@@ -412,8 +420,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
         fe_util.PrintDofs(bcon,header=['ux','uy'])
 
     # The number of free DOFs remaining
-    Model.ndof = bcon.max()
-    print "Number of DOF's: %s" % Model.ndof
+    calpyModel.ndof = bcon.max()
+    print "Number of DOF's: %s" % calpyModel.ndof
 
     
     # We extract the materials/sections from the property database
@@ -425,17 +433,17 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
                    mat.thickness,
                    0.0,      # rho was not defined in material
                    ] for mat in matprops]) 
-    Model.nmats = mats.shape[0]
+    calpyModel.nmats = mats.shape[0]
     if verbose:
         fe_util.PrintMats(mats,header=['E','nu','thick','rho'])
 
    
     ########### Find number of load cases ############
-    Model.nloads = 1
-    Model.PrintModelData()
+    calpyModel.nloads = 1
+    calpyModel.PrintModelData()
     ngp = 2
     nzem = 3
-    Model.banded = True
+    calpyModel.banded = True
 
 
     # Create element definitions:
@@ -443,19 +451,28 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     #    matnr,  node1, node2, .... 
     # Also notice that Calpy numbering starts at 1, not at 0 as customary
     # in pyFormex; therefore we add 1 to elems.
-    matnr = zeros(Model.nelems,dtype=int32)
+    matnr = zeros(calpyModel.nelems,dtype=int32)
     for i,mat in enumerate(matprops):  # proces in same order as above!
         matnr[mat.set] = i+1
 
+    NodesGrp = []
+    MatnrGrp = []
     PlaneGrp = []
-    
+
     for i,e in enumerate(model.elems):
         j,k = model.celems[i:i+2]
-        Plane = plane.Quad("part-%s" % i,[ngp,ngp],Model)
+        Plane = plane.Quad("part-%s" % i,[ngp,ngp],calpyModel)
         Plane.debug = 0
-        fe_util.PrintElements(e+1,matnr[j:k])
-        Plane.AddElements(e+1,matnr[j:k],mats,coords,bcon)
         PlaneGrp.append(Plane)
+        NodesGrp.append(e+1)
+        MatnrGrp.append(matnr[j:k])
+        if verbose:
+            fe_util.PrintElements(NodesGrp[-1],MatnrGrp[-1])
+
+        #Plane.AddElements(e+1,matnr[j:k],mats,coords,bcon)
+        
+    for Plane,nodenrs,matnrs in zip(PlaneGrp,NodesGrp,MatnrGrp):
+        Plane.AddElements(nodenrs,matnrs,mats,coords,bcon)
 
     # Create load vectors
     # Calpy allows for multiple load cases in a single analysis.
@@ -476,11 +493,11 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # Also notice that the indexing inside the bcon array uses numpy
     # convention (starting at 0), thus no adding 1 is needed!
     print "Assembling Concentrated Loads"
-    Model.nloads = 1
-    f = zeros((Model.ndof,Model.nloads),float)
+    calpyModel.nloads = 1
+    f = zeros((calpyModel.ndof,calpyModel.nloads),float)
     for p in PDB.getProp('n',attr=['cload']):
         if p.set is None:
-            nodeset = range(Model.nnodes)
+            nodeset = range(calpyModel.nnodes)
         else:
             nodeset = p.set
         F = [0.0,0.0]
@@ -488,45 +505,67 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             if i in [0,1]:
                 F[i] = v
         for n in nodeset:
-            print F
-            print "HALLO"
             f[:,0] = fe_util.AssembleVector(f[:,0],F,bcon[n])
 
     print "Assembling distributed loads"
     # This is a bit more complex. See Calpy for details
-    # We first generate the input data, then read them with the
-    # calpy femodel.ReadBoundaryLoads function and finally
-    # assemble them with plane.addBoundaryLoads.
-    for p in PDB.getProp('n',attr=['dload']):
-        print p
-    #idloads,dloads = plane.ReadBoundaryLoads(*nb,model.ndim)
+    # We first generate the input data in a string, then read them with the
+    # calpy femodel.ReadBoundaryLoads function and finally assemble them with
+    # plane.addBoundaryLoads. We have to this operation per element group
+    # however, and the property database does not contain the group number.
+    # It is found from model.splitElems().
+    ngroups = model.ngroups()
+    s = [ "" ] * ngroups
+    nb = [ 0 ] * ngroups
+    loadcase = 1
+    for p in PDB.getProp('e',attr=['eload']):
+        xload = yload = 0.
+        if p.label == 'x':
+            xload = p.value
+        elif p.label == 'y':
+            yload = p.value
+        gnrs,lnrs = model.splitElems(p.set)
+        # Because of the way we constructed the database, this will
+        # currently contain only one element (and thus only one group)
+        # but let's loop over it anyway
+        #print gnrs,lnrs
+        for g,grp in enumerate(gnrs):
+            #print grp
+            for e in grp:  # remember calpy numbers are +1 !
+                #print e
+                s[g] += "%s %s %s %s %s\n" % (e+1,p.edge+1,loadcase,xload,yload)
+                nb[g] += 1
+    #print s,nb
+    for nbi,si,nodes,matnr,Plane in zip(nb,s,NodesGrp,MatnrGrp,PlaneGrp):
+        if nbi > 0:
+            idloads,dloads = fe_util.ReadBoundaryLoads(nbi,calpyModel.ndim,si)
+            #print idloads,dloads
+            Plane.AddBoundaryLoads(f,calpyModel,idloads,dloads,nodes,matnr,coords,bcon,mats)
     
     if verbose:
         print "Calpy.Loads"
         print f
 
     ############ Create global stiffness matrix ##########
-    s = Model.ZeroStiffnessMatrix(0)
+    s = calpyModel.ZeroStiffnessMatrix(0)
     for elgrp in PlaneGrp:
-        s = elgrp.Assemble(s,mats,Model)
-    #print "The complete stiffness matrix"
-    #print s
-    print f
-    v = Model.SolveSystem(s,f)
-    if verbose:
-        print "Displacements",v
+        s = elgrp.Assemble(s,mats,calpyModel)
+    # print "The complete stiffness matrix"
+    # print s
+
+    ############ Solve the system of equations ##########
+    v = calpyModel.SolveSystem(s,f)
     print "Calpy analysis has finished --- Runtime was %s seconds." % (time.clock()-starttime)
     displ = fe_util.selectDisplacements (v,bcon)
-    print displ.shape
     if verbose:
-        print displ
+        print "Displacements",displ
 
     if flavia:
         flavia.WriteMeshFile(jobname,"Quadrilateral",model.nnodel,coord,nodes,matnr)
         res=flavia.ResultsFile(jobname)
         
     # compute stresses
-    for l in range(Model.nloads):
+    for l in range(calpyModel.nloads):
         
         print "Results for load case %d" %(l+1)
         print "Displacements"
@@ -551,7 +590,7 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
                 print "Nodal Element Stress\n", strese
 
             #print "Nodes",e+1
-            stresn,count = P.NodalAcc(e+1,strese,nnod=Model.nnodes,nodata=stresn,nodn=count)
+            stresn,count = P.NodalAcc(e+1,strese,nnod=calpyModel.nnodes,nodata=stresn,nodn=count)
             #print stresn,count
             
         #print stresn.shape
@@ -577,9 +616,9 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     DB.Finalize()
     DB.data_size['S'] = 3
     #print DB.elems
-    for lc in range(Model.nloads):
+    for lc in range(calpyModel.nloads):
         DB.Increment(lc,0)
-        d = zeros((Model.nnodes,3))
+        d = zeros((calpyModel.nnodes,3))
         d[:,:2] = displ[:,:,lc]
         DB.R['U'] = d
         DB.R['S'] = stresn
@@ -637,12 +676,12 @@ def create_menu():
         ("&Add material properties",setMaterial),
         ("&Add boundary conditions",setBoundary),
         ("&Add concentrated loads",setCLoad),
-        ("&Add line loads",setLLoad),
-        ("&Print property database",printDB),
+        ("&Add edge loads",setELoad),
         ("&Delete all material properties",deleteAllMats),
         ("&Delete all boundary conditions",deleteAllBcons),
         ("&Delete all concentrated loads",deleteAllCLoads),
-        ("&Delete all line loads",deleteAllLLoads),
+        ("&Delete all edge loads",deleteAllELoads),
+        ("&Print property database",printDB),
         ("---",None),
         ("&Create Abaqus input file",createAbaqusInput),
         ("&Run Calpy analysis",runCalpyAnalysis),

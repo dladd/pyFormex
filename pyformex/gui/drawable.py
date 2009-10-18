@@ -229,8 +229,8 @@ def drawEdges(x,e,edges,color=None):
         GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
         # select the colors of the matching points
         color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
-        print color.shape[-2:]
-        print (-1,)+color.shape[-2:]
+        #print color.shape[-2:]
+        #print (-1,)+color.shape[-2:]
         color = color.reshape((-1,)+color.shape[-2:])
         GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
     draw_parts(coords,elems,'wireframe',color,1.0)

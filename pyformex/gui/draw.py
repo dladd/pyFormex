@@ -47,7 +47,7 @@ import formex
 from script import *
 from signals import *
 
-from plugins import surface,tools,mesh
+from plugins import surface,tools,mesh,fe
 from formex import Formex
 #from cameraMenu import setLocalAxes,setGlobalAxes 
         
@@ -318,6 +318,9 @@ def draw(F,
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
+    ## if isinstance(F,fe.Model):
+    ##     F = [ mesh.Mesh(F.coords,e) for e in F.elems ]
+        
     if type(F) == list:
         actor = []
         nowait = False
@@ -337,7 +340,6 @@ def draw(F,
         F = named(F)
         if F is None:
             return None
-
 
     if isinstance(F,formex.Formex):
         pass
@@ -508,7 +510,7 @@ def drawPlane(P,N,size):
     return actor
 
 
-def drawMarks(X,M,color='black'):
+def drawMarks(X,M,color='black',leader=''):
     """Draw a list of marks at points X.
 
     X is a Coords array.
@@ -516,14 +518,14 @@ def drawMarks(X,M,color='black'):
     The string representation of the marks are drawn at the corresponding
     3D coordinate.
     """
-    M = marks.MarkList(X,M,color=color)
+    M = marks.MarkList(X,M,color=color,leader=leader)
     GD.canvas.addAnnotation(M)
     GD.canvas.numbers = M
     GD.canvas.update()
     return M
 
 
-def drawNumbers(F,color='black',trl=None,offset=0):
+def drawNumbers(F,color='black',trl=None,offset=0,leader=''):
     """Draw numbers on all elements of F.
 
     Normally, the numbers are drawn at the centroids of the elements.
@@ -536,7 +538,7 @@ def drawNumbers(F,color='black',trl=None,offset=0):
         F = F.centroids()
     if trl is not None:
         F = F.trl(trl)
-    return drawMarks(F,numpy.arange(F.shape[0])+offset,color=color)
+    return drawMarks(F,numpy.arange(F.shape[0])+offset,color=color,leader=leader)
 
 
 def drawVertexNumbers(F,color='black',trl=None):
@@ -975,6 +977,8 @@ def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
     GD.canvas.update()
 
 
+######### Highlighting ###############
+    
 def highlightActors(K):
     """Highlight a selection of actors on the canvas.
 
@@ -987,10 +991,10 @@ def highlightActors(K):
         print "%s/%s" % (i,len(GD.canvas.actors))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.GeomActor):
-            FA = actors.GeomActor(actor,color='red')
+            FA = actors.GeomActor(actor,color=GD.canvas.settings.slcolor)
             GD.canvas.addHighlight(FA)
         elif isinstance(actor,actors.TriSurfaceActor):
-            SA = actors.TriSurfaceActor(actor,color='red')
+            SA = actors.TriSurfaceActor(actor,color=GD.canvas.settings.slcolor)
             GD.canvas.addHighlight(SA)
     GD.canvas.update()
 
@@ -1007,10 +1011,10 @@ def highlightElements(K):
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.GeomActor):
-            FA = actors.GeomActor(actor.select(K[i]),color='red',linewidth=3)
+            FA = actors.GeomActor(actor.select(K[i]),color=GD.canvas.settings.slcolor,linewidth=3)
             GD.canvas.addHighlight(FA)
         elif isinstance(actor,actors.TriSurfaceActor):
-            SA = actors.TriSurfaceActor(actor.select(K[i]),color='red')
+            SA = actors.TriSurfaceActor(actor.select(K[i]),color=GD.canvas.settings.slcolor)
             GD.canvas.addHighlight(SA)
     GD.canvas.update()
 
@@ -1027,8 +1031,12 @@ def highlightEdges(K):
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.TriSurfaceActor):
-            FA = actors.GeomActor(Formex(actor.coords[actor.edges[K[i]]]),color='red',linewidth=3)
+            FA = actors.GeomActor(Formex(actor.coords[actor.edges[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
             GD.canvas.addHighlight(FA)
+        elif isinstance(actor,actors.GeomActor):
+            FA = actors.GeomActor(Formex(actor.coords[actor.edges()[K[i]]]),color=GD.canvas.settings.slcolor,linewidth=3)
+            GD.canvas.addHighlight(FA)
+            
     GD.canvas.update()
 
 
@@ -1041,7 +1049,7 @@ def highlightPoints(K):
     for i in K.keys():
         GD.debug("Actor %s: Selection %s" % (i,K[i]))
         actor = GD.canvas.actors[i]
-        FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color='red',marksize=10)
+        FA = actors.GeomActor(Formex(actor.vertices()[K[i]]),color=GD.canvas.settings.slcolor,marksize=10)
         GD.canvas.addHighlight(FA)
     GD.canvas.update()
 

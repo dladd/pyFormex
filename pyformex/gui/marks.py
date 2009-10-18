@@ -86,7 +86,7 @@ class TextMark(Mark):
 class MarkList(Mark):
     """A list of numbers drawn at 3D positions."""
     
-    def __init__(self,pos,val,color=black,font='sans',size=18):
+    def __init__(self,pos,val,color=black,font='sans',size=18,leader=''):
         """Create a number list.
 
         pos is an (N,3) array of positions.
@@ -103,6 +103,7 @@ class MarkList(Mark):
         self.color = saneColor(color)
         self.font = gluttext.glutSelectFont(font,size)
         #self.font = getFont(font,size)
+        self.leader = str(leader)
 
 
     def draw(self,mode=None,color=None):
@@ -110,7 +111,7 @@ class MarkList(Mark):
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):
             GL.glRasterPos3fv(p)
-            gluttext.glutRenderText(str(v),self.font)
+            gluttext.glutRenderText(self.leader+str(v),self.font)
             #x,y,z = p
             #GD.canvas.renderText(x,y,z,str(v))
 
