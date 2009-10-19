@@ -1,19 +1,24 @@
 #!/bin/bash
+# $Id$
 #
-# This script helps with installing tetgen from source:
-#
-# ./tetgen_install get unpack patch make
-# sudo ./tetgen_install install rename
-# ./tetgen_install clean
-#
-# Use at your own risk if you do not understand what is happening!
-#
+_usage() {
+    cat <<EOF
+This script helps with installing tetgen from source. The normal sequence
+of commands is:
+
+./tetgen_install get unpack make
+sudo ./tetgen_install install rename
+./tetgen_install clean
+
+Use at your own risk if you do not understand what is happening!
+
+EOF
+}
 
 VERSION=1.4.3
 NAME=tetgen$VERSION
 ARCHIVE=$NAME.tar.gz
 URI=http://tetgen.berlios.de/files/$ARCHIVE
-PATCH=tetgen-$VERSION.patch
 
 _get() {
     [ -f $ARCHIVE ] || wget $URI
@@ -22,12 +27,6 @@ _get() {
 _unpack() {
     rm -rf $NAME
     tar xvzf $ARCHIVE
-}
-
-_patch() {
-    pushd $NAME
-    patch -p0 < ../$PATCH
-    popd
 }
 
 _make() {
@@ -55,9 +54,9 @@ _clean() {
 for cmd in "$@"; do
 
     case $cmd in 
-	get | unpack | patch | make | install | rename | clean ) _$cmd;;
+	get | unpack | make | install | rename | clean | usage ) _$cmd;;
 	all ) _get;_unpack;_patch;_make;_install;_clean;;
-        * ) echo "UNKNOWN command $cmd";;
+        * ) _usage; echo "UNKNOWN command $cmd";;
     esac
 
 done
