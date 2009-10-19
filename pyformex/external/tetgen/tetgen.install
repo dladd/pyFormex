@@ -55,7 +55,7 @@ for cmd in "$@"; do
 
     case $cmd in 
 	get | unpack | make | install | rename | clean | usage ) _$cmd;;
-	all ) _get;_unpack;_patch;_make;_install;_clean;;
+	all ) _get;_unpack;_make;_install;_clean;;
         * ) _usage; echo "UNKNOWN command $cmd";;
     esac
 
