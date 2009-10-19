@@ -23,9 +23,11 @@
 ##
 """Definition of some RGB colors and color conversion functions"""
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore,QtGui
+import numpy
 
-QtGui.QColor.setAllowX11ColorNames(True) 
+QtGui.QColor.setAllowX11ColorNames(True)
+
 
 def GLColor(color):
     """Convert a color to an OpenGL RGB color.
@@ -41,29 +43,38 @@ def GLColor(color):
     """
     col = color
 
-    # include this test because QtGui.Qcolor spits output if given
-    # an erroneous string.
-    if not ( type(col) == tuple or type(col) == list ):
-        # Convert strings or QColors to a color tuple
+    # as of Qt4.5, QtGui.Qcolor no longer raises an error if given
+    # erroneous input. Therefore, we check it ourselves
+
+    # str, QString or QtCore.Globalcolor: convert to QColor
+    if ( type(col) is str or
+         type(col) is QtCore.QString  or
+         isinstance(col,QtCore.Qt.GlobalColor) ):
         try:
             col = QtGui.QColor(col)
-            col = (col.red(),col.green(),col.blue())
         except:
             pass
 
-    # col should now be a 3-tuple
-    if (type(col) == tuple or type(col) == list) and len(col) == 3:
-        try:
+    # QColor: convert to (r,g,b) tuple (0..255)
+    if isinstance(col,QtGui.QColor):
+        col = (col.red(),col.green(),col.blue())
+        
+    # Convert to a list and check length
+    try:
+        col = tuple(col)
+        if len(col) == 3:
             if type(col[0]) == int:
                 # convert int values to float
                 col = [ c/255. for c in col ]
             col = map(float,col)
             # SUCCESS !
             return tuple(col)
-        except:
-            pass
+    except:
+        pass
 
-    raise ValueError,"GLColor: unexpected input type %s: %s" % (type(color),color)
+    # No success: rais an error
+    raise ValueError,"GLColor: unexpected input of type %s: %s" % (type(color),color)
+
 
 def colorName(color):
     """Return a string designation for the color.
