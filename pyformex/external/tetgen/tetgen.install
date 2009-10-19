@@ -9,10 +9,10 @@
 # Use at your own risk if you do not understand what is happening!
 #
 
-VERSION=1.4.2
+VERSION=1.4.3
 NAME=tetgen$VERSION
 ARCHIVE=$NAME.tar.gz
-URI=http://www.wias-berlin.de/people/si/$ARCHIVE
+URI=http://tetgen.berlios.de/files/$ARCHIVE
 PATCH=tetgen-$VERSION.patch
 
 _get() {
@@ -32,8 +32,7 @@ _patch() {
 
 _make() {
     pushd $NAME
-    ./configure
-    make
+    CXXFLAGS=-O2 make -e
     popd
 }
 
