@@ -196,27 +196,33 @@ pyFormex is currently distributed in the form of a .tar.gz (tarball) archive. Se
 Install pyFormex
 ----------------
 
-Once you have downloaded the tarball, unpack it with tar xvzf pyformex-
-version.tar.gz Then go to the created pyformex directory: cd pyformex-version
-and do (with root privileges)  python setup.py install --prefix=/usr/local This
-will install under /usr/local/. You can change the prefix to install in some
-other place.
+Once you have downloaded the tarball, unpack it with ``tar xvzf
+pyformex-version.tar.gz``. Then go to the created pyformex directory:
+``cd pyformex-version`` and do (with root privileges) ``python
+setup.py install --prefix=/usr/local``.  This will install under
+``/usr/local/``. You can change the prefix to install pyFormex in some other
+place.
 
-The installation procedure installs everything into a single directory, and
-creates a symlink to the executable in /usr/local/bin. You can use the command
-pyformex --whereami to find out where is installed.
+The installation procedure installs everything into a single
+directory, and creates a symlink to the executable in
+``/usr/local/bin``. You can use the command ``pyformex --whereami`` to
+find out where pyFormex is installed.
 
-Finally, a installation can usually be removed by giving the command pyformex
---remove and answering 'yes' to the question. You may want to do this before
-installing a new version, especially if you install a new release of an already
-existing version.
+Finally, a pyFormex installation can usually be removed by giving the command
+``pyformex --remove`` and answering 'yes' to the question.  You may
+want to do this before installing a new version, especially if you
+install a new release of an already existing version.
 
 
-Install additional software
----------------------------
-pyFormex uses a large number of external software packages to enhance its
-functionality. Some of these packages are so essential, that they were listed as requirements. Others however are merely optional packages: interesting for those users who need them, but not essential for everybody.
-The user has the choice to install these extras or not.
+Install additional software 
+--------------------------- 
+
+pyFormex uses a large number of external software packages to enhance
+its functionality. Some of these packages are so essential, that they
+were listed as requirements. Others however are merely optional
+packages: interesting for those users who need them, but not essential
+for everybody.  The user has the choice to install these extras or
+not.
 
 Some external packages however do not come in an easy to install package, ot
 the available packaged formats do not collaborate well with pyFormex.
@@ -301,10 +307,13 @@ library just like specified above.
 BuMPix Live Linux system
 ========================
 
+What is BuMPix
+--------------
+
 If you do not have access to a running Linux system, or if the above
 installation methods fail for some unknown reason (remember, you can
 ask for help on the pyFormex `Forums`_), you can still run pyFormex by
-using a `Bumpix Live Linux` system. `Bumpix Live` is a full featured
+using a `Bumpix Live Linux`_ system. `Bumpix Live` is a full featured
 Linux system including pyFormex that can be run from a single
 removable medium such as a CD or a USB key.  BuMPix is still an
 experimental project, but new versions are already produced at regular
@@ -320,7 +329,7 @@ untouched.
 
 
 Because the size of the image (since version 0.4) exceeds that of a CD, 
-we no longer produce CD-images (.*iso) by default, but some older
+we no longer produce CD-images (.iso) by default, but some older
 images remain avaliable on the server. New (reduced) CD
 images will only be created on request.
 On the other hand, USB-sticks of 2GB and larger have become very
@@ -335,49 +344,99 @@ The Live system is also an excellent way to test and see what pyFormex can
 do for you, without having to install it. Or to demonstrate pyFormex to
 your friends or colleagues. 
 
+Download BuMPix
+---------------
 The numbering scheme of the
 BuMPix images is independent from the pyFormex numbering. Just pick
 the `latest BuMPix image`_ to get the most recent pyFormex available
-on USB stick. After you downloaded the *.img file, write it to a USB stick as an image, not as file! 
-On a linux machine you can do that with the command::
+on USB stick. After you downloaded the .img file, write it to a USB
+stick as an image, not as file! Below, you find instructions on how to do
+this on a Linux system or on a Windows platform.
 
-  dd if=bumpix-VERSION.img of=USBDEV
+.. warning:: Make sure you've got the device designation correct, or
+   you might end up overwriting your whole hard disk! 
 
-where ``bumpix-VERSION.img`` is the downloaded file and ``USBDEV`` is the device
-corresponding to your USB key. This is dependent on your hardware, but
-will probably be something like ``/dev/sda`` or 
-``/dev/sdb``. You can find out the correct value by giving the command ``dmesg``
-after you plug in the USB key. 
-The ``dd`` command above will overwrite everything on the specified device,
-so copy your files off it before you start.   
-And make sure you got the device designation right, or
-you might end up overwriting your whole SATA hard disk! 
 Also, be aware that the
 USB stick will no longer be usable to store your files under Windows.
 
-Once the image has been written, reboot your computer from the USB
-stick. You may have to change your BIOS settings or use the boot menu
-to do that. On success, you will have a full Linux system running,
-containing pyFormex ready to use. There is even a start button in the 
-toolbar at the bottom.
+Create the BuMPix USB stick under Linux
+---------------------------------------
+
+If you have an existing Linux system available, you can write the 
+downloaded image to the USB-stick using the command::
+
+  dd if=bumpix-VERSION.img of=USBDEV
+
+where ``bumpix-VERSION.img`` is the downloaded file and USBDEV
+is the device corresponding to your USB key. This should be
+``/dev/sda`` or ``/dev/sdb`` or, generally, ``/dev/sd?`` where ``?``
+is a single character from ``a-z``. The value you should use depends
+on your hardware. You can find out the correct value by giving the command ``dmesg``
+after you have plugged in the USB key. You will see messages mentioning the
+correct ``[sd?]`` device.
+
+The ``dd`` command above will overwrite everything on the specified device,
+so copy your files off the stick before you start, and make sure you've got the device designation correct.
+
+
+Create the BuMPix USB stick under Windows
+-----------------------------------------
 
 If you have no Linux machine available to create the USB key, there
-are ways to do this under Windows as well. See the `Debian Live Wiki`_
-for more information. We recommend to use the program ``dd for Windows``.
+are ways to do this under Windows as well. 
+We recommend to use `dd for Windows`_. You can then proceed as follows. 
 
-Finally, if you do not succeed in properly writing the image to a USB
-key, we provide ready-made BuMPix USB sticks with the ``pyformex.org`` logo at the cost of production
-and distribution. Just `email us` for a quotation.
+* Download `dd for Windows`_ to a folder, say ``C:\\download\ddWrite``.
+
+* Download the `latest BuMPix image`_ to the same folder.
+
+* Mount the target USB stick and look for the number of the mounted
+  USB. This can be done with the command ``c:\\download\ddWrite dd --list``.
+  Look at the description (Removable media) and the size to make sure
+  you've got the correct harddisk designation (e.g. ``harddisk1``).
+
+* Write the image to the USB stick with the command, substituting the
+  harddisk designation found above.
+
+   dd if=c:\download\ddwrite\bumpix-0.4-b1.img of=\\?\device\harddisk1\partition0 bs=1M --progress
+
+The ``dd`` command above will overwrite everything on the specified device,
+so copy your files off the stick before you start, and make sure you've got the device designation correct.
+
+
+Buy a USB stick with BuMPix 
+--------------------------- 
+
+Alternatively,
+
+* if you do not succeed in properly writing the image to a USB key, or
+* if you just want an easy solution without any install troubles, or
+* if you want to financially support the further development of pyFormex, or
+* if you need a large number of pyFormex USB installations,
+
+you may be happy to know that we can provide ready-made BuMPix USB
+sticks with the ``pyformex.org`` logo at a cost hardly exceeding that
+of production and distribution.
+If you think this is the right choice for you, just `email us`_ for a quotation.
 
 .. image:: ../website/images/pyformex_ufd.jpg
    :align: center
    :alt: pyFormex USB stick with BuMPix Live Linux
 
 
+Boot your BuMPix system
+-----------------------
+Once the image has been written, reboot your computer from the USB
+stick. You may have to change your BIOS settings or use the boot menu
+to do that. On success, you will have a full Linux system running,
+containing pyFormex ready to use. There is even a start button in the 
+toolbar at the bottom.
+
+
 .. _sec:pyformex-nonlinux:
 
 Running pyFormex on non-Linux systems
-=======================================
+=====================================
 
 pyFormex is being developed on Linux platforms, and most of its users run
 pyFormex on a Linux system. Because of that, there is no installation

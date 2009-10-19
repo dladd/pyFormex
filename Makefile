@@ -34,6 +34,7 @@ MANDIR= ${PYFORMEXDIR}/manual
 LIBDIR= ${PYFORMEXDIR}/lib
 DOCDIR= ${PYFORMEXDIR}/doc
 BINDIR= ${PYFORMEXDIR}/bin
+SPHINXDIR= sphinx
 
 SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/*.py) \
@@ -127,7 +128,7 @@ bumprelease:
 	OLD=$$(expr "${RELEASE}" : '.*\([0-9])*\)$$');NEW=$$(expr $$OLD + 1);sed -i "/^RELEASE=/s|$$OLD$$|$$NEW|" RELEASE
 
 
-version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac
+version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac ${SPHINXDIR}/conf.py
 
 ${PYFORMEXDIR}/__init__.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
@@ -137,6 +138,9 @@ ${MANDIR}/pyformex.tex: RELEASE
 
 ${LIBDIR}/configure.ac: RELEASE
 	sed -i 's|^AC_INIT.*|AC_INIT(pyformex-lib,${RELEASE})|'  $@
+
+${SPHINXDIR}/conf.py: RELEASE
+	sed -i "s|^version =.*|version = '${VERSION}'|;s|^release =.*|release = '${RELEASE}'|" $@
 
 setup.py: RELEASE
 	sed -i "s|version='.*'|version='${RELEASE}'|" $@

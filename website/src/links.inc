@@ -40,6 +40,7 @@
 .. _`Debian GNU/Linux`: http://www.debian.org
 .. _`Debian Live Wiki`: http://wiki.debian.org/DebianLive/Howto/USB
 
+.. _`dd for Windows`: http://www.chrysocome.net/dd
 
 .. _`stent research group`: http://www.stent-ibitech.ugent.be
 .. _`IBiTech - Ghent University`: http://www.ibitech.ugent.be
