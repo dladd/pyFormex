@@ -498,8 +498,6 @@ class PropertyDB(Dict):
         If delete==True, the returned properties are removed from the database.
         """
         prop = getattr(self,kind+'prop')
-        #print "%s props found" % len(prop)
-        #print prop
         if rec is not None:
             if type(rec) != list:
                 rec = [ rec ]
@@ -512,12 +510,8 @@ class PropertyDB(Dict):
             prop = [ p for p in prop if p.has_key('tag') and p['tag'] in tag ]
         for a in attr:
             prop = [ p for p in prop if p.has_key(a) and p[a] is not None ]
-        #print "%s props retained after attr" % len(prop)
-        #print prop
         for a in noattr:
             prop = [ p for p in prop if not p.has_key(a) or p[a] is None ]
-        #print "%s props retained after noattr" % len(prop)
-        #print prop
         if delete:
             self._delete(prop,kind=kind)
         return prop
@@ -554,7 +548,7 @@ class PropertyDB(Dict):
         return self.getProp(kind=kind,rec=rec,tag=tag,attr=attr,delete=True)
 
 
-    def nodeProp(self,prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None):
+    def nodeProp(self,prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None,**kargs):
         """Create a new node property, empty by default.
 
         A node property can contain any combination of the following fields:
@@ -571,7 +565,7 @@ class PropertyDB(Dict):
         - ampl: the name of an Amplitude
         """
         try:
-            d = {}
+            d = kargs
             if cload is not None:
                 d['cload'] = checkIdValue(cload)
 #                d['cload'] = checkArray1D(cload,6,'f','i')
@@ -596,7 +590,7 @@ class PropertyDB(Dict):
             raise ValueError,"Invalid Node Property"
 
 
-    def elemProp(self,prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,eload=None,ampl=None): 
+    def elemProp(self,prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,eload=None,ampl=None,**kargs): 
         """Create a new element property, empty by default.
         
         An elem property can contain any combination of the following fields:
@@ -628,6 +622,8 @@ class PropertyDB(Dict):
                 d['eload'] = eload
             # Currently unchecked!
             d['ampl'] = ampl
+            d.update(kargs)
+            
 
             return self.Prop(kind='e',prop=prop,tag=tag,set=set,name=name,**d)
         except:

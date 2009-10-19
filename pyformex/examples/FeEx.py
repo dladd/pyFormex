@@ -166,12 +166,12 @@ def pickNodes():
     """Let user pick nodes and return node numbers.
 
     This relies on the model being merged and drawn, resulting in a
-    single actor having point geometry.
+    single actor having point geometry. Thus we do not bother about the key.
     """
     K = pickPoints()
     for k,v in K.items():
         if len(v) > 0:
-            return k,v
+            return v
     return None
 
 
@@ -219,7 +219,8 @@ def setMaterial():
             for k in range(len(parts)):
                 e = getPickedElems(K,k) + model.celems[k]
                 print k,e
-                PDB.elemProp(set=e,eltype='CPS4',section=ElemSection(section=section))
+                if len(e) > 0:
+                    PDB.elemProp(set=e,eltype='CPS4',section=ElemSection(section=section))
 
 def deleteAllMats():
     PDB.delProp(kind='e',attr=['eltype'])
@@ -246,7 +247,7 @@ def setBoundary():
             print nodeset
             bcon = [int(xcon),int(ycon),0,0,0,0]
             print "SETTING BCON %s" % bcon
-            PDB.nodeProp(set=nodeset,bound=bcon)
+            PDB.nodeProp(set=nodeset,bound=[xcon,ycon,0,0,0,0])
 
 def deleteAllBcons():
     PDB.delProp(kind='n',attr=['bound'])
@@ -305,10 +306,10 @@ def setELoad():
             for el,edg in zip(elems,edges):
                 for label in 'xy':
                     if edge_load[label] != 0.:
-                        PDB.elemProp(set=el,eload=EdgeLoad(edge=edg,label=label,value=edge_load[label]))
+                        PDB.elemProp(set=el,group=k,eload=EdgeLoad(edge=edg,label=label,value=edge_load[label]))
 
 def deleteAllELoads():
-    PDB.delProp(kind='n',attr=['eload'])
+    PDB.delProp(kind='e',attr=['eload'])
 
 
 def printDB():
@@ -511,9 +512,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     # This is a bit more complex. See Calpy for details
     # We first generate the input data in a string, then read them with the
     # calpy femodel.ReadBoundaryLoads function and finally assemble them with
-    # plane.addBoundaryLoads. We have to this operation per element group
-    # however, and the property database does not contain the group number.
-    # It is found from model.splitElems().
+    # plane.addBoundaryLoads. We have to this operation per element group.
+    # The group number is stored in the property record.
     ngroups = model.ngroups()
     s = [ "" ] * ngroups
     nb = [ 0 ] * ngroups
@@ -524,17 +524,15 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
             xload = p.value
         elif p.label == 'y':
             yload = p.value
-        gnrs,lnrs = model.splitElems(p.set)
-        # Because of the way we constructed the database, this will
-        # currently contain only one element (and thus only one group)
-        # but let's loop over it anyway
-        #print gnrs,lnrs
-        for g,grp in enumerate(gnrs):
-            #print grp
-            for e in grp:  # remember calpy numbers are +1 !
-                #print e
-                s[g] += "%s %s %s %s %s\n" % (e+1,p.edge+1,loadcase,xload,yload)
-                nb[g] += 1
+        # Because of the way we constructed the database, the set will
+        # contain only one element, but let's loop over it anyway in case
+        # one day we make the storage more effective
+        # Also, remember calpy numbers are +1 !
+        g = p.group
+        print "Group %s" % g
+        for e in p.set:
+            s[g] += "%s %s %s %s %s\n" % (e+1,p.edge+1,loadcase,xload,yload)
+            nb[g] += 1
     #print s,nb
     for nbi,si,nodes,matnr,Plane in zip(nb,s,NodesGrp,MatnrGrp,PlaneGrp):
         if nbi > 0:
@@ -630,8 +628,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
 def autoRun():
     clear()
-    createPart({'x1':1.})
-    createPart({'x1':-1.})
+    createPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
+    createPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
@@ -641,14 +639,15 @@ def autoRun():
 
 def autoConv():
     clear()
-    res = askItems([('n',1)])
-    n = res['n']
-    createPart({'x1':10.,'nx':n,'ny':1})
+    res = askItems([('nx',1),('ny',1)])
+    nx = res['nx']
+    ny = res['ny']
+    createPart(dict(x0=0.,x1=10.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
     PDB.nodeProp(set=nodenrs[:ny+1],bound=[1,1,0,0,0,0])
-    PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[0.,1.,0.,0.,0.,0.])
+    PDB.nodeProp(set=nodenrs[-(ny+1):],cload=[0.,1./(ny+1),0.,0.,0.,0.])
     runCalpyAnalysis('FeEx',verbose=True)
 
 
