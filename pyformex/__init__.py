@@ -26,7 +26,7 @@
 
 """
 
-__version__ = "0.8.1-a3"
+__version__ = "0.8.1-a4"
 __revision__ = ""
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2009 Benedict Verhegghe'
