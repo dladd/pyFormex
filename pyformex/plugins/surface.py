@@ -1519,7 +1519,7 @@ Total area: %s; Enclosed volume: %s
         if min_edges:
             cmd += ' -n %d' % min_edges
         if max_cost:
-            cmd += ' -c %d' % max_cost
+            cmd += ' -c %f' % max_cost
         if mid_vertex:
             cmd += ' -m'
         if length_cost:
@@ -1559,7 +1559,7 @@ Total area: %s; Enclosed volume: %s
         if max_edges:
             cmd += ' -n %d' % max_edges
         if min_cost:
-            cmd += ' -c %d' % min_cost
+            cmd += ' -c %f' % min_cost
         if log:
             cmd += ' -L'
         if verbose:

@@ -1066,7 +1066,7 @@ def coarsen():
     S = selection.check(single=True)
     if S:
         res = askItems([('min_edges',-1),
-                        ('max_cost',-1),
+                        ('max_cost',-1.0),
                         ('mid_vertex',False),
                         ('length_cost',False),
                         ('max_fold',1.0),
@@ -1091,7 +1091,7 @@ def refine():
     S = selection.check(single=True)
     if S:
         res = askItems([('max_edges',-1),
-                        ('min_cost',-1),
+                        ('min_cost',-1.0),
                         ('log',False),
                         ('verbose',False),
                         ])
