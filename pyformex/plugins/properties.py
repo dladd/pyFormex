@@ -459,6 +459,10 @@ class PropertyDB(Dict):
         d.nr = len(prop)
         if tag is not None:
             d.tag = str(tag)
+        if name is None and kargs.has_key('setname'):
+            # allow for backwards compatibility
+            print "!! 'setname' is deprecated, please use 'name'"
+            name = setname
         if set is not None:
             if type(set) is str and name is None:
                 ### convenience to allow set='name' as alias for name='name'
@@ -583,10 +587,9 @@ class PropertyDB(Dict):
                     raise
             # Currently unchecked!
             d['ampl'] = ampl
-
             return self.Prop(kind='n',prop=prop,tag=tag,set=set,name=name,**d)
         except:
-            print "tag=%s,set=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,cload,bound,displ,csys)
+            print "tag=%s,set=%s,name=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,name,cload,bound,displ,csys)
             raise ValueError,"Invalid Node Property"
 
 

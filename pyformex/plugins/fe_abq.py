@@ -63,18 +63,18 @@ def abqInputNames(job):
 
 def nsetName(p):
     """Determine the setname for writing a node property."""
-    if p.setname is None:
+    if p.name is None:
         return 'Nall'
     else:
-        return p.setname
+        return p.name
 
 
 def esetName(p):
     """Determine the setname for writing a elem property."""
-    if p.setname is None:
+    if p.name is None:
         return 'Eall'
     else:
-        return p.setname
+        return p.name
 
 
 def writeHeading(fil, text=''):
@@ -169,7 +169,7 @@ def writeMaterial(fil,mat):
 """%(float(mat.yield_stress), float(mat.plastic_strain)))
         if mat.plastic is not None:
             fil.write('*PLASTIC\n')
-            plastic=eval(mat['plastic'])
+            plastic = mat.plastic
             for i in range(len(plastic)):
 	      fil.write( '%s, %s\n' % (plastic[i][0],plastic[i][1]))
 	if mat.damping == 'Yes':
@@ -669,21 +669,21 @@ def writeAmplitude(fil,prop):
 ## def writeElemSurface(fil,number=None,abqdata=None):
 ##     if number is not None and abqdata is not None:
 ##         elemsnumbers=where(abqdata.elemprop==number)[0]
-##         fil.write('*ELset,Elset=%s\n'% elemproperties[number].surfaces.setname)
+##         fil.write('*ELset,Elset=%s\n'% elemproperties[number].surfaces.name)
 ##         for i in elemsnumbers:
 ##             n=i+1
 ##             fil.write('%s,\n'%n)
-##             fil.write('*Surface, type =Element, name=%s\n%s,%s\n' %(elemproperties[number].surfaces.name,elemproperties[number].surfaces.setname,elemproperties[number].surfaces.arg))
+##             fil.write('*Surface, type =Element, name=%s\n%s,%s\n' %(elemproperties[number].surfaces.name,elemproperties[number].surfaces.name,elemproperties[number].surfaces.arg))
 
             
 ## def writeNodeSurface(fil,number=None,abqdata=None):
 ##     if number is not None and abqdata is not None:
 ##         nodenumbers=where(abqdata.nodeprop==number)[0]
-##         fil.write('*ELset,Elset=%s\n'% nodeproperties[number].surfaces.setname)
+##         fil.write('*ELset,Elset=%s\n'% nodeproperties[number].surfaces.name)
 ##         for i in nodenumbers:
 ##             n=i+1
 ##             fil.write('%s,\n'%n)
-##             fil.write('*Surface, type =Node, name=%s\n%s,%s\n' %(nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.setname,nodeproperties[number].surfaces.arg))
+##             fil.write('*Surface, type =Node, name=%s\n%s,%s\n' %(nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.name,nodeproperties[number].surfaces.arg))
 
     
 ## def writeSurface(fil,name=None,abqdata=None):
@@ -692,18 +692,18 @@ def writeAmplitude(fil,prop):
 ##             global elemsprops
 ##             elemssetsurfaces=[]
 ##             for i in range(len(elemproperties)):
-##                 if elemproperties[i].surfaces==the_modelproperties[name].setname:
+##                 if elemproperties[i].surfaces==the_modelproperties[name].name:
 ##                     elemssetsurfaces.append(i)
 ## 		elemssur=[]
 ## 		for i in elemssetsurfaces:
 ##                     elemss=where(abqdata.elemprop[:]==i)[0]
 ##                     elemssur.extend(elemss)
 ##                 if len(elemssur)>0:
-##                     fil.write('*ELset,Elset=%s, internal\n'% the_modelproperties[name].setname)
+##                     fil.write('*ELset,Elset=%s, internal\n'% the_modelproperties[name].name)
 ##                     for i in range(len(elemssur)):
 ##                         getal=elemssur[i]+1
 ##                         fil.write('%s,\n'%getal)
-## 			fil.write('*Surface, type =Element, name=%s, internal\n%s,%s\n' %(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
+## 			fil.write('*Surface, type =Element, name=%s, internal\n%s,%s\n' %(name,the_modelproperties[name].name,the_modelproperties[name].arg))
 
 ## 	elif the_modelproperties[name].surftype=='Node':
 ##             nodes=[]
@@ -722,20 +722,11 @@ def writeAmplitude(fil,prop):
 ##                     elemcount+=length[i]
 ##                     nodes.extend(part[j-elemcount])
 ## 		nodes = unique(nodes)
-## 		fil.write('*Nset,Nset=%s, internal\n'% the_modelproperties[name].setname)
+## 		fil.write('*Nset,Nset=%s, internal\n'% the_modelproperties[name].name)
 ## 		for i in range(len(nodes)):
 ##                     getal=nodes[i]+1
 ##                     fil.write('%s,\n'%getal)
-## 		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].setname,the_modelproperties[name].arg))
-
-
-## def writeModelProps(fil,prop):
-##     for i in the_modelproperties:
-##         if the_modelproperties[i].interaction is not None:
-##             writeInteraction(fil, i)
-##     for i in the_modelproperties:
-##         if the_modelproperties[i].damping is not None:
-##             writedamping(fil, i)
+## 		fil.write('*Surface, type =Node, name=%s, internal\n%s,%s\n'%(name,the_modelproperties[name].name,the_modelproperties[name].arg))
 
 
 ### Output requests ###################################
@@ -1206,7 +1197,7 @@ Script: %s
 
         GD.message("Writing coordinate transforms")
         for p in self.prop.getProp('n',attr=['csys']):
-            writeTransform(fil,p.setname,p.csys)
+            writeTransform(fil,p.name,p.csys)
 
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
@@ -1229,7 +1220,6 @@ Script: %s
                 print 'Elements of type %s: %s' % (p.eltype,set)
 
                 setname = esetName(p)
-                #print setname,p.setname
                 gl,gr = self.model.splitElems(set)
                 elems = self.model.getElems(gr)
                 for i,elnrs,els in zip(range(len(gl)),gl,elems):
@@ -1245,7 +1235,7 @@ Script: %s
                         if group_by_group:
                             writeSet(fil,'ELSET',grpname,[subsetname])
             else:
-                writeSet(fil,'ELSET',p.setname,p.set)
+                writeSet(fil,'ELSET',p.name,p.set)
                     
         GD.message("Total number of elements: %s" % telems)
         if nelems != telems:
@@ -1341,7 +1331,7 @@ if __name__ == "script" or __name__ == "draw":
     # populate the property database
     P.nodeProp(tag='d1',set=[0,1],cload=[2,6,4,0,0,0],displ=[(3,5.4)],csys=CYL)
     p = P.nodeProp(tag='b0',set=[1,2],cload=[9,2,5,3,0,4],bound='pinned')
-    P.nodeProp(tag='d2',setname=p.setname,bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
+    P.nodeProp(tag='d2',setname=p.name,bound=[1,1,1,0,0,1],displ=[(2,6),(4,8.)])
 
     bottom = P.elemProp(12,section=S2,dload=[BL1],eltype='T2D3')
     top = P.elemProp(2,section=S2,dload=[BL2],eltype='FRAME2D')
