@@ -520,6 +520,26 @@ def startGui(args=[]):
         gui.runGUI()
 
 
+def checkRevision(rev,comp='>='):
+    """Check that we have the requested revision number.
+
+    Raises an error if the revision number of the running pyFormex does not
+    pass the comparison test with the given revision number.
+
+    rev: an positive integer.
+    comp: a string used in the comparison.
+
+    Default is to allow the specified revision and all later ones.
+    """
+    try:
+        cur = int(utils.splitStartDigits(GD.__revision__.split()[1])[0])
+        if not eval("%s %s %s" % (cur,comp,rev)):
+            raise RuntimeError
+    except:
+        raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (cur,comp,rev)
+   
+
+
 @deprecation("Use chdir(__file__) instead")
 def workHere():
     """Change the current working directory to the script's location."""

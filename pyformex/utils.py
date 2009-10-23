@@ -490,6 +490,7 @@ class NameSequence(object):
 
 
 string_digits = re.compile('(.*?)(\d*)$')
+digits_string = re.compile('(\d*)(.*)$')
 
 def splitEndDigits(s):
     """Split a string in any prefix and a numerical end sequence.
@@ -498,6 +499,14 @@ def splitEndDigits(s):
     Any of both can be empty.
     """
     return string_digits.match(s).groups()
+
+def splitStartDigits(s):
+    """Split a string in any prefix and a numerical end sequence.
+
+    A string like 'abc-0123' will be split in 'abc-' and '0123'.
+    Any of both can be empty.
+    """
+    return digits_string.match(s).groups()
     
     
 def stuur(x,xval,yval,exp=2.5):
