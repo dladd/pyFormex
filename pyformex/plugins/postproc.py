@@ -54,6 +54,25 @@ def niceNumber(f,approx=floor):
     return m*10**n
 
 
+def argNearestValue(values,target):
+    """Return the position of the item from the list of values that is
+    nearest to target.
+
+    target is a float value, values must be convertible to an array of floats.
+    """
+    v = array(values).ravel()
+    c = v - target
+    return argmin(c*c)
+
+
+def nearestValue(values,target):
+    """Return the item from the list of values that is nearest to target.
+
+    target is a float value, values must be convertible to an array of floats.
+    """
+    return values[argNearestValue(values,target)]
+
+
 def frameScale(nframes=10,cycle='up',shape='linear'):
     """Return a sequence of scale values between -1 and +1.
 

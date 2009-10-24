@@ -1081,7 +1081,11 @@ def inputAnyOld(item,parent=None):
     if len(item) > 2 and type(item[2]) == str:
         itemtype = item[2]
     else:
-        itemtype = type(value)
+        # No item specified: guess from value or from available options
+        if 'choices' in options:
+            itemtype = 'select'
+        else:
+            itemtype = type(value)
 
     if itemtype == int:
         if len(item) > 3 and type(item[3] != dict):

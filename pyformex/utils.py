@@ -500,6 +500,7 @@ def splitEndDigits(s):
     """
     return string_digits.match(s).groups()
 
+
 def splitStartDigits(s):
     """Split a string in any prefix and a numerical end sequence.
 
@@ -507,7 +508,15 @@ def splitStartDigits(s):
     Any of both can be empty.
     """
     return digits_string.match(s).groups()
-    
+
+
+def subDict(dic,keystart):
+    """Return a dict with the items from dic whose key starts with keystart.
+
+    This also strips the keystart form the keys.
+    """
+    return dict([ (k.replace(keystart,'',1),v) for k,v in dic.items() if k.startswith(keystart)])
+
     
 def stuur(x,xval,yval,exp=2.5):
     """Returns a (non)linear response on the input x.

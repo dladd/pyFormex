@@ -876,6 +876,13 @@ def writeFileOutput(fil,resfreq=1,timemarks=False):
         fil.write(", TIME MARKS=YES")
     fil.write("\n")
 
+    
+def writeModelProps(fil,prop):
+    """Write model props for this step"""
+    for p in prop:
+        if p.extra:
+            fil.write(p.extra)
+
 
 ##################################################
 ## Some classes to store all the required information
@@ -997,10 +1004,10 @@ class Step(Dict):
             GD.message("  Writing step dloads")
             writeDloads(fil,prop)
         
-##         prop = propDB.getProp('',tag=self.tags)
-##         if prop:
-##             GD.message("  Writing step model props")
-##             writeModelProps(fil,prop)
+        prop = propDB.getProp('',tag=self.tags)
+        if prop:
+            GD.message("  Writing step model props")
+            writeModelProps(fil,prop)
 
         if self.out:
             out += self.out
