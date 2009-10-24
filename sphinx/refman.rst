@@ -64,6 +64,9 @@ These modules are located under pyformex/gui.
    ref/colorscale
    ref/image
    ref/widgets
+   ref/actors
+   ref/decors
+   ref/marks
 
 
 |pyFormex| plugins

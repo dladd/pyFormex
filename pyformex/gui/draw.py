@@ -116,9 +116,9 @@ def showFile(filename):
     f.close()
 
 
-# result status of the widget in askItems() function
+# widget and result status of the widget in askItems() function
+_dialog_widget = None
 _dialog_result = None
-
 
 def askItems(items,caption=None,timeout=None,**kargs):
     """Ask the value of some items to the user.
@@ -137,14 +137,25 @@ def askItems(items,caption=None,timeout=None,**kargs):
     (key,value) pair. Returns an empty dictionary if the dialog was canceled.
     Sets the dialog timeout and accepted status in global variables.
     """
-    global _dialog_result
+    global _dialog_widget,_dialog_result
     if type(items) == dict:
         items = items.items()
     w = widgets.InputDialog(items,caption,**kargs)
+    _dialog_widget = w
+    _dialog_result = None
     res = w.getResult(timeout)
+    _dialog_widget = None
     _dialog_result = w.result()
     return res
 
+def currentDialog():
+    """Returns the current dialog widget.
+
+    This returns the dialog widget created by the askItems() function,
+    while the dialog is still active. If no askItems() has been called
+    or if the user already closed the dialog, None is returned.
+    """
+    return _dialog_widget
 
 def dialogAccepted():
     """Returns True if the last askItems() dialog was accepted."""

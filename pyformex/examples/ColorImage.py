@@ -32,34 +32,62 @@ techniques = ['colors']
 
 from gui.imageColor import *
 
+flat()
 lights(False)
 
 filename = getcfg('datadir')+'/butterfly.png'
+image = None
+scaled_image = None
+w,h = 400,400
 
-filename = askFilename(filename,filter=utils.fileDescription('img'),multi=False,exist=True)
-if not filename:
-    exit()
+def selectFile():
+    """Select an image file."""
+    global filename
+    filename = askFilename(filename,filter=utils.fileDescription('img'),multi=False,exist=True)
+    if filename:
+        currentDialog().updateData({'Image File':filename})
+        loadImage()
 
-im = QtGui.QImage(filename)
-if im.isNull():
-    warning("Could not load image '%s'" % filename)
-    exit()
 
-w,h = im.width(),im.height()
-print "size = %sx%s" % (w,h)
+def loadImage():
+    global image, scaled_image
+    image = QtGui.QImage(filename)
+    if image.isNull():
+        warning("Could not load image '%s'" % filename)
+        return None
 
-maxsiz = 40000.
-if w*h > maxsiz:
-    scale = sqrt(maxsiz/w/h)
-    w = int(w*scale)
-    h = int(h*scale)
-    
-res = askItems([('Width',w),('Height',h)])
+    w,h = image.width(),image.height()
+    print "size = %sx%s" % (w,h)
+
+    diag = currentDialog()
+    if diag:
+        diag.updateData({'nx':w,'ny':h})
+
+    maxsiz = 40000.
+    if w*h > maxsiz:
+        scale = sqrt(maxsiz/w/h)
+        w = int(w*scale)
+        h = int(h*scale)
+
+
+res = askItems([
+    ('filename',filename,{'buttons':[('Select File',selectFile)]}),
+    ('nx',w,{'text':'width'}),
+    ('ny',h,{'text':'height'}),
+    ])
+
 if not res:
     exit()
 
-nx = res['Width']
-ny = res['Height']
+print res
+
+globals().update(res)
+
+if image is None:
+    loadImage()
+
+if image is None:
+    exit()
 
 # Create a 2D grid of nx*ny elements
 F = Formex(mpattern('123')).replic2(nx,ny).centered()
@@ -78,7 +106,7 @@ for F in G:
     print F.center(),F.bbox()
 
 # Create the colors
-color,colortable = image2glcolor(im.scaled(nx,ny))
+color,colortable = image2glcolor(image.scaled(nx,ny))
 
 nvp = len(G)
 layout(nvp)

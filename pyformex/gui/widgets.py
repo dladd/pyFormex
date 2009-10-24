@@ -472,6 +472,7 @@ def getColor(col=None,caption=None):
 
 #####################################################################
 ########### General Input Dialog ####################################
+#####################################################################
 
 class InputItem(QtGui.QHBoxLayout):
     """A single input item, usually with a label in front.
@@ -527,6 +528,11 @@ class InputItem(QtGui.QHBoxLayout):
             self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
 
+        if 'buttons' in kargs and 'parent' in kargs:
+            self.buttons = dialogButtons(kargs['parent'],kargs['buttons'])
+            self.addLayout(self.buttons)
+            
+
     def name(self):
         """Return the name of the InputItem."""
         return self.key
@@ -560,7 +566,7 @@ class InputInfo(InputItem):
         self.input = QtGui.QLineEdit(str(value))
         self.input.setReadOnly(True)
         self._value_ = value
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -584,7 +590,7 @@ class InputString(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
         self._is_string_ = type(value) == str
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -618,7 +624,7 @@ class InputText(InputItem):
         self._is_string_ = type(value) == str
         self.input =  QtGui.QTextEdit()
         self.setValue(value)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -658,7 +664,7 @@ class InputBool(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QCheckBox(text)
         self.setValue(value)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def text(self):
         """Return the displayed text."""
@@ -699,7 +705,7 @@ class InputCombo(InputItem):
         self.input = QtGui.QComboBox()
         self.input.addItems(self._choices_)
         self.setValue(default)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -749,7 +755,7 @@ class InputRadio(InputItem):
 
         self.rb[choices.index(default)].setChecked(True)
         self.input.setLayout(self.hbox)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def value(self):
         """Return the widget's value."""
@@ -806,7 +812,7 @@ class InputPush(InputItem):
 
         self.rb[choices.index(default)].setChecked(True)
         self.input.setLayout(self.hbox)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def setText(self,text,index=0):
         """Change the text on button index."""
@@ -849,7 +855,7 @@ class InputInteger(InputItem):
         if kargs.has_key('max'):
             self.validator.setTop(int(kargs['max']))
         self.input.setValidator(self.validator)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -881,7 +887,7 @@ class InputFloat(InputItem):
         if kargs.has_key('dec'):
             self.validator.setDecimals(int(kargs['dec']))
         self.input.setValidator(self.validator)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def show(self):
         """Select all text on first display.""" 
@@ -987,7 +993,7 @@ class InputColor(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QPushButton(colors.colorName(value))
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
-        self.addWidget(self.input)
+        self.insertWidget(1,self.input)
 
     def setColor(self):
         color = getColor(self.input.text())
@@ -1056,8 +1062,13 @@ def inputAny(name,value,itemtype=str,**options):
     return line
                 
 
-def inputAnyNew(item):
-    """This translates the old item input to the inputAny arguments."""
+def inputAnyOld(item,parent=None):
+    """Create an InputItem with the old data style.
+
+    This translates the data from the legacy InputItem data to the
+    new style required by InputAny.
+    Returns the InputItem constrctured with the data.
+    """
     name,value = item[:2]
     
     if type(item[-1]) == dict:
@@ -1099,6 +1110,9 @@ def inputAnyNew(item):
         if len(item) > 3:
             options['choices'] = item[3]
         options['direction'] = itemtype[0]
+
+    if parent is not None:
+        options['parent'] = parent
 
     return inputAny(name,value,itemtype,**options)
 
@@ -1177,7 +1191,7 @@ class InputDialog(QtGui.QDialog):
         self._pos = None
         form = QtGui.QVBoxLayout()
         for item in items:
-            line = inputAnyNew(item)
+            line = inputAnyOld(item,parent=self)
             form.addLayout(line)
             self.fields.append(line)
 
@@ -1323,7 +1337,7 @@ class InputDialog(QtGui.QDialog):
         return self.results
 
 
-def dialogButtons(dialog,actions,default):
+def dialogButtons(dialog,actions,default=None):
     """Create a set of dialog buttons
 
     dia is a dialog widget
