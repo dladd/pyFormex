@@ -896,8 +896,8 @@ class Step(Dict):
                        'PERTURBATION', 'BUCKLE', 'RIKS' ]
     
     def __init__(self,analysis='STATIC',time=[0.,0.,0.,0.],nlgeom='NO',
-                 tags=None, buckle='SUBSPACE', incr=0.1,name=None,
-                 bulkvisc=None,out=None,res=None):
+                 tags=None,inc=None,sdi=None,buckle='SUBSPACE',incr=0.1,
+                 name=None,bulkvisc=None,out=None,res=None):
         """Create new analysis data.
         
         analysis is the analysis type. Should be one of:
@@ -914,7 +914,9 @@ class Step(Dict):
         'PERTURBATION' ignores nlgeom
 
         tags is a list of property tags to include in this step.
-
+        
+        inc is the maximum number of increments in a step (the default is 100)
+        sdi determines how severe discontinuities are accounted for
         buckle specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
         incr is the increment in 'RIKS' type
         bulkvisc is a list of two floats (default: [0.06,1.2]), only used
@@ -938,6 +940,8 @@ class Step(Dict):
         else:
             self.nlgeom = nlgeom
         self.tags = tags
+        self.inc = inc
+        self.sdi = sdi
         self.bulkvisc = bulkvisc
         self.out = out
         self.res = res
@@ -963,6 +967,10 @@ class Step(Dict):
             cmd += ', NLGEOM=%s' % self.nlgeom
             if self.analysis == 'RIKS':
                 cmd += ', INCR=%s' % self.incr
+        if self.inc:
+            cmd += ',INC=%s' % self.inc
+        if self.sdi:
+            cmd += ',CONVERT SDI=%s' % self.sdi        
         fil.write("%s\n" % cmd)
         if self.analysis in ['STATIC','DYNAMIC']:
             fil.write("*%s\n" % self.analysis)
