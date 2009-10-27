@@ -526,7 +526,7 @@ def checkRevision(rev,comp='>='):
     Raises an error if the revision number of the running pyFormex does not
     pass the comparison test with the given revision number.
 
-    rev: an positive integer.
+    rev: a positive integer.
     comp: a string used in the comparison.
 
     Default is to allow the specified revision and all later ones.
@@ -536,7 +536,7 @@ def checkRevision(rev,comp='>='):
         if not eval("%s %s %s" % (cur,comp,rev)):
             raise RuntimeError
     except:
-        raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (cur,comp,rev)
+        raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (GD.__revision__,comp,rev)
    
 
 

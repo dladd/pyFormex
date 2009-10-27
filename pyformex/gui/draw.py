@@ -90,15 +90,15 @@ def ack(question):
     
 def error(message,actions=['OK']):
     """Show an error message and wait for user acknowledgement."""
-    widgets.messageBox(message,'error',actions)
+    return widgets.messageBox(message,'error',actions)
     
 def warning(message,actions=['OK']):
     """Show a warning message and wait for user acknowledgement."""
-    widgets.messageBox(message,'warning',actions)
+    return widgets.messageBox(message,'warning',actions)
 
 def showInfo(message,actions=['OK']):
     """Show a neutral message and wait for user acknowledgement."""
-    widgets.messageBox(message,'info',actions)
+    return widgets.messageBox(message,'info',actions)
 
 def showText(text,type=None,actions=['OK']):
     """Display a text and wait for user response.
