@@ -296,4 +296,18 @@ def sector(r,t,nr,nt,h=0.,diag=None):
     return F
 
 
+def cylinder(D,L,nt,nl,D1=None,angle=360.,bias=0.,diag=None):
+    """Create a cylinder with diameter D and length L.
+
+    The cylinder has nt elements in circumferential direction and
+    nl in longitudinal direction.
+    The cylinder's axis is the z-axis.
+    By default, the elements are quads. Put in a diagonal ('u' or 'd')
+    to create triangles.
+    """
+    C = rectangle(nl,nt,L,angle,bias=bias,diag=diag).trl(2,D/2.)
+    return C.cylindrical(dir=[2,1,0])
+
+
+
 # End
