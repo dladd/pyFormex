@@ -340,10 +340,14 @@ def outBeamSection(el,setname):
     - sectiontype CIRC:
 
       - radius
+      - intpoints1 (number of integration points in the first direction) optional
+      - intpoints2 (number of integration points in the second direction) optional
 
     - sectiontype RECT:
 
       - width, height
+      - intpoints1 (number of integration points in the first direction) optional
+      - intpoints2 (number of integration points in the second direction) optional
       
     """
     out = ""
@@ -361,6 +365,12 @@ def outBeamSection(el,setname):
         out += "%s,%s,%s\n" % tuple(el.orientation)
     else:
         out += '\n'
+
+    if el.intpoints1 != None:
+        out += "%s" % el.intpoints1
+        if el.intpoints2 != None:
+            out += ", %s" % el.intpoints2
+        out += "\n"
 
     return out
 
