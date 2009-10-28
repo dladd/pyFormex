@@ -444,7 +444,6 @@ def outSurfaceInteraction(prop):
             out += "*FRICTION\n%s\n" % float(p.friction)
     return out
 
- 
 def outContactPair(prop):
     """Format the contact pair.
 
@@ -464,6 +463,31 @@ def outContactPair(prop):
             
         out += "*Contact Pair, interaction=%s\n" % intername
         out += "%s, %s\n" % (p.slave,p.master)
+    return out
+
+def outOrientation(prop):
+    """Format the orientation.
+
+    Optional:
+    
+    - definition 
+    - system: coordinate system
+    - a: a first point
+    - b: a second point
+    """
+    out = ''
+    for p in prop:
+        out += "*Orientation, name=%s" % (p.name)
+        if p.definition is not None:
+            out += ", DEFINITION=%s" % p.definition
+        if p.system is not None:
+            out += ", SYSTEM=%s" % p.system
+        out += "\n"
+        if p.a is not None:
+            out += "%s,%s,%s" % tuple(p.a)
+            if p.b is not None:
+                out += ",%s,%s,%s" % tuple(p.b)  
+            out += "\n"
     return out
 
 
@@ -1256,11 +1280,16 @@ Script: %s
             writeSection(fil,p)
 
         GD.message("Writing global model properties")
-        
+            
         prop = self.prop.getProp('',attr=['amplitude'])
         if prop:
             GD.message("Writing amplitudes")
             writeAmplitude(fil,prop)
+
+        prop = self.prop.getProp('',attr=['orientation'])
+        if prop:
+            GD.message("Writing orientations")
+            fil.write(outOrientation(prop))
 
         prop = self.prop.getProp('',attr=['surftype'])
         if prop:
