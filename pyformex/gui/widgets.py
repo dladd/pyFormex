@@ -1187,6 +1187,8 @@ class InputDialog(QtGui.QDialog):
         if parent is None:
             parent = GD.GUI
         QtGui.QDialog.__init__(self,parent)
+        if flags is not None:
+            self.setWindowFlags(flags)
         if caption is None:
             caption = 'pyFormex-dialog'
         self.setWindowTitle(str(caption))
@@ -1229,7 +1231,7 @@ class InputDialog(QtGui.QDialog):
         return self.result() == TIMEOUT
 
 
-    def show(self,timeout=None,timeoutfunc=None):
+    def show(self,timeout=None,timeoutfunc=None,modal=False):
         """Show the dialog.
 
         For a non-modal dialog, the user has to call this function to
@@ -1242,6 +1244,7 @@ class InputDialog(QtGui.QDialog):
         self.fields[0].input.setFocus()
         self.status = None
 
+        self.setModal(modal)
         QtGui.QDialog.show(self)
 
         if timeout is None:
@@ -1330,7 +1333,7 @@ class InputDialog(QtGui.QDialog):
         if self._pos is not None:
             self.restoreGeometry(self._pos)
             
-        self.show(timeout)
+        self.show(timeout,modal=True)
         #GD.debug("WAITING FOR EVENTS")
         self.exec_()
         #GD.debug("GOT A RESULT")
