@@ -243,6 +243,8 @@ def outFrameSection(el,setname):
         extra += ', DENSITY=%s' % float(el.density)
     if el.yield_stress:
             extra += ', PLASTIC DEFAULTS, YIELD STRESS=%s' % float(el.yield_stress)
+    if el.shear_modulus is None and el.poisson_ratio is not None:
+        el.shear_modulus = el.young_modulus / 2. / (1.+float(el.poisson_ratio))
 
     sectiontype = el.sectiontype.upper()
     out += "*FRAME SECTION, ELSET=%s, SECTION=%s%s\n" % (setname,sectiontype,extra)
