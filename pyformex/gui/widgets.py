@@ -464,7 +464,10 @@ def getColor(col=None,caption=None):
         col = QtGui.QColor.fromRgb(*col)
     else:
         col = QtGui.QColor(col)
-    col = QtGui.QColorDialog.getColor(col)
+    dia = QtGui.QColorDialog
+    #myButton = QtGui.QPushButton('MY')
+    #dia.layout()
+    col = dia.getColor(col)
     if col.isValid():
         return str(col.name())
     else:
@@ -1131,7 +1134,7 @@ class InputDialog(QtGui.QDialog):
     The input dialog can be modal or non-modal dialog.
     """
     
-    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None):
+    def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False):
         """Creates a dialog which asks the user for the value of items.
 
         Each item in the 'items' list is a tuple holding at least the name
@@ -1206,9 +1209,18 @@ class InputDialog(QtGui.QDialog):
             actions = [('CANCEL',),('OK',)]
             default = 'OK'
         but = dialogButtons(self,actions,default)
-        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
         form.addLayout(but)
-        self.setLayout(form)
+        if scroll:
+            # This is experimental !!!
+            self.child = QtGui.QWidget()
+            self.child.setLayout(form)
+            self.scroll = QtGui.QScrollArea(self)
+            self.scroll.setWidget(self.child)
+            self.scroll.setSizePolicy(QtGui.QSizePolicy.MinimumExpanding,QtGui.QSizePolicy.MinimumExpanding)
+            self.scroll.resize(GD.GUI.width()/2,GD.GUI.height())
+        else:
+            self.setLayout(form)
+        self.connect(self,QtCore.SIGNAL("accepted()"),self.acceptData)
         
 
     def __getitem__(self,name):

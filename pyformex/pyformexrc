@@ -100,6 +100,8 @@ wheelzoomfactor = 0.25  # enlargement factor for the wheelzoom
 dynazoom = ['area','dolly']     # preferred zoom technique ('area', 'dolly', 'lens' or 'none')
 wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 
+plot2d = 'gnuplot'
+
 [input]
 timeout = -1         # never timeout
 

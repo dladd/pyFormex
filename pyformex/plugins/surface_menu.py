@@ -1,4 +1,3 @@
-#!/usr/bin/env pyformex
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
@@ -25,7 +24,7 @@
 
 """surface_menu.py
 
-STL plugin menu for pyFormex.
+Surface operations plugin menu for pyFormex.
 """
 
 import pyformex as GD
@@ -34,7 +33,7 @@ from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
-from plugins import formex_menu,surface_abq
+from plugins import plot2d,formex_menu,surface_abq
 import simple
 from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
@@ -368,7 +367,11 @@ SelectableStatsValues = {
     'Number of connected elements': (TriSurface.nEdgeConnected,True),
     }
 
+def showHistogram(key,val,cumulative):
+    y,x = plot2d.createHistogram(val,cumulative=cumulative)
+    return plot2d.showHistogram(x,y,key)
 
+    
 def showStatistics():
     S = selection.check(single=True)
     if S:
@@ -1153,30 +1156,6 @@ def boolean():
             #selection.draw()
 
 
-################### dependent on gnuplot ####################
-
-
-
-def showHistogram(txt,val,cumulative=False):
-    if not utils.hasModule('gnuplot'):
-        error("You do not have the Python Gnuplot module installed.\nI can not draw the requested plot.")
-        return
-        
-    import Gnuplot
-
-    y,x = histogram(val)
-    #hist = column_stack([hist[1],hist[0]])
-    if cumulative:
-        y = y.cumsum()
-    data = Gnuplot.Data(x,y,
-                        title=txt,
-                        with='histeps')  # boxes?
-    g = Gnuplot.Gnuplot(persist=1)
-    g.title('Histogram of %s' % txt)
-    #g('set boxwidth 1')
-    g.plot(data)
-
-
     
 ################### menu #################
 
@@ -1295,8 +1274,5 @@ if __name__ == "draw":
     # If executed as a pyformex script
     close_menu()
     show_menu()
-    
-elif __name__ == "__main__":
-    print __doc__
 
 # End
