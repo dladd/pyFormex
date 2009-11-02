@@ -1199,10 +1199,28 @@ class InputDialog(QtGui.QDialog):
         self.results = {}
         self._pos = None
         form = QtGui.QVBoxLayout()
-        for item in items:
-            line = inputAnyOld(item,parent=self)
-            form.addLayout(line)
-            self.fields.append(line)
+
+        if isinstance(items,dict):
+            # add the input tab pages
+            tab = QtGui.QTabWidget()
+            for page in items:
+                w = QtGui.QWidget()
+                f = QtGui.QVBoxLayout()
+                # add the items to the tab page
+                for item in items[page]:
+                    line = inputAnyOld(item,parent=self)
+                    f.addLayout(line)
+                    self.fields.append(line)
+                w.setLayout(f)
+                tab.addTab(w,page)
+            form.addWidget(tab)
+
+        else:
+            # add the items directly
+            for item in items:
+                line = inputAnyOld(item,parent=self)
+                form.addLayout(line)
+                self.fields.append(line)
 
         # add the action buttons
         if actions is None:
