@@ -33,6 +33,8 @@ Each task can have the following keys:
       sta: PARTIAL
       rem: Done via external 'gts': transform to GTS format
       Should be implemented as C function 
+
+   - Final surface format ??
       
    - Expand the Abaqus exporter:
       
@@ -67,12 +69,17 @@ Each task can have the following keys:
       
    - Add an interactive command window to the GUI
       
+   - Add an interactive Python aware editor widget
+      
    - Generalize the timeout to all dialogs
       A 'timeout' branch was created for experiments
       Need work for: non-modal dialogs, pause()
       
    - Copy viewport defaults to newly added viewports
       sta: TODO
+
+   - Fix all docstrings for the sphinx system
+
       
       
 * Release 0.9 :

@@ -263,7 +263,7 @@ class PolyLine(Curve):
     def atLength(self, div):
         """Returns the parameter values for relative curve lengths div.
         
-        'div' is a list of relative curve lengths (from 0.0 to 1.0).
+        ``div`` is a list of relative curve lengths (from 0.0 to 1.0).
         As a convenience, an single integer value may be specified,
         in which case the relative curve lengths are found by dividing
         the interval [0.0,1.0] in the specified number of subintervals.
@@ -376,17 +376,19 @@ class BezierSpline(Curve):
 #
 
 class CardinalSpline(BezierSpline):
-    """A class representing a cardinal spline."""
+    """A class representing a cardinal spline.
+
+    Create a natural spline through the given points.
+
+    The Cardinal Spline with given tension is a Bezier Spline with curl
+    :math: `curl = ( 1 - tension) / 3`
+    The separate class name is retained for compatibility and convenience. 
+    See CardinalSpline2 for a direct implementation (it misses the end
+    intervals of the point set).
+    """
 
     def __init__(self,pts,tension=0.0,closed=False):
-        """Create a natural spline through the given points.
-
-        The Cardinal Spline with given tension is a Bezier Spline with curl
-        :math: `curl = ( 1 - tension) / 3`
-        The separate class name is retained for compatibility and convenience. 
-        See CardinalSpline2 for a direct implementation (it misses the end
-        intervals of the point set).
-        """
+        """Create a natural spline through the given points."""
         BezierSpline.__init__(self,pts,curl=(1.-tension)/3.,closed=closed)
 
 

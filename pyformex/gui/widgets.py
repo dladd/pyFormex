@@ -1211,6 +1211,7 @@ class InputDialog(QtGui.QDialog):
                     line = inputAnyOld(item,parent=self)
                     f.addLayout(line)
                     self.fields.append(line)
+                f.addStretch()
                 w.setLayout(f)
                 tab.addTab(w,page)
             form.addWidget(tab)
@@ -1512,7 +1513,7 @@ class TableDialog(QtGui.QDialog):
             parent = GD.GUI
         QtGui.QDialog.__init__(self,parent)
         if caption is None:
-            caption = 'pyFormex-dialog'
+            caption = 'pyFormex-table'
         self.setWindowTitle(str(caption))
         form = QtGui.QVBoxLayout()
         if tab:

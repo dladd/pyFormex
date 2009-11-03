@@ -2,11 +2,11 @@
 .. pyformex documentation master file
 
 .. include:: defines.inc
-.. include:: ../website/src/links.inc
+.. include:: links.inc
 
-========================
+======================
 pyFormex documentation
-========================
+======================
 
 This is the pyFormex |release| documentation, last updated on |today|.
 

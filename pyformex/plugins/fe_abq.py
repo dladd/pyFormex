@@ -79,12 +79,11 @@ def esetName(p):
 
 def writeHeading(fil, text=''):
     """Write the heading of the Abaqus input file."""
-    head = """**  Abaqus input file created by %s
-**  %s (%s)
+    head = """**  Abaqus input file created by %s (%s)
 **
 *HEADING
 %s
-""" % (GD.Version,GD.Copyright,GD.Url,text)
+""" % (GD.Version,GD.Url,text)
     fil.write(head)
 
 

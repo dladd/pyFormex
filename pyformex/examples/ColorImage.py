@@ -34,18 +34,20 @@ from gui.imageColor import *
 
 flat()
 lights(False)
+transparent(False)
+view('front')
 
 filename = getcfg('datadir')+'/butterfly.png'
 image = None
 scaled_image = None
-w,h = 400,400
+w,h = 200,200
 
 def selectFile():
     """Select an image file."""
     global filename
     filename = askFilename(filename,filter=utils.fileDescription('img'),multi=False,exist=True)
     if filename:
-        currentDialog().updateData({'Image File':filename})
+        currentDialog().updateData({'filename':filename})
         loadImage()
 
 
@@ -71,7 +73,7 @@ def loadImage():
 
 
 res = askItems([
-    ('filename',filename,{'buttons':[('Select File',selectFile)]}),
+    ('filename','',{'buttons':[('Select File',selectFile)]}),
     ('nx',w,{'text':'width'}),
     ('ny',h,{'text':'height'}),
     ])
@@ -79,7 +81,6 @@ res = askItems([
 if not res:
     exit()
 
-print res
 
 globals().update(res)
 
@@ -89,30 +90,26 @@ if image is None:
 if image is None:
     exit()
 
+# Create the colors
+color,colortable = image2glcolor(image.scaled(nx,ny))
+
 # Create a 2D grid of nx*ny elements
 F = Formex(mpattern('123')).replic2(nx,ny).centered()
 
 # Create some transformex grids
 R = float(nx)/pi
 L = float(ny)
-print R,L
 F1 = F.translate(2,R)
 F2 = F1.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1).setProp(1)
 F3 = F1.projectOnCylinder(2*R,1).setProp(2)
 F4 = F1.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1).setProp(3)
 
 G = [F1,F2,F3,F4]
-for F in G:
-    print F.center(),F.bbox()
-
-# Create the colors
-color,colortable = image2glcolor(image.scaled(nx,ny))
 
 nvp = len(G)
 layout(nvp)
 for i,F in enumerate(G):
     viewport(i)
-    flat()
     clear()
     draw(F,color=color,colormap=colortable)
     drawtext('Created with pyFormex',10,10)
