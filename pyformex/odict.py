@@ -34,21 +34,21 @@ class ODict(dict):
     This is a dictionary that keeps the keys in order.
     The default order is the insertion order. The current order can be
     changed at any time.
+
+    The :class:`ODict` can be initialized with a Python dict or another
+    :class:`ODict` object. If a plain Python dict is used, the resulting
+    order is undefined.
     """
 
     def __init__(self,data={}):
-        """Create a new ODict instance.
-
-        The ODict can be initialized with a Python dict or an ODict.
-        The order after insertion is indeterminate if a plain dict is used.
-        """
-        dict.__init__(self,data)
+        """Create a new ODict instance."""
         if type(data) is ODict:
             self._order = data._order
         elif type(data) is list or type(data) is tuple:
             self._order = [ i[0] for i in data ]
         else:
             self._order = dict.keys(self)
+        dict.__init__(self,data)
 
 
     def __repr__(self):
@@ -125,7 +125,24 @@ class ODict(dict):
     def items(self):
         """Return the key,value pairs in order of the keys."""
         return [(k,self[k]) for k in self._order]
-    
+ 
+
+    def __reduce__(self):
+        state = (dict(self), self.__dict__)
+        return (__newobj__, (self.__class__,), state)
+
+
+    def __setstate__(self,state):
+        if type(state) == tuple:
+            self.update(state[0])
+            self.__dict__.update(state[1])
+        elif type(state) == dict:
+            #self.__dict__['_default_'] = state.pop('_default_')
+            self.update(state)
+
+
+def __newobj__(cls, *args):
+    return cls.__new__(cls, *args)
 
 
 class KeyedList(ODict):

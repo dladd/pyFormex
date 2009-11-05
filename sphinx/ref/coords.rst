@@ -13,8 +13,12 @@
 
 .. automodule:: coords
    :synopsis: A structured collection of 3D coordinates.
-   :members:
+   :members: bbox, coordsmethod
    
+   .. autoclass:: Coords(data=None,dtyp=Float,copy=False)
+      :members:
+
+
 .. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
 
 .. End

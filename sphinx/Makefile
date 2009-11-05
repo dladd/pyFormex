@@ -16,12 +16,13 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d _build/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-COREMODULES= arraytools coords connectivity formex mydict odict olist project \
+COREMODULES= arraytools connectivity formex mydict odict olist project \
   script simple utils
 GUIMODULES= actors colors colorscale decors draw image marks widgets 
 PLUGINMODULES= curve fe inertia isopar lima mesh \
   properties section2d surface turtle units
 AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
+NOAUTOREF = coords
 
 MANDOCS= _build/html/*
 RSYNC= rsync -av -e ssh

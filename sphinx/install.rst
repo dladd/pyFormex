@@ -6,11 +6,9 @@
 
 .. _cha:install:
 
-*********************
+*******************
 Installing pyFormex
-*********************
-
-.. warning:: This document is still under construction! 
+*******************
 
 .. topic:: Abstract
 
@@ -173,7 +171,7 @@ for all functions in the library), using the library will dramatically speed up 
 
 Installing prerequisites on `Debian GNU/Linux`_
 ...............................................
-Debian users should just have to install the packages ``python-numpy`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` and ``python-qt4-gl`` as dependencies. Also, for compiling the accelearation library, you should install 
+Debian users should just have to install the packages ``python-numpy`` and  ``python-qt4-gl``. The latter will install ``python-qt4`` and ``python-qt4-gl`` as dependencies. Also, for compiling the acceleration library, you should install 
 ``python-dev``, ``python-qt4-dev`` and ``libgl1-mesa-dev``.
 
 Other optional packages that might be useful are ``admesh``, ``python-scipy``,
@@ -396,7 +394,7 @@ We recommend to use `dd for Windows`_. You can then proceed as follows.
   you've got the correct harddisk designation (e.g. ``harddisk1``).
 
 * Write the image to the USB stick with the command, substituting the
-  harddisk designation found above.
+  harddisk designation found above::
 
    dd if=c:\download\ddwrite\bumpix-0.4-b1.img of=\\?\device\harddisk1\partition0 bs=1M --progress
 

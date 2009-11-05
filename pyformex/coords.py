@@ -24,10 +24,9 @@
 ##
 """A structured collection of 3D coordinates.
 
-This module defines the Coords class, which is the basic data structure
-in pyFormex to store coordinates of points in a 3D space.
+The :mod:`coords` module defines the :class:`Coords` class, which is the basic data structure in pyFormex to store coordinates of points in a 3D space.
 
-The :mod:`coords` module implements a data class for storing large sets of 3D coordinates and provides a extensive set of methods for transforming these coordinates. The :class:`Coords` class is used by other classes, such as Formex and Surface, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the Coords class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the Coords class directly as well.
+This module implements a data class for storing large sets of 3D coordinates and provides an extensive set of methods for transforming these coordinates. The :class:`Coords` class is used by other classes, such as Formex and Surface, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the :class:`Coords` class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the :class:`Coords` class directly as well.
 """
 
 from arraytools import *
@@ -37,7 +36,7 @@ from lib import misc
 def bbox(objects):
     """Compute the bounding box of a list of objects.
 
-    All the objects in list should have the :method:`bbox` method.
+    All the objects in list should have the `bbox` method.
     The result is the eclosing bbox of all the objects in the list.
     Objects returning a None bbox are ignored.
     """
@@ -50,15 +49,15 @@ def bbox(objects):
 
 
 def coordsmethod(f):
-    """Decorator to apply a Coords method to a 'coords' attribute.
+    """Decorator to apply a :class:`Coords` method to a 'coords' attribute.
 
     Many classes that model geometry use a 'coords' attribute to store
-    the coordinates. This decorator can be used to apply the Coords method
-    to that attribute, thus making the Coords transformations available
+    the coordinates. This decorator can be used to apply the :class:`Coords` method
+    to that attribute, thus making the :class:`Coords` transformations available
     to other classes.
 
     The following lines show how to use the decorator.
-    These lines make the 'scale' method of the Coords class available in
+    These lines make the 'scale' method of the :class:`Coords` class available in
     your class, with the same arguments::
     
        @coordsmethod
@@ -83,35 +82,39 @@ def coordsmethod(f):
 #########################
 #
 class Coords(ndarray):
-    """A structured collection of 3D coordinates.
+    """A structured collection of points in a 3D cartesian space.
     
-    The :class:`Coords` class is the basic data structure used throughout pyFormex
-    to store coordinates of points in a 3D space.
-
-    The :class:`Coords` class is used by other classes, such as :class:`Formex`
+    The :class:`Coords` class is the basic data structure used throughout
+    pyFormex to store coordinates of points in a 3D space.
+    It is used by other classes, such as :class:`Formex`
     and :class:`Surface`, which thus inherit the same transformation
     capabilities. Applications will mostly use the higher level
     classes, which usually have more elaborated consistency checking
     and error handling.
     
-    :class:`Coords` is implemented as a floating point numpy (Numerical Python) array
+    :class:`Coords` is implemented as a float type :class:`numpy.ndarray`
     whose last axis has a length equal to 3.
-    Each set of 3 values along the last axis thus represents a single point
-    in 3D cartesian space.
+    Each set of 3 values along the last axis represents a single point
+    in 3D cartesian space. The float datatype is only checked at creation
+    time. It is the responsibility
+    of the user to keep this consistent throughout the lifetime of the object.
+    a :class:`Coords` object inherits all the methods of the :class:`numpy.ndarray`.
 
-    The datatype should be a float type; the default is :data:`Float`, which is
-    equivalent to :data:`numpy.float32`.
-    These restrictions are currently only checked at creation time.
-    It is the responsibility of the user to keep consistency. 
+    `data`: If specified, data should evaluate to an (...,3) shaped array
+    of floats. If no data are given, a single point (0.,0.,0.) will be created.
+
+    `dtyp`: The datatype to be used. It not specified, the datatype of `data`
+    is used, or the default :data:`Float` (which is equivalent to
+    :data:`numpy.float32`).
+
+    `copy`: If ``True``, the data are copied. By default, the original data are
+    used if possible, e.g. if a correctly shaped and typed
+    :class:`numpy.ndarray` is specified.
     """
             
     def __new__(cls, data=None, dtyp=Float, copy=False):
-        """Create a new :class:`Coords` instance.
+        """Create a new instance of :class:`Coords`.
 
-        If no data are given, a single point (0.,0.,0.) will be created.
-        If specified, data should evaluate to an (...,3) shaped array of floats.
-        If ``copy==True``, the data are copied.
-        If no dtyp is given that of data are used, or :data:`Float` by default.
         """
         if data is None:
             data = zeros((3,),dtype=Float)
@@ -145,7 +148,7 @@ class Coords(ndarray):
     # General
 
     def points(self):
-        """Return the data as a simple set of points.
+        """Returns the :class:`Coords` object as a simple set of points.
 
         This reshapes the array to a 2-dimensional array, flattening
         the structure of the points.
@@ -153,10 +156,10 @@ class Coords(ndarray):
         return self.reshape((-1,3))
     
     def pshape(self):
-        """Return the shape of the points array.
+        """Returns the shape of the :class:`Coords` object.
 
-        This is the shape of the Coords array with last axis removed.
-        The full shape of the Coords array can be obtained from
+        This is the shape of the `NumPy`_ array with the last axis removed.
+        The full shape of the :class:`Coords` array can be obtained from
         its shape attribute.
         """
         return self.shape[:-1]
@@ -183,8 +186,9 @@ class Coords(ndarray):
 
         The bounding box is the smallest rectangular volume in global
         coordinates, such at no points are outside the box.
-        It is returned as a Coords object with shape (2,3): the first row
-        holds the minimal coordinates and the second row the maximal.
+        It is returned as a :class:`Coords` object with shape (2,3):
+        the first point holds the minimal coordinates and the second point
+        has the maximal ones.
         """
         if self.size > 0:
             s = self.points()
@@ -192,28 +196,29 @@ class Coords(ndarray):
         else:
             return None
 
-    def center(self):
-        """Return the center of the Coords.
 
-        The center of a Coords is the center of its bbox().
-        The return value is a (3,) shaped Coords object.
+    def center(self):
+        """Return the center of the :class:`Coords`.
+
+        The center of a :class:`Coords` is the center of its bbox().
+        The return value is a (3,) shaped :class:`Coords` object.
         """
         X0,X1 = self.bbox()
         return 0.5 * (X0+X1)
 
 
     def centroid(self):
-        """Return the centroid of the Coords.
+        """Return the centroid of the :class:`Coords`.
 
-        The centroid of a Coords is the point whose coordinates
+        The centroid of a :class:`Coords` is the point whose coordinates
         are the mean values of all points.
-        The return value is a (3,) shaped Coords object.
+        The return value is a (3,) shaped :class:`Coords` object.
         """
         return self.points().mean(axis=0)
 
 
     def sizes(self):
-        """Return the sizes of the Coords.
+        """Return the sizes of the :class:`Coords`.
 
         Return an array with the length of the bbox along the 3 axes.
         """
@@ -222,7 +227,7 @@ class Coords(ndarray):
 
 
     def dsize(self):
-        """Return an estimate of the global size of the Coords.
+        """Return an estimate of the global size of the :class:`Coords`.
 
         This estimate is the length of the diagonal of the bbox()."""
         X0,X1 = self.bbox()
@@ -230,10 +235,10 @@ class Coords(ndarray):
 
     
     def bsphere(self):
-        """Return the diameter of the bounding sphere of the Coords.
+        """Return the diameter of the bounding sphere of the :class:`Coords`.
 
         The bounding sphere is the smallest sphere with center in the
-        center() of the Coords, and such that no points of the Coords
+        center() of the :class:`Coords`, and such that no points of the :class:`Coords`
         are lying outside the sphere.
         """
         return self.distanceFromPoint(self.center()).max()
@@ -295,11 +300,11 @@ class Coords(ndarray):
     def test(self,dir=0,min=None,max=None,atol=0.):
         """Flag points having coordinates between min and max.
 
-        This function is very convenient in clipping a Coords in a specified
+        This function is very convenient in clipping a :class:`Coords` in a specified
         direction. It returns a 1D integer array flagging (with a value 1 or
         True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
-        Or directly use clip() or cclip() to create the clipped Coords.
+        Or directly use clip() or cclip() to create the clipped :class:`Coords`.
         
         The test plane can be define in two ways depending on the value of dir.
         If dir == 0, 1 or 2, it specifies a global axis and min and max are
@@ -336,7 +341,7 @@ class Coords(ndarray):
 
 
     def fprint(self,fmt="%10.3e %10.3e %10.3e"):
-        """Formatted printing of a Coords.
+        """Formatted printing of a :class:`Coords`.
 
         The supplied format should contain 3 formatting sequences for the
         three coordinates of a point.
@@ -392,7 +397,7 @@ class Coords(ndarray):
     
 
     def translate(self,vector,distance=None,inplace=False):
-        """Translate a Coords object.
+        """Translate a :class:`Coords` object.
 
         The translation vector can be specified in one of the following ways:
         - an axis number (0,1,2),
@@ -401,7 +406,7 @@ class Coords(ndarray):
         If an axis number is given, a unit vector in the direction of the
         specified axis will be used.
         If an array of translation vectors is given, it should be
-        broadcastable to the size of the Coords array.
+        broadcastable to the size of the :class:`Coords` array.
         If a distance value is given, the translation vector is multiplied
         with this value before it is added to the coordinates.
 
@@ -487,10 +492,13 @@ class Coords(ndarray):
     
 
     def affine(self,mat,vec=None,inplace=False):
-        """Return a general affine transform of the Coords.
+        """Returns a general affine transform of the :class:`Coords` object.
 
-        The returned Coords has coordinates given by xorig * mat + vec,
-        where mat is a 3x3 matrix and vec a length 3 list.
+        `mat`: a 3x3 float matrix
+        
+        `vec`: a length 3 list or array of floats
+        
+        The returned object has coordinates given by ``self * mat + vec``.
         """
         if inplace:
             out = self
@@ -631,7 +639,7 @@ class Coords(ndarray):
 
 
     def bump1(self,dir,a,func,dist):
-        """Return a Coords with a one-dimensional bump.
+        """Return a :class:`Coords` with a one-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
         a is the point that forces the bumping;
@@ -646,7 +654,7 @@ class Coords(ndarray):
 
     
     def bump2(self,dir,a,func):
-        """Return a Coords with a two-dimensional bump.
+        """Return a :class:`Coords` with a two-dimensional bump.
 
         dir specifies the axis of the modified coordinates;
         a is the point that forces the bumping;
@@ -670,7 +678,7 @@ class Coords(ndarray):
     # the distance and a point for defining the intensity (3-D) of the
     # modification
     def bump(self,dir,a,func,dist=None):
-        """Return a Coords with a bump.
+        """Return a :class:`Coords` with a bump.
 
         A bump is a modification of a set of coordinates by a non-matching
         point. It can produce various effects, but one of the most common
@@ -711,7 +719,7 @@ class Coords(ndarray):
 
 
     def flare (self,xf,f,dir=[0,2],end=0,exp=1.):
-        """Create a flare at the end of a Coords block.
+        """Create a flare at the end of a :class:`Coords` block.
 
         The flare extends over a distance ``xf`` at the start (``end=0``) or end (``end=1``)
         in direction ``dir[0]`` of the coords block, and has a maximum amplitude of ``f``
@@ -741,7 +749,7 @@ class Coords(ndarray):
     # NEW implementation flattens coordinate sets to ease use of
     # complicated functions
     def newmap(self,func):
-        """Return a Coords mapped by a 3-D function.
+        """Return a :class:`Coords` mapped by a 3-D function.
 
         This is one of the versatile mapping functions.
         func is a numerical function which takes three arguments and produces
@@ -764,7 +772,7 @@ class Coords(ndarray):
 
 
     def map(self,func):
-        """Return a Coords mapped by a 3-D function.
+        """Return a :class:`Coords` mapped by a 3-D function.
 
         This is one of the versatile mapping functions.
         func is a numerical function which takes three arguments and produces
@@ -783,7 +791,7 @@ class Coords(ndarray):
 
 
     def map1(self,dir,func,x=None):
-        """Return a Coords where coordinate i is mapped by a 1-D function.
+        """Return a :class:`Coords` where coordinate i is mapped by a 1-D function.
 
         <func> is a numerical function which takes one argument and produces
         one result. The coordinate dir will be replaced by func(coord[x]).
@@ -848,7 +856,7 @@ class Coords(ndarray):
         i and j are lists of axis numbers or single axis numbers.
         replace ([0,1,2],[1,2,0]) will roll the axes by 1.
         replace ([0,1],[1,0]) will swap axes 0 and 1.
-        An optionally third argument may specify another Coords object to take
+        An optionally third argument may specify another :class:`Coords` object to take
         the coordinates from. It should have the same dimensions.
         """
         if other is None:
@@ -876,10 +884,10 @@ class Coords(ndarray):
 
 
     def projectOnSphere(self,radius=1.,center=[0.,0.,0.]):
-        """Project Coords on a sphere.
+        """Project :class:`Coords` on a sphere.
 
         The default sphere is a unit sphere at the origin.
-        The center of the sphere should not be part of the Coords.
+        The center of the sphere should not be part of the :class:`Coords`.
         """
         d = self.distanceFromPoint(center)
         s = radius / d
@@ -891,10 +899,10 @@ class Coords(ndarray):
 
 
     def projectOnCylinder(self,radius=1.,dir=0,center=[0.,0.,0.]):
-        """Project Coords on a cylinder with axis parallel to a global axis.
+        """Project :class:`Coords` on a cylinder with axis parallel to a global axis.
 
         The default cylinder has its axis along the x-axis and a unit radius.
-        No points of the Coords should belong to the axis..
+        No points of the :class:`Coords` should belong to the axis..
         """
         d = self.distanceFromLine(center,unitVector(dir))
         s = radius / d
@@ -927,7 +935,7 @@ class Coords(ndarray):
 
         This method finds the points that are very close and replaces them
         with a single point. The return value is a tuple of two arrays:
-        - the unique points as a Coords object,
+        - the unique points as a :class:`Coords` object,
         - an integer (nnod) array holding an index in the unique
         coordinates array for each of the original nodes. This index will
         have the same shape as the pshape() of the coords array.
@@ -1016,19 +1024,19 @@ class Coords(ndarray):
 
     @classmethod
     def concatenate(cls,L,**kargs):
-        """Concatenate a list of Coords object.
+        """Concatenate a list of :class:`Coords` object.
 
-        All Coords object in the list L should have the same shape
+        All :class:`Coords` object in the list L should have the same shape
         except for the length of the first axis.
         This function is equivalent to the numpy concatenate, but makes
-        sure the result is a Coords object.
+        sure the result is a :class:`Coords` object.
         """
         return Coords(concatenate(L,axis=0,**kargs))
 
 
     @classmethod
     def fromfile(*args):
-        """Read a Coords from file.
+        """Read a :class:`Coords` from file.
 
         This convenience function uses the numpy fromfile function to read
         the coordinates from file.
@@ -1041,15 +1049,15 @@ class Coords(ndarray):
     
     @classmethod
     def interpolate(clas,F,G,div):
-        """Create interpolations between two Coords.
+        """Create interpolations between two :class:`Coords`.
 
-        F and G are two Coords with the same shape.
+        F and G are two :class:`Coords` with the same shape.
         v is a list of floating point values.
         The result is the concatenation of the interpolations of F and G at all
         the values in div.
-        An interpolation of F and G at value v is a Coords H where each
+        An interpolation of F and G at value v is a :class:`Coords` H where each
         coordinate Hijk is obtained from:  Hijk = Fijk + v * (Gijk-Fijk).
-        Thus, a Coords interpolate(F,G,[0.,0.5,1.0]) will contain all points of
+        Thus, a :class:`Coords` interpolate(F,G,[0.,0.5,1.0]) will contain all points of
         F and G and all points with mean coordinates between those of F and G.
 
         As a convenience, if an integer is specified for div, it is taken as a
@@ -1057,7 +1065,7 @@ class Coords(ndarray):
         Thus, interpolate(F,G,n) is equivalent with
         interpolate(F,G,arange(0,n+1)/float(n))
 
-        The resulting Coords array has an extra axis (the first). Its shape is
+        The resulting :class:`Coords` array has an extra axis (the first). Its shape is
         (n,) + F.shape, where n is the number of divisions.
         """
         if F.shape != G.shape:
@@ -1098,7 +1106,7 @@ class Coords(ndarray):
 if __name__ == "__main__":
 
     def testX(X):
-        """Run some tests on Coords X."""
+        """Run some tests on:class:`Coords` X."""
 
         def prt(s,v):
             """Print a statement 's = v' and return v"""
