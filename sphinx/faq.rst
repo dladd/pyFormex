@@ -194,4 +194,20 @@ TRICKS
    this (on Debian: ``apt-get install libgl1-mesa-dev``).
 
 
+#. **Permission denied error when running calpy simulation**
+
+  If you have no write permission in your current working directory,
+  running a calpy simulation will result in an error like this::
+
+    fil = file(self.tempfilename,'w')
+    IOError
+    : 
+    [Errno 13] Permission denied: 'calpy.tmp.part-0'
+
+  You can fix this by changing your current working directory to a path
+  where you have write permission (e.g. your home directory). 
+  You can do this using the :menuselection:`File->Change workdir` menu option.
+  The setting will be saved when you leave pyFormex (but other scripts
+  might change the setting again).
+
 .. End

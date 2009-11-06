@@ -39,16 +39,15 @@ class ODict(dict):
     :class:`ODict` object. If a plain Python dict is used, the resulting
     order is undefined.
     """
-
     def __init__(self,data={}):
         """Create a new ODict instance."""
+        dict.__init__(self,data)
         if type(data) is ODict:
             self._order = data._order
         elif type(data) is list or type(data) is tuple:
             self._order = [ i[0] for i in data ]
         else:
             self._order = dict.keys(self)
-        dict.__init__(self,data)
 
 
     def __repr__(self):
@@ -94,6 +93,9 @@ class ODict(dict):
                 if k in self._order:
                     self._order.remove(k)
             self._order += data._order
+        else:
+            print data
+            self._order.extend(data.keys())
 
 
     def __add__(self,data):
