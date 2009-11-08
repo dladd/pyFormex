@@ -1,20 +1,26 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.inertia
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- inertia
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.inertia:
+.. _sec:ref-inertia:
 
-:mod:`plugins.inertia` --- inertia.py
-=====================================
+:mod:`inertia` --- inertia.py
+=============================
 
-
-.. automodule:: plugins.inertia
+.. automodule:: inertia
    :synopsis: inertia.py
-   :members:
+
+
+   .. autofunction:: centroids(X)
+   .. autofunction:: center(X,mass=None)
+   .. autofunction:: inertia(X,mass=None)
+   .. autofunction:: principal(inertia)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

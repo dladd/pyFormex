@@ -22,7 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""image_numpy
+"""Convert bitmap images into numpy arrays.
 
 This module contains functions to convert bitmap images into numpy
 arrays and vice versa.

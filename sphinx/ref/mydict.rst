@@ -1,6 +1,6 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- mydict
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
@@ -10,11 +10,34 @@
 :mod:`mydict` --- 
 ==================
 
-
 .. automodule:: mydict
    :synopsis: 
-   :members:
+
+
+
+   .. autoclass:: Dict
+
+
+      Dict objects have the following methods:
+
+      .. automethod:: update(data={})
+      .. automethod:: get(key,default)
+      .. automethod:: setdefault(key,default)
+
+   .. autoclass:: CDict
+
+
+      CDict objects have the following methods:
+
+
+   Functions defined in the mydict module:
+
+   .. autofunction:: cascade(d,key)
+   .. autofunction:: returnNone(key)
+   .. autofunction:: raiseKeyError(key)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

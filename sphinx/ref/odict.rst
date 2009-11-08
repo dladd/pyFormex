@@ -1,6 +1,6 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- odict
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
@@ -10,11 +10,34 @@
 :mod:`odict` --- Specialized dictionary type structures.
 ========================================================
 
-
 .. automodule:: odict
    :synopsis: Specialized dictionary type structures.
-   :members:
+
+
+
+   .. autoclass:: ODict
+
+
+      ODict objects have the following methods:
+
+      .. automethod:: update(data={})
+      .. automethod:: sort(keys)
+      .. automethod:: keys()
+      .. automethod:: values()
+      .. automethod:: items()
+
+   .. autoclass:: KeyedList
+
+
+      KeyedList objects have the following methods:
+
+      .. automethod:: items()
+
+   Functions defined in the odict module:
+
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

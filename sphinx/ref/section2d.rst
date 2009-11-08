@@ -1,20 +1,35 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.section2d
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- section2d
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.section2d:
+.. _sec:ref-section2d:
 
-:mod:`plugins.section2d` --- Some functions operating on 2D structures.
-=======================================================================
+:mod:`section2d` --- Some functions operating on 2D structures.
+===============================================================
 
-
-.. automodule:: plugins.section2d
+.. automodule:: section2d
    :synopsis: Some functions operating on 2D structures.
-   :members:
+
+
+
+   .. autoclass:: planeSection
+
+
+      planeSection objects have the following methods:
+
+      .. automethod:: sectionChar()
+
+   Functions defined in the section2d module:
+
+   .. autofunction:: sectionChar(F)
+   .. autofunction:: extendedSectionChar(S)
+   .. autofunction:: princTensor2D(Ixx,Iyy,Ixy)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

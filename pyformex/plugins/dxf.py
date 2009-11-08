@@ -103,7 +103,10 @@ class DxfExporter(object):
 
 
 def exportDXF(filename,F):
-    """Export a Formex to a DXF file"""
+    """Export a Formex to a DXF file
+
+    Currently, only plex-2 Formices can be exported to DXF.
+    """
     if F.nplex() != 2:
         raise ValueError,"Can only export plex-2 Formices to DXF"
     dxf = DxfExporter(filename)

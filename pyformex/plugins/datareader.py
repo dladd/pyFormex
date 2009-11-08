@@ -67,12 +67,15 @@ def readData(s,type,strict=False):
     the returned list will correspond to the shortest of both and the surplus
     data or types are ignored, UNLESS the strict flag has been set, in which
     case a RuntimError is raised.
-    Example:
+    Example::
       readData('12, 13, 14.5e3, 12 inch, 1hr, 31kg ', ['int','float','kg','cm','s'])
-    returns
-     [12, 13.0, 14500.0, 30.48, 3600.0]
-    Prerequisites:
-    You need to have GNU 'units' installed for the unit conversion to work. 
+      
+    returns ``[12, 13.0, 14500.0, 30.48, 3600.0]``
+    
+    ..warning ::
+    
+    You need to have the GNU ``units`` command installed for the unit
+    conversion to work. 
     """
     import units,string
     out = []

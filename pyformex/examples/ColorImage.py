@@ -30,7 +30,7 @@ techniques = ['colors']
 
 """
 
-from gui.imageColor import *
+from gui.imagecolor import *
 
 flat()
 lights(False)

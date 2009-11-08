@@ -52,6 +52,7 @@ main pyformex path are considered to belong to the pyformex core functionality.
    ref/simple
    ref/project
    ref/utils
+   ref/elements
 
 
 |pyFormex| GUI modules
@@ -61,12 +62,18 @@ These modules are located under pyformex/gui.
 .. toctree::
    :maxdepth: 1
 
-   ref/colorscale
-   ref/image
    ref/widgets
+   ref/colorscale
    ref/actors
    ref/decors
    ref/marks
+   ref/gluttext
+   ref/canvas
+   ref/viewport
+   ref/camera
+   ref/image
+   ref/imagearray
+   ref/imagecolor
 
 
 |pyFormex| plugins
@@ -78,17 +85,31 @@ path, these modules are in no way different from other pyFormex modules.
 .. toctree::
    :maxdepth: 1
 
+   ref/geometry
    ref/curve
-   ref/fe
-   ref/inertia
-   ref/isopar
-   ref/lima
-   ref/mesh
-   ref/properties
-   ref/section2d
    ref/surface
-   ref/turtle
+   ref/isopar
+   ref/section2d
+   ref/inertia
    ref/units
+   ref/datareader
+   ref/mesh
+   ref/fe
+   ref/properties
+   ref/fe_abq
+   ref/fe_post
+   ref/postproc
+   ref/lima
+   ref/turtle
+   ref/dxf
+   ref/export
+   ref/tetgen
+   ref/tools
+   ref/objects
+..   ref/formex_menu
+..   ref/tools_menu
+..   ref/surface_menu
+..   ref/postproc_menu
 
    
 |pyFormex| tools
@@ -104,6 +125,12 @@ elsewhere.
    ref/olist
    ref/mydict
    ref/odict
+   ref/collection
+   ref/config
+   ref/flatkeydb
+   ref/sendmail
+   ref/timer
+   ref/misc
 
 .. End
 

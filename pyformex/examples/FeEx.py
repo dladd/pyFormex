@@ -375,6 +375,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     from calpy.arrayprint import aprint
     ############################
 
+    checkWorkdir()
+
     if model is None:
         warn()
         return

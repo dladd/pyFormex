@@ -21,14 +21,13 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""geometry.py: A class for operations on basic geometrical entities.
+"""Basic geometrical operations.
 
-(C) 2009 Benedict Verhegghe (benedict.verhegghe@dommel.be)
-I wrote this software in my free time, for my joy, not as a commissioned task.
-Any copyright claims made by my employer should therefore be considered void.
+This module defines some basic operations on simple geometrical entities
+such as lines, triangles, circles.
 """
 
-from pyformex.formex import *
+from formex import *
 
 
 def triangleCircumCircle(x):
@@ -58,7 +57,6 @@ def triangleCircumCircle(x):
     # Unit normals
     n = n / N.reshape(-1,1)
     return r,C,n
-    
 
 
 def lineIntersection(P1,D1,P2,D2,visual_debug=False):

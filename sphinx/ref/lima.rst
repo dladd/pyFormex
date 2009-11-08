@@ -1,20 +1,36 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.lima
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- lima
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.lima:
+.. _sec:ref-lima:
 
-:mod:`plugins.lima` --- Lindenmayer Systems
-===========================================
+:mod:`lima` --- Lindenmayer Systems
+===================================
 
-
-.. automodule:: plugins.lima
+.. automodule:: lima
    :synopsis: Lindenmayer Systems
-   :members:
+
+
+
+   .. autoclass:: Lima
+
+
+      Lima objects have the following methods:
+
+      .. automethod:: status()
+      .. automethod:: addRule(atom,product)
+      .. automethod:: translate(rule,keep=False)
+      .. automethod:: grow(ngen=1)
+
+   Functions defined in the lima module:
+
+   .. autofunction:: lima(axiom,rules,level,turtlecmds,glob=None)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

@@ -1,20 +1,34 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.turtle
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- turtle
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.turtle:
+.. _sec:ref-turtle:
 
-:mod:`plugins.turtle` --- Turtle graphics for pyFormex
-======================================================
+:mod:`turtle` --- Turtle graphics for pyFormex
+==============================================
 
-
-.. automodule:: plugins.turtle
+.. automodule:: turtle
    :synopsis: Turtle graphics for pyFormex
-   :members:
+
+
+   .. autofunction:: sind(arg)
+   .. autofunction:: cosd(arg)
+   .. autofunction:: reset()
+   .. autofunction:: push()
+   .. autofunction:: pop()
+   .. autofunction:: fd(d=None,connect=True)
+   .. autofunction:: mv(d=None)
+   .. autofunction:: ro(a)
+   .. autofunction:: go(p)
+   .. autofunction:: st(d)
+   .. autofunction:: an(a)
+   .. autofunction:: play(scr,glob=None)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

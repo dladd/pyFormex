@@ -86,19 +86,31 @@ Rad = 1.
 # Should we keep this in ???
 
 
-def sind(arg):
-    """Return the sin of an angle in degrees."""
-    return sin(arg*Deg)
+def sind(arg,angle_spec=Deg):
+    """Return the sin of an angle in degrees.
+
+    For convenience, this can also be used with an angle in radians,
+    by specifying ``angle_spec=Rad``.
+    """
+    return sin(arg*angle_spec)
 
 
-def cosd(arg):
-    """Return the cos of an angle in degrees."""
-    return cos(arg*Deg)
+def cosd(arg,angle_spec=Deg):
+    """Return the cos of an angle in degrees.
+
+    For convenience, this can also be used with an angle in radians,
+    by specifying ``angle_spec=Rad``.
+    """
+    return cos(arg*angle_spec)
 
 
-def tand(arg):
-    """Return the tan of an angle in degrees."""
-    return tan(arg*Deg)
+def tand(arg,angle_spec=Deg):
+    """Return the tan of an angle in degrees.
+
+    For convenience, this can also be used with an angle in radians,
+    by specifying ``angle_spec=Rad``.
+    """
+    return tan(arg*angle_spec)
 
 
 def dotpr (A,B,axis=-1):

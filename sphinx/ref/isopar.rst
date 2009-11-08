@@ -1,20 +1,36 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.isopar
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- isopar
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.isopar:
+.. _sec:ref-isopar:
 
-:mod:`plugins.isopar` --- Isoparametric transformations
-=======================================================
+:mod:`isopar` --- Isoparametric transformations
+===============================================
 
-
-.. automodule:: plugins.isopar
+.. automodule:: isopar
    :synopsis: Isoparametric transformations
-   :members:
+
+
+
+   .. autoclass:: Isopar
+
+
+      Isopar objects have the following methods:
+
+      .. automethod:: transform(X)
+      .. automethod:: transformFormex(F)
+
+   Functions defined in the isopar module:
+
+   .. autofunction:: build_matrix(atoms,x,y=0,z=0)
+   .. autofunction:: transformFormex(F,trf)
+   .. autofunction:: isopar(F,eltype,coords,oldcoords)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

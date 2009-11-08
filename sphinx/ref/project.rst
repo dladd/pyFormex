@@ -1,6 +1,6 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- project
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
@@ -10,11 +10,24 @@
 :mod:`project` --- project.py
 =============================
 
-
 .. automodule:: project
    :synopsis: project.py
-   :members:
+
+
+
+   .. autoclass:: Project
+
+
+      Project objects have the following methods:
+
+      .. automethod:: header_data()
+      .. automethod:: set_data_from_header(data)
+      .. automethod:: save()
+      .. automethod:: load()
+      .. automethod:: delete()
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

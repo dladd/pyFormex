@@ -1,20 +1,38 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.units
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- units
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.units:
+.. _sec:ref-units:
 
-:mod:`plugins.units` --- A Python wrapper for unit conversion of physical quantities.
-=====================================================================================
+:mod:`units` --- A Python wrapper for unit conversion of physical quantities.
+=============================================================================
 
-
-.. automodule:: plugins.units
+.. automodule:: units
    :synopsis: A Python wrapper for unit conversion of physical quantities.
-   :members:
+
+
+
+   .. autoclass:: UnitsSystem
+
+
+      UnitsSystem objects have the following methods:
+
+      .. automethod:: Add(un)
+      .. automethod:: Predefined(system)
+      .. automethod:: International()
+      .. automethod:: Engineering()
+      .. automethod:: Read(filename)
+      .. automethod:: Get(ent)
+
+   Functions defined in the units module:
+
+   .. autofunction:: convertUnits(From,To)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

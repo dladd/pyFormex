@@ -1,20 +1,132 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- gui.draw
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- draw
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-gui.draw:
+.. _sec:ref-draw:
 
-:mod:`gui.draw` --- Create 3D graphical representations.
-========================================================
+:mod:`draw` --- Create 3D graphical representations.
+====================================================
 
-
-.. automodule:: gui.draw
+.. automodule:: draw
    :synopsis: Create 3D graphical representations.
-   :members:
+
+
+   .. autofunction:: closeGui()
+   .. autofunction:: ask(question,choices=None,default=None)
+   .. autofunction:: ack(question)
+   .. autofunction:: error(message,actions=['OK'])
+   .. autofunction:: warning(message,actions=['OK'])
+   .. autofunction:: showInfo(message,actions=['OK'])
+   .. autofunction:: showText(text,type=None,actions=['OK'])
+   .. autofunction:: showFile(filename)
+   .. autofunction:: askItems(items,caption=None,timeout=None)
+   .. autofunction:: currentDialog()
+   .. autofunction:: dialogAccepted()
+   .. autofunction:: dialogRejected()
+   .. autofunction:: dialogTimedOut()
+   .. autofunction:: askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=True)
+   .. autofunction:: askNewFilename(cur=None,filter="All files (*.*)")
+   .. autofunction:: askDirname(cur=None,change=True)
+   .. autofunction:: checkWorkdir()
+   .. autofunction:: log(s)
+   .. autofunction:: draw(F,view=None,bbox=None,color='prop',colormap=None,alpha=0.5,mode=None,linewidth=None,shrink=None,marksize=None,wait=True,clear=None,allviews=False)
+   .. autofunction:: setDrawOptions(d)
+   .. autofunction:: showDrawOptions()
+   .. autofunction:: askDrawOptions(d={})
+   .. autofunction:: reset()
+   .. autofunction:: resetAll()
+   .. autofunction:: shrink(v)
+   .. autofunction:: setView(name,angles=None)
+   .. autofunction:: drawVectors(P,v,d=1.0,color='red')
+   .. autofunction:: drawPlane(P,N,size)
+   .. autofunction:: drawMarks(X,M,color='black',leader='')
+   .. autofunction:: drawNumbers(F,color='black',trl=None,offset=0,leader='')
+   .. autofunction:: drawVertexNumbers(F,color='black',trl=None)
+   .. autofunction:: drawText3D(P,text,color='black',font=None,size=None)
+   .. autofunction:: drawViewportAxes3D(pos,color=None)
+   .. autofunction:: drawBbox(A)
+   .. autofunction:: drawActor(A)
+   .. autofunction:: undraw(itemlist)
+   .. autofunction:: focus(object)
+   .. autofunction:: view(v,wait=False)
+   .. autofunction:: setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0])
+   .. autofunction:: drawText(text,x,y,gravity=None,font='helvetica',size=14,color=None,adjust=None)
+   .. autofunction:: annotate(annot)
+   .. autofunction:: unannotate(annot)
+   .. autofunction:: decorate(decor)
+   .. autofunction:: undecorate(decor)
+   .. autofunction:: frontView()
+   .. autofunction:: backView()
+   .. autofunction:: leftView()
+   .. autofunction:: rightView()
+   .. autofunction:: topView()
+   .. autofunction:: bottomView()
+   .. autofunction:: isoView()
+   .. autofunction:: createView(name,angles)
+   .. autofunction:: zoomBbox(bb)
+   .. autofunction:: zoomRectangle()
+   .. autofunction:: zoomAll()
+   .. autofunction:: zoom(f)
+   .. autofunction:: bgcolor(color)
+   .. autofunction:: fgcolor(color)
+   .. autofunction:: renderMode(mode)
+   .. autofunction:: wireframe()
+   .. autofunction:: flat()
+   .. autofunction:: smooth()
+   .. autofunction:: smoothwire()
+   .. autofunction:: flatwire()
+   .. autofunction:: opacity(alpha)
+   .. autofunction:: lights(onoff)
+   .. autofunction:: set_light_value(typ,val)
+   .. autofunction:: set_ambient(i)
+   .. autofunction:: set_specular(i)
+   .. autofunction:: set_emission(i)
+   .. autofunction:: set_shininess(i)
+   .. autofunction:: linewidth(wid)
+   .. autofunction:: canvasSize(width,height)
+   .. autofunction:: clear_canvas()
+   .. autofunction:: clear()
+   .. autofunction:: redraw()
+   .. autofunction:: pause(msg="Use the Step or Continue button to proceed")
+   .. autofunction:: step()
+   .. autofunction:: fforward()
+   .. autofunction:: delay(i)
+   .. autofunction:: sleep(timeout=None)
+   .. autofunction:: wakeup(mode=0)
+   .. autofunction:: printbbox()
+   .. autofunction:: printviewportsettings()
+   .. autofunction:: layout(nvps=None,ncols=None,nrows=None)
+   .. autofunction:: addViewport()
+   .. autofunction:: removeViewport()
+   .. autofunction:: linkViewport(vp,tovp)
+   .. autofunction:: viewport(n)
+   .. autofunction:: updateGUI()
+   .. autofunction:: flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None)
+   .. autofunction:: highlightActors(K)
+   .. autofunction:: highlightElements(K)
+   .. autofunction:: highlightEdges(K)
+   .. autofunction:: highlightPoints(K)
+   .. autofunction:: highlightPartitions(K)
+   .. autofunction:: removeHighlights()
+   .. autofunction:: set_selection_filter(i)
+   .. autofunction:: pick(mode='actor',single=False,func=None,filtr=None)
+   .. autofunction:: pickActors(single=False,func=None,filtr=None)
+   .. autofunction:: pickElements(single=False,func=None,filtr=None)
+   .. autofunction:: pickPoints(single=False,func=None,filtr=None)
+   .. autofunction:: pickEdges(single=False,func=None,filtr=None)
+   .. autofunction:: highlight(K,mode)
+   .. autofunction:: pickNumbers(marks=None)
+   .. autofunction:: set_edit_mode(i)
+   .. autofunction:: drawLinesInter(mode='line',single=False,func=None)
+   .. autofunction:: showLineDrawing(L)
+   .. autofunction:: setLocalAxes(mode=True)
+   .. autofunction:: setGlobalAxes(mode=True)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

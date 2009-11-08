@@ -22,7 +22,7 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""imageColor
+"""Using bitmap images as colors.
 
 This module contains functions to use bitmap images as colors on a
 pyFormex geometry.
@@ -30,7 +30,7 @@ pyFormex geometry.
 
 from pyformex.arraytools import *
 from PyQt4.QtGui import QImage
-from image_numpy import qimage2numpy
+from imagearray import qimage2numpy
 
 def image2glcolor(im,flip=True):
     """Convert a bitmap image to corresponding OpenGL colors.

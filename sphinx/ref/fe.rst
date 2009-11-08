@@ -1,20 +1,43 @@
 .. $Id$  -*- rst -*-
-.. pyformex reference manual --- plugins.fe
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. pyformex reference manual --- fe
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
 
-.. _sec:ref-plugins.fe:
+.. _sec:ref-fe:
 
-:mod:`plugins.fe` --- Finite Element Models in pyFormex.
-========================================================
+:mod:`fe` --- Finite Element Models in pyFormex.
+================================================
 
-
-.. automodule:: plugins.fe
+.. automodule:: fe
    :synopsis: Finite Element Models in pyFormex.
-   :members:
+
+
+
+   .. autoclass:: Model
+
+
+      Model objects have the following methods:
+
+      .. automethod:: nnodes()
+      .. automethod:: nelems()
+      .. automethod:: ngroups()
+      .. automethod:: mplex()
+      .. automethod:: splitElems(set)
+      .. automethod:: elemNrs(group,set)
+      .. automethod:: getElems(sets)
+      .. automethod:: renumber(old=None,new=None)
+
+   Functions defined in the fe module:
+
+   .. autofunction:: mergeNodes(nodes)
+   .. autofunction:: mergeModels(femodels)
+   .. autofunction:: checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None)
+   .. autofunction:: mergedModel()
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

@@ -1,6 +1,6 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- simple
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
@@ -10,11 +10,27 @@
 :mod:`simple` --- Predefined geometries with a simple shape.
 ============================================================
 
-
 .. automodule:: simple
    :synopsis: Predefined geometries with a simple shape.
-   :members:
+
+
+   .. autofunction:: shape(name)
+   .. autofunction:: regularGrid(x0,x1,nx)
+   .. autofunction:: point(x=0.,y=0.,z=0.)
+   .. autofunction:: line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1)
+   .. autofunction:: rectangle(nx,ny,b=None,h=None,bias=0.,diag=None)
+   .. autofunction:: circle(a1=2.,a2=0.,a3=360.)
+   .. autofunction:: polygon(n)
+   .. autofunction:: triangle()
+   .. autofunction:: quadraticCurve(x=None,n=8)
+   .. autofunction:: sphere2(nx,ny,r=1,bot=-90,top=90)
+   .. autofunction:: sphere3(nx,ny,r=1,bot=-90,top=90)
+   .. autofunction:: connectCurves(curve1,curve2,n)
+   .. autofunction:: sector(r,t,nr,nt,h=0.,diag=None)
+   .. autofunction:: cylinder(D,L,nt,nl,D1=None,angle=360.,bias=0.,diag=None)
+
    
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

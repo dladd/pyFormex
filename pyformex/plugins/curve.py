@@ -25,16 +25,16 @@
 
 """Definition of curves in pyFormex.
 
-(C) 2008 Benedict Verhegghe (bverheg at users.berlios.de)
-I wrote this software in my free time, for my joy, not as a commissioned task.
-Any copyright claims made by my employer should therefore be considered void.
-Acknowledgements: Gianluca De Santis
-
 This module defines classes and functions specialized for handling
 one-dimensional geometry in pyFormex. These may be straight lines, polylines,
 higher order curves and collections thereof. In general, the curves are 3D,
 but special cases may be created for handling plane curves.
 """
+
+# (C) 2008 Benedict Verhegghe (bverheg at users.berlios.de)
+# I wrote this software in my free time, for my joy, not as a commissioned task.
+# Any copyright claims made by my employer should therefore be considered void.
+# Acknowledgements: Gianluca De Santis
 
 from numpy import *
 from formex import *
@@ -588,8 +588,10 @@ class Arc(Curve):
 class Spiral(Curve):
     """A class representing a spiral curve."""
 
-    def __init__(self,rfunc=lambda x:x,turns=2.0,nparts=100):
-        self.coords = Coords([0.,0.,0.]).replic(npoints).hypercylindrical()
+    def __init__(self,turns=2.0,nparts=100,rfunc=None):
+        if rfunc == None:
+            rfunc = lambda x:x
+        self.coords = Coords([0.,0.,0.]).replic(npoints+1).hypercylindrical()
         self.nparts = nparts
         self.closed = False
 

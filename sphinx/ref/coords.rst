@@ -1,6 +1,6 @@
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- coords
-.. CREATED WITH quickref.py: DO NOT EDIT
+.. CREATED WITH py2rst.py: DO NOT EDIT
 
 .. include:: ../defines.inc
 .. include:: ../links.inc
@@ -10,15 +10,73 @@
 :mod:`coords` --- A structured collection of 3D coordinates.
 ============================================================
 
-
 .. automodule:: coords
    :synopsis: A structured collection of 3D coordinates.
-   :members: bbox, coordsmethod
+
+
+
+   .. autoclass:: Coords
+
+
+      Coords objects have the following methods:
+
+      .. automethod:: points()
+      .. automethod:: pshape()
+      .. automethod:: npoints()
+      .. automethod:: x()
+      .. automethod:: y()
+      .. automethod:: z()
+      .. automethod:: bbox()
+      .. automethod:: center()
+      .. automethod:: centroid()
+      .. automethod:: sizes()
+      .. automethod:: dsize()
+      .. automethod:: bsphere()
+      .. automethod:: distanceFromPlane(p,n)
+      .. automethod:: distanceFromLine(p,n)
+      .. automethod:: distanceFromPoint(p)
+      .. automethod:: test(dir=0,min=None,max=None,atol=0.)
+      .. automethod:: fprint(fmt="\%10.3e \%10.3e \%10.3e")
+      .. automethod:: set(f)
+      .. automethod:: scale(scale,dir=None,inplace=False)
+      .. automethod:: translate(vector,distance=None,inplace=False)
+      .. automethod:: rotate(angle,axis=2,around=None,inplace=False)
+      .. automethod:: shear(dir,dir1,skew,inplace=False)
+      .. automethod:: reflect(dir=2,pos=0,inplace=False)
+      .. automethod:: affine(mat,vec=None,inplace=False)
+      .. automethod:: cylindrical(dir=[0,1,2],scale=[1.,1.,1.])
+      .. automethod:: hyperCylindrical(dir=[0,1,2],scale=[1.,1.,1.],func=None,angle=Deg)
+      .. automethod:: toCylindrical(dir=[0,1,2])
+      .. automethod:: spherical(dir=[0,1,2],scale=[1.,1.,1.],colat=False)
+      .. automethod:: superSpherical(n=1.0,e=1.0,k=0.0,dir=[0,1,2],scale=[1.,1.,1.],colat=False)
+      .. automethod:: toSpherical(dir=[0,1,2])
+      .. automethod:: bump1(dir,a,func,dist)
+      .. automethod:: bump2(dir,a,func)
+      .. automethod:: bump(dir,a,func,dist=None)
+      .. automethod:: flare(xf,f,dir=[0,2],end=0,exp=1.)
+      .. automethod:: newmap(func)
+      .. automethod:: map(func)
+      .. automethod:: map1(dir,func,x=None)
+      .. automethod:: mapd(dir,func,point,dist=None)
+      .. automethod:: egg(k)
+      .. automethod:: replace(i,j,other=None)
+      .. automethod:: swapAxes(i,j)
+      .. automethod:: rollAxes(n=1)
+      .. automethod:: projectOnSphere(radius=1.,center=[0.,0.,0.])
+      .. automethod:: projectOnCylinder(radius=1.,dir=0,center=[0.,0.,0.])
+      .. automethod:: split()
+      .. automethod:: fuse(nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5)
+      .. automethod:: concatenate(cls,L)
+      .. automethod:: fromfile()
+      .. automethod:: interpolate(clas,F,G,div)
+
+   Functions defined in the coords module:
+
+   .. autofunction:: bbox(objects)
+   .. autofunction:: coordsmethod(f)
+
    
-   .. autoclass:: Coords(data=None,dtyp=Float,copy=False)
-      :members:
-
-
-.. moduleauthor:: 'pyFormex project' <'http://pyformex.berlios.de'>
+.. moduleauthor:: pyFormex project (http://pyformex.org)
 
 .. End
+

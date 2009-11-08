@@ -21,8 +21,9 @@ COREMODULES= arraytools connectivity formex mydict odict olist project \
 GUIMODULES= actors colors colorscale decors draw image marks widgets 
 PLUGINMODULES= curve fe inertia isopar lima mesh \
   properties section2d surface turtle units
-AUTOREF= $(COREMODULES) $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
+AUTOREF= $(COREMODULES) # $(addprefix gui., $(GUIMODULES)) $(addprefix plugins., $(PLUGINMODULES))
 NOAUTOREF = coords
+AUTOSRC= $(addprefix ref/, $(addsuffix .rst, ${AUTOREF}))
 
 MANDOCS= _build/html/*
 RSYNC= rsync -av -e ssh
@@ -31,6 +32,10 @@ UPLOAD= shell.berlios.de:/home/groups/pyformex/
 DOCUPLOAD= ${UPLOAD}/htdocs/doc
 
 .PHONY: help clean ref html dirhtml pickle json htmlhelp qthelp latex changes linkcheck doctest
+
+# where to search for source files
+PYFORMEXDIR=../pyformex
+vpath %.py $(addprefix ../pyformex, / /gui/ /plugins/)
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -50,7 +55,7 @@ help:
 clean:
 	-rm -rf _build/*
 
-html:
+html: ref
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
 	@echo
 	@echo "Build finished. The HTML pages are in _build/html."
@@ -118,7 +123,14 @@ pdf:	latex
 prereq: ref pyformex.help
 
 ref:
-	quickref.py ${AUTOREF}
+	make -C ref
+
+
+
+# 
+# The autodoc just is not powerful enough
+#	quickref.py ${AUTOREF}
+#
 
 pyformex.help: ../pyformex/pyformex
 	../pyformex/pyformex --help > $@

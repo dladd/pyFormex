@@ -34,7 +34,7 @@ from simple import rectangle
 from utils import NameSequence
 from gui.widgets import *
 from gui.draw import *
-from gui.imageColor import *
+from gui.imagecolor import *
 
 dialog = None
 savefile = None
