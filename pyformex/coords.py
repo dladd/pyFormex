@@ -529,13 +529,23 @@ class Coords(ndarray):
         # We put in a optional scaling, because doing this together with the
         # transforming is cheaper than first scaling and then transforming.
         f = zeros_like(self)
+        theta = (scale[1]*Deg) * self[...,dir[1]]
         r = scale[0] * self[...,dir[0]]
-        theta = (scale[1]*rad) * self[...,dir[1]]
         f[...,0] = r*cos(theta)
         f[...,1] = r*sin(theta)
         f[...,2] = scale[2] * self[...,dir[2]]  
         return f
 
+
+    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],func=lambda x:1,angle=Deg):
+        f = zeros_like(self)
+        theta = (scale[1]*angle) * self[...,dir[1]]
+        r = scale[0] * func(theta) * self[...,dir[0]]
+        f[...,0] = r * cos(theta)
+        f[...,1] = r * sin(theta)
+        f[...,2] = scale[2] * self[...,dir[2]]
+        return f
+    
 
     def toCylindrical(self,dir=[0,1,2]):
         """Converts from cartesian to cylindrical coordinates.
@@ -548,7 +558,7 @@ class Coords(ndarray):
         f = zeros_like(self)
         x,y,z = [ self[...,i] for i in dir ]
         f[...,0] = sqrt(x*x+y*y)
-        f[...,1] = arctan2(y,x) / rad
+        f[...,1] = arctan2(y,x) / Deg
         f[...,2] = z
         return f
 
@@ -565,11 +575,11 @@ class Coords(ndarray):
         If colat=True, the third coordinate is the colatitude (90-lat) instead.
         """
         f = self.reshape((-1,3))
-        theta = (scale[0]*rad) * f[:,dir[0]]
-        phi = (scale[1]*rad) * f[:,dir[1]]
+        theta = (scale[0]*Deg) * f[:,dir[0]]
+        phi = (scale[1]*Deg) * f[:,dir[1]]
         r = scale[2] * f[:,dir[2]]
         if colat:
-            phi = 90.0*rad - phi
+            phi = 90.0*Deg - phi
         rc = r*cos(phi)
         f = column_stack([rc*cos(theta),rc*sin(theta),r*sin(phi)])
         return f.reshape(self.shape)
@@ -607,11 +617,11 @@ class Coords(ndarray):
             return sign(c)*abs(c)**m
 
         f = self.reshape((-1,3))
-        theta = (scale[0]*rad) * f[:,dir[0]]
-        phi = (scale[1]*rad) * f[:,dir[1]]
+        theta = (scale[0]*Deg) * f[:,dir[0]]
+        phi = (scale[1]*Deg) * f[:,dir[1]]
         r = scale[2] * f[:,dir[2]]
         if colat:
-            phi = 90.0*rad - phi
+            phi = 90.0*Deg - phi
         rc = r*c(phi,n)
         if k != 0:   # k should be > -1.0 !!!!
             x = sin(phi)
@@ -632,8 +642,8 @@ class Coords(ndarray):
         """
         v = self[...,dir].reshape((-1,3))
         dist = sqrt(sum(v*v,-1))
-        long = arctan2(v[:,0],v[:,2]) / rad
-        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / rad)
+        long = arctan2(v[:,0],v[:,2]) / Deg
+        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / Deg)
         f = column_stack([long,lat,dist])
         return f.reshape(self.shape)
 
@@ -811,17 +821,20 @@ class Coords(ndarray):
     def mapd(self,dir,func,point,dist=None):
         """Maps one coordinate by a function of the distance to a point.
 
-        <func> is a numerical function which takes one argument and produces
-        one result. The coordinate dir will be replaced by func(d), where <d>
-        is calculated as the distance to <point>.
+        ``func`` a numerical function which takes one argument and produces
+        one result. The coordinate dir will be replaced by ``func(d)``, where
+        ``d`` is calculated as the distance to ``point`.
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
         numpy module.
         By default, the distance d is calculated in 3-D, but one can specify
         a limited set of axes to calculate a 2-D or 1-D distance.
-        This method is one of several mapping methods. See also map3 and map1.
-        Example: E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
-        maps E on a sphere with radius 10
+        This method is one of several mapping methods. See also
+        :method:`map3` and :method:`map1`.
+        
+        Example::
+          E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
+        maps ``E`` on a sphere with radius 10.
         """
         f = self.copy()
         if dist == None:
@@ -847,7 +860,6 @@ class Coords(ndarray):
     def egg(self,k):
         """Maps the coordinates to an egg-shape"""
         return (1-k*self)/(1+k*self)
-    
 
 
     def replace(self,i,j,other=None):

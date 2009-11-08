@@ -166,21 +166,49 @@ def segmentOrientation(vertices,vertices2=None,point=None):
     return orient
 
 
+# !! We have to merge the following two functions
 
-def rotation(x,n):
+def rotation(x,r,angle_spec=Deg):
     """Return a rotation as an axis + angle.
 
-    x and n are two unit vectors.
-    The return value is a vector perpendicular to both and
-    the angle between both.
+    ``x`` and ``r`` are two unit vectors.
+    The return value is a tuple of:
+    
+    - a vector perpendicular to ``x`` and ``r``,
+    - the angle between both ``x`` and ``r``.
+
+    angle_spec can be set to ``Deg`` ro ``Rad`` to get the result in
+    degrees (default) or radians.
     """
-    w = cross(x,n)
+    w = cross(x,r)
     wl = length(w)
     if wl == 0.0:
         return [0.,0.,1.],0.
     else:
         w /= wl
-        angle = arccos(dotpr(x,n)) / rad
+        angle = arccos(dotpr(x,r)) / angle_spec
         return w,angle
+    
+
+def rotationAngle(A,B,angle_spec=Deg):
+    """Return rotation vector and angle for rotation of A to B.
+
+    A and B are (n,3)-shaped arrays where each line represents a vector.
+    This function computes the rotation from each vector of A to the
+    corresponding vector of B. Broadcasting is done if one of A or B has
+    only one row.
+    The return value is a tuple of an (n,) shaped array with rotation angles
+    (by default in degrees) and an (n,3)-shaped array with unit vectors
+    along the rotation axis.
+    Specify angle_spec=Rad to get the angles in radians.
+    """
+    A = normalize(A)
+    B = normalize(B)
+    N = cross(A,B)
+    L = length(N)
+    S = L / (length(A)*length(B))  # !! SEEMS SUPERFLUOUS 
+    ANG = arcsin(S.clip(min=-1.0,max=1.0)) / angle_spec
+    N = N/column_stack([L])
+    return N,ANG
 
 # End

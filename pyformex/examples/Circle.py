@@ -32,31 +32,7 @@ techniques = ['dialog', 'animation']
 """
 
 from simple import circle
-    
-
-def rotationAngle(A,B,rad=False):
-    """Return rotation vector and angle for rotation of A to B.
-
-    A and B are (n,3)-shaped arrays where each line represents a vector.
-    This function computes the rotation from each vector of A to the
-    corresponding vector of B. Broadcasting is done if one of A or B has
-    only one row.
-    The return value is a tuple of an (n,) shaped array with rotation angles
-    (by default in degrees) and an (n,3)-shaped array with unit vectors
-    along the rotation axis.
-    If rad==True, the returned angles are in radians.
-    """
-    A = normalize(A)
-    B = normalize(B)
-    N = cross(A,B)
-    L = length(N)
-    #print L
-    S = L / (length(A)*length(B))
-    ANG = arcsin(S.clip(min=-1.0,max=1.0))
-    N = N/column_stack([L])
-    if not rad:
-        ANG *= 180./pi
-    return (ANG,N)
+from plugins.geometry import rotationAngle
 
 # Test
 linewidth(1)
@@ -92,7 +68,7 @@ D = B-A
 # vector initially normal to circle defined above
 nuc = array([0.,0.,1.])
 # rotation angles and vectors
-ang,rot = rotationAngle(nuc,D)
+rot,ang = rotationAngle(nuc,D)
 # diameters varying linearly with the |x| coordinate
 diam = 0.1*h*(2.-abs(C[:,0]))
 # finally, here are the circles:

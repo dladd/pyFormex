@@ -52,7 +52,7 @@ FA = drawSurf(F,surf)
 
 angle = 360.
 n = 120
-da = rad*angle/n
+da = angle*Deg/n
 
 F.setProp(1)
 for i in range(n+1):

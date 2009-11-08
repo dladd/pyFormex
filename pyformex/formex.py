@@ -33,6 +33,15 @@ from coords import *
 from utils import deprecation,deprecated,functionWasRenamed,functionBecameMethod
 
 
+def vectorLength(vec):
+    """Return the lengths of a set of vectors.
+
+    vec is an (n,3) shaped array holding a collection of vectors.
+    The result is an (n,) shaped array with the length of each vector.
+    """
+    return sqrt((vec*vec).sum(axis=-1))
+
+
 def vectorNormalize(vec):
     """Normalize a set of vectors.
 
@@ -42,7 +51,7 @@ def vectorNormalize(vec):
     - length (n): the length of the vectors vec
     - normal (n,3): unit-length vectors along vec.
     """
-    length = sqrt((vec*vec).sum(axis=-1))
+    length = vectorLength(vec)
     normal = vec / length.reshape((-1,1))
     return length,normal
 

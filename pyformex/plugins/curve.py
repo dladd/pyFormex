@@ -48,6 +48,7 @@ from formex import *
 #    coords: coordinates of points defining the curve
 #    parts:  number of parts (e.g. straight segments of a polyline)
 #    closed: is the curve closed or not
+#    range: [min,max] : range of the parameter: default 0..1
 # methods:
 #    subPoints(t,j): returns points with parameter values t of part j
 #    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
@@ -312,7 +313,7 @@ class BezierSpline(Curve):
                      [ 1.,  0.,  0., 0.]]
                     )
 
-    def __init__(self,pts,deriv=None,curl=0.5,control=None,closed=False):
+    def __init__(self,coords,deriv=None,curl=0.5,control=None,closed=False):
         """Create a cubic spline curve through the given points.
 
         The curve is defined by the points and the directions at these points.
@@ -325,8 +326,8 @@ class BezierSpline(Curve):
         override the deriv and curl parameters. Since each segment of the curve
         needs two control points, the control array has shape (npts-1, 2, 3).
         """
-        pts = Coords(pts)
-        self.coords = pts
+        coords = Coords(coords)
+        self.coords = coords
         self.nparts = self.coords.shape[0]
         if not closed:
             self.nparts -= 1
@@ -335,18 +336,18 @@ class BezierSpline(Curve):
             if self.nparts < 2:
                 control = self.coords
             else:
-                P = PolyLine(pts,closed=closed)
+                P = PolyLine(coords,closed=closed)
                 if deriv is None:
                     deriv = P.avgDirections()
                 ampl = P.lengths().reshape(-1,1)
                 if not closed:
-                    pts = pts[1:-1]
+                    coords = coords[1:-1]
                 if not closed:
-                    p1 = pts + deriv*curl*ampl[1:]
-                    p2 = pts - deriv*curl*ampl[:-1]
+                    p1 = coords + deriv*curl*ampl[1:]
+                    p2 = coords - deriv*curl*ampl[:-1]
                 else:
-                    p1 = pts + deriv*curl*ampl
-                    p2 = pts - deriv*curl*roll(ampl,1,axis=0)
+                    p1 = coords + deriv*curl*ampl
+                    p2 = coords - deriv*curl*roll(ampl,1,axis=0)
                 if not closed:
                     p1 = concatenate([p2[:1],p1],axis=0)
                     p2 = concatenate([p2,p1[-1:]],axis=0)
@@ -387,15 +388,15 @@ class CardinalSpline(BezierSpline):
     intervals of the point set).
     """
 
-    def __init__(self,pts,tension=0.0,closed=False):
+    def __init__(self,coords,tension=0.0,closed=False):
         """Create a natural spline through the given points."""
-        BezierSpline.__init__(self,pts,curl=(1.-tension)/3.,closed=closed)
+        BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 
 class CardinalSpline2(BezierSpline):
     """A class representing a cardinal spline."""
 
-    def __init__(self,pts,tension=0.0,closed=False):
+    def __init__(self,coords,tension=0.0,closed=False):
         """Create a natural spline through the given points.
 
         This is a direct implementation of the Cardinal Spline.
@@ -404,8 +405,8 @@ class CardinalSpline2(BezierSpline):
         It is retained here because the implementation may some day
         replace the BezierSpline implementation.
         """
-        pts = Coords(pts)
-        self.coords = pts
+        coords = Coords(coords)
+        self.coords = coords
         self.nparts = self.coords.shape[0]
         if not closed:
             self.nparts -= 3
@@ -435,10 +436,10 @@ class CardinalSpline2(BezierSpline):
 class NaturalSpline(Curve):
     """A class representing a natural spline."""
 
-    def __init__(self,pts,endcond=['notaknot','notaknot'],closed=False):
+    def __init__(self,coords,endcond=['notaknot','notaknot'],closed=False):
         """Create a natural spline through the given points.
 
-        pts specifies the coordinates of a set of points. A natural spline
+        coords specifies the coordinates of a set of points. A natural spline
         is constructed through this points.
         endcond specifies the end conditions in the first, resp. last point.
         It can be 'notaknot' or 'secder'.
@@ -447,10 +448,10 @@ class NaturalSpline(Curve):
         With 'secder', the spline ends with a zero second derivative.
         If closed is True, the spline is closed, and endcond is ignored.
         """
-        pts = Coords(pts)
+        coords = Coords(coords)
         if closed:
-            pts = Coords.concatenate([pts,pts[:1]])
-        self.coords = pts
+            coords = Coords.concatenate([coords,coords[:1]])
+        self.coords = coords
         self.nparts = self.coords.shape[0] - 1
         self.closed = closed
         self.endcond = endcond
@@ -529,12 +530,12 @@ def vectorPairAngle(v1,v2):
 class Arc3(Curve):
     """A class representing a circular arc."""
 
-    def __init__(self,pts):
+    def __init__(self,coords):
         """Create a circular arc.
 
         The arc is specified by 3 non-colinear points.
         """
-        self.coords = Coords(pts)
+        self.coords = Coords(coords)
         self.nparts = 1
         self.closed = False
         if self.coords.shape != (3,3):
@@ -549,19 +550,19 @@ class Arc3(Curve):
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
-        X = X.scale(self.radius).rotate(self.angles[0]/rad).translate(self.center)
+        X = X.scale(self.radius).rotate(self.angles[0]/Deg).translate(self.center)
         return X
 
 
 class Arc(Curve):
     """A class representing a circular arc."""
 
-    def __init__(self,pts):
+    def __init__(self,coords):
         """Create a circular arc.
 
         The arc is specified by the center and begin and end-point.
         """
-        self.coords = Coords(pts)
+        self.coords = Coords(coords)
         self.nparts = 1
         self.closed = False
         if self.coords.shape != (3,3):
@@ -579,9 +580,17 @@ class Arc(Curve):
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])
         X = Coords(column_stack([cos(a),sin(a),zeros_like(a)]))
-        X = X.scale(self.radius).rotate(self.angles[0]/rad).translate(self.center)
+        X = X.scale(self.radius).rotate(self.angles[0]/Deg).translate(self.center)
         return X
 
 
-    
+
+class Spiral(Curve):
+    """A class representing a spiral curve."""
+
+    def __init__(self,rfunc=lambda x:x,turns=2.0,nparts=100):
+        self.coords = Coords([0.,0.,0.]).replic(npoints).hypercylindrical()
+        self.nparts = nparts
+        self.closed = False
+
 # End

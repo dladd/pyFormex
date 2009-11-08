@@ -77,8 +77,10 @@ def niceNumber(f,approx=floor):
     return m*10**n
 
 # pi is defined in numpy
-# rad is a multiplier to transform degrees to radians
-rad = pi/180.
+# Deg is a multiplier to transform degrees to radians
+# Rad is a multiplier to transform radians to radians
+Deg = pi/180.
+Rad = 1.
 
 # Convenience functions: trigonometric functions with argument in degrees
 # Should we keep this in ???
@@ -86,17 +88,17 @@ rad = pi/180.
 
 def sind(arg):
     """Return the sin of an angle in degrees."""
-    return sin(arg*rad)
+    return sin(arg*Deg)
 
 
 def cosd(arg):
     """Return the cos of an angle in degrees."""
-    return cos(arg*rad)
+    return cos(arg*Deg)
 
 
 def tand(arg):
     """Return the tan of an angle in degrees."""
-    return tan(arg*rad)
+    return tan(arg*Deg)
 
 
 def dotpr (A,B,axis=-1):
@@ -200,10 +202,10 @@ def unitVector(v):
     return u
 
 
-def rotationMatrix(angle,axis=None):
+def rotationMatrix(angle,axis=None,angle_spec=Deg):
     """Return a rotation matrix over angle, optionally around axis.
 
-    The angle is specified in degrees.
+    The angle is specified in degrees, unless angle_spec=Rad is specified.
     If axis==None (default), a 2x2 rotation matrix is returned.
     Else, axis should specifying the rotation axis in a 3D world. It is either
     one of 0,1,2, specifying a global axis, or a vector with 3 components
@@ -217,7 +219,7 @@ def rotationMatrix(angle,axis=None):
     but the latter functions calls are more efficient.
     The result is returned as an array.
     """
-    a = angle*rad
+    a = angle*angle_spec
     c = cos(a)
     s = sin(a)
     if axis==None:
@@ -240,31 +242,6 @@ def rotationMatrix(angle,axis=None):
         
     return array(f)
 
-
-## def rotMatrix(u,n=3):
-##     """Create a rotation matrix that rotates axis 0 to the given vector.
-
-##     u is a vector representing the 
-##     Return either a 3x3(default) or 4x4(if n==4) rotation matrix.
-##     """
-##     u = unitVector(u)
-
-##     v = cross([0.,0.,1.],u)
-##     vl = length(v)
-##     if vl == 0.0:
-##         v = cross(u,[0.,1.,0.])
-##         vl = length(v)
-##     v /= vl
-##     w = cross(u,v)
-##     w /= length(w)
-##     m = row_stack([u,v,w])
-    
-##     if n != 4:
-##         return m
-##     else:
-##         a = identity(4)
-##         a[0:3,0:3] = m
-##         return a
 
 def rotMatrix(u,w=[0.,0.,1.],n=3):
     """Create a rotation matrix that rotates axis 0 to the given vector.

@@ -89,8 +89,8 @@ def circumcenter(nodes,elems):
     centers = column_stack([Dx[:]/(2*alfa[:]),Dy[:]/(2*alfa[:]),Dz[:]/(2*alfa[:])])
     #calculate radii of the circumscribed spheres
     vec = centers[:]-nodes[elems[:,0]]
-    rad = sqrt((vec*vec).sum(axis=-1))
-    return centers,rad
+    radii = sqrt((vec*vec).sum(axis=-1))
+    return centers,radii
 
 ## Voronoi: vor diagram is determined using Tetgen. Some of the vor nodes may fall outside the surface. This should be avoided as this may compromise the centerline determination. Therefore, we created a second definition to determine the inner voronoi diagram (voronoiInner).
 
@@ -114,8 +114,8 @@ def voronoi(fn):
     nodesVor = tetgen.readNodes('%s.1.v.node' %fn)[0]
     #calculate the radii of the voronoi spheres
     vec = nodesVor[:]-nodes[elems[:,0]]
-    rad = sqrt((vec*vec).sum(axis=-1))
-    return nodesVor,rad
+    radii = sqrt((vec*vec).sum(axis=-1))
+    return nodesVor,radii
 
 
 def voronoiInner(fn):
@@ -149,11 +149,11 @@ def voronoiInner(fn):
     nodesVorInner = centers[w]
     #calculate the radii of the voronoi spheres
     vec = nodesVorInner[:]-nodes[elemsInner[:,0]]
-    rad = sqrt((vec*vec).sum(axis=-1))
-    return nodesVorInner,rad
+    radii = sqrt((vec*vec).sum(axis=-1))
+    return nodesVorInner,radii
+
     
-    
-def selectMaxVor(nodesVor,rad,r1=1.,r2=2.,q=0.7,maxruns=-1):
+def selectMaxVor(nodesVor,radii,r1=1.,r2=2.,q=0.7,maxruns=-1):
     """Select the local maxima of the voronoi spheres.
     
     Description of the procedure:
@@ -174,22 +174,22 @@ def selectMaxVor(nodesVor,rad,r1=1.,r2=2.,q=0.7,maxruns=-1):
     run = 0
     while nodesVor.shape[0] and (maxruns < 0 or run < maxruns):
         #find maximum voronoi sphere in the record
-        w = where(rad[:] == rad[:].max())[0]
-        maxR = rad[w].reshape(-1)
+        w = where(radii[:] == radii[:].max())[0]
+        maxR = radii[w].reshape(-1)
         maxP = nodesVor[w].reshape(-1)
         #remove all the nodes within the first cube
         t1 =  (nodesVor[:] > (maxP-r1*maxR)).all(axis=1)
         t2 =  (nodesVor[:] < (maxP+r1*maxR)).all(axis=1)
         ttot1 = t1*t2
-        rad = rad[-ttot1]
+        radii = radii[-ttot1]
         nodesVor = nodesVor[-ttot1]
         #remove some of the nodes within the second cube
         t3 =  (nodesVor[:] > (maxP-r2*maxR)).all(axis=1)
         t4 =  (nodesVor[:] < (maxP+r2*maxR)).all(axis=1)
-        t5 = (rad<maxR*q)
+        t5 = (radii<maxR*q)
         ttot2 = t3*t4*t5
         if ttot2.shape[0]:
-            rad = rad[-ttot2]
+            radii = radii[-ttot2]
             nodesVor = nodesVor[-ttot2]
         #add local maximum to a list
         nodesCent = append(nodesCent,maxP)
@@ -213,7 +213,7 @@ def removeDoubles(elems):
     return transpose(array(elemsU))
 
 
-def connectVorNodes(nodes,rad):
+def connectVorNodes(nodes,radii):
     """Create connections between the voronoi nodes.
     
     Each of the nodes is connected with its closest neighbours.
@@ -225,14 +225,14 @@ def connectVorNodes(nodes,rad):
     connections = array([]).astype(int)
     v = 4
     for i in range(nodes.shape[0]):
-        t1 =  (nodes[:] > (nodes[i]-v*rad[i])).all(axis=2)
-        t2 =  (nodes[:] < (nodes[i]+v*rad[i])).all(axis=2)
+        t1 =  (nodes[:] > (nodes[i]-v*radii[i])).all(axis=2)
+        t2 =  (nodes[:] < (nodes[i]+v*radii[i])).all(axis=2)
         t = t1*t2
         t[i] = False
         w1 = where(t == 1)[0]
         c = coords.Coords(nodes[w1])
         d =c.distanceFromPoint(nodes[i]).reshape(-1)
-        w2 = d < rad[w1] + rad[i]
+        w2 = d < radii[w1] + radii[i]
         w = w1[w2]
         for j in w:
             connections = append(connections,i)
@@ -273,8 +273,11 @@ def centerline(fn):
     The output are the centerline nodes, an array containing the connectivity information
     and radii of the voronoi spheres.
     """
-    nodesVor,rad= voronoiInner('%s' %fn)
-    nodesC,rad=selectMaxVor(nodesVor,rad)
-    elemsC = connectVorNodes(nodesC,rad)
+    nodesVor,radii= voronoiInner('%s' %fn)
+    nodesC,radii=selectMaxVor(nodesVor,radii)
+    elemsC = connectVorNodes(nodesC,radii)
     elemsC = removeTriangles(elemsC)
-    return nodesC,elemsC,rad
+    return nodesC,elemsC,radii
+
+# End
+

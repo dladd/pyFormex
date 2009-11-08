@@ -28,13 +28,13 @@ This module was mainly aimed at the drawing of Lindenmayer products
 (see :mod:`plugins.lima` and the Lima example).
 """
 import math
-rad = math.pi/180.
+deg = math.pi/180.
 def sind(arg):
     """Return the sin of an angle in degrees."""
-    return math.sin(arg*rad)
+    return math.sin(arg*deg)
 def cosd(arg):
     """Return the sin of an angle in degrees."""
-    return math.cos(arg*rad)
+    return math.cos(arg*deg)
 
 
 def reset():
