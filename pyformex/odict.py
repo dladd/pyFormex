@@ -135,6 +135,7 @@ class ODict(dict):
 
 
     def __setstate__(self,state):
+        self.__init__()
         if type(state) == tuple:
             self.update(state[0])
             self.__dict__.update(state[1])

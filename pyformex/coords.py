@@ -537,15 +537,17 @@ class Coords(ndarray):
         return f
 
 
-    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],func=None,angle=Deg):
-        if func is None:
-            func = lambda x:1
+    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],rfunc=None,zfunc=None,angle=Deg):
+        if rfunc is None:
+            rfunc = lambda x:1
+        if zfunc is None:
+            zfunc = lambda x:1
         f = zeros_like(self)
         theta = (scale[1]*angle) * self[...,dir[1]]
-        r = scale[0] * func(theta) * self[...,dir[0]]
+        r = scale[0] * rfunc(theta) * self[...,dir[0]]
         f[...,0] = r * cos(theta)
         f[...,1] = r * sin(theta)
-        f[...,2] = scale[2] * self[...,dir[2]]
+        f[...,2] = scale[2] * zfunc(theta) * self[...,dir[2]]
         return f
     
 

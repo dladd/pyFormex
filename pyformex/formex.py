@@ -1666,6 +1666,9 @@ class Formex(object):
     def cylindrical(self,*args,**kargs):
         pass
     @coords_transformation
+    def hyperCylindrical(self,*args,**kargs):
+        pass
+    @coords_transformation
     def toCylindrical(self,*args,**kargs):
         pass
     @coords_transformation
