@@ -53,7 +53,7 @@ def center(X,mass=None):
     X = X.reshape((-1,X.shape[-1]))
     if mass is not None:
         mass = array(mass)
-        ctr = (X*mass).mean(axis=0) / mass.sum()
+        ctr = (X*mass).sum(axis=0) / mass.sum()
     else:
         ctr = X.mean(axis=0)
     return ctr
@@ -73,7 +73,7 @@ def inertia(X,mass=None):
     X = X.reshape((-1,X.shape[-1]))
     if mass is not None:
         mass = array(mass)
-        ctr = (X*mass).mean(axis=0) / mass.sum()
+        ctr = (X*mass).sum(axis=0) / mass.sum()
     else:
         ctr = X.mean(axis=0)
     Xc = X - ctr
