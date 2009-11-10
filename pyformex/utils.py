@@ -271,7 +271,7 @@ def all_image_extensions():
 
 file_description = {
     'all': 'All files (*)',
-    'img': 'Images (*.png *.jpg *.eps)',
+    'img': 'Images (*.png *.jpg *.eps *.gif)',
     'png': 'PNG images (*.png)',
     'icon': 'Icons (*.xpm)',
     'formex': 'Formex files (*.formex)',
@@ -281,17 +281,22 @@ file_description = {
     'smesh': 'Tetgen surface mesh files (*.smesh)',
     'neu': 'Gambit Neutral files (*.neu)',
     'surface': 'Any Surface file ( *.gts *.stl *.off *.smesh *.neu)',
-    'postproc': 'Postproc scripts (*_post.py *.post)'
+    'postproc': 'Postproc scripts (*_post.py *.post)',
+    'pyformex': 'pyFormex scripts (*.py *.pye)',
+    'pyf': 'pyFormex projects (*.pyf)',
 }
 
-def fileDescription(type):
+def fileDescription(ftype):
     """Return a description of the specified file type.
 
     The description of known types are listed in a dict file_description.
     If the type is unknown, the returned string has the form
     ``TYPE files (*.type)``
     """
-    return file_description.get(type,"%s files (*.%s)" % (type.upper(),type))
+    if type(ftype) is list:
+        return map(fileDescription,ftype)
+    ftype = ftype.lower()
+    return file_description.get(ftype,"%s files (*.%s)" % (ftype.upper(),ftype))
 
 
 def findIcon(name):

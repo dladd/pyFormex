@@ -72,7 +72,7 @@ def createProject(create=True,compression=0,addGlobals=None):
         if ans == options[2]:
             the_project.save()
         cur = the_project.filename
-    typ = [ 'pyFormex projects (*.pyf)', 'All files (*)' ]
+    typ = utils.fileDescription(['pyf','all'])
     res = widgets.ProjectSelection(cur,typ,exist=not create).getResult()
     if res is None:
         # user canceled
@@ -211,7 +211,7 @@ def openScript(fn=None,exist=True,create=False):
     """
     if fn is None:
         cur = GD.cfg.get('curfile',GD.cfg.get('workdir','.'))
-        typ = "pyFormex scripts (*.py)"
+        typ = utils.fileDescription('pyformex')
         fn = widgets.FileSelection(cur,typ,exist=exist).getFilename()
     if fn:
         if create:

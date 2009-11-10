@@ -389,7 +389,7 @@ class GUI(QtGui.QMainWindow):
         else:
             filename = GD.cfg.get('curfile','')
         if filename:
-            self.canPlay = utils.isPyFormex(filename)
+            self.canPlay = utils.isPyFormex(filename) or filename.endswith('.pye')
             self.curfile.setText(os.path.basename(filename))
             self.actions['Play'].setEnabled(self.canPlay)
             self.actions['Step'].setEnabled(self.canPlay)

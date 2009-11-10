@@ -224,9 +224,10 @@ scriptRunning = False
 exitrequested = False
 stepmode = False
 starttime = 0.0
+pye = False
 
  
-def playScript(scr,name=None,filename=None,argv=[]):
+def playScript(scr,name=None,filename=None,argv=[],pye=False):
     """Play a pyformex script scr. scr should be a valid Python text.
 
     There is a lock to prevent multiple scripts from being executed at the
@@ -300,6 +301,10 @@ def playScript(scr,name=None,filename=None,argv=[]):
                     s = m.replace('.py','')
                     print s
                     __import__(s,g)
+                elif pye:
+                    t = scr.read()
+                    n = (len(t)+1) // 2
+                    exec utils.mergeme(t[:n],t[n:]) in g
                 else:
                     exec scr in g
 
@@ -388,7 +393,7 @@ def playFile(fn,argv=[]):
     """
     message("Running script (%s)" % fn)
     GD.debug("  Executing with arguments: %s" % argv)
-    res = playScript(file(fn,'r'),fn,fn,argv)
+    res = playScript(file(fn,'r'),fn,fn,argv,fn.endswith('.pye'))
     GD.debug("  Arguments left after execution: %s" % argv)
     message("Finished script %s" % fn)
     return res
@@ -435,7 +440,9 @@ def processArgs(args):
     """
     while len(args) > 0:
         fn = args.pop(0)
-        if not os.path.exists(fn) or not utils.isPyFormex(fn):
+        if fn.endswith('.pye'):
+            pass
+        elif not os.path.exists(fn) or not utils.isPyFormex(fn):
             GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
             continue
         try:
