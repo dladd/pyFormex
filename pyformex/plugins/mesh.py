@@ -82,7 +82,7 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,avgdir=False,enddir=None):
     angles,normals = vectorPairAreaNormals(directions,normal)
     w = where(angles==0.0)[0]
     normals[w] = [0.,0.,1.]
-    angles = arcsin(angles)/rad
+    angles = arcsin(angles)/Deg
     
     base = self.translate(-Coords(origin))
     sequence = [ base.rotate(a,v).translate(p) for a,v,p in zip(angles,normals,points) ]

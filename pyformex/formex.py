@@ -1642,7 +1642,13 @@ class Formex(object):
     def affine(self,*args,**kargs):
         pass
 
-    def mirror(self,dir=2,pos=0,keep_orig=False):
+    def mirror(self,dir=2,pos=0,keep_orig=True):
+        """Reflect a Formex in one of the coordinate directions
+
+        This method behaves like reflect(), but adds the reflected
+        part to the original. Setting keep_orig=False makes it behave just
+        like reflect().
+        """
         if keep_orig:
             return self+self.reflect(dir,pos)
         else:

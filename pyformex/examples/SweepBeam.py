@@ -59,11 +59,11 @@ Flange3 =  simple.rectangle(ewf,etb,b/2.-r-tw/2.,tw/2.).translate([tw/2.+r,h/2.-
 c1a = simple.line([0,h/2-tf-r,0],[0,h/2-tf+tw/2,0],er/2)
 c1b = simple.line([0,h/2-tf+tw/2,0],[tw/2+r,h/2-tf+tw/2,0],er/2)
 c1 = c1a + c1b
-c2 = simple.circle(90./er,0.,90.).mirror(0).scale(r).translate([tw/2+r,h/2-tf-r,0])
+c2 = simple.circle(90./er,0.,90.).reflect(0).scale(r).translate([tw/2+r,h/2-tf-r,0])
 Filled = simple.connectCurves(c2,c1,etb)
 Quarter = Body + Filled + Flange1 + Flange2 + Flange3
-Half = Quarter + Quarter.mirror(1).reverse()
-Full = Half + Half.mirror(0).reverse()
+Half = Quarter + Quarter.reflect(1).reverse()
+Full = Half + Half.reflect(0).reverse()
 Section = Full.toMesh()
 
 clear()

@@ -474,7 +474,7 @@ class Coords(ndarray):
 
 
     def reflect(self,dir=2,pos=0,inplace=False):
-        """Mirror the coordinates in direction dir against plane at pos.
+        """Reflect the coordinates in direction dir against plane at pos.
 
         Default position of the plane is through the origin.
         Default mirror direction is the z-direction.
@@ -485,10 +485,6 @@ class Coords(ndarray):
             out = self.copy()
         out[...,dir] = 2*pos - out[...,dir]
         return out
-
-
-    # An alias
-    mirror = reflect
     
 
     def affine(self,mat,vec=None,inplace=False):
@@ -1098,7 +1094,11 @@ class Coords(ndarray):
     trl = translate
 
     # Deprecated functions
-    # from utils import deprecated
+    from utils import deprecated
+
+    @deprecated(reflect)
+    def mirror(*args,**kargs):
+        return reflect(*args,**kargs)
 
 
 ##############################################################################

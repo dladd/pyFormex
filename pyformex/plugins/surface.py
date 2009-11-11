@@ -1139,7 +1139,7 @@ class TriSurface(object):
 
     def edgeAngles(self):
         """Return the angles over all edges (in degrees)."""
-        return arccos(self.edgeCosAngles()) / rad
+        return arccos(self.edgeCosAngles()) / Deg
 
 
     def data(self):

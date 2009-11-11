@@ -43,7 +43,7 @@ if __name__ == "draw":
     layout(4)
     F0 = Formex(mpattern('12-34'),[1,3])
     F1 = F0.replic2(2,2)
-    F2 = F1 + F1.mirror(1)
+    F2 = F1 + F1.reflect(1)
     F3 = F2 + F2.rotate(180.,1)
     
     for i,F in enumerate([F0,F1,F2,F3]):
