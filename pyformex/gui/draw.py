@@ -566,6 +566,14 @@ def drawVertexNumbers(F,color='black',trl=None):
     return drawMarks(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
 
 
+def drawNormals(N,P,size=5,**extra):
+    """Draw normals N in P. size can be single constant or list."""
+    C = zeros((N.shape[0],2,3))
+    C[:,0,:] = P
+    C[:,1,:] = P + size*N
+    return draw(Formex(C),**extra)
+
+
 def drawText3D(P,text,color='black',font=None,size=None):
     """Draw a text at a 3D point P."""
     M = marks.TextMark(P,text,color=color,font=font,size=size)

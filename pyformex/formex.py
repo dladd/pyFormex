@@ -39,7 +39,7 @@ def vectorLength(vec):
     vec is an (n,3) shaped array holding a collection of vectors.
     The result is an (n,) shaped array with the length of each vector.
     """
-    return sqrt((vec*vec).sum(axis=-1))
+    return length(vec)
 
 
 def vectorNormalize(vec):
@@ -63,11 +63,14 @@ def vectorPairAreaNormals(vec1,vec2):
     The result is a tuple of two arrays:
     - area (n) : the area of the parallellogram formed by vec1 and vec2.
     - normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
-    These are calculated from the cross product of vec1 and vec, which indeed
+    These are calculated from the cross product of vec1 and vec2, which indeed
     gives area * normal.
+
+    Note that where two vectors are parallel, an area zero will results and
+    an axis with components NaN.
     """
     normal = cross(vec1,vec2)
-    area = sqrt((normal*normal).sum(axis=-1))
+    area = vectorLength(normal)
     normal /= area.reshape((-1,1))
     return area,normal
 
@@ -92,10 +95,10 @@ def vectorPairNormals(vec1,vec2,normalized=True):
     If not essential, this can be switched off to save computing time.
     """
     if normalized:
-        return vectorPairAreaNormals(vec1,vec2)[1]
-    else:
         return cross(vec1,vec2)
-
+    else:
+        return vectorPairAreaNormals(vec1,vec2)[1]
+        
 
 def vectorTripleProduct(vec1,vec2,vec3):
     """Compute triple product vec1 . (vec2 x vec3).
@@ -106,7 +109,7 @@ def vectorTripleProduct(vec1,vec2,vec3):
     This is also the square of the volume of the parallellepid formex by
     the 3 vectors.
     """
-    return dot(vec1,cross(vec2,vec3))
+    return dotpr(vec1,cross(vec2,vec3))
     
 
 def polygonNormals(x):

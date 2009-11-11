@@ -36,8 +36,41 @@ import elements
 from plugins.fe import mergeModels
 from utils import deprecation
 
-# Should be made a Coords method
-def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,avgdir=False,enddir=None):
+# This should probably go to formex or coords module
+
+
+def vectorPairCosAngles(vec1,vec2,normalized=False):
+    if not normalized:
+        vec1 = normalize(vec1)
+        vec2 = normalize(vec2)
+    return dotpr(vec1,vec2)
+
+def vectorPairAngles(vec1,vec2,normalized=False,angle_spec=Deg):
+    return arccos(vectorPairCosAngles(vec1,vec2,normalized))/angle_spec
+
+
+def vectorRotation(vec1,vec2,angle_spec=Deg):
+    """Return axis and angle to rotate vectors in a parallel to b
+
+    vectors in a and b should be unit vectors.
+    The returned axis is the cross product of a and b. If the vectors
+    are already parallel, a random vector normal to a is returned.
+    """
+    vec1 = normalize(vec1)
+    vec2 = normalize(vec2)
+    area,normals = vectorPairAreaNormals(vec1,resize(vec2,vec1.shape))
+    angles = vectorPairAngles(vec1,vec2,normalized=True)
+    w = where(area==0.0)[0]
+    if len(w) > 0:
+        vec1 = normalize(random.random((len(w),3)))
+        area1,normals1 = vectorPairAreaNormals(vec1,resize(vec2,vec1.shape))
+        normals[w] = normals1
+    return angles,normals
+
+
+# Should probably be made a Coords method
+# But that would make the coords module dependent on a plugin
+def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,enddir=None):
     """ Sweep a Coords object along a path, returning a series of copies.
 
     origin and normal define the local path position and direction on the mesh.
@@ -74,19 +107,33 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,avgdir=False,enddir=None):
                 directions[j] = Coords(enddir[i])
 
     directions = normalize(directions)
+    print directions 
 
     if type(normal) is int:
         normal = unitVector(normal)
-    normal = Coords(resize(normal,directions.shape))
-    normal = normalize(normal)
-    angles,normals = vectorPairAreaNormals(directions,normal)
-    w = where(angles==0.0)[0]
-    normals[w] = [0.,0.,1.]
-    angles = arcsin(angles)/Deg
+    angles,normals = vectorRotation(directions,normal)
+    print angles,normals
     
     base = self.translate(-Coords(origin))
-    sequence = [ base.rotate(a,v).translate(p) for a,v,p in zip(angles,normals,points) ]
 
+    if upvector is None:
+        sequence = [
+            base.rotate(a,-v).translate(p)
+            for a,v,p in zip(angles,normals,points)
+            ]     
+
+    else:
+        if type(upvector) is int:
+            upvector = Coords(unitVector(upvector))
+        uptrf = [ upvector.rotate(a,v) for a,v in zip(angles,normals) ]
+        uangles,unormals = vectorRotation(uptrf,upvector)
+        print uangles,unormals
+          
+        sequence = [
+            base.rotate(a,v).rotate(ua,uv).translate(p)
+            for a,v,ua,uv,p in zip(angles,normals,uangles,unormals,points)
+            ]
+        
     return sequence
 
 
@@ -98,6 +145,7 @@ _default_eltype = {
     6 : 'wedge6',
     8 : 'hex8',
     }
+
 
 def defaultEltype(nplex):
     """Default element type for a mesh with given plexitude.
