@@ -90,6 +90,22 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,avgdir=False,enddir=None):
     return sequence
 
 
+_default_eltype = {
+    1 : 'point',
+    2 : 'line2',
+    3 : 'tri3',
+    4 : 'quad4',
+    6 : 'wedge6',
+    8 : 'hex8',
+    }
+
+def defaultEltype(nplex):
+    """Default element type for a mesh with given plexitude.
+
+    """
+    return _default_eltype.get(nplex,None)
+
+
 class Mesh(object):
     """A mesh is a discrete geometrical model consisting of nodes and elements.
 
@@ -129,7 +145,6 @@ class Mesh(object):
         self.coords = None
         self.elems = None
         self.prop = prop
-        self.eltype = eltype
 
         if elems is None:
             if hasattr(coords,'toMesh'):
@@ -147,6 +162,11 @@ class Mesh(object):
 
         except:
             raise ValueError,"Invalid initialization data"
+
+        if eltype is None:
+            self.eltype = defaultEltype(self.nplex())
+        else:
+            self.eltype = eltype
 
 
     def copy(self):
@@ -245,18 +265,42 @@ Size: %s
             M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
 
         if autofix:
-            M.eltype = { 6:'wedge6', 8:'hex8' }.get(M.nplex(),None)
-        else:
-            M.eltype = None
+            M.eltype = defaultEltype(M.nplex())
 
         return M
 
 
-    def sweep(self,path,eltype=None,**kargs):
-        """Sweep a mesh along a path, creating an extrusion"""
+    def sweep(self,path,autofix=True,**kargs):
+        """Sweep a mesh along a path, creating an extrusion
+
+        Returns a new Mesh obtained by sweeping the given Mesh
+        over a path.
+        The returned Mesh has double plexitude of the original.
+        The operation is similar to the extrude() method, but the path
+        can be any 3D curve.
+        
+        This function is usually used to extrude points into lines,
+        lines into surfaces and surfaces into volumes.
+        By default it will try to fix the connectivity ordering where
+        appropriate. If autofix is switched off, the connectivities
+        are merely stacked, and the user may have to fix it himself.
+
+        Currently, this function correctly transforms: point1 to line2,
+        line2 to quad4, tri3 to wedge6, quad4 to hex8.
+        """
+        nplex = self.nplex()
         seq = sweepCoords(self.coords,path,**kargs)
         ML = [ Mesh(x,self.elems) for x in seq ]
-        return connectMeshSequence(ML,eltype=eltype)
+        M = connectMeshSequence(ML)
+
+        if autofix and nplex == 2:
+            # fix node ordering for line2 to quad4 extrusions
+            M.elems[:,-nplex:] = M.elems[:,-1:-(nplex+1):-1].copy()
+
+        if autofix:
+            M.eltype = defaultEltype(M.nplex())
+
+        return M
 
 
     def convert(self,fromtype,totype):
@@ -328,14 +372,14 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
 
 
 def connectMeshSequence(ML,loop=False,**kargs):
+    #print [Mi.eltype for Mi in ML]
     MR = ML[1:]
     if loop:
         MR.append(ML[0])
     else:
         ML = ML[:-1]
-    print [ type(Mi) for Mi in ML ]
     HM = [ connectMesh(Mi,Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
-    print [Mi.eltype for Mi in HM]
+    #print [Mi.eltype for Mi in HM]
     return Mesh.concatenate(HM)
 
 
