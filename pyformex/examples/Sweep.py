@@ -8,6 +8,7 @@ techniques = ['curve','sweep','mesh']
 
 from plugins import curve
 import simple
+import re
 
 linewidth(2)
 clear()
@@ -22,15 +23,17 @@ spiral_data = [
     ]
 
 
-# get the existing patterns from simple module
-cross_sections_2d = simple.Pattern
-# remove the non-plane patterns
-#del cross_sections_2d['cube']
-#del cross_sections_2d['star3d']
+# get the plane line patterns from simple module
+cross_sections_2d = {}
+for cs in simple.Pattern:
+    if re.search('[a-zA-Z]',cs) is None:
+        cross_sections_2d[cs] = simple.Pattern[cs]
 # add some more patterns
-cross_sections_2d['channel'] = '1223'
-cross_sections_2d['sigma'] = '16253'
-cross_sections_2d['H-beam'] = '11/322/311'
+cross_sections_2d.update({
+    'channel' : '1223',
+    'sigma' : '16253',
+    'H-beam' : '11/322/311',
+    })
 # define some plane surface patterns
 cross_sections_3d = {
     'filled_square':'123',
@@ -41,6 +44,7 @@ cross_sections_3d = {
 sweep_data = [
     ('cross_section',None,'select',{'text':'Shape of cross section','choices':cross_sections_2d.keys()+cross_sections_3d.keys()}),
     ('cross_rotate',0.,{'text':'Cross section rotation angle before sweeping'}),
+    ('cross_scale',0.,{'text':'Cross section scaling factor'}),
     ]
 
 
@@ -84,12 +88,16 @@ def drawSpiralCurves(PL,nwires,color1,color2=None):
 
 
 def createCrossSection():
-    if cross_section in cross_section_2d:
-        CS = Formex(pattern(cross_section_2d[cross_section]))
-    elif cross_section in cross_section_3d:
-        CS = Formex(mpattern(cross_section_3d[cross_section]))
+    if cross_section in cross_sections_2d:
+        CS = Formex(pattern(cross_sections_2d[cross_section]))
+    elif cross_section in cross_sections_3d:
+        CS = Formex(mpattern(cross_sections_3d[cross_section]))
+    # Return a Mesh, because that has a 'sweep' function
+    CS = CS.swapAxes(0,2).toMesh()
     if cross_rotate :
         CS = CS.rotate(cross_rotate)
+    if cross_scale:
+        CS = CS.scale(cross_scale)
     return CS
     
 
@@ -130,10 +138,8 @@ if not sweep:
     
 CS = createCrossSection()
 draw(CS)
-exit()
+
     
-# Use a Mesh, because that already has a 'sweep' function
-CS = CS.swapAxes(0,2).scale(0.5).toMesh()
 structure = CS.sweep(PL,normal=0,upvector=None,avgdir=True)
 clear()
 draw(structure,color=yellow)
