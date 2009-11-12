@@ -139,7 +139,11 @@ def askItems(items,caption=None,timeout=None,**kargs):
     """
     global _dialog_widget,_dialog_result
     if type(items) == dict:
-        items = items.items()
+        import warnings
+        warnings.warn("""The syntax of the askItems function has changed!
+Using a dict as items argument will now result in a tabbed InputDialog.
+See gui.widgets.InputDialog for details.""")
+        #items = items.items()
     w = widgets.InputDialog(items,caption,**kargs)
     _dialog_widget = w
     _dialog_result = None

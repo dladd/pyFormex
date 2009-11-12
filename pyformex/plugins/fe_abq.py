@@ -1167,8 +1167,8 @@ class AbqData(CDict):
           The default is to apply ALL boundary conditions initially.
           Specify a (possibly non-existing) tag to override the default.
         """
-        if not(type(model) is Model and type(prop) is PropertyDB):
-            raise ValueError,"Invalid data"
+        if not isinstance(model,Model) or not isinstance(prop,PropertyDB):
+            raise ValueError,"Invalid arguments: expected Model and PropertyDB, got %s and %s" % (type(model),type(prop))
         
         self.model = model
         self.prop = prop

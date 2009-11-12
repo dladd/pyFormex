@@ -7,16 +7,55 @@ techniques = ['curve','sweep','mesh']
 """
 
 from plugins import curve
+import simple
 
 linewidth(2)
 clear()
 
-res = askItems([
+spiral_data = [
     ('nmod',200,{'text':'Number of cells along spiral'}),
+    ('spread',False,{'text':'Spread points evenly along spiral'}),
     ('turns',2.25,{'text':'Number of 360 degree turns'}),
     ('spiral3d',0.0,{'text':'Out of plane factor'}),
     ('nwires',2,{'text':'Number of spirals'}),
-    ])
+    ('sweep',False,{'text':'Sweep a cross section along the spiral'}),
+    ]
+
+
+# get the existing patterns from simple module
+cross_sections_2d = simple.Pattern
+# remove the non-plane patterns
+#del cross_sections_2d['cube']
+#del cross_sections_2d['star3d']
+# add some more patterns
+cross_sections_2d['channel'] = '1223'
+cross_sections_2d['sigma'] = '16253'
+cross_sections_2d['H-beam'] = '11/322/311'
+# define some plane surface patterns
+cross_sections_3d = {
+    'filled_square':'123',
+    'filled_octagon':'15263748',
+    }
+
+
+sweep_data = [
+    ('cross_section',None,'select',{'text':'Shape of cross section','choices':cross_sections_2d.keys()+cross_sections_3d.keys()}),
+    ('cross_rotate',0.,{'text':'Cross section rotation angle before sweeping'}),
+    ]
+
+
+input_data = {
+    'Spiral Data' : spiral_data,
+    'Sweep Data' : sweep_data,
+}
+
+#import gui.widgets
+#dialog = widgets.InputDialog(input_data)
+#res = dialog.getResult()
+
+res = askItems(input_data)
+if not res:
+    exit()
 
 globals().update(res)
 
@@ -44,12 +83,21 @@ def drawSpiralCurves(PL,nwires,color1,color2=None):
         draw(Formex(PL.coords).rosette(nwires,360./nwires),color=color2)
 
 
+def createCrossSection():
+    if cross_section in cross_section_2d:
+        CS = Formex(pattern(cross_section_2d[cross_section]))
+    elif cross_section in cross_section_3d:
+        CS = Formex(mpattern(cross_section_3d[cross_section]))
+    if cross_rotate :
+        CS = CS.rotate(cross_rotate)
+    return CS
+    
+
 phi = 30.
 alpha2 = 70.
 c = 1.
 a = c*tand(phi)
 b = tand(phi) / tand(alpha2)
- 
 
 print "a = %s, b = %s, c = %s" % (a,b,c)
 print c*b/a
@@ -69,7 +117,7 @@ PL = curve.PolyLine(S[:,0,:])
 clear()
 drawSpiralCurves(PL,nwires,red,blue)
 
-if ack("Spread point evenly?"):
+if spread:
     at = PL.atLength(PL.nparts)
     X = PL.pointsAt(at)
     PL = curve.PolyLine(X)
@@ -77,14 +125,13 @@ if ack("Spread point evenly?"):
     drawSpiralCurves(PL,nwires,blue,red)
 
 
-sweep = ask("Sweep cross section",['None','line','surface'])
-if sweep == 'line':
-    CS = Formex(pattern('1653')).rotate(90)  # circumference of a square
-elif sweep == 'surface':
-    CS = Formex(mpattern('123'))  # a square surface
-else:
+if not sweep:
     exit()
-
+    
+CS = createCrossSection()
+draw(CS)
+exit()
+    
 # Use a Mesh, because that already has a 'sweep' function
 CS = CS.swapAxes(0,2).scale(0.5).toMesh()
 structure = CS.sweep(PL,normal=0,upvector=None,avgdir=True)
