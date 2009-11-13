@@ -2,7 +2,7 @@
 """Spirals
 
 level = 'normal'
-topics = ['geometry']
+topics = ['geometry','curves']
 techniques = ['curve','sweep','mesh']
 """
 
@@ -13,12 +13,21 @@ import re
 linewidth(2)
 clear()
 
+rfuncs = {
+    'constant': 'a',
+    'linear (Archimedes)': 'a*x+b',
+    'quadratic' : 'a*x**2+b*x+c',
+    'exponential (equi-angular)' : 'a*exp(b*x)',
+    'custom' : 'a*sqrt(x)',
+}
+
 spiral_data = [
-    ('nmod',200,{'text':'Number of cells along spiral'}),
-    ('spread',False,{'text':'Spread points evenly along spiral'}),
-    ('turns',2.25,{'text':'Number of 360 degree turns'}),
+    ('nmod',100,{'text':'Number of cells along spiral'}),
+    ('turns',2.5,{'text':'Number of 360 degree turns'}),
+#    ('rfunc',None,{'text':'Spiral function','choices':rfuncs}),
     ('spiral3d',0.0,{'text':'Out of plane factor'}),
-    ('nwires',2,{'text':'Number of spirals'}),
+    ('spread',False,{'text':'Spread points evenly along spiral'}),
+    ('nwires',1,{'text':'Number of spirals'}),
     ('sweep',False,{'text':'Sweep a cross section along the spiral'}),
     ]
 
@@ -37,7 +46,7 @@ cross_sections_2d.update({
 # define some plane surface patterns
 cross_sections_3d = {
     'filled_square':'123',
-    'filled_octagon':'15263748',
+    'filled_triangle':'12',
     }
 
 
@@ -53,18 +62,6 @@ input_data = {
     'Sweep Data' : sweep_data,
 }
 
-#import gui.widgets
-#dialog = widgets.InputDialog(input_data)
-#res = dialog.getResult()
-
-res = askItems(input_data)
-if not res:
-    exit()
-
-globals().update(res)
-
-F = Formex(origin()).replic(nmod,1.,0).scale(turns*2*pi/nmod)
-
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
     print X.shape
@@ -76,6 +73,7 @@ def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     X = hstack([x,y,z]).reshape(X.shape)
     print X.shape
     return Coords(X)
+
 
 def drawSpiralCurves(PL,nwires,color1,color2=None):
     if color2 is None:
@@ -92,62 +90,100 @@ def createCrossSection():
         CS = Formex(pattern(cross_sections_2d[cross_section]))
     elif cross_section in cross_sections_3d:
         CS = Formex(mpattern(cross_sections_3d[cross_section]))
-    # Return a Mesh, because that has a 'sweep' function
-    CS = CS.swapAxes(0,2).toMesh()
     if cross_rotate :
         CS = CS.rotate(cross_rotate)
     if cross_scale:
         CS = CS.scale(cross_scale)
+    # Return a Mesh, because that has a 'sweep' function
+    CS = CS.swapAxes(0,2).toMesh()
     return CS
+
+
+def createSpiralCurve(turns,nmod):
+    F = Formex(origin()).replic(nmod,1.,0).scale(turns*2*pi/nmod)
+
+    phi = 30.
+    alpha2 = 70.
+    c = 1.
+    a = c*tand(phi)
+    b = tand(phi) / tand(alpha2)
+
+    print "a = %s, b = %s, c = %s" % (a,b,c)
+    print c*b/a
+    print tand(45.)
+    print arctan(c*b/a) / Deg
+
+    rf = lambda x : a * exp(b*x)
+    if spiral3d:
+        zf = lambda x : spiral3d * exp(b*x)
+    else:
+        zf = lambda x : 0.0
+
+    S = spiral(F.f,[0,1,2],rf,zf)
+
+    PL = curve.PolyLine(S[:,0,:])
+
+    return PL
     
 
-phi = 30.
-alpha2 = 70.
-c = 1.
-a = c*tand(phi)
-b = tand(phi) / tand(alpha2)
 
-print "a = %s, b = %s, c = %s" % (a,b,c)
-print c*b/a
-print tand(45.)
-print arctan(c*b/a) / Deg
-
-rf = lambda x : a * exp(b*x)
-if spiral3d:
-    zf = lambda x : spiral3d * exp(b*x)
-else:
-    zf = lambda x : 0.0
-
-S = spiral(F.f,[0,1,2],rf,zf)
-
-PL = curve.PolyLine(S[:,0,:])
-
-clear()
-drawSpiralCurves(PL,nwires,red,blue)
-
-if spread:
-    at = PL.atLength(PL.nparts)
-    X = PL.pointsAt(at)
-    PL = curve.PolyLine(X)
+def show():
+    """Accept the data and draw according to them"""
     clear()
-    drawSpiralCurves(PL,nwires,blue,red)
+    dialog.acceptData()
+    res = dialog.results
+    globals().update(res)
+
+    PL = createSpiralCurve(turns,nmod)
+    drawSpiralCurves(PL,nwires,red,blue)
+
+    if spread:
+        at = PL.atLength(PL.nparts)
+        X = PL.pointsAt(at)
+        PL = curve.PolyLine(X)
+        clear()
+        drawSpiralCurves(PL,nwires,blue,red)
 
 
-if not sweep:
-    exit()
+    if not sweep:
+        return
+
+    CS = createCrossSection()
+    draw(CS)
+
+    structure = CS.sweep(PL,normal=0,upvector=None,avgdir=True)
+    clear()
+    draw(structure,color=yellow)
+
+    if nwires > 1:
+        structure = structure.toFormex().rosette(nwires,360./nwires).toMesh()
+        smoothwire()
+        draw(structure,color='orange')
+
+
+def close():
+    global dialog
+    if dialog:
+        dialog.close()
+        dialog = None
+
+
+def timeOut():
+    """What to do on a InputDialog timeout event.
+
+    As a policy, all pyFormex examples should behave well on a
+    dialog timeout.
+    Most users can simply ignore this.
+    """
+    show()
+    close()
     
-CS = createCrossSection()
-draw(CS)
-
-    
-structure = CS.sweep(PL,normal=0,upvector=None,avgdir=True)
-clear()
-draw(structure,color=yellow)
-
-if nwires > 1:
-    structure = structure.toFormex().rosette(nwires,360./nwires).toMesh()
-    draw(structure,color='orange')
-    
+# Create the modeless dialog widget
+dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
+# The examples style requires a timeout action
+dialog.timeout = timeOut
+# Show the dialog and let the user have fun
+dialog.show()
 
 # End
 

@@ -1,12 +1,11 @@
 #!/usr/bin/env python pyformex.py
-
 """TestDraw
 
 Example for testing the low level drawing functions
 
 level = 'normal'
 topics = ['geometry','mesh','drawing','color',]
-techniques = ['widgets','modeless dialog','random']
+techniques = ['widgets','dialog','random']
 """
 
 from numpy.random import rand
