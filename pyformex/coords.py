@@ -1035,7 +1035,7 @@ class Coords(ndarray):
 
 
     @classmethod
-    def concatenate(cls,L,**kargs):
+    def concatenate(clas,L,**kargs):
         """Concatenate a list of :class:`Coords` object.
 
         All :class:`Coords` object in the list L should have the same shape
@@ -1047,7 +1047,7 @@ class Coords(ndarray):
 
 
     @classmethod
-    def fromfile(*args):
+    def fromfile(clas,fil,**kargs):
         """Read a :class:`Coords` from file.
 
         This convenience function uses the numpy fromfile function to read
@@ -1056,7 +1056,11 @@ class Coords(ndarray):
         (X,Y,Z) for subsequent points, and that the total number of
         coordinates read is a multiple of 3.
         """
-        return Coords(fromfile(*args).reshape((-1,3)))
+        x = fromfile(fil,dtype=Float,**kargs)
+        print x
+        if x.size % 3 != 0 :
+            raise RuntimeError,"Number of coordinates read: %s, should be multiple of 3!" % x.size
+        return Coords(x.reshape(-1,3))
 
     
     @classmethod

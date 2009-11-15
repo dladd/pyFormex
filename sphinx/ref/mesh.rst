@@ -39,13 +39,18 @@
       .. automethod:: report()
       .. automethod:: compact()
       .. automethod:: extrude(n,step=1.,dir=0,autofix=True)
-      .. automethod:: sweep(path,eltype=None)
+      .. automethod:: sweep(path,autofix=True)
       .. automethod:: convert(fromtype,totype)
       .. automethod:: concatenate(clas,ML)
 
    Functions defined in the mesh module:
 
-   .. autofunction:: sweepCoords(path,origin=[0.,0.,0.],normal=0,avgdir=False,enddir=None)
+   .. autofunction:: vectorPairAreaNormals(vec1,vec2)
+   .. autofunction:: vectorPairCosAngles(vec1,vec2,normalized=False)
+   .. autofunction:: vectorPairAngles(vec1,vec2,normalized=False,angle_spec=Deg)
+   .. autofunction:: vectorRotation(vec1,vec2,upvec=[0.,0.,1.])
+   .. autofunction:: sweepCoords(path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,enddir=None)
+   .. autofunction:: defaultEltype(nplex)
    .. autofunction:: connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None)
    .. autofunction:: connectMeshSequence(ML,loop=False)
    .. autofunction:: createWedgeElements(S1,S2,div=1)

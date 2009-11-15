@@ -333,8 +333,8 @@ def draw(F,
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
-    ## if isinstance(F,fe.Model):
-    ##     F = [ mesh.Mesh(F.coords,e) for e in F.elems ]
+    if bbox is None:
+        bbox = GD.canvas.options.get('bbox','auto')
         
     if type(F) == list:
         actor = []
@@ -342,13 +342,19 @@ def draw(F,
         for Fi in F:
             if Fi == F[-1]:
                 nowait = wait
-            actor.append(draw(Fi,view,bbox,
+            actor.append(draw(Fi,view,None,
                               color,colormap,alpha,
                               mode,linewidth,shrink,marksize,
                               wait=nowait,clear=clear,allviews=allviews))
             if Fi == F[0]:
                 clear = False
                 view = None
+                
+        if bbox == 'auto':
+            bbox = coords.bbox(F)
+            GD.canvas.setCamera(bbox,view)
+            GD.canvas.update()
+                
         return actor
 
     if type(F) == str:
@@ -380,9 +386,6 @@ def draw(F,
     if clear:
         clear_canvas()
 
-    if bbox is None:
-        bbox = GD.canvas.options.get('bbox','auto')
-
     if view is not None and view != 'last':
         GD.debug("SETTING VIEW to %s" % view)
         setView(view)
@@ -407,8 +410,8 @@ def draw(F,
 
     GD.GUI.setBusy()
     if shrink is not None:
-        #GD.debug("DRAWING WITH SHRINK = %s" % shrink)
         F = _shrink(F,shrink)
+        
     try:
         if isinstance(F,formex.Formex):
             if F.nelems() == 0:
@@ -446,6 +449,30 @@ def draw(F,
     return actor
 
 
+def _setFocus(object,bbox,view):
+    """Set focus after a draw operation"""
+    if view is not None or bbox not in [None,'last']:
+        if view == 'last':
+            view = GD.canvas.options['view']
+        if bbox == 'auto':
+            bbox = coords.bbox(object)
+        GD.canvas.setCamera(bbox,view)
+    GD.canvas.update()
+
+
+def focus(object):
+    """Move the camera thus that object comes fully into view.
+
+    object can be anything having a bbox() method or a list thereof.
+    if no view is given, the default is used.
+
+    The camera is moved with fixed axis directions to a place
+    where the whole object can be viewed using a 45. degrees lens opening.
+    This technique may change in future!
+    """
+    GD.canvas.setCamera(bbox=bbox(object))
+    GD.canvas.update()
+
     
 def setDrawOptions(d):
     GD.canvas.setOptions(d)
@@ -463,7 +490,7 @@ def askDrawOptions(d={}):
     """
     setDrawOptions(d)
     res = askItems(GD.canvas.options.items())
-    print res
+    setDrawOptions(res)
 
 
 def reset():
@@ -616,18 +643,6 @@ def undraw(itemlist):
     GD.canvas.remove(itemlist)
     GD.canvas.update()
     GD.app.processEvents()
-
-
-def focus(object):
-    """Move the camera thus that object comes fully into view.
-
-    object can be anything having a bbox() method.
-
-    The camera is moved with fixed axis directions to a place
-    where the whole object can be viewed using a 45. degrees lens opening.
-    This technique may change in future!
-    """
-    GD.canvas.setCamera(bbox=object.bbox())
     
 
 def view(v,wait=False):

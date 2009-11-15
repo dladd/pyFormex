@@ -22,18 +22,17 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Spiral
+"""Helix
 
 level = 'beginner'
 topics = ['geometry']
 techniques = ['colors']
 
-"""
-# This constructs the same example as torus.py, but shows all steps
-m = 36 # number of cells along torus big circle
-n = 10 # number of cells along torus small circle
-# First create a long rectangle
+This is basically the same example as Torus.py, but it shows all steps.
 
+"""
+m = 36 # number of cells along helix
+n = 10 # number of cells along circular cross section
 reset()
 setDrawOptions({'clear':True})
 F = Formex(pattern("164"),[1,2,3]); draw(F)

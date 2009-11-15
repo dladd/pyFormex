@@ -302,7 +302,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.options = dict(
             view = None,       # Keep the current camera angles
             bbox = 'auto',     # Automatically zoom on the drawed object
-            clear = False,
+            clear = False,      # Clear on each drawing action
             shrink = None,
             )
 

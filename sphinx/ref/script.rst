@@ -58,7 +58,7 @@
    .. autofunction:: warning(message)
    .. autofunction:: showInfo(message)
    .. autofunction:: system(cmdline,result='output')
-   .. autofunction:: playScript(scr,name=None,filename=None,argv=[])
+   .. autofunction:: playScript(scr,name=None,filename=None,argv=[],pye=False)
    .. autofunction:: force_finish()
    .. autofunction:: step_script(s,glob,paus=True)
    .. autofunction:: breakpt(msg=None)

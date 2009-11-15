@@ -3,7 +3,9 @@
 .. common definitions for pyFormex documentation 
 
 .. |button-play| image:: images/next.png
+.. |button-wireframe| image:: images/wireframe.png
 .. |button-smooth| image:: images/smooth.png
 .. |button-flat| image:: images/flat.png
-.. |button-wireframe| image:: images/wireframe.png
+.. |button-smoothwire| image:: images/smoothwire.png
+.. |button-transparent| image:: images/transparent.png
 

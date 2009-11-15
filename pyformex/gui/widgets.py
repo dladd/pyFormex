@@ -1374,6 +1374,31 @@ class InputDialog(QtGui.QDialog):
         self._pos = self.saveGeometry()
         return self.results
 
+    
+def updateDialogItems(data,newdata):
+    """Update the input data fields with new data values
+
+    data: a list of dialog items, as required by an InputDialog.
+    newdata: a dictionary with new values for (some of) the items.
+    The values in data which have a matching key in newdata will be
+    replaced with the new value, unless it is None.
+    
+    This function requires that the dialog items are lists, not tuples.
+    """
+    if newdata:
+        if type(data) is dict:
+            for d in data:
+                print "subitems",d
+                updateDialogItems(data[d],newdata)
+        else:
+            for d in data:
+                print "item",d
+                v = newdata.get(d[0],None)
+                print v
+                if v is not None:
+                    d[1] = v
+                print d
+
 
 def dialogButtons(dialog,actions,default=None):
     """Create a set of dialog buttons

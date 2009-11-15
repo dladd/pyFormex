@@ -45,7 +45,7 @@
       .. automethod:: reflect(dir=2,pos=0,inplace=False)
       .. automethod:: affine(mat,vec=None,inplace=False)
       .. automethod:: cylindrical(dir=[0,1,2],scale=[1.,1.,1.])
-      .. automethod:: hyperCylindrical(dir=[0,1,2],scale=[1.,1.,1.],func=None,angle=Deg)
+      .. automethod:: hyperCylindrical(dir=[0,1,2],scale=[1.,1.,1.],rfunc=None,zfunc=None,angle=Deg)
       .. automethod:: toCylindrical(dir=[0,1,2])
       .. automethod:: spherical(dir=[0,1,2],scale=[1.,1.,1.],colat=False)
       .. automethod:: superSpherical(n=1.0,e=1.0,k=0.0,dir=[0,1,2],scale=[1.,1.,1.],colat=False)
@@ -66,8 +66,8 @@
       .. automethod:: projectOnCylinder(radius=1.,dir=0,center=[0.,0.,0.])
       .. automethod:: split()
       .. automethod:: fuse(nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5)
-      .. automethod:: concatenate(cls,L)
-      .. automethod:: fromfile()
+      .. automethod:: concatenate(clas,L)
+      .. automethod:: fromfile(clas,fil)
       .. automethod:: interpolate(clas,F,G,div)
 
    Functions defined in the coords module:

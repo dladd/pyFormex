@@ -1977,16 +1977,17 @@ class Formex(object):
 
         If fil is a string, a file with that name is opened. Else fil should
         be an open file.
-        The Formex is then written to that file in a native format.
+        The Formex is then written to that file in a native format, using
+        sep as separator between the coordinates.
         If fil is a string, the file is closed prior to returning.
         """
         isname = type(fil) == str
         if isname:
             fil = file(fil,'w')
-        fil.write("# Formex File Format 1.0 (http://pyformex.org)\n")
+        fil.write("# Formex File Format 1.1 (http://pyformex.org)\n")
         nelems,nplex = self.f.shape[:2]
         hasp = self.p is not None
-        fil.write("# nelems=%r; nplex=%r; props=%r; eltype=%r\n" % (nelems,nplex,hasp,self.eltype))
+        fil.write("# nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'\n" % (nelems,nplex,hasp,self.eltype,sep))
         self.f.tofile(fil,sep)
         fil.write('\n')
         if hasp:
@@ -1997,7 +1998,16 @@ class Formex(object):
 
 
     @classmethod
-    def read(clas,fil):
+    def fromfile(clas,fil,sep=' ',nplex=1):
+        """Read the coordinates of a Formex from a file"""
+        x = Coords.fromfile(fil,sep=sep)
+        if x.shape[0] % nplex != 0:
+            raise RuntimeError,"Number of points read: %s, should be multiple of %s!" % (x.shape[0],nplex)
+        return Formex(x.reshape(-1,nplex,3))
+    
+        
+    @classmethod
+    def read(clas,fil,sep=' '):
         """Read a Formex from file.
 
         fil is a filename or a file object.
@@ -2018,8 +2028,8 @@ class Formex(object):
             if s.startswith('# nelems'):
                 exec(s[1:].strip())
                 break
-        # read the coordinates
-        f = fromfile(file=fil, dtype=Float, count=ndim*nelems*nplex, sep=' ').reshape((nelems,nplex,3))
+        # read the coordinates: we know how many
+        f = fromfile(file=fil, dtype=Float, count=ndim*nelems*nplex, sep=sep).reshape((nelems,nplex,3))
         if props:
             p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
         else:

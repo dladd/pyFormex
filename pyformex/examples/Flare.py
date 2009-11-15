@@ -26,7 +26,7 @@
 
 level = 'beginner'
 topics = ['geometry']
-techniques = ['dialog','transformation','function']
+techniques = ['dialog','transform','function']
 """
 
 def addFlares(F,dir=[0,2]):

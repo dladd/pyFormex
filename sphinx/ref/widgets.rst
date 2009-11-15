@@ -291,6 +291,7 @@
    .. autofunction:: getColor(col=None,caption=None)
    .. autofunction:: inputAny(name,value,itemtype=str)
    .. autofunction:: inputAnyOld(item,parent=None)
+   .. autofunction:: updateDialogItems(data,newdata)
    .. autofunction:: dialogButtons(dialog,actions,default=None)
    .. autofunction:: messageBox(message,level='info',choices=['OK'],default=None,timeout=None)
    .. autofunction:: textBox(text,type=None,choices=['OK'])

@@ -37,7 +37,7 @@
    .. autofunction:: dos2unix(infile,outfile=None)
    .. autofunction:: unix2dos(infile,outfile=None)
    .. autofunction:: all_image_extensions()
-   .. autofunction:: fileDescription(type)
+   .. autofunction:: fileDescription(ftype)
    .. autofunction:: findIcon(name)
    .. autofunction:: projectName(fn)
    .. autofunction:: splitme(s)

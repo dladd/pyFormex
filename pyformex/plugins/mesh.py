@@ -39,33 +39,71 @@ from utils import deprecation
 # This should probably go to formex or coords module
 
 
+def vectorPairAreaNormals(vec1,vec2):
+    """Compute area of and normals on parallellograms formed by vec1 and vec2.
+
+    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+    The result is a tuple of two arrays:
+    - area (n) : the area of the parallellogram formed by vec1 and vec2.
+    - normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
+    These are calculated from the cross product of vec1 and vec2, which indeed
+    gives area * normal.
+
+    Note that where two vectors are parallel, an area zero will results and
+    an axis with components NaN.
+    """
+    normal = cross(vec1,vec2)
+    area = vectorLength(normal)
+    print "vectorPairAreaNormals",area,normal
+    normal /= area.reshape((-1,1))
+    return area,normal
+
+
 def vectorPairCosAngles(vec1,vec2,normalized=False):
+    """Return the cosine of the angles between two vectors.
+
+    vec1: an (nvector,3) shaped array of floats
+    vec2: an (nvector,3) shaped array of floats
+    normalized: can be set True if the vectors are already normalized. 
+
+    Return value: an (nvector,) shaped array of floats
+    """
     if not normalized:
         vec1 = normalize(vec1)
         vec2 = normalize(vec2)
     return dotpr(vec1,vec2)
 
+
 def vectorPairAngles(vec1,vec2,normalized=False,angle_spec=Deg):
     return arccos(vectorPairCosAngles(vec1,vec2,normalized))/angle_spec
 
 
-def vectorRotation(vec1,vec2,angle_spec=Deg):
+def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     """Return axis and angle to rotate vectors in a parallel to b
 
     vectors in a and b should be unit vectors.
     The returned axis is the cross product of a and b. If the vectors
     are already parallel, a random vector normal to a is returned.
     """
-    vec1 = normalize(vec1)
-    vec2 = normalize(vec2)
-    area,normals = vectorPairAreaNormals(vec1,resize(vec2,vec1.shape))
-    angles = vectorPairAngles(vec1,vec2,normalized=True)
-    w = where(area==0.0)[0]
-    if len(w) > 0:
-        vec1 = normalize(random.random((len(w),3)))
-        area1,normals1 = vectorPairAreaNormals(vec1,resize(vec2,vec1.shape))
-        normals[w] = normals1
-    return angles,normals
+    u = normalize(vec1)
+    u1 = normalize(vec2)
+    v = normalize(upvec)
+    v1 = v
+    w = cross(u,v)
+    w1 = cross(u1,v)
+    wa = where(length(w) == 0)
+    wa1 = where(length(w1) == 0)
+    print u
+    print u1
+    print v
+    print v1
+    print w
+    print w1
+    if len(wa) > 0 or len(wa1) > 0:
+        print wa,wa1
+        raise
+    ## if len(wa1) 
+    ##      = normalize(random.random((len(w),3)))
 
 
 # Should probably be made a Coords method

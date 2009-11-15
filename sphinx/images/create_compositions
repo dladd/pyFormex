@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Create composed images
+#
+convert +append tetraeder-wireframe.png tetraeder-smoothwire.png tetraeder.png
