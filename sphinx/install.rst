@@ -212,6 +212,8 @@ want to do this before installing a new version, especially if you
 install a new release of an already existing version.
 
 
+.. _subsec:development-version:
+
 Install additional software 
 --------------------------- 
 
@@ -222,10 +224,61 @@ packages: interesting for those users who need them, but not essential
 for everybody.  The user has the choice to install these extras or
 not.
 
-Some external packages however do not come in an easy to install package, ot
+Some external packages however do not come in an easy to install package, or
 the available packaged formats do not collaborate well with pyFormex.
 Therefore, we have created a set of dedicated install script to ease the
-installation of these external packages.
+installation of these external packages. Currently, there is an
+install procedure for the following packages:
+
+.. warning:: We provide these installation procedures for your
+   convenience, but take no responsibility for them working correctly.  
+
+**gl2ps**
+   This package allows to save the OpenGL rendering to a file in
+   vector format. Currently supported are ``eps``, ``pdf`` and
+   ``svg``. Our install procedure provides the necessary Python
+   interface and installs the gl2ps library at the same time. 
+
+**gts**
+   This package (Gnu Triangluted Surfaces) implements a library of
+   powerful functions for operating on triangulated surface models.
+   It also delivers some example programs built with the library.
+   The pyFormex ``surface`` plugin uses these for many of its
+   functions. Because the examples programs are usually not installed
+   from distribution specific binary packages, and pyFormex uses
+   customized names for them, we advise you to use our install
+   procedure.
+
+**tetgen**
+   This package provides a high quality tetrahedral mesher. pyFormex
+   has some import and export functions for the specific ``tetgen`` file formats. 
+   Since ``tetgen`` is only distributed in source form, we provide this
+   install procedure to help with the compile/install.
+
+**calpy**
+   Calpy is an experimental package that provides efficient Finite Element
+   simulations through a Python interface. It does this by calling
+   into a library of compiled Fortran routines. There is currently no
+   distribution to the general public yet, but this install procedure
+   grabs the source from our local FTP server, compiles the library
+   and creates the Python interface. pyFormex comes with some examples
+   that use Calpy as a simulatiopn tool.
+
+To install any of these packages, proceed as follows. Go to the
+directory where you unpacked the pyFormex distribution:
+``cd pyformex-version``. Then go to the ``pyformex/external``
+subdirectory, where you will find a subdirectory for each of the
+above packages. Go into the directory of the package you wish to
+install and execute the following command (with root privileges):
+``./PACKAGENAME.install all``
+
+All these procedures will install under ``/usr/local``. If you wish to
+change this, you will have to change the install procedure. 
+The install procedures can also be sued to perform only part of the
+installation process. Thus, ``./PACKAGENAME.install get unpack`` will
+only download and unpack that package. See the README files and the
+install procedures themselves for more info.
+
 
 
 .. _sec:alpha-release:

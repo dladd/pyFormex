@@ -3,3 +3,4 @@
 # Create composed images
 #
 convert +append tetraeder-wireframe.png tetraeder-smoothwire.png tetraeder.png
+convert +append props-000.png props-001.png props-002.png props-003.png props.png

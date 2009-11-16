@@ -136,6 +136,15 @@ TRICKS
    script, before any scripts specified on the command line, and
    before giving the input focus to the user.
 
+
+#. **Get a list of all available image formats**
+
+   ::
+
+      import gui.image
+      print image.imageFormats()
+
+
 #. **Create a movie from a sequence of recorded images**
 
    The multisave option allows you to easily record a series of images

@@ -199,6 +199,7 @@
       .. automethod:: cutAtPlane(p,n,newprops=None,side='+',atol=0.)
       .. automethod:: split(n=1)
       .. automethod:: write(fil,sep=' ')
+      .. automethod:: fromstring(clas,fil,sep=' ',nplex=1,ndim=3,count=-1)
       .. automethod:: fromfile(clas,fil,sep=' ',nplex=1)
       .. automethod:: read(clas,fil,sep=' ')
       .. automethod:: reverseElements()

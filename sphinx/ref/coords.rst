@@ -67,6 +67,7 @@
       .. automethod:: split()
       .. automethod:: fuse(nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5)
       .. automethod:: concatenate(clas,L)
+      .. automethod:: fromstring(clas,fil,sep=' ',ndim=3,count=-1)
       .. automethod:: fromfile(clas,fil)
       .. automethod:: interpolate(clas,F,G,div)
 

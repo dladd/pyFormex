@@ -30,7 +30,8 @@ The definitions in these modules are always available to your scripts, without
 the need to explicitely import them.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :numbered:
 
    ref/coords
    ref/formex

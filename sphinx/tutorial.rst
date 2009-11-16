@@ -105,7 +105,7 @@ Getting started
      :linenos:
 
 .. note:: If the editor does not open, you may need to configure
-   the editor command:  see :ref: `Settings --> Commands <settings-commands>`.
+   the editor command:  see :ref:`Settings --> Commands <settings-commands>`.
 
    Make sure you are using an editor that understands Python code. Most modern
    editors will give you syntax highlighting and help with indentation.
@@ -296,15 +296,10 @@ pyFormex uses the NumPy :class:`ndarray` as implementation of fast
 numerical arrays in Python.
 
 
-.. _sec:geom:
-
-Creating geometrical models
-===========================
-
 .. _sec:formex:
 
 The Formex data model
----------------------
+=====================
 
 .. index::
    single: Formex
@@ -363,11 +358,16 @@ Further, ``F[i][j]`` will be a :math:`(3,)`\ -shaped array containing the
 coordinates of point :math:`j` of element :math:`i`. Finally, ``F[i][j][k]`` is
 a single floating point value representing one coordinate of that point.
 
+In the following sections of this tutorial, we will first learn you
+how to create simple geometry using the Formex data model and how to
+use the basic pyFormex interface functions. The real power of the
+:class:`Formex` class will then be established starting from the section :ref:`sec:transform`.
+ 
 
-.. _subsec:create:
+.. _sec:create_formex:
 
-Creating a Formex 
------------------ 
+Creating a Formex
+=================
 
 There are many, many ways to create :class:`Formex` instances in your
 scripts.  Most of the geometrical operations and transformations in
@@ -376,8 +376,10 @@ a new geometric structure from simple coordinate data? Well, there are
 several ways to do that too, and we'll introduce them one by one.
 
 
+.. _subsec:direct_input:
+
 Direct input of structured coordinate data
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The most straightforward way to create a Formex is by directly
 specifying the coordinates of the points of all its elements in a way
@@ -539,15 +541,28 @@ Hold down the left mouse button and move the mouse: the pyramid will
 rotate. In the same way, holding down the rigth button will zoomin and
 out. Holding down the middle button (possibly the mouse wheel, or the
 left and right button together) will move the pyramid over the canvas.
-Practice a bit with this mouse manipulations, to get a feeling of what
+Practice a bit with these mouse manipulations, until you get a feeling of what
 they do.
 All these mouse operations do not change the coordinates of the
-structure: they just change the way you're looking at it.
+structure: they just change the way you're looking at it. You can
+restore the default view with the :menuselection:`Views --> Front`
+menu or the |button-front| button. 
+
+The default installation of pyFormex provides seven default views:
+``Front``, ``Back``, ``Left``, ``Right``, ``Top``, ``Bottom`` and
+``Iso``. They can be set from the :menuselection:`Views` menu items or
+the corresponding view buttons in the toolbar.  The default ``Front``
+corresponds to the camera looking in the :math:`-z` direction, with
+the :math:`x` axis oriented to the right and the :math:`y` axis
+upward.
+
 
 We explicitely added the element type ``tet4`` when creating the
 pyramid. Without it, pyFormex would have interpreted the 4-plex Formex
 as a quadrilateral (though in this case a non-planar one).
 
+
+.. _subsec:using_patterns:
 
 Using the :func:`pattern` or :func:`mpattern` functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -607,7 +622,7 @@ Figure :ref:`fig:patterns` shows some more examples.
    :align: center
    :alt: Images generated from patterns
 
-   Images generated from the patterns '126', '11722' and '22584433553388'
+   Images generated from the patterns '127', '11722' and '22584433553388'
 
 The :func:`mpattern` function is more general than :func:`pattern` in that it allows the
 creation of Formices of any plexitude. Each subsequent point is added
@@ -628,11 +643,10 @@ ready for use.  These pattern strings are stacked in a dictionary called
 :func:`pattern` function to produce coordinates::
 
    #!/usr/bin/env pyformex
-   from simple import *
+   from simple import Pattern
    F = Formex(pattern(Pattern['cube']))
-   clear()
-   draw(F,view='iso')
    print F.shape()
+   draw(F,color=blue,view='iso')
 
 .. _`fig:cube`:
 
@@ -647,6 +661,12 @@ what we have created here is not a 3D solid cube, nor the planes bounding
 that cube, but merely twelve straight line segments forming the edges
 of a cube. 
 
+The ``view='iso'`` option in the draw statement rotates the camera so
+that it looks in the [-1,-1,-1] direction. This is one of the
+predefined viewing directions and can also be set from the
+:menuselection:`Views` menu or using the |button-iso| button.
+
+
 While the :func:`pattern` and :func:`mpattern` functions can
 only generate points lying on a regular cartesian grid, pyFormex provides
 a wealth of transformation functions to move the points to other
@@ -655,8 +675,10 @@ Also, the :mod:`Turtle` plugin module provides a more general mechanism to
 create planar wireframe structures.
   
 
-Reading coordinates from a file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. _subsec:reading_from_file_or_string:
+
+Reading coordinates from a file or a string
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Sometimes you want to read the coordinates from a file, rather
 than specifying them directly in your script.
 This is especially handy
@@ -665,41 +687,54 @@ export data in a format that is understood by pyFormex. There usually is a
 way to write the bare coordinates to a file, and the pyFormex
 scripting language provides all the necessary tools to read them back.
 
-As an example, create the text file ``square.txt`` (in the same folder
-where you store your scripts) with the following contents::
+As an example, create (in the same folder where you store your
+scripts) the text file ``square.txt`` with the following contents::
 
-   0, 0, 0, 
-   0, 1, 0,
-   1, 1, 0, 
-   1, 0, 0,
+   0, 0, 0,  0, 1, 0,  1, 1, 0,  1, 0, 0,
+   1, 1, 0,  2, 1, 0,  2, 2, 0,
+   1, 2, 0,
 
 Then create and execute the following script. It will generate the
 same square as above (figure :ref:`fig:square`).  ::
 
    #!/usr/bin/env pyformex
    chdir(__file__)
-   F = Formex.fromfile('square.text',sep=',',nplex=4)
+   F = Formex.fromfile('square.txt',sep=',',nplex=4)
    draw(F)
 
 The ``chdir(__file__)`` statement sets your working
 directory to the directory where the script is located, so that the filename
 can be specified without adding the full pathname.
-The :func:`Formex.fromfile` call reads the coordinates (as specified, separated by ',') from the file and groups them into elements of the specified
+The :meth:`Formex.fromfile` call reads the coordinates (as specified, separated by ',') from the file and groups them into elements of the specified
 plexitude (4). The grouping of coordinates on a line is irrelevant:
-all data could just as well be given on a single line, or one value
+all data could just as well be given on a single line, or with just one value
 per line. The separator character can be accompanied by extra
 whitespace. Use a space character if your data are only separated by
 whitespace. 
 
-.. note :: Make sure to use :func:`Formex.fromfile`, to distinguish it from
-           :func:`Coords.fromfile` and :func:`numpy.fromfile`.
+There is a similar :meth:`Formex.fromstring` method, which reads
+coordinates directly from a string in the script. 
+If you have a lot of coordinates to specify, this may be far more easy
+than using the list formatting. 
+The following script yields the same result as the above one::
+
+   #!/usr/bin/env pyformex
+   F = Formex.fromstring("""
+   0 0 0  0 1 0  1 1 0  1 0 0
+   1 1 0  2 1 0  2 2 0  1 2 0
+   """,nplex=4)
+   draw(F)
+
+Here we used the default separator, which is a space.
+
+.. note :: Make sure to use :meth:`Formex.fromfile`, to distinguish it from
+           :meth:`Coords.fromfile` and :meth:`numpy.fromfile`.
 
 
-
-.. _subsec:concatenation:
+.. _sec:concatenation_and _lists:
 
 Concatenation and lists of Formices
------------------------------------
+===================================
 
 Multiple Formices can be concatenated to form one new Formex. There
 are many ways to do this, but the simplest is to use the '+' or
@@ -746,10 +781,10 @@ center point of the square (G: plexitude 1), both in red.
    A square and its center point.
 
 
-.. _subsec:propnr:
+.. _sec:propnr:
 
 Formex property numbers
------------------------
+=======================
 
 Apart from the coordinates of its points, a :class:`Formex` object can
 also store a set of property numbers. This is a set of integers, one
@@ -793,7 +828,7 @@ individual values by directly accessing the :attr:`p` attribute::
 
    F = Formex(mpattern('12-34-14-32'),[1,3])
    F.p[3] = 4
-   print F.p   # --> [1 3 1 4]
+   print(F.p)   # --> [1 3 1 4]
    draw(F)
    drawNumbers(F)
 
@@ -804,7 +839,7 @@ in different colors. The default color table has eight colors:
 ``[black, red, green, blue, cyan, magenta, yellow, white]`` and will wrap
 around if a property value larger than 7 is used. You can however
 specify any other and larger colorset to be used for drawing the
-property colors. The following figure shows three different renderings
+property colors. The following figure shows different renderings
 of the structure created by the above script. The :func:`drawNumbers`
 function draws the element numbers (starting from 0).  
 
@@ -812,40 +847,149 @@ function draws the element numbers (starting from 0).
 
 .. figure:: images/props.png
    :align: center
-   :alt: A Formex with properties 
+   :alt: A Formex with properties drawn as colors
 
-   A Formex with property numbers drawn as colors
-   Left: flat rendering; middle: transparent flat rendering;
-   right: wireframe.
+   A Formex with property numbers drawn as colors. From left to right:
+   wireframe, flat, flat (transparent), flatwire (transparent).
 
+Remark how the flat rendering mode obscures the element numbers. We
+make them reappear by using the transparent mode, which can be toggled
+with the |button-transparent| button. 
 
-The following lines show the creation of the four Formices displayed
-in figure :ref:`fig:props`, where elements with property value 1 are
-shown in red, those with property value 3 are shown in blue.  ::
-
-   F0 = Formex(mpattern('12-34'),[1,3])
-   F1 = F0.replic2(4,2)
-   F2 = F1 + F1.mirror(1)
-   F3 = F2 + F2.rotate(180.,1)
-   draw(F3)
+Adding properties to a Formex is often done with the sole purpose of
+drawing with multiple colors. But remember you are free to use the properties
+for any purpose you want. You can even save, change and restore them
+throughout the lifetime of a Formex object, thus you can attibrute
+multiple property sets to a Formex.
 
 
-.. _subsec:changing:
+.. _sec:formex_info:
+
+Getting information about a Formex
+==================================
+
+While the visual feedback on the canvas usually gives a good
+impression of the structure you created, at times the view will not
+provide enough information or not precise enough. Viewing a 3D
+geometry on a 2D screen can at times even be very misleading. The most
+reliable source for checking your geometry will always be the Formex
+data itself. We have already seen that you can print the coordinates of the Formex ``F``
+just by printing the Formex itself: ``print(F)``. 
+Likewise you can see the property numbers from a ``print(F.p)`` instruction.
+
+But once you start using large data structures, this information may become difficult to handle.
+You are usually better of with some generalized information about the Formex object.
+The :class:`Formex` class provides a number of methods that return such information.
+The following table lists the most interesting ones.
+
++--------------------+----------------------------------------------+
+| Function           | Description                                  |
++====================+==============================================+
+| :meth:`F.nelems()` | Return the number of elements in the Formex. |
++--------------------+----------------------------------------------+
+| :meth:`F.nplex()`  | Return the plexitude (the number of point in |
+|                    | each element) of the Formex.                 |
++--------------------+----------------------------------------------+
+| :meth:`F.prop()`   | Return the properties array (same as F.p).   |
++--------------------+----------------------------------------------+
+| :meth:`F.bbox()`   | Return the bounding box of the Formex.       |
++--------------------+----------------------------------------------+
+| :meth:`F.center()` | Return the center of the Formex.             |
++--------------------+----------------------------------------------+
+ 
+
+.. _sec:saving_images:
+
+Saving images
+=============
+
+Often you will want to save an image of the created geometry to a
+file, e.g. to include it in some document. This can readily be done
+from the :menuselection:`File --> Save Image` menu. You just have to
+fill in the file name and click the :guilabel:`Save` buttton. 
+You can specify the file format by using the appropriate extension in
+the file name. The default and recommended format is ``png``, but
+pyFormex can save in commonly used bitmap formats like ``jpg`` or
+``gif`` as well. 
+If you have installed ``gl2ps`` (see :ref:`subsec:development-version`), you can even save in a number of
+vector formats, such as ``eps`` or ``svg``.
+
+But you can also create the images from inside your script. Just
+import the ``image`` module and call the ``image.save()`` function::
+   
+   import gui.image
+   image.save("my_image.png")
+
+Often you will want to change some settings, like rendering mode or
+background color, to get a better looking picture.
+Since the main goal of pyFormex is to automate the creation and
+transformation of geometrical models, all these settings can be
+changed from inside your script as well. 
+The following code was used to create the four images in 
+figure :ref:`fig:props` above.
+
+::
+
+   import gui.image
+   chdir(__file__)
+   reset()
+   bgcolor(white)
+   linewidth(2)
+   canvasSize(200,300)
+   F = Formex(mpattern('12-34-14-32'),[1,3])
+   F.p[3] = 4
+   clear()
+   draw(F)
+   drawNumbers(F)
+   wireframe()
+   image.save('props-000.png')
+   flat()
+   transparent(False)
+   image.save('props-001.png')
+   transparent(True)
+   image.save('props-002.png')
+   flatwire()
+   image.save('props-003.png')
+
+The following table lists the interactive menu
+option and the correspondant programmable function to be used to
+change some of the most common rendering settings.
+
++--------------------+------------------------+------------------------------------------------+
+| Purpose            | Function(s)            | Menu item                                      |
++====================+========================+================================================+
+| Background color   | bgcolor()              | :menuselection:`Viewport --> Background Color` |
++--------------------+------------------------+------------------------------------------------+
+| Line width         | linewidth()            | :menuselection:`Viewport --> LineWidth`        |
++--------------------+------------------------+------------------------------------------------+
+| Canvas Size        | canvasSize()           | :menuselection:`Viewport --> Canvas Size`      |
++--------------------+------------------------+------------------------------------------------+
+| Render Mode        | wireframe(),           | :menuselection:`Viewport --> Render Mode`      |
+|                    | flat(), flatwire(),    |                                                |
+|                    | smooth(), smoothwire() |                                                |
++--------------------+------------------------+------------------------------------------------+
+| Transparency       | transparent()          |                                                |
++--------------------+------------------------+------------------------------------------------+
+
+
+ 
+
+.. _sec:transform:
 
 Transforming a Formex
----------------------
+=====================
 
 Until now, we've only created simple Formices. The strength of
 pyFormex however is the ease to generate large geometrical models by a sequence of
 mathematical transformations. After creating a initial Formex, you can
 transform it by creating copies, translations, rotations, projections,...
 
-The :class:`Formex` class has an wide range of transformation methods
-available, and this is not the place to describe them all. The reference manual 
-:doc:`refman` describes them all in detail.
+The :class:`Formex` class has an wide range of powerful transformation methods
+available, and this is not the place to treat them all. The reference manual 
+:doc:`refman` describes them in detail.
 
 We will illustrate the power of the :class:`Formex` transformations by
-studying one of the examples that come with pyFormex. The
+studying one of the examples included with pyFormex. The
 examples can be accessed from the :menuselection:`Examples` menu
 option.
 
@@ -873,40 +1017,29 @@ script` to load it in your editor.
 .. literalinclude:: _static/scripts/Helix.py
    :linenos:
 
+The script shows all steps in the building of the helical structure. 
+We will explain and illustrate them one by one.
+If you want to see the intermediate results in pyFormex during
+execution of the script, you can set a wait time between
+subsequent drawing operations with :menuselection:`Settings --> Draw
+Wait Time`. Or alternatively, you can start the script with the
+|button-step| button: pyFormex will then halt before each ``draw``
+function and wait until you push the |button-step| again.
+ 
+The script starts (lines 3-4) with setting the two parameters ``m`` and ``n``. It is
+always a good idea to put constants in a variable. That makes it easy to
+change the values in a single place when you want to create another
+structure:
+`your model has become a parametric model.`
 
-During this first read-through, you will have noticed that every step is drawn.
-Of course, this is not necessary, but it can be useful. And above all, it is
-very educational for use in a tutorial...
+Lines 5 resets the drawing options to the defaults. It is not essential in this script but it is often a good idea to restore the defaults, in case they would have been changed by a script tha was run previously.
+Setting the ``clear=True`` option in line 6 makes sure the subsequent drawing instructions will remove the previous step from the canvas.
 
-The next important thing is that parameters were used. It's recommended to
-always do this, especially when you want to do a parametric study of course, but
-it can also be very convenient if at some point you want to change the geometry
-(for example when you want to re-use the script for another application).
+In line 7 we create the basic geometrical entity for this structure: a triangle consisting of three lines, which we give the properties 1, 2 and 3, so that the three lines are shown in a different color::
 
-A simple function :func:`drawit` is defined for use in this script only. This
-function only provides a shorter way of drawing Formices, since it combines
-:func:`clear` and :func:`draw`.
+   F = Formex(pattern("164"),[1,2,3]) 
 
-Now, let's dissect the script. ::
-
-   def drawit(F,view='front'):
-       clear()
-       draw(F,view)
-
-This is a small function that is only defined in this script. It clears the
-screen and draws the Formex at the same time.  ::
-
-   m = 36 # number of cells along torus big circle
-   n = 10 # number of cells along torus small circle
-
-These are the parameters. They can easily be changed, and a whole new spiral
-will be created without any extra effort. The first step is to create a basic
-Formex. In this case, it's a triangle which has a different property number for
-every edge.  ::
-
-   F = Formex(pattern("164"),[1,2,3]); drawit(F)  
-
-.. _`fig:basic-formex`:
+.. _`fig:helix-000`:
 
 .. figure:: images/helix-000.png
    :align: center
@@ -914,14 +1047,31 @@ every edge.  ::
 
    The basic Formex
 
-This basic Formex is copied 'm' times in the 0-direction with a translation
-step of '1' (the length of an edge of the triangle). After that, the new  Formex
-is copied 'n' times in the 1-direction with a translation step of '1'.  Because
-of the recursive definition (F=F.replic), the original Formex F is  overwritten
-by the transformed one.  ::
+This basic Formex is copied ``m`` times with a translation step 1.0 (this is precisely the length
+of the horizontal edge of the triangle) in the 0 direction::
 
-   F = F.replic(m,1,0); drawit(F)
-   F = F.replic(n,1,1); drawit(F)
+   F = F.replic(m,1.,0)
+
+.. _`fig:helix-001`:
+
+.. figure:: images/helix-001.png
+   :align: center
+   :alt: Replicated in x-direction
+
+   Replicated in x-direction
+
+Then, the new  Formex
+is copied ``n`` times  with the same step size in the direction 1. ::
+
+   F = F.replic(n,1.,1)
+
+.. _`fig:helix-002`:
+
+.. figure:: images/helix-002.png
+   :align: center
+   :alt: Replicated in y-direction
+
+   Replicated in y-direction
 
 Now a copy of this last Formex is translated in direction '2' with a
 translation step of '1'. This necessary for the transformation into a cilinder.
@@ -1019,62 +1169,10 @@ torus.   ::
 
 
 
-
-
-Saving images
--------------
-
-.. _subsec:images:
-
-After drawing the Formex, you might want to save the image. This is very easy to
-do: ---  :menuselection:`File --> Save Image` ---  The filetype should be 'bmp',
-'jpg', 'pbm', 'png', 'ppm', 'xbm', 'xpm', 'eps', 'ps', 'pdf' or 'tex'.  ---  To
-create a better looking picture, several settings can be changed:
-
-* Change the background color :menuselection:`Settings --> Background Color`
-
-* Use a different (bigger) linewidth :menuselection:`Settings --> Linewidth`
-
-* Change the canvas size. This prevents having to cut and rescale the figure
-  with an image manipulation program (and loosing quality by doing so).
-  :menuselection:`Settings --> Canvas Size`
-
-It is also possible to save a series of images. This can be especially useful
-when playing a script which creates several images, and you would like to save
-them all.  For example, figure :ref:`fig:wirestent-steps`, which shows the
-different steps in the creation of the WireStent model, was created this way.
----  :menuselection:`File --> Toggle MultiSave` ---
-
-
-.. _subsec:info:
-
-Information about a Formex
---------------------------
-
-The Formex class has several methods related to abtaining information obout the
-object. We refer to the reference manual in chapter :ref:`cha:reference` for a
-full list. Some of the most interesting and often used ones are:
-
-+-------------------+----------------------------------------------+
-| Function          | Description                                  |
-+===================+==============================================+
-| :exc:`F.nelems()` | Return the number of elements in the Formex. |
-+-------------------+----------------------------------------------+
-| :exc:`F.nplex()`  | Return the plexitude (the number of point in |
-|                   | each element) of the Formex.                 |
-+-------------------+----------------------------------------------+
-| :exc:`F.prop()`   | Return the properties array (same as F.p).   |
-+-------------------+----------------------------------------------+
-| :exc:`F.bbox()`   | Return the bounding box of the Formex.       |
-+-------------------+----------------------------------------------+
-| :exc:`F.center()` | Return the center of the Formex.             |
-+-------------------+----------------------------------------------+
-
-
-.. _subsec:femodel:
+.. _sec:femodel:
 
 Converting a Formex to a Finite Element model
----------------------------------------------
+=============================================
 
 The :meth:`feModel` method is important in exporting the geometry to finite
 element (FE) programs. A Formex often contains many points with (nearly) the
