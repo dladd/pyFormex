@@ -1047,6 +1047,35 @@ class Coords(ndarray):
 
 
     @classmethod
+    def fromstring(clas,fil,sep=' ',ndim=3,count=-1):
+        """Create a :class:`Coords` object with data from a string.
+
+        This convenience function uses the :func:`numpy.fromstring`
+        function to read coordinates from a string.
+
+        fil: a string containing a single sequence of float numbers separated
+             by whitespace and a possible separator string.
+        sep: the separator used between the coordinates. If not a space,
+             all extra whitespace is ignored. 
+        ndim: number of coordinates per point. Should be 1, 2 or 3 (default).
+             If 1, resp. 2, the coordinate string only holds x, resp. x,y
+             values.
+        count: total number of coordinates to read. This should be a multiple
+               of 3. The default is to read all the coordinates in the string.
+               count can be used to force an error condition if the string
+               does not contain the expected number of values.
+
+        The return value is  Coords object.
+        """
+        x = fromstring(fil,dtype=Float,sep=sep,count=count)
+        if count > 0 and x.size != count :
+            raise RuntimeError,"Number of coordinates read: %s, expected %s!" % (x.size,count)
+        if x.size % ndim != 0 :
+            raise RuntimeError,"Number of coordinates read: %s, expected a multiple of %s!" % (x.size,ndim)
+        return Coords(x.reshape(-1,ndim))
+
+
+    @classmethod
     def fromfile(clas,fil,**kargs):
         """Read a :class:`Coords` from file.
 
@@ -1057,7 +1086,6 @@ class Coords(ndarray):
         coordinates read is a multiple of 3.
         """
         x = fromfile(fil,dtype=Float,**kargs)
-        print x
         if x.size % 3 != 0 :
             raise RuntimeError,"Number of coordinates read: %s, should be multiple of 3!" % x.size
         return Coords(x.reshape(-1,3))

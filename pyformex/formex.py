@@ -1998,6 +1998,34 @@ class Formex(object):
 
 
     @classmethod
+    def fromstring(clas,fil,sep=' ',nplex=1,ndim=3,count=-1):
+        """Create a :class:`Formex` from coodinates in a string.
+
+        This uses the :method:`Coords.fromstring` method to read coordinates
+        from a string and restructures them into a Formex of the specified
+        plexitude.
+
+        fil: a string containing a single sequence of float numbers separated
+             by whitespace and a possible separator string.
+        sep: the separator used between the coordinates. If not a space,
+             all extra whitespace is ignored. 
+        ndim: number of coordinates per point. Should be 1, 2 or 3 (default).
+             If 1, resp. 2, the coordinate string only holds x, resp. x,y
+             values.
+        count: total number of coordinates to read. This should be a multiple
+               of 3. The default is to read all the coordinates in the string.
+               ``count`` can be used to force an error condition if the string
+               does not contain the expected number of values.
+
+        The return value is  Coords object.
+        """
+        x = Coords.fromstring(fil,sep=sep,ndim=ndim,count=count)
+        if x.shape[0] % nplex != 0:
+            raise RuntimeError,"Number of points read: %s, expected a multiple of %s!" % (x.shape[0],nplex)
+        return Formex(x.reshape(-1,nplex,3))
+
+
+    @classmethod
     def fromfile(clas,fil,sep=' ',nplex=1):
         """Read the coordinates of a Formex from a file"""
         x = Coords.fromfile(fil,sep=sep)

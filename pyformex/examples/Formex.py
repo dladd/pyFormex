@@ -57,9 +57,9 @@ def drawFrame(P):
     frame = (h + v).trl(P)
     draw(frame,linewidth=1.0,bbox=None)
 
-drawAxis(30,0,'axis 2: coordinates')
-drawAxis(30,-90,'axis 1: points')
-F = drawAxis(50,30,'axis 0: elements').divide(8)
+drawAxis(30,0,'axis 2: coordinates (x,y,z): length = 3')
+drawAxis(30,-90,'axis 1: points: length = self.nplex()')
+F = drawAxis(50,30,'axis 0: elements: length = self.nelems()').divide(8)
 
 for i in range(1,5,2):
     drawFrame(F[i][1])

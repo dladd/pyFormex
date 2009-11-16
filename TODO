@@ -57,6 +57,8 @@ Each task can have the following keys:
    - Derive BBoxActor from GridActor
       
    - Add a CoordPlaneActor to the formex_menu
+
+   - Add a GRID option to the canvas
       
    - Create CURVE objects
       dev: bverheg
@@ -68,6 +70,9 @@ Each task can have the following keys:
       sta: PARTIAL
       
    - Add an interactive command window to the GUI
+      dev: bverheg
+      sta: PARTIAL
+      rem: A single command line is available. 
       
    - Add an interactive Python aware editor widget
       
@@ -79,6 +84,10 @@ Each task can have the following keys:
       sta: TODO
 
    - Fix all docstrings for the sphinx system
+
+   - Finish the tutorial
+
+   - Complete the Coords.fromfile and Formex.fromfile arguments
 
       
       

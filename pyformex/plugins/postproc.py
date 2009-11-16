@@ -55,10 +55,14 @@ def niceNumber(f,approx=floor):
 
 
 def argNearestValue(values,target):
-    """Return the position of the item from the list of values that is
-    nearest to target.
+    """Return the index of the item nearest to target.
 
-    target is a float value, values must be convertible to an array of floats.
+    ``values``: a list of float values
+    
+    ``target``: a single value
+
+    Return value: the position of the item in ``values`` values that is
+    nearest to ``target``.
     """
     v = array(values).ravel()
     c = v - target
@@ -66,9 +70,14 @@ def argNearestValue(values,target):
 
 
 def nearestValue(values,target):
-    """Return the item from the list of values that is nearest to target.
+    """Return the item nearest to target.
 
-    target is a float value, values must be convertible to an array of floats.
+    ``values``: a list of float values
+    
+    ``target``: a single value
+
+    Return value: the item in ``values`` values that is
+    nearest to ``target``.
     """
     return values[argNearestValue(values,target)]
 
@@ -76,16 +85,21 @@ def nearestValue(values,target):
 def frameScale(nframes=10,cycle='up',shape='linear'):
     """Return a sequence of scale values between -1 and +1.
 
-    nframes is the number of steps between 0 and |1| values.
+    ``nframes`` : the number of steps between 0 and -1/+1 values.
 
-    cycle determines how subsequent cycles occur:
-      'up' : ramping up
-      'updown': ramping up and down
-      'revert': ramping up and down then reverse up and down
+    ``cycle``: determines how subsequent cycles occur:
+      
+      ``'up'``: ramping up
+      
+      ``'updown'``: ramping up and down
+      
+      ``'revert'``: ramping up and down then reverse up and down
 
-    shape determines the shape of the amplitude curve:
-      'linear': linear scaling
-      'sine': sinusoidal scaling
+    ``shape``: determines the shape of the amplitude curve:
+    
+      ``'linear'``: linear scaling
+      
+      ``'sine'``: sinusoidal scaling
     """
     s = arange(nframes+1)
     if cycle in [ 'updown', 'revert' ]:
