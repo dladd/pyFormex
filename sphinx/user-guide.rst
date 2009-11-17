@@ -6,9 +6,9 @@
 
 .. _cha:userguide:
 
-*********************
+*******************
 pyFormex user guide
-*********************
+*******************
 
 .. warning:: This document and the sections below it are still very incomplete! 
 
@@ -21,11 +21,10 @@ pyFormex user guide
   extension of pyFormex.   
 
 
-Sections of the user guide:
-===========================
+**Sections of the user guide:**
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    running
    gui

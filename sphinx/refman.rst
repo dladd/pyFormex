@@ -8,9 +8,9 @@
 
 .. _cha:reference:
 
-===========================
-pyFormex reference manual
-===========================
+##########################
+ pyFormex reference manual
+##########################
 
 This is the reference manual for pyFormex |release|.
 
@@ -24,8 +24,8 @@ All the other modules need to be accessed using the normal Python import
 statements.
 
 
-Autoloaded modules
-------------------
+**Autoloaded modules**
+
 The definitions in these modules are always available to your scripts, without
 the need to explicitely import them.
 
@@ -41,13 +41,14 @@ the need to explicitely import them.
    ref/colors
 
 
-Other |pyFormex| core modules
------------------------------
+**Other pyFormex core modules**
+
 Together with the autoloaded modules, the following modules located under the
 main pyformex path are considered to belong to the pyformex core functionality. 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :numbered:
 
    ref/connectivity
    ref/simple
@@ -56,8 +57,8 @@ main pyformex path are considered to belong to the pyformex core functionality.
    ref/elements
 
 
-|pyFormex| GUI modules
-----------------------
+**pyFormex GUI modules**
+
 These modules are located under pyformex/gui.
 
 .. toctree::
@@ -77,8 +78,8 @@ These modules are located under pyformex/gui.
    ref/imagecolor
 
 
-|pyFormex| plugins
-------------------
+**pyFormex plugins**
+
 Plugin modules extend the basic pyFormex functions to variety of 
 specific applications. Apart from being located under the pyformex/plugins
 path, these modules are in no way different from other pyFormex modules. 
@@ -113,8 +114,8 @@ path, these modules are in no way different from other pyFormex modules.
 ..   ref/postproc_menu
 
    
-|pyFormex| tools
-----------------
+**pyFormex tools**
+
 The main pyformex path contains a number of modules that are not
 considered to be part of the pyFormex core, but are rather tools that
 were used in the implementation of other modules, but can also be useful

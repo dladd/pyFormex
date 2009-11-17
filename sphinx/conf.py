@@ -113,7 +113,7 @@ html_theme = 'default'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = 'pyformex-logo.png'
+html_logo = 'images/scallop_dome_small.png' #'pyformex-logo.png'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -175,17 +175,17 @@ latex_font_size = '11pt'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'pyFormex.tex', u'pyFormex Documentation',
-   u'Benedict Verhegghe', 'manual'),
+  ('index', 'pyformex.tex', u'pyFormex Documentation',
+   u'Benedict Verhegghe', 'manual', True),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = None
+latex_logo = 'images/pyformex_logo_with_dome.png'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
-#latex_use_parts = False
+#latex_use_parts = True
 
 # Additional stuff for the LaTeX preamble.
 #latex_preamble = ''

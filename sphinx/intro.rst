@@ -6,9 +6,9 @@
 
 .. _cha:introduction:
 
-**************************
+************************
 Introduction to pyFormex
-**************************
+************************
 
 .. topic:: Abstract
 
@@ -25,7 +25,7 @@ Introduction to pyFormex
 .. _sec:what-is-pyformex:
 
 What is pyFormex?
-===================
+=================
 
 You probably expect to find here a short definition of what pyFormex is and
 what it can do for you. I may have to disappoint you: describing the essence

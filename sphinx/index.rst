@@ -4,17 +4,19 @@
 .. include:: defines.inc
 .. include:: links.inc
 
-======================
-pyFormex documentation
-======================
+######################
+pyFormex Documentation
+######################
 
 This is the pyFormex |release| documentation, last updated on |today|.
 
-.. warning:: We have moved to a new documentation management
-   system (sphinx) and are currently in the process of rewriting the
-   documentation. This means that some of these documents are in a rather
-   unstable condition and may evolve quickly. Most of the documents (except
-   the :doc:`user-guide`) are already fairly useable.
+.. warning:: We have moved to a new documentation management system
+   (`Sphinx`_) and are currently in the process of rewriting the
+   documentation. This means that some of these documents are in a
+   rather unstable condition and may evolve quickly. The :doc:`intro`,
+   :doc:`install`, :doc:`tutorial` and :doc:`refman` are already fairly
+   complete and useable. The :doc:`user-guide` and :doc:`examples` are
+   still in an embryonal state.
 
 These documents are to become a full documentation set for the installation and use of the pyFormex software. However, as pyFormex is still under active
 development, so is this documentation: it therefore is by no means final and
@@ -29,9 +31,7 @@ Some older versions of the documentation may be available in PDF format from
 the `pyFormex website`_. You should also find a version in your local
 pyFormex installation. 
 
-
-Parts of the documentation
-==========================
+**Parts of the documentation**
 
 .. toctree::
    :maxdepth: 1
@@ -46,10 +46,10 @@ Parts of the documentation
    license
 
 
-Indices and tables
-==================
+**Indices and tables**
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 
+.. End

@@ -17,13 +17,13 @@ Installing pyFormex
    to install it, and how to get it running.
 
 
-.. _sec:introduction:
+.. _sec:choose_installation:
 
-Introduction
-============
+Choose installation type
+========================
 
 There are several ways to get a running installation of pyFormex, and you may
-choose the most appropriate for you, depending on your needs, your current 
+choose the most appropriate method for you, depending on your needs, your current 
 infrastructure and your computer knowledge. We will describe them in detail in
 this document, and advice you on which method might be the best in your case. 
 
@@ -37,50 +37,62 @@ Let's first give you an overview of the most important pros and cons of the
 different install methods. 
 
 :ref:`sec:official-release`:
-  +-------------------------------+-------------------------------------------+
-  | PROS                          |   CONS                                    |
-  +===============================+===========================================+
-  |  - Stable                     |  - Linux required                         |
-  |  - Well supported             |  - Root access required                   |
-  |  - Easy install procedure     |  - Installation of prerequisites required |
-  |  - Site-wide install          |  - May be missing latest features         |
-  +-------------------------------+-------------------------------------------+
 
+.. The following fixes problems with generating the PDF docs
+.. tabularcolumns:: |p{5cm}|p{5cm}|
+
++-------------------------------+-------------------------------------------+
+| PROS                          |   CONS                                    |
++===============================+===========================================+
+|  - Stable                     |  - Linux required                         |
+|  - Well supported             |  - Root access required                   |
+|  - Easy install procedure     |  - Installation of prerequisites required |
+|  - Site-wide install          |  - May be missing latest features         |
++-------------------------------+-------------------------------------------+
 
 :ref:`sec:alpha-release`:
-  +------------------------------+--------------------------------------------+
-  | PROS                         |   CONS                                     |
-  +==============================+============================================+
-  |  - Easy install              |  - Linux required                          |
-  |    procedure                 |  - Root access required                    |
-  |  - Site-wide                 |  - Installation of prerequisites required  |
-  |    install                   |  - Latests features                        |
-  +------------------------------+--------------------------------------------+
+
+.. tabularcolumns:: |p{5cm}|p{5cm}|
+
++------------------------------+--------------------------------------------+
+| PROS                         |   CONS                                     |
++==============================+============================================+
+|  - Easy install              |  - Linux required                          |
+|    procedure                 |  - Root access required                    |
+|  - Site-wide                 |  - Installation of prerequisites required  |
+|    install                   |  - Latests features                        |
++------------------------------+--------------------------------------------+
 
 
 :ref:`sec:development-version`:
-  +---------------------+--------------------------------------------+
-  | PROS                |   CONS                                     |
-  +=====================+============================================+
-  | - Latest features   | - Linux required                           |
-  | - No                | - No install procedure                     |
-  |   root              | - (Usually) single user install            |
-  |   access            | - Manual installation of prerequisites     |
-  |   required          |   (and root access) may be required        |
-  |                     | - Less stable                              |
-  +---------------------+--------------------------------------------+
+
+.. tabularcolumns:: |p{5cm}|p{5cm}|
+
++---------------------+--------------------------------------------+
+| PROS                |   CONS                                     |
++=====================+============================================+
+| - Latest features   | - Linux required                           |
+| - No                | - No install procedure                     |
+|   root              | - (Usually) single user install            |
+|   access            | - Manual installation of prerequisites     |
+|   required          |   (and root access) may be required        |
+|                     | - Less stable                              |
++---------------------+--------------------------------------------+
  
 
 :ref:`sec:bumpix-live-linux`:
-  +-------------------------------------+----------------------------------+
-  | PROS                                |                            CONS  |
-  +=====================================+==================================+
-  | - No Linux required                 | - Missing latest features        |
-  | - No root access required           | - Difficult to upgrade           |
-  | - No installation required          | - Somewhat slower loading        |
-  | - Stable version                    |                                  |
-  | - Easily portable                   |                                  |
-  +-------------------------------------+----------------------------------+
+
+.. tabularcolumns:: |p{5cm}|p{5cm}|
+
++-------------------------------------+----------------------------------+
+| PROS                                |                            CONS  |
++=====================================+==================================+
+| - No Linux required                 | - Missing latest features        |
+| - No root access required           | - Difficult to upgrade           |
+| - No installation required          | - Somewhat slower loading        |
+| - Stable version                    |                                  |
+| - Easily portable                   |                                  |
++-------------------------------------+----------------------------------+
 
 
 To sum it up:
@@ -194,20 +206,35 @@ pyFormex is currently distributed in the form of a .tar.gz (tarball) archive. Se
 Install pyFormex
 ----------------
 
-Once you have downloaded the tarball, unpack it with ``tar xvzf
-pyformex-version.tar.gz``. Then go to the created pyformex directory:
-``cd pyformex-version`` and do (with root privileges) ``python
-setup.py install --prefix=/usr/local``.  This will install under
-``/usr/local/``. You can change the prefix to install pyFormex in some other
-place.
+Once you have downloaded the tarball, unpack it with the command ::
+
+   tar xvzf pyformex-VERSION.tar.gz
+
+where you replace ``VERSION`` with the correct version from the downloaded file.
+Then go to the created pyformex directory ::
+
+   cd pyformex-VERSION
+
+and execute the following command with root privileges::
+
+   python setup.py install --prefix=/usr/local
+
+This will install pyFormex under ``/usr/local/``. 
+You can change the prefix to install pyFormex in some other place.
 
 The installation procedure installs everything into a single
 directory, and creates a symlink to the executable in
-``/usr/local/bin``. You can use the command ``pyformex --whereami`` to
-find out where pyFormex is installed.
+``/usr/local/bin``. You can use the command :: 
 
-Finally, a pyFormex installation can usually be removed by giving the command
-``pyformex --remove`` and answering 'yes' to the question.  You may
+   pyformex --whereami
+
+to find out where pyFormex is installed.
+
+Finally, a pyFormex installation can usually be removed by giving the command ::
+
+   pyformex --remove 
+
+and answering 'yes' to the question.  You may
 want to do this before installing a new version, especially if you
 install a new release of an already existing version.
 
