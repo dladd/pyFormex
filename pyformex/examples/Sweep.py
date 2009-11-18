@@ -33,8 +33,8 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     if len(wa) > 0 or len(wa1) > 0:
         print wa,wa1
         raise
-    U = column_stack
-   C = linalg.solve(M,B)
+    ## U = column_stack(
+    ## C = linalg.solve(U,B)
 
 
 vec1 = array([

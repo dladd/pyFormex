@@ -8,7 +8,7 @@ techniques = ['curve','transform']
 
 from plugins import curve
 
-m = 10 # number of cells along spiral
+m = 100 # number of cells along spiral
 a = 1. # number of 360 degree turns
 
 linewidth(2)
@@ -55,8 +55,8 @@ S = spiral(F.f,[0,1,2],rf)#.rosette(nwires,360./nwires)
 
 PL = curve.PolyLine(S[:,0,:])
 
-F = Formex(pattern('15263748'))
-PL = curve.PolyLine(F.f[:,0,:])
+## F = Formex(pattern('15263748'))
+## PL = curve.PolyLine(F.f[:,0,:])
 
 clear()
 draw(PL,color=red)
@@ -72,19 +72,19 @@ if ack("Spread point evenly?"):
     draw(PL,color=blue)
     draw(PL.coords,color=blue)
 
-sweep = ask("Sweep cross section",['None','line','surface'])
-if sweep == 'line':
-    CS = Formex(pattern('123'))  # circumference of a square
-elif sweep == 'surface':
-    CS = Formex(mpattern('123'))  # a square surface
-else:
-    exit()
+## sweep = ask("Sweep cross section",['None','line','surface'])
+## if sweep == 'line':
+##     CS = Formex(pattern('123'))  # circumference of a square
+## elif sweep == 'surface':
+##     CS = Formex(mpattern('123'))  # a square surface
+## else:
+##     exit()
 
-# Use a Mesh, because that already has a 'sweep' function
-CS = CS.swapAxes(0,2).scale(0.2).toMesh()
-structure = CS.sweep(PL,normal=0,upvector=None,avgdir=True)
-clear()
-draw(structure)
+## # Use a Mesh, because that already has a 'sweep' function
+## CS = CS.swapAxes(0,2).scale(0.2).toMesh()
+## structure = CS.sweep(PL,normal=0,upvector=None,avgdir=True)
+## clear()
+## draw(structure)
 
 # End
 

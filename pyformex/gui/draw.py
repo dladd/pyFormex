@@ -351,7 +351,7 @@ def draw(F,
                 view = None
                 
         if bbox == 'auto':
-            bbox = coords.bbox(F)
+            bbox = coords.bbox(actor)
             GD.canvas.setCamera(bbox,view)
             GD.canvas.update()
                 
