@@ -83,9 +83,8 @@ def setBgColor2():
     global _the_dialog
     color = GD.canvas.settings.bgcolor
     color2 = GD.canvas.settings.bgcolor2
-    twocolor = color2 is not None
-    ## itemlist = [('top',color,'color',{'text':'Top background color','buttons':[('Select Color',set_the_color_top)]}),
-    ##             ('bottom',color2,'color',{'text':'Bottom background color','buttons':[('Select Color',set_the_color_bottom)]}),
+    if color2 is None:
+        color2 = color
     itemlist = [('top',color,'color',{'text':'Top background color'}),
                 ('bottom',color2,'color',{'text':'Bottom background color'}),
                 ]

@@ -994,18 +994,22 @@ class InputColor(InputItem):
         value is set in the button.
         """
         InputItem.__init__(self,name,*args,**kargs)
-        self.input = QtGui.QPushButton(colors.colorName(value))
+        color = colors.colorName(value)
+        self.input = QtGui.QPushButton(color)
+        self.setValue(color)
         self.connect(self.input,QtCore.SIGNAL("clicked()"),self.setColor)
         self.insertWidget(1,self.input)
-
+        
     def setColor(self):
         color = getColor(self.input.text())
         if color:
-            self.input.setText(str(color))
+            self.setValue(color)
 
     def setValue(self,value):
         """Change the widget's value."""
-        pass
+        rgb = QtGui.QColor(value).getRgb()
+        self.input.setStyleSheet("* { background-color: rgb(%s,%s,%s) }" % rgb[:3])
+        self.input.setText(str(value))
 
 
 def inputAny(name,value,itemtype=str,**options):
