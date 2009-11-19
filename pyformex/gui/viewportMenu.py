@@ -50,13 +50,53 @@ def setRenderMode():
     res = widgets.InputDialog(itemlist,'Select Render Mode').getResult()
     if res:
         GD.canvas.setRenderMode(res['Render Mode'])
-        
+
+
+_the_dialog = None
+
+def set_the_color(field='top'):
+    """Set the_color from a dialog"""
+    _the_dialog.acceptData()
+    color = _the_dialog.results[field]
+    color = widgets.getColor(color)
+    print color
+    if color:
+        _the_dialog.updateData({field:color})
+
+
+def set_the_color_top():
+    set_the_color('top')
+def set_the_color_bottom():
+    set_the_color('bottom')
+                
+
 def setBgColor():
     """Change the background color."""
     color = GD.canvas.settings.bgcolor
     color = widgets.getColor(color)
     if color:
         GD.canvas.setBgColor(color)
+
+
+def setBgColor2():
+    """Interactively set the viewport background colors."""
+    global _the_dialog
+    color = GD.canvas.settings.bgcolor
+    color2 = GD.canvas.settings.bgcolor2
+    twocolor = color2 is not None
+    ## itemlist = [('top',color,'color',{'text':'Top background color','buttons':[('Select Color',set_the_color_top)]}),
+    ##             ('bottom',color2,'color',{'text':'Bottom background color','buttons':[('Select Color',set_the_color_bottom)]}),
+    itemlist = [('top',color,'color',{'text':'Top background color'}),
+                ('bottom',color2,'color',{'text':'Bottom background color'}),
+                ]
+    _the_dialog = widgets.InputDialog(itemlist,'Config Dialog')
+    res = _the_dialog.getResult()
+    GD.debug(res)
+    if res:
+        GD.canvas.setBgColor(res['top'],res['bottom'])
+        GD.canvas.update()
+    _the_dialog = None
+
         
 def setFgColor():
     """Change the default drawing color."""
@@ -98,7 +138,6 @@ def viewportSettings():
     """Interactively set the viewport settings."""
     mode = GD.canvas.rendermode
     modes = canvas.Canvas.rendermodes
-    print modes
     s = GD.canvas.settings
     itemlist = [('rendermode', mode, 'select', modes),
                 ('bgcolor', s.bgcolor, 'color'),
@@ -115,7 +154,7 @@ def viewportSettings():
         GD.canvas.redrawAll()
         if res['Store these settings as defaults']:
             GD.cfg.update(GD.canvas.settings.__dict__,name='canvas')
-
+        
 
 def viewportLayout():
     """Set the viewport layout."""
@@ -150,6 +189,7 @@ MenuData = [
         (_('Set &Axes Triade Properties'),setTriadeParams), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
+        (_('&Background 2Color'),setBgColor2), 
         (_('&Foreground Color'),setFgColor), 
         (_('&Highlight Color'),setSlColor), 
         (_('Line&Width'),setLineWidth), 

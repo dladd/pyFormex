@@ -121,9 +121,6 @@ dialog = widgets.InputDialog(items)
 
 while not dialog.result() == widgets.TIMEOUT:
     dialog.show()
-    ## sleep(2)
-    ## dialog.timeout()
-    ## res = dialog.results
     res = dialog.getResult()
     if not res:
         break
@@ -131,12 +128,8 @@ while not dialog.result() == widgets.TIMEOUT:
     globals().update(res)
     F = cone(r0,r1,h,t,nr,nt,diag)
     G = cone1(r0,r1,h,t,nr,nt,diag).swapAxes(1,2).trl(0,2*max(r0,r1))
-    #F.setProp(0)
     G.setProp(1)
     H = F+G
-    print H.shape()
-    print H.p
-    print H.p.shape
     clear()
     draw(H)
     exit()

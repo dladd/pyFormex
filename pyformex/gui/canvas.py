@@ -132,6 +132,7 @@ class CanvasSettings(object):
     default = dict(
         linewidth = 1.0,
         bgcolor = colors.mediumgrey,
+        bgcolor2 = None,
         fgcolor = colors.black,
         slcolor = colors.red,     # color for selected items
         transparency = 1.0,       # opaque
@@ -146,16 +147,18 @@ class CanvasSettings(object):
     def checkDict(clas,dict):
         """Transform a dict to acceptable settings."""
         ok = {}
-        keys = dict.keys()
-##        if 'rendermode' in keys:
-##            ok['rendermode'] = dict['rendermode']
-        if 'linewidth' in keys:
-            ok['linewidth'] =  float(dict['linewidth'])
-        for c in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
-            if c in keys:
-                ok[c] = colors.GLColor(dict[c])
-        if 'propcolors' in keys:
-            ok['propcolors'] = map(colors.GLColor,dict['propcolors'])
+        for k,v in dict.items():
+            if k in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
+                ok[k] = colors.GLColor(v)
+            elif k == 'bgcolor2':
+                if v is None:
+                    ok[k] = None
+                else:
+                    ok[k] = colors.GLColor(v)
+            elif k == 'propcolors':
+                ok[k] = map(colors.GLColor,v)
+            elif k == 'linewidth':
+                ok[k] = float(v)
         return ok
         
     def __init__(self,dict={}):
@@ -218,6 +221,7 @@ class Canvas(object):
         self.annotations = ActorList(self,'annotation')
         self.decorations = ActorList(self,'decoration')
         self.triade = None
+        self.background = None
         self.bbox = None
         self.resetLighting()
         self.resetLights()
@@ -329,9 +333,34 @@ class Canvas(object):
         self.settings.linewidth = float(lw)
 
 
-    def setBgColor(self,color):
-        """Set the background color."""
-        self.settings.bgcolor = colors.GLColor(color)
+    ## def setBgColor(self,color):
+    ##     """Set the background color."""
+    ##     self.settings.bgcolor = colors.GLColor(color)
+    ##     self.clear()
+    ##     self.redrawAll()
+
+
+    def setBgColor(self,color1,color2=None):
+        """Set the background color.
+
+        If one color is specified, a solid background is set.
+        If two colors are specified, a graded background is set
+        and an object is created to display the background.
+        """
+        self.settings.bgcolor = colors.GLColor(color1)
+        if color2 is None:
+            GD.debug("Clearing twocolor background")
+            self.settings.bgcolor2 = None
+            self.background = None
+        else:
+            self.settings.bgcolor2 = colors.GLColor(color2)
+            GD.debug("Creating background with colors %s, %s" % (str(color1),str(color2)))
+            x1,y1 = 0,0
+            x2,y2 = self.Size()
+            color4 = [self.settings.bgcolor2,self.settings.bgcolor2,self.settings.bgcolor,self.settings.bgcolor]
+            self.background = decors.Rectangle(x1,y1,x2,y2,color=color4)
+            glSmooth()
+            glFill()
         self.clear()
         self.redrawAll()
         
@@ -398,14 +427,21 @@ class Canvas(object):
 
         # On initializing a rendering mode, we also set default lighting
         if self.rendermode == 'wireframe':
-            glFlat()
-            glLine()
+            if self.background:
+                glSmooth()
+                glFill()
+            else:
+                glFlat()
+                glLine()
             self.lighting = False
             self.glLight(False)
 
                 
         elif self.rendermode.startswith('flat'):
-            glFlat()
+            if self.background:
+                glSmooth()
+            else:
+                glFlat()
             glFill()
             self.lighting = False
             self.glLight(False)
@@ -458,6 +494,25 @@ class Canvas(object):
         self.clear()
         self.glLight(self.lighting)
         
+        # decorations are drawn in 2D mode
+        self.begin_2D_drawing()
+        if self.background:
+            GD.debug("Displaying background")
+            self.background.draw(mode='smooth')
+
+        if len(self.decorations) > 0:
+            for actor in self.decorations:
+                self.setDefaults()
+                actor.draw(mode=self.rendermode)
+
+        # draw the focus rectangle if more than one viewport
+        if len(GD.GUI.viewports.all) > 1:
+            if self.hasFocus():
+                self.draw_focus_rectangle(2)
+            elif self.focus:
+                self.draw_focus_rectangle(1)
+        self.end_2D_drawing()
+        
         # draw the highlighted actors
         self.camera.loadProjection()
         self.camera.loadMatrix()
@@ -489,21 +544,7 @@ class Canvas(object):
             actor.draw(mode=self.rendermode)
 
         # decorations are drawn in 2D mode
-        self.begin_2D_drawing()
-        
-        if len(self.decorations) > 0:
-            for actor in self.decorations:
-                self.setDefaults()
-                actor.draw(mode=self.rendermode)
-
-        # draw the focus rectangle if more than one viewport
-        if len(GD.GUI.viewports.all) > 1:
-            if self.hasFocus():
-                self.draw_focus_rectangle(2)
-            elif self.focus:
-                self.draw_focus_rectangle(1)
-            
-        self.end_2D_drawing()
+        # decoration drawing was moved to the start of the drawing cycle
 
         # make sure canvas is updated
         GL.glFlush()
@@ -604,8 +645,6 @@ class Canvas(object):
         item appears.
         itemlist can also be a single item instead of a list.
         """
-        #print "removing %s" % itemlist
-        #print self.actors,self.annotations
         if not type(itemlist) == list:
             itemlist = [ itemlist ]
         for item in itemlist:
@@ -613,7 +652,6 @@ class Canvas(object):
             self.highlights.delete(item)
             self.annotations.delete(item)
             self.decorations.delete(item)
-        #print self.actors,self.annotations
         
 
     def removeActors(self,actorlist=None):
@@ -709,15 +747,11 @@ class Canvas(object):
         import simple,coords
         bbix = simple.regularGrid(X0,X1,[1,1,1])
         bbix = dot(bbix,self.camera.rot[:3,:3])
-        #print bbix
         bbox = coords.Coords(bbix).bbox()
         dx,dy,dz = bbox[1] - bbox[0]
-        #print  "dx,dx/asp,dy = %s, %s, %s" % (dx,dx/self.aspect,dy)
         vsize = max(dx/self.aspect,dy)
         offset = dz
-        #print "vsize,offset = %s, %s" % (vsize,offset)
         dist = (vsize/tf + offset) / correction
-        #print "new dist = %s" % (dist)
         
         if dist == nan or dist == inf:
             GD.debug("DIST: %s" % dist)
@@ -786,7 +820,6 @@ class Canvas(object):
 
     def saveBuffer(self):
         """Save the current OpenGL buffer"""
-        #GD.debugt("saveBuffer")
         self.save_buffer = GL.glGetIntegerv(GL.GL_DRAW_BUFFER)
 
     def showBuffer(self):

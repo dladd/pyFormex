@@ -107,6 +107,7 @@ timeout = -1         # never timeout
 
 [canvas]
 bgcolor = 'lightgrey'
+bgcolor2 = None
 fgcolor = 'black'
 slcolor = 'red'
 linewidth = 1

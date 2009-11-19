@@ -89,6 +89,16 @@ def drawRect(x1,y1,x2,y2):
     drawGrid(x1,y1,x2,y2,1,1)
 
 
+def drawRectangle(x1,y1,x2,y2,color):
+    color = resize(asarray(color),(4,3))
+    coord = [(x1,y1),(x2,y1),(x2,y2),(x1,y2)]
+    GL.glBegin(GL.GL_QUADS)
+    for c,x in zip(color,coord):
+        GL.glColor3fv(c)
+        GL.glVertex2fv(x)
+    GL.glEnd()
+
+
 ### Decorations ###############################################
 
 class Decoration(Drawable):
@@ -234,6 +244,20 @@ class ColorLegend(Decoration):
             t.use_list()
             ## if TA not in GD.canvas.decorations:
             ##     GD.canvas.addDecoration(TA)
+
+
+class Rectangle(Decoration):
+    """A 2D-rectangle on the canvas."""
+    def __init__(self,x1,y1,x2,y2,color=None):
+        Decoration.__init__(self,x1,y1)
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        self.setColor(color,ncolors=4)
+
+    def drawGL(self,mode='wireframe',color=None):
+        drawRectangle(self.x1,self.y1,self.x2,self.y2,self.color)
 
 
 class Grid(Decoration):

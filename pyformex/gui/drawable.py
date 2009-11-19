@@ -229,8 +229,6 @@ def drawEdges(x,e,edges,color=None):
         GD.debug("COLOR SHAPE BEFORE EXTRACTING: %s" % str(color.shape))
         # select the colors of the matching points
         color = color[:,fa,:]#.reshape((-1,)+color.shape[-2:])
-        #print color.shape[-2:]
-        #print (-1,)+color.shape[-2:]
         color = color.reshape((-1,)+color.shape[-2:])
         GD.debug("COLOR SHAPE AFTER EXTRACTING: %s" % str(color.shape))
     draw_parts(coords,elems,'wireframe',color,1.0)
@@ -638,6 +636,7 @@ def saneColorArray(color,shape):
     - if shape[1] != np and shape[1] != 1: take out first plane in direction 1
     - if shape[0] != ne and shape[0] != 1: repeat plane in direction 0 ne times
     """
+    color = asarray(color)
     if color.ndim == 1:
         return color
     if color.ndim == 3:
@@ -755,7 +754,7 @@ class Drawable(object):
 
     def setColor(self,color=None,colormap=None,ncolors=1):
         """Set the color of the Drawable."""
-        self.color,self.colormap = saneColorSet(color,colormap)
+        self.color,self.colormap = saneColorSet(color,colormap,shape=(ncolors,))
 
 
 ### End
