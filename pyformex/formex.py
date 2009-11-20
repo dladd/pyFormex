@@ -85,19 +85,14 @@ def vectorPairArea(vec1,vec2):
     return vectorPairAreaNormals(vec1,vec2)[0]
 
 
-def vectorPairNormals(vec1,vec2,normalized=True):
+def vectorPairNormals(vec1,vec2):
     """Compute vectors normal to vec1 and vec2.
 
     vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-    The result is an (n,3) shaped array of vectors normal to each couple
-    (edg1,edg2).
-    Default is to normalize the vectors to unit length.
-    If not essential, this can be switched off to save computing time.
+    The result is an (n,3) shaped array of unit length vectors normal to
+    each couple (edg1,edg2).
     """
-    if normalized:
-        return cross(vec1,vec2)
-    else:
-        return vectorPairAreaNormals(vec1,vec2)[1]
+    return vectorPairAreaNormals(vec1,vec2)[1]
         
 
 def vectorTripleProduct(vec1,vec2,vec3):
