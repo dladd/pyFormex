@@ -151,7 +151,7 @@ class CanvasSettings(object):
             if k in [ 'bgcolor', 'fgcolor', 'slcolor' ]:
                 ok[k] = colors.GLColor(v)
             elif k == 'bgcolor2':
-                if v is None:
+                if v is None or v == ok['bgcolor']:
                     ok[k] = None
                 else:
                     ok[k] = colors.GLColor(v)
@@ -166,13 +166,22 @@ class CanvasSettings(object):
         self.reset(dict)
 
     def reset(self,dict={}):
-        """Reset to default settings
+        """Reset to defaults
 
         If a dict is specified, these settings will override defaults.
         """
-        self.__dict__.update(CanvasSettings.checkDict(CanvasSettings.default))
+        self.update(self.default)
         if dict:
-            self.__dict__.update(CanvasSettings.checkDict(dict))
+            self.update(dict)
+
+    def update(self,dict):
+        """Update current values with the specified settings
+
+        Returns the sanitized update values.
+        """
+        ok = self.checkDict(dict)
+        self.__dict__.update(ok)
+        return ok
     
     def __str__(self):
         return utils.formatDict(self.__dict__)
@@ -333,13 +342,6 @@ class Canvas(object):
         self.settings.linewidth = float(lw)
 
 
-    ## def setBgColor(self,color):
-    ##     """Set the background color."""
-    ##     self.settings.bgcolor = colors.GLColor(color)
-    ##     self.clear()
-    ##     self.redrawAll()
-
-
     def setBgColor(self,color1,color2=None):
         """Set the background color.
 
@@ -373,6 +375,27 @@ class Canvas(object):
     def setSlColor(self,color):
         """Set the highlight color."""
         self.settings.slcolor = colors.GLColor(color)
+
+
+    def updateSettings(self,settings):
+        """Update the viewport settings"""
+        for k,v in settings.items():
+            if k == 'linewidth':
+                self.setLineWidth(v)
+            elif k == 'bgcolor':
+                if 'bgcolor2' in settings:
+                    self.setBgColor(v,settings.get('bgcolor2',None))
+            elif k == 'bgcolor2':
+                if 'bgcolor' in settings:
+                    pass
+                else:
+                    self.setBgColor(self.settings.bgcolor,v)
+            elif k == 'fgcolor':
+                self.setFgColor(v)
+            elif k == 'slcolor':
+                self.setSlColor(v)
+        
+        
 
     
     def setLight(self,nr,ambient,diffuse,specular,position):
@@ -417,6 +440,10 @@ class Canvas(object):
         if mode:
             self.rendermode = mode
 
+
+        if self.settings.bgcolor != self.settings.bgcolor2:
+            self.setBgColor(self.settings.bgcolor,self.settings.bgcolor2)
+
         self.clear()
         #GL.glClearColor(*colors.RGBA(self.default.bgcolor))# Clear The Background Color
         GL.glClearDepth(1.0)	       # Enables Clearing Of The Depth Buffer
@@ -454,7 +481,6 @@ class Canvas(object):
             
         else:
             raise RuntimeError,"Unknown rendering mode"
-
 
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""

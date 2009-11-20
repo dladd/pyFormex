@@ -67,7 +67,6 @@ def command():
         print "Command: %s" % cmd
         exec(cmd)
 
-
 ##################### database tools ##########################
 
 database = objects.Objects()
@@ -522,7 +521,7 @@ _menu = 'Tools'
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
-        ('Execute pyFormex command',command),
+        ('&Execute pyFormex command',command),
         ('-- Global Variables --',printall,dict(disabled=True)),
         ('  &List All',printall),
         ('  &Select',database.ask),

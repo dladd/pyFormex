@@ -126,6 +126,7 @@ ActionMenuData = [
     ## (_('&Reset Picking Mode'),resetPick),
     (_('&Reset GUI'),resetGUI),
     (_('&Force Finish Script'),draw.force_finish),
+    ## (_('&Execute single statement'),command),
     (_('&ListFormices'),script.printall),
     (_('&PrintGlobalNames'),script.printglobalnames),
     (_('&PrintGlobals'),script.printglobals),

@@ -40,7 +40,7 @@ h=15.
 n=64
 
 F = simple.sector(r,360.,n,n,h=h,diag=None)
-F.f = F.f.flare(h/4,r/2,dir=[2,0],end=1,exp=5.)
+#F.f = F.f.flare(h/4,r/2,dir=[2,0],end=1,exp=5.)
 F.setProp(0)
 draw(F,view='bottom')
 setDrawOptions({'bbox':None})

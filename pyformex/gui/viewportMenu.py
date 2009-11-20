@@ -138,19 +138,24 @@ def viewportSettings():
     mode = GD.canvas.rendermode
     modes = canvas.Canvas.rendermodes
     s = GD.canvas.settings
+    if s.bgcolor2 is None:
+        s.bgcolor2 = s.bgcolor
     itemlist = [('rendermode', mode, 'select', modes),
+                ('linewidth', s.linewidth, 'float'),
                 ('bgcolor', s.bgcolor, 'color'),
+                ('bgcolor2', s.bgcolor2, 'color'),
                 ('fgcolor', s.fgcolor, 'color'),
                 ('slcolor', s.slcolor, 'color'),
-                ('linewidth', s.linewidth, 'float'),
                 ('Store these settings as defaults', False),
                 ]
     res = widgets.InputDialog(itemlist,'Config Dialog').getResult()
     if res:
         GD.debug(res)
-        s.reset(res)
+        GD.canvas.updateSettings(res)
         GD.canvas.setRenderMode(res['rendermode'])
+        #GD.canvas.clear()
         GD.canvas.redrawAll()
+        GD.canvas.update()
         if res['Store these settings as defaults']:
             GD.cfg.update(GD.canvas.settings.__dict__,name='canvas')
         
