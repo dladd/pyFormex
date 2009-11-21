@@ -246,7 +246,7 @@
    .. autofunction:: vectorNormalize(vec)
    .. autofunction:: vectorPairAreaNormals(vec1,vec2)
    .. autofunction:: vectorPairArea(vec1,vec2)
-   .. autofunction:: vectorPairNormals(vec1,vec2,normalized=True)
+   .. autofunction:: vectorPairNormals(vec1,vec2)
    .. autofunction:: vectorTripleProduct(vec1,vec2,vec3)
    .. autofunction:: polygonNormals(x)
    .. autofunction:: pattern(s)

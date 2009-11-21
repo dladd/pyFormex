@@ -1392,16 +1392,16 @@ def updateDialogItems(data,newdata):
     if newdata:
         if type(data) is dict:
             for d in data:
-                print "subitems",d
+                #print "subitems",d
                 updateDialogItems(data[d],newdata)
         else:
             for d in data:
-                print "item",d
+                #print "item",d
                 v = newdata.get(d[0],None)
-                print v
+                #print v
                 if v is not None:
                     d[1] = v
-                print d
+                #print d
 
 
 def dialogButtons(dialog,actions,default=None):
@@ -1743,13 +1743,16 @@ class BaseMenu(object):
         self.title = title
         self.parent = parent
         if parent and isinstance(parent,BaseMenu):
+            #print "INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title)
             if before:
                 before = parent.itemAction(before)
             parent.insert_menu(self,before)
-            parent.menuitems.append((normalize(title),self))
+            #parent.menuitems.append((normalize(title),self))
         self.menuitems = []
         if items:
+            #print "INSERTING ITEMS"
             self.insertItems(items)
+            #print [ p[0] for p in self.menuitems ]
 
 
     def item(self,text):
@@ -1916,10 +1919,10 @@ class Menu(BaseMenu,QtGui.QMenu):
 class MenuBar(BaseMenu,QtGui.QMenuBar):
     """A menu bar allowing easy menu creation."""
 
-    def __init__(self):
+    def __init__(self,title='TopMenuBar'):
         """Create the menubar."""
         QtGui.QMenuBar.__init__(self)
-        BaseMenu.__init__(self)
+        BaseMenu.__init__(self,title)
 
 
 ###################### Action List ############################################

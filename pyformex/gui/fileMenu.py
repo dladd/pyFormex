@@ -316,6 +316,8 @@ def setOptions():
             ## if o == 'debug':
             ##     GD.setDebugFunc()
 
+print surface_menu
+print surface_menu.show_menu
 
 MenuData = [
     (_('&Start new project'),createProject),

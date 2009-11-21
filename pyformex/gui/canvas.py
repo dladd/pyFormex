@@ -235,7 +235,7 @@ class Canvas(object):
         self.resetLighting()
         self.resetLights()
         self.setBbox()
-        self.settings = CanvasSettings()
+        self.settings = CanvasSettings(GD.cfg['canvas'])
         self.mode2D = False
         self.rendermode = 'wireframe'
         self.polygonfill = False

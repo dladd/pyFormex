@@ -156,7 +156,7 @@ class GUI(QtGui.QMainWindow):
         #self.statusbar.addWidget(cf)
 
         # The menu bar
-        self.menu = widgets.MenuBar()
+        self.menu = widgets.MenuBar('TopMenu')
         self.setMenuBar(self.menu)
 
         # The toolbar

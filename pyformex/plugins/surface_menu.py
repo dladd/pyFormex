@@ -1244,7 +1244,7 @@ def create_menu():
           ]),
         ("---",None),
 #        ("&Show volume model",show_volume),
-        #("&Print Nodal Coordinates",show_nodes),
+        # ("&Print Nodal Coordinates",show_nodes),
         # ("&Convert STL file to OFF file",convert_stl_to_off),
         # ("&Sanitize STL file to OFF file",sanitize_stl_to_off),
 #        ("&Trim border",trim_surface),
@@ -1254,12 +1254,14 @@ def create_menu():
 #        ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='help')
+    return widgets.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='Help')
 
     
 def show_menu():
     """Show the Tools menu."""
+    global _the_menu
     if not GD.GUI.menu.item('Surface'):
+        print "NOW CREATING THE SURFACE MENU"
         create_menu()
 
 
