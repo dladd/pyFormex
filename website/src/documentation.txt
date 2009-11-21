@@ -22,6 +22,11 @@ has been finalized.*
 
 - Preview of the new `pyFormex documentation`_ under development. 
 
+  - The `Introduction to pyFormex`_, `Installing pyFormex`_, `pyFormex
+    tutorial`_ and `pyFormex reference manual`_ are already fairly complete
+    and useable. 
+  - The `pyFormex user guide`_ and `pyFormex examples`_ are still very limited. 
+
 - The older pyFormex manual (version 0.8):
 
   - Browse the `Online manual`_ (a local version is accessible from inside the pyFormex GUI).

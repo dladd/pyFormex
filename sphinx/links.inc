@@ -17,7 +17,12 @@
 .. _`Online manual`: http://pyformex.berlios.de/manual/index.html
 .. _`pyFormex documentation`: http://pyformex.berlios.de/doc/index.html
 .. _`PDF-version`: ftp://ftp.berlios.de/pub/pyformex/pyformex.pdf
-
+.. _`Introduction to pyFormex`: http://pyformex.berlios.de/doc/intro.html
+.. _`Installing pyFormex`: http://pyformex.berlios.de/doc/install.html
+.. _`pyFormex tutorial`: http://pyformex.berlios.de/doc/tutorial.html
+.. _`pyFormex reference manual`: http://pyformex.berlios.de/doc/refman.html
+.. _`pyFormex user guide`: http://pyformex.berlios.de/doc/user-guide.html
+.. _`pyFormex examples`: http://pyformex.berlios.de/doc/examples.html
 
 .. _`local FTP server`: ftp://bumps.ugent.be/pub/pyformex
 .. _`latest BuMPix image`: ftp://bumps.ugent.be/pub/bumpix/bumpix-latest.img
