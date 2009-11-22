@@ -356,15 +356,19 @@ class Canvas(object):
             self.background = None
         else:
             self.settings.bgcolor2 = colors.GLColor(color2)
-            GD.debug("Creating background with colors %s, %s" % (str(color1),str(color2)))
-            x1,y1 = 0,0
-            x2,y2 = self.Size()
-            color4 = [self.settings.bgcolor2,self.settings.bgcolor2,self.settings.bgcolor,self.settings.bgcolor]
-            self.background = decors.Rectangle(x1,y1,x2,y2,color=color4)
+            self.createBackground()
             glSmooth()
             glFill()
         self.clear()
         self.redrawAll()
+
+
+    def createBackground(self):
+        """Create the background object."""
+        x1,y1 = 0,0
+        x2,y2 = self.Size()
+        color4 = [self.settings.bgcolor2,self.settings.bgcolor2,self.settings.bgcolor,self.settings.bgcolor]
+        self.background = decors.Rectangle(x1,y1,x2,y2,color=color4)
         
 
     def setFgColor(self,color):
@@ -506,6 +510,9 @@ class Canvas(object):
         GL.glViewport(0, 0, w, h)
         self.aspect = float(w)/h
         self.camera.setLens(aspect=self.aspect)
+        if self.background:
+            # recreate the background to match the current size
+            self.createBackground()
         self.display()
 
 

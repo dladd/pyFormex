@@ -17,7 +17,7 @@ pyFormex tutorial
 
    This tutorial will guide you step by step through the most important
    concepts of the pyFormex scripting language and the pyFormex Graphical
-   User Interface (GUI). It is set up for first time users, giving explicit
+   User Interface (GUI). It is intended for first time users, giving explicit
    details of what to do and what to expect as result.
    
 
@@ -883,18 +883,20 @@ The :class:`Formex` class provides a number of methods that return such informat
 The following table lists the most interesting ones.
 
 +--------------------+----------------------------------------------+
-| Function           | Description                                  |
+| Function           | Return value                                 |
 +====================+==============================================+
-| :meth:`F.nelems()` | Return the number of elements in the Formex. |
+| :meth:`F.nelems()` | The number of elements in the Formex         |
 +--------------------+----------------------------------------------+
-| :meth:`F.nplex()`  | Return the plexitude (the number of point in |
-|                    | each element) of the Formex.                 |
+| :meth:`F.nplex()`  | The plexitude of the Formex (the number      |
+|                    | of points in each element of the Formex)     |
 +--------------------+----------------------------------------------+
-| :meth:`F.prop()`   | Return the properties array (same as F.p).   |
+| :meth:`F.prop()`   | The properties array (same as F.p)           |
 +--------------------+----------------------------------------------+
-| :meth:`F.bbox()`   | Return the bounding box of the Formex.       |
+| :meth:`F.bbox()`   | The bounding box of the Formex               |
 +--------------------+----------------------------------------------+
-| :meth:`F.center()` | Return the center of the Formex.             |
+| :meth:`F.center()` | The center of the bbox of the Formex         |
++--------------------+----------------------------------------------+
+| :meth:`F.sizes()`  | The size of the bbox of the Formex           |
 +--------------------+----------------------------------------------+
  
 

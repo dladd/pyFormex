@@ -747,9 +747,14 @@ def zoom(f):
     GD.canvas.update()
 
 
-def bgcolor(color):
-    """Change the background color (and redraw)."""
-    GD.canvas.setBgColor(color)
+def bgcolor(color,color2=None):
+    """Change the background color (and redraw).
+
+    If one color is given, the background is a solid color.
+    If two colors are given, the background color will get a vertical
+    gradient with color on top and color2 at the bottom.
+    """
+    GD.canvas.setBgColor(color,color2)
     GD.canvas.display()
     GD.canvas.update()
 

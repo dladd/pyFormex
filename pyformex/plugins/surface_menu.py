@@ -783,7 +783,7 @@ def sliceIt():
         dx =  (xmax-xmin) / nslices
         x = arange(nslices+1) * dx
         N = unitVector(axis)
-        print N
+        #print N
         P = [ bb[0]+N*s for s in x ]
         G = [S.toFormex().intersectionLinesWithPlane(Pi,N) for Pi in P]
         #[ G.setProp(i) for i,G in enumerate(G) ]
@@ -1261,7 +1261,6 @@ def show_menu():
     """Show the Tools menu."""
     global _the_menu
     if not GD.GUI.menu.item('Surface'):
-        print "NOW CREATING THE SURFACE MENU"
         create_menu()
 
 

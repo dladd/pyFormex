@@ -278,7 +278,6 @@ class GUI(QtGui.QMainWindow):
             printsize(self.central,'DEBUG: Canvas:')
             printsize(self.board,'DEBUG: Board:')
 
-
         # Drawing lock
         self.drawwait = GD.cfg['draw/wait']
         self.drawlock = drawlock.DrawLock()

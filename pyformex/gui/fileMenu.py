@@ -301,8 +301,6 @@ def showImage():
         viewer = ImageViewer(GD.app,fn)
         viewer.show()
         
-    
-
 
 def setOptions():
     options = ['test','debug','uselib','safelib','fastencode']
@@ -316,8 +314,6 @@ def setOptions():
             ## if o == 'debug':
             ##     GD.setDebugFunc()
 
-print surface_menu
-print surface_menu.show_menu
 
 MenuData = [
     (_('&Start new project'),createProject),
