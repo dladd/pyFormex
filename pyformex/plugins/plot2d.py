@@ -25,13 +25,14 @@ def showHistogram(x,y,txt,**options):
         print len(x)
         print len(y)
         maxlen = min(len(x),len(y))
-        data = Gnuplot.Data(x[:maxlen],y[:maxlen],title=txt, with='histeps') 
+        data = Gnuplot.Data(x[:maxlen],y[:maxlen],title=txt, with_='histeps') 
         g = Gnuplot.Gnuplot(persist=1)
         g.title('pyFormex histogram: %s' % txt)
         g.plot(data)
         
     elif plot2d_system == 'qwt':
-        from PyQt4.Qwt5.qplt import *
+        pass
+        #from PyQt4.Qwt5.qplt import *
 
 
 def createHistogram(data,cumulative=False):
