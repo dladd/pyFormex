@@ -587,15 +587,12 @@ class GeomActor(Actor):
         mode can be 'element', 'edge' or 'point'
         """
         if mode == 'element':
-            if self.elems is None:
-                pickPolygons(self.coords)
-            else:
-                pickPolygonElems(self.coords,self.elems)
+            pickPolygons(self.coords,self.elems)
 
         elif mode == 'edge':
             edges = self.edges()
             if edges is not None:
-                pickPolygonElems(self.coords,edges)
+                pickPolygons(self.coords,edges)
                 
         elif mode == 'point':
             pickPoints(self.coords)
@@ -711,9 +708,9 @@ class TriSurfaceActor(Actor,TriSurface):
         """
         if mode == 'element':
             self.refresh()
-            pickPolygonElems(self.coords,self.elems)
+            pickPolygons(self.coords,self.elems)
         elif mode == 'edge':
-            pickPolygonElems(self.coords,self.edges)
+            pickPolygons(self.coords,self.edges)
         elif mode == 'point':
             pickPoints(self.coords)
 

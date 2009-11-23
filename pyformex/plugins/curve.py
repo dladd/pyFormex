@@ -31,12 +31,11 @@ higher order curves and collections thereof. In general, the curves are 3D,
 but special cases may be created for handling plane curves.
 """
 
-# (C) 2008 Benedict Verhegghe (bverheg at users.berlios.de)
 # I wrote this software in my free time, for my joy, not as a commissioned task.
 # Any copyright claims made by my employer should therefore be considered void.
 # Acknowledgements: Gianluca De Santis
 
-from pyformex import debug
+#from pyformex import debug
 from numpy import *
 from formex import *
 
@@ -159,7 +158,7 @@ class Curve(object):
 
     def approx(self,ndiv=N_approx):
         """Return an approximate PolyLine"""
-        return PolyLine(self.subPoints(ndiv))
+        return PolyLine(self.subPoints(ndiv),closed=self.closed)
 
 
     # This allows us to draw approximations of curves that do not specify
@@ -195,9 +194,8 @@ class PolyLine(Curve):
     def toFormex(self):
         """Return the polyline as a Formex."""
         x = self.coords
-        debug("CURVE HAS %s POINTS" % x.shape[0])
-        return connect([x,x],bias=[0,1],loop=self.closed)
-
+        F = connect([x,x],bias=[0,1],loop=self.closed)
+        return F
 
     def sub_points(self,t,j):
         """Return the points at values t in part j"""

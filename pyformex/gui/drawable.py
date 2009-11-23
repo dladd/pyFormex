@@ -420,8 +420,6 @@ def drawNurbsCurves(x,color=None):
     If color is given it is an (nlines,3) array of RGB values.
     """
     nurb = GLU.gluNewNurbsRenderer()
-##    nkots = 7
-##    knots = arange(nkots+1) / float(nkots)
     if x.shape[1] == 4:
         knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
     if x.shape[1] == 3:
@@ -436,7 +434,6 @@ def drawNurbsCurves(x,color=None):
         GLU.gluEndCurve(nurb)
 
     
-  
 def drawCube(s,color=[red,cyan,green,magenta,blue,yellow]):
     """Draws a centered cube with side 2*s and colored faces.
 
@@ -520,29 +517,27 @@ def drawGridPlanes(x0,x1,nx):
             GL.glEnd()
 
 
-######################## Draw mimicking for picking ########################
+######################## Picking functions ########################
 
-
-
-def pickPolygons(x,objtype=-1):
-    """Mimics drawing polygons for picking purposes."""
+def pickPolygons(x,e=None,objtype=-1):
+    """Mimics drawPolygons for picking purposes."""
     if GD.options.safelib:
         x = x.astype(float32)
-    drawgl.pick_polygons(x,objtype)
+        if e is not None:
+            e = e.astype(int32)
+    if e is None:
+        drawgl.pick_polygons(x,objtype)
+    else:
+        drawgl.pick_polygon_elems(x,e,objtype)
+
+
+def pickPolygonEdges(x,e,edg):
+    warning("pickPolygonEdges IS NOT IMPLEMENTED YET!")
 
 
 def pickPoints(x):
     x = x.reshape((-1,1,3))
     pickPolygons(x)
-
-
-def pickPolygonElems(x,e):
-    pickPolygons(x[e])
-
-
-def pickPolygonEdges(x,e,edg):
-    warning("THIS IS NOT OPERATIONAL YET!")
-    #pickPolygons(x[e])
 
 
 ### Settings ###############################################

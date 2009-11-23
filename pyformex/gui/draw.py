@@ -372,7 +372,6 @@ def draw(F,
         pass
     elif hasattr(F,'toFormex'):
         F = F.toFormex()
-        GD.debug("TRANSFORMING TO FORMEX with shape" + str(F.shape()))   
     # keep this below trying the 'toFormex' !!!
     elif isinstance(F,coords.Coords):
         F = Formex(F)
