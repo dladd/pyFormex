@@ -71,7 +71,7 @@
    .. autofunction:: zoomRectangle()
    .. autofunction:: zoomAll()
    .. autofunction:: zoom(f)
-   .. autofunction:: bgcolor(color)
+   .. autofunction:: bgcolor(color,color2=None)
    .. autofunction:: fgcolor(color)
    .. autofunction:: renderMode(mode)
    .. autofunction:: wireframe()

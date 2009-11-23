@@ -43,6 +43,7 @@ pyFormex installation.
    examples
    refman
    license
+   meta
 
 
 **Indices and tables**

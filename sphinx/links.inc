@@ -39,6 +39,7 @@
 .. _`PyQt4`: http://www.riverbankcomputing.co.uk/pyqt
 .. _`Subversion`: http://subversion.tigris.org
 .. _`Sphinx`: http://sphinx.pocoo.org
+.. _`reStructuredText`: http://docutils.sourceforge.net/rst.html
 
 .. _`GNU GPL`: http://www.gnu.org/licenses/gpl.html
 .. _`GNU General Public License`: http://www.gnu.org/licenses/gpl.html
