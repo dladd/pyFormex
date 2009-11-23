@@ -36,6 +36,7 @@ but special cases may be created for handling plane curves.
 # Any copyright claims made by my employer should therefore be considered void.
 # Acknowledgements: Gianluca De Santis
 
+from pyformex import debug
 from numpy import *
 from formex import *
 
@@ -194,6 +195,7 @@ class PolyLine(Curve):
     def toFormex(self):
         """Return the polyline as a Formex."""
         x = self.coords
+        debug("CURVE HAS %s POINTS" % x.shape[0])
         return connect([x,x],bias=[0,1],loop=self.closed)
 
 

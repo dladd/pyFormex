@@ -557,9 +557,11 @@ class GeomActor(Actor):
             drawLines(self.coords,self.elems,color)
         
         elif self.eltype == 'curve' and nplex == 3:
+            GD.debug("DRAWING WITH drawQuadraticCurves")
             drawQuadraticCurves(self.coords,color,n=quadratic_curve_ndiv)
             
         elif self.eltype == 'nurbs' and (nplex == 3 or nplex == 4):
+            GD.debug("DRAWING WITH drawNurbsCurves")
             drawNurbsCurves(self.coords,color)
             
         elif self.eltype is None:

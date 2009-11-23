@@ -34,6 +34,10 @@ the user.
 from OpenGL import GL,GLU
 from numpy import *
 
+def get_version():
+    return 0
+
+
 def glColor(color,alpha=1.0):
     """Set the OpenGL color, possibly with transparency.
 
@@ -61,12 +65,15 @@ def glObjType(nplex):
     return objtype
 
 
-def draw_polygons(x,n,c,alpha):
+def draw_polygons(x,n,c,alpha,objtype):
     """Draw a collection of polygons.
 
     x : float (nel,nplex,3) : coordinates.
     n : float (nel,3) or (nel,nplex,3) : normals.
     c : float (nel,3) or (nel,nplex,3) : color(s)
+    alpha : float
+    objtype : GL Object type (-1 = auto)
+
     If nplex colors per element are given, and shading mode is flat,
     the last color will be used.
     """
@@ -77,7 +84,9 @@ def draw_polygons(x,n,c,alpha):
     if c is not None:
         c = c.astype(float32)
 
-    objtype = glObjType(nplex)
+    if objtype < 0:
+        objtype = glObjType(nplex)
+        
     if nplex <= 4:
 
         GL.glBegin(objtype)
@@ -210,13 +219,16 @@ def draw_polygons(x,n,c,alpha):
 
         
 
-def pick_polygons(x):
-    """Mimics drawPolygons for picking purposes.
+def pick_polygons(x,objtype):
+    """Mimics draw_polygons for picking purposes.
 
     x : float (nel,nplex,3) : coordinates.
+    objtype : GL Object type (-1 = auto)
     """
     nplex = x.shape[1]
-    objtype = glObjType(nplex)
+
+    if objtype < 0:
+        objtype = glObjType(nplex)
 
     for i,xi in enumerate(x): 
         GL.glPushName(i)
@@ -227,18 +239,28 @@ def pick_polygons(x):
         GL.glPopName()
 
         
-def draw_polygon_elems(x,e,n,c,alpha):
+def draw_polygon_elems(x,e,n,c,alpha,objtype):
     """Draw a collection of polygon elements.
 
-    This function is like drawPolygons, but the vertices of the polygons
+    This function is like draw_polygons, but the vertices of the polygons
     are specified by a (coords,elems) tuple.
     x : float (npts,3) : coordinates
     e : int32 (nel,nplex) : element connectivity
     n : float (nel,3) or (nel,nplex,3) normals.
     c : float (nel,3) or (nel,nplex,3) colors
     alpha : float
+    objtype : GL Object type (-1 = auto)
     """
-    drawPolygons(x[e],n,c,alpha)
+    draw_polygons(x[e],n,c,alpha,objtype)
     
+
+def pick_polygon_elems(x,e,objtype):
+    """Mimics draw_polygon_elems for picking purposes.
+
+    x : float (npts,3) : coordinates
+    e : int32 (nel,nplex) : element connectivity
+    objtype : GL Object type (-1 = auto)
+    """
+    pick_polygons(x[e],objtype)
     
 ### End

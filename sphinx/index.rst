@@ -42,7 +42,6 @@ pyFormex installation.
    user-guide
    examples
    refman
-   faq
    license
 
 

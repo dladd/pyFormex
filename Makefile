@@ -122,10 +122,12 @@ website:
 bumpversion:
 	OLD=$$(expr "${VERSION}" : '.*\([0-9])*\)$$');NEW=$$(expr $$OLD + 1);sed -i "/^VERSION=/s|$$OLD$$|$$NEW|" RELEASE
 	sed -i '/^RELEASE=/s|}.*|}-a1|' RELEASE
+	make version
 
 # This increases the tail only: minor number or alpha number
 bumprelease:
 	OLD=$$(expr "${RELEASE}" : '.*\([0-9])*\)$$');NEW=$$(expr $$OLD + 1);sed -i "/^RELEASE=/s|$$OLD$$|$$NEW|" RELEASE
+	make version
 
 
 version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac ${SPHINXDIR}/conf.py

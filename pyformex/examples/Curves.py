@@ -37,14 +37,19 @@ techniques = ['solve','widgets','persistence']
 """
 
 def BezierCurve(X,curl=None,closed=False):
-    """Create a Bezier curve give 4 points"""
+    """Create a Bezier curve give 4 points
+
+    This currently does not allow closed==True
+    """
     ns = (X.shape[0]-1) / 3
     ip = 3*arange(ns+1)
+    print ip
     P = X[ip]
     ip = 3*arange(ns)
     ic = column_stack([ip+1,ip+2]).ravel()
     C = X[ic].reshape(-1,2,3)
-    return BezierSpline(P,control=C,closed=closed)
+    # always use False
+    return BezierSpline(P,control=C,closed=False)
     
 
 method = ODict([
@@ -123,8 +128,8 @@ dataset = [
             [2., -1.5, -2.], [1.5, -1.5, 2.], [0., -8., 0.], [-1., -8., -1.],
             [3., -3., 1.]]),
     Coords([[0., 1., 0.],[0., 0.1, 0.],[0.1, 0., 0.],  [1., 0., 0.]]),
-    Coords([[0., 1., 0.],[0.,0.,0.],[1., 0., 0.]]),
-    Coords([[0., 1., 0.],[1., 0., 0.]]),
+    #Coords([[0., 1., 0.],[0.,0.,0.],[1., 0., 0.]]),
+    #Coords([[0., 1., 0.],[1., 0., 0.]]),
     ]
 
 data_items = [

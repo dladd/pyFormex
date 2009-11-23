@@ -1741,18 +1741,20 @@ class BaseMenu(object):
         names and actions.
         """
         self.title = title
+        GD.debug("Creating menu %s" % title)
         self.parent = parent
+        self.menuitems = []
+        if items:
+            GD.debug("INSERTING ITEMS in menu %s" % title)
+            self.insertItems(items)
+            GD.debug("MENU %s now has items %s" % (title,[i[0] for i in self.menuitems]))
         if parent and isinstance(parent,BaseMenu):
-            #print "INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title)
+            GD.debug("INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title))
             if before:
                 before = parent.itemAction(before)
             parent.insert_menu(self,before)
-            #parent.menuitems.append((normalize(title),self))
-        self.menuitems = []
-        if items:
-            #print "INSERTING ITEMS"
-            self.insertItems(items)
-            #print [ p[0] for p in self.menuitems ]
+            parent.menuitems.append((normalize(title),self))
+            GD.debug("PARENT MENU %s now has items %s" % (self.parent.title,[i[0] for i in self.parent.menuitems]))
 
 
     def item(self,text):
