@@ -750,13 +750,20 @@ def writeAmplitude(fil,prop):
 # Result: goes to the .fil file (for postprocessing with other means)
 #######################################################
 
-def writeStepOutput(fil,kind,type,variable='PRESELECT'):
+def writeStepOutput(fil,kind,history=False,variable='PRESELECT'):
     """Write the global step output requests.
     
-    type = 'FIELD' or 'HISTORY'
-    variable = 'ALL' or 'PRESELECT'
+    variable = 'ALL' or 'PRESELECT' or ''
     """
-    fil.write("*OUTPUT, %s, VARIABLE=%s\n" %(type.upper(),variable.upper()))
+    if history:
+        option = 'HISTORY'
+    else:
+        option = 'FIELD'    
+    out = '*OUTPUT, %s' % option
+    if variable:
+        out += ', VARIABLE=%s' % variable.upper()
+    out += '\n'
+    fil.write(out)
 
 
 def writeNodeOutput(fil,kind,keys,set='Nall'):
@@ -840,6 +847,7 @@ def writeElemOutput(fil,kind,keys,set='Eall'):
       for which the results should be written
     """
     output = 'OUTPUT'
+
     if type(set) == str or type(set) == int:
         set = [ set ]
     for i in set:
@@ -1054,6 +1062,7 @@ class Step(Dict):
 
         if self.out:
             out += self.out
+        
         for i in out:
             if i.kind is None:
                 writeStepOutput(fil,**i)
@@ -1078,15 +1087,14 @@ class Output(Dict):
     """A request for output to .odb and history."""
     
     def __init__(self,kind=None,keys=None,set=None,
-                 type='FIELD',variable='PRESELECT'):
+                 history=False,variable='PRESELECT'):
         """ Create new output request.
         
         kind = None, 'NODE', or 'ELEMENT' (first character suffices)
 
         For kind=='':
 
-          type =  'FIELD' or 'HISTORY'
-          variable = 'ALL' or 'PRESELECT'
+          variable = 'ALL' or 'PRESELECT' or ''
 
         For kind=='NODE' or 'ELEMENT':
 
@@ -1107,7 +1115,7 @@ class Output(Dict):
         if kind is not None:
             self.update({'keys':keys,'set':set})
         else:
-            self.update({'type':type,'variable':variable})
+            self.update({'history':history,'variable':variable})
 
 
 class Result(Dict):
