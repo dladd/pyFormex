@@ -341,14 +341,17 @@ class ModelessSelection(QtGui.QDialog):
         'extended': QtGui.QAbstractItemView.ExtendedSelection,
         }
     
-    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None):
+    def __init__(self,slist=[],title='Selection Dialog',mode=None,sort=False,func=None,width=None,height=None):
         """Create the SelectionList dialog.
         """
         QtGui.QDialog.__init__(self)
         self.setWindowTitle(title)
         # Selection List
         self.listw = QtGui.QListWidget()
-        self.listw.setMaximumWidth(100)
+        if width is not None:
+            self.listw.setMaximumWidth(width)
+        if height is not None:
+            self.listw.setMaximumHeight(height)
         self.listw.addItems(slist)
         if sort:
             self.listw.sortItems()
