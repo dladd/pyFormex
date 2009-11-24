@@ -1,0 +1,17 @@
+{% extends "!layout.html" %}
+
+{% set reldelim1 = ' |' %}
+
+{% block rootrellink %}
+    <li><a href="http://pyformex.org/">pyFormex Home</a>{{ reldelim1 }}</li>
+    {{ super() }}
+{% endblock %}
+
+{%- block sidebarlogo %}
+    {%- if logo %}
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="{{ pathto('_static/' + logo, 1) }}" alt="Logo"/>
+        </a></p>
+    {%- endif %}
+    <h3><a href="{{ pathto(master_doc) }}">{{ _('Documentation') }}</a></h3>
+{%- endblock %}

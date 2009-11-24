@@ -52,3 +52,22 @@ Guidelines for creating pyFormex documentation
   copy the commands to the output, so that you can fix them afterwards in the
   ``.rst`` file.
 
+Images
+======
+
+- Put original images int the subdirectory ``images``.
+
+- Create images with a transparent or white background.
+
+- Use PNG images whenever possible.
+
+- Create the reasonable size for inclusion on a web page. Use a minimal canvas size and maximal zooming.
+
+- Give related images identical size (set canvas size and use autozoom).
+
+- Make composite images to combine multiple small images in a single large one.
+  If you have ``ImageMagick``, the following command create a horizontal
+  composition ``result.png``  of three images::
+
+     convert +append image-000.png image-001.png image-003.png result.png
+

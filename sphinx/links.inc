@@ -40,6 +40,7 @@
 .. _`Subversion`: http://subversion.tigris.org
 .. _`Sphinx`: http://sphinx.pocoo.org
 .. _`reStructuredText`: http://docutils.sourceforge.net/rst.html
+.. _`GIMP`: http://www.gimp.org
 
 .. _`GNU GPL`: http://www.gnu.org/licenses/gpl.html
 .. _`GNU General Public License`: http://www.gnu.org/licenses/gpl.html

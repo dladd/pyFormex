@@ -33,10 +33,14 @@ FAQ
 
 #. **How was the pyFormex logo created?**
 
-   With the Gimp, using the menu option 
-   :menuselection:`Xtra-->Script-Fu-->Logos-->Alien-neon` and specifying
-   the following data::
+   We used the GNU Image Manipulation Program (`GIMP`_). It has a wide variety
+   of scripts to create logos. With newer versions (>= 2.6) use the menu
+   :menuselection:`Fille-->Create-->Logos-->Alien-neon`. With older 
+   versions (<=2.4) use :menuselection:`Xtra-->Script-Fu-->Logos-->Alien-neon`.
+   
+   In the Alien Neon dialog specify the following data::
 
+      Text: pyFormex
       Font Size: 150 
       Font: Blippo-Heavy
       Glow Color: 0xFF3366
@@ -46,10 +50,14 @@ FAQ
       Number of Bands: 7
       Fade Away: Yes
 
-   Then switch off the background layer and save the image in PNG
-   format.  Export the image with ``Save Background Color`` option switched
-   off!
+   Press :guilabel:`OK` to create the logo. Then switch off the background
+   layer and save the image in PNG format.  
+   Export the image with ``Save Background Color`` option switched off!
 
+
+#. **How was the pyFormex favicon created?**
+   With FTGL, save as icon, handedited .xpm in emacs to set background color
+   to None (transparent), then converted to .png and .ico with convert.
 
    
    .. _`faq:why_python`: 

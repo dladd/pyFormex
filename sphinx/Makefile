@@ -55,7 +55,7 @@ help:
 clean:
 	-rm -rf _build/*
 
-html: ref
+html: prereq
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
 	@echo
 	@echo "Build finished. The HTML pages are in _build/html."
@@ -125,15 +125,9 @@ prereq: ref pyformex.help
 ref:
 	make -C ref
 
-
-
-# 
-# The autodoc just is not powerful enough
-#	quickref.py ${AUTOREF}
-#
-
 pyformex.help: ../pyformex/pyformex
 	../pyformex/pyformex --help > $@
+
 
 # Transfer the files to BerliOS
 pub: 

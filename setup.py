@@ -113,7 +113,17 @@ transformations.
       license='GNU General Public License (GPL)',
       ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
-      package_data={'pyformex': ['pyformexrc', 'icons/*.xpm','icons/pyformex*.png','examples/scripts.cat','examples/Demos/*','data/*','doc/*', 'manual/html/*', 'manual/images/*']},
+      package_data={
+          'pyformex': [
+              'pyformexrc',
+              'icons/*.xpm',
+              'icons/pyformex*.png',
+              'examples/scripts.cat',
+              'examples/Demos/*',
+              'data/*',
+              'doc/*'
+              ],
+          },
       scripts=['pyformex/pyformex','pyformex-viewer','pyformex/lib/postabq'],
       data_files=DATA_FILES,
       classifiers=[

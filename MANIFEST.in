@@ -15,13 +15,10 @@ include pyformex/examples/Demos/README
 include pyformex/data/*
 include pyformex/icons/*.xpm
 include pyformex/icons/pyformex*.png
-include pyformex/manual/html/*
-include pyformex/manual/images/*.png
 
 include pyformex/external/gts/gts.install
 include pyformex/external/gts/README
 include pyformex/external/gts/gts-0.7.6-bv.patch
-include pyformex/external/pygl2ps/Makefile
 include pyformex/external/pygl2ps/gl2ps_wrap.c
 include pyformex/external/pygl2ps/README
 include pyformex/external/pygl2ps/gl2ps.i
@@ -30,10 +27,11 @@ include pyformex/external/pygl2ps/setup.py
 include pyformex/external/pygl2ps/pygl2ps.install
 include pyformex/external/calpy/README
 include pyformex/external/calpy/calpy.install
-include pyformex/external/tetgen/Makefile
 include pyformex/external/tetgen/README
-include pyformex/external/tetgen/tetgen-1.4.2.patch
 include pyformex/external/tetgen/tetgen.install
+
+include pyformex/doc/html/*
+include pyformex/doc/html/*/*
 
 prune *.py~
 prune *.pyc
