@@ -35,3 +35,4 @@ include pyformex/doc/html/*/*
 
 prune *.py~
 prune *.pyc
+prune pyformex/examples/t*.py

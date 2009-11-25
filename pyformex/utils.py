@@ -225,6 +225,23 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
+def prepend(prefix,files):
+    """Prepend a prefix to a list of filename."""
+    return [ os.path.join(prefix,f) for f in files ]
+
+
+def listTree(path,listdirs=True,topdown=True):
+    """List all files in path. If dirs==False, directories are not listed."""
+    filelist = []
+    for root, dirs, files in os.walk(path, topdown=topdown):
+        if listdirs and topdown:
+            filelist.append(root)
+        filelist.extend(prepend(root,files))
+        if listdirs and not topdown:
+            filelist.append(root)
+    return filelist
+
+
 def setSaneLocale():
     """Set a sane local configuration for LC_NUMERIC.
 

@@ -34,6 +34,27 @@ from distutils.core import setup, Extension
 
 import os,sys,commands
 
+def prepend(prefix,files):
+    """Prepend a prefix to a list of filename."""
+    return [ os.path.join(prefix,f) for f in files ]
+
+
+def listTree(path,listdirs=True,topdown=True):
+    """List all files in path. If dirs==False, directories are not listed."""
+    filelist = []
+    for root, dirs, files in os.walk(path, topdown=topdown):
+        if listdirs and topdown:
+            filelist.append(root)
+        filelist.extend(prepend(root,files))
+        if listdirs and not topdown:
+            filelist.append(root)
+    return filelist
+
+
+DOC_FILES = listTree('pyformex/doc/html')
+for f in DOC_FILES:
+    print f
+
 EXT_MODULES = [ 'drawgl', 'misc' ]
 
 DATA_FILES = [
@@ -109,7 +130,7 @@ transformations.
 """,
       author='Benedict Verhegghe',
       author_email='benedict.verhegghe@ugent.be',
-      url='http://pyformex.berlios.de/',
+      url='http://pyformex.org',
       license='GNU General Public License (GPL)',
       ext_modules = [ Extension('pyformex/lib/%s'%m,sources = ['pyformex/lib/%smodule.c'%m]) for m in EXT_MODULES ],
       packages=['pyformex','pyformex.gui','pyformex.lib','pyformex.plugins','pyformex.examples'],
@@ -122,6 +143,7 @@ transformations.
               'examples/Demos/*',
               'data/*',
               'doc/*'
+              'doc/*/*'
               ],
           },
       scripts=['pyformex/pyformex','pyformex-viewer','pyformex/lib/postabq'],
@@ -145,6 +167,7 @@ transformations.
           'Topic :: Scientific/Engineering :: Visualization',
           'Topic :: Scientific/Engineering :: Physics',
           ],
+      requires = ['numpy','OpenGl','PyQt4'],
       )
 
 # End
