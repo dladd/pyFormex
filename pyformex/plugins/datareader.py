@@ -39,7 +39,7 @@ def splitFloat(s):
     If the beginning of the string matches a floating point number,
     a list is returned with the float and the remainder of the string;
     if not, None is returned.
-    Example: splitFloat('123e4rt345e6') returns [1230000.0, 'rt345e6']
+    Example: ``splitFloat('123e4rt345e6')`` returns ``[1230000.0, 'rt345e6']``
     """
     m = FloatString.match(s)
     if m:
@@ -68,7 +68,8 @@ def readData(s,type,strict=False):
     data or types are ignored, UNLESS the strict flag has been set, in which
     case a RuntimError is raised.
     Example::
-      readData('12, 13, 14.5e3, 12 inch, 1hr, 31kg ', ['int','float','kg','cm','s'])
+    
+       readData('12, 13, 14.5e3, 12 inch, 1hr, 31kg ', ['int','float','kg','cm','s'])
       
     returns ``[12, 13.0, 14500.0, 30.48, 3600.0]``
     

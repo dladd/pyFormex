@@ -28,24 +28,24 @@ A general yet simple configuration class.
 Distributed under the GNU GPL version 3 or later
 
 Why:
-I wrote this simple class because I wanted to use Python expressions in my
-configuration files. This is so much more fun than using .INI style config
-files.
-While there are some other Python config modules available on the web,
-I couldn't find one that suited my needs and my taste: either they are intended
-for more complex configuration needs than mine, or they do not work with the
-simple Python syntax I expected.
+  I wrote this simple class because I wanted to use Python expressions in my
+  configuration files. This is so much more fun than using .INI style config
+  files.
+  While there are some other Python config modules available on the web,
+  I couldn't find one that suited my needs and my taste: either they are intended
+  for more complex configuration needs than mine, or they do not work with the
+  simple Python syntax I expected.
 
 What:
-Our Config class is just a normal Python dictionary which can hold anything.
-Fields can be accessed either as dictionary lookup (config['foo']) or as
-object attributes (config.foo).
-The class provides a function for reading the dictionary from a flat text
-(multiline string or file). I will always use the word 'file' hereafter,
-because that is what you usually will read the configuration from.
-Your configuration file can have named sections. Sections are stored as
-other Python dicts inside the top Config dictionary. The current version
-is limited to one level of sectioning.
+  Our Config class is just a normal Python dictionary which can hold anything.
+  Fields can be accessed either as dictionary lookup (config['foo']) or as
+  object attributes (config.foo).
+  The class provides a function for reading the dictionary from a flat text
+  (multiline string or file). I will always use the word 'file' hereafter,
+  because that is what you usually will read the configuration from.
+  Your configuration file can have named sections. Sections are stored as
+  other Python dicts inside the top Config dictionary. The current version
+  is limited to one level of sectioning.
 """
 
 import copy
@@ -109,20 +109,24 @@ class Config(Dict):
     function. Variables inserted with addSection() will not be available
     as individual variables though, but can be access as self['name'].
     
-    As an example, if your config file looks like
-      aa = 'bb'
-      bb = aa
-      [cc]
-      aa = 'aa'
-      _n = 3
-      rng = range(_n)
+    As an example, if your config file looks like::
+    
+       aa = 'bb'
+       bb = aa
+       [cc]
+       aa = 'aa'
+       _n = 3
+       rng = range(_n)
+       
     the resulting configuration dictionary is
-    {'aa': 'bb', 'bb': 'bb', 'cc': {'aa': 'aa', 'rng': [0, 1, 2]}}
+    ``{'aa': 'bb', 'bb': 'bb', 'cc': {'aa': 'aa', 'rng': [0, 1, 2]}}``
 
     As far as the resulting Config contents is concerned, the following are
-    equivalent:
-    C.update({'key':'value'})
-    C.read("key='value'\n")
+    equivalent::
+    
+       C.update({'key':'value'})
+       C.read("key='value'\n")
+       
     There is an important difference though: the second line will make a
     variable key (with value 'value') available in subsequent Config read()
     method calls.
@@ -185,8 +189,8 @@ class Config(Dict):
     def read(self,fil,debug=False):
         """Read a configuration from a file or text
 
-        fil is a sequence of strings. Any type that allows a loop like 
-          for line in fil:
+        `fil` is a sequence of strings. Any type that allows a loop like 
+        ``for line in fil:``
         to iterate over its text lines will do. This could be a file type, or
         a multiline text after splitting on '\n'.
 

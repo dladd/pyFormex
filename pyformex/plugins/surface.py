@@ -432,6 +432,7 @@ class TriSurface(object):
         The surface contains ntri triangles, each having 3 vertices with
         3 coordinates.
         The surface can be initialized from one of the following:
+        
         - a (ntri,3,3) shaped array of floats ;
         - a 3-plex Formex with ntri elements ;
         - an (ncoords,3) float array of vertex coordinates and
@@ -745,9 +746,11 @@ class TriSurface(object):
         
         nodes specifies which nodes are taken into account in the comparisons.
         It should be one of the following:
+        
         - a single (integer) point number (< the number of points in the Formex)
         - a list of point numbers
         - one of the special strings: 'all', 'any', 'none'
+        
         The default ('all') will flag all the elements that have all their
         nodes between the planes x=min and x=max, i.e. the elements that
         fall completely between these planes. One of the two clipping planes
@@ -811,7 +814,8 @@ class TriSurface(object):
     def pointNormals(self):
         """Compute the normal vectors in each point of a collection of triangles.
         
-        The normal vector in a point is the average of the normal vectors of the neighbouring triangles.
+        The normal vector in a point is the average of the normal vectors of
+        the neighbouring triangles.
         The normal vectors are normalized.
         """
         con = reverseIndex(self.getElems())
@@ -825,7 +829,8 @@ class TriSurface(object):
     def offset(self,distance=1.):
         """Offset a surface with a certain distance.
         
-        All the nodes of the surface are translated over a specified distance along their normal vector.
+        All the nodes of the surface are translated over a specified distance
+        along their normal vector.
         This creates a new congruent surface.
         """
         NPA = self.pointNormals()
@@ -849,11 +854,12 @@ class TriSurface(object):
         If no file type is specified, it is derived from the filename
         extension.
         Currently supported file types:
-          - .stl (ASCII or BINARY)
-          - .gts
-          - .off
-          - .neu (Gambit Neutral)
-          - .smesh (Tetgen)
+
+        - .stl (ASCII or BINARY)
+        - .gts
+        - .off
+        - .neu (Gambit Neutral)
+        - .smesh (Tetgen)
         """
         if ftype is None:
             ftype = os.path.splitext(fn)[1]  # deduce from extension
@@ -1355,12 +1361,13 @@ Total area: %s; Enclosed volume: %s
     def growSelection(self,sel,mode='node',nsteps=1):
         """Grows a selection of a surface.
 
-        p is a single element number or a list of numbers.
+        `p` is a single element number or a list of numbers.
         The return value is a list of element numbers obtained by
-        growing the front nsteps times.
-        The mode argument specifies how a single frontal step is done:
-        'node' : include all elements that have a node in common,
-        'edge' : include all elements that have an edge in common.
+        growing the front `nsteps` times.
+        The `mode` argument specifies how a single frontal step is done:
+
+        - 'node' : include all elements that have a node in common,
+        - 'edge' : include all elements that have an edge in common.
         """
         if mode == 'node':
             p = self.walkNodeFront(startat=sel,nsteps=nsteps)

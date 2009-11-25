@@ -24,9 +24,17 @@
 ##
 """A structured collection of 3D coordinates.
 
-The :mod:`coords` module defines the :class:`Coords` class, which is the basic data structure in pyFormex to store coordinates of points in a 3D space.
+The :mod:`coords` module defines the :class:`Coords` class, which is the basic
+data structure in pyFormex to store coordinates of points in a 3D space.
 
-This module implements a data class for storing large sets of 3D coordinates and provides an extensive set of methods for transforming these coordinates. The :class:`Coords` class is used by other classes, such as Formex and Surface, which thus inherit the same transformation capabilities. In future, other geometrical data models may (and should) also derive from the :class:`Coords` class. While the user will mostly use the higher level classes, he might occasionally find good reason to use the :class:`Coords` class directly as well.
+This module implements a data class for storing large sets of 3D coordinates
+and provides an extensive set of methods for transforming these coordinates.
+The :class:`Coords` class is used by other classes, such as Formex and Surface,
+which thus inherit the same transformation capabilities.
+In future, other geometrical data models may (and should) also derive from
+the :class:`Coords` class.
+While the user will mostly use the higher level classes, he might occasionally
+find good reason to use the :class:`Coords` class directly as well.
 """
 
 from arraytools import *
@@ -300,7 +308,8 @@ class Coords(ndarray):
     def test(self,dir=0,min=None,max=None,atol=0.):
         """Flag points having coordinates between min and max.
 
-        This function is very convenient in clipping a :class:`Coords` in a specified
+        This function is very convenient in clipping a :class:`Coords` in a
+        specified
         direction. It returns a 1D integer array flagging (with a value 1 or
         True) the elements having nodal coordinates in the required range.
         Use where(result) to get a list of element numbers passing the test.
@@ -400,9 +409,11 @@ class Coords(ndarray):
         """Translate a :class:`Coords` object.
 
         The translation vector can be specified in one of the following ways:
+        
         - an axis number (0,1,2),
         - a single translation vector,
         - an array of translation vectors.
+        
         If an axis number is given, a unit vector in the direction of the
         specified axis will be used.
         If an array of translation vectors is given, it should be
@@ -410,11 +421,12 @@ class Coords(ndarray):
         If a distance value is given, the translation vector is multiplied
         with this value before it is added to the coordinates.
 
-        Thus, the following are all equivalent:
-          F.translate(1)
-          F.translate(1,1)
-          F.translate([0,1,0])
-          F.translate([0,2,0],0.5)
+        Thus, the following lines are all equivalent::
+        
+           F.translate(1)
+           F.translate(1,1)
+           F.translate([0,1,0])
+           F.translate([0,2,0],0.5)
         """
         if inplace:
             out = self
@@ -566,12 +578,14 @@ class Coords(ndarray):
     def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
         """Converts from spherical to cartesian after scaling.
 
-        <dir> specifies which coordinates are interpreted as resp.
-        longitude(theta), latitude(phi) and distance(r).
-        <scale> will scale the coordinate values prior to the transformation.
-        Angles are then interpreted in degrees.
+        - `dir` specifies which coordinates are interpreted as resp.
+          longitude(theta), latitude(phi) and distance(r).
+        - `scale` will scale the coordinate values prior to the transformation.
+
+        Angles are interpreted in degrees.
         Latitude, i.e. the elevation angle, is measured from equator in
         direction of north pole(90). South pole is -90.
+
         If colat=True, the third coordinate is the colatitude (90-lat) instead.
         """
         f = self.reshape((-1,3))
@@ -593,19 +607,21 @@ class Coords(ndarray):
 
         Just like with spherical(), the input coordinates are interpreted as
         the longitude, latitude and distance in a spherical coordinate system.
-        <dir> specifies which coordinates are interpreted as resp.
+
+        `dir` specifies which coordinates are interpreted as resp.
         longitude(theta), latitude(phi) and distance(r).
         Angles are then interpreted in degrees.
         Latitude, i.e. the elevation angle, is measured from equator in
         direction of north pole(90). South pole is -90.
         If colat=True, the third coordinate is the colatitude (90-lat) instead.
-        <scale> will scale the coordinate values prior to the transformation.
 
-        The n and e parameters define exponential transformations of the
+        `scale` will scale the coordinate values prior to the transformation.
+
+        The `n` and `e` parameters define exponential transformations of the
         north_south (latitude), resp. the east_west (longitude) coordinates.
         Default values of 1 result in a circle.
 
-        k adds 'eggness' to the shape: a difference between the northern and
+        `k` adds 'eggness' to the shape: a difference between the northern and
         southern hemisphere. Values > 0 enlarge the southern hemishpere and
         shrink the northern.
         """
@@ -633,11 +649,12 @@ class Coords(ndarray):
     def toSpherical(self,dir=[0,1,2]):
         """Converts from cartesian to spherical coordinates.
 
-        dir specifies which coordinates axes are parallel to respectively
+        `dir` specifies which coordinates axes are parallel to respectively
         the spherical axes distance(r), longitude(theta) and latitude(phi).
         Latitude is the elevation angle measured from equator in direction
         of north pole(90). South pole is -90.
         Default order is [0,1,2], thus the equator plane is the (x,y)-plane.
+
         The returned angle values are given in degrees.
         """
         v = self[...,dir].reshape((-1,3))
@@ -651,11 +668,11 @@ class Coords(ndarray):
     def bump1(self,dir,a,func,dist):
         """Return a :class:`Coords` with a one-dimensional bump.
 
-        dir specifies the axis of the modified coordinates;
-        a is the point that forces the bumping;
-        dist specifies the direction in which the distance is measured;
-        func is a function that calculates the bump intensity from distance
-        !! func(0) should be different from 0.
+        - `dir` specifies the axis of the modified coordinates;
+        - `a` is the point that forces the bumping;
+        - `dist` specifies the direction in which the distance is measured;
+        - `func` is a function that calculates the bump intensity from distance
+          and should be such that ``func(0) != 0``.
         """
         f = self.copy()
         d = f[...,dist] - a[dist]
@@ -731,9 +748,9 @@ class Coords(ndarray):
     def flare (self,xf,f,dir=[0,2],end=0,exp=1.):
         """Create a flare at the end of a :class:`Coords` block.
 
-        The flare extends over a distance ``xf`` at the start (``end=0``) or end (``end=1``)
-        in direction ``dir[0]`` of the coords block, and has a maximum amplitude of ``f``
-        in the ``dir[1]`` direction.
+        The flare extends over a distance ``xf`` at the start (``end=0``)
+        or end (``end=1``) in direction ``dir[0]`` of the coords block,
+        and has a maximum amplitude of ``f`` in the ``dir[1]`` direction.
         """
         ix,iz = dir
         bb = self.bbox()
@@ -769,8 +786,8 @@ class Coords(ndarray):
         only include numerical operations and functions understood by the
         numpy module.
         This method is one of several mapping methods. See also map1 and mapd.
-        Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
-        is equivalent with E.scale([2,3,4])
+        Example: ``E.map(lambda x,y,z: [2*x,3*y,4*z])``
+        is equivalent with ``E.scale([2,3,4])``
         """
         x,y,z = func(self[...,0].flat,self[...,1].flat,self[...,2].flat)
         shape = list(self.shape)
@@ -803,7 +820,7 @@ class Coords(ndarray):
     def map1(self,dir,func,x=None):
         """Return a :class:`Coords` where coordinate i is mapped by a 1-D function.
 
-        <func> is a numerical function which takes one argument and produces
+        `func` is a numerical function which takes one argument and produces
         one result. The coordinate dir will be replaced by func(coord[x]).
         If no x is specified, x is taken equal to dir. 
         The function must be applicable on arrays, so it should only
@@ -821,19 +838,21 @@ class Coords(ndarray):
     def mapd(self,dir,func,point,dist=None):
         """Maps one coordinate by a function of the distance to a point.
 
-        ``func`` a numerical function which takes one argument and produces
-        one result. The coordinate dir will be replaced by ``func(d)``, where
-        ``d`` is calculated as the distance to ``point`.
+        `func` a numerical function which takes one argument and produces
+        one result. The coordinate `dir` will be replaced by ``func(d)``,
+        where ``d`` is calculated as the distance to `point`.
         The function must be applicable on arrays, so it should only
         include numerical operations and functions understood by the
-        numpy module.
+        :mod:`numpy` module.
         By default, the distance d is calculated in 3-D, but one can specify
         a limited set of axes to calculate a 2-D or 1-D distance.
         This method is one of several mapping methods. See also
-        :method:`map3` and :method:`map1`.
+        :meth:`map3` and :meth:`map1`.
         
         Example::
+        
           E.mapd(2,lambda d:sqrt(10**2-d**2),f.center(),[0,1])
+
         maps ``E`` on a sphere with radius 10.
         """
         f = self.copy()
@@ -947,8 +966,10 @@ class Coords(ndarray):
 
         This method finds the points that are very close and replaces them
         with a single point. The return value is a tuple of two arrays:
+        
         - the unique points as a :class:`Coords` object,
         - an integer (nnod) array holding an index in the unique
+        
         coordinates array for each of the original nodes. This index will
         have the same shape as the pshape() of the coords array.
 
@@ -1053,17 +1074,20 @@ class Coords(ndarray):
         This convenience function uses the :func:`numpy.fromstring`
         function to read coordinates from a string.
 
-        fil: a string containing a single sequence of float numbers separated
-             by whitespace and a possible separator string.
-        sep: the separator used between the coordinates. If not a space,
-             all extra whitespace is ignored. 
-        ndim: number of coordinates per point. Should be 1, 2 or 3 (default).
-             If 1, resp. 2, the coordinate string only holds x, resp. x,y
-             values.
-        count: total number of coordinates to read. This should be a multiple
-               of 3. The default is to read all the coordinates in the string.
-               count can be used to force an error condition if the string
-               does not contain the expected number of values.
+        `fil`: a string containing a single sequence of float numbers separated
+        by whitespace and a possible separator string.
+
+        `sep`: the separator used between the coordinates. If not a space,
+        all extra whitespace is ignored. 
+
+        `ndim`: number of coordinates per point. Should be 1, 2 or 3 (default).
+        If 1, resp. 2, the coordinate string only holds x, resp. x,y
+        values.
+
+        `count`: total number of coordinates to read. This should be a multiple
+        of 3. The default is to read all the coordinates in the string.
+        count can be used to force an error condition if the string
+        does not contain the expected number of values.
 
         The return value is  Coords object.
         """
@@ -1109,8 +1133,8 @@ class Coords(ndarray):
         Thus, interpolate(F,G,n) is equivalent with
         interpolate(F,G,arange(0,n+1)/float(n))
 
-        The resulting :class:`Coords` array has an extra axis (the first). Its shape is
-        (n,) + F.shape, where n is the number of divisions.
+        The resulting :class:`Coords` array has an extra axis (the first).
+        Its shape is (n,) + F.shape, where n is the number of divisions.
         """
         if F.shape != G.shape:
             raise RuntimeError,"Expected Coords objects with equal shape!"

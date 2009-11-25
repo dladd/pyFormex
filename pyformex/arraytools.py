@@ -24,8 +24,11 @@
 
 """A collection of numerical array utilities.
 
-These are general utility functions that depend only on the numpy array model.
-All pyformex modules needing numpy should import everything from this module.
+These are general utility functions that depend only on the :mod:`numpy`
+array model. All pyformex modules needing :mod:`numpy` should import
+everything from this module::
+
+   from arraytools import * 
 """
 
 from numpy import *
@@ -90,7 +93,7 @@ def sind(arg,angle_spec=Deg):
     """Return the sin of an angle in degrees.
 
     For convenience, this can also be used with an angle in radians,
-    by specifying ``angle_spec=Rad``.
+    by specifying `angle_spec=Rad`.
     """
     return sin(arg*angle_spec)
 
@@ -151,11 +154,11 @@ def projection(A,B,axis=-1):
     return dotpr(A,B,axis)/length(B,axis)
 
 def norm(v,n=2):
-    """Return a norm of the vector v.
+    """Return thr `n`-norm of the vector `v`.
 
-    Default is the quadratic norm (vector length)
-    n == 1 returns the sum
-    n <= 0 returns the max absolute value
+    Default is the quadratic norm (vector length).
+    `n == 1` returns the sum.
+    ``n <= 0`` returns the max absolute value.
     """
     a = asarray(v).flat
     if n == 2:
@@ -178,13 +181,13 @@ def inside(p,mi,ma):
 def isClose(values,target,rtol=1.e-5,atol=1.e-8):
     """Returns an array flagging the elements close to target.
 
-    values is a float array, target is a float value.
-    values and target should be broadcastable to the same shape.
+    `values` is a float array, `target` is a float value.
+    `values` and `target` should be broadcastable to the same shape.
     
-    The return value is a boolean array with shape of values flagging
+    The return value is a boolean array with shape of `values` flagging
     where the values are close to target.
-    Two values a and b  are considered close if
-        | a - b | < atol + rtol * | b |
+    Two values `a` and `b` are considered close if
+    :math:`| a - b | < atol + rtol * | b |`
     """
     values = asarray(values)
     target = asarray(target) 
@@ -199,7 +202,7 @@ def origin():
 def unitVector(v):
     """Return a unit vector in the direction of v.
 
-    v is either an integer specifying one of the global axes (0,1,2),
+    `v` is either an integer specifying one of the global axes (0,1,2),
     or a 3-element array or compatible.
     """
     if type(v) is int:
@@ -224,9 +227,10 @@ def rotationMatrix(angle,axis=None,angle_spec=Deg):
     specifying an axis through the origin.
     In either case a 3x3 rotation matrix is returned.
     Note that:
-      rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
-      rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
-      rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
+
+    - rotationMatrix(angle,[1,0,0]) == rotationMatrix(angle,0) 
+    - rotationMatrix(angle,[0,1,0]) == rotationMatrix(angle,1) 
+    - rotationMatrix(angle,[0,0,1]) == rotationMatrix(angle,2)
       
     but the latter functions calls are more efficient.
     The result is returned as an array.
