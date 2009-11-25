@@ -425,13 +425,13 @@ def showCurvature():
     if S:
         dispmodes = ['On Domain','Histogram','Cumulative Histogram']
         res  = askItems([('Neighbourhood',1),
-                         ('Select Value',None,'select',['Gaussian curvature','Mean curvature']),
+                         ('Select Value',None,'select',['Gaussian curvature','Mean curvature','Shape index','Curvedness']),
                          ('Display Mode',None,'select',dispmodes)
                          ])        
         if res:
             key = res['Select Value']
             curv = S.curvature(neighbours=res['Neighbourhood'])
-            val = {'Gaussian curvature':0,'Mean curvature':1}
+            val = {'Gaussian curvature':0,'Mean curvature':1,'Shape index':2,'Curvedness':3}
             val = curv[val[key]]
             mode = res['Display Mode']
             if mode == 'On Domain':

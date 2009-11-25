@@ -262,11 +262,14 @@ def surface_volume(x,pt=None):
 
 
 def curvature(coords,elems,edges,neighbours=1):
-    """Calculate curvature parameters (according to Dong et al. 2005).
+    """Calculate curvature parameters
     
+    (according to Dong and Wang 2005;
+    Koenderink and Van Doorn 1992).
     The n-ring neighbourhood of the nodes is used (n=neighbours).
-    Six values are returned: the Gaussian and mean curvature, the
-    principal curvatures and the principal directions at the nodes.
+    Eight values are returned: the Gaussian and mean curvature, the
+    shape index, the curvedness, the principal curvatures and the
+    principal directions.    
     """
     # calculate n-ring neighbourhood of the nodes (n=neighbours)
     adj = adjacencyArray(edges,neighbours=neighbours)
@@ -328,7 +331,10 @@ def curvature(coords,elems,edges,neighbours=1):
     # the curvature of these nodes is zero
     plane = (adj>=0).sum(-1) <= 2
     Kg[plane] = H[plane] = k1[plane] = k2[plane] = e1[plane] = e2[plane] = 0.
-    return Kg,H,k1,k2,e1,e2
+    # calculate the shape index and curvedness
+    S = 2./pi*arctan((k1+k2)/(k1-k2))
+    C = square((k1**2+k2**2)/2)    
+    return Kg,H,S,C,k1,k2,e1,e2
 
 
 ############################################################################
@@ -976,8 +982,9 @@ class TriSurface(object):
         """Return the curvature parameters at the nodes.
         
         The n-ring neighbourhood of the nodes is used (n=neighbours).
-        Six values are returned: the Gaussian and mean curvature, the
-        principal curvatures and the principal directions.      
+        Eight values are returned: the Gaussian and mean curvature, the
+        shape index, the curvedness, the principal curvatures and the
+        principal directions.      
         """
         self.refresh()
         curv = curvature(self.coords,self.elems,self.edges,neighbours=neighbours)
