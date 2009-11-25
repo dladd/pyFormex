@@ -33,33 +33,15 @@ from distutils.command.build_ext import build_ext as _build_ext
 from distutils.core import setup, Extension
 
 import os,sys,commands
+from pyformex.utils import listTree
 
-def prepend(prefix,files):
-    """Prepend a prefix to a list of filename."""
-    return [ os.path.join(prefix,f) for f in files ]
-
-
-def listTree(path,listdirs=True,topdown=True):
-    """List all files in path. If dirs==False, directories are not listed."""
-    filelist = []
-    for root, dirs, files in os.walk(path, topdown=topdown):
-        if listdirs and topdown:
-            filelist.append(root)
-        filelist.extend(prepend(root,files))
-        if listdirs and not topdown:
-            filelist.append(root)
-    return filelist
-
-
-DOC_FILES = listTree('pyformex/doc/html')
-for f in DOC_FILES:
-    print f
+DOC_FILES = [ f[9:] for f in listTree('pyformex/doc',listdirs=False) ]
 
 EXT_MODULES = [ 'drawgl', 'misc' ]
 
 DATA_FILES = [
-              ('/usr/share/pixmaps', ['pyformex/icons/pyformex-64x64.png']),
-              ('/usr/share/applnk', ['pyformex-pyformex.desktop']),
+              ('pixmaps', ['pyformex/icons/pyformex-64x64.png']),
+              ('applnk', ['pyformex-pyformex.desktop']),
              ]
 
 
@@ -121,7 +103,7 @@ files.
 
 setup(cmdclass={'build_ext': build_ext,'install':install},
       name='pyformex',
-      version='0.8.1-a8',
+      version='0.8.1-a9',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
 pyFormex is a program for generating, manipulating and operating on 
@@ -142,9 +124,7 @@ transformations.
               'examples/scripts.cat',
               'examples/Demos/*',
               'data/*',
-              'doc/*'
-              'doc/*/*'
-              ],
+              ] + DOC_FILES
           },
       scripts=['pyformex/pyformex','pyformex-viewer','pyformex/lib/postabq'],
       data_files=DATA_FILES,
@@ -167,7 +147,7 @@ transformations.
           'Topic :: Scientific/Engineering :: Visualization',
           'Topic :: Scientific/Engineering :: Physics',
           ],
-      requires = ['numpy','OpenGl','PyQt4'],
+      requires=['numpy','OpenGL','PyQt4'],
       )
 
 # End

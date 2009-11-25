@@ -111,7 +111,7 @@ def setTimeoutButton():
     
 
 def setHelp():
-    askConfigPreferences(['viewer','help/manual','help/sphinx'])
+    askConfigPreferences(['help/docs'])
 
 def setCommands():
     askConfigPreferences(['editor','viewer','browser'])

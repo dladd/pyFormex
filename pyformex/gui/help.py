@@ -163,12 +163,7 @@ except:
     LinksMenuData = []
 
 
-MenuData = [
-    (_('&Manual (local)'),help,{'data':GD.cfg['help/manual']}),
-    (_('&Manual (online)'),help,{'data':GD.cfg['help/webmanual']}),
-    (_('&Online pyFormex documentation'),help,{'data':GD.cfg['help/webdoc']}),
-    (_('pyFormex &Website'),help,{'data':GD.cfg['help/website']}),
-    (_('&Help (pydoc) about item'),showpydoc),
+MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
     ('---',None),
     (_('&Command line options'),cmdline),
     (_('&Readme'),readme), 
@@ -182,10 +177,6 @@ MenuData = [
     (_('&About'),about), 
     ]
 
-sphinx = GD.cfg.get('help/sphinx','')
-if sphinx and os.path.exists(sphinx):
-    print "GREAT! FOUND SPHINX @ %s" % sphinx
 
-    MenuData[1:1] =  [(_('&Sphinx (experimental pyFormex documentation)'),help,{'data':sphinx})]
 
 # End

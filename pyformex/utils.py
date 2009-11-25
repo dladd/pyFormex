@@ -214,6 +214,78 @@ def reportDetected():
     return s
 
 
+def prefix(prefix,files):
+    """Prepend a prefix to a list of filename."""
+    return [ os.path.join(prefix,f) for f in files ]
+
+
+def matchMany(regexps,target):
+    """Return multiple regular expression matches of the same target string."""
+    return [re.match(r,target) for r in regexps]
+
+
+def matchCount(regexps,target):
+    """Return the number of matches of target to  regexps."""
+    return len(filter(None,matchMany(regexps,target)))
+                  
+
+def matchAny(regexps,target):
+    """Check whether target matches any of the regular expressions."""
+    return matchCount(regexps,target) > 0
+
+
+def matchNone(regexps,target):
+    """Check whether targes matches none of the regular expressions."""
+    return matchCount(regexps,target) == 0
+
+
+def matchAll(regexps,target):
+    """Check whether targets matches all of the regular expressions."""
+    return matchCount(regexps,target) == len(regexps)
+
+
+def listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[]):
+    """List all files in path.
+
+    If ``dirs==False``, directories are not listed.
+    By default the tree is listed top down and entries in the same directory
+    are unsorted.
+    
+    `exludedirs` and `excludefiles` are lists of regular expressions with
+    dirnames, resp. filenames to exclude from the result.
+
+    `includedirs` and `includefiles` can be given to include only the
+    directories, resp. files matching any of those patterns.
+
+    Note that 'excludedirs' and 'includedirs' force top down handling.
+    """
+    filelist = []
+    if excludedirs or includedirs:
+        topdown = True
+    for root, dirs, files in os.walk(path, topdown=topdown):
+        if sorted:
+            dirs.sort()
+            files.sort()
+        if excludedirs:
+            remove = [ d for d in dirs if matchAny(excludedirs,d) ]
+            for d in remove:
+                dirs.remove(d)
+        if includedirs:
+            remove = [ d for d in dirs if not matchAny(includedirs,d) ]
+            for d in remove:
+                dirs.remove(d)
+        if listdirs and topdown:
+            filelist.append(root)
+        if excludefiles:
+            files = [ f for f in files if matchNone(excludefiles,f) ]
+        if includefiles:
+            files = [ f for f in files if matchAny(includefiles,f) ]
+        filelist.extend(prefix(root,files))
+        if listdirs and not topdown:
+            filelist.append(root)
+    return filelist
+
+
 def removeTree(path,top=True):
     """Remove all files below path. If top==True, also path is removed."""
     for root, dirs, files in os.walk(path, topdown=False):
@@ -223,23 +295,6 @@ def removeTree(path,top=True):
             os.rmdir(os.path.join(root, name))
     if top:
         os.rmdir(path)
-
-
-def prefix(prefix,files):
-    """Prepend a prefix to a list of filename."""
-    return [ os.path.join(prefix,f) for f in files ]
-
-
-def listTree(path,listdirs=True,topdown=True):
-    """List all files in path. If dirs==False, directories are not listed."""
-    filelist = []
-    for root, dirs, files in os.walk(path, topdown=topdown):
-        if listdirs and topdown:
-            filelist.append(root)
-        filelist.extend(prefix(root,files))
-        if listdirs and not topdown:
-            filelist.append(root)
-    return filelist
 
 
 def setSaneLocale():

@@ -142,15 +142,20 @@ avgnormaltreshold = 0.5
 
 
 [help]
-manual = os.path.join(pyformexdir,"manual","html","index.html")
-sphinx = os.path.join(pyformexdir,"sphinx","_build","html","index.html")
+htmldir = os.path.join(pyformexdir,'doc','html')
+localdoc = os.path.join(htmldir,"index.html")
+refman = os.path.join(htmldir,"refman.html")
+index = os.path.join(htmldir,"genindex.html")
+modindex = os.path.join(htmldir,"modindex.html")
 readme = os.path.join(pyformexdir,"doc","README")
 notes = os.path.join(pyformexdir,"doc","ReleaseNotes")
 license = os.path.join(pyformexdir,"doc","COPYING")
-website = "http://pyformex.berlios.de" 
+website = "http://pyformex.org" 
 webdoc = website+"/doc" 
-webmanual = website+"/manual"
+oldmanual = website+"/manual"
 links = {'pyformex':'pyformex.org','ibitech':'www.ibitech.ugent.be','python':'www.python.org','pyformex-dev':'developer.berlios.de/projects/pyformex','stent-boys':'www.stent-ibitech.ugent.be'}
+docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('&Index',index),('&Module Index',modindex),('&Online documentation',webdoc),('Old manual (v0.8)',oldmanual),]
+
 
 [keys]
 save = 'F2'
