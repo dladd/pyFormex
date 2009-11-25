@@ -45,19 +45,26 @@ class Actor(Drawable):
     angles, clipping planes, rendering mode and lighting.
     
     An Actor subclass should minimally reimplement the following methods:
-      bbox(): return the actors bounding box.
-      drawGL(mode): to draw the actor. Takes a mode argument so the
-        drawing function can act differently depending on the mode. There are
-        currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
-      drawGL should only contain OpenGL calls that are allowed inside a display
-        list. This may include calling the display list of another actor but NOT
-        creating a new display list.
+    
+    - `bbox()`: return the actors bounding box.
+    - `drawGL(mode)`: to draw the actor. Takes a mode argument so the
+      drawing function can act differently depending on the mode. There are
+      currently 5 modes: wireframe, flat, smooth, flatwire, smoothwire.
+      drawGL should only contain OpenGL calls that are allowed inside a
+      display list. This may include calling the display list of another
+      actor but *not* creating a new display list.
+
+    The interactive picking functionality requires the following methods,
+    for which we porvide do-nothing defaults here:
+    
+    - `npoints()`:
+    - `nelems()`:
+    - `pickGL()`:
     """
     
     def __init__(self):
         Drawable.__init__(self)
 
-    # we need nelems() and pickGL for the picking functions
     def npoints(self):
         return 0
     def nelems(self):
@@ -361,11 +368,16 @@ class GeomActor(Actor):
 
         Here is a list of possible eltype values (which should match the
         corresponding plexitude):
-          plex-1: 'point3d' : a 3D cube with 6 differently colored faces is
-                              drawn at each point
-          plex-4: 'tet4'   : a tetrahedron
-          plex-6: 'wedge6' : a wedge (triangular prism)
-          plex-8: 'hex8'   : a hexahedron
+
+        =========   ===========   ============================================
+        plexitude   `eltype`      element type
+        =========   ===========   ============================================
+        1           ``point3d``   | a 3D cube with 6 differently colored faces
+                                    is drawn at each point
+        4           ``tet4``      a tetrahedron
+        6           ``wedge6``    a wedge (triangular prism)
+        8           ``hex8``      a hexahedron
+        =========   ===========   ============================================
         
         The colors argument specifies a list of OpenGL colors for each
         of the property values in the Formex. If the list has less

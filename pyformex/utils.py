@@ -225,7 +225,7 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
-def prepend(prefix,files):
+def prefix(prefix,files):
     """Prepend a prefix to a list of filename."""
     return [ os.path.join(prefix,f) for f in files ]
 
@@ -236,7 +236,7 @@ def listTree(path,listdirs=True,topdown=True):
     for root, dirs, files in os.walk(path, topdown=topdown):
         if listdirs and topdown:
             filelist.append(root)
-        filelist.extend(prepend(root,files))
+        filelist.extend(prefix(root,files))
         if listdirs and not topdown:
             filelist.append(root)
     return filelist
