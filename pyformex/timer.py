@@ -46,10 +46,18 @@ class Timer(object):
         now = datetime.now()
         return now - self.start
     
-    def seconds(self):
-        """Return the timer readings in seconds."""
+    def seconds(self,rounded=True):
+        """Return the timer readings in seconds.
+
+        The default return value is a rounded integer number of seconds.
+        With ``rounded == False``, a floating point value with grnularity of
+        1 microsecond is returned.
+        """
         e = self.read()
-        return e.days*24*3600 + e.seconds + int(round(e.microseconds / 1000000.))
+        tim = e.days*24*3600 + e.seconds + e.microseconds / 1000000.
+        if rounded:
+            tim = int(round(tim))
+        return tim
         
 
 if __name__ == "__main__":

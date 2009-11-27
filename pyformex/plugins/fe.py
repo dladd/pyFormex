@@ -45,7 +45,7 @@ def mergeNodes(nodes):
     coords = Coords(concatenate([x for x in nodes],axis=0))
     coords,index = coords.fuse()
     n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
-    ind = [ index[f:t+1] for f,t in zip(n[:-1],n[1:]) ]
+    ind = [ index[f:t] for f,t in zip(n[:-1],n[1:]) ]
     return coords,ind
 
 
@@ -59,13 +59,10 @@ def mergeModels(femodels):
     - a list of elems corresponding to the input list,
       but with numbers referring to the new coordinates.
     """
-    nodes = [ x for x,e in femodels ]
-    coords = Coords(concatenate(nodes,axis=0))
-    coords,index = coords.fuse()
-    n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
-    ind = [ index[f:t+1] for f,t in zip(n[:-1],n[1:]) ]
+    coords = [ x for x,e in femodels ]
     elems = [ e for x,e in femodels ]
-    return coords,[i[e] for i,e in zip(ind,elems)]
+    coords,index = mergeNodes(coords)
+    return coords,[i[e] for i,e in zip(index,elems)]
               
 
 def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
