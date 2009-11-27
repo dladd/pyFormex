@@ -98,6 +98,9 @@ class Board(QtGui.QTextEdit):
             self.cursor.movePosition(QtGui.QTextCursor.End)
             self.setTextCursor(self.cursor)
 
+    def flush(self):
+        self.update()
+
 
 #####################################
 ################# GUI ###############

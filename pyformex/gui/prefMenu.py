@@ -148,6 +148,7 @@ def setRender():
     items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
     res = draw.askItems(items)
     if res:
+        print res
         updateSettings(res,GD.cfg)
 
 

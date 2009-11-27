@@ -29,6 +29,22 @@ import widgets
 import draw
 from gettext import gettext as _
 
+        
+
+def set_near_clip(v):
+    dist = GD.canvas.camera.getDist()
+    GD.canvas.camera.setClip(10**v*dist,100.*dist)
+    GD.canvas.update()
+    
+    
+def setClip():
+    items = [
+        ('near',-2.0,'slider',{'min':-100,'max':100,'scale':0.01,'func': set_near_clip}),
+        ]
+    res = draw.askItems(items)
+    ## if res:
+    ##     updateSettings(res,GD.cfg)
+
 
 def setTriadeParams():
     try:
@@ -191,6 +207,7 @@ MenuData = [
         (_('&Clear'),draw.clear),
         (_('Toggle &Axes Triade'),draw.setTriade), 
         (_('Set &Axes Triade Properties'),setTriadeParams), 
+        (_('Set Near and Far Clipping Planes'),setClip), 
 #        (_('&Transparency'),setOpacity), 
         (_('&Background Color'),setBgColor), 
         (_('&Background 2Color'),setBgColor2), 

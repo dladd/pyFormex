@@ -952,6 +952,7 @@ class InputFSlider(InputFloat):
 
     Options:
     - 'min', 'max': range of the scale (integer)
+    - 'scale': scale factor to compute the float value
     - 'ticks' : step for the tick marks (default range length / 10)
     - 'func' : an optional function to be called whenever the value is
       changed. The function takes a float/integer argument.

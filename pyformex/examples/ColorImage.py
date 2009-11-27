@@ -72,45 +72,56 @@ def loadImage():
         h = int(h*scale)
 
 
+transforms = {
+    'flat': lambda F: F,
+    'cylindrical': lambda F: F.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1),
+    'spherical': lambda F: F.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1),
+    'projected_on_cylinder': lambda F: F.projectOnCylinder(2*R,1),
+    }
+
 res = askItems([
-    ('filename','',{'buttons':[('Select File',selectFile)]}),
+    ('filename',filename,{'buttons':[('Select File',selectFile)]}),
     ('nx',w,{'text':'width'}),
     ('ny',h,{'text':'height'}),
+    ('transform',None,'vradio',{'choices':transforms.keys()}),
     ])
 
 if not res:
     exit()
 
-
 globals().update(res)
 
+import timer
+tim = timer.Timer()
+
+
+tim.reset()
 if image is None:
     loadImage()
+print "Loading image: %.2f" % tim.seconds(False)
 
 if image is None:
     exit()
 
 # Create the colors
+tim.reset()
 color,colortable = image2glcolor(image.scaled(nx,ny))
+print "Image to colors: %.2f" % tim.seconds(False)
 
+tim.reset()
 # Create a 2D grid of nx*ny elements
-F = Formex(mpattern('123')).replic2(nx,ny).centered()
-
-# Create some transformex grids
 R = float(nx)/pi
 L = float(ny)
-F1 = F.translate(2,R)
-F2 = F1.cylindrical([2,0,1],[2.,90./float(nx),1.]).rollAxes(-1).setProp(1)
-F3 = F1.projectOnCylinder(2*R,1).setProp(2)
-F4 = F1.spherical(scale=[1.,90./float(nx),2.]).rollAxes(-1).setProp(3)
+F = Formex(mpattern('123')).replic2(nx,ny).centered()
+F = F.translate(2,R)
+trf = transforms[transform]
+F = trf(F)
+print "Creating grid : %.2f" % tim.seconds(False)
 
-G = [F1,F2,F3,F4]
+clear()
+tim.reset()
+draw(F,color=color,colormap=colortable)
+print "drawing time = %.2f" % tim.seconds(False)
+drawtext('Created with pyFormex',10,10)
 
-nvp = len(G)
-layout(nvp)
-for i,F in enumerate(G):
-    viewport(i)
-    clear()
-    draw(F,color=color,colormap=colortable)
-    drawtext('Created with pyFormex',10,10)
 # End
