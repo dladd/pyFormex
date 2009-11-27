@@ -48,7 +48,7 @@ DATA_FILES = [
 class install(_install):
     def run(self):
         _install.run(self)
-        print "Running pyFormex post-install script"
+        print("Running pyFormex post-install script")
         os.system("./post-install")
         
 
@@ -65,10 +65,10 @@ class build_ext(_build_ext):
 
     def configure(self):
         """Detect the required header files"""
-        print "Configuring the pyFormex acceleration library"
+        print("Configuring the pyFormex acceleration library")
         cmd = "cd pyformex/lib;./configure >/dev/null && grep '^SUCCESS=' config.log"
         sta,out = commands.getstatusoutput(cmd)
-        print out
+        print(out)
         exec(out)
         return SUCCESS=='1'
     
@@ -79,25 +79,25 @@ class build_ext(_build_ext):
         ## non-posix systems.
         ## If anybody knows how to do it, please go ahead and emove this.
         if os.name != 'posix':
-            print "!! The acceleration library is not available for your platform.\n!! You should consider switching to Linux (or some other Posix) Platform."
+            print("!! The acceleration library is not available for your platform.\n!! You should consider switching to Linux (or some other Posix) Platform.")
             return
 
         if self.configure():
-            print "Compiling the pyFormex acceleration library"
+            print("Compiling the pyFormex acceleration library")
             _build_ext.run(self)
-            print "Compiling the pyFormex postabq converter"
+            print("Compiling the pyFormex postabq converter")
             cmd = "cd pyformex/lib;make postabq"
             sta,out = commands.getstatusoutput(cmd)
-            print out
+            print(out)
 
         else:
-            print """
+            print("""
 Some files required to compile the accelerator library were not found
 on your system. Installation will be continued, and pyFormex will run
 without the library, but some operations on large data sets may run slowly.
 See the manual or the website for information onhow to install the missing
 files.
-"""
+""")
       
 
 
