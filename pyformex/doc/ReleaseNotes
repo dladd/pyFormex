@@ -22,66 +22,58 @@
 ..  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ..
 
-pyFormex 0.8  Releasenotes
-==========================
+pyFormex 0.8.1  Releasenotes
+============================
 
 This is a collection of the most prominent changes in pyFormex 0.8
-compared to the previous release 0.7.3
+compared to the previous release 0.8
 
+
+Documentation
+-------------
+The most notable change is the new documentation system, Sphinx, used
+to create and manage the documentation. The old manual has been
+removed from the distribution and the svn repositories, in favor of
+the new docs. There will be a global cleanup and expansion of the docs
+before the next release.
+ 
 
 Installation
 ------------
-pyFormex now includes install scripts for:
- - gl2ps
- - gts
- - tetgen
- - calpy  
+The installation procedure will install the new (sphinx) docs in the
+pyFormex install tree.
 
 
 Command line
 ------------
-- In GUI mode, pyFormex script filenames passed on the command line will now
-be processed just like in NONGUI mode, before entering the GUI.
 
 
 Configuration
 -------------
-- The pyFormex user configuration files have been moved to a directory ~/.pyformex
 
 
 Core
 ----
-- Formex:
-  + Formex transformation preserve the 'eltype' attribute
-  + New transformations: mirror (now different from reflect!), centered, resized
-  + Deprecated 'readfile'
-  + cutAtPlane is deprecated in favor of cutWithPlane
-  + A number of deprecated functions were removed
- 
-- All script executing functionality is moved to script.py
-- The GUI can now be started from a nongui script
-- mydict.py: changed the pickling to allow non-ascii pickling of projects
-- olist.py: new module gathering list functions
-- odict.py: new class KeyList
+- Coords: new transformations 'hyperCylindrical' and 'flare'
+- class method 'fromstring' to read 'Coords' or 'Formex' from a string
 
 
 Gui
 ---
-- GUI can be started from the nongui mode by calling a function
-- Current viewport identified by a focus rectangle
-- Rectangle zooming
-- Mouse wheel zooming
-- Revised Project File menu
-- Project files can be compressed
+
 
 
 Drawing
 -------
-- Defaults for draw() have changed. Use view='last' and bbox='last' to keep
-  camera settings unchanged.
-- New drawing functions drawMarks en drawVectors
-- All colors named in X11/rgb.txt file are usable.
-
+- All geometry Actors now support picking of actors, elements, edges, points 
+- The Canvas can have a background with a vertical color gradient.
+- The current viewport is visualized by a colored frame
+- The ColorScale has two new color palets, which provide much better
+  coloring: RAINBOW and IRAINBOW. Thanks to Tomas Praet for signaling
+  this. RAINBOW is now the default.
+- Drawing 2D text has been reverted to the GLUT text fonts. Better
+  font selection and alignment using gravity have been aded.
+ 
 
 Scripting
 ---------
@@ -89,30 +81,8 @@ Scripting
 
 Plugins
 -------
-- mesh: new class Mesh to represent geometry in (coords,connectivity) format,
-  functions/methods to sweep, extrude and connect meshes.
-- isopar: added more transformations('quad13','quad16','hex64'
-- fe_menu: start of a Finite Element Preprocessor plugin
-- export: start of a generalized exporting framework
-- dxf: start of an exporter to DXF format
-- curve: added PolyLine.atLength() method
-- tools_menu: added general variable editor, delete all variables
-- project: moved to pyFormex core 
 
 
 Examples
 --------
-- new examples: Extrude, 
-- Connectmesh: Mesh class moved into mesh plugin
-- SweepBeam: expanded with extrude method
-- Curves: expanded with more curve types and data sets
-
-Manual
-------
-- The reference manual has been expanded largely with automatically generated documentation from the Python source docstrings. 
-
-
-Project Status
---------------
-We have upgraded the project status to Beta. This is a clear sign to the user that we have reached a status where the program has become largely usable, despite some still missing or unfinished functions.
 
