@@ -71,7 +71,7 @@
       .. automethod:: fromfile(clas,fil)
       .. automethod:: interpolate(clas,F,G,div)
 
-   Functions defined in the coords module:
+**Functions defined in the module coords**
 
    .. autofunction:: bbox(objects)
    .. autofunction:: coordsmethod(f)

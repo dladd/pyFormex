@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# $Id$
 """Extract info from a Python file and shipout in TeX format.
 
 This script automatically extracts class & function docstrings and argument
@@ -444,7 +445,12 @@ def ship_method(name,args,docstring,class_method=False,coords_method=False):
     
 
 def ship_function_section(name):
-    print "\n   Functions defined in the %s module:\n"  % name
+    s = "Functions defined in the module %s" % name
+    print "\n**%s**\n" % s
+##     print """
+## %s
+## %s
+## """  % (s,'-'*(len(s)))
 
 
 def ship_function(name,args,docstring):

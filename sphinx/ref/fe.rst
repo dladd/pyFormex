@@ -29,7 +29,7 @@
       .. automethod:: getElems(sets)
       .. automethod:: renumber(old=None,new=None)
 
-   Functions defined in the fe module:
+**Functions defined in the module fe**
 
    .. autofunction:: mergeNodes(nodes)
    .. autofunction:: mergeModels(femodels)

@@ -27,7 +27,7 @@
       .. automethod:: Read(filename)
       .. automethod:: Get(ent)
 
-   Functions defined in the units module:
+**Functions defined in the module units**
 
    .. autofunction:: convertUnits(From,To)
 

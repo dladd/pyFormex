@@ -29,7 +29,7 @@
       .. automethod:: reverseIndex()
       .. automethod:: expand()
 
-   Functions defined in the connectivity module:
+**Functions defined in the module connectivity**
 
    .. autofunction:: magic_numbers(elems,magic)
    .. autofunction:: demagic(mag,magic)

@@ -43,7 +43,7 @@
       .. automethod:: convert(fromtype,totype)
       .. automethod:: concatenate(clas,ML)
 
-   Functions defined in the mesh module:
+**Functions defined in the module mesh**
 
    .. autofunction:: vectorPairAreaNormals(vec1,vec2)
    .. autofunction:: vectorPairCosAngles(vec1,vec2,normalized=False)

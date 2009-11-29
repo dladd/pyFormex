@@ -30,7 +30,7 @@
       CDict objects have the following methods:
 
 
-   Functions defined in the mydict module:
+**Functions defined in the module mydict**
 
    .. autofunction:: cascade(d,key)
    .. autofunction:: returnNone(key)

@@ -24,8 +24,8 @@
 """A collection of custom widgets used in the pyFormex GUI
 
 The widgets in this module were primarily created in function of the
-|pyformex| GUI. The user can apply them to change the GUI or to add
-interactive widgets to his scripts. He can of course also use all the
+pyFormex GUI. The user can apply them to change the GUI or to add
+interactive widgets to his scripts. Of course he can also use all the
 Qt widgets directly.
 """
 
@@ -54,7 +54,7 @@ class Options:
     pass
 
 class FileSelection(QtGui.QFileDialog):
-    """A file selection dialog widget.
+    """A file selection dialog.
 
     You can specify a default path/filename that will be suggested initially.
     If a pattern is specified, only matching files will be shown.
@@ -126,7 +126,7 @@ class FileSelection(QtGui.QFileDialog):
 
 
 class ProjectSelection(FileSelection):
-    """A file selection dialog specialized for opnening projects."""
+    """A file selection dialog specialized for opening projects."""
     def __init__(self,path=None,pattern=None,exist=False,compression=0):
         """Create the dialog."""
         if path is None:
@@ -173,7 +173,11 @@ class ProjectSelection(FileSelection):
 
 
 class SaveImageDialog(FileSelection):
-    """A file selection dialog with extra fields."""
+    """A dialog for saving to an image file.
+
+    The dialog contains the normal file selection widget plus some
+    extra fields to set the Save Image parameters.
+    """
     def __init__(self,path=None,pattern=None,exist=False,multi=False):
         """Create the dialog."""
         if path is None:
@@ -222,6 +226,11 @@ class SaveImageDialog(FileSelection):
 
 
 class ImageViewerDialog(QtGui.QDialog):
+    """A dialog to select an image file.
+
+    The dialog helps selecting the correct image by displaying the
+    image in an image viewer widget.
+    """
     def __init__(self,path=None):
         QtGui.QDialog.__init__(self)
         box = QtGui.QHBoxLayout()
@@ -248,8 +257,9 @@ def selectFont():
 
     A font selection dialog widget is displayed and the user is requested
     to select a font.
-    Returns a font if the user exited the dialog with the OK button.
-    Returns None if the user clicked CANCEL.
+    Returns a font if the user exited the dialog with the :guilabel:`OK`
+    button.
+    Returns None if the user clicked :guilabel:`CANCEL`.
     """
     font,ok = QtGui.QFontDialog.getFont()
     if ok:
@@ -259,7 +269,11 @@ def selectFont():
 
         
 class AppearenceDialog(QtGui.QDialog):
-    """A dialog for setting the GUI appearance."""
+    """A dialog for setting the GUI appearance.
+
+    The dialog lets you select one of the Qt styles.
+    """
+    
     def __init__(self):
         """Create the Appearance dialog."""
         self.font = None
@@ -506,7 +520,7 @@ class InputItem(QtGui.QHBoxLayout):
     setValue() methods.
 
     Subclasses should initialize the superclass as follows:
-        ``InputItem.__init__(self,name,*args,**kargs)``
+    ``InputItem.__init__(self,name,*args,**kargs)``
 
     Subclasses should override:
     
@@ -1728,6 +1742,7 @@ class BaseMenu(object):
 
     This class is not intended for direct use, but through subclasses.
     Subclasses should implement at least the following methods:
+    
     - addSeparator()
     - insertSeperator(before)
     - addAction(text,action)

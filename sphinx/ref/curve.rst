@@ -99,7 +99,7 @@
       Spiral objects have the following methods:
 
 
-   Functions defined in the curve module:
+**Functions defined in the module curve**
 
    .. autofunction:: vectorPairAngle(v1,v2)
 

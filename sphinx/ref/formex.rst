@@ -240,7 +240,7 @@
       .. automethod:: tic(f)
       .. automethod:: ric(f)
 
-   Functions defined in the formex module:
+**Functions defined in the module formex**
 
    .. autofunction:: vectorLength(vec)
    .. autofunction:: vectorNormalize(vec)

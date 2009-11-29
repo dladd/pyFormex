@@ -25,7 +25,7 @@
       .. automethod:: translate(rule,keep=False)
       .. automethod:: grow(ngen=1)
 
-   Functions defined in the lima module:
+**Functions defined in the module lima**
 
    .. autofunction:: lima(axiom,rules,level,turtlecmds,glob=None)
 

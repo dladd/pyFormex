@@ -30,6 +30,13 @@ from config import formatDict
 from distutils.version import LooseVersion as SaneVersion
 
 
+def procInfo(title):
+    print title
+    print 'module name:', __name__
+    print 'parent process:', os.getppid()
+    print 'process id:', os.getpid()
+
+
 # versions of detected modules/external commands
 the_version = {'pyformex':pyformex.__version__}
 the_external = {}
@@ -467,8 +474,9 @@ def isPyFormex(filename):
     starts with '#!' and contains the substring 'pyformex'
     A file is considered to be a pyFormex script if its name ends in '.py'
     and the first line of the file contains the substring 'pyformex'.
-    Typically, a pyFormex script starts with a line:
-      #!/usr/bin/env pyformex
+    Typically, a pyFormex script starts with a line::
+
+       #!/usr/bin/env pyformex
     """
     ok = filename.endswith(".py")
     if ok:

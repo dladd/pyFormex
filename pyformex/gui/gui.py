@@ -756,10 +756,14 @@ See Help->License or the file COPYING for details.
 
 def runGUI():
     """Go into interactive mode"""
-    
     GD.debug("Start main loop")
+    #utils.procInfo('runGUI')
+    #from multiprocessing import Process
+    #p = Process(target=GD.app.exec_)
+    #p.start()
+    #res = p.join()
     res = GD.app.exec_()
-    GD.debug("Exit main loop")
+    GD.debug("Exit main loop with value %s" % res)
     return res
 
 

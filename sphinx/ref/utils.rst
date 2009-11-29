@@ -24,7 +24,7 @@
       .. automethod:: peek()
       .. automethod:: glob()
 
-   Functions defined in the utils module:
+**Functions defined in the module utils**
 
    .. autofunction:: checkVersion(name,version,external=False)
    .. autofunction:: checkModule(name)

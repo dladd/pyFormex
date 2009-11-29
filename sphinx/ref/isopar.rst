@@ -23,7 +23,7 @@
       .. automethod:: transform(X)
       .. automethod:: transformFormex(F)
 
-   Functions defined in the isopar module:
+**Functions defined in the module isopar**
 
    .. autofunction:: build_matrix(atoms,x,y=0,z=0)
    .. autofunction:: transformFormex(F,trf)

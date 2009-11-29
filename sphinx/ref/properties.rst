@@ -81,7 +81,7 @@
       .. automethod:: nodeProp(prop=None,set=None,name=None,tag=None,cload=None,bound=None,displ=None,csys=None,ampl=None)
       .. automethod:: elemProp(prop=None,grp=None,set=None,name=None,tag=None,section=None,eltype=None,dload=None,eload=None,ampl=None)
 
-   Functions defined in the properties module:
+**Functions defined in the module properties**
 
    .. autofunction:: checkIdValue(values)
    .. autofunction:: checkString(a,valid)

@@ -39,13 +39,20 @@ Agenda and discussion
 
 The bad news
 ------------
-- New BuMPix image: problems with wide screen monitor
-- BuMPix netboot server (can be used to boot in local network): not done yet
-- 2D Text rendering: reinstated GLUT since QT is not compatible. GLUT has a very
-  limited number of fonts with 1 fixed size. Therefore, more options were added to
-  pyFormex. The user can choose the font size and the best approximated size is calculated.
-- 3D font manipulations using FTGL: no further work was done. FTGL is not stable yet.
-  Since FTGL can be used also in 2D, it could replace GLUT in future.
+- Then new BuMPix image (0.5) has problems with newer graphics cards
+  and wide screen monitors. *Update: a newer image 0.5.1 has been
+  created that resolves those problems.*
+- The promised BuMPix netboot server (which can be used to boot BuMPix
+  in local network) has not been done yet.
+- 2D Text rendering: Because the QT4 funcdtionality for drawing 2D
+  text on an OpenGL canavas is not compatible with many parts of the
+  pyFormex endering machine, we had to reinstate GLUT for 2D text
+  drawing. Sadly, this means a very limited number of fonts and
+  fontsizes. Some functions were added to allow easily picking the
+  GLUT font/size that comes close to the expectations.
+- 3D font manipulations using FTGL: no further work was done.
+  When fully developed, this could probably be used for 2D text drawing
+  as well, instead of the limited  GLUT fonts.
 
 
 The good news
@@ -59,7 +66,8 @@ The good news
     - Text can be entered in very basic text format and the extension can be chosen (.rst)
     - Text can be exported to several formats like .html
 
-  - Reference manual is created automatically from the docstrings in the pyFormex source code
+  - Reference manual is created semi-automatically from the docstrings
+    in the pyFormex source code
 
     - Requires *discipline*: docstrings should be legal ReST ! 
     - Need to check current manual and fix all docstrings: 

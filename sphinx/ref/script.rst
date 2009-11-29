@@ -42,7 +42,7 @@
       TimeOut objects have the following methods:
 
 
-   Functions defined in the script module:
+**Functions defined in the module script**
 
    .. autofunction:: Globals()
    .. autofunction:: export(dic)

@@ -285,7 +285,7 @@
       .. automethod:: add(name,icon=None)
       .. automethod:: names()
 
-   Functions defined in the widgets module:
+**Functions defined in the module widgets**
 
    .. autofunction:: selectFont()
    .. autofunction:: getColor(col=None,caption=None)

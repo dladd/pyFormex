@@ -117,7 +117,7 @@
       .. automethod:: smooth(lambda_value=0.5,n_iterations=2,fold_smoothing=None,verbose=False)
       .. automethod:: boolean(surf,op,inter=False,check=False,verbose=False)
 
-   Functions defined in the surface module:
+**Functions defined in the module surface**
 
    .. autofunction:: areaNormals(x)
    .. autofunction:: stlConvert(stlname,outname=None,options='-d')

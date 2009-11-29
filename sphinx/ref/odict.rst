@@ -33,7 +33,7 @@
 
       .. automethod:: items()
 
-   Functions defined in the odict module:
+**Functions defined in the module odict**
 
 
    

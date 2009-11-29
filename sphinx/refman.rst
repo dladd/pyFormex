@@ -12,17 +12,43 @@
  pyFormex reference manual
 ##########################
 
-This is the reference manual for pyFormex |release|.
+.. topic:: Abstract
 
-When pyformex is started, it always loads the modules
-:mod:`coords`, :mod:`formex`, :mod:`arraytools`, :mod:`script` and (if the GUI is used) :mod:`draw` and :mod:`colors`.
+   This is the reference manual for pyFormex |release|.
+   It describes most of the classes and functions
+   defined in the pyFormex modules. It was built automatically from
+   the pyFormex sources and is therefore the ultimate reference
+   document if you want to look up the precise arguments (and their meaning) 
+   of any class constructor or function in pyFormex. The :ref:`genindex`
+   and :ref:`modindex` may be helpful in navigating through this
+   document.
+
+
+This reference manual describes the classes in functions defined in
+most of the pyFormex modules. It was built automatically from the docstrings in
+the pyFormex sources. The pyFormex modules are placed in three paths:
+
+- ``pyformex`` contains the core functionality, with most of the
+  geometrical transformations, the pyFormex scripting language and utilities,
+- ``pyformex/gui`` contains all the modules that form the interactive
+  graphical user interface,
+- ``pyformex/plugins`` contains extensions that are not considered to
+  be essential parts of pyFormex. They usually provide additional
+  functionality for specific applications. 
+
+Some of the modules are loaded automatically when pyFormex is
+started. Currently this is the case with the modules
+:mod:`coords`, :mod:`formex`, :mod:`arraytools`, :mod:`script` and, if the GUI is used, :mod:`draw` and :mod:`colors`.
 All the public definitions in these modules are available to pyFormex
 scripts without explicitly importing them. Also available is the complete 
-:mod:`numpy` namespace.
+:mod:`numpy` namespace, because it is imported by :mod:`arraytools`.
 
-All the other modules need to be accessed using the normal Python import
-statements.
+The definitions in the other modules can only be accessed using the
+normal Python ``import`` statements.
 
+
+
+.. _sec:autoloaded_modules:
 
 **Autoloaded modules**
 
@@ -31,7 +57,7 @@ the need to explicitely import them.
 
 .. toctree::
    :maxdepth: 2
-   :numbered:
+   :numbered: 0
 
    ref/coords
    ref/formex
@@ -48,7 +74,7 @@ main pyformex path are considered to belong to the pyformex core functionality.
 
 .. toctree::
    :maxdepth: 2
-   :numbered:
+   :numbered: 6
 
    ref/connectivity
    ref/simple
@@ -63,6 +89,7 @@ These modules are located under pyformex/gui.
 
 .. toctree::
    :maxdepth: 1
+   :numbered: 11
 
    ref/widgets
    ref/colorscale
@@ -86,6 +113,7 @@ path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
+   :numbered: 23
 
    ref/geometry
    ref/curve
@@ -123,6 +151,7 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
+   :numbered: 44
 
    ref/olist
    ref/mydict

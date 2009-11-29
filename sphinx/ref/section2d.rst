@@ -22,7 +22,7 @@
 
       .. automethod:: sectionChar()
 
-   Functions defined in the section2d module:
+**Functions defined in the module section2d**
 
    .. autofunction:: sectionChar(F)
    .. autofunction:: extendedSectionChar(S)

@@ -24,10 +24,10 @@
 """
 A general yet simple configuration class.
 
-(C) 2005 Benedict Verhegghe
-Distributed under the GNU GPL version 3 or later
+| (C) 2005 Benedict Verhegghe
+| Distributed under the GNU GPL version 3 or later
 
-Why:
+Why
   I wrote this simple class because I wanted to use Python expressions in my
   configuration files. This is so much more fun than using .INI style config
   files.
@@ -36,7 +36,7 @@ Why:
   for more complex configuration needs than mine, or they do not work with the
   simple Python syntax I expected.
 
-What:
+What
   Our Config class is just a normal Python dictionary which can hold anything.
   Fields can be accessed either as dictionary lookup (config['foo']) or as
   object attributes (config.foo).
@@ -130,7 +130,7 @@ class Config(Dict):
     There is an important difference though: the second line will make a
     variable key (with value 'value') available in subsequent Config read()
     method calls.
-    """
+"""
 
 
     def __init__(self,data={},default=None):
