@@ -153,7 +153,8 @@ license = os.path.join(pyformexdir,"doc","COPYING")
 website = "http://pyformex.org" 
 webdoc = website+"/doc" 
 oldmanual = website+"/manual"
-links = {'pyformex':'pyformex.org','ibitech':'www.ibitech.ugent.be','python':'www.python.org','pyformex-dev':'developer.berlios.de/projects/pyformex','stent-boys':'www.stent-ibitech.ugent.be'}
+import odict
+links = odict.ODict([('pyFormex','pyformex.org'),('pyFormex-dev','developer.berlios.de/projects/pyformex'),('Python','www.python.org'),('IBiTech-bioMMeda','www.ibitech.ugent.be'),('stent-boys@bioMMeda','www.stent-ibitech.ugent.be'),('FEops','www.feops.com')])
 docs = [('&Local documentation',localdoc),('&Reference Manual',refman),('&Index',index),('&Module Index',modindex),('&Online documentation',webdoc),('Old manual (v0.8)',oldmanual),]
 
 
