@@ -372,7 +372,7 @@ def fmtSurface(prop):
     - set: the elements/nodes in the surface, either numbers or a set name.
     - name: the surface name
     - surftype: 'ELEMENT' or 'NODE'
-    - label: face or edge identifier (only required for surftype = 'NODE'
+    - label: face or edge identifier (only required for surftype = 'NODE')
     """
     out = ''
     for p in prop:
@@ -745,7 +745,22 @@ def writeDloads(fil,prop,op='NEW'):
             fil.write("%s, GRAV, 9.81, 0, 0 ,-1\n" % setname)
         else:
             fil.write("%s, %s, %s\n" % (setname,p.dload.label,p.dload.value))
-            
+
+
+def writeDsloads(fil,prop,op='NEW'):
+    """Write Dsloads.
+    
+    prop is a list property records having an attribute dsload
+
+    By default, the loads are applied as new values in the current step.
+    The user can set op='MOD' to add the loads to already existing ones.
+    """
+    for p in prop:
+        fil.write("*DSLOAD, OP=%s" % op)
+        if p.ampl is not None:
+            fil.write(", AMPLITUDE=%s" % p.ampl)
+        fil.write("\n")
+        fil.write("%s, %s, %s\n" % (p.dsload.surface,p.dsload.label,p.dsload.value))
 
 #######################################################
 # General model data
@@ -1075,6 +1090,11 @@ class Step(Dict):
         if prop:
             GD.message("  Writing step dloads")
             writeDloads(fil,prop)
+
+        prop = propDB.getProp('',tag=self.tags,attr=['dsload'])
+        if prop:
+            GD.message("  Writing step dsloads")
+            writeDsloads(fil,prop)
         
         prop = propDB.getProp('',tag=self.tags)
         if prop:
