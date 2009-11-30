@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>37. postproc — Postprocessing functions &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="38. lima — Lindenmayer Systems" href="lima.html" />
+    <link rel="prev" title="36. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="lima.html" title="38. lima — Lindenmayer Systems"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fe_post.html" title="36. fe_post — A postprocessor for ABAQUS output files."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-postproc">
+<span id="sec-ref-postproc"></span><h1>37. <tt class="xref docutils literal"><span class="pre">postproc</span></tt> &#8212; Postprocessing functions<a class="headerlink" href="#module-postproc" title="Permalink to this headline">¶</a></h1>
+<p>Postprocessing functions</p>
+<p>Postprocessing means collecting a geometrical model and computed values
+from a numerical simulation, and render the values on the domain.</p>
+<dl class="function">
+<dt id="postproc.norm2">
+<tt class="descclassname">postproc.</tt><tt class="descname">norm2</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#postproc.norm2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="postproc.norm">
+<tt class="descclassname">postproc.</tt><tt class="descname">norm</tt><big>(</big><em>A</em>, <em>x</em><big>)</big><a class="headerlink" href="#postproc.norm" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="postproc.max">
+<tt class="descclassname">postproc.</tt><tt class="descname">max</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#postproc.max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="postproc.min">
+<tt class="descclassname">postproc.</tt><tt class="descname">min</tt><big>(</big><em>A</em><big>)</big><a class="headerlink" href="#postproc.min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="postproc.niceNumber">
+<tt class="descclassname">postproc.</tt><tt class="descname">niceNumber</tt><big>(</big><em>f</em>, <em>approx=floor</em><big>)</big><a class="headerlink" href="#postproc.niceNumber" title="Permalink to this definition">¶</a></dt>
+<dd>Returns a nice number close to but not smaller than f.</dd></dl>
+
+<dl class="function">
+<dt id="postproc.argNearestValue">
+<tt class="descclassname">postproc.</tt><tt class="descname">argNearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#postproc.argNearestValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the index of the item nearest to target.</p>
+<p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
+<p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
+<p>Return value: the position of the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
+nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="postproc.nearestValue">
+<tt class="descclassname">postproc.</tt><tt class="descname">nearestValue</tt><big>(</big><em>values</em>, <em>target</em><big>)</big><a class="headerlink" href="#postproc.nearestValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the item nearest to target.</p>
+<p><tt class="docutils literal"><span class="pre">values</span></tt>: a list of float values</p>
+<p><tt class="docutils literal"><span class="pre">target</span></tt>: a single value</p>
+<p>Return value: the item in <tt class="docutils literal"><span class="pre">values</span></tt> values that is
+nearest to <tt class="docutils literal"><span class="pre">target</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="postproc.frameScale">
+<tt class="descclassname">postproc.</tt><tt class="descname">frameScale</tt><big>(</big><em>nframes=10</em>, <em>cycle='up'</em>, <em>shape='linear'</em><big>)</big><a class="headerlink" href="#postproc.frameScale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a sequence of scale values between -1 and +1.</p>
+<p><tt class="docutils literal"><span class="pre">nframes</span></tt> : the number of steps between 0 and -1/+1 values.</p>
+<p><tt class="docutils literal"><span class="pre">cycle</span></tt>: determines how subsequent cycles occur:</p>
+<blockquote>
+<p><tt class="docutils literal"><span class="pre">'up'</span></tt>: ramping up</p>
+<p><tt class="docutils literal"><span class="pre">'updown'</span></tt>: ramping up and down</p>
+<p><tt class="docutils literal"><span class="pre">'revert'</span></tt>: ramping up and down then reverse up and down</p>
+</blockquote>
+<p><tt class="docutils literal"><span class="pre">shape</span></tt>: determines the shape of the amplitude curve:</p>
+<blockquote>
+<p><tt class="docutils literal"><span class="pre">'linear'</span></tt>: linear scaling</p>
+<p><tt class="docutils literal"><span class="pre">'sine'</span></tt>: sinusoidal scaling</p>
+</blockquote>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="fe_post.html"
+                                  title="previous chapter">36. <tt class="docutils literal docutils literal docutils literal"><span class="pre">fe_post</span></tt> &#8212; A postprocessor for ABAQUS output files.</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="lima.html"
+                                  title="next chapter">38. <tt class="docutils literal docutils literal"><span class="pre">lima</span></tt> &#8212; Lindenmayer Systems</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/postproc.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lima.html" title="38. lima — Lindenmayer Systems"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fe_post.html" title="36. fe_post — A postprocessor for ABAQUS output files."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

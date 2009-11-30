@@ -26,6 +26,7 @@
 
 **Functions defined in the module utils**
 
+   .. autofunction:: procInfo(title)
    .. autofunction:: checkVersion(name,version,external=False)
    .. autofunction:: checkModule(name)
    .. autofunction:: hasModule(name,check=False)

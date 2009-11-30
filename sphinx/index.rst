@@ -16,7 +16,11 @@ This is the pyFormex |release| documentation, last updated on |today|.
    rather unstable condition and may evolve quickly. The :doc:`intro`,
    :doc:`install`, :doc:`tutorial` and :doc:`refman` are already fairly
    complete and useable. The :doc:`user-guide` and :doc:`examples` are
-   still in an embryonal state.
+   still in an embryonal state but may already contain valuable information
+   for some users.
+  
+   For some time, we will also keep the old `Online manual`_ available.
+
 
 These documents are to become a full documentation set for the installation and use of the pyFormex software. However, as pyFormex is still under active
 development, so is this documentation: it therefore is by no means final and

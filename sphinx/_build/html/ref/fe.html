@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>33. fe — Finite Element Models in pyFormex. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="34. properties — General framework for attributing properties to geometrical elements." href="properties.html" />
+    <link rel="prev" title="32. mesh — mesh.py" href="mesh.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="properties.html" title="34. properties — General framework for attributing properties to geometrical elements."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mesh.html" title="32. mesh — mesh.py"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-fe">
+<span id="sec-ref-fe"></span><h1>33. <tt class="xref docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.<a class="headerlink" href="#module-fe" title="Permalink to this headline">¶</a></h1>
+<p>Finite Element Models in pyFormex.</p>
+<p>Finite element models are geometrical models that consist of a unique
+set of nodal coordinates and one of more sets of elements.</p>
+<dl class="class">
+<dt id="fe.Model">
+<em class="property">class </em><tt class="descclassname">fe.</tt><tt class="descname">Model</tt><big>(</big><em>coords</em>, <em>elems</em><big>)</big><a class="headerlink" href="#fe.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains all FE model data.</p>
+<p>Create new model data.</p>
+<p>coords is an array with nodal coordinates
+elems is either a single element connectivity array, or a list of such.
+In a simple case, coords and elems can be the arrays obtained by 
+<tt class="docutils literal"><span class="pre">coords,</span> <span class="pre">elems</span> <span class="pre">=</span> <span class="pre">F.feModel()</span></tt>.
+This is however limited to a model where all elements have the same
+number of nodes. Then you can use the list of elems arrays. The &#8216;fe&#8217;
+plugin has a helper function to create this list. E.g., if <tt class="docutils literal"><span class="pre">FL</span></tt> is a
+list of Formices (possibly with different plexitude), then
+<tt class="docutils literal"><span class="pre">fe.mergeModels([Fi.feModel()</span> <span class="pre">for</span> <span class="pre">Fi</span> <span class="pre">in</span> <span class="pre">FL])</span></tt>
+will return the (coords,elems) tuple to create the Model.</p>
+<p>The model can have node and element property numbers.</p>
+<p>Model objects have the following methods:</p>
+<dl class="method">
+<dt id="fe.Model.nnodes">
+<tt class="descname">nnodes</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.nnodes" title="Permalink to this definition">¶</a></dt>
+<dd>Return the number of nodes in the model.</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.nelems" title="Permalink to this definition">¶</a></dt>
+<dd>Return the number of elements in the model.</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.ngroups">
+<tt class="descname">ngroups</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.ngroups" title="Permalink to this definition">¶</a></dt>
+<dd>Return the number of element groups in the model.</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.mplex">
+<tt class="descname">mplex</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.Model.mplex" title="Permalink to this definition">¶</a></dt>
+<dd>Return the maximum plexitude of the model.</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.splitElems">
+<tt class="descname">splitElems</tt><big>(</big><em>set</em><big>)</big><a class="headerlink" href="#fe.Model.splitElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits a set of element numbers over the element groups.</p>
+<p>Returns two lists of element sets, the first in global numbering,
+the second in group numbering.
+Each item contains the element numbers from the given set that
+belong to the corresponding group.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.elemNrs">
+<tt class="descname">elemNrs</tt><big>(</big><em>group</em>, <em>set</em><big>)</big><a class="headerlink" href="#fe.Model.elemNrs" title="Permalink to this definition">¶</a></dt>
+<dd>Return the global element numbers for elements set in group</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.getElems">
+<tt class="descname">getElems</tt><big>(</big><em>sets</em><big>)</big><a class="headerlink" href="#fe.Model.getElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the definitions of the elements in sets.</p>
+<p>sets should be a list of element sets with length equal to the
+number of element groups. Each set contains element numbers local
+to that group.</p>
+<p>As the elements can be grouped according to plexitude,
+this function returns a list of element arrays matching
+the element groups in self.elems. Some of these arrays may
+be empty.</p>
+<p>It also provide the global and group element numbers, since they
+had to be calculated anyway.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="fe.Model.renumber">
+<tt class="descname">renumber</tt><big>(</big><em>old=None</em>, <em>new=None</em><big>)</big><a class="headerlink" href="#fe.Model.renumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renumber a set of nodes.</p>
+<p>old and new are equally sized lists with unique node numbers, each
+smaller that the number of nodes in the model.
+The old numbers will be renumbered to the new numbers.
+If one of the lists is None, a range with the length of the
+other is used.
+If the lists are shorter than the number of nodes, the remaining
+nodes will be numbered in an unspecified order.
+If both lists are None, the nodes are renumbered randomly.</p>
+<p>This function returns a tuple (old,new) with the full renumbering
+vectors used. The first gives the old node numbers of the current
+numbers, the second gives the new numbers cooresponding with the
+old ones.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module fe</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="fe.mergeNodes">
+<tt class="descclassname">fe.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em><big>)</big><a class="headerlink" href="#fe.mergeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge all the nodes of a list of node sets.</p>
+<p>Each item in nodes is a Coords array.
+The return value is a tuple with:</p>
+<ul class="simple">
+<li>the coordinates of all unique nodes,</li>
+<li>a list of indices translating the old node numbers to the new.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe.mergeModels">
+<tt class="descclassname">fe.</tt><tt class="descname">mergeModels</tt><big>(</big><em>femodels</em><big>)</big><a class="headerlink" href="#fe.mergeModels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge all the nodes of a list of FE models.</p>
+<p>Each item in femodels is a (coords,elems) tuple.
+The return value is a tuple with:</p>
+<ul class="simple">
+<li>the coordinates of all unique nodes,</li>
+<li>a list of elems corresponding to the input list,
+but with numbers referring to the new coordinates.</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe.checkUniqueNumbers">
+<tt class="descclassname">fe.</tt><tt class="descname">checkUniqueNumbers</tt><big>(</big><em>nrs</em>, <em>nmin=0</em>, <em>nmax=None</em>, <em>error=None</em><big>)</big><a class="headerlink" href="#fe.checkUniqueNumbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that an array contains a set of unique integers in range.</p>
+<p>nrs is an integer array with any shape.
+All integers should be unique and in the range(nmin,nmax).
+Beware: this means that    nmin &lt;= i &lt; nmax  !
+Default nmax is unlimited. Set nmin to None to
+error is the value to return if the tests are not passed.
+By default, a ValueError is raised.
+On success, None is returned</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe.mergedModel">
+<tt class="descclassname">fe.</tt><tt class="descname">mergedModel</tt><big>(</big><big>)</big><a class="headerlink" href="#fe.mergedModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the fe Model obtained from merging individual models.</p>
+<p>The input arguments are (coords,elems) tuples.
+The return value is a merged fe Model.</p>
+</dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="mesh.html"
+                                  title="previous chapter">32. <tt class="docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="properties.html"
+                                  title="next chapter">34. <tt class="docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/fe.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="properties.html" title="34. properties — General framework for attributing properties to geometrical elements."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mesh.html" title="32. mesh — mesh.py"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

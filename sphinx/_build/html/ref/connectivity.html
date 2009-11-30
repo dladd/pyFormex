@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>7. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="8. simple — Predefined geometries with a simple shape." href="simple.html" />
+    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="simple.html" title="8. simple — Predefined geometries with a simple shape."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-connectivity">
+<span id="sec-ref-connectivity"></span><h1>7. <tt class="xref docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.<a class="headerlink" href="#module-connectivity" title="Permalink to this headline">¶</a></h1>
+<p>A class and functions for handling nodal connectivity.</p>
+<p>This module defines a specialized array class for representing nodal
+connectivity. This is e.g. used in mesh models, where geometry is
+represented by a set of numbered points (nodes) and the geometric elements
+are described by refering to the node numbers.
+In a mesh model, points common to adjacent elements are unique, and
+adjacency of elements can easily be detected from common node numbers.</p>
+<dl class="class">
+<dt id="connectivity.Connectivity">
+<em class="property">class </em><tt class="descclassname">connectivity.</tt><tt class="descname">Connectivity</tt><a class="headerlink" href="#connectivity.Connectivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for handling element/node connectivity.</p>
+<p>A connectivity object is a 2-dimensional integer array with all
+non-negative values.
+In this implementation, all values should be lower than 2**31.</p>
+<p>Furthermore, all values in a row should be unique. This is not enforced
+at creation time, but a method is provided to check the uniqueness.</p>
+<p>Connectivity objects have the following methods:</p>
+<dl class="method">
+<dt id="connectivity.Connectivity.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nelems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.nplex">
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.nplex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.Max">
+<tt class="descname">Max</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.Max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.unique">
+<tt class="descname">unique</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.unique" title="Permalink to this definition">¶</a></dt>
+<dd>Return a list of arrays with the unique values for each row.</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.checkUnique">
+<tt class="descname">checkUnique</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.checkUnique" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flag the rows which have all unique entries.</p>
+<p>Returns an array with the value True or Falsefor each row.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.check">
+<tt class="descname">check</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.check" title="Permalink to this definition">¶</a></dt>
+<dd>Returns True if all rows have unique entries.</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.reverseIndex">
+<tt class="descname">reverseIndex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.reverseIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a reverse index for the connectivity table.</p>
+<p>This is equivalent to the function reverseIndex()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.expand">
+<tt class="descname">expand</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform elems to edges and faces.</p>
+<p>Return a tuple edges,faces where</p>
+<ul class="simple">
+<li>edges is an (nedges,2) int array of edges connecting two node numbers.</li>
+<li>faces is an (nelems,nplex) int array with the edge numbers connecting
+each pair os subsequent nodes in the elements of elems.</li>
+</ul>
+<p>The order of the edges respects the node order, and starts with
+nodes 0-1.
+The node numbering in the edges is always lowest node number first.</p>
+<p>The inverse operation can be obtained from function compactElems.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module connectivity</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="connectivity.magic_numbers">
+<tt class="descclassname">connectivity.</tt><tt class="descname">magic_numbers</tt><big>(</big><em>elems</em>, <em>magic</em><big>)</big><a class="headerlink" href="#connectivity.magic_numbers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="connectivity.demagic">
+<tt class="descclassname">connectivity.</tt><tt class="descname">demagic</tt><big>(</big><em>mag</em>, <em>magic</em><big>)</big><a class="headerlink" href="#connectivity.demagic" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="connectivity.expandElems">
+<tt class="descclassname">connectivity.</tt><tt class="descname">expandElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.expandElems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="connectivity.compactElems">
+<tt class="descclassname">connectivity.</tt><tt class="descname">compactElems</tt><big>(</big><em>edges</em>, <em>faces</em><big>)</big><a class="headerlink" href="#connectivity.compactElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return compacted elems from edges and faces.</p>
+<p>This is the inverse operation of expandElems.
+The algorithm only works if all vertex numbers of an element are
+unique.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.reverseUniqueIndex">
+<tt class="descclassname">connectivity.</tt><tt class="descname">reverseUniqueIndex</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#connectivity.reverseUniqueIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse an index.</p>
+<p>index is a one-dimensional integer array with unique non-negative values.</p>
+<p>The return value is the reverse index: each value shows the position
+of its index in the index array. The length of the reverse index is
+equal to maximum value in index plus one. Values not occurring in index
+get a value -1 in the reverse index.</p>
+<p>Remark that reverseUniqueIndex(index)[index] == arange(1+index.max()).
+The reverse index thus translates the unique index numbers in a
+sequential index.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.reverseIndex">
+<tt class="descclassname">connectivity.</tt><tt class="descname">reverseIndex</tt><big>(</big><em>index</em>, <em>maxcon=3</em><big>)</big><a class="headerlink" href="#connectivity.reverseIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse an index.</p>
+<p>index is a (nr,nc) shaped integer array.</p>
+<p>The result is a (mr,mc) shaped integer array, where row i contains
+all the row numbers of index containing i.</p>
+<p>Negative numbers in index are disregarded.
+mr will be equal to the highest positive value in index, +1.
+mc will be equal to the highest multiplicity of any number in index.
+On entry, maxcon is an estimate for this value. The procedure will
+automatically change it if needed.</p>
+<p>Each row of the reverse index for a number that occurs less than mc
+times in index, will be filled up with -1 values.</p>
+<p>mult is the highest possible multiplicity of any number in a single
+column of index.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacencyList">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyList</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyList" title="Permalink to this definition">¶</a></dt>
+<dd>Create adjacency lists for 2-node elements.</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacencyArray">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacencyArray</tt><big>(</big><em>elems</em>, <em>maxcon=3</em>, <em>neighbours=1</em><big>)</big><a class="headerlink" href="#connectivity.adjacencyArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create adjacency array for 2-node elements.</p>
+<p>The n-ring neighbourhood of the nodes is calculated (n=neighbours).
+These are the nodes connected through maximum n elements.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.connected">
+<tt class="descclassname">connectivity.</tt><tt class="descname">connected</tt><big>(</big><em>index</em>, <em>i</em><big>)</big><a class="headerlink" href="#connectivity.connected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the list of elements connected to element i.</p>
+<p>index is a (nr,nc) shaped integer array.
+An element j of index is said to be connected to element i, iff element j
+has at least one (non-negative) value in common with element i.</p>
+<p>The result is a sorted list of unique element numbers, not containing
+the element number i itself.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.adjacent">
+<tt class="descclassname">connectivity.</tt><tt class="descname">adjacent</tt><big>(</big><em>index</em>, <em>rev=None</em><big>)</big><a class="headerlink" href="#connectivity.adjacent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an index of connected elements.</p>
+<p>index is a (nr,nc) shaped integer array.
+An element j of index is said to be connected to element i, iff element j
+has at least one (non-negative) value in common with element i.</p>
+<p>The result is an integer array with shape (nr,mc), where row i holds
+a sorted list of the elements that are connected to element i, padded with
+-1 values to created an equal list length for all elements.</p>
+<p>The result of this method provides the same information as repeated calls
+of connected(index,i), but may be more efficient if nr becomes large.</p>
+<p>The reverse index may be specified, if it was already computed.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.closedLoop">
+<tt class="descclassname">connectivity.</tt><tt class="descname">closedLoop</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.closedLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a set of line elements form a closed curve.</p>
+<p>elems is a connection table of line elements, such as obtained
+from the feModel() method on a plex-2 Formex.</p>
+<p>The return value is a tuple of:</p>
+<ul class="simple">
+<li>return code:<ul>
+<li>0: the segments form a closed loop</li>
+<li>1: the segments form a single non-closed path</li>
+<li>2: the segments form multiple not connected paths</li>
+</ul>
+</li>
+<li>a new connection table which is equivalent to the input if it forms</li>
+</ul>
+<p>a closed loop. The new table has the elements in order of the loop.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="connectivity.connectedLineElems">
+<tt class="descclassname">connectivity.</tt><tt class="descname">connectedLineElems</tt><big>(</big><em>elems</em><big>)</big><a class="headerlink" href="#connectivity.connectedLineElems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition a segmented curve into connected segments.</p>
+<p>The input argument is a (nelems,2) shaped array of integers.
+Each row holds the two vertex numbers of a single line segment.</p>
+<p>The return value ia a list of (nsegi,2) shaped array of integers.</p>
+</dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="colors.html"
+                                  title="previous chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="simple.html"
+                                  title="next chapter">8. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/connectivity.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="simple.html" title="8. simple — Predefined geometries with a simple shape."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

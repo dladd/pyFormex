@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>30. units — A Python wrapper for unit conversion of physical quantities. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="31. datareader — Numerical data reader" href="datareader.html" />
+    <link rel="prev" title="29. inertia — inertia.py" href="inertia.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="datareader.html" title="31. datareader — Numerical data reader"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="inertia.html" title="29. inertia — inertia.py"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-units">
+<span id="sec-ref-units"></span><h1>30. <tt class="xref docutils literal"><span class="pre">units</span></tt> &#8212; A Python wrapper for unit conversion of physical quantities.<a class="headerlink" href="#module-units" title="Permalink to this headline">¶</a></h1>
+<p>A Python wrapper for unit conversion of physical quantities.</p>
+<p>This module uses the standard UNIX program &#8216;units&#8217; (available from
+<a class="reference external" href="http://www.gnu.org/software/units/units.html">http://www.gnu.org/software/units/units.html</a>) to do the actual conversions.
+Obviously, it will only work on systems that have this program available.</p>
+<p>If you really insist on running another OS lacking the units command,
+have a look at <a class="reference external" href="http://home.tiscali.be/be052320/Unum.html">http://home.tiscali.be/be052320/Unum.html</a> and make an
+implementation based on unum. If you GPL it and send it to me, I might
+include it in this distribution.</p>
+<dl class="class">
+<dt id="units.UnitsSystem">
+<em class="property">class </em><tt class="descclassname">units.</tt><tt class="descname">UnitsSystem</tt><big>(</big><em>system='international'</em><big>)</big><a class="headerlink" href="#units.UnitsSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for handling and converting units of physical quantities.</p>
+<p>The units class provides two built-in consistent units systems:
+International() and Engineering().
+International() returns the standard International Standard units.
+Engineering() returns a consistent engineering system,which is very
+practical for use in mechanical engineering. It uses &#8216;mm&#8217; for length
+and &#8216;MPa&#8217; for pressure and stress. To keep it consistent however,
+the density is rather unpractical: &#8216;t/mm^3&#8217;. If you want to use t/m^3,
+you can make a custom units system. Beware with non-consistent unit
+systems though!
+The better practice is to allow any unit to be specified at input
+(and eventually requested for output), and to convert everyting
+internally to a consistent system.
+Apart from the units for usual physical quantities, Units stores two
+special purpose values in its units dictionary:
+&#8216;model&#8217; : defines the length unit used in the geometrical model
+&#8216;problem&#8217; : defines the unit system to be used in the problem.
+Defaults are: model=&#8217;m&#8217;, problem=&#8217;international&#8217;.</p>
+<p>UnitsSystem objects have the following methods:</p>
+<dl class="method">
+<dt id="units.UnitsSystem.Add">
+<tt class="descname">Add</tt><big>(</big><em>un</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Add" title="Permalink to this definition">¶</a></dt>
+<dd>Add the units from dictionary un to the units system</dd></dl>
+
+<dl class="method">
+<dt id="units.UnitsSystem.Predefined">
+<tt class="descname">Predefined</tt><big>(</big><em>system</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Predefined" title="Permalink to this definition">¶</a></dt>
+<dd>Returns the predefined units for the specified system</dd></dl>
+
+<dl class="method">
+<dt id="units.UnitsSystem.International">
+<tt class="descname">International</tt><big>(</big><big>)</big><a class="headerlink" href="#units.UnitsSystem.International" title="Permalink to this definition">¶</a></dt>
+<dd>Returns the international units system.</dd></dl>
+
+<dl class="method">
+<dt id="units.UnitsSystem.Engineering">
+<tt class="descname">Engineering</tt><big>(</big><big>)</big><a class="headerlink" href="#units.UnitsSystem.Engineering" title="Permalink to this definition">¶</a></dt>
+<dd>Returns a consistent engineering units system.</dd></dl>
+
+<dl class="method">
+<dt id="units.UnitsSystem.Read">
+<tt class="descname">Read</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read units from file with specified name.</p>
+<p>The units file is an ascii file where each line contains a couple of
+words separated by a colon and a blank. The first word is the type of
+quantity, the second is the unit to be used for this quantity.
+Lines starting with &#8216;#&#8217; are ignored.
+A &#8216;problem: system&#8217; line sets all units to the corresponding value of
+the specified units system.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="units.UnitsSystem.Get">
+<tt class="descname">Get</tt><big>(</big><em>ent</em><big>)</big><a class="headerlink" href="#units.UnitsSystem.Get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get units list for the specified entitities.</p>
+<p>If ent is a single entity, returns the corresponding unit if an entry
+ent exists in the current system or else returns ent unchanged.
+If ent is a list of entities, returns a list of corresponding units.
+Example: with the default units system:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Un</span> <span class="o">=</span> <span class="n">UnitsSystem</span><span class="p">()</span>
+<span class="n">Un</span><span class="o">.</span><span class="n">Get</span><span class="p">([</span><span class="s">&#39;length&#39;</span><span class="p">,</span><span class="s">&#39;mass&#39;</span><span class="p">,</span><span class="s">&#39;float&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>returns: <tt class="docutils literal"><span class="pre">['m',</span> <span class="pre">'kg',</span> <span class="pre">'float']</span></tt></p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module units</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="units.convertUnits">
+<tt class="descclassname">units.</tt><tt class="descname">convertUnits</tt><big>(</big><em>From</em>, <em>To</em><big>)</big><a class="headerlink" href="#units.convertUnits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts between conformable units.</p>
+<p>This function converts the units &#8216;From&#8217; to units &#8216;To&#8217;. The units should
+be conformable. The &#8216;From&#8217; argument can (and usually does) include a value.
+The return value is the converted value without units. Thus:
+convertUnits(&#8216;3.45 kg&#8217;,&#8217;g&#8217;) will return &#8216;3450&#8217;.
+This function is merely a wrapper around the GNU &#8216;units&#8217; command, which
+should be installed for this function to work.</p>
+</dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="inertia.html"
+                                  title="previous chapter">29. <tt class="docutils literal docutils literal docutils literal"><span class="pre">inertia</span></tt> &#8212; inertia.py</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="datareader.html"
+                                  title="next chapter">31. <tt class="docutils literal docutils literal docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/units.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="datareader.html" title="31. datareader — Numerical data reader"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="inertia.html" title="29. inertia — inertia.py"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

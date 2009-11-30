@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>39. turtle — Turtle graphics for pyFormex &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="40. dxf —" href="dxf.html" />
+    <link rel="prev" title="38. lima — Lindenmayer Systems" href="lima.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="dxf.html" title="40. dxf —"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="lima.html" title="38. lima — Lindenmayer Systems"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-turtle">
+<span id="sec-ref-turtle"></span><h1>39. <tt class="xref docutils literal"><span class="pre">turtle</span></tt> &#8212; Turtle graphics for pyFormex<a class="headerlink" href="#module-turtle" title="Permalink to this headline">¶</a></h1>
+<p>Turtle graphics for pyFormex</p>
+<p>This module was mainly aimed at the drawing of Lindenmayer products
+(see <tt class="xref docutils literal"><span class="pre">plugins.lima</span></tt> and the Lima example).</p>
+<p>The idea is that a turtle can be moved in 2D from one position to another,
+thereby creating a line between start and endpoint or not.</p>
+<p>The current state of the turtle is defined by</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">pos</span></tt>: the position as a 2D coordinate pair (x,y),</li>
+<li><tt class="docutils literal"><span class="pre">angle</span></tt>: the moving direction as an angle (in degrees) with the x-axis,</li>
+<li><tt class="docutils literal"><span class="pre">step</span></tt>: the speed, as a discrete step size.</li>
+</ul>
+<p>The start conditions are: <tt class="docutils literal"><span class="pre">pos=(0,0),</span> <span class="pre">step=1.,</span> <span class="pre">angle=0.</span></tt></p>
+<p>The followin example turtle script creates a unit square:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">fd</span><span class="p">();</span><span class="n">ro</span><span class="p">(</span><span class="mf">90</span><span class="p">);</span><span class="n">fd</span><span class="p">();</span><span class="n">ro</span><span class="p">(</span><span class="mf">90</span><span class="p">);</span><span class="n">fd</span><span class="p">();</span><span class="n">ro</span><span class="p">(</span><span class="mf">90</span><span class="p">);</span><span class="n">fd</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="turtle.sind">
+<tt class="descclassname">turtle.</tt><tt class="descname">sind</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#turtle.sind" title="Permalink to this definition">¶</a></dt>
+<dd>Return the sine of an angle in degrees.</dd></dl>
+
+<dl class="function">
+<dt id="turtle.cosd">
+<tt class="descclassname">turtle.</tt><tt class="descname">cosd</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#turtle.cosd" title="Permalink to this definition">¶</a></dt>
+<dd>Return the cosine of an angle in degrees.</dd></dl>
+
+<dl class="function">
+<dt id="turtle.reset">
+<tt class="descclassname">turtle.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#turtle.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the turtle graphics engine to start conditions.</p>
+<p>This resets the turtle&#8217;s state to the starting conditions
+<tt class="docutils literal"><span class="pre">pos=(0,0),</span> <span class="pre">step=1.,</span> <span class="pre">angle=0.</span></tt>, removes everything from the state save
+stack and empties the resulting path.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="turtle.push">
+<tt class="descclassname">turtle.</tt><tt class="descname">push</tt><big>(</big><big>)</big><a class="headerlink" href="#turtle.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the current state of the turtle.</p>
+<p>The turtle state includes its position, step and angle.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="turtle.pop">
+<tt class="descclassname">turtle.</tt><tt class="descname">pop</tt><big>(</big><big>)</big><a class="headerlink" href="#turtle.pop" title="Permalink to this definition">¶</a></dt>
+<dd>Restore the turtle state to the last saved state.</dd></dl>
+
+<dl class="function">
+<dt id="turtle.fd">
+<tt class="descclassname">turtle.</tt><tt class="descname">fd</tt><big>(</big><em>d=None</em>, <em>connect=True</em><big>)</big><a class="headerlink" href="#turtle.fd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move forward over a step <cite>d</cite>, with or without drawing.</p>
+<p>The direction is the current direction.
+If <cite>d</cite> is not given, the step size is the current step.</p>
+<p>By default, the new position is connected to the previous with a
+straight line segment.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="turtle.mv">
+<tt class="descclassname">turtle.</tt><tt class="descname">mv</tt><big>(</big><em>d=None</em><big>)</big><a class="headerlink" href="#turtle.mv" title="Permalink to this definition">¶</a></dt>
+<dd>Move over step <cite>d</cite> without drawing.</dd></dl>
+
+<dl class="function">
+<dt id="turtle.ro">
+<tt class="descclassname">turtle.</tt><tt class="descname">ro</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#turtle.ro" title="Permalink to this definition">¶</a></dt>
+<dd>Rotate over angle <cite>a</cite>. The new direction is incremented with <cite>a</cite></dd></dl>
+
+<dl class="function">
+<dt id="turtle.go">
+<tt class="descclassname">turtle.</tt><tt class="descname">go</tt><big>(</big><em>p</em><big>)</big><a class="headerlink" href="#turtle.go" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go to position <cite>p</cite> (without drawing).</p>
+<p>While the <cite>mv</cite> method performs a relative move, this is an absolute move.
+<cite>p</cite> is a tuple of (x,y) values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="turtle.st">
+<tt class="descclassname">turtle.</tt><tt class="descname">st</tt><big>(</big><em>d</em><big>)</big><a class="headerlink" href="#turtle.st" title="Permalink to this definition">¶</a></dt>
+<dd>Set the step size.</dd></dl>
+
+<dl class="function">
+<dt id="turtle.an">
+<tt class="descclassname">turtle.</tt><tt class="descname">an</tt><big>(</big><em>a</em><big>)</big><a class="headerlink" href="#turtle.an" title="Permalink to this definition">¶</a></dt>
+<dd>Set the angle</dd></dl>
+
+<dl class="function">
+<dt id="turtle.play">
+<tt class="descclassname">turtle.</tt><tt class="descname">play</tt><big>(</big><em>scr</em>, <em>glob=None</em><big>)</big><a class="headerlink" href="#turtle.play" title="Permalink to this definition">¶</a></dt>
+<dd><p>Play all the commands in the script <cite>scr</cite></p>
+<p>The script is a string of turtle commands, where each command
+is ended with a semicolon (&#8216;;&#8217;).</p>
+<p>If a dict <cite>glob</cite> is specified, it will be update with the turtle
+module&#8217;s globals() after each turtle command.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="lima.html"
+                                  title="previous chapter">38. <tt class="docutils literal docutils literal docutils literal"><span class="pre">lima</span></tt> &#8212; Lindenmayer Systems</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="dxf.html"
+                                  title="next chapter">40. <tt class="docutils literal docutils literal docutils literal"><span class="pre">dxf</span></tt> &#8212;</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/turtle.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dxf.html" title="40. dxf —"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="lima.html" title="38. lima — Lindenmayer Systems"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

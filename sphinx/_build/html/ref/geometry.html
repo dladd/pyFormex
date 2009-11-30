@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>24. geometry — Basic geometrical operations. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="25. curve — Definition of curves in pyFormex." href="curve.html" />
+    <link rel="prev" title="23. imagecolor — Using bitmap images as colors." href="imagecolor.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="curve.html" title="25. curve — Definition of curves in pyFormex."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="imagecolor.html" title="23. imagecolor — Using bitmap images as colors."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-geometry">
+<span id="sec-ref-geometry"></span><h1>24. <tt class="xref docutils literal"><span class="pre">geometry</span></tt> &#8212; Basic geometrical operations.<a class="headerlink" href="#module-geometry" title="Permalink to this headline">¶</a></h1>
+<p>Basic geometrical operations.</p>
+<p>This module defines some basic operations on simple geometrical entities
+such as lines, triangles, circles.</p>
+<dl class="function">
+<dt id="geometry.triangleCircumCircle">
+<tt class="descclassname">geometry.</tt><tt class="descname">triangleCircumCircle</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#geometry.triangleCircumCircle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the circumcircles of the triangles x</p>
+<p>x is a Coords array with shape (ntri,3,3) representing ntri triangles.</p>
+<p>Returns a tuple r,C,n with the radii, Center and unit normals of the
+circles going through the vertices of each triangle.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geometry.lineIntersection">
+<tt class="descclassname">geometry.</tt><tt class="descname">lineIntersection</tt><big>(</big><em>P1</em>, <em>D1</em>, <em>P2</em>, <em>D2</em>, <em>visual_debug=False</em><big>)</big><a class="headerlink" href="#geometry.lineIntersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the intersection of 2 coplanar lines.</p>
+<p>The lines (P1,D1) and (P2,D2) are defined by a point and a direction
+vector. Let a and b be unit vectors along the lines, and c = P2-P1,
+let ld and d be the length and the unit vector of the cross product a*b,
+the intersection point X is then given by X = 0.5(P1+P2+sa*a+sb*b)
+where sa = det([c,b,d])/ld and sb = det([c,a,d])/ld</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geometry.displaceLines">
+<tt class="descclassname">geometry.</tt><tt class="descname">displaceLines</tt><big>(</big><em>A</em>, <em>N</em>, <em>C</em>, <em>d</em><big>)</big><a class="headerlink" href="#geometry.displaceLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move all lines (A,N) over a distance a in the direction of point C.</p>
+<p>A,N are arrays with points and directions defining the lines.
+C is a point.
+d is a scalar or a list of scalars.
+All line elements of F are translated in the plane (line,C)
+over a distance d in the direction of the point C.
+Returns a new set of lines (A,N).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geometry.segmentOrientation">
+<tt class="descclassname">geometry.</tt><tt class="descname">segmentOrientation</tt><big>(</big><em>vertices</em>, <em>vertices2=None</em>, <em>point=None</em><big>)</big><a class="headerlink" href="#geometry.segmentOrientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the orientation of a set of line segments.</p>
+<p>vertices and vertices2 are matching sets of points.
+point is a single point.
+All arguments are Coords objects.</p>
+<p>Line segments run between corresponding points of vertices and vertices2.
+If vertices2 is None, it is obtained by rolling the vertices one position
+foreward, thus corresponding to a closed polygon through the vertices).
+If point is None, it is taken as the center of vertices.</p>
+<p>The orientation algorithm checks whether the line segments turn
+positively around the point.</p>
+<p>Returns an array with +1/-1 for positive/negative oriented segments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geometry.rotation">
+<tt class="descclassname">geometry.</tt><tt class="descname">rotation</tt><big>(</big><em>x</em>, <em>r</em>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#geometry.rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a rotation as an axis + angle.</p>
+<p><tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">r</span></tt> are two unit vectors.
+The return value is a tuple of:</p>
+<ul class="simple">
+<li>a vector perpendicular to <tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">r</span></tt>,</li>
+<li>the angle between both <tt class="docutils literal"><span class="pre">x</span></tt> and <tt class="docutils literal"><span class="pre">r</span></tt>.</li>
+</ul>
+<p>angle_spec can be set to <tt class="docutils literal"><span class="pre">Deg</span></tt> ro <tt class="docutils literal"><span class="pre">Rad</span></tt> to get the result in
+degrees (default) or radians.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="geometry.rotationAngle">
+<tt class="descclassname">geometry.</tt><tt class="descname">rotationAngle</tt><big>(</big><em>A</em>, <em>B</em>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#geometry.rotationAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return rotation vector and angle for rotation of A to B.</p>
+<p>A and B are (n,3)-shaped arrays where each line represents a vector.
+This function computes the rotation from each vector of A to the
+corresponding vector of B. Broadcasting is done if one of A or B has
+only one row.
+The return value is a tuple of an (n,) shaped array with rotation angles
+(by default in degrees) and an (n,3)-shaped array with unit vectors
+along the rotation axis.
+Specify angle_spec=Rad to get the angles in radians.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="imagecolor.html"
+                                  title="previous chapter">23. <tt class="docutils literal"><span class="pre">imagecolor</span></tt> &#8212; Using bitmap images as colors.</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="curve.html"
+                                  title="next chapter">25. <tt class="docutils literal docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/geometry.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="curve.html" title="25. curve — Definition of curves in pyFormex."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="imagecolor.html" title="23. imagecolor — Using bitmap images as colors."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

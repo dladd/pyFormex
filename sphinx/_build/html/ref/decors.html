@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>15. decors — 2D decorations for the OpenGL canvas. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="16. marks — OpenGL marks for annotating 3D actors." href="marks.html" />
+    <link rel="prev" title="14. actors — OpenGL actors for populating the 3D scene." href="actors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="marks.html" title="16. marks — OpenGL marks for annotating 3D actors."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="actors.html" title="14. actors — OpenGL actors for populating the 3D scene."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-decors">
+<span id="sec-ref-decors"></span><h1>15. <tt class="xref docutils literal"><span class="pre">decors</span></tt> &#8212; 2D decorations for the OpenGL canvas.<a class="headerlink" href="#module-decors" title="Permalink to this headline">¶</a></h1>
+<p>2D decorations for the OpenGL canvas.</p>
+<dl class="class">
+<dt id="decors.Decoration">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Decoration</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#decors.Decoration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decoration is a 2-D drawing at canvas position x,y.</p>
+<dl class="docutils">
+<dt>All decoration have at least the following attributes:</dt>
+<dd><p class="first">x,y : (int) window coordinates of the insertion point
+drawGL() : function that draws the decoration at (x,y).</p>
+<blockquote class="last">
+This should only use openGL function that are
+allowed in a display list.</blockquote>
+</dd>
+</dl>
+<p>Create a decoration at canvas coordinates x,y</p>
+<p>Decoration objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="decors.GlutText">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">GlutText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>font='9x15'</em>, <em>size=None</em>, <em>gravity=None</em>, <em>adjust=None</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.GlutText" title="Permalink to this definition">¶</a></dt>
+<dd><p>A viewport decoration showing a text.</p>
+<p>Create a text actor</p>
+<p>GlutText objects have the following methods:</p>
+<dl class="method">
+<dt id="decors.GlutText.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.GlutText.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the text.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="decors.ColorLegend">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">ColorLegend</tt><big>(</big><em>colorlegend</em>, <em>x</em>, <em>y</em>, <em>w</em>, <em>h</em>, <em>font=None</em>, <em>size=None</em>, <em>dec=2</em>, <em>scale=0</em>, <em>grid=0</em>, <em>linewidth=None</em>, <em>lefttext=False</em><big>)</big><a class="headerlink" href="#decors.ColorLegend" title="Permalink to this definition">¶</a></dt>
+<dd><p>A viewport decoration showing a colorscale legend.</p>
+<p>ColorLegend objects have the following methods:</p>
+<dl class="method">
+<dt id="decors.ColorLegend.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.ColorLegend.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="decors.ColorLegend.use_list">
+<tt class="descname">use_list</tt><big>(</big><big>)</big><a class="headerlink" href="#decors.ColorLegend.use_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="decors.Rectangle">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Rectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 2D-rectangle on the canvas.</p>
+<p>Rectangle objects have the following methods:</p>
+<dl class="method">
+<dt id="decors.Rectangle.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Rectangle.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="decors.Grid">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Grid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx=1</em>, <em>ny=1</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 2D-grid on the canvas.</p>
+<p>Grid objects have the following methods:</p>
+<dl class="method">
+<dt id="decors.Grid.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Grid.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="decors.Line">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">Line</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.Line" title="Permalink to this definition">¶</a></dt>
+<dd><p>A straight line on the canvas.</p>
+<p>Line objects have the following methods:</p>
+<dl class="method">
+<dt id="decors.Line.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode='wireframe'</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.Line.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="decors.LineDrawing">
+<em class="property">class </em><tt class="descclassname">decors.</tt><tt class="descname">LineDrawing</tt><big>(</big><em>data</em>, <em>color=None</em>, <em>linewidth=None</em><big>)</big><a class="headerlink" href="#decors.LineDrawing" title="Permalink to this definition">¶</a></dt>
+<dd><p>A collection of straight lines on the canvas.</p>
+<p>Initially a Line Drawing.</p>
+<p>data can be a 2-plex Formex or equivalent coordinate data.
+The z-coordinates of the Formex are unused.
+A (n,2,2) shaped array will do as well.</p>
+<p>LineDrawing objects have the following methods:</p>
+<dl class="method">
+<dt id="decors.LineDrawing.drawGL">
+<tt class="descname">drawGL</tt><big>(</big><em>mode=None</em>, <em>color=None</em><big>)</big><a class="headerlink" href="#decors.LineDrawing.drawGL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module decors</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="decors.drawDot">
+<tt class="descclassname">decors.</tt><tt class="descname">drawDot</tt><big>(</big><em>x</em>, <em>y</em><big>)</big><a class="headerlink" href="#decors.drawDot" title="Permalink to this definition">¶</a></dt>
+<dd>Draw a dot at canvas coordinates (x,y).</dd></dl>
+
+<dl class="function">
+<dt id="decors.drawLine">
+<tt class="descclassname">decors.</tt><tt class="descname">drawLine</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><big>)</big><a class="headerlink" href="#decors.drawLine" title="Permalink to this definition">¶</a></dt>
+<dd>Draw a straight line from (x1,y1) to (x2,y2) in canvas coordinates.</dd></dl>
+
+<dl class="function">
+<dt id="decors.drawGrid">
+<tt class="descclassname">decors.</tt><tt class="descname">drawGrid</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>nx</em>, <em>ny</em><big>)</big><a class="headerlink" href="#decors.drawGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a rectangular grid of lines</p>
+<p>The rectangle has (x1,y1) and and (x2,y2) as opposite corners.
+There are (nx,ny) subdivisions along the (x,y)-axis. So the grid
+has (nx+1) * (ny+1) lines. nx=ny=1 draws a rectangle.
+nx=0 draws 1 vertical line (at x1). nx=-1 draws no vertical lines.
+ny=0 draws 1 horizontal line (at y1). ny=-1 draws no horizontal lines.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="decors.drawRect">
+<tt class="descclassname">decors.</tt><tt class="descname">drawRect</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em><big>)</big><a class="headerlink" href="#decors.drawRect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="decors.drawRectangle">
+<tt class="descclassname">decors.</tt><tt class="descname">drawRectangle</tt><big>(</big><em>x1</em>, <em>y1</em>, <em>x2</em>, <em>y2</em>, <em>color</em><big>)</big><a class="headerlink" href="#decors.drawRectangle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="actors.html"
+                                  title="previous chapter">14. <tt class="docutils literal docutils literal docutils literal"><span class="pre">actors</span></tt> &#8212; OpenGL actors for populating the 3D scene.</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="marks.html"
+                                  title="next chapter">16. <tt class="docutils literal"><span class="pre">marks</span></tt> &#8212; OpenGL marks for annotating 3D actors.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/decors.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="marks.html" title="16. marks — OpenGL marks for annotating 3D actors."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="actors.html" title="14. actors — OpenGL actors for populating the 3D scene."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

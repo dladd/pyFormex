@@ -16,13 +16,15 @@ discussion of the operation of this code.
 Usage:  py2tex.py PYTHONFILE [> outputfile.tex]
 """
 
-import os
+import os,sys
+
 import parser
 import symbol
 import token
 import types
-
 from types import ListType, TupleType
+
+sys.path.insert(0,'../pyformex')
 from pyformex.odict import ODict
 
 def debug(s):
@@ -420,7 +422,7 @@ def ship_class(name,docstring):
 
 def ship_classinit(name,args,docstring):
     pass
-##     print "\nThe %s class has the constructor: 
+##    print("\nThe %s class has the constructor: \n" % name)
 
 ##       :method:
 ## \\begin{classdesc}{%s}{%s}

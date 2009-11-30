@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>52. timer — A timer class. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="53. misc — Python equivalents of the functions in lib.misc" href="misc.html" />
+    <link rel="prev" title="51. sendmail — sendmail.py: a simple program to send an email message" href="sendmail.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="misc.html" title="53. misc — Python equivalents of the functions in lib.misc"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sendmail.html" title="51. sendmail — sendmail.py: a simple program to send an email message"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-timer">
+<span id="sec-ref-timer"></span><h1>52. <tt class="xref docutils literal"><span class="pre">timer</span></tt> &#8212; A timer class.<a class="headerlink" href="#module-timer" title="Permalink to this headline">¶</a></h1>
+<p>A timer class.</p>
+<dl class="class">
+<dt id="timer.Timer">
+<em class="property">class </em><tt class="descclassname">timer.</tt><tt class="descname">Timer</tt><a class="headerlink" href="#timer.Timer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for measuring elapsed time.</p>
+<p>Create and start a timer.</p>
+<p>Timer objects have the following methods:</p>
+<dl class="method">
+<dt id="timer.Timer.reset">
+<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#timer.Timer.reset" title="Permalink to this definition">¶</a></dt>
+<dd>Start the timer.</dd></dl>
+
+<dl class="method">
+<dt id="timer.Timer.read">
+<tt class="descname">read</tt><big>(</big><big>)</big><a class="headerlink" href="#timer.Timer.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the timer.</p>
+<p>This returns the elapsed time since the last reset (or the creation
+of the timer) as a datetime.timedelta object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="timer.Timer.seconds">
+<tt class="descname">seconds</tt><big>(</big><em>rounded=True</em><big>)</big><a class="headerlink" href="#timer.Timer.seconds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the timer readings in seconds.</p>
+<p>The default return value is a rounded integer number of seconds.
+With <tt class="docutils literal"><span class="pre">rounded</span> <span class="pre">==</span> <span class="pre">False</span></tt>, a floating point value with grnularity of
+1 microsecond is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="sendmail.html"
+                                  title="previous chapter">51. <tt class="docutils literal docutils literal docutils literal"><span class="pre">sendmail</span></tt> &#8212; sendmail.py: a simple program to send an email message</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="misc.html"
+                                  title="next chapter">53. <tt class="docutils literal docutils literal"><span class="pre">misc</span></tt> &#8212; Python equivalents of the functions in lib.misc</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/timer.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="misc.html" title="53. misc — Python equivalents of the functions in lib.misc"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sendmail.html" title="51. sendmail — sendmail.py: a simple program to send an email message"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

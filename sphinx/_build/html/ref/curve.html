@@ -1,0 +1,412 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>25. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="26. surface — Operations on triangulated surfaces." href="surface.html" />
+    <link rel="prev" title="24. geometry — Basic geometrical operations." href="geometry.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="26. surface — Operations on triangulated surfaces."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="geometry.html" title="24. geometry — Basic geometrical operations."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-curve">
+<span id="sec-ref-curve"></span><h1>25. <tt class="xref docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.<a class="headerlink" href="#module-curve" title="Permalink to this headline">¶</a></h1>
+<p>Definition of curves in pyFormex.</p>
+<p>This module defines classes and functions specialized for handling
+one-dimensional geometry in pyFormex. These may be straight lines, polylines,
+higher order curves and collections thereof. In general, the curves are 3D,
+but special cases may be created for handling plane curves.</p>
+<dl class="class">
+<dt id="curve.Curve">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Curve</tt><a class="headerlink" href="#curve.Curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for curve type classes.</p>
+<p>This is a virtual class intended to be subclassed.
+It defines the common definitions for all curve types.
+The subclasses should at least define the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sub_points</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Curve objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.Curve.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values t in part j</p>
+<p>t can be an array of parameter values, j is a single segment number.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.sub_points_2">
+<tt class="descname">sub_points_2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the points at values,parts given by zip(t,j)</p>
+<p>t and j can both be arrays, but should have the same length.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.lengths" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.pointsAt">
+<tt class="descname">pointsAt</tt><big>(</big><em>t</em><big>)</big><a class="headerlink" href="#curve.Curve.pointsAt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the points at parameter values t.</p>
+<p>Parameter values are floating point values. Their integer part
+is interpreted as the curve segment number, and the decimal part
+goes from 0 to 1 over the segment.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.subPoints">
+<tt class="descname">subPoints</tt><big>(</big><em>div=10</em>, <em>extend=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#curve.Curve.subPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a series of points on the PolyLine.</p>
+<p>The parameter space of each segment is divided into ndiv parts.
+The coordinates of the points at these parameter values are returned
+as a Coords object.
+The extend parameter allows to extend the curve beyond the endpoints.
+The normal parameter space of each part is [0.0 .. 1.0]. The extend
+parameter will add a curve with parameter space [-extend[0] .. 0.0]
+for the first part, and a curve with parameter space
+[1.0 .. 1 + extend[0]] for the last part.
+The parameter step in the extensions will be adjusted slightly so
+that the specified extension is a multiple of the step size.
+If the curve is closed, the extend parameter is disregarded.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.length">
+<tt class="descname">length</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the total length of the curve.</p>
+<p>This is only available for curves that implement the &#8216;lengths&#8217;
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.approx">
+<tt class="descname">approx</tt><big>(</big><em>ndiv=N_approx</em><big>)</big><a class="headerlink" href="#curve.Curve.approx" title="Permalink to this definition">¶</a></dt>
+<dd>Return an approximate PolyLine</dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.PolyLine">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">PolyLine</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.PolyLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a series of straight line segments.</p>
+<p>Initialize a PolyLine from a coordinate array.</p>
+<p>coords is a (npts,3) shaped array of coordinates of the subsequent
+vertices of the polyline (or a compatible data object).
+If closed == True, the polyline is closed by connecting the last
+point to the first. This does not change the vertex data.</p>
+<p>PolyLine objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.PolyLine.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd>Return the polyline as a Formex.</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd>Return the points at values t in part j</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.sub_points2">
+<tt class="descname">sub_points2</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.PolyLine.sub_points2" title="Permalink to this definition">¶</a></dt>
+<dd>Return the points at value,part pairs (t,j)</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.vectors">
+<tt class="descname">vectors</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the vectors of the points to the next one.</p>
+<p>The vectors are returned as a Coords object.
+If not closed, this returns one less vectors than the number of points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.directions">
+<tt class="descname">directions</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.directions" title="Permalink to this definition">¶</a></dt>
+<dd>Returns unit vectors in the direction of the next point.</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.avgDirections">
+<tt class="descname">avgDirections</tt><big>(</big><em>normalized=True</em><big>)</big><a class="headerlink" href="#curve.PolyLine.avgDirections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns average directions at the inner nodes.</p>
+<p>If open, the number of directions returned is 2 less than the
+number of points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.lengths">
+<tt class="descname">lengths</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.lengths" title="Permalink to this definition">¶</a></dt>
+<dd>Return the length of the parts of the curve.</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.atLength">
+<tt class="descname">atLength</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#curve.PolyLine.atLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the parameter values for relative curve lengths div.</p>
+<p><tt class="docutils literal"><span class="pre">div</span></tt> is a list of relative curve lengths (from 0.0 to 1.0).
+As a convenience, an single integer value may be specified,
+in which case the relative curve lengths are found by dividing
+the interval [0.0,1.0] in the specified number of subintervals.</p>
+<p>The function returns a list with the parameter values for the points
+at the specified relative lengths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.reverse">
+<tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.reverse" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Polygon">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Polygon</tt><big>(</big><em>coords=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#curve.Polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Polygon is a closed PolyLine.</p>
+<p>Polygon objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.BezierSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">BezierSpline</tt><big>(</big><em>coords</em>, <em>deriv=None</em>, <em>curl=0.5</em>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.BezierSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a Bezier spline curve.</p>
+<p>Create a cubic spline curve through the given points.</p>
+<p>The curve is defined by the points and the directions at these points.
+If no directions are specified, the average of the segments ending
+in that point is used, and in the end points of an open curve, the
+direction of the end segment.
+The curl parameter can be set to influence the curliness of the curve.
+curl=0.0 results in straight segments.
+The control points can also be specified directly. If they are, they
+override the deriv and curl parameters. Since each segment of the curve
+needs two control points, the control array has shape (npts-1, 2, 3).</p>
+<p>BezierSpline objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.BezierSpline.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.CardinalSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">CardinalSpline</tt><big>(</big><em>coords</em>, <em>tension=0.0</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a cardinal spline.</p>
+<p>Create a natural spline through the given points.</p>
+<p>The Cardinal Spline with given tension is a Bezier Spline with curl
+:math: <cite>curl = ( 1 - tension) / 3</cite>
+The separate class name is retained for compatibility and convenience. 
+See CardinalSpline2 for a direct implementation (it misses the end
+intervals of the point set).</p>
+<p>Create a natural spline through the given points.</p>
+<p>CardinalSpline objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.CardinalSpline2">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">CardinalSpline2</tt><big>(</big><em>coords</em>, <em>tension=0.0</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a cardinal spline.</p>
+<p>Create a natural spline through the given points.</p>
+<p>This is a direct implementation of the Cardinal Spline.
+For open curves, it misses the interpolation in the two end
+intervals of the point set.
+It is retained here because the implementation may some day
+replace the BezierSpline implementation.</p>
+<p>CardinalSpline2 objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.CardinalSpline2.compute_coefficients">
+<tt class="descname">compute_coefficients</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.compute_coefficients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.CardinalSpline2.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.CardinalSpline2.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.NaturalSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">NaturalSpline</tt><big>(</big><em>coords</em>, <em>endcond=</em><span class="optional">[</span>, <em>'notaknot'</em>, <em>'notaknot'</em><span class="optional">]</span>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a natural spline.</p>
+<p>Create a natural spline through the given points.</p>
+<p>coords specifies the coordinates of a set of points. A natural spline
+is constructed through this points.
+endcond specifies the end conditions in the first, resp. last point.
+It can be &#8216;notaknot&#8217; or &#8216;secder&#8217;.
+With &#8216;notaknot&#8217;, maximal continuity (up to the third derivative)
+is obtained between the first two splines.
+With &#8216;secder&#8217;, the spline ends with a zero second derivative.
+If closed is True, the spline is closed, and endcond is ignored.</p>
+<p>NaturalSpline objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.NaturalSpline.compute_coefficients">
+<tt class="descname">compute_coefficients</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.NaturalSpline.compute_coefficients" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.NaturalSpline.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.NaturalSpline.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Arc3">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc3</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a circular arc.</p>
+<p>Create a circular arc.</p>
+<p>The arc is specified by 3 non-colinear points.</p>
+<p>Arc3 objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.Arc3.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Arc3.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Arc">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Arc</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#curve.Arc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a circular arc.</p>
+<p>Create a circular arc.</p>
+<p>The arc is specified by the center and begin and end-point.</p>
+<p>Arc objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.Arc.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Arc.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.Spiral">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">Spiral</tt><big>(</big><em>turns=2.0</em>, <em>nparts=100</em>, <em>rfunc=None</em><big>)</big><a class="headerlink" href="#curve.Spiral" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a spiral curve.</p>
+<p>Spiral objects have the following methods:</p>
+</dd></dl>
+
+<p><strong>Functions defined in the module curve</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="curve.vectorPairAngle">
+<tt class="descclassname">curve.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#curve.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
+<dd>Return the angle between the vectors v1 and v2.</dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="geometry.html"
+                                  title="previous chapter">24. <tt class="docutils literal"><span class="pre">geometry</span></tt> &#8212; Basic geometrical operations.</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="surface.html"
+                                  title="next chapter">26. <tt class="docutils literal"><span class="pre">surface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/curve.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="26. surface — Operations on triangulated surfaces."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="geometry.html" title="24. geometry — Basic geometrical operations."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

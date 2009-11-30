@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>28. section2d — Some functions operating on 2D structures. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="29. inertia — inertia.py" href="inertia.html" />
+    <link rel="prev" title="27. isopar — Isoparametric transformations" href="isopar.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="inertia.html" title="29. inertia — inertia.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="isopar.html" title="27. isopar — Isoparametric transformations"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-section2d">
+<span id="sec-ref-section2d"></span><h1>28. <tt class="xref docutils literal"><span class="pre">section2d</span></tt> &#8212; Some functions operating on 2D structures.<a class="headerlink" href="#module-section2d" title="Permalink to this headline">¶</a></h1>
+<p>Some functions operating on 2D structures.</p>
+<p>This is a plugin for pyFormex.
+(C) 2002 Benedict Verhegghe</p>
+<p>See the Section2D example for an example of its use.</p>
+<dl class="class">
+<dt id="section2d.planeSection">
+<em class="property">class </em><tt class="descclassname">section2d.</tt><tt class="descname">planeSection</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#section2d.planeSection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class describing a general 2D section.</p>
+<p>The 2D section is the area inside a closed curve in the (x,y) plane.
+The curve is decribed by a finite number of points and by straight
+segments connecting them.</p>
+<p>Initialize a plane section.</p>
+<p>Initialization can be done either by a list of points or a set of line
+segments.</p>
+<dl class="docutils">
+<dt>By Points</dt>
+<dd>Each point is connected to the following one, and (unless they are
+very close) the last one back to the first. Traversing the resulting
+path should rotate positively around the z axis to yield a positive
+surface.</dd>
+<dt>By Segments</dt>
+<dd>It is the responsibilty of the user to ensure that the segments
+form a closed curve. If not, the calculated section data will be
+rather meaningless.</dd>
+</dl>
+<p>planeSection objects have the following methods:</p>
+<dl class="method">
+<dt id="section2d.planeSection.sectionChar">
+<tt class="descname">sectionChar</tt><big>(</big><big>)</big><a class="headerlink" href="#section2d.planeSection.sectionChar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module section2d</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="section2d.sectionChar">
+<tt class="descclassname">section2d.</tt><tt class="descname">sectionChar</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#section2d.sectionChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute characteristics of plane sections.</p>
+<p>The plane sections are described by their circumference, consisting of a
+sequence of straight segments.
+The segment end point data are gathered in a plex-2 Formex.
+The segments should form a closed curve.
+The z-value of the coordinates does not have to be specified,
+and will be ignored if it is.
+The resulting path through the points should rotate positively around the
+z axis to yield a positive surface.</p>
+<p>The return value is a dict with the following characteristics:
+&#8216;L&#8217;   : circumference,
+&#8216;A&#8217;   : enclosed surface,
+&#8216;Sx&#8217;  : first area moment around global x-axis
+&#8216;Sy&#8217;  : first area moment around global y-axis
+&#8216;Ixx&#8217; : second area moment around global x-axis
+&#8216;Iyy&#8217; : second area moment around global y-axis
+&#8216;Ixy&#8217; : product moment of area around global x,y-axes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="section2d.extendedSectionChar">
+<tt class="descclassname">section2d.</tt><tt class="descname">extendedSectionChar</tt><big>(</big><em>S</em><big>)</big><a class="headerlink" href="#section2d.extendedSectionChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes extended section characteristics for the given section.</p>
+<p>S is a dict with section basic section characteristics as returned by
+sectionChar().
+This function computes and returns a dict with the following:</p>
+<ul class="simple">
+<li>&#8216;xG&#8217;, &#8216;yG&#8217; : coordinates of the center of gravity G of the plane section</li>
+<li>&#8216;IGxx&#8217;, &#8216;IGyy&#8217;, &#8216;IGxy&#8217; : second area moments and product around axes
+through G and  parallel with the global x,y-axes</li>
+<li>&#8216;alpha&#8217; : angle(in radians) between the glabla x,y axes and the principal
+axes (X,Y) of the section (X and Y always pass through G)</li>
+<li>&#8216;IXX&#8217;,&#8217;IYY&#8217;: principal second area moments around X,Y respectively. (The
+second area product is always zero.)</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="section2d.princTensor2D">
+<tt class="descclassname">section2d.</tt><tt class="descname">princTensor2D</tt><big>(</big><em>Ixx</em>, <em>Iyy</em>, <em>Ixy</em><big>)</big><a class="headerlink" href="#section2d.princTensor2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the principal values and directions of a 2D tensor.</p>
+<p>Returns a tuple with three values:</p>
+<ul class="simple">
+<li>alpha: angle (in radians) from x-axis to principal X-axis</li>
+<li>IXX,IYY: principal values of the tensor</li>
+</ul>
+</dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="isopar.html"
+                                  title="previous chapter">27. <tt class="docutils literal docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="inertia.html"
+                                  title="next chapter">29. <tt class="docutils literal docutils literal"><span class="pre">inertia</span></tt> &#8212; inertia.py</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/section2d.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="inertia.html" title="29. inertia — inertia.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="isopar.html" title="27. isopar — Isoparametric transformations"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

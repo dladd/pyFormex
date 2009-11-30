@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>27. isopar — Isoparametric transformations &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="28. section2d — Some functions operating on 2D structures." href="section2d.html" />
+    <link rel="prev" title="26. surface — Operations on triangulated surfaces." href="surface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="section2d.html" title="28. section2d — Some functions operating on 2D structures."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="26. surface — Operations on triangulated surfaces."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-isopar">
+<span id="sec-ref-isopar"></span><h1>27. <tt class="xref docutils literal"><span class="pre">isopar</span></tt> &#8212; Isoparametric transformations<a class="headerlink" href="#module-isopar" title="Permalink to this headline">¶</a></h1>
+<p>Isoparametric transformations</p>
+<dl class="class">
+<dt id="isopar.Isopar">
+<em class="property">class </em><tt class="descclassname">isopar.</tt><tt class="descname">Isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.Isopar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing an isoparametric transformation</p>
+<p>Create an isoparametric transformation.</p>
+<p>type is one of the keys in Isopar.isodata
+coords and oldcoords can be either arrays, Coords or Formex instances,
+but should be of equal shape, and match the number of atoms in the
+specified transformation type</p>
+<p>Isopar objects have the following methods:</p>
+<dl class="method">
+<dt id="isopar.Isopar.transform">
+<tt class="descname">transform</tt><big>(</big><em>X</em><big>)</big><a class="headerlink" href="#isopar.Isopar.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply isoparametric transform to a set of coordinates.</p>
+<p>Returns a Coords array with same shape as X</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="isopar.Isopar.transformFormex">
+<tt class="descname">transformFormex</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#isopar.Isopar.transformFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply an isoparametric transform to a Formex.</p>
+<p>The result is a topologically equivalent Formex.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module isopar</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="isopar.build_matrix">
+<tt class="descclassname">isopar.</tt><tt class="descname">build_matrix</tt><big>(</big><em>atoms</em>, <em>x</em>, <em>y=0</em>, <em>z=0</em><big>)</big><a class="headerlink" href="#isopar.build_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a matrix of functions of coords.</p>
+<p>Atoms is a list of text strings representing some function of
+x(,y)(,z). x is a list of x-coordinats of the nodes, y and z can be set
+to lists of y,z coordinates of the nodes.
+Each line of the returned matrix contains the atoms evaluated at a
+node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="isopar.transformFormex">
+<tt class="descclassname">isopar.</tt><tt class="descname">transformFormex</tt><big>(</big><em>F</em>, <em>trf</em><big>)</big><a class="headerlink" href="#isopar.transformFormex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="isopar.isopar">
+<tt class="descclassname">isopar.</tt><tt class="descname">isopar</tt><big>(</big><em>F</em>, <em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.isopar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="surface.html"
+                                  title="previous chapter">26. <tt class="docutils literal docutils literal"><span class="pre">surface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="section2d.html"
+                                  title="next chapter">28. <tt class="docutils literal docutils literal"><span class="pre">section2d</span></tt> &#8212; Some functions operating on 2D structures.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/isopar.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="section2d.html" title="28. section2d — Some functions operating on 2D structures."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="surface.html" title="26. surface — Operations on triangulated surfaces."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

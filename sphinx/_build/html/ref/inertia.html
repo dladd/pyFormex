@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>29. inertia — inertia.py &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="30. units — A Python wrapper for unit conversion of physical quantities." href="units.html" />
+    <link rel="prev" title="28. section2d — Some functions operating on 2D structures." href="section2d.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="30. units — A Python wrapper for unit conversion of physical quantities."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="section2d.html" title="28. section2d — Some functions operating on 2D structures."
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-inertia">
+<span id="sec-ref-inertia"></span><h1>29. <tt class="xref docutils literal"><span class="pre">inertia</span></tt> &#8212; inertia.py<a class="headerlink" href="#module-inertia" title="Permalink to this headline">¶</a></h1>
+<p>inertia.py</p>
+<p>Compute inertia related quantities of a Formex.
+This comprises: center of gravity, inertia tensor, principal axes</p>
+<p>Currently, these functions work on arrays of nodes, not on Formices!
+Use func(F,f) to operate on a Formex F.</p>
+<dl class="function">
+<dt id="inertia.centroids">
+<tt class="descclassname">inertia.</tt><tt class="descname">centroids</tt><big>(</big><em>X</em><big>)</big><a class="headerlink" href="#inertia.centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the centroids of the points of a set of elements.</p>
+<p>X (nelems,nplex,3)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inertia.center">
+<tt class="descclassname">inertia.</tt><tt class="descname">center</tt><big>(</big><em>X</em>, <em>mass=None</em><big>)</big><a class="headerlink" href="#inertia.center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the center of gravity of an array of points.</p>
+<p>mass is an optional array of masses to be atributed to the
+points. The default is to attribute a mass=1 to all points.</p>
+<p>If you also need the inertia tensor, it is more efficient to
+use the inertia() function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inertia.inertia">
+<tt class="descclassname">inertia.</tt><tt class="descname">inertia</tt><big>(</big><em>X</em>, <em>mass=None</em><big>)</big><a class="headerlink" href="#inertia.inertia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the inertia tensor of an array of points.</p>
+<p>mass is an optional array of masses to be atributed to the
+points. The default is to attribute a mass=1 to all points.</p>
+<dl class="docutils">
+<dt>The result is a tuple of two float arrays:</dt>
+<dd><ul class="first last simple">
+<li>the center of gravity: shape (3,)</li>
+<li>the inertia tensor: shape (6,) with the following values (in order):
+Ixx, Iyy, Izz, Ixy, Ixz, Iyz</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="inertia.principal">
+<tt class="descclassname">inertia.</tt><tt class="descname">principal</tt><big>(</big><em>inertia</em><big>)</big><a class="headerlink" href="#inertia.principal" title="Permalink to this definition">¶</a></dt>
+<dd>Returns the principal values and axes of the inertia tensor.</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="section2d.html"
+                                  title="previous chapter">28. <tt class="docutils literal"><span class="pre">section2d</span></tt> &#8212; Some functions operating on 2D structures.</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="units.html"
+                                  title="next chapter">30. <tt class="docutils literal docutils literal"><span class="pre">units</span></tt> &#8212; A Python wrapper for unit conversion of physical quantities.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/inertia.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="units.html" title="30. units — A Python wrapper for unit conversion of physical quantities."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="section2d.html" title="28. section2d — Some functions operating on 2D structures."
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

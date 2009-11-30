@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>32. mesh — mesh.py &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="up" title="pyFormex reference manual" href="../refman.html" />
+    <link rel="next" title="33. fe — Finite Element Models in pyFormex." href="fe.html" />
+    <link rel="prev" title="31. datareader — Numerical data reader" href="datareader.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="fe.html" title="33. fe — Finite Element Models in pyFormex."
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="datareader.html" title="31. datareader — Numerical data reader"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" accesskey="U">pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-mesh">
+<span id="sec-ref-mesh"></span><h1>32. <tt class="xref docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py<a class="headerlink" href="#module-mesh" title="Permalink to this headline">¶</a></h1>
+<p>mesh.py</p>
+<p>Definition of the Mesh class for describing discrete geometrical models.
+And some useful meshing functions to create such models.</p>
+<dl class="class">
+<dt id="mesh.Mesh">
+<em class="property">class </em><tt class="descclassname">mesh.</tt><tt class="descname">Mesh</tt><big>(</big><em>coords=None</em>, <em>elems=None</em>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>A mesh is a discrete geometrical model consisting of nodes and elements.</p>
+<p>In the Mesh geometrical data model, coordinates of all points are gathered
+in a single twodimensional array &#8216;coords&#8217; with shape (ncoords,3) and the
+individual geometrical elements are described by indices into the &#8216;coords&#8217;
+array.
+This model has some advantages over the Formex data model, where all
+points of all element are stored by their coordinates:</p>
+<ul class="simple">
+<li>compacter storage, because coordinates of coinciding points do not
+need to be repeated,</li>
+<li>faster connectivity related algorithms.</li>
+</ul>
+<p>The downside is that geometry generating algorithms are far more complex
+and possibly slower.</p>
+<p>In pyFormex we therefore mostly use the Formex data model when creating
+geometry, but when we come to the point of exporting the geometry to
+file (and to other programs), a Mesh data model may be more adequate.</p>
+<p>The Mesh data model has at least the following attributes:</p>
+<ul class="simple">
+<li>coords: (ncoords,3) shaped Coords array,</li>
+<li>elems: (nelems,nplex) shaped array of int32 indices into coords. All
+values should be in the range 0 &lt;= value &lt; ncoords.</li>
+<li>prop: array of element property numbers, default None.</li>
+<li>eltype: string designing the element type, default None.</li>
+</ul>
+<p>Create a new Mesh from the specified data.</p>
+<p>data is either a tuple of (coords,elems) arrays, or an object having
+a &#8216;toMesh()&#8217; method, which should return such a tuple.</p>
+<p>Mesh objects have the following methods:</p>
+<dl class="method">
+<dt id="mesh.Mesh.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.copy" title="Permalink to this definition">¶</a></dt>
+<dd>Return a copy using the same data arrays</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.toFormex">
+<tt class="descname">toFormex</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.toFormex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mesh to a Formex.</p>
+<p>The Formex inherits the element property numbers and eltype from
+the Mesh. Node property numbers however can not be translated to
+the Formex data model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.data">
+<tt class="descname">data</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.data" title="Permalink to this definition">¶</a></dt>
+<dd>Return the mesh data as a tuple (coords,elems)</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nelems">
+<tt class="descname">nelems</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nelems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nplex">
+<tt class="descname">nplex</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nplex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.ncoords">
+<tt class="descname">ncoords</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.ncoords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.shape">
+<tt class="descname">shape</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.shape" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.bbox">
+<tt class="descname">bbox</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.bbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.nedges">
+<tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nedges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of edges.</p>
+<p>Currently, the edges are not fused!</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.centroids">
+<tt class="descname">centroids</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the centroids of all elements of the Formex.</p>
+<p>The centroid of an element is the point whose coordinates
+are the mean values of all points of the element.
+The return value is a Coords object with nelems points.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.report">
+<tt class="descname">report</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.report" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.compact">
+<tt class="descname">compact</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.compact" title="Permalink to this definition">¶</a></dt>
+<dd>Renumber the mesh and remove unconnected nodes.</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.extrude">
+<tt class="descname">extrude</tt><big>(</big><em>n</em>, <em>step=1.</em>, <em>dir=0</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.extrude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extrude a Mesh in one of the axes directions.</p>
+<p>Returns a new Mesh obtained by extruding the given Mesh
+over n steps of length step in direction of axis dir.
+The returned Mesh has double plexitude of the original.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.sweep">
+<tt class="descname">sweep</tt><big>(</big><em>path</em>, <em>autofix=True</em><big>)</big><a class="headerlink" href="#mesh.Mesh.sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sweep a mesh along a path, creating an extrusion</p>
+<p>Returns a new Mesh obtained by sweeping the given Mesh
+over a path.
+The returned Mesh has double plexitude of the original.
+The operation is similar to the extrude() method, but the path
+can be any 3D curve.</p>
+<p>This function is usually used to extrude points into lines,
+lines into surfaces and surfaces into volumes.
+By default it will try to fix the connectivity ordering where
+appropriate. If autofix is switched off, the connectivities
+are merely stacked, and the user may have to fix it himself.</p>
+<p>Currently, this function correctly transforms: point1 to line2,
+line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.convert">
+<tt class="descname">convert</tt><big>(</big><em>fromtype</em>, <em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a mesh from element type fromtype to type totype.</p>
+<p>Currently defined conversions:
+&#8216;quad4&#8217; -&gt; &#8216;tri3&#8217;</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="mesh.Mesh.concatenate">
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>ML</em><big>)</big><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd>Concatenate a list of meshes of the same plexitude and eltype</dd></dl>
+
+</dd></dl>
+
+<p><strong>Functions defined in the module mesh</strong></p>
+<blockquote>
+<dl class="function">
+<dt id="mesh.vectorPairAreaNormals">
+<tt class="descclassname">mesh.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#mesh.vectorPairAreaNormals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute area of and normals on parallellograms formed by vec1 and vec2.</p>
+<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
+The result is a tuple of two arrays:
+- area (n) : the area of the parallellogram formed by vec1 and vec2.
+- normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
+These are calculated from the cross product of vec1 and vec2, which indeed
+gives area * normal.</p>
+<p>Note that where two vectors are parallel, an area zero will results and
+an axis with components NaN.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.vectorPairCosAngles">
+<tt class="descclassname">mesh.</tt><tt class="descname">vectorPairCosAngles</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>normalized=False</em><big>)</big><a class="headerlink" href="#mesh.vectorPairCosAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cosine of the angles between two vectors.</p>
+<p>vec1: an (nvector,3) shaped array of floats
+vec2: an (nvector,3) shaped array of floats
+normalized: can be set True if the vectors are already normalized.</p>
+<p>Return value: an (nvector,) shaped array of floats</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.vectorPairAngles">
+<tt class="descclassname">mesh.</tt><tt class="descname">vectorPairAngles</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>normalized=False</em>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#mesh.vectorPairAngles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mesh.vectorRotation">
+<tt class="descclassname">mesh.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>upvec=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>1.</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#mesh.vectorRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return axis and angle to rotate vectors in a parallel to b</p>
+<p>vectors in a and b should be unit vectors.
+The returned axis is the cross product of a and b. If the vectors
+are already parallel, a random vector normal to a is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.sweepCoords">
+<tt class="descclassname">mesh.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>path</em>, <em>origin=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span>, <em>normal=0</em>, <em>upvector=None</em>, <em>avgdir=False</em>, <em>enddir=None</em><big>)</big><a class="headerlink" href="#mesh.sweepCoords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sweep a Coords object along a path, returning a series of copies.</p>
+<p>origin and normal define the local path position and direction on the mesh.</p>
+<p>At each point of the curve, a copy of the Coords object is created, with
+its origin in the curve&#8217;s point, and its normal along the curve&#8217;s direction.
+In case of a PolyLine, directions are pointing to the next point by default.
+If avgdir==True, average directions are taken at the intermediate points.
+Missing end directions can explicitely be set by enddir, and are by default
+taken along the last segment.
+If the curve is closed, endpoints are treated as any intermediate point,
+and the user should normally not specify enddir.</p>
+<p>The return value is a sequence of the transformed Coords objects.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.defaultEltype">
+<tt class="descclassname">mesh.</tt><tt class="descname">defaultEltype</tt><big>(</big><em>nplex</em><big>)</big><a class="headerlink" href="#mesh.defaultEltype" title="Permalink to this definition">¶</a></dt>
+<dd>Default element type for a mesh with given plexitude.</dd></dl>
+
+<dl class="function">
+<dt id="mesh.connectMesh">
+<tt class="descclassname">mesh.</tt><tt class="descname">connectMesh</tt><big>(</big><em>mesh1</em>, <em>mesh2</em>, <em>n=1</em>, <em>n1=None</em>, <em>n2=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.connectMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect two meshes to form a hypermesh.</p>
+<p>mesh1 and mesh2 are two meshes with same topology (shape). 
+The two meshes are connected by a higher order mesh with n
+elements in the direction between the two meshes.
+n1 and n2 are node selection indices permitting a permutation of the
+nodes of the base sets in their appearance in the hypermesh.
+This can e.g. be used to achieve circular numbering of the hypermesh.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.connectMeshSequence">
+<tt class="descclassname">mesh.</tt><tt class="descname">connectMeshSequence</tt><big>(</big><em>ML</em>, <em>loop=False</em><big>)</big><a class="headerlink" href="#mesh.connectMeshSequence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mesh.createWedgeElements">
+<tt class="descclassname">mesh.</tt><tt class="descname">createWedgeElements</tt><big>(</big><em>S1</em>, <em>S2</em>, <em>div=1</em><big>)</big><a class="headerlink" href="#mesh.createWedgeElements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="mesh.sweepGrid">
+<tt class="descclassname">mesh.</tt><tt class="descname">sweepGrid</tt><big>(</big><em>nodes</em>, <em>elems</em>, <em>path</em>, <em>scale=1.</em>, <em>angle=0.</em>, <em>a1=None</em>, <em>a2=None</em><big>)</big><a class="headerlink" href="#mesh.sweepGrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</blockquote>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="../_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="../index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="datareader.html"
+                                  title="previous chapter">31. <tt class="docutils literal docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="fe.html"
+                                  title="next chapter">33. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/ref/mesh.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="fe.html" title="33. fe — Finite Element Models in pyFormex."
+             >next</a> |</li>
+        <li class="right" >
+          <a href="datareader.html" title="31. datareader — Numerical data reader"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="../index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="../refman.html" >pyFormex reference manual</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>
