@@ -75,8 +75,8 @@ def readData(s,type,strict=False):
     
     ..warning ::
     
-    You need to have the GNU ``units`` command installed for the unit
-    conversion to work. 
+      You need to have the GNU ``units`` command installed for the unit
+      conversion to work. 
     """
     import units,string
     out = []

@@ -37,7 +37,7 @@ import os
 def abq_export(fn,nodes,elems,eltype,header="Exported by stl_examples.py"):
     """Export a finite element model in Abaqus .inp format."""
     fil = file(fn,'w')
-    fe_abq.writeHeading(fil,header)
+    fil.write(fe_abq.fmtHeading(header))
     fe_abq.writeNodes(fil,nodes)
     fe_abq.writeElems(fil,elems,eltype,nofs=1)
     fil.close()

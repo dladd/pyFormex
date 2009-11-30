@@ -23,7 +23,7 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-"""objects.py
+"""Selection of objects from the global dictionary. 
 
 This is a support module for other pyFormex plugins.
 """
@@ -236,12 +236,13 @@ from gui.draw import *
 class DrawableObjects(Objects):
     """A selection of drawable objects from the globals().
 
-    annotations, if set, is a list of (func,active) tuples, where
-    func is a function that is to be called with the object name as argument
-      to draw some annotation for the object,
-    active is a flag to signal if the annotation should be drawn or not.
+    ``annotations``, if set, is a list of (func,active) tuples, where
 
-    The default is to provide object name and element numbers.
+    - ``func`` is a function that is to be called with the object name as
+      argument to draw some annotation for the object,
+    - ``active`` is a flag to signal if the annotation should be drawn or not.
+
+    The default is to draw object name and element numbers.
     """
     def __init__(self,*args,**kargs):
         Objects.__init__(self,*args,**kargs)

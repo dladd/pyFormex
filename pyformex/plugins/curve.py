@@ -517,7 +517,7 @@ class NaturalSpline(Curve):
 
 ##############################################################################
 
-from geometry import triangleCircumCircle
+from plugins.geometry import triangleCircumCircle
 
 def vectorPairAngle(v1,v2):
     """Return the angle between the vectors v1 and v2."""

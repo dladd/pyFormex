@@ -1,4 +1,4 @@
-8# $Id$
+## $Id$
 ##
 ##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
@@ -21,13 +21,12 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""viewport.py: Interactive OpenGL Canvas.
+"""Interactive OpenGL Canvas embedded in a Qt4 widget.
 
-This module implements user interaction with the OpenGL canvas.
-QtCanvas is a single interactive OpenGL canvas, while MultiCanvas
+This module implements user interaction with the OpenGL canvas defined in
+module :mod:`canvas`.
+`QtCanvas` is a single interactive OpenGL canvas, while `MultiCanvas`
 implements a dynamic array of multiple canvases.
-
-The basic OpenGL drawing functionality is implemented in the canvas module.
 """
 
 import pyformex as GD
@@ -112,10 +111,11 @@ def setOpenGLFormat():
     """Set the correct OpenGL format.
 
     On a correctly installed system, the default should do well.
-    The default OpenGL format can be changed by command line options.
-    --dri   : use the DIrect Rendering Infrastructure
-    --nodri : do not use the DRI
-    --alpha : enable the alpha buffer 
+    The default OpenGL format can be changed by command line options::
+    
+       --dri   : use the Direct Rendering Infrastructure
+       --nodri : do not use the DRI
+       --alpha : enable the alpha buffer 
     """
     global opengl_format
     fmt = QtOpenGL.QGLFormat.defaultFormat()
@@ -467,25 +467,27 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def pick(self,mode='actor',single=False,func=None,filter=None):
         """Interactively pick objects from the viewport.
 
-        - mode: defines what to pick : one of
-        ['actor','element','point','number','edge']
-        - single: if True, the function returns as soon as the user ends
-        a picking operation. The default is to let the user
-        modify his selection and only to return after an explicit
-        cancel (ESC or right mouse button).
-        - func: if specified, this function will be called after each
-        atomic pick operation. The Collection with the currently selected
-        objects is passed as an argument. This can e.g. be used to highlight
-        the selected objects during picking.
-        - filter: defines what elements to retain from the selection: one of
-        [None,'closest,'connected'].
-        The default (None) will return the complete selection.
-        'closest' will only keep the element closest to the user.
-        'connected' will only keep elements connected to
-          - the closest element (set picked)
-          - what is already in the selection (add picked).
-          Currently this only works when picking mode is 'element' and
-          for Actors having a partitionByConnection method.
+        - `mode`: defines what to pick : one of
+          ``['actor','element','point','number','edge']``
+        - `single`: if True, the function returns as soon as the user ends
+          a picking operation. The default is to let the user
+          modify his selection and only to return after an explicit
+          cancel (ESC or right mouse button).
+        - `func`: if specified, this function will be called after each
+          atomic pick operation. The Collection with the currently selected
+          objects is passed as an argument. This can e.g. be used to highlight
+          the selected objects during picking.
+        - `filter`: defines what elements to retain from the selection: one of
+          ``[None,'closest,'connected']``.
+
+          - None (default) will return the complete selection.
+          - 'closest' will only keep the element closest to the user.
+          - 'connected' will only keep elements connected to
+            - the closest element (set picked)
+            - what is already in the selection (add picked).
+
+            Currently this only works when picking mode is 'element' and
+            for Actors having a partitionByConnection method.
 
         When the picking operation is finished, the selection is returned.
         The return value is always a Collection object.

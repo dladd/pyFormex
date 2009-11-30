@@ -25,8 +25,9 @@
 """A postprocessor for ABAQUS output files.
 
 The ABAQUS .fil output file can be scanned and translated into a pyFormex
-script with the 'postabq' command. Use it as follows:
-  postabq job.fil > job.py
+script with the 'postabq' command. Use it as follows::
+
+   postabq job.fil > job.py
 
 Then execute the created script from inside pyFormex.
 """

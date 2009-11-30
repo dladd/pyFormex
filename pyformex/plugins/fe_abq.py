@@ -22,9 +22,9 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""A number of functions to write an Abaqus input file.
+"""An interface to write Finite Element models in Abaqus input file format.
 
-There are low level functions that just generate a part of an Abaqus
+There are low level functions that just generate a part of an Abaqus (R)
 input file, conforming to the Keywords manual.
 
 Then there are higher level functions that read data from the property module
@@ -77,134 +77,86 @@ def esetName(p):
         return p.name
 
 
-def writeHeading(fil, text=''):
-    """Write the heading of the Abaqus input file."""
-    head = """**  Abaqus input file created by %s (%s)
+###########################################################
+##   Output Formatting Following Abaqus Keywords Manual  ##
+###########################################################
+    
+#
+#  !! This is only a very partial implementation
+#     of the Abaqus keyword specs.
+#
+
+## The following output functions return the formatted output
+## and should be written to file by the caller.
+###############################################
+
+def fmtHeading(text=''):
+    """Format the heading of the Abaqus input file."""
+    out = """**  Abaqus input file created by %s (%s)
 **
 *HEADING
 %s
 """ % (GD.Version,GD.Url,text)
-    fil.write(head)
-
-
-def writeNodes(fil,nodes,name='Nall',nofs=1):
-    """Write nodal coordinates.
-
-    The nodes are added to the named node set. 
-    If a name different from 'Nall' is specified, the nodes will also
-    be added to a set named 'Nall'.
-    The nofs specifies an offset for the node numbers.
-    The default is 1, because Abaqus numbering starts at 1.  
-    """
-    fil.write('*NODE, NSET=%s\n' % name)
-    for i,n in enumerate(nodes):
-        fil.write("%d, %14.6e, %14.6e, %14.6e\n" % ((i+nofs,)+tuple(n)))
-    if name != 'Nall':
-        fil.write('*NSET, NSET=Nall\n%s\n' % name)
-
-
-def writeElems(fil,elems,type,name='Eall',eid=None,eofs=1,nofs=1):
-    """Write element group of given type.
-
-    elems is the list with the element node numbers.
-    The elements are added to the named element set. 
-    If a name different from 'Eall' is specified, the elements will also
-    be added to a set named 'Eall'.
-    The eofs and nofs specify offsets for element and node numbers.
-    The default is 1, because Abaqus numbering starts at 1.
-    If eid is specified, it contains the element numbers increased with eofs.
-    """
-    fil.write('*ELEMENT, TYPE=%s, ELSET=%s\n' % (type.upper(),name))
-    nn = elems.shape[1]
-    fmt = '%d' + nn*', %d' + '\n'
-    if eid is None:
-        eid = arange(elems.shape[0])
-    else:
-        eid = asarray(eid)
-    for i,e in zip(eid+eofs,elems+nofs):
-        fil.write(fmt % ((i,)+tuple(e)))
-    writeSet(fil,'ELSET','Eall',[name])
-
-
-def writeSet(fil,type,name,set,ofs=1):
-    """Write a named set of nodes or elements (type=NSET|ELSET)
-
-    set is an ndarray 
-    set can be a list of node/element numbers, in which case the ofs
-    value will be added to them, or a list of names the name of another already defined set.
-    """
-    fil.write("*%s,%s=%s\n" % (type,type,name))
-    set = asarray(set)
-    if set.dtype.kind == 'S':
-        # we have set names
-        for i in set:
-            fil.write('%s\n' % i)
-    else:
-        for i in set+ofs:
-            fil.write("%d,\n" % i)
+    return out
 
 
 materialswritten=[]
-def writeMaterial(fil,mat):
+def fmtMaterial(mat):
     """Write a material section.
     
-    mat is the property dict of the material.
+    `mat` is the property dict of the material.
     If the material has a name and has already been written, this function
     does nothing.
     """
-    if mat.name is not None and mat.name not in materialswritten:
-        if mat.poisson_ratio is None and mat.shear_modulus is not None:
-            mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
-            
-        fil.write("""*MATERIAL, NAME=%s
+    if mat.name is None or mat.name in materialswritten:
+        return ""
+
+    if mat.poisson_ratio is None and mat.shear_modulus is not None:
+        mat.poisson_ratio = 0.5 * mat.young_modulus / mat.shear_modulus - 1.0
+
+    out ="""*MATERIAL, NAME=%s
 *ELASTIC
 %s,%s
-""" % (mat.name, float(mat.young_modulus), float(mat.poisson_ratio)))
+""" % (mat.name, float(mat.young_modulus), float(mat.poisson_ratio))
+    materialswritten.append(mat.name)
 
-        if mat.density is not None:
-            fil.write("*DENSITY\n%s\n" % float(mat.density))
-            
-        if mat.plastic is not None:
-            print mat.plastic
-            mat.plastic = asarray(mat.plastic)
-            if mat.plastic.ndim != 2:
-                raise ValueError,"Plastic data should be 2-dim array"
-            if mat.plastic.shape[1] > 8:
-                raise ValueError,"Plastic data array should have max. 8 columns"
+    if mat.density is not None:
+        out += "*DENSITY\n%s\n" % float(mat.density)
 
-            fil.write("*PLASTIC\n")
-            fmt = ', '.join(['%s']*mat.plastic.shape[1]) + '\n'
-            for p in mat.plastic:
-                print p
-                fil.write(fmt % tuple(p))
-              
-	if mat.damping == 'Yes':
-            fil.write("*DAMPING")
-            if mat.alpha != 'None':
-                fil.write(", ALPHA = %s" %mat.alpha)
-            if mat.beta != 'None':
-                fil.write(", BETA = %s" %mat.beta)
-            fil.write("\n")
-        materialswritten.append(mat.name)
+    if mat.plastic is not None:
+        mat.plastic = asarray(mat.plastic)
+        if mat.plastic.ndim != 2:
+            raise ValueError,"Plastic data should be 2-dim array"
+        if mat.plastic.shape[1] > 8:
+            raise ValueError,"Plastic data array should have max. 8 columns"
+
+        out += "*PLASTIC\n"
+        fmt = ', '.join(['%s']*mat.plastic.shape[1]) + '\n'
+        out += ''.join([fmt % tuple(p) for p in mat.plastic ])
+
+    if mat.damping == 'Yes':
+        out += "*DAMPING"
+        if mat.alpha != 'None':
+            out +=", ALPHA = %s" %mat.alpha
+        if mat.beta != 'None':
+            out +=", BETA = %s" %mat.beta
+        out += '\n'
+
+    return out
 
 
-def writeTransform(fil,setname,csys):
+def fmtTransform(setname,csys):
     """Write transform command for the given set.
 
-    setname is the name of a node set
-    csys is a CoordSystem.
+    - `setname` is the name of a node set
+    - `csys` is a CoordSystem.
     """
-    fil.write("*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys))
-    fil.write("%s,%s,%s,%s,%s,%s\n" % tuple(csys.data.ravel()))
+    out = "*TRANSFORM, NSET=%s, TYPE=%s\n" % (setname,csys.sys)
+    out += "%s,%s,%s,%s,%s,%s\n" % tuple(csys.data.ravel())
+    return out
 
 
-####################################
-# Formatting of the SECTION keywords
-########################################################################
-
-# These function return a string with the formatted output
-
-def outFrameSection(el,setname):
+def fmtFrameSection(el,setname):
     """Write a frame section for the named element set.
 
     Recognized data fields in the property record:
@@ -223,7 +175,8 @@ def outFrameSection(el,setname):
 
     - sectiontype RECT:
 
-      - width, height
+      - width
+      - height
 
     - all sectiontypes:
 
@@ -263,7 +216,8 @@ def outFrameSection(el,setname):
 
     return out
 
-def outGeneralBeamSection(el,setname):
+
+def fmtGeneralBeamSection(el,setname):
     """Write a general beam section for the named element set.
 
     To specify a beam section when numerical integration over the section is not required.
@@ -321,7 +275,8 @@ def outGeneralBeamSection(el,setname):
 
     return out
 
-def outBeamSection(el,setname):
+
+def fmtBeamSection(el,setname):
     """Write a beam section for the named element set.
 
     To specify a beam section when numerical integration over the section is required.
@@ -375,12 +330,14 @@ def outBeamSection(el,setname):
 
     return out
 
-def outConnectorSection(el,setname):
+
+def fmtConnectorSection(el,setname):
     """Write a connector section.
 
     Optional data:
-    - behavior = connector behavior name,
-    - orient = connector orientation
+    
+    - `behavior` : connector behavior name
+    - `orient`  : connector orientation
     """
     out = ""
     if el.sectiontype.upper() != 'GENERAL':
@@ -394,11 +351,11 @@ def outConnectorSection(el,setname):
     return out
 
 
-def writeConnectorBehavior(fil,name):
-    fil.write('*CONNECTOR BEHAVIOR, NAME=%s\n' % name)
+def fmtConnectorBehavior(fil,name):
+    return "*CONNECTOR BEHAVIOR, NAME=%s\n" % name
 
 
-def outShellSection(el,setname,matname):
+def fmtShellSection(el,setname,matname):
     out = ''
     if el.sectiontype.upper() == 'SHELL':
         if matname is not None:
@@ -407,7 +364,7 @@ def outShellSection(el,setname,matname):
     return out
 
  
-def outSurface(prop):
+def fmtSurface(prop):
     """Format the surface definitions.
 
     Required:
@@ -428,7 +385,7 @@ def outSurface(prop):
     return out
 
  
-def outSurfaceInteraction(prop):
+def fmtSurfaceInteraction(prop):
     """Format the interactions.
 
     Optional:
@@ -445,7 +402,8 @@ def outSurfaceInteraction(prop):
             out += "*FRICTION\n%s\n" % float(p.friction)
     return out
 
-def outContactPair(prop):
+
+def fmtContactPair(prop):
     """Format the contact pair.
 
     Required:
@@ -460,13 +418,14 @@ def outContactPair(prop):
             intername = p.interaction
         else:
             intername = p.interaction.name
-            out += outSurfaceInteraction([p.interaction])
+            out += fmtSurfaceInteraction([p.interaction])
             
         out += "*Contact Pair, interaction=%s\n" % intername
         out += "%s, %s\n" % (p.slave,p.master)
     return out
 
-def outOrientation(prop):
+
+def fmtOrientation(prop):
     """Format the orientation.
 
     Optional:
@@ -492,9 +451,67 @@ def outOrientation(prop):
     return out
 
 
-##################################################
-## Some higher level functions, interfacing with the properties module
-##################################################
+## The following output sections with possibly large data
+## are written directly to file.
+##########################################################
+
+def writeNodes(fil,nodes,name='Nall',nofs=1):
+    """Write nodal coordinates.
+
+    The nodes are added to the named node set. 
+    If a name different from 'Nall' is specified, the nodes will also
+    be added to a set named 'Nall'.
+    The nofs specifies an offset for the node numbers.
+    The default is 1, because Abaqus numbering starts at 1.  
+    """
+    fil.write('*NODE, NSET=%s\n' % name)
+    for i,n in enumerate(nodes):
+        fil.write("%d, %14.6e, %14.6e, %14.6e\n" % ((i+nofs,)+tuple(n)))
+    if name != 'Nall':
+        fil.write('*NSET, NSET=Nall\n%s\n' % name)
+
+
+def writeElems(fil,elems,type,name='Eall',eid=None,eofs=1,nofs=1):
+    """Write element group of given type.
+
+    elems is the list with the element node numbers.
+    The elements are added to the named element set. 
+    If a name different from 'Eall' is specified, the elements will also
+    be added to a set named 'Eall'.
+    The eofs and nofs specify offsets for element and node numbers.
+    The default is 1, because Abaqus numbering starts at 1.
+    If eid is specified, it contains the element numbers increased with eofs.
+    """
+    fil.write('*ELEMENT, TYPE=%s, ELSET=%s\n' % (type.upper(),name))
+    nn = elems.shape[1]
+    fmt = '%d' + nn*', %d' + '\n'
+    if eid is None:
+        eid = arange(elems.shape[0])
+    else:
+        eid = asarray(eid)
+    for i,e in zip(eid+eofs,elems+nofs):
+        fil.write(fmt % ((i,)+tuple(e)))
+    writeSet(fil,'ELSET','Eall',[name])
+
+
+def writeSet(fil,type,name,set,ofs=1):
+    """Write a named set of nodes or elements (type=NSET|ELSET)
+
+    `set` : an ndarray. `set` can be a list of node/element numbers,
+    in which case the `ofs` value will be added to them,
+    or a list of names the name of another already defined set.
+    """
+    fil.write("*%s,%s=%s\n" % (type,type,name))
+    set = asarray(set)
+    if set.dtype.kind == 'S':
+        # we have set names
+        for i in set:
+            fil.write('%s\n' % i)
+    else:
+        for i in set+ofs:
+            fil.write("%d,\n" % i)
+
+    
 
 connector_elems = ['CONN3D2','CONN2D2']
 frame_elems = ['FRAME3D','FRAME2D']
@@ -553,19 +570,20 @@ def writeSection(fil,prop):
 
     prop is a an element property record with a section and eltype attribute
     """
+    out = ""
     setname = esetName(prop)
     el = prop.section
     eltype = prop.eltype.upper()
 
     mat = el.material
     if mat is not None:
-        writeMaterial(fil,mat)
+        fil.write(fmtMaterial(mat))
             
     if eltype in connector_elems:
-        fil.write(outConnectorSection(el,setname))
+        fil.write(fmtConnectorSection(el,setname))
 
     elif eltype in frame_elems:
-        fil.write(outFrameSection(el,setname))
+        fil.write(fmtFrameSection(el,setname))
             
     elif eltype in truss_elems:
         if el.sectiontype.upper() == 'GENERAL':
@@ -582,15 +600,15 @@ def writeSection(fil,prop):
     ##########################
     elif eltype in beam_elems:
         if el.integrate:
-            fil.write(outBeamSection(el,setname))
+            fil.write(fmtBeamSection(el,setname))
         else:
-            fil.write(outGeneralBeamSection(el,setname))
+            fil.write(fmtGeneralBeamSection(el,setname))
 
     ############
     ## SHELL elements
     ##########################
     elif eltype in shell_elems:
-        fil.write(outShellSection(el,setname,mat.name))
+        fil.write(fmtShellSection(el,setname,mat.name))
     
     ############
     ## SURFACE elements
@@ -769,11 +787,10 @@ def writeStepOutput(fil,kind,history=False,variable='PRESELECT'):
 def writeNodeOutput(fil,kind,keys,set='Nall'):
     """ Write a request for nodal result output to the .odb file.
 
-    keys is a list of NODE output identifiers
-    set is single item or a list of items, where each item is either:
-      - a property number
-      - a node set name
-      for which the results should be written
+    - `keys`: a list of NODE output identifiers
+    - `set`: a single item or a list of items, where each item is either
+      a property number or a node set name for which the results should
+      be written
     """
     output = 'OUTPUT'
     if type(set) == str or type(set) == int:
@@ -794,24 +811,26 @@ def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
                     summary=False,total=False):
     """ Write a request for nodal result output to the .fil or .dat file.
 
-    keys is a list of NODE output identifiers
-    set is single item or a list of items, where each item is either:
-      - a property number
-      - a node set name
-      for which the results should be written
-    output is either 'FILE' (.fil) or 'PRINT' (.dat)(Standard only)
-    freq is the output frequency in increments (0 = no output)
+    - `keys`: a list of NODE output identifiers
+    - `set`: a single item or a list of items, where each item is either
+      a property number or a node set name for which the results should
+      be written
+    - `output` is either ``FILE`` (for .fil output) or ``PRINT`` (for .dat
+      output)(Abaqus/Standard only)
+    - `freq` is the output frequency in increments (0 = no output)
 
     Extra arguments:
-    globalaxes: If 'YES', the requested output is returned in the global axes.
-      Default is to use the local axes wherever defined.
 
-    Extra arguments for output='PRINT':
-    summary: if True, a summary with minimum and maximum is written
-    total: if True, sums the values for each key
+    - `globalaxes`: If 'YES', the requested output is returned in the global
+      axes. Default is to use the local axes wherever defined.
 
-    Remark: the 'kind' argument is not used, but is included so that we can
-    easily call it with a Results dict as arguments
+    Extra arguments for output=``PRINT``:
+
+    - `summary`: if True, a summary with minimum and maximum is written
+    - `total`: if True, sums the values for each key
+
+    Remark: the `kind` argument is not used, but is included so that we can
+    easily call it with a `Results` dict as arguments
     """
     if type(set) == str or type(set) == int:
         set = [ set ]
@@ -840,11 +859,10 @@ def writeNodeResult(fil,kind,keys,set='Nall',output='FILE',freq=1,
 def writeElemOutput(fil,kind,keys,set='Eall'):
     """ Write a request for element output to the .odb file.
 
-    keys is a list of ELEMENT output identifiers
-    set is single item or a list of items, where each item is either:
-      - a property number
-      - an element set name
-      for which the results should be written
+    - `keys`: a list of ELEMENT output identifiers
+    - `set`: a single item or a list of items, where each item is either
+      a property number or an element set name for which the results should
+      be written
     """
     output = 'OUTPUT'
 
@@ -866,28 +884,32 @@ def writeElemResult(fil,kind,keys,set='Eall',output='FILE',freq=1,
                     summary=False,total=False):
     """ Write a request for element result output to the .fil or .dat file.
 
-    keys is a list of ELEMENT output identifiers
-    set is single item or a list of items, where each item is either:
-      - a property number
-      - an element set name
-      for which the results should be written
-    output is either 'FILE' (.fil) or 'PRINT' (.dat)(Standard only)
-    freq is the output frequency in increments (0 = no output)
+    - `keys`: a list of ELEMENT output identifiers
+    - `set`: a single item or a list of items, where each item is either
+      a property number or an element set name for which the results should
+      be written
+    - `output` is either ``FILE`` (for .fil output) or ``PRINT`` (for .dat
+      output)(Abaqus/Standard only)
+    - `freq` is the output frequency in increments (0 = no output)
 
     Extra arguments:
-    pos: Position of the points in the elements at which the results are
+    
+    - `pos`: Position of the points in the elements at which the results are
       written. Should be one of:
-      'INTEGRATION POINTS' (default)
-      'CENTROIDAL'
-      'NODES'
-      'AVERAGED AT NODES'
+
+      - 'INTEGRATION POINTS' (default)
+      - 'CENTROIDAL'
+      - 'NODES'
+      - 'AVERAGED AT NODES'
+      
       Non-default values are only available for ABAQUS/Standard.
       
     Extra arguments for output='PRINT':
-    summary: if True, a summary with minimum and maximum is written
-    total: if True, sums the values for each key
 
-    Remark: the 'kind' argument is not used, but is included so that we can
+    - `summary`: if True, a summary with minimum and maximum is written
+    - `total`: if True, sums the values for each key
+
+    Remark: the ``kind`` argument is not used, but is included so that we can
     easily call it with a Results dict as arguments
     """
     if type(set) == str or type(set) == int:
@@ -943,29 +965,28 @@ class Step(Dict):
                  name=None,bulkvisc=None,out=None,res=None):
         """Create new analysis data.
         
-        analysis is the analysis type. Should be one of:
-          'STATIC', 'DYNAMIC', 'EXPLICIT',
-          'PERTURBATION', 'BUCKLE', 'RIKS' 
-        time is either a single float value specifying the step time,
-        or a list of 4 values:
-          time inc, step time, min. time inc, max. time inc
-        or, for LANCZOS: a list of 5 values
-        or, for RIKS: a list of 8 values
-        In most cases, only the step time should be specified.
-        If nlgeom='YES', the analysis will be non-linear.
-        'RIKS' always sets nlgeom='YES', 'BUCKLE' sets it to 'NO',
-        'PERTURBATION' ignores nlgeom
+        - `analysis`:  the analysis type. Should be one of: 'STATIC', 'DYNAMIC',
+          'EXPLICIT', 'PERTURBATION', 'BUCKLE', 'RIKS' 
+        - `time`: either
 
-        tags is a list of property tags to include in this step.
-        
-        inc is the maximum number of increments in a step (the default is 100)
-        sdi determines how severe discontinuities are accounted for
-        buckle specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
-        incr is the increment in 'RIKS' type
-        bulkvisc is a list of two floats (default: [0.06,1.2]), only used
-        in Explicit steps.
-        out and res are specific output/result records for this step. They
-        come in addition to the global ones.
+          - a single float value specifying the step time,
+          - a list of 4 values: time inc, step time, min. time inc, max. time inc
+          - for LANCZOS: a list of 5 values
+          - for RIKS: a list of 8 values
+          
+          In most cases, only the step time should be specified.
+        - `nlgeom='YES'` specifies that the analysis will be non-linear.
+          'RIKS' always sets ``nlgeom='YES'``, 'BUCKLE' sets it to ``'NO'``,
+          'PERTURBATION' ignores `nlgeom`.
+        - `tags` : a list of property tags to include in this step.
+        - `inc`:  the maximum number of increments in a step (the default is 100)
+        - `sdi`: determines how severe discontinuities are accounted for
+        - `buckle`: specifies the BUCKLE type: 'SUBSPACE' or 'LANCZOS'
+        - `incr`: the increment in 'RIKS' type
+        - `bulkvisc`:  a list of two floats (default: [0.06,1.2]), only used
+          in Explicit steps.
+        - `out` and `res`: specific output/result records for this step. They
+          come in addition to the global ones.
         """
         self.analysis = analysis.upper()
         self.name = name
@@ -1090,22 +1111,19 @@ class Output(Dict):
                  history=False,variable='PRESELECT'):
         """ Create new output request.
         
-        kind = None, 'NODE', or 'ELEMENT' (first character suffices)
+        - `kind`: None, 'NODE', or 'ELEMENT' (first character suffices)
 
         For kind=='':
 
-          variable = 'ALL' or 'PRESELECT' or ''
+          - `variable` : 'ALL', 'PRESELECT' or ''
 
         For kind=='NODE' or 'ELEMENT':
 
-          keys is a list of output identifiers (compatible with kind type)
-        
-          set is single item or a list of items, where each item is either:
-            - a property number
-            - a node/elem set name
-            for which the results should be written
-          If no set is specified, the default is 'Nall' for kind=='NODE'
-          and 'Eall' for kind='ELEMENT'
+          - `keys`: a list of output identifiers (compatible with kind type)
+          - `set`: a single item or a list of items, where each item is either
+            a property number or a node/element set name for which the results
+            should be written. If no set is specified, the default is 'Nall'
+            for kind=='NODE' and 'Eall' for kind='ELEMENT'
         """
         if kind:
             kind = kind[0].upper()
@@ -1130,22 +1148,18 @@ class Result(Dict):
                  **kargs):
         """Create new result request.
         
-        kind = 'NODE' or 'ELEMENT' (actually, the first character suffices)
+        - `kind`: 'NODE' or 'ELEMENT' (first character suffices)
+        - `keys`: a list of output identifiers (compatible with kind type)
+        - `set`: a single item or a list of items, where each item is either
+           a property number or a node/element set name for which the results
+           should be written. If no set is specified, the default is 'Nall'
+           for kind=='NODE' and 'Eall' for kind='ELEMENT'
+        - `output` is either ``FILE`` (for .fil output) or ``PRINT`` (for .dat
+          output)(Abaqus/Standard only)
+        - `freq` is the output frequency in increments (0 = no output)
 
-        keys is a list of output identifiers (compatible with kind type)
-        
-        set is single item or a list of items, where each item is either:
-          - a property number
-          - a node/elem set name
-          for which the results should be written
-        If no set is specified, the default is 'Nall' for kind=='NODE'
-        and 'Eall' for kind='ELEMENT'
-        
-        output is either 'FILE' (.fil) or 'PRINT' (.dat)(Standard only)
-        freq is the output frequency in increments (0 = no output)
-
-        Extra keyword arguments are available: see the writeNodeResults and
-        writeElemResults functions for details.
+        Extra keyword arguments are available: see the `writeNodeResults` and
+        `writeElemResults` methods for details.
         """
         kind = kind[0].upper()
         if set is None:
@@ -1156,22 +1170,19 @@ class Result(Dict):
 
 
 ############################################################ AbqData
-
-## ?? Why is this a CDict ?
-## !! THIS COULD BE A SIMPLE object?
         
-class AbqData(CDict):
+class AbqData(object):
     """Contains all data required to write the Abaqus input file."""
     
     def __init__(self,model,prop,nprop=None,eprop=None,steps=[],res=[],out=[],bound=None):
         """Create new AbqData. 
         
-        model is a Model instance.
-        prop is the property database.
-        steps is a list of Step instances.
-        res is a list of Result instances.
-        out is a list of Output instances.
-        bound is tag/list of the initial boundary conditions.
+        - `model` : a :class:`Model` instance.
+        - `prop` : the `Property` database.
+        - `steps` : a list of `Step` instances.
+        - `res` : a list of `Result` instances.
+        - `out` : a list of `Output` instances.
+        - `bound` : a tag or alist of the initial boundary conditions.
           The default is to apply ALL boundary conditions initially.
           Specify a (possibly non-existing) tag to override the default.
         """
@@ -1206,14 +1217,14 @@ class AbqData(CDict):
             fil = file(filename,'w')
             GD.message("Writing to file %s" % (filename))
         
-        writeHeading(fil, """Model: %s     Date: %s      Created by pyFormex
+        fil.write(fmtHeading("""Model: %s     Date: %s      Created by pyFormex
 Script: %s 
 %s
-""" % (jobname, datetime.now(), GD.scriptName, header))
+""" % (jobname, datetime.now(), GD.scriptName, header)))
         
         nnod = self.model.nnodes()
         GD.message("Writing %s nodes" % nnod)
-        writeNodes(fil, self.model.coords)
+        writeNodes(fil,self.model.coords)
 
         GD.message("Writing node sets")
         for p in self.prop.getProp('n',attr=['set']):
@@ -1235,7 +1246,7 @@ Script: %s
 
         GD.message("Writing coordinate transforms")
         for p in self.prop.getProp('n',attr=['csys']):
-            writeTransform(fil,p.name,p.csys)
+            fil.write(fmtTransform(p.name,p.csys))
 
         GD.message("Writing element sets")
         telems = self.model.celems[-1]
@@ -1298,17 +1309,17 @@ Script: %s
         prop = self.prop.getProp('',attr=['orientation'])
         if prop:
             GD.message("Writing orientations")
-            fil.write(outOrientation(prop))
+            fil.write(fmtOrientation(prop))
 
         prop = self.prop.getProp('',attr=['surftype'])
         if prop:
             GD.message("Writing surfacces")
-            fil.write(outSurface(prop))
+            fil.write(fmtSurface(prop))
 
         prop = self.prop.getProp('',attr=['interaction'])
         if prop:
             GD.message("Writing contact pairs")
-            fil.write(outContactPair(prop))
+            fil.write(fmtContactPair(prop))
 
         prop = self.prop.getProp('n',tag=self.bound,attr=['bound'])
         if prop:
@@ -1322,13 +1333,6 @@ Script: %s
         if filename is not None:
             fil.close()
         GD.message("Done")
-
-
-
-def writeAbqInput(abqdata, jobname=None):
-    print "This function is deprecated: use the AbqData.write() method instead"
-    abqdata.write(jobname)
-    
 
     
 ##################################################

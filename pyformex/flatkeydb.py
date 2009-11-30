@@ -23,10 +23,11 @@
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 """Flat Text File Database.
+
 A simple database stored as a flat text file.
 
-(C) 2005 Benedict Verhegghe.
-Distributed under the GNU GPL version 3 or later.
+| (C) 2005 Benedict Verhegghe.
+| Distributed under the GNU GPL version 3 or later.
 """
 
 
@@ -108,20 +109,23 @@ class FlatDB(dict):
     between or inside records. Blank lines are also ignored (except they serve
     as record delimiter if endrec is empty)
 
-    Thus, with the initialization:
-      FlatDB(req_keys=['key1'], comment = 'com', key_sep = '=',
-      beginrec = 'rec', endrec = '')
-    the following is a legal database:
-      com This is a comment
-      com
-      rec key1=val1
-        key2=val2
-      rec
-      com Yes, this starts another record
-        key1=val3
-        key3=val4
+    Thus, with the initialization::
+    
+       FlatDB(req_keys=['key1'], comment = 'com', key_sep = '=',
+       beginrec = 'rec', endrec = '')
 
-    The readFile() function can even be instructed to ignore anything not
+    the following is a legal database::
+    
+       com This is a comment
+       com
+       rec key1=val1
+          key2=val2
+       rec
+       com Yes, this starts another record
+          key1=val3
+          key3=val4
+
+    The `readFile` function can even be instructed to ignore anything not
     between a (beginrec,endrec) pair. This allows for multiple databases
     being stored on the same file, even with records intermixed.
 
@@ -137,14 +141,16 @@ class FlatDB(dict):
 
     A record checking function can be specified. It takes a record as its
     argument. It is called whenever a new record is inserted in the database
-    (or an existing one is replaced). Before calling this check_func, the
+    (or an existing one is replaced). Before calling this ``check_func``, the
     system will already have checked that the record is a dictionary and
     that it has all the required keys.
 
     Two error handlers may be overridden by the user:
+    
     - record_error_handler(record) is called when the record does not pass the
-    checks;
+      checks;
     - key_error_handler(key) is called when a dunplicat key is encountered.
+
     The default for both is to raise an error.
     Overriding is done by changing the instance attibute.
     """
@@ -192,9 +198,9 @@ class FlatDB(dict):
 
         This function checks that the record is a dictionary type, that the
         record has the required keys, and that check_func(record) returns
-        True (if a check_func was specified).
+        True (if a `check_func` was specified).
         If the record passes, just return True. If it does not, call the
-        record_error_handler and (if it returns) return False.
+        `record_error_handler` and (if it returns) return False.
         This method can safely be overriden in subclasses.
         """
         OK = type(record) == dict and self.checkKeys(record) and (
@@ -236,7 +242,7 @@ class FlatDB(dict):
     def insert(self, record):
         """Insert a record to the database, overwriting existing records.
 
-        This is equivalent to __setitem__ but using the value stored in the
+        This is equivalent to `__setitem__` but using the value stored in the
         the primary key field of the record as key for storing the record.
         This is also similar to append(), but overwriting an old record with
         the same primary key.
@@ -260,7 +266,7 @@ class FlatDB(dict):
     def splitKeyValue(self,line):
         """Split a line in key,value pair.
 
-        The field is split on the first occurrence of the key_sep.
+        The field is split on the first occurrence of the `key_sep`.
         Key and value are then stripped of leading and trailing whitespace.
         If there is no key_sep, the whole line becomes the key and the
         value is an empty string. If the key_sep is the first character,
@@ -338,7 +344,7 @@ class FlatDB(dict):
         """Read a database from text.
 
         lines is an iterater over text lines (e.g. a text file or a
-        multiline string splitted on '\n')
+        multiline string splitted on '\\n')
         Lines starting with a comment string are ignored.
         Every record is delimited by a (beginrec,endrec) pair.
         If ignore is True, all lines that are not between a (beginrec,endrec)

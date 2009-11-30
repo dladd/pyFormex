@@ -97,10 +97,12 @@ def glutFont(font):
     """Return GLUT font designation for the named font.
 
     The recognized font names are:
-      fixed: '9x15', '8x13',
-      times-roman: 'tr10', 'tr24'
-      helvetica:   'hv10', 'hv12',  'hv18'
-    If an unrecognized string is  given, the default is hv18.
+    
+    - fixed: '9x15', '8x13',
+    - times-roman: 'tr10', 'tr24'
+    - helvetica:   'hv10', 'hv12',  'hv18'
+    
+    If an unrecognized string is  given, the default is 'hv18'.
     """
     return GLUTFONTS.get(font,GLUTFONTS['hv18'])
 

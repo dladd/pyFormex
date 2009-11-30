@@ -21,31 +21,31 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""
-A general yet simple configuration class.
+"""A general yet simple configuration class.
 
 | (C) 2005 Benedict Verhegghe
 | Distributed under the GNU GPL version 3 or later
 
 Why
-  I wrote this simple class because I wanted to use Python expressions in my
-  configuration files. This is so much more fun than using .INI style config
-  files.
-  While there are some other Python config modules available on the web,
-  I couldn't find one that suited my needs and my taste: either they are intended
-  for more complex configuration needs than mine, or they do not work with the
-  simple Python syntax I expected.
+   I wrote this simple class because I wanted to use Python
+   expressions in my configuration files. This is so much more fun
+   than using .INI style config files.  While there are some other
+   Python config modules available on the web, I couldn't find one
+   that suited my needs and my taste: either they are intended for
+   more complex configuration needs than mine, or they do not work
+   with the simple Python syntax I expected.
 
 What
-  Our Config class is just a normal Python dictionary which can hold anything.
-  Fields can be accessed either as dictionary lookup (config['foo']) or as
-  object attributes (config.foo).
-  The class provides a function for reading the dictionary from a flat text
-  (multiline string or file). I will always use the word 'file' hereafter,
-  because that is what you usually will read the configuration from.
-  Your configuration file can have named sections. Sections are stored as
-  other Python dicts inside the top Config dictionary. The current version
-  is limited to one level of sectioning.
+   Our Config class is just a normal Python dictionary which can hold
+   anything.  Fields can be accessed either as dictionary lookup
+   (config['foo']) or as object attributes (config.foo).  The class
+   provides a function for reading the dictionary from a flat text
+   (multiline string or file). I will always use the word 'file'
+   hereafter, because that is what you usually will read the
+   configuration from.  Your configuration file can have named
+   sections. Sections are stored as other Python dicts inside the top
+   Config dictionary. The current version is limited to one level of
+   sectioning.
 """
 
 import copy
@@ -70,44 +70,45 @@ from mydict import Dict
 class Config(Dict):
     """A configuration class allowing Python expressions in the input.
 
-    The configuration settings are stored in the __dict__ of a Python object.
-    An item 'foo' in the configuration 'config' can be accessed either as
-    dictionary lookup (config['foo']) or as object attribute (config.foo).
+    The configuration settings are stored in the __dict__ of a Python
+    object.  An item 'foo' in the configuration 'config' can be accessed
+    either as dictionary lookup (``config['foo']``) or as object attribute
+    (``config.foo``).
 
     The configuration object can be initialized from a multiline string or
-    a text file (or any other object that allows iterating over strings). 
+    a text file (or any other object that allows iterating over strings).
     
-    The format of the config file/text is as follows.
-
-    All config lines should have the format: key = value,
-    where key is a string and value is a Python expression
-    The first '=' character on the line is the delimiter between key and value.
-    Blanks around both the key and the value are stripped.
-    The value is then evaluated as a Python expression and stored in a variable
-    with name specified by the key. This variable is available for use in
-    subsequent configuration lines. It is an error to use a variable before
-    it is defined.
-    The key,value pair is also stored in the config dictionary, unless the key
+    The format of the config file/text is described hereafter.
+   
+    All config lines should have the format: key = value, where key is a
+    string and value is a Python expression The first '=' character on the
+    line is the delimiter between key and value.  Blanks around both the
+    key and the value are stripped.  The value is then evaluated as a
+    Python expression and stored in a variable with name specified by the
+    key. This variable is available for use in subsequent configuration
+    lines. It is an error to use a variable before it is defined.  The
+    key,value pair is also stored in the config dictionary, unless the key
     starts with an underscore ('_'): this provides for local variables.
 
-    Lines starting with '#' are comments and are ignored, as are empty and
-    blank lines.
-    Lines ending with '\' are continued on the next line.
-    A line starting with '[' starts a new section. A section is nothing more
-    than a Python dictionary inside the config dictionary. The section name
-    is delimited by '['and ']'. All subsequent lines will be stored in the
-    section dictionary instead of the toplevel dictionary.
+    Lines starting with '#' are comments and are ignored, as are empty
+    and blank lines.  Lines ending with '\' are continued on the next
+    line.  A line starting with '[' starts a new section. A section is
+    nothing more than a Python dictionary inside the config
+    dictionary. The section name is delimited by '['and ']'. All
+    subsequent lines will be stored in the section dictionary instead
+    of the toplevel dictionary.
 
-    All other lines are executed as python statements. This allows e.g. for
-    importing modules.
+    All other lines are executed as python statements. This allows
+    e.g. for importing modules.
 
     Whole dictionaries can be inserted at once in the config with the
-    update() function. 
+    update() function.
     
-    All defined variables while reading config files remain available for use
-    in the config file statements, even over multiple calls to the read()
-    function. Variables inserted with addSection() will not be available
-    as individual variables though, but can be access as self['name'].
+    All defined variables while reading config files remain available
+    for use in the config file statements, even over multiple calls to
+    the read() function. Variables inserted with addSection() will not
+    be available as individual variables though, but can be access as
+    ``self['name']``.
     
     As an example, if your config file looks like::
     
@@ -125,13 +126,12 @@ class Config(Dict):
     equivalent::
     
        C.update({'key':'value'})
-       C.read("key='value'\n")
-       
+       C.read("key='value'\\n")
+
     There is an important difference though: the second line will make a
     variable key (with value 'value') available in subsequent Config read()
-    method calls.
-"""
-
+    method calls.   
+    """
 
     def __init__(self,data={},default=None):
         """Creates a new Config instance.
@@ -192,17 +192,16 @@ class Config(Dict):
         `fil` is a sequence of strings. Any type that allows a loop like 
         ``for line in fil:``
         to iterate over its text lines will do. This could be a file type, or
-        a multiline text after splitting on '\n'.
+        a multiline text after splitting on '\\n'.
 
         The function will try to react intelligently if a string is passed as
-        argument. If the string contains at least one '\n', it will be
-        interpreted as a multiline string and be splitted on '\n'.
+        argument. If the string contains at least one '\\n', it will be
+        interpreted as a multiline string and be splitted on '\\n'.
         Else, the string will be considered and a file with that name will
         be opened. It is an error if the file does not exist or can not be
         opened.
         
         The function returns self, so that you can write: cfg = Config().
-        
         """
         filename = None
         if type(fil) == str:

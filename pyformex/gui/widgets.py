@@ -862,7 +862,8 @@ class InputInteger(InputItem):
     """An integer input item.
 
     Options:
-    'min', 'max': range of the scale (integer)
+
+    - 'min, 'max': range of the scale (integer)
     """
     
     def __init__(self,name,value,*args,**kargs):
@@ -965,6 +966,7 @@ class InputFSlider(InputFloat):
     """A float input item using a slider.
 
     Options:
+    
     - 'min', 'max': range of the scale (integer)
     - 'scale': scale factor to compute the float value
     - 'ticks' : step for the tick marks (default range length / 10)
@@ -1157,27 +1159,54 @@ class InputDialog(QtGui.QDialog):
     """
     
     def __init__(self,items,caption=None,parent=None,flags=None,actions=None,default=None,scroll=False):
-        """Creates a dialog which asks the user for the value of items.
+        """Create a dialog asking the user for the value of items.
 
-        Each item in the 'items' list is a tuple holding at least the name
-        of the item, and optionally some more elements that limit the type
-        of data that can be entered. The general format of an item is:
-          ``name,value,type,range``
-        It should fit one of the following schemes:
-        ('name',str) : type string, any string input allowed
-        ('name',int) : type int, any integer value allowed
-        ('name',int,'min','max') : type int, only min <= value <= max allowed
-        For each item a label with the name and a LineEdit widget are created,
-        with a validator function where appropriate.
+        `items` is either a list of items, or a dict where each value is a
+        list of items. If `items` is a dict, a tabbed widget will be created
+        with a tab for each (key,value) pair in the dict.
 
-        Input items are defined by a list with the following structure:
-        [ name, value, type, range... ]
-        The fields have the following meaning:
-
+        Each item in an `items` list is a list or tuple of the form
+        (name,value,type,options), where the fields have the following meaning:
+    
         - name:  the name of the field,
         - value: the initial or default value of the field,
         - type:  the type of values the field can accept,
+        - options: a dict with options for the field.
+
+        At least the name and initial value need to be specified. The type
+        can often be determined from the initial value. Some types set the
+        initial value from an option if it was an empty string or None.
+        The options dictionary has both generic options, available for all
+        item types, and type specific options.
+
+        Each item specifies a single input field, and its value will be
+        contained in the results dictionary using the field name as a key.
+        
+        For each item a single input line is created in the dialog.
+        This line by default consists of a label displaying the field
+        name and a LineEdit widget where the initial value is displayed
+        and can be changed. Where appropriate, a validator function is attached
+        to it.
+
+        The following options are applicable to all item types:
+
+        - text: if specified, the text value will be displayed instead of
+          the name. The name value will remain the key in the return dict.
+          Use this field to display a more descriptive text for the user,
+          while using a short name for handling the value in your script.
+        - buttons:
+        - tooltip:
+
+        Currently, the following item types are available:
+
+        The item specific options:
+        - min
+        - max
         - range: the range of values the field can accept,
+        - choices
+
+
+
 
         The first two fields are mandatory. In many cases the type can be
         determined from the value and no other fields are required. Thus:

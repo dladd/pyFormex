@@ -31,7 +31,6 @@ Properties can be attributed to a set of geometrical elements.
 from flatkeydb import FlatDB
 from mydict import Dict,CDict
 from arraytools import *
-#from numpy import *
 
 #################################################################
 # This first part still needs to be changed.
@@ -120,7 +119,9 @@ class ElemSection(CDict):
         - 'box'  : a hollow rectangular section,
         - 'I'    : an I-beam,
         - 'general' : anything else (automatically set if not specified).
+
         !! Currently only 'solid' and 'general' are allowed.
+        
       - the cross section characteristics :
         cross_section, moment_inertia_11, moment_inertia_12,
         moment_inertia_22, torsional_constant
@@ -128,12 +129,11 @@ class ElemSection(CDict):
 
     material
       the element material. This can be a dict or a string.
-      Currently known keys to fe_abq.py are:
-       young_modulus, shear_modulus, density, poisson_ratio
+      Currently known keys to fe_abq.py are: young_modulus,
+      shear_modulus, density, poisson_ratio
 
     orientation
-      is a list of 3 direction cosines of the first beam
-      section axis.
+      is a list of 3 direction cosines of the first beam section axis.
 
     behavior
       the behavior of a connector
