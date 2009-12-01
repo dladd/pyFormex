@@ -403,6 +403,30 @@ def fmtSurfaceInteraction(prop):
     return out
 
 
+def fmtGeneralContact(prop):
+    """Format the general contact.
+    
+    Only implemented on model level
+    
+    Required:
+
+    - interaction: interaction properties : name or Dict
+    """
+    out = ''
+    for p in prop:
+        if type(p.generalinteraction) is str:
+            intername = p.generalinteraction
+        else:
+            intername = p.generalinteraction.name
+            out += fmtSurfaceInteraction([p.generalinteraction])
+            
+        out += "*Contact\n" 
+        out += "*Contact Inclusions, ALL EXTERIOR\n"
+        out += "*Contact property assignment\n"
+        out += ", , %s\n" % intername
+    return out
+
+
 def fmtContactPair(prop):
     """Format the contact pair.
 
@@ -1095,7 +1119,7 @@ class Step(Dict):
         if prop:
             GD.message("  Writing step dsloads")
             writeDsloads(fil,prop)
-        
+
         prop = propDB.getProp('',tag=self.tags)
         if prop:
             GD.message("  Writing step model props")
@@ -1333,13 +1357,18 @@ Script: %s
 
         prop = self.prop.getProp('',attr=['surftype'])
         if prop:
-            GD.message("Writing surfacces")
+            GD.message("Writing surfaces")
             fil.write(fmtSurface(prop))
 
         prop = self.prop.getProp('',attr=['interaction'])
-        if prop:
+        if prop:       
             GD.message("Writing contact pairs")
             fil.write(fmtContactPair(prop))
+
+        prop = self.prop.getProp('',attr=['generalinteraction'])
+        if prop:  
+                GD.message("Writing general contact")
+                fil.write(fmtGeneralContact(prop))
 
         prop = self.prop.getProp('n',tag=self.bound,attr=['bound'])
         if prop:
