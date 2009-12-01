@@ -377,7 +377,7 @@ does nothing.</p>
 <li>set: the elements/nodes in the surface, either numbers or a set name.</li>
 <li>name: the surface name</li>
 <li>surftype: &#8216;ELEMENT&#8217; or &#8216;NODE&#8217;</li>
-<li>label: face or edge identifier (only required for surftype = &#8216;NODE&#8217;</li>
+<li>label: face or edge identifier (only required for surftype = &#8216;NODE&#8217;)</li>
 </ul>
 </dd></dl>
 
@@ -498,6 +498,15 @@ The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.
 <tt class="descclassname">fe_abq.</tt><tt class="descname">writeDloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDloads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write Dloads.</p>
 <p>prop is a list property records having an attribute dload</p>
+<p>By default, the loads are applied as new values in the current step.
+The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="fe_abq.writeDsloads">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">writeDsloads</tt><big>(</big><em>fil</em>, <em>prop</em>, <em>op='NEW'</em><big>)</big><a class="headerlink" href="#fe_abq.writeDsloads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write Dsloads.</p>
+<p>prop is a list property records having an attribute dsload</p>
 <p>By default, the loads are applied as new values in the current step.
 The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.</p>
 </dd></dl>

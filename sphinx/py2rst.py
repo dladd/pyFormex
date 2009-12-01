@@ -24,8 +24,10 @@ import token
 import types
 from types import ListType, TupleType
 
-parent = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+# set path to the pyformex modules
+parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,parent)
+
 from pyformex.odict import ODict
 
 def debug(s):

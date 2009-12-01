@@ -1996,7 +1996,7 @@ class Formex(object):
     def fromstring(clas,fil,sep=' ',nplex=1,ndim=3,count=-1):
         """Create a :class:`Formex` from coodinates in a string.
 
-        This uses the :method:`Coords.fromstring` method to read coordinates
+        This uses the :meth:`Coords.fromstring` method to read coordinates
         from a string and restructures them into a Formex of the specified
         plexitude.
 
@@ -2012,7 +2012,7 @@ class Formex(object):
                ``count`` can be used to force an error condition if the string
                does not contain the expected number of values.
 
-        The return value is  Coords object.
+        The return value is a `Coords` object.
         """
         x = Coords.fromstring(fil,sep=sep,ndim=ndim,count=count)
         if x.shape[0] % nplex != 0:
