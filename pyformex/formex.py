@@ -2012,7 +2012,7 @@ class Formex(object):
                ``count`` can be used to force an error condition if the string
                does not contain the expected number of values.
 
-        The return value is a `Coords` object.
+        The return value is a :class:`Coords` object.
         """
         x = Coords.fromstring(fil,sep=sep,ndim=ndim,count=count)
         if x.shape[0] % nplex != 0:
