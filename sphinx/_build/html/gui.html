@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The Graphical User Interface &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="index.html" />
+    <link rel="up" title="pyFormex user guide" href="user-guide.html" />
+    <link rel="next" title="The Canvas" href="drawing.html" />
+    <link rel="prev" title="Running pyFormex" href="running.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="drawing.html" title="The Canvas"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="running.html" title="Running pyFormex"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="user-guide.html" accesskey="U">pyFormex user guide</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-graphical-user-interface">
+<span id="cha-gui"></span><h1>The Graphical User Interface<a class="headerlink" href="#the-graphical-user-interface" title="Permalink to this headline">¶</a></h1>
+<p>While the GUI has become much more elaborate in recent versions, its
+intention will never be to provide a fully interactive environment to
+operate on geometrical data. The main purpose of pyFormex will
+always remain to provide a framework for easily creating scripts to
+operate on geometries. Automization of otherwise tedious tasks is our
+primary focus.</p>
+<p>The GUI mainly serves the following purposes:</p>
+<ul class="simple">
+<li>Display a structure in 3D. This includes changing the viewpoint, orientation
+and viewing distance. Thus you can interactively rotate, translate, zoom.</li>
+<li>Save a view in one of the supported image formats. Most of the images in this
+manual and on the  website were created that way.</li>
+<li>Changing settings (though not everything can be changed through the GUI yet).</li>
+<li>Running scripts, possibly starting other programs and display their results.</li>
+<li>Interactively construct, select, change, import or export geometrical
+structures.</li>
+</ul>
+<p>Unlike with most other geometrical modelers, in you usually design a geometrical
+model by writing a small script with the mathematical expressions needed to
+generate it. Any text editor will be suitable for this purpose. The main author
+of uses GNU Emacs, but this is just a personal preference. Any modern text
+editor will be fine, and the one you are accustomed with, will probably be the
+best choice. Since Python is the language used in scripts, a Python aware editor
+is highly preferable. It will highlight the syntax and help you with proper
+alignment (which is very important in Python). The default editors of KDE and
+Gnome and most other modern editors will certainly do well.  A special purpose
+editor integrated into the GUI is on our TODO list, but it certainly is not our
+top priority, because general purpose editors are already adequate for our
+purposes.</p>
+<p>Learning how to use is best done by studying and changing some of the examples.
+We suggest that you first take a look at the examples included in the GUI and
+select those that display geometrical structures and/or use features that look
+interesting to you. Then you can study the source code of those examples and see
+how the structures got built and how the features were obtained. Depending on
+your installation and configuration, the examples can be found under the
+<em>Examples</em> or <em>Scripts</em> main menu item. The
+examples may appear classified according to themes or keywords, which can help
+you in selecting appropriate examples.</p>
+<p>Selecting an example from the menu will normally execute the script, possibly
+ask for some interactive input and display the resulting geometrical structure.
+To see the source of the script, choose the <em>File ‣ Edit
+Script</em> menu item.</p>
+<p>Before starting to write your own scripts, you should probably get acquainted
+with the basic data structures and instructions of Python, NumPy and pyFormex.
+You can do this by reading the <a class="reference external" href="tutorial.html"><em>pyFormex tutorial</em></a>.</p>
+<div class="section" id="starting-the-gui">
+<h2>Starting the GUI<a class="headerlink" href="#starting-the-gui" title="Permalink to this headline">¶</a></h2>
+<p>You start the pyFormex GUI by entering the command <tt class="docutils literal"><span class="pre">pyformex</span></tt> in a
+terminal window. Depending on your installation, you may also have a
+panel or menu button on your desktop from which you can start the
+graphical interface by a simple mouse click.  When the main window
+appears, it will look like the one shown in the figure
+<a class="reference internal" href="#fig-gui"><em>The pyFormex main window</em></a>. Your window manager will most likely have put some
+decorations around it, but these are very much OS and window manager
+dependent and are therefore not shown in the figure.</p>
+<dl class="docutils">
+<dt>Finally, you can also start the GUI with the instruction</dt>
+<dd><tt class="docutils literal"><span class="pre">startGUI()</span></tt> from a pyFormex script executed in non-GUI mode.</dd>
+</dl>
+<div align="center" class="figure" id="fig-gui">
+<img alt="pyFormex GUI" src="_images/gui.png" />
+<p class="caption">The pyFormex main window</p>
+</div>
+</div>
+<div class="section" id="basic-use-of-the-gui">
+<h2>Basic use of the GUI<a class="headerlink" href="#basic-use-of-the-gui" title="Permalink to this headline">¶</a></h2>
+<p>As is still in its infancy, the GUI is subject to frequent changes and it would
+make no sense to cover here every single aspect of it. Rather we will describe
+the most important functions, so that users can quickly get used to working with
+. Also we will present some of the more obscure features that users may not
+expect but yet might be very useful.</p>
+<p>The window (figure <a class="reference internal" href="#fig-gui"><em>The pyFormex main window</em></a>) comprises 5 parts. From top to bottom these
+are:</p>
+<ol class="arabic simple">
+<li>the menu bar,</li>
+<li>the tool bar,</li>
+<li>the canvas (empty in the figure),</li>
+<li>the message board, and</li>
+<li>the status bar.</li>
+</ol>
+<p>Many of these parts look and work in a rather familiar way. The menu bar gives
+access to most of the GUI features through a series of pull-down menus. The most
+import functions are described in following sections.</p>
+<p>The toolbar contains a series of buttons that trigger actions when clicked upon.
+This provides an easier access to some frequently used functions, mainly for
+changing the viewing parameters.</p>
+<p>The canvas is a drawing board where your scripts can show the created
+geometrical structures and provide them with full 3D view and manipulation
+functions. This is obviously the most important part of the GUI, and even the
+main reason for having a GUI at all. However, the contents of the canvas is
+often mainly created by calling drawing functions from a script. This part of
+the GUI is therefore treated in full detail in a separate chapter.</p>
+<p>In the message board displays informative messages, requested results, possibly
+also errors and any text that your script writes out.</p>
+<p>The status bar shows the current status of the GUI. For now this only contains
+the filename of the current script and an indicator if this file has been
+recognized as a script (happy face) or not (unhappy face).</p>
+<p>Between the canvas and the message board is a splitter allowing resizing the
+parts of the window occupied by the canvas and message board. The mouse cursor
+changes to a vertical resizing symbol when you move over it. Just click on the
+splitter and move the mouse up or down to adjust the canvas/message board to
+your likings.</p>
+<p>The main window can be resized in the usual ways.</p>
+</div>
+<div class="section" id="the-file-menu">
+<span id="sec-menu-file"></span><h2>The <em>File</em> menu<a class="headerlink" href="#the-file-menu" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="the-settings-menu">
+<span id="sec-menu-settings"></span><h2>The <em>Settings</em> menu<a class="headerlink" href="#the-settings-menu" title="Permalink to this headline">¶</a></h2>
+<p>Many aspects of the pyFormex GUI are configurable to suit better to
+the user&#8217;s likings. This customization can be made persistent by
+storing it in a configuration file. This is explained in
+<a class="reference external" href="config.html"><em>Configuring pyFormex</em></a>.</p>
+<p>Many of the configuration variables however can be changed interactively from
+the GUI itself.</p>
+<ul class="simple" id="settings-commands">
+<li><em>Settings ‣ Commands</em>: Lets you change the external
+command name used for the editor, the HTML/text file viewer and the HTML
+browser. Each of these values should be an executable command
+accepting a file name as parameter.</li>
+</ul>
+</div>
+<div class="section" id="the-viewport-menu">
+<span id="sec-viewport-menu"></span><h2>The viewport menu<a class="headerlink" href="#the-viewport-menu" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="mouse-interactions-on-the-canvas">
+<span id="sec-mouse-interactions"></span><h2>Mouse interactions on the canvas<a class="headerlink" href="#mouse-interactions-on-the-canvas" title="Permalink to this headline">¶</a></h2>
+<p>A number of actions can be performed by interacting with the mouse on the
+canvas.  The default initial bindings of the mouse buttons are shown in the
+following table.</p>
+<div class="section" id="rotate-pan-and-zoom">
+<h3>Rotate, pan and zoom<a class="headerlink" href="#rotate-pan-and-zoom" title="Permalink to this headline">¶</a></h3>
+<p>You can use the mouse to dynamically rotate, pan and zoom the scene displayed on
+the canvas. These actions are bound to the left, middle and right mouse buttons
+by default. Pressing the corresponding mouse button starts the action; moving
+the mouse with depressed button continuously performs the actions, until the
+button is released. During picking operations, the mouse bindings are changed.
+You can however still start the interactive rotate, pan and zoom, by holding
+down the ALT key modifier when pressing the mouse button.</p>
+<dl class="docutils">
+<dt>rotate</dt>
+<dd>Press the left mouse button, and while holding it down, move the mouse ove the
+canvas: the scene will rotate. Rotating in 3D by a 2D translation of the mouse
+is a fairly complex operation:</dd>
+</dl>
+<ul>
+<li><dl class="first docutils">
+<dt>Moving the mouse radially with respect to the center of the screen rotates</dt>
+<dd><p class="first last">around an axis lying in the screen and perpendicular to the direction of the
+movement.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Moving tangentially rotates around an axis perpendicular to the screen (the</dt>
+<dd><blockquote class="first">
+<p>screen z-axis), but only if the mouse was not too close to the center of the
+screen when the button was pressed.</p>
+</blockquote>
+<p class="last">Try it out on some examples to get a feeling of the workinhg of mouse rotation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="docutils">
+<dt>pan</dt>
+<dd>Pressing the middle (or simultanuous left+right) mouse button and holding it
+down, will move the scene in the direction of the mouse movement. Because this
+is implemented as a movement of the camera in the opposite direction, the
+perspective of the scene may change during this operation.</dd>
+<dt>zoom</dt>
+<dd>Interactive zooming is performed by pressing the right mouse button and move the
+mouse while keeping the button depressed. The type of zoom action depends on the
+direction of the movement:</dd>
+</dl>
+<ul>
+<li><p class="first">horizontal movement zooms by camera lens angle,</p>
+</li>
+<li><p class="first">vertical movement zooms by changing camera distance.</p>
+<blockquote>
+<p>The first mode keeps the perspective, the second changes it. Moving right and
+upzooms in, left and down zooms out. Moving diagonally from upper left to lower
+right more or less keeps the image size, while changing the perspective.</p>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="interactive-selection">
+<h3>Interactive selection<a class="headerlink" href="#interactive-selection" title="Permalink to this headline">¶</a></h3>
+<p>During picking operations, the mouse button functionality is changed. Click and
+drag the left mouse button to create a rectangular selection region on the
+canvas. Depending on the modifier key that was used when pressing the button,
+the selected items will be:</p>
+<dl class="docutils">
+<dt>NONE</dt>
+<dd>set as the current selection;</dd>
+<dt>SHIFT</dt>
+<dd>added to the currentselection;</dd>
+<dt>CTRL</dt>
+<dd>removed from the current selection.</dd>
+</dl>
+<p>Clicking the right mouse button finishes the interactive selection mode.</p>
+<p>During selection mode, using the mouse buttons in combination with the ALT
+modifier key will still activate the default mouse functions (rotate/pan/zoom).</p>
+</div>
+</div>
+<div class="section" id="customizing-the-gui">
+<span id="sec-customize-gui"></span><h2>Customizing the GUI<a class="headerlink" href="#customizing-the-gui" title="Permalink to this headline">¶</a></h2>
+<p>Some parts of the GUI can easily be customized by the user.  The appearance
+(widget style and fonts) can be changed from the preferences menu. Custom menus
+can be added by executing a script. Both are very simple tasks even for
+beginning users. They are explained shortly hereafter.</p>
+<p>Experienced users with a sufficient knowledge of Python and GUI building with Qt
+can of course use all their skills to tune every single aspect of the GUI
+according to their wishes. If you send us your modifications, we might even
+include them in the official distribution.</p>
+<div class="section" id="changing-the-appearance-of-the-gui">
+<span id="sec-chang-appe-gui"></span><h3>Changing the appearance of the GUI<a class="headerlink" href="#changing-the-appearance-of-the-gui" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="adding-your-scripts-in-a-menu">
+<span id="sec-adding-scripts-menu"></span><h3>Adding your scripts in a menu<a class="headerlink" href="#adding-your-scripts-in-a-menu" title="Permalink to this headline">¶</a></h3>
+<p>By default, pyFormex adds all the example scripts that come with the
+distribution in a single menu accessible from the menubar. The scripts in this
+menu are executed by selecting them from the menu. This is easier than opening
+the file and then executing it.</p>
+<p>You can customize this scripts menu and add your own scripts directories to it.
+Just add a line like the following to the main section of your .pyformexrc
+configuration file: &#8212;  scriptdirs = [(&#8216;Examples&#8217;, None), (&#8216;My Scripts&#8217;,
+&#8216;/home/me/myscripts&#8217;), (&#8216;More&#8217;, &#8216;/home/me/morescripts&#8217;)]</p>
+<p>Each tuple in this list consists of a string to be used as menu title and the
+absolute path of a directory with your scripts. From each such directory all the
+files that are recognized as scripts and do no start with a &#8216;.&#8217; or &#8216;_&#8217;, will be
+included in the menu. If your scriptdirs setting has only one item, the menu
+item will be created directly in the menubar. If there are multiple items, a top
+menu named &#8216;Scripts&#8217; will be created with submenus for each entry.</p>
+<p>Notice the special entry for the examples supplied with the distribution. You do
+not specify the directory where the examples are: you would probably not even
+know the correct path, and it could change when a new version of is installed.
+As long as you keep its name to &#8216;Examples&#8217; (in any case: &#8216;examples&#8217; would work
+as well) and the path set to None (unquoted!), will itself try to detect the
+path to the installed examples.</p>
+</div>
+<div class="section" id="adding-custom-menus">
+<span id="sec-adding-custom-menus"></span><h3>Adding custom menus<a class="headerlink" href="#adding-custom-menus" title="Permalink to this headline">¶</a></h3>
+<p>When you start using for serious work, you will probably run into complex
+scripts built from simpler subtasks that are not necessarily always executed in
+the same order. While the scripting language offers enough functions to ask the
+user which parts of the script should be executed, in some cases it might be
+better to extend the GUI with custom menus to execute some parts of your script.</p>
+<p>For this purpose, the gui.widgets module of provides a Menu widget class. Its
+use is illustrated in the example Stl.py.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">The Graphical User Interface</a><ul>
+<li><a class="reference external" href="#starting-the-gui">Starting the GUI</a></li>
+<li><a class="reference external" href="#basic-use-of-the-gui">Basic use of the GUI</a></li>
+<li><a class="reference external" href="#the-file-menu">The <em>File</em> menu</a></li>
+<li><a class="reference external" href="#the-settings-menu">The <em>Settings</em> menu</a></li>
+<li><a class="reference external" href="#the-viewport-menu">The viewport menu</a></li>
+<li><a class="reference external" href="#mouse-interactions-on-the-canvas">Mouse interactions on the canvas</a><ul>
+<li><a class="reference external" href="#rotate-pan-and-zoom">Rotate, pan and zoom</a></li>
+<li><a class="reference external" href="#interactive-selection">Interactive selection</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#customizing-the-gui">Customizing the GUI</a><ul>
+<li><a class="reference external" href="#changing-the-appearance-of-the-gui">Changing the appearance of the GUI</a></li>
+<li><a class="reference external" href="#adding-your-scripts-in-a-menu">Adding your scripts in a menu</a></li>
+<li><a class="reference external" href="#adding-custom-menus">Adding custom menus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="running.html"
+                                  title="previous chapter">Running pyFormex</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="drawing.html"
+                                  title="next chapter">The Canvas</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/gui.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="drawing.html" title="The Canvas"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="running.html" title="Running pyFormex"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="user-guide.html" >pyFormex user guide</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

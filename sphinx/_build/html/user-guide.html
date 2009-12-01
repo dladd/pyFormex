@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pyFormex user guide &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="index.html" />
+    <link rel="next" title="Running pyFormex" href="running.html" />
+    <link rel="prev" title="pyFormex tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="running.html" title="Running pyFormex"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="pyFormex tutorial"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="cha-userguide">
+<span id="id1"></span><h1>pyFormex user guide<a class="headerlink" href="#cha-userguide" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This document and the sections below it are still very incomplete!</p>
+</div>
+<div class="topic">
+<p class="topic-title first">Abstract</p>
+<p>The user guide explains in depth the most important components of pyFormex.
+It shows you how to start pyFormex, how to use the Graphical User Interface
+(GUI), how to use the most important data classes, functions and GUI widgets
+in your scripts. It also contains sections dedicated to customization and
+extension of pyFormex.</p>
+</div>
+<p><strong>Sections of the user guide:</strong></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="running.html">Running pyFormex</a></li>
+<li class="toctree-l1"><a class="reference external" href="running.html#command-line-options">Command line options</a></li>
+<li class="toctree-l1"><a class="reference external" href="running.html#running-without-the-gui">Running without the GUI</a></li>
+<li class="toctree-l1"><a class="reference external" href="gui.html">The Graphical User Interface</a><ul>
+<li class="toctree-l2"><a class="reference external" href="gui.html#starting-the-gui">Starting the GUI</a></li>
+<li class="toctree-l2"><a class="reference external" href="gui.html#basic-use-of-the-gui">Basic use of the GUI</a></li>
+<li class="toctree-l2"><a class="reference external" href="gui.html#the-file-menu">The <em>File</em> menu</a></li>
+<li class="toctree-l2"><a class="reference external" href="gui.html#the-settings-menu">The <em>Settings</em> menu</a></li>
+<li class="toctree-l2"><a class="reference external" href="gui.html#the-viewport-menu">The viewport menu</a></li>
+<li class="toctree-l2"><a class="reference external" href="gui.html#mouse-interactions-on-the-canvas">Mouse interactions on the canvas</a></li>
+<li class="toctree-l2"><a class="reference external" href="gui.html#customizing-the-gui">Customizing the GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="drawing.html">The Canvas</a><ul>
+<li class="toctree-l2"><a class="reference external" href="drawing.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference external" href="drawing.html#drawing-a-formex">Drawing a Formex</a></li>
+<li class="toctree-l2"><a class="reference external" href="drawing.html#viewing-the-scene">Viewing the scene</a></li>
+<li class="toctree-l2"><a class="reference external" href="drawing.html#other-canvas-items">Other canvas items</a></li>
+<li class="toctree-l2"><a class="reference external" href="drawing.html#multiple-viewports">Multiple viewports</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="properties.html">Assigning properties to geometry</a><ul>
+<li class="toctree-l2"><a class="reference external" href="properties.html#general-properties">General properties</a></li>
+<li class="toctree-l2"><a class="reference external" href="properties.html#using-the-set-and-setname-fields">Using the  set and  setname fields</a></li>
+<li class="toctree-l2"><a class="reference external" href="properties.html#specialized-property-records">Specialized property records</a></li>
+<li class="toctree-l2"><a class="reference external" href="properties.html#node-properties">Node properties</a></li>
+<li class="toctree-l2"><a class="reference external" href="properties.html#element-properties">Element properties</a></li>
+<li class="toctree-l2"><a class="reference external" href="properties.html#property-data-classes">Property data classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="plugins.html">pyFormex plugins</a><ul>
+<li class="toctree-l2"><a class="reference external" href="plugins.html#what-are-plugins">What are plugins?</a></li>
+<li class="toctree-l2"><a class="reference external" href="plugins.html#how-to-create-a-plugin">How to create a plugin.</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="config.html">Configuring pyFormex</a><ul>
+<li class="toctree-l2"><a class="reference external" href="config.html#configuration-files">Configuration files</a></li>
+<li class="toctree-l2"><a class="reference external" href="config.html#syntax-of-the-configuration-files">Syntax of the configuration files</a></li>
+<li class="toctree-l2"><a class="reference external" href="config.html#configuration-variables">Configuration variables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="faq.html">pyFormex FAQ &#8216;n TRICKS</a><ul>
+<li class="toctree-l2"><a class="reference external" href="faq.html#faq">FAQ</a></li>
+<li class="toctree-l2"><a class="reference external" href="faq.html#tricks">TRICKS</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="tutorial.html"
+                                  title="previous chapter">pyFormex tutorial</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="running.html"
+                                  title="next chapter">Running pyFormex</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/user-guide.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="running.html" title="Running pyFormex"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="pyFormex tutorial"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

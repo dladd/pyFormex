@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuring pyFormex &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.1-a9',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="index.html" />
+    <link rel="up" title="pyFormex user guide" href="user-guide.html" />
+    <link rel="next" title="pyFormex FAQ ‘n TRICKS" href="faq.html" />
+    <link rel="prev" title="pyFormex plugins" href="plugins.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="plugins.html" title="pyFormex plugins"
+             accesskey="P">previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="user-guide.html" accesskey="U">pyFormex user guide</a> &gt;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuring-pyformex">
+<span id="cha-config"></span><h1>Configuring pyFormex<a class="headerlink" href="#configuring-pyformex" title="Permalink to this headline">¶</a></h1>
+<p>Many aspects of can be configured to better suit the user&#8217;s needs and likings.
+These can range from merely cosmetic changes to important extensions of the
+functionality. As is written in a scripting language and distributed as source,
+the user can change every single aspect of the program. And the GNU-GPL license
+under which the program is distributed guarantees that you have access to the
+source and are allowed to change it.</p>
+<p>Most users however will only want to change minor aspects of the program, and
+would rather not have to delve into the source to do just that. Therefore we
+have gathered some items of that users might like to change, into separate files
+where thay can easily be found. Some of these items can even be set
+interactivley through the GUI menus.</p>
+<p>Often users want to keep their settings between subsequent invocation of the
+program. To this end, the user preferences have to be stored on file when
+leaving the program and read back when starting the next time. While it might
+make sense to distinct between the user&#8217;s current settings in the program and
+his default preferences, the current configuration system of (still under
+development) does not allow such distinction yet. Still, since the topic is so
+important to the user and the configuration system in is already quite complex,
+we tought it was necessary to provide already some information on how to
+configure . Be aware though that important changes to this system will likely
+occur.</p>
+<div class="section" id="configuration-files">
+<span id="sec-pyf-conf-files"></span><h2>Configuration files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>On startup, reads its configurable data from a number of files. Often there are
+not less than four configuration files, read in sequence. The settings in each
+file being read override the value read before. The different configuration
+files used serve different purposes. On a typical Linux installation, the
+following files will be read in sequence:</p>
+<ul class="simple">
+<li>PYFORMEX-INSTALL-PATH/pyformexrc: this file should never be changed , neither
+by the user nor the administrator. It is there to guarantee that all settings
+get an adequate default value to allow to correctly start up.</li>
+<li>/etc/pyformex: this file can be used by the system administrator to make
+system-wide changes to the installation. This could e.g. be used to give all
+users at a site access to a common set of scripts or extensions.</li>
+<li>/.pyformexrc: this is where the user normally stores his own default
+settings.</li>
+<li>CURRENT-DIR/.pyformex: if the current working directory from which is started
+contains a file named .pyformex, it will be read too. This makes it possible to
+keep different configurations in different directories, depending on the
+purpose. Thus, one directory might aim at the use of for operating on
+triangulated surfaces, while another might be intended for pre- and post-
+processing of Finite Element models.</li>
+<li>Finally, the <tt class="docutils literal"><span class="pre">--config=</span></tt> command line option provides a way to specify
+another file with any name to be used as the last configuration file.</li>
+</ul>
+<p>On exit,will store the changed settings on the last user configuration file that
+was read. The first two files mentioned above are system configuration files and
+will never be changed by the program. A user configuration file will be
+generated if none existed.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Currently, when pyFormex exits, it will just dump all
+the changed configuration (key,value) pairs on the last
+configuration file, together with the values it read from that
+file. pyFormex will not detect if any changes were made to that
+file between reading it and writing back. Therefore, the user should
+never edit the configuration files directly while pyFormex is still
+running. Always close the program first!</p>
+</div>
+</div>
+<div class="section" id="syntax-of-the-configuration-files">
+<span id="sec-syntax-conf-files"></span><h2>Syntax of the configuration files<a class="headerlink" href="#syntax-of-the-configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>All configuration files are plain text files where each non blank line is one of
+the following:</p>
+<ul class="simple">
+<li>a comment line, starting with a &#8216;#&#8217;,</li>
+<li>a section header, of the form &#8216;[section-name]&#8217;,</li>
+<li>a valid python instruction.</li>
+</ul>
+<p>The configuration file is organized in sections. All lines preceding the first
+section name refer to the general (unnamed) section.</p>
+<p>Any valid Python source line can be used. This allows for quite complex
+configuration instructions, even importing Python modules. Any line that binds a
+value to a variable will cause a corresponding configuration variable to be set.
+The user can edit the configuration files with any text editor, but should make
+sure the lines are legal Python. Any line can use the previously defined
+variables, even those defined in previously read files.</p>
+<p>In the configuration files, the variable pyformexdir refers to the directory
+where was installed (and which is also reported by the <tt class="docutils literal"><span class="pre">pyformex</span> <span class="pre">--whereami</span></tt>
+command).</p>
+</div>
+<div class="section" id="configuration-variables">
+<span id="sec-conf-vars"></span><h2>Configuration variables<a class="headerlink" href="#configuration-variables" title="Permalink to this headline">¶</a></h2>
+<p>Many configuration variables can be set interactively from the GUI, and the user
+may prefer to do it that way. Some variables however can not (yet) be set from
+th GUI. And real programmers may prefer to do it with an editor anyway. So here
+are some guidelines for setting some interesting variables. The user may take a
+look at the installed default configuration file for more examples.</p>
+<div class="section" id="general-section">
+<h3>General section<a class="headerlink" href="#general-section" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">syspath</span> <span class="pre">=</span> <span class="pre">[]</span></tt>: Value is a list of path names that will be appended to
+the Python&#8217;s sys.path variable on startup. This enables your scripts
+to import modules from other than default Python paths.</li>
+<li><tt class="docutils literal"><span class="pre">scriptdirs</span> <span class="pre">=</span> <span class="pre">[</span> <span class="pre">('Examples',examplesdir),</span>
+<span class="pre">('MyScripts',myscriptsdir)]</span></tt>: a list of tuples (name,path). On
+startup, all these paths will be scanned for scripts and these will
+be added in the menu under an item named name.</li>
+</ul>
+<ul class="simple" id="index-0">
+<li><tt class="docutils literal"><span class="pre">autorun</span> <span class="pre">=</span> <span class="pre">'.pyformex.startup'</span></tt>: name of a script that will be
+executed on startup, before any other script (specified on the
+command line or started from the GUI).</li>
+<li><tt class="docutils literal"><span class="pre">editor</span> <span class="pre">=</span> <span class="pre">'kedit'</span></tt>: sets the name of the editor that will be used
+for editing pyformex scripts.</li>
+<li><tt class="docutils literal"><span class="pre">viewer</span> <span class="pre">=</span> <span class="pre">'firefox'</span></tt>: sets the name of the html viewer to be used to
+display the html help screens.</li>
+<li><tt class="docutils literal"><span class="pre">browser</span> <span class="pre">=</span> <span class="pre">'firefox'</span></tt>: sets the name of the browser to be used to access the
+website.</li>
+<li><tt class="docutils literal"><span class="pre">uselib</span> <span class="pre">=</span> <span class="pre">False</span></tt>: do not use the acceleration library. The default (True) is to
+use it when it is available.</li>
+</ul>
+</div>
+<div class="section" id="section-gui">
+<h3>Section <tt class="docutils literal"><span class="pre">[gui]</span></tt><a class="headerlink" href="#section-gui" title="Permalink to this headline">¶</a></h3>
+<ul class="simple" id="index-1">
+<li><tt class="docutils literal"><span class="pre">splash</span> <span class="pre">=</span> <span class="pre">'path-to-splash-image.png'</span></tt>: full path name of the image to be used
+as splash image on startup.</li>
+<li><tt class="docutils literal"><span class="pre">modebar</span> <span class="pre">=</span> <span class="pre">True</span></tt>: adds a toolbar with the render mode buttons. Besides
+True or False, the value can also be one of &#8216;top&#8217;, &#8216;bottom&#8217;, &#8216;left&#8217;
+or &#8216;right&#8217;, specifying the placement of the render mode toolbar at
+the specified window border. Any other value that evaluates True
+will make the buttons get included in the top toolbar.</li>
+<li><tt class="docutils literal"><span class="pre">viewbar</span> <span class="pre">=</span> <span class="pre">True</span></tt>: adds a toolbar with different view
+buttons. Possioble values as explained above for modebar.</li>
+<li><tt class="docutils literal"><span class="pre">timeoutbutton</span> <span class="pre">=</span> <span class="pre">True</span></tt>: include the timeout button in the toolbar. The
+timeout button, when depressed, will cause input widgets to time out
+after a prespecified delay time. This feature is still experimental.</li>
+<li><tt class="docutils literal"><span class="pre">plugins</span> <span class="pre">=</span> <span class="pre">['surface_menu',</span> <span class="pre">'formex_menu',</span> <span class="pre">'tools_menu']</span></tt>: a list of
+plugins to load on startup. This is mainly used to load extra
+(non-default) menus in the GUI to provide extended
+functionality. The named plugins should be available in the
+&#8216;plugins&#8217; subdirectory of the installation. To autoload user
+extensions from a different place, the autorun script can be used.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+        <p class="logo"><a href="http://pyformex.org/">
+        <img class="logo" src="_static/pyformex_logo.png" alt="Logo"/>
+        </a></p>
+    <h3><a href="index.html">Documentation</a></h3>
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Configuring pyFormex</a><ul>
+<li><a class="reference external" href="#configuration-files">Configuration files</a></li>
+<li><a class="reference external" href="#syntax-of-the-configuration-files">Syntax of the configuration files</a></li>
+<li><a class="reference external" href="#configuration-variables">Configuration variables</a><ul>
+<li><a class="reference external" href="#general-section">General section</a></li>
+<li><a class="reference external" href="#section-gui">Section <tt class="docutils literal"><span class="pre">[gui]</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="plugins.html"
+                                  title="previous chapter">pyFormex plugins</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="faq.html"
+                                  title="next chapter">pyFormex FAQ &#8216;n TRICKS</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/config.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="faq.html" title="pyFormex FAQ ‘n TRICKS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="plugins.html" title="pyFormex plugins"
+             >previous</a> |</li>
+    <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
+    
+        <li><a href="index.html">pyFormex Documentation</a> &gt;</li>
+
+          <li><a href="user-guide.html" >pyFormex user guide</a> &gt;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2009, Benedict Verhegghe.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>
