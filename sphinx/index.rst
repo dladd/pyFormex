@@ -20,6 +20,8 @@ This is the pyFormex |release| documentation, last updated on |today|.
    for some users.
   
    For some time, we will also keep the old `Online manual`_ available.
+   A `PDF-version`_ of the older (v0.8) manual is available for
+   download.
 
 
 These documents are to become a full documentation set for the installation and use of the pyFormex software. However, as pyFormex is still under active
@@ -31,9 +33,8 @@ this preliminary version available to the general public, to ease the use
 of pyFormex. The :doc:`refman` is automatically generated from the docstrings
 in the Python source, so this might best reflect the latest development version of the software.
 
-Some older versions of the documentation may be available in PDF format from
-the `pyFormex website`_. You should also find a version in your local
-pyFormex installation. 
+The new documentation is currently only available in HTML format. 
+
 
 **Parts of the documentation**
 

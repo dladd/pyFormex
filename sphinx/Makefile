@@ -131,7 +131,7 @@ pyformex.help: ../pyformex/pyformex
 
 # Transfer the files to BerliOS
 pub: 
-	${RSYNC} --delete ${MANDOCS} ${DOCUPLOAD}
+	${RSYNC} --exclude '.svn' --delete ${MANDOCS} ${DOCUPLOAD}
 
 # and to our ftp server
 publocal:

@@ -30,7 +30,6 @@ PKGNAME= pyformex
 
 PYFORMEXDIR= pyformex
 
-MANDIR= ${PYFORMEXDIR}/manual
 LIBDIR= ${PYFORMEXDIR}/lib
 DOCDIR= ${PYFORMEXDIR}/doc
 BINDIR= ${PYFORMEXDIR}/bin
@@ -76,7 +75,7 @@ FTPLOCAL=bumps:/home/ftp/pub/pyformex
 # ftp server on pyformex website
 FTPPYFORMEX=bverheg@shell.berlios.de:/home/groups/ftp/pub/pyformex
 
-.PHONY: dist pub distclean pydoc manual minutes website stamp dist.stamped version tag register bumprelease bumpversion
+.PHONY: dist pub distclean html pdf pubdoc minutes website stamp dist.stamped version tag register bumprelease bumpversion
 
 ############ Creating Distribution ##################
 
@@ -85,10 +84,6 @@ default:
 
 distclean:
 	alldirs . "rm -f *~"
-
-# Create the manual
-manual:
-	make -C ${MANDIR}
 
 # Create the C library
 lib: ${LIBDIR}/Makefile
@@ -105,9 +100,15 @@ libreset: ${LIBDIR}/Makefile
 ${LIBDIR}/Makefile: ${LIBDIR}/configure
 	cd ${LIBDIR} && ./configure
 
-# Create the pydoc html files
-pydoc:
-	make -C ${DOCDIR}
+# Create the Sphinx documentation
+html:
+	make -C ${SPHINXDIR} html
+
+pdf:
+	make -C ${SPHINXDIR} pdf
+
+pubdoc:
+	make -C ${SPHINXDIR} pub
 
 # Create the minutes of the user meeting
 minutes: 
@@ -130,13 +131,10 @@ bumprelease:
 	make version
 
 
-version: ${PYFORMEXDIR}/__init__.py ${MANDIR}/pyformex.tex setup.py ${LIBDIR}/configure.ac ${SPHINXDIR}/conf.py
+version: ${PYFORMEXDIR}/__init__.py setup.py ${LIBDIR}/configure.ac ${SPHINXDIR}/conf.py
 
 ${PYFORMEXDIR}/__init__.py: RELEASE
 	sed -i 's|${VERSIONSTRING}|${NEWVERSIONSTRING}|' $@
-
-${MANDIR}/pyformex.tex: RELEASE
-	sed -i 's|\\release{.*}|\\release{${RELEASE}}|;s|\\setshortversion{.*}|\\setshortversion{${VERSION}}|;'  $@
 
 ${LIBDIR}/configure.ac: RELEASE
 	sed -i 's|^AC_INIT.*|AC_INIT(pyformex-lib,${RELEASE})|'  $@

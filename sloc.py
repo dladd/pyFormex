@@ -111,12 +111,12 @@ set title "pyFormex history (http://pyformex.berlios.de)\nCreated %s"
 set key top left
 #set offsets 0,0.1,0,0
 set xdata time
-set timefmt "%Y-%m-%d"
-set format x "%y-%m"
+set timefmt "%s"
+set format x "%s"
 set xlabel "Date (YY-MM)"
 set ylabel "revision number"
 #set yrange [0:1.2]
-plot """ % now
+plot """ % (now,'%Y-%m-%d','%y-%m')
 
 KEYSplot = "size python ansic sh sloc manyears dollars"
 
