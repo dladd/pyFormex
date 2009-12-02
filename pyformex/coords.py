@@ -75,13 +75,15 @@ def coordsmethod(f):
     The coordinates are changed inplane, so if you want to save the original
     ones, you need to copy them before you use the transformation.
     """
+    repl = getattr(Coords,f.__name__)
+    vargs = repl.func_code.co_varnames[:repl.func_code.co_argcount]
     def newf(self,*args,**kargs):
-        repl = getattr(Coords,f.__name__)
-        self.coords = repl(self.coords,*args,**kargs)
-        newf.__name__ = f.__name__
-        newf.__doc__ = repl.__doc__
+        vkargs = dict((k,v) for k,v in kargs.iteritems() if k in vargs)
+        self.coords = repl(self.coords,*args,**vkargs)
+        f(self,*args,**kargs)
+    newf.__name__ = f.__name__
+    newf.__doc__ = repl.__doc__
     return newf
-
 
 ###########################################################################
 ##
@@ -485,7 +487,7 @@ class Coords(ndarray):
         return out
 
 
-    def reflect(self,dir=2,pos=0,inplace=False):
+    def reflect(self,dir=0,pos=0,inplace=False):
         """Reflect the coordinates in direction dir against plane at pos.
 
         Default position of the plane is through the origin.
@@ -541,7 +543,7 @@ class Coords(ndarray):
         r = scale[0] * self[...,dir[0]]
         f[...,0] = r*cos(theta)
         f[...,1] = r*sin(theta)
-        f[...,2] = scale[2] * self[...,dir[2]]  
+        f[...,2] = scale[2] * self[...,dir[2]]
         return f
 
 

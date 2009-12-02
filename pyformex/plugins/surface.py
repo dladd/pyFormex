@@ -269,7 +269,7 @@ def curvature(coords,elems,edges,neighbours=1):
     The n-ring neighbourhood of the nodes is used (n=neighbours).
     Eight values are returned: the Gaussian and mean curvature, the
     shape index, the curvedness, the principal curvatures and the
-    principal directions.    
+    principal directions.
     """
     # calculate n-ring neighbourhood of the nodes (n=neighbours)
     adj = adjacencyArray(edges,neighbours=neighbours)
@@ -513,7 +513,7 @@ class TriSurface(object):
 
     def setElems(self,elems):
         """Change the elems data."""
-        self.edges = self.faces = None
+        self.edges = self.faces = self.areas = self.normals = self.econn = self.conn = self.eadj = self.adj = self.edglen = None
         self.elems = Connectivity(elems)
         self.refresh()
 
@@ -935,7 +935,9 @@ class TriSurface(object):
         pass
     @coordsmethod
     def reflect(self,*args,**kargs):
-        pass
+        if kargs.get('invert_normals',True) == True:
+            elems = self.getElems()
+            self.setElems(column_stack([elems[:,0],elems[:,2],elems[:,1]]))
     @coordsmethod
     def affine(self,*args,**kargs):
         pass

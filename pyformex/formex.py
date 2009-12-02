@@ -828,11 +828,11 @@ def coords_transformation(f):
     The return value is a Formex with changed coordinates but unchanged
     properties.
     """
+    repl = getattr(Coords,f.__name__)
     def newf(self,*args,**kargs):
-        repl = getattr(Coords,f.__name__)
         return Formex(repl(self.f,*args,**kargs),self.p,self.eltype)
-        newf.__name__ = f.__name__
-        newf.__doc__ = repl.__doc__
+    newf.__name__ = f.__name__
+    newf.__doc__ = repl.__doc__
     return newf
 
 
