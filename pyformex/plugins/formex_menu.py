@@ -162,7 +162,7 @@ def showPrincipal():
     C,I = inertia.inertia(F.f)
     GD.message("Center of gravity: %s" % C)
     GD.message("Inertia tensor: %s" % I)
-    Iprin,Iaxes = inertia.principal(I)
+    Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
     GD.message("Principal Values: %s" % Iprin)
     GD.message("Principal Directions: %s" % Iaxes)
     data = (C,I,Iprin,Iaxes)

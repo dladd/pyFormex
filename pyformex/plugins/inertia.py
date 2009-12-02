@@ -32,6 +32,7 @@ Use func(F,f) to operate on a Formex F.
 """
 
 from numpy import *
+from arraytools import normalize
 
 def centroids(X):
     """Compute the centroids of the points of a set of elements.
@@ -85,11 +86,21 @@ def inertia(X,mass=None):
     return ctr,I.sum(axis=0)
 
 
-def principal(inertia):
-    """Returns the principal values and axes of the inertia tensor."""
+def principal(inertia,sort=False,right_handed=False):
+    """Returns the principal values and axes of the inertia tensor.
+    
+    If sort is True, they are sorted (maximum comes first).
+    If right_handed is True, the axes define a right-handed coordinate system.
+    """
     Ixx,Iyy,Izz,Iyz,Izx,Ixy = inertia
     Itensor = array([ [Ixx,Ixy,Izx], [Ixy,Iyy,Iyz], [Izx,Iyz,Izz] ])
     Iprin,Iaxes = linalg.eig(Itensor)
+    if sort:
+        s = Iprin.argsort()[::-1]
+        Iprin = Iprin[s]
+        Iaxes = Iaxes[:,s]
+    if right_handed and not allclose(normalize(cross(Iaxes[:,0],Iaxes[:,1])),Iaxes[:,2]):
+        Iaxes[:,2] = -Iaxes[:,2]
     return Iprin,Iaxes
 
 
