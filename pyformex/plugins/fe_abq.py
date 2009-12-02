@@ -807,7 +807,7 @@ def writeAmplitude(fil,prop):
 # Result: goes to the .fil file (for postprocessing with other means)
 #######################################################
 
-def writeStepOutput(fil,kind,history=False,variable='PRESELECT'):
+def writeStepOutput(fil,kind,history=False,variable='PRESELECT',numberinterval=None):
     """Write the global step output requests.
     
     variable = 'ALL' or 'PRESELECT' or ''
@@ -817,6 +817,8 @@ def writeStepOutput(fil,kind,history=False,variable='PRESELECT'):
     else:
         option = 'FIELD'    
     out = '*OUTPUT, %s' % option
+    if numberinterval and not history:
+            out+=', NUMBER INTERVAL=%s' % numberinterval
     if variable:
         out += ', VARIABLE=%s' % variable.upper()
     out += '\n'
@@ -1152,7 +1154,7 @@ class Output(Dict):
     """A request for output to .odb and history."""
     
     def __init__(self,kind=None,keys=None,set=None,
-                 history=False,variable='PRESELECT'):
+                 history=False,variable='PRESELECT',numberinterval=None):
         """ Create new output request.
         
         - `kind`: None, 'NODE', or 'ELEMENT' (first character suffices)
@@ -1177,7 +1179,7 @@ class Output(Dict):
         if kind is not None:
             self.update({'keys':keys,'set':set})
         else:
-            self.update({'history':history,'variable':variable})
+            self.update({'history':history,'variable':variable,'numberinterval':numberinterval})
 
 
 class Result(Dict):
