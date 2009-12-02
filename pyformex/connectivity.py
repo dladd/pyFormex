@@ -184,7 +184,7 @@ class Connectivity(ndarray):
 ############################################################################
 
 def expandElems(elems):
-##    print "This function is deprecated: use Connectivity.expand() instead."
+##    print("This function is deprecated: use Connectivity.expand() instead.")
     return Connectivity(elems).expand()
     
 
@@ -388,38 +388,38 @@ def adjacent(index,rev=None):
     if rev is None:
         rev = reverseIndex(index)
     adj = rev[index].reshape((n,-1))
-    #print adj
+    #print(adj)
     k =arange(n)
     # remove the element itself
     adj[adj == k.reshape(n,-1)] = -1
     adj.sort(axis=-1)
-    #print adj
+    #print(adj)
     ncols = adj.shape[1]
     pos = (ncols-1) * ones((n,),dtype=int32)
     #pos = column_stack([arange(n),pos])    
     j = ncols-1
     while j > 0:
         j -= 1
-        #print pos
-        #print adj[k,pos]
-        #print adj[:,j]
+        #print(pos)
+        #print(adj[k,pos])
+        #print(adj[:,j])
         t = adj[:,j] < adj[k,pos]
         w = where(t)
         x = where(t == 0)
         pos[w] -= 1
         adj[w,pos[w]] = adj[w,j]
-        #print adj
+        #print(adj)
 
     pmin = pos.min()
     p = pos.max()
     while p > pmin:
-        #print pos==p
+        #print(pos==p)
         adj[pos==p,p] = -1
         pos[pos==p] -= 1
         p = pos.max()
-        #print adj
+        #print(adj)
     adj = adj[:,pmin+1:]
-    #print adj
+    #print(adj)
     return adj
 
 
@@ -457,7 +457,7 @@ def closedLoop(elems):
             break
         w = where(elems == j)
         if w[0].size == 0:
-            print "No match found"
+            print("No match found")
             break
         je = w[0][0]
         ie += 1
@@ -496,10 +496,10 @@ partitionSegmentedCurve = connectedLineElems
 if __name__ == "__main__":
 
     c = Connectivity([[0,2,3],[2,4,5]])
-    print c
-    print c.magic
-    print c.nelems()
-    print c.nplex()
-    print c.revIndex()
+    print(c)
+    print(c.magic)
+    print(c.nelems())
+    print(c.nplex())
+    print(c.revIndex())
  
 # End

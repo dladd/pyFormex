@@ -40,12 +40,13 @@ from numpy import *
 ##
 #########################
 
-# Define a wrapper function for old versions
+# Define a wrapper function for old versions of numpy
 #
 
 if unique1d([1],True)[0][0] == 0:
     # We have the old numy version
-    print "BEWARE: OLD VERSION OF NUMPY!!!!"
+    import warnings
+    warnings.warn("BEWARE: OLD VERSION OF NUMPY!!!! We advise you to upgrade NumPy!")
     def unique1d(a,return_indices=False):
         """Replacement for numpy's unique1d"""
         import numpy
@@ -359,7 +360,7 @@ def checkArray1D(a,size=None,kind=None,allow=None):
                 a = a.astype(Float)
         return a
     except:
-        print "Expected size %s, kind %s, got: %s" % (size,kind,a)
+        print("Expected size %s, kind %s, got: %s" % (size,kind,a))
     raise ValueError
 
    

@@ -82,7 +82,7 @@ def sendmail(message,sender,to,serverURL='localhost'):
 ##################################################################
 
 def input_message(prompt=True):
-    print """
+    print("""
     This is Bene's simple mail program, version 0.00001.
     Enter lines of text, end with CTRL-D (on a blank line).
     Include at least one line starting with 'To:'
@@ -90,7 +90,7 @@ def input_message(prompt=True):
     Optionally include a line starting with 'From:'
     Optionally include one or more lines starting with 'CC:'
     All other lines will be the text of your message.
-    """
+    """)
     to = []
     cc = []
     subj = ''
@@ -124,13 +124,14 @@ if __name__ == '__main__':
 
     if to and subj and msg and sender:
         msg = message(sender,to,cc,subj,msg)
-        print "\n\n    Email message:",msg
-        if raw_input('\n    Shall I send the email now? ') == 'y':
+        print("\n\n    Email message:")
+        print(msg)
+        if raw_input('\n    Shall I send the email now? (y/n)') == 'y':
             sendmail(msg,sender,to)
-            print "Mail has been sent!"
+            print("Mail has been sent!")
         else:
-            print "Mail not sent!"
+            print("Mail not sent!")
     else:
-        print "Message can not be sent because of missing fields!"
+        print("Message can not be sent because of missing fields!")
         
 # End

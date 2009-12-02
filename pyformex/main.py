@@ -28,6 +28,7 @@ pyformexdir = sys.path[0]
 svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
 
 import pyformex
+from pyformex import *
 
 import warnings
 warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
@@ -38,7 +39,6 @@ from config import Config
 
 ###########################  main  ################################
 
-
 def refLookup(key):
     """Lookup a key in the reference configuration."""
     return pyformex.refcfg[key]
@@ -46,10 +46,10 @@ def refLookup(key):
 
 def printcfg(key):
     try:
-        print "!! refcfg[%s] = %s" % (key,pyformex.refcfg[key])
+        print("!! refcfg[%s] = %s" % (key,pyformex.refcfg[key]))
     except KeyError:
         pass
-    print "!! cfg[%s] = %s" % (key,pyformex.cfg[key])
+    print("!! cfg[%s] = %s" % (key,pyformex.cfg[key]))
 
 
 def setRevision():
@@ -61,31 +61,60 @@ def setRevision():
 
 def remove_pyFormex(pyformexdir,scriptdir):
     """Remove the pyFormex installation."""
-    print """
+    print("""
 BEWARE!
 This procedure will remove the complete pyFormex installation!
 If you continue, pyFormex will exit and you will not be able to run it again.
 The pyFormex installation is in: %s
 The pyFormex executable script is in: %s
 You will need proper permissions to actually delete the files.
-""" % (pyformexdir,scriptdir)
+""" % (pyformexdir,scriptdir))
     s = raw_input("Are you sure you want to remove pyFormex? yes/NO: ")
     if s == 'yes':
-        print "Removing %s" % pyformexdir
+        print("Removing %s" % pyformexdir)
         utils.removeTree(pyformexdir)
         script = os.path.join(scriptdir,'pyformex')
         egginfo = "%s-%s.egg-info" % (pyformexdir,pyformex.__version__.replace('-','_'))
         for f in [ script,egginfo ]:
             if os.path.exists(f):
-                print "Removing %s" % f
+                print("Removing %s" % f)
                 os.remove(f)
-        print "\nBye, bye! I won't be back until you reinstall me!"
+        print("\nBye, bye! I won't be back until you reinstall me!")
     elif s.startswith('y') or s.startswith('Y'):
-        print "You need to type exactly 'yes' to remove me."
+        print("You need to type exactly 'yes' to remove me.")
     else:
-        print "Thanks for letting me stay this time."
+        print("Thanks for letting me stay this time.")
     sys.exit()
 
+
+def savePreferences():
+    """Save the preferences.
+
+    The name of the preferences file is determined at startup from
+    the configuration files, and saved in ``pyformex.preffile``.
+    If a local preferences file was read, it will be saved there.
+    Otherwise, it will be saved as the user preferences, possibly
+    creating that file.
+    If ``pyformex.preffile`` is None, preferences are not saved.
+    """
+    if pyformex.preffile is None:
+        return
+    
+    del pyformex.cfg['__ref__']
+
+    # Dangerous to set permanently!
+    del pyformex.cfg['input/timeout']
+    
+    debug("!!!Saving config:\n%s" % pyformex.cfg)
+
+    try:
+        fil = file(pyformex.preffile,'w')
+        fil.write("%s" % pyformex.cfg)
+        fil.close()
+        res = "Saved"
+    except:
+        res = "Could not save"
+    debug("%s preferences to file %s" % (res,pyformex.preffile))
 
 ###########################  app  ################################
 
@@ -180,23 +209,23 @@ def main(argv=[]):
 
     # process options
     if pyformex.options.nodefaultconfig and not pyformex.options.config:
-        print "\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n"
+        print("\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n")
         sys.exit()
 
 
     if pyformex.options.whereami:
-        print "Script started from %s" % pyformex.scriptdir
-        print "I found pyFormex in %s " %  pyformexdir
-        print "Current Python sys.path: %s" % sys.path
+        print("Script started from %s" % pyformex.scriptdir)
+        print("I found pyFormex in %s " %  pyformexdir)
+        print("Current Python sys.path: %s" % sys.path)
         sys.exit()
         
     if pyformex.options.remove:
         remove_pyFormex(pyformexdir,pyformex.scriptdir)
         
     if pyformex.options.detect:
-        print "Detecting all installed helper software"
+        print("Detecting all installed helper software")
         utils.checkExternal()
-        print utils.reportDetected()
+        print(utils.reportDetected())
         sys.exit()
         
     pyformex.debug("Options: %s" % pyformex.options)
@@ -215,8 +244,8 @@ def main(argv=[]):
     olduserprefs = os.path.join(pyformex.cfg.homedir,'.pyformexrc')
     if not os.path.exists(pyformex.cfg.userprefs) and os.path.exists(olduserprefs):
         import shutil
-        print "Moving user preferences to new location"
-        print "%s --> %s" % (olduserprefs,pyformex.cfg.userprefs)
+        print("Moving user preferences to new location")
+        print("%s --> %s" % (olduserprefs,pyformex.cfg.userprefs))
         shutil.move(olduserprefs,pyformex.cfg.userprefs)
     
     # Set the config files
@@ -270,10 +299,10 @@ def main(argv=[]):
 
     pyformex.debug(utils.reportDetected())
 
-    #print "pyformex",utils.subDict(pyformex.cfg,'canvas/')
-    #print "DEFAULT",self.default
-    #print pyformex.cfg.keys()
-    #print pyformex.refcfg.keys()
+    #print("pyformex",utils.subDict(pyformex.cfg,'canvas/'))
+    #print("DEFAULT",self.default)
+    #print(pyformex.cfg.keys())
+    #print(pyformex.refcfg.keys())
     
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
@@ -290,7 +319,7 @@ def main(argv=[]):
     utils.setSaneLocale()
 
     # Initialize the libraries
-    #print "NOW LOAIDNG LIBS"
+    #print("NOW LOAIDNG LIBS")
     #import lib
     #lib.init_libs(pyformex.options.uselib,pyformex.options.gui)
 
@@ -323,12 +352,12 @@ def main(argv=[]):
         res = gui.runGUI()
 
     elif pyformex.options.interactive:
-        print "Enter your script and end with CTRL-D"
+        print("Enter your script and end with CTRL-D")
         from script import playScript
         playScript(sys.stdin)
         
     #Save the preferences that have changed
-    pyformex.savePreferences()
+    savePreferences()
 
     # Exit
     return res

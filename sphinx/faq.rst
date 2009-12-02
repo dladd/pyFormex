@@ -145,6 +145,14 @@ TRICKS
    before giving the input focus to the user.
 
 
+#. **Activate pyFormex debug messages from your script**
+
+   ::
+
+      import pyformex
+      pyformex.options.debug = True
+
+
 #. **Get a list of all available image formats**
 
    ::

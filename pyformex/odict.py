@@ -94,7 +94,7 @@ class ODict(dict):
                     self._order.remove(k)
             self._order += data._order
         else:
-            #print data
+            #print(data)
             self._order.extend(data.keys())
 
 
@@ -168,7 +168,7 @@ class KeyedList(ODict):
         if min(L) < 2:
             raise ValueEror,"All items in the data should have length >= 2"
         ODict.__init__(self,[[i[0],i[1:]] for i in alist])
-        print self
+        print(self)
     
 
     def items(self):
@@ -180,48 +180,48 @@ class KeyedList(ODict):
 if __name__ == "__main__":
 
     d = ODict({'a':1,'b':2,'c':3})
-    print d
+    print(d)
     d.sort(['a','b','c'])
-    print d
+    print(d)
     d['d'] = 4
     d['e'] = 5
     d['f'] = 6
-    print d
+    print(d)
     del d['c']
-    print d
+    print(d)
     D = ODict(d)
-    print D
+    print(D)
     D['d'] = 26
-    print D
-    print D['b']
+    print(D)
+    print(D['b'])
     D = ODict(zip(range(5),range(6,10)))
-    print D
-    print D.keys()
-    print D.values()
-    print D.items()
+    print(D)
+    print(D.keys())
+    print(D.values())
+    print(D.items())
     del D[1]
     del D[2]
     D[4] = 4
     D[3] = 3
     D[2] = 2
     D[1] = 1
-    print D
-    print D.keys()
-    print D.values()
-    print D.items()
+    print(D)
+    print(D.keys())
+    print(D.values())
+    print(D.items())
     k = D.keys()
     k.sort()
     D.sort(k)
-    print D
-    print D.keys()
-    print D.values()
-    print D.items()
+    print(D)
+    print(D.keys())
+    print(D.values())
+    print(D.items())
 
     D[1] += 7
     D[3] += 8
 
-    print D.items()
+    print(D.items())
 
-    print "DONE"
+    print("DONE")
     
 # End

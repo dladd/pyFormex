@@ -50,7 +50,7 @@ class Timer(object):
         """Return the timer readings in seconds.
 
         The default return value is a rounded integer number of seconds.
-        With ``rounded == False``, a floating point value with grnularity of
+        With ``rounded == False``, a floating point value with granularity of
         1 microsecond is returned.
         """
         e = self.read()
@@ -65,9 +65,10 @@ if __name__ == "__main__":
     import time
     
     t = Timer()
-    time.sleep(5)
+    time.sleep(14.2)
     r = t.read()
-    print r.days,r.seconds,r.microseconds
-    print t.seconds()
+    print(r.days,r.seconds,r.microseconds)
+    print(t.seconds())
+    print(t.seconds(False))
 
 # End

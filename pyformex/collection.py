@@ -152,20 +152,20 @@ class Collection(object):
 ################# Testing ###############
 
 if __name__ == "__main__":
-    print "Testing the Collection object"
+    print("Testing the Collection object")
     a = Collection()
     a.add(range(7),3)
     a.add(range(4))
     a.remove([2,4],3)
-    print a
+    print(a)
     a.add([[2,0],[2,3],[-1,7],[3,88]])
-    print a
+    print(a)
     a[2] = [1,2,3]
-    print a
+    print(a)
     a[2] = []
-    print a
+    print(a)
     a.set([[2,0],[2,3],[-1,7],[3,88]])
-    print a
+    print(a)
 
                     
 # End

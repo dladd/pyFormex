@@ -111,8 +111,8 @@ class Project(dict):
                 self.gzip = 0
             else:
                 # Incompatible format
-                print "HEADER IS %s" % s
-                print "EXPECTED %s" % self.signature
+                print("HEADER IS %s" % s)
+                print("EXPECTED %s" % self.signature)
                 raise ValueError,"File %s does not have a matching signature\nIf it is an old project file, try opening it with the 'legacy' option checked." % self.filename
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'r',self.gzip,f)
@@ -134,24 +134,24 @@ class Project(dict):
 if __name__ == '__main__':
 
     d = dict(a=1,b=2,c=3,d=[1,2,3],e={'f':4,'g':5})
-    print 'DATA',d
+    print('DATA',d)
     P = Project('test.pyf',create=True,signature='Test project')
     P.update(d)
-    print 'SAVE',P
+    print('SAVE',P)
     P.save()
     P.clear()
-    print 'CLEAR',P
+    print('CLEAR',P)
     P.load()
-    print 'LOAD',P
+    print('LOAD',P)
     
     P = Project('testc.pyf',create=True,signature='Test project',legacy=True)
     P.update(d)
-    print 'SAVE',P
+    print('SAVE',P)
     P.save()
     P.clear()
-    print 'CLEAR',P
+    print('CLEAR',P)
     P.load()
-    print 'LOAD',P
+    print('LOAD',P)
 
     #
 

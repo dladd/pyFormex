@@ -22,8 +22,10 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""pyformex.gui module initialisation.
+"""pyFormex core module initialisation.
 
+This module initializes the pyFormex global variables and
+defines a few essential functions.
 """
 
 __version__ = "0.8.1-a9"
@@ -46,7 +48,7 @@ StartTime = datetime.datetime.now()
 # initialize some global variables used for communication between modules
 
 options = None     # the options found on the command line
-print_help = None  # the function to print the pyformex help text (pyformex -h)
+print_help = None  # the function to print(the pyformex help text (pyformex -h))
 
 cfg = None         # the current configuration
 refcfg = None      # the reference configuration 
@@ -59,7 +61,7 @@ scriptName = None
 
 # define last rescue versions of message, warning and debug
 def message(s):
-    print s
+    print(s)
 
 warning = message
 
@@ -70,40 +72,12 @@ def debug(s,lead="DEBUG"):
             raise
         pass
     except:
-        print "%s: %s" % (lead,str(s))
+        print("%s: %s" % (lead,str(s)))
 
 
 def debugt(s):
     """Print a debug message with timer"""
     debug(s,time.time())
-
-def savePreferences():
-    """Save the preferences.
-
-    The name of the preferences file was set in GD.preffile.
-    If a local preferences file was read, it will be saved there.
-    Otherwise, it will be saved as the user preferences, possibly
-    creating that file.
-    If GD.preffile is None, preferences are not saved.
-    """
-    if preffile is None:
-        return
-    
-    del cfg['__ref__']
-
-    # Dangerous to set permanently!
-    del cfg['input/timeout']
-    
-    debug("!!!Saving config:\n%s" % cfg)
-
-    try:
-        fil = file(preffile,'w')
-        fil.write("%s" % cfg)
-        fil.close()
-        res = "Saved"
-    except:
-        res = "Could not save"
-    debug("%s preferences to file %s" % (res,preffile))
 
 
 ### End

@@ -351,14 +351,18 @@ class Coords(ndarray):
         return T
 
 
+    ## THIS IS A CANDIDATE FOR THE LIBRARY
+    ## (possibly in a more general arrayprint form)
+    ## (could be common with calpy)
+    
     def fprint(self,fmt="%10.3e %10.3e %10.3e"):
-        """Formatted printing of a :class:`Coords`.
+        """Formatted printing of a :class:`Coords` object.
 
         The supplied format should contain 3 formatting sequences for the
         three coordinates of a point.
         """
         for p in self.points():
-            print fmt % tuple(p)
+            print(fmt % tuple(p))
 
 
 
@@ -756,7 +760,7 @@ class Coords(ndarray):
         """
         ix,iz = dir
         bb = self.bbox()
-        #print "BBOX before:%s" % bb
+        #print("BBOX before:%s" % bb)
         if end == 0:
             xmin = bb[0][ix]
             endx = self.test(dir=ix,max=xmin+xf)
@@ -765,14 +769,14 @@ class Coords(ndarray):
             xmax = bb[1][ix]
             endx = self.test(dir=ix,min=xmax-xf)
             func = lambda x: (1.-(xmax-x)/xf) ** exp
-        #print x.shape
-        #print endx.shape
-        #print x[endx,ix].shape
-        #print "max func val: %s " % func(x[endx,ix]).max()
+        #print(x.shape)
+        #print(endx.shape)
+        #print(x[endx,ix].shape)
+        #print("max func val: %s " % func(x[endx,ix]).max())
         x = self.copy()
         x[endx,iz] += f * func(x[endx,ix])
         return x
-        #print "BBOX after:%s" % x.bbox()
+        #print("BBOX after:%s" % x.bbox())
 
 
     # NEW implementation flattens coordinate sets to ease use of
@@ -794,9 +798,9 @@ class Coords(ndarray):
         x,y,z = func(self[...,0].flat,self[...,1].flat,self[...,2].flat)
         shape = list(self.shape)
         shape[2] = 1
-        #print shape,reshape(x,shape)
+        #print(shape,reshape(x,shape))
         f = concatenate([reshape(x,shape),reshape(y,shape),reshape(z,shape)],2)
-        #print f.shape
+        #print(f.shape)
         return f
 
 
@@ -1188,7 +1192,7 @@ if __name__ == "__main__":
                 sep = '\n'
             else:
                 sep = ' '
-            print "%s =%s%s" % (s,sep,v)
+            print("%s =%s%s" % (s,sep,v))
             return v
 
         prt("###################################\nTests for Coords X",X)
@@ -1223,26 +1227,26 @@ if __name__ == "__main__":
         
         Y=prt("X_ref",X.reflect(1,2))
 
-        print X.bbox()
-        print Y.bbox()
-        print bbox([X,Y])
+        print(X.bbox())
+        print(Y.bbox())
+        print(bbox([X,Y]))
         return
         X3 = X.copy().reflect(1,1.5).translate(1,2)
-        print "X =",X
-        print "X3 =",X3
+        print("X =",X)
+        print("X3 =",X3)
         G = Coords.concatenate([X1,X3,X2,X3])
-        print "X1+X3+X2+X3 =",G
-        print "unique:",G.unique()
+        print("X1+X3+X2+X3 =",G)
+        print("unique:",G.unique())
 
         Y = Coords([[[1,0,0],[0,1,0],[0,0,1]],[[2,0,0],[0,2,0],[0,0,2]]])
-        print Y
+        print(Y)
         Y.translate([0.,100.,0.])
-        print Y
+        print(Y)
 
         Y = Coords([1.0,0.0,0.0])
-        print Y
+        print(Y)
         Y.translate([0.,100.,0.])
-        print Y
+        print(Y)
         return
     
 

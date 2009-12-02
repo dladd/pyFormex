@@ -67,17 +67,18 @@ def raiseKeyError(key):
 class Dict(dict):
     """A Python dictionary with default values and attribute syntax.
 
-    Dict is functionally nearly equivalent with the builtin Python dict,
-    but provides the following extras:
+    :class:`Dict` is functionally nearly equivalent with the builtin Python
+    :class:`dict`, but provides the following extras:
     
     - Items can be accessed with attribute syntax as well as dictionary
-      syntax. Thus, if C is a Dict, the following are equivalent:
-      ```C['foo']``   or   ``C.foo``
+      syntax. Thus, if ``C`` is a :class:`Dict`, ``C['foo']`` and ``C.foo``
+      are equivalent.
       This works as well for accessing values as for setting values.
-      In the following, the words key or attribute therefore have the
+      In the following, the terms *key* or *attribute* therefore have the
       same meaning.
     - Lookup of a nonexisting key/attribute does not automatically raise an
-      error, but calls a _default_ lookup method which can be set by the user.
+      error, but calls a ``_default_`` lookup method which can be set by
+      the user.
       The default is to raise a KeyError, but an alternative is to return
       None or some other default value.
 
@@ -90,38 +91,28 @@ class Dict(dict):
       
          C['get'] = 'foo'
          C.get = 'foo'
-         print C['get']
+         print(C['get'])
          
-      but not::
+      but this will not::
       
-         print C.get
+         print(C.get)
 
       This is done so because we want all the dict attributes to be available
       with their normal binding. Thus, ::
       
-         print C.get('get')
+         print(C.get('get'))
 
-      will print ``foo``.
+      will print ``foo``
     
 
     To avoid name clashes with user defines, many Python internal names start
     and end with '__'. The user should avoid such names.
     The Python dict has the following attributes not enclosed between '__',
-    so these are the one to watch out for:
+    so these are the ones to watch out for:
     'clear', 'copy', 'fromkeys', 'get', 'has_key', 'items', 'iteritems',
     'iterkeys', 'itervalues', 'keys', 'pop', 'popitem', 'setdefault',
     'update', 'values'.
     """
-
-##     @staticmethod
-##     def returnNone(key):
-##         """Always returns None."""
-##         return None
-
-##     @staticmethod
-##     def raiseKeyError(key):
-##         """Raise a KeyError."""
-##         raise KeyError
 
     def __init__(self,data={},default=None):
         """Create a new Dict instance.
@@ -336,30 +327,6 @@ class CDict(Dict):
             return self._default_(key)
 
 
-
-##     def __getstate__(self):
-##        return self.items()
-
-##     def __setstate__(self,dict):
-##         self.update(dict)
-
-
-##     def __getstate__(self):
-##         d = copy.copy(self.__dict__)
-##         d.update(self)
-##         return d
-
-
-##     def __setstate__(self,d):
-##         self.__dict__['_default_'] = d.pop('_default_')
-##         self.update(d)
-
-
-## if not hasattr(Dict,'__get__'):
-##     print "Apparently, Dict has no '__get__' attribute, so I added one!"
-##     Dict.__get__ = None
-    
-
 if __name__ == '__main__':
 
     import cPickle as pickle
@@ -377,26 +344,26 @@ if __name__ == '__main__':
         global C,Cr,Cs
         Cr = val('C','r')
         Cs = val('C','s')
-        print Cr
-        print Cs
-        print C.get('y','yorro')
-        print C.get('z','zorro')
-        print C.setdefault('w','worro')
-        print "%s = %s" % (C['y']['c'],C.y.c)
+        print(Cr)
+        print(Cs)
+        print(C.get('y','yorro'))
+        print(C.get('z','zorro'))
+        print(C.setdefault('w','worro'))
+        print("%s = %s" % (C['y']['c'],C.y.c))
 
 
     def testpickle():
         global C
-        print "Test (un)pickle"
+        print("Test (un)pickle")
         f = file('test.pickle','w')
-        print type(C)
-        print C._default_
+        print(type(C))
+        print(C._default_)
         pickle.dump(C,f)
         f.close()
         f = file('test.pickle','r')
         C = pickle.load(f)
-        print type(C)
-        print C._default_
+        print(type(C))
+        print(C._default_)
         f.close()
         
 
@@ -417,36 +384,36 @@ if __name__ == '__main__':
     show()
 
     # show some items
-    print val("C['a'],C['b'],C['c'],C['d'],C['x']['c']")
-    print val("C['e']")
-    print val("C.a,C.b,C.c,C.d,C.x.c")
-    print val("C.e")
+    print(val("C['a'],C['b'],C['c'],C['d'],C['x']['c']"))
+    print(val("C['e']"))
+    print(val("C.a,C.b,C.c,C.d,C.x.c"))
+    print(val("C.e"))
     
 
     C = CDict({'a':'aa','d':{'a':'aaa','b':'bbb'}})
-    print C
-    print C['a']
-    print C['d']
-    print C['b']
+    print(C)
+    print(C['a'])
+    print(C['d'])
+    print(C['b'])
 
     D = copy.deepcopy(C)
-    print D
-    print D.__dict__
-    print "%s == %s" % (C['b'],D['b']) 
+    print(D)
+    print(D.__dict__)
+    print("%s == %s" % (C['b'],D['b']) )
 
     C = Dict({'a':'aa','d':{'a':'aaa','b':'bbb'}})
-    print C
-    print C['a']
-    print C['d']
+    print(C)
+    print(C['a'])
+    print(C['d'])
     try:
-        print C['b']
-        print "This should provoke a KeyError, so you should not see this text"
+        print(C['b'])
+        print("This should provoke a KeyError, so you should not see this text")
     except:
-        print "Correctly received the intended KeyError"
+        print("Correctly received the intended KeyError")
 
     D = copy.deepcopy(C)
-    print D
-    print D.__dict__
+    print(D)
+    print(D.__dict__)
 
 # End
 

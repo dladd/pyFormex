@@ -489,9 +489,9 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
     if newprops:
        A.setProp(newprops[0]) 
        B.setProp(newprops[1])
-    ## print "Elements in F: %s" % F.nelems()
-    ## print "Elements in A: %s" % A.nelems()
-    ## print "Elements in B: %s" % B.nelems()
+    ## print("Elements in F: %s" % F.nelems())
+    ## print("Elements in A: %s" % A.nelems())
+    ## print("Elements in B: %s" % B.nelems())
 
     if cutting.any():
         G = F.clip(cutting)
@@ -508,9 +508,9 @@ def cut2AtPlane(F,p,n,side='',atol=None,newprops=None):
         A += G
         B += H
 
-        ## print "Elements in G: %s" % G.nelems()
-        ## print "Elements in A: %s" % A.nelems()
-        ## print "Elements in B: %s" % B.nelems()
+        ## print("Elements in G: %s" % G.nelems())
+        ## print("Elements in A: %s" % A.nelems())
+        ## print("Elements in B: %s" % B.nelems())
     return _select_side(side,[ A,B ])
 
 
@@ -1159,7 +1159,7 @@ class Formex(object):
         separated by commas and grouped between braces::
         
            >>> F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-           >>> print F
+           >>> print(F)
            {[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}
         """
         s = "{"
@@ -1239,7 +1239,7 @@ class Formex(object):
         get a copy with the sum. 
         >>> F = Formex([[[1.0,1.0,1.0]]])
         >>> G = F.append(F)
-        >>> print F
+        >>> print(F)
         {[1.0,1.0,1.0], [1.0,1.0,1.0]}
         """
         if F.f.size == 0:
@@ -1318,7 +1318,7 @@ class Formex(object):
 
         This is a class method, not an instance method!
         >>> F = Formex([[[1,2,3]]],1)
-        >>> print Formex.concatenate([F,F,F])
+        >>> print(Formex.concatenate([F,F,F]))
         {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}
         
         Formex.concatenate([F,G,H]) is functionally equivalent with F+G+H.
@@ -2090,136 +2090,6 @@ class Formex(object):
     
     nnodel = nplex
     nnodes = npoints
-    
-    # Formian compatibility functions
-    # These will be moved to a separate file in future.
-    #
-    # About Formian newspeak:
-    # The author of formex/formian had an incredible preference for newspeak:
-    # for every concept or function, a new name was invented. While this may
-    # give formian the aspect of a sophisticated scientific background,
-    # it works rather distracting and ennoying for people that are already
-    # familiar with the basic ideas of 3D geometry, and are used to using the
-    # standardized terms.
-
-    order = nelems
-    plexitude = nplex
-    grade = ndim
-
-    cantle = element
-    signet = point
-    uniple = coord
-    cop = remove
-    
-    cantle2str = element2str
-    signet2str = point2str
-    
-    def give(self):
-        print self.toFormian()
-
-    def tran(self,dir,dist):
-        return self.translate(dir-1,dist)
-    
-    def ref(self,dir,dist):
-        return self.reflect(dir-1,dist)
-
-    def rindle(self,n,dir,step):
-        return self.replic(n,step,dir)
-    def rin(self,dir,n,dist):
-        return self.rindle(n,dir-1,dist)
-
-    
-
-    def lam(self,dir,dist):
-        return self+self.reflect(dir-1,dist)
-
-    def ros(self,i,j,x,y,n,angle):
-        if (i,j) == (1,2):
-            return self.rosette(n,angle,2,[x,y,0])
-        elif (i,j) == (2,3):
-            return self.rosette(n,angle,0,[0,x,y])
-        elif (i,j) == (1,3):
-            return self.rosette(n,-angle,1,[x,0,y])
-
-    def tranic(self,*args,**kargs):
-        n = len(args)/2
-        d = [ i-1 for i in args[:n] ]
-        return self.translatem(*zip(d,args[n:]))
-    def tranid(self,t1,t2):
-        return self.translate([t1,t2,0])
-    def tranis(self,t1,t2):
-        return self.translate([t1,0,t2])
-    def tranit(self,t1,t2):
-        return self.translate([0,t1,t2])
-    def tranix(self,t1,t2,t3):
-        return self.translate([t1,t2,t3])
-
-    def tranad(self,a1,a2,b1,b2,t=None):
-        return self.translate([b1-a1,b2-a2,0.],t)
-    def tranas(self,a1,a2,b1,b2,t=None):
-        return self.translate([b1-a1,0.,b2-a2],t)
-    def tranat(self,a1,a2,b1,b2,t=None):
-        return self.translate([0.,b1-a1,b2-a2],t)
-    def tranax(self,a1,a2,a3,b1,b2,b3,t=None):
-        return self.translate([b1-a1,b2-a2,b3-a3],t)
-   
-    def rinic(self,*args,**kargs):
-        n = len(args)/3
-        F = self
-        for d,m,t in zip(args[:n],args[n:2*n],args[2*n:]):
-            F = F.rin(d,m,t)
-        return F
-    def rinid(self,n1,n2,t1,t2):
-        return self.rin(1,n1,t1).rin(2,n2,t2)
-    def rinis(self,n1,n2,t1,t2):
-        return self.rin(1,n1,t1).rin(3,n2,t2)
-    def rinit(self,n1,n2,t1,t2):
-        return self.rin(2,n1,t1).rin(3,n2,t2)
-
-    def lamic(self,*args,**kargs):
-        n = len(args)/2
-        F = self
-        for d,p in zip(args[:n],args[n:]):
-            F = F.lam(d,p)
-        return F
-    def lamid(self,t1,t2):
-        return self.lam(1,t1).lam(2,t2)
-    def lamis(self,t1,t2):
-        return self.lam(1,t1).lam(3,t2)
-    def lamit(self,t1,t2):
-        return self.lam(2,t1).lam(2,t2)
-    
-    def rosad(self,a,b,n=4,angle=90):
-        return self.rosette(n,angle,2,[a,b,0])
-    def rosas(self,a,b,n=4,angle=90):
-        return self.rosette(n,angle,1,[a,0,b])
-    def rosat(self,a,b,n=4,angle=90):
-        return self.rosette(n,angle,0,[0,a,b])
-
-    def genid(self,n1,n2,t1,t2,bias=0,taper=0):
-        return self.replic2(n1,n2,t1,t2,0,1,bias,taper)
-    def genis(self,n1,n2,t1,t2,bias=0,taper=0):
-        return self.replic2(n1,n2,t1,t2,0,2,bias,taper)
-    def genit(self,n1,n2,t1,t2,bias=0,taper=0):
-        return self.replic2(n1,n2,t1,t2,1,2,bias,taper)
-
-    def bb(self,b1,b2):
-        return self.scale([b1,b2,1.])
-
-    def bc(self,b1,b2,b3):
-        return self.cylindrical(scale=[b1,b2,b3])
-
-    def bp(self,b1,b2):
-        return self.cylindrical(scale=[b1,b2,1.])
-
-    def bs(self,b1,b2,b3):
-        return self.spherical(scale=[b1,b2,b3],colat=True)
-
-    pex = unique
-    def tic(f):
-        return int(f)
-    def ric(f):
-        return int(round(f))
 
     # Convenience short notations and aliases
     rep = replic
@@ -2346,51 +2216,51 @@ if __name__ == "__main__":
         """
         Formex.setPrintFunction(Formex.asFormexWithProp)
         A = Formex()
-        print "An empty formex",A
+        print("An empty formex",A)
         F = Formex([[[1,0],[0,1]],[[0,1],[1,2]]])
-        print "F =",F
+        print("F =",F)
         F1 = F.translate(0,6)
         F1.setProp(5)
-        print "F1 =",F1
+        print("F1 =",F1)
         F2 = F.ref(1,2)
-        print "F2 =",F2
+        print("F2 =",F2)
         F3 = F.ref(1,1.5).translate(1,2)
         F3.setProp([1,2])
         G = F1+F3+F2+F3
-        print "F1+F3+F2+F3 =",G
+        print("F1+F3+F2+F3 =",G)
         H = Formex.concatenate([F1,F3,F2,F3])
-        print "F1+F3+F2+F3 =",H
-        print "elbbox:",G.elbbox()
-        print "met prop 1:",G.withProp(1)
-        print "unique:",G.unique()
-        print "vertices:",G.vertices()
-        print "points:",G.points()
-        print "unique points:",G.points().unique()
-        print "diagonal size:",G.dsize()
+        print("F1+F3+F2+F3 =",H)
+        print("elbbox:",G.elbbox())
+        print("met prop 1:",G.withProp(1))
+        print("unique:",G.unique())
+        print("vertices:",G.vertices())
+        print("points:",G.points())
+        print("unique points:",G.points().unique())
+        print("diagonal size:",G.dsize())
         F = Formex([[[0,0]],[[1,0]],[[1,1]],[[0,1]]])
         G = connect([F,F],bias=[0,1])
-        print G
+        print(G)
         G = connect([F,F],bias=[0,1],loop=True)
-        print G
-        print G[1]
-        print G.feModel()
-        print F
-        print F.bbox()
-        print F.center(),F.centroid()
-        print F.bsphere()
+        print(G)
+        print(G[1])
+        print(G.feModel())
+        print(F)
+        print(F.bbox())
+        print(F.center(),F.centroid())
+        print(F.bsphere())
         F = Formex([[[0,0],[1,0],[0,1]],[[1,0],[1,1],[0,1]]])
-        print F
-        print F.reverse()
+        print(F)
+        print(F.reverse())
         Formex.setPrintFunction(Formex.asArray)
-        print F
+        print(F)
         F.fprint()
         F.fprint("%10.3f %10.4f %10.5f")
         F.fprint(fmt="%10.4f %10.5f %10.6f")
-        print type(F)
+        print(type(F))
 
     f = 0
     (f,t) = _test()
     if f == 0:
         test()
 
-### End
+# End

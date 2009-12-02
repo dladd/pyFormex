@@ -49,23 +49,28 @@ What
 """
 
 import copy
+from mydict import Dict
 
-def formatDict(dic):
+
+def formatDict(d):
     """Format a dict in Python source representation.
 
-    Each (key,value) pair is formatted on a line : key = value.
+    Each (key,value) pair is formatted on a line of the form::
+    
+       key = value
+       
+    The resulting text is a legal Python script to define the items in the
+    dict.
     """
     s = ""
-    if isinstance(dic,dict):
-        for k,v in dic.iteritems():
+    if isinstance(d,dict):
+        for k,v in d.iteritems():
             if type(v) == str:
                 s += '%s = "%s"\n' % (k,v)
             else:
                 s += '%s = %s\n' % (k,v)
     return s
 
-
-from mydict import Dict
 
 class Config(Dict):
     """A configuration class allowing Python expressions in the input.
@@ -236,11 +241,11 @@ class Config(Dict):
                     self.read_error(filename,lineno,line)
                 section = s[1:i]
                 if debug:
-                    print "Starting new section '%s'" % section
+                    print("Starting new section '%s'" % section)
                 continue
             else:
                 if debug:
-                    print "READ: "+line
+                    print("READ: "+line)
             i = s.find('=')
             if i >= 0:
                 key = s[:i].strip()
@@ -307,9 +312,9 @@ if __name__ == '__main__':
     def show(s):
         try:
             v = eval(s)
-            print "%s = %s" % (s,v)
+            print("%s = %s" % (s,v))
         except:
-            print "%s ! ERROR" % s
+            print("%s ! ERROR" % s)
         
     C = Config("""# A simple config example
 aa = 'bb'
@@ -344,7 +349,7 @@ rng = range(_n)
     show("C")
     show("D['cc/aa']")
     show("D['cc/rng']")
-    print "BUT!!!!"
+    print("BUT!!!!")
     show("D['cc']")
 
     # THis should give an error

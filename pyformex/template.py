@@ -13,6 +13,6 @@ composed of a short first line, then a blank line and
 one or more lines explaining the intention of the script.
 """
 
-print "This is the pyFormex template script"
+print("This is the pyFormex template script")
 
 # End

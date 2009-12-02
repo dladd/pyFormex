@@ -123,17 +123,17 @@ if __name__ == "__main__":
 
     a = [1,2,3,5,6,7]
     b = [2,3,4,7,8,9]
-    print a
-    print b
-    print union(a,b)
-    print difference(a,b)
-    print difference(b,a)
-    print symdifference(a,b)
-    print intersection(a,b)
-    print select(a,[1,3])
-    print concatenate([a,b,a])
-    print flatten([1,2,a,[a]])
-    print flatten([1,2,a,[a]],recurse=True)
+    print(a)
+    print(b)
+    print(union(a,b))
+    print(difference(a,b))
+    print(difference(b,a))
+    print(symdifference(a,b))
+    print(intersection(a,b))
+    print(select(a,[1,3]))
+    print(concatenate([a,b,a]))
+    print(flatten([1,2,a,[a]]))
+    print(flatten([1,2,a,[a]],recurse=True))
       
     
 # End

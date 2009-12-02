@@ -413,41 +413,41 @@ if __name__ == '__main__':
     db = FlatDB(['aa'])
     db.append({'aa':'bb'})
     db.append({'aa':'cc'})
-    print db
-    print db['bb']
+    print(db)
+    print(db['bb'])
     db[1] = { 'aa':'dd'}
-    print db
-    print len(db)
+    print(db)
+    print(len(db))
     
     mat = FlatDB(['name'],beginrec='material',endrec='endmaterial')
     mat.readFile('data/materials.db')
     mat.append({'name':'concrete', 'junk':''})
-    print mat
+    print(mat)
 
     mat.writeFile('materials.copy')
 
     for i in mat.match('name','steel'):
-        print mat[i]
+        print(mat[i])
     mat = FlatDB(req_keys=['name'],beginrec='material',endrec='endmaterial')
     mat.readFile('data/materials.db')
     mat.append({'name':'concrete'})
     try:
         mat.append({'junk':'concrete'})
     except:
-        print "Could not append record without 'name' field"
-    print mat
+        print("Could not append record without 'name' field")
+    print(mat)
     mat.key_error_handler = ignore_error
     mat.append({'name':'concrete'})
-    print mat
+    print(mat)
 
     # Variant without endmarker
     mat = FlatDB(req_keys=['name'],beginrec='material',endrec='')
     mat.readFile('data/materials.db',ignore=True)
-    print mat
+    print(mat)
 
     # Variant without begin/endrec markers: records separated by blanks
     mat = FlatDB(req_keys=['name'],beginrec='',endrec='')
     mat.readFile('data/materials.db')
-    print mat
+    print(mat)
 
 # End

@@ -31,10 +31,10 @@ from distutils.version import LooseVersion as SaneVersion
 
 
 def procInfo(title):
-    print title
-    print 'module name:', __name__
-    print 'parent process:', os.getppid()
-    print 'process id:', os.getpid()
+    print(title)
+    print('module name: %s' %  __name__)
+    print('parent process: %s' % os.getppid())
+    print('process id: %s' % os.getpid())
 
 
 # versions of detected modules/external commands
@@ -328,7 +328,7 @@ def dos2unix(infile,outfile=None):
         cmd = "sed -i 's|\\r||' %s" % infile
     else:
         cmd = "sed -i 's|\\r||' %s > %s" % (infile,outfile)
-    print cmd
+    print(cmd)
     return runCommand(cmd)
 
 def unix2dos(infile,outfile=None):
@@ -632,23 +632,23 @@ def stuur(x,xval,yval,exp=2.5):
 
 def interrogate(item):
     """Print useful information about item."""
+    import odict
+    info = odict.ODict()
     if hasattr(item, '__name__'):
-        print "NAME:    ", item.__name__
+        info["NAME:    "] =  item.__name__
     if hasattr(item, '__class__'):
-        print "CLASS:   ", item.__class__.__name__
-    print "ID:      ", id(item)
-    print "TYPE:    ", type(item)
-    print "VALUE:   ", repr(item)
-    print "CALLABLE:",
-    if callable(item):
-        print "Yes"
-    else:
-        print "No"
+        info["CLASS:   "] = item.__class__.__name__
+    info["ID:      "] = id(item)
+    info["TYPE:    "] = type(item)
+    info["VALUE:   "] = repr(item)
+    info["CALLABLE:"] = callable(item)
     if hasattr(item, '__doc__'):
         doc = getattr(item, '__doc__')
         doc = doc.strip()   # Remove leading/trailing whitespace.
         firstline = doc.split('\n')[0]
-        print "DOC:     ", firstline
+        info["DOC:     "] = firstline
+    for i in info.items():
+        print("%s %s"% i) 
 
 
 def deprecation(message):
@@ -665,7 +665,7 @@ def deprecated(replacement):
     def decorator(func):
         def wrapper(*_args,**_kargs):
             """This function is deprecated."""
-            print "! Function '%s' is deprecated: use '%s.%s' instead" % (func.func_name,replacement.__module__,replacement.func_name)
+            print("! Function '%s' is deprecated: use '%s.%s' instead" % (func.func_name,replacement.__module__,replacement.func_name))
             return replacement(*_args,**_kargs)
         return wrapper
     decorator.__doc__ = replacement.__doc__
@@ -675,7 +675,7 @@ def deprecated(replacement):
 def functionWasRenamed(replacement,text=None):
     def decorator(func):
         def wrapper(*_args,**_kargs):
-            print "! Function '%s' is deprecated: use '%s' instead" % (func.func_name,replacement.func_name)
+            print("! Function '%s' is deprecated: use '%s' instead" % (func.func_name,replacement.func_name))
             return replacement(*_args,**_kargs)
         return wrapper
     decorator.__doc__ = replacement.__doc__
@@ -685,7 +685,7 @@ def functionWasRenamed(replacement,text=None):
 def functionBecameMethod(replacement):
     def decorator(func):
         def wrapper(object,*args,**kargs):
-            print "! Function %s is deprecated: use method %s instead" % (func.func_name,replacement)
+            print("! Function %s is deprecated: use method %s instead" % (func.func_name,replacement))
             repfunc = getattr(object,replacement)
             return repfunc(*args,**kargs)
         return wrapper

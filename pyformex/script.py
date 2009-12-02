@@ -181,21 +181,21 @@ def ack(question):
 
 def error(message):
     """Show an error message and wait for user acknowlegement."""
-    print "pyFormex Error: "+message
+    print("pyFormex Error: "+message)
     if not ack("Do you want to continue?"):
         exit()
     
 def warning(message):
-    print "pyFormex Warning: "+message
+    print("pyFormex Warning: "+message)
     if not ack("Do you want to continue?"):
         exit()
 
 def showInfo(message):
-    print "pyFormex Info: "+message
+    print("pyFormex Info: "+message)
 
 ##def log(s):
 ##    """Display a message in the terminal."""
-##    print s
+##    print(s)
 
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
@@ -288,18 +288,18 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             else:
                 if GD.options.executor:
                     import sys
-                    print name,filename
+                    print(name,filename)
                     n = os.path.split(name)
                     m = os.path.basename(name)
                     m = os.path.basename(name)
-                    print n
+                    print(n)
                     o = os.path.split(n[0])
-                    print o
+                    print(o)
                     sys.path.insert(0,n[0])
-                    print sys.path
-                    print m
+                    print(sys.path)
+                    print(m)
                     s = m.replace('.py','')
-                    print s
+                    print(s)
                     __import__(s,g)
                 elif pye:
                     t = scr.read()
@@ -469,25 +469,25 @@ maxprop  = %s
 
 def printall():
     """Print all Formices in globals()"""
-    print "Formices currently in globals():\n%s" % listAll(clas=formex.Formex)
+    print("Formices currently in globals():\n%s" % listAll(clas=formex.Formex))
 
 
 def printglobals():
-    print globals()
+    print(globals())
 
 def printglobalnames():
     a = globals().keys()
     a.sort()
-    print a
+    print(a)
 
     
 def printconfig():
-    print "Reference Configuration: " + str(GD.refcfg)
-    print "User Configuration: " + str(GD.cfg)
+    print("Reference Configuration: " + str(GD.refcfg))
+    print("User Configuration: " + str(GD.cfg))
         
 
 def printdetected():
-    print utils.reportDetected()
+    print(utils.reportDetected())
 
 ### Utilities
 

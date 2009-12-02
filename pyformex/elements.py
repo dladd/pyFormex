@@ -236,4 +236,4 @@ class Icosa(Element):
 
 if __name__ == "__main__":
 
-    print Icosa.vertices
+    print(Icosa.vertices)
