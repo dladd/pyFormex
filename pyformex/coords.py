@@ -525,7 +525,7 @@ class Coords(ndarray):
 #        Cylindrical, Spherical, Isoparametric
 #
 
-    def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.]):
+    def cylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg):
         """Converts from cylindrical to cartesian after scaling.
 
         dir specifies which coordinates are interpreted as resp.
@@ -537,7 +537,7 @@ class Coords(ndarray):
         # We put in a optional scaling, because doing this together with the
         # transforming is cheaper than first scaling and then transforming.
         f = zeros_like(self)
-        theta = (scale[1]*Deg) * self[...,dir[1]]
+        theta = (scale[1]*angle_spec) * self[...,dir[1]]
         r = scale[0] * self[...,dir[0]]
         f[...,0] = r*cos(theta)
         f[...,1] = r*sin(theta)
@@ -545,13 +545,13 @@ class Coords(ndarray):
         return f
 
 
-    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],rfunc=None,zfunc=None,angle=Deg):
+    def hyperCylindrical(self,dir=[0,1,2],scale=[1.,1.,1.],rfunc=None,zfunc=None,angle_spec=Deg):
         if rfunc is None:
             rfunc = lambda x:1
         if zfunc is None:
             zfunc = lambda x:1
         f = zeros_like(self)
-        theta = (scale[1]*angle) * self[...,dir[1]]
+        theta = (scale[1]*angle_spec) * self[...,dir[1]]
         r = scale[0] * rfunc(theta) * self[...,dir[0]]
         f[...,0] = r * cos(theta)
         f[...,1] = r * sin(theta)
@@ -559,7 +559,7 @@ class Coords(ndarray):
         return f
     
 
-    def toCylindrical(self,dir=[0,1,2]):
+    def toCylindrical(self,dir=[0,1,2],angle_spec=Deg):
         """Converts from cartesian to cylindrical coordinates.
 
         dir specifies which coordinates axes are parallel to respectively the
@@ -570,12 +570,12 @@ class Coords(ndarray):
         f = zeros_like(self)
         x,y,z = [ self[...,i] for i in dir ]
         f[...,0] = sqrt(x*x+y*y)
-        f[...,1] = arctan2(y,x) / Deg
+        f[...,1] = arctan2(y,x) / angle_spec
         f[...,2] = z
         return f
 
     
-    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],colat=False):
+    def spherical(self,dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg,colat=False):
         """Converts from spherical to cartesian after scaling.
 
         - `dir` specifies which coordinates are interpreted as resp.
@@ -589,17 +589,17 @@ class Coords(ndarray):
         If colat=True, the third coordinate is the colatitude (90-lat) instead.
         """
         f = self.reshape((-1,3))
-        theta = (scale[0]*Deg) * f[:,dir[0]]
-        phi = (scale[1]*Deg) * f[:,dir[1]]
+        theta = (scale[0]*angle_spec) * f[:,dir[0]]
+        phi = (scale[1]*angle_spec) * f[:,dir[1]]
         r = scale[2] * f[:,dir[2]]
         if colat:
-            phi = 90.0*Deg - phi
+            phi = 90.0*angle_spec - phi
         rc = r*cos(phi)
         f = column_stack([rc*cos(theta),rc*sin(theta),r*sin(phi)])
         return f.reshape(self.shape)
 
 
-    def superSpherical(self,n=1.0,e=1.0,k=0.0, dir=[0,1,2],scale=[1.,1.,1.],colat=False):
+    def superSpherical(self,n=1.0,e=1.0,k=0.0, dir=[0,1,2],scale=[1.,1.,1.],angle_spec=Deg,colat=False):
         """Performs a superspherical transformation.
 
         superSpherical is much like spherical, but adds some extra
@@ -633,11 +633,11 @@ class Coords(ndarray):
             return sign(c)*abs(c)**m
 
         f = self.reshape((-1,3))
-        theta = (scale[0]*Deg) * f[:,dir[0]]
-        phi = (scale[1]*Deg) * f[:,dir[1]]
+        theta = (scale[0]*angle_spec) * f[:,dir[0]]
+        phi = (scale[1]*angle_spec) * f[:,dir[1]]
         r = scale[2] * f[:,dir[2]]
         if colat:
-            phi = 90.0*Deg - phi
+            phi = 90.0*angle_spec - phi
         rc = r*c(phi,n)
         if k != 0:   # k should be > -1.0 !!!!
             x = sin(phi)
@@ -646,7 +646,7 @@ class Coords(ndarray):
         return f.reshape(self.shape)
 
 
-    def toSpherical(self,dir=[0,1,2]):
+    def toSpherical(self,dir=[0,1,2],angle_spec=Deg):
         """Converts from cartesian to spherical coordinates.
 
         `dir` specifies which coordinates axes are parallel to respectively
@@ -659,8 +659,8 @@ class Coords(ndarray):
         """
         v = self[...,dir].reshape((-1,3))
         dist = sqrt(sum(v*v,-1))
-        long = arctan2(v[:,0],v[:,2]) / Deg
-        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / Deg)
+        long = arctan2(v[:,0],v[:,2]) / angle_spec
+        lat = where(dist <= 0.0,0.0,arcsin(v[:,1]/dist) / angle_spec)
         f = column_stack([long,lat,dist])
         return f.reshape(self.shape)
 

@@ -315,6 +315,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
             pass
         except ExitAll:
             exitall = True
+        except:
+            raise
             
     finally:
         scriptRunning = False # release the lock in case of an error
@@ -445,12 +447,11 @@ def processArgs(args):
         elif not os.path.exists(fn) or not utils.isPyFormex(fn):
             GD.message("Skipping %s: does not exist or is not a pyFormex script" % fn)
             continue
-        try:
-            playFile(fn,args)
-        except:
+        res = playFile(fn,args)
+        if res and GD.GUI:
             GD.message("Error during execution of script %s" % fn)
         
-    return 0
+    return res
 
 
 ########################## print information ################################
@@ -507,7 +508,7 @@ def chdir(fn):
     """
     if os.path.exists(fn):
         if not os.path.isdir(fn):
-            fn = os.path.dirname(fn)
+            fn = os.path.dirname(os.path.abspath(fn))
         os.chdir(fn)
         GD.cfg['workdir'] = fn
         GD.message("Your current workdir is %s" % os.getcwd())

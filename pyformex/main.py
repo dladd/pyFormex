@@ -307,13 +307,16 @@ def main(argv=[]):
     # remaining args are interpreted as scripts and their parameters
     res = 0
     if args:
-        try:
-            pyformex.debug("Remaining args: %s" % args)
-            from script import processArgs
-            res = processArgs(args)
-        except:
-            pyformex.message("There was an error while executing one of the scripts")
-            res = 1
+        pyformex.debug("Remaining args: %s" % args)
+        from script import processArgs
+        res = processArgs(args)
+        
+        if res:
+            if pyformex.options.gui:
+                pyformex.message("There was an error while executing one of the scripts")
+            else:
+                return res
+                
 
     # after processing all args, go into interactive mode
     if pyformex.options.gui:
