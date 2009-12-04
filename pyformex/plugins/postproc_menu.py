@@ -93,7 +93,7 @@ class DictModel(QtCore.QAbstractTableModel):
         vals = dic.values()
         typs = [ str(type(v)) for v in vals ]
         self.items = zip(keys,typs,vals)
-        #print self.items
+        #print(self.items)
                 
     def rowCount(self,parent): 
         return len(self.items) 
@@ -135,14 +135,14 @@ class Table(QtGui.QDialog):
         table.horizontalHeader().setVisible(True)
         table.verticalHeader().setVisible(False)
         table.resizeColumnsToContents()
-        #print table.size()
+        #print(table.size())
         form.addWidget(table)
 
         but = widgets.dialogButtons(self,actions,default)
         form.addLayout(but)
         self.setLayout(form)
-        #print table.size()
-        #print form.size()
+        #print(table.size())
+        #print(form.size())
         #self.resize(table.size())
         self.table = table
         self.show()
@@ -166,13 +166,13 @@ def showfields():
 
 
 def tblIndex():
-    print tbl.table.currentIndex()
+    print(tbl.table.currentIndex())
     r = tbl.table.currentIndex().row()
     c = tbl.table.currentIndex().column()
-    print "(%s,%s)" % (r,c)
+    print("(%s,%s)" % (r,c))
     m = tbl.table.model()
     p = m.data(m.index(r,c))
-    print p,p.toString(),p.toBool()
+    print(p,p.toString(),p.toBool())
 
 def showattr(name=None,dic=None):
     """Show the table of field acronyms."""
@@ -181,7 +181,7 @@ def showattr(name=None,dic=None):
         dic = globals()
     k = dic.keys()
     sort(k)
-    print k
+    print(k)
     if name is None:
         name = 'dia_full'
     tbl = AttributeTable(name,dic,actions=[('Cancel',),('Ok',),('Print',tblIndex)])
@@ -264,7 +264,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 
         if logma < 0:
             multiplier = 3 * ((2 - logma) / 3 )
-            #print "MULTIPLIER %s" % multiplier
+            #print("MULTIPLIER %s" % multiplier)
             
         CS = ColorScale('RAINBOW',vmin,vmax,vmid,1.,1.)
         cval = array(map(CS.color,val))
@@ -288,16 +288,16 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
     bbox = []
     for dsc in dscale.flat:
 
-        #print dsc
-        #print nodes.shape
-        #print displ.shape
+        #print(dsc)
+        #print(nodes.shape)
+        #print(displ.shape)
         dnodes = nodes + dsc * displ
         deformed = [ Formex(dnodes[el]) for el in elems ]
         bboxes = [ df.bbox() for df in deformed ]
         bbox.append(Formex(bboxes).bbox())
         # We store the changing parts of the display, so that we can
         # easily remove/redisplay them
-        #print val
+        #print(val)
         if val is None:
             F = [ draw(df,color='blue',view='__last__',bbox=None,wait=None) for df in deformed ]
         else:
@@ -371,53 +371,6 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##             sta,out = utils.runCommand(cmd)
 ##             if sta:
 ##                 GD.message(out)
-
-
-##     def importDB(self,fn=None):
-##         if fn is None:
-##             types = utils.fileDescription('postproc')
-##             fn = askFilename(GD.cfg['workdir'],types)
-##         if fn:
-##             chdir(fn)
-##             ###
-##             ### Warning for obsolete feature
-##             ### Will be removed in version 0.8
-##             if fn.endswith('_post.py'):
-##                 ans = ask("The '_post.py' extension for postprocessing databases is obsolete and should be avoided. Use the '.post' extension instead.\n\nDo you want to rename the database now?",['Keep','Rename','Cancel'])
-##                 if ans == 'Cancel':
-##                     return
-##                 elif ans == 'Rename':
-##                     newfn = fn.replace('_post.py','.post')
-##                     while os.path.exists(newfn):
-##                         newfn = newfn.replace('.post','_1.post')
-##                     os.rename(fn,newfn)
-##                     fn = newfn
-
-##             size = os.stat(fn).st_size
-##             if size > 1000000 and ask("""
-##     BEWARE!!!
-
-##     The size of this file is very large: %s bytes
-##     It is unlikely that I will be able to process this file.
-##     I strongly recommend you to cancel the operation now.
-##     """ % size,["Continue","Cancel"]) != "Continue":
-##                 return
-
-##             project = os.path.basename(os.path.splitext(fn)[0])
-##             #### Currenty, the postabq always uses the global 'DB'
-##             ##DB = FeResult()
-##             export({'DB':self.DB})
-##             play(fn)
-##             #### We export it under the project name
-##             export({project:GD.PF['DB']})
-##             #### and delete the 'DB' name
-##             del GD.PF['DB']
-##             ### now select the DB
-##             self.setDB(GD.PF[project],project)
-##             GD.message(self.DB.about['heading'])
-##             self.DB.printSteps()
-##             #self.showModel()
-
 
 ##     def selectStepInc(self):
 ##         res = askItems([('Step',self.DB.step,'select',self.DB.res.keys())])
@@ -511,10 +464,10 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
              
 
 ##     def setStep(self,i):
-##         print  "Current index: %s" % i
+##         print( "Current index: %s" % i)
 ##         step = str(self.step_combo.combo.input.currentText())
 ##         if step != self.DB.step:
-##             print "Current step: %s" % step
+##             print("Current step: %s" % step)
 ##             self.showInc(step)
 ##             inc = self.DB.getIncs(step)[0]
 ##             self.setInc(-1)
@@ -525,7 +478,7 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
 ##         inc = str(self.inc_combo.combo.input.currentText())
 ##         if inc != self.DB.inc:
 ##             self.DB.setStepInc(step,inc)
-##         print "Current step/inc: %s/%s" % (self.DB.step,self.DB.inc)
+##         print("Current step/inc: %s/%s" % (self.DB.step,self.DB.inc))
         
 
 ##     def select(self,sel=None):
@@ -613,7 +566,7 @@ DB = None
 def show():
     """Show the results"""
     data = dialog_getdata()
-    #print data
+    #print(data)
     globals().update(data)
     nodes = DB.nodes
     if elgroup == '--ALL--':
@@ -640,7 +593,7 @@ def show():
     val = None
     if resindex > 0:
         key = res_dict.keys()[resindex]
-        print "RESULT KEY = %s" % key
+        print("RESULT KEY = %s" % key)
         if key == 'Computed':
             if askPoint():
                 val = Coords(nodes).distanceFromPoint(point)
@@ -650,8 +603,8 @@ def show():
                 val = norm2(val)
     if val is not None:
         txt = res_dict.values()[resindex]
-    #print nodes.shape
-    #print displ.shape
+    #print(nodes.shape)
+    #print(displ.shape)
     showResults(nodes,elems,displ,txt,val,showref,dscale,count,sleeptime)
     return val
 
@@ -675,7 +628,7 @@ def dialog_update(data):
     for v in data:
         d = dia_dict[v]
         vals[d[0]] = data[v]
-    print vals
+    print(vals)
     dialog.updateData(vals)
 
 
@@ -697,20 +650,61 @@ def setDB(db):
     GD.PF['__PostProcMenu_result__'] = DB
 
     
-def selectDB():
-    """Select the current result database.
+def selectDB(db=None):
+    """Select the result database to work upon.
 
     If db is an FeResult instance, it is set as the current database.
     If None is given, a dialog is popped up to select one.
-    Returns the global DB variable (set to the selected database or None).
+
+    If a database is succesfully selected, the screen is cleared and the
+    geometry of the model is displayed.
+    
+    Returns the database or None.
     """
-    db = selection.ask1()
-    print "Selected results database: %s" % selection.names
+    if not isinstance(db,FeResult):
+        db = selection.ask1()
+        print("Selected results database: %s" % selection.names[0])
     if db:
         setDB(db)
+        clear()
+        print(DB.about['heading'])
+        print('Stress tensor has %s components' % DB.data_size['S'])
         showModel()
-        print 'Stress tensor has %s components' % DB.data_size['S']
+    return db
+
     
+def importDB(fn=None):
+    """Import a _post.py database and select it as the current."""
+    
+    if fn is None:
+        types = utils.fileDescription('postproc')
+        fn = askFilename(GD.cfg['workdir'],types)
+    if fn:
+        chdir(fn)
+        size = os.stat(fn).st_size
+        if size > 1000000 and ask("""
+BEWARE!!!
+
+The size of this file is very large: %s bytes
+It is unlikely that I will be able to process this file.
+I strongly recommend you to cancel the operation now.
+""" % size,["Continue","Cancel"]) != "Continue":
+            return
+
+        # import the results DB
+        play(fn)
+
+        ### check whether the import succeeded
+        name = FeResult._name_
+        db = GD.PF[name]
+        if not isinstance(db,FeResult):
+            warning("!Something went wrong during the import of the database %s" % fn)
+            return
+        
+        ### ok: select the DB
+        selection.set([name])
+        selectDB(db)
+
     
 def checkDB():
     """Make sure that a database is selected.
@@ -718,7 +712,7 @@ def checkDB():
     If no results database was already selected, asks the user to do so.
     Returns True if a databases is selected.
     """
-    print DB
+    print(DB)
     if not isinstance(DB,FeResult):
         selectDB()
     return isinstance(DB,FeResult)
@@ -730,7 +724,7 @@ def open_results_dialog():
         warning("No results database was selected!")
         return
     data = GD.PF.get('__PostProcMenu_data__',dia_defaults)
-    print "SAVED DATA",data
+    print("SAVED DATA",data)
     for k,v in data.items():
         dia_dict[k][1] = v
     if selection.check(single=True):
@@ -773,7 +767,7 @@ def create_menu():
     """Create the Postproc menu."""
     MenuData = [
 #        ("&Translate Abaqus .fil to FeResult database",P.postABQ),
-#        ("&Open FeResult Database",P.importDB),
+        ("&Open FeResult Database",importDB),
         ("&Select FeResult Data",selectDB),
 #        ("&Forget FeResult Data",P.selection.forget),
         ("---",None),
@@ -804,7 +798,7 @@ def reload_menu():
     global DB
     close_menu()
     DB =  GD.PF.get('__PostProcMenu_result__',None)
-    print "Current database %s" % DB
+    print("Current database %s" % DB)
     show_menu()
 
 
@@ -812,7 +806,7 @@ if __name__ == "draw":
     reload_menu()
     
 elif __name__ == "__main__":
-    print __doc__
+    print(__doc__)
 
 # End
 

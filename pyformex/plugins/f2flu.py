@@ -106,9 +106,9 @@ def read_tetgen(filename):
     elems are in file 'proj.1.ele'.
     """
     nodes = tetgen.readNodes(filename+'.1.node')
-    print "Read %d nodes" % nodes.shape[0]
+    print("Read %d nodes" % nodes.shape[0])
     elems = tetgen.readElems(filename+'.1.ele')
-    print "Read %d tetraeders" % elems.shape[0]
+    print("Read %d tetraeders" % elems.shape[0])
     return nodes,elems
 
 
@@ -126,38 +126,38 @@ def output_fluent(fil,nodes,elems):
     The tetraeder mesh consists of an array of nodal coordinates
     and an array of element connectivity.
     """
-    print "Nodal coordinates"
-    print nodes
-    print "Element connectivity"
-    print elems
+    print("Nodal coordinates")
+    print(nodes)
+    print("Element connectivity")
+    print(elems)
     faces = array(Tet4.faces)   # Turning faces into an array is important !
-    print "Tetraeder faces"
-    print faces
+    print("Tetraeder faces")
+    print(faces)
     elf = elems.take(faces,axis=1)
     # Remark: the shorter syntax elems[faces] takes its elements along the
     #         axis 0. Then we would need to transpose() first (and probably
     #         swap axes again later)
-    print "The faces of the elements:"
-    print elf
+    print("The faces of the elements:")
+    print(elf)
     # We need a copy to sort the nodes (sorting is done in-place)
     elfs = elf.copy()
     elfs.sort(axis=2) 
-    print "The faces with sorted nodes:"
-    print elfs
+    print("The faces with sorted nodes:")
+    print(elfs)
     magic = elems.max()+1
-    print "Magic number = %d" % magic
+    print("Magic number = %d" % magic)
     code = encode(elfs[:,:,0],elfs[:,:,1],elfs[:,:,2],magic)
     # Remark how nice the encode function works on the whole array
-    print "Encoded faces:"
-    print code
+    print("Encoded faces:")
+    print(code)
     code = code.ravel()
-    print code
-    print "Just A Check:"
-    print "Element 5 face 2 is %s " % elf[5,2]
-    print "Element 5 face 2 is %s " % list(decode(code[4*5+2],magic))
+    print(code)
+    print("Just A Check:")
+    print("Element 5 face 2 is %s " % elf[5,2])
+    print("Element 5 face 2 is %s " % list(decode(code[4*5+2],magic)))
     srt = code.argsort()
-    print srt
-    print code[srt]
+    print(srt)
+    print(code[srt])
     # Now shipout the faces in this order, removing the doubles
     j = -1 
     for i in srt:
@@ -171,7 +171,7 @@ def output_fluent(fil,nodes,elems):
             else:
                 e2 = -1
                 j = i
-            print "Face %s belongs to el %s and el %s" % ( elf[e1,f1], e2, e1 )
+            print("Face %s belongs to el %s and el %s" % ( elf[e1,f1], e2, e1 ))
 
     
 def tetgen2fluent(filename):
@@ -182,7 +182,7 @@ def tetgen2fluent(filename):
     """
     nodes,elems = read_tetgen(filename)
     if nodes is None or elems is None:
-        print "Error while reading model %s" % filename
+        print("Error while reading model %s" % filename)
         return
     fil = file(filename+'.flu','w')
     if fil:
@@ -193,7 +193,7 @@ def tetgen2fluent(filename):
 if __name__ == "script": 
 
     for arg in argv:
-        print "Converting model %s" % arg
+        print("Converting model %s" % arg)
         tetgen2fluent(arg)
 
     argv = [ 'hallo' ]

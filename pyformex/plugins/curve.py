@@ -357,8 +357,8 @@ class BezierSpline(Curve):
         control = asarray(control).reshape(-1,2,3)
         self.control = Coords(control)
         if self.control.shape != (self.nparts,2,3):
-            print "coords array has shape %s" % str(self.coords.shape)
-            print "control array has shape %s" % str(self.control.shape)
+            print("coords array has shape %s" % str(self.coords.shape))
+            print("control array has shape %s" % str(self.control.shape))
             raise ValueError,"Invalid control points for Bezier Spline"
         self.closed = closed
 
@@ -544,8 +544,8 @@ class Arc3(Curve):
         r,C,n = triangleCircumCircle(self.coords.reshape(-1,3,3))
         self.radius,self.center,self.normal = r[0],C[0],n[0]
         self.angles = vectorPairAngle(Coords([1.,0.,0.]),self.coords-self.center)
-        print "Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal)
-        print "ANGLES=%s" % (self.angles)
+        print("Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal))
+        print("ANGLES=%s" % (self.angles))
 
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])
@@ -573,9 +573,9 @@ class Arc(Curve):
         self.radius = length(v[0])
         self.normal = unitVector(cross(v[0],v[2]))
         self.angles = [ vectorPairAngle(Coords([1.,0.,0.]),x-self.center) for x in self.coords[[0,-1]] ]
-        print self.coords
-        print "Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal)
-        print "ANGLES=%s" % (self.angles)
+        print(self.coords)
+        print("Radius %s, Center %s, Normal %s" % (self.radius,self.center,self.normal))
+        print("ANGLES=%s" % (self.angles))
 
     def sub_points(self,t,j):
         a = t*(self.angles[-1]-self.angles[0])

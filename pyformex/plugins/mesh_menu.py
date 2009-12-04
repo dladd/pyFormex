@@ -42,16 +42,16 @@ def readNodes(fil):
     """Read a set of nodes from an open mesh file"""
     a = fromfile(fil,sep=" ").reshape(-1,3)
     x = Coords(a)
-    print x.shape
+    print(x.shape)
     return x
 
 
 def readElems(fil,nplex):
     """Read a set of elems of plexitude nplex from an open mesh file"""
-    print "Reading elements of plexitude %s" % nplex
+    print("Reading elements of plexitude %s" % nplex)
     e = fromfile(fil,sep=" ",dtype=Int).reshape(-1,nplex) 
     e = Connectivity(e)
-    print e.shape
+    print(e.shape)
     return e
 
 def readEsets(fil):
@@ -111,7 +111,7 @@ def importModel(fn=None):
         
     for f in fn:
         d = readMesh(f)
-        print type(d)
+        print(type(d))
         x = d['coords']
         e = d['elems']
 
@@ -134,9 +134,9 @@ def convert_inp(fn=None):
     dirname = os.path.dirname(fn)
     basename = os.path.basename(fn)
     cmd = 'cd %s;%s %s' % (dirname,converter,basename)
-    print cmd
+    print(cmd)
     pyformex.GUI.setBusy()
-    print utils.runCommand(cmd)
+    print(utils.runCommand(cmd))
     pyformex.GUI.setBusy(False)
 
 
@@ -187,8 +187,8 @@ def fromFormex(suffix=''):
 
     t = timer.Timer()
     meshes =  dict([ (n,F.toMesh()) for n,F in zip(names,formices) if F.nplex() == 3])
-    print "Converted in %s seconds" % t.seconds()
-    print meshes.keys()
+    print("Converted in %s seconds" % t.seconds())
+    print(meshes.keys())
     export(meshes)
 
     if not suffix:

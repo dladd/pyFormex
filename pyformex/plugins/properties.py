@@ -180,7 +180,7 @@ class ElemSection(CDict):
         elif isinstance(section,dict):
             # WE COULD ADD AUTOMATIC CALCULATION OF SECTION PROPERTIES
             #self.computeSection(section)
-            #print section
+            #print(section)
             self.secDB[section['name']] = CDict(section)
             self.section = self.secDB[section['name']]
         elif section==None:
@@ -298,22 +298,37 @@ class Amplitude(object):
 
 
 def checkIdValue(values):
-    """Check that a variable is a list of values or (id,value) tuples
+    """Check that a variable is a list of (id,value) tuples
 
-    If ok, return the values as a list of tuples.
+    `id` should be convertible to an int, value to a float.
+    If ok, return the values as a list of (int,float) tuples.
     """
     try:
         l = [ len(v) for v in values ]
-        if min(l) < 2 or max(l) > 2:
-            raise
-        values = [ (int(i),float(v)) for i,v in values ]
+        if min(l) == 2 and max(l) == 2:
+            return [ (int(i),float(v)) for i,v in values ]
     except:
-        print values
-        print "!! Probably invalid value"
-        values = [ float(v) for v in values ]
-        print values
-        values = [ (i,v) for i,v in enumerate(values) if v != 0.0 ]
-        print values
+        raise ValueError,"Expected a list of (int,float) tuples"
+
+
+def checkArrayOrIdValue(values):
+    """Check that a variable is an list of values or (id,value) tuples
+
+    This convenience function checks that the argument is either:
+    - a list of 6 float values (or convertible to it), or
+    - a list of (id,value) tuples where id is convertible to an int,
+      value to a float.
+    
+    If ok, return the values as a list of (int,float) tuples.
+    """
+    print("VALUES IN: %s" % values)
+    try:
+        v = checkArray1D(values,6,'f','i')
+        w = where(v != 0.0)[0]
+        values = [ (i,v[i]) for i in w ]
+    except:
+        values = checkIdValue(values)
+    print("VALUES OUT: %s" % values)
     return values
 
 
@@ -328,7 +343,7 @@ def checkString(a,valid):
         if a in valid:
             return a
     except:
-        print "Expected one of %s, got: %s" % (valid,a)
+        print("Expected one of %s, got: %s" % (valid,a))
     raise ValueError
 
 
@@ -461,7 +476,7 @@ class PropertyDB(Dict):
             d.tag = str(tag)
         if name is None and kargs.has_key('setname'):
             # allow for backwards compatibility
-            print "!! 'setname' is deprecated, please use 'name'"
+            print("!! 'setname' is deprecated, please use 'name'")
             name = setname
         if set is not None:
             if type(set) is str and name is None:
@@ -562,7 +577,8 @@ class PropertyDB(Dict):
         - set: a single number or a list of numbers identifying the node(s)
           for which this property will be set, or a set name
           If None, the property will hold for all nodes.
-        - cload: a concentrated load: a list of 6 values
+        - cload: a concentrated load: a list of 6 float values
+          [FX,FY,FZ,MX,MY,MZ] or a list of (dofid,value) tuples.
         - bound: a boundary condition: a list of 6 codes (0/1)
         - displ: a prescribed displacement: a list of tuples (dofid,value)
         - csys: a CoordSystem
@@ -571,15 +587,14 @@ class PropertyDB(Dict):
         try:
             d = kargs
             if cload is not None:
-                d['cload'] = checkIdValue(cload)
-#                d['cload'] = checkArray1D(cload,6,'f','i')
+                d['cload'] = checkArrayOrIdValue(cload)
             if bound is not None:
                 if type(bound) == str:
                     d['bound'] = checkString(bound,self.bound_strings)
                 else:
                     d['bound'] = checkArray1D(bound,6,'i')
             if displ is not None:
-                d['displ'] = checkIdValue(displ)
+                d['displ'] = checkArrayOrIdValue(displ)
             if csys is not None:
                 if isinstance(csys,CoordSystem):
                     d['csys'] = csys
@@ -589,7 +604,7 @@ class PropertyDB(Dict):
             d['ampl'] = ampl
             return self.Prop(kind='n',prop=prop,tag=tag,set=set,name=name,**d)
         except:
-            print "tag=%s,set=%s,name=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,name,cload,bound,displ,csys)
+            print("tag=%s,set=%s,name=%s,cload=%s,bound=%s,displ=%s,csys=%s" % (tag,set,name,cload,bound,displ,csys))
             raise ValueError,"Invalid Node Property"
 
 
@@ -640,39 +655,39 @@ if __name__ == "script" or  __name__ == "draw":
 
     if GD.GUI:
         workHere()
-    print os.getcwd()
+    print(os.getcwd())
     
     P = PropertyDB()
 
     Stick = P.Prop(color='green',name='Stick',weight=25,comment='This could be anything: a gum, a frog, a usb-stick,...')
-    print Stick
+    print(Stick)
     
     author = P.Prop(tag='author',alias='Alfred E Neuman',address=CDict({'street':'Krijgslaan', 'city':'Gent','country':'Belgium'}))
 
-    print P.getProp(tag='author')[0]
+    print(P.getProp(tag='author')[0])
     
     Stick.weight=30
     Stick.length=10
-    print Stick
+    print(Stick)
     
-    print author.street
+    print(author.street)
     author.street='Voskenslaan'
-    print author.street
-    print author.address.street
+    print(author.street)
+    print(author.address.street)
     author.address.street = 'Wiemersdreef'
-    print author.address.street
+    print(author.address.street)
 
     author = P.Prop(tag='author',name='John Doe',address={'city': 'London', 'street': 'Downing Street 10', 'country': 'United Kingdom'})
-    print author
+    print(author)
 
     for p in P.getProp(rec=[0,2]):
-        print p.name
+        print(p.name)
 
     for p in P.getProp(tag=['author']):
-        print p.name
+        print(p.name)
 
     for p in P.getProp(attr=['name']):
-        print p.nr
+        print(p.nr)
 
 
     P.Prop(set=[0,1,3],name='green_elements',color='green')
@@ -681,26 +696,26 @@ if __name__ == "script" or  __name__ == "draw":
     P.Prop(name=a.name,material='steel')
 
     for p in P.getProp(attr=['name']):
-        print p
+        print(p)
 
     P.Prop(set='green_elements',transparent=False)
     for p in P.getProp(attr=['name']):
         if p.name == 'green_elements':
-            print p.nr,p.transparent
+            print(p.nr,p.transparent)
 
-    print "before"
+    print("before")
     for p in P.getProp():
-        print p
+        print(p)
 
     P.getProp(attr=['transparent'],delete=True)
     P.delProp(attr=['color'])
     pl = P.getProp(rec=[5,6])
-    print pl
+    print(pl)
     P._delete(pl)
 
-    print "after"
+    print("after")
     for p in P.getProp():
-        print p
+        print(p)
 
     #exit()
 
@@ -729,23 +744,23 @@ if __name__ == "script" or  __name__ == "draw":
     # node properties with an already named set
     P.nodeProp(tag='step2',set=Nset(nset1),cload=P2)
 
-    print 'nodeproperties'
-    print P.nprop
+    print('nodeproperties')
+    print(P.nprop)
 
-    print 'all nodeproperties'
-    print P.getProp('n')
+    print('all nodeproperties')
+    print(P.getProp('n'))
     
-    print "properties 0 and 2"
+    print("properties 0 and 2")
     for p in P.getProp('n',rec=[0,2]):
-        print p
+        print(p)
         
-    print "tags 1 and step1"
+    print("tags 1 and step1")
     for p in P.getProp('n',tag=[1,'step1']):
-        print p
+        print(p)
 
-    print "cload attributes"
+    print("cload attributes")
     for p in P.getProp('n',attr=['cload']):
-        print p
+        print(p)
 
     # materials and sections
     ElemSection.matDB = Mat
@@ -755,13 +770,13 @@ if __name__ == "script" or  __name__ == "draw":
     hor = ElemSection({'name':'IPEM800','A':951247,'I':CDict({'Ix':1542,'Iy':6251,'Ixy':352})}, {'name':'S400','E':210,'fy':400})
     circ = ElemSection({'name':'circle','radius':10,'sectiontype':'circ'},'steel')
 
-    print "Materials"
+    print("Materials")
     for m in Mat:
-        print Mat[m]
+        print(Mat[m])
         
-    print "Sections"
+    print("Sections")
     for s in Sec:
-        print Sec[s]
+        print(Sec[s])
 
 
     q1 = ElemLoad('PZ',2.5)
@@ -774,13 +789,13 @@ if __name__ == "script" or  __name__ == "draw":
     bottom = P.elemProp(section=hor,dload=q2,ampl='amp1')
 
 
-    print 'elemproperties'
+    print('elemproperties')
     for p in P.eprop:
-        print p
+        print(p)
     
-    print "section properties"
+    print("section properties")
     for p in P.getProp('e',attr=['section']):
-        print p.nr
+        print(p.nr)
 
     P.Prop(set='cylinder',name='cylsurf',surftype='element',label='SNEG')
 

@@ -34,7 +34,7 @@ clear()
 wireframe()
 
 m=n=5
-data = askItems({'m':m,'n':n})
+data = askItems([('m',m),('n',n)])
 if not data.has_key('m'):
     exit()
 

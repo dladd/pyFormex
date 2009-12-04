@@ -157,8 +157,8 @@ reset()
 if __name__ == "__main__":
     def test(txt):
         l = play(txt)
-        print len(l)," line segments"
-        print l
+        print("%s line segments" % len(l))
+        print(l)
         
     test("fd();ro(90);fd();ro(90);fd();ro(90);fd()")
     test("fd();ro(90);fd();ro(90);fd();ro(90);fd()")

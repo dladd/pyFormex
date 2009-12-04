@@ -219,12 +219,12 @@ class Model(Dict):
         all = arange(nnodes)
         old = concatenate([old,setdiff1d(all,old)])
         new = concatenate([new,setdiff1d(all,new)])
-        #print "old:\n",old
-        #print "new:\n",new
+        #print("old:\n",old)
+        #print("new:\n",new)
         oldnew = old[new]
         newold = argsort(oldnew)
-        #print "oldnew:\n",oldnew
-        #print "newold:\n",newold
+        #print("oldnew:\n",oldnew)
+        #print("newold:\n",newold)
         self.coords = self.coords[oldnew]
         self.elems = [ Connectivity(newold[e]) for e in self.elems ]
         return oldnew,newold
@@ -241,6 +241,6 @@ def mergedModel(*args):
 
 if __name__ == "__main__":
 
-    print __doc__
+    print(__doc__)
 
 # End

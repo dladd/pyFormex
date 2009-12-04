@@ -200,7 +200,7 @@ class Objects(object):
         objects = self.check()
         if objects:
             for n,o in zip(self.names,objects):
-                print "%s = %s" % (n,str(o))
+                print("%s = %s" % (n,str(o)))
 
 
     def printbbox(self):
@@ -278,7 +278,7 @@ class DrawableObjects(Objects):
         old and new can be a either Formex instances or names or lists thereof.
         old are drawn in yellow, new in the current color.
         """
-        #print "DRAWCHANGES %s" % type(self)
+        #print("DRAWCHANGES %s" % type(self))
         self.draw(wait=False)
         draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
 
@@ -296,8 +296,8 @@ class DrawableObjects(Objects):
         If no onoff is given, this works as a toggle. 
         """
         active = self.annotations[i][1]
-        #print "WAS"
-        #print self.annotations
+        #print("WAS")
+        #print(self.annotations)
         if onoff is None:
             active = not active
         elif onoff:
@@ -305,24 +305,24 @@ class DrawableObjects(Objects):
         else:
             active = False
         self.annotations[i][1] = active
-        #print "BECOMES"
-        #print self.annotations
+        #print("BECOMES")
+        #print(self.annotations)
         if active:
             self.drawAnnotation(i)
         else:
             self.removeAnnotation(i)
-        #print self._annotations
+        #print(self._annotations)
 
 
     def drawAnnotation(self,i=0):
         """Draw some annotation for the current selection."""
-        #print "DRAW %s" % i
+        #print("DRAW %s" % i)
         self._annotations[i] = [ self.annotations[i][0](n) for n in self.names ]
 
 
     def removeAnnotation(self,i=0):
         """Remove the annotation i."""
-        #print "REMOVE %s" % i
+        #print("REMOVE %s" % i)
         GD.canvas.removeAnnotations(self._annotations[i])
         GD.canvas.update()
         del self._annotations[i]
@@ -364,7 +364,7 @@ if __name__ == "draw":
     GD.debug('Reloading module %s' % __file__)
     
 elif __name__ == "__main__":
-    print __doc__
+    print(__doc__)
 
 # End
 

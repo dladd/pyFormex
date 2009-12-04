@@ -30,8 +30,8 @@ from formex import *
 
 def invalid(line,fn):
     """Print message for invalid line."""
-    print "The following line in file %s is invalid:" % fn
-    print line
+    print("The following line in file %s is invalid:" % fn)
+    print(line)
     
 
 def readNodes(fn):
@@ -104,9 +104,9 @@ def readSurface(fn):
     Returns a tuple of (nodes,elems).
     """
     nodes,numbers = readNodes(utils.changeExt(fn,'.node'))
-    print "Read %s nodes" % nodes.shape[0]
+    print("Read %s nodes" % nodes.shape[0])
     elems = readFaces(utils.changeExt(fn,'.face'))
-    print "Read %s elems" % elems.shape[0]
+    print("Read %s elems" % elems.shape[0])
     #if numbers[0] == 1:
     #    elems -= 1 
     return nodes,elems
@@ -193,12 +193,12 @@ if __name__ == "__main__":
     for f in sys.argv[1:]:
         if f.endswith('.node'):
             nodes = readNodes(f)
-            print "Read %d nodes" % nodes.shape[0]
+            print("Read %d nodes" % nodes.shape[0])
         elif f.endswith('.ele'):
             elems = readElems(f)
-            print "Read %d elems" % elems.shape[0]
+            print("Read %d elems" % elems.shape[0])
         elif f.endswith('.smesh'):
             elems = readSmesh(f)
-            print "Read %d triangles" % elems.shape[0]
+            print("Read %d triangles" % elems.shape[0])
         
     

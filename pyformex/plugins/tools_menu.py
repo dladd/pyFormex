@@ -51,9 +51,9 @@ def editFormex(F,name):
             p = eval(p)
         e = res['eltype']
         
-        print x
-        print p
-        print e
+        print(x)
+        print(p)
+        print(e)
         F.__init__(x,F.p,e)
 
 Formex.edit = editFormex
@@ -64,7 +64,7 @@ def command():
     res = askItems([('command','','text')])
     if res:
         cmd = res['command']
-        print "Command: %s" % cmd
+        print("Command: %s" % cmd)
         exec(cmd)
 
 ##################### database tools ##########################
@@ -75,7 +75,7 @@ drawable = objects.DrawableObjects()
 
 def printall():
     """Print all global variable names."""
-    print listAll()
+    print(listAll())
     
 
 def printval():
@@ -135,7 +135,7 @@ def edit():
             # Use general editor
             res = askItems([(name,repr(F),'text')])
             if res:
-                print res
+                print(res)
                 GD.PF.update(res)
 
 
@@ -192,9 +192,9 @@ class DrawnObjects(dict):
 
     def draw(self,*args,**kargs):
         clear()
-        print "SELECTION: %s" % self.names
+        print("SELECTION: %s" % self.names)
         self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
-        #print self.annotations
+        #print(self.annotations)
         for i,a in enumerate(self.annotations):
             if a[1]:
                 self.drawAnnotation(i)
@@ -230,8 +230,8 @@ class DrawnObjects(dict):
         If no onoff is given, this works as a toggle. 
         """
         active = self.annotations[i][1]
-        #print "WAS"
-        #print self.annotations
+        #print("WAS")
+        #print(self.annotations)
         if onoff is None:
             active = not active
         elif onoff:
@@ -239,24 +239,24 @@ class DrawnObjects(dict):
         else:
             active = False
         self.annotations[i][1] = active
-        #print "BECOMES"
-        #print self.annotations
+        #print("BECOMES")
+        #print(self.annotations)
         if active:
             self.drawAnnotation(i)
         else:
             self.removeAnnotation(i)
-        #print self._annotations
+        #print(self._annotations)
 
 
     def drawAnnotation(self,i=0):
         """Draw some annotation for the current selection."""
-        #print "DRAW %s" % i
+        #print("DRAW %s" % i)
         self._annotations[i] = [ self.annotations[i][0](n) for n in self.names ]
 
 
     def removeAnnotation(self,i=0):
         """Remove the annotation i."""
-        #print "REMOVE %s" % i
+        #print("REMOVE %s" % i)
         map(undraw,self._annotations[i])
         del self._annotations[i]
 
@@ -372,7 +372,7 @@ def set_selection(obj_type):
 
 def query(mode):
     set_selection(mode)
-    print report(selection)
+    print(report(selection))
 
 def pick_actors():
     set_selection('actor')
@@ -394,20 +394,20 @@ def query_edges():
 
 def query_distances():
     set_selection('point')
-    print reportDistances(selection)
+    print(reportDistances(selection))
 
 def query_angle():
     showInfo("Select two line elements.")
     set_selection('element')
-    print reportAngles(selection)
+    print(reportAngles(selection))
                    
 
 def report_selection():
     if selection is None:
         warning("You need to pick something first.")
         return
-    print selection
-    print report(selection)
+    print(selection)
+    print(report(selection))
 
 
 def setprop_selection():
@@ -419,7 +419,7 @@ def setprop_selection():
     if selection is None:
         warning("You need to pick something first.")
         return
-    print selection
+    print(selection)
     res = askItems([['property',0]],
                    caption = 'Set Property Number for Selection (negative value to remove)')
     if res:
@@ -433,7 +433,7 @@ def grow_selection():
     if selection is None:
         warning("You need to pick something first.")
         return
-    print selection
+    print(selection)
     res = askItems([('mode','node','radio',['node','edge']),
                     ('nsteps',1),
                     ],
@@ -441,7 +441,7 @@ def grow_selection():
                    )
     if res:
         growCollection(selection,**res)
-    print selection
+    print(selection)
     highlightElements(selection)
 
 
@@ -502,7 +502,7 @@ def export_selection():
 
 def dos2unix():
     fn = askFilename(multi=True)
-    print "selected %s" % fn
+    print("selected %s" % fn)
     if fn:
         for f in fn:
             utils.dos2unix(f)

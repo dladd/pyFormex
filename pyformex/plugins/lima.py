@@ -37,11 +37,11 @@ class Lima:
 
     def status (self):
         """Print the status of the Lima"""
-        print "Lima status:"
-        print "  Axiom: %s" % self.axiom
-        print "  Rules: %r" % self.rule
-        print "  Generation: %d" % self.gen
-        print "  Product: %s" % self.product
+        print("Lima status:")
+        print("  Axiom: %s" % self.axiom)
+        print("  Rules: %r" % self.rule)
+        print("  Generation: %d" % self.gen)
+        print("  Product: %s" % self.product)
 
     def addRule (self,atom,product):
         """Add a new rule (or overwrite an existing)"""
@@ -91,8 +91,8 @@ def lima(axiom,rules,level,turtlecmds,glob=None):
 if __name__ == "__main__":
     def test():
         TurtleRules = { 'F' : 'fd();', '*' : 'ro(60);', '/' : 'ro(-60);' }
-        print lima("F",{"F":"F*F//F*F"},1,{ 'F' : 'fd();', '*' : 'ro(60);', '/' : 'ro(-60);' })
-        print lima("F",{"F":"F*F//F*F"},2,{ 'F' : 'fd();', '*' : 'ro(60);', '/' : 'ro(-60);' })                   
+        print(lima("F",{"F":"F*F//F*F"},1,{ 'F' : 'fd();', '*' : 'ro(60);', '/' : 'ro(-60);' }))
+        print(lima("F",{"F":"F*F//F*F"},2,{ 'F' : 'fd();', '*' : 'ro(60);', '/' : 'ro(-60);' })                   )
 
     test()
     test()

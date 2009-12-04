@@ -94,7 +94,7 @@ def check(trypaths=None):
 
 
 if __name__ == "__main__":
-    print __doc__
+    print(__doc__)
 else:
     GD.debug("Loading plugin %s" % __file__)
     check()

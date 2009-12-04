@@ -131,7 +131,7 @@ def read_off(fn):
     fil = file(fn,'r')
     head = fil.readline().strip()
     if head != "OFF":
-        print "%s is not an OFF file!" % fn
+        print("%s is not an OFF file!" % fn)
         return None,None
     nnodes,nelems,nedges = map(int,fil.readline().split())
     nodes = fromfile(file=fil, dtype=Float, count=3*nnodes, sep=' ')
@@ -204,7 +204,7 @@ def write_stla(f,x):
     f.write("solid  Created by %s\n" % GD.Version)
     area,norm = areaNormals(x)
     degen = degenerate(area,norm)
-    print "The model contains %d degenerate triangles" % degen.shape[0]
+    print("The model contains %d degenerate triangles" % degen.shape[0])
     for e,n in zip(x,norm):
         f.write("  facet normal %s %s %s\n" % tuple(n))
         f.write("    outer loop\n")
@@ -219,12 +219,12 @@ def write_stla(f,x):
 
 def write_stlb(f,x):
     """Export an x[n,3,3] float array as an binary .stl file."""
-    print "Cannot write binary STL files yet!" % fn
+    print("Cannot write binary STL files yet!" % fn)
     pass
 
 
 def write_gambit_neutral(fn,nodes,elems):
-    print "Cannot write Gambit neutral files yet!" % fn
+    print("Cannot write Gambit neutral files yet!" % fn)
     pass
 
 
@@ -867,11 +867,11 @@ class TriSurface(object):
         if ftype == 'off':
             return TriSurface(*read_off(fn))
         elif ftype == 'gts':
-            #print "READING GTS"
+            #print("READING GTS")
             ret = read_gts(fn)
-            #print ret
+            #print(ret)
             S = TriSurface(*ret)
-            #print S.shape()
+            #print(S.shape())
             return S
         elif ftype == 'stl':
             return TriSurface(*read_stl(fn))
@@ -912,7 +912,7 @@ class TriSurface(object):
                 write_smesh(fname,self.coords,self.elems)
             GD.message("Wrote %s vertices, %s elems" % (self.ncoords(),self.nfaces()))
         else:
-            print "Cannot save TriSurface as file %s" % fname
+            print("Cannot save TriSurface as file %s" % fname)
 
 
     def toFormex(self):
@@ -1031,12 +1031,12 @@ class TriSurface(object):
             rfaces = self.edgeConnections()
             # this gives all adjacent elements including element itself
             adj = rfaces[self.faces].reshape(nfaces,-1)
-            #print adj.shape
+            #print(adj.shape)
             fnr = arange(nfaces).reshape(nfaces,-1)
-            #print fnr.shape
+            #print(fnr.shape)
             # remove the element itself
-            #print adj != fnr
-            #print (adj != fnr).shape
+            #print(adj != fnr)
+            #print((adj != fnr).shape)
             self.eadj = adj[adj != fnr].reshape((nfaces,-1))
         return self.eadj
 
@@ -1203,7 +1203,7 @@ class TriSurface(object):
             volume = self.volume()
         else:
             volume = 0.0
-        print  (
+        print(
             self.ncoords(),self.nedges(),self.nfaces(),
             bbox[0],bbox[1],
             mincon,maxcon,
@@ -1252,7 +1252,7 @@ Total area: %s; Enclosed volume: %s
         a new part. Thus, the start of a new part can always be detected
         by a front not having the property of the previous plus front_increment.
         """
-        print "FRONT_INCREMENT %s" % front_increment
+        print("FRONT_INCREMENT %s" % front_increment)
         p = -ones((self.nfaces()),dtype=int)
         if self.nfaces() <= 0:
             return
@@ -1294,7 +1294,7 @@ Total area: %s; Enclosed volume: %s
                     continue
 
             # No more elements in this part: start a new one
-            print "NO MORE ELEMENTS"
+            print("NO MORE ELEMENTS")
             elems = where(p<0)[0]
             if elems.size > 0:
                 # Start a new part
@@ -1342,8 +1342,8 @@ Total area: %s; Enclosed volume: %s
 
     def walkEdgeFront(self,startat=0,nsteps=-1,okedges=None,front_increment=1):
         for p in self.edgeFront(startat=startat,okedges=okedges,front_increment=front_increment):
-            #print "NSTEPS=%d"%nsteps
-            #print p
+            #print("NSTEPS=%d"%nsteps)
+            #print(p)
             if nsteps > 0:
                 nsteps -= 1
             elif nsteps == 0:
@@ -1809,7 +1809,7 @@ def remove_triangles(elems,remove):
     Returns a (nelems-nremove,3) integer array with the triangles of
     nelems where the triangles of remove have been removed.
     """
-    #print elems,remove
+    #print(elems,remove)
     GD.message("Removing %s out of %s triangles" % (remove.shape[0],elems.shape[0]))
     magic = elems.max()+1
 
@@ -1880,6 +1880,6 @@ if __name__ == '__main__':
     f = file('unit_triangle.stl','r')
     a = read_ascii(f)
     f.close()
-    print a
+    print(a)
     
 # End

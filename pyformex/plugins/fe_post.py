@@ -42,10 +42,12 @@ import re
 
 class FeResult(object):
 
+    _name_ = '__FePost__'
     data_size = {'U':3,'S':6,'COORD':3}
     re_Skey = re.compile("S[0-5]")
 
-    def __init__(self):
+    def __init__(self,name=_name_):
+        self.name = name
         self.about = {'creator':GD.Version,
                       'created':GD.StartTime,
                       }
@@ -166,7 +168,7 @@ class FeResult(object):
             n2 = self.hdr['nshr']
             ind = arange(len(data))
             ind[n1:] += (3-n1)
-            #print ind
+            #print(ind)
             self.R[key][nodid-1][ind] = data
         else:
             self.R[key][nodid-1][:len(data)] = data
@@ -188,7 +190,7 @@ class FeResult(object):
             self.step = None
             self.inc = None
             self.R = None
-        export({'DB':self})
+        export({self.name:self, self._name_:self})
         GD.message("Read %d nodes, %d elements" % (self.nnodes,self.nelems))
         if self.res is None:
             GD.message("No results")
@@ -230,7 +232,7 @@ class FeResult(object):
         The key may include a component to return only a single column
         of a multicolumn value.
         """
-        #print self.dofs
+        #print(self.dofs)
         if self.re_Skey.match(key) and self.data_size['S']==3:
             components = '013'
         else:
@@ -254,7 +256,7 @@ class FeResult(object):
             for i,step in self.res.iteritems():
                 for j,inc in step.iteritems():
                     for k,v in inc.iteritems():
-                        print "Step %s, Inc %s, Res %s (%s)" % (i,j,k,str(v.shape))
+                        print("Step %s, Inc %s, Res %s (%s)" % (i,j,k,str(v.shape)))
 
 
 #End

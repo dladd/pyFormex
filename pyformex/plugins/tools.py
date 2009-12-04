@@ -74,7 +74,7 @@ class Plane(object):
 
 def report(K):
     if K is not None and hasattr(K,'obj_type'):
-        print K.obj_type
+        print(K.obj_type)
         if K.obj_type == 'actor':
             return reportActors(K)
         elif K.obj_type == 'element':
@@ -175,13 +175,13 @@ def reportAngles(K):
     for F in getCollection(K):
         if isinstance(F,GeomActor):
             x = F.coords
-            print x
+            print(x)
             if F.elems is None:
-                print x.shape
+                print(x.shape)
                 v = x[:,1,:] - x[:,0,:]
                 v = normalize(v)
             cosa = dotpr(v[0],v[1])
-            print cosa
+            print(cosa)
             a = arccos(cosa) * 180. / pi
             s += "  a = %s" % a
     return s
@@ -235,7 +235,7 @@ def setpropCollection(K,prop):
                 if not hasattr(o,'p') or o.p is None:
                     o.setProp(0)
                 o.p[K[k]] = prop
-                print o.p
+                print(o.p)
                 o.setColor(o.p)
                 o.redraw()
 
@@ -263,7 +263,7 @@ def partitionCollection(K):
     """
     sel = getCollection(K)
     if len(sel) == 0:
-        print "Nothing to partition!"
+        print("Nothing to partition!")
         return
     if K.obj_type == 'actor':
         actor_numbers = K.get(-1,[])
@@ -274,7 +274,7 @@ def partitionCollection(K):
     j = 0
     for i in K.keys():
         p = sel[j].partitionByConnection() + prop
-        print "Actor %s partitioned in %s parts" % (i,p.max()-p.min()+1)
+        print("Actor %s partitioned in %s parts" % (i,p.max()-p.min()+1))
         C = Collection()
         C.set(transpose(asarray([p,K[i]])))
         K[i] = C

@@ -74,7 +74,7 @@ def centerline(F,dir,nx=2,mode=2,th=0.2):
             elif mode == 2:
                 test = test.sum(axis=-1)
                 G = F.select(test==F.f.shape[1])
-                print G
+                print(G)
                 C = G.center()
             center.append(C)
         grid = array(center)
@@ -140,7 +140,7 @@ def sectionize(F,segments,th=0.1,visual=True):
         if visual:
             draw(G,color='blue',view=None)
             GD.canvas.update()
-        print G
+        print(G)
         C = G.center()
         D = 2 * G.distanceFromLine(C,n).mean()
         GD.message("Section Center: %s; Diameter: %s" % (C,D))

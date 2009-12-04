@@ -96,6 +96,8 @@ def drawModel(M,nodes=True,elems=True,nodenrs=True,elemnrs=True):
             [ drawNumbers(i) for i in G ]
     zoomAll()
 
+drawModel(M)
+
 # Transfer the properties from the parts in a global set
 elemprops = concatenate([part.p for part in parts])
 
@@ -155,7 +157,7 @@ print "Boundary nodes: %s" % bnodes
 print "Loaded nodes: %s" % lnodes
 
 P.nodeProp(tag='init',set=bnodes,bound=[1,1,0,0,0,0])
-P.nodeProp(tag='step1',set=lnodes,setname='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
+P.nodeProp(tag='step1',set=lnodes,name='Loaded',cload=[-10.,0.,0.,0.,0.,0.])
 P.nodeProp(tag='step2',set='Loaded',cload=[-10.,10.,0.,0.,0.,0.])
 
 F.setProp(0)
@@ -168,7 +170,6 @@ for p in P.getProp('n'):
 
 
 drawModel(M,elems=False)
-#exit()
 
 while ack("Renumber nodes?"):
     # renumber the nodes randomly

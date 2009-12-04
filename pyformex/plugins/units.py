@@ -136,7 +136,7 @@ class UnitsSystem:
                 if key == 'problem':
                     self.Add(self.Predefined(string.lower(val)))
             else:
-                print "Ignoring line : %s\n",line     
+                print("Ignoring line : %s" % line)
         fil.close()
 
     def Get(self,ent):
@@ -168,6 +168,6 @@ if __name__ == '__main__':
             ('1 lightyear','km'),
             )
     for f,t in test:
-        print "%s = %s %s" % (f,convertUnits(f,t),t) 
+        print("%s = %s %s" % (f,convertUnits(f,t),t))
 
 ### End

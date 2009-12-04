@@ -170,7 +170,7 @@ def printStats():
     for s in selection.names:
         S = named(s)
         GD.message("Statistics for surface %s" % s)
-        print S.stats()
+        print(S.stats())
 
 def toFormex(suffix=''):
     """Transform the selection to Formices.
@@ -219,8 +219,8 @@ def fromFormex(suffix=''):
 
     t = timer.Timer()
     surfaces =  dict([ (n,TriSurface(F)) for n,F in zip(names,formices) if F.nplex() == 3])
-    print "Converted in %s seconds" % t.seconds()
-    print surfaces.keys()
+    print("Converted in %s seconds" % t.seconds())
+    print(surfaces.keys())
     export(surfaces)
 
     if not suffix:
@@ -277,8 +277,8 @@ def write_surface(types=['surface','gts','stl','off','neu','smesh']):
 def showBorder():
     S = selection.check(single=True)
     if S:
-        print S.nEdgeConnected()
-        print S.borderEdges()
+        print(S.nEdgeConnected())
+        print(S.borderEdges())
         F = S.border()
         if F.nelems() > 0:
             draw(F,color='red',linewidth=3)
@@ -291,11 +291,11 @@ def checkBorder():
     if S:
         border = S.checkBorder()
         if border is None:
-            print "The surface has no border."
+            print("The surface has no border.")
         else:
             closed,loop = border
-            print "The border is of type %s" % closed
-            print "The sorted border edges are: %s" % loop
+            print("The border is of type %s" % closed)
+            print("The sorted border edges are: %s" % loop)
 
 
 def fillBorder():
@@ -317,9 +317,9 @@ def fillHoles():
         border_elems = S.edges[S.borderEdges()]
         if border_elems.size != 0:
             # partition borders
-            print border_elems
+            print(border_elems)
             border_elems = partitionSegmentedCurve(border_elems)
-            print border_elems
+            print(border_elems)
             
             # draw borders in new viewport
             R = GD.canvas.camera.getRot()
@@ -396,10 +396,10 @@ def showStatistics():
 def showSurfaceValue(S,txt,val,onEdges):
     val = nan_to_num(val)
     mi,ma = val.min(),val.max()
-    print mi,ma
+    print(mi,ma)
     # Test: replace min with max
     dec = min(abs(mi),abs(ma))
-    print dec
+    print(dec)
     if dec > 0.0:
         dec = max(0,3-int(log10(dec)))
     else:
@@ -466,7 +466,7 @@ def colorByFront():
             else:
                 p = S.walkEdgeFront(nsteps=nsteps,startat=startat)
             S.setProp(p/nwidth + firstprop)
-            print "Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+            print("Colored in %s parts (%s seconds)" % (S.p.max()+1,t.seconds()))
             selection.draw()
 
 
@@ -476,7 +476,7 @@ def partitionByConnection():
         selection.remember()
         t = timer.Timer()
         S.p = S.partitionByConnection()
-        print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+        print("Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds()))
         selection.draw()
 
 
@@ -489,7 +489,7 @@ def partitionByAngle():
             selection.remember()
             t = timer.Timer()
             S.p = S.partitionByAngle(**res)
-            print "Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds())
+            print("Partitioned in %s parts (%s seconds)" % (S.p.max()+1,t.seconds()))
             selection.draw()
          
  
@@ -590,7 +590,7 @@ def rotate(mode='global'):
         if res:
             selection.remember(True)
             for F in FL:
-                #print "ROTATE %s %s %s " % (angle,axis,around)
+                #print("ROTATE %s %s %s " % (angle,axis,around))
                 F.rotate(angle,axis,around)
             selection.drawChanges()
 
@@ -637,7 +637,7 @@ def clip_surface():
         xc1 = xmi + float(res[1][1]) * dx
         xc2 = xmi + float(res[2][1]) * dx
         nodid = res[3][1]
-        #print nodid
+        #print(nodid)
         clear()
         draw(F,color='yellow')
         w = F.test(nodes='any',dir=axis,min=xc1,max=xc2)
@@ -783,7 +783,7 @@ def sliceIt():
         dx =  (xmax-xmin) / nslices
         x = arange(nslices+1) * dx
         N = unitVector(axis)
-        #print N
+        #print(N)
         P = [ bb[0]+N*s for s in x ]
         G = [S.toFormex().intersectionLinesWithPlane(Pi,N) for Pi in P]
         #[ G.setProp(i) for i,G in enumerate(G) ]
@@ -872,7 +872,7 @@ def export_surface():
         types = [ "Abaqus INP files (*.inp)" ]
         fn = askNewFilename(GD.cfg['workdir'],types)
         if fn:
-            print "Exporting surface model to %s" % fn
+            print("Exporting surface model to %s" % fn)
             updateGUI()
             S.refresh()
             nodes,elems = S.coords,S.elems
@@ -886,7 +886,7 @@ def export_volume():
     types = [ "Abaqus INP files (*.inp)" ]
     fn = askNewFilename(GD.cfg['workdir'],types)
     if fn:
-        print "Exporting volume model to %s" % fn
+        print("Exporting volume model to %s" % fn)
         updateGUI()
         nodes,elems = PF['volume']
         stl_abq.abq_export(fn,nodes,elems,'C3D%d' % elems.shape[1],"Abaqus model generated by tetgen from surface in STL file %s.stl" % PF['project'])
@@ -898,7 +898,7 @@ def show_nodes():
     n = int(data['node number'])
     if n > 0:
         nodes,elems = PF['surface']
-        print "Node %s = %s",(n,nodes[n])
+        print("Node %s = %s",(n,nodes[n]))
 
 
 def trim_border(elems,nodes,nb,visual=False):
@@ -913,7 +913,7 @@ def trim_border(elems,nodes,nb,visual=False):
     nelems = elems.shape[0]
     ntrim = trim.shape[0]
     nkeep = keep.shape[0]
-    print "Selected %s of %s elements, leaving %s" % (ntrim,nelems,nkeep) 
+    print("Selected %s of %s elements, leaving %s" % (ntrim,nelems,nkeep) )
 
     if visual and ntrim > 0:
         prop = zeros(shape=(F.nelems(),),dtype=int32)
@@ -933,10 +933,10 @@ def trim_surface():
     GD.GUI.update()
     n = int(data['Number of trim rounds'])
     nb = int(data['Minimum number of border edges'])
-    print "Initial number of elements: %s" % elems.shape[0]
+    print("Initial number of elements: %s" % elems.shape[0])
     for i in range(n):
         elems = trim_border(elems,nodes,nb)
-        print "Number of elements after border removal: %s" % elems.shape[0]
+        print("Number of elements after border removal: %s" % elems.shape[0])
 
 
 def read_tetgen(surface=True, volume=True):
@@ -953,14 +953,14 @@ def read_tetgen(surface=True, volume=True):
         project = utils.projectName(fn)
         set_project(project)
         nodes,nodenrs = tetgen.readNodes(project+'.node')
-#        print "Read %d nodes" % nodes.shape[0]
+#        print("Read %d nodes" % nodes.shape[0])
         if volume:
             elems,elemnrs,elemattr = tetgen.readElems(project+'.ele')
-            print "Read %d tetraeders" % elems.shape[0]
+            print("Read %d tetraeders" % elems.shape[0])
             PF['volume'] = (nodes,elems)
         if surface:
             surf = tetgen.readSurface(project+'.smesh')
-            print "Read %d triangles" % surf.shape[0]
+            print("Read %d triangles" % surf.shape[0])
             PF['surface'] = (nodes,surf)
     if surface:
         show_surface()

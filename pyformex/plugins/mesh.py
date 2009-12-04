@@ -54,7 +54,7 @@ def vectorPairAreaNormals(vec1,vec2):
     """
     normal = cross(vec1,vec2)
     area = vectorLength(normal)
-    print "vectorPairAreaNormals",area,normal
+    print("vectorPairAreaNormals",area,normal)
     normal /= area.reshape((-1,1))
     return area,normal
 
@@ -93,14 +93,14 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     w1 = cross(u1,v)
     wa = where(length(w) == 0)
     wa1 = where(length(w1) == 0)
-    print u
-    print u1
-    print v
-    print v1
-    print w
-    print w1
+    print(u)
+    print(u1)
+    print(v)
+    print(v1)
+    print(w)
+    print(w1)
     if len(wa) > 0 or len(wa1) > 0:
-        print wa,wa1
+        print(wa,wa1)
         raise
     ## if len(wa1) 
     ##      = normalize(random.random((len(w),3)))
@@ -145,12 +145,12 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,
                 directions[j] = Coords(enddir[i])
 
     directions = normalize(directions)
-    print directions 
+    print(directions )
 
     if type(normal) is int:
         normal = unitVector(normal)
     angles,normals = vectorRotation(directions,normal)
-    print angles,normals
+    print(angles,normals)
     
     base = self.translate(-Coords(origin))
 
@@ -165,7 +165,7 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,
             upvector = Coords(unitVector(upvector))
         uptrf = [ upvector.rotate(a,v) for a,v in zip(angles,normals) ]
         uangles,unormals = vectorRotation(uptrf,upvector)
-        print uangles,unormals
+        print(uangles,unormals)
           
         sequence = [
             base.rotate(a,v).rotate(ua,uv).translate(p)
@@ -403,7 +403,7 @@ Size: %s
             raise ValueError,"Don't know how to convert from '%s' to '%s'" % (fromtype,totype)
 
         elems = self.elems[:,conv].reshape(-1,len(conv[0]))
-        print elems.shape
+        print(elems.shape)
         return Mesh(self.coords,elems)
 
 
@@ -458,14 +458,14 @@ def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
 
 
 def connectMeshSequence(ML,loop=False,**kargs):
-    #print [Mi.eltype for Mi in ML]
+    #print([Mi.eltype for Mi in ML])
     MR = ML[1:]
     if loop:
         MR.append(ML[0])
     else:
         ML = ML[:-1]
     HM = [ connectMesh(Mi,Mj,**kargs) for Mi,Mj in zip (ML,MR) ]
-    #print [Mi.eltype for Mi in HM]
+    #print([Mi.eltype for Mi in HM])
     return Mesh.concatenate(HM)
 
 

@@ -46,7 +46,7 @@ def Hex2Wedge(v):
     degfac=None
     for i in range(f.shape[0]):
         if areaQuad(v[f[i]])==0:
-            #print 'Hex with degenerated face %d'%i
+            #print('Hex with degenerated face %d'%i)
             degfac=i
     if degfac==None:return v#it is a real Hex8
 
@@ -128,7 +128,7 @@ def correctHexMeshDirection(M, drawit=False):
         if modified==True:cor_el_list[i]=1.
     modified_indices=where(cor_el_list==1)[0]
     if drawit==True: draw(Formex(M[:][modified_indices].reshape(-1, 1, 3)), marksize=10, color='red')
-    print 'correcting HEX :%d HEX have been corrected'%modified_indices.shape[0]
+    print('correcting HEX :%d HEX have been corrected'%modified_indices.shape[0])
     return Formex(m.reshape(-1, 8, 3), eltype='Hex8')
 
 
@@ -150,7 +150,7 @@ def correctWedgeMeshDirection(M, drawit=False):
         if modified==True:cor_el_list[i]=1.
     modified_indices=where(cor_el_list==1)[0]
     if drawit==True: draw(Formex(M[:][modified_indices].reshape(-1, 1, 3)), marksize=10, color='red')
-    #print 'the number of uncorrect Wedges was %d'%modified_indices.shape
+    #print('the number of uncorrect Wedges was %d'%modified_indices.shape)
     return Formex(m.reshape(-1, 6, 3), eltype='Wedge6')
 
 def detectHex2Wedge(W):
@@ -162,7 +162,7 @@ def detectHex2Wedge(W):
         if current_el.shape[0]==6:we.append(current_el)#it is wedge6
         if current_el.shape[0]==8:he.append(current_el)#it is wedge6
     we, he=array(we), array(he)
-    print 'detecting degenerated HEX: there are %d hex and %d wedge'%(he.shape[0], we.shape[0])
+    print('detecting degenerated HEX: there are %d hex and %d wedge'%(he.shape[0], we.shape[0]))
     return array(we), array(he)
 def revolve_QuadMesh(n0, e0, nr, ang=None):
     """it takes a Quad mesh on xy and revolve it along the z axis nr times by ang. If ang==None, then it is calculated in order to fill 360 degrees with the nr revolutions."""

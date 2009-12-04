@@ -335,7 +335,7 @@ def cutSelection():
         side = res['Side']
         if side == 'both':
             G = [F.cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL]
-            #print G[0][0].p
+            #print(G[0][0].p)
             draw(G[0])
             G_pos = [ g[0] for g in G ]
             G_neg = [ g[1] for g in G ]
@@ -520,7 +520,7 @@ if __name__ == "draw":
     reload_menu()
     
 elif __name__ == "__main__":
-    print __doc__
+    print(__doc__)
 
 # End
 

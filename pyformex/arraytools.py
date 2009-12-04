@@ -314,14 +314,14 @@ def reverseAxis(a,axis=-1):
 def checkArray(a,shape=None,kind=None,allow=None):
     """Check that an array a has the correct shape and type.
 
-    The input a is anything that can e converted into a numpy array.
-    Either shape and or kind can be specified.
-    The dimensions where shape contains a -1 value are not checked. The
-    number of dimensions should match, though.
-    If kind does not match, but is included in allow, conversion to the
-    requested type is attempted.
-    Returns the array if valid.
-    Else, an error is raised.
+    The input `a` is anything that can be converted into a numpy array.
+    Either `shape` and/or `kind` can be specified. and will then be checked.
+    The dimensions where `shape` contains a -1 value are not checked. The
+    number of dimensions should match.
+    If `kind` does not match, but the value is included in `allow`,
+    conversion to the requested type is attempted.
+
+    Returns the array if valid; else, an error is raised.
     """
     try:
         a = asarray(a)

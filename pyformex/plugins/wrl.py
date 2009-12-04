@@ -42,9 +42,9 @@ def IndexedFaceSet(coords,faces=None):
     global p
     p += 1
     coords = asarray(coords).reshape(-1,3)
-    print coords.shape,p
+    print(coords.shape,p)
     F = Formex(coords,p)
-    print F.p
+    print(F.p)
     draw(F)
     export({"%s-%s" % (_name_,'coords'):F})
     if faces is None:
@@ -53,12 +53,12 @@ def IndexedFaceSet(coords,faces=None):
     
 def IndexedLineSet(coords,lines):
     coords = asarray(coords).reshape(-1,3)
-    print coords.shape
+    print(coords.shape)
     F = Formex(coords,p)
     draw(F)
     export({"%s-%s" % (_name_,'coords'):F})
     lines = column_stack([lines[:-1],lines[1:]])
-    print lines.shape
+    print(lines.shape)
     G = Formex(coords[lines],p)
     export({_name_:G})
     draw(G)

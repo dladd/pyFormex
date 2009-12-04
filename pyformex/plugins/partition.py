@@ -37,7 +37,7 @@ def prepare(V):
     global VA
     V = V.translate(-V.center())
     P = V.center()
-    print "Initial P = %s" % P
+    print("Initial P = %s" % P)
     VA = draw(V,bbox=None,color='black')
     area,norm = surface.areaNormals(V.f)
     N = norm[0]
@@ -51,13 +51,13 @@ def testview(F,V,P):
     while waiting:
         GD.app.processEvents()
     p -= array(GD.canvas.camera.getCenter())
-    print "TRANSLATE: %s" % p
+    print("TRANSLATE: %s" % p)
     m = GD.canvas.camera.getRot()
     P += p
-    print "TOTAL TRANSLATE: %s" % P
+    print("TOTAL TRANSLATE: %s" % P)
     V = V.affine(inverse(m[0:3,0:3])).translate(-P)
-    print V.center()
-    print F.center()
+    print(V.center())
+    print(F.center())
     undraw(VA)
     VA = draw(V)
     area,norm = surface.areaNormals(V.f)
@@ -67,18 +67,18 @@ def testview(F,V,P):
 
 def colorCut(F,P,N,prop):
     """Color a Formex in two by a plane (P,N)"""
-    print F.bbox()
-    print P
-    print N
-    print prop
+    print(F.bbox())
+    print(P)
+    print(N)
+    print(prop)
     dist = F.distanceFromPlane(P,N)
-    print dist
+    print(dist)
     right = any(dist>0.0,axis=1)
-    print right
+    print(right)
     F.p[right] = prop
     nright = right.sum()
     nleft = F.nelems() - nright
-    print "Left part has %s elements, right part has %s elements" % (nleft,nright)
+    print("Left part has %s elements, right part has %s elements" % (nleft,nright))
     return F
 
 
@@ -166,7 +166,7 @@ def partition(Fin,prop=0):
         res = ask("",["Adjust Cut","Keep Cut", "Finish"])
         if res == "Adjust Cut":
             P,N = testview(F,V,P)
-            print "Plane: point %s, normal %s" % (P,N)
+            print("Plane: point %s, normal %s" % (P,N))
         elif res == "Keep Cut":
             undraw(FA)
             #undraw(VA)
@@ -187,7 +187,7 @@ def partition(Fin,prop=0):
 
    
 def savePartitions(F):
-    print "Current dir is %s" % os.getcwd()
+    print("Current dir is %s" % os.getcwd())
     if ack("Save the partitioned Formex?"):
         writeFormex(F,'part.fmx')
         clear()

@@ -682,7 +682,7 @@ def writeSection(fil,prop):
     ## UNSUPPORTED elements
     ##########################
     else:
-        warning('Sorry, elementtype %s is not yet supported' % eltype)
+        GD.warning('Sorry, elementtype %s is not yet supported' % eltype)
 
 
 def writeBoundaries(fil,prop,op='MOD'):
@@ -806,23 +806,6 @@ def writeAmplitude(fil,prop):
 # Output: goes to the .odb file (for postprocessing with Abaqus/CAE)
 # Result: goes to the .fil file (for postprocessing with other means)
 #######################################################
-
-def writeStepOutput(fil,kind,history=False,variable='PRESELECT',numberinterval=None):
-    """Write the global step output requests.
-    
-    variable = 'ALL' or 'PRESELECT' or ''
-    """
-    if history:
-        option = 'HISTORY'
-    else:
-        option = 'FIELD'    
-    out = '*OUTPUT, %s' % option
-    if numberinterval and not history:
-            out+=', NUMBER INTERVAL=%s' % numberinterval
-    if variable:
-        out += ', VARIABLE=%s' % variable.upper()
-    out += '\n'
-    fil.write(out)
 
 
 def writeNodeOutput(fil,kind,keys,set='Nall'):
@@ -1132,7 +1115,7 @@ class Step(Dict):
         
         for i in out:
             if i.kind is None:
-                writeStepOutput(fil,**i)
+                fil.write(i.fmt())
             if i.kind == 'N':
                 writeNodeOutput(fil,**i)
             elif i.kind == 'E':
@@ -1153,16 +1136,19 @@ class Step(Dict):
 class Output(Dict):
     """A request for output to .odb and history."""
     
-    def __init__(self,kind=None,keys=None,set=None,
-                 history=False,variable='PRESELECT',numberinterval=None):
+    def __init__(self,kind=None,keys=None,set=None,type='FIELD',variable='PRESELECT',extra='',**options):
         """ Create new output request.
-        
+
+        - `type`: 'FIELD' or 'HISTORY'
         - `kind`: None, 'NODE', or 'ELEMENT' (first character suffices)
+        - `extra`: an extra string to be added to the command line. This
+          allows to add Abaqus options not handled by this constructor.
+          The string will be appended to the command line preceded by a comma.
 
         For kind=='':
 
-          - `variable` : 'ALL', 'PRESELECT' or ''
-
+          - `variable`: 'ALL', 'PRESELECT' or ''
+          
         For kind=='NODE' or 'ELEMENT':
 
           - `keys`: a list of output identifiers (compatible with kind type)
@@ -1171,15 +1157,33 @@ class Output(Dict):
             should be written. If no set is specified, the default is 'Nall'
             for kind=='NODE' and 'Eall' for kind='ELEMENT'
         """
+        if 'history' in options:
+            GD.warning("The `history` argument in an output request is deprecated.\nPlease use `type='history'` instead.")
+        if 'numberinterval' in options:
+            GD.warning("The `numberinterval` argument in an output request is deprecated.\nPlease use the `extra` argument instead.")
+
         if kind:
             kind = kind[0].upper()
         if set is None:
             set = "%sall" % kind
         Dict.__init__(self,{'kind':kind})
-        if kind is not None:
-            self.update({'keys':keys,'set':set})
+        if kind is None:
+            self.update({'type':type,'variable':variable,'extra':extra})
         else:
-            self.update({'history':history,'variable':variable,'numberinterval':numberinterval})
+            self.update({'keys':keys,'set':set})
+
+
+    def fmt(self):
+        """Format an output request.
+
+        Return a string with the formatted output command.
+        """
+        out = ['*OUTPUT',self.type.upper()]
+        if self.variable:
+            out.append('VARIABLE=%s' % self.variable.upper())
+        if self.extra:
+            out.append(self.extra)
+        return ', '.join(out)+'\n'
 
 
 class Result(Dict):
@@ -1280,7 +1284,7 @@ Script: %s
             elif p.prop is not None:
                 # set is specified by nprop nrs
                 if self.nprop is None:
-                    print p
+                    print(p)
                     raise ValueError,"nodeProp has a 'prop' field but no 'nprop'was specified"
                 set = where(self.nprop == p.prop)[0]
             else:
@@ -1304,7 +1308,7 @@ Script: %s
             elif p.prop is not None:
                 # element set is specified by eprop nrs
                 if self.eprop is None:
-                    print p
+                    print(p)
                     raise ValueError,"elemProp has a 'prop' field but no 'eprop'was specified"
                 set = where(self.eprop == p.prop)[0]
             else:
@@ -1312,7 +1316,7 @@ Script: %s
                 set = range(telems)
 
             if p.has_key('eltype'):
-                print 'Elements of type %s: %s' % (p.eltype,set)
+                print('Elements of type %s: %s' % (p.eltype,set))
 
                 setname = esetName(p)
                 gl,gr = self.model.splitElems(set)
@@ -1392,8 +1396,8 @@ Script: %s
 
 if __name__ == "script" or __name__ == "draw":
 
-    print "The data hereafter are incorrect and inconsistent."
-    print "See the FeAbq example for a comprehensive example."
+    print("The data hereafter are incorrect and inconsistent.")
+    print("See the FeAbq example for a comprehensive example.")
    
     # Create the geometry (4 quads)
     F = Formex(mpattern('123')).replic2(2,2)

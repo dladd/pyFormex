@@ -48,16 +48,16 @@ def readModel(fn):
         error("Corresponding element file '%s' does not exist" % efn)
         return None
 
-    print "Importing model %s" % fn
+    print("Importing model %s" % fn)
     fil = file(fn,'r')
     noffset = 0
     #noffset = int(fil.readline().split()[1])
     a = fromfile(fil,sep=" ").reshape(-1,3)
-    print a.shape
+    print(a.shape)
     x = Coords(a)
-    print x.shape
+    print(x.shape)
     e = fromfile(efn,sep=" ",dtype=Int).reshape(-1,3) 
-    print e.shape
+    print(e.shape)
 
     # convert to numpy offset
     if noffset != 0:
@@ -134,7 +134,7 @@ if __name__ == "draw":
     smooth()
 ##     if GD.GUI:
 ##         workHere()
-##         print os.getcwd()
+##         print(os.getcwd())
         
     reload_menu()
 

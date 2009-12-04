@@ -84,7 +84,7 @@ def readData(s,type,strict=False):
     if strict and len(data) != len(type):
         raise RuntimeError, "Data do not match type specifier %s\nData: '%s'" % (type,s)
     for t,d in zip(type,data):
-        #print t,d
+        #print(t,d)
         if len(d) == 0:
             break
         v = string.strip(d)
@@ -94,7 +94,7 @@ def readData(s,type,strict=False):
             val = float(v)
         else:
             m = Float.match(v)
-            #print m.start(),m.end(),len(v)
+            #print(m.start(),m.end(),len(v))
             if m and m.end() == len(v):
                 val = float(v)
             else:
@@ -104,4 +104,4 @@ def readData(s,type,strict=False):
 
 
 if __name__ == "__main__":
-    print readData('12, 13, 14.5e3, 12 inch, 1hr, 5MPa', ['int','float','kg','cm','s'])
+    print(readData('12, 13, 14.5e3, 12 inch, 1hr, 5MPa', ['int','float','kg','cm','s']))
