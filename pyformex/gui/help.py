@@ -26,7 +26,7 @@
 
 import pyformex as GD
 
-import os,sys,pydoc
+import os,sys
 import draw
 import utils
 import tempfile
@@ -69,15 +69,6 @@ def cmdline():
     """Display the pyFormex command line help."""
     catchAndDisplay('GD.print_help()')
 
-def showpydoc(item=None):
-    """Display the pydoc information about topic."""
-    if item is None:
-        res = draw.askItems([('Item:','')])
-        if res:
-            item = res['Item:']
-    if item:
-        catchAndDisplay("pydoc.help('%s')" % item)
-
 def readme():
     """Display the pyFormex description."""
     draw.showText(file(GD.cfg['help/readme']).read())
@@ -115,6 +106,7 @@ _developers = [
     'Bart Desloovere',
     'Peter Mortier',
     'Tim Neels',
+    'Tomas Praet',
     'Sofie Van Cauter',
     'Benedict Verhegghe',
     ]

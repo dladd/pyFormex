@@ -65,9 +65,9 @@ def Pos(widget):
     return p.x(),p.y()
 
 def printpos(w,t=None):
-    print "%s %s x %s" % (t,w.x(),w.y())
+    print("%s %s x %s" % (t,w.x(),w.y()))
 def printsize(w,t=None):
-    print "%s %s x %s" % (t,w.width(),w.height())
+    print("%s %s x %s" % (t,w.width(),w.height()))
 
 ################# Message Board ###############
 
@@ -356,7 +356,7 @@ class GUI(QtGui.QMainWindow):
         self.central.resize(wd,ht)
         self.box.resize(wd,ht+self.board.height())
         self.adjustSize()
-        print "RESIZED",Pos(self)
+        print("RESIZED",Pos(self))
     
     def showEditor(self):
         """Start the editor."""
@@ -486,7 +486,7 @@ class GUI(QtGui.QMainWindow):
     def closeEvent(self,event):
         """Close Main Window Event Handler"""
 ##         if draw.ack("Do you really want to quit?"):
-##             print "YES:EXIT"
+##             print("YES:EXIT")
         self.cleanup()
         GD.debug("Executing registered exit functions")
         for f in self.on_exit:
@@ -495,7 +495,7 @@ class GUI(QtGui.QMainWindow):
         self.writeSettings()
         event.accept()
 ##         else:
-##             print "NO:STAY"
+##             print("NO:STAY")
 ##             event.ignore()
 
     def onExit(self,func):
@@ -634,7 +634,7 @@ def startGUI(args):
     count = 0
     while windowExists(windowname):
         if count > 255:
-            print "Can not open the main window --- bailing out"
+            print("Can not open the main window --- bailing out")
             return 1
         count += 1
         windowname = '%s (%s)' % (GD.Version,count)
@@ -769,8 +769,8 @@ def runGUI():
 
 def classify_examples():
     m = GD.GUI.menu.item('Examples')
-    #print m
-    #print str(m.title())
+    #print(m)
+    #print(str(m.title()))
     
         
 

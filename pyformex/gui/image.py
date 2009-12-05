@@ -222,8 +222,8 @@ if gl2ps:
         opts = gl2ps.GL2PS_SILENT | gl2ps.GL2PS_SIMPLE_LINE_OFFSET | gl2ps.GL2PS_USE_CURRENT_VIEWPORT
         ##| gl2ps.GL2PS_NO_BLENDING | gl2ps.GL2PS_OCCLUSION_CULL | gl2ps.GL2PS_BEST_ROOT
         ##color = GL[[0.,0.,0.,0.]]
-        #print "VIEWPORT %s" % str(viewport)
-        #print fp
+        #print("VIEWPORT %s" % str(viewport))
+        #print(fp)
         viewport=None
         while state == gl2ps.GL2PS_OVERFLOW:
             bufsize += 1024*1024
@@ -350,13 +350,13 @@ def save(filename=None,window=False,multi=False,hotkey=True,autosave=False,borde
         if os.path.exists(names.peek()):
             next = names.next()
         GD.message("Start multisave mode to files: %s (%s)" % (names.name,format))
-        #print hotkey
+        #print(hotkey)
         if hotkey:
              QtCore.QObject.connect(GD.GUI,QtCore.SIGNAL("Save"),saveNext)
              if verbose:
                  GD.warning("Each time you hit the '%s' key,\nthe image will be saved to the next number." % GD.cfg['keys/save'])
         multisave = (names,format,window,border,hotkey,autosave,rootcrop)
-        print "MULTISAVE %s "% str(multisave)
+        print("MULTISAVE %s "% str(multisave))
         return multisave is None
 
     else: # Save the image

@@ -91,7 +91,7 @@ def colorName(color):
 def createColorDict():
     for c in QtGui.QColor.colorNames():
         col = QtGui.QColor
-        print "Color %s = %s" % (c,colorName(c))
+        print("Color %s = %s" % (c,colorName(c)))
 
 
 def closestColorName(color):
@@ -127,18 +127,18 @@ mediumgrey = grey(0.7)
 darkgrey = grey(0.5)
 
 if __name__ == "__main__":
-    print GLColor(QtGui.QColor('red'))
-    print GLColor(QtGui.QColor('indianred'))
-    print GLColor('red')
-    print GLColor(red)
-    print GLColor([200,200,255])
-    print GLColor([1.,1.,1.])
-    print GLColor(lightgrey)
-    print GLColor('#ffddff')
+    print(GLColor(QtGui.QColor('red')))
+    print(GLColor(QtGui.QColor('indianred')))
+    print(GLColor('red'))
+    print(GLColor(red))
+    print(GLColor([200,200,255]))
+    print(GLColor([1.,1.,1.]))
+    print(GLColor(lightgrey))
+    print(GLColor('#ffddff'))
     
-    print colorName(red)
-    print colorName('red')
-    print colorName('#ffddff')
-    print colorName([1.,1.,1.])
+    print(colorName(red))
+    print(colorName('red'))
+    print(colorName('#ffddff'))
+    print(colorName([1.,1.,1.]))
         
     createColorDict()

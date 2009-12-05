@@ -42,7 +42,7 @@ import OpenGL.GLU as GLU
 
 
 def printModelviewMatrix(s="%s"):
-    print s % GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+    print(s % GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX))
 
 
 
@@ -216,7 +216,7 @@ class Camera:
         a dolly operation.
         """
         self.setDist(self.getDist() * val)
-        #print "DIST %s" % self.dist
+        #print("DIST %s" % self.dist)
         self.viewChanged = True
         
     def pan(self,val,axis=0):
@@ -324,7 +324,7 @@ class Camera:
         self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
         self.rot = copy.deepcopy(self.m)
         self.trl = copy.deepcopy(self.rot[3,0:3])
-        #print "Translation: %s" % self.trl
+        #print("Translation: %s" % self.trl)
         self.rot[3,0:3] = [0.,0.,0.]
 
     def loadMatrix (self):
@@ -421,11 +421,11 @@ class Camera:
                         diff[0] = diff[1] #* self.aspect
                     area[0] = mean-diff
                     area[1] = mean+diff
-                #print "RELATIVE AREA %s" % (area)
+                #print("RELATIVE AREA %s" % (area))
                 area = (1.-area) * self.area[0] + area * self.area[1]
 
-            #print "OLD ZOOM AREA %s (aspect %s)" % (self.area,self.aspect)
-            #print "NEW ZOOM AREA %s" % (area)
+            #print("OLD ZOOM AREA %s (aspect %s)" % (self.area,self.aspect))
+            #print("NEW ZOOM AREA %s" % (area))
                                                        
             self.area = area
             self.lensChanged = True
@@ -443,13 +443,13 @@ class Camera:
             #self.setArea(val,val,1.-val,1.-val,center=center)
             if area is None:
                 area = self.area
-            #print "ZOOM AREA %s (%s)" % (area.tolist(),val)
+            #print("ZOOM AREA %s (%s)" % (area.tolist(),val))
             mean = (area[1]+area[0]) * 0.5
             diff = (area[1]-area[0]) * 0.5 * val
             area[0] = mean-diff
             area[1] = mean+diff
             self.area = area
-            #print "CAMERA AREA %s" % self.area.tolist()
+            #print("CAMERA AREA %s" % self.area.tolist())
             self.lensChanged = True
 
             
@@ -459,7 +459,7 @@ class Camera:
         dx and dy are relative movements in fractions of the
         current area size.
         """
-        #print "TRANSAREA %s,%s" % (dx,dy)
+        #print("TRANSAREA %s,%s" % (dx,dy))
         area = self.area
         diff = (area[1]-area[0]) * array([dx,dy])
         area += diff
@@ -474,7 +474,7 @@ class Camera:
             self.near,self.far = near,far
             self.lensChanged = True
         else:
-            print "Error: Invalid Near/Far clipping values"""
+            print("Error: Invalid Near/Far clipping values")
 
         
     ## def setClipRel(self,near,far):
@@ -483,7 +483,7 @@ class Camera:
     ##         self.near,self.far = near,far
     ##         self.lensChanged = True
     ##     else:
-    ##         print "Error: Invalid Near/Far clipping values""" 
+    ##         print("Error: Invalid Near/Far clipping values")
 
     def setPerspective(self,on=True):
         """Set perspective on or off"""
@@ -621,7 +621,7 @@ if __name__ == "__main__":
         elif key == 'o':
             cam.setPerspective(not cam.perspective)
         else:
-            print key
+            print(key)
         display()
             
 

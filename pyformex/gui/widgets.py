@@ -49,6 +49,42 @@ REJECTED = QtGui.QDialog.Rejected
 TIMEOUT = -1        # the return value if a widget timed out
 
 
+def addTimeOut(widget,timeout=None,timeoutfunc=None):
+    """Add a timeout to a widget.
+
+    - `timeoutfunc` is a callable. If None it will be set to the widget's
+      `timeout` method if one exists.
+    - `timeout` is a float value. If None, it will be set to to the global
+      `input_timeout`.
+
+    If timeout is positive, a timer will be installed into the widget which
+    will call the `timeoutfunc` after `timeout` seconds have elapsed.
+    The `timeoutfunc` can be any callable, but usually will emit a signal
+    to make the widget accept or reject the input. The timeoutfunc will not
+    be called is if the widget is destructed before the timer has finished.
+    """
+    if timeout is None:
+        timeout = input_timeout
+    if timeoutfunc is None and hasattr(widget,'timeout'):
+        timeoutfunc = widget.timeout
+
+    #print(timeout,timeoutfunc)
+    try:
+        timeout = float(timeout)
+        if timeout >= 0.0:
+            GD.debug("NOW REALLY STARTING TIMEOUT %s" % timeout)
+            timer = QtCore.QTimer()
+            #timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
+            timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutfunc)
+            timer.setSingleShot(True)
+            timeout = int(1000*timeout)
+            timer.start(timeout)
+            # make sure this timer stays alive
+            widget.timer = timer
+            GD.debug("TIMER STARTED")
+    except:
+        raise ValueError,"Could not start the timeout timer"
+
 
 class Options:
     pass
@@ -69,13 +105,13 @@ class FileSelection(QtGui.QFileDialog):
     def __init__(self,path,pattern=None,exist=False,multi=False,dir=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
-        #print path
+        #print(path)
         if os.path.isfile(path):
-            #print "path is a file"
+            #print("path is a file")
             self.setDirectory(os.path.dirname(path))
             self.selectFile(path)
         else:
-            #print "path is a dir"
+            #print("path is a dir")
             self.setDirectory(path)
         if type(pattern) == str:
             self.setFilter(pattern)
@@ -655,7 +691,7 @@ class InputText(InputItem):
         """Return the widget's value."""
         s = str(self.input.toPlainText())
         if self._is_string_:
-            #print "VALUE",s
+            #print("VALUE",s)
             return s
         else:
             return eval(s)
@@ -1205,9 +1241,6 @@ class InputDialog(QtGui.QDialog):
         - range: the range of values the field can accept,
         - choices
 
-
-
-
         The first two fields are mandatory. In many cases the type can be
         determined from the value and no other fields are required. Thus:
 
@@ -1320,7 +1353,7 @@ class InputDialog(QtGui.QDialog):
         display the dialog. 
         For a modal dialog, this is implicitely executed by getResult().
 
-        If a timeout, start the timeout timer if needed.
+        If a timeout is given, start the timeout timer.
         """
         # Set the keyboard focus to the first input field
         self.fields[0].input.setFocus()
@@ -1329,32 +1362,7 @@ class InputDialog(QtGui.QDialog):
         self.setModal(modal)
         QtGui.QDialog.show(self)
 
-        if timeout is None:
-            # use the GUI timeout value
-            timeout = input_timeout
-        if timeoutfunc is None:
-            # use the default timeout function
-            timeoutfunc = self.timeout
-
-        #GD.debug("TIMEOUT %s" % timeout)
-        if timeout >= 0:
-            # Start the timer:
-            #GD.debug("START TIMEOUT %s" % timeout)
-            try:
-                timeout = float(timeout)
-                if timeout >= 0.0:
-                    #GD.debug("NOW REALLY STARTING TIMEOUT %s" % timeout)
-                    timer = QtCore.QTimer()
-                    #timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
-                    timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutfunc)
-                    timer.setSingleShot(True)
-                    timeout = int(1000*timeout)
-                    timer.start(timeout)
-                    # make sure this timer stays alive
-                    self.timer = timer
-                    #GD.debug("TIMER STARTED")
-            except:
-                raise ValueError,"Could not start the timeout timer"
+        addTimeOut(self,timeout,timeoutfunc)
         
         
     def acceptData(self,result=ACCEPTED):
@@ -1439,16 +1447,16 @@ def updateDialogItems(data,newdata):
     if newdata:
         if type(data) is dict:
             for d in data:
-                #print "subitems",d
+                #print("subitems",d)
                 updateDialogItems(data[d],newdata)
         else:
             for d in data:
-                #print "item",d
+                #print("item",d)
                 v = newdata.get(d[0],None)
-                #print v
+                #print(v)
                 if v is not None:
                     d[1] = v
-                #print d
+                #print(d)
 
 
 def dialogButtons(dialog,actions,default=None):
@@ -1656,6 +1664,7 @@ def messageBox(message,level='info',choices=['OK'],default=None,timeout=None):
             timeout = float(timeout)
             if timeout >= 0.0:
                 timer = QtCore.QTimer()
+                print(type(QtCore.SLOT("accept()")))
                 timer.connect(timer,QtCore.SIGNAL("timeout()"),w,QtCore.SLOT("accept()"))
                 timer.setSingleShot(True)
                 timeout = int(1000*timeout)
@@ -1673,43 +1682,47 @@ def messageBox(message,level='info',choices=['OK'],default=None,timeout=None):
         return ''
 
 
-def textBox(text,type=None,choices=['OK']):
+class TextBox(QtGui.QDialog):
     """Display a text and wait for user response.
 
     Possible choices are 'OK' and 'CANCEL'.
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
-    w = QtGui.QDialog()
-    w.setWindowTitle('pyFormex Text Display')
-    t = QtGui.QTextEdit()
-    t.setReadOnly(True)
-    if type == 'plain':
-        t.setPlainText(text)
-    elif type == 'html':
-        w.setWindowTitle('pyFormex Html Display')
-        t.setHtml(text)
-    else:
-        t.setText(text)
-    bl = QtGui.QHBoxLayout()
-    bl.addStretch()
-    if 'OK' in choices:
-        b = QtGui.QPushButton('OK')
-        QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("accept()"))
-        bl.addWidget(b)
-    if 'CANCEL' in choices:
-        b = QtGui.QPushButton('CANCEL')
-        QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),w,QtCore.SLOT("reject()"))
-        bl.addWidget(b)
-    bl.addStretch()
-    h = QtGui.QWidget()
-    h.setLayout(bl)
-    l = QtGui.QVBoxLayout()
-    l.addWidget(t)
-    l.addWidget(h)
-    w.setLayout(l)
-    w.resize(800,400)
-    return w.exec_() == QtGui.QDialog.Accepted
+    def __init__(self,text,type=None,choices=['OK']):
+        QtGui.QDialog.__init__(self)
+        self.setWindowTitle('pyFormex Text Display')
+        t = QtGui.QTextEdit()
+        t.setReadOnly(True)
+        if type == 'plain':
+            t.setPlainText(text)
+        elif type == 'html':
+            self.setWindowTitle('pyFormex Html Display')
+            t.setHtml(text)
+        else:
+            t.setText(text)
+        bl = QtGui.QHBoxLayout()
+        bl.addStretch()
+        if 'OK' in choices:
+            b = QtGui.QPushButton('OK')
+            QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
+            bl.addWidget(b)
+        if 'CANCEL' in choices:
+            b = QtGui.QPushButton('CANCEL')
+            QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
+            bl.addWidget(b)
+        bl.addStretch()
+        h = QtGui.QWidget()
+        h.setLayout(bl)
+        l = QtGui.QVBoxLayout()
+        l.addWidget(t)
+        l.addWidget(h)
+        self.setLayout(l)
+        self.resize(800,400)
+
+    def getResult(self):
+        return self.exec_() == QtGui.QDialog.Accepted
+
 
 
 ############################# Named button box ###########################
@@ -1899,14 +1912,14 @@ class BaseMenu(object):
                 if type(val) == str:
                     val = eval(val)
                 if len(item) > 2 and item[2].has_key('data'):
-                    #print "INSERT A DACTION", item
+                    #print("INSERT A DACTION", item)
                     a = DAction(txt,data=item[2]['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
                 else:
                     a = self.create_insert_action(txt,val,before)
                 if len(item) > 2:
-                    #print 'item = %s' % str(item)
+                    #print('item = %s' % str(item))
                     for k,v in item[2].items():                        
                         if k == 'icon':
                             a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
@@ -2056,7 +2069,7 @@ class ActionList(object):
         The icon is either a filename or a QIcon object. 
         """
         if type(icon) == str:
-            #print "CREATE ICON %s" % icon
+            #print("CREATE ICON %s" % icon)
             if os.path.exists(icon):
                 icon = QtGui.QIcon(QtGui.QPixmap(icon))
             else:

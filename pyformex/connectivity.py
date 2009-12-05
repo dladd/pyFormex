@@ -170,21 +170,17 @@ class Connectivity(ndarray):
         uniq,uniqid = unique1d(codes,True)
         # uniq is sorted 
         uedges = uniq.searchsorted(codes)
-        edges = column_stack([uniq/self.magic,uniq%self.magic])
+        if GD.options.fastencode:
+            edges = uniq.view(int32).reshape(-1,2)
+        else:
+            edges = column_stack([uniq/self.magic,uniq%self.magic])
         faces = uedges.reshape((nelems,nplex))
         return edges,faces
-
-
-    from utils import deprecated
-    @deprecated(expand)
-    def expandElems(self):
-        pass
 
 
 ############################################################################
 
 def expandElems(elems):
-##    print("This function is deprecated: use Connectivity.expand() instead.")
     return Connectivity(elems).expand()
     
 

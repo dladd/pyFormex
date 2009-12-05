@@ -80,7 +80,7 @@ class ImageViewer(QtGui.QMainWindow):
             QtGui.QMessageBox.information(self,tr(caption),tr("Cannot load %1.").arg(filename))
             return
 
-        print "Size %sx%s" % (image.width(),image.height()) 
+        print("Size %sx%s" % (image.width(),image.height()))
         self.filename = str(filename)
         self.image.setPixmap(QtGui.QPixmap.fromImage(image))
         self.scaleFactor = 1.0

@@ -105,7 +105,8 @@ def showText(text,type=None,actions=['OK']):
 
     This can display a large text and will add scrollbars when needed.
     """
-    return widgets.textBox(text,type,actions)
+    return widgets.TextBox(text,type,actions).getResult()
+
 
 def showFile(filename):
     try:
@@ -193,12 +194,12 @@ def askFilename(cur=None,filter="All files (*.*)",exist=True,multi=False,change=
         fn = os.path.basename(cur)
         cur = os.path.dirname(cur)
     #GD.debug("cur,fn: %s,%s" % (cur,fn))
-    #print "MULTI=%s" % multi
+    #print("MULTI=%s" % multi)
     w = widgets.FileSelection(cur,filter,exist,multi)
     if fn:
         w.selectFile(fn)
     fn = w.getFilename()
-    #print "SELECTED=%s" % fn
+    #print("SELECTED=%s" % fn)
     if fn and change:
         if multi:
             chdir(fn[0])
@@ -951,7 +952,7 @@ def wakeup(mode=0):
 
 
 def printbbox():
-    print GD.canvas.bbox
+    print(GD.canvas.bbox)
 
 def printviewportsettings():
     GD.GUI.viewports.printSettings()
@@ -1031,7 +1032,7 @@ def highlightActors(K):
     """
     GD.canvas.removeHighlights()
     for i in K.get(-1,[]):
-        print "%s/%s" % (i,len(GD.canvas.actors))
+        print("%s/%s" % (i,len(GD.canvas.actors)))
         actor = GD.canvas.actors[i]
         if isinstance(actor,actors.GeomActor):
             FA = actors.GeomActor(actor,color=GD.canvas.settings.slcolor)

@@ -91,37 +91,41 @@ if not res:
 
 globals().update(res)
 
-import timer
-tim = timer.Timer()
-
-
-tim.reset()
 if image is None:
+    print "Loading image"
     loadImage()
-print "Loading image: %.2f" % tim.seconds(False)
 
 if image is None:
     exit()
 
 # Create the colors
-tim.reset()
 color,colortable = image2glcolor(image.scaled(nx,ny))
-print "Image to colors: %.2f" % tim.seconds(False)
+print "Converting image to color array"
 
-tim.reset()
 # Create a 2D grid of nx*ny elements
+print "Creating grid"
 R = float(nx)/pi
 L = float(ny)
 F = Formex(mpattern('123')).replic2(nx,ny).centered()
 F = F.translate(2,R)
-trf = transforms[transform]
-F = trf(F)
-print "Creating grid : %.2f" % tim.seconds(False)
 
-clear()
-tim.reset()
-draw(F,color=color,colormap=colortable)
-print "drawing time = %.2f" % tim.seconds(False)
-drawtext('Created with pyFormex',10,10)
+# Transform rid and draw
+def drawTransform(transform):
+    print "Transforming grid"
+    trf = transforms[transform]
+    G = trf(F)
+    clear()
+    print "Drawing Colored grid"
+    draw(G,color=color,colormap=colortable)
+    drawtext('Created with pyFormex',10,10,size=24)
 
+
+layout(2)
+viewport(0)
+drawTransform('cylindrical')
+zoomAll()
+
+viewport(1)
+drawTransform('spherical')
+zoomAll()
 # End

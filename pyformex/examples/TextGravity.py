@@ -1,4 +1,4 @@
-#!/usr/bin/env pyformex --gui
+#!/usr/bin/env pyformex
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
@@ -22,27 +22,42 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
-"""Parabolic Tower
+"""TextGravity
+
+Show the use of the text gravity parameter.
 
 level = 'beginner'
-topics = ['geometry']
-techniques = ['colors']
+topics = []
+techniques = ['text']
 
 """
 
 clear()
-global a,b,c,d  # constants in lambda need to be made global
-h = 25.   # height of tower
-h1 = 18.  # height at neck of tower
-r = 10.   # radius at base of tower
-r1 = 5.   # radius at neck of tower
-m = 10    # number of sides at the base   
-n = 8     # number of levels
-a = (r-r1)/h1**2; b = -2*a*h1; c = r; d = h/n
-g = lambda i: a*(d*i)**2 + b*d*i + c
-f = concatenate([  [[[g(i),i,i], [g(i+1),i-1,i+1]],
-             [[g(i),i,i], [g(i+1),i+1,i+1]],
-             [[g(i+1),i-1,i+1], [g(i+1),i+1,i+1]]] for i in range(n) ])
-F = Formex(f,[3,0,1]).replic(m,2,dir=1)
-T = F.cylindrical(scale=[1,360./(2*m),d])
-draw(T,view='bottom')
+lights(False)
+x = GD.canvas.width()//2
+y = GD.canvas.height()//2
+x,y = 600,300
+print x,y
+
+from gui.decors import Grid
+
+d = 50
+
+G = Grid(x-50,y-50,x+50,y+50,2,2)
+decorate(G)
+    
+for g in [ 'NW','N','NE','W','C','E','SW','S','SE']:
+    T = drawText("XXX  %s  XXX"%g,x,y,gravity=g)
+    sleep(2)
+    undecorate(T)
+
+
+from gui.gluttext import GLUTFONTS
+for f in GLUTFONTS.keys():
+    S = drawText(f,20,20,font='hv18')
+    T = drawText('X',x,y,font=f,gravity='C')
+    sleep(1)
+    undecorate(S)
+    undecorate(T)
+    
+# End

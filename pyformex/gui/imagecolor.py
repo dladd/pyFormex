@@ -48,7 +48,7 @@ def image2glcolor(im,flip=True):
         c = flipud(c)
     if t is None:
         color = dstack([c['r'],c['g'],c['b']]).reshape(-1,3)
-        # print color.shape
+        # print(color.shape)
         return color.astype(Float)/255.,t
     else:
         return c,t

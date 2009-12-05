@@ -100,15 +100,15 @@ class ActorList(list):
     def delete(self,actor):
         """Remove an actor from an actorlist."""
 ##         if self.atype == 'annotation':
-##             print "DELETE"
-##             print self
-##             print actor
+##             print("DELETE")
+##             print(self)
+##             print(actor)
         if actor in self:
 ##             if self.atype == 'annotation':
-##                 print "REMOVE %s" % actor
+##                 print("REMOVE %s" % actor)
             self.remove(actor)
 ##             if self.atype == 'annotation':
-##                 print self
+##                 print(self)
 
     def redraw(self):
         """Redraw (some) actors in the scene.
@@ -809,12 +809,12 @@ class Canvas(object):
     ##     model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
     ##     proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
     ##     view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-    ##     print "Modelview matrix:",model
-    ##     print "Projection matrix:",proj
-    ##     print "Viewport:",view
-    ##     print "Point:",str((x,y,z)) 
+    ##     print("Modelview matrix:",model)
+    ##     print("Projection matrix:",proj)
+    ##     print("Viewport:",view)
+    ##     print("Point:",str((x,y,z)) )
     ##     objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-    ##     print "Coordinates: ",x,y," map to ",objx,objy
+    ##     print("Coordinates: ",x,y," map to ",objx,objy)
     ##     return (objx,objy,objz)
 
 
@@ -823,12 +823,12 @@ class Canvas(object):
     ##     model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
     ##     proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
     ##     view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-    ##     print "Modelview matrix:",model
-    ##     print "Projection matrix:",proj
-    ##     print "Viewport:",view
-    ##     print "Point:",str((x,y,z)) 
+    ##     print("Modelview matrix:",model)
+    ##     print("Projection matrix:",proj)
+    ##     print("Viewport:",view)
+    ##     print("Point:",str((x,y,z)) )
     ##     objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-    ##     print "Coordinates: ",x,y," map to ",objx,objy
+    ##     print("Coordinates: ",x,y," map to ",objx,objy)
     ##     return (objx,objy,objz)
 
 

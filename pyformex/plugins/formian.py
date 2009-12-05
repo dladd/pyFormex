@@ -65,7 +65,7 @@ def rindle(self,n,dir,step):
     return self.replic(n,step,dir)
 @formex_method
 def rin(self,dir,n,dist):
-    return self.rindle(n,dir-1,dist)
+    return self.replic(n,dist,dir-1)
 
 
 @formex_method

@@ -30,6 +30,8 @@ techniques = ['colors']
 
 """
 
+from plugins import formian
+
 clear()
 n=10; a=2./3.; d=1./n;
 e1 = Formex([[[0,0,d],[2,0,d]],[[2,0,d],[1,1,d]],[[1,1,d],[0,0,d]]],prop=1)

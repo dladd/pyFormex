@@ -237,8 +237,8 @@ class ScriptsMenu(QtGui.QMenu):
         self.files = self.filterFiles(files)
         
         if GD.options.debug:
-            print "Found Scripts in %s" % self.dir
-            print self.files
+            print("Found Scripts in %s" % self.dir)
+            print(self.files)
         self.actions = [ self.addAction(f) for f in self.files ]           
         self.connect(self,QtCore.SIGNAL("triggered(QAction*)"),self.run)
         
@@ -305,7 +305,7 @@ class ScriptsMenu(QtGui.QMenu):
     def runScript(self,filename):
         """Run the specified script."""
         self.current = filename
-        #print "CURRENT=%s" % self.current
+        #print("CURRENT=%s" % self.current)
         selected = self.fileName(filename)
         GD.debug("Playing script %s" % selected)
         GD.GUI.setcurfile(selected)
@@ -318,8 +318,8 @@ class ScriptsMenu(QtGui.QMenu):
     def runNext(self):
         """Run the next script."""
         try:
-            #print "CURRENT FOUND=%s" % self.current
-            #print self.files
+            #print("CURRENT FOUND=%s" % self.current)
+            #print(self.files)
             i = self.files.index(self.current) + 1
         except ValueError:
             i = 0
@@ -331,8 +331,8 @@ class ScriptsMenu(QtGui.QMenu):
     def runAllNext(self):
         """Run the current and all following scripts."""
         try:
-            #print "CURRENT FOUND=%s" % self.current
-            #print self.files
+            #print("CURRENT FOUND=%s" % self.current)
+            #print(self.files)
             i = self.files.index(self.current)
         except ValueError:
             i = 0

@@ -54,23 +54,23 @@ def qimage2numpy(qimage):
 
     elif qimage.format() == QImage.Format_Indexed8:
         ncolors = qimage.numColors()
-        print "Number of colors: %s" % ncolors
+        print("Number of colors: %s" % ncolors)
         colortable = qimage.colorTable()
-        print colortable
+        print(colortable)
         colortable = numpy.array(colortable)
-        print colortable.dtype
-        print colortable.size
+        print(colortable.dtype)
+        print(colortable.size)
         dtype = numpy.uint8
         buf = qimage.bits().asstring(qimage.numBytes())
         ar = numpy.frombuffer(buf, dtype)
         h,w = qimage.height(),qimage.width()
         if w*h != ar.size:
-            print "!! Size of image (%s) does not match dimensions: %s x %s = %s" % (ar.size,w,h,w*h)
+            print("!! Size of image (%s) does not match dimensions: %s x %s = %s" % (ar.size,w,h,w*h))
         ar = ar[:w*h]
-        print ar.shape
-        print ar.dtype
-        print ar.shape
-        print ar
+        print(ar.shape)
+        print(ar.dtype)
+        print(ar.shape)
+        print(ar)
         return ar.reshape(h,w),colortable
         
     else:

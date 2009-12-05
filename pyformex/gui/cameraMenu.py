@@ -90,7 +90,7 @@ def dollyOut():
     GD.canvas.camera.dolly(float(GD.cfg['gui/zoomfactor']))
     GD.canvas.update()   
 def report():
-    print GD.canvas.camera.report()
+    print(GD.canvas.camera.report())
 
 
 MenuData = [

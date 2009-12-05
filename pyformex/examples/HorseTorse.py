@@ -63,6 +63,7 @@ for i in range(n+1):
     undraw(FA)
     FA = GA
 
+
 elong = 2.0
 nx = 50
 dx = elong/nx

@@ -75,7 +75,7 @@ def set_the_color(field='top'):
     _the_dialog.acceptData()
     color = _the_dialog.results[field]
     color = widgets.getColor(color)
-    print color
+    #print(color)
     if color:
         _the_dialog.updateData({field:color})
 

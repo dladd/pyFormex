@@ -126,7 +126,7 @@ def setOpenGLFormat():
     QtOpenGL.QGLFormat.setDefaultFormat(fmt)
     opengl_format = fmt
     if GD.options.debug:
-        print OpenGLFormat()
+        print(OpenGLFormat())
     return fmt
 
 def getOpenGLContext():
@@ -172,10 +172,10 @@ Multisample Buffers: %s
 
 def printOpenGLContext(ctxt):
     if ctxt:
-        print "context is valid: %d" % ctxt.isValid()
-        print "context is sharing: %d" % ctxt.isSharing()
+        print("context is valid: %d" % ctxt.isValid())
+        print("context is sharing: %d" % ctxt.isSharing())
     else:
-        print "No OpenGL context yet!"
+        print("No OpenGL context yet!")
 
 
 ################# Canvas Mouse Event Handler #########################
@@ -214,25 +214,25 @@ class CanvasMouseHandler(object):
 
     """
     def setMouse(self,button,func,mod=NONE):
-        #print button,mod
+        #print(button,mod)
         self.mousefncsaved[mod][button].append(self.mousefnc[mod][button])
         self.mousefnc[mod][button] = func
         self.setCursorShapeFromFunc(func)
-        #print "MOUSE %s" % func
-        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+        #print("MOUSE %s" % func)
+        #print("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
 
 
     def resetMouse(self,button,mod=NONE):
-        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+        #print("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
         try:
             func = self.mousefncsaved[mod][button].pop()
         except:
-            #print "AAAAAHHH, COULD NOT POP"
+            #print("AAAAAHHH, COULD NOT POP")
             func = None
         self.mousefnc[mod][button] = func
         self.setCursorShapeFromFunc(func)
-        #print "RESETMOUSE %s" % func
-        #print "MOUSE SAVED %s" % self.mousefncsaved[mod][button]
+        #print("RESETMOUSE %s" % func)
+        #print("MOUSE SAVED %s" % self.mousefncsaved[mod][button])
             
 
     def getMouseFunc(self):
@@ -648,7 +648,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
     def initializeGL(self):
         if GD.options.debug:
             p = self.sizePolicy()
-            print p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch()
+            print(p.horizontalPolicy(), p.verticalPolicy(), p.horizontalStretch(), p.verticalStretch())
         self.initCamera()
         self.glinit()
         self.resizeGL(self.width(),self.height())
@@ -1182,10 +1182,10 @@ class MultiCanvas(FramedGridLayout):
         ind = self.all.index(w)
         row,col = divmod(ind,self.ncols)
 
-        ## print "Viewport %s %s,%s,%s" % (self.rowwise,row,col,self.ncols)
+        ## print("Viewport %s %s,%s,%s" % (self.rowwise,row,col,self.ncols))
 
         ## if row > 0 and col < self.ncols and ind == len(self.all)-1:
-        ##     print "SPANMULTIPLE"
+        ##     print("SPANMULTIPLE")
         ##     rspan,cspan = 1,2
         ##     if not self.rowwise:
         ##         row,col = col,row

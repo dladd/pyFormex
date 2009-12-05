@@ -199,15 +199,15 @@ if __name__ == "__main__":
     for palet in [ 'RGB', 'BW' ]:
         CS = ColorScale(palet,-50.,250.)
         for x in [ -50+10.*i for i in range(31) ]:
-            print x,": ",CS.color(x)
+            print(x,": ",CS.color(x))
     
     CS = ColorScale('RGB',-50.,250.,0.)
     CL = ColorLegend(CS,5)
-    print CL.limits
+    print(CL.limits)
     for x in [ -45+10.*i for i in range(30) ]:
-        print x,": ",CL.color(x)
+        print(x,": ",CL.color(x))
     CL.underflowcolor = black
     CL.overflowcolor = white
 
-    print CL.color(-55)
-    print CL.color(255)
+    print(CL.color(-55))
+    print(CL.color(255))

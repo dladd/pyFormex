@@ -35,14 +35,15 @@ from plugins.properties import *
 from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
+from odict import ODict
 import utils
 
 # global data
 
-parts = None,
-femodels = None,
-model = None,
-PDB = None,
+parts = None
+femodels = None
+model = None
+PDB = None
 
 # check for existing results
 feresult_base = 'FeResult'
@@ -131,7 +132,7 @@ def drawParts():
     zoomAll()
 
 
-######################## de model ####################
+######################## the model ####################
 
 def createModel():
     """Merge all the parts into a Finite Element model."""

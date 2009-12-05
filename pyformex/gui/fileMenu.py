@@ -84,7 +84,7 @@ def createProject(create=True,compression=0,addGlobals=None):
     legacy = res.leg
     ignoresig = res.sig
     compression = res.cpr
-    #print fn,legacy,compression
+    #print(fn,legacy,compression)
 
     if create and os.path.exists(fn):
         res = draw.ask("The project file '%s' already exists\nShall I delete the contents or add to it?" % fn,['Delete','Add','Cancel'])
@@ -310,7 +310,7 @@ def setOptions():
     if res:
         for o in options:
             setattr(GD.options,o,res[o])
-            print GD.options
+            print(GD.options)
             ## if o == 'debug':
             ##     GD.setDebugFunc()
 

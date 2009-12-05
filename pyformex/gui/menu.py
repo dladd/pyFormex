@@ -42,10 +42,10 @@ saveAs = NotImplemented
 
 def editor():
     if pyformex.GUI.editor:
-        print "Close editor"
+        print("Close editor")
         pyformex.GUI.closeEditor()
     else:
-        print "Open editor"
+        print("Open editor")
         pyformex.GUI.showEditor()
 
  
@@ -102,8 +102,8 @@ def viewportSettings():
 def printwindow():
     pyformex.app.syncX()
     r = pyformex.GUI.frameGeometry()
-    print "Qt4 geom(w,h,x,y): %s,%s,%s,%s" % (r.width(),r.height(),r.x(),r.y())
-    print "According to xwininfo, (x,y) is %s,%s" % pyformex.GUI.XPos()
+    print("Qt4 geom(w,h,x,y): %s,%s,%s,%s" % (r.width(),r.height(),r.x(),r.y()))
+    print("According to xwininfo, (x,y) is %s,%s" % pyformex.GUI.XPos())
 
 
 _geometry=None

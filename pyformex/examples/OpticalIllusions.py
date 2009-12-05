@@ -27,8 +27,6 @@ def ParallelLines():
     they are strictly parallel.
     """
     resetview([0.8,0.8,0.8])
-    if Explanation:
-        message(ParallelLines.__doc__)
     lines = Formex([[[0,0,0],[14,0,0]]]).replic(13,1,dir=1)
     draw(lines,color=[0.8,0.8,0.8],linewidth=1.0)
     F = Formex(mpattern('1234')).replic(13,1)
@@ -49,8 +47,6 @@ def RotatingCircle():
     Blinking or changing your focus will immediately undo the effect.
     """
     resetview([0.8,0.8,0.8])
-    if Explanation:
-        message(RotatingCircle.__doc__)
     ask = askItems([('Number of circles',12),('Radius of circles',1.2),('Radius of the figure',12),('Number of rotations',16),('color of circles',[1.0,0.40,1.0]),('Sleep time',0.03),('Zoom',14.)])
     if not ask: return
     N = ask['Number of circles']
@@ -83,8 +79,6 @@ def SquaresAndCircles():
     You may need to zoom to get an optimal effect.
     """
     resetview([0.6,0.6,0.6])
-    if Explanation:
-        message(SquaresAndCircles.__doc__)
     B,H = 16,16
     F = Formex(mpattern('1234')).replic2(B,H,1.2,1.2)
     R = 0.2/sqrt(2.)
@@ -104,8 +98,6 @@ def ShadesOfGrey():
     The effect can be somewhat subtle though.
     """
     resetview([0.8,0.8,0.8])
-    if Explanation:
-        message(ShadesOfGrey.__doc__)
     sc = 2
     box = [[-2,0,-2],[2,8,2]]
     back = Formex(mpattern('1234')).scale([8,8,1])
@@ -136,8 +128,6 @@ def RunningInCircles():
     at equal and constant speed.
     """
     resetview()
-    if Explanation:
-        message(RunningInCircles)
     box= [[-8,-8,-8],[8,8,8]]
     N = 72
     R = 10
@@ -174,8 +164,6 @@ def HowManyColors():
     Lots of zooming might convince you that this is the case.
     """
     resetview()
-    if Explanation:
-        message(HowManyColors.__doc__)
     magenta,orange,cyan = array([1.,0.,1.]),array([1.,0.6,0.]),array([0.,1.,0.6])
     b,h,B,H = 10,0.5,11,99
     F = Formex(mpattern('1234')).scale([b,h,1]).replic2(B,H,b,h)
@@ -198,8 +186,6 @@ def AlignedLines():
     visible.
     """
     resetview()
-    if Explanation:
-        message(AlignedLines.__doc__)
     a = 60.
     lines = Formex(pattern('1')).scale([20,1,0]).rotate(a).translate([-20.*cos(a*pi/180.),0,0]).replic(32,1)
     lines = cut2AtPlane(cut2AtPlane(lines,[-1,0,0],[1,0,0],side='+'),[22,0,0],[1,0,0],side='-')
@@ -223,8 +209,6 @@ def ParallelLinesOverWheel():
     Some zooming can help to optimize the effect.
     """
     resetview()
-    if Explanation:
-        message(ParallelLinesOverWheel.__doc__)
     C,O = circle(a1=20).scale(2).points(),[0,0,0]
     draw(Formex([[C[i,0],C[i+1,0],O] for i in arange(0,36,2)]))
     line = Formex([[[-20,0,0],[20,0,0]]])
@@ -247,8 +231,6 @@ def MotionInducedBlindness():
     Cool huh?
     """
     resetview('black')
-    if Explanation:
-        message(MotionInducedBlindness.__doc__)
     res = askItems([('Number of static points',10),('Background',None,'radio',['Tiles','Structured points','Random points']),('Rotations',2),('Rotation angle',2),('Number of random points',300)])
     if not res: return
     nr,a,rot,back,n = res['Number of random points'],res['Rotation angle'],res['Rotations'],res['Background'],res['Number of static points']
@@ -272,8 +254,6 @@ def FlickerInducedBlindness():
     """
     #... STILL UNDER DEVELOPMENT... (pyFormex might lack the possibility to reach the correct frequencies)
     resetview('black')
-    if Explanation:
-        message(FlickerInducedBlindness.__doc__)
     n,freq,d = 4,2.,0.17
     sl = 1/2/freq
     centre = shape('plus').scale(0.4)
@@ -305,8 +285,6 @@ def SineWave():
     that all lines are equally large.
     """
     resetview()
-    if Explanation:
-        message(SineWave.__doc__)
     res = askItems([('Amplitude',3.5),('Periods',3),('Spacing between lines',0.1)])
     if not res: return
     shift,per,amp = res['Spacing between lines'],res['Periods'],res['Amplitude']
@@ -327,8 +305,6 @@ def CirclesAndLines():
     well as others.
     """
     resetview()
-    if Explanation:
-        message(CirclesAndLines.__doc__)
     n,m,nc = 5,5,8
     size = nc*sqrt(2)
     lines = Formex(pattern('1234')).translate([-0.5,-0.5,0]).rotate(45).scale(size)
@@ -348,8 +324,6 @@ def Crater():
     Look carefully and you'll see the whirlabout of a crater shaped object.
     """
     resetview()
-    if Explanation:
-        message(Crater.__doc__)
     deg,rot,col = 5,3,rand(2,3)
     r1,r2,r3,r4,r5,r6,r7,r8 = 1,1.9,2.9,4,5.1,6.1,7,7.8
     p = circle(a1=5).vertices()
@@ -381,8 +355,6 @@ def Cussion():
     straight!
     """
     resetview()
-    if Explanation:
-        message(Cussion.__doc__)
     b,h = 17,17
     if b%2==0: b+=1
     if h%2==0: h+=1
@@ -416,8 +388,6 @@ def CrazyCircles():
     an illusion.
     """
     resetview()
-    if Explanation:
-        message(CrazyCircles.__doc__)
     n = 5*6
     col = [[1.,1.,1.],[0.12,0.556,1.],[0.,0.,1.],[0.,0.,0.],[0.7,0.9,0.2],[1.,1.,0.]]
     p = circle(a1=10).rotate(5).vertices()
@@ -441,11 +411,6 @@ def resetview(bgcol='white'):
     toolbar.setProjection()
     frontView()
 
-def showtext(txt=''): #Currently not used
-    line = 0
-    for i in txt:
-        drawText(i,40,400-line,color=blue,size=16)
-        line += 25
 
 # Persistent dialog settings
 
@@ -472,7 +437,7 @@ method = ODict(zip(headers,illusions))
 
 data_items = [
     ['Illusion',None,'select',method.keys()],
-    ['Explanation',False],
+    ['Explain',False,{'text':'Show explanation'}],
     ]
 
 globals().update([i[:2] for i in data_items])
@@ -492,15 +457,30 @@ def timeOut():
 
 # Actions
 
+def explain():
+    dialog.acceptData()
+    globals().update(dialog.results)
+    showText(method[Illusion].__doc__)
+
 def show():
     dialog.acceptData()
     globals().update(dialog.results)
-    if Explanation: message('_________________________________________')
+    if Explain:
+        explain()
     method[Illusion]()
+
+def next():
+    dialog.acceptData()
+    ill = dialog.results['Illusion']
+    print ill,method._order
+    i = (method._order.index(ill) + 1) % len(method._order)
+    print method._order[i]
+    dialog.updateData({'Illusion':method._order[i]})
+    show()
 
 # Display the dialog
 
-dialog = widgets.InputDialog(data_items,caption='Optical illusions',actions = [('Close',close),('Show',show)],default='Show')
+dialog = widgets.InputDialog(data_items,caption='Optical illusions',actions = [('Done',close),('Next',next),('Explain',explain),('Show',show)],default='Show')
 dialog.timeout = timeOut
 dialog.show()
 
