@@ -68,26 +68,29 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
     if timeoutfunc is None and hasattr(widget,'timeout'):
         timeoutfunc = widget.timeout
 
-    #print(timeout,timeoutfunc)
     try:
         timeout = float(timeout)
         if timeout >= 0.0:
             GD.debug("NOW REALLY STARTING TIMEOUT %s" % timeout)
             timer = QtCore.QTimer()
-            #timer.connect(timer,QtCore.SIGNAL("timeout()"),self.timeout)
-            timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutfunc)
+            if type(timeoutfunc) is str:
+                timer.connect(timer,QtCore.SIGNAL("timeout()"),widget,QtCore.SLOT(timeoutfunc))
+            else:
+                timer.connect(timer,QtCore.SIGNAL("timeout()"),timeoutfunc)
             timer.setSingleShot(True)
             timeout = int(1000*timeout)
             timer.start(timeout)
-            # make sure this timer stays alive
-            widget.timer = timer
+            widget.timer = timer  # make sure this timer stays alive
             GD.debug("TIMER STARTED")
     except:
         raise ValueError,"Could not start the timeout timer"
 
 
+
 class Options:
     pass
+
+###################### File Selection Dialog #########################
 
 class FileSelection(QtGui.QFileDialog):
     """A file selection dialog.
@@ -105,13 +108,10 @@ class FileSelection(QtGui.QFileDialog):
     def __init__(self,path,pattern=None,exist=False,multi=False,dir=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
-        #print(path)
         if os.path.isfile(path):
-            #print("path is a file")
             self.setDirectory(os.path.dirname(path))
             self.selectFile(path)
         else:
-            #print("path is a dir")
             self.setDirectory(path)
         if type(pattern) == str:
             self.setFilter(pattern)
@@ -691,7 +691,6 @@ class InputText(InputItem):
         """Return the widget's value."""
         s = str(self.input.toPlainText())
         if self._is_string_:
-            #print("VALUE",s)
             return s
         else:
             return eval(s)
@@ -1625,61 +1624,93 @@ class TableDialog(QtGui.QDialog):
 
 
 #####################################################################
-# Some static functions for displaying text widgets
+########### Text Display Widgets ####################################
+#####################################################################
 
-def messageBox(message,level='info',choices=['OK'],default=None,timeout=None):
-    """Display a message box and wait for user response.
+class MessageBox(QtGui.QMessageBox):
+    """A message box is a widget displaying a short text for the user.
 
-    The message box displays a text, an icon depending on the level
-    (either 'about', 'info', 'warning' or 'error') and 1-3 buttons
-    with the specified action text. The 'about' level has no buttons.
+    The message box displays a text, an optional icon depending on the level
+    and a number of push buttons.
 
-    The function returns the text of the button that was clicked or
-    an empty string is ESC was hit.
+    - `text`: the text to be shown. This can be either plain text or html
+      or reStructuredText.
+    - `format`: the text format: either 'plain', 'html' or 'rst'.
+      Any other value will try automatic recognition.
+      Recognition of plain text and html is automatic.
+      A text is autorecognized to be reStructuredText if its first
+      line starts with '..' and is followed by a blank line.
+    - `level`: defines the icon that will be shown together with the text.
+      If one of 'question', 'info', 'warning' or 'error', a matching icon
+      will be shown to hint the user about the type of message. Any other
+      value will suppress the icon.
+    - `actions`: a list of strings. For each string a pushbutton will be
+      created which can be used to exit the dialog and remove the message.
+      By default there is a single button labeled 'OK'.
+
+    When the MessageBox is displayed with the :method:`getResult()` method,
+    a modal
+    dialog is created, i.e. the user will have to click a button or hit the
+    ESC key before he can continue.
+
+    If you want a modeless dialog, allowing the user to continue while the
+    message stays open, use the :method:`show()` mehod to display it.
     """
-    if default is None:
-        default = choices[-1]
-    w = QtGui.QMessageBox()
-    w.setText(message)
-    if level == 'error':
-        w.setIcon(QtGui.QMessageBox.Critical)
-    elif level == 'warning':
-        w.setIcon(QtGui.QMessageBox.Warning)
-    elif level == 'info':
-        w.setIcon(QtGui.QMessageBox.Information)
-    elif level == 'question':
-        w.setIcon(QtGui.QMessageBox.Question)
-    for a in choices:
-        b = w.addButton(a,QtGui.QMessageBox.AcceptRole)
-        if a == default:
-            w.setDefaultButton(b)
-            
-    if timeout is None:
-        timeout = input_timeout
+    def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None):
+        QtGui.QMessageBox.__init__(self)
+        if default is None:
+            default = actions[-1]
+        self.updateText(text,format)
+        if level == 'error':
+            self.setIcon(QtGui.QMessageBox.Critical)
+        elif level == 'warning':
+            self.setIcon(QtGui.QMessageBox.Warning)
+        elif level == 'info':
+            self.setIcon(QtGui.QMessageBox.Information)
+        elif level == 'question':
+            self.setIcon(QtGui.QMessageBox.Question)
+        for a in actions:
+            b = self.addButton(a,QtGui.QMessageBox.AcceptRole)
+            if a == default:
+                self.setDefaultButton(b)
 
-    # Start the timer:
-    if timeout >= 0:
-        GD.debug("STARTING TIIMEOUT TIMER %s" % input_timeout)
-        try:
-            timeout = float(timeout)
-            if timeout >= 0.0:
-                timer = QtCore.QTimer()
-                print(type(QtCore.SLOT("accept()")))
-                timer.connect(timer,QtCore.SIGNAL("timeout()"),w,QtCore.SLOT("accept()"))
-                timer.setSingleShot(True)
-                timeout = int(1000*timeout)
-                timer.start(timeout)
-        except:
-            raise
-            
-    w.exec_()
-    b = w.clickedButton()
-    if b == 0:
-        b = w.defaultButton()
-    if b:
-        return str(b.text())
-    else:
-        return ''
+        addTimeOut(self,timeout,"accept()")
+
+
+    def updateText(self,text,format=''):
+        """Set the text of the MessageBox.
+
+        This allows to update the text of an existing MessageBox widget.
+        """
+        if format == 'plain':
+            self.setPlainText(text)
+        elif format == 'html':
+            self.setHtml(text)
+        elif format == 'rest':
+            text = utils.rst2html(text)
+            self.setHtml(text)
+        else:
+            if type(text) is str and text.startswith('..'):
+                text = utils.rst2html(text)
+            self.setText(text)
+
+
+    def getResult(self):
+        """Display the message box and wait for user to click a button.
+
+        This will show the message box as a modal dialog, so that the
+        user has to click a button (or hit the ESC key) before he can continue.
+        Returns the text of the button that was clicked or
+        an empty string if ESC was hit.
+        """
+        self.exec_()
+        b = self.clickedButton()
+        if not b:  # b == 0 or b is None
+            b = self.defaultButton()
+        if b:
+            return str(b.text())
+        else:
+            return ''
 
 
 class TextBox(QtGui.QDialog):
@@ -1689,25 +1720,19 @@ class TextBox(QtGui.QDialog):
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
-    def __init__(self,text,type=None,choices=['OK']):
+    def __init__(self,text,format=None,actions=['OK']):
         QtGui.QDialog.__init__(self)
         self.setWindowTitle('pyFormex Text Display')
-        t = QtGui.QTextEdit()
-        t.setReadOnly(True)
-        if type == 'plain':
-            t.setPlainText(text)
-        elif type == 'html':
-            self.setWindowTitle('pyFormex Html Display')
-            t.setHtml(text)
-        else:
-            t.setText(text)
+        self._t = QtGui.QTextEdit()
+        self._t.setReadOnly(True)
+        self.updateText(text,format)
         bl = QtGui.QHBoxLayout()
         bl.addStretch()
-        if 'OK' in choices:
+        if 'OK' in actions:
             b = QtGui.QPushButton('OK')
             QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
             bl.addWidget(b)
-        if 'CANCEL' in choices:
+        if 'CANCEL' in actions:
             b = QtGui.QPushButton('CANCEL')
             QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
             bl.addWidget(b)
@@ -1715,10 +1740,29 @@ class TextBox(QtGui.QDialog):
         h = QtGui.QWidget()
         h.setLayout(bl)
         l = QtGui.QVBoxLayout()
-        l.addWidget(t)
+        l.addWidget(self._t)
         l.addWidget(h)
         self.setLayout(l)
         self.resize(800,400)
+        
+
+    def updateText(self,text,format=''):
+        """Set the text of the TextBox.
+
+        This allows to update the text of an existing TextBox widget.
+        """
+        if format == 'plain':
+            self._t.setPlainText(text)
+        elif format == 'html':
+            self._t.setHtml(text)
+        elif format == 'rest':
+            text = utils.rst2html(text)
+            self._t.setHtml(text)
+        else:
+            if type(text) is str and text.startswith('..'):
+                text = utils.rst2html(text)
+            self._t.setText(text)
+
 
     def getResult(self):
         return self.exec_() == QtGui.QDialog.Accepted

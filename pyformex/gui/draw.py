@@ -56,6 +56,30 @@ from formex import Formex
 def closeGui():
     GD.debug("Closing the GUI: currently, this will also terminate pyformex.")
     GD.GUI.close()
+
+
+def showMessage(text,actions=['OK'],level='info'):
+    """Show a short message widget and wait for user acknowledgement.
+
+    There are three levels of messages: 'info', 'warning' and 'error'.
+    They differ only in the icon that is shown next to the test.
+    By default, the message widget has a single button with the text 'OK'.
+    The dialog is closed if the user clicks a button.
+    The return value is the button text. 
+    """
+    return widgets.MessageBox(text,level=level,actions=actions).getResult()
+
+def showInfo(text,actions=['OK']):
+    """Show an informational message and wait for user acknowledgement."""
+    return showMessage(text,actions,'info')
+    
+def warning(text,actions=['OK']):
+    """Show a warning message and wait for user acknowledgement."""
+    return showMessage(text,actions,'warning')
+    
+def error(text,actions=['OK']):
+    """Show an error message and wait for user acknowledgement."""
+    return showMessage(text,actions,'error')
     
 
 def ask(question,choices=None,default=None,**kargs):
@@ -64,41 +88,13 @@ def ask(question,choices=None,default=None,**kargs):
     Return answer if accepted or default if rejected.
     The remaining arguments are passed to the InputDialog getResult method.
     """
-    if choices:
-        return widgets.messageBox(question,'question',choices)
-
-    raise ValueError,"Unspecified choices"
-    if choices is None:
-        if default is None:
-            default = choices[0]
-        items = [ [question, default] ]
-    else:
-        items = [ [question, choices, 'combo', default] ]
-
-    res = widgets.InputDialog(items,'Ask Question').getResult(**kargs)
-    if GD.GUI:
-        GD.GUI.update()
-    if res:
-        return res[question]
-    else:
-        return default
+    return showMessage(question,choices,'question')
 
 
 def ack(question):
     """Show a Yes/No question and return True/False depending on answer."""
     return ask(question,['No','Yes']) == 'Yes'
-    
-def error(message,actions=['OK']):
-    """Show an error message and wait for user acknowledgement."""
-    return widgets.messageBox(message,'error',actions)
-    
-def warning(message,actions=['OK']):
-    """Show a warning message and wait for user acknowledgement."""
-    return widgets.messageBox(message,'warning',actions)
 
-def showInfo(message,actions=['OK']):
-    """Show a neutral message and wait for user acknowledgement."""
-    return widgets.messageBox(message,'info',actions)
 
 def showText(text,type=None,actions=['OK']):
     """Display a text and wait for user response.

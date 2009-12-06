@@ -272,11 +272,11 @@ if GD.options.gui:
     functions = [None,showForces,showDeformation,showAnimatedDeformation]
     while True:
         ans = ask("Which results do you want to see?",options)
-        if ans == '':   #timeout
-            break
         ind = options.index(ans)
         if ind <= 0:
             break
         functions[ind]()
+        if widgets.input_timeout > 0:  #timeout
+            break
         
 # End

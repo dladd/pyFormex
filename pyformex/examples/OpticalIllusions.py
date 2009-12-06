@@ -281,6 +281,7 @@ def SineWave():
     A simple yet powerful illusion: the vertical lines seem larger at places
     where the sine wave is more horizontal, and smaller where the sine wave
     is more vertical.
+    
     Play with the parameters to get a more obvious result. Amplitude 0 shows
     that all lines are equally large.
     """
@@ -445,24 +446,38 @@ globals().update([i[:2] for i in data_items])
 for i,it in enumerate(data_items):
     data_items[i][1] = globals()[it[0]]
 
+# Actions
+
 def close():
-    global dialog
+    """Close the dialog"""
+    global dialog,explanation
     if dialog:
         dialog.close()
         dialog = None
-
-def timeOut():
-    show()
-    close()
-
-# Actions
+    if explanation:
+        explanation.close()
+        explanation = None
 
 def explain():
+    """Show the explanation"""
+    global explanation
     dialog.acceptData()
     globals().update(dialog.results)
-    showText(method[Illusion].__doc__)
+    text = method[Illusion].__doc__
+    if Explain:
+        # use a persistent text box
+        if explanation:
+            explanation.updateText(text)
+        else:
+            # create the persistent text box
+            explanation = widgets.TextBox(text,actions=['Close'])
+            explanation.show()
+    else:
+        # show a non-persistent text
+        showText(method[Illusion].__doc__)
 
 def show():
+    """Show the illusion"""
     dialog.acceptData()
     globals().update(dialog.results)
     if Explain:
@@ -470,6 +485,7 @@ def show():
     method[Illusion]()
 
 def next():
+    """Show the next illusion"""
     dialog.acceptData()
     ill = dialog.results['Illusion']
     print ill,method._order
@@ -478,10 +494,16 @@ def next():
     dialog.updateData({'Illusion':method._order[i]})
     show()
 
+def timeOut():
+    """What to do when the dialog receives a timeout signal"""
+    show()
+    close()
+
 # Display the dialog
 
 dialog = widgets.InputDialog(data_items,caption='Optical illusions',actions = [('Done',close),('Next',next),('Explain',explain),('Show',show)],default='Show')
 dialog.timeout = timeOut
 dialog.show()
+explanation = None
 
 # End

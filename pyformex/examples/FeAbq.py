@@ -175,8 +175,8 @@ while ack("Renumber nodes?"):
     # renumber the nodes randomly
     old,new = M.renumber()
     drawModel(M)
-    
-#exit()
+    if widgets.input_timeout > 0:
+        break
 
 # Request default output plus output of S in elements of part B.
 # If the abqdata are written with group_by_group==True (see at bottom),

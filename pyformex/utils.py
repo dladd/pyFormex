@@ -304,22 +304,41 @@ def removeTree(path,top=True):
         os.rmdir(path)
 
 
-def setSaneLocale():
+###################### locale ###################
+
+def setSaneLocale(localestring=''):
     """Set a sane local configuration for LC_NUMERIC.
 
-    Some local settings change the LC_NUMERIC setting, so that floating
-    point values are read or written with a comma instead of a the decimal
-    point. Of course this makes your files completely incompatible.
-    You will often not be able to process these files any further and
-    create a lot of troubels for yourself and other people if you do so.
-    The idiots that thought changing the LC_NUMERIC locale was a good thing
-    should be hung.
+    `locale` is the locale string to be set, e.g. 'en_US.UTF-8'
 
-    Anyway, here's a function to set it back to a sane value.
-    It is always called when pyFormex starts.
+    This will change the ``LC_ALL`` setting to the specified string,
+    and set the ``LC_NUMBERIC`` to 'C'.
+
+    Changing the LC_NUMERIC setting is a very bad idea! It makes floating
+    point values to be read or written with a comma instead of a the decimal
+    point. Of course this makes input and output files completely incompatible.
+    You will often not be able to process these files any further and
+    create a lot of troubles for yourself and other people if you use an
+    LC_NUMERIC setting different from the standard.
+
+    Because we do not want to help you shoot yourself in the foot, this
+    function always sets ``LC_NUMERIC`` back to a sane value and we
+    call this function when pyFormex is starting up.
     """
     import locale
+    locale.setlocale(locale.LC_ALL,localestring)
     locale.setlocale(locale.LC_NUMERIC, 'C')
+
+
+###################### ReST conversion ###################
+
+try:
+    from docutils.core import publish_string
+    def rst2html(text,writer='html'):
+        return publish_string(text,writer_name=writer)
+except ImportError:
+    def rst2html(text,writer='html'):
+        return text
 
 ###################### dos to unix conversion ###################
 
