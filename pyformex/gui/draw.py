@@ -58,7 +58,7 @@ def closeGui():
     GD.GUI.close()
 
 
-def showMessage(text,actions=['OK'],level='info'):
+def showMessage(text,actions=['OK'],level='info',**kargs):
     """Show a short message widget and wait for user acknowledgement.
 
     There are three levels of messages: 'info', 'warning' and 'error'.
@@ -67,7 +67,7 @@ def showMessage(text,actions=['OK'],level='info'):
     The dialog is closed if the user clicks a button.
     The return value is the button text. 
     """
-    return widgets.MessageBox(text,level=level,actions=actions).getResult()
+    return widgets.MessageBox(text,level=level,actions=actions,**kargs).getResult()
 
 def showInfo(text,actions=['OK']):
     """Show an informational message and wait for user acknowledgement."""
@@ -82,18 +82,18 @@ def error(text,actions=['OK']):
     return showMessage(text,actions,'error')
     
 
-def ask(question,choices=None,default=None,**kargs):
+def ask(question,choices=None,**kargs):
     """Ask a question and present possible answers.
 
     Return answer if accepted or default if rejected.
     The remaining arguments are passed to the InputDialog getResult method.
     """
-    return showMessage(question,choices,'question')
+    return showMessage(question,choices,'question',**kargs)
 
 
-def ack(question):
+def ack(question,**kargs):
     """Show a Yes/No question and return True/False depending on answer."""
-    return ask(question,['No','Yes']) == 'Yes'
+    return ask(question,['No','Yes'],**kargs) == 'Yes'
 
 
 def showText(text,type=None,actions=['OK']):
@@ -965,7 +965,7 @@ def addViewport():
     GD.GUI.viewports.addView()
 
 def removeViewport():
-    """Remove a new viewport."""
+    """Remove the last viewport."""
     n = len(GD.GUI.viewports.all)
     if n > 1:
         GD.GUI.viewports.removeView()

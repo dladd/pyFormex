@@ -143,13 +143,21 @@ class FileSelection(QtGui.QFileDialog):
 ##             self.setSidebarUrls(urls)
 ##         for p in self.sidebarUrls():
 ##             GD.message(p.toString())
+
+    timeout = "accept()"
+
+    def show(self,timeout=None,timeoutfunc=None,modal=False):
+        self.setModal(modal)
+        QtGui.QFileDialog.show(self)
+        addTimeOut(self,timeout,timeoutfunc)
         
-    def getFilename(self):
+    def getFilename(self,timeout=None):
         """Ask for a filename by user interaction.
 
         Return the filename selected by the user.
         If the user hits CANCEL or ESC, None is returned.
         """
+        self.show(timeout,modal=True)
         self.exec_()
         if self.result() == QtGui.QDialog.Accepted:
             files = map(str,self.selectedFiles())
@@ -1423,9 +1431,7 @@ class InputDialog(QtGui.QDialog):
             self.restoreGeometry(self._pos)
             
         self.show(timeout,modal=True)
-        #GD.debug("WAITING FOR EVENTS")
         self.exec_()
-        #GD.debug("GOT A RESULT")
         self.activateWindow()
         self.raise_()
         GD.app.processEvents()

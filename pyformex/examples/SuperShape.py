@@ -203,7 +203,8 @@ def play():
         filename = savefile.name
         savefile.close()
     else:
-        filename = askFilename(filter="Text files (*.txt)")
+        filename = os.path.join(getcfg('datadir'),'supershape.txt')
+        filename = askFilename(cur=filename,filter="Text files (*.txt)")
     if filename:
         savefile = file(filename,'r')
         for line in savefile:
@@ -217,8 +218,7 @@ def play():
 
 
 def dialog_timeout():
-    #print "DIALOG TIMED OUT!"
-    show_shape()
+    play()
     close()
         
 def openSuperShapeDialogs():

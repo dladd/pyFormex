@@ -76,13 +76,19 @@ def checkVersion(name,version,external=False):
     else:
         return -1
 
-            
-def checkModule(name):
+known_modules = [ 'numpy','pyopengl','pyqt4','pyqt4gl','calpy',
+                  'gnuplot','gl2ps' ]
+
+def checkModule(name=None):
     """Check if the named Python module is available, and record its version.
 
     The version string is returned, empty if the module could not be loaded.
     The (name,version) pair is also inserted into the the_version dict.
     """
+    if name is None:
+        [ checkModule(n) for n in known_modules ]
+        return
+    
     version = ''
     fatal = False
     try:
@@ -208,6 +214,8 @@ def hasExternal(name):
 
 def reportDetected():
     s = "%s (%s)\n\n" % (pyformex.Version,pyformex.__revision__)
+    s += "Python version: %s\n" % sys.version
+    s += "Operating system: %s\n\n" % sys.platform
     s += "Detected Python Modules:\n"
     for k,v in the_version.items():
         if not v:

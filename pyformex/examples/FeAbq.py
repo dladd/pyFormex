@@ -211,7 +211,7 @@ step2 = Step(time=[1., 1., 0.01, 1.],tags=['step2'])
 #
 all = AbqData(M,prop=P,steps=[step1,step2],out=out,res=res,bound=['init'])
 
-if ack('Export this model in ABAQUS input format?'):
+if ack('Export this model in ABAQUS input format?',default='No'):
     fn = askNewFilename(filter='*.inp')
     if fn:
         all.write(jobname=fn,group_by_group=True)

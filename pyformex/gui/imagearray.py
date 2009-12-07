@@ -120,18 +120,5 @@ def rgb2qimage(rgb):
         result.ndarray = bgra
         return result
 
-## if __name__ == '__main__':
-##     import pylab
-##     i = QImage()
-##     i.load("../../Testimages/house.png")
-##     v = qimage2numpy(i)
-## #     v2 = qimage_view(i)
-## #     v2["b"] = 0
-##     rgb = numpy.empty(v.shape + (3, ), dtype = numpy.uint8)
-##     rgb[...,0] = v["r"]
-##     rgb[...,1] = v["g"]
-##     rgb[...,2] = v["b"]
-##     pylab.imshow(rgb)
-##     pylab.show()
 
 # End

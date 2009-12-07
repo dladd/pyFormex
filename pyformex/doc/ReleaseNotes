@@ -60,11 +60,19 @@ Core
 
 Gui
 ---
-
+- Uniform timeout for InputDialog, MessageBox, TextBox
+- Added ReStructuredText format to MessageBox and TextBox
+- Background color(s) can be set from the Viewport Menu
+- The viewport menu has an item to set the Near and Far clipping planes 
 
 
 Drawing
 -------
+- The imagearray module allows conversion between bitmap images and
+  numpy arrays
+- The imagecolor module allows bitmap images to be used as a color
+  array
+- The drawing routines for Formex and Mesh type geometry have been unified
 - All geometry Actors now support picking of actors, elements, edges, points 
 - The Canvas can have a background with a vertical color gradient.
 - The current viewport is visualized by a colored frame
@@ -81,8 +89,30 @@ Scripting
 
 Plugins
 -------
-
+- fe_abq: The Abaqus .inp format exporter has many new features. 
+- formian: The Formian compatibilitye functions have been removed from
+  the core formex module and placed in a separate plugin.
+- inertia: principal() allows sorting tha axes and forcing right hand
+  side axes system
+- jobs_menu: An illustrative plugin menu for sending computational jobs
+  to a remote server and collect the results for postprocessing.
+- surface: New method `curvature` to compute the surface curvature. 
 
 Examples
 --------
+The data files for the examples have been moved to the pyformex/data directory.
+The following new examples have been added:
+
+- CircumCircle
+- ColorImage
+- ColorScale
+- Flare
+- Grid
+- Helix
+- OpticalIllusions
+- Sweep
+- TestDraw
+- TextGravity
+- Widgets
+- World
 

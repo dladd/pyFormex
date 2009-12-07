@@ -20,10 +20,6 @@ def showHistogram(x,y,txt,**options):
             return
         
         import Gnuplot
-        print(x)
-        print(y)
-        print(len(x))
-        print(len(y))
         maxlen = min(len(x),len(y))
         data = Gnuplot.Data(x[:maxlen],y[:maxlen],title=txt, with_='histeps') 
         g = Gnuplot.Gnuplot(persist=1)
