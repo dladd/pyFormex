@@ -44,6 +44,7 @@ for i in range(n):
     dx = 360./(m+i)
     f = Formex([[[j*dx,(i+1)*dy,0]] for j in range(m+i+1)])
     F.append(f)
+    draw(F)
 
 # Create Lines
 if ack("Create Line model?"):
@@ -79,18 +80,18 @@ if ack("Create Surface model?"):
 
     clear()
     draw(G)
-
+    
     smoothwire()
     #GD.canvas.update()
     T = G.translate([0,bot,r]).spherical()
     clear()
     draw(T)
 
-    T += T.reflect()
+    T += T.reflect(dir=2)
     clear()
     draw(T)
 
-    if ack('Export this model in STL format?'):
+    if ack('Export this model in STL format?',default='No'):
         fn = askNewFilename(getcfg('workdir'),"Stl files (*.stl)")
         if fn:
             from plugins import surface
