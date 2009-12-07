@@ -35,10 +35,9 @@ import os,random
 catname = 'scripts.cat'
 
 def extractKeyword(s):
-    """Extract a keyword =value pair from a string.
+    """Extract a keyword = value pair from a string.
 
-    If the string s is of the form
-      keyword = value
+    If the input string `s` is of the form ``keyword = value``
     a tuple (keyword,value) is returned; else None.
     """
     i = s.find('=')
@@ -350,7 +349,7 @@ class ScriptsMenu(QtGui.QMenu):
 
 
     ### THIS should be moved to a playAll function in draw/script module
-    def runAllFiles(self,files,randomize=False):
+    def runAllFiles(self,files,randomize=False,pause=0.):
         """Run all the scripts in given list."""
         GD.GUI.actions['Stop'].setEnabled(True)
         if randomize:
@@ -361,6 +360,8 @@ class ScriptsMenu(QtGui.QMenu):
             #GD.debug("draw.exitrequested == %s" % draw.exitrequested)
             if draw.exitrequested:
                 break
+            if pause > 0.:
+                sleep(pause)
         GD.GUI.actions['Stop'].setEnabled(False)
 
 

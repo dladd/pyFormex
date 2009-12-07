@@ -119,6 +119,17 @@ def restoreGeometry():
 def moveCorrect():
     pyformex.GUI.move(*pyformex.GUI.XPos())
 
+def closeLogFile():
+    if draw.logfile:
+        draw.logfile.close()
+        draw.logfile = None
+        
+def openLogFile():
+    fn = draw.askFilename(filter=['*.log','*'],multi=False)
+    if fn:
+        closeLogFile()
+        draw.logfile = file(fn,'w')
+        
 
 ActionMenuData = [
     (_('&Step'),draw.step),
@@ -127,6 +138,8 @@ ActionMenuData = [
     (_('&Reset GUI'),resetGUI),
     (_('&Force Finish Script'),draw.force_finish),
     ## (_('&Execute single statement'),command),
+    (_('&Open Log File'),openLogFile),
+    (_('&Close Log File'),closeLogFile),
     (_('&ListFormices'),script.printall),
     (_('&PrintGlobalNames'),script.printglobalnames),
     (_('&PrintGlobals'),script.printglobals),

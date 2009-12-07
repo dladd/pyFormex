@@ -114,17 +114,9 @@ if __name__ == "draw":
     C = AnalogClock()
     C.draw()
     setDrawOptions({'bbox':None})
-    C.drawNow()
-
-    def stopClock():
-        C.stop()
-        
-    if ack("Shall I start the clock?"):
+    res = askItems([('runtime',15,{'text':'Run time (seconds)'})])
+    if res and res['runtime'] > 0:
+        C.drawNow()
         C.run()
-        ## res = askItems([('Runtime (in seconds)',100)])
-        ## if res:
-        ##     time = res['Runtime (in seconds)']
-        ##     C.run(runtime=time)
-        ##     warning("Please wait until the clock stops running.")
-
-
+        sleep(res['runtime'])
+        C.stop()

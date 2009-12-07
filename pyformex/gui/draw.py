@@ -252,16 +252,24 @@ def checkWorkdir():
     return ok
     
 
-def log(s):
-    """Display a message in the cmdlog window."""
+logfile = None     # the log file
+
+def printMessage(s):
+    """Print a message on the message board.
+
+    If a logfile was opened, the message is also written to the log file.
+    """
+    if logfile is not None:
+        logfile.write(str(s)+'\n')
     GD.GUI.board.write(str(s))
     GD.GUI.update()
     GD.app.processEvents()
 
 # message is the preferred function to send text info to the user.
 # The default message handler is set here.
-# Best candidates are log/info
-message = log
+message = printMessage
+
+
 
 
 ############################## drawing functions ########################
