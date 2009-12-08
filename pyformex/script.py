@@ -241,7 +241,7 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     the script that starts with 'draw'. Also (in this case), each line
     (including comments) is echoed to the message board.
     """
-    global scriptDisabled,scriptRunning,exitrequested
+    global scriptDisabled,scriptRunning,exitrcrequested
     #GD.debug('SCRIPT MODE %s,%s,%s'% (scriptDisabled,scriptRunning,exitrequested))
     # (We only allow one script executing at a time!)
     # and scripts are non-reentrant
@@ -280,6 +280,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
     starttime = time.clock()
     GD.debug('STARTING SCRIPT (%s)' % starttime)
+    GD.debug(scr)
+    GD.debug(pye)
     try:
         try:
             if GD.GUI and stepmode:
@@ -302,9 +304,11 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                     print(s)
                     __import__(s,g)
                 elif pye:
-                    t = scr.read()
-                    n = (len(t)+1) // 2
-                    exec utils.mergeme(t[:n],t[n:]) in g
+                    n = (len(scr)+1) // 2
+                    print scr
+                    scr = utils.mergeme(scr[:n],scr[n:])
+                    print scr
+#                    exec utils.mergeme(scr[:n],scr[n:]) in g
                 else:
                     exec scr in g
 

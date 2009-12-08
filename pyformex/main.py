@@ -22,6 +22,17 @@
 ##  You should have received a copy of the GNU General Public License
 ##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
+"""pyFormex main module
+
+This module holds the main function to start the pyFormex program.
+
+The main function processes the command line arguments,
+reads the configuration files, executes scripts passed on the command line,
+and starts the GUI
+
+The main function is called from the `pyformex` script, which is responsible
+for setting up the correct sys.path.
+"""
 
 import sys,os
 pyformexdir = sys.path[0]
@@ -53,7 +64,9 @@ def printcfg(key):
 
 
 def setRevision():
-    sta,out = utils.runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
+    sta,out = utils.runCommand(
+        'cd %s && svnversion' % pyformex.cfg['pyformexdir'],
+        quiet=True)
     if sta == 0 and not out.startswith('exported'):
         pyformex.__revision__ = "$Rev: %s $" % out.strip()
 
@@ -155,53 +168,74 @@ def main(argv=[]):
     pyformex.cfg.read(defaults)
     
     # Process options
-    from optparse import OptionParser,make_option
+    from optparse import OptionParser,make_option as MO
     parser = OptionParser(
         usage = "usage: %prog [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]",
         version = pyformex.Version,
         option_list=[
-        make_option("--gui", help="start the GUI (default if no scriptfile argument is given)",
-                    action="store_true", dest="gui", default=None),
-        make_option("--nogui", help="do not load the GUI (default if a scriptfile argument is given)",
-                    action="store_false", dest="gui", default=None),
-        make_option("--interactive",'-i', help="go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
-                    action="store_true", dest="interactive", default=False),
-        make_option("--force-dri", help="Force use of Direct Rendering",
-                    action="store_true", dest="dri", default=None),
-        make_option("--force-nodri", help="Disables the Direct Rendering",
-                    action="store_false", dest="dri", default=None),
-        make_option("--uselib", help="Use the pyFormex C lib if available. This is the default.",
-                    action="store_true", dest="uselib", default=None),
-        make_option("--nouselib", help="Do not use the pyFormex C-lib.",
-                    action="store_false", dest="uselib", default=None),
-        make_option("--safelib", help="Convert data types to match C-lib. This is the default.",
-                    action="store_true", dest="safelib", default=True),
-        make_option("--unsafelib", help="Do not convert data types to match C-lib. BEWARE: this may make the C-lib calls impossible. Use only for debugging purposes.",
-                    action="store_false", dest="safelib", default=True),
-        make_option("--fastencode", help="Use a fast algorithm to encode edges.",
-                    action="store_true", dest="fastencode", default=False),
-        make_option("--config", help="Use file CONFIG for settings",
-                    action="store", dest="config", default=None),
-        make_option("--nodefaultconfig", help="Skip the default site and user config files. This option can only be used in conjunction with the --config option.",
-                    action="store_true", dest="nodefaultconfig", default=False),
-        make_option("--redirect", help="Redirect standard output to the message board (ignored with --nogui)",
-                    action="store_true", dest="redirect", default=False),
-        make_option("--detect", help="Detect helper software and print report.",
-                    action="store_true", dest="detect", default=False),
-        make_option("--debug", help="display debugging info to sys.stdout",
-                    action="store_true", dest="debug", default=False),
-        make_option("--classify", help="classify the examples in categories",
-                    action="store_true", dest="classify", default=False),
-        make_option("--whereami", help="show where the pyformex package is located",
-                    action="store_true", dest="whereami", default=False),
-        make_option("--remove", help="remove the pyformex installation",
-                    action="store_true", dest="remove", default=False),
-        make_option("--test", help="testing mode: only for developers!",
-                    action="store_true", dest="test", default=False),
-        make_option("--testhighlight", help="highlight testing mode: only for developers!",
-                    action="store_true", dest="testhighlight", default=False),
-        make_option("--executor", help="test alternate executor: only for developers!",
-                    action="store_true", dest="executor", default=False),
+        MO("--gui",
+           help="start the GUI (default if no scriptfile argument is given)",
+           action="store_true", dest="gui", default=None),
+        MO("--nogui",
+           help="do not load the GUI (default if a scriptfile argument is given)",
+           action="store_false", dest="gui", default=None),
+        MO("--interactive",'-i',
+           help="go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
+           action="store_true", dest="interactive", default=False),
+        MO("--force-dri",
+           help="Force use of Direct Rendering",
+           action="store_true", dest="dri", default=None),
+        MO("--force-nodri",
+           help="Disables the Direct Rendering",
+           action="store_false", dest="dri", default=None),
+        MO("--uselib",
+           help="Use the pyFormex C lib if available. This is the default.",
+           action="store_true", dest="uselib", default=None),
+        MO("--nouselib",
+           help="Do not use the pyFormex C-lib.",
+           action="store_false", dest="uselib", default=None),
+        MO("--safelib",
+           help="Convert data types to match C-lib. This is the default.",
+           action="store_true", dest="safelib", default=True),
+        MO("--unsafelib",
+           help="Do not convert data types to match C-lib. BEWARE: this may make the C-lib calls impossible. Use only for debugging purposes.",
+           action="store_false", dest="safelib", default=True),
+        MO("--fastencode",
+           help="Use a fast algorithm to encode edges.",
+           action="store_true", dest="fastencode", default=False),
+        MO("--config",
+           help="Use file CONFIG for settings",
+           action="store", dest="config", default=None),
+        MO("--nodefaultconfig",
+           help="Skip the default site and user config files. This option can only be used in conjunction with the --config option.",
+           action="store_true", dest="nodefaultconfig", default=False),
+        MO("--redirect",
+           help="Redirect standard output to the message board (ignored with --nogui)",
+           action="store_true", dest="redirect", default=False),
+        MO("--detect",
+           help="Detect helper software and print report.",
+           action="store_true", dest="detect", default=False),
+        MO("--debug",
+           help="display debugging info to sys.stdout",
+           action="store_true", dest="debug", default=False),
+        MO("--classify",
+           help="classify the examples in categories",
+           action="store_true", dest="classify", default=False),
+        MO("--whereami",
+           help="show where the pyformex package is located",
+           action="store_true", dest="whereami", default=False),
+        MO("--remove",
+           help="remove the pyformex installation",
+           action="store_true", dest="remove", default=False),
+        MO("--test",
+           help="testing mode: only for developers!",
+           action="store_true", dest="test", default=False),
+        MO("--testhighlight",
+           help="highlight testing mode: only for developers!",
+           action="store_true", dest="testhighlight", default=False),
+        MO("--executor",
+           help="test alternate executor: only for developers!",
+           action="store_true", dest="executor", default=False),
         ])
     pyformex.options, args = parser.parse_args(argv)
     pyformex.print_help = parser.print_help
@@ -342,19 +376,26 @@ def main(argv=[]):
         
         if res:
             if pyformex.options.gui:
-                pyformex.message("There was an error while executing one of the scripts")
+                pyformex.message("There was an error while executing a script")
             else:
                 return res
                 
+    else:
+        pyformex.debug("stdin is a tty: %s" % sys.stdin.isatty())
+        # Play script from stdin
+        # Can we check for interactive session: stdin connected to terminal?
+        #from script import playScript
+        #playScript(sys.stdin)
+        
 
     # after processing all args, go into interactive mode
     if pyformex.options.gui:
         res = gui.runGUI()
 
-    elif pyformex.options.interactive:
-        print("Enter your script and end with CTRL-D")
-        from script import playScript
-        playScript(sys.stdin)
+    ## elif pyformex.options.interactive:
+    ##     print("Enter your script and end with CTRL-D")
+    ##     from script import playScript
+    ##     playScript(sys.stdin)
         
     #Save the preferences that have changed
     savePreferences()

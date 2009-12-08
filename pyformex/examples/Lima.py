@@ -32,9 +32,8 @@ techniques = ['dialog','lima']
 
 # We use the lima module
 from plugins import lima,turtle
-
-wireframe()
-linewidth(2)
+# allow this example to be used as a module
+from gui.draw import *
 
 # return standard Turtle rules 
 def turtlecmds(rules={}):
@@ -83,7 +82,7 @@ limas = {
     #25: [ "F", {"F":"F-F++F-F"}, 4, turtlecmds() ],
     }
 
-def show(i,L,turtle_cmds,clear=True):
+def show(i,L,turtle_cmds,clear=True,text=True):
     """Show the current production of the Lima L."""
     global FA,TA
     turtle_script = L.translate(turtle_cmds)
@@ -97,41 +96,48 @@ def show(i,L,turtle_cmds,clear=True):
         if clear:
             undraw(FA)
         FA = FB
-        TB = drawText("Generation %d"%i,20,20)
-        undecorate(TA)
-        TA = TB
+        if text:
+            TB = drawText("Generation %d"%i,20,20)
+            undecorate(TA)
+            TA = TB
         
 
-def grow(rule,clearing):
+def grow(rule,clearing,text=True):
     """Show subsequent Lima productions."""
     global FA,TA
     FA = None
     TA = None
     clear()
     #GD.message(rule)
-    drawText(rule,20,40)
+    if text:
+        drawText(rule,20,40)
     a,r,g,t = limas[rule]
     L = lima.Lima(a,r)
-    show(0,L,t,clearing)
+    show(0,L,t,clearing,text)
     for i in range(g):
         L.grow()
-        show(i+1,L,t,clearing)
+        show(i+1,L,t,clearing,text)
 
-keys = limas.keys()
-keys.sort()
-choices = ['__all__','__custom__'] + keys
 
-res = askItems([('Production rule',None,'select',choices),('clear',True)])
+if __name__ == "draw":
 
-if res:
-    rule = res['Production rule']
-    clearing = res['clear']
-    if rule == '__all__':
-        for rule in keys:
+    wireframe()
+    linewidth(2)
+    keys = limas.keys()
+    keys.sort()
+    choices = ['__all__','__custom__'] + keys
+
+    res = askItems([('Production rule',None,'select',choices),('clear',True)])
+
+    if res:
+        rule = res['Production rule']
+        clearing = res['clear']
+        if rule == '__all__':
+            for rule in keys:
+                grow(rule,clearing)
+        elif rule == '__all__':
+            pass
+        else:
             grow(rule,clearing)
-    elif rule == '__all__':
-        pass
-    else:
-        grow(rule,clearing)
 
 # End

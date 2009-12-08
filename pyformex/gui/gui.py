@@ -177,8 +177,6 @@ class GUI(QtGui.QMainWindow):
         self.boxlayout.addWidget(self.splitter)
         self.splitter.setOrientation(QtCore.Qt.Vertical)
         self.splitter.show()
-        #### Do not touch the next line unless you know what you're doing !!
-        self.easter_egg = None
 
         # self.central is the complete central widget of the main window
         self.central = QtGui.QWidget()
@@ -748,10 +746,16 @@ See Help->License or the file COPYING for details.
     GD.app_started = True
     GD.app.processEvents()
 
-    if GD.GUI.easter_egg:
-        draw.playScript(utils.mergeme(*GD.GUI.easter_egg))
+    showegg = GD.cfg.get('easter_egg',None)
+    if showegg:
+        print 'SHOWEGG'
+        if '\n' in egg:
+            egg = file(egg).read()
+            pye = egg.endswith('pye')
+        else:
+            pye = True
+        draw.playScript(egg,pye=True)
 
-    ## GD.warning("The project menu functions have been changed completely. Please use carefully during the test period (and make a copy of your existing project files for safety),") 
 
 
 def runGUI():

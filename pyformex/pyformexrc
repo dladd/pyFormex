@@ -101,6 +101,7 @@ dynazoom = ['area','dolly']     # preferred zoom technique ('area', 'dolly', 'le
 wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 
 plot2d = 'gnuplot'
+easter_egg = None
 
 [input]
 timeout = -1         # never timeout
