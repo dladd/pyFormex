@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>10. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>10. utils — A collection of miscellaneous utility functions. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="11. elements — Element local coordinates and numbering." href="elements.html" />
     <link rel="prev" title="9. project — project.py" href="project.html" /> 
@@ -125,7 +125,7 @@ This should normally understand version numbers in the format 2.10.1</p>
 
 <dl class="function">
 <dt id="utils.checkModule">
-<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">checkModule</tt><big>(</big><em>name=None</em><big>)</big><a class="headerlink" href="#utils.checkModule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the named Python module is available, and record its version.</p>
 <p>The version string is returned, empty if the module could not be loaded.
 The (name,version) pair is also inserted into the the_version dict.</p>
@@ -228,17 +228,20 @@ directories, resp. files matching any of those patterns.</p>
 
 <dl class="function">
 <dt id="utils.setSaneLocale">
-<tt class="descclassname">utils.</tt><tt class="descname">setSaneLocale</tt><big>(</big><big>)</big><a class="headerlink" href="#utils.setSaneLocale" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">utils.</tt><tt class="descname">setSaneLocale</tt><big>(</big><em>localestring=''</em><big>)</big><a class="headerlink" href="#utils.setSaneLocale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a sane local configuration for LC_NUMERIC.</p>
-<p>Some local settings change the LC_NUMERIC setting, so that floating
-point values are read or written with a comma instead of a the decimal
-point. Of course this makes your files completely incompatible.
+<p><cite>locale</cite> is the locale string to be set, e.g. &#8216;en_US.UTF-8&#8217;</p>
+<p>This will change the <tt class="docutils literal"><span class="pre">LC_ALL</span></tt> setting to the specified string,
+and set the <tt class="docutils literal"><span class="pre">LC_NUMBERIC</span></tt> to &#8216;C&#8217;.</p>
+<p>Changing the LC_NUMERIC setting is a very bad idea! It makes floating
+point values to be read or written with a comma instead of a the decimal
+point. Of course this makes input and output files completely incompatible.
 You will often not be able to process these files any further and
-create a lot of troubels for yourself and other people if you do so.
-The idiots that thought changing the LC_NUMERIC locale was a good thing
-should be hung.</p>
-<p>Anyway, here&#8217;s a function to set it back to a sane value.
-It is always called when pyFormex starts.</p>
+create a lot of troubles for yourself and other people if you use an
+LC_NUMERIC setting different from the standard.</p>
+<p>Because we do not want to help you shoot yourself in the foot, this
+function always sets <tt class="docutils literal"><span class="pre">LC_NUMERIC</span></tt> back to a sane value and we
+call this function when pyFormex is starting up.</p>
 </dd></dl>
 
 <dl class="function">

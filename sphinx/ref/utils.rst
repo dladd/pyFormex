@@ -28,7 +28,7 @@
 
    .. autofunction:: procInfo(title)
    .. autofunction:: checkVersion(name,version,external=False)
-   .. autofunction:: checkModule(name)
+   .. autofunction:: checkModule(name=None)
    .. autofunction:: hasModule(name,check=False)
    .. autofunction:: checkExternal(name=None,command=None,answer=None)
    .. autofunction:: hasExternal(name)
@@ -41,7 +41,7 @@
    .. autofunction:: matchAll(regexps,target)
    .. autofunction:: listTree(path,listdirs=True,topdown=True,sorted=False,excludedirs=[],excludefiles=[],includedirs=[],includefiles=[])
    .. autofunction:: removeTree(path,top=True)
-   .. autofunction:: setSaneLocale()
+   .. autofunction:: setSaneLocale(localestring='')
    .. autofunction:: dos2unix(infile,outfile=None)
    .. autofunction:: unix2dos(infile,outfile=None)
    .. autofunction:: all_image_extensions()

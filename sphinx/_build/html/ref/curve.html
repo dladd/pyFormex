@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>25. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>25. curve — Definition of curves in pyFormex. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="26. surface — Operations on triangulated surfaces." href="surface.html" />
     <link rel="prev" title="24. geometry —" href="geometry.html" /> 
@@ -224,14 +224,36 @@ If no directions are specified, the average of the segments ending
 in that point is used, and in the end points of an open curve, the
 direction of the end segment.
 The curl parameter can be set to influence the curliness of the curve.
-curl=0.0 results in straight segments.
-The control points can also be specified directly. If they are, they
+curl=0.0 results in straight segments.</p>
+<p>The control points can also be specified directly. If they are, they
 override the deriv and curl parameters. Since each segment of the curve
 needs two control points, the control array has shape (npts-1, 2, 3).</p>
 <p>BezierSpline objects have the following methods:</p>
 <dl class="method">
 <dt id="curve.BezierSpline.sub_points">
 <tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="curve.QuadBezierSpline">
+<em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">QuadBezierSpline</tt><big>(</big><em>coords</em>, <em>deriv=None</em>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class representing a Bezier spline curve.</p>
+<p>Create a cubic spline curve through the given points.</p>
+<p>The curve is defined by the points and the directions at these points.
+If no directions are specified, the average of the segments ending
+in that point is used, and in the end points of an open curve, the
+direction of the end segment.
+The curl parameter can be set to influence the curliness of the curve.
+curl=0.0 results in straight segments. curl=1.0 
+The control points can also be specified directly. If they are, they
+override the deriv and curl parameters. Since each segment of the curve
+needs two control points, the control array has shape (npts-1, 2, 3).</p>
+<p>QuadBezierSpline objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.QuadBezierSpline.sub_points">
+<tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

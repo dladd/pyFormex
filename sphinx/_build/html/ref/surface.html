@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>26. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>26. surface — Operations on triangulated surfaces. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="27. isopar — Isoparametric transformations" href="isopar.html" />
     <link rel="prev" title="25. curve — Definition of curves in pyFormex." href="curve.html" /> 
@@ -363,32 +363,77 @@ If the filename has no extension, the &#8216;gts&#8217; file type is used.</p>
 <dl class="method">
 <dt id="surface.TriSurface.scale">
 <tt class="descname">scale</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.scale" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.translate">
 <tt class="descname">translate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.translate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Translate a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Thus, the following lines are all equivalent:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.rotate">
 <tt class="descname">rotate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.rotate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.shear">
 <tt class="descname">shear</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.shear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.reflect">
 <tt class="descname">reflect</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.reflect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Default position of the plane is through the origin.
+Default mirror direction is the z-direction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.affine">
 <tt class="descname">affine</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#surface.TriSurface.affine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a general affine transform of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="surface.TriSurface.avgVertexNormals">

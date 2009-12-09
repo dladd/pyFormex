@@ -84,6 +84,7 @@
 **Functions defined in the module properties**
 
    .. autofunction:: checkIdValue(values)
+   .. autofunction:: checkArrayOrIdValue(values)
    .. autofunction:: checkString(a,valid)
    .. autofunction:: autoName(base)
    .. autofunction:: Nset()

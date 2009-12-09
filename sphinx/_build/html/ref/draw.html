@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>5. draw — Create 3D graphical representations. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" />
     <link rel="prev" title="4. script — Basic pyFormex script functions" href="script.html" /> 
@@ -65,8 +65,34 @@ rendering capabilities of pyFOrmex.</p>
 <dd></dd></dl>
 
 <dl class="function">
+<dt id="draw.showMessage">
+<tt class="descclassname">draw.</tt><tt class="descname">showMessage</tt><big>(</big><em>text</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span>, <em>level='info'</em><big>)</big><a class="headerlink" href="#draw.showMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a short message widget and wait for user acknowledgement.</p>
+<p>There are three levels of messages: &#8216;info&#8217;, &#8216;warning&#8217; and &#8216;error&#8217;.
+They differ only in the icon that is shown next to the test.
+By default, the message widget has a single button with the text &#8216;OK&#8217;.
+The dialog is closed if the user clicks a button.
+The return value is the button text.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="draw.showInfo">
+<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>text</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.showInfo" title="Permalink to this definition">¶</a></dt>
+<dd>Show an informational message and wait for user acknowledgement.</dd></dl>
+
+<dl class="function">
+<dt id="draw.warning">
+<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>text</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.warning" title="Permalink to this definition">¶</a></dt>
+<dd>Show a warning message and wait for user acknowledgement.</dd></dl>
+
+<dl class="function">
+<dt id="draw.error">
+<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>text</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.error" title="Permalink to this definition">¶</a></dt>
+<dd>Show an error message and wait for user acknowledgement.</dd></dl>
+
+<dl class="function">
 <dt id="draw.ask">
-<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#draw.ask" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">ask</tt><big>(</big><em>question</em>, <em>choices=None</em><big>)</big><a class="headerlink" href="#draw.ask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ask a question and present possible answers.</p>
 <p>Return answer if accepted or default if rejected.
 The remaining arguments are passed to the InputDialog getResult method.</p>
@@ -76,21 +102,6 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 <dt id="draw.ack">
 <tt class="descclassname">draw.</tt><tt class="descname">ack</tt><big>(</big><em>question</em><big>)</big><a class="headerlink" href="#draw.ack" title="Permalink to this definition">¶</a></dt>
 <dd>Show a Yes/No question and return True/False depending on answer.</dd></dl>
-
-<dl class="function">
-<dt id="draw.error">
-<tt class="descclassname">draw.</tt><tt class="descname">error</tt><big>(</big><em>message</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.error" title="Permalink to this definition">¶</a></dt>
-<dd>Show an error message and wait for user acknowledgement.</dd></dl>
-
-<dl class="function">
-<dt id="draw.warning">
-<tt class="descclassname">draw.</tt><tt class="descname">warning</tt><big>(</big><em>message</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.warning" title="Permalink to this definition">¶</a></dt>
-<dd>Show a warning message and wait for user acknowledgement.</dd></dl>
-
-<dl class="function">
-<dt id="draw.showInfo">
-<tt class="descclassname">draw.</tt><tt class="descname">showInfo</tt><big>(</big><em>message</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.showInfo" title="Permalink to this definition">¶</a></dt>
-<dd>Show a neutral message and wait for user acknowledgement.</dd></dl>
 
 <dl class="function">
 <dt id="draw.showText">
@@ -184,9 +195,11 @@ False, the selected directory will become the new  working directory.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="draw.log">
-<tt class="descclassname">draw.</tt><tt class="descname">log</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.log" title="Permalink to this definition">¶</a></dt>
-<dd>Display a message in the cmdlog window.</dd></dl>
+<dt id="draw.printMessage">
+<tt class="descclassname">draw.</tt><tt class="descname">printMessage</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#draw.printMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a message on the message board.</p>
+<p>If a logfile was opened, the message is also written to the log file.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="draw.draw">
@@ -385,7 +398,7 @@ removed. The default (None) toggles between on and off.</p>
 
 <dl class="function">
 <dt id="draw.drawText">
-<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity=None</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>adjust=None</em><big>)</big><a class="headerlink" href="#draw.drawText" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText</tt><big>(</big><em>text</em>, <em>x</em>, <em>y</em>, <em>gravity=''</em>, <em>font='helvetica'</em>, <em>size=14</em>, <em>color=None</em>, <em>adjust=None</em>, <em>zoom=None</em><big>)</big><a class="headerlink" href="#draw.drawText" title="Permalink to this definition">¶</a></dt>
 <dd>Show a text at position x,y using font.</dd></dl>
 
 <dl class="function">
@@ -646,7 +659,7 @@ forces wakeup for longer period.</p>
 <dl class="function">
 <dt id="draw.removeViewport">
 <tt class="descclassname">draw.</tt><tt class="descname">removeViewport</tt><big>(</big><big>)</big><a class="headerlink" href="#draw.removeViewport" title="Permalink to this definition">¶</a></dt>
-<dd>Remove a new viewport.</dd></dl>
+<dd>Remove the last viewport.</dd></dl>
 
 <dl class="function">
 <dt id="draw.linkViewport">

@@ -1,6 +1,6 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
+##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -1661,13 +1661,13 @@ class MessageBox(QtGui.QMessageBox):
       created which can be used to exit the dialog and remove the message.
       By default there is a single button labeled 'OK'.
 
-    When the MessageBox is displayed with the :method:`getResult()` method,
+    When the MessageBox is displayed with the :meth:`getResult()` method,
     a modal
     dialog is created, i.e. the user will have to click a button or hit the
     ESC key before he can continue.
 
     If you want a modeless dialog, allowing the user to continue while the
-    message stays open, use the :method:`show()` mehod to display it.
+    message stays open, use the :meth:`show()` mehod to display it.
     """
     def __init__(self,text,format='',level='info',actions=['OK'],default=None,timeout=None):
         QtGui.QMessageBox.__init__(self)

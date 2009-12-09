@@ -17,7 +17,7 @@
    .. autofunction:: centroids(X)
    .. autofunction:: center(X,mass=None)
    .. autofunction:: inertia(X,mass=None)
-   .. autofunction:: principal(inertia)
+   .. autofunction:: principal(inertia,sort=False,right_handed=False)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

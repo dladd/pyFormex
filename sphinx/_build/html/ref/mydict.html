@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>46. mydict — &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>46. mydict — &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="47. odict — Specialized dictionary type structures." href="odict.html" />
     <link rel="prev" title="45. olist — Some convenient shortcuts for common list operations." href="olist.html" /> 
@@ -66,17 +66,18 @@ Distributed under the GNU GPL version 3 or later</p>
 <dt id="mydict.Dict">
 <em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">Dict</tt><big>(</big><em>data={}</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#mydict.Dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Python dictionary with default values and attribute syntax.</p>
-<p>Dict is functionally nearly equivalent with the builtin Python dict,
-but provides the following extras:</p>
+<p><a title="mydict.Dict" class="reference internal" href="#mydict.Dict"><tt class="xref docutils literal"><span class="pre">Dict</span></tt></a> is functionally nearly equivalent with the builtin Python
+<tt class="xref docutils literal"><span class="pre">dict</span></tt>, but provides the following extras:</p>
 <ul class="simple">
 <li>Items can be accessed with attribute syntax as well as dictionary
-syntax. Thus, if C is a Dict, the following are equivalent:
-<tt class="docutils literal"><span class="pre">`C['foo']</span></tt>   or   <tt class="docutils literal"><span class="pre">C.foo</span></tt>
+syntax. Thus, if <tt class="docutils literal"><span class="pre">C</span></tt> is a <a title="mydict.Dict" class="reference internal" href="#mydict.Dict"><tt class="xref docutils literal"><span class="pre">Dict</span></tt></a>, <tt class="docutils literal"><span class="pre">C['foo']</span></tt> and <tt class="docutils literal"><span class="pre">C.foo</span></tt>
+are equivalent.
 This works as well for accessing values as for setting values.
-In the following, the words key or attribute therefore have the
+In the following, the terms <em>key</em> or <em>attribute</em> therefore have the
 same meaning.</li>
 <li>Lookup of a nonexisting key/attribute does not automatically raise an
-error, but calls a _default_ lookup method which can be set by the user.
+error, but calls a <tt class="docutils literal"><span class="pre">_default_</span></tt> lookup method which can be set by
+the user.
 The default is to raise a KeyError, but an alternative is to return
 None or some other default value.</li>
 </ul>
@@ -88,25 +89,25 @@ the dictionary syntax to access these items. It is possible to set
 such keys as attributes. Thus the following will work:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">C</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;foo&#39;</span>
 <span class="n">C</span><span class="o">.</span><span class="n">get</span> <span class="o">=</span> <span class="s">&#39;foo&#39;</span>
-<span class="k">print</span> <span class="n">C</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="s">&#39;get&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>but not:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">C</span><span class="o">.</span><span class="n">get</span>
+<p>but this will not:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This is done so because we want all the dict attributes to be available
 with their normal binding. Thus,</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="n">C</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;get&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;get&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>will print <tt class="docutils literal"><span class="pre">foo</span></tt>.</p>
+<p>will print <tt class="docutils literal"><span class="pre">foo</span></tt></p>
 </li>
 </ul>
 <p>To avoid name clashes with user defines, many Python internal names start
 and end with &#8216;__&#8217;. The user should avoid such names.
 The Python dict has the following attributes not enclosed between &#8216;__&#8217;,
-so these are the one to watch out for:
+so these are the ones to watch out for:
 &#8216;clear&#8217;, &#8216;copy&#8217;, &#8216;fromkeys&#8217;, &#8216;get&#8217;, &#8216;has_key&#8217;, &#8216;items&#8217;, &#8216;iteritems&#8217;,
 &#8216;iterkeys&#8217;, &#8216;itervalues&#8217;, &#8216;keys&#8217;, &#8216;pop&#8217;, &#8216;popitem&#8217;, &#8216;setdefault&#8217;,
 &#8216;update&#8217;, &#8216;values&#8217;.</p>
@@ -143,7 +144,7 @@ default value if get found a KeyError.</p>
 
 <dl class="class">
 <dt id="mydict.CDict">
-<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x3d87668&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">mydict.</tt><tt class="descname">CDict</tt><big>(</big><em>data={}</em>, <em>default=&lt;function returnNone at 0x2a19500&gt;</em><big>)</big><a class="headerlink" href="#mydict.CDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cascading Dict: properties not in Dict are searched in all Dicts.</p>
 <p>This is equivalent to the Dict class, except that if a key is not found
 and the CDict has items with values that are themselves instances

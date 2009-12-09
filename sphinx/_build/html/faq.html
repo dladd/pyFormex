@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pyFormex FAQ ‘n TRICKS &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>pyFormex FAQ ‘n TRICKS &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="index.html" />
     <link rel="up" title="pyFormex user guide" href="user-guide.html" />
     <link rel="next" title="pyFormex example scripts" href="examples.html" />
     <link rel="prev" title="Configuring pyFormex" href="config.html" /> 
@@ -60,7 +60,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field"><th class="field-name">Date:</th><td class="field-body">November 30, 2009</td>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">December 09, 2009</td>
 </tr>
 <tr class="field"><th class="field-name">Version:</th><td class="field-body">0.8.1</td>
 </tr>
@@ -175,6 +175,12 @@ can even specify a list of scripts, which will be executed in
 order. The autorun scripts are executed as any other pyFormex
 script, before any scripts specified on the command line, and
 before giving the input focus to the user.</p>
+</li>
+<li><p class="first"><strong>Activate pyFormex debug messages from your script</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pyformex</span>
+<span class="n">pyformex</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
 </li>
 <li><p class="first"><strong>Get a list of all available image formats</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">gui.image</span>

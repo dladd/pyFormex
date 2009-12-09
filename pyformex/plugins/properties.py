@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
+##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -315,6 +315,7 @@ def checkArrayOrIdValue(values):
     """Check that a variable is an list of values or (id,value) tuples
 
     This convenience function checks that the argument is either:
+    
     - a list of 6 float values (or convertible to it), or
     - a list of (id,value) tuples where id is convertible to an int,
       value to a float.

@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>34. properties — General framework for attributing properties to geometrical elements. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>34. properties — General framework for attributing properties to geometrical elements. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="35. fe_abq — An interface to write Finite Element models in Abaqus input file format." href="fe_abq.html" />
     <link rel="prev" title="33. fe — Finite Element Models in pyFormex." href="fe.html" /> 
@@ -305,7 +305,8 @@ used to flag Step, increment, load case, ...)</li>
 <li>set: a single number or a list of numbers identifying the node(s)
 for which this property will be set, or a set name
 If None, the property will hold for all nodes.</li>
-<li>cload: a concentrated load: a list of 6 values</li>
+<li>cload: a concentrated load: a list of 6 float values
+[FX,FY,FZ,MX,MY,MZ] or a list of (dofid,value) tuples.</li>
 <li>bound: a boundary condition: a list of 6 codes (0/1)</li>
 <li>displ: a prescribed displacement: a list of tuples (dofid,value)</li>
 <li>csys: a CoordSystem</li>
@@ -343,8 +344,22 @@ in the Model.</li>
 <dl class="function">
 <dt id="properties.checkIdValue">
 <tt class="descclassname">properties.</tt><tt class="descname">checkIdValue</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#properties.checkIdValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check that a variable is a list of values or (id,value) tuples</p>
-<p>If ok, return the values as a list of tuples.</p>
+<dd><p>Check that a variable is a list of (id,value) tuples</p>
+<p><cite>id</cite> should be convertible to an int, value to a float.
+If ok, return the values as a list of (int,float) tuples.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="properties.checkArrayOrIdValue">
+<tt class="descclassname">properties.</tt><tt class="descname">checkArrayOrIdValue</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#properties.checkArrayOrIdValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that a variable is an list of values or (id,value) tuples</p>
+<p>This convenience function checks that the argument is either:</p>
+<ul class="simple">
+<li>a list of 6 float values (or convertible to it), or</li>
+<li>a list of (id,value) tuples where id is convertible to an int,
+value to a float.</li>
+</ul>
+<p>If ok, return the values as a list of (int,float) tuples.</p>
 </dd></dl>
 
 <dl class="function">
@@ -407,10 +422,10 @@ such as ndarrays.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="fe.html"
-                                  title="previous chapter">33. <tt class="docutils literal docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
+                                  title="previous chapter">33. <tt class="docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="fe_abq.html"
-                                  title="next chapter">35. <tt class="docutils literal docutils literal docutils literal"><span class="pre">fe_abq</span></tt> &#8212; An interface to write Finite Element models in Abaqus input file format.</a></p>
+                                  title="next chapter">35. <tt class="docutils literal"><span class="pre">fe_abq</span></tt> &#8212; An interface to write Finite Element models in Abaqus input file format.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/properties.txt"

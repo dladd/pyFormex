@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>1. coords — A structured collection of 3D coordinates. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="2. formex — Formex algebra in Python" href="formex.html" />
     <link rel="prev" title="pyFormex reference manual" href="../refman.html" /> 
@@ -238,7 +238,7 @@ are points and should also evaluate to (3,) shaped arrays.</p>
 <dl class="method">
 <dt id="coords.Coords.fprint">
 <tt class="descname">fprint</tt><big>(</big><em>fmt=&quot;%10.3e %10.3e %10.3e&quot;</em><big>)</big><a class="headerlink" href="#coords.Coords.fprint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Formatted printing of a <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a>.</p>
+<dd><p>Formatted printing of a <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>The supplied format should contain 3 formatting sequences for the
 three coordinates of a point.</p>
 </dd></dl>
@@ -308,7 +308,7 @@ rotation origin is specified in the argument &#8216;around&#8217;.</p>
 
 <dl class="method">
 <dt id="coords.Coords.reflect">
-<tt class="descname">reflect</tt><big>(</big><em>dir=2</em>, <em>pos=0</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.reflect" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reflect</tt><big>(</big><em>dir=0</em>, <em>pos=0</em>, <em>inplace=False</em><big>)</big><a class="headerlink" href="#coords.Coords.reflect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
 <p>Default position of the plane is through the origin.
 Default mirror direction is the z-direction.</p>
@@ -325,7 +325,7 @@ Default mirror direction is the z-direction.</p>
 
 <dl class="method">
 <dt id="coords.Coords.cylindrical">
-<tt class="descname">cylindrical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#coords.Coords.cylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">cylindrical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#coords.Coords.cylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from cylindrical to cartesian after scaling.</p>
 <p>dir specifies which coordinates are interpreted as resp.
 distance(r), angle(theta) and height(z). Default order is [r,theta,z].
@@ -336,12 +336,12 @@ The resulting angle is interpreted in degrees.</p>
 
 <dl class="method">
 <dt id="coords.Coords.hyperCylindrical">
-<tt class="descname">hyperCylindrical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>rfunc=None</em>, <em>zfunc=None</em>, <em>angle=Deg</em><big>)</big><a class="headerlink" href="#coords.Coords.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">hyperCylindrical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>rfunc=None</em>, <em>zfunc=None</em>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#coords.Coords.hyperCylindrical" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="coords.Coords.toCylindrical">
-<tt class="descname">toCylindrical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#coords.Coords.toCylindrical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toCylindrical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#coords.Coords.toCylindrical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from cartesian to cylindrical coordinates.</p>
 <p>dir specifies which coordinates axes are parallel to respectively the
 cylindrical axes distance(r), angle(theta) and height(z). Default
@@ -351,7 +351,7 @@ The angle value is given in degrees.</p>
 
 <dl class="method">
 <dt id="coords.Coords.spherical">
-<tt class="descname">spherical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>colat=False</em><big>)</big><a class="headerlink" href="#coords.Coords.spherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">spherical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>angle_spec=Deg</em>, <em>colat=False</em><big>)</big><a class="headerlink" href="#coords.Coords.spherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from spherical to cartesian after scaling.</p>
 <ul class="simple">
 <li><cite>dir</cite> specifies which coordinates are interpreted as resp.
@@ -366,7 +366,7 @@ direction of north pole(90). South pole is -90.</p>
 
 <dl class="method">
 <dt id="coords.Coords.superSpherical">
-<tt class="descname">superSpherical</tt><big>(</big><em>n=1.0</em>, <em>e=1.0</em>, <em>k=0.0</em>, <em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>colat=False</em><big>)</big><a class="headerlink" href="#coords.Coords.superSpherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">superSpherical</tt><big>(</big><em>n=1.0</em>, <em>e=1.0</em>, <em>k=0.0</em>, <em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>scale=</em><span class="optional">[</span>, <em>1.</em>, <em>1.</em>, <em>1.</em><span class="optional">]</span>, <em>angle_spec=Deg</em>, <em>colat=False</em><big>)</big><a class="headerlink" href="#coords.Coords.superSpherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs a superspherical transformation.</p>
 <p>superSpherical is much like spherical, but adds some extra
 parameters to enable the creation of virtually any surface.</p>
@@ -389,7 +389,7 @@ shrink the northern.</p>
 
 <dl class="method">
 <dt id="coords.Coords.toSpherical">
-<tt class="descname">toSpherical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#coords.Coords.toSpherical" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toSpherical</tt><big>(</big><em>dir=</em><span class="optional">[</span>, <em>0</em>, <em>1</em>, <em>2</em><span class="optional">]</span>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#coords.Coords.toSpherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts from cartesian to spherical coordinates.</p>
 <p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
 the spherical axes distance(r), longitude(theta) and latitude(phi).

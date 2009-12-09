@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>35. fe_abq — An interface to write Finite Element models in Abaqus input file format. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>35. fe_abq — An interface to write Finite Element models in Abaqus input file format. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="36. fe_post — A postprocessor for ABAQUS output files." href="fe_post.html" />
     <link rel="prev" title="34. properties — General framework for attributing properties to geometrical elements." href="properties.html" /> 
@@ -117,16 +117,20 @@ resfreq and timemarks are global values only used by Explicit</p>
 
 <dl class="class">
 <dt id="fe_abq.Output">
-<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>history=False</em>, <em>variable='PRESELECT'</em><big>)</big><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">fe_abq.</tt><tt class="descname">Output</tt><big>(</big><em>kind=None</em>, <em>keys=None</em>, <em>set=None</em>, <em>type='FIELD'</em>, <em>variable='PRESELECT'</em>, <em>extra=''</em>, <em>**options</em><big>)</big><a class="headerlink" href="#fe_abq.Output" title="Permalink to this definition">¶</a></dt>
 <dd><p>A request for output to .odb and history.</p>
 <p>Create new output request.</p>
 <ul class="simple">
+<li><cite>type</cite>: &#8216;FIELD&#8217; or &#8216;HISTORY&#8217;</li>
 <li><cite>kind</cite>: None, &#8216;NODE&#8217;, or &#8216;ELEMENT&#8217; (first character suffices)</li>
+<li><cite>extra</cite>: an extra string to be added to the command line. This
+allows to add Abaqus options not handled by this constructor.
+The string will be appended to the command line preceded by a comma.</li>
 </ul>
 <p>For kind==&#8217;&#8216;:</p>
 <blockquote>
 <ul class="simple">
-<li><cite>variable</cite> : &#8216;ALL&#8217;, &#8216;PRESELECT&#8217; or &#8216;&#8217;</li>
+<li><cite>variable</cite>: &#8216;ALL&#8217;, &#8216;PRESELECT&#8217; or &#8216;&#8217;</li>
 </ul>
 </blockquote>
 <p>For kind==&#8217;NODE&#8217; or &#8216;ELEMENT&#8217;:</p>
@@ -140,6 +144,13 @@ for kind==&#8217;NODE&#8217; and &#8216;Eall&#8217; for kind=&#8217;ELEMENT&#821
 </ul>
 </blockquote>
 <p>Output objects have the following methods:</p>
+<dl class="method">
+<dt id="fe_abq.Output.fmt">
+<tt class="descname">fmt</tt><big>(</big><big>)</big><a class="headerlink" href="#fe_abq.Output.fmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format an output request.</p>
+<p>Return a string with the formatted output command.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -393,6 +404,17 @@ does nothing.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="fe_abq.fmtGeneralContact">
+<tt class="descclassname">fe_abq.</tt><tt class="descname">fmtGeneralContact</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtGeneralContact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format the general contact.</p>
+<p>Only implemented on model level</p>
+<p>Required:</p>
+<ul class="simple">
+<li>interaction: interaction properties : name or Dict</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
 <dt id="fe_abq.fmtContactPair">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">fmtContactPair</tt><big>(</big><em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.fmtContactPair" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the contact pair.</p>
@@ -515,13 +537,6 @@ The user can set op=&#8217;MOD&#8217; to add the loads to already existing ones.
 <dt id="fe_abq.writeAmplitude">
 <tt class="descclassname">fe_abq.</tt><tt class="descname">writeAmplitude</tt><big>(</big><em>fil</em>, <em>prop</em><big>)</big><a class="headerlink" href="#fe_abq.writeAmplitude" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="function">
-<dt id="fe_abq.writeStepOutput">
-<tt class="descclassname">fe_abq.</tt><tt class="descname">writeStepOutput</tt><big>(</big><em>fil</em>, <em>kind</em>, <em>history=False</em>, <em>variable='PRESELECT'</em><big>)</big><a class="headerlink" href="#fe_abq.writeStepOutput" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write the global step output requests.</p>
-<p>variable = &#8216;ALL&#8217; or &#8216;PRESELECT&#8217; or &#8216;&#8217;</p>
-</dd></dl>
 
 <dl class="function">
 <dt id="fe_abq.writeNodeOutput">

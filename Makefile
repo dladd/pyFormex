@@ -1,7 +1,7 @@
 #  -*- Makefile -*-  for creating pyFormex releases
 # $Id$
 ##
-##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
+##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
@@ -40,7 +40,7 @@ SOURCE= ${PYFORMEXDIR}/pyformex \
 	$(wildcard ${PYFORMEXDIR}/gui/*.py) \
 	$(wildcard ${PYFORMEXDIR}/plugins/*.py) \
 	$(wildcard ${LIBDIR}/*.c) \
-	$(addprefix ${BINDIR}/, read_abq_inp) \
+	$(addprefix ${BINDIR}/, read_abq_inp.awk) \
 
 
 EXAMPLES= \
@@ -49,6 +49,8 @@ EXAMPLES= \
 	$(wildcard ${PYFORMEXDIR}/examples/Demos/*.py) \
 
 EXAMPLEDATA= $(wildcard ${PYFORMEXDIR}/examples/*.db)
+
+EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py ${BINDIR}/read_abq_inp.awk ${LIBDIR}/postabq pyformex-viewer
 
 
 OTHERSTAMPABLE= setup.py Makefile\
@@ -152,6 +154,7 @@ stamp: Stamp.template RELEASE
 
 stampall: stamp
 	${STAMP} -tStamp.stamp -i ${STAMPABLE}
+	chmod +x ${EXECUTABLE}
 
 printstampable:
 	@for f in ${STAMPABLE}; do echo $$f; done

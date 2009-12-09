@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>29. inertia — inertia.py &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>29. inertia — inertia.py &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="30. units — A Python wrapper for unit conversion of physical quantities." href="units.html" />
     <link rel="prev" title="28. section2d — Some functions operating on 2D structures." href="section2d.html" /> 
@@ -97,8 +97,11 @@ Ixx, Iyy, Izz, Ixy, Ixz, Iyz</li>
 
 <dl class="function">
 <dt id="inertia.principal">
-<tt class="descclassname">inertia.</tt><tt class="descname">principal</tt><big>(</big><em>inertia</em><big>)</big><a class="headerlink" href="#inertia.principal" title="Permalink to this definition">¶</a></dt>
-<dd>Returns the principal values and axes of the inertia tensor.</dd></dl>
+<tt class="descclassname">inertia.</tt><tt class="descname">principal</tt><big>(</big><em>inertia</em>, <em>sort=False</em>, <em>right_handed=False</em><big>)</big><a class="headerlink" href="#inertia.principal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the principal values and axes of the inertia tensor.</p>
+<p>If sort is True, they are sorted (maximum comes first).
+If right_handed is True, the axes define a right-handed coordinate system.</p>
+</dd></dl>
 
 </div>
 

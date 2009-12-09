@@ -78,6 +78,7 @@
    .. autofunction:: chdir(fn)
    .. autofunction:: runtime()
    .. autofunction:: startGui(args=[])
+   .. autofunction:: isWritable(path)
    .. autofunction:: checkRevision(rev,comp='>=')
    .. autofunction:: workHere()
 

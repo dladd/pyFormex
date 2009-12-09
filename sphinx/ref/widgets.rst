@@ -26,7 +26,8 @@
 
       FileSelection objects have the following methods:
 
-      .. automethod:: getFilename()
+      .. automethod:: show(timeout=None,timeoutfunc=None,modal=False)
+      .. automethod:: getFilename(timeout=None)
 
    .. autoclass:: ProjectSelection
 
@@ -228,6 +229,22 @@
       TableDialog objects have the following methods:
 
 
+   .. autoclass:: MessageBox
+
+
+      MessageBox objects have the following methods:
+
+      .. automethod:: updateText(text,format='')
+      .. automethod:: getResult()
+
+   .. autoclass:: TextBox
+
+
+      TextBox objects have the following methods:
+
+      .. automethod:: updateText(text,format='')
+      .. automethod:: getResult()
+
    .. autoclass:: ButtonBox
 
 
@@ -287,14 +304,14 @@
 
 **Functions defined in the module widgets**
 
+   .. autofunction:: setInputTimeout(timeout)
+   .. autofunction:: addTimeOut(widget,timeout=None,timeoutfunc=None)
    .. autofunction:: selectFont()
    .. autofunction:: getColor(col=None,caption=None)
    .. autofunction:: inputAny(name,value,itemtype=str)
    .. autofunction:: inputAnyOld(item,parent=None)
    .. autofunction:: updateDialogItems(data,newdata)
    .. autofunction:: dialogButtons(dialog,actions,default=None)
-   .. autofunction:: messageBox(message,level='info',choices=['OK'],default=None,timeout=None)
-   .. autofunction:: textBox(text,type=None,choices=['OK'])
    .. autofunction:: normalize(s)
 
    

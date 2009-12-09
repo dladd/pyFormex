@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>3. arraytools — A collection of numerical array utilities. &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="4. script — Basic pyFormex script functions" href="script.html" />
     <link rel="prev" title="2. formex — Formex algebra in Python" href="formex.html" /> 
@@ -206,14 +206,13 @@ Return either a 3x3(default) or 4x4(if n==4) rotation matrix.</p>
 <dt id="arraytools.checkArray">
 <tt class="descclassname">arraytools.</tt><tt class="descname">checkArray</tt><big>(</big><em>a</em>, <em>shape=None</em>, <em>kind=None</em>, <em>allow=None</em><big>)</big><a class="headerlink" href="#arraytools.checkArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that an array a has the correct shape and type.</p>
-<p>The input a is anything that can e converted into a numpy array.
-Either shape and or kind can be specified.
-The dimensions where shape contains a -1 value are not checked. The
-number of dimensions should match, though.
-If kind does not match, but is included in allow, conversion to the
-requested type is attempted.
-Returns the array if valid.
-Else, an error is raised.</p>
+<p>The input <cite>a</cite> is anything that can be converted into a numpy array.
+Either <cite>shape</cite> and/or <cite>kind</cite> can be specified. and will then be checked.
+The dimensions where <cite>shape</cite> contains a -1 value are not checked. The
+number of dimensions should match.
+If <cite>kind</cite> does not match, but the value is included in <cite>allow</cite>,
+conversion to the requested type is attempted.</p>
+<p>Returns the array if valid; else, an error is raised.</p>
 </dd></dl>
 
 <dl class="function">

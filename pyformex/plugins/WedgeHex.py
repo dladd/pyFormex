@@ -1,7 +1,7 @@
 #!/usr/bin/env pyformex --gui
 # $Id: Isopar.py 921 2009-02-24 09:51:50Z bverheg $
 ##
-##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
+##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
 ##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)

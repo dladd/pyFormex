@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.1-a9 documentation</title>
+    <title>2. formex — Formex algebra in Python &mdash; pyFormex v0.8.1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1-a9',
+        VERSION:     '0.8.1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1-a9 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" />
     <link rel="prev" title="1. coords — A structured collection of 3D coordinates." href="coords.html" /> 
@@ -294,7 +294,7 @@ The default settting for atol is rtol * self.dsize()</p>
 by semicolons and grouped between brackets, elements are
 separated by commas and grouped between braces:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">Formex</span><span class="p">([[[</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">],[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">]],[[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">],[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">]]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">F</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
 <span class="go">{[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}</span>
 </pre></div>
 </div>
@@ -349,7 +349,7 @@ they wil be repeated. If you give more, they will be ignored.</p>
 get a copy with the sum. 
 &gt;&gt;&gt; F = Formex([[[1.0,1.0,1.0]]])
 &gt;&gt;&gt; G = F.append(F)
-&gt;&gt;&gt; print F
+&gt;&gt;&gt; print(F)
 {[1.0,1.0,1.0], [1.0,1.0,1.0]}</p>
 </dd></dl>
 
@@ -373,7 +373,7 @@ get a copy with the sum.
 <dd><p>Concatenate all formices in Flist.</p>
 <p>This is a class method, not an instance method!
 &gt;&gt;&gt; F = Formex([[[1,2,3]]],1)
-&gt;&gt;&gt; print Formex.concatenate([F,F,F])
+&gt;&gt;&gt; print(Formex.concatenate([F,F,F]))
 {[1.0,2.0,3.0], [1.0,2.0,3.0], [1.0,2.0,3.0]}</p>
 <p>Formex.concatenate([F,G,H]) is functionally equivalent with F+G+H.
 The latter is simpler to write for a list with a few elements.
@@ -544,32 +544,77 @@ F.select(t&gt;0).</p>
 <dl class="method">
 <dt id="formex.Formex.scale">
 <tt class="descname">scale</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.scale" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.translate">
 <tt class="descname">translate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.translate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Translate a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Thus, the following lines are all equivalent:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.rotate">
 <tt class="descname">rotate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.rotate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy rotated over angle around axis.</p>
+<p>The angle is specified in degrees.
+The axis is either one of (0,1,2) designating the global axes,
+or a vector specifying an axis through the origin.
+If no axis is specified, rotation is around the 2(z)-axis. This is
+convenient for working on 2D-structures.</p>
+<p>As a convenience, the user may also specify a 3x3 rotation matrix,
+in which case the function rotate(mat) is equivalent to affine(mat).</p>
+<p>All rotations are performed around the point [0,0,0], unless a
+rotation origin is specified in the argument &#8216;around&#8217;.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.shear">
 <tt class="descname">shear</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.shear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a copy skewed in the direction dir of plane (dir,dir1).</p>
+<p>The coordinate dir is replaced with (dir + skew * dir1).</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.reflect">
 <tt class="descname">reflect</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.reflect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reflect the coordinates in direction dir against plane at pos.</p>
+<p>Default position of the plane is through the origin.
+Default mirror direction is the z-direction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.affine">
 <tt class="descname">affine</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.affine" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a general affine transform of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p><cite>mat</cite>: a 3x3 float matrix</p>
+<p><cite>vec</cite>: a length 3 list or array of floats</p>
+<p>The returned object has coordinates given by <tt class="docutils literal"><span class="pre">self</span> <span class="pre">*</span> <span class="pre">mat</span> <span class="pre">+</span> <span class="pre">vec</span></tt>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.mirror">
@@ -595,7 +640,13 @@ like reflect().</p>
 <dl class="method">
 <dt id="formex.Formex.cylindrical">
 <tt class="descname">cylindrical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.cylindrical" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts from cylindrical to cartesian after scaling.</p>
+<p>dir specifies which coordinates are interpreted as resp.
+distance(r), angle(theta) and height(z). Default order is [r,theta,z].
+scale will scale the coordinate values prior to the transformation.
+(scale is given in order r,theta,z).
+The resulting angle is interpreted in degrees.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.hyperCylindrical">
@@ -605,87 +656,222 @@ like reflect().</p>
 <dl class="method">
 <dt id="formex.Formex.toCylindrical">
 <tt class="descname">toCylindrical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.toCylindrical" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts from cartesian to cylindrical coordinates.</p>
+<p>dir specifies which coordinates axes are parallel to respectively the
+cylindrical axes distance(r), angle(theta) and height(z). Default
+order is [x,y,z].
+The angle value is given in degrees.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.spherical">
 <tt class="descname">spherical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.spherical" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts from spherical to cartesian after scaling.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).</li>
+<li><cite>scale</cite> will scale the coordinate values prior to the transformation.</li>
+</ul>
+<p>Angles are interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.</p>
+<p>If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.superSpherical">
 <tt class="descname">superSpherical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.superSpherical" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Performs a superspherical transformation.</p>
+<p>superSpherical is much like spherical, but adds some extra
+parameters to enable the creation of virtually any surface.</p>
+<p>Just like with spherical(), the input coordinates are interpreted as
+the longitude, latitude and distance in a spherical coordinate system.</p>
+<p><cite>dir</cite> specifies which coordinates are interpreted as resp.
+longitude(theta), latitude(phi) and distance(r).
+Angles are then interpreted in degrees.
+Latitude, i.e. the elevation angle, is measured from equator in
+direction of north pole(90). South pole is -90.
+If colat=True, the third coordinate is the colatitude (90-lat) instead.</p>
+<p><cite>scale</cite> will scale the coordinate values prior to the transformation.</p>
+<p>The <cite>n</cite> and <cite>e</cite> parameters define exponential transformations of the
+north_south (latitude), resp. the east_west (longitude) coordinates.
+Default values of 1 result in a circle.</p>
+<p><cite>k</cite> adds &#8216;eggness&#8217; to the shape: a difference between the northern and
+southern hemisphere. Values &gt; 0 enlarge the southern hemishpere and
+shrink the northern.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.toSpherical">
 <tt class="descname">toSpherical</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.toSpherical" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Converts from cartesian to spherical coordinates.</p>
+<p><cite>dir</cite> specifies which coordinates axes are parallel to respectively
+the spherical axes distance(r), longitude(theta) and latitude(phi).
+Latitude is the elevation angle measured from equator in direction
+of north pole(90). South pole is -90.
+Default order is [0,1,2], thus the equator plane is the (x,y)-plane.</p>
+<p>The returned angle values are given in degrees.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.bump">
 <tt class="descname">bump</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.bump" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> with a bump.</p>
+<p>A bump is a modification of a set of coordinates by a non-matching
+point. It can produce various effects, but one of the most common
+uses is to force a surface to be indented by some point.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+(!! func(0) should be different from 0)
+dist is the direction in which the distance is measured : this can
+be one of the axes, or a list of one or more axes.
+If only 1 axis is specified, the effect is like function bump1
+If 2 axes are specified, the effect is like bump2
+This function can take 3 axes however.
+Default value is the set of 3 axes minus the direction of modification.
+This function is then equivalent to bump2.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.bump1">
 <tt class="descname">bump1</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.bump1" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> with a one-dimensional bump.</p>
+<ul class="simple">
+<li><cite>dir</cite> specifies the axis of the modified coordinates;</li>
+<li><cite>a</cite> is the point that forces the bumping;</li>
+<li><cite>dist</cite> specifies the direction in which the distance is measured;</li>
+<li><cite>func</cite> is a function that calculates the bump intensity from distance
+and should be such that <tt class="docutils literal"><span class="pre">func(0)</span> <span class="pre">!=</span> <span class="pre">0</span></tt>.</li>
+</ul>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.bump2">
 <tt class="descname">bump2</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.bump2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> with a two-dimensional bump.</p>
+<p>dir specifies the axis of the modified coordinates;
+a is the point that forces the bumping;
+func is a function that calculates the bump intensity from distance
+!! func(0) should be different from 0.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.flare">
 <tt class="descname">flare</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.flare" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a flare at the end of a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> block.</p>
+<p>The flare extends over a distance <tt class="docutils literal"><span class="pre">xf</span></tt> at the start (<tt class="docutils literal"><span class="pre">end=0</span></tt>)
+or end (<tt class="docutils literal"><span class="pre">end=1</span></tt>) in direction <tt class="docutils literal"><span class="pre">dir[0]</span></tt> of the coords block,
+and has a maximum amplitude of <tt class="docutils literal"><span class="pre">f</span></tt> in the <tt class="docutils literal"><span class="pre">dir[1]</span></tt> direction.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.map">
 <tt class="descname">map</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.map" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.
+Example: E.map(lambda x,y,z: [2*x,3*y,4*z])
+is equivalent with E.scale([2,3,4])</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.map1">
 <tt class="descname">map1</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.map1" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> where coordinate i is mapped by a 1-D function.</p>
+<p><cite>func</cite> is a numerical function which takes one argument and produces
+one result. The coordinate dir will be replaced by func(coord[x]).
+If no x is specified, x is taken equal to dir. 
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map and mapd.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.mapd">
 <tt class="descname">mapd</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.mapd" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Maps one coordinate by a function of the distance to a point.</p>
+<p><cite>func</cite> a numerical function which takes one argument and produces
+one result. The coordinate <cite>dir</cite> will be replaced by <tt class="docutils literal"><span class="pre">func(d)</span></tt>,
+where <tt class="docutils literal"><span class="pre">d</span></tt> is calculated as the distance to <cite>point</cite>.
+The function must be applicable on arrays, so it should only
+include numerical operations and functions understood by the
+<tt class="xref docutils literal"><span class="pre">numpy</span></tt> module.
+By default, the distance d is calculated in 3-D, but one can specify
+a limited set of axes to calculate a 2-D or 1-D distance.
+This method is one of several mapping methods. See also
+<tt class="xref docutils literal"><span class="pre">map3()</span></tt> and <a title="formex.Formex.map1" class="reference internal" href="#formex.Formex.map1"><tt class="xref docutils literal"><span class="pre">map1()</span></tt></a>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">E</span><span class="o">.</span><span class="n">mapd</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">10</span><span class="o">**</span><span class="mf">2</span><span class="o">-</span><span class="n">d</span><span class="o">**</span><span class="mf">2</span><span class="p">),</span><span class="n">f</span><span class="o">.</span><span class="n">center</span><span class="p">(),[</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>maps <tt class="docutils literal"><span class="pre">E</span></tt> on a sphere with radius 10.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.newmap">
 <tt class="descname">newmap</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.newmap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Return a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> mapped by a 3-D function.</p>
+<p>This is one of the versatile mapping functions.
+func is a numerical function which takes three arguments and produces
+a list of three output values. The coordinates [x,y,z] will be
+replaced by func(x,y,z).
+The function must be applicable to arrays, so it should
+only include numerical operations and functions understood by the
+numpy module.
+This method is one of several mapping methods. See also map1 and mapd.
+Example: <tt class="docutils literal"><span class="pre">E.map(lambda</span> <span class="pre">x,y,z:</span> <span class="pre">[2*x,3*y,4*z])</span></tt>
+is equivalent with <tt class="docutils literal"><span class="pre">E.scale([2,3,4])</span></tt></p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.replace">
 <tt class="descname">replace</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.replace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Replace the coordinates along the axes i by those along j.</p>
+<p>i and j are lists of axis numbers or single axis numbers.
+replace ([0,1,2],[1,2,0]) will roll the axes by 1.
+replace ([0,1],[1,0]) will swap axes 0 and 1.
+An optionally third argument may specify another <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object to take
+the coordinates from. It should have the same dimensions.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.swapAxes">
 <tt class="descname">swapAxes</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.swapAxes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Swap coordinate axes i and j.</p>
+<p>Beware! This is different from numpy&#8217;s swapaxes() method !</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.rollAxes">
 <tt class="descname">rollAxes</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.rollAxes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Roll the axes over the given amount.</p>
+<p>Default is 1, thus axis 0 becomes the new 1 axis, 1 becomes 2 and
+2 becomes 0.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.projectOnSphere" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Project <tt class="xref docutils literal"><span class="pre">Coords</span></tt> on a sphere.</p>
+<p>The default sphere is a unit sphere at the origin.
+The center of the sphere should not be part of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.projectOnCylinder">
 <tt class="descname">projectOnCylinder</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.projectOnCylinder" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Project <tt class="xref docutils literal"><span class="pre">Coords</span></tt> on a cylinder with axis parallel to a global axis.</p>
+<p>The default cylinder has its axis along the x-axis and a unit radius.
+No points of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> should belong to the axis..</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.circulize">
@@ -872,7 +1058,7 @@ values.</dd>
 <tt class="docutils literal"><span class="pre">count</span></tt> can be used to force an error condition if the string
 does not contain the expected number of values.</dd>
 </dl>
-<p>The return value is a <cite>Coords</cite> object.</p>
+<p>The return value is a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -893,190 +1079,6 @@ Valid Formex file formats are described in the manual.</p>
 <dl class="method">
 <dt id="formex.Formex.reverseElements">
 <tt class="descname">reverseElements</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.reverseElements" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.give">
-<tt class="descname">give</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.give" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tran">
-<tt class="descname">tran</tt><big>(</big><em>dir</em>, <em>dist</em><big>)</big><a class="headerlink" href="#formex.Formex.tran" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.ref">
-<tt class="descname">ref</tt><big>(</big><em>dir</em>, <em>dist</em><big>)</big><a class="headerlink" href="#formex.Formex.ref" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rindle">
-<tt class="descname">rindle</tt><big>(</big><em>n</em>, <em>dir</em>, <em>step</em><big>)</big><a class="headerlink" href="#formex.Formex.rindle" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rin">
-<tt class="descname">rin</tt><big>(</big><em>dir</em>, <em>n</em>, <em>dist</em><big>)</big><a class="headerlink" href="#formex.Formex.rin" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.lam">
-<tt class="descname">lam</tt><big>(</big><em>dir</em>, <em>dist</em><big>)</big><a class="headerlink" href="#formex.Formex.lam" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.ros">
-<tt class="descname">ros</tt><big>(</big><em>i</em>, <em>j</em>, <em>x</em>, <em>y</em>, <em>n</em>, <em>angle</em><big>)</big><a class="headerlink" href="#formex.Formex.ros" title="Permalink to this definition">¶</a></dt>
-<dd>Return a Formex with n rotational replications with angular
-step angle around an axis parallel with one of the coordinate axes
-going through the given point. axis is the number of the axis (0,1,2).
-point must be given as a list (or array) of three coordinates.
-The original Formex is the first of the n replicas.</dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranic">
-<tt class="descname">tranic</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.tranic" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranid">
-<tt class="descname">tranid</tt><big>(</big><em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.tranid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranis">
-<tt class="descname">tranis</tt><big>(</big><em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.tranis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranit">
-<tt class="descname">tranit</tt><big>(</big><em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.tranit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranix">
-<tt class="descname">tranix</tt><big>(</big><em>t1</em>, <em>t2</em>, <em>t3</em><big>)</big><a class="headerlink" href="#formex.Formex.tranix" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranad">
-<tt class="descname">tranad</tt><big>(</big><em>a1</em>, <em>a2</em>, <em>b1</em>, <em>b2</em>, <em>t=None</em><big>)</big><a class="headerlink" href="#formex.Formex.tranad" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranas">
-<tt class="descname">tranas</tt><big>(</big><em>a1</em>, <em>a2</em>, <em>b1</em>, <em>b2</em>, <em>t=None</em><big>)</big><a class="headerlink" href="#formex.Formex.tranas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranat">
-<tt class="descname">tranat</tt><big>(</big><em>a1</em>, <em>a2</em>, <em>b1</em>, <em>b2</em>, <em>t=None</em><big>)</big><a class="headerlink" href="#formex.Formex.tranat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tranax">
-<tt class="descname">tranax</tt><big>(</big><em>a1</em>, <em>a2</em>, <em>a3</em>, <em>b1</em>, <em>b2</em>, <em>b3</em>, <em>t=None</em><big>)</big><a class="headerlink" href="#formex.Formex.tranax" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rinic">
-<tt class="descname">rinic</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.rinic" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rinid">
-<tt class="descname">rinid</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.rinid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rinis">
-<tt class="descname">rinis</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.rinis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rinit">
-<tt class="descname">rinit</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.rinit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.lamic">
-<tt class="descname">lamic</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.lamic" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.lamid">
-<tt class="descname">lamid</tt><big>(</big><em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.lamid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.lamis">
-<tt class="descname">lamis</tt><big>(</big><em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.lamis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.lamit">
-<tt class="descname">lamit</tt><big>(</big><em>t1</em>, <em>t2</em><big>)</big><a class="headerlink" href="#formex.Formex.lamit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rosad">
-<tt class="descname">rosad</tt><big>(</big><em>a</em>, <em>b</em>, <em>n=4</em>, <em>angle=90</em><big>)</big><a class="headerlink" href="#formex.Formex.rosad" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rosas">
-<tt class="descname">rosas</tt><big>(</big><em>a</em>, <em>b</em>, <em>n=4</em>, <em>angle=90</em><big>)</big><a class="headerlink" href="#formex.Formex.rosas" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.rosat">
-<tt class="descname">rosat</tt><big>(</big><em>a</em>, <em>b</em>, <em>n=4</em>, <em>angle=90</em><big>)</big><a class="headerlink" href="#formex.Formex.rosat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.genid">
-<tt class="descname">genid</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1</em>, <em>t2</em>, <em>bias=0</em>, <em>taper=0</em><big>)</big><a class="headerlink" href="#formex.Formex.genid" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.genis">
-<tt class="descname">genis</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1</em>, <em>t2</em>, <em>bias=0</em>, <em>taper=0</em><big>)</big><a class="headerlink" href="#formex.Formex.genis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.genit">
-<tt class="descname">genit</tt><big>(</big><em>n1</em>, <em>n2</em>, <em>t1</em>, <em>t2</em>, <em>bias=0</em>, <em>taper=0</em><big>)</big><a class="headerlink" href="#formex.Formex.genit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.bb">
-<tt class="descname">bb</tt><big>(</big><em>b1</em>, <em>b2</em><big>)</big><a class="headerlink" href="#formex.Formex.bb" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.bc">
-<tt class="descname">bc</tt><big>(</big><em>b1</em>, <em>b2</em>, <em>b3</em><big>)</big><a class="headerlink" href="#formex.Formex.bc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.bp">
-<tt class="descname">bp</tt><big>(</big><em>b1</em>, <em>b2</em><big>)</big><a class="headerlink" href="#formex.Formex.bp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.bs">
-<tt class="descname">bs</tt><big>(</big><em>b1</em>, <em>b2</em>, <em>b3</em><big>)</big><a class="headerlink" href="#formex.Formex.bs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.tic">
-<tt class="descname">tic</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#formex.Formex.tic" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="formex.Formex.ric">
-<tt class="descname">ric</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#formex.Formex.ric" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
