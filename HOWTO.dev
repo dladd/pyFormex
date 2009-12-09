@@ -79,7 +79,7 @@ Create a distribution
   svn up
   make dist
 Put the file on berlios ftp server
-  ftp -p ftp.berlios.de
+  ftp ftp.berlios.de
   name: ftp (anoniem)
   cd incoming
   lcd dist
@@ -110,7 +110,7 @@ Add the release data to the database
   edt pyformex-releases.fdb
 
 Bump the RELEASE and VERSION variables in the file RELEASE, then
-  make version
+  make bumpversion
   svn ci -m 'Bump version after release'
 
 
