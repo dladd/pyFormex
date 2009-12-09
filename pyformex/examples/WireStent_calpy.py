@@ -41,7 +41,7 @@ from calpy.beam3d import *
 
 ############################################
 # Create geometry
-from examples.WireStent import DoubleHelixStent
+from pyformex.examples.WireStent import DoubleHelixStent
 import datetime
 
 # create a Doublehelix stent
@@ -71,7 +71,7 @@ nel = stent.nelems()
 print "Number of elements: %s" % nel
 print "Original number of nodes: %s" % stent.nnodes()
 # Create FE model
-message("Creating FE model: for a large model this can take a LOT of time!")
+message("Creating Finite Element model: this may take some time.")
 nodes,elems = stent.feModel()
 nnod = nodes.shape[0]
 print "Compressed number of nodes: %s" % nnod
@@ -197,12 +197,12 @@ if GD.options.gui:
 
     bgcolor('lightgreen')
     linewidth(3)
-    drawtext('Normal force in the members',450,100,'tr24')
+    x = GD.canvas.width()//2
+    TA = drawtext('Normal force in the members',x,100,font='tr32')
     CL = ColorLegend(CS,100)
     CLA = decors.ColorLegend(CL,10,10,30,200) 
-    GD.canvas.addDecoration(CLA)
-    GD.canvas.update()
-    #pause()
+    decorate(CLA)
+    sleep(1)
 
     # and a deformed plot on multiple scales
     dscales = arange(1,6) * 1.0
@@ -210,14 +210,14 @@ if GD.options.gui:
     for dscale in dscales:
         dcoords = coords + dscale * displ[:,0:3,loadcase]
         clear()
-        GD.canvas.addDecoration(CLA)
+        decorate(CLA)
+        decorate(TA)
         linewidth(1)
         draw(results,color='darkgreen',wait=False)
         linewidth(3)
         deformed = Formex(dcoords[elems])
         draw(deformed,color=cval)
-        drawtext('Normal force in the truss members',450,100,'tr24')
-        drawtext('Deformed geometry (scale %.2f)' % dscale,450,70,'tr24')
+        drawtext('Deformed geometry (scale %.2f)' % dscale,x,70)
 
 
 # End
