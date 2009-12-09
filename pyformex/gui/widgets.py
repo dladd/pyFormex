@@ -755,7 +755,7 @@ class InputBool(InputItem):
 class InputCombo(InputItem):
     """A combobox InputItem."""
     
-    def __init__(self,name,default,choices=[],*args,**kargs):
+    def __init__(self,name,default,choices=[],onselect=None,*args,**kargs):
         """Creates a new combobox for the selection of a value from a list.
 
         choices is a list/tuple of possible values.
@@ -765,6 +765,9 @@ class InputCombo(InputItem):
        
         The choices are presented to the user as a combobox, which will
         initially be set to the default value.
+
+        An optional `onselect` function may be specified, which will be called
+        whenever the current selection changes.
         """
         if default is None:
             default = choices[0]
@@ -774,6 +777,8 @@ class InputCombo(InputItem):
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QComboBox()
         self.input.addItems(self._choices_)
+        if callable(onselect):
+            self.connect(self.input,QtCore.SIGNAL("currentIndexChanged(const QString &)"),onselect)
         self.setValue(default)
         self.insertWidget(1,self.input)
 

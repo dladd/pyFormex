@@ -82,62 +82,107 @@ limas = {
     #25: [ "F", {"F":"F-F++F-F"}, 4, turtlecmds() ],
     }
 
-def show(i,L,turtle_cmds,clear=True,text=True):
+def show(i,L,turtle_cmds,clear=True,text=True,colors=True):
     """Show the current production of the Lima L."""
     global FA,TA
     turtle_script = L.translate(turtle_cmds)
     coords = turtle.play("reset();" + turtle_script)
     if len(coords) > 0:
-        if clear:
-            prop = 0
-        else:
+        if colors:
             prop = i
+        else:
+            prop = 0
         FB = draw(Formex(coords,prop))
         if clear:
             undraw(FA)
         FA = FB
         if text:
-            TB = drawText("Generation %d"%i,20,20)
+            TB = drawText("Generation %d"%i,40,40,size=24)
             undecorate(TA)
             TA = TB
         
 
-def grow(rule,clearing,text=True):
+def grow(rule='',clearing=True,text=True,ngen=-1,colors=True,viewports=False):
     """Show subsequent Lima productions."""
     global FA,TA
     FA = None
     TA = None
+    viewport(0)
     clear()
-    #GD.message(rule)
+    if not rule in limas.keys():
+        return
+    
     if text:
-        drawText(rule,20,40)
+        drawText(rule,40,60,size=24)
+
     a,r,g,t = limas[rule]
+    #print "NGEN default %s" % g
+    #print "NGEN requested %s" % ngen
+    if ngen >= 0:
+        # respect the requested number of generations
+        g = ngen
+    #print "NGEN executed %s" % g
     L = lima.Lima(a,r)
+    # show the axiom
     show(0,L,t,clearing,text)
+    # show g generations
     for i in range(g):
+        if viewports:
+            viewport(i+1)
         L.grow()
         show(i+1,L,t,clearing,text)
 
 
+def setDefaultGenerations(rule):
+    rule = str(rule)
+    if limas.has_key(rule):
+        ngen = limas[rule][2]
+        d = currentDialog()
+        if d:
+            d.updateData({'ngen':ngen})
+        
+
 if __name__ == "draw":
 
+    layout(1)
+    viewport(0)
+    clear()
     wireframe()
     linewidth(2)
     keys = limas.keys()
     keys.sort()
     choices = ['__all__','__custom__'] + keys
 
-    res = askItems([('Production rule',None,'select',choices),('clear',True)])
+    defaults = {
+        'rule':None,
+        'ngen':-1,
+        'colors':True,
+        'clearing':True,
+        'viewports':False
+        }
+
+    defaults = GD.PF.get('__Lima__data',defaults)
+
+    res = askItems([
+        ('rule',defaults['rule'],'select',{'text':'Production rule','choices':choices,'onselect':setDefaultGenerations}),
+        ('ngen',defaults['ngen'],{'text':'Number of generations (-1 = default)'}),
+        ('colors',defaults['colors'],{'text':'Use different colors per generation'}),
+        ('clearing',defaults['clearing'],{'text':'Clear screen between generations'}),
+        ('viewports',defaults['viewports'],{'text':'Use a separate viewport for each generation'}),
+        ])
 
     if res:
-        rule = res['Production rule']
-        clearing = res['clear']
-        if rule == '__all__':
-            for rule in keys:
-                grow(rule,clearing)
-        elif rule == '__all__':
+        globals().update(res)
+        GD.PF['__Lima__data'] = res
+        if viewports:
+            layout(ngen+1,ncols=(ngen+2)//2)
+        if rule == '__custom__':
             pass
+        elif rule == '__all__':
+            for rule in keys:
+                res['rule'] = rule
+                grow(**res)
         else:
-            grow(rule,clearing)
+            grow(**res)
 
 # End

@@ -676,7 +676,7 @@ def setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0]):
     GD.app.processEvents()
 
 
-def drawText(text,x,y,gravity='',font='helvetica',size=14,color=None,adjust=None,zoom=None):
+def drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,adjust=None,zoom=None):
     """Show a text at position x,y using font."""
     TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,adjust=adjust,zoom=zoom)
     decorate(TA)
