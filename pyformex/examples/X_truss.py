@@ -1,11 +1,11 @@
 #!/usr/bin/env pyformex --gui
 # $Id: X_truss.py 131 2006-09-19 17:57:54Z bverheg $
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """X-shaped truss
 

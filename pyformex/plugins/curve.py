@@ -1,11 +1,11 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 
 """Definition of curves in pyFormex.
@@ -322,6 +322,7 @@ class BezierSpline(Curve):
         direction of the end segment.
         The curl parameter can be set to influence the curliness of the curve.
         curl=0.0 results in straight segments.
+        
         The control points can also be specified directly. If they are, they
         override the deriv and curl parameters. Since each segment of the curve
         needs two control points, the control array has shape (npts-1, 2, 3).
@@ -370,6 +371,76 @@ class BezierSpline(Curve):
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
+        X = dot(U,C)
+        return X
+
+##############################################################################
+#
+
+class QuadBezierSpline(Curve):
+    """A class representing a Bezier spline curve."""
+    coeffs = matrix([[ 1., -2.,  1.],
+                     [-2.,  2.,  0.],
+                     [ 1.,  0.,  0.]]
+                    )
+
+    def __init__(self,coords,deriv=None,control=None,closed=False):
+        """Create a cubic spline curve through the given points.
+
+        The curve is defined by the points and the directions at these points.
+        If no directions are specified, the average of the segments ending
+        in that point is used, and in the end points of an open curve, the
+        direction of the end segment.
+        The curl parameter can be set to influence the curliness of the curve.
+        curl=0.0 results in straight segments. curl=1.0 
+        The control points can also be specified directly. If they are, they
+        override the deriv and curl parameters. Since each segment of the curve
+        needs two control points, the control array has shape (npts-1, 2, 3).
+        """
+        coords = Coords(coords)
+        self.coords = coords
+        self.nparts = self.coords.shape[0]
+        if not closed:
+            self.nparts -= 1
+            
+        if control is None:
+            if self.nparts < 2:
+                control = self.coords
+            else:
+                P = PolyLine(coords,closed=closed)
+                if deriv is None:
+                    deriv = P.avgDirections()
+                ampl = P.lengths().reshape(-1,1)
+                if not closed:
+                    coords = coords[1:-1]
+                if not closed:
+                    p1 = coords + deriv*curl*ampl[1:]
+                    p2 = coords - deriv*curl*ampl[:-1]
+                else:
+                    p1 = coords + deriv*curl*ampl
+                    p2 = coords - deriv*curl*roll(ampl,1,axis=0)
+                if not closed:
+                    p1 = concatenate([p2[:1],p1],axis=0)
+                    p2 = concatenate([p2,p1[-1:]],axis=0)
+                else:
+                    p2 = roll(p2,-1,axis=0)
+                control = concatenate([p1,p2],axis=1)
+        control = asarray(control).reshape(-1,3)
+        self.control = Coords(control)
+        if self.control.shape != (self.nparts,3):
+            print("coords array has shape %s" % str(self.coords.shape))
+            print("control array has shape %s" % str(self.control.shape))
+            raise ValueError,"Invalid control points for Bezier Spline"
+        self.closed = closed
+
+
+    def sub_points(self,t,j):
+        j1 = (j+1) % self.coords.shape[0]
+        P = self.coords[[j,j1]]
+        D = self.control[j]
+        P = concatenate([ P[0],D,P[1] ],axis=0).reshape(-1,3)
+        C = self.coeffs * P
+        U = column_stack([t**2., t, ones_like(t)])
         X = dot(U,C)
         return X
 

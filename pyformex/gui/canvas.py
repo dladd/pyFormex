@@ -1,10 +1,10 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +19,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """This implements an OpenGL drawing widget for painting 3D scenes."""
 
@@ -423,13 +423,13 @@ class Canvas(object):
         """
         if on is None:
             on = self.triade is None
+        GD.debug("SETTING TRIADE %s" % on)
         if self.triade:
             self.removeAnnotation(self.triade)
+            self.triade = None
         if on:
             self.triade = actors.TriadeActor(size,pos)
             self.addAnnotation(self.triade)
-        else:
-            self.triade = None
     
 
     def initCamera(self):
@@ -536,7 +536,11 @@ class Canvas(object):
         if len(self.decorations) > 0:
             for actor in self.decorations:
                 self.setDefaults()
+                ## if hasattr(actor,'zoom'):
+                ##     self.zoom_2D(actor.zoom)
                 actor.draw(mode=self.rendermode)
+                ## if hasattr(actor,'zoom'):
+                ##     self.zoom_2D()
 
         # draw the focus rectangle if more than one viewport
         if len(GD.GUI.viewports.all) > 1:
@@ -558,7 +562,7 @@ class Canvas(object):
             opaque = [ a for a in self.actors if not a.trans ]
             transp = [ a for a in self.actors if a.trans ]
             for actor in opaque:
-               actor.draw(mode=self.rendermode)
+                actor.draw(mode=self.rendermode)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
@@ -583,6 +587,12 @@ class Canvas(object):
         GL.glFlush()
 
 
+    def zoom_2D(self,zoom=None):
+        if zoom is None:
+            zoom = (0,self.width(),0,self.height())
+        GLU.gluOrtho2D(*zoom)
+            
+
     def begin_2D_drawing(self):
         """Set up the canvas for 2D drawing on top of 3D canvas.
 
@@ -600,7 +610,7 @@ class Canvas(object):
         GL.glMatrixMode(GL.GL_PROJECTION)
         GL.glPushMatrix()
         GL.glLoadIdentity()
-        GLU.gluOrtho2D(0,self.width(),0,self.height())
+        self.zoom_2D()
         GL.glDisable(GL.GL_DEPTH_TEST)
         self.glLight(False)
         self.mode2D = True
@@ -692,6 +702,8 @@ class Canvas(object):
         if actorlist == None:
             actorlist = self.actors[:]
         for actor in actorlist:
+            if actor is self.triade:
+                self.triade == None
             self.removeActor(actor)
         self.setBbox()
         
@@ -706,9 +718,13 @@ class Canvas(object):
 
     def removeAnnotations(self,actorlist=None):
         """Remove all actors in actorlist (default = all) from the scene."""
+        GD.debug("REMOVING ALL ACTORS")
         if actorlist == None:
             actorlist = self.annotations[:]
         for actor in actorlist:
+            if actor == self.triade:
+                GD.debug("REMOVING TRIADE")
+                self.triade = None
             self.removeAnnotation(actor)
 
 
@@ -726,6 +742,7 @@ class Canvas(object):
         self.removeHighlights()
         self.removeAnnotations()
         self.removeDecorations()
+        self.triade = None
 
 
     def redrawAll(self):

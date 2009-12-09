@@ -27,15 +27,14 @@ make libdebug
 ** Create the manual
 
 You need to install the following packages (on debian):
-  python-dev
-  latex2html
+  python-sphinx
 
 In the main pyformex directory (svn tree) do:
-  make manual
-This will generate: 
-  - PDF version:  manual/manual.pdf
-  - PS version:   manual/manual.ps
-  - HTML version: manual/html/
+  make html
+This will generate html documentation in sphinx/_build/html.
+To create the PDF manual:
+  make pdf
+This will create the pdf manual in _build/latex.
 
             
 ** Create a distribution

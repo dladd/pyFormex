@@ -1,11 +1,11 @@
 # This is the default pyFormex config file. DO NOT CHANGE IT!  -*- PYTHON -*-
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 #
 # Changes should go to /etc/pyformexrc (for site-wide changes)
@@ -101,7 +101,7 @@ dynazoom = ['area','dolly']     # preferred zoom technique ('area', 'dolly', 'le
 wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 
 plot2d = 'gnuplot'
-easter_egg = None
+easter_egg = ('#/s/i/n yomx-gifo yomxeape.iaipr \nrmpoetipr rjc\nieit()fclrbu)go(Pat\'FleFle\n  rjc(spt.onG.f[dtdr]\'lpo5pf)cet=as)Pla(\nuv  [bip-\'\nrwcreclrpfre_iklnwdh5\nfak"hsi h yomxLsrmrlaennlc eoet olne hwti tru cenn,hie=\'eoe,Ke\')= Rmv\'\n  Dcg\'u/atreg]=Nn\n  ', '!urbnevpfre -u\nrmpfre.xmlsLm mot*fo rjc motPoetlnwdh2\ngoo(le\nrw\'ln1,as,as)P=Poeto.ahji(Dcg\'aai\',bip-.y\',raeFle\n.od)cre=P\'lpo5]da(uv,oo=yomxpn,ieit=)i s(Ti stepFre utu ees\\\\CikRmv on ogrso hssatpsre\\"cocs[Rmv\'\'ep] =\'eoe:  G.f[giese_g\'  oe  \n')
 
 [input]
 timeout = -1         # never timeout

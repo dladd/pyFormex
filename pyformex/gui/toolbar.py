@@ -1,10 +1,10 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +19,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """Toolbars for pyformex GUI."""
 
@@ -270,13 +270,15 @@ def setShrink(mode):
 timeout_button = None # the toggle timeout button
 
 def toggleTimeout(onoff=None):
+    #print "TOGGLETIMEOUT"
     if onoff is None:
         onoff = widgets.input_timeout < 0
     if onoff:
-        widgets.input_timeout = GD.cfg.get('input/timeout',-1)
+        widgets.setInputTimeout(GD.cfg.get('input/timeout',-1))
     else:
-        widgets.input_timeout = -1
+        widgets.setInputTimeout(-1)
     onoff = widgets.input_timeout > 0
+    #print "TIMEOUT IS NOW %s" % widgets.input_timeout
     return onoff
 
 

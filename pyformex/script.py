@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """Basic pyFormex script functions
 
@@ -219,6 +219,8 @@ def system(cmdline,result='output'):
 
 ########################### PLAYING SCRIPTS ##############################
 
+sleep = time.sleep
+
 scriptDisabled = False
 scriptRunning = False
 exitrequested = False
@@ -280,8 +282,8 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
 
     starttime = time.clock()
     GD.debug('STARTING SCRIPT (%s)' % starttime)
-    GD.debug(scr)
-    GD.debug(pye)
+    #GD.debug(scr)
+    #GD.debug(pye)
     try:
         try:
             if GD.GUI and stepmode:
@@ -303,13 +305,12 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                     s = m.replace('.py','')
                     print(s)
                     __import__(s,g)
-                elif pye:
-                    n = (len(scr)+1) // 2
-                    print scr
-                    scr = utils.mergeme(scr[:n],scr[n:])
-                    print scr
-#                    exec utils.mergeme(scr[:n],scr[n:]) in g
                 else:
+                    if pye:
+                        n = (len(scr)+1) // 2
+                        # print scr
+                        scr = utils.mergeme(scr[:n],scr[n:])
+                        # print scr
                     exec scr in g
 
             if GD.cfg['autoglobals']:
@@ -531,6 +532,10 @@ def startGui(args=[]):
         gui.startGUI(args)
         gui.runGUI()
 
+
+def isWritable(path):
+    """Check that the specified path is writeable."""
+    return os.access(path,os.W_OK)
 
 def checkRevision(rev,comp='>='):
     """Check that we have the requested revision number.

@@ -1,11 +1,11 @@
 #!/usr/bin/env pyformex --gui
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,21 +20,20 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-
-from plugins.curve import *
-from odict import ODict
-from gui import widgets
-
 """Curves
 
 Examples showing the use of the 'curve' plugin
 
 level = 'normal'
-topics = ['geometry','curves','spline',]
-techniques = ['solve','widgets','persistence']
+topics = ['geometry','curve']
+techniques = ['solve','widgets','persistence','import','spline']
 """
+
+from plugins.curve import *
+from odict import ODict
+from gui import widgets
 
 def BezierCurve(X,curl=None,closed=False):
     """Create a Bezier curve give 4 points

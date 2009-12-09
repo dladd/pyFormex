@@ -1,10 +1,10 @@
 ## $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +19,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """Create 3D graphical representations.
 
@@ -676,9 +676,9 @@ def setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0]):
     GD.app.processEvents()
 
 
-def drawText(text,x,y,gravity=None,font='helvetica',size=14,color=None,adjust=None):
+def drawText(text,x,y,gravity='',font='helvetica',size=14,color=None,adjust=None,zoom=None):
     """Show a text at position x,y using font."""
-    TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,adjust=adjust)
+    TA = decors.Text(text,x,y,gravity=gravity,font=font,size=size,color=color,adjust=adjust,zoom=zoom)
     decorate(TA)
     return TA
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,19 +20,8 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
-"""pyFormex main module
-
-This module holds the main function to start the pyFormex program.
-
-The main function processes the command line arguments,
-reads the configuration files, executes scripts passed on the command line,
-and starts the GUI
-
-The main function is called from the `pyformex` script, which is responsible
-for setting up the correct sys.path.
-"""
 
 import sys,os
 pyformexdir = sys.path[0]
@@ -64,9 +53,7 @@ def printcfg(key):
 
 
 def setRevision():
-    sta,out = utils.runCommand(
-        'cd %s && svnversion' % pyformex.cfg['pyformexdir'],
-        quiet=True)
+    sta,out = utils.runCommand('cd %s && svnversion' % pyformex.cfg['pyformexdir'],quiet=True)
     if sta == 0 and not out.startswith('exported'):
         pyformex.__revision__ = "$Rev: %s $" % out.strip()
 
@@ -132,7 +119,7 @@ def savePreferences():
 ###########################  app  ################################
 
     
-def main(argv=[]):
+def run(argv=[]):
     """This is a fairly generic main() function.
 
     It is responsible for reading the configuration file(s),
@@ -174,68 +161,89 @@ def main(argv=[]):
         version = pyformex.Version,
         option_list=[
         MO("--gui",
+           action="store_true", dest="gui", default=None,
            help="start the GUI (default if no scriptfile argument is given)",
-           action="store_true", dest="gui", default=None),
+           ),
         MO("--nogui",
+           action="store_false", dest="gui", default=None,
            help="do not load the GUI (default if a scriptfile argument is given)",
-           action="store_false", dest="gui", default=None),
+           ),
         MO("--interactive",'-i',
+           action="store_true", dest="interactive", default=False,
            help="go into interactive mode after processing the command line parameters. This is implied by the --gui option.",
-           action="store_true", dest="interactive", default=False),
+           ),
         MO("--force-dri",
+           action="store_true", dest="dri", default=None,
            help="Force use of Direct Rendering",
-           action="store_true", dest="dri", default=None),
+           ),
         MO("--force-nodri",
+           action="store_false", dest="dri", default=None,
            help="Disables the Direct Rendering",
-           action="store_false", dest="dri", default=None),
+           ),
         MO("--uselib",
+           action="store_true", dest="uselib", default=None,
            help="Use the pyFormex C lib if available. This is the default.",
-           action="store_true", dest="uselib", default=None),
+           ),
         MO("--nouselib",
+           action="store_false", dest="uselib", default=None,
            help="Do not use the pyFormex C-lib.",
-           action="store_false", dest="uselib", default=None),
+           ),
         MO("--safelib",
+           action="store_true", dest="safelib", default=True,
            help="Convert data types to match C-lib. This is the default.",
-           action="store_true", dest="safelib", default=True),
+           ),
         MO("--unsafelib",
+           action="store_false", dest="safelib", default=True,
            help="Do not convert data types to match C-lib. BEWARE: this may make the C-lib calls impossible. Use only for debugging purposes.",
-           action="store_false", dest="safelib", default=True),
+           ),
         MO("--fastencode",
+           action="store_true", dest="fastencode", default=False,
            help="Use a fast algorithm to encode edges.",
-           action="store_true", dest="fastencode", default=False),
+           ),
         MO("--config",
+           action="store", dest="config", default=None,
            help="Use file CONFIG for settings",
-           action="store", dest="config", default=None),
+           ),
         MO("--nodefaultconfig",
+           action="store_true", dest="nodefaultconfig", default=False,
            help="Skip the default site and user config files. This option can only be used in conjunction with the --config option.",
-           action="store_true", dest="nodefaultconfig", default=False),
+           ),
         MO("--redirect",
+           action="store_true", dest="redirect", default=False,
            help="Redirect standard output to the message board (ignored with --nogui)",
-           action="store_true", dest="redirect", default=False),
+           ),
         MO("--detect",
+           action="store_true", dest="detect", default=False,
            help="Detect helper software and print report.",
-           action="store_true", dest="detect", default=False),
+           ),
         MO("--debug",
+           action="store_true", dest="debug", default=False,
            help="display debugging info to sys.stdout",
-           action="store_true", dest="debug", default=False),
+           ),
         MO("--classify",
+           action="store_true", dest="classify", default=False,
            help="classify the examples in categories",
-           action="store_true", dest="classify", default=False),
+           ),
         MO("--whereami",
+           action="store_true", dest="whereami", default=False,
            help="show where the pyformex package is located",
-           action="store_true", dest="whereami", default=False),
+           ),
         MO("--remove",
+           action="store_true", dest="remove", default=False,
            help="remove the pyformex installation",
-           action="store_true", dest="remove", default=False),
+           ),
         MO("--test",
+           action="store_true", dest="test", default=False,
            help="testing mode: only for developers!",
-           action="store_true", dest="test", default=False),
+           ),
         MO("--testhighlight",
+           action="store_true", dest="testhighlight", default=False,
            help="highlight testing mode: only for developers!",
-           action="store_true", dest="testhighlight", default=False),
+           ),
         MO("--executor",
+           action="store_true", dest="executor", default=False,
            help="test alternate executor: only for developers!",
-           action="store_true", dest="executor", default=False),
+           ),
         ])
     pyformex.options, args = parser.parse_args(argv)
     pyformex.print_help = parser.print_help

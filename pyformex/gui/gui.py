@@ -1,10 +1,10 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +19,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """Graphical User Interface for pyFormex."""
 
@@ -746,20 +746,23 @@ See Help->License or the file COPYING for details.
     GD.app_started = True
     GD.app.processEvents()
 
-    showegg = GD.cfg.get('easter_egg',None)
-    if showegg:
-        print 'SHOWEGG'
-        if '\n' in egg:
-            egg = file(egg).read()
-            pye = egg.endswith('pye')
-        else:
-            pye = True
-        draw.playScript(egg,pye=True)
-
 
 
 def runGUI():
     """Go into interactive mode"""
+
+    egg = GD.cfg.get('gui/easter_egg',None)
+    GD.debug('EGG: %s' % str(egg))
+    if egg:
+        GD.debug('EGG')
+        if type(egg) is str:
+            pye = egg.endswith('pye')
+            egg = file(egg).read()
+        else:
+            pye = True
+            egg = ''.join(egg)
+        draw.playScript(egg,pye=True)
+
     GD.debug("Start main loop")
     #utils.procInfo('runGUI')
     #from multiprocessing import Process

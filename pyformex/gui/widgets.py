@@ -1,10 +1,10 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Mon Jun  8 11:56:55 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +19,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """A collection of custom widgets used in the pyFormex GUI
 
@@ -43,6 +43,11 @@ import utils
 
 input_timeout = -1  # default timeout value : -1 means no timeout
 
+def setInputTimeout(timeout):
+    global input_timeout
+    input_timeout = timeout
+    
+
 # result values for dialogs
 ACCEPTED = QtGui.QDialog.Accepted
 REJECTED = QtGui.QDialog.Rejected
@@ -63,10 +68,12 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
     to make the widget accept or reject the input. The timeoutfunc will not
     be called is if the widget is destructed before the timer has finished.
     """
+    GD.debug("ADDING TIMEOUT")
     if timeout is None:
         timeout = input_timeout
     if timeoutfunc is None and hasattr(widget,'timeout'):
         timeoutfunc = widget.timeout
+    GD.debug("TIMEOUT IS %s,%s" % (timeout,timeoutfunc))
 
     try:
         timeout = float(timeout)
@@ -1859,7 +1866,7 @@ class BaseMenu(object):
             GD.debug("INSERTING ITEMS in menu %s" % title)
             self.insertItems(items)
             GD.debug("MENU %s now has items %s" % (title,[i[0] for i in self.menuitems]))
-        if parent and isinstance(parent,BaseMenu):
+        if parent: # and isinstance(parent,BaseMenu):
             GD.debug("INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title))
             if before:
                 before = parent.itemAction(before)

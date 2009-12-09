@@ -1,10 +1,10 @@
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -19,7 +19,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """2D decorations for the OpenGL canvas."""
 
@@ -146,7 +146,7 @@ class Decoration(Drawable):
 class GlutText(Decoration):
     """A viewport decoration showing a text."""
 
-    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,adjust=None,color=None):
+    def __init__(self,text,x,y,font='9x15',size=None,gravity=None,adjust=None,color=None,zoom=None):
         """Create a text actor"""
         Decoration.__init__(self,x,y)
         self.text = str(text)
@@ -166,12 +166,17 @@ class GlutText(Decoration):
             gravity = 'E'
         self.gravity = gravity
         self.color = saneColor(color)
+        self.zoom = zoom
 
     def drawGL(self,mode='wireframe',color=None):
         """Draw the text."""
+        ## if self.zoom:
+        ##     GD.canvas.zoom_2D(self.zoom)
         if self.color is not None: 
             GL.glColor3fv(self.color)
         gluttext.glutDrawText(self.text,self.x,self.y,self.font,gravity=self.gravity)
+        ## if self.zoom:
+        ##     GD.canvas.zoom_2D()
 
 Text = GlutText
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # $Id$
 ##
-##  This file is part of pyFormex 0.8 Release Sat Jun 13 10:22:42 2009
+##  This file is part of pyFormex 0.8.1 Release Tue Dec  8 12:25:08 2009
 ##  pyFormex is a tool for generating, manipulating and transforming 3D
 ##  geometrical models by sequences of mathematical operations.
-##  Website: http://pyformex.berlios.de/
-##  Copyright (C) Benedict Verhegghe (bverheg@users.berlios.de) 
+##  Homepage: http://pyformex.org   (http://pyformex.berlios.de)
+##  Copyright (C) Benedict Verhegghe (benedict.verhegghe@ugent.be) 
 ##  Distributed under the GNU General Public License version 3 or later.
 ##
 ##
@@ -20,7 +20,7 @@
 ##  GNU General Public License for more details.
 ##
 ##  You should have received a copy of the GNU General Public License
-##  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##  along with this program.  If not, see http://www.gnu.org/licenses/.
 ##
 """pyFormex, a free program for creating and manipulating 3D geometry.
 
@@ -40,18 +40,18 @@ distributed under the GNU General Public License, version 3 or later.
 
 # Get the pyformex dir and put it on the head of sys.path
 import sys,os
-scriptdir = sys.path[0]
+_scriptdir = sys.path[0]
 
 # In case we execute the pyformex script from inside the
 # pyformex package dir: add the parent to the front of sys.path
 # to pick up this package by preference
 
-if scriptdir.endswith('pyformex'):
-    sys.path[:0] = [ os.path.dirname(scriptdir) ]
+if _scriptdir.endswith('pyformex'):
+    sys.path[:0] = [ os.path.dirname(_scriptdir) ]
     
 try:
     import pyformex
-    pyformex.scriptdir = scriptdir
+    pyformex.scriptdir = _scriptdir
     # we could remove the sys.path[0] again?
 except:
     print "Could not import pyformex."
@@ -60,10 +60,10 @@ except:
 # Put the pyformex path in front.
 sys.path = [ pyformex.__path__[0] ] + sys.path
 
-
-from main import *
+#from pyformex.main import run
+from main import run
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    sys.exit(run(sys.argv[1:]))
 
 # End
