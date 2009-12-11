@@ -83,12 +83,10 @@ def draw_polygons(x,n,c,alpha,objtype):
         n = n.astype(float32)
     if c is not None:
         c = c.astype(float32)
-
     if objtype < 0:
         objtype = glObjType(nplex)
         
-    if nplex <= 4:
-
+    if nplex <= 4 and glObjType(nplex) == objtype:
         GL.glBegin(objtype)
         if c is None:
             if n is None:
