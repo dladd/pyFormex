@@ -35,10 +35,10 @@ import os,random
 catname = 'scripts.cat'
 
 def extractKeyword(s):
-    """Extract a keyword = value pair from a string.
+    """Extract a ``keyword = value`` pair from a string.
 
     If the input string `s` is of the form ``keyword = value``
-    a tuple (keyword,value) is returned; else None.
+    a tuple (keyword,value) is returned, else None.
     """
     i = s.find('=')
     if i >= 0:
@@ -55,11 +55,13 @@ def extractKeyword(s):
 def scriptKeywords(fn,keyw=None):
     """Read the script keywords from a script file.
 
-    fn is the full path name of a pyFormex script file.
-    keyw is an optional list of keywords.
+    - `fn`: the full path name of a pyFormex script file.
+    - `keyw`: an optional list of keywords.
     
-    Script keywords are written in the form
-      key = value
+    Script keywords are written in the form::
+
+       key = value
+       
     in the docstring of the script.
     The docstring is the first non-indented multiline string of the file.
     A multiline string is a string delimited by triple double-quotes.
@@ -88,7 +90,13 @@ def scriptKeywords(fn,keyw=None):
 
 
 def sortSets(d):
-    """Turn the set values in d into sorted lists."""
+    """Turn the set values in d into sorted lists.
+
+    - `d`: a Python dictionary
+
+    All the values in the dictionary are checked. Those that are of type
+    `set` are converted to a sorted list.
+    """
     for k in d:
         if type(d[k]) == set:
             d[k] = list(d[k])
@@ -97,63 +105,85 @@ def sortSets(d):
 
 
 class ScriptsMenu(QtGui.QMenu):
-    """A menu of pyFormex scripts in a directory or list."""
+    """A menu of pyFormex scripts in a directory or list.
+
+    This class creates a menu of pyFormex scripts collected from a directory
+    or specified in a list. It is e.g. used in the pyFormex GUI to create
+    the examples menu, and for the scripts history. The pyFormex scripts
+    can then be executed from the menu. The user may use this class to add
+    his own scripts into the pyFormex GUI.
+
+    Only files that are recognized by :func:`utils.isPyFormex()` as being
+    pyFormex scripts will be added to the menu. 
+
+    The constructor takes the following arguments:
+
+    - `title`: the top level label for the menu
+    - `files`: a list of file names of pyFormex scripts. If no `dir` nor `ext`
+      arguments are given, these should be the full path names to the script
+      files. If omitted, all files in the directory `dir` whose name is ending
+      with `ext` *and do not start with either '.' or '_'*, will be selected.
+    - `dir`: an optional directory path. If given, it will be prepended to
+      each file name in `files` and `recursive` will be True by default.
+    - `ext`: an extension to be added to each filename. If `dir` was specified,
+      the default extension is '.py'. If no `dir` was specified, the default
+      extension is an empty string.
+    - `recursive`: if True, a cascading menu of all pyFormex scripts in the
+      directory and below will be constructed.
+    - `max`: if specified, the list of files will be truncated to this number
+      of items. Adding more files to the menu will then be done at the top and  
+      the surplus number of files will be dropped from the bottom of the list.
+
+    The defaults were thus chosen to be convenient for the two most frequent
+    uses of this class::
+
+      ScriptsMenu('My Scripts',dir="/path/to/my/sciptsdir")
+
+    creates a menu will all pyFormex scripts in the specified path and its
+    subdirectories.
+
+    ::
+
+      ScriptsMenu('History',files=["/my/script1.py","/some/other/script.pye"],recursive=False)
+
+    is typically used to create a history menu of previously visited files
+
+    With the resulting file list, a menu is created. Selecting a menu item
+    will make the corresponding file the current script and unless the
+    `autoplay` configuration variable was set to False, the script is executed.
+
+    If the file specification was done by a directory path only,
+    some extra options will be included in the menu.
+    They are fairly self-explaining and mainly intended for the pyFormex
+    developers, in order to test the functionality by running a sets of
+    example scripts:
+
+    - :menuselection:`Run next script`
+    - :menuselection:`Run all following scripts`
+    - :menuselection:`Run all scripts`
+    - :menuselection:`Run a random script`
+    - :menuselection:`Run all in random order`
+
+
+    Furthermore, if the menu is a toplevel one, it will have the following
+    extra options:
+
+    - :menuselection:`Classify scripts`
+    - :menuselection:`Remove catalog`
+    - :menuselection:`Reload scripts`
+
+    The first option uses the keyword specifications in the scripts docstring
+    to make a classification of the scripts according to keywords.
+    See the :func:`scriptKeywords()` function for more info. The second option
+    removes the classification. Both options are especially useful for the
+    pyFormex examples.
+
+    The last option reloads a ScriptsMenu. This can be used to update the menu
+    when you created a new script file.
+    """
     
     def __init__(self,title,dir=None,files=None,ext=None,recursive=None,max=0,autoplay=False,toplevel=True):
-        """Create a menu with pyFormex scripts to play.
-
-        dir, files, ext determine the list of script names and files in the
-        menu. When all three are specified, files is a list of script file
-        names whose full path names are given by dir/filename+ext.
-
-        If no dir is specified, files should be full path names of the scripts
-        (possibly only to be extended by a specified extension). Default
-        extension is ''.
-
-        If a dir is specified, files should all be relative to that dir.
-        If no files are given, all files in that directory whose names end
-        with the specifiied extension AND do no start with either '.' or '_'
-        will be selected.
-        If no extension is given, it defaults to '.py'.
-        If files are given including the extension, specify '' to suppress
-        the default extension.
-        
-        Commonly used initialisations are:
-        
-        - dir=path: to specify all pyFormex scripts in that directory
-        - files=[list of full path names], recursive=False: to specify a list
-           of files spread over random directories (e.g. to create a history
-           menu of previously played scripts).
-    
-        If recursive is True (default if dir is specified), a cascading menu
-        of all pyFormex scripts in that directory and subdirectories will be
-        created.
-
-        By default, files are only included if:
-        - the name ends with '.py'
-        - the name does not start with '.' or '_'
-        - the file is recognized as a pyFormex script by isPyFormex()
-
-        If files is a list, a maximum number of items in the list may be
-        specified. If it is > 0, no more than max scripts will be allowed.
-        New ones are added on top, while bottom ones will drop off.
-
-        With the resulting files, a menu is created. Selecting a menu item
-        will make the corresponding file the current script and, if autoplay
-        was set True, the script is executed.
-
-        If only a directory path was specified, extra options will be included
-        in the menu:
-        - execute all files
-        - execute current and all following files
-        - execute a random script
-        - execute all files in random order
-        
-        If the menu is a toplevel, it will furthermore have the extra options
-        - close the menu
-        - reload the menu
-        - classify the scripts according to keywords
-        """
+        """Create a menu with pyFormex scripts to play."""
         QtGui.QMenu.__init__(self,title)
         self.dir = dir
         self.files = files

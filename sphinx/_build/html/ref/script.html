@@ -5,13 +5,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.1 documentation</title>
+    <title>4. script — Basic pyFormex script functions &mdash; pyFormex v0.8.2-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.2-a1',
         COLLAPSE_MODINDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
-    <link rel="top" title="pyFormex v0.8.1 documentation" href="../index.html" />
+    <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="5. draw — Create 3D graphical representations." href="draw.html" />
     <link rel="prev" title="3. arraytools — A collection of numerical array utilities." href="arraytools.html" /> 
@@ -245,9 +245,11 @@ is returned to the caller.</p>
 <dl class="function">
 <dt id="script.play">
 <tt class="descclassname">script.</tt><tt class="descname">play</tt><big>(</big><em>fn=None</em>, <em>argv=</em><span class="optional">[</span><span class="optional">]</span>, <em>step=False</em><big>)</big><a class="headerlink" href="#script.play" title="Permalink to this definition">¶</a></dt>
-<dd><p>Play a formex script from file fn or from the current file.</p>
-<p>This function does nothing if no file is passed or no current
-file was set.</p>
+<dd><p>Play the pyFormex script with filename <cite>fn</cite> or the current script file.</p>
+<p>This function does nothing if no filename is passed or no current
+scriptfile was set.
+If arguments are given, they are passed to the script. If <cite>step</cite> is True,
+the script is executed in step mode.</p>
 </dd></dl>
 
 <dl class="function">

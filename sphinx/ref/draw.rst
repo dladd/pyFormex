@@ -55,7 +55,7 @@
    .. autofunction:: undraw(itemlist)
    .. autofunction:: view(v,wait=False)
    .. autofunction:: setTriade(on=None,size=1.0,pos=[0.0,0.0,0.0])
-   .. autofunction:: drawText(text,x,y,gravity='',font='helvetica',size=14,color=None,adjust=None,zoom=None)
+   .. autofunction:: drawText(text,x,y,gravity='E',font='helvetica',size=14,color=None,adjust=None,zoom=None)
    .. autofunction:: annotate(annot)
    .. autofunction:: unannotate(annot)
    .. autofunction:: decorate(decor)
