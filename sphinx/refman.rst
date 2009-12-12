@@ -104,6 +104,7 @@ These modules are located under pyformex/gui.
    ref/image
    ref/imagearray
    ref/imagecolor
+   ref/scriptsMenu
 
 
 **pyFormex plugins**

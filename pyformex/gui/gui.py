@@ -711,7 +711,7 @@ See Help->License or the file COPYING for details.
     # Script menu
     GD.GUI.scriptmenu = createScriptMenu()
 
-
+    
     # Set interaction functions
     GD.message = draw.message
     GD.warning = draw.warning

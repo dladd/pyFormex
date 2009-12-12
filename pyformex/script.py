@@ -307,10 +307,10 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
                     __import__(s,g)
                 else:
                     if pye:
+                        if type(scr) is file:
+                             scr = scr.read()
                         n = (len(scr)+1) // 2
-                        # print scr
                         scr = utils.mergeme(scr[:n],scr[n:])
-                        # print scr
                     exec scr in g
 
             if GD.cfg['autoglobals']:
@@ -407,10 +407,12 @@ def playFile(fn,argv=[]):
 
 
 def play(fn=None,argv=[],step=False):
-    """Play a formex script from file fn or from the current file.
+    """Play the pyFormex script with filename `fn` or the current script file.
 
-    This function does nothing if no file is passed or no current
-    file was set.
+    This function does nothing if no filename is passed or no current
+    scriptfile was set.
+    If arguments are given, they are passed to the script. If `step` is True,
+    the script is executed in step mode.
     """
     global stepmode
     if not fn:
@@ -445,6 +447,7 @@ def processArgs(args):
     with arguments for the scripts.
     Each running script should pop the required arguments from the list.
     """
+    res = 0
     while len(args) > 0:
         fn = args.pop(0)
         if fn.endswith('.pye'):

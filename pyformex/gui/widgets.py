@@ -68,17 +68,15 @@ def addTimeOut(widget,timeout=None,timeoutfunc=None):
     to make the widget accept or reject the input. The timeoutfunc will not
     be called is if the widget is destructed before the timer has finished.
     """
-    GD.debug("ADDING TIMEOUT")
     if timeout is None:
         timeout = input_timeout
     if timeoutfunc is None and hasattr(widget,'timeout'):
         timeoutfunc = widget.timeout
-    GD.debug("TIMEOUT IS %s,%s" % (timeout,timeoutfunc))
 
     try:
         timeout = float(timeout)
         if timeout >= 0.0:
-            GD.debug("NOW REALLY STARTING TIMEOUT %s" % timeout)
+            GD.debug("ADDING TIMEOUT %s,%s" % (timeout,timeoutfunc))
             timer = QtCore.QTimer()
             if type(timeoutfunc) is str:
                 timer.connect(timer,QtCore.SIGNAL("timeout()"),widget,QtCore.SLOT(timeoutfunc))
@@ -178,7 +176,7 @@ class FileSelection(QtGui.QFileDialog):
 
 class ProjectSelection(FileSelection):
     """A file selection dialog specialized for opening projects."""
-    def __init__(self,path=None,pattern=None,exist=False,compression=0):
+    def __init__(self,path=None,pattern=None,exist=False,compression=4,ignore_signature=True):
         """Create the dialog."""
         if path is None:
             path = GD.cfg['workdir']
@@ -195,16 +193,19 @@ class ProjectSelection(FileSelection):
             self.cpw.setToolTip("Higher compression levels result in smaller files, but higher load and save times.")
             grid.addWidget(self.cpw,nr,0,1,-1)
             nr += 1
-               
-        self.sig = QtGui.QCheckBox("Ignore Signature Version")
-        self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
-        grid.addWidget(self.sig,nr,0,1,-1)
-        nr += 1
-               
-        self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
-        self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
-        grid.addWidget(self.leg,nr,0,1,-1)
-        nr += 1
+
+        if exist:
+            self.sig = QtGui.QCheckBox("Ignore Signature Version")
+            if ignore_signature:
+                self.sig.setCheckState(QtCore.Qt.Checked)
+            self.sig.setToolTip("Check this box to allow opening projects saved with an older version number in the header.")
+            grid.addWidget(self.sig,nr,0,1,-1)
+            nr += 1
+
+            self.leg = QtGui.QCheckBox("Allow Opening Legacy Format")
+            self.leg.setToolTip("Check this box to allow opening projects saved in the headerless legacy format.")
+            grid.addWidget(self.leg,nr,0,1,-1)
+            nr += 1
 
 
     def getResult(self):
@@ -212,12 +213,13 @@ class ProjectSelection(FileSelection):
         if self.result() == QtGui.QDialog.Accepted:
             opt = odict.ODict()
             opt.fn = str(self.selectedFiles()[0])
-            opt.leg = self.leg.isChecked()
-            opt.sig = self.sig.isChecked()
+            opt.cpr = opt.sig = opt.leg = None
             if hasattr(self,'cpr'):
                 opt.cpr = self.cpr.value()
-            else:
-                opt.cpr = 0
+            if hasattr(self,'leg'):
+                opt.leg = self.leg.isChecked()
+            if hasattr(self,'sig'):
+                opt.sig = self.sig.isChecked()
             return opt
         else:
             return None

@@ -505,6 +505,9 @@ def isPyFormex(filename):
 
        #!/usr/bin/env pyformex
     """
+    if filename.endswith(".pye"):
+        return True
+
     ok = filename.endswith(".py")
     if ok:
         try:
@@ -516,28 +519,6 @@ def isPyFormex(filename):
     return ok
     
 
-
-# THIS MAY BE FASTER THAN olist.collectOnLength, BUT IT IS DEPENDENT ON NUMPY
-
-## def collectOnLength(items):
-##     """Collect items with same length.
-
-##     a is a list of items of any type for which the function len()
-##     returns an integer value.
-##     The items are sorted in a number of bins, each containing the
-##     items with the same length.
-##     The return value is a tuple of:
-##     - a list of bins with the sorted items,
-##     - a list of indices of these items in the input list,
-##     - a list of lengths of the bins,
-##     - a list of the item length in each bin.
-##     """
-##     np = array([ len(e) for e in items ])
-##     itemlen = unique1d(np)
-##     itemnrs = [ where(np==p)[0] for p in itemlen ]
-##     itemgrps = [ olist.select(items,i) for i in itemnrs ]
-##     itemcnt = [ len(i) for i in itemnrs ]
-##     return itemgrps,itemnrs,itemcnt,itemlen
 
 
 class NameSequence(object):

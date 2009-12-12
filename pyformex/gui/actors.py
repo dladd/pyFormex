@@ -528,6 +528,7 @@ class GeomActor(Actor):
 
         if mode.endswith('wire'):
             self.drawGL(mode=mode[:-4],color=color,colormap=colormap,alpha=alpha)
+            GL.glDisable(GL.GL_LIGHTING)
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
             return
 

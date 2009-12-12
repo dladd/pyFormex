@@ -410,12 +410,20 @@ Size: %s
     @classmethod
     def concatenate(clas,ML):
         """Concatenate a list of meshes of the same plexitude and eltype"""
-        if len(set([ m.nplex() for m in ML ])) > 1 or len(set([ m.eltype for m in ML ])) > 1:
-            raise ValueError,"Meshes are not of same type/plexitude"
+        nplex = set([ m.nplex() for m in ML ])
+        if len(nplex) > 1:
+            raise ValueError,"Cannot concatenate meshes with different plexitude: %s" % str(nplex)
+        eltype = set([ m.eltype for m in ML if m.eltype is not None ])
+        if len(eltype) > 1:
+            raise ValueError,"Cannot concatenate meshes with different eltype: %s" % str(eltype)
+        if len(eltype) == 1:
+            eltype = eltype.pop()
+        else:
+            eltype = None
 
         coords,elems = mergeModels([(m.coords,m.elems) for m in ML])
         elems = concatenate(elems,axis=0)
-        return Mesh(coords,elems,eltype=ML[0].eltype)
+        return Mesh(coords,elems,eltype=eltype)
         
 
 def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):

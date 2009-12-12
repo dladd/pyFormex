@@ -119,6 +119,7 @@ class ScriptsMenu(QtGui.QMenu):
         the default extension.
         
         Commonly used initialisations are:
+        
         - dir=path: to specify all pyFormex scripts in that directory
         - files=[list of full path names], recursive=False: to specify a list
            of files spread over random directories (e.g. to create a history
@@ -147,6 +148,7 @@ class ScriptsMenu(QtGui.QMenu):
         - execute current and all following files
         - execute a random script
         - execute all files in random order
+        
         If the menu is a toplevel, it will furthermore have the extra options
         - close the menu
         - reload the menu
@@ -156,7 +158,7 @@ class ScriptsMenu(QtGui.QMenu):
         self.dir = dir
         self.files = files
         if self.dir is None and self.files is None:
-            raise ValueError,"At lest one of 'dir' or 'files' must be set."
+            raise ValueError,"At least one of 'dir' or 'files' must be set."
         if ext is None:
             if self.dir is None:
                 ext = ''

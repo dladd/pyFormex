@@ -65,7 +65,7 @@ class Project(dict):
 
     def header_data(self):
         """Construct the data to be saved in the header."""
-        store_attr = ['gzip','mode','autofile']
+        store_attr = ['gzip','mode','autofile','_autoscript_']
         store_vals = [getattr(self,k,None) for k in store_attr]
         return dict([(k,v) for k,v in zip(store_attr,store_vals) if v is not None])
 
@@ -80,6 +80,7 @@ class Project(dict):
         """Save the project to file."""
         f = file(self.filename,'w'+self.mode)
         f.write("%s\n" % self.signature)
+        print self.header_data()
         pickle.dump(self.header_data(),f,pickle.HIGHEST_PROTOCOL)
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'w'+self.mode,self.gzip,f)

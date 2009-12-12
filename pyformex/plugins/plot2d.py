@@ -53,11 +53,11 @@ def showHistogram(x,y,txt,**options):
         #from PyQt4.Qwt5.qplt import *
 
 
-def createHistogram(data,cumulative=False):
+def createHistogram(data,cumulative=False,**kargs):
     """Create a histogram from data
 
     """
-    y,x = histogram(data)
+    y,x = histogram(data,**kargs)
     if cumulative:
         y = y.cumsum()
     return y,x

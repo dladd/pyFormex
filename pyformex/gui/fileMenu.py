@@ -111,7 +111,7 @@ def createProject(create=True,compression=0,addGlobals=None):
     if ignoresig:
         sig = ''
 
-    # Loading the project make take a long while; attent user
+    # Loading the project may take a long while; attent user
     GD.GUI.setBusy()
     try:
         the_project = project.Project(fn,create=create,signature=sig,compression=compression,legacy=legacy)
@@ -123,6 +123,27 @@ def createProject(create=True,compression=0,addGlobals=None):
     GD.PF = the_project
     GD.GUI.setcurproj(fn)
     GD.message("Project contents: %s" % the_project.keys())
+    
+    if hasattr(the_project,'_autoscript_'):
+        _ignore = "Ignore it!"
+        _show = "Show it"
+        _edit = "Load it in the editor"
+        _exec = "Execute it"
+        res = draw.ask("There is an autoscript stored inside the project.\nIf you received this project file from an untrusted source, you should probably not execute it.",[_ignore,_show,_edit,_exec])
+        if res == _show:
+            res = draw.showText(the_project._autoscript_)#,actions=[_ignore,_edit,_show])
+            return
+        if res == _exec:
+            draw.playScript(the_project._autoscript_)
+        elif res == _edit:
+            fn = "_autoscript_.py"
+            draw.checkWorkdir()
+            f = file(fn,'w')
+            f.write(the_project._autoscript_)
+            f.close()
+            openScript(fn)
+            editScript(fn)
+
     if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
         processArgs([the_project.autofile])
 
@@ -139,12 +160,26 @@ def openProject():
     createProject(create=False)
  
 
+def setAutoScript():
+    """Set the current script as autoScript in the project"""
+    global the_project
+    if the_project is not None and GD.cfg['curfile'] and GD.GUI.canPlay:
+        the_project._autoscript_ = file(GD.cfg['curfile']).read()
+ 
+
 def setAutoFile():
     """Set the current script as autoScriptFile in the project"""
     global the_project
     if the_project is not None and GD.cfg['curfile'] and GD.GUI.canPlay:
         the_project.autofile = GD.cfg['curfile']
             
+def removeAutoScript():
+    global the_project
+    delattr(the_project,'_autoscript_')
+            
+def removeAutoFile():
+    global the_project
+    delattr(the_project,'autofile')
 
 def saveProject():
     if the_project is not None:
@@ -318,7 +353,10 @@ def setOptions():
 MenuData = [
     (_('&Start new project'),createProject),
     (_('&Open existing project'),openProject),
+    (_('&Set current script as AutoScript'),setAutoScript),
+    (_('&Remove the AutoScript'),removeAutoScript),
     (_('&Set current script as AutoFile'),setAutoFile),
+    (_('&Remove the AutoFile'),removeAutoFile),
     (_('&Save project'),saveProject),
     (_('&Save project As'),saveAsProject),
     (_('&Close project without saving'),closeProjectWithoutSaving),

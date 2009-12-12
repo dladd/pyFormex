@@ -165,7 +165,6 @@ class Curve(object):
     # their own (hopefully better) Formex representation
     def toFormex(self):
         return self.approx().toFormex()
-        
   
 
 ##############################################################################
