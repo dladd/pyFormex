@@ -93,13 +93,17 @@ def detected():
 
 def about():
     """Display short information about pyFormex."""
-    draw.showInfo("""%s
+    draw.showInfo("""..
+
+%s
+%s
 
 A tool for generating, manipulating and transforming 3D geometrical models by sequences of mathematical operations.
 
-Copyright 2004-2009 Benedict Verhegghe.
-Distributed under the GNU GPL version 3 or later.
-""" % GD.Version)
+`Copyright 2004-2009 Benedict Verhegghe`
+
+Distributed under the GNU GPL version 3 or later
+""" % (GD.Version,'='*len(GD.Version)))
 
 _developers = [
     'Matthieu De Beule',

@@ -53,6 +53,9 @@ ACCEPTED = QtGui.QDialog.Accepted
 REJECTED = QtGui.QDialog.Rejected
 TIMEOUT = -1        # the return value if a widget timed out
 
+# slots
+Accept = QtCore.SLOT("accept()")
+Reject = QtCore.SLOT("reject()")
 
 def addTimeOut(widget,timeout=None,timeoutfunc=None):
     """Add a timeout to a widget.
@@ -349,9 +352,9 @@ class AppearenceDialog(QtGui.QDialog):
         self.connect(self.fontButton,QtCore.SIGNAL("clicked()"),self.setFont)
         # Accept/Cancel Buttons
         acceptButton = QtGui.QPushButton('OK')
-        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
+        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
         cancelButton = QtGui.QPushButton('Cancel')
-        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
+        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,Reject)
         # Putting it all together
         grid = QtGui.QGridLayout()
         grid.setColumnStretch(1,1)
@@ -480,9 +483,9 @@ class Selection(QtGui.QDialog):
             self.setSelected(selected)
         # Accept/Cancel Buttons
         acceptButton = QtGui.QPushButton('OK')
-        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
+        self.connect(acceptButton,QtCore.SIGNAL("clicked()"),self,Accept)
         cancelButton = QtGui.QPushButton('Cancel')
-        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
+        self.connect(cancelButton,QtCore.SIGNAL("clicked()"),self,Reject)
         # Putting it all together
         grid = QtGui.QGridLayout()
         grid.setColumnStretch(1,1)
@@ -1499,11 +1502,11 @@ def dialogButtons(dialog,actions,default=None):
         if len(a) > 1:
             slot = (a[1],)
         elif n == 'ok':
-            slot = (dialog,QtCore.SLOT("accept()"))
+            slot = (dialog,Accept)
         elif n == 'cancel':
-            slot = (dialog,QtCore.SLOT("reject()"))
+            slot = (dialog,Reject)
         else:
-            slot = (dialog,QtCore.SLOT("reject()"))
+            slot = (dialog,Reject)
         dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
         if default is not None and n == default.lower():
             b.setDefault(True)
@@ -1770,29 +1773,16 @@ class TextBox(QtGui.QDialog):
     The function returns True if the OK button was clicked or 'ENTER'
     was pressed, False if the 'CANCEL' button was pressed or ESC was pressed.
     """
-    def __init__(self,text,format=None,actions=['OK']):
+    def __init__(self,text,format=None,actions=['OK',None]):
         QtGui.QDialog.__init__(self)
         self.setWindowTitle('pyFormex Text Display')
         self._t = QtGui.QTextEdit()
         self._t.setReadOnly(True)
         updateText(self._t,text,format)
-        #self._b = ButtonBox('',actions 
-        bl = QtGui.QHBoxLayout()
-        bl.addStretch()
-        if 'OK' in actions:
-            b = QtGui.QPushButton('OK')
-            QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("accept()"))
-            bl.addWidget(b)
-        if 'CANCEL' in actions:
-            b = QtGui.QPushButton('CANCEL')
-            QtCore.QObject.connect(b,QtCore.SIGNAL("clicked()"),self,QtCore.SLOT("reject()"))
-            bl.addWidget(b)
-        bl.addStretch()
-        h = QtGui.QWidget()
-        h.setLayout(bl)
+        self._b = ButtonBox('',actions,parent=self,stretch=[1,1]) 
         l = QtGui.QVBoxLayout()
         l.addWidget(self._t)
-        l.addWidget(h)
+        l.addWidget(self._b)
         self.setLayout(l)
         self.resize(800,400)
 
@@ -1803,20 +1793,33 @@ class TextBox(QtGui.QDialog):
 ############################# Button box ###########################
 
 class ButtonBox(QtGui.QWidget):
-    """An autonomous button box."""
-    def __init__(self,name,actions=[],funcs=None,*args):
-        if funcs:
-            import warnings
-            warnings.warn("The use of `choices` and `funcs` arguments of the ButtonBox is deprecated.\nPlease use `actions` instead!")
-            print actions
-            print funcs
-            actions = zip(actions,funcs)
-        QtGui.QWidget.__init__(self,*args)
+    """A box with action buttons.
+
+    - `name`: a label to be displayed in front of the button box. An empty
+      string will suppress it.
+    - `actions`: a list of (button label, button function) tuples. The button
+      function can be a normal callable function, or one of the values
+      widgets.ACCEPTED or widgets.REJECTED. In the latter case, `parent`
+      should be specified.
+    - `parent`: the parent dialog holding this button box. It should be
+      specified if one of the buttons actions is widgets.ACCEPTED or
+      widgets.REJECTED.
+    """
+    def __init__(self,name,actions=[],parent=None,stretch=[-1,-1]):
+        QtGui.QWidget.__init__(self,parent)
         s = InputPush(name,None,[a[0] for a in actions])
+        for i in [0,-1]:
+            if stretch[i] >= 0:
+                s.insertStretch(i,stretch[i])
         s.setSpacing(0)
         s.setMargin(0)
         for r,f in zip(s.rb,[a[1] for a in actions]):
-            self.connect(r,QtCore.SIGNAL("clicked()"),f)
+            if f is None:
+                f = Accept
+            if callable(f):
+                self.connect(r,QtCore.SIGNAL("clicked()"),f)
+            else:
+                self.connect(r,QtCore.SIGNAL("clicked()"),parent,f)
         self.setLayout(s)
         self.buttons = s
 

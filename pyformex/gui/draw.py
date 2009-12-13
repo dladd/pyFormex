@@ -95,7 +95,7 @@ def ack(question,**kargs):
     return ask(question,['No','Yes'],**kargs) == 'Yes'
 
 
-def showText(text,type=None,actions=['OK']):
+def showText(text,type=None,actions=[('OK',None)]):
     """Display a text and wait for user response.
 
     This can display a large text and will add scrollbars when needed.
