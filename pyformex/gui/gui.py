@@ -142,8 +142,8 @@ class GUI(QtGui.QMainWindow):
 
         # The status bar
         self.statusbar = self.statusBar()
-        self.curproj = widgets.ButtonBox('Project:',['None'],[fileMenu.openProject])
-        self.curfile = widgets.ButtonBox('Script:',['None'],[fileMenu.openScript])
+        self.curproj = widgets.ButtonBox('Project:',[('None',fileMenu.openProject)])
+        self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
         self.canPlay = False
         
         #cf = QtGui.QWidget()

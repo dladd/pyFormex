@@ -862,7 +862,7 @@ class InputPush(InputItem):
         If default is None, the first item of choices is taken as the default.
        
         The choices are presented to the user as a hbox with radio buttons,
-        of which the default will initially be pressed.
+        of which the default will initially be selected.
         If direction == 'v', the options are in a vbox. 
         """
         if default is None:
@@ -1647,6 +1647,54 @@ class TableDialog(QtGui.QDialog):
 ########### Text Display Widgets ####################################
 #####################################################################
 
+
+def updateText(widget,text,format=''):
+    """Update the text of a text display widget.
+
+    - `widget`: a widget that has the :meth:`setText`, :meth:`setPlainText`
+      and :meth:`setHtml` methods to set the widget's text.
+      Examples are :class:`QMessageBox` and :class:`QTextEdit`.
+    - `text`: a multiline string with the text to be displayed.
+    - `format`: the format of the text. If empty, autorecognition will be
+      tried. Currently available formats are: ``plain``, ``html`` and
+      ``rest`` (reStructuredText).
+
+    This function allows to display other text formats besides the
+    plain text and html supported by the widget. 
+    Any format other than ``plain`` or ``html`` will be converted to one
+    of these before sending it to the widget. Currently, we convert the
+    following formats:
+    
+    ``rest`` (reStructuredText): 
+      If the :mod:docutils is available, `rest` text is converted to `html`,
+      otherwise it will be displayed as plain text.
+      A text is autorecognized as reStructuredText if its first
+      line starts with '..'. Note: If you add a '..' line to your text to
+      have it autorecogn ized as reST, be sure to have it followed with a
+      blank line, or your first paragraph could be turned into comments.
+      
+    """
+    # autorecognition
+    if format not in ['plain','html','rest']:
+        if type(text) is str and text.startswith('..'):
+            format = 'rest'
+
+    # conversion
+    if format == 'rest':
+        text = utils.rst2html(text)
+        format = ''
+        # We leave the format undefined, because we are not sure
+        # that the conversion function (docutils) is available
+        
+    if format == 'plain':
+        widget.setPlainText(text)
+    elif format == 'html':
+        widget.setHtml(text)
+    else:
+        # As a last rescue, try QT4's autorecognition
+        widget.setText(text)
+
+
 class MessageBox(QtGui.QMessageBox):
     """A message box is a widget displaying a short text for the user.
 
@@ -1655,7 +1703,7 @@ class MessageBox(QtGui.QMessageBox):
 
     - `text`: the text to be shown. This can be either plain text or html
       or reStructuredText.
-    - `format`: the text format: either 'plain', 'html' or 'rst'.
+    - `format`: the text format: either 'plain', 'html' or 'rest'.
       Any other value will try automatic recognition.
       Recognition of plain text and html is automatic.
       A text is autorecognized to be reStructuredText if its first
@@ -1680,7 +1728,7 @@ class MessageBox(QtGui.QMessageBox):
         QtGui.QMessageBox.__init__(self)
         if default is None:
             default = actions[-1]
-        self.updateText(text,format)
+        updateText(self,text,format)
         if level == 'error':
             self.setIcon(QtGui.QMessageBox.Critical)
         elif level == 'warning':
@@ -1695,24 +1743,6 @@ class MessageBox(QtGui.QMessageBox):
                 self.setDefaultButton(b)
 
         addTimeOut(self,timeout,"accept()")
-
-
-    def updateText(self,text,format=''):
-        """Set the text of the MessageBox.
-
-        This allows to update the text of an existing MessageBox widget.
-        """
-        if format == 'plain':
-            self.setPlainText(text)
-        elif format == 'html':
-            self.setHtml(text)
-        elif format == 'rest':
-            text = utils.rst2html(text)
-            self.setHtml(text)
-        else:
-            if type(text) is str and text.startswith('..'):
-                text = utils.rst2html(text)
-            self.setText(text)
 
 
     def getResult(self):
@@ -1745,7 +1775,8 @@ class TextBox(QtGui.QDialog):
         self.setWindowTitle('pyFormex Text Display')
         self._t = QtGui.QTextEdit()
         self._t.setReadOnly(True)
-        self.updateText(text,format)
+        updateText(self._t,text,format)
+        #self._b = ButtonBox('',actions 
         bl = QtGui.QHBoxLayout()
         bl.addStretch()
         if 'OK' in actions:
@@ -1764,40 +1795,27 @@ class TextBox(QtGui.QDialog):
         l.addWidget(h)
         self.setLayout(l)
         self.resize(800,400)
-        
-
-    def updateText(self,text,format=''):
-        """Set the text of the TextBox.
-
-        This allows to update the text of an existing TextBox widget.
-        """
-        if format == 'plain':
-            self._t.setPlainText(text)
-        elif format == 'html':
-            self._t.setHtml(text)
-        elif format == 'rest':
-            text = utils.rst2html(text)
-            self._t.setHtml(text)
-        else:
-            if type(text) is str and text.startswith('..'):
-                text = utils.rst2html(text)
-            self._t.setText(text)
-
 
     def getResult(self):
         return self.exec_() == QtGui.QDialog.Accepted
 
 
-
-############################# Named button box ###########################
+############################# Button box ###########################
 
 class ButtonBox(QtGui.QWidget):
-    def __init__(self,name,choices,funcs,*args):
+    """An autonomous button box."""
+    def __init__(self,name,actions=[],funcs=None,*args):
+        if funcs:
+            import warnings
+            warnings.warn("The use of `choices` and `funcs` arguments of the ButtonBox is deprecated.\nPlease use `actions` instead!")
+            print actions
+            print funcs
+            actions = zip(actions,funcs)
         QtGui.QWidget.__init__(self,*args)
-        s = InputPush(name,None,choices)
+        s = InputPush(name,None,[a[0] for a in actions])
         s.setSpacing(0)
         s.setMargin(0)
-        for r,f in zip(s.rb,funcs):
+        for r,f in zip(s.rb,[a[1] for a in actions]):
             self.connect(r,QtCore.SIGNAL("clicked()"),f)
         self.setLayout(s)
         self.buttons = s
@@ -1815,7 +1833,7 @@ class ButtonBox(QtGui.QWidget):
         return s
 
 
-############################# Named combo box ###########################
+############################# Combo box ###########################
 
 class ComboBox(QtGui.QWidget):
     def __init__(self,name,choices,func,*args):
@@ -1873,7 +1891,7 @@ class BaseMenu(object):
             GD.debug("INSERTING ITEMS in menu %s" % title)
             self.insertItems(items)
             GD.debug("MENU %s now has items %s" % (title,[i[0] for i in self.menuitems]))
-        if parent: # and isinstance(parent,BaseMenu):
+        if parent and isinstance(parent,BaseMenu):
             GD.debug("INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title))
             if before:
                 before = parent.itemAction(before)

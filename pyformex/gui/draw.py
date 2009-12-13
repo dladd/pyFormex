@@ -1159,7 +1159,7 @@ def pick(mode='actor',single=False,func=None,filtr=None):
         warning("You need to finish the previous picking operation first!")
         return
 
-    pick_buttons = widgets.ButtonBox('Selection:',['Cancel','OK'],[GD.canvas.cancel_selection,GD.canvas.accept_selection])
+    pick_buttons = widgets.ButtonBox('Selection:',[('Cancel',GD.canvas.cancel_selection),('OK',GD.canvas.accept_selection)])
     
     if mode == 'element':
         filters = selection_filters
@@ -1243,7 +1243,7 @@ def drawLinesInter(mode ='line',single=False,func=None):
         return
     if func == None:
         func = showLineDrawing
-    drawing_buttons = widgets.ButtonBox('Drawing:',['Cancel','OK'],[GD.canvas.cancel_drawing,GD.canvas.accept_drawing])
+    drawing_buttons = widgets.ButtonBox('Drawing:',[('Cancel',GD.canvas.cancel_drawing),('OK',GD.canvas.accept_drawing)])
     GD.GUI.statusbar.addWidget(drawing_buttons)
     edit_combo = widgets.ComboBox('Edit:',edit_modes,set_edit_mode)
     GD.GUI.statusbar.addWidget(edit_combo)
