@@ -53,7 +53,6 @@ from formex import *
 #    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
 #           part in ndiv sections at equal parameter distance.             
 
-
 class Curve(object):
     """Base class for curve type classes.
 
@@ -363,16 +362,24 @@ class BezierSpline(Curve):
             control = Coords.concatenate([control,dummy],axis=0)
         coords = coords[:,newaxis,:]
         self.coords = Coords.concatenate([coords,control],axis=1)
-        self.points = self.coords[:,0,:]
-        self.control = self.coords[:nparts,1:,:]
         self.nparts = nparts
         self.closed = closed
 
 
+    def pointsOn(self):
+        """Return the points on the curve""" 
+        return self.coords[:,0,:]
+
+
+    def pointsOff(self):
+        """Return the points off the curve (the control points)""" 
+        return self.coords[:self.nparts,1:,:]
+
+
     def sub_points(self,t,j):
-        j1 = (j+1) % self.points.shape[0]
-        P = self.points[[j,j1]]
-        D = self.control[j]
+        j1 = (j+1) % self.coords.shape[0]
+        P = self.pointsOn()[[j,j1]]
+        D = self.pointsOff()[j]
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**3., t**2., t, ones_like(t)])
@@ -425,16 +432,24 @@ class QuadBezierSpline(Curve):
         coords = coords[:,newaxis,:]
         control = control[:,newaxis,:]
         self.coords = Coords.concatenate([coords,control],axis=1)
-        self.points = self.coords[:,0,:]
-        self.control = self.coords[:nparts,1,:]
         self.nparts = nparts
         self.closed = closed
 
 
+    def pointsOn(self):
+        """Return the points on the curve""" 
+        return self.coords[:,0,:]
+
+
+    def pointsOff(self):
+        """Return the points off the curve (the control points)""" 
+        return self.coords[:self.nparts,1,:]
+
+
     def sub_points(self,t,j):
-        j1 = (j+1) % self.points.shape[0]
-        P = self.points[[j,j1]]
-        D = self.control[j]
+        j1 = (j+1) % self.coords.shape[0]
+        P = self.pointsOn()[[j,j1]]
+        D = self.pointsOff()[j]
         P = concatenate([ P[0],D,P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
         U = column_stack([t**2., t, ones_like(t)])
