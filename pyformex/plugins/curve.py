@@ -1,4 +1,3 @@
-#!/usr/bin/env pyformex --gui
 # $Id$
 ##
 ##  This file is part of pyFormex 0.8.1 Release Wed Dec  9 11:27:53 2009
@@ -305,7 +304,7 @@ class Polygon(PolyLine):
 #
 
 class BezierSpline(Curve):
-    """A class representing a Bezier spline curve."""
+    """A class representing a cubic Bezier spline curve."""
     coeffs = matrix([[-1.,  3., -3., 1.],
                      [ 3., -6.,  3., 0.],
                      [-3.,  3.,  0., 0.],
@@ -327,45 +326,52 @@ class BezierSpline(Curve):
         needs two control points, the control array has shape (npts-1, 2, 3).
         """
         coords = Coords(coords)
-        self.coords = coords
-        self.nparts = self.coords.shape[0]
+        nparts = coords.shape[0]
         if not closed:
-            self.nparts -= 1
+            nparts -= 1
             
         if control is None:
-            if self.nparts < 2:
-                control = self.coords
+            if nparts < 2:
+                control = coords
             else:
                 P = PolyLine(coords,closed=closed)
                 if deriv is None:
                     deriv = P.avgDirections()
                 ampl = P.lengths().reshape(-1,1)
-                if not closed:
-                    coords = coords[1:-1]
-                if not closed:
-                    p1 = coords + deriv*curl*ampl[1:]
-                    p2 = coords - deriv*curl*ampl[:-1]
-                else:
+                if closed:
                     p1 = coords + deriv*curl*ampl
                     p2 = coords - deriv*curl*roll(ampl,1,axis=0)
-                if not closed:
+                    p2 = roll(p2,-1,axis=0)
+                else:
+                    p1 = coords[1:-1] + deriv*curl*ampl[1:]
+                    p2 = coords[1:-1] - deriv*curl*ampl[:-1]
                     p1 = concatenate([p2[:1],p1],axis=0)
                     p2 = concatenate([p2,p1[-1:]],axis=0)
-                else:
-                    p2 = roll(p2,-1,axis=0)
                 control = concatenate([p1,p2],axis=1)
+                
         control = asarray(control).reshape(-1,2,3)
-        self.control = Coords(control)
-        if self.control.shape != (self.nparts,2,3):
-            print("coords array has shape %s" % str(self.coords.shape))
-            print("control array has shape %s" % str(self.control.shape))
-            raise ValueError,"Invalid control points for Bezier Spline"
+        control = Coords(control)
+        if control.shape != (nparts,2,3):
+            print("coords array has shape %s" % str(coords.shape))
+            print("control array has shape %s" % str(control.shape))
+            raise ValueError,"Invalid control points for BezierSpline"
+
+        # To enable easy transforms, we join the coords and controls
+        # in a single array
+        if not closed:
+            dummy = Coords([[[0.,0.,0.],[0.,0.,0.]]])
+            control = Coords.concatenate([control,dummy],axis=0)
+        coords = coords[:,newaxis,:]
+        self.coords = Coords.concatenate([coords,control],axis=1)
+        self.points = self.coords[:,0,:]
+        self.control = self.coords[:nparts,1:,:]
+        self.nparts = nparts
         self.closed = closed
 
 
     def sub_points(self,t,j):
-        j1 = (j+1) % self.coords.shape[0]
-        P = self.coords[[j,j1]]
+        j1 = (j+1) % self.points.shape[0]
+        P = self.points[[j,j1]]
         D = self.control[j]
         P = concatenate([ P[0],D[0],D[1],P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P
@@ -377,7 +383,7 @@ class BezierSpline(Curve):
 #
 
 class QuadBezierSpline(Curve):
-    """A class representing a Bezier spline curve."""
+    """A class representing a Quadratic Bezier spline curve."""
     coeffs = matrix([[ 1., -2.,  1.],
                      [-2.,  2.,  0.],
                      [ 1.,  0.,  0.]]
@@ -397,45 +403,37 @@ class QuadBezierSpline(Curve):
         needs two control points, the control array has shape (npts-1, 2, 3).
         """
         coords = Coords(coords)
-        self.coords = coords
-        self.nparts = self.coords.shape[0]
+        nparts = coords.shape[0]
         if not closed:
-            self.nparts -= 1
+            nparts -= 1
             
         if control is None:
-            if self.nparts < 2:
-                control = self.coords
-            else:
-                P = PolyLine(coords,closed=closed)
-                if deriv is None:
-                    deriv = P.avgDirections()
-                ampl = P.lengths().reshape(-1,1)
-                if not closed:
-                    coords = coords[1:-1]
-                if not closed:
-                    p1 = coords + deriv*curl*ampl[1:]
-                    p2 = coords - deriv*curl*ampl[:-1]
-                else:
-                    p1 = coords + deriv*curl*ampl
-                    p2 = coords - deriv*curl*roll(ampl,1,axis=0)
-                if not closed:
-                    p1 = concatenate([p2[:1],p1],axis=0)
-                    p2 = concatenate([p2,p1[-1:]],axis=0)
-                else:
-                    p2 = roll(p2,-1,axis=0)
-                control = concatenate([p1,p2],axis=1)
+            raise ValueError,"Currently, control points should be specified by the user."
+
         control = asarray(control).reshape(-1,3)
-        self.control = Coords(control)
-        if self.control.shape != (self.nparts,3):
-            print("coords array has shape %s" % str(self.coords.shape))
-            print("control array has shape %s" % str(self.control.shape))
-            raise ValueError,"Invalid control points for Bezier Spline"
+        control = Coords(control)
+        if control.shape != (nparts,3):
+            print("coords array has shape %s" % str(coords.shape))
+            print("control array has shape %s" % str(control.shape))
+            raise ValueError,"Invalid control points for QuadBezierSpline"
+
+        # To enable easy transforms, we join the coords and controls
+        # in a single array
+        if not closed:
+            dummy = Coords([[0.,0.,0.]])
+            control = Coords.concatenate([control,dummy],axis=0)
+        coords = coords[:,newaxis,:]
+        control = control[:,newaxis,:]
+        self.coords = Coords.concatenate([coords,control],axis=1)
+        self.points = self.coords[:,0,:]
+        self.control = self.coords[:nparts,1,:]
+        self.nparts = nparts
         self.closed = closed
 
 
     def sub_points(self,t,j):
-        j1 = (j+1) % self.coords.shape[0]
-        P = self.coords[[j,j1]]
+        j1 = (j+1) % self.points.shape[0]
+        P = self.points[[j,j1]]
         D = self.control[j]
         P = concatenate([ P[0],D,P[1] ],axis=0).reshape(-1,3)
         C = self.coeffs * P

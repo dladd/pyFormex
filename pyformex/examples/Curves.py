@@ -48,6 +48,8 @@ def BezierCurve(X,curl=None,closed=False):
     ic = column_stack([ip+1,ip+2]).ravel()
     C = X[ic].reshape(-1,2,3)
     # always use False
+    print P
+    print C
     return BezierSpline(P,control=C,closed=False)
     
 

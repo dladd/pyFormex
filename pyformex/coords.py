@@ -1062,15 +1062,16 @@ class Coords(ndarray):
 
 
     @classmethod
-    def concatenate(clas,L,**kargs):
+    def concatenate(clas,L,axis=0):
         """Concatenate a list of :class:`Coords` object.
 
         All :class:`Coords` object in the list L should have the same shape
-        except for the length of the first axis.
+        except for the length of the specified axis.
         This function is equivalent to the numpy concatenate, but makes
-        sure the result is a :class:`Coords` object.
+        sure the result is a :class:`Coords` object,and the default axis
+        is the first one instead of the last.
         """
-        return Coords(concatenate(L,axis=0,**kargs))
+        return Coords(concatenate(L,axis=axis))
 
 
     @classmethod
