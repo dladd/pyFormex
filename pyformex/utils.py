@@ -341,7 +341,7 @@ def setSaneLocale(localestring=''):
 ###################### ReST conversion ###################
 
 try:
-    from docutils.core import publih_string
+    from docutils.core import publish_string
     def rst2html(text,writer='html'):
         return publish_string(text,writer_name=writer)
 except ImportError:
