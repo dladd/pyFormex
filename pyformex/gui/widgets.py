@@ -1684,7 +1684,13 @@ def updateText(widget,text,format=''):
 
     # conversion
     if format == 'rest':
-        text = utils.rst2html(text)
+        try:
+            text = utils.rst2html(text)
+        except:
+            GD.message("Could not convert reStrucuturedText to html. Displaying as plain text.")
+            if GD.options.debug:
+                raise
+            
         format = ''
         # We leave the format undefined, because we are not sure
         # that the conversion function (docutils) is available
