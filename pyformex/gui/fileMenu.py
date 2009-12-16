@@ -41,7 +41,7 @@ from gettext import gettext as _
 the_project = None
 
 
-def createProject(create=True,compression=0,addGlobals=None):
+def createProject(create=True,compression=0,addGlobals=None,makeDefault=True):
     """Open a file selection dialog and let the user select a project.
 
     The default will let the user create new project files as well as open
@@ -54,6 +54,13 @@ def createProject(create=True,compression=0,addGlobals=None):
 
     Only one pyFormex project can be open at any time. The open project
     owns all the global data created and exported by any script.
+
+    If makeDefault is True, an already open project will be closed and
+    the opened project becomes the current project.
+    If makeDefault is False, the project data are imported into GD.PF
+    and the current project does not change. This means that if a project was
+    open, the imported data will be added to it.
+    
     If addGlobals is None, the user is asked whether the current globals
     should be added to the project. Set True or False to force or reject
     the adding without asking.
@@ -64,13 +71,14 @@ def createProject(create=True,compression=0,addGlobals=None):
     if the_project is None:
         cur = GD.cfg.get('workdir','.')
     else:
-        options = ['Cancel','Close without saving','Save and Close']
-        ans = draw.ask("Another project is still open. Shall I close it first?",
-                    options)
-        if ans == 'Cancel':
-            return
-        if ans == options[2]:
-            the_project.save()
+        if makeDefault:
+            options = ['Cancel','Close without saving','Save and Close']
+            ans = draw.ask("Another project is still open. Shall I close it first?",
+                        options)
+            if ans == 'Cancel':
+                return
+            if ans == options[2]:
+                the_project.save()
         cur = the_project.filename
     typ = utils.fileDescription(['pyf','all'])
     res = widgets.ProjectSelection(cur,typ,exist=not create).getResult()
@@ -111,54 +119,82 @@ def createProject(create=True,compression=0,addGlobals=None):
     if ignoresig:
         sig = ''
 
-    # Loading the project may take a long while; attent user
-    GD.GUI.setBusy()
-    try:
-        the_project = project.Project(fn,create=create,signature=sig,compression=compression,legacy=legacy)
-        if GD.PF and addGlobals:
-            the_project.update(GD.PF)
-    finally:
-        GD.GUI.setBusy(False)
+    proj = _open_project(fn,create,sig,compression,legacy)
         
-    GD.PF = the_project
-    GD.GUI.setcurproj(fn)
-    GD.message("Project contents: %s" % the_project.keys())
+    GD.message("Project contents: %s" % proj.keys())
     
-    if hasattr(the_project,'_autoscript_'):
+    if hasattr(proj,'_autoscript_'):
         _ignore = "Ignore it!"
         _show = "Show it"
         _edit = "Load it in the editor"
         _exec = "Execute it"
         res = draw.ask("There is an autoscript stored inside the project.\nIf you received this project file from an untrusted source, you should probably not execute it.",[_ignore,_show,_edit,_exec])
         if res == _show:
-            res = draw.showText(the_project._autoscript_)#,actions=[_ignore,_edit,_show])
+            res = draw.showText(proj._autoscript_)#,actions=[_ignore,_edit,_show])
             return
         if res == _exec:
-            draw.playScript(the_project._autoscript_)
+            draw.playScript(proj._autoscript_)
         elif res == _edit:
             fn = "_autoscript_.py"
             draw.checkWorkdir()
             f = file(fn,'w')
-            f.write(the_project._autoscript_)
+            f.write(proj._autoscript_)
             f.close()
             openScript(fn)
             editScript(fn)
 
-    if hasattr(the_project,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % the_project.autofile):
-        processArgs([the_project.autofile])
+    if hasattr(proj,'autofile') and draw.ack("The project has an autofile attribute: %s\nShall I execute this script?" % proj.autofile):
+        processArgs([proj.autofile])
+
+    if makeDefault:
+        the_project = proj
+        if GD.PF and addGlobals:
+            the_project.update(GD.PF)
+        GD.PF = the_project
+        GD.GUI.setcurproj(fn)
+
+    else:
+        # Just import the data into current project
+        GD.PF.update(proj)
+
+    GD.message("Exported symbols: %s" % GD.PF.keys())
 
 
 def openProject():
-    """Create a new project file, uncompressed by default.
+    """Open an existing project.
 
-    If a compression level (1..9) is specified, the stored data will be
-    gzipped. This may substantially reduce the size of large databases.
-
-    This internal compression is easier to the user than externally
-    compressing the resulting files.
+    Ask the user to select an existing project file, and then open it.
     """
     createProject(create=False)
- 
+
+
+def importProject():
+    """Import an existing project.
+
+    Ask the user to select an existing project file, and then import
+    its data into the current project.
+    """
+    createProject(create=False,addGlobals=False,makeDefault=False)
+
+
+def _open_project(fn,create,signature,compression,legacy):
+    """Open a project in the GUI
+
+    This is a low level function not intended for the user.
+    It is equivalent to creating a project instance, but has
+    exception trapping
+    """
+    # Loading the project may take a long while; attent user
+    GD.GUI.setBusy()
+    try:
+        proj = project.Project(fn,create,signature,compression,legacy)
+    except:
+        proj = None
+        raise
+    finally:
+        GD.GUI.setBusy(False)
+    return proj
+    
 
 def setAutoScript():
     """Set the current script as autoScript in the project"""
@@ -214,7 +250,8 @@ def closeProject(save=True):
         GD.PF.update(the_project)
         GD.GUI.setcurproj('None')
     the_project = None
-
+        
+    
 
 def askCloseProject():
     if the_project is not None:
@@ -353,6 +390,7 @@ def setOptions():
 MenuData = [
     (_('&Start new project'),createProject),
     (_('&Open existing project'),openProject),
+    (_('&Import another project'),importProject),
     (_('&Set current script as AutoScript'),setAutoScript),
     (_('&Remove the AutoScript'),removeAutoScript),
     (_('&Set current script as AutoFile'),setAutoFile),

@@ -192,8 +192,51 @@ def defaultEltype(nplex):
     return _default_eltype.get(nplex,None)
 
 
+def convert_quad4_tri3(mesh,pattern='u'):
+    conversions = {
+        'u' : [ (0,1,2), (2,3,0) ],
+        'd' : [ (0,1,3), (2,3,1) ],
+        }
+    print "This is the quad4 to tri3 conversion with pattern %s" % pattern
+    if pattern in 'ud':
+        sel = conversions[pattern]
+        elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
+    elif pattern == 'r':
+        options = array([conversions['u'],conversions['d']])
+        print options.shape
+        sel = options[random.randint(0,2,(mesh.nelems(),1))]
+        print sel.shape
+        elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
+    print(elems.shape)
+    return Mesh(mesh.coords,elems,eltype='tri3')
+
+
+from collections import defaultdict
+
+
+import re
+_conversion_re = re.compile("convert_([a-z][a-z0-9]*)_([a-z][a-z0-9]*)$")
+_conversions = []
+from_conversions = defaultdict(list)
+to_conversions = defaultdict(list)
+
+for k in globals().keys():
+    m = _conversion_re.match(k)
+    if m:
+        c = m.groups()
+        _conversions.append(c)
+        from_conversions[c[0]].append(c[1])
+        to_conversions[c[1]].append(c[0])
+
+print "FOUND CONVERSIONS %s" % _conversions
+print "FROM CONVERSIONS %s" % from_conversions
+print "TO CONVERSIONS %s" % to_conversions
+
+
+
+
 class Mesh(object):
-    """A mesh is a discrete geometrical model consisting of nodes and elements.
+    """A mesh is a discrete geometrical model defined by nodes and elements.
 
     In the Mesh geometrical data model, coordinates of all points are gathered
     in a single twodimensional array 'coords' with shape (ncoords,3) and the
@@ -389,7 +432,7 @@ Size: %s
         return M
 
 
-    def convert(self,fromtype,totype):
+    def convert(self,fromtype,totype,**kargs):
         """Convert a mesh from element type fromtype to type totype.
 
         Currently defined conversions:
@@ -397,6 +440,8 @@ Size: %s
         """
         fromtype = fromtype.capitalize()
         totype = totype.capitalize()
+        print globals().has_key("convert_%s_%s"%(fromtype,totype))
+        print globals.has_key("convert_%s_%s"%(fromtype,totype))
         try:
             conv = getattr(elements,fromtype).conversion[totype]
         except:

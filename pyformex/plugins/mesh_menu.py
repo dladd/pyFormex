@@ -217,6 +217,42 @@ def fromFormex(suffix=''):
     selection.set(meshes.keys())
 
 
+def convertMesh():
+    """Transform the element type of the selected meshes.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    eltypes = set([ m.eltype for m in meshes if m.eltype is not None])
+    print "eltypes in selected meshes: %s" % eltypes
+    if len(eltypes) > 1:
+        warning("I can only convert meshes with the same element type\nPlease narrow your selection before trying conversion.")
+        return
+    if len(eltypes) == 1:
+        fromtype = eltypes.pop()
+        choices = ["%s -> %s" % (fromtype,to) for to in mesh.from_conversions[fromtype]]
+        res = askItems([\
+            ("Conversion Type",None,'vradio',{'choices':choices}),
+            ("Pattern",None,'hradio',{'choices':['u','d','x','r']}),
+            ])
+        if res:
+            print "Selected conversion %s" % res["Conversion Type"]
+            converter = "convert_%s" % res["Conversion Type"].replace(' -> ','_')
+            print  "Selected converter: %s" % converter
+            converter_func = globals().get(converter,None)
+            if converter_func is None:
+                warning("Sorry, I could not find the converter function!")
+                return
+            newnames = [ "%s_converted" % n for n in selection.names ]
+            newmeshes = [ converter_func(m,res['Pattern']) for m in meshes ]
+            export2(newnames,newmeshes)
+    
+
 ################################## Menu #############################
 
 _menu = 'Mesh'
@@ -231,6 +267,8 @@ def create_menu():
         ("&Forget Selection",selection.forget),
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
+        ("---",None),
+        ("&Convert Mesh Type",convertMesh),
         ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
