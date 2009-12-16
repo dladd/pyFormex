@@ -33,7 +33,7 @@ from mydict import Dict
 from numpy import *
 
 
-def mergeNodes(nodes):
+def mergeNodes(nodes,**kargs):
     """Merge all the nodes of a list of node sets.
 
     Each item in nodes is a Coords array.
@@ -41,15 +41,18 @@ def mergeNodes(nodes):
     
     - the coordinates of all unique nodes,
     - a list of indices translating the old node numbers to the new.
+
+    The merging operation can be tuned by specifying extra arguments
+    that will be passed to :meth:`Coords:fuse`.
     """
     coords = Coords(concatenate([x for x in nodes],axis=0))
-    coords,index = coords.fuse()
+    coords,index = coords.fuse(**kargs)
     n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
     ind = [ index[f:t] for f,t in zip(n[:-1],n[1:]) ]
     return coords,ind
 
 
-def mergeModels(femodels):
+def mergeModels(femodels,**kargs):
     """Merge all the nodes of a list of FE models.
 
     Each item in femodels is a (coords,elems) tuple.
@@ -58,10 +61,32 @@ def mergeModels(femodels):
     - the coordinates of all unique nodes,
     - a list of elems corresponding to the input list,
       but with numbers referring to the new coordinates.
+
+    The merging operation can be tuned by specifying extra arguments
+    that will be passed to :meth:`Coords:fuse`.
     """
     coords = [ x for x,e in femodels ]
     elems = [ e for x,e in femodels ]
-    coords,index = mergeNodes(coords)
+    coords,index = mergeNodes(coords,**kargs)
+    return coords,[i[e] for i,e in zip(index,elems)]
+
+
+def mergeMeshes(meshes,**kargs):
+    """Merge all the nodes of a list of Meshes.
+
+    Each item in meshes is a Mesh instance.
+    The return value is a tuple with:
+
+    - the coordinates of all unique nodes,
+    - a list of elems corresponding to the input list,
+      but with numbers referring to the new coordinates.
+
+    The merging operation can be tuned by specifying extra arguments
+    that will be passed to :meth:`Coords:fuse`.
+    """
+    coords = [ m.coords for m in meshes ]
+    elems = [ m.elems for m in meshes ]
+    coords,index = mergeNodes(coords,**kargs)
     return coords,[i[e] for i,e in zip(index,elems)]
               
 

@@ -513,7 +513,16 @@ class TriSurface(object):
 
     def setElems(self,elems):
         """Change the elems data."""
-        self.edges = self.faces = self.areas = self.normals = self.econn = self.conn = self.eadj = self.adj = self.edglen = None
+        self.edges = self.faces = None
+        self.elems = None
+        self.areas = None
+        self.normals = None
+        self.econn = None
+        self.conn = None
+        self.eadj = None
+        self.adj = None
+        if hasattr(self,'edglen'):
+            del self.edglen
         self.elems = Connectivity(elems)
         self.refresh()
 

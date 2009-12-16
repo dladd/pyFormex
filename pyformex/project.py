@@ -80,7 +80,6 @@ class Project(dict):
         """Save the project to file."""
         f = file(self.filename,'w'+self.mode)
         f.write("%s\n" % self.signature)
-        print self.header_data()
         pickle.dump(self.header_data(),f,pickle.HIGHEST_PROTOCOL)
         if self.gzip:
             pyf = gzip.GzipFile(self.filename,'w'+self.mode,self.gzip,f)

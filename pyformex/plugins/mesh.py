@@ -192,27 +192,60 @@ def defaultEltype(nplex):
     return _default_eltype.get(nplex,None)
 
 
+def subElements(elems,nodsel):
+    """Create elements from the nodes of an existing mesh.
+
+    elems is an existing mesh connectivity
+    nodsel is a list of local node tuples, all having the same length.
+    """
+    plex = [ len(n) for n in nodsel ]
+    nplex = plex.max()
+    if not nplex == plex.min():
+        raise ValueError,"Invalid node selector"
+    return elems[:,sel].reshape(-1,nplex)
+    
+
 def convert_quad4_tri3(mesh,pattern='u'):
     conversions = {
         'u' : [ (0,1,2), (2,3,0) ],
         'd' : [ (0,1,3), (2,3,1) ],
         }
     print "This is the quad4 to tri3 conversion with pattern %s" % pattern
+    print mesh.elems.shape
+    coords = mesh.coords
     if pattern in 'ud':
-        sel = conversions[pattern]
-        elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
+        elems = subElements(mesh.elems,conversions[pattern])
+        #sel = conversions[pattern]
+        #elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
+    elif pattern == 'x':
+        newcoords = mesh.toFormex().centroids()
+        print newcoords.shape
+        coords = Coords.concatenate([mesh.coords,newcoords])
+        print coords.shape
+        newnodes = arange(len(newcoords)) + mesh.ncoords()
+        newelems = [ column_stack([mesh.elems[:,i],mesh.elems[:,j],newnodes]) for i,j in [(0,1),(1,2),(2,3),(3,0)]]
+        elems = column_stack(newelems).reshape(-1,3)
     elif pattern == 'r':
-        options = array([conversions['u'],conversions['d']])
+        options = array([conversions['u'],conversions['d']]).reshape(-1,6)
+        print options
         print options.shape
-        sel = options[random.randint(0,2,(mesh.nelems(),1))]
+        sel = options[random.randint(0,2,(mesh.nelems()))]
         print sel.shape
-        elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
+        rsel = column_stack([arange(mesh.nelems())]*6)
+        elems = mesh.elems[rsel,sel]
+        print elems.shape
+        elems = elems.reshape(-1,3)
     print(elems.shape)
-    return Mesh(mesh.coords,elems,eltype='tri3')
+    return Mesh(coords,elems,eltype='tri3')
+
+
+def convert_quad4_quad8(mesh):
+    from elements import Quad4
+    edges = subElements(mesh.elems,Quad4.edges)
+    print edges
 
 
 from collections import defaultdict
-
 
 import re
 _conversion_re = re.compile("convert_([a-z][a-z0-9]*)_([a-z][a-z0-9]*)$")
@@ -231,8 +264,6 @@ for k in globals().keys():
 print "FOUND CONVERSIONS %s" % _conversions
 print "FROM CONVERSIONS %s" % from_conversions
 print "TO CONVERSIONS %s" % to_conversions
-
-
 
 
 class Mesh(object):
@@ -453,8 +484,12 @@ Size: %s
 
 
     @classmethod
-    def concatenate(clas,ML):
-        """Concatenate a list of meshes of the same plexitude and eltype"""
+    def concatenate(clas,ML,**kargs):
+        """Concatenate a list of meshes of the same plexitude and eltype
+
+        Merging of the nodes can be tuned by specifying extra arguments
+        that will be passed to :meth:`Coords:fuse`.
+        """
         nplex = set([ m.nplex() for m in ML ])
         if len(nplex) > 1:
             raise ValueError,"Cannot concatenate meshes with different plexitude: %s" % str(nplex)
@@ -466,7 +501,7 @@ Size: %s
         else:
             eltype = None
 
-        coords,elems = mergeModels([(m.coords,m.elems) for m in ML])
+        coords,elems = mergeModels([(m.coords,m.elems) for m in ML],**kargs)
         elems = concatenate(elems,axis=0)
         return Mesh(coords,elems,eltype=eltype)
         

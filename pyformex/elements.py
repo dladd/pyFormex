@@ -111,6 +111,7 @@ class Quad4(Element):
         }
 
 
+
 class Quad9(Element):
     """A 4-node quadrilateral"""
     vertices = [ (  0.0,  0.0, 0.0 ),
@@ -127,6 +128,17 @@ class Quad9(Element):
     edges = [ (0,1), (1,2), (2,3), (3,0) ]
 
     faces = [ (0,1,2,3,4,5,6,7,8), ]
+
+    element = faces[0]
+
+
+class Quad8(Element):
+    """A 8-node quadrilateral"""
+    vertices = Quad9.vertices[:8]
+
+    edges = Quad9.edges
+
+    faces = [ (0,1,2,3,4,5,6,7), ]
 
     element = faces[0]
 

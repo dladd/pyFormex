@@ -405,7 +405,7 @@ def drawQuadraticCurves(x,color=None,n=8):
         if color is not None:
             GL.glColor3fv(color[i])
         P = dot(H,x[i])
-        GD,debug("P.shape=%s"%str(P.shape))
+        GD.debug("P.shape=%s"%str(P.shape))
         GL.glBegin(GL.GL_LINE_STRIP)
         for p in P:
             GL.glVertex3fv(p)
@@ -415,7 +415,7 @@ def drawQuadraticCurves(x,color=None,n=8):
 def drawNurbsCurves(x,color=None):
     """Draw a collection of curves.
 
-    x is a (nlines,3,3) shaped array of coordinates.
+    x is an (nlines,4,3) or (nlines,3,3) shaped array of coordinates.
 
     If color is given it is an (nlines,3) array of RGB values.
     """
@@ -429,6 +429,7 @@ def drawNurbsCurves(x,color=None):
     for i,xi in enumerate(x):
         if color is not None:
             GL.glColor3fv(color[i])
+        print x
         GLU.gluBeginCurve(nurb)
         GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
         GLU.gluEndCurve(nurb)

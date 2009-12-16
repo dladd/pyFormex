@@ -41,7 +41,6 @@ import utils
 # global data
 
 parts = None
-femodels = None
 model = None
 PDB = None
 
@@ -65,9 +64,8 @@ feresult_name = utils.NameSequence(name)
 
 
 def resetData():
-    global parts,femodels,model,PDB
+    global parts,model,PDB
     parts = []
-    femodels = []
     model = None
     PDB = None
     
@@ -118,17 +116,17 @@ def addPart(F):
     """Add a Formex to the parts list."""
     global parts
     n = len(parts)
-    F.setProp(n)
-    export({'part-%s'%n:F})
-    parts.append(F)
-    femodels.append(F.feModel())
+    part = F.setProp(n).toMesh()
+    export({'part-%s'%n:part})
+    parts.append(part)
+    
 
 def drawParts():
     """Draw all parts"""
     clear()
     draw(parts)
     [ drawNumbers(p) for p in parts ]
-    [ drawNumbers(Formex(fem[0]),color=red) for fem in femodels ]
+    [ drawNumbers(p.coords) for p in parts ]
     zoomAll()
 
 
@@ -137,7 +135,7 @@ def drawParts():
 def createModel():
     """Merge all the parts into a Finite Element model."""
     global model,PDB
-    model = Model(*mergeModels(femodels))
+    model = Model(*mergeMeshes(parts))
     PDB = PropertyDB()
     drawModel()
 

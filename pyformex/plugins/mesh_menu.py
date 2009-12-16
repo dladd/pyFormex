@@ -147,9 +147,13 @@ def convert_inp(fn=None):
     """
     if fn is None:
         fn = askFilename(".","*.inp",multi=True)
+        if not fn:
+            return
+
         for f in fn:
             convert_inp(f)
         return
+
 
     converter = os.path.join(GD.cfg['pyformexdir'],'bin','read_abq_inp.awk')
     dirname = os.path.dirname(fn)
@@ -290,6 +294,7 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     close_menu()
+    reload(mesh)
     import mesh_menu
     reload(mesh_menu)
     show_menu()

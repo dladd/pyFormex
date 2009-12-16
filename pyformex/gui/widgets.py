@@ -659,12 +659,16 @@ class InputString(InputItem):
     If the type of value is not a string, the input string
     will be eval'ed before returning.
     
-    There are no specific op[tions.
+    Options:
+
+    - `max`: the maximum number of characters in the string.
     """
-    def __init__(self,name,value,*args,**kargs):
+    def __init__(self,name,value,max=None,*args,**kargs):
         """Creates the input item."""
         InputItem.__init__(self,name,*args,**kargs)
         self.input = QtGui.QLineEdit(str(value))
+        if max>0:
+            self.input.setMaxLength(max)
         self._is_string_ = type(value) == str
         self.insertWidget(1,self.input)
 

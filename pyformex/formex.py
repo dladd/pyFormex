@@ -30,7 +30,7 @@ Therefore, it can also be used as a standalone extension module in Python.
 """
 
 from coords import *
-from utils import deprecation,deprecated,functionWasRenamed,functionBecameMethod
+from utils import deprecation,functionWasRenamed,functionBecameMethod
 
 
 def vectorLength(vec):
@@ -1095,7 +1095,7 @@ class Formex(object):
         an integer array with the node numbers connected by each element.
         The elements come in the same order as they are in the Formex, but
         the order of the nodes is unspecified.
-        By the way, the reverse operation of ``coords,elems = feModel(F)``
+        By the way, the reverse operation of ``coords,elems = fuse(F)``
         is accomplished by ``F = Formex(coords[elems])``
 
         There is a (very small) probability that two very close nodes are
@@ -1119,10 +1119,7 @@ class Formex(object):
     def toMesh(self):
         from plugins.mesh import Mesh
         x,e = self.fuse()
-        return Mesh(x,e,eltype=self.eltype)
-
-    # retained for compatibility
-    feModel = fuse
+        return Mesh(x,e,prop=self.p,eltype=self.eltype)
 
 
 ##############################################################################
@@ -2075,19 +2072,10 @@ class Formex(object):
     def reverseElements(self):
         pass
 
-    @deprecated(view)
-    def data(self):
-        pass
+    @deprecation("feModel() is deprecated. Use toMesh() wherever possible.\nfuse() remains available with the same result as feModel()")
+    def feModel(self,*args,**kargs):
+        return self.fuse(*args,**kargs)
 
-    @deprecated(test)
-    def where(self,*args,**kargs):
-        pass
-
-    @deprecated("Use Formex.spherical instead")
-    def oldspherical(self,dir=[2,0,1],scale=[1.,1.,1.]):
-        """Same as spherical, but using colatitude."""
-        return self.spherical([dir[1],dir[2],dir[0]],[scale[1],scale[2],scale[0]],colat=True)
-    
     nnodel = nplex
     nnodes = npoints
 
@@ -2222,9 +2210,9 @@ if __name__ == "__main__":
         F1 = F.translate(0,6)
         F1.setProp(5)
         print("F1 =",F1)
-        F2 = F.ref(1,2)
+        F2 = F.reflect(0,2.)
         print("F2 =",F2)
-        F3 = F.ref(1,1.5).translate(1,2)
+        F3 = F.reflect(0,1.5).translate(1,2)
         F3.setProp([1,2])
         G = F1+F3+F2+F3
         print("F1+F3+F2+F3 =",G)
