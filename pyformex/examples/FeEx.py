@@ -28,6 +28,8 @@ level = 'advanced'
 topics = ['FEA']
 techniques = ['menu', 'dialog', 'persistence', 'colors'] 
 """
+from pyformex import GUI
+print GUI.menu.menuitems
 
 from simple import rectangle
 from plugins.fe import *

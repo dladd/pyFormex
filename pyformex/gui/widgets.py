@@ -1899,18 +1899,23 @@ class BaseMenu(object):
         self.title = title
         GD.debug("Creating menu %s" % title)
         self.parent = parent
-        self.menuitems = []
+        self.menuitems = odict.ODict()
         if items:
             GD.debug("INSERTING ITEMS in menu %s" % title)
             self.insertItems(items)
-            GD.debug("MENU %s now has items %s" % (title,[i[0] for i in self.menuitems]))
+            GD.debug("MENU %s now has items %s" % (title,self.menuitems.keys()))
         if parent and isinstance(parent,BaseMenu):
             GD.debug("INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title))
             if before:
                 before = parent.itemAction(before)
             parent.insert_menu(self,before)
-            parent.menuitems.append((normalize(title),self))
-            GD.debug("PARENT MENU %s now has items %s" % (self.parent.title,[i[0] for i in self.parent.menuitems]))
+            title = normalize(title)
+            if title in parent.menuitems:
+                GD.debug("NOT ADDING %s TO PARENT, SINCE ALREADY THERE"%title)
+            else:
+                GD.debug("ADDING %s TO PARENT, SINCE NOT THERE"%title)
+                parent.menuitems[normalize(title)] = self
+            GD.debug("PARENT MENU %s now has items %s" % (self.parent.title,self.parent.menuitems.keys()))
 
 
     def item(self,text):
@@ -1919,7 +1924,7 @@ class BaseMenu(object):
         Text normalization removes all '&' characters and
         converts to lower case.
         """
-        return dict(self.menuitems).get(normalize(text),None)
+        return self.menuitems.get(normalize(text),None)
 
 
     def itemAction(self,item):
@@ -1929,7 +1934,7 @@ class BaseMenu(object):
         values. This method guarantees that the return value is either the
         corresponding Action, or None.
         """
-        if item not in dict(self.menuitems).values():
+        if item not in self.menuitems.values():
             item = self.item(item)
         if isinstance(item,QtGui.QMenu):
             item = item.menuAction()
@@ -2026,7 +2031,12 @@ class BaseMenu(object):
                             a.setCheckable(v)
                         elif k == 'disabled':
                             a.setDisabled(True)
-            self.menuitems.append((normalize(txt),a))
+            txt = normalize(txt)
+            if txt in self.menuitems:
+                GD.debug("!!!!!!!!!!! NOT ADDING ITEM %s TO MENU %s" % (txt,self.title))
+            else:
+                GD.debug("!!!!!!!!!!! ADDING ITEM %s TO MENU %s" % (txt,self.title))
+                self.menuitems[normalize(txt)] = a
 
 
 class Menu(BaseMenu,QtGui.QMenu):
@@ -2069,9 +2079,9 @@ class Menu(BaseMenu,QtGui.QMenu):
         self.done=True
         if self.parent:
             self.parent.removeAction(self.menuAction())
-            for i,item in enumerate(self.parent.menuitems):
-                if item[1] == self:
-                    del self.parent.menuitems[i]
+            for k,v in self.parent.menuitems.items():
+                if v == self:
+                    del self.parent.menuitems[k]
 
 
 class MenuBar(BaseMenu,QtGui.QMenuBar):

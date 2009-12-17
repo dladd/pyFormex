@@ -28,6 +28,7 @@ Definition of the Mesh class for describing discrete geometrical models.
 And some useful meshing functions to create such models.
 """
 
+
 from numpy import *
 from coords import *
 from formex import *
@@ -239,7 +240,7 @@ def convert_quad4_tri3(mesh,pattern='u'):
     return Mesh(coords,elems,eltype='tri3')
 
 
-def convert_quad4_quad8(mesh):
+def convert_quad4_quad8(mesh,*args,**kargs):
     from elements import Quad4
     edges = subElements(mesh.elems,Quad4.edges)
     print edges
