@@ -224,7 +224,15 @@ def draw_object_name(n):
 
 def draw_elem_numbers(n):
     """Draw the numbers of an object's elements."""
-    return drawNumbers(named(n))
+    return drawNumbers(named(n),color='blue')
+
+def draw_nodes(n):
+    """Draw the numbers of an object's nodes."""
+    return draw(named(n).coords)
+
+def draw_node_numbers(n):
+    """Draw the numbers of an object's nodes."""
+    return drawNumbers(named(n).coords,color='red')
 
 def draw_bbox(n):
     """Draw the bbox of an object."""
@@ -250,6 +258,8 @@ class DrawableObjects(Objects):
         self.shrink = None
         self.annotations = [[draw_object_name,False],
                             [draw_elem_numbers,False],
+                            [draw_node_numbers,False],
+                            [draw_nodes,False],
                             [draw_bbox,False],
                             ]
         self._annotations = {}
@@ -278,7 +288,6 @@ class DrawableObjects(Objects):
         old and new can be a either Formex instances or names or lists thereof.
         old are drawn in yellow, new in the current color.
         """
-        #print("DRAWCHANGES %s" % type(self))
         self.draw(wait=False)
         draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
 
@@ -332,8 +341,12 @@ class DrawableObjects(Objects):
         self.toggleAnnotation(0)
     def toggleNumbers(self):
         self.toggleAnnotation(1)
-    def toggleBbox(self):
+    def toggleNodeNumbers(self):
         self.toggleAnnotation(2)
+    def toggleNodes(self):
+        self.toggleAnnotation(3)
+    def toggleBbox(self):
+        self.toggleAnnotation(4)
 
 
     def setProperty(self,prop=None):

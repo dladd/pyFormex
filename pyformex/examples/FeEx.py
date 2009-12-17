@@ -29,7 +29,6 @@ topics = ['FEA']
 techniques = ['menu', 'dialog', 'persistence', 'colors'] 
 """
 from pyformex import GUI
-print GUI.menu.menuitems
 
 from simple import rectangle
 from plugins.fe import *
@@ -37,6 +36,7 @@ from plugins.properties import *
 from plugins.fe_abq import *
 from plugins.fe_post import FeResult
 from plugins import postproc_menu
+from plugins import mesh_menu
 from odict import ODict
 import utils
 
@@ -75,7 +75,7 @@ def reset():
     clear()
     smoothwire()
     transparent()
-    lights(False)
+    #lights(False)
 
 def deleteAll():
     resetData()
@@ -111,7 +111,7 @@ def createPart(res=None):
         diag = {'quad':'', 'tri-u':'u', 'tri-d':'d'}[eltype]
         F = rectangle(nx,ny,x1-x0,y1-y0,diag=diag).trl([x0,y0,0])
         addPart(F)
-        drawParts()
+#        drawParts()
 
 
 def addPart(F):
@@ -119,8 +119,11 @@ def addPart(F):
     global parts
     n = len(parts)
     part = F.setProp(n).toMesh()
-    export({'part-%s'%n:part})
     parts.append(part)
+    partname = 'part-%s'%n
+    export({partname:part})
+    mesh_menu.selection.set([partname])
+    mesh_menu.selection.draw()
     
 
 def drawParts():
@@ -720,6 +723,7 @@ def reload_menu():
 
 if __name__ == "draw":
 
+    mesh_menu.show_menu()
     resetData()
     reset()
     reload_menu()

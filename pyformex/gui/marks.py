@@ -65,22 +65,23 @@ class AxesMark(Mark):
 class TextMark(Mark):
     """A text drawn at a 3D position."""
     
-    def __init__(self,pos,text,color=None,font=None,size=None):
+    def __init__(self,pos,text,color=None,font='sans',size=18):
         Mark.__init__(self,pos)
         self.text = text
         self.color = saneColor(color)
-        self.font = gluttext.getFont(font,size)
+        self.font = gluttext.glutSelectFont(font,size)
 
     def drawGL(self,mode=None,color=None):
         if self.color is not None:
             GL.glColor3fv(self.color)
         GL.glRasterPos3fv(self.pos)
-
-    def use_list(self):
-        Mark.use_list(self)
         gluttext.glutRenderText(self.text,self.font)
-        #x,y,z = self.pos
-        #GD.canvas.renderText(x,y,z,self.text,self.font)
+
+    ## def use_list(self):
+    ##     Mark.use_list(self)
+    ##     gluttext.glutRenderText(self.text,self.font)
+    ##     #x,y,z = self.pos
+    ##     #GD.canvas.renderText(x,y,z,self.text,self.font)
 
 
 class MarkList(Mark):
@@ -106,7 +107,7 @@ class MarkList(Mark):
         self.leader = str(leader)
 
 
-    def draw(self,mode=None,color=None):
+    def drawGL(self,mode=None,color=None):
         if self.color is not None:
             GL.glColor3fv(self.color)
         for p,v in zip(self.pos,self.val):

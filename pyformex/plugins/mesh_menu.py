@@ -257,6 +257,8 @@ def convertMesh():
             newnames = [ "%s_converted" % n for n in selection.names ]
             newmeshes = [ converter_func(m,res['Pattern']) for m in meshes ]
             export2(newnames,newmeshes)
+            selection.set(newnames)
+            selection.draw()
     
 
 ################################## Menu #############################
@@ -275,6 +277,14 @@ def create_menu():
         ("&Convert from Formex",fromFormex),
         ("---",None),
         ("&Convert Mesh Type",convertMesh),
+        ("---",None),
+        ("Toggle &Annotations",
+         [("&Name",selection.toggleNames,dict(checkable=True)),
+          ("&Element Numbers",selection.toggleNumbers,dict(checkable=True)),
+          ("&Node Numbers",selection.toggleNodeNumbers,dict(checkable=True)),
+          ("&Node Marks",selection.toggleNodes,dict(checkable=True)),
+          ('&Bounding Box',selection.toggleBbox,dict(checkable=True)),
+          ]),
         ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
@@ -296,7 +306,6 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     close_menu()
-    reload(mesh)
     import mesh_menu
     reload(mesh_menu)
     show_menu()

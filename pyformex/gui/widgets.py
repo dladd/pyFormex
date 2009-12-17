@@ -1877,6 +1877,11 @@ def normalize(s):
 class BaseMenu(object):
     """A general menu class.
 
+    A hierarchical menu that keeps a list of its item names and actions.
+    The item names are normalized by removing all '&' characters and
+    converting the result to lower case.
+    It thus becomes easy to search for an existing item in a menu.
+    
     This class is not intended for direct use, but through subclasses.
     Subclasses should implement at least the following methods:
     
@@ -1891,38 +1896,28 @@ class BaseMenu(object):
     """
 
     def __init__(self,title='AMenu',parent=None,before=None,items=None):
-        """Create a menu.
-
-        This is a hierarchical menu that keeps a list of its item
-        names and actions.
-        """
+        """Create a menu."""
         self.title = title
         GD.debug("Creating menu %s" % title)
         self.parent = parent
         self.menuitems = odict.ODict()
         if items:
-            GD.debug("INSERTING ITEMS in menu %s" % title)
             self.insertItems(items)
-            GD.debug("MENU %s now has items %s" % (title,self.menuitems.keys()))
         if parent and isinstance(parent,BaseMenu):
-            GD.debug("INSERTING MENU %s BEFORE %s IN PARENT %s" % (title,before,parent.title))
             if before:
                 before = parent.itemAction(before)
             parent.insert_menu(self,before)
             title = normalize(title)
-            if title in parent.menuitems:
-                GD.debug("NOT ADDING %s TO PARENT, SINCE ALREADY THERE"%title)
-            else:
-                GD.debug("ADDING %s TO PARENT, SINCE NOT THERE"%title)
-                parent.menuitems[normalize(title)] = self
-            GD.debug("PARENT MENU %s now has items %s" % (self.parent.title,self.parent.menuitems.keys()))
+            if not title in parent.menuitems:
+                parent.menuitems[title] = self
 
 
     def item(self,text):
-        """Get the menu item with given normalized text.
+        """Get the menu item with text.
 
-        Text normalization removes all '&' characters and
-        converts to lower case.
+        The text will be normalized before searching it.
+        If an item with the resulting name exists, it is returned.
+        Else None is returned.
         """
         return self.menuitems.get(normalize(text),None)
 
@@ -2007,19 +2002,16 @@ class BaseMenu(object):
             elif isinstance(val, list):
                 a = Menu(txt,self)
                 a.insertItems(val)
-                #self.insert_menu(a,before)
             else:
                 if type(val) == str:
                     val = eval(val)
                 if len(item) > 2 and item[2].has_key('data'):
-                    #print("INSERT A DACTION", item)
                     a = DAction(txt,data=item[2]['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
                 else:
                     a = self.create_insert_action(txt,val,before)
                 if len(item) > 2:
-                    #print('item = %s' % str(item))
                     for k,v in item[2].items():                        
                         if k == 'icon':
                             a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
@@ -2032,11 +2024,8 @@ class BaseMenu(object):
                         elif k == 'disabled':
                             a.setDisabled(True)
             txt = normalize(txt)
-            if txt in self.menuitems:
-                GD.debug("!!!!!!!!!!! NOT ADDING ITEM %s TO MENU %s" % (txt,self.title))
-            else:
-                GD.debug("!!!!!!!!!!! ADDING ITEM %s TO MENU %s" % (txt,self.title))
-                self.menuitems[normalize(txt)] = a
+            if not txt in self.menuitems:
+                self.menuitems[txt] = a
 
 
 class Menu(BaseMenu,QtGui.QMenu):

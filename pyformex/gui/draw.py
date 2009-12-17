@@ -609,7 +609,7 @@ def drawNormals(N,P,size=5,**extra):
     return draw(Formex(C),**extra)
 
 
-def drawText3D(P,text,color='black',font=None,size=None):
+def drawText3D(P,text,color=None,font='sans',size=18):
     """Draw a text at a 3D point P."""
     M = marks.TextMark(P,text,color=color,font=font,size=size)
     GD.canvas.addAnnotation(M)

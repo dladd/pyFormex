@@ -28,7 +28,6 @@ Definition of the Mesh class for describing discrete geometrical models.
 And some useful meshing functions to create such models.
 """
 
-
 from numpy import *
 from coords import *
 from formex import *
@@ -199,11 +198,12 @@ def subElements(elems,nodsel):
     elems is an existing mesh connectivity
     nodsel is a list of local node tuples, all having the same length.
     """
-    plex = [ len(n) for n in nodsel ]
+    print nodsel
+    plex = array([ len(n) for n in nodsel ])
     nplex = plex.max()
     if not nplex == plex.min():
         raise ValueError,"Invalid node selector"
-    return elems[:,sel].reshape(-1,nplex)
+    return elems[:,nodsel].reshape(-1,nplex)
     
 
 def convert_quad4_tri3(mesh,pattern='u'):
@@ -244,6 +244,7 @@ def convert_quad4_quad8(mesh,*args,**kargs):
     from elements import Quad4
     edges = subElements(mesh.elems,Quad4.edges)
     print edges
+    return mesh
 
 
 from collections import defaultdict
@@ -360,7 +361,9 @@ class Mesh(object):
         return self.elems.shape
     def bbox(self):
         return self.coords.bbox()
-
+    def center(self):
+        return self.coords.center()
+    
     def nedges(self):
         """Return the number of edges.
 
