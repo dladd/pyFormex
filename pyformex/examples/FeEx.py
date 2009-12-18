@@ -70,12 +70,15 @@ def resetData():
     parts = []
     model = None
     PDB = None
+    mesh_menu.selection.set([])
+    
     
 def reset():
     clear()
     smoothwire()
     transparent()
     #lights(False)
+    mesh_menu.selection.draw()
 
 def deleteAll():
     resetData()
@@ -122,7 +125,7 @@ def addPart(F):
     parts.append(part)
     partname = 'part-%s'%n
     export({partname:part})
-    mesh_menu.selection.set([partname])
+    mesh_menu.selection.names.append(partname)
     mesh_menu.selection.draw()
     
 

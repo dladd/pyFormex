@@ -36,7 +36,6 @@ the :class:`Coords` class.
 While the user will mostly use the higher level classes, he might occasionally
 find good reason to use the :class:`Coords` class directly as well.
 """
-
 from arraytools import *
 from lib import misc
 
@@ -967,15 +966,16 @@ class Coords(ndarray):
 
 ##############################################################################
 
-    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5):
+
+    def fuse(self,nodesperbox=1,shift=0.5,rtol=1.e-5,atol=1.e-5,fusemeth=0):
         """Find (almost) identical nodes and return a compressed set.
 
         This method finds the points that are very close and replaces them
         with a single point. The return value is a tuple of two arrays:
-        
+
         - the unique points as a :class:`Coords` object,
         - an integer (nnod) array holding an index in the unique
-        
+
         coordinates array for each of the original nodes. This index will
         have the same shape as the pshape() of the coords array.
 
@@ -1009,7 +1009,7 @@ class Coords(ndarray):
             x = x[:1]
             e = zeros(nnod,dtype=int32)
             return x,e
-            
+
         vol = esz.prod()
         nboxes = nnod / nodesperbox # ideal total number of boxes
         boxsz = (vol/nboxes) ** (1./esz.shape[0])
@@ -1037,28 +1037,15 @@ class Coords(ndarray):
         # than enough for all practical purposes
         x = x.astype(float32)
         val = val.astype(int32)
-        flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
-        sel = arange(nnod).astype(int32)   # replacement unique node nr
         tol = float32(max(abs(rtol*self.sizes()).max(),atol))
-        if hasattr(misc,'fuse'):
-            # use the lib
-            misc.fuse(x,val,flag,sel,tol)
-        else:
-            # !!!! this code should be moved to the emulated lib !
-            for i in range(nnod):
-                j = i-1
-                while j>=0 and val[i]==val[j]:
-                    if allclose(x[i],x[j],rtol=rtol,atol=atol):
-                        # node i is same as node j
-                        flag[i] = 0
-                        sel[i] = sel[j]
-                        sel[i+1:nnod] -= 1
-                        break
-                    j = j-1
-                    
+        nnod = val.shape[0]
+        sel = zeros(nnod,dtype=int32)      # replacement unique node nr
+        flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
+        misc._fuse(x,val,flag,sel,tol)     # fuse the close points
         x = x[flag>0]          # extract unique nodes
         s = sel[argsort(srt)]  # and indices for old nodes
         return (x,s.reshape(self.shape[:-1]))
+
 
 
     @classmethod

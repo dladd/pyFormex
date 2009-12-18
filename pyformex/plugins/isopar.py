@@ -25,6 +25,7 @@
 """Isoparametric transformations"""
 
 from formex import *
+from utils import deprecation
 
 
 def build_matrix(atoms,x,y=0,z=0):
@@ -43,7 +44,19 @@ def build_matrix(atoms,x,y=0,z=0):
 
 
 class Isopar(object):
-    """A class representing an isoparametric transformation"""
+    """A class representing an isoparametric transformation
+
+    The following three formulations are equivalent ::
+
+       trf = Isopar(eltype,coords,oldcoords)
+       G = F.isopar(trf)
+
+       trf = Isopar(eltype,coords,oldcoords)
+       G = trf.transform(F)
+
+       G = isopar(F,eltype,coords,oldcoords)
+
+    """
 
     # REM: we should create a function to produce these data
     isodata = {
@@ -137,6 +150,9 @@ class Isopar(object):
 
         Returns a Coords array with same shape as X
         """
+        if isinstance(X,Formex):
+            return Formex(self.transform(X.f),X.p,X.eltype)
+        
         ndim,atoms = Isopar.isodata[self.eltype]
         X = Coords(X)
         aa = build_matrix(atoms,X.x().ravel(),X.y().ravel(),X.z().ravel())
@@ -146,33 +162,27 @@ class Isopar(object):
         return xx
 
 
+    @deprecation("Please use Isopar.transform() instead")
     def transformFormex(self,F):
         """Apply an isoparametric transform to a Formex.
 
         The result is a topologically equivalent Formex.
         """
-        return Formex(self.transform(F.f))
+        return Formex(self.transform(F.f),F.p,F.eltype)
 
 
 def transformFormex(F,trf):
-    return trf.transformFormex(F)
+    return trf.transform(F)
     
 Formex.isopar = transformFormex
 
 
 def isopar(F,eltype,coords,oldcoords):
+    """Perform an isoparametric transformation on a Formex.
+
+    This is a convenience function that creates and uses an iosprametric
+    transformation in a single line.
+    """
     return Isopar(eltype,coords,oldcoords).transformFormex(F)
-
-
-# the following formulations are equivalent
-# 1.
-#   trf = Isopar(eltype,coorsd,oldcoords)
-#   G = F.isopar(trf)
-# 2.
-#   trf = Isopar(eltype,coorsd,oldcoords)
-#   G = trf.transformFormex(F)
-# 3.
-#   G = isopar(F,eltype,,coorsd,oldcoords)
-#
 
 # End

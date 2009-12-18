@@ -31,6 +31,25 @@ external functions in the compiled library.
 # There should be no other imports here than array
 from pyformex.arraytools import *
 
+
+def _fuse(x,val,flag,sel,tol):
+    """Fusing nodes.
+
+    This is a low level function performing the internal loop of
+    the fuse operation. It is not intended to be called by the user.
+    """
+    nnod = val.shape[0]
+    nexti = 0
+    for i in range(1,nnod):
+        j = i-1
+        if val[i]==val[j] and abs(x[i]-x[j]).max() < tol:
+            # node i is same as previous node j
+            flag[i] = 0
+        else:
+            nexti += 1
+        sel[i] = nexti
+
+
 def nodalSum(val,elems,work,avg):
     """Compute the nodal sum of values defined on elements.
 

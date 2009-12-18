@@ -1116,9 +1116,16 @@ class Formex(object):
         return f,e
 
 
-    def toMesh(self):
+    def toMesh(self,*args,**kargs):
+        """Convert a Formex to a Mesh.
+
+        Converts a geometry in Formex model to the equivalent Mesh model.
+        In the Mesh model, all points with nearly identical coordinates
+        are fused into a single point, and elements are defined by a
+        connectivity table with integers pointing to the corresponding vertex.
+        """
         from plugins.mesh import Mesh
-        x,e = self.fuse()
+        x,e = self.fuse(*args,**kargs)
         return Mesh(x,e,prop=self.p,eltype=self.eltype)
 
 

@@ -44,7 +44,7 @@
 
 
 /**************************************************** coords.fuse ****/
-/* Fuse nodes */
+/* Fuse nodes : new and much faster algorithm */
 /* args:  x, val, flag, sel, tol
      x   : (nnod,3) coordinates
      val : (nnod) gives the point a code, such that only points with equal val
@@ -80,32 +80,22 @@ coords_fuse(PyObject *dummy, PyObject *args)
   val = (int *)PyArray_DATA(arr2);
   flag = (int *)PyArray_DATA(arr3);
   sel = (int *)PyArray_DATA(arr4);
-  int i,j,ki,kj;
-/*   printf("Fast Fuse Data:\n"); */
-/*   for (i=0; i<nnod; i++) { */
-/*     ki = 3*i; */
-/*     printf(" node %d: %12.8f, %12.8f, %12.8f; %lld; %d; %lld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]); */
-/*   } */
-  for (i=0; i<nnod; i++) {
-    ki = 3*i;
-/*     printf(" node %d: %12.8f, %12.8f, %12.8f; %lld; %d; %lld\n",i,x[ki],x[ki+1],x[ki+2],val[i],flag[i],sel[i]); */
-  
+  int i,j,ki,kj,nexti;
+
+  nexti = 0;
+  for (i=1; i<nnod; i++) {
     j = i-1;
-    while (j >= 0 && val[i]==val[j]) {
-/*       printf("Compare %d and %d\n",i,j); */
-      kj = 3*j;
-      if ( fabs(x[ki]-x[kj]) < tol && \
-	   fabs(x[ki+1]-x[kj+1]) < tol && \
-	   fabs(x[ki+2]-x[kj+2]) < tol ) {
-/* 	printf("Nodes %d and %d are close\n",i,j);	\ */
-	flag[i] = 0;
-	sel[i] = sel[j];
-	j = i+1;
-	while (j < nnod) --sel[j++];
-	break;
-      }
-      j = j-1;
+    ki = 3*i;
+    kj = 3*j;
+    if ( val[i]==val[j] &&
+	 fabs(x[ki]-x[kj]) < tol &&
+	 fabs(x[ki+1]-x[kj+1]) < tol &&
+	 fabs(x[ki+2]-x[kj+2]) < tol ) {
+      flag[i] = 0;
+    } else {
+      ++nexti;
     }
+    sel[i] = nexti;
   }
   /* Clean up and return */
   Py_DECREF(arr1);
@@ -271,7 +261,7 @@ nodal_sum_1(PyObject *dummy, PyObject *args)
 
 /* The methods defined in this module */
 static PyMethodDef Methods[] = {
-    {"fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
+    {"_fuse", coords_fuse, METH_VARARGS, "Fuse nodes."},
     {"nodalSum", nodal_sum, METH_VARARGS, "Nodal sum."},
     {NULL, NULL, 0, NULL}        /* Sentinel */
 };

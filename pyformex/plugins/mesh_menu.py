@@ -242,22 +242,35 @@ def convertMesh():
     if len(eltypes) == 1:
         fromtype = eltypes.pop()
         choices = ["%s -> %s" % (fromtype,to) for to in mesh.from_conversions[fromtype]]
-        res = askItems([\
-            ("Conversion Type",None,'vradio',{'choices':choices}),
-            ("Pattern",None,'hradio',{'choices':['u','d','x','r']}),
+        res = askItems([
+            ('_conversion',None,'vradio',{'text':'Conversion Type','choices':choices}),
+            ("_pattern",None,'hradio',{'choices':['u','d','x','r']}),
+            ('_merge',None,'hradio',{'text':"Merge Meshes",'choices':['None','Each','All']}),
             ])
         if res:
-            print "Selected conversion %s" % res["Conversion Type"]
-            converter = "convert_%s" % res["Conversion Type"].replace(' -> ','_')
+            globals().update(res)
+            print "Selected conversion %s" % _conversion
+            converter = "convert_%s" % _conversion.replace(' -> ','_')
             print  "Selected converter: %s" % converter
             converter_func = globals().get(converter,None)
             if converter_func is None:
                 warning("Sorry, I could not find the converter function!")
                 return
-            newnames = [ "%s_converted" % n for n in selection.names ]
-            newmeshes = [ converter_func(m,res['Pattern']) for m in meshes ]
-            export2(newnames,newmeshes)
-            selection.set(newnames)
+            names = [ "%s_converted" % n for n in selection.names ]
+            meshes = [ converter_func(m,_pattern) for m in meshes ]
+            if _merge == 'Each':
+                meshes = [ m.fuse() for m in meshes ]
+            elif  _merge == 'All':
+                print _merge
+                coords,elems = mergeMeshes(meshes)
+                print elems
+                ## names = [ "_merged_mesh_%s" % e.nplex() for e in elems ]
+                ## meshes = [ Mesh(coords,e,eltype=meshes[0].eltype) for e in elems ]
+                ## print meshes[0].elems
+                meshes = [ Mesh(coords,e,m.prop,m.eltype) for e,m in zip(elems,meshes) ]
+            export2(names,meshes)
+            selection.set(names)
+            clear()
             selection.draw()
     
 
@@ -303,13 +316,13 @@ def close_menu():
     if m :
         m.remove()
 
+
 def reload_menu():
     """Reload the menu."""
     close_menu()
     import mesh_menu
     reload(mesh_menu)
     show_menu()
-
 
 ####################################################################
 

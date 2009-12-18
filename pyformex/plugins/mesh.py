@@ -28,13 +28,15 @@ Definition of the Mesh class for describing discrete geometrical models.
 And some useful meshing functions to create such models.
 """
 
-from numpy import *
-from coords import *
+#from numpy import *
+#from coords import *
 from formex import *
-from connectivity import *
+from connectivity import Connectivity
 import elements
-from plugins.fe import mergeModels
 from utils import deprecation
+
+
+#################### This first section holds experimental stuff!! #####
 
 # This should probably go to formex or coords module
 
@@ -218,6 +220,7 @@ def convert_quad4_tri3(mesh,pattern='u'):
         elems = subElements(mesh.elems,conversions[pattern])
         #sel = conversions[pattern]
         #elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
+        nmult = 2
     elif pattern == 'x':
         newcoords = mesh.toFormex().centroids()
         print newcoords.shape
@@ -226,6 +229,7 @@ def convert_quad4_tri3(mesh,pattern='u'):
         newnodes = arange(len(newcoords)) + mesh.ncoords()
         newelems = [ column_stack([mesh.elems[:,i],mesh.elems[:,j],newnodes]) for i,j in [(0,1),(1,2),(2,3),(3,0)]]
         elems = column_stack(newelems).reshape(-1,3)
+        nmult = 4
     elif pattern == 'r':
         options = array([conversions['u'],conversions['d']]).reshape(-1,6)
         print options
@@ -236,15 +240,24 @@ def convert_quad4_tri3(mesh,pattern='u'):
         elems = mesh.elems[rsel,sel]
         print elems.shape
         elems = elems.reshape(-1,3)
+        nmult = 2
     print(elems.shape)
+    if mesh.prop is not None:
+        prop = column_stack([mesh.prop]*nmult)
+        print prop.shape
     return Mesh(coords,elems,eltype='tri3')
 
 
 def convert_quad4_quad8(mesh,*args,**kargs):
     from elements import Quad4
-    edges = subElements(mesh.elems,Quad4.edges)
-    print edges
-    return mesh
+    coords = mesh.coords
+    elems = mesh.elems
+    edges = subElements(elems,Quad4.edges)
+    newcoords = coords[edges].mean(axis=1).reshape(-1,3)
+    newnodes = arange(newcoords.shape[0]).reshape(elems.shape[0],4) + coords.shape[0]
+    coords = Coords.concatenate([coords,newcoords])
+    elems = concatenate([elems,newnodes],axis=1)
+    return Mesh(coords,elems,prop=mesh.prop,eltype='quad8')
 
 
 from collections import defaultdict
@@ -267,6 +280,7 @@ print "FOUND CONVERSIONS %s" % _conversions
 print "FROM CONVERSIONS %s" % from_conversions
 print "TO CONVERSIONS %s" % to_conversions
 
+##############################################################
 
 class Mesh(object):
     """A mesh is a discrete geometrical model defined by nodes and elements.
@@ -393,13 +407,27 @@ BBox: %s, %s
 Size: %s
 """ % (self.ncoords(),self.nelems(),self.nplex(),bb[1],bb[0],bb[1]-bb[0])
 
+
+    def fuse(self,**kargs):
+        """Fuse the nodes of a Meshes.
+
+        All nodes that are within the tolerance limits of each other
+        are merged into a single node.  
+
+        The merging operation can be tuned by specifying extra arguments
+        that will be passed to :meth:`Coords:fuse`.
+        """
+        coords,index = self.coords.fuse(**kargs)
+        return Mesh(coords,index[self.elems],self.prop,self.eltype)
+    
+
     def compact(self):
-        """Renumber the mesh and remove unconnected nodes."""
+        """Remove unconnected nodes and renumber the mesh."""
         nodes = unique1d(self.elems)
         if nodes[-1] >= nodes.size:
             coords = self.coords[nodes]
             elems = reverseUniqueIndex(nodes)[self.elems]
-            return Mesh(coords,elems,eltype=self.eltype)
+            return Mesh(coords,elems,prop=self.prop,eltype=self.eltype)
         else:
             return self
 
@@ -509,6 +537,48 @@ Size: %s
         elems = concatenate(elems,axis=0)
         return Mesh(coords,elems,eltype=eltype)
         
+
+
+########### Functions #####################
+
+
+def mergeNodes(nodes,**kargs):
+    """Merge all the nodes of a list of node sets.
+
+    Each item in nodes is a Coords array.
+    The return value is a tuple with:
+    
+    - the coordinates of all unique nodes,
+    - a list of indices translating the old node numbers to the new.
+
+    The merging operation can be tuned by specifying extra arguments
+    that will be passed to :meth:`Coords:fuse`.
+    """
+    coords = Coords(concatenate([x for x in nodes],axis=0))
+    coords,index = coords.fuse(**kargs)
+    n = array([0] + [ x.npoints() for x in nodes ]).cumsum()
+    ind = [ index[f:t] for f,t in zip(n[:-1],n[1:]) ]
+    return coords,ind
+
+
+def mergeMeshes(meshes,**kargs):
+    """Merge all the nodes of a list of Meshes.
+
+    Each item in meshes is a Mesh instance.
+    The return value is a tuple with:
+
+    - the coordinates of all unique nodes,
+    - a list of elems corresponding to the input list,
+      but with numbers referring to the new coordinates.
+
+    The merging operation can be tuned by specifying extra arguments
+    that will be passed to :meth:`Coords:fuse`.
+    """
+    coords = [ m.coords for m in meshes ]
+    elems = [ m.elems for m in meshes ]
+    coords,index = mergeNodes(coords,**kargs)
+    return coords,[Connectivity(i[e]) for i,e in zip(index,elems)]
+
 
 def connectMesh(mesh1,mesh2,n=1,n1=None,n2=None,eltype=None):
     """Connect two meshes to form a hypermesh.

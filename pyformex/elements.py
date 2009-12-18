@@ -29,11 +29,11 @@ pyFormex. When interfacing with other programs, one should be aware
 that conversions may be necessary. Conversions to/from external programs
 should be done by the interface modules.
 """
+from numpy import array
+from olist import collectOnLength
+from math import sqrt
 
-import math
-golden_ratio = 0.5 * (1.0 + math.sqrt(5))
-
-import olist
+golden_ratio = 0.5 * (1.0 + sqrt(5.))
 
 
 class Element(object):
@@ -73,7 +73,7 @@ class Element(object):
         return len(self.faces)
 
     def getFaces():
-        return olist.collectOnLength(self.faces)
+        return collectOnLength(self.faces)
 
 
 
@@ -94,15 +94,16 @@ class Tri3(Element):
 
 class Quad4(Element):
     """A 4-node quadrilateral"""
-    vertices = [ (  0.0,  0.0, 0.0 ),
-                 (  1.0,  0.0, 0.0 ),
-                 (  1.0,  1.0, 0.0 ),
-                 (  0.0,  1.0, 0.0 ),
-                 ]
+    vertices = array([
+        (  0.0,  0.0, 0.0 ),
+        (  1.0,  0.0, 0.0 ),
+        (  1.0,  1.0, 0.0 ),
+        (  0.0,  1.0, 0.0 ),
+        ])
 
-    edges = [ (0,1), (1,2), (2,3), (3,0) ]
+    edges = array([ (0,1), (1,2), (2,3), (3,0) ])
 
-    faces = [ (0,1,2,3), ]
+    faces = array([ (0,1,2,3), ])
 
     element = faces[0]
 

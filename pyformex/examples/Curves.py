@@ -71,7 +71,7 @@ TA = None
 
 
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spread):
+def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spread,drawtype):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -104,7 +104,7 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spr
         X = S.pointsAt(at)
         point_color = 'blue'
         msize = 5
-    
+
     PL = PolyLine(X,closed=closed)
 
     if spread:
@@ -146,6 +146,7 @@ data_items = [
     ['ExtendAtStart',0.0],
     ['ExtendAtEnd',0.0],
 #    ['FreeSpaced',[-0.1,0.0,0.1,0.25,1.5,2.75]],
+    ['DrawAs',None,'hradio',{'choices':['Curve','Polyline']}],
     ['Clear',True],
     ]
 globals().update([i[:2] for i in data_items])
@@ -187,7 +188,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,InterPoints,Nintervals,[ExtendAtStart,ExtendAtEnd],SpreadEqually)
+        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,InterPoints,Nintervals,[ExtendAtStart,ExtendAtEnd],SpreadEqually,DrawAs)
         setDrawOptions({'bbox':None})
 
 def showAll():

@@ -390,7 +390,6 @@ def interpolateNormals(coords,elems,atNodes=False,treshold=None):
     return normalize(n)
 
 
-
 def drawQuadraticCurves(x,color=None,n=8):
     """Draw a collection of curves.
 
@@ -420,16 +419,17 @@ def drawNurbsCurves(x,color=None):
     If color is given it is an (nlines,3) array of RGB values.
     """
     nurb = GLU.gluNewNurbsRenderer()
+    if not nurb:
+        raise RuntimeError,"Could not create a new NURBS renderer"
+        return
+    
     if x.shape[1] == 4:
         knots = array([0.,0.,0.,0.,1.0,1.0,1.0,1.0])
     if x.shape[1] == 3:
         knots = array([0.,0.,0.,1.0,1.0,1.0])
-    if not nurb:
-        return
     for i,xi in enumerate(x):
         if color is not None:
             GL.glColor3fv(color[i])
-        print x
         GLU.gluBeginCurve(nurb)
         GLU.gluNurbsCurve(nurb,knots,xi,GL.GL_MAP1_VERTEX_3)
         GLU.gluEndCurve(nurb)

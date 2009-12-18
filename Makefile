@@ -56,7 +56,7 @@ EXECUTABLE= ${PYFORMEXDIR}/pyformex ${PYFORMEXDIR}/sendmail.py ${BINDIR}/read_ab
 OTHERSTAMPABLE= setup.py Makefile\
 	${PYFORMEXDIR}/pyformexrc \
 	${EXAMPLEDATA} \
-	${LIBDIR}/Makefile \
+	${LIBDIR}/Makefile.in \
 	${addprefix ${DOCDIR}/, README ReleaseNotes}
 
 NONSTAMPABLE= ${DOC}/COPYING 
