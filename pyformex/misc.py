@@ -32,7 +32,7 @@ external functions in the compiled library.
 from pyformex.arraytools import *
 
 
-def _fuse(x,val,flag,sel,tol):
+def _fuse2(x,val,flag,sel,tol):
     """Fusing nodes.
 
     This is a low level function performing the internal loop of
@@ -48,6 +48,20 @@ def _fuse(x,val,flag,sel,tol):
         else:
             nexti += 1
         sel[i] = nexti
+
+
+def _fuse(x,val,flag,sel,tol):
+    nnod = val.shape[0]
+    for i in range(nnod):
+        j = i-1
+        while j>=0 and val[i]==val[j]:
+            if allclose(x[i],x[j],rtol=tol,atol=tol):
+                # node i is same as node j
+                flag[i] = 0
+                sel[i] = sel[j]
+                sel[i+1:nnod] -= 1
+                break
+            j = j-1
 
 
 def nodalSum(val,elems,work,avg):

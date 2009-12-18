@@ -322,14 +322,12 @@ def checkArrayOrIdValue(values):
     
     If ok, return the values as a list of (int,float) tuples.
     """
-    print("VALUES IN: %s" % values)
     try:
-        v = checkArray(values,6,'f','i')
+        v = checkArray(values,(6,),'f','i')
         w = where(v != 0.0)[0]
         values = [ (i,v[i]) for i in w ]
     except:
         values = checkIdValue(values)
-    print("VALUES OUT: %s" % values)
     return values
 
 
@@ -364,7 +362,6 @@ def Eset(*args):
 
 #############################################################
 ##################### Properties Database ###################
-
 
 
 def FindListItem(l,p):

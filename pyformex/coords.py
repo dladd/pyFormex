@@ -38,6 +38,7 @@ find good reason to use the :class:`Coords` class directly as well.
 """
 from arraytools import *
 from lib import misc
+from pyformex import options
 
 
 def bbox(objects):
@@ -1039,9 +1040,14 @@ class Coords(ndarray):
         val = val.astype(int32)
         tol = float32(max(abs(rtol*self.sizes()).max(),atol))
         nnod = val.shape[0]
-        sel = zeros(nnod,dtype=int32)      # replacement unique node nr
         flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
-        misc._fuse(x,val,flag,sel,tol)     # fuse the close points
+        if options.testfuse:
+            sel = zeros(nnod,dtype=int32)      # replacement unique node nr
+            misc._fuse2(x,val,flag,sel,tol)     # fuse the close points
+        else:
+            sel = arange(nnod).astype(int32)      # replacement unique node nr
+            misc._fuse(x,val,flag,sel,tol)     # fuse the close points
+
         x = x[flag>0]          # extract unique nodes
         s = sel[argsort(srt)]  # and indices for old nodes
         return (x,s.reshape(self.shape[:-1]))

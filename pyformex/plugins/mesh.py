@@ -31,7 +31,7 @@ And some useful meshing functions to create such models.
 #from numpy import *
 #from coords import *
 from formex import *
-from connectivity import Connectivity
+from connectivity import Connectivity,reverseUniqueIndex
 import elements
 from utils import deprecation
 
