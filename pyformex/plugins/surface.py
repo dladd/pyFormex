@@ -288,7 +288,7 @@ def curvature(coords,elems,edges,neighbours=1):
     # calculate normal curvature
     k = dotpr(vp,vn)/dotpr(vp,vp)
     # calculate maximum normal curvature and corresponding coordinate system
-    # where adj = -1, set curvature very low    
+    # where adj = -1, set curvature very low
     k[adj<0] = -10000.
     imax = k.argmax(-1)
     kmax =  k[range(len(k)),imax]
@@ -327,13 +327,13 @@ def curvature(coords,elems,edges,neighbours=1):
     theta0[w] = pi-theta0[w]
     e1 = cos(theta0)[:,newaxis]*e1+sin(theta0)[:,newaxis]*e2
     e2 = cos(theta0)[:,newaxis]*e2-sin(theta0)[:,newaxis]*e1
+    # calculate the shape index and curvedness
+    S = 2./pi*arctan((k1+k2)/(k1-k2))
+    C = square((k1**2+k2**2)/2)
     # for nodes that have only two adjacent nodes, (a11*a22-a12**2) = 0
     # the curvature of these nodes is zero
     plane = (adj>=0).sum(-1) <= 2
-    Kg[plane] = H[plane] = k1[plane] = k2[plane] = e1[plane] = e2[plane] = 0.
-    # calculate the shape index and curvedness
-    S = 2./pi*arctan((k1+k2)/(k1-k2))
-    C = square((k1**2+k2**2)/2)    
+    Kg[plane] = H[plane] = S[plane] = C[plane] = k1[plane] = k2[plane] = e1[plane] = e2[plane] = 0.
     return Kg,H,S,C,k1,k2,e1,e2
 
 
@@ -1414,7 +1414,8 @@ Total area: %s; Enclosed volume: %s
 
 
     def partitionByConnection(self):
-        return self.partitionByNodeFront()
+##        return self.partitionByNodeFront()
+        return self.partitionByEdgeFront(okedges=None)
 
 
     def partitionByAngle(self,angle=180.,firstprop=0,startat=0):
