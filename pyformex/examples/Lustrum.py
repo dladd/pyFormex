@@ -29,6 +29,7 @@ topics = ['curve','drawing','illustration']
 techniques = ['colors','persistence','curve','lima','import']
 
 """
+reset()
 from pyformex.examples.Lima import *
 from project import Project
 linewidth(2)
@@ -37,6 +38,10 @@ grow('Plant1',ngen=7,clearing=False,text=False)
 P = Project(os.path.join(GD.cfg['datadir'],'blippo-5.pyf'),create=False)
 P.load()
 curve = P['blippo-5']
+bb = curve.coords.bbox()
+ctr = bb.center()
+siz = bb.sizes()
+curve.coords = curve.coords.trl(0,-ctr[0]).scale(50./siz[0])
 draw(curve,color=pyformex_pink,linewidth=5)
 
 # End
