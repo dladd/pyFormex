@@ -592,11 +592,11 @@ class GeomActor(Actor):
             if mode=='wireframe' :
                 drawEdges(self.coords,self.elems,el.edges,color)    
             else:
-                ## faces = array(el.faces)
-                ## if self.eltype == 'quad8' or self.eltype == 'quad9':
-                ##     # Currently, draw linear quad
-                ##     faces = array(el.faces)[:,:4]
-                drawFaces(self.coords,self.elems,el.faces,mode,color,alpha)
+                faces = el.faces
+                if self.eltype == 'quad8' or self.eltype == 'quad9':
+                    # Currently, draw linear quad
+                    faces = array(el.faces)[:,:4]
+                drawFaces(self.coords,self.elems,faces,mode,color,alpha)
     
 
     def pickGL(self,mode):
