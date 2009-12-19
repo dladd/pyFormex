@@ -39,18 +39,28 @@ def _fuse2(x,val,flag,sel,tol):
     the fuse operation. It is not intended to be called by the user.
     """
     nnod = val.shape[0]
-    nexti = 0
+    nexti = 1
     for i in range(1,nnod):
         j = i-1
-        if val[i]==val[j] and abs(x[i]-x[j]).max() < tol:
-            # node i is same as previous node j
-            flag[i] = 0
-        else:
+        while j>=0 and val[i]==val[j]:
+            if abs(x[i]-x[j]).max() < tol:
+                # node i is same as previous node j
+                flag[i] = 0
+                sel[i] = sel[j]
+                break
+            j = j-1
+        if flag[i]:
+            # node i is a new node
+            sel[i] = nexti
             nexti += 1
-        sel[i] = nexti
 
 
 def _fuse(x,val,flag,sel,tol):
+    """Fusing nodes.
+
+    This is a low level function performing the internal loop of
+    the fuse operation. It is not intended to be called by the user.
+    """
     nnod = val.shape[0]
     for i in range(nnod):
         j = i-1

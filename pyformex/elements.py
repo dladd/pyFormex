@@ -72,7 +72,7 @@ class Element(object):
     def nfaces(self):
         return len(self.faces)
 
-    def getFaces():
+    def getFaces(self):
         return collectOnLength(self.faces)
 
 

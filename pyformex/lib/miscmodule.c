@@ -82,20 +82,25 @@ coords_fuse2(PyObject *dummy, PyObject *args)
   sel = (int *)PyArray_DATA(arr4);
   int i,j,ki,kj,nexti;
 
-  nexti = 0;
+  nexti = 1;
   for (i=1; i<nnod; i++) {
     j = i-1;
     ki = 3*i;
-    kj = 3*j;
-    if ( val[i]==val[j] &&
-	 fabs(x[ki]-x[kj]) < tol &&
-	 fabs(x[ki+1]-x[kj+1]) < tol &&
-	 fabs(x[ki+2]-x[kj+2]) < tol ) {
-      flag[i] = 0;
-    } else {
+    while (j >= 0 && val[i]==val[j]) {
+      kj = 3*j;
+      if ( fabs(x[ki]-x[kj]) < tol &&
+	   fabs(x[ki+1]-x[kj+1]) < tol &&
+	   fabs(x[ki+2]-x[kj+2]) < tol ) {
+	flag[i] = 0;
+	sel[i] = sel[j];
+	break;
+      }
+      --j;
+    }
+    if (flag[i]) {
+      sel[i] = nexti;
       ++nexti;
     }
-    sel[i] = nexti;
   }
   /* Clean up and return */
   Py_DECREF(arr1);
