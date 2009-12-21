@@ -242,6 +242,9 @@ def convertMesh():
     if len(eltypes) == 1:
         fromtype = eltypes.pop()
         choices = ["%s -> %s" % (fromtype,to) for to in mesh.from_conversions[fromtype]]
+        if len(choices) == 0:
+            warning("Sorry, can not convert a %s mesh"%fromtype)
+            return
         res = askItems([
             ('_conversion',None,'vradio',{'text':'Conversion Type','choices':choices}),
             ("_pattern",None,'hradio',{'choices':['u','d','x','r']}),

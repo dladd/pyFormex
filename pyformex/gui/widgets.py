@@ -778,6 +778,8 @@ class InputCombo(InputItem):
         An optional `onselect` function may be specified, which will be called
         whenever the current selection changes.
         """
+        if len(choices) == 0:
+            raise ValueError,"Selection expected choices!"
         if default is None:
             default = choices[0]
         elif default not in choices:

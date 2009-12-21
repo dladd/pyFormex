@@ -247,10 +247,11 @@ def drawFaces(x,e,faces,mode,color=None,alpha=1.0):
     sorted and collected according to their plexitude before drawing them. 
     """
     GD.debug("drawFaces")
-    GD.debug("Got faces: %s"% faces)
-    faces = list(faces)
-    GD.debug("Converted to faces: %s" % faces)
     # We may have faces with different plexitudes!
+    # We collect them according to plexitude.
+    # But first convert to a list, so that we can call this function
+    # with an array too (in case of a single plexitude)
+    faces = list(faces)
     for fac in olist.collectOnLength(faces).itervalues():
         fa = asarray(fac)
         nplex = fa.shape[1]

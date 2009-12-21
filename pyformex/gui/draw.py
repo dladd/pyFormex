@@ -1146,7 +1146,7 @@ def set_selection_filter(i):
         GD.canvas.start_selection(None,selection_filters[i])
 
     
-def pick(mode='actor',single=False,func=None,filtr=None):
+def pick(mode='actor',filtr=None,oneshot=False,func=None):
     """Enter interactive picking mode and return selection.
 
     See viewport.py for more details.
@@ -1177,7 +1177,7 @@ def pick(mode='actor',single=False,func=None,filtr=None):
     GD.GUI.statusbar.addWidget(pick_buttons)
     GD.GUI.statusbar.addWidget(filter_combo)
     try:
-        sel = GD.canvas.pick(mode,single,func,filtr)
+        sel = GD.canvas.pick(mode,oneshot,func,filtr)
     finally:
         # cleanup
         if GD.canvas.selection_mode is not None:
@@ -1187,17 +1187,17 @@ def pick(mode='actor',single=False,func=None,filtr=None):
     return sel
  
     
-def pickActors(single=False,func=None,filtr=None):
-    return pick('actor',single,func,filtr)
+def pickActors(filtr=None,oneshot=False,func=None):
+    return pick('actor',filtr,oneshot,func)
 
-def pickElements(single=False,func=None,filtr=None):
-    return pick('element',single,func,filtr)
+def pickElements(filtr=None,oneshot=False,func=None):
+    return pick('element',filtr,oneshot,func)
 
-def pickPoints(single=False,func=None,filtr=None):
-    return pick('point',single,func,filtr)
+def pickPoints(filtr=None,oneshot=False,func=None):
+    return pick('point',filtr,oneshot,func)
 
-def pickEdges(single=False,func=None,filtr=None):
-    return pick('edge',single,func,filtr)
+def pickEdges(filtr=None,oneshot=False,func=None):
+    return pick('edge',filtr,oneshot,func)
 
 
 def highlight(K,mode):

@@ -1041,12 +1041,13 @@ class Coords(ndarray):
         tol = float32(max(abs(rtol*self.sizes()).max(),atol))
         nnod = val.shape[0]
         flag = ones((nnod,),dtype=int32)   # 1 = new, 0 = existing node
-        if options.testfuse:
+        if options.oldfuse:
             sel = zeros(nnod,dtype=int32)      # replacement unique node nr
-            misc._fuse2(x,val,flag,sel,tol)     # fuse the close points
-        else:
-            sel = arange(nnod).astype(int32)      # replacement unique node nr
             misc._fuse(x,val,flag,sel,tol)     # fuse the close points
+        else:
+            # new fusing algorithm
+            sel = arange(nnod).astype(int32)      # replacement unique node nr
+            misc._fuse2(x,val,flag,sel,tol)     # fuse the close points
 
         x = x[flag>0]          # extract unique nodes
         s = sel[argsort(srt)]  # and indices for old nodes

@@ -533,11 +533,10 @@ Size: %s
         else:
             eltype = None
 
-        coords,elems = mergeModels([(m.coords,m.elems) for m in ML],**kargs)
+        coords,elems = mergeMeshes(ML,**kargs)
         elems = concatenate(elems,axis=0)
         return Mesh(coords,elems,eltype=eltype)
         
-
 
 ########### Functions #####################
 
