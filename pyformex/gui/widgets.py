@@ -1228,8 +1228,11 @@ class InputDialog(QtGui.QDialog):
         """Create a dialog asking the user for the value of items.
 
         `items` is either a list of items, or a dict where each value is a
-        list of items. If `items` is a dict, a tabbed widget will be created
-        with a tab for each (key,value) pair in the dict.
+        list of items or another dict (where each value is then a list of items).
+        If `items` is a dict, a tabbed widget will be created
+        with a tab for each (key,value) pair in the dict. If the value is
+        again a dict, then a box will be created for each (key,value) pair in
+        that subdict.
 
         Each item in an `items` list is a list or tuple of the form
         (name,value,type,options), where the fields have the following meaning:
@@ -1317,14 +1320,27 @@ class InputDialog(QtGui.QDialog):
         if isinstance(items,dict):
             # add the input tab pages
             tab = QtGui.QTabWidget()
-            for page in items:
+            for page in items.keys():
                 w = QtGui.QWidget()
                 f = QtGui.QVBoxLayout()
-                # add the items to the tab page
-                for item in items[page]:
-                    line = inputAnyOld(item,parent=self)
-                    f.addLayout(line)
-                    self.fields.append(line)
+                if isinstance(items[page],dict):
+                    for box in items[page].keys():
+                        f1 = QtGui.QVBoxLayout()
+                        g = QtGui.QGroupBox()
+                        g.setTitle(box)
+                        g.setLayout(f1)
+                        f.addWidget(g)
+                        # add the items to the tab page
+                        for item in items[page][box]:
+                            line = inputAnyOld(item,parent=self)
+                            f1.addLayout(line)
+                            self.fields.append(line)
+                else:
+                    # add the items to the tab page
+                    for item in items[page]:
+                        line = inputAnyOld(item,parent=self)
+                        f.addLayout(line)
+                        self.fields.append(line)
                 f.addStretch()
                 w.setLayout(f)
                 tab.addTab(w,page)

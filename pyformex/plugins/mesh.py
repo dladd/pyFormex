@@ -287,7 +287,7 @@ class Mesh(object):
 
     In the Mesh geometrical data model, coordinates of all points are gathered
     in a single twodimensional array 'coords' with shape (ncoords,3) and the
-    individual geometrical elements are described by indices into the 'coords'
+    individual geometrical elements are described by indices into the 'elems'
     array.
     This model has some advantages over the Formex data model, where all
     points of all element are stored by their coordinates:
