@@ -25,26 +25,19 @@
   
 
 
-pyFormex 0.8.1  Releasenotes
+pyFormex 0.8.2  Releasenotes
 ============================
 
-This is a collection of the most prominent changes in pyFormex 0.8
-compared to the previous release 0.8
+This is a collection of the most prominent changes in pyFormex 0.8.2
+compared to the previous release 0.8.1
 
 
 Documentation
 -------------
-The most notable change is the new documentation system, Sphinx, used
-to create and manage the documentation. The old manual has been
-removed from the distribution and the svn repositories, in favor of
-the new docs. There will be a global cleanup and expansion of the docs
-before the next release.
- 
+
 
 Installation
 ------------
-The installation procedure will install the new (sphinx) docs in the
-pyFormex install tree.
 
 
 Command line
@@ -57,34 +50,21 @@ Configuration
 
 Core
 ----
-- Coords: new transformations 'hyperCylindrical' and 'flare'
-- class method 'fromstring' to read 'Coords' or 'Formex' from a string
+- The coords.fuse algorithm has been tuned for large data structures,
+  resulting in a spectacular speedup of both the compiled and Python
+  implementations.
 
 
 Gui
 ---
-- Uniform timeout for InputDialog, MessageBox, TextBox
-- Added ReStructuredText format to MessageBox and TextBox
-- Background color(s) can be set from the Viewport Menu
-- The viewport menu has an item to set the Near and Far clipping planes 
+- Input Dialogs now have the possiblity to group the data on a single
+  tab in group boxes.
+
 
 
 Drawing
 -------
-- The imagearray module allows conversion between bitmap images and
-  numpy arrays
-- The imagecolor module allows bitmap images to be used as a color
-  array
-- The drawing routines for Formex and Mesh type geometry have been unified
-- All geometry Actors now support picking of actors, elements, edges, points 
-- The Canvas can have a background with a vertical color gradient.
-- The current viewport is visualized by a colored frame
-- The ColorScale has two new color palets, which provide much better
-  coloring: RAINBOW and IRAINBOW. Thanks to Tomas Praet for signaling
-  this. RAINBOW is now the default.
-- Drawing 2D text has been reverted to the GLUT text fonts. Better
-  font selection and alignment using gravity have been aded.
- 
+
 
 Scripting
 ---------
@@ -92,31 +72,10 @@ Scripting
 
 Plugins
 -------
-- fe_abq: The Abaqus .inp format exporter has many new features. 
-- formian: The Formian compatibilitye functions have been removed from
-  the core formex module and placed in a separate plugin.
-- inertia: principal() allows sorting tha axes and forcing right hand
-  side axes system
-- jobs_menu: An illustrative plugin menu for sending computational jobs
-  to a remote server and collect the results for postprocessing.
-- surface: New method `curvature` to compute the surface curvature. 
+
 
 Examples
 --------
-The data files for the examples have been moved to the pyformex/data directory.
-The following new examples have been added:
 
-- CircumCircle
-- ColorImage
-- ColorScale
-- Flare
-- Grid
-- Helix
-- Lustrum
-- OpticalIllusions
-- Sweep
-- TestDraw
-- TextGravity
-- Widgets
-- World
 
+.. End

@@ -28,6 +28,10 @@
 import olist
 
 
+def __newobj__(cls, *args):
+    return cls.__new__(cls, *args)
+
+
 class ODict(dict):
     """**An ordered dictionary.**
 
@@ -41,13 +45,18 @@ class ODict(dict):
     """
     def __init__(self,data={}):
         """Create a new ODict instance."""
+        self._order = []
         if type(data) is list or type(data) is tuple:
+            # preserve the order
             dict.__init__(self,data)
-            self._order = [ i[0] for i in data ]
+            [ self._order.append(i[0]) for i in data if not i[0] in self._order ]
         else:
             dict.__init__(self,{})
-            self._order = []
             self.update(data)
+
+
+    def __iter__(self):
+        return list.__iter__(self._order)
 
 
     def __repr__(self):
@@ -144,9 +153,6 @@ class ODict(dict):
             self.update(state)
 
 
-def __newobj__(cls, *args):
-    return cls.__new__(cls, *args)
-
 
 class KeyedList(ODict):
     """A named item list.
@@ -179,10 +185,12 @@ class KeyedList(ODict):
 
 if __name__ == "__main__":
 
-    d = ODict({'a':1,'b':2,'c':3})
+    d = ODict({'a':1,'b':2,'c':3,'a':3})
     print(d)
     d.sort(['a','b','c'])
     print(d)
+    d = ODict([('a',1),('b',2),('c',3),('a',3)])
+    print d
     d['d'] = 4
     d['e'] = 5
     d['f'] = 6
