@@ -1414,8 +1414,7 @@ Total area: %s; Enclosed volume: %s
 
 
     def partitionByConnection(self):
-##        return self.partitionByNodeFront()
-        return self.partitionByEdgeFront(okedges=None)
+        return self.partitionByNodeFront()
 
 
     def partitionByAngle(self,angle=180.,firstprop=0,startat=0):
