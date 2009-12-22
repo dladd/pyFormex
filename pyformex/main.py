@@ -26,9 +26,28 @@
 import sys,os
 pyformexdir = sys.path[0]
 svnversion = os.path.exists(os.path.join(pyformexdir,'.svn'))
+startup_warnings = ''
+
+if svnversion:
+    libdir = os.path.join(pyformexdir,'lib')
+    libraries = [ 'miscmodule','drawglmodule' ]
+    for lib in libraries:
+        src = os.path.join(libdir,lib+'.c')
+        obj = os.path.join(libdir,lib+'.so')
+        if not os.path.exists(obj) or os.path.getmtime(obj) < os.path.getmtime(src):
+            startup_warnings += "\nThe compiled library '%s' is not up to date!" % lib
+    if startup_warnings:
+        startup_warnings += """
+        
+You should probably rebuild the pyFormex library first.
+
+Do 'make lib' in %s
+""" % pyformexdir
 
 import pyformex
+#print dir(pyformex)
 from pyformex import *
+
 
 import warnings
 warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
@@ -342,13 +361,6 @@ def run(argv=[]):
     # Set Revision if we run from an SVN version
     if svnversion:
         setRevision()
-
-    pyformex.debug(utils.reportDetected())
-
-    #print("pyformex",utils.subDict(pyformex.cfg,'canvas/'))
-    #print("DEFAULT",self.default)
-    #print(pyformex.cfg.keys())
-    #print(pyformex.refcfg.keys())
     
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
@@ -356,6 +368,16 @@ def run(argv=[]):
         pyformex.debug("GUI version")
         from gui import gui
         gui.startGUI(args)
+
+    # Display the startup warnings
+    if startup_warnings:
+        pyformex.warning(startup_warnings)
+
+    pyformex.debug(utils.reportDetected())
+ 
+    #print(pyformex.cfg.keys())
+    #print(pyformex.refcfg.keys())
+      
     #
     # Qt4 may have changed the locale.
     # Since a LC_NUMERIC setting other than C may cause lots of troubles

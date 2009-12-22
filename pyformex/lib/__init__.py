@@ -22,41 +22,42 @@ accelerated = []
 required_drawgl_version = 1
 
     
-import pyformex as GD
+from pyformex import options,debug
+
 
 accelerate = gui = False
-if GD.options:
+if options:
     # testing for not False makes other values than T/F (like None) pass
-    accelerate = GD.options.uselib is not False
-    gui = GD.options.gui
+    accelerate = options.uselib is not False
+    gui = options.gui
 
 if accelerate:
 
     try:
         import misc
-        GD.debug("Succesfully loaded the pyFormex compiled misc library")
+        debug("Succesfully loaded the pyFormex compiled misc library")
         accelerated.append(misc)
     except ImportError:
-        GD.debug("Error while loading the pyFormex compiled misc library")
+        debug("Error while loading the pyFormex compiled misc library")
 
     if gui: 
         try:
             import drawgl
-            GD.debug("Succesfully loaded the pyFormex compiled draw library")
+            debug("Succesfully loaded the pyFormex compiled draw library")
             drawgl_version = drawgl.get_version()
-            GD.debug("Drawing library version %s" % drawgl_version)
+            debug("Drawing library version %s" % drawgl_version)
             if not drawgl_version == required_drawgl_version:
                 raise RuntimeError,"Incorrect acceleration library version (have %s, required %s)\nIf you are running pyFormex directly from sources, this might mean you have to run 'make lib' in the top directory of your pyFormex source tree.\nElse, this probably means pyFormex was not correctly installed."
             accelerated.append(drawgl)
         except ImportError:
-            GD.debug("Error while loading the pyFormex compiled draw library")
+            debug("Error while loading the pyFormex compiled draw library")
 
 if misc is None:
-    GD.debug("Using the (slower) Python misc functions")
+    debug("Using the (slower) Python misc functions")
     import pyformex.misc as misc
 
 if gui and drawgl is None:
-    GD.debug("Using the (slower) Python draw functions")
+    debug("Using the (slower) Python draw functions")
     import pyformex.gui.drawgl as drawgl
 
 

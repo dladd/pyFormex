@@ -276,9 +276,9 @@ for k in globals().keys():
         from_conversions[c[0]].append(c[1])
         to_conversions[c[1]].append(c[0])
 
-print "FOUND CONVERSIONS %s" % _conversions
-print "FROM CONVERSIONS %s" % from_conversions
-print "TO CONVERSIONS %s" % to_conversions
+#print "FOUND CONVERSIONS %s" % _conversions
+#print "FROM CONVERSIONS %s" % from_conversions
+#print "TO CONVERSIONS %s" % to_conversions
 
 ##############################################################
 
