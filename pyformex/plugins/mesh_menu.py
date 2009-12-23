@@ -241,7 +241,7 @@ def convertMesh():
         return
     if len(eltypes) == 1:
         fromtype = eltypes.pop()
-        choices = ["%s -> %s" % (fromtype,to) for to in mesh.from_conversions[fromtype]]
+        choices = ["%s -> %s" % (fromtype,to) for to in mesh._conversions_.get(fromtype,{}).keys()]
         if len(choices) == 0:
             warning("Sorry, can not convert a %s mesh"%fromtype)
             return
@@ -253,14 +253,9 @@ def convertMesh():
         if res:
             globals().update(res)
             print "Selected conversion %s" % _conversion
-            converter = "convert_%s" % _conversion.replace(' -> ','_')
-            print  "Selected converter: %s" % converter
-            converter_func = globals().get(converter,None)
-            if converter_func is None:
-                warning("Sorry, I could not find the converter function!")
-                return
+            totype = _conversion.split()[-1]
             names = [ "%s_converted" % n for n in selection.names ]
-            meshes = [ converter_func(m,_pattern) for m in meshes ]
+            meshes = [ mesh.convertMesh(m,totype) for m in meshes ]
             if _merge == 'Each':
                 meshes = [ m.fuse() for m in meshes ]
             elif  _merge == 'All':

@@ -34,6 +34,7 @@ from formex import *
 from connectivity import Connectivity,reverseUniqueIndex
 import elements
 from utils import deprecation
+#from collections import defaultdict
 
 
 #################### This first section holds experimental stuff!! #####
@@ -194,91 +195,164 @@ def defaultEltype(nplex):
     return _default_eltype.get(nplex,None)
 
 
-def subElements(elems,nodsel):
+########################################################################
+## Mesh conversions ##
+######################
+
+_conversions_ = {
+    'quad4': {
+        'tri3'   : 'tri3-u',
+        'tri3-r' : ['tri3-u','tri3-d'],
+        'tri3-u' : [ ('s', [ (0,1,2), (2,3,0) ]), ],
+        'tri3-d' : [ ('s', [ (0,1,3), (2,3,1) ]), ],
+        'tri3-x' : [ ('m', [ (0,1,2,3) ]),
+                     ('s', [ (0,1,4),(1,2,4),(2,3,4),(3,0,4) ]),
+                     ],
+        'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]), ],
+        'quad9'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]),
+                     ('m', [ (4,5,6,7) ]),
+                     ],
+        },
+    'quad8': {
+        'quad9'  : [ ('m', [ (4,5,6,7) ]), ],
+        },
+    'quad9': {
+        'quad8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
+        'quad4'  : [ ('s', [ (0,1,2,3) ]), ],
+        'tri3-d' : [ ('s', [ (0,4,7),(4,1,5),(5,2,6),(6,3,7),
+                      (7,4,8),(4,5,8),(5,6,8),(6,7,8) ]), ],
+        'tri3-x' : [ ('s', [ (0,4,8),(4,1,8),(1,5,8),(5,2,8),
+                      (2,6,8),(6,3,8),(3,7,8),(7,0,8) ]), ],
+        },
+    }
+
+
+def subElems(elems,nodsel):
     """Create elements from the nodes of an existing mesh.
 
     elems is an existing mesh connectivity
     nodsel is a list of local node tuples, all having the same length.
     """
-    print nodsel
     plex = array([ len(n) for n in nodsel ])
     nplex = plex.max()
     if not nplex == plex.min():
         raise ValueError,"Invalid node selector"
     return elems[:,nodsel].reshape(-1,nplex)
+
+
+def meanNodes(coords,elems,nodsel):
+    """Create nodes from the existing nodes of a mesh."""
+    elems = subElems(elems,nodsel)
+    newcoords = coords[elems].mean(axis=1)
+    return newcoords
+
+
+def addNodes(coords,elems,newcoords):
+    """Add new nodes to elements by averaging existing ones."""
+    newnodes = arange(newcoords.shape[0]).reshape(elems.shape[0],-1) + coords.shape[0]
+    elems = concatenate([elems,newnodes],axis=-1)
+    coords = Coords.concatenate([coords,newcoords])
+    return coords,elems
+                         
+
+def convertRandom(m,choices):
+    """Convert choosing randomly between choices"""
+    ml = randomSplit(m,len(choices))
+    ml = [ convertMesh(m,c) for m,c in zip(ml,choices) ]
+    prop = m.prop
+    if prop:
+        prop = concatenate([m.prop for m in ml])
+    elems = concatenate([m.elems for m in ml],axis=0)
+    eltype = set([m.eltype for m in ml])
+    if len(eltype) > 1:
+        raise RuntimeError,"Invalid choices for random conversions"
+    eltype = eltype.pop()
+    return Mesh(m.coords,elems,prop,eltype)
     
 
-def convert_quad4_tri3(mesh,pattern='u'):
-    conversions = {
-        'u' : [ (0,1,2), (2,3,0) ],
-        'd' : [ (0,1,3), (2,3,1) ],
-        }
-    print "This is the quad4 to tri3 conversion with pattern %s" % pattern
-    print mesh.elems.shape
-    coords = mesh.coords
-    if pattern in 'ud':
-        elems = subElements(mesh.elems,conversions[pattern])
-        #sel = conversions[pattern]
-        #elems = mesh.elems[:,sel].reshape(-1,len(sel[0]))
-        nmult = 2
-    elif pattern == 'x':
-        newcoords = mesh.toFormex().centroids()
-        print newcoords.shape
-        coords = Coords.concatenate([mesh.coords,newcoords])
-        print coords.shape
-        newnodes = arange(len(newcoords)) + mesh.ncoords()
-        newelems = [ column_stack([mesh.elems[:,i],mesh.elems[:,j],newnodes]) for i,j in [(0,1),(1,2),(2,3),(3,0)]]
-        elems = column_stack(newelems).reshape(-1,3)
-        nmult = 4
-    elif pattern == 'r':
-        options = array([conversions['u'],conversions['d']]).reshape(-1,6)
-        print options
-        print options.shape
-        sel = options[random.randint(0,2,(mesh.nelems()))]
-        print sel.shape
-        rsel = column_stack([arange(mesh.nelems())]*6)
-        elems = mesh.elems[rsel,sel]
-        print elems.shape
-        elems = elems.reshape(-1,3)
-        nmult = 2
-    print(elems.shape)
-    if mesh.prop is not None:
-        prop = column_stack([mesh.prop]*nmult)
-        print prop.shape
-    return Mesh(coords,elems,eltype='tri3')
+def convertMesh(m,totype):
+    fromtype = m.eltype
+    print "Converting '%s' mesh to '%s'" % (fromtype,totype)
+
+    strategy = _conversions_[fromtype].get(totype,None)
+
+    while not type(strategy) is list:
+        # This allows for aliases in the conversion database
+        strategy = _conversions_[fromtype].get(strategy,None)
+        if strategy is None:
+            raise ValueError,"Don't know how to %s -> %s" % (fromtype,totype)
+
+    if type(strategy[0]) is str:
+        # A list of conversions that should be applied randomly
+        return convertRandom(m,strategy)
+
+    # Execute a strategy
+    print "Strategy: %s" % strategy
+    coords,elems,prop = m.coords,m.elems,m.prop
+    for step in strategy:
+        print step
+        steptype,stepdata = step
+        
+        if steptype == 's':
+            sel = stepdata
+            nmult = len(sel[0])
+            elems = subElems(elems,sel)
+
+        elif steptype == 'm':
+            newcoords = meanNodes(coords,elems,stepdata)
+            coords,elems = addNodes(coords,elems,newcoords)
+            nmult = 1
+
+    if prop is not None:
+        prop = column_stack([prop]*nmult)
+        print "PROPSHAPE",prop.shape
+    return Mesh(coords,elems,prop=prop,eltype=totype.split('-')[0])
+    
+
+def drawMesh(m):
+    clear()
+    draw(m,color='yellow')
+    drawNumbers(m,color=blue)
+    draw(m.coords)
+    drawNumbers(m.coords,color=red)
 
 
-def convert_quad4_quad8(mesh,*args,**kargs):
-    from elements import Quad4
-    coords = mesh.coords
-    elems = mesh.elems
-    edges = subElements(elems,Quad4.edges)
-    newcoords = coords[edges].mean(axis=1).reshape(-1,3)
-    newnodes = arange(newcoords.shape[0]).reshape(elems.shape[0],4) + coords.shape[0]
-    coords = Coords.concatenate([coords,newcoords])
-    elems = concatenate([elems,newnodes],axis=1)
-    return Mesh(coords,elems,prop=mesh.prop,eltype='quad8')
+def subMesh(m,selected):
+    """Return a mesh holding the selected elements.
+
+    The coords are not compacted
+    """
+    prop = m.prop
+    if prop:
+        prop = prop[selected]
+    #print m.coords
+    #print m.elems[selected]
+    #print prop
+    #print m.eltype
+    elems = m.elems[selected]
+    return Mesh(m.coords,elems,prop,m.eltype)
 
 
-from collections import defaultdict
+def randomSplit(self,n):
+    """Split a mesh in n parts, distributing the elements randomly."""
+    sel = random.randint(0,n,(self.nelems()))
+    return [ subMesh(self,sel==i) for i in range(n) if i in sel ]
+    
 
-import re
-_conversion_re = re.compile("convert_([a-z][a-z0-9]*)_([a-z][a-z0-9]*)$")
-_conversions = []
-from_conversions = defaultdict(list)
-to_conversions = defaultdict(list)
 
-for k in globals().keys():
-    m = _conversion_re.match(k)
-    if m:
-        c = m.groups()
-        _conversions.append(c)
-        from_conversions[c[0]].append(c[1])
-        to_conversions[c[1]].append(c[0])
+## import re
+## _conversion_re = re.compile("convert_([a-z][a-z0-9]*)_([a-z][a-z0-9]*)$")
+## _conversions = []
+## from_conversions = defaultdict(list)
+## to_conversions = defaultdict(list)
 
-#print "FOUND CONVERSIONS %s" % _conversions
-#print "FROM CONVERSIONS %s" % from_conversions
-#print "TO CONVERSIONS %s" % to_conversions
+## for k in globals().keys():
+##     m = _conversion_re.match(k)
+##     if m:
+##         c = m.groups()
+##         _conversions.append(c)
+##         from_conversions[c[0]].append(c[1])
+##         to_conversions[c[1]].append(c[0])
 
 ##############################################################
 
