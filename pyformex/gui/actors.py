@@ -592,10 +592,10 @@ class GeomActor(Actor):
             if mode=='wireframe' :
                 drawEdges(self.coords,self.elems,el.edges,color)    
             else:
-                faces = el.faces
-                if self.eltype == 'quad8' or self.eltype == 'quad9':
-                    # Currently, draw linear quad
-                    faces = array(el.faces)[:,:4]
+                if hasattr(el,'drawfaces'):
+                    faces = el.drawfaces
+                else:
+                    faces = el.faces
                 drawFaces(self.coords,self.elems,faces,mode,color,alpha)
     
 

@@ -33,7 +33,7 @@ from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.surface import *
 from plugins.objects import *
-from plugins import plot2d,formex_menu,surface_abq
+from plugins import plot2d,formex_menu,mesh_menu,surface_abq
 import simple
 from plugins.tools import Plane
 from pyformex.arraytools import niceLogSize
@@ -228,6 +228,62 @@ def fromFormex(suffix=''):
     selection.set(surfaces.keys())
 
 
+def toMesh(suffix=''):
+    """Transform the selection to Meshes.
+
+    If a suffix is given, the Meshes are stored with names equal to the
+    surface names plus the suffix, else, the surface names will be used
+    (and the surfaces will thus be cleared from memory).
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    newnames = selection.names
+    if suffix:
+        newnames = [ n + suffix for n in newnames ]
+
+    newvalues = [ named(n).toMesh() for n in newnames ]
+    export2(newnames,newvalues)
+
+    if not suffix:
+        selection.clear()
+    mesh_menu.selection.set(newnames)
+    clear()
+    mesh_menu.selection.draw()
+    
+
+def fromMesh(suffix=''):
+    """Transform the Mesh selection to TriSurfaces.
+
+    If a suffix is given, the TriSurfaces are stored with names equal to the
+    Mesh names plus the suffix, else, the Mesh names will be used
+    (and the Meshes will thus be cleared from memory).
+    """
+    if not mesh_menu.selection.check():
+        mesh_menu.selection.ask()
+
+    if not mesh_menu.selection.names:
+        return
+
+    names = mesh_menu.selection.names
+    meshes = [ named(n) for n in names ]
+    if suffix:
+        names = [ n + suffix for n in names ]
+
+    t = timer.Timer()
+    surfaces =  dict([ (n,TriSurface(M)) for n,M in zip(names,meshes) if M.eltype == 'tri3'])
+    print("Converted in %s seconds" % t.seconds())
+    print(surfaces.keys())
+    export(surfaces)
+
+    if not suffix:
+        mesh_menu.selection.clear()
+    selection.set(surfaces.keys())
+
+
 def toggle_shrink():
     """Toggle the shrink mode"""
     if selection.shrink is None:
@@ -405,7 +461,7 @@ def showSurfaceValue(S,txt,val,onEdges):
     else:
         dec = 2
     # create a colorscale and draw the colorlegend
-    CS = ColorScale([colors.blue,colors.yellow,colors.red],mi,ma,0.5*(mi+ma),1.)
+    CS = ColorScale('RAINBOW',mi,ma,0.5*(mi+ma),1.)
     cval = array(map(CS.color,ravel(val)))
     cval = cval.reshape(append(val.shape,cval.shape[-1]))
     clear()
@@ -854,19 +910,7 @@ def flytru_stl():
     flyAlong(path)
     
 
-def export_stl():
-    """Export an stl model stored in Formex F in Abaqus .inp format."""
-    global project,F
-    if ack("Creating nodes and elements.\nFor a large model, this could take quite some time!"):
-        GD.app.processEvents()
-        GD.message("Creating nodes and elements.")
-        nodes,elems = F.feModel()
-        nnodes = nodes.shape[0]
-        nelems = elems.shape[0]
-        GD.message("There are %d unique nodes and %d triangle elements in the model." % (nnodes,nelems))
-        stl_abq.abq_export(project+'.inp',nodes,elems,'S3',"Created by stl_examples.py")
-
-def export_surface():       
+def export_surface():
     S = selection.check(single=True)
     if S:
         types = [ "Abaqus INP files (*.inp)" ]
@@ -1167,7 +1211,9 @@ def create_menu():
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
         ("&Convert to Formex",toFormex),
+        ("&Convert to Mesh",toMesh),
         ("&Convert from Formex",fromFormex),
+        ("&Convert from Mesh",fromMesh),
         ("&Write Surface Model",write_surface),
         ("---",None),
         ("&Create surface",

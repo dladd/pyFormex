@@ -200,6 +200,16 @@ def defaultEltype(nplex):
 ######################
 
 _conversions_ = {
+    'tri3': {
+        'tri6'   : [ ('m', [ (0,1), (1,2), (2,0) ]), ],
+        'quad4'  : [ ('m', [ (0,1), (1,2), (2,0), ]),
+                     ('m', [ (0,1,2), ]),
+                     ('s', [ (0,3,6,5),(1,4,6,3),(2,5,6,4) ]),
+                     ],
+        },
+    'tri6': {
+        'tri3'   : [ ('s', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]), ],
+        },
     'quad4': {
         'tri3'   : 'tri3-u',
         'tri3-r' : ['tri3-u','tri3-d'],
@@ -219,6 +229,7 @@ _conversions_ = {
     'quad9': {
         'quad8'  : [ ('s', [ (0,1,2,3,4,5,6,7) ]), ],
         'quad4'  : [ ('s', [ (0,1,2,3) ]), ],
+        'quad4-4': [ ('s', [ (0,4,8,7),(4,1,5,8),(7,8,6,3),(8,5,2,6) ]), ],
         'tri3-d' : [ ('s', [ (0,4,7),(4,1,5),(5,2,6),(6,3,7),
                       (7,4,8),(4,5,8),(5,6,8),(6,7,8) ]), ],
         'tri3-x' : [ ('s', [ (0,4,8),(4,1,8),(1,5,8),(5,2,8),
@@ -227,22 +238,9 @@ _conversions_ = {
     }
 
 
-def subElems(elems,nodsel):
-    """Create elements from the nodes of an existing mesh.
-
-    elems is an existing mesh connectivity
-    nodsel is a list of local node tuples, all having the same length.
-    """
-    plex = array([ len(n) for n in nodsel ])
-    nplex = plex.max()
-    if not nplex == plex.min():
-        raise ValueError,"Invalid node selector"
-    return elems[:,nodsel].reshape(-1,nplex)
-
-
 def meanNodes(coords,elems,nodsel):
     """Create nodes from the existing nodes of a mesh."""
-    elems = subElems(elems,nodsel)
+    elems = elems.selectNodes(nodsel)
     newcoords = coords[elems].mean(axis=1)
     return newcoords
 
@@ -250,7 +248,7 @@ def meanNodes(coords,elems,nodsel):
 def addNodes(coords,elems,newcoords):
     """Add new nodes to elements by averaging existing ones."""
     newnodes = arange(newcoords.shape[0]).reshape(elems.shape[0],-1) + coords.shape[0]
-    elems = concatenate([elems,newnodes],axis=-1)
+    elems = Connectivity(concatenate([elems,newnodes],axis=-1))
     coords = Coords.concatenate([coords,newcoords])
     return coords,elems
                          
@@ -269,44 +267,6 @@ def convertRandom(m,choices):
     eltype = eltype.pop()
     return Mesh(m.coords,elems,prop,eltype)
     
-
-def convertMesh(m,totype):
-    fromtype = m.eltype
-    print "Converting '%s' mesh to '%s'" % (fromtype,totype)
-
-    strategy = _conversions_[fromtype].get(totype,None)
-
-    while not type(strategy) is list:
-        # This allows for aliases in the conversion database
-        strategy = _conversions_[fromtype].get(strategy,None)
-        if strategy is None:
-            raise ValueError,"Don't know how to %s -> %s" % (fromtype,totype)
-
-    if type(strategy[0]) is str:
-        # A list of conversions that should be applied randomly
-        return convertRandom(m,strategy)
-
-    # Execute a strategy
-    print "Strategy: %s" % strategy
-    coords,elems,prop = m.coords,m.elems,m.prop
-    for step in strategy:
-        print step
-        steptype,stepdata = step
-        
-        if steptype == 's':
-            sel = stepdata
-            nmult = len(sel[0])
-            elems = subElems(elems,sel)
-
-        elif steptype == 'm':
-            newcoords = meanNodes(coords,elems,stepdata)
-            coords,elems = addNodes(coords,elems,newcoords)
-            nmult = 1
-
-    if prop is not None:
-        prop = column_stack([prop]*nmult)
-        print "PROPSHAPE",prop.shape
-    return Mesh(coords,elems,prop=prop,eltype=totype.split('-')[0])
     
 
 def drawMesh(m):
@@ -316,43 +276,7 @@ def drawMesh(m):
     draw(m.coords)
     drawNumbers(m.coords,color=red)
 
-
-def subMesh(m,selected):
-    """Return a mesh holding the selected elements.
-
-    The coords are not compacted
-    """
-    prop = m.prop
-    if prop:
-        prop = prop[selected]
-    #print m.coords
-    #print m.elems[selected]
-    #print prop
-    #print m.eltype
-    elems = m.elems[selected]
-    return Mesh(m.coords,elems,prop,m.eltype)
-
-
-def randomSplit(self,n):
-    """Split a mesh in n parts, distributing the elements randomly."""
-    sel = random.randint(0,n,(self.nelems()))
-    return [ subMesh(self,sel==i) for i in range(n) if i in sel ]
-    
-
-
-## import re
-## _conversion_re = re.compile("convert_([a-z][a-z0-9]*)_([a-z][a-z0-9]*)$")
-## _conversions = []
-## from_conversions = defaultdict(list)
-## to_conversions = defaultdict(list)
-
-## for k in globals().keys():
-##     m = _conversion_re.match(k)
-##     if m:
-##         c = m.groups()
-##         _conversions.append(c)
-##         from_conversions[c[0]].append(c[1])
-##         to_conversions[c[1]].append(c[0])
+   
 
 ##############################################################
 
@@ -444,6 +368,7 @@ class Mesh(object):
         return self.elems.shape[1]
     def ncoords(self):
         return self.coords.shape[0]
+    nnodes = ncoords
     npoints = ncoords
     def shape(self):
         return self.elems.shape
@@ -497,13 +422,78 @@ Size: %s
 
     def compact(self):
         """Remove unconnected nodes and renumber the mesh."""
+        print "Compacting mesh with %s nodes and %s elems" % (self.ncoords(),self.nelems())
+        print self.elems
         nodes = unique1d(self.elems)
-        if nodes[-1] >= nodes.size:
+        print nodes
+        if nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
+            print "Leaving %s nodes after compaction" % nodes.shape[0]
             coords = self.coords[nodes]
-            elems = reverseUniqueIndex(nodes)[self.elems]
+            if nodes[-1] >= nodes.size:
+                elems = reverseUniqueIndex(nodes)[self.elems]
+            else:
+                elems = self.elems
             return Mesh(coords,elems,prop=self.prop,eltype=self.eltype)
         else:
             return self
+
+
+    def select(self,selected,compact=False):
+        """Return a mesh with selected elements from the original.
+
+        - `selected`: an object that can be used as an index in the
+          `elems` array, e.g. a list of element numbers.
+        The coords are not compacted, unless compact=True is specify
+        """
+        prop = self.prop
+        if prop:
+            prop = prop[selected]
+        elems = m.elems[selected]
+        return Mesh(m.coords,elems,prop,m.eltype)
+
+
+    def randomSplit(self,n):
+        """Split a mesh in n parts, distributing the elements randomly."""
+        sel = random.randint(0,n,(self.nelems()))
+        return [ self.select(sel==i) for i in range(n) if i in sel ]
+
+
+    def convert(self,totype):
+        fromtype = self.eltype
+        print "Converting '%s' mesh to '%s'" % (fromtype,totype)
+
+        strategy = _conversions_[fromtype].get(totype,None)
+
+        while not type(strategy) is list:
+            # This allows for aliases in the conversion database
+            strategy = _conversions_[fromtype].get(strategy,None)
+            if strategy is None:
+                raise ValueError,"Don't know how to %s -> %s" % (fromtype,totype)
+
+        if type(strategy[0]) is str:
+            # A list of conversions that should be applied randomly
+            return convertRandom(m,strategy)
+
+        # Execute a strategy
+        print "Strategy: %s" % strategy
+        coords,elems,prop = self.coords,self.elems,self.prop
+        for step in strategy:
+            print step
+            steptype,stepdata = step
+
+            if steptype == 's':
+                elems = elems.selectNodes(stepdata)
+                nmult = len(stepdata)
+
+            elif steptype == 'm':
+                newcoords = meanNodes(coords,elems,stepdata)
+                coords,elems = addNodes(coords,elems,newcoords)
+                nmult = 1
+
+        if prop is not None:
+            prop = column_stack([prop]*nmult)
+            print "PROPSHAPE",prop.shape
+        return Mesh(coords,elems,prop=prop,eltype=totype.split('-')[0])
 
 
     def extrude(self,n,step=1.,dir=0,autofix=True):
@@ -567,26 +557,6 @@ Size: %s
             M.eltype = defaultEltype(M.nplex())
 
         return M
-
-
-    def convert(self,fromtype,totype,**kargs):
-        """Convert a mesh from element type fromtype to type totype.
-
-        Currently defined conversions:
-        'quad4' -> 'tri3'
-        """
-        fromtype = fromtype.capitalize()
-        totype = totype.capitalize()
-        print globals().has_key("convert_%s_%s"%(fromtype,totype))
-        print globals.has_key("convert_%s_%s"%(fromtype,totype))
-        try:
-            conv = getattr(elements,fromtype).conversion[totype]
-        except:
-            raise ValueError,"Don't know how to convert from '%s' to '%s'" % (fromtype,totype)
-
-        elems = self.elems[:,conv].reshape(-1,len(conv[0]))
-        print(elems.shape)
-        return Mesh(self.coords,elems)
 
 
     @classmethod

@@ -2039,6 +2039,9 @@ class BaseMenu(object):
                             a.setToolTip(v)
                         elif k == 'checkable':
                             a.setCheckable(v)
+                        elif k == 'checked':
+                            a.setCheckable(True)
+                            a.setChecked(v)
                         elif k == 'disabled':
                             a.setDisabled(True)
             txt = normalize(txt)
@@ -2049,12 +2052,13 @@ class BaseMenu(object):
 class Menu(BaseMenu,QtGui.QMenu):
     """A popup/pulldown menu."""
 
-    def __init__(self,title='UserMenu',parent=None,before=None,items=None):
+    def __init__(self,title='UserMenu',parent=None,before=None,tearoff=False,items=None):
         """Create a popup/pulldown menu.
 
         If parent==None, the menu is a standalone popup menu.
         If parent is given, the menu will be inserted in the parent menu.
         If parent==GD.GUI, the menu is inserted in the main menu bar.
+        If a parent is given, and tearoff==True, the menu can be teared-off.
         
         If insert == True, the menu will be inserted in the main menubar
         before the item specified by before.
@@ -2071,6 +2075,8 @@ class Menu(BaseMenu,QtGui.QMenu):
         if parent is None:
             self.setWindowFlags(QtCore.Qt.Dialog)
             self.setWindowTitle(title)
+        else:
+            self.setTearOffEnabled(tearoff)
         self.done = False
             
 

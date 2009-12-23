@@ -139,6 +139,23 @@ class Connectivity(ndarray):
         return self.rev
 
 
+    def selectNodes(self,nodsel):
+        """Return a connectivity table with a subset of the nodes.
+
+        `nodsel` is an object that can be converted to a 1-dim or 2-dim
+        array. Examples are a tuple of local node numbers, or a list
+        of such tuples all having the same length.
+        Each row of `nodsel` holds a list of local node numbers that
+        should be retained in the new connectivity table.
+        """
+        nodsel = asarray(nodsel)
+        nplex = nodsel.shape[-1]
+
+        print "NPLEX = %s" % nplex
+        nodsel = nodsel.reshape(-1,nplex)
+        return Connectivity(self[:,nodsel].reshape(-1,nplex))
+
+
     def expand(self):
         """Transform elems to edges and faces.
 

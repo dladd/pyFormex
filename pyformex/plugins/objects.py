@@ -337,16 +337,30 @@ class DrawableObjects(Objects):
         del self._annotations[i]
 
 
-    def toggleNames(self):
-        self.toggleAnnotation(0)
-    def toggleNumbers(self):
-        self.toggleAnnotation(1)
-    def toggleNodeNumbers(self):
-        self.toggleAnnotation(2)
-    def toggleNodes(self):
-        self.toggleAnnotation(3)
-    def toggleBbox(self):
-        self.toggleAnnotation(4)
+    def hasAnnotation(self,i=0):
+        """Return the status of annotation i"""
+        return self.annotations[i][1]
+    def hasNames(self):
+        return self.hasAnnotation(0)
+    def hasNumbers(self):
+        return self.hasAnnotation(1)
+    def hasNodeNumbers(self):
+        return self.hasAnnotation(2)
+    def hasNodeMarks(self):
+        return self.hasAnnotation(3)
+    def hasBbox(self):
+        return self.hasAnnotation(4)
+        
+    def toggleNames(self,onoff=None):
+        self.toggleAnnotation(0,onoff)
+    def toggleNumbers(self,onoff=None):
+        self.toggleAnnotation(1,onoff)
+    def toggleNodeNumbers(self,onoff=None):
+        self.toggleAnnotation(2,onoff)
+    def toggleNodes(self,onoff=None):
+        self.toggleAnnotation(3,onoff)
+    def toggleBbox(self,onoff=None):
+        self.toggleAnnotation(4,onoff)
 
 
     def setProperty(self,prop=None):

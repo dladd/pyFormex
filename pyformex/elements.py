@@ -43,10 +43,17 @@ class Element(object):
     an uppercase character and further only lower case and digits.
 
     Each element is defined by the following attributes:
-    vertices: the natural coordinates of its vertices,
-    edges: a list of edges, each defined by a couple of node numbers,
-    faces: a list of faces, each defined by a list of minimum 3 node numbers,
-    element: a list of all node numbers
+
+    - `vertices`: the natural coordinates of its vertices,
+    - `edges`: a list of edges, each defined by a couple of node numbers,
+    - `faces`: a list of faces, each defined by a list of minimum 3 node
+      numbers,
+    - `element`: a list of all node numbers
+    - `drawfaces`: a list of faces to be drawn, if different from faces. This
+      is an optional attribute. If defined, it will be used instead of the
+      `faces` attribute to draw the element. This can e.g. be used to draw
+      approximate representations for higher order elements for which there
+      is no correct drawing function.
 
     The vertices of the elements are defined in a unit space [0,1] in each
     axis direction. 
@@ -92,6 +99,25 @@ class Tri3(Element):
     element = faces[0]
 
 
+class Tri6(Element):
+    """A 6-node triangle"""
+    vertices = [ ( 0.0, 0.0, 0.0 ),
+                 ( 1.0, 0.0, 0.0 ),
+                 ( 0.0, 1.0, 0.0 ),
+                 ( 0.5, 0.5, 0.0 ),
+                 ( 0.0, 0.5, 0.0 ),
+                 ( 0.5, 0.0, 0.0 ),
+                 ]
+
+    edges = [ (0,1), (1,2), (2,0) ]
+
+    faces = [ (0,1,2), ]
+
+    element = faces[0]
+
+    drawfaces = Tri3.faces
+
+
 class Quad4(Element):
     """A 4-node quadrilateral"""
     vertices = array([
@@ -132,6 +158,8 @@ class Quad9(Element):
 
     element = faces[0]
 
+    drawfaces = Quad4.faces
+
 
 class Quad8(Element):
     """A 8-node quadrilateral"""
@@ -142,6 +170,8 @@ class Quad8(Element):
     faces = [ (0,1,2,3,4,5,6,7), ]
 
     element = faces[0]
+
+    drawfaces = Quad4.faces
 
 
 class Tet4(Element):
@@ -157,6 +187,8 @@ class Tet4(Element):
     faces = [ (0,2,1), (0,1,3), (1,2,3), (2,0,3) ]
 
     element = [ 0,1,2,3 ]
+
+    drawfaces = Quad4.faces
 
 
 class Wedge6(Element):

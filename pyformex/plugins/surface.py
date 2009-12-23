@@ -31,6 +31,7 @@ a triangulated surface.
 import os
 import pyformex as GD
 from plugins import tetgen
+from plugins.mesh import Mesh
 from connectivity import *
 from utils import runCommand, changeExt,countLines,mtime,hasExternal
 from formex import *
@@ -459,13 +460,24 @@ class TriSurface(object):
         if len(args) == 1:
             # a Formex/STL model
             a = args[0]
-            if not isinstance(a,Formex):
-                a = Formex(a)
-            if a.nplex() != 3:
-                raise ValueError,"Expected a plex-3 Formex"
-            self.coords,elems = a.feModel()
-            self.setElems(elems)
-            self.p = a.p
+            try:
+                nplex = a.nplex()
+            except:
+                raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
+            if nplex != 3:
+                raise ValueError,"Expected an object with plexitude 3!"
+            if isinstance(a,Mesh):
+                if a.eltype != 'tri3':
+                    raise ValueError,"Only meshes with eltype 'tri3' can be converted to TriSurface!"
+                self.coords = a.coords
+                self.setElems(a.elems)
+                self.p = a.prop
+            elif isinstance(a,Formex):
+                self.coords,elems = a.fuse()
+                self.setElems(elems)
+                self.p = a.p
+            else:
+                raise ValueError,"Can not convert objects of type %s to TriSurface!" % type(a)
 
         else:
             a = Coords(args[0])
@@ -851,10 +863,13 @@ class TriSurface(object):
     def toMesh(self):
         """Return a tuple of nodal coordinates and element connectivity."""
         self.refresh()
-        return self.coords,self.elems
+        return Mesh(self.coords,self.elems,self.p,eltype='tri3')
 
     # retained for compatibility
-    feModel = toMesh
+    @deprecation("feModel() is deprecated. Please use toMesh() instead")
+    def feModel(self):
+        return self.coords,self.elems
+        
 
     @classmethod
     def read(clas,fn,ftype=None):

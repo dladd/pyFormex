@@ -29,23 +29,44 @@ Interactive menu for Mesh type objects
 (C) 2009 Benedict Verhegghe.
 """
 import pyformex
-import os,sys
-sys.path[:0] = ['.', os.path.dirname(__file__)]
+# WHY WAS THIS ADDED?
+#import os,sys
+#sys.path[:0] = ['.', os.path.dirname(__file__)]
 
-from gui.draw import *
-from plugins import objects,formex_menu
 import simple
-from elements import Hex8
 from connectivity import *
+from gui import widgets
+from gui.draw import *
+#from gui.actors import *
+from plugins import formex_menu
+from plugins.objects import DrawableObjects
 from plugins.fe import *
 from plugins.mesh import *
-from gui.actors import *
 
 
 ##################### select, read and write ##########################
 
-selection = objects.DrawableObjects(clas=Mesh)
+selection = DrawableObjects(clas=Mesh)
 
+def toggleAnnotation(self,i=0,onoff=None):
+    """Toggle mesh annotations on/off.
+
+    This functions is like DrawableObjects.toggleAnnotation but also
+    updates the mesh_menu when changes are made.
+    """
+    #print "THIS IS THE MESHMENU TOGGLE"
+    #print self
+    _toggleAnnotation(self,i,onoff)
+    mesh_menu = GD.GUI.menu.item(_menu)
+    #print mesh_menu.menuitems
+    toggle_menu = mesh_menu.item("toggle annotations")
+    #print toggle_menu
+    action = toggle_menu.menuitems.keys()[i]
+    #print "ACTION %s" % action
+    toggle_menu.itemAction(action).setChecked(selection.hasAnnotation(i))
+    
+_toggleAnnotation = DrawableObjects.toggleAnnotation
+DrawableObjects.toggleAnnotation = toggleAnnotation
 
 setSelection = selection.set
 drawSelection = selection.draw
@@ -210,17 +231,15 @@ def fromFormex(suffix=''):
     if suffix:
         names = [ n + suffix for n in names ]
 
-    t = timer.Timer()
+    #t = timer.Timer()
     meshes =  dict([ (n,F.toMesh()) for n,F in zip(names,formices) if F.nplex() == 3])
-    print("Converted in %s seconds" % t.seconds())
-    print(meshes.keys())
+    #print("Converted in %s seconds" % t.seconds())
+    print("Converted %s" % meshes.keys())
     export(meshes)
 
     if not suffix:
         formex_menu.selection.clear()
     selection.set(meshes.keys())
-
-
 
 
 def convertMesh():
@@ -247,7 +266,7 @@ def convertMesh():
             return
         res = askItems([
             ('_conversion',None,'vradio',{'text':'Conversion Type','choices':choices}),
-            ("_pattern",None,'hradio',{'choices':['u','d','x','r']}),
+            ("_compact",True),
             ('_merge',None,'hradio',{'text':"Merge Meshes",'choices':['None','Each','All']}),
             ])
         if res:
@@ -255,7 +274,7 @@ def convertMesh():
             print "Selected conversion %s" % _conversion
             totype = _conversion.split()[-1]
             names = [ "%s_converted" % n for n in selection.names ]
-            meshes = [ mesh.convertMesh(m,totype) for m in meshes ]
+            meshes = [ m.convert(totype) for m in meshes ]
             if _merge == 'Each':
                 meshes = [ m.fuse() for m in meshes ]
             elif  _merge == 'All':
@@ -266,6 +285,10 @@ def convertMesh():
                 ## meshes = [ Mesh(coords,e,eltype=meshes[0].eltype) for e in elems ]
                 ## print meshes[0].elems
                 meshes = [ Mesh(coords,e,m.prop,m.eltype) for e,m in zip(elems,meshes) ]
+            if _compact:
+                print "compacting meshes"
+                meshes = [ m.compact() for m in meshes ]
+                
             export2(names,meshes)
             selection.set(names)
             clear()
@@ -290,17 +313,17 @@ def create_menu():
         ("&Convert Mesh Type",convertMesh),
         ("---",None),
         ("Toggle &Annotations",
-         [("&Name",selection.toggleNames,dict(checkable=True)),
-          ("&Element Numbers",selection.toggleNumbers,dict(checkable=True)),
-          ("&Node Numbers",selection.toggleNodeNumbers,dict(checkable=True)),
-          ("&Node Marks",selection.toggleNodes,dict(checkable=True)),
-          ('&Bounding Box',selection.toggleBbox,dict(checkable=True)),
+         [("&Name",selection.toggleNames,dict(checked=selection.hasNames())),
+          ("&Element Numbers",selection.toggleNumbers,dict(checked=selection.hasNumbers())),
+          ("&Node Numbers",selection.toggleNodeNumbers,dict(checked=selection.hasNodeNumbers())),
+          ("&Node Marks",selection.toggleNodes,dict(checked=selection.hasNodeMarks())),
+          ('&Bounding Box',selection.toggleBbox,dict(checked=selection.hasBbox())),
           ]),
         ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    w = widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
+    w = widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
     return w
 
 def show_menu():
