@@ -201,27 +201,28 @@ def defaultEltype(nplex):
 
 _conversions_ = {
     'tri3': {
+        'tri3-4' : [ ('v', 'tri6'), ],
         'tri6'   : [ ('m', [ (0,1), (1,2), (2,0) ]), ],
-        'quad4'  : [ ('m', [ (0,1), (1,2), (2,0), ]),
-                     ('m', [ (0,1,2), ]),
+        'quad4'  : [ ('v', 'tri6'), ],
+    },
+    'tri6': {
+        'tri3'   : [ ('s', [ (0,1,2) ]), ],
+        'tri3-4' : [ ('s', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]), ],
+        'quad4'  : [ ('m', [ (0,1,2), ]),
                      ('s', [ (0,3,6,5),(1,4,6,3),(2,5,6,4) ]),
                      ],
         },
-    'tri6': {
-        'tri3'   : [ ('s', [ (0,3,5),(3,1,4),(4,2,5),(3,4,5) ]), ],
-        },
     'quad4': {
         'tri3'   : 'tri3-u',
-        'tri3-r' : ['tri3-u','tri3-d'],
+        'tri3-r' : [ ('r', ['tri3-u','tri3-d']), ],
         'tri3-u' : [ ('s', [ (0,1,2), (2,3,0) ]), ],
         'tri3-d' : [ ('s', [ (0,1,3), (2,3,1) ]), ],
         'tri3-x' : [ ('m', [ (0,1,2,3) ]),
                      ('s', [ (0,1,4),(1,2,4),(2,3,4),(3,0,4) ]),
                      ],
+        'quad4-4': [ ('v', 'quad9'), ],
         'quad8'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]), ],
-        'quad9'  : [ ('m', [ (0,1), (1,2), (2,3), (3,0) ]),
-                     ('m', [ (4,5,6,7) ]),
-                     ],
+        'quad9'  : [ ('v', 'quad8'), ],
         },
     'quad8': {
         'quad9'  : [ ('m', [ (4,5,6,7) ]), ],
@@ -236,46 +237,6 @@ _conversions_ = {
                       (2,6,8),(6,3,8),(3,7,8),(7,0,8) ]), ],
         },
     }
-
-
-def meanNodes(coords,elems,nodsel):
-    """Create nodes from the existing nodes of a mesh."""
-    elems = elems.selectNodes(nodsel)
-    newcoords = coords[elems].mean(axis=1)
-    return newcoords
-
-
-def addNodes(coords,elems,newcoords):
-    """Add new nodes to elements by averaging existing ones."""
-    newnodes = arange(newcoords.shape[0]).reshape(elems.shape[0],-1) + coords.shape[0]
-    elems = Connectivity(concatenate([elems,newnodes],axis=-1))
-    coords = Coords.concatenate([coords,newcoords])
-    return coords,elems
-                         
-
-def convertRandom(m,choices):
-    """Convert choosing randomly between choices"""
-    ml = randomSplit(m,len(choices))
-    ml = [ convertMesh(m,c) for m,c in zip(ml,choices) ]
-    prop = m.prop
-    if prop:
-        prop = concatenate([m.prop for m in ml])
-    elems = concatenate([m.elems for m in ml],axis=0)
-    eltype = set([m.eltype for m in ml])
-    if len(eltype) > 1:
-        raise RuntimeError,"Invalid choices for random conversions"
-    eltype = eltype.pop()
-    return Mesh(m.coords,elems,prop,eltype)
-    
-    
-
-def drawMesh(m):
-    clear()
-    draw(m,color='yellow')
-    drawNumbers(m,color=blue)
-    draw(m.coords)
-    drawNumbers(m.coords,color=red)
-
    
 
 ##############################################################
@@ -448,15 +409,61 @@ Size: %s
         prop = self.prop
         if prop:
             prop = prop[selected]
-        elems = m.elems[selected]
-        return Mesh(m.coords,elems,prop,m.eltype)
+        elems = self.elems[selected]
+        return Mesh(self.coords,elems,prop,self.eltype)
 
 
-    def randomSplit(self,n):
-        """Split a mesh in n parts, distributing the elements randomly."""
-        sel = random.randint(0,n,(self.nelems()))
-        return [ self.select(sel==i) for i in range(n) if i in sel ]
+    def meanNodes(self,nodsel):
+        """Create nodes from the existing nodes of a mesh.
 
+        `nodsel` is a local node selector as in :meth:`selectNodes`
+        Returns the mean coordinates of the points in the selector. 
+        """
+        elems = self.elems.selectNodes(nodsel)
+        return self.coords[elems].mean(axis=1)
+
+
+    def addNodes(self,newcoords,eltype=None):
+        """Add new nodes to elements.
+
+        `newcoords` is an `(nelems,nnod,3)` array of coordinates.
+        Each element thus gets exactly `nnod` extra points and the result
+        is a Mesh with plexitude self.nplex() + nnod.
+        """
+        newnodes = arange(newcoords.shape[0]).reshape(self.elems.shape[0],-1) + self.coords.shape[0]
+        elems = Connectivity(concatenate([self.elems,newnodes],axis=-1))
+        coords = Coords.concatenate([self.coords,newcoords])
+        return Mesh(coords,elems,self.prop,eltype)
+
+
+    def addMeanNodes(self,nodsel,eltype=None):
+        """Add new nodes to elements by averaging existing ones.
+
+        `nodsel` is a local node selector as in :meth:`selectNodes`
+        Returns a Mesh where the mean coordinates of the points in the
+        selector are added to each element, thus increasing the plexitude
+        by the length of the items in the selector.
+        The new element type should be set to correct value.
+        """
+        newcoords = self.meanNodes(nodsel)
+        return self.addNodes(newcoords,eltype)
+
+
+    def selectNodes(self,nodsel,eltype):
+        """Return a mesh with subsets of the original nodes.
+
+        `nodsel` is an object that can be converted to a 1-dim or 2-dim
+        array. Examples are a tuple of local node numbers, or a list
+        of such tuples all having the same length.
+        Each row of `nodsel` holds a list of local node numbers that
+        should be retained in the new connectivity table.
+        """
+        elems = self.elems.selectNodes(nodsel)
+        prop = self.prop
+        if prop is not None:
+            prop = column_stack([prop]*len(nodsel)).reshape(-1)
+        return Mesh(self.coords,elems,prop=prop,eltype=eltype)   
+    
 
     def convert(self,totype):
         fromtype = self.eltype
@@ -468,33 +475,55 @@ Size: %s
             # This allows for aliases in the conversion database
             strategy = _conversions_[fromtype].get(strategy,None)
             if strategy is None:
-                raise ValueError,"Don't know how to %s -> %s" % (fromtype,totype)
+                raise ValueError,"Don't know how to convert %s -> %s" % (fromtype,totype)
 
-        if type(strategy[0]) is str:
-            # A list of conversions that should be applied randomly
-            return convertRandom(m,strategy)
+        # 'r' and 'v' steps can only be the first and only step
+        steptype,stepdata = strategy[0]
+        if steptype == 'r':
+            # Randomly convert elements to one of the types in list
+            return self.convertRandom(stepdata)
+        elif steptype == 'v':
+            return self.convert(stepdata).convert(totype)
 
         # Execute a strategy
-        print "Strategy: %s" % strategy
-        coords,elems,prop = self.coords,self.elems,self.prop
+        mesh = self
+        totype = totype.split('-')[0]
         for step in strategy:
-            print step
+            print "STEP: %s" % str(step)
             steptype,stepdata = step
 
-            if steptype == 's':
-                elems = elems.selectNodes(stepdata)
-                nmult = len(stepdata)
+            if steptype == 'm':
+                mesh = mesh.addMeanNodes(stepdata,totype)
+                
+            elif steptype == 's':
+                mesh = mesh.selectNodes(stepdata,totype)
 
-            elif steptype == 'm':
-                newcoords = meanNodes(coords,elems,stepdata)
-                coords,elems = addNodes(coords,elems,newcoords)
-                nmult = 1
+            else:
+                raise ValueError,"Unknown conversion step type '%s'" % steptype
 
-        if prop is not None:
-            prop = column_stack([prop]*nmult)
-            print "PROPSHAPE",prop.shape
-        return Mesh(coords,elems,prop=prop,eltype=totype.split('-')[0])
+        return mesh
 
+
+    def randomSplit(self,n):
+        """Split a mesh in n parts, distributing the elements randomly."""
+        sel = random.randint(0,n,(self.nelems()))
+        return [ self.select(sel==i) for i in range(n) if i in sel ]
+
+
+    def convertRandom(self,choices):
+        """Convert choosing randomly between choices"""
+        ml = self.randomSplit(len(choices))
+        ml = [ m.convert(c) for m,c in zip(ml,choices) ]
+        prop = self.prop
+        if prop:
+            prop = concatenate([m.prop for m in ml])
+        elems = concatenate([m.elems for m in ml],axis=0)
+        eltype = set([m.eltype for m in ml])
+        if len(eltype) > 1:
+            raise RuntimeError,"Invalid choices for random conversions"
+        eltype = eltype.pop()
+        return Mesh(self.coords,elems,prop,eltype)
+ 
 
     def extrude(self,n,step=1.,dir=0,autofix=True):
         """Extrude a Mesh in one of the axes directions.
@@ -576,12 +605,17 @@ Size: %s
             eltype = eltype.pop()
         else:
             eltype = None
-
+            
+        prop = [m.prop for m in ml]
+        if None in prop:
+            prop = None
+        else:
+            prop = concatenate(prop)
+            
         coords,elems = mergeMeshes(ML,**kargs)
         elems = concatenate(elems,axis=0)
-        return Mesh(coords,elems,eltype=eltype)
-        
-
+        return Mesh(coords,elems,prop,eltype)
+ 
 ########### Functions #####################
 
 
