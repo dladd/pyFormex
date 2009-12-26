@@ -37,43 +37,50 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     are already parallel, a random vector normal to a is returned.
     """
     u = normalize(vec1)
-    u1 = normalize(vec2)
-    v = normalize(upvec)
-    v1 = v
+    v = normalize(vec2)
     w = cross(u,v)
-    w1 = cross(u1,v)
-    wa = where(length(w) == 0.)[0]
-    wa1 = where(length(w1) == 0.)[0]
-    print u
-    print u1
-    print v
-    print v1
-    print w
-    print w1
-    print len(wa)
-    print len(wa1)
-    if len(wa) > 0 or len(wa1) > 0:
-        print wa,wa1
-        raise
-    ## U = column_stack(
-    ## C = linalg.solve(U,B)
+    sa = length(w)
+    w[sa==0.] = [1.,0.,0.] 
+    ca = dotpr(u,v)
+    angle = arcsin(sa)
+    print angle/Deg
+    angle1 = arccos(sa)
+    print angle1/Deg
+    angle2 = arctan2(sa,ca)
+    print angle2/Deg
+    axis = normalize(w)
+    print sa
+    print axis
+    return angle,axis
+    
 
 
-vec1 = array([
-    [ 0.06151652 , 0.97150612 , 0.22889221],
-    [-0.0847166  , 0.97068906 , 0.22491293],
-    [-0.36283585 , 0.9072879  , 0.21255307],
-    [-0.60093606 , 0.7734409  , 0.20165572],
-    [-0.78529388 , 0.58856845 , 0.19209583],
-    [-0.90958768 , 0.37270108 , 0.18369579],
-    [-0.97370327 , 0.14436606 , 0.17623945],
-    [-0.98221517 ,-0.08080836 , 0.16947962],
-    [-0.94275808 ,-0.29084417 , 0.16314666],
-    [-0.907462   ,-0.3887904  , 0.15923157]])
-vec2 = array([[1.,0.,0.]])
+vec2 = array([
+    [ 1., 0., 0.],
+    [ 1., 1., 0.],
+    [ 0., 1., 0.],
+    [-1., 1., 0.],
+    [-1., 0., 0.],
+    [-1.,-1., 0.],
+    [ 0.,-1., 0.],
+    [ 1.,-1., 0.],
+    
+    ## [0.06151652 , 0.97150612 , 0.22889221],
+    ## [ 0.06151652 , 0.97150612 , 0.22889221],
+    ## [-0.0847166  , 0.97068906 , 0.22491293],
+    ## [-0.36283585 , 0.9072879  , 0.21255307],
+    ## [-0.60093606 , 0.7734409  , 0.20165572],
+    ## [-0.78529388 , 0.58856845 , 0.19209583],
+    ## [-0.90958768 , 0.37270108 , 0.18369579],
+    ## [-0.97370327 , 0.14436606 , 0.17623945],
+    ## [-0.98221517 ,-0.08080836 , 0.16947962],
+    ## [-0.94275808 ,-0.29084417 , 0.16314666],
+    ## [-0.907462   ,-0.3887904  , 0.15923157]
+    ])
+vec1 = array([[1.,0.,0.]])
 
 vectorRotation(vec1,vec2)
-exit()
+#exit()
 
 
 from plugins import curve

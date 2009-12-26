@@ -33,6 +33,8 @@ from formex import *
 from gui.draw import *
 from gui.colors import *
 
+from subprocess import call
+
 
 def about():
     showInfo("""Jobs.py
@@ -112,18 +114,32 @@ def submitToCluster(filename=None):
             ('ncpus',4,{'text':'Number of cpus','min':1,'max':1024}),
             ('postabq',False,{'text':'Run postabq on the results?'}),
             ])
-        reqtxt = 'cpus=%s\n' % res['ncpus']
-        if res['postabq']:
-            reqtxt += 'postproc=postabq\n'
+        if res:
+            reqtxt = 'cpus=%s\n' % res['ncpus']
+            if res['postabq']:
+                reqtxt += 'postproc=postabq\n'
+            host = GD.cfg.get('jobs/host','mecaflix')
+            reqdir = GD.cfg.get('jobs/requests','bumper/requests')
+            cmd = "scp %s %s:%s" % (filename,host,reqdir)
+            ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
+            print ret
+            ret = call(['ssh',host,"echo '%s' > %s/%s.request" % (reqtxt,reqdir,jobname)])
+            print ret
+        
+
+def killClusterJob(jobname=None):
+    """Kill a job to the cluster."""
+    res = askItems([('jobname','')])
+    if res:
+        jobname = res['jobname']
         host = GD.cfg.get('jobs/host','mecaflix')
         reqdir = GD.cfg.get('jobs/requests','bumper/requests')
-        cmd = "scp %s %s:%s" % (filename,host,reqdir)
-        from subprocess import call
-        ret = call(['scp',filename,'%s:%s' % (host,reqdir)])
+        cmd = "touch %s/%s.kill" % (reqdir,jobname)
+        print host
+        print cmd
+        ret = call(['ssh',host,"%s" % cmd])
         print ret
-        ret = call(['ssh',host,"echo '%s' > %s/%s.request" % (reqtxt,reqdir,jobname)])
-        print ret
-
+       
 
 the_server = None
 the_userdir = None
@@ -209,10 +225,12 @@ def create_menu():
     MenuData = [
         ("&About",about),
         ("&Submit Abaqus Job",submitToCluster),
+        ("&Kill Cluster Job",killClusterJob),
         ("&Check result cases on server",checkResultsOnServer),
         ("&Get results from server",getResultsFromServer),
         ("&Execute remote command",remoteCommand),
         ("---",None),
+        ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
     return widgets.Menu('Jobs',items=MenuData,parent=GD.GUI.menu,before='help')
@@ -232,6 +250,8 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     close_menu()
+    from plugins import jobs
+    reload(jobs)
     show_menu()
 
 if __name__ == "draw":

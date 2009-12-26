@@ -89,24 +89,21 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     are already parallel, a random vector normal to a is returned.
     """
     u = normalize(vec1)
-    u1 = normalize(vec2)
-    v = normalize(upvec)
-    v1 = v
+    v = normalize(vec2)
     w = cross(u,v)
-    w1 = cross(u1,v)
-    wa = where(length(w) == 0)
-    wa1 = where(length(w1) == 0)
-    print(u)
-    print(u1)
-    print(v)
-    print(v1)
-    print(w)
-    print(w1)
-    if len(wa) > 0 or len(wa1) > 0:
-        print(wa,wa1)
-        raise
-    ## if len(wa1) 
-    ##      = normalize(random.random((len(w),3)))
+    sa = length(w)
+    w[sa==0.] = [1.,0.,0.] 
+    ca = dotpr(u,v)
+    angle = arcsin(sa)
+    print angle/Deg
+    angle1 = arccos(sa)
+    print angle1/Deg
+    angle2 = arctan2(sa,ca)
+    print angle2/Deg
+    axis = normalize(w)
+    print sa
+    print axis
+    return angle,axis
 
 
 # Should probably be made a Coords method
@@ -577,6 +574,7 @@ Size: %s
         seq = sweepCoords(self.coords,path,**kargs)
         ML = [ Mesh(x,self.elems) for x in seq ]
         M = connectMeshSequence(ML)
+        print M
 
         if autofix and nplex == 2:
             # fix node ordering for line2 to quad4 extrusions
@@ -589,16 +587,16 @@ Size: %s
 
 
     @classmethod
-    def concatenate(clas,ML,**kargs):
+    def concatenate(clas,meshes,**kargs):
         """Concatenate a list of meshes of the same plexitude and eltype
 
         Merging of the nodes can be tuned by specifying extra arguments
         that will be passed to :meth:`Coords:fuse`.
         """
-        nplex = set([ m.nplex() for m in ML ])
+        nplex = set([ m.nplex() for m in meshes ])
         if len(nplex) > 1:
             raise ValueError,"Cannot concatenate meshes with different plexitude: %s" % str(nplex)
-        eltype = set([ m.eltype for m in ML if m.eltype is not None ])
+        eltype = set([ m.eltype for m in meshes if m.eltype is not None ])
         if len(eltype) > 1:
             raise ValueError,"Cannot concatenate meshes with different eltype: %s" % str(eltype)
         if len(eltype) == 1:
@@ -606,14 +604,15 @@ Size: %s
         else:
             eltype = None
             
-        prop = [m.prop for m in ml]
+        prop = [m.prop for m in meshes]
         if None in prop:
             prop = None
         else:
             prop = concatenate(prop)
             
-        coords,elems = mergeMeshes(ML,**kargs)
+        coords,elems = mergeMeshes(meshes,**kargs)
         elems = concatenate(elems,axis=0)
+        print coords,elems,prop,eltype
         return Mesh(coords,elems,prop,eltype)
  
 ########### Functions #####################

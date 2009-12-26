@@ -28,7 +28,7 @@ anywhere, causing attached functions to be executed.
 """
 import pyformex as GD
 
-from PyQt4.QtCore import Qt,QObject,SIGNAL
+from PyQt4.QtCore import Qt,QObject,SIGNAL,QThread
 
 # signals
 CANCEL = SIGNAL("Cancel")   # cancel the operation, undoing it
@@ -53,8 +53,6 @@ def offSignal(signal,function,widget=None):
     if widget is None:
         widget = GD.GUI
     QObject.disconnect(widget,signal,function)
-
-
     
 # End
 

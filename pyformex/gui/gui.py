@@ -602,6 +602,15 @@ def startGUI(args):
     GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
     #
     GD.app = QtGui.QApplication(args)
+    GD.app.setOrganizationName("pyformex.org")
+    GD.app.setOrganizationDomain("pyformex.org")
+    GD.app.setApplicationName("pyFormex")
+    GD.app.setApplicationVersion(GD.__version__)
+    ## GD.settings = QtCore.QSettings("pyformex.org", "pyFormex")
+    ## GD.settings.setValue("testje","testvalue")
+    ## print "%s" % GD.settings
+    
+
     #
     GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
     locale.setlocale(locale.LC_NUMERIC, 'C')
