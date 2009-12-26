@@ -81,7 +81,7 @@ def vectorPairAngles(vec1,vec2,normalized=False,angle_spec=Deg):
     return arccos(vectorPairCosAngles(vec1,vec2,normalized))/angle_spec
 
 
-def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
+def vectorRotation(vec1,vec2,upvec=[0.,0.,1.],angle_spec=Deg):
     """Return axis and angle to rotate vectors in a parallel to b
 
     vectors in a and b should be unit vectors.
@@ -94,16 +94,9 @@ def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     sa = length(w)
     w[sa==0.] = [1.,0.,0.] 
     ca = dotpr(u,v)
-    angle = arcsin(sa)
-    print angle/Deg
-    angle1 = arccos(sa)
-    print angle1/Deg
-    angle2 = arctan2(sa,ca)
-    print angle2/Deg
+    angle = arctan2(sa,ca)
     axis = normalize(w)
-    print sa
-    print axis
-    return angle,axis
+    return angle/angle_spec,axis
 
 
 # Should probably be made a Coords method
@@ -145,21 +138,17 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,
                 directions[j] = Coords(enddir[i])
 
     directions = normalize(directions)
-    print(directions )
 
     if type(normal) is int:
         normal = unitVector(normal)
-    angles,normals = vectorRotation(directions,normal)
-    print(angles,normals)
+    angles,normals = vectorRotation(normal,directions)
     
     base = self.translate(-Coords(origin))
 
     if upvector is None:
-        sequence = [
-            base.rotate(a,-v).translate(p)
-            for a,v,p in zip(angles,normals,points)
-            ]     
-
+        sequence = [ base.rotate(a,v).translate(p)
+                     for a,v,p in zip(angles,normals,points)
+                     ]
     else:
         if type(upvector) is int:
             upvector = Coords(unitVector(upvector))
@@ -380,12 +369,12 @@ Size: %s
 
     def compact(self):
         """Remove unconnected nodes and renumber the mesh."""
-        print "Compacting mesh with %s nodes and %s elems" % (self.ncoords(),self.nelems())
-        print self.elems
+        #print "Compacting mesh with %s nodes and %s elems" % (self.ncoords(),self.nelems())
+        #print self.elems
         nodes = unique1d(self.elems)
-        print nodes
+        #print nodes
         if nodes.shape[0] < self.ncoords() or nodes[-1] >= nodes.size:
-            print "Leaving %s nodes after compaction" % nodes.shape[0]
+            #print "Leaving %s nodes after compaction" % nodes.shape[0]
             coords = self.coords[nodes]
             if nodes[-1] >= nodes.size:
                 elems = reverseUniqueIndex(nodes)[self.elems]
@@ -574,7 +563,7 @@ Size: %s
         seq = sweepCoords(self.coords,path,**kargs)
         ML = [ Mesh(x,self.elems) for x in seq ]
         M = connectMeshSequence(ML)
-        print M
+        #print M
 
         if autofix and nplex == 2:
             # fix node ordering for line2 to quad4 extrusions
@@ -612,7 +601,7 @@ Size: %s
             
         coords,elems = mergeMeshes(meshes,**kargs)
         elems = concatenate(elems,axis=0)
-        print coords,elems,prop,eltype
+        #print coords,elems,prop,eltype
         return Mesh(coords,elems,prop,eltype)
  
 ########### Functions #####################
