@@ -27,62 +27,6 @@ level = 'normal'
 topics = ['geometry','curve','mesh']
 techniques = ['sweep',]
 """
-
-
-def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
-    """Return axis and angle to rotate vectors in a parallel to b
-
-    vectors in a and b should be unit vectors.
-    The returned axis is the cross product of a and b. If the vectors
-    are already parallel, a random vector normal to a is returned.
-    """
-    u = normalize(vec1)
-    v = normalize(vec2)
-    w = cross(u,v)
-    sa = length(w)
-    w[sa==0.] = [1.,0.,0.] 
-    ca = dotpr(u,v)
-    angle = arcsin(sa)
-    print angle/Deg
-    angle1 = arccos(sa)
-    print angle1/Deg
-    angle2 = arctan2(sa,ca)
-    print angle2/Deg
-    axis = normalize(w)
-    print sa
-    print axis
-    return angle,axis
-    
-
-
-vec2 = array([
-    [ 1., 0., 0.],
-    [ 1., 1., 0.],
-    [ 0., 1., 0.],
-    [-1., 1., 0.],
-    [-1., 0., 0.],
-    [-1.,-1., 0.],
-    [ 0.,-1., 0.],
-    [ 1.,-1., 0.],
-    
-    ## [0.06151652 , 0.97150612 , 0.22889221],
-    ## [ 0.06151652 , 0.97150612 , 0.22889221],
-    ## [-0.0847166  , 0.97068906 , 0.22491293],
-    ## [-0.36283585 , 0.9072879  , 0.21255307],
-    ## [-0.60093606 , 0.7734409  , 0.20165572],
-    ## [-0.78529388 , 0.58856845 , 0.19209583],
-    ## [-0.90958768 , 0.37270108 , 0.18369579],
-    ## [-0.97370327 , 0.14436606 , 0.17623945],
-    ## [-0.98221517 ,-0.08080836 , 0.16947962],
-    ## [-0.94275808 ,-0.29084417 , 0.16314666],
-    ## [-0.907462   ,-0.3887904  , 0.15923157]
-    ])
-vec1 = array([[1.,0.,0.]])
-
-vectorRotation(vec1,vec2)
-#exit()
-
-
 from plugins import curve
 import simple
 import re
@@ -131,7 +75,7 @@ cross_sections_3d = {
 sweep_data = [
     ['cross_section',None,'select',{'text':'Shape of cross section','choices':cross_sections_2d.keys()+cross_sections_3d.keys()}],
     ['cross_rotate',0.,{'text':'Cross section rotation angle before sweeping'}],
-    ['cross_upvector','None',{'text':'Cross section vector that keeps its orientation'}],
+    ['cross_upvector','2',{'text':'Cross section vector that keeps its orientation'}],
     ['cross_scale',0.,{'text':'Cross section scaling factor'}],
     ]
 
@@ -143,14 +87,12 @@ input_data = {
 
 def spiral(X,dir=[0,1,2],rfunc=lambda x:1,zfunc=lambda x:0):
     """Perform a spiral transformation on a coordinate array"""
-    print X.shape
     theta = X[...,dir[0]]
     r = rfunc(theta) + X[...,dir[1]]
     x = r * cos(theta)
     y = r * sin(theta)
     z = zfunc(theta) + X[...,dir[2]]
     X = hstack([x,y,z]).reshape(X.shape)
-    print X.shape
     return Coords(X)
 
 
@@ -259,10 +201,7 @@ def timeOut():
 
 # Update the data items from saved values
 saved_data = GD.PF.get('Sweep_data',{})
-print saved_data
-print input_data
 widgets.updateDialogItems(input_data,GD.PF.get('Sweep_data',{}))
-print input_data
 # Create the modeless dialog widget
 dialog = widgets.InputDialog(input_data,caption='Sweep Dialog',actions = [('Close',close),('Show',show)],default='Show')
 # The examples style requires a timeout action

@@ -28,8 +28,6 @@ Definition of the Mesh class for describing discrete geometrical models.
 And some useful meshing functions to create such models.
 """
 
-#from numpy import *
-#from coords import *
 from formex import *
 from connectivity import Connectivity,reverseUniqueIndex
 import elements
@@ -41,67 +39,32 @@ from utils import deprecation
 
 # This should probably go to formex or coords module
 
+def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
+    """Return a rotation matrix for rotating vector vec1 to vec2
 
-def vectorPairAreaNormals(vec1,vec2):
-    """Compute area of and normals on parallellograms formed by vec1 and vec2.
+    The rotation matrix will be sucht that the plane of vec2 and the
+    rotated upvec will be parallel to the original upvec.
 
-    vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-    The result is a tuple of two arrays:
-    - area (n) : the area of the parallellogram formed by vec1 and vec2.
-    - normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
-    These are calculated from the cross product of vec1 and vec2, which indeed
-    gives area * normal.
-
-    Note that where two vectors are parallel, an area zero will results and
-    an axis with components NaN.
-    """
-    normal = cross(vec1,vec2)
-    area = vectorLength(normal)
-    print("vectorPairAreaNormals",area,normal)
-    normal /= area.reshape((-1,1))
-    return area,normal
-
-
-def vectorPairCosAngles(vec1,vec2,normalized=False):
-    """Return the cosine of the angles between two vectors.
-
-    vec1: an (nvector,3) shaped array of floats
-    vec2: an (nvector,3) shaped array of floats
-    normalized: can be set True if the vectors are already normalized. 
-
-    Return value: an (nvector,) shaped array of floats
-    """
-    if not normalized:
-        vec1 = normalize(vec1)
-        vec2 = normalize(vec2)
-    return dotpr(vec1,vec2)
-
-
-def vectorPairAngles(vec1,vec2,normalized=False,angle_spec=Deg):
-    return arccos(vectorPairCosAngles(vec1,vec2,normalized))/angle_spec
-
-
-def vectorRotation(vec1,vec2,upvec=[0.,0.,1.],angle_spec=Deg):
-    """Return axis and angle to rotate vectors in a parallel to b
-
-    vectors in a and b should be unit vectors.
-    The returned axis is the cross product of a and b. If the vectors
-    are already parallel, a random vector normal to a is returned.
+    This function is like :func:`arraytools.rotMatrix`, but allows the
+    specification of vec1.
+    The returned matrix should be used in postmultiplication to the Coords.
     """
     u = normalize(vec1)
-    v = normalize(vec2)
-    w = cross(u,v)
-    sa = length(w)
-    w[sa==0.] = [1.,0.,0.] 
-    ca = dotpr(u,v)
-    angle = arctan2(sa,ca)
-    axis = normalize(w)
-    return angle/angle_spec,axis
+    u1 = normalize(vec2)
+    w = normalize(upvec)
+    v = normalize(cross(w,u))
+    w = normalize(cross(u,v))
+    v1 = normalize(cross(w,u1))
+    w1 = normalize(cross(u1,v1))
+    mat1 = column_stack([u,v,w])
+    mat2 = row_stack([u1,v1,w1])
+    mat = dot(mat1,mat2)
+    return mat
 
 
 # Should probably be made a Coords method
 # But that would make the coords module dependent on a plugin
-def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,enddir=None):
+def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=2,avgdir=False,enddir=None):
     """ Sweep a Coords object along a path, returning a series of copies.
 
     origin and normal define the local path position and direction on the mesh.
@@ -141,25 +104,14 @@ def sweepCoords(self,path,origin=[0.,0.,0.],normal=0,upvector=None,avgdir=False,
 
     if type(normal) is int:
         normal = unitVector(normal)
-    angles,normals = vectorRotation(normal,directions)
-    
-    base = self.translate(-Coords(origin))
 
-    if upvector is None:
-        sequence = [ base.rotate(a,v).translate(p)
-                     for a,v,p in zip(angles,normals,points)
-                     ]
-    else:
-        if type(upvector) is int:
-            upvector = Coords(unitVector(upvector))
-        uptrf = [ upvector.rotate(a,v) for a,v in zip(angles,normals) ]
-        uangles,unormals = vectorRotation(uptrf,upvector)
-        print(uangles,unormals)
-          
-        sequence = [
-            base.rotate(a,v).rotate(ua,uv).translate(p)
-            for a,v,ua,uv,p in zip(angles,normals,uangles,unormals,points)
-            ]
+    if type(upvector) is int:
+        upvector = Coords(unitVector(upvector))
+
+    base = self.translate(-Coords(origin))
+    sequence = [ base.rotate(vectorRotation(normal,d,upvector)).translate(p)
+                 for d,p in zip(directions,points)
+                 ]
         
     return sequence
 
