@@ -97,7 +97,7 @@ if export and checkWorkdir():
         G += F.selectNodes([0,i-1,i])
     clear()
     draw(G)
-    surface.write_stla(f,G.f)
+    surface.write_stla(f,G.coords)
     f.close()
 
 # End

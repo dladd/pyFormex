@@ -54,7 +54,7 @@ Axes = unitAxes()
 def showPrincipal1(F):
     """Show the principal axes."""
     clear()
-    C,I = inertia.inertia(F.f)
+    C,I = inertia.inertia(F.coords)
     GD.message("Center: %s" % C)
     GD.message("Inertia tensor: %s" % I)
     Iprin,Iaxes = inertia.principal(I)

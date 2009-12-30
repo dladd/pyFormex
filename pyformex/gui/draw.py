@@ -420,7 +420,7 @@ def draw(F,
         if isinstance(F,formex.Formex):
             if F.nelems() == 0:
                 return None
-            actor = actors.GeomActor(F.f,None,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+            actor = actors.GeomActor(F.coords,None,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         elif isinstance(F,mesh.Mesh):
             if F.nelems() == 0:
                 return None
@@ -595,10 +595,10 @@ def drawVertexNumbers(F,color='black',trl=None):
     e.g. to put them in front of the objects to make them visible,
     or to allow to view a mark at the vertices.
     """
-    FC = F.f.reshape((-1,3))
+    FC = F.coords.reshape((-1,3))
     if trl is not None:
         FC = FC.trl(trl)
-    return drawMarks(FC,numpy.resize(numpy.arange(F.f.shape[1]),(FC.shape[0])),color=color)
+    return drawMarks(FC,numpy.resize(numpy.arange(F.coords.shape[1]),(FC.shape[0])),color=color)
 
 
 def drawNormals(N,P,size=5,**extra):

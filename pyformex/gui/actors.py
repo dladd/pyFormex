@@ -208,7 +208,7 @@ class TriadeActor(Actor):
         GL.glScalef (self.size,self.size,self.size) 
         # Coord axes of size 1.0
         GL.glBegin(GL.GL_LINES)
-        pts = Formex(pattern('1')).f.reshape(-1,3)
+        pts = Formex(pattern('1')).coords.reshape(-1,3)
         GL.glColor3f(*black)
         for i in range(3):
             #GL.glColor(*self.color[i])
@@ -218,7 +218,7 @@ class TriadeActor(Actor):
         GL.glEnd()
         # Coord plane triangles of size 0.5
         GL.glBegin(GL.GL_TRIANGLES)
-        pts = Formex(mpattern('16')).scale(0.5).f.reshape(-1,3)
+        pts = Formex(mpattern('16')).scale(0.5).coords.reshape(-1,3)
         for i in range(3):
             pts = pts.rollAxes(1)
             GL.glColor(*self.color[i])
@@ -394,7 +394,7 @@ class GeomActor(Actor):
         if isinstance(data,GeomActor):
             self.coords,self.elems,self.eltype = data.coords,data.elems,data.eltype
         elif isinstance(data,Formex):
-            self.coords = data.f
+            self.coords = data.coords
             self.elems = None
             self.eltype = data.eltype
         else:

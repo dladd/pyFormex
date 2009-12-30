@@ -39,7 +39,7 @@ from plugins.tools import *
 
 def editFormex(F,name):
     """Edit a Formex"""
-    items = [('coords',repr(array(F.f)),'text')]
+    items = [('coords',repr(array(F.coords)),'text')]
     if F.p is not None:
         items.append(('prop',repr(array(F.p)),'text'))
     items.append(('eltype',F.eltype))

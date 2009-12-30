@@ -39,7 +39,7 @@ def prepare(V):
     P = V.center()
     print("Initial P = %s" % P)
     VA = draw(V,bbox=None,color='black')
-    area,norm = surface.areaNormals(V.f)
+    area,norm = surface.areaNormals(V.coords)
     N = norm[0]
     return V,P,N
 
@@ -60,7 +60,7 @@ def testview(F,V,P):
     print(F.center())
     undraw(VA)
     VA = draw(V)
-    area,norm = surface.areaNormals(V.f)
+    area,norm = surface.areaNormals(V.coords)
     N = norm[0]
     return P,N
 

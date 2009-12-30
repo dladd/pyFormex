@@ -77,6 +77,7 @@ main pyformex path are considered to belong to the pyformex core functionality.
    :maxdepth: 2
    :numbered: 6
 
+   ref/geometry
    ref/connectivity
    ref/simple
    ref/project
@@ -90,7 +91,7 @@ These modules are located under pyformex/gui.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 11
+   :numbered: 12
 
    ref/widgets
    ref/colorscale
@@ -117,11 +118,11 @@ path, these modules are in no way different from other pyFormex modules.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 26
+   :numbered: 27
 
-   ref/geometry
    ref/curve
    ref/surface
+   ref/geomtools
    ref/isopar
    ref/section2d
    ref/inertia
@@ -155,7 +156,7 @@ elsewhere.
 
 .. toctree::
    :maxdepth: 1
-   :numbered: 47
+   :numbered: 48
 
    ref/olist
    ref/mydict

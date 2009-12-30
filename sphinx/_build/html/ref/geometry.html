@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>27. geometry — &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>7. geometry — A generic interface to the Coords transformation methods &mdash; pyFormex v0.8.2-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="28. curve — Definition of curves in pyFormex." href="curve.html" />
-    <link rel="prev" title="26. toolbar — Toolbars for pyformex GUI." href="toolbar.html" /> 
+    <link rel="next" title="8. connectivity — A class and functions for handling nodal connectivity." href="connectivity.html" />
+    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +36,10 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="curve.html" title="28. curve — Definition of curves in pyFormex."
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="26. toolbar — Toolbars for pyformex GUI."
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -54,10 +54,77 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="geometry">
-<span id="sec-ref-geometry"></span><h1>27. <tt class="xref docutils literal"><span class="pre">geometry</span></tt> &#8212;<a class="headerlink" href="#geometry" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-geometry">
+<span id="sec-ref-geometry"></span><h1>7. <tt class="xref docutils literal"><span class="pre">geometry</span></tt> &#8212; A generic interface to the Coords transformation methods<a class="headerlink" href="#module-geometry" title="Permalink to this headline">¶</a></h1>
+<p>A generic interface to the Coords transformation methods</p>
+<p>This module defines a generic Geometry superclass which adds all the
+possibilities of coordinate transformations offered by the
+Coords class to the derived classes.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is experimental stuff!</p>
+</div>
+<dl class="class">
+<dt id="geometry.Geometry">
+<em class="property">class </em><tt class="descclassname">geometry.</tt><tt class="descname">Geometry</tt><a class="headerlink" href="#geometry.Geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Geometry objects have the following methods:</p>
+<dl class="method">
+<dt id="geometry.Geometry.transform">
+<tt class="descname">transform</tt><big>(</big><em>funcname</em>, <em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.transform" title="Permalink to this definition">¶</a></dt>
+<dd>Transform the coordinates of the object using the function
+func(<a href="#id1"><span class="problematic" id="id2">*</span></a>args,**kargs), where func is a transformation method of the
+Coords class.</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.scale">
+<tt class="descname">scale</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a copy scaled with scale[i] in direction i.</p>
+<p>The scale should be a list of 3 scaling factors for the 3 axis
+directions, or a single scaling factor.
+In the latter case, dir (a single axis number or a list) may be given
+to specify the direction(s) to scale. The default is to produce a
+homothetic scaling.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.translate">
+<tt class="descname">translate</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#geometry.Geometry.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a <tt class="xref docutils literal"><span class="pre">Coords</span></tt> object.</p>
+<p>The translation vector can be specified in one of the following ways:</p>
+<ul class="simple">
+<li>an axis number (0,1,2),</li>
+<li>a single translation vector,</li>
+<li>an array of translation vectors.</li>
+</ul>
+<p>If an axis number is given, a unit vector in the direction of the
+specified axis will be used.
+If an array of translation vectors is given, it should be
+broadcastable to the size of the <tt class="xref docutils literal"><span class="pre">Coords</span></tt> array.
+If a distance value is given, the translation vector is multiplied
+with this value before it is added to the coordinates.</p>
+<p>Thus, the following lines are all equivalent:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span><span class="mf">1</span><span class="p">)</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">,</span><span class="mf">0</span><span class="p">])</span>
+<span class="n">F</span><span class="o">.</span><span class="n">translate</span><span class="p">([</span><span class="mf">0</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">0</span><span class="p">],</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="geometry.Geometry.draw">
+<tt class="descname">draw</tt><big>(</big><em>color='red'</em><big>)</big><a class="headerlink" href="#geometry.Geometry.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <p><strong>Functions defined in the module geometry</strong></p>
 <blockquote>
+<dl class="function">
+<dt id="geometry.coords_transformation">
+<tt class="descclassname">geometry.</tt><tt class="descname">coords_transformation</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#geometry.coords_transformation" title="Permalink to this definition">¶</a></dt>
+<dd>Perform a transformation on the .coords attribute of the object</dd></dl>
+
 </blockquote>
 </div>
 
@@ -72,11 +139,11 @@
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
-            <p class="topless"><a href="toolbar.html"
-                                  title="previous chapter">26. <tt class="docutils literal"><span class="pre">toolbar</span></tt> &#8212; Toolbars for pyformex GUI.</a></p>
+            <p class="topless"><a href="colors.html"
+                                  title="previous chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
             <h4>Next topic</h4>
-            <p class="topless"><a href="curve.html"
-                                  title="next chapter">28. <tt class="docutils literal docutils literal"><span class="pre">curve</span></tt> &#8212; Definition of curves in pyFormex.</a></p>
+            <p class="topless"><a href="connectivity.html"
+                                  title="next chapter">8. <tt class="docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/geometry.txt"
@@ -109,10 +176,10 @@
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="curve.html" title="28. curve — Definition of curves in pyFormex."
+          <a href="connectivity.html" title="8. connectivity — A class and functions for handling nodal connectivity."
              >next</a> |</li>
         <li class="right" >
-          <a href="toolbar.html" title="26. toolbar — Toolbars for pyformex GUI."
+          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     

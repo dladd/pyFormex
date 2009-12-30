@@ -34,7 +34,7 @@ from plugins.geomtools import triangleCircumCircle
 
 #
 def drawCircles(F):
-    for r,C,n in zip(*triangleCircumCircle(F.f)):
+    for r,C,n in zip(*triangleCircumCircle(F.coords)):
         c = simple.circle().swapAxes(0,2).scale(r).rotate(rotMatrix(n)).trl(C)
         draw(c)
         zoomAll()   

@@ -70,10 +70,10 @@ def centerline(F,dir,nx=2,mode=2,th=0.2):
         for P in grid:
             test = abs(F.distanceFromPlane(P,n)) < th
             if mode == 1:
-                C = F.f[test].mean(axis=0)
+                C = F.coords[test].mean(axis=0)
             elif mode == 2:
                 test = test.sum(axis=-1)
-                G = F.select(test==F.f.shape[1])
+                G = F.select(test==F.coords.shape[1])
                 print(G)
                 C = G.center()
             center.append(C)

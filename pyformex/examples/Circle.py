@@ -60,8 +60,8 @@ draw(curve)
 
 # Create circles in the middle of each segment, with normal along the segment
 # begin and end points of segment
-A = curve.f[:,0,:]
-B = curve.f[:,1,:]
+A = curve.coords[:,0,:]
+B = curve.coords[:,1,:]
 # midpoint and segment director
 C = 0.5*(B+A)
 D = B-A

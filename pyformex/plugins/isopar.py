@@ -151,7 +151,7 @@ class Isopar(object):
         Returns a Coords array with same shape as X
         """
         if isinstance(X,Formex):
-            return Formex(self.transform(X.f),X.p,X.eltype)
+            return Formex(self.transform(X.coords),X.p,X.eltype)
         
         ndim,atoms = Isopar.isodata[self.eltype]
         X = Coords(X)
@@ -168,7 +168,7 @@ class Isopar(object):
 
         The result is a topologically equivalent Formex.
         """
-        return Formex(self.transform(F.f),F.p,F.eltype)
+        return Formex(self.transform(F.coords),F.p,F.eltype)
 
 
 def transformFormex(F,trf):

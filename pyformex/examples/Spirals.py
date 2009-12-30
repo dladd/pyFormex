@@ -68,7 +68,7 @@ zf = lambda x : c * exp(b*x)
 rf = lambda x : a * exp(b*x)
 
 
-S = spiral(F.f,[0,1,2],rf)#.rosette(nwires,360./nwires)
+S = spiral(F.coords,[0,1,2],rf)#.rosette(nwires,360./nwires)
 
 PL = curve.PolyLine(S[:,0,:])
 

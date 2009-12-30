@@ -96,6 +96,6 @@ if ack("Create Surface model?"):
         if fn:
             from plugins import surface
             f = file(fn,'w')
-            surface.write_stla(f,T.f)
+            surface.write_stla(f,T.coords)
             f.close()
 

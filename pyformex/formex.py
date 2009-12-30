@@ -293,7 +293,7 @@ def intersectionWithPlane(F,p,n):
     such that for each segment L the intersection point is given
     by (1-t)*L[0]+ t*L[1].
     """
-    f = F.f
+    f = F.coords
     if f.shape[1] != 2:
         raise RuntimeError,"Formex should have plexitude 2."
     p = asarray(p).reshape((3))
@@ -311,7 +311,7 @@ def pointsAt(F,t):
     that the first node has value 0.0 and the last has vaue 1.0.
     The return value is a Coords array with the points at values t.
     """
-    f = F.f
+    f = F.coords
     t = t[:,newaxis]
     return Coords((1.-t) * f[:,0,:] + t * f[:,1,:])
 
@@ -326,7 +326,7 @@ def intersectionPointsWithPlane(F,p,n):
     The result is a plex-1 Formex with the same number of elements as the
     original. Some of the points may be NaN's.
     """
-    f = F.f
+    f = F.coords
     t = intersectionWithPlane(F,p,n).reshape((-1,1))
     return Formex((1.-t) * f[:,0,:] + t * f[:,1,:])
 
@@ -354,8 +354,8 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
     P = pointsAt(C,t)
     t = t.reshape(3,-1).transpose()
     Pb = P.reshape(3,-1,3).swapaxes(0,1)
-    Pf = F.f
-    Ps = roll(F.f,-1,axis=1)
+    Pf = F.coords
+    Ps = roll(F.coords,-1,axis=1)
     t1 = t >= 0.+atol
     t2 = t <= 1.-atol
     t3 = t >= 0.-atol
@@ -650,9 +650,9 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
 
     C = [connect([F,F],nodid=ax) for ax in [[0,1],[1,2],[2,0]]]
     t = column_stack([Ci.intersectionWithPlane(p,n) for Ci in C])
-    P = column_stack([Ci.intersectionPointsWithPlane(p,n).f for Ci in C])    
+    P = column_stack([Ci.intersectionPointsWithPlane(p,n).coords for Ci in C])    
     T = (t >= 0.)*(t <= 1.)
-    d = F.f.distanceFromPlane(p,n)
+    d = F.coords.distanceFromPlane(p,n)
     U = abs(d) < atol
     V = U.sum(axis=-1) # number of vertices with |distance| < atol
     F1_pos = F2_pos = F3_pos = F4_pos = F5_pos = F6_pos = F7_pos = F1_neg = F2_neg = F3_neg = F4_neg = F5_neg = F6_neg = F7_neg = Formex()
@@ -824,13 +824,13 @@ def coords_transformation(f):
     """Define a Formex transformation as the equivalent Coords transformation.
 
     This decorator replaces a Formex method with the equally named
-    Coords method applied on the Formex coordinates attribute (.f).
+    Coords method applied on the Formex coordinates attribute (.coords).
     The return value is a Formex with changed coordinates but unchanged
     properties.
     """
     repl = getattr(Coords,f.__name__)
     def newf(self,*args,**kargs):
-        return Formex(repl(self.f,*args,**kargs),self.p,self.eltype)
+        return Formex(repl(self.coords,*args,**kargs),self.p,self.eltype)
     newf.__name__ = f.__name__
     newf.__doc__ = repl.__doc__
     return newf
@@ -892,7 +892,7 @@ class Formex(object):
         called to assign the properties.
         """
         if isinstance(data,Formex):
-            data = data.f
+            data = data.coords
         else:
             if type(data) == str:
                 data = pattern(data)
@@ -923,7 +923,7 @@ class Formex(object):
                     z = zeros((data.shape[0],data.shape[1],1),dtype=Float)
                     data = concatenate([data,z],axis=-1)
         # data should be OK now
-        self.f = Coords(data)    # make sure coordinates are a Coords object 
+        self.coords = Coords(data)    # make sure coordinates are a Coords object 
         self.setProp(prop)
         try:
             self.eltype = eltype.lower()
@@ -935,26 +935,26 @@ class Formex(object):
 
         This allows addressing element i of Formex F as F[i].
         """
-        return self.f[i]
+        return self.coords[i]
 
     def __setitem__(self,i,val):
         """Change element i of the Formex.
 
         This allows writing expressions as F[i] = [[1,2,3]].
         """
-        self.f[i] = val
+        self.coords[i] = val
 
     def element(self,i):
         """Return element i of the Formex"""
-        return self.f[i]
+        return self.coords[i]
 
     def point(self,i,j):
         """Return point j of element i"""
-        return self.f[i,j]
+        return self.coords[i,j]
 
     def coord(self,i,j,k):
         """Return coord k of point j of element i"""
-        return self.f[i,j,k]
+        return self.coords[i,j,k]
 
 ###########################################################################
 #
@@ -962,7 +962,7 @@ class Formex(object):
 #
     def nelems(self):
         """Return the number of elements in the formex."""
-        return self.f.shape[0]
+        return self.coords.shape[0]
 
 
     def nplex(self):
@@ -975,7 +975,7 @@ class Formex(object):
         3: triangles or quadratic line elements,
         4: tetraeders or quadrilaterals or cubic line elements.
         """
-        return self.f.shape[1]
+        return self.coords.shape[1]
     
     def ndim(self):
         """Return the number of dimensions.
@@ -985,7 +985,7 @@ class Formex(object):
         define 2D Formices by given only two coordinates: the third
         will automatically be set to zero.
         """
-        return self.f.shape[2]
+        return self.coords.shape[2]
     
     def npoints(self):
         """Return the number of points in the formex.
@@ -993,7 +993,7 @@ class Formex(object):
         This is the product of the number of elements in the formex
         with the number of nodes per element.
         """
-        return self.f.shape[0]*self.f.shape[1]
+        return self.coords.shape[0]*self.coords.shape[1]
     
     def shape(self):
         """Return the shape of the Formex.
@@ -1001,7 +1001,7 @@ class Formex(object):
         The shape of a Formex is the shape of its data array,
         i.e. a tuple (nelems, nplex, ndim).
         """
-        return self.f.shape
+        return self.coords.shape
 
 
     # Coordinates
@@ -1012,7 +1012,7 @@ class Formex(object):
         the ndarray, this method allows writing code that works with both
         Formex and ndarray instances. The results is always an ndarray.
         """
-        return self.f.view()
+        return self.coords.view()
 
 
     # Properties
@@ -1038,29 +1038,29 @@ class Formex(object):
     # the underlying Coords object
 
     def x(self):
-        return self.f.x()
+        return self.coords.x()
     def y(self):
-        return self.f.y()
+        return self.coords.y()
     def z(self):
-        return self.f.z()
+        return self.coords.z()
 
     def bbox(self):
-        return self.f.bbox()
+        return self.coords.bbox()
 
     def center(self):
-        return self.f.center()
+        return self.coords.center()
 
     def centroid(self):
-        return self.f.centroid()
+        return self.coords.centroid()
 
     def sizes(self):
-        return self.f.sizes()
+        return self.coords.sizes()
 
     def dsize(self):
-        return self.f.dsize()
+        return self.coords.dsize()
 
     def bsphere(self):
-        return self.f.bsphere()
+        return self.coords.bsphere()
 
 
     def centroids(self):
@@ -1070,19 +1070,19 @@ class Formex(object):
         are the mean values of all points of the element.
         The return value is a Coords object with nelems points.
         """
-        return self.f.mean(axis=1)
+        return self.coords.mean(axis=1)
 
     #  Distance
 
     def distanceFromPlane(self,*args,**kargs):
-        return self.f.distanceFromPlane(*args,**kargs)
+        return self.coords.distanceFromPlane(*args,**kargs)
 
     def distanceFromLine(self,*args,**kargs):
-        return self.f.distanceFromLine(*args,**kargs)
+        return self.coords.distanceFromLine(*args,**kargs)
 
 
     def distanceFromPoint(self,*args,**kargs):
-        return self.f.distanceFromPoint(*args,**kargs)
+        return self.coords.distanceFromPoint(*args,**kargs)
  
 
     # Data conversion
@@ -1107,12 +1107,12 @@ class Formex(object):
         """
         if atol is None:
             atol = rtol * self.dsize()
-        f = reshape(self.f,(self.nnodes(),3))
+        f = reshape(self.coords,(self.nnodes(),3))
         f,s = f.fuse(nodesperbox,0.5,rtol=rtol,atol=atol)
         if repeat:
             f,t = f.fuse(nodesperbox,0.75,rtol=rtol,atol=atol)
             s = t[s]
-        e = reshape(s,self.f.shape[:2])
+        e = reshape(s,self.coords.shape[:2])
         return f,e
 
 
@@ -1167,10 +1167,10 @@ class Formex(object):
            {[1.0,0.0,0.0; 0.0,1.0,0.0], [0.0,1.0,0.0; 1.0,2.0,0.0]}
         """
         s = "{"
-        if len(self.f) > 0:
-            s += self.element2str(self.f[0])
-            if len(self.f) > 1:
-                for i in self.f[1:]:
+        if len(self.coords) > 0:
+            s += self.element2str(self.coords[0])
+            if len(self.coords) > 1:
+                for i in self.coords[1:]:
                     s += ", " + self.element2str(i)
         return s+"}"
 
@@ -1189,7 +1189,7 @@ class Formex(object):
                 
     def asArray(self):
         """Return string representation as a numpy array."""
-        return self.f.__str__()
+        return self.coords.__str__()
 
     #default print function
     __str__ = asFormex
@@ -1208,7 +1208,7 @@ class Formex(object):
 
 
     def fprint(self,*args,**kargs):
-        self.f.fprint(*args,**kargs)
+        self.coords.fprint(*args,**kargs)
            
 
 ##############################################################################
@@ -1232,7 +1232,7 @@ class Formex(object):
             self.p = None
         else:
             p = array(p).astype(Int)
-            self.p = resize(p,self.f.shape[:1])
+            self.p = resize(p,self.coords.shape[:1])
         return self
 
 
@@ -1246,22 +1246,22 @@ class Formex(object):
         >>> print(F)
         {[1.0,1.0,1.0], [1.0,1.0,1.0]}
         """
-        if F.f.size == 0:
+        if F.coords.size == 0:
             return self
-        if self.f.size == 0:
-            self.f = F.f
+        if self.coords.size == 0:
+            self.coords = F.coords
             self.p = F.p
             return self
 
-        self.f = Coords(concatenate((self.f,F.f)))
+        self.coords = Coords(concatenate((self.coords,F.coords)))
         ## What to do if one of the formices has properties, the other one not?
         ## The current policy is to use zero property values for the Formex
         ## without props
         if self.p is not None or F.p is not None:
             if self.p is None:
-                self.p = zeros(shape=self.f.shape[:1],dtype=Int)
+                self.p = zeros(shape=self.coords.shape[:1],dtype=Int)
             if F.p is None:
-                p = zeros(shape=F.f.shape[:1],dtype=Int)
+                p = zeros(shape=F.coords.shape[:1],dtype=Int)
             else:
                 p = F.p
             self.p = concatenate((self.p,p))
@@ -1293,15 +1293,15 @@ class Formex(object):
         !! THE 0-direction OF NODE 0
         """
         sel = argsort(self.x()[:,0])
-        f = self.f[sel]
+        f = self.coords[sel]
         if self.p:
             p = self.p[sel]
         return Formex(f,p,self.eltype)
        
     def copy(self):
         """Return a deep copy of itself."""
-        return Formex(self.f,self.p,self.eltype)
-        ## IS THIS CORRECT? Shouldn't this be self.f.copy() ???
+        return Formex(self.coords,self.p,self.eltype)
+        ## IS THIS CORRECT? Shouldn't this be self.coords.copy() ???
         ## In all examples it works, I think because the operations on
         ## the array data cause a copy to be made. Need to explore this.
 
@@ -1332,7 +1332,7 @@ class Formex(object):
         We made it a class method and not a global function, because that
         would interfere with NumPy's own concatenate function.
         """
-        f = concatenate([ F.f for F in Flist ])
+        f = concatenate([ F.coords for F in Flist ])
         plist = [ F.p for F in Flist ]
         hasp = [ p is not None for p in plist ]
         nhasp = sum(hasp)
@@ -1354,10 +1354,10 @@ class Formex(object):
         any other index mechanism accepted by numpy's ndarray
         """
         if self.p is None:
-            return Formex(self.f[idx],eltype=self.eltype)
+            return Formex(self.coords[idx],eltype=self.eltype)
         else:
             idx = asarray(idx)
-            return Formex(self.f[idx],self.p[idx],self.eltype)
+            return Formex(self.coords[idx],self.p[idx],self.eltype)
 
       
     def selectNodes(self,idx):
@@ -1369,7 +1369,7 @@ class Formex(object):
         F.selectNodes([0,1]) + F.selectNodes([1,2]) + F.selectNodes([2,0])
         The returned Formex inherits the property of its parent.
         """
-        return Formex(self.f[:,idx,:],self.p,self.eltype)
+        return Formex(self.coords[:,idx,:],self.p,self.eltype)
 
 
     def points(self):
@@ -1384,7 +1384,7 @@ class Formex(object):
         
         The vertices() method returns the same data, but as a Coords object.
         """
-        return Formex(self.f.reshape((-1,1,3)))
+        return Formex(self.coords.reshape((-1,1,3)))
 
 
     def vertices(self):
@@ -1395,7 +1395,7 @@ class Formex(object):
         
         The points() method returns the same data, but as a Formex.
         """
-        return self.f.reshape((-1,3))
+        return self.coords.reshape((-1,3))
 
 
     def remove(self,F):
@@ -1406,10 +1406,10 @@ class Formex(object):
         order. This is a slow operation: for large structures, you should
         avoid it where possible.
         """
-        flag = ones((self.f.shape[0],))
-        for i in range(self.f.shape[0]):
-            for j in range(F.f.shape[0]):
-                if allclose(self.f[i],F.f[j]):
+        flag = ones((self.coords.shape[0],))
+        for i in range(self.coords.shape[0]):
+            for j in range(F.coords.shape[0]):
+                if allclose(self.coords[i],F.coords[j]):
                     # element i is same as element j of F
                     flag[i] = 0
                     break
@@ -1417,7 +1417,7 @@ class Formex(object):
             p = None
         else:
             p = self.p[flag>0]
-        return Formex(self.f[flag>0],p,self.eltype)
+        return Formex(self.coords[flag>0],p,self.eltype)
 
     
     def whereProp(self,val):
@@ -1448,14 +1448,14 @@ class Formex(object):
         If the Formex has no properties, a copy with all elements is returned.
         """
         if self.p is None:
-            return Formex(self.f,eltype=self.eltype)
+            return Formex(self.coords,eltype=self.eltype)
         elif type(val) == int:
-            return Formex(self.f[self.p==val],val,self.eltype)
+            return Formex(self.coords[self.p==val],val,self.eltype)
         else:
             t = zeros(self.p.shape,dtype=bool)
             for v in asarray(val).flat:
                 t += (self.p == v)
-            return Formex(self.f[t],self.p[t],self.eltype)
+            return Formex(self.coords[t],self.p[t],self.eltype)
             
 
     def splitProp(self):
@@ -1480,9 +1480,9 @@ class Formex(object):
         ## Obviously, in the case of plexitude 1 and 2,
         ## there are shorter ways to perform this
         return Formex( [ [
-            [ self.f[j,:,i].min() for i in range(self.f.shape[2])],
-            [ self.f[j,:,i].max() for i in range(self.f.shape[2])] ]
-                        for j in range(self.f.shape[0]) ] )
+            [ self.coords[j,:,i].min() for i in range(self.coords.shape[2])],
+            [ self.coords[j,:,i].max() for i in range(self.coords.shape[2])] ]
+                        for j in range(self.coords.shape[0]) ] )
 
 
         
@@ -1500,10 +1500,10 @@ class Formex(object):
         ##  THIS IS SLOW!! IT NEEDS TO BE REIMPLEMENTED BASED ON THE
         ##  feModel, and should probably be moved to a dedicated class
         ##
-        flag = ones((self.f.shape[0],))
-        for i in range(self.f.shape[0]):
+        flag = ones((self.coords.shape[0],))
+        for i in range(self.coords.shape[0]):
             for j in range(i):
-                if allclose(self.f[i],self.f[j],rtol=rtol,atol=atol):
+                if allclose(self.coords[i],self.coords[j],rtol=rtol,atol=atol):
                     # i is a duplicate node
                     flag[i] = 0
                     break
@@ -1511,7 +1511,7 @@ class Formex(object):
             p = None
         else:
             p = self.p[flag>0]
-        return Formex(self.f[flag>0],p,self.eltype)
+        return Formex(self.coords[flag>0],p,self.eltype)
 
       
     def nonzero(self):
@@ -1519,7 +1519,7 @@ class Formex(object):
 
         A zero element is an element where all nodes are equal."""
         # NOT IMPLEMENTED YET !!! FOR NOW, RETURNS A COPY
-        return Formex(self.f,self.p,self.eltype)
+        return Formex(self.coords,self.p,self.eltype)
 
 
     def reverse(self):
@@ -1527,7 +1527,7 @@ class Formex(object):
 
         Reversing an element means reversing the order of its points.
         """
-        return Formex(self.f[:,range(self.f.shape[1]-1,-1,-1),:],self.p,self.eltype)
+        return Formex(self.coords[:,range(self.coords.shape[1]-1,-1,-1),:],self.p,self.eltype)
 
 
 #############################
@@ -1563,7 +1563,7 @@ class Formex(object):
         """
         if min is None and max is None:
             raise ValueError,"At least one of min or max have to be specified."
-        f = self.f
+        f = self.coords
         if type(nodes)==str:
             nod = range(f.shape[1])
         else:
@@ -1766,8 +1766,8 @@ class Formex(object):
         wireframe draw mode to show all elements disconnected. A factor above
         1.0 will grow the elements.
         """
-        c = self.f.mean(1).reshape((self.f.shape[0],1,self.f.shape[2]))
-        return Formex(factor*(self.f-c)+c,self.p,self.eltype)
+        c = self.coords.mean(1).reshape((self.coords.shape[0],1,self.coords.shape[2]))
+        return Formex(factor*(self.coords-c)+c,self.p,self.eltype)
 
 
 ##############################################################################
@@ -1780,7 +1780,7 @@ class Formex(object):
 
         The original Formex is the first of the n replicas.
         """
-        f = array( [ self.f for i in range(n) ] )
+        f = array( [ self.coords for i in range(n) ] )
         for i in range(1,n):
             f[i,:,:,dir] += i*step
         f.shape = (f.shape[0]*f.shape[1],f.shape[2],f.shape[3])
@@ -1810,7 +1810,7 @@ class Formex(object):
         point must be given as a list (or array) of three coordinates.
         The original Formex is the first of the n replicas.
         """
-        f = self.f - point
+        f = self.coords - point
         f = array( [ f for i in range(n) ] )
         for i in range(1,n):
             m = array(rotationMatrix(i*angle,axis))
@@ -1963,9 +1963,9 @@ class Formex(object):
             raise RuntimeError,"Number of elements should be integer multiple of n"
         m = self.nelems()/n
         if self.p is None:
-            return [ Formex(self.f[n*i:n*(i+1)],self.eltype) for i in range(m) ]
+            return [ Formex(self.coords[n*i:n*(i+1)],self.eltype) for i in range(m) ]
         else:
-            return [ Formex(self.f[n*i:n*(i+1)],self.p[n*i:n*(i+1)],self.eltype) for i in range(m) ]
+            return [ Formex(self.coords[n*i:n*(i+1)],self.p[n*i:n*(i+1)],self.eltype) for i in range(m) ]
 
 
 #################### Read/Write Formex File ##################################
@@ -1984,10 +1984,10 @@ class Formex(object):
         if isname:
             fil = file(fil,'w')
         fil.write("# Formex File Format 1.1 (http://pyformex.org)\n")
-        nelems,nplex = self.f.shape[:2]
+        nelems,nplex = self.coords.shape[:2]
         hasp = self.p is not None
         fil.write("# nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'\n" % (nelems,nplex,hasp,self.eltype,sep))
-        self.f.tofile(fil,sep)
+        self.coords.tofile(fil,sep)
         fil.write('\n')
         if hasp:
             self.p.tofile(fil,sep)
@@ -2140,9 +2140,9 @@ def connect(Flist,nodid=None,bias=None,loop=False):
         n = min([ Flist[i].nelems() - bias[i] for i in range(m) ])
     f = zeros((n,m,3),dtype=Float)
     for i,j,k in zip(range(m),nodid,bias):
-        v = Flist[i].f[k:k+n,j,:]
+        v = Flist[i].coords[k:k+n,j,:]
         if loop and k > 0:
-            v = concatenate([v,Flist[i].f[:k,j,:]])
+            v = concatenate([v,Flist[i].coords[:k,j,:]])
         f[:,i,:] = resize(v,(n,3))
     return Formex(f)
 
@@ -2170,7 +2170,7 @@ def interpolate(F,G,div,swap=False):
     If swap==True, the order is swapped and you get m sequences of n
     interpolations.
     """
-    r = Coords.interpolate(F.f,G.f,div)
+    r = Coords.interpolate(F.coords,G.coords,div)
     # r is a 4-dim array
     if swap:
         r = r.swapaxes(0,1)

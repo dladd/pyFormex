@@ -138,7 +138,7 @@ def createSpiralCurve(turns,nmod):
     else:
         zf = lambda x : 0.0
 
-    S = spiral(F.f,[0,1,2],rf,zf)
+    S = spiral(F.coords,[0,1,2],rf,zf)
 
     PL = curve.PolyLine(S[:,0,:])
 

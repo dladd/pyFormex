@@ -53,7 +53,7 @@ def read_Formex(fn):
     GD.message("Reading file %s" % fn)
     t = timer.Timer()
     F = Formex.read(fn)
-    nelems,nplex = F.f.shape[0:2]
+    nelems,nplex = F.coords.shape[0:2]
     GD.message("Read %d elems of plexitude %d in %s seconds" % (nelems,nplex, t.seconds()))
     return F
 
@@ -159,7 +159,7 @@ def showPrincipal():
     if not F:
         return
     # compute the axes
-    C,I = inertia.inertia(F.f)
+    C,I = inertia.inertia(F.coords)
     GD.message("Center of gravity: %s" % C)
     GD.message("Inertia tensor: %s" % I)
     Iprin,Iaxes = inertia.principal(I,sort=True,right_handed=True)
