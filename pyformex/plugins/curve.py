@@ -37,6 +37,7 @@ but special cases may be created for handling plane curves.
 #from pyformex import debug
 from numpy import *
 from formex import *
+from plugins.geomtools import triangleCircumCircle
 
 
 ##############################################################################
@@ -600,8 +601,6 @@ class NaturalSpline(Curve):
         return X
 
 ##############################################################################
-
-from plugins.geometry import triangleCircumCircle
 
 def vectorPairAngle(v1,v2):
     """Return the angle between the vectors v1 and v2."""

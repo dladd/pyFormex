@@ -574,7 +574,7 @@ Raises an error if self.ndim &lt; 2.</p>
 
 <dl class="method">
 <dt id="coords.Coords.fuse">
-<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.e-5</em>, <em>atol=1.e-5</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">fuse</tt><big>(</big><em>nodesperbox=1</em>, <em>shift=0.5</em>, <em>rtol=1.e-5</em>, <em>atol=1.e-5</em>, <em>fusemeth=0</em><big>)</big><a class="headerlink" href="#coords.Coords.fuse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find (almost) identical nodes and return a compressed set.</p>
 <p>This method finds the points that are very close and replaces them
 with a single point. The return value is a tuple of two arrays:</p>
@@ -604,12 +604,13 @@ boxes shifted in space.</p>
 
 <dl class="classmethod">
 <dt id="coords.Coords.concatenate">
-<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>L</em><big>)</big><a class="headerlink" href="#coords.Coords.concatenate" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>L</em>, <em>axis=0</em><big>)</big><a class="headerlink" href="#coords.Coords.concatenate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate a list of <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
 <p>All <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object in the list L should have the same shape
-except for the length of the first axis.
+except for the length of the specified axis.
 This function is equivalent to the numpy concatenate, but makes
-sure the result is a <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object.</p>
+sure the result is a <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object,and the default axis
+is the first one instead of the last.</p>
 </dd></dl>
 
 <dl class="classmethod">
@@ -714,7 +715,7 @@ ones, you need to copy them before you use the transformation.</p>
                                   title="previous chapter">pyFormex reference manual</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="formex.html"
-                                  title="next chapter">2. <tt class="docutils literal docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
+                                  title="next chapter">2. <tt class="docutils literal"><span class="pre">formex</span></tt> &#8212; Formex algebra in Python</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/coords.txt"

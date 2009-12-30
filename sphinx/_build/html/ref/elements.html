@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>11. elements — Element local coordinates and numbering. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>12. elements — Element local coordinates and numbering. &mdash; pyFormex v0.8.2-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -23,7 +23,7 @@
     <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
     <link rel="next" title="12. widgets — A collection of custom widgets used in the pyFormex GUI" href="widgets.html" />
-    <link rel="prev" title="10. utils — A collection of miscellaneous utility functions." href="utils.html" /> 
+    <link rel="prev" title="11. utils — A collection of miscellaneous utility functions." href="utils.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +39,7 @@
           <a href="widgets.html" title="12. widgets — A collection of custom widgets used in the pyFormex GUI"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="utils.html" title="10. utils — A collection of miscellaneous utility functions."
+          <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -55,7 +55,7 @@
           <div class="body">
             
   <div class="section" id="module-elements">
-<span id="sec-ref-elements"></span><h1>11. <tt class="xref docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
+<span id="sec-ref-elements"></span><h1>12. <tt class="xref docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.<a class="headerlink" href="#module-elements" title="Permalink to this headline">¶</a></h1>
 <p>Element local coordinates and numbering.</p>
 <p>This modules allows for a consistent local numbering scheme throughout
 pyFormex. When interfacing with other programs, one should be aware
@@ -67,11 +67,19 @@ should be done by the interface modules.</p>
 <dd><p>Element base class: an empty element.</p>
 <p>All derived classes should have a capitalized name: starting with
 an uppercase character and further only lower case and digits.</p>
-<p>Each element is defined by the following attributes:
-vertices: the natural coordinates of its vertices,
-edges: a list of edges, each defined by a couple of node numbers,
-faces: a list of faces, each defined by a list of minimum 3 node numbers,
-element: a list of all node numbers</p>
+<p>Each element is defined by the following attributes:</p>
+<ul class="simple">
+<li><cite>vertices</cite>: the natural coordinates of its vertices,</li>
+<li><cite>edges</cite>: a list of edges, each defined by a couple of node numbers,</li>
+<li><cite>faces</cite>: a list of faces, each defined by a list of minimum 3 node
+numbers,</li>
+<li><cite>element</cite>: a list of all node numbers</li>
+<li><cite>drawfaces</cite>: a list of faces to be drawn, if different from faces. This
+is an optional attribute. If defined, it will be used instead of the
+<cite>faces</cite> attribute to draw the element. This can e.g. be used to draw
+approximate representations for higher order elements for which there
+is no correct drawing function.</li>
+</ul>
 <p>The vertices of the elements are defined in a unit space [0,1] in each
 axis direction.</p>
 <p>The elements guarantee a fixed local numbering scheme of the vertices.
@@ -111,6 +119,13 @@ normal on the face.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="elements.Tri6">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Tri6</tt><a class="headerlink" href="#elements.Tri6" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 6-node triangle</p>
+<p>Tri6 objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="elements.Quad4">
 <em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad4</tt><a class="headerlink" href="#elements.Quad4" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 4-node quadrilateral</p>
@@ -122,6 +137,13 @@ normal on the face.</p>
 <em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad9</tt><a class="headerlink" href="#elements.Quad9" title="Permalink to this definition">¶</a></dt>
 <dd><p>A 4-node quadrilateral</p>
 <p>Quad9 objects have the following methods:</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="elements.Quad8">
+<em class="property">class </em><tt class="descclassname">elements.</tt><tt class="descname">Quad8</tt><a class="headerlink" href="#elements.Quad8" title="Permalink to this definition">¶</a></dt>
+<dd><p>A 8-node quadrilateral</p>
+<p>Quad8 objects have the following methods:</p>
 </dd></dl>
 
 <dl class="class">
@@ -167,10 +189,10 @@ normal on the face.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="utils.html"
-                                  title="previous chapter">10. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
+                                  title="previous chapter">11. <tt class="docutils literal"><span class="pre">utils</span></tt> &#8212; A collection of miscellaneous utility functions.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="widgets.html"
-                                  title="next chapter">12. <tt class="docutils literal docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
+                                  title="next chapter">12. <tt class="docutils literal"><span class="pre">widgets</span></tt> &#8212; A collection of custom widgets used in the pyFormex GUI</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/elements.txt"
@@ -206,7 +228,7 @@ normal on the face.</p>
           <a href="widgets.html" title="12. widgets — A collection of custom widgets used in the pyFormex GUI"
              >next</a> |</li>
         <li class="right" >
-          <a href="utils.html" title="10. utils — A collection of miscellaneous utility functions."
+          <a href="utils.html" title="11. utils — A collection of miscellaneous utility functions."
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     

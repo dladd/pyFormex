@@ -32,7 +32,7 @@ techniques = ['dialog', 'animation']
 """
 
 from simple import circle
-from plugins.geometry import rotationAngle
+from plugins.geomtools import rotationAngle
 
 # Test
 linewidth(1)

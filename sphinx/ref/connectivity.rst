@@ -27,6 +27,7 @@
       .. automethod:: checkUnique()
       .. automethod:: check()
       .. automethod:: reverseIndex()
+      .. automethod:: selectNodes(nodsel)
       .. automethod:: expand()
 
 **Functions defined in the module connectivity**

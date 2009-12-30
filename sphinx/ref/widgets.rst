@@ -234,7 +234,6 @@
 
       MessageBox objects have the following methods:
 
-      .. automethod:: updateText(text,format='')
       .. automethod:: getResult()
 
    .. autoclass:: TextBox
@@ -242,7 +241,6 @@
 
       TextBox objects have the following methods:
 
-      .. automethod:: updateText(text,format='')
       .. automethod:: getResult()
 
    .. autoclass:: ButtonBox
@@ -312,6 +310,7 @@
    .. autofunction:: inputAnyOld(item,parent=None)
    .. autofunction:: updateDialogItems(data,newdata)
    .. autofunction:: dialogButtons(dialog,actions,default=None)
+   .. autofunction:: updateText(widget,text,format='')
    .. autofunction:: normalize(s)
 
    

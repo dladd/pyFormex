@@ -22,7 +22,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="45. olist — Some convenient shortcuts for common list operations." href="olist.html" />
+    <link rel="next" title="48. olist — Some convenient shortcuts for common list operations." href="olist.html" />
     <link rel="prev" title="46. tools — tools.py" href="tools.html" /> 
   </head>
   <body>
@@ -36,7 +36,7 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="olist.html" title="45. olist — Some convenient shortcuts for common list operations."
+          <a href="olist.html" title="48. olist — Some convenient shortcuts for common list operations."
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="tools.html" title="46. tools — tools.py"
@@ -224,18 +224,58 @@ If no onoff is given, this works as a toggle.</p>
 <dd>Remove the annotation i.</dd></dl>
 
 <dl class="method">
+<dt id="objects.DrawableObjects.hasAnnotation">
+<tt class="descname">hasAnnotation</tt><big>(</big><em>i=0</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasAnnotation" title="Permalink to this definition">¶</a></dt>
+<dd>Return the status of annotation i</dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.hasNames">
+<tt class="descname">hasNames</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasNames" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.hasNumbers">
+<tt class="descname">hasNumbers</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasNumbers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.hasNodeNumbers">
+<tt class="descname">hasNodeNumbers</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasNodeNumbers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.hasNodeMarks">
+<tt class="descname">hasNodeMarks</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasNodeMarks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.hasBbox">
+<tt class="descname">hasBbox</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.hasBbox" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="objects.DrawableObjects.toggleNames">
-<tt class="descname">toggleNames</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleNames" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toggleNames</tt><big>(</big><em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleNames" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.toggleNumbers">
-<tt class="descname">toggleNumbers</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleNumbers" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toggleNumbers</tt><big>(</big><em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleNumbers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.toggleNodeNumbers">
+<tt class="descname">toggleNodeNumbers</tt><big>(</big><em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleNodeNumbers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="objects.DrawableObjects.toggleNodes">
+<tt class="descname">toggleNodes</tt><big>(</big><em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleNodes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="objects.DrawableObjects.toggleBbox">
-<tt class="descname">toggleBbox</tt><big>(</big><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleBbox" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">toggleBbox</tt><big>(</big><em>onoff=None</em><big>)</big><a class="headerlink" href="#objects.DrawableObjects.toggleBbox" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -263,6 +303,16 @@ If a selected object does not have a setProp method, it is ignored.</p>
 <dd>Draw the numbers of an object&#8217;s elements.</dd></dl>
 
 <dl class="function">
+<dt id="objects.draw_nodes">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_nodes</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_nodes" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the numbers of an object&#8217;s nodes.</dd></dl>
+
+<dl class="function">
+<dt id="objects.draw_node_numbers">
+<tt class="descclassname">objects.</tt><tt class="descname">draw_node_numbers</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_node_numbers" title="Permalink to this definition">¶</a></dt>
+<dd>Draw the numbers of an object&#8217;s nodes.</dd></dl>
+
+<dl class="function">
 <dt id="objects.draw_bbox">
 <tt class="descclassname">objects.</tt><tt class="descname">draw_bbox</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#objects.draw_bbox" title="Permalink to this definition">¶</a></dt>
 <dd>Draw the bbox of an object.</dd></dl>
@@ -285,7 +335,7 @@ If a selected object does not have a setProp method, it is ignored.</p>
                                   title="previous chapter">46. <tt class="docutils literal"><span class="pre">tools</span></tt> &#8212; tools.py</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="olist.html"
-                                  title="next chapter">45. <tt class="docutils literal"><span class="pre">olist</span></tt> &#8212; Some convenient shortcuts for common list operations.</a></p>
+                                  title="next chapter">48. <tt class="docutils literal docutils literal"><span class="pre">olist</span></tt> &#8212; Some convenient shortcuts for common list operations.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/objects.txt"
@@ -318,7 +368,7 @@ If a selected object does not have a setProp method, it is ignored.</p>
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olist.html" title="45. olist — Some convenient shortcuts for common list operations."
+          <a href="olist.html" title="48. olist — Some convenient shortcuts for common list operations."
              >next</a> |</li>
         <li class="right" >
           <a href="tools.html" title="46. tools — tools.py"

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>7. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.2-a1 documentation</title>
+    <title>8. connectivity — A class and functions for handling nodal connectivity. &mdash; pyFormex v0.8.2-a1 documentation</title>
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="top" title="pyFormex v0.8.2-a1 documentation" href="../index.html" />
     <link rel="up" title="pyFormex reference manual" href="../refman.html" />
-    <link rel="next" title="8. simple — Predefined geometries with a simple shape." href="simple.html" />
-    <link rel="prev" title="6. colors — Definition of some RGB colors and color conversion functions" href="colors.html" /> 
+    <link rel="next" title="9. simple — Predefined geometries with a simple shape." href="simple.html" />
+    <link rel="prev" title="27. geometry —" href="geometry.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,10 +36,10 @@
           <a href="../modindex.html" title="Global Module Index"
              accesskey="M">modules</a> |</li>
         <li class="right" >
-          <a href="simple.html" title="8. simple — Predefined geometries with a simple shape."
+          <a href="simple.html" title="9. simple — Predefined geometries with a simple shape."
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+          <a href="geometry.html" title="27. geometry —"
              accesskey="P">previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     
@@ -55,7 +55,7 @@
           <div class="body">
             
   <div class="section" id="module-connectivity">
-<span id="sec-ref-connectivity"></span><h1>7. <tt class="xref docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.<a class="headerlink" href="#module-connectivity" title="Permalink to this headline">¶</a></h1>
+<span id="sec-ref-connectivity"></span><h1>8. <tt class="xref docutils literal"><span class="pre">connectivity</span></tt> &#8212; A class and functions for handling nodal connectivity.<a class="headerlink" href="#module-connectivity" title="Permalink to this headline">¶</a></h1>
 <p>A class and functions for handling nodal connectivity.</p>
 <p>This module defines a specialized array class for representing nodal
 connectivity. This is e.g. used in mesh models, where geometry is
@@ -110,6 +110,17 @@ at creation time, but a method is provided to check the uniqueness.</p>
 <tt class="descname">reverseIndex</tt><big>(</big><big>)</big><a class="headerlink" href="#connectivity.Connectivity.reverseIndex" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a reverse index for the connectivity table.</p>
 <p>This is equivalent to the function reverseIndex()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="connectivity.Connectivity.selectNodes">
+<tt class="descname">selectNodes</tt><big>(</big><em>nodsel</em><big>)</big><a class="headerlink" href="#connectivity.Connectivity.selectNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a connectivity table with a subset of the nodes.</p>
+<p><cite>nodsel</cite> is an object that can be converted to a 1-dim or 2-dim
+array. Examples are a tuple of local node numbers, or a list
+of such tuples all having the same length.
+Each row of <cite>nodsel</cite> holds a list of local node numbers that
+should be retained in the new connectivity table.</p>
 </dd></dl>
 
 <dl class="method">
@@ -269,11 +280,11 @@ Each row holds the two vertex numbers of a single line segment.</p>
         </a></p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
-            <p class="topless"><a href="colors.html"
-                                  title="previous chapter">6. <tt class="docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+            <p class="topless"><a href="geometry.html"
+                                  title="previous chapter">27. <tt class="docutils literal"><span class="pre">geometry</span></tt> &#8212;</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="simple.html"
-                                  title="next chapter">8. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
+                                  title="next chapter">9. <tt class="docutils literal"><span class="pre">simple</span></tt> &#8212; Predefined geometries with a simple shape.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/connectivity.txt"
@@ -306,10 +317,10 @@ Each row holds the two vertex numbers of a single line segment.</p>
           <a href="../modindex.html" title="Global Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="simple.html" title="8. simple — Predefined geometries with a simple shape."
+          <a href="simple.html" title="9. simple — Predefined geometries with a simple shape."
              >next</a> |</li>
         <li class="right" >
-          <a href="colors.html" title="6. colors — Definition of some RGB colors and color conversion functions"
+          <a href="geometry.html" title="27. geometry —"
              >previous</a> |</li>
     <li><a href="http://pyformex.org/">pyFormex Home</a> &gt;</li>
     

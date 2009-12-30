@@ -149,18 +149,6 @@ old ones.</p>
 <p><strong>Functions defined in the module fe</strong></p>
 <blockquote>
 <dl class="function">
-<dt id="fe.mergeNodes">
-<tt class="descclassname">fe.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em><big>)</big><a class="headerlink" href="#fe.mergeNodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge all the nodes of a list of node sets.</p>
-<p>Each item in nodes is a Coords array.
-The return value is a tuple with:</p>
-<ul class="simple">
-<li>the coordinates of all unique nodes,</li>
-<li>a list of indices translating the old node numbers to the new.</li>
-</ul>
-</dd></dl>
-
-<dl class="function">
 <dt id="fe.mergeModels">
 <tt class="descclassname">fe.</tt><tt class="descname">mergeModels</tt><big>(</big><em>femodels</em><big>)</big><a class="headerlink" href="#fe.mergeModels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge all the nodes of a list of FE models.</p>
@@ -171,6 +159,8 @@ The return value is a tuple with:</p>
 <li>a list of elems corresponding to the input list,
 but with numbers referring to the new coordinates.</li>
 </ul>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
 </dd></dl>
 
 <dl class="function">
@@ -209,7 +199,7 @@ The return value is a merged fe Model.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="mesh.html"
-                                  title="previous chapter">35. <tt class="docutils literal docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
+                                  title="previous chapter">35. <tt class="docutils literal"><span class="pre">mesh</span></tt> &#8212; mesh.py</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="properties.html"
                                   title="next chapter">37. <tt class="docutils literal"><span class="pre">properties</span></tt> &#8212; General framework for attributing properties to geometrical elements.</a></p>

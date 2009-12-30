@@ -105,7 +105,7 @@ The remaining arguments are passed to the InputDialog getResult method.</p>
 
 <dl class="function">
 <dt id="draw.showText">
-<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text</em>, <em>type=None</em>, <em>actions=</em><span class="optional">[</span>, <em>'OK'</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">showText</tt><big>(</big><em>text</em>, <em>type=None</em>, <em>actions=</em><span class="optional">[</span>, <em>(!!(319</em>, <em>(303</em>, <em>(304</em>, <em>(305</em>, <em>(306</em>, <em>(307</em>, <em>(309</em>, <em>(310</em>, <em>(311</em>, <em>(312</em>, <em>(313</em>, <em>(314</em>, <em>(315</em>, <em>(316</em>, <em>(317</em>, <em>(3</em>, <em>&quot;'OK'&quot;)))))))))))))))</em>, <em>(12</em>, <em>'</em>, <em>')</em>, <em>(303</em>, <em>(304</em>, <em>(305</em>, <em>(306</em>, <em>(307</em>, <em>(309</em>, <em>(310</em>, <em>(311</em>, <em>(312</em>, <em>(313</em>, <em>(314</em>, <em>(315</em>, <em>(316</em>, <em>(317</em>, <em>(1</em>, <em>'None'))))))))))))))))!!)</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#draw.showText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display a text and wait for user response.</p>
 <p>This can display a large text and will add scrollbars when needed.</p>
 </dd></dl>
@@ -356,7 +356,7 @@ or to allow to view a mark at the vertices.</p>
 
 <dl class="function">
 <dt id="draw.drawText3D">
-<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color='black'</em>, <em>font=None</em>, <em>size=None</em><big>)</big><a class="headerlink" href="#draw.drawText3D" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">drawText3D</tt><big>(</big><em>P</em>, <em>text</em>, <em>color=None</em>, <em>font='sans'</em>, <em>size=18</em><big>)</big><a class="headerlink" href="#draw.drawText3D" title="Permalink to this definition">¶</a></dt>
 <dd>Draw a text at a 3D point P.</dd></dl>
 
 <dl class="function">
@@ -738,7 +738,7 @@ partitionCollection() method.</p>
 
 <dl class="function">
 <dt id="draw.pick">
-<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>single=False</em>, <em>func=None</em>, <em>filtr=None</em><big>)</big><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pick</tt><big>(</big><em>mode='actor'</em>, <em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enter interactive picking mode and return selection.</p>
 <p>See viewport.py for more details.
 This function differs in that it provides default highlighting
@@ -748,22 +748,22 @@ during the picking operation, a button to stop the selection operation</p>
 
 <dl class="function">
 <dt id="draw.pickActors">
-<tt class="descclassname">draw.</tt><tt class="descname">pickActors</tt><big>(</big><em>single=False</em>, <em>func=None</em>, <em>filtr=None</em><big>)</big><a class="headerlink" href="#draw.pickActors" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pickActors</tt><big>(</big><em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pickActors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="draw.pickElements">
-<tt class="descclassname">draw.</tt><tt class="descname">pickElements</tt><big>(</big><em>single=False</em>, <em>func=None</em>, <em>filtr=None</em><big>)</big><a class="headerlink" href="#draw.pickElements" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pickElements</tt><big>(</big><em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pickElements" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="draw.pickPoints">
-<tt class="descclassname">draw.</tt><tt class="descname">pickPoints</tt><big>(</big><em>single=False</em>, <em>func=None</em>, <em>filtr=None</em><big>)</big><a class="headerlink" href="#draw.pickPoints" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pickPoints</tt><big>(</big><em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pickPoints" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="draw.pickEdges">
-<tt class="descclassname">draw.</tt><tt class="descname">pickEdges</tt><big>(</big><em>single=False</em>, <em>func=None</em>, <em>filtr=None</em><big>)</big><a class="headerlink" href="#draw.pickEdges" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">draw.</tt><tt class="descname">pickEdges</tt><big>(</big><em>filtr=None</em>, <em>oneshot=False</em>, <em>func=None</em><big>)</big><a class="headerlink" href="#draw.pickEdges" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -828,10 +828,10 @@ might also be set by the user.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="script.html"
-                                  title="previous chapter">4. <tt class="docutils literal docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
+                                  title="previous chapter">4. <tt class="docutils literal"><span class="pre">script</span></tt> &#8212; Basic pyFormex script functions</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="colors.html"
-                                  title="next chapter">6. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
+                                  title="next chapter">6. <tt class="docutils literal"><span class="pre">colors</span></tt> &#8212; Definition of some RGB colors and color conversion functions</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/draw.txt"

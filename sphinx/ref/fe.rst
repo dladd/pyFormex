@@ -31,7 +31,6 @@
 
 **Functions defined in the module fe**
 
-   .. autofunction:: mergeNodes(nodes)
    .. autofunction:: mergeModels(femodels)
    .. autofunction:: checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None)
    .. autofunction:: mergedModel()

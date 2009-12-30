@@ -1,3 +1,6 @@
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"feModel() is deprecated. Please use toMesh() instead"'))))))))))))))))), (8, ')'), (4, '')))
+.. MATCHING (259, (50, '@'), (287, (1, 'deprecation')))
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"feModel() is deprecated. Please use toMesh() instead"'))))))))))))))))), (8, ')'), (4, '')))
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- surface
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -57,6 +60,7 @@
       .. automethod:: pointNormals()
       .. automethod:: offset(distance=1.)
       .. automethod:: toMesh()
+      .. automethod:: feModel()
       .. automethod:: read(clas,fn,ftype=None)
       .. automethod:: write(fname,ftype=None)
       .. automethod:: toFormex()

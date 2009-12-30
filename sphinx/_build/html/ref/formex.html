@@ -261,7 +261,7 @@ the coordinates of the unique nodes of the Formex. The second is
 an integer array with the node numbers connected by each element.
 The elements come in the same order as they are in the Formex, but
 the order of the nodes is unspecified.
-By the way, the reverse operation of <tt class="docutils literal"><span class="pre">coords,elems</span> <span class="pre">=</span> <span class="pre">feModel(F)</span></tt>
+By the way, the reverse operation of <tt class="docutils literal"><span class="pre">coords,elems</span> <span class="pre">=</span> <span class="pre">fuse(F)</span></tt>
 is accomplished by <tt class="docutils literal"><span class="pre">F</span> <span class="pre">=</span> <span class="pre">Formex(coords[elems])</span></tt></p>
 <p>There is a (very small) probability that two very close nodes are
 not equivalenced  by this procedure. Use it multiple times with
@@ -273,8 +273,13 @@ The default settting for atol is rtol * self.dsize()</p>
 
 <dl class="method">
 <dt id="formex.Formex.toMesh">
-<tt class="descname">toMesh</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.toMesh" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">toMesh</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.toMesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Formex to a Mesh.</p>
+<p>Converts a geometry in Formex model to the equivalent Mesh model.
+In the Mesh model, all points with nearly identical coordinates
+are fused into a single point, and elements are defined by a
+connectivity table with integers pointing to the corresponding vertex.</p>
+</dd></dl>
 
 <dl class="classmethod">
 <dt id="formex.Formex.point2str">
@@ -1081,6 +1086,11 @@ Valid Formex file formats are described in the manual.</p>
 <tt class="descname">reverseElements</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.reverseElements" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="formex.Formex.feModel">
+<tt class="descname">feModel</tt><big>(</big><em>None</em><big>)</big><a class="headerlink" href="#formex.Formex.feModel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <p><strong>Functions defined in the module formex</strong></p>
@@ -1390,7 +1400,7 @@ interpolations.</p>
                                   title="previous chapter">1. <tt class="docutils literal docutils literal"><span class="pre">coords</span></tt> &#8212; A structured collection of 3D coordinates.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="arraytools.html"
-                                  title="next chapter">3. <tt class="docutils literal docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
+                                  title="next chapter">3. <tt class="docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/formex.txt"

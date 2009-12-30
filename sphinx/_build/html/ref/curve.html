@@ -217,7 +217,7 @@ at the specified relative lengths.</p>
 <dl class="class">
 <dt id="curve.BezierSpline">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">BezierSpline</tt><big>(</big><em>coords</em>, <em>deriv=None</em>, <em>curl=0.5</em>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.BezierSpline" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class representing a Bezier spline curve.</p>
+<dd><p>A class representing a cubic Bezier spline curve.</p>
 <p>Create a cubic spline curve through the given points.</p>
 <p>The curve is defined by the points and the directions at these points.
 If no directions are specified, the average of the segments ending
@@ -230,6 +230,16 @@ override the deriv and curl parameters. Since each segment of the curve
 needs two control points, the control array has shape (npts-1, 2, 3).</p>
 <p>BezierSpline objects have the following methods:</p>
 <dl class="method">
+<dt id="curve.BezierSpline.pointsOn">
+<tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.pointsOn" title="Permalink to this definition">¶</a></dt>
+<dd>Return the points on the curve</dd></dl>
+
+<dl class="method">
+<dt id="curve.BezierSpline.pointsOff">
+<tt class="descname">pointsOff</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.BezierSpline.pointsOff" title="Permalink to this definition">¶</a></dt>
+<dd>Return the points off the curve (the control points)</dd></dl>
+
+<dl class="method">
 <dt id="curve.BezierSpline.sub_points">
 <tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.BezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -239,7 +249,7 @@ needs two control points, the control array has shape (npts-1, 2, 3).</p>
 <dl class="class">
 <dt id="curve.QuadBezierSpline">
 <em class="property">class </em><tt class="descclassname">curve.</tt><tt class="descname">QuadBezierSpline</tt><big>(</big><em>coords</em>, <em>deriv=None</em>, <em>control=None</em>, <em>closed=False</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline" title="Permalink to this definition">¶</a></dt>
-<dd><p>A class representing a Bezier spline curve.</p>
+<dd><p>A class representing a Quadratic Bezier spline curve.</p>
 <p>Create a cubic spline curve through the given points.</p>
 <p>The curve is defined by the points and the directions at these points.
 If no directions are specified, the average of the segments ending
@@ -251,6 +261,16 @@ The control points can also be specified directly. If they are, they
 override the deriv and curl parameters. Since each segment of the curve
 needs two control points, the control array has shape (npts-1, 2, 3).</p>
 <p>QuadBezierSpline objects have the following methods:</p>
+<dl class="method">
+<dt id="curve.QuadBezierSpline.pointsOn">
+<tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsOn" title="Permalink to this definition">¶</a></dt>
+<dd>Return the points on the curve</dd></dl>
+
+<dl class="method">
+<dt id="curve.QuadBezierSpline.pointsOff">
+<tt class="descname">pointsOff</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.pointsOff" title="Permalink to this definition">¶</a></dt>
+<dd>Return the points off the curve (the control points)</dd></dl>
+
 <dl class="method">
 <dt id="curve.QuadBezierSpline.sub_points">
 <tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.QuadBezierSpline.sub_points" title="Permalink to this definition">¶</a></dt>
@@ -378,7 +398,7 @@ If closed is True, the spline is closed, and endcond is ignored.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="geometry.html"
-                                  title="previous chapter">27. <tt class="docutils literal"><span class="pre">geometry</span></tt> &#8212;</a></p>
+                                  title="previous chapter">27. <tt class="docutils literal docutils literal"><span class="pre">geometry</span></tt> &#8212;</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="surface.html"
                                   title="next chapter">29. <tt class="docutils literal"><span class="pre">surface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>

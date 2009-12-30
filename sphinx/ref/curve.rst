@@ -55,6 +55,8 @@
 
       BezierSpline objects have the following methods:
 
+      .. automethod:: pointsOn()
+      .. automethod:: pointsOff()
       .. automethod:: sub_points(t,j)
 
    .. autoclass:: QuadBezierSpline
@@ -62,6 +64,8 @@
 
       QuadBezierSpline objects have the following methods:
 
+      .. automethod:: pointsOn()
+      .. automethod:: pointsOff()
       .. automethod:: sub_points(t,j)
 
    .. autoclass:: CardinalSpline

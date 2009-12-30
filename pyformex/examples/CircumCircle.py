@@ -30,7 +30,7 @@ techniques = ['function','import','mpattern','dialog','viewports']
 """
 import simple
 from examples.Cube import cube_tri
-from plugins.geometry import triangleCircumCircle
+from plugins.geomtools import triangleCircumCircle
 
 #
 def drawCircles(F):

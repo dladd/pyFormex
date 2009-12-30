@@ -79,6 +79,9 @@
 .. POPPING (260, (259, (50, '@'), (287, (1, 'functionWasRenamed')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (1, 'reverse'))))))))))))))))), (8, ')'), (4, '')))
 .. MATCHING (259, (50, '@'), (287, (1, 'functionWasRenamed')))
 .. POPPING (260, (259, (50, '@'), (287, (1, 'functionWasRenamed')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (1, 'reverse'))))))))))))))))), (8, ')'), (4, '')))
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"feModel() is deprecated. Use toMesh() wherever possible.\\nfuse() remains available with the same result as feModel()"'))))))))))))))))), (8, ')'), (4, '')))
+.. MATCHING (259, (50, '@'), (287, (1, 'deprecation')))
+.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"feModel() is deprecated. Use toMesh() wherever possible.\\nfuse() remains available with the same result as feModel()"'))))))))))))))))), (8, ')'), (4, '')))
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- formex
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -127,7 +130,7 @@
       .. automethod:: distanceFromLine(None)
       .. automethod:: distanceFromPoint(None)
       .. automethod:: fuse(nodesperbox=1,repeat=True,rtol=1.e-5,atol=None)
-      .. automethod:: toMesh()
+      .. automethod:: toMesh(None)
       .. automethod:: point2str(clas,point)
       .. automethod:: element2str(clas,elem)
       .. automethod:: asFormex()
@@ -203,6 +206,7 @@
       .. automethod:: fromfile(clas,fil,sep=' ',nplex=1)
       .. automethod:: read(clas,fil,sep=' ')
       .. automethod:: reverseElements()
+      .. automethod:: feModel(None)
 
 **Functions defined in the module formex**
 

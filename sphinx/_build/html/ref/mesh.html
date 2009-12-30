@@ -62,10 +62,10 @@ And some useful meshing functions to create such models.</p>
 <dl class="class">
 <dt id="mesh.Mesh">
 <em class="property">class </em><tt class="descclassname">mesh.</tt><tt class="descname">Mesh</tt><big>(</big><em>coords=None</em>, <em>elems=None</em>, <em>prop=None</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p>A mesh is a discrete geometrical model consisting of nodes and elements.</p>
+<dd><p>A mesh is a discrete geometrical model defined by nodes and elements.</p>
 <p>In the Mesh geometrical data model, coordinates of all points are gathered
 in a single twodimensional array &#8216;coords&#8217; with shape (ncoords,3) and the
-individual geometrical elements are described by indices into the &#8216;coords&#8217;
+individual geometrical elements are described by indices into the &#8216;elems&#8217;
 array.
 This model has some advantages over the Formex data model, where all
 points of all element are stored by their coordinates:</p>
@@ -136,6 +136,11 @@ the Formex data model.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.center">
+<tt class="descname">center</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.center" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.nedges">
 <tt class="descname">nedges</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.nedges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of edges.</p>
@@ -157,9 +162,84 @@ The return value is a Coords object with nelems points.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="mesh.Mesh.fuse">
+<tt class="descname">fuse</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.fuse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fuse the nodes of a Meshes.</p>
+<p>All nodes that are within the tolerance limits of each other
+are merged into a single node.</p>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="mesh.Mesh.compact">
 <tt class="descname">compact</tt><big>(</big><big>)</big><a class="headerlink" href="#mesh.Mesh.compact" title="Permalink to this definition">¶</a></dt>
-<dd>Renumber the mesh and remove unconnected nodes.</dd></dl>
+<dd>Remove unconnected nodes and renumber the mesh.</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.select">
+<tt class="descname">select</tt><big>(</big><em>selected</em>, <em>compact=False</em><big>)</big><a class="headerlink" href="#mesh.Mesh.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mesh with selected elements from the original.</p>
+<ul class="simple">
+<li><cite>selected</cite>: an object that can be used as an index in the
+<cite>elems</cite> array, e.g. a list of element numbers.</li>
+</ul>
+<p>The coords are not compacted, unless compact=True is specify</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.meanNodes">
+<tt class="descname">meanNodes</tt><big>(</big><em>nodsel</em><big>)</big><a class="headerlink" href="#mesh.Mesh.meanNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create nodes from the existing nodes of a mesh.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a title="mesh.Mesh.selectNodes" class="reference internal" href="#mesh.Mesh.selectNodes"><tt class="xref docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns the mean coordinates of the points in the selector.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.addNodes">
+<tt class="descname">addNodes</tt><big>(</big><em>newcoords</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.addNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new nodes to elements.</p>
+<p><cite>newcoords</cite> is an <cite>(nelems,nnod,3)</cite> array of coordinates.
+Each element thus gets exactly <cite>nnod</cite> extra points and the result
+is a Mesh with plexitude self.nplex() + nnod.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.addMeanNodes">
+<tt class="descname">addMeanNodes</tt><big>(</big><em>nodsel</em>, <em>eltype=None</em><big>)</big><a class="headerlink" href="#mesh.Mesh.addMeanNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new nodes to elements by averaging existing ones.</p>
+<p><cite>nodsel</cite> is a local node selector as in <a title="mesh.Mesh.selectNodes" class="reference internal" href="#mesh.Mesh.selectNodes"><tt class="xref docutils literal"><span class="pre">selectNodes()</span></tt></a>
+Returns a Mesh where the mean coordinates of the points in the
+selector are added to each element, thus increasing the plexitude
+by the length of the items in the selector.
+The new element type should be set to correct value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.selectNodes">
+<tt class="descname">selectNodes</tt><big>(</big><em>nodsel</em>, <em>eltype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.selectNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a mesh with subsets of the original nodes.</p>
+<p><cite>nodsel</cite> is an object that can be converted to a 1-dim or 2-dim
+array. Examples are a tuple of local node numbers, or a list
+of such tuples all having the same length.
+Each row of <cite>nodsel</cite> holds a list of local node numbers that
+should be retained in the new connectivity table.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.convert">
+<tt class="descname">convert</tt><big>(</big><em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.randomSplit">
+<tt class="descname">randomSplit</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#mesh.Mesh.randomSplit" title="Permalink to this definition">¶</a></dt>
+<dd>Split a mesh in n parts, distributing the elements randomly.</dd></dl>
+
+<dl class="method">
+<dt id="mesh.Mesh.convertRandom">
+<tt class="descname">convertRandom</tt><big>(</big><em>choices</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convertRandom" title="Permalink to this definition">¶</a></dt>
+<dd>Convert choosing randomly between choices</dd></dl>
 
 <dl class="method">
 <dt id="mesh.Mesh.extrude">
@@ -195,64 +275,32 @@ are merely stacked, and the user may have to fix it himself.</p>
 line2 to quad4, tri3 to wedge6, quad4 to hex8.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="mesh.Mesh.convert">
-<tt class="descname">convert</tt><big>(</big><em>fromtype</em>, <em>totype</em><big>)</big><a class="headerlink" href="#mesh.Mesh.convert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a mesh from element type fromtype to type totype.</p>
-<p>Currently defined conversions:
-&#8216;quad4&#8217; -&gt; &#8216;tri3&#8217;</p>
-</dd></dl>
-
 <dl class="classmethod">
 <dt id="mesh.Mesh.concatenate">
-<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>ML</em><big>)</big><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
-<dd>Concatenate a list of meshes of the same plexitude and eltype</dd></dl>
+<em class="property">classmethod </em><tt class="descname">concatenate</tt><big>(</big><em>clas</em>, <em>meshes</em><big>)</big><a class="headerlink" href="#mesh.Mesh.concatenate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Concatenate a list of meshes of the same plexitude and eltype</p>
+<p>Merging of the nodes can be tuned by specifying extra arguments
+that will be passed to <tt class="xref docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
 
 </dd></dl>
 
 <p><strong>Functions defined in the module mesh</strong></p>
 <blockquote>
 <dl class="function">
-<dt id="mesh.vectorPairAreaNormals">
-<tt class="descclassname">mesh.</tt><tt class="descname">vectorPairAreaNormals</tt><big>(</big><em>vec1</em>, <em>vec2</em><big>)</big><a class="headerlink" href="#mesh.vectorPairAreaNormals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute area of and normals on parallellograms formed by vec1 and vec2.</p>
-<p>vec1 and vec2 are (n,3) shaped arrays holding collections of vectors.
-The result is a tuple of two arrays:
-- area (n) : the area of the parallellogram formed by vec1 and vec2.
-- normal (n,3) : (normalized) vectors normal to each couple (vec1,2).
-These are calculated from the cross product of vec1 and vec2, which indeed
-gives area * normal.</p>
-<p>Note that where two vectors are parallel, an area zero will results and
-an axis with components NaN.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh.vectorPairCosAngles">
-<tt class="descclassname">mesh.</tt><tt class="descname">vectorPairCosAngles</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>normalized=False</em><big>)</big><a class="headerlink" href="#mesh.vectorPairCosAngles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the cosine of the angles between two vectors.</p>
-<p>vec1: an (nvector,3) shaped array of floats
-vec2: an (nvector,3) shaped array of floats
-normalized: can be set True if the vectors are already normalized.</p>
-<p>Return value: an (nvector,) shaped array of floats</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="mesh.vectorPairAngles">
-<tt class="descclassname">mesh.</tt><tt class="descname">vectorPairAngles</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>normalized=False</em>, <em>angle_spec=Deg</em><big>)</big><a class="headerlink" href="#mesh.vectorPairAngles" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="mesh.vectorRotation">
 <tt class="descclassname">mesh.</tt><tt class="descname">vectorRotation</tt><big>(</big><em>vec1</em>, <em>vec2</em>, <em>upvec=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>1.</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#mesh.vectorRotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return axis and angle to rotate vectors in a parallel to b</p>
-<p>vectors in a and b should be unit vectors.
-The returned axis is the cross product of a and b. If the vectors
-are already parallel, a random vector normal to a is returned.</p>
+<dd><p>Return a rotation matrix for rotating vector vec1 to vec2</p>
+<p>The rotation matrix will be sucht that the plane of vec2 and the
+rotated upvec will be parallel to the original upvec.</p>
+<p>This function is like <a title="arraytools.rotMatrix" class="reference external" href="arraytools.html#arraytools.rotMatrix"><tt class="xref docutils literal"><span class="pre">arraytools.rotMatrix()</span></tt></a>, but allows the
+specification of vec1.
+The returned matrix should be used in postmultiplication to the Coords.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="mesh.sweepCoords">
-<tt class="descclassname">mesh.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>path</em>, <em>origin=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span>, <em>normal=0</em>, <em>upvector=None</em>, <em>avgdir=False</em>, <em>enddir=None</em><big>)</big><a class="headerlink" href="#mesh.sweepCoords" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">mesh.</tt><tt class="descname">sweepCoords</tt><big>(</big><em>path</em>, <em>origin=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span>, <em>normal=0</em>, <em>upvector=2</em>, <em>avgdir=False</em>, <em>enddir=None</em><big>)</big><a class="headerlink" href="#mesh.sweepCoords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sweep a Coords object along a path, returning a series of copies.</p>
 <p>origin and normal define the local path position and direction on the mesh.</p>
 <p>At each point of the curve, a copy of the Coords object is created, with
@@ -270,6 +318,35 @@ and the user should normally not specify enddir.</p>
 <dt id="mesh.defaultEltype">
 <tt class="descclassname">mesh.</tt><tt class="descname">defaultEltype</tt><big>(</big><em>nplex</em><big>)</big><a class="headerlink" href="#mesh.defaultEltype" title="Permalink to this definition">¶</a></dt>
 <dd>Default element type for a mesh with given plexitude.</dd></dl>
+
+<dl class="function">
+<dt id="mesh.mergeNodes">
+<tt class="descclassname">mesh.</tt><tt class="descname">mergeNodes</tt><big>(</big><em>nodes</em><big>)</big><a class="headerlink" href="#mesh.mergeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge all the nodes of a list of node sets.</p>
+<p>Each item in nodes is a Coords array.
+The return value is a tuple with:</p>
+<ul class="simple">
+<li>the coordinates of all unique nodes,</li>
+<li>a list of indices translating the old node numbers to the new.</li>
+</ul>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesh.mergeMeshes">
+<tt class="descclassname">mesh.</tt><tt class="descname">mergeMeshes</tt><big>(</big><em>meshes</em><big>)</big><a class="headerlink" href="#mesh.mergeMeshes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge all the nodes of a list of Meshes.</p>
+<p>Each item in meshes is a Mesh instance.
+The return value is a tuple with:</p>
+<ul class="simple">
+<li>the coordinates of all unique nodes,</li>
+<li>a list of elems corresponding to the input list,
+but with numbers referring to the new coordinates.</li>
+</ul>
+<p>The merging operation can be tuned by specifying extra arguments
+that will be passed to <tt class="xref docutils literal"><span class="pre">Coords:fuse()</span></tt>.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="mesh.connectMesh">
@@ -313,7 +390,7 @@ This can e.g. be used to achieve circular numbering of the hypermesh.</p>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="datareader.html"
-                                  title="previous chapter">34. <tt class="docutils literal docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
+                                  title="previous chapter">34. <tt class="docutils literal"><span class="pre">datareader</span></tt> &#8212; Numerical data reader</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="fe.html"
                                   title="next chapter">36. <tt class="docutils literal docutils literal"><span class="pre">fe</span></tt> &#8212; Finite Element Models in pyFormex.</a></p>

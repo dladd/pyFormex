@@ -61,6 +61,16 @@
 <dt id="isopar.Isopar">
 <em class="property">class </em><tt class="descclassname">isopar.</tt><tt class="descname">Isopar</tt><big>(</big><em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.Isopar" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class representing an isoparametric transformation</p>
+<p>The following three formulations are equivalent</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">trf</span> <span class="o">=</span> <span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">isopar</span><span class="p">(</span><span class="n">trf</span><span class="p">)</span>
+
+<span class="n">trf</span> <span class="o">=</span> <span class="n">Isopar</span><span class="p">(</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">trf</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">F</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">isopar</span><span class="p">(</span><span class="n">F</span><span class="p">,</span><span class="n">eltype</span><span class="p">,</span><span class="n">coords</span><span class="p">,</span><span class="n">oldcoords</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Create an isoparametric transformation.</p>
 <p>type is one of the keys in Isopar.isodata
 coords and oldcoords can be either arrays, Coords or Formex instances,
@@ -77,9 +87,7 @@ specified transformation type</p>
 <dl class="method">
 <dt id="isopar.Isopar.transformFormex">
 <tt class="descname">transformFormex</tt><big>(</big><em>F</em><big>)</big><a class="headerlink" href="#isopar.Isopar.transformFormex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply an isoparametric transform to a Formex.</p>
-<p>The result is a topologically equivalent Formex.</p>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -104,7 +112,10 @@ node.</p>
 <dl class="function">
 <dt id="isopar.isopar">
 <tt class="descclassname">isopar.</tt><tt class="descname">isopar</tt><big>(</big><em>F</em>, <em>eltype</em>, <em>coords</em>, <em>oldcoords</em><big>)</big><a class="headerlink" href="#isopar.isopar" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Perform an isoparametric transformation on a Formex.</p>
+<p>This is a convenience function that creates and uses an iosprametric
+transformation in a single line.</p>
+</dd></dl>
 
 </blockquote>
 </div>
@@ -124,7 +135,7 @@ node.</p>
                                   title="previous chapter">29. <tt class="docutils literal docutils literal"><span class="pre">surface</span></tt> &#8212; Operations on triangulated surfaces.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="section2d.html"
-                                  title="next chapter">31. <tt class="docutils literal docutils literal"><span class="pre">section2d</span></tt> &#8212; Some functions operating on 2D structures.</a></p>
+                                  title="next chapter">31. <tt class="docutils literal"><span class="pre">section2d</span></tt> &#8212; Some functions operating on 2D structures.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/isopar.txt"
