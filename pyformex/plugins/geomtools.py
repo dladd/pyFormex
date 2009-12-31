@@ -24,10 +24,14 @@
 """Basic geometrical operations.
 
 This module defines some basic operations on simple geometrical entities
-such as lines, triangles, circles.
+such as lines, triangles, circles, planes.
 """
 
 from formex import *
+
+class Plane(object):
+    def __init__(self,P,n):
+        self.coords = Coords.concatenate([P,normalize(n)])
 
 
 def triangleCircumCircle(x):
@@ -59,7 +63,7 @@ def triangleCircumCircle(x):
     return r,C,n
 
 
-def lineIntersection(P1,D1,P2,D2,visual_debug=False):
+def lineIntersection(P1,D1,P2,D2):
     """Finds the intersection of 2 coplanar lines.
 
     The lines (P1,D1) and (P2,D2) are defined by a point and a direction
@@ -73,18 +77,6 @@ def lineIntersection(P1,D1,P2,D2,visual_debug=False):
     P2 = asarray(P2).reshape((-1,3)).astype(float64)
     D2 = asarray(D2).reshape((-1,3)).astype(float64)
     N = P1.shape[0]
-    if visual_debug:
-        f = zeros((N,2,3))
-        f[:,0,:] = P1
-        f[:,1,:] = P1+D1
-        F = Formex(f,2)
-        f[:,0,:] = P2
-        f[:,1,:] = P2+D2
-        G = Formex(f,3)
-        #clear()
-        draw(F)
-        draw(G)
-        zoomAll()
     # a,b,c,d
     la,a = vectorNormalize(D1)
     lb,b = vectorNormalize(D2)
@@ -108,14 +100,6 @@ def lineIntersection(P1,D1,P2,D2,visual_debug=False):
     a = a.reshape((-1,3))
     b = b.reshape((-1,3))
     X = 0.5 * ( P1 + sa*a + P2 + sb*b )
-    if visual_debug:
-        H = connect([Formex(X),Formex(P1)])
-        H.setProp(1)
-        draw(H)
-        H = connect([Formex(X),Formex(P2)])
-        H.setProp(5)
-        draw(H)
-        zoomAll()
     return Coords(X)
 
 

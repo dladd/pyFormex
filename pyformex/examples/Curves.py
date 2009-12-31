@@ -57,12 +57,13 @@ method = ODict([
     ('Natural Spline', NaturalSpline),
     ('Bezier Spline', BezierSpline),
     ('Cardinal Bezier Spline', CardinalSpline),
+    ('Quadratic Bezier Spline', QuadBezierSpline),
     ('Cardinal Spline', CardinalSpline2),
     ('Polyline', PolyLine),
     ('Bezier Curve', BezierCurve),
 ])
 
-method_color = [ 'red','green','blue','cyan','magenta','yellow' ] 
+method_color = [ 'red','green','blue','cyan','magenta','yellow','white' ] 
 point_color = [ 'black','white' ] 
         
 open_or_closed = { True:'A closed', False:'An open' }

@@ -168,6 +168,10 @@ class Curve(object):
 
 ##############################################################################
 #
+#  Curves that can be transformed by Coords Transforms
+#
+##############################################################################
+#
 class PolyLine(Curve):
     """A class representing a series of straight line segments."""
 
@@ -298,11 +302,8 @@ class Polygon(PolyLine):
         PolyLine.__init__(self,coords,closed=True)
         
 
-
-
 ##############################################################################
 #
-
 class BezierSpline(Curve):
     """A class representing a cubic Bezier spline curve."""
     coeffs = matrix([[-1.,  3., -3., 1.],
@@ -348,6 +349,7 @@ class BezierSpline(Curve):
                     p1 = concatenate([p2[:1],p1],axis=0)
                     p2 = concatenate([p2,p1[-1:]],axis=0)
                 control = concatenate([p1,p2],axis=1)
+                    
                 
         control = asarray(control).reshape(-1,2,3)
         control = Coords(control)
@@ -389,7 +391,6 @@ class BezierSpline(Curve):
 
 ##############################################################################
 #
-
 class QuadBezierSpline(Curve):
     """A class representing a Quadratic Bezier spline curve."""
     coeffs = matrix([[ 1., -2.,  1.],
@@ -397,18 +398,9 @@ class QuadBezierSpline(Curve):
                      [ 1.,  0.,  0.]]
                     )
 
-    def __init__(self,coords,deriv=None,control=None,closed=False):
-        """Create a cubic spline curve through the given points.
+    def __init__(self,coords,control=None,closed=False):
+        """Create a quadratic spline curve through the given points.
 
-        The curve is defined by the points and the directions at these points.
-        If no directions are specified, the average of the segments ending
-        in that point is used, and in the end points of an open curve, the
-        direction of the end segment.
-        The curl parameter can be set to influence the curliness of the curve.
-        curl=0.0 results in straight segments. curl=1.0 
-        The control points can also be specified directly. If they are, they
-        override the deriv and curl parameters. Since each segment of the curve
-        needs two control points, the control array has shape (npts-1, 2, 3).
         """
         coords = Coords(coords)
         nparts = coords.shape[0]
@@ -416,7 +408,23 @@ class QuadBezierSpline(Curve):
             nparts -= 1
             
         if control is None:
-            raise ValueError,"Currently, control points should be specified by the user."
+            if nparts < 2:
+                control = 0.5*(coords[:-1] + coords[1:])
+            else:
+                if closed:
+                    P0 = 0.5 * (roll(coords,1,axis=0) + roll(coords,-1,axis=0))
+                    P1 = 2*coords - P0
+                    Q0 = 0.5*(roll(coords,1,axis=0) + P1)
+                    Q1 = 0.5*(roll(coords,-1,axis=0) + P1)
+                    Q = 0.5*(roll(Q0,-1,axis=0)+Q1)
+                    control = Q
+                else:
+                    P0 = 0.5 * (coords[:-2] + coords[2:])
+                    P1 = 2*coords[1:-1] - P0
+                    Q0 = 0.5*(coords[:-2] + P1)
+                    Q1 = 0.5*(coords[2:] + P1)
+                    Q = 0.5*(Q0[1:]+Q1[:-1])
+                    control = Coords.concatenate([Q0[:1],Q,Q1[-1:]],axis=0)
 
         control = asarray(control).reshape(-1,3)
         control = Coords(control)
@@ -460,7 +468,6 @@ class QuadBezierSpline(Curve):
 
 ##############################################################################
 #
-
 class CardinalSpline(BezierSpline):
     """A class representing a cardinal spline.
 
@@ -478,7 +485,14 @@ class CardinalSpline(BezierSpline):
         BezierSpline.__init__(self,coords,curl=(1.-tension)/3.,closed=closed)
 
 
-class CardinalSpline2(BezierSpline):
+
+##############################################################################
+#
+#  Curves that can NOT be transformed by Coords Transforms
+#
+##############################################################################
+
+class CardinalSpline2(Curve):
     """A class representing a cardinal spline."""
 
     def __init__(self,coords,tension=0.0,closed=False):
@@ -487,8 +501,6 @@ class CardinalSpline2(BezierSpline):
         This is a direct implementation of the Cardinal Spline.
         For open curves, it misses the interpolation in the two end
         intervals of the point set.
-        It is retained here because the implementation may some day
-        replace the BezierSpline implementation.
         """
         coords = Coords(coords)
         self.coords = coords
@@ -677,5 +689,30 @@ class Spiral(Curve):
         self.coords = Coords([0.,0.,0.]).replic(npoints+1).hypercylindrical()
         self.nparts = nparts
         self.closed = False
+
+
+##############################################################################
+# Other functions
+
+def convertFormexToCurve(self,closed=False):
+    """Convert a Formex to a Curve.
+
+    The following Formices can be converted to a Curve:
+    - plex 2 : to PolyLine
+    - plex 3 : to QuadBezierSpline
+    - plex 4 : to BezierSpline
+    """
+    points = Coords.concatenate([self.coords[:,0,:],self.coords[-1:,-1,:]],axis=0)
+    if self.nplex() == 2:
+        curve = PolyLine(points,closed=closed)
+    elif self.nplex() == 3:
+        control = self.coords[:,1,:]
+        curve = QuadBezierSpline(points,control=control,closed=closed)
+    elif self.nplex() == 4:
+        control = self.coords[:,1:3,:]
+        curve = BezierSpline(points,control=control,closed=closed)
+    return curve
+
+Formex.toCurve = convertFormexToCurve
 
 # End

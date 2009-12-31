@@ -920,6 +920,22 @@ class Coords(ndarray):
         return roll(self, int(n) % 3,axis=-1)
 
 
+    def projectOnPlane(self,P,n):
+        """Project :class:`Coords` on the plane(s) (P,n)
+
+        P and n define a plane or a set of planes by a point P and the normal
+        n. If a set of planes, there should be exactly ncoords planes.
+        Each of P and n thus can have shape (ncoords,3) or (1,3) or (3,).
+
+        Return a Coords with same shape as original, with the base points
+        of the lines through all the points of self, perpendicular to the
+        plane(s) (P,n), i.e. the projection of the points on the plane(s).
+        """
+        n = normalize(Coords(n).reshape(-1,3))
+        s =  - dotpr(n,(self.reshape(-1,3)-P))
+        return self + outer(s,n).reshape(self.shape)
+
+
     def projectOnSphere(self,radius=1.,center=[0.,0.,0.]):
         """Project :class:`Coords` on a sphere.
 
@@ -952,8 +968,6 @@ class Coords(ndarray):
             f[...,i] *= s
         f += c
         return f
-
-
     def split(self):
         """Split the coordinate array in blocks along first axis.
 
