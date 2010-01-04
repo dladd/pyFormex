@@ -1994,6 +1994,39 @@ class Formex(object):
         fil.write('\n')
         if isname:
             fil.close()
+    
+        
+    @classmethod
+    def read(clas,fil,sep=' '):
+        """Read a Formex from file.
+
+        fil is a filename or a file object.
+        If the file is in a valid Formex file format, the Formex is read and
+        returned. Otherwise, None is returned.
+        Valid Formex file formats are described in the manual.
+        """
+        isname = type(fil) == str
+        if isname:
+            fil = file(fil,'r')
+        s = fil.readline()
+        if not s.startswith('# Formex'):
+            return None
+        eltype = None # for compatibility with older .formex files
+        ndim = 3
+        while s.startswith('#'):
+            s = fil.readline()
+            if s.startswith('# nelems'):
+                exec(s[1:].strip())
+                break
+        # read the coordinates: we know how many
+        f = fromfile(file=fil, dtype=Float, count=ndim*nelems*nplex, sep=sep).reshape((nelems,nplex,3))
+        if props:
+            p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
+        else:
+            p = None
+        if isname:
+            fil.close()
+        return Formex(f,p,eltype)
 
 
     @classmethod
@@ -2031,39 +2064,6 @@ class Formex(object):
         if x.shape[0] % nplex != 0:
             raise RuntimeError,"Number of points read: %s, should be multiple of %s!" % (x.shape[0],nplex)
         return Formex(x.reshape(-1,nplex,3))
-    
-        
-    @classmethod
-    def read(clas,fil,sep=' '):
-        """Read a Formex from file.
-
-        fil is a filename or a file object.
-        If the file is in a valid Formex file format, the Formex is read and
-        returned. Otherwise, None is returned.
-        Valid Formex file formats are described in the manual.
-        """
-        isname = type(fil) == str
-        if isname:
-            fil = file(fil,'r')
-        s = fil.readline()
-        if not s.startswith('# Formex'):
-            return None
-        eltype = None # for compatibility with older .formex files
-        ndim = 3
-        while s.startswith('#'):
-            s = fil.readline()
-            if s.startswith('# nelems'):
-                exec(s[1:].strip())
-                break
-        # read the coordinates: we know how many
-        f = fromfile(file=fil, dtype=Float, count=ndim*nelems*nplex, sep=sep).reshape((nelems,nplex,3))
-        if props:
-            p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
-        else:
-            p = None
-        if isname:
-            fil.close()
-        return Formex(f,p,eltype)
 
 
 #########################################################################

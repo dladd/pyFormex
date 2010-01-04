@@ -27,6 +27,7 @@ Options:
   --whereami         show where the pyformex package is located
   --remove           remove the pyformex installation
   --test             testing mode: only for developers!
+  --oldfuse          use old fuse algorithm
   --testhighlight    highlight testing mode: only for developers!
   --executor         test alternate executor: only for developers!
   --version          show program's version number and exit

@@ -24,14 +24,17 @@ This is the pyFormex |release| documentation, last updated on |today|.
    download.
 
 
-These documents are to become a full documentation set for the installation and use of the pyFormex software. However, as pyFormex is still under active
-development, so is this documentation: it therefore is by no means final and
-complete; it does not even pretend to be accurate for any version of pyFormex.
+These documents are to become a full documentation set for the
+installation and use of the pyFormex software. However, as pyFormex is
+still under active development, so is this documentation: it therefore
+is by no means final and complete; it does not even pretend to be
+accurate for any version of pyFormex.
 
-However, since partial documentation is better than none, we decided to make 
-this preliminary version available to the general public, to ease the use
-of pyFormex. The :doc:`refman` is automatically generated from the docstrings
-in the Python source, so this might best reflect the latest development version of the software.
+However, since partial documentation is better than none, we decided
+to make this preliminary version available to the general public, to
+ease the use of pyFormex. The :doc:`refman` is automatically generated
+from the docstrings in the Python source, so this might best reflect
+the latest development version of the software.
 
 The new documentation is currently only available in HTML format. 
 
@@ -47,6 +50,7 @@ The new documentation is currently only available in HTML format.
    user-guide
    examples
    refman
+   file_format
    license
    meta
 

@@ -1044,6 +1044,16 @@ If fil is a string, the file is closed prior to returning.</p>
 </dd></dl>
 
 <dl class="classmethod">
+<dt id="formex.Formex.read">
+<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#formex.Formex.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a Formex from file.</p>
+<p>fil is a filename or a file object.
+If the file is in a valid Formex file format, the Formex is read and
+returned. Otherwise, None is returned.
+Valid Formex file formats are described in the manual.</p>
+</dd></dl>
+
+<dl class="classmethod">
 <dt id="formex.Formex.fromstring">
 <em class="property">classmethod </em><tt class="descname">fromstring</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em>, <em>ndim=3</em>, <em>count=-1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromstring" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <a title="formex.Formex" class="reference internal" href="#formex.Formex"><tt class="xref docutils literal"><span class="pre">Formex</span></tt></a> from coodinates in a string.</p>
@@ -1070,16 +1080,6 @@ does not contain the expected number of values.</dd>
 <dt id="formex.Formex.fromfile">
 <em class="property">classmethod </em><tt class="descname">fromfile</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em>, <em>nplex=1</em><big>)</big><a class="headerlink" href="#formex.Formex.fromfile" title="Permalink to this definition">¶</a></dt>
 <dd>Read the coordinates of a Formex from a file</dd></dl>
-
-<dl class="classmethod">
-<dt id="formex.Formex.read">
-<em class="property">classmethod </em><tt class="descname">read</tt><big>(</big><em>clas</em>, <em>fil</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#formex.Formex.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read a Formex from file.</p>
-<p>fil is a filename or a file object.
-If the file is in a valid Formex file format, the Formex is read and
-returned. Otherwise, None is returned.
-Valid Formex file formats are described in the manual.</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.reverseElements">
@@ -1334,7 +1334,7 @@ side is either &#8216;+&#8217;, &#8216;-&#8216; or &#8216;&#8217;</p>
 <tt class="descclassname">formex.</tt><tt class="descname">coords_transformation</tt><big>(</big><em>f</em><big>)</big><a class="headerlink" href="#formex.coords_transformation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define a Formex transformation as the equivalent Coords transformation.</p>
 <p>This decorator replaces a Formex method with the equally named
-Coords method applied on the Formex coordinates attribute (.f).
+Coords method applied on the Formex coordinates attribute (.coords).
 The return value is a Formex with changed coordinates but unchanged
 properties.</p>
 </dd></dl>
@@ -1400,7 +1400,7 @@ interpolations.</p>
                                   title="previous chapter">1. <tt class="docutils literal docutils literal"><span class="pre">coords</span></tt> &#8212; A structured collection of 3D coordinates.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="arraytools.html"
-                                  title="next chapter">3. <tt class="docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
+                                  title="next chapter">3. <tt class="docutils literal docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/formex.txt"
