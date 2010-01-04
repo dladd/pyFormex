@@ -91,8 +91,8 @@ def getmat(key):
 
 # create model for structural analysis
 model = truss.allBars()
-coords,elems = model.feModel()
-props = model.prop()
+coords,elems = model.fuse()
+props = model.p
 propset = model.propSet()
 
 clear()

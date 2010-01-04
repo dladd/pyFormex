@@ -387,6 +387,27 @@ def checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None):
     return uniq
 
 
+def readArray(file,dtype,shape,sep=' '):
+    """Read an array from an open file.
+
+    This uses :func:`numpy.fromfile` to read an array with known shape and
+    data type from an open file.
+    The sep parameter can be specified as in fromfile.
+    """
+    shape = asarray(shape)
+    size = shape.prod()
+    return fromfile(file=file,dtype=dtype,count=size,sep=sep).reshape(shape)
+
+
+def writeArray(file,array,sep=' '):
+    """Write an array to an open file.
+
+    This uses :func:`numpy.tofile` to write an array to an open file.
+    The sep parameter can be specified as in tofile.
+    """
+    array.tofile(file,sep=sep)
+
+
 # THIS MAY BE FASTER THAN olist.collectOnLength, BUT IT IS DEPENDENT ON NUMPY
 
 ## def collectOnLength(items):

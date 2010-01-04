@@ -157,7 +157,29 @@ def deleteAll():
     printall()
     if ack("Are you sure you want to unrecoverably delete all global variables?"):
         GD.PF = {}
-        
+
+
+def writeGeometry():
+    """Write geometry to file."""
+    drawable.ask()
+    if drawable.check():
+        filter = utils.fileDescription(['pgf','all'])
+        cur = GD.cfg['workdir']
+        fn = askNewFilename(cur=cur,filter=filter)
+        if fn:
+            drawable.writeToFile(fn)
+
+
+def readGeometry():
+    """Read geometry from file."""
+    filter = utils.fileDescription(['pgf','all'])
+    cur = GD.cfg['workdir']
+    fn = askNewFilename(cur=cur,filter=filter)
+    if fn:
+        drawable.readFromFile(fn)
+        drawable.draw()
+
+    
 
 ###################### Drawn Objects #############################
 
@@ -533,6 +555,9 @@ def create_menu():
         ('  &Rename',rename),
         ('  &Delete',forget),
         ('  &Delete All',deleteAll),
+        ("---",None),
+        ('&Write Geometry File',writeGeometry),
+        ('&Read Geometry File',readGeometry),
         ("---",None),
         ("&Create Plane",
             [("Coordinates", 

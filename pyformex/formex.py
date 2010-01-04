@@ -1970,8 +1970,8 @@ class Formex(object):
 
 #################### Read/Write Formex File ##################################
 
-
-    def write(self,fil,sep=' '):
+    
+    def write(self,fil,sep=' ',mode='w'):
         """Write a Formex to file.
 
         If fil is a string, a file with that name is opened. Else fil should
@@ -1980,22 +1980,13 @@ class Formex(object):
         sep as separator between the coordinates.
         If fil is a string, the file is closed prior to returning.
         """
-        isname = type(fil) == str
-        if isname:
-            fil = file(fil,'w')
-        fil.write("# Formex File Format 1.1 (http://pyformex.org)\n")
-        nelems,nplex = self.coords.shape[:2]
-        hasp = self.p is not None
-        fil.write("# nelems=%r; nplex=%r; props=%r; eltype=%r; sep='%s'\n" % (nelems,nplex,hasp,self.eltype,sep))
-        self.coords.tofile(fil,sep)
-        fil.write('\n')
-        if hasp:
-            self.p.tofile(fil,sep)
-        fil.write('\n')
-        if isname:
-            fil.close()
-    
+        from geomfile import GeometryFile
+        f = GeometryFile(fil,mode='w',sep=sep)
+        f.writeFormex(self)
+        if f.isname:
+            f.close()
         
+       
     @classmethod
     def read(clas,fil,sep=' '):
         """Read a Formex from file.
@@ -2005,28 +1996,10 @@ class Formex(object):
         returned. Otherwise, None is returned.
         Valid Formex file formats are described in the manual.
         """
-        isname = type(fil) == str
-        if isname:
-            fil = file(fil,'r')
-        s = fil.readline()
-        if not s.startswith('# Formex'):
-            return None
-        eltype = None # for compatibility with older .formex files
-        ndim = 3
-        while s.startswith('#'):
-            s = fil.readline()
-            if s.startswith('# nelems'):
-                exec(s[1:].strip())
-                break
-        # read the coordinates: we know how many
-        f = fromfile(file=fil, dtype=Float, count=ndim*nelems*nplex, sep=sep).reshape((nelems,nplex,3))
-        if props:
-            p = fromfile(file=fil, dtype=Int, count=nelems, sep=' ')
-        else:
-            p = None
-        if isname:
-            fil.close()
-        return Formex(f,p,eltype)
+        from geomfile import GeometryFile
+        f = GeometryFile(fil,mode='r',sep=sep)
+        res = f.read(count=1)
+        return res.values()[0]
 
 
     @classmethod
@@ -2177,6 +2150,7 @@ def interpolate(F,G,div,swap=False):
     return Formex(r.reshape((-1,) + r.shape[-2:]))
     
 
+#print "formex.py: %s" % id(Formex)
 
 ##############################################################################
 #

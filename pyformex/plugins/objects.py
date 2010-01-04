@@ -31,8 +31,7 @@ This is a support module for other pyFormex plugins.
 import pyformex as GD
 
 from coords import bbox
-from formex import Formex
-from plugins.surface import TriSurface
+from geomfile import GeometryFile
 from copy import deepcopy
 
 
@@ -212,6 +211,23 @@ class Objects(object):
             if len(self.names) > 1:
                 GD.message("Overal bbox is %s" % bbox(objects))
 
+
+    def writeToFile(self,filename):
+        """Write objects to a geometry file."""
+        objects = self.check()
+        if objects:
+            f = GeometryFile(filename,mode='w',sep=' ')
+            for n,o in zip(self.names,objects):
+                f.write(o,n)
+            f.close()
+
+
+    def readFromFile(self,filename):
+        """Read objects from a geometry file."""
+        f = GeometryFile(filename,mode='r',sep=' ')
+        res = f.read()
+        export(res)
+        self.set(res.keys())
 
 
 ###################### Drawable Objects #############################

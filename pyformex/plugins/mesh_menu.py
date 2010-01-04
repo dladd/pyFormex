@@ -242,6 +242,27 @@ def fromFormex(suffix=''):
     selection.set(meshes.keys())
 
 
+def divideMesh():
+    """Create a mesh by subdividing existing elements.
+
+    """
+    if not selection.check():
+        selection.ask()
+
+    if not selection.names:
+        return
+
+    meshes = [ named(n) for n in selection.names ]
+    eltypes = set([ m.eltype for m in meshes if m.eltype is not None])
+    print "eltypes in selected meshes: %s" % eltypes
+    if len(eltypes) > 1:
+        warning("I can only divide meshes with the same element type\nPlease narrow your selection before trying conversion.")
+        return
+    if len(eltypes) == 1:
+        fromtype = eltypes.pop()
+    showInfo("Sorry, this function is not implemented yet!")
+
+
 def convertMesh():
     """Transform the element type of the selected meshes.
 
@@ -310,7 +331,8 @@ def create_menu():
         ("&Convert to Formex",toFormex),
         ("&Convert from Formex",fromFormex),
         ("---",None),
-        ("&Convert Mesh Type",convertMesh),
+        ("&Divide Mesh",divideMesh),
+        ("&Convert Mesh Eltype",convertMesh),
         ("---",None),
         ("Toggle &Annotations",
          [("&Name",selection.toggleNames,dict(checked=selection.hasNames())),

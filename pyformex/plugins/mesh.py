@@ -405,7 +405,6 @@ Size: %s
 
     def convert(self,totype):
         fromtype = self.eltype
-        print "Converting '%s' mesh to '%s'" % (fromtype,totype)
 
         strategy = _conversions_[fromtype].get(totype,None)
 
@@ -427,7 +426,7 @@ Size: %s
         mesh = self
         totype = totype.split('-')[0]
         for step in strategy:
-            print "STEP: %s" % str(step)
+            #print "STEP: %s" % str(step)
             steptype,stepdata = step
 
             if steptype == 'm':

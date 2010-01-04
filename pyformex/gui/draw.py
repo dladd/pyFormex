@@ -43,12 +43,12 @@ import image
 import canvas
 import colors
 import coords
-import formex
+from formex import Formex
+
 from script import *
 from signals import *
 
 from plugins import surface,tools,mesh,fe
-from formex import Formex
         
 #################### Interacting with the user ###############################
 
@@ -366,7 +366,7 @@ def draw(F,
         if F is None:
             return None
 
-    if isinstance(F,formex.Formex):
+    if isinstance(F,Formex):
         pass
     elif isinstance(F,mesh.Mesh):
         pass
@@ -417,7 +417,7 @@ def draw(F,
         F = _shrink(F,shrink)
         
     try:
-        if isinstance(F,formex.Formex):
+        if isinstance(F,Formex):
             if F.nelems() == 0:
                 return None
             actor = actors.GeomActor(F.coords,None,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)

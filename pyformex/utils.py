@@ -42,7 +42,7 @@ the_version = {'pyformex':pyformex.__version__}
 the_external = {}
 
 
-def _congratulations(name,version,typ='module',fatal=False,quiet=False):
+def _congratulations(name,version,typ='module',fatal=False,quiet=True):
     """Report a detected module/program."""
     if version and not quiet:
         pyformex.message("Congratulations! You have %s (%s)" % (name,version))
@@ -192,7 +192,7 @@ def checkExternal(name=None,command=None,answer=None):
         version = m.group(1)
     else:
         version = ''
-    _congratulations(name,version,'program')
+    _congratulations(name,version,'program',quiet=True)
     the_external[name] = version
     return version
 
@@ -390,6 +390,7 @@ file_description = {
     'postproc': 'Postproc scripts (*_post.py *.post)',
     'pyformex': 'pyFormex scripts (*.py *.pye)',
     'pyf': 'pyFormex projects (*.pyf)',
+    'pgf': 'pyFormex geometry files (*.pgf *.formex)',
 }
 
 def fileDescription(ftype):

@@ -45,16 +45,12 @@ Do 'make lib' in %s
 """ % pyformexdir
 
 import pyformex
-#print dir(pyformex)
-from pyformex import *
-
+import utils
+from config import Config
 
 import warnings
 warnings.filterwarnings('ignore','.*return_index.*',UserWarning,'numpy')
 
-
-import utils
-from config import Config
 
 ###########################  main  ################################
 
@@ -124,7 +120,7 @@ def savePreferences():
     # Dangerous to set permanently!
     del pyformex.cfg['input/timeout']
     
-    debug("!!!Saving config:\n%s" % pyformex.cfg)
+    pyformex.debug("!!!Saving config:\n%s" % pyformex.cfg)
 
     try:
         fil = file(pyformex.preffile,'w')
@@ -133,7 +129,7 @@ def savePreferences():
         res = "Saved"
     except:
         res = "Could not save"
-    debug("%s preferences to file %s" % (res,pyformex.preffile))
+    pyformex.debug("%s preferences to file %s" % (res,pyformex.preffile))
 
 ###########################  app  ################################
 
