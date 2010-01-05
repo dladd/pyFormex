@@ -29,13 +29,14 @@ but to be loaded as a plugin.
 """
 
 import pyformex as GD
+from formex import *
+import utils
+from odict import ODict
+
 from gui import actors
 from gui.draw import *
-from formex import *
-
 
 from plugins import objects,surface,inertia,partition,sectionize
-from pyformex.arraytools import niceLogSize
 
 import commands, os, timer
 
@@ -49,59 +50,54 @@ setSelection = selection.set
 drawSelection = selection.draw
 
 
-def read_Formex(fn):
-    GD.message("Reading file %s" % fn)
-    t = timer.Timer()
-    F = Formex.read(fn)
-    nelems,nplex = F.coords.shape[0:2]
-    GD.message("Read %d elems of plexitude %d in %s seconds" % (nelems,nplex, t.seconds()))
-    return F
-
-
 def readSelection(select=True,draw=True,multi=True):
     """Read a Formex (or list) from asked file name(s).
 
     If select is True (default), this becomes the current selection.
     If select and draw are True (default), the selection is drawn.
     """
-    types = [ 'Formex Files (*.formex)', 'All Files (*)' ]
+    types = utils.fileDescription(['pgf','all'])
     fn = askFilename(GD.cfg['workdir'],types,multi=multi)
     if fn:
         if not multi:
             fn = [ fn ]
         chdir(fn[0])
-        names = map(utils.projectName,fn)
+        res = ODict()
         GD.GUI.setBusy()
-        F = map(read_Formex,fn)
+        for f in fn:
+            res.update(readGeomFile(f))
         GD.GUI.setBusy(False)
-        export(dict(zip(names,F)))
+        export(res)
         if select:
-            GD.message("Set selection to %s" % str(names))
-            selection.set(names)
+            oknames = [ k for k in res if isinstance(res[k],Formex) ]
+            selection.set(oknames)
+            GD.message("Set Formex selection to %s" % oknames)
             if draw:
                 selection.draw()
     return fn
+
+
+def writeSelection():
+    """Writes the currently selected Formices to a Geometry File."""
+    F = selection.check()
+    if F:
+        types = utils.fileDescription(['pgf','all'])
+        name = selection.names[0]
+        fn = askNewFilename(os.path.join(GD.cfg['workdir'],"%s.pgf" % name),
+                            filter=types)
+        if fn:
+            if not (fn.endswith('.pgf') or fn.endswith('.formex')):
+                fn += '.pgf'
+            GD.message("Creating pyFormex Geometry File '%s'" % fn)
+            chdir(fn)
+            selection.writeToFile(fn)
+            GD.message("Contents: %s" % selection.names)
     
 
 def printSize():
     for s in selection.names:
         S = named(s)
         GD.message("Formex %s has shape %s" % (s,S.shape()))
-
-
-def writeSelection():
-    """Writes the currently selected Formex to .formex file."""
-    F = selection.check(single=True)
-    if F:
-        name = selection.names[0]
-        fn = askNewFilename(os.path.join(GD.cfg['workdir'],"%s.formex" % name),
-                         filter=['(*.formex)','*'])
-        if fn:
-            if not fn.endswith('.formex'):
-                fn += '.formex'
-            GD.message("Writing Formex '%s' to file '%s'" % (name,fn))
-            chdir(fn)
-            F.write(fn)
 
 
 ################### Change attributes of Formex #######################
@@ -335,7 +331,6 @@ def cutSelection():
         side = res['Side']
         if side == 'both':
             G = [F.cutWithPlane(P,N,side=side,atol=atol,newprops=p) for F in FL]
-            #print(G[0][0].p)
             draw(G[0])
             G_pos = [ g[0] for g in G ]
             G_neg = [ g[1] for g in G ]
@@ -442,11 +437,11 @@ def sectionizeSelection():
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
-        ("&Read Formex Files",readSelection),
         ("&Select",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
-        ("&Save Selection as Formex",writeSelection),
+        ("&Read Geometry File(s)",readSelection),
+        ("&Write Geometry File",writeSelection),
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),

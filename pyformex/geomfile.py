@@ -11,7 +11,7 @@ from coords import *
 from formex import Formex
 from plugins.mesh import Mesh
 from plugins.curve import Curve
-
+from odict import ODict
 
 import os
 
@@ -93,20 +93,23 @@ class GeometryFile(object):
     def write(self,geom,name=None,sep=None):
         """Write any geometry object to the geometry file.
 
-        `geom` is one of the Geometry data types of pyFormex.
-        This currently includes :class:`Coords`, :class:`Formex`,
-        :class:`Mesh`, :class:`Curve`.
+        `geom` is one of the Geometry data types of pyFormex or a list
+        or dict of such objects.
+        Currently exported geometry objects are
+        :class:`Coords`, :class:`Formex`, :class:`Mesh`, :class:`Curve`.
         The geometry object is written to the file using the specified
         separator, or the default.
         """
         if isinstance(geom,dict):
-            for name,obj in geom.iteritems():
-                self.write(obj,name,sep)
+            for name in geom:
+                self.write(geom[name],name,sep)
+        elif isinstance(geom,list):
+            for obj in geom:
+                self.write(obj,None,sep)
         elif isinstance(geom,Formex):
             self.writeFormex(geom,name,sep)
         elif isinstance(geom,Mesh):
             self.writeMesh(geom,name,sep)
-        return self
 
 
     def writeFormex(self,F,name=None,sep=None):
@@ -163,7 +166,7 @@ class GeometryFile(object):
         self._version_ = version
         self.sep = sep
         self.objname = utils.NameSequence('%s_000' % utils.projectName(self.fil.name))
-        self.results = {}
+        self.results = ODict()
 
 
     def read(self,count=-1):

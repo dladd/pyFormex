@@ -31,7 +31,9 @@ This is a support module for other pyFormex plugins.
 import pyformex as GD
 
 from coords import bbox
-from geomfile import GeometryFile
+import geomfile
+import odict
+
 from copy import deepcopy
 
 
@@ -162,6 +164,15 @@ class Objects(object):
             return map(named,self.names)
 
 
+    def odict(self):
+        """Return the currently selected items as a dictionary.
+
+        Returns an ODict with the currently selected object in the order
+        of the selection.names.
+        """
+        return odict.ODict(zip(self.names,self.check(warn=False)))
+    
+
     def ask(self,mode='multi'):
         """Show the names of known objects and let the user select one or more.
 
@@ -214,18 +225,14 @@ class Objects(object):
 
     def writeToFile(self,filename):
         """Write objects to a geometry file."""
-        objects = self.check()
+        objects = self.odict()
         if objects:
-            f = GeometryFile(filename,mode='w',sep=' ')
-            for n,o in zip(self.names,objects):
-                f.write(o,n)
-            f.close()
+            writeGeomFile(filename,objects) 
 
 
     def readFromFile(self,filename):
         """Read objects from a geometry file."""
-        f = GeometryFile(filename,mode='r',sep=' ')
-        res = f.read()
+        res = readGeomFile(filename)
         export(res)
         self.set(res.keys())
 

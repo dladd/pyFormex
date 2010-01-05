@@ -32,7 +32,7 @@ module.
 
 import pyformex
 import formex
-#print "script.py: %s" % id(formex.Formex)
+import geomfile
 import utils
 
 import threading,os,commands,copy,re,time
@@ -556,6 +556,50 @@ def checkRevision(rev,comp='>='):
     except:
         raise RuntimeError,"Your current pyFormex revision (%s) does not pass the test %s %s" % (pyformex.__revision__,comp,rev)
    
+################### read and write files #################################
 
+def writeGeomFile(filename,objects,sep=' ',mode='w'):
+    """Save geometric objects to a pyFormex Geometry File.
+
+    A pyFormex Geometry File can store multiple geometrical objects in a
+    native format that can be efficiently read back into pyFormex.
+    The format is portable over different pyFormex versions and 
+    even to other software.
+
+    -`filename`: the name of the file to be written
+    -`objects`: a list or a dictionary. If it is a dictionary,
+      the objects will be saved with the key values as there names.
+      Objects that can not be exported to a Geometry File will be
+      silently ignored.
+    - `mode`: can be set to 'a' to append to an existing file.
+    - `sep`: the string used to separate data. If set to an empty
+      string, the data will be written in binary format and the resulting file
+      will be smaller but less portable.
+
+    Returns the number of objects written to the file.
+    """
+    f = geomfile.GeometryFile(filename,mode='w',sep=sep)
+    f.write(objects)
+    f.close()
+    return len(objects)
+    
+
+def readGeomFile(filename):
+    """Read a pyFormex Geometry File.
+
+    A pyFormex Geometry File can store multiple geometrical objects in a
+    native format that can be efficiently read back into pyFormex.
+    The format is portable over different pyFormex versions and 
+    even to other software.
+
+    -`filename`: the name of an exisiting pyFormex Geometry File.
+    
+    Returns a dictionary with the geometric objects read from the file.
+    If object names were stored in the file, they will be used as the keys.
+    Else, default names will be provided.
+    """
+    f = geomfile.GeometryFile(filename,mode='r')
+    return f.read()
+    
 
 #### End

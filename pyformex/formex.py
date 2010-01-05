@@ -1982,8 +1982,8 @@ class Formex(object):
         """
         from geomfile import GeometryFile
         f = GeometryFile(fil,mode='w',sep=sep)
-        f.writeFormex(self)
-        if f.isname:
+        f.write(self)
+        if f.isname and mode[0]=='w':
             f.close()
         
        
