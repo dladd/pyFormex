@@ -1876,10 +1876,10 @@ class Formex(object):
         """
         if self.nplex() != 2:
             raise RuntimeError,"Can only divide plex-2 Formices"
-        if type(div) == int:
+        div = asarray(div).ravel()
+        if div.size == 1 and div.dtype.kind=='i':
+            div = div[0]
             div = arange(div+1) / float(div)
-        else:
-            div = array(div).ravel()
         A = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[:-1],swap=True)
         B = interpolate(self.selectNodes([0]),self.selectNodes([1]),div[1:],swap=True)
         return connect([A,B])
