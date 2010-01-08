@@ -336,7 +336,7 @@ def checkArray(a,shape=None,kind=None,allow=None):
                 a = a.astype(Float)
         return a
     except:
-        raise ValueError,"Expected shape %s, kind %s, got: %s" % (shape,kind,a)
+        raise ValueError,"Expected shape %s, kind %s, got: %s, %s" % (shape,kind,a.shape,a.dtype.kind)
     
 
 

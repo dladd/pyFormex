@@ -32,12 +32,11 @@ import simple
 from examples.Cube import cube_tri
 from plugins.geomtools import triangleCircumCircle
 
-#
+
 def drawCircles(F):
-    for r,C,n in zip(*triangleCircumCircle(F.coords)):
-        c = simple.circle().swapAxes(0,2).scale(r).rotate(rotMatrix(n)).trl(C)
-        draw(c)
-        zoomAll()   
+    for r,c,n in zip(*triangleCircumCircle(F.coords)):
+        C = simple.circle(r=r,n=n,c=c)
+        draw(C)
 
 # create two viewports
 layout(2)
@@ -48,6 +47,7 @@ clear()
 F = Formex(mpattern('16-32'),[0,1]).scale([2,1,0])
 draw(F)
 drawCircles(F)
+zoomAll()   
 
 # draw in viewport 1
 viewport(1)
@@ -55,6 +55,7 @@ clear()
 F,c = cube_tri()
 draw(F)
 drawCircles(F)
+zoomAll()   
 
 if not ack("Keep both viewports ?"):
     print "Removing a viewport"

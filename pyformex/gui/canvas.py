@@ -772,8 +772,9 @@ class Canvas(object):
         self.makeCurrent()
         # go to a distance to have a good view with a 45 degree angle lens
         if bbox is not None:
+            GD.debug("SETTING BBOX: %s" % self.bbox)
             self.setBbox(bbox)
-        #GD.debug("USING BBOX: %s" % self.bbox)
+        GD.debug("USING BBOX: %s" % self.bbox)
         X0,X1 = self.bbox
         center = 0.5*(X0+X1)
         # calculating the bounding circle: this is rather conservative
@@ -819,34 +820,28 @@ class Canvas(object):
             self.camera.dolly(f)
 
 
-    ## def unProject(self,x,y,z):
-    ##     "Map the window coordinates (x,y,z) to object coordinates."""
-    ##     self.makeCurrent()
-    ##     #y = vp.h-y
-    ##     model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-    ##     proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
-    ##     view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-    ##     print("Modelview matrix:",model)
-    ##     print("Projection matrix:",proj)
-    ##     print("Viewport:",view)
-    ##     print("Point:",str((x,y,z)) )
-    ##     objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-    ##     print("Coordinates: ",x,y," map to ",objx,objy)
-    ##     return (objx,objy,objz)
+    def project(self,x,y,z):
+        "Map the object coordinates (x,y,z) to window coordinates."""
+        self.makeCurrent()
+        self.camera.loadProjection()
+        model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
+        proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
+        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        winx,winy,winz = GLU.gluProject(x,y,z,model,proj,view)
+        #GD.debug("Object coordinates: ",x,y,z," map to ",winx,winy,winz)
+        return winx,winy,winz
 
 
-    ## def unProject2(self,x,y,z):
-    ##     "Map the window coordinates (x,y,z) to object coordinates."""
-    ##     model = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-    ##     proj = GL.glGetFloatv(GL.GL_PROJECTION_MATRIX)
-    ##     view = GL.glGetIntegerv(GL.GL_VIEWPORT)
-    ##     print("Modelview matrix:",model)
-    ##     print("Projection matrix:",proj)
-    ##     print("Viewport:",view)
-    ##     print("Point:",str((x,y,z)) )
-    ##     objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
-    ##     print("Coordinates: ",x,y," map to ",objx,objy)
-    ##     return (objx,objy,objz)
+    def unProject(self,x,y,z):
+        "Map the window coordinates (x,y,z) to object coordinates."""
+        self.makeCurrent()
+        self.camera.loadProjection()
+        model = GL.glGetDoublev(GL.GL_MODELVIEW_MATRIX)
+        proj = GL.glGetDoublev(GL.GL_PROJECTION_MATRIX)
+        view = GL.glGetIntegerv(GL.GL_VIEWPORT)
+        objx, objy, objz = GLU.gluUnProject(x,y,z,model,proj,view)
+        #GD.debug("Window coordinates: ",x,y,z," map to ",objx,objy,objz)
+        return (objx,objy,objz)
 
 
     def zoomRectangle(self,x0,y0,x1,y1):

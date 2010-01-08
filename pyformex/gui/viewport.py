@@ -294,6 +294,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             'number' : self.pick_numbers,
             }
         self.drawing_mode = None
+        self.drawing = None
         # Drawing options
         self.resetOptions()
 
@@ -359,11 +360,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 
     def mouse_rectangle_zoom(self,x,y,action):
-        """Process mouse events during interactive picking.
+        """Process mouse events during interactive rectangle zooming.
 
         On PRESS, record the mouse position.
-        On MOVE, create a rectangular picking window.
-        On RELEASE, pick the objects inside the rectangle.
+        On MOVE, create a rectangular zoom window.
+        On RELEASE, zoom to the picked rectangle.
         """
         if action == PRESS:
             self.makeCurrent()
@@ -397,6 +398,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.finish_rectangle_zoom()
 
 
+
     def start_selection(self,mode,filtr):
         """Start an interactive picking mode.
 
@@ -404,7 +406,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         this can be used to change the filter method.
         """
         if self.selection_mode is None:
-            GD.debug("START SELECTION MODE: %s" % mode)
+            #GD.debug("START SELECTION MODE: %s" % mode)
             self.setMouse(LEFT,self.mouse_pick)
             self.setMouse(LEFT,self.mouse_pick,SHIFT)
             self.setMouse(LEFT,self.mouse_pick,CTRL)
@@ -418,7 +420,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         if filtr == 'none':
             filtr = None
-        GD.debug("SET SELECTION FILTER: %s" % filtr)
+        #GD.debug("SET SELECTION FILTER: %s" % filtr)
         self.selection_filter = filtr
         if filtr is None:
             self.selection_front = None
@@ -436,7 +438,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def finish_selection(self):
         """End an interactive picking mode."""
-        GD.debug("END SELECTION MODE")
+        #GD.debug("END SELECTION MODE")
         self.resetMouse(LEFT)
         self.resetMouse(LEFT,SHIFT)
         self.resetMouse(LEFT,CTRL)
@@ -451,7 +453,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         If clear == True, the current selection is cleared.
         """
-        GD.debug("CANCEL SELECTION MODE")
+        #GD.debug("CANCEL SELECTION MODE")
         self.selection_accepted = True
         if clear:
             self.selection.clear()
@@ -549,6 +551,99 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Go into number picking mode and return the selection."""
         return self.pick('numbers',*args,**kargs)
 
+#################### Interactive drawing ####################################
+
+    def mouse_create_point(self,x,y,action):
+        """Process mouse events during interactive drawing.
+
+        On PRESS, do nothing.
+        On MOVE, do nothing.
+        On RELEASE, add the point to the point list.
+        """
+        if action == PRESS:
+            self.makeCurrent()
+            self.update()
+
+        elif action == MOVE:
+            print self.zplane
+            self.drawn = self.unProject(x,y,self.zplane)
+            print self.drawn
+
+        elif action == RELEASE:
+            self.drawn = self.unProject(x,y,self.zplane)
+            self.selection_busy = False
+
+
+    def start_draw(self,mode,zplane=0.):
+        """Start an interactive drawing mode."""
+        #GD.debug("START DRAW MODE")
+        self.setMouse(LEFT,self.mouse_create_point)
+        self.setMouse(RIGHT,self.emit_done)
+        self.setMouse(RIGHT,self.emit_cancel,SHIFT)
+        self.connect(self,DONE,self.accept_draw)
+        self.connect(self,CANCEL,self.cancel_draw)
+        self.drawmode = mode
+        self.zplane = zplane
+        self.drawing = Coords()
+
+    def finish_draw(self):
+        """End an interactive drawing mode."""
+        #GD.debug("END DRAW MODE")
+        #self.setCursorShape('default')
+        self.resetMouse(LEFT)
+        self.resetMouse(RIGHT)
+        self.resetMouse(RIGHT,SHIFT)
+        self.disconnect(self,DONE,self.accept_selection)
+        self.disconnect(self,CANCEL,self.cancel_selection)
+        self.drawmode = None
+
+    def accept_draw(self,clear=False):
+        """Cancel an interactive drawing mode.
+
+        If clear == True, the current drawing is cleared.
+        """
+        #GD.debug("CANCEL DRAW MODE")
+        self.draw_accepted = True
+        if clear:
+            self.drawing = Coords()
+            self.draw_accepted = False
+        self.draw_canceled = True
+        self.selection_busy = False
+
+    def cancel_draw(self):
+        """Cancel an interactive drawing mode and clear the drawing."""
+        self.accept_draw(clear=True)
+
+    def draw(self,mode='point',npoints=-1,zplane=0.,func=None):
+        """Interactively draw on the canvas.
+
+        - single: if True, the function returns as soon as the user ends
+        a drawing operation. The default is to let the user
+        draw multiple lines and only to return after an explicit
+        cancel (ESC or right mouse button).
+        - func: if specified, this function will be called after each
+        atomic drawing operation. The current drawing is passed as
+        an argument. This can e.g. be used to show the drawing.
+        When the drawing operation is finished, the drawing is returned.
+        The return value is a (n,2,2) shaped array.
+        """
+        self.draw_canceled = False
+        self.start_draw(mode,zplane)
+        while not self.draw_canceled:
+            self.wait_selection()
+            if not self.draw_canceled:
+                self.drawn = Coords(self.drawn).reshape(-1,3)
+                self.drawing = Coords.concatenate([self.drawing,self.drawn])
+                if func:
+                    func(self.drawing)
+            if npoints > 0 and len(self.drawing) >= npoints:
+                self.accept_draw()                
+        if func and not self.draw_accepted:
+            func(self.drawing)
+        self.finish_draw()
+        return self.drawing
+
+##########################################################################
 
     def start_drawing(self,mode):
         """Start an interactive drawing mode."""

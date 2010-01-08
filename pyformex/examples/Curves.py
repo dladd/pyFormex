@@ -42,14 +42,11 @@ def BezierCurve(X,curl=None,closed=False):
     """
     ns = (X.shape[0]-1) / 3
     ip = 3*arange(ns+1)
-    print ip
     P = X[ip]
     ip = 3*arange(ns)
     ic = column_stack([ip+1,ip+2]).ravel()
     C = X[ic].reshape(-1,2,3)
     # always use False
-    print P
-    print C
     return BezierSpline(P,control=C,closed=False)
     
 
@@ -72,7 +69,7 @@ TA = None
 
 
 
-def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spread,drawtype):
+def drawCurve(ctype,dset,closed,endcond,tension,curl,ndiv,ntot,extend,spread,drawtype):
     global TA
     P = dataset[dset]
     text = "%s %s with %s points" % (open_or_closed[closed],ctype.lower(),len(P))
@@ -90,32 +87,17 @@ def drawCurve(ctype,dset,closed,endcond,tension,curl,interpoints,ndiv,extend,spr
         curl = float(curl)
         kargs['curl'] = curl
     S = method[ctype](P,**kargs)
-    if interpoints == 'subPoints':
-        X = S.subPoints(ndiv,extend)
-        point_color = 'black'
-        msize = 3
-    elif interpoints == 'pointsAt':
-        npts = ndiv*S.nparts + (extend[1]-extend[0]) * ndiv + 1
-        X = S.pointsAt(extend[0] + arange(npts)/ndiv)
-        point_color = 'white'
-        msize = 4
-    else: #if interpoints == 'random':
-        at = sort(random.rand(ndiv*S.nparts))*S.nparts
-        print at
-        X = S.pointsAt(at)
-        point_color = 'blue'
-        msize = 5
-
-    PL = PolyLine(X,closed=closed)
 
     if spread:
-        at = PL.atLength(PL.nparts)
-        X = PL.pointsAt(at)
-        PL = PolyLine(X,closed=closed)
+        print ndiv,ntot
+        PL = S.approx(ndiv=ndiv,ntot=ntot)
+    else:
+        print ndiv,ntot
+        PL = S.approx(ndiv=ndiv)
         
-    draw(X, color=point_color,marksize=msize)
     im = method.keys().index(ctype)
     draw(PL, color=method_color[im])
+    draw(PL.pointsOn(),color=black,marksize=4)
 
 
 dataset = [
@@ -141,9 +123,9 @@ data_items = [
     ['EndCondition',None,'select',['notaknot','secder']],
     ['Tension',0.0],
     ['Curl',0.5],
-    ['InterPoints',None,'select',['subPoints','pointsAt','random']],
-    ['Nintervals',10],
-    ['SpreadEqually',False],
+    ['Ndiv',10],
+    ['SpreadEvenly',False],
+    ['Ntot',40],
     ['ExtendAtStart',0.0],
     ['ExtendAtEnd',0.0],
 #    ['FreeSpaced',[-0.1,0.0,0.1,0.25,1.5,2.75]],
@@ -189,7 +171,7 @@ def show(all=False):
         Types = [CurveType]
     setDrawOptions({'bbox':'auto'})
     for Type in Types:
-        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,InterPoints,Nintervals,[ExtendAtStart,ExtendAtEnd],SpreadEqually,DrawAs)
+        drawCurve(Type,int(DataSet),Closed,EndCondition,Tension,Curl,Ndiv,Ntot,[ExtendAtStart,ExtendAtEnd],SpreadEvenly,DrawAs)
         setDrawOptions({'bbox':None})
 
 def showAll():

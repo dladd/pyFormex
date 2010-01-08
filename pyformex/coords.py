@@ -126,8 +126,13 @@ class Coords(ndarray):
         """Create a new instance of :class:`Coords`.
 
         """
+        # An empty coords object
         if data is None:
-            data = zeros((3,),dtype=Float)
+            data = ndarray((0,3),dtype=Float)
+
+        #
+        # !! Perhaps we should force at least dimension 2 ???
+        #
 
         # Turn the data into an array, and copy if requested
         ar = array(data, dtype=dtyp, copy=copy)
@@ -177,6 +182,8 @@ class Coords(ndarray):
     def npoints(self):
         """Return the total number of points."""
         return asarray(self.shape[:-1]).prod()
+
+    ncoords = npoints
 
     def x(self):
         """Return the x-plane"""
@@ -1068,6 +1075,20 @@ class Coords(ndarray):
         return (x,s.reshape(self.shape[:-1]))
 
 
+    def append(self,coords):
+        """Append coords to a Coords object.
+
+        The appended coords should have matching dimensions in all
+        but the first axis.
+
+        Returns the concatenated Coords object, without changing the current.
+
+        This is comparable to the :numpy:`append` function, but the result
+        is a :class:`Coords` object, the default axis is the first one
+        instead of the last, and it is a method rather than a function.
+        """
+        return Coords(append(self,coords,axis=0))
+            
 
     @classmethod
     def concatenate(clas,L,axis=0):

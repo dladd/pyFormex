@@ -52,7 +52,10 @@ from plugins.geomtools import triangleCircumCircle
 # methods:
 #    subPoints(t,j): returns points with parameter values t of part j
 #    points(ndiv,extend=[0.,0.]): returns points obtained by dividing each
-#           part in ndiv sections at equal parameter distance.             
+#           part in ndiv sections at equal parameter distance.
+#    pointsOn(): the defining points situated on the curve
+#    pointsOff(): the defining points situated off the curve (control points)
+
 
 class Curve(object):
     """Base class for curve type classes.
@@ -65,6 +68,12 @@ class Curve(object):
     """
 
     N_approx = 10
+
+    def pointsOn(self):
+        return self.coords
+
+    def pointsOff(self):
+        return Coords()
     
     def sub_points(self,t,j):
         """Return the points at values t in part j
@@ -155,9 +164,22 @@ class Curve(object):
         return self.lengths().sum()
 
 
-    def approx(self,ndiv=N_approx):
-        """Return an approximate PolyLine"""
-        return PolyLine(self.subPoints(ndiv),closed=self.closed)
+    def approx(self,ndiv=N_approx,ntot=None):
+        """Return a PolyLine approximation of the curve
+
+        If no `ntot` is given, the curve is approximated by `ndiv`
+        straight segments over each part of the curve.
+        If `ntot` is given, the curve is approximated by `ntot`
+        straight segments over the total curve. This is based on a
+        first approximation with ndiv segments over each part.
+        """
+        PL = PolyLine(self.subPoints(ndiv),closed=self.closed)
+        if ntot is not None:
+            at = PL.atLength(ntot)
+            X = PL.pointsAt(at)
+            PL = PolyLine(X,closed=PL.closed)
+        return PL
+
 
 
     # This allows us to draw approximations of curves that do not specify
@@ -198,6 +220,7 @@ class PolyLine(Curve):
         x = self.coords
         F = connect([x,x],bias=[0,1],loop=self.closed)
         return F
+
 
     def sub_points(self,t,j):
         """Return the points at values t in part j"""
@@ -267,7 +290,7 @@ class PolyLine(Curve):
         """Returns the parameter values for relative curve lengths div.
         
         ``div`` is a list of relative curve lengths (from 0.0 to 1.0).
-        As a convenience, an single integer value may be specified,
+        As a convenience, a single integer value may be specified,
         in which case the relative curve lengths are found by dividing
         the interval [0.0,1.0] in the specified number of subintervals.
 
@@ -288,6 +311,7 @@ class PolyLine(Curve):
         at = zeros(len(div))
         at[wi] = ai
         return at
+
 
     def reverse(self):
         return PolyLine(reverseAxis(self.coords,axis=0),closed=self.closed)

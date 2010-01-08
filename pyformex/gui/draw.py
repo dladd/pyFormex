@@ -277,7 +277,8 @@ def draw(F,
          view=None,bbox=None,
          color='prop',colormap=None,alpha=0.5,
          mode=None,linewidth=None,shrink=None,marksize=None,
-         wait=True,clear=None,allviews=False):
+         wait=True,clear=None,allviews=False,
+         highlight=False):
     """Draw object(s) with specified settings and direct camera to it.
 
     The first argument is an object to be drawn. All other arguments are
@@ -344,13 +345,14 @@ def draw(F,
         actor = []
         nowait = False
         for Fi in F:
-            if Fi == F[-1]:
+            if Fi is F[-1]:
                 nowait = wait
-            actor.append(draw(Fi,view,None,
+            actor.append(draw(Fi,view,bbox,
                               color,colormap,alpha,
                               mode,linewidth,shrink,marksize,
-                              wait=nowait,clear=clear,allviews=allviews))
-            if Fi == F[0]:
+                              wait=nowait,clear=clear,allviews=allviews,
+                              highlight=highlight))
+            if Fi is F[0]:
                 clear = False
                 view = None
                 
@@ -383,17 +385,6 @@ def draw(F,
         # Don't know how to draw this object
         raise RuntimeError,"draw() can not draw objects of type %s" % type(F)
 
-    GD.GUI.drawlock.wait()
-
-    if clear is None:
-        clear = GD.canvas.options.get('clear',False)
-    if clear:
-        clear_canvas()
-
-    if view is not None and view != 'last':
-        GD.debug("SETTING VIEW to %s" % view)
-        setView(view)
-
     if shrink is None:
         shrink = GD.canvas.options.get('shrink',None)
  
@@ -411,6 +402,17 @@ def draw(F,
     elif color == 'random':
         # create random colors
         color = numpy.random.rand(F.nelems(),3)
+
+    GD.GUI.drawlock.wait()
+
+    if clear is None:
+        clear = GD.canvas.options.get('clear',False)
+    if clear:
+        clear_canvas()
+
+    if view is not None and view != 'last':
+        GD.debug("SETTING VIEW to %s" % view)
+        setView(view)
 
     GD.GUI.setBusy()
     if shrink is not None:
@@ -431,16 +433,19 @@ def draw(F,
             actor = actors.TriSurfaceActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
         elif isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
-        GD.canvas.addActor(actor)
-        if view is not None or bbox not in [None,'last']:
-            #GD.debug("CHANGING VIEW to %s" % view)
-            if view == 'last':
-                view = GD.canvas.options['view']
-            if bbox == 'auto':
-                bbox = F.bbox()
-            #GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
-            GD.canvas.setCamera(bbox,view)
-            #setView(view)
+        if highlight:
+            GD.canvas.addHighlight(actor)
+        else:
+            GD.canvas.addActor(actor)
+            if view is not None or bbox not in [None,'last']:
+                GD.debug("CHANGING VIEW to %s" % view)
+                if view == 'last':
+                    view = GD.canvas.options['view']
+                if bbox == 'auto':
+                    bbox = F.bbox()
+                GD.debug("SET CAMERA TO: bbox=%s, view=%s" % (bbox,view))
+                GD.canvas.setCamera(bbox,view)
+                #setView(view)
         GD.canvas.update()
         GD.app.processEvents()
         #GD.debug("AUTOSAVE %s" % image.autoSaveOn())
