@@ -47,7 +47,7 @@ scripttemplate = os.path.join(pyformexdir,'template.py')
 
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
-scriptdirs = [ ('examples','') ]
+scriptdirs = [ ('Examples','/home/pmortier/pyformex/pyformex/examples'),('FEA','/home/pmortier/pyformex/pyformex/fea'),('stent','/home/pmortier/pyformex/pyformex/stent'),('varia','/home/pmortier/pyformex/pyformex/varia'),('studie_Denis','/home/pmortier/pyformex/pyformex/studie_Denis') ]
 history = []
 
 # extra paths to append tot sys.path
@@ -56,7 +56,7 @@ syspath = []
 
 # commands
 ### THESE MAY BE CHANGED BY THE INSTALLATION PROCEDURE
-editor = os.environ.get('VISUAL','')
+editor = os.environ.get('VISUAL','eric')
 viewer = 'firefox'   # html viewer
 browser = 'firefox'  # web browser
 
