@@ -1016,9 +1016,12 @@ class Formex(object):
 
 
     # Properties
-    def prop(self):
-        """Return the properties as a numpy array (ndarray)"""
-        return self.p
+    def getprop(self,index=None):
+        """Return the propertie numbers of the element in index"""
+        if index is None or self.p is None:
+            return self.p
+        else:
+            return self.p[index]
 
     def maxprop(self):
         """Return the highest property value used, or None"""

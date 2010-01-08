@@ -632,6 +632,12 @@ class GeomActor(Actor):
         return GeomActor(x,e,eltype=self.eltype)
 
 
+class FormexActor(GeomActor,Formex):
+    def __init__(self,F,*args,**kargs):
+        GeomActor.__init__(self,F.coords,None,F.eltype,*args,**kargs)
+        Formex.__init__(self,F)
+        
+
 #############################################################################
 
 

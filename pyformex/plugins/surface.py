@@ -676,7 +676,7 @@ class TriSurface(object):
             self.p = resize(p,(self.nelems(),))
         return self
 
-    def prop(self):
+    def getprop(self):
         """Return the properties as a numpy array (ndarray)"""
         return self.p
 

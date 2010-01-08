@@ -422,7 +422,7 @@ def draw(F,
         if isinstance(F,Formex):
             if F.nelems() == 0:
                 return None
-            actor = actors.GeomActor(F.coords,None,F.eltype,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
+            actor = actors.FormexActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth,marksize=marksize)
         elif isinstance(F,mesh.Mesh):
             if F.nelems() == 0:
                 return None

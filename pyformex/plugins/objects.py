@@ -45,7 +45,7 @@ class Objects(object):
     objects can be changed and the changes can be undone.
     """
 
-    def __init__(self,clas=None,filter=None,namelist=[]):
+    def __init__(self,clas=None,filter=None,namelist=[]): 
         """Create a new selection of objects.
 
         If a dict is given, objects will be selected from this dict, else
@@ -239,6 +239,8 @@ class Objects(object):
 
 ###################### Drawable Objects #############################
 
+from gui.draw import *
+
 # Default Annotations
             
 def draw_object_name(n):
@@ -262,16 +264,14 @@ def draw_bbox(n):
     return drawBbox(named(n))
    
 
-from gui.draw import *
-
 class DrawableObjects(Objects):
     """A selection of drawable objects from the globals().
 
-    ``annotations``, if set, is a list of (func,active) tuples, where
+    `annotations`, if set, is a list of (func,active) tuples, where
 
-    - ``func`` is a function that is to be called with the object name as
+    - `func` is a function that is to be called with the object name as
       argument to draw some annotation for the object,
-    - ``active`` is a flag to signal if the annotation should be drawn or not.
+    - `active` is a flag to signal if the annotation should be drawn or not.
 
     The default is to draw object name and element numbers.
     """
@@ -296,6 +296,15 @@ class DrawableObjects(Objects):
         for i,a in enumerate(self.annotations):
             if a[1]:
                 self.drawAnnotation(i)
+
+
+    def actorName(self,actor):
+        """Find the name corresponding to a canvas actor"""
+        for i,a in self._actors:
+            if actor is a and i < len(names):
+                return self.names[i]
+        return None
+            
 
 
     def ask(self,mode='multi'):

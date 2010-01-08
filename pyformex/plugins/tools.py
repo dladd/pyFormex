@@ -212,34 +212,6 @@ def getCollection(K):
         return None
 
    
-def setpropCollection(K,prop):
-    """Set the property of a collection.
-
-    prop should be a single non-negative integer value or None.
-    If None is given, the prop attribute will be removed from the objects
-    in collection even the non-selected items.
-    If a selected object does not have a setProp method, it is ignored.
-    """
-    if K.obj_type == 'actor':
-        obj = [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
-        for o in obj:
-            if hasattr(o,'setProp'):
-                o.setProp(prop)
-            
-    elif K.obj_type in ['element','point']:
-        for k in K.keys():
-            o = GD.canvas.actors[k]
-            if prop is None:
-                o.setProp(prop)
-            elif hasattr(o,'setProp'):
-                if not hasattr(o,'p') or o.p is None:
-                    o.setProp(0)
-                o.p[K[k]] = prop
-                print(o.p)
-                o.setColor(o.p)
-                o.redraw()
-
-   
 def growCollection(K,**kargs):
     """Grow the collection with n frontal rings.
 

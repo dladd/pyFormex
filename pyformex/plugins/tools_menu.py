@@ -179,140 +179,23 @@ def readGeometry():
         drawable.readFromFile(fn)
         drawable.draw()
 
+
+def dos2unix():
+    fn = askFilename(multi=True)
+    print("selected %s" % fn)
+    if fn:
+        for f in fn:
+            utils.dos2unix(f)
+
+
+def unix2dos():
+    fn = askFilename(multi=True)
+    if fn:
+        for f in fn:
+            utils.unix2dos(f)
+
+        
     
-
-###################### Drawn Objects #############################
-
-            
-def draw_object_name(n):
-    """Draw the name of an object at its center."""
-    return drawText3D(named(n).center(),n)
-
-def draw_elem_numbers(n):
-    """Draw the numbers of an object's elements."""
-    return drawNumbers(named(n))
-
-def draw_bbox(n):
-    """Draw the bbox of an object."""
-    return drawBbox(named(n))
-   
-
-class DrawnObjects(dict):
-    """A dictionary of drawn objects.
-    """
-    def __init__(self,*args,**kargs):
-        dict.__init__(self,*args,**kargs)
-        self.autodraw = False
-        self.shrink = None
-        self.annotations = [[draw_object_name,False],
-                            [draw_elem_numbers,False],
-                            [draw_bbox,False],
-                            ]
-        self._annotations = {}
-        self._actors = []
-
-
-    def draw(self,*args,**kargs):
-        clear()
-        print("SELECTION: %s" % self.names)
-        self._actors = draw(self.names,clear=False,shrink=self.shrink,*args,**kargs)
-        #print(self.annotations)
-        for i,a in enumerate(self.annotations):
-            if a[1]:
-                self.drawAnnotation(i)
-
-
-    def ask(self,mode='multi'):
-        """Interactively sets the current selection."""
-        new = Objects.ask(self,mode)
-        if new is not None:
-            self.draw()
-
-
-    def drawChanges(self):
-        """Draws old and new version of a Formex with differrent colors.
-
-        old and new can be a either Formex instances or names or lists thereof.
-        old are drawn in yellow, new in the current color.
-        """
-        self.draw(wait=False)
-        draw(self.values,color='yellow',bbox=None,clear=False,shrink=self.shrink)
- 
-
-    def undoChanges(self):
-        """Undo the last changes of the values."""
-        Objects.undoChanges(self)
-        self.draw()
-
-
-    def toggleAnnotation(self,i=0,onoff=None):
-        """Toggle the display of number On or Off.
-
-        If given, onoff is True or False. 
-        If no onoff is given, this works as a toggle. 
-        """
-        active = self.annotations[i][1]
-        #print("WAS")
-        #print(self.annotations)
-        if onoff is None:
-            active = not active
-        elif onoff:
-            active = True
-        else:
-            active = False
-        self.annotations[i][1] = active
-        #print("BECOMES")
-        #print(self.annotations)
-        if active:
-            self.drawAnnotation(i)
-        else:
-            self.removeAnnotation(i)
-        #print(self._annotations)
-
-
-    def drawAnnotation(self,i=0):
-        """Draw some annotation for the current selection."""
-        #print("DRAW %s" % i)
-        self._annotations[i] = [ self.annotations[i][0](n) for n in self.names ]
-
-
-    def removeAnnotation(self,i=0):
-        """Remove the annotation i."""
-        #print("REMOVE %s" % i)
-        map(undraw,self._annotations[i])
-        del self._annotations[i]
-
-
-    def toggleNames(self):
-        self.toggleAnnotation(0)
-    def toggleNumbers(self):
-        self.toggleAnnotation(1)
-    def toggleBbox(self):
-        self.toggleAnnotation(2)
-
-
-    def setProperty(self,prop=None):
-        """Set the property of the current selection.
-
-        prop should be a single integer value or None.
-        If None is given, a value will be asked from the user.
-        If a negative value is given, the property is removed.
-        If a selected object does not have a setProp method, it is ignored.
-        """
-        objects = self.check()
-        if objects:
-            if prop is None:
-                res = askItems([['property',0]],
-                               caption = 'Set Property Number for Selection (negative value to remove)')
-                if res:
-                    prop = int(res['property'])
-                    if prop < 0:
-                        prop = None
-            for o in objects:
-                if hasattr(o,'setProp'):
-                    o.setProp(prop)
-            self.draw()
-
 ##################### planes ##########################
 
 planes = objects.DrawableObjects(clas=Plane)
@@ -390,6 +273,7 @@ selection = None
 
 def set_selection(obj_type):
     global selection
+    selection = None
     selection = pick(obj_type)
 
 def query(mode):
@@ -422,7 +306,7 @@ def query_angle():
     showInfo("Select two line elements.")
     set_selection('element')
     print(reportAngles(selection))
-                   
+
 
 def report_selection():
     if selection is None:
@@ -430,6 +314,35 @@ def report_selection():
         return
     print(selection)
     print(report(selection))
+
+
+   
+def setpropCollection(K,prop):
+    """Set the property of a collection.
+
+    prop should be a single non-negative integer value or None.
+    If None is given, the prop attribute will be removed from the objects
+    in collection even the non-selected items.
+    If a selected object does not have a setProp method, it is ignored.
+    """
+    if K.obj_type == 'actor':
+        obj = [ GD.canvas.actors[i] for i in K.get(-1,[]) ]
+        for o in obj:
+            if hasattr(o,'setProp'):
+                o.setProp(prop)
+            
+    elif K.obj_type in ['element','point']:
+        for k in K.keys():
+            o = GD.canvas.actors[k]
+            if prop is None:
+                o.setProp(prop)
+            elif hasattr(o,'setProp'):
+                if not hasattr(o,'p') or o.p is None:
+                    o.setProp(0)
+                o.p[K[k]] = prop
+                print(o.p)
+                o.setColor(o.p)
+                o.redraw(mode=GD.canvas.rendermode)
 
 
 def setprop_selection():
@@ -449,6 +362,7 @@ def setprop_selection():
         if prop < 0:
             prop = None
         setpropCollection(selection,prop)
+        removeHighlights()
 
 
 def grow_selection():
@@ -476,6 +390,7 @@ def partition_selection():
         warning("You need to pick actors or elements.")
         return
     for A in GD.canvas.actors:
+        print A.atype
         if not A.atype == 'TriSurface':
             warning("Currently I can only partition TriSurfaces." )
             return
@@ -520,20 +435,6 @@ def export_selection():
             export({name:sel})
         elif res['Export as'] == options[1]:
             export(dict([ (name+"-%s"%i,v) for i,v in enumerate(sel)]))
-
-
-def dos2unix():
-    fn = askFilename(multi=True)
-    print("selected %s" % fn)
-    if fn:
-        for f in fn:
-            utils.dos2unix(f)
-
-def unix2dos():
-    fn = askFilename(multi=True)
-    if fn:
-        for f in fn:
-            utils.unix2dos(f)
      
         
 ################### menu #################
@@ -558,6 +459,8 @@ def create_menu():
         ("---",None),
         ('&Write Geometry File',writeGeometry),
         ('&Read Geometry File',readGeometry),
+        ("&DOS to Unix",dos2unix),
+        ("&Unix to DOS",unix2dos),
         ("---",None),
         ("&Create Plane",
             [("Coordinates", 
@@ -597,9 +500,6 @@ def create_menu():
           ('&Distances',query_distances),
           ('&Angle',query_angle),
           ]),
-        ("---",None),
-        ("&DOS to Unix",dos2unix),
-        ("&Unix to DOS",unix2dos),
         ("---",None),
         ('&Reload',reload_menu),
         ("&Close",close_menu),
