@@ -174,10 +174,11 @@ def readGeometry():
     """Read geometry from file."""
     filter = utils.fileDescription(['pgf','all'])
     cur = GD.cfg['workdir']
-    fn = askNewFilename(cur=cur,filter=filter)
+    fn = askFilename(cur=cur,filter=filter)
     if fn:
         drawable.readFromFile(fn)
         drawable.draw()
+        zoomAll()
 
 
 def dos2unix():
@@ -334,15 +335,26 @@ def setpropCollection(K,prop):
     elif K.obj_type in ['element','point']:
         for k in K.keys():
             o = GD.canvas.actors[k]
+            print "SETPROP ACTOR %s" % type(o)
+            n =  drawable.names[k]
+            print "SETPROP DRAWABLE %s" % n
+            O = named(n)
+            if O is not None:
+                print "ALSO SETTING OBECT PROPERTIES"
             if prop is None:
                 o.setProp(prop)
+                if O:
+                    O.setProp(prop)
             elif hasattr(o,'setProp'):
                 if not hasattr(o,'p') or o.p is None:
                     o.setProp(0)
+                print("PROP %s ?= %s" % (o.p,O.p))
                 o.p[K[k]] = prop
-                print(o.p)
                 o.setColor(o.p)
                 o.redraw(mode=GD.canvas.rendermode)
+                if O and id(O.p) != id(o.p):
+                    O.setProp(o.p)
+                print("PROP %s ?= %s" % (o.p,O.p))
 
 
 def setprop_selection():
@@ -444,7 +456,8 @@ _menu = 'Tools'
 def create_menu():
     """Create the Tools menu."""
     MenuData = [
-        ('&Execute pyFormex command',command),
+        ('&Read Geometry File',readGeometry),
+        ('&Write Geometry File',writeGeometry),
         ('-- Global Variables --',printall,dict(disabled=True)),
         ('  &List All',printall),
         ('  &Select',database.ask),
@@ -457,8 +470,7 @@ def create_menu():
         ('  &Delete',forget),
         ('  &Delete All',deleteAll),
         ("---",None),
-        ('&Write Geometry File',writeGeometry),
-        ('&Read Geometry File',readGeometry),
+        ('&Execute pyFormex command',command),
         ("&DOS to Unix",dos2unix),
         ("&Unix to DOS",unix2dos),
         ("---",None),
@@ -521,13 +533,6 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     close_menu()
-    reload(tools_menu)
-    show_menu()
-
-
-def reload_menu():
-    close_menu()
-    reload(tools_menu)
     show_menu()
     
 

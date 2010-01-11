@@ -298,14 +298,13 @@ class DrawableObjects(Objects):
                 self.drawAnnotation(i)
 
 
-    def actorName(self,actor):
-        """Find the name corresponding to a canvas actor"""
-        for i,a in self._actors:
-            if actor is a and i < len(names):
-                return self.names[i]
-        return None
+    ## def actorName(self,actor):
+    ##     """Find the name corresponding to a canvas actor"""
+    ##     for i,a in enumerate(self._actors):
+    ##         if actor is a and i < len(names):
+    ##             return self.names[i]
+    ##     return None
             
-
 
     def ask(self,mode='multi'):
         """Interactively sets the current selection."""

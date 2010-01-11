@@ -437,11 +437,11 @@ def sectionizeSelection():
 def create_menu():
     """Create the Formex menu."""
     MenuData = [
+        ("&Read Geometry File(s)",readSelection),
+        ("&Write Geometry File",writeSelection),
         ("&Select",selection.ask),
         ("&Draw Selection",selection.draw),
         ("&Forget Selection",selection.forget),
-        ("&Read Geometry File(s)",readSelection),
-        ("&Write Geometry File",writeSelection),
         ("---",None),
         ("Print &Information",
          [('&Data Size',printSize),
