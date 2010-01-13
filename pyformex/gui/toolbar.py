@@ -188,9 +188,9 @@ def setLight(mode=True):
 
 normals_button = None
 
-def toggleNormals(): 
-    mode = not GD.canvas.avgnormals
-    GD.canvas.setAveragedNormals(mode)
+def toggleNormals():
+    state = not GD.canvas.avgnormals
+    GD.canvas.setAveragedNormals(state)
     GD.canvas.update()
     GD.app.processEvents()
 
@@ -200,12 +200,12 @@ def addNormalsButton(toolbar):
                                'normals-avg',toggleNormals,icon0='normals-ind',
                                toggle=True,checked=False)    
 
-def setNormals(mode=True):
-    """Set the normals mode on or off."""
-    GD.canvas.setAveragedNormals(mode)
+def setNormals(state=True):
+    """Set the normals mode to averaged or not."""
+    GD.canvas.setAveragedNormals(state)
     GD.canvas.update()
     if normals_button:
-        normals_button.setChecked(mode)
+        normals_button.setChecked(state)
     GD.app.processEvents()
 
 

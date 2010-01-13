@@ -48,8 +48,6 @@ class Objects(object):
     def __init__(self,clas=None,filter=None,namelist=[]): 
         """Create a new selection of objects.
 
-        If a dict is given, objects will be selected from this dict, else
-        from the global pyFormex dict GD.PF.
         If a filter is given, only objects passing it will be accepted.
         The filter will be applied dynamically on the dict.
 
@@ -109,8 +107,17 @@ class Objects(object):
         return self.names[i]
     
 
+    def listAll(self):
+        """Return a list with all selectable objects.
+
+        This lists all the global names in pyformex.PF that match
+        the class and/or filter (if specified).
+        """
+        return listAll(clas=self.clas)
+
+
     def selectAll(self):
-        self.set(self.listAll(clas=self.clas))
+        self.set(self.listAll())
 
 
     def remember(self,copy=False):
@@ -297,14 +304,7 @@ class DrawableObjects(Objects):
             if a[1]:
                 self.drawAnnotation(i)
 
-
-    ## def actorName(self,actor):
-    ##     """Find the name corresponding to a canvas actor"""
-    ##     for i,a in enumerate(self._actors):
-    ##         if actor is a and i < len(names):
-    ##             return self.names[i]
-    ##     return None
-            
+    
 
     def ask(self,mode='multi'):
         """Interactively sets the current selection."""

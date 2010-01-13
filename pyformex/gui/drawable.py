@@ -115,7 +115,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     n = None
     if mode.startswith('smooth') and objtype==-1:
         if normals is None:
-            if mode == 'smooth-avg' and e is not None:
+            if mode == 'smooth_avg' and e is not None:
                 n = interpolateNormals(x,e,treshold=GD.cfg['render/avgnormaltreshold'])
                 mode = 'smooth'
             else:

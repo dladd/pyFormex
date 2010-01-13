@@ -1,4 +1,14 @@
 #!/usr/bin/env pyformex
+# $Id$
+
+"""Interactive 2D drawing in a 3D space
+
+This pyFormex plugin provides some interactive 2D drawing functions.
+While the drawing operations themselves are in 2D, they can be performed
+on a plane with any orientation in space. The constructed geometry always
+has 3D coordinates in the global cartesian coordinate system.
+"""
+
 
 from simple import circle
 from odict import ODict
@@ -7,7 +17,16 @@ from plugins.curve import *
 from plugins.tools_menu import *
 
 
-def draw2D(mode ='point',npoints=1,zplane=0.,func=None):
+_preview = False
+
+def toggle_preview():
+    global _preview
+    res = askItems([('_preview',_preview,{'text':'Preview mode'})])
+    if res:
+        globals().update(res)
+
+
+def draw2D(mode='point',npoints=1,zplane=0.,func=None):
     """Enter interactive drawing mode and return the line drawing.
 
     See viewport.py for more details.
@@ -22,12 +41,32 @@ def draw2D(mode ='point',npoints=1,zplane=0.,func=None):
         return
     if func == None:
         func = highlightDrawing
-    # drawing_buttons = widgets.ButtonBox('Drawing:',[('Cancel',GD.canvas.cancel_drawing),('OK',GD.canvas.accept_drawing)])
-    # GD.GUI.statusbar.addWidget(drawing_buttons)
-    points = GD.canvas.draw(mode,npoints,zplane,func)
-    print "POINTS: %s" % points
-    # GD.GUI.statusbar.removeWidget(drawing_buttons)
-    return points
+    return GD.canvas.draw(mode,npoints,zplane,func,_preview)
+
+
+def drawnObject(points,mode='point'):
+    """Return the geometric object resulting from draw2D points"""
+    minor = None
+    if '_' in mode:
+        mode,minor = mode.split('_')
+    closed = minor=='closed'
+    
+    if mode == 'point':
+        return points
+    elif mode == 'polyline':
+        return PolyLine(points,closed=closed)
+    elif mode == 'spline' and points.ncoords() > 1:
+        return BezierSpline(points,closed=closed)
+    elif mode == 'circle' and points.ncoords() % 3 == 0:
+        R,C,N = triangleCircumCircle(points.reshape(-1,3,3))
+        circles = [circle(r=r,c=c,n=n) for r,c,n in zip(R,C,N)]
+        if len(circles) == 1:
+            return circles[0]
+        else:
+            return circles
+    else:
+        return None
+    
 
 
 def highlightDrawing(points):
@@ -36,45 +75,19 @@ def highlightDrawing(points):
     pts is an array of points.
     """
     GD.canvas.removeHighlights()
+    GD.canvas.update()
     mode = GD.canvas.drawmode
     draw(points,highlight=True,flat=True)
-    if mode == 'polyline':
-        draw(PolyLine(points),color=GD.canvas.settings.slcolor,highlight=True,flat=True)
-    elif mode == 'spline':
-        if points.ncoords() > 1:
-            draw(BezierSpline(points),color=GD.canvas.settings.slcolor,highlight=True,flat=True)
-    elif mode == 'circle':
-        print "%s POINTS" % points.ncoords()
-        if points.ncoords() % 3 == 0:
-            points = points.reshape(-1,3,3)
-            R,C,N = triangleCircumCircle(points)
-            draw([circle(r=r,c=c,n=n) for r,c,n in zip(R,C,N)],color=GD.canvas.settings.slcolor,highlight=True,flat=True)
+    objects = drawnObject(points,mode=mode)
+    if objects is not None:
+        draw(objects,color=GD.canvas.settings.slcolor,highlight=True,flat=True)
 
-
-def finalDrawing(points,mode,color):
-    """Final drawing.
-
-    pts is an array of points.
-    """
-    GD.canvas.removeHighlights()
-    draw(points,flat=True)
-    if mode == 'polyline':
-        draw(PolyLine(points),mode='flat',linewidth=4,color=color,flat=True)
-    elif mode == 'spline':
-        if points.ncoords() > 1:
-            draw(BezierSpline(points),mode='flat',linewidth=4,color=color,flat=True)
-    elif mode == 'circle':
-        if points.ncoords() % 3 == 0:
-            points = points.reshape(-1,3,3)
-            R,C,N = triangleCircumCircle(points)
-            draw([circle(r=r,c=c,n=n) for r,c,n in zip(R,C,N)],mode='flat',linewidth=4,color=color,flat=True)
-   
 
 
 ###################################
 
 _draw_object = ['point','polyline','spline','circle']
-_auto_name = ODict([ (obj,utils.NameSequence(obj)) for obj in _draw_object ])
+autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in _draw_object ])
 _zvalue = 0.
     
 def draw_object(mode,npoints=-1):
@@ -82,31 +95,88 @@ def draw_object(mode,npoints=-1):
         return
     x,y,z = GD.canvas.project(0.,0.,_zvalue)
     points = draw2D(mode,npoints=npoints,zplane=z)
-    if len(points) == 0:
+    obj = drawnObject(points,mode=mode)
+    if obj is None:
+        GD.canvas.removeHighlights()
         return
-    points = Coords(points)
     res = askItems([
-        ('name',_auto_name[mode].peek(),{'text':'Name for storing the object'}),
+        ('name',autoname[mode].peek(),{'text':'Name for storing the object'}),
         ('color','blue','color',{'text':'Color for the object'}),
         ])
-    if res:
-        name = res['name']
-        color = res['color']
-        points.specular = 0.
-        if name == _auto_name[mode].peek():
-            _auto_name[mode].next()
-        export({name:points})
-        finalDrawing(points,mode,color=color)  
+    if not res:
+        return None
+    
+    name = res['name']
+    color = res['color']
+    if name == autoname[mode].peek():
+        autoname[mode].next()
+    export({name:obj})
+    GD.canvas.removeHighlights()
+    draw(points,color='black',flat=True)
+    if mode != 'point':
+        draw(obj,color=color,flat=True)
+    return name
+    
+            
 
 def draw_points(npoints=-1):
-    draw_object('point',npoints=npoints)
+    return draw_object('point',npoints=npoints)
 def draw_polyline():
-    draw_object('polyline')
+    return draw_object('polyline')
 def draw_spline():
-    draw_object('spline')
+    return draw_object('spline')
 def draw_circle():
-    draw_object('circle')
+    return draw_object('circle')
 
+
+
+def objectName(actor):
+    """Find the exported name corresponding to a canvas actor"""
+    if hasattr(actor,'object'):
+        obj = actor.object
+        print "OBJECT",obj
+        for name in GD.PF:
+            print name
+            print named(name)
+            if named(name) is obj:
+                return name
+    return None
+        
+
+
+def splitPolyLine(c):
+    """Interactively split the specified polyline"""
+    GD.options.debug=True
+    XA = draw(c.coords,clear=False,bbox='last',flat=True)
+    GD.canvas.pickable = [XA]
+    #print "ACTORS",GD.canvas.actors
+    #print "PICKABLE",GD.canvas.pickable
+    k = pickPoints(filtr='single',oneshot=True)
+    GD.canvas.pickable = None
+    undraw(XA)
+    if k.has_key(0):
+        at = k[0]
+        return c.split(at)
+    else:
+        return []
+    
+  
+def split_curve():
+    k = pickActors(filtr='single',oneshot=True)
+    print k
+    print k[-1]
+    if not k.has_key(-1):
+        return
+    nr = k[-1][0]
+    actor = GD.canvas.actors[nr]
+    name = objectName(actor)
+    print "Enter a point to split %s" % name
+    c = named(name)
+    cs = splitPolyLine(c)
+    if len(cs) == 2:
+        draw(cs[0],color='red')
+        draw(cs[1],color='green')
+    
 
 _grid_data = [
     ['autosize',False],
@@ -179,10 +249,14 @@ def create_menu():
         ("&Set grid",create_grid),
         ("&Remove grid",remove_grid),
         ("---",None),
+        ("&Toggle Preview",toggle_preview),
+        ("---",None),
         ("&Draw Points",draw_points),
         ("&Draw Polyline",draw_polyline),
         ("&Draw Spline",draw_spline),
         ("&Draw Circle",draw_circle),
+        ("---",None),
+        ("&Split Curve",split_curve),
         ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
@@ -205,6 +279,8 @@ def close_menu():
 def reload_menu():
     """Reload the menu."""
     close_menu()
+    import plugins
+    plugins.refresh('draw2d')
     show_menu()
     setDrawOptions({'bbox':'last'})
 

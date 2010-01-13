@@ -363,8 +363,11 @@ def run(argv=[]):
     if pyformex.options.gui:
         pyformex.debug("GUI version")
         from gui import gui
-        gui.startGUI(args)
-
+        res = gui.startGUI(args)
+        if res != 0:
+            print("Could not start the pyFormex GUI: %s" % res)
+            return res # EXIT
+        
     # Display the startup warnings
     if startup_warnings:
         pyformex.warning(startup_warnings)
@@ -408,7 +411,7 @@ def run(argv=[]):
             if pyformex.options.gui:
                 pyformex.message("There was an error while executing a script")
             else:
-                return res
+                return res # EXIT
                 
     else:
         pyformex.debug("stdin is a tty: %s" % sys.stdin.isatty())

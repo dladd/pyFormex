@@ -530,13 +530,14 @@ def startGui(args=[]):
     if pyformex.GUI is None:
         pyformex.debug("Starting the pyFormex GUI")
         from gui import gui
-        gui.startGUI(args)
-        gui.runGUI()
+        if gui.startGUI(args) == 0:
+            gui.runGUI()
 
 
 def isWritable(path):
     """Check that the specified path is writeable."""
     return os.access(path,os.W_OK)
+
 
 def checkRevision(rev,comp='>='):
     """Check that we have the requested revision number.

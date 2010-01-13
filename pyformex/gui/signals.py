@@ -33,6 +33,7 @@ from PyQt4.QtCore import Qt,QObject,SIGNAL,QThread
 # signals
 CANCEL = SIGNAL("Cancel")   # cancel the operation, undoing it
 DONE   = SIGNAL("Done")     # accept and finish the operation
+REDRAW = SIGNAL("Redraw")   # redraw a preview state
 WAKEUP = SIGNAL("Wakeup")   # wake up from a sleep state
 TIMEOUT = SIGNAL("Timeout") # terminate what was going on
 SAVE = SIGNAL("Save")       # 

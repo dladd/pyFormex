@@ -144,11 +144,20 @@ def setPickSize():
     GD.cfg['pick/size'] = (int(res['w']),int(res['h']))
         
     
+def setRenderMode():
+    from canvas import Canvas
+    res = draw.askItems([('render/mode',None,'vradio',{'text':'Render Mode','choices':Canvas.rendermodes})])
+    if res:
+        rendermode = res['render/mode']
+        if hasattr(draw,rendermode):
+            getattr(draw,rendermode)()
+        updateSettings(res,GD.cfg)
+            
+    
 def setRender():
     items = [ ('render/%s'%a,getattr(GD.canvas,a),'slider',{'min':0,'max':100,'scale':0.01,'func':getattr(draw,'set_%s'%a)}) for a in [ 'ambient', 'specular', 'emission', 'shininess' ] ]
     res = draw.askItems(items)
     if res:
-        print(res)
         updateSettings(res,GD.cfg)
 
 
@@ -291,6 +300,7 @@ MenuData = [
         (_('&ZoomFactor'),setZoomFactor),
         (_('&AutoZoomFactor'),setAutoZoomFactor),
         (_('&ZoomActions'),setZoomActions),
+        (_('&Render Mode'),setRenderMode),
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),

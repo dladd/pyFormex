@@ -31,7 +31,7 @@ import project
 import draw
 from script import processArgs
 import image
-from plugins import surface_menu,formex_menu,mesh_menu,tools_menu,postproc_menu,jobs_menu
+import plugins
 
 from gettext import gettext as _
 
@@ -414,14 +414,8 @@ MenuData = [
     (_('&Save as Icon'),saveIcon),
     (_('&Show Image'),showImage),
     (_('---2'),None),
-    (_('Load &Plugins'),[
-        (_('Surface menu'),surface_menu.show_menu),
-        (_('Formex menu'),formex_menu.show_menu),
-        (_('Mesh menu'),mesh_menu.show_menu),
-        (_('Tools menu'),tools_menu.show_menu),
-        (_('Jobs menu'),jobs_menu.show_menu),
-        (_('Postproc menu'),postproc_menu.show_menu),
-        ]),
+    plugins.LoadMenu,
+    plugins.ReloadMenu,
     (_('&Options'),setOptions),
     (_('---3'),None),
     (_('E&xit'),draw.closeGui),

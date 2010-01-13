@@ -278,7 +278,7 @@ def draw(F,
          color='prop',colormap=None,alpha=0.5,
          mode=None,linewidth=None,shrink=None,marksize=None,
          wait=True,clear=None,allviews=False,
-         highlight=False):
+         highlight=False,flat=False):
     """Draw object(s) with specified settings and direct camera to it.
 
     The first argument is an object to be drawn. All other arguments are
@@ -351,7 +351,7 @@ def draw(F,
                               color,colormap,alpha,
                               mode,linewidth,shrink,marksize,
                               wait=nowait,clear=clear,allviews=allviews,
-                              highlight=highlight))
+                              highlight=highlight,flat=flat))
             if Fi is F[0]:
                 clear = False
                 view = None
@@ -362,6 +362,10 @@ def draw(F,
             GD.canvas.update()
                 
         return actor
+
+    # We have a single object to draw
+
+    obj = F
 
     if type(F) == str:
         F = named(F)
@@ -417,7 +421,7 @@ def draw(F,
     GD.GUI.setBusy()
     if shrink is not None:
         F = _shrink(F,shrink)
-        
+
     try:
         if isinstance(F,Formex):
             if F.nelems() == 0:
@@ -433,6 +437,9 @@ def draw(F,
             actor = actors.TriSurfaceActor(F,color=color,colormap=colormap,alpha=alpha,mode=mode,linewidth=linewidth)
         elif isinstance(F,tools.Plane):
             return drawPlane(F.point(),F.normal(),F.size())
+        actor.object = obj
+        if flat:
+            actor.specular = 0.
         if highlight:
             GD.canvas.addHighlight(actor)
         else:
@@ -773,8 +780,9 @@ def fgcolor(color):
     GD.canvas.setFgColor(color)
 
 
-def renderMode(mode):
+def renderMode(mode,avg=False):
     GD.canvas.setRenderMode(mode)
+    toolbar.setNormals(avg)
     toolbar.setLight(GD.canvas.lighting)
     GD.canvas.update()
     GD.app.processEvents()
@@ -782,17 +790,20 @@ def renderMode(mode):
 def wireframe():
     renderMode("wireframe")
     
-def flat():
-    renderMode("flat")
-    
 def smooth():
     renderMode("smooth")
 
 def smoothwire():
     renderMode("smoothwire")
     
+def flat():
+    renderMode("flat")
+    
 def flatwire():
     renderMode("flatwire")
+    
+def smooth_avg():
+    renderMode("smooth",True)
 
 def opacity(alpha):
     """Set the viewports transparency."""

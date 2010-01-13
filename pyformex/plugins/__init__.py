@@ -27,3 +27,54 @@
 Currently, this does nothing. The file should be kept though, because it is
 needed to flag this directory as a Python module.
 """
+
+from types import ModuleType
+from gettext import gettext as _
+
+
+def load(plugin):
+    """Load the named plugin"""
+    # imports are placed here to defer loading until possible
+    import formex_menu
+    import surface_menu
+    import mesh_menu
+    import tools_menu
+    import draw2d
+    import jobs_menu
+    import postproc_menu
+    module = globals().get(plugin,None)
+    if type(module) is ModuleType and hasattr(module,'show_menu'):
+        module.show_menu()
+
+
+def refresh(plugin):
+    """Reload the named plugin"""
+    module = globals().get(plugin,None)
+    reload(module)
+
+
+def refresh_menu(plugin):
+    """Reload the named plugin"""
+    module = globals().get(plugin,None)
+    reload(module)
+
+
+def loaded_modules():
+    d = [ k for k in globals() if type(globals()[k]) is ModuleType ]
+    d.sort()
+    return d
+
+plugin_menus = [
+    (_('Surface menu'),'surface_menu'),
+    (_('Formex menu'),'formex_menu'),
+    (_('Mesh menu'),'mesh_menu'),
+    (_('Tools menu'),'tools_menu'),
+    (_('Draw menu'),'draw2d'),
+    (_('Jobs menu'),'jobs_menu'),
+    (_('Postproc menu'),'postproc_menu'),
+    ]
+
+LoadMenu = _('Load &Plugins'),[ (k,load,{'data':v}) for k,v in plugin_menus]
+ReloadMenu = _('Reload &Plugins'),[ (k,refresh,{'data':v}) for k,v in plugin_menus]
+
+# End

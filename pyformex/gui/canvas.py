@@ -221,7 +221,7 @@ class Canvas(object):
     """A canvas for OpenGL rendering."""
 
     rendermodes = ['wireframe','flat','flatwire','smooth','smoothwire',
-                   'smooth-avg']
+                   'smooth_avg']
 
     def __init__(self):
         """Initialize an empty canvas with default settings."""
@@ -237,7 +237,7 @@ class Canvas(object):
         self.setBbox()
         self.settings = CanvasSettings(GD.cfg['canvas'])
         self.mode2D = False
-        self.rendermode = 'wireframe'
+        self.rendermode = GD.cfg['render/mode']
         self.polygonfill = False
         self.lighting = True
         self.avgnormals = False
@@ -259,8 +259,6 @@ class Canvas(object):
         GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,colors.GREY(self.specular))
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
         GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
-        GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
-        GL.glEnable(GL.GL_COLOR_MATERIAL)
 
     def glLightSpec(self):
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
@@ -274,6 +272,8 @@ class Canvas(object):
                 l.enable()
             GL.glPopMatrix()
         self.glMatSpec()
+        GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
+        GL.glEnable(GL.GL_COLOR_MATERIAL)
 
     def glLight(self,onoff):
         """Toggle lights on/off."""
@@ -327,10 +327,10 @@ class Canvas(object):
     def setAveragedNormals(self,mode):
         self.avgnormals = mode
         change = (self.rendermode == 'smooth' and self.avgnormals) or \
-                 (self.rendermode == 'smooth-avg' and not self.avgnormals)
+                 (self.rendermode == 'smooth_avg' and not self.avgnormals)
         if change:
             if self.avgnormals:
-                self.rendermode = 'smooth-avg'
+                self.rendermode = 'smooth_avg'
             else:
                 self.rendermode = 'smooth'
             self.actors.redraw()
@@ -486,6 +486,10 @@ class Canvas(object):
         else:
             raise RuntimeError,"Unknown rendering mode"
 
+        if self.rendermode.endswith('wire'):
+            GL.glPolygonOffset(1.0,1.0) 
+        
+
     def glupdate(self):
         """Flush all OpenGL commands, making sure the display is updated."""
         GL.glFlush()
@@ -502,6 +506,8 @@ class Canvas(object):
         """Activate the canvas settings in the GL machine."""
         GL.glColor3fv(self.settings.fgcolor)
         GL.glLineWidth(self.settings.linewidth)
+        if self.rendermode.startswith('smooth'):
+            self.glMatSpec()
 
     
     def setSize (self,w,h):
@@ -555,6 +561,7 @@ class Canvas(object):
         self.camera.loadMatrix()
         if self.highlights:
             for actor in self.highlights:
+                self.setDefaults()
                 actor.draw(mode=self.rendermode)
 
         # draw the scene actors
@@ -562,11 +569,13 @@ class Canvas(object):
             opaque = [ a for a in self.actors if not a.trans ]
             transp = [ a for a in self.actors if a.trans ]
             for actor in opaque:
+                self.setDefaults()
                 actor.draw(mode=self.rendermode)
             GL.glEnable (GL.GL_BLEND)
             GL.glDepthMask (GL.GL_FALSE)
             GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             for actor in transp:
+                self.setDefaults()
                 actor.draw(mode=self.rendermode)
             GL.glDepthMask (GL.GL_TRUE)
             GL.glDisable (GL.GL_BLEND)

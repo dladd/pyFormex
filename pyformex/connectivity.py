@@ -440,7 +440,7 @@ def closedLoop(elems):
     """Check if a set of line elements form a closed curve.
 
     elems is a connection table of line elements, such as obtained
-    from the feModel() method on a plex-2 Formex.
+    from the fuse() method on a plex-2 Formex.
 
     The return value is a tuple of:
     

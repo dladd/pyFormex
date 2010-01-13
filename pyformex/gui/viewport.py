@@ -293,6 +293,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             'edge'   : self.pick_edges,
             'number' : self.pick_numbers,
             }
+        self.pickable = None
         self.drawing_mode = None
         self.drawing = None
         # Drawing options
@@ -321,7 +322,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def setCursorShapeFromFunc(self,func):
         """Set the cursor shape to shape"""
-        if func in [ self.mouse_rectangle_zoom,self.mouse_pick,self.mouse_draw ]:
+        if func in [ self.mouse_rectangle_zoom,self.mouse_pick ]:
             shape = 'pick'
         else:
             shape = 'default'
@@ -370,7 +371,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             self.begin_2D_drawing()
-            #self.swapBuffers()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
             GL.glLogicOp(GL.GL_INVERT)        
@@ -388,7 +388,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == RELEASE:
             GL.glDisable(GL.GL_COLOR_LOGIC_OP)
-            #self.swapBuffers()
             self.end_2D_drawing()
             x0 = min(self.statex,x)
             y0 = min(self.statey,y)
@@ -397,7 +396,15 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.zoomRectangle(x0,y0,x1,y1)
             self.finish_rectangle_zoom()
 
+####################### INTERACTIVE PICKING ############################
 
+    def setPickable(self,nrs=None):
+        """Set the list of pickable actors"""
+        if nrs is None:
+            self.pickable = None
+        else:
+            self.pickable = [ self.actors[i] for i in nrs if i in range(len(self.actors))]
+        
 
     def start_selection(self,mode,filtr):
         """Start an interactive picking mode.
@@ -406,7 +413,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         this can be used to change the filter method.
         """
         if self.selection_mode is None:
-            #GD.debug("START SELECTION MODE: %s" % mode)
             self.setMouse(LEFT,self.mouse_pick)
             self.setMouse(LEFT,self.mouse_pick,SHIFT)
             self.setMouse(LEFT,self.mouse_pick,CTRL)
@@ -414,13 +420,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(RIGHT,self.emit_cancel,SHIFT)
             self.connect(self,DONE,self.accept_selection)
             self.connect(self,CANCEL,self.cancel_selection)
-            #self.setCursorShape('pick')
             self.selection_mode = mode
             self.selection_front = None
 
         if filtr == 'none':
             filtr = None
-        #GD.debug("SET SELECTION FILTER: %s" % filtr)
         self.selection_filter = filtr
         if filtr is None:
             self.selection_front = None
@@ -438,7 +442,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def finish_selection(self):
         """End an interactive picking mode."""
-        #GD.debug("END SELECTION MODE")
         self.resetMouse(LEFT)
         self.resetMouse(LEFT,SHIFT)
         self.resetMouse(LEFT,CTRL)
@@ -453,7 +456,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         If clear == True, the current selection is cleared.
         """
-        #GD.debug("CANCEL SELECTION MODE")
         self.selection_accepted = True
         if clear:
             self.selection.clear()
@@ -553,7 +555,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 #################### Interactive drawing ####################################
 
-    def mouse_create_point(self,x,y,action):
+    def mouse_draw(self,x,y,action):
         """Process mouse events during interactive drawing.
 
         On PRESS, do nothing.
@@ -565,10 +567,15 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
 
         elif action == MOVE:
-            print self.zplane
             self.drawn = self.unProject(x,y,self.zplane)
-            print self.drawn
-
+            if GD.app.hasPendingEvents():
+                return
+            if self.previewfunc:
+                self.swapBuffers()
+                self.drawn = Coords(self.drawn).reshape(-1,3)
+                self.previewfunc(Coords.concatenate([self.drawing,self.drawn]))
+                self.swapBuffers()
+            
         elif action == RELEASE:
             self.drawn = self.unProject(x,y,self.zplane)
             self.selection_busy = False
@@ -576,8 +583,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def start_draw(self,mode,zplane=0.):
         """Start an interactive drawing mode."""
-        #GD.debug("START DRAW MODE")
-        self.setMouse(LEFT,self.mouse_create_point)
+        self.setMouse(LEFT,self.mouse_draw)
         self.setMouse(RIGHT,self.emit_done)
         self.setMouse(RIGHT,self.emit_cancel,SHIFT)
         self.connect(self,DONE,self.accept_draw)
@@ -588,8 +594,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
     def finish_draw(self):
         """End an interactive drawing mode."""
-        #GD.debug("END DRAW MODE")
-        #self.setCursorShape('default')
         self.resetMouse(LEFT)
         self.resetMouse(RIGHT)
         self.resetMouse(RIGHT,SHIFT)
@@ -602,7 +606,6 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         If clear == True, the current drawing is cleared.
         """
-        #GD.debug("CANCEL DRAW MODE")
         self.draw_accepted = True
         if clear:
             self.drawing = Coords()
@@ -614,7 +617,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Cancel an interactive drawing mode and clear the drawing."""
         self.accept_draw(clear=True)
 
-    def draw(self,mode='point',npoints=-1,zplane=0.,func=None):
+    def draw(self,mode='point',npoints=-1,zplane=0.,func=None, preview=False):
         """Interactively draw on the canvas.
 
         - single: if True, the function returns as soon as the user ends
@@ -629,6 +632,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """
         self.draw_canceled = False
         self.start_draw(mode,zplane)
+        if preview:
+            self.previewfunc = func
+        else:
+            self.previewfunc = None
+
         while not self.draw_canceled:
             self.wait_selection()
             if not self.draw_canceled:
@@ -646,9 +654,9 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 ##########################################################################
 
     def start_drawing(self,mode):
-        """Start an interactive drawing mode."""
+        """Start an interactive line drawing mode."""
         GD.debug("START DRAWING MODE")
-        self.setMouse(LEFT,self.mouse_draw)
+        self.setMouse(LEFT,self.mouse_draw_line)
         self.setMouse(RIGHT,self.emit_done)
         self.setMouse(RIGHT,self.emit_cancel,SHIFT)
         self.connect(self,DONE,self.accept_drawing)
@@ -946,7 +954,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.selection_busy = False
 
 
-    def pick_actors(self,store_closest=False):
+    def pick_actors(self):
         """Set the list of actors inside the pick_window."""
         self.camera.loadProjection(pick=self.pick_window)
         self.camera.loadMatrix()
@@ -959,21 +967,16 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             GL.glPushName(i)
             GL.glCallList(a.list)
             GL.glPopName()
-##         buf = GL.glRenderMode(GL.GL_RENDER)
-##         self.picked = [ r[2][0] for r in buf]
-##         if store_closest and len(buf) > 0:
-##             d = asarray([ r[0] for r in buf ])
-##             dmin = d.min()
-##             w = where(d == dmin)[0][0]
-##             self.closest_pick = (self.picked[w], dmin)
         libGL.glRenderMode(GL.GL_RENDER)
         # Read the selection buffer
+        store_closest = self.selection_filter == 'single' or \
+                        self.selection_filter == 'closest'
         self.picked = []
         if selbuf[0] > 0:
             buf = asarray(selbuf).reshape(-1,3+selbuf[0])
             buf = buf[buf[:,0] > 0]
             self.picked = buf[:,3]
-            if store_closest and len(buf) > 0:
+            if store_closest:
                 w = buf[:,1].argmin()
                 self.closest_pick = (self.picked[w], buf[w,1])
 
@@ -988,6 +991,10 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         The picked object numbers are stored in self.picked.
         If store_closest==True, the closest picked object is stored in as a
         tuple ( [actor,object] ,distance) in self.picked_closest
+
+        A list of actors from which can be picked may be given.
+        If so, the resulting keys are indices in this list.
+        By default, the full actor list is used.
         """
         self.picked = []
         if max_objects <= 0:
@@ -999,7 +1006,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         selbuf = GL.glSelectBuffer(max_objects*(3+stackdepth))
         GL.glRenderMode(GL.GL_SELECT)
         GL.glInitNames()
-        for i,a in enumerate(self.actors):
+        if self.pickable is None:
+            pickable = self.actors
+        else:
+            pickable = self.pickable
+        for i,a in enumerate(pickable):
             GL.glPushName(i)
             a.pickGL(obj_type)  # this will push the number of the part
             GL.glPopName()
@@ -1035,7 +1046,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             npickable += a.npoints()
         self.pick_parts('point',npickable,store_closest=\
                         self.selection_filter == 'single' or\
-                        self.selection_filter == 'closest'
+                        self.selection_filter == 'closest',
                         )
 
 
@@ -1047,7 +1058,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
                 npickable += a.nedges()
         self.pick_parts('edge',npickable,store_closest=\
                         self.selection_filter == 'single' or\
-                        self.selection_filter == 'closest'
+                        self.selection_filter == 'closest',
                         )
 
 
@@ -1067,7 +1078,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         decors.drawLine(self.statex,self.statey,x,y)
 
 
-    def mouse_draw(self,x,y,action):
+    def mouse_draw_line(self,x,y,action):
         """Process mouse events during interactive drawing.
 
         On PRESS, record the mouse position.

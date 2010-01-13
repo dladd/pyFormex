@@ -477,6 +477,7 @@ class GUI(QtGui.QMainWindow):
         GD.debug('GUI cleanup')
         self.drawlock.release()
         GD.canvas.cancel_selection()
+        GD.canvas.cancel_draw()
         draw.clear_canvas()
         self.setBusy(False)
 
@@ -642,12 +643,13 @@ def startGUI(args):
     while windowExists(windowname):
         if count > 255:
             print("Can not open the main window --- bailing out")
-            return 1
+            return -1
         count += 1
         windowname = '%s (%s)' % (GD.Version,count)
 
     if count > 0:
-        warning = """
+        warning = """..
+        
 Another instance of pyFormex is already running
 on this screen. This may be a leftover from a
 previously crashed program. In that case you should
@@ -668,7 +670,7 @@ You should seriously consider to bail out now!!!
 """
             answer = draw.warning(warning,actions)
         if answer != 'Really Continue':
-            return 1
+            return -1
 
     GD.GUI = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
@@ -729,12 +731,8 @@ See Help->License or the file COPYING for details.
     # Load plugins, ignore if not found
     import plugins
     for p in GD.cfg.get('gui/plugins',[]):
-        try:
-            m = getattr(plugins,p)
-            if hasattr(m,'show_menu'):
-                m.show_menu()
-        except:
-            GD.debug('ERROR while loading plugin %s' % p)
+        plugins.load(p)
+
     GD.GUI.setBusy(False)
     GD.GUI.update()
     GD.GUI.addStatusBarButtons()
@@ -754,6 +752,7 @@ See Help->License or the file COPYING for details.
         GD.cfg['workdir'] = os.getcwd()
     GD.app_started = True
     GD.app.processEvents()
+    return 0
 
 
 

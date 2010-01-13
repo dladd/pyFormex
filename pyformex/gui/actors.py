@@ -395,10 +395,12 @@ class GeomActor(Actor):
             self.coords,self.elems,self.eltype = data.coords,data.elems,data.eltype
         elif isinstance(data,Formex):
             self.coords = data.coords
+            #print "%s -> %s" % (id(data.coords),id(self.coords))
             self.elems = None
             self.eltype = data.eltype
         else:
             self.coords = data
+            #print "%s -> %s" % (id(data),id(self.coords))
             self.elems = elems
             self.eltype = eltype
             
@@ -531,7 +533,7 @@ class GeomActor(Actor):
             GL.glDisable(GL.GL_LIGHTING)
             self.drawGL(mode='wireframe',color=asarray(black),colormap=None)
             return
-
+                            
         ############# set drawing attributes #########
         if alpha is None:
             alpha = self.alpha
@@ -540,12 +542,14 @@ class GeomActor(Actor):
             color,colormap = self.color,self.colormap
         else:
             color,colormap = saneColorSet(color,colormap,self.nelems())
-        
+
+
         if color is None:  # no color
             pass
         
         elif color.dtype.kind == 'f' and color.ndim == 1:  # single color
             GL.glColor(append(color,alpha))
+                
             color = None
 
         elif color.dtype.kind == 'i': # color index
@@ -556,6 +560,21 @@ class GeomActor(Actor):
                 
         if self.linewidth is not None:
             GL.glLineWidth(self.linewidth)
+
+        if mode.startswith('smooth'):
+            if hasattr(self,'specular'):
+                fill_mode = GL.GL_FRONT
+                import colors
+                if color:
+                    spec = color * self.specular# *  GD.canvas.specular
+                    spec = append(spec,1.)
+                else:
+                    spec = colors.GREY(self.specular)# *  GD.canvas.specular
+                #print self.coords.shape
+                #print "SETTING SPECULAR to %s" % str(spec)
+                GL.glMaterialfv(fill_mode,GL.GL_SPECULAR,spec)
+                GL.glMaterialfv(fill_mode,GL.GL_EMISSION,spec)
+                GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.specular)
 
         ################## draw the geometry #################
         nplex = self.nplex()
@@ -597,7 +616,8 @@ class GeomActor(Actor):
                 else:
                     faces = el.faces
                 drawFaces(self.coords,self.elems,faces,mode,color,alpha)
-    
+
+   
 
     def pickGL(self,mode):
         """ Allow picking of parts of the actor.
@@ -635,7 +655,10 @@ class GeomActor(Actor):
 class FormexActor(GeomActor,Formex):
     def __init__(self,F,*args,**kargs):
         GeomActor.__init__(self,F.coords,None,F.eltype,*args,**kargs)
-        Formex.__init__(self,F)
+        #Formex.__init__(self,F)
+        if hasattr(F,'specular'):
+            #print "COPYIN SPECULAR"
+            self.specular = F.specular
         
 
 #############################################################################

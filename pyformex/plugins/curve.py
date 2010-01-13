@@ -74,6 +74,12 @@ class Curve(object):
 
     def pointsOff(self):
         return Coords()
+
+    def ncoords(self):
+        return self.coords.shape[0]
+
+    def npoints(self):
+        return self.pointsOn().shape[0]
     
     def sub_points(self,t,j):
         """Return the points at values t in part j
@@ -315,7 +321,24 @@ class PolyLine(Curve):
 
     def reverse(self):
         return PolyLine(reverseAxis(self.coords,axis=0),closed=self.closed)
-        
+
+
+    def split(self,i):
+        """Split the curve at point i.
+
+        Returns a list of open PolyLines: one, if the PolyLine is closed or
+        i is one of the endpoints of an open PolyLine, two in other cases.
+        """
+        res = []
+        if self.closed:
+            res.append(PolyLine(roll(self.coords,-i,axis=0)))
+        else:
+            if i > 0:
+                res.append(PolyLine(self.coords[:i+1]))
+            if i < len(self.coords):
+                res.append(PolyLine(self.coords[i:]))
+        return res
+
 
 ##############################################################################
 #
