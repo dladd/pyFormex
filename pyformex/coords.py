@@ -140,6 +140,9 @@ class Coords(ndarray):
             pass
         elif ar.shape[-1] in [1,2]:
             ar = concatenate([ar,zeros(ar.shape[:-1]+(3-ar.shape[-1],))],axis=-1)
+        elif ar.shape[-1] == 0: # allow empty coords objects 
+            ar = ar.reshape(0,3)
+            print ar.shape
         else:
             raise ValueError,"Expected a length 1,2 or 3 for last array axis"
 
