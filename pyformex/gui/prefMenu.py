@@ -233,7 +233,7 @@ w=None
 def setScriptDirs():
     global w
     scr = GD.cfg['scriptdirs']
-    w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Delete',removeRow),('OK',)])
+    w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('OK',)])
     w.show()
 
 def insertRow():
@@ -244,6 +244,13 @@ def insertRow():
         w.table.model().insertRows()
         scr[-1] = ['New',fn]
     
+def editRow():
+    row = w.table.currentIndex().row()
+    scr = GD.cfg['scriptdirs']
+    item = scr[row]
+    res = draw.askItems([('Label',item[0]),('Path',item[1])])
+    if res:
+        scr[row] = [res['Label'],res['Path']]
 
 def removeRow():
     row = w.table.currentIndex().row()

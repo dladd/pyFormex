@@ -338,6 +338,14 @@ def draw(F,
     specifying wait=False. Setting drawdelay=0 will disable the waiting
     mechanism for all subsequent draw statements (until set >0 again).
     """
+
+    # Facilities for drawing database objects
+    
+    if type(F) == str:
+        F = named(F)
+        if F is None:
+            return None
+
     if bbox is None:
         bbox = GD.canvas.options.get('bbox','auto')
         
@@ -362,15 +370,11 @@ def draw(F,
             GD.canvas.update()
                 
         return actor
+            
 
-    # We have a single object to draw
+    # We now should have a single object to draw
 
     obj = F
-
-    if type(F) == str:
-        F = named(F)
-        if F is None:
-            return None
 
     if isinstance(F,Formex):
         pass

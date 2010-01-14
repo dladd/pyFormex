@@ -555,33 +555,58 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
 #################### Interactive drawing ####################################
 
-    def mouse_draw(self,x,y,action):
-        """Process mouse events during interactive drawing.
+    def idraw(self,mode='point',npoints=-1,zplane=0.,func=None,coords=None,preview=False):
+        """Interactively draw on the canvas.
 
-        On PRESS, do nothing.
-        On MOVE, do nothing.
-        On RELEASE, add the point to the point list.
+        This function allows the user to interactively create points in 3D
+        space and collects the subsequent points in a Coords object. The
+        interpretation of these points is left to the caller.
+        
+        - `mode`: one of the drawing modes, specifying the kind of objects you
+          want to draw. This is passed to the specified `func`.
+        - `npoints`: If -1, the user can create any number of points. When >=0,
+          the function will return when the total number of points in the
+          collection reaches the specified value.
+        - `zplane`: the depth of the z-plane on which the 2D drawing is done.
+        - `func`: a function that is called after each atomic drawing
+          operation. It is typically used to draw a preview using the current
+          set of points. The function is passed the current Coords and the
+          `mode` as arguments.
+        - `coords`: an initial set of coordinates to which the newly created
+          points should be added. If specified, `npoints` also counts these
+          initial points.
+        - `preview`: **Experimental** If True, the preview funcion will also
+          be called during mouse movement with a pressed button, allowing to
+          preview the result before a point is created.
+        
+        The drawing operation is finished when the number of requested points
+        has been reached, or when the user clicks the right mouse button or
+        hits 'ENTER'.
+        The return value is a (n,3) shaped Coords array.
         """
-        if action == PRESS:
-            self.makeCurrent()
-            self.update()
+        self.draw_canceled = False
+        self.start_draw(mode,zplane,coords)
+        if preview:
+            self.previewfunc = func
+        else:
+            self.previewfunc = None
 
-        elif action == MOVE:
-            self.drawn = self.unProject(x,y,self.zplane)
-            if GD.app.hasPendingEvents():
-                return
-            if self.previewfunc:
-                self.swapBuffers()
+        while not self.draw_canceled:
+            self.wait_selection()
+            if not self.draw_canceled:
                 self.drawn = Coords(self.drawn).reshape(-1,3)
-                self.previewfunc(Coords.concatenate([self.drawing,self.drawn]))
-                self.swapBuffers()
-            
-        elif action == RELEASE:
-            self.drawn = self.unProject(x,y,self.zplane)
-            self.selection_busy = False
+                self.drawing = Coords.concatenate([self.drawing,self.drawn])
+                if func:
+                    func(self.drawing,self.drawmode)
+            if npoints > 0 and len(self.drawing) >= npoints:
+                self.accept_draw()                
+        if func and not self.draw_accepted:
+            func(self.drawing,self.drawmode)
+        self.finish_draw()
+        return self.drawing
 
 
-    def start_draw(self,mode,zplane=0.):
+    def start_draw(self,mode,zplane,coords):
         """Start an interactive drawing mode."""
         self.setMouse(LEFT,self.mouse_draw)
         self.setMouse(RIGHT,self.emit_done)
@@ -590,7 +615,11 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.connect(self,CANCEL,self.cancel_draw)
         self.drawmode = mode
         self.zplane = zplane
-        self.drawing = Coords()
+        #print coords
+        #print Coords(coords)
+        #print Coords(coords).shape
+        self.drawing = Coords(coords)
+        #print self.drawing.shape
 
     def finish_draw(self):
         """End an interactive drawing mode."""
@@ -617,39 +646,31 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """Cancel an interactive drawing mode and clear the drawing."""
         self.accept_draw(clear=True)
 
-    def draw(self,mode='point',npoints=-1,zplane=0.,func=None, preview=False):
-        """Interactively draw on the canvas.
 
-        - single: if True, the function returns as soon as the user ends
-        a drawing operation. The default is to let the user
-        draw multiple lines and only to return after an explicit
-        cancel (ESC or right mouse button).
-        - func: if specified, this function will be called after each
-        atomic drawing operation. The current drawing is passed as
-        an argument. This can e.g. be used to show the drawing.
-        When the drawing operation is finished, the drawing is returned.
-        The return value is a (n,2,2) shaped array.
+    def mouse_draw(self,x,y,action):
+        """Process mouse events during interactive drawing.
+
+        On PRESS, do nothing.
+        On MOVE, do nothing.
+        On RELEASE, add the point to the point list.
         """
-        self.draw_canceled = False
-        self.start_draw(mode,zplane)
-        if preview:
-            self.previewfunc = func
-        else:
-            self.previewfunc = None
+        if action == PRESS:
+            self.makeCurrent()
+            self.update()
 
-        while not self.draw_canceled:
-            self.wait_selection()
-            if not self.draw_canceled:
+        elif action == MOVE:
+            self.drawn = self.unProject(x,y,self.zplane)
+            if GD.app.hasPendingEvents():
+                return
+            if self.previewfunc:
+                self.swapBuffers()
                 self.drawn = Coords(self.drawn).reshape(-1,3)
-                self.drawing = Coords.concatenate([self.drawing,self.drawn])
-                if func:
-                    func(self.drawing)
-            if npoints > 0 and len(self.drawing) >= npoints:
-                self.accept_draw()                
-        if func and not self.draw_accepted:
-            func(self.drawing)
-        self.finish_draw()
-        return self.drawing
+                self.previewfunc(Coords.concatenate([self.drawing,self.drawn]),self.drawmode)
+                self.swapBuffers()
+            
+        elif action == RELEASE:
+            self.drawn = self.unProject(x,y,self.zplane)
+            self.selection_busy = False
 
 ##########################################################################
 

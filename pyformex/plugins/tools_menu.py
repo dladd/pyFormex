@@ -179,6 +179,7 @@ def readGeometry():
         drawable.readFromFile(fn)
         drawable.draw()
         zoomAll()
+        print drawable.names
 
 
 def dos2unix():

@@ -16,6 +16,8 @@ from plugins.geomtools import triangleCircumCircle
 from plugins.curve import *
 from plugins.tools_menu import *
 
+draw_mode_2d = ['point','polyline','spline','circle']
+autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in draw_mode_2d ])
 
 _preview = False
 
@@ -26,7 +28,7 @@ def toggle_preview():
         globals().update(res)
 
 
-def draw2D(mode='point',npoints=1,zplane=0.,func=None):
+def draw2D(mode='point',npoints=1,zplane=0.,coords=None,func=None):
     """Enter interactive drawing mode and return the line drawing.
 
     See viewport.py for more details.
@@ -41,7 +43,8 @@ def draw2D(mode='point',npoints=1,zplane=0.,func=None):
         return
     if func == None:
         func = highlightDrawing
-    return GD.canvas.draw(mode,npoints,zplane,func,_preview)
+    print "INITIAL = %s" % coords
+    return GD.canvas.idraw(mode,npoints,zplane,func,coords,_preview)
 
 
 def drawnObject(points,mode='point'):
@@ -68,33 +71,40 @@ def drawnObject(points,mode='point'):
         return None
     
 
-
-def highlightDrawing(points):
+def highlightDrawing(points,mode):
     """Highlight a temporary drawing on the canvas.
 
     pts is an array of points.
     """
     GD.canvas.removeHighlights()
     GD.canvas.update()
-    mode = GD.canvas.drawmode
     draw(points,highlight=True,flat=True)
     objects = drawnObject(points,mode=mode)
     if objects is not None:
         draw(objects,color=GD.canvas.settings.slcolor,highlight=True,flat=True)
 
+    
+def drawPoints2D(mode,npoints=-1,zvalue=0.,coords=None):
+    """Draw a 2D opbject in the xy-plane with given z-value"""
+    if mode not in draw_mode_2d:
+        return
+    x,y,z = GD.canvas.project(0.,0.,zvalue)
+    points = draw2D(mode,npoints=npoints,zplane=z,coords=coords)
+    return points
+
+    
+def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
+    """Draw a 2D opbject in the xy-plane with given z-value"""
+    points = drawPoints2D(mode,npoints=-1,zvalue=zvalue,coords=coords)
+    return drawnObject(points,mode=mode)
 
 
 ###################################
 
-_draw_object = ['point','polyline','spline','circle']
-autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in _draw_object ])
 _zvalue = 0.
     
 def draw_object(mode,npoints=-1):
-    if mode not in _draw_object:
-        return
-    x,y,z = GD.canvas.project(0.,0.,_zvalue)
-    points = draw2D(mode,npoints=npoints,zplane=z)
+    points = drawPoints2D(mode,npoints=-1,zvalue=zvalue)
     obj = drawnObject(points,mode=mode)
     if obj is None:
         GD.canvas.removeHighlights()
