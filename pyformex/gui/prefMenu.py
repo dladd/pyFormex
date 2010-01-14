@@ -232,8 +232,9 @@ w=None
 
 def setScriptDirs():
     global w
+    from scriptMenu import reloadScriptMenu
     scr = GD.cfg['scriptdirs']
-    w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('OK',)])
+    w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('OK',)])
     w.show()
 
 def insertRow():
@@ -243,6 +244,7 @@ def insertRow():
         scr = GD.cfg['scriptdirs']
         w.table.model().insertRows()
         scr[-1] = ['New',fn]
+    w.table.update()
     
 def editRow():
     row = w.table.currentIndex().row()
@@ -251,11 +253,24 @@ def editRow():
     res = draw.askItems([('Label',item[0]),('Path',item[1])])
     if res:
         scr[row] = [res['Label'],res['Path']]
+    w.table.update()
 
 def removeRow():
     row = w.table.currentIndex().row()
     w.table.model().removeRows(row,1)
+    w.table.update()
 
+def moveUp():
+    row = w.table.currentIndex().row()
+    scr = GD.cfg['scriptdirs']
+    if row > 0:
+        a,b = scr[row-1:row+1]
+        scr[row-1] = b
+        scr[row] = a
+    w.table.setFocus() # For some unkown reason, this seems needed to
+                       # immediately update the widget
+    w.table.update()
+    
 
 ## def editConfig():
 ##     error('You can not edit the config file while pyFormex is running!') 

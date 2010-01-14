@@ -42,6 +42,14 @@ the_version = {'pyformex':pyformex.__version__}
 the_external = {}
 
 
+def strNorm(s):
+    """Normalize a string.
+
+    Text normalization removes all '&' characters and converts it to lower case.
+    """
+    return str(s).replace('&','').lower()
+
+
 def _congratulations(name,version,typ='module',fatal=False,quiet=True):
     """Report a detected module/program."""
     if version and not quiet:
@@ -355,7 +363,6 @@ def dos2unix(infile,outfile=None):
         cmd = "sed -i 's|\\r||' %s" % infile
     else:
         cmd = "sed -i 's|\\r||' %s > %s" % (infile,outfile)
-    print(cmd)
     return runCommand(cmd)
 
 def unix2dos(infile,outfile=None):

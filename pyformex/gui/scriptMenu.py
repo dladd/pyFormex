@@ -30,7 +30,9 @@ from PyQt4 import QtCore, QtGui
 
 import utils
 import draw
+import widgets
 import os,random
+from gettext import gettext as _
     
 catname = 'scripts.cat'
 
@@ -104,7 +106,7 @@ def sortSets(d):
   
 
 
-class ScriptsMenu(QtGui.QMenu):
+class ScriptMenu(QtGui.QMenu):
     """A menu of pyFormex scripts in a directory or list.
 
     This class creates a menu of pyFormex scripts collected from a directory
@@ -137,14 +139,14 @@ class ScriptsMenu(QtGui.QMenu):
     The defaults were thus chosen to be convenient for the two most frequent
     uses of this class::
 
-      ScriptsMenu('My Scripts',dir="/path/to/my/sciptsdir")
+      ScriptMenu('My Scripts',dir="/path/to/my/sciptsdir")
 
     creates a menu will all pyFormex scripts in the specified path and its
     subdirectories.
 
     ::
 
-      ScriptsMenu('History',files=["/my/script1.py","/some/other/script.pye"],recursive=False)
+      ScriptMenu('History',files=["/my/script1.py","/some/other/script.pye"],recursive=False)
 
     is typically used to create a history menu of previously visited files
 
@@ -178,7 +180,7 @@ class ScriptsMenu(QtGui.QMenu):
     removes the classification. Both options are especially useful for the
     pyFormex examples.
 
-    The last option reloads a ScriptsMenu. This can be used to update the menu
+    The last option reloads a ScriptMenu. This can be used to update the menu
     when you created a new script file.
     """
     
@@ -223,7 +225,7 @@ class ScriptsMenu(QtGui.QMenu):
         dirs = filter(filtr,dirs)
         dirs.sort()
         for d in dirs:
-            m = ScriptsMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
+            m = ScriptMenu(d,os.path.join(self.dir,d),autoplay=self.autoplay,recursive=self.recursive)
             self.addMenu(m)
             self.menus.append(m)
             
@@ -292,10 +294,10 @@ class ScriptsMenu(QtGui.QMenu):
                     files = col[k]
                 else:
                     files = []
-                mk = ScriptsMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
+                mk = ScriptMenu(k.capitalize(),dir=self.dir,files=files,recursive=False,toplevel=False,autoplay=self.autoplay)
                 for i in cat[k]:
                     ki = '%s/%s' % (k,i)
-                    mi = ScriptsMenu(i.capitalize(),dir=self.dir,files=col[ki],recursive=False,toplevel=False,autoplay=self.autoplay)
+                    mi = ScriptMenu(i.capitalize(),dir=self.dir,files=col[ki],recursive=False,toplevel=False,autoplay=self.autoplay)
                     mk.addMenu(mi)
                     mk.menus.append(mi)
                 self.addMenu(mk)
@@ -484,5 +486,61 @@ class ScriptsMenu(QtGui.QMenu):
             if os.path.exists(f):
                 os.remove(f)
                 self.reload()
-            
+
+############### The pyFormex Script menu ############################
+
+from prefMenu import setScriptDirs
+
+def createScriptMenu(parent=None,before=None):
+    """Create the menu(s) with pyFormex scripts
+
+    This creates a menu with all examples distributed with pyFormex.
+    By default, this menu is put in the top menu bar with menu label 'Examples'.
+
+    The user can add his own script directories through the configuration
+    settings. In that case the 'Examples' menu and menus for all the
+    configured script paths will be gathered in a top level popup menu labeled
+    'Scripts'.
+
+    The menu will be placed in the top menu bar before the specified item.
+    If a menu item named 'Examples' or 'Scripts' already exists, it is
+    replaced.
+    """
+    from odict import ODict
+    scriptmenu = widgets.Menu('&Scripts',parent=parent,before=before)
+    scriptmenu.menuitems = ODict()
+    # Create a copy to leave the cfg unchanged!
+    scriptdirs = [] + GD.cfg['scriptdirs']
+    # Fill in missing default locations : this enables the user
+    # to keep the pyFormex installed examples in his config
+    knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
+    for i,item in enumerate(scriptdirs):
+        if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
+            scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
+
+    for txt,dirname in scriptdirs:
+        GD.debug("Loading script dir %s" % dirname)
+        if os.path.exists(dirname):
+            m = ScriptMenu(txt,dir=dirname,autoplay=True)
+            scriptmenu.insert_menu(m)
+            txt = utils.strNorm(txt)
+            scriptmenu.menuitems[txt] = m
+
+    scriptmenu.insertItems([
+        ('---',None),
+        (_('&Configure Script Paths'),setScriptDirs),
+        (_('&Reload Script Menu'),reloadScriptMenu),
+        ])
+    
+    return scriptmenu
+
+
+def reloadScriptMenu():
+    menu = GD.GUI.menu.item('scripts')
+    if menu is not None:
+        before = GD.GUI.menu.nextitem('scripts')
+        newmenu = createScriptMenu(GD.GUI.menu,before)
+        menu.replace(newmenu)
+ 
+    
 # End

@@ -136,7 +136,17 @@ class ODict(dict):
     def items(self):
         """Return the key,value pairs in order of the keys."""
         return [(k,self[k]) for k in self._order]
- 
+
+
+    def pos(self,key):
+        """Return the position of the specified key.
+
+        If the key is not in the ODict, None is returned"""
+        try:
+            return self._order.index(key)
+        except ValueError:
+            return None
+        
 
     def __reduce__(self):
         state = (dict(self), self.__dict__)

@@ -39,7 +39,7 @@ from PyQt4 import QtCore, QtGui
 import menu
 import cameraMenu
 import fileMenu
-import scriptsMenu
+import scriptMenu
 import prefMenu
 import toolbar
 import viewport
@@ -541,54 +541,6 @@ def quit():
         GD.app.exit()
 
 
-def createScriptMenu():
-    """Create the menu(s) with pyFormex scripts
-
-    The default is to create an entry in the toplevel menu with
-    all the examples distributed with pyFormex. The user can add his
-    own script directories through the configuration settings.
-    """
-    menus = []
-    # Create a copy to leave the cfg unchanged!
-    scriptdirs = [] + GD.cfg['scriptdirs']
-    # Fill in missing default locations : this enables the user
-    # to keep the pyFormex installed examples in his config
-    knownscriptdirs = { 'examples': GD.cfg['examplesdir'] }
-    for i,item in enumerate(scriptdirs):
-        if type(item[0]) is str and not item[1] and item[0].lower() in knownscriptdirs:
-            scriptdirs[i] = (item[0].capitalize(),knownscriptdirs[item[0].lower()])
-
-    if GD.cfg.get('gui/separate_script_dirs',False):
-        # This should create separate menus for all scriptdirs
-        # But has not been implemented yet
-        pass
-    else:
-        # The default is to collect all scriptdirs in a single main menu
-        if len(scriptdirs) > 1:
-            scriptsmenu = widgets.Menu('Scripts',GD.GUI.menu)
-            before = GD.GUI.menu.item('help').menuAction()
-            GD.GUI.menu.insertMenu(before,scriptsmenu)
-            before = None
-        else:
-            scriptsmenu = GD.GUI.menu
-            before = scriptsmenu.itemAction('help')
-
-        for title,dirname in scriptdirs:
-            GD.debug("Loading script dir %s" % dirname)
-            if os.path.exists(dirname):
-                m = scriptsMenu.ScriptsMenu(title,dir=dirname,autoplay=True)
-                scriptsmenu.insert_menu(m,before)
-                menus.append(m)   # Needed to keep m linked to a name !
-
-                # This is not good, because normal users do not have
-                # write access to the installed examples
-##                 if title.lower() in GD.cfg.get('gui/classify_scripts',[]):
-##                     m._classify()
-
-
-    return menus
-
-
 def startGUI(args):
     """Create the QT4 application and GUI.
 
@@ -708,7 +660,7 @@ See Help->License or the file COPYING for details.
     # History Menu
     history = GD.cfg.get('history',None)
     if type(history) == list:
-        GD.GUI.history = scriptsMenu.ScriptsMenu('History',files=history,max=20)
+        GD.GUI.history = scriptMenu.ScriptMenu('History',files=history,max=20)
 
     if GD.cfg.get('gui/history_in_main_menu',False):
         before = GD.GUI.menu.item('help').menuAction()
@@ -718,10 +670,8 @@ See Help->License or the file COPYING for details.
         before = filemenu.item('---1')
         filemenu.insertMenu(before,GD.GUI.history)
 
-
     # Script menu
-    GD.GUI.scriptmenu = createScriptMenu()
-
+    GD.GUI.scriptmenu = scriptMenu.createScriptMenu(GD.GUI.menu,before='help')
     
     # Set interaction functions
     GD.message = draw.message

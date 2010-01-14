@@ -37,7 +37,6 @@ import odict
 import imageViewer
 import utils
 
-
 # timeout value for all widgets providing timeout feature
 #  (currently: InputDialog, MessageBox)
 
@@ -1593,7 +1592,7 @@ class TableModel(QtCore.QAbstractTableModel):
 
 
 class Table(QtGui.QDialog):
-    """A dialog widget to show two-dimensional arrays of items."""
+    """A dialog widget to show/edit a two-dimensional array of items."""
     
     def __init__(self,data,chead=None,rhead=None,caption=None,parent=None,actions=[('OK',)],default='OK'):
         """Create the Table dialog.
@@ -1695,7 +1694,7 @@ def updateText(widget,text,format=''):
       otherwise it will be displayed as plain text.
       A text is autorecognized as reStructuredText if its first
       line starts with '..'. Note: If you add a '..' line to your text to
-      have it autorecogn ized as reST, be sure to have it followed with a
+      have it autorecognized as reST, be sure to have it followed with a
       blank line, or your first paragraph could be turned into comments.
       
     """
@@ -1884,14 +1883,6 @@ class ComboBox(QtGui.QWidget):
 ############################# Menu ##############################
 
 
-def normalize(s):
-    """Normalize a string.
-
-    Text normalization removes all '&' characters and converts to lower case.
-    """
-    return str(s).replace('&','').lower()
-
-
 class BaseMenu(object):
     """A general menu class.
 
@@ -1915,7 +1906,7 @@ class BaseMenu(object):
 
     def __init__(self,title='AMenu',parent=None,before=None,items=None):
         """Create a menu."""
-        self.title = title
+        self._title = title
         GD.debug("Creating menu %s" % title)
         self.parent = parent
         self.menuitems = odict.ODict()
@@ -1925,7 +1916,7 @@ class BaseMenu(object):
             if before:
                 before = parent.itemAction(before)
             parent.insert_menu(self,before)
-            title = normalize(title)
+            title = utils.strNorm(title)
             if not title in parent.menuitems:
                 parent.menuitems[title] = self
 
@@ -1937,7 +1928,22 @@ class BaseMenu(object):
         If an item with the resulting name exists, it is returned.
         Else None is returned.
         """
-        return self.menuitems.get(normalize(text),None)
+        return self.menuitems.get(utils.strNorm(text),None)
+
+
+    def nextitem(self,text):
+        """Returns the name of the next item.
+
+        This can be used to replace the current item with another menu.
+        If the item is the last, None is returned.
+        """
+        i = self.menuitems.pos(utils.strNorm(text))
+        #print "POS = %s" % i
+        #print self.menuitems._order
+        if i is not None and i < len(self.menuitems._order)-1:
+            i = self.menuitems._order[i+1]
+            #print "FINAL %s" % i
+        return i
 
 
     def itemAction(self,item):
@@ -2002,6 +2008,7 @@ class BaseMenu(object):
         - a string with the name of a function/method,
         - a list of Menu Items: a popup Menu will be created that will appear
           when the item is selected,
+        - an existing Menu,
         - None : this will create a separator item with no action.
 
         Icon is the name of one of the icons in the installed icondir.
@@ -2044,10 +2051,10 @@ class BaseMenu(object):
                             a.setChecked(v)
                         elif k == 'disabled':
                             a.setDisabled(True)
-            txt = normalize(txt)
+            txt = utils.strNorm(txt)
             if not txt in self.menuitems:
                 self.menuitems[txt] = a
-
+                
 
 class Menu(BaseMenu,QtGui.QMenu):
     """A popup/pulldown menu."""
@@ -2095,6 +2102,16 @@ class Menu(BaseMenu,QtGui.QMenu):
             for k,v in self.parent.menuitems.items():
                 if v == self:
                     del self.parent.menuitems[k]
+
+
+    def replace(self,menu):
+        """Replace this menu with the specified one."""
+        self.done=True
+        if self.parent:
+            self.parent.removeAction(self.menuAction())
+            for k,v in self.parent.menuitems.items():
+                if v == self:
+                    self.parent.menuitems[k] = menu
 
 
 class MenuBar(BaseMenu,QtGui.QMenuBar):
@@ -2187,7 +2204,6 @@ class ActionList(object):
         The icon is either a filename or a QIcon object. 
         """
         if type(icon) == str:
-            #print("CREATE ICON %s" % icon)
             if os.path.exists(icon):
                 icon = QtGui.QIcon(QtGui.QPixmap(icon))
             else:

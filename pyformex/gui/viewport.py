@@ -586,23 +586,25 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         """
         self.draw_canceled = False
         self.start_draw(mode,zplane,coords)
-        if preview:
-            self.previewfunc = func
-        else:
-            self.previewfunc = None
+        try:
+            if preview:
+                self.previewfunc = func
+            else:
+                self.previewfunc = None
 
-        while not self.draw_canceled:
-            self.wait_selection()
-            if not self.draw_canceled:
-                self.drawn = Coords(self.drawn).reshape(-1,3)
-                self.drawing = Coords.concatenate([self.drawing,self.drawn])
-                if func:
-                    func(self.drawing,self.drawmode)
-            if npoints > 0 and len(self.drawing) >= npoints:
-                self.accept_draw()                
-        if func and not self.draw_accepted:
-            func(self.drawing,self.drawmode)
-        self.finish_draw()
+            while not self.draw_canceled:
+                self.wait_selection()
+                if not self.draw_canceled:
+                    self.drawn = Coords(self.drawn).reshape(-1,3)
+                    self.drawing = Coords.concatenate([self.drawing,self.drawn])
+                    if func:
+                        func(self.drawing,self.drawmode)
+                if npoints > 0 and len(self.drawing) >= npoints:
+                    self.accept_draw()                
+            if func and not self.draw_accepted:
+                func(self.drawing,self.drawmode)
+        finally:
+            self.finish_draw()
         return self.drawing
 
 
@@ -615,11 +617,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         self.connect(self,CANCEL,self.cancel_draw)
         self.drawmode = mode
         self.zplane = zplane
-        #print coords
-        #print Coords(coords)
-        #print Coords(coords).shape
         self.drawing = Coords(coords)
-        #print self.drawing.shape
 
     def finish_draw(self):
         """End an interactive drawing mode."""
