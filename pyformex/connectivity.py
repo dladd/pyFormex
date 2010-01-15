@@ -454,26 +454,42 @@ def closedLoop(elems):
     
     a closed loop. The new table has the elements in order of the loop.
     """
+    def reverse_table(tbl,nrows):
+        """Reverse the table of a connected line
+
+        The first nrows rows of table are reversed in row and column order.
+        """
+        tbl[:nrows] = reverseAxis(reverseAxis(tbl[:nrows],0),1)
+
+
     srt = zeros_like(elems) - 1
     ie = 0
     je = 0
     rev = False
-    k = elems[je][0]
+    k = elems[0][0] # remember startpoint
     while True:
+        # Store an element that has been found ok
         if rev:
             srt[ie] = elems[je][[1,0]]
         else:
             srt[ie] = elems[je]
         elems[je] = [ -1,-1 ] # Done with this one
-        j = srt[ie][1]
+        j = srt[ie][1] # remember endpoint
         if j == k:
             break
+        ie += 1
+
+        # Look for the next connected element
         w = where(elems == j)
         if w[0].size == 0:
-            print("No match found")
-            break
+            # Try reversing
+            w = where(elems == k)
+            if w[0].size == 0:
+                break
+            else:
+                j,k = k,j
+                reverse_table(srt,ie)
         je = w[0][0]
-        ie += 1
         rev = w[1][0] == 1
     if any(srt == -1):
         ret = 2
