@@ -298,7 +298,7 @@ def intersectionWithPlane(F,p,n):
         raise RuntimeError,"Formex should have plexitude 2."
     p = asarray(p).reshape((3))
     n = asarray(n).reshape((3))
-    n /= length(n)
+    n = normalize(n)
     t = (inner(p,n) - inner(f[:,0,:],n)) / inner((f[:,1,:]-f[:,0,:]),n)
     return t
 
@@ -728,7 +728,7 @@ def cutElements3AtPlane(F,p,n,newprops=None,side='',atol=0.):
             F21 = F2[w21]
             U21 = U2[w21]
             K1 = F21[U21] # vertices with |distance| < atol
-            n /= length(n)
+            n = normalize(n)
             K1 = (K1 - n*d2[w21][U21].reshape(-1,1)).reshape(-1,1,3) # project vertices on plane (p,n)
             K2 = F21[d2[w21]>atol].reshape(-1,2,3) # vertices with distance > atol
             E4_pos = column_stack([K1,K2])

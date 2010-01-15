@@ -278,7 +278,7 @@ class Coords(ndarray):
         """
         p = asarray(p).reshape((3))
         n = asarray(n).reshape((3))
-        n /= length(n)
+        n = normalize(n)
         d = inner(self,n) - inner(p,n)
         return d
 
