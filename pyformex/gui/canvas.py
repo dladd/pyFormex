@@ -260,6 +260,7 @@ class Canvas(object):
         GL.glMaterialfv(fill_mode,GL.GL_EMISSION,colors.GREY(self.emission))
         GL.glMaterialfv(fill_mode,GL.GL_SHININESS,self.shininess)
 
+
     def glLightSpec(self):
         GL.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT,colors.GREY(self.ambient))
         GL.glLightModeli(GL.GL_LIGHT_MODEL_TWO_SIDE, 1)
@@ -275,6 +276,7 @@ class Canvas(object):
         GL.glColorMaterial(fill_mode,GL.GL_AMBIENT_AND_DIFFUSE)
         GL.glEnable(GL.GL_COLOR_MATERIAL)
 
+
     def glLight(self,onoff):
         """Toggle lights on/off."""
         if onoff:
@@ -283,16 +285,24 @@ class Canvas(object):
         else:
             GL.glDisable(GL.GL_LIGHTING)
 
+
+    def hasLight(self):
+        """Return the status of the lighting."""
+        return GL.glIsEnabled(GL.GL_LIGHTING)
+        
+
     def resetDefaults(self,dict={}):
         """Return all the settings to their default values."""
         self.settings.reset(dict)
         self.resetLights()
+
 
     def resetLighting(self):
         self.ambient = GD.cfg['render/ambient']
         self.specular = GD.cfg['render/specular']
         self.emission = GD.cfg['render/emission']
         self.shininess = GD.cfg['render/shininess']
+
         
     def resetLights(self):
         self.lights = []
@@ -462,7 +472,7 @@ class Canvas(object):
                 glSmooth()
                 glFill()
             else:
-                glFlat()
+                #glFlat()
                 glLine()
             self.lighting = False
             self.glLight(False)
