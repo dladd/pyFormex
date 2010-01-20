@@ -239,6 +239,23 @@ By default, a ValueError is raised.
 On success, None is returned</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="arraytools.readArray">
+<tt class="descclassname">arraytools.</tt><tt class="descname">readArray</tt><big>(</big><em>file</em>, <em>dtype</em>, <em>shape</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#arraytools.readArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read an array from an open file.</p>
+<p>This uses <tt class="xref docutils literal"><span class="pre">numpy.fromfile()</span></tt> to read an array with known shape and
+data type from an open file.
+The sep parameter can be specified as in fromfile.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="arraytools.writeArray">
+<tt class="descclassname">arraytools.</tt><tt class="descname">writeArray</tt><big>(</big><em>file</em>, <em>array</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#arraytools.writeArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write an array to an open file.</p>
+<p>This uses <tt class="xref docutils literal"><span class="pre">numpy.tofile()</span></tt> to write an array to an open file.
+The sep parameter can be specified as in tofile.</p>
+</dd></dl>
+
 </div>
 
 

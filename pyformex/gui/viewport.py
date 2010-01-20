@@ -286,6 +286,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.setMouse(RIGHT,self.dynazoom,mod)
         self.selection_mode = None
         self.selection = Collection()
+        self.trackfunc = None
         self.pick_func = {
             'actor'  : self.pick_actors,
             'element': self.pick_elements,
@@ -370,6 +371,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
         if action == PRESS:
             self.makeCurrent()
             self.update()
+            if self.trackfunc:
+                self.trackfunc(x,y)
             self.begin_2D_drawing()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
@@ -379,6 +382,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.swapBuffers()
 
         elif action == MOVE:
+            if self.trackfunc:
+                self.trackfunc(x,y)
             # Remove old rectangle
             self.swapBuffers()
             self.draw_state_rect(*self.state)
@@ -657,11 +662,14 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.update()
 
         elif action == MOVE:
-            self.drawn = self.unProject(x,y,self.zplane)
             if GD.app.hasPendingEvents():
                 return
+            if self.trackfunc:
+                self.trackfunc(x,y)
+                #GD.app.processEvents()
             if self.previewfunc:
                 self.swapBuffers()
+                self.drawn = self.unProject(x,y,self.zplane)
                 self.drawn = Coords(self.drawn).reshape(-1,3)
                 self.previewfunc(Coords.concatenate([self.drawing,self.drawn]),self.drawmode)
                 self.swapBuffers()

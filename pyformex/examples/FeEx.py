@@ -29,6 +29,7 @@ topics = ['FEA']
 techniques = ['menu', 'dialog', 'persistence', 'colors'] 
 """
 from pyformex import GUI
+from gui import menu
 
 from simple import rectangle
 from plugins.fe import *
@@ -633,6 +634,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
     name = feresult_name.next()
     export({name:DB})
     showInfo("The results have been exported as %s\nYou can now use the postproc menu to display results" % name)
+    #postproc_menu.selection.set(name)
+    #postproc_menu.open_results_dialog()
     
 
 def autoRun():
@@ -701,7 +704,7 @@ def create_menu():
         ("---",None),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('FeEx',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('FeEx',items=MenuData,parent=GD.GUI.menu,before='help')
 
  
 def show_menu():

@@ -18,7 +18,7 @@ The following pyFormex developers, users and enthusiasts were present.
 - Matthieu De Beule
 - Peter Mortier
 - Sofie Van Cauter
-- Gianluca De Santis, secretary
+- Gianluca De Santis
 - Tomas Praet
 
 
@@ -29,7 +29,6 @@ Apologies
 
 Minutes of the previous meeting
 -------------------------------
-- The minutes of the previous meeting were not yet available. They will be approved later and put on the `pyFormex User Meeting page`_.
 
 
 Agenda and discussion

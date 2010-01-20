@@ -258,47 +258,12 @@
 
       .. automethod:: setIndex(i)
 
-   .. autoclass:: BaseMenu
+   .. autoclass:: CoordsBox
 
 
-      BaseMenu objects have the following methods:
+      CoordsBox objects have the following methods:
 
-      .. automethod:: item(text)
-      .. automethod:: itemAction(item)
-      .. automethod:: insert_sep(before=None)
-      .. automethod:: insert_menu(menu,before=None)
-      .. automethod:: insert_action(action,before=None)
-      .. automethod:: create_insert_action(str,val,before=None)
-      .. automethod:: insertItems(items,before=None)
-
-   .. autoclass:: Menu
-
-
-      Menu objects have the following methods:
-
-      .. automethod:: process()
-      .. automethod:: remove()
-
-   .. autoclass:: MenuBar
-
-
-      MenuBar objects have the following methods:
-
-
-   .. autoclass:: DAction
-
-
-      DAction objects have the following methods:
-
-      .. automethod:: activated()
-
-   .. autoclass:: ActionList
-
-
-      ActionList objects have the following methods:
-
-      .. automethod:: add(name,icon=None)
-      .. automethod:: names()
+      .. automethod:: setValues(values)
 
 **Functions defined in the module widgets**
 
@@ -311,7 +276,6 @@
    .. autofunction:: updateDialogItems(data,newdata)
    .. autofunction:: dialogButtons(dialog,actions,default=None)
    .. autofunction:: updateText(widget,text,format='')
-   .. autofunction:: normalize(s)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

@@ -35,7 +35,7 @@ import pyformex
 
 import simple
 from connectivity import *
-from gui import widgets
+from gui import menu
 from gui.draw import *
 #from gui.actors import *
 from plugins import formex_menu
@@ -345,7 +345,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    w = widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
+    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
     return w
 
 def show_menu():

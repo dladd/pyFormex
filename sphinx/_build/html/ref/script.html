@@ -130,7 +130,7 @@ module (&#8211;nogui option).</p>
 <tt class="descclassname">script.</tt><tt class="descname">listAll</tt><big>(</big><em>clas=None</em>, <em>dic=None</em><big>)</big><a class="headerlink" href="#script.listAll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of all objects in dic that are of given clas.</p>
 <p>If no class is given, Formex objects are sought.
-If no dict is given, the objects from both GD.PF and locals()
+If no dict is given, the objects from both pyformex.PF and locals()
 are returned.</p>
 </dd></dl>
 
@@ -195,7 +195,7 @@ If result == &#8216;both&#8217;, a tuple of status and output is returned.</p>
 <p>There is a lock to prevent multiple scripts from being executed at the
 same time. This implies that pyFormex scripts can currently not be
 recurrent.
-If a name is specified, set the global variable GD.scriptName to it
+If a name is specified, set the global variable pyformex.scriptName to it
 when the script is started.
 If a filename is specified, set the global variable __file__ to it.</p>
 <p>If step==True, an indefinite pause will be started after each line of
@@ -308,7 +308,7 @@ Each running script should pop the required arguments from the list.</p>
 <p>If fn is a directory name, the current directory is set to fn.
 If fn is a file name, the current directory is set to the directory
 holding fn.
-In either case, the current dirctory is stored in GD.cfg[&#8216;workdir&#8217;]
+In either case, the current dirctory is stored in pyformex.cfg[&#8216;workdir&#8217;]
 for persistence between pyFormex invocations.</p>
 <p>If fn does not exist, nothing is done.</p>
 </dd></dl>
@@ -340,9 +340,41 @@ comp: a string used in the comparison.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="script.workHere">
-<tt class="descclassname">script.</tt><tt class="descname">workHere</tt><big>(</big><big>)</big><a class="headerlink" href="#script.workHere" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="script.writeGeomFile">
+<tt class="descclassname">script.</tt><tt class="descname">writeGeomFile</tt><big>(</big><em>filename</em>, <em>objects</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#script.writeGeomFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save geometric objects to a pyFormex Geometry File.</p>
+<p>A pyFormex Geometry File can store multiple geometrical objects in a
+native format that can be efficiently read back into pyFormex.
+The format is portable over different pyFormex versions and 
+even to other software.</p>
+<p>-<cite>filename</cite>: the name of the file to be written
+-<cite>objects</cite>: a list or a dictionary. If it is a dictionary,</p>
+<blockquote>
+the objects will be saved with the key values as there names.
+Objects that can not be exported to a Geometry File will be
+silently ignored.</blockquote>
+<ul class="simple">
+<li><cite>mode</cite>: can be set to &#8216;a&#8217; to append to an existing file.</li>
+<li><cite>sep</cite>: the string used to separate data. If set to an empty
+string, the data will be written in binary format and the resulting file
+will be smaller but less portable.</li>
+</ul>
+<p>Returns the number of objects written to the file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="script.readGeomFile">
+<tt class="descclassname">script.</tt><tt class="descname">readGeomFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#script.readGeomFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pyFormex Geometry File.</p>
+<p>A pyFormex Geometry File can store multiple geometrical objects in a
+native format that can be efficiently read back into pyFormex.
+The format is portable over different pyFormex versions and 
+even to other software.</p>
+<p>-<cite>filename</cite>: the name of an exisiting pyFormex Geometry File.</p>
+<p>Returns a dictionary with the geometric objects read from the file.
+If object names were stored in the file, they will be used as the keys.
+Else, default names will be provided.</p>
+</dd></dl>
 
 </blockquote>
 </div>
@@ -362,7 +394,7 @@ comp: a string used in the comparison.</p>
                                   title="previous chapter">3. <tt class="docutils literal docutils literal docutils literal"><span class="pre">arraytools</span></tt> &#8212; A collection of numerical array utilities.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="draw.html"
-                                  title="next chapter">5. <tt class="docutils literal docutils literal docutils literal"><span class="pre">draw</span></tt> &#8212; Create 3D graphical representations.</a></p>
+                                  title="next chapter">5. <tt class="docutils literal docutils literal"><span class="pre">draw</span></tt> &#8212; Create 3D graphical representations.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/script.txt"

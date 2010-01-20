@@ -24,7 +24,8 @@
 ##
 
 import pyformex as GD
-from gui import widgets
+from gui import *
+
 import utils
 import os
 
@@ -233,7 +234,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('Jobs',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Jobs',items=MenuData,parent=GD.GUI.menu,before='help')
 
  
 def show_menu():

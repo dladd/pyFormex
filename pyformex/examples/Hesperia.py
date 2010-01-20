@@ -36,7 +36,7 @@ from plugins.surface import TriSurface
 from plugins.properties import *
 from plugins.fe_abq import *
 from gui.colorscale import ColorScale,ColorLegend
-import gui.decors
+from gui import menu,decors
 
 import time
 
@@ -909,7 +909,7 @@ def create_menu():
         ("---",None),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('Hesperia',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Hesperia',items=MenuData,parent=GD.GUI.menu,before='help')
 
  
 def show_menu():

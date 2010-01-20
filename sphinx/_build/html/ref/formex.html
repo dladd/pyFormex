@@ -169,9 +169,9 @@ Formex and ndarray instances. The results is always an ndarray.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="formex.Formex.prop">
-<tt class="descname">prop</tt><big>(</big><big>)</big><a class="headerlink" href="#formex.Formex.prop" title="Permalink to this definition">¶</a></dt>
-<dd>Return the properties as a numpy array (ndarray)</dd></dl>
+<dt id="formex.Formex.getprop">
+<tt class="descname">getprop</tt><big>(</big><em>index=None</em><big>)</big><a class="headerlink" href="#formex.Formex.getprop" title="Permalink to this definition">¶</a></dt>
+<dd>Return the propertie numbers of the element in index</dd></dl>
 
 <dl class="method">
 <dt id="formex.Formex.maxprop">
@@ -998,13 +998,15 @@ but returns a Formex instead of an array of points.</p>
 <dl class="method">
 <dt id="formex.Formex.cutWithPlane">
 <tt class="descname">cutWithPlane</tt><big>(</big><em>p</em>, <em>n</em>, <em>side=''</em>, <em>atol=None</em>, <em>newprops=None</em><big>)</big><a class="headerlink" href="#formex.Formex.cutWithPlane" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all elements of the Formex cut at plane(s).</p>
-<p>This method currently only works for plexitude 2 or 3!</p>
-<p>F is a Formex of plexitude 2 or 3.
-p,n are a point and normal vector defining the cutting plane.
+<dd><p>Cut a Formex with the plane(s) (p,n).</p>
+<p>..warning :: This method currently only works for plexitude 2 or 3!</p>
+<ul class="simple">
+<li><cite>F</cite>: a Formex of plexitude 2 or 3.</li>
+<li><cite>p</cite>,`n`: a point and normal vector defining the cutting plane.
 In case of plexitude 3, p and n can be sequences of points and vector,
 allowing to cut with multiple planes.
-Both p and n have shape (3) or (npoints,3).</p>
+Both p and n have shape (3) or (npoints,3).</li>
+</ul>
 <p>The default return value is a tuple of two Formices of the same
 plexitude as the input: (Fpos,Fneg), where Fpos is the part of the
 Formex at the positive side of the plane (as defined by the normal
@@ -1034,7 +1036,7 @@ Returns a list of Formices each comprising n elements.</p>
 
 <dl class="method">
 <dt id="formex.Formex.write">
-<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em><big>)</big><a class="headerlink" href="#formex.Formex.write" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">write</tt><big>(</big><em>fil</em>, <em>sep=' '</em>, <em>mode='w'</em><big>)</big><a class="headerlink" href="#formex.Formex.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a Formex to file.</p>
 <p>If fil is a string, a file with that name is opened. Else fil should
 be an open file.

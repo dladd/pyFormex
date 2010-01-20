@@ -9,7 +9,6 @@ on a plane with any orientation in space. The constructed geometry always
 has 3D coordinates in the global cartesian coordinate system.
 """
 
-
 from simple import circle
 from odict import ODict
 from plugins.geomtools import triangleCircumCircle
@@ -21,6 +20,12 @@ autoname = ODict([ (obj,utils.NameSequence(obj)) for obj in draw_mode_2d ])
 
 _preview = False
 
+
+def set_preview(onoff=True):
+    global _preview
+    _preview = onoff
+    
+
 def toggle_preview():
     global _preview
     res = askItems([('_preview',_preview,{'text':'Preview mode'})])
@@ -28,7 +33,7 @@ def toggle_preview():
         globals().update(res)
 
 
-def draw2D(mode='point',npoints=1,zplane=0.,coords=None,func=None):
+def draw2D(mode='point',npoints=-1,zplane=0.,coords=None,func=None):
     """Enter interactive drawing mode and return the line drawing.
 
     See viewport.py for more details.
@@ -43,9 +48,10 @@ def draw2D(mode='point',npoints=1,zplane=0.,coords=None,func=None):
         return
     if func == None:
         func = highlightDrawing
-    print "INITIAL = %s" % coords
     return GD.canvas.idraw(mode,npoints,zplane,func,coords,_preview)
 
+
+_obj_params = {}
 
 def drawnObject(points,mode='point'):
     """Return the geometric object resulting from draw2D points"""
@@ -59,7 +65,9 @@ def drawnObject(points,mode='point'):
     elif mode == 'polyline':
         return PolyLine(points,closed=closed)
     elif mode == 'spline' and points.ncoords() > 1:
-        return BezierSpline(points,closed=closed)
+        curl = _obj_params.get('curl',None)
+        closed = _obj_params.get('closed',None)
+        return BezierSpline(points,curl=curl,closed=closed)
     elif mode == 'circle' and points.ncoords() % 3 == 0:
         R,C,N = triangleCircumCircle(points.reshape(-1,3,3))
         circles = [circle(r=r,c=c,n=n) for r,c,n in zip(R,C,N)]
@@ -77,11 +85,23 @@ def highlightDrawing(points,mode):
     pts is an array of points.
     """
     GD.canvas.removeHighlights()
+    #draw(points,highlight=True,flat=True)
+    PA = actors.FormexActor(Formex(points))
+    PA.specular=0.0
+    GD.canvas.addHighlight(PA)
+    obj = drawnObject(points,mode=mode)
+    if obj is not None:
+        #draw(obj,color=GD.canvas.settings.slcolor,highlight=True,flat=True)
+        #print type(obj)
+        if hasattr(obj,'toFormex'):
+            #print "toFormex"
+            F = obj.toFormex()
+        else:
+            F = Formex(obj)
+        OA = actors.FormexActor(F,color=GD.canvas.settings.slcolor)
+        OA.specular=0.0
+        GD.canvas.addHighlight(OA)
     GD.canvas.update()
-    draw(points,highlight=True,flat=True)
-    objects = drawnObject(points,mode=mode)
-    if objects is not None:
-        draw(objects,color=GD.canvas.settings.slcolor,highlight=True,flat=True)
 
     
 def drawPoints2D(mode,npoints=-1,zvalue=0.,coords=None):
@@ -95,7 +115,7 @@ def drawPoints2D(mode,npoints=-1,zvalue=0.,coords=None):
     
 def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
     """Draw a 2D opbject in the xy-plane with given z-value"""
-    points = drawPoints2D(mode,npoints=-1,zvalue=zvalue,coords=coords)
+    points = drawPoints2D(mode,npoints=npoints,zvalue=zvalue,coords=coords)
     return drawnObject(points,mode=mode)
 
 
@@ -104,7 +124,7 @@ def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
 _zvalue = 0.
     
 def draw_object(mode,npoints=-1):
-    points = drawPoints2D(mode,npoints=-1,zvalue=zvalue)
+    points = drawPoints2D(mode,npoints=-1)
     obj = drawnObject(points,mode=mode)
     if obj is None:
         GD.canvas.removeHighlights()
@@ -134,6 +154,9 @@ def draw_points(npoints=-1):
 def draw_polyline():
     return draw_object('polyline')
 def draw_spline():
+    global _obj_params
+    res = askItems([('curl',1./3.),('closed',False)])
+    _obj_params.update(res)
     return draw_object('spline')
 def draw_circle():
     return draw_object('circle')
@@ -205,6 +228,7 @@ _grid_data = [
 
         
 def create_grid():
+    global dx,dy
     if hasattr(GD.canvas,'_grid'):
         if hasattr(GD.canvas,'_grid_data'):
             updateData(_grid_data,GD.canvas._grid_data)
@@ -213,14 +237,15 @@ def create_grid():
         GD.canvas._grid_data = res
         globals().update(res)
         
-        obj = drawable.check()
-        if autosize and obj:
-            bb = bbox(obj)
-            nx = ny = 20
-            dx = dy = bb.sizes().max() / nx * 2.
-        else:
-            nx = int(ceil(width/dx))
-            ny = int(ceil(height/dy))
+        nx = int(ceil(width/dx))
+        ny = int(ceil(height/dy))
+        obj = None
+        if autosize:
+            obj = drawable.check()
+            if obj:
+                bb = bbox(obj)
+                nx = ny = 20
+                dx = dy = bb.sizes().max() / nx * 2.
             
         ox = (-nx*dx/2.,-ny*dy/2.,0.)
         if obj:
@@ -271,7 +296,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    w = widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
+    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
     return w
 
 def show_menu():

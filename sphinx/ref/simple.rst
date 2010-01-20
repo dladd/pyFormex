@@ -19,7 +19,7 @@
    .. autofunction:: point(x=0.,y=0.,z=0.)
    .. autofunction:: line(p1=[0.,0.,0.],p2=[1.,0.,0.],n=1)
    .. autofunction:: rectangle(nx,ny,b=None,h=None,bias=0.,diag=None)
-   .. autofunction:: circle(a1=2.,a2=0.,a3=360.)
+   .. autofunction:: circle(a1=2.,a2=0.,a3=360.,r=None,n=None,c=None)
    .. autofunction:: polygon(n)
    .. autofunction:: triangle()
    .. autofunction:: quadraticCurve(x=None,n=8)

@@ -158,20 +158,22 @@ try:
 except:
     LinksMenuData = []
 
-
-MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
-    ('---',None),
-    (_('&Command line options'),cmdline),
-    (_('&Readme'),readme), 
-    (_('&ReleaseNotes'),releasenotes), 
-    (_('&License'),license), 
-    (_('&Detected Software'),detected), 
-    (_('&OpenGL Format'),opengl), 
-    (_('&Fortune Cookie'),cookie),
-    (_('&Favourite Links'),LinksMenuData),
-    (_('&Developers'),developers), 
-    (_('&About'),about), 
-    ]
+try:
+    MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
+        ('---',None),
+        (_('&Command line options'),cmdline),
+        (_('&Readme'),readme), 
+        (_('&ReleaseNotes'),releasenotes), 
+        (_('&License'),license), 
+        (_('&Detected Software'),detected), 
+        (_('&OpenGL Format'),opengl), 
+        (_('&Fortune Cookie'),cookie),
+        (_('&Favourite Links'),LinksMenuData),
+        (_('&Developers'),developers), 
+        (_('&About'),about), 
+        ]
+except:
+    MenuData = []
 
 
 

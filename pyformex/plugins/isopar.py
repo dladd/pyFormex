@@ -28,14 +28,15 @@ from formex import *
 from utils import deprecation
 
 
-def build_matrix(atoms,x,y=0,z=0):
+def evaluate(atoms,x,y=0,z=0):
     """Build a matrix of functions of coords.
 
-    Atoms is a list of text strings representing some function of
-    x(,y)(,z). x is a list of x-coordinats of the nodes, y and z can be set
-    to lists of y,z coordinates of the nodes.
-    Each line of the returned matrix contains the atoms evaluated at a
-    node.
+    - `atoms`: a list of text strings representing a mathematical function of
+      `x`, and possibly of `y` and `z`.
+    - `x`, `y`, `z`: a list of x- (and optionally y-, z-) values at which the
+      `atoms` will be evaluated. The lists should have the same length.
+
+    Returns a matrix with `nvalues` rows and `natoms` colums.
     """
     aa = zeros((len(x),len(atoms)),Float)
     for k,a in enumerate(atoms):
@@ -139,7 +140,7 @@ class Isopar(object):
             z = oldcoords[:,2]
         else:
             z = 0
-        aa = build_matrix(atoms,x,y,z)
+        aa = evaluate(atoms,x,y,z)
         ab = linalg.solve(aa,coords)
         self.eltype = eltype
         self.trf = ab
@@ -150,39 +151,36 @@ class Isopar(object):
 
         Returns a Coords array with same shape as X
         """
-        if isinstance(X,Formex):
-            return Formex(self.transform(X.coords),X.p,X.eltype)
+        try:
+            X = Coords(X)
+        except:
+            raise ValueError,"Expected a Coords object as argument"
         
         ndim,atoms = Isopar.isodata[self.eltype]
-        X = Coords(X)
-        aa = build_matrix(atoms,X.x().ravel(),X.y().ravel(),X.z().ravel())
+        aa = evaluate(atoms,X.x().ravel(),X.y().ravel(),X.z().ravel())
         xx = reshape(dot(aa,self.trf),X.shape)
         if ndim < 3:
             xx[...,ndim:] += X[...,ndim:]
         return xx
 
 
-    @deprecation("Please use Isopar.transform() instead")
-    def transformFormex(self,F):
-        """Apply an isoparametric transform to a Formex.
+def isopar(X,eltype,coords,oldcoords):
+    """Perform an isoparametric transformation on a Coords.
 
-        The result is a topologically equivalent Formex.
-        """
-        return Formex(self.transform(F.coords),F.p,F.eltype)
+    This is a convenience function that creates and uses an isoparametric
+    transformation in a single line. It is equivalent to::
 
-
-def transformFormex(F,trf):
-    return trf.transform(F)
-    
-Formex.isopar = transformFormex
-
-
-def isopar(F,eltype,coords,oldcoords):
-    """Perform an isoparametric transformation on a Formex.
-
-    This is a convenience function that creates and uses an iosprametric
-    transformation in a single line.
+      Isopar(eltype,coords,oldcoords).transform(X)
     """
-    return Isopar(eltype,coords,oldcoords).transformFormex(F)
+    return Isopar(eltype,coords,oldcoords).transform(X)
+
+
+Coords.isopar = isopar
+
+def _isopar_F(self,eltype,coords,oldcoords):
+    X = isopar(self.coords,eltype,coords,oldcoords)
+    return Formex(X,self.p,self.eltype)
+
+Formex.isopar = _isopar_F
 
 # End

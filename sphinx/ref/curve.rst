@@ -20,13 +20,17 @@
 
       Curve objects have the following methods:
 
+      .. automethod:: pointsOn()
+      .. automethod:: pointsOff()
+      .. automethod:: ncoords()
+      .. automethod:: npoints()
       .. automethod:: sub_points(t,j)
       .. automethod:: sub_points_2(t,j)
       .. automethod:: lengths()
       .. automethod:: pointsAt(t)
       .. automethod:: subPoints(div=10,extend=[0.,0.])
       .. automethod:: length()
-      .. automethod:: approx(ndiv=N_approx)
+      .. automethod:: approx(ndiv=N_approx,ntot=None)
       .. automethod:: toFormex()
 
    .. autoclass:: PolyLine
@@ -43,6 +47,7 @@
       .. automethod:: lengths()
       .. automethod:: atLength(div)
       .. automethod:: reverse()
+      .. automethod:: split(i)
 
    .. autoclass:: Polygon
 
@@ -113,6 +118,7 @@
 **Functions defined in the module curve**
 
    .. autofunction:: vectorPairAngle(v1,v2)
+   .. autofunction:: convertFormexToCurve(closed=False)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

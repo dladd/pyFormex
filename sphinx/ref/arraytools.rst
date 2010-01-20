@@ -35,6 +35,8 @@
    .. autofunction:: checkArray(a,shape=None,kind=None,allow=None)
    .. autofunction:: checkArray1D(a,size=None,kind=None,allow=None)
    .. autofunction:: checkUniqueNumbers(nrs,nmin=0,nmax=None,error=None)
+   .. autofunction:: readArray(file,dtype,shape,sep=' ')
+   .. autofunction:: writeArray(file,array,sep=' ')
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

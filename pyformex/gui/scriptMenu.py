@@ -30,7 +30,7 @@ from PyQt4 import QtCore, QtGui
 
 import utils
 import draw
-import widgets
+import menu
 import os,random
 from gettext import gettext as _
     
@@ -507,7 +507,7 @@ def createScriptMenu(parent=None,before=None):
     replaced.
     """
     from odict import ODict
-    scriptmenu = widgets.Menu('&Scripts',parent=parent,before=before)
+    scriptmenu = menu.Menu('&Scripts',parent=parent,before=before)
     scriptmenu.menuitems = ODict()
     # Create a copy to leave the cfg unchanged!
     scriptdirs = [] + GD.cfg['scriptdirs']

@@ -146,20 +146,8 @@ class GUI(QtGui.QMainWindow):
         self.curfile = widgets.ButtonBox('Script:',[('None',fileMenu.openScript)])
         self.canPlay = False
         
-        #cf = QtGui.QWidget()
-        #hl = QtGui.QHBoxLayout()
-        #hl.setSpacing(0)
-        #hl.setMargin(0)
-        #cf.setLayout(hl) 
-        #self.curfile = QtGui.QLabel('No File')
-        #self.curfile.setLineWidth(0)
-        #self.smiley = QtGui.QLabel()
-        #hl.addWidget(self.smiley)
-        #hl.addWidget(self.curfile)
-        #self.statusbar.addWidget(cf)
-
         # The menu bar
-        self.menu = widgets.MenuBar('TopMenu')
+        self.menu = menu.MenuBar('TopMenu')
         self.setMenuBar(self.menu)
 
         # The toolbar
@@ -230,7 +218,7 @@ class GUI(QtGui.QMainWindow):
             mmenu = None
         self.modebar = self.activateToolBar('RenderMode ToolBar','modebar')
             
-        self.modebtns = widgets.ActionList(
+        self.modebtns = menu.ActionList(
             modes,draw.renderMode,menu=mmenu,toolbar=self.modebar)
         
         # Add the toggle type buttons
@@ -251,14 +239,14 @@ class GUI(QtGui.QMainWindow):
         ###############  VIEWS menu and toolbar ################
         self.viewsMenu = None
         if GD.cfg.get('gui/viewmenu',True):
-            self.viewsMenu = widgets.Menu('&Views',parent=self.menu,before='help')
+            self.viewsMenu = menu.Menu('&Views',parent=self.menu,before='help')
         self.viewbar = self.activateToolBar('Views ToolBar','viewbar')
 
         defviews = GD.cfg['gui/defviews']
         views = [ v[0] for v in defviews ]
         viewicons = [ v[1] for v in defviews ]
 
-        self.viewbtns = widgets.ActionList(
+        self.viewbtns = menu.ActionList(
             views,set_view,
             menu=self.viewsMenu,
             toolbar=self.viewbar,
@@ -314,8 +302,26 @@ class GUI(QtGui.QMainWindow):
         sbh = self.statusbar.height()
         self.curproj.setFixedHeight(32)
         self.curfile.setFixedHeight(32)
-        GD.GUI.statusbar.addWidget(self.curproj)
-        GD.GUI.statusbar.addWidget(self.curfile)
+        self.statusbar.addWidget(self.curproj)
+        self.statusbar.addWidget(self.curfile)
+
+
+    def addCoordsTracker(self):
+        self.coordsbox = widgets.CoordsBox()
+        GD.GUI.statusbar.addPermanentWidget(c)
+
+        def track(x,y,z=0.):
+            X,Y,Z = GD.canvas.unProject(x,y,z)
+            GD.GUI.coordsbox.setValues([X,Y,Z])
+
+        for vp in self.viewports.all:
+            vp.trackfunc = track
+
+
+    def removeCoordsTracker(self):
+        self.coordsbox.close()
+        for vp in self.viewports.all:
+            vp.trackfunc = None
 
 
     def setStyle(self,style):

@@ -38,7 +38,7 @@
       .. automethod:: copy()
       .. automethod:: select(idx,compress=True)
       .. automethod:: setProp(p=None)
-      .. automethod:: prop()
+      .. automethod:: getprop()
       .. automethod:: maxprop()
       .. automethod:: propSet()
       .. automethod:: x()

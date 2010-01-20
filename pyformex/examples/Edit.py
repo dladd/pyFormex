@@ -41,7 +41,6 @@ def plotChar(char):
         raise ValueError,"Can not plot character %s" % char
 
 
-plotChar('A')
 
 data = dict(
     a = 1,
@@ -52,7 +51,9 @@ data = dict(
     )
 export(data)
 globals().update(data)
-draw(f)
-               
+#draw(f)
+
+plotChar('A')
+  
 
 # End

@@ -24,11 +24,12 @@
 ##
 
 import pyformex as GD
+from gui import menu
+
 from plugins.postproc import *
 from plugins.fe_post import FeResult
 from plugins.objects import Objects
 from gui.colorscale import ColorScale,ColorLegend
-from gui import decors,canvas,widgets
 import utils
 from odict import ODict
 
@@ -154,7 +155,8 @@ class Table(QtGui.QDialog):
 
 
 if globals().has_key('tbl'):
-    tbl.close()
+    if tbl is not None:
+        tbl.close()
 tbl = None
 
 def showfields():
@@ -299,9 +301,9 @@ def showResults(nodes,elems,displ,text,val,showref=False,dscale=100.,
         # easily remove/redisplay them
         #print(val)
         if val is None:
-            F = [ draw(df,color='blue',view='__last__',bbox=None,wait=None) for df in deformed ]
+            F = [ draw(df,color='blue',view=None,bbox='last',wait=None) for df in deformed ]
         else:
-            F = [ draw(df,color=cval[el],view='__last__',bbox=None,wait=None) for df,el in zip(deformed,elems) ]
+            F = [ draw(df,color=cval[el],view=None,bbox='last',wait=None) for df,el in zip(deformed,elems) ]
         T = drawtext('Deformation scale = %s' % dsc,200,10)
 
         # remove the last frame
@@ -667,7 +669,7 @@ def selectDB(db=None):
     if db:
         setDB(db)
         clear()
-        print(DB.about['heading'])
+        print(DB.about.get('heading','No Heading'))
         print('Stress tensor has %s components' % DB.data_size['S'])
         showModel()
     return db
@@ -779,7 +781,7 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
         ]
-    return widgets.Menu('Postproc',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Postproc',items=MenuData,parent=GD.GUI.menu,before='help')
   
 def show_menu():
     """Show the Postproc menu."""
@@ -799,6 +801,8 @@ def reload_menu():
     close_menu()
     DB =  GD.PF.get('__PostProcMenu_result__',None)
     print("Current database %s" % DB)
+    import plugins
+    plugins.refresh('postproc_menu')
     show_menu()
 
 

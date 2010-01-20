@@ -34,6 +34,7 @@ import utils
 from odict import ODict
 
 from gui import actors
+from gui import menu
 from gui.draw import *
 
 from plugins import objects,surface,inertia,partition,sectionize
@@ -488,7 +489,7 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close",close_menu),
         ]
-    return widgets.Menu('Formex',items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu('Formex',items=MenuData,parent=GD.GUI.menu,before='help')
 
     
 def show_menu():

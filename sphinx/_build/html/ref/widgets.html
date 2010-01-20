@@ -767,7 +767,7 @@ Optional lists of column and row headers can be specified.</p>
 <dl class="class">
 <dt id="widgets.Table">
 <em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Table</tt><big>(</big><em>data</em>, <em>chead=None</em>, <em>rhead=None</em>, <em>caption=None</em>, <em>parent=None</em>, <em>actions=</em><span class="optional">[</span>, <em>('OK'</em>, <em>)</em><span class="optional">]</span>, <em>default='OK'</em><big>)</big><a class="headerlink" href="#widgets.Table" title="Permalink to this definition">¶</a></dt>
-<dd><p>A dialog widget to show two-dimensional arrays of items.</p>
+<dd><p>A dialog widget to show/edit a two-dimensional array of items.</p>
 <p>Create the Table dialog.</p>
 <p>data is a 2-D array of items, mith nrow rows and ncol columns.
 chead is an optional list of ncol column headers.
@@ -883,184 +883,14 @@ widgets.REJECTED.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="widgets.BaseMenu">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">BaseMenu</tt><big>(</big><em>title='AMenu'</em>, <em>parent=None</em>, <em>before=None</em>, <em>items=None</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu" title="Permalink to this definition">¶</a></dt>
-<dd><p>A general menu class.</p>
-<p>A hierarchical menu that keeps a list of its item names and actions.
-The item names are normalized by removing all &#8216;&amp;&#8217; characters and
-converting the result to lower case.
-It thus becomes easy to search for an existing item in a menu.</p>
-<p>This class is not intended for direct use, but through subclasses.
-Subclasses should implement at least the following methods:</p>
-<ul class="simple">
-<li>addSeparator()</li>
-<li>insertSeperator(before)</li>
-<li>addAction(text,action)</li>
-<li>insertAction(before,text,action)</li>
-<li>addMenu(text,menu)</li>
-<li>insertMenu(before,text,menu)</li>
-</ul>
-<p>QtGui.Menu and QtGui.MenuBar provide these methods.</p>
-<p>Create a menu.</p>
-<p>BaseMenu objects have the following methods:</p>
+<dt id="widgets.CoordsBox">
+<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">CoordsBox</tt><big>(</big><em>ndim=3</em>, <em>*args</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>A widget displaying the coordinates of a point.</p>
+<p>CoordsBox objects have the following methods:</p>
 <dl class="method">
-<dt id="widgets.BaseMenu.item">
-<tt class="descname">item</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.item" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the menu item with text.</p>
-<p>The text will be normalized before searching it.
-If an item with the resulting name exists, it is returned.
-Else None is returned.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.BaseMenu.itemAction">
-<tt class="descname">itemAction</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.itemAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the action corresponding to item.</p>
-<p>item is either one of the menu&#8217;s item texts, or one of its
-values. This method guarantees that the return value is either the
-corresponding Action, or None.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.BaseMenu.insert_sep">
-<tt class="descname">insert_sep</tt><big>(</big><em>before=None</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.insert_sep" title="Permalink to this definition">¶</a></dt>
-<dd>Create and insert a separator</dd></dl>
-
-<dl class="method">
-<dt id="widgets.BaseMenu.insert_menu">
-<tt class="descname">insert_menu</tt><big>(</big><em>menu</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.insert_menu" title="Permalink to this definition">¶</a></dt>
-<dd>Insert an existing menu.</dd></dl>
-
-<dl class="method">
-<dt id="widgets.BaseMenu.insert_action">
-<tt class="descname">insert_action</tt><big>(</big><em>action</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.insert_action" title="Permalink to this definition">¶</a></dt>
-<dd>Insert an action.</dd></dl>
-
-<dl class="method">
-<dt id="widgets.BaseMenu.create_insert_action">
-<tt class="descname">create_insert_action</tt><big>(</big><em>str</em>, <em>val</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.create_insert_action" title="Permalink to this definition">¶</a></dt>
-<dd>Create and insert an action.</dd></dl>
-
-<dl class="method">
-<dt id="widgets.BaseMenu.insertItems">
-<tt class="descname">insertItems</tt><big>(</big><em>items</em>, <em>before=None</em><big>)</big><a class="headerlink" href="#widgets.BaseMenu.insertItems" title="Permalink to this definition">¶</a></dt>
-<dd><p>Insert a list of items in the menu.</p>
-<p>Each item is a tuple of two to five elements:
-Text, Action, [ Icon,  ShortCut, ToolTip ].</p>
-<p>Item text is the text that will be displayed in the menu.
-It will be stored in a normalized way: all lower case and with
-&#8216;&amp;&#8217; removed.</p>
-<p>Action can be any of the following:</p>
-<ul class="simple">
-<li>a Python function or instance method : it will be called when the
-item is selected,</li>
-<li>a string with the name of a function/method,</li>
-<li>a list of Menu Items: a popup Menu will be created that will appear
-when the item is selected,</li>
-<li>None : this will create a separator item with no action.</li>
-</ul>
-<p>Icon is the name of one of the icons in the installed icondir.
-ShortCut is an optional key combination to select the item.
-Tooltip is a popup help string.</p>
-<p>If before is given, it specifies the text OR the action of one of the
-items in the menu: the new items will be inserted before that one.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.Menu">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">Menu</tt><big>(</big><em>title='UserMenu'</em>, <em>parent=None</em>, <em>before=None</em>, <em>tearoff=False</em>, <em>items=None</em><big>)</big><a class="headerlink" href="#widgets.Menu" title="Permalink to this definition">¶</a></dt>
-<dd><p>A popup/pulldown menu.</p>
-<p>Create a popup/pulldown menu.</p>
-<p>If parent==None, the menu is a standalone popup menu.
-If parent is given, the menu will be inserted in the parent menu.
-If parent==GD.GUI, the menu is inserted in the main menu bar.
-If a parent is given, and tearoff==True, the menu can be teared-off.</p>
-<p>If insert == True, the menu will be inserted in the main menubar
-before the item specified by before.
-If before is None or not the normalized text of an item of the
-main menu, the new menu will be inserted at the end.
-Calling the close() function of an inserted menu will remove it
-from the main menu.</p>
-<p>If insert == False, the created menu will be an independent dialog
-and the user will have to process it explicitely.</p>
-<p>Menu objects have the following methods:</p>
-<dl class="method">
-<dt id="widgets.Menu.process">
-<tt class="descname">process</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Menu.process" title="Permalink to this definition">¶</a></dt>
+<dt id="widgets.CoordsBox.setValues">
+<tt class="descname">setValues</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#widgets.CoordsBox.setValues" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="widgets.Menu.remove">
-<tt class="descname">remove</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.Menu.remove" title="Permalink to this definition">¶</a></dt>
-<dd>Remove this menu from its parent.</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.MenuBar">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">MenuBar</tt><big>(</big><em>title='TopMenuBar'</em><big>)</big><a class="headerlink" href="#widgets.MenuBar" title="Permalink to this definition">¶</a></dt>
-<dd><p>A menu bar allowing easy menu creation.</p>
-<p>Create the menubar.</p>
-<p>MenuBar objects have the following methods:</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.DAction">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">DAction</tt><big>(</big><em>name</em>, <em>icon=None</em>, <em>data=None</em>, <em>signal=None</em><big>)</big><a class="headerlink" href="#widgets.DAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>A DAction is a QAction that emits a signal with a string parameter.</p>
-<p>When triggered, this action sends a signal (default &#8216;Clicked&#8217;) with a
-custom string as parameter. The connected slot can then act depending
-on this parameter.</p>
-<p>Create a new DAction with name, icon and string data.</p>
-<p>If the DAction is used in a menu, a name is sufficient. For use
-in a toolbar, you will probably want to specify an icon.
-When the action is triggered, the data is sent as a parameter to
-the SLOT function connected with the &#8216;Clicked&#8217; signal.
-If no data is specified, the name is used as data.</p>
-<p>See the views.py module for an example.</p>
-<p>DAction objects have the following methods:</p>
-<dl class="method">
-<dt id="widgets.DAction.activated">
-<tt class="descname">activated</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.DAction.activated" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="widgets.ActionList">
-<em class="property">class </em><tt class="descclassname">widgets.</tt><tt class="descname">ActionList</tt><big>(</big><em>actions=</em><span class="optional">[</span><span class="optional">]</span>, <em>function=None</em>, <em>menu=None</em>, <em>toolbar=None</em>, <em>icons=None</em><big>)</big><a class="headerlink" href="#widgets.ActionList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Menu and toolbar with named actions.</p>
-<p>An action list is a list of strings, each connected to some action.
-The actions can be presented in a menu and/or a toolbar.
-On activating one of the menu or toolbar buttons, a given signal is
-emitted with the button string as parameter. A fixed function can be
-connected to this signal to act dependent on the string value.</p>
-<p>Create an new action list, empty by default.</p>
-<p>A list of strings can be passed to initialize the actions.
-If a menu and/or toolbar are passed, a button is added to them
-for each string in the action list.
-If a function is passed, it will be called with the string as
-parameter when the item is triggered.</p>
-<p>If no icon names are specified, they are taken equal to the
-action names. Icons will be taken from the installed icon directory.
-If you want to specify other icons, use the add() method.</p>
-<p>ActionList objects have the following methods:</p>
-<dl class="method">
-<dt id="widgets.ActionList.add">
-<tt class="descname">add</tt><big>(</big><em>name</em>, <em>icon=None</em><big>)</big><a class="headerlink" href="#widgets.ActionList.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a new name to the actions list and create a matching DAction.</p>
-<p>If the actions list has an associated menu or toolbar,
-a matching button will be inserted in each of these.
-If an icon is specified, it will be used on the menu and toolbar.
-The icon is either a filename or a QIcon object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="widgets.ActionList.names">
-<tt class="descname">names</tt><big>(</big><big>)</big><a class="headerlink" href="#widgets.ActionList.names" title="Permalink to this definition">¶</a></dt>
-<dd>Return an ordered list of names of the action items.</dd></dl>
 
 </dd></dl>
 
@@ -1183,16 +1013,9 @@ following formats:</p>
 otherwise it will be displayed as plain text.
 A text is autorecognized as reStructuredText if its first
 line starts with &#8216;..&#8217;. Note: If you add a &#8216;..&#8217; line to your text to
-have it autorecogn ized as reST, be sure to have it followed with a
+have it autorecognized as reST, be sure to have it followed with a
 blank line, or your first paragraph could be turned into comments.</dd>
 </dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="widgets.normalize">
-<tt class="descclassname">widgets.</tt><tt class="descname">normalize</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#widgets.normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalize a string.</p>
-<p>Text normalization removes all &#8216;&amp;&#8217; characters and converts to lower case.</p>
 </dd></dl>
 
 </blockquote>
@@ -1210,10 +1033,10 @@ blank line, or your first paragraph could be turned into comments.</dd>
     <h3><a href="../index.html">Documentation</a></h3>
             <h4>Previous topic</h4>
             <p class="topless"><a href="elements.html"
-                                  title="previous chapter">12. <tt class="docutils literal docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
+                                  title="previous chapter">12. <tt class="docutils literal docutils literal"><span class="pre">elements</span></tt> &#8212; Element local coordinates and numbering.</a></p>
             <h4>Next topic</h4>
             <p class="topless"><a href="colorscale.html"
-                                  title="next chapter">14. <tt class="docutils literal docutils literal docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
+                                  title="next chapter">14. <tt class="docutils literal docutils literal"><span class="pre">colorscale</span></tt> &#8212; Color mapping of a range of values.</a></p>
             <h3>This Page</h3>
             <ul class="this-page-menu">
               <li><a href="../_sources/ref/widgets.txt"

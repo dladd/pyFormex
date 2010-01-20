@@ -25,6 +25,7 @@
       .. automethod:: keys()
       .. automethod:: values()
       .. automethod:: items()
+      .. automethod:: pos(key)
 
    .. autoclass:: KeyedList
 

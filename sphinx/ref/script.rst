@@ -1,6 +1,3 @@
-.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"Use chdir(__file__) instead"'))))))))))))))))), (8, ')'), (4, '')))
-.. MATCHING (259, (50, '@'), (287, (1, 'deprecation')))
-.. POPPING (260, (259, (50, '@'), (287, (1, 'deprecation')), (7, '('), (329, (330, (303, (304, (305, (306, (307, (309, (310, (311, (312, (313, (314, (315, (316, (317, (3, '"Use chdir(__file__) instead"'))))))))))))))))), (8, ')'), (4, '')))
 .. $Id$  -*- rst -*-
 .. pyformex reference manual --- script
 .. CREATED WITH py2rst.py: DO NOT EDIT
@@ -80,7 +77,8 @@
    .. autofunction:: startGui(args=[])
    .. autofunction:: isWritable(path)
    .. autofunction:: checkRevision(rev,comp='>=')
-   .. autofunction:: workHere()
+   .. autofunction:: writeGeomFile(filename,objects,sep=' ',mode='w')
+   .. autofunction:: readGeomFile(filename)
 
    
 .. moduleauthor:: pyFormex project (http://pyformex.org)

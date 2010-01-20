@@ -73,6 +73,26 @@ The subclasses should at least define the following:</p>
 </div>
 <p>Curve objects have the following methods:</p>
 <dl class="method">
+<dt id="curve.Curve.pointsOn">
+<tt class="descname">pointsOn</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.pointsOn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.pointsOff">
+<tt class="descname">pointsOff</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.pointsOff" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.ncoords">
+<tt class="descname">ncoords</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.ncoords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.Curve.npoints">
+<tt class="descname">npoints</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.Curve.npoints" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="curve.Curve.sub_points">
 <tt class="descname">sub_points</tt><big>(</big><em>t</em>, <em>j</em><big>)</big><a class="headerlink" href="#curve.Curve.sub_points" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the points at values t in part j</p>
@@ -127,8 +147,14 @@ method.</p>
 
 <dl class="method">
 <dt id="curve.Curve.approx">
-<tt class="descname">approx</tt><big>(</big><em>ndiv=N_approx</em><big>)</big><a class="headerlink" href="#curve.Curve.approx" title="Permalink to this definition">¶</a></dt>
-<dd>Return an approximate PolyLine</dd></dl>
+<tt class="descname">approx</tt><big>(</big><em>ndiv=N_approx</em>, <em>ntot=None</em><big>)</big><a class="headerlink" href="#curve.Curve.approx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PolyLine approximation of the curve</p>
+<p>If no <cite>ntot</cite> is given, the curve is approximated by <cite>ndiv</cite>
+straight segments over each part of the curve.
+If <cite>ntot</cite> is given, the curve is approximated by <cite>ntot</cite>
+straight segments over the total curve. This is based on a
+first approximation with ndiv segments over each part.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="curve.Curve.toFormex">
@@ -193,7 +219,7 @@ number of points.</p>
 <tt class="descname">atLength</tt><big>(</big><em>div</em><big>)</big><a class="headerlink" href="#curve.PolyLine.atLength" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the parameter values for relative curve lengths div.</p>
 <p><tt class="docutils literal"><span class="pre">div</span></tt> is a list of relative curve lengths (from 0.0 to 1.0).
-As a convenience, an single integer value may be specified,
+As a convenience, a single integer value may be specified,
 in which case the relative curve lengths are found by dividing
 the interval [0.0,1.0] in the specified number of subintervals.</p>
 <p>The function returns a list with the parameter values for the points
@@ -204,6 +230,14 @@ at the specified relative lengths.</p>
 <dt id="curve.PolyLine.reverse">
 <tt class="descname">reverse</tt><big>(</big><big>)</big><a class="headerlink" href="#curve.PolyLine.reverse" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="curve.PolyLine.split">
+<tt class="descname">split</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#curve.PolyLine.split" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the curve at point i.</p>
+<p>Returns a list of open PolyLines: one, if the PolyLine is closed or
+i is one of the endpoints of an open PolyLine, two in other cases.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -371,6 +405,16 @@ If closed is True, the spline is closed, and endcond is ignored.</p>
 <dt id="curve.vectorPairAngle">
 <tt class="descclassname">curve.</tt><tt class="descname">vectorPairAngle</tt><big>(</big><em>v1</em>, <em>v2</em><big>)</big><a class="headerlink" href="#curve.vectorPairAngle" title="Permalink to this definition">¶</a></dt>
 <dd>Return the angle between the vectors v1 and v2.</dd></dl>
+
+<dl class="function">
+<dt id="curve.convertFormexToCurve">
+<tt class="descclassname">curve.</tt><tt class="descname">convertFormexToCurve</tt><big>(</big><em>closed=False</em><big>)</big><a class="headerlink" href="#curve.convertFormexToCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Formex to a Curve.</p>
+<p>The following Formices can be converted to a Curve:
+- plex 2 : to PolyLine
+- plex 3 : to QuadBezierSpline
+- plex 4 : to BezierSpline</p>
+</dd></dl>
 
 </blockquote>
 </div>

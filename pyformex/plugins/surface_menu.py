@@ -28,7 +28,7 @@ Surface operations plugin menu for pyFormex.
 """
 
 import pyformex as GD
-from gui import actors,colors,decors,widgets
+from gui import actors,colors,decors,widgets,menu
 from gui.colorscale import ColorScale,ColorLegend
 from gui.draw import *
 from plugins.surface import *
@@ -679,7 +679,7 @@ def clip_surface():
     if not check_surface():
         return
     itemlist = [['axis',0],['begin',0.0],['end',1.0],['nodes','any']]
-    res = widgets.InputDialog(itemlist,'Clipping Parameters').getResult()
+    res = askItems(itemlist,caption='Clipping Parameters')
     if res:
         updateGUI()
         nodes,elems = PF['old_surface'] = PF['surface']
@@ -1300,7 +1300,7 @@ def create_menu():
 #        ("&Export volume to Abaqus",export_volume),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='Help')
+    return menu.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='Help')
 
     
 def show_menu():

@@ -108,6 +108,8 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     independent from the drawing mode.
     """
     GD.debug("drawPolygons")
+    #print normals
+    #print mode
     if e is None:
         nelems = x.shape[0]
     else:
@@ -115,6 +117,7 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
     n = None
     if mode.startswith('smooth') and objtype==-1:
         if normals is None:
+            GD.debug("Computing normals")
             if mode == 'smooth_avg' and e is not None:
                 n = interpolateNormals(x,e,treshold=GD.cfg['render/avgnormaltreshold'])
                 mode = 'smooth'
@@ -152,12 +155,14 @@ def drawPolygons(x,e,mode,color=None,alpha=1.0,normals=None,objtype=-1):
 
 def drawPolyLines(x,e,color):
     """Draw the circumference of polygons."""
+    GD.debug("drawPolyLines")
     drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0,objtype=GL.GL_LINE_LOOP)
 
 
 def drawLines(x,e,color):
     """Draw straight line segments."""
-    drawPolygons(x,e,mode='wireframe',color=color,alpha=1.0)
+    GD.debug("drawLines")
+    drawPolygons(x,e,mode=GD.canvas.rendermode,color=color,alpha=1.0)
 
 
 def color_multiplex(color,nparts):

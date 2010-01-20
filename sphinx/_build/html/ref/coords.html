@@ -549,6 +549,18 @@ the coordinates from. It should have the same dimensions.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="coords.Coords.projectOnPlane">
+<tt class="descname">projectOnPlane</tt><big>(</big><em>P</em>, <em>n</em><big>)</big><a class="headerlink" href="#coords.Coords.projectOnPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> on the plane(s) (P,n)</p>
+<p>P and n define a plane or a set of planes by a point P and the normal
+n. If a set of planes, there should be exactly ncoords planes.
+Each of P and n thus can have shape (ncoords,3) or (1,3) or (3,).</p>
+<p>Return a Coords with same shape as original, with the base points
+of the lines through all the points of self, perpendicular to the
+plane(s) (P,n), i.e. the projection of the points on the plane(s).</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="coords.Coords.projectOnSphere">
 <tt class="descname">projectOnSphere</tt><big>(</big><em>radius=1.</em>, <em>center=</em><span class="optional">[</span>, <em>0.</em>, <em>0.</em>, <em>0.</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#coords.Coords.projectOnSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Project <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> on a sphere.</p>
@@ -600,6 +612,18 @@ testing adjacent boxes is rather high, and the probability of separating
 two close nodes with the computed box limits is very small. Nevertheless
 we intend to access this problem by repeating the procedure with the
 boxes shifted in space.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="coords.Coords.append">
+<tt class="descname">append</tt><big>(</big><em>coords</em><big>)</big><a class="headerlink" href="#coords.Coords.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append coords to a Coords object.</p>
+<p>The appended coords should have matching dimensions in all
+but the first axis.</p>
+<p>Returns the concatenated Coords object, without changing the current.</p>
+<p>This is comparable to the <a href="#id1"><span class="problematic" id="id2">:numpy:`append`</span></a> function, but the result
+is a <a title="coords.Coords" class="reference internal" href="#coords.Coords"><tt class="xref docutils literal"><span class="pre">Coords</span></tt></a> object, the default axis is the first one
+instead of the last, and it is a method rather than a function.</p>
 </dd></dl>
 
 <dl class="classmethod">

@@ -116,6 +116,12 @@ def polygonNormals(x):
     The return value is an (nel,nplex,3) array with the unit normals on the
     two edges ending in each point.
     """
+    if x.shape[1] < 3:
+        #raise ValueError,"Cannot compute normals for plex-2 elements"
+        n = zeros_like(x)
+        n[:,:,2] = -1.
+        return n
+    
     ni = arange(x.shape[1])
     nj = roll(ni,1)
     nk = roll(ni,-1)
@@ -1914,15 +1920,15 @@ class Formex(object):
 
 
     def cutWithPlane(self,p,n,side='',atol=None,newprops=None):
-        """Returns all elements of the Formex cut at plane(s).
+        """Cut a Formex with the plane(s) (p,n).
 
-        This method currently only works for plexitude 2 or 3!
+        ..warning :: This method currently only works for plexitude 2 or 3!
         
-        F is a Formex of plexitude 2 or 3.
-        p,n are a point and normal vector defining the cutting plane.
-        In case of plexitude 3, p and n can be sequences of points and vector,
-        allowing to cut with multiple planes.
-        Both p and n have shape (3) or (npoints,3).
+        - `F`: a Formex of plexitude 2 or 3.
+        - `p`,`n`: a point and normal vector defining the cutting plane.
+          In case of plexitude 3, p and n can be sequences of points and vector,
+          allowing to cut with multiple planes.
+          Both p and n have shape (3) or (npoints,3).
 
         The default return value is a tuple of two Formices of the same
         plexitude as the input: (Fpos,Fneg), where Fpos is the part of the

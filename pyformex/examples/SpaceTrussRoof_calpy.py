@@ -34,7 +34,8 @@ from plugins.properties import *
 # Load the needed calpy modules    
 from plugins import calpy_itf
 calpy_itf.check()
-
+import calpy
+calpy.options.optimize = False
 from calpy.fe_util import *
 from calpy.truss3d import *
 

@@ -105,7 +105,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    return widgets.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
 
 def show_menu():
     """Show the menu."""

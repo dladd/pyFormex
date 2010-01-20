@@ -537,6 +537,15 @@ non-Linux platforms.  There has already been a successful attempt with
 a rather old version, but with recent versions nobody has (yet) taken
 the bother to try it.
 
+.. note:: **pyFormex on Windows** 
+   Lately there have been some successful attempts to get the basic 
+   functionality of pyFormex running on Windows. Thomas Praet has 
+   compiled `this document
+   <ftp://ftp.berlios.de/pub/pyformex/Install_pyFormex_on_Windows.html>`_ on how to proceed.
+   And a thread for discussing the installation on Windows has been
+   opened in the `forums. <http://developer.berlios.de/forum/forum.php?thread_id=37162&forum_id=8348>`_
+ 
+
 There may be a few things that have to be changed to successfully run
 pyFormex on other platforms (especially on Windows), but it should all
 be rather obvious.  If you have some programming experience on your

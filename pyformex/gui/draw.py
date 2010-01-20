@@ -1018,12 +1018,20 @@ def updateGUI():
 
 
 def flyAlong(path='flypath',upvector=[0.,1.,0.],sleeptime=None):
-    """Fly through the scene along the flypath."""
+    """Fly through the current scene along the flypath.
+
+    - `flypath': a PolyLine or plex-2 Formex.
+    """
+    from plugins.curve import PolyLine
+    
     if type(path) is str:
         path = named(path)
     if not path:
         warning("You have to define a flypath first!")
         return
+
+    if isinstance(path,PolyLine):
+        path = path.toFormex() 
     if path.nplex() != 2:
         warning("The flypath should be a plex-2 Formex!")
         

@@ -27,5 +27,7 @@
 This file is mainly here to flag the gui directory as a Python package.
 Global variables for the gui package may be defined here.
 """
+from PyQt4 import QtCore, QtGui
+from menu import Menu
 
 # End

@@ -30,7 +30,7 @@ techniques = ['dialog', 'colors','isopar']
 
 """
 
-from plugins.isopar import *
+from plugins import isopar
 import simple
 import elements
 
@@ -109,7 +109,7 @@ if sdim < tdim:
 x1 = x1.scale(sz)
 x2 = x2.scale(sz)
 
-G=isopar(F,eltype,x2.points(),x1.points())
+G=F.isopar(eltype,x2.points(),x1.points())
 G.setProp(1)
 
 message('This is the transformed Formex')
