@@ -304,6 +304,11 @@ def savePreferences():
     except:
         res = "Could not save"
     GD.debug("%s preferences to file %s" % (res,f))
+
+
+def coordsbox():
+    """Toggle the coordinate display box onor off"""
+    GD.GUI.toggleCoordsTracker()
     
 
 MenuData = [
@@ -337,6 +342,7 @@ MenuData = [
 ##         (_('&Edit Preferences'),editPreferences),
         (_('&Save Preferences'),savePreferences),
         (_('Toggle Timeout'),draw.timeout),
+        (_('Toggle CoordsBox'),coordsbox),
         ]),
     ]
 

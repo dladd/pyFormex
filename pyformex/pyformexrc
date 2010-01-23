@@ -86,6 +86,7 @@ viewbar = True       # add a Views toolbar
 examplesmenu = True  # add examples menu
 timeoutbutton = False # add the timeout button to toolbar
 lightbutton = True   # add the light button to toolbar
+coordsbox = False    # add the coords display widget to toolbar
 
 defviews = [('front','view-xr-yu'),('back','view-xl-yu'),\
             ('right','view-zl-yu'),('left','view-zr-yu'),\

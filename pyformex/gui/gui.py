@@ -308,21 +308,25 @@ class GUI(QtGui.QMainWindow):
 
     def addCoordsTracker(self):
         self.coordsbox = widgets.CoordsBox()
-        GD.GUI.statusbar.addPermanentWidget(c)
+        self.statusbar.addPermanentWidget(self.coordsbox)
+        #self.coordsbox.hide()
 
+        
+    def toggleCoordsTracker(self,onoff=None):
         def track(x,y,z=0.):
             X,Y,Z = GD.canvas.unProject(x,y,z)
             GD.GUI.coordsbox.setValues([X,Y,Z])
 
+        if onoff is None:
+            onoff = self.coordsbox.isHidden()
+        if onoff:
+            func = track
+        else:
+            func = None
         for vp in self.viewports.all:
-            vp.trackfunc = track
-
-
-    def removeCoordsTracker(self):
-        self.coordsbox.close()
-        for vp in self.viewports.all:
-            vp.trackfunc = None
-
+            vp.trackfunc = func
+        self.coordsbox.setVisible(onoff)
+            
 
     def setStyle(self,style):
         """Set the main application style."""
@@ -658,6 +662,8 @@ and you are welcome to redistribute it under the conditions of the
 GNU General Public License, version 3 or later.
 See Help->License or the file COPYING for details.
 """ % GD.Version)
+    GD.GUI.addCoordsTracker()
+    GD.GUI.toggleCoordsTracker(GD.cfg.get('gui/coordsbox',False))
     GD.GUI.show()
     GD.debug("Using window name %s" % GD.GUI.windowTitle())
     
@@ -690,8 +696,8 @@ See Help->License or the file COPYING for details.
         plugins.load(p)
 
     GD.GUI.setBusy(False)
-    GD.GUI.update()
     GD.GUI.addStatusBarButtons()
+    GD.GUI.update()
 
     # remove the splash window
     if splash is not None:
