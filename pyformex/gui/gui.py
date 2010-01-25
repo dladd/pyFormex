@@ -300,21 +300,32 @@ class GUI(QtGui.QMainWindow):
 
     def addStatusBarButtons(self):
         sbh = self.statusbar.height()
-        self.curproj.setFixedHeight(32)
-        self.curfile.setFixedHeight(32)
+        #self.curproj.setFixedHeight(32)
+        #self.curfile.setFixedHeight(32)
         self.statusbar.addWidget(self.curproj)
         self.statusbar.addWidget(self.curfile)
+
+
+    def addInputBox(self):
+        self.input = widgets.InputBox()
+        self.statusbar.addWidget(self.input)
+
+
+    def toggleInputBox(self,onoff=None):
+        if onoff is None:
+            onoff = self.input.isHidden()
+        self.input.setVisible(onoff)
 
 
     def addCoordsTracker(self):
         self.coordsbox = widgets.CoordsBox()
         self.statusbar.addPermanentWidget(self.coordsbox)
-        #self.coordsbox.hide()
 
         
     def toggleCoordsTracker(self,onoff=None):
-        def track(x,y,z=0.):
+        def track(x,y,z):
             X,Y,Z = GD.canvas.unProject(x,y,z)
+            print "%s --> %s" % ((x,y,z),(X,Y,Z))
             GD.GUI.coordsbox.setValues([X,Y,Z])
 
         if onoff is None:
@@ -662,6 +673,8 @@ and you are welcome to redistribute it under the conditions of the
 GNU General Public License, version 3 or later.
 See Help->License or the file COPYING for details.
 """ % GD.Version)
+    GD.GUI.addInputBox()
+    GD.GUI.toggleInputBox(False)
     GD.GUI.addCoordsTracker()
     GD.GUI.toggleCoordsTracker(GD.cfg.get('gui/coordsbox',False))
     GD.GUI.show()

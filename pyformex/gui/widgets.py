@@ -604,6 +604,9 @@ class InputItem(QtGui.QHBoxLayout):
             self.label = QtGui.QLabel(text)
             self.addWidget(self.label)
 
+        if 'tooltip' in kargs:
+            self.label.setToolTip(kargs['tooltip'])
+
         if 'buttons' in kargs and 'parent' in kargs:
             self.buttons = dialogButtons(kargs['parent'],kargs['buttons'])
             self.addLayout(self.buttons)
@@ -974,6 +977,53 @@ class InputFloat(InputItem):
         if kargs.has_key('dec'):
             self.validator.setDecimals(int(kargs['dec']))
         self.input.setValidator(self.validator)
+        self.insertWidget(1,self.input)
+
+    def show(self):
+        """Select all text on first display.""" 
+        InputItem.show(self)
+        self.input.selectAll()
+
+    def value(self):
+        """Return the widget's value."""
+        return float(self.input.text())
+
+    def setValue(self,val):
+        """Change the widget's value."""
+        val = float(val)
+        self.input.setText(str(val))
+
+
+class InputFloatTable(InputItem):
+    """A table of floats input item."""
+    
+    def __init__(self,name,value,*args,**kargs):
+        """Creates a new float table input field."""
+        InputItem.__init__(self,name,*args,**kargs)
+        #self.input = QtGui.QLineEdit(str(value))
+        #self.validator = QtGui.QDoubleValidator(self)
+        ncols = kargs.get('ncols',1)
+        nrows = kargs.get('nrows',1)
+        headers = kargs.get('headers',None)
+        if headers is not None and len(headers) < ncols:
+            headers.extend(['']*(ncols - len(headers)))
+        labels = kargs.get('labels',None)
+        if labels is not None and len(labels) < ncols:
+            labels.extend(['']*(ncols - len(labels)))
+        ## if kargs.has_key('min'):
+        ##     self.validator.setBottom(float(kargs['min']))
+        ## if kargs.has_key('max'):
+        ##     self.validator.setTop(float(kargs['max']))
+        ## if kargs.has_key('dec'):
+        ##     self.validator.setDecimals(int(kargs['dec']))
+        #self.input.setValidator(self.validator)
+        table = QtGui.QTableView()
+        tm = TableModel(data,chead,rhead,None)
+        table.setModel(tm)
+        table.horizontalHeader().setVisible(chead is not None)
+        table.verticalHeader().setVisible(rhead is not None)
+        table.resizeColumnsToContents()
+        #self.input = TableWidget(data=value,
         self.insertWidget(1,self.input)
 
     def show(self):
@@ -1592,13 +1642,45 @@ class TableModel(QtCore.QAbstractTableModel):
         return True
 
 
-class Table(QtGui.QDialog):
+class Table(QtGui.QWidget):
+    """A widget to show/edit a two-dimensional array of items.
+
+    - `data`: a 2-D array of items, with `nrow` rows and `ncol` columns.
+    - `chead`: an optional list of `ncol` column headers.
+    - `rhead`: an optional list of `nrow` row headers.
+    - `label`: an optional label to be displayed in the upper left corner
+      if both `chead` and `rhead` are specified, otherwise ignored.
+    """
+    
+    def __init__(self,data,chead=None,rhead=None,label=None,parent=None):
+        """Initialize the Table widget."""
+       #if parent is None:
+       #     parent = GD.GUI
+        QtGui.QWidget.__init__(self,parent)
+        self.setWindowTitle("MAGIC")
+        form = QtGui.QVBoxLayout()
+        table = QtGui.QTableView()
+        tm = TableModel(data,chead,rhead,None)
+        table.setModel(tm)
+        table.horizontalHeader().setVisible(chead is not None)
+        table.verticalHeader().setVisible(rhead is not None)
+        table.resizeColumnsToContents()
+        if label is not None:
+            table.setCornerButtonEnabled
+            table.cornerWidget().setText(label)
+        form.addWidget(table)
+        self.setLayout(form)
+        self.table = table
+                       
+
+
+class TableDialog(QtGui.QDialog):
     """A dialog widget to show/edit a two-dimensional array of items."""
     
     def __init__(self,data,chead=None,rhead=None,caption=None,parent=None,actions=[('OK',)],default='OK'):
         """Create the Table dialog.
         
-        data is a 2-D array of items, mith nrow rows and ncol columns.
+        data is a 2-D array of items, with nrow rows and ncol columns.
         chead is an optional list of ncol column headers.
         rhead is an optional list of nrow row headers.
         """
@@ -1624,10 +1706,10 @@ class Table(QtGui.QDialog):
         self.setLayout(form)
         #self.setMinimumSize(1000,400)
         self.table = table
-        self.show()
+        #self.show()
 
 
-class TableDialog(QtGui.QDialog):
+class OldTableDialog(QtGui.QDialog):
     """A dialog widget to show two-dimensional arrays of items."""
     def __init__(self,items,caption=None,parent=None,tab=False):
         """Create the Table dialog.
@@ -1818,6 +1900,19 @@ class TextBox(QtGui.QDialog):
         return self.exec_() == QtGui.QDialog.Accepted
 
 
+############################# Input box ###########################
+
+class InputBox(QtGui.QWidget):
+    """A widget accepting line input.
+
+    """
+    def __init__(self,*args):
+        QtGui.QWidget.__init__(self,*args)
+        layout = InputString('Input:','')
+        self.setLayout(layout)
+
+
+
 ############################# Button box ###########################
 
 class ButtonBox(QtGui.QWidget):
@@ -1883,25 +1978,6 @@ class ComboBox(QtGui.QWidget):
 
 ############################# Coords box ###########################
 
-class CoordsBox(QtGui.QWidget):
-    """A widget displaying the coordinates of a point.
-
-    """
-    def __init__(self,ndim=3,*args):
-        QtGui.QWidget.__init__(self,*args)
-        layout = QtGui.QHBoxLayout(self)
-        values = []
-        for name in ['x','y','z'][:ndim]:
-            lbl = QtGui.QLabel(name)
-            val = QtGui.Qlineedit()
-            layout.adWidget(lbl)
-            layout.addWidget(val)
-            values.append(val)
-        self.setLayout(layout)
-
-    def setValues(values):
-        for value,val in zip(self.values,values):
-            value.setText(str(val))
 
 class CoordsBox(QtGui.QWidget):
     """A widget displaying the coordinates of a point.
@@ -1925,4 +2001,4 @@ class CoordsBox(QtGui.QWidget):
             value.setText(str(val))
 
 
-#End
+# End

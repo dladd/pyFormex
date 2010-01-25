@@ -92,7 +92,7 @@ x1,y1 = 1.,1.
 nx,ny = 4,4
 eltype = 'quad'
 
-def createPart(res=None):
+def createRectPart(res=None):
     """Create a rectangular domain from user input"""
     global x0,y0,x1,y1
     if model is not None:
@@ -101,7 +101,34 @@ def createPart(res=None):
         else:
             return
     if res is None:
-        res = askItems([('x0',x0),('y0',y0),
+        res = askItems([('x0',x0,{'tooltip':'The x-value of one of the corners'}),
+                        ('y0',y0),
+                        ('x1',x1),('y1',y1),
+                        ('nx',nx),('ny',ny),
+                        ('eltype',eltype,'select',['quad','tri-u','tri-d']),
+                        ])
+    if res:
+        globals().update(res)
+        if x0 > x1:
+            x0,x1 = x1,x0
+        if y0 > y1:
+            y0,y1 = y1,y0
+        diag = {'quad':'', 'tri-u':'u', 'tri-d':'d'}[eltype]
+        F = rectangle(nx,ny,x1-x0,y1-y0,diag=diag).trl([x0,y0,0])
+        addPart(F)
+#        drawParts()
+
+def createQuadPart(res=None):
+    """Create a quadrilateral domain from user input"""
+    global x0,y0,x1,y1,x2,y2,x3,y3
+    if model is not None:
+        if ask('You have already merged the parts! I can not add new parts anymore.\nYou should first delete everything and recreate the parts.',['Delete','Cancel']) == 'Delete':
+            deleteAll()
+        else:
+            return
+    if res is None:
+        res = askItems([('x0',x0,{'tooltip':'The x-value of one of the corners'}),
+                        ('y0',y0),
                         ('x1',x1),('y1',y1),
                         ('nx',nx),('ny',ny),
                         ('eltype',eltype,'select',['quad','tri-u','tri-d']),
@@ -640,8 +667,8 @@ def runCalpyAnalysis(jobname=None,verbose=False,flavia=False):
 
 def autoRun():
     clear()
-    createPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
-    createPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
+    createRectPart(dict(x0=0.,x1=1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
+    createRectPart(dict(x0=0.,x1=-1.,y0=0.,y1=1.,nx=4,ny=4,eltype='quad'))
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
@@ -654,7 +681,7 @@ def autoConv():
     res = askItems([('nx',1),('ny',1)])
     nx = res['nx']
     ny = res['ny']
-    createPart(dict(x0=0.,x1=10.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
+    createRectPart(dict(x0=0.,x1=10.,y0=0.,y1=1.,nx=nx,ny=ny,eltype='quad'))
     createModel()
     nodenrs = arange(model.coords.shape[0])
     PDB.elemProp(eltype='CPS4',section=ElemSection(section=section))
@@ -676,7 +703,8 @@ def create_menu():
     """Create the FeEx menu."""
     MenuData = [
         ("&Delete All",deleteAll),
-        ("&Create Part",createPart),
+        ("&Create Rectangular Part",createRectPart),
+        ("&Create QuadrilateralPart",createQuadPart),
         ("&Show All",drawParts),
         ("---",None),
         ("&Merge Parts into Model",createModel),

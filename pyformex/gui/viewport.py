@@ -372,7 +372,8 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             self.makeCurrent()
             self.update()
             if self.trackfunc:
-                self.trackfunc(x,y)
+                self.zplane = GD.canvas.project(GD.canvas.camera.center)[2]
+                self.trackfunc(x,y,self.zplane)
             self.begin_2D_drawing()
             GL.glEnable(GL.GL_COLOR_LOGIC_OP)
             # An alternative is GL_XOR #
@@ -383,7 +384,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
 
         elif action == MOVE:
             if self.trackfunc:
-                self.trackfunc(x,y)
+                self.trackfunc(x,y,self.zplane)
             # Remove old rectangle
             self.swapBuffers()
             self.draw_state_rect(*self.state)
@@ -665,7 +666,7 @@ class QtCanvas(QtOpenGL.QGLWidget,canvas.Canvas):
             if GD.app.hasPendingEvents():
                 return
             if self.trackfunc:
-                self.trackfunc(x,y)
+                self.trackfunc(x,y,self.zplane)
                 #GD.app.processEvents()
             if self.previewfunc:
                 self.swapBuffers()

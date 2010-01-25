@@ -234,7 +234,7 @@ def setScriptDirs():
     global w
     from scriptMenu import reloadScriptMenu
     scr = GD.cfg['scriptdirs']
-    w = widgets.Table(scr,chead=['Label','Path'],actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('OK',)])
+    w = widgets.TableDialog(scr,chead=['Label','Path'],actions=[('New',insertRow),('Edit',editRow),('Delete',removeRow),('Move Up',moveUp),('Reload',reloadScriptMenu),('OK',)])
     w.show()
 
 def insertRow():

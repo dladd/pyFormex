@@ -26,11 +26,14 @@ def set_preview(onoff=True):
     _preview = onoff
     
 
-def toggle_preview():
+def toggle_preview(onoff=None):
     global _preview
-    res = askItems([('_preview',_preview,{'text':'Preview mode'})])
-    if res:
-        globals().update(res)
+    if onoff is None:
+        try:
+            onoff = GD.GUI.menu.item(_menu).item('preview').isChecked()
+        except:
+            onoff = not _preview
+    _preview = onoff
 
 
 def draw2D(mode='point',npoints=-1,zplane=0.,coords=None,func=None):
@@ -85,16 +88,13 @@ def highlightDrawing(points,mode):
     pts is an array of points.
     """
     GD.canvas.removeHighlights()
-    #draw(points,highlight=True,flat=True)
+    print points[-1]
     PA = actors.FormexActor(Formex(points))
     PA.specular=0.0
     GD.canvas.addHighlight(PA)
     obj = drawnObject(points,mode=mode)
     if obj is not None:
-        #draw(obj,color=GD.canvas.settings.slcolor,highlight=True,flat=True)
-        #print type(obj)
         if hasattr(obj,'toFormex'):
-            #print "toFormex"
             F = obj.toFormex()
         else:
             F = Formex(obj)
@@ -284,7 +284,7 @@ def create_menu():
         ("&Set grid",create_grid),
         ("&Remove grid",remove_grid),
         ("---",None),
-        ("&Toggle Preview",toggle_preview),
+        ("&Toggle Preview",toggle_preview,{'checkable':True}),
         ("---",None),
         ("&Draw Points",draw_points),
         ("&Draw Polyline",draw_polyline),
