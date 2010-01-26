@@ -671,7 +671,7 @@ def saneColorSet(color=None,colormap=None,shape=(1,)):
         if color.dtype.kind == 'i':
             ncolors = color.max()+1
             if colormap is None:
-                colormap = GD.canvas.settings.propcolors
+                colormap = GD.canvas.settings.colormap
             colormap = saneColor(colormap)
             colormap = saneColorArray(colormap,(ncolors,))
         else:

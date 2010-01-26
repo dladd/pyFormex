@@ -273,23 +273,24 @@ def run(argv=[]):
         print("\nInvalid options: --nodefaultconfig but no --config option\nDo pyformex --help for help on options.\n")
         sys.exit()
 
-
-    if pyformex.options.whereami:
-        print("Script started from %s" % pyformex.scriptdir)
-        print("I found pyFormex in %s " %  pyformexdir)
-        print("Current Python sys.path: %s" % sys.path)
-        sys.exit()
-        
+    pyformex.debug("Options: %s" % pyformex.options)
+   
     if pyformex.options.remove:
         remove_pyFormex(pyformexdir,pyformex.scriptdir)
         
-    if pyformex.options.detect:
+    if pyformex.options.whereami or pyformex.options.debug :
+        print("Script started from %s" % pyformex.scriptdir)
+        print("I found pyFormex in %s " %  pyformexdir)
+        print("Current Python sys.path: %s" % sys.path)
+
+    if pyformex.options.detect or pyformex.options.debug :
         print("Detecting all installed helper software")
         utils.checkExternal()
         print(utils.reportDetected())
+
+    if pyformex.options.whereami or pyformex.options.detect:
         sys.exit()
-        
-    pyformex.debug("Options: %s" % pyformex.options)
+
 
     ########### Read the config files  ####################
 

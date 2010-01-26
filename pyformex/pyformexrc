@@ -47,7 +47,7 @@ scripttemplate = os.path.join(pyformexdir,'template.py')
 
 # scriptdirs is a list of (title,dir) tuples
 # for 'examples', the directory will be filled in automagically
-scriptdirs = [ ('Examples','/home/pmortier/pyformex/pyformex/examples'),('FEA','/home/pmortier/pyformex/pyformex/fea'),('stent','/home/pmortier/pyformex/pyformex/stent'),('varia','/home/pmortier/pyformex/pyformex/varia'),('studie_Denis','/home/pmortier/pyformex/pyformex/studie_Denis') ]
+scriptdirs = [ ('Examples','') ]
 history = []
 
 # extra paths to append tot sys.path
@@ -56,14 +56,12 @@ syspath = []
 
 # commands
 ### THESE MAY BE CHANGED BY THE INSTALLATION PROCEDURE
-editor = os.environ.get('VISUAL','eric')
+editor = os.environ.get('VISUAL','')
 viewer = 'firefox'   # html viewer
 browser = 'firefox'  # web browser
 
 autoglobals = True
 uselib = True
-
-
 
 
 [gui]
@@ -102,19 +100,20 @@ dynazoom = ['area','dolly']     # preferred zoom technique ('area', 'dolly', 'le
 wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 
 plot2d = 'gnuplot'
-easter_egg = ('#/s/i/n yomx-gifo yomxeape.iaipr \nrmpoetipr rjc\nieit()fclrbu)go(Pat\'FleFle\n  rjc(spt.onG.f[dtdr]\'lpo5pf)cet=as)Pla(\nuv  [bip-\'\nrwcreclrpfre_iklnwdh5\nfak"hsi h yomxLsrmrlaennlc eoet olne hwti tru cenn,hie=\'eoe,Ke\')= Rmv\'\n  Dcg\'u/atreg]=Nn\n  ', '!urbnevpfre -u\nrmpfre.xmlsLm mot*fo rjc motPoetlnwdh2\ngoo(le\nrw\'ln1,as,as)P=Poeto.ahji(Dcg\'aai\',bip-.y\',raeFle\n.od)cre=P\'lpo5]da(uv,oo=yomxpn,ieit=)i s(Ti stepFre utu ees\\\\CikRmv on ogrso hssatpsre\\"cocs[Rmv\'\'ep] =\'eoe:  G.f[giese_g\'  oe  \n')
+easter_egg = ()
 
 [input]
 timeout = -1         # never timeout
 
+# Default canvas settings
 [canvas]
 bgcolor = 'lightgrey'
 bgcolor2 = None
 fgcolor = 'black'
-slcolor = 'red'
-linewidth = 1
-propcolors = ['black','red','green','blue','cyan','magenta','yellow','white'] 
-                 # a default color set for properties
+slcolor = 'magenta'
+linewidth = 1.0
+colormap = ['black','red','green','blue','cyan','magenta','yellow','white'] 
+
 
 [mark]
 avgnormalsize = '_auto_'

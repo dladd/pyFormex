@@ -30,6 +30,7 @@ from numpy import *
 from OpenGL import GL,GLU
 
 from formex import length
+from drawable import saneColor
 import colors
 import camera
 import actors
@@ -134,10 +135,9 @@ class CanvasSettings(object):
         bgcolor = colors.mediumgrey,
         bgcolor2 = None,
         fgcolor = colors.black,
-        slcolor = colors.red,     # color for selected items
-        transparency = 1.0,       # opaque
-        # colormap for mapping property values
-        propcolors = [
+        slcolor = colors.magenta,     # highlight color
+        transparency = 0.5,           # half transparent
+        colormap = [
             colors.black, colors.red, colors.green, colors.blue,
             colors.cyan, colors.magenta, colors.yellow, colors.white
             ],
@@ -155,10 +155,14 @@ class CanvasSettings(object):
                     ok[k] = None
                 else:
                     ok[k] = colors.GLColor(v)
-            elif k == 'propcolors':
+            elif k == 'colormap':
                 ok[k] = map(colors.GLColor,v)
             elif k == 'linewidth':
                 ok[k] = float(v)
+            elif k == 'transparency':
+                ok[k] = max(min(float(v),1.0),0.0)
+            elif k == 'colormap':
+                ok[k] = saneColor(colormap)
         return ok
         
     def __init__(self,dict={}):
