@@ -366,7 +366,7 @@ def run(argv=[]):
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pyformex.options.gui:
-        from pyformex.gui import gui
+        from gui import gui
         pyformex.debug("GUI version")
         res = gui.startGUI(args)
         if res != 0:
