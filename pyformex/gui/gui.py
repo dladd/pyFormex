@@ -42,6 +42,7 @@ import fileMenu
 import scriptMenu
 import prefMenu
 import toolbar
+import canvas
 import viewport
 
 import script
@@ -175,8 +176,10 @@ class GUI(QtGui.QMainWindow):
 
         
         # Create an OpenGL canvas with a nice frame around it
+        GD.debug("Setting canvas defaults:\n%s" % dict)
+        canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(GD.cfg['canvas']))
+
         self.viewports = viewport.MultiCanvas()
-        self.viewports.setDefaults(GD.cfg['canvas'])
         self.central.setLayout(self.viewports)
 
         # Create the message board

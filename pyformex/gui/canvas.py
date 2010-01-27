@@ -169,6 +169,10 @@ class CanvasSettings(object):
         """Create a new set of CanvasSettings, possibly changing defaults."""
         self.reset(dict)
 
+
+    def items(self):
+        return self.__dict__.items()
+    
     def reset(self,dict={}):
         """Reset to defaults
 
@@ -239,7 +243,7 @@ class Canvas(object):
         self.resetLighting()
         self.resetLights()
         self.setBbox()
-        self.settings = CanvasSettings(GD.cfg['canvas'])
+        self.settings = CanvasSettings()
         self.mode2D = False
         self.rendermode = GD.cfg['render/mode']
         self.polygonfill = False

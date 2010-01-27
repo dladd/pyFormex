@@ -1250,7 +1250,6 @@ class MultiCanvas(FramedGridLayout):
     def __init__(self,parent=None):
         """Initialize the multicanvas."""
         FramedGridLayout.__init__(self)
-#        QtGui.QGridLayout.__init__(self)
         self.all = []
         self.active = []
         self.current = None
@@ -1258,11 +1257,6 @@ class MultiCanvas(FramedGridLayout):
         self.rowwise = True
         self.parent = parent
 
-
-    def setDefaults(self,dict):
-        """Update the default settings of the canvas class."""
-        GD.debug("Setting canvas defaults:\n%s" % dict)
-        canvas.CanvasSettings.default.update(canvas.CanvasSettings.checkDict(dict))
 
     def newView(self,shared=None):
         "Create a new viewport"
@@ -1273,6 +1267,9 @@ class MultiCanvas(FramedGridLayout):
     def addView(self):
         """Add a new viewport to the widget"""
         canv = self.newView()
+        if len(self.all) > 0:
+            # copy default settings from previous
+            canv.resetDefaults(self.all[-1].settings)
         self.all.append(canv)
         self.active.append(canv)
         self.showWidget(canv)

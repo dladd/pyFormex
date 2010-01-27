@@ -129,6 +129,7 @@ class Camera:
 
     def __init__(self,center=[0.,0.,0.], long=0., lat=0., twist=0., dist=1.):
         """Create a new camera at position (0,0,0) looking along the -z axis"""
+        self.locked = False
         self.setCenter(*center)
         self.setRotation(long,lat,twist)
         self.setDist(dist)
@@ -152,11 +153,16 @@ class Camera:
         """Return the camera distance."""
         return self.dist
 
+    def lock(self,onoff=True):
+        self.locked = onoff
+        print "Camera locked is %s" % self.locked
+
 
     def setCenter(self,x,y,z):
         """Set the center of the camera in global cartesian coordinates."""
-        self.ctr = [x,y,z]
-        self.viewChanged = True
+        if not self.locked:
+            self.ctr = [x,y,z]
+            self.viewChanged = True
 
 
     def setAngles(self,angles):
@@ -167,28 +173,32 @@ class Camera:
             - a named view corresponding to angles in view_angles
             - None
         """
-        if type(angles) is str:
-            angles = view_angles.get(angles)
-        if angles is None:
-            return
-        self.setRotation(*angles)
+        if not self.locked:
+            if type(angles) is str:
+                angles = view_angles.get(angles)
+            if angles is None:
+                return
+            self.setRotation(*angles)
             
 
     def setRotation(self,long,lat,twist=0):
         """Set the rotation matrix of the camera from three angles."""
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        GL.glRotatef(-twist % 360, 0.0, 0.0, 1.0)
-        GL.glRotatef(lat % 360, 1.0, 0.0, 0.0)
-        GL.glRotatef(-long % 360, 0.0, 1.0, 0.0)
-        self.rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-        self.viewChanged = True
+        if not self.locked:
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glLoadIdentity()
+            GL.glRotatef(-twist % 360, 0.0, 0.0, 1.0)
+            GL.glRotatef(lat % 360, 1.0, 0.0, 0.0)
+            GL.glRotatef(-long % 360, 0.0, 1.0, 0.0)
+            self.rot = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+            self.viewChanged = True
+
 
     def setDist(self,dist):
         """Set the distance."""
-        if dist > 0.0 and dist != inf:
-            self.dist = dist
-            self.viewChanged = True
+        if not self.locked:
+            if dist > 0.0 and dist != inf:
+                self.dist = dist
+                self.viewChanged = True
 
 
     def report(self):
@@ -215,9 +225,11 @@ class Camera:
         The front and back clipping planes may need adjustment after
         a dolly operation.
         """
-        self.setDist(self.getDist() * val)
-        #print("DIST %s" % self.dist)
-        self.viewChanged = True
+        if not self.locked:
+            self.setDist(self.getDist() * val)
+            #print("DIST %s" % self.dist)
+            self.viewChanged = True
+
         
     def pan(self,val,axis=0):
         """Rotate the camera around axis through its eye. 
@@ -229,14 +241,16 @@ class Camera:
         alias tilt is created.
         For axis = 2 the operation is equivalent to the rotate operation.
         """
-        if axis==0 or axis ==1:
-            pos = self.getPosition()
-            self.eye[axis] = (self.eye[axis] + val) % 360
-            center = diff(pos,sphericalToCartesian(self.eye))
-            self.setCenter(*center)
-        elif axis==2:
-            self.twist = (self.twist + val) % 360
-        self.viewChanged = True
+        if not self.locked:
+            if axis==0 or axis ==1:
+                pos = self.getPosition()
+                self.eye[axis] = (self.eye[axis] + val) % 360
+                center = diff(pos,sphericalToCartesian(self.eye))
+                self.setCenter(*center)
+            elif axis==2:
+                self.twist = (self.twist + val) % 360
+            self.viewChanged = True
+
 
     def tilt(self,val):
         """Rotate the camera up/down around its own horizontal axis.
@@ -246,8 +260,10 @@ class Camera:
         A positive value tilts the camera up, shifting the scene down.
         The value is specified in degrees.
         """
-        self.pan(val,1)
-        self.viewChanged = True
+        if not self.locked:
+            self.pan(val,1)
+            self.viewChanged = True
+
 
     def move(self,dx,dy,dz):
         """Move the camera over translation (dx,dy,dz) in global coordinates.
@@ -255,8 +271,9 @@ class Camera:
         The center of the camera is moved over the specified translation
         vector. This has the effect of moving the scene in opposite direction.
         """
-        x,y,z = self.ctr
-        self.setCenter(x+dx,y+dy,z+dz)
+        if not self.locked:
+            x,y,z = self.ctr
+            self.setCenter(x+dx,y+dy,z+dz)
 
 ##    def truck(self,dx,dy,dz):
 ##        """Move the camera translation vector in local coordinates.
@@ -284,63 +301,74 @@ class Camera:
         These are the transformations applied on the model space.
         Rotations and translations need be taken negatively.
         """
-        # The operations on the model space
-        # arguments should be taken negative and applied in backwards order
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        #printModelviewMatrix("Identity:\n%s")
-        # translate over camera distance
-        GL.glTranslate(0,0,-self.dist)
-        #printModelviewMatrix("Camera distance:\n%s")
-        # rotate
-        GL.glMultMatrixf(self.rot)
-        #printModelviewMatrix("Rotation:\n%s")
-        # translate to center
-        dx,dy,dz = self.getCenter()
-        GL.glTranslatef(-dx,-dy,-dz)
-        #printModelviewMatrix("Translation:\n%s")
+        if not self.locked:
+            # The operations on the model space
+            # arguments should be taken negative and applied in backwards order
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glLoadIdentity()
+            #printModelviewMatrix("Identity:\n%s")
+            # translate over camera distance
+            GL.glTranslate(0,0,-self.dist)
+            #printModelviewMatrix("Camera distance:\n%s")
+            # rotate
+            GL.glMultMatrixf(self.rot)
+            #printModelviewMatrix("Rotation:\n%s")
+            # translate to center
+            dx,dy,dz = self.getCenter()
+            GL.glTranslatef(-dx,-dy,-dz)
+            #printModelviewMatrix("Translation:\n%s")
 
 
     def lookAt(self,eye,center,up):
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glLoadIdentity()
-        GLU.gluLookAt(*concatenate([eye,center,up]))
-        self.saveMatrix()
+        if not self.locked:
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            GL.glLoadIdentity()
+            GLU.gluLookAt(*concatenate([eye,center,up]))
+            self.saveMatrix()
+
 
     def rotate(self,val,vx,vy,vz):
         """Rotate the camera around current camera axes."""
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        self.saveMatrix()
-        GL.glLoadIdentity()
-        GL.glTranslatef(0,0,-self.dist)
-        GL.glRotatef(val,vx,vy,vz)
-        GL.glMultMatrixf(self.rot)
-        dx,dy,dz = self.getCenter()
-        GL.glTranslatef(-dx,-dy,-dz)
-        self.saveMatrix()
+        if not self.locked:
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            self.saveMatrix()
+            GL.glLoadIdentity()
+            GL.glTranslatef(0,0,-self.dist)
+            GL.glRotatef(val,vx,vy,vz)
+            GL.glMultMatrixf(self.rot)
+            dx,dy,dz = self.getCenter()
+            GL.glTranslatef(-dx,-dy,-dz)
+            self.saveMatrix()
+
 
     def saveMatrix (self):
         """Save the ModelView matrix."""
-        self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
-        self.rot = copy.deepcopy(self.m)
-        self.trl = copy.deepcopy(self.rot[3,0:3])
-        #print("Translation: %s" % self.trl)
-        self.rot[3,0:3] = [0.,0.,0.]
+        if not self.locked:
+            self.m = GL.glGetFloatv(GL.GL_MODELVIEW_MATRIX)
+            self.rot = copy.deepcopy(self.m)
+            self.trl = copy.deepcopy(self.rot[3,0:3])
+            #print("Translation: %s" % self.trl)
+            self.rot[3,0:3] = [0.,0.,0.]
+
 
     def loadMatrix (self):
         """Load the saved ModelView matrix."""
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        if self.viewChanged:
-            self.setMatrix()
-            self.saveMatrix()
-            self.viewChanged = False
-        else:
-            GL.glLoadMatrixf(self.m)
+        if not self.locked:
+            GL.glMatrixMode(GL.GL_MODELVIEW)
+            if self.viewChanged:
+                self.setMatrix()
+                self.saveMatrix()
+                self.viewChanged = False
+            else:
+                GL.glLoadMatrixf(self.m)
+
  
     def translate(self,vx,vy,vz,local=True):
-        if local:
-            vx,vy,vz = self.toWorld([vx,vy,vz,1])
-        self.move(-vx,-vy,-vz)
+        if not self.locked:
+            if local:
+                vx,vy,vz = self.toWorld([vx,vy,vz,1])
+            self.move(-vx,-vy,-vz)
+
       
     def transform(self,v):
         """Transform a vertex using the currently saved Modelview matrix."""
@@ -348,6 +376,7 @@ class Camera:
             v = v + [ 1. ]
         v = multiply([v],self.m)[0]
         return [ a/v[3] for a in v[0:3] ]
+
 
     def toWorld(self,v,trl=False):
         """Transform a vertex from camera to world coordinates.

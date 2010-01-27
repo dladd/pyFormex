@@ -2,9 +2,9 @@
 
 .. include:: links.inc
 
-====================================
-pyFormex User Meeting 9 (2010-01-19)
-====================================
+=====================================
+pyFormex User Meeting 10 (2010-01-19)
+=====================================
 
 
 Place and Date
@@ -39,7 +39,8 @@ Agenda and discussion
 =====================
 
 Documentation
-------------
+-------------
+
 - The examples available in pyFormex should be incorporated in the
   documentation and explained step by step. An automatic generation of 
   a pictured documentation by running all the examples would help.
@@ -48,56 +49,90 @@ Documentation
   needs to be added.
 - To understand a function, the examples containing that functions
   should be selected by keyword.
+- Automated generation of these features may be implemented by
+  specifications in the example's docstring.
 
 
 Draw 2D: interactive drawing
--------------
-- Drawing points, lines, circles and curves is now possible clicking on the screen.
-  These objects become global variables.
-- Displaying the coordinate on the canvas may be useful.
-- Selecting coords and elements of an object by a closed PolyLine need to be included.
-- Currently this is limited to a plane (arbitrarily oriented) but it can be extended
-  to the 3D space by using 2 perpendicular viewports.
+----------------------------
+- The new `draw2d` plugin provides some interactive drawing
+  functionality: points, lines, circles and curves can be drawn by
+  clicking with the mouse. The created objects become global
+  variables.
+- Drawing is done in 2D on an x-y-plane at any z-value.
+- What further functionality should pyFormex provide:
+  
+  - Displaying the coordinate values.
+  - Entering coordinates instead of clicking.
+  - Selecting points of an existing object.
+  - Editing/Deleting points 
+  - Transformation of the drawing plane to any position and orientation
+    in space.
+  - Combining multiple viewports may even allow full 3D interactive
 
 Different menus need integration
-------------
-- Currently, different menus (Formex, Surface, Mesh etc.) do not interact: the 
-   variables are not shared among the menus. This need to be fixed in 
-   order to select an object only once.
+--------------------------------
+- Currently, different plugin menus (Formex, Surface, Mesh etc.) do
+  not interact (well): variables are not shared among the menus and
+  different incompatible techniques are used. This needs to be fixed
+  by creating a single scheme for creating/using/selecting/drawing objects. 
+ 
 
-Model class and Meshes
-------------
-- A new Model class has been chosed to together different instances of the mesh class.
-- In the mesh plugins, some functions have been developed to convert the mesh element type
-  (quad4 to tri3, quad4 to quad8). This functions need to be extended in 3D (eg Hex to Tet).
+FE Models and Meshes
+--------------------
+- The Model class will be changed to use Mesh class objects as its
+  constituant objects.
+- The Mesh plugin provides an efficient and generic machine for mesh
+  conversions. Currently implemented are a whole bunch of 2D element
+  type conversions and subdivisions (e.g. `quad4` to `tri3`, `quad4`
+  to `quad8`). This needs to be extended with 3D element conversions
+  (e.g. `hex8` to `tet4`).
 
-Canvas and drawing
-------------
-- At the moment, Formices are stored as Actors to be drawn. Grouping
-   actors into layers can make the draing more versatile: draw smooth one layer
-   and flat an other one.
+The pyFormex rendering engine
+-----------------------------
+- It is planned to create a layer between the geometry (Formex)
+  objects and their rendering (Actor), to enable advanced and more
+  flexible functionality:
 
-pyFormex and Windows
-------------
-- Thomas Praet is the pioneer of pyFormex on Windows platform. pyFormex on Windows run slower
-   becuase the C libraries are missing and not all its functionalitis are running.
+  - Creating a stronger reference mechanism between actor and
+  - Hide and show objects by groups.
+  - Toggling decorations on and off.
+  - Displaying bitmaps on the canvas.
+  - Faster drawing mode switching.
 
-New Demos: spirals and sweep
-------------
-- A new example has been added, showing the creation of spirals (and helics) and
-   the new sweep function. The sweep function works on any curve.
+pyFormex on Windows
+-------------------
+- Thomas Praet, a pioneer of pyFormex on Windows platform, compiled
+  some instruction of how to get pyFormex running on Windows.. 
+  pyFormex on Windows runs slower because the compiled C-libraries are
+  missing. Also, some of the functionality will not be available. Still, the
+  basic parts are mostly running well. An announcement will be made on
+  the website and a link to the install instructions.
 
-Quadratic Bezier Spline and Fonts
-------------
-- The pyFormex Lustrum (5 th anniversary) has been created using quadratic bezier splines.
-  Quadratic Bezier Splines have been added to the pugins.curves.
-  It can be the best way to generate versatile fonts.
+
+Demos
+-----
+- New examples Spiral and Sweep illustrate the creation of spiral
+  curves and sweeping a cross section along a curve.
+
+- Mesh conversions were demonstrated using the Mesh menu.
+
+- The pyFormex Lustrum (5th anniversary) example presents a '5' shape
+  created with quadratic bezier splines.  Quadratic Bezier Splines have
+  been added to the `curves` plugin. They are often used to represent
+  character outlines in scalable fonts. One day, pyFormex may be able
+  to draw text using any TrueType font available on your computer.
+  And not just the original font, but all kinds of transformations of
+  such fonts.
+
 
 From STL surfaces of a vessel bifurcation to Hex mesh
 ------------
 - pyFormex potentials as mesher have been shown by  Benedict,
   who has taken some meshing tools from Gianluca and incorporated into
   a user-friendly menu. The result is terrific and will be partially distributed.
+  - interactive drawing tools (currently under development), applied
+    to hexahedral meshing of bifurcations.
   
 
 Varia
@@ -108,7 +143,7 @@ Varia
 
 Date of the next meeting
 ========================
-The next meeting will be held at IBiTech in Feb 2010.
+The next meeting will be held at IBiTech in March 2010.
 
 
 .. The following directive makes sure the targets are included in footnotes.

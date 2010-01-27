@@ -91,6 +91,10 @@ def dollyOut():
     GD.canvas.update()   
 def report():
     print(GD.canvas.camera.report())
+def lock():
+    GD.canvas.camera.lock()
+def unlock():
+    GD.canvas.camera.lock(False)
 
 
 MenuData = [
@@ -121,6 +125,8 @@ MenuData = [
         (_('Rotate &ClockWise'),twistRight),
         (_('Rotate &CCW'),twistLeft),
         ]),
+    (_('&Lock'),lock), 
+    (_('&Unlock'),unlock), 
     ('---',None),
     (_('&Report'),report), 
     ]
