@@ -490,6 +490,7 @@ def explain():
         # use a persistent text box
         if explanation:
             explanation.updateText(text)
+            explanation.raise_()
         else:
             # create the persistent text box
             explanation = widgets.TextBox(text,actions=[('Close',None)])

@@ -1875,6 +1875,9 @@ class MessageBox(QtGui.QMessageBox):
         else:
             return ''
 
+    def updateText(self,text,format=''):
+        updateText(self._t,text,format)
+
 
 class TextBox(QtGui.QDialog):
     """Display a text and wait for user response.
@@ -1898,6 +1901,9 @@ class TextBox(QtGui.QDialog):
 
     def getResult(self):
         return self.exec_() == QtGui.QDialog.Accepted
+
+    def updateText(self,text,format=''):
+        updateText(self._t,text,format)
 
 
 ############################# Input box ###########################
