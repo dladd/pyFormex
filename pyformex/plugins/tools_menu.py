@@ -28,7 +28,7 @@ Graphic Tools plugin menu for pyFormex.
 """
 
 import pyformex as GD
-from gui import *
+from gui import menu
 
 import utils
 from formex import *
@@ -517,7 +517,7 @@ def create_menu():
         ('&Reload',reload_menu),
         ("&Close",close_menu),
         ]
-    return Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
+    return menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
 
 
 def show_menu():

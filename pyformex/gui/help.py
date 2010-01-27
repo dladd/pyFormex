@@ -68,6 +68,13 @@ def cmdline():
     """Display the pyFormex command line help."""
     catchAndDisplay('GD.print_help()')
 
+## def qappargs():
+##     """Display informeation on the Qt application arguments."""
+##     qtversion = utils.hasModule('pyqt4')
+##     qtversion = '.'.join(qtversion.split('.')[:2])
+##     link = "http://doc.trolltech.com/%s/qapplication.html#QApplication" % qtversion
+##     help(link)
+
 def readme():
     """Display the pyFormex description."""
     draw.showText(file(GD.cfg['help/readme']).read())
@@ -162,6 +169,7 @@ try:
     MenuData = [(k,help,{'data':v}) for k,v in GD.cfg['help/docs']] + [
         ('---',None),
         (_('&Command line options'),cmdline),
+        ## (_('&Qt application arguments'),qappargs),
         (_('&Readme'),readme), 
         (_('&ReleaseNotes'),releasenotes), 
         (_('&License'),license), 

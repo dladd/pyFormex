@@ -106,7 +106,7 @@ setup(cmdclass={'build_ext': build_ext,'install':install},
       version='0.8.2-a1',
       description='A tool to generate and manipulate complex 3D geometries.',
       long_description="""
-pyFormex is a program for generating, manipulating and operating on 
+pyFormex is a tool for generating, manipulating and operating on 
 large geometrical models of 3D structures by sequences of mathematical
 transformations.
 """,

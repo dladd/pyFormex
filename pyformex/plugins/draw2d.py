@@ -179,7 +179,7 @@ def objectName(actor):
 
 def splitPolyLine(c):
     """Interactively split the specified polyline"""
-    GD.options.debug=True
+    GD.options.debug = 1
     XA = draw(c.coords,clear=False,bbox='last',flat=True)
     GD.canvas.pickable = [XA]
     #print "ACTORS",GD.canvas.actors

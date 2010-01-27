@@ -24,7 +24,7 @@
 ##
 
 import pyformex as GD
-from gui import *
+from gui import menu
 
 import utils
 import os

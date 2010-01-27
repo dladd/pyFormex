@@ -32,6 +32,7 @@ __revision__ = ""
 Version = 'pyFormex %s' % __version__
 Copyright = 'Copyright (C) 2004-2009 Benedict Verhegghe'
 Url = 'http://pyformex.org'
+Description = "pyFormex is a tool for generating, manipulating and transforming large geometrical models of 3D structures by sequences of mathematical transformations."
 
 # The GUI parts
 app_started = False
@@ -64,10 +65,10 @@ def message(s):
 
 warning = message
 
-def debug(s,lead="DEBUG"):
+def debug(s,lead="DEBUG",level=0):
     """Print a debug message"""
     try: # to make sure that debug() can be used before options are set
-        if options.debug:
+        if options.debug < 0 or (level>0 and options.debug % level > 0):
             raise
         pass
     except:

@@ -170,10 +170,16 @@ def run(argv=[]):
     pyformex.cfg.read(defaults)
     
     # Process options
-    from optparse import OptionParser,make_option as MO
-    parser = OptionParser(
-        usage = "usage: %prog [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]",
+    import optparse
+    from optparse import make_option as MO
+    parser = optparse.OptionParser(
+        # THE Qapp options are removed, because it does not seem to work !!!
+        # SEE the comments in the gui.startGUI function  
+        # usage = "usage: %prog [<options>] [ --  <Qapp-options> ] [[ scriptname [scriptargs]] ...]",
+        usage = "usage: %prog [<options>] [[ scriptname [scriptargs]] ...]",
         version = pyformex.Version,
+        description = pyformex.Description,
+        formatter = optparse.TitledHelpFormatter(),
         option_list=[
         MO("--gui",
            action="store_true", dest="gui", default=None,
@@ -227,33 +233,21 @@ def run(argv=[]):
            action="store_true", dest="redirect", default=False,
            help="Redirect standard output to the message board (ignored with --nogui)",
            ),
-        MO("--detect",
-           action="store_true", dest="detect", default=False,
-           help="Detect helper software and print report.",
-           ),
         MO("--debug",
-           action="store_true", dest="debug", default=False,
+           action="store_const", dest="debug", const=-1,
            help="display debugging info to sys.stdout",
            ),
-        MO("--classify",
-           action="store_true", dest="classify", default=False,
-           help="classify the examples in categories",
+        MO("--debuglevel",
+           action="store", dest="debug", type="int", default=0,
+           help="display debugging info to sys.stdout",
            ),
-        MO("--whereami",
-           action="store_true", dest="whereami", default=False,
-           help="show where the pyformex package is located",
-           ),
-        MO("--remove",
-           action="store_true", dest="remove", default=False,
-           help="remove the pyformex installation",
-           ),
+        ## MO("--classify",
+        ##    action="store_true", dest="classify", default=False,
+        ##    help="classify the examples in categories",
+        ##    ),
         MO("--test",
            action="store_true", dest="test", default=False,
            help="testing mode: only for developers!",
-           ),
-        MO("--oldfuse",
-           action="store_true", dest="oldfuse", default=False,
-           help="use old fuse algorithm",
            ),
         MO("--testhighlight",
            action="store_true", dest="testhighlight", default=False,
@@ -262,6 +256,18 @@ def run(argv=[]):
         MO("--executor",
            action="store_true", dest="executor", default=False,
            help="test alternate executor: only for developers!",
+           ),
+        MO("--remove",
+           action="store_true", dest="remove", default=False,
+           help="remove the pyformex installation and exit",
+           ),
+        MO("--whereami",
+           action="store_true", dest="whereami", default=False,
+           help="show where the pyformex package is installed and exit",
+           ),
+        MO("--detect",
+           action="store_true", dest="detect", default=False,
+           help="show detected helper software and exit",
            ),
         ])
     pyformex.options, args = parser.parse_args(argv)
@@ -291,7 +297,6 @@ def run(argv=[]):
     if pyformex.options.whereami or pyformex.options.detect:
         sys.exit()
 
-
     ########### Read the config files  ####################
 
     # Create the user conf dir
@@ -319,7 +324,6 @@ def run(argv=[]):
         userprefs = [ pyformex.cfg.userprefs ]
         if os.path.exists(pyformex.cfg.localprefs):
             userprefs.append(pyformex.cfg.localprefs)
-
 
     if pyformex.options.config:
         userprefs.append(pyformex.options.config)
@@ -362,8 +366,8 @@ def run(argv=[]):
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pyformex.options.gui:
+        from pyformex.gui import gui
         pyformex.debug("GUI version")
-        from gui import gui
         res = gui.startGUI(args)
         if res != 0:
             print("Could not start the pyFormex GUI: %s" % res)

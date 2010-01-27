@@ -575,7 +575,16 @@ def startGUI(args):
     import locale
     GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
     #
+    #GD.options.debug = -1
+    GD.debug("Arguments passed to the QApplication: %s" % args)
     GD.app = QtGui.QApplication(args)
+    GD.debug("Arguments left after constructing the QApplication: %s" % args)
+    GD.debug("Arguments left after constructing the QApplication: %s" % GD.app.arguments().join('\n'))
+    #GD.options.debug = 0
+    # As far as I have been testing this, the args passed to the Qt application are
+    # NOT acknowledged and neither are they removed!!
+
+
     GD.app.setOrganizationName("pyformex.org")
     GD.app.setOrganizationDomain("pyformex.org")
     GD.app.setApplicationName("pyFormex")
