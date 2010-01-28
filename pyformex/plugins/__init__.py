@@ -65,8 +65,8 @@ def loaded_modules():
     return d
 
 plugin_menus = [
-    (_('Surface menu'),'surface_menu'),
     (_('Formex menu'),'formex_menu'),
+    (_('Surface menu'),'surface_menu'),
     (_('Mesh menu'),'mesh_menu'),
     (_('Tools menu'),'tools_menu'),
     (_('Draw menu'),'draw2d'),

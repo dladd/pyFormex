@@ -1363,7 +1363,7 @@ class InputDialog(QtGui.QDialog):
             caption = 'pyFormex-dialog'
         self.setWindowTitle(str(caption))
         self.fields = []
-        self.results = {}
+        self.results = odict.ODict()
         self._pos = None
         form = QtGui.QVBoxLayout()
 
@@ -1471,7 +1471,7 @@ class InputDialog(QtGui.QDialog):
         would close the dialog).
         """
         #GD.debug("ACCEPTING DATA WITH RESULT %s"%result)
-        self.results = {}
+        self.results = odict.ODict()
         self.results.update([ (fld.name(),fld.value()) for fld in self.fields ])
         ## if self.report_pos:
         ##     self.results.update({'__pos__':self.pos()})
@@ -1514,7 +1514,7 @@ class InputDialog(QtGui.QDialog):
         The result() method can be used to find out how the dialog was ended.
         Its value will be one of ACCEPTED, REJECTED ot TIMEOUT.
         """
-        self.results = {}
+        self.results = odict.ODict()
         self.setResult(0)
         if self._pos is not None:
             self.restoreGeometry(self._pos)

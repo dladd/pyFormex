@@ -45,14 +45,42 @@ class ODict(dict):
     """
     def __init__(self,data={}):
         """Create a new ODict instance."""
-        self._order = []
-        if type(data) is list or type(data) is tuple:
+        dict.__init__(self,data)
+
+        if isinstance(data,ODict):
+            # keep order
+            self._order = data._order
+            
+        elif type(data) is list or type(data) is tuple:
             # preserve the order
-            dict.__init__(self,data)
-            [ self._order.append(i[0]) for i in data if not i[0] in self._order ]
+            self._order = []
+            self._add_keys([i[0] for i in data])
+            
+        elif type(data) is dict:
+            # order is undefined
+            self._order = data.keys()
+
         else:
-            dict.__init__(self,{})
-            self.update(data)
+            raise ValueError,"Unexpected initialization value for ODict"
+  
+
+    def _add_keys(self,keys):
+        """Add a list of keys to the ordered list, removing existing keys."""
+        for k in keys:
+            if k in self._order:
+                self._order.remove(k)
+        self._order += keys
+        
+        
+    def update(self,data={}):
+        """Add a dictionary to the ODict object.
+
+        The new keys will be appended to the existing, but the order of the
+        added keys is undetemined if data is a dict object. If data is an ODict
+        its order will be respected.. 
+        """
+        dict.update(self,data)
+        self._add_keys(ODict(data)._order)
 
 
     def __iter__(self):
@@ -87,24 +115,6 @@ class ODict(dict):
         """
         dict.__delitem__(self,key)
         self._order.remove(key)
-
-        
-    def update(self,data={}):
-        """Add a dictionary to the ODict object.
-
-        The new keys will be appended to the existing, but the order of the
-        added keys is undetemined if data is a dict object. If data is an ODict
-        its order will be respected.. 
-        """
-        dict.update(self,data)
-        if type(data) is ODict:
-            for k in data._order:
-                if k in self._order:
-                    self._order.remove(k)
-            self._order += data._order
-        else:
-            #print(data)
-            self._order.extend(data.keys())
 
 
     def __add__(self,data):

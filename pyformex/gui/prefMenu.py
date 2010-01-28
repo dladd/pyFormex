@@ -188,7 +188,16 @@ def setZoomActions():
     askConfigPreferences(['gui/dynazoom','gui/wheelzoom'])
 
 def setPlugins():
-    askConfigPreferences(['gui/plugins'])
+    import plugins
+    configured_plugins = GD.cfg['gui/plugins']
+    items = [ (name,name in configured_plugins,{'text':label}) for (label,name) in plugins.plugin_menus ]
+    #items.append(('apply',True,{'text':'Apply this to the current session'}))
+    res = draw.askItems(items)
+    print "Activated plugins: %s" % res.keys()
+    if res:
+        ok_plugins = [ name for name in res if res[name] ]
+        GD.cfg['gui/plugins'] = ok_plugins
+        
 
 
 def setFont(font=None):
@@ -332,7 +341,7 @@ MenuData = [
         (_('&Light0'),setLight0),
         (_('&Light1'),setLight1),
         (_('&Splash Image'),setSplash),
-        (_('&Autoloaded Plugins'),setPlugins),
+        (_('&Autoload Plugins'),setPlugins),
         (_('&Startup Scripts'),setAutoRun),
         (_('&Script Paths'),setScriptDirs),
         (_('&Commands'),setCommands),
