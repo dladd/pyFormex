@@ -124,7 +124,8 @@ def drawObject2D(mode,npoints=-1,zvalue=0.,coords=None):
 _zvalue = 0.
     
 def draw_object(mode,npoints=-1):
-    points = drawPoints2D(mode,npoints=-1)
+    print "z value = %s" % _zvalue
+    points = drawPoints2D(mode,npoints=-1,zvalue=_zvalue)
     obj = drawnObject(points,mode=mode)
     if obj is None:
         GD.canvas.removeHighlights()
@@ -278,9 +279,10 @@ def updateData(data,newdata):
 
 _menu = 'Draw'
 
-def create_menu():
+def create_menu(before='help'):
     """Create the menu."""
     MenuData = [
+        ("&Select drawable",drawable.ask),
         ("&Set grid",create_grid),
         ("&Remove grid",remove_grid),
         ("---",None),
@@ -296,28 +298,32 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
+    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before=before,tearoff=True)
     return w
 
-def show_menu():
+def show_menu(before='help'):
     """Show the menu."""
     if not GD.GUI.menu.item(_menu):
-        create_menu()
+        create_menu(before=before)
 
 def close_menu():
     """Close the menu."""
-    m = GD.GUI.menu.item(_menu)
-    if m :
-        m.remove()
+    GD.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():
     """Reload the menu."""
+    print GD.GUI.menu.menuitems
+    submenus = GD.GUI.menu.children()
+    print [ str(m.title()) for m in  submenus[1:]]
+    before = GD.GUI.menu.nextitem(_menu)
+    print "Menu %s was before %s" % (_menu,before)
     close_menu()
     import plugins
     plugins.refresh('draw2d')
-    show_menu()
+    show_menu(before=before)
     setDrawOptions({'bbox':'last'})
+    print GD.GUI.menu.menuitems
 
 ####################################################################
 

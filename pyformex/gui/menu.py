@@ -103,9 +103,14 @@ class BaseMenu(object):
         i = self.menuitems.pos(utils.strNorm(text))
         #print "POS = %s" % i
         #print self.menuitems._order
-        if i is not None and i < len(self.menuitems._order)-1:
-            i = self.menuitems._order[i+1]
-            #print "FINAL %s" % i
+        if i is not None:
+            if i < len(self.menuitems._order)-1:
+                i = self.menuitems._order[i+1]
+            else:
+                print "EXCEEDING!! %s = %s" % (text,i)
+                print self.menuitems._order
+                print len(self.menuitems),len(self.menuitems._order)
+                print len(self.children())
         return i
 
 
@@ -121,6 +126,48 @@ class BaseMenu(object):
         if isinstance(item,QtGui.QMenu):
             item = item.menuAction()
         return item
+
+
+    def _report_children(self):
+        print "%s = %s = %s" % (len(self.children()),len(self.menuitems._order),len(self.menuitems.keys()))
+        for i,c in enumerate( self.children()):
+            print "%s = %s" % (i,c)
+            if isinstance(c,QtGui.QMenu):
+                print utils.strNorm(str(c.title()))
+        print self.menuitems._order
+
+
+    def removeItem(self,item):
+        """Remove an item from this menu."""
+        #print '\n'
+        #self._report_children()
+        item = utils.strNorm(item)
+        #print "REMOVING %s" % item
+        action = self.itemAction(item)
+        if action:
+            #print "INDEED REMOVING %s" % item
+            self.removeAction(action)
+            #print action
+            if isinstance(action,QtGui.QMenu):
+                action.close()
+                del action
+            action = self.menuitems[item]
+            #print action
+            if isinstance(action,QtGui.QMenu):
+                action.close()
+                action.destroy()
+                del action
+            del self.menuitems[item]
+        #self._report_children()
+
+
+    def replace(self,menu):
+        """Replace this menu with the specified one."""
+        if self.parent:
+            self.parent.removeAction(self.menuAction())
+            for k,v in self.parent.menuitems.items():
+                if v == self:
+                    self.parent.menuitems[k] = menu
     
     # The need for the following functions demonstrates how much more
     # powerful a dynamically typed language as Python is as compared to
@@ -258,23 +305,7 @@ class Menu(BaseMenu,QtGui.QMenu):
 
 
     def remove(self):
-        """Remove this menu from its parent."""
-        self.done=True
-        if self.parent:
-            self.parent.removeAction(self.menuAction())
-            for k,v in self.parent.menuitems.items():
-                if v == self:
-                    del self.parent.menuitems[k]
-
-
-    def replace(self,menu):
-        """Replace this menu with the specified one."""
-        self.done=True
-        if self.parent:
-            self.parent.removeAction(self.menuAction())
-            for k,v in self.parent.menuitems.items():
-                if v == self:
-                    self.parent.menuitems[k] = menu
+        self.parent.removeItem(self.title())
 
 
 class MenuBar(BaseMenu,QtGui.QMenuBar):

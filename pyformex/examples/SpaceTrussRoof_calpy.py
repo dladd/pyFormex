@@ -29,6 +29,7 @@ topics = ['FEA']
 techniques = ['dialog', 'animation', 'persistence', 'colors'] 
 """
 
+from plugins.mesh import Mesh
 from plugins.properties import *
 ############################
 # Load the needed calpy modules    
@@ -78,12 +79,12 @@ clear();linewidth(1);draw(F,view='myview1')
 #Creating FE-model
 ###################
 
-nodes,elems=F.feModel()
+mesh = F.toMesh()
 
 ###############
 #Creating elemsets
 ###################
-# Remember: elems are in the same order as elements in F
+# Remember: elements in mesh are in the same order as elements in F
 topbar = where(F.p==3)[0]
 bottombar = where(F.p==0)[0]
 diabar = where(F.p==1)[0]
@@ -92,10 +93,10 @@ diabar = where(F.p==1)[0]
 #Creating nodesets
 ###################
 
-nnod=nodes.shape[0]
-nlist=arange(nnod)
+nnod = mesh.nnodes()
+nlist = arange(nnod)
 count = zeros(nnod)
-for n in elems.flat:
+for n in mesh.elems.flat:
     count[n] += 1
 field = nlist[count==8]
 topedge = nlist[count==7]
@@ -139,12 +140,11 @@ bcon[support] = [ 1,1,1 ]
 NumberEquations(bcon)
 
 #materials
-nelems = elems.shape[0]
 mats = array([ [p.young_modulus,p.density,p.cross_section] for p in props])
 matnr = zeros_like(F.p)
 for i,p in enumerate(props):
     matnr[p.set] = i+1
-matnod = concatenate([matnr.reshape((-1,1)),elems+1],axis=-1)
+matnod = concatenate([matnr.reshape((-1,1)),mesh.elems+1],axis=-1)
 ndof = bcon.max()
 
 # loads
@@ -156,15 +156,23 @@ for n in edge:
     loads[:,0] = AssembleVector(loads[:,0],[ 0.0, 0.0, Q/2 ],bcon[n,:])
 
 message("Performing analysis: this may take some time")
-outfilename = os.path.splitext(os.path.basename(GD.scriptName))[0] + '.out'
+# Find a candidate for the output file
 
-if not isWritable(outfilename):
-    tmpdir = '/var/tmp'
-    if isWritable(tmpdir):
-        outfilename = os.path.join(tmpdir,outfilename)
-    else:
-        message("No writeable path: I can not execute the simulation\nCopy the script to a writeable path and try again.")
-        exit()
+fullname = os.path.splitext(__file__)[0] + '.out'
+basename = os.path.basename(fullname)
+outfilename = None
+for candidate in [
+    fullname,
+    os.path.join(GD.cfg['workdir'],basename),
+    os.path.join('/var/tmp',basename),
+    ]:
+    if isWritable(candidate):
+        outfilename = candidate
+        break
+
+if outfilename is None:
+    message("No writeable path: I can not execute the simulation\nCopy the script to a writeable path and try again.")
+    exit()
 
 outfile = file(outfilename,'w')
 message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
@@ -172,7 +180,7 @@ stdout_saved = sys.stdout
 sys.stdout = outfile
 print "# File created by pyFormex on %s" % time.ctime()
 print "# Script name: %s" % GD.scriptName
-displ,frc = static(nodes,bcon,mats,matnod,loads,Echo=True)
+displ,frc = static(mesh.coords,bcon,mats,matnod,loads,Echo=True)
 print "# Analysis finished on %s" % time.ctime()
 sys.stdout = stdout_saved
 outfile.close()
@@ -188,9 +196,7 @@ if GD.options.gui:
     import gui.decors
 
     def showForces():
-        # Creating a formex for displaying results is fairly easy
-        results = Formex(nodes[elems],range(nelems))
-        # Now give the formex some meaningful colors.
+        # Give the mesh some meaningful colors.
         # The frc array returns element forces and has shape
         #  (nelems,nforcevalues,nloadcases)
         # In this case there is only one resultant force per element (the
@@ -204,7 +210,7 @@ if GD.options.gui:
         #aprint(cval,header=['Red','Green','Blue'])
         clear()
         linewidth(3)
-        draw(results,color=cval)
+        draw(mesh,color=cval)
         drawtext('Normal force in the truss members',300,50,size=24)
         CL = ColorLegend(CS,100)
         CLA = decors.ColorLegend(CL,10,10,30,200,size=24)
@@ -214,10 +220,10 @@ if GD.options.gui:
     # Show a deformed plot
     def deformed_plot(dscale=100.):
         """Shows a deformed plot with deformations scaled with a factor scale."""
-        dnodes = nodes + dscale * displ[:,:,0]
-        deformed = Formex(dnodes[elems],F.p)
         # deformed structure
-        FA = draw(deformed,bbox=None,wait=False)
+        dnodes = mesh.coords + dscale * displ[:,:,0]
+        deformed = Mesh(dnodes,mesh.elems,mesh.prop)
+        FA = draw(deformed,bbox='last',view=None,wait=False)
         TA = drawtext('Deformed geometry (scale %.2f)' % dscale,300,50,size=24)
         return FA,TA
 
@@ -239,7 +245,7 @@ if GD.options.gui:
     def getOptimscale():
         """Determine an optimal scale for displaying the deformation"""
         siz0 = F.sizes()
-        dF = Formex(displ[:,:,0][elems])
+        dF = Formex(displ[:,:,0][mesh.elems])
         #clear(); draw(dF,color=black)
         siz1 = dF.sizes()
         return niceNumber(1./(siz1/siz0).max())
@@ -278,7 +284,7 @@ if GD.options.gui:
 
 
     optimscale = getOptimscale()
-    options = ['Cancel','Member forces','Deformation','Animated deformation']
+    options = ['None','Member forces','Deformation','Animated deformation']
     functions = [None,showForces,showDeformation,showAnimatedDeformation]
     while True:
         ans = ask("Which results do you want to see?",options)

@@ -666,10 +666,11 @@ class Canvas(object):
             else:
                 bbox = [[-1.,-1.,-1.],[1.,1.,1.]]
         bbox = asarray(bbox)
-        if bbox.any() == nan:
+        try:
+            self.bbox = nan_to_num(bbox)
+        except:
+        # if bbox.any() == nan:
             GD.message("Invalid Bbox: %s" % bbox)
-            return
-        self.bbox = nan_to_num(bbox)
         #GD.debug("BBOX BECOMES: %s" % self.bbox)
 
          
