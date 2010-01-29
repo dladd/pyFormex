@@ -1203,6 +1203,8 @@ def boolean():
     
 ################### menu #################
 
+_menu = 'Surface'
+
 def create_menu():
     """Create the Surface menu."""
     MenuData = [
@@ -1298,28 +1300,34 @@ def create_menu():
 #        ("&Read Tetgen Volume",read_tetgen_volume),
         ("&Export surface to Abaqus",export_surface),
 #        ("&Export volume to Abaqus",export_volume),
+        ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
     return menu.Menu('Surface',items=MenuData,parent=GD.GUI.menu,before='Help')
 
-    
+
 def show_menu():
-    """Show the Tools menu."""
-    global _the_menu
-    if not GD.GUI.menu.item('Surface'):
+    """Show the menu."""
+    if not GD.GUI.menu.item(_menu):
         create_menu()
 
 
 def close_menu():
-    """Close the Tools menu."""
-    m = GD.GUI.menu.item('Surface')
-    if m :
-        m.remove()
-    
+    """Close the menu."""
+    GD.GUI.menu.removeItem(_menu)
 
-if __name__ == "draw":
-    # If executed as a pyformex script
+
+def reload_menu():
+    """Reload the menu."""
     close_menu()
     show_menu()
+
+
+####################################################################
+######### What to do when the script is executed ###################
+
+if __name__ == "draw":
+
+    reload_menu()
 
 # End

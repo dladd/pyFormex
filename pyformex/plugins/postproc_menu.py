@@ -765,6 +765,10 @@ def askPoint():
         return None
 
 
+################################## Menu #############################
+
+_menu = 'Postproc'
+
 def create_menu():
     """Create the Postproc menu."""
     MenuData = [
@@ -781,19 +785,19 @@ def create_menu():
         ("&Reload menu",reload_menu),
         ("&Close menu",close_menu),
         ]
-    return menu.Menu('Postproc',items=MenuData,parent=GD.GUI.menu,before='help')
-  
+    return menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help')
+
+
 def show_menu():
-    """Show the Postproc menu."""
-    if not GD.GUI.menu.item('Postproc'):
+    """Show the menu."""
+    if not GD.GUI.menu.item(_menu):
         create_menu()
-        
+
+
 def close_menu():
-    """Close the Postproc menu."""
-    m = GD.GUI.menu.item('Postproc')
-    if m :
-        m.remove()
-        #GD.GUI.statusbar.removeWidget(GD.GUI.postbutton)
+    """Close the menu."""
+    GD.GUI.menu.removeItem(_menu)
+
 
 def reload_menu():
     """Reload the Postproc menu."""
@@ -806,11 +810,13 @@ def reload_menu():
     show_menu()
 
 
+####################################################################
+######### What to do when the script is executed ###################
+
 if __name__ == "draw":
+
     reload_menu()
-    
-elif __name__ == "__main__":
-    print(__doc__)
+
 
 # End
 

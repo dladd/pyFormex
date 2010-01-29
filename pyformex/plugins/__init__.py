@@ -74,7 +74,22 @@ plugin_menus = [
     (_('Postproc menu'),'postproc_menu'),
     ]
 
-LoadMenu = _('Load &Plugins'),[ (k,load,{'data':v}) for k,v in plugin_menus]
-ReloadMenu = _('Reload &Plugins'),[ (k,refresh,{'data':v}) for k,v in plugin_menus]
+def create_plugin_menus(parent=None,before=None):
+    plugin_text =  [ k for k,v in plugin_menus ]
+    plugin_names = [ v for k,v in plugin_menus ]
+
+    from gui import menu
+    
+    loadmenu = menu.Menu('&Load plugins',parent=parent,before=before)
+    reloadmenu = menu.Menu('&Reload plugins',parent=parent,before=before)
+
+    loadactions = menu.ActionList(function=load,menu=loadmenu)
+    reloadactions = menu.ActionList(function=refresh,menu=reloadmenu)
+
+    for text,name in plugin_menus:
+        loadactions.add(name,icon=None,text=text)
+        reloadactions.add(name,icon=None,text=text)
+
+    return loadactions,reloadactions
 
 # End

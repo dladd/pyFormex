@@ -348,29 +348,29 @@ def create_menu():
     w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
     return w
 
+
 def show_menu():
     """Show the menu."""
     if not GD.GUI.menu.item(_menu):
         create_menu()
 
+
 def close_menu():
     """Close the menu."""
-    m = GD.GUI.menu.item(_menu)
-    if m :
-        m.remove()
+    GD.GUI.menu.removeItem(_menu)
 
 
 def reload_menu():
     """Reload the menu."""
     close_menu()
-    import mesh_menu
-    reload(mesh_menu)
     show_menu()
 
+
 ####################################################################
+######### What to do when the script is executed ###################
 
 if __name__ == "draw":
-    # If executed as a pyformex script
+
     reload_menu()
 
 # End

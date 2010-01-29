@@ -221,6 +221,8 @@ def getResultsFromServer(jobname=None,targetdir=None,ext=['.fil']):
 ####################################################################
 ######### MENU #############
 
+_menu = 'Jobs'
+
 def create_menu():
     """Create the Jobs menu."""
     MenuData = [
@@ -236,26 +238,29 @@ def create_menu():
         ]
     return menu.Menu('Jobs',items=MenuData,parent=GD.GUI.menu,before='help')
 
- 
+
 def show_menu():
     """Show the menu."""
-    if not GD.GUI.menu.item('Jobs'):
+    if not GD.GUI.menu.item(_menu):
         create_menu()
+
 
 def close_menu():
     """Close the menu."""
-    m = GD.GUI.menu.item('Jobs')
-    if m :
-        m.remove()
+    GD.GUI.menu.removeItem(_menu)
+
 
 def reload_menu():
     """Reload the menu."""
     close_menu()
-    from plugins import jobs
-    reload(jobs)
     show_menu()
 
+
+####################################################################
+######### What to do when the script is executed ###################
+
 if __name__ == "draw":
+
     reload_menu()
 
 # End

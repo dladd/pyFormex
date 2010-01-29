@@ -297,13 +297,14 @@ def create_menu(before='help'):
         ("---",None),
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
+        ("Test menu",test_menu),
         ]
-    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before=before,tearoff=True)
+    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before=before)
     return w
 
 def show_menu(before='help'):
     """Show the menu."""
-    if not GD.GUI.menu.item(_menu):
+    if not GD.GUI.menu.action(_menu):
         create_menu(before=before)
 
 def close_menu():
@@ -313,9 +314,6 @@ def close_menu():
 
 def reload_menu():
     """Reload the menu."""
-    print GD.GUI.menu.menuitems
-    submenus = GD.GUI.menu.children()
-    print [ str(m.title()) for m in  submenus[1:]]
     before = GD.GUI.menu.nextitem(_menu)
     print "Menu %s was before %s" % (_menu,before)
     close_menu()
@@ -323,8 +321,11 @@ def reload_menu():
     plugins.refresh('draw2d')
     show_menu(before=before)
     setDrawOptions({'bbox':'last'})
-    print GD.GUI.menu.menuitems
+    print GD.GUI.menu.actionList()
 
+def test_menu():
+    print "TEST2"
+    
 ####################################################################
 
 if __name__ == "draw":
