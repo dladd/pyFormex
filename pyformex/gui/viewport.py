@@ -1384,9 +1384,16 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
         columns and nrows is ignored. If ncols is None and nrows is an int,
         viewports are laid out columnwise over nrows rows.
         """
+        if GD.options.fpbug:
+            print "CHANGE LAYOUT: %s (%s)" % (nvps,type(nvps))
+            print self.all
         if type(nvps) == int:
+            if GD.options.fpbug:
+                print "removeView"
             while len(self.all) > nvps:
                 self.removeView()
+            if GD.options.fpbug:
+                print "addView"
             while len(self.all) < nvps:
                 self.addView()
 
@@ -1398,10 +1405,14 @@ Viewport %s;  Active:%s;  Current:%s;  Settings:
         else:
             return
 
+        if GD.options.fpbug:
+            print "removeWidget"
         for w in self.all:
             self.removeWidget(w)
         self.ncols = ncols
         self.rowwise = rowwise
+        if GD.options.fpbug:
+            print "showWidget"
         for w in self.all:
             self.showWidget(w)
 

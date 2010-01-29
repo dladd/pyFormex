@@ -72,26 +72,78 @@ class BaseMenu(object):
         self._title = title
         pyformex.debug("Creating menu %s" % title)
         self.parent = parent
-        self.menuitems = odict.ODict()
+        self.separators = odict.ODict()
         if items:
             self.insertItems(items)
         if parent and isinstance(parent,BaseMenu):
-            if before:
-                before = parent.itemAction(before)
+            before = parent.action(before)
             parent.insert_menu(self,before)
-            title = utils.strNorm(title)
-            if not title in parent.menuitems:
-                parent.menuitems[title] = self
+
+
+    ## def itemAction(self,item):
+    ##     """Return the action corresponding to item.
+
+    ##     item is either one of the menu's item texts, or one of its
+    ##     values. This method guarantees that the return value is either the
+    ##     corresponding Action, or None.
+    ##     """
+    ##     if item not in self.menuitems.values():
+    ##         item = self.item(item)
+    ##     if isinstance(item,QtGui.QMenu):
+    ##         item = item.menuAction()
+    ##     return item
+
+
+    def actionList(self):
+        """Return a list with the current actions."""
+        return [ utils.strNorm(str(c.text())) for c in self.actions() ]
+    
+
+    def index(self,text):
+        """Return the index of the specified item in the actionlist.
+
+        If the requested item is not in the actionlist, -1 is returned.
+        """
+        try:
+            return self.actionList().index(utils.strNorm(text))
+        except ValueError:
+            return -1
+    
+
+    def action(self,text):
+        """Return the action with specified text.
+
+        First, a normal action is tried. If none is found,
+        a separator is tried.
+        """
+        if text is None:
+            return None
+        if text in self.actions():
+            return text
+        i = self.index(text)
+        if i >= 0:
+            return self.actions()[i]
+        else:
+            return self.separators.get(utils.strNorm(text),None)
 
 
     def item(self,text):
-        """Get the menu item with text.
+        """Return the item with specified text.
 
-        The text will be normalized before searching it.
-        If an item with the resulting name exists, it is returned.
-        Else None is returned.
+        For a normal action or a separator, an qction is returned.
+        For a menu action, a menu is returned.
         """
-        return self.menuitems.get(utils.strNorm(text),None)
+        i = self.index(text)
+        if i >= 0:
+            a = self.actions()[i]
+            m = a.menu()
+            if m:
+                return m
+            else:
+                return a
+        else:
+            return self.separators.get(utils.strNorm(text),None)
+        
 
 
     def nextitem(self,text):
@@ -100,74 +152,26 @@ class BaseMenu(object):
         This can be used to replace the current item with another menu.
         If the item is the last, None is returned.
         """
-        i = self.menuitems.pos(utils.strNorm(text))
-        #print "POS = %s" % i
-        #print self.menuitems._order
-        if i is not None:
-            if i < len(self.menuitems._order)-1:
-                i = self.menuitems._order[i+1]
-            else:
-                print "EXCEEDING!! %s = %s" % (text,i)
-                print self.menuitems._order
-                print len(self.menuitems),len(self.menuitems._order)
-                print len(self.children())
-        return i
-
-
-    def itemAction(self,item):
-        """Return the action corresponding to item.
-
-        item is either one of the menu's item texts, or one of its
-        values. This method guarantees that the return value is either the
-        corresponding Action, or None.
-        """
-        if item not in self.menuitems.values():
-            item = self.item(item)
-        if isinstance(item,QtGui.QMenu):
-            item = item.menuAction()
-        return item
-
-
-    def _report_children(self):
-        print "%s = %s = %s" % (len(self.children()),len(self.menuitems._order),len(self.menuitems.keys()))
-        for i,c in enumerate( self.children()):
-            print "%s = %s" % (i,c)
-            if isinstance(c,QtGui.QMenu):
-                print utils.strNorm(str(c.title()))
-        print self.menuitems._order
+        itemlist = self.actionList()
+        i = itemlist.index(utils.strNorm(text))
+        #print "POS = %s/%s" % (i,len(itemlist))
+        if i >= 0 and i < len(itemlist)-1:
+            return itemlist[i+1]
+        else:
+            return None
 
 
     def removeItem(self,item):
         """Remove an item from this menu."""
-        #print '\n'
-        #self._report_children()
-        item = utils.strNorm(item)
-        #print "REMOVING %s" % item
-        action = self.itemAction(item)
+        #print self.actionList()
+        action = self.action(item)
         if action:
-            #print "INDEED REMOVING %s" % item
+            #print "INDEED REMOVING %s = %s" % (item,action)
             self.removeAction(action)
-            #print action
             if isinstance(action,QtGui.QMenu):
                 action.close()
                 del action
-            action = self.menuitems[item]
-            #print action
-            if isinstance(action,QtGui.QMenu):
-                action.close()
-                action.destroy()
-                del action
-            del self.menuitems[item]
-        #self._report_children()
-
-
-    def replace(self,menu):
-        """Replace this menu with the specified one."""
-        if self.parent:
-            self.parent.removeAction(self.menuAction())
-            for k,v in self.parent.menuitems.items():
-                if v == self:
-                    self.parent.menuitems[k] = menu
+        #print self.actionList()
     
     # The need for the following functions demonstrates how much more
     # powerful a dynamically typed language as Python is as compared to
@@ -228,42 +232,43 @@ class BaseMenu(object):
         If before is given, it specifies the text OR the action of one of the
         items in the menu: the new items will be inserted before that one.
         """
-        if before:
-            before = self.itemAction(before)
+        before = self.action(before)
         for item in items:
             txt,val = item[:2]
+            if len(item) > 2:
+                options = item[2]
+            else:
+                options = {}
             if  val is None:
                 a = self.insert_sep(before)
+                self.separators[txt] = a
             elif isinstance(val, list):
-                a = Menu(txt,self)
+                a = Menu(txt,parent=self,before=before)
                 a.insertItems(val)
             else:
                 if type(val) == str:
                     val = eval(val)
-                if len(item) > 2 and item[2].has_key('data'):
-                    a = DAction(txt,data=item[2]['data'])
+                if 'data' in options:
+                    # DActions should be saved to keep them alive !!!
+                    a = DAction(txt,data = options['data'])
                     QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),val)
                     self.insert_action(a,before)
                 else:
                     a = self.create_insert_action(txt,val,before)
-                if len(item) > 2:
-                    for k,v in item[2].items():                        
-                        if k == 'icon':
-                            a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
-                        elif k == 'shortcut':
-                            a.setShortcut(v)
-                        elif k == 'tooltip':
-                            a.setToolTip(v)
-                        elif k == 'checkable':
-                            a.setCheckable(v)
-                        elif k == 'checked':
-                            a.setCheckable(True)
-                            a.setChecked(v)
-                        elif k == 'disabled':
-                            a.setDisabled(True)
-            txt = utils.strNorm(txt)
-            if not txt in self.menuitems:
-                self.menuitems[txt] = a
+                for k,v in options.items():                        
+                    if k == 'icon':
+                        a.setIcon(QtGui.QIcon(QtGui.QPixmap(utils.findIcon(v))))
+                    elif k == 'shortcut':
+                        a.setShortcut(v)
+                    elif k == 'tooltip':
+                        a.setToolTip(v)
+                    elif k == 'checkable':
+                        a.setCheckable(v)
+                    elif k == 'checked':
+                        a.setCheckable(True)
+                        a.setChecked(v)
+                    elif k == 'disabled':
+                        a.setDisabled(True)
                 
 
 class Menu(BaseMenu,QtGui.QMenu):
@@ -293,6 +298,9 @@ class Menu(BaseMenu,QtGui.QMenu):
             self.setWindowFlags(QtCore.Qt.Dialog)
             self.setWindowTitle(title)
         else:
+            if tearoff:
+                print "TEAR OFF menus currently not implemented"
+                tearoff = False
             self.setTearOffEnabled(tearoff)
         self.done = False
             
@@ -305,6 +313,7 @@ class Menu(BaseMenu,QtGui.QMenu):
 
 
     def remove(self):
+        self.close()
         self.parent.removeItem(self.title())
 
 
@@ -315,6 +324,10 @@ class MenuBar(BaseMenu,QtGui.QMenuBar):
         """Create the menubar."""
         QtGui.QMenuBar.__init__(self)
         BaseMenu.__init__(self,title)
+
+
+    def title(self):
+        return self._title
 
 
 ###################### Action List ############################################
@@ -365,7 +378,7 @@ class ActionList(object):
     connected to this signal to act dependent on the string value.
     """
 
-    def __init__(self,actions=[],function=None,menu=None,toolbar=None,icons=None):
+    def __init__(self,actions=[],function=None,menu=None,toolbar=None,icons=None,text=None):
         """Create an new action list, empty by default.
 
         A list of strings can be passed to initialize the actions.
@@ -385,25 +398,29 @@ class ActionList(object):
         if icons is None:
             icons = actions
         icons = map(utils.findIcon,icons)
-        for name,icon in zip(actions,icons):
-            self.add(name,icon)
+        if text is None:
+            text = actions
+        for name,icon,txt in zip(actions,icons,text):
+            self.add(name,icon,txt)
 
 
-    def add(self,name,icon=None):
+    def add(self,name,icon=None,text=None):
         """Add a new name to the actions list and create a matching DAction.
 
         If the actions list has an associated menu or toolbar,
         a matching button will be inserted in each of these.
         If an icon is specified, it will be used on the menu and toolbar.
-        The icon is either a filename or a QIcon object. 
+        The icon is either a filename or a QIcon object.
+        If text is specified, it is displayed instead of the action's name.
         """
         if type(icon) == str:
             if os.path.exists(icon):
                 icon = QtGui.QIcon(QtGui.QPixmap(icon))
             else:
                 raise RuntimeError,'Icons not installed properly'
-        menutext = '&' + name.capitalize()
-        a = DAction(menutext,icon,name)
+        if text is None:
+            text = name
+        a = DAction(text,icon,name)
         if self.function:
             QtCore.QObject.connect(a,QtCore.SIGNAL(a.signal),self.function)
         self.actions.append([name,a])

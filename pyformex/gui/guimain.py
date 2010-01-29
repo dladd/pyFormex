@@ -50,7 +50,6 @@ import draw
 import widgets
 import drawlock
 
-
 ############### General Qt utility functions #######
 
 ## might go to a qtutils module
@@ -221,6 +220,7 @@ class GUI(QtGui.QMainWindow):
             mmenu = None
         self.modebar = self.activateToolBar('RenderMode ToolBar','modebar')
             
+        #menutext = '&' + name.capitalize()
         self.modebtns = menu.ActionList(
             modes,draw.renderMode,menu=mmenu,toolbar=self.modebar)
         
@@ -571,6 +571,8 @@ def startGUI(args):
     A (possibly empty) list of command line options should be provided.
     QT4 wil remove the recognized QT4 and X11 options.
     """
+    if GD.options.fpbug:
+        print "startGUI"
     
     #
     # FIX FOR A BUG IN NUMPY (It's always sane anyway)
@@ -609,6 +611,8 @@ def startGUI(args):
     QtCore.QObject.connect(GD.app,QtCore.SIGNAL("aboutToQuit()"),quit)
         
        
+    if GD.options.fpbug:
+        print "SPLASH"
     # Load the splash image
     splash = None
     if os.path.exists(GD.cfg['gui/splash']):
@@ -620,9 +624,14 @@ def startGUI(args):
         splash.showMessage(GD.Version,QtCore.Qt.AlignHCenter,QtCore.Qt.red)
         splash.show()
 
+    if GD.options.fpbug:
+        print "OPENGL FORMAT"
     # create GUI, show it, run it
     viewport.setOpenGLFormat()
     dri = viewport.opengl_format.directRendering()
+
+    if GD.options.fpbug:
+        print "CHECK WINDOWS"
     windowname = GD.Version
     count = 0
     while windowExists(windowname):
@@ -657,15 +666,21 @@ You should seriously consider to bail out now!!!
         if answer != 'Really Continue':
             return -1
 
+    if GD.options.fpbug:
+        print "CREATE WINDOW"
     GD.GUI = GUI(windowname,
                  GD.cfg.get('gui/size',(800,600)),
                  GD.cfg.get('gui/pos',(0,0)),
                  GD.cfg.get('gui/bdsize',(800,600))
                  )
 
-    # set the appearence
+    # set the appearance
+    if GD.options.fpbug:
+        print "APPEARANCE"
     GD.GUI.setStyle(GD.cfg.get('gui/style','Plastique'))
     font = GD.cfg.get('gui/font',None)
+    if GD.options.fpbug:
+       print "SET FONT"
     if font:
         GD.GUI.setFont(font)
     else:
@@ -675,8 +690,14 @@ You should seriously consider to bail out now!!!
         fontsize =  GD.cfg.get('gui/fontsize',None)
         if fontsize:
             GD.GUI.setFontSize(fontsize)
+    if GD.options.fpbug:
+       print "SET VIEWPORTS"
     GD.GUI.viewports.changeLayout(1)
+    if GD.options.fpbug:
+       print "SET CURRENT VIEWPORT"
     GD.GUI.viewports.setCurrent(0)
+    if GD.options.fpbug:
+       print "WRITE WELCOME"
     GD.board = GD.GUI.board
     GD.board.write("""%s  (C) Benedict Verhegghe
 
@@ -685,10 +706,14 @@ and you are welcome to redistribute it under the conditions of the
 GNU General Public License, version 3 or later.
 See Help->License or the file COPYING for details.
 """ % GD.Version)
+    if GD.options.fpbug:
+       print "STATUS BAR WIDGETS"
     GD.GUI.addInputBox()
     GD.GUI.toggleInputBox(False)
     GD.GUI.addCoordsTracker()
     GD.GUI.toggleCoordsTracker(GD.cfg.get('gui/coordsbox',False))
+    if GD.options.fpbug:
+        print "SHOW THE GUI"
     GD.GUI.show()
     GD.debug("Using window name %s" % GD.GUI.windowTitle())
     
@@ -700,25 +725,29 @@ See Help->License or the file COPYING for details.
         GD.GUI.history = scriptMenu.ScriptMenu('History',files=history,max=20)
 
     if GD.cfg.get('gui/history_in_main_menu',False):
-        before = GD.GUI.menu.item('help').menuAction()
+        before = GD.GUI.menu.item('help')
         GD.GUI.menu.insertMenu(before,GD.GUI.history)
     else:
         filemenu = GD.GUI.menu.item('file')
         before = filemenu.item('---1')
         filemenu.insertMenu(before,GD.GUI.history)
+    
 
-    # Script menu
+    # Scripts menu
     GD.GUI.scriptmenu = scriptMenu.createScriptMenu(GD.GUI.menu,before='help')
+
+    # PLugin menus
+    import plugins
+    filemenu = GD.GUI.menu.item('file')
+    GD.gui.saveobj = plugins.create_plugin_menus(filemenu,before='options')
+    # Load configured plugins, ignore if not found
+    for p in GD.cfg.get('gui/plugins',[]):
+        plugins.load(p)
     
     # Set interaction functions
     GD.message = draw.message
     GD.warning = draw.warning
     draw.reset()
-    
-    # Load plugins, ignore if not found
-    import plugins
-    for p in GD.cfg.get('gui/plugins',[]):
-        plugins.load(p)
 
     GD.GUI.setBusy(False)
     GD.GUI.addStatusBarButtons()

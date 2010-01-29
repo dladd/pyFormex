@@ -249,11 +249,11 @@ def run(argv=[]):
            action="store_true", dest="test", default=False,
            help="testing mode: only for developers!",
            ),
-        MO("--testhighlight",
-           action="store_true", dest="testhighlight", default=False,
-           help="highlight testing mode: only for developers!",
+        MO("--testfpbug",
+           action="store_true", dest="fpbug", default=False,
+           help="testing mode: only for developers!",
            ),
-        MO("--executor",
+        MO("--testexecutor",
            action="store_true", dest="executor", default=False,
            help="test alternate executor: only for developers!",
            ),
@@ -366,9 +366,18 @@ def run(argv=[]):
     # Start the GUI if needed
     # Importing the gui should be done after the config is set !!
     if pyformex.options.gui:
-        from gui import gui
+        if pyformex.options.fpbug:
+            print "WILL NOW IMPORT GUI"
+        from gui import guimain
+        if pyformex.options.fpbug:
+            print "GUI IMPORTED"
+            print dir(guimain)
         pyformex.debug("GUI version")
-        res = gui.startGUI(args)
+        if pyformex.options.fpbug:
+            print "STARTING GUI"
+        res = guimain.startGUI(args)
+        if pyformex.options.fpbug:
+            print "GUI STARTED"
         if res != 0:
             print("Could not start the pyFormex GUI: %s" % res)
             return res # EXIT
@@ -428,7 +437,7 @@ def run(argv=[]):
 
     # after processing all args, go into interactive mode
     if pyformex.options.gui:
-        res = gui.runGUI()
+        res = guimain.runGUI()
 
     ## elif pyformex.options.interactive:
     ##     print("Enter your script and end with CTRL-D")

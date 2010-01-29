@@ -529,9 +529,9 @@ def startGui(args=[]):
     """Start the gui"""
     if pyformex.GUI is None:
         pyformex.debug("Starting the pyFormex GUI")
-        from gui import gui
-        if gui.startGUI(args) == 0:
-            gui.runGUI()
+        from gui import guimain
+        if guimain.startGUI(args) == 0:
+            guimain.runGUI()
 
 
 def isWritable(path):

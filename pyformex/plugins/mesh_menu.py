@@ -345,7 +345,7 @@ def create_menu():
         ("&Reload Menu",reload_menu),
         ("&Close Menu",close_menu),
         ]
-    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=True)
+    w = menu.Menu(_menu,items=MenuData,parent=GD.GUI.menu,before='help',tearoff=False)
     return w
 
 

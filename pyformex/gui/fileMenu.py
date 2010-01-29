@@ -414,12 +414,13 @@ MenuData = [
     (_('&Save as Icon'),saveIcon),
     (_('&Show Image'),showImage),
     (_('---2'),None),
-    plugins.LoadMenu,
-    plugins.ReloadMenu,
+#    plugins.LoadMenu,
+#    plugins.ReloadMenu,
     (_('&Options'),setOptions),
     (_('---3'),None),
     (_('E&xit'),draw.closeGui),
 ]
+
 
 #onExit(closeProject)
 
