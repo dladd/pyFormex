@@ -154,6 +154,7 @@ def projection(A,B,axis=-1):
     """
     return dotpr(A,B,axis)/length(B,axis)
 
+
 def norm(v,n=2):
     """Return thr `n`-norm of the vector `v`.
 
@@ -171,6 +172,75 @@ def norm(v,n=2):
     if n <= 0:
         return abs(a).max()
     return
+
+
+def determinant(A):
+    """Compute the determinants for an n-dimensional array.
+    
+    A is a (M,M,...) shaped array.
+    
+    This computes the determinant for all items A[:,:,i].
+    """
+    if A.shape[0] != A.shape[1]:
+        raise RuntimeError,"First and second axis dimension should be the same."
+    n = A.shape[0]
+    # permutations
+    a = range(n)
+    b = asarray(list(permutations(a)))
+    # sign of permutations = (-1)^nt
+    # nt = number of transpositions = number of pairs (x,y) such that x<y and b(x) > b(y)
+    nt = column_stack([ b[:,i:i+1] > b[:,i+1:] for i in range(n) ]).sum(-1) # (n!)
+    s = (-1.)**(nt)
+    s = s.reshape(insert(ones(len(A.shape)-2,dtype=int),0,-1))
+    # product over matrix entries
+    p = A[a,b].prod(1) #(n!,...)
+    return (s*p).sum(0)
+
+
+def solveCramer(A,b):
+    """Solve n-dimensional linear matrix equations or systems of linear scalar equations.
+    
+    A is a (M,M,...) shaped array.
+    b is a (M,...) shaped array.
+    
+    This solves all equations A[:,:,i].x = b[:,i].
+    The return value is a (M,...) shaped array.
+    """
+    x = []
+    detA = determinant(A)
+    for i in range(b.shape[0]):
+        Ai = A.copy()
+        Ai[:,i] = b
+        detAi = determinant(Ai)
+        x.append(detAi/detA)
+    return x
+
+
+# Build-in function for Python 2.6
+def permutations(iterable, r=None):
+    # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
+    # permutations(range(3)) --> 012 021 102 120 201 210
+    pool = tuple(iterable)
+    n = len(pool)
+    r = n if r is None else r
+    if r > n:
+        return
+    indices = range(n)
+    cycles = range(n, n-r, -1)
+    yield tuple(pool[i] for i in indices[:r])
+    while n:
+        for i in reversed(range(r)):
+            cycles[i] -= 1
+            if cycles[i] == 0:
+                indices[i:] = indices[i+1:] + indices[i:i+1]
+                cycles[i] = n - i
+            else:
+                j = cycles[i]
+                indices[i], indices[-j] = indices[-j], indices[i]
+                yield tuple(pool[i] for i in indices[:r])
+                break
+        else:
+            return
 
 
 def inside(p,mi,ma):
