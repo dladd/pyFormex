@@ -29,6 +29,8 @@ topics = ['FEA']
 techniques = ['colors'] 
 """
 
+chdir(__file__)
+
 ############################
 # Load the needed calpy modules    
 
@@ -66,6 +68,21 @@ if GD.options.gui:
     
 ############################################
 # Perform Analysis
+
+# Create output file
+if not checkWorkdir():
+    print "Could not open a file for writing. I have to stop here"
+    exit()
+
+outfilename = 'WireStent_calpy.out'
+outfile = file(outfilename,'w')
+message("Output is written to file '%s' in %s" % (outfilename,os.getcwd()))
+stdout_saved = sys.stdout
+sys.stdout = outfile
+print "# File created by pyFormex on %s" % time.ctime()
+print "# Script name: %s" % GD.scriptName
+
+
 
 nel = stent.nelems()
 print "Number of elements: %s" % nel
@@ -163,7 +180,11 @@ import calpy
 calpy.options.optimize=True
 print elements
 displ,frc = static(coords,bcon,mats,elements,loads,Echo=True)
-print "Analysis done"
+
+print "# Analysis finished on %s" % time.ctime()
+sys.stdout = stdout_saved
+outfile.close()
+
 
 
 ################################
@@ -220,5 +241,8 @@ if GD.options.gui:
         draw(deformed,color=cval)
         drawtext('Deformed geometry (scale %.2f)' % dscale,x,70)
 
+
+    if ack("Show the output file?"):
+        showFile(outfilename)
 
 # End

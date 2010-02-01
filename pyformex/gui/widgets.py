@@ -1642,7 +1642,7 @@ class TableModel(QtCore.QAbstractTableModel):
         return True
 
 
-class Table(QtGui.QWidget):
+class Table(QtGui.QTableView):
     """A widget to show/edit a two-dimensional array of items.
 
     - `data`: a 2-D array of items, with `nrow` rows and `ncol` columns.
@@ -1654,62 +1654,108 @@ class Table(QtGui.QWidget):
     
     def __init__(self,data,chead=None,rhead=None,label=None,parent=None):
         """Initialize the Table widget."""
-       #if parent is None:
-       #     parent = GD.GUI
-        QtGui.QWidget.__init__(self,parent)
-        self.setWindowTitle("MAGIC")
-        form = QtGui.QVBoxLayout()
-        table = QtGui.QTableView()
-        tm = TableModel(data,chead,rhead,None)
-        table.setModel(tm)
-        table.horizontalHeader().setVisible(chead is not None)
-        table.verticalHeader().setVisible(rhead is not None)
-        table.resizeColumnsToContents()
-        if label is not None:
-            table.setCornerButtonEnabled
-            table.cornerWidget().setText(label)
-        form.addWidget(table)
-        self.setLayout(form)
-        self.table = table
-                       
+        QtGui.QTableView.__init__(self,parent)
+        self.tm = TableModel(data,chead,rhead,None)
+        self.setModel(self.tm)
+        self.horizontalHeader().setVisible(chead is not None)
+        self.verticalHeader().setVisible(rhead is not None)
+        self.resizeColumnsToContents()
+        self.setCornerButtonEnabled
 
 
-class TableDialog(QtGui.QDialog):
-    """A dialog widget to show/edit a two-dimensional array of items."""
+class ArrayTable(Table):
+    """A Table widget displaying a numerical array.
+
+    This is like the Table widget, but shows default row and column
+    numbers if no headers are supplied. The data should be
+    a 2-dimensional numerical array.
+    """
+    def __init__(self,data,chead=None,rhead=None,label=None,parent=None):
+        """Initialize the ArrayTable widget."""
+        from numpy import asarray
+        data = asarray(data)
+        Table.__init__(self,data,chead=range(data.shape[1]),rhead=range(data.shape[0]),label=label,parent=parent)
+                        
+
+class Tabs(QtGui.QTabWidget):
+    """Present a list of widgets as a single tabbed widget.
+
+    - `items`: a list of (header,widget) tuples.
+    - `caption`:
+    - `parent`:
+    """
+    def __init__(self,items,parent=None):
+        """Create the TabWidget."""
+        QtGui.QTabWidget.__init__(self,parent)
+        for header,widget in items:
+            self.addTab(widget,header)
+
+
+class Dialog(QtGui.QDialog):
+    """A generic dialog widget.
+
+    The dialog if formed by a number of widgets stacked in a vertical box
+    layout. At the bottom is a horizontal button box with possible actions.
+
+    - `widgets`: a list of widgets to include in the dialog
+    - `title`: the window title for the dialog
+    - `parent`: the parent widget. If None, it is set to GD.GUI.
+    - `actions`: the actions to include in the bottom button box. By default,
+      an 'OK' button is displayed to close the dialog. Can be set to None
+      to avoid creation of a button box.
+    - `default`: the default action, 'OK' by default.
+    """
     
-    def __init__(self,data,chead=None,rhead=None,caption=None,parent=None,actions=[('OK',)],default='OK'):
+    def __init__(self,widgets,title=None,parent=None,actions=[('OK',)],default='OK'):
+        """Create the Dialog"""
+        if parent is None:
+            parent = GD.GUI
+        QtGui.QDialog.__init__(self,parent)
+        if title is None:
+            title = 'pyFormex Dialog'
+        self.setWindowTitle(str(title))
+        
+        self.form = QtGui.QVBoxLayout()
+        self.add(widgets)
+
+        if actions is not None:
+            but = dialogButtons(self,actions,default)
+            self.form.addLayout(but)
+        
+        self.setLayout(self.form)
+
+
+    def add(self,widgets,pos=-1):
+        if type(widgets) is not list:
+            widgets = [widgets]
+        for w in widgets:
+            if pos >= 0:
+                ind = pos
+            else:
+                ind = pos+self.form.count()
+            self.form.insertWidget(ind,w)
+
+
+class TableDialog(Dialog):
+    """A dialog widget to show/edit a two-dimensional array of items.
+
+    A convenience class representing a Table within a dialog.
+    """
+    
+    def __init__(self,data,chead=None,rhead=None,title=None,parent=None,actions=[('OK',)],default='OK'):
         """Create the Table dialog.
         
         data is a 2-D array of items, with nrow rows and ncol columns.
         chead is an optional list of ncol column headers.
         rhead is an optional list of nrow row headers.
         """
-        if parent is None:
-            parent = GD.GUI
-        QtGui.QDialog.__init__(self,parent)
-        if caption is None:
-            caption = 'pyFormex-dialog'
-        self.setWindowTitle(str(caption))
-        
-        form = QtGui.QVBoxLayout()
-        table = QtGui.QTableView()
-        tm = TableModel(data,chead,rhead,None)
-        table.setModel(tm)
-        table.horizontalHeader().setVisible(chead is not None)
-        table.verticalHeader().setVisible(rhead is not None)
-        table.resizeColumnsToContents()
-        form.addWidget(table)
-
-        but = dialogButtons(self,actions,default)
-        form.addLayout(but)
-        
-        self.setLayout(form)
-        #self.setMinimumSize(1000,400)
-        self.table = table
-        #self.show()
+        Dialog.__init__(self,
+                        [Table(data,chead=chead,rhead=rhead,parent=self)],
+                        title=title, parent=parent,
+                        actions=actions,default=default)
 
 
-class OldTableDialog(QtGui.QDialog):
+class OldTableDialog(Dialog):
     """A dialog widget to show two-dimensional arrays of items."""
     def __init__(self,items,caption=None,parent=None,tab=False):
         """Create the Table dialog.
@@ -1719,34 +1765,18 @@ class OldTableDialog(QtGui.QDialog):
         If tab = True, a dialog with multiple pages is created and items
         should be a list of pages [page_header,table_header,table_data].
         """
-        if parent is None:
-            parent = GD.GUI
-        QtGui.QDialog.__init__(self,parent)
-        if caption is None:
-            caption = 'pyFormex-table'
-        self.setWindowTitle(str(caption))
-        form = QtGui.QVBoxLayout()
+        import warnings
+        warnings.warn('The use of OldTableDialog is deprecated.\nPlease use a combination of the Dialog, Tabs and Table widgets.')
+
+        Dialog.__init__(self,[],title=caption,parent=parent)
         if tab:
-            tables = QtGui.QTabWidget()
-            for item in items:
-                page = QtGui.QTableView()
-                page_header,table_header,table_data = item
-                tm = TableModel(table_data,table_header,parent=self)
-                page.setModel(tm)
-                page.verticalHeader().setVisible(False)
-                page.resizeColumnsToContents()
-                tables.addTab(page,page_header)
-            form.addWidget(tables)
+            contents = Tabs(
+                [ (item[0], Table(data=item[2],chead=item[1],parent=None))
+                  for item in items ], parent=parent)
         else:
-            table = QtGui.QTableView()
-            table_header,table_data = items
-            tm = TableModel(table_data,table_header,parent=self)
-            table.setModel(tm)
-            table.verticalHeader().setVisible(False)
-            table.resizeColumnsToContents()
-            form.addWidget(table)
-        self.setLayout(form)
-        self.setMinimumSize(1000,400)
+            contents = Table(data=items[1],chead=items[0],parent=None)
+
+        self.add(contents)
         self.show()
 
 
@@ -1968,7 +1998,7 @@ class ButtonBox(QtGui.QWidget):
 ############################# Combo box ###########################
 
 class ComboBox(QtGui.QWidget):
-    def __init__(self,name,choices,func,*args):
+    def __init__(self,name,choices,func=None,*args):
         QtGui.QWidget.__init__(self,*args)
         s = InputCombo(name,None,choices=choices,*args)
         s.setSpacing(0)

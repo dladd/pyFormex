@@ -151,6 +151,5 @@ if __name__ == 'draw':
     for diag in [True,False]:
         for vert in [True,False]:
             example(diag,vert)
-
     
 # End

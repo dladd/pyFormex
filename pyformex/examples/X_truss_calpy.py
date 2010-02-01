@@ -183,5 +183,8 @@ draw(deformed,color=cval)
 drawtext('Normal force in the truss members',400,100,size=14)
 drawtext('Deformed geometry (scale %.2f)' % dscale,400,130,size=12)
 
+if ack("Show the output file?"):
+    showFile(outfilename)
+
 
 # End

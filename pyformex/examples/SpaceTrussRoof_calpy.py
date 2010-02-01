@@ -156,8 +156,8 @@ for n in edge:
     loads[:,0] = AssembleVector(loads[:,0],[ 0.0, 0.0, Q/2 ],bcon[n,:])
 
 message("Performing analysis: this may take some time")
-# Find a candidate for the output file
 
+# Find a candidate for the output file
 fullname = os.path.splitext(__file__)[0] + '.out'
 basename = os.path.basename(fullname)
 outfilename = None
@@ -194,6 +194,12 @@ if GD.options.gui:
     from plugins.postproc import niceNumber,frameScale
     from gui.colorscale import *
     import gui.decors
+
+
+    def showOutput():
+        #showText(file(outfilename).read())
+        showFile(outfilename)
+        
 
     def showForces():
         # Give the mesh some meaningful colors.
@@ -284,8 +290,8 @@ if GD.options.gui:
 
 
     optimscale = getOptimscale()
-    options = ['None','Member forces','Deformation','Animated deformation']
-    functions = [None,showForces,showDeformation,showAnimatedDeformation]
+    options = ['None','Output File','Member forces','Deformation','Animated deformation']
+    functions = [None,showOutput,showForces,showDeformation,showAnimatedDeformation]
     while True:
         ans = ask("Which results do you want to see?",options)
         ind = options.index(ans)
