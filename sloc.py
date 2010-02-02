@@ -9,6 +9,8 @@ Create a sloccount report for the pyformex tagged releases.
 
 print __doc__
 from pyformex.flatkeydb import FlatDB
+from pyformex.utils import runCommand
+
 import os,sys,commands,datetime
 
 now = datetime.datetime.now()
@@ -104,27 +106,48 @@ statsfile = file('pyformex-stats.dat','w')
 statsfile.write(out)
 statsfile.close()
 
+outfile = 'pyformex-stats.png'
+
 gnu = """set terminal png size 640,480
-set output "pyformex-stats.png"
+set output "%s"
 set datafile missing '*'
-set title "pyFormex history (http://pyformex.berlios.de)\nCreated %s"
+set title "pyFormex history (http://pyformex.berlios.de)\\nCreated %s"
 set key top left
 #set offsets 0,0.1,0,0
 set xdata time
 set timefmt "%s"
 set format x "%s"
 set xlabel "Date (YY-MM)"
-set ylabel "revision number"
+#set ylabel "revision number"
 #set yrange [0:1.2]
-plot """ % (now,'%Y-%m-%d','%y-%m')
+plot """ % (outfile,now,'%Y-%m-%d','%y-%m')
 
-KEYSplot = "size python ansic sh sloc manyears dollars"
+KEYSplot = { # what to plot (scale, title)
+    'python': (100,'%S lines of Python code'),
+    'ansic': (10,'%S lines of C code'),
+    'manyears': (0.01,'%S man-years'),
+    'dollars': (1000,'%S dollars'),
+    'rev': (None,'number of revisions'),
+    }
 
-for i,key in enumerate(KEYSplot.split()):
-    col = KEYSorted.index(key) + 1
-    gnu += "\\\n  'pyformex-stats.dat' using %s:1 title '%s' with lines linetype %s" % (col,key,i)
+for key in KEYSplot:
+    col = KEYS.index(key) + 1
+    scale,title = KEYSplot[key]
+    if scale:
+        item = "($%s/%s)" % (col,scale)
+        title = title.replace('%S',str(scale))
+    else:
+        item = "%s" % col
+    gnu += "\\\n  'pyformex-stats.dat' using 1:%s title '%s'," % (item,title)
 
-print gnu
-#gnufile =  file('pyformex-stats.gnu','w')
+gnu = gnu[:-1] + '\n'
+
+gnufile = 'pyformex-test.gnu'
+
+fil = open(gnufile,'w')
+fil.write(gnu)
+fil.close()
+
+runCommand('gnuplot %s && display %s' % (gnufile,outfile))
 
 # End
