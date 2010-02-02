@@ -349,11 +349,11 @@ def intersectionLinesWithPlane(F,p,n,atol=1.e-4):
     p = asarray(p)
     F = F.cclip(F.test('all',n,p)) # remove elements at the negative side
     if F.nelems() == 0:
-        return Formex()
+        return Formex(empty((0,2,3,),dtype=float))
     F = F.cclip(F.test('all',-n,p)) # select elements that will be cut by plane
     if F.nelems() == 0:
-        return Formex()
-    F1 = F21 = F22 = F31 = F32 = F41 = F42= F43 = Formex(empty((0,2,3,),dtype=float))    
+        return Formex(empty((0,2,3,),dtype=float))
+    F1 = F21 = F22 = F31 = F32 = F41 = F42= F43 = Formex(empty((0,2,3,),dtype=float))
     # Create a Formex with the edges
     C = Formex.concatenate([ F.selectNodes(e) for e in [[0,1],[1,2],[2,0]] ])
     t = C.intersectionWithPlane(p,n)
