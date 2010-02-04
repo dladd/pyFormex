@@ -113,7 +113,7 @@ class FileSelection(QtGui.QFileDialog):
     If dir==True, a single existing directory is asked.
     """
     
-    def __init__(self,path,pattern=None,exist=False,multi=False,dir=False):
+    def __init__(self,path='.',pattern='*.*',exist=False,multi=False,dir=False):
         """The constructor shows the widget."""
         QtGui.QFileDialog.__init__(self)
         if os.path.isfile(path):
@@ -500,10 +500,7 @@ class Selection(QtGui.QDialog):
         """Mark the specified items as selected."""
         for s in selected:
             for i in self.listw.findItems(s,QtCore.Qt.MatchExactly):
-                # OBSOLETE: should be changed with Qt version 4.2 or later
-                # self.listw.setItemSelected(i,True)
-                # SHOULD BECOME:
-                i.setSelected(True) # requires Qt 4.2
+                i.setSelected(True)
                 i.setCheckState(QtCore.Qt.Checked)
 
                 
@@ -1541,49 +1538,12 @@ def updateDialogItems(data,newdata):
     if newdata:
         if type(data) is dict:
             for d in data:
-                #print("subitems",d)
                 updateDialogItems(data[d],newdata)
         else:
             for d in data:
-                #print("item",d)
                 v = newdata.get(d[0],None)
-                #print(v)
                 if v is not None:
                     d[1] = v
-                #print(d)
-
-
-def dialogButtons(dialog,actions,default=None):
-    """Create a set of dialog buttons
-
-    dia is a dialog widget
-    actions is a list of tuples (name,) or (name,function).
-    If a function is specified, it will be executed on pressing the button.
-    If no function is specified, and name is one of 'ok' or 'cancel' (case
-    does not matter), the button will be bound to the dialog's 'accept'
-    or 'reject' slot.
-    default is the name of the action to set as the default.
-    """
-    but = QtGui.QHBoxLayout()
-    spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
-    but.addItem(spacer)
-    for a in actions:
-        name = a[0]
-        b = QtGui.QPushButton(name,dialog)
-        n = name.lower()
-        if len(a) > 1:
-            slot = (a[1],)
-        elif n == 'ok':
-            slot = (dialog,Accept)
-        elif n == 'cancel':
-            slot = (dialog,Reject)
-        else:
-            slot = (dialog,Reject)
-        dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
-        if default is not None and n == default.lower():
-            b.setDefault(True)
-        but.addWidget(b)
-    return but
 
 
 ########################### Table widgets ###########################
@@ -1950,6 +1910,40 @@ class InputBox(QtGui.QWidget):
 
 
 ############################# Button box ###########################
+
+
+def dialogButtons(dialog,actions,default=None):
+    """Create a set of dialog buttons
+
+    dia is a dialog widget
+    actions is a list of tuples (name,) or (name,function).
+    If a function is specified, it will be executed on pressing the button.
+    If no function is specified, and name is one of 'ok' or 'cancel' (case
+    does not matter), the button will be bound to the dialog's 'accept'
+    or 'reject' slot.
+    default is the name of the action to set as the default.
+    """
+    but = QtGui.QHBoxLayout()
+    spacer = QtGui.QSpacerItem(0,0,QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum )
+    but.addItem(spacer)
+    for a in actions:
+        name = a[0]
+        b = QtGui.QPushButton(name,dialog)
+        n = name.lower()
+        if len(a) > 1:
+            slot = (a[1],)
+        elif n == 'ok':
+            slot = (dialog,Accept)
+        elif n == 'cancel':
+            slot = (dialog,Reject)
+        else:
+            slot = (dialog,Reject)
+        dialog.connect(b,QtCore.SIGNAL("clicked()"),*slot)
+        if default is not None and n == default.lower():
+            b.setDefault(True)
+        but.addWidget(b)
+    return but
+
 
 class ButtonBox(QtGui.QWidget):
     """A box with action buttons.

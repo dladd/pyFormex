@@ -102,6 +102,9 @@ wheelzoom = 'area'    # action performed by the wheel ('area', 'dolly', 'lens')
 plot2d = 'gnuplot'
 easter_egg = ()
 
+layout = 1
+showfocus = True
+
 [input]
 timeout = -1         # never timeout
 

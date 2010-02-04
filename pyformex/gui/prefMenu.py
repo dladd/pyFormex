@@ -108,6 +108,8 @@ def setTimeoutButton():
     askConfigPreferences(['gui/timeoutbutton'])
     nextOnly()
     
+def setShowFocus():
+    askConfigPreferences(['gui/showfocus'])
     
 
 def setHelp():
@@ -338,6 +340,7 @@ MenuData = [
         (_('&ZoomFactor'),setZoomFactor),
         (_('&AutoZoomFactor'),setAutoZoomFactor),
         (_('&ZoomActions'),setZoomActions),
+        (_('&Show Focus'),setShowFocus),
         (_('&Render Mode'),setRenderMode),
         (_('&Rendering'),setRender),
         (_('&Light0'),setLight0),

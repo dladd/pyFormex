@@ -164,6 +164,7 @@ class CanvasSettings(object):
             elif k == 'colormap':
                 ok[k] = saneColor(colormap)
         return ok
+
         
     def __init__(self,dict={}):
         """Create a new set of CanvasSettings, possibly changing defaults."""
@@ -553,6 +554,7 @@ class Canvas(object):
         
         # decorations are drawn in 2D mode
         self.begin_2D_drawing()
+        
         if self.background:
             GD.debug("Displaying background")
             self.background.draw(mode='smooth')
@@ -567,11 +569,12 @@ class Canvas(object):
                 ##     self.zoom_2D()
 
         # draw the focus rectangle if more than one viewport
-        if len(GD.GUI.viewports.all) > 1:
+        if len(GD.GUI.viewports.all) > 1 and GD.cfg['gui/showfocus']:
             if self.hasFocus():
                 self.draw_focus_rectangle(2)
             elif self.focus:
                 self.draw_focus_rectangle(1)
+                
         self.end_2D_drawing()
         
         # draw the highlighted actors
