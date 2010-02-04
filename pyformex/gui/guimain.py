@@ -573,16 +573,17 @@ def startGUI(args):
     """
     if GD.options.fpbug:
         print "startGUI"
-    
+
+    # This seems to be the only way to make sure the numeric conversion is
+    # always correct
     #
-    # FIX FOR A BUG IN NUMPY (It's always sane anyway)
-    #
-    import locale
-    GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
+    QtCore.QLocale.setDefault(QtCore.QLocale.c())
     #
     #GD.options.debug = -1
     GD.debug("Arguments passed to the QApplication: %s" % args)
     GD.app = QtGui.QApplication(args)
+    
+    #
     GD.debug("Arguments left after constructing the QApplication: %s" % args)
     GD.debug("Arguments left after constructing the QApplication: %s" % GD.app.arguments().join('\n'))
     #GD.options.debug = 0
@@ -599,11 +600,6 @@ def startGUI(args):
     ## print "%s" % GD.settings
     
 
-    #
-    GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
-    locale.setlocale(locale.LC_NUMERIC, 'C')
-    GD.debug("LC_NUMERIC = %s" %  locale.setlocale(locale.LC_NUMERIC))
-    #
     #
     #
     

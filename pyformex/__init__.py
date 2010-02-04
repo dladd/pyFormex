@@ -54,7 +54,8 @@ cfg = None         # the current configuration
 refcfg = None      # the reference configuration 
 preffile = None    # the file where current configuration will be saved
 
-PF = {}            # globals that will be offered to scripts
+PF = {}            # explicitely exported globals
+_PF_ = {}          # globals that will be offered to scripts
     
 scriptName = None
 

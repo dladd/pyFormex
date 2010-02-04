@@ -997,30 +997,17 @@ class InputFloatTable(InputItem):
     def __init__(self,name,value,*args,**kargs):
         """Creates a new float table input field."""
         InputItem.__init__(self,name,*args,**kargs)
-        #self.input = QtGui.QLineEdit(str(value))
-        #self.validator = QtGui.QDoubleValidator(self)
-        ncols = kargs.get('ncols',1)
-        nrows = kargs.get('nrows',1)
-        headers = kargs.get('headers',None)
-        if headers is not None and len(headers) < ncols:
-            headers.extend(['']*(ncols - len(headers)))
-        labels = kargs.get('labels',None)
-        if labels is not None and len(labels) < ncols:
-            labels.extend(['']*(ncols - len(labels)))
-        ## if kargs.has_key('min'):
-        ##     self.validator.setBottom(float(kargs['min']))
-        ## if kargs.has_key('max'):
-        ##     self.validator.setTop(float(kargs['max']))
-        ## if kargs.has_key('dec'):
-        ##     self.validator.setDecimals(int(kargs['dec']))
-        #self.input.setValidator(self.validator)
-        table = QtGui.QTableView()
-        tm = TableModel(data,chead,rhead,None)
-        table.setModel(tm)
-        table.horizontalHeader().setVisible(chead is not None)
-        table.verticalHeader().setVisible(rhead is not None)
-        table.resizeColumnsToContents()
-        #self.input = TableWidget(data=value,
+        if value is None:
+            ncols = kargs.get('ncols',1)
+            nrows = kargs.get('nrows',1)
+            value = zeros(nrows,ncols)
+        else:
+            nrows,ncols = value.shape
+            
+        chead = kargs.get('chead',None)
+        rhead = kargs.get('rhead',None)
+
+        self.input = ArrayTable(value,rhead=rhead,chead=chead)
         self.insertWidget(1,self.input)
 
     def show(self):
@@ -1557,11 +1544,18 @@ class TableModel(QtCore.QAbstractTableModel):
     data[i][j].
     Optional lists of column and row headers can be specified.
     """
-    def __init__(self,data,chead=None,rhead=None,parent=None,*args): 
-        QtCore.QAbstractTableModel.__init__(self,parent,*args) 
+    def __init__(self,data,chead=None,rhead=None,edit=True): 
+        QtCore.QAbstractTableModel.__init__(self) 
         self.arraydata = data
         self.headerdata = {QtCore.Qt.Horizontal:chead,QtCore.Qt.Vertical:rhead}
- 
+        self.makeEditable(edit)
+
+    def makeEditable(self,edit=True):
+        self._flags = QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable
+        if edit:
+            self._flags |= QtCore.Qt.ItemIsEditable
+        self.edit = edit
+
     def rowCount(self,parent=None): 
         return len(self.arraydata) 
  
@@ -1600,41 +1594,104 @@ class TableModel(QtCore.QAbstractTableModel):
         self.arraydata[row:row+count] = []
         self.endRemoveRows()
         return True
+    
+    def flags(self,index):
+        """Return the TableModel flags."""
+        return self._flags
+
+    def setData(self,index,value,role=QtCore.Qt.EditRole):
+        if self.edit and role == QtCore.Qt.EditRole:
+            print "Setting items at %s to %s" % (str(index),str(value))
+            try:
+                r,c = [index.row(),index.column()]
+                print "Setting value at %s,%s to %s" %(r,c,value)
+                value = eval(str(svalue.toString()))
+                print "Setting value at %s,%s to %s" %(r,c,value)
+                self.arraydata[index.row()][index.column()] = value
+                print "Succesfully changed data"
+                self.emit(QtCore.SIGNAL(self.dataChanged),index,index)
+                print "Signaled success"
+                return True
+            except:
+                print "Could not set the value"
+                return False
+        else:
+            print "CAN  NOT EDIT"
+        return False
+
+from numpy import ndarray,asarray
+
+class ArrayModel(TableModel):
+    """A TableModel specialized for represents 2D array data.
+
+    - `data`: a numpy array with two dimensions.
+    - `chead`, `rhead`: column and row headers. The default will show column
+      and row numbers.
+    - `edit`: if True (default), the data can be edited. Set to False to make
+      the data readonly.
+    """
+    def __init__(self,data,chead=None,rhead=None,edit=True):
+        data = asarray(data)
+        if rhead is None:
+            rhead=range(data.shape[0])
+        if chead is None:
+            chead=range(data.shape[1])
+        TableModel.__init__(self,data,rhead=rhead,chead=chead,edit=edit)
+
+
+    def setData(self,index,value,role=QtCore.Qt.EditRole):
+        if self.edit and role == QtCore.Qt.EditRole:
+            print "Setting items at %s to %s" % (str(index),str(value))
+            try:
+                r,c = [index.row(),index.column()]
+                print "Setting value at %s,%s to %s" %(r,c,value)
+                if self.arraydata.dtype.kind == 'f':
+                    value,ok = value.toDouble()
+                elif self.arraydata.dtype.kind == 'i':
+                    value,ok = value.toInt()
+                else:
+                    print "Editing of other than float or int arrays is not implemented yet!"
+                    ok = False
+                if not ok:
+                    raise ValueError
+                print "Setting value at %s,%s to %s" %(r,c,value)
+                self.arraydata[index.row()][index.column()] = value
+                self.emit(QtCore.SIGNAL(self.dataChanged),index,index)
+                return True
+            except:
+                print "Could not set the value"
+                return False
+        else:
+            print "CAN  NOT EDIT"
+        return False
+
 
 
 class Table(QtGui.QTableView):
     """A widget to show/edit a two-dimensional array of items.
 
-    - `data`: a 2-D array of items, with `nrow` rows and `ncol` columns.
+    - `data`: a 2-D array of items, with `nrow` rows and `ncol` columns. If
+      `data` is an ndarray instance, the Table will use an ArrayModel,
+      else a TableModel. The difference is important when editing the table.
+      Also, an ArrayModel has default row and column headers, while a
+      TableModel doesn't.
     - `chead`: an optional list of `ncol` column headers.
     - `rhead`: an optional list of `nrow` row headers.
-    - `label`: an optional label to be displayed in the upper left corner
-      if both `chead` and `rhead` are specified, otherwise ignored.
+    - `label`: currently unused (intended to display an optional label
+      in the upper left corner if both `chead` and `rhead` are specified.
     """
-    
-    def __init__(self,data,chead=None,rhead=None,label=None,parent=None):
+    def __init__(self,data,chead=None,rhead=None,label=None,edit=True,parent=None):
         """Initialize the Table widget."""
         QtGui.QTableView.__init__(self,parent)
-        self.tm = TableModel(data,chead,rhead,None)
+        if isinstance(data,ndarray):
+            self.tm = ArrayModel(data,chead,rhead,edit=edit)
+        else:
+            self.tm = TableModel(data,chead,rhead,edit=edit)
         self.setModel(self.tm)
         self.horizontalHeader().setVisible(chead is not None)
         self.verticalHeader().setVisible(rhead is not None)
         self.resizeColumnsToContents()
         self.setCornerButtonEnabled
-
-
-class ArrayTable(Table):
-    """A Table widget displaying a numerical array.
-
-    This is like the Table widget, but shows default row and column
-    numbers if no headers are supplied. The data should be
-    a 2-dimensional numerical array.
-    """
-    def __init__(self,data,chead=None,rhead=None,label=None,parent=None):
-        """Initialize the ArrayTable widget."""
-        from numpy import asarray
-        data = asarray(data)
-        Table.__init__(self,data,chead=range(data.shape[1]),rhead=range(data.shape[0]),label=label,parent=parent)
                         
 
 class Tabs(QtGui.QTabWidget):
@@ -1899,7 +1956,7 @@ class TextBox(QtGui.QDialog):
 ############################# Input box ###########################
 
 class InputBox(QtGui.QWidget):
-    """A widget accepting line input.
+    """A widget accepting a line of input.
 
     """
     def __init__(self,*args):

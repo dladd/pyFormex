@@ -485,6 +485,103 @@ def writeArray(file,array,sep=' '):
     array.tofile(file,sep=sep)
 
 
+def cubicEquation(a,b,c,d):
+    """Solve a cubiq equation using a direct method.
+
+    a,b,c,d are the (floating point) coefficients of a third degree
+    polynomial equation::
+  
+       3         2
+      a . x  +  b . x  +  c . x  +  d   =   0
+
+    This function computes the three roots (real and complex) of this equation
+    and returns full information about their kind, sorting order, occurrence
+    of double roots. It uses scaling of the variables to enhance the accuracy.
+    
+    The return value is a tuple (r1,r2,r3,kind), where r1,r2 and r3 are three
+    float values and kind is an integer specifying the kind of roots.
+
+    Depending on the value of `kind`, the roots are defined as follows:
+    
+    kind      roots
+    ====      ========================
+    0         three real roots r1 < r2 < r3
+    1         three real roots r1 < r2 = r3
+    2         three real roots r1 = r2 < r3
+    3         three real roots r1 = r2 = r3
+    4         one real root r1 and two complex conjugate roots with real part
+              r2 and imaginary part r3: the complex roots are thus :
+              r2+i*r3 en r2-i*r3, where i = sqrt(-1).
+
+    If the coefficient a==0, a ValueError is raised.
+    """
+    #print "Coeffs: %s" % str((a,b,c,d))
+    if a == 0.0:
+        raise ValueError,"Coeeficient a of cubiq equation should not be 0"
+
+    e3 = 1./3.
+    pie = pi*2.*e3
+    r = b/a
+    s = c/a
+    t = d/a
+    #print "r,s,t = %s" % str((r,s,t))
+
+    # scale variable
+    sc = max(abs(r),sqrt(abs(s)),abs(t)**e3)
+    sc = 10**(int(log10(sc)))
+    r = r/sc
+    s = s/sc/sc
+    t = t/sc/sc/sc
+    #print "scaled (%s) r,s,t = %s" % (sc,str((r,s,t)))
+    
+    rx = r*e3
+    p3 = (s-r*rx)*e3
+    q2 = rx**3-rx*s/2.+t/2.
+    #print "rx,p3,q2 = %s" % str((rx,p3,q2))
+    
+    q2s = q2*q2
+    p3c = p3**3
+    som = q2s+p3c
+    #print "q2s,p3c,som = %s" % str((q2s,p3c,som))
+
+    if som <= 0.0:
+
+        # 3 different real roots
+        ic = 0
+        roots = [ -rx ] * 3
+        rt = sqrt(-p3c)
+        if abs(rt) > 0.0:
+            phi = cos(-q2/rt)*e3
+            rt = 2.*sqrt(-p3)
+            roots += rt * cos(phi + [0.,+pie, -pie])
+        
+        # sort the 3 roots
+
+        roots.sort()
+        if roots[1] == roots[2]:
+            ic += 1
+        if roots[1] == roots[0]:
+            ic += 2
+
+    else: # som < 0.0
+        #  1 real and 2 complex conjugate roots
+        ic = 4
+        som = sqrt(som)
+        u = -q2+som
+        u = sign(abs(u)**e3) * u
+        v = -q2-som
+        v = sign(abs(v)**e3) * v
+        r1 = u+v
+        r2 = -r1/2-rx
+        r3 = (u-v)*sqrt(3.)/2.
+        r1 = r1-rx
+        roots = array([r1,r2,r3])
+
+    # scale and return values
+    roots *= sc
+    return roots,ic
+ 
+
 # THIS MAY BE FASTER THAN olist.collectOnLength, BUT IT IS DEPENDENT ON NUMPY
 
 ## def collectOnLength(items):

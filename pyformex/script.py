@@ -126,15 +126,13 @@ def listAll(clas=None,dic=None):
 
 def named(name):
     """Returns the global object named name."""
-    #pyformex.debug("name %s" % name)
     if pyformex.PF.has_key(name):
-        #pyformex.debug("Found %s in pyformex.PF" % name)
         dic = pyformex.PF
-    elif globals().has_key(name):
-        pyformex.debug("Found %s in globals()" % name)
-        dic = globals()
+    elif pyformex._PF_.has_key(name):
+        pyformex.debug("Found %s in pyformex._PF_" % name)
+        dic = pyformex._PF_
     else:
-        raise NameError,"Name %s is in neither pyformex.PF nor globals()" % name
+        raise NameError,"Name %s is in neither pyformex.PF nor pyformex._PF_" % name
     return dic[name]
 
 
@@ -272,6 +270,9 @@ def playScript(scr,name=None,filename=None,argv=[],pye=False):
     if filename:
         g.update({'__file__':filename})
     g.update({'argv':argv})
+
+    # Make this directory available
+    pyformex._PF_ = g
 
     # Now we can execute the script using these collected globals
     exportNames = []

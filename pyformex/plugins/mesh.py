@@ -42,7 +42,7 @@ from utils import deprecation
 def vectorRotation(vec1,vec2,upvec=[0.,0.,1.]):
     """Return a rotation matrix for rotating vector vec1 to vec2
 
-    The rotation matrix will be sucht that the plane of vec2 and the
+    The rotation matrix will be such that the plane of vec2 and the
     rotated upvec will be parallel to the original upvec.
 
     This function is like :func:`arraytools.rotMatrix`, but allows the
