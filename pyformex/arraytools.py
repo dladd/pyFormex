@@ -144,7 +144,10 @@ def normalize(A,axis=-1):
     A = asarray(A)
     shape = list(A.shape)
     shape[axis] = 1
-    return A / length(A,axis).reshape(shape)
+    Al = length(A,axis).reshape(shape)
+    if (Al == 0.).any():
+        raise ValueError,"Normalization of zero vector."
+    return A/Al
 
 
 def projection(A,B,axis=-1):
@@ -152,6 +155,10 @@ def projection(A,B,axis=-1):
 
     The default axis is the last.
     """
+    d = dotpr(A,B,axis)
+    Bl = length(B,axis)
+    if (Bl == 0.).any():
+        raise ValueError,"Projection on zero vector."
     return dotpr(A,B,axis)/length(B,axis)
 
 
